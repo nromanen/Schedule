@@ -5,12 +5,15 @@ import com.softserve.repository.CarRepository;
 import com.softserve.service.CarService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
+@Transactional
 @Service
 public class CarServiceImpl implements CarService {
+
 
     private final CarRepository carRepository;
 

@@ -2,36 +2,35 @@ package com.softserve.controller;
 
 
 import com.softserve.entity.Employee;
-import com.softserve.service.impl.EmployeeServiceImpl;
+import com.softserve.service.EmployeeService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
 
 
 @RestController
 @RequestMapping("/employee")
 public class EmployeeController {
 
-    private final EmployeeServiceImpl employeeServiceImpl;
+    private final EmployeeService employeeServiceImpl;
 
     @Autowired
-    public EmployeeController(EmployeeServiceImpl employeeServiceImpl) {
+    public EmployeeController(EmployeeService employeeServiceImpl) {
         this.employeeServiceImpl = employeeServiceImpl;
     }
 
 
     @GetMapping
-    public ResponseEntity<List<Employee>> list() {
+    public ResponseEntity<?> list() {
         List<Employee> employees = employeeServiceImpl.getAll();
         return ResponseEntity.ok().body(employees);
     }
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<Employee> get(@PathVariable("id") long id) {
+    public ResponseEntity<?> get(@PathVariable("id") long id) {
         Employee employee = employeeServiceImpl.getById(id).get();
         return ResponseEntity.ok().body(employee);
     }

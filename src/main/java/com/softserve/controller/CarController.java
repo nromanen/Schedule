@@ -1,6 +1,7 @@
 package com.softserve.controller;
 
 import com.softserve.entity.Car;
+import com.softserve.service.CarService;
 import com.softserve.service.impl.CarServiceImpl;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -14,10 +15,10 @@ import java.util.List;
 @Api(tags = "Car API")
 public class CarController {
 
-    final CarServiceImpl carServiceImpl;
+    final private CarService carServiceImpl;
 
     @Autowired
-    public CarController(CarServiceImpl carServiceImpl) {
+    public CarController(CarService carServiceImpl) {
         this.carServiceImpl = carServiceImpl;
     }
 

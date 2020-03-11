@@ -11,7 +11,7 @@ import java.lang.reflect.ParameterizedType;
 import java.util.List;
 import java.util.Optional;
 
-@Transactional
+
 @Repository
 @SuppressWarnings("unchecked")
 public abstract class BasicRepositoryImpl<T extends Serializable, I extends Serializable> implements BasicRepository<T, I> {
@@ -28,7 +28,6 @@ public abstract class BasicRepositoryImpl<T extends Serializable, I extends Seri
                 .getActualTypeArguments()[0];
         this.sessionFactory = sessionFactory;
     }
-
 
     @Override
     public List<T> getAll() {
