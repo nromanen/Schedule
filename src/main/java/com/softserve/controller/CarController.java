@@ -1,6 +1,7 @@
 package com.softserve.controller;
 
 import com.softserve.entity.Car;
+import com.softserve.service.CarService;
 import com.softserve.service.impl.CarServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -11,10 +12,10 @@ import java.util.List;
 @RestController
 public class CarController {
 
-    final CarServiceImpl carServiceImpl;
+    final private CarService carServiceImpl;
 
     @Autowired
-    public CarController(CarServiceImpl carServiceImpl) {
+    public CarController(CarService carServiceImpl) {
         this.carServiceImpl = carServiceImpl;
     }
 
