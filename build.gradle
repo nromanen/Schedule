@@ -63,9 +63,9 @@ dependencies {
     //Postgres DB
     compile group: 'org.postgresql', name: 'postgresql', version: '42.2.10'
 
-////    //Logger Log4j
-//    compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.12.1'
-//    compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.12.1'
+    /* LOGGER */
+    compile 'org.slf4j:jcl-over-slf4j:1.7.12'
+    compile 'ch.qos.logback:logback-classic:1.1.3'
 
 
 
