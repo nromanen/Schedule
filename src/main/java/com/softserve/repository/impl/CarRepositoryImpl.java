@@ -9,8 +9,4 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class CarRepositoryImpl extends BasicRepositoryImpl<Car, Long> implements CarRepository {
-
-    public CarRepositoryImpl(SessionFactory sessionFactory) {
-        super(sessionFactory);
-    }
 }

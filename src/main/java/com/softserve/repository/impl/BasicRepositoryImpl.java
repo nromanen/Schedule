@@ -18,15 +18,14 @@ public abstract class BasicRepositoryImpl<T extends Serializable, I extends Seri
 
     protected final Class<T> clazz;
 
-
+    @Autowired
     protected SessionFactory sessionFactory;
 
-    @Autowired
-    public BasicRepositoryImpl(SessionFactory sessionFactory) {
+
+    public BasicRepositoryImpl() {
         clazz = (Class<T>) ((ParameterizedType) getClass()
                 .getGenericSuperclass())
                 .getActualTypeArguments()[0];
-        this.sessionFactory = sessionFactory;
     }
 
     @Override
