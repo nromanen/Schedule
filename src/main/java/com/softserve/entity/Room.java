@@ -1,5 +1,6 @@
 package com.softserve.entity;
 
+import com.softserve.entity.enums.RoomSize;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -10,17 +11,15 @@ import java.io.Serializable;
 @NoArgsConstructor
 @Data
 @Entity
-@Table(name = "employee")
-public class Employee implements Serializable {
+@Table(name = "rooms")
+public class Room implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(columnDefinition = "serial")
     private long id;
 
-    @Column(name = "name")
-    private String name;
+    @Enumerated(EnumType.STRING)
+    private RoomSize roomSize;
 
-    @Column(name = "position")
-    private String position;
-
+    String name;
 }
