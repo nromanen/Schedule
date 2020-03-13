@@ -1,4 +1,4 @@
-package com.softserve.enums;
+package com.softserve.entity.enums;
 
 public enum RoomSize {
     SMALL,

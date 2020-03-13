@@ -1,8 +1,6 @@
 package com.softserve.repository.impl;
 
-import com.softserve.entity.Employee;
 import com.softserve.repository.EmployeeRepository;
-import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
 
 

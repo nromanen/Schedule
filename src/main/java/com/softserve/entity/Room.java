@@ -1,6 +1,6 @@
 package com.softserve.entity;
 
-import com.softserve.enums.RoomSize;
+import com.softserve.entity.enums.RoomSize;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -11,7 +11,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @Data
 @Entity
-@Table(name = "room")
+@Table(name = "rooms")
 public class Room implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

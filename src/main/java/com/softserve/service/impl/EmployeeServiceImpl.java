@@ -1,7 +1,6 @@
 package com.softserve.service.impl;
 
 
-import com.softserve.entity.Employee;
 import com.softserve.repository.EmployeeRepository;
 import com.softserve.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,7 +1,6 @@
 package com.softserve.controller;
 
 
-import com.softserve.entity.Employee;
 import com.softserve.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

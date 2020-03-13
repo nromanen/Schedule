@@ -11,7 +11,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class TeacherRepositoryImpl extends BasicRepositoryImpl<Teacher, Long> implements TeacherRepository {
 
-    public TeacherRepositoryImpl(SessionFactory sessionFactory) {
-        super(sessionFactory);
-    }
+
 }

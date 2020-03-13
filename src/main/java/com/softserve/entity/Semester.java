@@ -2,7 +2,6 @@ package com.softserve.entity;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -10,17 +9,12 @@ import java.io.Serializable;
 @NoArgsConstructor
 @Data
 @Entity
-@Table(name = "employee")
-public class Employee implements Serializable {
+@Table(name = "semester")
+public class Semester implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(columnDefinition = "serial")
     private long id;
-
-    @Column(name = "name")
-    private String name;
-
-    @Column(name = "position")
-    private String position;
-
+    private int year;
+    private int number;
 }

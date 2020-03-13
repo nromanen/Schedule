@@ -2,22 +2,25 @@ package com.softserve.entity;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
-
 import javax.persistence.*;
 import java.io.Serializable;
+import java.sql.Timestamp;
 
 
 @NoArgsConstructor
 @Data
 @Entity
-@Table(name = "semestr")
-public class Semestr implements Serializable {
+@Table(name = "periods")
+public class Period implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(columnDefinition = "serial")
     private long id;
-    private int year;
-    private int number;
+
+    @Column(name = "start_time")
+    private Timestamp startTime;
+
+    @Column(name = "end_time")
+    private Timestamp endTime;
+    private String name;
 }

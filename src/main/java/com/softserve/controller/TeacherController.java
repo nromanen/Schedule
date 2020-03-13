@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@Api(tags = "Car API")
+@Api(tags = "Teacher")
 public class TeacherController {
 
     final private TeacherService teacherServiceImpl;

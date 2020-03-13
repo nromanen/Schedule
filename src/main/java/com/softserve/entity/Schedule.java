@@ -1,12 +1,10 @@
 package com.softserve.entity;
 
-import com.softserve.enums.EvenOdd;
-import com.softserve.enums.RoomSize;
+import com.softserve.entity.enums.EvenOdd;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -14,31 +12,32 @@ import java.io.Serializable;
 @NoArgsConstructor
 @Data
 @Entity
-@Table(name = "schedule")
+@Table(name = "schedules")
 public class Schedule implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(columnDefinition = "serial")
     private long id;
-    private String day_of_week;
+    @Column(name = "day_of_week")
+    private String dayOfWeek;
 
     @Enumerated(EnumType.STRING)
     private EvenOdd evenOdd;
 
-    @ManyToOne(targetEntity = Semestr.class)
-    @JoinColumn(name = "semestr_id", insertable = false, updatable = false)
+    @ManyToOne(targetEntity = Semester.class)
+    @JoinColumn(name = "semester_id", insertable = false, updatable = false)
     @OnDelete(action = OnDeleteAction.NO_ACTION)
-    private Semestr semestr;
+    private Semester semester;
 
     @ManyToOne(targetEntity = Room.class)
     @JoinColumn(name = "room_id", insertable = false, updatable = false)
     @OnDelete(action = OnDeleteAction.NO_ACTION)
     private Room room;
 
-    @ManyToOne(targetEntity = Class.class)
-    @JoinColumn(name = "class_id", insertable = false, updatable = false)
+    @ManyToOne(targetEntity = Period.class)
+    @JoinColumn(name = "period_id", insertable = false, updatable = false)
     @OnDelete(action = OnDeleteAction.NO_ACTION)
-    private Class aClass;
+    private Period period;
 
     @ManyToOne(targetEntity = Lesson.class)
     @JoinColumn(name = "lesson_id", insertable = false, updatable = false)

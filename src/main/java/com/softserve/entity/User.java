@@ -1,8 +1,8 @@
 package com.softserve.entity;
 
+import com.softserve.entity.enums.Role;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -18,4 +18,6 @@ public class User implements Serializable {
     private long id;
     private String email;
     private String password;
+    @Enumerated(EnumType.STRING)
+    private Role role;
 }

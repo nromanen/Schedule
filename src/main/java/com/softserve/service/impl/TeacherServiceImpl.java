@@ -1,10 +1,7 @@
 package com.softserve.service.impl;
 
-import com.softserve.entity.Car;
 import com.softserve.entity.Teacher;
-import com.softserve.repository.CarRepository;
 import com.softserve.repository.TeacherRepository;
-import com.softserve.service.CarService;
 import com.softserve.service.TeacherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
