@@ -16,14 +16,14 @@ import java.util.Optional;
 @SuppressWarnings("unchecked")
 public abstract class BasicRepositoryImpl<T extends Serializable, I extends Serializable> implements BasicRepository<T, I> {
 
-    protected final Class<T> clazz;
+    protected final Class<T> basicClass;
 
     @Autowired
     protected SessionFactory sessionFactory;
 
 
     public BasicRepositoryImpl() {
-        clazz = (Class<T>) ((ParameterizedType) getClass()
+        basicClass = (Class<T>) ((ParameterizedType) getClass()
                 .getGenericSuperclass())
                 .getActualTypeArguments()[0];
     }
@@ -31,13 +31,13 @@ public abstract class BasicRepositoryImpl<T extends Serializable, I extends Seri
     @Override
     public List<T> getAll() {
         return sessionFactory.getCurrentSession()
-                .createQuery("from " + clazz.getName())
+                .createQuery("from " + basicClass.getName())
                 .getResultList();
     }
 
     @Override
     public Optional<T> findById(I id) {
-        return Optional.ofNullable(sessionFactory.getCurrentSession().get(clazz, id));
+        return Optional.ofNullable(sessionFactory.getCurrentSession().get(basicClass, id));
     }
 
     @Transactional
