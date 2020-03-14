@@ -23,9 +23,9 @@ public class TeacherController {
 
 
     @GetMapping("/teacher")
-    @ApiOperation(value = "Get the list of all cars")
+    @ApiOperation(value = "Get the list of all teachers")
     public ResponseEntity<List<Teacher>> list() {
-        List<Teacher> cars = teacherServiceImpl.getAll();
-        return ResponseEntity.ok().body(cars);
+        List<Teacher> teachers = teacherServiceImpl.getAll();
+        return ResponseEntity.ok().body(teachers);
     }
 }

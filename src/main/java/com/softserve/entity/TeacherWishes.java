@@ -1,15 +1,17 @@
 package com.softserve.entity;
 
+import com.vladmihalcea.hibernate.type.json.JsonStringType;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
-import org.hibernate.annotations.Type;
+import org.hibernate.annotations.*;
 
 import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.io.Serializable;
 
 
+@TypeDef(name = "json", typeClass = JsonStringType.class)
 @NoArgsConstructor
 @Data
 @Entity
@@ -30,7 +32,7 @@ public class TeacherWishes implements Serializable {
     @OnDelete(action = OnDeleteAction.NO_ACTION)
     private Semester semester;
 
-    @Type(type = "jsonb")
-    @Column(columnDefinition = "json")
-    private String wishlist;
+    @Type(type = "json")
+    @Column(name = "wishlist",columnDefinition = "json")
+    private String wishList;
 }
