@@ -1,17 +1,19 @@
-
-webapp:
-  build: server
+app-web:
+  build: .
   ports:
     - "8080:8080"
   links:
-    - database
+    - app-db
 
-database:
-  build: database
-  restart: always
-  ports:
-    - "5432:5432"
-  environment:
-    - DEBUG=true
-    - POSTGRES_USER=emailboot
-    - POSTGRES_PASSWORD=emailboot
+app-db:
+  build: ./src/main/resources
+  expose:
+    - "5432"
+  volumes_from:
+    - app-db-data
+
+app-db-data:
+  image: cogniteev/echo
+  command: echo 'Data Container for PostgreSQL'
+  volumes:
+    - /var/lib/postgresql/data
