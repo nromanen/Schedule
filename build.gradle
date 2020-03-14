@@ -12,6 +12,9 @@ plugins {
     id 'war'
 }
 
+war {
+    archiveName 'class_schhedule.war'
+}
 group 'org.example'
 version '1.0-SNAPSHOT'
 

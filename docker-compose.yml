@@ -1,0 +1,17 @@
+
+webapp:
+  build: server
+  ports:
+    - "8080:8080"
+  links:
+    - database
+
+database:
+  build: database
+  restart: always
+  ports:
+    - "5432:5432"
+  environment:
+    - DEBUG=true
+    - POSTGRES_USER=emailboot
+    - POSTGRES_PASSWORD=emailboot
