@@ -30,7 +30,7 @@ public class TeacherWishes implements Serializable {
     @OnDelete(action = OnDeleteAction.NO_ACTION)
     private Semester semester;
 
-    @Type(type = "jsonb")
-    @Column(columnDefinition = "json")
-    private String wishlist;
+//    @Type(type = "jsonb")
+//    @Column(columnDefinition = "json")
+//    private String wishlist;
 }
