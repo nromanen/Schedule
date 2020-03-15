@@ -60,7 +60,6 @@ public abstract class BasicRepositoryImpl<T extends Serializable, I extends Seri
         sessionFactory.getCurrentSession()
                 .remove(entity);
         return  entity;
-
     }
 
 }

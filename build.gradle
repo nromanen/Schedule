@@ -79,5 +79,7 @@ dependencies {
     compileOnly 'org.projectlombok:lombok:1.18.10'
     annotationProcessor 'org.projectlombok:lombok:1.18.10'
 
+    // modelMapper
+    compile group: 'org.modelmapper', name: 'modelmapper', version: '2.3.6'
 
 }
