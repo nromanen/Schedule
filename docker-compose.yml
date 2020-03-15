@@ -6,7 +6,7 @@ app-web:
     - app-db
 
 app-db:
-  build: ./src/main/resources
+  build: ./src/main/resources/db
   expose:
     - "5432"
   volumes_from:
