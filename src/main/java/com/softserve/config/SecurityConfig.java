@@ -55,6 +55,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .deleteCookies("JSESSIONID")
                 .and()*/
                 .apply(new JwtConfigurer(jwtTokenProvider));
-
     }
 }

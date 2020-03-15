@@ -36,9 +36,11 @@ public class User {
     @Column(name = "status")
     private Status status;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    /*@ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_roles",
             joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")})
-    private List<Role> roles;
+    private List<Role> roles;*/
+    @Column(name = "role")
+    private String role;
 }
