@@ -14,7 +14,8 @@ import java.util.List;
 @Api(tags = "Teacher")
 public class TeacherController {
 
-    final private TeacherService teacherServiceImpl;
+    protected final TeacherService teacherServiceImpl;
+
 
     @Autowired
     public TeacherController(TeacherService teacherServiceImpl) {

@@ -54,8 +54,6 @@ dependencies {
     compile group: 'javax.validation', name: 'validation-api', version: '2.0.1.Final'
 
 
-
-
     // Servlet
     providedCompile group: 'javax.servlet', name: 'javax.servlet-api', version: '4.0.1'
 
@@ -70,7 +68,6 @@ dependencies {
 // https://mvnrepository.com/artifact/com.vladmihalcea/hibernate-types-52
     compile group: 'com.vladmihalcea', name: 'hibernate-types-52', version: '1.0.0'
 
-
     // Swagger
     compile group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
     compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
@@ -78,6 +75,9 @@ dependencies {
     //Lombok
     compileOnly 'org.projectlombok:lombok:1.18.10'
     annotationProcessor 'org.projectlombok:lombok:1.18.10'
+
+    // modelMapper
+    compile group: 'org.modelmapper', name: 'modelmapper', version: '2.3.6'
 
 
 }
