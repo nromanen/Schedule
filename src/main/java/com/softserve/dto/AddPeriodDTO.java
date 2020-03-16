@@ -8,10 +8,10 @@ import java.sql.Timestamp;
 
 @Data
 @NoArgsConstructor
-public class SimplePeriodDTO {
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm", timezone = "GMT+2")
+public class AddPeriodDTO {
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm", timezone = "GMT+3")
     private Timestamp startTime;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm", timezone = "GMT+2")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm", timezone = "GMT+3")
     private Timestamp endTime;
     private String name;
 }

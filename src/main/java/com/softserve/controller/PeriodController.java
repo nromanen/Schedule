@@ -2,7 +2,7 @@ package com.softserve.controller;
 
 
 import com.softserve.dto.PeriodDTO;
-import com.softserve.dto.SimplePeriodDTO;
+import com.softserve.dto.AddPeriodDTO;
 import com.softserve.entity.Period;
 import com.softserve.service.PeriodService;
 import com.softserve.service.mapper.PeriodMapper;
@@ -46,9 +46,16 @@ public class PeriodController {
 
     @PostMapping
     @ApiOperation(value = "Create new period")
-    public ResponseEntity<?> save(@RequestBody SimplePeriodDTO period) {
+    public ResponseEntity<?> save(@RequestBody AddPeriodDTO period) {
         long id = periodService.save(periodMapper.convertToEntity(period)).getId();
         return ResponseEntity.ok().body("New period has been saved with ID:" + id);
+    }
+
+    @PostMapping("/all")
+    @ApiOperation(value = "Create a list of periods")
+    public ResponseEntity<?> save(@RequestBody List<AddPeriodDTO> periods) {
+        periodService.save(periods.stream().map(periodMapper::convertToEntity).collect(Collectors.toList()));
+        return ResponseEntity.ok().body("New periods have been saved");
     }
 
     @PutMapping("/{id}")
