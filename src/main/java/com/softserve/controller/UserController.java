@@ -59,7 +59,7 @@ public class UserController {
     public ResponseEntity<UserCreateDTO> update(@PathVariable Long id, @RequestBody UserCreateDTO updateUserDTO) {
         User user = userCreateMapper.toUser(updateUserDTO);
         user.setId(id);
-        userService.save(user);
+        userService.update(user);
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(updateUserDTO);
     }
 
