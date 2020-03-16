@@ -1,36 +1,41 @@
 version: '3'
 
 services:
-  tomcat-container:
-    container_name: tomcat-container
-    build: .
-    ports:
-      - 8080:8080
-    links:
-      - postgres-container
+
 
   postgres-container:
-    container_name: postgres-container
     image: postgres:10.12
     restart: always
-    expose:
-      - "5432"
+    container_name: postgres-container
+#    expose:
+#      - "5432"
     environment:
-      - POSTGRES_USER="postgres"
-      - POSTGRES_PASSWORD="root"
-      - POSTGRES_DB="schedule"
-      - POSTGRES_HOST_AUTH_METHOD=trust
-#    ports:
-#      - 5432:5432
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: schedule
+      POSTGRES_HOST_AUTH_METHOD: trust
+      POSTGRES_HOST: postgres-container
+    ports:
+      - "5432:5432"
     volumes:
-      - app-db-data
+      - postgres-data
 
 
 
-  app-db-data:
+  postgres-data:
       container_name: postgres-data
       image: busybox
       command: echo 'Data Container for PostgreSQL'
       volumes:
        - /usr/local/var/postgres/data
+
+  tomcat-container:
+    container_name: tomcat-container
+    build: .
+    ports:
+      - "8080:8080"
+#    links:
+#      - postgres-container
+    depends_on:
+      - postgres-container
 
