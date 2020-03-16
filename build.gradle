@@ -18,10 +18,22 @@ version '1.0-SNAPSHOT'
 repositories {
     mavenCentral()
 }
+task stage() {
+    dependsOn clean, war
+}
+war.mustRunAfter clean
+task copyToLib(type: Copy) {
+    into "$buildDir/server"
+    from(configurations.compile) {
+        include "webapp-runner*"
+    }
+}
+
+stage.dependsOn(copyToLib)
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
-
+    compile 'com.github.jsimone:webapp-runner:8.5.11.3'
     //Spring
     compile group: 'org.springframework', name: 'spring-core', version: '5.2.4.RELEASE'
     compile group: 'org.springframework', name: 'spring-context', version: '5.2.4.RELEASE'
