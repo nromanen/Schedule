@@ -3,51 +3,33 @@ version: '3'
 services:
   tomcat-container:
     container_name: tomcat-container
-    build: ./Dockerfile
+    build: .
     ports:
-    - 8080:8080
+      - 8080:8080
     links:
       - postgres-container
 
   postgres-container:
-
     container_name: postgres-container
     image: postgres:10.12
     restart: always
-    volumes:
-      - pgdata: /var/lib/postgresql/data
+    expose:
+      - "5432"
     environment:
       - POSTGRES_USER:postgres
       - POSTGRES_PASSWORD:root
-      - POSTGRES_DB:schedules
-    ports:
-      - 5432:5432
-
-  volumes:
-    pgdata:
-
-
-#version: '3'
-#
-#services:
-#  app-web:
-#    build: .
+      - POSTGRES_DB:schedule
 #    ports:
-#      - "8080:8080"
-#    links:
-#      - app-db
-#
-#  app-db:
-#    build: ./src/main/resources/db
-#    ports:
-#      - "5432:5432"
-#    volumes:
-#      - /var/lib/postgresql/data
+#      - 5432:5432
+    volumes:
+      - app-db-data
 
 
-#  app-db-data:
-#    image: cogniteev/echo
-#    command: echo 'Data Container for PostgreSQL'
-#    volumes:
-#     - /var/lib/postgresql/data
+
+  app-db-data:
+      container_name: postgres-data
+      image: busybox
+      command: echo 'Data Container for PostgreSQL'
+      volumes:
+       - /usr/local/var/postgres/data
 
