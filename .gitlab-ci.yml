@@ -15,6 +15,6 @@ master:
     artifacts:
         when: always
     script:
-        - dpl --provider=heroku --app=testdexd --api-key=a9422681-8049-4033-9259-7a03e7058521
+        - dpl --provider=heroku --app=softservedemo --api-key=a9422681-8049-4033-9259-7a03e7058521
     only:
         - configure_heroku_deploy
