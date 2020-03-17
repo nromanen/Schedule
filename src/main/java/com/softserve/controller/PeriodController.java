@@ -4,12 +4,14 @@ package com.softserve.controller;
 import com.softserve.dto.PeriodDTO;
 import com.softserve.dto.AddPeriodDTO;
 import com.softserve.entity.Period;
+import com.softserve.exception.DeleteEntityException;
+import com.softserve.exception.EntityNotFoundException;
 import com.softserve.service.PeriodService;
 import com.softserve.service.mapper.PeriodMapper;
-import com.softserve.service.mapper.impl.PeriodMapperImpl;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,10 +24,11 @@ import java.util.stream.Collectors;
 public class PeriodController {
 
     final private PeriodService periodService;
-    private final PeriodMapper periodMapper;
+
+    final private PeriodMapper periodMapper;
 
     @Autowired
-    public PeriodController(PeriodService periodService, PeriodMapperImpl periodMapper) {
+    public PeriodController(PeriodService periodService, PeriodMapper periodMapper) {
         this.periodService = periodService;
         this.periodMapper = periodMapper;
     }
@@ -39,36 +42,43 @@ public class PeriodController {
 
     @GetMapping("/{id}")
     @ApiOperation(value = "Get period info by id")
-    public ResponseEntity<PeriodDTO> get(@PathVariable("id") long id) {
-        Period period = periodService.getById(id).orElse(null);
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<PeriodDTO> get(@PathVariable("id") long id) throws EntityNotFoundException {
+        Period period = periodService.getById(id).orElseThrow(
+                () -> new EntityNotFoundException("this period doesn't exist"));
         return ResponseEntity.ok().body(periodMapper.convertToDto(period));
     }
 
     @PostMapping
     @ApiOperation(value = "Create new period")
+    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> save(@RequestBody AddPeriodDTO period) {
         long id = periodService.save(periodMapper.convertToEntity(period)).getId();
-        return ResponseEntity.ok().body("New period has been saved with ID:" + id);
+        return ResponseEntity.status(HttpStatus.CREATED).body("New period has been saved with ID:" + id);
     }
 
     @PostMapping("/all")
     @ApiOperation(value = "Create a list of periods")
+    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> save(@RequestBody List<AddPeriodDTO> periods) {
         periodService.save(periods.stream().map(periodMapper::convertToEntity).collect(Collectors.toList()));
-        return ResponseEntity.ok().body("New periods have been saved");
+        return ResponseEntity.status(HttpStatus.CREATED).body("New periods have been saved");
     }
 
     @PutMapping("/{id}")
     @ApiOperation(value = "Update existing period by id")
+    @ResponseStatus(HttpStatus.ACCEPTED)
     public ResponseEntity<?> update(@PathVariable("id") long id, @RequestBody PeriodDTO period) {
         periodService.update(periodMapper.convertToEntity(period));
-        return ResponseEntity.ok().body("Period has been updated successfully.");
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body("Period has been updated successfully.");
     }
 
     @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.ACCEPTED)
     @ApiOperation(value = "Delete period by id")
-    public ResponseEntity<?> delete(@PathVariable("id") long id) {
-        periodService.delete(periodService.getById(id).orElse(null));
-        return ResponseEntity.ok().body("Period has been deleted successfully.");
+    public ResponseEntity<?> delete(@PathVariable("id") long id) throws DeleteEntityException {
+        periodService.delete(periodService.getById(id).orElseThrow(
+                () -> new DeleteEntityException("This period has already connected with schedule and can't be deleted ")));
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body("Period has been deleted successfully.");
     }
 }

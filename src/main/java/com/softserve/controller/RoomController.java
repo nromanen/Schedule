@@ -3,11 +3,14 @@ package com.softserve.controller;
 import com.softserve.dto.RoomDTO;
 import com.softserve.dto.AddRoomDTO;
 import com.softserve.entity.Room;
+import com.softserve.exception.DeleteEntityException;
+import com.softserve.exception.EntityNotFoundException;
 import com.softserve.service.RoomService;
 import com.softserve.service.mapper.RoomMapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,8 +39,9 @@ public class RoomController {
     }
 
     @GetMapping("/free")
-    @ApiOperation(value = "Get the list of all rooms")
-    public ResponseEntity<List<RoomDTO>> freeRoomList(@RequestBody String nameOfPeriod) {
+    @ResponseStatus(HttpStatus.OK)
+    @ApiOperation(value = "Get the list of all free rooms by specific day and period")
+    public ResponseEntity<List<RoomDTO>> freeRoomList(/*@RequestParam(value = "name")*/ @RequestBody String nameOfPeriod) {
         List<Room> rooms = roomService.freeRoomBySpecificPeriod(nameOfPeriod);
         return ResponseEntity.ok().body(rooms.stream().map(roomMapper::convertToDto).collect(Collectors.toList()));
     }
@@ -45,29 +49,36 @@ public class RoomController {
 
     @GetMapping("/{id}")
     @ApiOperation(value = "Get room info by id")
-    public ResponseEntity<RoomDTO> get(@PathVariable("id") long id) {
-        Room room = roomService.getById(id).orElse(null);
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<RoomDTO> get(@PathVariable("id") long id) throws EntityNotFoundException {
+        Room room = roomService.getById(id).orElseThrow(
+                () -> new EntityNotFoundException("this room doesn't exist"));;
         return ResponseEntity.ok().body(roomMapper.convertToDto(room));
     }
 
     @PostMapping
     @ApiOperation(value = "Create new room")
+    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> save(@RequestBody AddRoomDTO room) {
         long id = roomService.save(roomMapper.convertToEntity(room)).getId();
-        return ResponseEntity.ok().body("New room has been saved with ID:" + id);
+        return ResponseEntity.status(HttpStatus.CREATED).body("New room has been saved with ID:" + id);
     }
 
     @PutMapping("/{id}")
     @ApiOperation(value = "Update existing room by id")
+    @ResponseStatus(HttpStatus.ACCEPTED)
     public ResponseEntity<?> update(@PathVariable("id") long id, @RequestBody RoomDTO room) {
         roomService.update(roomMapper.convertToEntity(room));
-        return ResponseEntity.ok().body("Room has been updated successfully.");
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body("Room has been updated successfully.");
     }
 
     @DeleteMapping("/{id}")
     @ApiOperation(value = "Delete room by id")
-    public ResponseEntity<?> delete(@PathVariable("id") long id) {
-        roomService.delete(roomService.getById(id).orElse(null));
-        return ResponseEntity.ok().body("Room has been deleted successfully.");
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public ResponseEntity<?> delete(@PathVariable("id") long id) throws DeleteEntityException {
+        roomService.delete(roomService.getById(id).orElseThrow(
+                () -> new DeleteEntityException("This room has already connected with schedule and can't be deleted "))
+        );
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body("Room has been deleted successfully.");
     }
 }

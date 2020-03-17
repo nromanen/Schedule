@@ -1,6 +1,8 @@
 package com.softserve.service.impl;
 
 import com.softserve.entity.Period;
+import com.softserve.exception.ConflictWithDBPeriodsException;
+import com.softserve.exception.IncorrectTimeException;
 import com.softserve.repository.PeriodRepository;
 import com.softserve.service.PeriodService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,26 +36,28 @@ public class PeriodServiceImpl implements PeriodService {
 
     @Override
     public Period save(Period object) {
-        if (object.getStartTime().after(object.getEndTime())) {
-            return null;
+        if (object.getStartTime().after(object.getEndTime()) |
+                object.getStartTime().equals(object.getEndTime())) {
+            throw new IncorrectTimeException("incorrect time in period");
         }
         if (isPeriodFree(getAll(), object)) {
             return periodRepository.save(object);
+        }else {
+            throw new ConflictWithDBPeriodsException("your period has conflict with already existed periods");
         }
-        return null;
     }
 
     @Override
-    public List<Period> save(List<Period> objects) {
-        if (!objects.stream().allMatch(period -> period.getStartTime().before(period.getEndTime()))) {
-            //throw custom exception
-            return null;
+    public List<Period> save(List<Period> objects) throws IncorrectTimeException {
+        if (!objects.stream().allMatch(period -> period.getStartTime().before(period.getEndTime()) &
+                !period.getStartTime().equals(period.getEndTime()))) {
+            throw new IncorrectTimeException("incorrect time in period");
         }
         if (isListOfPeriodsFree(getAll(), objects)) {
             return objects.stream().map(periodRepository::save).collect(Collectors.toList());
+        }else {
+            throw new ConflictWithDBPeriodsException("some periods have conflict with already existed periods");
         }
-        //throw custom exception
-        return null;
     }
 
     @Override
@@ -81,7 +85,6 @@ public class PeriodServiceImpl implements PeriodService {
     private boolean isListOfPeriodsFree(List<Period> oldPeriods, List<Period> newPeriods) {
         for(Period newPeriod : newPeriods){
             if(!isPeriodFree(newPeriods, newPeriod) & !isPeriodFree(oldPeriods, newPeriod)){
-                //throw custom exception
                 return false;
             }
         }

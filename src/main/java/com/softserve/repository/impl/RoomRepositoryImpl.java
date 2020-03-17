@@ -18,12 +18,12 @@ public class RoomRepositoryImpl extends BasicRepositoryImpl<Room, Long> implemen
         Query query = session.createQuery
                 ("select r1 from " + basicClass.getName() + " r1" +
                         " where r1.id not in" +
-                        "(select r.id from Schedule s" +
-                        " join s.room r " +
-                        " join s.period p " +
-                        " where p.name = :nameOfPeriod)")
-                .setParameter("nameOfPeriod", nameOfPeriod);
+                                "(select r.id from Schedule s" +
+                                " join s.room r " +
+                                " join s.period p " +
+                                " with p.name = :nameOfPeriod)");
         List<Room> res = query.getResultList();
+        res.forEach(System.out::println);
         return new ArrayList<>(res);
     }
 }
