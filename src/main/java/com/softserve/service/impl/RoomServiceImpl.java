@@ -45,4 +45,9 @@ public class RoomServiceImpl implements RoomService {
     public Room delete(Room object) {
         return roomRepository.delete(object);
     }
+
+    @Override
+    public List<Room> freeRoomBySpecificPeriod(String nameOfPeriod) {
+        return roomRepository.freeRoomBySpecificPeriod(nameOfPeriod);
+    }
 }

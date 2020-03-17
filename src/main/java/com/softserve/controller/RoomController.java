@@ -31,9 +31,17 @@ public class RoomController {
     @GetMapping
     @ApiOperation(value = "Get the list of all rooms")
     public ResponseEntity<List<RoomDTO>> list() {
-        List<Room> periods = roomService.getAll();
-        return ResponseEntity.ok().body(periods.stream().map(roomMapper::convertToDto).collect(Collectors.toList()));
+        List<Room> rooms = roomService.getAll();
+        return ResponseEntity.ok().body(rooms.stream().map(roomMapper::convertToDto).collect(Collectors.toList()));
     }
+
+    @GetMapping("/free")
+    @ApiOperation(value = "Get the list of all rooms")
+    public ResponseEntity<List<RoomDTO>> freeRoomList(@RequestBody String nameOfPeriod) {
+        List<Room> rooms = roomService.freeRoomBySpecificPeriod(nameOfPeriod);
+        return ResponseEntity.ok().body(rooms.stream().map(roomMapper::convertToDto).collect(Collectors.toList()));
+    }
+
 
     @GetMapping("/{id}")
     @ApiOperation(value = "Get room info by id")

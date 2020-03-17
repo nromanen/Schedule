@@ -2,6 +2,8 @@ package com.softserve.service;
 
 import com.softserve.entity.Room;
 
-public interface RoomService extends BasicService<Room, Long>  {
+import java.util.List;
 
+public interface RoomService extends BasicService<Room, Long>  {
+    List<Room> freeRoomBySpecificPeriod(String nameOfPeriod);
 }
