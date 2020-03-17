@@ -19,8 +19,8 @@ public class RoomRepositoryImpl extends BasicRepositoryImpl<Room, Long> implemen
                 ("select r1 from " + basicClass.getName() + " r1" +
                         " where r1.id not in" +
                         "(select r.id from Schedule s" +
-                        " inner join s.room r " +
-                        " inner join s.period p " +
+                        " join s.room r " +
+                        " join s.period p " +
                         " where p.name = :nameOfPeriod)")
                 .setParameter("nameOfPeriod", nameOfPeriod);
         List<Room> res = query.getResultList();
