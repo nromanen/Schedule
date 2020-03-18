@@ -29,5 +29,5 @@ public class Teacher implements Serializable {
     private String position;
 
     @Column(name ="user_id")
-    private String userId;
+    private int userId;
 }
