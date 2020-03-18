@@ -23,6 +23,16 @@ public class Teacher implements Serializable {
     @Column(length = 35, nullable = false)
     private String name;
 
+    @NotEmpty(message = "Surname cannot be empty")
+    @Size(min = 5, max = 35, message = "Surname must be between 5 and 35 characters long")
+    @Column(length = 35, nullable = false)
+    private String surname;
+
+    @NotEmpty(message = "Patronymic cannot be empty")
+    @Size(min = 5, max = 35, message = "Patronymic must be between 5 and 35 characters long")
+    @Column(length = 35, nullable = false)
+    private String patronymic;
+
     @NotEmpty(message = "Position cannot be empty")
     @Size(min = 2, max = 35, message = "Position must be between 2 and 35 characters long")
     @Column(length = 35, nullable = false)

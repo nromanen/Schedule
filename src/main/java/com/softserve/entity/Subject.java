@@ -20,11 +20,6 @@ public class Subject implements Serializable {
 
     @NotEmpty(message = "Name cannot be empty")
     @Size(min = 5, max = 35, message = "Name must be between 5 and 35 characters long")
-    @Column(length = 35, nullable = false)
+    @Column(unique = true, length = 35, nullable = false)
     private String name;
-
-    @NotEmpty(message = "Type cannot be empty")
-    @Size(min = 2, max = 35, message = "Type must be between 2 and 35 characters long")
-    @Column(length = 35, nullable = false)
-    private String type;
 }
