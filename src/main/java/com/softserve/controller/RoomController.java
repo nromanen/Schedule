@@ -4,8 +4,6 @@ import com.softserve.dto.RoomDTO;
 import com.softserve.dto.AddRoomDTO;
 import com.softserve.entity.Room;
 import com.softserve.entity.enums.EvenOdd;
-import com.softserve.exception.DeleteEntityException;
-import com.softserve.exception.EntityNotFoundException;
 import com.softserve.service.RoomService;
 import com.softserve.service.mapper.RoomMapper;
 import io.swagger.annotations.Api;
@@ -54,9 +52,8 @@ public class RoomController {
     @GetMapping("/{id}")
     @ApiOperation(value = "Get room info by id")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<RoomDTO> get(@PathVariable("id") long id) throws EntityNotFoundException {
-        Room room = roomService.getById(id).orElseThrow(
-                () -> new EntityNotFoundException("this room doesn't exist"));;
+    public ResponseEntity<RoomDTO> get(@PathVariable("id") long id){
+        Room room = roomService.getById(id);
         return ResponseEntity.ok().body(roomMapper.convertToDto(room));
     }
 
@@ -79,10 +76,8 @@ public class RoomController {
     @DeleteMapping("/{id}")
     @ApiOperation(value = "Delete room by id")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public ResponseEntity<?> delete(@PathVariable("id") long id) throws DeleteEntityException {
-        roomService.delete(roomService.getById(id).orElseThrow(
-                () -> new DeleteEntityException("This room has already connected with schedule and can't be deleted "))
-        );
+    public ResponseEntity<?> delete(@PathVariable("id") long id) {
+        roomService.delete(roomService.getById(id));
         return ResponseEntity.status(HttpStatus.ACCEPTED).body("Room has been deleted successfully.");
     }
 }

@@ -4,8 +4,6 @@ package com.softserve.controller;
 import com.softserve.dto.PeriodDTO;
 import com.softserve.dto.AddPeriodDTO;
 import com.softserve.entity.Period;
-import com.softserve.exception.DeleteEntityException;
-import com.softserve.exception.EntityNotFoundException;
 import com.softserve.service.PeriodService;
 import com.softserve.service.mapper.PeriodMapper;
 import io.swagger.annotations.Api;
@@ -43,9 +41,8 @@ public class PeriodController {
     @GetMapping("/{id}")
     @ApiOperation(value = "Get period info by id")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<PeriodDTO> get(@PathVariable("id") long id) throws EntityNotFoundException {
-        Period period = periodService.getById(id).orElseThrow(
-                () -> new EntityNotFoundException("this period doesn't exist"));
+    public ResponseEntity<PeriodDTO> get(@PathVariable("id") long id) {
+        Period period = periodService.getById(id);
         return ResponseEntity.ok().body(periodMapper.convertToDto(period));
     }
 
@@ -76,9 +73,8 @@ public class PeriodController {
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.ACCEPTED)
     @ApiOperation(value = "Delete period by id")
-    public ResponseEntity<?> delete(@PathVariable("id") long id) throws DeleteEntityException {
-        periodService.delete(periodService.getById(id).orElseThrow(
-                () -> new DeleteEntityException("This period has already connected with schedule and can't be deleted ")));
+    public ResponseEntity<?> delete(@PathVariable("id") long id){
+        periodService.delete(periodService.getById(id));
         return ResponseEntity.status(HttpStatus.ACCEPTED).body("Period has been deleted successfully.");
     }
 }

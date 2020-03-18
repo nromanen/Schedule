@@ -8,7 +8,7 @@ import java.util.Optional;
 
 interface BasicService<T extends Serializable, I extends Serializable> {
 
-    Optional<T> getById(I id);
+    T getById(I id);
 
     List<T> getAll();
 

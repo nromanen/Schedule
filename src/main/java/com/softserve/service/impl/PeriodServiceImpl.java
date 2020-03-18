@@ -1,8 +1,8 @@
 package com.softserve.service.impl;
 
 import com.softserve.entity.Period;
-import com.softserve.exception.ConflictWithDBPeriodsException;
 import com.softserve.exception.IncorrectTimeException;
+import com.softserve.exception.PeriodsException;
 import com.softserve.repository.PeriodRepository;
 import com.softserve.service.PeriodService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Transactional
@@ -25,8 +24,10 @@ public class PeriodServiceImpl implements PeriodService {
     }
 
     @Override
-    public Optional<Period> getById(Long id) {
-        return periodRepository.findById(id);
+    public Period getById(Long id) {
+        return periodRepository.findById(id).orElseThrow(
+                () -> new PeriodsException("period doesn't exist")
+        );
     }
 
     @Override
@@ -42,8 +43,8 @@ public class PeriodServiceImpl implements PeriodService {
         }
         if (isPeriodFree(getAll(), object)) {
             return periodRepository.save(object);
-        }else {
-            throw new ConflictWithDBPeriodsException("your period has conflict with already existed periods");
+        } else {
+            throw new PeriodsException("your period has conflict with already existed periods");
         }
     }
 
@@ -55,8 +56,8 @@ public class PeriodServiceImpl implements PeriodService {
         }
         if (isListOfPeriodsFree(getAll(), objects)) {
             return objects.stream().map(periodRepository::save).collect(Collectors.toList());
-        }else {
-            throw new ConflictWithDBPeriodsException("some periods have conflict with already existed periods");
+        } else {
+            throw new PeriodsException("some periods have conflict with already existed periods");
         }
     }
 
@@ -75,16 +76,16 @@ public class PeriodServiceImpl implements PeriodService {
         return oldPeriods.stream().noneMatch
                 (oldPeriod ->
                         newPeriod.getStartTime().
-                            before(oldPeriod.getEndTime())
-                        &
-                        newPeriod.getEndTime().
-                                after(oldPeriod.getStartTime())
+                                before(oldPeriod.getEndTime())
+                                &
+                                newPeriod.getEndTime().
+                                        after(oldPeriod.getStartTime())
                 );
     }
 
     private boolean isListOfPeriodsFree(List<Period> oldPeriods, List<Period> newPeriods) {
-        for(Period newPeriod : newPeriods){
-            if(!isPeriodFree(newPeriods, newPeriod) & !isPeriodFree(oldPeriods, newPeriod)){
+        for (Period newPeriod : newPeriods) {
+            if (!isPeriodFree(newPeriods, newPeriod) & !isPeriodFree(oldPeriods, newPeriod)) {
                 return false;
             }
         }

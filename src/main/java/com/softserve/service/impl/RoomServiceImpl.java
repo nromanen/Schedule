@@ -2,6 +2,7 @@ package com.softserve.service.impl;
 
 import com.softserve.entity.Room;
 import com.softserve.entity.enums.EvenOdd;
+import com.softserve.exception.RoomsException;
 import com.softserve.repository.RoomRepository;
 import com.softserve.service.RoomService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Transactional
 @Service
@@ -23,8 +23,10 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
-    public Optional<Room> getById(Long id) {
-        return roomRepository.findById(id);
+    public Room getById(Long id) {
+        return roomRepository.findById(id).orElseThrow(
+                () -> new RoomsException("period doesn't exist")
+        );
     }
 
     @Override
