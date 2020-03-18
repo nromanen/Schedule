@@ -18,7 +18,9 @@ public class Schedule implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(columnDefinition = "serial")
     private long id;
-    @Column(name = "day_of_week")
+
+
+    @Column(name = "day_of_week",length = 35, nullable = false)
     private String dayOfWeek;
 
     @Enumerated(EnumType.STRING)
