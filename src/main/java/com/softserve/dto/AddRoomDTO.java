@@ -8,5 +8,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class AddRoomDTO {
     private RoomSize roomSize;
-    String name;
+    private String name;
 }

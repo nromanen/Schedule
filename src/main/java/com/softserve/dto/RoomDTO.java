@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class RoomDTO {
-    Long id;
+    private Long id;
     private RoomSize roomSize;
-    String name;
+    private String name;
 }

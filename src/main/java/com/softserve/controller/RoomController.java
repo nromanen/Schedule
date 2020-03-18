@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 public class RoomController {
 
     final private RoomService roomService;
-    private final RoomMapper roomMapper;
+    final private RoomMapper roomMapper;
 
     @Autowired
     public RoomController(RoomService roomService, RoomMapper roomMapper) {
