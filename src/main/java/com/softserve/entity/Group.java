@@ -4,6 +4,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 
@@ -16,5 +18,9 @@ public class Group implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(columnDefinition = "serial")
     private long id;
+
+    @NotEmpty(message = "Title cannot be empty")
+    @Size(min = 2, max = 35, message = "Title must be between 2 and 35 characters long")
+    @Column(length = 35, nullable = false)
     private String title;
 }
