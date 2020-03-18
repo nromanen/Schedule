@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 
@@ -23,6 +25,8 @@ public class Room implements Serializable {
     @Enumerated(EnumType.STRING)
     private RoomSize roomSize;
 
-    @Column(unique = true)
-    String name;
+    @NotEmpty(message = "Name cannot be empty")
+    @Size(min = 2, max = 35, message = "Name must be between 2 and 35 characters long")
+    @Column(length = 35, nullable = false)
+    private String name;
 }
