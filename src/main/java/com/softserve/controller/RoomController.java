@@ -41,8 +41,9 @@ public class RoomController {
     @GetMapping("/free")
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "Get the list of all free rooms by specific day and period")
-    public ResponseEntity<List<RoomDTO>> freeRoomList(/*@RequestParam(value = "name")*/ @RequestBody String nameOfPeriod) {
-        List<Room> rooms = roomService.freeRoomBySpecificPeriod(nameOfPeriod);
+    public ResponseEntity<List<RoomDTO>> freeRoomList(@RequestParam(value = "id") Long id,
+                                                      @RequestParam(value = "dayOfWeek") String dayOfWeek) {
+        List<Room> rooms = roomService.freeRoomBySpecificPeriod(id, dayOfWeek);
         return ResponseEntity.ok().body(rooms.stream().map(roomMapper::convertToDto).collect(Collectors.toList()));
     }
 

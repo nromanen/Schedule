@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface RoomRepository extends BasicRepository<Room, Long>  {
 
-    List<Room> freeRoomBySpecificPeriod(String nameOfPeriod);
+    List<Room> freeRoomBySpecificPeriod(Long idOfPeriod, String dayOfWeek);
 }

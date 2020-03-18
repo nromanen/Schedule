@@ -47,7 +47,7 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
-    public List<Room> freeRoomBySpecificPeriod(String nameOfPeriod) {
-        return roomRepository.freeRoomBySpecificPeriod(nameOfPeriod);
+    public List<Room> freeRoomBySpecificPeriod(Long idOfPeriod, String dayOfWeek) {
+        return roomRepository.freeRoomBySpecificPeriod(idOfPeriod, dayOfWeek);
     }
 }
