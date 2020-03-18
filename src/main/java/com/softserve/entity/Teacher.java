@@ -27,4 +27,7 @@ public class Teacher implements Serializable {
     @Size(min = 2, max = 35, message = "Position must be between 2 and 35 characters long")
     @Column(length = 35, nullable = false)
     private String position;
+
+    @Column(name ="user_id")
+    private String userId;
 }
