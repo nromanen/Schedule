@@ -21,8 +21,8 @@ import java.util.stream.Collectors;
 @RequestMapping("/rooms")
 public class RoomController {
 
-    final private RoomService roomService;
-    final private RoomMapper roomMapper;
+    private final RoomService roomService;
+    private final RoomMapper roomMapper;
 
     @Autowired
     public RoomController(RoomService roomService, RoomMapper roomMapper) {

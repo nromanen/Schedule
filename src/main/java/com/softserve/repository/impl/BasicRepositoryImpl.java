@@ -54,7 +54,7 @@ public abstract class BasicRepositoryImpl<T extends Serializable, I extends Seri
 
     @Override
     public T update(T entity) {
-        log.info("Enter into update of BasicRepository with ");
+        log.info("Enter into update of BasicRepository with entity:{}", entity);
         sessionFactory.getCurrentSession()
                 .update(entity);
         return entity;
@@ -62,7 +62,7 @@ public abstract class BasicRepositoryImpl<T extends Serializable, I extends Seri
 
     @Override
     public T delete(T entity) {
-        log.info("Enter into delete of BasicRepository");
+        log.info("Enter into delete of BasicRepository with entity:{}", entity);
         sessionFactory.getCurrentSession()
                 .remove(entity);
         return  entity;

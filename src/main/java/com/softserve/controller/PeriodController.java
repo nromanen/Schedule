@@ -21,9 +21,9 @@ import java.util.stream.Collectors;
 @RequestMapping("/periods")
 public class PeriodController {
 
-    final private PeriodService periodService;
+    private final PeriodService periodService;
 
-    final private PeriodMapper periodMapper;
+    private final PeriodMapper periodMapper;
 
     @Autowired
     public PeriodController(PeriodService periodService, PeriodMapper periodMapper) {
