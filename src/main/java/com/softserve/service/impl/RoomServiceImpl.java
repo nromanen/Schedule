@@ -25,7 +25,7 @@ public class RoomServiceImpl implements RoomService {
     @Override
     public Room getById(Long id) {
         return roomRepository.findById(id).orElseThrow(
-                () -> new RoomsException("period doesn't exist")
+                () -> new RoomsException("room doesn't exist")
         );
     }
 
