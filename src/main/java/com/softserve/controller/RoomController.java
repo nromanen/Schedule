@@ -3,6 +3,7 @@ package com.softserve.controller;
 import com.softserve.dto.RoomDTO;
 import com.softserve.dto.AddRoomDTO;
 import com.softserve.entity.Room;
+import com.softserve.entity.enums.EvenOdd;
 import com.softserve.exception.DeleteEntityException;
 import com.softserve.exception.EntityNotFoundException;
 import com.softserve.service.RoomService;
@@ -42,8 +43,10 @@ public class RoomController {
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "Get the list of all free rooms by specific day and period")
     public ResponseEntity<List<RoomDTO>> freeRoomList(@RequestParam(value = "id") Long id,
-                                                      @RequestParam(value = "dayOfWeek") String dayOfWeek) {
-        List<Room> rooms = roomService.freeRoomBySpecificPeriod(id, dayOfWeek);
+                                                      @RequestParam(value = "dayOfWeek") String dayOfWeek,
+                                                      @RequestParam(value = "evenOdd", defaultValue = "WEEKLY")EvenOdd evenOdd
+                                                      ) {
+        List<Room> rooms = roomService.freeRoomBySpecificPeriod(id, dayOfWeek, evenOdd);
         return ResponseEntity.ok().body(rooms.stream().map(roomMapper::convertToDto).collect(Collectors.toList()));
     }
 

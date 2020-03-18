@@ -1,6 +1,7 @@
 package com.softserve.service.impl;
 
 import com.softserve.entity.Room;
+import com.softserve.entity.enums.EvenOdd;
 import com.softserve.repository.RoomRepository;
 import com.softserve.service.RoomService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +48,7 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
-    public List<Room> freeRoomBySpecificPeriod(Long idOfPeriod, String dayOfWeek) {
-        return roomRepository.freeRoomBySpecificPeriod(idOfPeriod, dayOfWeek);
+    public List<Room> freeRoomBySpecificPeriod(Long idOfPeriod, String dayOfWeek, EvenOdd evenOdd) {
+        return roomRepository.freeRoomBySpecificPeriod(idOfPeriod, dayOfWeek, evenOdd);
     }
 }
