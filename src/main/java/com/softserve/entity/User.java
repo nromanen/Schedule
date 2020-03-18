@@ -22,7 +22,7 @@ public class User implements Serializable {
     private long id;
 
     @Email
-    @Size(max = 40)
+    @Size(min=5, max = 40)
     @Column(unique = true, length = 40)
     private String email;
 
