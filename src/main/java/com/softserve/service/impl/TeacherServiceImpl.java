@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Transactional
 @Service
@@ -24,8 +23,8 @@ public class TeacherServiceImpl implements TeacherService {
 
 
     @Override
-    public Optional<Teacher> getById(Long id) {
-        return Optional.empty();
+    public Teacher getById(Long id) {
+        return null;
     }
 
     @Override
