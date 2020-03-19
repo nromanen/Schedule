@@ -1,6 +1,7 @@
 package com.softserve.repository.impl;
 
 import com.softserve.repository.BasicRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -11,7 +12,7 @@ import java.lang.reflect.ParameterizedType;
 import java.util.List;
 import java.util.Optional;
 
-
+@Slf4j
 @Repository
 @SuppressWarnings("unchecked")
 public abstract class BasicRepositoryImpl<T extends Serializable, I extends Serializable> implements BasicRepository<T, I> {
@@ -30,6 +31,7 @@ public abstract class BasicRepositoryImpl<T extends Serializable, I extends Seri
 
     @Override
     public List<T> getAll() {
+        log.info("Enter into getAll of BasicRepository");
         return sessionFactory.getCurrentSession()
                 .createQuery("from " + basicClass.getName())
                 .getResultList();
@@ -37,12 +39,14 @@ public abstract class BasicRepositoryImpl<T extends Serializable, I extends Seri
 
     @Override
     public Optional<T> findById(I id) {
+        log.info("Enter into findById of BasicRepository with id {}", id);
         return Optional.ofNullable(sessionFactory.getCurrentSession().get(basicClass, id));
     }
 
-    @Transactional
+
     @Override
     public T save(T entity) {
+        log.info("Enter into save of BasicRepository with entity:{}", entity );
         sessionFactory.getCurrentSession()
                 .save(entity);
         return entity;
@@ -50,6 +54,7 @@ public abstract class BasicRepositoryImpl<T extends Serializable, I extends Seri
 
     @Override
     public T update(T entity) {
+        log.info("Enter into update of BasicRepository with entity:{}", entity);
         sessionFactory.getCurrentSession()
                 .update(entity);
         return entity;
@@ -57,10 +62,10 @@ public abstract class BasicRepositoryImpl<T extends Serializable, I extends Seri
 
     @Override
     public T delete(T entity) {
+        log.info("Enter into delete of BasicRepository with entity:{}", entity);
         sessionFactory.getCurrentSession()
                 .remove(entity);
         return  entity;
-
     }
 
 }

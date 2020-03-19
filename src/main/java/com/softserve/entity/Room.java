@@ -1,10 +1,13 @@
 package com.softserve.entity;
 
 import com.softserve.entity.enums.RoomSize;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 
@@ -12,6 +15,7 @@ import java.io.Serializable;
 @Data
 @Entity
 @Table(name = "rooms")
+@AllArgsConstructor
 public class Room implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,5 +25,8 @@ public class Room implements Serializable {
     @Enumerated(EnumType.STRING)
     private RoomSize roomSize;
 
-    String name;
+    @NotEmpty(message = "Name cannot be empty")
+    @Size(min = 2, max = 35, message = "Name must be between 2 and 35 characters long")
+    @Column(length = 35, nullable = false)
+    private String name;
 }
