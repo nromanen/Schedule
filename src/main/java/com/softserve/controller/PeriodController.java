@@ -1,6 +1,7 @@
 package com.softserve.controller;
 
 
+import com.softserve.dto.MessageDTO;
 import com.softserve.dto.PeriodDTO;
 import com.softserve.dto.AddPeriodDTO;
 import com.softserve.entity.Period;
@@ -49,32 +50,31 @@ public class PeriodController {
     @PostMapping
     @ApiOperation(value = "Create new period")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<?> save(@RequestBody AddPeriodDTO period) {
+    public ResponseEntity<MessageDTO> save(@RequestBody AddPeriodDTO period) {
         long id = periodService.save(periodMapper.convertToEntity(period)).getId();
-        return ResponseEntity.status(HttpStatus.CREATED).body("New period has been saved with ID:" + id);
+        return ResponseEntity.status(HttpStatus.CREATED).body(new MessageDTO("New period has been saved with ID:" + id));
     }
-
     @PostMapping("/all")
     @ApiOperation(value = "Create a list of periods")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<?> save(@RequestBody List<AddPeriodDTO> periods) {
+    public ResponseEntity<MessageDTO> save(@RequestBody List<AddPeriodDTO> periods) {
         periodService.save(periods.stream().map(periodMapper::convertToEntity).collect(Collectors.toList()));
-        return ResponseEntity.status(HttpStatus.CREATED).body("New periods have been saved");
+        return ResponseEntity.status(HttpStatus.CREATED).body(new MessageDTO("New periods have been saved"));
     }
 
     @PutMapping("/{id}")
     @ApiOperation(value = "Update existing period by id")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public ResponseEntity<?> update(@PathVariable("id") long id, @RequestBody PeriodDTO period) {
+    public ResponseEntity<MessageDTO> update(@PathVariable("id") long id, @RequestBody PeriodDTO period) {
         periodService.update(periodMapper.convertToEntity(period));
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body("Period has been updated successfully.");
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(new MessageDTO("Period has been updated successfully."));
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.ACCEPTED)
     @ApiOperation(value = "Delete period by id")
-    public ResponseEntity<?> delete(@PathVariable("id") long id){
+    public ResponseEntity<MessageDTO> delete(@PathVariable("id") long id){
         periodService.delete(periodService.getById(id));
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body("Period has been deleted successfully.");
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(new MessageDTO("Period has been deleted successfully."));
     }
 }
