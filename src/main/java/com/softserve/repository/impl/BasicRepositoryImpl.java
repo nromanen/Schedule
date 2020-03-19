@@ -11,35 +11,33 @@ import java.lang.reflect.ParameterizedType;
 import java.util.List;
 import java.util.Optional;
 
-@Transactional
+
 @Repository
 @SuppressWarnings("unchecked")
 public abstract class BasicRepositoryImpl<T extends Serializable, I extends Serializable> implements BasicRepository<T, I> {
 
-    protected final Class<T> clazz;
+    protected final Class<T> basicClass;
 
-
+    @Autowired
     protected SessionFactory sessionFactory;
 
     @Autowired
-    public BasicRepositoryImpl(SessionFactory sessionFactory) {
-        clazz = (Class<T>) ((ParameterizedType) getClass()
+    public BasicRepositoryImpl() {
+        basicClass = (Class<T>) ((ParameterizedType) getClass()
                 .getGenericSuperclass())
                 .getActualTypeArguments()[0];
-        this.sessionFactory = sessionFactory;
     }
-
 
     @Override
     public List<T> getAll() {
         return sessionFactory.getCurrentSession()
-                .createQuery("from " + clazz.getName())
+                .createQuery("from " + basicClass.getName())
                 .getResultList();
     }
 
     @Override
     public Optional<T> findById(I id) {
-        return Optional.ofNullable(sessionFactory.getCurrentSession().get(clazz, id));
+        return Optional.ofNullable(sessionFactory.getCurrentSession().get(basicClass, id));
     }
 
     @Transactional

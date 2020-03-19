@@ -3,7 +3,7 @@ package com.softserve.security;
 import com.softserve.entity.User;
 import com.softserve.security.jwt.JwtUser;
 import com.softserve.security.jwt.JwtUserFactory;
-import com.softserve.service.impl.UserService;
+import com.softserve.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

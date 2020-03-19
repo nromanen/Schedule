@@ -4,25 +4,25 @@ import com.softserve.security.jwt.JwtConfigurer;
 import com.softserve.security.jwt.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 
-
-/*@Configuration*/
+@Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final JwtTokenProvider jwtTokenProvider;
 
-    private static final String ADMIN_ENDPOINT = "/api/v1/admin/**";
+    private static final String ADMIN_ENDPOINT = "/api/v1/manager/**";
     private static final String USER_ENDPOINT = "/api/v1/user/**";
     private static final String LOGIN_ENDPOINT = "/api/v1/auth/login";
     private static final String LOGOUT_ENDPOINT = "/api/v1/auth/logout";
-    private static final String CAR_ENDPOINT = "/car/**";
+   // private static final String SWAGGER_ENDPOINT = "/swagge‌​r-ui.html";
 
     @Autowired
     public SecurityConfig(JwtTokenProvider jwtTokenProvider) {
@@ -44,8 +44,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers(LOGIN_ENDPOINT).permitAll()
-                .antMatchers(USER_ENDPOINT).hasAnyRole("ADMIN", "USER")
-                .antMatchers(ADMIN_ENDPOINT, CAR_ENDPOINT).hasRole("ADMIN")
+                .antMatchers(USER_ENDPOINT).hasAnyRole("MANAGER", "USER")
+                .antMatchers(ADMIN_ENDPOINT).hasRole("MANAGER")
                 .anyRequest().authenticated()
                 .and()
                 /*.logout()
@@ -55,5 +55,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .deleteCookies("JSESSIONID")
                 .and()*/
                 .apply(new JwtConfigurer(jwtTokenProvider));
+    }
+
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring().antMatchers("/v2/api-docs",
+                "/configuration/ui",
+                "/swagger-resources/**",
+                "/configuration/security",
+                "/swagger-ui.html",
+                "/webjars/**");
     }
 }

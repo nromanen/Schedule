@@ -1,46 +1,24 @@
 package com.softserve.entity;
 
+import com.softserve.entity.enums.Role;
 import lombok.Data;
-
+import lombok.NoArgsConstructor;
 import javax.persistence.*;
-import java.util.List;
+import java.io.Serializable;
 
+
+@NoArgsConstructor
+@Data
 @Entity
 @Table(name = "users")
-@Data
-public class User {
+public class User implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(columnDefinition = "serial")
     private long id;
-
-    @Column(name = "username")
-    private String username;
-
-    @Column(name = "first_name")
-    private String firstName;
-
-    @Column(name = "last_name")
-    private String lastName;
-
-    @Column(name = "email")
     private String email;
-
-    @Column(name = "phone_number")
-    private String phoneNumber;
-
-    @Column(name = "password")
     private String password;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "status")
-    private Status status;
-
-    /*@ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "user_roles",
-            joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
-            inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")})
-    private List<Role> roles;*/
-    @Column(name = "role")
-    private String role;
+    private Role role = Role.ROLE_USER;
 }

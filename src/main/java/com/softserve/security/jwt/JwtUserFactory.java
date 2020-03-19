@@ -1,14 +1,11 @@
 package com.softserve.security.jwt;
 
-import com.softserve.entity.Role;
-import com.softserve.entity.Status;
 import com.softserve.entity.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public final class JwtUserFactory {
 
@@ -18,30 +15,16 @@ public final class JwtUserFactory {
     public static JwtUser create(User user) {
         return new JwtUser(
                 user.getId(),
-                user.getUsername(),
-                user.getFirstName(),
-                user.getLastName(),
                 user.getEmail(),
                 user.getPassword(),
-               // mapToGrantedAuthorities(new ArrayList<>(user.getRoles())),
                 mapToGrantedAuthorities(user),
-                user.getStatus().equals(Status.ACTIVE)
+                true
         );
     }
 
-    /*private static List<GrantedAuthority> mapToGrantedAuthorities(List<Role> userRoles) {
-        return userRoles.stream()
-                .map(role ->
-                        new SimpleGrantedAuthority(role.getName())
-                ).collect(Collectors.toList());
-    }*/
-
     private static List<GrantedAuthority> mapToGrantedAuthorities(User user) {
         List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
-        grantedAuthorities.add(new SimpleGrantedAuthority(user.getRole()));
+        grantedAuthorities.add(new SimpleGrantedAuthority(user.getRole().toString()));
         return grantedAuthorities;
     }
-    /*private static SimpleGrantedAuthority map(String role) {
-        return new SimpleGrantedAuthority(role);
-    }*/
 }

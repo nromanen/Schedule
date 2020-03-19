@@ -1,19 +1,21 @@
 package com.softserve.controller;
 
-import com.softserve.dto.AuthenticationRequestDto;
+import com.softserve.dto.AuthenticationRequestDTO;
 import com.softserve.entity.User;
 import com.softserve.security.jwt.JwtTokenProvider;
-import com.softserve.service.impl.UserService;
+import com.softserve.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -35,7 +37,7 @@ public class AuthenticationRestControllerV1 {
     }
 
     @PostMapping("login")
-    public ResponseEntity login(@RequestBody AuthenticationRequestDto requestDto) {
+    public ResponseEntity login(@RequestBody AuthenticationRequestDTO requestDto) {
         try {
             String username = requestDto.getUsername();
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, requestDto.getPassword()));
@@ -44,7 +46,7 @@ public class AuthenticationRestControllerV1 {
                 throw new UsernameNotFoundException("User with username: " + username + " not found");
             }
 
-            String token = jwtTokenProvider.createToken(username, user.getRole());
+            String token = jwtTokenProvider.createToken(username, user.getRole().toString());
 
             Map<Object, Object> response = new HashMap<>();
             response.put("username", username);
@@ -56,9 +58,10 @@ public class AuthenticationRestControllerV1 {
         }
     }
 
-    @PostMapping("logout")
-    public ResponseEntity logOut(@RequestBody AuthenticationRequestDto authenticationRequestDto) {
-        return new ResponseEntity<>(HttpStatus.OK);
+    @PostMapping(value = "logout")
+    public void logout(HttpServletRequest rq, HttpServletResponse rs) {
+        SecurityContextLogoutHandler securityContextLogoutHandler = new SecurityContextLogoutHandler();
+        securityContextLogoutHandler.logout(rq, rs, null);
     }
 
 }
