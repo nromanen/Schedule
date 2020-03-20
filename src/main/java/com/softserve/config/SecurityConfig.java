@@ -22,7 +22,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private static final String USER_ENDPOINT = "/api/v1/user/**";
     private static final String LOGIN_ENDPOINT = "/api/v1/auth/login";
     private static final String LOGOUT_ENDPOINT = "/api/v1/auth/logout";
-   // private static final String SWAGGER_ENDPOINT = "/swagge‌​r-ui.html";
 
     @Autowired
     public SecurityConfig(JwtTokenProvider jwtTokenProvider) {
