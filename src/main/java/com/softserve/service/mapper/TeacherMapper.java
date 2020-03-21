@@ -8,9 +8,9 @@ import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface TeacherMapper {
-    TeacherDTO toTeacherDTO(Teacher teacher);
+    TeacherDTO teacherToTeacherDTO(Teacher group);
+    Teacher teacherDTOToTeacher(TeacherDTO teacherDTO);
 
-    List<TeacherDTO> toTeacherDTOs(List<Teacher> teachers);
-    Teacher toTeacher(TeacherDTO teacherDTO);
+    List<TeacherDTO> teachersToTeacherDTOs(List<Teacher> teachers);
 
 }
