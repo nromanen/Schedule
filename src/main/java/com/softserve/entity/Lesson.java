@@ -35,18 +35,18 @@ public class Lesson implements Serializable {
 
 
     @ManyToOne(targetEntity = Teacher.class)
-    @JoinColumn(name = "teacher_id", insertable = false, updatable = false)
-    @OnDelete(action = OnDeleteAction.NO_ACTION)
+    @JoinColumn(name = "teacher_id")
+    //@OnDelete(action = OnDeleteAction.NO_ACTION)
     private Teacher teacher;
 
 
     @ManyToOne(targetEntity = Subject.class)
-    @JoinColumn(name = "subject_id", insertable = false, updatable = false)
+    @JoinColumn(name = "subject_id")
     //@OnDelete(action = OnDeleteAction.NO_ACTION)
     private Subject subject;
 
     @ManyToOne(targetEntity = Group.class)
-    @JoinColumn(name = "group_id", insertable = false, updatable = false)
+        @JoinColumn(name = "group_id")
     //@OnDelete(action = OnDeleteAction.NO_ACTION)
     private Group group;
 
