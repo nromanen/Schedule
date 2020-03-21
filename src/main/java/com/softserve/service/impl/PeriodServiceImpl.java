@@ -37,8 +37,7 @@ public class PeriodServiceImpl implements PeriodService {
 
     @Override
     public Period save(Period object) {
-        if (object.getStartTime().after(object.getEndTime()) |
-                object.getStartTime().equals(object.getEndTime())) {
+        if (isTimeInvalid(object)) {
             throw new IncorrectTimeException("incorrect time in period");
         }
         if (isPeriodFree(getAll(), object)) {
@@ -50,14 +49,13 @@ public class PeriodServiceImpl implements PeriodService {
 
     @Override
     public List<Period> save(List<Period> objects) throws IncorrectTimeException {
-        if (!objects.stream().allMatch(period -> period.getStartTime().before(period.getEndTime()) &
-                !period.getStartTime().equals(period.getEndTime()))) {
-            throw new IncorrectTimeException("incorrect time in period");
+        if (objects.stream().anyMatch(this::isTimeInvalid)) {
+            throw new IncorrectTimeException("Incorrect time in period");
         }
         if (isListOfPeriodsFree(getAll(), objects)) {
             return objects.stream().map(periodRepository::save).collect(Collectors.toList());
         } else {
-            throw new PeriodsException("some periods have conflict with already existed periods");
+            throw new PeriodsException("Some periods have conflict with already existed periods");
         }
     }
 
@@ -72,24 +70,39 @@ public class PeriodServiceImpl implements PeriodService {
     }
 
 
-    private boolean isPeriodFree(List<Period> oldPeriods, Period newPeriod) {
-        return oldPeriods.stream().noneMatch
-                (oldPeriod ->
-                        newPeriod.getStartTime().
-                                before(oldPeriod.getEndTime())
-                                &
-                                newPeriod.getEndTime().
-                                        after(oldPeriod.getStartTime())
-                );
-    }
-
     private boolean isListOfPeriodsFree(List<Period> oldPeriods, List<Period> newPeriods) {
         for (Period newPeriod : newPeriods) {
-            if (!isPeriodFree(newPeriods, newPeriod) & !isPeriodFree(oldPeriods, newPeriod)) {
+            if (!isPeriodFree(newPeriods, newPeriod) || !isPeriodFree(oldPeriods, newPeriod)) {
                 return false;
             }
         }
         return true;
     }
+
+    private boolean isPeriodFree(List<Period> oldPeriods, Period newPeriod) {
+        return oldPeriods.stream().noneMatch
+                (oldPeriod ->
+                        isPeriodsGlued(newPeriod, oldPeriod) || isPeriodsIntersect(newPeriod, oldPeriod)
+                );
+    }
+
+    private boolean isPeriodsIntersect(Period newPeriod, Period oldPeriod) {
+        return newPeriod.getStartTime().
+                before(oldPeriod.getEndTime())
+                && newPeriod.getEndTime().
+                after(oldPeriod.getStartTime())
+                && !newPeriod.equals(oldPeriod);
+    }
+
+    private boolean isPeriodsGlued(Period newPeriod, Period oldPeriod) {
+        return newPeriod.getStartTime().equals(oldPeriod.getEndTime())
+                || newPeriod.getEndTime().equals(oldPeriod.getStartTime());
+    }
+
+    private boolean isTimeInvalid(Period object) {
+        return object.getStartTime().after(object.getEndTime()) ||
+                object.getStartTime().equals(object.getEndTime());
+    }
 }
+
 

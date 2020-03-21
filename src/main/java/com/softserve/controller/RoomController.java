@@ -60,25 +60,22 @@ public class RoomController {
 
     @PostMapping
     @ApiOperation(value = "Create new room")
-    @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<MessageDTO> save(@RequestBody AddRoomDTO room) {
-        long id = roomService.save(roomMapper.convertToEntity(room)).getId();
-        return ResponseEntity.status(HttpStatus.CREATED).body(new MessageDTO("New room has been saved with ID:" + id));
+    public ResponseEntity<RoomDTO> save(@RequestBody AddRoomDTO addRoomDTO) {
+        Room newRoom = roomService.save(roomMapper.convertToEntity(addRoomDTO));
+        return ResponseEntity.ok().body(roomMapper.convertToDto(newRoom));
     }
 
-    @PutMapping("/{id}")
-    @ApiOperation(value = "Update existing room by id")
-    @ResponseStatus(HttpStatus.ACCEPTED)
-    public ResponseEntity<MessageDTO> update(@PathVariable("id") long id, @RequestBody RoomDTO room) {
-        roomService.update(roomMapper.convertToEntity(room));
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(new MessageDTO("Room has been updated successfully."));
+    @PutMapping
+    @ApiOperation(value = "Update existing room")
+    public ResponseEntity<RoomDTO> update(@RequestBody RoomDTO roomDTO) {
+        Room newRoom = roomService.update(roomMapper.convertToEntity(roomDTO));
+        return ResponseEntity.ok().body(roomMapper.convertToDto(newRoom));
     }
 
     @DeleteMapping("/{id}")
     @ApiOperation(value = "Delete room by id")
-    @ResponseStatus(HttpStatus.ACCEPTED)
     public ResponseEntity<MessageDTO> delete(@PathVariable("id") long id) {
         roomService.delete(roomService.getById(id));
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(new MessageDTO("Room has been deleted successfully."));
+        return ResponseEntity.ok().body(new MessageDTO("Room has been deleted successfully."));
     }
 }

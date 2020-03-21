@@ -49,32 +49,28 @@ public class PeriodController {
 
     @PostMapping
     @ApiOperation(value = "Create new period")
-    @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<MessageDTO> save(@RequestBody AddPeriodDTO period) {
-        long id = periodService.save(periodMapper.convertToEntity(period)).getId();
-        return ResponseEntity.status(HttpStatus.CREATED).body(new MessageDTO("New period has been saved with ID:" + id));
+    public ResponseEntity<PeriodDTO> save(@RequestBody AddPeriodDTO addPeriodDTO) {
+        Period newPeriod = periodService.save(periodMapper.convertToEntity(addPeriodDTO));
+        return ResponseEntity.ok().body(periodMapper.convertToDto(newPeriod));
     }
     @PostMapping("/all")
     @ApiOperation(value = "Create a list of periods")
-    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<MessageDTO> save(@RequestBody List<AddPeriodDTO> periods) {
         periodService.save(periods.stream().map(periodMapper::convertToEntity).collect(Collectors.toList()));
-        return ResponseEntity.status(HttpStatus.CREATED).body(new MessageDTO("New periods have been saved"));
+        return ResponseEntity.ok().body(new MessageDTO("New periods have been saved"));
     }
 
-    @PutMapping("/{id}")
-    @ApiOperation(value = "Update existing period by id")
-    @ResponseStatus(HttpStatus.ACCEPTED)
-    public ResponseEntity<MessageDTO> update(@PathVariable("id") long id, @RequestBody PeriodDTO period) {
-        periodService.update(periodMapper.convertToEntity(period));
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(new MessageDTO("Period has been updated successfully."));
+    @PutMapping
+    @ApiOperation(value = "Update existing period")
+    public ResponseEntity<PeriodDTO> update(@RequestBody PeriodDTO periodDTO) {
+        Period newPeriod = periodService.update(periodMapper.convertToEntity(periodDTO));
+        return ResponseEntity.ok().body(periodMapper.convertToDto(newPeriod));
     }
 
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.ACCEPTED)
     @ApiOperation(value = "Delete period by id")
     public ResponseEntity<MessageDTO> delete(@PathVariable("id") long id){
         periodService.delete(periodService.getById(id));
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(new MessageDTO("Period has been deleted successfully."));
+        return ResponseEntity.ok().body(new MessageDTO("Period has been deleted successfully."));
     }
 }
