@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -19,11 +20,11 @@ public class Period implements Serializable {
     @Column(columnDefinition = "serial")
     private long id;
 
-    @NotEmpty(message = "Start time cannot be empty")
+    @NotNull(message = "Start time cannot be empty")
     @Column(name = "start_time")
     private Timestamp startTime;
 
-    @NotEmpty(message = "End time cannot be empty")
+    @NotNull(message = "End time cannot be empty")
     @Column(name = "end_time")
     private Timestamp endTime;
 
