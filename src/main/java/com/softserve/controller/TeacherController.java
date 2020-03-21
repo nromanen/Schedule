@@ -28,7 +28,7 @@ public class TeacherController {
     @GetMapping
     @ApiOperation(value = "Get the list of all teachers")
     public ResponseEntity<List<TeacherDTO>> getAll() {
-        return ResponseEntity.ok(teacherMapper.toTeacherDTOs(teacherService.getAll()));
+        return ResponseEntity.ok(teacherMapper.teachersToTeacherDTOs(teacherService.getAll()));
     }
 
 
@@ -36,22 +36,21 @@ public class TeacherController {
     @ApiOperation(value = "Get teacher by id")
     public ResponseEntity<TeacherDTO> get(@PathVariable("id") Long id) {
         Teacher teacher = teacherService.getById(id);
-        return ResponseEntity.ok().body(teacherMapper.toTeacherDTO(teacher));
+        return ResponseEntity.ok().body(teacherMapper.teacherToTeacherDTO(teacher));
     }
 
     @PostMapping
     @ApiOperation(value = "Create new teacher")
     public ResponseEntity<TeacherDTO> save(@RequestBody TeacherDTO teacherDTO) {
-        teacherService.save(teacherMapper.toTeacher(teacherDTO));
-        return ResponseEntity.status(HttpStatus.CREATED).body(teacherDTO);
+        Teacher teacher = teacherService.save(teacherMapper.teacherDTOToTeacher(teacherDTO));
+        return ResponseEntity.status(HttpStatus.CREATED).body(teacherMapper.teacherToTeacherDTO(teacher));
     }
 
     @PutMapping
     @ApiOperation(value = "Update existing teacher by id")
     public ResponseEntity<TeacherDTO> update(@RequestBody TeacherDTO updateTeacherDTO) {
-        Teacher teacher = teacherMapper.toTeacher(updateTeacherDTO);
-        teacherService.update(teacher);
-        return ResponseEntity.status(HttpStatus.OK).body(updateTeacherDTO);
+        Teacher teacher = teacherService.update(teacherMapper.teacherDTOToTeacher(updateTeacherDTO));
+        return ResponseEntity.status(HttpStatus.OK).body(teacherMapper.teacherToTeacherDTO(teacher));
     }
 
     @DeleteMapping("/{id}")
