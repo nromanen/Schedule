@@ -21,6 +21,6 @@ public class Group implements Serializable {
 
     @NotEmpty(message = "Title cannot be empty")
     @Size(min = 2, max = 35, message = "Title must be between 2 and 35 characters long")
-    @Column(length = 35, nullable = false)
+    @Column(length = 35, nullable = false, unique = true)
     private String title;
 }
