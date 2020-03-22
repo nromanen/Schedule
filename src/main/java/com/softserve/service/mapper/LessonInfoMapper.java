@@ -9,6 +9,8 @@ import com.softserve.entity.Subject;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
+import java.util.List;
+
 @Mapper(componentModel = "spring")
 public interface LessonInfoMapper {
 
@@ -17,5 +19,7 @@ public interface LessonInfoMapper {
 //    @Mapping(target = "teacher", source = "teacher")
     LessonInfoDTO lessonToLessonInfoDTO(Lesson lesson);
     Lesson LessonInfoDTOToLesson(LessonInfoDTO lessonInfoDTO);
+
+    List<LessonInfoDTO> lessonsToLessonInfoDTOs(List<Lesson> lessons);
 
 }
