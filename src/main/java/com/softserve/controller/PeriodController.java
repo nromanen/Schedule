@@ -1,9 +1,9 @@
 package com.softserve.controller;
 
 
+import com.softserve.dto.AddPeriodDTO;
 import com.softserve.dto.MessageDTO;
 import com.softserve.dto.PeriodDTO;
-import com.softserve.dto.AddPeriodDTO;
 import com.softserve.entity.Period;
 import com.softserve.service.PeriodService;
 import com.softserve.service.mapper.PeriodMapper;
@@ -15,7 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @Api(tags = "Period API")
@@ -35,8 +34,7 @@ public class PeriodController {
     @GetMapping
     @ApiOperation(value = "Get the list of all periods")
     public ResponseEntity<List<PeriodDTO>> list() {
-        List<Period> periods = periodService.getAll();
-        return ResponseEntity.ok().body(periods.stream().map(periodMapper::convertToDto).collect(Collectors.toList()));
+        return ResponseEntity.ok().body(periodMapper.convertToDtoList(periodService.getAll()));
     }
 
     @GetMapping("/{id}")
@@ -56,7 +54,7 @@ public class PeriodController {
     @PostMapping("/all")
     @ApiOperation(value = "Create a list of periods")
     public ResponseEntity<MessageDTO> save(@RequestBody List<AddPeriodDTO> periods) {
-        periodService.save(periods.stream().map(periodMapper::convertToEntity).collect(Collectors.toList()));
+        periodService.save(periodMapper.convertToEntityList(periods));
         return ResponseEntity.ok().body(new MessageDTO("New periods have been saved"));
     }
 
