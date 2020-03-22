@@ -15,7 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 
 @RequiredArgsConstructor
@@ -41,9 +40,9 @@ public class UserController {
     @GetMapping("/{id}")
     @ApiOperation(value = "Get user by id")
     public ResponseEntity<UserDTO> get(@PathVariable("id") Long id) {
-        Optional<User> userOptional = userService.getById(id);
+        User user = userService.getById(id);
         //to do exception
-        return userOptional.map(user -> ResponseEntity.ok(userMapper.toUserDTO(user))).orElse(null);
+        return ResponseEntity.ok(userMapper.toUserDTO(user));
 
     }
 
@@ -66,8 +65,8 @@ public class UserController {
     @DeleteMapping("/{id}")
     @ApiOperation(value = "Delete user by id")
     public ResponseEntity<?> delete(@PathVariable("id") Long id) {
-        Optional<User> userOptional = userService.getById(id);
-        userOptional.ifPresent(userService::delete);
+        User user = userService.getById(id);
+        userService.delete(user);
         return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }
 }

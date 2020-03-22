@@ -1,6 +1,8 @@
 package com.softserve.service.impl;
 
 import com.softserve.entity.User;
+import com.softserve.exception.PeriodsException;
+import com.softserve.exception.UsersException;
 import com.softserve.repository.UserRepository;
 import com.softserve.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +25,10 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public Optional<User> getById(Long id) {
-        return userRepository.findById(id);
+    public User getById(Long id) {
+        return userRepository.findById(id).orElseThrow(
+                () -> new UsersException("user doesn't exist")
+        );
     }
 
     @Override

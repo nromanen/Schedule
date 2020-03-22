@@ -2,7 +2,6 @@ package com.softserve.repository.impl;
 
 import com.softserve.entity.User;
 import com.softserve.repository.UserRepository;
-import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
 
 @Repository
