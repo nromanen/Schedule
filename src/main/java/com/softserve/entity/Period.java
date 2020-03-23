@@ -29,7 +29,7 @@ public class Period implements Serializable {
     private Timestamp endTime;
 
     @NotEmpty(message = "Name cannot be empty")
-    @Size(min = 2, max = 35, message = "Name must be between 2 and 35 characters long")
+    @Size(min = 1, max = 35, message = "Name must be between 1 and 35 characters long")
     @Column(length = 35, nullable = false, unique = true)
     private String name;
 
