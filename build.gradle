@@ -83,6 +83,7 @@ dependencies {
     testCompile group: 'org.springframework', name: 'spring-test', version: '5.2.4.RELEASE'
     testCompile group: 'org.mockito', name: 'mockito-core', version: '3.3.3'
     testCompile 'com.jayway.jsonpath:json-path:2.2.0'
-
-
+    testCompile group: 'com.h2database', name: 'h2', version: '1.4.200'
+    testCompile group: 'org.hamcrest', name: 'hamcrest', version: '2.2'
+    testCompile group: 'org.testng', name: 'testng', version: '7.1.0'
 }
