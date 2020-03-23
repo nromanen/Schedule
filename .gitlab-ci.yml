@@ -18,6 +18,8 @@ build:
         paths:
             - build
             - .gradle
+    only:
+        - master
 test:
     image: gradle:alpine
     stage: test
@@ -27,6 +29,8 @@ test:
         policy: pull
         paths:
             - gradle test
+    only:
+        - master
 deploy:
     stage: deploy
     image: ruby:latest
