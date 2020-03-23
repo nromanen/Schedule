@@ -1,0 +1,39 @@
+stages:
+    - build
+    - test
+    - deploy
+
+variables:
+    GRADLE_OPTS: "-Dorg.gradle.daemon=false"
+before_script:
+    - export GRADLE_USER_HOME=`pwd`/.gradle
+
+build:
+    image: gradle:alpine
+    stage: build
+    script: gradle --build-cache assemble
+    cache:
+        key: "$CI_COMMIT_REF_NAME"
+        policy: push
+        paths:
+            - build
+            - .gradle
+test:
+    image: gradle:alpine
+    stage: test
+    script: gradle check
+    cache:
+        key: "$CI_COMMIT_REF_NAME"
+        policy: pull
+        paths:
+            - gradle test
+deploy:
+    stage: deploy
+    image: ruby:latest
+    script:
+        - apt-get update -qy
+        - apt-get install -y ruby-dev
+        - gem install dpl
+        #- dpl --provider=heroku --app=softservedemo --api-key=2efd3651-0259-4f2f-a0ca-435a05b2a5ae
+    only:
+        - master

@@ -39,9 +39,28 @@ public class DBConfig {
             System.exit(1);
         }
 
-        dataSource.setJdbcUrl(Objects.requireNonNull(environment.getProperty(URL)));
-        dataSource.setUser(Objects.requireNonNull(environment.getProperty(USER)));
-        dataSource.setPassword(Objects.requireNonNull(environment.getProperty(PASS)));
+       try {
+           String  url = System.getenv("HEROKU_DB_URL");
+           String  user = System.getenv("HEROKU_DB_USER");
+           String  pass = System.getenv("HEROKU_DB_PASSWORD");
+
+           if(url == null){
+               url = Objects.requireNonNull(environment.getProperty(URL));
+           }
+           if(user == null){
+               user = Objects.requireNonNull(environment.getProperty(USER));
+           }
+           if(pass == null){
+               pass = Objects.requireNonNull(environment.getProperty(PASS));
+           }
+
+           dataSource.setJdbcUrl(url);
+           dataSource.setUser(user);
+           dataSource.setPassword(pass);
+       }catch (NullPointerException e){
+           System.exit(1);
+       }
+
         return dataSource;
     }
 
