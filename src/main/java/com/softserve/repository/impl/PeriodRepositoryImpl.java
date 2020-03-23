@@ -26,6 +26,6 @@ public class PeriodRepositoryImpl extends BasicRepositoryImpl<Period, Long> impl
         log.info("Enter into getAll of BasicRepository");
         return sessionFactory.getCurrentSession().
                 createQuery("select p from " + basicClass.getName() + " p" +
-                        " order by p.startTime").getResultList();
+                        " order by p.startTime ASC").getResultList();
     }
 }
