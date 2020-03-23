@@ -73,7 +73,7 @@ public class UserControllerTest {
 
         mockMvc.perform(get("/user/{id}", "1").accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andExpect(status().is2xxSuccessful())
+                .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"))
                 .andExpect(jsonPath("$.id").value("1"));
     }
@@ -106,7 +106,7 @@ public class UserControllerTest {
 
         mockMvc.perform(put("/user/{id}", "2").content(mapper.writeValueAsString(user))
                 .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isAccepted())
+                .andExpect(status().isOk())
                 .andExpect(jsonPath("$.email").value(user.getEmail()));
         testGetAll();
     }
@@ -116,6 +116,6 @@ public class UserControllerTest {
         testGetAll();
         mockMvc.perform(delete("/user/{id}", "1")
                 .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isAccepted());
+                .andExpect(status().isOk());
     }
 }

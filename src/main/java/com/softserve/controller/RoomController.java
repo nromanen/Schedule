@@ -62,7 +62,7 @@ public class RoomController {
     @ApiOperation(value = "Create new room")
     public ResponseEntity<RoomDTO> save(@RequestBody AddRoomDTO addRoomDTO) {
         Room newRoom = roomService.save(roomMapper.convertToEntity(addRoomDTO));
-        return ResponseEntity.ok().body(roomMapper.convertToDto(newRoom));
+        return ResponseEntity.status(HttpStatus.CREATED).body(roomMapper.convertToDto(newRoom));
     }
 
     @PutMapping

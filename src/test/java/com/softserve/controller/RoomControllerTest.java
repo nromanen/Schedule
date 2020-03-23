@@ -85,7 +85,7 @@ public class RoomControllerTest {
                 .andExpect(jsonPath("$.id").value(room.getId()));
 
         mockMvc.perform(get("/rooms/{id}", "1").contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().is2xxSuccessful())
+                .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"))
                 .andExpect(jsonPath("$.id").value("1"));
     }
@@ -118,7 +118,7 @@ public class RoomControllerTest {
 
         mockMvc.perform(put("/rooms", "2").content(objectMapper.writeValueAsString(room))
                 .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isAccepted())
+                .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(room.getId()))
                 .andExpect(jsonPath("$.name").value(room.getName()))
                 .andExpect(jsonPath("$.roomSize").value(room.getRoomSize()));
@@ -130,6 +130,6 @@ public class RoomControllerTest {
         testGetAll();
         mockMvc.perform(delete("/rooms/{id}", "1")
                 .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isAccepted());
+                .andExpect(status().isOk());
     }
 }

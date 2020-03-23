@@ -215,7 +215,7 @@ public class TeacherControllerTest {
 
         mockMvc.perform(put("/teachers", "2").content(objectMapper.writeValueAsString(teacher))
                 .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isAccepted())
+                .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(teacher.getId()))
                 .andExpect(jsonPath("$.name").value(teacher.getName()))
                 .andExpect(jsonPath("$.surname").value(teacher.getSurname()))
@@ -229,6 +229,6 @@ public class TeacherControllerTest {
         testGetAll();
         mockMvc.perform(delete("/teachers/{id}", "1")
                 .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isAccepted());
+                .andExpect(status().isOk());
     }
 }

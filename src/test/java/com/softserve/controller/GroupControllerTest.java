@@ -71,7 +71,7 @@ public class GroupControllerTest {
                 .andExpect(jsonPath("$.id").value(group.getId()));
 
         mockMvc.perform(get("/groups/{id}", "1").contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().is2xxSuccessful())
+                .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"))
                 .andExpect(jsonPath("$.id").value("1"));
     }
@@ -102,7 +102,7 @@ public class GroupControllerTest {
 
         mockMvc.perform(put("/groups", "2").content(objectMapper.writeValueAsString(group))
                 .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isAccepted())
+                .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(group.getId()))
                 .andExpect(jsonPath("$.title").value(group.getTitle()));
         testGetAll();
@@ -113,6 +113,6 @@ public class GroupControllerTest {
         testGetAll();
         mockMvc.perform(delete("/groups/{id}", "1")
                 .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isAccepted());
+                .andExpect(status().isOk());
     }
 }

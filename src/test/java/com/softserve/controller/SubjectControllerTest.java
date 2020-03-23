@@ -71,7 +71,7 @@ public class SubjectControllerTest {
                 .andExpect(jsonPath("$.id").value(subject.getId()));
 
         mockMvc.perform(get("/subjects/{id}", "1").contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().is2xxSuccessful())
+                .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"))
                 .andExpect(jsonPath("$.id").value("1"));
     }
@@ -102,7 +102,7 @@ public class SubjectControllerTest {
 
         mockMvc.perform(put("/subjects", "2").content(objectMapper.writeValueAsString(subject))
                 .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isAccepted())
+                .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(subject.getId()))
                 .andExpect(jsonPath("$.name").value(subject.getName()));
         testGetAll();
@@ -113,6 +113,6 @@ public class SubjectControllerTest {
         testGetAll();
         mockMvc.perform(delete("/subjects/{id}", "1")
                 .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isAccepted());
+                .andExpect(status().isOk());
     }
 }

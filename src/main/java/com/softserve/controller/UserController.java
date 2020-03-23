@@ -59,7 +59,7 @@ public class UserController {
         User user = userCreateMapper.toUser(updateUserDTO);
         user.setId(id);
         userService.update(user);
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(updateUserDTO);
+        return ResponseEntity.status(HttpStatus.OK).body(updateUserDTO);
     }
 
     @DeleteMapping("/{id}")
@@ -67,6 +67,6 @@ public class UserController {
     public ResponseEntity<?> delete(@PathVariable("id") Long id) {
         User user = userService.getById(id);
         userService.delete(user);
-        return ResponseEntity.status(HttpStatus.ACCEPTED).build();
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 }

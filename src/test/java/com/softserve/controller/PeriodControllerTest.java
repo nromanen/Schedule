@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.softserve.config.DBConfigTest;
 import com.softserve.config.MyWebAppInitializer;
 import com.softserve.config.WebMvcConfig;
+import com.softserve.dto.AddPeriodDTO;
 import com.softserve.dto.PeriodDTO;
 import com.softserve.entity.Period;
 import com.softserve.service.PeriodService;
@@ -60,9 +61,9 @@ public class PeriodControllerTest {
 
     @Test
     public void testGet() throws Exception {
-        PeriodDTO periodDTO = new PeriodDTO();
-        periodDTO.setId(1L);
-        periodDTO.setClass_name("Some class name");
+        AddPeriodDTO periodDTO = new AddPeriodDTO();
+//        periodDTO.setId(1L);
+        periodDTO.setClass_name("name");
         periodDTO.setStartTime(Timestamp.valueOf("2020-10-15 10:10:11"));
         periodDTO.setEndTime(Timestamp.valueOf("2020-10-15 11:50:11"));
         Period period = new PeriodMapperImpl().convertToEntity(periodDTO);
@@ -75,7 +76,7 @@ public class PeriodControllerTest {
                 .andExpect(jsonPath("$.id").value(period.getId()));
 
         mockMvc.perform(get("/periods/{id}", "1").contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().is2xxSuccessful())
+                .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"))
                 .andExpect(jsonPath("$.id").value("1"));
     }
@@ -84,7 +85,7 @@ public class PeriodControllerTest {
     public void testSave() throws Exception {
         PeriodDTO periodDTO = new PeriodDTO();
         periodDTO.setId(2L);
-        periodDTO.setClass_name("Some class name2");
+        periodDTO.setClass_name("name2");
         periodDTO.setStartTime(Timestamp.valueOf("2020-10-15 9:10:11"));
         periodDTO.setEndTime(Timestamp.valueOf("2020-10-15 10:50:11"));
         Period period = new PeriodMapperImpl().convertToEntity(periodDTO);
@@ -110,7 +111,7 @@ public class PeriodControllerTest {
 
         mockMvc.perform(put("/periods", "2").content(objectMapper.writeValueAsString(period))
                 .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isAccepted())
+                .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(period.getId()))
                 .andExpect(jsonPath("$.name").value(period.getName()))
                 .andExpect(jsonPath("$.startTime").value(period.getStartTime()))
@@ -123,6 +124,6 @@ public class PeriodControllerTest {
         testGetAll();
         mockMvc.perform(delete("/periods/{id}", "1")
                 .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isAccepted());
+                .andExpect(status().isOk());
     }
 }
