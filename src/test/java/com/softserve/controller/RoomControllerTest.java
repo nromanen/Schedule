@@ -4,10 +4,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.softserve.config.DBConfigTest;
 import com.softserve.config.MyWebAppInitializer;
 import com.softserve.config.WebMvcConfig;
-import com.softserve.dto.UserCreateDTO;
-import com.softserve.entity.User;
-import com.softserve.service.UserService;
-import com.softserve.service.mapper.UserCreateMapperImpl;
+import com.softserve.dto.RoomDTO;
+import com.softserve.entity.Room;
+import com.softserve.entity.enums.RoomSize;
+import com.softserve.service.RoomService;
+import com.softserve.service.mapper.RoomMapperImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,16 +32,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {WebMvcConfig.class, DBConfigTest.class, MyWebAppInitializer.class})
 @WebAppConfiguration
-public class UserControllerTest {
+public class RoomControllerTest {
 
     private MockMvc mockMvc;
-    private ObjectMapper mapper = new ObjectMapper();
+    private ObjectMapper objectMapper = new ObjectMapper();
 
     @Autowired
     private WebApplicationContext wac;
 
     @Mock
-    private UserService userService;
+    private RoomService roomService;
 
     @Before
     public void init() throws Exception {
@@ -50,29 +51,40 @@ public class UserControllerTest {
 
     @Test
     public void testGetAll() throws Exception {
-        mockMvc.perform(get("/user").accept(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/rooms").accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andExpect(status().is2xxSuccessful())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json"));
+    }
+
+    //Dont work
+    @Test
+    public void testFreeRoomList() throws Exception {
+        mockMvc.perform(get("/rooms/free")
+                .param("id", "1")
+                .param("dayOfWeek", "MONDAY")
+                .param("evenOdd", "ODD").accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"));
     }
 
     @Test
     public void testGet() throws Exception {
-        UserCreateDTO userDTO = new UserCreateDTO();
-        userDTO.setEmail("764@gmail.com");
-        userDTO.setPassword("66password");
-        User user = new UserCreateMapperImpl().toUser(userDTO);
-        user.setId(1);
+        RoomDTO roomDTO = new RoomDTO();
+        roomDTO.setId(1L);
+        roomDTO.setName("first auditory");
+        roomDTO.setRoomSize(RoomSize.LARGE);
+        Room room = new RoomMapperImpl().convertToEntity(roomDTO);
 
-        when(userService.save(any(User.class))).thenReturn(user);
+        when(roomService.save(any(Room.class))).thenReturn(room);
 
-        mockMvc.perform(post("/user").content(mapper.writeValueAsString(user))
+        mockMvc.perform(post("/rooms").content(objectMapper.writeValueAsString(room))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.email").value(user.getEmail()));
+                .andExpect(jsonPath("$.id").value(room.getId()));
 
-        mockMvc.perform(get("/user/{id}", "1").accept(MediaType.APPLICATION_JSON))
-                .andDo(print())
+        mockMvc.perform(get("/rooms/{id}", "1").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(content().contentType("application/json"))
                 .andExpect(jsonPath("$.id").value("1"));
@@ -80,41 +92,43 @@ public class UserControllerTest {
 
     @Test
     public void testSave() throws Exception {
-        UserCreateDTO userDTO = new UserCreateDTO();
-        userDTO.setEmail("111@gmail.com");
-        userDTO.setPassword("111password");
-        User user = new UserCreateMapperImpl().toUser(userDTO);
-        user.setId(2);
+        RoomDTO roomDTO = new RoomDTO();
+        roomDTO.setId(2L);
+        roomDTO.setName("second auditory");
+        roomDTO.setRoomSize(RoomSize.SMALL);
+        Room room = new RoomMapperImpl().convertToEntity(roomDTO);
 
-        when(userService.save(any(User.class))).thenReturn(user);
+        when(roomService.save(any(Room.class))).thenReturn(room);
 
-        mockMvc.perform(post("/user").content(mapper.writeValueAsString(user))
+        mockMvc.perform(post("/rooms").content(objectMapper.writeValueAsString(room))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.email").value(user.getEmail()));
+                .andExpect(jsonPath("$.id").value(room.getId()));
     }
 
     @Test
     public void testUpdate() throws Exception {
-        UserCreateDTO userDTO = new UserCreateDTO();
-        userDTO.setEmail("updateEmail@gmail.com");
-        userDTO.setPassword("updatePassword");
-        User user = new UserCreateMapperImpl().toUser(userDTO);
-        user.setId(2);
+        RoomDTO roomDTO = new RoomDTO();
+        roomDTO.setId(2L);
+        roomDTO.setName("third auditory");
+        roomDTO.setRoomSize(RoomSize.MEDIUM);
+        Room room = new RoomMapperImpl().convertToEntity(roomDTO);
 
-        when(userService.update(any(User.class))).thenReturn(user);
+        when(roomService.update(any(Room.class))).thenReturn(room);
 
-        mockMvc.perform(put("/user/{id}", "2").content(mapper.writeValueAsString(user))
+        mockMvc.perform(put("/rooms", "2").content(objectMapper.writeValueAsString(room))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isAccepted())
-                .andExpect(jsonPath("$.email").value(user.getEmail()));
+                .andExpect(jsonPath("$.id").value(room.getId()))
+                .andExpect(jsonPath("$.name").value(room.getName()))
+                .andExpect(jsonPath("$.roomSize").value(room.getRoomSize()));
         testGetAll();
     }
 
     @Test
     public void testDelete() throws Exception {
         testGetAll();
-        mockMvc.perform(delete("/user/{id}", "1")
+        mockMvc.perform(delete("/rooms/{id}", "1")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isAccepted());
     }

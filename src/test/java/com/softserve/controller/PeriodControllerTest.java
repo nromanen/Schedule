@@ -4,10 +4,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.softserve.config.DBConfigTest;
 import com.softserve.config.MyWebAppInitializer;
 import com.softserve.config.WebMvcConfig;
-import com.softserve.dto.UserCreateDTO;
-import com.softserve.entity.User;
-import com.softserve.service.UserService;
-import com.softserve.service.mapper.UserCreateMapperImpl;
+import com.softserve.dto.PeriodDTO;
+import com.softserve.entity.Period;
+import com.softserve.service.PeriodService;
+import com.softserve.service.mapper.PeriodMapperImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,6 +22,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.sql.Timestamp;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -31,16 +33,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {WebMvcConfig.class, DBConfigTest.class, MyWebAppInitializer.class})
 @WebAppConfiguration
-public class UserControllerTest {
+public class PeriodControllerTest {
 
     private MockMvc mockMvc;
-    private ObjectMapper mapper = new ObjectMapper();
+    private ObjectMapper objectMapper = new ObjectMapper();
 
     @Autowired
     private WebApplicationContext wac;
 
     @Mock
-    private UserService userService;
+    private PeriodService periodService;
 
     @Before
     public void init() throws Exception {
@@ -50,29 +52,29 @@ public class UserControllerTest {
 
     @Test
     public void testGetAll() throws Exception {
-        mockMvc.perform(get("/user").accept(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/periods").accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andExpect(status().is2xxSuccessful())
+                .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"));
     }
 
     @Test
     public void testGet() throws Exception {
-        UserCreateDTO userDTO = new UserCreateDTO();
-        userDTO.setEmail("764@gmail.com");
-        userDTO.setPassword("66password");
-        User user = new UserCreateMapperImpl().toUser(userDTO);
-        user.setId(1);
+        PeriodDTO periodDTO = new PeriodDTO();
+        periodDTO.setId(1L);
+        periodDTO.setClass_name("Some class name");
+        periodDTO.setStartTime(Timestamp.valueOf("2020-10-15 10:10:11"));
+        periodDTO.setEndTime(Timestamp.valueOf("2020-10-15 11:50:11"));
+        Period period = new PeriodMapperImpl().convertToEntity(periodDTO);
 
-        when(userService.save(any(User.class))).thenReturn(user);
+        when(periodService.save(any(Period.class))).thenReturn(period);
 
-        mockMvc.perform(post("/user").content(mapper.writeValueAsString(user))
+        mockMvc.perform(post("/periods").content(objectMapper.writeValueAsString(period))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.email").value(user.getEmail()));
+                .andExpect(jsonPath("$.id").value(period.getId()));
 
-        mockMvc.perform(get("/user/{id}", "1").accept(MediaType.APPLICATION_JSON))
-                .andDo(print())
+        mockMvc.perform(get("/periods/{id}", "1").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(content().contentType("application/json"))
                 .andExpect(jsonPath("$.id").value("1"));
@@ -80,41 +82,46 @@ public class UserControllerTest {
 
     @Test
     public void testSave() throws Exception {
-        UserCreateDTO userDTO = new UserCreateDTO();
-        userDTO.setEmail("111@gmail.com");
-        userDTO.setPassword("111password");
-        User user = new UserCreateMapperImpl().toUser(userDTO);
-        user.setId(2);
+        PeriodDTO periodDTO = new PeriodDTO();
+        periodDTO.setId(2L);
+        periodDTO.setClass_name("Some class name2");
+        periodDTO.setStartTime(Timestamp.valueOf("2020-10-15 9:10:11"));
+        periodDTO.setEndTime(Timestamp.valueOf("2020-10-15 10:50:11"));
+        Period period = new PeriodMapperImpl().convertToEntity(periodDTO);
 
-        when(userService.save(any(User.class))).thenReturn(user);
+        when(periodService.save(any(Period.class))).thenReturn(period);
 
-        mockMvc.perform(post("/user").content(mapper.writeValueAsString(user))
+        mockMvc.perform(post("/periods").content(objectMapper.writeValueAsString(period))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.email").value(user.getEmail()));
+                .andExpect(jsonPath("$.id").value(period.getId()));
     }
 
     @Test
     public void testUpdate() throws Exception {
-        UserCreateDTO userDTO = new UserCreateDTO();
-        userDTO.setEmail("updateEmail@gmail.com");
-        userDTO.setPassword("updatePassword");
-        User user = new UserCreateMapperImpl().toUser(userDTO);
-        user.setId(2);
+        PeriodDTO periodDTO = new PeriodDTO();
+        periodDTO.setId(2L);
+        periodDTO.setClass_name("Some name12345");
+        periodDTO.setStartTime(Timestamp.valueOf("2020-10-15 8:10:11"));
+        periodDTO.setEndTime(Timestamp.valueOf("2020-10-15 9:50:11"));
+        Period period = new PeriodMapperImpl().convertToEntity(periodDTO);
 
-        when(userService.update(any(User.class))).thenReturn(user);
+        when(periodService.update(any(Period.class))).thenReturn(period);
 
-        mockMvc.perform(put("/user/{id}", "2").content(mapper.writeValueAsString(user))
+        mockMvc.perform(put("/periods", "2").content(objectMapper.writeValueAsString(period))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isAccepted())
-                .andExpect(jsonPath("$.email").value(user.getEmail()));
+                .andExpect(jsonPath("$.id").value(period.getId()))
+                .andExpect(jsonPath("$.name").value(period.getName()))
+                .andExpect(jsonPath("$.startTime").value(period.getStartTime()))
+                .andExpect(jsonPath("$.endTime").value(period.getEndTime()));
         testGetAll();
     }
 
     @Test
     public void testDelete() throws Exception {
         testGetAll();
-        mockMvc.perform(delete("/user/{id}", "1")
+        mockMvc.perform(delete("/periods/{id}", "1")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isAccepted());
     }

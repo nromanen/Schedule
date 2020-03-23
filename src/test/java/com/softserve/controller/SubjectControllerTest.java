@@ -4,10 +4,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.softserve.config.DBConfigTest;
 import com.softserve.config.MyWebAppInitializer;
 import com.softserve.config.WebMvcConfig;
-import com.softserve.dto.UserCreateDTO;
-import com.softserve.entity.User;
-import com.softserve.service.UserService;
-import com.softserve.service.mapper.UserCreateMapperImpl;
+import com.softserve.dto.SubjectDTO;
+import com.softserve.entity.Subject;
+import com.softserve.service.SubjectService;
+import com.softserve.service.mapper.SubjectMapperImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,16 +31,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {WebMvcConfig.class, DBConfigTest.class, MyWebAppInitializer.class})
 @WebAppConfiguration
-public class UserControllerTest {
+public class SubjectControllerTest {
 
     private MockMvc mockMvc;
-    private ObjectMapper mapper = new ObjectMapper();
+    private ObjectMapper objectMapper = new ObjectMapper();
 
     @Autowired
     private WebApplicationContext wac;
 
     @Mock
-    private UserService userService;
+    private SubjectService subjectService;
 
     @Before
     public void init() throws Exception {
@@ -50,29 +50,27 @@ public class UserControllerTest {
 
     @Test
     public void testGetAll() throws Exception {
-        mockMvc.perform(get("/user").accept(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/subjects").accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andExpect(status().is2xxSuccessful())
+                .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"));
     }
 
     @Test
     public void testGet() throws Exception {
-        UserCreateDTO userDTO = new UserCreateDTO();
-        userDTO.setEmail("764@gmail.com");
-        userDTO.setPassword("66password");
-        User user = new UserCreateMapperImpl().toUser(userDTO);
-        user.setId(1);
+        SubjectDTO subjectDTO = new SubjectDTO();
+        subjectDTO.setId(1L);
+        subjectDTO.setName("history");
+        Subject subject = new SubjectMapperImpl().subjectDTOToSubject(subjectDTO);
 
-        when(userService.save(any(User.class))).thenReturn(user);
+        when(subjectService.save(any(Subject.class))).thenReturn(subject);
 
-        mockMvc.perform(post("/user").content(mapper.writeValueAsString(user))
+        mockMvc.perform(post("/subjects").content(objectMapper.writeValueAsString(subject))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.email").value(user.getEmail()));
+                .andExpect(jsonPath("$.id").value(subject.getId()));
 
-        mockMvc.perform(get("/user/{id}", "1").accept(MediaType.APPLICATION_JSON))
-                .andDo(print())
+        mockMvc.perform(get("/subjects/{id}", "1").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(content().contentType("application/json"))
                 .andExpect(jsonPath("$.id").value("1"));
@@ -80,41 +78,40 @@ public class UserControllerTest {
 
     @Test
     public void testSave() throws Exception {
-        UserCreateDTO userDTO = new UserCreateDTO();
-        userDTO.setEmail("111@gmail.com");
-        userDTO.setPassword("111password");
-        User user = new UserCreateMapperImpl().toUser(userDTO);
-        user.setId(2);
+        SubjectDTO subjectDTO = new SubjectDTO();
+        subjectDTO.setId(2L);
+        subjectDTO.setName("biology");
+        Subject subject = new SubjectMapperImpl().subjectDTOToSubject(subjectDTO);
 
-        when(userService.save(any(User.class))).thenReturn(user);
+        when(subjectService.save(any(Subject.class))).thenReturn(subject);
 
-        mockMvc.perform(post("/user").content(mapper.writeValueAsString(user))
+        mockMvc.perform(post("/subjects").content(objectMapper.writeValueAsString(subject))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.email").value(user.getEmail()));
+                .andExpect(jsonPath("$.id").value(subject.getId()));
     }
 
     @Test
     public void testUpdate() throws Exception {
-        UserCreateDTO userDTO = new UserCreateDTO();
-        userDTO.setEmail("updateEmail@gmail.com");
-        userDTO.setPassword("updatePassword");
-        User user = new UserCreateMapperImpl().toUser(userDTO);
-        user.setId(2);
+        SubjectDTO subjectDTO = new SubjectDTO();
+        subjectDTO.setId(2L);
+        subjectDTO.setName("Geometry");
+        Subject subject = new SubjectMapperImpl().subjectDTOToSubject(subjectDTO);
 
-        when(userService.update(any(User.class))).thenReturn(user);
+        when(subjectService.update(any(Subject.class))).thenReturn(subject);
 
-        mockMvc.perform(put("/user/{id}", "2").content(mapper.writeValueAsString(user))
+        mockMvc.perform(put("/subjects", "2").content(objectMapper.writeValueAsString(subject))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isAccepted())
-                .andExpect(jsonPath("$.email").value(user.getEmail()));
+                .andExpect(jsonPath("$.id").value(subject.getId()))
+                .andExpect(jsonPath("$.name").value(subject.getName()));
         testGetAll();
     }
 
     @Test
     public void testDelete() throws Exception {
         testGetAll();
-        mockMvc.perform(delete("/user/{id}", "1")
+        mockMvc.perform(delete("/subjects/{id}", "1")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isAccepted());
     }
