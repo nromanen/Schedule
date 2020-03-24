@@ -1,16 +1,13 @@
 package com.softserve.service.impl;
-
 import com.softserve.entity.Room;
 import com.softserve.entity.enums.EvenOdd;
-import com.softserve.exception.PeriodsException;
-import com.softserve.exception.RoomsException;
+import com.softserve.exception.EntityNotFoundException;
 import com.softserve.repository.RoomRepository;
 import com.softserve.service.RoomService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 
 @Transactional
@@ -30,13 +27,13 @@ public class RoomServiceImpl implements RoomService {
      *
      * @param id Identity number of room
      * @return target room
-     * @throws PeriodsException if room doesn't exist
+     * @throws EntityNotFoundException if room doesn't exist
      */
     @Override
     public Room getById(Long id) {
         log.info("Enter into getById of RoomServiceImpl with id {}", id);
         return roomRepository.findById(id).orElseThrow(
-                () -> new RoomsException("room doesn't exist")
+                () -> new EntityNotFoundException(Room.class, "id", id.toString())
         );
     }
 

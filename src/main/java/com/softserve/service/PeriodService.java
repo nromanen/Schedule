@@ -1,7 +1,6 @@
 package com.softserve.service;
 
 import com.softserve.entity.Period;
-import com.softserve.exception.IncorrectTimeException;
 
 import java.util.List;
 
