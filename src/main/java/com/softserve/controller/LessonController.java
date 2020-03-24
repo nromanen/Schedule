@@ -42,12 +42,12 @@ public class LessonController {
     @GetMapping
     public ResponseEntity<List<LessonInfoDTO>> list(@RequestParam(required = false) @ApiParam(value = "Get all lessons for particular group") Long groupId) {
         if (groupId == null){
-            log.info("Enter into list of LessonController");
+            log.info("Enter into list method of {}", getClass().getName());
             List<Lesson> lessons = lessonService.getAll();
             return  ResponseEntity.status(HttpStatus.OK).body(lessons.stream().map(lessonInfoMapper::lessonToLessonInfoDTO).collect(Collectors.toList()));
         }
         else {
-            log.info("Get list of all lessons for group with id = {}", groupId);
+            log.info("List method of {} . Get list of all lessons for group with id = {}", getClass().getName(), groupId);
             List<Lesson> lessons = lessonService.getAllForGroup(groupId);
             return  ResponseEntity.status(HttpStatus.OK).body(lessonInfoMapper.lessonsToLessonInfoDTOs(lessons));
         }
@@ -58,7 +58,7 @@ public class LessonController {
     @ApiOperation(value = "Get lesson info by id")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<LessonInfoDTO> get(@PathVariable("id") long id){
-        log.info("Enter into get of LessonController with id {} ", id);
+        log.info("Enter into get method of {} with id {} ", getClass().getName(), id);
         Lesson lesson = lessonService.getById(id);
         return ResponseEntity.status(HttpStatus.OK).body(lessonInfoMapper.lessonToLessonInfoDTO(lesson));
     }
@@ -67,7 +67,7 @@ public class LessonController {
     @PostMapping
     @ApiOperation(value = "Create new lesson")
     public ResponseEntity<LessonInfoDTO> save(@RequestBody LessonInfoDTO lessonInfoDTO) {
-        log.info("Enter into save of LessonController with lessonInfoDTO: {}", lessonInfoDTO);
+        log.info("Enter into save method of {} with lessonInfoDTO: {}", getClass().getName(), lessonInfoDTO);
        Lesson newLesson = lessonService.save(lessonInfoMapper.LessonInfoDTOToLesson(lessonInfoDTO));
         return ResponseEntity.status(HttpStatus.CREATED).body(lessonInfoMapper.lessonToLessonInfoDTO(newLesson));
     }
@@ -75,7 +75,7 @@ public class LessonController {
     @PutMapping
     @ApiOperation(value = "Update existing lesson")
     public ResponseEntity<LessonInfoDTO> update( @RequestBody LessonInfoDTO lessonInfoDTO) {
-        log.info("Enter into update of LessonController with lessonInfoDTO: {}", lessonInfoDTO);
+        log.info("Enter into update method of {} with lessonInfoDTO: {}", getClass().getName(), lessonInfoDTO);
         Lesson updatedLesson = lessonService.update(lessonInfoMapper.LessonInfoDTOToLesson(lessonInfoDTO));
         return ResponseEntity.status(HttpStatus.OK).body(lessonInfoMapper.lessonToLessonInfoDTO(updatedLesson));
     }
@@ -83,7 +83,7 @@ public class LessonController {
     @DeleteMapping("/{id}")
     @ApiOperation(value = "Delete lesson by id")
     public ResponseEntity<?> delete(@PathVariable("id") long id) {
-        log.info("Enter into delete of LessonController with  group id: {}", id);
+        log.info("Enter into delete method of {} with  group id: {}", getClass().getName(), id);
         Lesson lesson = lessonService.getById(id);
         lessonService.delete(lesson);
         return ResponseEntity.status(HttpStatus.OK).build();
