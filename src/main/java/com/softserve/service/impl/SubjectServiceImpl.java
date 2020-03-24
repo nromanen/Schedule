@@ -1,15 +1,14 @@
 package com.softserve.service.impl;
 
 import com.softserve.entity.Subject;
+import com.softserve.exception.EntityNotFoundException;
 import com.softserve.repository.SubjectRepository;
 import com.softserve.service.SubjectService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
-import java.util.Optional;
 
 @Transactional
 @Service
@@ -32,7 +31,8 @@ public class SubjectServiceImpl implements SubjectService {
     @Override
     public Subject getById(Long id) {
         log.info("Enter into getById method of {} with id {}", getClass().getName(), id);
-        return subjectRepository.findById(id).orElseThrow(()-> new RuntimeException("Exception"));
+        return subjectRepository.findById(id).orElseThrow(
+                () -> new EntityNotFoundException(Subject.class, "id", id.toString()));
     }
 
     /**
