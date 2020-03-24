@@ -1,8 +1,9 @@
 package com.softserve.service.impl;
 
 import com.softserve.entity.Period;
+import com.softserve.exception.EntityNotFoundException;
 import com.softserve.exception.IncorrectTimeException;
-import com.softserve.exception.PeriodsException;
+import com.softserve.exception.PeriodConflictException;
 import com.softserve.repository.PeriodRepository;
 import com.softserve.service.PeriodService;
 import lombok.extern.slf4j.Slf4j;
@@ -30,13 +31,13 @@ public class PeriodServiceImpl implements PeriodService {
      *
      * @param id Identity number of period
      * @return target period
-     * @throws PeriodsException if period doesn't exist
+     * @throws EntityNotFoundException if period doesn't exist
      */
     @Override
     public Period getById(Long id) {
         log.info("Enter into getById of PeriodServiceImpl with id {}", id);
         return periodRepository.findById(id).orElseThrow(
-                () -> new PeriodsException("period doesn't exist")
+                () -> new EntityNotFoundException(Period.class, "id", id.toString())
         );
     }
 
@@ -57,18 +58,18 @@ public class PeriodServiceImpl implements PeriodService {
      * @param object period
      * @return saved period
      * @throws IncorrectTimeException when period begins after his end or begin equal to end
-     * @throws PeriodsException       when some periods intersect with others or periods
+     * @throws PeriodConflictException       when some periods intersect with others or periods
      */
     @Override
     public Period save(Period object) {
         log.info("Enter into save of PeriodServiceImpl with entity:{}", object);
         if (isTimeInvalid(object)) {
-            throw new IncorrectTimeException("incorrect time in period");
+            throw new IncorrectTimeException("Incorrect time in period");
         }
         if (isPeriodFree(getAll(), object)) {
             return periodRepository.save(object);
         } else {
-            throw new PeriodsException("your period has conflict with already existed periods");
+            throw new PeriodConflictException("Your period has conflict with already existed periods");
         }
     }
 
@@ -78,9 +79,10 @@ public class PeriodServiceImpl implements PeriodService {
      * @param periods list of periods
      * @return list of periods that have been saved
      * @throws IncorrectTimeException when period begins after his end or begin equal to end
-     * @throws PeriodsException       when some periods intersect with others or periods
+     * @throws PeriodConflictException       when some periods intersect with others or periods
      */
     @Override
+
     public List<Period> save(List<Period> periods) {
         log.info("Enter into save of PeriodServiceImpl with entities:{}", periods);
         if (periods.stream().anyMatch(this::isTimeInvalid)) {
@@ -89,7 +91,7 @@ public class PeriodServiceImpl implements PeriodService {
         if (isListOfPeriodsFree(getAll(), periods)) {
             return periods.stream().map(periodRepository::save).collect(Collectors.toList());
         } else {
-            throw new PeriodsException("Some periods have conflict with already existed periods");
+            throw new PeriodConflictException("Some periods have conflict with already existed periods");
         }
     }
 
