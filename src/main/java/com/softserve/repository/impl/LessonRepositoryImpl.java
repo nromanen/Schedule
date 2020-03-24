@@ -1,12 +1,14 @@
 package com.softserve.repository.impl;
 
 import com.softserve.entity.Lesson;
+import com.softserve.entity.Room;
 import com.softserve.repository.LessonRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository

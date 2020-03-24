@@ -2,6 +2,8 @@ package com.softserve.controller;
 
 import com.softserve.dto.GroupDTO;
 import com.softserve.entity.Group;
+import com.softserve.entity.Room;
+import com.softserve.entity.Subject;
 import com.softserve.service.GroupService;
 import com.softserve.service.mapper.GroupMapper;
 import io.swagger.annotations.Api;
@@ -13,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController

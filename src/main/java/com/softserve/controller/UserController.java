@@ -4,11 +4,11 @@ import com.softserve.dto.UserCreateDTO;
 import com.softserve.dto.UserDTO;
 import com.softserve.entity.User;
 import com.softserve.service.UserService;
+import com.softserve.service.mapper.UserCreateMapper;
 import com.softserve.service.mapper.UserMapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,10 +16,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Slf4j
+
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("users")
+@RequestMapping("user")
 @Api(tags = "User")
 public class UserController {
 
@@ -27,48 +27,46 @@ public class UserController {
     private final UserService userService;
 
     private final UserMapper userMapper;
+    private final UserCreateMapper userCreateMapper;
+
 
     @GetMapping
     @ApiOperation(value = "Get the list of all users")
-
     public ResponseEntity<List<UserDTO>> getAll() {
-        log.info("Enter into list method of {}", getClass().getName());
-        return ResponseEntity.status(HttpStatus.OK).body(userMapper.toUserDTOs(userService.getAll()));
+        return ResponseEntity.ok(userMapper.toUserDTOs(userService.getAll()));
     }
 
 
     @GetMapping("/{id}")
     @ApiOperation(value = "Get user by id")
-    public ResponseEntity<UserDTO> get(@PathVariable("id") Long id){
-        log.info("Enter into get method of {} with id {} ", getClass().getName(), id);
+    public ResponseEntity<UserDTO> get(@PathVariable("id") Long id) {
         User user = userService.getById(id);
-        return ResponseEntity.status(HttpStatus.OK).body(userMapper.toUserDTO(user));
+        //to do exception
+        return ResponseEntity.ok(userMapper.toUserDTO(user));
+
     }
 
     @PostMapping
     @ApiOperation(value = "Create new user")
     public ResponseEntity<UserCreateDTO> save(@RequestBody UserCreateDTO createUserDTO) {
-        log.info("Enter into save method of {} with createUserDTO: {}",getClass().getName(), createUserDTO);
-        User user = userService.save(userMapper.toUser(createUserDTO));
-        return ResponseEntity.status(HttpStatus.CREATED).body(userMapper.toUserCreateDTO(user));
+        userService.save(userCreateMapper.toUser(createUserDTO));
+        return ResponseEntity.status(HttpStatus.CREATED).body(createUserDTO);
     }
 
-
-    @PutMapping
+    @PutMapping("/{id}")
     @ApiOperation(value = "Update existing user by id")
-    public ResponseEntity<UserCreateDTO> update(@RequestBody UserCreateDTO userDTO) {
-        log.info("Enter into update method of {} with userDTO: {}", getClass().getName(), userDTO);
-        User updatedUser = userMapper.toUser(userDTO);
-        userService.update(updatedUser);
-        return ResponseEntity.status(HttpStatus.OK).body(userMapper.toUserCreateDTO(updatedUser));
+    public ResponseEntity<UserCreateDTO> update(@PathVariable Long id, @RequestBody UserCreateDTO updateUserDTO) {
+        User user = userCreateMapper.toUser(updateUserDTO);
+        user.setId(id);
+        userService.update(user);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(updateUserDTO);
     }
 
     @DeleteMapping("/{id}")
     @ApiOperation(value = "Delete user by id")
     public ResponseEntity<?> delete(@PathVariable("id") Long id) {
-        log.info("Enter into delete method of {} with  group id: {}", getClass().getName(), id);
         User user = userService.getById(id);
         userService.delete(user);
-        return ResponseEntity.status(HttpStatus.OK).build();
+        return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }
 }
