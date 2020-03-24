@@ -1,15 +1,14 @@
 package com.softserve.service.impl;
 
 import com.softserve.entity.Lesson;
+import com.softserve.exception.EntityNotFoundException;
 import com.softserve.repository.LessonRepository;
 import com.softserve.service.LessonService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
-import java.util.Optional;
 
 @Transactional
 @Service
@@ -30,8 +29,9 @@ public class LessonServiceImpl implements LessonService {
      */
     @Override
     public Lesson getById(Long id) {
-        log.info("Enter into getById method of {} with id {}", getClass().getName(), id);
-        return lessonRepository.findById(id).orElseThrow(()-> new RuntimeException("Exception"));
+        log.info("Enter into getById of LessonServiceImpl with id {}", id);
+        return lessonRepository.findById(id).orElseThrow(
+                () -> new EntityNotFoundException(Lesson.class, "id", id.toString()));
     }
 
     /**
