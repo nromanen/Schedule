@@ -17,13 +17,13 @@ import java.util.List;
 public class PeriodRepositoryImpl extends BasicRepositoryImpl<Period, Long> implements PeriodRepository {
 
     /**
-     * The method used for getting list of entities from database
+     * The method used for getting list of periods from database
      *
-     * @return list of entities ordered by start time
+     * @return list of periods ordered by start time
      */
     @Override
     public List<Period> getAll() {
-        log.info("Enter into getAll of BasicRepository");
+        log.info("Enter into getAll of PeriodRepositoryImpl");
         return sessionFactory.getCurrentSession().
                 createQuery("select p from " + basicClass.getName() + " p" +
                         " order by p.startTime ASC").getResultList();
