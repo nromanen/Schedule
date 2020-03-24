@@ -10,11 +10,6 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 
-@NamedQuery(
-        name = "findEmail",
-        query = "from User u where u.email= :email"
-)
-
 @NoArgsConstructor
 @Data
 @Entity
@@ -22,7 +17,7 @@ import java.io.Serializable;
 public class User implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(columnDefinition = "serial")
     private long id;
 
@@ -34,7 +29,6 @@ public class User implements Serializable {
     @NotEmpty(message = "Password cannot be empty")
     private String password;
 
-    @Column(length = 20, columnDefinition = "varchar(32) default 'ROLE_USER'")
     @Enumerated(EnumType.STRING)
     private Role role = Role.ROLE_USER;
 }

@@ -1,7 +1,7 @@
 package com.softserve.service.impl;
 
 import com.softserve.entity.Teacher;
-import com.softserve.exception.EntityNotFoundException;
+import com.softserve.exception.TeachersException;
 import com.softserve.repository.TeacherRepository;
 import com.softserve.service.TeacherService;
 import lombok.extern.slf4j.Slf4j;
@@ -28,13 +28,14 @@ public class TeacherServiceImpl implements TeacherService {
      *
      * @param id Identity teacher id
      * @return target teacher
-     * @throws EntityNotFoundException if teacher doesn't exist
+     * @throws TeachersException if teacher doesn't exist
      */
     @Override
     public Teacher getById(Long id) {
         log.info("Enter into getById of TeacherServiceImpl with id {}", id);
         return teacherRepository.findById(id).orElseThrow(
-                () -> new EntityNotFoundException(Teacher.class, "id", id.toString()));
+                () -> new TeachersException("teacher doesn't exist")
+        );
     }
 
     @Override

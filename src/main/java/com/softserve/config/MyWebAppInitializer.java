@@ -1,4 +1,5 @@
 package com.softserve.config;
+
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 
@@ -17,6 +18,4 @@ public class MyWebAppInitializer  extends AbstractAnnotationConfigDispatcherServ
     protected String[] getServletMappings() {
         return new String[] { "/" };
     }
-
-
 }

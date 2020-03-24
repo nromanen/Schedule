@@ -1,14 +1,15 @@
 package com.softserve.service.impl;
 
 import com.softserve.entity.Group;
-import com.softserve.exception.EntityNotFoundException;
 import com.softserve.repository.GroupRepository;
 import com.softserve.service.GroupService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
+import java.util.Optional;
 
 @Transactional
 @Service
@@ -30,8 +31,7 @@ public class GroupServiceImpl  implements GroupService {
     @Override
     public Group getById(Long id) {
         log.info("Enter into getById method of {} with id {}", getClass().getName(), id);
-        return groupRepository.findById(id).orElseThrow(
-                () -> new EntityNotFoundException(Group.class, "id", id.toString()));
+        return groupRepository.findById(id).orElseThrow(()-> new RuntimeException("Exception"));
     }
 
     /**
