@@ -101,6 +101,7 @@ public class LessonsControllerTest {
                 .andExpect(jsonPath("$.id").value(lesson.getId()));
 
         mockMvc.perform(get("/lessons/{id}", "1").contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(content().contentType("application/json"))
                 .andExpect(jsonPath("$.id").value("1"));
@@ -135,6 +136,7 @@ public class LessonsControllerTest {
 
         mockMvc.perform(post("/lessons").content(objectMapper.writeValueAsString(lesson))
                 .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").value(lesson.getId()));
     }
@@ -173,6 +175,7 @@ public class LessonsControllerTest {
 
         mockMvc.perform(put("/lessons", "2").content(objectMapper.writeValueAsString(lesson))
                 .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
                 .andExpect(status().isAccepted())
                 .andExpect(jsonPath("$.id").value(lesson.getId()))
                 .andExpect(jsonPath("$.hours").value(lesson.getHours()))
@@ -182,14 +185,13 @@ public class LessonsControllerTest {
 //                .andExpect(jsonPath("$.subject").value(lesson.getSubject()));
 //                .andExpect(jsonPath("$.group").value(lesson.getGroup()));
 //                .andExpect(jsonPath("$.teacher").value(lesson.getTeacher()));
-        testGetAll();
     }
 
     @Test
     public void testDelete() throws Exception {
-        testGetAll();
         mockMvc.perform(delete("/lessons/{id}", "1")
                 .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
                 .andExpect(status().isAccepted());
     }
 }
