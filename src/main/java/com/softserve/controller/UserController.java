@@ -56,19 +56,11 @@ public class UserController {
 
     @PutMapping
     @ApiOperation(value = "Update existing user by id")
-<<<<<<< HEAD
-    public ResponseEntity<UserCreateDTO> update(@PathVariable Long id, @RequestBody UserCreateDTO updateUserDTO) {
-        User user = userCreateMapper.toUser(updateUserDTO);
-        user.setId(id);
-        userService.update(user);
-        return ResponseEntity.status(HttpStatus.OK).body(updateUserDTO);
-=======
     public ResponseEntity<UserCreateDTO> update(@RequestBody UserCreateDTO userDTO) {
         log.info("Enter into update method of {} with userDTO: {}", getClass().getName(), userDTO);
         User updatedUser = userMapper.toUser(userDTO);
         userService.update(updatedUser);
         return ResponseEntity.status(HttpStatus.OK).body(userMapper.toUserCreateDTO(updatedUser));
->>>>>>> cd24787d46a8724ee7ddd82b42cfb98825717985
     }
 
     @DeleteMapping("/{id}")

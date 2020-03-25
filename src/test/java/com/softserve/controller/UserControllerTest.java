@@ -7,7 +7,7 @@ import com.softserve.config.WebMvcConfig;
 import com.softserve.dto.UserCreateDTO;
 import com.softserve.entity.User;
 import com.softserve.service.UserService;
-import com.softserve.service.mapper.UserCreateMapperImpl;
+import com.softserve.service.mapper.UserMapperImpl;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -136,13 +136,13 @@ public class UserControllerTest {
         //Save new period before all Test methods
         userDtoForBefore.setEmail("dto email");
         userDtoForBefore.setPassword("dto password");
-        user = new UserCreateMapperImpl().toUser(userDtoForBefore);
+        user = new UserMapperImpl().toUser(userDtoForBefore);
         userService.save(user);
 
         userDtoForSave.setEmail("save email");
         userDtoForSave.setPassword("save password");
 
-//        userDtoForUpdate.setId(user.getId());
+        userDtoForUpdate.setId(user.getId());
         userDtoForUpdate.setEmail("update email");
         userDtoForUpdate.setPassword("update password");
 //        userDtoForUpdate.setRole(ROLE_USER);
@@ -156,7 +156,7 @@ public class UserControllerTest {
 
     @Test
     public void testGetAll() throws Exception {
-        mockMvc.perform(get("/user").accept(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/users").accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"));
@@ -165,7 +165,7 @@ public class UserControllerTest {
     @Test
     public void testGet() throws Exception {
 
-        mockMvc.perform(get("/user/{id}", String.valueOf(user.getId())).contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/users/{id}", String.valueOf(user.getId())).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentType("application/json"))
@@ -175,7 +175,7 @@ public class UserControllerTest {
     @Test
     public void testSave() throws Exception {
 
-        mockMvc.perform(post("/user").content(objectMapper.writeValueAsString(userDtoForSave))
+        mockMvc.perform(post("/users").content(objectMapper.writeValueAsString(userDtoForSave))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isCreated());
@@ -184,10 +184,9 @@ public class UserControllerTest {
     @Test
     public void testUpdate() throws Exception {
 
-        User userForCompare = new UserCreateMapperImpl().toUser(userDtoForUpdate);
-        user.setId(1);
+        User userForCompare = new UserMapperImpl().toUser(userDtoForUpdate);
 
-        mockMvc.perform(put("/user", "2").content(objectMapper.writeValueAsString(userDtoForUpdate))
+        mockMvc.perform(put("/users", String.valueOf(userDtoForUpdate.getId())).content(objectMapper.writeValueAsString(userDtoForUpdate))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -201,9 +200,9 @@ public class UserControllerTest {
         UserCreateDTO userCreateDTO = new UserCreateDTO();
         userCreateDTO.setEmail("delete email");
         userCreateDTO.setPassword("delete password");
-        User user = userService.save(new UserCreateMapperImpl().toUser(userCreateDTO));
+        User user = userService.save(new UserMapperImpl().toUser(userCreateDTO));
 
-        mockMvc.perform(delete("/user/{id}", String.valueOf(user.getId()))
+        mockMvc.perform(delete("/users/{id}", String.valueOf(user.getId()))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk());

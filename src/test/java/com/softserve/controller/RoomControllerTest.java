@@ -209,7 +209,7 @@ public class RoomControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(roomForCompare.getId()))
                 .andExpect(jsonPath("$.name").value(roomForCompare.getName()))
-                .andExpect(jsonPath("$.roomSize").value(roomForCompare.getRoomSize()));
+                .andExpect(jsonPath("$.roomSize").value(roomForCompare.getRoomSize().toString()));
     }
 
     @Test

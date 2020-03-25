@@ -24,6 +24,8 @@ import org.springframework.web.context.WebApplicationContext;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -40,7 +42,8 @@ public class PeriodControllerTest {
     private AddPeriodDTO periodDtoForBefore = new AddPeriodDTO();
     private AddPeriodDTO periodDtoForSave = new AddPeriodDTO();
     private PeriodDTO periodDtoForUpdate = new PeriodDTO();
-
+    private AddPeriodDTO periodDtoForList = new AddPeriodDTO();
+    private List<AddPeriodDTO> periodDtoListForSave = new ArrayList<>();
 
     @Autowired
     private WebApplicationContext wac;
@@ -62,6 +65,11 @@ public class PeriodControllerTest {
         periodDtoForBefore.setEndTime(Timestamp.valueOf("2020-10-15 02:00:00"));
         period = new PeriodMapperImpl().convertToEntity(periodDtoForBefore);
         periodService.save(period);
+
+        periodDtoForList.setClass_name("dto list");
+        periodDtoForList.setStartTime(Timestamp.valueOf("2020-10-15 11:00:00"));
+        periodDtoForList.setEndTime(Timestamp.valueOf("2020-10-15 12:00:00"));
+        periodDtoListForSave.add(periodDtoForList);
 
         periodDtoForSave.setClass_name("save name");
         periodDtoForSave.setStartTime(Timestamp.valueOf("2020-10-15 03:00:00"));
@@ -101,6 +109,14 @@ public class PeriodControllerTest {
     public void testSave() throws Exception {
 
         mockMvc.perform(post("/periods").content(objectMapper.writeValueAsString(periodDtoForSave))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isCreated());
+    }
+
+    @Test
+    public void testSaveList() throws Exception {
+        mockMvc.perform(post("/periods/all").content(objectMapper.writeValueAsString(periodDtoListForSave))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isCreated());
