@@ -1,11 +1,11 @@
 package com.softserve.dto;
 
 import lombok.Data;
-
-import java.io.Serializable;
+import lombok.NoArgsConstructor;
 
 @Data
-public class AuthenticationRequestDTO implements Serializable {
+@NoArgsConstructor
+public class AuthenticationRequestDTO {
     private String username;
     private String password;
 }
