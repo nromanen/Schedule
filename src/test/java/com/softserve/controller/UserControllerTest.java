@@ -25,87 +25,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-//@RunWith(SpringJUnit4ClassRunner.class)
-//@ContextConfiguration(classes = {WebMvcConfig.class, DBConfigTest.class, MyWebAppInitializer.class})
-//@WebAppConfiguration
-//public class UserControllerTest {
-//
-//    private MockMvc mockMvc;
-//    private ObjectMapper mapper = new ObjectMapper();
-//
-//    @Autowired
-//    private WebApplicationContext wac;
-//
-//    @Autowired
-//    private UserService userService;
-//
-//    @Before
-//    public void init() {
-//        mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
-//    }
-//
-//    @Test
-//    public void testGetAll() throws Exception {
-//        mockMvc.perform(get("/user").accept(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isOk())
-//                .andExpect(content().contentType("application/json"));
-//    }
-//
-//    @Test
-//    public void testGet() throws Exception {
-//        UserCreateDTO userDTO = new UserCreateDTO();
-//        userDTO.setEmail("764@gmail.com");
-//        userDTO.setPassword("66password");
-//        User user = new UserCreateMapperImpl().toUser(userDTO);
-//        user.setId(1);
-//
-//        mockMvc.perform(post("/user").content(mapper.writeValueAsString(user))
-//                .contentType(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isCreated())
-//                .andExpect(jsonPath("$.email").value(user.getEmail()));
-//
-//        mockMvc.perform(get("/user/{id}", "1").accept(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isOk())
-//                .andExpect(content().contentType("application/json"))
-//                .andExpect(jsonPath("$.id").value("1"));
-//    }
-//
-//    @Test
-//    public void testSave() throws Exception {
-//        UserCreateDTO userDTO = new UserCreateDTO();
-//        userDTO.setEmail("111@gmail.com");
-//        userDTO.setPassword("111password");
-//        User user = new UserCreateMapperImpl().toUser(userDTO);
-//        user.setId(2);
-//
-//        mockMvc.perform(post("/user").content(mapper.writeValueAsString(user))
-//                .contentType(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isCreated())
-//                .andExpect(jsonPath("$.email").value(user.getEmail()));
-//    }
-//
-//    @Test
-//    public void testUpdate() throws Exception {
-//        UserCreateDTO userDTO = new UserCreateDTO();
-//        userDTO.setEmail("updateEmail@gmail.com");
-//        userDTO.setPassword("updatePassword");
-//        User user = new UserCreateMapperImpl().toUser(userDTO);
-//        user.setId(2);
-//
-//        mockMvc.perform(put("/user/{id}", "2").content(mapper.writeValueAsString(user))
-//                .contentType(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$.email").value(user.getEmail()));
-//    }
-//
-//    @Test
-//    public void testDelete() throws Exception {
-//        mockMvc.perform(delete("/user/{id}", "1")
-//                .contentType(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isOk());
-//    }
-//}
-
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {WebMvcConfig.class, DBConfigTest.class, MyWebAppInitializer.class})
 @WebAppConfiguration
@@ -118,7 +37,6 @@ public class UserControllerTest {
     private UserCreateDTO userDtoForSave = new UserCreateDTO();
     private UserCreateDTO userDtoForUpdate = new UserCreateDTO();
 
-
     @Autowired
     private WebApplicationContext wac;
 
@@ -126,12 +44,9 @@ public class UserControllerTest {
     private UserService userService;
 
     @Before
-    public void init() {
-        mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
-    }
-
-    @Before
     public void insertData() {
+
+        mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
 
         //Save new period before all Test methods
         userDtoForBefore.setEmail("dto email");
@@ -150,14 +65,12 @@ public class UserControllerTest {
 
     @After
     public void deleteData() {
-        userDtoForBefore = null;
         userService.delete(user);
     }
 
     @Test
     public void testGetAll() throws Exception {
         mockMvc.perform(get("/users").accept(MediaType.APPLICATION_JSON))
-                .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"));
     }
@@ -167,9 +80,8 @@ public class UserControllerTest {
 
         mockMvc.perform(get("/users/{id}", String.valueOf(user.getId())).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andDo(print())
                 .andExpect(content().contentType("application/json"))
-                .andExpect(jsonPath("$.id").value("1"));
+                .andExpect(jsonPath("$.id").value(String.valueOf(user.getId())));
     }
 
     @Test
@@ -177,7 +89,6 @@ public class UserControllerTest {
 
         mockMvc.perform(post("/users").content(objectMapper.writeValueAsString(userDtoForSave))
                 .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
                 .andExpect(status().isCreated());
     }
 
@@ -188,7 +99,6 @@ public class UserControllerTest {
 
         mockMvc.perform(put("/users", String.valueOf(userDtoForUpdate.getId())).content(objectMapper.writeValueAsString(userDtoForUpdate))
                 .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(userForCompare.getId()))
                 .andExpect(jsonPath("$.email").value(userForCompare.getEmail()))
@@ -204,7 +114,6 @@ public class UserControllerTest {
 
         mockMvc.perform(delete("/users/{id}", String.valueOf(user.getId()))
                 .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
                 .andExpect(status().isOk());
     }
 }

@@ -52,12 +52,9 @@ public class PeriodControllerTest {
     private PeriodService periodService;
 
     @Before
-    public void init() {
-        mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
-    }
-
-    @Before
     public void insertData() {
+
+        mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
 
         //Save new period before all Test methods
         periodDtoForBefore.setClass_name("dto name");
@@ -83,14 +80,13 @@ public class PeriodControllerTest {
 
     @After
     public void deleteData() {
-        periodDtoForBefore = null;
         periodService.delete(period);
     }
 
     @Test
     public void testGetAll() throws Exception {
+
         mockMvc.perform(get("/periods").accept(MediaType.APPLICATION_JSON))
-                .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"));
     }
@@ -100,9 +96,8 @@ public class PeriodControllerTest {
 
         mockMvc.perform(get("/periods/{id}", String.valueOf(period.getId())).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andDo(print())
                 .andExpect(content().contentType("application/json"))
-                .andExpect(jsonPath("$.id").value("1"));
+                .andExpect(jsonPath("$.id").value(String.valueOf(period.getId())));
     }
 
     @Test
@@ -110,7 +105,6 @@ public class PeriodControllerTest {
 
         mockMvc.perform(post("/periods").content(objectMapper.writeValueAsString(periodDtoForSave))
                 .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
                 .andExpect(status().isCreated());
     }
 
@@ -118,7 +112,6 @@ public class PeriodControllerTest {
     public void testSaveList() throws Exception {
         mockMvc.perform(post("/periods/all").content(objectMapper.writeValueAsString(periodDtoListForSave))
                 .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
                 .andExpect(status().isCreated());
     }
 
@@ -129,7 +122,6 @@ public class PeriodControllerTest {
 
         mockMvc.perform(put("/periods", String.valueOf(period.getId())).content(objectMapper.writeValueAsString(periodDtoForUpdate))
                 .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(periodForCompare.getId()))
                 .andExpect(jsonPath("$.class_name").value(periodForCompare.getName()))
@@ -146,7 +138,6 @@ public class PeriodControllerTest {
         Period period = periodService.save(new PeriodMapperImpl().convertToEntity(addPeriodDTO));
         mockMvc.perform(delete("/periods/{id}", String.valueOf(period.getId()))
                 .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
                 .andExpect(status().isOk());
     }
 }
