@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @Slf4j
@@ -21,5 +22,19 @@ public class GroupRepositoryImpl extends BasicRepositoryImpl<Group, Long> implem
         return sessionFactory.getCurrentSession()
                 .createQuery("from Group ORDER BY title ASC")
                 .getResultList();
+    }
+
+    /**
+     * The method used for getting Group by title from database
+     *
+     * @param title String title used to find Group
+     * @return Group entity
+     */
+    @Override
+    public Optional<Group> findByTitle(String title) {
+        log.info("Enter into findByTitle method of {} with title:{}", getClass().getName(), title);
+        return sessionFactory.getCurrentSession().createQuery
+                ("FROM Group g WHERE g.title = :title")
+                .setParameter("title", title).uniqueResultOptional();
     }
 }

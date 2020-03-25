@@ -1,7 +1,9 @@
 package com.softserve.service.impl;
 
+import com.softserve.entity.Group;
 import com.softserve.entity.Subject;
 import com.softserve.exception.EntityNotFoundException;
+import com.softserve.exception.FieldAlreadyExistsException;
 import com.softserve.repository.SubjectRepository;
 import com.softserve.service.SubjectService;
 import lombok.extern.slf4j.Slf4j;
@@ -65,6 +67,9 @@ public class SubjectServiceImpl implements SubjectService {
     @Override
     public Subject update(Subject object) {
         log.info("Enter into update method of {} with entity:{}", getClass().getName(), object);
+        if(findByName(object.getName())){
+            throw new FieldAlreadyExistsException(Subject.class, "name", object.getName());
+        }
         return subjectRepository.update(object);
     }
 
@@ -76,6 +81,20 @@ public class SubjectServiceImpl implements SubjectService {
     @Override
     public Subject delete(Subject object) {
         log.info("Enter into delete method  of {} with entity:{}", getClass().getName(), object);
+        if(findByName(object.getName())){
+            throw new FieldAlreadyExistsException(Subject.class, "name", object.getName());
+        }
         return subjectRepository.delete(object);
+    }
+
+    /**
+     * Method finds if Subject with name already exists
+     * @param name
+     * @return true if Subject with such name already exist
+     */
+    @Override
+    public boolean findByName(String name) {
+        log.info("Enter into findByName method  of {} with name:{}", getClass().getName(), name);
+        return subjectRepository.findByName(name).isPresent();
     }
 }

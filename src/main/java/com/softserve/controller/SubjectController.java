@@ -13,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @Api(tags = "Subject API")
@@ -57,13 +56,14 @@ public class SubjectController {
     @ApiOperation(value = "Update existing subject by id")
     public ResponseEntity<SubjectDTO> update(@RequestBody SubjectDTO subjectDTO) {
         log.info("Enter into update method of {} with subjectDTO: {}", getClass().getName(), subjectDTO);
+        subjectService.getById(subjectDTO.getId());
         Subject subject = subjectService.update(subjectMapper.subjectDTOToSubject(subjectDTO));
         return ResponseEntity.status(HttpStatus.OK).body(subjectMapper.subjectToSubjectDTO(subject));
     }
 
     @DeleteMapping("/{id}")
     @ApiOperation(value = "Delete subject by id")
-    public ResponseEntity<?> delete(@PathVariable("id") long id){
+    public ResponseEntity delete(@PathVariable("id") long id){
         log.info("Enter into delete method of {} with  subject id: {}", getClass().getName(), id);
         Subject subject = subjectService.getById(id);
         subjectService.delete(subject);
