@@ -13,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @Api(tags = "Group API")
@@ -57,13 +56,14 @@ public class GroupController {
     @ApiOperation(value = "Update existing group by id")
     public ResponseEntity<GroupDTO> update(@RequestBody GroupDTO groupDTO) {
         log.info("Enter into update method of {} with groupDTO: {}", getClass().getName(), groupDTO);
+        groupService.getById(groupDTO.getId());
         Group group = groupService.update(groupMapper.groupDTOToGroup(groupDTO));
         return ResponseEntity.status(HttpStatus.OK).body(groupMapper.groupToGroupDTO(group));
     }
 
     @DeleteMapping("/{id}")
     @ApiOperation(value = "Delete group by id")
-    public ResponseEntity<?> delete(@PathVariable("id") long id){
+    public ResponseEntity delete(@PathVariable("id") long id){
         log.info("Enter into delete method of {} with  group id: {}", getClass().getName(), id);
         Group group = groupService.getById(id);
         groupService.delete(group);
