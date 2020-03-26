@@ -2,7 +2,6 @@ package com.softserve.dto;
 
 import lombok.*;
 
-
 @Data
 public class TeacherDTO {
     private Long id;
@@ -10,5 +9,4 @@ public class TeacherDTO {
     private String surname;
     private String patronymic;
     private String position;
-   // private List<TeacherWishes> teacherWishesList;
 }
