@@ -28,11 +28,11 @@ test:
         key: "$CI_COMMIT_REF_NAME"
         policy: pull
         paths:
-            - gradle test --tests GroupControllerTest
-            - gradle test --tests PeriodControllerTest
-            - gradle test --tests RoomControllerTest
-            - gradle test --tests SubjectControllerTest
-            - gradle test --tests TeacherControllerTest
+            - gradle test --tests GroupControllerTest --stacktrace
+            - gradle test --tests PeriodControllerTest --stacktrace
+            - gradle test --tests RoomControllerTest --stacktrace
+            - gradle test --tests SubjectControllerTest --stacktrace
+            - gradle test --tests TeacherControllerTest --stacktrace
     only:
          - 12_ci_cd
 deploy:
