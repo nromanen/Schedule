@@ -15,7 +15,6 @@ import java.util.List;
 public class TeacherRepositoryImpl extends BasicRepositoryImpl<Teacher, Long> implements TeacherRepository {
     /**
      * The method used for getting list of teachers entities from database
-     *
      * @return list of entities ordered by surname
      */
     @Override
