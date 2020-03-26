@@ -13,14 +13,17 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
+import org.springframework.http.*;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.util.NestedServletException;
 
+import static junit.framework.TestCase.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -32,6 +35,7 @@ public class GroupControllerTest {
     private MockMvc mockMvc;
     private ObjectMapper objectMapper = new ObjectMapper();
     private Group group;
+    private RestTemplate restTemplate;
 
     @Autowired
     private WebApplicationContext wac;
@@ -102,5 +106,27 @@ public class GroupControllerTest {
         mockMvc.perform(delete("/groups/{id}", String.valueOf(group.getId()))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    public void whenGroupNotFound() throws Exception {
+        mockMvc.perform(get("/groups/10")).andExpect(status().isNotFound());
+    }
+
+    @Test(expected = NestedServletException.class)
+    public void whenSaveExistsGroup() throws Exception {
+        mockMvc.perform(post("/groups").content(objectMapper.writeValueAsString(group))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isConflict());
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void whenSaveNameIsNull() {
+        String userInJson = "{\"name\":null}";
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<String> entity = new HttpEntity<>(userInJson, headers);
+        ResponseEntity<String> response = restTemplate.postForEntity("/groups", entity, String.class);
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     }
 }

@@ -6,7 +6,6 @@ import com.softserve.config.MyWebAppInitializer;
 import com.softserve.config.WebMvcConfig;
 import com.softserve.dto.UserCreateDTO;
 import com.softserve.entity.User;
-import com.softserve.exception.EntityNotFoundException;
 import com.softserve.service.UserService;
 import com.softserve.service.mapper.UserMapperImpl;
 import org.junit.After;
@@ -14,14 +13,16 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
+import org.springframework.http.*;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.WebApplicationContext;
 
+import static junit.framework.TestCase.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -33,6 +34,7 @@ public class UserControllerTest {
     private MockMvc mockMvc;
     private ObjectMapper objectMapper = new ObjectMapper();
     private User user;
+    private RestTemplate restTemplate;
 
     @Autowired
     private WebApplicationContext wac;
@@ -119,13 +121,18 @@ public class UserControllerTest {
 
     @Test
     public void whenSaveExistsUser() throws Exception {
-        UserCreateDTO userDto = new UserCreateDTO();
-        userDto.setEmail("dto email");
-        userDto.setPassword("dto password");
-
         mockMvc.perform(post("/users").content(objectMapper.writeValueAsString(user))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isConflict());
     }
 
+    @Test(expected = NullPointerException.class)
+    public void whenSavePasswordIsNull() {
+        String userInJson = "{\"email\":\"some@email\", \"password\" : null}";
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<String> entity = new HttpEntity<>(userInJson, headers);
+        ResponseEntity<String> response = restTemplate.postForEntity("/users", entity, String.class);
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+    }
 }

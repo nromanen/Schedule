@@ -13,14 +13,16 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
+import org.springframework.http.*;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.WebApplicationContext;
 
+import static junit.framework.TestCase.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -32,6 +34,7 @@ public class TeacherControllerTest {
     private MockMvc mockMvc;
     private ObjectMapper objectMapper = new ObjectMapper();
     private Teacher teacher;
+    private RestTemplate restTemplate;
 
     @Autowired
     private WebApplicationContext wac;
@@ -119,5 +122,20 @@ public class TeacherControllerTest {
         mockMvc.perform(delete("/teachers/{id}", String.valueOf(teacher.getId()))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    public void whenTeacherNotFound() throws Exception {
+        mockMvc.perform(get("/teachers/10")).andExpect(status().isNotFound());
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void whenSavePositionIsNull() {
+        String userInJson = "{\"name\":\"Petro\", \"surname\" : \" Petrov\", \"patronymic\" : \" Petrovych\", \"position\" : null}";
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<String> entity = new HttpEntity<>(userInJson, headers);
+        ResponseEntity<String> response = restTemplate.postForEntity("/teachers", entity, String.class);
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     }
 }
