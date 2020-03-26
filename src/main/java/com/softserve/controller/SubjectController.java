@@ -1,8 +1,6 @@
 package com.softserve.controller;
 
-import com.softserve.dto.GroupDTO;
 import com.softserve.dto.SubjectDTO;
-import com.softserve.entity.Room;
 import com.softserve.entity.Subject;
 import com.softserve.service.SubjectService;
 import com.softserve.service.mapper.SubjectMapper;
@@ -15,8 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RestController
 @Api(tags = "Subject API")
@@ -35,7 +31,7 @@ public class SubjectController {
     @GetMapping
     @ApiOperation(value = "Get the list of all subjects")
     public ResponseEntity<List<SubjectDTO>> list() {
-        log.info("Enter into list of SubjectController");
+        log.info("Enter into list method of {}", getClass().getName());
         List<Subject> subjects = subjectService.getAll();
         return ResponseEntity.status(HttpStatus.OK).body(subjectMapper.subjectsToSubjectDTOs(subjects));
     }
@@ -43,7 +39,7 @@ public class SubjectController {
     @GetMapping("/{id}")
     @ApiOperation(value = "Get subject info by id")
     public ResponseEntity<SubjectDTO> get(@PathVariable("id") long id){
-        log.info("Enter into get of SubjectController with id {} ", id);
+        log.info("Enter into get method of {} with id {} ", getClass().getName(), id);
         Subject subject = subjectService.getById(id);
         return ResponseEntity.status(HttpStatus.OK).body(subjectMapper.subjectToSubjectDTO(subject));
     }
@@ -51,7 +47,7 @@ public class SubjectController {
     @PostMapping
     @ApiOperation(value = "Create new subject")
     public ResponseEntity<SubjectDTO> save(@RequestBody SubjectDTO subjectDTO) {
-        log.info("Enter into save of SubjectController with subjectDTO: {}", subjectDTO);
+        log.info("Enter into save method of {} with subjectDTO: {}", getClass().getName(), subjectDTO);
         Subject subject = subjectService.save(subjectMapper.subjectDTOToSubject(subjectDTO));
         return ResponseEntity.status(HttpStatus.CREATED).body(subjectMapper.subjectToSubjectDTO(subject));
     }
@@ -59,15 +55,16 @@ public class SubjectController {
     @PutMapping
     @ApiOperation(value = "Update existing subject by id")
     public ResponseEntity<SubjectDTO> update(@RequestBody SubjectDTO subjectDTO) {
-        log.info("Enter into update of SubjectController with subjectDTO: {}", subjectDTO);
+        log.info("Enter into update method of {} with subjectDTO: {}", getClass().getName(), subjectDTO);
+        subjectService.getById(subjectDTO.getId());
         Subject subject = subjectService.update(subjectMapper.subjectDTOToSubject(subjectDTO));
         return ResponseEntity.status(HttpStatus.OK).body(subjectMapper.subjectToSubjectDTO(subject));
     }
 
     @DeleteMapping("/{id}")
     @ApiOperation(value = "Delete subject by id")
-    public ResponseEntity<?> delete(@PathVariable("id") long id){
-        log.info("Enter into delete of SubjectController with  group id: {}", id);
+    public ResponseEntity delete(@PathVariable("id") long id){
+        log.info("Enter into delete method of {} with  subject id: {}", getClass().getName(), id);
         Subject subject = subjectService.getById(id);
         subjectService.delete(subject);
         return ResponseEntity.status(HttpStatus.OK).build();

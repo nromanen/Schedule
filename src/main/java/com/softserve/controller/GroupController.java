@@ -2,8 +2,6 @@ package com.softserve.controller;
 
 import com.softserve.dto.GroupDTO;
 import com.softserve.entity.Group;
-import com.softserve.entity.Room;
-import com.softserve.entity.Subject;
 import com.softserve.service.GroupService;
 import com.softserve.service.mapper.GroupMapper;
 import io.swagger.annotations.Api;
@@ -15,8 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RestController
 @Api(tags = "Group API")
@@ -35,7 +31,7 @@ public class GroupController {
     @GetMapping
     @ApiOperation(value = "Get the list of all groups")
     public ResponseEntity<List<GroupDTO>> list() {
-        log.info("Enter into list of GroupController");
+        log.info("Enter into list method of {}", getClass().getName());
         List<Group> groups = groupService.getAll();
         return ResponseEntity.status(HttpStatus.OK).body(groupMapper.groupsToGroupDTOs(groups));
     }
@@ -43,7 +39,7 @@ public class GroupController {
     @GetMapping("/{id}")
     @ApiOperation(value = "Get group info by id")
     public ResponseEntity<GroupDTO> get(@PathVariable("id") long id){
-        log.info("Enter into get of GroupController with id {} ", id);
+        log.info("Enter into get method of {} with id {} ", getClass().getName(), id);
         Group group = groupService.getById(id);
         return ResponseEntity.status(HttpStatus.OK).body(groupMapper.groupToGroupDTO(group));
     }
@@ -51,23 +47,24 @@ public class GroupController {
     @PostMapping
     @ApiOperation(value = "Create new group")
     public ResponseEntity<GroupDTO> save(@RequestBody GroupDTO groupDTO) {
-        log.info("Enter into save of GroupController with groupDTO: {}", groupDTO);
+        log.info("Enter into save method of {} with groupDTO: {}",getClass().getName(), groupDTO);
         Group group = groupService.save(groupMapper.groupDTOToGroup(groupDTO));
         return ResponseEntity.status(HttpStatus.CREATED).body(groupMapper.groupToGroupDTO(group));
     }
 
-    @PutMapping
+    @PutMapping()
     @ApiOperation(value = "Update existing group by id")
-    public ResponseEntity<?> update(@RequestBody GroupDTO groupDTO) {
-        log.info("Enter into update of GroupController with groupDTO: {}", groupDTO);
+    public ResponseEntity<GroupDTO> update(@RequestBody GroupDTO groupDTO) {
+        log.info("Enter into update method of {} with groupDTO: {}", getClass().getName(), groupDTO);
+        groupService.getById(groupDTO.getId());
         Group group = groupService.update(groupMapper.groupDTOToGroup(groupDTO));
         return ResponseEntity.status(HttpStatus.OK).body(groupMapper.groupToGroupDTO(group));
     }
 
     @DeleteMapping("/{id}")
     @ApiOperation(value = "Delete group by id")
-    public ResponseEntity<?> delete(@PathVariable("id") long id){
-        log.info("Enter into delete of GroupController with  group id: {}", id);
+    public ResponseEntity delete(@PathVariable("id") long id){
+        log.info("Enter into delete method of {} with  group id: {}", getClass().getName(), id);
         Group group = groupService.getById(id);
         groupService.delete(group);
         return ResponseEntity.status(HttpStatus.OK).build();
