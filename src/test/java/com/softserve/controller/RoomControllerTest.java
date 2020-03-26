@@ -33,10 +33,7 @@ public class RoomControllerTest {
 
     private MockMvc mockMvc;
     private ObjectMapper objectMapper = new ObjectMapper();
-    private Room room = new Room();
-    private AddRoomDTO roomDtoForBefore = new AddRoomDTO();
-    private AddRoomDTO roomDtoForSave = new AddRoomDTO();
-    private RoomDTO roomDtoForUpdate = new RoomDTO();
+    private Room room;
 
     @Autowired
     private WebApplicationContext wac;
@@ -45,26 +42,18 @@ public class RoomControllerTest {
     private RoomService roomService;
 
     @Before
-    public void insertData() {
-
+    public void setup() {
         mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
 
-        //Save new period before all Test methods
-        roomDtoForBefore.setName("dto name");
-        roomDtoForBefore.setRoomSize(RoomSize.LARGE);
-        room = new RoomMapperImpl().convertToEntity(roomDtoForBefore);
+        AddRoomDTO roomDTO = new AddRoomDTO();
+        roomDTO.setName("dto name");
+        roomDTO.setRoomSize(RoomSize.LARGE);
+        room = new RoomMapperImpl().convertToEntity(roomDTO);
         roomService.save(room);
-
-        roomDtoForSave.setName("save name");
-        roomDtoForSave.setRoomSize(RoomSize.MEDIUM);
-
-        roomDtoForUpdate.setId(room.getId());
-        roomDtoForUpdate.setName("update name");
-        roomDtoForUpdate.setRoomSize(RoomSize.SMALL);
     }
 
     @After
-    public void deleteData() {
+    public void tearDown() {
         roomService.delete(room);
     }
 
@@ -77,7 +66,6 @@ public class RoomControllerTest {
 
     @Test
     public void testGet() throws Exception {
-
         mockMvc.perform(get("/rooms/{id}", String.valueOf(room.getId())).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"))
@@ -86,6 +74,9 @@ public class RoomControllerTest {
 
     @Test
     public void testSave() throws Exception {
+        AddRoomDTO roomDtoForSave = new AddRoomDTO();
+        roomDtoForSave.setName("save name");
+        roomDtoForSave.setRoomSize(RoomSize.MEDIUM);
 
         mockMvc.perform(post("/rooms").content(objectMapper.writeValueAsString(roomDtoForSave))
                 .contentType(MediaType.APPLICATION_JSON))
@@ -94,6 +85,10 @@ public class RoomControllerTest {
 
     @Test
     public void testUpdate() throws Exception {
+        RoomDTO roomDtoForUpdate = new RoomDTO();
+        roomDtoForUpdate.setId(room.getId());
+        roomDtoForUpdate.setName("update name");
+        roomDtoForUpdate.setRoomSize(RoomSize.SMALL);
 
         Room roomForCompare = new RoomMapperImpl().convertToEntity(roomDtoForUpdate);
 

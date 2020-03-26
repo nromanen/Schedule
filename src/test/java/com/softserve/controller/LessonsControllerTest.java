@@ -233,12 +233,9 @@ public class LessonsControllerTest {
     private GroupService groupService;
 
     @Before
-    public void init() {
-        mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
-    }
-
-    @Before
     public void insertData() {
+
+        mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
 
         //Save new period before all Test methods
         TeacherDTO teacherDTO = new TeacherDTO();
@@ -264,6 +261,7 @@ public class LessonsControllerTest {
         lessonDtoForBefore.setSubject(new SubjectMapperImpl().subjectToSubjectDTO(subject));
         lessonDtoForBefore.setGroup(new GroupMapperImpl().groupToGroupDTO(group));
         lesson = new LessonInfoMapperImpl().LessonInfoDTOToLesson(lessonDtoForBefore);
+
         lessonService.save(lesson);
 
         lessonDtoForSave.setHours(1);
@@ -283,13 +281,6 @@ public class LessonsControllerTest {
         lessonDtoForUpdate.setSubject(new SubjectMapperImpl().subjectToSubjectDTO(subject));
         lessonDtoForUpdate.setGroup(new GroupMapperImpl().groupToGroupDTO(group));
 
-        lessonDtoForBefore.setHours(1);
-        lessonDtoForBefore.setTeacherForSite("teacher for site before");
-        lessonDtoForBefore.setSubjectForSite("subject for site before");
-        lessonDtoForBefore.setLessonType(LessonType.LECTURE);
-        lessonDtoForBefore.setTeacher(new TeacherNameMapperImpl().teacherNameToTeacherDTO(teacher));
-        lessonDtoForBefore.setSubject(new SubjectMapperImpl().subjectToSubjectDTO(subject));
-        lessonDtoForBefore.setGroup(new GroupMapperImpl().groupToGroupDTO(group));
     }
 
     @After

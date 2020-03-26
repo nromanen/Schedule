@@ -31,10 +31,7 @@ public class GroupControllerTest {
 
     private MockMvc mockMvc;
     private ObjectMapper objectMapper = new ObjectMapper();
-    private Group group = new Group();
-    private GroupDTO groupDtoForBefore = new GroupDTO();
-    private GroupDTO groupDtoForSave = new GroupDTO();
-    private GroupDTO groupDtoForUpdate = new GroupDTO();
+    private Group group;
 
     @Autowired
     private WebApplicationContext wac;
@@ -43,23 +40,17 @@ public class GroupControllerTest {
     private GroupService groupService;
 
     @Before
-    public void insertData() {
-
+    public void setup() {
         mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
 
-        //Save new period before all Test methods
-        groupDtoForBefore.setTitle("dto name");
-        group = new GroupMapperImpl().groupDTOToGroup(groupDtoForBefore);
+        GroupDTO groupDTO = new GroupDTO();
+        groupDTO.setTitle("dto name");
+        group = new GroupMapperImpl().groupDTOToGroup(groupDTO);
         groupService.save(group);
-
-        groupDtoForSave.setTitle("save name");
-
-        groupDtoForUpdate.setId(group.getId());
-        groupDtoForUpdate.setTitle("update name");
     }
 
     @After
-    public void deleteData() {
+    public void tearDown() {
         groupService.delete(group);
     }
 
@@ -72,7 +63,6 @@ public class GroupControllerTest {
 
     @Test
     public void testGet() throws Exception {
-
         mockMvc.perform(get("/groups/{id}", String.valueOf(group.getId())).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"))
@@ -81,6 +71,8 @@ public class GroupControllerTest {
 
     @Test
     public void testSave() throws Exception {
+        GroupDTO groupDtoForSave = new GroupDTO();
+        groupDtoForSave.setTitle("save name");
 
         mockMvc.perform(post("/groups").content(objectMapper.writeValueAsString(groupDtoForSave))
                 .contentType(MediaType.APPLICATION_JSON))
@@ -89,6 +81,9 @@ public class GroupControllerTest {
 
     @Test
     public void testUpdate() throws Exception {
+        GroupDTO groupDtoForUpdate = new GroupDTO();
+        groupDtoForUpdate.setId(group.getId());
+        groupDtoForUpdate.setTitle("update name");
 
         Group groupForCompare = new GroupMapperImpl().groupDTOToGroup(groupDtoForUpdate);
 

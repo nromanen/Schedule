@@ -6,6 +6,7 @@ import com.softserve.config.MyWebAppInitializer;
 import com.softserve.config.WebMvcConfig;
 import com.softserve.dto.UserCreateDTO;
 import com.softserve.entity.User;
+import com.softserve.exception.EntityNotFoundException;
 import com.softserve.service.UserService;
 import com.softserve.service.mapper.UserMapperImpl;
 import org.junit.After;
@@ -22,7 +23,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -32,10 +32,7 @@ public class UserControllerTest {
 
     private MockMvc mockMvc;
     private ObjectMapper objectMapper = new ObjectMapper();
-    private User user = new User();
-    private UserCreateDTO userDtoForBefore = new UserCreateDTO();
-    private UserCreateDTO userDtoForSave = new UserCreateDTO();
-    private UserCreateDTO userDtoForUpdate = new UserCreateDTO();
+    private User user;
 
     @Autowired
     private WebApplicationContext wac;
@@ -44,27 +41,19 @@ public class UserControllerTest {
     private UserService userService;
 
     @Before
-    public void insertData() {
-
+    public void setup() {
         mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
 
-        //Save new period before all Test methods
-        userDtoForBefore.setEmail("dto email");
-        userDtoForBefore.setPassword("dto password");
-        user = new UserMapperImpl().toUser(userDtoForBefore);
+        UserCreateDTO userDto = new UserCreateDTO();
+        userDto.setEmail("dto email");
+        userDto.setPassword("dto password");
+        user = new UserMapperImpl().toUser(userDto);
         userService.save(user);
 
-        userDtoForSave.setEmail("save email");
-        userDtoForSave.setPassword("save password");
-
-        userDtoForUpdate.setId(user.getId());
-        userDtoForUpdate.setEmail("update email");
-        userDtoForUpdate.setPassword("update password");
-//        userDtoForUpdate.setRole(ROLE_USER);
     }
 
     @After
-    public void deleteData() {
+    public void tearDown() {
         userService.delete(user);
     }
 
@@ -77,7 +66,6 @@ public class UserControllerTest {
 
     @Test
     public void testGet() throws Exception {
-
         mockMvc.perform(get("/users/{id}", String.valueOf(user.getId())).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"))
@@ -86,6 +74,9 @@ public class UserControllerTest {
 
     @Test
     public void testSave() throws Exception {
+        UserCreateDTO userDtoForSave = new UserCreateDTO();
+        userDtoForSave.setEmail("save email");
+        userDtoForSave.setPassword("save password");
 
         mockMvc.perform(post("/users").content(objectMapper.writeValueAsString(userDtoForSave))
                 .contentType(MediaType.APPLICATION_JSON))
@@ -94,6 +85,10 @@ public class UserControllerTest {
 
     @Test
     public void testUpdate() throws Exception {
+        UserCreateDTO userDtoForUpdate = new UserCreateDTO();
+        userDtoForUpdate.setId(user.getId());
+        userDtoForUpdate.setEmail("update email");
+        userDtoForUpdate.setPassword("update password");
 
         User userForCompare = new UserMapperImpl().toUser(userDtoForUpdate);
 
@@ -116,4 +111,21 @@ public class UserControllerTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
+
+    @Test
+    public void whenUserNotFound() throws Exception {
+        mockMvc.perform(get("/users/10")).andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void whenSaveExistsUser() throws Exception {
+        UserCreateDTO userDto = new UserCreateDTO();
+        userDto.setEmail("dto email");
+        userDto.setPassword("dto password");
+
+        mockMvc.perform(post("/users").content(objectMapper.writeValueAsString(user))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isConflict());
+    }
+
 }

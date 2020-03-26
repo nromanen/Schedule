@@ -31,10 +31,7 @@ public class TeacherControllerTest {
 
     private MockMvc mockMvc;
     private ObjectMapper objectMapper = new ObjectMapper();
-    private Teacher teacher = new Teacher();
-    private TeacherDTO teacherDtoForBefore = new TeacherDTO();
-    private TeacherDTO teacherDtoForSave = new TeacherDTO();
-    private TeacherDTO teacherDtoForUpdate = new TeacherDTO();
+    private Teacher teacher;
 
     @Autowired
     private WebApplicationContext wac;
@@ -43,32 +40,20 @@ public class TeacherControllerTest {
     private TeacherService teacherService;
 
     @Before
-    public void insertData() {
-
+    public void setup() {
         mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
 
-        //Save new period before all Test methods
-        teacherDtoForBefore.setName("dto name");
-        teacherDtoForBefore.setSurname("dto surname");
-        teacherDtoForBefore.setPatronymic("dto patronymic");
-        teacherDtoForBefore.setPosition("dto position");
-        teacher = new TeacherMapperImpl().teacherDTOToTeacher(teacherDtoForBefore);
+        TeacherDTO teacherDto = new TeacherDTO();
+        teacherDto.setName("dto name");
+        teacherDto.setSurname("dto surname");
+        teacherDto.setPatronymic("dto patronymic");
+        teacherDto.setPosition("dto position");
+        teacher = new TeacherMapperImpl().teacherDTOToTeacher(teacherDto);
         teacherService.save(teacher);
-
-        teacherDtoForSave.setName("save name");
-        teacherDtoForSave.setSurname("save surname");
-        teacherDtoForSave.setPatronymic("save patronymic");
-        teacherDtoForSave.setPosition("save position");
-
-        teacherDtoForUpdate.setId(teacher.getId());
-        teacherDtoForUpdate.setName("update name");
-        teacherDtoForUpdate.setSurname("update surname");
-        teacherDtoForUpdate.setPatronymic("update patronymic");
-        teacherDtoForUpdate.setPosition("update position");
     }
 
     @After
-    public void deleteData() {
+    public void tearDown() {
         teacherService.delete(teacher);
     }
 
@@ -81,7 +66,6 @@ public class TeacherControllerTest {
 
     @Test
     public void testGet() throws Exception {
-
         mockMvc.perform(get("/teachers/{id}", String.valueOf(teacher.getId())).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"))
@@ -90,6 +74,11 @@ public class TeacherControllerTest {
 
     @Test
     public void testSave() throws Exception {
+        TeacherDTO teacherDtoForSave = new TeacherDTO();
+        teacherDtoForSave.setName("save name");
+        teacherDtoForSave.setSurname("save surname");
+        teacherDtoForSave.setPatronymic("save patronymic");
+        teacherDtoForSave.setPosition("save position");
 
         mockMvc.perform(post("/teachers").content(objectMapper.writeValueAsString(teacherDtoForSave))
                 .contentType(MediaType.APPLICATION_JSON))
@@ -98,6 +87,12 @@ public class TeacherControllerTest {
 
     @Test
     public void testUpdate() throws Exception {
+        TeacherDTO teacherDtoForUpdate = new TeacherDTO();
+        teacherDtoForUpdate.setId(teacher.getId());
+        teacherDtoForUpdate.setName("update name");
+        teacherDtoForUpdate.setSurname("update surname");
+        teacherDtoForUpdate.setPatronymic("update patronymic");
+        teacherDtoForUpdate.setPosition("update position");
 
         Teacher teacherForCompare = new TeacherMapperImpl().teacherDTOToTeacher(teacherDtoForUpdate);
 
@@ -118,8 +113,10 @@ public class TeacherControllerTest {
         teacherDTO.setSurname("delete surname");
         teacherDTO.setPatronymic("delete patronymic");
         teacherDTO.setPosition("delete position");
-        Teacher save = teacherService.save(new TeacherMapperImpl().teacherDTOToTeacher(teacherDTO));
-        mockMvc.perform(delete("/teachers/{id}", String.valueOf(save.getId()))
+
+        Teacher teacher = teacherService.save(new TeacherMapperImpl().teacherDTOToTeacher(teacherDTO));
+
+        mockMvc.perform(delete("/teachers/{id}", String.valueOf(teacher.getId()))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }

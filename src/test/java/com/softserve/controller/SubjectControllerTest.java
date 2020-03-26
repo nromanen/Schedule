@@ -31,10 +31,7 @@ public class SubjectControllerTest {
 
     private MockMvc mockMvc;
     private ObjectMapper objectMapper = new ObjectMapper();
-    private Subject subject = new Subject();
-    private SubjectDTO subjectDtoForBefore = new SubjectDTO();
-    private SubjectDTO subjectDtoForSave = new SubjectDTO();
-    private SubjectDTO subjectDtoForUpdate = new SubjectDTO();
+    private Subject subject;
 
     @Autowired
     private WebApplicationContext wac;
@@ -43,23 +40,17 @@ public class SubjectControllerTest {
     private SubjectService subjectService;
 
     @Before
-    public void insertData() {
-
+    public void setup() {
         mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
 
-        //Save new period before all Test methods
-        subjectDtoForBefore.setName("dto name");
-        subject = new SubjectMapperImpl().subjectDTOToSubject(subjectDtoForBefore);
+        SubjectDTO subjectDTO = new SubjectDTO();
+        subjectDTO.setName("dto name");
+        subject = new SubjectMapperImpl().subjectDTOToSubject(subjectDTO);
         subjectService.save(subject);
-
-        subjectDtoForSave.setName("save name");
-
-        subjectDtoForUpdate.setId(subject.getId());
-        subjectDtoForUpdate.setName("update name");
     }
 
     @After
-    public void deleteData() {
+    public void tearDown() {
         subjectService.delete(subject);
     }
 
@@ -72,7 +63,6 @@ public class SubjectControllerTest {
 
     @Test
     public void testGet() throws Exception {
-
         mockMvc.perform(get("/subjects/{id}", String.valueOf(subject.getId())).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"))
@@ -81,6 +71,8 @@ public class SubjectControllerTest {
 
     @Test
     public void testSave() throws Exception {
+        SubjectDTO subjectDtoForSave = new SubjectDTO();
+        subjectDtoForSave.setName("save name");
 
         mockMvc.perform(post("/subjects").content(objectMapper.writeValueAsString(subjectDtoForSave))
                 .contentType(MediaType.APPLICATION_JSON))
@@ -89,6 +81,9 @@ public class SubjectControllerTest {
 
     @Test
     public void testUpdate() throws Exception {
+        SubjectDTO subjectDtoForUpdate = new SubjectDTO();
+        subjectDtoForUpdate.setId(subject.getId());
+        subjectDtoForUpdate.setName("update name");
 
         Subject subjectForCompare = new SubjectMapperImpl().subjectDTOToSubject(subjectDtoForUpdate);
 
