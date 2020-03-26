@@ -110,7 +110,7 @@ public class PeriodServiceImpl implements PeriodService {
         if (isPeriodFree(getAll(), object)) {
             return periodRepository.update(object);
         } else {
-            throw new PeriodsException("your period has conflict with already existed periods");
+            throw new PeriodConflictException("your period has conflict with already existed periods");
         }
     }
 
