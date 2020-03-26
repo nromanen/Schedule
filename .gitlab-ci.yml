@@ -19,7 +19,7 @@ build:
             - build
             - .gradle
     only:
-         - master
+         - 12_ci_cd
 test:
     image: gradle:alpine
     stage: test
@@ -28,9 +28,13 @@ test:
         key: "$CI_COMMIT_REF_NAME"
         policy: pull
         paths:
-            - gradle test
+            - gradle test --tests GroupControllerTest
+            - gradle test --tests PeriodControllerTest
+            - gradle test --tests RoomControllerTest
+            - gradle test --tests SubjectControllerTest
+            - gradle test --tests TeacherControllerTest
     only:
-         - master
+         - 12_ci_cd
 deploy:
     stage: deploy
     image: ruby:latest
@@ -40,7 +44,6 @@ deploy:
         - apt-get update -qy
         - apt-get install -y ruby-dev
         - gem install dpl
-
         #- dpl --provider=heroku --app=$HEROKU_APP_MASTER --api-key=$HEROKU_API_KEY
     only:
-        - master
+        - 12_ci_cd
