@@ -10,6 +10,7 @@ buildscript {
 
 plugins {
     id 'war'
+    id 'java'
 }
 
 group 'com.softserve'
