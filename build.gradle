@@ -32,14 +32,6 @@ task copyToLib(type: Copy) {
 
 stage.dependsOn(copyToLib)
 
-
-test {
-    useJUnit()
-
-    maxHeapSize = '1G'
-}
-
-
 dependencies {
 
 
