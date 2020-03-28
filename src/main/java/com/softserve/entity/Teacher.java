@@ -1,11 +1,14 @@
 package com.softserve.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.List;
+import java.util.Set;
 
 @Data
 @Entity
@@ -39,7 +42,9 @@ public class Teacher implements Serializable {
     @Column(name ="user_id")
     private Integer userId;
 
-    @OneToMany(mappedBy = 'teachers')
-    @JoinColumn()
-    private TeacherWishes teacherWishes;
+    @OneToMany(targetEntity=TeacherWishes.class, mappedBy="teacher_id",fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private List<TeacherWishes> teacherWishesList;
+
+
+
 }

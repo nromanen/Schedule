@@ -1,6 +1,7 @@
 package com.softserve.controller;
 
 import com.softserve.dto.TeacherDTO;
+import com.softserve.dto.TeacherMapperWishDTO;
 import com.softserve.entity.Teacher;
 import com.softserve.service.TeacherService;
 import com.softserve.service.mapper.TeacherMapper;
@@ -34,6 +35,12 @@ public class TeacherController {
     public ResponseEntity<List<TeacherDTO>> getAll() {
         log.info("Enter into list method of {}", getClass().getName());
         return ResponseEntity.ok(teacherMapper.teachersToTeacherDTOs(teacherService.getAll()));
+    }
+
+    @GetMapping("/all")
+    @ApiOperation(value = "Get the list of all teachers")
+    public ResponseEntity<List<TeacherMapperWishDTO>> all() {
+        return ResponseEntity.ok(teacherMapper.toTeacherWithWishesDTOs(teacherService.getAll()));
     }
 
 
