@@ -1,6 +1,7 @@
 package com.softserve.entity;
 
-import com.vladmihalcea.hibernate.type.json.JsonStringType;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.*;
@@ -11,7 +12,10 @@ import javax.persistence.Table;
 import java.io.Serializable;
 
 
-@TypeDef(name = "json", typeClass = JsonStringType.class)
+@TypeDef(
+        typeClass = JsonBinaryType.class,
+        defaultForType = JsonNode.class
+)
 @NoArgsConstructor
 @Data
 @Entity
@@ -22,17 +26,11 @@ public class TeacherWishes implements Serializable {
     @Column(columnDefinition = "serial")
     private long id;
 
-    @ManyToOne(targetEntity = Teacher.class)
-    @JoinColumn(name = "teacher_id", insertable = false, updatable = false)
-    @OnDelete(action = OnDeleteAction.NO_ACTION)
-    private Teacher teacher;
+    private Integer teacher_id;
 
-    @ManyToOne(targetEntity = Semester.class)
-    @JoinColumn(name = "semester_id", insertable = false, updatable = false)
-    @OnDelete(action = OnDeleteAction.NO_ACTION)
-    private Semester semester;
+    private Integer semester_id;
 
-    @Type(type = "json")
-    @Column(name = "wishlist",columnDefinition = "json")
-    private String wishList;
+    @Column(name = "wishlist", columnDefinition = "json")
+    private JsonNode wishList;
+
 }
