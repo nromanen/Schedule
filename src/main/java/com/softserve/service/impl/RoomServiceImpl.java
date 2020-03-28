@@ -99,4 +99,9 @@ public class RoomServiceImpl implements RoomService {
                 idOfPeriod, dayOfWeek, evenOdd);
         return roomRepository.freeRoomBySpecificPeriod(idOfPeriod, dayOfWeek, evenOdd);
     }
+
+    @Override
+    public List<String> allUniqueRoomTypes() {
+        return roomRepository.allUniqueRoomTypes();
+    }
 }
