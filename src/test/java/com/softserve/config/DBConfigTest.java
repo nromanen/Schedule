@@ -1,7 +1,6 @@
 package com.softserve.config;
 
 import com.mchange.v2.c3p0.ComboPooledDataSource;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,24 +18,20 @@ import java.util.Properties;
 import static org.hibernate.cfg.Environment.*;
 
 @Configuration
-@PropertySource("classpath:hibernate.properties")
+@PropertySource("classpath:hibernatetest.properties")
 @EnableTransactionManagement
-@Slf4j
-public class DBConfig {
+public class DBConfigTest {
     private static final String ENTITY_PACKAGE = "hibernate.entity.package";
 
     private final Environment environment;
 
     @Autowired
-    public DBConfig(Environment environment) {
+    public DBConfigTest(Environment environment) {
         this.environment = environment;
     }
 
     @Bean
     public DataSource getDataSource() {
-        String  url= null;
-        String  user = null;
-        String  password;
         ComboPooledDataSource dataSource = new ComboPooledDataSource();
         try {
             dataSource.setDriverClass(Objects.requireNonNull(environment.getProperty(DRIVER)));
@@ -44,48 +39,17 @@ public class DBConfig {
             System.exit(1);
         }
 
-        try {
-            url = System.getenv("HEROKU_DB_URL");
-            user = System.getenv("HEROKU_DB_USER");
-            password = System.getenv("HEROKU_DB_PASSWORD");
-
-            if(url == null){
-                url = Objects.requireNonNull(environment.getProperty(URL));
-            }
-            if(user == null){
-                user = Objects.requireNonNull(environment.getProperty(USER));
-            }
-            if(password == null){
-                password = Objects.requireNonNull(environment.getProperty(PASS));
-            }
-
-            dataSource.setJdbcUrl(url);
-            dataSource.setUser(user);
-            dataSource.setPassword(password);
-        }catch (NullPointerException e){
-            log.error("Wrong db credential, user: {}, url:{}", user, url);
-        }
-
+        dataSource.setJdbcUrl(Objects.requireNonNull(environment.getProperty(URL)));
+        dataSource.setUser(Objects.requireNonNull(environment.getProperty(USER)));
+        dataSource.setPassword(Objects.requireNonNull(environment.getProperty(PASS)));
         return dataSource;
     }
-
 
     @Bean
     public LocalSessionFactoryBean getSessionFactory() {
         LocalSessionFactoryBean sessionFactoryBean = new LocalSessionFactoryBean();
         sessionFactoryBean.setDataSource(getDataSource());
         Properties properties = new Properties();
-
-        try {
-            String url = Objects.requireNonNull(System.getenv("HEROKU_DB_URL"));
-            String user = Objects.requireNonNull(System.getenv("HEROKU_DB_USER"));
-            String password = Objects.requireNonNull(System.getenv("HEROKU_DB_PASSWORD"));
-            properties.put("hibernate.connection.url", url);
-            properties.put("hibernate.connection.username", user);
-            properties.put("hibernate.connection.password", password);
-        }catch (NullPointerException e){
-            log.info("Connect to db with local credential");
-        }
 
         properties.put(SHOW_SQL, Objects.requireNonNull(environment.getProperty(SHOW_SQL)));
         properties.put(HBM2DDL_AUTO, Objects.requireNonNull(environment.getProperty(HBM2DDL_AUTO)));

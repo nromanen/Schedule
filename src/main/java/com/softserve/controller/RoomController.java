@@ -66,7 +66,7 @@ public class RoomController {
     public ResponseEntity<RoomDTO> save(@RequestBody AddRoomDTO addRoomDTO) {
         log.info("Enter into save of RoomController with addRoomDTO: {}", addRoomDTO);
         Room newRoom = roomService.save(roomMapper.convertToEntity(addRoomDTO));
-        return ResponseEntity.ok().body(roomMapper.convertToDto(newRoom));
+        return ResponseEntity.status(HttpStatus.CREATED).body(roomMapper.convertToDto(newRoom));
     }
 
     @PutMapping
@@ -84,4 +84,11 @@ public class RoomController {
         roomService.delete(roomService.getById(id));
         return ResponseEntity.ok().body(new MessageDTO("Room has been deleted successfully."));
     }
+
+    @GetMapping("/types")
+    @ApiOperation(value = "Get all room types")
+    public ResponseEntity<List<String>> getAllUniqueRoomTypes(){
+        return ResponseEntity.ok().body(roomService.allUniqueRoomTypes());
+    }
+
 }

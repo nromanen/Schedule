@@ -104,7 +104,14 @@ public class PeriodServiceImpl implements PeriodService {
     @Override
     public Period update(Period object) {
         log.info("Enter into update of PeriodServiceImpl with entity:{}", object);
-        return periodRepository.update(object);
+        if (isTimeInvalid(object)) {
+            throw new IncorrectTimeException("incorrect time in period");
+        }
+        if (isPeriodFree(getAll(), object)) {
+            return periodRepository.update(object);
+        } else {
+            throw new PeriodConflictException("your period has conflict with already existed periods");
+        }
     }
 
     /**

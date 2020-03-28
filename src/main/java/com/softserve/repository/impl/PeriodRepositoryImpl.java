@@ -28,4 +28,16 @@ public class PeriodRepositoryImpl extends BasicRepositoryImpl<Period, Long> impl
                 createQuery("select p from " + basicClass.getName() + " p" +
                         " order by p.startTime ASC").getResultList();
     }
+
+    /**
+     * The method used for updating existed entity from database
+     *
+     * @param entity entity is going to be updated
+     * @return entity that was updated
+     */
+    @Override
+    public Period update(Period entity) {
+        sessionFactory.getCurrentSession().clear();
+        return super.update(entity);
+    }
 }

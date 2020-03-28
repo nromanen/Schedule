@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="true">
+    <property value="schedule_logs" name="USER_HOME"/>
+    <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <Pattern>[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n</Pattern>
+        </layout>
+    </appender>
+    <appender name="fout" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${USER_HOME}/log.log</file>
+        <append>true</append>
+        <encoder>
+            <pattern>[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>${USER_HOME}/logArchiveAll/roll.%d{yyyy-MM-dd}.%i.log.zip</FileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>10MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <maxHistory>60</maxHistory>
+            <totalSizeCap>1GB</totalSizeCap>
+        </rollingPolicy>
+    </appender>
+    <logger name="com.softserve" level="INFO">
+        <appender-ref ref="fout"/>
+    </logger>
+    <logger name="org.hibernate.sql" level="DEBUG">
+        <appender-ref ref="fout"/>
+    </logger>
+    <root level="INFO">
+        <appender-ref ref="stdout"/>
+    </root>
+</configuration>

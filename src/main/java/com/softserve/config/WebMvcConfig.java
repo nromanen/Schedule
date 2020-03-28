@@ -13,7 +13,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
 
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-
     }
 
     public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {

@@ -3,8 +3,6 @@ package com.softserve.repository.impl;
 import com.softserve.entity.Lesson;
 import com.softserve.repository.LessonRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.Session;
-import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -12,9 +10,6 @@ import java.util.List;
 @Repository
 @Slf4j
 public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> implements LessonRepository {
-
-    public LessonRepositoryImpl() {
-    }
 
     /**
      *  Method gets information about all lessons for particular group from DB
@@ -25,11 +20,8 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
     public List<Lesson> getAllForGroup(Long groupId) {
         log.info("Enter into  getAllForGroup method of {} to search lessons for group with id = {}", getClass().getName(), groupId);
 
-        Session session = sessionFactory.getCurrentSession();
-        Query query = session.createQuery
+        return sessionFactory.getCurrentSession().createQuery
                 ("FROM Lesson l WHERE l.group.id = :groupId")
-                .setParameter("groupId", groupId);
-        List<Lesson> res = query.getResultList();
-        return res;
+                .setParameter("groupId", groupId).getResultList();
     }
 }
