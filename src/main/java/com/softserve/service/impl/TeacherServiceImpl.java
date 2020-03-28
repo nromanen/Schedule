@@ -37,6 +37,10 @@ public class TeacherServiceImpl implements TeacherService {
                 () -> new EntityNotFoundException(Teacher.class, "id", id.toString()));
     }
 
+    /**
+     * Method gets information about teachers from Repository
+     * @return List of all teachers
+     */
     @Override
     public List<Teacher> getAll() {
         return teacherRepository.getAll();
@@ -44,16 +48,30 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Override
     public Teacher save(Teacher object) {
+        log.info("Enter into save method of {} with entity:{}", getClass().getName(), object);
         return teacherRepository.save(object);
     }
 
+    /**
+     * Method updates information for an existing teacher in Repository
+     * @param object Teacher entity with info to be updated
+     * @return updated Teacher entity
+     */
     @Override
-    public Teacher update(Teacher object) {
+    public Teacher update(Teacher object)
+    {
+        log.info("Enter into update method of {} with entity:{}", getClass().getName(), object);
         return teacherRepository.update(object);
     }
 
+    /**
+     * Method deletes an existing teacher from Repository
+     * @param object Teacher entity to be deleted
+     * @return deleted Teacher entity
+     */
     @Override
     public Teacher delete(Teacher object) {
+        log.info("Enter into delete method of {} with entity:{}", getClass().getName(), object);
         return teacherRepository.delete(object);
     }
 }
