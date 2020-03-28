@@ -12,6 +12,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
+
+@Transactional
 @RestController
 @Api(tags = "Teacher Wishes API")
 @RequestMapping("/teacher_wishes")
@@ -50,13 +53,13 @@ public class TeacherWishesController {
         return ResponseEntity.status(HttpStatus.CREATED).body(teacherWishesMapper.teacherWishesToTeacherWishesDTO(teacherWishes));
     }
 
-   /* @PutMapping()
-    @ApiOperation(value = "Update existing group by id")
-    public ResponseEntity<GroupDTO> update(@RequestBody GroupDTO groupDTO) {
-        log.info("Enter into update method of {} with groupDTO: {}", getClass().getName(), groupDTO);
-        groupService.getById(groupDTO.getId());
-        Group group = groupService.update(groupMapper.groupDTOToGroup(groupDTO));
-        return ResponseEntity.status(HttpStatus.OK).body(groupMapper.groupToGroupDTO(group));
+    @PutMapping()
+    @ApiOperation(value = "Update existing wish by id")
+    public ResponseEntity<TeacherWishesDTO> update(@RequestBody TeacherWishesDTO teacherWishesDTO) {
+        log.info("Enter into update method with TeacherWishesDTO: {}", teacherWishesDTO);
+        teacherWishesService.getById(teacherWishesDTO.getId());
+        TeacherWishes teacherWishes = teacherWishesService.update(teacherWishesMapper.teacherWishesDTOToTeacherWishes(teacherWishesDTO));
+        return ResponseEntity.status(HttpStatus.OK).body(teacherWishesMapper.teacherWishesToTeacherWishesDTO(teacherWishes));
     }
 
    /* @DeleteMapping("/{id}")
