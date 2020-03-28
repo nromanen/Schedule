@@ -46,11 +46,4 @@ public class UserRepositoryImpl extends BasicRepositoryImpl<User, Long> implemen
         sessionFactory.getCurrentSession().update(entity);
         return entity;
     }
-
-    public User findByUsername(String username) {
-        Session session = sessionFactory.getCurrentSession();
-        Query query = session.createQuery("from User user where user.email= :email")
-                .setParameter("email", username);
-        return (User) query.getResultList().stream().findFirst().orElse(null);
-    }
 }
