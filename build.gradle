@@ -21,7 +21,7 @@ repositories {
 
 
 task stage() {
-    dependsOn clean, war, test
+    dependsOn clean, war
 }
 war.mustRunAfter clean
 task copyToLib(type: Copy) {
