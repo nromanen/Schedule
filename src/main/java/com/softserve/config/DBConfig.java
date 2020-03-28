@@ -25,7 +25,7 @@ import static org.hibernate.cfg.Environment.*;
 public class DBConfig {
     private static final String ENTITY_PACKAGE = "hibernate.entity.package";
 
-    private  Environment environment;
+    private final Environment environment;
 
     @Autowired
     public DBConfig(Environment environment) {
