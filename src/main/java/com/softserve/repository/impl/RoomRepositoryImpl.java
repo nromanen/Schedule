@@ -42,4 +42,9 @@ public class RoomRepositoryImpl extends BasicRepositoryImpl<Room, Long> implemen
         List<Room> res = query.getResultList();
         return new ArrayList<>(res);
     }
+
+    @Override
+    public List<String> allUniqueRoomTypes() {
+        return  sessionFactory.getCurrentSession().createQuery("select distinct room.type from Room room").getResultList();
+    }
 }

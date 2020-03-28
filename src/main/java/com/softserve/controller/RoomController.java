@@ -84,4 +84,11 @@ public class RoomController {
         roomService.delete(roomService.getById(id));
         return ResponseEntity.ok().body(new MessageDTO("Room has been deleted successfully."));
     }
+
+    @GetMapping("/types")
+    @ApiOperation(value = "Get all room types")
+    public ResponseEntity<List<String>> getAllUniqueRoomTypes(){
+        return ResponseEntity.ok().body(roomService.allUniqueRoomTypes());
+    }
+
 }
