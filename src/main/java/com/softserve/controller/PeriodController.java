@@ -54,14 +54,14 @@ public class PeriodController {
     public ResponseEntity<PeriodDTO> save(@RequestBody AddPeriodDTO addPeriodDTO) {
         log.info("Enter into save of PeriodController with addPeriodDTO: {}", addPeriodDTO);
         Period newPeriod = periodService.save(periodMapper.convertToEntity(addPeriodDTO));
-        return ResponseEntity.ok().body(periodMapper.convertToDto(newPeriod));
+        return ResponseEntity.status(HttpStatus.CREATED).body(periodMapper.convertToDto(newPeriod));
     }
     @PostMapping("/all")
     @ApiOperation(value = "Create a list of periods")
     public ResponseEntity<MessageDTO> save(@RequestBody List<AddPeriodDTO> periods) {
         log.info("Enter into save of PeriodController with List of addPeriodDTO: {}", periods);
         periodService.save(periodMapper.convertToEntityList(periods));
-        return ResponseEntity.ok().body(new MessageDTO("New periods have been saved"));
+        return ResponseEntity.status(HttpStatus.CREATED).body(new MessageDTO("New periods have been saved"));
     }
 
     @PutMapping
