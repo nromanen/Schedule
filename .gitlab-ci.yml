@@ -20,21 +20,21 @@ build:
             - .gradle
     only:
          - develop
-test:
-    image: gradle:alpine
-    stage: test
-    script:
-        - gradle check
-        - gradle test --tests GroupControllerTest
-        - gradle test --tests PeriodControllerTest
-        - gradle test --tests RoomControllerTest
-        - gradle test --tests SubjectControllerTest
-        - gradle test --tests TeacherControllerTest
-    cache:
-        key: "$CI_COMMIT_REF_NAME"
-        policy: pull
-    only:
-         - develop
+#test:
+#    image: gradle:alpine
+#    stage: test
+#    script:
+#        - gradle check
+#        - gradle test --tests GroupControllerTest
+#        - gradle test --tests PeriodControllerTest
+#        - gradle test --tests RoomControllerTest
+#        - gradle test --tests SubjectControllerTest
+#        - gradle test --tests TeacherControllerTest
+#    cache:
+#        key: "$CI_COMMIT_REF_NAME"
+#        policy: pull
+#    only:
+#         - develop
 deploy:
     stage: deploy
     image: ruby:latest
