@@ -2,6 +2,7 @@ stages:
     - build
     - deploy
 
+
 variables:
     GRADLE_OPTS: "-Dorg.gradle.daemon=true"
 before_script:
