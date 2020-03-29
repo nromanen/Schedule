@@ -1,6 +1,5 @@
 package com.softserve.entity;
 
-import com.softserve.entity.enums.RoomSize;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,11 +21,16 @@ public class Room implements Serializable {
     @Column(columnDefinition = "serial")
     private long id;
 
-    @Enumerated(EnumType.STRING)
-    private RoomSize roomSize;
 
     @NotEmpty(message = "Name cannot be empty")
     @Size(min = 2, max = 35, message = "Name must be between 2 and 35 characters long")
     @Column(length = 35, nullable = false)
     private String name;
+
+    @NotEmpty(message = "Type cannot be empty")
+    @Size(min = 2, max = 100, message = "Type must be between 2 and 100 characters long")
+    @Column(length = 100, nullable = false)
+    private String type;
+
+
 }

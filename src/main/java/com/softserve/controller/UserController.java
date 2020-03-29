@@ -65,7 +65,7 @@ public class UserController {
 
     @DeleteMapping("/{id}")
     @ApiOperation(value = "Delete user by id")
-    public ResponseEntity<?> delete(@PathVariable("id") Long id) {
+    public ResponseEntity delete(@PathVariable("id") Long id) {
         log.info("Enter into delete method of {} with  group id: {}", getClass().getName(), id);
         User user = userService.getById(id);
         userService.delete(user);

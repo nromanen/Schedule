@@ -7,8 +7,6 @@ import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.util.List;
-
 
 @NoArgsConstructor
 @Data
@@ -42,9 +40,4 @@ public class Teacher implements Serializable {
 
     @Column(name ="user_id")
     private Integer userId;
-
-    //@OneToMany(targetEntity = TeacherWishes.class)
-    //private List<TeacherWishes> teacherWishesList;
-
-
 }

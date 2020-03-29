@@ -2,6 +2,7 @@ package com.softserve.service.impl;
 
 import com.softserve.entity.Group;
 import com.softserve.exception.EntityNotFoundException;
+import com.softserve.exception.FieldAlreadyExistsException;
 import com.softserve.repository.GroupRepository;
 import com.softserve.service.GroupService;
 import lombok.extern.slf4j.Slf4j;
@@ -54,6 +55,9 @@ public class GroupServiceImpl  implements GroupService {
     @Override
     public Group save(Group object) {
         log.info("Enter into save method of {} with entity:{}", getClass().getName(), object );
+        if (findByTitle(object.getTitle())){
+            throw new FieldAlreadyExistsException(Group.class, "title", object.getTitle());
+        }
         return groupRepository.save(object);
     }
 
@@ -65,6 +69,9 @@ public class GroupServiceImpl  implements GroupService {
     @Override
     public Group update(Group object) {
         log.info("Enter into update method of {} with entity:{}", getClass().getName(), object);
+        if (findByTitle(object.getTitle())){
+            throw new FieldAlreadyExistsException(Group.class, "title", object.getTitle());
+        }
         return groupRepository.update(object);
     }
 
@@ -77,5 +84,16 @@ public class GroupServiceImpl  implements GroupService {
     public Group delete(Group object) {
         log.info("Enter into delete method of {} with entity:{}", getClass().getName(), object);
         return groupRepository.delete(object);
+    }
+
+    /**
+     * Method finds if Group with title already exists
+     * @param title
+     * @return true if Group with such title already exist
+     */
+    @Override
+    public boolean findByTitle(String title) {
+        log.info("Enter into findByTitle method  of {} with title:{}", getClass().getName(), title);
+        return groupRepository.findByTitle(title).isPresent();
     }
 }

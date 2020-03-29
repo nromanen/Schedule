@@ -44,6 +44,7 @@ public class UserServiceImpl implements UserService {
         log.info("Enter into getAll method of {} ", getClass().getName());
         return userRepository.getAll();
     }
+
     /**
      * The method used for saving user in database
      *
@@ -77,8 +78,10 @@ public class UserServiceImpl implements UserService {
         }
         return userRepository.update(object);
     }
+
     /**
      * Method deletes an existing user from repository
+     *
      * @param object user entity to be deleted
      * @return deleted user
      */
@@ -88,9 +91,25 @@ public class UserServiceImpl implements UserService {
         return userRepository.delete(object);
     }
 
+    /**
+     * The method used for getting User by email from database
+     *
+     * @param email String email used to find User by it
+     * @return User entity
+     */
+    @Override
+    public User findByEmail(String email) {
+        log.info("Enter into findByEmail method with email:{}", email);
+        return userRepository.findByEmail(email).orElseThrow(
+                () -> new EntityNotFoundException(User.class, "email", email)
+        );
+    }
+
     // method for checking email in database
     private boolean emailExists(String email) {
         log.info("Enter into emailExists method  of {} with email:{}", getClass().getName(), email);
         return userRepository.findByEmail(email).isPresent();
     }
+
+
 }

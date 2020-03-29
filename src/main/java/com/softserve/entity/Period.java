@@ -38,13 +38,11 @@ public class Period implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Period period = (Period) o;
-        return startTime.equals(period.startTime) &&
-                endTime.equals(period.endTime) &&
-                name.equals(period.name);
+        return name.equals(period.name);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(startTime, endTime, name);
+        return Objects.hash(name);
     }
 }
