@@ -14,7 +14,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.bind.annotation.*;
 
@@ -46,14 +45,9 @@ public class AuthenticationController {
         log.info("Enter into login method with user email {}", requestDto.getUsername());
         try {
             String username = requestDto.getUsername();
-
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, requestDto.getPassword()));
             User user = userService.findByEmail(username);
 
-            if (user == null) {
-                throw new UsernameNotFoundException("User with username: " + username + " not found");
-            }
-
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, requestDto.getPassword()));
             String token = jwtTokenProvider.createToken(username, user.getRole().toString());
             AuthenticationResponseDTO authenticationResponseDTO = new AuthenticationResponseDTO(username, token);
 

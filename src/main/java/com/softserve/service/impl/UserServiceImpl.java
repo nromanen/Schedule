@@ -99,7 +99,10 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public User findByEmail(String email) {
-        return userRepository.findByEmail(email).orElse(null);
+        log.info("Enter into findByEmail method with email:{}", email);
+        return userRepository.findByEmail(email).orElseThrow(
+                () -> new EntityNotFoundException(User.class, "email", email)
+        );
     }
 
     // method for checking email in database

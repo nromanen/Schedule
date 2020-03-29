@@ -2,8 +2,6 @@ package com.softserve.repository.impl;
 
 import com.softserve.entity.User;
 import com.softserve.repository.UserRepository;
-import org.hibernate.Session;
-import org.hibernate.query.Query;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
