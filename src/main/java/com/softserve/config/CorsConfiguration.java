@@ -6,9 +6,11 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
+@EnableWebMvc
 @PropertySource("classpath:cors.properties")
 public class CorsConfiguration {
 
@@ -24,8 +26,7 @@ public class CorsConfiguration {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**").allowedOrigins(environment.getProperty("cors.localurl"),
-                        environment.getProperty("cors.herokuUrl")).allowedMethods("GET","POST","PUT", "DELETE");
+                registry.addMapping("/**").allowedMethods("GET","POST","PUT", "DELETE");
             }
         };
     }
