@@ -22,6 +22,7 @@ public class JwtUserDetailsService implements UserDetailsService {
         User user = userService.findByEmail(username);
 
         if (user == null) {
+            //TODO refactor to EntityNotFoundException
             throw new UsernameNotFoundException("User with username:" + username + " not found");
         }
 
