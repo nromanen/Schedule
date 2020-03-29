@@ -7,8 +7,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 @RestController
 @RequestMapping(value = "/test")
@@ -17,7 +15,7 @@ public class TestSecurityController {
 
     @GetMapping
     @ApiOperation(value = "Test method")
-    public ResponseEntity logout(HttpServletRequest rq, HttpServletResponse rs) {
+    public ResponseEntity test() {
         return ResponseEntity.ok("Successful security testing");
     }
 }
