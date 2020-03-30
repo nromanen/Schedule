@@ -47,12 +47,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
 
         //TODO security
-        http.cors().configurationSource(new CorsConfigurationSource() {
-            @Override
-            public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
-                return (CorsConfiguration) new CorsConfiguration().applyPermitDefaultValues();
-            }
-        })
+        http.cors().configurationSource(request -> (CorsConfiguration) new CorsConfiguration(environment).applyPermitDefaultValues())
                 //.httpBasic().disable()
                 // .csrf().disable()
                 //   .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -65,18 +60,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .apply(new JwtConfigurer(jwtTokenProvider));
     }
-
-
-    @Bean
-    static CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("*"));
-        configuration.setAllowedMethods(Arrays.asList("GET","POST","PUT", "DELETE"));
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
-    }
-
 
     @Override
     public void configure(WebSecurity web) throws Exception {
