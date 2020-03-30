@@ -1,6 +1,7 @@
 package com.softserve.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -42,6 +43,7 @@ public class Teacher implements Serializable {
     @Column(name ="user_id")
     private Integer userId;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
     private List<TeacherWishes> teacherWishesList;
 }
