@@ -18,7 +18,7 @@ public class GroupRepositoryImpl extends BasicRepositoryImpl<Group, Long> implem
      */
     @Override
     public List<Group> getAll() {
-        log.info("Enter into getAll method of {}", getClass().getName());
+        log.info("Enter into getAll method");
         return sessionFactory.getCurrentSession()
                 .createQuery("from Group ORDER BY title ASC")
                 .getResultList();
@@ -32,7 +32,7 @@ public class GroupRepositoryImpl extends BasicRepositoryImpl<Group, Long> implem
      */
     @Override
     public Optional<Group> findByTitle(String title) {
-        log.info("Enter into findByTitle method of {} with title:{}", getClass().getName(), title);
+        log.info("Enter into findByTitle method with title:{}", title);
         return sessionFactory.getCurrentSession().createQuery
                 ("FROM Group g WHERE g.title = :title")
                 .setParameter("title", title).uniqueResultOptional();

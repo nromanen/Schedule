@@ -32,7 +32,7 @@ public class GroupServiceImpl  implements GroupService {
     @Override
     public Group getById(Long id) {
 
-        log.info("Enter into getById method of {} with id {}", getClass().getName(), id);
+        log.info("Enter into getById  with id {}",  id);
         return groupRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException(Group.class, "id", id.toString()));
     }
@@ -43,7 +43,7 @@ public class GroupServiceImpl  implements GroupService {
      */
     @Override
     public List<Group> getAll() {
-        log.info("Enter into getAll method of {}", getClass().getName());
+        log.info("Enter into getAll method");
         return groupRepository.getAll();
     }
 
@@ -54,7 +54,7 @@ public class GroupServiceImpl  implements GroupService {
      */
     @Override
     public Group save(Group object) {
-        log.info("Enter into save method of {} with entity:{}", getClass().getName(), object );
+        log.info("Enter into save method with entity: {}", object );
         if (findByTitle(object.getTitle())){
             throw new FieldAlreadyExistsException(Group.class, "title", object.getTitle());
         }
@@ -68,7 +68,7 @@ public class GroupServiceImpl  implements GroupService {
      */
     @Override
     public Group update(Group object) {
-        log.info("Enter into update method of {} with entity:{}", getClass().getName(), object);
+        log.info("Enter into update method  with entity: {}", object);
         if (findByTitle(object.getTitle())){
             throw new FieldAlreadyExistsException(Group.class, "title", object.getTitle());
         }
@@ -82,7 +82,7 @@ public class GroupServiceImpl  implements GroupService {
      */
     @Override
     public Group delete(Group object) {
-        log.info("Enter into delete method of {} with entity:{}", getClass().getName(), object);
+        log.info("Enter into delete method with entity: {}", object);
         return groupRepository.delete(object);
     }
 
@@ -93,7 +93,7 @@ public class GroupServiceImpl  implements GroupService {
      */
     @Override
     public boolean findByTitle(String title) {
-        log.info("Enter into findByTitle method  of {} with title:{}", getClass().getName(), title);
+        log.info("Enter into findByTitle method with title: {}",  title);
         return groupRepository.findByTitle(title).isPresent();
     }
 }
