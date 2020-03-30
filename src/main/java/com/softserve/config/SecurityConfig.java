@@ -44,7 +44,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         //TODO security
         http.cors().configurationSource(request -> new CorsConfiguration(environment).applyPermitDefaultValues()).and()
-              //  .httpBasic().disable()
+                .httpBasic().disable()
                  .csrf().disable()
                  .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
