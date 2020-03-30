@@ -4,6 +4,8 @@ import com.softserve.security.jwt.JwtConfigurer;
 import com.softserve.security.jwt.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -18,8 +20,9 @@ import java.util.Arrays;
 
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
+@PropertySource("classpath:cors.properties")
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-
+    private final Environment environment;
     private final JwtTokenProvider jwtTokenProvider;
 
     private static final String MANAGER_ENDPOINT = "/test/**";
@@ -27,8 +30,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 
     @Autowired
-    public SecurityConfig(JwtTokenProvider jwtTokenProvider) {
+    public SecurityConfig(JwtTokenProvider jwtTokenProvider,Environment environment) {
         this.jwtTokenProvider = jwtTokenProvider;
+        this.environment = environment;
     }
 
 
