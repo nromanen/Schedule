@@ -81,9 +81,6 @@ public class SubjectServiceImpl implements SubjectService {
     @Override
     public Subject delete(Subject object) {
         log.info("Enter into delete method  of {} with entity:{}", getClass().getName(), object);
-        if(findByName(object.getName())){
-            throw new FieldAlreadyExistsException(Subject.class, "name", object.getName());
-        }
         return subjectRepository.delete(object);
     }
 
