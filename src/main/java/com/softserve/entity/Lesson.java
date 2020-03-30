@@ -1,8 +1,7 @@
 package com.softserve.entity;
 
 import com.softserve.entity.enums.LessonType;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -11,8 +10,10 @@ import javax.validation.constraints.Min;
 import java.io.Serializable;
 
 
+@Getter
+@Setter
 @NoArgsConstructor
-@Data
+@ToString
 @Entity
 @Table(name = "lessons")
 public class Lesson implements Serializable {

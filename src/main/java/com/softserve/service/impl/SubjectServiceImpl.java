@@ -29,11 +29,11 @@ public class SubjectServiceImpl implements SubjectService {
     /**
      * Method gets information from Repository for particular subject with id parameter
      * @param id Identity number of the subject
-     * @return Group entity
+     * @return Subject entity
      */
     @Override
     public Subject getById(Long id) {
-        log.info("Enter into getById method of {} with id {}", getClass().getName(), id);
+        log.info("Enter into getById method with id {}", id);
         return subjectRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException(Subject.class, "id", id.toString()));
     }
@@ -44,7 +44,7 @@ public class SubjectServiceImpl implements SubjectService {
      */
     @Override
     public List<Subject> getAll() {
-        log.info("Enter into getAll method of {} ", getClass().getName());
+        log.info("Enter into getAll method");
         return subjectRepository.getAll();
     }
 
@@ -55,7 +55,7 @@ public class SubjectServiceImpl implements SubjectService {
      */
     @Override
     public Subject save(Subject object) {
-        log.info("Enter into save method of {} with entity:{}", getClass().getName(), object );
+        log.info("Enter into save method with entity: {}", object );
         return subjectRepository.save(object);
     }
 
@@ -66,7 +66,7 @@ public class SubjectServiceImpl implements SubjectService {
      */
     @Override
     public Subject update(Subject object) {
-        log.info("Enter into update method of {} with entity:{}", getClass().getName(), object);
+        log.info("Enter into update method with entity: {}", object);
         if(findByName(object.getName())){
             throw new FieldAlreadyExistsException(Subject.class, "name", object.getName());
         }
@@ -91,7 +91,7 @@ public class SubjectServiceImpl implements SubjectService {
      */
     @Override
     public boolean findByName(String name) {
-        log.info("Enter into findByName method  of {} with name:{}", getClass().getName(), name);
+        log.info("Enter into findByName method with name: {}", name);
         return subjectRepository.findByName(name).isPresent();
     }
 }

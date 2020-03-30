@@ -18,7 +18,7 @@ public class SubjectRepositoryImpl extends BasicRepositoryImpl<Subject, Long> im
      */
     @Override
     public List<Subject> getAll() {
-        log.info("Enter into getAll method of {}", getClass().getName());
+        log.info("Enter into getAll method");
         return sessionFactory.getCurrentSession()
                 .createQuery("from Subject ORDER BY name ASC")
                 .getResultList();
@@ -32,7 +32,7 @@ public class SubjectRepositoryImpl extends BasicRepositoryImpl<Subject, Long> im
      */
     @Override
     public Optional<Subject> findByName(String name) {
-        log.info("Enter into findByName method of {} with name:{}", getClass().getName(), name);
+        log.info("Enter into findByName method with name:{}", name);
         return sessionFactory.getCurrentSession().createQuery
                 ("FROM Subject s WHERE s.name = :name")
                 .setParameter("name", name).uniqueResultOptional();

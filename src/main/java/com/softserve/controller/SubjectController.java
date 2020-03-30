@@ -31,7 +31,7 @@ public class SubjectController {
     @GetMapping
     @ApiOperation(value = "Get the list of all subjects")
     public ResponseEntity<List<SubjectDTO>> list() {
-        log.info("Enter into list method of {}", getClass().getName());
+        log.info("Enter into list method");
         List<Subject> subjects = subjectService.getAll();
         return ResponseEntity.status(HttpStatus.OK).body(subjectMapper.subjectsToSubjectDTOs(subjects));
     }
@@ -39,7 +39,7 @@ public class SubjectController {
     @GetMapping("/{id}")
     @ApiOperation(value = "Get subject info by id")
     public ResponseEntity<SubjectDTO> get(@PathVariable("id") long id){
-        log.info("Enter into get method of {} with id {} ", getClass().getName(), id);
+        log.info("Enter into get method with id {} ", id);
         Subject subject = subjectService.getById(id);
         return ResponseEntity.status(HttpStatus.OK).body(subjectMapper.subjectToSubjectDTO(subject));
     }
@@ -47,7 +47,7 @@ public class SubjectController {
     @PostMapping
     @ApiOperation(value = "Create new subject")
     public ResponseEntity<SubjectDTO> save(@RequestBody SubjectDTO subjectDTO) {
-        log.info("Enter into save method of {} with subjectDTO: {}", getClass().getName(), subjectDTO);
+        log.info("Enter into save method with subjectDTO: {}", subjectDTO);
         Subject subject = subjectService.save(subjectMapper.subjectDTOToSubject(subjectDTO));
         return ResponseEntity.status(HttpStatus.CREATED).body(subjectMapper.subjectToSubjectDTO(subject));
     }
@@ -55,7 +55,7 @@ public class SubjectController {
     @PutMapping
     @ApiOperation(value = "Update existing subject by id")
     public ResponseEntity<SubjectDTO> update(@RequestBody SubjectDTO subjectDTO) {
-        log.info("Enter into update method of {} with subjectDTO: {}", getClass().getName(), subjectDTO);
+        log.info("Enter into update method with subjectDTO: {}", subjectDTO);
         subjectService.getById(subjectDTO.getId());
         Subject subject = subjectService.update(subjectMapper.subjectDTOToSubject(subjectDTO));
         return ResponseEntity.status(HttpStatus.OK).body(subjectMapper.subjectToSubjectDTO(subject));
@@ -64,7 +64,7 @@ public class SubjectController {
     @DeleteMapping("/{id}")
     @ApiOperation(value = "Delete subject by id")
     public ResponseEntity delete(@PathVariable("id") long id){
-        log.info("Enter into delete method of {} with  subject id: {}", getClass().getName(), id);
+        log.info("Enter into delete method with  subject id: {}", id);
         Subject subject = subjectService.getById(id);
         subjectService.delete(subject);
         return ResponseEntity.status(HttpStatus.OK).build();
