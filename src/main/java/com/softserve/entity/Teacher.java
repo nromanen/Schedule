@@ -42,9 +42,6 @@ public class Teacher implements Serializable {
     @Column(name ="user_id")
     private Integer userId;
 
-    @OneToMany(targetEntity=TeacherWishes.class, mappedBy="teacher_id",fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL)
     private List<TeacherWishes> teacherWishesList;
-
-
-
 }

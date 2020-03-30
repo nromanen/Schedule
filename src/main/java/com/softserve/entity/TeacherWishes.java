@@ -26,11 +26,11 @@ public class TeacherWishes implements Serializable {
     @Column(columnDefinition = "serial")
     private long id;
 
-    @Column
+    /*@Column
     private long teacher_id;
 
     @Column
-    private long semester_id;
+    private long semester_id;*/
 
     @Column(name = "wishlist", columnDefinition = "json")
     private JsonNode wishList;

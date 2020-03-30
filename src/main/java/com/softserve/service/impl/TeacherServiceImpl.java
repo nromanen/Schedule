@@ -5,6 +5,7 @@ import com.softserve.exception.EntityNotFoundException;
 import com.softserve.repository.TeacherRepository;
 import com.softserve.service.TeacherService;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -73,5 +74,12 @@ public class TeacherServiceImpl implements TeacherService {
     public Teacher delete(Teacher object) {
         log.info("Enter into delete method of {} with entity:{}", getClass().getName(), object);
         return teacherRepository.delete(object);
+    }
+
+
+    public List<Teacher> findAll() {
+        List<Teacher> teachers = teacherRepository.getAll();
+        teachers.forEach(teacher -> Hibernate.initialize(teacher.getTeacherWishesList()));
+        return teachers;
     }
 }
