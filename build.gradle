@@ -24,12 +24,17 @@ task stage() {
     dependsOn clean, war
 }
 war.mustRunAfter clean
-task copyToLib(type: Copy) {
-    into "$buildDir/server"
-    from(configurations.compile) {
-        include "webapp-runner*"
+    task copyToLib(type: Copy) {
+        if (System.getenv('buildDir') != null) {
+        into "$buildDir/server"
+        from(configurations.compile) {
+            include "webapp-runner*"
+        }
     }
-}
+    }
+    stage.dependsOn(copyToLib)
+
+
 
 test {
     useJUnit()
@@ -37,7 +42,7 @@ test {
 }
 
 
-stage.dependsOn(copyToLib)
+
 
 dependencies {
 
@@ -110,6 +115,5 @@ dependencies {
     //jackson-datatype-jsr310
     compile group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: '2.10.3'
 
-    compile 'com.github.jsimone:webapp-runner:8.5.11.3'
 
 }

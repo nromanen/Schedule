@@ -76,7 +76,7 @@ public class TeacherServiceImpl implements TeacherService {
         return teacherRepository.delete(object);
     }
 
-
+    @Override
     public List<Teacher> findAll() {
         List<Teacher> teachers = teacherRepository.getAll();
         teachers.forEach(teacher -> Hibernate.initialize(teacher.getTeacherWishesList()));
