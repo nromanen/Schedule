@@ -26,7 +26,8 @@ public class CorsConfiguration extends org.springframework.web.cors.CorsConfigur
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**").allowedOrigins(environment.getProperty("cors.localurl"), environment.getProperty("cors.herokuUrl")).allowedMethods("GET","POST","PUT", "DELETE");;
+                registry.addMapping("/**").allowedOrigins(environment.getProperty("cors.localurl"),
+                        environment.getProperty("cors.herokuUrl")).allowedMethods("GET","POST","PUT", "DELETE");
             }
         };
     }
