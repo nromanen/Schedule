@@ -44,6 +44,6 @@ public class Teacher implements Serializable {
     private Integer userId;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonManagedReference
-    private List<TeacherWishes> teacherWishesList;
+    @JoinColumn(name="teacher_id")
+    private Set<TeacherWishes> teacherWishesList;
 }
