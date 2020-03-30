@@ -40,7 +40,7 @@ public class TeacherController {
     @GetMapping("/all")
     @ApiOperation(value = "Get the list of all teachers")
     public ResponseEntity<List<TeacherMapperWishDTO>> findAll() {
-        return ResponseEntity.ok(teacherMapper.toTeacherWithWishesDTOs(teacherService.getAll()));
+        return ResponseEntity.ok(teacherMapper.toTeacherWithWishesDTOs(teacherService.findAll()));
     }
 
 
