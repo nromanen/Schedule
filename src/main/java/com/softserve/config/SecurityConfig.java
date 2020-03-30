@@ -12,6 +12,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
@@ -47,10 +48,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
 
         //TODO security
-        http.cors().configurationSource(request -> new CorsConfiguration(environment).applyPermitDefaultValues())
-                //.httpBasic().disable()
-                // .csrf().disable()
-                //   .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+        http.cors().configurationSource(request -> new CorsConfiguration(environment).applyPermitDefaultValues()).and()
+              //  .httpBasic().disable()
+                 .csrf().disable()
+                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
 
                 .authorizeRequests()
