@@ -19,7 +19,7 @@ build:
             - build
             - .gradle
     only:
-         - develop
+         - master
 #test:
 #    image: gradle:alpine
 #    stage: test
@@ -46,4 +46,4 @@ deploy:
         - gem install dpl
         - dpl --provider=heroku --app=$HEROKU_APP_MASTER --api-key=$HEROKU_API_KEY
     only:
-        - develop
+        - master
