@@ -1,5 +1,6 @@
 package com.softserve.controller;
 
+import com.softserve.dto.AddTeacherWishesDTO;
 import com.softserve.dto.TeacherWishesDTO;
 import com.softserve.entity.TeacherWishes;
 import com.softserve.service.TeacherWishesService;
@@ -47,10 +48,10 @@ public class TeacherWishesController {
 
     @PostMapping
     @ApiOperation(value = "Create new teacher wish")
-    public ResponseEntity<TeacherWishesDTO> save(@RequestBody TeacherWishesDTO teacherWishesDTO) {
-        log.info("Enter into save method with TeacherWishesDTO: {}", teacherWishesDTO);
-        TeacherWishes teacherWishes = teacherWishesService.save(teacherWishesMapper.teacherWishesDTOToTeacherWishes(teacherWishesDTO));
-        return ResponseEntity.status(HttpStatus.CREATED).body(teacherWishesMapper.teacherWishesToTeacherWishesDTO(teacherWishes));
+    public ResponseEntity<AddTeacherWishesDTO> save(@RequestBody AddTeacherWishesDTO addTeacherWishesDTO) {
+        log.info("Enter into save method with AddTeacherWishesDTO: {}", addTeacherWishesDTO);
+        TeacherWishes teacherWishes = teacherWishesService.save(teacherWishesMapper.addteacherWishesDTOToTeacherWishes(addTeacherWishesDTO));
+        return ResponseEntity.status(HttpStatus.CREATED).body(teacherWishesMapper.addteacherWishesToTeacherWishesDTO(teacherWishes));
     }
 
     @PutMapping()

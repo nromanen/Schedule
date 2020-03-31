@@ -2,17 +2,18 @@ package com.softserve.dto;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
-public class TeacherWishesDTO {
-    private Long id;
+public class AddTeacherWishesDTO {
+    private Long teacher_id;
     private JsonNode wishList;
 
-    public Long getId() {
-        return id;
+    public Long getTeacher_id() {
+        return teacher_id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setTeacher_id(Long teacher_id) {
+        this.teacher_id = teacher_id;
     }
+
     public JsonNode getWishList() {
         return wishList;
     }

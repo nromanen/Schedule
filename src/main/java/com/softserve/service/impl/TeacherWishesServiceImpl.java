@@ -1,14 +1,15 @@
 package com.softserve.service.impl;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.softserve.entity.TeacherWishes;
 import com.softserve.exception.EntityNotFoundException;
+import com.softserve.exception.IncorrectWishException;
 import com.softserve.repository.TeacherWishesRepository;
 import com.softserve.service.TeacherWishesService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 
 @Transactional
@@ -49,6 +50,7 @@ public class TeacherWishesServiceImpl implements TeacherWishesService {
     @Override
     public TeacherWishes save(TeacherWishes object) {
         log.info("Enter into save method of {} with entity:{}", getClass().getName(), object);
+        validateTeacherWish(object.getWishList());
         return teacherWishesRepository.save(object);
     }
 
@@ -61,6 +63,7 @@ public class TeacherWishesServiceImpl implements TeacherWishesService {
     public TeacherWishes update(TeacherWishes object)
     {
         log.info("Enter into update method of {} with entity:{}", getClass().getName(), object);
+        validateTeacherWish(object.getWishList());
         return teacherWishesRepository.update(object);
     }
 
@@ -73,5 +76,28 @@ public class TeacherWishesServiceImpl implements TeacherWishesService {
     public TeacherWishes delete(TeacherWishes object) {
         log.info("Enter into delete method of {} with entity:{}", getClass().getName(), object);
         return teacherWishesRepository.delete(object);
+    }
+
+    private void validateTeacherWish(JsonNode teacherWish){
+        try {
+            teacherWish.forEach(jsonNode -> {
+                int dayOfWeek = jsonNode.get("day_of_week").asInt();
+                if(dayOfWeek == 0){
+                    throw new IncorrectWishException("day_of_week is incorrect, "+jsonNode);
+                }
+                for (JsonNode classNode : jsonNode.get("wishes")) {
+                    JsonNode classNumber = classNode.get("class_number");
+                    if (classNumber.asInt() == 0) {
+                        throw new IncorrectWishException("class_number is empty, "+ classNode);
+                    }
+                    JsonNode status = classNode.get("status");
+                    if (status.asText() == null) {
+                        throw new IncorrectWishException("status is empty, "+ classNode);
+                    }
+                }
+            });
+        }catch (Exception e) {
+            throw new IncorrectWishException("Wish is incorrect, "+ teacherWish.toString());
+        }
     }
 }

@@ -27,9 +27,6 @@ public class TeacherWishes implements Serializable {
     private long id;
 
     /*@Column
-    private long teacher_id;
-
-    @Column
     private long semester_id;*/
 
     @Column(name = "wishlist", columnDefinition = "json")
