@@ -30,7 +30,7 @@ public class LessonServiceImpl implements LessonService {
      */
     @Override
     public Lesson getById(Long id) {
-        log.info("Enter into getById method of {} with id {}", getClass().getName(), id);
+        log.info("Enter into getById method with id {}", id);
         return lessonRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException(Lesson.class, "id", id.toString()));
     }
@@ -41,7 +41,7 @@ public class LessonServiceImpl implements LessonService {
      */
     @Override
     public List<Lesson> getAll() {
-        log.info("Enter into getAll method of {}", getClass().getName());
+        log.info("Enter into getAll method");
         return lessonRepository.getAll();
     }
 
@@ -54,7 +54,7 @@ public class LessonServiceImpl implements LessonService {
      */
     @Override
     public Lesson save(Lesson object) {
-        log.info("Enter into save method of {} with entity:{}", getClass().getName(), object );
+        log.info("Enter into save method with entity: {}", object );
 
         //Fill in teacher for site by teacher data if teacher for site is empty or null
         if (object.getTeacherForSite().isEmpty() || object.getTeacherForSite() == null)
@@ -77,7 +77,7 @@ public class LessonServiceImpl implements LessonService {
      */
     @Override
     public Lesson update(Lesson object) {
-        log.info("Enter into update method of {} with entity:{}", getClass().getName(), object);
+        log.info("Enter into update method with entity: {}", object);
         return lessonRepository.update(object);
     }
 
@@ -88,7 +88,7 @@ public class LessonServiceImpl implements LessonService {
      */
     @Override
     public Lesson delete(Lesson object) {
-        log.info("Enter into delete method of {} with entity:{}", getClass().getName(), object);
+        log.info("Enter into delete method with entity: {}", object);
         return lessonRepository.delete(object);
     }
 
@@ -99,8 +99,7 @@ public class LessonServiceImpl implements LessonService {
      */
     @Override
     public List<Lesson> getAllForGroup(Long groupId) {
-        log.info("Enter into getAllForGroup method of {} with groupId:{}", getClass().getName(), groupId
-        );
+        log.info("Enter into getAllForGroup method with groupId: {}",  groupId);
         return lessonRepository.getAllForGroup(groupId);
     }
 }

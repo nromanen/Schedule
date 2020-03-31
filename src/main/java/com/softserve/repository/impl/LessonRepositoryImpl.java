@@ -18,7 +18,7 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
      */
     @Override
     public List<Lesson> getAllForGroup(Long groupId) {
-        log.info("Enter into  getAllForGroup method of {} to search lessons for group with id = {}", getClass().getName(), groupId);
+        log.info("Enter into  getAllForGroup method to search lessons for group with id = {}", groupId);
 
         return sessionFactory.getCurrentSession().createQuery
                 ("FROM Lesson l WHERE l.group.id = :groupId")

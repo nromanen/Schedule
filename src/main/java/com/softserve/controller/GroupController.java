@@ -39,7 +39,7 @@ public class GroupController {
     @GetMapping("/{id}")
     @ApiOperation(value = "Get group info by id")
     public ResponseEntity<GroupDTO> get(@PathVariable("id") long id){
-        log.info("Enter into get method of {} with id {} ", getClass().getName(), id);
+        log.info("Enter into get method with id {} ", id);
         Group group = groupService.getById(id);
         return ResponseEntity.status(HttpStatus.OK).body(groupMapper.groupToGroupDTO(group));
     }
@@ -47,7 +47,7 @@ public class GroupController {
     @PostMapping
     @ApiOperation(value = "Create new group")
     public ResponseEntity<GroupDTO> save(@RequestBody GroupDTO groupDTO) {
-        log.info("Enter into save method of {} with groupDTO: {}",getClass().getName(), groupDTO);
+        log.info("Enter into save method with groupDTO: {}", groupDTO);
         Group group = groupService.save(groupMapper.groupDTOToGroup(groupDTO));
         return ResponseEntity.status(HttpStatus.CREATED).body(groupMapper.groupToGroupDTO(group));
     }
@@ -55,7 +55,7 @@ public class GroupController {
     @PutMapping()
     @ApiOperation(value = "Update existing group by id")
     public ResponseEntity<GroupDTO> update(@RequestBody GroupDTO groupDTO) {
-        log.info("Enter into update method of {} with groupDTO: {}", getClass().getName(), groupDTO);
+        log.info("Enter into update method with groupDTO: {}", groupDTO);
         groupService.getById(groupDTO.getId());
         Group group = groupService.update(groupMapper.groupDTOToGroup(groupDTO));
         return ResponseEntity.status(HttpStatus.OK).body(groupMapper.groupToGroupDTO(group));
@@ -64,7 +64,7 @@ public class GroupController {
     @DeleteMapping("/{id}")
     @ApiOperation(value = "Delete group by id")
     public ResponseEntity delete(@PathVariable("id") long id){
-        log.info("Enter into delete method of {} with  group id: {}", getClass().getName(), id);
+        log.info("Enter into delete method with group id: {}", id);
         Group group = groupService.getById(id);
         groupService.delete(group);
         return ResponseEntity.status(HttpStatus.OK).build();
