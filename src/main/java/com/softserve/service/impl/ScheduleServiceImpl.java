@@ -5,7 +5,10 @@ import com.softserve.dto.CreateScheduleInfoDTO;
 import com.softserve.entity.Schedule;
 import com.softserve.entity.enums.EvenOdd;
 import com.softserve.exception.EntityNotFoundException;
+import com.softserve.exception.ScheduleConflictException;
+import com.softserve.repository.LessonRepository;
 import com.softserve.repository.ScheduleRepository;
+import com.softserve.service.LessonService;
 import com.softserve.service.ScheduleService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,10 +24,12 @@ import java.util.List;
 public class ScheduleServiceImpl implements ScheduleService {
 
     private final ScheduleRepository scheduleRepository;
+    private final LessonService lessonService;
 
     @Autowired
-    public ScheduleServiceImpl(ScheduleRepository scheduleRepository) {
+    public ScheduleServiceImpl(ScheduleRepository scheduleRepository, LessonRepository lessonRepository, LessonService lessonService) {
         this.scheduleRepository = scheduleRepository;
+        this.lessonService = lessonService;
     }
 
     /**
@@ -81,33 +86,44 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
 
+    /**
+     * Method returns necessary info to finish saving schedule
+     * @param semesterId the semester id in which schedule have to be saved
+     * @param dayOfWeek the semester id in which schedule have to be saved
+     * @param evenOdd lesson occurs by EVEN/ODD/WEEKLY
+     * @param classId period id in which schedule have to be saved
+     * @param lessonId lesson id that pretends t be saved
+     * @return  CreateScheduleInfoDTO - necessary info to finish saving schedule
+     */
     @Override
-    public CreateScheduleInfoDTO getInfoForCreatingSchedule(Long semesterId, DayOfWeek dayOfWeek, EvenOdd evenOdd, Long classId) {
-        log.info("Enter into getInfoForCreatingSchedule with semesterId = {}, dayOfWeek = {}, evenOdd = {}, classId = {}", semesterId, dayOfWeek, evenOdd, classId);
+    public CreateScheduleInfoDTO getInfoForCreatingSchedule(Long semesterId, DayOfWeek dayOfWeek, EvenOdd evenOdd, Long classId, Long lessonId) {
+        log.info("Enter into getInfoForCreatingSchedule with semesterId = {}, dayOfWeek = {}, evenOdd = {}, classId = {}, lessonId = {}", semesterId, dayOfWeek, evenOdd, classId, lessonId);
         //checking for missing parameters and wrong types is skipped, because it handles automatically by GlobalExceptionHandler
-
-
-        isConflictInSchedule(semesterId, dayOfWeek, evenOdd, classId);
-
-        return new CreateScheduleInfoDTO();
+        if (isConflictForGroupInSchedule(semesterId, dayOfWeek, evenOdd, classId, lessonId)){
+            throw new ScheduleConflictException("You can't create schedule for this group, because one already exists");
+        }
+        else  return new CreateScheduleInfoDTO();
     }
 
 
     /**
-     * Method
-     * @param semesterId
-     * @param dayOfWeek
-     * @param evenOdd
-     * @param classId
-     * @return true if there is a conflict on 
+     * Method checks if there is a conflict in schedule for Group at particular period of time
+     * @param semesterId the semester id that the search is performed for
+     * @param dayOfWeek the day of the week that the search is performed for
+     * @param evenOdd lesson should occur by EVEN/ODD/WEEKLY
+     * @param classId id for period that the search is performed for
+     * @return true if there is a conflict in the Group schedule, else false
      */
-    private boolean isConflictInSchedule(Long semesterId, DayOfWeek dayOfWeek, EvenOdd evenOdd, Long classId) {
-       log.info("Enter into isConflictInSchedule");
-        if (scheduleRepository.conflictInSchedule(semesterId, dayOfWeek, evenOdd, classId) != 0){
-            log.error("conflict" );
+    private boolean isConflictForGroupInSchedule(Long semesterId, DayOfWeek dayOfWeek, EvenOdd evenOdd, Long classId, Long lessonId) {
+        log.info("Enter into isConflictForGroupInSchedule with semesterId = {}, dayOfWeek = {}, evenOdd = {}, classId = {}, lessonId = {}", semesterId, dayOfWeek, evenOdd, classId, lessonId);
+
+        //Get group ID from Lesson by lesson ID to search further by group ID
+        Long groupId = lessonService.getById(lessonId).getGroup().getId();
+
+        //If Repository doesn't count any records that means there are no conflicts for this group at that point of time
+        if (scheduleRepository.conflictForGroupInSchedule(semesterId, dayOfWeek, evenOdd, classId, groupId) != 0){
             return true;
         } else {
-            log.error("no conflict");
             return false;
         }
     }
