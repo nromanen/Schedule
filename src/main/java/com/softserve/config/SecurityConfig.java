@@ -17,6 +17,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final JwtTokenProvider jwtTokenProvider;
 
     private static final String MANAGER_ENDPOINT = "/test/**";
+    private static final String CLASSES_ENDPOINT = "/classes/**";
+    private static final String GROUPS_ENDPOINT = "/groups/**";
+    private static final String LESSONS_ENDPOINT = "/lessons/**";
+    private static final String ROOMS_ENDPOINT = "/rooms/**";
+    private static final String SUBJECTS_ENDPOINT = "/subjects/**";
+    private static final String TEACHERS_ENDPOINT = "/teachers/**";
     private static final String LOGIN_ENDPOINT = "/auth/login";
 
 
@@ -40,10 +46,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-
                 .authorizeRequests()
                 .antMatchers(LOGIN_ENDPOINT).permitAll()
-                .antMatchers(MANAGER_ENDPOINT).hasRole("MANAGER")
+                .antMatchers(MANAGER_ENDPOINT, CLASSES_ENDPOINT, GROUPS_ENDPOINT, LESSONS_ENDPOINT,
+                ROOMS_ENDPOINT, SUBJECTS_ENDPOINT, TEACHERS_ENDPOINT).hasRole("MANAGER")
                 // .anyRequest().authenticated()
                 .and()
                 .apply(new JwtConfigurer(jwtTokenProvider));
