@@ -1,14 +1,17 @@
 package com.softserve.repository.impl;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.github.fge.jackson.JsonLoader;
+import com.github.fge.jsonschema.core.report.ProcessingReport;
+import com.github.fge.jsonschema.main.JsonSchema;
+import com.github.fge.jsonschema.main.JsonSchemaFactory;
 import com.softserve.entity.TeacherWishes;
-import com.softserve.entity.User;
 import com.softserve.entity.enums.EvenOdd;
-import com.softserve.exception.IncorrectWishException;
 import com.softserve.repository.TeacherWishesRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
+import java.io.IOException;
 import java.time.DayOfWeek;
 
 
@@ -44,13 +47,20 @@ public class TeacherWishesRepositoryImpl extends BasicRepositoryImpl<TeacherWish
         return entity;
     }
 
-
-
-
-
-    private void validateTeacherWish(JsonNode teacherWish){
+    public void validateTeacherWish(JsonNode teacherWish){
         try {
-            teacherWish.forEach(jsonNode -> {
+
+            final JsonNode fstabSchema = loadResource("/wish-shema.json");
+            final JsonSchemaFactory factory = JsonSchemaFactory.byDefault();
+
+            final JsonSchema schema = factory.getJsonSchema(fstabSchema);
+            ProcessingReport report;
+            report = schema.validate(teacherWish);
+            System.out.println(report);
+
+
+
+            /*teacherWish.forEach(jsonNode -> {
                 int dayOfWeek = jsonNode.get("day_of_week").asInt();
                 if(dayOfWeek == 0){
                     throw new IncorrectWishException("day_of_week is incorrect, "+jsonNode);
@@ -65,16 +75,28 @@ public class TeacherWishesRepositoryImpl extends BasicRepositoryImpl<TeacherWish
                         throw new IncorrectWishException("status is empty, "+ classNode);
                     }
                 }
-            });
+            });*/
         }catch (Exception e) {
-            throw new IncorrectWishException("Wish is incorrect, "+ teacherWish.toString());
+           // throw new IncorrectWishException("Wish is incorrect, "+ teacherWish.toString());
+            e.printStackTrace();
         }
     }
 
+    /**
+     * Load one resource from the current package as a {@link JsonNode}
+     *
+     * @param name name of the resource (<b>MUST</b> start with {@code /}
+     * @return a JSON document
+     * @throws IOException resource not found
+     */
+    public static JsonNode loadResource(final String name)
+            throws IOException
+    {
+        return JsonLoader.fromResource(name);
+    }
 
+    private boolean isClassSuits(long teacher_id, Long semesterId, DayOfWeek dayOfWeek, EvenOdd evenOdd, Long classId){
 
-    private String checkTeacherClassWish(long teacher_id, Long semesterId, DayOfWeek dayOfWeek, EvenOdd evenOdd, Long classId){
-
-        return "q";
+        return true;
     }
 }
