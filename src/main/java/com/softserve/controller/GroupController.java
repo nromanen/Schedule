@@ -56,7 +56,6 @@ public class GroupController {
     @ApiOperation(value = "Update existing group by id")
     public ResponseEntity<GroupDTO> update(@RequestBody GroupDTO groupDTO) {
         log.info("Enter into update method with groupDTO: {}", groupDTO);
-        groupService.getById(groupDTO.getId());
         Group group = groupService.update(groupMapper.groupDTOToGroup(groupDTO));
         return ResponseEntity.status(HttpStatus.OK).body(groupMapper.groupToGroupDTO(group));
     }

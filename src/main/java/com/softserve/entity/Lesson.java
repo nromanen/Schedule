@@ -20,7 +20,7 @@ public class Lesson implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(columnDefinition = "serial")
-    private long id;
+    private Long id;
 
     @Min(1)
     private int hours;

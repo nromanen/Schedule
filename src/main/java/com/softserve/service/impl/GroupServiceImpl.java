@@ -55,7 +55,7 @@ public class GroupServiceImpl  implements GroupService {
     @Override
     public Group save(Group object) {
         log.info("Enter into save method with entity: {}", object );
-        if (findByTitle(object.getTitle())){
+        if (isGroupExistsWitTitle(object.getTitle())){
             throw new FieldAlreadyExistsException(Group.class, "title", object.getTitle());
         }
         return groupRepository.save(object);
@@ -69,10 +69,15 @@ public class GroupServiceImpl  implements GroupService {
     @Override
     public Group update(Group object) {
         log.info("Enter into update method  with entity: {}", object);
-        if (findByTitle(object.getTitle())){
-            throw new FieldAlreadyExistsException(Group.class, "title", object.getTitle());
+        if (isExistsWithId(object.getId())){
+            if (isGroupExistsWitTitle(object.getTitle())){
+                throw new FieldAlreadyExistsException(Group.class, "title", object.getTitle());
+            }
+            return groupRepository.update(object);
         }
-        return groupRepository.update(object);
+        else {
+            throw new EntityNotFoundException(Group.class, "id", object.getId().toString());
+        }
     }
 
     /**
@@ -92,8 +97,19 @@ public class GroupServiceImpl  implements GroupService {
      * @return true if Group with such title already exist
      */
     @Override
-    public boolean findByTitle(String title) {
-        log.info("Enter into findByTitle method with title: {}",  title);
-        return groupRepository.findByTitle(title).isPresent();
+    public boolean isGroupExistsWitTitle(String title) {
+        log.info("Enter into isGroupExistsWitTitle method with title: {}",  title);
+        return groupRepository.countGroupsWithTitle(title) != 0;
+    }
+
+    /**
+     * Method verifies if Group with id param exist in repository
+     * @param id
+     * @return true if Group with id param exist
+     */
+    @Override
+    public boolean isExistsWithId(Long id) {
+        log.info("Enter into isExistsWithId method with id: {}",  id);
+        return groupRepository.existsById(id)!=0;
     }
 }
