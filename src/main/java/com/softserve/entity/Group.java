@@ -17,7 +17,7 @@ public class Group implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(columnDefinition = "serial")
-    private long id;
+    private Long id;
 
     @NotEmpty(message = "Title cannot be empty")
     @Size(min = 2, max = 35, message = "Title must be between 2 and 35 characters long")
