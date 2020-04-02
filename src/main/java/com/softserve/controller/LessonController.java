@@ -3,6 +3,7 @@ package com.softserve.controller;
 
 import com.softserve.dto.LessonInfoDTO;
 import com.softserve.entity.Lesson;
+import com.softserve.entity.enums.LessonType;
 import com.softserve.service.LessonService;
 import com.softserve.service.mapper.LessonInfoMapper;
 import io.swagger.annotations.Api;
@@ -26,6 +27,7 @@ public class LessonController {
 
     private final LessonService lessonService;
     private final LessonInfoMapper lessonInfoMapper;
+
 
 
     @Autowired
@@ -85,6 +87,13 @@ public class LessonController {
         Lesson lesson = lessonService.getById(id);
         lessonService.delete(lesson);
         return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @GetMapping("/types")
+    @ApiOperation(value = "Get all lesson types")
+    public ResponseEntity<List<LessonType>> getLessonTypes() {
+        log.info("Enter into getLessonTypes method with");
+        return ResponseEntity.status(HttpStatus.OK).body(lessonService.getAllLessonTypes());
     }
 
 }
