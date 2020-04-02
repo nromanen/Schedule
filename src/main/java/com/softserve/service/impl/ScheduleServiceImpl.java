@@ -145,7 +145,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         log.info("Enter into isTeacherAvailable with semesterId = {}, dayOfWeek = {}, evenOdd = {}, classId = {}, lessonId = {}", semesterId, dayOfWeek, evenOdd, classId, lessonId);
         //Get teacher ID from Lesson by lesson ID to search further by teacher ID
         Long teacherId = lessonService.getById(lessonId).getTeacher().getId();
-        return scheduleRepository.conflictForTeacherInSchedule(semesterId, dayOfWeek, evenOdd, classId, teacherId) != 0;
+        return scheduleRepository.conflictForTeacherInSchedule(semesterId, dayOfWeek, evenOdd, classId, teacherId) == 0;
     }
 }
 
