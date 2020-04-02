@@ -7,7 +7,6 @@ import com.softserve.config.WebMvcConfig;
 import com.softserve.dto.AddRoomDTO;
 import com.softserve.dto.RoomDTO;
 import com.softserve.entity.Room;
-import com.softserve.entity.enums.RoomSize;
 import com.softserve.service.RoomService;
 import com.softserve.service.mapper.RoomMapperImpl;
 import org.junit.After;
@@ -15,16 +14,14 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.*;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.WebApplicationContext;
 
-import static junit.framework.TestCase.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -36,7 +33,6 @@ public class RoomControllerTest {
     private MockMvc mockMvc;
     private ObjectMapper objectMapper = new ObjectMapper();
     private Room room;
-    private RestTemplate restTemplate;
 
     @Autowired
     private WebApplicationContext wac;
@@ -50,7 +46,7 @@ public class RoomControllerTest {
 
         AddRoomDTO roomDTO = new AddRoomDTO();
         roomDTO.setName("dto name");
-        roomDTO.setRoomSize(RoomSize.LARGE);
+        roomDTO.setType("dto type");
         room = new RoomMapperImpl().convertToEntity(roomDTO);
         roomService.save(room);
     }
@@ -79,7 +75,7 @@ public class RoomControllerTest {
     public void testSave() throws Exception {
         AddRoomDTO roomDtoForSave = new AddRoomDTO();
         roomDtoForSave.setName("save name");
-        roomDtoForSave.setRoomSize(RoomSize.MEDIUM);
+        roomDtoForSave.setType("save type");
 
         mockMvc.perform(post("/rooms").content(objectMapper.writeValueAsString(roomDtoForSave))
                 .contentType(MediaType.APPLICATION_JSON))
@@ -91,7 +87,7 @@ public class RoomControllerTest {
         RoomDTO roomDtoForUpdate = new RoomDTO();
         roomDtoForUpdate.setId(room.getId());
         roomDtoForUpdate.setName("update name");
-        roomDtoForUpdate.setRoomSize(RoomSize.SMALL);
+        roomDtoForUpdate.setType("update type");
 
         Room roomForCompare = new RoomMapperImpl().convertToEntity(roomDtoForUpdate);
 
@@ -99,15 +95,14 @@ public class RoomControllerTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(roomForCompare.getId()))
-                .andExpect(jsonPath("$.name").value(roomForCompare.getName()))
-                .andExpect(jsonPath("$.roomSize").value(roomForCompare.getRoomSize().toString()));
+                .andExpect(jsonPath("$.name").value(roomForCompare.getName()));
     }
 
     @Test
     public void testDelete() throws Exception {
         AddRoomDTO addRoomDTO = new AddRoomDTO();
         addRoomDTO.setName("delete name");
-        addRoomDTO.setRoomSize(RoomSize.SMALL);
+        addRoomDTO.setType("delete type");
         Room room = roomService.save(new RoomMapperImpl().convertToEntity(addRoomDTO));
         mockMvc.perform(delete("/rooms/{id}", String.valueOf(room.getId()))
                 .contentType(MediaType.APPLICATION_JSON))
@@ -115,17 +110,18 @@ public class RoomControllerTest {
     }
 
     @Test
-    public void whenTeacherNotFound() throws Exception {
+    public void whenRoomNotFound() throws Exception {
         mockMvc.perform(get("/rooms/10")).andExpect(status().isNotFound());
     }
 
     @Test(expected = NullPointerException.class)
-    public void whenSavePositionIsNull() {
-        String userInJson = "{\"name\": null}";
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<String> entity = new HttpEntity<>(userInJson, headers);
-        ResponseEntity<String> response = restTemplate.postForEntity("/rooms", entity, String.class);
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+    public void whenSaveNameIsNull() throws Exception {
+        AddRoomDTO roomDtoForSave = new AddRoomDTO();
+        roomDtoForSave.setName(null);
+        roomDtoForSave.setType("save type");
+
+        mockMvc.perform(post("/rooms").content(objectMapper.writeValueAsString(roomDtoForSave))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
     }
 }

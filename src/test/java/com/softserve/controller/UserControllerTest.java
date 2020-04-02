@@ -13,17 +13,16 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.*;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.WebApplicationContext;
 
-import static junit.framework.TestCase.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -34,7 +33,6 @@ public class UserControllerTest {
     private MockMvc mockMvc;
     private ObjectMapper objectMapper = new ObjectMapper();
     private User user;
-    private RestTemplate restTemplate;
 
     @Autowired
     private WebApplicationContext wac;
@@ -43,15 +41,14 @@ public class UserControllerTest {
     private UserService userService;
 
     @Before
-    public void setup() {
+    public void setUp() {
         mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
 
         UserCreateDTO userDto = new UserCreateDTO();
-        userDto.setEmail("dto email");
+        userDto.setEmail("dto@email.com");
         userDto.setPassword("dto password");
         user = new UserMapperImpl().toUser(userDto);
         userService.save(user);
-
     }
 
     @After
@@ -62,6 +59,7 @@ public class UserControllerTest {
     @Test
     public void testGetAll() throws Exception {
         mockMvc.perform(get("/users").accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"));
     }
@@ -77,19 +75,21 @@ public class UserControllerTest {
     @Test
     public void testSave() throws Exception {
         UserCreateDTO userDtoForSave = new UserCreateDTO();
-        userDtoForSave.setEmail("save email");
+        userDtoForSave.setEmail("save@email.com");
         userDtoForSave.setPassword("save password");
 
         mockMvc.perform(post("/users").content(objectMapper.writeValueAsString(userDtoForSave))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
+
+        userService.delete(userService.findByEmail(userDtoForSave.getEmail()));
     }
 
     @Test
     public void testUpdate() throws Exception {
         UserCreateDTO userDtoForUpdate = new UserCreateDTO();
         userDtoForUpdate.setId(user.getId());
-        userDtoForUpdate.setEmail("update email");
+        userDtoForUpdate.setEmail("update@email.com");
         userDtoForUpdate.setPassword("update password");
 
         User userForCompare = new UserMapperImpl().toUser(userDtoForUpdate);
@@ -105,8 +105,9 @@ public class UserControllerTest {
     @Test
     public void testDelete() throws Exception {
         UserCreateDTO userCreateDTO = new UserCreateDTO();
-        userCreateDTO.setEmail("delete email");
+        userCreateDTO.setEmail("delete@email.com");
         userCreateDTO.setPassword("delete password");
+
         User user = userService.save(new UserMapperImpl().toUser(userCreateDTO));
 
         mockMvc.perform(delete("/users/{id}", String.valueOf(user.getId()))
@@ -126,13 +127,13 @@ public class UserControllerTest {
                 .andExpect(status().isConflict());
     }
 
-    @Test(expected = NullPointerException.class)
-    public void whenSavePasswordIsNull() {
-        String userInJson = "{\"email\":\"some@email\", \"password\" : null}";
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<String> entity = new HttpEntity<>(userInJson, headers);
-        ResponseEntity<String> response = restTemplate.postForEntity("/users", entity, String.class);
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+    @Test
+    public void whenSavePasswordIsNull() throws Exception {
+        UserCreateDTO userCreateDTO = new UserCreateDTO();
+        userCreateDTO.setPassword(null);
+        userCreateDTO.setEmail("some@mail.com");
+        mockMvc.perform(post("/users").content(objectMapper.writeValueAsString(userCreateDTO))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
     }
 }

@@ -14,13 +14,12 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.*;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.util.NestedServletException;
 
@@ -29,7 +28,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import static junit.framework.TestCase.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -41,7 +39,6 @@ public class PeriodControllerTest {
     private MockMvc mockMvc;
     private ObjectMapper objectMapper = new ObjectMapper();
     private Period period;
-    private RestTemplate restTemplate;
 
     @Autowired
     private WebApplicationContext wac;
@@ -68,14 +65,14 @@ public class PeriodControllerTest {
 
     @Test
     public void testGetAll() throws Exception {
-        mockMvc.perform(get("/periods").accept(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/classes").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"));
     }
 
     @Test
     public void testGet() throws Exception {
-        mockMvc.perform(get("/periods/{id}", String.valueOf(period.getId())).contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/classes/{id}", String.valueOf(period.getId())).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"))
                 .andExpect(jsonPath("$.id").value(String.valueOf(period.getId())));
@@ -88,7 +85,7 @@ public class PeriodControllerTest {
         periodDtoForSave.setStartTime(Timestamp.valueOf("2020-10-15 03:00:00"));
         periodDtoForSave.setEndTime(Timestamp.valueOf("2020-10-15 04:00:00"));
 
-        mockMvc.perform(post("/periods").content(objectMapper.writeValueAsString(periodDtoForSave))
+        mockMvc.perform(post("/classes").content(objectMapper.writeValueAsString(periodDtoForSave))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
     }
@@ -102,7 +99,7 @@ public class PeriodControllerTest {
         List<AddPeriodDTO> periodDtoListForSave = new ArrayList<>();
         periodDtoListForSave.add(periodDtoForList);
 
-        mockMvc.perform(post("/periods/all").content(objectMapper.writeValueAsString(periodDtoListForSave))
+        mockMvc.perform(post("/classes/all").content(objectMapper.writeValueAsString(periodDtoListForSave))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
     }
@@ -117,7 +114,7 @@ public class PeriodControllerTest {
 
         Period periodForCompare = new PeriodMapperImpl().convertToEntity(periodDtoForUpdate);
 
-        mockMvc.perform(put("/periods", String.valueOf(period.getId())).content(objectMapper.writeValueAsString(periodDtoForUpdate))
+        mockMvc.perform(put("/classes", String.valueOf(period.getId())).content(objectMapper.writeValueAsString(periodDtoForUpdate))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(periodForCompare.getId()))
@@ -140,23 +137,25 @@ public class PeriodControllerTest {
 
     @Test
     public void whenPeriodNotFound() throws Exception {
-        mockMvc.perform(get("/periods/10")).andExpect(status().isNotFound());
+        mockMvc.perform(get("/classes/50")).andExpect(status().isNotFound());
     }
 
     @Test(expected = NestedServletException.class)
     public void whenSaveExistsPeriod() throws Exception {
-        mockMvc.perform(post("/periods").content(objectMapper.writeValueAsString(period))
+        mockMvc.perform(post("/classes").content(objectMapper.writeValueAsString(period))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isConflict());
     }
 
     @Test(expected = NullPointerException.class)
-    public void whenSaveNameIsNull() {
-        String userInJson = "{\"name\": null, \"starttime\" : \" 08:00\", \"endtime\" : \" 09:00\"}";
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<String> entity = new HttpEntity<>(userInJson, headers);
-        ResponseEntity<String> response = restTemplate.postForEntity("/users", entity, String.class);
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+    public void whenSaveNameIsNull() throws Exception {
+        AddPeriodDTO periodDtoForSave = new AddPeriodDTO();
+        periodDtoForSave.setClass_name(null);
+        periodDtoForSave.setStartTime(Timestamp.valueOf("2020-10-15 03:00:00"));
+        periodDtoForSave.setEndTime(Timestamp.valueOf("2020-10-15 04:00:00"));
+
+        mockMvc.perform(post("/classes").content(objectMapper.writeValueAsString(periodDtoForSave))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
     }
 }

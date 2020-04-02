@@ -1,5 +1,6 @@
 package com.softserve.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.softserve.config.DBConfigTest;
 import com.softserve.config.MyWebAppInitializer;
@@ -34,7 +35,6 @@ public class TeacherControllerTest {
     private MockMvc mockMvc;
     private ObjectMapper objectMapper = new ObjectMapper();
     private Teacher teacher;
-    private RestTemplate restTemplate;
 
     @Autowired
     private WebApplicationContext wac;
@@ -130,12 +130,15 @@ public class TeacherControllerTest {
     }
 
     @Test(expected = NullPointerException.class)
-    public void whenSavePositionIsNull() {
-        String userInJson = "{\"name\":\"Petro\", \"surname\" : \" Petrov\", \"patronymic\" : \" Petrovych\", \"position\" : null}";
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<String> entity = new HttpEntity<>(userInJson, headers);
-        ResponseEntity<String> response = restTemplate.postForEntity("/teachers", entity, String.class);
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+    public void whenSavePositionIsNull() throws Exception {
+        TeacherDTO teacherDtoForSave = new TeacherDTO();
+        teacherDtoForSave.setName("save name");
+        teacherDtoForSave.setSurname("save surname");
+        teacherDtoForSave.setPatronymic("save patronymic");
+        teacherDtoForSave.setPosition(null);
+
+        mockMvc.perform(post("/teachers").content(objectMapper.writeValueAsString(teacherDtoForSave))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
     }
 }

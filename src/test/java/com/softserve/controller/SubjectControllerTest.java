@@ -13,17 +13,15 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.*;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.util.NestedServletException;
 
-import static junit.framework.TestCase.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -35,7 +33,6 @@ public class SubjectControllerTest {
     private MockMvc mockMvc;
     private ObjectMapper objectMapper = new ObjectMapper();
     private Subject subject;
-    private RestTemplate restTemplate;
 
     @Autowired
     private WebApplicationContext wac;
@@ -125,12 +122,12 @@ public class SubjectControllerTest {
     }
 
     @Test(expected = NullPointerException.class)
-    public void whenSaveNameIsNull() {
-        String userInJson = "{\"name\":null}";
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<String> entity = new HttpEntity<>(userInJson, headers);
-        ResponseEntity<String> response = restTemplate.postForEntity("/subjects", entity, String.class);
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+    public void whenSaveNameIsNull() throws Exception {
+        SubjectDTO subjectDtoForSave = new SubjectDTO();
+        subjectDtoForSave.setName(null);
+
+        mockMvc.perform(post("/subjects").content(objectMapper.writeValueAsString(subjectDtoForSave))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
     }
 }
