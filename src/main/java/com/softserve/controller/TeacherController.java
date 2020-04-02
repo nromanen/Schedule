@@ -2,6 +2,7 @@ package com.softserve.controller;
 
 import com.softserve.dto.TeacherDTO;
 import com.softserve.dto.TeacherMapperWishDTO;
+import com.softserve.dto.TeacherWishDTO;
 import com.softserve.entity.Teacher;
 import com.softserve.service.TeacherService;
 import com.softserve.service.mapper.TeacherMapper;
@@ -39,8 +40,8 @@ public class TeacherController {
 
     @GetMapping("/all")
     @ApiOperation(value = "Get the list of all teachers")
-    public ResponseEntity<List<TeacherMapperWishDTO>> findAll() {
-        return ResponseEntity.ok(teacherMapper.toTeacherWithWishesDTOs(teacherService.findAll()));
+    public ResponseEntity<List<TeacherMapperWishDTO>> getAllWithWishes() {
+        return ResponseEntity.ok(teacherMapper.toTeacherWithWishesDTOs(teacherService.getAllWithWishes()));
     }
 
 
@@ -50,6 +51,13 @@ public class TeacherController {
         log.info("Enter into get method of {} with id {} ", getClass().getName(), id);
         Teacher teacher = teacherService.getById(id);
         return ResponseEntity.ok().body(teacherMapper.teacherToTeacherDTO(teacher));
+    }
+    @GetMapping("/all/{id}")
+    @ApiOperation(value = "Get teacher with wish by id")
+    public ResponseEntity<TeacherWishDTO> getTeacherWithWishes(@PathVariable("id") Long id) {
+        log.info("Enter into get method of {} with id {} ", getClass().getName(), id);
+        Teacher teacher = teacherService.getTeacherWithWishes(id);
+        return ResponseEntity.ok().body(teacherMapper.toTeacherWithWishesDTOs(teacher));
     }
 
     @PostMapping

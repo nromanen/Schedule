@@ -1,0 +1,129 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "http://example.com/example.json",
+  "type": "object",
+  "title": "The Root Schema",
+  "description": "The root schema comprises the entire JSON document.",
+  "required": [
+    "id"
+  ],
+  "properties": {
+    "id": {
+      "$id": "#/properties/id",
+      "type": "integer",
+      "title": "The Id Schema",
+      "description": "An explanation about the purpose of this instance.",
+      "default": 0,
+      "examples": [
+        1
+      ]
+    },
+    "wishList": {
+      "$id": "#/properties/wishList",
+      "type": "array",
+      "title": "The Wishlist Schema",
+      "description": "An explanation about the purpose of this instance.",
+      "default": [],
+      "items": {
+        "$id": "#/properties/wishList/items",
+        "type": "object",
+        "title": "The Items Schema",
+        "description": "An explanation about the purpose of this instance.",
+        "default": {},
+        "examples": [
+          {
+            "day_of_week": "MONDAY",
+            "evenOdd": "EVEN",
+            "wishes": [
+              {
+                "status": "GOOD",
+                "class_id": 1.0
+              },
+              {
+                "class_id": 3.0,
+                "status": "Not good"
+              }
+            ]
+          }
+        ],
+        "required": [
+          "day_of_week",
+          "evenOdd",
+          "wishes"
+        ],
+        "properties": {
+          "day_of_week": {
+            "$id": "#/properties/wishList/items/properties/day_of_week",
+            "type": "string",
+            "title": "The Day_of_week Schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": "",
+            "examples": [
+              "MONDAY"
+            ]
+          },
+          "evenOdd": {
+            "$id": "#/properties/wishList/items/properties/evenOdd",
+            "type": "string",
+            "title": "The Evenodd Schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": "",
+            "examples": [
+              "EVEN"
+            ]
+          },
+          "wishes": {
+            "$id": "#/properties/wishList/items/properties/wishes",
+            "type": "array",
+            "title": "The Wishes Schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": [],
+            "items": {
+              "$id": "#/properties/wishList/items/properties/wishes/items",
+              "type": "object",
+              "title": "The Items Schema",
+              "description": "An explanation about the purpose of this instance.",
+              "default": {},
+              "examples": [
+                {
+                  "status": "GOOD",
+                  "class_id": 1.0
+                },
+                {
+                  "class_id": 3.0,
+                  "status": "Not good"
+                }
+              ],
+              "required": [
+                "class_id",
+                "status"
+              ],
+              "properties": {
+                "class_id": {
+                  "$id": "#/properties/wishList/items/properties/wishes/items/properties/class_id",
+                  "type": "integer",
+                  "title": "The Class_id Schema",
+                  "description": "An explanation about the purpose of this instance.",
+                  "default": 0,
+                  "examples": [
+                    1
+                  ]
+                },
+                "status": {
+                  "$id": "#/properties/wishList/items/properties/wishes/items/properties/status",
+                  "type": "string",
+                  "title": "The Status Schema",
+                  "description": "An explanation about the purpose of this instance.",
+                  "default": "",
+                  "examples": [
+                    "GOOD"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

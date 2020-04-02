@@ -19,19 +19,6 @@ import java.time.DayOfWeek;
 @Slf4j
 @SuppressWarnings("unchecked")
 public class TeacherWishesRepositoryImpl extends BasicRepositoryImpl<TeacherWishes, Long> implements TeacherWishesRepository {
-    /**
-     * Modified save method, which merge entity before updating it
-     *
-     * @param entity teacher wishes is going to be saved
-     * @return Teacher Wishes
-     */
-    @Override
-    public TeacherWishes save(TeacherWishes entity) {
-        log.info("Enter into save method of {} with entity:{}", getClass().getName(), entity);
-        entity = (TeacherWishes) sessionFactory.getCurrentSession().merge(entity);
-        sessionFactory.getCurrentSession().save(entity);
-        return entity;
-    }
 
     /**
      * Modified update method, which merge entity before updating it
@@ -42,40 +29,30 @@ public class TeacherWishesRepositoryImpl extends BasicRepositoryImpl<TeacherWish
     @Override
     public TeacherWishes update(TeacherWishes entity) {
         log.info("Enter into update method of {} with entity:{}", getClass().getName(), entity);
-        entity = (TeacherWishes) sessionFactory.getCurrentSession().merge(entity);
-        sessionFactory.getCurrentSession().update(entity);
+        sessionFactory.getCurrentSession().clear();
+        return super.update(entity);
+    }
+
+    /**
+     * Modified update method, which merge entity before updating it
+     *
+     * @param entity teacher wishes is going to be updated
+     * @return Teacher Wishes
+     */
+    @Override
+    public TeacherWishes save(TeacherWishes entity) {
+        log.info("Enter into update method of {} with entity:{}", getClass().getName(), entity);
+       entity = (TeacherWishes)sessionFactory.getCurrentSession().merge(entity);
+        sessionFactory.getCurrentSession().save(entity);
         return entity;
     }
 
     public void validateTeacherWish(JsonNode teacherWish){
         try {
-
-            final JsonNode fstabSchema = loadResource("/wish-shema.json");
-            final JsonSchemaFactory factory = JsonSchemaFactory.byDefault();
-
-            final JsonSchema schema = factory.getJsonSchema(fstabSchema);
-            ProcessingReport report;
-            report = schema.validate(teacherWish);
-            System.out.println(report);
-
-
-
-            /*teacherWish.forEach(jsonNode -> {
-                int dayOfWeek = jsonNode.get("day_of_week").asInt();
-                if(dayOfWeek == 0){
-                    throw new IncorrectWishException("day_of_week is incorrect, "+jsonNode);
-                }
-                for (JsonNode classNode : jsonNode.get("wishes")) {
-                    JsonNode classNumber = classNode.get("class_number");
-                    if (classNumber.asInt() == 0) {
-                        throw new IncorrectWishException("class_number is empty, "+ classNode);
-                    }
-                    JsonNode status = classNode.get("status");
-                    if (status.asText() == null) {
-                        throw new IncorrectWishException("status is empty, "+ classNode);
-                    }
-                }
-            });*/
+                final JsonNode fstabSchema = loadResource("/wish-shema.json");
+                final JsonSchemaFactory factory = JsonSchemaFactory.byDefault();
+                final JsonSchema schema = factory.getJsonSchema(fstabSchema);
+                schema.validate(teacherWish);
         }catch (Exception e) {
            // throw new IncorrectWishException("Wish is incorrect, "+ teacherWish.toString());
             e.printStackTrace();

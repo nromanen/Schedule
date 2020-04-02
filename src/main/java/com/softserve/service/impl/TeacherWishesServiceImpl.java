@@ -50,8 +50,7 @@ public class TeacherWishesServiceImpl implements TeacherWishesService {
 
     @Override
     public TeacherWishes save(TeacherWishes object) {
-        log.info("Enter into save method of {} with entity:{}", getClass().getName(), object);
-        teacherWishesRepository.validateTeacherWish(object.getWishList());
+        log.info("Enter into save method of {} with entity:{}", object);
         return teacherWishesRepository.save(object);
     }
 

@@ -30,29 +30,13 @@ public class TeacherWishesController {
         this.teacherWishesMapper = teacherWishesMapper;
     }
 
-   /* @GetMapping
-    @ApiOperation(value = "Get the list of all groups")
-    public ResponseEntity<List<GroupDTO>> list() {
-        log.info("Enter into list method of {}", getClass().getName());
-       // List<Group> groups = groupService.getAll();
-        return ResponseEntity.status(HttpStatus.OK);
-    }
-
-    @GetMapping("/{id}")
-    @ApiOperation(value = "Get group info by id")
-    public ResponseEntity<GroupDTO> get(@PathVariable("id") long id){
-        log.info("Enter into get method of {} with id {} ", getClass().getName(), id);
-        Group group = groupService.getById(id);
-        return ResponseEntity.status(HttpStatus.OK).body(groupMapper.groupToGroupDTO(group));
-    }*/
-
-    @PostMapping
+    /*@PostMapping
     @ApiOperation(value = "Create new teacher wish")
     public ResponseEntity<AddTeacherWishesDTO> save(@RequestBody AddTeacherWishesDTO addTeacherWishesDTO) {
         log.info("Enter into save method with AddTeacherWishesDTO: {}", addTeacherWishesDTO);
         TeacherWishes teacherWishes = teacherWishesService.save(teacherWishesMapper.addteacherWishesDTOToTeacherWishes(addTeacherWishesDTO));
         return ResponseEntity.status(HttpStatus.CREATED).body(teacherWishesMapper.addteacherWishesToTeacherWishesDTO(teacherWishes));
-    }
+    }*/
 
     @PutMapping()
     @ApiOperation(value = "Update existing wish by id")
@@ -62,15 +46,5 @@ public class TeacherWishesController {
         TeacherWishes teacherWishes = teacherWishesService.update(teacherWishesMapper.teacherWishesDTOToTeacherWishes(teacherWishesDTO));
         return ResponseEntity.status(HttpStatus.OK).body(teacherWishesMapper.teacherWishesToTeacherWishesDTO(teacherWishes));
     }
-
-   /* @DeleteMapping("/{id}")
-    @ApiOperation(value = "Delete group by id")
-    public ResponseEntity delete(@PathVariable("id") long id){
-        log.info("Enter into delete method of {} with  group id: {}", getClass().getName(), id);
-        Group group = groupService.getById(id);
-        groupService.delete(group);
-        return ResponseEntity.status(HttpStatus.OK).build();
-    }*/
-
 
 }
