@@ -2,14 +2,13 @@ package com.softserve.service.impl;
 
 
 import com.softserve.dto.CreateScheduleInfoDTO;
-import com.softserve.entity.Room;
 import com.softserve.entity.Schedule;
 import com.softserve.entity.enums.EvenOdd;
 import com.softserve.exception.EntityNotFoundException;
 import com.softserve.exception.ScheduleConflictException;
-import com.softserve.repository.LessonRepository;
 import com.softserve.repository.ScheduleRepository;
 import com.softserve.service.LessonService;
+import com.softserve.service.RoomService;
 import com.softserve.service.ScheduleService;
 import com.softserve.service.mapper.RoomMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -27,12 +26,14 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     private final ScheduleRepository scheduleRepository;
     private final LessonService lessonService;
+    private final RoomService roomService;
     private final RoomMapper roomMapper;
 
     @Autowired
-    public ScheduleServiceImpl(ScheduleRepository scheduleRepository, LessonRepository lessonRepository, LessonService lessonService, RoomMapper roomMapper) {
+    public ScheduleServiceImpl(ScheduleRepository scheduleRepository,  LessonService lessonService,  RoomService roomService, RoomMapper roomMapper) {
         this.scheduleRepository = scheduleRepository;
         this.lessonService = lessonService;
+        this.roomService = roomService;
         this.roomMapper = roomMapper;
     }
 
@@ -110,9 +111,9 @@ public class ScheduleServiceImpl implements ScheduleService {
 
 
             CreateScheduleInfoDTO createScheduleInfoDTO = new CreateScheduleInfoDTO();
-            createScheduleInfoDTO.setTeacherAvailable(isTeacherAvailable(semesterId, dayOfWeek, evenOdd, classId, lessonId));
-            createScheduleInfoDTO.setNotAvailableRooms(roomMapper.convertToDtoList(getNotAvailableRooms(semesterId, dayOfWeek, evenOdd, classId)));
-            createScheduleInfoDTO.setAvailableRooms(roomMapper.convertToDtoList(getAvailableRooms(semesterId, dayOfWeek, evenOdd, classId)));
+            createScheduleInfoDTO.setTeacherAvailable(isTeacherAvailableForSchedule(semesterId, dayOfWeek, evenOdd, classId, lessonId));
+            createScheduleInfoDTO.setNotAvailableRooms(roomMapper.convertToDtoList(roomService.getNotAvailableRoomsForSchedule(semesterId, dayOfWeek, evenOdd, classId)));
+            createScheduleInfoDTO.setAvailableRooms(roomMapper.convertToDtoList(roomService.getAvailableRoomsForSchedule(semesterId, dayOfWeek, evenOdd, classId)));
             createScheduleInfoDTO.setClassSuitsToTeacher(true);
            return createScheduleInfoDTO;
 
@@ -129,7 +130,7 @@ public class ScheduleServiceImpl implements ScheduleService {
      * @param classId id for period that the search is performed for
      * @return true if there is a conflict in the Group schedule, else false
      */
-    private boolean isConflictForGroupInSchedule(Long semesterId, DayOfWeek dayOfWeek, EvenOdd evenOdd, Long classId, Long lessonId) {
+    public boolean isConflictForGroupInSchedule(Long semesterId, DayOfWeek dayOfWeek, EvenOdd evenOdd, Long classId, Long lessonId) {
         log.info("Enter into isConflictForGroupInSchedule with semesterId = {}, dayOfWeek = {}, evenOdd = {}, classId = {}, lessonId = {}", semesterId, dayOfWeek, evenOdd, classId, lessonId);
 
         //Get group ID from Lesson by lesson ID to search further by group ID
@@ -139,21 +140,16 @@ public class ScheduleServiceImpl implements ScheduleService {
         return scheduleRepository.conflictForGroupInSchedule(semesterId, dayOfWeek, evenOdd, classId, groupId) != 0;
     }
 
-    private boolean isTeacherAvailable(Long semesterId, DayOfWeek dayOfWeek, EvenOdd evenOdd, Long classId, Long lessonId){
+    @Override
+    public boolean isTeacherAvailableForSchedule(Long semesterId, DayOfWeek dayOfWeek, EvenOdd evenOdd, Long classId, Long lessonId) {
         log.info("Enter into isTeacherAvailable with semesterId = {}, dayOfWeek = {}, evenOdd = {}, classId = {}, lessonId = {}", semesterId, dayOfWeek, evenOdd, classId, lessonId);
         //Get teacher ID from Lesson by lesson ID to search further by teacher ID
         Long teacherId = lessonService.getById(lessonId).getTeacher().getId();
         return scheduleRepository.conflictForTeacherInSchedule(semesterId, dayOfWeek, evenOdd, classId, teacherId) != 0;
     }
-
-    private List<Room> getNotAvailableRooms(Long semesterId, DayOfWeek dayOfWeek, EvenOdd evenOdd, Long classId){
-        log.info("Enter into getNotAvailableRooms with semesterId = {}, dayOfWeek = {}, evenOdd = {}, classId = {} ", semesterId, dayOfWeek, evenOdd, classId);
-        return scheduleRepository.getNotAvailableRooms(semesterId, dayOfWeek, evenOdd, classId);
-    }
-
-    private List<Room> getAvailableRooms(Long semesterId, DayOfWeek dayOfWeek, EvenOdd evenOdd, Long classId){
-        log.info("Enter into getNotAvailableRooms with semesterId = {}, dayOfWeek = {}, evenOdd = {}, classId = {} ", semesterId, dayOfWeek, evenOdd, classId);
-        return scheduleRepository.getAvailableRooms(semesterId, dayOfWeek, evenOdd, classId);
-    }
-
 }
+
+
+
+
+
