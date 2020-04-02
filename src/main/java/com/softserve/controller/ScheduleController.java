@@ -49,8 +49,7 @@ public class ScheduleController {
                                                                             @RequestParam Long classId,
                                                                             @RequestParam Long lessonId){
         log.info("Enter into getInfoForCreatingSchedule method ");
-        scheduleService.getInfoForCreatingSchedule(semesterId, dayOfWeek,evenOdd, classId, lessonId);
-        return ResponseEntity.status(HttpStatus.OK).build();
+        return ResponseEntity.status(HttpStatus.OK).body(scheduleService.getInfoForCreatingSchedule(semesterId, dayOfWeek,evenOdd, classId, lessonId));
     }
 
 

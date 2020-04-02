@@ -56,7 +56,6 @@ public class SubjectController {
     @ApiOperation(value = "Update existing subject by id")
     public ResponseEntity<SubjectDTO> update(@RequestBody SubjectDTO subjectDTO) {
         log.info("Enter into update method with subjectDTO: {}", subjectDTO);
-        subjectService.getById(subjectDTO.getId());
         Subject subject = subjectService.update(subjectMapper.subjectDTOToSubject(subjectDTO));
         return ResponseEntity.status(HttpStatus.OK).body(subjectMapper.subjectToSubjectDTO(subject));
     }

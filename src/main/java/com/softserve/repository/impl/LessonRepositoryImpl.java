@@ -24,4 +24,25 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
                 ("FROM Lesson l WHERE l.group.id = :groupId")
                 .setParameter("groupId", groupId).getResultList();
     }
+
+
+    /**
+     * Method searches duplicate of lesson in the DB
+     * @param lesson Lesson entity that needs to be verified
+     * @return count of duplicates if such exist, else return 0
+     */
+    @Override
+    public Long countLessonDuplicates(Lesson lesson) {
+        return (Long) sessionFactory.getCurrentSession().createQuery("" +
+                "select count(*) from Lesson l " +
+                "where l.teacher.id = :teacherId " +
+                "and l.subject.id = :subjectId " +
+                "and l.group.id = :groupId " +
+                "and l.lessonType = :lessonType")
+                .setParameter("teacherId", lesson.getTeacher().getId())
+                .setParameter("subjectId", lesson.getSubject().getId())
+                .setParameter("groupId", lesson.getSubject().getId())
+                .setParameter("lessonType", lesson.getLessonType())
+                .getSingleResult();
+    }
 }
