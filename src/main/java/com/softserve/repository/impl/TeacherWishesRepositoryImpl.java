@@ -2,11 +2,13 @@ package com.softserve.repository.impl;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.github.fge.jackson.JsonLoader;
+import com.github.fge.jsonschema.core.exceptions.ProcessingException;
 import com.github.fge.jsonschema.core.report.ProcessingReport;
 import com.github.fge.jsonschema.main.JsonSchema;
 import com.github.fge.jsonschema.main.JsonSchemaFactory;
 import com.softserve.entity.TeacherWishes;
 import com.softserve.entity.enums.EvenOdd;
+import com.softserve.exception.IncorrectWishException;
 import com.softserve.repository.TeacherWishesRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
@@ -47,15 +49,18 @@ public class TeacherWishesRepositoryImpl extends BasicRepositoryImpl<TeacherWish
         return entity;
     }
 
-    public void validateTeacherWish(JsonNode teacherWish){
+    public void validateTeacherWish(JsonNode teacherWish) {
         try {
-                final JsonNode fstabSchema = loadResource("/wish-shema.json");
-                final JsonSchemaFactory factory = JsonSchemaFactory.byDefault();
-                final JsonSchema schema = factory.getJsonSchema(fstabSchema);
-                schema.validate(teacherWish);
-        }catch (Exception e) {
-           // throw new IncorrectWishException("Wish is incorrect, "+ teacherWish.toString());
-            e.printStackTrace();
+            final JsonNode fstabSchema = loadResource("/wish-schema.json");
+            final JsonSchemaFactory factory = JsonSchemaFactory.byDefault();
+            final JsonSchema schema = factory.getJsonSchema(fstabSchema);
+            ProcessingReport report;
+            report = schema.validate(teacherWish);
+            if (!report.isSuccess()) {
+                throw new IncorrectWishException("Wish is incorrect, " + report.toString());
+            }
+        } catch (ProcessingException | IOException e) {
+            log.error("");
         }
     }
 

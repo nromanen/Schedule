@@ -55,7 +55,6 @@ public class TeacherServiceImpl implements TeacherService {
     public Teacher save(Teacher object) {
         log.info("Enter into save method of {} with entity:{}", getClass().getName(), object);
         Teacher teacher = teacherRepository.save(object);
-
         TeacherWishes teacherWishes = new TeacherWishes();
         teacherWishes.setId(teacher.getId());
         teacherWishes.setWishList(null);

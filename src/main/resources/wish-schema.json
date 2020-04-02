@@ -1,0 +1,61 @@
+{
+  "type": "array",
+  "title": "The Wishlist Schema",
+  "description": "An explanation about the purpose of this instance.",
+  "default": [],
+  "items": {
+    "type": "object",
+    "title": "The Items Schema",
+    "description": "An explanation about the purpose of this instance.",
+    "default": {},
+    "required": [
+      "day_of_week",
+      "evenOdd",
+      "wishes"
+    ],
+    "properties": {
+      "day_of_week": {
+        "type": "string",
+        "title": "The Day_of_week Schema",
+        "description": "An explanation about the purpose of this instance.",
+        "default": ""
+      },
+      "evenOdd": {
+        "type": "string",
+        "title": "The Evenodd Schema",
+        "description": "An explanation about the purpose of this instance.",
+        "default": ""
+      },
+      "wishes": {
+        "type": "array",
+        "title": "The Wishes Schema",
+        "description": "An explanation about the purpose of this instance.",
+        "default": [],
+        "items": {
+          "type": "object",
+          "title": "The Items Schema",
+          "description": "An explanation about the purpose of this instance.",
+          "default": {},
+          "required": [
+            "class_id",
+            "status"
+          ],
+          "properties": {
+            "class_id": {
+              "type": "integer",
+              "title": "The Class_id Schema",
+              "description": "An explanation about the purpose of this instance.",
+              "default": 0
+            },
+            "status": {
+              "type": "string",
+              "title": "The Status Schema",
+              "description": "An explanation about the purpose of this instance.",
+              "default": ""
+            }
+          }
+        }
+      }
+    }
+  }
+}
