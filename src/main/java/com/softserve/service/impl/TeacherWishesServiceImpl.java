@@ -1,16 +1,16 @@
 package com.softserve.service.impl;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.softserve.entity.TeacherWishes;
 import com.softserve.entity.enums.EvenOdd;
 import com.softserve.exception.EntityNotFoundException;
-import com.softserve.exception.IncorrectWishException;
 import com.softserve.repository.TeacherWishesRepository;
 import com.softserve.service.TeacherWishesService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.DayOfWeek;
 import java.util.List;
 
 @Transactional
@@ -50,7 +50,7 @@ public class TeacherWishesServiceImpl implements TeacherWishesService {
 
     @Override
     public TeacherWishes save(TeacherWishes object) {
-        log.info("Enter into save method of {} with entity:{}", object);
+        log.info("Enter into save method with entity:{}", object);
         return teacherWishesRepository.save(object);
     }
 
@@ -62,7 +62,7 @@ public class TeacherWishesServiceImpl implements TeacherWishesService {
     @Override
     public TeacherWishes update(TeacherWishes object)
     {
-        log.info("Enter into update method of {} with entity:{}", getClass().getName(), object);
+        log.info("Enter into update method with entity:{}", object);
         teacherWishesRepository.validateTeacherWish(object.getWishList());
         return teacherWishesRepository.update(object);
     }
@@ -74,7 +74,12 @@ public class TeacherWishesServiceImpl implements TeacherWishesService {
      */
     @Override
     public TeacherWishes delete(TeacherWishes object) {
-        log.info("Enter into delete method of {} with entity:{}", getClass().getName(), object);
+        log.info("Enter into delete method with entity:{}", object);
         return teacherWishesRepository.delete(object);
+    }
+
+    @Override
+    public boolean isClassSuits(Long teacherId, Long semesterId, DayOfWeek dayOfWeek, EvenOdd evenOdd, Long classId) {
+        return teacherWishesRepository.isClassSuits(teacherId, semesterId, dayOfWeek, evenOdd, classId);
     }
 }

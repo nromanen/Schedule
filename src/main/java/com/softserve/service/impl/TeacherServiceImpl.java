@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
-import java.util.Optional;
 
 @Transactional
 @Service
@@ -25,7 +24,7 @@ public class TeacherServiceImpl implements TeacherService {
     @Autowired
     public TeacherServiceImpl(TeacherRepository teacherRepository, TeacherWishesService teacherWishesService) {
         this.teacherRepository = teacherRepository;
-        this.teacherWishesService= teacherWishesService;
+        this.teacherWishesService = teacherWishesService;
     }
 
     /**
@@ -53,7 +52,7 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Override
     public Teacher save(Teacher object) {
-        log.info("Enter into save method of {} with entity:{}", getClass().getName(), object);
+        log.info("Enter into save method with entity:{}", object);
         Teacher teacher = teacherRepository.save(object);
         TeacherWishes teacherWishes = new TeacherWishes();
         teacherWishes.setId(teacher.getId());
@@ -70,7 +69,7 @@ public class TeacherServiceImpl implements TeacherService {
     @Override
     public Teacher update(Teacher object)
     {
-        log.info("Enter into update method of {} with entity:{}", getClass().getName(), object);
+        log.info("Enter into update method with entity:{}", object);
         return teacherRepository.update(object);
     }
 
@@ -81,17 +80,25 @@ public class TeacherServiceImpl implements TeacherService {
      */
     @Override
     public Teacher delete(Teacher object) {
-        log.info("Enter into delete method of {} with entity:{}", getClass().getName(), object);
+        log.info("Enter into delete method with entity:{}", object);
         return teacherRepository.delete(object);
     }
-
+    /**
+     * Method gets information about teachers with wishes from Repository
+     * @return List of all teachers with wishes
+     */
     @Override
-    public List<Teacher> getAllWithWishes() {
+    public List<Teacher> getAllTeachersWithWishes() {
         List<Teacher> teachers = teacherRepository.getAll();
         teachers.forEach(teacher -> Hibernate.initialize(teacher.getTeacherWishesList()));
         return teachers;
     }
 
+    /**
+     * The method used for getting teacher with wishes by id
+     * @param id Identity teacher id
+     * @return target teacher with wishes
+     */
     @Override
     public Teacher getTeacherWithWishes(Long id) {
         Teacher teacher = this.getById(id);

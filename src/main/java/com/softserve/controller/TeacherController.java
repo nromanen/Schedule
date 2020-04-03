@@ -1,7 +1,6 @@
 package com.softserve.controller;
 
 import com.softserve.dto.TeacherDTO;
-import com.softserve.dto.TeacherMapperWishDTO;
 import com.softserve.dto.TeacherWishDTO;
 import com.softserve.entity.Teacher;
 import com.softserve.service.TeacherService;
@@ -34,28 +33,29 @@ public class TeacherController {
     @GetMapping
     @ApiOperation(value = "Get the list of all teachers")
     public ResponseEntity<List<TeacherDTO>> getAll() {
-        log.info("Enter into list method of {}", getClass().getName());
+        log.info("Enter into list method");
         return ResponseEntity.ok(teacherMapper.teachersToTeacherDTOs(teacherService.getAll()));
     }
-
-    @GetMapping("/all")
-    @ApiOperation(value = "Get the list of all teachers")
-    public ResponseEntity<List<TeacherMapperWishDTO>> getAllWithWishes() {
-        return ResponseEntity.ok(teacherMapper.toTeacherWithWishesDTOs(teacherService.getAllWithWishes()));
-    }
-
 
     @GetMapping("/{id}")
     @ApiOperation(value = "Get teacher by id")
     public ResponseEntity<TeacherDTO> get(@PathVariable("id") Long id) {
-        log.info("Enter into get method of {} with id {} ", getClass().getName(), id);
+        log.info("Enter into get method with id {} ", id);
         Teacher teacher = teacherService.getById(id);
         return ResponseEntity.ok().body(teacherMapper.teacherToTeacherDTO(teacher));
     }
+
+    @GetMapping("/all")
+    @ApiOperation(value = "Get the list of all teachers with wishes")
+    public ResponseEntity<List<TeacherWishDTO>> getAllWithWishes() {
+        log.info("Enter into getAllWithWishes method");
+        return ResponseEntity.ok(teacherMapper.toTeacherWithWishesDTOs(teacherService.getAllTeachersWithWishes()));
+    }
+
     @GetMapping("/all/{id}")
     @ApiOperation(value = "Get teacher with wish by id")
     public ResponseEntity<TeacherWishDTO> getTeacherWithWishes(@PathVariable("id") Long id) {
-        log.info("Enter into get method of {} with id {} ", getClass().getName(), id);
+        log.info("Enter into getTeacherWithWishes method with id {} ", id);
         Teacher teacher = teacherService.getTeacherWithWishes(id);
         return ResponseEntity.ok().body(teacherMapper.toTeacherWithWishesDTOs(teacher));
     }
@@ -63,7 +63,7 @@ public class TeacherController {
     @PostMapping
     @ApiOperation(value = "Create new teacher")
     public ResponseEntity<TeacherDTO> save(@RequestBody TeacherDTO teacherDTO) {
-        log.info("Enter into save method of {} with teacherDTO: {}",getClass().getName(), teacherDTO);
+        log.info("Enter into save method with teacherDTO: {}", teacherDTO);
         Teacher teacher = teacherService.save(teacherMapper.teacherDTOToTeacher(teacherDTO));
         return ResponseEntity.status(HttpStatus.CREATED).body(teacherMapper.teacherToTeacherDTO(teacher));
     }
@@ -71,7 +71,7 @@ public class TeacherController {
     @PutMapping
     @ApiOperation(value = "Update existing teacher by id")
     public ResponseEntity<TeacherDTO> update(@RequestBody TeacherDTO updateTeacherDTO) {
-        log.info("Enter into update method of {} with updateTeacherDTO: {}", getClass().getName(), updateTeacherDTO);
+        log.info("Enter into update method with updateTeacherDTO: {}",updateTeacherDTO);
         Teacher teacher = teacherService.update(teacherMapper.teacherDTOToTeacher(updateTeacherDTO));
         return ResponseEntity.status(HttpStatus.OK).body(teacherMapper.teacherToTeacherDTO(teacher));
     }
@@ -79,7 +79,7 @@ public class TeacherController {
     @DeleteMapping("/{id}")
     @ApiOperation(value = "Delete teacher by id")
     public ResponseEntity<?> delete(@PathVariable("id") Long id) {
-        log.info("Enter into delete method of {} with  teacher id: {}", getClass().getName(), id);
+        log.info("Enter into delete method with  teacher id: {}", id);
         Teacher teacher = teacherService.getById(id);
         teacherService.delete(teacher);
         return ResponseEntity.status(HttpStatus.OK).build();

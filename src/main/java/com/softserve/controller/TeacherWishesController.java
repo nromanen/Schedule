@@ -1,6 +1,5 @@
 package com.softserve.controller;
 
-import com.softserve.dto.AddTeacherWishesDTO;
 import com.softserve.dto.TeacherWishesDTO;
 import com.softserve.entity.TeacherWishes;
 import com.softserve.service.TeacherWishesService;
@@ -13,9 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.transaction.Transactional;
-
-@Transactional
 @RestController
 @Api(tags = "Teacher Wishes API")
 @RequestMapping("/teacher_wishes")
@@ -30,13 +26,6 @@ public class TeacherWishesController {
         this.teacherWishesMapper = teacherWishesMapper;
     }
 
-    /*@PostMapping
-    @ApiOperation(value = "Create new teacher wish")
-    public ResponseEntity<AddTeacherWishesDTO> save(@RequestBody AddTeacherWishesDTO addTeacherWishesDTO) {
-        log.info("Enter into save method with AddTeacherWishesDTO: {}", addTeacherWishesDTO);
-        TeacherWishes teacherWishes = teacherWishesService.save(teacherWishesMapper.addteacherWishesDTOToTeacherWishes(addTeacherWishesDTO));
-        return ResponseEntity.status(HttpStatus.CREATED).body(teacherWishesMapper.addteacherWishesToTeacherWishesDTO(teacherWishes));
-    }*/
 
     @PutMapping()
     @ApiOperation(value = "Update existing wish by id")

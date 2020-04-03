@@ -1,20 +1,11 @@
 package com.softserve.service.mapper;
 
-import com.softserve.dto.AddTeacherWishesDTO;
 import com.softserve.dto.TeacherWishesDTO;
 import com.softserve.entity.TeacherWishes;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface TeacherWishesMapper {
     TeacherWishesDTO teacherWishesToTeacherWishesDTO(TeacherWishes teacherWishes);
     TeacherWishes teacherWishesDTOToTeacherWishes(TeacherWishesDTO teacherWishesDTO);
-
-    AddTeacherWishesDTO addteacherWishesToTeacherWishesDTO(TeacherWishes teacherWishes);
-    TeacherWishes addteacherWishesDTOToTeacherWishes(AddTeacherWishesDTO addTeacherWishesDTO);
-    
-
-//    List<TeacherDTO> teachersToTeacherDTOs(List<Teacher> teachers);
-
 }

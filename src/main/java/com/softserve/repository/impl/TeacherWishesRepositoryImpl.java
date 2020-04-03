@@ -30,7 +30,7 @@ public class TeacherWishesRepositoryImpl extends BasicRepositoryImpl<TeacherWish
      */
     @Override
     public TeacherWishes update(TeacherWishes entity) {
-        log.info("Enter into update method of {} with entity:{}", getClass().getName(), entity);
+        log.info("Enter into update method with entity:{}", entity);
         sessionFactory.getCurrentSession().clear();
         return super.update(entity);
     }
@@ -43,27 +43,11 @@ public class TeacherWishesRepositoryImpl extends BasicRepositoryImpl<TeacherWish
      */
     @Override
     public TeacherWishes save(TeacherWishes entity) {
-        log.info("Enter into update method of {} with entity:{}", getClass().getName(), entity);
-       entity = (TeacherWishes)sessionFactory.getCurrentSession().merge(entity);
+        log.info("Enter into update method  with entity:{}", entity);
+        entity = (TeacherWishes)sessionFactory.getCurrentSession().merge(entity);
         sessionFactory.getCurrentSession().save(entity);
         return entity;
     }
-
-    public void validateTeacherWish(JsonNode teacherWish) {
-        try {
-            final JsonNode fstabSchema = loadResource("/wish-schema.json");
-            final JsonSchemaFactory factory = JsonSchemaFactory.byDefault();
-            final JsonSchema schema = factory.getJsonSchema(fstabSchema);
-            ProcessingReport report;
-            report = schema.validate(teacherWish);
-            if (!report.isSuccess()) {
-                throw new IncorrectWishException("Wish is incorrect, " + report.toString());
-            }
-        } catch (ProcessingException | IOException e) {
-            log.error("");
-        }
-    }
-
     /**
      * Load one resource from the current package as a {@link JsonNode}
      *
@@ -77,8 +61,37 @@ public class TeacherWishesRepositoryImpl extends BasicRepositoryImpl<TeacherWish
         return JsonLoader.fromResource(name);
     }
 
-    private boolean isClassSuits(long teacher_id, Long semesterId, DayOfWeek dayOfWeek, EvenOdd evenOdd, Long classId){
 
-        return true;
+    /**
+     * Validate method
+     *
+     * @param teacherWish
+     * @throws IncorrectWishException when json not valid
+     */
+    public void validateTeacherWish(JsonNode teacherWish) {
+        try {
+            final JsonNode fstabSchema = loadResource("/wish-schema.json");
+            final JsonSchemaFactory factory = JsonSchemaFactory.byDefault();
+            final JsonSchema schema = factory.getJsonSchema(fstabSchema);
+            ProcessingReport report = schema.validate(teacherWish);
+            if (!report.isSuccess()) {
+                throw new IncorrectWishException("Wish is incorrect, " + report.toString());
+            }
+        } catch (ProcessingException | IOException e) {
+            log.error("Error in method validateTeacherWish {}",e.toString());
+        }
     }
+
+    /**
+     * Validate method
+     *
+     * @param teacherId, semesterId, dayOfWeek, evenOdd, classId
+     * @return boolean
+     */
+    public boolean isClassSuits(Long teacherId, Long semesterId, DayOfWeek dayOfWeek, EvenOdd evenOdd, Long classId) {
+        return false;
+    }
+
+
+
 }
