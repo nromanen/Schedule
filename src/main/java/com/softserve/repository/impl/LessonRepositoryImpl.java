@@ -18,10 +18,31 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
      */
     @Override
     public List<Lesson> getAllForGroup(Long groupId) {
-        log.info("Enter into  getAllForGroup method of {} to search lessons for group with id = {}", getClass().getName(), groupId);
+        log.info("Enter into  getAllForGroup method to search lessons for group with id = {}", groupId);
 
         return sessionFactory.getCurrentSession().createQuery
                 ("FROM Lesson l WHERE l.group.id = :groupId")
                 .setParameter("groupId", groupId).getResultList();
+    }
+
+
+    /**
+     * Method searches duplicate of lesson in the DB
+     * @param lesson Lesson entity that needs to be verified
+     * @return count of duplicates if such exist, else return 0
+     */
+    @Override
+    public Long countLessonDuplicates(Lesson lesson) {
+        return (Long) sessionFactory.getCurrentSession().createQuery("" +
+                "select count(*) from Lesson l " +
+                "where l.teacher.id = :teacherId " +
+                "and l.subject.id = :subjectId " +
+                "and l.group.id = :groupId " +
+                "and l.lessonType = :lessonType")
+                .setParameter("teacherId", lesson.getTeacher().getId())
+                .setParameter("subjectId", lesson.getSubject().getId())
+                .setParameter("groupId", lesson.getSubject().getId())
+                .setParameter("lessonType", lesson.getLessonType())
+                .getSingleResult();
     }
 }

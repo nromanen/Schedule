@@ -11,6 +11,7 @@ buildscript {
 plugins {
     id 'war'
     id 'java'
+
 }
 
 group 'com.softserve'
@@ -18,7 +19,6 @@ group 'com.softserve'
 repositories {
     mavenCentral()
 }
-
 
 task stage() {
     dependsOn clean, war
@@ -39,10 +39,8 @@ if (System.getenv('$buildDir') != "") {
     stage.dependsOn(copyToLib)
 }
 
-
-
 dependencies {
-
+    testCompile group: 'junit', name: 'junit', version: '4.11'
 
     //Spring
     compile group: 'org.springframework', name: 'spring-core', version: '5.2.4.RELEASE'
@@ -75,8 +73,10 @@ dependencies {
     // https://mvnrepository.com/artifact/javax.validation/validation-api
     compile group: 'javax.validation', name: 'validation-api', version: '2.0.1.Final'
 
+
     // Servlet
     providedCompile group: 'javax.servlet', name: 'javax.servlet-api', version: '4.0.1'
+
 
     //Postgres DB
     compile group: 'org.postgresql', name: 'postgresql', version: '42.2.10'
@@ -109,14 +109,13 @@ dependencies {
     testCompile group: 'com.h2database', name: 'h2', version: '1.4.200'
     testCompile group: 'org.hamcrest', name: 'hamcrest', version: '2.2'
 
+    //jwt
+    compile group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.0'
+
     //jackson-datatype-jsr310
     compile group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: '2.10.3'
 
-
     compile(group: "com.github.java-json-tools", name: "json-schema-validator", version: "2.2.12");
-
-
     providedCompile group: 'com.github.jsimone', name: 'webapp-runner', version: '8.5.11.3'
-
-
 }
+

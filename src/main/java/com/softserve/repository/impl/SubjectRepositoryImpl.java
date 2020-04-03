@@ -6,7 +6,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 @Slf4j
@@ -18,23 +17,36 @@ public class SubjectRepositoryImpl extends BasicRepositoryImpl<Subject, Long> im
      */
     @Override
     public List<Subject> getAll() {
-        log.info("Enter into getAll method of {}", getClass().getName());
+        log.info("Enter into getAll method");
         return sessionFactory.getCurrentSession()
                 .createQuery("from Subject ORDER BY name ASC")
                 .getResultList();
     }
 
     /**
-     * The method used for getting Subject by name from database
+     * The method used for getting number of subjects with name from database
      *
      * @param name String name used to find Subject
-     * @return Subject entity
+     * @return Long number of records with name
      */
     @Override
-    public Optional<Subject> findByName(String name) {
-        log.info("Enter into findByName method of {} with name:{}", getClass().getName(), name);
-        return sessionFactory.getCurrentSession().createQuery
-                ("FROM Subject s WHERE s.name = :name")
-                .setParameter("name", name).uniqueResultOptional();
+    public Long countSubjectsWithName(String name) {
+        log.info("Enter into countSubjectsWithName method with name:{}", name);
+        return (Long) sessionFactory.getCurrentSession().createQuery
+                ("SELECT count (*) FROM Subject s WHERE s.name = :name")
+                .setParameter("name", name).getSingleResult();
+    }
+
+    /**
+     * Method used to verify if Subject with such id exists
+     * @param id of the Subject
+     * @return 0 if there is no Subject with such id, 1 if record with id exists
+     */
+    @Override
+    public Long existsById(Long id) {
+        log.info("Enter into existsById method with id:{}", id);
+        return (Long) sessionFactory.getCurrentSession().createQuery
+                ("SELECT count (*) FROM Subject s WHERE s.id = :id")
+                .setParameter("id", id).getSingleResult();
     }
 }

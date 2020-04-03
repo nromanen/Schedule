@@ -1,6 +1,5 @@
 package com.softserve.dto;
 
-import com.softserve.entity.enums.RoomSize;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -8,6 +7,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class RoomDTO {
     private Long id;
-    private RoomSize roomSize;
     private String name;
+    private String type;
 }

@@ -32,7 +32,7 @@ public class GroupServiceImpl  implements GroupService {
     @Override
     public Group getById(Long id) {
 
-        log.info("Enter into getById method of {} with id {}", getClass().getName(), id);
+        log.info("Enter into getById  with id {}",  id);
         return groupRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException(Group.class, "id", id.toString()));
     }
@@ -43,7 +43,7 @@ public class GroupServiceImpl  implements GroupService {
      */
     @Override
     public List<Group> getAll() {
-        log.info("Enter into getAll method of {}", getClass().getName());
+        log.info("Enter into getAll method");
         return groupRepository.getAll();
     }
 
@@ -54,8 +54,8 @@ public class GroupServiceImpl  implements GroupService {
      */
     @Override
     public Group save(Group object) {
-        log.info("Enter into save method of {} with entity:{}", getClass().getName(), object );
-        if (findByTitle(object.getTitle())){
+        log.info("Enter into save method with entity: {}", object );
+        if (isGroupExistsWitTitle(object.getTitle())){
             throw new FieldAlreadyExistsException(Group.class, "title", object.getTitle());
         }
         return groupRepository.save(object);
@@ -68,11 +68,16 @@ public class GroupServiceImpl  implements GroupService {
      */
     @Override
     public Group update(Group object) {
-        log.info("Enter into update method of {} with entity:{}", getClass().getName(), object);
-        if (findByTitle(object.getTitle())){
-            throw new FieldAlreadyExistsException(Group.class, "title", object.getTitle());
+        log.info("Enter into update method  with entity: {}", object);
+        if (isExistsWithId(object.getId())){
+            if (isGroupExistsWitTitle(object.getTitle())){
+                throw new FieldAlreadyExistsException(Group.class, "title", object.getTitle());
+            }
+            return groupRepository.update(object);
         }
-        return groupRepository.update(object);
+        else {
+            throw new EntityNotFoundException(Group.class, "id", object.getId().toString());
+        }
     }
 
     /**
@@ -82,7 +87,7 @@ public class GroupServiceImpl  implements GroupService {
      */
     @Override
     public Group delete(Group object) {
-        log.info("Enter into delete method of {} with entity:{}", getClass().getName(), object);
+        log.info("Enter into delete method with entity: {}", object);
         return groupRepository.delete(object);
     }
 
@@ -92,8 +97,19 @@ public class GroupServiceImpl  implements GroupService {
      * @return true if Group with such title already exist
      */
     @Override
-    public boolean findByTitle(String title) {
-        log.info("Enter into findByTitle method  of {} with title:{}", getClass().getName(), title);
-        return groupRepository.findByTitle(title).isPresent();
+    public boolean isGroupExistsWitTitle(String title) {
+        log.info("Enter into isGroupExistsWitTitle method with title: {}",  title);
+        return groupRepository.countGroupsWithTitle(title) != 0;
+    }
+
+    /**
+     * Method verifies if Group with id param exist in repository
+     * @param id
+     * @return true if Group with id param exist
+     */
+    @Override
+    public boolean isExistsWithId(Long id) {
+        log.info("Enter into isExistsWithId method with id: {}",  id);
+        return groupRepository.existsById(id)!=0;
     }
 }

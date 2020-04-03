@@ -29,11 +29,11 @@ public class SubjectServiceImpl implements SubjectService {
     /**
      * Method gets information from Repository for particular subject with id parameter
      * @param id Identity number of the subject
-     * @return Group entity
+     * @return Subject entity
      */
     @Override
     public Subject getById(Long id) {
-        log.info("Enter into getById method of {} with id {}", getClass().getName(), id);
+        log.info("Enter into getById method with id {}", id);
         return subjectRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException(Subject.class, "id", id.toString()));
     }
@@ -44,7 +44,7 @@ public class SubjectServiceImpl implements SubjectService {
      */
     @Override
     public List<Subject> getAll() {
-        log.info("Enter into getAll method of {} ", getClass().getName());
+        log.info("Enter into getAll method");
         return subjectRepository.getAll();
     }
 
@@ -55,7 +55,11 @@ public class SubjectServiceImpl implements SubjectService {
      */
     @Override
     public Subject save(Subject object) {
-        log.info("Enter into save method of {} with entity:{}", getClass().getName(), object );
+        log.info("Enter into save method with entity: {}", object );
+        if(isSubjectExistsWithName(object.getName())){
+            log.error("exist? {} ", isSubjectExistsWithName(object.getName()));
+            throw new FieldAlreadyExistsException(Subject.class, "name", object.getName());
+        }
         return subjectRepository.save(object);
     }
 
@@ -66,11 +70,16 @@ public class SubjectServiceImpl implements SubjectService {
      */
     @Override
     public Subject update(Subject object) {
-        log.info("Enter into update method of {} with entity:{}", getClass().getName(), object);
-        if(findByName(object.getName())){
-            throw new FieldAlreadyExistsException(Subject.class, "name", object.getName());
+        log.info("Enter into update method with entity: {}", object);
+        if (isExistsWithId(object.getId())) {
+            if (isSubjectExistsWithName(object.getName())) {
+                throw new FieldAlreadyExistsException(Subject.class, "name", object.getName());
+            }
+            return subjectRepository.update(object);
         }
-        return subjectRepository.update(object);
+        else {
+            throw new EntityNotFoundException(Group.class, "id", object.getId().toString());
+        }
     }
 
     /**
@@ -81,20 +90,28 @@ public class SubjectServiceImpl implements SubjectService {
     @Override
     public Subject delete(Subject object) {
         log.info("Enter into delete method  of {} with entity:{}", getClass().getName(), object);
-        if(findByName(object.getName())){
-            throw new FieldAlreadyExistsException(Subject.class, "name", object.getName());
-        }
         return subjectRepository.delete(object);
     }
 
     /**
      * Method finds if Subject with name already exists
-     * @param name
+     * @param name subject id
      * @return true if Subject with such name already exist
      */
     @Override
-    public boolean findByName(String name) {
-        log.info("Enter into findByName method  of {} with name:{}", getClass().getName(), name);
-        return subjectRepository.findByName(name).isPresent();
+    public boolean isSubjectExistsWithName(String name) {
+        log.info("Enter into isSubjectExistsWithName method with name: {}", name);
+        return subjectRepository.countSubjectsWithName(name) != 0;
+    }
+
+    /**
+     * Method verifies if Subject with id param exist in repository
+     * @param id subject id
+     * @return true if Subject with id param exist
+     */
+    @Override
+    public boolean isExistsWithId(Long id) {
+        log.info("Enter into isExistsWithId method with id: {}",  id);
+        return subjectRepository.existsById(id)!=0;
     }
 }

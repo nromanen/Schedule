@@ -1,9 +1,12 @@
 package com.softserve.dto;
 
 import com.softserve.entity.enums.LessonType;
-import lombok.Data;
+import lombok.*;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@ToString
 public class LessonInfoDTO {
     private Long id;
     private int hours;

@@ -8,6 +8,7 @@ import org.hibernate.Session;
 import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
 
+import java.time.DayOfWeek;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,5 +42,90 @@ public class RoomRepositoryImpl extends BasicRepositoryImpl<Room, Long> implemen
                 .setParameter("evenOdd", evenOdd);
         List<Room> res = query.getResultList();
         return new ArrayList<>(res);
+    }
+
+    @Override
+    public List<String> allUniqueRoomTypes() {
+        return  sessionFactory.getCurrentSession().createQuery("select distinct room.type from Room room").getResultList();
+    }
+
+
+    @Override
+    public List<Room> getNotAvailableRoomsForSchedule(Long semesterId, DayOfWeek dayOfWeek, EvenOdd evenOdd, Long classId) {
+        log.info("Enter into getNotAvailableRooms with semesterId = {}, dayOfWeek = {}, evenOdd = {}, classId = {} ", semesterId, dayOfWeek, evenOdd, classId);
+        if (evenOdd == EvenOdd.WEEKLY) {
+            return sessionFactory.getCurrentSession().createQuery(
+
+                    "select r1 from Room r1 " +
+                            "where r1.id in " +
+                            "(select r.id from Schedule s" +
+                            " join s.room r " +
+                            " where  s.semester.id = :semesterId " +
+                            "and s.dayOfWeek = :dayOfWeek " +
+                            "and s.period.id = :classId )" )
+
+                    .setParameter("semesterId", semesterId)
+                    .setParameter("dayOfWeek", dayOfWeek.toString())
+                    .setParameter("classId", classId)
+                    .getResultList();
+        }
+        else {
+            return sessionFactory.getCurrentSession().createQuery(
+
+                    "select r1 from Room r1 " +
+                            "where r1.id in " +
+                            "(select r.id from Schedule s" +
+                            " join s.room r " +
+                            " where  s.semester.id = :semesterId " +
+                            "and s.dayOfWeek = :dayOfWeek " +
+                            "and s.period.id = :classId " +
+                            "and ( s.evenOdd = :evenOdd or s.evenOdd = 'WEEKLY') )")
+
+                    .setParameter("semesterId", semesterId)
+                    .setParameter("dayOfWeek", dayOfWeek.toString())
+                    .setParameter("classId", classId)
+                    .setParameter("evenOdd", evenOdd)
+                    .getResultList();
+        }
+    }
+
+
+    @Override
+    public List<Room> getAvailableRoomsForSchedule(Long semesterId, DayOfWeek dayOfWeek, EvenOdd evenOdd, Long classId) {
+        log.info("Enter into getAvailableRooms with semesterId = {}, dayOfWeek = {}, evenOdd = {}, classId = {} ", semesterId, dayOfWeek, evenOdd, classId);
+        if (evenOdd == EvenOdd.WEEKLY) {
+            return sessionFactory.getCurrentSession().createQuery(
+
+                    "select r1 from Room r1 " +
+                            "where r1.id not in " +
+                            "(select r.id from Schedule s" +
+                            " join s.room r " +
+                            " where  s.semester.id = :semesterId " +
+                            "and s.dayOfWeek = :dayOfWeek " +
+                            "and s.period.id = :classId )" )
+
+                    .setParameter("semesterId", semesterId)
+                    .setParameter("dayOfWeek", dayOfWeek.toString())
+                    .setParameter("classId", classId)
+                    .getResultList();
+        }
+        else {
+            return sessionFactory.getCurrentSession().createQuery(
+
+                    "select r1 from Room r1 " +
+                            "where r1.id not in " +
+                            "(select r.id from Schedule s" +
+                            " join s.room r " +
+                            " where  s.semester.id = :semesterId " +
+                            "and s.dayOfWeek = :dayOfWeek " +
+                            "and s.period.id = :classId " +
+                            "and ( s.evenOdd = :evenOdd or s.evenOdd = 'WEEKLY') )")
+
+                    .setParameter("semesterId", semesterId)
+                    .setParameter("dayOfWeek", dayOfWeek.toString())
+                    .setParameter("classId", classId)
+                    .setParameter("evenOdd", evenOdd)
+                    .getResultList();
+        }
     }
 }
