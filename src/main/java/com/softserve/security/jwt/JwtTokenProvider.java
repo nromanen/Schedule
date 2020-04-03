@@ -1,5 +1,6 @@
 package com.softserve.security.jwt;
 
+import com.softserve.exception.JwtAuthenticationException;
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

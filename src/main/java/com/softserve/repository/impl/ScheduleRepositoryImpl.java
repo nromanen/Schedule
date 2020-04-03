@@ -7,7 +7,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
 import java.time.DayOfWeek;
-import java.util.List;
 
 @Repository
 @Slf4j
