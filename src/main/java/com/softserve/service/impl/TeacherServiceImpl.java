@@ -1,14 +1,16 @@
 package com.softserve.service.impl;
 
 import com.softserve.entity.Teacher;
+import com.softserve.entity.TeacherWishes;
 import com.softserve.exception.EntityNotFoundException;
 import com.softserve.repository.TeacherRepository;
 import com.softserve.service.TeacherService;
+import com.softserve.service.TeacherWishesService;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 
 @Transactional
@@ -17,10 +19,12 @@ import java.util.List;
 public class TeacherServiceImpl implements TeacherService {
 
     private final TeacherRepository teacherRepository;
+    private final TeacherWishesService teacherWishesService;
 
     @Autowired
-    public TeacherServiceImpl(TeacherRepository teacherRepository) {
+    public TeacherServiceImpl(TeacherRepository teacherRepository, TeacherWishesService teacherWishesService) {
         this.teacherRepository = teacherRepository;
+        this.teacherWishesService = teacherWishesService;
     }
 
     /**
@@ -48,8 +52,13 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Override
     public Teacher save(Teacher object) {
-        log.info("Enter into save method of {} with entity:{}", getClass().getName(), object);
-        return teacherRepository.save(object);
+        log.info("Enter into save method with entity:{}", object);
+        Teacher teacher = teacherRepository.save(object);
+        TeacherWishes teacherWishes = new TeacherWishes();
+        teacherWishes.setId(teacher.getId());
+        teacherWishes.setWishList(null);
+        teacherWishesService.save(teacherWishes);
+        return teacher;
     }
 
     /**
@@ -60,7 +69,7 @@ public class TeacherServiceImpl implements TeacherService {
     @Override
     public Teacher update(Teacher object)
     {
-        log.info("Enter into update method of {} with entity:{}", getClass().getName(), object);
+        log.info("Enter into update method with entity:{}", object);
         return teacherRepository.update(object);
     }
 
@@ -71,7 +80,29 @@ public class TeacherServiceImpl implements TeacherService {
      */
     @Override
     public Teacher delete(Teacher object) {
-        log.info("Enter into delete method of {} with entity:{}", getClass().getName(), object);
+        log.info("Enter into delete method with entity:{}", object);
         return teacherRepository.delete(object);
+    }
+    /**
+     * Method gets information about teachers with wishes from Repository
+     * @return List of all teachers with wishes
+     */
+    @Override
+    public List<Teacher> getAllTeachersWithWishes() {
+        List<Teacher> teachers = teacherRepository.getAll();
+        teachers.forEach(teacher -> Hibernate.initialize(teacher.getTeacherWishesList()));
+        return teachers;
+    }
+
+    /**
+     * The method used for getting teacher with wishes by id
+     * @param id Identity teacher id
+     * @return target teacher with wishes
+     */
+    @Override
+    public Teacher getTeacherWithWishes(Long id) {
+        Teacher teacher = this.getById(id);
+        Hibernate.initialize(teacher.getTeacherWishesList());
+        return teacher;
     }
 }
