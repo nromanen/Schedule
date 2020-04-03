@@ -1,8 +1,10 @@
 package com.softserve.exception.handler;
+
 import com.softserve.exception.*;
 import com.softserve.exception.apierror.ApiError;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.exception.ConstraintViolationException;
+import org.postgresql.util.PSQLException;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -11,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.converter.HttpMessageNotWritableException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
@@ -21,12 +24,10 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-import java.util.ArrayList;
-import java.util.List;
+
 import java.util.Objects;
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
-import static org.springframework.http.HttpStatus.CONFLICT;
+
+import static org.springframework.http.HttpStatus.*;
 
 
 @Order(Ordered.HIGHEST_PRECEDENCE)
@@ -34,38 +35,43 @@ import static org.springframework.http.HttpStatus.CONFLICT;
 @Slf4j
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
-    //Handles EntityFieldAlreadyExistsException. Triggered when entities field has conflict with already existed field.
+    //Handles FieldAlreadyExistsException. Triggered when entities field has conflict with already existed field.
     @ExceptionHandler(FieldAlreadyExistsException.class)
     protected ResponseEntity<Object> handleEntityFieldAlreadyExistsException(
             FieldAlreadyExistsException ex) {
         ApiError apiError = new ApiError(CONFLICT);
-
-        //parsing exception message into simple message
-        String input = ex.getMessage();
-        String[] str = input.split("=");
-        List<String> list = new ArrayList<>();
-        for (String s : str) {
-            s = s.replaceAll("\\{", " ");
-            String lastWord = s.substring(s.lastIndexOf(' ') + 1);
-            list.add(lastWord);
-        }
-        list.remove(list.size() - 1);
-        StringBuilder fields = new StringBuilder();
-        if (list.size() > 1) {
-            for (String s : list) {
-                fields.append(s).append(", ");
-            }
-            if (fields.length() > 0) fields.delete(fields.length() - 2, fields.length() - 1);
-        } else {
-            fields.append(list.get(0));
-        }
-        int i = input.indexOf(' ');
-        String entity = input.substring(0, i);
-        String message = entity + " with provided " + fields + " already exists";
-
-
-        apiError.setMessage(message);
+        apiError.setMessage(ex.getShortMessage());
         apiError.setDebugMessage(ex.getMessage());
+        log.error(ex.getMessage());
+        return buildResponseEntity(apiError);
+    }
+
+    //Handles EntityAlreadyExistsException. Triggered when such object already exists in an another class.
+    @ExceptionHandler(EntityAlreadyExistsException.class)
+    protected ResponseEntity<Object> handleEntityAlreadyExistsException(
+            EntityAlreadyExistsException ex) {
+        ApiError apiError = new ApiError(CONFLICT);
+        apiError.setMessage(ex.getMessage());
+        log.error(ex.getMessage());
+        return buildResponseEntity(apiError);
+    }
+
+    //Handles ScheduleConflictException. Triggered when schedule has conflict with already existed schedules.
+    @ExceptionHandler(ScheduleConflictException.class)
+    protected ResponseEntity<Object> handleScheduleConflictException(
+            ScheduleConflictException ex) {
+        ApiError apiError = new ApiError(CONFLICT);
+        apiError.setMessage(ex.getMessage());
+        log.error(ex.getMessage());
+        return buildResponseEntity(apiError);
+    }
+
+    //Handles IncorrectWishException. Triggered when teacher wishes json is not valid.
+    @ExceptionHandler(IncorrectWishException.class)
+    protected ResponseEntity<Object> handleIncorrectWishException(
+            IncorrectWishException ex) {
+        ApiError apiError = new ApiError(CONFLICT);
+        apiError.setMessage(ex.getMessage());
         log.error(ex.getMessage());
         return buildResponseEntity(apiError);
     }
@@ -95,12 +101,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleEntityNotFound(
             EntityNotFoundException ex) {
         ApiError apiError = new ApiError(NOT_FOUND);
-        String input = ex.getMessage();
-        int i = input.indexOf(' ');
-        String entity = input.substring(0, i);
-        String builder = entity +
-                " was not found";
-        apiError.setMessage(builder);
+        apiError.setMessage(ex.getShortMessage());
         apiError.setDebugMessage(ex.getMessage());
         log.error(ex.getMessage());
         return buildResponseEntity(apiError);
@@ -117,6 +118,40 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return buildResponseEntity(apiError);
     }
 
+    // Handle DataIntegrityViolationException, inspects the cause for different DB causes.
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    protected ResponseEntity<Object> handlePersistenceException(final DataIntegrityViolationException ex) {
+        Throwable cause = ex.getRootCause();
+        if (cause instanceof PSQLException) {
+            PSQLException consEx = (PSQLException) cause;
+            ApiError apiError = new ApiError(HttpStatus.INTERNAL_SERVER_ERROR);
+            apiError.setMessage("Object will not be deleted while there are references pointing to it");
+            apiError.setDebugMessage(consEx.getLocalizedMessage());
+            return buildResponseEntity(apiError);
+        }
+        if (cause instanceof ConstraintViolationException) {
+            ConstraintViolationException consEx = (ConstraintViolationException) cause;
+            ApiError apiError = new ApiError(HttpStatus.INTERNAL_SERVER_ERROR);
+            apiError.setMessage(consEx.getLocalizedMessage());
+            apiError.setDebugMessage(consEx.getLocalizedMessage());
+            return buildResponseEntity(apiError);
+        }
+        ApiError apiError = new ApiError(INTERNAL_SERVER_ERROR);
+        apiError.setMessage(ex.getLocalizedMessage());
+        return buildResponseEntity(apiError);
+    }
+
+    // Handle DeleteDisabledException. Triggered when an object requested for deleting is still referenced by another object.
+    @ExceptionHandler(DeleteDisabledException.class)
+    protected ResponseEntity<Object> handleDeleteDisabledException(
+            DeleteDisabledException ex) {
+        ApiError apiError = new ApiError(CONFLICT);
+        apiError.setMessage(ex.getMessage());
+        apiError.setDebugMessage(ex.getMessage());
+        log.error(ex.getMessage());
+        return buildResponseEntity(apiError);
+    }
+
     //Handle HttpMessageNotReadableException. Happens when request JSON is malformed.
     @Override
     protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
@@ -126,7 +161,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         log.error(ex.getMessage());
         return buildResponseEntity(new ApiError(HttpStatus.BAD_REQUEST, error, ex));
     }
-
 
     // Handle MissingServletRequestParameterException. Triggered when a 'required' request parameter is missing.
     @Override
@@ -174,7 +208,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleHttpMessageNotWritable(HttpMessageNotWritableException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
         String error = "Error writing JSON output";
         log.error(ex.getMessage());
-        return buildResponseEntity(new ApiError(HttpStatus.INTERNAL_SERVER_ERROR, error, ex));
+        return buildResponseEntity(new ApiError(INTERNAL_SERVER_ERROR, error, ex));
     }
 
     // Handle NoHandlerFoundException.
@@ -182,7 +216,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleNoHandlerFoundException(
             NoHandlerFoundException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
         ApiError apiError = new ApiError(BAD_REQUEST);
-        apiError.setMessage(String.format("Could not find the %s method for URL %s", ex.getHttpMethod(), ex.getRequestURL()));
+        apiError.setMessage("Could not find the " + ex.getHttpMethod() + " method for URL " + ex.getRequestURL());
         apiError.setDebugMessage(ex.getMessage());
         log.error(ex.getMessage());
         return buildResponseEntity(apiError);
@@ -195,24 +229,42 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return buildResponseEntity(new ApiError(HttpStatus.NOT_FOUND, ex));
     }
 
-    // Handle DataIntegrityViolationException, inspects the cause for different DB causes.
-    @ExceptionHandler(DataIntegrityViolationException.class)
-    protected ResponseEntity<Object> handleDataIntegrityViolation(DataIntegrityViolationException ex,
-                                                                  WebRequest request) {
-        log.error(ex.getMessage());
-        if (ex.getCause() instanceof ConstraintViolationException) {
-            return buildResponseEntity(new ApiError(HttpStatus.CONFLICT, "Unable to execute statement", ex.getCause()));
-        }
-        return buildResponseEntity(new ApiError(HttpStatus.INTERNAL_SERVER_ERROR, ex));
-    }
-
     // Handle Exception, handle generic Exception.class
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-    protected ResponseEntity<Object> handleMethodArgumentTypeMismatch(MethodArgumentTypeMismatchException ex,
-                                                                      WebRequest request) {
+    protected ResponseEntity<Object> handleMethodArgumentTypeMismatch(MethodArgumentTypeMismatchException ex) {
         ApiError apiError = new ApiError(BAD_REQUEST);
-        apiError.setMessage(String.format("The parameter '%s' of value '%s' could not be converted to type '%s'",
-                ex.getName(), ex.getValue(), Objects.requireNonNull(ex.getRequiredType()).getSimpleName()));
+        apiError.setMessage("The parameter " + ex.getName() + " of value " + ex.getValue()
+                + " could not be converted to type " + Objects.requireNonNull(ex.getRequiredType()).getSimpleName());
+        apiError.setDebugMessage(ex.getMessage());
+        log.error(ex.getMessage());
+        return buildResponseEntity(apiError);
+    }
+
+    //Handles AuthenticationException. Triggered when password is wrong.
+    @ExceptionHandler(AuthenticationException.class)
+    protected ResponseEntity<Object> handleAuthenticationException(AuthenticationException ex) {
+        ApiError apiError = new ApiError(UNAUTHORIZED);
+        apiError.setMessage("Invalid password or email");
+        apiError.setDebugMessage(ex.getMessage());
+        log.error(ex.getMessage());
+        return buildResponseEntity(apiError);
+    }
+
+    //Handles JwtAuthenticationException. Triggered when token is expired or invalid.
+    @ExceptionHandler(JwtAuthenticationException.class)
+    protected ResponseEntity<Object> handleJwtAuthenticationException(JwtAuthenticationException ex) {
+        ApiError apiError = new ApiError(UNAUTHORIZED);
+        apiError.setMessage("JWT token is expired or invalid");
+        apiError.setDebugMessage(ex.getMessage());
+        log.error(ex.getMessage());
+        return buildResponseEntity(apiError);
+    }
+
+    // Handle Exception in case, other handlers dod not handle it
+    @ExceptionHandler(Exception.class)
+    protected ResponseEntity<Object> handleOtherExceptions(Exception ex) {
+        ApiError apiError = new ApiError(INTERNAL_SERVER_ERROR);
+        apiError.setMessage("Unexpected error occurred, please refer to the logs for more information");
         apiError.setDebugMessage(ex.getMessage());
         log.error(ex.getMessage());
         return buildResponseEntity(apiError);

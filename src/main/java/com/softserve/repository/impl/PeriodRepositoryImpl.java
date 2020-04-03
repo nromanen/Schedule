@@ -1,15 +1,14 @@
 package com.softserve.repository.impl;
 
 import com.softserve.entity.Period;
-import com.softserve.entity.Room;
+import com.softserve.exception.DeleteDisabledException;
 import com.softserve.repository.PeriodRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.Session;
-import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
+import javax.persistence.TypedQuery;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @Slf4j
@@ -39,5 +38,48 @@ public class PeriodRepositoryImpl extends BasicRepositoryImpl<Period, Long> impl
     public Period update(Period entity) {
         sessionFactory.getCurrentSession().clear();
         return super.update(entity);
+    }
+
+    /**
+     * The method used for getting Period by name from database
+     *
+     * @param name String email used to find User by it
+     * @return Period
+     */
+    @Override
+    public Optional<Period> findByName(String name) {
+        log.info("Enter into findByName method with name: {}", name);
+        TypedQuery<Period> query = sessionFactory.getCurrentSession().createNamedQuery("findName", Period.class).setMaxResults(1);
+        query.setParameter("name", name);
+        List<Period> periods = query.getResultList();
+        if (periods.isEmpty()) {
+            return Optional.empty();
+        }
+        return Optional.of(query.getResultList().get(0));
+    }
+
+    /**
+     * The method used for deleting object in database, checking references before it
+     *
+     * @param entity is going to be deleted
+     * @return deleted entity
+     * @throws DeleteDisabledException when there are still references pointing to object requested for deleting
+     */
+    @Override
+    public Period delete(Period entity) {
+        if (checkReference(entity.getId())) {
+            throw new DeleteDisabledException("Unable to delete object, till another object is referenced on it");
+        }
+        return super.delete(entity);
+    }
+
+    // Checking by id if period is used in Schedule table
+    private boolean checkReference(Long periodId) {
+        long count = (long) sessionFactory.getCurrentSession().createQuery
+                ("select count (s.id) " +
+                        "from Schedule s where s.period.id = :periodId")
+                .setParameter("periodId", periodId)
+                .getSingleResult();
+        return count != 0;
     }
 }
