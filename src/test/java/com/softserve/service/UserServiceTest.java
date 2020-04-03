@@ -11,7 +11,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import java.sql.SQLDataException;
 import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
@@ -23,10 +22,10 @@ import static org.mockito.Mockito.*;
 public class UserServiceTest {
 
     @Mock
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
     @InjectMocks
-    UserServiceImpl userService;
+    private UserServiceImpl userService;
 
     @Test
     public void testGetById() {
@@ -43,7 +42,7 @@ public class UserServiceTest {
     }
 
     @Test(expected = EntityNotFoundException.class)
-    public void not_found_id() {
+    public void notFoundId() {
         User user = new User();
         user.setId(1L);
 
@@ -69,7 +68,7 @@ public class UserServiceTest {
     }
 
     @Test(expected = FieldAlreadyExistsException.class)
-    public void save_exists_email() {
+    public void saveExistsEmail() {
         User user = new User();
         user.setEmail("test@email.com");
         user.setPassword("password");
@@ -81,9 +80,10 @@ public class UserServiceTest {
         verify(userRepository, times(1)).save(user);
         verify(userRepository, times(1)).findByEmail(user.getEmail());
     }
-//    another exception
+
+    //    another exception
     @Test(expected = NullPointerException.class)
-    public void save_when_password_is_null() {
+    public void saveWhenPasswordIsNull() {
         User user = new User();
         user.setEmail("test@email.com");
         user.setPassword(null);
@@ -130,7 +130,7 @@ public class UserServiceTest {
     }
 
     @Test(expected = FieldAlreadyExistsException.class)
-    public void update_when_email_is_exists() {
+    public void updateWhenEmailIsExists() {
         User oldUser = new User();
         oldUser.setEmail("email@mail.com");
         oldUser.setPassword("oldPassword");
@@ -140,10 +140,14 @@ public class UserServiceTest {
         updateUser.setPassword("updatePassword");
 
         when(userRepository.findByEmail(updateUser.getEmail())).thenReturn(Optional.of(oldUser));
-        when(userRepository.findById(anyLong())).thenReturn(Optional.of(oldUser));
+        when(userRepository.findById(anyLong())).thenReturn(Optional.of(updateUser));
         when(userRepository.update(any(User.class))).thenReturn(updateUser);
 
         userService.update(updateUser);
+
+        verify(userRepository, times(1)).update(oldUser);
+        verify(userRepository, times(1)).findById(anyLong());
+        verify(userRepository, times(1)).findByEmail(oldUser.getEmail());
     }
 
     @Test
@@ -161,7 +165,7 @@ public class UserServiceTest {
     }
 
     @Test(expected = EntityNotFoundException.class)
-    public void email_not_founded() {
+    public void emailNotFounded() {
         User user = new User();
         user.setEmail("test@email.com");
 
