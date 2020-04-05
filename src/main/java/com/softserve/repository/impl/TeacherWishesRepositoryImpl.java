@@ -79,6 +79,7 @@ public class TeacherWishesRepositoryImpl extends BasicRepositoryImpl<TeacherWish
             }
         } catch (ProcessingException | IOException e) {
             log.error("Error in method validateTeacherWish {}",e.toString());
+            throw new IncorrectWishException("Error occured when validating teacher wishes");
         }
     }
 

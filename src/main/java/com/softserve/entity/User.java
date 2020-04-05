@@ -1,8 +1,8 @@
 package com.softserve.entity;
 
 import com.softserve.entity.enums.Role;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
@@ -16,7 +16,9 @@ import java.io.Serializable;
 )
 
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
+@ToString
 @Entity
 @Table(name = "users")
 public class User implements Serializable {
@@ -24,11 +26,12 @@ public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(columnDefinition = "serial")
-    private long id;
+    private Long id;
 
     @Email
-    @Size(min=5, max = 40)
+    @Size(min = 5, max = 40)
     @Column(unique = true, length = 40)
+    @NotEmpty(message = "Email cannot be empty")
     private String email;
 
     @NotEmpty(message = "Password cannot be empty")

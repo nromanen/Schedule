@@ -33,15 +33,20 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public User getById(Long id) {
-        log.info("Enter into getById method of {} with id {}", getClass().getName(), id);
+        log.info("Enter into getById method with id {}", id);
         return userRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException(User.class, "id", id.toString())
         );
     }
 
+    /**
+     * Method gets information about all users from Repository
+     *
+     * @return List of all users
+     */
     @Override
     public List<User> getAll() {
-        log.info("Enter into getAll method of {} ", getClass().getName());
+        log.info("Enter into getAll method");
         return userRepository.getAll();
     }
 
@@ -54,7 +59,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public User save(User object) {
-        log.info("Enter into save method of {} with entity:{}", getClass().getName(), object);
+        log.info("Enter into save method with entity:{}", object);
         if (emailExists(object.getEmail())) {
             throw new FieldAlreadyExistsException(User.class, "email", object.getEmail());
         }
@@ -70,7 +75,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public User update(User object) {
-        log.info("Enter into update method of {} with entity:{}", getClass().getName(), object);
+        log.info("Enter into update method with entity:{}", object);
         getById(object.getId());
         if (userRepository.findByEmail(object.getEmail()).isPresent() &&
                 userRepository.findByEmail(object.getEmail()).get().getId() != object.getId()) {
@@ -87,7 +92,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public User delete(User object) {
-        log.info("Enter into delete method  of {} with entity:{}", getClass().getName(), object);
+        log.info("Enter into delete method with entity:{}", object);
         return userRepository.delete(object);
     }
 
@@ -107,9 +112,7 @@ public class UserServiceImpl implements UserService {
 
     // method for checking email in database
     private boolean emailExists(String email) {
-        log.info("Enter into emailExists method  of {} with email:{}", getClass().getName(), email);
+        log.info("Enter into emailExists method with email:{}", email);
         return userRepository.findByEmail(email).isPresent();
     }
-
-
 }

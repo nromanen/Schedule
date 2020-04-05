@@ -2,6 +2,7 @@ package com.softserve.repository.impl;
 
 import com.softserve.entity.Room;
 import com.softserve.entity.enums.EvenOdd;
+import com.softserve.exception.DeleteDisabledException;
 import com.softserve.repository.RoomRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Session;
@@ -20,7 +21,7 @@ public class RoomRepositoryImpl extends BasicRepositoryImpl<Room, Long> implemen
      * The method used for getting list of free room by specific period, day of week and number of week from database
      *
      * @param idOfPeriod identity number of period
-     * @param dayOfWeek day of the week
+     * @param dayOfWeek  day of the week
      * @param evenOdd    number of week
      * @return list of rooms
      */
@@ -46,9 +47,33 @@ public class RoomRepositoryImpl extends BasicRepositoryImpl<Room, Long> implemen
 
     @Override
     public List<String> allUniqueRoomTypes() {
-        return  sessionFactory.getCurrentSession().createQuery("select distinct room.type from Room room").getResultList();
+        return sessionFactory.getCurrentSession().createQuery("select distinct room.type from Room room").getResultList();
     }
 
+    /**
+     * The method used for deleting object in database, checking references before it
+     *
+     * @param entity is going to be deleted
+     * @return deleted entity
+     * @throws DeleteDisabledException when there are still references pointing to object requested for deleting
+     */
+    @Override
+    public Room delete(Room entity) {
+        if (checkReference(entity.getId())) {
+            throw new DeleteDisabledException("Unable to delete object, till another object is referenced on it");
+        }
+        return super.delete(entity);
+    }
+
+    // Checking by id if room is used in Schedule table
+    private boolean checkReference(Long roomId) {
+        long count = (long) sessionFactory.getCurrentSession().createQuery
+                ("select count (s.id) " +
+                        "from Schedule s where s.room.id = :roomId")
+                .setParameter("roomId", roomId)
+                .getSingleResult();
+        return count != 0;
+    }
 
     @Override
     public List<Room> getNotAvailableRoomsForSchedule(Long semesterId, DayOfWeek dayOfWeek, EvenOdd evenOdd, Long classId) {
@@ -62,14 +87,13 @@ public class RoomRepositoryImpl extends BasicRepositoryImpl<Room, Long> implemen
                             " join s.room r " +
                             " where  s.semester.id = :semesterId " +
                             "and s.dayOfWeek = :dayOfWeek " +
-                            "and s.period.id = :classId )" )
+                            "and s.period.id = :classId )")
 
                     .setParameter("semesterId", semesterId)
                     .setParameter("dayOfWeek", dayOfWeek.toString())
                     .setParameter("classId", classId)
                     .getResultList();
-        }
-        else {
+        } else {
             return sessionFactory.getCurrentSession().createQuery(
 
                     "select r1 from Room r1 " +
@@ -102,14 +126,13 @@ public class RoomRepositoryImpl extends BasicRepositoryImpl<Room, Long> implemen
                             " join s.room r " +
                             " where  s.semester.id = :semesterId " +
                             "and s.dayOfWeek = :dayOfWeek " +
-                            "and s.period.id = :classId )" )
+                            "and s.period.id = :classId )")
 
                     .setParameter("semesterId", semesterId)
                     .setParameter("dayOfWeek", dayOfWeek.toString())
                     .setParameter("classId", classId)
                     .getResultList();
-        }
-        else {
+        } else {
             return sessionFactory.getCurrentSession().createQuery(
 
                     "select r1 from Room r1 " +
