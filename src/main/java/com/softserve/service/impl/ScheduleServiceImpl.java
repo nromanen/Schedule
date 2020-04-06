@@ -2,7 +2,6 @@ package com.softserve.service.impl;
 
 
 import com.softserve.dto.CreateScheduleInfoDTO;
-import com.softserve.dto.RoomForScheduleDTO;
 import com.softserve.entity.Schedule;
 import com.softserve.entity.enums.EvenOdd;
 import com.softserve.exception.EntityNotFoundException;
@@ -11,7 +10,6 @@ import com.softserve.repository.ScheduleRepository;
 import com.softserve.service.LessonService;
 import com.softserve.service.RoomService;
 import com.softserve.service.ScheduleService;
-import com.softserve.service.mapper.RoomForScheduleMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,14 +26,12 @@ public class ScheduleServiceImpl implements ScheduleService {
     private final ScheduleRepository scheduleRepository;
     private final LessonService lessonService;
     private final RoomService roomService;
-    private final RoomForScheduleMapper roomForScheduleMapper;
 
     @Autowired
-    public ScheduleServiceImpl(ScheduleRepository scheduleRepository,  LessonService lessonService,  RoomService roomService, RoomForScheduleMapper roomForScheduleMapper) {
+    public ScheduleServiceImpl(ScheduleRepository scheduleRepository,  LessonService lessonService,  RoomService roomService) {
         this.scheduleRepository = scheduleRepository;
         this.lessonService = lessonService;
         this.roomService = roomService;
-        this.roomForScheduleMapper = roomForScheduleMapper;
     }
 
     /**
@@ -125,7 +121,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 
             CreateScheduleInfoDTO createScheduleInfoDTO = new CreateScheduleInfoDTO();
             createScheduleInfoDTO.setTeacherAvailable(isTeacherAvailableForSchedule(semesterId, dayOfWeek, evenOdd, classId, lessonId));
-           createScheduleInfoDTO.setRooms(getRoomsForCreatingSchedule(semesterId,dayOfWeek, evenOdd, classId));
+           createScheduleInfoDTO.setRooms(roomService.getAllRoomsForCreatingSchedule(semesterId,dayOfWeek, evenOdd, classId));
            createScheduleInfoDTO.setClassSuitsToTeacher(true);
            return createScheduleInfoDTO;
 
@@ -158,13 +154,6 @@ public class ScheduleServiceImpl implements ScheduleService {
         //Get teacher ID from Lesson by lesson ID to search further by teacher ID
         Long teacherId = lessonService.getById(lessonId).getTeacher().getId();
         return scheduleRepository.conflictForTeacherInSchedule(semesterId, dayOfWeek, evenOdd, classId, teacherId) == 0;
-    }
-
-    private List<RoomForScheduleDTO> getRoomsForCreatingSchedule(Long semesterId, DayOfWeek dayOfWeek, EvenOdd evenOdd, Long classId){
-        List<RoomForScheduleDTO> rooms = roomForScheduleMapper.toRoomForScheduleDTOList(roomService.getAvailableRoomsForSchedule(semesterId, dayOfWeek, evenOdd, classId));
-        rooms.forEach(roomForScheduleDTO -> roomForScheduleDTO.setAvailable(true));
-        rooms.addAll(roomForScheduleMapper.toRoomForScheduleDTOList(roomService.getNotAvailableRoomsForSchedule(semesterId, dayOfWeek, evenOdd, classId)));
-        return rooms;
     }
 }
 
