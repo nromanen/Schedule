@@ -31,7 +31,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     private final RoomForScheduleMapper roomForScheduleMapper;
 
     @Autowired
-    public ScheduleServiceImpl(ScheduleRepository scheduleRepository, LessonService lessonService, RoomService roomService, RoomForScheduleMapper roomForScheduleMapper) {
+    public ScheduleServiceImpl(ScheduleRepository scheduleRepository,  LessonService lessonService,  RoomService roomService, RoomForScheduleMapper roomForScheduleMapper) {
         this.scheduleRepository = scheduleRepository;
         this.lessonService = lessonService;
         this.roomService = roomService;
@@ -68,7 +68,13 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Override
     public Schedule save(Schedule object) {
         log.info("Enter into save method with entity: {}", object );
-        return scheduleRepository.save(object);
+        if (isConflictForGroupInSchedule(object.getSemester().getId(), DayOfWeek.valueOf(object.getDayOfWeek()), object.getEvenOdd(), object.getPeriod().getId(), object.getLesson().getId()))
+        {
+            throw new ScheduleConflictException("You can't create schedule item for this group, because one already exists");
+        } else
+        {
+            return scheduleRepository.save(object);
+        }
     }
 
     /**
@@ -78,7 +84,13 @@ public class ScheduleServiceImpl implements ScheduleService {
      */
     @Override
     public Schedule update(Schedule object) {
-        return scheduleRepository.update(object);
+        log.info("Enter into update method with entity: {}", object );
+        if (isConflictForGroupInSchedule(object.getSemester().getId(), DayOfWeek.valueOf(object.getDayOfWeek()), object.getEvenOdd(), object.getPeriod().getId(), object.getLesson().getId()))
+        {
+            throw new ScheduleConflictException("You can't update schedule item for this group, because it violates already existing");
+        } else {
+            return scheduleRepository.update(object);
+        }
     }
 
     /**
@@ -113,8 +125,8 @@ public class ScheduleServiceImpl implements ScheduleService {
 
             CreateScheduleInfoDTO createScheduleInfoDTO = new CreateScheduleInfoDTO();
             createScheduleInfoDTO.setTeacherAvailable(isTeacherAvailableForSchedule(semesterId, dayOfWeek, evenOdd, classId, lessonId));
-            createScheduleInfoDTO.setRooms(getRoomsForCreatingSchedule(semesterId,dayOfWeek, evenOdd, classId));
-            createScheduleInfoDTO.setClassSuitsToTeacher(true);
+           createScheduleInfoDTO.setRooms(getRoomsForCreatingSchedule(semesterId,dayOfWeek, evenOdd, classId));
+           createScheduleInfoDTO.setClassSuitsToTeacher(true);
            return createScheduleInfoDTO;
 
         }
@@ -154,7 +166,6 @@ public class ScheduleServiceImpl implements ScheduleService {
         rooms.addAll(roomForScheduleMapper.toRoomForScheduleDTOList(roomService.getNotAvailableRoomsForSchedule(semesterId, dayOfWeek, evenOdd, classId)));
         return rooms;
     }
-
 }
 
 
