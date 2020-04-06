@@ -131,7 +131,7 @@ public class UserControllerTest {
     public void whenSavePasswordIsNull() throws Exception {
         UserCreateDTO userCreateDTO = new UserCreateDTO();
         userCreateDTO.setPassword(null);
-        userCreateDTO.setEmail("some@mail.com");
+        userCreateDTO.setEmail("12341@mail.com");
         mockMvc.perform(post("/users").content(objectMapper.writeValueAsString(userCreateDTO))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());

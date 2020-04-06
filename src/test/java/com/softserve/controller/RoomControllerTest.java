@@ -114,7 +114,7 @@ public class RoomControllerTest {
         mockMvc.perform(get("/rooms/10")).andExpect(status().isNotFound());
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test
     public void whenSaveNameIsNull() throws Exception {
         AddRoomDTO roomDtoForSave = new AddRoomDTO();
         roomDtoForSave.setName(null);

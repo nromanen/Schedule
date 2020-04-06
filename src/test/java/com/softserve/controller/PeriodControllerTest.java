@@ -140,14 +140,14 @@ public class PeriodControllerTest {
         mockMvc.perform(get("/classes/50")).andExpect(status().isNotFound());
     }
 
-    @Test(expected = NestedServletException.class)
+    @Test
     public void whenSaveExistsPeriod() throws Exception {
         mockMvc.perform(post("/classes").content(objectMapper.writeValueAsString(period))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isConflict());
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test
     public void whenSaveNameIsNull() throws Exception {
         AddPeriodDTO periodDtoForSave = new AddPeriodDTO();
         periodDtoForSave.setClass_name(null);

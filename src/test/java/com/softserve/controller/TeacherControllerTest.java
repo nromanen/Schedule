@@ -68,6 +68,20 @@ public class TeacherControllerTest {
     }
 
     @Test
+    public void testGetAllWithWishes() throws Exception{
+        mockMvc.perform(get("/teachers/with-wishes").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json"));
+    }
+
+    @Test
+    public void testGetWithWishes() throws Exception{
+        mockMvc.perform(get("/teachers/with-wishes/{id}",String.valueOf(teacher.getId())).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json"));
+    }
+
+    @Test
     public void testGet() throws Exception {
         mockMvc.perform(get("/teachers/{id}", String.valueOf(teacher.getId())).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -129,7 +143,7 @@ public class TeacherControllerTest {
         mockMvc.perform(get("/teachers/10")).andExpect(status().isNotFound());
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test
     public void whenSavePositionIsNull() throws Exception {
         TeacherDTO teacherDtoForSave = new TeacherDTO();
         teacherDtoForSave.setName("save name");

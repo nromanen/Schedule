@@ -118,7 +118,7 @@ public class GroupControllerTest {
                 .andExpect(status().isConflict());
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test
     public void whenSaveNameIsNull() throws Exception {
         GroupDTO groupDtoForSave = new GroupDTO();
         groupDtoForSave.setTitle(null);

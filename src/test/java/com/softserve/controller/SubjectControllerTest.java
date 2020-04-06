@@ -111,7 +111,7 @@ public class SubjectControllerTest {
         mockMvc.perform(get("/subjects/10")).andExpect(status().isNotFound());
     }
 
-    @Test(expected = NestedServletException.class)
+    @Test
     public void whenSaveExistsSubject() throws Exception {
         SubjectDTO subjectDTO = new SubjectDTO();
         subjectDTO.setName("dto name");
@@ -121,7 +121,7 @@ public class SubjectControllerTest {
                 .andExpect(status().isConflict());
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test
     public void whenSaveNameIsNull() throws Exception {
         SubjectDTO subjectDtoForSave = new SubjectDTO();
         subjectDtoForSave.setName(null);

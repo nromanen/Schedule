@@ -46,8 +46,6 @@ public class UserServiceTest {
         User user = new User();
         user.setId(1L);
 
-        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
-
         userService.getById(2L);
         verify(userService, times(1)).getById(2L);
     }
@@ -74,21 +72,6 @@ public class UserServiceTest {
         user.setPassword("password");
 
         when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
-        when(userRepository.save(any(User.class))).thenReturn(user);
-
-        userService.save(user);
-        verify(userRepository, times(1)).save(user);
-        verify(userRepository, times(1)).findByEmail(user.getEmail());
-    }
-
-    //    another exception
-    @Test(expected = NullPointerException.class)
-    public void saveWhenPasswordIsNull() {
-        User user = new User();
-        user.setEmail("test@email.com");
-        user.setPassword(null);
-
-        when(userRepository.save(any(User.class))).thenReturn(user);
 
         userService.save(user);
         verify(userRepository, times(1)).save(user);
@@ -113,10 +96,11 @@ public class UserServiceTest {
         User oldUser = new User();
         oldUser.setEmail("oldEmail@mail.com");
         oldUser.setPassword("oldPassword");
+        oldUser.setId(1L);
         User updateUser = new User();
         updateUser.setEmail("update@mail.com");
         updateUser.setPassword("updatePassword");
-
+        updateUser.setId(1L);
 
         when(userRepository.findById(anyLong())).thenReturn(Optional.of(oldUser));
         when(userRepository.update(any(User.class))).thenReturn(updateUser);
@@ -129,6 +113,7 @@ public class UserServiceTest {
         verify(userRepository, times(1)).findByEmail(oldUser.getEmail());
     }
 
+
     @Test(expected = FieldAlreadyExistsException.class)
     public void updateWhenEmailIsExists() {
         User oldUser = new User();
@@ -138,16 +123,16 @@ public class UserServiceTest {
         User updateUser = new User();
         updateUser.setEmail("email@mail.com");
         updateUser.setPassword("updatePassword");
+        updateUser.setId(2L);
 
-        when(userRepository.findByEmail(updateUser.getEmail())).thenReturn(Optional.of(oldUser));
+        when(userRepository.findByEmail(updateUser.getEmail())).thenReturn(Optional.of(updateUser));
         when(userRepository.findById(anyLong())).thenReturn(Optional.of(updateUser));
-        when(userRepository.update(any(User.class))).thenReturn(updateUser);
 
-        userService.update(updateUser);
+        userService.update(oldUser);
 
         verify(userRepository, times(1)).update(oldUser);
         verify(userRepository, times(1)).findById(anyLong());
-        verify(userRepository, times(1)).findByEmail(oldUser.getEmail());
+        verify(userRepository, times(2)).findByEmail(oldUser.getEmail());
     }
 
     @Test
@@ -168,8 +153,6 @@ public class UserServiceTest {
     public void emailNotFounded() {
         User user = new User();
         user.setEmail("test@email.com");
-
-        when(userRepository.findByEmail("test@email.com")).thenReturn(Optional.of(user));
 
         userService.findByEmail("some@email.com");
         verify(userRepository, times(1)).findByEmail("test@email.com");
