@@ -10,13 +10,13 @@ import java.time.DayOfWeek;
 @Getter
 @Setter
 @NoArgsConstructor
-public class ScheduleDTO {
+public class ScheduleSaveDTO {
     private Long id;
-    private SemesterDTO semester;
+    private Long semesterId;
+    private Long periodId;
     private DayOfWeek dayOfWeek;
     private EvenOdd evenOdd;
-    private LessonInfoDTO lesson;
-    private PeriodDTO period;
-    private RoomDTO room;
+    private Long lessonId;
+    private Long roomId;
 
 }
