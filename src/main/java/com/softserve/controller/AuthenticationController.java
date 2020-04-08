@@ -65,8 +65,8 @@ public class AuthenticationController {
         return ResponseEntity.status(HttpStatus.CREATED).body(messageDTO);
     }
 
-    @GetMapping("/activation_account")
-    @ApiOperation(value = "Get token for activation account")
+    @PutMapping("/activation_account")
+    @ApiOperation(value = "Update token after activation successfully account")
     public ResponseEntity<MessageDTO> activationAccount(@RequestParam("token") String token) {
         log.info("Enter into activationAccount method");
         User user = userService.findByToken(token);
@@ -78,7 +78,7 @@ public class AuthenticationController {
         return ResponseEntity.status(HttpStatus.OK).body(messageDTO);
     }
 
-    @PostMapping("/reset_password")
+    @PutMapping("/reset_password")
     @ApiOperation(value = "Reset password by email")
     public ResponseEntity<MessageDTO> resetPassword(@RequestParam("email") String email) {
         log.info("Enter into resetPassword method  with email:{}", email);
@@ -88,7 +88,6 @@ public class AuthenticationController {
 
         return ResponseEntity.ok().body(messageDTO);
     }
-
 
     @PostMapping("/sign_out")
     @ApiOperation(value = "Making the logout")
