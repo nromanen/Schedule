@@ -1,6 +1,5 @@
 package com.softserve.repository.impl;
 
-
 import com.softserve.entity.Teacher;
 import com.softserve.exception.DeleteDisabledException;
 import com.softserve.repository.TeacherRepository;

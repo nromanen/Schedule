@@ -14,7 +14,10 @@ import java.io.Serializable;
         name = "findEmail",
         query = "from User u where u.email= :email"
 )
-
+@NamedQuery(
+        name = "findToken",
+        query = "from User u where u.token= :token"
+)
 @NoArgsConstructor
 @Getter
 @Setter
@@ -40,4 +43,6 @@ public class User implements Serializable {
     @Column(length = 20, columnDefinition = "varchar(32) default 'ROLE_USER'")
     @Enumerated(EnumType.STRING)
     private Role role = Role.ROLE_USER;
+
+    private String token;
 }

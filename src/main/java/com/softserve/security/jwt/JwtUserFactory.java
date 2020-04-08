@@ -12,8 +12,7 @@ public final class JwtUserFactory {
                 user.getEmail(),
                 user.getPassword(),
                 Collections.singleton(new SimpleGrantedAuthority(user.getRole().toString())),
-                true
+                user.getToken().equals("")
         );
     }
-
 }

@@ -38,7 +38,7 @@ public class Teacher implements Serializable {
     private Integer userId;
 
     @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name="teacher_id")
+    @JoinColumn(name="teacher_id", updatable = false)
     private Set<TeacherWishes> teacherWishesList;
 
     public long getId() {
