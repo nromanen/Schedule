@@ -16,7 +16,7 @@
 
       "properties": {
         "day_of_week": {
-          "enum": ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY"]
+          "enum": ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"]
         },
         "evenOdd": {
           "enum": ["WEEKLY", "EVEN", "ODD"]
