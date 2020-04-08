@@ -53,12 +53,7 @@ public class TeacherServiceImpl implements TeacherService {
     @Override
     public Teacher save(Teacher object) {
         log.info("Enter into save method with entity:{}", object);
-        Teacher teacher = teacherRepository.save(object);
-        TeacherWishes teacherWishes = new TeacherWishes();
-        teacherWishes.setId(teacher.getId());
-        teacherWishes.setWishList(null);
-        teacherWishesService.save(teacherWishes);
-        return teacher;
+        return teacherRepository.save(object);
     }
 
     /**

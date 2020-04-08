@@ -1,5 +1,4 @@
 package com.softserve.entity;
-import org.hibernate.annotations.JoinFormula;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
@@ -38,7 +37,7 @@ public class Teacher implements Serializable {
     @Column(name ="user_id")
     private Integer userId;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name="teacher_id")
     private Set<TeacherWishes> teacherWishesList;
 

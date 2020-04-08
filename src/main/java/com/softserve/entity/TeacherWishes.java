@@ -1,18 +1,20 @@
 package com.softserve.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.hibernate.annotations.*;
+import org.hibernate.annotations.TypeDef;
+import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.*;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.validation.Valid;
 import java.io.Serializable;
 
 
@@ -33,9 +35,10 @@ public class TeacherWishes implements Serializable {
     @Column(columnDefinition = "serial")
     private long id;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "teacher_id", insertable = false, updatable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "teacher_id", updatable = false)
     @JsonIgnore
+    @JsonIgnoreProperties
     private Teacher teacher;
 
     @Column(name = "wishlist", columnDefinition = "json default '{}'")
