@@ -16,7 +16,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @Api(tags = "Lesson API")
@@ -40,16 +39,9 @@ public class LessonController {
     @ApiOperation(value = "Get list of all lessons")
     @GetMapping
     public ResponseEntity<List<LessonInfoDTO>> list(@RequestParam(required = false) @ApiParam(value = "Get all lessons for particular group") Long groupId) {
-        if (groupId == null){
-            log.info("Enter into list method of");
-            List<Lesson> lessons = lessonService.getAll();
-            return  ResponseEntity.status(HttpStatus.OK).body(lessons.stream().map(lessonInfoMapper::lessonToLessonInfoDTO).collect(Collectors.toList()));
-        }
-        else {
-            log.info("List method. Get list of all lessons for group with id = {}", groupId);
-            List<Lesson> lessons = lessonService.getAllForGroup(groupId);
-            return  ResponseEntity.status(HttpStatus.OK).body(lessonInfoMapper.lessonsToLessonInfoDTOs(lessons));
-        }
+        log.info("Enter into list method of");
+        List<Lesson> lessons = groupId == null ? lessonService.getAll() : lessonService.getAllForGroup(groupId);
+        return  ResponseEntity.status(HttpStatus.OK).body(lessonInfoMapper.lessonsToLessonInfoDTOs(lessons));
 
     }
 
@@ -61,7 +53,6 @@ public class LessonController {
         Lesson lesson = lessonService.getById(id);
         return ResponseEntity.status(HttpStatus.OK).body(lessonInfoMapper.lessonToLessonInfoDTO(lesson));
     }
-
 
     @PostMapping
     @ApiOperation(value = "Create new lesson")
