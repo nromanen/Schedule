@@ -1,7 +1,7 @@
 package com.softserve.service.impl;
-
 import com.softserve.entity.Period;
 import com.softserve.exception.EntityNotFoundException;
+import com.softserve.exception.FieldAlreadyExistsException;
 import com.softserve.exception.IncorrectTimeException;
 import com.softserve.exception.PeriodConflictException;
 import com.softserve.repository.PeriodRepository;
@@ -57,16 +57,20 @@ public class PeriodServiceImpl implements PeriodService {
      *
      * @param object period
      * @return saved period
-     * @throws IncorrectTimeException when period begins after his end or begin equal to end
-     * @throws PeriodConflictException       when some periods intersect with others or periods
+     * @throws IncorrectTimeException  when period begins after his end or begin equal to end
+     * @throws PeriodConflictException when some periods intersect with others or periods
+     * @throws FieldAlreadyExistsException when periods name already exists
      */
     @Override
     public Period save(Period object) {
-        log.info("Enter into save of PeriodServiceImpl with entity:{}", object);
+        log.info("Enter into save of PeriodServiceImpl with entity: {}", object);
         if (isTimeInvalid(object)) {
             throw new IncorrectTimeException("Incorrect time in period");
         }
         if (isPeriodFree(getAll(), object)) {
+            if (nameExists(object.getName())) {
+                throw new FieldAlreadyExistsException(Period.class, "name", object.getName());
+            }
             return periodRepository.save(object);
         } else {
             throw new PeriodConflictException("Your period has conflict with already existed periods");
@@ -78,8 +82,8 @@ public class PeriodServiceImpl implements PeriodService {
      *
      * @param periods list of periods
      * @return list of periods that have been saved
-     * @throws IncorrectTimeException when period begins after his end or begin equal to end
-     * @throws PeriodConflictException       when some periods intersect with others or periods
+     * @throws IncorrectTimeException  when period begins after his end or begin equal to end
+     * @throws PeriodConflictException when some periods intersect with others or periods
      */
     @Override
 
@@ -100,6 +104,7 @@ public class PeriodServiceImpl implements PeriodService {
      *
      * @param object period is going to be updated
      * @return updated period
+     * @throws FieldAlreadyExistsException when periods name already exists
      */
     @Override
     public Period update(Period object) {
@@ -108,6 +113,11 @@ public class PeriodServiceImpl implements PeriodService {
             throw new IncorrectTimeException("incorrect time in period");
         }
         if (isPeriodFree(getAll(), object)) {
+            getById(object.getId());
+            if (periodRepository.findByName(object.getName()).isPresent() &&
+                    periodRepository.findByName(object.getName()).get().getId() != object.getId()) {
+                throw new FieldAlreadyExistsException(Period.class, "name", object.getName());
+            }
             return periodRepository.update(object);
         } else {
             throw new PeriodConflictException("your period has conflict with already existed periods");
@@ -169,6 +179,11 @@ public class PeriodServiceImpl implements PeriodService {
         log.info("Enter into isTimeInvalid of PeriodServiceImpl with entity: {}", object);
         return object.getStartTime().after(object.getEndTime()) ||
                 object.getStartTime().equals(object.getEndTime());
+    }
+    // method for checking email in database
+    private boolean nameExists(String name) {
+        log.info("Enter into nameExists method with name:{}", name);
+        return periodRepository.findByName(name).isPresent();
     }
 }
 

@@ -1,5 +1,4 @@
 package com.softserve.entity;
-
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import javax.persistence.*;
@@ -9,6 +8,11 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Objects;
+
+@NamedQuery(
+        name = "findName",
+        query = "from Period p where p.name= :name"
+)
 
 @NoArgsConstructor
 @Data

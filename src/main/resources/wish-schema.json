@@ -42,7 +42,7 @@
           "type": "integer"
         },
         "status": {
-          "enum": ["GOOD", "Not good"]
+          "enum": ["GOOD", "EVEN", "ODD"]
         }
       }
     }

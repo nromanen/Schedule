@@ -1,9 +1,5 @@
 package com.softserve.repository.impl;
 
-import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fge.jackson.JsonLoader;
@@ -18,11 +14,7 @@ import com.softserve.entity.enums.EvenOdd;
 import com.softserve.exception.IncorrectWishException;
 import com.softserve.repository.TeacherWishesRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.Criteria;
-import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
-
-import java.io.DataInput;
 import java.io.IOException;
 import java.time.DayOfWeek;
 import java.util.*;
@@ -41,7 +33,7 @@ public class TeacherWishesRepositoryImpl extends BasicRepositoryImpl<TeacherWish
      */
     @Override
     public TeacherWishes save(TeacherWishes entity) {
-        log.info("Enter into update method  with entity:{}", entity);
+        log.info("Enter into save method  with entity:{}", entity);
         entity = (TeacherWishes)sessionFactory.getCurrentSession().merge(entity);
         sessionFactory.getCurrentSession().save(entity);
         return entity;
@@ -59,7 +51,6 @@ public class TeacherWishesRepositoryImpl extends BasicRepositoryImpl<TeacherWish
                 ("SELECT count (*) FROM TeacherWishes t WHERE t.teacher.id = :teacherId")
                 .setParameter("teacherId", teacherId).getSingleResult();
     }
-
 
     /**
      * Load one resource from the current package as a {@link JsonNode}
@@ -82,7 +73,7 @@ public class TeacherWishesRepositoryImpl extends BasicRepositoryImpl<TeacherWish
      * @throws IncorrectWishException when json not valid
      */
     public void validateTeacherWish(JsonNode teacherWish) {
-       try {
+        try {
             final JsonNode fstabSchema = loadResource("/wish-schema.json");
             final JsonSchemaFactory factory = JsonSchemaFactory.byDefault();
             final JsonSchema schema = factory.getJsonSchema(fstabSchema);
@@ -100,6 +91,7 @@ public class TeacherWishesRepositoryImpl extends BasicRepositoryImpl<TeacherWish
                 }
         } catch (ProcessingException | IOException e) {
             log.error("Error in method validateTeacherWish {}",e.toString());
+            throw new IncorrectWishException("Error occured when validating teacher wishes");
         }
     }
 

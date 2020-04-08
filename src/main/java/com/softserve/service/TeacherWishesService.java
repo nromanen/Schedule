@@ -1,7 +1,6 @@
 package com.softserve.service;
 
 import com.softserve.entity.TeacherWishes;
-import com.softserve.entity.User;
 import com.softserve.entity.enums.EvenOdd;
 import java.time.DayOfWeek;
 

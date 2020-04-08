@@ -12,4 +12,5 @@ public interface TeacherWishesMapper {
 
     TeacherWishes addTeacherWishesDTOToTeacherWishes(AddWishesDTO addWishesDTO);
 
+
 }

@@ -1,6 +1,5 @@
 package com.softserve.entity;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -8,13 +7,10 @@ import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.hibernate.annotations.TypeDef;
-import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.*;
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import javax.validation.Valid;
 import java.io.Serializable;
 
 
@@ -25,10 +21,10 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = "teacher_wishes")
-@EqualsAndHashCode(exclude = { "teacher"}) // This,
-@ToString(exclude = { "teacher"}) // and this
+@EqualsAndHashCode(exclude = {"teacher"}) // This,
+@ToString(exclude = {"teacher"}) // and this
 
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler","teacher"})
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "teacher"})
 public class TeacherWishes implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
