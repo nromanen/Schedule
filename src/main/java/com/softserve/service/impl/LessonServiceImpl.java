@@ -33,7 +33,7 @@ public class LessonServiceImpl implements LessonService {
      */
     @Override
     public Lesson getById(Long id) {
-        log.info("Enter into getById method with id {}", id);
+        log.info("In getById(id = [{}])",  id);
         return lessonRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException(Lesson.class, "id", id.toString()));
     }
@@ -44,7 +44,7 @@ public class LessonServiceImpl implements LessonService {
      */
     @Override
     public List<Lesson> getAll() {
-        log.info("Enter into getAll method");
+        log.info("In getAll()");
         return lessonRepository.getAll();
     }
 
@@ -57,19 +57,18 @@ public class LessonServiceImpl implements LessonService {
      */
     @Override
     public Lesson save(Lesson object) {
-        log.info("Enter into save method with entity: {}", object );
-
+        log.info("In save(entity = [{}]", object);
         if (isLessonForGroupExists(object)){
             throw new EntityAlreadyExistsException("Lesson with this parameters already exists");
         }
     else {
-            //Fill in teacher for site by teacher data if teacher for site is empty or null
+            //Fill in teacher for site by teacher data (from JSON) if teacher for site is empty or null
             if (object.getTeacherForSite().isEmpty() || object.getTeacherForSite() == null) {
                 object.setTeacherForSite(object.getTeacher().getSurname()
                         + " " + object.getTeacher().getName()
                         + " " + object.getTeacher().getPatronymic());
             }
-            //Fill in subject for site by subject name if subject for site is empty or null
+            //Fill in subject for site by subject name (from JSON) if subject for site is empty or null
             if (object.getSubjectForSite().isEmpty() || object.getSubjectForSite() == null) {
                 object.setSubjectForSite(object.getSubject().getName());
             }
@@ -84,7 +83,7 @@ public class LessonServiceImpl implements LessonService {
      */
     @Override
     public Lesson update(Lesson object) {
-        log.info("Enter into update method with entity: {}", object);
+        log.info("In update(entity = [{}]", object);
         if (isLessonForGroupExists(object)){
             throw new EntityAlreadyExistsException("Lesson with this parameters already exists");
         }
@@ -100,7 +99,7 @@ public class LessonServiceImpl implements LessonService {
      */
     @Override
     public Lesson delete(Lesson object) {
-        log.info("Enter into delete method with entity: {}", object);
+        log.info("In delete(object = [{}])",  object);
         return lessonRepository.delete(object);
     }
 
@@ -111,7 +110,7 @@ public class LessonServiceImpl implements LessonService {
      */
     @Override
     public List<Lesson> getAllForGroup(Long groupId) {
-        log.info("Enter into getAllForGroup method with groupId: {}",  groupId);
+        log.info("In getAllForGroup(groupId = [{}])",  groupId);
         return lessonRepository.getAllForGroup(groupId);
     }
 
@@ -121,6 +120,7 @@ public class LessonServiceImpl implements LessonService {
      */
     @Override
     public List<LessonType> getAllLessonTypes() {
+        log.info("In getAllLessonTypes()");
         return Arrays.asList(LessonType.values());
     }
 
@@ -131,6 +131,7 @@ public class LessonServiceImpl implements LessonService {
      */
     @Override
     public boolean isLessonForGroupExists(Lesson lesson) {
+        log.info("In isLessonForGroupExists(lesson = [{}])", lesson);
         return lessonRepository.countLessonDuplicates(lesson) !=0;
     }
 }

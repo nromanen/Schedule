@@ -23,10 +23,10 @@ import java.util.List;
 @Slf4j
 @RequestMapping("/schedules")
 public class ScheduleController {
+
     private final ScheduleService scheduleService;
     private final ScheduleMapper scheduleMapper;
     private final ScheduleSaveMapper scheduleSaveMapper;
-
 
     public ScheduleController(ScheduleService scheduleService, ScheduleMapper scheduleMapper, ScheduleSaveMapper scheduleSaveMapper) {
         this.scheduleService = scheduleService;
@@ -37,7 +37,7 @@ public class ScheduleController {
     @GetMapping
     @ApiOperation(value = "Get the list of all schedules")
     public ResponseEntity<List<ScheduleDTO>> list() {
-        log.info("Enter into list method ");
+        log.info("In list()");
         List<Schedule> schedules = scheduleService.getAll();
         return ResponseEntity.status(HttpStatus.OK).body(scheduleMapper.scheduleToScheduleDTOs(schedules));
     }
@@ -49,14 +49,14 @@ public class ScheduleController {
                                                                             @RequestParam EvenOdd evenOdd,
                                                                             @RequestParam Long classId,
                                                                             @RequestParam Long lessonId){
-        log.info("Enter into getInfoForCreatingSchedule method ");
+        log.info("In getInfoForCreatingSchedule(semesterId = [{}], dayOfWeek = [{}], evenOdd = [{}], classId = [{}], lessonId = [{}])", semesterId, dayOfWeek, evenOdd, classId, lessonId);
         return ResponseEntity.status(HttpStatus.OK).body(scheduleService.getInfoForCreatingSchedule(semesterId, dayOfWeek,evenOdd, classId, lessonId));
     }
 
     @PostMapping
     @ApiOperation(value = "Create new schedule")
     public ResponseEntity<ScheduleSaveDTO> save(@RequestBody ScheduleSaveDTO scheduleSaveDTO) {
-        log.info("Enter into save method with scheduleSaveDTO: {}", scheduleSaveDTO);
+        log.info("In save(scheduleSaveDTO = [{}])", scheduleSaveDTO);
         Schedule schedule = scheduleService.save(scheduleSaveMapper.scheduleSaveDTOToSchedule(scheduleSaveDTO));
         return ResponseEntity.status(HttpStatus.CREATED).body(scheduleSaveMapper.scheduleToScheduleSaveDTO(schedule));
     }
@@ -64,7 +64,7 @@ public class ScheduleController {
     @DeleteMapping("/{id}")
     @ApiOperation(value = "Delete schedule by id")
     public ResponseEntity delete(@PathVariable("id") long id){
-        log.info("Enter into delete method with semester id: {}", id);
+        log.info("In delete(id =[{}]", id);
         Schedule schedule = scheduleService.getById(id);
         scheduleService.delete(schedule);
         return ResponseEntity.status(HttpStatus.OK).build();

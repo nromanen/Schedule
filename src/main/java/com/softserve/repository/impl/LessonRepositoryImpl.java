@@ -20,13 +20,11 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
      */
     @Override
     public List<Lesson> getAllForGroup(Long groupId) {
-        log.info("Enter into  getAllForGroup method to search lessons for group with id = {}", groupId);
-
+        log.info("In getAllForGroup(groupId = [{}])", groupId);
         return sessionFactory.getCurrentSession().createQuery
                 ("FROM Lesson l WHERE l.group.id = :groupId")
                 .setParameter("groupId", groupId).getResultList();
     }
-
 
     /**
      * Method searches duplicate of lesson in the DB
@@ -36,6 +34,7 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
      */
     @Override
     public Long countLessonDuplicates(Lesson lesson) {
+        log.info("In countLessonDuplicates(lesson = [{}])", lesson);
         return (Long) sessionFactory.getCurrentSession().createQuery("" +
                 "select count(*) from Lesson l " +
                 "where l.teacher.id = :teacherId " +
@@ -58,6 +57,7 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
      */
     @Override
     public Lesson delete(Lesson entity) {
+        log.info("In delete(entity = [{}])", entity);
         if (checkReference(entity.getId())) {
             throw new DeleteDisabledException("Unable to delete object, till another object is referenced on it");
         }
@@ -66,6 +66,7 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
 
     // Checking by id if lesson is used in Schedule table
     private boolean checkReference(Long lessonId) {
+        log.info("In checkReference(lessonId = [{}])", lessonId);
         long count = (long) sessionFactory.getCurrentSession().createQuery
                 ("select count (s.id) " +
                         "from Schedule s where s.lesson.id = :lessonId")

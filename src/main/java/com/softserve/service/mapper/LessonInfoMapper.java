@@ -8,7 +8,6 @@ import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface LessonInfoMapper {
-
     LessonInfoDTO lessonToLessonInfoDTO(Lesson lesson);
     Lesson lessonInfoDTOToLesson(LessonInfoDTO lessonInfoDTO);
 
