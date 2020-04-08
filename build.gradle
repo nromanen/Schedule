@@ -117,5 +117,17 @@ dependencies {
 
     compile(group: "com.github.java-json-tools", name: "json-schema-validator", version: "2.2.12");
     providedCompile group: 'com.github.jsimone', name: 'webapp-runner', version: '8.5.11.3'
+
+    //for mail
+    compile group: 'javax.mail', name: 'mail', version: '1.4'
+
+    //generate password
+    compile group: 'org.apache.commons', name: 'commons-text', version: '1.8'
+
+    // https://mvnrepository.com/artifact/org.json/json
+    compile group: 'org.json', name: 'json', version: '20190722'
+
+    //for swagger
+    compile group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
 }
 

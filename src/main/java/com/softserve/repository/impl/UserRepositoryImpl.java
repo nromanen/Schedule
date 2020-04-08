@@ -33,6 +33,25 @@ public class UserRepositoryImpl extends BasicRepositoryImpl<User, Long> implemen
     }
 
     /**
+     * The method used for getting User by token from database
+     *
+     * @param token String token used to find User by it
+     * @return User
+     */
+    @Override
+    public Optional<User> findByToken(String token) {
+        log.info("Enter into findByToken  with token:{}", token);
+        TypedQuery<User> query = sessionFactory.getCurrentSession().createNamedQuery("findToken", User.class).setMaxResults(1);
+        query.setParameter("token", token);
+        List<User> user = query.getResultList();
+        if (user.isEmpty()) {
+            return Optional.empty();
+        }
+        return Optional.of(query.getResultList().get(0));
+    }
+
+
+    /**
      * Modified update method, which merge entity before updating it
      *
      * @param entity user is going to be updated

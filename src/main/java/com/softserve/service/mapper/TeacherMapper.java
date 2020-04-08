@@ -1,6 +1,7 @@
 package com.softserve.service.mapper;
 
 import com.softserve.dto.TeacherDTO;
+import com.softserve.dto.TeacherWithUserDTO;
 import com.softserve.dto.TeacherWishDTO;
 import com.softserve.entity.Teacher;
 import org.mapstruct.Mapper;
@@ -11,6 +12,8 @@ import java.util.List;
 public interface TeacherMapper {
     TeacherDTO teacherToTeacherDTO(Teacher teacher);
     Teacher teacherDTOToTeacher(TeacherDTO teacherDTO);
+
+    TeacherWithUserDTO toTeacherWithUserDTO(Teacher teacher);
 
 
     TeacherWishDTO toTeacherWithWishesDTOs(Teacher teacher);
