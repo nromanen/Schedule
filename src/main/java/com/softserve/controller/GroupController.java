@@ -30,7 +30,7 @@ public class GroupController {
     @GetMapping
     @ApiOperation(value = "Get the list of all groups")
     public ResponseEntity<List<GroupDTO>> list() {
-        log.info("Enter into list method of {}", getClass().getName());
+        log.info("In list method ");
         List<Group> groups = groupService.getAll();
         return ResponseEntity.status(HttpStatus.OK).body(groupMapper.groupsToGroupDTOs(groups));
     }

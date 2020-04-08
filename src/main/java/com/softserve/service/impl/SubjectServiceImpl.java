@@ -89,7 +89,7 @@ public class SubjectServiceImpl implements SubjectService {
      */
     @Override
     public Subject delete(Subject object) {
-        log.info("Enter into delete method  of {} with entity:{}", getClass().getName(), object);
+        log.info("In delete with entity:{}", object);
         return subjectRepository.delete(object);
     }
 

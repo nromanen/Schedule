@@ -61,7 +61,6 @@ public class ScheduleController {
         return ResponseEntity.status(HttpStatus.CREATED).body(scheduleSaveMapper.scheduleToScheduleSaveDTO(schedule));
     }
 
-
     @DeleteMapping("/{id}")
     @ApiOperation(value = "Delete schedule by id")
     public ResponseEntity delete(@PathVariable("id") long id){
