@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.IntStream;
 
+
 @Getter
 public class FieldAlreadyExistsException extends RuntimeException {
     private final Class clazz;

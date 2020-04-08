@@ -3,7 +3,6 @@ package com.softserve.service.impl;
 import com.softserve.entity.Semester;
 import com.softserve.entity.Subject;
 import com.softserve.exception.EntityNotFoundException;
-import com.softserve.exception.FieldAlreadyExistsException;
 import com.softserve.repository.SemesterRepository;
 import com.softserve.service.SemesterService;
 import lombok.extern.slf4j.Slf4j;

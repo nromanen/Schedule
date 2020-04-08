@@ -1,15 +1,20 @@
 package com.softserve.service.impl;
 
 import com.softserve.entity.Teacher;
+import com.softserve.entity.User;
+import com.softserve.entity.enums.Role;
+import com.softserve.exception.EntityAlreadyExistsException;
 import com.softserve.exception.EntityNotFoundException;
 import com.softserve.repository.TeacherRepository;
+import com.softserve.service.MailService;
 import com.softserve.service.TeacherService;
-import com.softserve.service.TeacherWishesService;
+import com.softserve.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 
 @Transactional
@@ -18,10 +23,14 @@ import java.util.List;
 public class TeacherServiceImpl implements TeacherService {
 
     private final TeacherRepository teacherRepository;
+    private final UserService userService;
+    private final MailService mailService;
 
     @Autowired
-    public TeacherServiceImpl(TeacherRepository teacherRepository) {
+    public TeacherServiceImpl(TeacherRepository teacherRepository, UserService userService, MailService mailService) {
         this.teacherRepository = teacherRepository;
+        this.userService = userService;
+        this.mailService = mailService;
     }
 
     /**
@@ -96,5 +105,36 @@ public class TeacherServiceImpl implements TeacherService {
         Teacher teacher = this.getById(id);
         Hibernate.initialize(teacher.getTeacherWishesList());
         return teacher;
+    }
+
+    /**
+     * The method used for join Teacher and User
+     *
+     * @param teacherId Long teacherId used to find Teacher by it
+     * @param userId Long userId used to find User by it
+     * @return Teacher entity
+     * @throws EntityAlreadyExistsException when user already exist in some teacher/manager or teacher contains some userId
+     */
+    @Override
+    public Teacher joinTeacherWithUser(Long teacherId, Long userId) {
+        log.info("Enter into joinTeacherWithUser method with teacherId {} and userId:{}", teacherId, userId);
+        User user = userService.getById(userId);
+        Teacher getTeacher = getById(teacherId);
+
+        if (!user.getRole().equals(Role.ROLE_USER) || getTeacher.getUserId() != null) {
+            throw new EntityAlreadyExistsException("You cannot doing this action.");
+        }
+
+        getTeacher.setUserId(Integer.parseInt(String.valueOf(userId)));
+        user.setRole(Role.ROLE_TEACHER);
+        userService.update(user);
+
+        String message =  "Hello, " + user.getEmail() + ".\n" +
+                "You received this email, because you now have all the teacher rights in the system.\n" +
+                "Congratulations!";
+        String subject = "You - Teacher";
+        mailService.send(user.getEmail(), subject, message);
+
+        return update(getTeacher);
     }
 }
