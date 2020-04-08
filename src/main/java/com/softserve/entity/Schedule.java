@@ -27,22 +27,22 @@ public class Schedule implements Serializable {
     private EvenOdd evenOdd;
 
     @ManyToOne(targetEntity = Semester.class)
-    @JoinColumn(name = "semester_id", insertable = false, updatable = false)
+    @JoinColumn(name = "semester_id")
     @OnDelete(action = OnDeleteAction.NO_ACTION)
     private Semester semester;
 
     @ManyToOne(targetEntity = Room.class)
-    @JoinColumn(name = "room_id", insertable = false, updatable = false)
+    @JoinColumn(name = "room_id")
     @OnDelete(action = OnDeleteAction.NO_ACTION)
     private Room room;
 
     @ManyToOne(targetEntity = Period.class)
-    @JoinColumn(name = "period_id", insertable = false, updatable = false)
+    @JoinColumn(name = "period_id")
     @OnDelete(action = OnDeleteAction.NO_ACTION)
     private Period period;
 
     @ManyToOne(targetEntity = Lesson.class)
-    @JoinColumn(name = "lesson_id", insertable = false, updatable = false)
+    @JoinColumn(name = "lesson_id")
     @OnDelete(action = OnDeleteAction.NO_ACTION)
     private Lesson lesson;
 }

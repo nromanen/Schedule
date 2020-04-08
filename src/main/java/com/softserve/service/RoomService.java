@@ -1,5 +1,6 @@
 package com.softserve.service;
 
+import com.softserve.dto.RoomForScheduleDTO;
 import com.softserve.entity.Room;
 import com.softserve.entity.enums.EvenOdd;
 
@@ -11,5 +12,6 @@ public interface RoomService extends BasicService<Room, Long>  {
     List<String> allUniqueRoomTypes();
     List<Room> getNotAvailableRoomsForSchedule(Long semesterId, DayOfWeek dayOfWeek, EvenOdd evenOdd, Long classId);
     List<Room> getAvailableRoomsForSchedule(Long semesterId, DayOfWeek dayOfWeek, EvenOdd evenOdd, Long classId);
+    List<RoomForScheduleDTO> getAllRoomsForCreatingSchedule(Long semesterId, DayOfWeek dayOfWeek, EvenOdd evenOdd, Long classId);
 
 }
