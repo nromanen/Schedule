@@ -19,6 +19,7 @@ public class SemesterRepositoryImpl extends BasicRepositoryImpl<Semester, Long> 
      */
     @Override
     public Semester delete(Semester entity) {
+        log.info("In delete(entity = [{}])", entity);
         if (checkReference(entity.getId())) {
             throw new DeleteDisabledException("Unable to delete object, till another object is referenced on it");
         }
@@ -27,6 +28,7 @@ public class SemesterRepositoryImpl extends BasicRepositoryImpl<Semester, Long> 
 
     // Checking by id if semester is used in Schedule and TeacherWishes tables
     private boolean checkReference(Long semesterId) {
+        log.info("In checkReference(semesterId = [{}])", semesterId);
         long count = (long) sessionFactory.getCurrentSession().createQuery
                 ("select count (s.id) " +
                         "from Schedule s where s.semester.id = :semesterId")

@@ -5,5 +5,5 @@ import com.softserve.entity.Subject;
 public interface SubjectRepository extends BasicRepository<Subject, Long> {
 
     Long countSubjectsWithName(String name);
-    Long existsById(Long id);
+    Long countBySubjectId(Long id);
 }
