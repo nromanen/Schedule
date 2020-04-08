@@ -1,7 +1,6 @@
 package com.softserve.service.impl;
 
 import com.softserve.entity.Teacher;
-import com.softserve.entity.TeacherWishes;
 import com.softserve.exception.EntityNotFoundException;
 import com.softserve.repository.TeacherRepository;
 import com.softserve.service.TeacherService;
@@ -19,12 +18,10 @@ import java.util.List;
 public class TeacherServiceImpl implements TeacherService {
 
     private final TeacherRepository teacherRepository;
-    private final TeacherWishesService teacherWishesService;
 
     @Autowired
-    public TeacherServiceImpl(TeacherRepository teacherRepository, TeacherWishesService teacherWishesService) {
+    public TeacherServiceImpl(TeacherRepository teacherRepository) {
         this.teacherRepository = teacherRepository;
-        this.teacherWishesService = teacherWishesService;
     }
 
     /**
@@ -53,12 +50,7 @@ public class TeacherServiceImpl implements TeacherService {
     @Override
     public Teacher save(Teacher object) {
         log.info("Enter into save method with entity:{}", object);
-        Teacher teacher = teacherRepository.save(object);
-        TeacherWishes teacherWishes = new TeacherWishes();
-        teacherWishes.setId(teacher.getId());
-        teacherWishes.setWishList(null);
-        teacherWishesService.save(teacherWishes);
-        return teacher;
+        return teacherRepository.save(object);
     }
 
     /**
