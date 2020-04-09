@@ -66,7 +66,7 @@ public class UserRepositoryImpl extends BasicRepositoryImpl<User, Long> implemen
 
     // Checking if user is used in Teacher table
     @Override
-    public boolean checkReference(User user) {
+    protected boolean checkReference(User user) {
         log.info("In checkReference(user = [{}])", user);
         long count = (long) sessionFactory.getCurrentSession().createQuery
                 ("select count (t.id) " +

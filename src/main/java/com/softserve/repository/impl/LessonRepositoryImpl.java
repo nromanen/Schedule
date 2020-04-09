@@ -49,7 +49,7 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
 
     // Checking if lesson is used in Schedule table
     @Override
-    public boolean checkReference(Lesson lesson) {
+    protected boolean checkReference(Lesson lesson) {
         log.info("In checkReference(lesson = [{}])", lesson);
         long count = (long) sessionFactory.getCurrentSession().createQuery
                 ("select count (s.id) " +

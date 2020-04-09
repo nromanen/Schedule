@@ -106,8 +106,7 @@ public abstract class BasicRepositoryImpl<T extends Serializable, I extends Seri
      * @param entity entity is going to be checked
      * @return true if there's constraint violation
      */
-    @Override
-    public boolean checkReference(T entity) {
+    protected boolean checkReference(T entity) {
         log.info("In checkReference(entity = [{}])", entity);
         return false;
     }

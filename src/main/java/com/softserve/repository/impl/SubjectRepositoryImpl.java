@@ -54,7 +54,7 @@ public class SubjectRepositoryImpl extends BasicRepositoryImpl<Subject, Long> im
 
     // Checking if subject is used in Lesson table
     @Override
-    public boolean checkReference(Subject subject) {
+    protected boolean checkReference(Subject subject) {
         log.info("In checkReference(subject = [{}])", subject);
         long count = (long) sessionFactory.getCurrentSession().createQuery
                 ("select count (l.id) " +

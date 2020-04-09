@@ -45,17 +45,17 @@ public class JwtTokenFilter extends GenericFilterBean {
                 String key = headerNames.nextElement();
                 String value = ((HttpServletRequest) req).getHeader(key);
                 map.put(key, value);
-            }
-            if (map.containsKey("authorization")) {
-                response.setContentType("application/json;charset=UTF-8");
-                response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-                response.getWriter().write(new JSONObject()
-                        .put("message", "The access token provided is expired, revoked, malformed, or invalid for other reasons")
-                        .toString() + "\n");
-                response.getWriter().flush();
+                if (map.containsKey("authorization")) {
+                    response.setContentType("application/json;charset=UTF-8");
+                    response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                    response.getWriter().write(new JSONObject()
+                            .put("message", "The access token provided is invalid")
+                            .toString() + "\n");
+                    response.getWriter().flush();
+                    break;
+                }
             }
         }
         filterChain.doFilter(req, response);
     }
-
 }
