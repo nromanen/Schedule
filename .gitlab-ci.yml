@@ -1,6 +1,7 @@
 stages:
     - build
     - deploy
+    - develop
 
 
 variables:
@@ -47,3 +48,16 @@ deploy:
         - dpl --provider=heroku --app=$HEROKU_APP_MASTER --api-key=$HEROKU_API_KEY
     only:
         - master
+
+develop:
+    stage: develop
+    image: ruby:latest
+    artifacts:
+           when: always
+    script:
+        - apt-get update -qy
+        - apt-get install -y ruby-dev
+        - gem install dpl
+        - dpl --provider=heroku --app=$HEROKU_APP_DEVELOP --api-key=$HEROKU_API_KEY
+    only:
+        - develop
