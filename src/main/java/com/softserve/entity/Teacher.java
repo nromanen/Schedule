@@ -1,11 +1,15 @@
 package com.softserve.entity;
 
+import lombok.Getter;
+import lombok.Setter;
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Set;
 
+@Setter
+@Getter
 @Entity
 @Table(name = "teachers")
 public class Teacher implements Serializable {
@@ -40,60 +44,4 @@ public class Teacher implements Serializable {
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name="teacher_id", updatable = false)
     private Set<TeacherWishes> teacherWishesList;
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getSurname() {
-        return surname;
-    }
-
-    public void setSurname(String surname) {
-        this.surname = surname;
-    }
-
-    public String getPatronymic() {
-        return patronymic;
-    }
-
-    public void setPatronymic(String patronymic) {
-        this.patronymic = patronymic;
-    }
-
-    public String getPosition() {
-        return position;
-    }
-
-    public void setPosition(String position) {
-        this.position = position;
-    }
-
-    public Integer getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Integer userId) {
-        this.userId = userId;
-    }
-
-    public Set<TeacherWishes> getTeacherWishesList() {
-        return teacherWishesList;
-    }
-
-    public void setTeacherWishesList(Set<TeacherWishes> teacherWishesList) {
-        this.teacherWishesList = teacherWishesList;
-    }
 }

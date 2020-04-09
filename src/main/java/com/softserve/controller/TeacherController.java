@@ -52,7 +52,7 @@ public class TeacherController {
         return ResponseEntity.ok(teacherMapper.toTeacherWithWishesDTOs(teacherService.getAllTeachersWithWishes()));
     }
 
-    @GetMapping("/with-wishes/{id}")
+    @GetMapping("/{id}/with-wishes")
     @ApiOperation(value = "Get teacher with wish by id")
     public ResponseEntity<TeacherWishDTO> getTeacherWithWishes(@PathVariable("id") Long id) {
         log.info("Enter into getTeacherWithWishes method with id {} ", id);
