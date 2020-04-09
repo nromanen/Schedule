@@ -154,7 +154,7 @@ public class PeriodServiceImpl implements PeriodService {
                 oldPeriods, newPeriod);
         return oldPeriods.stream().noneMatch
                 (oldPeriod ->
-                        isPeriodsGlued(newPeriod, oldPeriod) || isPeriodsIntersect(newPeriod, oldPeriod)
+                        (isPeriodsGlued(newPeriod, oldPeriod)  || isPeriodsIntersect(newPeriod, oldPeriod)) &&  newPeriod.getId() != oldPeriod.getId()
                 );
     }
 
