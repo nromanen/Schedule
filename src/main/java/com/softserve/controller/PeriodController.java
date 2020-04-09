@@ -34,7 +34,7 @@ public class PeriodController {
     }
 
     @GetMapping
-    @ApiOperation(value = "Get the list of all class")
+    @ApiOperation(value = "Get the list of all classes")
     public ResponseEntity<List<PeriodDTO>> list() {
         log.info("Enter into list of PeriodController");
         return ResponseEntity.ok().body(periodMapper.convertToDtoList(periodService.getAll()));

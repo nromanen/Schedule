@@ -1,6 +1,7 @@
 package com.softserve.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -16,5 +17,6 @@ public class PeriodDTO {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm", timezone = "GMT+3")
     private Timestamp endTime;
 
-    private String class_name;
+    @JsonProperty("class_name")
+    private String name;
 }
