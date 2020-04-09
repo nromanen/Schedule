@@ -1,7 +1,6 @@
 package com.softserve.repository.impl;
 
 import com.softserve.entity.Subject;
-import com.softserve.exception.DeleteDisabledException;
 import com.softserve.repository.SubjectRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
@@ -53,29 +52,14 @@ public class SubjectRepositoryImpl extends BasicRepositoryImpl<Subject, Long> im
                 .setParameter("id", id).getSingleResult();
     }
 
-    /**
-     * The method used for deleting object in database, checking references before it
-     *
-     * @param entity is going to be deleted
-     * @return deleted entity
-     * @throws DeleteDisabledException when there are still references pointing to object requested for deleting
-     */
+    // Checking if subject is used in Lesson table
     @Override
-    public Subject delete(Subject entity) {
-        log.info("In delete(entity = [{}])", entity);
-        if (checkReference(entity.getId())) {
-            throw new DeleteDisabledException("Unable to delete object, till another object is referenced on it");
-        }
-        return super.delete(entity);
-    }
-
-    // Checking by id if subject is used in Lesson table
-    private boolean checkReference(Long subjectId) {
-        log.info("In checkReference(subjectId = [{}])", subjectId);
+    public boolean checkReference(Subject subject) {
+        log.info("In checkReference(subject = [{}])", subject);
         long count = (long) sessionFactory.getCurrentSession().createQuery
                 ("select count (l.id) " +
                         "from Lesson l where l.subject.id = :subjectId")
-                .setParameter("subjectId", subjectId)
+                .setParameter("subjectId", subject.getId())
                 .getSingleResult();
         return count != 0;
     }

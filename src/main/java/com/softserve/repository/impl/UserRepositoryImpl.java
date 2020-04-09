@@ -1,7 +1,6 @@
 package com.softserve.repository.impl;
 
 import com.softserve.entity.User;
-import com.softserve.exception.DeleteDisabledException;
 import com.softserve.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
@@ -65,28 +64,16 @@ public class UserRepositoryImpl extends BasicRepositoryImpl<User, Long> implemen
         return entity;
     }
 
-    /**
-     * The method used for deleting object in database, checking references before it
-     *
-     * @param entity is going to be deleted
-     * @return deleted entity
-     * @throws DeleteDisabledException when there are still references pointing to object requested for deleting
-     */
+    // Checking if user is used in Teacher table
     @Override
-    public User delete(User entity) {
-        if (checkReference(entity.getId())) {
-            throw new DeleteDisabledException("Unable to delete object, till another object is referenced on it");
-        }
-        return super.delete(entity);
-    }
-
-    // Checking by id if user is used in Lesson table
-    private boolean checkReference(Long userId) {
+    public boolean checkReference(User user) {
+        log.info("In checkReference(user = [{}])", user);
         long count = (long) sessionFactory.getCurrentSession().createQuery
                 ("select count (t.id) " +
                         "from Teacher t where t.userId.id = :userId")
-                .setParameter("userId", userId)
+                .setParameter("userId", user.getId())
                 .getSingleResult();
         return count != 0;
     }
+
 }

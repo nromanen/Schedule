@@ -1,5 +1,6 @@
 package com.softserve.security.jwt;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -10,7 +11,11 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class JwtTokenFilter extends GenericFilterBean {
@@ -25,6 +30,7 @@ public class JwtTokenFilter extends GenericFilterBean {
     @Override
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain filterChain)
             throws IOException, ServletException {
+        HttpServletResponse response = (HttpServletResponse) res;
         String token = jwtTokenProvider.resolveToken((HttpServletRequest) req);
         if (token != null && jwtTokenProvider.validateToken(token)) {
             Authentication auth = jwtTokenProvider.getAuthentication(token);
@@ -32,8 +38,24 @@ public class JwtTokenFilter extends GenericFilterBean {
             if (auth != null) {
                 SecurityContextHolder.getContext().setAuthentication(auth);
             }
+        } else {
+            Map<String, String> map = new HashMap<>();
+            Enumeration<String> headerNames = ((HttpServletRequest) req).getHeaderNames();
+            while (headerNames.hasMoreElements()) {
+                String key = headerNames.nextElement();
+                String value = ((HttpServletRequest) req).getHeader(key);
+                map.put(key, value);
+            }
+            if (map.containsKey("authorization")) {
+                response.setContentType("application/json;charset=UTF-8");
+                response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                response.getWriter().write(new JSONObject()
+                        .put("message", "The access token provided is expired, revoked, malformed, or invalid for other reasons")
+                        .toString() + "\n");
+                response.getWriter().flush();
+            }
         }
-        filterChain.doFilter(req, res);
+        filterChain.doFilter(req, response);
     }
 
 }

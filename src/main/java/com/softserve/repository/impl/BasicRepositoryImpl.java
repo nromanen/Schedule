@@ -1,5 +1,6 @@
 package com.softserve.repository.impl;
 
+import com.softserve.exception.DeleteDisabledException;
 import com.softserve.repository.BasicRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.SessionFactory;
@@ -49,7 +50,7 @@ public abstract class BasicRepositoryImpl<T extends Serializable, I extends Seri
      */
     @Override
     public Optional<T> findById(I id) {
-        log.info("In findById(id = [{}])",  id);
+        log.info("In findById(id = [{}])", id);
         return Optional.ofNullable(sessionFactory.getCurrentSession().get(basicClass, id));
     }
 
@@ -82,17 +83,32 @@ public abstract class BasicRepositoryImpl<T extends Serializable, I extends Seri
     }
 
     /**
-     * he method used for deleting existed entity from database
+     * The method used for deleting existed entity from database
      *
      * @param entity entity is going to be deleted
      * @return deleted entity
+     * @throws DeleteDisabledException when there are still references pointing to object requested for deleting
      */
     @Override
     public T delete(T entity) {
-        log.info("In delete(entity = [{}])",  entity);
+        log.info("In delete(entity = [{}])", entity);
+        if (checkReference(entity)) {
+            throw new DeleteDisabledException(entity.getClass());
+        }
         sessionFactory.getCurrentSession()
                 .remove(entity);
         return entity;
     }
 
+    /**
+     * The method used for checking if entity is used in another tables
+     *
+     * @param entity entity is going to be checked
+     * @return true if there's constraint violation
+     */
+    @Override
+    public boolean checkReference(T entity) {
+        log.info("In checkReference(entity = [{}])", entity);
+        return false;
+    }
 }
