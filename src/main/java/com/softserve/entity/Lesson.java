@@ -2,8 +2,6 @@ package com.softserve.entity;
 
 import com.softserve.entity.enums.LessonType;
 import lombok.*;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
@@ -34,21 +32,16 @@ public class Lesson implements Serializable {
     @Enumerated(EnumType.STRING)
     private LessonType lessonType;
 
-
     @ManyToOne(targetEntity = Teacher.class)
     @JoinColumn(name = "teacher_id")
-    //@OnDelete(action = OnDeleteAction.NO_ACTION)
     private Teacher teacher;
-
 
     @ManyToOne(targetEntity = Subject.class)
     @JoinColumn(name = "subject_id")
-    //@OnDelete(action = OnDeleteAction.NO_ACTION)
     private Subject subject;
 
     @ManyToOne(targetEntity = Group.class)
-        @JoinColumn(name = "group_id")
-    //@OnDelete(action = OnDeleteAction.NO_ACTION)
+    @JoinColumn(name = "group_id")
     private Group group;
 
 }

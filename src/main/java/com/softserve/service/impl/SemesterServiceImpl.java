@@ -24,7 +24,6 @@ public class SemesterServiceImpl implements SemesterService {
         this.semesterRepository = semesterRepository;
     }
 
-
     /**
      * Method gets information from Repository for particular Semester with id parameter
      * @param id Identity number of the Semester
@@ -32,7 +31,7 @@ public class SemesterServiceImpl implements SemesterService {
      */
     @Override
     public Semester getById(Long id) {
-        log.info("Enter into getById method with id {}", id);
+        log.info("In getById(id = [{}])",  id);
         return semesterRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException(Subject.class, "id", id.toString()));
     }
@@ -43,7 +42,7 @@ public class SemesterServiceImpl implements SemesterService {
      */
     @Override
     public List<Semester> getAll() {
-        log.info("Enter into getAll method ");
+        log.info("In getAll()");
         return semesterRepository.getAll();
     }
 
@@ -54,7 +53,7 @@ public class SemesterServiceImpl implements SemesterService {
      */
     @Override
     public Semester save(Semester object) {
-        log.info("Enter into save method  with entity: {}", object );
+        log.info("In save(entity = [{}]", object);
         return semesterRepository.save(object);
     }
 
@@ -65,7 +64,7 @@ public class SemesterServiceImpl implements SemesterService {
      */
     @Override
     public Semester update(Semester object) {
-        log.info("Enter into delete method with entity: {}",  object);
+        log.info("In update(entity = [{}]", object);
         return semesterRepository.delete(object);
     }
 
@@ -76,7 +75,7 @@ public class SemesterServiceImpl implements SemesterService {
      */
     @Override
     public Semester delete(Semester object) {
-        log.info("Enter into delete method with entity:{}", object);
+        log.info("In delete(object = [{}])",  object);
         return semesterRepository.delete(object);
     }
 }

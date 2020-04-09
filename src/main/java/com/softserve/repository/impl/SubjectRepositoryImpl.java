@@ -19,7 +19,7 @@ public class SubjectRepositoryImpl extends BasicRepositoryImpl<Subject, Long> im
      */
     @Override
     public List<Subject> getAll() {
-        log.info("Enter into getAll method");
+        log.info("In getAll()");
         return sessionFactory.getCurrentSession()
                 .createQuery("from Subject ORDER BY name ASC")
                 .getResultList();
@@ -33,7 +33,7 @@ public class SubjectRepositoryImpl extends BasicRepositoryImpl<Subject, Long> im
      */
     @Override
     public Long countSubjectsWithName(String name) {
-        log.info("Enter into countSubjectsWithName method with name:{}", name);
+        log.info("In countSubjectsWithName(name = [{}])", name);
         return (Long) sessionFactory.getCurrentSession().createQuery
                 ("SELECT count (*) FROM Subject s WHERE s.name = :name")
                 .setParameter("name", name).getSingleResult();
@@ -46,8 +46,8 @@ public class SubjectRepositoryImpl extends BasicRepositoryImpl<Subject, Long> im
      * @return 0 if there is no Subject with such id, 1 if record with id exists
      */
     @Override
-    public Long existsById(Long id) {
-        log.info("Enter into existsById method with id:{}", id);
+    public Long countBySubjectId(Long id) {
+        log.info("In countBySubjectId(id = [{}])", id);
         return (Long) sessionFactory.getCurrentSession().createQuery
                 ("SELECT count (*) FROM Subject s WHERE s.id = :id")
                 .setParameter("id", id).getSingleResult();
@@ -62,6 +62,7 @@ public class SubjectRepositoryImpl extends BasicRepositoryImpl<Subject, Long> im
      */
     @Override
     public Subject delete(Subject entity) {
+        log.info("In delete(entity = [{}])", entity);
         if (checkReference(entity.getId())) {
             throw new DeleteDisabledException("Unable to delete object, till another object is referenced on it");
         }
@@ -70,6 +71,7 @@ public class SubjectRepositoryImpl extends BasicRepositoryImpl<Subject, Long> im
 
     // Checking by id if subject is used in Lesson table
     private boolean checkReference(Long subjectId) {
+        log.info("In checkReference(subjectId = [{}])", subjectId);
         long count = (long) sessionFactory.getCurrentSession().createQuery
                 ("select count (l.id) " +
                         "from Lesson l where l.subject.id = :subjectId")

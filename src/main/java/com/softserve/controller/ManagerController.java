@@ -27,8 +27,8 @@ public class ManagerController {
         this.teacherMapper = teacherMapper;
     }
 
-    @PostMapping("/teacher_credentials")
-    @ApiOperation(value = "Get teacher with userId")
+    @PutMapping("/teacher_credentials")
+    @ApiOperation(value = "Update Teacher without credentials and join with User")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<TeacherWithUserDTO> joinTeacherWithUser(@RequestBody JoinTeacherWithUserDTO joinTeacherWithUserDTO) {
         log.info("Enter into joinTeacherWithUser method with teacherId {} and userId {}",

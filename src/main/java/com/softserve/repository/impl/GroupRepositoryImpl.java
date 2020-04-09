@@ -19,7 +19,7 @@ public class GroupRepositoryImpl extends BasicRepositoryImpl<Group, Long> implem
      */
     @Override
     public List<Group> getAll() {
-        log.info("Enter into getAll method");
+        log.info("In getAll()");
         return sessionFactory.getCurrentSession()
                 .createQuery("from Group ORDER BY title ASC")
                 .getResultList();
@@ -33,7 +33,7 @@ public class GroupRepositoryImpl extends BasicRepositoryImpl<Group, Long> implem
      */
     @Override
     public Long countGroupsWithTitle(String title) {
-        log.info("Enter into countGroupsWithTitle method with title:{}", title);
+        log.info("In countGroupsWithTitle(title = [{}])", title);
         return (Long) sessionFactory.getCurrentSession().createQuery
                 ("SELECT count (*) FROM Group g WHERE g.title = :title")
                 .setParameter("title", title).getSingleResult();
@@ -46,8 +46,8 @@ public class GroupRepositoryImpl extends BasicRepositoryImpl<Group, Long> implem
      * @return 0 if there is no group with such id, 1 if record with id exists
      */
     @Override
-    public Long existsById(Long id) {
-        log.info("Enter into existsById method with id:{}", id);
+    public Long countByGroupId(Long id) {
+        log.info("In countByGroupId(id = [{}])", id);
         return (Long) sessionFactory.getCurrentSession().createQuery
                 ("SELECT count (*) FROM Group g WHERE g.id = :id")
                 .setParameter("id", id).getSingleResult();
@@ -62,6 +62,7 @@ public class GroupRepositoryImpl extends BasicRepositoryImpl<Group, Long> implem
      */
     @Override
     public Group delete(Group entity) {
+        log.info("In delete(entity = [{}])", entity);
         if (checkReference(entity.getId())) {
             throw new DeleteDisabledException("Unable to delete object, till another object is referenced on it");
         }
@@ -70,6 +71,7 @@ public class GroupRepositoryImpl extends BasicRepositoryImpl<Group, Long> implem
 
     // Checking by id if group is used in Lesson table
     private boolean checkReference(Long groupId) {
+        log.info("In checkReference(groupId = [{}])", groupId);
         long count = (long) sessionFactory.getCurrentSession().createQuery
                 ("select count (l.id) " +
                         "from Lesson l where l.group.id = :groupId")
