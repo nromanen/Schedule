@@ -5,5 +5,5 @@ import com.softserve.entity.Group;
 public interface GroupRepository extends BasicRepository<Group, Long>{
 
     Long countGroupsWithTitle(String title);
-    Long existsById(Long id);
+    Long countByGroupId(Long id);
 }

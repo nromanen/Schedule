@@ -2,6 +2,7 @@ package com.softserve.exception.handler;
 
 import com.softserve.exception.*;
 import com.softserve.exception.apierror.ApiError;
+import io.jsonwebtoken.ExpiredJwtException;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.exception.ConstraintViolationException;
 import org.postgresql.util.PSQLException;
@@ -13,6 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.converter.HttpMessageNotWritableException;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -52,6 +55,41 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             EntityAlreadyExistsException ex) {
         ApiError apiError = new ApiError(CONFLICT);
         apiError.setMessage(ex.getMessage());
+        log.error(ex.getMessage());
+        return buildResponseEntity(apiError);
+    }
+
+    //Handles IncorrectPasswordException. Triggered when password entered during registration by User is incorrect
+    // (not strong enough, failed parsing, etc).
+    @ExceptionHandler(IncorrectPasswordException.class)
+    protected ResponseEntity<Object> handleIncorrectPasswordException(
+            IncorrectPasswordException ex) {
+        ApiError apiError = new ApiError(BAD_REQUEST);
+        apiError.setMessage(ex.getMessage());
+        apiError.setDebugMessage(ex.getMessage());
+        log.error(ex.getMessage());
+        return buildResponseEntity(apiError);
+    }
+
+    //Handles AccessDeniedException. Triggered when access for User is denied.
+    @ExceptionHandler(AccessDeniedException.class)
+    protected ResponseEntity<Object> handleAccessDeniedException (
+            AccessDeniedException ex) {
+        ApiError apiError = new ApiError(FORBIDDEN);
+        apiError.setMessage("Access is denied");
+        apiError.setDebugMessage(ex.getMessage());
+        log.error(ex.getMessage());
+        return buildResponseEntity(apiError);
+    }
+
+    //Handles AccessDeniedException. Triggered when the credentials are invalid,
+    // the account is neither locked nor disabled (when it' thrown).
+    @ExceptionHandler({BadCredentialsException.class})
+    protected ResponseEntity<Object> handleBadCredentialsException (
+            BadCredentialsException ex) {
+        ApiError apiError = new ApiError(UNAUTHORIZED);
+        apiError.setMessage("Invalid password or email");
+        apiError.setDebugMessage(ex.getMessage());
         log.error(ex.getMessage());
         return buildResponseEntity(apiError);
     }
@@ -241,7 +279,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     //Handles AuthenticationException. Triggered when password is wrong.
-    @ExceptionHandler(AuthenticationException.class)
+    @ExceptionHandler({AuthenticationException.class})
     protected ResponseEntity<Object> handleAuthenticationException(AuthenticationException ex) {
         ApiError apiError = new ApiError(UNAUTHORIZED);
         apiError.setMessage("Invalid password or email");

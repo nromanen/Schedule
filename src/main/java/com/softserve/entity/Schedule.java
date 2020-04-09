@@ -3,8 +3,6 @@ package com.softserve.entity;
 import com.softserve.entity.enums.EvenOdd;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -27,22 +25,18 @@ public class Schedule implements Serializable {
     private EvenOdd evenOdd;
 
     @ManyToOne(targetEntity = Semester.class)
-    @JoinColumn(name = "semester_id", insertable = false, updatable = false)
-    @OnDelete(action = OnDeleteAction.NO_ACTION)
+    @JoinColumn(name = "semester_id")
     private Semester semester;
 
     @ManyToOne(targetEntity = Room.class)
-    @JoinColumn(name = "room_id", insertable = false, updatable = false)
-    @OnDelete(action = OnDeleteAction.NO_ACTION)
+    @JoinColumn(name = "room_id")
     private Room room;
 
     @ManyToOne(targetEntity = Period.class)
-    @JoinColumn(name = "period_id", insertable = false, updatable = false)
-    @OnDelete(action = OnDeleteAction.NO_ACTION)
+    @JoinColumn(name = "period_id")
     private Period period;
 
     @ManyToOne(targetEntity = Lesson.class)
-    @JoinColumn(name = "lesson_id", insertable = false, updatable = false)
-    @OnDelete(action = OnDeleteAction.NO_ACTION)
+    @JoinColumn(name = "lesson_id")
     private Lesson lesson;
 }

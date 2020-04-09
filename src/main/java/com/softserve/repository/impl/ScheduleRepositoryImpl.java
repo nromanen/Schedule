@@ -12,7 +12,7 @@ import java.time.DayOfWeek;
 @Slf4j
 public class ScheduleRepositoryImpl  extends BasicRepositoryImpl<Schedule, Long> implements ScheduleRepository {
 
-    private final static String START_SELECT_COUNT = "select count (s.id) " +
+    private static final String START_SELECT_COUNT = "select count (s.id) " +
             "from Schedule s where s.semester.id = :semesterId " +
             "and s.dayOfWeek = :dayOfWeek " +
             "and s.period.id = :classId ";
@@ -28,8 +28,8 @@ public class ScheduleRepositoryImpl  extends BasicRepositoryImpl<Schedule, Long>
      */
     @Override
     public Long conflictForGroupInSchedule(Long semesterId, DayOfWeek dayOfWeek, EvenOdd evenOdd, Long classId, Long groupId) {
-        log.info("Enter into isConflictForGroupInSchedule with semesterId = {}, dayOfWeek = {}, evenOdd = {}, classId = {}, groupId = {}", semesterId, dayOfWeek, evenOdd, classId, groupId);
-        //if schedule pretends to occur weekly need to check that there are no amy already saved schedules for that Group
+        log.info("In isConflictForGroupInSchedule(semesterId = [{}], dayOfWeek = [{}], evenOdd = [{}], classId = [{}], groupId = [{}])", semesterId, dayOfWeek, evenOdd, classId, groupId);
+        //if schedule pretends to occur weekly need to check that there are no any already saved schedules for that Group
         if (evenOdd == EvenOdd.WEEKLY){
             log.debug("Search when lesson repeats weekly");
                return (Long) sessionFactory.getCurrentSession().createQuery(
@@ -41,7 +41,6 @@ public class ScheduleRepositoryImpl  extends BasicRepositoryImpl<Schedule, Long>
                     .setParameter("groupId", groupId)
                     .getSingleResult();
         }
-
         //else schedule pretends to occur by even/odd need to check that here are no amy already saved schedules for that Group at the same half or weekly
         else {
             log.debug("Search when lesson repeats by even/odd");
@@ -61,7 +60,7 @@ public class ScheduleRepositoryImpl  extends BasicRepositoryImpl<Schedule, Long>
 
     @Override
     public Long conflictForTeacherInSchedule(Long semesterId, DayOfWeek dayOfWeek, EvenOdd evenOdd, Long classId, Long teacherId) {
-        log.info("Enter into conflictForTeacherInSchedule with semesterId = {}, dayOfWeek = {}, evenOdd = {}, classId = {}, teacherId = {}", semesterId, dayOfWeek, evenOdd, classId, teacherId);
+        log.info("In conflictForTeacherInSchedule(semesterId = [{}], dayOfWeek = [{}], evenOdd = [{}], classId = [{}], teacherId = [{}])", semesterId, dayOfWeek, evenOdd, classId, teacherId);
         if (evenOdd == EvenOdd.WEEKLY) {
             return (Long) sessionFactory.getCurrentSession().createQuery("" +
                     START_SELECT_COUNT +

@@ -2,6 +2,7 @@ package com.softserve.service.impl;
 
 import com.softserve.entity.TeacherWishes;
 import com.softserve.entity.enums.EvenOdd;
+import com.softserve.exception.EntityAlreadyExistsException;
 import com.softserve.exception.EntityNotFoundException;
 import com.softserve.repository.TeacherWishesRepository;
 import com.softserve.service.TeacherWishesService;
@@ -51,6 +52,9 @@ public class TeacherWishesServiceImpl implements TeacherWishesService {
     @Override
     public TeacherWishes save(TeacherWishes object) {
         log.info("Enter into save method with entity:{}", object);
+        if (teacherWishesRepository.isExistsWishWithTeacherId(object.getTeacher().getId()) > 0) {
+            throw new EntityAlreadyExistsException("Wish already created");
+        }
         return teacherWishesRepository.save(object);
     }
 
@@ -79,7 +83,7 @@ public class TeacherWishesServiceImpl implements TeacherWishesService {
     }
 
     @Override
-    public boolean isClassSuits(Long teacherId, Long semesterId, DayOfWeek dayOfWeek, EvenOdd evenOdd, Long classId) {
-        return teacherWishesRepository.isClassSuits(teacherId, semesterId, dayOfWeek, evenOdd, classId);
+    public boolean isClassSuits(Long teacherId, DayOfWeek dayOfWeek, EvenOdd evenOdd, Long classId) {
+        return teacherWishesRepository.isClassSuits(teacherId, dayOfWeek, evenOdd, classId);
     }
 }

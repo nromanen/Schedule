@@ -1,6 +1,5 @@
 package com.softserve.security.jwt;
 
-import com.softserve.exception.JwtAuthenticationException;
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -81,8 +80,9 @@ public class JwtTokenProvider {
             Jws<Claims> claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(token);
 
             return !claims.getBody().getExpiration().before(new Date());
-        } catch (JwtException | IllegalArgumentException e) {
-            throw new JwtAuthenticationException("JWT token is expired or invalid");
+        } catch (ExpiredJwtException | MalformedJwtException | SignatureException
+                | UnsupportedJwtException | IllegalArgumentException e) {
+            return false;
         }
     }
 }

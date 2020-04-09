@@ -34,8 +34,8 @@ public class DBConfig {
 
     @Bean
     public DataSource getDataSource() {
-        String  url= null;
-        String  user = null;
+        String  url;
+        String  user;
         String  password;
         ComboPooledDataSource dataSource = new ComboPooledDataSource();
         try {
@@ -44,27 +44,23 @@ public class DBConfig {
             System.exit(1);
         }
 
-        try {
-            url = System.getenv("HEROKU_DB_URL");
-            user = System.getenv("HEROKU_DB_USER");
-            password = System.getenv("HEROKU_DB_PASSWORD");
+        url = System.getenv("HEROKU_DB_URL");
+        user = System.getenv("HEROKU_DB_USER");
+        password = System.getenv("HEROKU_DB_PASSWORD");
 
-            if(url == null){
-                url = Objects.requireNonNull(environment.getProperty(URL));
-            }
-            if(user == null){
-                user = Objects.requireNonNull(environment.getProperty(USER));
-            }
-            if(password == null){
-                password = Objects.requireNonNull(environment.getProperty(PASS));
-            }
-
-            dataSource.setJdbcUrl(url);
-            dataSource.setUser(user);
-            dataSource.setPassword(password);
-        }catch (NullPointerException e){
-            log.error("Wrong db credential, user: {}, url:{}", user, url);
+        if (url == null) {
+            url = Objects.requireNonNull(environment.getProperty(URL));
         }
+        if (user == null) {
+            user = Objects.requireNonNull(environment.getProperty(USER));
+        }
+        if (password == null) {
+            password = Objects.requireNonNull(environment.getProperty(PASS));
+        }
+
+        dataSource.setJdbcUrl(url);
+        dataSource.setUser(user);
+        dataSource.setPassword(password);
 
         return dataSource;
     }
@@ -76,17 +72,14 @@ public class DBConfig {
         sessionFactoryBean.setDataSource(getDataSource());
         Properties properties = new Properties();
 
-        try {
-            String url = Objects.requireNonNull(System.getenv("HEROKU_DB_URL"));
-            String user = Objects.requireNonNull(System.getenv("HEROKU_DB_USER"));
-            String password = Objects.requireNonNull(System.getenv("HEROKU_DB_PASSWORD"));
+        String url = System.getenv("HEROKU_DB_URL");
+        String user = System.getenv("HEROKU_DB_USER");
+        String password = System.getenv("HEROKU_DB_PASSWORD");
+        if(url != null && user != null && password!=null) {
             properties.put("hibernate.connection.url", url);
             properties.put("hibernate.connection.username", user);
             properties.put("hibernate.connection.password", password);
-        }catch (NullPointerException e){
-            log.info("Connect to db with local credential");
         }
-
         properties.put(SHOW_SQL, Objects.requireNonNull(environment.getProperty(SHOW_SQL)));
         properties.put(HBM2DDL_AUTO, Objects.requireNonNull(environment.getProperty(HBM2DDL_AUTO)));
         properties.put(DIALECT, Objects.requireNonNull(environment.getProperty(DIALECT)));

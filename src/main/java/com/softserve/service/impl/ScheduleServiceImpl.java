@@ -2,7 +2,6 @@ package com.softserve.service.impl;
 
 
 import com.softserve.dto.CreateScheduleInfoDTO;
-import com.softserve.dto.RoomForScheduleDTO;
 import com.softserve.entity.Schedule;
 import com.softserve.entity.enums.EvenOdd;
 import com.softserve.exception.EntityNotFoundException;
@@ -11,7 +10,6 @@ import com.softserve.repository.ScheduleRepository;
 import com.softserve.service.LessonService;
 import com.softserve.service.RoomService;
 import com.softserve.service.ScheduleService;
-import com.softserve.service.mapper.RoomForScheduleMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,14 +26,12 @@ public class ScheduleServiceImpl implements ScheduleService {
     private final ScheduleRepository scheduleRepository;
     private final LessonService lessonService;
     private final RoomService roomService;
-    private final RoomForScheduleMapper roomForScheduleMapper;
 
     @Autowired
-    public ScheduleServiceImpl(ScheduleRepository scheduleRepository, LessonService lessonService, RoomService roomService, RoomForScheduleMapper roomForScheduleMapper) {
+    public ScheduleServiceImpl(ScheduleRepository scheduleRepository,  LessonService lessonService,  RoomService roomService) {
         this.scheduleRepository = scheduleRepository;
         this.lessonService = lessonService;
         this.roomService = roomService;
-        this.roomForScheduleMapper = roomForScheduleMapper;
     }
 
     /**
@@ -45,7 +41,7 @@ public class ScheduleServiceImpl implements ScheduleService {
      */
     @Override
     public Schedule getById(Long id) {
-        log.info("Enter into getById  with id {}",  id);
+        log.info("In getById(id = [{}])",  id);
         return scheduleRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException(Schedule.class, "id", id.toString()));
     }
@@ -56,7 +52,7 @@ public class ScheduleServiceImpl implements ScheduleService {
      */
     @Override
     public List<Schedule> getAll() {
-        log.info("Enter into getAll method");
+        log.info("In getAll()");
         return scheduleRepository.getAll();
     }
 
@@ -67,8 +63,14 @@ public class ScheduleServiceImpl implements ScheduleService {
      */
     @Override
     public Schedule save(Schedule object) {
-        log.info("Enter into save method with entity: {}", object );
-        return scheduleRepository.save(object);
+        log.info("In save(entity = [{}]", object);
+        if (isConflictForGroupInSchedule(object.getSemester().getId(), DayOfWeek.valueOf(object.getDayOfWeek()), object.getEvenOdd(), object.getPeriod().getId(), object.getLesson().getId())) {
+            log.error("Schedule for group with id [{}] has conflict with already existing", object.getLesson().getGroup().getId());
+            throw new ScheduleConflictException("You can't create schedule item for this group, because one already exists");
+        } else
+        {
+            return scheduleRepository.save(object);
+        }
     }
 
     /**
@@ -78,7 +80,12 @@ public class ScheduleServiceImpl implements ScheduleService {
      */
     @Override
     public Schedule update(Schedule object) {
-        return scheduleRepository.update(object);
+        log.info("In update(entity = [{}]", object);
+        if (isConflictForGroupInSchedule(object.getSemester().getId(), DayOfWeek.valueOf(object.getDayOfWeek()), object.getEvenOdd(), object.getPeriod().getId(), object.getLesson().getId())) {
+            throw new ScheduleConflictException("You can't update schedule item for this group, because it violates already existing");
+        } else {
+            return scheduleRepository.update(object);
+        }
     }
 
     /**
@@ -90,7 +97,6 @@ public class ScheduleServiceImpl implements ScheduleService {
     public Schedule delete(Schedule object) {
         return scheduleRepository.delete(object);
     }
-
 
     /**
      * Method returns necessary info to finish saving schedule
@@ -109,18 +115,14 @@ public class ScheduleServiceImpl implements ScheduleService {
             throw new ScheduleConflictException("You can't create schedule for this group, because one already exists");
         }
         else  {
-
-
             CreateScheduleInfoDTO createScheduleInfoDTO = new CreateScheduleInfoDTO();
             createScheduleInfoDTO.setTeacherAvailable(isTeacherAvailableForSchedule(semesterId, dayOfWeek, evenOdd, classId, lessonId));
-            createScheduleInfoDTO.setRooms(getRoomsForCreatingSchedule(semesterId,dayOfWeek, evenOdd, classId));
+            createScheduleInfoDTO.setRooms(roomService.getAllRoomsForCreatingSchedule(semesterId,dayOfWeek, evenOdd, classId));
             createScheduleInfoDTO.setClassSuitsToTeacher(true);
            return createScheduleInfoDTO;
-
         }
 
     }
-
 
     /**
      * Method checks if there is a conflict in schedule for Group at particular period of time
@@ -132,10 +134,8 @@ public class ScheduleServiceImpl implements ScheduleService {
      */
     public boolean isConflictForGroupInSchedule(Long semesterId, DayOfWeek dayOfWeek, EvenOdd evenOdd, Long classId, Long lessonId) {
         log.info("Enter into isConflictForGroupInSchedule with semesterId = {}, dayOfWeek = {}, evenOdd = {}, classId = {}, lessonId = {}", semesterId, dayOfWeek, evenOdd, classId, lessonId);
-
         //Get group ID from Lesson by lesson ID to search further by group ID
         Long groupId = lessonService.getById(lessonId).getGroup().getId();
-
         //If Repository doesn't count any records that means there are no conflicts for this group at that point of time
         return scheduleRepository.conflictForGroupInSchedule(semesterId, dayOfWeek, evenOdd, classId, groupId) != 0;
     }
@@ -147,14 +147,6 @@ public class ScheduleServiceImpl implements ScheduleService {
         Long teacherId = lessonService.getById(lessonId).getTeacher().getId();
         return scheduleRepository.conflictForTeacherInSchedule(semesterId, dayOfWeek, evenOdd, classId, teacherId) == 0;
     }
-
-    private List<RoomForScheduleDTO> getRoomsForCreatingSchedule(Long semesterId, DayOfWeek dayOfWeek, EvenOdd evenOdd, Long classId){
-        List<RoomForScheduleDTO> rooms = roomForScheduleMapper.toRoomForScheduleDTOList(roomService.getAvailableRoomsForSchedule(semesterId, dayOfWeek, evenOdd, classId));
-        rooms.forEach(roomForScheduleDTO -> roomForScheduleDTO.setAvailable(true));
-        rooms.addAll(roomForScheduleMapper.toRoomForScheduleDTOList(roomService.getNotAvailableRoomsForSchedule(semesterId, dayOfWeek, evenOdd, classId)));
-        return rooms;
-    }
-
 }
 
 

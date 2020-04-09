@@ -35,7 +35,7 @@ public abstract class BasicRepositoryImpl<T extends Serializable, I extends Seri
      */
     @Override
     public List<T> getAll() {
-        log.info("Enter into getAll method");
+        log.info("In getAll()");
         return sessionFactory.getCurrentSession()
                 .createQuery("from " + basicClass.getName())
                 .getResultList();
@@ -49,7 +49,7 @@ public abstract class BasicRepositoryImpl<T extends Serializable, I extends Seri
      */
     @Override
     public Optional<T> findById(I id) {
-        log.info("Enter into findById method with id {}", id);
+        log.info("In findById(id = [{}])",  id);
         return Optional.ofNullable(sessionFactory.getCurrentSession().get(basicClass, id));
     }
 
@@ -61,7 +61,7 @@ public abstract class BasicRepositoryImpl<T extends Serializable, I extends Seri
      */
     @Override
     public T save(T entity) {
-        log.info("Enter into save method with entity: {}", entity );
+        log.info("In save(entity = [{}]", entity);
         sessionFactory.getCurrentSession()
                 .save(entity);
         return entity;
@@ -75,7 +75,7 @@ public abstract class BasicRepositoryImpl<T extends Serializable, I extends Seri
      */
     @Override
     public T update(T entity) {
-        log.info("Enter into update method with entity: {}", entity);
+        log.info("In update(entity = [{}]", entity);
         sessionFactory.getCurrentSession()
                 .update(entity);
         return entity;
@@ -89,7 +89,7 @@ public abstract class BasicRepositoryImpl<T extends Serializable, I extends Seri
      */
     @Override
     public T delete(T entity) {
-        log.info("Enter into delete method with entity: {}", entity);
+        log.info("In delete(entity = [{}])",  entity);
         sessionFactory.getCurrentSession()
                 .remove(entity);
         return entity;
