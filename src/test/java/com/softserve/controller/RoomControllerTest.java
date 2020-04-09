@@ -23,6 +23,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -69,6 +70,20 @@ public class RoomControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"))
                 .andExpect(jsonPath("$.id").value(String.valueOf(room.getId())));
+    }
+
+    @Test
+    public void testGetFreeRooms() throws Exception {
+        mockMvc.perform(get("/rooms/free?id=" + room.getId() + "&dayOfWeek=MONDAY&evenOdd=EVEN")
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(content().contentType("application/json"));
+    }
+
+    @Test
+    public void testGetAllUniqueRoomsTypes() throws Exception {
+        mockMvc.perform(get("/rooms/types").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json"));
     }
 
     @Test
