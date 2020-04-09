@@ -54,7 +54,7 @@ public class GroupRepositoryImpl extends BasicRepositoryImpl<Group, Long> implem
 
     // Checking if group is used in Lesson table
     @Override
-    public boolean checkReference(Group group) {
+    protected boolean checkReference(Group group) {
         log.info("In checkReference(group = [{}])", group);
         long count = (long) sessionFactory.getCurrentSession().createQuery
                 ("select count (l.id) " +

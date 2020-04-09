@@ -59,7 +59,7 @@ public class PeriodRepositoryImpl extends BasicRepositoryImpl<Period, Long> impl
 
     // Checking if period is used in Schedule table
     @Override
-    public boolean checkReference(Period period) {
+    protected boolean checkReference(Period period) {
         log.info("In checkReference(period = [{}])", period);
         long count = (long) sessionFactory.getCurrentSession().createQuery
                 ("select count (s.id) " +

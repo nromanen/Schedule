@@ -12,7 +12,7 @@ public class SemesterRepositoryImpl extends BasicRepositoryImpl<Semester, Long> 
 
     // Checking if semester is used in Schedule table
     @Override
-    public boolean checkReference(Semester semester) {
+    protected boolean checkReference(Semester semester) {
         log.info("In checkReference(semester = [{}])", semester);
         long count = (long) sessionFactory.getCurrentSession().createQuery
                 ("select count (s.id) " +

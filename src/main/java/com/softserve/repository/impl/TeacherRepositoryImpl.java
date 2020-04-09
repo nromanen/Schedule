@@ -27,7 +27,7 @@ public class TeacherRepositoryImpl extends BasicRepositoryImpl<Teacher, Long> im
 
     // Checking if teacher is used in Lesson and TeacherWishes tables
     @Override
-    public boolean checkReference(Teacher teacher) {
+    protected boolean checkReference(Teacher teacher) {
         log.info("In checkReference(teacher = [{}])", teacher);
         long count = (long) sessionFactory.getCurrentSession().createQuery
                 ("select count (l.id) " +

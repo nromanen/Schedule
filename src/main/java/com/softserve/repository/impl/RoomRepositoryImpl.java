@@ -51,7 +51,7 @@ public class RoomRepositoryImpl extends BasicRepositoryImpl<Room, Long> implemen
 
     // Checking if room is used in Schedule table
     @Override
-    public boolean checkReference(Room room) {
+    protected boolean checkReference(Room room) {
         log.info("In checkReference(room = [{}])", room);
         long count = (long) sessionFactory.getCurrentSession().createQuery
                 ("select count (s.id) " +
