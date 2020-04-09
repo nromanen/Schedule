@@ -2,7 +2,6 @@ package com.softserve.exception.handler;
 
 import com.softserve.exception.*;
 import com.softserve.exception.apierror.ApiError;
-import io.jsonwebtoken.ExpiredJwtException;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.exception.ConstraintViolationException;
 import org.postgresql.util.PSQLException;
@@ -42,28 +41,23 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(FieldAlreadyExistsException.class)
     protected ResponseEntity<Object> handleEntityFieldAlreadyExistsException(
             FieldAlreadyExistsException ex) {
-        ApiError apiError = new ApiError(CONFLICT);
+        ApiError apiError = new ApiError(BAD_REQUEST);
         apiError.setMessage(ex.getShortMessage());
         apiError.setDebugMessage(ex.getMessage());
         log.error(ex.getMessage());
         return buildResponseEntity(apiError);
     }
 
-    //Handles EntityAlreadyExistsException. Triggered when such object already exists in an another class.
-    @ExceptionHandler(EntityAlreadyExistsException.class)
-    protected ResponseEntity<Object> handleEntityAlreadyExistsException(
-            EntityAlreadyExistsException ex) {
-        ApiError apiError = new ApiError(CONFLICT);
-        apiError.setMessage(ex.getMessage());
-        log.error(ex.getMessage());
-        return buildResponseEntity(apiError);
-    }
-
-    //Handles IncorrectPasswordException. Triggered when password entered during registration by User is incorrect
-    // (not strong enough, failed parsing, etc).
-    @ExceptionHandler(IncorrectPasswordException.class)
-    protected ResponseEntity<Object> handleIncorrectPasswordException(
-            IncorrectPasswordException ex) {
+    /** Handles IncorrectWishException, IncorrectTimeException, IncorrectPasswordException, ScheduleConflictException,
+     * PeriodConflictException, EntityAlreadyExistsException. Triggered when:
+     * teacher wishes json / time in period / password, entered during registration by User, are incorrect;
+     * schedule / period have conflicts with already existed entities;
+     * object already exists in an another class.
+    */
+    @ExceptionHandler({IncorrectWishException.class, IncorrectTimeException.class, IncorrectPasswordException.class,
+            ScheduleConflictException.class, PeriodConflictException.class, EntityAlreadyExistsException.class})
+    protected ResponseEntity<Object> handleIncorrectFieldExceptions(
+            RuntimeException ex) {
         ApiError apiError = new ApiError(BAD_REQUEST);
         apiError.setMessage(ex.getMessage());
         apiError.setDebugMessage(ex.getMessage());
@@ -73,7 +67,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     //Handles AccessDeniedException. Triggered when access for User is denied.
     @ExceptionHandler(AccessDeniedException.class)
-    protected ResponseEntity<Object> handleAccessDeniedException (
+    protected ResponseEntity<Object> handleAccessDeniedException(
             AccessDeniedException ex) {
         ApiError apiError = new ApiError(FORBIDDEN);
         apiError.setMessage("Access is denied");
@@ -84,8 +78,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     //Handles AccessDeniedException. Triggered when the credentials are invalid,
     // the account is neither locked nor disabled (when it' thrown).
-    @ExceptionHandler({BadCredentialsException.class})
-    protected ResponseEntity<Object> handleBadCredentialsException (
+    @ExceptionHandler(BadCredentialsException.class)
+    protected ResponseEntity<Object> handleBadCredentialsException(
             BadCredentialsException ex) {
         ApiError apiError = new ApiError(UNAUTHORIZED);
         apiError.setMessage("Invalid password or email");
@@ -94,47 +88,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return buildResponseEntity(apiError);
     }
 
-    //Handles ScheduleConflictException. Triggered when schedule has conflict with already existed schedules.
-    @ExceptionHandler(ScheduleConflictException.class)
-    protected ResponseEntity<Object> handleScheduleConflictException(
-            ScheduleConflictException ex) {
-        ApiError apiError = new ApiError(CONFLICT);
-        apiError.setMessage(ex.getMessage());
-        log.error(ex.getMessage());
-        return buildResponseEntity(apiError);
-    }
-
-    //Handles IncorrectWishException. Triggered when teacher wishes json is not valid.
-    @ExceptionHandler(IncorrectWishException.class)
-    protected ResponseEntity<Object> handleIncorrectWishException(
-            IncorrectWishException ex) {
-        ApiError apiError = new ApiError(CONFLICT);
-        apiError.setMessage(ex.getMessage());
-        log.error(ex.getMessage());
-        return buildResponseEntity(apiError);
-    }
-
-    //Handles IncorrectTimeException. Happens when time in period is incorrect.
-    @ExceptionHandler(IncorrectTimeException.class)
-    protected ResponseEntity<Object> handleIncorrectTimeException(
-            IncorrectTimeException ex) {
-        ApiError apiError = new ApiError(CONFLICT);
-        apiError.setMessage(ex.getMessage());
-        log.error(ex.getMessage());
-        return buildResponseEntity(apiError);
-    }
-
-    //Handles PeriodConflictException. Triggered when period has conflict with already existed periods.
-    @ExceptionHandler(PeriodConflictException.class)
-    protected ResponseEntity<Object> handlePeriodConflictException(
-            PeriodConflictException ex) {
-        ApiError apiError = new ApiError(CONFLICT);
-        apiError.setMessage(ex.getMessage());
-        log.error(ex.getMessage());
-        return buildResponseEntity(apiError);
-    }
-
-    // Handles EntityNotFoundException. Created to encapsulate errors with more detail than javax.persistence.EntityNotFoundException.
+    // Handles EntityNotFoundException. Created to encapsulate errors with
+    // more detail than javax.persistence.EntityNotFoundException.
     @ExceptionHandler(EntityNotFoundException.class)
     protected ResponseEntity<Object> handleEntityNotFound(
             EntityNotFoundException ex) {
@@ -183,7 +138,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(DeleteDisabledException.class)
     protected ResponseEntity<Object> handleDeleteDisabledException(
             DeleteDisabledException ex) {
-        ApiError apiError = new ApiError(CONFLICT);
+        ApiError apiError = new ApiError(BAD_REQUEST);
         apiError.setMessage(ex.getMessage());
         apiError.setDebugMessage(ex.getMessage());
         log.error(ex.getMessage());
@@ -279,20 +234,10 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     //Handles AuthenticationException. Triggered when password is wrong.
-    @ExceptionHandler({AuthenticationException.class})
+    @ExceptionHandler(AuthenticationException.class)
     protected ResponseEntity<Object> handleAuthenticationException(AuthenticationException ex) {
         ApiError apiError = new ApiError(UNAUTHORIZED);
         apiError.setMessage("Invalid password or email");
-        apiError.setDebugMessage(ex.getMessage());
-        log.error(ex.getMessage());
-        return buildResponseEntity(apiError);
-    }
-
-    //Handles JwtAuthenticationException. Triggered when token is expired or invalid.
-    @ExceptionHandler(JwtAuthenticationException.class)
-    protected ResponseEntity<Object> handleJwtAuthenticationException(JwtAuthenticationException ex) {
-        ApiError apiError = new ApiError(UNAUTHORIZED);
-        apiError.setMessage("JWT token is expired or invalid");
         apiError.setDebugMessage(ex.getMessage());
         log.error(ex.getMessage());
         return buildResponseEntity(apiError);

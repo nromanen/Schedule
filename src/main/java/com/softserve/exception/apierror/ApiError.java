@@ -2,7 +2,8 @@ package com.softserve.exception.apierror;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.validator.internal.engine.path.PathImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
@@ -13,7 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-@Data
+@Getter
+@Setter
 public class ApiError {
     @JsonIgnore
     private HttpStatus status;
@@ -23,23 +25,17 @@ public class ApiError {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private List<ApiSubError> subErrors;
 
-    private ApiError() {
-    }
-
     public ApiError(HttpStatus status) {
-        this();
         this.status = status;
     }
 
     public ApiError(HttpStatus status, Throwable ex) {
-        this();
         this.status = status;
         this.message = "Unexpected error";
         this.debugMessage = ex.getLocalizedMessage();
     }
 
     public ApiError(HttpStatus status, String message, Throwable ex) {
-        this();
         this.status = status;
         this.message = message;
         this.debugMessage = ex.getLocalizedMessage();

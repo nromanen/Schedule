@@ -3,7 +3,9 @@ package com.softserve.dto;
 import lombok.*;
 
 
-@Data
+@Getter
+@Setter
+@ToString
 public class UserCreateDTO {
 
     private Long id;

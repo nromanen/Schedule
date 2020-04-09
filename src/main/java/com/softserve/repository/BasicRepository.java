@@ -16,4 +16,5 @@ public interface BasicRepository<T extends Serializable, I extends Serializable>
 
     T delete(T entity);
 
+    boolean checkReference(T entity);
 }

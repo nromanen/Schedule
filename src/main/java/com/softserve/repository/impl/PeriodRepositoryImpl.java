@@ -1,7 +1,6 @@
 package com.softserve.repository.impl;
 
 import com.softserve.entity.Period;
-import com.softserve.exception.DeleteDisabledException;
 import com.softserve.repository.PeriodRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
@@ -58,27 +57,14 @@ public class PeriodRepositoryImpl extends BasicRepositoryImpl<Period, Long> impl
         return Optional.of(query.getResultList().get(0));
     }
 
-    /**
-     * The method used for deleting object in database, checking references before it
-     *
-     * @param entity is going to be deleted
-     * @return deleted entity
-     * @throws DeleteDisabledException when there are still references pointing to object requested for deleting
-     */
+    // Checking if period is used in Schedule table
     @Override
-    public Period delete(Period entity) {
-        if (checkReference(entity.getId())) {
-            throw new DeleteDisabledException("Unable to delete object, till another object is referenced on it");
-        }
-        return super.delete(entity);
-    }
-
-    // Checking by id if period is used in Schedule table
-    private boolean checkReference(Long periodId) {
+    public boolean checkReference(Period period) {
+        log.info("In checkReference(period = [{}])", period);
         long count = (long) sessionFactory.getCurrentSession().createQuery
                 ("select count (s.id) " +
                         "from Schedule s where s.period.id = :periodId")
-                .setParameter("periodId", periodId)
+                .setParameter("periodId", period.getId())
                 .getSingleResult();
         return count != 0;
     }
