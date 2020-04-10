@@ -9,6 +9,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 
+import java.util.Objects;
 import java.util.Properties;
 
 @Configuration
@@ -46,10 +47,18 @@ public class MailConfig {
     public JavaMailSender javaMailSender() {
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
 
+        String credentialsUsername = username;
+        String credentialsPassword = password;
+
+        if (environment.getProperty(username) == null && environment.getProperty(password) == null) {
+            credentialsUsername = System.getenv("HEROKU_MAIL_USERNAME");
+            credentialsPassword = System.getenv("HEROKU_MAIL_PASSWORD");
+        }
+
         mailSender.setHost(host);
         mailSender.setPort(port);
-        mailSender.setUsername(environment.getProperty(username));
-        mailSender.setPassword(environment.getProperty(password));
+        mailSender.setUsername(Objects.requireNonNull(environment.getProperty(credentialsUsername)));
+        mailSender.setPassword(Objects.requireNonNull(environment.getProperty(credentialsPassword)));
 
         Properties properties = mailSender.getJavaMailProperties();
 
