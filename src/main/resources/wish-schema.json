@@ -1,0 +1,50 @@
+{
+  "allOf": [{
+    "type": "array",
+    "items": {
+      "$ref": "#/definitions/DayOfWeek"
+    },
+    "uniqueItems": true
+  }],
+  "definitions": {
+    "DayOfWeek": {
+      "type": "object",
+      "required": [
+        "day_of_week",
+        "evenOdd"
+      ],
+
+      "properties": {
+        "day_of_week": {
+          "enum": ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"]
+        },
+        "evenOdd": {
+          "enum": ["WEEKLY", "EVEN", "ODD"]
+        },"wishes": {
+          "type": "array",
+          "allOf": [{
+            "items": {
+              "$ref": "#/definitions/classId"
+            }
+          }],
+          "uniqueItems": true
+        }
+      }
+    },
+    "classId": {
+      "type": "object",
+      "required": [
+        "class_id",
+        "status"
+      ],
+      "properties": {
+        "class_id": {
+          "type": "integer"
+        },
+        "status": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}
