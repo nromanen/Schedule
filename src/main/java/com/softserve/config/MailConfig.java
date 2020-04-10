@@ -47,7 +47,7 @@ public class MailConfig {
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
 
         String credentialsUsername = environment.getProperty(username);
-        String credentialsPassword = environment.getProperty(username);
+        String credentialsPassword = environment.getProperty(password);
 
         if (credentialsUsername == null && credentialsPassword == null) {
             credentialsUsername = System.getenv("HEROKU_MAIL_USERNAME");

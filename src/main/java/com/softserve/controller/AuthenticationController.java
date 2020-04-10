@@ -41,8 +41,8 @@ public class AuthenticationController {
     @PostMapping("/sign_in")
     @ApiOperation(value = "Get credentials  for login")
     public ResponseEntity<AuthenticationResponseDTO> signIn(@RequestBody AuthenticationRequestDTO requestDto) {
-        log.info("Enter into signIn method with user email {}", requestDto.getUsername());
-        String username = requestDto.getUsername();
+        log.info("Enter into signIn method with user email {}", requestDto.getEmail());
+        String username = requestDto.getEmail();
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, requestDto.getPassword()));
         User user = userService.findByEmail(username);
         String token = jwtTokenProvider.createToken(username, user.getRole().toString());
@@ -70,7 +70,7 @@ public class AuthenticationController {
     public ResponseEntity<MessageDTO> activationAccount(@RequestParam("token") String token) {
         log.info("Enter into activationAccount method");
         User user = userService.findByToken(token);
-        user.setToken("");
+        user.setToken(null);
         userService.update(user);
         MessageDTO messageDTO = new MessageDTO();
         messageDTO.setMessage("You successfully activate Your account.");
