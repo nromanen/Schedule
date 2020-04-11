@@ -2,7 +2,6 @@ package com.softserve.repository.impl;
 
 import com.softserve.entity.Room;
 import com.softserve.entity.enums.EvenOdd;
-import com.softserve.exception.DeleteDisabledException;
 import com.softserve.repository.RoomRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Session;
@@ -50,27 +49,14 @@ public class RoomRepositoryImpl extends BasicRepositoryImpl<Room, Long> implemen
         return sessionFactory.getCurrentSession().createQuery("select distinct room.type from Room room").getResultList();
     }
 
-    /**
-     * The method used for deleting object in database, checking references before it
-     *
-     * @param entity is going to be deleted
-     * @return deleted entity
-     * @throws DeleteDisabledException when there are still references pointing to object requested for deleting
-     */
+    // Checking if room is used in Schedule table
     @Override
-    public Room delete(Room entity) {
-        if (checkReference(entity.getId())) {
-            throw new DeleteDisabledException("Unable to delete object, till another object is referenced on it");
-        }
-        return super.delete(entity);
-    }
-
-    // Checking by id if room is used in Schedule table
-    private boolean checkReference(Long roomId) {
+    protected boolean checkReference(Room room) {
+        log.info("In checkReference(room = [{}])", room);
         long count = (long) sessionFactory.getCurrentSession().createQuery
                 ("select count (s.id) " +
                         "from Schedule s where s.room.id = :roomId")
-                .setParameter("roomId", roomId)
+                .setParameter("roomId", room.getId())
                 .getSingleResult();
         return count != 0;
     }

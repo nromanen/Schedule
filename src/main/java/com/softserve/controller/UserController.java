@@ -27,7 +27,6 @@ public class UserController {
 
     @GetMapping
     @ApiOperation(value = "Get the list of all users")
-
     public ResponseEntity<List<UserDTO>> getAll() {
         log.info("Enter into getAll method");
         return ResponseEntity.status(HttpStatus.OK).body(userMapper.toUserDTOs(userService.getAll()));

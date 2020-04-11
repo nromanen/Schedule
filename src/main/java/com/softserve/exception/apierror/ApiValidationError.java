@@ -1,12 +1,10 @@
 package com.softserve.exception.apierror;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 
-@Data
-@EqualsAndHashCode(callSuper = false)
+@Getter
+@Setter
 @AllArgsConstructor
 public class ApiValidationError implements ApiSubError {
     private String object;

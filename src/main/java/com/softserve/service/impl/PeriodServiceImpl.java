@@ -1,5 +1,4 @@
 package com.softserve.service.impl;
-
 import com.softserve.entity.Period;
 import com.softserve.exception.EntityNotFoundException;
 import com.softserve.exception.FieldAlreadyExistsException;
@@ -155,7 +154,7 @@ public class PeriodServiceImpl implements PeriodService {
                 oldPeriods, newPeriod);
         return oldPeriods.stream().noneMatch
                 (oldPeriod ->
-                        isPeriodsGlued(newPeriod, oldPeriod) || isPeriodsIntersect(newPeriod, oldPeriod)
+                        (isPeriodsGlued(newPeriod, oldPeriod)  || isPeriodsIntersect(newPeriod, oldPeriod)) &&  newPeriod.getId() != oldPeriod.getId()
                 );
     }
 

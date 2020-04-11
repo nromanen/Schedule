@@ -10,6 +10,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
+
 @Service
 @PropertySource("classpath:mail.properties")
 @Slf4j
@@ -36,9 +37,14 @@ public class MailServiceImpl implements MailService {
      */
     public void send(String emailTo, String subject, String message) {
         log.info("Enter into send method with emailTo {}, subject {}", emailTo, subject);
+        String credentialsUsername = environment.getProperty(username);
+        if (credentialsUsername == null) {
+            credentialsUsername = System.getenv("HEROKU_MAIL_USERNAME");
+        }
+
         SimpleMailMessage mailMessage = new SimpleMailMessage();
 
-        mailMessage.setFrom(environment.getProperty(username));
+        mailMessage.setFrom(credentialsUsername);
         mailMessage.setTo(emailTo);
         mailMessage.setSubject(subject);
         mailMessage.setText(message);

@@ -1,7 +1,6 @@
 package com.softserve.repository.impl;
 
 import com.softserve.entity.Lesson;
-import com.softserve.exception.DeleteDisabledException;
 import com.softserve.repository.LessonRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
@@ -48,29 +47,14 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
                 .getSingleResult();
     }
 
-    /**
-     * The method used for deleting object in database, checking references before it
-     *
-     * @param entity is going to be deleted
-     * @return deleted entity
-     * @throws DeleteDisabledException when there are still references pointing to object requested for deleting
-     */
+    // Checking if lesson is used in Schedule table
     @Override
-    public Lesson delete(Lesson entity) {
-        log.info("In delete(entity = [{}])", entity);
-        if (checkReference(entity.getId())) {
-            throw new DeleteDisabledException("Unable to delete object, till another object is referenced on it");
-        }
-        return super.delete(entity);
-    }
-
-    // Checking by id if lesson is used in Schedule table
-    private boolean checkReference(Long lessonId) {
-        log.info("In checkReference(lessonId = [{}])", lessonId);
+    protected boolean checkReference(Lesson lesson) {
+        log.info("In checkReference(lesson = [{}])", lesson);
         long count = (long) sessionFactory.getCurrentSession().createQuery
                 ("select count (s.id) " +
                         "from Schedule s where s.lesson.id = :lessonId")
-                .setParameter("lessonId", lessonId)
+                .setParameter("lessonId", lesson.getId())
                 .getSingleResult();
         return count != 0;
     }
