@@ -1,6 +1,5 @@
 package com.softserve.service;
 
-import com.softserve.entity.Group;
 import com.softserve.entity.Teacher;
 import com.softserve.entity.User;
 import com.softserve.exception.EntityAlreadyExistsException;

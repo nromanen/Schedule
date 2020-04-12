@@ -8,7 +8,6 @@ import com.softserve.dto.UserCreateDTO;
 import com.softserve.entity.User;
 import com.softserve.service.UserService;
 import com.softserve.service.mapper.UserMapperImpl;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,7 +21,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -32,7 +30,6 @@ public class UserControllerTest {
 
     private MockMvc mockMvc;
     private ObjectMapper objectMapper = new ObjectMapper();
-    private User user;
 
     @Autowired
     private WebApplicationContext wac;
@@ -43,58 +40,44 @@ public class UserControllerTest {
     @Before
     public void setUp() {
         mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
-
-        UserCreateDTO userDto = new UserCreateDTO();
-        userDto.setEmail("dto@email.com");
-        userDto.setPassword("dto password");
-        user = new UserMapperImpl().toUser(userDto);
-        userService.save(user);
-    }
-
-    @After
-    public void tearDown() {
-        userService.delete(user);
     }
 
     @Test
     public void testGetAll() throws Exception {
         mockMvc.perform(get("/users").accept(MediaType.APPLICATION_JSON))
-                .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"));
     }
 
     @Test
     public void testGet() throws Exception {
-        mockMvc.perform(get("/users/{id}", String.valueOf(user.getId())).contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/users/{id}", 1).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"))
-                .andExpect(jsonPath("$.id").value(String.valueOf(user.getId())));
+                .andExpect(jsonPath("$.id").value(1));
     }
 
     @Test
     public void testSave() throws Exception {
         UserCreateDTO userDtoForSave = new UserCreateDTO();
         userDtoForSave.setEmail("save@email.com");
-        userDtoForSave.setPassword("save password");
+        userDtoForSave.setPassword("Qwerty1!");
 
         mockMvc.perform(post("/users").content(objectMapper.writeValueAsString(userDtoForSave))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
-
-        userService.delete(userService.findByEmail(userDtoForSave.getEmail()));
     }
 
     @Test
     public void testUpdate() throws Exception {
         UserCreateDTO userDtoForUpdate = new UserCreateDTO();
-        userDtoForUpdate.setId(user.getId());
+        userDtoForUpdate.setId(5L);
         userDtoForUpdate.setEmail("update@email.com");
-        userDtoForUpdate.setPassword("update password");
+        userDtoForUpdate.setPassword("Qwerty1!");
 
         User userForCompare = new UserMapperImpl().toUser(userDtoForUpdate);
 
-        mockMvc.perform(put("/users", String.valueOf(userDtoForUpdate.getId())).content(objectMapper.writeValueAsString(userDtoForUpdate))
+        mockMvc.perform(put("/users", 5).content(objectMapper.writeValueAsString(userDtoForUpdate))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(userForCompare.getId()))
@@ -122,9 +105,13 @@ public class UserControllerTest {
 
     @Test
     public void whenSaveExistsUser() throws Exception {
-        mockMvc.perform(post("/users").content(objectMapper.writeValueAsString(user))
+        UserCreateDTO userDtoForSave = new UserCreateDTO();
+        userDtoForSave.setEmail("first@mail.com");
+        userDtoForSave.setPassword("Qwerty1!");
+
+        mockMvc.perform(post("/users").content(objectMapper.writeValueAsString(userDtoForSave))
                 .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isConflict());
+                .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -133,6 +120,30 @@ public class UserControllerTest {
         userCreateDTO.setPassword(null);
         userCreateDTO.setEmail("12341@mail.com");
         mockMvc.perform(post("/users").content(objectMapper.writeValueAsString(userCreateDTO))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void whenUpdateExistEmail() throws Exception {
+        UserCreateDTO userDtoForUpdate = new UserCreateDTO();
+        userDtoForUpdate.setId(2L);
+        userDtoForUpdate.setEmail("first@mail.com");
+        userDtoForUpdate.setPassword("Qwerty1!");
+
+        mockMvc.perform(put("/users", 2).content(objectMapper.writeValueAsString(userDtoForUpdate))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void whenUpdateNullEmail() throws Exception {
+        UserCreateDTO userDtoForUpdate = new UserCreateDTO();
+        userDtoForUpdate.setId(2L);
+        userDtoForUpdate.setEmail(null);
+        userDtoForUpdate.setPassword("Qwerty1!");
+
+        mockMvc.perform(put("/users", 2).content(objectMapper.writeValueAsString(userDtoForUpdate))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
     }

@@ -9,7 +9,6 @@ import com.softserve.dto.RoomDTO;
 import com.softserve.entity.Room;
 import com.softserve.service.RoomService;
 import com.softserve.service.mapper.RoomMapperImpl;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,7 +22,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -33,7 +31,6 @@ public class RoomControllerTest {
 
     private MockMvc mockMvc;
     private ObjectMapper objectMapper = new ObjectMapper();
-    private Room room;
 
     @Autowired
     private WebApplicationContext wac;
@@ -44,17 +41,6 @@ public class RoomControllerTest {
     @Before
     public void setup() {
         mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
-
-        AddRoomDTO roomDTO = new AddRoomDTO();
-        roomDTO.setName("dto name");
-        roomDTO.setType("dto type");
-        room = new RoomMapperImpl().convertToEntity(roomDTO);
-        roomService.save(room);
-    }
-
-    @After
-    public void tearDown() {
-        roomService.delete(room);
     }
 
     @Test
@@ -66,15 +52,15 @@ public class RoomControllerTest {
 
     @Test
     public void testGet() throws Exception {
-        mockMvc.perform(get("/rooms/{id}", String.valueOf(room.getId())).contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/rooms/{id}", 1).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"))
-                .andExpect(jsonPath("$.id").value(String.valueOf(room.getId())));
+                .andExpect(jsonPath("$.id").value(1));
     }
 
     @Test
     public void testGetFreeRooms() throws Exception {
-        mockMvc.perform(get("/rooms/free?id=" + room.getId() + "&dayOfWeek=MONDAY&evenOdd=EVEN")
+        mockMvc.perform(get("/rooms/free?id=1&dayOfWeek=MONDAY&evenOdd=EVEN")
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(content().contentType("application/json"));
     }
@@ -89,8 +75,8 @@ public class RoomControllerTest {
     @Test
     public void testSave() throws Exception {
         AddRoomDTO roomDtoForSave = new AddRoomDTO();
-        roomDtoForSave.setName("save name");
-        roomDtoForSave.setType("save type");
+        roomDtoForSave.setName("save room name");
+        roomDtoForSave.setType("save room type");
 
         mockMvc.perform(post("/rooms").content(objectMapper.writeValueAsString(roomDtoForSave))
                 .contentType(MediaType.APPLICATION_JSON))
@@ -100,16 +86,17 @@ public class RoomControllerTest {
     @Test
     public void testUpdate() throws Exception {
         RoomDTO roomDtoForUpdate = new RoomDTO();
-        roomDtoForUpdate.setId(room.getId());
-        roomDtoForUpdate.setName("update name");
-        roomDtoForUpdate.setType("update type");
+        roomDtoForUpdate.setId(3L);
+        roomDtoForUpdate.setName("Small auditory updated");
+        roomDtoForUpdate.setType("Small room updated");
 
         Room roomForCompare = new RoomMapperImpl().convertToEntity(roomDtoForUpdate);
 
-        mockMvc.perform(put("/rooms", String.valueOf(room.getId())).content(objectMapper.writeValueAsString(roomDtoForUpdate))
+        mockMvc.perform(put("/rooms", 3).content(objectMapper.writeValueAsString(roomDtoForUpdate))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(roomForCompare.getId()))
+                .andExpect(jsonPath("$.type").value(roomForCompare.getType()))
                 .andExpect(jsonPath("$.name").value(roomForCompare.getName()));
     }
 
@@ -136,6 +123,18 @@ public class RoomControllerTest {
         roomDtoForSave.setType("save type");
 
         mockMvc.perform(post("/rooms").content(objectMapper.writeValueAsString(roomDtoForSave))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void whenUpdateTypeIsNull() throws Exception {
+        RoomDTO roomDtoForUpdate = new RoomDTO();
+        roomDtoForUpdate.setId(3L);
+        roomDtoForUpdate.setName("update name");
+        roomDtoForUpdate.setType(null);
+
+        mockMvc.perform(put("/rooms", 3).content(objectMapper.writeValueAsString(roomDtoForUpdate))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
     }

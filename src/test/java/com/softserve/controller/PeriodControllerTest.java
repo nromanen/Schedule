@@ -9,7 +9,6 @@ import com.softserve.dto.PeriodDTO;
 import com.softserve.entity.Period;
 import com.softserve.service.PeriodService;
 import com.softserve.service.mapper.PeriodMapperImpl;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,7 +20,6 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.util.NestedServletException;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -38,7 +36,6 @@ public class PeriodControllerTest {
 
     private MockMvc mockMvc;
     private ObjectMapper objectMapper = new ObjectMapper();
-    private Period period;
 
     @Autowired
     private WebApplicationContext wac;
@@ -49,18 +46,6 @@ public class PeriodControllerTest {
     @Before
     public void setup() {
         mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
-
-        AddPeriodDTO addPeriodDTO = new AddPeriodDTO();
-        addPeriodDTO.setName("dto name");
-        addPeriodDTO.setStartTime(Timestamp.valueOf("2020-10-15 01:00:00"));
-        addPeriodDTO.setEndTime(Timestamp.valueOf("2020-10-15 02:00:00"));
-        period = new PeriodMapperImpl().convertToEntity(addPeriodDTO);
-        periodService.save(period);
-    }
-
-    @After
-    public void tearDown() {
-        periodService.delete(period);
     }
 
     @Test
@@ -72,18 +57,18 @@ public class PeriodControllerTest {
 
     @Test
     public void testGet() throws Exception {
-        mockMvc.perform(get("/classes/{id}", String.valueOf(period.getId())).contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/classes/{id}", 1).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"))
-                .andExpect(jsonPath("$.id").value(String.valueOf(period.getId())));
+                .andExpect(jsonPath("$.id").value(String.valueOf(1)));
     }
 
     @Test
     public void testSave() throws Exception {
         AddPeriodDTO periodDtoForSave = new AddPeriodDTO();
-        periodDtoForSave.setName("save name");
-        periodDtoForSave.setStartTime(Timestamp.valueOf("2020-10-15 03:00:00"));
-        periodDtoForSave.setEndTime(Timestamp.valueOf("2020-10-15 04:00:00"));
+        periodDtoForSave.setName("save period");
+        periodDtoForSave.setStartTime(Timestamp.valueOf("2020-10-15 09:00:00"));
+        periodDtoForSave.setEndTime(Timestamp.valueOf("2020-10-15 10:00:00"));
 
         mockMvc.perform(post("/classes").content(objectMapper.writeValueAsString(periodDtoForSave))
                 .contentType(MediaType.APPLICATION_JSON))
@@ -93,7 +78,7 @@ public class PeriodControllerTest {
     @Test
     public void testSaveList() throws Exception {
         AddPeriodDTO periodDtoForList = new AddPeriodDTO();
-        periodDtoForList.setName("dto list");
+        periodDtoForList.setName("save list of periods");
         periodDtoForList.setStartTime(Timestamp.valueOf("2020-10-15 11:00:00"));
         periodDtoForList.setEndTime(Timestamp.valueOf("2020-10-15 12:00:00"));
         List<AddPeriodDTO> periodDtoListForSave = new ArrayList<>();
@@ -107,14 +92,14 @@ public class PeriodControllerTest {
     @Test
     public void testUpdate() throws Exception {
         PeriodDTO periodDtoForUpdate = new PeriodDTO();
-        periodDtoForUpdate.setId(period.getId());
-        periodDtoForUpdate.setName("update name");
-        periodDtoForUpdate.setStartTime(Timestamp.valueOf("2020-10-15 05:00:00"));
-        periodDtoForUpdate.setEndTime(Timestamp.valueOf("2020-10-15 06:00:00"));
+        periodDtoForUpdate.setId(2L);
+        periodDtoForUpdate.setName("2 para updated");
+        periodDtoForUpdate.setStartTime(Timestamp.valueOf("2020-10-15 13:00:00"));
+        periodDtoForUpdate.setEndTime(Timestamp.valueOf("2020-10-15 14:00:00"));
 
         Period periodForCompare = new PeriodMapperImpl().convertToEntity(periodDtoForUpdate);
 
-        mockMvc.perform(put("/classes", String.valueOf(period.getId())).content(objectMapper.writeValueAsString(periodDtoForUpdate))
+        mockMvc.perform(put("/classes", 2).content(objectMapper.writeValueAsString(periodDtoForUpdate))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(periodForCompare.getId()))
@@ -127,8 +112,8 @@ public class PeriodControllerTest {
     public void testDelete() throws Exception {
         AddPeriodDTO addPeriodDTO = new AddPeriodDTO();
         addPeriodDTO.setName("delete name");
-        addPeriodDTO.setStartTime(Timestamp.valueOf("2020-10-15 08:00:00"));
-        addPeriodDTO.setEndTime(Timestamp.valueOf("2020-10-15 09:00:00"));
+        addPeriodDTO.setStartTime(Timestamp.valueOf("2020-10-15 16:00:00"));
+        addPeriodDTO.setEndTime(Timestamp.valueOf("2020-10-15 17:00:00"));
         Period period = periodService.save(new PeriodMapperImpl().convertToEntity(addPeriodDTO));
         mockMvc.perform(delete("/periods/{id}", String.valueOf(period.getId()))
                 .contentType(MediaType.APPLICATION_JSON))
@@ -142,9 +127,13 @@ public class PeriodControllerTest {
 
     @Test
     public void whenSaveExistsPeriod() throws Exception {
-        mockMvc.perform(post("/classes").content(objectMapper.writeValueAsString(period))
+        AddPeriodDTO addPeriodDTO = new AddPeriodDTO();
+        addPeriodDTO.setName("1 para");
+        addPeriodDTO.setStartTime(Timestamp.valueOf("2020-04-11 01:00:00"));
+        addPeriodDTO.setEndTime(Timestamp.valueOf("2020-04-11 02:00:00"));
+        mockMvc.perform(post("/classes").content(objectMapper.writeValueAsString(addPeriodDTO))
                 .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isConflict());
+                .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -155,6 +144,32 @@ public class PeriodControllerTest {
         periodDtoForSave.setEndTime(Timestamp.valueOf("2020-10-15 04:00:00"));
 
         mockMvc.perform(post("/classes").content(objectMapper.writeValueAsString(periodDtoForSave))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void whenUpdateExistName() throws Exception {
+        PeriodDTO periodDtoForUpdate = new PeriodDTO();
+        periodDtoForUpdate.setId(2L);
+        periodDtoForUpdate.setName("1 para");
+        periodDtoForUpdate.setStartTime(Timestamp.valueOf("2020-10-15 13:00:00"));
+        periodDtoForUpdate.setEndTime(Timestamp.valueOf("2020-10-15 14:00:00"));
+
+        mockMvc.perform(put("/classes", 2).content(objectMapper.writeValueAsString(periodDtoForUpdate))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void whenUpdateNullName() throws Exception {
+        PeriodDTO periodDtoForUpdate = new PeriodDTO();
+        periodDtoForUpdate.setId(2L);
+        periodDtoForUpdate.setName(null);
+        periodDtoForUpdate.setStartTime(Timestamp.valueOf("2020-10-15 13:00:00"));
+        periodDtoForUpdate.setEndTime(Timestamp.valueOf("2020-10-15 14:00:00"));
+
+        mockMvc.perform(put("/classes", 2).content(objectMapper.writeValueAsString(periodDtoForUpdate))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
     }

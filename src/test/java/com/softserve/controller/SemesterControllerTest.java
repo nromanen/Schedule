@@ -5,13 +5,9 @@ import com.softserve.config.DBConfigTest;
 import com.softserve.config.MyWebAppInitializer;
 import com.softserve.config.WebMvcConfig;
 import com.softserve.dto.SemesterDTO;
-import com.softserve.dto.SubjectDTO;
 import com.softserve.entity.Semester;
-import com.softserve.entity.Subject;
 import com.softserve.service.SemesterService;
 import com.softserve.service.mapper.SemesterMapperImpl;
-import com.softserve.service.mapper.SubjectMapperImpl;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,12 +20,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import javax.persistence.EntityManager;
-
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {WebMvcConfig.class, DBConfigTest.class, MyWebAppInitializer.class})
@@ -37,7 +29,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class SemesterControllerTest {
     private MockMvc mockMvc;
     private ObjectMapper objectMapper = new ObjectMapper();
-    private Semester semester;
 
     @Autowired
     private WebApplicationContext wac;
@@ -46,19 +37,8 @@ public class SemesterControllerTest {
     private SemesterService semesterService;
 
     @Before
-    public void setup() {
+    public void setUp() {
         mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
-
-        SemesterDTO semesterDTO = new SemesterDTO();
-        semesterDTO.setNumber(1);
-        semesterDTO.setYear(2020);
-        semester = new SemesterMapperImpl().semesterDTOToSemester(semesterDTO);
-        semesterService.save(semester);
-    }
-
-    @After
-    public void tearDown() {
-        semesterService.delete(semester);
     }
 
     @Test
@@ -69,17 +49,17 @@ public class SemesterControllerTest {
     }
 
     @Test
-    public void                                                                                                                                                               testGet() throws Exception {
-        mockMvc.perform(get("/semesters/{id}", String.valueOf(semester.getId())).contentType(MediaType.APPLICATION_JSON))
+    public void testGet() throws Exception {
+        mockMvc.perform(get("/semesters/{id}", 1).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"))
-                .andExpect(jsonPath("$.id").value(String.valueOf(semester.getId())));
+                .andExpect(jsonPath("$.id").value(String.valueOf(1)));
     }
 
     @Test
     public void testSave() throws Exception {
         SemesterDTO semesterDtoForSave = new SemesterDTO();
-        semesterDtoForSave.setNumber(1);
+        semesterDtoForSave.setNumber(4);
         semesterDtoForSave.setYear(2020);
 
         mockMvc.perform(post("/semesters").content(objectMapper.writeValueAsString(semesterDtoForSave))
@@ -90,12 +70,13 @@ public class SemesterControllerTest {
     @Test
     public void testUpdate() throws Exception {
         SemesterDTO semesterDtoForUpdate = new SemesterDTO();
-        semesterDtoForUpdate.setNumber(2);
+        semesterDtoForUpdate.setNumber(11);
         semesterDtoForUpdate.setYear(2022);
+        semesterDtoForUpdate.setId(1);
 
         Semester semesterForCompare = new SemesterMapperImpl().semesterDTOToSemester(semesterDtoForUpdate);
 
-        mockMvc.perform(put("/semesters", String.valueOf(semester.getId()))
+        mockMvc.perform(put("/semesters", "1")
                 .content(objectMapper.writeValueAsString(semesterDtoForUpdate))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -117,23 +98,23 @@ public class SemesterControllerTest {
     }
 
     @Test
-    public void whenSubjectNotFound() throws Exception {
+    public void whenSemesterNotFound() throws Exception {
         mockMvc.perform(get("/semesters/10")).andExpect(status().isNotFound());
     }
 
     @Test
-    public void whenSaveExistsSubject() throws Exception {
+    public void whenSaveExistsSemester() throws Exception {
         SemesterDTO semesterDTO = new SemesterDTO();
         semesterDTO.setNumber(1);
         semesterDTO.setYear(2020);
 
         mockMvc.perform(post("/semesters").content(objectMapper.writeValueAsString(semesterDTO))
                 .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isConflict());
+                .andExpect(status().isBadRequest());
     }
 
     @Test
-    public void whenSaveNameIsNull() throws Exception {
+    public void whenSaveNumberIsNull() throws Exception {
         SemesterDTO semesterDTO = new SemesterDTO();
         semesterDTO.setNumber(0);
         semesterDTO.setYear(2020);
@@ -143,4 +124,28 @@ public class SemesterControllerTest {
                 .andExpect(status().isBadRequest());
     }
 
+    @Test
+    public void whenUpdateExistSemester() throws Exception {
+        SemesterDTO semesterDtoForUpdate = new SemesterDTO();
+        semesterDtoForUpdate.setNumber(1);
+        semesterDtoForUpdate.setYear(2022);
+        semesterDtoForUpdate.setId(2);
+
+        mockMvc.perform(put("/semesters", 2).content(objectMapper.writeValueAsString(semesterDtoForUpdate))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void whenUpdateNullNumber() throws Exception {
+        SemesterDTO semesterDtoForUpdate = new SemesterDTO();
+        semesterDtoForUpdate.setNumber(0);
+        semesterDtoForUpdate.setYear(2022);
+        semesterDtoForUpdate.setId(2);
+
+        mockMvc.perform(put("/semesters", 2)
+                .content(objectMapper.writeValueAsString(semesterDtoForUpdate))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
 }

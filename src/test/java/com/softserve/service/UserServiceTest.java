@@ -3,11 +3,14 @@ package com.softserve.service;
 import com.softserve.entity.User;
 import com.softserve.exception.EntityNotFoundException;
 import com.softserve.exception.FieldAlreadyExistsException;
+import com.softserve.exception.IncorrectEmailException;
+import com.softserve.exception.IncorrectPasswordException;
 import com.softserve.repository.UserRepository;
 import com.softserve.service.impl.MailServiceImpl;
 import com.softserve.service.impl.UserServiceImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
@@ -180,5 +183,73 @@ public class UserServiceTest {
         user.setToken("qwerty123!@#");
 
         userService.findByToken("qflkwrgn");
+    }
+
+    @Test
+    public void testRegistration() {
+        String url = "/sign_up";
+        User user = new User();
+        user.setEmail("some@mail.com");
+        user.setPassword("Qwerty123!@#");
+
+        when(userRepository.save(user)).thenReturn(user);
+        when(encoder.encode(any(CharSequence.class))).thenReturn("Qwerty123!@#");
+
+        User registeredUser = userService.registration(user, url);
+        assertNotNull(registeredUser);
+        assertNotNull(registeredUser.getToken());
+        assertEquals(user.getEmail(), registeredUser.getEmail());
+        assertEquals(user.getPassword(), registeredUser.getPassword());
+        verify(userRepository, times(1)).save(user);
+        verify(mailService, times(1)).send(
+                ArgumentMatchers.eq(registeredUser.getEmail()),
+                ArgumentMatchers.contains("Activation account"),
+                ArgumentMatchers.contains("activation_account?token=")
+        );
+    }
+
+    @Test(expected = IncorrectPasswordException.class)
+    public void registrationWhenWrongInvalidPassword() {
+        String url = "/sign_up";
+        User user = new User();
+        user.setPassword("qwert");
+        user.setEmail("some@mail.com");
+
+        userService.registration(user, url);
+    }
+
+    @Test
+    public void testResetPassword() {
+        User user = new User();
+        user.setEmail("some@mail.com");
+        user.setPassword("Qwerty1!");
+        user.setId(1L);
+
+        when(userRepository.findByEmail("some@mail.com")).thenReturn(Optional.of(user));
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        when(encoder.encode(any(CharSequence.class))).thenReturn("Qwerty123!@#");
+        when(userRepository.update(user)).thenReturn(user);
+
+        userService.resetPassword("some@mail.com");
+        assertEquals("Qwerty123!@#", user.getPassword());
+        verify(userRepository, times(3)).findByEmail("some@mail.com");
+        verify(userRepository, times(1)).findById(1L);
+        verify(encoder, times(1)).encode(any(CharSequence.class));
+        verify(userRepository, times(1)).update(user);
+        verify(mailService, times(1)).send(
+                ArgumentMatchers.eq("some@mail.com"),
+                ArgumentMatchers.contains("Change password"),
+                ArgumentMatchers.contains("You received this email because you requested to reset your password.")
+        );
+    }
+
+    @Test(expected = IncorrectEmailException.class)
+    public void resetPasswordWhenMailIsIncorrect() {
+        User user = new User();
+        user.setEmail("afvadf");
+        user.setPassword("Qwerty1!");
+        user.setId(1L);
+
+        userService.resetPassword(user.getEmail());
     }
 }

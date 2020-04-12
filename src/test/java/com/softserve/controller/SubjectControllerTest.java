@@ -8,7 +8,6 @@ import com.softserve.dto.SubjectDTO;
 import com.softserve.entity.Subject;
 import com.softserve.service.SubjectService;
 import com.softserve.service.mapper.SubjectMapperImpl;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,7 +19,6 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.util.NestedServletException;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -32,7 +30,6 @@ public class SubjectControllerTest {
 
     private MockMvc mockMvc;
     private ObjectMapper objectMapper = new ObjectMapper();
-    private Subject subject;
 
     @Autowired
     private WebApplicationContext wac;
@@ -43,16 +40,6 @@ public class SubjectControllerTest {
     @Before
     public void setup() {
         mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
-
-        SubjectDTO subjectDTO = new SubjectDTO();
-        subjectDTO.setName("dto name");
-        subject = new SubjectMapperImpl().subjectDTOToSubject(subjectDTO);
-        subjectService.save(subject);
-    }
-
-    @After
-    public void tearDown() {
-        subjectService.delete(subject);
     }
 
     @Test
@@ -64,16 +51,16 @@ public class SubjectControllerTest {
 
     @Test
     public void testGet() throws Exception {
-        mockMvc.perform(get("/subjects/{id}", String.valueOf(subject.getId())).contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/subjects/{id}", 1).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"))
-                .andExpect(jsonPath("$.id").value(String.valueOf(subject.getId())));
+                .andExpect(jsonPath("$.id").value(1));
     }
 
     @Test
     public void testSave() throws Exception {
         SubjectDTO subjectDtoForSave = new SubjectDTO();
-        subjectDtoForSave.setName("save name");
+        subjectDtoForSave.setName("save subject name");
 
         mockMvc.perform(post("/subjects").content(objectMapper.writeValueAsString(subjectDtoForSave))
                 .contentType(MediaType.APPLICATION_JSON))
@@ -83,12 +70,12 @@ public class SubjectControllerTest {
     @Test
     public void testUpdate() throws Exception {
         SubjectDTO subjectDtoForUpdate = new SubjectDTO();
-        subjectDtoForUpdate.setId(subject.getId());
-        subjectDtoForUpdate.setName("update name");
+        subjectDtoForUpdate.setId(1L);
+        subjectDtoForUpdate.setName("updated History");
 
         Subject subjectForCompare = new SubjectMapperImpl().subjectDTOToSubject(subjectDtoForUpdate);
 
-        mockMvc.perform(put("/subjects", String.valueOf(subject.getId())).content(objectMapper.writeValueAsString(subjectDtoForUpdate))
+        mockMvc.perform(put("/subjects", 1).content(objectMapper.writeValueAsString(subjectDtoForUpdate))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(subjectForCompare.getId()))
@@ -108,17 +95,17 @@ public class SubjectControllerTest {
 
     @Test
     public void whenSubjectNotFound() throws Exception {
-        mockMvc.perform(get("/subjects/10")).andExpect(status().isNotFound());
+        mockMvc.perform(get("/subjects/100")).andExpect(status().isNotFound());
     }
 
     @Test
     public void whenSaveExistsSubject() throws Exception {
         SubjectDTO subjectDTO = new SubjectDTO();
-        subjectDTO.setName("dto name");
+        subjectDTO.setName("Biology");
 
         mockMvc.perform(post("/subjects").content(objectMapper.writeValueAsString(subjectDTO))
                 .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isConflict());
+                .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -127,6 +114,28 @@ public class SubjectControllerTest {
         subjectDtoForSave.setName(null);
 
         mockMvc.perform(post("/subjects").content(objectMapper.writeValueAsString(subjectDtoForSave))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void whenUpdateExistsSubject() throws Exception {
+        SubjectDTO subjectDtoForUpdate = new SubjectDTO();
+        subjectDtoForUpdate.setId(1L);
+        subjectDtoForUpdate.setName("Astronomy");
+
+        mockMvc.perform(put("/subjects", 1).content(objectMapper.writeValueAsString(subjectDtoForUpdate))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void whenUpdateNullName() throws Exception {
+        SubjectDTO subjectDtoForUpdate = new SubjectDTO();
+        subjectDtoForUpdate.setId(1L);
+        subjectDtoForUpdate.setName(null);
+
+        mockMvc.perform(put("/subjects", 1).content(objectMapper.writeValueAsString(subjectDtoForUpdate))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
     }
