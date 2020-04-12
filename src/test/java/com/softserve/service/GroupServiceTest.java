@@ -90,7 +90,7 @@ public class GroupServiceTest {
         updatedGroup.setTitle("updated title");
         updatedGroup.setId(1L);
 
-        when(groupRepository.existsById(anyLong())).thenReturn(1L);
+        when(groupRepository.countByGroupId(anyLong())).thenReturn(1L);
         when(groupRepository.countGroupsWithTitle(anyString())).thenReturn(0L);
         when(groupRepository.update(updatedGroup)).thenReturn(updatedGroup);
 
@@ -110,7 +110,7 @@ public class GroupServiceTest {
         updatedSubject.setTitle("updated group");
         updatedSubject.setId(1L);
 
-        when(groupRepository.existsById(anyLong())).thenReturn(1L);
+        when(groupRepository.countByGroupId(anyLong())).thenReturn(1L);
         when(groupRepository.countGroupsWithTitle(anyString())).thenReturn(1L);
 
         oldGroup = groupService.update(updatedSubject);
@@ -124,7 +124,7 @@ public class GroupServiceTest {
         group.setTitle("some group");
         group.setId(1L);
 
-        when(groupRepository.existsById(anyLong())).thenReturn(0L);
+        when(groupRepository.countByGroupId(anyLong())).thenReturn(0L);
 
         groupService.update(group);
         verify(groupService, times(1)).update(group);

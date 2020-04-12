@@ -51,7 +51,7 @@ public class PeriodControllerTest {
         mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
 
         AddPeriodDTO addPeriodDTO = new AddPeriodDTO();
-        addPeriodDTO.setClass_name("dto name");
+        addPeriodDTO.setName("dto name");
         addPeriodDTO.setStartTime(Timestamp.valueOf("2020-10-15 01:00:00"));
         addPeriodDTO.setEndTime(Timestamp.valueOf("2020-10-15 02:00:00"));
         period = new PeriodMapperImpl().convertToEntity(addPeriodDTO);
@@ -81,7 +81,7 @@ public class PeriodControllerTest {
     @Test
     public void testSave() throws Exception {
         AddPeriodDTO periodDtoForSave = new AddPeriodDTO();
-        periodDtoForSave.setClass_name("save name");
+        periodDtoForSave.setName("save name");
         periodDtoForSave.setStartTime(Timestamp.valueOf("2020-10-15 03:00:00"));
         periodDtoForSave.setEndTime(Timestamp.valueOf("2020-10-15 04:00:00"));
 
@@ -93,7 +93,7 @@ public class PeriodControllerTest {
     @Test
     public void testSaveList() throws Exception {
         AddPeriodDTO periodDtoForList = new AddPeriodDTO();
-        periodDtoForList.setClass_name("dto list");
+        periodDtoForList.setName("dto list");
         periodDtoForList.setStartTime(Timestamp.valueOf("2020-10-15 11:00:00"));
         periodDtoForList.setEndTime(Timestamp.valueOf("2020-10-15 12:00:00"));
         List<AddPeriodDTO> periodDtoListForSave = new ArrayList<>();
@@ -108,7 +108,7 @@ public class PeriodControllerTest {
     public void testUpdate() throws Exception {
         PeriodDTO periodDtoForUpdate = new PeriodDTO();
         periodDtoForUpdate.setId(period.getId());
-        periodDtoForUpdate.setClass_name("update name");
+        periodDtoForUpdate.setName("update name");
         periodDtoForUpdate.setStartTime(Timestamp.valueOf("2020-10-15 05:00:00"));
         periodDtoForUpdate.setEndTime(Timestamp.valueOf("2020-10-15 06:00:00"));
 
@@ -126,7 +126,7 @@ public class PeriodControllerTest {
     @Test
     public void testDelete() throws Exception {
         AddPeriodDTO addPeriodDTO = new AddPeriodDTO();
-        addPeriodDTO.setClass_name("delete name");
+        addPeriodDTO.setName("delete name");
         addPeriodDTO.setStartTime(Timestamp.valueOf("2020-10-15 08:00:00"));
         addPeriodDTO.setEndTime(Timestamp.valueOf("2020-10-15 09:00:00"));
         Period period = periodService.save(new PeriodMapperImpl().convertToEntity(addPeriodDTO));
@@ -150,7 +150,7 @@ public class PeriodControllerTest {
     @Test
     public void whenSaveNameIsNull() throws Exception {
         AddPeriodDTO periodDtoForSave = new AddPeriodDTO();
-        periodDtoForSave.setClass_name(null);
+        periodDtoForSave.setName(null);
         periodDtoForSave.setStartTime(Timestamp.valueOf("2020-10-15 03:00:00"));
         periodDtoForSave.setEndTime(Timestamp.valueOf("2020-10-15 04:00:00"));
 

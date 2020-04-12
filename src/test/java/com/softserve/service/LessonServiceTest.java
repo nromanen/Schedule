@@ -153,7 +153,7 @@ public class LessonServiceTest {
 
         when(lessonRepository.countLessonDuplicates(lesson)).thenReturn(1L);
 
-        Lesson result = lessonService.save(lesson);
+        lessonService.save(lesson);
         verify(lessonRepository, times(1)).countLessonDuplicates(lesson);
         verify(lessonRepository, times(1)).save(lesson);
     }

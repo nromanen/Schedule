@@ -4,13 +4,16 @@ import com.softserve.entity.User;
 import com.softserve.exception.EntityNotFoundException;
 import com.softserve.exception.FieldAlreadyExistsException;
 import com.softserve.repository.UserRepository;
+import com.softserve.service.impl.MailServiceImpl;
 import com.softserve.service.impl.UserServiceImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.Arrays;
 import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
@@ -23,6 +26,12 @@ public class UserServiceTest {
 
     @Mock
     private UserRepository userRepository;
+
+    @Mock
+    private PasswordEncoder encoder;
+
+    @Mock
+    private MailServiceImpl mailService;
 
     @InjectMocks
     private UserServiceImpl userService;
@@ -54,9 +63,10 @@ public class UserServiceTest {
     public void testSave() {
         User user = new User();
         user.setEmail("mail@email.com");
-        user.setPassword("password");
+        user.setPassword("Qwerty1!");
 
         when(userRepository.save(any(User.class))).thenReturn(user);
+        when(encoder.encode(any(CharSequence.class))).thenReturn("Qwerty1!");
 
         User result = userService.save(user);
         assertNotNull(result);
@@ -72,24 +82,12 @@ public class UserServiceTest {
         user.setPassword("password");
 
         when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
+        when(encoder.encode(any(CharSequence.class))).thenReturn("Qwerty1!");
 
         userService.save(user);
         verify(userRepository, times(1)).save(user);
         verify(userRepository, times(1)).findByEmail(user.getEmail());
     }
-
-//    @Test(expected = SQLDataException.class)
-//    public void save_when_email_longer_than_40_symbols() {
-//        User user = new User();
-//        user.setEmail("123456789123456789123456789123456789@email.com");
-//        user.setPassword("password");
-//
-//        when(userRepository.save(any(User.class))).thenReturn(user);
-//
-//        userService.save(user);
-//        verify(userRepository, times(1)).save(user);
-//        verify(userRepository, times(1)).findByEmail(user.getEmail());
-//    }
 
     @Test
     public void testUpdate() {
@@ -112,7 +110,6 @@ public class UserServiceTest {
         verify(userRepository, times(1)).findById(anyLong());
         verify(userRepository, times(1)).findByEmail(oldUser.getEmail());
     }
-
 
     @Test(expected = FieldAlreadyExistsException.class)
     public void updateWhenEmailIsExists() {
@@ -156,5 +153,32 @@ public class UserServiceTest {
 
         userService.findByEmail("some@email.com");
         verify(userRepository, times(1)).findByEmail("test@email.com");
+    }
+
+    @Test
+    public void findByToken() {
+        User user = new User();
+        user.setEmail("some@mail.com");
+        user.setPassword("mypassword");
+        user.setId(1L);
+        user.setToken("qwerty123!@#");
+
+        when(userRepository.findByToken("qwerty123!@#")).thenReturn(Optional.of(user));
+
+        User result = userService.findByToken("qwerty123!@#");
+        assertNotNull(result);
+        assertEquals(user.getId(), result.getId());
+        verify(userRepository, times(1)).findByToken(anyString());
+    }
+
+    @Test(expected = EntityNotFoundException.class)
+    public void notFoundByToken() {
+        User user = new User();
+        user.setEmail("some@mail.com");
+        user.setPassword("mypassword");
+        user.setId(1L);
+        user.setToken("qwerty123!@#");
+
+        userService.findByToken("qflkwrgn");
     }
 }

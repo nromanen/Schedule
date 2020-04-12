@@ -44,21 +44,22 @@ public class GroupControllerTest {
     public void setup() {
         mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
 
-        GroupDTO groupDTO = new GroupDTO();
-        groupDTO.setTitle("dto name");
-        group = new GroupMapperImpl().groupDTOToGroup(groupDTO);
-        groupService.save(group);
+//        GroupDTO groupDTO = new GroupDTO();
+//        groupDTO.setTitle("dto name");
+//        group = new GroupMapperImpl().groupDTOToGroup(groupDTO);
+//        groupService.save(group);
     }
 
-    @After
-    public void tearDown() {
-        groupService.delete(group);
-    }
+//    @After
+//    public void tearDown() {
+//        groupService.delete(group);
+//    }
 
     @Test
     public void testGetAll() throws Exception {
         mockMvc.perform(get("/groups").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
+                .andDo(print())
                 .andExpect(content().contentType("application/json"));
     }
 

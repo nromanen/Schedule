@@ -87,7 +87,7 @@ public class SubjectServiceTest {
         updatedSubject.setName("updated name");
         updatedSubject.setId(1L);
 
-        when(subjectRepository.existsById(anyLong())).thenReturn(1L);
+        when(subjectRepository.countBySubjectId(anyLong())).thenReturn(1L);
         when(subjectRepository.countSubjectsWithName(anyString())).thenReturn(0L);
         when(subjectRepository.update(updatedSubject)).thenReturn(updatedSubject);
 
@@ -107,7 +107,7 @@ public class SubjectServiceTest {
         updatedSubject.setName("updated name");
         updatedSubject.setId(1L);
 
-        when(subjectRepository.existsById(anyLong())).thenReturn(1L);
+        when(subjectRepository.countBySubjectId(anyLong())).thenReturn(1L);
         when(subjectRepository.countSubjectsWithName(anyString())).thenReturn(1L);
 
         oldSubject = subjectService.update(updatedSubject);
@@ -121,7 +121,7 @@ public class SubjectServiceTest {
         subject.setName("some subject");
         subject.setId(1L);
 
-        when(subjectRepository.existsById(anyLong())).thenReturn(0L);
+        when(subjectRepository.countBySubjectId(anyLong())).thenReturn(0L);
 
         subjectService.update(subject);
         verify(subjectRepository, times(1)).update(subject);
