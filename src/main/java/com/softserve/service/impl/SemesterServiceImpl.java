@@ -3,6 +3,7 @@ package com.softserve.service.impl;
 import com.softserve.entity.Semester;
 import com.softserve.entity.Subject;
 import com.softserve.exception.EntityNotFoundException;
+import com.softserve.exception.IncorrectTimeException;
 import com.softserve.repository.SemesterRepository;
 import com.softserve.service.SemesterService;
 import lombok.extern.slf4j.Slf4j;
@@ -54,6 +55,9 @@ public class SemesterServiceImpl implements SemesterService {
     @Override
     public Semester save(Semester object) {
         log.info("In save(entity = [{}]", object);
+        if (isTimeInvalid(object)) {
+            throw new IncorrectTimeException("The end day cannot be before the start day");
+        }
         return semesterRepository.save(object);
     }
 
@@ -65,6 +69,9 @@ public class SemesterServiceImpl implements SemesterService {
     @Override
     public Semester update(Semester object) {
         log.info("In update(entity = [{}]", object);
+        if (isTimeInvalid(object)) {
+            throw new IncorrectTimeException("The end day cannot be before the start day");
+        }
         return semesterRepository.update(object);
     }
 
@@ -77,5 +84,11 @@ public class SemesterServiceImpl implements SemesterService {
     public Semester delete(Semester object) {
         log.info("In delete(object = [{}])",  object);
         return semesterRepository.delete(object);
+    }
+
+    private boolean isTimeInvalid(Semester object) {
+        log.info("Enter into isTimeInvalid  with entity: {}", object);
+        return object.getStartDay().isAfter(object.getEndDay()) ||
+                object.getStartDay().equals(object.getEndDay());
     }
 }

@@ -4,8 +4,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.time.LocalDate;
 
 
 @NoArgsConstructor
@@ -18,9 +20,14 @@ public class Semester implements Serializable {
     @Column(columnDefinition = "serial")
     private long id;
 
-    @Min(1)
-    private int year;
+    @NotBlank(message = "Description cannot be null or empty")
+    private String description;
 
-    @Min(1)
-    private int number;
+    @Column(name = "start_day")
+    @NotNull(message = "Start time cannot be empty")
+    private LocalDate startDay;
+
+    @Column(name = "end_day")
+    @NotNull(message = "End time cannot be empty")
+    private LocalDate endDay;
 }
