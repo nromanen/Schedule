@@ -1,7 +1,7 @@
 package com.softserve.entity;
 
-import lombok.Getter;
-import lombok.Setter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
@@ -43,5 +43,6 @@ public class Teacher implements Serializable {
 
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name="teacher_id", updatable = false)
+    @JsonIgnore
     private Set<TeacherWishes> teacherWishesList;
 }
