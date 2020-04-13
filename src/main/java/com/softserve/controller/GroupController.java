@@ -52,7 +52,7 @@ public class GroupController {
         return ResponseEntity.status(HttpStatus.CREATED).body(groupMapper.groupToGroupDTO(group));
     }
 
-    @PutMapping()
+    @PutMapping
     @ApiOperation(value = "Update existing group by id")
     public ResponseEntity<GroupDTO> update(@RequestBody GroupDTO groupDTO) {
         log.info("In update (groupDTO = [{}])", groupDTO);
