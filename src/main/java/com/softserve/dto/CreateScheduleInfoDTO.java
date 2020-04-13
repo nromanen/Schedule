@@ -9,7 +9,7 @@ import java.util.List;
 @Setter
 public class CreateScheduleInfoDTO {
     private boolean isTeacherAvailable;
-    private List<RoomForScheduleDTO> rooms;
+    private List<RoomForScheduleInfoDTO> rooms;
     private boolean classSuitsToTeacher;
 
 }

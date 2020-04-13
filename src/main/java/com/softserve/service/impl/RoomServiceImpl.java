@@ -1,12 +1,12 @@
 package com.softserve.service.impl;
-import com.softserve.dto.RoomForScheduleDTO;
+import com.softserve.dto.RoomForScheduleInfoDTO;
 import com.softserve.entity.Room;
 import com.softserve.entity.enums.EvenOdd;
 import com.softserve.exception.EntityAlreadyExistsException;
 import com.softserve.exception.EntityNotFoundException;
 import com.softserve.repository.RoomRepository;
 import com.softserve.service.RoomService;
-import com.softserve.service.mapper.RoomForScheduleMapper;
+import com.softserve.service.mapper.RoomForScheduleInfoMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,12 +21,12 @@ import java.util.List;
 public class RoomServiceImpl implements RoomService {
 
     private final RoomRepository roomRepository;
-    private final RoomForScheduleMapper roomForScheduleMapper;
+    private final RoomForScheduleInfoMapper roomForScheduleInfoMapper;
 
     @Autowired
-    public RoomServiceImpl(RoomRepository roomRepository, RoomForScheduleMapper roomForScheduleMapper) {
+    public RoomServiceImpl(RoomRepository roomRepository, RoomForScheduleInfoMapper roomForScheduleInfoMapper) {
         this.roomRepository = roomRepository;
-        this.roomForScheduleMapper = roomForScheduleMapper;
+        this.roomForScheduleInfoMapper = roomForScheduleInfoMapper;
     }
 
     /**
@@ -127,10 +127,10 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
-    public List<RoomForScheduleDTO> getAllRoomsForCreatingSchedule(Long semesterId, DayOfWeek dayOfWeek, EvenOdd evenOdd, Long classId) {
-        List<RoomForScheduleDTO> rooms = roomForScheduleMapper.toRoomForScheduleDTOList(getAvailableRoomsForSchedule(semesterId, dayOfWeek, evenOdd, classId));
+    public List<RoomForScheduleInfoDTO> getAllRoomsForCreatingSchedule(Long semesterId, DayOfWeek dayOfWeek, EvenOdd evenOdd, Long classId) {
+        List<RoomForScheduleInfoDTO> rooms = roomForScheduleInfoMapper.toRoomForScheduleDTOList(getAvailableRoomsForSchedule(semesterId, dayOfWeek, evenOdd, classId));
         rooms.forEach(roomForScheduleDTO -> roomForScheduleDTO.setAvailable(true));
-        rooms.addAll(roomForScheduleMapper.toRoomForScheduleDTOList(getNotAvailableRoomsForSchedule(semesterId, dayOfWeek, evenOdd, classId)));
+        rooms.addAll(roomForScheduleInfoMapper.toRoomForScheduleDTOList(getNotAvailableRoomsForSchedule(semesterId, dayOfWeek, evenOdd, classId)));
         return rooms;
     }
 

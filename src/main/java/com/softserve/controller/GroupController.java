@@ -36,6 +36,14 @@ public class GroupController {
         return ResponseEntity.status(HttpStatus.OK).body(groupMapper.groupsToGroupDTOs(groups));
     }
 
+    @GetMapping("/public")
+    @ApiOperation(value = "Public endpoint to get the list of all groups")
+    public ResponseEntity<List<GroupDTO>> publicList() {
+        log.info("In publicList ()");
+        List<Group> groups = groupService.getAll();
+        return ResponseEntity.status(HttpStatus.OK).body(groupMapper.groupsToGroupDTOs(groups));
+    }
+
     @GetMapping("/{id}")
     @ApiOperation(value = "Get group info by id")
     public ResponseEntity<GroupDTO> get(@PathVariable("id") long id){

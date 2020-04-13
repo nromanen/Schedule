@@ -1,8 +1,6 @@
 package com.softserve.controller;
 
-import com.softserve.dto.CreateScheduleInfoDTO;
-import com.softserve.dto.ScheduleDTO;
-import com.softserve.dto.ScheduleSaveDTO;
+import com.softserve.dto.*;
 import com.softserve.entity.Schedule;
 import com.softserve.entity.enums.EvenOdd;
 import com.softserve.service.ScheduleService;
@@ -42,8 +40,8 @@ public class ScheduleController {
         return ResponseEntity.status(HttpStatus.OK).body(scheduleMapper.scheduleToScheduleDTOs(schedules));
     }
 
-    @GetMapping("/getInfo")
-    @ApiOperation(value = "Get the info for saving the schedule")
+    @GetMapping("/creating-data")
+    @ApiOperation(value = "Get the info for finishing creating the schedule")
     public ResponseEntity<CreateScheduleInfoDTO> getInfoForCreatingSchedule(@RequestParam Long semesterId,
                                                                             @RequestParam DayOfWeek dayOfWeek,
                                                                             @RequestParam EvenOdd evenOdd,
@@ -51,6 +49,22 @@ public class ScheduleController {
                                                                             @RequestParam Long lessonId){
         log.info("In getInfoForCreatingSchedule(semesterId = [{}], dayOfWeek = [{}], evenOdd = [{}], classId = [{}], lessonId = [{}])", semesterId, dayOfWeek, evenOdd, classId, lessonId);
         return ResponseEntity.status(HttpStatus.OK).body(scheduleService.getInfoForCreatingSchedule(semesterId, dayOfWeek,evenOdd, classId, lessonId));
+    }
+
+    @GetMapping("/full/groups")
+    @ApiOperation(value = "Get full schedule for semester, returns for all groups by default")
+    public ResponseEntity<List<ScheduleForGroupDTO>> getFullScheduleForGroup(@RequestParam Long semesterId,
+                                                                     @RequestParam(required = false) Long groupId) {
+        log.info("I, getFullScheduleForGroup (semesterId = [{}], groupId = [{}]) ", semesterId, groupId);
+        return ResponseEntity.status(HttpStatus.OK).body(scheduleService.getFullSchedule(semesterId, groupId));
+    }
+
+    @GetMapping("/full/teachers")
+    @ApiOperation(value = "Get full schedule for semester, returns for all groups by default")
+    public ResponseEntity<List<ScheduleForGroupDTO>> getFullScheduleForTeacher(@RequestParam Long semesterId,
+                                                                             @RequestParam(required = false) Long groupId) {
+        log.info("In, getFullScheduleForGroup (semesterId = [{}], groupId = [{}]) ", semesterId, groupId);
+        return ResponseEntity.status(HttpStatus.OK).body(scheduleService.getFullSchedule(semesterId, groupId));
     }
 
     @PostMapping

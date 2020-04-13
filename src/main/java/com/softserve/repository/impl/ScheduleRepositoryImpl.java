@@ -1,12 +1,14 @@
 package com.softserve.repository.impl;
 
-import com.softserve.entity.Schedule;
+import com.softserve.entity.*;
 import com.softserve.entity.enums.EvenOdd;
 import com.softserve.repository.ScheduleRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
 import java.time.DayOfWeek;
+import java.util.List;
+import java.util.Optional;
 
 @Repository
 @Slf4j
@@ -41,6 +43,7 @@ public class ScheduleRepositoryImpl  extends BasicRepositoryImpl<Schedule, Long>
                     .setParameter("groupId", groupId)
                     .getSingleResult();
         }
+
         //else schedule pretends to occur by even/odd need to check that here are no amy already saved schedules for that Group at the same half or weekly
         else {
             log.debug("Search when lesson repeats by even/odd");
@@ -87,4 +90,65 @@ public class ScheduleRepositoryImpl  extends BasicRepositoryImpl<Schedule, Long>
 
     }
 
+    @Override
+    public List<Group> uniqueGroupsInScheduleBySemester(Long semesterId) {
+        return sessionFactory.getCurrentSession().createQuery("select distinct g1 from Group g1" +
+                " where g1.id in" +
+                " (select g.id from Schedule s join s.lesson.group g where s.semester.id = :semesterId)")
+                .setParameter("semesterId", semesterId).getResultList();
+    }
+
+    @Override
+    public List<Period> periodsForGroupByDayBySemester(Long semesterId, Long groupId, DayOfWeek day) {
+        return sessionFactory.getCurrentSession().createQuery("select distinct p1 from Period p1" +
+                " where p1.id in" +
+                " (select p.id from Schedule s join s.period p where s.semester.id = :semesterId and s.lesson.group.id = :groupId and s.dayOfWeek = :dayOfWeek) order by p1.startTime")
+                .setParameter("semesterId", semesterId)
+                .setParameter("groupId", groupId)
+                .setParameter("dayOfWeek", day.toString())
+                .getResultList();
+    }
+
+    @Override
+    public Optional<Lesson> lessonForGroupByDayBySemesterByPeriodByWeek(Long semesterId, Long groupId, Long periodId, DayOfWeek day, EvenOdd evenOdd) {
+
+        return (Optional<Lesson>) sessionFactory.getCurrentSession().createQuery("select l1 from Lesson l1" +
+                " where l1.id in" +
+                " (select l.id from Schedule s join s.lesson l where (s.semester.id = :semesterId and s.dayOfWeek = :dayOfWeek and s.period.id = :periodId and s.lesson.group.id = :groupId) and (s.evenOdd = :evenOdd or s.evenOdd = 'WEEKLY'))")
+                .setParameter("semesterId", semesterId)
+                .setParameter("groupId", groupId)
+                .setParameter("periodId", periodId)
+                .setParameter("dayOfWeek", day.toString())
+                .setParameter("evenOdd", evenOdd)
+                .uniqueResultOptional();
+    }
+
+    @Override
+    public Room getRoomForLesson(Long semesterId, Long periodId, Long lessonId, DayOfWeek day, EvenOdd evenOdd) {
+        return (Room) sessionFactory.getCurrentSession().createQuery("select r1 from Room r1" +
+                " where r1.id in" +
+                " (select r.id from Schedule s join s.room r where (s.semester.id = :semesterId and s.dayOfWeek = :dayOfWeek and s.period.id = :periodId and s.lesson.id = :lessonId) and (s.evenOdd = :evenOdd or s.evenOdd = 'WEEKLY'))")
+                .setParameter("semesterId", semesterId)
+                .setParameter("lessonId", lessonId)
+                .setParameter("periodId", periodId)
+                .setParameter("dayOfWeek", day.toString())
+                .setParameter("evenOdd", evenOdd)
+                .getSingleResult();
+    }
+
+    @Override
+    public List<String> getDaysWhenGroupHasClassesBySemester(Long semesterId, Long groupId) {
+        return sessionFactory.getCurrentSession().createQuery("select distinct s.dayOfWeek from  Schedule s where s.semester.id = :semesterId and s.lesson.group.id = :groupId")
+                .setParameter("semesterId", semesterId)
+                .setParameter("groupId", groupId)
+                .getResultList();
+    }
+
+    @Override
+    public Long countSchedulesForGroupInSemester(Long semesterId, Long groupId){
+        return (Long) sessionFactory.getCurrentSession().createQuery("select count (s.id) from  Schedule s where s.semester.id = :semesterId and s.lesson.group.id = :groupId")
+                .setParameter("semesterId", semesterId)
+                .setParameter("groupId", groupId)
+                .getSingleResult();
+    }
 }
