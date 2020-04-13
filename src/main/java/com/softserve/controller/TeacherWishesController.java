@@ -2,6 +2,7 @@ package com.softserve.controller;
 
 import com.softserve.dto.AddWishesDTO;
 import com.softserve.dto.TeacherWishesDTO;
+import com.softserve.dto.WishesWithTeacherDTO;
 import com.softserve.entity.TeacherWishes;
 import com.softserve.service.TeacherWishesService;
 import com.softserve.service.mapper.TeacherWishesMapper;
@@ -12,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @Api(tags = "Teacher Wishes API")
@@ -27,6 +30,12 @@ public class TeacherWishesController {
         this.teacherWishesMapper = teacherWishesMapper;
     }
 
+    @GetMapping
+    @ApiOperation(value = "Get the list of all teachers wishes")
+    public ResponseEntity<List<WishesWithTeacherDTO>> getAll() {
+        log.info("Enter into getAll method");
+        return ResponseEntity.ok(teacherWishesMapper.teacherWishesDTOsToTeacherWishes(teacherWishesService.getAll()));
+    }
 
     @PostMapping
     @ApiOperation(value = "Create new wish")
