@@ -5,7 +5,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class AddRoomDTO {
-    private String name;
-    private String type;
+public class RoomTypeDTO {
+    private Long id;
+    private String description;
 }

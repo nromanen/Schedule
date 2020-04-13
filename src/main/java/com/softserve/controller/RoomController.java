@@ -1,6 +1,5 @@
 package com.softserve.controller;
 
-import com.softserve.dto.AddRoomDTO;
 import com.softserve.dto.MessageDTO;
 import com.softserve.dto.RoomDTO;
 import com.softserve.entity.Room;
@@ -63,9 +62,9 @@ public class RoomController {
 
     @PostMapping
     @ApiOperation(value = "Create new room")
-    public ResponseEntity<RoomDTO> save(@RequestBody AddRoomDTO addRoomDTO) {
-        log.info("Enter into save of RoomController with addRoomDTO: {}", addRoomDTO);
-        Room newRoom = roomService.save(roomMapper.convertToEntity(addRoomDTO));
+    public ResponseEntity<RoomDTO> save(@RequestBody RoomDTO roomDTO) {
+        log.info("Enter into save of RoomController with roomDTO: {}", roomDTO);
+        Room newRoom = roomService.save(roomMapper.convertToEntity(roomDTO));
         return ResponseEntity.status(HttpStatus.CREATED).body(roomMapper.convertToDto(newRoom));
     }
 
@@ -83,12 +82,6 @@ public class RoomController {
         log.info("Enter into delete of RoomController with id: {}", id);
         roomService.delete(roomService.getById(id));
         return ResponseEntity.ok().body(new MessageDTO("Room has been deleted successfully."));
-    }
-
-    @GetMapping("/types")
-    @ApiOperation(value = "Get all room types")
-    public ResponseEntity<List<String>> getAllUniqueRoomTypes(){
-        return ResponseEntity.ok().body(roomService.allUniqueRoomTypes());
     }
 
 }

@@ -1,5 +1,7 @@
 package com.softserve.entity;
 
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import javax.persistence.*;
@@ -43,5 +45,6 @@ public class Teacher implements Serializable {
 
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name="teacher_id", updatable = false)
+    @JsonIgnore
     private Set<TeacherWishes> teacherWishesList;
 }

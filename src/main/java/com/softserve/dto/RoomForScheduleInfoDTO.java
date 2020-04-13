@@ -1,12 +1,15 @@
 package com.softserve.dto;
 
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
-public class RoomDTO {
+public class RoomForScheduleInfoDTO {
     private Long id;
     private String name;
     private RoomTypeDTO type;
+    private boolean isAvailable;
 }
