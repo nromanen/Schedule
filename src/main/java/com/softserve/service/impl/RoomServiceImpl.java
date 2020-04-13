@@ -2,6 +2,7 @@ package com.softserve.service.impl;
 import com.softserve.dto.RoomForScheduleDTO;
 import com.softserve.entity.Room;
 import com.softserve.entity.enums.EvenOdd;
+import com.softserve.exception.EntityAlreadyExistsException;
 import com.softserve.exception.EntityNotFoundException;
 import com.softserve.repository.RoomRepository;
 import com.softserve.service.RoomService;
@@ -61,10 +62,14 @@ public class RoomServiceImpl implements RoomService {
      * @return save room
      */
     @Override
-    public Room save(Room object)
-    {
+    public Room save(Room object) {
         log.info("Enter into save of RoomServiceImpl with entity:{}", object );
-        return roomRepository.save(object);
+        if (isRoomExists(object)){
+            throw new EntityAlreadyExistsException("Room with this parameters already exists");
+        }
+        else {
+            return roomRepository.save(object);
+        }
     }
 
     /**
@@ -76,7 +81,12 @@ public class RoomServiceImpl implements RoomService {
     @Override
     public Room update(Room object) {
         log.info("Enter into update of RoomServiceImpl with entity:{}", object);
-        return roomRepository.update(object);
+        if (isRoomExists(object)){
+            throw new EntityAlreadyExistsException("Room with this parameters already exists");
+        }
+        else {
+            return roomRepository.update(object);
+        }
     }
 
     /**
@@ -107,11 +117,6 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
-    public List<String> allUniqueRoomTypes() {
-        return roomRepository.allUniqueRoomTypes();
-    }
-
-    @Override
     public List<Room> getNotAvailableRoomsForSchedule(Long semesterId, DayOfWeek dayOfWeek, EvenOdd evenOdd, Long classId) {
         return roomRepository.getNotAvailableRoomsForSchedule(semesterId, dayOfWeek, evenOdd, classId);
     }
@@ -129,4 +134,8 @@ public class RoomServiceImpl implements RoomService {
         return rooms;
     }
 
+    @Override
+    public boolean isRoomExists(Room room) {
+        return roomRepository.countRoomDuplicates(room) != 0;
+    }
 }

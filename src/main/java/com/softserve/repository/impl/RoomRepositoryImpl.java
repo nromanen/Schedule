@@ -44,11 +44,6 @@ public class RoomRepositoryImpl extends BasicRepositoryImpl<Room, Long> implemen
         return new ArrayList<>(res);
     }
 
-    @Override
-    public List<String> allUniqueRoomTypes() {
-        return sessionFactory.getCurrentSession().createQuery("select distinct room.type from Room room").getResultList();
-    }
-
     // Checking if room is used in Schedule table
     @Override
     protected boolean checkReference(Room room) {
@@ -99,7 +94,6 @@ public class RoomRepositoryImpl extends BasicRepositoryImpl<Room, Long> implemen
         }
     }
 
-
     @Override
     public List<Room> getAvailableRoomsForSchedule(Long semesterId, DayOfWeek dayOfWeek, EvenOdd evenOdd, Long classId) {
         log.info("Enter into getAvailableRooms with semesterId = {}, dayOfWeek = {}, evenOdd = {}, classId = {} ", semesterId, dayOfWeek, evenOdd, classId);
@@ -136,5 +130,17 @@ public class RoomRepositoryImpl extends BasicRepositoryImpl<Room, Long> implemen
                     .setParameter("evenOdd", evenOdd)
                     .getResultList();
         }
+    }
+
+    @Override
+    public Long countRoomDuplicates(Room room) {
+        log.info("In countRoomDuplicates(room = [{}])", room);
+        return (Long) sessionFactory.getCurrentSession().createQuery(
+                "select count(*) from Room r " +
+                "where r.name = :name " +
+                "and r.type.id = :typeId " )
+                .setParameter("name", room.getName())
+                .setParameter("typeId", room.getType().getId())
+                .getSingleResult();
     }
 }

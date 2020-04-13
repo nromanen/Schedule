@@ -10,6 +10,6 @@ import lombok.Setter;
 public class RoomForScheduleDTO {
     private Long id;
     private String name;
-    private String type;
+    private RoomTypeDTO type;
     private boolean isAvailable;
 }

@@ -14,7 +14,6 @@ import java.io.Serializable;
 @Data
 @Entity
 @Table(name = "rooms")
-@AllArgsConstructor
 public class Room implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,10 +26,8 @@ public class Room implements Serializable {
     @Column(length = 35, nullable = false)
     private String name;
 
-    @NotEmpty(message = "Type cannot be empty")
-    @Size(min = 2, max = 100, message = "Type must be between 2 and 100 characters long")
-    @Column(length = 100, nullable = false)
-    private String type;
-
+    @ManyToOne(targetEntity = RoomType.class)
+    @JoinColumn(name = "room_type_id")
+    private RoomType type;
 
 }
