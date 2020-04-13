@@ -3,6 +3,7 @@ package com.softserve.service.impl;
 import com.softserve.entity.Semester;
 import com.softserve.entity.Subject;
 import com.softserve.exception.EntityNotFoundException;
+import com.softserve.exception.FieldAlreadyExistsException;
 import com.softserve.exception.IncorrectTimeException;
 import com.softserve.repository.SemesterRepository;
 import com.softserve.service.SemesterService;
@@ -27,18 +28,20 @@ public class SemesterServiceImpl implements SemesterService {
 
     /**
      * Method gets information from Repository for particular Semester with id parameter
+     *
      * @param id Identity number of the Semester
      * @return Semester entity
      */
     @Override
     public Semester getById(Long id) {
-        log.info("In getById(id = [{}])",  id);
+        log.info("In getById(id = [{}])", id);
         return semesterRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException(Subject.class, "id", id.toString()));
     }
 
     /**
      * Method gets information about all semesters from Repository
+     *
      * @return List of all semesters
      */
     @Override
@@ -49,6 +52,7 @@ public class SemesterServiceImpl implements SemesterService {
 
     /**
      * Method saves new semester to Repository
+     *
      * @param object Semester entity to be saved
      * @return saved Semester entity
      */
@@ -58,11 +62,17 @@ public class SemesterServiceImpl implements SemesterService {
         if (isTimeInvalid(object)) {
             throw new IncorrectTimeException("The end day cannot be before the start day");
         }
+        if (isSemesterExists(object) != null) {
+            if (isSemesterExists(object).getId() != object.getId()) {
+                throw new FieldAlreadyExistsException(Semester.class, "description", object.getDescription());
+            }
+        }
         return semesterRepository.save(object);
     }
 
     /**
      * Method updates information for an existing semester in Repository
+     *
      * @param object Semester entity with updated fields
      * @return updated Semester entity
      */
@@ -72,18 +82,35 @@ public class SemesterServiceImpl implements SemesterService {
         if (isTimeInvalid(object)) {
             throw new IncorrectTimeException("The end day cannot be before the start day");
         }
+        if (isSemesterExists(object) != null) {
+            if (isSemesterExists(object).getId() != object.getId()) {
+                throw new FieldAlreadyExistsException(Semester.class, "description", object.getDescription());
+            }
+        }
         return semesterRepository.update(object);
     }
 
     /**
      * Method deletes an existing semester from Repository
+     *
      * @param object Semester entity to be deleted
      * @return deleted Semester entity
      */
     @Override
     public Semester delete(Semester object) {
-        log.info("In delete(object = [{}])",  object);
+        log.info("In delete(object = [{}])", object);
         return semesterRepository.delete(object);
+    }
+
+    /**
+     * Method verifies if Semester doesn't exist in Repository
+     *
+     * @param semester Semester entity that needs to be verified
+     * @return Semester if such semester already exists, else return null
+     */
+    @Override
+    public Semester isSemesterExists(Semester semester) {
+        return semesterRepository.semesterDuplicates(semester).orElse(null);
     }
 
     private boolean isTimeInvalid(Semester object) {

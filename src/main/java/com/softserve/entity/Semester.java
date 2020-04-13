@@ -9,6 +9,10 @@ import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDate;
 
+@NamedQuery(
+        name = "findDescription",
+        query = "from Semester s where s.description= :description"
+)
 
 @NoArgsConstructor
 @Data
