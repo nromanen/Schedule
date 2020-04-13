@@ -65,7 +65,7 @@ public class SemesterServiceImpl implements SemesterService {
     @Override
     public Semester update(Semester object) {
         log.info("In update(entity = [{}]", object);
-        return semesterRepository.delete(object);
+        return semesterRepository.update(object);
     }
 
     /**
