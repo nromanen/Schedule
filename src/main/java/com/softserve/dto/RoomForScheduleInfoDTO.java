@@ -7,7 +7,9 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class RoomForScheduleDTO {
+public class RoomForScheduleInfoDTO {
     private Long id;
     private String name;
+    private RoomTypeDTO type;
+    private boolean isAvailable;
 }
