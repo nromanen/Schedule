@@ -1,11 +1,12 @@
 package com.softserve.service.impl;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.fge.jackson.JsonLoader;
 import com.github.fge.jsonschema.core.exceptions.ProcessingException;
 import com.github.fge.jsonschema.core.report.ProcessingReport;
 import com.github.fge.jsonschema.main.JsonSchema;
 import com.github.fge.jsonschema.main.JsonSchemaFactory;
-import com.softserve.entity.Teacher;
 import com.softserve.entity.TeacherWishes;
 import com.softserve.entity.Wish;
 import com.softserve.entity.Wishes;
@@ -20,10 +21,15 @@ import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.io.IOException;
 import java.time.DayOfWeek;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 @Transactional
 @Service
@@ -38,27 +44,27 @@ public class TeacherWishesServiceImpl implements TeacherWishesService {
     }
 
     /**
-     * The method used for getting teacher by id
+     * The method used for getting wish by id
      *
-     * @param id Identity teacher id
-     * @return target teacher
-     * @throws EntityNotFoundException if teacher doesn't exist
+     * @param id Identity wish id
+     * @return target wish
+     * @throws EntityNotFoundException if wish doesn't exist
      */
     @Override
     public TeacherWishes getById(Long id) {
-        log.info("Enter into getById of TeacherServiceImpl with id {}", id);
+        log.info("Enter into getById of TeacherWishesServiceImpl with id {}", id);
         return teacherWishesRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException(TeacherWishes.class, "id", id.toString()));
     }
 
     /**
-     * Method gets information about teachers from Repository
-     * @return List of all teachers
+     * Method gets all wishes
+     *
+     * @return List of all wishes
      */
     @Override
-    public List<TeacherWishes> getAll()
-    {
-        List<TeacherWishes>  teacherWishesList = teacherWishesRepository.getAll();
+    public List<TeacherWishes> getAll() {
+        List<TeacherWishes> teacherWishesList = teacherWishesRepository.getAll();
         teacherWishesList.forEach(wish -> Hibernate.initialize(wish.getTeacher()));
         return teacherWishesList;
     }
@@ -66,56 +72,139 @@ public class TeacherWishesServiceImpl implements TeacherWishesService {
     @Override
     public TeacherWishes save(TeacherWishes object) {
         log.info("Enter into save method with entity:{}", object);
-        if (teacherWishesRepository.isExistsWishWithTeacherId(object.getTeacher().getId()) > 0) {
+        if (teacherWishesRepository.countWishesByTeacherId(object.getTeacher().getId()) > 0) {
             throw new EntityAlreadyExistsException("Wish already created");
         }
-        teacherWishesRepository.validateTeacherWish(object.getTeacherWishesList());
+        validateTeacherWish(object.getTeacherWishesList());
         return teacherWishesRepository.save(object);
     }
 
     /**
-     * Method updates information for an existing teacher in Repository
-     * @param object Teacher entity with info to be updated
-     * @return updated Teacher entity
+     * Method updates information for an existing wish in Repository
+     *
+     * @param object Wish entity with info to be updated
+     * @return updated Wish entity
      */
     @Override
-    public TeacherWishes update(TeacherWishes object)
-    {
+    public TeacherWishes update(TeacherWishes object) {
         log.info("Enter into update method with entity:{}", object);
-        teacherWishesRepository.validateTeacherWish(object.getTeacherWishesList());
+        validateTeacherWish(object.getTeacherWishesList());
         return teacherWishesRepository.update(object);
     }
 
     /**
-     * Method deletes an existing teacher from Repository
-     * @param object Teacher entity to be deleted
-     * @return deleted Teacher entity
+     * Method deletes an existing wish from Repository
+     *
+     * @param object Wish entity to be deleted
+     * @return deleted Wish entity
      */
+
     @Override
     public TeacherWishes delete(TeacherWishes object) {
         log.info("Enter into delete method with entity:{}", object);
         return teacherWishesRepository.delete(object);
     }
 
+    /**
+     * Method validate if a class is comfortable for teacher
+     *
+     * @param teacherId, dayOfWeek, evenOdd, classId
+     * @return boolean teacher wish
+     */
     @Override
     public boolean isClassSuits(Long teacherId, DayOfWeek dayOfWeek, EvenOdd evenOdd, Long classId) {
-        Wishes[] teacherWishList = teacherWishesRepository.getWishByTeacherId(teacherId);
-        for (Wishes wishItem : teacherWishList) {
-            if((DayOfWeek.valueOf(wishItem.getDayOfWeek()) == dayOfWeek) &&
-                    (EvenOdd.valueOf(wishItem.getEvenOdd()) == evenOdd)){
-                for (Wish classItem : wishItem.getWishes()){
-                    if(classItem.getClassId() == classId){
-                        return !(classItem.getStatus().equals("bad"));
-                    }
-                }
-            }
-        }
-        return true;
+        List<Wishes> teacherWishList = teacherWishesRepository.getWishByTeacherId(teacherId);
+        return teacherWishList.stream().filter(wishItem -> DayOfWeek.valueOf(wishItem.getDayOfWeek().toUpperCase()) == dayOfWeek
+                && (EvenOdd.valueOf(wishItem.getEvenOdd()) == evenOdd))
+                .noneMatch(wishItem -> wishItem.getWishes().stream().anyMatch(classItem -> classItem.getClassId() == classId && classItem.getStatus().equals("bad")));
+
+    }
+
+    /**
+     * Load one resource from the current package as a {@link JsonNode}
+     *
+     * @param name name of the resource (<b>MUST</b> start with {@code /}
+     * @return a JSON document
+     * @throws IOException resource not found
+     */
+    public static JsonNode loadResource(final String name)
+            throws IOException {
+        return JsonLoader.fromResource(name);
     }
 
 
+    /**
+     * Validate method
+     *
+     * @param teacherWishes
+     * @throws IncorrectWishException when json not valid
+     */
+    public void validateTeacherWish(Wishes[] teacherWishes) {
+        List<Wishes> teacherWishesList = Arrays.asList(teacherWishes);
+        isTeacherSchemaValid(teacherWishes);
+        if (!isUniqueDayAndEvenOdd(teacherWishesList)) {
+            throw new IncorrectWishException("wish is not unique");
+        }
+        for (Wishes wishItem : teacherWishesList) {
+            if (!isUniqueClassId(wishItem.getWishes())) {
+                throw new IncorrectWishException("classes is not unique");
+            }
+            if (EvenOdd.valueOf(wishItem.getEvenOdd()).equals(EvenOdd.WEEKLY) && !isEvenOddNotExist(wishItem, teacherWishesList)) {
+                throw new IncorrectWishException("EVEN and ODD is not allowed together with WEEKLY");
+            }
+        }
+    }
+
+    public boolean isUniqueClassId(List<Wish> wishesList) {
+        return wishesList.stream().map(Wish::getClassId).distinct().count() == wishesList.size();
+    }
+
+    public boolean isEvenOddNotExist(Wishes wishes, List<Wishes> wishesList) {
+        return wishesList.stream().noneMatch(wish ->
+                wish.getDayOfWeek().equals(wishes.getDayOfWeek()) && (EvenOdd.valueOf(wish.getEvenOdd()).equals(EvenOdd.EVEN)
+                        || EvenOdd.valueOf(wish.getEvenOdd()).equals(EvenOdd.ODD))
+        );
+    }
+
+    public boolean isUniqueDayAndEvenOdd(List<Wishes> wishesList) {
+        return wishesList.stream().filter(distinctByKeys(Wishes::getDayOfWeek, Wishes::getEvenOdd)).count() == wishesList.size();
+    }
+
+    /**
+     * Validate method
+     *
+     * @param teacherWishes
+     * @throws IncorrectWishException when json is not valid
+     */
     @Override
-    public boolean isTeacherSchemaValid(JsonNode teacherWish) {
-       return isTeacherSchemaValid(teacherWish);
+    public void isTeacherSchemaValid(Wishes[] teacherWishes) {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode teacherWishNode = mapper.convertValue(teacherWishes, JsonNode.class);
+            final JsonNode fstabSchema = loadResource("/wish-schema.json");
+            final JsonSchemaFactory factory = JsonSchemaFactory.byDefault();
+            final JsonSchema schema = factory.getJsonSchema(fstabSchema);
+            ProcessingReport report = schema.validate(teacherWishNode);
+            if (!report.isSuccess()) {
+                throw new IncorrectWishException("Wish is incorrect, " + report.toString());
+            }
+        } catch (ProcessingException | IOException e) {
+            log.error("Error in method validateTeacherWish {}", e.toString());
+            throw new IncorrectWishException("Error occurred when validating teacher wishes");
+        }
+    }
+
+
+    @SafeVarargs
+    private static <T> Predicate<T> distinctByKeys(Function<? super T, ?>... keyExtractors) {
+        final Map<List<?>, Boolean> seen = new ConcurrentHashMap<>();
+        return t ->
+        {
+            final List<?> keys = Arrays.stream(keyExtractors)
+                    .map(ke -> ke.apply(t))
+                    .collect(Collectors.toList());
+
+            return seen.putIfAbsent(keys, Boolean.TRUE) == null;
+        };
     }
 }
