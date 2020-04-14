@@ -11,6 +11,7 @@ import com.softserve.service.RoomService;
 import com.softserve.service.mapper.RoomMapperImpl;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -22,8 +23,10 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@Category(IntegrationTestCategory.class)
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {WebMvcConfig.class, DBConfigTest.class, MyWebAppInitializer.class})
 @WebAppConfiguration
@@ -113,7 +116,7 @@ public class RoomControllerTest {
 
     @Test
     public void whenRoomNotFound() throws Exception {
-        mockMvc.perform(get("/rooms/10")).andExpect(status().isNotFound());
+        mockMvc.perform(get("/rooms/100")).andExpect(status().isNotFound());
     }
 
     @Test
@@ -124,6 +127,7 @@ public class RoomControllerTest {
 
         mockMvc.perform(post("/rooms").content(objectMapper.writeValueAsString(roomDtoForSave))
                 .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
                 .andExpect(status().isBadRequest());
     }
 
@@ -136,6 +140,7 @@ public class RoomControllerTest {
 
         mockMvc.perform(put("/rooms", 3).content(objectMapper.writeValueAsString(roomDtoForUpdate))
                 .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
                 .andExpect(status().isBadRequest());
     }
 }

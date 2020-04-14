@@ -10,6 +10,7 @@ import com.softserve.service.SubjectService;
 import com.softserve.service.mapper.SubjectMapperImpl;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -21,8 +22,10 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@Category(IntegrationTestCategory.class)
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {WebMvcConfig.class, DBConfigTest.class, MyWebAppInitializer.class})
 @WebAppConfiguration
@@ -105,6 +108,7 @@ public class SubjectControllerTest {
 
         mockMvc.perform(post("/subjects").content(objectMapper.writeValueAsString(subjectDTO))
                 .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
                 .andExpect(status().isBadRequest());
     }
 
@@ -115,6 +119,7 @@ public class SubjectControllerTest {
 
         mockMvc.perform(post("/subjects").content(objectMapper.writeValueAsString(subjectDtoForSave))
                 .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
                 .andExpect(status().isBadRequest());
     }
 
@@ -126,6 +131,7 @@ public class SubjectControllerTest {
 
         mockMvc.perform(put("/subjects", 1).content(objectMapper.writeValueAsString(subjectDtoForUpdate))
                 .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
                 .andExpect(status().isBadRequest());
     }
 
@@ -137,6 +143,7 @@ public class SubjectControllerTest {
 
         mockMvc.perform(put("/subjects", 1).content(objectMapper.writeValueAsString(subjectDtoForUpdate))
                 .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
                 .andExpect(status().isBadRequest());
     }
 }

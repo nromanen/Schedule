@@ -11,6 +11,7 @@ import com.softserve.service.PeriodService;
 import com.softserve.service.mapper.PeriodMapperImpl;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -27,8 +28,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@Category(IntegrationTestCategory.class)
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {WebMvcConfig.class, DBConfigTest.class, MyWebAppInitializer.class})
 @WebAppConfiguration
@@ -115,7 +118,7 @@ public class PeriodControllerTest {
         addPeriodDTO.setStartTime(Timestamp.valueOf("2020-10-15 16:00:00"));
         addPeriodDTO.setEndTime(Timestamp.valueOf("2020-10-15 17:00:00"));
         Period period = periodService.save(new PeriodMapperImpl().convertToEntity(addPeriodDTO));
-        mockMvc.perform(delete("/periods/{id}", String.valueOf(period.getId()))
+        mockMvc.perform(delete("/classes/{id}", String.valueOf(period.getId()))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
@@ -133,6 +136,7 @@ public class PeriodControllerTest {
         addPeriodDTO.setEndTime(Timestamp.valueOf("2020-04-11 02:00:00"));
         mockMvc.perform(post("/classes").content(objectMapper.writeValueAsString(addPeriodDTO))
                 .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
                 .andExpect(status().isBadRequest());
     }
 
@@ -145,6 +149,7 @@ public class PeriodControllerTest {
 
         mockMvc.perform(post("/classes").content(objectMapper.writeValueAsString(periodDtoForSave))
                 .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
                 .andExpect(status().isBadRequest());
     }
 
@@ -158,6 +163,7 @@ public class PeriodControllerTest {
 
         mockMvc.perform(put("/classes", 2).content(objectMapper.writeValueAsString(periodDtoForUpdate))
                 .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
                 .andExpect(status().isBadRequest());
     }
 
@@ -170,6 +176,19 @@ public class PeriodControllerTest {
         periodDtoForUpdate.setEndTime(Timestamp.valueOf("2020-10-15 14:00:00"));
 
         mockMvc.perform(put("/classes", 2).content(objectMapper.writeValueAsString(periodDtoForUpdate))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void whenPeriodIntersectWithAnother() throws Exception {
+        AddPeriodDTO periodDtoForSave = new AddPeriodDTO();
+        periodDtoForSave.setName("intersect period");
+        periodDtoForSave.setStartTime(Timestamp.valueOf("2020-04-11 01:30:00"));
+        periodDtoForSave.setEndTime(Timestamp.valueOf("2020-04-11 02:30:00"));
+
+        mockMvc.perform(post("/classes").content(objectMapper.writeValueAsString(periodDtoForSave))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
     }

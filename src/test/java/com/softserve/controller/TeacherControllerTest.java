@@ -10,10 +10,12 @@ import com.softserve.service.TeacherService;
 import com.softserve.service.mapper.TeacherMapperImpl;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
@@ -21,11 +23,14 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@Category(IntegrationTestCategory.class)
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {WebMvcConfig.class, DBConfigTest.class, MyWebAppInitializer.class})
 @WebAppConfiguration
+@Sql(value = "classpath:create-teachers-before.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 public class TeacherControllerTest {
 
     private MockMvc mockMvc;
@@ -58,17 +63,17 @@ public class TeacherControllerTest {
 
     @Test
     public void testGetWithWishes() throws Exception {
-        mockMvc.perform(get("/teachers/{id}/with-wishes", 1).contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/teachers/{id}/with-wishes", 4).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"));
     }
 
     @Test
     public void testGet() throws Exception {
-        mockMvc.perform(get("/teachers/{id}", 1).contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/teachers/{id}", 4).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"))
-                .andExpect(jsonPath("$.id").value(1));
+                .andExpect(jsonPath("$.id").value(4));
     }
 
     @Test
@@ -87,42 +92,32 @@ public class TeacherControllerTest {
     @Test
     public void testUpdate() throws Exception {
         TeacherDTO teacherDtoForUpdate = new TeacherDTO();
-        teacherDtoForUpdate.setId(2L);
+        teacherDtoForUpdate.setId(6L);
         teacherDtoForUpdate.setName("Dmytro updated");
         teacherDtoForUpdate.setSurname("Dmytryk updated");
         teacherDtoForUpdate.setPatronymic("Dmytrovych updated");
         teacherDtoForUpdate.setPosition("docent updated");
 
-        Teacher teacherForCompare = new TeacherMapperImpl().teacherDTOToTeacher(teacherDtoForUpdate);
-
-        mockMvc.perform(put("/teachers", 2).content(objectMapper.writeValueAsString(teacherDtoForUpdate))
+        mockMvc.perform(put("/teachers", 6).content(objectMapper.writeValueAsString(teacherDtoForUpdate))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(teacherForCompare.getId()))
-                .andExpect(jsonPath("$.name").value(teacherForCompare.getName()))
-                .andExpect(jsonPath("$.surname").value(teacherForCompare.getSurname()))
-                .andExpect(jsonPath("$.patronymic").value(teacherForCompare.getPatronymic()))
-                .andExpect(jsonPath("$.position").value(teacherForCompare.getPosition()));
+                .andExpect(jsonPath("$.id").value(teacherDtoForUpdate.getId()))
+                .andExpect(jsonPath("$.name").value(teacherDtoForUpdate.getName()))
+                .andExpect(jsonPath("$.surname").value(teacherDtoForUpdate.getSurname()))
+                .andExpect(jsonPath("$.patronymic").value(teacherDtoForUpdate.getPatronymic()))
+                .andExpect(jsonPath("$.position").value(teacherDtoForUpdate.getPosition()));
     }
 
     @Test
     public void testDelete() throws Exception {
-        TeacherDTO teacherDTO = new TeacherDTO();
-        teacherDTO.setName("delete name");
-        teacherDTO.setSurname("delete surname");
-        teacherDTO.setPatronymic("delete patronymic");
-        teacherDTO.setPosition("delete position");
-
-        Teacher teacher = teacherService.save(new TeacherMapperImpl().teacherDTOToTeacher(teacherDTO));
-
-        mockMvc.perform(delete("/teachers/{id}", String.valueOf(teacher.getId()))
+        mockMvc.perform(delete("/teachers/{id}", 5)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
 
     @Test
     public void whenTeacherNotFound() throws Exception {
-        mockMvc.perform(get("/teachers/10")).andExpect(status().isNotFound());
+        mockMvc.perform(get("/teachers/100")).andExpect(status().isNotFound());
     }
 
     @Test
@@ -140,13 +135,14 @@ public class TeacherControllerTest {
 
         mockMvc.perform(post("/teachers").content(objectMapper.writeValueAsString(teacherDtoForSave))
                 .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
                 .andExpect(status().isBadRequest());
     }
 
     @Test
     public void whenUpdateNullName() throws Exception {
         TeacherDTO teacherDtoForUpdate = new TeacherDTO();
-        teacherDtoForUpdate.setId(2L);
+        teacherDtoForUpdate.setId(7L);
         teacherDtoForUpdate.setName(null);
         teacherDtoForUpdate.setSurname("update surname");
         teacherDtoForUpdate.setPatronymic("update patronymic");
@@ -154,6 +150,7 @@ public class TeacherControllerTest {
 
         mockMvc.perform(put("/teachers", 2).content(objectMapper.writeValueAsString(teacherDtoForUpdate))
                 .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
                 .andExpect(status().isBadRequest());
     }
 }

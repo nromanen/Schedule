@@ -10,6 +10,7 @@ import com.softserve.service.SemesterService;
 import com.softserve.service.mapper.SemesterMapperImpl;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -21,8 +22,10 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@Category(IntegrationTestCategory.class)
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {WebMvcConfig.class, DBConfigTest.class, MyWebAppInitializer.class})
 @WebAppConfiguration
@@ -110,6 +113,7 @@ public class SemesterControllerTest {
 
         mockMvc.perform(post("/semesters").content(objectMapper.writeValueAsString(semesterDTO))
                 .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
                 .andExpect(status().isBadRequest());
     }
 
@@ -121,6 +125,7 @@ public class SemesterControllerTest {
 
         mockMvc.perform(post("/semesters").content(objectMapper.writeValueAsString(semesterDTO))
                 .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
                 .andExpect(status().isBadRequest());
     }
 
@@ -133,6 +138,7 @@ public class SemesterControllerTest {
 
         mockMvc.perform(put("/semesters", 2).content(objectMapper.writeValueAsString(semesterDtoForUpdate))
                 .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
                 .andExpect(status().isBadRequest());
     }
 
@@ -146,6 +152,7 @@ public class SemesterControllerTest {
         mockMvc.perform(put("/semesters", 2)
                 .content(objectMapper.writeValueAsString(semesterDtoForUpdate))
                 .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
                 .andExpect(status().isBadRequest());
     }
 }

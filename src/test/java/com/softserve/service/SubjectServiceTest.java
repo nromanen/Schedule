@@ -6,6 +6,7 @@ import com.softserve.exception.FieldAlreadyExistsException;
 import com.softserve.repository.SubjectRepository;
 import com.softserve.service.impl.SubjectServiceImpl;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -19,6 +20,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
+@Category(UnitTestCategory.class)
 @RunWith(MockitoJUnitRunner.class)
 public class SubjectServiceTest {
 

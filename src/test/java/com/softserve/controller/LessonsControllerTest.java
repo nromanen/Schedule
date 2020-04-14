@@ -20,6 +20,7 @@ import com.softserve.service.mapper.SubjectMapperImpl;
 import com.softserve.service.mapper.TeacherNameMapperImpl;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -32,8 +33,10 @@ import org.springframework.web.context.WebApplicationContext;
 
 import static com.softserve.entity.enums.LessonType.LECTURE;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@Category(IntegrationTestCategory.class)
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {WebMvcConfig.class, DBConfigTest.class, MyWebAppInitializer.class})
 @WebAppConfiguration
@@ -152,12 +155,13 @@ public class LessonsControllerTest {
 
         mockMvc.perform(post("/lessons").content(objectMapper.writeValueAsString(lessonDtoForSave))
                 .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
                 .andExpect(status().isBadRequest());
     }
 
     @Test
     public void whenSaveNullTeacher() throws Exception {
-//        TeacherNameDTO teacherDTO = new TeacherNameMapperImpl().teacherNameToTeacherDTO(teacherService.getById(1L));
+        TeacherNameDTO teacherDTO = new TeacherNameMapperImpl().teacherNameToTeacherDTO(teacherService.getById(1L));
         SubjectDTO subjectDTO = new SubjectMapperImpl().subjectToSubjectDTO(subjectService.getById(2L));
         GroupDTO groupDTO = new GroupMapperImpl().groupToGroupDTO(groupService.getById(3L));
         LessonInfoDTO lessonDtoForSave = new LessonInfoDTO();
@@ -165,12 +169,13 @@ public class LessonsControllerTest {
         lessonDtoForSave.setSubjectForSite("");
         lessonDtoForSave.setTeacherForSite("");
         lessonDtoForSave.setLessonType(LessonType.LABORATORY);
-        lessonDtoForSave.setTeacher(null);
+        lessonDtoForSave.setTeacher(teacherDTO);
         lessonDtoForSave.setSubject(subjectDTO);
         lessonDtoForSave.setGroup(groupDTO);
 
         mockMvc.perform(post("/lessons").content(objectMapper.writeValueAsString(lessonDtoForSave))
                 .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
                 .andExpect(status().isBadRequest());
     }
 
@@ -188,6 +193,7 @@ public class LessonsControllerTest {
 
         mockMvc.perform(put("/lessons", 2).content(objectMapper.writeValueAsString(lessonDtoForUpdate))
                 .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
                 .andExpect(status().isBadRequest());
     }
 
@@ -205,6 +211,7 @@ public class LessonsControllerTest {
 
         mockMvc.perform(put("/lessons", 2).content(objectMapper.writeValueAsString(lessonDtoForUpdate))
                 .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
                 .andExpect(status().isBadRequest());
     }
 }

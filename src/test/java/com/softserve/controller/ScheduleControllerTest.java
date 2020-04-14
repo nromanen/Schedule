@@ -11,6 +11,7 @@ import com.softserve.service.ScheduleService;
 import com.softserve.service.mapper.ScheduleSaveMapperImpl;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -28,6 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@Category(IntegrationTestCategory.class)
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {WebMvcConfig.class, DBConfigTest.class, MyWebAppInitializer.class})
 @WebAppConfiguration
@@ -98,6 +100,7 @@ public class ScheduleControllerTest {
     @Test
     public void testGetInfoWithConflictInEvenOdd() throws Exception {
         mockMvc.perform(get("/schedules/getInfo?semesterId=1&dayOfWeek=MONDAY&evenOdd=EVEN&classId=1&lessonId=1").contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType("application/json"));
     }
@@ -105,6 +108,7 @@ public class ScheduleControllerTest {
     @Test
     public void testGetInfoWithConflictInPeriod() throws Exception {
         mockMvc.perform(get("/schedules/getInfo?semesterId=1&dayOfWeek=MONDAY&evenOdd=EVEN&classId=2&lessonId=2").contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType("application/json"));
     }
@@ -128,6 +132,7 @@ public class ScheduleControllerTest {
 
         mockMvc.perform(post("/schedules").content(objectMapper.writeValueAsString(scheduleSaveDTO))
                 .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
                 .andExpect(status().isBadRequest());
     }
 
@@ -143,6 +148,7 @@ public class ScheduleControllerTest {
 
         mockMvc.perform(post("/schedules").content(objectMapper.writeValueAsString(scheduleSaveDTO))
                 .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
                 .andExpect(status().isBadRequest());
     }
 }

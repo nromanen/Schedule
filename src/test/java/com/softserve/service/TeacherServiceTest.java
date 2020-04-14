@@ -7,6 +7,7 @@ import com.softserve.exception.EntityNotFoundException;
 import com.softserve.repository.TeacherRepository;
 import com.softserve.service.impl.TeacherServiceImpl;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
@@ -21,6 +22,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
+@Category(UnitTestCategory.class)
 @RunWith(MockitoJUnitRunner.class)
 public class TeacherServiceTest {
     @Mock

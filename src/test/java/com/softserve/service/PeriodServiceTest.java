@@ -8,6 +8,7 @@ import com.softserve.exception.PeriodConflictException;
 import com.softserve.repository.PeriodRepository;
 import com.softserve.service.impl.PeriodServiceImpl;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -22,6 +23,7 @@ import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
+@Category(UnitTestCategory.class)
 @RunWith(MockitoJUnitRunner.class)
 public class PeriodServiceTest {
     @Mock
