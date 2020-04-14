@@ -1,7 +1,6 @@
 package com.softserve.entity;
 
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
@@ -45,5 +44,5 @@ public class Semester implements Serializable {
     private LocalDate endDay;
 
     @Column(name = "current_semester", columnDefinition = "boolean default 'false'")
-    private boolean currentSemester;
+    private boolean currentSemester = false;
 }
