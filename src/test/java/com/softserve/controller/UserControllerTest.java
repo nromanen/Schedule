@@ -5,7 +5,6 @@ import com.softserve.config.DBConfigTest;
 import com.softserve.config.MyWebAppInitializer;
 import com.softserve.config.WebMvcConfig;
 import com.softserve.dto.UserCreateDTO;
-import com.softserve.service.UserService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -36,9 +35,6 @@ public class UserControllerTest {
 
     @Autowired
     private WebApplicationContext wac;
-
-    @Autowired
-    private UserService userService;
 
     @Before
     public void setUp() {
