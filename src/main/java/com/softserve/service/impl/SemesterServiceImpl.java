@@ -1,7 +1,7 @@
 package com.softserve.service.impl;
 
 import com.softserve.entity.Semester;
-import com.softserve.entity.Subject;
+import com.softserve.exception.EntityAlreadyExistsException;
 import com.softserve.exception.EntityNotFoundException;
 import com.softserve.exception.FieldAlreadyExistsException;
 import com.softserve.exception.IncorrectTimeException;
@@ -36,7 +36,7 @@ public class SemesterServiceImpl implements SemesterService {
     public Semester getById(Long id) {
         log.info("In getById(id = [{}])", id);
         return semesterRepository.findById(id).orElseThrow(
-                () -> new EntityNotFoundException(Subject.class, "id", id.toString()));
+                () -> new EntityNotFoundException(Semester.class, "id", id.toString()));
     }
 
     /**
@@ -62,9 +62,12 @@ public class SemesterServiceImpl implements SemesterService {
         if (isTimeInvalid(object)) {
             throw new IncorrectTimeException("The end day cannot be before the start day");
         }
-        if (isSemesterExists(object) != null) {
-            if (isSemesterExists(object).getId() != object.getId()) {
-                throw new FieldAlreadyExistsException(Semester.class, "description", object.getDescription());
+        if (isSemesterExistsByDescriptionAndYear(object)) {
+            throw new EntityAlreadyExistsException("Semester already exists with current description and year.");
+        }
+        if (object.isCurrentSemester()) {
+            if (getCurrentSemester() != null) {
+                throw new FieldAlreadyExistsException(Semester.class, "currentSemester", String.valueOf(object.isCurrentSemester()));
             }
         }
         return semesterRepository.save(object);
@@ -82,9 +85,12 @@ public class SemesterServiceImpl implements SemesterService {
         if (isTimeInvalid(object)) {
             throw new IncorrectTimeException("The end day cannot be before the start day");
         }
-        if (isSemesterExists(object) != null) {
-            if (isSemesterExists(object).getId() != object.getId()) {
-                throw new FieldAlreadyExistsException(Semester.class, "description", object.getDescription());
+        if (isSemesterExistsByDescriptionAndYearForUpdate(object)) {
+            throw new EntityAlreadyExistsException("Semester already exists with current description and year.");
+        }
+        if (object.isCurrentSemester()) {
+            if (isSemesterCurrent(object.getId())) {
+                throw new FieldAlreadyExistsException(Semester.class, "currentSemester", String.valueOf(object.isCurrentSemester()));
             }
         }
         return semesterRepository.update(object);
@@ -113,9 +119,48 @@ public class SemesterServiceImpl implements SemesterService {
         return semesterRepository.semesterDuplicates(semester).orElse(null);
     }
 
+    /**
+     * Method searches get of semester with currentSemester = true in the DB
+     *
+     * @return entity Semester if such exist, else return null
+     */
+    @Override
+    public Semester getCurrentSemester() {
+        return semesterRepository.getCurrentSemester().orElse(null);
+    }
+
+    //check if the end time is not before the start time or equals return true, else - false
     private boolean isTimeInvalid(Semester object) {
         log.info("Enter into isTimeInvalid  with entity: {}", object);
         return object.getStartDay().isAfter(object.getEndDay()) ||
                 object.getStartDay().equals(object.getEndDay());
+    }
+
+    //check if there is a semester with description and year return true, else - false
+    private boolean isSemesterExistsByDescriptionAndYear(Semester semester) {
+        Semester object = isSemesterExists(semester);
+        if (object == null) {
+            return false;
+        }
+        return (object.getDescription().equals(semester.getDescription()) && object.getYear() == semester.getYear());
+    }
+
+    //check if there is a semester with description and year return true, else - false (for update method)
+    private boolean isSemesterExistsByDescriptionAndYearForUpdate(Semester semester) {
+        Semester object = isSemesterExists(semester);
+        if (object == null) {
+            return false;
+        }
+        return (object.getDescription().equals(semester.getDescription()) &&
+                object.getYear() == semester.getYear() && object.getId() != semester.getId());
+    }
+
+    //check if semester is current return true, else - false
+    private boolean isSemesterCurrent(long id) {
+        Semester semester = getCurrentSemester();
+        if (semester == null) {
+            return false;
+        }
+        return semester.getId() != id;
     }
 }

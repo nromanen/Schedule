@@ -1,17 +1,23 @@
 package com.softserve.entity;
 
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDate;
 
 @NamedQuery(
-        name = "findDescription",
-        query = "from Semester s where s.description= :description"
+        name = "findDescriptionAndYear",
+        query = "from Semester s where s.description= :description and s.year= :year"
+)
+@NamedQuery(
+        name = "findCurrentSemester",
+        query = "from Semester s where s.currentSemester= :currentSemester"
 )
 
 @NoArgsConstructor
@@ -27,6 +33,9 @@ public class Semester implements Serializable {
     @NotBlank(message = "Description cannot be null or empty")
     private String description;
 
+    @Min(1)
+    private int year;
+
     @Column(name = "start_day")
     @NotNull(message = "Start time cannot be empty")
     private LocalDate startDay;
@@ -34,4 +43,7 @@ public class Semester implements Serializable {
     @Column(name = "end_day")
     @NotNull(message = "End time cannot be empty")
     private LocalDate endDay;
+
+    @Column(name = "current_semester", columnDefinition = "boolean default 'false'")
+    private boolean currentSemester;
 }

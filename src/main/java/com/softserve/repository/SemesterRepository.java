@@ -6,4 +6,5 @@ import java.util.Optional;
 
 public interface SemesterRepository extends BasicRepository<Semester, Long> {
     Optional<Semester> semesterDuplicates(Semester semester);
+    Optional<Semester> getCurrentSemester();
 }
