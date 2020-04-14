@@ -32,10 +32,10 @@ public class TeacherWishesRepositoryImpl extends BasicRepositoryImpl<TeacherWish
      * @return count wishes
      */
     @Override
-    public int countWishesByTeacherId(Long teacherId) {
+    public long countWishesByTeacherId(Long teacherId) {
         log.info("Enter into countWishesByTeacherId method with teacherId: {}",  teacherId);
-        return (int) sessionFactory.getCurrentSession().createQuery
-                ("SELECT count (*) FROM TeacherWishes t WHERE t.teacher.id = :teacherId")
+        return (long) sessionFactory.getCurrentSession().createQuery
+                ("SELECT count (t.id) FROM TeacherWishes t WHERE t.teacher.id = :teacherId")
                 .setParameter("teacherId", teacherId).getSingleResult();
     }
 

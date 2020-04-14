@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface TeacherWishesRepository extends BasicRepository<TeacherWishes, Long> {
     List<Wishes> getWishByTeacherId(Long teacherId);
-    int countWishesByTeacherId(Long teacherId);
+    long countWishesByTeacherId(Long teacherId);
 }
