@@ -81,6 +81,13 @@ public class LessonsControllerTest {
     }
 
     @Test
+    public void testGetAllLessonTypes() throws Exception {
+        mockMvc.perform(get("/lessons/types").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json"));
+    }
+
+    @Test
     public void testSave() throws Exception {
         TeacherNameDTO teacherDTO = new TeacherNameMapperImpl().teacherNameToTeacherDTO(teacherService.getById(1L));
         SubjectDTO subjectDTO = new SubjectMapperImpl().subjectToSubjectDTO(subjectService.getById(1L));

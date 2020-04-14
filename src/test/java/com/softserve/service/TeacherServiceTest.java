@@ -66,6 +66,7 @@ public class TeacherServiceTest {
         teacher.setUserId(1);
 
         teacherService.getById(2L);
+        verify(teacherRepository, times(1)).findById(2L);
     }
 
     @Test
