@@ -5,7 +5,6 @@ import com.softserve.security.jwt.JwtTokenProvider;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -30,6 +29,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private static final String REGISTRATION_ENDPOINT = "/auth/sign_up";
     private static final String ACTIVATION_ACCOUNT_ENDPOINT = "/auth/activation_account";
     private static final String RESET_PASSWORD_ENDPOINT = "/auth/reset_password";
+    private static final String SCHEDULE_ENDPOINT = "/schedules/*";
+    private static final String SCHEDULE_FOR_USERS_ENDPOINT = "/schedules/full/*";
+    private static final String ALL_GROUPS_PUBLIC_ENDPOINT = "/groups/public";
+
 
 
     @Autowired
@@ -54,9 +57,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers(LOGIN_ENDPOINT, REGISTRATION_ENDPOINT, ACTIVATION_ACCOUNT_ENDPOINT,
-                        RESET_PASSWORD_ENDPOINT).permitAll()
+                        RESET_PASSWORD_ENDPOINT, SCHEDULE_FOR_USERS_ENDPOINT, ALL_GROUPS_PUBLIC_ENDPOINT).permitAll()
                 .antMatchers(MANAGER_ENDPOINT, CLASSES_ENDPOINT, GROUPS_ENDPOINT, LESSONS_ENDPOINT,
-                        ROOMS_ENDPOINT, SUBJECTS_ENDPOINT, TEACHERS_ENDPOINT).hasRole("MANAGER")
+                        ROOMS_ENDPOINT, SUBJECTS_ENDPOINT, TEACHERS_ENDPOINT, SCHEDULE_ENDPOINT).hasRole("MANAGER")
                 .anyRequest().authenticated()
                 .and()
                 .apply(new JwtConfigurer(jwtTokenProvider));

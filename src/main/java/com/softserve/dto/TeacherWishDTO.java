@@ -1,16 +1,18 @@
 package com.softserve.dto;
 
 import com.softserve.entity.TeacherWishes;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-import java.util.List;
+import java.util.ArrayList;
 
-@Data
+@Setter
+@Getter
 public class TeacherWishDTO {
     private Long id;
     private String name;
     private String surname;
     private String patronymic;
     private String position;
-    private List<TeacherWishes> teacherWishesList;
+    private ArrayList<TeacherWishes> teacherWishesList;
 }

@@ -1,16 +1,27 @@
 package com.softserve.service.impl;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.github.fge.jsonschema.core.exceptions.ProcessingException;
+import com.github.fge.jsonschema.core.report.ProcessingReport;
+import com.github.fge.jsonschema.main.JsonSchema;
+import com.github.fge.jsonschema.main.JsonSchemaFactory;
+import com.softserve.entity.Teacher;
 import com.softserve.entity.TeacherWishes;
+import com.softserve.entity.Wish;
+import com.softserve.entity.Wishes;
 import com.softserve.entity.enums.EvenOdd;
 import com.softserve.exception.EntityAlreadyExistsException;
 import com.softserve.exception.EntityNotFoundException;
+import com.softserve.exception.IncorrectWishException;
 import com.softserve.repository.TeacherWishesRepository;
 import com.softserve.service.TeacherWishesService;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.time.DayOfWeek;
 import java.util.List;
 
@@ -45,8 +56,11 @@ public class TeacherWishesServiceImpl implements TeacherWishesService {
      * @return List of all teachers
      */
     @Override
-    public List<TeacherWishes> getAll() {
-        return teacherWishesRepository.getAll();
+    public List<TeacherWishes> getAll()
+    {
+        List<TeacherWishes>  teacherWishesList = teacherWishesRepository.getAll();
+        teacherWishesList.forEach(wish -> Hibernate.initialize(wish.getTeacher()));
+        return teacherWishesList;
     }
 
     @Override
@@ -55,6 +69,7 @@ public class TeacherWishesServiceImpl implements TeacherWishesService {
         if (teacherWishesRepository.isExistsWishWithTeacherId(object.getTeacher().getId()) > 0) {
             throw new EntityAlreadyExistsException("Wish already created");
         }
+        teacherWishesRepository.validateTeacherWish(object.getTeacherWishesList());
         return teacherWishesRepository.save(object);
     }
 
@@ -67,7 +82,7 @@ public class TeacherWishesServiceImpl implements TeacherWishesService {
     public TeacherWishes update(TeacherWishes object)
     {
         log.info("Enter into update method with entity:{}", object);
-        teacherWishesRepository.validateTeacherWish(object.getWishList());
+        teacherWishesRepository.validateTeacherWish(object.getTeacherWishesList());
         return teacherWishesRepository.update(object);
     }
 
@@ -84,6 +99,23 @@ public class TeacherWishesServiceImpl implements TeacherWishesService {
 
     @Override
     public boolean isClassSuits(Long teacherId, DayOfWeek dayOfWeek, EvenOdd evenOdd, Long classId) {
-        return teacherWishesRepository.isClassSuits(teacherId, dayOfWeek, evenOdd, classId);
+        Wishes[] teacherWishList = teacherWishesRepository.getWishByTeacherId(teacherId);
+        for (Wishes wishItem : teacherWishList) {
+            if((DayOfWeek.valueOf(wishItem.getDayOfWeek()) == dayOfWeek) &&
+                    (EvenOdd.valueOf(wishItem.getEvenOdd()) == evenOdd)){
+                for (Wish classItem : wishItem.getWishes()){
+                    if(classItem.getClassId() == classId){
+                        return !(classItem.getStatus().equals("bad"));
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
+
+    @Override
+    public boolean isTeacherSchemaValid(JsonNode teacherWish) {
+       return isTeacherSchemaValid(teacherWish);
     }
 }

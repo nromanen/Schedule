@@ -6,7 +6,8 @@ import lombok.Setter;
 
 @Setter
 @Getter
-public class TeacherWishesDTO {
+public class WishesWithTeacherDTO {
     private Long id;
+    private TeacherIdDTO teacher;
     private Wishes[] teacherWishesList;
 }
