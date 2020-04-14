@@ -5,16 +5,14 @@ import com.softserve.config.DBConfigTest;
 import com.softserve.config.MyWebAppInitializer;
 import com.softserve.config.WebMvcConfig;
 import com.softserve.dto.GroupDTO;
-import com.softserve.entity.Group;
-import com.softserve.service.GroupService;
-import com.softserve.service.mapper.GroupMapperImpl;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
@@ -22,45 +20,25 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@Category(IntegrationTestCategory.class)
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {WebMvcConfig.class, DBConfigTest.class, MyWebAppInitializer.class})
 @WebAppConfiguration
+@Sql(value = {"classpath:create-groups-before.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 public class GroupControllerTest {
 
     private MockMvc mockMvc;
     private ObjectMapper objectMapper = new ObjectMapper();
-    private Group group = new Group();
-    private GroupDTO groupDtoForBefore = new GroupDTO();
-    private GroupDTO groupDtoForSave = new GroupDTO();
-    private GroupDTO groupDtoForUpdate = new GroupDTO();
 
     @Autowired
     private WebApplicationContext wac;
 
-    @Autowired
-    private GroupService groupService;
-
     @Before
-    public void insertData() {
-
+    public void setup() {
         mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
-
-        //Save new period before all Test methods
-        groupDtoForBefore.setTitle("dto name");
-        group = new GroupMapperImpl().groupDTOToGroup(groupDtoForBefore);
-        groupService.save(group);
-
-        groupDtoForSave.setTitle("save name");
-
-        groupDtoForUpdate.setId(group.getId());
-        groupDtoForUpdate.setTitle("update name");
-    }
-
-    @After
-    public void deleteData() {
-        groupService.delete(group);
     }
 
     @Test
@@ -72,15 +50,16 @@ public class GroupControllerTest {
 
     @Test
     public void testGet() throws Exception {
-
-        mockMvc.perform(get("/groups/{id}", String.valueOf(group.getId())).contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/groups/{id}", 4).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"))
-                .andExpect(jsonPath("$.id").value(String.valueOf(group.getId())));
+                .andExpect(jsonPath("$.id").value(String.valueOf(4L)));
     }
 
     @Test
     public void testSave() throws Exception {
+        GroupDTO groupDtoForSave = new GroupDTO();
+        groupDtoForSave.setTitle("save new group");
 
         mockMvc.perform(post("/groups").content(objectMapper.writeValueAsString(groupDtoForSave))
                 .contentType(MediaType.APPLICATION_JSON))
@@ -89,23 +68,72 @@ public class GroupControllerTest {
 
     @Test
     public void testUpdate() throws Exception {
+        GroupDTO groupDtoForUpdate = new GroupDTO();
+        groupDtoForUpdate.setId(4L);
+        groupDtoForUpdate.setTitle("111 updated");
 
-        Group groupForCompare = new GroupMapperImpl().groupDTOToGroup(groupDtoForUpdate);
-
-        mockMvc.perform(put("/groups", String.valueOf(group.getId())).content(objectMapper.writeValueAsString(groupDtoForUpdate))
+        mockMvc.perform(put("/groups", 4).content(objectMapper.writeValueAsString(groupDtoForUpdate))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(groupForCompare.getId()))
-                .andExpect(jsonPath("$.title").value(groupForCompare.getTitle()));
+                .andExpect(jsonPath("$.id").value(groupDtoForUpdate.getId()))
+                .andExpect(jsonPath("$.title").value(groupDtoForUpdate.getTitle()));
     }
 
     @Test
     public void testDelete() throws Exception {
-        GroupDTO groupDTO = new GroupDTO();
-        groupDTO.setTitle("delete name");
-        Group group = groupService.save(new GroupMapperImpl().groupDTOToGroup(groupDTO));
-        mockMvc.perform(delete("/groups/{id}", String.valueOf(group.getId()))
+        mockMvc.perform(delete("/groups/{id}", 6)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    public void whenGroupNotFound() throws Exception {
+        mockMvc.perform(get("/groups/100")).andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void whenSaveExistsGroup() throws Exception {
+        GroupDTO groupDtoForSave = new GroupDTO();
+        groupDtoForSave.setTitle("111");
+
+        mockMvc.perform(post("/groups").content(objectMapper.writeValueAsString(groupDtoForSave))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void whenSaveNameIsNull() throws Exception {
+        GroupDTO groupDtoForSave = new GroupDTO();
+        groupDtoForSave.setTitle(null);
+
+        mockMvc.perform(post("/groups").content(objectMapper.writeValueAsString(groupDtoForSave))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void whenUpdateExistsGroup() throws Exception {
+        GroupDTO groupDtoForUpdate = new GroupDTO();
+        groupDtoForUpdate.setId(5L);
+        groupDtoForUpdate.setTitle("111");
+
+        mockMvc.perform(put("/groups", 5).content(objectMapper.writeValueAsString(groupDtoForUpdate))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void whenUpdateNullTitle() throws Exception {
+        GroupDTO groupDtoForUpdate = new GroupDTO();
+        groupDtoForUpdate.setId(6L);
+        groupDtoForUpdate.setTitle(null);
+
+        mockMvc.perform(put("/groups", 6).content(objectMapper.writeValueAsString(groupDtoForUpdate))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
     }
 }
