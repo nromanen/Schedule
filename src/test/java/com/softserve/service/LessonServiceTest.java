@@ -196,7 +196,7 @@ public class LessonServiceTest {
     }
 
     @Test(expected = EntityAlreadyExistsException.class)
-    public void updateWhenAlreayExists() {
+    public void updateWhenAlreadyExists() {
         Group group = new Group();
         group.setId(1L);
         group.setTitle("group");
@@ -222,7 +222,7 @@ public class LessonServiceTest {
 
         when(lessonRepository.countLessonDuplicates(lesson)).thenReturn(1L);
 
-        Lesson result = lessonService.update(lesson);
+        lessonService.update(lesson);
         verify(lessonRepository, times(1)).countLessonDuplicates(lesson);
         verify(lessonRepository, times(1)).update(lesson);
     }

@@ -49,6 +49,14 @@ public class GroupControllerTest {
     }
 
     @Test
+    public void testGetAllPublic() throws Exception {
+        mockMvc.perform(get("/groups/public").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(content().contentType("application/json"));
+    }
+
+    @Test
     public void testGet() throws Exception {
         mockMvc.perform(get("/groups/{id}", 4).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())

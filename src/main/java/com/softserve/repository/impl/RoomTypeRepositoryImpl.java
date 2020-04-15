@@ -44,7 +44,7 @@ public class RoomTypeRepositoryImpl extends BasicRepositoryImpl<RoomType, Long> 
         log.info("In checkReference(roomType = [{}])", roomType);
         long count = (long) sessionFactory.getCurrentSession().createQuery
                 ("select count (r.id) " +
-                        "from Room r where r.roomType.id = :roomTypeId")
+                        "from Room r where r.type.id = :roomTypeId")
                 .setParameter("roomTypeId", roomType.getId())
                 .getSingleResult();
         return count != 0;

@@ -36,7 +36,7 @@ public class SubjectServiceTest {
         subject.setName("some subject");
         subject.setId(1L);
 
-        when(subjectRepository.findById(anyLong())).thenReturn(Optional.of(subject));
+        when(subjectRepository.findById(1L)).thenReturn(Optional.of(subject));
 
         Subject result = subjectService.getById(1L);
         assertNotNull(result);
@@ -50,7 +50,7 @@ public class SubjectServiceTest {
         subject.setName("some subject");
 
         subjectService.getById(2L);
-        verify(subjectService, times(1)).getById(2L);
+        verify(subjectRepository, times(1)).findById(2L);
     }
 
     @Test
@@ -97,6 +97,7 @@ public class SubjectServiceTest {
         assertNotNull(oldSubject);
         assertEquals(updatedSubject, oldSubject);
         verify(subjectRepository, times(1)).update(oldSubject);
+        verify(subjectRepository, times(1)).countBySubjectId(anyLong());
         verify(subjectRepository, times(1)).countSubjectsWithName(anyString());
     }
 
@@ -113,7 +114,7 @@ public class SubjectServiceTest {
         when(subjectRepository.countSubjectsWithName(anyString())).thenReturn(1L);
 
         oldSubject = subjectService.update(updatedSubject);
-        verify(subjectRepository, times(1)).update(oldSubject);
+        verify(subjectRepository, times(1)).countBySubjectId(anyLong());
         verify(subjectRepository, times(1)).countSubjectsWithName(anyString());
     }
 
@@ -126,6 +127,6 @@ public class SubjectServiceTest {
         when(subjectRepository.countBySubjectId(anyLong())).thenReturn(0L);
 
         subjectService.update(subject);
-        verify(subjectRepository, times(1)).update(subject);
+        verify(subjectRepository, times(1)).countBySubjectId(anyLong());
     }
 }

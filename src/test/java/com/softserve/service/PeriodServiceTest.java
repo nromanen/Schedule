@@ -115,6 +115,8 @@ public class PeriodServiceTest {
         when(periodRepository.findByName(anyString())).thenReturn(Optional.of(period));
 
         periodService.save(period);
+        verify(periodRepository, times(1)).getAll();
+        verify(periodRepository, times(1)).findByName(anyString());
     }
 
     @Test(expected = PeriodConflictException.class)
@@ -135,6 +137,7 @@ public class PeriodServiceTest {
         when(periodRepository.getAll()).thenReturn(periodList);
 
         periodService.save(period);
+        verify(periodRepository, times(1)).getAll();
     }
 
     @Test
@@ -198,6 +201,7 @@ public class PeriodServiceTest {
         when(periodRepository.getAll()).thenReturn(periodList);
 
         periodService.save(saveList);
+        verify(periodRepository, times(1)).getAll();
     }
 
     @Test
@@ -223,6 +227,9 @@ public class PeriodServiceTest {
         periodInList = periodService.update(period);
         assertNotNull(periodInList);
         assertEquals(period, periodInList);
+        verify(periodRepository, times(1)).getAll();
+        verify(periodRepository, times(1)).findById(anyLong());
+        verify(periodRepository, times(1)).update(period);
     }
 
     @Test(expected = FieldAlreadyExistsException.class)
@@ -245,6 +252,9 @@ public class PeriodServiceTest {
         when(periodRepository.findById(period.getId())).thenReturn(Optional.of(period));
 
         periodService.update(period);
+        verify(periodRepository, times(1)).getAll();
+        verify(periodRepository, times(1)).findByName(anyString());
+        verify(periodRepository, times(1)).findById(anyLong());
     }
 
     @Test(expected = IncorrectTimeException.class)
@@ -276,5 +286,6 @@ public class PeriodServiceTest {
         when(periodRepository.getAll()).thenReturn(periodList);
 
         periodService.update(period);
+        verify(periodRepository, times(1)).getAll();
     }
 }

@@ -36,7 +36,7 @@ public class GroupServiceTest {
         group.setTitle("some group");
         group.setId(1L);
 
-        when(groupRepository.findById(anyLong())).thenReturn(Optional.of(group));
+        when(groupRepository.findById(1L)).thenReturn(Optional.of(group));
 
         Group result = groupService.getById(1L);
         assertNotNull(result);
@@ -51,7 +51,7 @@ public class GroupServiceTest {
         group.setId(1L);
 
         groupService.getById(2L);
-        verify(groupService, times(1)).getById(2L);
+        verify(groupRepository, times(1)).findById(2L);
     }
 
     @Test
@@ -104,7 +104,7 @@ public class GroupServiceTest {
     }
 
     @Test(expected = FieldAlreadyExistsException.class)
-    public void updateWhenNameIsExists() {
+    public void updateWhenTitleIsExists() {
         Group oldGroup = new Group();
         oldGroup.setTitle("some group");
         oldGroup.setId(1L);
@@ -116,12 +116,12 @@ public class GroupServiceTest {
         when(groupRepository.countGroupsWithTitle(anyString())).thenReturn(1L);
 
         oldGroup = groupService.update(updatedSubject);
-        verify(groupRepository, times(1)).update(oldGroup);
+        verify(groupRepository, times(1)).countByGroupId(anyLong());
         verify(groupRepository, times(1)).countGroupsWithTitle(anyString());
     }
 
     @Test(expected = EntityNotFoundException.class)
-    public void updateWhenSubjectNotFound() {
+    public void updateWhenGroupNotFound() {
         Group group = new Group();
         group.setTitle("some group");
         group.setId(1L);

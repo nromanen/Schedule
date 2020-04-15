@@ -47,7 +47,7 @@ public class UserServiceTest {
         user.setEmail("test@email.com");
         user.setPassword("password");
 
-        when(userRepository.findById(anyLong())).thenReturn(Optional.of(user));
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
 
         User result = userService.getById(1L);
         assertNotNull(result);
@@ -61,7 +61,7 @@ public class UserServiceTest {
         user.setId(1L);
 
         userService.getById(2L);
-        verify(userService, times(1)).getById(2L);
+        verify(userRepository, times(1)).findById(2L);
     }
 
     @Test
