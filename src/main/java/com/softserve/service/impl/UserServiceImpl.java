@@ -147,6 +147,7 @@ public class UserServiceImpl implements UserService {
      * @param user Entity User used for registration User in system
      * @param url from which url get request with User
      * @return User entity
+     *
      * @throws IncorrectPasswordException when password is incorrect or not strong enough
      */
     @Override

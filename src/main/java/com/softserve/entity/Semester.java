@@ -32,7 +32,7 @@ public class Semester implements Serializable {
     @NotBlank(message = "Description cannot be null or empty")
     private String description;
 
-    @Min(1)
+    @Min(1999)
     private int year;
 
     @Column(name = "start_day")

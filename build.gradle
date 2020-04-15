@@ -130,7 +130,9 @@ dependencies {
     //for swagger
     compile group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
 
+    //itextpdf
+    compile group: 'com.itextpdf', name: 'itextpdf', version: '5.5.13.1'
+
     //for parsing localdate
     compile("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.9.4")
 }
-

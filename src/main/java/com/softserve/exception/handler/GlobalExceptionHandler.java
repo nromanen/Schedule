@@ -2,6 +2,7 @@ package com.softserve.exception.handler;
 
 import com.softserve.exception.*;
 import com.softserve.exception.apierror.ApiError;
+import io.jsonwebtoken.ExpiredJwtException;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.exception.ConstraintViolationException;
 import org.postgresql.util.PSQLException;
