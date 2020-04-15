@@ -13,7 +13,8 @@ public interface ScheduleService extends BasicService<Schedule, Long> {
 
     List<ScheduleForGroupDTO> getFullSchedule(Long semesterId, Long groupId);
 
-    List<Schedule> getAllSchedulesByTeacherIdAndSemesterId(Long teacherId, Long semesterId);
-
     List<ScheduleForGroupDTO> getScheduleForTeacher(Long semesterId, Long teacherId);
+
+    List<Schedule> getAllSchedulesByTeacherIdAndSemesterId(Long teacherId, Long semesterId);
 }
+

@@ -2,7 +2,6 @@ package com.softserve.service.impl;
 
 
 import com.softserve.dto.*;
-import com.softserve.dto.CreateScheduleInfoDTO;
 import com.softserve.entity.Group;
 import com.softserve.entity.Lesson;
 import com.softserve.entity.Period;
@@ -11,11 +10,11 @@ import com.softserve.entity.enums.EvenOdd;
 import com.softserve.exception.EntityNotFoundException;
 import com.softserve.exception.ScheduleConflictException;
 import com.softserve.repository.ScheduleRepository;
-import com.softserve.service.GroupService;
-import com.softserve.service.LessonService;
-import com.softserve.service.RoomService;
-import com.softserve.service.ScheduleService;
-import com.softserve.service.mapper.*;
+import com.softserve.service.*;
+import com.softserve.service.mapper.GroupMapper;
+import com.softserve.service.mapper.LessonsInScheduleMapper;
+import com.softserve.service.mapper.PeriodMapper;
+import com.softserve.service.mapper.RoomForScheduleMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,6 +35,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     private final LessonService lessonService;
     private final RoomService roomService;
     private final GroupService groupService;
+    private final TeacherWishesService teacherWishesService;
 
     private final GroupMapper groupMapper;
     private final PeriodMapper periodMapper;
@@ -43,12 +43,13 @@ public class ScheduleServiceImpl implements ScheduleService {
     private final RoomForScheduleMapper roomForScheduleMapper;
 
     @Autowired
-    public ScheduleServiceImpl(ScheduleRepository scheduleRepository, LessonService lessonService, RoomService roomService, GroupService groupService, GroupMapper groupMapper, PeriodMapper periodMapper, LessonsInScheduleMapper lessonsInScheduleMapper, RoomForScheduleMapper roomForScheduleMapper) {
+    public ScheduleServiceImpl(ScheduleRepository scheduleRepository, LessonService lessonService, RoomService roomService, GroupService groupService, TeacherWishesService teacherWishesService, GroupMapper groupMapper, PeriodMapper periodMapper, LessonsInScheduleMapper lessonsInScheduleMapper, RoomForScheduleMapper roomForScheduleMapper) {
         this.scheduleRepository = scheduleRepository;
         this.lessonService = lessonService;
         this.roomService = roomService;
         this.groupService = groupService;
         this.groupMapper = groupMapper;
+        this.teacherWishesService = teacherWishesService;
         this.periodMapper = periodMapper;
         this.lessonsInScheduleMapper = lessonsInScheduleMapper;
         this.roomForScheduleMapper = roomForScheduleMapper;
@@ -134,37 +135,48 @@ public class ScheduleServiceImpl implements ScheduleService {
      */
     @Override
     public CreateScheduleInfoDTO getInfoForCreatingSchedule(Long semesterId, DayOfWeek dayOfWeek, EvenOdd evenOdd, Long classId, Long lessonId) {
-        log.info("Enter into getInfoForCreatingSchedule with semesterId = {}, dayOfWeek = {}, evenOdd = {}, classId = {}, lessonId = {}", semesterId, dayOfWeek, evenOdd, classId, lessonId);
+        log.info("In getInfoForCreatingSchedule (semesterId = [{}], dayOfWeek = [{}], evenOdd = [{}], classId = [{}], lessonId = [{}])", semesterId, dayOfWeek, evenOdd, classId, lessonId);
         //checking for missing parameters and wrong types is skipped, because it handles automatically by GlobalExceptionHandler
         if (isConflictForGroupInSchedule(semesterId, dayOfWeek, evenOdd, classId, lessonId)) {
+            log.error("Schedule for group already exists");
             throw new ScheduleConflictException("You can't create schedule for this group, because one already exists");
         } else {
             CreateScheduleInfoDTO createScheduleInfoDTO = new CreateScheduleInfoDTO();
             createScheduleInfoDTO.setTeacherAvailable(isTeacherAvailableForSchedule(semesterId, dayOfWeek, evenOdd, classId, lessonId));
             createScheduleInfoDTO.setRooms(roomService.getAllRoomsForCreatingSchedule(semesterId, dayOfWeek, evenOdd, classId));
-            createScheduleInfoDTO.setClassSuitsToTeacher(true);
+            createScheduleInfoDTO.setClassSuitsToTeacher(teacherWishesService.isClassSuits(lessonService.getById(lessonId).getTeacher().getId(), dayOfWeek, evenOdd, classId));
             return createScheduleInfoDTO;
         }
 
     }
 
+    //verifies if group has conflict in schedule when it saves
     private boolean isConflictForGroupInSchedule(Long semesterId, DayOfWeek dayOfWeek, EvenOdd evenOdd, Long classId, Long lessonId) {
-        log.info("Enter into isConflictForGroupInSchedule with semesterId = {}, dayOfWeek = {}, evenOdd = {}, classId = {}, lessonId = {}", semesterId, dayOfWeek, evenOdd, classId, lessonId);
+        log.info("In isConflictForGroupInSchedule(semesterId = [{}], dayOfWeek = [{}], evenOdd = [{}], classId = [{}], lessonId = [{}])", semesterId, dayOfWeek, evenOdd, classId, lessonId);
         //Get group ID from Lesson by lesson ID to search further by group ID
         Long groupId = lessonService.getById(lessonId).getGroup().getId();
         //If Repository doesn't count any records that means there are no conflicts for this group at that point of time
         return scheduleRepository.conflictForGroupInSchedule(semesterId, dayOfWeek, evenOdd, classId, groupId) != 0;
     }
 
+    //verifies if teacher already has another schedule at  at some semester (by semester id) at some day for some period(by classId)
     private boolean isTeacherAvailableForSchedule(Long semesterId, DayOfWeek dayOfWeek, EvenOdd evenOdd, Long classId, Long lessonId) {
-        log.info("Enter into isTeacherAvailable with semesterId = {}, dayOfWeek = {}, evenOdd = {}, classId = {}, lessonId = {}", semesterId, dayOfWeek, evenOdd, classId, lessonId);
+        log.info("In isTeacherAvailable (semesterId = [{}], dayOfWeek = [{}], evenOdd = [{}], classId = [{}], lessonId = [{}]", semesterId, dayOfWeek, evenOdd, classId, lessonId);
         //Get teacher ID from Lesson by lesson ID to search further by teacher ID
         Long teacherId = lessonService.getById(lessonId).getTeacher().getId();
         return scheduleRepository.conflictForTeacherInSchedule(semesterId, dayOfWeek, evenOdd, classId, teacherId) == 0;
     }
 
+    /**
+     * Method gets full schedule for all groups(by default) in particular semester, or full schedule for group in particular semester
+     *
+     * @param semesterId id of semester
+     * @param groupId    group id
+     * @return filled schedule for all groups (if groupId == null) or full schedule for group
+     */
     @Override
     public List<ScheduleForGroupDTO> getFullSchedule(Long semesterId, Long groupId) {
+        log.info("In getFullSchedule(semesterId = [{}], groupId[{}])", semesterId, groupId);
         List<ScheduleForGroupDTO> scheduleForGroupDTOList = new ArrayList<>();
         List<Group> groupsForSchedule = new ArrayList<>();
         if (semesterId != null && groupId != null) {
@@ -188,13 +200,12 @@ public class ScheduleServiceImpl implements ScheduleService {
         }
     }
 
+    //gets days when group has schedule and fill days by classes
     private List<DaysOfWeekWithClassesDTO> getDaysWhenGroupHasClassesBySemester(Long semesterId, Long groupId) {
-
+        log.info("In getDaysWhenGroupHasClassesBySemester(semesterId = [{}], groupId = [{}])", semesterId, groupId);
         List<DaysOfWeekWithClassesDTO> daysOfWeekWithClassesDTOList = new ArrayList<>();
         List<DayOfWeek> weekList = new ArrayList<>();
-
         scheduleRepository.getDaysWhenGroupHasClassesBySemester(semesterId, groupId).forEach(day -> weekList.add(DayOfWeek.valueOf(day)));
-
         weekList.sort(Comparator.comparingInt(DayOfWeek::getValue));
         for (DayOfWeek day : weekList) {
             DaysOfWeekWithClassesDTO daysOfWeekWithClassesDTO = new DaysOfWeekWithClassesDTO();
@@ -207,7 +218,9 @@ public class ScheduleServiceImpl implements ScheduleService {
         return daysOfWeekWithClassesDTOList;
     }
 
+    //get classes in Day when group has schedule and fill classes by even/odd lessons
     private List<ClassesInScheduleDTO> getClassesForGroupBySemesterByDayOfWeek(Long semesterId, Long groupId, DayOfWeek day) {
+        log.info("In getClassesForGroupBySemesterByDayOfWeek(semesterId = [{}], groupId = [{}], day = [{}])", semesterId, groupId, day);
         //get Classes in that Day for group
         List<Period> uniquePeriods = scheduleRepository.periodsForGroupByDayBySemester(semesterId, groupId, day);
         List<ClassesInScheduleDTO> classesInScheduleDTOList = new ArrayList<>();
@@ -222,38 +235,44 @@ public class ScheduleServiceImpl implements ScheduleService {
         return classesInScheduleDTOList;
     }
 
+    //get and fill even and odd lessons for group at some semester (by semester id) at some day for some period(by periodId)
     private LessonInScheduleByWeekDTO getLessonsForGroupForPeriodBySemesterAndDay(Long semesterId, Long groupId, Long periodId, DayOfWeek day) {
+        log.info("In getLessonsForGroupForPeriodBySemesterAndDay(semesterId = [{}], groupId = [{}], periodId = [{}], day = [{}])", semesterId, groupId, periodId, day);
         LessonInScheduleByWeekDTO lessonInScheduleByWeekDTO = new LessonInScheduleByWeekDTO();
         Lesson lesson = scheduleRepository.lessonForGroupByDayBySemesterByPeriodByWeek(semesterId, groupId, periodId, day, EvenOdd.EVEN).orElse(null);
         LessonsInScheduleDTO even = lessonsInScheduleMapper.lessonToLessonsInScheduleDTO(lesson);
 
         if (lesson != null) {
-            even.setRoom(roomForScheduleMapper.roomToRoomForScheduleDTO(scheduleRepository.getRoomForLesson(semesterId, periodId, lesson.getId(), day, EvenOdd.EVEN)));
+            even.setRoom(roomForScheduleMapper.roomToRoomForScheduleDTO(scheduleRepository.getRoomForLesson(semesterId,  periodId, lesson.getId(), day, EvenOdd.EVEN)));
             lessonInScheduleByWeekDTO.setEven(even);
         }
 
         Lesson lesson2 = scheduleRepository.lessonForGroupByDayBySemesterByPeriodByWeek(semesterId, groupId, periodId, day, EvenOdd.ODD).orElse(null);
         LessonsInScheduleDTO odd = lessonsInScheduleMapper.lessonToLessonsInScheduleDTO(lesson2);
         if (lesson2 != null) {
-            odd.setRoom(roomForScheduleMapper.roomToRoomForScheduleDTO(scheduleRepository.getRoomForLesson(semesterId, periodId, lesson2.getId(), day, EvenOdd.ODD)));
+            odd.setRoom(roomForScheduleMapper.roomToRoomForScheduleDTO(scheduleRepository.getRoomForLesson(semesterId,  periodId, lesson2.getId(), day, EvenOdd.ODD)));
             lessonInScheduleByWeekDTO.setOdd(odd);
         }
 
         return lessonInScheduleByWeekDTO;
     }
 
+    //verifies if group with groupId has Schedule in semester with semesterId
     private boolean groupHasScheduleInSemester(Long semesterId, Long groupId) {
+        log.info("In groupHasScheduleInSemester(semesterId = [{}], groupId = [{}])", semesterId, groupId);
         return scheduleRepository.countSchedulesForGroupInSemester(semesterId, groupId) != 0;
     }
 
-    @Override
-    public List<Schedule> getAllSchedulesByTeacherIdAndSemesterId(Long teacherId, Long semesterId) {
-        log.info("Enter into getAllSchedulesByTeacherIdAndSemesterId with teacherId = {}, semesterId = {}", teacherId, semesterId);
-        return scheduleRepository.getAllSchedulesByTeacherIdAndSemesterId(teacherId, semesterId);
-    }
-
+    /**
+     * Method gets full schedule for teacher in particular semester
+     *
+     * @param semesterId id of semester
+     * @param teacherId  id of teacher
+     * @return filled schedule for teacher
+     */
     @Override
     public List<ScheduleForGroupDTO> getScheduleForTeacher(Long semesterId, Long teacherId) {
+        log.info("In getScheduleForTeacher(semesterId = [{}], teacherId[{}])", semesterId, teacherId);
         List<ScheduleForGroupDTO> scheduleForGroupDTOList = new ArrayList<>();
         List<Group> groupsForSchedule = scheduleRepository.uniqueGroupsInScheduleBySemesterByTeacher(semesterId, teacherId);
         for (Group group : groupsForSchedule) {
@@ -265,14 +284,13 @@ public class ScheduleServiceImpl implements ScheduleService {
         return scheduleForGroupDTOList;
     }
 
+    //gets days when teacher has schedule and fill days by classes
     private List<DaysOfWeekWithClassesDTO> getDaysWhenGroupHasClassesBySemesterByTeacher(Long semesterId, Long groupId, Long teacherId) {
-
+        log.info("In getDaysWhenGroupHasClassesBySemesterByTeacher(semesterId = [{}], groupId = [{}], teacherId = [{}])", semesterId, groupId, teacherId);
         List<DaysOfWeekWithClassesDTO> daysOfWeekWithClassesDTOList = new ArrayList<>();
         List<DayOfWeek> weekList = new ArrayList<>();
-
         scheduleRepository.getDaysWhenGroupHasClassesBySemesterByTeacher(semesterId, groupId, teacherId).forEach(day -> weekList.add(DayOfWeek.valueOf(day)));
         weekList.sort(Comparator.comparingInt(DayOfWeek::getValue));
-
         for (DayOfWeek day : weekList) {
             DaysOfWeekWithClassesDTO daysOfWeekWithClassesDTO = new DaysOfWeekWithClassesDTO();
             daysOfWeekWithClassesDTO.setDay(day);
@@ -284,7 +302,9 @@ public class ScheduleServiceImpl implements ScheduleService {
         return daysOfWeekWithClassesDTOList;
     }
 
+    //get classes in Day when teacher has schedule and fill classes by even/odd lessons
     private List<ClassesInScheduleDTO> getPeriodsForGroupBySemesterByTeacherByDayOfWeek(Long semesterId, Long groupId, DayOfWeek day, Long teacherId) {
+        log.info("In getPeriodsForGroupBySemesterByTeacherByDayOfWeek(semesterId = [{}], groupId = [{}], day = [{}], teacherId = [{}])", semesterId, groupId, day, teacherId);
         //get Classes in that Day for group
         List<Period> uniquePeriods = scheduleRepository.periodsForGroupByDayBySemesterByTeacher(semesterId, groupId, day, teacherId);
         List<ClassesInScheduleDTO> classesInScheduleDTOList = new ArrayList<>();
@@ -295,29 +315,34 @@ public class ScheduleServiceImpl implements ScheduleService {
             classesInScheduleDTO.setWeeks(getLessonsForGroupForPeriodBySemesterByDayByTeacher(semesterId, groupId, period.getId(), day, teacherId));
             classesInScheduleDTOList.add(classesInScheduleDTO);
         }
-
         return classesInScheduleDTOList;
     }
 
+    //get and fill even and odd lessons for teacher at some semester (by semester id) at some day for some period(by periodId)
     private LessonInScheduleByWeekDTO getLessonsForGroupForPeriodBySemesterByDayByTeacher(Long semesterId, Long groupId, Long periodId, DayOfWeek day, Long teacherId) {
+        log.info("In getLessonsForGroupForPeriodBySemesterByDayByTeacher(semesterId = [{}], groupId = [{}], periodId = [{}], day = [{}], teacherId = [{}])", semesterId, groupId, periodId, day, teacherId);
         LessonInScheduleByWeekDTO lessonInScheduleByWeekDTO = new LessonInScheduleByWeekDTO();
         Lesson lesson = scheduleRepository.lessonForGroupByDayBySemesterByPeriodByWeekByTeacher(semesterId, groupId, periodId, day, EvenOdd.EVEN, teacherId).orElse(null);
         LessonsInScheduleDTO even = lessonsInScheduleMapper.lessonToLessonsInScheduleDTO(lesson);
-
         if (lesson != null) {
-            even.setRoom(roomForScheduleMapper.roomToRoomForScheduleDTO(scheduleRepository.getRoomForLesson(semesterId, periodId, lesson.getId(), day, EvenOdd.EVEN)));
+            even.setRoom(roomForScheduleMapper.roomToRoomForScheduleDTO(scheduleRepository.getRoomForLesson(semesterId,  periodId, lesson.getId(), day, EvenOdd.EVEN)));
             lessonInScheduleByWeekDTO.setEven(even);
         }
-
         Lesson lesson2 = scheduleRepository.lessonForGroupByDayBySemesterByPeriodByWeekByTeacher(semesterId, groupId, periodId, day, EvenOdd.ODD, teacherId).orElse(null);
         LessonsInScheduleDTO odd = lessonsInScheduleMapper.lessonToLessonsInScheduleDTO(lesson2);
         if (lesson2 != null) {
-            odd.setRoom(roomForScheduleMapper.roomToRoomForScheduleDTO(scheduleRepository.getRoomForLesson(semesterId, periodId, lesson2.getId(), day, EvenOdd.ODD)));
+            odd.setRoom(roomForScheduleMapper.roomToRoomForScheduleDTO(scheduleRepository.getRoomForLesson(semesterId,  periodId, lesson2.getId(), day, EvenOdd.ODD)));
             lessonInScheduleByWeekDTO.setOdd(odd);
         }
-
         return lessonInScheduleByWeekDTO;
     }
+
+    @Override
+    public List<Schedule> getAllSchedulesByTeacherIdAndSemesterId(Long teacherId, Long semesterId) {
+        log.info("Enter into getAllSchedulesByTeacherIdAndSemesterId with teacherId = {}, semesterId = {}", teacherId, semesterId);
+        return scheduleRepository.getAllSchedulesByTeacherIdAndSemesterId(teacherId, semesterId);
+    }
+
 }
 
 

@@ -1,6 +1,5 @@
 package com.softserve.repository.impl;
 
-import com.softserve.entity.Group;
 import com.softserve.entity.RoomType;
 import com.softserve.repository.RoomTypeRepository;
 import lombok.extern.slf4j.Slf4j;

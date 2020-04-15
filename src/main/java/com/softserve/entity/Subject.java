@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 
@@ -21,5 +22,6 @@ public class Subject implements Serializable {
     @NotEmpty(message = "Name cannot be empty")
     @Size(min = 2, max = 40, message = "Name must be between 2 and 40 characters long")
     @Column(unique = true, length = 40, nullable = false)
+    @NotNull
     private String name;
 }
