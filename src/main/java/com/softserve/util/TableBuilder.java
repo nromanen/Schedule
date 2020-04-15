@@ -107,20 +107,6 @@ public class TableBuilder {
                 cell = cellBuilder(schedule, DayOfWeek.values()[i].toString());
                 table.addCell(cell);
             }
-//            cell = cellBuilder(schedule, "MONDAY");
-//            table.addCell(cell);
-//            cell = cellBuilder(schedule, "TUESDAY");
-//            table.addCell(cell);
-//            cell = cellBuilder(schedule, "WEDNESDAY");
-//            table.addCell(cell);
-//            cell = cellBuilder(schedule, "THURSDAY");
-//            table.addCell(cell);
-//            cell = cellBuilder(schedule, "FRIDAY");
-//            table.addCell(cell);
-//            cell = cellBuilder(schedule, "SATURDAY");
-//            table.addCell(cell);
-//            cell = cellBuilder(schedule, "SUNDAY");
-//            table.addCell(cell);
         }
         return table;
     }
