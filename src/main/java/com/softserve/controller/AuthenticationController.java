@@ -73,7 +73,7 @@ public class AuthenticationController {
         user.setToken(null);
         userService.update(user);
         MessageDTO messageDTO = new MessageDTO();
-        messageDTO.setMessage("You successfully activate Your account.");
+        messageDTO.setMessage("You successfully activated Your account.");
 
         return ResponseEntity.status(HttpStatus.OK).body(messageDTO);
     }
