@@ -6,6 +6,7 @@ import lombok.*;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 
@@ -31,12 +32,14 @@ public class User implements Serializable {
     @Column(columnDefinition = "serial")
     private Long id;
 
+    @NotNull
     @Email
     @Size(min = 5, max = 40)
     @Column(unique = true, length = 40)
     @NotEmpty(message = "Email cannot be empty")
     private String email;
 
+    @NotNull
     @NotEmpty(message = "Password cannot be empty")
     private String password;
 

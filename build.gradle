@@ -129,5 +129,7 @@ dependencies {
 
     //for swagger
     compile group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
-}
 
+    //itextpdf
+    compile group: 'com.itextpdf', name: 'itextpdf', version: '5.5.13.1'
+}

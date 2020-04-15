@@ -12,7 +12,8 @@ import java.util.Optional;
 
 @Repository
 @Slf4j
-public class ScheduleRepositoryImpl  extends BasicRepositoryImpl<Schedule, Long> implements ScheduleRepository {
+public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> implements ScheduleRepository {
+
 
     private static final String START_SELECT_COUNT = "select count (s.id) " +
             "from Schedule s where s.semester.id = :semesterId " +
@@ -21,22 +22,23 @@ public class ScheduleRepositoryImpl  extends BasicRepositoryImpl<Schedule, Long>
 
     /**
      * Method searches if there are any saved records in schedule for particular group
+     *
      * @param semesterId the semester id that the search is performed for
-     * @param dayOfWeek the day of the week that the search is performed for
-     * @param evenOdd lesson should occur by EVEN/ODD/WEEKLY
-     * @param classId id for period that the search is performed for
-     * @param groupId group id for which the search is performed for
+     * @param dayOfWeek  the day of the week that the search is performed for
+     * @param evenOdd    lesson should occur by EVEN/ODD/WEEKLY
+     * @param classId    id for period that the search is performed for
+     * @param groupId    group id for which the search is performed for
      * @return 0 if there are no records(conflicts), else number of records
      */
     @Override
     public Long conflictForGroupInSchedule(Long semesterId, DayOfWeek dayOfWeek, EvenOdd evenOdd, Long classId, Long groupId) {
         log.info("In isConflictForGroupInSchedule(semesterId = [{}], dayOfWeek = [{}], evenOdd = [{}], classId = [{}], groupId = [{}])", semesterId, dayOfWeek, evenOdd, classId, groupId);
         //if schedule pretends to occur weekly need to check that there are no any already saved schedules for that Group
-        if (evenOdd == EvenOdd.WEEKLY){
+        if (evenOdd == EvenOdd.WEEKLY) {
             log.debug("Search when lesson repeats weekly");
-               return (Long) sessionFactory.getCurrentSession().createQuery(
-                        START_SELECT_COUNT +
-                    "and s.lesson.group.id = :groupId" )
+            return (Long) sessionFactory.getCurrentSession().createQuery(
+                    START_SELECT_COUNT +
+                            "and s.lesson.group.id = :groupId")
                     .setParameter("semesterId", semesterId)
                     .setParameter("dayOfWeek", dayOfWeek.toString())
                     .setParameter("classId", classId)
@@ -49,8 +51,8 @@ public class ScheduleRepositoryImpl  extends BasicRepositoryImpl<Schedule, Long>
             log.debug("Search when lesson repeats by even/odd");
             return (Long) sessionFactory.getCurrentSession().createQuery(
                     START_SELECT_COUNT +
-                    "and s.lesson.group.id = :groupId " +
-                    "and ( s.evenOdd = :evenOdd or s.evenOdd = 'WEEKLY')")
+                            "and s.lesson.group.id = :groupId " +
+                            "and ( s.evenOdd = :evenOdd or s.evenOdd = 'WEEKLY')")
                     .setParameter("semesterId", semesterId)
                     .setParameter("dayOfWeek", dayOfWeek.toString())
                     .setParameter("classId", classId)
@@ -66,15 +68,14 @@ public class ScheduleRepositoryImpl  extends BasicRepositoryImpl<Schedule, Long>
         if (evenOdd == EvenOdd.WEEKLY) {
             return (Long) sessionFactory.getCurrentSession().createQuery("" +
                     START_SELECT_COUNT +
-                    "and s.lesson.teacher.id = :teacherId " )
+                    "and s.lesson.teacher.id = :teacherId ")
                     .setParameter("semesterId", semesterId)
                     .setParameter("dayOfWeek", dayOfWeek.toString())
                     .setParameter("classId", classId)
                     .setParameter("teacherId", teacherId)
                     .getSingleResult();
 
-        }
-        else {
+        } else {
             return (Long) sessionFactory.getCurrentSession().createQuery(
                     START_SELECT_COUNT +
                             "and s.lesson.teacher.id = :teacherId " +
@@ -143,7 +144,7 @@ public class ScheduleRepositoryImpl  extends BasicRepositoryImpl<Schedule, Long>
     }
 
     @Override
-    public Long countSchedulesForGroupInSemester(Long semesterId, Long groupId){
+    public Long countSchedulesForGroupInSemester(Long semesterId, Long groupId) {
         return (Long) sessionFactory.getCurrentSession().createQuery("select count (s.id) from  Schedule s where s.semester.id = :semesterId and s.lesson.group.id = :groupId")
                 .setParameter("semesterId", semesterId)
                 .setParameter("groupId", groupId)
@@ -194,4 +195,19 @@ public class ScheduleRepositoryImpl  extends BasicRepositoryImpl<Schedule, Long>
                 .setParameter("teacherId", teacherId)
                 .uniqueResultOptional();
     }
+
+    @Override
+    public List<Schedule> getAllSchedulesByTeacherIdAndSemesterId(Long teacherId, Long semesterId) {
+        log.info("Enter into getAll of TeacherRepositoryImpl");
+        return sessionFactory.getCurrentSession().
+                createQuery("from Schedule s where s.semester.id = :semesterId " +
+                        "and s.lesson.teacher.id = :teacherId ")
+                .setParameter("semesterId", semesterId)
+                .setParameter("teacherId", teacherId)
+                .getResultList();
+    }
 }
+
+
+
+
