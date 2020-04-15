@@ -60,7 +60,6 @@ public class ScheduleRepositoryImpl  extends BasicRepositoryImpl<Schedule, Long>
         }
     }
 
-
     @Override
     public Long conflictForTeacherInSchedule(Long semesterId, DayOfWeek dayOfWeek, EvenOdd evenOdd, Long classId, Long teacherId) {
         log.info("In conflictForTeacherInSchedule(semesterId = [{}], dayOfWeek = [{}], evenOdd = [{}], classId = [{}], teacherId = [{}])", semesterId, dayOfWeek, evenOdd, classId, teacherId);
@@ -111,7 +110,6 @@ public class ScheduleRepositoryImpl  extends BasicRepositoryImpl<Schedule, Long>
 
     @Override
     public Optional<Lesson> lessonForGroupByDayBySemesterByPeriodByWeek(Long semesterId, Long groupId, Long periodId, DayOfWeek day, EvenOdd evenOdd) {
-
         return (Optional<Lesson>) sessionFactory.getCurrentSession().createQuery("select l1 from Lesson l1" +
                 " where l1.id in" +
                 " (select l.id from Schedule s join s.lesson l where (s.semester.id = :semesterId and s.dayOfWeek = :dayOfWeek and s.period.id = :periodId and s.lesson.group.id = :groupId) and (s.evenOdd = :evenOdd or s.evenOdd = 'WEEKLY'))")
@@ -150,5 +148,50 @@ public class ScheduleRepositoryImpl  extends BasicRepositoryImpl<Schedule, Long>
                 .setParameter("semesterId", semesterId)
                 .setParameter("groupId", groupId)
                 .getSingleResult();
+    }
+
+    @Override
+    public List<Group> uniqueGroupsInScheduleBySemesterByTeacher(Long semesterId, Long teacherId) {
+        return sessionFactory.getCurrentSession().createQuery("select distinct g1 from Group g1" +
+                " where g1.id in" +
+                " (select g.id from Schedule s join s.lesson.group g where s.semester.id = :semesterId and s.lesson.teacher.id = :teacherId)")
+                .setParameter("semesterId", semesterId)
+                .setParameter("teacherId", teacherId)
+                .getResultList();
+    }
+
+    @Override
+    public List<String> getDaysWhenGroupHasClassesBySemesterByTeacher(Long semesterId, Long groupId, Long teacherId) {
+        return sessionFactory.getCurrentSession().createQuery("select distinct s.dayOfWeek from  Schedule s where s.semester.id = :semesterId and s.lesson.group.id = :groupId and s.lesson.teacher.id = :teacherId")
+                .setParameter("semesterId", semesterId)
+                .setParameter("groupId", groupId)
+                .setParameter("teacherId", teacherId)
+                .getResultList();
+    }
+
+    @Override
+    public List<Period> periodsForGroupByDayBySemesterByTeacher(Long semesterId, Long groupId, DayOfWeek day, Long teacherId) {
+        return sessionFactory.getCurrentSession().createQuery("select distinct p1 from Period p1" +
+                " where p1.id in" +
+                " (select p.id from Schedule s join s.period p where s.semester.id = :semesterId and s.lesson.group.id = :groupId and s.dayOfWeek = :dayOfWeek and s.lesson.teacher.id = :teacherId) order by p1.startTime")
+                .setParameter("semesterId", semesterId)
+                .setParameter("groupId", groupId)
+                .setParameter("dayOfWeek", day.toString())
+                .setParameter("teacherId", teacherId)
+                .getResultList();
+    }
+
+    @Override
+    public Optional<Lesson> lessonForGroupByDayBySemesterByPeriodByWeekByTeacher(Long semesterId, Long groupId, Long periodId, DayOfWeek day, EvenOdd evenOdd, Long teacherId) {
+        return (Optional<Lesson>) sessionFactory.getCurrentSession().createQuery("select l1 from Lesson l1" +
+                " where l1.id in" +
+                " (select l.id from Schedule s join s.lesson l where (s.semester.id = :semesterId and s.dayOfWeek = :dayOfWeek and s.period.id = :periodId and s.lesson.group.id = :groupId and s.lesson.teacher.id = :teacherId) and (s.evenOdd = :evenOdd or s.evenOdd = 'WEEKLY'))")
+                .setParameter("semesterId", semesterId)
+                .setParameter("groupId", groupId)
+                .setParameter("periodId", periodId)
+                .setParameter("dayOfWeek", day.toString())
+                .setParameter("evenOdd", evenOdd)
+                .setParameter("teacherId", teacherId)
+                .uniqueResultOptional();
     }
 }
