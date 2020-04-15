@@ -32,25 +32,9 @@ public class LessonServiceTest {
     private LessonServiceImpl lessonService;
 
     @Test
-    public void testGetById() {
-//        Group group = new Group();
-//        group.setId(1L);
-//        group.setTitle("group");
-//        Teacher teacher = new Teacher();
-//        teacher.setId(1L);
-//        teacher.setUserId(1);
-//        teacher.setName("Ivan");
-//        teacher.setSurname("Ivanov");
-//        teacher.setPatronymic("Ivanovych");
-//        teacher.setPosition("Docent");
-//        Subject subject = new Subject();
-//        subject.setId(1L);
-//        subject.setName("Biology");
+    public void getLessonById() {
         Lesson lesson = new Lesson();
         lesson.setId(1L);
-//        lesson.setGroup(group);
-//        lesson.setTeacher(teacher);
-//        lesson.setSubject(subject);
         lesson.setHours(1);
         lesson.setLessonType(LessonType.LECTURE);
         lesson.setSubjectForSite("Human anatomy");
@@ -65,25 +49,9 @@ public class LessonServiceTest {
     }
 
     @Test(expected = EntityNotFoundException.class)
-    public void NotFoundId() {
-//        Group group = new Group();
-//        group.setId(1L);
-//        group.setTitle("group");
-//        Teacher teacher = new Teacher();
-//        teacher.setId(1L);
-//        teacher.setUserId(1);
-//        teacher.setName("Ivan");
-//        teacher.setSurname("Ivanov");
-//        teacher.setPatronymic("Ivanovych");
-//        teacher.setPosition("Docent");
-//        Subject subject = new Subject();
-//        subject.setId(1L);
-//        subject.setName("Biology");
+    public void throwEntityNotFoundExceptionIfLessonNotFoundedById() {
         Lesson lesson = new Lesson();
         lesson.setId(1L);
-//        lesson.setGroup(group);
-//        lesson.setTeacher(teacher);
-//        lesson.setSubject(subject);
         lesson.setHours(1);
         lesson.setLessonType(LessonType.LECTURE);
         lesson.setSubjectForSite("Human anatomy");
@@ -94,7 +62,7 @@ public class LessonServiceTest {
     }
 
     @Test
-    public void testSave() {
+    public void saveLessonIfDuplicatesNotExists() {
         Group group = new Group();
         group.setId(1L);
         group.setTitle("group");
@@ -129,25 +97,25 @@ public class LessonServiceTest {
     }
 
     @Test(expected = EntityAlreadyExistsException.class)
-    public void saveWhenAlreadyExists() {
-//        Group group = new Group();
-//        group.setId(1L);
-//        group.setTitle("group");
-//        Teacher teacher = new Teacher();
-//        teacher.setId(1L);
-//        teacher.setUserId(1);
-//        teacher.setName("Ivan");
-//        teacher.setSurname("Ivanov");
-//        teacher.setPatronymic("Ivanovych");
-//        teacher.setPosition("Docent");
-//        Subject subject = new Subject();
-//        subject.setId(1L);
-//        subject.setName("Biology");
+    public void throwEntityAlreadyExistsExceptionIfSaveLessonWithSameTeacherSubjectGroupLessonType() {
+        Group group = new Group();
+        group.setId(1L);
+        group.setTitle("group");
+        Teacher teacher = new Teacher();
+        teacher.setId(1L);
+        teacher.setUserId(1);
+        teacher.setName("Ivan");
+        teacher.setSurname("Ivanov");
+        teacher.setPatronymic("Ivanovych");
+        teacher.setPosition("Docent");
+        Subject subject = new Subject();
+        subject.setId(1L);
+        subject.setName("Biology");
         Lesson lesson = new Lesson();
         lesson.setId(1L);
-//        lesson.setGroup(group);
-//        lesson.setTeacher(teacher);
-//        lesson.setSubject(subject);
+        lesson.setGroup(group);
+        lesson.setTeacher(teacher);
+        lesson.setSubject(subject);
         lesson.setHours(1);
         lesson.setLessonType(LessonType.LECTURE);
         lesson.setSubjectForSite("Human anatomy");
@@ -161,7 +129,7 @@ public class LessonServiceTest {
     }
 
     @Test
-    public void testUpdate() {
+    public void updateLessonIfItsNotEqualsWithExistsLessons() {
         Group group = new Group();
         group.setId(1L);
         group.setTitle("group");
@@ -196,7 +164,7 @@ public class LessonServiceTest {
     }
 
     @Test(expected = EntityAlreadyExistsException.class)
-    public void updateWhenAlreadyExists() {
+    public void throwEntityAlreadyExistsExceptionIfUpdatedLessonEqualsWithExistsLessons() {
         Group group = new Group();
         group.setId(1L);
         group.setTitle("group");

@@ -31,7 +31,7 @@ public class RoomTypeServiceTest {
     private RoomTypeServiceImpl roomTypeService;
 
     @Test
-    public void testGetById() {
+    public void getRoomTypeById() {
         RoomType roomType = new RoomType();
         roomType.setId(1L);
         roomType.setDescription("1 rooType");
@@ -45,7 +45,7 @@ public class RoomTypeServiceTest {
     }
 
     @Test(expected = EntityNotFoundException.class)
-    public void notFoundId() {
+    public void throwEntityNotFoundExceptionIfRoomTypeNotExists() {
         RoomType roomType = new RoomType();
         roomType.setId(1L);
         roomType.setDescription("1 rooType");
@@ -55,7 +55,7 @@ public class RoomTypeServiceTest {
     }
 
     @Test
-    public void testSave() {
+    public void saveRoomTypeIfDescriptionNotExists() {
         RoomType roomType = new RoomType();
         roomType.setId(1L);
         roomType.setDescription("1 roomType");
@@ -71,7 +71,7 @@ public class RoomTypeServiceTest {
     }
 
     @Test(expected = FieldAlreadyExistsException.class)
-    public void saveExistsDescription() {
+    public void throwFieldAlreadyExistsExceptionIfSavedDescriptionAlreadyExists() {
         RoomType roomType = new RoomType();
         roomType.setId(1L);
         roomType.setDescription("1 roomType");
@@ -84,7 +84,7 @@ public class RoomTypeServiceTest {
     }
 
     @Test
-    public void testUpdate() {
+    public void updateRoomTypeIfDescriptionNotExists() {
         RoomType roomType = new RoomType();
         roomType.setId(1L);
         roomType.setDescription("1 roomType");
@@ -105,7 +105,7 @@ public class RoomTypeServiceTest {
     }
 
     @Test(expected = FieldAlreadyExistsException.class)
-    public void updateWhenDescriptionIsExists() {
+    public void throwFieldAlreadyExistsExceptionIfUpdatedDescriptionAlreadyExists() {
         RoomType roomType = new RoomType();
         roomType.setId(1L);
         roomType.setDescription("1 roomType");
