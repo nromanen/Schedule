@@ -9,8 +9,10 @@ import java.time.LocalDate;
 public class SemesterDTO {
     private long id;
     private String description;
+    private int year;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
     private LocalDate startDay;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
     private LocalDate endDay;
+    private boolean currentSemester;
 }

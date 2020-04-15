@@ -52,19 +52,19 @@ public class ScheduleController {
     }
 
     @GetMapping("/full/groups")
-    @ApiOperation(value = "Get full schedule for semester, returns for all groups by default")
+    @ApiOperation(value = "Get full schedule for semester. If groupId isn't specified returns schedule for all groups")
     public ResponseEntity<List<ScheduleForGroupDTO>> getFullScheduleForGroup(@RequestParam Long semesterId,
                                                                      @RequestParam(required = false) Long groupId) {
-        log.info("I, getFullScheduleForGroup (semesterId = [{}], groupId = [{}]) ", semesterId, groupId);
+        log.info("In, getFullScheduleForGroup (semesterId = [{}], groupId = [{}]) ", semesterId, groupId);
         return ResponseEntity.status(HttpStatus.OK).body(scheduleService.getFullSchedule(semesterId, groupId));
     }
 
     @GetMapping("/full/teachers")
-    @ApiOperation(value = "Get full schedule for semester, returns for all groups by default")
+    @ApiOperation(value = "Get full schedule for teacher by semester")
     public ResponseEntity<List<ScheduleForGroupDTO>> getFullScheduleForTeacher(@RequestParam Long semesterId,
-                                                                             @RequestParam(required = false) Long groupId) {
-        log.info("In, getFullScheduleForGroup (semesterId = [{}], groupId = [{}]) ", semesterId, groupId);
-        return ResponseEntity.status(HttpStatus.OK).body(scheduleService.getFullSchedule(semesterId, groupId));
+                                                                             @RequestParam Long teacherId) {
+        log.info("In, getFullScheduleForTeacher (semesterId = [{}], teacherId = [{}]) ", semesterId, teacherId);
+        return ResponseEntity.status(HttpStatus.OK).body(scheduleService.getScheduleForTeacher(semesterId, teacherId));
     }
 
     @PostMapping
