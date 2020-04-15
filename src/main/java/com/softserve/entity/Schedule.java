@@ -4,6 +4,7 @@ import com.softserve.entity.enums.EvenOdd;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 
@@ -19,24 +20,30 @@ public class Schedule implements Serializable {
 
 
     @Column(name = "day_of_week",length = 35, nullable = false)
+    @NotNull
     private String dayOfWeek;
 
     @Enumerated(EnumType.STRING)
+    @NotNull
     private EvenOdd evenOdd;
 
     @ManyToOne(targetEntity = Semester.class)
     @JoinColumn(name = "semester_id")
+    @NotNull
     private Semester semester;
 
     @ManyToOne(targetEntity = Room.class)
     @JoinColumn(name = "room_id")
+    @NotNull
     private Room room;
 
     @ManyToOne(targetEntity = Period.class)
     @JoinColumn(name = "period_id")
+    @NotNull
     private Period period;
 
     @ManyToOne(targetEntity = Lesson.class)
     @JoinColumn(name = "lesson_id")
+    @NotNull
     private Lesson lesson;
 }
