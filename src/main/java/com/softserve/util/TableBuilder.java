@@ -38,13 +38,8 @@ public class TableBuilder {
             columnWidths[i] = columnWidth;
         }
         table.setWidths(columnWidths);
-//        table.setWidths(new float[]{columnWidth, columnWidth, columnWidth, columnWidth, columnWidth,
-//                columnWidth, columnWidth, columnWidth});
-
-//        Font headFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD);
         Font headFont = new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.BOLD, BaseColor.BLACK);
-
-
+        
         //create table title cell
         Font font = new Font(Font.FontFamily.TIMES_ROMAN, 14, Font.BOLD, BaseColor.WHITE);
         Teacher teacher = schedules.get(0).getLesson().getTeacher();
