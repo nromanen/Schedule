@@ -1,3 +1,4 @@
+delete from de3rldngv565ak."public".lessons;
 delete from de3rldngv565ak."public".subjects;
 
 insert into de3rldngv565ak."public".subjects(id, name) VALUES

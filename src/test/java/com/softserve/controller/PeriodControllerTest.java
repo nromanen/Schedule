@@ -178,11 +178,12 @@ public class PeriodControllerTest {
     public void whenPeriodIntersectWithAnother() throws Exception {
         AddPeriodDTO periodDtoForSave = new AddPeriodDTO();
         periodDtoForSave.setName("intersect period");
-        periodDtoForSave.setStartTime(Timestamp.valueOf("2020-04-15 03:30:00"));
-        periodDtoForSave.setEndTime(Timestamp.valueOf("2020-04-15 04:30:00"));
+        periodDtoForSave.setStartTime(Timestamp.valueOf("1970-01-01 03:30:00"));
+        periodDtoForSave.setEndTime(Timestamp.valueOf("1970-01-01 04:30:00"));
 
         mockMvc.perform(post("/classes").content(objectMapper.writeValueAsString(periodDtoForSave))
                 .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
                 .andExpect(status().isBadRequest());
     }
 }

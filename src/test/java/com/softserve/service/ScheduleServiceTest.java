@@ -1,25 +1,26 @@
 package com.softserve.service;
 
-import com.softserve.dto.*;
+import com.softserve.dto.CreateScheduleInfoDTO;
+import com.softserve.dto.RoomForScheduleInfoDTO;
+import com.softserve.dto.RoomTypeDTO;
 import com.softserve.entity.*;
 import com.softserve.entity.enums.EvenOdd;
-import com.softserve.entity.enums.LessonType;
 import com.softserve.exception.EntityNotFoundException;
 import com.softserve.exception.ScheduleConflictException;
 import com.softserve.repository.ScheduleRepository;
 import com.softserve.service.impl.ScheduleServiceImpl;
-import com.softserve.service.mapper.*;
+import com.softserve.service.mapper.GroupMapperImpl;
+import com.softserve.service.mapper.LessonsInScheduleMapperImpl;
+import com.softserve.service.mapper.PeriodMapperImpl;
+import com.softserve.service.mapper.RoomForScheduleMapperImpl;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.beans.factory.annotation.Autowired;
 
-import java.sql.Timestamp;
 import java.time.DayOfWeek;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;

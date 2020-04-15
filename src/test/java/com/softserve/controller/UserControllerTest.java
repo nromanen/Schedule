@@ -84,7 +84,7 @@ public class UserControllerTest {
 
     @Test
     public void testDelete() throws Exception {
-        mockMvc.perform(delete("/users/{id}", 7)
+        mockMvc.perform(delete("/users/{id}", 8)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
@@ -114,7 +114,7 @@ public class UserControllerTest {
         mockMvc.perform(post("/users").content(objectMapper.writeValueAsString(userCreateDTO))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isInternalServerError());
     }
 
     @Test

@@ -137,6 +137,6 @@ public class RoomControllerTest {
         mockMvc.perform(put("/rooms", 4).content(objectMapper.writeValueAsString(roomDtoForUpdate))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isInternalServerError());
     }
 }

@@ -65,6 +65,7 @@ public class SemesterControllerTest {
         SemesterDTO semesterDtoForSave = new SemesterDTO();
         semesterDtoForSave.setId(1);
         semesterDtoForSave.setDescription("another semester");
+        semesterDtoForSave.setYear(2020);
         semesterDtoForSave.setStartDay(LocalDate.parse("2020/08/20", DateTimeFormatter.ofPattern("yyyy/MM/dd")));
         semesterDtoForSave.setEndDay(LocalDate.parse("2020/09/20", DateTimeFormatter.ofPattern("yyyy/MM/dd")));
 
@@ -77,6 +78,7 @@ public class SemesterControllerTest {
     public void testUpdate() throws Exception {
         SemesterDTO semesterDtoForUpdate = new SemesterDTO();
         semesterDtoForUpdate.setId(4);
+        semesterDtoForUpdate.setYear(2222);
         semesterDtoForUpdate.setDescription("another semester");
         semesterDtoForUpdate.setStartDay(LocalDate.of(2020, 7, 20));
         semesterDtoForUpdate.setEndDay(LocalDate.of(2020, 9, 20));

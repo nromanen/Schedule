@@ -1,7 +1,9 @@
 package com.softserve.service;
 
 import com.softserve.entity.Semester;
+import com.softserve.exception.EntityAlreadyExistsException;
 import com.softserve.exception.EntityNotFoundException;
+import com.softserve.exception.FieldAlreadyExistsException;
 import com.softserve.exception.IncorrectTimeException;
 import com.softserve.repository.SemesterRepository;
 import com.softserve.service.impl.SemesterServiceImpl;
@@ -35,6 +37,7 @@ public class SemesterServiceTest {
     public void testGetById() {
         Semester semester = new Semester();
         semester.setId(1L);
+        semester.setYear(2020);
         semester.setDescription("1 semester");
         semester.setStartDay(LocalDate.of(2020, 4, 10));
         semester.setEndDay(LocalDate.of(2020, 5, 10));
@@ -51,6 +54,7 @@ public class SemesterServiceTest {
     public void notFoundId() {
         Semester semester = new Semester();
         semester.setId(1L);
+        semester.setYear(2020);
         semester.setDescription("1 semester");
         semester.setStartDay(LocalDate.of(2020, 4, 10));
         semester.setEndDay(LocalDate.of(2020, 5, 10));
@@ -63,6 +67,7 @@ public class SemesterServiceTest {
     public void testSave() {
         Semester semester = new Semester();
         semester.setId(1L);
+        semester.setYear(2020);
         semester.setDescription("1 semester");
         semester.setStartDay(LocalDate.of(2020, 4, 10));
         semester.setEndDay(LocalDate.of(2020, 5, 10));
@@ -75,10 +80,39 @@ public class SemesterServiceTest {
         verify(semesterRepository, times(1)).save(semester);
     }
 
+    @Test(expected = FieldAlreadyExistsException.class)
+    public void testSaveWhenFieldAlreadyExists() {
+        Semester semester = new Semester();
+        semester.setId(1L);
+        semester.setYear(2020);
+        semester.setDescription("1 semester");
+        semester.setStartDay(LocalDate.of(2020, 4, 10));
+        semester.setEndDay(LocalDate.of(2020, 5, 10));
+        semester.setCurrentSemester(true);
+
+        when(semesterRepository.getCurrentSemester()).thenReturn(Optional.of(semester));
+
+        semesterService.save(semester);
+    }
+
+    @Test(expected = EntityAlreadyExistsException.class)
+    public void testSaveWhenDescriptionAlreadyExists() {
+        Semester semester = new Semester();
+        semester.setId(1L);
+        semester.setDescription("1 semester");
+        semester.setStartDay(LocalDate.of(2020, 4, 10));
+        semester.setEndDay(LocalDate.of(2020, 5, 10));
+
+        when(semesterRepository.semesterDuplicates(semester)).thenReturn(Optional.of(semester));
+
+        semesterService.save(semester);
+    }
+
     @Test(expected = IncorrectTimeException.class)
     public void saveWhenStartDayAfterEndDay() {
         Semester semester = new Semester();
         semester.setId(1L);
+        semester.setYear(2020);
         semester.setDescription("1 semester");
         semester.setStartDay(LocalDate.of(2020, 4, 10));
         semester.setEndDay(LocalDate.of(2020, 3, 10));
@@ -111,9 +145,52 @@ public class SemesterServiceTest {
     public void updateWhenStartDayAfterEndDay() {
         Semester semester = new Semester();
         semester.setId(1L);
+        semester.setYear(2020);
         semester.setDescription("1 semester");
         semester.setStartDay(LocalDate.of(2020, 3, 10));
         semester.setEndDay(LocalDate.of(2020, 1, 11));
+
+        semesterService.update(semester);
+    }
+
+    @Test(expected = EntityAlreadyExistsException.class)
+    public void testUpdateWhenDescriptionAlreadyExists() {
+        Semester semester = new Semester();
+        semester.setId(1L);
+        semester.setDescription("1 semester");
+        semester.setYear(2020);
+        semester.setStartDay(LocalDate.of(2020, 4, 10));
+        semester.setEndDay(LocalDate.of(2020, 5, 10));
+        Semester anotherSemester = new Semester();
+        anotherSemester.setId(2L);
+        anotherSemester.setDescription("1 semester");
+        anotherSemester.setYear(2020);
+        anotherSemester.setStartDay(LocalDate.of(2020, 10, 1));
+        anotherSemester.setEndDay(LocalDate.of(2020, 12, 15));
+
+        when(semesterRepository.semesterDuplicates(semester)).thenReturn(Optional.of(anotherSemester));
+
+        semesterService.update(semester);
+    }
+
+    @Test(expected = FieldAlreadyExistsException.class)
+    public void testUpdateWhenFieldAlreadyExists() {
+        Semester semester = new Semester();
+        semester.setId(1L);
+        semester.setYear(2020);
+        semester.setDescription("3 semester");
+        semester.setStartDay(LocalDate.of(2020, 8, 10));
+        semester.setEndDay(LocalDate.of(2020, 9, 10));
+        semester.setCurrentSemester(true);
+        Semester currentSemester = new Semester();
+        currentSemester.setId(2L);
+        currentSemester.setYear(2020);
+        currentSemester.setDescription("1 semester");
+        currentSemester.setStartDay(LocalDate.of(2020, 4, 10));
+        currentSemester.setEndDay(LocalDate.of(2020, 5, 10));
+        currentSemester.setCurrentSemester(true);
+
+        when(semesterRepository.getCurrentSemester()).thenReturn(Optional.of(currentSemester));
 
         semesterService.update(semester);
     }

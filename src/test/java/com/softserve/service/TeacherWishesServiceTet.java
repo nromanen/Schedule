@@ -104,7 +104,7 @@ public class TeacherWishesServiceTet {
         teacherWishes.setTeacher(teacher);
         teacherWishes.setTeacherWishesList(wishesArray);
 
-        when(teacherWishesRepository.countWishesByTeacherId(teacher.getId())).thenReturn(0);
+        when(teacherWishesRepository.countWishesByTeacherId(teacher.getId())).thenReturn(0L);
         when(teacherWishesRepository.save(teacherWishes)).thenReturn(teacherWishes);
 
         TeacherWishes result = teacherWishesService.save(teacherWishes);
@@ -134,7 +134,7 @@ public class TeacherWishesServiceTet {
         teacherWishes.setTeacher(teacher);
         teacherWishes.setTeacherWishesList(wishesArray);
 
-        when(teacherWishesRepository.countWishesByTeacherId(1L)).thenReturn(1);
+        when(teacherWishesRepository.countWishesByTeacherId(1L)).thenReturn(1L);
 
         teacherWishesService.save(teacherWishes);
         verify(teacherWishesRepository, times(1)).save(teacherWishes);
@@ -168,7 +168,7 @@ public class TeacherWishesServiceTet {
         teacherWishes.setTeacher(teacher);
         teacherWishes.setTeacherWishesList(wishesArray);
 
-        when(teacherWishesRepository.countWishesByTeacherId(1L)).thenReturn(0);
+        when(teacherWishesRepository.countWishesByTeacherId(1L)).thenReturn(0L);
 
         teacherWishesService.save(teacherWishes);
         verify(teacherWishesRepository, times(1)).save(teacherWishes);
@@ -202,7 +202,7 @@ public class TeacherWishesServiceTet {
         teacherWishes.setTeacher(teacher);
         teacherWishes.setTeacherWishesList(wishesArray);
 
-        when(teacherWishesRepository.countWishesByTeacherId(1L)).thenReturn(0);
+        when(teacherWishesRepository.countWishesByTeacherId(1L)).thenReturn(0L);
 
         teacherWishesService.save(teacherWishes);
         verify(teacherWishesRepository, times(1)).save(teacherWishes);
@@ -232,7 +232,7 @@ public class TeacherWishesServiceTet {
         teacherWishes.setTeacher(teacher);
         teacherWishes.setTeacherWishesList(wishesArray);
 
-        when(teacherWishesRepository.countWishesByTeacherId(1L)).thenReturn(0);
+        when(teacherWishesRepository.countWishesByTeacherId(1L)).thenReturn(0L);
 
         teacherWishesService.save(teacherWishes);
         verify(teacherWishesRepository, times(1)).save(teacherWishes);
