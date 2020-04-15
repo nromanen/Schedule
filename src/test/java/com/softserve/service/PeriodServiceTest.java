@@ -33,7 +33,7 @@ public class PeriodServiceTest {
     private PeriodServiceImpl periodService;
 
     @Test
-    public void getById() {
+    public void getPeriodById() {
         Period period = new Period();
         period.setId(1L);
         period.setName("Some period");
@@ -49,7 +49,7 @@ public class PeriodServiceTest {
     }
 
     @Test(expected = EntityNotFoundException.class)
-    public void notFoundId() {
+    public void throwEntityNotFoundExceptionIfPeriodNotFoundedById() {
         Period period = new Period();
         period.setId(1L);
         period.setName("Some period");
@@ -61,7 +61,7 @@ public class PeriodServiceTest {
     }
 
     @Test
-    public void testSave() {
+    public void savePeriodIfItHasCorrectTimeAndNotIntersectsWithOtherPeriodsAndNameIsNotExist() {
         Period period = new Period();
         period.setId(1L);
         period.setName("Some period");
@@ -86,7 +86,7 @@ public class PeriodServiceTest {
     }
 
     @Test(expected = IncorrectTimeException.class)
-    public void saveWhenPeriodBeginsAfterEnd() {
+    public void throwIncorrectTimeExceptionIfSavePeriodBeginsAfterHisEnd() {
         Period period = new Period();
         period.setId(1L);
         period.setName("Some period");
@@ -97,7 +97,7 @@ public class PeriodServiceTest {
     }
 
     @Test(expected = FieldAlreadyExistsException.class)
-    public void saveWhenPeriodIsAlreadyExists() {
+    public void throwFieldAlreadyExistsExceptionIfSavePeriodWithExistName() {
         Period period = new Period();
         period.setId(1L);
         period.setName("Some period");
@@ -120,7 +120,7 @@ public class PeriodServiceTest {
     }
 
     @Test(expected = PeriodConflictException.class)
-    public void saveWhenPeriodHasConflict() {
+    public void throwPeriodConflictExceptionIfSavedPeriodIntersectsWithOtherPeriods() {
         Period period = new Period();
         period.setId(1L);
         period.setName("Some period");
@@ -141,7 +141,7 @@ public class PeriodServiceTest {
     }
 
     @Test
-    public void testSaveList() {
+    public void saveListOfPeriodsIfAllPeriodsHaveCorrectTimeNotIntersectWithOtherPeriodsAndNamesAreNotExist() {
         Period period = new Period();
         period.setId(1L);
         period.setName("Some period");
@@ -169,7 +169,7 @@ public class PeriodServiceTest {
     }
 
     @Test(expected = IncorrectTimeException.class)
-    public void saveListWithIncorrectTime() {
+    public void throwIncorrectTimeExceptionIfSaveListOfPeriodsAndOneOfThemHasIncorrectTime() {
         Period period = new Period();
         period.setId(1L);
         period.setName("Some period");
@@ -182,7 +182,7 @@ public class PeriodServiceTest {
     }
 
     @Test(expected = PeriodConflictException.class)
-    public void saveListWhenConflict() {
+    public void throwPeriodConflictExceptionIfSaveListOfPeriodsAndOneOfThemIntersectsWithOtherPeriod() {
         Period period = new Period();
         period.setId(1L);
         period.setName("Some period");
@@ -205,7 +205,7 @@ public class PeriodServiceTest {
     }
 
     @Test
-    public void testUpdate() {
+    public void updatePeriodIfItHasCorrectTimeAndNotIntersectsWithOtherPeriodsAndNameIsNotExist() {
         Period period = new Period();
         period.setId(1L);
         period.setName("Some period");
@@ -233,7 +233,7 @@ public class PeriodServiceTest {
     }
 
     @Test(expected = FieldAlreadyExistsException.class)
-    public void updateWhenFieldAlreadyExists() {
+    public void throwPeriodConflictExceptionIfUpdatedPeriodsNameAlreadyExist() {
         Period period = new Period();
         period.setId(1L);
         period.setName("Some period");
@@ -258,7 +258,7 @@ public class PeriodServiceTest {
     }
 
     @Test(expected = IncorrectTimeException.class)
-    public void updateWhenIncorrectTime() {
+    public void throwIncorrectTimeExceptionIfUpdatedPeriodBeginsAfterHisEnd() {
         Period period = new Period();
         period.setId(1L);
         period.setName("Some period");
@@ -269,7 +269,7 @@ public class PeriodServiceTest {
     }
 
     @Test(expected = PeriodConflictException.class)
-    public void updateWhenConflictInTime() {
+    public void throwPeriodConflictExceptionIfUpdatedPeriodIntersectsWithOther() {
         Period period = new Period();
         period.setId(1L);
         period.setName("Some period");

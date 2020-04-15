@@ -31,7 +31,7 @@ public class GroupServiceTest {
     private GroupServiceImpl groupService;
 
     @Test
-    public void testGetById() {
+    public void getGroupById() {
         Group group = new Group();
         group.setTitle("some group");
         group.setId(1L);
@@ -45,7 +45,7 @@ public class GroupServiceTest {
     }
 
     @Test(expected = EntityNotFoundException.class)
-    public void notFoundId() {
+    public void throwEntityNotFoundExceptionIfGroupNotFoundedById() {
         Group group = new Group();
         group.setTitle("some group");
         group.setId(1L);
@@ -55,7 +55,7 @@ public class GroupServiceTest {
     }
 
     @Test
-    public void testSave() {
+    public void saveGroupIfTitleNotExists() {
         Group group = new Group();
         group.setTitle("some group");
         group.setId(1L);
@@ -71,7 +71,7 @@ public class GroupServiceTest {
     }
 
     @Test(expected = FieldAlreadyExistsException.class)
-    public void saveExistsTitle() {
+    public void throwFieldAlreadyExistsExceptionIfSavedGroupAlreadyExists() {
         Group group = new Group();
         group.setTitle("some group");
         group.setId(1L);
@@ -84,7 +84,7 @@ public class GroupServiceTest {
     }
 
     @Test
-    public void testUpdate() {
+    public void updateGroupIfTitleNotExists() {
         Group oldGroup = new Group();
         oldGroup.setTitle("some title");
         oldGroup.setId(1L);
@@ -104,7 +104,7 @@ public class GroupServiceTest {
     }
 
     @Test(expected = FieldAlreadyExistsException.class)
-    public void updateWhenTitleIsExists() {
+    public void throwFieldAlreadyExistsExceptionIfUpdatedTitleAlreadyExists() {
         Group oldGroup = new Group();
         oldGroup.setTitle("some group");
         oldGroup.setId(1L);
@@ -121,7 +121,7 @@ public class GroupServiceTest {
     }
 
     @Test(expected = EntityNotFoundException.class)
-    public void updateWhenGroupNotFound() {
+    public void throwEntityNotFoundExceptionIfTryToUpdateNotFoundedGroup() {
         Group group = new Group();
         group.setTitle("some group");
         group.setId(1L);

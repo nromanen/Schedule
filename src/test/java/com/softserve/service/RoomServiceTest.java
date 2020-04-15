@@ -31,7 +31,7 @@ public class RoomServiceTest {
     private RoomServiceImpl roomService;
 
     @Test
-    public void testGetById() {
+    public void getRoomById() {
         RoomType roomType = new RoomType();
         roomType.setId(1L);
         roomType.setDescription("Small auditory");
@@ -50,7 +50,7 @@ public class RoomServiceTest {
     }
 
     @Test(expected = EntityNotFoundException.class)
-    public void notFoundId() {
+    public void throwPeriodConflictExceptionIfRoomNotFounded() {
         RoomType roomType = new RoomType();
         roomType.setId(1L);
         roomType.setDescription("Small auditory");
@@ -64,7 +64,7 @@ public class RoomServiceTest {
     }
 
     @Test
-    public void testSave() {
+    public void saveRoomIfNameAndTypeAreNotExist() {
         RoomType roomType = new RoomType();
         roomType.setId(1L);
         roomType.setDescription("Small auditory");
@@ -85,7 +85,7 @@ public class RoomServiceTest {
     }
 
     @Test(expected = EntityAlreadyExistsException.class)
-    public void saveExistsName() {
+    public void throwEntityAlreadyExistsExceptionIfSavedRoomAlreadyExists() {
         RoomType roomType = new RoomType();
         roomType.setId(1L);
         roomType.setDescription("Small auditory");
@@ -102,7 +102,7 @@ public class RoomServiceTest {
     }
 
     @Test
-    public void testUpdate() {
+    public void updateRoomIfNameAndTypeAreNotExist() {
         RoomType roomType = new RoomType();
         roomType.setId(1L);
         roomType.setDescription("Small auditory");
@@ -129,7 +129,7 @@ public class RoomServiceTest {
     }
 
     @Test(expected = EntityAlreadyExistsException.class)
-    public void updateWhenNameIsExists() {
+    public void throwEntityAlreadyExistsExceptionIfUpdatedNameAndTypeAlreadyExist() {
         RoomType roomType = new RoomType();
         roomType.setId(1L);
         roomType.setDescription("Small auditory");

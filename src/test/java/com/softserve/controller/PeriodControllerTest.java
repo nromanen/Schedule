@@ -143,7 +143,7 @@ public class PeriodControllerTest {
         mockMvc.perform(post("/classes").content(objectMapper.writeValueAsString(periodDtoForSave))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isInternalServerError());
     }
 
     @Test
@@ -157,7 +157,7 @@ public class PeriodControllerTest {
         mockMvc.perform(put("/classes", 6).content(objectMapper.writeValueAsString(periodDtoForUpdate))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isInternalServerError());
     }
 
     @Test
