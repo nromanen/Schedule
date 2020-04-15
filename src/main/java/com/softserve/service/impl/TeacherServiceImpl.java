@@ -113,6 +113,7 @@ public class TeacherServiceImpl implements TeacherService {
      * @param teacherId Long teacherId used to find Teacher by it
      * @param userId Long userId used to find User by it
      * @return Teacher entity
+     *
      * @throws EntityAlreadyExistsException when user already exist in some teacher/manager or teacher contains some userId
      */
     @Override

@@ -116,6 +116,7 @@ public class SemesterServiceImpl implements SemesterService {
      */
     @Override
     public Semester isSemesterExists(Semester semester) {
+        log.info("In isSemesterExists with semester = {}", semester);
         return semesterRepository.semesterDuplicates(semester).orElse(null);
     }
 
@@ -126,6 +127,7 @@ public class SemesterServiceImpl implements SemesterService {
      */
     @Override
     public Semester getCurrentSemester() {
+        log.info("In getCurrentSemester");
         return semesterRepository.getCurrentSemester().orElse(null);
     }
 
@@ -138,6 +140,7 @@ public class SemesterServiceImpl implements SemesterService {
 
     //check if there is a semester with description and year return true, else - false
     private boolean isSemesterExistsByDescriptionAndYear(Semester semester) {
+        log.info("In isSemesterExistsByDescriptionAndYear with semester = {}", semester);
         Semester object = isSemesterExists(semester);
         if (object == null) {
             return false;
@@ -147,6 +150,7 @@ public class SemesterServiceImpl implements SemesterService {
 
     //check if there is a semester with description and year return true, else - false (for update method)
     private boolean isSemesterExistsByDescriptionAndYearForUpdate(Semester semester) {
+        log.info("In isSemesterExistsByDescriptionAndYearForUpdate with semester = {}", semester);
         Semester object = isSemesterExists(semester);
         if (object == null) {
             return false;
@@ -157,6 +161,7 @@ public class SemesterServiceImpl implements SemesterService {
 
     //check if semester is current return true, else - false
     private boolean isSemesterCurrent(long id) {
+        log.info("In isSemesterCurrent with id = {}", id);
         Semester semester = getCurrentSemester();
         if (semester == null) {
             return false;
