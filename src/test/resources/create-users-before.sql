@@ -1,6 +1,6 @@
-delete from testschedule."public".users;
+delete from de3rldngv565ak."public".users;
 
-insert into testschedule."public".users(id, email, password, role) VALUES
+insert into de3rldngv565ak."public".users(id, email, password, role) VALUES
 (4,'first@mail.com', '$2a$04$SpUhTZ/SjkDQop/Zvx1.seftJdqvOploGce/wau247zQhpEvKtz9.', 'ROLE_MANAGER'),
 (5,'second@mail.com', '$2a$04$SpUhTZ/SjkDQop/Zvx1.seftJdqvOploGce/wau247zQhpEvKtz9.', 'ROLE_TEACHER'),
 (6,'third@mail.com', '$2a$04$SpUhTZ/SjkDQop/Zvx1.seftJdqvOploGce/wau247zQhpEvKtz9.', 'ROLE_TEACHER'),

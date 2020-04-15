@@ -51,6 +51,10 @@ public class DBConfigTest {
         sessionFactoryBean.setDataSource(getDataSource());
         Properties properties = new Properties();
 
+        properties.put("hibernate.connection.url", environment.getProperty(URL));
+        properties.put("hibernate.connection.username", environment.getProperty(USER));
+        properties.put("hibernate.connection.password", environment.getProperty(PASS));
+
         properties.put(SHOW_SQL, Objects.requireNonNull(environment.getProperty(SHOW_SQL)));
         properties.put(HBM2DDL_AUTO, Objects.requireNonNull(environment.getProperty(HBM2DDL_AUTO)));
         properties.put(DIALECT, Objects.requireNonNull(environment.getProperty(DIALECT)));

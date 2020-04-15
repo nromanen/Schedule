@@ -5,9 +5,7 @@ import com.softserve.config.DBConfigTest;
 import com.softserve.config.MyWebAppInitializer;
 import com.softserve.config.WebMvcConfig;
 import com.softserve.dto.TeacherDTO;
-import com.softserve.entity.Teacher;
 import com.softserve.service.TeacherService;
-import com.softserve.service.mapper.TeacherMapperImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -38,9 +36,6 @@ public class TeacherControllerTest {
 
     @Autowired
     private WebApplicationContext wac;
-
-    @Autowired
-    private TeacherService teacherService;
 
     @Before
     public void setup() {

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.softserve.config.DBConfigTest;
 import com.softserve.config.MyWebAppInitializer;
 import com.softserve.config.WebMvcConfig;
-import com.softserve.dto.SubjectDTO;
+import com.softserve.dto.RoomTypeDTO;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -27,8 +27,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {WebMvcConfig.class, DBConfigTest.class, MyWebAppInitializer.class})
 @WebAppConfiguration
-@Sql(value = "classpath:create-subject-before.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-public class SubjectControllerTest {
+@Sql(value = "classpath:create-roomtypes-before.sql")
+public class RoomTypeControllerTest {
 
     private MockMvc mockMvc;
     private ObjectMapper objectMapper = new ObjectMapper();
@@ -43,14 +43,14 @@ public class SubjectControllerTest {
 
     @Test
     public void testGetAll() throws Exception {
-        mockMvc.perform(get("/subjects").accept(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/room-types").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"));
     }
 
     @Test
     public void testGet() throws Exception {
-        mockMvc.perform(get("/subjects/{id}", 4).contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/room-types/{id}", 4).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"))
                 .andExpect(jsonPath("$.id").value(4));
@@ -58,80 +58,59 @@ public class SubjectControllerTest {
 
     @Test
     public void testSave() throws Exception {
-        SubjectDTO subjectDtoForSave = new SubjectDTO();
-        subjectDtoForSave.setName("save subject name");
+        RoomTypeDTO roomTypeDTO = new RoomTypeDTO();
+        roomTypeDTO.setId(1L);
+        roomTypeDTO.setDescription("Another Small auditory");
 
-        mockMvc.perform(post("/subjects").content(objectMapper.writeValueAsString(subjectDtoForSave))
+        mockMvc.perform(post("/room-types").content(objectMapper.writeValueAsString(roomTypeDTO))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
     }
 
     @Test
     public void testUpdate() throws Exception {
-        SubjectDTO subjectDtoForUpdate = new SubjectDTO();
-        subjectDtoForUpdate.setId(5L);
-        subjectDtoForUpdate.setName("updated History");
+        RoomTypeDTO roomTypeDTO = new RoomTypeDTO();
+        roomTypeDTO.setId(4L);
+        roomTypeDTO.setDescription("Another Small auditory");
 
-        mockMvc.perform(put("/subjects", 5).content(objectMapper.writeValueAsString(subjectDtoForUpdate))
+        mockMvc.perform(put("/room-types", 4).content(objectMapper.writeValueAsString(roomTypeDTO))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(subjectDtoForUpdate.getId()))
-                .andExpect(jsonPath("$.name").value(subjectDtoForUpdate.getName()));
+                .andExpect(jsonPath("$.id").value(roomTypeDTO.getId()))
+                .andExpect(jsonPath("$.description").value(roomTypeDTO.getDescription()));
     }
 
     @Test
     public void testDelete() throws Exception {
-        mockMvc.perform(delete("/subjects/{id}", 5)
+        mockMvc.perform(delete("/room-types/{id}", 6)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
 
     @Test
-    public void whenSubjectNotFound() throws Exception {
-        mockMvc.perform(get("/subjects/100")).andExpect(status().isNotFound());
+    public void whenRoomTypeNotFound() throws Exception {
+        mockMvc.perform(get("/room-types/100")).andExpect(status().isNotFound());
     }
 
     @Test
-    public void whenSaveExistsSubject() throws Exception {
-        SubjectDTO subjectDTO = new SubjectDTO();
-        subjectDTO.setName("Biology");
+    public void whenSaveDescriptionIsNull() throws Exception {
+        RoomTypeDTO roomTypeDTO = new RoomTypeDTO();
+        roomTypeDTO.setId(1L);
+        roomTypeDTO.setDescription(null);
 
-        mockMvc.perform(post("/subjects").content(objectMapper.writeValueAsString(subjectDTO))
+        mockMvc.perform(post("/room-types").content(objectMapper.writeValueAsString(roomTypeDTO))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isBadRequest());
     }
 
     @Test
-    public void whenSaveNameIsNull() throws Exception {
-        SubjectDTO subjectDtoForSave = new SubjectDTO();
-        subjectDtoForSave.setName(null);
+    public void whenUpdateDescriptionIsNull() throws Exception {
+        RoomTypeDTO roomTypeDTO = new RoomTypeDTO();
+        roomTypeDTO.setId(5L);
+        roomTypeDTO.setDescription(null);
 
-        mockMvc.perform(post("/subjects").content(objectMapper.writeValueAsString(subjectDtoForSave))
-                .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isBadRequest());
-    }
-
-    @Test
-    public void whenUpdateExistsSubject() throws Exception {
-        SubjectDTO subjectDtoForUpdate = new SubjectDTO();
-        subjectDtoForUpdate.setId(4L);
-        subjectDtoForUpdate.setName("Astronomy");
-
-        mockMvc.perform(put("/subjects", 4).content(objectMapper.writeValueAsString(subjectDtoForUpdate))
-                .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isBadRequest());
-    }
-
-    @Test
-    public void whenUpdateNullName() throws Exception {
-        SubjectDTO subjectDtoForUpdate = new SubjectDTO();
-        subjectDtoForUpdate.setId(6L);
-        subjectDtoForUpdate.setName(null);
-
-        mockMvc.perform(put("/subjects", 6).content(objectMapper.writeValueAsString(subjectDtoForUpdate))
+        mockMvc.perform(put("/room-types").content(objectMapper.writeValueAsString(roomTypeDTO))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isBadRequest());

@@ -9,7 +9,6 @@ import com.softserve.dto.LessonInfoDTO;
 import com.softserve.dto.SubjectDTO;
 import com.softserve.dto.TeacherNameDTO;
 import com.softserve.entity.Lesson;
-import com.softserve.entity.enums.LessonType;
 import com.softserve.service.GroupService;
 import com.softserve.service.LessonService;
 import com.softserve.service.SubjectService;
@@ -25,12 +24,14 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import static com.softserve.entity.enums.LessonType.LABORATORY;
 import static com.softserve.entity.enums.LessonType.LECTURE;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -40,6 +41,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {WebMvcConfig.class, DBConfigTest.class, MyWebAppInitializer.class})
 @WebAppConfiguration
+@Sql(value = "classpath:create-lessons-before.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 public class LessonsControllerTest {
 
     private MockMvc mockMvc;
@@ -74,10 +76,10 @@ public class LessonsControllerTest {
 
     @Test
     public void testGet() throws Exception {
-        mockMvc.perform(get("/lessons/{id}", 1).contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/lessons/{id}", 4).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"))
-                .andExpect(jsonPath("$.id").value(1));
+                .andExpect(jsonPath("$.id").value(4));
     }
 
     @Test
@@ -89,14 +91,14 @@ public class LessonsControllerTest {
 
     @Test
     public void testSave() throws Exception {
-        TeacherNameDTO teacherDTO = new TeacherNameMapperImpl().teacherNameToTeacherDTO(teacherService.getById(1L));
-        SubjectDTO subjectDTO = new SubjectMapperImpl().subjectToSubjectDTO(subjectService.getById(1L));
-        GroupDTO groupDTO = new GroupMapperImpl().groupToGroupDTO(groupService.getById(1L));
+        TeacherNameDTO teacherDTO = new TeacherNameMapperImpl().teacherNameToTeacherDTO(teacherService.getById(5L));
+        SubjectDTO subjectDTO = new SubjectMapperImpl().subjectToSubjectDTO(subjectService.getById(4L));
+        GroupDTO groupDTO = new GroupMapperImpl().groupToGroupDTO(groupService.getById(4L));
         LessonInfoDTO lessonDtoForSave = new LessonInfoDTO();
         lessonDtoForSave.setHours(1);
         lessonDtoForSave.setSubjectForSite("");
         lessonDtoForSave.setTeacherForSite("");
-        lessonDtoForSave.setLessonType(LessonType.LABORATORY);
+        lessonDtoForSave.setLessonType(LABORATORY);
         lessonDtoForSave.setTeacher(teacherDTO);
         lessonDtoForSave.setSubject(subjectDTO);
         lessonDtoForSave.setGroup(groupDTO);
@@ -109,14 +111,14 @@ public class LessonsControllerTest {
     @Test
     public void testUpdate() throws Exception {
         LessonInfoDTO lessonDtoForUpdate = new LessonInfoDTO();
-        lessonDtoForUpdate.setId(2L);
+        lessonDtoForUpdate.setId(5L);
         lessonDtoForUpdate.setHours(2);
         lessonDtoForUpdate.setTeacherForSite("Ivanov I.I. updated");
         lessonDtoForUpdate.setSubjectForSite("History updated");
         lessonDtoForUpdate.setLessonType(LECTURE);
-        lessonDtoForUpdate.setTeacher(new TeacherNameMapperImpl().teacherNameToTeacherDTO(teacherService.getById(1L)));
-        lessonDtoForUpdate.setSubject(new SubjectMapperImpl().subjectToSubjectDTO(subjectService.getById(2L)));
-        lessonDtoForUpdate.setGroup(new GroupMapperImpl().groupToGroupDTO(groupService.getById(3L)));
+        lessonDtoForUpdate.setTeacher(new TeacherNameMapperImpl().teacherNameToTeacherDTO(teacherService.getById(6L)));
+        lessonDtoForUpdate.setSubject(new SubjectMapperImpl().subjectToSubjectDTO(subjectService.getById(6L)));
+        lessonDtoForUpdate.setGroup(new GroupMapperImpl().groupToGroupDTO(groupService.getById(4L)));
 
         Lesson lessonForCompare = new LessonInfoMapperImpl().lessonInfoDTOToLesson(lessonDtoForUpdate);
 
@@ -134,31 +136,20 @@ public class LessonsControllerTest {
 
     @Test
     public void testDelete() throws Exception {
-        LessonInfoDTO lessonInfoDTO = new LessonInfoDTO();
-        lessonInfoDTO.setHours(1);
-        lessonInfoDTO.setTeacherForSite("Ivanov I.I. for delete");
-        lessonInfoDTO.setSubjectForSite("History of UA delete");
-        lessonInfoDTO.setLessonType(LECTURE);
-        lessonInfoDTO.setTeacher(new TeacherNameMapperImpl().teacherNameToTeacherDTO(teacherService.getById(1L)));
-        lessonInfoDTO.setSubject(new SubjectMapperImpl().subjectToSubjectDTO(subjectService.getById(3L)));
-        lessonInfoDTO.setGroup(new GroupMapperImpl().groupToGroupDTO(groupService.getById(3L)));
-        Lesson lesson = new LessonInfoMapperImpl().lessonInfoDTOToLesson(lessonInfoDTO);
-        lessonService.save(lesson);
-
-        mockMvc.perform(delete("/lessons/{id}", String.valueOf(lesson.getId()))
+        mockMvc.perform(delete("/lessons/{id}", 7)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
 
     @Test
     public void notFound() throws Exception {
-        mockMvc.perform(get("/lessons/10"))
+        mockMvc.perform(get("/lessons/100"))
                 .andExpect(status().isNotFound());
     }
 
     @Test
     public void whenSaveExistLesson() throws Exception {
-        LessonInfoDTO lessonDtoForSave = new LessonInfoMapperImpl().lessonToLessonInfoDTO(lessonService.getById(1L));
+        LessonInfoDTO lessonDtoForSave = new LessonInfoMapperImpl().lessonToLessonInfoDTO(lessonService.getById(4L));
 
         mockMvc.perform(post("/lessons").content(objectMapper.writeValueAsString(lessonDtoForSave))
                 .contentType(MediaType.APPLICATION_JSON))
@@ -168,15 +159,15 @@ public class LessonsControllerTest {
 
     @Test
     public void whenSaveNullTeacher() throws Exception {
-        TeacherNameDTO teacherDTO = new TeacherNameMapperImpl().teacherNameToTeacherDTO(teacherService.getById(1L));
-        SubjectDTO subjectDTO = new SubjectMapperImpl().subjectToSubjectDTO(subjectService.getById(2L));
-        GroupDTO groupDTO = new GroupMapperImpl().groupToGroupDTO(groupService.getById(3L));
+//        TeacherNameDTO teacherDTO = new TeacherNameMapperImpl().teacherNameToTeacherDTO(teacherService.getById(1L));
+        SubjectDTO subjectDTO = new SubjectMapperImpl().subjectToSubjectDTO(subjectService.getById(6L));
+        GroupDTO groupDTO = new GroupMapperImpl().groupToGroupDTO(groupService.getById(6L));
         LessonInfoDTO lessonDtoForSave = new LessonInfoDTO();
         lessonDtoForSave.setHours(2);
         lessonDtoForSave.setSubjectForSite("");
         lessonDtoForSave.setTeacherForSite("");
-        lessonDtoForSave.setLessonType(LessonType.LABORATORY);
-        lessonDtoForSave.setTeacher(teacherDTO);
+        lessonDtoForSave.setLessonType(LABORATORY);
+        lessonDtoForSave.setTeacher(null);
         lessonDtoForSave.setSubject(subjectDTO);
         lessonDtoForSave.setGroup(groupDTO);
 
@@ -189,16 +180,16 @@ public class LessonsControllerTest {
     @Test
     public void whenUpdateExistLesson() throws Exception {
         LessonInfoDTO lessonDtoForUpdate = new LessonInfoDTO();
-        lessonDtoForUpdate.setId(2L);
+        lessonDtoForUpdate.setId(4L);
         lessonDtoForUpdate.setHours(1);
         lessonDtoForUpdate.setTeacherForSite("Ivanov I.I. update");
         lessonDtoForUpdate.setSubjectForSite("History of USA");
-        lessonDtoForUpdate.setLessonType(LECTURE);
-        lessonDtoForUpdate.setTeacher(new TeacherNameMapperImpl().teacherNameToTeacherDTO(teacherService.getById(1L)));
-        lessonDtoForUpdate.setSubject(new SubjectMapperImpl().subjectToSubjectDTO(subjectService.getById(1L)));
-        lessonDtoForUpdate.setGroup(new GroupMapperImpl().groupToGroupDTO(groupService.getById(1L)));
+        lessonDtoForUpdate.setLessonType(LABORATORY);
+        lessonDtoForUpdate.setTeacher(new TeacherNameMapperImpl().teacherNameToTeacherDTO(teacherService.getById(5L)));
+        lessonDtoForUpdate.setSubject(new SubjectMapperImpl().subjectToSubjectDTO(subjectService.getById(5L)));
+        lessonDtoForUpdate.setGroup(new GroupMapperImpl().groupToGroupDTO(groupService.getById(5L)));
 
-        mockMvc.perform(put("/lessons", 2).content(objectMapper.writeValueAsString(lessonDtoForUpdate))
+        mockMvc.perform(put("/lessons", 4).content(objectMapper.writeValueAsString(lessonDtoForUpdate))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isBadRequest());
@@ -207,16 +198,16 @@ public class LessonsControllerTest {
     @Test
     public void whenUpdateNullTeacher() throws Exception {
         LessonInfoDTO lessonDtoForUpdate = new LessonInfoDTO();
-        lessonDtoForUpdate.setId(2L);
+        lessonDtoForUpdate.setId(4L);
         lessonDtoForUpdate.setHours(1);
         lessonDtoForUpdate.setTeacherForSite("Ivanov I.I. update");
-        lessonDtoForUpdate.setSubjectForSite("History of USA");
+        lessonDtoForUpdate.setSubjectForSite("History of World");
         lessonDtoForUpdate.setLessonType(LECTURE);
         lessonDtoForUpdate.setTeacher(null);
-        lessonDtoForUpdate.setSubject(new SubjectMapperImpl().subjectToSubjectDTO(subjectService.getById(1L)));
-        lessonDtoForUpdate.setGroup(new GroupMapperImpl().groupToGroupDTO(groupService.getById(1L)));
+        lessonDtoForUpdate.setSubject(new SubjectMapperImpl().subjectToSubjectDTO(subjectService.getById(5L)));
+        lessonDtoForUpdate.setGroup(new GroupMapperImpl().groupToGroupDTO(groupService.getById(4L)));
 
-        mockMvc.perform(put("/lessons", 2).content(objectMapper.writeValueAsString(lessonDtoForUpdate))
+        mockMvc.perform(put("/lessons", 4).content(objectMapper.writeValueAsString(lessonDtoForUpdate))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isBadRequest());
