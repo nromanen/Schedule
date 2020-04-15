@@ -1,11 +1,13 @@
 stages:
     - build
-    - deploy
-    - develop
+    - test
+    - production_deploy
+    - develop_deploy
 
 
 variables:
     GRADLE_OPTS: "-Dorg.gradle.daemon=true"
+
 before_script:
     - export GRADLE_USER_HOME=`pwd`/.gradle
 
@@ -21,23 +23,22 @@ build:
             - .gradle
     only:
          - master
-#test:
-#    image: gradle:alpine
-#    stage: test
-#    script:
-#        - gradle check
-#        - gradle test --tests GroupControllerTest
-#        - gradle test --tests PeriodControllerTest
-#        - gradle test --tests RoomControllerTest
-#        - gradle test --tests SubjectControllerTest
-#        - gradle test --tests TeacherControllerTest
-#    cache:
-#        key: "$CI_COMMIT_REF_NAME"
-#        policy: pull
-#    only:
-#         - develop
-deploy:
-    stage: deploy
+         - develop
+test:
+    image: gradle:alpine
+    stage: test
+    script:
+        - gradle check
+        - gradle test
+    cache:
+        key: "$CI_COMMIT_REF_NAME"
+        policy: pull
+    only:
+        - master
+        - develop
+
+production_deploy:
+    stage: production_deploy
     image: ruby:latest
     artifacts:
            when: always
@@ -49,8 +50,8 @@ deploy:
     only:
         - master
 
-develop:
-    stage: develop
+develop_deploy:
+    stage: develop_deploy
     image: ruby:latest
     artifacts:
            when: always
