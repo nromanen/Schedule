@@ -206,7 +206,7 @@ public class UserServiceTest {
         verify(mailService, times(1)).send(
                 ArgumentMatchers.eq(registeredUser.getEmail()),
                 ArgumentMatchers.contains("Activation account"),
-                ArgumentMatchers.contains("activation_account?token=")
+                ArgumentMatchers.contains("activation-page?token=")
         );
     }
 
