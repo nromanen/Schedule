@@ -165,8 +165,9 @@ public class UserServiceImpl implements UserService {
             String registrationMessage = "Hello, " + user.getEmail() + ".\n" +
                     "You received this email because you requested to registration on our site.\n" +
                     "For successfully sign up and activate your profile, you have to follow the next link: ";
-            String link = url.replace("sign_up", "");
-            String linkForUser = link + "activation_account?token=" + token;
+           // String link = url.replace("sign_up", "");
+            String link = "http://localhost:3000/activation-page?token=";
+            String linkForUser = link + token;
             String message = registrationMessage + " \r\n" + linkForUser;
             String subject = "Activation account";
             mailService.send(user.getEmail(), subject, message);

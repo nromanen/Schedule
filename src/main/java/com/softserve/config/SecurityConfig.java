@@ -25,13 +25,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private static final String ROOMS_ENDPOINT = "/rooms/**";
     private static final String SUBJECTS_ENDPOINT = "/subjects/**";
     private static final String TEACHERS_ENDPOINT = "/teachers/**";
-    private static final String LOGIN_ENDPOINT = "/auth/sign_in";
-    private static final String REGISTRATION_ENDPOINT = "/auth/sign_up";
-    private static final String ACTIVATION_ACCOUNT_ENDPOINT = "/auth/activation_account";
-    private static final String RESET_PASSWORD_ENDPOINT = "/auth/reset_password";
+    private static final String AUTH_ENDPOINT = "/auth/**";
     private static final String SCHEDULE_ENDPOINT = "/schedules/*";
     private static final String SCHEDULE_FOR_USERS_ENDPOINT = "/schedules/full/*";
     private static final String ALL_GROUPS_PUBLIC_ENDPOINT = "/groups/public";
+
 
 
 
@@ -54,8 +52,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers(LOGIN_ENDPOINT, REGISTRATION_ENDPOINT, ACTIVATION_ACCOUNT_ENDPOINT,
-                        RESET_PASSWORD_ENDPOINT, SCHEDULE_FOR_USERS_ENDPOINT, ALL_GROUPS_PUBLIC_ENDPOINT).permitAll()
+                .antMatchers(AUTH_ENDPOINT, SCHEDULE_FOR_USERS_ENDPOINT, ALL_GROUPS_PUBLIC_ENDPOINT).permitAll()
                 .antMatchers(MANAGER_ENDPOINT, CLASSES_ENDPOINT, GROUPS_ENDPOINT, LESSONS_ENDPOINT,
                         ROOMS_ENDPOINT, SUBJECTS_ENDPOINT, TEACHERS_ENDPOINT, SCHEDULE_ENDPOINT).hasRole("MANAGER")
                 .anyRequest().authenticated()
