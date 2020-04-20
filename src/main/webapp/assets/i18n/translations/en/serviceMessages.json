@@ -1,0 +1,6 @@
+{
+    "created.label": "created",
+    "updated.label": "updated",
+    "deleted.label": "deleted",
+    "back.end.success.operation": "{{cardType}} was successfully {{actionType}}"
+}

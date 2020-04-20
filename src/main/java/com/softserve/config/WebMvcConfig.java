@@ -10,7 +10,10 @@ import org.springframework.web.servlet.config.annotation.*;
 @ComponentScan(basePackages = {"com.softserve.*"})
 public class WebMvcConfig implements WebMvcConfigurer {
 
-
+    @Override
+    public void addViewControllers(ViewControllerRegistry registry) {
+        registry.addRedirectViewController("/", "index.html");
+    }
 
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
     }

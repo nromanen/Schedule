@@ -1,0 +1,53 @@
+{
+	"edit.title": "Редагування ",
+	"create.title": "Створення ",
+	"delete.title": "Видалення",
+
+	"lesson.label": "Заняття",
+	"teacher.label": "Викладач",
+	"group.label": "Група",
+	"class.label": "Урок",
+	"room.label": "Аудиторія",
+	"subject.label": "Предмет",
+	"lessony.label": "Заняття",
+	"teachery.label": "Викладачa",
+	"groupy.label": "групи",
+	"classy.label": "Уроку",
+	"roomy.label": "аудиторії",
+	"subjecty.label": "предмету",
+	"type.label": "Тип",
+	"hours.label": "Годин(а)",
+	"email.label": "Електронна адреса",
+	"password.label": "Пароль",
+	"retype.password.label": "Повторіть пароль",
+
+	"teachery.firstName": "Ім'я",
+	"teachery.surname": "Прізвище",
+	"teachery.patronymic": "по Батькові",
+	"teachery.position": "Академічне звання",
+	"teachery.wish.classNumbaer": "номер пари",
+	"teachery.wish.day": "День",
+
+	"for.site.label": " для сайту",
+	"not.selected.label": " не обрана",
+
+	"save.button.label": "Зберегти",
+	"clear.button.label": "Очистити",
+
+	"lesson.type.lecture.label": "Лекція",
+	"lesson.type.laboratory.label": "Лабораторна",
+	"lesson.type.practical.label": "Практична",
+
+	"class.from.label": "З",
+	"class.to.label": "До",
+
+	"type.to.search": "Введіть для пошуку",
+	"there.is.no": "Немає",
+
+	"cancel.button.title": "Скасувати",
+	"choose.button.title": "Вибрати",
+
+	"number.label": "Номер аудиторії",
+	"newType.label": "Новий тип",
+	"addType.label": "Додати новий тип"
+}

@@ -1,0 +1,75 @@
+{
+    "login.title": "Увійти",
+    "login.page.title": "Вхід",
+    "registration.page.title": "Реєстрація",
+    "logout.title": "Вийти",
+    "admin.title": "Адміністратор",
+    "home.title": "Головна",
+    "schedule.title": "Розклад",
+
+    "lesson.management.title": "Заняття",
+    "teacher.management.title": "Викладачі",
+    "group.management.title": "Групи",
+    "class.management.title": "Уроки",
+    "room.management.title": "Аудиторії",
+    "subject.management.title": "Предмети",
+
+    "teacher.card.position": "Позиція вчителя",
+    "teacher.card.fullName": "П.І.Б",
+    "teacher.card.wish": "Бажання вчителя",
+    "teacher.card.noCards": "Немає викладацьких карток",
+
+    "lesson.forgroup.title": "Заняття для групи",
+    "lesson.nolessonforgroup.label": "Немає занять для групи ",
+
+    "day_of_week_1": "Понеділок",
+    "day_of_week_2": "Вівторок",
+    "day_of_week_3": "Середа",
+    "day_of_week_4": "Четвер",
+    "day_of_week_5": "П'ятниця",
+    "day_of_week_6": "Субота",
+    "day_of_week_7": "Неділя",
+    "day_of_week_MONDAY": "Понеділок",
+    "day_of_week_TUESDAY": "Вівторок",
+    "day_of_week_WEDNESDAY": "Середа",
+    "day_of_week_THURSDAY": "Четвер",
+    "day_of_week_FRIDAY": "П'ятниця",
+    "day_of_week_SATURDAY": "Субота",
+    "day_of_week_SUNDAY": "Неділя",
+    "odd.week": "Непарний тиждень",
+    "even.week": "Парний тиждень",
+    "lesson.service.isNotUnique": "Таке заняття вже існує для цієї групи",
+
+    "week.title": "тиждень",
+    "week.odd.title": "непарний",
+    "week.even.title": "парний",
+
+    "delete.schedule.item": "Видалити заняття",
+    "group.schedule": "Група: ",
+    "class.schedule": "Пара",
+    "select.group.schedule": "Будь ласка виберіть групу:",
+
+    "lesson.service.is.not.unique": "Таке заняття вже існує для цієї групи",
+
+    "delete.lesson": "Видалити заняття",
+    "edit.lesson": "Редагувати заняття",
+
+    "successful.login.message": "Ви успішно увійшли",
+    "successful.registered.message": "Ви успішно зареєструвалися. Підтвердьте будь ласка електронну адресу. ",
+
+    "empty.fields": "Заповніть будь ласка поля",
+    "different.passwords": "Паролі не співпадають",
+    "no.account": "Немає акаунта?",
+    "account.exist": "Уже зареєстровані?",
+    "create.account": "Зареєструватися",
+
+    "verifying.token": "Ваш токен перевіряється",
+    "token.error": "Виникла помилка",
+
+    "room.card.title": "Аудиторія: ",
+    "schedule.dialog.title": "Виберіть будь ласка аудиторію:",
+
+    "greetings.schedule.message": "Будь ласка, оберіть один із варіантів, натиснувши одну із кнопок нижче ",
+    "full.schedule.label": "Full Schedule",
+    "group.schedule.label": "Schedule for group"
+}
