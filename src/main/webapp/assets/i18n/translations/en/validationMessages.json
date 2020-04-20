@@ -1,0 +1,12 @@
+{
+    "required.message": "Required",
+    "bigger.than.zero.message": "Value must be greater than 0",
+    "bigger.than.char.message": "Must be {{min}} characters or more",
+    "less.than.char.message": "Must be less then {{max}} characters",
+    "less.than.field.message": "Must be before {{field}}",
+    "bigger.than.field.message": "Must be after {{field}}",
+    "unique.error.message": "Value must be unique!",
+    "intersect.time.error.message": "Time intersect with other class time!",
+    "email": "Invalid email address",
+    "password": "Invalid password"
+}

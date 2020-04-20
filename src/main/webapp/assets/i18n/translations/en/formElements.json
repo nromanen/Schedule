@@ -1,0 +1,53 @@
+{
+    "edit.title": "Edit ",
+    "create.title": "Create ",
+    "delete.title": "Delete",
+
+    "lesson.label": "Lesson",
+    "teacher.label": "Teacher",
+    "group.label": "Group",
+    "class.label": "Class",
+    "room.label": "Room",
+    "subject.label": "Subject",
+    "type.label": "Type",
+    "hours.label": "Hours",
+    "lessony.label": "Lesson",
+    "teachery.label": "Teacher",
+    "groupy.label": "group",
+    "classy.label": "Class",
+    "roomy.label": "room",
+    "subjecty.label": "subject",
+    "email.label": "Email",
+    "password.label": "Password",
+    "retype.password.label": "Retype password",
+
+    "teachery.firstName": "First Name",
+    "teachery.surname": "Surname",
+    "teachery.patronymic": "Patronymic",
+    "teachery.position": "Academic title",
+    "teachery.wish.classNumbaer": "class number",
+    "teachery.wish.day": "Day",
+
+    "for.site.label": " for site",
+    "not.selected.label": "is not selected",
+
+    "save.button.label": "Save",
+    "clear.button.label": "Clear",
+
+    "lesson.type.lecture.label": "Lecture",
+    "lesson.type.laboratory.label": "Laboratory",
+    "lesson.type.practical.label": "Practical",
+
+    "class.from.label": "From",
+    "class.to.label": "To",
+
+    "type.to.search": "Type to search",
+    "there.is.no": "There isn't any",
+
+    "cancel.button.title": "Cancel",
+    "choose.button.title": "Choose",
+
+    "number.label": "Room number",
+	"newType.label": "New type",
+	"addType.label": "Add new type here"
+}

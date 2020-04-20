@@ -1,0 +1,12 @@
+{
+    "required.message": "Обов'язкове",
+    "bigger.than.zero.message": "Значення повинно бути більше за 0",
+    "bigger.than.char.message": "Повинно бути {{min}} символів або більше",
+    "less.than.char.message": "Повинно бути  менше за {{max}} символів",
+    "less.than.field.message": "Повинно бути до {{field}}",
+    "bigger.than.field.message": "Повинно бути після {{field}}",
+    "unique.error.message": "Значення повинно бути унікальним",
+    "intersect.time.error.message": "Час уроку перетинається із часом іншого уроку!",
+    "email": "Невірно введена електронна адреса",
+    "password": "Невірно введений пароль"
+}

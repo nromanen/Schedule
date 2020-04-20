@@ -1,0 +1,76 @@
+{
+    "login.title": "Login",
+    "login.page.title": "Login",
+    "registration.page.title": "Registration",
+    "logout.title": "Logout",
+    "admin.title": "Admin",
+    "home.title": "Home",
+    "schedule.title": "Schedule",
+
+    "lesson.management.title": "Lesson Management",
+    "teacher.management.title": "Teacher Management",
+    "group.management.title": "Group Management",
+    "class.management.title": "Class Management",
+    "room.management.title": "Room Management",
+    "subject.management.title": "Subject Management",
+
+    "teacher.card.position": "Teacher position",
+    "teacher.card.fullName": "Full name",
+    "teacher.card.wish": "Teacher Wish",
+    "teacher.card.noCards": "No Teachers cards",
+
+    "lesson.service.is.not.unique": "This lesson is already exist for this group",
+
+    "successful.login.message": "You have logged in successfully",
+    "successful.registered.message": "You have registered successfully. Confirm email please",
+
+    "security.error.message": "Security doesn't work",
+
+    "lesson.forgroup.title": "Lessons for group",
+    "lesson.nolessonforgroup.label": "There are no lessons for group ",
+
+    "day_of_week_1": "Monday",
+    "day_of_week_2": "Tuesday",
+    "day_of_week_3": "Wednesday",
+    "day_of_week_4": "Thursday",
+    "day_of_week_5": "Friday",
+    "day_of_week_6": "Saturday",
+    "day_of_week_7": "Sunday",
+    "day_of_week_MONDAY": "Monday",
+    "day_of_week_TUESDAY": "Tuesday",
+    "day_of_week_WEDNESDAY": "Wednesday",
+    "day_of_week_THURSDAY": "Thursday",
+    "day_of_week_FRIDAY": "Friday",
+    "day_of_week_SATURDAY": "Saturday",
+    "day_of_week_SUNDAY": "Sunday",
+    "odd.week": "Odd week",
+    "even.week": "Even week",
+
+    "week.title": "week",
+    "week.odd.title": "odd",
+    "week.even.title": "even",
+
+    "delete.schedule.item": "Delete lesson",
+    "group.schedule": "Group: ",
+    "class.schedule": "Class ",
+    "select.group.schedule": "Please select group:",
+
+    "delete.lesson": "Delete lesson",
+    "edit.lesson": "Edit lesson",
+
+    "empty.fields": "Fields are required",
+    "different.passwords": "Passwords are different",
+    "no.account": "Don't have account?",
+    "account.exist": "Already have account?",
+    "create.account": "Create account",
+
+    "verifying.token": "Your token is being verified",
+    "token.error": "Error occurred",
+
+    "room.card.title": "Room: ",
+    "schedule.dialog.title": "Please choose room:",
+
+    "greetings.schedule.message": "Please select benween 2 options - click one of the following buttons",
+    "full.schedule.label": "Full Schedule",
+    "group.schedule.label": "Schedule for group"
+}

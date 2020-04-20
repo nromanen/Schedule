@@ -59,17 +59,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .apply(new JwtConfigurer(jwtTokenProvider));
 
-        http
-                .exceptionHandling()
-                .authenticationEntryPoint((request, response, e) ->
-                        {
-                            response.setContentType("application/json;charset=UTF-8");
-                            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-                            response.getWriter().write(new JSONObject()
-                                    .put("message", "Access denied")
-                                    .toString());
-                        }
-                );
+//        http
+//                .exceptionHandling()
+//                .authenticationEntryPoint((request, response, e) ->
+//                        {
+//                            response.setContentType("application/json;charset=UTF-8");
+//                            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+//                            response.getWriter().write(new JSONObject()
+//                                    .put("message", "Access denied")
+//                                    .toString());
+//                        }
+//                );
     }
 
     @Override

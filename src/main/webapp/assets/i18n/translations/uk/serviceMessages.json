@@ -1,0 +1,6 @@
+{
+    "created.label": "створено",
+    "updated.label": "оновлено",
+    "deleted.label": "видалено",
+    "back.end.success.operation": "{{cardType}} було успішно {{actionType}}"
+}
