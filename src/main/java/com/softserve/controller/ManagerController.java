@@ -3,7 +3,7 @@ package com.softserve.controller;
 import com.softserve.dto.JoinTeacherWithUserDTO;
 import com.softserve.dto.TeacherWithUserDTO;
 import com.softserve.service.TeacherService;
-import com.softserve.service.mapper.TeacherMapper;
+import com.softserve.mapper.TeacherMapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;

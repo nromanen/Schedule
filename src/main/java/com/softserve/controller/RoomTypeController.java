@@ -3,7 +3,7 @@ package com.softserve.controller;
 import com.softserve.dto.RoomTypeDTO;
 import com.softserve.entity.RoomType;
 import com.softserve.service.RoomTypeService;
-import com.softserve.service.mapper.RoomTypeMapper;
+import com.softserve.mapper.RoomTypeMapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;

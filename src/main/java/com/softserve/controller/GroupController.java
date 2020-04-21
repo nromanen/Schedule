@@ -3,7 +3,7 @@ package com.softserve.controller;
 import com.softserve.dto.GroupDTO;
 import com.softserve.entity.Group;
 import com.softserve.service.GroupService;
-import com.softserve.service.mapper.GroupMapper;
+import com.softserve.mapper.GroupMapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;

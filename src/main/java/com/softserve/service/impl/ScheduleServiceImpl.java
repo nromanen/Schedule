@@ -11,10 +11,10 @@ import com.softserve.exception.EntityNotFoundException;
 import com.softserve.exception.ScheduleConflictException;
 import com.softserve.repository.ScheduleRepository;
 import com.softserve.service.*;
-import com.softserve.service.mapper.GroupMapper;
-import com.softserve.service.mapper.LessonsInScheduleMapper;
-import com.softserve.service.mapper.PeriodMapper;
-import com.softserve.service.mapper.RoomForScheduleMapper;
+import com.softserve.mapper.GroupMapper;
+import com.softserve.mapper.LessonsInScheduleMapper;
+import com.softserve.mapper.PeriodMapper;
+import com.softserve.mapper.RoomForScheduleMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -322,16 +322,16 @@ public class ScheduleServiceImpl implements ScheduleService {
     private LessonInScheduleByWeekDTO getLessonsForGroupForPeriodBySemesterByDayByTeacher(Long semesterId, Long groupId, Long periodId, DayOfWeek day, Long teacherId) {
         log.info("In getLessonsForGroupForPeriodBySemesterByDayByTeacher(semesterId = [{}], groupId = [{}], periodId = [{}], day = [{}], teacherId = [{}])", semesterId, groupId, periodId, day, teacherId);
         LessonInScheduleByWeekDTO lessonInScheduleByWeekDTO = new LessonInScheduleByWeekDTO();
-        Lesson lesson = scheduleRepository.lessonForGroupByDayBySemesterByPeriodByWeekByTeacher(semesterId, groupId, periodId, day, EvenOdd.EVEN, teacherId).orElse(null);
-        LessonsInScheduleDTO even = lessonsInScheduleMapper.lessonToLessonsInScheduleDTO(lesson);
-        if (lesson != null) {
-            even.setRoom(roomForScheduleMapper.roomToRoomForScheduleDTO(scheduleRepository.getRoomForLesson(semesterId,  periodId, lesson.getId(), day, EvenOdd.EVEN)));
+        Lesson evenLesson = scheduleRepository.lessonForGroupByDayBySemesterByPeriodByWeekByTeacher(semesterId, groupId, periodId, day, EvenOdd.EVEN, teacherId).orElse(null);
+        if (evenLesson != null) {
+            LessonsInScheduleDTO even = lessonsInScheduleMapper.lessonToLessonsInScheduleDTO(evenLesson);
+            even.setRoom(roomForScheduleMapper.roomToRoomForScheduleDTO(scheduleRepository.getRoomForLesson(semesterId,  periodId, evenLesson.getId(), day, EvenOdd.EVEN)));
             lessonInScheduleByWeekDTO.setEven(even);
         }
-        Lesson lesson2 = scheduleRepository.lessonForGroupByDayBySemesterByPeriodByWeekByTeacher(semesterId, groupId, periodId, day, EvenOdd.ODD, teacherId).orElse(null);
-        LessonsInScheduleDTO odd = lessonsInScheduleMapper.lessonToLessonsInScheduleDTO(lesson2);
-        if (lesson2 != null) {
-            odd.setRoom(roomForScheduleMapper.roomToRoomForScheduleDTO(scheduleRepository.getRoomForLesson(semesterId,  periodId, lesson2.getId(), day, EvenOdd.ODD)));
+        Lesson oddLesson = scheduleRepository.lessonForGroupByDayBySemesterByPeriodByWeekByTeacher(semesterId, groupId, periodId, day, EvenOdd.ODD, teacherId).orElse(null);
+        if (oddLesson != null) {
+            LessonsInScheduleDTO odd = lessonsInScheduleMapper.lessonToLessonsInScheduleDTO(oddLesson);
+            odd.setRoom(roomForScheduleMapper.roomToRoomForScheduleDTO(scheduleRepository.getRoomForLesson(semesterId,  periodId, oddLesson.getId(), day, EvenOdd.ODD)));
             lessonInScheduleByWeekDTO.setOdd(odd);
         }
         return lessonInScheduleByWeekDTO;

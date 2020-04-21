@@ -1,4 +1,4 @@
-package com.softserve.service.mapper;
+package com.softserve.mapper;
 
 import com.softserve.dto.AddWishesDTO;
 import com.softserve.dto.TeacherWishesDTO;

@@ -1,4 +1,4 @@
-package com.softserve.service.mapper;
+package com.softserve.mapper;
 
 import com.softserve.dto.TeacherDTO;
 import com.softserve.dto.TeacherWithUserDTO;
