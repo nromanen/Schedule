@@ -7,7 +7,7 @@ import com.softserve.config.WebMvcConfig;
 import com.softserve.dto.AddPeriodDTO;
 import com.softserve.dto.PeriodDTO;
 import com.softserve.entity.Period;
-import com.softserve.service.mapper.PeriodMapperImpl;
+import com.softserve.mapper.PeriodMapperImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
