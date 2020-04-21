@@ -5,7 +5,7 @@ import com.softserve.dto.RoomDTO;
 import com.softserve.entity.Room;
 import com.softserve.entity.enums.EvenOdd;
 import com.softserve.service.RoomService;
-import com.softserve.service.mapper.RoomMapper;
+import com.softserve.mapper.RoomMapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;

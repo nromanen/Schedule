@@ -6,7 +6,7 @@ import com.softserve.exception.EntityAlreadyExistsException;
 import com.softserve.exception.EntityNotFoundException;
 import com.softserve.repository.RoomRepository;
 import com.softserve.service.RoomService;
-import com.softserve.service.mapper.RoomForScheduleInfoMapper;
+import com.softserve.mapper.RoomForScheduleInfoMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

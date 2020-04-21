@@ -4,7 +4,7 @@ import com.softserve.dto.UserCreateDTO;
 import com.softserve.dto.UserDTO;
 import com.softserve.entity.User;
 import com.softserve.service.UserService;
-import com.softserve.service.mapper.UserMapper;
+import com.softserve.mapper.UserMapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
