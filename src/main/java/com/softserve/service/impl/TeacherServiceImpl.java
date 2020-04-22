@@ -1,13 +1,22 @@
 package com.softserve.service.impl;
 
-import com.softserve.entity.*;
+import com.softserve.entity.Teacher;
+import com.softserve.entity.User;
+import com.softserve.entity.Period;
+import com.softserve.entity.Wishes;
+import com.softserve.entity.Wish;
+import com.softserve.entity.TeacherWishes;
 import com.softserve.entity.enums.EvenOdd;
 import com.softserve.entity.enums.Role;
 import com.softserve.entity.enums.WishStatuses;
 import com.softserve.exception.EntityAlreadyExistsException;
 import com.softserve.exception.EntityNotFoundException;
 import com.softserve.repository.TeacherRepository;
-import com.softserve.service.*;
+import com.softserve.service.MailService;
+import com.softserve.service.TeacherService;
+import com.softserve.service.TeacherWishesService;
+import com.softserve.service.UserService;
+import com.softserve.service.PeriodService;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,7 +1,6 @@
 package com.softserve.repository.impl;
 
 import com.softserve.entity.Period;
-import com.softserve.entity.Room;
 import com.softserve.repository.PeriodRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;

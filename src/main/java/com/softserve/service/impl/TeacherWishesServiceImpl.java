@@ -116,7 +116,7 @@ public class TeacherWishesServiceImpl implements TeacherWishesService {
      * @return boolean teacher wish
      */
     @Override
-    public boolean isClassSuits(Long teacherId, DayOfWeek dayOfWeek, EvenOdd evenOdd, long classId) {
+    public boolean isClassSuits(Long teacherId, DayOfWeek dayOfWeek, EvenOdd evenOdd, Long classId) {
         log.info("Enter into isClassSuits method");
         List<Wishes> teacherWishList = teacherWishesRepository.getWishByTeacherId(teacherId);
         String className = periodService.getById(classId).getName();
