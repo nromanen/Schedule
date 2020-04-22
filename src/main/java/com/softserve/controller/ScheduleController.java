@@ -61,7 +61,7 @@ public class ScheduleController {
 
     @GetMapping("/full/teachers")
     @ApiOperation(value = "Get full schedule for teacher by semester")
-    public ResponseEntity<List<ScheduleForGroupDTO>> getFullScheduleForTeacher(@RequestParam Long semesterId,
+    public ResponseEntity<ScheduleForTeacherDTO> getFullScheduleForTeacher(@RequestParam Long semesterId,
                                                                              @RequestParam Long teacherId) {
         log.info("In, getFullScheduleForTeacher (semesterId = [{}], teacherId = [{}]) ", semesterId, teacherId);
         return ResponseEntity.status(HttpStatus.OK).body(scheduleService.getScheduleForTeacher(semesterId, teacherId));

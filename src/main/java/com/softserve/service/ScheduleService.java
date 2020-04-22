@@ -2,6 +2,7 @@ package com.softserve.service;
 
 import com.softserve.dto.CreateScheduleInfoDTO;
 import com.softserve.dto.ScheduleForGroupDTO;
+import com.softserve.dto.ScheduleForTeacherDTO;
 import com.softserve.entity.Schedule;
 import com.softserve.entity.enums.EvenOdd;
 
@@ -13,7 +14,7 @@ public interface ScheduleService extends BasicService<Schedule, Long> {
 
     List<ScheduleForGroupDTO> getFullSchedule(Long semesterId, Long groupId);
 
-    List<ScheduleForGroupDTO> getScheduleForTeacher(Long semesterId, Long teacherId);
+    ScheduleForTeacherDTO getScheduleForTeacher(Long semesterId, Long teacherId);
 
     List<Schedule> getAllSchedulesByTeacherIdAndSemesterId(Long teacherId, Long semesterId);
 }

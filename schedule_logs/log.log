@@ -1,0 +1,820 @@
+[INFO ] 2020-04-16 09:19:28.333 [Test worker] c.s.c.PeriodController - Enter into get of PeriodController with id 4 
+[INFO ] 2020-04-16 09:19:28.350 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into getById of PeriodServiceImpl with id 4
+[INFO ] 2020-04-16 09:19:28.350 [Test worker] c.s.r.i.BasicRepositoryImpl - In findById(id = [4])
+[INFO ] 2020-04-16 09:19:28.802 [Test worker] c.s.c.PeriodController - Enter into save of PeriodController with List of addPeriodDTO: [AddPeriodDTO(startTime=1970-01-01 11:00:00.0, endTime=1970-01-01 12:00:00.0, name=save list of periods)]
+[INFO ] 2020-04-16 09:19:28.803 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into save of PeriodServiceImpl with entities:[Period(id=0, startTime=1970-01-01 11:00:00.0, endTime=1970-01-01 12:00:00.0, name=save list of periods)]
+[INFO ] 2020-04-16 09:19:28.808 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into isTimeInvalid of PeriodServiceImpl with entity: Period(id=0, startTime=1970-01-01 11:00:00.0, endTime=1970-01-01 12:00:00.0, name=save list of periods)
+[INFO ] 2020-04-16 09:19:28.808 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into getAll of PeriodServiceImpl
+[INFO ] 2020-04-16 09:19:28.808 [Test worker] c.s.r.i.PeriodRepositoryImpl - Enter into getAll of PeriodRepositoryImpl
+[INFO ] 2020-04-16 09:19:28.882 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into isListOfPeriodsFree of PeriodServiceImpl with entities oldPeriods: [Period(id=7, startTime=1970-01-01 03:00:00.0, endTime=1970-01-01 04:00:00.0, name=4 para), Period(id=4, startTime=2020-04-15 01:00:00.0, endTime=2020-04-15 02:00:00.0, name=1 para), Period(id=5, startTime=2020-04-15 03:00:00.0, endTime=2020-04-15 04:00:00.0, name=2 para), Period(id=6, startTime=2020-04-15 05:00:00.0, endTime=2020-04-15 06:00:00.0, name=3 para)], newPeriods: [Period(id=0, startTime=1970-01-01 11:00:00.0, endTime=1970-01-01 12:00:00.0, name=save list of periods)]
+[INFO ] 2020-04-16 09:19:28.882 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into isPeriodFree of PeriodServiceImpl with entities oldPeriods: [Period(id=0, startTime=1970-01-01 11:00:00.0, endTime=1970-01-01 12:00:00.0, name=save list of periods)] and newPeriod: Period(id=0, startTime=1970-01-01 11:00:00.0, endTime=1970-01-01 12:00:00.0, name=save list of periods)
+[INFO ] 2020-04-16 09:19:28.883 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into isPeriodsGlued of PeriodServiceImpl with entities oldPeriods: Period(id=0, startTime=1970-01-01 11:00:00.0, endTime=1970-01-01 12:00:00.0, name=save list of periods), newPeriods: Period(id=0, startTime=1970-01-01 11:00:00.0, endTime=1970-01-01 12:00:00.0, name=save list of periods)
+[INFO ] 2020-04-16 09:19:28.883 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into isPeriodsIntersect of PeriodServiceImpl with entities oldPeriod: Period(id=0, startTime=1970-01-01 11:00:00.0, endTime=1970-01-01 12:00:00.0, name=save list of periods), newPeriod: Period(id=0, startTime=1970-01-01 11:00:00.0, endTime=1970-01-01 12:00:00.0, name=save list of periods)
+[INFO ] 2020-04-16 09:19:28.883 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into isPeriodFree of PeriodServiceImpl with entities oldPeriods: [Period(id=7, startTime=1970-01-01 03:00:00.0, endTime=1970-01-01 04:00:00.0, name=4 para), Period(id=4, startTime=2020-04-15 01:00:00.0, endTime=2020-04-15 02:00:00.0, name=1 para), Period(id=5, startTime=2020-04-15 03:00:00.0, endTime=2020-04-15 04:00:00.0, name=2 para), Period(id=6, startTime=2020-04-15 05:00:00.0, endTime=2020-04-15 06:00:00.0, name=3 para)] and newPeriod: Period(id=0, startTime=1970-01-01 11:00:00.0, endTime=1970-01-01 12:00:00.0, name=save list of periods)
+[INFO ] 2020-04-16 09:19:28.883 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into isPeriodsGlued of PeriodServiceImpl with entities oldPeriods: Period(id=7, startTime=1970-01-01 03:00:00.0, endTime=1970-01-01 04:00:00.0, name=4 para), newPeriods: Period(id=0, startTime=1970-01-01 11:00:00.0, endTime=1970-01-01 12:00:00.0, name=save list of periods)
+[INFO ] 2020-04-16 09:19:28.884 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into isPeriodsIntersect of PeriodServiceImpl with entities oldPeriod: Period(id=7, startTime=1970-01-01 03:00:00.0, endTime=1970-01-01 04:00:00.0, name=4 para), newPeriod: Period(id=0, startTime=1970-01-01 11:00:00.0, endTime=1970-01-01 12:00:00.0, name=save list of periods)
+[INFO ] 2020-04-16 09:19:28.884 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into isPeriodsGlued of PeriodServiceImpl with entities oldPeriods: Period(id=4, startTime=2020-04-15 01:00:00.0, endTime=2020-04-15 02:00:00.0, name=1 para), newPeriods: Period(id=0, startTime=1970-01-01 11:00:00.0, endTime=1970-01-01 12:00:00.0, name=save list of periods)
+[INFO ] 2020-04-16 09:19:28.884 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into isPeriodsIntersect of PeriodServiceImpl with entities oldPeriod: Period(id=4, startTime=2020-04-15 01:00:00.0, endTime=2020-04-15 02:00:00.0, name=1 para), newPeriod: Period(id=0, startTime=1970-01-01 11:00:00.0, endTime=1970-01-01 12:00:00.0, name=save list of periods)
+[INFO ] 2020-04-16 09:19:28.884 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into isPeriodsGlued of PeriodServiceImpl with entities oldPeriods: Period(id=5, startTime=2020-04-15 03:00:00.0, endTime=2020-04-15 04:00:00.0, name=2 para), newPeriods: Period(id=0, startTime=1970-01-01 11:00:00.0, endTime=1970-01-01 12:00:00.0, name=save list of periods)
+[INFO ] 2020-04-16 09:19:28.884 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into isPeriodsIntersect of PeriodServiceImpl with entities oldPeriod: Period(id=5, startTime=2020-04-15 03:00:00.0, endTime=2020-04-15 04:00:00.0, name=2 para), newPeriod: Period(id=0, startTime=1970-01-01 11:00:00.0, endTime=1970-01-01 12:00:00.0, name=save list of periods)
+[INFO ] 2020-04-16 09:19:28.885 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into isPeriodsGlued of PeriodServiceImpl with entities oldPeriods: Period(id=6, startTime=2020-04-15 05:00:00.0, endTime=2020-04-15 06:00:00.0, name=3 para), newPeriods: Period(id=0, startTime=1970-01-01 11:00:00.0, endTime=1970-01-01 12:00:00.0, name=save list of periods)
+[INFO ] 2020-04-16 09:19:28.885 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into isPeriodsIntersect of PeriodServiceImpl with entities oldPeriod: Period(id=6, startTime=2020-04-15 05:00:00.0, endTime=2020-04-15 06:00:00.0, name=3 para), newPeriod: Period(id=0, startTime=1970-01-01 11:00:00.0, endTime=1970-01-01 12:00:00.0, name=save list of periods)
+[INFO ] 2020-04-16 09:19:28.886 [Test worker] c.s.r.i.BasicRepositoryImpl - In save(entity = [Period(id=0, startTime=1970-01-01 11:00:00.0, endTime=1970-01-01 12:00:00.0, name=save list of periods)]
+[INFO ] 2020-04-16 09:19:29.217 [Test worker] c.s.c.PeriodController - Enter into save of PeriodController with addPeriodDTO: AddPeriodDTO(startTime=1970-01-01 03:30:00.0, endTime=1970-01-01 04:30:00.0, name=intersect period)
+[INFO ] 2020-04-16 09:19:29.217 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into save of PeriodServiceImpl with entity: Period(id=0, startTime=1970-01-01 03:30:00.0, endTime=1970-01-01 04:30:00.0, name=intersect period)
+[INFO ] 2020-04-16 09:19:29.218 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into isTimeInvalid of PeriodServiceImpl with entity: Period(id=0, startTime=1970-01-01 03:30:00.0, endTime=1970-01-01 04:30:00.0, name=intersect period)
+[INFO ] 2020-04-16 09:19:29.218 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into getAll of PeriodServiceImpl
+[INFO ] 2020-04-16 09:19:29.218 [Test worker] c.s.r.i.PeriodRepositoryImpl - Enter into getAll of PeriodRepositoryImpl
+[INFO ] 2020-04-16 09:19:29.279 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into isPeriodFree of PeriodServiceImpl with entities oldPeriods: [Period(id=7, startTime=1970-01-01 03:00:00.0, endTime=1970-01-01 04:00:00.0, name=4 para), Period(id=4, startTime=2020-04-15 01:00:00.0, endTime=2020-04-15 02:00:00.0, name=1 para), Period(id=5, startTime=2020-04-15 03:00:00.0, endTime=2020-04-15 04:00:00.0, name=2 para), Period(id=6, startTime=2020-04-15 05:00:00.0, endTime=2020-04-15 06:00:00.0, name=3 para)] and newPeriod: Period(id=0, startTime=1970-01-01 03:30:00.0, endTime=1970-01-01 04:30:00.0, name=intersect period)
+[INFO ] 2020-04-16 09:19:29.279 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into isPeriodsGlued of PeriodServiceImpl with entities oldPeriods: Period(id=7, startTime=1970-01-01 03:00:00.0, endTime=1970-01-01 04:00:00.0, name=4 para), newPeriods: Period(id=0, startTime=1970-01-01 03:30:00.0, endTime=1970-01-01 04:30:00.0, name=intersect period)
+[INFO ] 2020-04-16 09:19:29.279 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into isPeriodsIntersect of PeriodServiceImpl with entities oldPeriod: Period(id=7, startTime=1970-01-01 03:00:00.0, endTime=1970-01-01 04:00:00.0, name=4 para), newPeriod: Period(id=0, startTime=1970-01-01 03:30:00.0, endTime=1970-01-01 04:30:00.0, name=intersect period)
+[ERROR] 2020-04-16 09:19:29.342 [Test worker] c.s.e.h.GlobalExceptionHandler - Your period has conflict with already existed periods
+[INFO ] 2020-04-16 09:19:29.540 [Test worker] c.s.c.PeriodController - Enter into save of PeriodController with addPeriodDTO: AddPeriodDTO(startTime=1970-01-01 09:00:00.0, endTime=1970-01-01 10:00:00.0, name=save period)
+[INFO ] 2020-04-16 09:19:29.540 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into save of PeriodServiceImpl with entity: Period(id=0, startTime=1970-01-01 09:00:00.0, endTime=1970-01-01 10:00:00.0, name=save period)
+[INFO ] 2020-04-16 09:19:29.540 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into isTimeInvalid of PeriodServiceImpl with entity: Period(id=0, startTime=1970-01-01 09:00:00.0, endTime=1970-01-01 10:00:00.0, name=save period)
+[INFO ] 2020-04-16 09:19:29.540 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into getAll of PeriodServiceImpl
+[INFO ] 2020-04-16 09:19:29.540 [Test worker] c.s.r.i.PeriodRepositoryImpl - Enter into getAll of PeriodRepositoryImpl
+[INFO ] 2020-04-16 09:19:29.601 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into isPeriodFree of PeriodServiceImpl with entities oldPeriods: [Period(id=7, startTime=1970-01-01 03:00:00.0, endTime=1970-01-01 04:00:00.0, name=4 para), Period(id=4, startTime=2020-04-15 01:00:00.0, endTime=2020-04-15 02:00:00.0, name=1 para), Period(id=5, startTime=2020-04-15 03:00:00.0, endTime=2020-04-15 04:00:00.0, name=2 para), Period(id=6, startTime=2020-04-15 05:00:00.0, endTime=2020-04-15 06:00:00.0, name=3 para)] and newPeriod: Period(id=0, startTime=1970-01-01 09:00:00.0, endTime=1970-01-01 10:00:00.0, name=save period)
+[INFO ] 2020-04-16 09:19:29.601 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into isPeriodsGlued of PeriodServiceImpl with entities oldPeriods: Period(id=7, startTime=1970-01-01 03:00:00.0, endTime=1970-01-01 04:00:00.0, name=4 para), newPeriods: Period(id=0, startTime=1970-01-01 09:00:00.0, endTime=1970-01-01 10:00:00.0, name=save period)
+[INFO ] 2020-04-16 09:19:29.601 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into isPeriodsIntersect of PeriodServiceImpl with entities oldPeriod: Period(id=7, startTime=1970-01-01 03:00:00.0, endTime=1970-01-01 04:00:00.0, name=4 para), newPeriod: Period(id=0, startTime=1970-01-01 09:00:00.0, endTime=1970-01-01 10:00:00.0, name=save period)
+[INFO ] 2020-04-16 09:19:29.601 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into isPeriodsGlued of PeriodServiceImpl with entities oldPeriods: Period(id=4, startTime=2020-04-15 01:00:00.0, endTime=2020-04-15 02:00:00.0, name=1 para), newPeriods: Period(id=0, startTime=1970-01-01 09:00:00.0, endTime=1970-01-01 10:00:00.0, name=save period)
+[INFO ] 2020-04-16 09:19:29.602 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into isPeriodsIntersect of PeriodServiceImpl with entities oldPeriod: Period(id=4, startTime=2020-04-15 01:00:00.0, endTime=2020-04-15 02:00:00.0, name=1 para), newPeriod: Period(id=0, startTime=1970-01-01 09:00:00.0, endTime=1970-01-01 10:00:00.0, name=save period)
+[INFO ] 2020-04-16 09:19:29.602 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into isPeriodsGlued of PeriodServiceImpl with entities oldPeriods: Period(id=5, startTime=2020-04-15 03:00:00.0, endTime=2020-04-15 04:00:00.0, name=2 para), newPeriods: Period(id=0, startTime=1970-01-01 09:00:00.0, endTime=1970-01-01 10:00:00.0, name=save period)
+[INFO ] 2020-04-16 09:19:29.602 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into isPeriodsIntersect of PeriodServiceImpl with entities oldPeriod: Period(id=5, startTime=2020-04-15 03:00:00.0, endTime=2020-04-15 04:00:00.0, name=2 para), newPeriod: Period(id=0, startTime=1970-01-01 09:00:00.0, endTime=1970-01-01 10:00:00.0, name=save period)
+[INFO ] 2020-04-16 09:19:29.602 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into isPeriodsGlued of PeriodServiceImpl with entities oldPeriods: Period(id=6, startTime=2020-04-15 05:00:00.0, endTime=2020-04-15 06:00:00.0, name=3 para), newPeriods: Period(id=0, startTime=1970-01-01 09:00:00.0, endTime=1970-01-01 10:00:00.0, name=save period)
+[INFO ] 2020-04-16 09:19:29.602 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into isPeriodsIntersect of PeriodServiceImpl with entities oldPeriod: Period(id=6, startTime=2020-04-15 05:00:00.0, endTime=2020-04-15 06:00:00.0, name=3 para), newPeriod: Period(id=0, startTime=1970-01-01 09:00:00.0, endTime=1970-01-01 10:00:00.0, name=save period)
+[INFO ] 2020-04-16 09:19:29.602 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into nameExists method with name:save period
+[INFO ] 2020-04-16 09:19:29.602 [Test worker] c.s.r.i.PeriodRepositoryImpl - Enter into findByName method with name: save period
+[INFO ] 2020-04-16 09:19:29.665 [Test worker] c.s.r.i.BasicRepositoryImpl - In save(entity = [Period(id=0, startTime=1970-01-01 09:00:00.0, endTime=1970-01-01 10:00:00.0, name=save period)]
+[INFO ] 2020-04-16 09:19:29.973 [Test worker] c.s.c.PeriodController - Enter into save of PeriodController with addPeriodDTO: AddPeriodDTO(startTime=1970-01-01 03:00:00.0, endTime=1970-01-01 04:00:00.0, name=null)
+[INFO ] 2020-04-16 09:19:29.973 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into save of PeriodServiceImpl with entity: Period(id=0, startTime=1970-01-01 03:00:00.0, endTime=1970-01-01 04:00:00.0, name=null)
+[INFO ] 2020-04-16 09:19:29.973 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into isTimeInvalid of PeriodServiceImpl with entity: Period(id=0, startTime=1970-01-01 03:00:00.0, endTime=1970-01-01 04:00:00.0, name=null)
+[INFO ] 2020-04-16 09:19:29.973 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into getAll of PeriodServiceImpl
+[INFO ] 2020-04-16 09:19:29.974 [Test worker] c.s.r.i.PeriodRepositoryImpl - Enter into getAll of PeriodRepositoryImpl
+[INFO ] 2020-04-16 09:19:30.035 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into isPeriodFree of PeriodServiceImpl with entities oldPeriods: [Period(id=7, startTime=1970-01-01 03:00:00.0, endTime=1970-01-01 04:00:00.0, name=4 para), Period(id=4, startTime=2020-04-15 01:00:00.0, endTime=2020-04-15 02:00:00.0, name=1 para), Period(id=5, startTime=2020-04-15 03:00:00.0, endTime=2020-04-15 04:00:00.0, name=2 para), Period(id=6, startTime=2020-04-15 05:00:00.0, endTime=2020-04-15 06:00:00.0, name=3 para)] and newPeriod: Period(id=0, startTime=1970-01-01 03:00:00.0, endTime=1970-01-01 04:00:00.0, name=null)
+[INFO ] 2020-04-16 09:19:30.035 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into isPeriodsGlued of PeriodServiceImpl with entities oldPeriods: Period(id=7, startTime=1970-01-01 03:00:00.0, endTime=1970-01-01 04:00:00.0, name=4 para), newPeriods: Period(id=0, startTime=1970-01-01 03:00:00.0, endTime=1970-01-01 04:00:00.0, name=null)
+[INFO ] 2020-04-16 09:19:30.036 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into isPeriodsIntersect of PeriodServiceImpl with entities oldPeriod: Period(id=7, startTime=1970-01-01 03:00:00.0, endTime=1970-01-01 04:00:00.0, name=4 para), newPeriod: Period(id=0, startTime=1970-01-01 03:00:00.0, endTime=1970-01-01 04:00:00.0, name=null)
+[ERROR] 2020-04-16 09:19:30.096 [Test worker] c.s.e.h.GlobalExceptionHandler - null
+[INFO ] 2020-04-16 09:19:30.285 [Test worker] c.s.c.PeriodController - Enter into save of PeriodController with addPeriodDTO: AddPeriodDTO(startTime=1970-01-01 01:00:00.0, endTime=1970-01-01 02:00:00.0, name=1 para)
+[INFO ] 2020-04-16 09:19:30.286 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into save of PeriodServiceImpl with entity: Period(id=0, startTime=1970-01-01 01:00:00.0, endTime=1970-01-01 02:00:00.0, name=1 para)
+[INFO ] 2020-04-16 09:19:30.286 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into isTimeInvalid of PeriodServiceImpl with entity: Period(id=0, startTime=1970-01-01 01:00:00.0, endTime=1970-01-01 02:00:00.0, name=1 para)
+[INFO ] 2020-04-16 09:19:30.286 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into getAll of PeriodServiceImpl
+[INFO ] 2020-04-16 09:19:30.286 [Test worker] c.s.r.i.PeriodRepositoryImpl - Enter into getAll of PeriodRepositoryImpl
+[ERROR] 2020-04-16 09:19:30.477 [Test worker] c.s.e.h.GlobalExceptionHandler - org.hibernate.exception.SQLGrammarException: could not extract ResultSet
+[INFO ] 2020-04-16 09:19:32.767 [Test worker] c.s.c.UserController - Enter into get method with id: 100 
+[INFO ] 2020-04-16 09:19:32.768 [Test worker] c.s.s.i.UserServiceImpl - Enter into getById method with id 100
+[INFO ] 2020-04-16 09:19:32.768 [Test worker] c.s.r.i.BasicRepositoryImpl - In findById(id = [100])
+[ERROR] 2020-04-16 09:19:32.894 [Test worker] c.s.e.h.GlobalExceptionHandler - User was not found for parameters {id=100}
+[INFO ] 2020-04-16 09:19:33.079 [Test worker] c.s.c.UserController - Enter into delete method with group id: 8
+[INFO ] 2020-04-16 09:19:33.079 [Test worker] c.s.s.i.UserServiceImpl - Enter into getById method with id 8
+[INFO ] 2020-04-16 09:19:33.079 [Test worker] c.s.r.i.BasicRepositoryImpl - In findById(id = [8])
+[INFO ] 2020-04-16 09:19:33.200 [Test worker] c.s.s.i.UserServiceImpl - Enter into delete method with entity:User(id=8, email=fives@mail.com, password=$2a$04$SpUhTZ/SjkDQop/Zvx1.seftJdqvOploGce/wau247zQhpEvKtz9., role=ROLE_USER, token=null)
+[INFO ] 2020-04-16 09:19:33.206 [Test worker] c.s.r.i.BasicRepositoryImpl - In delete(entity = [User(id=8, email=fives@mail.com, password=$2a$04$SpUhTZ/SjkDQop/Zvx1.seftJdqvOploGce/wau247zQhpEvKtz9., role=ROLE_USER, token=null)])
+[INFO ] 2020-04-16 09:19:33.206 [Test worker] c.s.r.i.UserRepositoryImpl - In checkReference(user = [User(id=8, email=fives@mail.com, password=$2a$04$SpUhTZ/SjkDQop/Zvx1.seftJdqvOploGce/wau247zQhpEvKtz9., role=ROLE_USER, token=null)])
+[INFO ] 2020-04-16 09:19:33.720 [Test worker] c.s.c.UserController - Enter into getAll method
+[INFO ] 2020-04-16 09:19:33.720 [Test worker] c.s.s.i.UserServiceImpl - Enter into getAll method
+[INFO ] 2020-04-16 09:19:33.720 [Test worker] c.s.r.i.BasicRepositoryImpl - In getAll()
+[INFO ] 2020-04-16 09:19:34.071 [Test worker] c.s.c.UserController - Enter into update method with userDTO: UserCreateDTO(id=5, email=update@email.com, password=Qwerty1!)
+[INFO ] 2020-04-16 09:19:34.072 [Test worker] c.s.s.i.UserServiceImpl - Enter into update method with entity:User(id=5, email=update@email.com, password=Qwerty1!, role=ROLE_USER, token=null)
+[INFO ] 2020-04-16 09:19:34.072 [Test worker] c.s.s.i.UserServiceImpl - Enter into getById method with id 5
+[INFO ] 2020-04-16 09:19:34.072 [Test worker] c.s.r.i.BasicRepositoryImpl - In findById(id = [5])
+[INFO ] 2020-04-16 09:19:34.133 [Test worker] c.s.r.i.UserRepositoryImpl - Enter into findByEmail method with email:update@email.com
+[INFO ] 2020-04-16 09:19:34.194 [Test worker] c.s.r.i.UserRepositoryImpl - Enter into update method with entity:User(id=5, email=update@email.com, password=Qwerty1!, role=ROLE_USER, token=null)
+[INFO ] 2020-04-16 09:19:34.509 [Test worker] c.s.c.UserController - Enter into update method with userDTO: UserCreateDTO(id=7, email=null, password=Qwerty1!)
+[INFO ] 2020-04-16 09:19:34.509 [Test worker] c.s.s.i.UserServiceImpl - Enter into update method with entity:User(id=7, email=null, password=Qwerty1!, role=ROLE_USER, token=null)
+[INFO ] 2020-04-16 09:19:34.509 [Test worker] c.s.s.i.UserServiceImpl - Enter into getById method with id 7
+[INFO ] 2020-04-16 09:19:34.509 [Test worker] c.s.r.i.BasicRepositoryImpl - In findById(id = [7])
+[INFO ] 2020-04-16 09:19:34.569 [Test worker] c.s.r.i.UserRepositoryImpl - Enter into findByEmail method with email:null
+[INFO ] 2020-04-16 09:19:34.630 [Test worker] c.s.r.i.UserRepositoryImpl - Enter into update method with entity:User(id=7, email=null, password=Qwerty1!, role=ROLE_USER, token=null)
+[ERROR] 2020-04-16 09:19:34.702 [Test worker] c.s.e.h.GlobalExceptionHandler - Validation failed for classes [com.softserve.entity.User] during update time for groups [javax.validation.groups.Default, ]
+List of constraint violations:[
+	ConstraintViolationImpl{interpolatedMessage='не може бути відсутнім, має бути задано', propertyPath=email, rootBeanClass=class com.softserve.entity.User, messageTemplate='{javax.validation.constraints.NotNull.message}'}
+	ConstraintViolationImpl{interpolatedMessage='Email cannot be empty', propertyPath=email, rootBeanClass=class com.softserve.entity.User, messageTemplate='Email cannot be empty'}
+]
+[INFO ] 2020-04-16 09:19:35.384 [Test worker] c.s.s.i.LessonServiceImpl - In getById(id = [4])
+[INFO ] 2020-04-16 09:19:35.384 [Test worker] c.s.r.i.BasicRepositoryImpl - In findById(id = [4])
+[INFO ] 2020-04-16 09:19:35.525 [Test worker] c.s.c.LessonController - In save (lessonInfoDTO = [LessonInfoDTO(id=4, hours=1, teacherForSite=, subjectForSite=, lessonType=LECTURE, subject=SubjectDTO(id=4, name=Biology), group=GroupDTO(id=4, title=111), teacher=TeacherNameDTO(id=4, name=Ivan, surname=Ivanov, patronymic=Ivanovych))])
+[INFO ] 2020-04-16 09:19:35.532 [Test worker] c.s.s.i.LessonServiceImpl - In save(entity = [Lesson(id=4, hours=1, teacherForSite=, subjectForSite=, lessonType=LECTURE, teacher=com.softserve.entity.Teacher@68c85658, subject=Subject(id=4, name=Biology), group=Group(id=4, title=111))]
+[INFO ] 2020-04-16 09:19:35.533 [Test worker] c.s.s.i.LessonServiceImpl - In isLessonForGroupExists(lesson = [Lesson(id=4, hours=1, teacherForSite=, subjectForSite=, lessonType=LECTURE, teacher=com.softserve.entity.Teacher@68c85658, subject=Subject(id=4, name=Biology), group=Group(id=4, title=111))])
+[INFO ] 2020-04-16 09:19:35.533 [Test worker] c.s.r.i.LessonRepositoryImpl - In countLessonDuplicates(lesson = [Lesson(id=4, hours=1, teacherForSite=, subjectForSite=, lessonType=LECTURE, teacher=com.softserve.entity.Teacher@68c85658, subject=Subject(id=4, name=Biology), group=Group(id=4, title=111))])
+[ERROR] 2020-04-16 09:19:35.656 [Test worker] c.s.e.h.GlobalExceptionHandler - Lesson with this parameters already exists
+[INFO ] 2020-04-16 09:19:36.326 [Test worker] c.s.c.LessonController - In get(id = [4])
+[INFO ] 2020-04-16 09:19:36.327 [Test worker] c.s.s.i.LessonServiceImpl - In getById(id = [4])
+[INFO ] 2020-04-16 09:19:36.327 [Test worker] c.s.r.i.BasicRepositoryImpl - In findById(id = [4])
+[INFO ] 2020-04-16 09:19:36.999 [Test worker] c.s.s.i.TeacherServiceImpl - Enter into getById of TeacherServiceImpl with id 5
+[INFO ] 2020-04-16 09:19:37.000 [Test worker] c.s.r.i.BasicRepositoryImpl - In findById(id = [5])
+[INFO ] 2020-04-16 09:19:37.121 [Test worker] c.s.s.i.SubjectServiceImpl - In getById(id = [4])
+[INFO ] 2020-04-16 09:19:37.121 [Test worker] c.s.r.i.BasicRepositoryImpl - In findById(id = [4])
+[INFO ] 2020-04-16 09:19:37.242 [Test worker] c.s.s.i.GroupServiceImpl - In getById(id = [4])
+[INFO ] 2020-04-16 09:19:37.242 [Test worker] c.s.r.i.BasicRepositoryImpl - In findById(id = [4])
+[INFO ] 2020-04-16 09:19:37.364 [Test worker] c.s.c.LessonController - In save (lessonInfoDTO = [LessonInfoDTO(id=null, hours=1, teacherForSite=, subjectForSite=, lessonType=LABORATORY, subject=SubjectDTO(id=4, name=Biology), group=GroupDTO(id=4, title=111), teacher=TeacherNameDTO(id=5, name=Petro, surname=Petrov, patronymic=Petrovych))])
+[INFO ] 2020-04-16 09:19:37.365 [Test worker] c.s.s.i.LessonServiceImpl - In save(entity = [Lesson(id=null, hours=1, teacherForSite=, subjectForSite=, lessonType=LABORATORY, teacher=com.softserve.entity.Teacher@28bbd534, subject=Subject(id=4, name=Biology), group=Group(id=4, title=111))]
+[INFO ] 2020-04-16 09:19:37.365 [Test worker] c.s.s.i.LessonServiceImpl - In isLessonForGroupExists(lesson = [Lesson(id=null, hours=1, teacherForSite=, subjectForSite=, lessonType=LABORATORY, teacher=com.softserve.entity.Teacher@28bbd534, subject=Subject(id=4, name=Biology), group=Group(id=4, title=111))])
+[INFO ] 2020-04-16 09:19:37.365 [Test worker] c.s.r.i.LessonRepositoryImpl - In countLessonDuplicates(lesson = [Lesson(id=null, hours=1, teacherForSite=, subjectForSite=, lessonType=LABORATORY, teacher=com.softserve.entity.Teacher@28bbd534, subject=Subject(id=4, name=Biology), group=Group(id=4, title=111))])
+[INFO ] 2020-04-16 09:19:37.425 [Test worker] c.s.r.i.BasicRepositoryImpl - In save(entity = [Lesson(id=null, hours=1, teacherForSite=Petrov Petro Petrovych, subjectForSite=Biology, lessonType=LABORATORY, teacher=com.softserve.entity.Teacher@28bbd534, subject=Subject(id=4, name=Biology), group=Group(id=4, title=111))]
+[INFO ] 2020-04-16 09:19:38.094 [Test worker] c.s.s.i.SubjectServiceImpl - In getById(id = [5])
+[INFO ] 2020-04-16 09:19:38.094 [Test worker] c.s.r.i.BasicRepositoryImpl - In findById(id = [5])
+[INFO ] 2020-04-16 09:19:38.214 [Test worker] c.s.s.i.GroupServiceImpl - In getById(id = [4])
+[INFO ] 2020-04-16 09:19:38.214 [Test worker] c.s.r.i.BasicRepositoryImpl - In findById(id = [4])
+[INFO ] 2020-04-16 09:19:38.336 [Test worker] c.s.c.LessonController - In update (lessonInfoDTO = [LessonInfoDTO(id=4, hours=1, teacherForSite=Ivanov I.I. update, subjectForSite=History of World, lessonType=LECTURE, subject=SubjectDTO(id=5, name=History), group=GroupDTO(id=4, title=111), teacher=null)])
+[INFO ] 2020-04-16 09:19:38.336 [Test worker] c.s.s.i.LessonServiceImpl - In getById(id = [4])
+[INFO ] 2020-04-16 09:19:38.336 [Test worker] c.s.r.i.BasicRepositoryImpl - In findById(id = [4])
+[INFO ] 2020-04-16 09:19:38.457 [Test worker] c.s.s.i.LessonServiceImpl - In update(entity = [Lesson(id=4, hours=1, teacherForSite=Ivanov I.I. update, subjectForSite=History of World, lessonType=LECTURE, teacher=null, subject=Subject(id=5, name=History), group=Group(id=4, title=111))]
+[INFO ] 2020-04-16 09:19:38.457 [Test worker] c.s.s.i.LessonServiceImpl - In isLessonForGroupExists(lesson = [Lesson(id=4, hours=1, teacherForSite=Ivanov I.I. update, subjectForSite=History of World, lessonType=LECTURE, teacher=null, subject=Subject(id=5, name=History), group=Group(id=4, title=111))])
+[INFO ] 2020-04-16 09:19:38.458 [Test worker] c.s.r.i.LessonRepositoryImpl - In countLessonDuplicates(lesson = [Lesson(id=4, hours=1, teacherForSite=Ivanov I.I. update, subjectForSite=History of World, lessonType=LECTURE, teacher=null, subject=Subject(id=5, name=History), group=Group(id=4, title=111))])
+[ERROR] 2020-04-16 09:19:38.458 [Test worker] c.s.e.h.GlobalExceptionHandler - null
+[INFO ] 2020-04-16 09:19:39.004 [Test worker] c.s.c.LessonController - In delete (id =[7]
+[INFO ] 2020-04-16 09:19:39.004 [Test worker] c.s.s.i.LessonServiceImpl - In getById(id = [7])
+[INFO ] 2020-04-16 09:19:39.004 [Test worker] c.s.r.i.BasicRepositoryImpl - In findById(id = [7])
+[INFO ] 2020-04-16 09:19:39.126 [Test worker] c.s.s.i.LessonServiceImpl - In delete(object = [Lesson(id=7, hours=2, teacherForSite=, subjectForSite=, lessonType=PRACTICAL, teacher=com.softserve.entity.Teacher@34be131, subject=Subject(id=6, name=Astronomy), group=Group(id=6, title=333))])
+[INFO ] 2020-04-16 09:19:39.126 [Test worker] c.s.r.i.BasicRepositoryImpl - In delete(entity = [Lesson(id=7, hours=2, teacherForSite=, subjectForSite=, lessonType=PRACTICAL, teacher=com.softserve.entity.Teacher@34be131, subject=Subject(id=6, name=Astronomy), group=Group(id=6, title=333))])
+[INFO ] 2020-04-16 09:19:39.126 [Test worker] c.s.r.i.LessonRepositoryImpl - In checkReference(lesson = [Lesson(id=7, hours=2, teacherForSite=, subjectForSite=, lessonType=PRACTICAL, teacher=com.softserve.entity.Teacher@34be131, subject=Subject(id=6, name=Astronomy), group=Group(id=6, title=333))])
+[INFO ] 2020-04-16 09:19:39.851 [Test worker] c.s.c.LessonController - In list ()
+[INFO ] 2020-04-16 09:19:39.852 [Test worker] c.s.s.i.LessonServiceImpl - In getAll()
+[INFO ] 2020-04-16 09:19:39.852 [Test worker] c.s.r.i.BasicRepositoryImpl - In getAll()
+[INFO ] 2020-04-16 09:19:41.058 [Test worker] c.s.s.i.SubjectServiceImpl - In getById(id = [6])
+[INFO ] 2020-04-16 09:19:41.058 [Test worker] c.s.r.i.BasicRepositoryImpl - In findById(id = [6])
+[INFO ] 2020-04-16 09:19:41.178 [Test worker] c.s.s.i.GroupServiceImpl - In getById(id = [6])
+[INFO ] 2020-04-16 09:19:41.178 [Test worker] c.s.r.i.BasicRepositoryImpl - In findById(id = [6])
+[INFO ] 2020-04-16 09:19:41.299 [Test worker] c.s.c.LessonController - In save (lessonInfoDTO = [LessonInfoDTO(id=null, hours=2, teacherForSite=, subjectForSite=, lessonType=LABORATORY, subject=SubjectDTO(id=6, name=Astronomy), group=GroupDTO(id=6, title=333), teacher=null)])
+[INFO ] 2020-04-16 09:19:41.300 [Test worker] c.s.s.i.LessonServiceImpl - In save(entity = [Lesson(id=null, hours=2, teacherForSite=, subjectForSite=, lessonType=LABORATORY, teacher=null, subject=Subject(id=6, name=Astronomy), group=Group(id=6, title=333))]
+[INFO ] 2020-04-16 09:19:41.300 [Test worker] c.s.s.i.LessonServiceImpl - In isLessonForGroupExists(lesson = [Lesson(id=null, hours=2, teacherForSite=, subjectForSite=, lessonType=LABORATORY, teacher=null, subject=Subject(id=6, name=Astronomy), group=Group(id=6, title=333))])
+[INFO ] 2020-04-16 09:19:41.300 [Test worker] c.s.r.i.LessonRepositoryImpl - In countLessonDuplicates(lesson = [Lesson(id=null, hours=2, teacherForSite=, subjectForSite=, lessonType=LABORATORY, teacher=null, subject=Subject(id=6, name=Astronomy), group=Group(id=6, title=333))])
+[ERROR] 2020-04-16 09:19:41.300 [Test worker] c.s.e.h.GlobalExceptionHandler - null
+[INFO ] 2020-04-16 09:19:41.843 [Test worker] c.s.c.LessonController - In get(id = [100])
+[INFO ] 2020-04-16 09:19:41.843 [Test worker] c.s.s.i.LessonServiceImpl - In getById(id = [100])
+[INFO ] 2020-04-16 09:19:41.843 [Test worker] c.s.r.i.BasicRepositoryImpl - In findById(id = [100])
+[ERROR] 2020-04-16 09:19:41.964 [Test worker] c.s.e.h.GlobalExceptionHandler - Lesson was not found for parameters {id=100}
+[INFO ] 2020-04-16 09:19:43.086 [Test worker] c.s.s.i.TeacherServiceImpl - Enter into getById of TeacherServiceImpl with id 6
+[INFO ] 2020-04-16 09:19:43.087 [Test worker] c.s.r.i.BasicRepositoryImpl - In findById(id = [6])
+[INFO ] 2020-04-16 09:19:43.206 [Test worker] c.s.s.i.SubjectServiceImpl - In getById(id = [6])
+[INFO ] 2020-04-16 09:19:43.207 [Test worker] c.s.r.i.BasicRepositoryImpl - In findById(id = [6])
+[INFO ] 2020-04-16 09:19:43.328 [Test worker] c.s.s.i.GroupServiceImpl - In getById(id = [4])
+[INFO ] 2020-04-16 09:19:43.328 [Test worker] c.s.r.i.BasicRepositoryImpl - In findById(id = [4])
+[INFO ] 2020-04-16 09:19:43.449 [Test worker] c.s.c.LessonController - In update (lessonInfoDTO = [LessonInfoDTO(id=5, hours=2, teacherForSite=Ivanov I.I. updated, subjectForSite=History updated, lessonType=LECTURE, subject=SubjectDTO(id=6, name=Astronomy), group=GroupDTO(id=4, title=111), teacher=TeacherNameDTO(id=6, name=Dmytro, surname=Dmytryk, patronymic=Dmytrovych))])
+[INFO ] 2020-04-16 09:19:43.449 [Test worker] c.s.s.i.LessonServiceImpl - In getById(id = [5])
+[INFO ] 2020-04-16 09:19:43.450 [Test worker] c.s.r.i.BasicRepositoryImpl - In findById(id = [5])
+[INFO ] 2020-04-16 09:19:43.570 [Test worker] c.s.s.i.LessonServiceImpl - In update(entity = [Lesson(id=5, hours=2, teacherForSite=Ivanov I.I. updated, subjectForSite=History updated, lessonType=LECTURE, teacher=com.softserve.entity.Teacher@66d58a6a, subject=Subject(id=6, name=Astronomy), group=Group(id=4, title=111))]
+[INFO ] 2020-04-16 09:19:43.570 [Test worker] c.s.s.i.LessonServiceImpl - In isLessonForGroupExists(lesson = [Lesson(id=5, hours=2, teacherForSite=Ivanov I.I. updated, subjectForSite=History updated, lessonType=LECTURE, teacher=com.softserve.entity.Teacher@66d58a6a, subject=Subject(id=6, name=Astronomy), group=Group(id=4, title=111))])
+[INFO ] 2020-04-16 09:19:43.570 [Test worker] c.s.r.i.LessonRepositoryImpl - In countLessonDuplicates(lesson = [Lesson(id=5, hours=2, teacherForSite=Ivanov I.I. updated, subjectForSite=History updated, lessonType=LECTURE, teacher=com.softserve.entity.Teacher@66d58a6a, subject=Subject(id=6, name=Astronomy), group=Group(id=4, title=111))])
+[INFO ] 2020-04-16 09:19:43.630 [Test worker] c.s.r.i.BasicRepositoryImpl - In update(entity = [Lesson(id=5, hours=2, teacherForSite=Ivanov I.I. updated, subjectForSite=History updated, lessonType=LECTURE, teacher=com.softserve.entity.Teacher@66d58a6a, subject=Subject(id=6, name=Astronomy), group=Group(id=4, title=111))]
+[ERROR] 2020-04-16 09:19:43.919 [Test worker] c.s.e.h.GlobalExceptionHandler - Object of class [com.softserve.entity.Lesson] with identifier [5]: optimistic locking failed; nested exception is org.hibernate.StaleObjectStateException: Row was updated or deleted by another transaction (or unsaved-value mapping was incorrect) : [com.softserve.entity.Lesson#5]
+[INFO ] 2020-04-16 09:19:44.466 [Test worker] c.s.s.i.TeacherServiceImpl - Enter into getById of TeacherServiceImpl with id 5
+[INFO ] 2020-04-16 09:19:44.466 [Test worker] c.s.r.i.BasicRepositoryImpl - In findById(id = [5])
+[INFO ] 2020-04-16 09:19:44.591 [Test worker] c.s.s.i.SubjectServiceImpl - In getById(id = [5])
+[INFO ] 2020-04-16 09:19:44.591 [Test worker] c.s.r.i.BasicRepositoryImpl - In findById(id = [5])
+[INFO ] 2020-04-16 09:19:44.711 [Test worker] c.s.s.i.GroupServiceImpl - In getById(id = [5])
+[INFO ] 2020-04-16 09:19:44.711 [Test worker] c.s.r.i.BasicRepositoryImpl - In findById(id = [5])
+[INFO ] 2020-04-16 09:19:44.832 [Test worker] c.s.c.LessonController - In update (lessonInfoDTO = [LessonInfoDTO(id=4, hours=1, teacherForSite=Ivanov I.I. update, subjectForSite=History of USA, lessonType=LABORATORY, subject=SubjectDTO(id=5, name=History), group=GroupDTO(id=5, title=222), teacher=TeacherNameDTO(id=5, name=Petro, surname=Petrov, patronymic=Petrovych))])
+[INFO ] 2020-04-16 09:19:44.832 [Test worker] c.s.s.i.LessonServiceImpl - In getById(id = [4])
+[INFO ] 2020-04-16 09:19:44.832 [Test worker] c.s.r.i.BasicRepositoryImpl - In findById(id = [4])
+[INFO ] 2020-04-16 09:19:44.953 [Test worker] c.s.s.i.LessonServiceImpl - In update(entity = [Lesson(id=4, hours=1, teacherForSite=Ivanov I.I. update, subjectForSite=History of USA, lessonType=LABORATORY, teacher=com.softserve.entity.Teacher@54b44212, subject=Subject(id=5, name=History), group=Group(id=5, title=222))]
+[INFO ] 2020-04-16 09:19:44.955 [Test worker] c.s.s.i.LessonServiceImpl - In isLessonForGroupExists(lesson = [Lesson(id=4, hours=1, teacherForSite=Ivanov I.I. update, subjectForSite=History of USA, lessonType=LABORATORY, teacher=com.softserve.entity.Teacher@54b44212, subject=Subject(id=5, name=History), group=Group(id=5, title=222))])
+[INFO ] 2020-04-16 09:19:44.955 [Test worker] c.s.r.i.LessonRepositoryImpl - In countLessonDuplicates(lesson = [Lesson(id=4, hours=1, teacherForSite=Ivanov I.I. update, subjectForSite=History of USA, lessonType=LABORATORY, teacher=com.softserve.entity.Teacher@54b44212, subject=Subject(id=5, name=History), group=Group(id=5, title=222))])
+[ERROR] 2020-04-16 09:19:45.075 [Test worker] c.s.e.h.GlobalExceptionHandler - Lesson with this parameters already exists
+[INFO ] 2020-04-16 09:19:45.383 [Test worker] c.s.c.GroupController - In get(id = [100])
+[INFO ] 2020-04-16 09:19:45.383 [Test worker] c.s.s.i.GroupServiceImpl - In getById(id = [100])
+[INFO ] 2020-04-16 09:19:45.383 [Test worker] c.s.r.i.BasicRepositoryImpl - In findById(id = [100])
+[ERROR] 2020-04-16 09:19:45.503 [Test worker] c.s.e.h.GlobalExceptionHandler - Group was not found for parameters {id=100}
+[INFO ] 2020-04-16 09:19:45.809 [Test worker] c.s.c.GroupController - In get(id = [4])
+[INFO ] 2020-04-16 09:19:45.809 [Test worker] c.s.s.i.GroupServiceImpl - In getById(id = [4])
+[INFO ] 2020-04-16 09:19:45.810 [Test worker] c.s.r.i.BasicRepositoryImpl - In findById(id = [4])
+[INFO ] 2020-04-16 09:19:46.231 [Test worker] c.s.c.GroupController - In update (groupDTO = [GroupDTO(id=5, title=111)])
+[INFO ] 2020-04-16 09:19:46.231 [Test worker] c.s.s.i.GroupServiceImpl - In update(entity = [Group(id=5, title=111)]
+[INFO ] 2020-04-16 09:19:46.232 [Test worker] c.s.s.i.GroupServiceImpl - In isExistsWithId(id = [5])
+[INFO ] 2020-04-16 09:19:46.232 [Test worker] c.s.r.i.GroupRepositoryImpl - In countByGroupId(id = [5])
+[INFO ] 2020-04-16 09:19:46.292 [Test worker] c.s.s.i.GroupServiceImpl - In isGroupExistsWitTitle(title = [111])
+[INFO ] 2020-04-16 09:19:46.293 [Test worker] c.s.r.i.GroupRepositoryImpl - In countGroupsWithTitle(title = [111])
+[ERROR] 2020-04-16 09:19:46.354 [Test worker] c.s.s.i.GroupServiceImpl - Group with title [111] already exists
+[ERROR] 2020-04-16 09:19:46.416 [Test worker] c.s.e.h.GlobalExceptionHandler - Group with parameter {title=111} already exists
+[INFO ] 2020-04-16 09:19:47.223 [Test worker] c.s.c.GroupController - In save (groupDTO = [GroupDTO(id=null, title=111)])
+[INFO ] 2020-04-16 09:19:47.224 [Test worker] c.s.s.i.GroupServiceImpl - In save(entity = [Group(id=null, title=111)]
+[INFO ] 2020-04-16 09:19:47.224 [Test worker] c.s.s.i.GroupServiceImpl - In isGroupExistsWitTitle(title = [111])
+[INFO ] 2020-04-16 09:19:47.224 [Test worker] c.s.r.i.GroupRepositoryImpl - In countGroupsWithTitle(title = [111])
+[ERROR] 2020-04-16 09:19:47.344 [Test worker] c.s.e.h.GlobalExceptionHandler - Group with parameter {title=111} already exists
+[INFO ] 2020-04-16 09:19:47.646 [Test worker] c.s.c.GroupController - In save (groupDTO = [GroupDTO(id=null, title=null)])
+[INFO ] 2020-04-16 09:19:47.647 [Test worker] c.s.s.i.GroupServiceImpl - In save(entity = [Group(id=null, title=null)]
+[INFO ] 2020-04-16 09:19:47.647 [Test worker] c.s.s.i.GroupServiceImpl - In isGroupExistsWitTitle(title = [null])
+[INFO ] 2020-04-16 09:19:47.647 [Test worker] c.s.r.i.GroupRepositoryImpl - In countGroupsWithTitle(title = [null])
+[INFO ] 2020-04-16 09:19:47.707 [Test worker] c.s.r.i.BasicRepositoryImpl - In save(entity = [Group(id=null, title=null)]
+[ERROR] 2020-04-16 09:19:47.767 [Test worker] c.s.e.h.GlobalExceptionHandler - Validation failed for classes [com.softserve.entity.Group] during persist time for groups [javax.validation.groups.Default, ]
+List of constraint violations:[
+	ConstraintViolationImpl{interpolatedMessage='не може бути відсутнім, має бути задано', propertyPath=title, rootBeanClass=class com.softserve.entity.Group, messageTemplate='{javax.validation.constraints.NotNull.message}'}
+	ConstraintViolationImpl{interpolatedMessage='Title cannot be empty', propertyPath=title, rootBeanClass=class com.softserve.entity.Group, messageTemplate='Title cannot be empty'}
+]
+[INFO ] 2020-04-16 09:19:48.069 [Test worker] c.s.c.GroupController - In publicList ()
+[INFO ] 2020-04-16 09:19:48.070 [Test worker] c.s.s.i.GroupServiceImpl - In getAll()
+[INFO ] 2020-04-16 09:19:48.070 [Test worker] c.s.r.i.GroupRepositoryImpl - In getAll()
+[INFO ] 2020-04-16 09:19:50.355 [Test worker] c.s.c.GroupController - In update (groupDTO = [GroupDTO(id=6, title=null)])
+[INFO ] 2020-04-16 09:19:50.356 [Test worker] c.s.s.i.GroupServiceImpl - In update(entity = [Group(id=6, title=null)]
+[INFO ] 2020-04-16 09:19:50.356 [Test worker] c.s.s.i.GroupServiceImpl - In isExistsWithId(id = [6])
+[INFO ] 2020-04-16 09:19:50.356 [Test worker] c.s.r.i.GroupRepositoryImpl - In countByGroupId(id = [6])
+[INFO ] 2020-04-16 09:19:50.415 [Test worker] c.s.s.i.GroupServiceImpl - In isGroupExistsWitTitle(title = [null])
+[INFO ] 2020-04-16 09:19:50.416 [Test worker] c.s.r.i.GroupRepositoryImpl - In countGroupsWithTitle(title = [null])
+[INFO ] 2020-04-16 09:19:50.475 [Test worker] c.s.r.i.BasicRepositoryImpl - In update(entity = [Group(id=6, title=null)]
+[ERROR] 2020-04-16 09:19:50.536 [Test worker] c.s.e.h.GlobalExceptionHandler - Validation failed for classes [com.softserve.entity.Group] during update time for groups [javax.validation.groups.Default, ]
+List of constraint violations:[
+	ConstraintViolationImpl{interpolatedMessage='Title cannot be empty', propertyPath=title, rootBeanClass=class com.softserve.entity.Group, messageTemplate='Title cannot be empty'}
+	ConstraintViolationImpl{interpolatedMessage='не може бути відсутнім, має бути задано', propertyPath=title, rootBeanClass=class com.softserve.entity.Group, messageTemplate='{javax.validation.constraints.NotNull.message}'}
+]
+[INFO ] 2020-04-16 09:19:50.728 [Test worker] c.s.c.SemesterController - In save (semesterDTO = [SemesterDTO(id=1, description=null, year=0, startDay=2020-07-20, endDay=2020-09-20, currentSemester=false)])
+[INFO ] 2020-04-16 09:19:50.732 [Test worker] c.s.s.i.SemesterServiceImpl - In save(entity = [Semester(id=1, description=null, year=0, startDay=2020-07-20, endDay=2020-09-20, currentSemester=false)]
+[INFO ] 2020-04-16 09:19:50.733 [Test worker] c.s.s.i.SemesterServiceImpl - Enter into isTimeInvalid  with entity: Semester(id=1, description=null, year=0, startDay=2020-07-20, endDay=2020-09-20, currentSemester=false)
+[INFO ] 2020-04-16 09:19:50.734 [Test worker] c.s.s.i.SemesterServiceImpl - In isSemesterExistsByDescriptionAndYear with semester = Semester(id=1, description=null, year=0, startDay=2020-07-20, endDay=2020-09-20, currentSemester=false)
+[INFO ] 2020-04-16 09:19:50.735 [Test worker] c.s.s.i.SemesterServiceImpl - In isSemesterExists with semester = Semester(id=1, description=null, year=0, startDay=2020-07-20, endDay=2020-09-20, currentSemester=false)
+[INFO ] 2020-04-16 09:19:50.736 [Test worker] c.s.r.i.SemesterRepositoryImpl - In countSemesterDuplicates(semester = [Semester(id=1, description=null, year=0, startDay=2020-07-20, endDay=2020-09-20, currentSemester=false)])
+[INFO ] 2020-04-16 09:19:50.796 [Test worker] c.s.r.i.BasicRepositoryImpl - In save(entity = [Semester(id=1, description=null, year=0, startDay=2020-07-20, endDay=2020-09-20, currentSemester=false)]
+[ERROR] 2020-04-16 09:19:50.859 [Test worker] c.s.e.h.GlobalExceptionHandler - Validation failed for classes [com.softserve.entity.Semester] during persist time for groups [javax.validation.groups.Default, ]
+List of constraint violations:[
+	ConstraintViolationImpl{interpolatedMessage='Description cannot be null or empty', propertyPath=description, rootBeanClass=class com.softserve.entity.Semester, messageTemplate='Description cannot be null or empty'}
+	ConstraintViolationImpl{interpolatedMessage='має бути більше або рівне 1999', propertyPath=year, rootBeanClass=class com.softserve.entity.Semester, messageTemplate='{javax.validation.constraints.Min.message}'}
+]
+[INFO ] 2020-04-16 09:19:51.048 [Test worker] c.s.c.SemesterController - In get(id = [4])
+[INFO ] 2020-04-16 09:19:51.048 [Test worker] c.s.s.i.SemesterServiceImpl - In getById(id = [4])
+[INFO ] 2020-04-16 09:19:51.048 [Test worker] c.s.r.i.BasicRepositoryImpl - In findById(id = [4])
+[INFO ] 2020-04-16 09:19:51.425 [Test worker] c.s.c.SemesterController - In save (semesterDTO = [SemesterDTO(id=1, description=another semester, year=2020, startDay=2020-08-20, endDay=2020-09-20, currentSemester=false)])
+[INFO ] 2020-04-16 09:19:51.425 [Test worker] c.s.s.i.SemesterServiceImpl - In save(entity = [Semester(id=1, description=another semester, year=2020, startDay=2020-08-20, endDay=2020-09-20, currentSemester=false)]
+[INFO ] 2020-04-16 09:19:51.425 [Test worker] c.s.s.i.SemesterServiceImpl - Enter into isTimeInvalid  with entity: Semester(id=1, description=another semester, year=2020, startDay=2020-08-20, endDay=2020-09-20, currentSemester=false)
+[INFO ] 2020-04-16 09:19:51.425 [Test worker] c.s.s.i.SemesterServiceImpl - In isSemesterExistsByDescriptionAndYear with semester = Semester(id=1, description=another semester, year=2020, startDay=2020-08-20, endDay=2020-09-20, currentSemester=false)
+[INFO ] 2020-04-16 09:19:51.425 [Test worker] c.s.s.i.SemesterServiceImpl - In isSemesterExists with semester = Semester(id=1, description=another semester, year=2020, startDay=2020-08-20, endDay=2020-09-20, currentSemester=false)
+[INFO ] 2020-04-16 09:19:51.425 [Test worker] c.s.r.i.SemesterRepositoryImpl - In countSemesterDuplicates(semester = [Semester(id=1, description=another semester, year=2020, startDay=2020-08-20, endDay=2020-09-20, currentSemester=false)])
+[INFO ] 2020-04-16 09:19:51.485 [Test worker] c.s.r.i.BasicRepositoryImpl - In save(entity = [Semester(id=1, description=another semester, year=2020, startDay=2020-08-20, endDay=2020-09-20, currentSemester=false)]
+[INFO ] 2020-04-16 09:19:51.793 [Test worker] c.s.c.SemesterController - In save (semesterDTO = [SemesterDTO(id=2, description=5 semester, year=0, startDay=2020-10-20, endDay=2020-09-20, currentSemester=false)])
+[INFO ] 2020-04-16 09:19:51.793 [Test worker] c.s.s.i.SemesterServiceImpl - In save(entity = [Semester(id=2, description=5 semester, year=0, startDay=2020-10-20, endDay=2020-09-20, currentSemester=false)]
+[INFO ] 2020-04-16 09:19:51.793 [Test worker] c.s.s.i.SemesterServiceImpl - Enter into isTimeInvalid  with entity: Semester(id=2, description=5 semester, year=0, startDay=2020-10-20, endDay=2020-09-20, currentSemester=false)
+[ERROR] 2020-04-16 09:19:51.793 [Test worker] c.s.e.h.GlobalExceptionHandler - The end day cannot be before the start day
+[INFO ] 2020-04-16 09:19:51.978 [Test worker] c.s.c.SemesterController - In update (semesterDTO = [SemesterDTO(id=4, description=2 semester, year=0, startDay=2020-05-20, endDay=2020-06-20, currentSemester=false)])
+[INFO ] 2020-04-16 09:19:51.978 [Test worker] c.s.s.i.SemesterServiceImpl - In getById(id = [4])
+[INFO ] 2020-04-16 09:19:51.978 [Test worker] c.s.r.i.BasicRepositoryImpl - In findById(id = [4])
+[INFO ] 2020-04-16 09:19:52.098 [Test worker] c.s.s.i.SemesterServiceImpl - In update(entity = [Semester(id=4, description=2 semester, year=0, startDay=2020-05-20, endDay=2020-06-20, currentSemester=false)]
+[INFO ] 2020-04-16 09:19:52.098 [Test worker] c.s.s.i.SemesterServiceImpl - Enter into isTimeInvalid  with entity: Semester(id=4, description=2 semester, year=0, startDay=2020-05-20, endDay=2020-06-20, currentSemester=false)
+[INFO ] 2020-04-16 09:19:52.098 [Test worker] c.s.s.i.SemesterServiceImpl - In isSemesterExistsByDescriptionAndYearForUpdate with semester = Semester(id=4, description=2 semester, year=0, startDay=2020-05-20, endDay=2020-06-20, currentSemester=false)
+[INFO ] 2020-04-16 09:19:52.098 [Test worker] c.s.s.i.SemesterServiceImpl - In isSemesterExists with semester = Semester(id=4, description=2 semester, year=0, startDay=2020-05-20, endDay=2020-06-20, currentSemester=false)
+[INFO ] 2020-04-16 09:19:52.098 [Test worker] c.s.r.i.SemesterRepositoryImpl - In countSemesterDuplicates(semester = [Semester(id=4, description=2 semester, year=0, startDay=2020-05-20, endDay=2020-06-20, currentSemester=false)])
+[INFO ] 2020-04-16 09:19:52.158 [Test worker] c.s.r.i.SemesterRepositoryImpl - Enter into update method with entity:Semester(id=4, description=2 semester, year=0, startDay=2020-05-20, endDay=2020-06-20, currentSemester=false)
+[ERROR] 2020-04-16 09:19:52.280 [Test worker] c.s.e.h.GlobalExceptionHandler - Validation failed for classes [com.softserve.entity.Semester] during update time for groups [javax.validation.groups.Default, ]
+List of constraint violations:[
+	ConstraintViolationImpl{interpolatedMessage='має бути більше або рівне 1999', propertyPath=year, rootBeanClass=class com.softserve.entity.Semester, messageTemplate='{javax.validation.constraints.Min.message}'}
+]
+[INFO ] 2020-04-16 09:19:52.463 [Test worker] c.s.c.SemesterController - In get(id = [100])
+[INFO ] 2020-04-16 09:19:52.464 [Test worker] c.s.s.i.SemesterServiceImpl - In getById(id = [100])
+[INFO ] 2020-04-16 09:19:52.464 [Test worker] c.s.r.i.BasicRepositoryImpl - In findById(id = [100])
+[ERROR] 2020-04-16 09:19:52.583 [Test worker] c.s.e.h.GlobalExceptionHandler - Semester was not found for parameters {id=100}
+[INFO ] 2020-04-16 09:19:52.766 [Test worker] c.s.c.SemesterController - In update (semesterDTO = [SemesterDTO(id=5, description=null, year=0, startDay=2020-07-20, endDay=2020-09-20, currentSemester=false)])
+[INFO ] 2020-04-16 09:19:52.766 [Test worker] c.s.s.i.SemesterServiceImpl - In getById(id = [5])
+[INFO ] 2020-04-16 09:19:52.766 [Test worker] c.s.r.i.BasicRepositoryImpl - In findById(id = [5])
+[INFO ] 2020-04-16 09:19:52.886 [Test worker] c.s.s.i.SemesterServiceImpl - In update(entity = [Semester(id=5, description=null, year=0, startDay=2020-07-20, endDay=2020-09-20, currentSemester=false)]
+[INFO ] 2020-04-16 09:19:52.886 [Test worker] c.s.s.i.SemesterServiceImpl - Enter into isTimeInvalid  with entity: Semester(id=5, description=null, year=0, startDay=2020-07-20, endDay=2020-09-20, currentSemester=false)
+[INFO ] 2020-04-16 09:19:52.886 [Test worker] c.s.s.i.SemesterServiceImpl - In isSemesterExistsByDescriptionAndYearForUpdate with semester = Semester(id=5, description=null, year=0, startDay=2020-07-20, endDay=2020-09-20, currentSemester=false)
+[INFO ] 2020-04-16 09:19:52.886 [Test worker] c.s.s.i.SemesterServiceImpl - In isSemesterExists with semester = Semester(id=5, description=null, year=0, startDay=2020-07-20, endDay=2020-09-20, currentSemester=false)
+[INFO ] 2020-04-16 09:19:52.886 [Test worker] c.s.r.i.SemesterRepositoryImpl - In countSemesterDuplicates(semester = [Semester(id=5, description=null, year=0, startDay=2020-07-20, endDay=2020-09-20, currentSemester=false)])
+[INFO ] 2020-04-16 09:19:52.946 [Test worker] c.s.r.i.SemesterRepositoryImpl - Enter into update method with entity:Semester(id=5, description=null, year=0, startDay=2020-07-20, endDay=2020-09-20, currentSemester=false)
+[ERROR] 2020-04-16 09:19:53.068 [Test worker] c.s.e.h.GlobalExceptionHandler - Validation failed for classes [com.softserve.entity.Semester] during update time for groups [javax.validation.groups.Default, ]
+List of constraint violations:[
+	ConstraintViolationImpl{interpolatedMessage='має бути більше або рівне 1999', propertyPath=year, rootBeanClass=class com.softserve.entity.Semester, messageTemplate='{javax.validation.constraints.Min.message}'}
+	ConstraintViolationImpl{interpolatedMessage='Description cannot be null or empty', propertyPath=description, rootBeanClass=class com.softserve.entity.Semester, messageTemplate='Description cannot be null or empty'}
+]
+[INFO ] 2020-04-16 09:19:53.263 [Test worker] c.s.c.SemesterController - In delete (id =[5]
+[INFO ] 2020-04-16 09:19:53.263 [Test worker] c.s.s.i.SemesterServiceImpl - In getById(id = [5])
+[INFO ] 2020-04-16 09:19:53.263 [Test worker] c.s.r.i.BasicRepositoryImpl - In findById(id = [5])
+[INFO ] 2020-04-16 09:19:53.383 [Test worker] c.s.s.i.SemesterServiceImpl - In delete(object = [Semester(id=5, description=2 semester, year=2020, startDay=2020-03-20, endDay=2020-04-20, currentSemester=false)])
+[INFO ] 2020-04-16 09:19:53.383 [Test worker] c.s.r.i.BasicRepositoryImpl - In delete(entity = [Semester(id=5, description=2 semester, year=2020, startDay=2020-03-20, endDay=2020-04-20, currentSemester=false)])
+[INFO ] 2020-04-16 09:19:53.383 [Test worker] c.s.r.i.SemesterRepositoryImpl - In checkReference(semester = [Semester(id=5, description=2 semester, year=2020, startDay=2020-03-20, endDay=2020-04-20, currentSemester=false)])
+[INFO ] 2020-04-16 09:19:53.775 [Test worker] c.s.c.SemesterController - In list ()
+[INFO ] 2020-04-16 09:19:53.775 [Test worker] c.s.s.i.SemesterServiceImpl - In getAll()
+[INFO ] 2020-04-16 09:19:53.775 [Test worker] c.s.r.i.BasicRepositoryImpl - In getAll()
+[INFO ] 2020-04-16 09:19:54.079 [Test worker] c.s.c.SemesterController - In update (semesterDTO = [SemesterDTO(id=4, description=another semester, year=2222, startDay=2020-07-20, endDay=2020-09-20, currentSemester=false)])
+[INFO ] 2020-04-16 09:19:54.079 [Test worker] c.s.s.i.SemesterServiceImpl - In getById(id = [4])
+[INFO ] 2020-04-16 09:19:54.080 [Test worker] c.s.r.i.BasicRepositoryImpl - In findById(id = [4])
+[INFO ] 2020-04-16 09:19:54.199 [Test worker] c.s.s.i.SemesterServiceImpl - In update(entity = [Semester(id=4, description=another semester, year=2222, startDay=2020-07-20, endDay=2020-09-20, currentSemester=false)]
+[INFO ] 2020-04-16 09:19:54.199 [Test worker] c.s.s.i.SemesterServiceImpl - Enter into isTimeInvalid  with entity: Semester(id=4, description=another semester, year=2222, startDay=2020-07-20, endDay=2020-09-20, currentSemester=false)
+[INFO ] 2020-04-16 09:19:54.199 [Test worker] c.s.s.i.SemesterServiceImpl - In isSemesterExistsByDescriptionAndYearForUpdate with semester = Semester(id=4, description=another semester, year=2222, startDay=2020-07-20, endDay=2020-09-20, currentSemester=false)
+[INFO ] 2020-04-16 09:19:54.199 [Test worker] c.s.s.i.SemesterServiceImpl - In isSemesterExists with semester = Semester(id=4, description=another semester, year=2222, startDay=2020-07-20, endDay=2020-09-20, currentSemester=false)
+[INFO ] 2020-04-16 09:19:54.199 [Test worker] c.s.r.i.SemesterRepositoryImpl - In countSemesterDuplicates(semester = [Semester(id=4, description=another semester, year=2222, startDay=2020-07-20, endDay=2020-09-20, currentSemester=false)])
+[INFO ] 2020-04-16 09:19:54.259 [Test worker] c.s.r.i.SemesterRepositoryImpl - Enter into update method with entity:Semester(id=4, description=another semester, year=2222, startDay=2020-07-20, endDay=2020-09-20, currentSemester=false)
+[INFO ] 2020-04-16 09:19:54.624 [Test worker] c.s.c.SemesterController - In save (semesterDTO = [SemesterDTO(id=4, description=1 semester, year=0, startDay=2020-01-20, endDay=2020-02-20, currentSemester=false)])
+[INFO ] 2020-04-16 09:19:54.624 [Test worker] c.s.s.i.SemesterServiceImpl - In save(entity = [Semester(id=4, description=1 semester, year=0, startDay=2020-01-20, endDay=2020-02-20, currentSemester=false)]
+[INFO ] 2020-04-16 09:19:54.624 [Test worker] c.s.s.i.SemesterServiceImpl - Enter into isTimeInvalid  with entity: Semester(id=4, description=1 semester, year=0, startDay=2020-01-20, endDay=2020-02-20, currentSemester=false)
+[INFO ] 2020-04-16 09:19:54.624 [Test worker] c.s.s.i.SemesterServiceImpl - In isSemesterExistsByDescriptionAndYear with semester = Semester(id=4, description=1 semester, year=0, startDay=2020-01-20, endDay=2020-02-20, currentSemester=false)
+[INFO ] 2020-04-16 09:19:54.624 [Test worker] c.s.s.i.SemesterServiceImpl - In isSemesterExists with semester = Semester(id=4, description=1 semester, year=0, startDay=2020-01-20, endDay=2020-02-20, currentSemester=false)
+[INFO ] 2020-04-16 09:19:54.624 [Test worker] c.s.r.i.SemesterRepositoryImpl - In countSemesterDuplicates(semester = [Semester(id=4, description=1 semester, year=0, startDay=2020-01-20, endDay=2020-02-20, currentSemester=false)])
+[INFO ] 2020-04-16 09:19:54.684 [Test worker] c.s.r.i.BasicRepositoryImpl - In save(entity = [Semester(id=4, description=1 semester, year=0, startDay=2020-01-20, endDay=2020-02-20, currentSemester=false)]
+[ERROR] 2020-04-16 09:19:54.745 [Test worker] c.s.e.h.GlobalExceptionHandler - Validation failed for classes [com.softserve.entity.Semester] during persist time for groups [javax.validation.groups.Default, ]
+List of constraint violations:[
+	ConstraintViolationImpl{interpolatedMessage='має бути більше або рівне 1999', propertyPath=year, rootBeanClass=class com.softserve.entity.Semester, messageTemplate='{javax.validation.constraints.Min.message}'}
+]
+[INFO ] 2020-04-16 09:19:54.929 [Test worker] c.s.c.SemesterController - In update (semesterDTO = [SemesterDTO(id=4, description=2 semester, year=0, startDay=2020-06-20, endDay=2020-05-20, currentSemester=false)])
+[INFO ] 2020-04-16 09:19:54.930 [Test worker] c.s.s.i.SemesterServiceImpl - In getById(id = [4])
+[INFO ] 2020-04-16 09:19:54.930 [Test worker] c.s.r.i.BasicRepositoryImpl - In findById(id = [4])
+[INFO ] 2020-04-16 09:19:55.049 [Test worker] c.s.s.i.SemesterServiceImpl - In update(entity = [Semester(id=4, description=2 semester, year=0, startDay=2020-06-20, endDay=2020-05-20, currentSemester=false)]
+[INFO ] 2020-04-16 09:19:55.050 [Test worker] c.s.s.i.SemesterServiceImpl - Enter into isTimeInvalid  with entity: Semester(id=4, description=2 semester, year=0, startDay=2020-06-20, endDay=2020-05-20, currentSemester=false)
+[ERROR] 2020-04-16 09:19:55.050 [Test worker] c.s.e.h.GlobalExceptionHandler - The end day cannot be before the start day
+[INFO ] 2020-04-16 09:19:55.297 [Test worker] c.s.c.SubjectController - In get(id = [4])
+[INFO ] 2020-04-16 09:19:55.297 [Test worker] c.s.s.i.SubjectServiceImpl - In getById(id = [4])
+[INFO ] 2020-04-16 09:19:55.297 [Test worker] c.s.r.i.BasicRepositoryImpl - In findById(id = [4])
+[INFO ] 2020-04-16 09:19:55.661 [Test worker] c.s.c.SubjectController - In save (subjectDTO = [SubjectDTO(id=null, name=save subject name)])
+[INFO ] 2020-04-16 09:19:55.662 [Test worker] c.s.s.i.SubjectServiceImpl - In save(entity = [Subject(id=null, name=save subject name)]
+[INFO ] 2020-04-16 09:19:55.662 [Test worker] c.s.s.i.SubjectServiceImpl - In isSubjectExistsWithName(name = [save subject name])
+[INFO ] 2020-04-16 09:19:55.662 [Test worker] c.s.r.i.SubjectRepositoryImpl - In countSubjectsWithName(name = [save subject name])
+[INFO ] 2020-04-16 09:19:55.723 [Test worker] c.s.r.i.BasicRepositoryImpl - In save(entity = [Subject(id=null, name=save subject name)]
+[INFO ] 2020-04-16 09:19:56.122 [Test worker] c.s.c.SubjectController - In get(id = [100])
+[INFO ] 2020-04-16 09:19:56.122 [Test worker] c.s.s.i.SubjectServiceImpl - In getById(id = [100])
+[INFO ] 2020-04-16 09:19:56.122 [Test worker] c.s.r.i.BasicRepositoryImpl - In findById(id = [100])
+[ERROR] 2020-04-16 09:19:56.241 [Test worker] c.s.e.h.GlobalExceptionHandler - Subject was not found for parameters {id=100}
+[INFO ] 2020-04-16 09:19:56.483 [Test worker] c.s.c.SubjectController - In save (subjectDTO = [SubjectDTO(id=null, name=null)])
+[INFO ] 2020-04-16 09:19:56.484 [Test worker] c.s.s.i.SubjectServiceImpl - In save(entity = [Subject(id=null, name=null)]
+[INFO ] 2020-04-16 09:19:56.484 [Test worker] c.s.s.i.SubjectServiceImpl - In isSubjectExistsWithName(name = [null])
+[INFO ] 2020-04-16 09:19:56.484 [Test worker] c.s.r.i.SubjectRepositoryImpl - In countSubjectsWithName(name = [null])
+[INFO ] 2020-04-16 09:19:56.544 [Test worker] c.s.r.i.BasicRepositoryImpl - In save(entity = [Subject(id=null, name=null)]
+[ERROR] 2020-04-16 09:19:56.604 [Test worker] c.s.e.h.GlobalExceptionHandler - Validation failed for classes [com.softserve.entity.Subject] during persist time for groups [javax.validation.groups.Default, ]
+List of constraint violations:[
+	ConstraintViolationImpl{interpolatedMessage='Name cannot be empty', propertyPath=name, rootBeanClass=class com.softserve.entity.Subject, messageTemplate='Name cannot be empty'}
+	ConstraintViolationImpl{interpolatedMessage='не може бути відсутнім, має бути задано', propertyPath=name, rootBeanClass=class com.softserve.entity.Subject, messageTemplate='{javax.validation.constraints.NotNull.message}'}
+]
+[INFO ] 2020-04-16 09:19:56.847 [Test worker] c.s.c.SubjectController - In save (subjectDTO = [SubjectDTO(id=null, name=Biology)])
+[INFO ] 2020-04-16 09:19:56.848 [Test worker] c.s.s.i.SubjectServiceImpl - In save(entity = [Subject(id=null, name=Biology)]
+[INFO ] 2020-04-16 09:19:56.848 [Test worker] c.s.s.i.SubjectServiceImpl - In isSubjectExistsWithName(name = [Biology])
+[INFO ] 2020-04-16 09:19:56.848 [Test worker] c.s.r.i.SubjectRepositoryImpl - In countSubjectsWithName(name = [Biology])
+[ERROR] 2020-04-16 09:19:56.908 [Test worker] c.s.s.i.SubjectServiceImpl - Subject with name Biology already exists
+[ERROR] 2020-04-16 09:19:56.968 [Test worker] c.s.e.h.GlobalExceptionHandler - Subject with parameter {name=Biology} already exists
+[INFO ] 2020-04-16 09:19:57.211 [Test worker] c.s.c.SubjectController - In update (subjectDTO = [SubjectDTO(id=4, name=Astronomy)])
+[INFO ] 2020-04-16 09:19:57.212 [Test worker] c.s.s.i.SubjectServiceImpl - In update(entity = [Subject(id=4, name=Astronomy)]
+[INFO ] 2020-04-16 09:19:57.212 [Test worker] c.s.s.i.SubjectServiceImpl - In isExistsWithId(id = [4])
+[INFO ] 2020-04-16 09:19:57.212 [Test worker] c.s.r.i.SubjectRepositoryImpl - In countBySubjectId(id = [4])
+[INFO ] 2020-04-16 09:19:57.272 [Test worker] c.s.s.i.SubjectServiceImpl - In isSubjectExistsWithName(name = [Astronomy])
+[INFO ] 2020-04-16 09:19:57.272 [Test worker] c.s.r.i.SubjectRepositoryImpl - In countSubjectsWithName(name = [Astronomy])
+[ERROR] 2020-04-16 09:19:57.332 [Test worker] c.s.s.i.SubjectServiceImpl - Subject with name [Astronomy] already exists
+[ERROR] 2020-04-16 09:19:57.392 [Test worker] c.s.e.h.GlobalExceptionHandler - Subject with parameter {name=Astronomy} already exists
+[INFO ] 2020-04-16 09:19:57.636 [Test worker] c.s.c.SubjectController - In update (subjectDTO = [SubjectDTO(id=6, name=null)])
+[INFO ] 2020-04-16 09:19:57.637 [Test worker] c.s.s.i.SubjectServiceImpl - In update(entity = [Subject(id=6, name=null)]
+[INFO ] 2020-04-16 09:19:57.637 [Test worker] c.s.s.i.SubjectServiceImpl - In isExistsWithId(id = [6])
+[INFO ] 2020-04-16 09:19:57.637 [Test worker] c.s.r.i.SubjectRepositoryImpl - In countBySubjectId(id = [6])
+[INFO ] 2020-04-16 09:19:57.696 [Test worker] c.s.s.i.SubjectServiceImpl - In isSubjectExistsWithName(name = [null])
+[INFO ] 2020-04-16 09:19:57.696 [Test worker] c.s.r.i.SubjectRepositoryImpl - In countSubjectsWithName(name = [null])
+[INFO ] 2020-04-16 09:19:57.756 [Test worker] c.s.r.i.BasicRepositoryImpl - In update(entity = [Subject(id=6, name=null)]
+[ERROR] 2020-04-16 09:19:57.855 [Test worker] c.s.e.h.GlobalExceptionHandler - Validation failed for classes [com.softserve.entity.Subject] during update time for groups [javax.validation.groups.Default, ]
+List of constraint violations:[
+	ConstraintViolationImpl{interpolatedMessage='Name cannot be empty', propertyPath=name, rootBeanClass=class com.softserve.entity.Subject, messageTemplate='Name cannot be empty'}
+	ConstraintViolationImpl{interpolatedMessage='не може бути відсутнім, має бути задано', propertyPath=name, rootBeanClass=class com.softserve.entity.Subject, messageTemplate='{javax.validation.constraints.NotNull.message}'}
+]
+[INFO ] 2020-04-16 09:19:58.099 [Test worker] c.s.c.SubjectController - In delete (id =[5]
+[INFO ] 2020-04-16 09:19:58.100 [Test worker] c.s.s.i.SubjectServiceImpl - In getById(id = [5])
+[INFO ] 2020-04-16 09:19:58.100 [Test worker] c.s.r.i.BasicRepositoryImpl - In findById(id = [5])
+[INFO ] 2020-04-16 09:19:58.219 [Test worker] c.s.s.i.SubjectServiceImpl - In delete(object = [Subject(id=5, name=History)])
+[INFO ] 2020-04-16 09:19:58.219 [Test worker] c.s.r.i.BasicRepositoryImpl - In delete(entity = [Subject(id=5, name=History)])
+[INFO ] 2020-04-16 09:19:58.219 [Test worker] c.s.r.i.SubjectRepositoryImpl - In checkReference(subject = [Subject(id=5, name=History)])
+[INFO ] 2020-04-16 09:19:58.642 [Test worker] c.s.c.SubjectController - In list ()
+[INFO ] 2020-04-16 09:19:58.642 [Test worker] c.s.s.i.SubjectServiceImpl - In getAll()
+[INFO ] 2020-04-16 09:19:58.642 [Test worker] c.s.r.i.SubjectRepositoryImpl - In getAll()
+[INFO ] 2020-04-16 09:19:59.005 [Test worker] c.s.c.SubjectController - In update (subjectDTO = [SubjectDTO(id=5, name=updated History)])
+[INFO ] 2020-04-16 09:19:59.005 [Test worker] c.s.s.i.SubjectServiceImpl - In update(entity = [Subject(id=5, name=updated History)]
+[INFO ] 2020-04-16 09:19:59.005 [Test worker] c.s.s.i.SubjectServiceImpl - In isExistsWithId(id = [5])
+[INFO ] 2020-04-16 09:19:59.005 [Test worker] c.s.r.i.SubjectRepositoryImpl - In countBySubjectId(id = [5])
+[INFO ] 2020-04-16 09:19:59.065 [Test worker] c.s.s.i.SubjectServiceImpl - In isSubjectExistsWithName(name = [updated History])
+[INFO ] 2020-04-16 09:19:59.065 [Test worker] c.s.r.i.SubjectRepositoryImpl - In countSubjectsWithName(name = [updated History])
+[INFO ] 2020-04-16 09:19:59.125 [Test worker] c.s.r.i.BasicRepositoryImpl - In update(entity = [Subject(id=5, name=updated History)]
+[INFO ] 2020-04-16 09:19:59.492 [Test worker] c.s.c.RoomTypeController - In save (roomTypeDTO = [RoomTypeDTO(id=1, description=null)])
+[INFO ] 2020-04-16 09:19:59.492 [Test worker] c.s.s.i.RoomTypeServiceImpl - In save(entity = [RoomType(id=1, description=null)]
+[INFO ] 2020-04-16 09:19:59.493 [Test worker] c.s.s.i.RoomTypeServiceImpl - In isRoomTypeExistsWithDescription(description = [null])
+[INFO ] 2020-04-16 09:19:59.493 [Test worker] c.s.r.i.RoomTypeRepositoryImpl - In countRoomTypesWithDescription(description = [null])
+[INFO ] 2020-04-16 09:19:59.555 [Test worker] c.s.r.i.BasicRepositoryImpl - In save(entity = [RoomType(id=1, description=null)]
+[ERROR] 2020-04-16 09:19:59.696 [Test worker] c.s.e.h.GlobalExceptionHandler - Validation failed for classes [com.softserve.entity.RoomType] during persist time for groups [javax.validation.groups.Default, ]
+List of constraint violations:[
+	ConstraintViolationImpl{interpolatedMessage='не може бути відсутнім, має бути задано', propertyPath=description, rootBeanClass=class com.softserve.entity.RoomType, messageTemplate='{javax.validation.constraints.NotNull.message}'}
+	ConstraintViolationImpl{interpolatedMessage='Description cannot be empty', propertyPath=description, rootBeanClass=class com.softserve.entity.RoomType, messageTemplate='Description cannot be empty'}
+]
+[INFO ] 2020-04-16 09:19:59.938 [Test worker] c.s.c.RoomTypeController - In get(id = [4])
+[INFO ] 2020-04-16 09:19:59.938 [Test worker] c.s.s.i.RoomTypeServiceImpl - In getById(id = [4])
+[INFO ] 2020-04-16 09:19:59.938 [Test worker] c.s.r.i.BasicRepositoryImpl - In findById(id = [4])
+[INFO ] 2020-04-16 09:20:00.393 [Test worker] c.s.c.RoomTypeController - In save (roomTypeDTO = [RoomTypeDTO(id=1, description=Another Small auditory)])
+[INFO ] 2020-04-16 09:20:00.393 [Test worker] c.s.s.i.RoomTypeServiceImpl - In save(entity = [RoomType(id=1, description=Another Small auditory)]
+[INFO ] 2020-04-16 09:20:00.393 [Test worker] c.s.s.i.RoomTypeServiceImpl - In isRoomTypeExistsWithDescription(description = [Another Small auditory])
+[INFO ] 2020-04-16 09:20:00.394 [Test worker] c.s.r.i.RoomTypeRepositoryImpl - In countRoomTypesWithDescription(description = [Another Small auditory])
+[INFO ] 2020-04-16 09:20:00.453 [Test worker] c.s.r.i.BasicRepositoryImpl - In save(entity = [RoomType(id=1, description=Another Small auditory)]
+[INFO ] 2020-04-16 09:20:00.828 [Test worker] c.s.c.RoomTypeController - In get(id = [100])
+[INFO ] 2020-04-16 09:20:00.828 [Test worker] c.s.s.i.RoomTypeServiceImpl - In getById(id = [100])
+[INFO ] 2020-04-16 09:20:00.828 [Test worker] c.s.r.i.BasicRepositoryImpl - In findById(id = [100])
+[ERROR] 2020-04-16 09:20:00.947 [Test worker] c.s.e.h.GlobalExceptionHandler - RoomType was not found for parameters {id=100}
+[INFO ] 2020-04-16 09:20:01.194 [Test worker] c.s.c.RoomTypeController - In update (roomTypeDTO = [RoomTypeDTO(id=5, description=null)])
+[INFO ] 2020-04-16 09:20:01.194 [Test worker] c.s.s.i.RoomTypeServiceImpl - In update(entity = [RoomType(id=5, description=null)]
+[INFO ] 2020-04-16 09:20:01.194 [Test worker] c.s.s.i.RoomTypeServiceImpl - In isExistsWithId(id = [5])
+[INFO ] 2020-04-16 09:20:01.194 [Test worker] c.s.r.i.RoomTypeRepositoryImpl - In countByRoomTypeId(id = [5])
+[INFO ] 2020-04-16 09:20:01.255 [Test worker] c.s.s.i.RoomTypeServiceImpl - In isRoomTypeExistsWithDescription(description = [null])
+[INFO ] 2020-04-16 09:20:01.255 [Test worker] c.s.r.i.RoomTypeRepositoryImpl - In countRoomTypesWithDescription(description = [null])
+[INFO ] 2020-04-16 09:20:01.314 [Test worker] c.s.r.i.BasicRepositoryImpl - In update(entity = [RoomType(id=5, description=null)]
+[ERROR] 2020-04-16 09:20:01.374 [Test worker] c.s.e.h.GlobalExceptionHandler - Validation failed for classes [com.softserve.entity.RoomType] during update time for groups [javax.validation.groups.Default, ]
+List of constraint violations:[
+	ConstraintViolationImpl{interpolatedMessage='не може бути відсутнім, має бути задано', propertyPath=description, rootBeanClass=class com.softserve.entity.RoomType, messageTemplate='{javax.validation.constraints.NotNull.message}'}
+	ConstraintViolationImpl{interpolatedMessage='Description cannot be empty', propertyPath=description, rootBeanClass=class com.softserve.entity.RoomType, messageTemplate='Description cannot be empty'}
+]
+[INFO ] 2020-04-16 09:20:01.618 [Test worker] c.s.c.RoomTypeController - In delete (id =[6]
+[INFO ] 2020-04-16 09:20:01.618 [Test worker] c.s.s.i.RoomTypeServiceImpl - In getById(id = [6])
+[INFO ] 2020-04-16 09:20:01.618 [Test worker] c.s.r.i.BasicRepositoryImpl - In findById(id = [6])
+[INFO ] 2020-04-16 09:20:01.737 [Test worker] c.s.s.i.RoomTypeServiceImpl - In delete(entity = [RoomType(id=6, description=big auditory)])
+[INFO ] 2020-04-16 09:20:01.737 [Test worker] c.s.r.i.BasicRepositoryImpl - In delete(entity = [RoomType(id=6, description=big auditory)])
+[INFO ] 2020-04-16 09:20:01.737 [Test worker] c.s.r.i.RoomTypeRepositoryImpl - In checkReference(roomType = [RoomType(id=6, description=big auditory)])
+[INFO ] 2020-04-16 09:20:02.160 [Test worker] c.s.c.RoomTypeController - In list ()
+[INFO ] 2020-04-16 09:20:02.160 [Test worker] c.s.s.i.RoomTypeServiceImpl - In getAll()
+[INFO ] 2020-04-16 09:20:02.160 [Test worker] c.s.r.i.BasicRepositoryImpl - In getAll()
+[INFO ] 2020-04-16 09:20:02.523 [Test worker] c.s.c.RoomTypeController - In update (roomTypeDTO = [RoomTypeDTO(id=4, description=Another Small auditory)])
+[INFO ] 2020-04-16 09:20:02.523 [Test worker] c.s.s.i.RoomTypeServiceImpl - In update(entity = [RoomType(id=4, description=Another Small auditory)]
+[INFO ] 2020-04-16 09:20:02.523 [Test worker] c.s.s.i.RoomTypeServiceImpl - In isExistsWithId(id = [4])
+[INFO ] 2020-04-16 09:20:02.523 [Test worker] c.s.r.i.RoomTypeRepositoryImpl - In countByRoomTypeId(id = [4])
+[INFO ] 2020-04-16 09:20:02.583 [Test worker] c.s.s.i.RoomTypeServiceImpl - In isRoomTypeExistsWithDescription(description = [Another Small auditory])
+[INFO ] 2020-04-16 09:20:02.583 [Test worker] c.s.r.i.RoomTypeRepositoryImpl - In countRoomTypesWithDescription(description = [Another Small auditory])
+[INFO ] 2020-04-16 09:20:02.643 [Test worker] c.s.r.i.BasicRepositoryImpl - In update(entity = [RoomType(id=4, description=Another Small auditory)]
+[INFO ] 2020-04-16 09:20:03.085 [Test worker] c.s.c.RoomController - Enter into update of RoomController with roomDTO: RoomDTO(id=4, name=update name, type=null)
+[INFO ] 2020-04-16 09:20:03.086 [Test worker] c.s.s.i.RoomServiceImpl - Enter into update of RoomServiceImpl with entity:Room(id=4, name=update name, type=null)
+[INFO ] 2020-04-16 09:20:03.088 [Test worker] c.s.r.i.RoomRepositoryImpl - In countRoomDuplicates(room = [Room(id=4, name=update name, type=null)])
+[ERROR] 2020-04-16 09:20:03.090 [Test worker] c.s.e.h.GlobalExceptionHandler - null
+[INFO ] 2020-04-16 09:20:03.393 [Test worker] c.s.c.RoomController - Enter into get of RoomController with id 4 
+[INFO ] 2020-04-16 09:20:03.394 [Test worker] c.s.s.i.RoomServiceImpl - Enter into getById of RoomServiceImpl with id 4
+[INFO ] 2020-04-16 09:20:03.394 [Test worker] c.s.r.i.BasicRepositoryImpl - In findById(id = [4])
+[INFO ] 2020-04-16 09:20:03.825 [Test worker] c.s.c.RoomController - Enter into save of RoomController with roomDTO: RoomDTO(id=null, name=save small room, type=RoomTypeDTO(id=4, description=Small auditory))
+[INFO ] 2020-04-16 09:20:03.826 [Test worker] c.s.s.i.RoomServiceImpl - Enter into save of RoomServiceImpl with entity:Room(id=0, name=save small room, type=RoomType(id=4, description=Small auditory))
+[INFO ] 2020-04-16 09:20:03.826 [Test worker] c.s.r.i.RoomRepositoryImpl - In countRoomDuplicates(room = [Room(id=0, name=save small room, type=RoomType(id=4, description=Small auditory))])
+[INFO ] 2020-04-16 09:20:03.887 [Test worker] c.s.r.i.BasicRepositoryImpl - In save(entity = [Room(id=0, name=save small room, type=RoomType(id=4, description=Small auditory))]
+[INFO ] 2020-04-16 09:20:04.313 [Test worker] c.s.c.RoomController - Enter into save of RoomController with roomDTO: RoomDTO(id=null, name=null, type=RoomTypeDTO(id=4, description=Small auditory))
+[INFO ] 2020-04-16 09:20:04.313 [Test worker] c.s.s.i.RoomServiceImpl - Enter into save of RoomServiceImpl with entity:Room(id=0, name=null, type=RoomType(id=4, description=Small auditory))
+[INFO ] 2020-04-16 09:20:04.313 [Test worker] c.s.r.i.RoomRepositoryImpl - In countRoomDuplicates(room = [Room(id=0, name=null, type=RoomType(id=4, description=Small auditory))])
+[INFO ] 2020-04-16 09:20:04.373 [Test worker] c.s.r.i.BasicRepositoryImpl - In save(entity = [Room(id=0, name=null, type=RoomType(id=4, description=Small auditory))]
+[ERROR] 2020-04-16 09:20:04.433 [Test worker] c.s.e.h.GlobalExceptionHandler - Validation failed for classes [com.softserve.entity.Room] during persist time for groups [javax.validation.groups.Default, ]
+List of constraint violations:[
+	ConstraintViolationImpl{interpolatedMessage='Name cannot be empty', propertyPath=name, rootBeanClass=class com.softserve.entity.Room, messageTemplate='Name cannot be empty'}
+]
+[INFO ] 2020-04-16 09:20:04.743 [Test worker] c.s.c.RoomController - Enter into freeRoomList of RoomController with id 1, dayOfWeek MONDAY and evenOdd EVEN 
+[INFO ] 2020-04-16 09:20:04.744 [Test worker] c.s.s.i.RoomServiceImpl - Enter into freeRoomBySpecificPeriod of RoomServiceImpl with id 1, dayOfWeek MONDAY and evenOdd EVEN 
+[INFO ] 2020-04-16 09:20:04.744 [Test worker] c.s.r.i.RoomRepositoryImpl - Enter into freeRoomBySpecificPeriod of RoomRepositoryImpl with id 1, dayOfWeek MONDAY and evenOdd EVEN 
+[INFO ] 2020-04-16 09:20:05.419 [Test worker] c.s.c.RoomController - Enter into delete of RoomController with id: 5
+[INFO ] 2020-04-16 09:20:05.419 [Test worker] c.s.s.i.RoomServiceImpl - Enter into getById of RoomServiceImpl with id 5
+[INFO ] 2020-04-16 09:20:05.419 [Test worker] c.s.r.i.BasicRepositoryImpl - In findById(id = [5])
+[INFO ] 2020-04-16 09:20:05.542 [Test worker] c.s.s.i.RoomServiceImpl - Enter into delete of RoomServiceImpl with entity:Room(id=5, name=Practical room, type=RoomType(id=5, description=medium auditory))
+[INFO ] 2020-04-16 09:20:05.542 [Test worker] c.s.r.i.BasicRepositoryImpl - In delete(entity = [Room(id=5, name=Practical room, type=RoomType(id=5, description=medium auditory))])
+[INFO ] 2020-04-16 09:20:05.542 [Test worker] c.s.r.i.RoomRepositoryImpl - In checkReference(room = [Room(id=5, name=Practical room, type=RoomType(id=5, description=medium auditory))])
+[INFO ] 2020-04-16 09:20:06.025 [Test worker] c.s.c.RoomController - Enter into list of RoomController
+[INFO ] 2020-04-16 09:20:06.025 [Test worker] c.s.s.i.RoomServiceImpl - Enter into getAll of RoomServiceImpl
+[INFO ] 2020-04-16 09:20:06.025 [Test worker] c.s.r.i.BasicRepositoryImpl - In getAll()
+[INFO ] 2020-04-16 09:20:06.636 [Test worker] c.s.c.RoomController - Enter into get of RoomController with id 100 
+[INFO ] 2020-04-16 09:20:06.636 [Test worker] c.s.s.i.RoomServiceImpl - Enter into getById of RoomServiceImpl with id 100
+[INFO ] 2020-04-16 09:20:06.636 [Test worker] c.s.r.i.BasicRepositoryImpl - In findById(id = [100])
+[ERROR] 2020-04-16 09:20:06.757 [Test worker] c.s.e.h.GlobalExceptionHandler - Room was not found for parameters {id=100}
+[INFO ] 2020-04-16 09:20:07.059 [Test worker] c.s.c.RoomController - Enter into update of RoomController with roomDTO: RoomDTO(id=4, name=update medium room, type=RoomTypeDTO(id=5, description=Medium auditory))
+[INFO ] 2020-04-16 09:20:07.059 [Test worker] c.s.s.i.RoomServiceImpl - Enter into update of RoomServiceImpl with entity:Room(id=4, name=update medium room, type=RoomType(id=5, description=Medium auditory))
+[INFO ] 2020-04-16 09:20:07.059 [Test worker] c.s.r.i.RoomRepositoryImpl - In countRoomDuplicates(room = [Room(id=4, name=update medium room, type=RoomType(id=5, description=Medium auditory))])
+[INFO ] 2020-04-16 09:20:07.119 [Test worker] c.s.r.i.BasicRepositoryImpl - In update(entity = [Room(id=4, name=update medium room, type=RoomType(id=5, description=Medium auditory))]
+[INFO ] 2020-04-16 09:20:07.644 [Test worker] c.s.c.TeacherController - Enter into get method with id 4 
+[INFO ] 2020-04-16 09:20:07.644 [Test worker] c.s.s.i.TeacherServiceImpl - Enter into getById of TeacherServiceImpl with id 4
+[INFO ] 2020-04-16 09:20:07.644 [Test worker] c.s.r.i.BasicRepositoryImpl - In findById(id = [4])
+[INFO ] 2020-04-16 09:20:08.009 [Test worker] c.s.c.TeacherController - Enter into save method with teacherDTO: TeacherDTO(id=null, name=save teacher name, surname=save teacher surname, patronymic=save teacher patronymic, position=save teacher position)
+[INFO ] 2020-04-16 09:20:08.011 [Test worker] c.s.s.i.TeacherServiceImpl - Enter into save method with entity:com.softserve.entity.Teacher@5c045b9d
+[INFO ] 2020-04-16 09:20:08.011 [Test worker] c.s.r.i.BasicRepositoryImpl - In save(entity = [com.softserve.entity.Teacher@5c045b9d]
+[INFO ] 2020-04-16 09:20:08.416 [Test worker] c.s.c.TeacherController - Enter into getTeacherWithWishes method with id 4 
+[INFO ] 2020-04-16 09:20:08.417 [Test worker] c.s.s.i.TeacherServiceImpl - Enter into getById of TeacherServiceImpl with id 4
+[INFO ] 2020-04-16 09:20:08.417 [Test worker] c.s.r.i.BasicRepositoryImpl - In findById(id = [4])
+[INFO ] 2020-04-16 09:20:08.874 [Test worker] c.s.c.TeacherController - Enter into getAllWithWishes method
+[INFO ] 2020-04-16 09:20:08.874 [Test worker] c.s.r.i.TeacherRepositoryImpl - Enter into getAll of TeacherRepositoryImpl
+[INFO ] 2020-04-16 09:20:09.480 [Test worker] c.s.c.TeacherController - Enter into getTeacherWithWishes method with id 100 
+[INFO ] 2020-04-16 09:20:09.480 [Test worker] c.s.s.i.TeacherServiceImpl - Enter into getById of TeacherServiceImpl with id 100
+[INFO ] 2020-04-16 09:20:09.480 [Test worker] c.s.r.i.BasicRepositoryImpl - In findById(id = [100])
+[ERROR] 2020-04-16 09:20:09.600 [Test worker] c.s.e.h.GlobalExceptionHandler - Teacher was not found for parameters {id=100}
+[INFO ] 2020-04-16 09:20:09.844 [Test worker] c.s.c.TeacherController - Enter into update method with updateTeacherDTO: TeacherDTO(id=7, name=null, surname=update surname, patronymic=update patronymic, position=update position)
+[INFO ] 2020-04-16 09:20:09.844 [Test worker] c.s.s.i.TeacherServiceImpl - Enter into update method with entity:com.softserve.entity.Teacher@7819335
+[INFO ] 2020-04-16 09:20:09.844 [Test worker] c.s.r.i.BasicRepositoryImpl - In update(entity = [com.softserve.entity.Teacher@7819335]
+[ERROR] 2020-04-16 09:20:09.845 [Test worker] c.s.e.h.GlobalExceptionHandler - Validation failed for classes [com.softserve.entity.Teacher] during update time for groups [javax.validation.groups.Default, ]
+List of constraint violations:[
+	ConstraintViolationImpl{interpolatedMessage='Name cannot be empty', propertyPath=name, rootBeanClass=class com.softserve.entity.Teacher, messageTemplate='Name cannot be empty'}
+]
+[INFO ] 2020-04-16 09:20:10.089 [Test worker] c.s.c.TeacherController - Enter into delete method with  teacher id: 5
+[INFO ] 2020-04-16 09:20:10.089 [Test worker] c.s.s.i.TeacherServiceImpl - Enter into getById of TeacherServiceImpl with id 5
+[INFO ] 2020-04-16 09:20:10.089 [Test worker] c.s.r.i.BasicRepositoryImpl - In findById(id = [5])
+[INFO ] 2020-04-16 09:20:10.209 [Test worker] c.s.s.i.TeacherServiceImpl - Enter into delete method with entity:com.softserve.entity.Teacher@7cf365ff
+[INFO ] 2020-04-16 09:20:10.209 [Test worker] c.s.r.i.BasicRepositoryImpl - In delete(entity = [com.softserve.entity.Teacher@7cf365ff])
+[INFO ] 2020-04-16 09:20:10.209 [Test worker] c.s.r.i.TeacherRepositoryImpl - In checkReference(teacher = [com.softserve.entity.Teacher@7cf365ff])
+[INFO ] 2020-04-16 09:20:10.696 [Test worker] c.s.c.TeacherController - Enter into list method
+[INFO ] 2020-04-16 09:20:10.696 [Test worker] c.s.r.i.TeacherRepositoryImpl - Enter into getAll of TeacherRepositoryImpl
+[INFO ] 2020-04-16 09:20:11.059 [Test worker] c.s.c.TeacherController - Enter into update method with updateTeacherDTO: TeacherDTO(id=6, name=Dmytro updated, surname=Dmytryk updated, patronymic=Dmytrovych updated, position=docent updated)
+[INFO ] 2020-04-16 09:20:11.060 [Test worker] c.s.s.i.TeacherServiceImpl - Enter into update method with entity:com.softserve.entity.Teacher@2a787c3a
+[INFO ] 2020-04-16 09:20:11.060 [Test worker] c.s.r.i.BasicRepositoryImpl - In update(entity = [com.softserve.entity.Teacher@2a787c3a]
+[INFO ] 2020-04-16 09:20:11.424 [Test worker] c.s.c.TeacherController - Enter into get method with id 100 
+[INFO ] 2020-04-16 09:20:11.424 [Test worker] c.s.s.i.TeacherServiceImpl - Enter into getById of TeacherServiceImpl with id 100
+[INFO ] 2020-04-16 09:20:11.424 [Test worker] c.s.r.i.BasicRepositoryImpl - In findById(id = [100])
+[ERROR] 2020-04-16 09:20:11.544 [Test worker] c.s.e.h.GlobalExceptionHandler - Teacher was not found for parameters {id=100}
+[INFO ] 2020-04-16 09:20:11.787 [Test worker] c.s.c.TeacherController - Enter into save method with teacherDTO: TeacherDTO(id=null, name=save name, surname=save surname, patronymic=save patronymic, position=null)
+[INFO ] 2020-04-16 09:20:11.788 [Test worker] c.s.s.i.TeacherServiceImpl - Enter into save method with entity:com.softserve.entity.Teacher@156a8912
+[INFO ] 2020-04-16 09:20:11.788 [Test worker] c.s.r.i.BasicRepositoryImpl - In save(entity = [com.softserve.entity.Teacher@156a8912]
+[ERROR] 2020-04-16 09:20:11.788 [Test worker] c.s.e.h.GlobalExceptionHandler - Validation failed for classes [com.softserve.entity.Teacher] during persist time for groups [javax.validation.groups.Default, ]
+List of constraint violations:[
+	ConstraintViolationImpl{interpolatedMessage='Position cannot be empty', propertyPath=position, rootBeanClass=class com.softserve.entity.Teacher, messageTemplate='Position cannot be empty'}
+]
+[INFO ] 2020-04-16 09:20:12.023 [Test worker] c.s.s.i.LessonServiceImpl - In getById(id = [1])
+[INFO ] 2020-04-16 09:20:12.030 [Test worker] c.s.s.i.LessonServiceImpl - In save(entity = [Lesson(id=1, hours=1, teacherForSite=Ivanov I.I., subjectForSite=Human anatomy, lessonType=LECTURE, teacher=com.softserve.entity.Teacher@2826425b, subject=Subject(id=1, name=Biology), group=Group(id=1, title=group))]
+[INFO ] 2020-04-16 09:20:12.030 [Test worker] c.s.s.i.LessonServiceImpl - In isLessonForGroupExists(lesson = [Lesson(id=1, hours=1, teacherForSite=Ivanov I.I., subjectForSite=Human anatomy, lessonType=LECTURE, teacher=com.softserve.entity.Teacher@2826425b, subject=Subject(id=1, name=Biology), group=Group(id=1, title=group))])
+[INFO ] 2020-04-16 09:20:12.030 [Test worker] c.s.s.i.LessonServiceImpl - In getById(id = [2])
+[INFO ] 2020-04-16 09:20:12.032 [Test worker] c.s.s.i.LessonServiceImpl - In save(entity = [Lesson(id=1, hours=1, teacherForSite=Ivanov I.I., subjectForSite=Human anatomy, lessonType=LECTURE, teacher=com.softserve.entity.Teacher@271f00e1, subject=Subject(id=1, name=Biology), group=Group(id=1, title=group))]
+[INFO ] 2020-04-16 09:20:12.032 [Test worker] c.s.s.i.LessonServiceImpl - In isLessonForGroupExists(lesson = [Lesson(id=1, hours=1, teacherForSite=Ivanov I.I., subjectForSite=Human anatomy, lessonType=LECTURE, teacher=com.softserve.entity.Teacher@271f00e1, subject=Subject(id=1, name=Biology), group=Group(id=1, title=group))])
+[INFO ] 2020-04-16 09:20:12.033 [Test worker] c.s.s.i.LessonServiceImpl - In update(entity = [Lesson(id=1, hours=1, teacherForSite=Ivanov I.I., subjectForSite=Human anatomy, lessonType=LECTURE, teacher=com.softserve.entity.Teacher@2f887ba6, subject=Subject(id=1, name=Biology), group=Group(id=1, title=group))]
+[INFO ] 2020-04-16 09:20:12.033 [Test worker] c.s.s.i.LessonServiceImpl - In isLessonForGroupExists(lesson = [Lesson(id=1, hours=1, teacherForSite=Ivanov I.I., subjectForSite=Human anatomy, lessonType=LECTURE, teacher=com.softserve.entity.Teacher@2f887ba6, subject=Subject(id=1, name=Biology), group=Group(id=1, title=group))])
+[INFO ] 2020-04-16 09:20:12.034 [Test worker] c.s.s.i.LessonServiceImpl - In update(entity = [Lesson(id=1, hours=1, teacherForSite=Ivanov I.I., subjectForSite=Human anatomy, lessonType=LECTURE, teacher=com.softserve.entity.Teacher@61563c40, subject=Subject(id=1, name=Biology), group=Group(id=1, title=group))]
+[INFO ] 2020-04-16 09:20:12.034 [Test worker] c.s.s.i.LessonServiceImpl - In isLessonForGroupExists(lesson = [Lesson(id=1, hours=1, teacherForSite=Ivanov I.I., subjectForSite=Human anatomy, lessonType=LECTURE, teacher=com.softserve.entity.Teacher@61563c40, subject=Subject(id=1, name=Biology), group=Group(id=1, title=group))])
+[INFO ] 2020-04-16 09:20:12.079 [Test worker] c.s.s.i.UserServiceImpl - Enter into getById method with id 2
+[INFO ] 2020-04-16 09:20:12.080 [Test worker] c.s.s.i.UserServiceImpl - Enter into findByToken method with token:qflkwrgn
+[INFO ] 2020-04-16 09:20:12.084 [Test worker] c.s.s.i.UserServiceImpl - Enter into save method with entity:User(id=null, email=mail@email.com, password=Qwerty1!, role=ROLE_USER, token=null)
+[INFO ] 2020-04-16 09:20:12.084 [Test worker] c.s.s.i.UserServiceImpl - Enter into emailExists method with email:mail@email.com
+[INFO ] 2020-04-16 09:20:12.086 [Test worker] c.s.s.i.UserServiceImpl - Enter into save method with entity:User(id=null, email=test@email.com, password=password, role=ROLE_USER, token=null)
+[INFO ] 2020-04-16 09:20:12.087 [Test worker] c.s.s.i.UserServiceImpl - Enter into emailExists method with email:test@email.com
+[INFO ] 2020-04-16 09:20:12.088 [Test worker] c.s.s.i.UserServiceImpl - Enter into getById method with id 1
+[INFO ] 2020-04-16 09:20:12.090 [Test worker] c.s.s.i.UserServiceImpl - Enter into registration method  with email:some@mail.com
+[INFO ] 2020-04-16 09:20:12.097 [Test worker] c.s.s.i.UserServiceImpl - Enter into save method with entity:User(id=null, email=some@mail.com, password=Qwerty123!@#, role=ROLE_USER, token=b066c6af-b2e3-44c1-96a5-f5c091daff60)
+[INFO ] 2020-04-16 09:20:12.098 [Test worker] c.s.s.i.UserServiceImpl - Enter into emailExists method with email:some@mail.com
+[INFO ] 2020-04-16 09:20:12.102 [Test worker] c.s.s.i.UserServiceImpl - Enter into findByEmail method with email:some@email.com
+[INFO ] 2020-04-16 09:20:12.105 [Test worker] c.s.s.i.UserServiceImpl - Enter into findByEmail method with email:test@email.com
+[INFO ] 2020-04-16 09:20:12.106 [Test worker] c.s.s.i.UserServiceImpl - Enter into resetPassword method  with email:afvadf
+[INFO ] 2020-04-16 09:20:12.107 [Test worker] c.s.s.i.UserServiceImpl - Enter into findByToken method with token:qwerty123!@#
+[INFO ] 2020-04-16 09:20:12.109 [Test worker] c.s.s.i.UserServiceImpl - Enter into update method with entity:User(id=1, email=email@mail.com, password=oldPassword, role=ROLE_USER, token=null)
+[INFO ] 2020-04-16 09:20:12.109 [Test worker] c.s.s.i.UserServiceImpl - Enter into getById method with id 1
+[INFO ] 2020-04-16 09:20:12.110 [Test worker] c.s.s.i.UserServiceImpl - Enter into registration method  with email:some@mail.com
+[INFO ] 2020-04-16 09:20:12.111 [Test worker] c.s.s.i.UserServiceImpl - Enter into update method with entity:User(id=1, email=update@mail.com, password=updatePassword, role=ROLE_USER, token=null)
+[INFO ] 2020-04-16 09:20:12.111 [Test worker] c.s.s.i.UserServiceImpl - Enter into getById method with id 1
+[INFO ] 2020-04-16 09:20:12.113 [Test worker] c.s.s.i.UserServiceImpl - Enter into resetPassword method  with email:some@mail.com
+[INFO ] 2020-04-16 09:20:12.118 [Test worker] c.s.s.i.UserServiceImpl - Enter into update method with entity:User(id=1, email=some@mail.com, password=Qwerty123!@#, role=ROLE_USER, token=null)
+[INFO ] 2020-04-16 09:20:12.118 [Test worker] c.s.s.i.UserServiceImpl - Enter into getById method with id 1
+[INFO ] 2020-04-16 09:20:12.155 [Test worker] c.s.s.i.TeacherServiceImpl - Enter into joinTeacherWithUser method with teacherId 1 and userId:1
+[INFO ] 2020-04-16 09:20:12.156 [Test worker] c.s.s.i.TeacherServiceImpl - Enter into getById of TeacherServiceImpl with id 1
+[INFO ] 2020-04-16 09:20:12.157 [Test worker] c.s.s.i.TeacherServiceImpl - Enter into joinTeacherWithUser method with teacherId 1 and userId:1
+[INFO ] 2020-04-16 09:20:12.157 [Test worker] c.s.s.i.TeacherServiceImpl - Enter into getById of TeacherServiceImpl with id 1
+[INFO ] 2020-04-16 09:20:12.158 [Test worker] c.s.s.i.TeacherServiceImpl - Enter into getById of TeacherServiceImpl with id 1
+[INFO ] 2020-04-16 09:20:12.160 [Test worker] c.s.s.i.TeacherServiceImpl - Enter into joinTeacherWithUser method with teacherId 1 and userId:1
+[INFO ] 2020-04-16 09:20:12.160 [Test worker] c.s.s.i.TeacherServiceImpl - Enter into getById of TeacherServiceImpl with id 1
+[INFO ] 2020-04-16 09:20:12.161 [Test worker] c.s.s.i.TeacherServiceImpl - Enter into update method with entity:com.softserve.entity.Teacher@7cd0162f
+[INFO ] 2020-04-16 09:20:12.164 [Test worker] c.s.s.i.TeacherServiceImpl - Enter into getById of TeacherServiceImpl with id 2
+[INFO ] 2020-04-16 09:20:12.179 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into update of PeriodServiceImpl with entity:Period(id=1, startTime=2020-10-15 05:00:00.0, endTime=2020-10-15 04:00:00.0, name=Some period)
+[INFO ] 2020-04-16 09:20:12.180 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into isTimeInvalid of PeriodServiceImpl with entity: Period(id=1, startTime=2020-10-15 05:00:00.0, endTime=2020-10-15 04:00:00.0, name=Some period)
+[INFO ] 2020-04-16 09:20:12.181 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into update of PeriodServiceImpl with entity:Period(id=1, startTime=2020-10-15 03:00:00.0, endTime=2020-10-15 04:00:00.0, name=Some period)
+[INFO ] 2020-04-16 09:20:12.181 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into isTimeInvalid of PeriodServiceImpl with entity: Period(id=1, startTime=2020-10-15 03:00:00.0, endTime=2020-10-15 04:00:00.0, name=Some period)
+[INFO ] 2020-04-16 09:20:12.181 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into getAll of PeriodServiceImpl
+[INFO ] 2020-04-16 09:20:12.182 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into isPeriodFree of PeriodServiceImpl with entities oldPeriods: [Period(id=2, startTime=2020-10-15 01:00:00.0, endTime=2020-10-15 02:00:00.0, name=Another period)] and newPeriod: Period(id=1, startTime=2020-10-15 03:00:00.0, endTime=2020-10-15 04:00:00.0, name=Some period)
+[INFO ] 2020-04-16 09:20:12.182 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into isPeriodsGlued of PeriodServiceImpl with entities oldPeriods: Period(id=2, startTime=2020-10-15 01:00:00.0, endTime=2020-10-15 02:00:00.0, name=Another period), newPeriods: Period(id=1, startTime=2020-10-15 03:00:00.0, endTime=2020-10-15 04:00:00.0, name=Some period)
+[INFO ] 2020-04-16 09:20:12.182 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into isPeriodsIntersect of PeriodServiceImpl with entities oldPeriod: Period(id=2, startTime=2020-10-15 01:00:00.0, endTime=2020-10-15 02:00:00.0, name=Another period), newPeriod: Period(id=1, startTime=2020-10-15 03:00:00.0, endTime=2020-10-15 04:00:00.0, name=Some period)
+[INFO ] 2020-04-16 09:20:12.182 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into getById of PeriodServiceImpl with id 1
+[INFO ] 2020-04-16 09:20:12.184 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into update of PeriodServiceImpl with entity:Period(id=1, startTime=2020-10-15 03:00:00.0, endTime=2020-10-15 04:00:00.0, name=Some period)
+[INFO ] 2020-04-16 09:20:12.184 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into isTimeInvalid of PeriodServiceImpl with entity: Period(id=1, startTime=2020-10-15 03:00:00.0, endTime=2020-10-15 04:00:00.0, name=Some period)
+[INFO ] 2020-04-16 09:20:12.185 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into getAll of PeriodServiceImpl
+[INFO ] 2020-04-16 09:20:12.185 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into isPeriodFree of PeriodServiceImpl with entities oldPeriods: [Period(id=2, startTime=2020-10-15 01:00:00.0, endTime=2020-10-15 02:00:00.0, name=Another period)] and newPeriod: Period(id=1, startTime=2020-10-15 03:00:00.0, endTime=2020-10-15 04:00:00.0, name=Some period)
+[INFO ] 2020-04-16 09:20:12.185 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into isPeriodsGlued of PeriodServiceImpl with entities oldPeriods: Period(id=2, startTime=2020-10-15 01:00:00.0, endTime=2020-10-15 02:00:00.0, name=Another period), newPeriods: Period(id=1, startTime=2020-10-15 03:00:00.0, endTime=2020-10-15 04:00:00.0, name=Some period)
+[INFO ] 2020-04-16 09:20:12.185 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into isPeriodsIntersect of PeriodServiceImpl with entities oldPeriod: Period(id=2, startTime=2020-10-15 01:00:00.0, endTime=2020-10-15 02:00:00.0, name=Another period), newPeriod: Period(id=1, startTime=2020-10-15 03:00:00.0, endTime=2020-10-15 04:00:00.0, name=Some period)
+[INFO ] 2020-04-16 09:20:12.185 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into getById of PeriodServiceImpl with id 1
+[INFO ] 2020-04-16 09:20:12.187 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into update of PeriodServiceImpl with entity:Period(id=1, startTime=1970-01-01 03:00:01.0, endTime=1970-01-01 03:00:02.0, name=Some period)
+[INFO ] 2020-04-16 09:20:12.187 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into isTimeInvalid of PeriodServiceImpl with entity: Period(id=1, startTime=1970-01-01 03:00:01.0, endTime=1970-01-01 03:00:02.0, name=Some period)
+[INFO ] 2020-04-16 09:20:12.187 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into getAll of PeriodServiceImpl
+[INFO ] 2020-04-16 09:20:12.187 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into isPeriodFree of PeriodServiceImpl with entities oldPeriods: [Period(id=2, startTime=1970-01-01 03:00:02.0, endTime=1970-01-01 03:00:03.0, name=Another period)] and newPeriod: Period(id=1, startTime=1970-01-01 03:00:01.0, endTime=1970-01-01 03:00:02.0, name=Some period)
+[INFO ] 2020-04-16 09:20:12.187 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into isPeriodsGlued of PeriodServiceImpl with entities oldPeriods: Period(id=2, startTime=1970-01-01 03:00:02.0, endTime=1970-01-01 03:00:03.0, name=Another period), newPeriods: Period(id=1, startTime=1970-01-01 03:00:01.0, endTime=1970-01-01 03:00:02.0, name=Some period)
+[INFO ] 2020-04-16 09:20:12.189 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into save of PeriodServiceImpl with entity: Period(id=1, startTime=2020-10-15 01:00:00.0, endTime=2020-10-15 02:00:00.0, name=Some period)
+[INFO ] 2020-04-16 09:20:12.189 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into isTimeInvalid of PeriodServiceImpl with entity: Period(id=1, startTime=2020-10-15 01:00:00.0, endTime=2020-10-15 02:00:00.0, name=Some period)
+[INFO ] 2020-04-16 09:20:12.189 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into getAll of PeriodServiceImpl
+[INFO ] 2020-04-16 09:20:12.189 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into isPeriodFree of PeriodServiceImpl with entities oldPeriods: [Period(id=2, startTime=2020-10-15 03:00:00.0, endTime=2020-10-15 04:00:00.0, name=Some period)] and newPeriod: Period(id=1, startTime=2020-10-15 01:00:00.0, endTime=2020-10-15 02:00:00.0, name=Some period)
+[INFO ] 2020-04-16 09:20:12.189 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into isPeriodsGlued of PeriodServiceImpl with entities oldPeriods: Period(id=2, startTime=2020-10-15 03:00:00.0, endTime=2020-10-15 04:00:00.0, name=Some period), newPeriods: Period(id=1, startTime=2020-10-15 01:00:00.0, endTime=2020-10-15 02:00:00.0, name=Some period)
+[INFO ] 2020-04-16 09:20:12.190 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into isPeriodsIntersect of PeriodServiceImpl with entities oldPeriod: Period(id=2, startTime=2020-10-15 03:00:00.0, endTime=2020-10-15 04:00:00.0, name=Some period), newPeriod: Period(id=1, startTime=2020-10-15 01:00:00.0, endTime=2020-10-15 02:00:00.0, name=Some period)
+[INFO ] 2020-04-16 09:20:12.190 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into nameExists method with name:Some period
+[INFO ] 2020-04-16 09:20:12.191 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into save of PeriodServiceImpl with entity: Period(id=1, startTime=2020-10-15 03:00:00.0, endTime=2020-10-15 04:00:00.0, name=Some period)
+[INFO ] 2020-04-16 09:20:12.191 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into isTimeInvalid of PeriodServiceImpl with entity: Period(id=1, startTime=2020-10-15 03:00:00.0, endTime=2020-10-15 04:00:00.0, name=Some period)
+[INFO ] 2020-04-16 09:20:12.191 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into getAll of PeriodServiceImpl
+[INFO ] 2020-04-16 09:20:12.192 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into isPeriodFree of PeriodServiceImpl with entities oldPeriods: [Period(id=2, startTime=2020-10-15 01:00:00.0, endTime=2020-10-15 02:00:00.0, name=Another period)] and newPeriod: Period(id=1, startTime=2020-10-15 03:00:00.0, endTime=2020-10-15 04:00:00.0, name=Some period)
+[INFO ] 2020-04-16 09:20:12.192 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into isPeriodsGlued of PeriodServiceImpl with entities oldPeriods: Period(id=2, startTime=2020-10-15 01:00:00.0, endTime=2020-10-15 02:00:00.0, name=Another period), newPeriods: Period(id=1, startTime=2020-10-15 03:00:00.0, endTime=2020-10-15 04:00:00.0, name=Some period)
+[INFO ] 2020-04-16 09:20:12.192 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into isPeriodsIntersect of PeriodServiceImpl with entities oldPeriod: Period(id=2, startTime=2020-10-15 01:00:00.0, endTime=2020-10-15 02:00:00.0, name=Another period), newPeriod: Period(id=1, startTime=2020-10-15 03:00:00.0, endTime=2020-10-15 04:00:00.0, name=Some period)
+[INFO ] 2020-04-16 09:20:12.192 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into nameExists method with name:Some period
+[INFO ] 2020-04-16 09:20:12.193 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into save of PeriodServiceImpl with entities:[Period(id=1, startTime=2020-10-15 05:00:00.0, endTime=2020-10-15 04:00:00.0, name=Some period)]
+[INFO ] 2020-04-16 09:20:12.193 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into isTimeInvalid of PeriodServiceImpl with entity: Period(id=1, startTime=2020-10-15 05:00:00.0, endTime=2020-10-15 04:00:00.0, name=Some period)
+[INFO ] 2020-04-16 09:20:12.194 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into save of PeriodServiceImpl with entities:[Period(id=1, startTime=1970-01-01 03:00:01.0, endTime=1970-01-01 03:00:02.0, name=Some period)]
+[INFO ] 2020-04-16 09:20:12.194 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into isTimeInvalid of PeriodServiceImpl with entity: Period(id=1, startTime=1970-01-01 03:00:01.0, endTime=1970-01-01 03:00:02.0, name=Some period)
+[INFO ] 2020-04-16 09:20:12.194 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into getAll of PeriodServiceImpl
+[INFO ] 2020-04-16 09:20:12.194 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into isListOfPeriodsFree of PeriodServiceImpl with entities oldPeriods: [Period(id=2, startTime=1970-01-01 03:00:02.0, endTime=1970-01-01 03:00:03.0, name=Some period)], newPeriods: [Period(id=1, startTime=1970-01-01 03:00:01.0, endTime=1970-01-01 03:00:02.0, name=Some period)]
+[INFO ] 2020-04-16 09:20:12.194 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into isPeriodFree of PeriodServiceImpl with entities oldPeriods: [Period(id=1, startTime=1970-01-01 03:00:01.0, endTime=1970-01-01 03:00:02.0, name=Some period)] and newPeriod: Period(id=1, startTime=1970-01-01 03:00:01.0, endTime=1970-01-01 03:00:02.0, name=Some period)
+[INFO ] 2020-04-16 09:20:12.194 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into isPeriodsGlued of PeriodServiceImpl with entities oldPeriods: Period(id=1, startTime=1970-01-01 03:00:01.0, endTime=1970-01-01 03:00:02.0, name=Some period), newPeriods: Period(id=1, startTime=1970-01-01 03:00:01.0, endTime=1970-01-01 03:00:02.0, name=Some period)
+[INFO ] 2020-04-16 09:20:12.194 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into isPeriodsIntersect of PeriodServiceImpl with entities oldPeriod: Period(id=1, startTime=1970-01-01 03:00:01.0, endTime=1970-01-01 03:00:02.0, name=Some period), newPeriod: Period(id=1, startTime=1970-01-01 03:00:01.0, endTime=1970-01-01 03:00:02.0, name=Some period)
+[INFO ] 2020-04-16 09:20:12.194 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into isPeriodFree of PeriodServiceImpl with entities oldPeriods: [Period(id=2, startTime=1970-01-01 03:00:02.0, endTime=1970-01-01 03:00:03.0, name=Some period)] and newPeriod: Period(id=1, startTime=1970-01-01 03:00:01.0, endTime=1970-01-01 03:00:02.0, name=Some period)
+[INFO ] 2020-04-16 09:20:12.194 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into isPeriodsGlued of PeriodServiceImpl with entities oldPeriods: Period(id=2, startTime=1970-01-01 03:00:02.0, endTime=1970-01-01 03:00:03.0, name=Some period), newPeriods: Period(id=1, startTime=1970-01-01 03:00:01.0, endTime=1970-01-01 03:00:02.0, name=Some period)
+[INFO ] 2020-04-16 09:20:12.195 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into save of PeriodServiceImpl with entity: Period(id=1, startTime=1970-01-01 03:00:01.0, endTime=1970-01-01 03:00:02.0, name=Some period)
+[INFO ] 2020-04-16 09:20:12.195 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into isTimeInvalid of PeriodServiceImpl with entity: Period(id=1, startTime=1970-01-01 03:00:01.0, endTime=1970-01-01 03:00:02.0, name=Some period)
+[INFO ] 2020-04-16 09:20:12.195 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into getAll of PeriodServiceImpl
+[INFO ] 2020-04-16 09:20:12.197 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into isPeriodFree of PeriodServiceImpl with entities oldPeriods: [Period(id=2, startTime=1970-01-01 03:00:02.0, endTime=1970-01-01 03:00:03.0, name=Some period)] and newPeriod: Period(id=1, startTime=1970-01-01 03:00:01.0, endTime=1970-01-01 03:00:02.0, name=Some period)
+[INFO ] 2020-04-16 09:20:12.197 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into isPeriodsGlued of PeriodServiceImpl with entities oldPeriods: Period(id=2, startTime=1970-01-01 03:00:02.0, endTime=1970-01-01 03:00:03.0, name=Some period), newPeriods: Period(id=1, startTime=1970-01-01 03:00:01.0, endTime=1970-01-01 03:00:02.0, name=Some period)
+[INFO ] 2020-04-16 09:20:12.198 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into getById of PeriodServiceImpl with id 1
+[INFO ] 2020-04-16 09:20:12.199 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into getById of PeriodServiceImpl with id 2
+[INFO ] 2020-04-16 09:20:12.200 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into save of PeriodServiceImpl with entity: Period(id=1, startTime=2020-10-15 05:00:00.0, endTime=2020-10-15 04:00:00.0, name=Some period)
+[INFO ] 2020-04-16 09:20:12.200 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into isTimeInvalid of PeriodServiceImpl with entity: Period(id=1, startTime=2020-10-15 05:00:00.0, endTime=2020-10-15 04:00:00.0, name=Some period)
+[INFO ] 2020-04-16 09:20:12.201 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into save of PeriodServiceImpl with entities:[Period(id=1, startTime=2020-10-15 03:00:00.0, endTime=2020-10-15 04:00:00.0, name=Some period)]
+[INFO ] 2020-04-16 09:20:12.201 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into isTimeInvalid of PeriodServiceImpl with entity: Period(id=1, startTime=2020-10-15 03:00:00.0, endTime=2020-10-15 04:00:00.0, name=Some period)
+[INFO ] 2020-04-16 09:20:12.201 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into getAll of PeriodServiceImpl
+[INFO ] 2020-04-16 09:20:12.204 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into isListOfPeriodsFree of PeriodServiceImpl with entities oldPeriods: [Period(id=2, startTime=2020-10-15 01:00:00.0, endTime=2020-10-15 02:00:00.0, name=another period), Period(id=1, startTime=2020-10-15 03:00:00.0, endTime=2020-10-15 04:00:00.0, name=Some period)], newPeriods: [Period(id=1, startTime=2020-10-15 03:00:00.0, endTime=2020-10-15 04:00:00.0, name=Some period)]
+[INFO ] 2020-04-16 09:20:12.204 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into isPeriodFree of PeriodServiceImpl with entities oldPeriods: [Period(id=1, startTime=2020-10-15 03:00:00.0, endTime=2020-10-15 04:00:00.0, name=Some period)] and newPeriod: Period(id=1, startTime=2020-10-15 03:00:00.0, endTime=2020-10-15 04:00:00.0, name=Some period)
+[INFO ] 2020-04-16 09:20:12.204 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into isPeriodsGlued of PeriodServiceImpl with entities oldPeriods: Period(id=1, startTime=2020-10-15 03:00:00.0, endTime=2020-10-15 04:00:00.0, name=Some period), newPeriods: Period(id=1, startTime=2020-10-15 03:00:00.0, endTime=2020-10-15 04:00:00.0, name=Some period)
+[INFO ] 2020-04-16 09:20:12.204 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into isPeriodsIntersect of PeriodServiceImpl with entities oldPeriod: Period(id=1, startTime=2020-10-15 03:00:00.0, endTime=2020-10-15 04:00:00.0, name=Some period), newPeriod: Period(id=1, startTime=2020-10-15 03:00:00.0, endTime=2020-10-15 04:00:00.0, name=Some period)
+[INFO ] 2020-04-16 09:20:12.204 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into isPeriodFree of PeriodServiceImpl with entities oldPeriods: [Period(id=2, startTime=2020-10-15 01:00:00.0, endTime=2020-10-15 02:00:00.0, name=another period), Period(id=1, startTime=2020-10-15 03:00:00.0, endTime=2020-10-15 04:00:00.0, name=Some period)] and newPeriod: Period(id=1, startTime=2020-10-15 03:00:00.0, endTime=2020-10-15 04:00:00.0, name=Some period)
+[INFO ] 2020-04-16 09:20:12.205 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into isPeriodsGlued of PeriodServiceImpl with entities oldPeriods: Period(id=2, startTime=2020-10-15 01:00:00.0, endTime=2020-10-15 02:00:00.0, name=another period), newPeriods: Period(id=1, startTime=2020-10-15 03:00:00.0, endTime=2020-10-15 04:00:00.0, name=Some period)
+[INFO ] 2020-04-16 09:20:12.205 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into isPeriodsIntersect of PeriodServiceImpl with entities oldPeriod: Period(id=2, startTime=2020-10-15 01:00:00.0, endTime=2020-10-15 02:00:00.0, name=another period), newPeriod: Period(id=1, startTime=2020-10-15 03:00:00.0, endTime=2020-10-15 04:00:00.0, name=Some period)
+[INFO ] 2020-04-16 09:20:12.205 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into isPeriodsGlued of PeriodServiceImpl with entities oldPeriods: Period(id=1, startTime=2020-10-15 03:00:00.0, endTime=2020-10-15 04:00:00.0, name=Some period), newPeriods: Period(id=1, startTime=2020-10-15 03:00:00.0, endTime=2020-10-15 04:00:00.0, name=Some period)
+[INFO ] 2020-04-16 09:20:12.205 [Test worker] c.s.s.i.PeriodServiceImpl - Enter into isPeriodsIntersect of PeriodServiceImpl with entities oldPeriod: Period(id=1, startTime=2020-10-15 03:00:00.0, endTime=2020-10-15 04:00:00.0, name=Some period), newPeriod: Period(id=1, startTime=2020-10-15 03:00:00.0, endTime=2020-10-15 04:00:00.0, name=Some period)
+[INFO ] 2020-04-16 09:20:12.220 [Test worker] c.s.s.i.TeacherWishesServiceImpl - Enter into getById of TeacherWishesServiceImpl with id 2
+[INFO ] 2020-04-16 09:20:12.221 [Test worker] c.s.s.i.TeacherWishesServiceImpl - Enter into save method with entity:TeacherWishes(id=1, teacherWishesList=[com.softserve.entity.Wishes@5b6d1da1])
+[INFO ] 2020-04-16 09:20:12.224 [Test worker] c.s.s.i.TeacherWishesServiceImpl - Enter into save method with entity:TeacherWishes(id=1, teacherWishesList=[com.softserve.entity.Wishes@784f8d6])
+[INFO ] 2020-04-16 09:20:12.331 [Test worker] c.s.s.i.TeacherWishesServiceImpl - Enter into save method with entity:TeacherWishes(id=1, teacherWishesList=[com.softserve.entity.Wishes@46c922a, com.softserve.entity.Wishes@48c199ee])
+[INFO ] 2020-04-16 09:20:12.339 [Test worker] c.s.s.i.TeacherWishesServiceImpl - Enter into getById of TeacherWishesServiceImpl with id 1
+[INFO ] 2020-04-16 09:20:12.340 [Test worker] c.s.s.i.TeacherWishesServiceImpl - Enter into save method with entity:TeacherWishes(id=1, teacherWishesList=[com.softserve.entity.Wishes@27f427a5, com.softserve.entity.Wishes@6109a33b])
+[INFO ] 2020-04-16 09:20:12.346 [Test worker] c.s.s.i.TeacherWishesServiceImpl - Enter into save method with entity:TeacherWishes(id=1, teacherWishesList=[com.softserve.entity.Wishes@7526031c, com.softserve.entity.Wishes@6a9f5fa5])
+[INFO ] 2020-04-16 09:20:12.351 [Test worker] c.s.s.i.TeacherWishesServiceImpl - Enter into update method with entity:TeacherWishes(id=1, teacherWishesList=[com.softserve.entity.Wishes@644aed2b])
+[INFO ] 2020-04-16 09:20:12.376 [Test worker] c.s.s.i.SemesterServiceImpl - In getById(id = [2])
+[INFO ] 2020-04-16 09:20:12.377 [Test worker] c.s.s.i.SemesterServiceImpl - In update(entity = [Semester(id=1, description=3 semester, year=2020, startDay=2020-08-10, endDay=2020-09-10, currentSemester=true)]
+[INFO ] 2020-04-16 09:20:12.377 [Test worker] c.s.s.i.SemesterServiceImpl - Enter into isTimeInvalid  with entity: Semester(id=1, description=3 semester, year=2020, startDay=2020-08-10, endDay=2020-09-10, currentSemester=true)
+[INFO ] 2020-04-16 09:20:12.377 [Test worker] c.s.s.i.SemesterServiceImpl - In isSemesterExistsByDescriptionAndYearForUpdate with semester = Semester(id=1, description=3 semester, year=2020, startDay=2020-08-10, endDay=2020-09-10, currentSemester=true)
+[INFO ] 2020-04-16 09:20:12.378 [Test worker] c.s.s.i.SemesterServiceImpl - In isSemesterExists with semester = Semester(id=1, description=3 semester, year=2020, startDay=2020-08-10, endDay=2020-09-10, currentSemester=true)
+[INFO ] 2020-04-16 09:20:12.378 [Test worker] c.s.s.i.SemesterServiceImpl - In isSemesterCurrent with id = 1
+[INFO ] 2020-04-16 09:20:12.378 [Test worker] c.s.s.i.SemesterServiceImpl - In getCurrentSemester
+[INFO ] 2020-04-16 09:20:12.379 [Test worker] c.s.s.i.SemesterServiceImpl - In save(entity = [Semester(id=1, description=1 semester, year=2020, startDay=2020-04-10, endDay=2020-05-10, currentSemester=false)]
+[INFO ] 2020-04-16 09:20:12.379 [Test worker] c.s.s.i.SemesterServiceImpl - Enter into isTimeInvalid  with entity: Semester(id=1, description=1 semester, year=2020, startDay=2020-04-10, endDay=2020-05-10, currentSemester=false)
+[INFO ] 2020-04-16 09:20:12.379 [Test worker] c.s.s.i.SemesterServiceImpl - In isSemesterExistsByDescriptionAndYear with semester = Semester(id=1, description=1 semester, year=2020, startDay=2020-04-10, endDay=2020-05-10, currentSemester=false)
+[INFO ] 2020-04-16 09:20:12.379 [Test worker] c.s.s.i.SemesterServiceImpl - In isSemesterExists with semester = Semester(id=1, description=1 semester, year=2020, startDay=2020-04-10, endDay=2020-05-10, currentSemester=false)
+[INFO ] 2020-04-16 09:20:12.380 [Test worker] c.s.s.i.SemesterServiceImpl - In update(entity = [Semester(id=1, description=1 semester, year=2020, startDay=2020-03-10, endDay=2020-01-11, currentSemester=false)]
+[INFO ] 2020-04-16 09:20:12.380 [Test worker] c.s.s.i.SemesterServiceImpl - Enter into isTimeInvalid  with entity: Semester(id=1, description=1 semester, year=2020, startDay=2020-03-10, endDay=2020-01-11, currentSemester=false)
+[INFO ] 2020-04-16 09:20:12.381 [Test worker] c.s.s.i.SemesterServiceImpl - In getById(id = [1])
+[INFO ] 2020-04-16 09:20:12.383 [Test worker] c.s.s.i.SemesterServiceImpl - In save(entity = [Semester(id=1, description=1 semester, year=0, startDay=2020-04-10, endDay=2020-05-10, currentSemester=false)]
+[INFO ] 2020-04-16 09:20:12.383 [Test worker] c.s.s.i.SemesterServiceImpl - Enter into isTimeInvalid  with entity: Semester(id=1, description=1 semester, year=0, startDay=2020-04-10, endDay=2020-05-10, currentSemester=false)
+[INFO ] 2020-04-16 09:20:12.383 [Test worker] c.s.s.i.SemesterServiceImpl - In isSemesterExistsByDescriptionAndYear with semester = Semester(id=1, description=1 semester, year=0, startDay=2020-04-10, endDay=2020-05-10, currentSemester=false)
+[INFO ] 2020-04-16 09:20:12.383 [Test worker] c.s.s.i.SemesterServiceImpl - In isSemesterExists with semester = Semester(id=1, description=1 semester, year=0, startDay=2020-04-10, endDay=2020-05-10, currentSemester=false)
+[INFO ] 2020-04-16 09:20:12.383 [Test worker] c.s.s.i.SemesterServiceImpl - In save(entity = [Semester(id=1, description=1 semester, year=2020, startDay=2020-04-10, endDay=2020-03-10, currentSemester=false)]
+[INFO ] 2020-04-16 09:20:12.383 [Test worker] c.s.s.i.SemesterServiceImpl - Enter into isTimeInvalid  with entity: Semester(id=1, description=1 semester, year=2020, startDay=2020-04-10, endDay=2020-03-10, currentSemester=false)
+[INFO ] 2020-04-16 09:20:12.384 [Test worker] c.s.s.i.SemesterServiceImpl - In save(entity = [Semester(id=1, description=1 semester, year=2020, startDay=2020-04-10, endDay=2020-05-10, currentSemester=true)]
+[INFO ] 2020-04-16 09:20:12.384 [Test worker] c.s.s.i.SemesterServiceImpl - Enter into isTimeInvalid  with entity: Semester(id=1, description=1 semester, year=2020, startDay=2020-04-10, endDay=2020-05-10, currentSemester=true)
+[INFO ] 2020-04-16 09:20:12.384 [Test worker] c.s.s.i.SemesterServiceImpl - In isSemesterExistsByDescriptionAndYear with semester = Semester(id=1, description=1 semester, year=2020, startDay=2020-04-10, endDay=2020-05-10, currentSemester=true)
+[INFO ] 2020-04-16 09:20:12.384 [Test worker] c.s.s.i.SemesterServiceImpl - In isSemesterExists with semester = Semester(id=1, description=1 semester, year=2020, startDay=2020-04-10, endDay=2020-05-10, currentSemester=true)
+[INFO ] 2020-04-16 09:20:12.385 [Test worker] c.s.s.i.SemesterServiceImpl - In getCurrentSemester
+[INFO ] 2020-04-16 09:20:12.386 [Test worker] c.s.s.i.SemesterServiceImpl - In update(entity = [Semester(id=1, description=1 semester, year=2020, startDay=2020-04-10, endDay=2020-05-10, currentSemester=false)]
+[INFO ] 2020-04-16 09:20:12.386 [Test worker] c.s.s.i.SemesterServiceImpl - Enter into isTimeInvalid  with entity: Semester(id=1, description=1 semester, year=2020, startDay=2020-04-10, endDay=2020-05-10, currentSemester=false)
+[INFO ] 2020-04-16 09:20:12.386 [Test worker] c.s.s.i.SemesterServiceImpl - In isSemesterExistsByDescriptionAndYearForUpdate with semester = Semester(id=1, description=1 semester, year=2020, startDay=2020-04-10, endDay=2020-05-10, currentSemester=false)
+[INFO ] 2020-04-16 09:20:12.386 [Test worker] c.s.s.i.SemesterServiceImpl - In isSemesterExists with semester = Semester(id=1, description=1 semester, year=2020, startDay=2020-04-10, endDay=2020-05-10, currentSemester=false)
+[INFO ] 2020-04-16 09:20:12.387 [Test worker] c.s.s.i.SemesterServiceImpl - In update(entity = [Semester(id=1, description=2 semester, year=0, startDay=2020-05-11, endDay=2020-06-22, currentSemester=false)]
+[INFO ] 2020-04-16 09:20:12.387 [Test worker] c.s.s.i.SemesterServiceImpl - Enter into isTimeInvalid  with entity: Semester(id=1, description=2 semester, year=0, startDay=2020-05-11, endDay=2020-06-22, currentSemester=false)
+[INFO ] 2020-04-16 09:20:12.387 [Test worker] c.s.s.i.SemesterServiceImpl - In isSemesterExistsByDescriptionAndYearForUpdate with semester = Semester(id=1, description=2 semester, year=0, startDay=2020-05-11, endDay=2020-06-22, currentSemester=false)
+[INFO ] 2020-04-16 09:20:12.387 [Test worker] c.s.s.i.SemesterServiceImpl - In isSemesterExists with semester = Semester(id=1, description=2 semester, year=0, startDay=2020-05-11, endDay=2020-06-22, currentSemester=false)
+[INFO ] 2020-04-16 09:20:12.402 [Test worker] c.s.s.i.GroupServiceImpl - In save(entity = [Group(id=1, title=some group)]
+[INFO ] 2020-04-16 09:20:12.402 [Test worker] c.s.s.i.GroupServiceImpl - In isGroupExistsWitTitle(title = [some group])
+[INFO ] 2020-04-16 09:20:12.403 [Test worker] c.s.s.i.GroupServiceImpl - In save(entity = [Group(id=1, title=some group)]
+[INFO ] 2020-04-16 09:20:12.403 [Test worker] c.s.s.i.GroupServiceImpl - In isGroupExistsWitTitle(title = [some group])
+[INFO ] 2020-04-16 09:20:12.404 [Test worker] c.s.s.i.GroupServiceImpl - In getById(id = [1])
+[INFO ] 2020-04-16 09:20:12.405 [Test worker] c.s.s.i.GroupServiceImpl - In update(entity = [Group(id=1, title=updated group)]
+[INFO ] 2020-04-16 09:20:12.405 [Test worker] c.s.s.i.GroupServiceImpl - In isExistsWithId(id = [1])
+[INFO ] 2020-04-16 09:20:12.406 [Test worker] c.s.s.i.GroupServiceImpl - In isGroupExistsWitTitle(title = [updated group])
+[ERROR] 2020-04-16 09:20:12.406 [Test worker] c.s.s.i.GroupServiceImpl - Group with title [updated group] already exists
+[INFO ] 2020-04-16 09:20:12.407 [Test worker] c.s.s.i.GroupServiceImpl - In update(entity = [Group(id=1, title=some group)]
+[INFO ] 2020-04-16 09:20:12.407 [Test worker] c.s.s.i.GroupServiceImpl - In isExistsWithId(id = [1])
+[INFO ] 2020-04-16 09:20:12.408 [Test worker] c.s.s.i.GroupServiceImpl - In update(entity = [Group(id=1, title=updated title)]
+[INFO ] 2020-04-16 09:20:12.409 [Test worker] c.s.s.i.GroupServiceImpl - In isExistsWithId(id = [1])
+[INFO ] 2020-04-16 09:20:12.409 [Test worker] c.s.s.i.GroupServiceImpl - In isGroupExistsWitTitle(title = [updated title])
+[INFO ] 2020-04-16 09:20:12.410 [Test worker] c.s.s.i.GroupServiceImpl - In getById(id = [2])
+[INFO ] 2020-04-16 09:20:12.422 [Test worker] c.s.s.i.SubjectServiceImpl - In getById(id = [2])
+[INFO ] 2020-04-16 09:20:12.423 [Test worker] c.s.s.i.SubjectServiceImpl - In save(entity = [Subject(id=null, name=some subject)]
+[INFO ] 2020-04-16 09:20:12.423 [Test worker] c.s.s.i.SubjectServiceImpl - In isSubjectExistsWithName(name = [some subject])
+[ERROR] 2020-04-16 09:20:12.423 [Test worker] c.s.s.i.SubjectServiceImpl - Subject with name some subject already exists
+[INFO ] 2020-04-16 09:20:12.424 [Test worker] c.s.s.i.SubjectServiceImpl - In save(entity = [Subject(id=null, name=some subject)]
+[INFO ] 2020-04-16 09:20:12.424 [Test worker] c.s.s.i.SubjectServiceImpl - In isSubjectExistsWithName(name = [some subject])
+[INFO ] 2020-04-16 09:20:12.426 [Test worker] c.s.s.i.SubjectServiceImpl - In update(entity = [Subject(id=1, name=some subject)]
+[INFO ] 2020-04-16 09:20:12.426 [Test worker] c.s.s.i.SubjectServiceImpl - In isExistsWithId(id = [1])
+[INFO ] 2020-04-16 09:20:12.427 [Test worker] c.s.s.i.SubjectServiceImpl - In getById(id = [1])
+[INFO ] 2020-04-16 09:20:12.428 [Test worker] c.s.s.i.SubjectServiceImpl - In update(entity = [Subject(id=1, name=updated name)]
+[INFO ] 2020-04-16 09:20:12.428 [Test worker] c.s.s.i.SubjectServiceImpl - In isExistsWithId(id = [1])
+[INFO ] 2020-04-16 09:20:12.428 [Test worker] c.s.s.i.SubjectServiceImpl - In isSubjectExistsWithName(name = [updated name])
+[ERROR] 2020-04-16 09:20:12.428 [Test worker] c.s.s.i.SubjectServiceImpl - Subject with name [updated name] already exists
+[INFO ] 2020-04-16 09:20:12.429 [Test worker] c.s.s.i.SubjectServiceImpl - In update(entity = [Subject(id=1, name=updated name)]
+[INFO ] 2020-04-16 09:20:12.429 [Test worker] c.s.s.i.SubjectServiceImpl - In isExistsWithId(id = [1])
+[INFO ] 2020-04-16 09:20:12.429 [Test worker] c.s.s.i.SubjectServiceImpl - In isSubjectExistsWithName(name = [updated name])
+[INFO ] 2020-04-16 09:20:12.511 [Test worker] c.s.s.i.ScheduleServiceImpl - In getInfoForCreatingSchedule (semesterId = [1], dayOfWeek = [MONDAY], evenOdd = [EVEN], classId = [1], lessonId = [1])
+[INFO ] 2020-04-16 09:20:12.512 [Test worker] c.s.s.i.ScheduleServiceImpl - In isConflictForGroupInSchedule(semesterId = [1], dayOfWeek = [MONDAY], evenOdd = [EVEN], classId = [1], lessonId = [1])
+[INFO ] 2020-04-16 09:20:12.512 [Test worker] c.s.s.i.ScheduleServiceImpl - In isTeacherAvailable (semesterId = [1], dayOfWeek = [MONDAY], evenOdd = [EVEN], classId = [1], lessonId = [1]
+[INFO ] 2020-04-16 09:20:12.515 [Test worker] c.s.s.i.ScheduleServiceImpl - In update(entity = [Schedule(id=1, dayOfWeek=TUESDAY, evenOdd=EVEN, semester=Semester(id=2, description=null, year=0, startDay=null, endDay=null, currentSemester=false), room=Room(id=2, name=null, type=RoomType(id=2, description=null)), period=Period(id=2, startTime=null, endTime=null, name=null), lesson=Lesson(id=2, hours=0, teacherForSite=null, subjectForSite=null, lessonType=null, teacher=null, subject=null, group=Group(id=2, title=null)))]
+[INFO ] 2020-04-16 09:20:12.519 [Test worker] c.s.s.i.ScheduleServiceImpl - In isConflictForGroupInSchedule(semesterId = [2], dayOfWeek = [TUESDAY], evenOdd = [EVEN], classId = [2], lessonId = [2])
+[INFO ] 2020-04-16 09:20:12.522 [Test worker] c.s.s.i.ScheduleServiceImpl - In getInfoForCreatingSchedule (semesterId = [1], dayOfWeek = [MONDAY], evenOdd = [EVEN], classId = [1], lessonId = [1])
+[INFO ] 2020-04-16 09:20:12.523 [Test worker] c.s.s.i.ScheduleServiceImpl - In isConflictForGroupInSchedule(semesterId = [1], dayOfWeek = [MONDAY], evenOdd = [EVEN], classId = [1], lessonId = [1])
+[ERROR] 2020-04-16 09:20:12.523 [Test worker] c.s.s.i.ScheduleServiceImpl - Schedule for group already exists
+[INFO ] 2020-04-16 09:20:12.525 [Test worker] c.s.s.i.ScheduleServiceImpl - In save(entity = [Schedule(id=1, dayOfWeek=MONDAY, evenOdd=ODD, semester=Semester(id=1, description=null, year=0, startDay=null, endDay=null, currentSemester=false), room=Room(id=1, name=null, type=RoomType(id=1, description=null)), period=Period(id=1, startTime=null, endTime=null, name=null), lesson=Lesson(id=1, hours=0, teacherForSite=null, subjectForSite=null, lessonType=null, teacher=null, subject=null, group=Group(id=1, title=null)))]
+[INFO ] 2020-04-16 09:20:12.526 [Test worker] c.s.s.i.ScheduleServiceImpl - In isConflictForGroupInSchedule(semesterId = [1], dayOfWeek = [MONDAY], evenOdd = [ODD], classId = [1], lessonId = [1])
+[INFO ] 2020-04-16 09:20:12.527 [Test worker] c.s.s.i.ScheduleServiceImpl - In save(entity = [Schedule(id=1, dayOfWeek=MONDAY, evenOdd=ODD, semester=Semester(id=1, description=null, year=0, startDay=null, endDay=null, currentSemester=false), room=Room(id=1, name=null, type=null), period=Period(id=1, startTime=null, endTime=null, name=null), lesson=Lesson(id=1, hours=0, teacherForSite=null, subjectForSite=null, lessonType=null, teacher=null, subject=null, group=Group(id=1, title=null)))]
+[INFO ] 2020-04-16 09:20:12.528 [Test worker] c.s.s.i.ScheduleServiceImpl - In isConflictForGroupInSchedule(semesterId = [1], dayOfWeek = [MONDAY], evenOdd = [ODD], classId = [1], lessonId = [1])
+[ERROR] 2020-04-16 09:20:12.528 [Test worker] c.s.s.i.ScheduleServiceImpl - Schedule for group with id [1] has conflict with already existing
+[INFO ] 2020-04-16 09:20:12.530 [Test worker] c.s.s.i.ScheduleServiceImpl - In update(entity = [Schedule(id=1, dayOfWeek=TUESDAY, evenOdd=EVEN, semester=Semester(id=2, description=null, year=0, startDay=null, endDay=null, currentSemester=false), room=Room(id=2, name=null, type=RoomType(id=2, description=null)), period=Period(id=2, startTime=null, endTime=null, name=null), lesson=Lesson(id=2, hours=0, teacherForSite=null, subjectForSite=null, lessonType=null, teacher=null, subject=null, group=Group(id=2, title=null)))]
+[INFO ] 2020-04-16 09:20:12.531 [Test worker] c.s.s.i.ScheduleServiceImpl - In isConflictForGroupInSchedule(semesterId = [2], dayOfWeek = [TUESDAY], evenOdd = [EVEN], classId = [2], lessonId = [2])
+[INFO ] 2020-04-16 09:20:12.533 [Test worker] c.s.s.i.ScheduleServiceImpl - In getById(id = [2])
+[INFO ] 2020-04-16 09:20:12.545 [Test worker] c.s.s.i.RoomServiceImpl - Enter into save of RoomServiceImpl with entity:Room(id=1, name=1 Room, type=RoomType(id=1, description=Small auditory))
+[INFO ] 2020-04-16 09:20:12.546 [Test worker] c.s.s.i.RoomServiceImpl - Enter into update of RoomServiceImpl with entity:Room(id=1, name=1 Room updated, type=RoomType(id=2, description=Medium auditory))
+[INFO ] 2020-04-16 09:20:12.547 [Test worker] c.s.s.i.RoomServiceImpl - Enter into getById of RoomServiceImpl with id 2
+[INFO ] 2020-04-16 09:20:12.547 [Test worker] c.s.s.i.RoomServiceImpl - Enter into update of RoomServiceImpl with entity:Room(id=1, name=1 Room updated, type=RoomType(id=2, description=Medium auditory))
+[INFO ] 2020-04-16 09:20:12.548 [Test worker] c.s.s.i.RoomServiceImpl - Enter into save of RoomServiceImpl with entity:Room(id=1, name=1 Room, type=RoomType(id=1, description=Small auditory))
+[INFO ] 2020-04-16 09:20:12.549 [Test worker] c.s.s.i.RoomServiceImpl - Enter into getById of RoomServiceImpl with id 1
+[INFO ] 2020-04-16 09:20:12.560 [Test worker] c.s.s.i.RoomTypeServiceImpl - In save(entity = [RoomType(id=1, description=1 roomType)]
+[INFO ] 2020-04-16 09:20:12.560 [Test worker] c.s.s.i.RoomTypeServiceImpl - In isRoomTypeExistsWithDescription(description = [1 roomType])
+[INFO ] 2020-04-16 09:20:12.561 [Test worker] c.s.s.i.RoomTypeServiceImpl - In save(entity = [RoomType(id=1, description=1 roomType)]
+[INFO ] 2020-04-16 09:20:12.561 [Test worker] c.s.s.i.RoomTypeServiceImpl - In isRoomTypeExistsWithDescription(description = [1 roomType])
+[INFO ] 2020-04-16 09:20:12.562 [Test worker] c.s.s.i.RoomTypeServiceImpl - In getById(id = [2])
+[INFO ] 2020-04-16 09:20:12.563 [Test worker] c.s.s.i.RoomTypeServiceImpl - In update(entity = [RoomType(id=1, description=1 roomType)]
+[INFO ] 2020-04-16 09:20:12.563 [Test worker] c.s.s.i.RoomTypeServiceImpl - In isExistsWithId(id = [1])
+[INFO ] 2020-04-16 09:20:12.564 [Test worker] c.s.s.i.RoomTypeServiceImpl - In update(entity = [RoomType(id=1, description=1 roomType)]
+[INFO ] 2020-04-16 09:20:12.564 [Test worker] c.s.s.i.RoomTypeServiceImpl - In isExistsWithId(id = [1])
+[INFO ] 2020-04-16 09:20:12.565 [Test worker] c.s.s.i.RoomTypeServiceImpl - In isRoomTypeExistsWithDescription(description = [1 roomType])
+[ERROR] 2020-04-16 09:20:12.565 [Test worker] c.s.s.i.RoomTypeServiceImpl - RoomType with Description [1 roomType] already exists
+[INFO ] 2020-04-16 09:20:12.565 [Test worker] c.s.s.i.RoomTypeServiceImpl - In getById(id = [1])
+[INFO ] 2020-04-16 09:20:12.567 [Test worker] c.s.s.i.RoomTypeServiceImpl - In update(entity = [RoomType(id=1, description=updated roomType)]
+[INFO ] 2020-04-16 09:20:12.567 [Test worker] c.s.s.i.RoomTypeServiceImpl - In isExistsWithId(id = [1])
+[INFO ] 2020-04-16 09:20:12.567 [Test worker] c.s.s.i.RoomTypeServiceImpl - In isRoomTypeExistsWithDescription(description = [updated roomType])
+[INFO ] 2020-04-16 09:20:59.675 [Test worker] c.s.s.i.ScheduleServiceImpl - In getInfoForCreatingSchedule (semesterId = [1], dayOfWeek = [MONDAY], evenOdd = [EVEN], classId = [1], lessonId = [1])
+[INFO ] 2020-04-16 09:20:59.688 [Test worker] c.s.s.i.ScheduleServiceImpl - In isConflictForGroupInSchedule(semesterId = [1], dayOfWeek = [MONDAY], evenOdd = [EVEN], classId = [1], lessonId = [1])
+[INFO ] 2020-04-16 09:20:59.689 [Test worker] c.s.s.i.ScheduleServiceImpl - In isTeacherAvailable (semesterId = [1], dayOfWeek = [MONDAY], evenOdd = [EVEN], classId = [1], lessonId = [1]
+[INFO ] 2020-04-16 09:20:59.699 [Test worker] c.s.s.i.ScheduleServiceImpl - In update(entity = [Schedule(id=1, dayOfWeek=TUESDAY, evenOdd=EVEN, semester=Semester(id=2, description=null, year=0, startDay=null, endDay=null, currentSemester=false), room=Room(id=2, name=null, type=RoomType(id=2, description=null)), period=Period(id=2, startTime=null, endTime=null, name=null), lesson=Lesson(id=2, hours=0, teacherForSite=null, subjectForSite=null, lessonType=null, teacher=null, subject=null, group=Group(id=2, title=null)))]
+[INFO ] 2020-04-16 09:20:59.700 [Test worker] c.s.s.i.ScheduleServiceImpl - In isConflictForGroupInSchedule(semesterId = [2], dayOfWeek = [TUESDAY], evenOdd = [EVEN], classId = [2], lessonId = [2])
+[INFO ] 2020-04-16 09:20:59.707 [Test worker] c.s.s.i.ScheduleServiceImpl - In getInfoForCreatingSchedule (semesterId = [1], dayOfWeek = [MONDAY], evenOdd = [EVEN], classId = [1], lessonId = [1])
+[INFO ] 2020-04-16 09:20:59.708 [Test worker] c.s.s.i.ScheduleServiceImpl - In isConflictForGroupInSchedule(semesterId = [1], dayOfWeek = [MONDAY], evenOdd = [EVEN], classId = [1], lessonId = [1])
+[ERROR] 2020-04-16 09:20:59.708 [Test worker] c.s.s.i.ScheduleServiceImpl - Schedule for group already exists
+[INFO ] 2020-04-16 09:20:59.712 [Test worker] c.s.s.i.ScheduleServiceImpl - In save(entity = [Schedule(id=1, dayOfWeek=MONDAY, evenOdd=ODD, semester=Semester(id=1, description=null, year=0, startDay=null, endDay=null, currentSemester=false), room=Room(id=1, name=null, type=RoomType(id=1, description=null)), period=Period(id=1, startTime=null, endTime=null, name=null), lesson=Lesson(id=1, hours=0, teacherForSite=null, subjectForSite=null, lessonType=null, teacher=null, subject=null, group=Group(id=1, title=null)))]
+[INFO ] 2020-04-16 09:20:59.712 [Test worker] c.s.s.i.ScheduleServiceImpl - In isConflictForGroupInSchedule(semesterId = [1], dayOfWeek = [MONDAY], evenOdd = [ODD], classId = [1], lessonId = [1])
+[INFO ] 2020-04-16 09:20:59.716 [Test worker] c.s.s.i.ScheduleServiceImpl - In save(entity = [Schedule(id=1, dayOfWeek=MONDAY, evenOdd=ODD, semester=Semester(id=1, description=null, year=0, startDay=null, endDay=null, currentSemester=false), room=Room(id=1, name=null, type=null), period=Period(id=1, startTime=null, endTime=null, name=null), lesson=Lesson(id=1, hours=0, teacherForSite=null, subjectForSite=null, lessonType=null, teacher=null, subject=null, group=Group(id=1, title=null)))]
+[INFO ] 2020-04-16 09:20:59.716 [Test worker] c.s.s.i.ScheduleServiceImpl - In isConflictForGroupInSchedule(semesterId = [1], dayOfWeek = [MONDAY], evenOdd = [ODD], classId = [1], lessonId = [1])
+[ERROR] 2020-04-16 09:20:59.717 [Test worker] c.s.s.i.ScheduleServiceImpl - Schedule for group with id [1] has conflict with already existing
+[INFO ] 2020-04-16 09:20:59.722 [Test worker] c.s.s.i.ScheduleServiceImpl - In update(entity = [Schedule(id=1, dayOfWeek=TUESDAY, evenOdd=EVEN, semester=Semester(id=2, description=null, year=0, startDay=null, endDay=null, currentSemester=false), room=Room(id=2, name=null, type=RoomType(id=2, description=null)), period=Period(id=2, startTime=null, endTime=null, name=null), lesson=Lesson(id=2, hours=0, teacherForSite=null, subjectForSite=null, lessonType=null, teacher=null, subject=null, group=Group(id=2, title=null)))]
+[INFO ] 2020-04-16 09:20:59.723 [Test worker] c.s.s.i.ScheduleServiceImpl - In isConflictForGroupInSchedule(semesterId = [2], dayOfWeek = [TUESDAY], evenOdd = [EVEN], classId = [2], lessonId = [2])
+[INFO ] 2020-04-16 09:20:59.729 [Test worker] c.s.s.i.ScheduleServiceImpl - In getById(id = [2])
+[INFO ] 2020-04-16 09:23:58.332 [Test worker] c.s.s.i.ScheduleServiceImpl - In getInfoForCreatingSchedule (semesterId = [1], dayOfWeek = [MONDAY], evenOdd = [EVEN], classId = [1], lessonId = [1])
+[INFO ] 2020-04-16 09:23:58.335 [Test worker] c.s.s.i.ScheduleServiceImpl - In isConflictForGroupInSchedule(semesterId = [1], dayOfWeek = [MONDAY], evenOdd = [EVEN], classId = [1], lessonId = [1])
+[INFO ] 2020-04-16 09:23:58.336 [Test worker] c.s.s.i.ScheduleServiceImpl - In isTeacherAvailable (semesterId = [1], dayOfWeek = [MONDAY], evenOdd = [EVEN], classId = [1], lessonId = [1]
+[ERROR] 2020-04-16 09:23:58.336 [Test worker] c.s.s.i.ScheduleServiceImpl - teacherID = 
+[INFO ] 2020-04-16 09:23:58.345 [Test worker] c.s.s.i.ScheduleServiceImpl - In update(entity = [Schedule(id=1, dayOfWeek=TUESDAY, evenOdd=EVEN, semester=Semester(id=2, description=null, year=0, startDay=null, endDay=null, currentSemester=false), room=Room(id=2, name=null, type=RoomType(id=2, description=null)), period=Period(id=2, startTime=null, endTime=null, name=null), lesson=Lesson(id=2, hours=0, teacherForSite=null, subjectForSite=null, lessonType=null, teacher=null, subject=null, group=Group(id=2, title=null)))]
+[INFO ] 2020-04-16 09:23:58.346 [Test worker] c.s.s.i.ScheduleServiceImpl - In isConflictForGroupInSchedule(semesterId = [2], dayOfWeek = [TUESDAY], evenOdd = [EVEN], classId = [2], lessonId = [2])
+[INFO ] 2020-04-16 09:23:58.353 [Test worker] c.s.s.i.ScheduleServiceImpl - In getInfoForCreatingSchedule (semesterId = [1], dayOfWeek = [MONDAY], evenOdd = [EVEN], classId = [1], lessonId = [1])
+[INFO ] 2020-04-16 09:23:58.353 [Test worker] c.s.s.i.ScheduleServiceImpl - In isConflictForGroupInSchedule(semesterId = [1], dayOfWeek = [MONDAY], evenOdd = [EVEN], classId = [1], lessonId = [1])
+[ERROR] 2020-04-16 09:23:58.354 [Test worker] c.s.s.i.ScheduleServiceImpl - Schedule for group already exists
+[INFO ] 2020-04-16 09:23:58.358 [Test worker] c.s.s.i.ScheduleServiceImpl - In save(entity = [Schedule(id=1, dayOfWeek=MONDAY, evenOdd=ODD, semester=Semester(id=1, description=null, year=0, startDay=null, endDay=null, currentSemester=false), room=Room(id=1, name=null, type=RoomType(id=1, description=null)), period=Period(id=1, startTime=null, endTime=null, name=null), lesson=Lesson(id=1, hours=0, teacherForSite=null, subjectForSite=null, lessonType=null, teacher=null, subject=null, group=Group(id=1, title=null)))]
+[INFO ] 2020-04-16 09:23:58.359 [Test worker] c.s.s.i.ScheduleServiceImpl - In isConflictForGroupInSchedule(semesterId = [1], dayOfWeek = [MONDAY], evenOdd = [ODD], classId = [1], lessonId = [1])
+[INFO ] 2020-04-16 09:23:58.362 [Test worker] c.s.s.i.ScheduleServiceImpl - In save(entity = [Schedule(id=1, dayOfWeek=MONDAY, evenOdd=ODD, semester=Semester(id=1, description=null, year=0, startDay=null, endDay=null, currentSemester=false), room=Room(id=1, name=null, type=null), period=Period(id=1, startTime=null, endTime=null, name=null), lesson=Lesson(id=1, hours=0, teacherForSite=null, subjectForSite=null, lessonType=null, teacher=null, subject=null, group=Group(id=1, title=null)))]
+[INFO ] 2020-04-16 09:23:58.362 [Test worker] c.s.s.i.ScheduleServiceImpl - In isConflictForGroupInSchedule(semesterId = [1], dayOfWeek = [MONDAY], evenOdd = [ODD], classId = [1], lessonId = [1])
+[ERROR] 2020-04-16 09:23:58.363 [Test worker] c.s.s.i.ScheduleServiceImpl - Schedule for group with id [1] has conflict with already existing
+[INFO ] 2020-04-16 09:23:58.367 [Test worker] c.s.s.i.ScheduleServiceImpl - In update(entity = [Schedule(id=1, dayOfWeek=TUESDAY, evenOdd=EVEN, semester=Semester(id=2, description=null, year=0, startDay=null, endDay=null, currentSemester=false), room=Room(id=2, name=null, type=RoomType(id=2, description=null)), period=Period(id=2, startTime=null, endTime=null, name=null), lesson=Lesson(id=2, hours=0, teacherForSite=null, subjectForSite=null, lessonType=null, teacher=null, subject=null, group=Group(id=2, title=null)))]
+[INFO ] 2020-04-16 09:23:58.367 [Test worker] c.s.s.i.ScheduleServiceImpl - In isConflictForGroupInSchedule(semesterId = [2], dayOfWeek = [TUESDAY], evenOdd = [EVEN], classId = [2], lessonId = [2])
+[INFO ] 2020-04-16 09:23:58.377 [Test worker] c.s.s.i.ScheduleServiceImpl - In getById(id = [2])
+[INFO ] 2020-04-16 09:24:36.567 [Test worker] c.s.s.i.ScheduleServiceImpl - In update(entity = [Schedule(id=1, dayOfWeek=TUESDAY, evenOdd=EVEN, semester=Semester(id=2, description=null, year=0, startDay=null, endDay=null, currentSemester=false), room=Room(id=2, name=null, type=RoomType(id=2, description=null)), period=Period(id=2, startTime=null, endTime=null, name=null), lesson=Lesson(id=2, hours=0, teacherForSite=null, subjectForSite=null, lessonType=null, teacher=null, subject=null, group=Group(id=2, title=null)))]
+[INFO ] 2020-04-16 09:24:36.571 [Test worker] c.s.s.i.ScheduleServiceImpl - In isConflictForGroupInSchedule(semesterId = [2], dayOfWeek = [TUESDAY], evenOdd = [EVEN], classId = [2], lessonId = [2])
+[INFO ] 2020-04-16 09:24:44.276 [Test worker] c.s.s.i.ScheduleServiceImpl - In getInfoForCreatingSchedule (semesterId = [1], dayOfWeek = [MONDAY], evenOdd = [EVEN], classId = [1], lessonId = [1])
+[INFO ] 2020-04-16 09:24:44.279 [Test worker] c.s.s.i.ScheduleServiceImpl - In isConflictForGroupInSchedule(semesterId = [1], dayOfWeek = [MONDAY], evenOdd = [EVEN], classId = [1], lessonId = [1])
+[INFO ] 2020-04-16 09:24:44.279 [Test worker] c.s.s.i.ScheduleServiceImpl - In isTeacherAvailable (semesterId = [1], dayOfWeek = [MONDAY], evenOdd = [EVEN], classId = [1], lessonId = [1]
+[ERROR] 2020-04-16 09:24:44.280 [Test worker] c.s.s.i.ScheduleServiceImpl - teacherID = 
+[INFO ] 2020-04-16 09:24:44.288 [Test worker] c.s.s.i.ScheduleServiceImpl - In update(entity = [Schedule(id=1, dayOfWeek=TUESDAY, evenOdd=EVEN, semester=Semester(id=2, description=null, year=0, startDay=null, endDay=null, currentSemester=false), room=Room(id=2, name=null, type=RoomType(id=2, description=null)), period=Period(id=2, startTime=null, endTime=null, name=null), lesson=Lesson(id=2, hours=0, teacherForSite=null, subjectForSite=null, lessonType=null, teacher=null, subject=null, group=Group(id=2, title=null)))]
+[INFO ] 2020-04-16 09:24:44.289 [Test worker] c.s.s.i.ScheduleServiceImpl - In isConflictForGroupInSchedule(semesterId = [2], dayOfWeek = [TUESDAY], evenOdd = [EVEN], classId = [2], lessonId = [2])
+[INFO ] 2020-04-16 09:24:44.296 [Test worker] c.s.s.i.ScheduleServiceImpl - In getInfoForCreatingSchedule (semesterId = [1], dayOfWeek = [MONDAY], evenOdd = [EVEN], classId = [1], lessonId = [1])
+[INFO ] 2020-04-16 09:24:44.297 [Test worker] c.s.s.i.ScheduleServiceImpl - In isConflictForGroupInSchedule(semesterId = [1], dayOfWeek = [MONDAY], evenOdd = [EVEN], classId = [1], lessonId = [1])
+[ERROR] 2020-04-16 09:24:44.297 [Test worker] c.s.s.i.ScheduleServiceImpl - Schedule for group already exists
+[INFO ] 2020-04-16 09:24:44.305 [Test worker] c.s.s.i.ScheduleServiceImpl - In save(entity = [Schedule(id=1, dayOfWeek=MONDAY, evenOdd=ODD, semester=Semester(id=1, description=null, year=0, startDay=null, endDay=null, currentSemester=false), room=Room(id=1, name=null, type=RoomType(id=1, description=null)), period=Period(id=1, startTime=null, endTime=null, name=null), lesson=Lesson(id=1, hours=0, teacherForSite=null, subjectForSite=null, lessonType=null, teacher=null, subject=null, group=Group(id=1, title=null)))]
+[INFO ] 2020-04-16 09:24:44.306 [Test worker] c.s.s.i.ScheduleServiceImpl - In isConflictForGroupInSchedule(semesterId = [1], dayOfWeek = [MONDAY], evenOdd = [ODD], classId = [1], lessonId = [1])
+[INFO ] 2020-04-16 09:24:44.309 [Test worker] c.s.s.i.ScheduleServiceImpl - In save(entity = [Schedule(id=1, dayOfWeek=MONDAY, evenOdd=ODD, semester=Semester(id=1, description=null, year=0, startDay=null, endDay=null, currentSemester=false), room=Room(id=1, name=null, type=null), period=Period(id=1, startTime=null, endTime=null, name=null), lesson=Lesson(id=1, hours=0, teacherForSite=null, subjectForSite=null, lessonType=null, teacher=null, subject=null, group=Group(id=1, title=null)))]
+[INFO ] 2020-04-16 09:24:44.309 [Test worker] c.s.s.i.ScheduleServiceImpl - In isConflictForGroupInSchedule(semesterId = [1], dayOfWeek = [MONDAY], evenOdd = [ODD], classId = [1], lessonId = [1])
+[ERROR] 2020-04-16 09:24:44.310 [Test worker] c.s.s.i.ScheduleServiceImpl - Schedule for group with id [1] has conflict with already existing
+[INFO ] 2020-04-16 09:24:44.320 [Test worker] c.s.s.i.ScheduleServiceImpl - In update(entity = [Schedule(id=1, dayOfWeek=TUESDAY, evenOdd=EVEN, semester=Semester(id=2, description=null, year=0, startDay=null, endDay=null, currentSemester=false), room=Room(id=2, name=null, type=RoomType(id=2, description=null)), period=Period(id=2, startTime=null, endTime=null, name=null), lesson=Lesson(id=2, hours=0, teacherForSite=null, subjectForSite=null, lessonType=null, teacher=null, subject=null, group=Group(id=2, title=null)))]
+[INFO ] 2020-04-16 09:24:44.321 [Test worker] c.s.s.i.ScheduleServiceImpl - In isConflictForGroupInSchedule(semesterId = [2], dayOfWeek = [TUESDAY], evenOdd = [EVEN], classId = [2], lessonId = [2])
+[INFO ] 2020-04-16 09:24:44.326 [Test worker] c.s.s.i.ScheduleServiceImpl - In getById(id = [2])
+[INFO ] 2020-04-16 09:33:10.542 [Test worker] c.s.s.i.ScheduleServiceImpl - In update(entity = [Schedule(id=1, dayOfWeek=TUESDAY, evenOdd=EVEN, semester=Semester(id=2, description=null, year=0, startDay=null, endDay=null, currentSemester=false), room=Room(id=2, name=null, type=RoomType(id=2, description=null)), period=Period(id=2, startTime=null, endTime=null, name=null), lesson=Lesson(id=2, hours=0, teacherForSite=null, subjectForSite=null, lessonType=null, teacher=null, subject=null, group=Group(id=2, title=null)))]
+[INFO ] 2020-04-16 09:33:10.546 [Test worker] c.s.s.i.ScheduleServiceImpl - In isConflictForGroupInSchedule(semesterId = [2], dayOfWeek = [TUESDAY], evenOdd = [EVEN], classId = [2], lessonId = [2])
+[INFO ] 2020-04-16 09:33:10.553 [Test worker] c.s.s.i.ScheduleServiceImpl - In getInfoForCreatingSchedule (semesterId = [1], dayOfWeek = [MONDAY], evenOdd = [EVEN], classId = [1], lessonId = [1])
+[INFO ] 2020-04-16 09:33:10.553 [Test worker] c.s.s.i.ScheduleServiceImpl - In isConflictForGroupInSchedule(semesterId = [1], dayOfWeek = [MONDAY], evenOdd = [EVEN], classId = [1], lessonId = [1])
+[ERROR] 2020-04-16 09:33:10.553 [Test worker] c.s.s.i.ScheduleServiceImpl - Schedule for group already exists
+[INFO ] 2020-04-16 09:33:10.557 [Test worker] c.s.s.i.ScheduleServiceImpl - In save(entity = [Schedule(id=1, dayOfWeek=MONDAY, evenOdd=ODD, semester=Semester(id=1, description=null, year=0, startDay=null, endDay=null, currentSemester=false), room=Room(id=1, name=null, type=RoomType(id=1, description=null)), period=Period(id=1, startTime=null, endTime=null, name=null), lesson=Lesson(id=1, hours=0, teacherForSite=null, subjectForSite=null, lessonType=null, teacher=null, subject=null, group=Group(id=1, title=null)))]
+[INFO ] 2020-04-16 09:33:10.558 [Test worker] c.s.s.i.ScheduleServiceImpl - In isConflictForGroupInSchedule(semesterId = [1], dayOfWeek = [MONDAY], evenOdd = [ODD], classId = [1], lessonId = [1])
+[INFO ] 2020-04-16 09:33:10.561 [Test worker] c.s.s.i.ScheduleServiceImpl - In save(entity = [Schedule(id=1, dayOfWeek=MONDAY, evenOdd=ODD, semester=Semester(id=1, description=null, year=0, startDay=null, endDay=null, currentSemester=false), room=Room(id=1, name=null, type=null), period=Period(id=1, startTime=null, endTime=null, name=null), lesson=Lesson(id=1, hours=0, teacherForSite=null, subjectForSite=null, lessonType=null, teacher=null, subject=null, group=Group(id=1, title=null)))]
+[INFO ] 2020-04-16 09:33:10.561 [Test worker] c.s.s.i.ScheduleServiceImpl - In isConflictForGroupInSchedule(semesterId = [1], dayOfWeek = [MONDAY], evenOdd = [ODD], classId = [1], lessonId = [1])
+[ERROR] 2020-04-16 09:33:10.561 [Test worker] c.s.s.i.ScheduleServiceImpl - Schedule for group with id [1] has conflict with already existing
+[INFO ] 2020-04-16 09:33:10.565 [Test worker] c.s.s.i.ScheduleServiceImpl - In update(entity = [Schedule(id=1, dayOfWeek=TUESDAY, evenOdd=EVEN, semester=Semester(id=2, description=null, year=0, startDay=null, endDay=null, currentSemester=false), room=Room(id=2, name=null, type=RoomType(id=2, description=null)), period=Period(id=2, startTime=null, endTime=null, name=null), lesson=Lesson(id=2, hours=0, teacherForSite=null, subjectForSite=null, lessonType=null, teacher=null, subject=null, group=Group(id=2, title=null)))]
+[INFO ] 2020-04-16 09:33:10.566 [Test worker] c.s.s.i.ScheduleServiceImpl - In isConflictForGroupInSchedule(semesterId = [2], dayOfWeek = [TUESDAY], evenOdd = [EVEN], classId = [2], lessonId = [2])
+[INFO ] 2020-04-16 09:33:10.572 [Test worker] c.s.s.i.ScheduleServiceImpl - In getById(id = [2])
+[INFO ] 2020-04-16 09:37:59.199 [Test worker] c.s.s.i.ScheduleServiceImpl - In getInfoForCreatingSchedule (semesterId = [1], dayOfWeek = [MONDAY], evenOdd = [EVEN], classId = [1], lessonId = [1])
+[INFO ] 2020-04-16 09:37:59.205 [Test worker] c.s.s.i.ScheduleServiceImpl - In isConflictForGroupInSchedule(semesterId = [1], dayOfWeek = [MONDAY], evenOdd = [EVEN], classId = [1], lessonId = [1])
+[INFO ] 2020-04-16 09:37:59.206 [Test worker] c.s.s.i.ScheduleServiceImpl - In isTeacherAvailable (semesterId = [1], dayOfWeek = [MONDAY], evenOdd = [EVEN], classId = [1], lessonId = [1]
+[ERROR] 2020-04-16 09:37:59.207 [Test worker] c.s.s.i.ScheduleServiceImpl - teacherID = 
+[INFO ] 2020-04-16 09:37:59.217 [Test worker] c.s.s.i.ScheduleServiceImpl - In update(entity = [Schedule(id=1, dayOfWeek=TUESDAY, evenOdd=EVEN, semester=Semester(id=2, description=null, year=0, startDay=null, endDay=null, currentSemester=false), room=Room(id=2, name=null, type=RoomType(id=2, description=null)), period=Period(id=2, startTime=null, endTime=null, name=null), lesson=Lesson(id=2, hours=0, teacherForSite=null, subjectForSite=null, lessonType=null, teacher=null, subject=null, group=Group(id=2, title=null)))]
+[INFO ] 2020-04-16 09:37:59.219 [Test worker] c.s.s.i.ScheduleServiceImpl - In isConflictForGroupInSchedule(semesterId = [2], dayOfWeek = [TUESDAY], evenOdd = [EVEN], classId = [2], lessonId = [2])
+[INFO ] 2020-04-16 09:37:59.227 [Test worker] c.s.s.i.ScheduleServiceImpl - In getInfoForCreatingSchedule (semesterId = [1], dayOfWeek = [MONDAY], evenOdd = [EVEN], classId = [1], lessonId = [1])
+[INFO ] 2020-04-16 09:37:59.228 [Test worker] c.s.s.i.ScheduleServiceImpl - In isConflictForGroupInSchedule(semesterId = [1], dayOfWeek = [MONDAY], evenOdd = [EVEN], classId = [1], lessonId = [1])
+[ERROR] 2020-04-16 09:37:59.228 [Test worker] c.s.s.i.ScheduleServiceImpl - Schedule for group already exists
+[INFO ] 2020-04-16 09:37:59.234 [Test worker] c.s.s.i.ScheduleServiceImpl - In save(entity = [Schedule(id=1, dayOfWeek=MONDAY, evenOdd=ODD, semester=Semester(id=1, description=null, year=0, startDay=null, endDay=null, currentSemester=false), room=Room(id=1, name=null, type=RoomType(id=1, description=null)), period=Period(id=1, startTime=null, endTime=null, name=null), lesson=Lesson(id=1, hours=0, teacherForSite=null, subjectForSite=null, lessonType=null, teacher=null, subject=null, group=Group(id=1, title=null)))]
+[INFO ] 2020-04-16 09:37:59.235 [Test worker] c.s.s.i.ScheduleServiceImpl - In isConflictForGroupInSchedule(semesterId = [1], dayOfWeek = [MONDAY], evenOdd = [ODD], classId = [1], lessonId = [1])
+[INFO ] 2020-04-16 09:37:59.243 [Test worker] c.s.s.i.ScheduleServiceImpl - In save(entity = [Schedule(id=1, dayOfWeek=MONDAY, evenOdd=ODD, semester=Semester(id=1, description=null, year=0, startDay=null, endDay=null, currentSemester=false), room=Room(id=1, name=null, type=null), period=Period(id=1, startTime=null, endTime=null, name=null), lesson=Lesson(id=1, hours=0, teacherForSite=null, subjectForSite=null, lessonType=null, teacher=null, subject=null, group=Group(id=1, title=null)))]
+[INFO ] 2020-04-16 09:37:59.243 [Test worker] c.s.s.i.ScheduleServiceImpl - In isConflictForGroupInSchedule(semesterId = [1], dayOfWeek = [MONDAY], evenOdd = [ODD], classId = [1], lessonId = [1])
+[ERROR] 2020-04-16 09:37:59.244 [Test worker] c.s.s.i.ScheduleServiceImpl - Schedule for group with id [1] has conflict with already existing
+[INFO ] 2020-04-16 09:37:59.252 [Test worker] c.s.s.i.ScheduleServiceImpl - In update(entity = [Schedule(id=1, dayOfWeek=TUESDAY, evenOdd=EVEN, semester=Semester(id=2, description=null, year=0, startDay=null, endDay=null, currentSemester=false), room=Room(id=2, name=null, type=RoomType(id=2, description=null)), period=Period(id=2, startTime=null, endTime=null, name=null), lesson=Lesson(id=2, hours=0, teacherForSite=null, subjectForSite=null, lessonType=null, teacher=null, subject=null, group=Group(id=2, title=null)))]
+[INFO ] 2020-04-16 09:37:59.253 [Test worker] c.s.s.i.ScheduleServiceImpl - In isConflictForGroupInSchedule(semesterId = [2], dayOfWeek = [TUESDAY], evenOdd = [EVEN], classId = [2], lessonId = [2])
+[INFO ] 2020-04-16 09:37:59.258 [Test worker] c.s.s.i.ScheduleServiceImpl - In getById(id = [2])
+[INFO ] 2020-04-16 09:42:59.711 [Test worker] c.s.s.i.ScheduleServiceImpl - In update(entity = [Schedule(id=1, dayOfWeek=TUESDAY, evenOdd=EVEN, semester=Semester(id=2, description=null, year=0, startDay=null, endDay=null, currentSemester=false), room=Room(id=2, name=null, type=RoomType(id=2, description=null)), period=Period(id=2, startTime=null, endTime=null, name=null), lesson=Lesson(id=2, hours=0, teacherForSite=null, subjectForSite=null, lessonType=null, teacher=null, subject=null, group=Group(id=2, title=null)))]
+[INFO ] 2020-04-16 09:42:59.717 [Test worker] c.s.s.i.ScheduleServiceImpl - In isConflictForGroupInSchedule(semesterId = [2], dayOfWeek = [TUESDAY], evenOdd = [EVEN], classId = [2], lessonId = [2])
+[INFO ] 2020-04-16 09:42:59.725 [Test worker] c.s.s.i.ScheduleServiceImpl - In getInfoForCreatingSchedule (semesterId = [1], dayOfWeek = [MONDAY], evenOdd = [EVEN], classId = [1], lessonId = [1])
+[INFO ] 2020-04-16 09:42:59.726 [Test worker] c.s.s.i.ScheduleServiceImpl - In isConflictForGroupInSchedule(semesterId = [1], dayOfWeek = [MONDAY], evenOdd = [EVEN], classId = [1], lessonId = [1])
+[ERROR] 2020-04-16 09:42:59.726 [Test worker] c.s.s.i.ScheduleServiceImpl - Schedule for group already exists
+[INFO ] 2020-04-16 09:42:59.731 [Test worker] c.s.s.i.ScheduleServiceImpl - In save(entity = [Schedule(id=1, dayOfWeek=MONDAY, evenOdd=ODD, semester=Semester(id=1, description=null, year=0, startDay=null, endDay=null, currentSemester=false), room=Room(id=1, name=null, type=RoomType(id=1, description=null)), period=Period(id=1, startTime=null, endTime=null, name=null), lesson=Lesson(id=1, hours=0, teacherForSite=null, subjectForSite=null, lessonType=null, teacher=null, subject=null, group=Group(id=1, title=null)))]
+[INFO ] 2020-04-16 09:42:59.732 [Test worker] c.s.s.i.ScheduleServiceImpl - In isConflictForGroupInSchedule(semesterId = [1], dayOfWeek = [MONDAY], evenOdd = [ODD], classId = [1], lessonId = [1])
+[INFO ] 2020-04-16 09:42:59.735 [Test worker] c.s.s.i.ScheduleServiceImpl - In save(entity = [Schedule(id=1, dayOfWeek=MONDAY, evenOdd=ODD, semester=Semester(id=1, description=null, year=0, startDay=null, endDay=null, currentSemester=false), room=Room(id=1, name=null, type=null), period=Period(id=1, startTime=null, endTime=null, name=null), lesson=Lesson(id=1, hours=0, teacherForSite=null, subjectForSite=null, lessonType=null, teacher=null, subject=null, group=Group(id=1, title=null)))]
+[INFO ] 2020-04-16 09:42:59.735 [Test worker] c.s.s.i.ScheduleServiceImpl - In isConflictForGroupInSchedule(semesterId = [1], dayOfWeek = [MONDAY], evenOdd = [ODD], classId = [1], lessonId = [1])
+[ERROR] 2020-04-16 09:42:59.736 [Test worker] c.s.s.i.ScheduleServiceImpl - Schedule for group with id [1] has conflict with already existing
+[INFO ] 2020-04-16 09:42:59.742 [Test worker] c.s.s.i.ScheduleServiceImpl - In update(entity = [Schedule(id=1, dayOfWeek=TUESDAY, evenOdd=EVEN, semester=Semester(id=2, description=null, year=0, startDay=null, endDay=null, currentSemester=false), room=Room(id=2, name=null, type=RoomType(id=2, description=null)), period=Period(id=2, startTime=null, endTime=null, name=null), lesson=Lesson(id=2, hours=0, teacherForSite=null, subjectForSite=null, lessonType=null, teacher=null, subject=null, group=Group(id=2, title=null)))]
+[INFO ] 2020-04-16 09:42:59.742 [Test worker] c.s.s.i.ScheduleServiceImpl - In isConflictForGroupInSchedule(semesterId = [2], dayOfWeek = [TUESDAY], evenOdd = [EVEN], classId = [2], lessonId = [2])
+[INFO ] 2020-04-16 09:42:59.746 [Test worker] c.s.s.i.ScheduleServiceImpl - In getById(id = [2])

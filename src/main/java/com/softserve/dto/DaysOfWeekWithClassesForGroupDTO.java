@@ -12,7 +12,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @ToString
-public class DaysOfWeekWithClassesDTO {
+public class DaysOfWeekWithClassesForGroupDTO {
     private DayOfWeek day;
-    private List<ClassesInScheduleDTO> classes;
+    private List<ClassesInScheduleForGroupDTO> classes;
 }
