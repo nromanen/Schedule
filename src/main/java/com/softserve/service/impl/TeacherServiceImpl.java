@@ -1,20 +1,21 @@
 package com.softserve.service.impl;
 
-import com.softserve.entity.Teacher;
-import com.softserve.entity.User;
+import com.softserve.entity.*;
+import com.softserve.entity.enums.EvenOdd;
 import com.softserve.entity.enums.Role;
+import com.softserve.entity.enums.WishStatuses;
 import com.softserve.exception.EntityAlreadyExistsException;
 import com.softserve.exception.EntityNotFoundException;
 import com.softserve.repository.TeacherRepository;
-import com.softserve.service.MailService;
-import com.softserve.service.TeacherService;
-import com.softserve.service.UserService;
+import com.softserve.service.*;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.DayOfWeek;
+import java.util.ArrayList;
 import java.util.List;
 
 @Transactional
@@ -25,12 +26,17 @@ public class TeacherServiceImpl implements TeacherService {
     private final TeacherRepository teacherRepository;
     private final UserService userService;
     private final MailService mailService;
+    private final PeriodService periodService;
+    private final TeacherWishesService teacherWishesService;
 
     @Autowired
-    public TeacherServiceImpl(TeacherRepository teacherRepository, UserService userService, MailService mailService) {
+    public TeacherServiceImpl(TeacherRepository teacherRepository, UserService userService, MailService mailService,
+                              PeriodService periodService, TeacherWishesService teacherWishesService) {
         this.teacherRepository = teacherRepository;
         this.userService = userService;
         this.mailService = mailService;
+        this.periodService = periodService;
+        this.teacherWishesService = teacherWishesService;
     }
 
     /**
@@ -59,7 +65,38 @@ public class TeacherServiceImpl implements TeacherService {
     @Override
     public Teacher save(Teacher object) {
         log.info("Enter into save method with entity:{}", object);
-        return teacherRepository.save(object);
+        Teacher teacher = teacherRepository.save(object);
+        List<Period> periods = periodService.getAll();
+        try {
+            Wishes[] teacherWishesArray= new Wishes[7];
+            int index = 0;
+            for(DayOfWeek day : DayOfWeek.values())
+            {
+                List<Wish> wishes = new ArrayList<>();
+                for(Period period: periods){
+                    Wish wish = new Wish();
+                    wish.setClassName(period.getName());
+                    wish.setStatus(WishStatuses.OK.toString());
+                    wishes.add(wish);
+                }
+                Wishes teacherWish = new Wishes();
+                teacherWish.withDayOfWeek(day.name());
+                teacherWish.setEvenOdd(EvenOdd.WEEKLY.toString());
+                teacherWish.setWishes(wishes);
+                teacherWishesArray[index]=teacherWish;
+                index++;
+            }
+            TeacherWishes teacherWishes = new TeacherWishes();
+            teacherWishes.setTeacher(teacher);
+            teacherWishes.setTeacherWishesList(teacherWishesArray);
+            teacherWishesService.save(teacherWishes);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+
+
+        return teacher;
     }
 
     /**

@@ -15,7 +15,7 @@
       ],
       "properties": {
         "day_of_week": {
-          "enum": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+          "enum": ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"]
         },
         "evenOdd": {
           "enum": ["WEEKLY", "EVEN", "ODD"]
@@ -33,12 +33,12 @@
     "classId": {
       "type": "object",
       "required": [
-        "class_id",
+        "class_name",
         "status"
       ],
       "properties": {
         "class_id": {
-          "type": "integer"
+          "type": "string"
         },
         "status": {
           "type": "string"
