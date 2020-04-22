@@ -42,14 +42,14 @@ public class RoomTypeControllerTest {
     }
 
     @Test
-    public void testGetAll() throws Exception {
+    public void getAllRoomTypes() throws Exception {
         mockMvc.perform(get("/room-types").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"));
     }
 
     @Test
-    public void testGet() throws Exception {
+    public void getRoomTypeById() throws Exception {
         mockMvc.perform(get("/room-types/{id}", 4).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"))
@@ -57,7 +57,7 @@ public class RoomTypeControllerTest {
     }
 
     @Test
-    public void testSave() throws Exception {
+    public void saveRoomTypeIfSavedRoomTypeDoesNotExist() throws Exception {
         RoomTypeDTO roomTypeDTO = new RoomTypeDTO();
         roomTypeDTO.setId(1L);
         roomTypeDTO.setDescription("Another Small auditory");
@@ -68,7 +68,7 @@ public class RoomTypeControllerTest {
     }
 
     @Test
-    public void testUpdate() throws Exception {
+    public void updateRoomTypeIfUpdatedDescriptionDoesNotExist() throws Exception {
         RoomTypeDTO roomTypeDTO = new RoomTypeDTO();
         roomTypeDTO.setId(4L);
         roomTypeDTO.setDescription("Another Small auditory");
@@ -81,19 +81,40 @@ public class RoomTypeControllerTest {
     }
 
     @Test
-    public void testDelete() throws Exception {
+    public void deleteExistRoomType() throws Exception {
         mockMvc.perform(delete("/room-types/{id}", 6)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
 
     @Test
-    public void whenRoomTypeNotFound() throws Exception {
+    public void returnNotFoundIfRoomTypeNotFoundedById() throws Exception {
         mockMvc.perform(get("/room-types/100")).andExpect(status().isNotFound());
     }
 
     @Test
-    public void whenSaveDescriptionIsNull() throws Exception {
+    public void returnBadRequestIfSavedRoomTypeAlreadyExists() throws Exception {
+        RoomTypeDTO roomTypeDTO = new RoomTypeDTO();
+        roomTypeDTO.setDescription("small auditory");
+
+        mockMvc.perform(post("/room-types").content(objectMapper.writeValueAsString(roomTypeDTO))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void returnBadRequestIfUpdatedRoomTypeAlreadyExists() throws Exception {
+        RoomTypeDTO roomTypeDTO = new RoomTypeDTO();
+        roomTypeDTO.setDescription("small auditory");
+        roomTypeDTO.setId(5L);
+
+        mockMvc.perform(put("/room-types",5).content(objectMapper.writeValueAsString(roomTypeDTO))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void returnBadRequestIfSavedDescriptionIsNull() throws Exception {
         RoomTypeDTO roomTypeDTO = new RoomTypeDTO();
         roomTypeDTO.setId(1L);
         roomTypeDTO.setDescription(null);
@@ -105,7 +126,7 @@ public class RoomTypeControllerTest {
     }
 
     @Test
-    public void whenUpdateDescriptionIsNull() throws Exception {
+    public void returnBadRequestIfUpdatedDescriptionIsNull() throws Exception {
         RoomTypeDTO roomTypeDTO = new RoomTypeDTO();
         roomTypeDTO.setId(5L);
         roomTypeDTO.setDescription(null);

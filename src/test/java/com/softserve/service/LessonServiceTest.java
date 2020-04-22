@@ -62,7 +62,7 @@ public class LessonServiceTest {
     }
 
     @Test
-    public void saveLessonIfDuplicatesNotExists() {
+    public void saveLessonIfDuplicatesDoesNotExists() {
         Group group = new Group();
         group.setId(1L);
         group.setTitle("group");
@@ -129,7 +129,7 @@ public class LessonServiceTest {
     }
 
     @Test
-    public void updateLessonIfItsNotEqualsWithExistsLessons() {
+    public void updateLessonIfItDoesNotEqualsWithExistsLessons() {
         Group group = new Group();
         group.setId(1L);
         group.setTitle("group");

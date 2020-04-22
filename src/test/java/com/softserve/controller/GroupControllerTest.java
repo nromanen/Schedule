@@ -42,14 +42,14 @@ public class GroupControllerTest {
     }
 
     @Test
-    public void testGetAll() throws Exception {
+    public void getAllGroups() throws Exception {
         mockMvc.perform(get("/groups").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"));
     }
 
     @Test
-    public void testGetAllPublic() throws Exception {
+    public void getAllPublicGroups() throws Exception {
         mockMvc.perform(get("/groups/public").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andDo(print())
@@ -57,7 +57,7 @@ public class GroupControllerTest {
     }
 
     @Test
-    public void testGet() throws Exception {
+    public void getGroupById() throws Exception {
         mockMvc.perform(get("/groups/{id}", 4).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"))
@@ -65,7 +65,7 @@ public class GroupControllerTest {
     }
 
     @Test
-    public void testSave() throws Exception {
+    public void saveGroupIfGroupDoesNotExist() throws Exception {
         GroupDTO groupDtoForSave = new GroupDTO();
         groupDtoForSave.setTitle("save new group");
 
@@ -75,7 +75,7 @@ public class GroupControllerTest {
     }
 
     @Test
-    public void testUpdate() throws Exception {
+    public void updateGroupIfUpdatedGroupDoesNotExist() throws Exception {
         GroupDTO groupDtoForUpdate = new GroupDTO();
         groupDtoForUpdate.setId(4L);
         groupDtoForUpdate.setTitle("111 updated");
@@ -88,19 +88,19 @@ public class GroupControllerTest {
     }
 
     @Test
-    public void testDelete() throws Exception {
+    public void deleteGroup() throws Exception {
         mockMvc.perform(delete("/groups/{id}", 6)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
 
     @Test
-    public void whenGroupNotFound() throws Exception {
+    public void returnNotFoundIfGroupNotFoundedById() throws Exception {
         mockMvc.perform(get("/groups/100")).andExpect(status().isNotFound());
     }
 
     @Test
-    public void whenSaveExistsGroup() throws Exception {
+    public void returnBadRequestIfSavedGroupAlreadyExists() throws Exception {
         GroupDTO groupDtoForSave = new GroupDTO();
         groupDtoForSave.setTitle("111");
 
@@ -111,7 +111,7 @@ public class GroupControllerTest {
     }
 
     @Test
-    public void whenSaveNameIsNull() throws Exception {
+    public void returnBadRequestIfSavedTitleIsNull() throws Exception {
         GroupDTO groupDtoForSave = new GroupDTO();
         groupDtoForSave.setTitle(null);
 
@@ -122,7 +122,7 @@ public class GroupControllerTest {
     }
 
     @Test
-    public void whenUpdateExistsGroup() throws Exception {
+    public void returnBadRequestIfUpdatedGroupAlreadyExists() throws Exception {
         GroupDTO groupDtoForUpdate = new GroupDTO();
         groupDtoForUpdate.setId(5L);
         groupDtoForUpdate.setTitle("111");
@@ -134,7 +134,7 @@ public class GroupControllerTest {
     }
 
     @Test
-    public void whenUpdateNullTitle() throws Exception {
+    public void returnBadRequestIfUpdatedTitleIsNull() throws Exception {
         GroupDTO groupDtoForUpdate = new GroupDTO();
         groupDtoForUpdate.setId(6L);
         groupDtoForUpdate.setTitle(null);

@@ -43,28 +43,28 @@ public class TeacherControllerTest {
     }
 
     @Test
-    public void testGetAll() throws Exception {
+    public void getAllTeachers() throws Exception {
         mockMvc.perform(get("/teachers").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"));
     }
 
     @Test
-    public void testGetAllWithWishes() throws Exception {
+    public void getAllTeachersWithWishes() throws Exception {
         mockMvc.perform(get("/teachers/with-wishes").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"));
     }
 
     @Test
-    public void testGetWithWishes() throws Exception {
+    public void getTeacherWithWishesById() throws Exception {
         mockMvc.perform(get("/teachers/{id}/with-wishes", 4).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"));
     }
 
     @Test
-    public void testGet() throws Exception {
+    public void getTeacherById() throws Exception {
         mockMvc.perform(get("/teachers/{id}", 4).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"))
@@ -72,7 +72,7 @@ public class TeacherControllerTest {
     }
 
     @Test
-    public void testSave() throws Exception {
+    public void saveTeacher() throws Exception {
         TeacherDTO teacherDtoForSave = new TeacherDTO();
         teacherDtoForSave.setName("save teacher name");
         teacherDtoForSave.setSurname("save teacher surname");
@@ -85,7 +85,7 @@ public class TeacherControllerTest {
     }
 
     @Test
-    public void testUpdate() throws Exception {
+    public void updateTeacher() throws Exception {
         TeacherDTO teacherDtoForUpdate = new TeacherDTO();
         teacherDtoForUpdate.setId(6L);
         teacherDtoForUpdate.setName("Dmytro updated");
@@ -104,24 +104,24 @@ public class TeacherControllerTest {
     }
 
     @Test
-    public void testDelete() throws Exception {
+    public void deleteTeacher() throws Exception {
         mockMvc.perform(delete("/teachers/{id}", 5)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
 
     @Test
-    public void whenTeacherNotFound() throws Exception {
+    public void returnNotFoundIfTeacherNotFoundedById() throws Exception {
         mockMvc.perform(get("/teachers/100")).andExpect(status().isNotFound());
     }
 
     @Test
-    public void whenTeacherWithWishesNotFound() throws Exception {
+    public void returnNotFoundIfTeacherWithWishesNotFoundedById() throws Exception {
         mockMvc.perform(get("/teachers/100/with-wishes")).andExpect(status().isNotFound());
     }
 
     @Test
-    public void whenSavePositionIsNull() throws Exception {
+    public void returnBadRequestIfSavedPositionIsNull() throws Exception {
         TeacherDTO teacherDtoForSave = new TeacherDTO();
         teacherDtoForSave.setName("save name");
         teacherDtoForSave.setSurname("save surname");
@@ -135,7 +135,7 @@ public class TeacherControllerTest {
     }
 
     @Test
-    public void whenUpdateNullName() throws Exception {
+    public void returnBadRequestIfUpdatedNameIsNull() throws Exception {
         TeacherDTO teacherDtoForUpdate = new TeacherDTO();
         teacherDtoForUpdate.setId(7L);
         teacherDtoForUpdate.setName(null);
@@ -143,7 +143,7 @@ public class TeacherControllerTest {
         teacherDtoForUpdate.setPatronymic("update patronymic");
         teacherDtoForUpdate.setPosition("update position");
 
-        mockMvc.perform(put("/teachers", 2).content(objectMapper.writeValueAsString(teacherDtoForUpdate))
+        mockMvc.perform(put("/teachers", 7).content(objectMapper.writeValueAsString(teacherDtoForUpdate))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isBadRequest());

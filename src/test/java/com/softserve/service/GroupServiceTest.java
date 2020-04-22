@@ -55,7 +55,7 @@ public class GroupServiceTest {
     }
 
     @Test
-    public void saveGroupIfTitleNotExists() {
+    public void saveGroupIfTitleDoestNotExists() {
         Group group = new Group();
         group.setTitle("some group");
         group.setId(1L);
@@ -84,7 +84,7 @@ public class GroupServiceTest {
     }
 
     @Test
-    public void updateGroupIfTitleNotExists() {
+    public void updateGroupIfTitleDoesNotExists() {
         Group oldGroup = new Group();
         oldGroup.setTitle("some title");
         oldGroup.setId(1L);

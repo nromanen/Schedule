@@ -68,14 +68,14 @@ public class LessonsControllerTest {
     }
 
     @Test
-    public void testGetAll() throws Exception {
+    public void getAllLessons() throws Exception {
         mockMvc.perform(get("/lessons").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"));
     }
 
     @Test
-    public void testGet() throws Exception {
+    public void getLessonById() throws Exception {
         mockMvc.perform(get("/lessons/{id}", 4).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"))
@@ -83,14 +83,14 @@ public class LessonsControllerTest {
     }
 
     @Test
-    public void testGetAllLessonTypes() throws Exception {
+    public void getAllLessonsTypes() throws Exception {
         mockMvc.perform(get("/lessons/types").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"));
     }
 
     @Test
-    public void testSave() throws Exception {
+    public void saveLessonsIfLessonDoesNotExist() throws Exception {
         TeacherNameDTO teacherDTO = new TeacherNameMapperImpl().teacherNameToTeacherDTO(teacherService.getById(5L));
         SubjectDTO subjectDTO = new SubjectMapperImpl().subjectToSubjectDTO(subjectService.getById(4L));
         GroupDTO groupDTO = new GroupMapperImpl().groupToGroupDTO(groupService.getById(4L));
@@ -109,7 +109,7 @@ public class LessonsControllerTest {
     }
 
     @Test
-    public void testUpdate() throws Exception {
+    public void updateLessonIfLessonDoesNotExist() throws Exception {
         LessonInfoDTO lessonDtoForUpdate = new LessonInfoDTO();
         lessonDtoForUpdate.setId(5L);
         lessonDtoForUpdate.setHours(2);
@@ -135,20 +135,20 @@ public class LessonsControllerTest {
     }
 
     @Test
-    public void testDelete() throws Exception {
+    public void deleteLesson() throws Exception {
         mockMvc.perform(delete("/lessons/{id}", 7)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
 
     @Test
-    public void notFound() throws Exception {
+    public void returnNotFoundIfLessonNotFoundedById() throws Exception {
         mockMvc.perform(get("/lessons/100"))
                 .andExpect(status().isNotFound());
     }
 
     @Test
-    public void whenSaveExistLesson() throws Exception {
+    public void returnBadRequestIfSaveExistLesson() throws Exception {
         LessonInfoDTO lessonDtoForSave = new LessonInfoMapperImpl().lessonToLessonInfoDTO(lessonService.getById(4L));
 
         mockMvc.perform(post("/lessons").content(objectMapper.writeValueAsString(lessonDtoForSave))
@@ -158,8 +158,7 @@ public class LessonsControllerTest {
     }
 
     @Test
-    public void whenSaveNullTeacher() throws Exception {
-//        TeacherNameDTO teacherDTO = new TeacherNameMapperImpl().teacherNameToTeacherDTO(teacherService.getById(1L));
+    public void returnInternalServerErrorIfSavedTeacherIsNull() throws Exception {
         SubjectDTO subjectDTO = new SubjectMapperImpl().subjectToSubjectDTO(subjectService.getById(6L));
         GroupDTO groupDTO = new GroupMapperImpl().groupToGroupDTO(groupService.getById(6L));
         LessonInfoDTO lessonDtoForSave = new LessonInfoDTO();
@@ -178,7 +177,7 @@ public class LessonsControllerTest {
     }
 
     @Test
-    public void whenUpdateExistLesson() throws Exception {
+    public void returnBadRequestIfUpdateExistLesson() throws Exception {
         LessonInfoDTO lessonDtoForUpdate = new LessonInfoDTO();
         lessonDtoForUpdate.setId(4L);
         lessonDtoForUpdate.setHours(1);
@@ -196,7 +195,7 @@ public class LessonsControllerTest {
     }
 
     @Test
-    public void whenUpdateNullTeacher() throws Exception {
+    public void returnInternalServerErrorIfUpdatedTeacherIsNull() throws Exception {
         LessonInfoDTO lessonDtoForUpdate = new LessonInfoDTO();
         lessonDtoForUpdate.setId(4L);
         lessonDtoForUpdate.setHours(1);

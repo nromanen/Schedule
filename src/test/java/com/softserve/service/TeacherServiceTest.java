@@ -38,7 +38,7 @@ public class TeacherServiceTest {
     TeacherServiceImpl teacherService;
 
     @Test
-    public void getById() {
+    public void getTeacherById() {
         Teacher teacher = new Teacher();
         teacher.setPosition("docent");
         teacher.setPatronymic("Ivanovych");
@@ -56,7 +56,7 @@ public class TeacherServiceTest {
     }
 
     @Test(expected = EntityNotFoundException.class)
-    public void notFound() {
+    public void throwEntityNotFoundExceptionIfTeacherNotFounded() {
         Teacher teacher = new Teacher();
         teacher.setPosition("docent");
         teacher.setPatronymic("Ivanovych");
@@ -70,7 +70,7 @@ public class TeacherServiceTest {
     }
 
     @Test
-    public void joinTeacherWithUser() {
+    public void joinTeacherWithUserIfUserIdFromTeacherIsNullAndUserRoleFromUserIsNotTeacher() {
         User user = new User();
         user.setId(1L);
         user.setPassword("somePassword");
@@ -103,7 +103,7 @@ public class TeacherServiceTest {
     }
 
     @Test(expected = EntityAlreadyExistsException.class)
-    public void failJoinTeacherWithUserWhenUserIdNotNull() {
+    public void throwEntityAlreadyExistsExceptionIfUserIdFromTeacherAlreadyExists() {
         User user = new User();
         user.setId(1L);
         user.setPassword("somePassword");
@@ -123,7 +123,7 @@ public class TeacherServiceTest {
     }
 
     @Test(expected = EntityAlreadyExistsException.class)
-    public void failJoinTeacherWithUserWhenUserRoleIsTeacher() {
+    public void throwEntityAlreadyExistsExceptionIfUserRoleFromUserIsTeacher() {
         User user = new User();
         user.setId(1L);
         user.setPassword("somePassword");

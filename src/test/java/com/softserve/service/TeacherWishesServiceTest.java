@@ -27,7 +27,7 @@ import static org.mockito.Mockito.*;
 
 @Category(UnitTestCategory.class)
 @RunWith(MockitoJUnitRunner.class)
-public class TeacherWishesServiceTet {
+public class TeacherWishesServiceTest {
 
     @Mock
     private TeacherWishesRepository teacherWishesRepository;
@@ -36,7 +36,7 @@ public class TeacherWishesServiceTet {
     private TeacherWishesServiceImpl teacherWishesService;
 
     @Test
-    public void testGetById() {
+    public void getTeacherWishesById() {
         Wish wish = new Wish();
         wish.setClassId(1L);
         wish.setStatus("good");
@@ -63,7 +63,7 @@ public class TeacherWishesServiceTet {
     }
 
     @Test(expected = EntityNotFoundException.class)
-    public void notFoundId() {
+    public void throwEntityNotFoundExceptionIfTeacherWishesNotFounded() {
         Wish wish = new Wish();
         wish.setClassId(1L);
         wish.setStatus("good");
@@ -86,7 +86,7 @@ public class TeacherWishesServiceTet {
     }
 
     @Test
-    public void testSave() {
+    public void saveTeacherWishesIfTeacherDoesNotExistsAndClassesAreUniqueAndUniqueDayWithEvenOddAndEvenOddWithoutWeeklyInSameTime() {
         Wish wish = new Wish();
         wish.setClassId(1L);
         wish.setStatus("good");
@@ -116,7 +116,7 @@ public class TeacherWishesServiceTet {
     }
 
     @Test(expected = EntityAlreadyExistsException.class)
-    public void saveWhenTeacherIsExists() {
+    public void throwEntityAlreadyExistsExceptionIfTeacherAlreadyExists() {
         Wish wish = new Wish();
         wish.setClassId(1L);
         wish.setStatus("good");
@@ -142,7 +142,7 @@ public class TeacherWishesServiceTet {
     }
 
     @Test(expected = IncorrectWishException.class)
-    public void whenClassesAreNotUnique() {
+    public void throwIncorrectWishExceptionIfClassesAreNotUnique() {
         Wish wish = new Wish();
         wish.setClassId(1L);
         wish.setStatus("good");
@@ -176,7 +176,7 @@ public class TeacherWishesServiceTet {
     }
 
     @Test(expected = IncorrectWishException.class)
-    public void whenNotUniqueDayAndEvenOdd() {
+    public void throwIncorrectWishExceptionIfDayAndEvenOddAreNotUnique() {
         Wish wish = new Wish();
         wish.setClassId(1L);
         wish.setStatus("good");
@@ -210,7 +210,7 @@ public class TeacherWishesServiceTet {
     }
 
     @Test(expected = IncorrectWishException.class)
-    public void whenEvenOrOddTogetherWithWeekly() {
+    public void throwIncorrectWishExceptionIfEvenOddWithWeeklyInSameTime() {
         Wish wish = new Wish();
         wish.setClassId(1L);
         wish.setStatus("good");
