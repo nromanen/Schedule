@@ -11,7 +11,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @ToString
-public class ScheduleForGroupDTO {
-    private GroupDTO group;
-    private List<DaysOfWeekWithClassesForGroupDTO> days;
+public class ScheduleForTeacherDTO {
+    private TeacherDTO teacher;
+    private List<DaysOfWeekWithClassesForTeacherDTO> days;
 }
