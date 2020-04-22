@@ -11,10 +11,12 @@ import com.softserve.entity.TeacherWishes;
 import com.softserve.entity.Wish;
 import com.softserve.entity.Wishes;
 import com.softserve.entity.enums.EvenOdd;
+import com.softserve.entity.enums.WishStatuses;
 import com.softserve.exception.EntityAlreadyExistsException;
 import com.softserve.exception.EntityNotFoundException;
 import com.softserve.exception.IncorrectWishException;
 import com.softserve.repository.TeacherWishesRepository;
+import com.softserve.service.PeriodService;
 import com.softserve.service.TeacherWishesService;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Hibernate;
@@ -37,10 +39,12 @@ import java.util.stream.Collectors;
 public class TeacherWishesServiceImpl implements TeacherWishesService {
 
     private final TeacherWishesRepository teacherWishesRepository;
+    private PeriodService periodService;
 
     @Autowired
-    public TeacherWishesServiceImpl(TeacherWishesRepository teacherWishesRepository) {
+    public TeacherWishesServiceImpl(TeacherWishesRepository teacherWishesRepository, PeriodService periodService) {
         this.teacherWishesRepository = teacherWishesRepository;
+        this.periodService = periodService;
     }
 
     /**
@@ -113,10 +117,14 @@ public class TeacherWishesServiceImpl implements TeacherWishesService {
      */
     @Override
     public boolean isClassSuits(Long teacherId, DayOfWeek dayOfWeek, EvenOdd evenOdd, Long classId) {
+        log.info("Enter into isClassSuits method");
         List<Wishes> teacherWishList = teacherWishesRepository.getWishByTeacherId(teacherId);
-        return teacherWishList.stream().filter(wishItem -> DayOfWeek.valueOf(wishItem.getDayOfWeek().toUpperCase()) == dayOfWeek
+        String className = periodService.getById(classId).getName();
+
+        return teacherWishList.stream().filter(wishItem -> DayOfWeek.valueOf(wishItem.getDayOfWeek()) == dayOfWeek
                 && (EvenOdd.valueOf(wishItem.getEvenOdd()) == evenOdd))
-                .noneMatch(wishItem -> wishItem.getWishes().stream().anyMatch(classItem -> classItem.getClassId() == classId && classItem.getStatus().equals("bad")));
+                .noneMatch(wishItem -> wishItem.getWishes().stream().anyMatch(classItem -> classItem.getClassName().equals(className)
+                        && classItem.getStatus().equals(WishStatuses.BAD.toString())));
 
     }
 
@@ -140,13 +148,15 @@ public class TeacherWishesServiceImpl implements TeacherWishesService {
      * @throws IncorrectWishException when json not valid
      */
     public void validateTeacherWish(Wishes[] teacherWishes) {
+        log.info("Enter validateTeacherWish method ");
+
         List<Wishes> teacherWishesList = Arrays.asList(teacherWishes);
         isTeacherSchemaValid(teacherWishes);
         if (!isUniqueDayAndEvenOdd(teacherWishesList)) {
             throw new IncorrectWishException("wish is not unique");
         }
         for (Wishes wishItem : teacherWishesList) {
-            if (!isUniqueClassId(wishItem.getWishes())) {
+            if (!isUniqueClassName(wishItem.getWishes())) {
                 throw new IncorrectWishException("classes is not unique");
             }
             if (EvenOdd.valueOf(wishItem.getEvenOdd()).equals(EvenOdd.WEEKLY) && !isEvenOddNotExist(wishItem, teacherWishesList)) {
@@ -155,18 +165,34 @@ public class TeacherWishesServiceImpl implements TeacherWishesService {
         }
     }
 
-    public boolean isUniqueClassId(List<Wish> wishesList) {
-        return wishesList.stream().map(Wish::getClassId).distinct().count() == wishesList.size();
+    /**
+     * Method check if class is unique
+     *
+     * @param wishesList
+     * return true if class unique
+     */
+    public boolean isUniqueClassName(List<Wish> wishesList) {
+        log.info("Enter isUniqueClassName update method with wishesList:{}", wishesList);
+        return wishesList.stream().map(Wish::getClassName).distinct().count() == wishesList.size();
     }
 
+
     public boolean isEvenOddNotExist(Wishes wishes, List<Wishes> wishesList) {
+        log.info("Enter isEvenOddNotExist update method with wishesList:{}", wishesList);
         return wishesList.stream().noneMatch(wish ->
                 wish.getDayOfWeek().equals(wishes.getDayOfWeek()) && (EvenOdd.valueOf(wish.getEvenOdd()).equals(EvenOdd.EVEN)
-                        || EvenOdd.valueOf(wish.getEvenOdd()).equals(EvenOdd.ODD))
+                        || EvenOdd.valueOf(wish.getEvenOdd().toUpperCase()).equals(EvenOdd.ODD))
         );
     }
 
+    /**
+     * Method check if pairs day and evenOdd  is unique
+     *
+     * @param wishesList
+     * return true if pairs day and evenOdd  is unique
+     */
     public boolean isUniqueDayAndEvenOdd(List<Wishes> wishesList) {
+        log.info("Enter isUniqueDayAndEvenOdd method with wishesList:{}", wishesList);
         return wishesList.stream().filter(distinctByKeys(Wishes::getDayOfWeek, Wishes::getEvenOdd)).count() == wishesList.size();
     }
 
@@ -178,6 +204,7 @@ public class TeacherWishesServiceImpl implements TeacherWishesService {
      */
     @Override
     public void isTeacherSchemaValid(Wishes[] teacherWishes) {
+        log.info("Enter isTeacherSchemaValid method");
         try {
             ObjectMapper mapper = new ObjectMapper();
             JsonNode teacherWishNode = mapper.convertValue(teacherWishes, JsonNode.class);

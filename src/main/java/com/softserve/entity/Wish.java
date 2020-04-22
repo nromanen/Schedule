@@ -13,14 +13,14 @@ import lombok.Setter;
 @Getter
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
-        "class_id",
+        "class_name",
         "status"
 })
 public class Wish implements Serializable
 {
 
-    @JsonProperty("class_id")
-    private long classId;
+    @JsonProperty("class_name")
+    private String className;
 
     @JsonProperty("status")
     private String status;
@@ -28,8 +28,8 @@ public class Wish implements Serializable
     @JsonIgnore
     private static final long serialVersionUID = -1925390674796259490L;
 
-    public Wish withClassId(long classId) {
-        this.classId = classId;
+    public Wish withClassName(String className) {
+        this.className = className;
         return this;
     }
 
