@@ -92,7 +92,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Override
     public Schedule save(Schedule object) {
         log.info("In save(entity = [{}]", object);
-        if (isConflictForGroupInSchedule(object.getSemester().getId(), DayOfWeek.valueOf(object.getDayOfWeek()), object.getEvenOdd(), object.getPeriod().getId(), object.getLesson().getId())) {
+        if (isConflictForGroupInSchedule(object.getSemester().getId(), object.getDayOfWeek(), object.getEvenOdd(), object.getPeriod().getId(), object.getLesson().getId())) {
             log.error("Schedule for group with id [{}] has conflict with already existing", object.getLesson().getGroup().getId());
             throw new ScheduleConflictException("You can't create schedule item for this group, because one already exists");
         } else {
@@ -109,7 +109,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Override
     public Schedule update(Schedule object) {
         log.info("In update(entity = [{}]", object);
-        if (isConflictForGroupInSchedule(object.getSemester().getId(), DayOfWeek.valueOf(object.getDayOfWeek()), object.getEvenOdd(), object.getPeriod().getId(), object.getLesson().getId())) {
+        if (isConflictForGroupInSchedule(object.getSemester().getId(), object.getDayOfWeek(), object.getEvenOdd(), object.getPeriod().getId(), object.getLesson().getId())) {
             throw new ScheduleConflictException("You can't update schedule item for this group, because it violates already existing");
         } else {
             return scheduleRepository.update(object);
@@ -208,8 +208,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     private List<DaysOfWeekWithClassesForGroupDTO> getDaysWhenGroupHasClassesBySemester(Long semesterId, Long groupId) {
         log.info("In getDaysWhenGroupHasClassesBySemester(semesterId = [{}], groupId = [{}])", semesterId, groupId);
         List<DaysOfWeekWithClassesForGroupDTO> daysOfWeekWithClassesForGroupDTOList = new ArrayList<>();
-        List<DayOfWeek> weekList = new ArrayList<>();
-        scheduleRepository.getDaysWhenGroupHasClassesBySemester(semesterId, groupId).forEach(day -> weekList.add(DayOfWeek.valueOf(day)));
+        List<DayOfWeek> weekList = scheduleRepository.getDaysWhenGroupHasClassesBySemester(semesterId, groupId);
         weekList.sort(Comparator.comparingInt(DayOfWeek::getValue));
         for (DayOfWeek day : weekList) {
             DaysOfWeekWithClassesForGroupDTO daysOfWeekWithClassesForGroupDTO = new DaysOfWeekWithClassesForGroupDTO();
@@ -282,8 +281,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         //get Teacher Info
         scheduleForTeacherDTO.setTeacher(teacherMapper.teacherToTeacherDTO(teacherService.getById(teacherId)));
 
-        List<DayOfWeek> weekList = new ArrayList<>();
-        scheduleRepository.getDaysWhenTeacherHasClassesBySemester(semesterId, teacherId).forEach(day -> weekList.add(DayOfWeek.valueOf(day)));
+        List<DayOfWeek> weekList = scheduleRepository.getDaysWhenTeacherHasClassesBySemester(semesterId, teacherId);
         weekList.sort(Comparator.comparingInt(DayOfWeek::getValue));
 
         List<DaysOfWeekWithClassesForTeacherDTO> daysOfWeekWithClassesForTeacherDTOList = new ArrayList<>();

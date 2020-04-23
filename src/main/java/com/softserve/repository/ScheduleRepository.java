@@ -20,11 +20,11 @@ public interface ScheduleRepository extends BasicRepository<Schedule, Long> {
 
     Room getRoomForLesson(Long semesterId, Long periodId, Long lessonId, DayOfWeek day, EvenOdd evenOdd);
 
-    List<String> getDaysWhenGroupHasClassesBySemester(Long semesterId, Long groupId);
+    List<DayOfWeek> getDaysWhenGroupHasClassesBySemester(Long semesterId, Long groupId);
 
     Long countSchedulesForGroupInSemester(Long semesterId, Long groupId);
 
-    List<String> getDaysWhenTeacherHasClassesBySemester(Long semesterId, Long teacherId);
+    List<DayOfWeek> getDaysWhenTeacherHasClassesBySemester(Long semesterId, Long teacherId);
 
     List<Period> periodsForTeacherBySemesterByDayByWeek(Long semesterId, Long teacherId, DayOfWeek day, EvenOdd evenOdd);
 
