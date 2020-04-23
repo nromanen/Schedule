@@ -71,7 +71,7 @@ public class RoomRepositoryImpl extends BasicRepositoryImpl<Room, Long> implemen
                             "and s.period.id = :classId )")
 
                     .setParameter("semesterId", semesterId)
-                    .setParameter("dayOfWeek", dayOfWeek.toString())
+                    .setParameter("dayOfWeek", dayOfWeek)
                     .setParameter("classId", classId)
                     .getResultList();
         } else {
@@ -87,7 +87,7 @@ public class RoomRepositoryImpl extends BasicRepositoryImpl<Room, Long> implemen
                             "and ( s.evenOdd = :evenOdd or s.evenOdd = 'WEEKLY') )")
 
                     .setParameter("semesterId", semesterId)
-                    .setParameter("dayOfWeek", dayOfWeek.toString())
+                    .setParameter("dayOfWeek", dayOfWeek)
                     .setParameter("classId", classId)
                     .setParameter("evenOdd", evenOdd)
                     .getResultList();
@@ -109,7 +109,7 @@ public class RoomRepositoryImpl extends BasicRepositoryImpl<Room, Long> implemen
                             "and s.period.id = :classId )")
 
                     .setParameter("semesterId", semesterId)
-                    .setParameter("dayOfWeek", dayOfWeek.toString())
+                    .setParameter("dayOfWeek", dayOfWeek)
                     .setParameter("classId", classId)
                     .getResultList();
         } else {
@@ -125,7 +125,7 @@ public class RoomRepositoryImpl extends BasicRepositoryImpl<Room, Long> implemen
                             "and ( s.evenOdd = :evenOdd or s.evenOdd = 'WEEKLY') )")
 
                     .setParameter("semesterId", semesterId)
-                    .setParameter("dayOfWeek", dayOfWeek.toString())
+                    .setParameter("dayOfWeek", dayOfWeek)
                     .setParameter("classId", classId)
                     .setParameter("evenOdd", evenOdd)
                     .getResultList();
