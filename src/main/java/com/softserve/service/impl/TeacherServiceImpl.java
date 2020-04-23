@@ -84,7 +84,7 @@ public class TeacherServiceImpl implements TeacherService {
                 List<Wish> wishes = new ArrayList<>();
                 for(Period period: periods){
                     Wish wish = new Wish();
-                    wish.setClassName(period.getName());
+                    wish.setPeriodName(period.getName());
                     wish.setStatus(WishStatuses.OK.toString());
                     wishes.add(wish);
                 }

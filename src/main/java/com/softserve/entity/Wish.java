@@ -20,7 +20,7 @@ public class Wish implements Serializable
 {
 
     @JsonProperty("class_name")
-    private String className;
+    private String periodName;
 
     @JsonProperty("status")
     private String status;
@@ -28,8 +28,8 @@ public class Wish implements Serializable
     @JsonIgnore
     private static final long serialVersionUID = -1925390674796259490L;
 
-    public Wish withClassName(String className) {
-        this.className = className;
+    public Wish withPeriodName(String periodName) {
+        this.periodName = periodName;
         return this;
     }
 
