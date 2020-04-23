@@ -123,7 +123,7 @@ public class TeacherWishesServiceImpl implements TeacherWishesService {
 
         return teacherWishList.stream().filter(wishItem -> DayOfWeek.valueOf(wishItem.getDayOfWeek()) == dayOfWeek
                 && (EvenOdd.valueOf(wishItem.getEvenOdd()) == evenOdd))
-                .noneMatch(wishItem -> wishItem.getWishes().stream().anyMatch(classItem -> classItem.getPeriodName().equals(className)
+                .noneMatch(wishItem -> wishItem.getWishes().stream().anyMatch(classItem -> classItem.getClassName().equals(className)
                         && classItem.getStatus().equals(WishStatuses.BAD.toString())));
 
     }
@@ -173,7 +173,7 @@ public class TeacherWishesServiceImpl implements TeacherWishesService {
      */
     public boolean isUniqueClassName(List<Wish> wishesList) {
         log.info("Enter isUniqueClassName update method with wishesList:{}", wishesList);
-        boolean p= wishesList.stream().map(Wish::getPeriodName).distinct().count() == wishesList.size();
+        boolean p= wishesList.stream().map(Wish::getClassName).distinct().count() == wishesList.size();
     return p;
     }
 
