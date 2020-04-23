@@ -64,7 +64,7 @@ public class ScheduleServiceTest {
     public void getById() {
         Schedule expectedSchedule = new Schedule();
         expectedSchedule.setId(1L);
-        expectedSchedule.setDayOfWeek(DayOfWeek.MONDAY.toString());
+        expectedSchedule.setDayOfWeek(DayOfWeek.MONDAY);
         expectedSchedule.setEvenOdd(EvenOdd.ODD);
         expectedSchedule.setLesson(new Lesson());
         expectedSchedule.setPeriod(new Period());
@@ -106,7 +106,7 @@ public class ScheduleServiceTest {
         room.setType(roomType);
         Schedule expectedSchedule = new Schedule();
         expectedSchedule.setId(1L);
-        expectedSchedule.setDayOfWeek(DayOfWeek.MONDAY.toString());
+        expectedSchedule.setDayOfWeek(DayOfWeek.MONDAY);
         expectedSchedule.setEvenOdd(EvenOdd.ODD);
         expectedSchedule.setLesson(lesson);
         expectedSchedule.setPeriod(period);
@@ -117,7 +117,7 @@ public class ScheduleServiceTest {
         Long groupId = lessonService.getById(1L).getGroup().getId();
         doReturn(0L).when(scheduleRepository).conflictForGroupInSchedule(
                 expectedSchedule.getSemester().getId(),
-                DayOfWeek.valueOf(expectedSchedule.getDayOfWeek()),
+                expectedSchedule.getDayOfWeek(),
                 expectedSchedule.getEvenOdd(),
                 expectedSchedule.getPeriod().getId(), groupId);
         doReturn(expectedSchedule).when(scheduleRepository).save(expectedSchedule);
@@ -128,7 +128,7 @@ public class ScheduleServiceTest {
         verify(lessonService, times(2)).getById(1L);
         verify(scheduleRepository, times(1)).conflictForGroupInSchedule(
                 expectedSchedule.getSemester().getId(),
-                DayOfWeek.valueOf(expectedSchedule.getDayOfWeek()),
+                expectedSchedule.getDayOfWeek(),
                 expectedSchedule.getEvenOdd(),
                 expectedSchedule.getPeriod().getId(), groupId);
         verify(scheduleRepository, times(1)).save(expectedSchedule);
@@ -149,7 +149,7 @@ public class ScheduleServiceTest {
         room.setId(1L);
         Schedule expectedSchedule = new Schedule();
         expectedSchedule.setId(1L);
-        expectedSchedule.setDayOfWeek(DayOfWeek.MONDAY.toString());
+        expectedSchedule.setDayOfWeek(DayOfWeek.MONDAY);
         expectedSchedule.setEvenOdd(EvenOdd.ODD);
         expectedSchedule.setLesson(lesson);
         expectedSchedule.setPeriod(period);
@@ -160,7 +160,7 @@ public class ScheduleServiceTest {
         Long groupId = lessonService.getById(1L).getGroup().getId();
         doReturn(1L).when(scheduleRepository).conflictForGroupInSchedule(
                 expectedSchedule.getSemester().getId(),
-                DayOfWeek.valueOf(expectedSchedule.getDayOfWeek()),
+                expectedSchedule.getDayOfWeek(),
                 expectedSchedule.getEvenOdd(),
                 expectedSchedule.getPeriod().getId(), groupId);
 
@@ -168,7 +168,7 @@ public class ScheduleServiceTest {
         verify(lessonService, times(2)).getById(1L);
         verify(scheduleRepository, times(1)).conflictForGroupInSchedule(
                 expectedSchedule.getSemester().getId(),
-                DayOfWeek.valueOf(expectedSchedule.getDayOfWeek()),
+                expectedSchedule.getDayOfWeek(),
                 expectedSchedule.getEvenOdd(),
                 expectedSchedule.getPeriod().getId(), groupId);
     }
@@ -191,7 +191,7 @@ public class ScheduleServiceTest {
         oldRoom.setType(oldRoomType);
         Schedule oldSchedule = new Schedule();
         oldSchedule.setId(1L);
-        oldSchedule.setDayOfWeek(DayOfWeek.MONDAY.toString());
+        oldSchedule.setDayOfWeek(DayOfWeek.MONDAY);
         oldSchedule.setEvenOdd(EvenOdd.ODD);
         oldSchedule.setLesson(oldLesson);
         oldSchedule.setPeriod(oldPeriod);
@@ -214,7 +214,7 @@ public class ScheduleServiceTest {
         room.setType(roomType);
         Schedule expectedSchedule = new Schedule();
         expectedSchedule.setId(1L);
-        expectedSchedule.setDayOfWeek(DayOfWeek.TUESDAY.toString());
+        expectedSchedule.setDayOfWeek(DayOfWeek.TUESDAY);
         expectedSchedule.setEvenOdd(EvenOdd.EVEN);
         expectedSchedule.setLesson(lesson);
         expectedSchedule.setPeriod(period);
@@ -225,7 +225,7 @@ public class ScheduleServiceTest {
         Long groupId = lessonService.getById(2L).getGroup().getId();
         doReturn(0L).when(scheduleRepository).conflictForGroupInSchedule(
                 expectedSchedule.getSemester().getId(),
-                DayOfWeek.valueOf(expectedSchedule.getDayOfWeek()),
+                expectedSchedule.getDayOfWeek(),
                 expectedSchedule.getEvenOdd(),
                 expectedSchedule.getPeriod().getId(), groupId);
         doReturn(expectedSchedule).when(scheduleRepository).update(expectedSchedule);
@@ -236,7 +236,7 @@ public class ScheduleServiceTest {
         verify(lessonService, times(2)).getById(2L);
         verify(scheduleRepository, times(1)).conflictForGroupInSchedule(
                 expectedSchedule.getSemester().getId(),
-                DayOfWeek.valueOf(expectedSchedule.getDayOfWeek()),
+                expectedSchedule.getDayOfWeek(),
                 expectedSchedule.getEvenOdd(),
                 expectedSchedule.getPeriod().getId(), groupId);
         verify(scheduleRepository, times(1)).update(expectedSchedule);
@@ -260,7 +260,7 @@ public class ScheduleServiceTest {
         oldRoom.setType(oldRoomType);
         Schedule oldSchedule = new Schedule();
         oldSchedule.setId(1L);
-        oldSchedule.setDayOfWeek(DayOfWeek.MONDAY.toString());
+        oldSchedule.setDayOfWeek(DayOfWeek.MONDAY);
         oldSchedule.setEvenOdd(EvenOdd.ODD);
         oldSchedule.setLesson(oldLesson);
         oldSchedule.setPeriod(oldPeriod);
@@ -283,7 +283,7 @@ public class ScheduleServiceTest {
         room.setType(roomType);
         Schedule expectedSchedule = new Schedule();
         expectedSchedule.setId(1L);
-        expectedSchedule.setDayOfWeek(DayOfWeek.TUESDAY.toString());
+        expectedSchedule.setDayOfWeek(DayOfWeek.TUESDAY);
         expectedSchedule.setEvenOdd(EvenOdd.EVEN);
         expectedSchedule.setLesson(lesson);
         expectedSchedule.setPeriod(period);
@@ -294,7 +294,7 @@ public class ScheduleServiceTest {
         Long groupId = lessonService.getById(2L).getGroup().getId();
         doReturn(1L).when(scheduleRepository).conflictForGroupInSchedule(
                 expectedSchedule.getSemester().getId(),
-                DayOfWeek.valueOf(expectedSchedule.getDayOfWeek()),
+                expectedSchedule.getDayOfWeek(),
                 expectedSchedule.getEvenOdd(),
                 expectedSchedule.getPeriod().getId(), groupId);
 
@@ -304,7 +304,7 @@ public class ScheduleServiceTest {
         verify(lessonService, times(2)).getById(2L);
         verify(scheduleRepository, times(1)).conflictForGroupInSchedule(
                 expectedSchedule.getSemester().getId(),
-                DayOfWeek.valueOf(expectedSchedule.getDayOfWeek()),
+                expectedSchedule.getDayOfWeek(),
                 expectedSchedule.getEvenOdd(),
                 expectedSchedule.getPeriod().getId(), groupId);
     }
@@ -487,7 +487,7 @@ public class ScheduleServiceTest {
 //        group.setId(1L);
 //        group.setTitle("111");
 //        List<String> dayOfWeekList = new ArrayList<>();
-//        dayOfWeekList.add(DayOfWeek.MONDAY.toString());
+//        dayOfWeekList.add(DayOfWeek.MONDAY);
 //        Period firstClasses = new Period();
 //        firstClasses.setId(1L);
 //        firstClasses.setName("1 para");
