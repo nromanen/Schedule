@@ -179,7 +179,7 @@ public class ScheduleServiceImpl implements ScheduleService {
      * @return filled schedule for all groups (if groupId == null) or full schedule for group
      */
     @Override
-    public List<ScheduleForGroupDTO> getFullSchedule(Long semesterId, Long groupId) {
+    public List<ScheduleForGroupDTO> getFullScheduleForGroup(Long semesterId, Long groupId) {
         log.info("In getFullSchedule(semesterId = [{}], groupId[{}])", semesterId, groupId);
         List<ScheduleForGroupDTO> scheduleForGroupDTOList = new ArrayList<>();
         List<Group> groupsForSchedule = new ArrayList<>();
@@ -264,6 +264,62 @@ public class ScheduleServiceImpl implements ScheduleService {
     private boolean groupHasScheduleInSemester(Long semesterId, Long groupId) {
         log.info("In groupHasScheduleInSemester(semesterId = [{}], groupId = [{}])", semesterId, groupId);
         return scheduleRepository.countSchedulesForGroupInSemester(semesterId, groupId) != 0;
+    }
+
+
+    @Override
+    public ScheduleFullDTO getFullScheduleForSemester(Long semesterId) {
+        ScheduleFullDTO scheduleFullDTO = new ScheduleFullDTO();
+        scheduleFullDTO.setSemesterClasses(periodMapper.convertToDtoList(scheduleRepository.periodsForSemester(semesterId)));
+        List<DayOfWeek> dayOfWeekList = scheduleRepository.getDaysForSemester(semesterId);
+        dayOfWeekList.sort(Comparator.comparingInt(DayOfWeek::getValue));
+        scheduleFullDTO.setSemesterDays(dayOfWeekList);
+
+        List<ScheduleForGroupDTO> scheduleForGroupDTOList = new ArrayList<>();
+        List<Group> groupsForSchedule = new ArrayList<>();
+
+        groupsForSchedule.addAll(scheduleRepository.uniqueGroupsInScheduleBySemester(semesterId));
+        for (Group group : groupsForSchedule) {
+            ScheduleForGroupDTO scheduleForGroupDTO = new ScheduleForGroupDTO();
+            scheduleForGroupDTO.setGroup(groupMapper.groupToGroupDTO(group));
+            scheduleForGroupDTO.setDays(getDaysForSemester(semesterId, group.getId()));
+            scheduleForGroupDTOList.add(scheduleForGroupDTO);
+
+        }
+        scheduleFullDTO.setSchedule(scheduleForGroupDTOList);
+        return scheduleFullDTO;
+    }
+
+    private List<DaysOfWeekWithClassesForGroupDTO> getDaysForSemester(Long semesterId, Long groupId) {
+        log.info("In getDaysForSemester(semesterId = [{}])", semesterId);
+        List<DaysOfWeekWithClassesForGroupDTO> daysOfWeekWithClassesForGroupDTOList = new ArrayList<>();
+        List<DayOfWeek> weekList = scheduleRepository.getDaysForSemester(semesterId);
+        weekList.sort(Comparator.comparingInt(DayOfWeek::getValue));
+        for (DayOfWeek day : weekList) {
+            DaysOfWeekWithClassesForGroupDTO daysOfWeekWithClassesForGroupDTO = new DaysOfWeekWithClassesForGroupDTO();
+            daysOfWeekWithClassesForGroupDTO.setDay(day);
+            daysOfWeekWithClassesForGroupDTO.setClasses(getClassesForSemesterByDay(semesterId, day, groupId));
+            daysOfWeekWithClassesForGroupDTOList.add(daysOfWeekWithClassesForGroupDTO);
+
+        }
+
+        return daysOfWeekWithClassesForGroupDTOList;
+    }
+
+    private List<ClassesInScheduleForGroupDTO> getClassesForSemesterByDay(Long semesterId, DayOfWeek day, Long groupId) {
+        log.info("In getClassesForSemester(semesterId = [{}])", semesterId);
+        //get Classes in that Day for group
+        List<Period> uniquePeriods = scheduleRepository.periodsForSemester(semesterId);
+        List<ClassesInScheduleForGroupDTO> classesInScheduleForGroupDTOList = new ArrayList<>();
+
+        for (Period period : uniquePeriods) {
+            ClassesInScheduleForGroupDTO classesInScheduleForGroupDTO = new ClassesInScheduleForGroupDTO();
+            classesInScheduleForGroupDTO.setPeriod(periodMapper.convertToDto(period));
+            classesInScheduleForGroupDTO.setWeeks(getLessonsForGroupForPeriodBySemesterAndDay(semesterId, groupId, period.getId(), day));
+            classesInScheduleForGroupDTOList.add(classesInScheduleForGroupDTO);
+        }
+
+        return classesInScheduleForGroupDTOList;
     }
 
     /**
