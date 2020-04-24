@@ -42,7 +42,7 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
                 "and l.lessonType = :lessonType")
                 .setParameter("teacherId", lesson.getTeacher().getId())
                 .setParameter("subjectId", lesson.getSubject().getId())
-                .setParameter("groupId", lesson.getSubject().getId())
+                .setParameter("groupId", lesson.getGroup().getId())
                 .setParameter("lessonType", lesson.getLessonType())
                 .getSingleResult();
     }

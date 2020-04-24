@@ -8,8 +8,8 @@ import lombok.*;
 @NoArgsConstructor
 @ToString
 @EqualsAndHashCode
-public class ClassesInScheduleDTO {
-        @JsonProperty("class")
-        private PeriodDTO period;
-        private LessonInScheduleByWeekDTO weeks;
+public class ClassesInScheduleForGroupDTO {
+    @JsonProperty("class")
+    private PeriodDTO period;
+    private LessonInScheduleByWeekDTO weeks;
 }

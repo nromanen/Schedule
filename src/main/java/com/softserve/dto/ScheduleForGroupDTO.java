@@ -11,5 +11,5 @@ import java.util.List;
 @EqualsAndHashCode
 public class ScheduleForGroupDTO {
     private GroupDTO group;
-    private List<DaysOfWeekWithClassesDTO> days;
+    private List<DaysOfWeekWithClassesForGroupDTO> days;
 }

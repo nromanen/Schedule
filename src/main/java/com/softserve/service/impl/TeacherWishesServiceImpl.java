@@ -173,7 +173,8 @@ public class TeacherWishesServiceImpl implements TeacherWishesService {
      */
     public boolean isUniqueClassName(List<Wish> wishesList) {
         log.info("Enter isUniqueClassName update method with wishesList:{}", wishesList);
-        return wishesList.stream().map(Wish::getClassName).distinct().count() == wishesList.size();
+        boolean p= wishesList.stream().map(Wish::getClassName).distinct().count() == wishesList.size();
+    return p;
     }
 
 

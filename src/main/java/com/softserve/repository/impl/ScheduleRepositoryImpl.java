@@ -39,7 +39,7 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
                     SELECT_COUNT +
                             "and s.lesson.group.id = :groupId")
                     .setParameter("semesterId", semesterId)
-                    .setParameter("dayOfWeek", dayOfWeek.toString())
+                    .setParameter("dayOfWeek", dayOfWeek)
                     .setParameter("classId", classId)
                     .setParameter("groupId", groupId)
                     .getSingleResult();
@@ -53,7 +53,7 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
                             "and s.lesson.group.id = :groupId " +
                             "and ( s.evenOdd = :evenOdd or s.evenOdd = 'WEEKLY')")
                     .setParameter("semesterId", semesterId)
-                    .setParameter("dayOfWeek", dayOfWeek.toString())
+                    .setParameter("dayOfWeek", dayOfWeek)
                     .setParameter("classId", classId)
                     .setParameter("groupId", groupId)
                     .setParameter("evenOdd", evenOdd)
@@ -79,7 +79,7 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
                     SELECT_COUNT +
                     "and s.lesson.teacher.id = :teacherId ")
                     .setParameter("semesterId", semesterId)
-                    .setParameter("dayOfWeek", dayOfWeek.toString())
+                    .setParameter("dayOfWeek", dayOfWeek)
                     .setParameter("classId", classId)
                     .setParameter("teacherId", teacherId)
                     .getSingleResult();
@@ -90,7 +90,7 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
                             "and s.lesson.teacher.id = :teacherId " +
                             "and ( s.evenOdd = :evenOdd or s.evenOdd = 'WEEKLY')")
                     .setParameter("semesterId", semesterId)
-                    .setParameter("dayOfWeek", dayOfWeek.toString())
+                    .setParameter("dayOfWeek", dayOfWeek)
                     .setParameter("classId", classId)
                     .setParameter("teacherId", teacherId)
                     .setParameter("evenOdd", evenOdd)
@@ -130,7 +130,7 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
                 " (select p.id from Schedule s join s.period p where s.semester.id = :semesterId and s.lesson.group.id = :groupId and s.dayOfWeek = :dayOfWeek) order by p1.startTime")
                 .setParameter("semesterId", semesterId)
                 .setParameter("groupId", groupId)
-                .setParameter("dayOfWeek", day.toString())
+                .setParameter("dayOfWeek", day)
                 .getResultList();
     }
 
@@ -153,7 +153,7 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
                 .setParameter("semesterId", semesterId)
                 .setParameter("groupId", groupId)
                 .setParameter("periodId", periodId)
-                .setParameter("dayOfWeek", day.toString())
+                .setParameter("dayOfWeek", day)
                 .setParameter("evenOdd", evenOdd)
                 .uniqueResultOptional();
     }
@@ -177,7 +177,7 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
                 .setParameter("semesterId", semesterId)
                 .setParameter("lessonId", lessonId)
                 .setParameter("periodId", periodId)
-                .setParameter("dayOfWeek", day.toString())
+                .setParameter("dayOfWeek", day)
                 .setParameter("evenOdd", evenOdd)
                 .getSingleResult();
     }
@@ -190,7 +190,7 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
      * @return List of days
      */
     @Override
-    public List<String> getDaysWhenGroupHasClassesBySemester(Long semesterId, Long groupId) {
+    public List<DayOfWeek> getDaysWhenGroupHasClassesBySemester(Long semesterId, Long groupId) {
         log.info("In getDaysWhenGroupHasClassesBySemester(semesterId = [{}], groupId = [{}])", semesterId, groupId);
         return sessionFactory.getCurrentSession().createQuery("select distinct s.dayOfWeek from  Schedule s where s.semester.id = :semesterId and s.lesson.group.id = :groupId")
                 .setParameter("semesterId", semesterId)
@@ -214,88 +214,40 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
                 .getSingleResult();
     }
 
-    /**
-     * Method gets the list of unique groups in semester where the teacher teaches
-     *
-     * @param semesterId id of the semester
-     * @param teacherId  id of the teacher
-     * @return list of unique groups
-     */
     @Override
-    public List<Group> uniqueGroupsInScheduleBySemesterByTeacher(Long semesterId, Long teacherId) {
-        log.info("In uniqueGroupsInScheduleBySemesterByTeacher(semesterId = [{}], teacherId = [{}])", semesterId, teacherId);
-        return sessionFactory.getCurrentSession().createQuery("select distinct g1 from Group g1" +
-                " where g1.id in" +
-                " (select g.id from Schedule s join s.lesson.group g where s.semester.id = :semesterId and s.lesson.teacher.id = :teacherId)")
+    public List<DayOfWeek> getDaysWhenTeacherHasClassesBySemester(Long semesterId, Long teacherId) {
+        log.info("In getDaysWhenTeacherHasClassesBySemester(semesterId = [{}], teacherId = [{}])", semesterId, teacherId);
+        return sessionFactory.getCurrentSession().createQuery("select distinct s.dayOfWeek from  Schedule s where s.semester.id = :semesterId and s.lesson.teacher.id = :teacherId")
                 .setParameter("semesterId", semesterId)
                 .setParameter("teacherId", teacherId)
                 .getResultList();
     }
 
-    /**
-     * Method gets unique days when Group have classes in semester with the teacher
-     *
-     * @param semesterId id of the semester
-     * @param groupId    id of the group
-     * @param teacherId  id of the teacher
-     * @return List of days
-     */
     @Override
-    public List<String> getDaysWhenGroupHasClassesBySemesterByTeacher(Long semesterId, Long groupId, Long teacherId) {
-        log.info("In getDaysWhenGroupHasClassesBySemesterByTeacher(semesterId = [{}], groupId = [{}], teacherId = [{}])", semesterId, groupId, teacherId);
-        return sessionFactory.getCurrentSession().createQuery("select distinct s.dayOfWeek from  Schedule s where s.semester.id = :semesterId and s.lesson.group.id = :groupId and s.lesson.teacher.id = :teacherId")
-                .setParameter("semesterId", semesterId)
-                .setParameter("groupId", groupId)
-                .setParameter("teacherId", teacherId)
-                .getResultList();
-    }
-
-    /**
-     * Method gets the list of periods/classes for group in  semester at  day where teacher teaches
-     *
-     * @param semesterId id of the semester
-     * @param groupId    id of the group
-     * @param day        day of the week
-     * @param teacherId  id of the teacher
-     * @return the list of periods/classes
-     */
-    @Override
-    public List<Period> periodsForGroupByDayBySemesterByTeacher(Long semesterId, Long groupId, DayOfWeek day, Long teacherId) {
-        log.info("In periodsForGroupByDayBySemesterByTeacher(semesterId = [{}], groupId = [{}], day = [{}], teacherId = [{}])", semesterId, groupId, day, teacherId);
+    public List<Period> periodsForTeacherBySemesterByDayByWeek(Long semesterId, Long teacherId, DayOfWeek day, EvenOdd evenOdd) {
+        log.info("In periodsForTeacherBySemesterByDayByWeek(semesterId = [{}], teacherId = [{}], day = [{}], evenOdd = [{}])", semesterId, teacherId, day, evenOdd);
         return sessionFactory.getCurrentSession().createQuery("select distinct p1 from Period p1" +
                 " where p1.id in" +
-                " (select p.id from Schedule s join s.period p where s.semester.id = :semesterId and s.lesson.group.id = :groupId and s.dayOfWeek = :dayOfWeek and s.lesson.teacher.id = :teacherId) order by p1.startTime")
+                " (select p.id from Schedule s join s.period p where (s.semester.id = :semesterId and s.lesson.teacher.id = :teacherId and s.dayOfWeek = :dayOfWeek) and (s.evenOdd = :evenOdd or s.evenOdd = 'WEEKLY')) order by p1.startTime")
                 .setParameter("semesterId", semesterId)
-                .setParameter("groupId", groupId)
-                .setParameter("dayOfWeek", day.toString())
                 .setParameter("teacherId", teacherId)
+                .setParameter("dayOfWeek", day)
+                .setParameter("evenOdd", evenOdd)
                 .getResultList();
     }
 
-    /**
-     * Method gets Lesson for group in some semester at some day(even/odd) at some period/class where teacher is a teacher
-     *
-     * @param semesterId id of the semester
-     * @param groupId    id of the group
-     * @param periodId   id of the period/class
-     * @param day        day of the week
-     * @param evenOdd    even/odd/weekly
-     * @param teacherId  id of the teacher
-     * @return Optional Lesson object
-     */
     @Override
-    public Optional<Lesson> lessonForGroupByDayBySemesterByPeriodByWeekByTeacher(Long semesterId, Long groupId, Long periodId, DayOfWeek day, EvenOdd evenOdd, Long teacherId) {
-        log.info("In lessonForGroupByDayBySemesterByPeriodByWeekByTeacher(semesterId = [{}], groupId = [{}], periodId = [{}], day = [{}], evenOdd = [{}], teacherId = [{}])", semesterId, groupId, periodId, day, evenOdd, teacherId);
+    public List<Lesson> lessonsForTeacherBySemesterByDayByPeriodByWeek(Long semesterId, Long teacherId, Long periodId, DayOfWeek day, EvenOdd evenOdd) {
+        log.info("In lessonsForTeacherBySemesterByDayByPeriodByWeek(semesterId = [{}], teacherId = [{}], periodId = [{}], day = [{}], evenOdd = [{}])", semesterId, teacherId, periodId, day, evenOdd);
         return sessionFactory.getCurrentSession().createQuery("select l1 from Lesson l1" +
                 " where l1.id in" +
-                " (select l.id from Schedule s join s.lesson l where (s.semester.id = :semesterId and s.dayOfWeek = :dayOfWeek and s.period.id = :periodId and s.lesson.group.id = :groupId and s.lesson.teacher.id = :teacherId) and (s.evenOdd = :evenOdd or s.evenOdd = 'WEEKLY'))")
+                " (select l.id from Schedule s join s.lesson l where (s.semester.id = :semesterId and s.dayOfWeek = :dayOfWeek and s.period.id = :periodId and s.lesson.teacher.id = :teacherId) and (s.evenOdd = :evenOdd or s.evenOdd = 'WEEKLY'))")
                 .setParameter("semesterId", semesterId)
-                .setParameter("groupId", groupId)
-                .setParameter("periodId", periodId)
-                .setParameter("dayOfWeek", day.toString())
-                .setParameter("evenOdd", evenOdd)
                 .setParameter("teacherId", teacherId)
-                .uniqueResultOptional();
+                .setParameter("periodId", periodId)
+                .setParameter("dayOfWeek", day)
+                .setParameter("evenOdd", evenOdd)
+                .getResultList();
     }
 
     @Override

@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.time.DayOfWeek;
 
 
 @NoArgsConstructor
@@ -19,9 +20,10 @@ public class Schedule implements Serializable {
     private long id;
 
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "day_of_week",length = 35, nullable = false)
     @NotNull
-    private String dayOfWeek;
+    private DayOfWeek dayOfWeek;
 
     @Enumerated(EnumType.STRING)
     @NotNull

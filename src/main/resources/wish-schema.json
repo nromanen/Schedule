@@ -19,25 +19,25 @@
         },
         "evenOdd": {
           "enum": ["WEEKLY", "EVEN", "ODD"]
-        },"wishes": {
+        },"class_status": {
           "type": "array",
           "allOf": [{
             "items": {
-              "$ref": "#/definitions/classId"
+              "$ref": "#/definitions/classStatus"
             }
-          }],
-          "uniqueItems": true
+          }]
+
         }
       }
     },
-    "classId": {
+    "classStatus": {
       "type": "object",
       "required": [
         "class_name",
         "status"
       ],
       "properties": {
-        "class_id": {
+        "class_name": {
           "type": "string"
         },
         "status": {

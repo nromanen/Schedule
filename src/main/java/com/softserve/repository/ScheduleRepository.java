@@ -20,17 +20,15 @@ public interface ScheduleRepository extends BasicRepository<Schedule, Long> {
 
     Room getRoomForLesson(Long semesterId, Long periodId, Long lessonId, DayOfWeek day, EvenOdd evenOdd);
 
-    List<String> getDaysWhenGroupHasClassesBySemester(Long semesterId, Long groupId);
+    List<DayOfWeek> getDaysWhenGroupHasClassesBySemester(Long semesterId, Long groupId);
 
     Long countSchedulesForGroupInSemester(Long semesterId, Long groupId);
 
-    List<Group> uniqueGroupsInScheduleBySemesterByTeacher(Long semesterId, Long teacherId);
+    List<DayOfWeek> getDaysWhenTeacherHasClassesBySemester(Long semesterId, Long teacherId);
 
-    List<String> getDaysWhenGroupHasClassesBySemesterByTeacher(Long semesterId, Long groupId, Long teacherId);
+    List<Period> periodsForTeacherBySemesterByDayByWeek(Long semesterId, Long teacherId, DayOfWeek day, EvenOdd evenOdd);
 
-    List<Period> periodsForGroupByDayBySemesterByTeacher(Long semesterId, Long groupId, DayOfWeek day, Long teacherId);
-
-    Optional<Lesson> lessonForGroupByDayBySemesterByPeriodByWeekByTeacher(Long semesterId, Long groupId, Long periodId, DayOfWeek day, EvenOdd evenOdd, Long teacherId);
+    List<Lesson> lessonsForTeacherBySemesterByDayByPeriodByWeek(Long semesterId, Long teacherId, Long periodId, DayOfWeek day, EvenOdd evenOdd);
 
     List<Schedule> getAllSchedulesByTeacherIdAndSemesterId(Long teacherId, Long semesterId);
 }
