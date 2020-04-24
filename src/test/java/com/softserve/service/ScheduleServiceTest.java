@@ -624,7 +624,7 @@ public class ScheduleServiceTest {
         when(roomForScheduleMapper.roomToRoomForScheduleDTO(laboratory)).thenReturn(laboratoryDTO);
         when(roomForScheduleMapper.roomToRoomForScheduleDTO(practical)).thenReturn(practicalDTO);
 
-        List<ScheduleForGroupDTO> forGroupDTOList = scheduleService.getFullSchedule(semester.getId(), group.getId());
+        List<ScheduleForGroupDTO> forGroupDTOList = scheduleService.getFullScheduleForGroup(semester.getId(), group.getId());
         assertNotNull(forGroupDTOList);
         assertEquals(scheduleForGroupDTOList,forGroupDTOList);
     }
