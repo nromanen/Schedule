@@ -1,9 +1,6 @@
 package com.softserve.dto;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import java.time.DayOfWeek;
 import java.util.List;
@@ -12,6 +9,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @ToString
+@EqualsAndHashCode
 public class DaysOfWeekWithClassesForGroupDTO {
     private DayOfWeek day;
     private List<ClassesInScheduleForGroupDTO> classes;

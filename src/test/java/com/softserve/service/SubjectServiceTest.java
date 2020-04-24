@@ -31,7 +31,7 @@ public class SubjectServiceTest {
     SubjectServiceImpl subjectService;
 
     @Test
-    public void testGetById() {
+    public void getSubjectById() {
         Subject subject = new Subject();
         subject.setName("some subject");
         subject.setId(1L);
@@ -45,7 +45,7 @@ public class SubjectServiceTest {
     }
 
     @Test(expected = EntityNotFoundException.class)
-    public void notFoundId() {
+    public void throwEntityNotFoundExceptionIfSubjectNotFounded() {
         Subject subject = new Subject();
         subject.setName("some subject");
 
@@ -54,7 +54,7 @@ public class SubjectServiceTest {
     }
 
     @Test
-    public void testSave() {
+    public void saveSubjectIfNameDoesNotExists() {
         Subject subject = new Subject();
         subject.setName("some subject");
 
@@ -69,7 +69,7 @@ public class SubjectServiceTest {
     }
 
     @Test(expected = FieldAlreadyExistsException.class)
-    public void saveExistsName() {
+    public void throwFieldAlreadyExistsExceptionIfNameAlreadyExists() {
         Subject subject = new Subject();
         subject.setName("some subject");
 
@@ -81,7 +81,7 @@ public class SubjectServiceTest {
     }
 
     @Test
-    public void testUpdate() {
+    public void updateSubjectIfNameDoesNotExists() {
         Subject oldSubject = new Subject();
         oldSubject.setName("some subject");
         oldSubject.setId(1L);
@@ -102,7 +102,7 @@ public class SubjectServiceTest {
     }
 
     @Test(expected = FieldAlreadyExistsException.class)
-    public void updateWhenNameIsExists() {
+    public void throwFieldAlreadyExistsExceptionIfUpdatedNameAlreadyExists() {
         Subject oldSubject = new Subject();
         oldSubject.setName("some subject");
         oldSubject.setId(1L);
@@ -119,7 +119,7 @@ public class SubjectServiceTest {
     }
 
     @Test(expected = EntityNotFoundException.class)
-    public void updateWhenSubjectNotFound() {
+    public void throwEntityNotFoundExceptionIfUpdatedSubjectNotFounded() {
         Subject subject = new Subject();
         subject.setName("some subject");
         subject.setId(1L);

@@ -42,7 +42,7 @@ public class UserServiceTest {
     private UserServiceImpl userService;
 
     @Test
-    public void testGetById() {
+    public void getUserById() {
         User user = new User();
         user.setEmail("test@email.com");
         user.setPassword("password");
@@ -56,7 +56,7 @@ public class UserServiceTest {
     }
 
     @Test(expected = EntityNotFoundException.class)
-    public void notFoundId() {
+    public void throwEntityNotFoundExceptionIfUserNotFounded() {
         User user = new User();
         user.setId(1L);
 
@@ -65,7 +65,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testSave() {
+    public void saveUserIfEmailDoesNotExist() {
         User user = new User();
         user.setEmail("mail@email.com");
         user.setPassword("Qwerty1!");
@@ -81,7 +81,7 @@ public class UserServiceTest {
     }
 
     @Test(expected = FieldAlreadyExistsException.class)
-    public void saveExistsEmail() {
+    public void throwFieldAlreadyExistsExceptionIfEmailAlreadyExists() {
         User user = new User();
         user.setEmail("test@email.com");
         user.setPassword("password");
@@ -95,7 +95,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testUpdate() {
+    public void updateUserIfEmailDoesNotExist() {
         User oldUser = new User();
         oldUser.setEmail("oldEmail@mail.com");
         oldUser.setPassword("oldPassword");
@@ -117,7 +117,7 @@ public class UserServiceTest {
     }
 
     @Test(expected = FieldAlreadyExistsException.class)
-    public void updateWhenEmailIsExists() {
+    public void throwFieldAlreadyExistsExceptionIfUpdatedEmailAlreadyExists() {
         User oldUser = new User();
         oldUser.setEmail("email@mail.com");
         oldUser.setPassword("oldPassword");
@@ -138,7 +138,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testFindByEmail() {
+    public void getUserByEmail() {
         User user = new User();
         user.setEmail("test@email.com");
         user.setPassword("password");
@@ -152,7 +152,7 @@ public class UserServiceTest {
     }
 
     @Test(expected = EntityNotFoundException.class)
-    public void emailNotFounded() {
+    public void throwEntityNotFoundExceptionIfEmailNotFounded() {
         User user = new User();
         user.setEmail("test@email.com");
 
@@ -161,7 +161,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void findByToken() {
+    public void getUserByToken() {
         User user = new User();
         user.setEmail("some@mail.com");
         user.setPassword("mypassword");
@@ -177,7 +177,7 @@ public class UserServiceTest {
     }
 
     @Test(expected = EntityNotFoundException.class)
-    public void notFoundByToken() {
+    public void throwEntityNotFoundExceptionIfTokenNotFounded                                                                         () {
         User user = new User();
         user.setEmail("some@mail.com");
         user.setPassword("mypassword");
@@ -188,7 +188,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testRegistration() {
+    public void registrationUser() {
         String url = "/sign_up";
         User user = new User();
         user.setEmail("some@mail.com");
@@ -211,7 +211,7 @@ public class UserServiceTest {
     }
 
     @Test(expected = IncorrectPasswordException.class)
-    public void registrationWhenWrongInvalidPassword() {
+    public void throwIncorrectPasswordExceptionIfEnteredPasswordIsIncorrect() {
         String url = "/sign_up";
         User user = new User();
         user.setPassword("qwert");
@@ -221,7 +221,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testResetPassword() {
+    public void resetPasswordAndSendNewOnEmail() {
         User user = new User();
         user.setEmail("some@mail.com");
         user.setPassword("Qwerty1!");
@@ -246,7 +246,7 @@ public class UserServiceTest {
     }
 
     @Test(expected = IncorrectEmailException.class)
-    public void resetPasswordWhenMailIsIncorrect() {
+    public void throwIncorrectEmailExceptionIfEnteredEmailIsIncorrect() {
         User user = new User();
         user.setEmail("afvadf");
         user.setPassword("Qwerty1!");

@@ -46,14 +46,14 @@ public class SemesterControllerTest {
     }
 
     @Test
-    public void testGetAll() throws Exception {
+    public void getAllSemesters() throws Exception {
         mockMvc.perform(get("/semesters").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"));
     }
 
     @Test
-    public void testGet() throws Exception {
+    public void getSemesterById() throws Exception {
         mockMvc.perform(get("/semesters/{id}", 4).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"))
@@ -61,7 +61,7 @@ public class SemesterControllerTest {
     }
 
     @Test
-    public void testSave() throws Exception {
+    public void saveSemesterIfSavedSemesterDoesNotExistAndStartDayBeginBeforeEndDay() throws Exception {
         SemesterDTO semesterDtoForSave = new SemesterDTO();
         semesterDtoForSave.setId(1);
         semesterDtoForSave.setDescription("another semester");
@@ -75,7 +75,7 @@ public class SemesterControllerTest {
     }
 
     @Test
-    public void testUpdate() throws Exception {
+    public void updateSemesterIfUpdatedSemesterDoesNotExistAndStartDayBeginBeforeEndDay() throws Exception {
         SemesterDTO semesterDtoForUpdate = new SemesterDTO();
         semesterDtoForUpdate.setId(4);
         semesterDtoForUpdate.setYear(2222);
@@ -94,19 +94,19 @@ public class SemesterControllerTest {
     }
 
     @Test
-    public void testDelete() throws Exception {
+    public void deleteExistSemester() throws Exception {
         mockMvc.perform(delete("/semesters/{id}", 5)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
 
     @Test
-    public void whenSemesterNotFound() throws Exception {
+    public void returnNotFoundIfSemesterNotFoundedById() throws Exception {
         mockMvc.perform(get("/semesters/100")).andExpect(status().isNotFound());
     }
 
     @Test
-    public void whenSaveExistsSemester() throws Exception {
+    public void returnBadRequestIfSavedSemesterAlreadyExists() throws Exception {
         SemesterDTO semesterDtoForSave = new SemesterDTO();
         semesterDtoForSave.setId(4);
         semesterDtoForSave.setDescription("1 semester");
@@ -120,7 +120,7 @@ public class SemesterControllerTest {
     }
 
     @Test
-    public void whenSaveStartDayAfterEndDay() throws Exception {
+    public void returnBadRequestIfSavedStartDayBeginAfterEndDay() throws Exception {
         SemesterDTO semesterDtoForSave = new SemesterDTO();
         semesterDtoForSave.setId(2);
         semesterDtoForSave.setDescription("5 semester");
@@ -134,7 +134,7 @@ public class SemesterControllerTest {
     }
 
     @Test
-    public void whenSaveDescriptionIsNull() throws Exception {
+    public void returnBadRequestIfSavedDescriptionIsNull() throws Exception {
         SemesterDTO semesterDtoForSave = new SemesterDTO();
         semesterDtoForSave.setId(1);
         semesterDtoForSave.setDescription(null);
@@ -148,7 +148,7 @@ public class SemesterControllerTest {
     }
 
     @Test
-    public void whenUpdateExistSemester() throws Exception {
+    public void returnBadRequestIfUpdatedSemesterAlreadyExists() throws Exception {
         SemesterDTO semesterDtoForSave = new SemesterDTO();
         semesterDtoForSave.setId(4);
         semesterDtoForSave.setDescription("2 semester");
@@ -162,7 +162,7 @@ public class SemesterControllerTest {
     }
 
     @Test
-    public void whenUpdateStartDayAfterEndDay() throws Exception {
+    public void returnBadRequestIfUpdatedStartDayBeginAfterEndDay() throws Exception {
         SemesterDTO semesterDtoForSave = new SemesterDTO();
         semesterDtoForSave.setId(4);
         semesterDtoForSave.setDescription("2 semester");
@@ -176,7 +176,7 @@ public class SemesterControllerTest {
     }
 
     @Test
-    public void whenUpdateNullDescription() throws Exception {
+    public void returnBadRequestIfUpdatedDescriptionIsNull() throws Exception {
         SemesterDTO semesterDtoForSave = new SemesterDTO();
         semesterDtoForSave.setId(5);
         semesterDtoForSave.setDescription(null);

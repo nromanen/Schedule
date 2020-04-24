@@ -42,14 +42,14 @@ public class SubjectControllerTest {
     }
 
     @Test
-    public void testGetAll() throws Exception {
+    public void getAllSubjects() throws Exception {
         mockMvc.perform(get("/subjects").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"));
     }
 
     @Test
-    public void testGet() throws Exception {
+    public void getSubjectById() throws Exception {
         mockMvc.perform(get("/subjects/{id}", 4).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"))
@@ -57,7 +57,7 @@ public class SubjectControllerTest {
     }
 
     @Test
-    public void testSave() throws Exception {
+    public void saveSubjectIfSavedSubjectDoesNotExist() throws Exception {
         SubjectDTO subjectDtoForSave = new SubjectDTO();
         subjectDtoForSave.setName("save subject name");
 
@@ -67,7 +67,7 @@ public class SubjectControllerTest {
     }
 
     @Test
-    public void testUpdate() throws Exception {
+    public void updateSubjectIfUpdatedSubjectDoesNotExist() throws Exception {
         SubjectDTO subjectDtoForUpdate = new SubjectDTO();
         subjectDtoForUpdate.setId(5L);
         subjectDtoForUpdate.setName("updated History");
@@ -80,19 +80,19 @@ public class SubjectControllerTest {
     }
 
     @Test
-    public void testDelete() throws Exception {
+    public void deleteExistSubject() throws Exception {
         mockMvc.perform(delete("/subjects/{id}", 5)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
 
     @Test
-    public void whenSubjectNotFound() throws Exception {
+    public void returnNotFoundIfSubjectNotFoundedById() throws Exception {
         mockMvc.perform(get("/subjects/100")).andExpect(status().isNotFound());
     }
 
     @Test
-    public void whenSaveExistsSubject() throws Exception {
+    public void returnBadRequestIfSavedSubjectAlreadyExists() throws Exception {
         SubjectDTO subjectDTO = new SubjectDTO();
         subjectDTO.setName("Biology");
 
@@ -103,7 +103,7 @@ public class SubjectControllerTest {
     }
 
     @Test
-    public void whenSaveNameIsNull() throws Exception {
+    public void returnBadRequestIfSavedNameIsNull() throws Exception {
         SubjectDTO subjectDtoForSave = new SubjectDTO();
         subjectDtoForSave.setName(null);
 
@@ -114,7 +114,7 @@ public class SubjectControllerTest {
     }
 
     @Test
-    public void whenUpdateExistsSubject() throws Exception {
+    public void returnBadRequestIfUpdatedSubjectAlreadyExists() throws Exception {
         SubjectDTO subjectDtoForUpdate = new SubjectDTO();
         subjectDtoForUpdate.setId(4L);
         subjectDtoForUpdate.setName("Astronomy");
@@ -126,7 +126,7 @@ public class SubjectControllerTest {
     }
 
     @Test
-    public void whenUpdateNullName() throws Exception {
+    public void returnBadRequestIfUpdatedNameIsNull() throws Exception {
         SubjectDTO subjectDtoForUpdate = new SubjectDTO();
         subjectDtoForUpdate.setId(6L);
         subjectDtoForUpdate.setName(null);

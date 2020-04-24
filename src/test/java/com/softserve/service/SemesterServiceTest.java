@@ -34,7 +34,7 @@ public class SemesterServiceTest {
     private SemesterServiceImpl semesterService;
 
     @Test
-    public void testGetById() {
+    public void getSemesterById() {
         Semester semester = new Semester();
         semester.setId(1L);
         semester.setYear(2020);
@@ -51,7 +51,7 @@ public class SemesterServiceTest {
     }
 
     @Test(expected = EntityNotFoundException.class)
-    public void notFoundId() {
+    public void throwEntityNotFoundExceptionIfSemesterNotFounded() {
         Semester semester = new Semester();
         semester.setId(1L);
         semester.setYear(2020);
@@ -64,7 +64,7 @@ public class SemesterServiceTest {
     }
 
     @Test
-    public void testSave() {
+    public void saveSemesterIfSemesterDoesNotExists() {
         Semester semester = new Semester();
         semester.setId(1L);
         semester.setYear(2020);
@@ -81,7 +81,7 @@ public class SemesterServiceTest {
     }
 
     @Test(expected = FieldAlreadyExistsException.class)
-    public void testSaveWhenFieldAlreadyExists() {
+    public void throwFieldAlreadyExistsExceptionIfFieldCurrentSemesterAlreadyExists() {
         Semester semester = new Semester();
         semester.setId(1L);
         semester.setYear(2020);
@@ -96,7 +96,7 @@ public class SemesterServiceTest {
     }
 
     @Test(expected = EntityAlreadyExistsException.class)
-    public void testSaveWhenDescriptionAlreadyExists() {
+    public void throwEntityAlreadyExistsExceptionIfDescriptionAlreadyExists() {
         Semester semester = new Semester();
         semester.setId(1L);
         semester.setDescription("1 semester");
@@ -109,7 +109,7 @@ public class SemesterServiceTest {
     }
 
     @Test(expected = IncorrectTimeException.class)
-    public void saveWhenStartDayAfterEndDay() {
+    public void throwIncorrectTimeExceptionIfStartTimeBeginAfterEndTime() {
         Semester semester = new Semester();
         semester.setId(1L);
         semester.setYear(2020);
@@ -121,7 +121,7 @@ public class SemesterServiceTest {
     }
 
     @Test
-    public void testUpdate() {
+    public void updateIfUpdatedSemesterDoestNotExists() {
         Semester semester = new Semester();
         semester.setId(1L);
         semester.setDescription("1 semester");
@@ -142,7 +142,7 @@ public class SemesterServiceTest {
     }
 
     @Test(expected = IncorrectTimeException.class)
-    public void updateWhenStartDayAfterEndDay() {
+    public void throwIncorrectTimeExceptionIfUpdatedStartTimeBeginAfterEndTime() {
         Semester semester = new Semester();
         semester.setId(1L);
         semester.setYear(2020);
@@ -154,7 +154,7 @@ public class SemesterServiceTest {
     }
 
     @Test(expected = EntityAlreadyExistsException.class)
-    public void testUpdateWhenDescriptionAlreadyExists() {
+    public void throwEntityAlreadyExistsExceptionIfUpdatedDescriptionAlreadyExists() {
         Semester semester = new Semester();
         semester.setId(1L);
         semester.setDescription("1 semester");
@@ -174,7 +174,7 @@ public class SemesterServiceTest {
     }
 
     @Test(expected = FieldAlreadyExistsException.class)
-    public void testUpdateWhenFieldAlreadyExists() {
+    public void throwFieldAlreadyExistsExceptionIfUpdatedCurrentSemesterAlreadyExists() {
         Semester semester = new Semester();
         semester.setId(1L);
         semester.setYear(2020);

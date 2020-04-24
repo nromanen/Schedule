@@ -55,7 +55,7 @@ public class RoomTypeServiceTest {
     }
 
     @Test
-    public void saveRoomTypeIfDescriptionNotExists() {
+    public void saveRoomTypeIfDescriptionDoesNotExists() {
         RoomType roomType = new RoomType();
         roomType.setId(1L);
         roomType.setDescription("1 roomType");
@@ -84,7 +84,7 @@ public class RoomTypeServiceTest {
     }
 
     @Test
-    public void updateRoomTypeIfDescriptionNotExists() {
+    public void updateRoomTypeIfDescriptionDoesNotExists() {
         RoomType roomType = new RoomType();
         roomType.setId(1L);
         roomType.setDescription("1 roomType");

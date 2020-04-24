@@ -42,14 +42,14 @@ public class UserControllerTest {
     }
 
     @Test
-    public void testGetAll() throws Exception {
+    public void getAllUsers() throws Exception {
         mockMvc.perform(get("/users").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"));
     }
 
     @Test
-    public void testGet() throws Exception {
+    public void getUserById() throws Exception {
         mockMvc.perform(get("/users/{id}", 4).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"))
@@ -57,7 +57,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void testSave() throws Exception {
+    public void saveUserIfSavedUserDoesNotExist() throws Exception {
         UserCreateDTO userDtoForSave = new UserCreateDTO();
         userDtoForSave.setEmail("save@email.com");
         userDtoForSave.setPassword("Qwerty1!");
@@ -68,7 +68,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void testUpdate() throws Exception {
+    public void updateUserIfUpdatedUserDoesNotExist() throws Exception {
         UserCreateDTO userDtoForUpdate = new UserCreateDTO();
         userDtoForUpdate.setId(5L);
         userDtoForUpdate.setEmail("update@email.com");
@@ -83,19 +83,19 @@ public class UserControllerTest {
     }
 
     @Test
-    public void testDelete() throws Exception {
+    public void deleteUser() throws Exception {
         mockMvc.perform(delete("/users/{id}", 8)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
 
     @Test
-    public void whenUserNotFound() throws Exception {
+    public void returnNotFoundIfUserNotFoundedById() throws Exception {
         mockMvc.perform(get("/users/100")).andExpect(status().isNotFound());
     }
 
     @Test
-    public void whenSaveExistsUser() throws Exception {
+    public void returnBadRequestIfSavedUserAlreadyExists() throws Exception {
         UserCreateDTO userDtoForSave = new UserCreateDTO();
         userDtoForSave.setEmail("first@mail.com");
         userDtoForSave.setPassword("Qwerty1!");
@@ -107,7 +107,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void whenSavePasswordIsNull() throws Exception {
+    public void returnBadRequestIfSavedPasswordIsNull() throws Exception {
         UserCreateDTO userCreateDTO = new UserCreateDTO();
         userCreateDTO.setPassword(null);
         userCreateDTO.setEmail("12341@mail.com");
@@ -118,7 +118,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void whenSaveEmailIsNull() throws Exception {
+    public void returnBadRequestIfSavedEmailIsNull() throws Exception {
         UserCreateDTO userCreateDTO = new UserCreateDTO();
         userCreateDTO.setPassword("Qwerty1!");
         userCreateDTO.setEmail(null);
@@ -129,7 +129,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void whenUpdateExistEmail() throws Exception {
+    public void returnBadRequestIfUpdatedEmailAlreadyExists() throws Exception {
         UserCreateDTO userDtoForUpdate = new UserCreateDTO();
         userDtoForUpdate.setId(6L);
         userDtoForUpdate.setEmail("first@mail.com");
@@ -142,7 +142,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void whenUpdateNullEmail() throws Exception {
+    public void returnBadRequestIfUpdatedEmailIsNull() throws Exception {
         UserCreateDTO userDtoForUpdate = new UserCreateDTO();
         userDtoForUpdate.setId(7L);
         userDtoForUpdate.setEmail(null);

@@ -50,14 +50,14 @@ public class PeriodControllerTest {
     }
 
     @Test
-    public void testGetAll() throws Exception {
+    public void getAllPeriods() throws Exception {
         mockMvc.perform(get("/classes").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"));
     }
 
     @Test
-    public void testGet() throws Exception {
+    public void getPeriodById() throws Exception {
         mockMvc.perform(get("/classes/{id}", 4).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"))
@@ -65,7 +65,7 @@ public class PeriodControllerTest {
     }
 
     @Test
-    public void testSave() throws Exception {
+    public void savePeriodIfSavedPeriodDoesNotExist() throws Exception {
         AddPeriodDTO periodDtoForSave = new AddPeriodDTO();
         periodDtoForSave.setName("save period");
         periodDtoForSave.setStartTime(Timestamp.valueOf("2020-10-15 09:00:00"));
@@ -77,7 +77,7 @@ public class PeriodControllerTest {
     }
 
     @Test
-    public void testSaveList() throws Exception {
+    public void saveListOfPeriodsIfAllOfThemDoNotExist() throws Exception {
         AddPeriodDTO periodDtoForList = new AddPeriodDTO();
         periodDtoForList.setName("save list of periods");
         periodDtoForList.setStartTime(Timestamp.valueOf("2020-10-15 11:00:00"));
@@ -91,7 +91,7 @@ public class PeriodControllerTest {
     }
 
     @Test
-    public void testUpdate() throws Exception {
+    public void updatePeriodIfUpdatedPeriodDoesNotExist() throws Exception {
         PeriodDTO periodDtoForUpdate = new PeriodDTO();
         periodDtoForUpdate.setId(4L);
         periodDtoForUpdate.setName("1 para updated");
@@ -104,25 +104,25 @@ public class PeriodControllerTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(periodForCompare.getId()))
-                .andExpect(jsonPath("$.class_name").value(periodForCompare.getName()));
-//                .andExpect(jsonPath("$.startTime").value(new SimpleDateFormat("HH:mm").format(periodForCompare.getStartTime())))
-//                .andExpect(jsonPath("$.endTime").value(new SimpleDateFormat("HH:mm").format(periodForCompare.getEndTime())));
+                .andExpect(jsonPath("$.class_name").value(periodForCompare.getName()))
+                .andExpect(jsonPath("$.startTime").value(new SimpleDateFormat("HH:mm").format(periodForCompare.getStartTime())))
+                .andExpect(jsonPath("$.endTime").value(new SimpleDateFormat("HH:mm").format(periodForCompare.getEndTime())));
     }
 
     @Test
-    public void testDelete() throws Exception {
+    public void deleteExistPeriod() throws Exception {
         mockMvc.perform(delete("/classes/{id}", 5)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
 
     @Test
-    public void whenPeriodNotFound() throws Exception {
+    public void returnNotFoundIfPeriodNotFoundedById() throws Exception {
         mockMvc.perform(get("/classes/100")).andExpect(status().isNotFound());
     }
 
     @Test
-    public void whenSaveExistsPeriod() throws Exception {
+    public void returnBadRequestIfSavedPeriodAlreadyExist() throws Exception {
         AddPeriodDTO addPeriodDTO = new AddPeriodDTO();
         addPeriodDTO.setName("1 para");
         addPeriodDTO.setStartTime(Timestamp.valueOf("2020-04-11 01:00:00"));
@@ -134,7 +134,7 @@ public class PeriodControllerTest {
     }
 
     @Test
-    public void whenSaveNameIsNull() throws Exception {
+    public void returnInternalServerErrorIfSavedNameIsNull() throws Exception {
         AddPeriodDTO periodDtoForSave = new AddPeriodDTO();
         periodDtoForSave.setName(null);
         periodDtoForSave.setStartTime(Timestamp.valueOf("2020-10-15 03:00:00"));
@@ -146,22 +146,22 @@ public class PeriodControllerTest {
                 .andExpect(status().isInternalServerError());
     }
 
-//    @Test
-//    public void whenUpdateExistName() throws Exception {
-//        PeriodDTO periodDtoForUpdate = new PeriodDTO();
-//        periodDtoForUpdate.setId(6L);
-//        periodDtoForUpdate.setName("1 para");
-//        periodDtoForUpdate.setStartTime(Timestamp.valueOf("2020-10-15 13:00:00"));
-//        periodDtoForUpdate.setEndTime(Timestamp.valueOf("2020-10-15 14:00:00"));
-//
-//        mockMvc.perform(put("/classes", 6).content(objectMapper.writeValueAsString(periodDtoForUpdate))
-//                .contentType(MediaType.APPLICATION_JSON))
-//                .andDo(print())
-//                .andExpect(status().isInternalServerError());
-//    }
+    @Test
+    public void returnBadRequestIfUpdatedPeriodAlreadyExist() throws Exception {
+        PeriodDTO periodDtoForUpdate = new PeriodDTO();
+        periodDtoForUpdate.setId(6L);
+        periodDtoForUpdate.setName("1 para");
+        periodDtoForUpdate.setStartTime(Timestamp.valueOf("2020-10-15 13:00:00"));
+        periodDtoForUpdate.setEndTime(Timestamp.valueOf("2020-10-15 14:00:00"));
+
+        mockMvc.perform(put("/classes", 6).content(objectMapper.writeValueAsString(periodDtoForUpdate))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+    }
 
     @Test
-    public void whenUpdateNullName() throws Exception {
+    public void returnBadRequestIfUpdatedNameIsNull() throws Exception {
         PeriodDTO periodDtoForUpdate = new PeriodDTO();
         periodDtoForUpdate.setId(5L);
         periodDtoForUpdate.setName(null);
@@ -175,7 +175,7 @@ public class PeriodControllerTest {
     }
 
     @Test
-    public void whenPeriodIntersectWithAnother() throws Exception {
+    public void returnBadRequestIfSavedPeriodIntersectsWithOtherPeriod() throws Exception {
         AddPeriodDTO periodDtoForSave = new AddPeriodDTO();
         periodDtoForSave.setName("intersect period");
         periodDtoForSave.setStartTime(Timestamp.valueOf("1970-01-01 03:30:00"));

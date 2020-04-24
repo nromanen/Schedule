@@ -1,10 +1,9 @@
 package com.softserve.service;
 
-import com.softserve.dto.CreateScheduleInfoDTO;
-import com.softserve.dto.RoomForScheduleInfoDTO;
-import com.softserve.dto.RoomTypeDTO;
+import com.softserve.dto.*;
 import com.softserve.entity.*;
 import com.softserve.entity.enums.EvenOdd;
+import com.softserve.entity.enums.LessonType;
 import com.softserve.exception.EntityNotFoundException;
 import com.softserve.exception.ScheduleConflictException;
 import com.softserve.mapper.GroupMapperImpl;
@@ -20,7 +19,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.sql.Timestamp;
 import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -57,6 +58,9 @@ public class ScheduleServiceTest {
     @Mock
     private GroupService groupService;
 
+    @Mock
+    private TeacherWishesService teacherWishesService;
+
     @InjectMocks
     private ScheduleServiceImpl scheduleService;
 
@@ -80,7 +84,7 @@ public class ScheduleServiceTest {
     }
 
     @Test(expected = EntityNotFoundException.class)
-    public void notFound() {
+    public void throwEntityNotFoundExceptionIfScheduleNotFoundedById() {
         Schedule schedule = new Schedule();
         schedule.setId(1L);
 
@@ -89,7 +93,7 @@ public class ScheduleServiceTest {
     }
 
     @Test
-    public void save() {
+    public void saveScheduleIfGroupHasNoAnyConflicts() {
         Group group = new Group();
         group.setId(1L);
         Lesson lesson = new Lesson();
@@ -135,7 +139,7 @@ public class ScheduleServiceTest {
     }
 
     @Test(expected = ScheduleConflictException.class)
-    public void saveWithConflict() {
+    public void throwScheduleConflictExceptionIfSaveScheduleForGroupWithConflicts() {
         Group group = new Group();
         group.setId(1L);
         Lesson lesson = new Lesson();
@@ -174,7 +178,7 @@ public class ScheduleServiceTest {
     }
 
     @Test
-    public void update() {
+    public void updateScheduleIfGroupHasNoConflicts() {
         Group oldGroup = new Group();
         oldGroup.setId(1L);
         Lesson oldLesson = new Lesson();
@@ -243,7 +247,7 @@ public class ScheduleServiceTest {
     }
 
     @Test(expected = ScheduleConflictException.class)
-    public void updateWithConflict() {
+    public void throwScheduleConflictExceptionIfUpdateScheduleForGroupWithConflicts() {
         Group oldGroup = new Group();
         oldGroup.setId(1L);
         Lesson oldLesson = new Lesson();
@@ -310,7 +314,7 @@ public class ScheduleServiceTest {
     }
 
     @Test
-    public void withoutConflictInSchedule() {
+    public void returnFalseIfGroupHasNoConflicts() {
         Long semesterId = 1L;
         DayOfWeek dayOfWeek = DayOfWeek.MONDAY;
         EvenOdd evenOdd = EvenOdd.EVEN;
@@ -332,7 +336,7 @@ public class ScheduleServiceTest {
     }
 
     @Test
-    public void withConflictInSchedule() {
+    public void returnTrueIfGroupHasConflicts() {
         Long semesterId = 1L;
         DayOfWeek dayOfWeek = DayOfWeek.MONDAY;
         EvenOdd evenOdd = EvenOdd.EVEN;
@@ -354,7 +358,7 @@ public class ScheduleServiceTest {
     }
 
     @Test
-    public void teacherIsAvailable() {
+    public void returnTrueIfTeacherIsAvailable() {
         Long semesterId = 1L;
         DayOfWeek dayOfWeek = DayOfWeek.MONDAY;
         EvenOdd evenOdd = EvenOdd.EVEN;
@@ -376,7 +380,7 @@ public class ScheduleServiceTest {
     }
 
     @Test
-    public void teacherIsNotAvailable() {
+    public void returnFalseIfTeacherIsNotAvailable() {
         Long semesterId = 1L;
         DayOfWeek dayOfWeek = DayOfWeek.MONDAY;
         EvenOdd evenOdd = EvenOdd.EVEN;
@@ -397,66 +401,67 @@ public class ScheduleServiceTest {
         assertFalse(result);
     }
 
-//    @Test
-//    public void getInfoForCreatingScheduleGood() {
-//        Long semesterId = 1L;
-//        DayOfWeek dayOfWeek = DayOfWeek.MONDAY;
-//        EvenOdd evenOdd = EvenOdd.EVEN;
-//        Long classId = 1L;
-//        Teacher teacher = new Teacher();
-//        teacher.setId(1L);
-//        Group group = new Group();
-//        group.setId(1L);
-//        Lesson lesson = new Lesson();
-//        lesson.setId(1L);
-//        lesson.setTeacher(teacher);
-//        lesson.setGroup(group);
-//        Long lessonId = lesson.getId();
-//        RoomTypeDTO laboratory = new RoomTypeDTO();
-//        laboratory.setId(1L);
-//        laboratory.setDescription("Laboratory");
-//        RoomTypeDTO practical = new RoomTypeDTO();
-//        practical.setId(2L);
-//        practical.setDescription("Practical");
-//        List<RoomForScheduleInfoDTO> allRooms = new ArrayList<RoomForScheduleInfoDTO>() {{
-//            add(new RoomForScheduleInfoDTO() {{
-//                setId(1L);
-//                setName("free name");
-//                setType(laboratory);
-//                setAvailable(true);
-//            }});
-//            add(new RoomForScheduleInfoDTO() {{
-//                setId(2L);
-//                setName("occupied name");
-//                setType(practical);
-//                setAvailable(false);
-//            }});
-//        }};
-//        CreateScheduleInfoDTO expectedDTO = new CreateScheduleInfoDTO();
-//        expectedDTO.setTeacherAvailable(true);
-//        expectedDTO.setRooms(allRooms);
-//        expectedDTO.setClassSuitsToTeacher(true);
-//
-//        doReturn(lesson).when(lessonService).getById(anyLong());
-//        Long groupId = lessonService.getById(1L).getGroup().getId();
-//        doReturn(0L).when(scheduleRepository).conflictForGroupInSchedule(semesterId, dayOfWeek, evenOdd, classId, groupId);
-//        Long teacherId = lessonService.getById(1L).getTeacher().getId();
-//        doReturn(0L).when(scheduleRepository).conflictForTeacherInSchedule(semesterId, dayOfWeek, evenOdd, classId, teacherId);
-//        doReturn(allRooms).when(roomService).getAllRoomsForCreatingSchedule(semesterId, dayOfWeek, evenOdd, classId);
-//
-//        CreateScheduleInfoDTO actualDTO = scheduleService.getInfoForCreatingSchedule(semesterId, dayOfWeek, evenOdd, classId, lessonId);
-//        assertEquals(expectedDTO.isClassSuitsToTeacher(), actualDTO.isClassSuitsToTeacher());
-//        assertEquals(expectedDTO.isTeacherAvailable(), actualDTO.isTeacherAvailable());
-//        assertEquals(expectedDTO.getRooms().size(), actualDTO.getRooms().size());
-//        assertEquals(expectedDTO.getRooms().get(0), actualDTO.getRooms().get(0));
-//        assertEquals(expectedDTO.getRooms().get(1), actualDTO.getRooms().get(1));
-//        verify(lessonService, times(4)).getById(anyLong());
-//        verify(scheduleRepository, times(1)).conflictForGroupInSchedule(semesterId, dayOfWeek, evenOdd, classId, groupId);
-//        verify(scheduleRepository, times(1)).conflictForTeacherInSchedule(semesterId, dayOfWeek, evenOdd, classId, teacherId);
-//    }
+    @Test
+    public void getInfoForCreatingScheduleIfNothingAlreadyExist() {
+        Long semesterId = 1L;
+        DayOfWeek dayOfWeek = DayOfWeek.MONDAY;
+        EvenOdd evenOdd = EvenOdd.EVEN;
+        Long classId = 1L;
+        Teacher teacher = new Teacher();
+        teacher.setId(1L);
+        Group group = new Group();
+        group.setId(1L);
+        Lesson lesson = new Lesson();
+        lesson.setId(1L);
+        lesson.setTeacher(teacher);
+        lesson.setGroup(group);
+        Long lessonId = lesson.getId();
+        RoomTypeDTO laboratory = new RoomTypeDTO();
+        laboratory.setId(1L);
+        laboratory.setDescription("Laboratory");
+        RoomTypeDTO practical = new RoomTypeDTO();
+        practical.setId(2L);
+        practical.setDescription("Practical");
+        List<RoomForScheduleInfoDTO> allRooms = new ArrayList<RoomForScheduleInfoDTO>() {{
+            add(new RoomForScheduleInfoDTO() {{
+                setId(1L);
+                setName("free name");
+                setType(laboratory);
+                setAvailable(true);
+            }});
+            add(new RoomForScheduleInfoDTO() {{
+                setId(2L);
+                setName("occupied name");
+                setType(practical);
+                setAvailable(false);
+            }});
+        }};
+        CreateScheduleInfoDTO expectedDTO = new CreateScheduleInfoDTO();
+        expectedDTO.setTeacherAvailable(true);
+        expectedDTO.setRooms(allRooms);
+        expectedDTO.setClassSuitsToTeacher(true);
+
+        doReturn(lesson).when(lessonService).getById(anyLong());
+        Long groupId = lessonService.getById(1L).getGroup().getId();
+        doReturn(0L).when(scheduleRepository).conflictForGroupInSchedule(semesterId, dayOfWeek, evenOdd, classId, groupId);
+        Long teacherId = lessonService.getById(1L).getTeacher().getId();
+        doReturn(true).when(teacherWishesService).isClassSuits(teacherId, dayOfWeek, evenOdd, classId);
+        doReturn(0L).when(scheduleRepository).conflictForTeacherInSchedule(semesterId, dayOfWeek, evenOdd, classId, teacherId);
+        doReturn(allRooms).when(roomService).getAllRoomsForCreatingSchedule(semesterId, dayOfWeek, evenOdd, classId);
+
+        CreateScheduleInfoDTO actualDTO = scheduleService.getInfoForCreatingSchedule(semesterId, dayOfWeek, evenOdd, classId, lessonId);
+        assertEquals(expectedDTO.isClassSuitsToTeacher(), actualDTO.isClassSuitsToTeacher());
+        assertEquals(expectedDTO.isTeacherAvailable(), actualDTO.isTeacherAvailable());
+        assertEquals(expectedDTO.getRooms().size(), actualDTO.getRooms().size());
+        assertEquals(expectedDTO.getRooms().get(0), actualDTO.getRooms().get(0));
+        assertEquals(expectedDTO.getRooms().get(1), actualDTO.getRooms().get(1));
+        verify(lessonService, times(5)).getById(anyLong());
+        verify(scheduleRepository, times(1)).conflictForGroupInSchedule(semesterId, dayOfWeek, evenOdd, classId, groupId);
+        verify(scheduleRepository, times(1)).conflictForTeacherInSchedule(semesterId, dayOfWeek, evenOdd, classId, teacherId);
+    }
 
     @Test(expected = ScheduleConflictException.class)
-    public void getInfoForCreatingScheduleBad() {
+    public void throwScheduleConflictExceptionIfGroupHasConflicts() {
         Long semesterId = 1L;
         DayOfWeek dayOfWeek = DayOfWeek.MONDAY;
         EvenOdd evenOdd = EvenOdd.EVEN;
@@ -476,139 +481,151 @@ public class ScheduleServiceTest {
         verify(scheduleRepository, times(1)).conflictForGroupInSchedule(semesterId, dayOfWeek, evenOdd, classId, groupId);
     }
 
-//    @Test
-//    public void testFullSchedule() {
-//        Semester semester = new Semester();
-//        semester.setId(1L);
-//        semester.setDescription("1 semester");
-//        semester.setStartDay(LocalDate.of(2020, 4, 10));
-//        semester.setEndDay(LocalDate.of(2020, 5, 10));
-//        Group group = new Group();
-//        group.setId(1L);
-//        group.setTitle("111");
-//        List<String> dayOfWeekList = new ArrayList<>();
-//        dayOfWeekList.add(DayOfWeek.MONDAY);
-//        Period firstClasses = new Period();
-//        firstClasses.setId(1L);
-//        firstClasses.setName("1 para");
-//        firstClasses.setStartTime(Timestamp.valueOf("2020-10-15 01:00:00"));
-//        firstClasses.setEndTime(Timestamp.valueOf("2020-10-15 02:00:00"));
-//        Period secondClasses = new Period();
-//        secondClasses.setId(2L);
-//        secondClasses.setName("2 para");
-//        secondClasses.setStartTime(Timestamp.valueOf("2020-10-15 03:00:00"));
-//        secondClasses.setEndTime(Timestamp.valueOf("2020-10-15 04:00:00"));
-//        List<Period> periodList = new ArrayList<>();
-//        periodList.add(firstClasses);
-//        periodList.add(secondClasses);
-//        Teacher teacher = new Teacher();
-//        teacher.setId(1L);
-//        teacher.setUserId(1);
-//        teacher.setName("Ivan");
-//        teacher.setSurname("Ivanov");
-//        teacher.setPatronymic("Ivanovych");
-//        teacher.setPosition("Docent");
-//        Subject subject = new Subject();
-//        subject.setId(1L);
-//        subject.setName("Biology");
-//        Lesson lesson = new Lesson();
-//        lesson.setId(1L);
-//        lesson.setGroup(group);
-//        lesson.setTeacher(teacher);
-//        lesson.setSubject(subject);
-//        lesson.setHours(1);
-//        lesson.setLessonType(LessonType.LABORATORY);
-//        lesson.setSubjectForSite("Human anatomy");
-//        lesson.setTeacherForSite("Ivanov I.I.");
-//        RoomType laboratoryType = new RoomType();
-//        laboratoryType.setId(1L);
-//        laboratoryType.setDescription("Laboratory");
-//        RoomType practicalType = new RoomType();
-//        practicalType.setId(2L);
-//        practicalType.setDescription("practical");
-//        Room laboratory = new Room();
-//        laboratory.setId(1L);
-//        laboratory.setType(laboratoryType);
-//        laboratory.setName("Laboratory Room");
-//        Room practical = new Room();
-//        practical.setId(2L);
-//        practical.setName("Practical Room");
-//        practical.setType(practicalType);
-//
-//        RoomForScheduleDTO laboratoryDTO = new RoomForScheduleDTO();
-//        laboratoryDTO.setId(laboratory.getId());
-//        laboratoryDTO.setName(laboratory.getName());
-//        LessonsInScheduleDTO firstLesson = new LessonsInScheduleDTO();
-//        firstLesson.setLessonType("LABORATORY");
-//        firstLesson.setRoom(laboratoryDTO);
-//        firstLesson.setSubjectForSite("Human anatomy");
-//        firstLesson.setTeacherForSite("Ivanov I.I.");
-//        RoomForScheduleDTO practicalDTO = new RoomForScheduleDTO();
-//        practicalDTO.setId(practical.getId());
-//        practicalDTO.setName(practical.getName());
-//        LessonsInScheduleDTO secondLesson = new LessonsInScheduleDTO();
-//        secondLesson.setLessonType("LABORATORY");
-//        secondLesson.setRoom(practicalDTO);
-//        secondLesson.setSubjectForSite("Human anatomy");
-//        secondLesson.setTeacherForSite("Ivanov I.I.");
-//        LessonInScheduleByWeekDTO lessonInScheduleByWeekDTO = new LessonInScheduleByWeekDTO();
-//        lessonInScheduleByWeekDTO.setEven(firstLesson);
-//        lessonInScheduleByWeekDTO.setOdd(secondLesson);
-//        PeriodDTO firstPeriodDTO = new PeriodDTO();
-//        firstPeriodDTO.setName(firstClasses.getName());
-//        firstPeriodDTO.setId(firstClasses.getId());
-//        firstPeriodDTO.setStartTime(firstClasses.getStartTime());
-//        firstPeriodDTO.setEndTime(firstClasses.getEndTime());
-//        PeriodDTO secondPeriodDTO = new PeriodDTO();
-//        secondPeriodDTO.setName(secondClasses.getName());
-//        secondPeriodDTO.setId(secondClasses.getId());
-//        secondPeriodDTO.setStartTime(secondClasses.getStartTime());
-//        secondPeriodDTO.setEndTime(secondClasses.getEndTime());
-//        ClassesInScheduleForGroupDTO classes = new ClassesInScheduleForGroupDTO();
-//        classes.setPeriod(secondPeriodDTO);
-//        classes.setWeeks(lessonInScheduleByWeekDTO);
-//        ClassesInScheduleForGroupDTO classes1 = new ClassesInScheduleForGroupDTO();
-//        classes1.setPeriod(firstPeriodDTO);
-//        classes1.setWeeks(lessonInScheduleByWeekDTO);
-//        List<ClassesInScheduleForGroupDTO> inScheduleDTOS = new ArrayList<>();
-//        inScheduleDTOS.add(classes1);
-//        inScheduleDTOS.add(classes );
-//        DaysOfWeekWithClassesForGroupDTO days = new DaysOfWeekWithClassesForGroupDTO();
-//        days.setDay(DayOfWeek.MONDAY);
-//        days.setClasses(inScheduleDTOS);
-//        GroupDTO groupDTO = new GroupDTO();
-//        groupDTO.setTitle(group.getTitle());
-//        groupDTO.setId(group.getId());
-//        List<DaysOfWeekWithClassesForGroupDTO> daysOfWeekWithClassesDTOList = new ArrayList<>();
-//        daysOfWeekWithClassesDTOList.add(days);
-//        ScheduleForGroupDTO scheduleForGroupDTO = new ScheduleForGroupDTO();
-//        scheduleForGroupDTO.setGroup(groupDTO);
-//        scheduleForGroupDTO.setDays(daysOfWeekWithClassesDTOList);
-//        List<ScheduleForGroupDTO> scheduleForGroupDTOList = new ArrayList<>();
-//        scheduleForGroupDTOList.add(scheduleForGroupDTO);
-//
-//        when(scheduleRepository.countSchedulesForGroupInSemester(semester.getId(), group.getId())).thenReturn(1L);
-//        when(groupService.getById(1L)).thenReturn(group);
-//        when(scheduleRepository.getDaysWhenGroupHasClassesBySemester(semester.getId(), group.getId())).thenReturn(dayOfWeekList);
-//        when(scheduleRepository.periodsForGroupByDayBySemester(semester.getId(), group.getId(), DayOfWeek.MONDAY)).thenReturn(periodList);
-//        when(scheduleRepository.lessonForGroupByDayBySemesterByPeriodByWeek(semester.getId(), group.getId(), firstClasses.getId(), DayOfWeek.MONDAY, EvenOdd.EVEN)).thenReturn(Optional.of(lesson));
-//        when(scheduleRepository.lessonForGroupByDayBySemesterByPeriodByWeek(semester.getId(), group.getId(), firstClasses.getId(), DayOfWeek.MONDAY, EvenOdd.ODD)).thenReturn(Optional.of(lesson));
-//        when(scheduleRepository.lessonForGroupByDayBySemesterByPeriodByWeek(semester.getId(), group.getId(), secondClasses.getId(), DayOfWeek.MONDAY, EvenOdd.EVEN)).thenReturn(Optional.of(lesson));
-//        when(scheduleRepository.lessonForGroupByDayBySemesterByPeriodByWeek(semester.getId(), group.getId(), secondClasses.getId(), DayOfWeek.MONDAY, EvenOdd.ODD)).thenReturn(Optional.of(lesson));
-//        when(scheduleRepository.getRoomForLesson(semester.getId(), lesson.getId(), firstClasses.getId(), DayOfWeek.MONDAY, EvenOdd.EVEN)).thenReturn(laboratory);
-//        when(scheduleRepository.getRoomForLesson(semester.getId(), lesson.getId(), firstClasses.getId(), DayOfWeek.MONDAY, EvenOdd.ODD)).thenReturn(practical);
-//        when(scheduleRepository.getRoomForLesson(semester.getId(), lesson.getId(), secondClasses.getId(), DayOfWeek.MONDAY, EvenOdd.EVEN)).thenReturn(laboratory);
-//        when(scheduleRepository.getRoomForLesson(semester.getId(), lesson.getId(), secondClasses.getId(), DayOfWeek.MONDAY, EvenOdd.ODD)).thenReturn(practical);
-//        when(groupMapper.groupToGroupDTO(group)).thenReturn(groupDTO);
-//        when(periodMapper.convertToDto(firstClasses)).thenReturn(firstPeriodDTO);
-//        when(periodMapper.convertToDto(secondClasses)).thenReturn(secondPeriodDTO);
-//        when(lessonsInScheduleMapper.lessonToLessonsInScheduleDTO(lesson)).thenReturn(firstLesson);
-//        when(lessonsInScheduleMapper.lessonToLessonsInScheduleDTO(lesson)).thenReturn(secondLesson);
-//        when(roomForScheduleMapper.roomToRoomForScheduleDTO(laboratory)).thenReturn(laboratoryDTO);
-//        when(roomForScheduleMapper.roomToRoomForScheduleDTO(practical)).thenReturn(practicalDTO);
-//
-//        List<ScheduleForGroupDTO> forGroupDTOList = scheduleService.getFullSchedule(semester.getId(), group.getId());
-//        assertNotNull(forGroupDTOList);
-//        assertEquals(scheduleForGroupDTOList, forGroupDTOList);
-//    }
+    @Test
+    public void getFullScheduleForGroup() {
+        Semester semester = new Semester();
+        semester.setId(1L);
+        semester.setDescription("1 semester");
+        semester.setStartDay(LocalDate.of(2020, 4, 10));
+        semester.setEndDay(LocalDate.of(2020, 5, 10));
+        Group group = new Group();
+        group.setId(1L);
+        group.setTitle("111");
+        List<DayOfWeek> dayOfWeekList = new ArrayList<>();
+        dayOfWeekList.add(DayOfWeek.MONDAY);
+        Period firstClasses = new Period();
+        firstClasses.setId(1L);
+        firstClasses.setName("1 para");
+        firstClasses.setStartTime(Timestamp.valueOf("2020-10-15 01:00:00"));
+        firstClasses.setEndTime(Timestamp.valueOf("2020-10-15 02:00:00"));
+        Period secondClasses = new Period();
+        secondClasses.setId(2L);
+        secondClasses.setName("2 para");
+        secondClasses.setStartTime(Timestamp.valueOf("2020-10-15 03:00:00"));
+        secondClasses.setEndTime(Timestamp.valueOf("2020-10-15 04:00:00"));
+        List<Period> periodList = new ArrayList<>();
+        periodList.add(firstClasses);
+        periodList.add(secondClasses);
+        Teacher teacher = new Teacher();
+        teacher.setId(1L);
+        teacher.setUserId(1);
+        teacher.setName("Ivan");
+        teacher.setSurname("Ivanov");
+        teacher.setPatronymic("Ivanovych");
+        teacher.setPosition("Docent");
+        Subject biologySubject = new Subject();
+        biologySubject.setId(1L);
+        biologySubject.setName("Biology");
+        Subject astronomySubject = new Subject();
+        astronomySubject.setId(2L);
+        astronomySubject.setName("Astronomy");
+        Lesson biology = new Lesson();
+        biology.setId(1L);
+        biology.setGroup(group);
+        biology.setTeacher(teacher);
+        biology.setSubject(biologySubject);
+        biology.setHours(1);
+        biology.setLessonType(LessonType.LABORATORY);
+        biology.setSubjectForSite("FIRST SUBJECT");
+        biology.setTeacherForSite("Ivanov I.I.");
+        Lesson astronomy = new Lesson();
+        astronomy.setId(2L);
+        astronomy.setHours(2);
+        astronomy.setTeacherForSite("Petrov P.P.");
+        astronomy.setSubjectForSite("SECOND SUBJECT");
+        astronomy.setGroup(group);
+        astronomy.setLessonType(LessonType.PRACTICAL);
+        astronomy.setSubject(astronomySubject);
+        astronomy.setTeacher(teacher);
+        RoomType laboratoryType = new RoomType();
+        laboratoryType.setId(1L);
+        laboratoryType.setDescription("Laboratory");
+        RoomType practicalType = new RoomType();
+        practicalType.setId(2L);
+        practicalType.setDescription("practical");
+        Room laboratory = new Room();
+        laboratory.setId(1L);
+        laboratory.setType(laboratoryType);
+        laboratory.setName("Laboratory Room");
+        Room practical = new Room();
+        practical.setId(2L);
+        practical.setName("Practical Room");
+        practical.setType(practicalType);
+
+        RoomForScheduleDTO laboratoryDTO = new RoomForScheduleDTO();
+        laboratoryDTO.setId(laboratory.getId());
+        laboratoryDTO.setName(laboratory.getName());
+        LessonsInScheduleDTO firstLesson = new LessonsInScheduleDTO();
+        firstLesson.setLessonType("LABORATORY");
+        firstLesson.setRoom(laboratoryDTO);
+        firstLesson.setSubjectForSite("FIRST SUBJECT");
+        firstLesson.setTeacherForSite("Ivanov I.I.");
+        RoomForScheduleDTO practicalDTO = new RoomForScheduleDTO();
+        practicalDTO.setId(practical.getId());
+        practicalDTO.setName(practical.getName());
+        LessonsInScheduleDTO secondLesson = new LessonsInScheduleDTO();
+        secondLesson.setLessonType("PRACTICAL");
+        secondLesson.setRoom(practicalDTO);
+        secondLesson.setSubjectForSite("SECOND SUBJECT");
+        secondLesson.setTeacherForSite("Petrov P.P.");
+        LessonInScheduleByWeekDTO lessonInScheduleByWeekDTO = new LessonInScheduleByWeekDTO();
+        lessonInScheduleByWeekDTO.setEven(firstLesson);
+        lessonInScheduleByWeekDTO.setOdd(secondLesson);
+        PeriodDTO firstPeriodDTO = new PeriodDTO();
+        firstPeriodDTO.setName(firstClasses.getName());
+        firstPeriodDTO.setId(firstClasses.getId());
+        firstPeriodDTO.setStartTime(firstClasses.getStartTime());
+        firstPeriodDTO.setEndTime(firstClasses.getEndTime());
+        PeriodDTO secondPeriodDTO = new PeriodDTO();
+        secondPeriodDTO.setName(secondClasses.getName());
+        secondPeriodDTO.setId(secondClasses.getId());
+        secondPeriodDTO.setStartTime(secondClasses.getStartTime());
+        secondPeriodDTO.setEndTime(secondClasses.getEndTime());
+        ClassesInScheduleForGroupDTO classes = new ClassesInScheduleForGroupDTO();
+        classes.setPeriod(secondPeriodDTO);
+        classes.setWeeks(lessonInScheduleByWeekDTO);
+        ClassesInScheduleForGroupDTO classes1 = new ClassesInScheduleForGroupDTO();
+        classes1.setPeriod(firstPeriodDTO);
+        classes1.setWeeks(lessonInScheduleByWeekDTO);
+        List<ClassesInScheduleForGroupDTO> inScheduleDTOS = new ArrayList<>();
+        inScheduleDTOS.add(classes1);
+        inScheduleDTOS.add(classes);
+        DaysOfWeekWithClassesForGroupDTO days = new DaysOfWeekWithClassesForGroupDTO();
+        days.setDay(DayOfWeek.MONDAY);
+        days.setClasses(inScheduleDTOS);
+        GroupDTO groupDTO = new GroupDTO();
+        groupDTO.setTitle(group.getTitle());
+        groupDTO.setId(group.getId());
+        List<DaysOfWeekWithClassesForGroupDTO> daysOfWeekWithClassesDTOList = new ArrayList<>();
+        daysOfWeekWithClassesDTOList.add(days);
+        ScheduleForGroupDTO scheduleForGroupDTO = new ScheduleForGroupDTO();
+        scheduleForGroupDTO.setGroup(groupDTO);
+        scheduleForGroupDTO.setDays(daysOfWeekWithClassesDTOList);
+        List<ScheduleForGroupDTO> scheduleForGroupDTOList = new ArrayList<>();
+        scheduleForGroupDTOList.add(scheduleForGroupDTO);
+
+        when(scheduleRepository.countSchedulesForGroupInSemester(semester.getId(), group.getId())).thenReturn(1L);
+        when(groupService.getById(1L)).thenReturn(group);
+        when(scheduleRepository.getDaysWhenGroupHasClassesBySemester(semester.getId(), group.getId())).thenReturn(dayOfWeekList);
+        when(scheduleRepository.periodsForGroupByDayBySemester(semester.getId(), group.getId(), DayOfWeek.MONDAY)).thenReturn(periodList);
+        when(scheduleRepository.lessonForGroupByDayBySemesterByPeriodByWeek(semester.getId(), group.getId(), firstClasses.getId(), DayOfWeek.MONDAY, EvenOdd.EVEN)).thenReturn(Optional.of(biology));
+        when(scheduleRepository.lessonForGroupByDayBySemesterByPeriodByWeek(semester.getId(), group.getId(), firstClasses.getId(), DayOfWeek.MONDAY, EvenOdd.ODD)).thenReturn(Optional.of(astronomy));
+        when(scheduleRepository.lessonForGroupByDayBySemesterByPeriodByWeek(semester.getId(), group.getId(), secondClasses.getId(), DayOfWeek.MONDAY, EvenOdd.EVEN)).thenReturn(Optional.of(biology));
+        when(scheduleRepository.lessonForGroupByDayBySemesterByPeriodByWeek(semester.getId(), group.getId(), secondClasses.getId(), DayOfWeek.MONDAY, EvenOdd.ODD)).thenReturn(Optional.of(astronomy));
+        when(scheduleRepository.getRoomForLesson(semester.getId(), firstClasses.getId(), biology.getId(), DayOfWeek.MONDAY, EvenOdd.EVEN)).thenReturn(laboratory);
+        when(scheduleRepository.getRoomForLesson(semester.getId(), firstClasses.getId(), astronomy.getId(), DayOfWeek.MONDAY, EvenOdd.ODD)).thenReturn(practical);
+        when(scheduleRepository.getRoomForLesson(semester.getId(), secondClasses.getId(), biology.getId(), DayOfWeek.MONDAY, EvenOdd.EVEN)).thenReturn(laboratory);
+        when(scheduleRepository.getRoomForLesson(semester.getId(), secondClasses.getId(), astronomy.getId(), DayOfWeek.MONDAY, EvenOdd.ODD)).thenReturn(practical);
+        when(groupMapper.groupToGroupDTO(group)).thenReturn(groupDTO);
+        when(periodMapper.convertToDto(firstClasses)).thenReturn(firstPeriodDTO);
+        when(periodMapper.convertToDto(secondClasses)).thenReturn(secondPeriodDTO);
+        when(lessonsInScheduleMapper.lessonToLessonsInScheduleDTO(biology)).thenReturn(firstLesson);
+        when(lessonsInScheduleMapper.lessonToLessonsInScheduleDTO(astronomy)).thenReturn(secondLesson);
+        when(roomForScheduleMapper.roomToRoomForScheduleDTO(laboratory)).thenReturn(laboratoryDTO);
+        when(roomForScheduleMapper.roomToRoomForScheduleDTO(practical)).thenReturn(practicalDTO);
+
+        List<ScheduleForGroupDTO> forGroupDTOList = scheduleService.getFullSchedule(semester.getId(), group.getId());
+        assertNotNull(forGroupDTOList);
+        assertEquals(scheduleForGroupDTOList,forGroupDTOList);
+    }
 }
