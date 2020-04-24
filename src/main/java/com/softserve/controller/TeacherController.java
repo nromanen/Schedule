@@ -4,7 +4,7 @@ import com.softserve.dto.TeacherDTO;
 import com.softserve.dto.TeacherWishDTO;
 import com.softserve.entity.Teacher;
 import com.softserve.service.TeacherService;
-import com.softserve.service.mapper.TeacherMapper;
+import com.softserve.mapper.TeacherMapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;

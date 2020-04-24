@@ -6,7 +6,7 @@ import com.softserve.dto.MessageDTO;
 import com.softserve.dto.PeriodDTO;
 import com.softserve.entity.Period;
 import com.softserve.service.PeriodService;
-import com.softserve.service.mapper.PeriodMapper;
+import com.softserve.mapper.PeriodMapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;

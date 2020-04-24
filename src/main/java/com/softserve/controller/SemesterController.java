@@ -3,7 +3,7 @@ package com.softserve.controller;
 import com.softserve.dto.SemesterDTO;
 import com.softserve.entity.Semester;
 import com.softserve.service.SemesterService;
-import com.softserve.service.mapper.SemesterMapper;
+import com.softserve.mapper.SemesterMapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;

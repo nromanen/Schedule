@@ -4,7 +4,7 @@ import com.softserve.dto.*;
 import com.softserve.entity.User;
 import com.softserve.security.jwt.JwtTokenProvider;
 import com.softserve.service.UserService;
-import com.softserve.service.mapper.UserMapper;
+import com.softserve.mapper.UserMapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;

@@ -43,7 +43,7 @@ public class Teacher implements Serializable {
     @Column(name ="user_id")
     private Integer userId;
 
-    @OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
     @JoinColumn(name="teacher_id", updatable = false)
     @JsonIgnore
     private Set<TeacherWishes> teacherWishesList;

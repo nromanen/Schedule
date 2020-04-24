@@ -4,8 +4,8 @@ import com.softserve.dto.*;
 import com.softserve.entity.Schedule;
 import com.softserve.entity.enums.EvenOdd;
 import com.softserve.service.ScheduleService;
-import com.softserve.service.mapper.ScheduleMapper;
-import com.softserve.service.mapper.ScheduleSaveMapper;
+import com.softserve.mapper.ScheduleMapper;
+import com.softserve.mapper.ScheduleSaveMapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -40,7 +40,7 @@ public class ScheduleController {
         return ResponseEntity.status(HttpStatus.OK).body(scheduleMapper.scheduleToScheduleDTOs(schedules));
     }
 
-    @GetMapping("/creating-data")
+    @GetMapping("/data-before")
     @ApiOperation(value = "Get the info for finishing creating the schedule")
     public ResponseEntity<CreateScheduleInfoDTO> getInfoForCreatingSchedule(@RequestParam Long semesterId,
                                                                             @RequestParam DayOfWeek dayOfWeek,
