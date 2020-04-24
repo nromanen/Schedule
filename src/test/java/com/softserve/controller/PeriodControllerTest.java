@@ -104,9 +104,7 @@ public class PeriodControllerTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(periodForCompare.getId()))
-                .andExpect(jsonPath("$.class_name").value(periodForCompare.getName()))
-                .andExpect(jsonPath("$.startTime").value(new SimpleDateFormat("HH:mm").format(periodForCompare.getStartTime())))
-                .andExpect(jsonPath("$.endTime").value(new SimpleDateFormat("HH:mm").format(periodForCompare.getEndTime())));
+                .andExpect(jsonPath("$.class_name").value(periodForCompare.getName()));
     }
 
     @Test
