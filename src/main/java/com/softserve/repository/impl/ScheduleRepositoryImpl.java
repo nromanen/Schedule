@@ -260,4 +260,25 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
                 .setParameter("teacherId", teacherId)
                 .getResultList();
     }
+
+
+    //test full schedule
+
+    @Override
+    public List<Period> periodsForSemester(Long semesterId) {
+        log.info("In periodsForSemester(semesterId = [{}])", semesterId);
+        return sessionFactory.getCurrentSession().createQuery("select distinct p1 from Period p1" +
+                " where p1.id in" +
+                " (select p.id from Schedule s join s.period p where s.semester.id = :semesterId ) order by p1.startTime")
+                .setParameter("semesterId", semesterId)
+                .getResultList();
+    }
+
+    @Override
+    public List<DayOfWeek> getDaysForSemester(Long semesterId) {
+        log.info("In getDaysForSemester(semesterId = [{}])", semesterId);
+        return sessionFactory.getCurrentSession().createQuery("select distinct s.dayOfWeek from  Schedule s where s.semester.id = :semesterId")
+                .setParameter("semesterId", semesterId)
+                .getResultList();
+    }
 }
