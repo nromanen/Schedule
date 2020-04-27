@@ -10,6 +10,7 @@ import com.softserve.entity.enums.EvenOdd;
 
 import java.time.DayOfWeek;
 import java.util.List;
+import java.util.Optional;
 
 public interface ScheduleService extends BasicService<Schedule, Long> {
     CreateScheduleInfoDTO getInfoForCreatingSchedule(Long semesterId, DayOfWeek dayOfWeek, EvenOdd evenOdd, Long classId, Long lessonId);
@@ -23,5 +24,7 @@ public interface ScheduleService extends BasicService<Schedule, Long> {
     List<Schedule> getAllSchedulesByTeacherIdAndSemesterId(Long teacherId, Long semesterId);
 
     List<ScheduleForRoomDTO> getScheduleForRooms(Long semesterId);
+
+    List<Schedule> getScheduleBySemester(Long semesterId);
 }
 

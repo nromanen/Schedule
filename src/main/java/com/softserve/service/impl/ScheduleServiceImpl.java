@@ -18,6 +18,7 @@ import java.time.DayOfWeek;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 @Transactional
 @Service
@@ -468,7 +469,13 @@ public class ScheduleServiceImpl implements ScheduleService {
         }
         return scheduleForGroupDTOList;
         }
+
+    @Override
+    public List<Schedule> getScheduleBySemester(Long semesterId) {
+        log.info("In getScheduleBySemester(Long semesterId = [{}])", semesterId);
+        return scheduleRepository.getScheduleBySemester(semesterId);
     }
+}
 
 
 

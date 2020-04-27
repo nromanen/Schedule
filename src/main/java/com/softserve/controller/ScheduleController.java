@@ -40,6 +40,14 @@ public class ScheduleController {
         return ResponseEntity.status(HttpStatus.OK).body(scheduleMapper.scheduleToScheduleDTOs(schedules));
     }
 
+    @GetMapping("/semester")
+    @ApiOperation(value = "Get the list of all schedules")
+    public ResponseEntity<List<ScheduleDTO>> listForSemester(@RequestParam Long semesterId) {
+        log.info("In listForSemester()");
+        List<Schedule> schedules = scheduleService.getScheduleBySemester(semesterId);
+        return ResponseEntity.status(HttpStatus.OK).body(scheduleMapper.scheduleToScheduleDTOs(schedules));
+    }
+
     @GetMapping("/data-before")
     @ApiOperation(value = "Get the info for finishing creating the schedule")
     public ResponseEntity<CreateScheduleInfoDTO> getInfoForCreatingSchedule(@RequestParam Long semesterId,

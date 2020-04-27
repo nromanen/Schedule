@@ -44,4 +44,6 @@ public interface ScheduleRepository extends BasicRepository<Schedule, Long> {
     List<Period> getPeriodsForRoomBySemesterByDayOfWeek(Long semesterId, Long roomId, DayOfWeek day);
 
     List<Lesson> lessonForRoomByDayBySemesterByPeriodByWeek(Long semesterId, Long roomId, Long periodId, DayOfWeek day, EvenOdd evenOdd);
+
+    List<Schedule> getScheduleBySemester(Long semesterId);
 }
