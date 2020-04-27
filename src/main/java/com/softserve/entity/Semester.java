@@ -60,6 +60,7 @@ public class Semester implements Serializable {
     @JoinTable(name = "semester_period",
             joinColumns = { @JoinColumn(name = "semester_id")},
             inverseJoinColumns = {@JoinColumn(name = "period_id")})
+    @OrderBy("startTime")
     private Set<Period> periods;
 
 
