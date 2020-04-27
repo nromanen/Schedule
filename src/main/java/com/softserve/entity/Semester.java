@@ -8,7 +8,9 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.util.Set;
 
 @NamedQuery(
         name = "findDescriptionAndYear",
@@ -45,4 +47,20 @@ public class Semester implements Serializable {
 
     @Column(name = "current_semester", columnDefinition = "boolean default 'false'")
     private boolean currentSemester = false;
+
+    @ElementCollection(targetClass = DayOfWeek.class)
+    @Enumerated(EnumType.STRING)
+    @CollectionTable(name="semester_day")
+    @Column(name = "day")
+    @NotNull(message = "At least one day should persist in the semester")
+    private Set<DayOfWeek> daysOfWeek;
+
+    @NotNull(message = "Semester should contain at least one period")
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "semester_period",
+            joinColumns = { @JoinColumn(name = "semester_id")},
+            inverseJoinColumns = {@JoinColumn(name = "period_id")})
+    private Set<Period> periods;
+
+
 }
