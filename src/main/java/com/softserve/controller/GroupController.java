@@ -28,18 +28,10 @@ public class GroupController {
         this.groupMapper = groupMapper;
     }
 
-    @GetMapping
+    @GetMapping(path = {"", "/public"})
     @ApiOperation(value = "Get the list of all groups")
     public ResponseEntity<List<GroupDTO>> list() {
         log.info("In list ()");
-        List<Group> groups = groupService.getAll();
-        return ResponseEntity.status(HttpStatus.OK).body(groupMapper.groupsToGroupDTOs(groups));
-    }
-
-    @GetMapping("/public")
-    @ApiOperation(value = "Public endpoint to get the list of all groups")
-    public ResponseEntity<List<GroupDTO>> publicList() {
-        log.info("In publicList ()");
         List<Group> groups = groupService.getAll();
         return ResponseEntity.status(HttpStatus.OK).body(groupMapper.groupsToGroupDTOs(groups));
     }

@@ -3,6 +3,7 @@ package com.softserve.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.softserve.entity.Group;
 import com.softserve.entity.Period;
+import com.softserve.entity.Semester;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -16,9 +17,6 @@ import java.util.List;
 @NoArgsConstructor
 @ToString
 public class ScheduleFullDTO {
-    @JsonProperty("semester_days")
-    private List<DayOfWeek> semesterDays;
-    @JsonProperty("semester_classes")
-    private List<PeriodDTO> semesterClasses;
+    private SemesterDTO semester;
     private List<ScheduleForGroupDTO> schedule;
 }

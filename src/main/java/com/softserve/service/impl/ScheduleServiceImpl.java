@@ -31,6 +31,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     private final GroupService groupService;
     private final TeacherWishesService teacherWishesService;
     private final TeacherService teacherService;
+    private final SemesterService semesterService;
 
     private final GroupMapper groupMapper;
     private final PeriodMapper periodMapper;
@@ -41,12 +42,13 @@ public class ScheduleServiceImpl implements ScheduleService {
 
 
     @Autowired
-    public ScheduleServiceImpl(ScheduleRepository scheduleRepository, LessonService lessonService, RoomService roomService, GroupService groupService, TeacherWishesService teacherWishesService, TeacherService teacherService, GroupMapper groupMapper, PeriodMapper periodMapper, LessonsInScheduleMapper lessonsInScheduleMapper, RoomForScheduleMapper roomForScheduleMapper, TeacherMapper teacherMapper, LessonForTeacherScheduleMapper lessonForTeacherScheduleMapper) {
+    public ScheduleServiceImpl(ScheduleRepository scheduleRepository, LessonService lessonService, RoomService roomService, GroupService groupService, TeacherWishesService teacherWishesService, TeacherService teacherService, SemesterService semesterService, GroupMapper groupMapper, PeriodMapper periodMapper, LessonsInScheduleMapper lessonsInScheduleMapper, RoomForScheduleMapper roomForScheduleMapper, TeacherMapper teacherMapper, LessonForTeacherScheduleMapper lessonForTeacherScheduleMapper) {
         this.scheduleRepository = scheduleRepository;
         this.lessonService = lessonService;
         this.roomService = roomService;
         this.groupService = groupService;
         this.teacherService = teacherService;
+        this.semesterService = semesterService;
         this.groupMapper = groupMapper;
         this.teacherWishesService = teacherWishesService;
         this.periodMapper = periodMapper;
@@ -267,10 +269,8 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Override
     public ScheduleFullDTO getFullScheduleForSemester(Long semesterId) {
         ScheduleFullDTO scheduleFullDTO = new ScheduleFullDTO();
-        scheduleFullDTO.setSemesterClasses(periodMapper.convertToDtoList(scheduleRepository.periodsForSemester(semesterId)));
-        List<DayOfWeek> dayOfWeekList = scheduleRepository.getDaysForSemester(semesterId);
-        dayOfWeekList.sort(Comparator.comparingInt(DayOfWeek::getValue));
-        scheduleFullDTO.setSemesterDays(dayOfWeekList);
+        SemesterMapper semesterMapper = new SemesterMapperImpl();
+        scheduleFullDTO.setSemester(semesterMapper.semesterToSemesterDTO(semesterService.getById(semesterId)));
 
         List<ScheduleForGroupDTO> scheduleForGroupDTOList = new ArrayList<>();
         List<Group> groupsForSchedule = new ArrayList<>();

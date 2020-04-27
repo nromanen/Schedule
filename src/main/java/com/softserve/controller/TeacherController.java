@@ -30,7 +30,7 @@ public class TeacherController {
         this.teacherMapper = teacherMapper;
     }
 
-    @GetMapping
+    @GetMapping(path = {"", "/public"})
     @ApiOperation(value = "Get the list of all teachers")
     public ResponseEntity<List<TeacherDTO>> getAll() {
         log.info("Enter into list method");
@@ -78,7 +78,7 @@ public class TeacherController {
 
     @DeleteMapping("/{id}")
     @ApiOperation(value = "Delete teacher by id")
-    public ResponseEntity<?> delete(@PathVariable("id") Long id) {
+    public ResponseEntity delete(@PathVariable("id") Long id) {
         log.info("Enter into delete method with  teacher id: {}", id);
         Teacher teacher = teacherService.getById(id);
         teacherService.delete(teacher);

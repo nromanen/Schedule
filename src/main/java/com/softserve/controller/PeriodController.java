@@ -33,7 +33,7 @@ public class PeriodController {
         this.periodMapper = periodMapper;
     }
 
-    @GetMapping
+    @GetMapping(path = {"", "/public"})
     @ApiOperation(value = "Get the list of all classes")
     public ResponseEntity<List<PeriodDTO>> list() {
         log.info("Enter into list of PeriodController");
