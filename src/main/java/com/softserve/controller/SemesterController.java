@@ -45,6 +45,14 @@ public class SemesterController {
         return ResponseEntity.status(HttpStatus.OK).body(semesterMapper.semesterToSemesterDTO(semester));
     }
 
+    @GetMapping("/current")
+    @ApiOperation(value = "Get current semester a manager is working on")
+    public ResponseEntity<SemesterDTO> getCurrent(){
+        log.info("In getCurrent()");
+        Semester semester = semesterService.getCurrentSemester();
+        return ResponseEntity.status(HttpStatus.OK).body(semesterMapper.semesterToSemesterDTO(semester));
+    }
+
     @PostMapping
     @ApiOperation(value = "Create new semester")
     public ResponseEntity<SemesterDTO> save(@RequestBody SemesterDTO semesterDTO) {

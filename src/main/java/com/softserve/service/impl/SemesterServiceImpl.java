@@ -130,7 +130,8 @@ public class SemesterServiceImpl implements SemesterService {
     @Override
     public Semester getCurrentSemester() {
         log.info("In getCurrentSemester");
-        return semesterRepository.getCurrentSemester().orElse(null);
+        return semesterRepository.getCurrentSemester().orElseThrow(
+                () -> new RuntimeException("Current semester for managers work isn't specified"));
     }
 
     //check if the end time is not before the start time or equals return true, else - false
