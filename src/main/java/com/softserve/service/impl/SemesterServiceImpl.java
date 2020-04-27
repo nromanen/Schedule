@@ -8,6 +8,7 @@ import com.softserve.exception.IncorrectTimeException;
 import com.softserve.repository.SemesterRepository;
 import com.softserve.service.SemesterService;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,8 +36,11 @@ public class SemesterServiceImpl implements SemesterService {
     @Override
     public Semester getById(Long id) {
         log.info("In getById(id = [{}])", id);
-        return semesterRepository.findById(id).orElseThrow(
+        Semester semester = semesterRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException(Semester.class, "id", id.toString()));
+        Hibernate.initialize(semester.getDaysOfWeek());
+        Hibernate.initialize(semester.getPeriods());
+        return semester;
     }
 
     /**
@@ -47,7 +51,12 @@ public class SemesterServiceImpl implements SemesterService {
     @Override
     public List<Semester> getAll() {
         log.info("In getAll()");
-        return semesterRepository.getAll();
+        List<Semester> semesters = semesterRepository.getAll();
+        for (Semester semester: semesters) {
+            Hibernate.initialize(semester.getDaysOfWeek());
+            Hibernate.initialize(semester.getPeriods());
+        }
+        return  semesters;
     }
 
     /**
