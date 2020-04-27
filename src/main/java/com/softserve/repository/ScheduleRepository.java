@@ -39,7 +39,7 @@ public interface ScheduleRepository extends BasicRepository<Schedule, Long> {
     List<DayOfWeek> getDaysForSemester(Long semesterId);
 
     //rooms
-    List<String> getDaysWhenRoomHasClassesBySemester(Long semesterId, Long roomId);
+    List<DayOfWeek> getDaysWhenRoomHasClassesBySemester(Long semesterId, Long roomId);
 
     List<Period> getPeriodsForRoomBySemesterByDayOfWeek(Long semesterId, Long roomId, DayOfWeek day);
 

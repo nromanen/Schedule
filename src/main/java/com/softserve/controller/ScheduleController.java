@@ -76,8 +76,8 @@ public class ScheduleController {
 
     @GetMapping("/full/rooms")
     @ApiOperation(value = "Get full schedule for semester. Returns schedule for  rooms")
-    public ResponseEntity<List<ScheduleForRoomDTO>> getFullScheduleForGroup(@RequestParam Long semesterId) {
-        log.info("In, getFullScheduleForGroup (semesterId = [{}]) ", semesterId);
+    public ResponseEntity<List<ScheduleForRoomDTO>> getFullScheduleForRoom(@RequestParam Long semesterId) {
+        log.info("In, getFullScheduleForRoom (semesterId = [{}]) ", semesterId);
         return ResponseEntity.status(HttpStatus.OK).body(scheduleService.getScheduleForRooms(semesterId));
     }
 

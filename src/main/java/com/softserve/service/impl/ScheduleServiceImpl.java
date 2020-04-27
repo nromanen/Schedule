@@ -435,10 +435,10 @@ public class ScheduleServiceImpl implements ScheduleService {
 
 
     private List<DaysOfWeekWithClassesForRoomDTO> getDaysWhenRoomHasClassesBySemester(Long semesterId, Long roomId) {
-        log.info("In getDaysWhenGroupHasClassesBySemesterByTeacher(semesterId = [{}], groupId = [{}], teacherId = [{}])", semesterId, roomId);
+        log.info("In getDaysWhenRoomHasClassesBySemester(semesterId = [{}], groupId = [{}])", semesterId, roomId);
         List<DaysOfWeekWithClassesForRoomDTO> daysOfWeekWithClassesForRoomDTOList = new ArrayList<>();
-        List<DayOfWeek> weekList = new ArrayList<>();
-        scheduleRepository.getDaysWhenRoomHasClassesBySemester(semesterId, roomId).forEach(day -> weekList.add(DayOfWeek.valueOf(day)));
+
+        List<DayOfWeek> weekList = scheduleRepository.getDaysWhenRoomHasClassesBySemester(semesterId, roomId);
         weekList.sort(Comparator.comparingInt(DayOfWeek::getValue));
         for (DayOfWeek day : weekList) {
             DaysOfWeekWithClassesForRoomDTO daysOfWeekWithClassesForRoomDTO = new DaysOfWeekWithClassesForRoomDTO();

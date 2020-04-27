@@ -270,7 +270,7 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
      * @return List of days
      */
     @Override
-    public List<String> getDaysWhenRoomHasClassesBySemester(Long semesterId, Long roomId) {
+    public List<DayOfWeek> getDaysWhenRoomHasClassesBySemester(Long semesterId, Long roomId) {
         log.info("In getDaysWhenRoomHasClassesBySemester(semesterId = [{}], roomId = [{}]", semesterId, roomId);
         return sessionFactory.getCurrentSession().createQuery("select distinct s.dayOfWeek from  Schedule s where s.semester.id = :semesterId and s.room.id= :roomId")
                 .setParameter("semesterId", semesterId)
@@ -296,7 +296,7 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
                 " (select p.id from Schedule s join s.period p where s.semester.id = :semesterId and s.room.id = :roomId and s.dayOfWeek = :dayOfWeek) order by p1.startTime")
                 .setParameter("semesterId", semesterId)
                 .setParameter("roomId", roomId)
-                .setParameter("dayOfWeek", day.toString())
+                .setParameter("dayOfWeek", day)
                 .getResultList();
     }
 
@@ -319,7 +319,7 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
                 .setParameter("semesterId", semesterId)
                 .setParameter("roomId", roomId)
                 .setParameter("periodId", periodId)
-                .setParameter("dayOfWeek", day.toString())
+                .setParameter("dayOfWeek", day)
                 .setParameter("evenOdd", evenOdd)
                 .getResultList();
     }
