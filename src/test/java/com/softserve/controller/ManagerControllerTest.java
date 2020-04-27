@@ -6,10 +6,8 @@
 //import com.softserve.entity.Teacher;
 //import com.softserve.entity.User;
 //import com.softserve.entity.enums.Role;
-//import com.softserve.service.MailService;
 //import com.softserve.service.TeacherService;
 //import com.softserve.service.UserService;
-//import com.softserve.service.impl.UserServiceImpl;
 //import org.junit.Before;
 //import org.junit.Test;
 //import org.junit.experimental.categories.Category;
@@ -17,7 +15,6 @@
 //import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.http.MediaType;
 //import org.springframework.security.test.context.support.WithMockUser;
-//import org.springframework.security.test.context.support.WithUserDetails;
 //import org.springframework.test.context.ContextConfiguration;
 //import org.springframework.test.context.jdbc.Sql;
 //import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -36,7 +33,7 @@
 //@ContextConfiguration(classes = {WebMvcConfig.class, DBConfigTest.class, MyWebAppInitializer.class,
 //        SecurityConfig.class, SecurityWebApplicationInitializer.class, MailConfig.class})
 //@WebAppConfiguration
-//@WithMockUser(roles = "MANAGER")
+//@WithMockUser(username = "first@mail.com", password = "$2a$04$SpUhTZ/SjkDQop/Zvx1.seftJdqvOploGce/wau247zQhpEvKtz9.", roles = "MANAGER")
 //@Sql(value = "classpath:create-dataForManager-before.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 //public class ManagerControllerTest {
 //
@@ -69,7 +66,7 @@
 //
 //        Teacher teacher = teacherService.getById(4L);
 //        User user = userService.getById(5L);
-//        assertEquals(user.getId(), teacher.getUserId());
+//        assertEquals(user.getId(), (Long)teacher.getUserId().longValue());
 //        assertEquals(Role.ROLE_TEACHER, user.getRole());
 //    }
 //}
