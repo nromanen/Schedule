@@ -36,11 +36,8 @@ public class SemesterServiceImpl implements SemesterService {
     @Override
     public Semester getById(Long id) {
         log.info("In getById(id = [{}])", id);
-        Semester semester = semesterRepository.findById(id).orElseThrow(
+        return semesterRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException(Semester.class, "id", id.toString()));
-        Hibernate.initialize(semester.getDaysOfWeek());
-        Hibernate.initialize(semester.getPeriods());
-        return semester;
     }
 
     /**
@@ -52,10 +49,6 @@ public class SemesterServiceImpl implements SemesterService {
     public List<Semester> getAll() {
         log.info("In getAll()");
         List<Semester> semesters = semesterRepository.getAll();
-        for (Semester semester: semesters) {
-            Hibernate.initialize(semester.getDaysOfWeek());
-            Hibernate.initialize(semester.getPeriods());
-        }
         return  semesters;
     }
 
