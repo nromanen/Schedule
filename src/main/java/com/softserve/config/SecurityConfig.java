@@ -53,16 +53,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-//                .authorizeRequests()
-//                .antMatchers(LOGIN_ENDPOINT, REGISTRATION_ENDPOINT, ACTIVATION_ACCOUNT_ENDPOINT,
-//                        RESET_PASSWORD_ENDPOINT, SCHEDULE_FOR_USERS_ENDPOINT, ALL_GROUPS_PUBLIC_ENDPOINT, ALL_TEACHERS_PUBLIC_ENDPOINT,
-//                        ALL_GROUPS_PUBLIC_ENDPOINT).permitAll()
-//                .antMatchers(MANAGER_ENDPOINT, CLASSES_ENDPOINT, GROUPS_ENDPOINT, LESSONS_ENDPOINT,
-//                        ROOMS_ENDPOINT, SUBJECTS_ENDPOINT, TEACHERS_ENDPOINT, SCHEDULE_ENDPOINT).hasRole("MANAGER")
-//                .anyRequest().authenticated()
-//                .and()
-               // .apply(new JwtConfigurer(jwtTokenProvider))
-        ;
+                .authorizeRequests()
+                .antMatchers(AUTH_ENDPOINT, SCHEDULE_FOR_USERS_ENDPOINT, ALL_GROUPS_PUBLIC_ENDPOINT, ALL_TEACHERS_PUBLIC_ENDPOINT,
+                        ALL_GROUPS_PUBLIC_ENDPOINT).permitAll()
+                .antMatchers(MANAGER_ENDPOINT, CLASSES_ENDPOINT, GROUPS_ENDPOINT, LESSONS_ENDPOINT,
+                        ROOMS_ENDPOINT, SUBJECTS_ENDPOINT, TEACHERS_ENDPOINT, SCHEDULE_ENDPOINT).hasRole("MANAGER")
+                .anyRequest().authenticated()
+                .and()
+                .apply(new JwtConfigurer(jwtTokenProvider));
 
 //        http
 //                .exceptionHandling()
