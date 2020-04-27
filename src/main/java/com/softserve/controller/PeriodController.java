@@ -40,6 +40,13 @@ public class PeriodController {
         return ResponseEntity.ok().body(periodMapper.convertToDtoList(periodService.getAll()));
     }
 
+    @GetMapping(path = {"", "/public"})
+    @ApiOperation(value = "Public endpoint to get the list of all classes")
+    public ResponseEntity<List<PeriodDTO>> publicList() {
+        log.info("Enter into list of publicList");
+        return ResponseEntity.ok().body(periodMapper.convertToDtoList(periodService.getAll()));
+    }
+
     @GetMapping("/{id}")
     @ApiOperation(value = "Get class info by id")
     @ResponseStatus(HttpStatus.OK)
