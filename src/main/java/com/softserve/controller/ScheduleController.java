@@ -52,11 +52,18 @@ public class ScheduleController {
     }
 
     @GetMapping("/full/groups")
-    @ApiOperation(value = "Get full schedule for semester. If groupId isn't specified returns schedule for all groups")
+    @ApiOperation(value = "Get full schedule for groupId in some semester")
     public ResponseEntity<List<ScheduleForGroupDTO>> getFullScheduleForGroup(@RequestParam Long semesterId,
-                                                                     @RequestParam(required = false) Long groupId) {
+                                                                     @RequestParam Long groupId) {
         log.info("In, getFullScheduleForGroup (semesterId = [{}], groupId = [{}]) ", semesterId, groupId);
-        return ResponseEntity.status(HttpStatus.OK).body(scheduleService.getFullSchedule(semesterId, groupId));
+        return ResponseEntity.status(HttpStatus.OK).body(scheduleService.getFullScheduleForGroup(semesterId, groupId));
+    }
+
+    @GetMapping("/full/semester")
+    @ApiOperation(value = "Get full schedule for semester")
+    public ResponseEntity<ScheduleFullDTO> getFullScheduleForSemester(@RequestParam Long semesterId) {
+        log.info("In, getFullScheduleForGroup (semesterId = [{}]) ", semesterId);
+        return ResponseEntity.status(HttpStatus.OK).body(scheduleService.getFullScheduleForSemester(semesterId));
     }
 
     @GetMapping("/full/teachers")
@@ -66,6 +73,14 @@ public class ScheduleController {
         log.info("In, getFullScheduleForTeacher (semesterId = [{}], teacherId = [{}]) ", semesterId, teacherId);
         return ResponseEntity.status(HttpStatus.OK).body(scheduleService.getScheduleForTeacher(semesterId, teacherId));
     }
+
+    @GetMapping("/full/rooms")
+    @ApiOperation(value = "Get full schedule for semester. Returns schedule for  rooms")
+    public ResponseEntity<List<ScheduleForRoomDTO>> getFullScheduleForRoom(@RequestParam Long semesterId) {
+        log.info("In, getFullScheduleForRoom (semesterId = [{}]) ", semesterId);
+        return ResponseEntity.status(HttpStatus.OK).body(scheduleService.getScheduleForRooms(semesterId));
+    }
+
 
     @PostMapping
     @ApiOperation(value = "Create new schedule")
