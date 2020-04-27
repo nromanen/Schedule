@@ -1,6 +1,7 @@
 package com.softserve.service;
 
 import com.softserve.dto.CreateScheduleInfoDTO;
+import com.softserve.dto.ScheduleForRoomDTO;
 import com.softserve.dto.ScheduleForGroupDTO;
 import com.softserve.dto.ScheduleForTeacherDTO;
 import com.softserve.dto.ScheduleFullDTO;
@@ -20,5 +21,7 @@ public interface ScheduleService extends BasicService<Schedule, Long> {
     ScheduleForTeacherDTO getScheduleForTeacher(Long semesterId, Long teacherId);
 
     List<Schedule> getAllSchedulesByTeacherIdAndSemesterId(Long teacherId, Long semesterId);
+
+    List<ScheduleForRoomDTO> getScheduleForRooms(Long semesterId);
 }
 
