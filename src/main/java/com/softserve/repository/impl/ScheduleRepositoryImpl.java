@@ -344,4 +344,12 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
                 .setParameter("semesterId", semesterId)
                 .getResultList();
     }
+
+    @Override
+    public List<Schedule> getScheduleBySemester(Long semesterId) {
+        log.info("In getScheduleBySemester(semesterId = [{}])", semesterId);
+        return sessionFactory.getCurrentSession().createQuery("SELECT s from Schedule s where s.semester.id = :semesterId")
+                .setParameter("semesterId", semesterId)
+                .getResultList();
+    }
 }
