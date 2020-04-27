@@ -50,7 +50,6 @@ public class RoomController {
         return ResponseEntity.ok().body(roomMapper.convertToDtoList(rooms));
     }
 
-
     @GetMapping("/{id}")
     @ApiOperation(value = "Get room info by id")
     @ResponseStatus(HttpStatus.OK)
