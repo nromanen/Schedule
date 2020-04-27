@@ -54,12 +54,12 @@ public class PeriodControllerTest {
                 .build();
     }
 
-//    @Test
-//    public void getAllPeriods() throws Exception {
-//        mockMvc.perform(get("/classes").accept(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isOk())
-//                .andExpect(content().contentType("application/json"));
-//    }
+    @Test
+    public void getAllPeriods() throws Exception {
+        mockMvc.perform(get("/classes").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json"));
+    }
 
     @Test
     public void getPeriodById() throws Exception {
