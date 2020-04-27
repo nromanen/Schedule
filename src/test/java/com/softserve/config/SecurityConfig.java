@@ -26,6 +26,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private static final String SUBJECTS_ENDPOINT = "/subjects/**";
     private static final String TEACHERS_ENDPOINT = "/teachers/**";
     private static final String AUTH_ENDPOINT = "/auth/**";
+    private static final String SEMESTERS_ENDPOINT = "/semesters/**";
+    private static final String USERS_ENDPOINT = "/users/**";
+    private static final String ROOM_TYPES_ENDPOINT = "/room-types/**";
     private static final String SCHEDULE_ENDPOINT = "/schedules/*";
     private static final String SCHEDULE_FOR_USERS_ENDPOINT = "/schedules/full/*";
     private static final String ALL_GROUPS_PUBLIC_ENDPOINT = "/groups/public";
@@ -52,7 +55,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers(AUTH_ENDPOINT, SCHEDULE_FOR_USERS_ENDPOINT, ALL_GROUPS_PUBLIC_ENDPOINT).permitAll()
                 .antMatchers(MANAGER_ENDPOINT, CLASSES_ENDPOINT, GROUPS_ENDPOINT, LESSONS_ENDPOINT,
-                        ROOMS_ENDPOINT, SUBJECTS_ENDPOINT, TEACHERS_ENDPOINT, SCHEDULE_ENDPOINT).hasRole("MANAGER")
+                        ROOMS_ENDPOINT, SUBJECTS_ENDPOINT, TEACHERS_ENDPOINT, SCHEDULE_ENDPOINT,
+                        SEMESTERS_ENDPOINT, USERS_ENDPOINT, ROOM_TYPES_ENDPOINT).hasRole("MANAGER")
                 .anyRequest().authenticated()
                 .and()
                 .apply(new JwtConfigurer(jwtTokenProvider))

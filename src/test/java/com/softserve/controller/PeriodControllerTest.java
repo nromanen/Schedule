@@ -144,7 +144,7 @@ public class PeriodControllerTest {
     }
 
     @Test
-    public void returnBadRequestIfSavedNameIsNull() throws Exception {
+    public void returnInternalServerErrorIfSavedNameIsNull() throws Exception {
         AddPeriodDTO periodDtoForSave = new AddPeriodDTO();
         periodDtoForSave.setName(null);
         periodDtoForSave.setStartTime(Timestamp.valueOf("2020-10-15 03:00:00"));
@@ -153,7 +153,7 @@ public class PeriodControllerTest {
         mockMvc.perform(post("/classes").content(objectMapper.writeValueAsString(periodDtoForSave))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isInternalServerError());
     }
 
     @Test
