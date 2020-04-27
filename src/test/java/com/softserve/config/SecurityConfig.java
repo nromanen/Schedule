@@ -6,14 +6,11 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -28,10 +25,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private static final String ROOMS_ENDPOINT = "/rooms/**";
     private static final String SUBJECTS_ENDPOINT = "/subjects/**";
     private static final String TEACHERS_ENDPOINT = "/teachers/**";
-    private static final String LOGIN_ENDPOINT = "/auth/sign_in";
-    private static final String REGISTRATION_ENDPOINT = "/auth/sign_up";
-    private static final String ACTIVATION_ACCOUNT_ENDPOINT = "/auth/activation_account";
-    private static final String RESET_PASSWORD_ENDPOINT = "/auth/reset_password";
+    private static final String AUTH_ENDPOINT = "/auth/**";
+    private static final String SEMESTERS_ENDPOINT = "/semesters/**";
+    private static final String USERS_ENDPOINT = "/users/**";
+    private static final String ROOM_TYPES_ENDPOINT = "/room-types/**";
+    private static final String SCHEDULE_ENDPOINT = "/schedules/*";
+    private static final String SCHEDULE_FOR_USERS_ENDPOINT = "/schedules/full/*";
+    private static final String ALL_GROUPS_PUBLIC_ENDPOINT = "/groups/public";
 
 
     @Autowired
@@ -47,21 +47,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-
-        //TODO security
         http.cors().and()
                 .httpBasic().disable()
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers(LOGIN_ENDPOINT, REGISTRATION_ENDPOINT, ACTIVATION_ACCOUNT_ENDPOINT,
-                        RESET_PASSWORD_ENDPOINT).permitAll()
+                .antMatchers(AUTH_ENDPOINT, SCHEDULE_FOR_USERS_ENDPOINT, ALL_GROUPS_PUBLIC_ENDPOINT).permitAll()
                 .antMatchers(MANAGER_ENDPOINT, CLASSES_ENDPOINT, GROUPS_ENDPOINT, LESSONS_ENDPOINT,
-                        ROOMS_ENDPOINT, SUBJECTS_ENDPOINT, TEACHERS_ENDPOINT).hasRole("MANAGER")
+                        ROOMS_ENDPOINT, SUBJECTS_ENDPOINT, TEACHERS_ENDPOINT, SCHEDULE_ENDPOINT,
+                        SEMESTERS_ENDPOINT, USERS_ENDPOINT, ROOM_TYPES_ENDPOINT).hasRole("MANAGER")
                 .anyRequest().authenticated()
                 .and()
-                .apply(new JwtConfigurer(jwtTokenProvider));
+                .apply(new JwtConfigurer(jwtTokenProvider))
+        ;
 
         http
                 .exceptionHandling()
@@ -84,15 +83,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 "/configuration/security",
                 "/swagger-ui.html",
                 "/webjars/**");
-    }
-
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
-        auth.inMemoryAuthentication()
-                .passwordEncoder(encoder)
-                .withUser("spring")
-                .password(encoder.encode("secret"))
-                .roles("MANAGER");
     }
 }
