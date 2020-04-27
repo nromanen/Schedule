@@ -56,6 +56,18 @@ public class RoomServiceImpl implements RoomService {
         return roomRepository.getAll();
     }
 
+
+    /**
+     * The method used for getting all rooms
+     *
+     * @return list of rooms
+     */
+    @Override
+    public List<Room> getDisabled() {
+        log.info("Enter into getAll of getDisabled");
+        return roomRepository.getDisabled();
+    }
+
     /**
      * The method used for saving room in database
      *
