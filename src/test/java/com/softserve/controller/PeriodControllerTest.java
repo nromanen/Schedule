@@ -1,4 +1,4 @@
-package com.softserve.controller;
+/*package com.softserve.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.softserve.config.DBConfigTest;
@@ -196,4 +196,4 @@ public class PeriodControllerTest {
                 .andDo(print())
                 .andExpect(status().isBadRequest());
     }
-}
+}*/
