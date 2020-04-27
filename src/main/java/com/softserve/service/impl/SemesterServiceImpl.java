@@ -1,10 +1,7 @@
 package com.softserve.service.impl;
 
 import com.softserve.entity.Semester;
-import com.softserve.exception.EntityAlreadyExistsException;
-import com.softserve.exception.EntityNotFoundException;
-import com.softserve.exception.FieldAlreadyExistsException;
-import com.softserve.exception.IncorrectTimeException;
+import com.softserve.exception.*;
 import com.softserve.repository.SemesterRepository;
 import com.softserve.service.SemesterService;
 import lombok.extern.slf4j.Slf4j;
@@ -131,7 +128,7 @@ public class SemesterServiceImpl implements SemesterService {
     public Semester getCurrentSemester() {
         log.info("In getCurrentSemester");
         return semesterRepository.getCurrentSemester().orElseThrow(
-                () -> new RuntimeException("Current semester for managers work isn't specified"));
+                () -> new ScheduleConflictException("Current semester for managers work isn't specified"));
     }
 
     //check if the end time is not before the start time or equals return true, else - false
