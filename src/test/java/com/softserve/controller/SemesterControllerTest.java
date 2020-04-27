@@ -5,6 +5,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.softserve.config.DBConfigTest;
 import com.softserve.config.MyWebAppInitializer;
 import com.softserve.config.WebMvcConfig;
+import com.softserve.dto.PeriodDTO;
 import com.softserve.dto.SemesterDTO;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,8 +23,13 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.sql.Timestamp;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.TreeSet;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -73,42 +79,66 @@ public class SemesterControllerTest {
                 .andExpect(status().isForbidden());
     }
 
-//    @Test
-//    public void saveSemesterIfSavedSemesterDoesNotExistAndStartDayBeginBeforeEndDay() throws Exception {
-//        SemesterDTO semesterDtoForSave = new SemesterDTO();
-//        semesterDtoForSave.setId(1);
-//        semesterDtoForSave.setDescription("another semester");
-//        semesterDtoForSave.setYear(2020);
-//        semesterDtoForSave.setStartDay(LocalDate.parse("2020/08/20", DateTimeFormatter.ofPattern("yyyy/MM/dd")));
-//        semesterDtoForSave.setEndDay(LocalDate.parse("2020/09/20", DateTimeFormatter.ofPattern("yyyy/MM/dd")));
-//
-//        mockMvc.perform(post("/semesters").content(objectMapper.writeValueAsString(semesterDtoForSave))
-//                .contentType(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isCreated());
-//    }
-//
-//    @Test
-//    public void updateSemesterIfUpdatedSemesterDoesNotExistAndStartDayBeginBeforeEndDay() throws Exception {
-//        SemesterDTO semesterDtoForUpdate = new SemesterDTO();
-//        semesterDtoForUpdate.setId(4);
-//        semesterDtoForUpdate.setYear(2222);
-//        semesterDtoForUpdate.setDescription("another semester");
-//        semesterDtoForUpdate.setStartDay(LocalDate.of(2020, 7, 20));
-//        semesterDtoForUpdate.setEndDay(LocalDate.of(2020, 9, 20));
-//
-//        mockMvc.perform(put("/semesters", 4)
-//                .content(objectMapper.writeValueAsString(semesterDtoForUpdate))
-//                .contentType(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$.id").value(semesterDtoForUpdate.getId()))
-//                .andExpect(jsonPath("$.description").value(semesterDtoForUpdate.getDescription()))
-//                .andExpect(jsonPath("$.startDay").value(semesterDtoForUpdate.getStartDay().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))))
-//                .andExpect(jsonPath("$.endDay").value(semesterDtoForUpdate.getEndDay().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))));
-//    }
+    @Test
+    public void saveSemesterIfSavedSemesterDoesNotExistAndStartDayBeginBeforeEndDay() throws Exception {
+        TreeSet<DayOfWeek> dayOfWeeks = new TreeSet<>();
+        dayOfWeeks.add(DayOfWeek.MONDAY);
+        dayOfWeeks.add(DayOfWeek.FRIDAY);
+        PeriodDTO periodDTO = new PeriodDTO();
+        periodDTO.setId(4L);
+        periodDTO.setName("first para");
+        periodDTO.setStartTime(Timestamp.valueOf("2020-10-15 09:00:00"));
+        periodDTO.setEndTime(Timestamp.valueOf("2020-10-15 10:00:00"));
+        Set<PeriodDTO> periodDTOS = new HashSet<>();
+        periodDTOS.add(periodDTO);
+        SemesterDTO semesterDtoForSave = new SemesterDTO();
+        semesterDtoForSave.setDaysOfWeek(dayOfWeeks);
+        semesterDtoForSave.setPeriods(periodDTOS);
+        semesterDtoForSave.setId(1);
+        semesterDtoForSave.setDescription("another semester");
+        semesterDtoForSave.setYear(2020);
+        semesterDtoForSave.setStartDay(LocalDate.parse("2020/08/20", DateTimeFormatter.ofPattern("yyyy/MM/dd")));
+        semesterDtoForSave.setEndDay(LocalDate.parse("2020/09/20", DateTimeFormatter.ofPattern("yyyy/MM/dd")));
+
+        mockMvc.perform(post("/semesters").content(objectMapper.writeValueAsString(semesterDtoForSave))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated());
+    }
+
+    @Test
+    public void updateSemesterIfUpdatedSemesterDoesNotExistAndStartDayBeginBeforeEndDay() throws Exception {
+        TreeSet<DayOfWeek> dayOfWeeks = new TreeSet<>();
+        dayOfWeeks.add(DayOfWeek.MONDAY);
+        dayOfWeeks.add(DayOfWeek.FRIDAY);
+        PeriodDTO periodDTO = new PeriodDTO();
+        periodDTO.setId(6L);
+        periodDTO.setName("updated para");
+        periodDTO.setStartTime(Timestamp.valueOf("2020-10-15 18:00:00"));
+        periodDTO.setEndTime(Timestamp.valueOf("2020-10-15 19:00:00"));
+        Set<PeriodDTO> periodDTOS = new HashSet<>();
+        periodDTOS.add(periodDTO);
+        SemesterDTO semesterDtoForUpdate = new SemesterDTO();
+        semesterDtoForUpdate.setId(4);
+        semesterDtoForUpdate.setYear(2222);
+        semesterDtoForUpdate.setDescription("another semester");
+        semesterDtoForUpdate.setStartDay(LocalDate.of(2020, 7, 20));
+        semesterDtoForUpdate.setEndDay(LocalDate.of(2020, 9, 20));
+        semesterDtoForUpdate.setDaysOfWeek(dayOfWeeks);
+        semesterDtoForUpdate.setPeriods(periodDTOS);
+
+        mockMvc.perform(put("/semesters", 4)
+                .content(objectMapper.writeValueAsString(semesterDtoForUpdate))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(semesterDtoForUpdate.getId()))
+                .andExpect(jsonPath("$.description").value(semesterDtoForUpdate.getDescription()))
+                .andExpect(jsonPath("$.startDay").value(semesterDtoForUpdate.getStartDay().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))))
+                .andExpect(jsonPath("$.endDay").value(semesterDtoForUpdate.getEndDay().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))));
+    }
 
     @Test
     public void deleteExistSemester() throws Exception {
-        mockMvc.perform(delete("/semesters/{id}", 5)
+        mockMvc.perform(delete("/semesters/{id}", 6)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
