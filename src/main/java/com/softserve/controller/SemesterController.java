@@ -29,7 +29,7 @@ public class SemesterController {
         this.semesterMapper = semesterMapper;
     }
 
-    @GetMapping
+    @GetMapping(path = {"", "/public"})
     @ApiOperation(value = "Get the list of all semesters")
     public ResponseEntity<List<SemesterDTO>> list() {
         log.info("In list ()");
