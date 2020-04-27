@@ -1,8 +1,11 @@
 package com.softserve.entity;
 
 import lombok.*;
+import org.hibernate.annotations.*;
 
 import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
@@ -13,6 +16,15 @@ import java.io.Serializable;
 @Getter
 @Entity
 @Table(name = "rooms")
+
+@FilterDef(name="roomDisableFilter", parameters={
+        @ParamDef( name="disable", type="boolean" ),
+})
+
+@Filters( {
+        @Filter(name="roomDisableFilter", condition="disable = :disable"),
+} )
+
 public class Room implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,5 +40,8 @@ public class Room implements Serializable {
     @ManyToOne(targetEntity = RoomType.class)
     @JoinColumn(name = "room_type_id")
     private RoomType type;
+
+    @Column(name = "disable",  columnDefinition = "boolean default 'false'")
+    private boolean disable = false;
 
 }

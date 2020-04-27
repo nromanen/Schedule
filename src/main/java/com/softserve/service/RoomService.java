@@ -14,4 +14,5 @@ public interface RoomService extends BasicService<Room, Long>  {
     List<RoomForScheduleInfoDTO> getAllRoomsForCreatingSchedule(Long semesterId, DayOfWeek dayOfWeek, EvenOdd evenOdd, Long classId);
 
     boolean isRoomExists(Room room);
+    List<Room> getDisabled();
 }

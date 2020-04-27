@@ -83,4 +83,11 @@ public class RoomController {
         return ResponseEntity.ok().body(new MessageDTO("Room has been deleted successfully."));
     }
 
+    @GetMapping("/disabled")
+    @ApiOperation(value = "Get the list of disabled rooms")
+    public ResponseEntity<List<RoomDTO>> getDisabled() {
+        log.info("Enter into list of RoomController");
+        return ResponseEntity.ok().body(roomMapper.convertToDtoList(roomService.getDisabled()));
+    }
+
 }
