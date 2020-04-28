@@ -14,8 +14,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.text.CharacterPredicates;
 import org.apache.commons.text.RandomStringGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.core.env.Environment;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
@@ -27,10 +27,13 @@ import static org.apache.commons.lang3.StringUtils.*;
 
 
 @Slf4j
+@PropertySource({"classpath:cors.properties"})
 @Transactional
 @Service
-@PropertySource({"classpath:cors.properties"})
 public class UserServiceImpl implements UserService {
+
+    @Value("${cors.localurl}")
+    private String url;
 
     private static final char[] NUMBERS = ("0123456789").toCharArray();
     private static final char[] SPECIAL_CHARACTERS = ("!@#$%^&*").toCharArray();
@@ -40,14 +43,12 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final MailService mailService;
-    private final Environment env;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, MailService mailService, Environment env) {
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, MailService mailService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.mailService = mailService;
-        this.env = env;
     }
 
     /**
@@ -155,12 +156,12 @@ public class UserServiceImpl implements UserService {
      * The method used for registration User
      *
      * @param user Entity User used for registration User in system
-     * @param url  from which url get request with User
+
      * @return User entity
      * @throws IncorrectPasswordException when password is incorrect or not strong enough
      */
     @Override
-    public User registration(User user, String url) {
+    public User registration(User user) {
         log.info("Enter into registration method  with email:{}", user.getEmail());
         User registrationUser = null;
         String password = user.getPassword();
@@ -175,9 +176,8 @@ public class UserServiceImpl implements UserService {
                     "You received this email because you requested to registration on our site.\n" +
                     "For successfully sign up and activate your profile, you have to follow the next link: ";
 
-            String link = env.getProperty("cors.localurl") + "/activation-page?token=";
-            String linkForUser = link + token;
-            String message = registrationMessage + " \r\n" + linkForUser;
+            String link = url + "/activation-page?token=" + token;
+            String message = registrationMessage + " \r\n" + link;
             String subject = "Activation account";
             mailService.send(user.getEmail(), subject, message);
         } else {

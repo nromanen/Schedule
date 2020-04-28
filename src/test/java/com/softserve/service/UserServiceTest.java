@@ -197,7 +197,7 @@ public class UserServiceTest {
         when(userRepository.save(user)).thenReturn(user);
         when(encoder.encode(any(CharSequence.class))).thenReturn("Qwerty123!@#");
 
-        User registeredUser = userService.registration(user, url);
+        User registeredUser = userService.registration(user);
         assertNotNull(registeredUser);
         assertNotNull(registeredUser.getToken());
         assertEquals(user.getEmail(), registeredUser.getEmail());
@@ -217,7 +217,7 @@ public class UserServiceTest {
         user.setPassword("qwert");
         user.setEmail("some@mail.com");
 
-        userService.registration(user, url);
+        userService.registration(user);
     }
 
     @Test
