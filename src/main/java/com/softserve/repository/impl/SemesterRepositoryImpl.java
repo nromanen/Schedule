@@ -1,6 +1,5 @@
 package com.softserve.repository.impl;
 
-import com.softserve.entity.Room;
 import com.softserve.entity.Semester;
 import com.softserve.repository.SemesterRepository;
 import lombok.extern.slf4j.Slf4j;
