@@ -1,10 +1,7 @@
 package com.softserve.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import java.time.DayOfWeek;
 import java.util.List;
@@ -13,6 +10,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @ToString
+@EqualsAndHashCode
 public class DaysOfWeekWithClassesForTeacherDTO {
     private DayOfWeek day;
     @JsonProperty("even")
