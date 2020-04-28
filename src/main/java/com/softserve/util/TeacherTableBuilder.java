@@ -15,7 +15,7 @@ import java.util.List;
 
 
 @Slf4j
-public class TableBuilder {
+public class TeacherTableBuilder {
 
     private Style style = new Style();
     private static final int NUM_COLUMNS = 8;
@@ -54,35 +54,35 @@ public class TableBuilder {
         PdfPCell header;
 
         header = new PdfPCell(new Phrase("Period", headFont));
-        style.labelCellStyle(header);
+        style.headerCellStyle(header);
         table.addCell(header);
 
         header = new PdfPCell(new Phrase("Monday", headFont));
-        style.labelCellStyle(header);
+        style.headerCellStyle(header);
         table.addCell(header);
 
         header = new PdfPCell(new Phrase("Tuesday", headFont));
-        style.labelCellStyle(header);
+        style.headerCellStyle(header);
         table.addCell(header);
 
         header = new PdfPCell(new Phrase("Wednesday", headFont));
-        style.labelCellStyle(header);
+        style.headerCellStyle(header);
         table.addCell(header);
 
         header = new PdfPCell(new Phrase("Thursday", headFont));
-        style.labelCellStyle(header);
+        style.headerCellStyle(header);
         table.addCell(header);
 
         header = new PdfPCell(new Phrase("Friday", headFont));
-        style.labelCellStyle(header);
+        style.headerCellStyle(header);
         table.addCell(header);
 
         header = new PdfPCell(new Phrase("Saturday", headFont));
-        style.labelCellStyle(header);
+        style.headerCellStyle(header);
         table.addCell(header);
 
         header = new PdfPCell(new Phrase("Sunday", headFont));
-        style.labelCellStyle(header);
+        style.headerCellStyle(header);
         table.addCell(header);
         schedules.sort(Comparator.comparing(a -> a.getPeriod().getStartTime()));
 
