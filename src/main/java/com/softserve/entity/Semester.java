@@ -16,6 +16,16 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.Set;
 
+
+@NamedQuery(
+        name = "findDescriptionAndYear",
+        query = "from Semester s where s.description= :description and s.year= :year"
+)
+@NamedQuery(
+        name = "findCurrentSemester",
+        query = "from Semester s where s.currentSemester= :currentSemester"
+)
+
 @FilterDef(name="semesterDisableFilter", parameters={
         @ParamDef( name="disable", type="boolean" ),
 })

@@ -50,7 +50,7 @@ public class RoomServiceTest {
     }
 
     @Test(expected = EntityNotFoundException.class)
-    public void throwPeriodConflictExceptionIfRoomNotFounded() {
+    public void throwEntityNotFoundExceptionIfRoomNotFounded() {
         RoomType roomType = new RoomType();
         roomType.setId(1L);
         roomType.setDescription("Small auditory");
