@@ -1,6 +1,7 @@
 package com.softserve.service.impl;
 
 import com.softserve.entity.Group;
+import com.softserve.entity.Semester;
 import com.softserve.entity.Subject;
 import com.softserve.exception.EntityNotFoundException;
 import com.softserve.exception.FieldAlreadyExistsException;
@@ -115,4 +116,16 @@ public class SubjectServiceImpl implements SubjectService {
         log.info("In isExistsWithId(id = [{}])",  id);
         return subjectRepository.countBySubjectId(id)!=0;
     }
+    /**
+     * The method used for getting all disabled subjects
+     *
+     * @return list of disabled subjects
+     */
+    @Override
+    public List<Subject> getDisabled() {
+        log.info("Enter into getAll of getDisabled");
+        return subjectRepository.getDisabled();
+    }
+
+
 }

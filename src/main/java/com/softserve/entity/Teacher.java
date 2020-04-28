@@ -4,6 +4,11 @@ package com.softserve.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Filter;
+import org.hibernate.annotations.FilterDef;
+import org.hibernate.annotations.Filters;
+import org.hibernate.annotations.ParamDef;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
@@ -14,6 +19,14 @@ import java.util.Set;
 @Getter
 @Entity
 @Table(name = "teachers")
+@FilterDef(name="teachersDisableFilter", parameters={
+        @ParamDef( name="disable", type="boolean" ),
+})
+
+@Filters( {
+        @Filter(name="teachersDisableFilter", condition="disable = :disable"),
+} )
+
 public class Teacher implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -47,4 +60,7 @@ public class Teacher implements Serializable {
     @JoinColumn(name="teacher_id", updatable = false)
     @JsonIgnore
     private Set<TeacherWishes> teacherWishesList;
+
+    @Column(name = "disable",  columnDefinition = "boolean default 'false'")
+    private boolean disable = false;
 }

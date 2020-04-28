@@ -1,8 +1,11 @@
 package com.softserve.repository.impl;
 
 import com.softserve.entity.Group;
+import com.softserve.entity.Semester;
 import com.softserve.repository.GroupRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.Filter;
+import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -10,6 +13,13 @@ import java.util.List;
 @Repository
 @Slf4j
 public class GroupRepositoryImpl extends BasicRepositoryImpl<Group, Long> implements GroupRepository {
+
+    private Session getSession(){
+        Session session = sessionFactory.getCurrentSession();
+        Filter filter = session.enableFilter("groupDisableFilter");
+        filter.setParameter("disable", false);
+        return session;
+    }
 
     /**
      * Method gets information about all groups from DB
@@ -19,8 +29,8 @@ public class GroupRepositoryImpl extends BasicRepositoryImpl<Group, Long> implem
     @Override
     public List<Group> getAll() {
         log.info("In getAll()");
-        return sessionFactory.getCurrentSession()
-                .createQuery("from Group ORDER BY title ASC")
+        Session session = getSession();
+        return session.createQuery("from Group ORDER BY title ASC")
                 .getResultList();
     }
 
@@ -62,5 +72,14 @@ public class GroupRepositoryImpl extends BasicRepositoryImpl<Group, Long> implem
                 .setParameter("groupId", group.getId())
                 .getSingleResult();
         return count != 0;
+    }
+
+    @Override
+    public List<Group> getDisabled() {
+        log.info("In getDisabled");
+        return sessionFactory.getCurrentSession().createQuery(
+                "select g from Group g " +
+                        "where g.disable = true ")
+                .getResultList();
     }
 }

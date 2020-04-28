@@ -1,10 +1,7 @@
 package com.softserve.service;
 
 import com.softserve.entity.Semester;
-import com.softserve.exception.EntityAlreadyExistsException;
-import com.softserve.exception.EntityNotFoundException;
-import com.softserve.exception.FieldAlreadyExistsException;
-import com.softserve.exception.IncorrectTimeException;
+import com.softserve.exception.*;
 import com.softserve.repository.SemesterRepository;
 import com.softserve.service.impl.SemesterServiceImpl;
 import org.junit.Test;
@@ -193,5 +190,35 @@ public class SemesterServiceTest {
         when(semesterRepository.getCurrentSemester()).thenReturn(Optional.of(currentSemester));
 
         semesterService.update(semester);
+    }
+
+    @Test
+    public void getCurrentSemesterIfSemesterExists() {
+        Semester semester = new Semester();
+        semester.setId(1L);
+        semester.setYear(2020);
+        semester.setDescription("1 semester");
+        semester.setStartDay(LocalDate.of(2020, 4, 10));
+        semester.setEndDay(LocalDate.of(2020, 5, 10));
+        semester.setCurrentSemester(true);
+
+        when(semesterRepository.getCurrentSemester()).thenReturn(Optional.of(semester));
+
+        Semester currentSemester = semesterService.getCurrentSemester();
+        assertEquals(semester,currentSemester);
+        verify(semesterRepository,times(1)).getCurrentSemester();
+    }
+
+    @Test(expected = ScheduleConflictException.class)
+    public void throwScheduleConflictExceptionIfCurrentSemesterNotFounded() {
+        Semester semester = new Semester();
+        semester.setId(1L);
+        semester.setYear(2020);
+        semester.setDescription("1 semester");
+        semester.setStartDay(LocalDate.of(2020, 4, 10));
+        semester.setEndDay(LocalDate.of(2020, 5, 10));
+        semester.setCurrentSemester(false);
+
+        semesterService.getCurrentSemester();
     }
 }

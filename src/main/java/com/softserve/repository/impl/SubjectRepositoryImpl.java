@@ -1,5 +1,6 @@
 package com.softserve.repository.impl;
 
+import com.softserve.entity.Semester;
 import com.softserve.entity.Subject;
 import com.softserve.repository.SubjectRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -62,5 +63,14 @@ public class SubjectRepositoryImpl extends BasicRepositoryImpl<Subject, Long> im
                 .setParameter("subjectId", subject.getId())
                 .getSingleResult();
         return count != 0;
+    }
+
+    @Override
+    public List<Subject> getDisabled() {
+        log.info("In getDisabled");
+        return sessionFactory.getCurrentSession().createQuery(
+                "select s from Subject s " +
+                        "where s.disable = true ")
+                .getResultList();
     }
 }

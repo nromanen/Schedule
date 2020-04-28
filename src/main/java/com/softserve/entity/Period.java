@@ -6,7 +6,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.sql.Timestamp;
+import java.time.LocalTime;
 import java.util.Objects;
 
 @NamedQuery(
@@ -26,11 +26,11 @@ public class Period implements Serializable {
 
     @NotNull(message = "Start time cannot be empty")
     @Column(name = "start_time")
-    private Timestamp startTime;
+    private LocalTime startTime;
 
     @NotNull(message = "End time cannot be empty")
     @Column(name = "end_time")
-    private Timestamp endTime;
+    private LocalTime endTime;
 
     @NotEmpty(message = "Name cannot be empty")
     @Size(min = 1, max = 35, message = "Name must be between 1 and 35 characters long")

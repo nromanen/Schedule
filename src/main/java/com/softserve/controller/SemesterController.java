@@ -1,5 +1,6 @@
 package com.softserve.controller;
 
+import com.softserve.dto.RoomDTO;
 import com.softserve.dto.SemesterDTO;
 import com.softserve.entity.Semester;
 import com.softserve.service.SemesterService;
@@ -77,6 +78,13 @@ public class SemesterController {
         Semester semester = semesterService.getById(id);
         semesterService.delete(semester);
         return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @GetMapping("/disabled")
+    @ApiOperation(value = "Get the list of disabled semester")
+    public ResponseEntity<List<SemesterDTO>> getDisabled() {
+        log.info("Enter into getDisabled");
+        return ResponseEntity.ok().body(semesterMapper.semestersToSemesterDTOs(semesterService.getDisabled()));
     }
 
 }
