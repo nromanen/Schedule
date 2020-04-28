@@ -83,8 +83,8 @@ public class LessonServiceTest {
         lesson.setSubject(subject);
         lesson.setHours(1);
         lesson.setLessonType(LessonType.LECTURE);
-        lesson.setSubjectForSite("Human anatomy");
-        lesson.setTeacherForSite("Ivanov I.I.");
+        lesson.setSubjectForSite("");
+        lesson.setTeacherForSite("");
 
         when(lessonRepository.countLessonDuplicates(lesson)).thenReturn(0L);
         when(lessonRepository.save(lesson)).thenReturn(lesson);

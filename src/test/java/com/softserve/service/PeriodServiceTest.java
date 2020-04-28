@@ -274,8 +274,8 @@ public class PeriodServiceTest {
         Period period = new Period();
         period.setId(1L);
         period.setName("Some period");
-        period.setStartTime(LocalTime.parse("03:00:00"));
-        period.setEndTime(LocalTime.parse("04:00:00"));
+        period.setStartTime(LocalTime.parse("02:00:00"));
+        period.setEndTime(LocalTime.parse("03:30:00"));
         Period periodInList = new Period();
         periodInList.setId(2L);
         periodInList.setName("Another period");
