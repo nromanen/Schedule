@@ -84,4 +84,11 @@ public class TeacherController {
         teacherService.delete(teacher);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
+
+    @GetMapping("/disabled")
+    @ApiOperation(value = "Get the list of disabled teachers")
+    public ResponseEntity<List<TeacherDTO>> getDisabled() {
+        log.info("Enter into getDisabled");
+        return ResponseEntity.ok(teacherMapper.teachersToTeacherDTOs(teacherService.getDisabled()));
+    }
 }

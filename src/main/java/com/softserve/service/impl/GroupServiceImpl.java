@@ -1,6 +1,7 @@
 package com.softserve.service.impl;
 
 import com.softserve.entity.Group;
+import com.softserve.entity.Semester;
 import com.softserve.exception.EntityNotFoundException;
 import com.softserve.exception.FieldAlreadyExistsException;
 import com.softserve.repository.GroupRepository;
@@ -111,5 +112,15 @@ public class GroupServiceImpl  implements GroupService {
     public boolean isExistsWithId(Long id) {
         log.info("In isExistsWithId(id = [{}])",  id);
         return groupRepository.countByGroupId(id)!=0;
+    }
+    /**
+     * The method used for getting all disabled groups
+     *
+     * @return list of disabled groups
+     */
+    @Override
+    public List<Group> getDisabled() {
+        log.info("Enter into getAll of getDisabled");
+        return groupRepository.getDisabled();
     }
 }

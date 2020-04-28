@@ -1,8 +1,11 @@
 package com.softserve.repository.impl;
 
+import com.softserve.entity.Room;
 import com.softserve.entity.Semester;
 import com.softserve.repository.SemesterRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.Filter;
+import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.TypedQuery;
@@ -12,6 +15,26 @@ import java.util.Optional;
 @Slf4j
 @Repository
 public class SemesterRepositoryImpl extends BasicRepositoryImpl<Semester, Long> implements SemesterRepository {
+
+    private Session getSession(){
+        Session session = sessionFactory.getCurrentSession();
+        Filter filter = session.enableFilter("semesterDisableFilter");
+        filter.setParameter("disable", false);
+        return session;
+    }
+
+    /**
+     * The method used for getting list of entities from database
+     *
+     * @return list of entities
+     */
+    @Override
+    public List<Semester> getAll() {
+        log.info("In getAll()");
+        Session session = getSession();
+        return session.createQuery("from Semester " )
+                .getResultList();
+    }
 
 
     /**
@@ -73,5 +96,15 @@ public class SemesterRepositoryImpl extends BasicRepositoryImpl<Semester, Long> 
             return Optional.empty();
         }
         return Optional.of(semesters.get(0));
+    }
+
+
+    @Override
+    public List<Semester> getDisabled() {
+        log.info("In getDisabled");
+        return sessionFactory.getCurrentSession().createQuery(
+                "select s from Semester s " +
+                        "where s.disable = true ")
+                .getResultList();
     }
 }
