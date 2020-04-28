@@ -47,7 +47,7 @@ public class RoomRepositoryImpl extends BasicRepositoryImpl<Room, Long> implemen
      * @return list of rooms
      */
     @Override
-    public List<Room> freeRoomBySpecificPeriod(Long idOfPeriod, String dayOfWeek, EvenOdd evenOdd) {
+    public List<Room> freeRoomBySpecificPeriod(Long idOfPeriod, DayOfWeek dayOfWeek, EvenOdd evenOdd) {
         log.info("Enter into freeRoomBySpecificPeriod of RoomRepositoryImpl with id {}, dayOfWeek {} and evenOdd {} ",
                 idOfPeriod, dayOfWeek, evenOdd);
         Session session = getSession();

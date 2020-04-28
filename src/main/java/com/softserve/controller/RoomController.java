@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.DayOfWeek;
 import java.util.List;
 
 @RestController
@@ -42,7 +43,7 @@ public class RoomController {
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "Get the list of all free rooms by specific day and period")
     public ResponseEntity<List<RoomDTO>> freeRoomList(@RequestParam(value = "id") Long id,
-                                                      @RequestParam(value = "dayOfWeek") String dayOfWeek,
+                                                      @RequestParam(value = "dayOfWeek") DayOfWeek dayOfWeek,
                                                       @RequestParam(value = "evenOdd", defaultValue = "WEEKLY")EvenOdd evenOdd
                                                       ) {
         log.info("Enter into freeRoomList of RoomController with id {}, dayOfWeek {} and evenOdd {} ", id, dayOfWeek, evenOdd);
