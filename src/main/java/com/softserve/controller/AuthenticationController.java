@@ -18,6 +18,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Optional;
+
+import static com.softserve.service.impl.UserServiceImpl.PASSWORD_FOR_SOCIAL_USER;
 
 @RestController
 @RequestMapping("/auth")
@@ -40,15 +43,23 @@ public class AuthenticationController {
 
     @PostMapping("/sign_in")
     @ApiOperation(value = "Get credentials  for login")
-    public ResponseEntity<AuthenticationResponseDTO> signIn(@RequestBody AuthenticationRequestDTO requestDto) {
+    public ResponseEntity signIn(@RequestBody AuthenticationRequestDTO requestDto) {
         log.info("Enter into signIn method with user email {}", requestDto.getEmail());
+        Optional<User> getUser = userService.findSocialUser(requestDto.getEmail());
+        User user = null;
+        if (getUser.isPresent()) {
+            user = getUser.get();
+            String password = getUser.get().getPassword();
+            if (password.equals(PASSWORD_FOR_SOCIAL_USER)) {
+                return ResponseEntity.status(401).body(new MessageDTO("You registered via social network. Please, sign in via social network."));
+            }
+        }
         String username = requestDto.getEmail();
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, requestDto.getPassword()));
-        User user = userService.findByEmail(username);
+        assert user != null;
         String token = jwtTokenProvider.createToken(username, user.getRole().toString());
-        AuthenticationResponseDTO authenticationResponseDTO = new AuthenticationResponseDTO(username, token);
 
-        return ResponseEntity.ok(authenticationResponseDTO);
+        return ResponseEntity.ok(new AuthenticationResponseDTO(username, token));
     }
 
     @PostMapping("/sign_up")
@@ -72,10 +83,8 @@ public class AuthenticationController {
         User user = userService.findByToken(token);
         user.setToken(null);
         userService.update(user);
-        MessageDTO messageDTO = new MessageDTO();
-        messageDTO.setMessage("You successfully activated Your account.");
 
-        return ResponseEntity.status(HttpStatus.OK).body(messageDTO);
+        return ResponseEntity.status(HttpStatus.OK).body(new MessageDTO("You successfully activated Your account."));
     }
 
     @PutMapping("/reset_password")
@@ -83,10 +92,8 @@ public class AuthenticationController {
     public ResponseEntity<MessageDTO> resetPassword(@RequestParam("email") String email) {
         log.info("Enter into resetPassword method  with email:{}", email);
         userService.resetPassword(email);
-        MessageDTO messageDTO = new MessageDTO();
-        messageDTO.setMessage("Check Your email, please. A new password has been sent to Your email.");
 
-        return ResponseEntity.ok().body(messageDTO);
+        return ResponseEntity.ok().body(new MessageDTO("Check Your email, please. A new password has been sent to Your email."));
     }
 
     @PostMapping("/sign_out")
