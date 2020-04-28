@@ -497,13 +497,13 @@ public class ScheduleServiceTest {
         Period firstClasses = new Period();
         firstClasses.setId(1L);
         firstClasses.setName("1 para");
-        firstClasses.setStartTime(LocalTime.of(1,0));
-        firstClasses.setEndTime(LocalTime.of(2,0));
+        firstClasses.setStartTime(LocalTime.parse("02:00:00"));
+        firstClasses.setEndTime(LocalTime.parse("03:00:00"));
         Period secondClasses = new Period();
         secondClasses.setId(2L);
         secondClasses.setName("2 para");
-        secondClasses.setStartTime(LocalTime.of(3,0));
-        secondClasses.setEndTime(LocalTime.of(4,0));
+        secondClasses.setStartTime(LocalTime.parse("04:00:00"));
+        secondClasses.setEndTime(LocalTime.parse("05:00:00"));
         List<Period> periodList = new ArrayList<>();
         periodList.add(firstClasses);
         periodList.add(secondClasses);
