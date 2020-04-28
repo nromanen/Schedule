@@ -30,6 +30,7 @@ import static org.apache.commons.lang3.StringUtils.*;
 @PropertySource({"classpath:cors.properties"})
 @Transactional
 @Service
+@PropertySource({"classpath:cors.properties"})
 public class UserServiceImpl implements UserService {
 
     @Value("${cors.localurl}")
@@ -43,12 +44,14 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final MailService mailService;
+    private final Environment env;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, MailService mailService) {
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, MailService mailService, Environment env) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.mailService = mailService;
+        this.env = env;
     }
 
     /**
