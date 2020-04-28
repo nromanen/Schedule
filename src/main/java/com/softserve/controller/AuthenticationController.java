@@ -64,14 +64,12 @@ public class AuthenticationController {
 
     @PostMapping("/sign_up")
     @ApiOperation(value = "Get credentials for registration")
-    public ResponseEntity<MessageDTO> signUp(@RequestBody RegistrationRequestDTO registrationDTO, HttpServletRequest request) {
+    public ResponseEntity<MessageDTO> signUp(@RequestBody RegistrationRequestDTO registrationDTO) {
         log.info("Enter into signUp method with user email {}", registrationDTO.getEmail());
         User user = userMapper.toCreateUser(registrationDTO);
-        String url = String.valueOf(request.getRequestURL());
-        User createUser = userService.registration(user, url);
+        User createUser = userService.registration(user);
         String message = "You have successfully registered. Please, check Your email '" + createUser.getEmail() + "' to activate profile.";
-        MessageDTO messageDTO = new MessageDTO();
-        messageDTO.setMessage(message);
+        MessageDTO messageDTO = new MessageDTO(message);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(messageDTO);
     }
