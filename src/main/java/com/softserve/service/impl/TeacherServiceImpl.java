@@ -1,11 +1,6 @@
 package com.softserve.service.impl;
 
-import com.softserve.entity.Teacher;
-import com.softserve.entity.User;
-import com.softserve.entity.Period;
-import com.softserve.entity.Wishes;
-import com.softserve.entity.Wish;
-import com.softserve.entity.TeacherWishes;
+import com.softserve.entity.*;
 import com.softserve.entity.enums.EvenOdd;
 import com.softserve.entity.enums.Role;
 import com.softserve.entity.enums.WishStatuses;
@@ -184,4 +179,16 @@ public class TeacherServiceImpl implements TeacherService {
 
         return update(getTeacher);
     }
+
+    /**
+     * The method used for getting all disabled teachers
+     *
+     * @return list of disabled teachers
+     */
+    @Override
+    public List<Teacher> getDisabled() {
+        log.info("Enter into getAll of getDisabled");
+        return teacherRepository.getDisabled();
+    }
+
 }

@@ -2,6 +2,10 @@ package com.softserve.entity;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Filter;
+import org.hibernate.annotations.FilterDef;
+import org.hibernate.annotations.Filters;
+import org.hibernate.annotations.ParamDef;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
@@ -14,6 +18,15 @@ import java.io.Serializable;
 @Data
 @Entity
 @Table(name = "groups")
+
+@FilterDef(name="groupDisableFilter", parameters={
+        @ParamDef( name="disable", type="boolean" ),
+})
+
+@Filters( {
+        @Filter(name="groupDisableFilter", condition="disable = :disable"),
+} )
+
 public class Group implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,4 +38,7 @@ public class Group implements Serializable {
     @Column(length = 35, nullable = false, unique = true)
     @NotNull
     private String title;
+
+    @Column(name = "disable",  columnDefinition = "boolean default 'false'")
+    private boolean disable = false;
 }

@@ -1,5 +1,6 @@
 package com.softserve.service.impl;
 
+import com.softserve.entity.Room;
 import com.softserve.entity.Semester;
 import com.softserve.exception.*;
 import com.softserve.repository.SemesterRepository;
@@ -168,4 +169,17 @@ public class SemesterServiceImpl implements SemesterService {
         }
         return semester.getId() != id;
     }
+
+
+    /**
+     * The method used for getting all disabled semesters
+     *
+     * @return list of disabled semesters
+     */
+    @Override
+    public List<Semester> getDisabled() {
+        log.info("Enter into getAll of getDisabled");
+        return semesterRepository.getDisabled();
+    }
+
 }
