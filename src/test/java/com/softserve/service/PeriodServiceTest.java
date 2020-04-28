@@ -38,8 +38,8 @@ public class PeriodServiceTest {
         Period period = new Period();
         period.setId(1L);
         period.setName("Some period");
-        period.setStartTime(LocalTime.of(3,0));
-        period.setEndTime(LocalTime.of(4,0));
+        period.setStartTime(LocalTime.parse("03:00:00"));
+        period.setEndTime(LocalTime.parse("04:00:00"));
 
         when(periodRepository.findById(1L)).thenReturn(Optional.of(period));
 
@@ -54,8 +54,8 @@ public class PeriodServiceTest {
         Period period = new Period();
         period.setId(1L);
         period.setName("Some period");
-        period.setStartTime(LocalTime.of(3,0));
-        period.setEndTime(LocalTime.of(4,0));
+        period.setStartTime(LocalTime.parse("03:00:00"));
+        period.setEndTime(LocalTime.parse("04:00:00"));
 
         periodService.getById(2L);
         verify(periodRepository, times(1)).findById(anyLong());
@@ -66,13 +66,13 @@ public class PeriodServiceTest {
         Period period = new Period();
         period.setId(1L);
         period.setName("Some period");
-        period.setStartTime(LocalTime.of(3,0));
-        period.setEndTime(LocalTime.of(4,0));
+        period.setStartTime(LocalTime.parse("03:00:00"));
+        period.setEndTime(LocalTime.parse("04:00:00"));
         Period periodInList = new Period();
         periodInList.setId(2L);
         periodInList.setName("Another period");
-        period.setStartTime(LocalTime.of(1,0));
-        period.setEndTime(LocalTime.of(2,0));
+        periodInList.setStartTime(LocalTime.parse("05:00:00"));
+        periodInList.setEndTime(LocalTime.parse("06:00:00"));
         List<Period> periodList = new ArrayList<>();
         periodList.add(periodInList);
 
@@ -91,8 +91,8 @@ public class PeriodServiceTest {
         Period period = new Period();
         period.setId(1L);
         period.setName("Some period");
-        period.setStartTime(LocalTime.of(5,0));
-        period.setEndTime(LocalTime.of(4,0));
+        period.setStartTime(LocalTime.parse("05:00:00"));
+        period.setEndTime(LocalTime.parse("04:00:00"));
 
         periodService.save(period);
     }
@@ -102,13 +102,13 @@ public class PeriodServiceTest {
         Period period = new Period();
         period.setId(1L);
         period.setName("Some period");
-        period.setStartTime(LocalTime.of(1,0));
-        period.setEndTime(LocalTime.of(2,0));
+        period.setStartTime(LocalTime.parse("01:00:00"));
+        period.setEndTime(LocalTime.parse("02:00:00"));
         Period periodInList = new Period();
         periodInList.setId(2L);
         periodInList.setName("Some period");
-        period.setStartTime(LocalTime.of(3,0));
-        period.setEndTime(LocalTime.of(4,0));
+        periodInList.setStartTime(LocalTime.parse("03:00:00"));
+        periodInList.setEndTime(LocalTime.parse("04:00:00"));
         List<Period> periodList = new ArrayList<>();
         periodList.add(periodInList);
 
@@ -120,18 +120,18 @@ public class PeriodServiceTest {
         verify(periodRepository, times(1)).findByName(anyString());
     }
 
-    /*@Test(expected = PeriodConflictException.class)
+    @Test(expected = PeriodConflictException.class)
     public void throwPeriodConflictExceptionIfSavedPeriodIntersectsWithOtherPeriods() {
         Period period = new Period();
         period.setId(1L);
         period.setName("Some period");
-        period.setStartTime(new Timestamp(1000));
-        period.setEndTime(new Timestamp(2000));
+        period.setStartTime(LocalTime.parse("01:00:00"));
+        period.setEndTime(LocalTime.parse("02:00:00"));
         Period periodInList = new Period();
         periodInList.setId(2L);
         periodInList.setName("Some period");
-        periodInList.setStartTime(new Timestamp(2000));
-        periodInList.setEndTime(new Timestamp(3000));
+        periodInList.setStartTime(LocalTime.parse("02:00:00"));
+        periodInList.setEndTime(LocalTime.parse("03:00:00"));
         List<Period> periodList = new ArrayList<>();
         periodList.add(periodInList);
 
@@ -139,20 +139,20 @@ public class PeriodServiceTest {
 
         periodService.save(period);
         verify(periodRepository, times(1)).getAll();
-    }*/
+    }
 
     @Test
     public void saveListOfPeriodsIfAllPeriodsHaveCorrectTimeNotIntersectWithOtherPeriodsAndNamesAreNotExist() {
         Period period = new Period();
         period.setId(1L);
         period.setName("Some period");
-        period.setStartTime(LocalTime.of(3,0));
-        period.setEndTime(LocalTime.of(4,0));
+        period.setStartTime(LocalTime.parse("03:00:00"));
+        period.setEndTime(LocalTime.parse("04:00:00"));
         Period anotherPeriod = new Period();
         anotherPeriod.setId(2L);
         anotherPeriod.setName("another period");
-        period.setStartTime(LocalTime.of(1,0));
-        period.setEndTime(LocalTime.of(2,0));
+        anotherPeriod.setStartTime(LocalTime.parse("01:00:00"));
+        anotherPeriod.setEndTime(LocalTime.parse("02:00:00"));
         List<Period> periodListForSave = new ArrayList<>();
         periodListForSave.add(period);
         List<Period> periodList = new ArrayList<>();
@@ -174,26 +174,26 @@ public class PeriodServiceTest {
         Period period = new Period();
         period.setId(1L);
         period.setName("Some period");
-        period.setStartTime(LocalTime.of(5,0));
-        period.setEndTime(LocalTime.of(5,0));
+        period.setStartTime(LocalTime.parse("05:00:00"));
+        period.setEndTime(LocalTime.parse("04:00:00"));
         List<Period> periodList = new ArrayList<>();
         periodList.add(period);
 
         periodService.save(periodList);
     }
 
-   /* @Test(expected = PeriodConflictException.class)
+    @Test(expected = PeriodConflictException.class)
     public void throwPeriodConflictExceptionIfSaveListOfPeriodsAndOneOfThemIntersectsWithOtherPeriod() {
         Period period = new Period();
         period.setId(1L);
         period.setName("Some period");
-        period.setStartTime(new Timestamp(1000));
-        period.setEndTime(new Timestamp(2000));
+        period.setStartTime(LocalTime.parse("02:00:00"));
+        period.setEndTime(LocalTime.parse("03:00:00"));
         Period periodInList = new Period();
         periodInList.setId(2L);
         periodInList.setName("Some period");
-        periodInList.setStartTime(new Timestamp(2000));
-        periodInList.setEndTime(new Timestamp(3000));
+        periodInList.setStartTime(LocalTime.parse("03:00:00"));
+        periodInList.setEndTime(LocalTime.parse("04:00:00"));
         List<Period> periodList = new ArrayList<>();
         periodList.add(periodInList);
         List<Period> saveList = new ArrayList<>();
@@ -203,20 +203,20 @@ public class PeriodServiceTest {
 
         periodService.save(saveList);
         verify(periodRepository, times(1)).getAll();
-    }*/
+    }
 
     @Test
     public void updatePeriodIfItHasCorrectTimeAndNotIntersectsWithOtherPeriodsAndNameIsNotExist() {
         Period period = new Period();
         period.setId(1L);
         period.setName("Some period");
-        period.setStartTime(LocalTime.of(3,0));
-        period.setEndTime(LocalTime.of(4,0));
+        period.setStartTime(LocalTime.parse("03:00:00"));
+        period.setEndTime(LocalTime.parse("04:00:00"));
         Period periodInList = new Period();
         periodInList.setId(2L);
         periodInList.setName("Another period");
-        period.setStartTime(LocalTime.of(1,0));
-        period.setEndTime(LocalTime.of(2,0));
+        periodInList.setStartTime(LocalTime.parse("06:00:00"));
+        periodInList.setEndTime(LocalTime.parse("07:00:00"));
         List<Period> periodList = new ArrayList<>();
         periodList.add(periodInList);
 
@@ -238,13 +238,13 @@ public class PeriodServiceTest {
         Period period = new Period();
         period.setId(1L);
         period.setName("Some period");
-        period.setStartTime(LocalTime.of(3,0));
-        period.setEndTime(LocalTime.of(4,0));
+        period.setStartTime(LocalTime.parse("03:00:00"));
+        period.setEndTime(LocalTime.parse("04:00:00"));
         Period periodInList = new Period();
         periodInList.setId(2L);
         periodInList.setName("Another period");
-        period.setStartTime(LocalTime.of(1,0));
-        period.setEndTime(LocalTime.of(2,0));
+        periodInList.setStartTime(LocalTime.parse("06:00:00"));
+        periodInList.setEndTime(LocalTime.parse("07:00:00"));
         List<Period> periodList = new ArrayList<>();
         periodList.add(periodInList);
 
@@ -263,24 +263,24 @@ public class PeriodServiceTest {
         Period period = new Period();
         period.setId(1L);
         period.setName("Some period");
-        period.setStartTime(LocalTime.of(5,0));
-        period.setEndTime(LocalTime.of(4,0));
+        period.setStartTime(LocalTime.parse("05:00:00"));
+        period.setEndTime(LocalTime.parse("04:00:00"));
 
         periodService.update(period);
     }
 
-    /*@Test(expected = PeriodConflictException.class)
+    @Test(expected = PeriodConflictException.class)
     public void throwPeriodConflictExceptionIfUpdatedPeriodIntersectsWithOther() {
         Period period = new Period();
         period.setId(1L);
         period.setName("Some period");
-        period.setStartTime(new Timestamp(1000));
-        period.setEndTime(new Timestamp(2000));
+        period.setStartTime(LocalTime.parse("03:00:00"));
+        period.setEndTime(LocalTime.parse("04:00:00"));
         Period periodInList = new Period();
         periodInList.setId(2L);
         periodInList.setName("Another period");
-        periodInList.setStartTime(new Timestamp(2000));
-        periodInList.setEndTime(new Timestamp(3000));
+        periodInList.setStartTime(LocalTime.parse("03:00:00"));
+        periodInList.setEndTime(LocalTime.parse("04:00:00"));
         List<Period> periodList = new ArrayList<>();
         periodList.add(periodInList);
 
@@ -288,5 +288,5 @@ public class PeriodServiceTest {
 
         periodService.update(period);
         verify(periodRepository, times(1)).getAll();
-    }*/
+    }
 }

@@ -88,8 +88,8 @@ public class SemesterControllerTest {
         PeriodDTO periodDTO = new PeriodDTO();
         periodDTO.setId(4L);
         periodDTO.setName("first para");
-        periodDTO.setStartTime(LocalTime.of(9,0));
-        periodDTO.setEndTime(LocalTime.of(10,0));
+        periodDTO.setStartTime(LocalTime.parse("09:00:00"));
+        periodDTO.setEndTime(LocalTime.parse("10:00:00"));
         Set<PeriodDTO> periodDTOS = new HashSet<>();
         periodDTOS.add(periodDTO);
         SemesterDTO semesterDtoForSave = new SemesterDTO();
@@ -114,8 +114,8 @@ public class SemesterControllerTest {
         PeriodDTO periodDTO = new PeriodDTO();
         periodDTO.setId(6L);
         periodDTO.setName("updated para");
-        periodDTO.setStartTime(LocalTime.of(9,0));
-        periodDTO.setEndTime(LocalTime.of(10,0));
+        periodDTO.setStartTime(LocalTime.parse("09:00:00"));
+        periodDTO.setEndTime(LocalTime.parse("10:00:00"));
         Set<PeriodDTO> periodDTOS = new HashSet<>();
         periodDTOS.add(periodDTO);
         SemesterDTO semesterDtoForUpdate = new SemesterDTO();
