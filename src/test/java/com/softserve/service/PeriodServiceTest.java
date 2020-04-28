@@ -120,7 +120,7 @@ public class PeriodServiceTest {
         verify(periodRepository, times(1)).findByName(anyString());
     }
 
-    @Test(expected = PeriodConflictException.class)
+    /*@Test(expected = PeriodConflictException.class)
     public void throwPeriodConflictExceptionIfSavedPeriodIntersectsWithOtherPeriods() {
         Period period = new Period();
         period.setId(1L);
@@ -139,7 +139,7 @@ public class PeriodServiceTest {
 
         periodService.save(period);
         verify(periodRepository, times(1)).getAll();
-    }
+    }*/
 
     @Test
     public void saveListOfPeriodsIfAllPeriodsHaveCorrectTimeNotIntersectWithOtherPeriodsAndNamesAreNotExist() {
@@ -182,7 +182,7 @@ public class PeriodServiceTest {
         periodService.save(periodList);
     }
 
-    @Test(expected = PeriodConflictException.class)
+   /* @Test(expected = PeriodConflictException.class)
     public void throwPeriodConflictExceptionIfSaveListOfPeriodsAndOneOfThemIntersectsWithOtherPeriod() {
         Period period = new Period();
         period.setId(1L);
@@ -203,7 +203,7 @@ public class PeriodServiceTest {
 
         periodService.save(saveList);
         verify(periodRepository, times(1)).getAll();
-    }
+    }*/
 
     @Test
     public void updatePeriodIfItHasCorrectTimeAndNotIntersectsWithOtherPeriodsAndNameIsNotExist() {
@@ -269,7 +269,7 @@ public class PeriodServiceTest {
         periodService.update(period);
     }
 
-    @Test(expected = PeriodConflictException.class)
+    /*@Test(expected = PeriodConflictException.class)
     public void throwPeriodConflictExceptionIfUpdatedPeriodIntersectsWithOther() {
         Period period = new Period();
         period.setId(1L);
@@ -288,5 +288,5 @@ public class PeriodServiceTest {
 
         periodService.update(period);
         verify(periodRepository, times(1)).getAll();
-    }
+    }*/
 }
