@@ -47,6 +47,21 @@ public class SubjectRepositoryImpl extends BasicRepositoryImpl<Subject, Long> im
     }
 
     /**
+     * The method used for getting number of subjects with name from database
+     *
+     * @param id Long id used to ignore Subject
+     * @param name String name used to find Subject
+     * @return Long number of records with name
+     */
+    @Override
+    public Long countSubjectsWithNameAndIgnoreWithId(Long id, String name) {
+        log.info("In countSubjectsWithName(name = [{}])", name);
+        return (Long) sessionFactory.getCurrentSession().createQuery
+                ("SELECT count (*) FROM Subject s WHERE s.name = :name and id!=:id")
+                .setParameter("name", name).setParameter("id", id).getSingleResult();
+    }
+
+    /**
      * Method used to verify if Subject with such id exists
      *
      * @param id of the Subject
