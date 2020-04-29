@@ -9,4 +9,6 @@ public interface SemesterRepository extends BasicRepository<Semester, Long> {
     Optional<Semester> semesterDuplicates(Semester semester);
     Optional<Semester> getCurrentSemester();
     List<Semester> getDisabled();
+    int setCurrentSemesterToFalse();
+    int setCurrentSemester(Long semesterId);
 }

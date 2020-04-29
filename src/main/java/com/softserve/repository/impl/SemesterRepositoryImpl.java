@@ -106,4 +106,21 @@ public class SemesterRepositoryImpl extends BasicRepositoryImpl<Semester, Long> 
                         "where s.disable = true ")
                 .getResultList();
     }
+
+    @Override
+    public int setCurrentSemesterToFalse() {
+        log.info("In setCurrentSemesterToFalse()");
+        return  sessionFactory.getCurrentSession().createQuery(
+                "UPDATE Semester s set s.currentSemester = false  where currentSemester = true")
+                .executeUpdate();
+    }
+
+    @Override
+    public int setCurrentSemester(Long semesterId) {
+        log.info("In setCurrentSemester(semesterId = [{}])", semesterId);
+        return sessionFactory.getCurrentSession().createQuery(
+                "UPDATE Semester s set s.currentSemester = true  where s.id = :semesterId")
+                .setParameter("semesterId", semesterId)
+                .executeUpdate();
+    }
 }

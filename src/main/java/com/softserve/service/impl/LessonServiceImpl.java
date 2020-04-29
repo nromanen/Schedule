@@ -1,11 +1,15 @@
 package com.softserve.service.impl;
 
 import com.softserve.entity.Lesson;
+import com.softserve.entity.Subject;
+import com.softserve.entity.Teacher;
 import com.softserve.entity.enums.LessonType;
 import com.softserve.exception.EntityAlreadyExistsException;
 import com.softserve.exception.EntityNotFoundException;
 import com.softserve.repository.LessonRepository;
 import com.softserve.service.LessonService;
+import com.softserve.service.SubjectService;
+import com.softserve.service.TeacherService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,10 +24,14 @@ import java.util.List;
 public class LessonServiceImpl implements LessonService {
 
     private final LessonRepository lessonRepository;
+    private final TeacherService teacherService;
+    private final SubjectService subjectService;
 
     @Autowired
-    public LessonServiceImpl(LessonRepository lessonRepository) {
+    public LessonServiceImpl(LessonRepository lessonRepository, TeacherService teacherService, SubjectService subjectService) {
         this.lessonRepository = lessonRepository;
+        this.teacherService = teacherService;
+        this.subjectService = subjectService;
     }
 
     /**
@@ -64,13 +72,16 @@ public class LessonServiceImpl implements LessonService {
     else {
             //Fill in teacher for site by teacher data (from JSON) if teacher for site is empty or null
             if (object.getTeacherForSite().isEmpty() || object.getTeacherForSite() == null) {
-                object.setTeacherForSite(object.getTeacher().getSurname()
-                        + " " + object.getTeacher().getName()
-                        + " " + object.getTeacher().getPatronymic());
+                Teacher teacher = teacherService.getById(object.getTeacher().getId());
+                object.setTeacherForSite(
+                                teacher.getSurname() + " "
+                                + teacher.getName() + " "
+                                + teacher.getPatronymic());
             }
             //Fill in subject for site by subject name (from JSON) if subject for site is empty or null
             if (object.getSubjectForSite().isEmpty() || object.getSubjectForSite() == null) {
-                object.setSubjectForSite(object.getSubject().getName());
+                Subject subject = subjectService.getById(object.getSubject().getId());
+                object.setSubjectForSite(subject.getName());
             }
             return lessonRepository.save(object);
         }

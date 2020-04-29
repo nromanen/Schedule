@@ -66,9 +66,7 @@ public class SemesterServiceImpl implements SemesterService {
             throw new EntityAlreadyExistsException("Semester already exists with current description and year.");
         }
         if (object.isCurrentSemester()) {
-            if (getCurrentSemester() != null) {
-                throw new FieldAlreadyExistsException(Semester.class, "currentSemester", String.valueOf(object.isCurrentSemester()));
-            }
+            semesterRepository.setCurrentSemesterToFalse();
         }
         return semesterRepository.save(object);
     }
@@ -89,9 +87,7 @@ public class SemesterServiceImpl implements SemesterService {
             throw new EntityAlreadyExistsException("Semester already exists with current description and year.");
         }
         if (object.isCurrentSemester()) {
-            if (isSemesterCurrent(object.getId())) {
-                throw new FieldAlreadyExistsException(Semester.class, "currentSemester", String.valueOf(object.isCurrentSemester()));
-            }
+            semesterRepository.setCurrentSemesterToFalse();
         }
         return semesterRepository.update(object);
     }
@@ -182,4 +178,11 @@ public class SemesterServiceImpl implements SemesterService {
         return semesterRepository.getDisabled();
     }
 
+    @Override
+    public Semester changeCurrentSemester(Long semesterId) {
+        log.info("In changeCurrentSemester(Long semesterId = [{}])", semesterId);
+        semesterRepository.setCurrentSemesterToFalse();
+        semesterRepository.setCurrentSemester(semesterId);
+        return getById(semesterId);
+    }
 }
