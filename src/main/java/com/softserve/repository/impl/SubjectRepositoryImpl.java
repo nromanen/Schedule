@@ -1,9 +1,10 @@
 package com.softserve.repository.impl;
 
-import com.softserve.entity.Semester;
 import com.softserve.entity.Subject;
 import com.softserve.repository.SubjectRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.Filter;
+import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -12,6 +13,12 @@ import java.util.List;
 @Slf4j
 public class SubjectRepositoryImpl extends BasicRepositoryImpl<Subject, Long> implements SubjectRepository {
 
+    private Session getSession(){
+        Session session = sessionFactory.getCurrentSession();
+        Filter filter = session.enableFilter("subjectDisableFilter");
+        filter.setParameter("disable", false);
+        return session;
+    }
     /**
      * Method gets information about all subjects from DB
      *
@@ -20,8 +27,8 @@ public class SubjectRepositoryImpl extends BasicRepositoryImpl<Subject, Long> im
     @Override
     public List<Subject> getAll() {
         log.info("In getAll()");
-        return sessionFactory.getCurrentSession()
-                .createQuery("from Subject ORDER BY name ASC")
+        Session session = getSession();
+        return session.createQuery("from Subject ORDER BY name ASC")
                 .getResultList();
     }
 
@@ -65,6 +72,11 @@ public class SubjectRepositoryImpl extends BasicRepositoryImpl<Subject, Long> im
         return count != 0;
     }
 
+    /**
+     * The method used for getting list of disabled entities from database
+     *
+     * @return list of disabled subjects
+     */
     @Override
     public List<Subject> getDisabled() {
         log.info("In getDisabled");
