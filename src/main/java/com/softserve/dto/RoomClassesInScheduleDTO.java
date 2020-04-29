@@ -1,9 +1,6 @@
 package com.softserve.dto;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import java.util.List;
 
@@ -11,6 +8,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @ToString
+@EqualsAndHashCode
 public class RoomClassesInScheduleDTO {
         private List<LessonsInRoomScheduleDTO> even;
         private List<LessonsInRoomScheduleDTO> odd;
