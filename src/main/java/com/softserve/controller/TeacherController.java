@@ -16,7 +16,6 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/teachers")
 @Api(tags = "Teacher API")
 @Slf4j
 public class TeacherController {
@@ -30,14 +29,14 @@ public class TeacherController {
         this.teacherMapper = teacherMapper;
     }
 
-    @GetMapping(path = {"", "/public"})
+    @GetMapping(path = {"/teachers", "/public/teachers"})
     @ApiOperation(value = "Get the list of all teachers")
     public ResponseEntity<List<TeacherDTO>> getAll() {
         log.info("Enter into list method");
         return ResponseEntity.ok(teacherMapper.teachersToTeacherDTOs(teacherService.getAll()));
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/teachers/{id}")
     @ApiOperation(value = "Get teacher by id")
     public ResponseEntity<TeacherDTO> get(@PathVariable("id") Long id) {
         log.info("Enter into get method with id {} ", id);
@@ -45,14 +44,14 @@ public class TeacherController {
         return ResponseEntity.ok().body(teacherMapper.teacherToTeacherDTO(teacher));
     }
 
-    @GetMapping("/with-wishes")
+    @GetMapping("/teachers/with-wishes")
     @ApiOperation(value = "Get the list of all teachers with wishes")
     public ResponseEntity<List<TeacherWishDTO>> getAllWithWishes() {
         log.info("Enter into getAllWithWishes method");
         return ResponseEntity.ok(teacherMapper.toTeacherWithWishesDTOs(teacherService.getAllTeachersWithWishes()));
     }
 
-    @GetMapping("/{id}/with-wishes")
+    @GetMapping("/teachers/{id}/with-wishes")
     @ApiOperation(value = "Get teacher with wish by id")
     public ResponseEntity<TeacherWishDTO> getTeacherWithWishes(@PathVariable("id") Long id) {
         log.info("Enter into getTeacherWithWishes method with id {} ", id);
@@ -60,7 +59,7 @@ public class TeacherController {
         return ResponseEntity.ok().body(teacherMapper.toTeacherWithWishesDTOs(teacher));
     }
 
-    @PostMapping
+    @PostMapping("/teachers")
     @ApiOperation(value = "Create new teacher")
     public ResponseEntity<TeacherDTO> save(@RequestBody TeacherDTO teacherDTO) {
         log.info("Enter into save method with teacherDTO: {}", teacherDTO);
@@ -68,7 +67,7 @@ public class TeacherController {
         return ResponseEntity.status(HttpStatus.CREATED).body(teacherMapper.teacherToTeacherDTO(teacher));
     }
 
-    @PutMapping
+    @PutMapping("/teachers")
     @ApiOperation(value = "Update existing teacher by id")
     public ResponseEntity<TeacherDTO> update(@RequestBody TeacherDTO updateTeacherDTO) {
         log.info("Enter into update method with updateTeacherDTO: {}",updateTeacherDTO);
@@ -76,7 +75,7 @@ public class TeacherController {
         return ResponseEntity.status(HttpStatus.OK).body(teacherMapper.teacherToTeacherDTO(teacher));
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/teachers/{id}")
     @ApiOperation(value = "Delete teacher by id")
     public ResponseEntity delete(@PathVariable("id") Long id) {
         log.info("Enter into delete method with  teacher id: {}", id);
@@ -85,7 +84,7 @@ public class TeacherController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    @GetMapping("/disabled")
+    @GetMapping("/teachers/disabled")
     @ApiOperation(value = "Get the list of disabled teachers")
     public ResponseEntity<List<TeacherDTO>> getDisabled() {
         log.info("Enter into getDisabled");

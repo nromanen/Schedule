@@ -34,7 +34,6 @@ test:
         policy: pull
     only:
         - master
-        - develop
 
 production_deploy:
     stage: production_deploy

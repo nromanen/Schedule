@@ -15,7 +15,6 @@ import java.util.List;
 
 @RestController
 @Api(tags = "Group API")
-@RequestMapping("/groups")
 @Slf4j
 public class GroupController {
 
@@ -28,7 +27,7 @@ public class GroupController {
         this.groupMapper = groupMapper;
     }
 
-    @GetMapping(path = {"", "/public"})
+    @GetMapping(path = {"/groups", "/public/groups"})
     @ApiOperation(value = "Get the list of all groups")
     public ResponseEntity<List<GroupDTO>> list() {
         log.info("In list ()");
@@ -36,7 +35,7 @@ public class GroupController {
         return ResponseEntity.status(HttpStatus.OK).body(groupMapper.groupsToGroupDTOs(groups));
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/groups/{id}")
     @ApiOperation(value = "Get group info by id")
     public ResponseEntity<GroupDTO> get(@PathVariable("id") long id){
         log.info("In get(id = [{}])", id);
@@ -44,7 +43,7 @@ public class GroupController {
         return ResponseEntity.status(HttpStatus.OK).body(groupMapper.groupToGroupDTO(group));
     }
 
-    @PostMapping
+    @PostMapping("/groups")
     @ApiOperation(value = "Create new group")
     public ResponseEntity<GroupDTO> save(@RequestBody GroupDTO groupDTO) {
         log.info("In save (groupDTO = [{}])", groupDTO);
@@ -52,7 +51,7 @@ public class GroupController {
         return ResponseEntity.status(HttpStatus.CREATED).body(groupMapper.groupToGroupDTO(group));
     }
 
-    @PutMapping
+    @PutMapping("/groups")
     @ApiOperation(value = "Update existing group by id")
     public ResponseEntity<GroupDTO> update(@RequestBody GroupDTO groupDTO) {
         log.info("In update (groupDTO = [{}])", groupDTO);
@@ -60,7 +59,7 @@ public class GroupController {
         return ResponseEntity.status(HttpStatus.OK).body(groupMapper.groupToGroupDTO(group));
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/groups/{id}")
     @ApiOperation(value = "Delete group by id")
     public ResponseEntity delete(@PathVariable("id") long id){
         log.info("In delete (id =[{}]", id);
@@ -69,7 +68,7 @@ public class GroupController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    @GetMapping("/disabled")
+    @GetMapping("/groups/disabled")
     @ApiOperation(value = "Get the list of disabled teachers")
     public ResponseEntity<List<GroupDTO>> getDisabled() {
         log.info("Enter into getDisabled");
