@@ -77,19 +77,23 @@ public class SemesterServiceTest {
         verify(semesterRepository, times(1)).save(semester);
     }
 
-    @Test(expected = FieldAlreadyExistsException.class)
-    public void throwFieldAlreadyExistsExceptionIfFieldCurrentSemesterAlreadyExists() {
+    @Test
+    public void saveSemesterAndSetItAsCurrent() {
         Semester semester = new Semester();
         semester.setId(1L);
         semester.setYear(2020);
+        semester.setCurrentSemester(true);
         semester.setDescription("1 semester");
         semester.setStartDay(LocalDate.of(2020, 4, 10));
         semester.setEndDay(LocalDate.of(2020, 5, 10));
-        semester.setCurrentSemester(true);
 
-        when(semesterRepository.getCurrentSemester()).thenReturn(Optional.of(semester));
+        when(semesterRepository.save(any(Semester.class))).thenReturn(semester);
 
-        semesterService.save(semester);
+        Semester result = semesterService.save(semester);
+        assertNotNull(result);
+        assertEquals(semester.getDescription(), result.getDescription());
+        verify(semesterRepository, times(1)).save(semester);
+        verify(semesterRepository, times(1)).setCurrentSemesterToFalse();
     }
 
     @Test(expected = EntityAlreadyExistsException.class)
@@ -170,26 +174,27 @@ public class SemesterServiceTest {
         semesterService.update(semester);
     }
 
-    @Test(expected = FieldAlreadyExistsException.class)
-    public void throwFieldAlreadyExistsExceptionIfUpdatedCurrentSemesterAlreadyExists() {
+    @Test
+    public void updateSemesterAndSetItAsCurrent() {
         Semester semester = new Semester();
         semester.setId(1L);
-        semester.setYear(2020);
-        semester.setDescription("3 semester");
-        semester.setStartDay(LocalDate.of(2020, 8, 10));
-        semester.setEndDay(LocalDate.of(2020, 9, 10));
-        semester.setCurrentSemester(true);
-        Semester currentSemester = new Semester();
-        currentSemester.setId(2L);
-        currentSemester.setYear(2020);
-        currentSemester.setDescription("1 semester");
-        currentSemester.setStartDay(LocalDate.of(2020, 4, 10));
-        currentSemester.setEndDay(LocalDate.of(2020, 5, 10));
-        currentSemester.setCurrentSemester(true);
+        semester.setDescription("1 semester");
+        semester.setStartDay(LocalDate.of(2020, 4, 10));
+        semester.setEndDay(LocalDate.of(2020, 5, 10));
+        Semester updatedSemester = new Semester();
+        updatedSemester.setId(1L);
+        updatedSemester.setDescription("2 semester");
+        updatedSemester.setCurrentSemester(true);
+        updatedSemester.setStartDay(LocalDate.of(2020, 5, 11));
+        updatedSemester.setEndDay(LocalDate.of(2020, 6, 22));
 
-        when(semesterRepository.getCurrentSemester()).thenReturn(Optional.of(currentSemester));
+        when(semesterRepository.update(updatedSemester)).thenReturn(updatedSemester);
 
-        semesterService.update(semester);
+        semester = semesterService.update(updatedSemester);
+        assertNotNull(semester);
+        assertEquals(updatedSemester, semester);
+        verify(semesterRepository, times(1)).update(semester);
+        verify(semesterRepository, times(1)).setCurrentSemesterToFalse();
     }
 
     @Test
@@ -205,8 +210,8 @@ public class SemesterServiceTest {
         when(semesterRepository.getCurrentSemester()).thenReturn(Optional.of(semester));
 
         Semester currentSemester = semesterService.getCurrentSemester();
-        assertEquals(semester,currentSemester);
-        verify(semesterRepository,times(1)).getCurrentSemester();
+        assertEquals(semester, currentSemester);
+        verify(semesterRepository, times(1)).getCurrentSemester();
     }
 
     @Test(expected = ScheduleConflictException.class)

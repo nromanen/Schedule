@@ -53,7 +53,7 @@ public class GroupControllerTest {
 
     @Test
     public void getAllPublicGroups() throws Exception {
-        mockMvc.perform(get("/groups/public").accept(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/public/groups").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentType("application/json"));
@@ -153,5 +153,12 @@ public class GroupControllerTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void getAllDisableGroups() throws Exception {
+        mockMvc.perform(get("/groups/disabled").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json"));
     }
 }

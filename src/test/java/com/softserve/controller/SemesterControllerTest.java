@@ -7,6 +7,7 @@ import com.softserve.config.MyWebAppInitializer;
 import com.softserve.config.WebMvcConfig;
 import com.softserve.dto.PeriodDTO;
 import com.softserve.dto.SemesterDTO;
+import com.softserve.entity.Semester;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -199,7 +200,7 @@ public class SemesterControllerTest {
         semesterDtoForSave.setStartDay(LocalDate.of(2020, 5, 20));
         semesterDtoForSave.setEndDay(LocalDate.of(2020, 6, 20));
 
-        mockMvc.perform(put("/semesters", 2).content(objectMapper.writeValueAsString(semesterDtoForSave))
+        mockMvc.perform(put("/semesters").content(objectMapper.writeValueAsString(semesterDtoForSave))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isBadRequest());
@@ -213,7 +214,7 @@ public class SemesterControllerTest {
         semesterDtoForSave.setStartDay(LocalDate.of(2020, 6, 20));
         semesterDtoForSave.setEndDay(LocalDate.of(2020, 5, 20));
 
-        mockMvc.perform(put("/semesters", 2).content(objectMapper.writeValueAsString(semesterDtoForSave))
+        mockMvc.perform(put("/semesters").content(objectMapper.writeValueAsString(semesterDtoForSave))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isBadRequest());
@@ -227,10 +228,33 @@ public class SemesterControllerTest {
         semesterDtoForSave.setStartDay(LocalDate.of(2020, 7, 20));
         semesterDtoForSave.setEndDay(LocalDate.of(2020, 9, 20));
 
-        mockMvc.perform(put("/semesters", 2)
+        mockMvc.perform(put("/semesters")
                 .content(objectMapper.writeValueAsString(semesterDtoForSave))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void getDisableSemesters() throws Exception {
+        mockMvc.perform(get("/semesters/disabled").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json"));
+    }
+
+    @Test
+    public void getCurrentSemester() throws Exception {
+        mockMvc.perform(get("/semesters/current"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json"))
+                .andExpect(jsonPath("$.currentSemester").value(true));
+    }
+
+    @Test
+    public void changeCurrentSemester() throws Exception {
+        mockMvc.perform(put("/semesters/current").param("semesterId","7"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json"))
+                .andExpect(jsonPath("$.currentSemester").value(true));
     }
 }
