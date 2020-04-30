@@ -97,7 +97,11 @@ public class SemesterRepositoryImpl extends BasicRepositoryImpl<Semester, Long> 
         return Optional.of(semesters.get(0));
     }
 
-
+    /**
+     * The method used for getting list of disabled entities from database
+     *
+     * @return list of disabled semesters
+     */
     @Override
     public List<Semester> getDisabled() {
         log.info("In getDisabled");
