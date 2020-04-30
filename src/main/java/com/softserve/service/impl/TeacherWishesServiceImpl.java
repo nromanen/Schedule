@@ -222,6 +222,19 @@ public class TeacherWishesServiceImpl implements TeacherWishesService {
         }
     }
 
+    /**
+     * The method used for getting list of wishes current teacher from database
+     *
+     * @param teacherId Identity teacher id
+     * @return list of entities TeacherWishes
+     */
+    @Override
+    public List<TeacherWishes> getAllCurrentTeacherWishes(Long teacherId) {
+        List<TeacherWishes> teacherWishesList = teacherWishesRepository.getAllCurrentTeacherWishes(teacherId);
+        teacherWishesList.forEach(wish -> Hibernate.initialize(wish.getTeacher()));
+        return teacherWishesList;
+    }
+
 
     @SafeVarargs
     private static <T> Predicate<T> distinctByKeys(Function<? super T, ?>... keyExtractors) {

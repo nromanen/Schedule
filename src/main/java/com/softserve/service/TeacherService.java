@@ -8,5 +8,5 @@ public interface TeacherService extends BasicService<Teacher, Long> {
     List<Teacher> getAllTeachersWithWishes();
     Teacher getTeacherWithWishes(Long id);
     List<Teacher> getDisabled();
-
+    Teacher findByUserId(int userId);
 }
