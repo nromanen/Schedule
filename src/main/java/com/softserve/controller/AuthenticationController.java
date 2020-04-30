@@ -41,7 +41,7 @@ public class AuthenticationController {
         this.userMapper = userMapper;
     }
 
-    @PostMapping("/sign_in")
+    @PostMapping("/sign-in")
     @ApiOperation(value = "Get credentials  for login")
     public ResponseEntity signIn(@RequestBody AuthenticationRequestDTO requestDto) {
         log.info("Enter into signIn method with user email {}", requestDto.getEmail());
@@ -62,7 +62,7 @@ public class AuthenticationController {
         return ResponseEntity.ok(new AuthenticationResponseDTO(username, token));
     }
 
-    @PostMapping("/sign_up")
+    @PostMapping("/sign-up")
     @ApiOperation(value = "Get credentials for registration")
     public ResponseEntity<MessageDTO> signUp(@RequestBody RegistrationRequestDTO registrationDTO) {
         log.info("Enter into signUp method with user email {}", registrationDTO.getEmail());
@@ -74,7 +74,7 @@ public class AuthenticationController {
         return ResponseEntity.status(HttpStatus.CREATED).body(messageDTO);
     }
 
-    @PutMapping("/activation_account")
+    @PutMapping("/activation-account")
     @ApiOperation(value = "Update token after activation successfully account")
     public ResponseEntity<MessageDTO> activationAccount(@RequestParam("token") String token) {
         log.info("Enter into activationAccount method");
@@ -85,7 +85,7 @@ public class AuthenticationController {
         return ResponseEntity.status(HttpStatus.OK).body(new MessageDTO("You successfully activated Your account."));
     }
 
-    @PutMapping("/reset_password")
+    @PutMapping("/reset-password")
     @ApiOperation(value = "Reset password by email")
     public ResponseEntity<MessageDTO> resetPassword(@RequestParam("email") String email) {
         log.info("Enter into resetPassword method  with email:{}", email);
@@ -94,7 +94,7 @@ public class AuthenticationController {
         return ResponseEntity.ok().body(new MessageDTO("Check Your email, please. A new password has been sent to Your email."));
     }
 
-    @PostMapping("/sign_out")
+    @PostMapping("/sign-out")
     @ApiOperation(value = "Making the logout")
     public void signOut(HttpServletRequest rq, HttpServletResponse rs) {
         log.info("Enter into signOut method");

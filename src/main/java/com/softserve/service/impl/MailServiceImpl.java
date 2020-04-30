@@ -22,12 +22,12 @@ public class MailServiceImpl implements MailService {
     @Value("${spring.mail.username}")
     private String username;
 
+
     @Autowired
     public MailServiceImpl(JavaMailSender mailSender, Environment environment) {
         this.mailSender = mailSender;
         this.environment = environment;
     }
-
 
     /**
      * Method for sending message from server to user

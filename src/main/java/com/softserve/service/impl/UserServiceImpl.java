@@ -27,7 +27,6 @@ import static org.apache.commons.lang3.StringUtils.*;
 
 
 @Slf4j
-@PropertySource({"classpath:cors.properties"})
 @Transactional
 @Service
 @PropertySource({"classpath:cors.properties"})
@@ -166,9 +165,7 @@ public class UserServiceImpl implements UserService {
         log.info("Enter into registration method  with email:{}", user.getEmail());
         User registrationUser = null;
         String password = user.getPassword();
-        if (isNotBlank(password) && isMixedCase(password) && containsAny(password, NUMBERS)
-                && containsAny(password, SPECIAL_CHARACTERS) && length(password) >= 8 && length(password) <= 30) {
-
+        if (isPasswordValid(password)) {
             String token = UUID.randomUUID().toString();
             user.setToken(token);
             registrationUser = save(user);
@@ -253,9 +250,27 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByEmail(email);
     }
 
+    /**
+     * The method used for getting list of users from database, that have role USER in system
+     *
+     * @return list of entities User
+     */
+    @Override
+    public List<User> getAllUsersWithRoleUser() {
+        log.info("Enter into getAllUsersWithRoleUser of UserServiceImpl");
+        return userRepository.getAllUsersWithRoleUser();
+    }
+
     // method for checking email in database
     private boolean emailExists(String email) {
         log.info("Enter into emailExists method with email:{}", email);
         return userRepository.findByEmail(email).isPresent();
+    }
+
+    //check if password valid return true, else - false
+    private boolean isPasswordValid(String password) {
+        log.info("Enter into isPasswordValid method with password:{}", password);
+        return (isNotBlank(password) && isMixedCase(password) && containsAny(password, NUMBERS)
+                && containsAny(password, SPECIAL_CHARACTERS) && length(password) >= 8 && length(password) <= 30);
     }
 }
