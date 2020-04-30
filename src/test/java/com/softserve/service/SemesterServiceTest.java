@@ -1,5 +1,6 @@
 package com.softserve.service;
 
+import com.softserve.entity.Period;
 import com.softserve.entity.Semester;
 import com.softserve.exception.*;
 import com.softserve.repository.SemesterRepository;
@@ -11,8 +12,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -68,6 +72,24 @@ public class SemesterServiceTest {
         semester.setDescription("1 semester");
         semester.setStartDay(LocalDate.of(2020, 4, 10));
         semester.setEndDay(LocalDate.of(2020, 5, 10));
+        Set<DayOfWeek> dayOfWeeks = new HashSet<>();
+        dayOfWeeks.add(DayOfWeek.MONDAY);
+        dayOfWeeks.add(DayOfWeek.TUESDAY);
+        semester.setDaysOfWeek(dayOfWeeks);
+        Period firstClasses = new Period();
+        firstClasses.setName("1 para");
+        Period secondClasses = new Period();
+        secondClasses.setName("2 para");
+        Period thirdClasses = new Period();
+        thirdClasses.setName("3 para");
+        Period fourthClasses = new Period();
+        fourthClasses.setName("4 para");
+        Set<Period> periodSet = new HashSet<>();
+        periodSet.add(firstClasses);
+        periodSet.add(secondClasses);
+        periodSet.add(thirdClasses);
+        periodSet.add(fourthClasses);
+        semester.setPeriods(periodSet);
 
         when(semesterRepository.save(any(Semester.class))).thenReturn(semester);
 
@@ -82,10 +104,28 @@ public class SemesterServiceTest {
         Semester semester = new Semester();
         semester.setId(1L);
         semester.setYear(2020);
-        semester.setCurrentSemester(true);
         semester.setDescription("1 semester");
+        semester.setCurrentSemester(true);
         semester.setStartDay(LocalDate.of(2020, 4, 10));
         semester.setEndDay(LocalDate.of(2020, 5, 10));
+        Set<DayOfWeek> dayOfWeeks = new HashSet<>();
+        dayOfWeeks.add(DayOfWeek.MONDAY);
+        dayOfWeeks.add(DayOfWeek.TUESDAY);
+        semester.setDaysOfWeek(dayOfWeeks);
+        Period firstClasses = new Period();
+        firstClasses.setName("1 para");
+        Period secondClasses = new Period();
+        secondClasses.setName("2 para");
+        Period thirdClasses = new Period();
+        thirdClasses.setName("3 para");
+        Period fourthClasses = new Period();
+        fourthClasses.setName("4 para");
+        Set<Period> periodSet = new HashSet<>();
+        periodSet.add(firstClasses);
+        periodSet.add(secondClasses);
+        periodSet.add(thirdClasses);
+        periodSet.add(fourthClasses);
+        semester.setPeriods(periodSet);
 
         when(semesterRepository.save(any(Semester.class))).thenReturn(semester);
 
@@ -125,14 +165,35 @@ public class SemesterServiceTest {
     public void updateIfUpdatedSemesterDoestNotExists() {
         Semester semester = new Semester();
         semester.setId(1L);
+        semester.setYear(2020);
         semester.setDescription("1 semester");
         semester.setStartDay(LocalDate.of(2020, 4, 10));
         semester.setEndDay(LocalDate.of(2020, 5, 10));
+        Set<DayOfWeek> dayOfWeeks = new HashSet<>();
+        dayOfWeeks.add(DayOfWeek.MONDAY);
+        dayOfWeeks.add(DayOfWeek.TUESDAY);
+        semester.setDaysOfWeek(dayOfWeeks);
+        Period firstClasses = new Period();
+        firstClasses.setName("1 para");
+        Period secondClasses = new Period();
+        secondClasses.setName("2 para");
+        Period thirdClasses = new Period();
+        thirdClasses.setName("3 para");
+        Period fourthClasses = new Period();
+        fourthClasses.setName("4 para");
+        Set<Period> periodSet = new HashSet<>();
+        periodSet.add(firstClasses);
+        periodSet.add(secondClasses);
+        periodSet.add(thirdClasses);
+        periodSet.add(fourthClasses);
+        semester.setPeriods(periodSet);
         Semester updatedSemester = new Semester();
         updatedSemester.setId(1L);
         updatedSemester.setDescription("2 semester");
         updatedSemester.setStartDay(LocalDate.of(2020, 5, 11));
         updatedSemester.setEndDay(LocalDate.of(2020, 6, 22));
+        updatedSemester.setPeriods(semester.getPeriods());
+        updatedSemester.setDaysOfWeek(semester.getDaysOfWeek());
 
         when(semesterRepository.update(updatedSemester)).thenReturn(updatedSemester);
 
@@ -178,15 +239,36 @@ public class SemesterServiceTest {
     public void updateSemesterAndSetItAsCurrent() {
         Semester semester = new Semester();
         semester.setId(1L);
+        semester.setYear(2020);
         semester.setDescription("1 semester");
         semester.setStartDay(LocalDate.of(2020, 4, 10));
         semester.setEndDay(LocalDate.of(2020, 5, 10));
+        Set<DayOfWeek> dayOfWeeks = new HashSet<>();
+        dayOfWeeks.add(DayOfWeek.MONDAY);
+        dayOfWeeks.add(DayOfWeek.TUESDAY);
+        semester.setDaysOfWeek(dayOfWeeks);
+        Period firstClasses = new Period();
+        firstClasses.setName("1 para");
+        Period secondClasses = new Period();
+        secondClasses.setName("2 para");
+        Period thirdClasses = new Period();
+        thirdClasses.setName("3 para");
+        Period fourthClasses = new Period();
+        fourthClasses.setName("4 para");
+        Set<Period> periodSet = new HashSet<>();
+        periodSet.add(firstClasses);
+        periodSet.add(secondClasses);
+        periodSet.add(thirdClasses);
+        periodSet.add(fourthClasses);
+        semester.setPeriods(periodSet);
         Semester updatedSemester = new Semester();
         updatedSemester.setId(1L);
         updatedSemester.setDescription("2 semester");
         updatedSemester.setCurrentSemester(true);
         updatedSemester.setStartDay(LocalDate.of(2020, 5, 11));
         updatedSemester.setEndDay(LocalDate.of(2020, 6, 22));
+        updatedSemester.setDaysOfWeek(semester.getDaysOfWeek());
+        updatedSemester.setPeriods(semester.getPeriods());
 
         when(semesterRepository.update(updatedSemester)).thenReturn(updatedSemester);
 

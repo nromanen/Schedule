@@ -152,11 +152,24 @@ public class SemesterControllerTest {
 
     @Test
     public void returnBadRequestIfSavedSemesterAlreadyExists() throws Exception {
+        TreeSet<DayOfWeek> dayOfWeeks = new TreeSet<>();
+        dayOfWeeks.add(DayOfWeek.MONDAY);
+        dayOfWeeks.add(DayOfWeek.FRIDAY);
+        PeriodDTO periodDTO = new PeriodDTO();
+        periodDTO.setId(4L);
+        periodDTO.setName("first para");
+        periodDTO.setStartTime(LocalTime.parse("09:00:00"));
+        periodDTO.setEndTime(LocalTime.parse("10:00:00"));
+        Set<PeriodDTO> periodDTOS = new HashSet<>();
+        periodDTOS.add(periodDTO);
         SemesterDTO semesterDtoForSave = new SemesterDTO();
+        semesterDtoForSave.setDaysOfWeek(dayOfWeeks);
+        semesterDtoForSave.setPeriods(periodDTOS);
         semesterDtoForSave.setId(4);
         semesterDtoForSave.setDescription("1 semester");
-        semesterDtoForSave.setStartDay(LocalDate.of(2020, 1, 20));
-        semesterDtoForSave.setEndDay(LocalDate.of(2020, 2, 20));
+        semesterDtoForSave.setYear(2020);
+        semesterDtoForSave.setStartDay(LocalDate.parse("2020/08/20", DateTimeFormatter.ofPattern("yyyy/MM/dd")));
+        semesterDtoForSave.setEndDay(LocalDate.parse("2020/09/20", DateTimeFormatter.ofPattern("yyyy/MM/dd")));
 
         mockMvc.perform(post("/semesters").content(objectMapper.writeValueAsString(semesterDtoForSave))
                 .contentType(MediaType.APPLICATION_JSON))
@@ -166,11 +179,24 @@ public class SemesterControllerTest {
 
     @Test
     public void returnBadRequestIfSavedStartDayBeginAfterEndDay() throws Exception {
+        TreeSet<DayOfWeek> dayOfWeeks = new TreeSet<>();
+        dayOfWeeks.add(DayOfWeek.MONDAY);
+        dayOfWeeks.add(DayOfWeek.FRIDAY);
+        PeriodDTO periodDTO = new PeriodDTO();
+        periodDTO.setId(4L);
+        periodDTO.setName("first para");
+        periodDTO.setStartTime(LocalTime.parse("09:00:00"));
+        periodDTO.setEndTime(LocalTime.parse("10:00:00"));
+        Set<PeriodDTO> periodDTOS = new HashSet<>();
+        periodDTOS.add(periodDTO);
         SemesterDTO semesterDtoForSave = new SemesterDTO();
+        semesterDtoForSave.setDaysOfWeek(dayOfWeeks);
+        semesterDtoForSave.setPeriods(periodDTOS);
         semesterDtoForSave.setId(2);
         semesterDtoForSave.setDescription("5 semester");
-        semesterDtoForSave.setStartDay(LocalDate.of(2020, 10, 20));
-        semesterDtoForSave.setEndDay(LocalDate.of(2020, 9, 20));
+        semesterDtoForSave.setYear(2020);
+        semesterDtoForSave.setStartDay(LocalDate.parse("2020/10/20", DateTimeFormatter.ofPattern("yyyy/MM/dd")));
+        semesterDtoForSave.setEndDay(LocalDate.parse("2020/09/20", DateTimeFormatter.ofPattern("yyyy/MM/dd")));
 
         mockMvc.perform(post("/semesters").content(objectMapper.writeValueAsString(semesterDtoForSave))
                 .contentType(MediaType.APPLICATION_JSON))
@@ -180,11 +206,24 @@ public class SemesterControllerTest {
 
     @Test
     public void returnBadRequestIfSavedDescriptionIsNull() throws Exception {
+        TreeSet<DayOfWeek> dayOfWeeks = new TreeSet<>();
+        dayOfWeeks.add(DayOfWeek.MONDAY);
+        dayOfWeeks.add(DayOfWeek.FRIDAY);
+        PeriodDTO periodDTO = new PeriodDTO();
+        periodDTO.setId(4L);
+        periodDTO.setName("first para");
+        periodDTO.setStartTime(LocalTime.parse("09:00:00"));
+        periodDTO.setEndTime(LocalTime.parse("10:00:00"));
+        Set<PeriodDTO> periodDTOS = new HashSet<>();
+        periodDTOS.add(periodDTO);
         SemesterDTO semesterDtoForSave = new SemesterDTO();
+        semesterDtoForSave.setDaysOfWeek(dayOfWeeks);
+        semesterDtoForSave.setPeriods(periodDTOS);
         semesterDtoForSave.setId(1);
         semesterDtoForSave.setDescription(null);
-        semesterDtoForSave.setStartDay(LocalDate.of(2020, 7, 20));
-        semesterDtoForSave.setEndDay(LocalDate.of(2020, 9, 20));
+        semesterDtoForSave.setYear(2020);
+        semesterDtoForSave.setStartDay(LocalDate.parse("2020/08/20", DateTimeFormatter.ofPattern("yyyy/MM/dd")));
+        semesterDtoForSave.setEndDay(LocalDate.parse("2020/09/20", DateTimeFormatter.ofPattern("yyyy/MM/dd")));
 
         mockMvc.perform(post("/semesters").content(objectMapper.writeValueAsString(semesterDtoForSave))
                 .contentType(MediaType.APPLICATION_JSON))
@@ -194,11 +233,24 @@ public class SemesterControllerTest {
 
     @Test
     public void returnBadRequestIfUpdatedSemesterAlreadyExists() throws Exception {
+        TreeSet<DayOfWeek> dayOfWeeks = new TreeSet<>();
+        dayOfWeeks.add(DayOfWeek.MONDAY);
+        dayOfWeeks.add(DayOfWeek.FRIDAY);
+        PeriodDTO periodDTO = new PeriodDTO();
+        periodDTO.setId(4L);
+        periodDTO.setName("first para");
+        periodDTO.setStartTime(LocalTime.parse("09:00:00"));
+        periodDTO.setEndTime(LocalTime.parse("10:00:00"));
+        Set<PeriodDTO> periodDTOS = new HashSet<>();
+        periodDTOS.add(periodDTO);
         SemesterDTO semesterDtoForSave = new SemesterDTO();
+        semesterDtoForSave.setDaysOfWeek(dayOfWeeks);
+        semesterDtoForSave.setPeriods(periodDTOS);
         semesterDtoForSave.setId(4);
         semesterDtoForSave.setDescription("2 semester");
-        semesterDtoForSave.setStartDay(LocalDate.of(2020, 5, 20));
-        semesterDtoForSave.setEndDay(LocalDate.of(2020, 6, 20));
+        semesterDtoForSave.setYear(2020);
+        semesterDtoForSave.setStartDay(LocalDate.parse("2020/08/20", DateTimeFormatter.ofPattern("yyyy/MM/dd")));
+        semesterDtoForSave.setEndDay(LocalDate.parse("2020/09/20", DateTimeFormatter.ofPattern("yyyy/MM/dd")));
 
         mockMvc.perform(put("/semesters").content(objectMapper.writeValueAsString(semesterDtoForSave))
                 .contentType(MediaType.APPLICATION_JSON))
@@ -222,11 +274,24 @@ public class SemesterControllerTest {
 
     @Test
     public void returnBadRequestIfUpdatedDescriptionIsNull() throws Exception {
+        TreeSet<DayOfWeek> dayOfWeeks = new TreeSet<>();
+        dayOfWeeks.add(DayOfWeek.MONDAY);
+        dayOfWeeks.add(DayOfWeek.FRIDAY);
+        PeriodDTO periodDTO = new PeriodDTO();
+        periodDTO.setId(4L);
+        periodDTO.setName("first para");
+        periodDTO.setStartTime(LocalTime.parse("09:00:00"));
+        periodDTO.setEndTime(LocalTime.parse("10:00:00"));
+        Set<PeriodDTO> periodDTOS = new HashSet<>();
+        periodDTOS.add(periodDTO);
         SemesterDTO semesterDtoForSave = new SemesterDTO();
+        semesterDtoForSave.setDaysOfWeek(dayOfWeeks);
+        semesterDtoForSave.setPeriods(periodDTOS);
         semesterDtoForSave.setId(5);
         semesterDtoForSave.setDescription(null);
-        semesterDtoForSave.setStartDay(LocalDate.of(2020, 7, 20));
-        semesterDtoForSave.setEndDay(LocalDate.of(2020, 9, 20));
+        semesterDtoForSave.setYear(2020);
+        semesterDtoForSave.setStartDay(LocalDate.parse("2020/08/20", DateTimeFormatter.ofPattern("yyyy/MM/dd")));
+        semesterDtoForSave.setEndDay(LocalDate.parse("2020/09/20", DateTimeFormatter.ofPattern("yyyy/MM/dd")));
 
         mockMvc.perform(put("/semesters")
                 .content(objectMapper.writeValueAsString(semesterDtoForSave))
