@@ -90,4 +90,11 @@ public class TeacherController {
         log.info("Enter into getDisabled");
         return ResponseEntity.ok(teacherMapper.teachersToTeacherDTOs(teacherService.getDisabled()));
     }
+
+    @GetMapping("/not-registered-teachers")
+    @ApiOperation(value = "Get the list of all teachers, that don't registered in system")
+    public ResponseEntity<List<TeacherDTO>> getAllNotRegisteredTeachers() {
+        log.info("Enter into getAllNotRegisteredTeachers method");
+        return ResponseEntity.ok(teacherMapper.teachersToTeacherDTOs(teacherService.getAllTeacherWithoutUser()));
+    }
 }

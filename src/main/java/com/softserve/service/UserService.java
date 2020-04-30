@@ -3,6 +3,7 @@ package com.softserve.service;
 import com.softserve.entity.User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface UserService extends BasicService <User, Long> {
@@ -12,4 +13,5 @@ public interface UserService extends BasicService <User, Long> {
     void resetPassword(String email);
     User createSocialUser(OAuth2User oAuth2User);
     Optional<User> findSocialUser(String email);
+    List<User> getAllUsersWithRoleUser();
 }

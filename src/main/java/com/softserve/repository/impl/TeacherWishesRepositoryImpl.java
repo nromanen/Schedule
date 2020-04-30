@@ -39,6 +39,21 @@ public class TeacherWishesRepositoryImpl extends BasicRepositoryImpl<TeacherWish
                 .setParameter("teacherId", teacherId).getSingleResult();
     }
 
+    /**
+     * The method used for getting list of wishes current teacher from database
+     *
+     * @param teacherId Identity teacher id
+     * @return list of entities TeacherWishes
+     */
+    @Override
+    public List<TeacherWishes> getAllCurrentTeacherWishes(Long teacherId) {
+        return sessionFactory.getCurrentSession().createQuery(
+                "select t from TeacherWishes t " +
+                        "where t.teacher.id= :teacher")
+                .setParameter("teacher", teacherId)
+                .getResultList();
+    }
+
 
     /**
      * getWishByTeacherId method

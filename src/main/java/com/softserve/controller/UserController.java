@@ -19,7 +19,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("users")
-@Api(tags = "User")
+@Api(tags = "User API")
 public class UserController {
 
     private final UserService userService;
@@ -67,5 +67,12 @@ public class UserController {
         User user = userService.getById(id);
         userService.delete(user);
         return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @GetMapping("/with-role-user")
+    @ApiOperation(value = "Get the list of all users, that have role User")
+    public ResponseEntity<List<UserDTO>> getAllUsersWithRoleUser() {
+        log.info("Enter into getAllUsersWithRoleUser method");
+        return ResponseEntity.status(HttpStatus.OK).body(userMapper.toUserDTOs(userService.getAllUsersWithRoleUser()));
     }
 }
