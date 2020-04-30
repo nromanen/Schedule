@@ -51,8 +51,8 @@ public class MailConfig {
         String credentialsPassword = environment.getProperty(password);
 
         if (credentialsUsername == null && credentialsPassword == null) {
-            credentialsUsername = System.getenv(herokuUsername);
-            credentialsPassword = System.getenv(herokuPassword);
+            credentialsUsername = System.getenv("HEROKU_MAIL_USERNAME");
+            credentialsPassword = System.getenv("HEROKU_MAIL_PASSWORD");
         }
 
         mailSender.setHost(host);
