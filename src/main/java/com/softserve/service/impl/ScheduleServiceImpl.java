@@ -10,6 +10,7 @@ import com.softserve.mapper.*;
 import com.softserve.repository.ScheduleRepository;
 import com.softserve.service.*;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -68,8 +69,11 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Override
     public Schedule getById(Long id) {
         log.info("In getById(id = [{}])", id);
-        return scheduleRepository.findById(id).orElseThrow(
+        Schedule schedule = scheduleRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException(Schedule.class, "id", id.toString()));
+        Hibernate.initialize(schedule.getSemester().getDaysOfWeek());
+        Hibernate.initialize(schedule.getSemester().getPeriods());
+        return schedule;
     }
 
     /**
@@ -80,7 +84,12 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Override
     public List<Schedule> getAll() {
         log.info("In getAll()");
-        return scheduleRepository.getAll();
+        List<Schedule> schedules = scheduleRepository.getAll();
+        for (Schedule schedule:schedules) {
+            Hibernate.initialize(schedule.getSemester().getDaysOfWeek());
+            Hibernate.initialize(schedule.getSemester().getPeriods());
+        }
+        return schedules;
     }
 
     /**
@@ -471,7 +480,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         }
 
     @Override
-    public List<Schedule> getScheduleBySemester(Long semesterId) {
+    public List<Schedule> getSchedulesBySemester(Long semesterId) {
         log.info("In getScheduleBySemester(Long semesterId = [{}])", semesterId);
         return scheduleRepository.getScheduleBySemester(semesterId);
     }

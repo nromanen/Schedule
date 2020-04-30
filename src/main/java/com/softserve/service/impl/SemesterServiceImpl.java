@@ -7,6 +7,7 @@ import com.softserve.repository.SemesterRepository;
 import com.softserve.service.PeriodService;
 import com.softserve.service.SemesterService;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,8 +41,11 @@ public class SemesterServiceImpl implements SemesterService {
     @Override
     public Semester getById(Long id) {
         log.info("In getById(id = [{}])", id);
-        return semesterRepository.findById(id).orElseThrow(
+        Semester semester = semesterRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException(Semester.class, "id", id.toString()));
+        Hibernate.initialize(semester.getDaysOfWeek());
+        Hibernate.initialize(semester.getPeriods());
+        return semester;
     }
 
     /**
@@ -53,6 +57,10 @@ public class SemesterServiceImpl implements SemesterService {
     public List<Semester> getAll() {
         log.info("In getAll()");
         List<Semester> semesters = semesterRepository.getAll();
+        for (Semester semester:semesters) {
+            Hibernate.initialize(semester.getDaysOfWeek());
+            Hibernate.initialize(semester.getPeriods());
+        }
         return  semesters;
     }
 
@@ -137,7 +145,10 @@ public class SemesterServiceImpl implements SemesterService {
     @Override
     public Semester semesterExists(Semester semester) {
         log.info("In isSemesterExists with semester = {}", semester);
-        return semesterRepository.semesterDuplicates(semester).orElse(null);
+        Semester semesterForHibernate =  semesterRepository.semesterDuplicates(semester).orElse(null);
+        Hibernate.initialize(semesterForHibernate.getDaysOfWeek());
+        Hibernate.initialize(semesterForHibernate.getPeriods());
+        return semester;
     }
 
     /**
@@ -148,8 +159,11 @@ public class SemesterServiceImpl implements SemesterService {
     @Override
     public Semester getCurrentSemester() {
         log.info("In getCurrentSemester");
-        return semesterRepository.getCurrentSemester().orElseThrow(
+        Semester semester = semesterRepository.getCurrentSemester().orElseThrow(
                 () -> new ScheduleConflictException("Current semester for managers work isn't specified"));
+        Hibernate.initialize(semester.getDaysOfWeek());
+        Hibernate.initialize(semester.getPeriods());
+        return semester;
     }
 
     //check if the end time is not before the start time or equals return true, else - false
@@ -199,7 +213,12 @@ public class SemesterServiceImpl implements SemesterService {
     @Override
     public List<Semester> getDisabled() {
         log.info("Enter into getAll of getDisabled");
-        return semesterRepository.getDisabled();
+        List<Semester> semesters = semesterRepository.getDisabled();
+        for (Semester semester:semesters) {
+            Hibernate.initialize(semester.getDaysOfWeek());
+            Hibernate.initialize(semester.getPeriods());
+        }
+        return  semesters;
     }
 
     @Override
