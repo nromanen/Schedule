@@ -49,6 +49,20 @@ public class UserRepositoryImpl extends BasicRepositoryImpl<User, Long> implemen
         return Optional.of(query.getResultList().get(0));
     }
 
+    /**
+     * The method used for getting list of users from database, that have role USER in system
+     *
+     * @return list of entities Teacher
+     */
+    @Override
+    public List<User> getAllUsersWithRoleUser() {
+        log.info("Enter into getAllUsersWithRoleUser of UserRepositoryImpl");
+        return sessionFactory.getCurrentSession().createQuery(
+                "select u from User u " +
+                        " where u.role = 'ROLE_USER' ")
+                .getResultList();
+    }
+
 
     /**
      * Modified update method, which merge entity before updating it

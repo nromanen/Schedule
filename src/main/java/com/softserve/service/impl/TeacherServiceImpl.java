@@ -167,7 +167,7 @@ public class TeacherServiceImpl implements TeacherService {
         User user = userService.getById(userId);
         Teacher getTeacher = getById(teacherId);
 
-        if (!user.getRole().equals(Role.ROLE_USER) || getTeacher.getUserId() != null) {
+        if (user.getRole() != Role.ROLE_USER || getTeacher.getUserId() != null) {
             throw new EntityAlreadyExistsException("You cannot doing this action.");
         }
 
@@ -195,4 +195,28 @@ public class TeacherServiceImpl implements TeacherService {
         return teacherRepository.getDisabled();
     }
 
+    /**
+     * The method used for getting teacher by userId
+     *
+     * @param userId Identity user id
+     * @return Teacher entity
+     * @throws EntityNotFoundException if teacher doesn't exist
+     */
+    @Override
+    public Teacher findByUserId(int userId) {
+        log.info("Enter into getByUserId with userId {}", userId);
+        return teacherRepository.findByUserId(userId).orElseThrow(
+                () -> new EntityNotFoundException(Teacher.class, "userId", String.valueOf(userId)));
+    }
+
+    /**
+     * The method used for getting list of teachers from database, that don't registered in system
+     *
+     * @return list of entities User
+     */
+    @Override
+    public List<Teacher> getAllTeacherWithoutUser() {
+        log.info("Enter into getAllTeacherWithoutUser of TeacherServiceImpl");
+        return teacherRepository.getAllTeacherWithoutUser();
+    }
 }
