@@ -39,7 +39,7 @@ public class MailServiceImpl implements MailService {
         log.info("Enter into send method with emailTo {}, subject {}", emailTo, subject);
         String credentialsUsername = environment.getProperty(username);
         if (credentialsUsername == null) {
-            credentialsUsername = System.getenv(herokuUsername);
+            credentialsUsername = System.getenv("HEROKU_MAIL_USERNAME");
         }
 
         SimpleMailMessage mailMessage = new SimpleMailMessage();
