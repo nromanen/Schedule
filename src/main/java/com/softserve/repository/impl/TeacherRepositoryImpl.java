@@ -70,4 +70,18 @@ public class TeacherRepositoryImpl extends BasicRepositoryImpl<Teacher, Long> im
                 .setParameter("userId", userId)
                 .uniqueResultOptional();
     }
+
+    /**
+     * The method used for getting list of teachers from database, that don't registered in system
+     *
+     * @return list of entities Teacher
+     */
+    @Override
+    public List<Teacher> getAllTeacherWithoutUser() {
+        log.info("Enter into getAllTeacherWithoutUser of TeacherRepositoryImpl");
+        return sessionFactory.getCurrentSession().createQuery(
+                "select t from Teacher t " +
+                        " where t.userId = null ")
+                .getResultList();
+    }
 }

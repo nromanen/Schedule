@@ -204,4 +204,15 @@ public class TeacherServiceImpl implements TeacherService {
         return teacherRepository.findByUserId(userId).orElseThrow(
                 () -> new EntityNotFoundException(Teacher.class, "userId", String.valueOf(userId)));
     }
+
+    /**
+     * The method used for getting list of teachers from database, that don't registered in system
+     *
+     * @return list of entities User
+     */
+    @Override
+    public List<Teacher> getAllTeacherWithoutUser() {
+        log.info("Enter into getAllTeacherWithoutUser of TeacherServiceImpl");
+        return teacherRepository.getAllTeacherWithoutUser();
+    }
 }
