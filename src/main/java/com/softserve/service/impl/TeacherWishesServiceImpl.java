@@ -121,10 +121,10 @@ public class TeacherWishesServiceImpl implements TeacherWishesService {
         List<Wishes> teacherWishList = teacherWishesRepository.getWishByTeacherId(teacherId);
         String className = periodService.getById(classId).getName();
 
-        return teacherWishList.stream().filter(wishItem -> DayOfWeek.valueOf(wishItem.getDayOfWeek()) == dayOfWeek
-                && (EvenOdd.valueOf(wishItem.getEvenOdd()) == evenOdd))
+        return teacherWishList.stream().filter(wishItem -> wishItem.getDayOfWeek().equals(dayOfWeek)
+                && (wishItem.getEvenOdd().equals(evenOdd)))
                 .noneMatch(wishItem -> wishItem.getWishes().stream().anyMatch(classItem -> classItem.getClassName().equals(className)
-                        && classItem.getStatus().equals(WishStatuses.BAD.toString())));
+                        && classItem.getStatus().equals(WishStatuses.BAD)));
 
     }
 
@@ -159,7 +159,7 @@ public class TeacherWishesServiceImpl implements TeacherWishesService {
             if (!isUniqueClassName(wishItem.getWishes())) {
                 throw new IncorrectWishException("classes is not unique");
             }
-            if (EvenOdd.valueOf(wishItem.getEvenOdd()).equals(EvenOdd.WEEKLY) && !isEvenOddNotExist(wishItem, teacherWishesList)) {
+            if (wishItem.getEvenOdd().equals(EvenOdd.WEEKLY) && !isEvenOddNotExist(wishItem, teacherWishesList)) {
                 throw new IncorrectWishException("EVEN and ODD is not allowed together with WEEKLY");
             }
         }
@@ -173,16 +173,15 @@ public class TeacherWishesServiceImpl implements TeacherWishesService {
      */
     public boolean isUniqueClassName(List<Wish> wishesList) {
         log.info("Enter isUniqueClassName update method with wishesList:{}", wishesList);
-        boolean p= wishesList.stream().map(Wish::getClassName).distinct().count() == wishesList.size();
-    return p;
+        return wishesList.stream().map(Wish::getClassName).distinct().count() == wishesList.size();
     }
 
 
     public boolean isEvenOddNotExist(Wishes wishes, List<Wishes> wishesList) {
         log.info("Enter isEvenOddNotExist update method with wishesList:{}", wishesList);
         return wishesList.stream().noneMatch(wish ->
-                wish.getDayOfWeek().equals(wishes.getDayOfWeek()) && (EvenOdd.valueOf(wish.getEvenOdd()).equals(EvenOdd.EVEN)
-                        || EvenOdd.valueOf(wish.getEvenOdd().toUpperCase()).equals(EvenOdd.ODD))
+                wish.getDayOfWeek().equals(wishes.getDayOfWeek()) && (wish.getEvenOdd().equals(EvenOdd.EVEN)
+                        || wish.getEvenOdd().equals(EvenOdd.ODD))
         );
     }
 

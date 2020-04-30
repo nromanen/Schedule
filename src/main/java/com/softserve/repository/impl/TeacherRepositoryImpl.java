@@ -1,6 +1,5 @@
 package com.softserve.repository.impl;
 
-import com.softserve.entity.Semester;
 import com.softserve.entity.Teacher;
 import com.softserve.repository.TeacherRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -46,7 +45,11 @@ public class TeacherRepositoryImpl extends BasicRepositoryImpl<Teacher, Long> im
         return count != 0;
     }
 
-
+    /**
+     * The method used for getting list of disabled entities from database
+     *
+     * @return list of disabled teachers
+     */
     @Override
     public List<Teacher> getDisabled() {
         log.info("In getDisabled");

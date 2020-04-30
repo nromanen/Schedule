@@ -1,6 +1,8 @@
 package com.softserve.service;
 
 import com.softserve.entity.Teacher;
+import com.softserve.entity.TeacherWishes;
+
 import java.util.List;
 
 public interface TeacherService extends BasicService<Teacher, Long> {
@@ -8,5 +10,4 @@ public interface TeacherService extends BasicService<Teacher, Long> {
     List<Teacher> getAllTeachersWithWishes();
     Teacher getTeacherWithWishes(Long id);
     List<Teacher> getDisabled();
-
 }

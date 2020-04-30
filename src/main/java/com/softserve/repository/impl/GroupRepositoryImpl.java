@@ -89,6 +89,11 @@ public class GroupRepositoryImpl extends BasicRepositoryImpl<Group, Long> implem
         return count != 0;
     }
 
+    /**
+     * The method used for getting list of disabled entities from database
+     *
+     * @return list of disabled groups
+     */
     @Override
     public List<Group> getDisabled() {
         log.info("In getDisabled");

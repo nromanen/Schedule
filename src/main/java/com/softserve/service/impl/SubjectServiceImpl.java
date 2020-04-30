@@ -72,7 +72,7 @@ public class SubjectServiceImpl implements SubjectService {
     public Subject update(Subject object) {
         log.info("In update(entity = [{}]", object);
         if (isExistsWithId(object.getId())) {
-            if (isSubjectExistsWithName(object.getName())) {
+            if (isSubjectExistsWithNameAndIgnoreWithId(object.getId(), object.getName())) {
                 log.error("Subject with name [{}] already exists", object.getName());
                 throw new FieldAlreadyExistsException(Subject.class, "name", object.getName());
             }
@@ -96,13 +96,25 @@ public class SubjectServiceImpl implements SubjectService {
 
     /**
      * Method finds if Subject with name already exists
-     * @param name subject id
+     * @param name subject name
      * @return true if Subject with such name already exist
      */
     @Override
     public boolean isSubjectExistsWithName(String name) {
         log.info("In isSubjectExistsWithName(name = [{}])",  name);
         return subjectRepository.countSubjectsWithName(name) != 0;
+    }
+
+    /**
+     * Method finds if Subject with name already exists
+     * @param id subject id
+     * @param name subject name
+     * @return true if Subject with such name already exist
+     */
+    @Override
+    public boolean isSubjectExistsWithNameAndIgnoreWithId(Long id, String name) {
+        log.info("In isSubjectExistsWithNameAndIgnoreWithId(id = [{}], name = [{}])", id, name);
+        return subjectRepository.countSubjectsWithNameAndIgnoreWithId(id, name) != 0;
     }
 
     /**
