@@ -148,4 +148,11 @@ public class SubjectControllerTest {
                 .andDo(print())
                 .andExpect(status().isBadRequest());
     }
+
+    @Test
+    public void getDisableTeachers() throws Exception {
+        mockMvc.perform(get("/subjects/disabled").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json"));
+    }
 }

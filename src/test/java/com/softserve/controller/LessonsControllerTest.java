@@ -134,7 +134,7 @@ public class LessonsControllerTest {
 
         Lesson lessonForCompare = new LessonInfoMapperImpl().lessonInfoDTOToLesson(lessonDtoForUpdate);
 
-        mockMvc.perform(put("/lessons", 2).content(objectMapper.writeValueAsString(lessonDtoForUpdate))
+        mockMvc.perform(put("/lessons").content(objectMapper.writeValueAsString(lessonDtoForUpdate))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(lessonForCompare.getId()))

@@ -152,4 +152,11 @@ public class RoomControllerTest {
                 .andDo(print())
                 .andExpect(status().isInternalServerError());
     }
+
+    @Test
+    public void getDisableTeachers() throws Exception {
+        mockMvc.perform(get("/rooms/disabled").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json"));
+    }
 }
