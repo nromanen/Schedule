@@ -22,8 +22,6 @@ public class MailServiceImpl implements MailService {
     @Value("${spring.mail.username}")
     private String username;
 
-    @Value("${heroku.mail.username}")
-    private String herokuUsername;
 
     @Autowired
     public MailServiceImpl(JavaMailSender mailSender, Environment environment) {

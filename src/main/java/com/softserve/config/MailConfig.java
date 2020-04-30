@@ -39,11 +39,6 @@ public class MailConfig {
     @Value("${spring.mail.properties.mail.smtp.starttls.enable}")
     private String enable;
 
-    @Value("${heroku.mail.username}")
-    private String herokuUsername;
-
-    @Value("${heroku.mail.password}")
-    private String herokuPassword;
 
     @Autowired
     private Environment environment;
