@@ -90,7 +90,7 @@ public class SubjectServiceTest {
         updatedSubject.setId(1L);
 
         when(subjectRepository.countBySubjectId(anyLong())).thenReturn(1L);
-        when(subjectRepository.countSubjectsWithName(anyString())).thenReturn(0L);
+        when(subjectRepository.countSubjectsWithNameAndIgnoreWithId(anyLong(), anyString())).thenReturn(0L);
         when(subjectRepository.update(updatedSubject)).thenReturn(updatedSubject);
 
         oldSubject = subjectService.update(updatedSubject);
@@ -98,7 +98,7 @@ public class SubjectServiceTest {
         assertEquals(updatedSubject, oldSubject);
         verify(subjectRepository, times(1)).update(oldSubject);
         verify(subjectRepository, times(1)).countBySubjectId(anyLong());
-        verify(subjectRepository, times(1)).countSubjectsWithName(anyString());
+        verify(subjectRepository, times(1)).countSubjectsWithNameAndIgnoreWithId(anyLong(),anyString());
     }
 
     @Test(expected = FieldAlreadyExistsException.class)
@@ -111,11 +111,11 @@ public class SubjectServiceTest {
         updatedSubject.setId(1L);
 
         when(subjectRepository.countBySubjectId(anyLong())).thenReturn(1L);
-        when(subjectRepository.countSubjectsWithName(anyString())).thenReturn(1L);
+        when(subjectRepository.countSubjectsWithNameAndIgnoreWithId(anyLong(), anyString())).thenReturn(1L);
 
         oldSubject = subjectService.update(updatedSubject);
         verify(subjectRepository, times(1)).countBySubjectId(anyLong());
-        verify(subjectRepository, times(1)).countSubjectsWithName(anyString());
+        verify(subjectRepository, times(1)).countSubjectsWithNameAndIgnoreWithId(anyLong(), anyString());
     }
 
     @Test(expected = EntityNotFoundException.class)

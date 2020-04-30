@@ -78,12 +78,12 @@ public class TeacherWishesControllerTest {
     public void saveTeacherWishes() throws Exception {
         Wish wish = new Wish();
         wish.setClassName("1 para");
-        wish.setStatus(WishStatuses.GOOD.toString());
+        wish.setStatus(WishStatuses.GOOD);
         List<Wish> wishList = new ArrayList<>();
         wishList.add(wish);
         Wishes wishes = new Wishes();
-        wishes.setDayOfWeek(DayOfWeek.MONDAY.toString());
-        wishes.setEvenOdd(EvenOdd.EVEN.toString());
+        wishes.setDayOfWeek(DayOfWeek.MONDAY);
+        wishes.setEvenOdd(EvenOdd.EVEN);
         wishes.setWishes(wishList);
         Wishes[] wishesArray = {wishes};
         AddWishesDTO saveTeacherWishes = new AddWishesDTO();
@@ -100,12 +100,12 @@ public class TeacherWishesControllerTest {
     public void updateTeacherWishes() throws Exception {
         Wish wish = new Wish();
         wish.setClassName("1 para");
-        wish.setStatus(WishStatuses.GOOD.toString());
+        wish.setStatus(WishStatuses.GOOD);
         List<Wish> wishList = new ArrayList<>();
         wishList.add(wish);
         Wishes wishes = new Wishes();
-        wishes.setDayOfWeek(DayOfWeek.MONDAY.toString());
-        wishes.setEvenOdd(EvenOdd.EVEN.toString());
+        wishes.setDayOfWeek(DayOfWeek.MONDAY);
+        wishes.setEvenOdd(EvenOdd.EVEN);
         wishes.setWishes(wishList);
         Wishes[] wishesArray = {wishes};
         TeacherWishes teacherWishes = new TeacherWishes();
@@ -116,12 +116,12 @@ public class TeacherWishesControllerTest {
         teacherWishesDTO.setId(savedTeacherWishes.getId());
         Wish updatedWish = new Wish();
         updatedWish.setClassName("2 para");
-        updatedWish.setStatus(WishStatuses.BAD.toString());
+        updatedWish.setStatus(WishStatuses.BAD);
         List<Wish> updatedWishList = new ArrayList<>();
         updatedWishList.add(updatedWish);
         Wishes updatedWishes = new Wishes();
-        updatedWishes.setDayOfWeek(DayOfWeek.MONDAY.toString());
-        updatedWishes.setEvenOdd(EvenOdd.EVEN.toString());
+        updatedWishes.setDayOfWeek(DayOfWeek.MONDAY);
+        updatedWishes.setEvenOdd(EvenOdd.EVEN);
         updatedWishes.setWishes(updatedWishList);
         Wishes[] updatedWishesArray = {updatedWishes};
         teacherWishesDTO.setTeacherWishesList(updatedWishesArray);
