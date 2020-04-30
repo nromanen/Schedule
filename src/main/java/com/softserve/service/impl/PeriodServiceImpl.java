@@ -185,6 +185,11 @@ public class PeriodServiceImpl implements PeriodService {
         log.info("Enter into nameExists method with name:{}", name);
         return periodRepository.findByName(name).isPresent();
     }
+
+    @Override
+    public List<Period> getFistFourPeriods() {
+        return periodRepository.getFistFourPeriods();
+    }
 }
 
 

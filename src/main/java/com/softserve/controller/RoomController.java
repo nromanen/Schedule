@@ -42,12 +42,13 @@ public class RoomController {
     @GetMapping("/free")
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "Get the list of all free rooms by specific day and period")
-    public ResponseEntity<List<RoomDTO>> freeRoomList(@RequestParam(value = "id") Long id,
+    public ResponseEntity<List<RoomDTO>> freeRoomList(@RequestParam(value = "semesterId") Long semesterId,
+                                                      @RequestParam(value = "classId") Long classId,
                                                       @RequestParam(value = "dayOfWeek") DayOfWeek dayOfWeek,
-                                                      @RequestParam(value = "evenOdd", defaultValue = "WEEKLY")EvenOdd evenOdd
+                                                      @RequestParam(value = "evenOdd")EvenOdd evenOdd
                                                       ) {
-        log.info("Enter into freeRoomList of RoomController with id {}, dayOfWeek {} and evenOdd {} ", id, dayOfWeek, evenOdd);
-        List<Room> rooms = roomService.freeRoomBySpecificPeriod(id, dayOfWeek, evenOdd);
+        log.info("In freeRoomList (semesterId = [{}], classId = [{}], dayOfWeek = [{}], evenOdd = [{}])", semesterId, classId, dayOfWeek, evenOdd);
+        List<Room> rooms = roomService.getAvailableRoomsForSchedule(semesterId, dayOfWeek, evenOdd, classId);
         return ResponseEntity.ok().body(roomMapper.convertToDtoList(rooms));
     }
 
