@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.softserve.entity.enums.WishStatuses;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -23,7 +24,7 @@ public class Wish implements Serializable
     private String className;
 
     @JsonProperty("status")
-    private String status;
+    private WishStatuses status;
 
     @JsonIgnore
     private static final long serialVersionUID = -1925390674796259490L;
@@ -33,7 +34,7 @@ public class Wish implements Serializable
         return this;
     }
 
-    public Wish withStatus(String status) {
+    public Wish withStatus(WishStatuses status) {
         this.status = status;
         return this;
     }

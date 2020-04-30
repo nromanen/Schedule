@@ -26,20 +26,20 @@ public class Wishes implements Serializable
 {
 
     @JsonProperty("day_of_week")
-    private String dayOfWeek;
+    private DayOfWeek dayOfWeek;
 
     @JsonProperty("evenOdd")
-    private String evenOdd;
+    private EvenOdd evenOdd;
 
     @JsonProperty("class_status")
     private List<Wish> wishes = new ArrayList<Wish>();
 
-    public Wishes withDayOfWeek(String dayOfWeek) {
+    public Wishes withDayOfWeek(DayOfWeek dayOfWeek) {
         this.dayOfWeek = dayOfWeek;
         return this;
     }
 
-    public Wishes withEvenOdd(String evenOdd) {
+    public Wishes withEvenOdd(EvenOdd evenOdd) {
         this.evenOdd = evenOdd;
         return this;
     }

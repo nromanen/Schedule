@@ -170,6 +170,11 @@ public class RoomRepositoryImpl extends BasicRepositoryImpl<Room, Long> implemen
                 .getSingleResult();
     }
 
+    /**
+     * The method used for getting list of disabled entities from database
+     *
+     * @return list of disabled rooms
+     */
     @Override
     public List<Room> getDisabled() {
         log.info("In getDisabled");
