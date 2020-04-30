@@ -1,12 +1,10 @@
 package com.softserve.service.impl;
 
-import com.softserve.entity.Room;
 import com.softserve.entity.Semester;
 import com.softserve.exception.*;
 import com.softserve.repository.SemesterRepository;
 import com.softserve.service.SemesterService;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -62,7 +60,7 @@ public class SemesterServiceImpl implements SemesterService {
         if (isTimeInvalid(object)) {
             throw new IncorrectTimeException("The end day cannot be before the start day");
         }
-        if (isSemesterExistsByDescriptionAndYear(object)) {
+        if (isSemesterExistsByDescriptionAndYearForSave(object)) {
             throw new EntityAlreadyExistsException("Semester already exists with current description and year.");
         }
         if (object.isCurrentSemester()) {
@@ -115,7 +113,7 @@ public class SemesterServiceImpl implements SemesterService {
      * @return Semester if such semester already exists, else return null
      */
     @Override
-    public Semester isSemesterExists(Semester semester) {
+    public Semester semesterExists(Semester semester) {
         log.info("In isSemesterExists with semester = {}", semester);
         return semesterRepository.semesterDuplicates(semester).orElse(null);
     }
@@ -140,9 +138,9 @@ public class SemesterServiceImpl implements SemesterService {
     }
 
     //check if there is a semester with description and year return true, else - false
-    private boolean isSemesterExistsByDescriptionAndYear(Semester semester) {
+    private boolean isSemesterExistsByDescriptionAndYearForSave(Semester semester) {
         log.info("In isSemesterExistsByDescriptionAndYear with semester = {}", semester);
-        Semester object = isSemesterExists(semester);
+        Semester object = semesterExists(semester);
         if (object == null) {
             return false;
         }
@@ -152,7 +150,7 @@ public class SemesterServiceImpl implements SemesterService {
     //check if there is a semester with description and year return true, else - false (for update method)
     private boolean isSemesterExistsByDescriptionAndYearForUpdate(Semester semester) {
         log.info("In isSemesterExistsByDescriptionAndYearForUpdate with semester = {}", semester);
-        Semester object = isSemesterExists(semester);
+        Semester object = semesterExists(semester);
         if (object == null) {
             return false;
         }

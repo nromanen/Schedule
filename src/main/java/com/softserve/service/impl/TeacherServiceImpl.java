@@ -163,7 +163,7 @@ public class TeacherServiceImpl implements TeacherService {
         User user = userService.getById(userId);
         Teacher getTeacher = getById(teacherId);
 
-        if (!user.getRole().equals(Role.ROLE_USER) || getTeacher.getUserId() != null) {
+        if (user.getRole() != Role.ROLE_USER || getTeacher.getUserId() != null) {
             throw new EntityAlreadyExistsException("You cannot doing this action.");
         }
 
