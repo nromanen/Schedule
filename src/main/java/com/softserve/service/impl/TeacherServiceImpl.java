@@ -70,36 +70,7 @@ public class TeacherServiceImpl implements TeacherService {
     public Teacher save(Teacher object) {
         log.info("Enter into save method with entity:{}", object);
         Teacher teacher = teacherRepository.save(object);
-        List<Period> periods = periodService.getAll();
-        try {
-            Wishes[] teacherWishesArray= new Wishes[7];
-            int index = 0;
-            for(DayOfWeek day : DayOfWeek.values())
-            {
-                List<Wish> wishes = new ArrayList<>();
-                for(Period period: periods){
-                    Wish wish = new Wish();
-                    wish.setClassName(period.getName());
-                    wish.setStatus(WishStatuses.OK.toString());
-                    wishes.add(wish);
-                }
-                Wishes teacherWish = new Wishes();
-                teacherWish.withDayOfWeek(day.name());
-                teacherWish.setEvenOdd(EvenOdd.WEEKLY.toString());
-                teacherWish.setWishes(wishes);
-                teacherWishesArray[index]=teacherWish;
-                index++;
-            }
-            TeacherWishes teacherWishes = new TeacherWishes();
-            teacherWishes.setTeacher(teacher);
-            teacherWishes.setTeacherWishesList(teacherWishesArray);
-            teacherWishesService.save(teacherWishes);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-
-
-
+        saveTeacherWishesByNewTeacher(teacher);
         return teacher;
     }
 
@@ -113,6 +84,39 @@ public class TeacherServiceImpl implements TeacherService {
     {
         log.info("Enter into update method with entity:{}", object);
         return teacherRepository.update(object);
+    }
+
+    /**
+     * Method save information for Teacher Wishes in Repository
+     * @param teacher Teacher entity
+     * @return saved TeacherWishes entity
+     */
+    private TeacherWishes saveTeacherWishesByNewTeacher(Teacher teacher)
+    {
+        log.info("Enter into saveTeacherWishesByNewTeacher method with entity:{}", teacher);
+        List<Period> periods = periodService.getAll();
+        Wishes[] teacherWishesArray= new Wishes[7];
+        int index = 0;
+        for(DayOfWeek day : DayOfWeek.values())
+        {
+            List<Wish> wishes = new ArrayList<>();
+            for(Period period: periods){
+                Wish wish = new Wish();
+                wish.setClassName(period.getName());
+                wish.setStatus(WishStatuses.OK);
+                wishes.add(wish);
+            }
+            Wishes teacherWish = new Wishes();
+            teacherWish.withDayOfWeek(day);
+            teacherWish.setEvenOdd(EvenOdd.WEEKLY);
+            teacherWish.setWishes(wishes);
+            teacherWishesArray[index]=teacherWish;
+            index++;
+        }
+        TeacherWishes teacherWishes = new TeacherWishes();
+        teacherWishes.setTeacher(teacher);
+        teacherWishes.setTeacherWishesList(teacherWishesArray);
+        return teacherWishesService.save(teacherWishes);
     }
 
     /**

@@ -64,15 +64,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private static final String TEACHERS_ENDPOINT = "/teachers/**";
     private static final String AUTH_ENDPOINT = "/auth/**";
     private static final String SCHEDULE_ENDPOINT = "/schedules/*";
-    private static final String SCHEDULE_FOR_USERS_ENDPOINT = "/schedules/full/*";
-    private static final String ALL_GROUPS_PUBLIC_ENDPOINT = "/groups/public";
-    private static final String ALL_TEACHERS_PUBLIC_ENDPOINT = "/teachers/public";
-    private static final String ALL_CLASSES_PUBLIC_ENDPOINT = "/classes/public";
-    private static final String ALL_SEMESTERS_PUBLIC_ENDPOINT = "/semesters/public";
     private static final String SEMESTERS_ENDPOINT = "/semesters/**";
     private static final String USERS_ENDPOINT = "/users/**";
     private static final String ROOM_TYPES_ENDPOINT = "/room-types/**";
     private static final String SOCIAL_ENDPOINT = "/social/**";
+    //PUBLIC
+    private static final String SCHEDULE_FOR_USERS_ENDPOINT = "/schedules/full/*";
+    private static final String ALL_GROUPS_PUBLIC_ENDPOINT = "/public/groups";
+    private static final String ALL_TEACHERS_PUBLIC_ENDPOINT = "/public/teachers";
+    private static final String ALL_CLASSES_PUBLIC_ENDPOINT = "/public/classes";
+    private static final String ALL_SEMESTERS_PUBLIC_ENDPOINT = "/public/semesters";
 
 
     @Autowired
@@ -114,7 +115,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .successHandler(authenticationSuccessHandler())
                 .and()
-                .apply(new JwtConfigurer(jwtTokenProvider));
+                .apply(new JwtConfigurer(jwtTokenProvider))
+        ;
 
         http
                 .exceptionHandling()

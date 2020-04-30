@@ -49,6 +49,21 @@ public class GroupRepositoryImpl extends BasicRepositoryImpl<Group, Long> implem
     }
 
     /**
+     * The method used for getting number of groups with title from database
+     *
+     * @param id Long id
+     * @param title String title used to find Group
+     * @return Long number of records with title
+     */
+    @Override
+    public Long countGroupsWithTitleAndIgnoreWithId(Long id, String title) {
+        log.info("In countGroupsWithTitleAndIgnoreWithId(id = [{}], title = [{}])", id, title);
+        return (Long) sessionFactory.getCurrentSession().createQuery
+                ("SELECT count (*) FROM Group g WHERE g.title = :title and g.id!=:id")
+                .setParameter("title", title).setParameter("id", id).getSingleResult();
+    }
+
+    /**
      * Method used to verify if group with such id exists
      *
      * @param id of the Group
@@ -74,6 +89,11 @@ public class GroupRepositoryImpl extends BasicRepositoryImpl<Group, Long> implem
         return count != 0;
     }
 
+    /**
+     * The method used for getting list of disabled entities from database
+     *
+     * @return list of disabled groups
+     */
     @Override
     public List<Group> getDisabled() {
         log.info("In getDisabled");

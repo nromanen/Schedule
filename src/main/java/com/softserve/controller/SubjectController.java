@@ -70,4 +70,11 @@ public class SubjectController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
+    @GetMapping("/disabled")
+    @ApiOperation(value = "Get the list of disabled subjects")
+    public ResponseEntity<List<SubjectDTO>> getDisabled() {
+        log.info("In list getDisabled");
+        List<Subject> subjects = subjectService.getDisabled();
+        return ResponseEntity.status(HttpStatus.OK).body(subjectMapper.subjectsToSubjectDTOs(subjects));
+    }
 }

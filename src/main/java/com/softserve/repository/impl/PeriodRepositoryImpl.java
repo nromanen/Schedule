@@ -68,4 +68,12 @@ public class PeriodRepositoryImpl extends BasicRepositoryImpl<Period, Long> impl
                 .getSingleResult();
         return count != 0;
     }
+
+    @Override
+    public List<Period> getFistFourPeriods() {
+        log.info("In getFistFourPeriods()");
+        return sessionFactory.getCurrentSession().createQuery("select p from Period p order by startTime")
+                .setMaxResults(4)
+                .getResultList();
+    }
 }

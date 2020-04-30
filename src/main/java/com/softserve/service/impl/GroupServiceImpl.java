@@ -55,7 +55,7 @@ public class GroupServiceImpl  implements GroupService {
     @Override
     public Group save(Group object) {
         log.info("In save(entity = [{}]", object);
-        if (isGroupExistsWitTitle(object.getTitle())){
+        if (isGroupExistsWithTitle(object.getTitle())){
             throw new FieldAlreadyExistsException(Group.class, "title", object.getTitle());
         }
         return groupRepository.save(object);
@@ -70,7 +70,7 @@ public class GroupServiceImpl  implements GroupService {
     public Group update(Group object) {
         log.info("In update(entity = [{}]", object);
         if (isExistsWithId(object.getId())){
-            if (isGroupExistsWitTitle(object.getTitle())){
+            if (isGroupExistsWithTitleAndIgnoreWithId(object.getId(), object.getTitle())){
                 log.error("Group with title [{}] already exists", object.getTitle());
                 throw new FieldAlreadyExistsException(Group.class, "title", object.getTitle());
             }
@@ -94,12 +94,25 @@ public class GroupServiceImpl  implements GroupService {
 
     /**
      * Method finds if Group with title already exists
+     * @param id
      * @param title
      * @return true if Group with such title already exist
      */
     @Override
-    public boolean isGroupExistsWitTitle(String title) {
-        log.info("In isGroupExistsWitTitle(title = [{}])",  title);
+    public boolean isGroupExistsWithTitleAndIgnoreWithId(Long id, String title) {
+        log.info("In isGroupExistsWithTitleAndIgnoreWithId(id = [{}], title = [{}])", id, title);
+        return groupRepository.countGroupsWithTitleAndIgnoreWithId(id, title) != 0;
+    }
+
+
+    /**
+     * Method finds if Group with title already exists
+     * @param title
+     * @return true if Group with such title already exist
+     */
+    @Override
+    public boolean isGroupExistsWithTitle(String title) {
+        log.info("In isGroupExistsWithTitle(title = [{}])",  title);
         return groupRepository.countGroupsWithTitle(title) != 0;
     }
 

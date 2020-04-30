@@ -3,6 +3,8 @@ package com.softserve.entity;
 import com.softserve.entity.enums.EvenOdd;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Where;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -37,6 +39,7 @@ public class Schedule implements Serializable {
     @ManyToOne(targetEntity = Room.class)
     @JoinColumn(name = "room_id")
     @NotNull
+    @Where(clause = "disable = false")
     private Room room;
 
     @ManyToOne(targetEntity = Period.class)

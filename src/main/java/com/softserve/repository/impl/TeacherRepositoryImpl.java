@@ -46,7 +46,11 @@ public class TeacherRepositoryImpl extends BasicRepositoryImpl<Teacher, Long> im
         return count != 0;
     }
 
-
+    /**
+     * The method used for getting list of disabled entities from database
+     *
+     * @return list of disabled teachers
+     */
     @Override
     public List<Teacher> getDisabled() {
         log.info("In getDisabled");

@@ -7,5 +7,6 @@ public interface SemesterService extends BasicService<Semester, Long> {
     Semester semesterExists(Semester semester);
     Semester getCurrentSemester();
     List<Semester> getDisabled();
+    Semester changeCurrentSemester(Long semesterId);
 
 }

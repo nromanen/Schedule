@@ -1,15 +1,21 @@
 package com.softserve.service.impl;
 
+import com.softserve.entity.Period;
 import com.softserve.entity.Semester;
 import com.softserve.exception.*;
 import com.softserve.repository.SemesterRepository;
+import com.softserve.service.PeriodService;
 import com.softserve.service.SemesterService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.DayOfWeek;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Slf4j
 @Transactional
@@ -17,10 +23,12 @@ import java.util.List;
 public class SemesterServiceImpl implements SemesterService {
 
     private final SemesterRepository semesterRepository;
+    private final PeriodService periodService;
 
     @Autowired
-    public SemesterServiceImpl(SemesterRepository semesterRepository) {
+    public SemesterServiceImpl(SemesterRepository semesterRepository, PeriodService periodService) {
         this.semesterRepository = semesterRepository;
+        this.periodService = periodService;
     }
 
     /**
@@ -63,10 +71,17 @@ public class SemesterServiceImpl implements SemesterService {
         if (isSemesterExistsByDescriptionAndYearForSave(object)) {
             throw new EntityAlreadyExistsException("Semester already exists with current description and year.");
         }
+        if (object.getDaysOfWeek().isEmpty()){
+            List<DayOfWeek> dayOfWeekList = Arrays.asList(DayOfWeek.MONDAY, DayOfWeek.TUESDAY, DayOfWeek.WEDNESDAY, DayOfWeek.THURSDAY, DayOfWeek.FRIDAY);
+            Set<DayOfWeek> dayOfWeekSet = new HashSet<>(dayOfWeekList);
+            object.setDaysOfWeek(dayOfWeekSet);
+        }
+        if (object.getPeriods().isEmpty()){
+            Set<Period> periodSet = new HashSet<>(periodService.getFistFourPeriods());
+            object.setPeriods(periodSet);
+        }
         if (object.isCurrentSemester()) {
-            if (getCurrentSemester() != null) {
-                throw new FieldAlreadyExistsException(Semester.class, "currentSemester", String.valueOf(object.isCurrentSemester()));
-            }
+            semesterRepository.setCurrentSemesterToFalse();
         }
         return semesterRepository.save(object);
     }
@@ -86,10 +101,17 @@ public class SemesterServiceImpl implements SemesterService {
         if (isSemesterExistsByDescriptionAndYearForUpdate(object)) {
             throw new EntityAlreadyExistsException("Semester already exists with current description and year.");
         }
+        if (object.getDaysOfWeek().isEmpty()){
+            List<DayOfWeek> dayOfWeekList = Arrays.asList(DayOfWeek.MONDAY, DayOfWeek.TUESDAY, DayOfWeek.WEDNESDAY, DayOfWeek.THURSDAY, DayOfWeek.FRIDAY);
+            Set<DayOfWeek> dayOfWeekSet = new HashSet<>(dayOfWeekList);
+            object.setDaysOfWeek(dayOfWeekSet);
+        }
+        if (object.getPeriods().isEmpty()){
+            Set<Period> periodSet = new HashSet<>(periodService.getFistFourPeriods());
+            object.setPeriods(periodSet);
+        }
         if (object.isCurrentSemester()) {
-            if (isSemesterCurrent(object.getId())) {
-                throw new FieldAlreadyExistsException(Semester.class, "currentSemester", String.valueOf(object.isCurrentSemester()));
-            }
+            semesterRepository.setCurrentSemesterToFalse();
         }
         return semesterRepository.update(object);
     }
@@ -180,4 +202,11 @@ public class SemesterServiceImpl implements SemesterService {
         return semesterRepository.getDisabled();
     }
 
+    @Override
+    public Semester changeCurrentSemester(Long semesterId) {
+        log.info("In changeCurrentSemester(Long semesterId = [{}])", semesterId);
+        semesterRepository.setCurrentSemesterToFalse();
+        semesterRepository.setCurrentSemester(semesterId);
+        return getById(semesterId);
+    }
 }
