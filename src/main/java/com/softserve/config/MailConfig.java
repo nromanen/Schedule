@@ -39,11 +39,6 @@ public class MailConfig {
     @Value("${spring.mail.properties.mail.smtp.starttls.enable}")
     private String enable;
 
-    @Value("${heroku.mail.username}")
-    private String herokuUsername;
-
-    @Value("${heroku.mail.password}")
-    private String herokuPassword;
 
     @Autowired
     private Environment environment;
@@ -56,8 +51,8 @@ public class MailConfig {
         String credentialsPassword = environment.getProperty(password);
 
         if (credentialsUsername == null && credentialsPassword == null) {
-            credentialsUsername = System.getenv(herokuUsername);
-            credentialsPassword = System.getenv(herokuPassword);
+            credentialsUsername = System.getenv("HEROKU_MAIL_USERNAME");
+            credentialsPassword = System.getenv("HEROKU_MAIL_PASSWORD");
         }
 
         mailSender.setHost(host);

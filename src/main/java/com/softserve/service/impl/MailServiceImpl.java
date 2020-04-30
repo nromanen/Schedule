@@ -22,8 +22,6 @@ public class MailServiceImpl implements MailService {
     @Value("${spring.mail.username}")
     private String username;
 
-    @Value("${heroku.mail.username}")
-    private String herokuUsername;
 
     @Autowired
     public MailServiceImpl(JavaMailSender mailSender, Environment environment) {
@@ -41,7 +39,7 @@ public class MailServiceImpl implements MailService {
         log.info("Enter into send method with emailTo {}, subject {}", emailTo, subject);
         String credentialsUsername = environment.getProperty(username);
         if (credentialsUsername == null) {
-            credentialsUsername = System.getenv(herokuUsername);
+            credentialsUsername = System.getenv("HEROKU_MAIL_USERNAME");
         }
 
         SimpleMailMessage mailMessage = new SimpleMailMessage();
