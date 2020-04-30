@@ -101,6 +101,15 @@ public class SemesterServiceImpl implements SemesterService {
         if (isSemesterExistsByDescriptionAndYearForUpdate(object)) {
             throw new EntityAlreadyExistsException("Semester already exists with current description and year.");
         }
+        if (object.getDaysOfWeek().isEmpty()){
+            List<DayOfWeek> dayOfWeekList = Arrays.asList(DayOfWeek.MONDAY, DayOfWeek.TUESDAY, DayOfWeek.WEDNESDAY, DayOfWeek.THURSDAY, DayOfWeek.FRIDAY);
+            Set<DayOfWeek> dayOfWeekSet = new HashSet<>(dayOfWeekList);
+            object.setDaysOfWeek(dayOfWeekSet);
+        }
+        if (object.getPeriods().isEmpty()){
+            Set<Period> periodSet = new HashSet<>(periodService.getFistFourPeriods());
+            object.setPeriods(periodSet);
+        }
         if (object.isCurrentSemester()) {
             semesterRepository.setCurrentSemesterToFalse();
         }
