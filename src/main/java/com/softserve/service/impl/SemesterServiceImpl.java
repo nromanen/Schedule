@@ -76,7 +76,7 @@ public class SemesterServiceImpl implements SemesterService {
         if (isTimeInvalid(object)) {
             throw new IncorrectTimeException("The end day cannot be before the start day");
         }
-        if (isSemesterExistsByDescriptionAndYearForSave(object)) {
+        if (isSemesterExistsByDescriptionAndYear(object.getDescription(), object.getYear())) {
             throw new EntityAlreadyExistsException("Semester already exists with current description and year.");
         }
         if (object.getDaysOfWeek().isEmpty()){
@@ -106,9 +106,6 @@ public class SemesterServiceImpl implements SemesterService {
         if (isTimeInvalid(object)) {
             throw new IncorrectTimeException("The end day cannot be before the start day");
         }
-        if (isSemesterExistsByDescriptionAndYearForUpdate(object)) {
-            throw new EntityAlreadyExistsException("Semester already exists with current description and year.");
-        }
         if (object.getDaysOfWeek().isEmpty()){
             List<DayOfWeek> dayOfWeekList = Arrays.asList(DayOfWeek.MONDAY, DayOfWeek.TUESDAY, DayOfWeek.WEDNESDAY, DayOfWeek.THURSDAY, DayOfWeek.FRIDAY);
             Set<DayOfWeek> dayOfWeekSet = new HashSet<>(dayOfWeekList);
@@ -136,20 +133,6 @@ public class SemesterServiceImpl implements SemesterService {
         return semesterRepository.delete(object);
     }
 
-    /**
-     * Method verifies if Semester doesn't exist in Repository
-     *
-     * @param semester Semester entity that needs to be verified
-     * @return Semester if such semester already exists, else return null
-     */
-    @Override
-    public Semester semesterExists(Semester semester) {
-        log.info("In isSemesterExists with semester = {}", semester);
-        Semester semesterForHibernate =  semesterRepository.semesterDuplicates(semester).orElse(null);
-        Hibernate.initialize(semesterForHibernate.getDaysOfWeek());
-        Hibernate.initialize(semesterForHibernate.getPeriods());
-        return semester;
-    }
 
     /**
      * Method searches get of semester with currentSemester = true in the DB
@@ -174,36 +157,10 @@ public class SemesterServiceImpl implements SemesterService {
     }
 
     //check if there is a semester with description and year return true, else - false
-    private boolean isSemesterExistsByDescriptionAndYearForSave(Semester semester) {
-        log.info("In isSemesterExistsByDescriptionAndYear with semester = {}", semester);
-        Semester object = semesterExists(semester);
-        if (object == null) {
-            return false;
-        }
-        return (object.getDescription().equals(semester.getDescription()) && object.getYear() == semester.getYear());
+    private boolean isSemesterExistsByDescriptionAndYear(String description, int year) {
+        log.info("In isSemesterExistsByDescriptionAndYear (description = [{}], year = [{}])", description, year);
+        return semesterRepository.semesterDuplicates(description, year) !=0 ;
     }
-
-    //check if there is a semester with description and year return true, else - false (for update method)
-    private boolean isSemesterExistsByDescriptionAndYearForUpdate(Semester semester) {
-        log.info("In isSemesterExistsByDescriptionAndYearForUpdate with semester = {}", semester);
-        Semester object = semesterExists(semester);
-        if (object == null) {
-            return false;
-        }
-        return (object.getDescription().equals(semester.getDescription()) &&
-                object.getYear() == semester.getYear() && object.getId() != semester.getId());
-    }
-
-    //check if semester is current return true, else - false
-    private boolean isSemesterCurrent(long id) {
-        log.info("In isSemesterCurrent with id = {}", id);
-        Semester semester = getCurrentSemester();
-        if (semester == null) {
-            return false;
-        }
-        return semester.getId() != id;
-    }
-
 
     /**
      * The method used for getting all disabled semesters

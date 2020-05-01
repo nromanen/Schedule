@@ -62,22 +62,14 @@ public class SemesterRepositoryImpl extends BasicRepositoryImpl<Semester, Long> 
         return count != 0;
     }
 
-    /**
-     * Method searches duplicate of semester in the DB
-     *
-     * @param semester Semester entity that needs to be verified
-     * @return Optional with Semester of duplicates if such exist, else return empty Optional
-     */
+
     @Override
-    public Optional<Semester> semesterDuplicates(Semester semester) {
-        log.info("In countSemesterDuplicates(semester = [{}])", semester);
-        TypedQuery<Semester> query = sessionFactory.getCurrentSession().createNamedQuery("findDescriptionAndYear", Semester.class).setMaxResults(1);
-        query.setParameter("description", semester.getDescription()).setParameter("year", semester.getYear());
-        List<Semester> semesters = query.getResultList();
-        if (semesters.isEmpty()) {
-            return Optional.empty();
-        }
-        return Optional.of(query.getResultList().get(0));
+    public Long semesterDuplicates(String description, int year) {
+        log.info("In countSemesterDuplicates(description = [{}], year = [{}])", description, year);
+        return (Long) sessionFactory.getCurrentSession().createQuery("select count(*) from Semester s where s.description = :description and s.year = :year")
+                .setParameter("description", description)
+                .setParameter("year", year)
+                .getSingleResult();
     }
 
     /**
