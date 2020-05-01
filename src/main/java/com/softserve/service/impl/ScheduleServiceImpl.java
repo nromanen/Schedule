@@ -422,9 +422,6 @@ public class ScheduleServiceImpl implements ScheduleService {
                 even.setClassId(period.getId());
                 evenLessonsInRoomScheduleDTOList.add(even);
             }
-            if(evenLesson.size() == 0){
-                evenLessonsInRoomScheduleDTOList.add(null);
-            }
 
             List<Lesson> oddLesson = scheduleRepository.lessonForRoomByDayBySemesterByPeriodByWeek(semesterId, roomId, period.getId(), day, EvenOdd.ODD);
             for(Lesson lessonItem : oddLesson)
@@ -439,9 +436,6 @@ public class ScheduleServiceImpl implements ScheduleService {
                 odd.setClassId(period.getId());
                 oddLessonsInRoomScheduleDTOList.add(odd);
             }
-                if(oddLesson.size() == 0){
-                    oddLessonsInRoomScheduleDTOList.add(null);
-                }
 
             }
         roomClassesInScheduleDTO.setEven(evenLessonsInRoomScheduleDTOList);
