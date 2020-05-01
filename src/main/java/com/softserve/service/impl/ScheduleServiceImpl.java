@@ -422,7 +422,7 @@ public class ScheduleServiceImpl implements ScheduleService {
                 even.setClassId(period.getId());
                 evenLessonsInRoomScheduleDTOList.add(even);
             }
-            if(evenLesson.isEmpty()){
+            if(evenLesson.size() == 0){
                 evenLessonsInRoomScheduleDTOList.add(null);
             }
 
@@ -439,7 +439,7 @@ public class ScheduleServiceImpl implements ScheduleService {
                 odd.setClassId(period.getId());
                 oddLessonsInRoomScheduleDTOList.add(odd);
             }
-                if(oddLesson.isEmpty()){
+                if(oddLesson.size() == 0){
                     oddLessonsInRoomScheduleDTOList.add(null);
                 }
 
