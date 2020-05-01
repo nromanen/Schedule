@@ -422,6 +422,9 @@ public class ScheduleServiceImpl implements ScheduleService {
                 even.setClassId(period.getId());
                 evenLessonsInRoomScheduleDTOList.add(even);
             }
+            if(evenLesson.isEmpty()){
+                evenLessonsInRoomScheduleDTOList.add(null);
+            }
 
             List<Lesson> oddLesson = scheduleRepository.lessonForRoomByDayBySemesterByPeriodByWeek(semesterId, roomId, period.getId(), day, EvenOdd.ODD);
             for(Lesson lessonItem : oddLesson)
@@ -436,7 +439,11 @@ public class ScheduleServiceImpl implements ScheduleService {
                 odd.setClassId(period.getId());
                 oddLessonsInRoomScheduleDTOList.add(odd);
             }
-        }
+                if(oddLesson.isEmpty()){
+                    oddLessonsInRoomScheduleDTOList.add(null);
+                }
+
+            }
         roomClassesInScheduleDTO.setEven(evenLessonsInRoomScheduleDTOList);
         roomClassesInScheduleDTO.setOdd(oddLessonsInRoomScheduleDTOList);
         roomClassesInScheduleDTOList.add(roomClassesInScheduleDTO);
@@ -448,9 +455,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         log.info("In getDaysWhenRoomHasClassesBySemester(semesterId = [{}], groupId = [{}])", semesterId, roomId);
         List<DaysOfWeekWithClassesForRoomDTO> daysOfWeekWithClassesForRoomDTOList = new ArrayList<>();
 
-        List<DayOfWeek> weekList = scheduleRepository.getDaysWhenRoomHasClassesBySemester(semesterId, roomId);
-        weekList.sort(Comparator.comparingInt(DayOfWeek::getValue));
-        for (DayOfWeek day : weekList) {
+        for (DayOfWeek day : DayOfWeek.values()) {
             DaysOfWeekWithClassesForRoomDTO daysOfWeekWithClassesForRoomDTO = new DaysOfWeekWithClassesForRoomDTO();
             daysOfWeekWithClassesForRoomDTO.setDay(day);
             daysOfWeekWithClassesForRoomDTO.setClasses(getPeriodsForRoomBySemesterByDayOfWeek(semesterId, roomId, day));
