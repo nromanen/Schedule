@@ -6,6 +6,6 @@ import lombok.Data;
 public class GroupDTO {
     private Long id;
     private String title;
-    private boolean disable = false;
+    private boolean disable;
 
 }
