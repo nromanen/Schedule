@@ -7,7 +7,6 @@ import lombok.Data;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.LinkedHashSet;
-import java.util.Set;
 import java.util.TreeSet;
 
 @Data
@@ -24,5 +23,5 @@ public class SemesterDTO {
     private TreeSet<DayOfWeek> daysOfWeek;
     @JsonProperty("semester_classes")
     private LinkedHashSet<PeriodDTO> periods;
-    private boolean disabled = false;
+    private boolean disabled;
 }

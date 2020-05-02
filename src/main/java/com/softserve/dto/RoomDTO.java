@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 public class RoomDTO {
     private Long id;
     private String name;
-    private boolean disable = false;
+    private boolean disable;
     private RoomTypeDTO type;
 }

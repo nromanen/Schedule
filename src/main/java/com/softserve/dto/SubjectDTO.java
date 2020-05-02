@@ -8,5 +8,5 @@ import lombok.Setter;
 public class SubjectDTO {
     private Long id;
     private String name;
-    private boolean disable = false;
+    private boolean disable;
 }
