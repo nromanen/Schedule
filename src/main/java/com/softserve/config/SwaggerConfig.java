@@ -1,5 +1,6 @@
 package com.softserve.config;
 
+import com.softserve.entity.CurrentUser;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import springfox.documentation.builders.ParameterBuilder;
@@ -29,6 +30,7 @@ public class SwaggerConfig {
                 .build();
         params.add(paramBuilder.build());
         return new Docket(DocumentationType.SWAGGER_2)
+                .ignoredParameterTypes(CurrentUser.class)
                 .globalOperationParameters(params)
                 .select()
                 .apis(RequestHandlerSelectors.any())
