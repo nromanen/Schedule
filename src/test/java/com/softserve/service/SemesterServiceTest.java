@@ -100,7 +100,7 @@ public class SemesterServiceTest {
         semester.setStartDay(LocalDate.of(2020, 4, 10));
         semester.setEndDay(LocalDate.of(2020, 5, 10));
 
-        when(semesterRepository.semesterDuplicates(semester)).thenReturn(Optional.of(semester));
+        when(semesterRepository.countSemesterDuplicatesByDescriptionAndYear(semester)).thenReturn(Optional.of(semester));
 
         semesterService.save(semester);
     }
@@ -165,7 +165,7 @@ public class SemesterServiceTest {
         anotherSemester.setStartDay(LocalDate.of(2020, 10, 1));
         anotherSemester.setEndDay(LocalDate.of(2020, 12, 15));
 
-        when(semesterRepository.semesterDuplicates(semester)).thenReturn(Optional.of(anotherSemester));
+        when(semesterRepository.countSemesterDuplicatesByDescriptionAndYear(semester)).thenReturn(Optional.of(anotherSemester));
 
         semesterService.update(semester);
     }
