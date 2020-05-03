@@ -33,6 +33,7 @@ test:
         key: "$CI_COMMIT_REF_NAME"
         policy: pull
     only:
+        - develop
         - master
 
 production_deploy:
