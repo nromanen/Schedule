@@ -1,5 +1,6 @@
 package com.softserve.dto;
 
+import com.softserve.entity.Semester;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,6 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @ToString
 public class ScheduleForTeacherDTO {
+    private SemesterDTO semester;
     private TeacherDTO teacher;
     private List<DaysOfWeekWithClassesForTeacherDTO> days;
 }
