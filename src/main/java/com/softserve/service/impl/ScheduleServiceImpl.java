@@ -299,7 +299,8 @@ public class ScheduleServiceImpl implements ScheduleService {
         log.info("In getDaysForSemester(semesterId = [{}])", semesterId);
         List<DaysOfWeekWithClassesForGroupDTO> daysOfWeekWithClassesForGroupDTOList = new ArrayList<>();
         Set<DayOfWeek> weekList = semesterService.getById(semesterId).getDaysOfWeek();
-        for (DayOfWeek day : weekList) {
+        TreeSet<DayOfWeek> dayOfWeeks = new TreeSet<>(weekList);
+        for (DayOfWeek day : dayOfWeeks) {
             DaysOfWeekWithClassesForGroupDTO daysOfWeekWithClassesForGroupDTO = new DaysOfWeekWithClassesForGroupDTO();
             daysOfWeekWithClassesForGroupDTO.setDay(day);
             daysOfWeekWithClassesForGroupDTO.setClasses(getClassesForSemesterByDay(semesterId, day, groupId));
