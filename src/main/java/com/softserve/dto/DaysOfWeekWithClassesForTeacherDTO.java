@@ -7,7 +7,6 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.time.DayOfWeek;
-import java.util.List;
 
 @Getter
 @Setter

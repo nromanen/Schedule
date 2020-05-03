@@ -6,12 +6,12 @@ import com.itextpdf.text.pdf.PdfPCell;
 
 public class Style {
 
-    public static final BaseColor TITLE_COLOUR = new BaseColor(40, 88, 142);
-    public static final BaseColor HEADER_COLOUR = new BaseColor(143, 184, 230);
-    public static final BaseColor PERIOD_COLOUR = new BaseColor(170, 199, 230, 125);
+    private static final BaseColor TITLE_COLOUR = new BaseColor(40, 88, 142);
+    private static final BaseColor HEADER_COLOUR = new BaseColor(143, 184, 230);
+    private static final BaseColor PERIOD_COLOUR = new BaseColor(170, 199, 230, 125);
 
-    public static final float HEADER_HEIGHT = 18f * 2f;
-    public static final float CELL_HEIGHT = HEADER_HEIGHT * 2f;
+    private static final float HEADER_HEIGHT = 18f * 2f;
+    private static final float CELL_HEIGHT = HEADER_HEIGHT * 2f;
 
 
     /**
