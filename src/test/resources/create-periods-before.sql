@@ -1,3 +1,5 @@
+delete from de3rldngv565ak."public".semester_day;
+delete from de3rldngv565ak."public".semester_period;
 delete from de3rldngv565ak."public".periods;
 
 insert into de3rldngv565ak."public".periods(id, end_time, name, start_time) VALUES
