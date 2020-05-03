@@ -16,9 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.DayOfWeek;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 @Transactional
 @Service
@@ -300,8 +298,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     private List<DaysOfWeekWithClassesForGroupDTO> getDaysForSemester(Long semesterId, Long groupId) {
         log.info("In getDaysForSemester(semesterId = [{}])", semesterId);
         List<DaysOfWeekWithClassesForGroupDTO> daysOfWeekWithClassesForGroupDTOList = new ArrayList<>();
-        List<DayOfWeek> weekList = scheduleRepository.getDaysForSemester(semesterId);
-        weekList.sort(Comparator.comparingInt(DayOfWeek::getValue));
+        Set<DayOfWeek> weekList = semesterService.getById(semesterId).getDaysOfWeek();
         for (DayOfWeek day : weekList) {
             DaysOfWeekWithClassesForGroupDTO daysOfWeekWithClassesForGroupDTO = new DaysOfWeekWithClassesForGroupDTO();
             daysOfWeekWithClassesForGroupDTO.setDay(day);
@@ -316,10 +313,9 @@ public class ScheduleServiceImpl implements ScheduleService {
     private List<ClassesInScheduleForGroupDTO> getClassesForSemesterByDay(Long semesterId, DayOfWeek day, Long groupId) {
         log.info("In getClassesForSemester(semesterId = [{}])", semesterId);
         //get Classes in that Day for group
-        List<Period> uniquePeriods = scheduleRepository.periodsForSemester(semesterId);
+        Set<Period> semesterPeriods = semesterService.getById(semesterId).getPeriods();
         List<ClassesInScheduleForGroupDTO> classesInScheduleForGroupDTOList = new ArrayList<>();
-
-        for (Period period : uniquePeriods) {
+        for (Period period : semesterPeriods) {
             ClassesInScheduleForGroupDTO classesInScheduleForGroupDTO = new ClassesInScheduleForGroupDTO();
             classesInScheduleForGroupDTO.setPeriod(periodMapper.convertToDto(period));
             classesInScheduleForGroupDTO.setWeeks(getLessonsForGroupForPeriodBySemesterAndDay(semesterId, groupId, period.getId(), day));

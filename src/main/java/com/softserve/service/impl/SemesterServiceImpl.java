@@ -159,7 +159,7 @@ public class SemesterServiceImpl implements SemesterService {
     //check if there is a semester with description and year return true, else - false
     private boolean isSemesterExistsByDescriptionAndYear(String description, int year) {
         log.info("In isSemesterExistsByDescriptionAndYear (description = [{}], year = [{}])", description, year);
-        return semesterRepository.semesterDuplicates(description, year) !=0 ;
+        return semesterRepository.countSemesterDuplicatesByDescriptionAndYear(description, year) !=0 ;
     }
 
     /**
@@ -185,4 +185,5 @@ public class SemesterServiceImpl implements SemesterService {
         semesterRepository.setCurrentSemester(semesterId);
         return getById(semesterId);
     }
+
 }
