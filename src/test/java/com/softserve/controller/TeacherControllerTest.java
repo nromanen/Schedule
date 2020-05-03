@@ -161,5 +161,26 @@ public class TeacherControllerTest {
                 .andDo(print())
                 .andExpect(status().isBadRequest());
     }
+
+    @Test
+    public void getAllPublicTeachers() throws Exception {
+        mockMvc.perform(get("/public/teachers").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json"));
+    }
+
+    @Test
+    public void getDisableTeachers() throws Exception {
+        mockMvc.perform(get("/teachers/disabled").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json"));
+    }
+
+    @Test
+    public void getAllNotRegisteredTeachers() throws Exception {
+        mockMvc.perform(get("/not-registered-teachers").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json"));
+    }
 }
 

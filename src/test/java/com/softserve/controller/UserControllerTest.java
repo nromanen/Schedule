@@ -166,4 +166,11 @@ public class UserControllerTest {
                 .andDo(print())
                 .andExpect(status().isBadRequest());
     }
+
+    @Test
+    public void getAllUsersWithRoleUser() throws Exception {
+        mockMvc.perform(get("/users/with-role-user").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json"));
+    }
 }

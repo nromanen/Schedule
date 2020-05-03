@@ -93,14 +93,14 @@ public class GroupServiceTest {
         updatedGroup.setId(1L);
 
         when(groupRepository.countByGroupId(anyLong())).thenReturn(1L);
-        when(groupRepository.countGroupsWithTitle(anyString())).thenReturn(0L);
+        when(groupRepository.countGroupsWithTitleAndIgnoreWithId(anyLong(), anyString())).thenReturn(0L);
         when(groupRepository.update(updatedGroup)).thenReturn(updatedGroup);
 
         oldGroup = groupService.update(updatedGroup);
         assertNotNull(oldGroup);
         assertEquals(updatedGroup, oldGroup);
         verify(groupRepository, times(1)).update(oldGroup);
-        verify(groupRepository, times(1)).countGroupsWithTitle(anyString());
+        verify(groupRepository, times(1)).countGroupsWithTitleAndIgnoreWithId(anyLong(), anyString());
     }
 
     @Test(expected = FieldAlreadyExistsException.class)
@@ -113,11 +113,11 @@ public class GroupServiceTest {
         updatedSubject.setId(1L);
 
         when(groupRepository.countByGroupId(anyLong())).thenReturn(1L);
-        when(groupRepository.countGroupsWithTitle(anyString())).thenReturn(1L);
+        when(groupRepository.countGroupsWithTitleAndIgnoreWithId(anyLong(), anyString())).thenReturn(1L);
 
         oldGroup = groupService.update(updatedSubject);
         verify(groupRepository, times(1)).countByGroupId(anyLong());
-        verify(groupRepository, times(1)).countGroupsWithTitle(anyString());
+        verify(groupRepository, times(1)).countGroupsWithTitleAndIgnoreWithId(anyLong(), anyString());
     }
 
     @Test(expected = EntityNotFoundException.class)

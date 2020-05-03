@@ -9,6 +9,8 @@ import com.softserve.exception.EntityAlreadyExistsException;
 import com.softserve.exception.EntityNotFoundException;
 import com.softserve.repository.LessonRepository;
 import com.softserve.service.impl.LessonServiceImpl;
+import com.softserve.service.impl.SubjectServiceImpl;
+import com.softserve.service.impl.TeacherServiceImpl;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -27,6 +29,12 @@ import static org.mockito.Mockito.*;
 public class LessonServiceTest {
     @Mock
     private LessonRepository lessonRepository;
+
+    @Mock
+    private TeacherServiceImpl teacherService;
+
+    @Mock
+    private SubjectServiceImpl subjectService;
 
     @InjectMocks
     private LessonServiceImpl lessonService;
@@ -83,17 +91,21 @@ public class LessonServiceTest {
         lesson.setSubject(subject);
         lesson.setHours(1);
         lesson.setLessonType(LessonType.LECTURE);
-        lesson.setSubjectForSite("Human anatomy");
-        lesson.setTeacherForSite("Ivanov I.I.");
+        lesson.setSubjectForSite("");
+        lesson.setTeacherForSite("");
 
         when(lessonRepository.countLessonDuplicates(lesson)).thenReturn(0L);
         when(lessonRepository.save(lesson)).thenReturn(lesson);
+        when(teacherService.getById(teacher.getId())).thenReturn(teacher);
+        when(subjectService.getById(subject.getId())).thenReturn(subject);
 
         Lesson result = lessonService.save(lesson);
         assertNotNull(result);
         assertEquals(lesson, result);
         verify(lessonRepository, times(1)).countLessonDuplicates(lesson);
         verify(lessonRepository, times(1)).save(lesson);
+        verify(teacherService, times(1)).getById(teacher.getId());
+        verify(subjectService, times(1)).getById(subject.getId());
     }
 
     @Test(expected = EntityAlreadyExistsException.class)

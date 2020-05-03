@@ -8,6 +8,7 @@ import com.softserve.dto.RoomDTO;
 import com.softserve.dto.RoomTypeDTO;
 import com.softserve.entity.Room;
 
+import com.softserve.entity.enums.EvenOdd;
 import com.softserve.mapper.RoomMapperImpl;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,6 +25,8 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+
+import java.time.DayOfWeek;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -74,7 +77,11 @@ public class RoomControllerTest {
 
     @Test
     public void getFreeRoomsBySpecificPeriodDayOfWeekAndNumberOfWeek() throws Exception {
-        mockMvc.perform(get("/rooms/free?id=1&dayOfWeek=MONDAY&evenOdd=EVEN")
+        mockMvc.perform(get("/rooms/free")
+                .param("semesterId", "1")
+                .param("classId", "1")
+                .param("dayOfWeek", DayOfWeek.MONDAY.toString())
+                .param("evenOdd", EvenOdd.EVEN.toString())
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(content().contentType("application/json"));
     }
@@ -151,5 +158,12 @@ public class RoomControllerTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isInternalServerError());
+    }
+
+    @Test
+    public void getDisableTeachers() throws Exception {
+        mockMvc.perform(get("/rooms/disabled").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json"));
     }
 }

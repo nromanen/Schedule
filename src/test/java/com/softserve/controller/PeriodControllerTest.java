@@ -1,6 +1,7 @@
-/*package com.softserve.controller;
+package com.softserve.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.softserve.config.DBConfigTest;
 import com.softserve.config.MyWebAppInitializer;
 import com.softserve.config.WebMvcConfig;
@@ -24,8 +25,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,6 +52,7 @@ public class PeriodControllerTest {
         mockMvc = MockMvcBuilders.webAppContextSetup(wac)
                 .apply(SecurityMockMvcConfigurers.springSecurity())
                 .build();
+        objectMapper.registerModule(new JavaTimeModule());
     }
 
     @Test
@@ -80,8 +81,8 @@ public class PeriodControllerTest {
     public void savePeriodIfSavedPeriodDoesNotExist() throws Exception {
         AddPeriodDTO periodDtoForSave = new AddPeriodDTO();
         periodDtoForSave.setName("save period");
-        periodDtoForSave.setStartTime(Timestamp.valueOf("2020-10-15 09:00:00"));
-        periodDtoForSave.setEndTime(Timestamp.valueOf("2020-10-15 10:00:00"));
+        periodDtoForSave.setStartTime(LocalTime.parse("09:00:00"));
+        periodDtoForSave.setEndTime(LocalTime.parse("10:00:00"));
 
         mockMvc.perform(post("/classes").content(objectMapper.writeValueAsString(periodDtoForSave))
                 .contentType(MediaType.APPLICATION_JSON))
@@ -92,8 +93,8 @@ public class PeriodControllerTest {
     public void saveListOfPeriodsIfAllOfThemDoNotExist() throws Exception {
         AddPeriodDTO periodDtoForList = new AddPeriodDTO();
         periodDtoForList.setName("save list of periods");
-        periodDtoForList.setStartTime(Timestamp.valueOf("2020-10-15 11:00:00"));
-        periodDtoForList.setEndTime(Timestamp.valueOf("2020-10-15 12:00:00"));
+        periodDtoForList.setStartTime(LocalTime.parse("11:00:00"));
+        periodDtoForList.setEndTime(LocalTime.parse("12:00:00"));
         List<AddPeriodDTO> periodDtoListForSave = new ArrayList<>();
         periodDtoListForSave.add(periodDtoForList);
 
@@ -107,8 +108,8 @@ public class PeriodControllerTest {
         PeriodDTO periodDtoForUpdate = new PeriodDTO();
         periodDtoForUpdate.setId(4L);
         periodDtoForUpdate.setName("1 para updated");
-        periodDtoForUpdate.setStartTime(Timestamp.valueOf("2020-10-15 13:00:00"));
-        periodDtoForUpdate.setEndTime(Timestamp.valueOf("2020-10-15 14:00:00"));
+        periodDtoForUpdate.setStartTime(LocalTime.parse("13:00:00"));
+        periodDtoForUpdate.setEndTime(LocalTime.parse("14:00:00"));
 
         Period periodForCompare = new PeriodMapperImpl().convertToEntity(periodDtoForUpdate);
 
@@ -135,8 +136,8 @@ public class PeriodControllerTest {
     public void returnBadRequestIfSavedPeriodAlreadyExist() throws Exception {
         AddPeriodDTO addPeriodDTO = new AddPeriodDTO();
         addPeriodDTO.setName("1 para");
-        addPeriodDTO.setStartTime(Timestamp.valueOf("2020-04-11 01:00:00"));
-        addPeriodDTO.setEndTime(Timestamp.valueOf("2020-04-11 02:00:00"));
+        addPeriodDTO.setStartTime(LocalTime.parse("01:00:00"));
+        addPeriodDTO.setEndTime(LocalTime.parse("02:00:00"));
         mockMvc.perform(post("/classes").content(objectMapper.writeValueAsString(addPeriodDTO))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
@@ -147,8 +148,8 @@ public class PeriodControllerTest {
     public void returnInternalServerErrorIfSavedNameIsNull() throws Exception {
         AddPeriodDTO periodDtoForSave = new AddPeriodDTO();
         periodDtoForSave.setName(null);
-        periodDtoForSave.setStartTime(Timestamp.valueOf("2020-10-15 03:00:00"));
-        periodDtoForSave.setEndTime(Timestamp.valueOf("2020-10-15 04:00:00"));
+        periodDtoForSave.setStartTime(LocalTime.parse("03:00:00"));
+        periodDtoForSave.setEndTime(LocalTime.parse("04:00:00"));
 
         mockMvc.perform(post("/classes").content(objectMapper.writeValueAsString(periodDtoForSave))
                 .contentType(MediaType.APPLICATION_JSON))
@@ -161,8 +162,8 @@ public class PeriodControllerTest {
         PeriodDTO periodDtoForUpdate = new PeriodDTO();
         periodDtoForUpdate.setId(6L);
         periodDtoForUpdate.setName("1 para");
-        periodDtoForUpdate.setStartTime(Timestamp.valueOf("2020-10-15 13:00:00"));
-        periodDtoForUpdate.setEndTime(Timestamp.valueOf("2020-10-15 14:00:00"));
+        periodDtoForUpdate.setStartTime(LocalTime.parse("13:00:00"));
+        periodDtoForUpdate.setEndTime(LocalTime.parse("14:00:00"));
 
         mockMvc.perform(put("/classes", 6).content(objectMapper.writeValueAsString(periodDtoForUpdate))
                 .contentType(MediaType.APPLICATION_JSON))
@@ -175,8 +176,8 @@ public class PeriodControllerTest {
         PeriodDTO periodDtoForUpdate = new PeriodDTO();
         periodDtoForUpdate.setId(5L);
         periodDtoForUpdate.setName(null);
-        periodDtoForUpdate.setStartTime(Timestamp.valueOf("2020-10-15 13:00:00"));
-        periodDtoForUpdate.setEndTime(Timestamp.valueOf("2020-10-15 14:00:00"));
+        periodDtoForUpdate.setStartTime(LocalTime.parse("13:00:00"));
+        periodDtoForUpdate.setEndTime(LocalTime.parse("14:00:00"));
 
         mockMvc.perform(put("/classes", 5).content(objectMapper.writeValueAsString(periodDtoForUpdate))
                 .contentType(MediaType.APPLICATION_JSON))
@@ -188,12 +189,19 @@ public class PeriodControllerTest {
     public void returnBadRequestIfSavedPeriodIntersectsWithOtherPeriod() throws Exception {
         AddPeriodDTO periodDtoForSave = new AddPeriodDTO();
         periodDtoForSave.setName("intersect period");
-        periodDtoForSave.setStartTime(Timestamp.valueOf("1970-01-01 03:30:00"));
-        periodDtoForSave.setEndTime(Timestamp.valueOf("1970-01-01 04:30:00"));
+        periodDtoForSave.setStartTime(LocalTime.parse("03:30:00"));
+        periodDtoForSave.setEndTime(LocalTime.parse("04:40:00"));
 
         mockMvc.perform(post("/classes").content(objectMapper.writeValueAsString(periodDtoForSave))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isBadRequest());
     }
-}*/
+
+    @Test
+    public void getAllPublicClasses() throws Exception {
+        mockMvc.perform(get("/public/classes").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json"));
+    }
+}

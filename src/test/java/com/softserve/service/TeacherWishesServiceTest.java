@@ -4,6 +4,7 @@ import com.softserve.entity.Teacher;
 import com.softserve.entity.TeacherWishes;
 import com.softserve.entity.Wish;
 import com.softserve.entity.Wishes;
+import com.softserve.entity.enums.EvenOdd;
 import com.softserve.entity.enums.WishStatuses;
 import com.softserve.exception.EntityAlreadyExistsException;
 import com.softserve.exception.EntityNotFoundException;
@@ -17,6 +18,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.time.DayOfWeek;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -40,12 +42,12 @@ public class TeacherWishesServiceTest {
     public void getTeacherWishesById() {
         Wish wish = new Wish();
         wish.setClassName("1 para");
-        wish.setStatus(WishStatuses.GOOD.toString());
+        wish.setStatus(WishStatuses.GOOD);
         List<Wish> wishList = new ArrayList<>();
         wishList.add(wish);
         Wishes wishes = new Wishes();
-        wishes.setDayOfWeek("MONDAY");
-        wishes.setEvenOdd("EVEN");
+        wishes.setDayOfWeek(DayOfWeek.MONDAY);
+        wishes.setEvenOdd(EvenOdd.EVEN);
         wishes.setWishes(wishList);
         Wishes[] wishesArray = {wishes};
         Teacher teacher = new Teacher();
@@ -67,12 +69,12 @@ public class TeacherWishesServiceTest {
     public void throwEntityNotFoundExceptionIfTeacherWishesNotFounded() {
         Wish wish = new Wish();
         wish.setClassName("1 para");
-        wish.setStatus(WishStatuses.GOOD.toString());
+        wish.setStatus(WishStatuses.GOOD);
         List<Wish> wishList = new ArrayList<>();
         wishList.add(wish);
         Wishes wishes = new Wishes();
-        wishes.setDayOfWeek("MONDAY");
-        wishes.setEvenOdd("EVEN");
+        wishes.setDayOfWeek(DayOfWeek.MONDAY);
+        wishes.setEvenOdd(EvenOdd.EVEN);
         wishes.setWishes(wishList);
         Wishes[] wishesArray = {wishes};
         Teacher teacher = new Teacher();
@@ -90,12 +92,12 @@ public class TeacherWishesServiceTest {
     public void saveTeacherWishesIfTeacherDoesNotExistsAndClassesAreUniqueAndUniqueDayWithEvenOddAndEvenOddWithoutWeeklyInSameTime() {
         Wish wish = new Wish();
         wish.setClassName("1 para");
-        wish.setStatus(WishStatuses.GOOD.toString());
+        wish.setStatus(WishStatuses.GOOD);
         List<Wish> wishList = new ArrayList<>();
         wishList.add(wish);
         Wishes wishes = new Wishes();
-        wishes.setDayOfWeek("MONDAY");
-        wishes.setEvenOdd("EVEN");
+        wishes.setDayOfWeek(DayOfWeek.MONDAY);
+        wishes.setEvenOdd(EvenOdd.EVEN);
         wishes.setWishes(wishList);
         Wishes[] wishesArray = {wishes};
         Teacher teacher = new Teacher();
@@ -120,12 +122,12 @@ public class TeacherWishesServiceTest {
     public void throwEntityAlreadyExistsExceptionIfTeacherAlreadyExists() {
         Wish wish = new Wish();
         wish.setClassName("1 para");
-        wish.setStatus(WishStatuses.GOOD.toString());
+        wish.setStatus(WishStatuses.GOOD);
         List<Wish> wishList = new ArrayList<>();
         wishList.add(wish);
         Wishes wishes = new Wishes();
-        wishes.setDayOfWeek("MONDAY");
-        wishes.setEvenOdd("EVEN");
+        wishes.setDayOfWeek(DayOfWeek.MONDAY);
+        wishes.setEvenOdd(EvenOdd.EVEN);
         wishes.setWishes(wishList);
         Wishes[] wishesArray = {wishes};
         Teacher teacher = new Teacher();
@@ -146,21 +148,21 @@ public class TeacherWishesServiceTest {
     public void throwIncorrectWishExceptionIfClassesAreNotUnique() {
         Wish wish = new Wish();
         wish.setClassName("1 para");
-        wish.setStatus(WishStatuses.GOOD.toString());
+        wish.setStatus(WishStatuses.GOOD);
         Wish anotherWish = new Wish();
         anotherWish.setClassName("1 para");
-        anotherWish.setStatus(WishStatuses.BAD.toString());
+        anotherWish.setStatus(WishStatuses.BAD);
         List<Wish> wishList = new ArrayList<>();
         wishList.add(wish);
         wishList.add(anotherWish);
         Wishes wishes = new Wishes();
-        wishes.setDayOfWeek("MONDAY");
-        wishes.setEvenOdd("EVEN");
+        wishes.setDayOfWeek(DayOfWeek.MONDAY);
+        wishes.setEvenOdd(EvenOdd.EVEN);
         wishes.setWishes(wishList);
         Wishes anotherWishes = new Wishes();
         anotherWishes.setWishes(wishList);
-        anotherWishes.setDayOfWeek("MONDAY");
-        anotherWishes.setEvenOdd("ODD");
+        anotherWishes.setDayOfWeek(DayOfWeek.MONDAY);
+        anotherWishes.setEvenOdd(EvenOdd.ODD);
         Wishes[] wishesArray = {wishes, anotherWishes};
         Teacher teacher = new Teacher();
         teacher.setId(1L);
@@ -180,21 +182,21 @@ public class TeacherWishesServiceTest {
     public void throwIncorrectWishExceptionIfDayAndEvenOddAreNotUnique() {
         Wish wish = new Wish();
         wish.setClassName("1 para");
-        wish.setStatus(WishStatuses.GOOD.toString());
+        wish.setStatus(WishStatuses.GOOD);
         Wish anotherWish = new Wish();
         anotherWish.setClassName("2 para");
-        anotherWish.setStatus(WishStatuses.BAD.toString());
+        anotherWish.setStatus(WishStatuses.BAD);
         List<Wish> wishList = new ArrayList<>();
         wishList.add(wish);
         wishList.add(anotherWish);
         Wishes wishes = new Wishes();
-        wishes.setDayOfWeek("MONDAY");
-        wishes.setEvenOdd("WEEKLY");
+        wishes.setDayOfWeek(DayOfWeek.MONDAY);
+        wishes.setEvenOdd(EvenOdd.WEEKLY);
         wishes.setWishes(wishList);
         Wishes anotherWishes = new Wishes();
         anotherWishes.setWishes(wishList);
-        anotherWishes.setDayOfWeek("MONDAY");
-        anotherWishes.setEvenOdd("WEEKLY");
+        anotherWishes.setDayOfWeek(DayOfWeek.MONDAY);
+        anotherWishes.setEvenOdd(EvenOdd.WEEKLY);
         Wishes[] wishesArray = {wishes, anotherWishes};
         Teacher teacher = new Teacher();
         teacher.setId(1L);
@@ -214,16 +216,16 @@ public class TeacherWishesServiceTest {
     public void throwIncorrectWishExceptionIfEvenOddWithWeeklyInSameTime() {
         Wish wish = new Wish();
         wish.setClassName("1 para");
-        wish.setStatus(WishStatuses.GOOD.toString());
+        wish.setStatus(WishStatuses.GOOD);
         List<Wish> wishList = new ArrayList<>();
         wishList.add(wish);
         Wishes wishes = new Wishes();
-        wishes.setDayOfWeek("MONDAY");
-        wishes.setEvenOdd("EVEN");
+        wishes.setDayOfWeek(DayOfWeek.MONDAY);
+        wishes.setEvenOdd(EvenOdd.EVEN);
         Wishes anotherWishes = new Wishes();
         anotherWishes.setWishes(wishList);
-        anotherWishes.setDayOfWeek("MONDAY");
-        anotherWishes.setEvenOdd("WEEKLY");
+        anotherWishes.setDayOfWeek(DayOfWeek.MONDAY);
+        anotherWishes.setEvenOdd(EvenOdd.WEEKLY);
         wishes.setWishes(wishList);
         Wishes[] wishesArray = {wishes, anotherWishes};
         Teacher teacher = new Teacher();
@@ -244,12 +246,12 @@ public class TeacherWishesServiceTest {
     public void updateTeacherWishesIfTeacherDoesNotExistsAndClassesAreUniqueAndUniqueDayWithEvenOddAndEvenOddWithoutWeeklyInSameTime() {
         Wish wish = new Wish();
         wish.setClassName("1 para");
-        wish.setStatus(WishStatuses.GOOD.toString());
+        wish.setStatus(WishStatuses.GOOD);
         List<Wish> wishList = new ArrayList<>();
         wishList.add(wish);
         Wishes wishes = new Wishes();
-        wishes.setDayOfWeek("MONDAY");
-        wishes.setEvenOdd("EVEN");
+        wishes.setDayOfWeek(DayOfWeek.MONDAY);
+        wishes.setEvenOdd(EvenOdd.EVEN);
         wishes.setWishes(wishList);
         Wishes[] wishesArray = {wishes};
         Teacher teacher = new Teacher();

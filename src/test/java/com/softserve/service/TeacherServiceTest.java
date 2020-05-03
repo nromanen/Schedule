@@ -1,7 +1,8 @@
 package com.softserve.service;
 
-import com.softserve.entity.Teacher;
-import com.softserve.entity.User;
+import com.softserve.entity.*;
+import com.softserve.entity.enums.EvenOdd;
+import com.softserve.entity.enums.WishStatuses;
 import com.softserve.exception.EntityAlreadyExistsException;
 import com.softserve.exception.EntityNotFoundException;
 import com.softserve.repository.TeacherRepository;
@@ -14,7 +15,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import java.util.Optional;
+import java.time.DayOfWeek;
+import java.time.LocalTime;
+import java.util.*;
 
 import static com.softserve.entity.enums.Role.ROLE_TEACHER;
 import static org.junit.Assert.assertEquals;
@@ -33,6 +36,12 @@ public class TeacherServiceTest {
 
     @Mock
     MailService mailService;
+
+    @Mock
+    PeriodService periodService;
+
+    @Mock
+    TeacherWishesService teacherWishesService;
 
     @InjectMocks
     TeacherServiceImpl teacherService;
@@ -140,5 +149,66 @@ public class TeacherServiceTest {
         when(teacherRepository.findById(1L)).thenReturn(Optional.of(teacher));
 
         teacherService.joinTeacherWithUser(teacher.getId(), user.getId());
+    }
+
+    @Test
+    public void saveTeacherWithWishes() {
+        Teacher teacher = new Teacher();
+        teacher.setId(1L);
+        teacher.setUserId(2);
+        teacher.setName("Ivan");
+        teacher.setSurname("Ivanov");
+        teacher.setPatronymic("Ivanovych");
+        teacher.setPosition("docent");
+        Period period = new Period();
+        period.setName("1 para");
+        period.setId(1L);
+        period.setStartTime(LocalTime.parse("10:00:00"));
+        period.setEndTime(LocalTime.parse("11:00:00"));
+        List<Period> periodList = new ArrayList<>();
+        periodList.add(period);
+
+        when(periodService.getAll()).thenReturn(periodList);
+        when(teacherWishesService.save(any(TeacherWishes.class))).thenReturn(null);
+        when(teacherRepository.save(teacher)).thenReturn(teacher);
+
+        Teacher result = teacherService.save(teacher);
+        assertNotNull(result);
+        assertEquals(teacher, result);
+        verify(periodService, times(1)).getAll();
+        verify(teacherRepository, times(1)).save(teacher);
+        verify(teacherWishesService, times(1)).save(any(TeacherWishes.class));
+    }
+
+    @Test
+    public void getTeacherByUserId() {
+        Teacher teacher = new Teacher();
+        teacher.setPosition("docent");
+        teacher.setPatronymic("Ivanovych");
+        teacher.setSurname("Ivanov");
+        teacher.setName("Ivan");
+        teacher.setId(1L);
+        teacher.setUserId(1);
+
+        when(teacherRepository.findByUserId(1)).thenReturn(Optional.of(teacher));
+
+        Teacher result = teacherService.findByUserId(1);
+        assertNotNull(result);
+        assertEquals(teacher, result);
+        verify(teacherRepository, times(1)).findByUserId(1);
+    }
+
+    @Test(expected = EntityNotFoundException.class)
+    public void throwEntityNotFoundException() {
+        Teacher teacher = new Teacher();
+        teacher.setPosition("docent");
+        teacher.setPatronymic("Ivanovych");
+        teacher.setSurname("Ivanov");
+        teacher.setName("Ivan");
+        teacher.setId(1L);
+        teacher.setUserId(1);
+
+        teacherService.findByUserId(2);
+        verify(teacherRepository, times(1)).findByUserId(2);
     }
 }

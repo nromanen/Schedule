@@ -1,5 +1,6 @@
 package com.softserve.entity;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -26,6 +27,7 @@ import java.io.Serializable;
 @Getter
 @Entity
 @Table(name = "subjects")
+@EqualsAndHashCode
 public class Subject implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

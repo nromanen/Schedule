@@ -187,7 +187,7 @@ public class PeriodServiceImpl implements PeriodService {
     }
 
     @Override
-    public List<Period> getFistFourPeriods() {
+    public List<Period> getFirstFourPeriods() {
         return periodRepository.getFistFourPeriods();
     }
 }

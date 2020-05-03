@@ -85,7 +85,7 @@ public class SemesterServiceImpl implements SemesterService {
             object.setDaysOfWeek(dayOfWeekSet);
         }
         if (object.getPeriods().isEmpty()){
-            Set<Period> periodSet = new HashSet<>(periodService.getFistFourPeriods());
+            Set<Period> periodSet = new HashSet<>(periodService.getFirstFourPeriods());
             object.setPeriods(periodSet);
         }
         if (object.isCurrentSemester()) {
@@ -115,7 +115,7 @@ public class SemesterServiceImpl implements SemesterService {
             object.setDaysOfWeek(dayOfWeekSet);
         }
         if (object.getPeriods().isEmpty()){
-            Set<Period> periodSet = new HashSet<>(periodService.getFistFourPeriods());
+            Set<Period> periodSet = new HashSet<>(periodService.getFirstFourPeriods());
             object.setPeriods(periodSet);
         }
         if (object.isCurrentSemester()) {
