@@ -179,4 +179,36 @@ public class TeacherServiceTest {
         verify(teacherRepository, times(1)).save(teacher);
         verify(teacherWishesService, times(1)).save(any(TeacherWishes.class));
     }
+
+    @Test
+    public void getTeacherByUserId() {
+        Teacher teacher = new Teacher();
+        teacher.setPosition("docent");
+        teacher.setPatronymic("Ivanovych");
+        teacher.setSurname("Ivanov");
+        teacher.setName("Ivan");
+        teacher.setId(1L);
+        teacher.setUserId(1);
+
+        when(teacherRepository.findByUserId(1)).thenReturn(Optional.of(teacher));
+
+        Teacher result = teacherService.findByUserId(1);
+        assertNotNull(result);
+        assertEquals(teacher, result);
+        verify(teacherRepository, times(1)).findByUserId(1);
+    }
+
+    @Test(expected = EntityNotFoundException.class)
+    public void throwEntityNotFoundException() {
+        Teacher teacher = new Teacher();
+        teacher.setPosition("docent");
+        teacher.setPatronymic("Ivanovych");
+        teacher.setSurname("Ivanov");
+        teacher.setName("Ivan");
+        teacher.setId(1L);
+        teacher.setUserId(1);
+
+        teacherService.findByUserId(2);
+        verify(teacherRepository, times(1)).findByUserId(2);
+    }
 }

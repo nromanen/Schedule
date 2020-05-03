@@ -175,5 +175,12 @@ public class TeacherControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"));
     }
+
+    @Test
+    public void getAllNotRegisteredTeachers() throws Exception {
+        mockMvc.perform(get("/not-registered-teachers").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json"));
+    }
 }
 

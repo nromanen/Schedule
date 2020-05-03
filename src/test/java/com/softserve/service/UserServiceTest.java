@@ -17,7 +17,9 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
@@ -177,7 +179,7 @@ public class UserServiceTest {
     }
 
     @Test(expected = EntityNotFoundException.class)
-    public void throwEntityNotFoundExceptionIfTokenNotFounded                                                                         () {
+    public void throwEntityNotFoundExceptionIfTokenNotFounded() {
         User user = new User();
         user.setEmail("some@mail.com");
         user.setPassword("mypassword");
@@ -253,5 +255,20 @@ public class UserServiceTest {
         user.setId(1L);
 
         userService.resetPassword(user.getEmail());
+    }
+
+    @Test
+    public void getAllUsersWithRoleUser() {
+        User user = new User();
+        user.setEmail("test@email.com");
+        user.setPassword("password");
+        List<User> userList = new ArrayList<>();
+        userList.add(user);
+
+        when(userRepository.getAllUsersWithRoleUser()).thenReturn(userList);
+
+        List<User> result = userService.getAllUsersWithRoleUser();
+        assertNotNull(result);
+        assertEquals(userList, result);
     }
 }
