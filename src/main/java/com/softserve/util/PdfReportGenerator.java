@@ -6,6 +6,7 @@ import com.itextpdf.text.PageSize;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.softserve.dto.ScheduleForGroupDTO;
+import com.softserve.dto.ScheduleForTeacherDTO;
 import com.softserve.entity.Schedule;
 import lombok.extern.slf4j.Slf4j;
 
@@ -20,11 +21,11 @@ public class PdfReportGenerator {
     /**
      * Method used for generating byte array, which we convert into pdf in controller
      *
-     * @param schedules for selected teacher and semester
+     * @param schedule for selected teacher and semester
      * @return ByteArrayOutputStream (schedule)
      */
-    public ByteArrayOutputStream teacherScheduleReport(List<Schedule> schedules) {
-        log.info("Enter into schedulesReport method with list of schedules {}", schedules);
+    public ByteArrayOutputStream teacherScheduleReport(ScheduleForTeacherDTO schedule) {
+        log.info("Enter into schedulesReport method with list of schedules {}", schedule);
 
         ByteArrayOutputStream bys = null;
         try {
@@ -34,10 +35,10 @@ public class PdfReportGenerator {
             bys = new ByteArrayOutputStream();
             PdfWriter.getInstance(document, bys);
             document.open();
-            PdfPTable table = new TeacherTableBuilder().createTable(schedules);
+            PdfPTable table = new TeacherTableBuilder().createTeacherTable(schedule);
             document.add(table);
             document.close();
-        } catch (DocumentException e) {
+        } catch (DocumentException | IOException e) {
             log.error(e.getMessage());
         }
         return bys;

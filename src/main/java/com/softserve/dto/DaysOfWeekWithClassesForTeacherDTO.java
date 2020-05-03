@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import java.time.DayOfWeek;
-import java.util.List;
 
 @Getter
 @Setter
