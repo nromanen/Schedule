@@ -3,7 +3,6 @@ package com.softserve.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.softserve.entity.Lesson;
 import lombok.*;
-
 import java.util.List;
 
 @Getter
