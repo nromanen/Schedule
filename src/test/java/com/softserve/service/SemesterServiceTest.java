@@ -144,7 +144,7 @@ public class SemesterServiceTest {
         semester.setStartDay(LocalDate.of(2020, 4, 10));
         semester.setEndDay(LocalDate.of(2020, 5, 10));
 
-        when(semesterRepository.semesterDuplicates(semester.getDescription(),semester.getYear())).thenReturn(1L);
+        when(semesterRepository.countSemesterDuplicatesByDescriptionAndYear(semester.getDescription(), semester.getYear())).thenReturn(1L);
 
         semesterService.save(semester);
     }
@@ -214,8 +214,8 @@ public class SemesterServiceTest {
 
         semesterService.update(semester);
     }
-// uncomment when add checking in service
-    /*@Test(expected = EntityAlreadyExistsException.class)
+
+    @Test(expected = EntityAlreadyExistsException.class)
     public void throwEntityAlreadyExistsExceptionIfUpdatedDescriptionAlreadyExists() {
         Semester semester = new Semester();
         semester.setId(1L);
@@ -248,10 +248,10 @@ public class SemesterServiceTest {
         anotherSemester.setStartDay(LocalDate.of(2020, 10, 1));
         anotherSemester.setEndDay(LocalDate.of(2020, 12, 15));
 
-        when(semesterRepository.semesterDuplicates(semester.getDescription(),semester.getYear())).thenReturn(1L);
+        when(semesterRepository.getSemesterByDescriptionAndYear(semester.getDescription(),semester.getYear())).thenReturn(Optional.of(anotherSemester));
 
         semesterService.update(semester);
-    }*/
+    }
 
     @Test
     public void updateSemesterAndSetItAsCurrent() {

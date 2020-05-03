@@ -10,6 +10,7 @@ import java.util.List;
 @ToString
 @EqualsAndHashCode
 public class ScheduleForTeacherDTO {
+    private SemesterDTO semester;
     private TeacherDTO teacher;
     private List<DaysOfWeekWithClassesForTeacherDTO> days;
 }

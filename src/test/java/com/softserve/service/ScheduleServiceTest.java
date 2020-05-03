@@ -929,8 +929,8 @@ public class ScheduleServiceTest {
         classes1.setPeriod(firstPeriodDTO);
         classes1.setWeeks(lessonInScheduleByWeekDTO);
         List<ClassesInScheduleForGroupDTO> inScheduleDTOS = new ArrayList<>();
-        inScheduleDTOS.add(classes1);
         inScheduleDTOS.add(classes);
+        inScheduleDTOS.add(classes1);
         DaysOfWeekWithClassesForGroupDTO days = new DaysOfWeekWithClassesForGroupDTO();
         days.setDay(DayOfWeek.MONDAY);
         days.setClasses(inScheduleDTOS);
@@ -946,8 +946,8 @@ public class ScheduleServiceTest {
         scheduleForGroupDTOList.add(scheduleForGroupDTO);
 
         LinkedHashSet<PeriodDTO> periodDTOSet = new LinkedHashSet<>();
-        periodDTOSet.add(firstPeriodDTO);
         periodDTOSet.add(secondPeriodDTO);
+        periodDTOSet.add(firstPeriodDTO);
         SemesterDTO semesterDTO = new SemesterDTO();
         semesterDTO.setId(semester.getId());
         semesterDTO.setDescription(semester.getDescription());
@@ -963,8 +963,6 @@ public class ScheduleServiceTest {
 
         when(semesterService.getById(semester.getId())).thenReturn(semester);
         when(scheduleRepository.uniqueGroupsInScheduleBySemester(semester.getId())).thenReturn(groupList);
-        when(scheduleRepository.getDaysForSemester(semester.getId())).thenReturn(dayOfWeekList);
-        when(scheduleRepository.periodsForSemester(semester.getId())).thenReturn(periodList);
         when(scheduleRepository.lessonForGroupByDayBySemesterByPeriodByWeek(semester.getId(), group.getId(), firstClasses.getId(), DayOfWeek.MONDAY, EvenOdd.EVEN)).thenReturn(Optional.of(biology));
         when(scheduleRepository.lessonForGroupByDayBySemesterByPeriodByWeek(semester.getId(), group.getId(), firstClasses.getId(), DayOfWeek.MONDAY, EvenOdd.ODD)).thenReturn(Optional.of(astronomy));
         when(scheduleRepository.lessonForGroupByDayBySemesterByPeriodByWeek(semester.getId(), group.getId(), secondClasses.getId(), DayOfWeek.MONDAY, EvenOdd.EVEN)).thenReturn(Optional.of(biology));

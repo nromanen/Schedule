@@ -64,7 +64,7 @@ public class SemesterRepositoryImpl extends BasicRepositoryImpl<Semester, Long> 
 
 
     @Override
-    public Long semesterDuplicates(String description, int year) {
+    public Long countSemesterDuplicatesByDescriptionAndYear(String description, int year) {
         log.info("In countSemesterDuplicates(description = [{}], year = [{}])", description, year);
         return (Long) sessionFactory.getCurrentSession().createQuery("select count(*) from Semester s where s.description = :description and s.year = :year")
                 .setParameter("description", description)
@@ -118,5 +118,14 @@ public class SemesterRepositoryImpl extends BasicRepositoryImpl<Semester, Long> 
                 "UPDATE Semester s set s.currentSemester = true  where s.id = :semesterId")
                 .setParameter("semesterId", semesterId)
                 .executeUpdate();
+    }
+
+    @Override
+    public Optional<Semester> getSemesterByDescriptionAndYear(String description, int year) {
+        log.info("In getSemesterByDescriptionAndYear(String description = [{}], int year = [{}])", description, year);
+        return sessionFactory.getCurrentSession().createQuery("select s from Semester s where s.description= :description and s.year= :year")
+                .setParameter("description", description).
+                setParameter("year", year)
+                .uniqueResultOptional();
     }
 }

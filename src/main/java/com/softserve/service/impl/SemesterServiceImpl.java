@@ -106,6 +106,9 @@ public class SemesterServiceImpl implements SemesterService {
         if (isTimeInvalid(object)) {
             throw new IncorrectTimeException("The end day cannot be before the start day");
         }
+        if (isSemesterExistsByDescriptionAndYearForUpdate(object.getId(), object.getDescription(), object.getYear())) {
+            throw new EntityAlreadyExistsException("Semester already exists with current description and year.");
+        }
         if (object.getDaysOfWeek().isEmpty()){
             List<DayOfWeek> dayOfWeekList = Arrays.asList(DayOfWeek.MONDAY, DayOfWeek.TUESDAY, DayOfWeek.WEDNESDAY, DayOfWeek.THURSDAY, DayOfWeek.FRIDAY);
             Set<DayOfWeek> dayOfWeekSet = new HashSet<>(dayOfWeekList);
@@ -159,9 +162,20 @@ public class SemesterServiceImpl implements SemesterService {
     //check if there is a semester with description and year return true, else - false
     private boolean isSemesterExistsByDescriptionAndYear(String description, int year) {
         log.info("In isSemesterExistsByDescriptionAndYear (description = [{}], year = [{}])", description, year);
-        return semesterRepository.semesterDuplicates(description, year) !=0 ;
+        return semesterRepository.countSemesterDuplicatesByDescriptionAndYear(description, year) !=0 ;
     }
 
+    private boolean isSemesterExistsByDescriptionAndYearForUpdate(Long semesterId, String description, int year){
+        log.info("In isSemesterExistsByDescriptionAndYearForUpdate (semesterId = [{}],description = [{}], year = [{}])", semesterId, description, year);
+        Semester semesterByDescriptionAndYear = semesterRepository.getSemesterByDescriptionAndYear(description, year).orElse(null);
+        if (semesterByDescriptionAndYear == null){
+            return false;
+        }
+        if (semesterByDescriptionAndYear.getId() != semesterId) {
+            return true;
+        }
+        else return false;
+    }
     /**
      * The method used for getting all disabled semesters
      *
@@ -185,4 +199,5 @@ public class SemesterServiceImpl implements SemesterService {
         semesterRepository.setCurrentSemester(semesterId);
         return getById(semesterId);
     }
+
 }
