@@ -12,13 +12,11 @@ import java.time.DayOfWeek;
 @Setter
 @NoArgsConstructor
 @ToString
-public class ScheduleDTO {
+public class ScheduleWithoutSemesterDTO {
     private Long id;
-    private SemesterDTO semester;
     private DayOfWeek dayOfWeek;
     private EvenOdd evenOdd;
     private LessonInfoDTO lesson;
     private PeriodDTO period;
     private RoomDTO room;
-
 }

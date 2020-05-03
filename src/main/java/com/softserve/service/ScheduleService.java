@@ -25,6 +25,6 @@ public interface ScheduleService extends BasicService<Schedule, Long> {
 
     List<ScheduleForRoomDTO> getScheduleForRooms(Long semesterId);
 
-    List<Schedule> getScheduleBySemester(Long semesterId);
+    List<Schedule> getSchedulesBySemester(Long semesterId);
 }
 

@@ -183,4 +183,24 @@ public class RoomRepositoryImpl extends BasicRepositoryImpl<Room, Long> implemen
                 "where r.disable = true ")
                 .getResultList();
     }
+
+    /**
+     * The method used for getting list of rooms which have schedule
+     *
+     * @return list of rooms
+     */
+    @Override
+    public List<Room> getRoomsWithSchedule(Long semesterId) {
+        log.info("Enter into getRoomsWithSchedule with semesterId = {} ", semesterId);
+        Session session = getSession();
+        return session.createQuery(
+
+                "select r1 from Room r1 " +
+                        "where r1.id in " +
+                        "(select distinct(r.id) from Schedule s" +
+                        " join s.room r " +
+                        " where  s.semester.id = :semesterId)")
+                .setParameter("semesterId", semesterId)
+                .getResultList();
+    }
 }

@@ -7,6 +7,7 @@ import com.softserve.repository.SemesterRepository;
 import com.softserve.service.PeriodService;
 import com.softserve.service.SemesterService;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,8 +41,11 @@ public class SemesterServiceImpl implements SemesterService {
     @Override
     public Semester getById(Long id) {
         log.info("In getById(id = [{}])", id);
-        return semesterRepository.findById(id).orElseThrow(
+        Semester semester = semesterRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException(Semester.class, "id", id.toString()));
+        Hibernate.initialize(semester.getDaysOfWeek());
+        Hibernate.initialize(semester.getPeriods());
+        return semester;
     }
 
     /**
@@ -53,6 +57,10 @@ public class SemesterServiceImpl implements SemesterService {
     public List<Semester> getAll() {
         log.info("In getAll()");
         List<Semester> semesters = semesterRepository.getAll();
+        for (Semester semester:semesters) {
+            Hibernate.initialize(semester.getDaysOfWeek());
+            Hibernate.initialize(semester.getPeriods());
+        }
         return  semesters;
     }
 
@@ -68,7 +76,7 @@ public class SemesterServiceImpl implements SemesterService {
         if (isTimeInvalid(object)) {
             throw new IncorrectTimeException("The end day cannot be before the start day");
         }
-        if (isSemesterExistsByDescriptionAndYearForSave(object)) {
+        if (isSemesterExistsByDescriptionAndYear(object.getDescription(), object.getYear())) {
             throw new EntityAlreadyExistsException("Semester already exists with current description and year.");
         }
         if (object.getDaysOfWeek().isEmpty()){
@@ -98,9 +106,6 @@ public class SemesterServiceImpl implements SemesterService {
         if (isTimeInvalid(object)) {
             throw new IncorrectTimeException("The end day cannot be before the start day");
         }
-        if (isSemesterExistsByDescriptionAndYearForUpdate(object)) {
-            throw new EntityAlreadyExistsException("Semester already exists with current description and year.");
-        }
         if (object.getDaysOfWeek().isEmpty()){
             List<DayOfWeek> dayOfWeekList = Arrays.asList(DayOfWeek.MONDAY, DayOfWeek.TUESDAY, DayOfWeek.WEDNESDAY, DayOfWeek.THURSDAY, DayOfWeek.FRIDAY);
             Set<DayOfWeek> dayOfWeekSet = new HashSet<>(dayOfWeekList);
@@ -128,17 +133,6 @@ public class SemesterServiceImpl implements SemesterService {
         return semesterRepository.delete(object);
     }
 
-    /**
-     * Method verifies if Semester doesn't exist in Repository
-     *
-     * @param semester Semester entity that needs to be verified
-     * @return Semester if such semester already exists, else return null
-     */
-    @Override
-    public Semester semesterExists(Semester semester) {
-        log.info("In isSemesterExists with semester = {}", semester);
-        return semesterRepository.semesterDuplicates(semester).orElse(null);
-    }
 
     /**
      * Method searches get of semester with currentSemester = true in the DB
@@ -148,8 +142,11 @@ public class SemesterServiceImpl implements SemesterService {
     @Override
     public Semester getCurrentSemester() {
         log.info("In getCurrentSemester");
-        return semesterRepository.getCurrentSemester().orElseThrow(
+        Semester semester = semesterRepository.getCurrentSemester().orElseThrow(
                 () -> new ScheduleConflictException("Current semester for managers work isn't specified"));
+        Hibernate.initialize(semester.getDaysOfWeek());
+        Hibernate.initialize(semester.getPeriods());
+        return semester;
     }
 
     //check if the end time is not before the start time or equals return true, else - false
@@ -160,36 +157,10 @@ public class SemesterServiceImpl implements SemesterService {
     }
 
     //check if there is a semester with description and year return true, else - false
-    private boolean isSemesterExistsByDescriptionAndYearForSave(Semester semester) {
-        log.info("In isSemesterExistsByDescriptionAndYear with semester = {}", semester);
-        Semester object = semesterExists(semester);
-        if (object == null) {
-            return false;
-        }
-        return (object.getDescription().equals(semester.getDescription()) && object.getYear() == semester.getYear());
+    private boolean isSemesterExistsByDescriptionAndYear(String description, int year) {
+        log.info("In isSemesterExistsByDescriptionAndYear (description = [{}], year = [{}])", description, year);
+        return semesterRepository.semesterDuplicates(description, year) !=0 ;
     }
-
-    //check if there is a semester with description and year return true, else - false (for update method)
-    private boolean isSemesterExistsByDescriptionAndYearForUpdate(Semester semester) {
-        log.info("In isSemesterExistsByDescriptionAndYearForUpdate with semester = {}", semester);
-        Semester object = semesterExists(semester);
-        if (object == null) {
-            return false;
-        }
-        return (object.getDescription().equals(semester.getDescription()) &&
-                object.getYear() == semester.getYear() && object.getId() != semester.getId());
-    }
-
-    //check if semester is current return true, else - false
-    private boolean isSemesterCurrent(long id) {
-        log.info("In isSemesterCurrent with id = {}", id);
-        Semester semester = getCurrentSemester();
-        if (semester == null) {
-            return false;
-        }
-        return semester.getId() != id;
-    }
-
 
     /**
      * The method used for getting all disabled semesters
@@ -199,7 +170,12 @@ public class SemesterServiceImpl implements SemesterService {
     @Override
     public List<Semester> getDisabled() {
         log.info("Enter into getAll of getDisabled");
-        return semesterRepository.getDisabled();
+        List<Semester> semesters = semesterRepository.getDisabled();
+        for (Semester semester:semesters) {
+            Hibernate.initialize(semester.getDaysOfWeek());
+            Hibernate.initialize(semester.getPeriods());
+        }
+        return  semesters;
     }
 
     @Override

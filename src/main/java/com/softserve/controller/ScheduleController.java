@@ -3,6 +3,7 @@ package com.softserve.controller;
 import com.softserve.dto.*;
 import com.softserve.entity.Schedule;
 import com.softserve.entity.enums.EvenOdd;
+import com.softserve.mapper.ScheduleWithoutSemesterMapper;
 import com.softserve.service.ScheduleService;
 import com.softserve.mapper.ScheduleMapper;
 import com.softserve.mapper.ScheduleSaveMapper;
@@ -25,11 +26,13 @@ public class ScheduleController {
     private final ScheduleService scheduleService;
     private final ScheduleMapper scheduleMapper;
     private final ScheduleSaveMapper scheduleSaveMapper;
+    private final ScheduleWithoutSemesterMapper scheduleWithoutSemesterMapper;
 
-    public ScheduleController(ScheduleService scheduleService, ScheduleMapper scheduleMapper, ScheduleSaveMapper scheduleSaveMapper) {
+    public ScheduleController(ScheduleService scheduleService, ScheduleMapper scheduleMapper, ScheduleSaveMapper scheduleSaveMapper, ScheduleWithoutSemesterMapper scheduleWithoutSemesterMapper) {
         this.scheduleService = scheduleService;
         this.scheduleMapper = scheduleMapper;
         this.scheduleSaveMapper = scheduleSaveMapper;
+        this.scheduleWithoutSemesterMapper = scheduleWithoutSemesterMapper;
     }
 
     @GetMapping
@@ -42,10 +45,10 @@ public class ScheduleController {
 
     @GetMapping("/semester")
     @ApiOperation(value = "Get the list of all schedules")
-    public ResponseEntity<List<ScheduleDTO>> listForSemester(@RequestParam Long semesterId) {
+    public ResponseEntity<List<ScheduleWithoutSemesterDTO>> listForSemester(@RequestParam Long semesterId) {
         log.info("In listForSemester()");
-        List<Schedule> schedules = scheduleService.getScheduleBySemester(semesterId);
-        return ResponseEntity.status(HttpStatus.OK).body(scheduleMapper.scheduleToScheduleDTOs(schedules));
+        List<Schedule> schedules = scheduleService.getSchedulesBySemester(semesterId);
+        return ResponseEntity.status(HttpStatus.OK).body(scheduleWithoutSemesterMapper.scheduleToScheduleWithoutSemesterDTOs(schedules));
     }
 
     @GetMapping("/data-before")

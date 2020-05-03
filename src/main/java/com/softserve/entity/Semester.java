@@ -66,11 +66,11 @@ public class Semester implements Serializable {
     @Enumerated(EnumType.STRING)
     @CollectionTable(name="semester_day")
     @Column(name = "day")
-    //@NotNull(message = "At least one day should persist in the semester")
+    @NotNull(message = "At least one day should persist in the semester")
     private Set<DayOfWeek> daysOfWeek;
 
-    //@NotNull(message = "Semester should contain at least one period")
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @NotNull(message = "Semester should contain at least one period")
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "semester_period",
             joinColumns = { @JoinColumn(name = "semester_id")},
             inverseJoinColumns = {@JoinColumn(name = "period_id")})
