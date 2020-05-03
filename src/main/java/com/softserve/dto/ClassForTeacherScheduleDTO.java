@@ -1,7 +1,6 @@
 package com.softserve.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.softserve.entity.Lesson;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class GroupTableBuilder {
 
+    private static final String EMPTY_CELL = "--//--";
     private Style style = new Style();
 
     /**
@@ -36,7 +37,7 @@ public class GroupTableBuilder {
     public PdfPTable createGroupTable(ScheduleForGroupDTO schedule) throws DocumentException, IOException {
         log.info("Enter into createGroupTable method with list of schedules {}", schedule);
 
-        // getting number of columns, setting columns width when creating table
+        // getting number of columns, setting columns width when creating main table
         int numColumns = schedule.getDays().size() + 1;
         PdfPTable table = new PdfPTable(numColumns);
         table.setWidthPercentage(100);
@@ -80,7 +81,6 @@ public class GroupTableBuilder {
         TreeSet<PeriodDTO> periods = schedule.getDays().stream()
                 .flatMap(s -> s.getClasses().stream())
                 .map(ClassesInScheduleForGroupDTO::getPeriod)
-                .sorted(Comparator.comparing(PeriodDTO::getStartTime))
                 .collect(Collectors.toCollection(
                         () -> new TreeSet<>(
                                 Comparator.comparing(PeriodDTO::getStartTime)
@@ -90,7 +90,7 @@ public class GroupTableBuilder {
 
         // creating table cells with values
         PdfPCell cell;
-        Font cellFont = new Font(baseFont, 12, Font.NORMAL, BaseColor.BLACK);
+        Font cellFont = new Font(baseFont, 11, Font.NORMAL, BaseColor.BLACK);
 
         //getting in first loop layer - iterating every period
         for (PeriodDTO period : periods) {
@@ -103,7 +103,7 @@ public class GroupTableBuilder {
             //getting in second loop layer - iterating days
             for (DaysOfWeekWithClassesForGroupDTO day : schedule.getDays()) {
                 StringBuilder daySchedule = new StringBuilder("");
-                cell = new PdfPCell(new Phrase("--//--", cellFont));
+                cell = new PdfPCell(new Phrase(EMPTY_CELL, cellFont));
                 //getting in third loop layer - iterating classes
                 for (int k = 0; k < day.getClasses().size(); k++) {
                     // filling in column raws checking needed period
@@ -122,7 +122,7 @@ public class GroupTableBuilder {
                             PdfPCell lowerInnerCell;
                             //upper (odd) cell
                             if (day.getClasses().get(k).getWeeks().getOdd() == null) {
-                                upperInnerCell = new PdfPCell(new Phrase("\n\n --//--\n\n ", cellFont));
+                                upperInnerCell = new PdfPCell(new Phrase(EMPTY_CELL, cellFont));
                             } else {
                                 cellStringValue(upperInnerCellString, day.getClasses().get(k).getWeeks().getOdd());
                                 upperInnerCell = new PdfPCell(new Phrase(String.valueOf(upperInnerCellString), cellFont));
@@ -132,7 +132,7 @@ public class GroupTableBuilder {
                             inner.addCell(upperInnerCell);
                             //lower (even) cell
                             if (day.getClasses().get(k).getWeeks().getEven() == null) {
-                                lowerInnerCell = new PdfPCell(new Phrase("\n\n --//--\n\n ", cellFont));
+                                lowerInnerCell = new PdfPCell(new Phrase(EMPTY_CELL, cellFont));
                             } else {
                                 cellStringValue(lowerInnerCellString, day.getClasses().get(k).getWeeks().getEven());
                                 lowerInnerCell = new PdfPCell(new Phrase(String.valueOf(lowerInnerCellString), cellFont));
@@ -144,7 +144,7 @@ public class GroupTableBuilder {
                         }
                     }
                 }
-                // formatting and adding cell to table if it's empty
+                // formatting and adding cell to table
                 style.valueCellStyle(cell);
                 table.addCell(cell);
             }
