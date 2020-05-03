@@ -123,7 +123,7 @@ public class SemesterRepositoryImpl extends BasicRepositoryImpl<Semester, Long> 
     @Override
     public Optional<Semester> getSemesterByDescriptionAndYear(String description, int year) {
         log.info("In getSemesterByDescriptionAndYear(String description = [{}], int year = [{}])", description, year);
-        return sessionFactory.getCurrentSession().createQuery("select from Semester s where s.description= :description and s.year= :year")
+        return sessionFactory.getCurrentSession().createQuery("select s from Semester s where s.description= :description and s.year= :year")
                 .setParameter("description", description).
                 setParameter("year", year)
                 .uniqueResultOptional();

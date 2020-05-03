@@ -18,10 +18,6 @@ import java.util.Set;
 
 
 @NamedQuery(
-        name = "findDescriptionAndYear",
-        query = "from Semester s where s.description= :description and s.year= :year"
-)
-@NamedQuery(
         name = "findCurrentSemester",
         query = "from Semester s where s.currentSemester= :currentSemester"
 )
