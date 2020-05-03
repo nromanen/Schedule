@@ -19,7 +19,6 @@ import java.time.DayOfWeek;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 
 @Transactional
 @Service
@@ -85,7 +84,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     public List<Schedule> getAll() {
         log.info("In getAll()");
         List<Schedule> schedules = scheduleRepository.getAll();
-        for (Schedule schedule:schedules) {
+        for (Schedule schedule : schedules) {
             Hibernate.initialize(schedule.getSemester().getDaysOfWeek());
             Hibernate.initialize(schedule.getSemester().getPeriods());
         }
@@ -255,14 +254,14 @@ public class ScheduleServiceImpl implements ScheduleService {
         LessonsInScheduleDTO even = lessonsInScheduleMapper.lessonToLessonsInScheduleDTO(lesson);
 
         if (lesson != null) {
-            even.setRoom(roomForScheduleMapper.roomToRoomForScheduleDTO(scheduleRepository.getRoomForLesson(semesterId,  periodId, lesson.getId(), day, EvenOdd.EVEN)));
+            even.setRoom(roomForScheduleMapper.roomToRoomForScheduleDTO(scheduleRepository.getRoomForLesson(semesterId, periodId, lesson.getId(), day, EvenOdd.EVEN)));
             lessonInScheduleByWeekDTO.setEven(even);
         }
 
         Lesson lesson2 = scheduleRepository.lessonForGroupByDayBySemesterByPeriodByWeek(semesterId, groupId, periodId, day, EvenOdd.ODD).orElse(null);
         LessonsInScheduleDTO odd = lessonsInScheduleMapper.lessonToLessonsInScheduleDTO(lesson2);
         if (lesson2 != null) {
-            odd.setRoom(roomForScheduleMapper.roomToRoomForScheduleDTO(scheduleRepository.getRoomForLesson(semesterId,  periodId, lesson2.getId(), day, EvenOdd.ODD)));
+            odd.setRoom(roomForScheduleMapper.roomToRoomForScheduleDTO(scheduleRepository.getRoomForLesson(semesterId, periodId, lesson2.getId(), day, EvenOdd.ODD)));
             lessonInScheduleByWeekDTO.setOdd(odd);
         }
 
@@ -295,6 +294,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         }
         scheduleFullDTO.setSchedule(scheduleForGroupDTOList);
         return scheduleFullDTO;
+
     }
 
     private List<DaysOfWeekWithClassesForGroupDTO> getDaysForSemester(Long semesterId, Long groupId) {
@@ -339,8 +339,9 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Override
     public ScheduleForTeacherDTO getScheduleForTeacher(Long semesterId, Long teacherId) {
         log.info("In getScheduleForTeacher(semesterId = [{}], teacherId[{}])", semesterId, teacherId);
-       ScheduleForTeacherDTO scheduleForTeacherDTO = new ScheduleForTeacherDTO();
-
+        ScheduleForTeacherDTO scheduleForTeacherDTO = new ScheduleForTeacherDTO();
+        SemesterMapper semesterMapper = new SemesterMapperImpl();
+        scheduleForTeacherDTO.setSemester(semesterMapper.semesterToSemesterDTO(semesterService.getById(semesterId)));
         //get Teacher Info
         scheduleForTeacherDTO.setTeacher(teacherMapper.teacherToTeacherDTO(teacherService.getById(teacherId)));
 
@@ -359,7 +360,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         return scheduleForTeacherDTO;
     }
 
-    private ClassesInScheduleForTeacherDTO getInfoForTeacherScheduleByWeek(Long semesterId, Long teacherId, DayOfWeek day, EvenOdd evenOdd){
+    private ClassesInScheduleForTeacherDTO getInfoForTeacherScheduleByWeek(Long semesterId, Long teacherId, DayOfWeek day, EvenOdd evenOdd) {
         List<ClassForTeacherScheduleDTO> classForTeacherScheduleDTOList = new ArrayList<>();
 
         ClassesInScheduleForTeacherDTO classesInScheduleForTeacherDTO = new ClassesInScheduleForTeacherDTO();
@@ -379,11 +380,11 @@ public class ScheduleServiceImpl implements ScheduleService {
         return classesInScheduleForTeacherDTO;
     }
 
-    private List<LessonForTeacherScheduleDTO> getLessonsForTeacherBySemesterByDayByWeekByPeriod(Long semesterId, Long teacherId, DayOfWeek day, EvenOdd evenOdd, Long periodId){
+    private List<LessonForTeacherScheduleDTO> getLessonsForTeacherBySemesterByDayByWeekByPeriod(Long semesterId, Long teacherId, DayOfWeek day, EvenOdd evenOdd, Long periodId) {
         List<LessonForTeacherScheduleDTO> lessonForTeacherScheduleDTOList = new ArrayList<>();
         List<Lesson> lessons = scheduleRepository.lessonsForTeacherBySemesterByDayByPeriodByWeek(semesterId, teacherId, periodId, day, evenOdd);
-        for (Lesson lesson: lessons) {
-            LessonForTeacherScheduleDTO lessonForTeacherScheduleDTO =  lessonForTeacherScheduleMapper.lessonToLessonForTeacherScheduleDTO(lesson);
+        for (Lesson lesson : lessons) {
+            LessonForTeacherScheduleDTO lessonForTeacherScheduleDTO = lessonForTeacherScheduleMapper.lessonToLessonForTeacherScheduleDTO(lesson);
             lessonForTeacherScheduleDTO.setRoom(scheduleRepository.getRoomForLesson(semesterId, periodId, lessonForTeacherScheduleDTO.getId(), day, evenOdd).getName());
             lessonForTeacherScheduleDTOList.add(lessonForTeacherScheduleDTO);
         }
@@ -397,7 +398,6 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
 
-
     //get classes in Day when teacher has schedule and fill classes by even/odd lessons
     private List<RoomClassesInScheduleDTO> getPeriodsForRoomBySemesterByDayOfWeek(Long semesterId, Long roomId, DayOfWeek day) {
         log.info("In getPeriodsForRoomBySemesterByDayOfWeek(semesterId = [{}], groupId = [{}], day = [{}])", semesterId, roomId, day);
@@ -406,12 +406,11 @@ public class ScheduleServiceImpl implements ScheduleService {
         List<RoomClassesInScheduleDTO> roomClassesInScheduleDTOList = new ArrayList<>();
         RoomClassesInScheduleDTO roomClassesInScheduleDTO = new RoomClassesInScheduleDTO();
         List<LessonsInRoomScheduleDTO> evenLessonsInRoomScheduleDTOList = new ArrayList<>();
-        List<LessonsInRoomScheduleDTO>  oddLessonsInRoomScheduleDTOList = new ArrayList<>();
+        List<LessonsInRoomScheduleDTO> oddLessonsInRoomScheduleDTOList = new ArrayList<>();
         for (Period period : uniquePeriods) {
             //change
             List<Lesson> evenLesson = scheduleRepository.lessonForRoomByDayBySemesterByPeriodByWeek(semesterId, roomId, period.getId(), day, EvenOdd.EVEN);
-            for(Lesson lessonItem : evenLesson)
-             {
+            for (Lesson lessonItem : evenLesson) {
                 LessonsInRoomScheduleDTO even = lessonsInScheduleMapper.lessonToLessonsInRoomScheduleDTO(lessonItem);
                 even.setSurname(lessonItem.getTeacher().getSurname());
                 even.setSubjectName(lessonItem.getSubject().getName());
@@ -424,8 +423,7 @@ public class ScheduleServiceImpl implements ScheduleService {
             }
 
             List<Lesson> oddLesson = scheduleRepository.lessonForRoomByDayBySemesterByPeriodByWeek(semesterId, roomId, period.getId(), day, EvenOdd.ODD);
-            for(Lesson lessonItem : oddLesson)
-             {
+            for (Lesson lessonItem : oddLesson) {
                 LessonsInRoomScheduleDTO odd = lessonsInScheduleMapper.lessonToLessonsInRoomScheduleDTO(lessonItem);
                 odd.setSurname(lessonItem.getTeacher().getSurname());
                 odd.setSubjectName(lessonItem.getSubject().getName());
@@ -437,7 +435,7 @@ public class ScheduleServiceImpl implements ScheduleService {
                 oddLessonsInRoomScheduleDTOList.add(odd);
             }
 
-            }
+        }
         roomClassesInScheduleDTO.setEven(evenLessonsInRoomScheduleDTOList);
         roomClassesInScheduleDTO.setOdd(oddLessonsInRoomScheduleDTOList);
         roomClassesInScheduleDTOList.add(roomClassesInScheduleDTO);
@@ -459,8 +457,6 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
 
-
-
     @Override
     public List<ScheduleForRoomDTO> getScheduleForRooms(Long semesterId) {
         log.info("Enter into getScheduleForRooms");
@@ -476,7 +472,7 @@ public class ScheduleServiceImpl implements ScheduleService {
             scheduleForGroupDTOList.add(scheduleForRoomDTO);
         }
         return scheduleForGroupDTOList;
-        }
+    }
 
     @Override
     public List<Schedule> getSchedulesBySemester(Long semesterId) {

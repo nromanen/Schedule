@@ -4,9 +4,11 @@ import com.softserve.dto.*;
 import com.softserve.entity.Schedule;
 import com.softserve.entity.enums.EvenOdd;
 import com.softserve.mapper.ScheduleWithoutSemesterMapper;
+import com.softserve.mapper.SemesterMapper;
 import com.softserve.service.ScheduleService;
 import com.softserve.mapper.ScheduleMapper;
 import com.softserve.mapper.ScheduleSaveMapper;
+import com.softserve.service.SemesterService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -24,12 +26,16 @@ import java.util.List;
 public class ScheduleController {
 
     private final ScheduleService scheduleService;
+    private final SemesterService semesterService;
+    private final SemesterMapper semesterMapper;
     private final ScheduleMapper scheduleMapper;
     private final ScheduleSaveMapper scheduleSaveMapper;
     private final ScheduleWithoutSemesterMapper scheduleWithoutSemesterMapper;
 
-    public ScheduleController(ScheduleService scheduleService, ScheduleMapper scheduleMapper, ScheduleSaveMapper scheduleSaveMapper, ScheduleWithoutSemesterMapper scheduleWithoutSemesterMapper) {
+    public ScheduleController(ScheduleService scheduleService, SemesterService semesterService, SemesterMapper semesterMapper, ScheduleMapper scheduleMapper, ScheduleSaveMapper scheduleSaveMapper, ScheduleWithoutSemesterMapper scheduleWithoutSemesterMapper) {
         this.scheduleService = scheduleService;
+        this.semesterService = semesterService;
+        this.semesterMapper = semesterMapper;
         this.scheduleMapper = scheduleMapper;
         this.scheduleSaveMapper = scheduleSaveMapper;
         this.scheduleWithoutSemesterMapper = scheduleWithoutSemesterMapper;
@@ -64,10 +70,13 @@ public class ScheduleController {
 
     @GetMapping("/full/groups")
     @ApiOperation(value = "Get full schedule for groupId in some semester")
-    public ResponseEntity<List<ScheduleForGroupDTO>> getFullScheduleForGroup(@RequestParam Long semesterId,
+    public ResponseEntity<ScheduleFullDTO> getFullScheduleForGroup(@RequestParam Long semesterId,
                                                                      @RequestParam Long groupId) {
         log.info("In, getFullScheduleForGroup (semesterId = [{}], groupId = [{}]) ", semesterId, groupId);
-        return ResponseEntity.status(HttpStatus.OK).body(scheduleService.getFullScheduleForGroup(semesterId, groupId));
+        ScheduleFullDTO scheduleFullDTO = new ScheduleFullDTO();
+        scheduleFullDTO.setSemester(semesterMapper.semesterToSemesterDTO(semesterService.getById(semesterId)));
+        scheduleFullDTO.setSchedule(scheduleService.getFullScheduleForGroup(semesterId, groupId));
+        return ResponseEntity.status(HttpStatus.OK).body(scheduleFullDTO);
     }
 
     @GetMapping("/full/semester")
