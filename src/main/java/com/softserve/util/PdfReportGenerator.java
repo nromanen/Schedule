@@ -7,12 +7,11 @@ import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.softserve.dto.ScheduleForGroupDTO;
 import com.softserve.dto.ScheduleForTeacherDTO;
-import com.softserve.entity.Schedule;
+import com.softserve.exception.FileDownloadException;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.List;
 
 
 @Slf4j
@@ -22,12 +21,12 @@ public class PdfReportGenerator {
      * Method used for generating byte array, which we convert into pdf in controller
      *
      * @param schedule for selected teacher and semester
-     * @return ByteArrayOutputStream (schedule)
+     * @return ByteArrayOutputStream teacher schedule in byte array format
      */
     public ByteArrayOutputStream teacherScheduleReport(ScheduleForTeacherDTO schedule) {
-        log.info("Enter into schedulesReport method with list of schedules {}", schedule);
+        log.info("Enter into teacherScheduleReport method with schedule {}", schedule);
 
-        ByteArrayOutputStream bys = null;
+        ByteArrayOutputStream bys;
         try {
             Document document = new Document();
             document.setPageSize(PageSize.A4);
@@ -39,21 +38,22 @@ public class PdfReportGenerator {
             document.add(table);
             document.close();
         } catch (DocumentException | IOException e) {
-            log.error(e.getMessage());
+            log.error(e.getMessage(), e);
+            throw new FileDownloadException("Failed to download file");
         }
         return bys;
     }
 
     /**
-     * Method used for creating document with converting group schedule pdf table into byte array
+     * Method used for generating byte array, which we convert into pdf in controller
      *
      * @param schedule for selected group and semester
      * @return ByteArrayOutputStream group schedule in byte array format
      */
     public ByteArrayOutputStream groupScheduleReport(ScheduleForGroupDTO schedule) {
-        log.info("Enter into schedulesReport method with schedule {}", schedule);
+        log.info("Enter into groupScheduleReport method with schedule {}", schedule);
 
-        ByteArrayOutputStream bys = null;
+        ByteArrayOutputStream bys;
         try {
             Document document = new Document();
             document.setPageSize(PageSize.A4);
@@ -65,7 +65,8 @@ public class PdfReportGenerator {
             document.add(table);
             document.close();
         } catch (DocumentException | IOException e) {
-            log.error(e.getMessage());
+            log.error(e.getMessage(), e);
+            throw new FileDownloadException("Failed to download file");
         }
         return bys;
     }
