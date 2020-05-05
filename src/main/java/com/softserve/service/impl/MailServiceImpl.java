@@ -8,6 +8,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 
@@ -35,6 +36,7 @@ public class MailServiceImpl implements MailService {
      * @param subject the subject of the message
      * @param message message from the letter
      */
+    @Async
     public void send(String emailTo, String subject, String message) {
         log.info("Enter into send method with emailTo {}, subject {}", emailTo, subject);
         String credentialsUsername = environment.getProperty(username);

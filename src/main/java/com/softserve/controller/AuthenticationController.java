@@ -12,13 +12,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Optional;
 
 import static com.softserve.service.impl.UserServiceImpl.PASSWORD_FOR_SOCIAL_USER;
 
@@ -45,18 +45,14 @@ public class AuthenticationController {
     @ApiOperation(value = "Get credentials  for login")
     public ResponseEntity signIn(@RequestBody AuthenticationRequestDTO requestDto) {
         log.info("Enter into signIn method with user email {}", requestDto.getEmail());
-        Optional<User> getUser = userService.findSocialUser(requestDto.getEmail());
-        User user = null;
-        if (getUser.isPresent()) {
-            user = getUser.get();
-            String password = getUser.get().getPassword();
-            if (password.equals(PASSWORD_FOR_SOCIAL_USER)) {
-                return ResponseEntity.status(401).body(new MessageDTO("You registered via social network. Please, sign in via social network."));
-            }
+        User user = userService.findSocialUser(requestDto.getEmail()).orElseThrow(() ->
+                new BadCredentialsException("Invalid password or email")
+        );
+        if (user.getPassword().equals(PASSWORD_FOR_SOCIAL_USER)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new MessageDTO("You registered via social network. Please, sign in via social network."));
         }
         String username = requestDto.getEmail();
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, requestDto.getPassword()));
-        assert user != null;
         String token = jwtTokenProvider.createToken(username, user.getRole().toString());
 
         return ResponseEntity.ok(new AuthenticationResponseDTO(username, token));
@@ -100,5 +96,12 @@ public class AuthenticationController {
         log.info("Enter into signOut method");
         SecurityContextLogoutHandler securityContextLogoutHandler = new SecurityContextLogoutHandler();
         securityContextLogoutHandler.logout(rq, rs, null);
+    }
+
+    @GetMapping("/social/login-success")
+    @ApiOperation(value = "Get token after successful sign in via social network")
+    public ResponseEntity<MessageDTO> getLoginInfo(@RequestParam("token") String token) {
+        log.info("Enter into getLoginInfo method");
+        return ResponseEntity.ok().body(new MessageDTO(token));
     }
 }

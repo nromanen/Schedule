@@ -67,7 +67,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private static final String SEMESTERS_ENDPOINT = "/semesters/**";
     private static final String USERS_ENDPOINT = "/users/**";
     private static final String ROOM_TYPES_ENDPOINT = "/room-types/**";
-    private static final String SOCIAL_ENDPOINT = "/social/**";
     //PUBLIC
     private static final String SCHEDULE_FOR_USERS_ENDPOINT = "/schedules/full/*";
     private static final String ALL_GROUPS_PUBLIC_ENDPOINT = "/public/groups";
@@ -99,7 +98,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/","/login",SOCIAL_ENDPOINT, AUTH_ENDPOINT, SCHEDULE_FOR_USERS_ENDPOINT, ALL_GROUPS_PUBLIC_ENDPOINT, ALL_TEACHERS_PUBLIC_ENDPOINT,
+                .antMatchers("/","/login", AUTH_ENDPOINT, SCHEDULE_FOR_USERS_ENDPOINT, ALL_GROUPS_PUBLIC_ENDPOINT, ALL_TEACHERS_PUBLIC_ENDPOINT,
                         ALL_GROUPS_PUBLIC_ENDPOINT, ALL_CLASSES_PUBLIC_ENDPOINT, ALL_SEMESTERS_PUBLIC_ENDPOINT).permitAll()
                 .antMatchers(MANAGER_ENDPOINT, CLASSES_ENDPOINT, GROUPS_ENDPOINT, LESSONS_ENDPOINT,
                         ROOMS_ENDPOINT, SUBJECTS_ENDPOINT, TEACHERS_ENDPOINT, SCHEDULE_ENDPOINT, SEMESTERS_ENDPOINT, USERS_ENDPOINT, ROOM_TYPES_ENDPOINT).hasRole("MANAGER")
@@ -115,8 +114,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .successHandler(authenticationSuccessHandler())
                 .and()
-                .apply(new JwtConfigurer(jwtTokenProvider))
-        ;
+                .apply(new JwtConfigurer(jwtTokenProvider));
 
         http
                 .exceptionHandling()
@@ -194,7 +192,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
             String url = env.getProperty("backend.url");
             String jwtToken = jwtTokenProvider.createToken(user.getEmail(), user.getRole().toString());
-            response.sendRedirect(url + "social/loginSuccess?token=" + jwtToken);
+            response.sendRedirect(url + "auth/social/login-success?token=" + jwtToken);
         };
     }
 }
