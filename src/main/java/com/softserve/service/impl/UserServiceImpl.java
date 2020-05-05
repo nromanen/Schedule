@@ -226,16 +226,7 @@ public class UserServiceImpl implements UserService {
     public User createSocialUser(OAuth2User oAuth2User) {
         log.info("Enter into emailExists method with OAuth2User = {}", oAuth2User);
         String email = oAuth2User.getAttribute("email");
-
-        if (!emailExists(email)) {
-            User user = new User();
-            user.setEmail(email);
-            user.setPassword(PASSWORD_FOR_SOCIAL_USER);
-            user.setToken(null);
-            user.setRole(Role.ROLE_USER);
-            return userRepository.save(user);
-        }
-        return findByEmail(email);
+        return userRepository.findByEmail(email).orElseGet(() -> saveSocialUser(email));
     }
 
     /**
@@ -272,5 +263,15 @@ public class UserServiceImpl implements UserService {
         log.info("Enter into isPasswordValid method with password:{}", password);
         return (isNotBlank(password) && isMixedCase(password) && containsAny(password, NUMBERS)
                 && containsAny(password, SPECIAL_CHARACTERS) && length(password) >= 8 && length(password) <= 30);
+    }
+
+    //save User in db after sign up via social network
+    private User saveSocialUser(String email) {
+        User user = new User();
+        user.setEmail(email);
+        user.setPassword(PASSWORD_FOR_SOCIAL_USER);
+        user.setToken(null);
+        user.setRole(Role.ROLE_USER);
+        return userRepository.save(user);
     }
 }
