@@ -243,6 +243,16 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return buildResponseEntity(apiError);
     }
 
+    //Handles FileDownloadException. Triggered when downloading of file failed.
+    @ExceptionHandler(FileDownloadException.class)
+    protected ResponseEntity<Object> handleFileDownloadException(FileDownloadException ex) {
+        ApiError apiError = new ApiError(INTERNAL_SERVER_ERROR);
+        apiError.setMessage(ex.getMessage());
+        apiError.setDebugMessage(ex.getMessage());
+        log.error(ex.getMessage());
+        return buildResponseEntity(apiError);
+    }
+
     // Handle Exception in case, other handlers dod not handle it
     @ExceptionHandler(Exception.class)
     protected ResponseEntity<Object> handleOtherExceptions(Exception ex) {
