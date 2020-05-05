@@ -35,7 +35,6 @@ public class SemesterRepositoryImpl extends BasicRepositoryImpl<Semester, Long> 
                 .getResultList();
     }
 
-
     /**
      * Modified update method, which merge entity before updating it
      *
@@ -62,7 +61,12 @@ public class SemesterRepositoryImpl extends BasicRepositoryImpl<Semester, Long> 
         return count != 0;
     }
 
-
+    /**
+     * Method gets count of semesters with provided description and year
+     * @param description searched description
+     * @param year searched year
+     * @return count of semesters
+     */
     @Override
     public Long countSemesterDuplicatesByDescriptionAndYear(String description, int year) {
         log.info("In countSemesterDuplicates(description = [{}], year = [{}])", description, year);
@@ -103,6 +107,11 @@ public class SemesterRepositoryImpl extends BasicRepositoryImpl<Semester, Long> 
                 .getResultList();
     }
 
+    /**
+     * Method sets value current semester to false fo all entities which have it true
+     *
+     * @return number of updated rows
+     */
     @Override
     public int setCurrentSemesterToFalse() {
         log.info("In setCurrentSemesterToFalse()");
@@ -111,6 +120,12 @@ public class SemesterRepositoryImpl extends BasicRepositoryImpl<Semester, Long> 
                 .executeUpdate();
     }
 
+    /**
+     * Method sets the value current semester true for semester with id
+     *
+     * @param semesterId id of the semester
+     * @return number of updated rows
+     */
     @Override
     public int setCurrentSemester(Long semesterId) {
         log.info("In setCurrentSemester(semesterId = [{}])", semesterId);
@@ -120,6 +135,12 @@ public class SemesterRepositoryImpl extends BasicRepositoryImpl<Semester, Long> 
                 .executeUpdate();
     }
 
+    /**
+     * Method gets Semester object with provided description and year
+     * @param description searched description
+     * @param year searched year
+     * @return Semester if such exists, else null
+     */
     @Override
     public Optional<Semester> getSemesterByDescriptionAndYear(String description, int year) {
         log.info("In getSemesterByDescriptionAndYear(String description = [{}], int year = [{}])", description, year);

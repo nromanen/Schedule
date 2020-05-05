@@ -214,6 +214,13 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
                 .getSingleResult();
     }
 
+    /**
+     * Method gets unique days when Teacher has classes in semester
+     *
+     * @param semesterId id of the semester
+     * @param teacherId    id of the teacher
+     * @return List of days
+     */
     @Override
     public List<DayOfWeek> getDaysWhenTeacherHasClassesBySemester(Long semesterId, Long teacherId) {
         log.info("In getDaysWhenTeacherHasClassesBySemester(semesterId = [{}], teacherId = [{}])", semesterId, teacherId);
@@ -223,6 +230,14 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
                 .getResultList();
     }
 
+    /**
+     * Method gets the list of periods/classes for teacher in some semester at some day
+     *
+     * @param semesterId id of the semester
+     * @param teacherId  id of the teacher
+     * @param day        day of the week
+     * @return the list of periods/classes
+     */
     @Override
     public List<Period> periodsForTeacherBySemesterByDayByWeek(Long semesterId, Long teacherId, DayOfWeek day, EvenOdd evenOdd) {
         log.info("In periodsForTeacherBySemesterByDayByWeek(semesterId = [{}], teacherId = [{}], day = [{}], evenOdd = [{}])", semesterId, teacherId, day, evenOdd);
@@ -236,6 +251,16 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
                 .getResultList();
     }
 
+    /**
+     * Method gets Lesson for teacher in some semester at some day(even/odd) at some period/class
+     *
+     * @param semesterId id of the semester
+     * @param teacherId  id of the group
+     * @param periodId   id of the period/class
+     * @param day        day of the week
+     * @param evenOdd    even/odd/weekly
+     * @return Optional Lesson object
+     */
     @Override
     public List<Lesson> lessonsForTeacherBySemesterByDayByPeriodByWeek(Long semesterId, Long teacherId, Long periodId, DayOfWeek day, EvenOdd evenOdd) {
         log.info("In lessonsForTeacherBySemesterByDayByPeriodByWeek(semesterId = [{}], teacherId = [{}], periodId = [{}], day = [{}], evenOdd = [{}])", semesterId, teacherId, periodId, day, evenOdd);
@@ -261,7 +286,6 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
                 .getResultList();
     }
 
-
     /**
      * Method gets unique days when Room have classes in semester
      *
@@ -277,8 +301,6 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
                 .setParameter("roomId", roomId)
                 .getResultList();
     }
-
-
 
     /**
      * Method gets the list of periods/classes for room in  semester at  day
@@ -324,27 +346,11 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
                 .getResultList();
     }
 
-
-    //test full schedule
-
-    @Override
-    public List<Period> periodsForSemester(Long semesterId) {
-        log.info("In periodsForSemester(semesterId = [{}])", semesterId);
-        return sessionFactory.getCurrentSession().createQuery("select distinct p1 from Period p1" +
-                " where p1.id in" +
-                " (select p.id from Schedule s join s.period p where s.semester.id = :semesterId ) order by p1.startTime")
-                .setParameter("semesterId", semesterId)
-                .getResultList();
-    }
-
-    @Override
-    public List<DayOfWeek> getDaysForSemester(Long semesterId) {
-        log.info("In getDaysForSemester(semesterId = [{}])", semesterId);
-        return sessionFactory.getCurrentSession().createQuery("select distinct s.dayOfWeek from  Schedule s where s.semester.id = :semesterId")
-                .setParameter("semesterId", semesterId)
-                .getResultList();
-    }
-
+    /**
+     * Method geets all schedules from db in particular semester
+     * @param semesterId id of the semester
+     * @return list of schedules
+     */
     @Override
     public List<Schedule> getScheduleBySemester(Long semesterId) {
         log.info("In getScheduleBySemester(semesterId = [{}])", semesterId);
