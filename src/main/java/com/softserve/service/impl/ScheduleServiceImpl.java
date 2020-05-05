@@ -178,11 +178,11 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     /**
-     * Method gets full schedule for all groups(by default) in particular semester, or full schedule for group in particular semester
+     * Method gets full schedule for groups in particular semester
      *
      * @param semesterId id of semester
      * @param groupId    group id
-     * @return filled schedule for all groups (if groupId == null) or full schedule for group
+     * @return filled schedule for group
      */
     @Override
     public List<ScheduleForGroupDTO> getFullScheduleForGroup(Long semesterId, Long groupId) {
@@ -272,7 +272,11 @@ public class ScheduleServiceImpl implements ScheduleService {
         return scheduleRepository.countSchedulesForGroupInSemester(semesterId, groupId) != 0;
     }
 
-
+    /** Method gets full schedule for groups in particular semester
+     *
+     * @param semesterId id of semester
+     * @return filled schedule for all groups that have any lessons in that semester
+     */
     @Override
     public ScheduleFullDTO getFullScheduleForSemester(Long semesterId) {
         ScheduleFullDTO scheduleFullDTO = new ScheduleFullDTO();
@@ -394,8 +398,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         return scheduleRepository.getAllSchedulesByTeacherIdAndSemesterId(teacherId, semesterId);
     }
 
-
-    //get classes in Day when teacher has schedule and fill classes by even/odd lessons
+    //get classes in Day when room has schedule and fill classes by even/odd lessons
     private List<RoomClassesInScheduleDTO> getPeriodsForRoomBySemesterByDayOfWeek(Long semesterId, Long roomId, DayOfWeek day) {
         log.info("In getPeriodsForRoomBySemesterByDayOfWeek(semesterId = [{}], groupId = [{}], day = [{}])", semesterId, roomId, day);
         //get Classes in that Day for group
@@ -439,7 +442,6 @@ public class ScheduleServiceImpl implements ScheduleService {
         return roomClassesInScheduleDTOList;
     }
 
-
     private List<DaysOfWeekWithClassesForRoomDTO> getDaysWhenRoomHasClassesBySemester(Long semesterId, Long roomId) {
         log.info("In getDaysWhenRoomHasClassesBySemester(semesterId = [{}], groupId = [{}])", semesterId, roomId);
         List<DaysOfWeekWithClassesForRoomDTO> daysOfWeekWithClassesForRoomDTOList = new ArrayList<>();
@@ -452,7 +454,6 @@ public class ScheduleServiceImpl implements ScheduleService {
         }
         return daysOfWeekWithClassesForRoomDTOList;
     }
-
 
     @Override
     public List<ScheduleForRoomDTO> getScheduleForRooms(Long semesterId) {

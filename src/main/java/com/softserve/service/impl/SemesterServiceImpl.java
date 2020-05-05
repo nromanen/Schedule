@@ -192,6 +192,11 @@ public class SemesterServiceImpl implements SemesterService {
         return  semesters;
     }
 
+    /**
+     * The method used to change the default semester that the Manager is working on
+     * @param semesterId id of the semester that needs to be current
+     * @return changed Semester
+     */
     @Override
     public Semester changeCurrentSemester(Long semesterId) {
         log.info("In changeCurrentSemester(Long semesterId = [{}])", semesterId);
