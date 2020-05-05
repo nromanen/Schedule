@@ -9,6 +9,7 @@ import com.softserve.dto.LessonInfoDTO;
 import com.softserve.dto.SubjectDTO;
 import com.softserve.dto.TeacherNameDTO;
 import com.softserve.entity.Lesson;
+import com.softserve.entity.enums.LessonType;
 import com.softserve.mapper.GroupMapperImpl;
 import com.softserve.mapper.LessonInfoMapperImpl;
 import com.softserve.mapper.SubjectMapperImpl;
