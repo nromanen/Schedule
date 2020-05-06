@@ -73,6 +73,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private static final String ALL_TEACHERS_PUBLIC_ENDPOINT = "/public/teachers";
     private static final String ALL_CLASSES_PUBLIC_ENDPOINT = "/public/classes";
     private static final String ALL_SEMESTERS_PUBLIC_ENDPOINT = "/public/semesters";
+    private static final String DOWNLOAD_SCHEDULE_ENDPOINT = "/download/**";
 
 
     @Autowired
@@ -98,7 +99,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers(AUTH_ENDPOINT, SCHEDULE_FOR_USERS_ENDPOINT, ALL_GROUPS_PUBLIC_ENDPOINT, ALL_TEACHERS_PUBLIC_ENDPOINT,
+                .antMatchers(DOWNLOAD_SCHEDULE_ENDPOINT, AUTH_ENDPOINT, SCHEDULE_FOR_USERS_ENDPOINT, ALL_GROUPS_PUBLIC_ENDPOINT, ALL_TEACHERS_PUBLIC_ENDPOINT,
                         ALL_GROUPS_PUBLIC_ENDPOINT, ALL_CLASSES_PUBLIC_ENDPOINT, ALL_SEMESTERS_PUBLIC_ENDPOINT).permitAll()
                 .antMatchers(MANAGER_ENDPOINT, CLASSES_ENDPOINT, GROUPS_ENDPOINT, LESSONS_ENDPOINT,
                         ROOMS_ENDPOINT, SUBJECTS_ENDPOINT, TEACHERS_ENDPOINT, SCHEDULE_ENDPOINT, SEMESTERS_ENDPOINT, USERS_ENDPOINT, ROOM_TYPES_ENDPOINT).hasRole("MANAGER")
