@@ -595,14 +595,13 @@ public class ScheduleServiceImpl implements ScheduleService {
             Map<Period, List<Schedule>> collect = itr.getValue().stream()
                     .collect(Collectors.groupingBy(Schedule::getPeriod));
 
-            Map<Period, List<Schedule>> sorted = collect.entrySet().stream()
+            /*Map<Period, List<Schedule>> sorted = collect.entrySet().stream()
                     .sorted(Map.Entry.comparingByKey(Comparator.comparing(Period::getName)))
                     .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
-                            (oldValue, newValue) -> oldValue, LinkedHashMap::new));
-         /*   Map<Period, List<Schedule>> sorted = new LinkedHashMap<>();
-            collect.entrySet().stream()
-                    .sorted(Map.Entry.comparingByKey(Comparator.comparing(Period::getName)))
-                    .forEachOrdered(x -> sorted.put(x.getKey(), x.getValue()));*/
+                            (oldValue, newValue) -> oldValue, LinkedHashMap::new));*/
+            Map<Period, List<Schedule>> sorted = new LinkedHashMap<>();
+            collect.entrySet().stream().sorted(Map.Entry.comparingByKey(Comparator.comparing(Period::getName)))
+                    .forEachOrdered(x -> sorted.put(x.getKey(), x.getValue()));
             map.put(itr.getKey(), sorted);
         }
         return map;
