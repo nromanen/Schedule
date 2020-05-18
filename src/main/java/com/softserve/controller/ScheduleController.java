@@ -145,9 +145,9 @@ public class ScheduleController {
                                                                   @CurrentUser JwtUser jwtUser) {
         log.info("In, getScheduleByDateRangeForCurrentTeacher with from = {} and to = {}", from, to);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-        DateTimeFormatter formatter1 = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDate fromDate = LocalDate.parse(LocalDate.parse(from, formatter).toString(), formatter1);
-        LocalDate toDate = LocalDate.parse(LocalDate.parse(to, formatter).toString(), formatter1);
+        DateTimeFormatter currentFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate fromDate = LocalDate.parse(LocalDate.parse(from, formatter).toString(), currentFormatter);
+        LocalDate toDate = LocalDate.parse(LocalDate.parse(to, formatter).toString(), currentFormatter);
         Teacher teacher = teacherService.findByUserId(Integer.parseInt(jwtUser.getId().toString()));
         List<ScheduleDateRangeFullDTO> dto = fullDTOForTeacherDateRange(scheduleService.scheduleByDateRangeForTeacher(fromDate, toDate, teacher.getId()));
         return ResponseEntity.status(HttpStatus.OK).body(dto);
