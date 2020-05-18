@@ -5,12 +5,14 @@ import com.softserve.dto.ScheduleForRoomDTO;
 import com.softserve.dto.ScheduleForGroupDTO;
 import com.softserve.dto.ScheduleForTeacherDTO;
 import com.softserve.dto.ScheduleFullDTO;
+import com.softserve.entity.Period;
 import com.softserve.entity.Schedule;
 import com.softserve.entity.enums.EvenOdd;
 
 import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 
 public interface ScheduleService extends BasicService<Schedule, Long> {
     CreateScheduleInfoDTO getInfoForCreatingSchedule(Long semesterId, DayOfWeek dayOfWeek, EvenOdd evenOdd, Long classId, Long lessonId);
@@ -26,5 +28,7 @@ public interface ScheduleService extends BasicService<Schedule, Long> {
     List<ScheduleForRoomDTO> getScheduleForRooms(Long semesterId);
 
     List<Schedule> getSchedulesBySemester(Long semesterId);
+
+    Map<LocalDate, Map<Period, List<Schedule>>> scheduleByDateRangeForTeacher(LocalDate fromDate, LocalDate toDate, Long teacherId);
 }
 
