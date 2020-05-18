@@ -4,6 +4,7 @@ import com.softserve.entity.*;
 import com.softserve.entity.enums.EvenOdd;
 
 import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,4 +41,6 @@ public interface ScheduleRepository extends BasicRepository<Schedule, Long> {
     List<Lesson> lessonForRoomByDayBySemesterByPeriodByWeek(Long semesterId, Long roomId, Long periodId, DayOfWeek day, EvenOdd evenOdd);
 
     List<Schedule> getScheduleBySemester(Long semesterId);
+
+    List<Schedule> scheduleByDateRangeForTeacher(LocalDate fromDate, LocalDate toDate, Long teacherId);
 }

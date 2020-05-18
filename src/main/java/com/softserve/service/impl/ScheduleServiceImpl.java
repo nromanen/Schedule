@@ -16,7 +16,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Transactional
 @Service
@@ -272,7 +275,8 @@ public class ScheduleServiceImpl implements ScheduleService {
         return scheduleRepository.countSchedulesForGroupInSemester(semesterId, groupId) != 0;
     }
 
-    /** Method gets full schedule for groups in particular semester
+    /**
+     * Method gets full schedule for groups in particular semester
      *
      * @param semesterId id of semester
      * @return filled schedule for all groups that have any lessons in that semester
@@ -476,6 +480,132 @@ public class ScheduleServiceImpl implements ScheduleService {
     public List<Schedule> getSchedulesBySemester(Long semesterId) {
         log.info("In getScheduleBySemester(Long semesterId = [{}])", semesterId);
         return scheduleRepository.getScheduleBySemester(semesterId);
+    }
+
+    /**
+     * Method scheduleByDateRangeForTeacher get all schedules from db in particular date range
+     *
+     * @param fromDate  LocalDate from
+     * @param toDate    LocalDate to
+     * @param teacherId id teacher
+     * @return list of schedules
+     */
+    @Override
+    public Map<LocalDate, Map<Period, List<Schedule>>> scheduleByDateRangeForTeacher(LocalDate fromDate, LocalDate toDate, Long teacherId) {
+        log.info("In scheduleByDateRangeForTeacher with fromDate = {} and toDate = {}", fromDate, toDate);
+        List<Schedule> schedules = scheduleRepository.scheduleByDateRangeForTeacher(fromDate, toDate, teacherId);
+        schedules.forEach(semester -> Hibernate.initialize(semester.getSemester().getPeriods()));
+
+        List<Schedule> dateRangeSchedule = new ArrayList<>();
+        for (Schedule schedule : schedules) {
+            if (isDateInSemesterDateRange(schedule, fromDate, toDate)) {
+                dateRangeSchedule.add(schedule);
+            }
+        }
+
+        return fullScheduleForTeacherByDateRange(dateRangeSchedule, fromDate, toDate);
+    }
+
+    //check date in semester date range, if yes return - true, else - false
+    private boolean isDateInSemesterDateRange(Schedule schedule, LocalDate fromDate, LocalDate toDate) {
+        DayOfWeek startSemester = schedule.getSemester().getStartDay().getDayOfWeek();
+
+        if (schedule.getEvenOdd() == EvenOdd.ODD) {
+            if (startSemester.getValue() > schedule.getDayOfWeek().getValue()) {
+                int i = startSemester.getValue() - schedule.getDayOfWeek().getValue();
+                LocalDate firstCaseDate = schedule.getSemester().getStartDay().plusDays(14 - i);
+
+                return checkDateRangeForReturn(firstCaseDate, schedule.getSemester().getEndDay(), fromDate, toDate);
+            }
+            int k = schedule.getDayOfWeek().getValue() - startSemester.getValue();
+            LocalDate secondCaseDate = schedule.getSemester().getStartDay().plusDays(k);
+
+            return checkDateRangeForReturn(secondCaseDate, schedule.getSemester().getEndDay(), fromDate, toDate);
+        }
+
+        if (schedule.getEvenOdd() == EvenOdd.EVEN || schedule.getEvenOdd() == EvenOdd.WEEKLY) {
+            if (startSemester.getValue() > schedule.getDayOfWeek().getValue()) {
+                int i = startSemester.getValue() - schedule.getDayOfWeek().getValue();
+                LocalDate firstCaseDate = schedule.getSemester().getStartDay().plusDays(7 - i);
+
+                return checkDateRangeForReturn(firstCaseDate, schedule.getSemester().getEndDay(), fromDate, toDate);
+            }
+            int k = schedule.getDayOfWeek().getValue() - startSemester.getValue();
+            if (schedule.getEvenOdd() == EvenOdd.WEEKLY) {
+                LocalDate secondCaseDate = schedule.getSemester().getStartDay().plusDays(k);
+                return checkDateRangeForReturn(secondCaseDate, schedule.getSemester().getEndDay(), fromDate, toDate);
+            }
+            LocalDate thirdCaseDate = schedule.getSemester().getStartDay().plusDays(7 + k);
+            return checkDateRangeForReturn(thirdCaseDate, schedule.getSemester().getEndDay(), fromDate, toDate);
+        }
+        return false;
+    }
+
+    //this method use for don't duplicate code
+    private boolean checkDateRangeForReturn(LocalDate dateForCheck, LocalDate semesterEndDate, LocalDate fromDate, LocalDate toDate) {
+        return (dateForCheck.isBefore(semesterEndDate) || dateForCheck.isEqual(semesterEndDate)) &&
+                (dateForCheck.isAfter(fromDate) || dateForCheck.isEqual(fromDate)) &&
+                (dateForCheck.isBefore(toDate) || dateForCheck.isEqual(toDate));
+    }
+
+    //check dates(even/odd/weekly) for distribution in baskets and create Map<LocalDate, Map<Period, List<Schedule>>>
+    private Map<LocalDate, Map<Period, List<Schedule>>> fullScheduleForTeacherByDateRange(List<Schedule> schedules, LocalDate fromDate, LocalDate toDate) {
+        Map<LocalDate, List<Schedule>> scheduleByDateRange = new LinkedHashMap<>();
+
+        for (LocalDate date = fromDate; date.isBefore(toDate.plusDays(1)); date = date.plusDays(1)) {
+            List<Schedule> scheduleList = new ArrayList<>();
+            for (Schedule schedule : schedules) {
+                if (date.getDayOfWeek() == schedule.getDayOfWeek() && (date.isBefore(schedule.getSemester().getEndDay()) ||
+                        date.isEqual(schedule.getSemester().getEndDay())) && (date.isAfter(schedule.getSemester().getStartDay())
+                        || date.isEqual(schedule.getSemester().getStartDay()))) {
+                    int countStartDate = schedule.getSemester().getStartDay().getDayOfWeek().getValue();
+                    int countEndDate = date.getDayOfWeek().getValue();
+                    int countDays = Integer.parseInt(String.valueOf(ChronoUnit.DAYS.between(
+                            schedule.getSemester().getStartDay().minusDays(countStartDate), date.plusDays(7 - countEndDate))));
+
+                    switch (schedule.getEvenOdd()) {
+                        case ODD:
+                            if ((countDays / 7) % 2 != 0) {
+                                scheduleList.add(schedule);
+                            }
+                            break;
+                        case EVEN:
+                            if ((countDays / 7) % 2 == 0) {
+                                scheduleList.add(schedule);
+                            }
+                            break;
+                        case WEEKLY:
+                            scheduleList.add(schedule);
+                            break;
+                    }
+                }
+            }
+            if (!scheduleList.isEmpty()) {
+                scheduleByDateRange.put(date, scheduleList);
+            }
+        }
+        return convertToMapScheduleDateRange(scheduleByDateRange);
+    }
+
+    //convert from Map<LocalDate, List<Schedule>> to Map<LocalDate, Map<Period, List<Schedule>>> for easy way to convert dto in future
+    private Map<LocalDate, Map<Period, List<Schedule>>> convertToMapScheduleDateRange(Map<LocalDate, List<Schedule>> scheduleByDateRange) {
+        Map<LocalDate, Map<Period, List<Schedule>>> map = new LinkedHashMap<>();
+
+        for (Map.Entry<LocalDate, List<Schedule>> itr : scheduleByDateRange.entrySet()) {
+            Map<Period, List<Schedule>> collect = itr.getValue().stream()
+                    .collect(Collectors.groupingBy(Schedule::getPeriod));
+
+            Map<Period, List<Schedule>> sorted = collect.entrySet().stream()
+                    .sorted(Map.Entry.comparingByKey(Comparator.comparing(Period::getName)))
+                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
+                            (oldValue, newValue) -> oldValue, LinkedHashMap::new));
+         /*   Map<Period, List<Schedule>> sorted = new LinkedHashMap<>();
+            collect.entrySet().stream()
+                    .sorted(Map.Entry.comparingByKey(Comparator.comparing(Period::getName)))
+                    .forEachOrdered(x -> sorted.put(x.getKey(), x.getValue()));*/
+            map.put(itr.getKey(), sorted);
+        }
+        return map;
     }
 }
 

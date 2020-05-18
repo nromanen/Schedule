@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
 import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -356,6 +357,24 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
         log.info("In getScheduleBySemester(semesterId = [{}])", semesterId);
         return sessionFactory.getCurrentSession().createQuery("SELECT s from Schedule s where s.semester.id = :semesterId")
                 .setParameter("semesterId", semesterId)
+                .getResultList();
+    }
+
+    /**
+     * Method scheduleByDateRangeForTeacher get all schedules from db in particular date range
+     * @param fromDate LocalDate from
+     * @param toDate LocalDate to
+     * @param teacherId id teacher
+     * @return list of schedules
+     */
+    @Override
+    public List<Schedule> scheduleByDateRangeForTeacher(LocalDate fromDate, LocalDate toDate, Long teacherId) {
+        log.info("In scheduleByDateRangeForTeacher with fromDate = {} and toDate = {}", fromDate, toDate);
+        return sessionFactory.getCurrentSession().createQuery("SELECT s from Schedule s " +
+                "where s.semester.startDay <= :toDate  and s.semester.endDay >= :fromDate and s.lesson.teacher.id = :teacherId")
+                .setParameter("fromDate", fromDate)
+                .setParameter("toDate", toDate)
+                .setParameter("teacherId", teacherId)
                 .getResultList();
     }
 }
