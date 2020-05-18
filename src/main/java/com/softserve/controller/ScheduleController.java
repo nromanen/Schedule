@@ -137,16 +137,17 @@ public class ScheduleController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    @GetMapping("/schedules")
+    @GetMapping("/teacher")
     @ApiOperation(value = "Get full schedule for current teacher by date range")
     @PreAuthorize("hasRole('TEACHER')")
     public ResponseEntity<List<ScheduleDateRangeFullDTO>> getScheduleByDateRangeForCurrentTeacher(@RequestParam String from,
                                                                   @RequestParam String to,
                                                                   @CurrentUser JwtUser jwtUser) {
         log.info("In, getScheduleByDateRangeForCurrentTeacher with from = {} and to = {}", from, to);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDate fromDate = LocalDate.parse(from, formatter);
-        LocalDate toDate = LocalDate.parse(to, formatter);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        DateTimeFormatter formatter1 = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate fromDate = LocalDate.parse(LocalDate.parse(from, formatter).toString(), formatter1);
+        LocalDate toDate = LocalDate.parse(LocalDate.parse(to, formatter).toString(), formatter1);
         Teacher teacher = teacherService.findByUserId(Integer.parseInt(jwtUser.getId().toString()));
         List<ScheduleDateRangeFullDTO> dto = fullDTOForTeacherDateRange(scheduleService.scheduleByDateRangeForTeacher(fromDate, toDate, teacher.getId()));
         return ResponseEntity.status(HttpStatus.OK).body(dto);
