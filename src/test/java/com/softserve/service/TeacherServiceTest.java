@@ -102,7 +102,7 @@ public class TeacherServiceTest {
         assertEquals(ROLE_TEACHER, user.getRole());
         verify(userService, timeout(1)).getById(anyLong());
         verify(userService, times(1)).update(any(User.class));
-        verify(teacherRepository, times(1)).findById(anyLong());
+        verify(teacherRepository, times(2)).findById(anyLong());
         verify(teacherRepository, times(1)).update(teacher);
         verify(mailService, times(1)).send(
                 ArgumentMatchers.eq(user.getEmail()),
