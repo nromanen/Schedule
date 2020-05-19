@@ -21,6 +21,7 @@ public class TeacherRepositoryImpl extends BasicRepositoryImpl<Teacher, Long> im
         filter.setParameter("disable", false);
         return session;
     }
+
     /**
      * The method used for getting list of teachers entities from database
      *
@@ -32,6 +33,17 @@ public class TeacherRepositoryImpl extends BasicRepositoryImpl<Teacher, Long> im
         Session session = getSession();
         return session.createQuery("select t from " + basicClass.getName() + " t" +
                         " order by t.surname ASC").getResultList();
+    }
+
+    /**
+     * Method updates information for an existing teacher in Repository
+     * @param entity Teacher entity with info to be updated
+     * @return updated Teacher entity
+     */
+    @Override
+    public Teacher update(Teacher entity) {
+        sessionFactory.getCurrentSession().clear();
+        return super.update(entity);
     }
 
     // Checking if teacher is used in Lesson and TeacherWishes tables
