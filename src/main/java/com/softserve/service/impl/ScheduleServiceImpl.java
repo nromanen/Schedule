@@ -498,7 +498,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 
         List<Schedule> dateRangeSchedule = new ArrayList<>();
         for (Schedule schedule : schedules) {
-            if (isDateInSemesterDateRange(schedule, fromDate, toDate)) {
+            if (isDateInSemesterDateRange(schedule, toDate)) {
                 dateRangeSchedule.add(schedule);
             }
         }
@@ -507,7 +507,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     //check date in semester date range, if yes return - true, else - false
-    private boolean isDateInSemesterDateRange(Schedule schedule, LocalDate fromDate, LocalDate toDate) {
+    private boolean isDateInSemesterDateRange(Schedule schedule, LocalDate toDate) {
         DayOfWeek startSemester = schedule.getSemester().getStartDay().getDayOfWeek();
 
         if (schedule.getEvenOdd() == EvenOdd.ODD) {
@@ -515,12 +515,12 @@ public class ScheduleServiceImpl implements ScheduleService {
                 int i = startSemester.getValue() - schedule.getDayOfWeek().getValue();
                 LocalDate firstCaseDate = schedule.getSemester().getStartDay().plusDays(14 - i);
 
-                return checkDateRangeForReturn(firstCaseDate, schedule.getSemester().getEndDay(), fromDate, toDate);
+                return checkDateRangeForReturn(firstCaseDate, schedule.getSemester().getEndDay(), toDate);
             }
             int k = schedule.getDayOfWeek().getValue() - startSemester.getValue();
             LocalDate secondCaseDate = schedule.getSemester().getStartDay().plusDays(k);
 
-            return checkDateRangeForReturn(secondCaseDate, schedule.getSemester().getEndDay(), fromDate, toDate);
+            return checkDateRangeForReturn(secondCaseDate, schedule.getSemester().getEndDay(), toDate);
         }
 
         if (schedule.getEvenOdd() == EvenOdd.EVEN || schedule.getEvenOdd() == EvenOdd.WEEKLY) {
@@ -528,23 +528,22 @@ public class ScheduleServiceImpl implements ScheduleService {
                 int i = startSemester.getValue() - schedule.getDayOfWeek().getValue();
                 LocalDate firstCaseDate = schedule.getSemester().getStartDay().plusDays(7 - i);
 
-                return checkDateRangeForReturn(firstCaseDate, schedule.getSemester().getEndDay(), fromDate, toDate);
+                return checkDateRangeForReturn(firstCaseDate, schedule.getSemester().getEndDay(), toDate);
             }
             int k = schedule.getDayOfWeek().getValue() - startSemester.getValue();
             if (schedule.getEvenOdd() == EvenOdd.WEEKLY) {
                 LocalDate secondCaseDate = schedule.getSemester().getStartDay().plusDays(k);
-                return checkDateRangeForReturn(secondCaseDate, schedule.getSemester().getEndDay(), fromDate, toDate);
+                return checkDateRangeForReturn(secondCaseDate, schedule.getSemester().getEndDay(), toDate);
             }
             LocalDate thirdCaseDate = schedule.getSemester().getStartDay().plusDays(7 + k);
-            return checkDateRangeForReturn(thirdCaseDate, schedule.getSemester().getEndDay(), fromDate, toDate);
+            return checkDateRangeForReturn(thirdCaseDate, schedule.getSemester().getEndDay(), toDate);
         }
         return false;
     }
 
     //this method use for don't duplicate code
-    private boolean checkDateRangeForReturn(LocalDate dateForCheck, LocalDate semesterEndDate, LocalDate fromDate, LocalDate toDate) {
+    private boolean checkDateRangeForReturn(LocalDate dateForCheck, LocalDate semesterEndDate, LocalDate toDate) {
         return (dateForCheck.isBefore(semesterEndDate) || dateForCheck.isEqual(semesterEndDate)) &&
-                (dateForCheck.isAfter(fromDate) || dateForCheck.isEqual(fromDate)) &&
                 (dateForCheck.isBefore(toDate) || dateForCheck.isEqual(toDate));
     }
 
