@@ -206,7 +206,7 @@ public class UserServiceImpl implements UserService {
                     .build();
             String password = pwdGenerator.generate(15);
             user.setPassword(passwordEncoder.encode(password));
-            update(user);
+            userRepository.update(user);
 
             String message = "Hello, " + user.getEmail() + ".\n" +
                     "You received this email because you requested to reset your password.\n" +
@@ -251,6 +251,21 @@ public class UserServiceImpl implements UserService {
     public List<User> getAllUsersWithRoleUser() {
         log.info("Enter into getAllUsersWithRoleUser of UserServiceImpl");
         return userRepository.getAllUsersWithRoleUser();
+    }
+
+    @Override
+    public void changePassword(long userId, String oldPassword, String newPassword) {
+        User user = getById(userId);
+        String encodeOldPassword = passwordEncoder.encode(oldPassword);
+        if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
+            throw new IncorrectPasswordException("Password you entered is not equal to the current password for this profile");
+        }
+        if (!isPasswordValid(newPassword)) {
+            throw new IncorrectPasswordException("Password must contains at least: 8 characters(at least: 1 upper case, 1 lower case, " +
+                    "1 number and 1 special character('!@#$%^&*')) and no more 30 characters.");
+        }
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.update(user);
     }
 
     // method for checking email in database
