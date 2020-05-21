@@ -2,7 +2,10 @@ package com.softserve.controller;
 
 import com.softserve.dto.UserCreateDTO;
 import com.softserve.dto.UserDTO;
+import com.softserve.entity.Teacher;
 import com.softserve.entity.User;
+import com.softserve.entity.enums.Role;
+import com.softserve.service.TeacherService;
 import com.softserve.service.UserService;
 import com.softserve.mapper.UserMapper;
 import io.swagger.annotations.Api;
@@ -24,6 +27,7 @@ public class UserController {
 
     private final UserService userService;
     private final UserMapper userMapper;
+    private final TeacherService teacherService;
 
     @GetMapping
     @ApiOperation(value = "Get the list of all users")
@@ -55,6 +59,9 @@ public class UserController {
     public ResponseEntity<UserCreateDTO> update(@RequestBody UserCreateDTO userDTO) {
         log.info("Enter into update method with userDTO: {}", userDTO);
         User updatedUser = userMapper.toUser(userDTO);
+        User user = userService.getById(updatedUser.getId());
+        updatedUser.setRole(user.getRole());
+        updatedUser.setToken(user.getToken());
         userService.update(updatedUser);
         return ResponseEntity.status(HttpStatus.OK).body(userMapper.toUserCreateDTO(updatedUser));
     }
@@ -62,9 +69,13 @@ public class UserController {
     @DeleteMapping("/{id}")
     @ApiOperation(value = "Delete user by id")
     public ResponseEntity<HttpStatus> delete(@PathVariable("id") Long id) {
-
         log.info("Enter into delete method with group id: {}", id);
         User user = userService.getById(id);
+        if (user.getRole() == Role.ROLE_TEACHER) {
+            Teacher teacher = teacherService.findByUserId(user.getId().intValue());
+            teacher.setUserId(null);
+            teacherService.update(teacher);
+        }
         userService.delete(user);
         return ResponseEntity.status(HttpStatus.OK).build();
     }

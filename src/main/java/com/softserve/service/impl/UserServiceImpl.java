@@ -105,6 +105,7 @@ public class UserServiceImpl implements UserService {
     public User update(User object) {
         log.info("Enter into update method with entity:{}", object);
         getById(object.getId());
+        object.setPassword(passwordEncoder.encode(object.getPassword()));
         if (userRepository.findByEmail(object.getEmail()).isPresent() &&
                 userRepository.findByEmail(object.getEmail()).get().getId() != object.getId()) {
             throw new FieldAlreadyExistsException(User.class, "email", object.getEmail());

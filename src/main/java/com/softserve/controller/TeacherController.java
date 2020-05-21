@@ -3,8 +3,11 @@ package com.softserve.controller;
 import com.softserve.dto.TeacherDTO;
 import com.softserve.dto.TeacherWishDTO;
 import com.softserve.entity.Teacher;
+import com.softserve.entity.User;
+import com.softserve.entity.enums.Role;
 import com.softserve.service.TeacherService;
 import com.softserve.mapper.TeacherMapper;
+import com.softserve.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -22,11 +25,13 @@ public class TeacherController {
 
     private final TeacherService teacherService;
     private final TeacherMapper teacherMapper;
+    private final UserService userService;
 
     @Autowired
-    public TeacherController(TeacherService teacherService, TeacherMapper teacherMapper) {
+    public TeacherController(TeacherService teacherService, TeacherMapper teacherMapper, UserService userService) {
         this.teacherService = teacherService;
         this.teacherMapper = teacherMapper;
+        this.userService = userService;
     }
 
     @GetMapping(path = {"/teachers", "/public/teachers"})
@@ -71,7 +76,9 @@ public class TeacherController {
     @ApiOperation(value = "Update existing teacher by id")
     public ResponseEntity<TeacherDTO> update(@RequestBody TeacherDTO updateTeacherDTO) {
         log.info("Enter into update method with updateTeacherDTO: {}",updateTeacherDTO);
-        Teacher teacher = teacherService.update(teacherMapper.teacherDTOToTeacher(updateTeacherDTO));
+        Teacher teacherToUpdate = teacherMapper.teacherDTOToTeacher(updateTeacherDTO);
+        teacherToUpdate.setUserId(teacherService.getById(teacherToUpdate.getId()).getUserId());
+        Teacher teacher = teacherService.update(teacherToUpdate);
         return ResponseEntity.status(HttpStatus.OK).body(teacherMapper.teacherToTeacherDTO(teacher));
     }
 
@@ -80,6 +87,11 @@ public class TeacherController {
     public ResponseEntity delete(@PathVariable("id") Long id) {
         log.info("Enter into delete method with  teacher id: {}", id);
         Teacher teacher = teacherService.getById(id);
+        if (teacher.getUserId() != null) {
+            User user = userService.getById(teacher.getUserId().longValue());
+            user.setRole(Role.ROLE_USER);
+            userService.update(user);
+        }
         teacherService.delete(teacher);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
