@@ -6,6 +6,10 @@ import com.softserve.repository.ScheduleRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.List;
@@ -18,7 +22,9 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
     private static final String SELECT_COUNT = "select count (s.id) " +
             "from Schedule s where s.semester.id = :semesterId " +
             "and s.dayOfWeek = :dayOfWeek " +
-            "and s.period.id = :classId ";
+            "and s.period.id = :classId "+
+            "and s.semester.disable = false "+
+            "and s.room.disable = false ";
 
     /**
      * Method searches if there are any saved records in schedule for particular group
@@ -361,6 +367,26 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
     }
 
     /**
+     * Method gets information about all schedules from DB
+     *
+     * @return List of all schedules
+     */
+    @Override
+    public List<Schedule> getAll() {
+        log.info("In getAll()");
+        CriteriaBuilder cb = sessionFactory.getCurrentSession().getCriteriaBuilder();
+        CriteriaQuery<Schedule> cq = cb.createQuery(Schedule.class);
+        Root<Schedule> from = cq.from(Schedule.class);
+        cq.where(cb.equal(from.get("room").get("disable"), false),
+                cb.equal(from.get("semester").get("disable"), false));
+
+        TypedQuery<Schedule> tq = sessionFactory.getCurrentSession().createQuery(cq);
+        return tq.getResultList();
+    }
+
+
+
+    /**
      * Method scheduleByDateRangeForTeacher get all schedules from db in particular date range
      * @param fromDate LocalDate from
      * @param toDate LocalDate to
@@ -377,4 +403,5 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
                 .setParameter("teacherId", teacherId)
                 .getResultList();
     }
+
 }

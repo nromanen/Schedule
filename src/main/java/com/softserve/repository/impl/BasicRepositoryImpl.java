@@ -1,5 +1,6 @@
 package com.softserve.repository.impl;
 
+import com.softserve.entity.Subject;
 import com.softserve.exception.DeleteDisabledException;
 import com.softserve.repository.BasicRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -109,5 +110,19 @@ public abstract class BasicRepositoryImpl<T extends Serializable, I extends Seri
     protected boolean checkReference(T entity) {
         log.info("In checkReference(entity = [{}])", entity);
         return false;
+    }
+
+    /**
+     * The method used for getting list of disabled entities from database
+     *
+     * @return list
+     */
+    @Override
+    public List<T> getDisabled() {
+        log.info("In getDisabled");
+        return sessionFactory.getCurrentSession().createQuery(
+                "from " + basicClass.getName() +" tableName"+
+                        " where tableName.disable = true ")
+                .getResultList();
     }
 }

@@ -171,20 +171,6 @@ public class RoomRepositoryImpl extends BasicRepositoryImpl<Room, Long> implemen
     }
 
     /**
-     * The method used for getting list of disabled entities from database
-     *
-     * @return list of disabled rooms
-     */
-    @Override
-    public List<Room> getDisabled() {
-        log.info("In getDisabled");
-        return sessionFactory.getCurrentSession().createQuery(
-                "select r from Room r " +
-                "where r.disable = true ")
-                .getResultList();
-    }
-
-    /**
      * The method used for getting list of rooms which have schedule
      *
      * @return list of rooms
