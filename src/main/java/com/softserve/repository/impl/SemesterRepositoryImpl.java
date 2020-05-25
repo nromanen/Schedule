@@ -35,6 +35,7 @@ public class SemesterRepositoryImpl extends BasicRepositoryImpl<Semester, Long> 
                 .getResultList();
     }
 
+
     /**
      * Modified update method, which merge entity before updating it
      *
@@ -91,20 +92,6 @@ public class SemesterRepositoryImpl extends BasicRepositoryImpl<Semester, Long> 
             return Optional.empty();
         }
         return Optional.of(semesters.get(0));
-    }
-
-    /**
-     * The method used for getting list of disabled entities from database
-     *
-     * @return list of disabled semesters
-     */
-    @Override
-    public List<Semester> getDisabled() {
-        log.info("In getDisabled");
-        return sessionFactory.getCurrentSession().createQuery(
-                "select s from Semester s " +
-                        "where s.disable = true ")
-                .getResultList();
     }
 
     /**

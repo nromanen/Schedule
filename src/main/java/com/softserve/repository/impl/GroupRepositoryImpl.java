@@ -1,7 +1,6 @@
 package com.softserve.repository.impl;
 
 import com.softserve.entity.Group;
-import com.softserve.entity.Semester;
 import com.softserve.repository.GroupRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Filter;
@@ -87,19 +86,5 @@ public class GroupRepositoryImpl extends BasicRepositoryImpl<Group, Long> implem
                 .setParameter("groupId", group.getId())
                 .getSingleResult();
         return count != 0;
-    }
-
-    /**
-     * The method used for getting list of disabled entities from database
-     *
-     * @return list of disabled groups
-     */
-    @Override
-    public List<Group> getDisabled() {
-        log.info("In getDisabled");
-        return sessionFactory.getCurrentSession().createQuery(
-                "select g from Group g " +
-                        "where g.disable = true ")
-                .getResultList();
     }
 }

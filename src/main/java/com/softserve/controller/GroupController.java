@@ -69,7 +69,7 @@ public class GroupController {
     }
 
     @GetMapping("/groups/disabled")
-    @ApiOperation(value = "Get the list of disabled teachers")
+    @ApiOperation(value = "Get the list of disabled groups")
     public ResponseEntity<List<GroupDTO>> getDisabled() {
         log.info("Enter into getDisabled");
         return ResponseEntity.status(HttpStatus.OK).body(groupMapper.groupsToGroupDTOs(groupService.getDisabled()));
