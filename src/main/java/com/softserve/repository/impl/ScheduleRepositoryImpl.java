@@ -385,7 +385,6 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
     }
 
 
-
     /**
      * Method scheduleByDateRangeForTeacher get all schedules from db in particular date range
      * @param fromDate LocalDate from
@@ -403,5 +402,6 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
                 .setParameter("teacherId", teacherId)
                 .getResultList();
     }
+
 
 }
