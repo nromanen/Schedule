@@ -1,0 +1,109 @@
+@import '../../App.scss';
+
+$block-width: 70px;
+$need-attention: #fdfd04;
+$height-for-block: 50px;
+
+.busy-rooms-container {
+    min-width: 96%;
+    max-width: 1440px;
+    .busy-heading {
+        width: 100%;
+        text-align: center;
+        margin: 10px 0 3px 0;
+    }
+    .view-rooms {
+        width: 100%;
+        margin: 10px 0;
+        display: flex;
+        overflow-y: auto;
+        .busy-room {
+            .room-day {
+                margin-bottom: 10px;
+                min-height: 187px;
+            }
+            .room-heading {
+                width: 100%;
+                text-align: center;
+                margin-bottom: 3px;
+            }
+            .room-name {
+                text-transform: uppercase;
+            }
+            .room-type {
+                margin-left: 15px;
+            }
+
+            .even-odd-week {
+                display: flex;
+                align-items: center;
+                &:first-child {
+                    margin-bottom: 10px;
+                    padding-bottom: 10px;
+                    border-bottom: 1px solid $border-color;
+                }
+            }
+
+            .class-info {
+                display: flex;
+                flex-direction: column;
+                margin-left: 5px;
+                border-right: 1px solid $border-color;
+                padding: 0 5px;
+
+                .class-info-data {
+                    display: flex;
+                    flex-direction: row;
+                    margin-left: 5px;
+                    min-width: $block-width;
+                    &:first-child {
+                        border-bottom: 1px solid $border-color;
+                    }
+                    &:last-child {
+                        margin-top: 3px;
+                    }
+                }
+            }
+
+            .free-class-info {
+                display: flex;
+                flex-direction: column;
+                margin-left: 5px;
+                border-right: 1px solid $border-color;
+                padding: 0 5px;
+
+                .free-class {
+                    border-bottom: 1px solid $border-color;
+                }
+            }
+
+            .more-then-one {
+                background: $need-attention;
+            }
+
+            .group-height {
+                min-height: $height-for-block;
+            }
+            .green-free {
+                min-height: $height-for-block;
+                min-width: $block-width;
+                background: $good-color;
+            }
+
+            .even-odd-heading {
+                font-size: 16px;
+                font-weight: bold;
+                color: $border-color;
+                min-width: 78px;
+            }
+
+            .no-schedule {
+                display: flex;
+                align-items: center;
+                flex-wrap: wrap;
+                font-size: 16px;
+                color: $border-color;
+            }
+        }
+    }
+}
