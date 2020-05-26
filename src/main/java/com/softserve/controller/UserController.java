@@ -1,9 +1,6 @@
 package com.softserve.controller;
 
-import com.softserve.dto.ChangeUserPasswordDTO;
-import com.softserve.dto.MessageDTO;
-import com.softserve.dto.UserCreateDTO;
-import com.softserve.dto.UserDTO;
+import com.softserve.dto.*;
 import com.softserve.entity.CurrentUser;
 import com.softserve.entity.Teacher;
 import com.softserve.entity.User;
@@ -23,6 +20,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
+
+import static org.apache.commons.lang3.StringUtils.isNoneBlank;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -101,11 +101,44 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(userMapper.toUserDTOs(userService.getAllUsersWithRoleUser()));
     }
 
-    @PutMapping("/change-password")
-    @ApiOperation(value = "Change password for current user")
-    public ResponseEntity changePasswordForCurrentUser(@CurrentUser JwtUser jwtUser,
-                                                       @RequestBody ChangeUserPasswordDTO passwordDTO) {
-        userService.changePassword(jwtUser.getId(), passwordDTO.getOldPassword(), passwordDTO.getNewPassword());
-        return ResponseEntity.ok().body(new MessageDTO("Password successfully changed."));
+    @GetMapping("/my-data")
+    @ApiOperation(value = "Get current user data")
+    public ResponseEntity getCurrentUser(@CurrentUser JwtUser jwtUser) {
+        User user = userService.getById(jwtUser.getId());
+        if (user.getRole() == Role.ROLE_TEACHER) {
+            Teacher teacher = teacherService.findByUserId(user.getId().intValue());
+            return ResponseEntity.ok().body(new UserDataDTO(teacher.getName(), teacher.getSurname(), teacher.getPatronymic(), teacher.getPosition()));
+        }
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/change-data")
+    @ApiOperation(value = "Change data for current user")
+    public ResponseEntity<MessageDTO> changeDataForCurrentUser(@CurrentUser JwtUser jwtUser, @RequestBody UserDataForChangeDTO data) {
+        User user = userService.getById(jwtUser.getId());
+
+        Teacher teacher = null;
+        if (user.getRole() == Role.ROLE_TEACHER) {
+            teacher = teacherService.findByUserId(user.getId().intValue());
+            teacher.setName(data.getTeacherName());
+            teacher.setSurname(data.getTeacherSurname());
+            teacher.setPosition(data.getTeacherPosition());
+            teacher.setPatronymic(data.getTeacherPatronymic());
+        }
+
+        Optional<String> password = isNoneBlank(data.getCurrentPassword()) && isNoneBlank(data.getNewPassword()) ?
+                Optional.ofNullable(userService.changePasswordForCurrentUser(user, data.getCurrentPassword(), data.getNewPassword())) :
+                Optional.empty();
+
+        if (teacher != null) {
+            teacherService.update(teacher);
+        }
+
+        if (password.isPresent()) {
+            user.setPassword(password.get());
+            userService.update(user);
+        }
+
+        return ResponseEntity.ok().body(new MessageDTO(jwtUser.getUsername() + " data successfully changed."));
     }
 }

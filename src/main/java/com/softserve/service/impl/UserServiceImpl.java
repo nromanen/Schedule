@@ -10,7 +10,6 @@ import com.softserve.repository.UserRepository;
 import com.softserve.service.MailService;
 import com.softserve.service.UserService;
 import lombok.extern.slf4j.Slf4j;
-
 import org.apache.commons.text.CharacterPredicates;
 import org.apache.commons.text.RandomStringGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -252,9 +251,16 @@ public class UserServiceImpl implements UserService {
         return userRepository.getAllUsersWithRoleUser();
     }
 
+    /**
+     * The method used for change password for current user
+     *
+     * @param user User entity
+     * @param oldPassword String password, that use user for sign in up to now
+     * @param newPassword String password, that will use user for sign in in future
+     * @return Optional<User> entity
+     */
     @Override
-    public void changePassword(long userId, String oldPassword, String newPassword) {
-        User user = getById(userId);
+    public String changePasswordForCurrentUser(User user, String oldPassword, String newPassword) {
         if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
             throw new IncorrectPasswordException("Password you entered is not equal to the current password for this profile");
         }
@@ -262,8 +268,7 @@ public class UserServiceImpl implements UserService {
             throw new IncorrectPasswordException("Password must contains at least: 8 characters(at least: 1 upper case, 1 lower case, " +
                     "1 number and 1 special character('!@#$%^&*')) and no more 30 characters.");
         }
-        user.setPassword(passwordEncoder.encode(newPassword));
-        userRepository.update(user);
+        return passwordEncoder.encode(newPassword);
     }
 
     // method for checking email in database
