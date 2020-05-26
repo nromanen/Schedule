@@ -1,0 +1,123 @@
+@import '../../App';
+a.pdf_link {
+    display: block;
+    font-size: 0.7em;
+    margin: 0 auto;
+    padding: 0 20px;
+    text-align: right;
+    svg {
+        margin: 0px 10px;
+    }
+}
+.MuiTableContainer-root {
+    max-height: 40em;
+    max-width: 100%;
+    overflow: scroll;
+    position: relative;
+    margin-bottom: 20px;
+
+    .MuiTable-root {
+        border-collapse: separate;
+        border-spacing: 0;
+        margin: 0 auto;
+        width: auto;
+
+        thead.MuiTableHead-root
+            tr.MuiTableRow-root.MuiTableRow-head
+            th.MuiTableCell-root.MuiTableCell-head {
+            background-color: $main-color;
+            border-right: $regular-border;
+            position: sticky;
+            text-align: center;
+            top: 0;
+            width: auto;
+            z-index: 5;
+
+            &:first-child {
+                left: 0;
+            }
+        }
+
+        td.MuiTableCell-root.MuiTableCell-body {
+            height: 60px;
+            padding: 10px;
+            width: auto;
+            z-index: 0;
+
+            &[rowSpan~='2'] {
+                height: 120px;
+            }
+
+            &.lesson {
+                border-right: $regular-border;
+                font-weight: 300;
+                font-size: 0.8em;
+                min-width: 150px;
+                text-align: center;
+                white-space: pre-wrap;
+                width: 150px;
+                p {
+                    margin: 0px;
+                }
+                p:first-child {
+                    font-weight: bold;
+                    font-size: 1.2em;
+                }
+            }
+
+            &.grouped {
+                background-color: #ffc000;
+            }
+
+            &.currentDay {
+                background-color: $light-blue;
+            }
+
+            &.classNameCell,
+            &.dayNameCell {
+                background-color: $main-color;
+                border-right: $regular-border;
+                font-size: 1em;
+                padding: 0px;
+                position: relative;
+                position: sticky;
+                text-align: center;
+                z-index: 1;
+            }
+
+            &.classNameCell {
+                left: 51px;
+                width: 10px;
+                &.currentDay {
+                    background-color: $light-blue;
+                }
+                &.subClassName {
+                    left: 93px;
+                    width: 10px;
+                }
+            }
+
+            &.dayNameCell {
+                left: 0;
+                margin: 0px;
+                min-width: 50px;
+                overflow: visible;
+                width: 20px !important;
+
+                &.minHeightDouble {
+                    height: 240px;
+                }
+
+                &.currentDay {
+                    background-color: $light-blue;
+                }
+
+                .dayName {
+                    writing-mode: vertical-rl;
+                    -webkit-text-orientation: upright;
+                    text-orientation: upright;
+                }
+            }
+        }
+    }
+}

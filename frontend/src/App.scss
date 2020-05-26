@@ -1,0 +1,150 @@
+@import './AppConstants';
+
+@mixin flexWrap {
+    display: flex;
+}
+
+@mixin buttonStyle {
+    cursor: pointer;
+    width: $btn-size;
+    height: $btn-size;
+    transition: color 0.3s linear;
+}
+
+body {
+    margin: 0;
+    font-family: $font;
+}
+
+.under-line {
+    position: relative;
+
+    &::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        width: 100%;
+        bottom: -10px;
+        border-bottom: 1px solid;
+    }
+}
+
+.container {
+    max-width: 1440px;
+    margin: 10px auto;
+
+    @media (max-width: 1440px) {
+        margin: 10px 10px;
+    }
+}
+
+.form-buttons-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .buttons-style {
+        width: 48%;
+
+        @media (max-width: 768px) {
+            margin-bottom: 5px;
+            font-size: 12px;
+            width: 60%;
+        }
+    }
+}
+
+.margin-top-bottom {
+    margin: 2px 0 7px 0;
+}
+
+.cards-container {
+    @media (max-width: 850px) {
+        flex-direction: column;
+        align-items: center;
+    }
+    @include flexWrap();
+    align-items: start;
+
+    .container-flex-wrap {
+        @include flexWrap();
+
+        width: 100%;
+        align-items: center;
+        justify-content: space-around;
+        flex-wrap: wrap;
+    }
+}
+
+.cards-btns {
+    @include flexWrap();
+    align-items: center;
+    justify-content: flex-end;
+    position: relative;
+    height: $btn-size;
+
+    .svg-btn {
+        @include buttonStyle;
+        margin-right: 10px;
+
+        &:last-child {
+            margin-right: 0;
+        }
+    }
+
+    .delete-btn {
+        &:hover {
+            color: $delete-color;
+        }
+    }
+
+    .edit-btn {
+        &:hover {
+            color: $background-color;
+        }
+    }
+
+    .copy-btn {
+        &:hover {
+            color: $good-color;
+        }
+    }
+}
+
+::-webkit-scrollbar {
+    width: 7px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px grey;
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: $thunck-color;
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: $thunck-color-hover;
+}
+
+.search-list__panel {
+    position: sticky;
+    top: 1rem;
+    width: 30rem;
+    @media (max-width: 850px) {
+        position: relative;
+        margin: 0 auto 40px;
+        max-width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
+.language-icon {
+    max-width: 30px;
+    margin-right: 25px;
+}

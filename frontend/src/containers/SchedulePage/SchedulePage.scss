@@ -1,0 +1,177 @@
+@import '../../App';
+
+$board-height: 70px;
+$board-min-width: 120px;
+
+.in-board-section {
+    position: relative;
+    &:hover {
+        transition: all 0.7s;
+
+        .in-board-card {
+            transition: all 0.7s;
+            position: absolute;
+            top: 0;
+            left: 0;
+            transform: scale(1.7);
+            z-index: 1000;
+        }
+    }
+}
+.for-phones-and-tablets.card {
+    display: none;
+}
+
+.flexbox.card {
+    display: flex;
+    justify-content: stretch;
+
+    min-width: 75%;
+    width: auto;
+
+    overflow: auto;
+    height: 75vh;
+
+    margin: 0 auto;
+    padding: 15px;
+
+    .no-current-semester {
+        margin: 10% auto 0;
+    }
+
+    .card {
+        margin: 5px;
+        &.schedule-class,
+        &.schedule-day {
+            margin-top: 0;
+            margin-bottom: 0;
+        }
+    }
+
+    .day-classes-aside {
+        .card.empty-card {
+            min-width: 97px;
+            min-height: 19px;
+            font-size: 13px;
+            text-align: center;
+        }
+        .before-border {
+            position: relative;
+            &:before {
+                content: '';
+                display: flex;
+                position: absolute;
+                width: 45%;
+                top: -0.5px;
+                left: 7px;
+                border-top: 0.5px outset $label-color;
+                border-radius: 5px;
+            }
+            .schedule-day {
+                box-shadow: none;
+                position: relative;
+                text-align: center;
+                font-size: 1.5rem;
+                writing-mode: vertical-rl;
+                text-orientation: upright;
+            }
+            .schedule-class {
+                min-height: 2 * $board-height + 14;
+                text-align: center;
+                font-size: 1.5rem;
+                writing-mode: vertical-rl;
+                text-orientation: upright;
+            }
+        }
+    }
+
+    .group-title {
+        display: flex;
+        font-size: 13px;
+        justify-content: center;
+        flex: 1 1 auto;
+        overflow: hidden;
+        height: 19px;
+        padding: 16px 7px;
+    }
+
+    .board-div {
+        position: relative;
+        .board {
+            display: flex;
+            justify-content: center;
+            min-width: $board-min-width;
+            max-height: $board-height;
+            min-height: $board-height;
+            padding: 10px 5px;
+
+            .more-icon {
+                position: absolute;
+                right: 4%;
+                cursor: pointer;
+            }
+
+            .card {
+                margin: 0;
+                max-width: 80px;
+                min-width: 80px;
+                padding: 5px 8px;
+                cursor: pointer;
+                &.in-board-card {
+                    font-size: 7px;
+                    position: relative;
+                    padding: 3px;
+                    .delete-item {
+                        position: absolute;
+                        right: 0;
+                        display: none;
+                        .delete-btn {
+                            width: $schedule-button-size;
+                            height: $schedule-button-size;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+.lesson-list.card {
+    margin-top: 0;
+    margin-right: 0;
+    min-width: 15%;
+    max-width: 15%;
+    height: 75vh;
+    max-height: 75vh;
+    overflow: auto;
+    overflow-x: hidden;
+    .card {
+        min-width: 60%;
+        max-width: 60%;
+        font-size: 12px;
+    }
+}
+
+.lesson-board {
+    width: 250px;
+}
+
+.class-section {
+    max-width: 60px;
+}
+
+.availability-warning {
+    color: $delete-color;
+}
+
+@media screen and (max-width: 968px) {
+    .schedule-page.cards-container {
+        display: none;
+    }
+    .for-phones-and-tablets.card {
+        display: block;
+        width: 80%;
+        margin: 15% auto 0;
+        text-align: center;
+    }
+}

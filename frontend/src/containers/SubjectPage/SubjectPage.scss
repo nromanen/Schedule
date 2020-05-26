@@ -1,0 +1,20 @@
+.subject-card {
+    width: 10em;
+    min-height: 105px;
+    overflow: hidden;
+
+    &__description {
+        text-align: center;
+        margin: 5px 0 0 0;
+    }
+    &__name {
+        text-align: center;
+        margin: 0;
+        max-width: 160px;
+        overflow: hidden;
+    }
+}
+
+.wrapper {
+    width: 100%;
+}
