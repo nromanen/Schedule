@@ -73,6 +73,11 @@ const Auth = props => {
         props.setLoading(true);
         resetFormHandler(LOGIN_FORM);
     };
+    const socialLoginHandler = () => {
+        props.onAuth({ authType: 'google' });
+        props.setLoading(true);
+        resetFormHandler(LOGIN_FORM);
+    };
 
     const registrationHandler = registrationData => {
         if (registrationData.password !== registrationData.retypePassword) {
@@ -132,6 +137,7 @@ const Auth = props => {
                     isLoading={isLoading}
                     loginError={error}
                     onSubmit={loginHandler}
+                    socialLogin={socialLoginHandler}
                     switchAuthMode={switchAuthModeHandler}
                     translation={t}
                     setError={props.setError}
