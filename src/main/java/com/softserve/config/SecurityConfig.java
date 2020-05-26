@@ -72,6 +72,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private static final String ALL_CLASSES_PUBLIC_ENDPOINT = "/public/classes";
     private static final String ALL_SEMESTERS_PUBLIC_ENDPOINT = "/public/semesters";
     private static final String DOWNLOAD_SCHEDULE_ENDPOINT = "/download/**";
+    //FRONTEND
+    private static final String HOME_ENDPOINT = "/";
+    private static final String LOGIN_ENDPOINT = "/login";
+    private static final String ADMIN_ENDPOINT = "/admin";
+    private static final String FRONTEND_SCHEDULE_ENDPOINT = "/schedule";
+    private static final String FRONTEND_ACTIVATION_PAGE_ENDPOINT = "/activation-page";
 
 
     @Autowired
@@ -97,8 +103,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers(DOWNLOAD_SCHEDULE_ENDPOINT, AUTH_ENDPOINT, SCHEDULE_FOR_USERS_ENDPOINT, ALL_GROUPS_PUBLIC_ENDPOINT, ALL_TEACHERS_PUBLIC_ENDPOINT,
-                        ALL_GROUPS_PUBLIC_ENDPOINT, ALL_CLASSES_PUBLIC_ENDPOINT, ALL_SEMESTERS_PUBLIC_ENDPOINT).permitAll()
+                .antMatchers(FRONTEND_ACTIVATION_PAGE_ENDPOINT, DOWNLOAD_SCHEDULE_ENDPOINT, AUTH_ENDPOINT, SCHEDULE_FOR_USERS_ENDPOINT, ALL_GROUPS_PUBLIC_ENDPOINT, ALL_TEACHERS_PUBLIC_ENDPOINT,HOME_ENDPOINT,LOGIN_ENDPOINT,ADMIN_ENDPOINT,FRONTEND_SCHEDULE_ENDPOINT,
+                         ALL_CLASSES_PUBLIC_ENDPOINT, ALL_SEMESTERS_PUBLIC_ENDPOINT).permitAll()
                 .antMatchers(MANAGER_ENDPOINT, CLASSES_ENDPOINT, GROUPS_ENDPOINT, LESSONS_ENDPOINT,
                         ROOMS_ENDPOINT, SUBJECTS_ENDPOINT, TEACHERS_ENDPOINT, SEMESTERS_ENDPOINT, ROOM_TYPES_ENDPOINT).hasRole("MANAGER")
                 .anyRequest().authenticated()
@@ -135,6 +141,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 "/swagger-resources/**",
                 "/configuration/security",
                 "/swagger-ui.html",
+                "/favicon.ico",
+                "/**/*.png",
+                "/**/*.gif",
+                "/**/*.svg",
+                "/**/*.jpg",
+                "/**/*.html",
+                "/**/*.css",
+                "/**/*.js",
+                "/**/*.json",
+                "/assets/**",
                 "/webjars/**");
     }
 

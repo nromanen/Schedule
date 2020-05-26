@@ -11,8 +11,8 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.SimpleMongoDbFactory;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
-@Configuration
-@EnableMongoRepositories(basePackages = "com.softserve.*")
+/*@Configuration
+@EnableMongoRepositories(basePackages = "com.softserve.*")*/
 public class MongoConfig /*extends AbstractMongoConfiguration*/ {
 
   /*  @Override
@@ -30,11 +30,11 @@ public class MongoConfig /*extends AbstractMongoConfiguration*/ {
         return "com.softserve.*";
     }*/
 
-    @Bean
+    /*@Bean
     public MongoTemplate mongoTemplate() {
         MongoClient mongoClient = new MongoClient("127.0.0.1", 27017);
         MongoDbFactory mongoDbFactory = new SimpleMongoDbFactory(mongoClient, "helloWorld");
         return new MongoTemplate(mongoDbFactory);
-    }
+    }*/
 }
 

@@ -9,6 +9,8 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -20,13 +22,19 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import java.io.IOException;
+
 import static com.softserve.service.impl.UserServiceImpl.PASSWORD_FOR_SOCIAL_USER;
 
 @RestController
 @RequestMapping("/auth")
 @Api(tags = "Authentication API")
 @Slf4j
+@PropertySource({"classpath:cors.properties"})
 public class AuthenticationController {
+
+    @Value("${backend.url}")
+    private String url;
 
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider jwtTokenProvider;
@@ -103,5 +111,11 @@ public class AuthenticationController {
     public ResponseEntity<MessageDTO> getLoginInfo(@RequestParam("token") String token) {
         log.info("Enter into getLoginInfo method");
         return ResponseEntity.ok().body(new MessageDTO(token));
+    }
+
+    @GetMapping("/google")
+    public ResponseEntity getGoogleSignIn(HttpServletResponse response) throws IOException {
+        response.sendRedirect(url + "oauth_login/google");
+        return ResponseEntity.ok().body("Ok");
     }
 }

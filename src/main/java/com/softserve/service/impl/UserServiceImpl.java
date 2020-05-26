@@ -32,7 +32,7 @@ import static org.apache.commons.lang3.StringUtils.*;
 @PropertySource({"classpath:cors.properties"})
 public class UserServiceImpl implements UserService {
 
-    @Value("${cors.localurl}")
+    @Value("${backend.url}")
     private String url;
 
     private static final char[] NUMBERS = ("0123456789").toCharArray();
@@ -105,7 +105,6 @@ public class UserServiceImpl implements UserService {
     public User update(User object) {
         log.info("Enter into update method with entity:{}", object);
         getById(object.getId());
-        object.setPassword(passwordEncoder.encode(object.getPassword()));
         if (userRepository.findByEmail(object.getEmail()).isPresent() &&
                 userRepository.findByEmail(object.getEmail()).get().getId() != object.getId()) {
             throw new FieldAlreadyExistsException(User.class, "email", object.getEmail());
@@ -175,7 +174,7 @@ public class UserServiceImpl implements UserService {
                     "You received this email because you requested to registration on our site.\n" +
                     "For successfully sign up and activate your profile, you have to follow the next link: ";
 
-            String link = url + "/activation-page?token=" + token;
+            String link = url + "activation-page?token=" + token;
             String message = registrationMessage + " \r\n" + link;
             String subject = "Activation account";
             mailService.send(user.getEmail(), subject, message);
@@ -256,7 +255,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public void changePassword(long userId, String oldPassword, String newPassword) {
         User user = getById(userId);
-        String encodeOldPassword = passwordEncoder.encode(oldPassword);
         if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
             throw new IncorrectPasswordException("Password you entered is not equal to the current password for this profile");
         }

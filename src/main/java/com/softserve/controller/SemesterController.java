@@ -87,6 +87,7 @@ public class SemesterController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
+
     @GetMapping("/semesters/disabled")
     @ApiOperation(value = "Get the list of disabled semester")
     public ResponseEntity<List<SemesterDTO>> getDisabled() {

@@ -59,20 +59,6 @@ public class TeacherRepositoryImpl extends BasicRepositoryImpl<Teacher, Long> im
     }
 
     /**
-     * The method used for getting list of disabled entities from database
-     *
-     * @return list of disabled teachers
-     */
-    @Override
-    public List<Teacher> getDisabled() {
-        log.info("In getDisabled");
-        return sessionFactory.getCurrentSession().createQuery(
-                "select t from Teacher t " +
-                        "where t.disable = true ")
-                .getResultList();
-    }
-
-    /**
      * The method used for getting teacher by userId
      *
      * @param userId Identity user id

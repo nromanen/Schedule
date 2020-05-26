@@ -230,14 +230,14 @@ public class UserServiceTest {
         user.setId(1L);
 
         when(userRepository.findByEmail("some@mail.com")).thenReturn(Optional.of(user));
-        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+    //    when(userRepository.findById(1L)).thenReturn(Optional.of(user));
         when(encoder.encode(any(CharSequence.class))).thenReturn("Qwerty123!@#");
         when(userRepository.update(user)).thenReturn(user);
 
         userService.resetPassword("some@mail.com");
         assertEquals("Qwerty123!@#", user.getPassword());
-        verify(userRepository, times(3)).findByEmail("some@mail.com");
-        verify(userRepository, times(1)).findById(1L);
+        verify(userRepository, times(1)).findByEmail("some@mail.com");
+      //  verify(userRepository, times(1)).findById(1L);
         verify(encoder, times(1)).encode(any(CharSequence.class));
         verify(userRepository, times(1)).update(user);
         verify(mailService, times(1)).send(

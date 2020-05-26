@@ -86,18 +86,4 @@ public class SubjectRepositoryImpl extends BasicRepositoryImpl<Subject, Long> im
                 .getSingleResult();
         return count != 0;
     }
-
-    /**
-     * The method used for getting list of disabled entities from database
-     *
-     * @return list of disabled subjects
-     */
-    @Override
-    public List<Subject> getDisabled() {
-        log.info("In getDisabled");
-        return sessionFactory.getCurrentSession().createQuery(
-                "select s from Subject s " +
-                        "where s.disable = true ")
-                .getResultList();
-    }
 }

@@ -19,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -33,6 +34,7 @@ public class UserController {
     private final UserService userService;
     private final UserMapper userMapper;
     private final TeacherService teacherService;
+    private final PasswordEncoder passwordEncoder;
 
     @GetMapping
     @ApiOperation(value = "Get the list of all users")
@@ -69,6 +71,7 @@ public class UserController {
         log.info("Enter into update method with userDTO: {}", userDTO);
         User updatedUser = userMapper.toUser(userDTO);
         User user = userService.getById(updatedUser.getId());
+        updatedUser.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
         updatedUser.setRole(user.getRole());
         updatedUser.setToken(user.getToken());
         userService.update(updatedUser);
@@ -99,6 +102,7 @@ public class UserController {
     }
 
     @PutMapping("/change-password")
+    @ApiOperation(value = "Change password for current user")
     public ResponseEntity changePasswordForCurrentUser(@CurrentUser JwtUser jwtUser,
                                                        @RequestBody ChangeUserPasswordDTO passwordDTO) {
         userService.changePassword(jwtUser.getId(), passwordDTO.getOldPassword(), passwordDTO.getNewPassword());
