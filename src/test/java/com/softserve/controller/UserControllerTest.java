@@ -91,8 +91,8 @@ public class UserControllerTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(userDtoForUpdate.getId()))
-                .andExpect(jsonPath("$.email").value(userDtoForUpdate.getEmail()))
-                .andExpect(jsonPath("$.password").value(userDtoForUpdate.getPassword()));
+                .andExpect(jsonPath("$.email").value(userDtoForUpdate.getEmail()));
+//                .andExpect(jsonPath("$.password").value(userDtoForUpdate.getPassword()))
     }
 
     @Test

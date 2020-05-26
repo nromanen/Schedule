@@ -14,4 +14,5 @@ public interface UserService extends BasicService <User, Long> {
     User createSocialUser(OAuth2User oAuth2User);
     Optional<User> findSocialUser(String email);
     List<User> getAllUsersWithRoleUser();
+    void changePassword(long userId, String oldPassword, String newPassword);
 }

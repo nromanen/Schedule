@@ -14,6 +14,7 @@ import com.softserve.service.TeacherService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -41,7 +42,9 @@ public class ScheduleController {
     private final TeacherService teacherService;
     private final PeriodMapper periodMapper;
     private final RoomForScheduleMapper roomForScheduleMapper;
+  //  private final MongoTemplate mongoTemplate;
 
+    @Autowired
     public ScheduleController(ScheduleService scheduleService, SemesterService semesterService, SemesterMapper semesterMapper, ScheduleMapper scheduleMapper, ScheduleSaveMapper scheduleSaveMapper, ScheduleWithoutSemesterMapper scheduleWithoutSemesterMapper, TeacherService teacherService, PeriodMapper periodMapper, RoomForScheduleMapper roomForScheduleMapper) {
         this.scheduleService = scheduleService;
         this.semesterService = semesterService;
@@ -150,6 +153,11 @@ public class ScheduleController {
         LocalDate toDate = LocalDate.parse(LocalDate.parse(to, formatter).toString(), currentFormatter);
         Teacher teacher = teacherService.findByUserId(Integer.parseInt(jwtUser.getId().toString()));
         List<ScheduleDateRangeFullDTO> dto = fullDTOForTeacherDateRange(scheduleService.scheduleByDateRangeForTeacher(fromDate, toDate, teacher.getId()));
+
+        TestDTO testDTO = new TestDTO();
+        testDTO.setName("for Teacher");
+        testDTO.setFull(dto);
+       // mongoTemplate.insert(testDTO);
         return ResponseEntity.status(HttpStatus.OK).body(dto);
     }
 

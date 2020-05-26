@@ -494,7 +494,6 @@ public class ScheduleServiceImpl implements ScheduleService {
     public Map<LocalDate, Map<Period, List<Schedule>>> scheduleByDateRangeForTeacher(LocalDate fromDate, LocalDate toDate, Long teacherId) {
         log.info("In scheduleByDateRangeForTeacher with fromDate = {} and toDate = {}", fromDate, toDate);
         List<Schedule> schedules = scheduleRepository.scheduleByDateRangeForTeacher(fromDate, toDate, teacherId);
-        schedules.forEach(semester -> Hibernate.initialize(semester.getSemester().getPeriods()));
 
         List<Schedule> dateRangeSchedule = new ArrayList<>();
         for (Schedule schedule : schedules) {

@@ -83,7 +83,7 @@ public class TeacherServiceImpl implements TeacherService {
     public Teacher update(Teacher object)
     {
         log.info("Enter into update method with entity:{}", object);
-        object.setUserId(getById(object.getId()).getUserId());
+      //  object.setUserId(getById(object.getId()).getUserId());
         return teacherRepository.update(object);
     }
 
