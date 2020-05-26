@@ -1,6 +1,8 @@
 package com.softserve.service;
 
+import com.softserve.dto.UserDataForChangeDTO;
 import com.softserve.entity.User;
+import com.softserve.security.jwt.JwtUser;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import java.util.List;
@@ -14,5 +16,5 @@ public interface UserService extends BasicService <User, Long> {
     User createSocialUser(OAuth2User oAuth2User);
     Optional<User> findSocialUser(String email);
     List<User> getAllUsersWithRoleUser();
-    void changePassword(long userId, String oldPassword, String newPassword);
+    String changePasswordForCurrentUser(User user, String oldPassword, String newPassword);
 }
