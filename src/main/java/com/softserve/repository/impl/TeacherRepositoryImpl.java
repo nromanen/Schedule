@@ -35,17 +35,6 @@ public class TeacherRepositoryImpl extends BasicRepositoryImpl<Teacher, Long> im
                         " order by t.surname ASC").getResultList();
     }
 
-//    /**
-//     * Method updates information for an existing teacher in Repository
-//     * @param entity Teacher entity with info to be updated
-//     * @return updated Teacher entity
-//     */
-//    @Override
-//    public Teacher update(Teacher entity) {
-//        sessionFactory.getCurrentSession().clear();
-//        return super.update(entity);
-//    }
-
     // Checking if teacher is used in Lesson and TeacherWishes tables
     @Override
     protected boolean checkReference(Teacher teacher) {
