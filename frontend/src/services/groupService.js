@@ -76,6 +76,7 @@ export const updateGroupService = data => {
             store.dispatch(updateGroup(response.data));
             selectGroupService(null);
             getDisabledGroupsService();
+            showAllGroupsService();
             resetFormHandler(GROUP_FORM);
             successHandler(
                 i18n.t('serviceMessages:back_end_success_operation', {

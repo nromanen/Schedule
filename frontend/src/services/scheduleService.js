@@ -126,21 +126,31 @@ export const deleteItemFromScheduleService = itemId => {
 
 export const submitSearchSchedule = values => {
     setScheduleSemesterIdService(values.semester);
-
-    if (values.hasOwnProperty('group') && values.group > 0) {
+    if (values.hasOwnProperty('group') && +values.group > 0) {
         setScheduleTypeService('group');
         setScheduleGroupIdService(values.group);
         getGroupSchedule(values.group, values.semester);
+        return;
     }
-    if (values.hasOwnProperty('teacher') && values.teacher > 0) {
+    if (values.hasOwnProperty('teacher') && +values.teacher > 0) {
         setScheduleTypeService('teacher');
         setScheduleGroupIdService(values.teacher);
         getTeacherSchedule(values.teacher, values.semester);
+        return;
     }
     if (
         (!values.hasOwnProperty('group') &&
             !values.hasOwnProperty('teacher')) ||
-        (values.group === 0 && values.teacher === 0)
+        (values.hasOwnProperty('group') &&
+            !values.hasOwnProperty('teacher') &&
+            +values.group === 0) ||
+        (!values.hasOwnProperty('group') &&
+            values.hasOwnProperty('teacher') &&
+            +values.teacher === 0) ||
+        (values.hasOwnProperty('group') &&
+            values.hasOwnProperty('teacher') &&
+            +values.teacher === 0 &&
+            +values.group === 0)
     ) {
         setScheduleTypeService('full');
         getFullSchedule(values.semester);

@@ -13,11 +13,11 @@ import { LOGIN_FORM } from '../../constants/reduxForms';
 import { authTypes } from '../../constants/auth';
 
 import { required } from '../../validation/validateFields';
-
+import { FaGoogle } from 'react-icons/fa';
 
 let LoginForm = props => {
     const { t } = useTranslation('formElements');
-    const { handleSubmit } = props;
+    const { handleSubmit, socialLogin } = props;
 
     const error = props.loginError;
 
@@ -78,6 +78,15 @@ let LoginForm = props => {
                     {translation('forgot_password')}
                 </button>
             </div>
+            <Button
+                // className="buttons-style under-line"
+                variant="contained"
+                color="secondary"
+                onClick={socialLogin}
+            >
+                <FaGoogle />
+                {'   ' + t('login_via_google')}
+            </Button>
         </form>
     );
 

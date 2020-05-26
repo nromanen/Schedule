@@ -3,6 +3,7 @@ export const GROUP_URL = 'groups';
 export const LESSON_URL = 'lessons';
 export const LESSON_TYPES_URL = 'lessons/types';
 export const LOGIN_URL = 'auth/sign-in';
+export const GOOGLE_LOGIN_URL = 'auth/google';
 export const LOGOUT_URL = 'auth/sign-out';
 export const REGISTRATION_URL = 'auth/sign-up';
 export const RESET_PASSWORD_URL = 'auth/reset-password';
