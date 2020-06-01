@@ -15,5 +15,4 @@ public interface RoomService extends BasicService<Room, Long>  {
 
     boolean isRoomExists(Room room);
     List<Room> getDisabled();
-    List<Room> getRoomsWithSchedule(Long semesterId);
 }
