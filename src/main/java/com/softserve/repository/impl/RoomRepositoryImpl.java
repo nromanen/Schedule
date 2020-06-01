@@ -32,7 +32,7 @@ public class RoomRepositoryImpl extends BasicRepositoryImpl<Room, Long> implemen
     public List<Room> getAll() {
         log.info("In getAll()");
         Session session = getSession();
-       return session.createQuery("from Room" )
+       return session.createQuery("from Room order by name ASC " )
                 .getResultList();
     }
 
