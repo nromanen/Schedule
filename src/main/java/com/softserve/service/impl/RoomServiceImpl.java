@@ -151,9 +151,4 @@ public class RoomServiceImpl implements RoomService {
     public boolean isRoomExists(Room room) {
         return roomRepository.countRoomDuplicates(room) != 0;
     }
-
-    @Override
-    public List<Room> getRoomsWithSchedule(Long semesterId) {
-        return roomRepository.getRoomsWithSchedule(semesterId);
-    }
 }
