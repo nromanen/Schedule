@@ -3,7 +3,7 @@ package com.softserve.controller;
 import com.softserve.dto.SubjectDTO;
 import com.softserve.entity.Subject;
 import com.softserve.service.SubjectService;
-import com.softserve.service.mapper.SubjectMapper;
+import com.softserve.mapper.SubjectMapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -70,4 +70,11 @@ public class SubjectController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
+    @GetMapping("/disabled")
+    @ApiOperation(value = "Get the list of disabled subjects")
+    public ResponseEntity<List<SubjectDTO>> getDisabled() {
+        log.info("In list getDisabled");
+        List<Subject> subjects = subjectService.getDisabled();
+        return ResponseEntity.status(HttpStatus.OK).body(subjectMapper.subjectsToSubjectDTOs(subjects));
+    }
 }

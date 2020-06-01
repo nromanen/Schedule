@@ -3,6 +3,8 @@ package com.softserve.repository.impl;
 import com.softserve.entity.Group;
 import com.softserve.repository.GroupRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.Filter;
+import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -10,6 +12,13 @@ import java.util.List;
 @Repository
 @Slf4j
 public class GroupRepositoryImpl extends BasicRepositoryImpl<Group, Long> implements GroupRepository {
+
+    private Session getSession(){
+        Session session = sessionFactory.getCurrentSession();
+        Filter filter = session.enableFilter("groupDisableFilter");
+        filter.setParameter("disable", false);
+        return session;
+    }
 
     /**
      * Method gets information about all groups from DB
@@ -19,8 +28,8 @@ public class GroupRepositoryImpl extends BasicRepositoryImpl<Group, Long> implem
     @Override
     public List<Group> getAll() {
         log.info("In getAll()");
-        return sessionFactory.getCurrentSession()
-                .createQuery("from Group ORDER BY title ASC")
+        Session session = getSession();
+        return session.createQuery("from Group ORDER BY title ASC")
                 .getResultList();
     }
 
@@ -36,6 +45,21 @@ public class GroupRepositoryImpl extends BasicRepositoryImpl<Group, Long> implem
         return (Long) sessionFactory.getCurrentSession().createQuery
                 ("SELECT count (*) FROM Group g WHERE g.title = :title")
                 .setParameter("title", title).getSingleResult();
+    }
+
+    /**
+     * The method used for getting number of groups with title from database
+     *
+     * @param id Long id
+     * @param title String title used to find Group
+     * @return Long number of records with title
+     */
+    @Override
+    public Long countGroupsWithTitleAndIgnoreWithId(Long id, String title) {
+        log.info("In countGroupsWithTitleAndIgnoreWithId(id = [{}], title = [{}])", id, title);
+        return (Long) sessionFactory.getCurrentSession().createQuery
+                ("SELECT count (*) FROM Group g WHERE g.title = :title and g.id!=:id")
+                .setParameter("title", title).setParameter("id", id).getSingleResult();
     }
 
     /**

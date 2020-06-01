@@ -5,7 +5,7 @@ import com.softserve.dto.LessonInfoDTO;
 import com.softserve.entity.Lesson;
 import com.softserve.entity.enums.LessonType;
 import com.softserve.service.LessonService;
-import com.softserve.service.mapper.LessonInfoMapper;
+import com.softserve.mapper.LessonInfoMapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;

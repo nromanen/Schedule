@@ -4,14 +4,17 @@ import com.softserve.dto.*;
 import com.softserve.entity.User;
 import com.softserve.security.jwt.JwtTokenProvider;
 import com.softserve.service.UserService;
-import com.softserve.service.mapper.UserMapper;
+import com.softserve.mapper.UserMapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.bind.annotation.*;
@@ -19,11 +22,19 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import java.io.IOException;
+
+import static com.softserve.service.impl.UserServiceImpl.PASSWORD_FOR_SOCIAL_USER;
+
 @RestController
 @RequestMapping("/auth")
 @Api(tags = "Authentication API")
 @Slf4j
+@PropertySource({"classpath:cors.properties"})
 public class AuthenticationController {
+
+    @Value("${backend.url}")
+    private String url;
 
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider jwtTokenProvider;
@@ -38,62 +49,73 @@ public class AuthenticationController {
         this.userMapper = userMapper;
     }
 
-    @PostMapping("/sign_in")
+    @PostMapping("/sign-in")
     @ApiOperation(value = "Get credentials  for login")
-    public ResponseEntity<AuthenticationResponseDTO> signIn(@RequestBody AuthenticationRequestDTO requestDto) {
-        log.info("Enter into signIn method with user email {}", requestDto.getUsername());
-        String username = requestDto.getUsername();
+    public ResponseEntity signIn(@RequestBody AuthenticationRequestDTO requestDto) {
+        log.info("Enter into signIn method with user email {}", requestDto.getEmail());
+        User user = userService.findSocialUser(requestDto.getEmail()).orElseThrow(() ->
+                new BadCredentialsException("Invalid password or email")
+        );
+        if (user.getPassword().equals(PASSWORD_FOR_SOCIAL_USER)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new MessageDTO("You registered via social network. Please, sign in via social network."));
+        }
+        String username = requestDto.getEmail();
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, requestDto.getPassword()));
-        User user = userService.findByEmail(username);
         String token = jwtTokenProvider.createToken(username, user.getRole().toString());
-        AuthenticationResponseDTO authenticationResponseDTO = new AuthenticationResponseDTO(username, token);
 
-        return ResponseEntity.ok(authenticationResponseDTO);
+        return ResponseEntity.ok(new AuthenticationResponseDTO(username, token));
     }
 
-    @PostMapping("/sign_up")
+    @PostMapping("/sign-up")
     @ApiOperation(value = "Get credentials for registration")
-    public ResponseEntity<MessageDTO> signUp(@RequestBody RegistrationRequestDTO registrationDTO, HttpServletRequest request) {
+    public ResponseEntity<MessageDTO> signUp(@RequestBody RegistrationRequestDTO registrationDTO) {
         log.info("Enter into signUp method with user email {}", registrationDTO.getEmail());
         User user = userMapper.toCreateUser(registrationDTO);
-        String url = String.valueOf(request.getRequestURL());
-        User createUser = userService.registration(user, url);
+        User createUser = userService.registration(user);
         String message = "You have successfully registered. Please, check Your email '" + createUser.getEmail() + "' to activate profile.";
-        MessageDTO messageDTO = new MessageDTO();
-        messageDTO.setMessage(message);
+        MessageDTO messageDTO = new MessageDTO(message);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(messageDTO);
     }
 
-    @PutMapping("/activation_account")
+    @PutMapping("/activation-account")
     @ApiOperation(value = "Update token after activation successfully account")
     public ResponseEntity<MessageDTO> activationAccount(@RequestParam("token") String token) {
         log.info("Enter into activationAccount method");
         User user = userService.findByToken(token);
-        user.setToken("");
+        user.setToken(null);
         userService.update(user);
-        MessageDTO messageDTO = new MessageDTO();
-        messageDTO.setMessage("You successfully activate Your account.");
 
-        return ResponseEntity.status(HttpStatus.OK).body(messageDTO);
+        return ResponseEntity.status(HttpStatus.OK).body(new MessageDTO("You successfully activated Your account."));
     }
 
-    @PutMapping("/reset_password")
+    @PutMapping("/reset-password")
     @ApiOperation(value = "Reset password by email")
     public ResponseEntity<MessageDTO> resetPassword(@RequestParam("email") String email) {
         log.info("Enter into resetPassword method  with email:{}", email);
         userService.resetPassword(email);
-        MessageDTO messageDTO = new MessageDTO();
-        messageDTO.setMessage("Check Your email, please. A new password has been sent to Your email.");
 
-        return ResponseEntity.ok().body(messageDTO);
+        return ResponseEntity.ok().body(new MessageDTO("Check Your email, please. A new password has been sent to Your email."));
     }
 
-    @PostMapping("/sign_out")
+    @PostMapping("/sign-out")
     @ApiOperation(value = "Making the logout")
     public void signOut(HttpServletRequest rq, HttpServletResponse rs) {
         log.info("Enter into signOut method");
         SecurityContextLogoutHandler securityContextLogoutHandler = new SecurityContextLogoutHandler();
         securityContextLogoutHandler.logout(rq, rs, null);
+    }
+
+    @GetMapping("/social/login-success")
+    @ApiOperation(value = "Get token after successful sign in via social network")
+    public ResponseEntity<MessageDTO> getLoginInfo(@RequestParam("token") String token) {
+        log.info("Enter into getLoginInfo method");
+        return ResponseEntity.ok().body(new MessageDTO(token));
+    }
+
+    @GetMapping("/google")
+    public ResponseEntity getGoogleSignIn(HttpServletResponse response) throws IOException {
+        response.sendRedirect(url + "oauth_login/google");
+        return ResponseEntity.ok().body("Ok");
     }
 }

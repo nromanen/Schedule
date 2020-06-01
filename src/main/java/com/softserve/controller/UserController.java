@@ -1,32 +1,44 @@
 package com.softserve.controller;
 
-import com.softserve.dto.UserCreateDTO;
-import com.softserve.dto.UserDTO;
+import com.softserve.dto.*;
+import com.softserve.entity.CurrentUser;
+import com.softserve.entity.Teacher;
 import com.softserve.entity.User;
+import com.softserve.entity.enums.Role;
+import com.softserve.security.jwt.JwtUser;
+import com.softserve.service.TeacherService;
 import com.softserve.service.UserService;
-import com.softserve.service.mapper.UserMapper;
+import com.softserve.mapper.UserMapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
+
+import static org.apache.commons.lang3.StringUtils.isNoneBlank;
 
 @Slf4j
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("users")
-@Api(tags = "User")
+@Api(tags = "User API")
 public class UserController {
 
     private final UserService userService;
     private final UserMapper userMapper;
+    private final TeacherService teacherService;
+    private final PasswordEncoder passwordEncoder;
 
     @GetMapping
     @ApiOperation(value = "Get the list of all users")
+    @PreAuthorize("hasRole('MANAGER')")
     public ResponseEntity<List<UserDTO>> getAll() {
         log.info("Enter into getAll method");
         return ResponseEntity.status(HttpStatus.OK).body(userMapper.toUserDTOs(userService.getAll()));
@@ -35,6 +47,7 @@ public class UserController {
 
     @GetMapping("/{id}")
     @ApiOperation(value = "Get user by id")
+    @PreAuthorize("hasRole('MANAGER')")
     public ResponseEntity<UserDTO> get(@PathVariable("id") Long id) {
         log.info("Enter into get method with id: {} ", id);
         User user = userService.getById(id);
@@ -43,6 +56,7 @@ public class UserController {
 
     @PostMapping
     @ApiOperation(value = "Create new user")
+    @PreAuthorize("hasRole('MANAGER')")
     public ResponseEntity<UserCreateDTO> save(@RequestBody UserCreateDTO createUserDTO) {
         log.info("Enter into save method with createUserDTO: {}", createUserDTO);
         User user = userService.save(userMapper.toUser(createUserDTO));
@@ -52,20 +66,79 @@ public class UserController {
 
     @PutMapping
     @ApiOperation(value = "Update existing user by id")
+    @PreAuthorize("hasRole('MANAGER')")
     public ResponseEntity<UserCreateDTO> update(@RequestBody UserCreateDTO userDTO) {
         log.info("Enter into update method with userDTO: {}", userDTO);
         User updatedUser = userMapper.toUser(userDTO);
+        User user = userService.getById(updatedUser.getId());
+        updatedUser.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
+        updatedUser.setRole(user.getRole());
+        updatedUser.setToken(user.getToken());
         userService.update(updatedUser);
         return ResponseEntity.status(HttpStatus.OK).body(userMapper.toUserCreateDTO(updatedUser));
     }
 
     @DeleteMapping("/{id}")
     @ApiOperation(value = "Delete user by id")
+    @PreAuthorize("hasRole('MANAGER')")
     public ResponseEntity<HttpStatus> delete(@PathVariable("id") Long id) {
-
         log.info("Enter into delete method with group id: {}", id);
         User user = userService.getById(id);
+        if (user.getRole() == Role.ROLE_TEACHER) {
+            Teacher teacher = teacherService.findByUserId(user.getId().intValue());
+            teacher.setUserId(null);
+            teacherService.update(teacher);
+        }
         userService.delete(user);
         return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @GetMapping("/with-role-user")
+    @ApiOperation(value = "Get the list of all users, that have role User")
+    @PreAuthorize("hasRole('MANAGER')")
+    public ResponseEntity<List<UserDTO>> getAllUsersWithRoleUser() {
+        log.info("Enter into getAllUsersWithRoleUser method");
+        return ResponseEntity.status(HttpStatus.OK).body(userMapper.toUserDTOs(userService.getAllUsersWithRoleUser()));
+    }
+
+    @GetMapping("/my-data")
+    @ApiOperation(value = "Get current user data")
+    public ResponseEntity getCurrentUser(@CurrentUser JwtUser jwtUser) {
+        User user = userService.getById(jwtUser.getId());
+        if (user.getRole() == Role.ROLE_TEACHER) {
+            Teacher teacher = teacherService.findByUserId(user.getId().intValue());
+            return ResponseEntity.ok().body(new UserDataDTO(teacher.getName(), teacher.getSurname(), teacher.getPatronymic(), teacher.getPosition()));
+        }
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/change-data")
+    @ApiOperation(value = "Change data for current user")
+    public ResponseEntity<MessageDTO> changeDataForCurrentUser(@CurrentUser JwtUser jwtUser, @RequestBody UserDataForChangeDTO data) {
+        User user = userService.getById(jwtUser.getId());
+
+        Teacher teacher = null;
+        if (user.getRole() == Role.ROLE_TEACHER) {
+            teacher = teacherService.findByUserId(user.getId().intValue());
+            teacher.setName(data.getTeacherName());
+            teacher.setSurname(data.getTeacherSurname());
+            teacher.setPosition(data.getTeacherPosition());
+            teacher.setPatronymic(data.getTeacherPatronymic());
+        }
+
+        Optional<String> password = isNoneBlank(data.getCurrentPassword()) && isNoneBlank(data.getNewPassword()) ?
+                Optional.ofNullable(userService.changePasswordForCurrentUser(user, data.getCurrentPassword(), data.getNewPassword())) :
+                Optional.empty();
+
+        if (teacher != null) {
+            teacherService.update(teacher);
+        }
+
+        if (password.isPresent()) {
+            user.setPassword(password.get());
+            userService.update(user);
+        }
+
+        return ResponseEntity.ok().body(new MessageDTO(jwtUser.getUsername() + " data successfully changed."));
     }
 }

@@ -5,50 +5,40 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.softserve.entity.enums.WishStatuses;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
+
+@Setter
+@Getter
+@ToString
+@EqualsAndHashCode
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
-        "class_id",
+        "class_name",
         "status"
 })
 public class Wish implements Serializable
 {
 
-    @JsonProperty("class_id")
-    private long classId;
+    @JsonProperty("class_name")
+    private String className;
 
     @JsonProperty("status")
-    private String status;
+    private WishStatuses status;
 
     @JsonIgnore
-    private final static long serialVersionUID = -1925390674796259490L;
+    private static final long serialVersionUID = -1925390674796259490L;
 
-    @JsonProperty("class_id")
-    public long getClassId() {
-        return classId;
-    }
-
-    @JsonProperty("class_id")
-    public void setClassId(long classId) {
-        this.classId = classId;
-    }
-
-    public Wish withClassId(long classId) {
-        this.classId = classId;
+    public Wish withClassName(String className) {
+        this.className = className;
         return this;
     }
 
-    @JsonProperty("status")
-    public String getStatus() {
-        return status;
-    }
-
-    @JsonProperty("status")
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public Wish withStatus(String status) {
+    public Wish withStatus(WishStatuses status) {
         this.status = status;
         return this;
     }

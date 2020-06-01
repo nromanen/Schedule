@@ -1,6 +1,7 @@
 package com.softserve.service.impl;
 
 import com.softserve.entity.Group;
+import com.softserve.entity.Semester;
 import com.softserve.entity.Subject;
 import com.softserve.exception.EntityNotFoundException;
 import com.softserve.exception.FieldAlreadyExistsException;
@@ -72,7 +73,7 @@ public class SubjectServiceImpl implements SubjectService {
     public Subject update(Subject object) {
         log.info("In update(entity = [{}]", object);
         if (isExistsWithId(object.getId())) {
-            if (isSubjectExistsWithName(object.getName())) {
+            if (isSubjectExistsWithNameAndIgnoreWithId(object.getId(), object.getName())) {
                 log.error("Subject with name [{}] already exists", object.getName());
                 throw new FieldAlreadyExistsException(Subject.class, "name", object.getName());
             }
@@ -96,13 +97,25 @@ public class SubjectServiceImpl implements SubjectService {
 
     /**
      * Method finds if Subject with name already exists
-     * @param name subject id
+     * @param name subject name
      * @return true if Subject with such name already exist
      */
     @Override
     public boolean isSubjectExistsWithName(String name) {
         log.info("In isSubjectExistsWithName(name = [{}])",  name);
         return subjectRepository.countSubjectsWithName(name) != 0;
+    }
+
+    /**
+     * Method finds if Subject with name already exists
+     * @param id subject id
+     * @param name subject name
+     * @return true if Subject with such name already exist
+     */
+    @Override
+    public boolean isSubjectExistsWithNameAndIgnoreWithId(Long id, String name) {
+        log.info("In isSubjectExistsWithNameAndIgnoreWithId(id = [{}], name = [{}])", id, name);
+        return subjectRepository.countSubjectsWithNameAndIgnoreWithId(id, name) != 0;
     }
 
     /**
@@ -115,4 +128,16 @@ public class SubjectServiceImpl implements SubjectService {
         log.info("In isExistsWithId(id = [{}])",  id);
         return subjectRepository.countBySubjectId(id)!=0;
     }
+    /**
+     * The method used for getting all disabled subjects
+     *
+     * @return list of disabled subjects
+     */
+    @Override
+    public List<Subject> getDisabled() {
+        log.info("Enter into getAll of getDisabled");
+        return subjectRepository.getDisabled();
+    }
+
+
 }

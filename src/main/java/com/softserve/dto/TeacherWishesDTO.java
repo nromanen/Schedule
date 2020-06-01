@@ -1,6 +1,6 @@
 package com.softserve.dto;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import com.softserve.entity.Wishes;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -8,5 +8,5 @@ import lombok.Setter;
 @Getter
 public class TeacherWishesDTO {
     private Long id;
-    private JsonNode wishList;
+    private Wishes[] teacherWishesList;
 }

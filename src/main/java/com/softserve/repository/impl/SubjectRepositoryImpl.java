@@ -3,6 +3,8 @@ package com.softserve.repository.impl;
 import com.softserve.entity.Subject;
 import com.softserve.repository.SubjectRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.Filter;
+import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -11,6 +13,12 @@ import java.util.List;
 @Slf4j
 public class SubjectRepositoryImpl extends BasicRepositoryImpl<Subject, Long> implements SubjectRepository {
 
+    private Session getSession(){
+        Session session = sessionFactory.getCurrentSession();
+        Filter filter = session.enableFilter("subjectDisableFilter");
+        filter.setParameter("disable", false);
+        return session;
+    }
     /**
      * Method gets information about all subjects from DB
      *
@@ -19,8 +27,8 @@ public class SubjectRepositoryImpl extends BasicRepositoryImpl<Subject, Long> im
     @Override
     public List<Subject> getAll() {
         log.info("In getAll()");
-        return sessionFactory.getCurrentSession()
-                .createQuery("from Subject ORDER BY name ASC")
+        Session session = getSession();
+        return session.createQuery("from Subject ORDER BY name ASC")
                 .getResultList();
     }
 
@@ -36,6 +44,21 @@ public class SubjectRepositoryImpl extends BasicRepositoryImpl<Subject, Long> im
         return (Long) sessionFactory.getCurrentSession().createQuery
                 ("SELECT count (*) FROM Subject s WHERE s.name = :name")
                 .setParameter("name", name).getSingleResult();
+    }
+
+    /**
+     * The method used for getting number of subjects with name from database
+     *
+     * @param id Long id used to ignore Subject
+     * @param name String name used to find Subject
+     * @return Long number of records with name
+     */
+    @Override
+    public Long countSubjectsWithNameAndIgnoreWithId(Long id, String name) {
+        log.info("In countSubjectsWithName(name = [{}])", name);
+        return (Long) sessionFactory.getCurrentSession().createQuery
+                ("SELECT count (*) FROM Subject s WHERE s.name = :name and id!=:id")
+                .setParameter("name", name).setParameter("id", id).getSingleResult();
     }
 
     /**

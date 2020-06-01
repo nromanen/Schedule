@@ -1,31 +1,24 @@
 package com.softserve.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.core.env.Environment;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 @PropertySource("classpath:cors.properties")
+@Order(Ordered.HIGHEST_PRECEDENCE)
 public class CorsConfiguration {
 
-    private final Environment environment;
-
-    @Autowired
-    public CorsConfiguration(Environment environment) {
-        this.environment = environment;
-    }
-
-    @Bean
+   @Bean
     public WebMvcConfigurer corsConfigurer() {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**").allowedOrigins(environment.getProperty("cors.localurl"),
-                        environment.getProperty("cors.herokuUrl")).allowedMethods("GET","POST","PUT", "DELETE");
+                registry.addMapping("/**").allowedOrigins("*").allowedMethods("GET","POST","PUT", "DELETE");
             }
         };
     }

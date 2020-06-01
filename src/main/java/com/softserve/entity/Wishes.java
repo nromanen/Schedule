@@ -1,68 +1,50 @@
 package com.softserve.entity;
 
 import java.io.Serializable;
+import java.time.DayOfWeek;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.softserve.entity.enums.EvenOdd;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
+@Setter
+@Getter
+@ToString
+@EqualsAndHashCode
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
         "day_of_week",
         "evenOdd",
-        "wishes"
+        "class_status"
 })
 public class Wishes implements Serializable
 {
 
     @JsonProperty("day_of_week")
-    private String dayOfWeek;
+    private DayOfWeek dayOfWeek;
 
     @JsonProperty("evenOdd")
-    private String evenOdd;
+    private EvenOdd evenOdd;
 
-    @JsonProperty("wishes")
+    @JsonProperty("class_status")
     private List<Wish> wishes = new ArrayList<Wish>();
 
-    @JsonProperty("day_of_week")
-    public String getDayOfWeek() {
-        return dayOfWeek;
-    }
-
-    @JsonProperty("day_of_week")
-    public void setDayOfWeek(String dayOfWeek) {
-        this.dayOfWeek = dayOfWeek;
-    }
-
-    public Wishes withDayOfWeek(String dayOfWeek) {
+    public Wishes withDayOfWeek(DayOfWeek dayOfWeek) {
         this.dayOfWeek = dayOfWeek;
         return this;
     }
 
-    @JsonProperty("evenOdd")
-    public String getEvenOdd() {
-        return evenOdd;
-    }
-
-    @JsonProperty("evenOdd")
-    public void setEvenOdd(String evenOdd) {
-        this.evenOdd = evenOdd;
-    }
-
-    public Wishes withEvenOdd(String evenOdd) {
+    public Wishes withEvenOdd(EvenOdd evenOdd) {
         this.evenOdd = evenOdd;
         return this;
-    }
-
-    @JsonProperty("wishes")
-    public List<Wish> getWishes() {
-        return wishes;
-    }
-
-    @JsonProperty("wishes")
-    public void setWishes(List<Wish> wishes) {
-        this.wishes = wishes;
     }
 
     public Wishes withWishes(List<Wish> wishes) {

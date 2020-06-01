@@ -1,12 +1,11 @@
 package com.softserve.controller;
 
-import com.softserve.dto.AddRoomDTO;
 import com.softserve.dto.MessageDTO;
 import com.softserve.dto.RoomDTO;
 import com.softserve.entity.Room;
 import com.softserve.entity.enums.EvenOdd;
 import com.softserve.service.RoomService;
-import com.softserve.service.mapper.RoomMapper;
+import com.softserve.mapper.RoomMapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.DayOfWeek;
 import java.util.List;
 
 @RestController
@@ -42,15 +42,15 @@ public class RoomController {
     @GetMapping("/free")
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "Get the list of all free rooms by specific day and period")
-    public ResponseEntity<List<RoomDTO>> freeRoomList(@RequestParam(value = "id") Long id,
-                                                      @RequestParam(value = "dayOfWeek") String dayOfWeek,
-                                                      @RequestParam(value = "evenOdd", defaultValue = "WEEKLY")EvenOdd evenOdd
+    public ResponseEntity<List<RoomDTO>> freeRoomList(@RequestParam(value = "semesterId") Long semesterId,
+                                                      @RequestParam(value = "classId") Long classId,
+                                                      @RequestParam(value = "dayOfWeek") DayOfWeek dayOfWeek,
+                                                      @RequestParam(value = "evenOdd")EvenOdd evenOdd
                                                       ) {
-        log.info("Enter into freeRoomList of RoomController with id {}, dayOfWeek {} and evenOdd {} ", id, dayOfWeek, evenOdd);
-        List<Room> rooms = roomService.freeRoomBySpecificPeriod(id, dayOfWeek, evenOdd);
+        log.info("In freeRoomList (semesterId = [{}], classId = [{}], dayOfWeek = [{}], evenOdd = [{}])", semesterId, classId, dayOfWeek, evenOdd);
+        List<Room> rooms = roomService.getAvailableRoomsForSchedule(semesterId, dayOfWeek, evenOdd, classId);
         return ResponseEntity.ok().body(roomMapper.convertToDtoList(rooms));
     }
-
 
     @GetMapping("/{id}")
     @ApiOperation(value = "Get room info by id")
@@ -63,9 +63,9 @@ public class RoomController {
 
     @PostMapping
     @ApiOperation(value = "Create new room")
-    public ResponseEntity<RoomDTO> save(@RequestBody AddRoomDTO addRoomDTO) {
-        log.info("Enter into save of RoomController with addRoomDTO: {}", addRoomDTO);
-        Room newRoom = roomService.save(roomMapper.convertToEntity(addRoomDTO));
+    public ResponseEntity<RoomDTO> save(@RequestBody RoomDTO roomDTO) {
+        log.info("Enter into save of RoomController with roomDTO: {}", roomDTO);
+        Room newRoom = roomService.save(roomMapper.convertToEntity(roomDTO));
         return ResponseEntity.status(HttpStatus.CREATED).body(roomMapper.convertToDto(newRoom));
     }
 
@@ -85,10 +85,11 @@ public class RoomController {
         return ResponseEntity.ok().body(new MessageDTO("Room has been deleted successfully."));
     }
 
-    @GetMapping("/types")
-    @ApiOperation(value = "Get all room types")
-    public ResponseEntity<List<String>> getAllUniqueRoomTypes(){
-        return ResponseEntity.ok().body(roomService.allUniqueRoomTypes());
+    @GetMapping("/disabled")
+    @ApiOperation(value = "Get the list of disabled rooms")
+    public ResponseEntity<List<RoomDTO>> getDisabled() {
+        log.info("Enter into list of RoomController");
+        return ResponseEntity.ok().body(roomMapper.convertToDtoList(roomService.getDisabled()));
     }
 
 }

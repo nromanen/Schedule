@@ -9,4 +9,6 @@ public class TeacherDTO {
     private String surname;
     private String patronymic;
     private String position;
+    private boolean disable;
+
 }

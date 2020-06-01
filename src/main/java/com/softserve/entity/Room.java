@@ -1,20 +1,30 @@
 package com.softserve.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.hibernate.annotations.*;
 
 import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 
 @NoArgsConstructor
-@Data
+@Setter
+@Getter
 @Entity
 @Table(name = "rooms")
-@AllArgsConstructor
+
+@FilterDef(name="roomDisableFilter", parameters={
+        @ParamDef( name="disable", type="boolean" ),
+})
+
+@Filters( {
+        @Filter(name="roomDisableFilter", condition="disable = :disable"),
+} )
+
 public class Room implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,10 +37,11 @@ public class Room implements Serializable {
     @Column(length = 35, nullable = false)
     private String name;
 
-    @NotEmpty(message = "Type cannot be empty")
-    @Size(min = 2, max = 100, message = "Type must be between 2 and 100 characters long")
-    @Column(length = 100, nullable = false)
-    private String type;
+    @ManyToOne(targetEntity = RoomType.class)
+    @JoinColumn(name = "room_type_id")
+    private RoomType type;
 
+    @Column(name = "disable",  columnDefinition = "boolean default 'false'")
+    private boolean disable = false;
 
 }

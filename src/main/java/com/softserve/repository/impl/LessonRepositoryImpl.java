@@ -1,15 +1,38 @@
 package com.softserve.repository.impl;
-
 import com.softserve.entity.Lesson;
 import com.softserve.repository.LessonRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.*;
 import java.util.List;
 
 @Repository
 @Slf4j
 public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> implements LessonRepository {
+
+
+    /**
+     * Method gets information about all lessons from DB
+     *
+     * @return List of all lessons
+     */
+    @Override
+    public List<Lesson> getAll() {
+        log.info("In getAll()");
+        CriteriaBuilder cb = sessionFactory.getCurrentSession().getCriteriaBuilder();
+        CriteriaQuery<Lesson> cq = cb.createQuery(Lesson.class);
+        Root<Lesson> from = cq.from(Lesson.class);
+        cq.where(cb.equal(from.get("teacher").get("disable"), false),
+                cb.equal(from.get("subject").get("disable"), false),
+                cb.equal(from.get("group").get("disable"), false));
+
+        TypedQuery<Lesson> tq = sessionFactory.getCurrentSession().createQuery(cq);
+        return tq.getResultList();
+    }
+
 
     /**
      * Method gets information about all lessons for particular group from DB
@@ -20,10 +43,20 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
     @Override
     public List<Lesson> getAllForGroup(Long groupId) {
         log.info("In getAllForGroup(groupId = [{}])", groupId);
-        return sessionFactory.getCurrentSession().createQuery
-                ("FROM Lesson l WHERE l.group.id = :groupId")
-                .setParameter("groupId", groupId).getResultList();
+        CriteriaBuilder cb = sessionFactory.getCurrentSession().getCriteriaBuilder();
+        CriteriaQuery<Lesson> cq = cb.createQuery(Lesson.class);
+        Root<Lesson> from = cq.from(Lesson.class);
+
+        cq.where(cb.equal(from.get("teacher").get("disable"), false),
+                cb.equal(from.get("subject").get("disable"), false),
+
+                cb.equal(from.get("group").get("disable"), false),
+                cb.equal(from.get("group").get("id"), groupId));
+        TypedQuery<Lesson> tq = sessionFactory.getCurrentSession().createQuery(cq);
+        return  tq.getResultList();
     }
+
+
 
     /**
      * Method searches duplicate of lesson in the DB
@@ -34,17 +67,24 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
     @Override
     public Long countLessonDuplicates(Lesson lesson) {
         log.info("In countLessonDuplicates(lesson = [{}])", lesson);
-        return (Long) sessionFactory.getCurrentSession().createQuery("" +
-                "select count(*) from Lesson l " +
-                "where l.teacher.id = :teacherId " +
-                "and l.subject.id = :subjectId " +
-                "and l.group.id = :groupId " +
-                "and l.lessonType = :lessonType")
-                .setParameter("teacherId", lesson.getTeacher().getId())
-                .setParameter("subjectId", lesson.getSubject().getId())
-                .setParameter("groupId", lesson.getSubject().getId())
-                .setParameter("lessonType", lesson.getLessonType())
-                .getSingleResult();
+
+        CriteriaBuilder cb = sessionFactory.getCurrentSession().getCriteriaBuilder();
+        CriteriaQuery<Long> cq = cb.createQuery(Long.class);
+        Root<Lesson> from = cq.from(Lesson.class);
+
+        cq.where(cb.equal(from.get("teacher").get("disable"), false),
+                cb.equal(from.get("teacher").get("id"), lesson.getTeacher().getId()),
+
+                cb.equal(from.get("subject").get("disable"), false),
+                cb.equal(from.get("subject").get("id"), lesson.getSubject().getId()),
+
+                cb.equal(from.get("group").get("disable"), false),
+                cb.equal(from.get("group").get("id"), lesson.getGroup().getId()),
+
+                cb.equal(from.get("lessonType"),lesson.getLessonType()));
+        cq.select(cb.count(from));
+        Query<Long> query = sessionFactory.getCurrentSession().createQuery(cq);
+        return query.getSingleResult();
     }
 
     // Checking if lesson is used in Schedule table

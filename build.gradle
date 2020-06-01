@@ -106,7 +106,7 @@ dependencies {
     testCompile group: 'org.springframework', name: 'spring-test', version: '5.2.4.RELEASE'
     testCompile group: 'org.mockito', name: 'mockito-core', version: '3.3.3'
     testCompile 'com.jayway.jsonpath:json-path:2.2.0'
-    testCompile group: 'com.h2database', name: 'h2', version: '1.4.200'
+    testCompile group: 'org.springframework.security', name: 'spring-security-test', version: '5.3.1.RELEASE'
     testCompile group: 'org.hamcrest', name: 'hamcrest', version: '2.2'
 
     //jwt
@@ -115,7 +115,7 @@ dependencies {
     //jackson-datatype-jsr310
     compile group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: '2.10.3'
 
-    compile(group: "com.github.java-json-tools", name: "json-schema-validator", version: "2.2.12");
+    compile(group: "com.github.java-json-tools", name: "json-schema-validator", version: "2.2.12")
     providedCompile group: 'com.github.jsimone', name: 'webapp-runner', version: '8.5.11.3'
 
     //for mail
@@ -129,5 +129,21 @@ dependencies {
 
     //for swagger
     compile group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
-}
 
+    //itextpdf
+    compile group: 'com.itextpdf', name: 'itextpdf', version: '5.5.13.1'
+
+    //for parsing localdate
+    compile("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.9.4")
+
+    /* SOCIAL */
+    compile group: 'org.springframework.security.oauth', name: 'spring-security-oauth2', version: '2.3.4.RELEASE'
+    compile group: 'org.springframework.security', name: 'spring-security-oauth2-client', version: '5.2.1.RELEASE'
+    compile group: 'org.springframework.security', name: 'spring-security-oauth2-jose', version: '5.2.1.RELEASE'
+    providedCompile group: 'org.springframework.security', name: 'spring-security-jwt', version: '1.1.0.RELEASE'
+    compile "org.springframework.security:spring-security-oauth2-client"
+
+    compile 'javax.servlet:jstl:1.2'
+
+    compile group: 'org.springframework.data', name: 'spring-data-mongodb', version: '2.2.4.RELEASE'
+}

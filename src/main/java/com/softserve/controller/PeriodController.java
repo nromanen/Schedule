@@ -6,7 +6,7 @@ import com.softserve.dto.MessageDTO;
 import com.softserve.dto.PeriodDTO;
 import com.softserve.entity.Period;
 import com.softserve.service.PeriodService;
-import com.softserve.service.mapper.PeriodMapper;
+import com.softserve.mapper.PeriodMapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +19,6 @@ import java.util.List;
 
 @RestController
 @Api(tags = "Class API")
-@RequestMapping("/classes")
 @Slf4j
 public class PeriodController {
 
@@ -33,14 +32,14 @@ public class PeriodController {
         this.periodMapper = periodMapper;
     }
 
-    @GetMapping
+    @GetMapping(path = {"/classes", "/public/classes"})
     @ApiOperation(value = "Get the list of all classes")
     public ResponseEntity<List<PeriodDTO>> list() {
         log.info("Enter into list of PeriodController");
         return ResponseEntity.ok().body(periodMapper.convertToDtoList(periodService.getAll()));
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/classes/{id}")
     @ApiOperation(value = "Get class info by id")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<PeriodDTO> get(@PathVariable("id") long id) {
@@ -49,14 +48,14 @@ public class PeriodController {
         return ResponseEntity.ok().body(periodMapper.convertToDto(period));
     }
 
-    @PostMapping
+    @PostMapping("/classes")
     @ApiOperation(value = "Create new class")
     public ResponseEntity<PeriodDTO> save(@RequestBody AddPeriodDTO addPeriodDTO) {
         log.info("Enter into save of PeriodController with addPeriodDTO: {}", addPeriodDTO);
         Period newPeriod = periodService.save(periodMapper.convertToEntity(addPeriodDTO));
         return ResponseEntity.status(HttpStatus.CREATED).body(periodMapper.convertToDto(newPeriod));
     }
-    @PostMapping("/all")
+    @PostMapping("/classes/all")
     @ApiOperation(value = "Create a list of classes")
     public ResponseEntity<MessageDTO> save(@RequestBody List<AddPeriodDTO> periods) {
         log.info("Enter into save of PeriodController with List of addPeriodDTO: {}", periods);
@@ -64,7 +63,7 @@ public class PeriodController {
         return ResponseEntity.status(HttpStatus.CREATED).body(new MessageDTO("New periods have been saved"));
     }
 
-    @PutMapping
+    @PutMapping("/classes")
     @ApiOperation(value = "Update existing class")
     public ResponseEntity<PeriodDTO> update(@RequestBody PeriodDTO periodDTO) {
         log.info("Enter into update of PeriodController with periodDTO: {}", periodDTO);
@@ -72,7 +71,7 @@ public class PeriodController {
         return ResponseEntity.ok().body(periodMapper.convertToDto(newPeriod));
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/classes/{id}")
     @ApiOperation(value = "Delete class by id")
     public ResponseEntity<MessageDTO> delete(@PathVariable("id") long id){
         log.info("Enter into delete of PeriodController with id: {}", id);

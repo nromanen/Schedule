@@ -1,0 +1,17 @@
+@import '../../App';
+
+.search-group {
+  height: 85px;
+
+  @media (max-width: 500px) { 
+    width: 85% !important;
+}
+
+}
+
+.form-field {
+  @media (max-width: 800px) { 
+    max-width: 100% !important;
+}
+}
+

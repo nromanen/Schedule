@@ -55,7 +55,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
      * object already exists in an another class.
     */
     @ExceptionHandler({IncorrectWishException.class, IncorrectTimeException.class, IncorrectPasswordException.class,
-            ScheduleConflictException.class, PeriodConflictException.class, EntityAlreadyExistsException.class})
+            ScheduleConflictException.class, PeriodConflictException.class, EntityAlreadyExistsException.class,
+            IncorrectEmailException.class})
     protected ResponseEntity<Object> handleIncorrectFieldExceptions(
             RuntimeException ex) {
         ApiError apiError = new ApiError(BAD_REQUEST);
@@ -237,6 +238,16 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleAuthenticationException(AuthenticationException ex) {
         ApiError apiError = new ApiError(UNAUTHORIZED);
         apiError.setMessage("Invalid password or email");
+        apiError.setDebugMessage(ex.getMessage());
+        log.error(ex.getMessage());
+        return buildResponseEntity(apiError);
+    }
+
+    //Handles FileDownloadException. Triggered when downloading of file failed.
+    @ExceptionHandler(FileDownloadException.class)
+    protected ResponseEntity<Object> handleFileDownloadException(FileDownloadException ex) {
+        ApiError apiError = new ApiError(INTERNAL_SERVER_ERROR);
+        apiError.setMessage(ex.getMessage());
         apiError.setDebugMessage(ex.getMessage());
         log.error(ex.getMessage());
         return buildResponseEntity(apiError);

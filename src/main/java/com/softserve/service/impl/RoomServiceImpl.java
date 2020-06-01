@@ -1,17 +1,19 @@
 package com.softserve.service.impl;
-import com.softserve.dto.RoomForScheduleDTO;
+import com.softserve.dto.RoomForScheduleInfoDTO;
 import com.softserve.entity.Room;
 import com.softserve.entity.enums.EvenOdd;
+import com.softserve.exception.EntityAlreadyExistsException;
 import com.softserve.exception.EntityNotFoundException;
 import com.softserve.repository.RoomRepository;
 import com.softserve.service.RoomService;
-import com.softserve.service.mapper.RoomForScheduleMapper;
+import com.softserve.mapper.RoomForScheduleInfoMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.DayOfWeek;
+import java.util.ArrayList;
 import java.util.List;
 
 @Transactional
@@ -20,12 +22,12 @@ import java.util.List;
 public class RoomServiceImpl implements RoomService {
 
     private final RoomRepository roomRepository;
-    private final RoomForScheduleMapper roomForScheduleMapper;
+    private final RoomForScheduleInfoMapper roomForScheduleInfoMapper;
 
     @Autowired
-    public RoomServiceImpl(RoomRepository roomRepository, RoomForScheduleMapper roomForScheduleMapper) {
+    public RoomServiceImpl(RoomRepository roomRepository, RoomForScheduleInfoMapper roomForScheduleInfoMapper) {
         this.roomRepository = roomRepository;
-        this.roomForScheduleMapper = roomForScheduleMapper;
+        this.roomForScheduleInfoMapper = roomForScheduleInfoMapper;
     }
 
     /**
@@ -54,6 +56,18 @@ public class RoomServiceImpl implements RoomService {
         return roomRepository.getAll();
     }
 
+
+    /**
+     * The method used for getting all rooms
+     *
+     * @return list of rooms
+     */
+    @Override
+    public List<Room> getDisabled() {
+        log.info("Enter into getAll of getDisabled");
+        return roomRepository.getDisabled();
+    }
+
     /**
      * The method used for saving room in database
      *
@@ -61,10 +75,14 @@ public class RoomServiceImpl implements RoomService {
      * @return save room
      */
     @Override
-    public Room save(Room object)
-    {
+    public Room save(Room object) {
         log.info("Enter into save of RoomServiceImpl with entity:{}", object );
-        return roomRepository.save(object);
+        if (isRoomExists(object)){
+            throw new EntityAlreadyExistsException("Room with this parameters already exists");
+        }
+        else {
+            return roomRepository.save(object);
+        }
     }
 
     /**
@@ -76,7 +94,12 @@ public class RoomServiceImpl implements RoomService {
     @Override
     public Room update(Room object) {
         log.info("Enter into update of RoomServiceImpl with entity:{}", object);
-        return roomRepository.update(object);
+        if (isRoomExists(object)){
+            throw new EntityAlreadyExistsException("Room with this parameters already exists");
+        }
+        else {
+            return roomRepository.update(object);
+        }
     }
 
     /**
@@ -100,15 +123,10 @@ public class RoomServiceImpl implements RoomService {
      * @return list of rooms
      */
     @Override
-    public List<Room> freeRoomBySpecificPeriod(Long idOfPeriod, String dayOfWeek, EvenOdd evenOdd) {
+    public List<Room> freeRoomBySpecificPeriod(Long idOfPeriod, DayOfWeek dayOfWeek, EvenOdd evenOdd) {
         log.info("Enter into freeRoomBySpecificPeriod of RoomServiceImpl with id {}, dayOfWeek {} and evenOdd {} ",
                 idOfPeriod, dayOfWeek, evenOdd);
         return roomRepository.freeRoomBySpecificPeriod(idOfPeriod, dayOfWeek, evenOdd);
-    }
-
-    @Override
-    public List<String> allUniqueRoomTypes() {
-        return roomRepository.allUniqueRoomTypes();
     }
 
     @Override
@@ -122,11 +140,15 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
-    public List<RoomForScheduleDTO> getAllRoomsForCreatingSchedule(Long semesterId, DayOfWeek dayOfWeek, EvenOdd evenOdd, Long classId) {
-        List<RoomForScheduleDTO> rooms = roomForScheduleMapper.toRoomForScheduleDTOList(getAvailableRoomsForSchedule(semesterId, dayOfWeek, evenOdd, classId));
+    public List<RoomForScheduleInfoDTO> getAllRoomsForCreatingSchedule(Long semesterId, DayOfWeek dayOfWeek, EvenOdd evenOdd, Long classId) {
+        List<RoomForScheduleInfoDTO> rooms = roomForScheduleInfoMapper.toRoomForScheduleDTOList(getAvailableRoomsForSchedule(semesterId, dayOfWeek, evenOdd, classId));
         rooms.forEach(roomForScheduleDTO -> roomForScheduleDTO.setAvailable(true));
-        rooms.addAll(roomForScheduleMapper.toRoomForScheduleDTOList(getNotAvailableRoomsForSchedule(semesterId, dayOfWeek, evenOdd, classId)));
+        rooms.addAll(roomForScheduleInfoMapper.toRoomForScheduleDTOList(getNotAvailableRoomsForSchedule(semesterId, dayOfWeek, evenOdd, classId)));
         return rooms;
     }
 
+    @Override
+    public boolean isRoomExists(Room room) {
+        return roomRepository.countRoomDuplicates(room) != 0;
+    }
 }

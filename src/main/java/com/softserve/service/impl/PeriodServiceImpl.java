@@ -162,9 +162,9 @@ public class PeriodServiceImpl implements PeriodService {
         log.info("Enter into isPeriodsIntersect of PeriodServiceImpl with entities oldPeriod: {}, newPeriod: {}",
                 oldPeriod, newPeriod);
         return newPeriod.getStartTime().
-                before(oldPeriod.getEndTime())
+                isBefore(oldPeriod.getEndTime())
                 && newPeriod.getEndTime().
-                after(oldPeriod.getStartTime())
+                isAfter(oldPeriod.getStartTime())
                 && !newPeriod.equals(oldPeriod);
     }
 
@@ -177,13 +177,18 @@ public class PeriodServiceImpl implements PeriodService {
 
     private boolean isTimeInvalid(Period object) {
         log.info("Enter into isTimeInvalid of PeriodServiceImpl with entity: {}", object);
-        return object.getStartTime().after(object.getEndTime()) ||
+        return object.getStartTime().isAfter(object.getEndTime()) ||
                 object.getStartTime().equals(object.getEndTime());
     }
     // method for checking email in database
     private boolean nameExists(String name) {
         log.info("Enter into nameExists method with name:{}", name);
         return periodRepository.findByName(name).isPresent();
+    }
+
+    @Override
+    public List<Period> getFirstFourPeriods() {
+        return periodRepository.getFistFourPeriods();
     }
 }
 

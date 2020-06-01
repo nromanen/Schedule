@@ -1,0 +1,21 @@
+@import '../../App';
+.semester-card {
+    min-height: 175px;
+    min-width: 170px;
+    margin-bottom: 50px;
+  
+    &__description {
+      text-align: center
+    }
+    &__name {
+      text-align: center
+    }
+  }
+  
+  .wrapper {
+    width: 100%
+  }
+
+  .current {
+    box-shadow: 0 0px 15px 1px $good-color
+  }

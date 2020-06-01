@@ -1,0 +1,5 @@
+export const authTypes = {
+    LOGIN: 'LOGIN',
+    REGISTRATION: 'REGISTRATION',
+    RESET_PASSWORD: 'RESET_PASSWORD'
+};

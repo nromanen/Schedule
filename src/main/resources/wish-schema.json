@@ -13,33 +13,32 @@
         "day_of_week",
         "evenOdd"
       ],
-
       "properties": {
         "day_of_week": {
           "enum": ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"]
         },
         "evenOdd": {
           "enum": ["WEEKLY", "EVEN", "ODD"]
-        },"wishes": {
+        },"class_status": {
           "type": "array",
           "allOf": [{
             "items": {
-              "$ref": "#/definitions/classId"
+              "$ref": "#/definitions/classStatus"
             }
-          }],
-          "uniqueItems": true
+          }]
+
         }
       }
     },
-    "classId": {
+    "classStatus": {
       "type": "object",
       "required": [
-        "class_id",
+        "class_name",
         "status"
       ],
       "properties": {
-        "class_id": {
-          "type": "integer"
+        "class_name": {
+          "type": "string"
         },
         "status": {
           "type": "string"
