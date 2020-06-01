@@ -1275,7 +1275,7 @@ public class ScheduleServiceTest {
         List<ScheduleForRoomDTO> scheduleForRoomDTOS = new ArrayList<>();
         scheduleForRoomDTOS.add(laboratoryDTO);
 
-        when(roomService.getRoomsWithSchedule(semester.getId())).thenReturn(roomList);
+ //       when(roomService.getRoomsWithSchedule(semester.getId())).thenReturn(roomList);
 //        when(scheduleRepository.getDaysWhenRoomHasClassesBySemester(semester.getId(), laboratory.getId())).thenReturn(dayOfWeekList);
         when(scheduleRepository.getPeriodsForRoomBySemesterByDayOfWeek(semester.getId(), laboratory.getId(), DayOfWeek.MONDAY)).thenReturn(periodList);
         when(scheduleRepository.lessonForRoomByDayBySemesterByPeriodByWeek(semester.getId(), laboratory.getId(), firstClasses.getId(), DayOfWeek.MONDAY, EvenOdd.EVEN)).thenReturn(evenLessons);
