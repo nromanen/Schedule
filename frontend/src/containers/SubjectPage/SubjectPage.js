@@ -114,6 +114,9 @@ const SubjectPage = props => {
                     )}
                     {visibleSubjects.map(subject => (
                         <Card key={subject.id} class="subject-card done-card">
+                            <h2 className="subject-card__name">
+                                {subject.name}
+                            </h2>
                             <div className="cards-btns">
                                 {disabled ? (
                                     <IoMdEye
@@ -152,12 +155,9 @@ const SubjectPage = props => {
                                     onClick={() => handleClickOpen(subject.id)}
                                 />
                             </div>
-                            <p className="subject-card__description">
+                            {/* <p className="subject-card__description">
                                 {t('subject_label') + ':'}{' '}
-                            </p>
-                            <h2 className="subject-card__name">
-                                {subject.name}
-                            </h2>
+                            </p> */}
                         </Card>
                     ))}
                 </section>
