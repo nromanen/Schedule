@@ -72,9 +72,7 @@
     "day_free_rooms": "Choose the day",
     "class_free_rooms": "Choose the class number",
 
-
-
-
     "merge_button": "Merge",
-    "max_count_classes_reached": "You reach maximum classes quantity"
+    "max_count_classes_reached": "You reach maximum classes quantity",
+    "login_via_google": "Login via Google"
 }
