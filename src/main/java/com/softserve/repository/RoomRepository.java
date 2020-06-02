@@ -13,5 +13,4 @@ public interface RoomRepository extends BasicRepository<Room, Long>  {
 
     Long countRoomDuplicates(Room room);
     List<Room> getDisabled();
-    List<Room> getRoomsWithSchedule(Long semesterId);
 }

@@ -463,7 +463,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     public List<ScheduleForRoomDTO> getScheduleForRooms(Long semesterId) {
         log.info("Enter into getScheduleForRooms");
         List<ScheduleForRoomDTO> scheduleForGroupDTOList = new ArrayList<>();
-        List<Room> roomForDetails = roomService.getRoomsWithSchedule(semesterId);
+        List<Room> roomForDetails = roomService.getAll();
 
         for (Room room : roomForDetails) {
             ScheduleForRoomDTO scheduleForRoomDTO = new ScheduleForRoomDTO();

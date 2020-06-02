@@ -150,6 +150,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 "/**/*.css",
                 "/**/*.js",
                 "/**/*.json",
+                "/**/*.map",
                 "/assets/**",
                 "/webjars/**");
     }
