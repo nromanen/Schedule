@@ -67,7 +67,7 @@ public class Semester implements Serializable {
     private Set<DayOfWeek> daysOfWeek;
 
     @NotNull(message = "Semester should contain at least one period")
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany
     @JoinTable(name = "semester_period",
             joinColumns = { @JoinColumn(name = "semester_id")},
             inverseJoinColumns = {@JoinColumn(name = "period_id")})

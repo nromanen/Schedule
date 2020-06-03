@@ -505,6 +505,24 @@ public class ScheduleServiceImpl implements ScheduleService {
         return fullScheduleForTeacherByDateRange(dateRangeSchedule, fromDate, toDate);
     }
 
+    /**
+     * Method copyScheduleFromOneToAnotherSemester save schedules in db by copy from one semester to another
+     *
+     * @param schedules  List<Schedule> from one semester
+     * @param toSemester Semester entity for which save schedule
+     * @return list of schedules for toSemester
+     */
+    @Override
+    public List<Schedule> copyScheduleFromOneToAnotherSemester(List<Schedule> schedules, Semester toSemester) {
+        log.info("In method copyScheduleFromOneToAnotherSemester with schedules = {} and toSemester = {}", schedules, toSemester);
+        List<Schedule> toSchedule = new ArrayList<>();
+        for (Schedule schedule : schedules) {
+            schedule.setSemester(toSemester);
+            toSchedule.add(save(schedule));
+        }
+        return toSchedule;
+    }
+
     //check date in semester date range, if yes return - true, else - false
     private boolean isDateInSemesterDateRange(Schedule schedule, LocalDate toDate) {
         DayOfWeek startSemester = schedule.getSemester().getStartDay().getDayOfWeek();

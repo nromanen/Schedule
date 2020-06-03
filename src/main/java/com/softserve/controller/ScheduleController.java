@@ -1,10 +1,7 @@
 package com.softserve.controller;
 
 import com.softserve.dto.*;
-import com.softserve.entity.CurrentUser;
-import com.softserve.entity.Period;
-import com.softserve.entity.Schedule;
-import com.softserve.entity.Teacher;
+import com.softserve.entity.*;
 import com.softserve.entity.enums.EvenOdd;
 import com.softserve.mapper.*;
 import com.softserve.security.jwt.JwtUser;
@@ -146,7 +143,7 @@ public class ScheduleController {
     public ResponseEntity<List<ScheduleDateRangeFullDTO>> getScheduleByDateRangeForCurrentTeacher(@RequestParam String from,
                                                                   @RequestParam String to,
                                                                   @CurrentUser JwtUser jwtUser) {
-        log.info("In, getScheduleByDateRangeForCurrentTeacher with from = {} and to = {}", from, to);
+        log.info("In getScheduleByDateRangeForCurrentTeacher with from = {} and to = {}", from, to);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         DateTimeFormatter currentFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate fromDate = LocalDate.parse(LocalDate.parse(from, formatter).toString(), currentFormatter);
@@ -159,6 +156,19 @@ public class ScheduleController {
         testDTO.setFull(dto);
        // mongoTemplate.insert(testDTO);
         return ResponseEntity.status(HttpStatus.OK).body(dto);
+    }
+
+    @PostMapping("/copy-schedule")
+    @ApiOperation(value = "Copy full schedule from one semester to another semester")
+    @PreAuthorize("hasRole('MANAGER')")
+    public ResponseEntity<List<ScheduleDTO>> copySchedule(@RequestParam Long fromSemesterId,
+                                                          @RequestParam Long toSemesterId) {
+        log.info("In copySchedule with fromSemesterId = {} and toSemesterId = {}", fromSemesterId, toSemesterId);
+        Semester toSemester = semesterService.getById(toSemesterId);
+        List<Schedule> getSchedules = scheduleService.getSchedulesBySemester(fromSemesterId);
+        List<ScheduleDTO> dto = scheduleMapper.scheduleToScheduleDTOs(
+                scheduleService.copyScheduleFromOneToAnotherSemester(getSchedules, toSemester));
+        return ResponseEntity.ok().body(dto);
     }
 
     //convert schedule map to schedule dto

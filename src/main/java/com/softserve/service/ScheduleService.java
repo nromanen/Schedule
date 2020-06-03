@@ -7,6 +7,7 @@ import com.softserve.dto.ScheduleForTeacherDTO;
 import com.softserve.dto.ScheduleFullDTO;
 import com.softserve.entity.Period;
 import com.softserve.entity.Schedule;
+import com.softserve.entity.Semester;
 import com.softserve.entity.enums.EvenOdd;
 
 import java.time.DayOfWeek;
@@ -30,5 +31,7 @@ public interface ScheduleService extends BasicService<Schedule, Long> {
     List<Schedule> getSchedulesBySemester(Long semesterId);
 
     Map<LocalDate, Map<Period, List<Schedule>>> scheduleByDateRangeForTeacher(LocalDate fromDate, LocalDate toDate, Long teacherId);
+
+    List<Schedule> copyScheduleFromOneToAnotherSemester(List<Schedule> schedules, Semester toSemester);
 }
 
