@@ -6,5 +6,6 @@ export const links = {
     ACTIVATION_PAGE: '/activation-page',
     LOGOUT: '/logout',
     WISHES: '/wishes',
-    TEACHER_SCHEDULE: '/teacher-schedule'
+    TEACHER_SCHEDULE: '/teacher-schedule',
+    MY_PROFILE: '/my-profile'
 };
