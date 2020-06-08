@@ -75,5 +75,6 @@
 
     "merge_button": "Merge",
     "max_count_classes_reached": "You reach maximum classes quantity",
-    "change_password_form_title": "Change password"
+    "change_password_form_title": "Change password",
+    "login_via_google": "Login via Google"
 }

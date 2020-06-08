@@ -101,7 +101,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(userMapper.toUserDTOs(userService.getAllUsersWithRoleUser()));
     }
 
-    @GetMapping("/my-data")
+    @GetMapping("/profile")
     @ApiOperation(value = "Get current user data")
     public ResponseEntity getCurrentUser(@CurrentUser JwtUser jwtUser) {
         User user = userService.getById(jwtUser.getId());
@@ -112,7 +112,7 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/change-data")
+    @PutMapping("/change-profile")
     @ApiOperation(value = "Change data for current user")
     public ResponseEntity<MessageDTO> changeDataForCurrentUser(@CurrentUser JwtUser jwtUser, @RequestBody UserDataForChangeDTO data) {
         User user = userService.getById(jwtUser.getId());

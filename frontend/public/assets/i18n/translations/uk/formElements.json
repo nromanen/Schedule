@@ -75,5 +75,6 @@
 
     "merge_button": "З'єднати",
     "max_count_classes_reached": "Ви створили максимальну кількість уроків",
-    "change_password_form_title": "Змінити пароль"
+    "change_password_form_title": "Змінити пароль",
+    "login_via_google": "Увійти із Google"
 }
