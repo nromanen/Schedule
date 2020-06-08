@@ -2,10 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import {
+    FaCaretDown,
     FaHome,
     FaClock,
     FaUser,
-    FaWindowClose,
+    FaSignOutAlt,
     FaRunning,
     FaClipboardList,
     FaDoorOpen
@@ -61,10 +62,12 @@ const StyledMenuItem = withStyles(theme => ({
 
 const Header = props => {
     const [anchorEl, setAnchorEl] = React.useState(null);
-
     const handleClick = event => setAnchorEl(event.currentTarget);
-
     const handleClose = () => setAnchorEl(null);
+
+    const [anchorElUser, setAnchorElUser] = React.useState(null);
+    const handleClickUserMenu = event => setAnchorElUser(event.currentTarget);
+    const handleCloseUserMenu = () => setAnchorElUser(null);
 
     const { t } = useTranslation('common');
 
@@ -83,33 +86,242 @@ const Header = props => {
     const handleCloseWish = value => {
         setOpenWish(false);
     };
+    const getUserMenu = userRole => {
+        let userMenu = null;
+        if (userRole === null || userRole === undefined) {
+            return (
+                <Link to={links.AUTH} className="navLinks">
+                    {t('login_title')}
+                </Link>
+            );
+        }
+        switch (userRole) {
+            case roles.MANAGER:
+                userMenu = (
+                    <div className="user-menu">
+                        <Button
+                            aria-controls="customized-menu"
+                            aria-haspopup="true"
+                            variant="contained"
+                            color="primary"
+                            onClick={handleClickUserMenu}
+                        >
+                            {localStorage.getItem('email')}
+                            <ListItemIcon>
+                                <FaCaretDown fontSize="normall" />
+                            </ListItemIcon>
+                        </Button>
+                        <StyledMenu
+                            id="customized-menu"
+                            anchorEl={anchorElUser}
+                            keepMounted
+                            open={Boolean(anchorElUser)}
+                            onClose={handleCloseUserMenu}
+                        >
+                            <Link
+                                to={links.ADMIN_PAGE}
+                                className="navLinks"
+                                style={{ textDecoration: 'none' }}
+                                onClick={handleCloseUserMenu}
+                            >
+                                <StyledMenuItem>
+                                    <ListItemIcon>
+                                        <FaUser fontSize="normall" />
+                                    </ListItemIcon>
+                                    {t('admin_title')}
+                                </StyledMenuItem>
+                            </Link>
+                            <Link
+                                to={links.SCHEDULE_PAGE}
+                                className="navLinks"
+                                style={{ textDecoration: 'none' }}
+                                onClick={handleCloseUserMenu}
+                            >
+                                <StyledMenuItem>
+                                    <ListItemIcon>
+                                        <FaClock fontSize="normall" />
+                                    </ListItemIcon>
+                                    {t('schedule_title')}
+                                </StyledMenuItem>
+                            </Link>
+                            <span
+                                className="navLinks"
+                                style={{ textDecoration: 'none' }}
+                                onClick={handleCloseUserMenu}
+                            >
+                                <StyledMenuItem>
+                                    <ListItemIcon>
+                                        <FaDoorOpen fontSize="normall" />
+                                    </ListItemIcon>
+                                    <FreeRooms
+                                        classScheduler={props.classScheduler}
+                                    />
+                                </StyledMenuItem>
+                            </span>
+                            <Link
+                                to={links.MY_PROFILE}
+                                className="navLinks"
+                                style={{ textDecoration: 'none' }}
+                                onClick={handleCloseUserMenu}
+                            >
+                                <StyledMenuItem>
+                                    <ListItemIcon>
+                                        <FaUser fontSize="normall" />
+                                    </ListItemIcon>
+                                    {t('my_profile')}
+                                </StyledMenuItem>
+                            </Link>
+                            <Link
+                                to={links.LOGOUT}
+                                className="navLinks"
+                                style={{ textDecoration: 'none' }}
+                                onClick={handleCloseUserMenu}
+                            >
+                                <StyledMenuItem>
+                                    <ListItemIcon>
+                                        <FaSignOutAlt fontSize="normall" />
+                                    </ListItemIcon>
+                                    {t('logout_title')}
+                                </StyledMenuItem>
+                            </Link>
+                        </StyledMenu>
+                    </div>
+                );
+                break;
+            case roles.TEACHER:
+                userMenu = (
+                    <div className="user-menu">
+                        <Button
+                            aria-controls="customized-menu"
+                            aria-haspopup="true"
+                            variant="contained"
+                            color="primary"
+                            onClick={handleClickUserMenu}
+                        >
+                            {localStorage.getItem('email')}
+                            <ListItemIcon>
+                                <FaCaretDown fontSize="normall" />
+                            </ListItemIcon>
+                        </Button>
+                        <StyledMenu
+                            id="customized-menu"
+                            anchorEl={anchorElUser}
+                            keepMounted
+                            open={Boolean(anchorElUser)}
+                            onClose={handleCloseUserMenu}
+                        >
+                            <Link
+                                to={links.TEACHER_SCHEDULE}
+                                className="navLinks"
+                                style={{ textDecoration: 'none' }}
+                                onClick={handleCloseUserMenu}
+                            >
+                                <StyledMenuItem>
+                                    <ListItemIcon>
+                                        <FaClock fontSize="normall" />
+                                    </ListItemIcon>
+                                    {t('schedule_title')}
+                                </StyledMenuItem>
+                            </Link>
+                            <span
+                                className="navLinks"
+                                style={{ textDecoration: 'none' }}
+                                onClick={() => {
+                                    handleClickOpenWish(
+                                        props.myWishes[0].teacher
+                                    );
+                                    getMyTeacherWishesService();
+                                    handleCloseUserMenu();
+                                }}
+                            >
+                                <StyledMenuItem>
+                                    <ListItemIcon>
+                                        <FaClipboardList fontSize="normall" />
+                                    </ListItemIcon>
+                                    {t('wishes_title')}
+                                </StyledMenuItem>
+                            </span>
+                            <Link
+                                to={links.MY_PROFILE}
+                                className="navLinks"
+                                style={{ textDecoration: 'none' }}
+                                onClick={handleCloseUserMenu}
+                            >
+                                <StyledMenuItem>
+                                    <ListItemIcon>
+                                        <FaUser fontSize="normall" />
+                                    </ListItemIcon>
+                                    {t('my_profile')}
+                                </StyledMenuItem>
+                            </Link>
+                            <Link
+                                to={links.LOGOUT}
+                                className="navLinks"
+                                style={{ textDecoration: 'none' }}
+                                onClick={handleCloseUserMenu}
+                            >
+                                <StyledMenuItem>
+                                    <ListItemIcon>
+                                        <FaSignOutAlt fontSize="normall" />
+                                    </ListItemIcon>
+                                    {t('logout_title')}
+                                </StyledMenuItem>
+                            </Link>
+                        </StyledMenu>
+                    </div>
+                );
+                break;
+            default:
+                userMenu = (
+                    <div className="user-menu">
+                        <Button
+                            aria-controls="customized-menu"
+                            aria-haspopup="true"
+                            variant="contained"
+                            color="primary"
+                            onClick={handleClickUserMenu}
+                        >
+                            {localStorage.getItem('email')}
+                        </Button>
+                        <StyledMenu
+                            id="customized-menu"
+                            anchorEl={anchorElUser}
+                            keepMounted
+                            open={Boolean(anchorElUser)}
+                            onClose={handleCloseUserMenu}
+                        >
+                            <Link
+                                to={links.LOGOUT}
+                                className="navLinks"
+                                style={{ textDecoration: 'none' }}
+                                onClick={handleCloseUserMenu}
+                            >
+                                <StyledMenuItem>
+                                    <ListItemIcon>
+                                        <FaSignOutAlt fontSize="normall" />
+                                    </ListItemIcon>
+                                    {t('logout_title')}
+                                </StyledMenuItem>
+                            </Link>
+                        </StyledMenu>
+                    </div>
+                );
+        }
+        return userMenu;
+    };
 
     const roles = props.roles;
 
     let leftLinks = null;
-    let rightLinks = null;
     let menu = null;
+    let userMenu = getUserMenu(props.userRole);
     if (props.userRole === roles.MANAGER) {
         leftLinks = (
             <>
-                <Link to={links.SCHEDULE_PAGE} className="navLinks">
-                    {t('schedule_title')}
-                </Link>
                 <span className="navLinks nav-semester">
                     {t('formElements:semester_label')}:{' '}
                     {props.currentSemester.description}
                 </span>
-            </>
-        );
-        rightLinks = (
-            <>
-                <FreeRooms classScheduler={props.classScheduler} />
-                <Link to={links.ADMIN_PAGE} className="navLinks">
-                    {t('admin_title')}
-                </Link>
-                <Link to={links.LOGOUT} className="navLinks">
-                    {t('logout_title')}
-                </Link>
             </>
         );
         menu = (
@@ -138,6 +350,7 @@ const Header = props => {
                         to={links.HOME_PAGE}
                         className="navLinks"
                         style={{ textDecoration: 'none' }}
+                        onClick={handleClose}
                     >
                         <StyledMenuItem>
                             <ListItemIcon>
@@ -151,6 +364,7 @@ const Header = props => {
                         to={links.SCHEDULE_PAGE}
                         className="navLinks"
                         style={{ textDecoration: 'none' }}
+                        onClick={handleClose}
                     >
                         <StyledMenuItem>
                             <ListItemIcon>
@@ -164,6 +378,7 @@ const Header = props => {
                         to={links.ADMIN_PAGE}
                         className="navLinks"
                         style={{ textDecoration: 'none' }}
+                        onClick={handleClose}
                     >
                         <StyledMenuItem>
                             <ListItemIcon>
@@ -173,9 +388,10 @@ const Header = props => {
                         </StyledMenuItem>
                     </Link>
 
-                    <Link
+                    <span
                         className="navLinks"
                         style={{ textDecoration: 'none' }}
+                        onClick={handleClose}
                     >
                         <StyledMenuItem>
                             <ListItemIcon>
@@ -183,16 +399,17 @@ const Header = props => {
                             </ListItemIcon>
                             <FreeRooms classScheduler={props.classScheduler} />
                         </StyledMenuItem>
-                    </Link>
+                    </span>
 
                     <Link
                         to={links.LOGOUT}
                         className="navLinks"
                         style={{ textDecoration: 'none' }}
+                        onClick={handleClose}
                     >
                         <StyledMenuItem>
                             <ListItemIcon>
-                                <FaWindowClose fontSize="normall" />
+                                <FaSignOutAlt fontSize="normall" />
                             </ListItemIcon>
                             {t('logout_title')}
                         </StyledMenuItem>
@@ -201,106 +418,6 @@ const Header = props => {
             </div>
         );
     } else if (props.userRole === roles.TEACHER) {
-        leftLinks = (
-            <>
-                <span
-                    className="navLinks"
-                    onClick={() => {
-                        handleClickOpenWish(props.myWishes[0].teacher);
-                        getMyTeacherWishesService();
-                    }}
-                >
-                    {t('wishes_title')}
-                </span>
-                <Link to={links.TEACHER_SCHEDULE} className="navLinks">
-                    {t('schedule_title')}
-                </Link>
-            </>
-        );
-        rightLinks = (
-            <Link to={links.LOGOUT} className="navLinks">
-                {t('logout_title')}
-            </Link>
-        );
-        menu = (
-            <div className="menu">
-                <Button
-                    aria-controls="customized-menu"
-                    aria-haspopup="true"
-                    variant="contained"
-                    color="primary"
-                    onClick={handleClick}
-                >
-                    {t('menu_button')}
-                </Button>
-
-                <StyledMenu
-                    id="customized-menu"
-                    anchorEl={anchorEl}
-                    keepMounted
-                    open={Boolean(anchorEl)}
-                    onClose={handleClose}
-                >
-                    <StyledMenuItem>
-                        <ListItemIcon>
-                            <FaClipboardList fontSize="normall" />
-                        </ListItemIcon>
-
-                        <span
-                            className="navLinks"
-                            onClick={() => {
-                                handleClickOpenWish(props.myWishes[0].teacher);
-                                getMyTeacherWishesService();
-                            }}
-                        >
-                            {t('wishes_title')}
-                        </span>
-                    </StyledMenuItem>
-
-                    <Link
-                        to={links.TEACHER_SCHEDULE}
-                        className="navLinks"
-                        style={{ textDecoration: 'none' }}
-                    >
-                        <StyledMenuItem>
-                            <ListItemIcon>
-                                <FaWindowClose fontSize="normall" />
-                            </ListItemIcon>
-                            {t('schedule_title')}
-                        </StyledMenuItem>
-                    </Link>
-
-                    <Link
-                        to={links.LOGOUT}
-                        className="navLinks"
-                        style={{ textDecoration: 'none' }}
-                    >
-                        <StyledMenuItem>
-                            <ListItemIcon>
-                                <FaWindowClose fontSize="normall" />
-                            </ListItemIcon>
-                            {t('logout_title')}
-                        </StyledMenuItem>
-                    </Link>
-                </StyledMenu>
-            </div>
-        );
-    } else if (props.userRole) {
-        rightLinks = (
-            <>
-                <Link to={links.LOGOUT} className="navLinks">
-                    {t('logout_title')}
-                </Link>
-            </>
-        );
-    } else {
-        rightLinks = (
-            <>
-                <Link to={links.AUTH} className="navLinks">
-                    {t('login_title')}
-                </Link>
-            </>
-        );
         menu = (
             <div className="menu">
                 <Button
@@ -324,6 +441,7 @@ const Header = props => {
                         to={links.HOME_PAGE}
                         className="navLinks"
                         style={{ textDecoration: 'none' }}
+                        onClick={handleClose}
                     >
                         <StyledMenuItem>
                             <ListItemIcon>
@@ -332,11 +450,89 @@ const Header = props => {
                             {t('home_title')}
                         </StyledMenuItem>
                     </Link>
+                    <StyledMenuItem>
+                        <ListItemIcon>
+                            <FaClipboardList fontSize="normall" />
+                        </ListItemIcon>
+                        <span
+                            className="navLinks"
+                            onClick={() => {
+                                handleClickOpenWish(props.myWishes[0].teacher);
+                                getMyTeacherWishesService();
+                                handleClose();
+                            }}
+                        >
+                            {t('wishes_title')}
+                        </span>
+                    </StyledMenuItem>
 
+                    <Link
+                        to={links.TEACHER_SCHEDULE}
+                        className="navLinks"
+                        style={{ textDecoration: 'none' }}
+                        onClick={handleClose}
+                    >
+                        <StyledMenuItem>
+                            <ListItemIcon>
+                                <FaClock fontSize="normall" />
+                            </ListItemIcon>
+                            {t('schedule_title')}
+                        </StyledMenuItem>
+                    </Link>
+
+                    <Link
+                        to={links.LOGOUT}
+                        className="navLinks"
+                        style={{ textDecoration: 'none' }}
+                        onClick={handleClose}
+                    >
+                        <StyledMenuItem>
+                            <ListItemIcon>
+                                <FaSignOutAlt fontSize="normall" />
+                            </ListItemIcon>
+                            {t('logout_title')}
+                        </StyledMenuItem>
+                    </Link>
+                </StyledMenu>
+            </div>
+        );
+    } else if (props.userRole === null || props.userRole === undefined) {
+        menu = (
+            <div className="menu">
+                <Button
+                    aria-controls="customized-menu"
+                    aria-haspopup="true"
+                    variant="contained"
+                    color="primary"
+                    onClick={handleClick}
+                >
+                    {t('menu_button')}
+                </Button>
+                <StyledMenu
+                    id="customized-menu"
+                    anchorEl={anchorEl}
+                    keepMounted
+                    open={Boolean(anchorEl)}
+                    onClose={handleClose}
+                >
+                    <Link
+                        to={links.HOME_PAGE}
+                        className="navLinks"
+                        style={{ textDecoration: 'none' }}
+                        onClick={handleClose}
+                    >
+                        <StyledMenuItem>
+                            <ListItemIcon>
+                                <FaHome fontSize="normall" />
+                            </ListItemIcon>
+                            {t('home_title')}
+                        </StyledMenuItem>
+                    </Link>
                     <Link
                         to={links.AUTH}
                         className="navLinks"
                         style={{ textDecoration: 'none' }}
+                        onClick={handleClose}
                     >
                         <StyledMenuItem>
                             <ListItemIcon>
@@ -374,9 +570,8 @@ const Header = props => {
                     {leftLinks}
                 </nav>
                 <nav className="header-blocks header-blocks_two">
-                    {rightLinks}
+                    {userMenu}
                 </nav>
-
                 <nav className="header-blocks header-blocks_three">
                     <LanguageSelector />
                 </nav>
