@@ -51,6 +51,14 @@ public class LessonController {
         return ResponseEntity.status(HttpStatus.OK).body(lessonInfoMapper.lessonToLessonInfoDTO(lesson));
     }
 
+    @GetMapping("/teacher")
+    @ApiOperation(value = "Get lessons info by teacher")
+    public ResponseEntity<List<LessonInfoDTO>> getLessonByTeacher(@RequestParam long teacherId){
+        log.info("In getLessonByTeacher(teacherId = [{}])", teacherId);
+        List<Lesson> lessons = lessonService.getLessonByTeacher(teacherId);
+        return ResponseEntity.status(HttpStatus.OK).body(lessonInfoMapper.lessonsToLessonInfoDTOs(lessons));
+    }
+
     @PostMapping
     @ApiOperation(value = "Create new lesson")
     public ResponseEntity<LessonInfoDTO> save(@RequestBody LessonInfoDTO lessonInfoDTO) {

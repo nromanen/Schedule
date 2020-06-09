@@ -34,7 +34,7 @@ test:
         key: "$CI_COMMIT_REF_NAME"
         policy: pull
     only:
-        - develop
+        #- develop
         - master
 
 build_frontend:
