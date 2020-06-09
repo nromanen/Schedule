@@ -89,7 +89,7 @@ public class RoomRepositoryImpl extends BasicRepositoryImpl<Room, Long> implemen
                             "where r1.id in " +
                             "(select r.id from Schedule s" +
                             " join s.room r " +
-                            " where  s.semester.id = :semesterId " +
+                            " where  s.lesson.semester.id = :semesterId " +
                             "and s.dayOfWeek = :dayOfWeek " +
                             "and s.period.id = :classId )")
 
@@ -104,7 +104,7 @@ public class RoomRepositoryImpl extends BasicRepositoryImpl<Room, Long> implemen
                             "where r1.id in " +
                             "(select r.id from Schedule s" +
                             " join s.room r " +
-                            " where  s.semester.id = :semesterId " +
+                            " where  s.lesson.semester.id = :semesterId " +
                             "and s.dayOfWeek = :dayOfWeek " +
                             "and s.period.id = :classId " +
                             "and ( s.evenOdd = :evenOdd or s.evenOdd = 'WEEKLY') )")
@@ -128,7 +128,7 @@ public class RoomRepositoryImpl extends BasicRepositoryImpl<Room, Long> implemen
                             "where r1.id not in " +
                             "(select r.id from Schedule s" +
                             " join s.room r " +
-                            " where  s.semester.id = :semesterId " +
+                            " where  s.lesson.semester.id = :semesterId " +
                             "and s.dayOfWeek = :dayOfWeek " +
                             "and s.period.id = :classId )")
 
@@ -143,7 +143,7 @@ public class RoomRepositoryImpl extends BasicRepositoryImpl<Room, Long> implemen
                             "where r1.id not in " +
                             "(select r.id from Schedule s" +
                             " join s.room r " +
-                            " where  s.semester.id = :semesterId " +
+                            " where  s.lesson.semester.id = :semesterId " +
                             "and s.dayOfWeek = :dayOfWeek " +
                             "and s.period.id = :classId " +
                             "and ( s.evenOdd = :evenOdd or s.evenOdd = 'WEEKLY') )")
