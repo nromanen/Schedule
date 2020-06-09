@@ -6,4 +6,9 @@ export const setUsers = res => {
         result: res
     };
 };
-
+export const setUser = res => {
+    return {
+        type: actionTypes.SET_USER,
+        result: res
+    };
+};

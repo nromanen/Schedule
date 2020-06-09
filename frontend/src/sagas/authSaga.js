@@ -13,6 +13,7 @@ export function* authSaga(payload) {
         const response = yield call(authUserService, payload);
         const jwtDecode = require('jwt-decode');
         const token = response.data.token;
+        const email = response.data.email;
         const decodedJWT = jwtDecode(token);
         const expirationDate = new Date(decodedJWT.exp * 1000);
 
@@ -21,10 +22,11 @@ export function* authSaga(payload) {
         yield localStorage.setItem('token', TOKEN_BEGIN + token);
         yield localStorage.setItem('expirationDate', expirationDate);
         yield localStorage.setItem('userRole', decodedJWT.roles);
+        yield localStorage.setItem('email', email);
 
         yield put({
             type: actionTypes.AUTH_USER_SUCCESS,
-            response: { token, role: decodedJWT.roles }
+            response: { token, role: decodedJWT.roles, email }
         });
 
         yield put({ type: actionTypes.SET_LOADING_INDICATOR, result: false });

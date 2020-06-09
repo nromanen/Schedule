@@ -32,6 +32,8 @@ export const DISABLED_SEMESTERS_URL = 'semesters/disabled';
 export const DISABLED_SUBJECTS_URL = 'subjects/disabled';
 
 export const USERS_URL = 'users/with-role-user';
+export const USER_PROFILE = 'users/profile';
+export const UPDATE_USER_PROFILE = 'users/change-profile';
 export const TEACHERS_WITHOUT_ACCOUNT_URL = 'not-registered-teachers';
 export const MERGE_USER_AND_TEACHER_URL = 'managers/teacher_credentials';
 

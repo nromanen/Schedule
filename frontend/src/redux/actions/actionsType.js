@@ -10,6 +10,7 @@ export const SET_UNIQUE_ERROR = 'SET_UNIQUE_ERROR';
 export const SET_OPEN_SNACKBAR = 'SET_OPEN_SNACKBAR';
 
 export const SET_USERS = 'SET_USERS';
+export const SET_USER = 'SET_USER';
 
 export const AUTH_USER = 'AUTH_USER';
 export const AUTH_USER_SUCCESS = 'AUTH_USER_SUCCESS';
@@ -47,6 +48,7 @@ export const SET_ITEM_GROUP_ID = 'SET_ITEM_GROUP_ID';
 
 export const ADD_TEACHER = 'ADD_TEACHER';
 export const SELECT_TEACHER = 'SELECT_TEACHER';
+export const SET_TEACHER = 'SET_TEACHER';
 export const UPDATE_TEACHER = 'UPDATE_TEACHER';
 export const DELETE_TEACHER = 'DELETE_TEACHER';
 export const SHOW_ALL = 'SHOW_ALL';

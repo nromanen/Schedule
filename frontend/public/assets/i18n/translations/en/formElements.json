@@ -20,6 +20,7 @@
     "email_label": "Email",
     "password_label": "Password",
     "retype_password_label": "Retype password",
+    "new_password_label": "New password",
     "semester_label": "Semester",
     "semestry_label": "semesters",
     "semester_start": "Begin",
@@ -74,5 +75,6 @@
 
     "merge_button": "Merge",
     "max_count_classes_reached": "You reach maximum classes quantity",
+    "change_password_form_title": "Change password",
     "login_via_google": "Login via Google"
 }
