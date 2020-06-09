@@ -31,11 +31,6 @@ public class Schedule implements Serializable {
     @NotNull
     private EvenOdd evenOdd;
 
-    @ManyToOne(targetEntity = Semester.class)
-    @JoinColumn(name = "semester_id")
-    @NotNull
-    private Semester semester;
-
     @ManyToOne(targetEntity = Room.class)
     @JoinColumn(name = "room_id")
     @NotNull

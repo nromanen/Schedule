@@ -55,4 +55,8 @@ public class Lesson implements Serializable {
     @Where(clause = "disable = false")
     private Group group;
 
+    @ManyToOne(targetEntity = Semester.class)
+    @JoinColumn(name = "semester_id")
+    @NotNull
+    private Semester semester;
 }

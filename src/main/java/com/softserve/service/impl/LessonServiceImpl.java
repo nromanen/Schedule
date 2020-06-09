@@ -8,6 +8,7 @@ import com.softserve.exception.EntityAlreadyExistsException;
 import com.softserve.exception.EntityNotFoundException;
 import com.softserve.repository.LessonRepository;
 import com.softserve.service.LessonService;
+import com.softserve.service.SemesterService;
 import com.softserve.service.SubjectService;
 import com.softserve.service.TeacherService;
 import lombok.extern.slf4j.Slf4j;
@@ -26,12 +27,14 @@ public class LessonServiceImpl implements LessonService {
     private final LessonRepository lessonRepository;
     private final TeacherService teacherService;
     private final SubjectService subjectService;
+    private final SemesterService semesterService;
 
     @Autowired
-    public LessonServiceImpl(LessonRepository lessonRepository, TeacherService teacherService, SubjectService subjectService) {
+    public LessonServiceImpl(LessonRepository lessonRepository, TeacherService teacherService, SubjectService subjectService, SemesterService semesterService) {
         this.lessonRepository = lessonRepository;
         this.teacherService = teacherService;
         this.subjectService = subjectService;
+        this.semesterService = semesterService;
     }
 
     /**
@@ -65,6 +68,7 @@ public class LessonServiceImpl implements LessonService {
      */
     @Override
     public Lesson save(Lesson object) {
+        object.setSemester(semesterService.getCurrentSemester());
         log.info("In save(entity = [{}]", object);
         if (isLessonForGroupExists(object)){
             throw new EntityAlreadyExistsException("Lesson with this parameters already exists");
@@ -94,6 +98,7 @@ public class LessonServiceImpl implements LessonService {
      */
     @Override
     public Lesson update(Lesson object) {
+        object.setSemester(semesterService.getCurrentSemester());
         log.info("In update(entity = [{}]", object);
         if (isLessonForGroupExists(object)){
             throw new EntityAlreadyExistsException("Lesson with this parameters already exists");
@@ -122,7 +127,7 @@ public class LessonServiceImpl implements LessonService {
     @Override
     public List<Lesson> getAllForGroup(Long groupId) {
         log.info("In getAllForGroup(groupId = [{}])",  groupId);
-        return lessonRepository.getAllForGroup(groupId);
+        return lessonRepository.getAllForGroup(groupId, semesterService.getCurrentSemester().getId());
     }
 
     /**
