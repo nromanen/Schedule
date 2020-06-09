@@ -15,7 +15,7 @@ export const authUserService = request => {
         request.result.authType === 'google'
     ) {
         return axios.get(GOOGLE_LOGIN_URL).then(response => {
-            console.log('response', response);
+            console.log('google response', response);
             return response;
         });
     }

@@ -13,3 +13,4 @@ export const TEACHER_WISH_FORM = 'teacherWish';
 export const SEMESTER_FORM = 'addSemester';
 export const TEACHER_SCHEDULE_FORM = 'teacherScheduleForm';
 export const SCHEDULE_SEARCH_FORM = 'GroupSchedulePageTop';
+export const PROFILE_FORM = 'ProfilePage';

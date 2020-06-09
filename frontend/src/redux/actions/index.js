@@ -11,7 +11,7 @@ export {
 
 export { setOpenSnackbar } from './snackbar';
 
-export { setUsers } from './users';
+export { setUsers, setUser } from './users';
 
 export {
     authUser,
@@ -46,6 +46,7 @@ export {
 
 export {
     addTeacher,
+    setTeacher,
     deleteTeacher,
     selectTeacherCard,
     updateTeacherCard,

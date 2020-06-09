@@ -56,7 +56,7 @@ public class SemesterRepositoryImpl extends BasicRepositoryImpl<Semester, Long> 
         log.info("In checkReference(semester = [{}])", semester);
         long count = (long) sessionFactory.getCurrentSession().createQuery
                 ("select count (s.id) " +
-                        "from Schedule s where s.semester.id = :semesterId")
+                        "from Schedule s where s.lesson.semester.id = :semesterId")
                 .setParameter("semesterId", semester.getId()).getSingleResult();
 
         return count != 0;

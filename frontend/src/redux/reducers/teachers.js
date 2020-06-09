@@ -34,6 +34,11 @@ const teachers = (
                 ]
             };
 
+        case actionTypes.SET_TEACHER:
+            return {
+                ...state,
+                teacher: action.result
+            };
         case actionTypes.SELECT_TEACHER:
             let teacher = state.teachers.filter(
                 teacher => teacher.id === action.result

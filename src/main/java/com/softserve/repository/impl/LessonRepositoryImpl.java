@@ -41,7 +41,7 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
      * @return List of filtered lessons
      */
     @Override
-    public List<Lesson> getAllForGroup(Long groupId) {
+    public List<Lesson> getAllForGroup(Long groupId, Long semesterId) {
         log.info("In getAllForGroup(groupId = [{}])", groupId);
         CriteriaBuilder cb = sessionFactory.getCurrentSession().getCriteriaBuilder();
         CriteriaQuery<Lesson> cq = cb.createQuery(Lesson.class);
@@ -51,7 +51,8 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
                 cb.equal(from.get("subject").get("disable"), false),
 
                 cb.equal(from.get("group").get("disable"), false),
-                cb.equal(from.get("group").get("id"), groupId));
+                cb.equal(from.get("group").get("id"), groupId),
+                cb.equal(from.get("semester").get("id"), semesterId));
         TypedQuery<Lesson> tq = sessionFactory.getCurrentSession().createQuery(cq);
         return  tq.getResultList();
     }
