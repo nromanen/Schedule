@@ -59,4 +59,7 @@ public class Lesson implements Serializable {
     @JoinColumn(name = "semester_id")
     @NotNull
     private Semester semester;
+
+    @Column(name = "groupped",  columnDefinition = "boolean default 'false'")
+    private boolean groupped = false;
 }

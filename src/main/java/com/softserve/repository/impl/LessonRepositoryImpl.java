@@ -58,6 +58,30 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
     }
 
 
+    /**
+     * Method gets information  all lessons for teacher from DB
+     *
+     * @param teacherId Identity number of the teacher for which need to find all lessons
+     * @return List of filtered lessons
+     */
+    @Override
+    public List<Lesson> getLessonByTeacher(Long teacherId, Long semesterId) {
+        log.info("In getLessonByTeacher(groupId = [{}])", teacherId);
+        CriteriaBuilder cb = sessionFactory.getCurrentSession().getCriteriaBuilder();
+        CriteriaQuery<Lesson> cq = cb.createQuery(Lesson.class);
+        Root<Lesson> from = cq.from(Lesson.class);
+
+        cq.where(cb.equal(from.get("teacher").get("disable"), false),
+                cb.equal(from.get("teacher").get("id"), teacherId),
+                cb.equal(from.get("subject").get("disable"), false),
+
+                cb.equal(from.get("group").get("disable"), false),
+                cb.equal(from.get("semester").get("id"), semesterId));
+        TypedQuery<Lesson> tq = sessionFactory.getCurrentSession().createQuery(cq);
+        return  tq.getResultList();
+    }
+
+
 
     /**
      * Method searches duplicate of lesson in the DB
