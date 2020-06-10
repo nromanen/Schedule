@@ -6,6 +6,7 @@ import com.softserve.repository.ScheduleRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -407,5 +408,16 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
                 .getResultList();
     }
 
-
+    /**
+     * Method deleteSchedulesBySemesterId delete all schedules from db in with current semesterId
+     *
+     * @param semesterId id Semester for delete schedule
+     */
+    @Override
+    public void deleteSchedulesBySemesterId(Long semesterId) {
+        log.info("In deleteSchedulesBySemesterId with semesterId = {}", semesterId);
+        sessionFactory.getCurrentSession().createQuery(
+                "delete from Schedule s where s.id in (select sch.id from Schedule sch where sch.lesson.semester.id = :semesterId)")
+                .setParameter("semesterId", semesterId).executeUpdate();
+    }
 }

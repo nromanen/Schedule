@@ -107,7 +107,7 @@ public class UserController {
         User user = userService.getById(jwtUser.getId());
         if (user.getRole() == Role.ROLE_TEACHER) {
             Teacher teacher = teacherService.findByUserId(user.getId().intValue());
-            return ResponseEntity.ok().body(new UserDataDTO(teacher.getName(), teacher.getSurname(), teacher.getPatronymic(), teacher.getPosition()));
+            return ResponseEntity.ok().body(new UserDataDTO(teacher.getId(), teacher.getName(), teacher.getSurname(), teacher.getPatronymic(), teacher.getPosition()));
         }
         return ResponseEntity.ok().build();
     }
