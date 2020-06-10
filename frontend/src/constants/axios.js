@@ -50,3 +50,4 @@ export const PUBLIC_DOWNLOAD_TEACHER_SCHEDULE_URL =
     'https://develop-softserve.herokuapp.com/download/schedule-for-teacher-in-pdf';
 
 export const FOR_TEACHER_SCHEDULE_URL = 'schedules/teacher';
+export const SEMESTER_COPY_URL = '/schedules/copy-schedule';
