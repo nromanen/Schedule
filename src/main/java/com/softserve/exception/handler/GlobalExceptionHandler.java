@@ -32,11 +32,11 @@ import java.util.Objects;
 import static org.springframework.http.HttpStatus.*;
 
 
-/*@Order(Ordered.HIGHEST_PRECEDENCE)
+@Order(Ordered.HIGHEST_PRECEDENCE)
 @ControllerAdvice
-@Slf4j*/
-public class GlobalExceptionHandler/* extends ResponseEntityExceptionHandler*/ {
-/*
+@Slf4j
+public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
+
     //Handles FieldAlreadyExistsException. Triggered when entities field has conflict with already existed field.
     @ExceptionHandler(FieldAlreadyExistsException.class)
     protected ResponseEntity<Object> handleEntityFieldAlreadyExistsException(
@@ -48,12 +48,12 @@ public class GlobalExceptionHandler/* extends ResponseEntityExceptionHandler*/ {
         return buildResponseEntity(apiError);
     }
 
-    *//** Handles IncorrectWishException, IncorrectTimeException, IncorrectPasswordException, ScheduleConflictException,
+    /** Handles IncorrectWishException, IncorrectTimeException, IncorrectPasswordException, ScheduleConflictException,
      * PeriodConflictException, EntityAlreadyExistsException. Triggered when:
      * teacher wishes json / time in period / password, entered during registration by User, are incorrect;
      * schedule / period have conflicts with already existed entities;
      * object already exists in an another class.
-    *//*
+     */
     @ExceptionHandler({IncorrectWishException.class, IncorrectTimeException.class, IncorrectPasswordException.class,
             ScheduleConflictException.class, PeriodConflictException.class, EntityAlreadyExistsException.class,
             IncorrectEmailException.class})
@@ -266,5 +266,5 @@ public class GlobalExceptionHandler/* extends ResponseEntityExceptionHandler*/ {
     //Response builder
     private ResponseEntity<Object> buildResponseEntity(ApiError apiError) {
         return ResponseEntity.status(apiError.getStatus()).body(apiError);
-    }*/
+    }
 }
