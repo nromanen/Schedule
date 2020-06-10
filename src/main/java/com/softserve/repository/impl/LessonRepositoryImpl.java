@@ -112,6 +112,21 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
         return query.getSingleResult();
     }
 
+    /**
+     * The method used for getting list of lessons from database by semesterId
+     *
+     * @param semesterId Semester id for getting all lessons by this id from db
+     * @return list of entities Lesson
+     */
+    @Override
+    public List<Lesson> getLessonsBySemester(Long semesterId) {
+        log.info("In getLessonsBySemester(semesterId = [{}])", semesterId);
+        return sessionFactory.getCurrentSession().createQuery(
+                "select l from Lesson l " +
+                        " where l.semester.id= :semesterId").setParameter("semesterId", semesterId)
+                .getResultList();
+    }
+
     // Checking if lesson is used in Schedule table
     @Override
     protected boolean checkReference(Lesson lesson) {

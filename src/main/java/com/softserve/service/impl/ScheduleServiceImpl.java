@@ -506,21 +506,26 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     /**
-     * Method copyScheduleFromOneToAnotherSemester save schedules in db by copy from one semester to another
+     * Method deleteSchedulesBySemesterId delete all schedules from db in with current seemsterId
      *
-     * @param schedules  List<Schedule> from one semester
-     * @param toSemester Semester entity for which save schedule
-     * @return list of schedules for toSemester
+     * @param semesterId id Semester for delete schedule
      */
     @Override
-    public List<Schedule> copyScheduleFromOneToAnotherSemester(List<Schedule> schedules, Semester toSemester) {
-        log.info("In method copyScheduleFromOneToAnotherSemester with schedules = {} and toSemester = {}", schedules, toSemester);
-        List<Schedule> toSchedule = new ArrayList<>();
-        for (Schedule schedule : schedules) {
-            //schedule.setSemester(toSemester);
-            toSchedule.add(save(schedule));
-        }
-        return toSchedule;
+    public void deleteSchedulesBySemesterId(Long semesterId) {
+        log.info("In deleteSchedulesBySemesterId with semesterId = {}", semesterId);
+        scheduleRepository.deleteSchedulesBySemesterId(semesterId);
+    }
+
+    /**
+     * Method saveScheduleDuringCopy save Schedule in db
+     *
+     * @param schedule Schedule entity for save schedule in db
+     * @return Schedule entity after saved in db
+     */
+    @Override
+    public Schedule saveScheduleDuringCopy(Schedule schedule) {
+        log.info("In saveScheduleDuringCopy with schedule = {}", schedule);
+        return scheduleRepository.save(schedule);
     }
 
     //check date in semester date range, if yes return - true, else - false
