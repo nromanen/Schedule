@@ -380,7 +380,10 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
         CriteriaQuery<Schedule> cq = cb.createQuery(Schedule.class);
         Root<Schedule> from = cq.from(Schedule.class);
         cq.where(cb.equal(from.get("room").get("disable"), false),
-                cb.equal(from.get("semester").get("disable"), false));
+                cb.equal(from.get("lesson").get("semester").get("disable"), false),
+                cb.equal(from.get("lesson").get("group").get("disable"), false),
+                cb.equal(from.get("lesson").get("subject").get("disable"), false),
+                cb.equal(from.get("lesson").get("teacher").get("disable"), false));
 
         TypedQuery<Schedule> tq = sessionFactory.getCurrentSession().createQuery(cq);
         return tq.getResultList();
@@ -398,7 +401,7 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
     public List<Schedule> scheduleByDateRangeForTeacher(LocalDate fromDate, LocalDate toDate, Long teacherId) {
         log.info("In scheduleByDateRangeForTeacher with fromDate = {} and toDate = {}", fromDate, toDate);
         return sessionFactory.getCurrentSession().createQuery("SELECT s from Schedule s " +
-                "where s.semester.startDay <= :toDate  and s.semester.endDay >= :fromDate and s.lesson.teacher.id = :teacherId")
+                "where s.lesson.semester.startDay <= :toDate  and s.lesson.semester.endDay >= :fromDate and s.lesson.teacher.id = :teacherId")
                 .setParameter("fromDate", fromDate)
                 .setParameter("toDate", toDate)
                 .setParameter("teacherId", teacherId)
