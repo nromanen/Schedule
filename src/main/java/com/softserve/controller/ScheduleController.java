@@ -60,6 +60,7 @@ public class ScheduleController {
     public ResponseEntity<List<ScheduleDTO>> list() {
         log.info("In list()");
         List<Schedule> schedules = scheduleService.getAll();
+
         return ResponseEntity.status(HttpStatus.OK).body(scheduleMapper.scheduleToScheduleDTOs(schedules));
     }
 
@@ -155,6 +156,23 @@ public class ScheduleController {
         testDTO.setName("for Teacher");
         testDTO.setFull(dto);
        // mongoTemplate.insert(testDTO);
+        return ResponseEntity.status(HttpStatus.OK).body(dto);
+    }
+
+
+    @GetMapping("/full/teachers/date-range")
+    @ApiOperation(value = "Get full schedule for teacher by date range")
+    @PreAuthorize("hasRole('MANAGER')")
+    public ResponseEntity<List<ScheduleDateRangeFullDTO>> getScheduleByDateRangeForTeacher(@RequestParam String from,
+                                                                              @RequestParam String to,
+                                                                                                  @RequestParam Long teacherId) {
+        log.info("In getScheduleByDateForTeacher with from = {}, to={}, teacherId = {}", from, to, teacherId);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        DateTimeFormatter currentFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate fromDate = LocalDate.parse(LocalDate.parse(from, formatter).toString(), currentFormatter);
+        LocalDate toDate = LocalDate.parse(LocalDate.parse(to, formatter).toString(), currentFormatter);
+        teacherService.getById(teacherId);
+        List<ScheduleDateRangeFullDTO> dto = fullDTOForTeacherDateRange(scheduleService.scheduleByDateRangeForTeacher(fromDate, toDate, teacherId));
         return ResponseEntity.status(HttpStatus.OK).body(dto);
     }
 
