@@ -479,7 +479,12 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Override
     public List<Schedule> getSchedulesBySemester(Long semesterId) {
         log.info("In getScheduleBySemester(Long semesterId = [{}])", semesterId);
-        return scheduleRepository.getScheduleBySemester(semesterId);
+        List<Schedule> schedules = scheduleRepository.getScheduleBySemester(semesterId);
+        for (Schedule schedule : schedules) {
+            Hibernate.initialize(schedule.getLesson().getSemester().getDaysOfWeek());
+            Hibernate.initialize(schedule.getLesson().getSemester().getPeriods());
+        }
+        return schedules;
     }
 
     /**
