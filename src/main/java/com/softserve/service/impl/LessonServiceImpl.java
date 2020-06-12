@@ -12,6 +12,7 @@ import com.softserve.service.SemesterService;
 import com.softserve.service.SubjectService;
 import com.softserve.service.TeacherService;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,8 +46,10 @@ public class LessonServiceImpl implements LessonService {
     @Override
     public Lesson getById(Long id) {
         log.info("In getById(id = [{}])",  id);
-        return lessonRepository.findById(id).orElseThrow(
+        Lesson lesson = lessonRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException(Lesson.class, "id", id.toString()));
+        Hibernate.initialize(lesson.getSemester().getPeriods());
+        return lesson;
     }
 
     /**
