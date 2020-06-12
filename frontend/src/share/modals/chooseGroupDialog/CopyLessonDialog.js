@@ -59,6 +59,7 @@ export const CopyLessonDialog = props => {
             <Autocomplete
                 {...defaultProps}
                 id="group"
+                multiple
                 clearOnEscape
                 openOnFocus
                 className={classes.groupField}
