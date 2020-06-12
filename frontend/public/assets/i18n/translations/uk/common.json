@@ -134,5 +134,6 @@
     "download_pdf": "Завантажити PDF",
     "select_dates_for_teacher_schedule": "Оберіть дати",
     "block_view": "Вигляд блоків",
-    "list_view": "Вигляд таблиці"
+    "list_view": "Вигляд таблиці",
+    "clear_schedule_label": "Очистити розклад"
 }

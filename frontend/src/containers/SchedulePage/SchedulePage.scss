@@ -145,6 +145,9 @@ $board-min-width: 120px;
     max-height: 75vh;
     overflow: auto;
     overflow-x: hidden;
+    button {
+        margin-bottom: 15px;
+    }
     .card {
         min-width: 60%;
         max-width: 60%;

@@ -6,5 +6,6 @@
     "semester_service_not_as_begin_or_end": "Your year is not the same as year of begin or end of semester. Are you sure you want to create it?",
     "back_end_success_operation": "{{cardType}} was successfully {{actionType}}",
     "successfully_merged": "User and teacher have been successfully merged",
-    "copied_label": "copied"
+    "copied_label": "copied",
+    "cleared_label": "cleared"
 }

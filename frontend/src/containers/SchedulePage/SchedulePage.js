@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { useTranslation } from 'react-i18next';
+import Button from '@material-ui/core/Button';
 
 import { showAllGroupsService } from '../../services/groupService';
 import { getLessonsByGroupService } from '../../services/lessonService';
@@ -9,7 +10,10 @@ import {
     setScheduleLoadingService
 } from '../../services/loadingService';
 import { getClassScheduleListService } from '../../services/classService';
-import { getScheduleItemsService } from '../../services/scheduleService';
+import {
+    getScheduleItemsService,
+    clearSchedule
+} from '../../services/scheduleService';
 import { showListOfRoomsService } from '../../services/roomService';
 
 import ScheduleLessonsList from '../../components/ScheduleLessonsList/ScheduleLessonsList';
@@ -54,6 +58,15 @@ const SchedulePage = props => {
     useEffect(() => getClassScheduleListService(), []);
 
     useEffect(() => showListOfRoomsService(), []);
+    const handleClearSchedule = () => {
+        if (props.currentSemester.id) {
+            clearSchedule(props.currentSemester.id);
+            if (groupId) {
+                setLoadingService(true);
+                getLessonsByGroupService(groupId);
+            }
+        }
+    };
 
     return (
         <>
@@ -86,16 +99,26 @@ const SchedulePage = props => {
                     {isLoading ? (
                         <CircularProgress />
                     ) : (
-                        <ScheduleLessonsList
-                            items={scheduleItems}
-                            groups={groups}
-                            lessons={lessons}
-                            groupId={groupId}
-                            translation={t}
-                            classScheduler={
-                                props.currentSemester.semester_classes
-                            }
-                        />
+                        <>
+                            <Button
+                                className="buttons-style"
+                                variant="contained"
+                                color="primary"
+                                onClick={() => handleClearSchedule()}
+                            >
+                                {t('clear_schedule_label')}
+                            </Button>
+                            <ScheduleLessonsList
+                                items={scheduleItems}
+                                groups={groups}
+                                lessons={lessons}
+                                groupId={groupId}
+                                translation={t}
+                                classScheduler={
+                                    props.currentSemester.semester_classes
+                                }
+                            />
+                        </>
                     )}
                 </aside>
             </section>

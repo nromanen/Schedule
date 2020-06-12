@@ -51,3 +51,4 @@ export const PUBLIC_DOWNLOAD_TEACHER_SCHEDULE_URL =
 
 export const FOR_TEACHER_SCHEDULE_URL = 'schedules/teacher';
 export const SEMESTER_COPY_URL = '/schedules/copy-schedule';
+export const CLEAR_SCHEDULE_URL = '/schedules/delete-schedules';
