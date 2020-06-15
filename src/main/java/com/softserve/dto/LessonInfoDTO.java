@@ -18,5 +18,4 @@ public class LessonInfoDTO {
     private GroupDTO group;
     private TeacherNameDTO teacher;
     private boolean grouped;
-
 }
