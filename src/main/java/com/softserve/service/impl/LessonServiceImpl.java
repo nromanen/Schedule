@@ -113,7 +113,7 @@ public class LessonServiceImpl implements LessonService {
     public Lesson update(Lesson object) {
         object.setSemester(semesterService.getCurrentSemester());
         log.info("In update(entity = [{}]", object);
-        if (isLessonForGroupExists(object)){
+        if (isLessonForGroupExistsAndIgnoreWithId(object)){
             throw new EntityAlreadyExistsException("Lesson with this parameters already exists");
         }
         else {
@@ -162,5 +162,16 @@ public class LessonServiceImpl implements LessonService {
     public boolean isLessonForGroupExists(Lesson lesson) {
         log.info("In isLessonForGroupExists(lesson = [{}])", lesson);
         return lessonRepository.countLessonDuplicates(lesson) !=0;
+    }
+
+    /**
+     * Method verifies if lesson doesn't exist in Repository
+     * @param lesson Lesson entity that needs to be verified
+     * @return true if such lesson already exists
+     */
+    @Override
+    public boolean isLessonForGroupExistsAndIgnoreWithId(Lesson lesson) {
+        log.info("In isLessonForGroupExistsAndIgnoreWithId(lesson = [{}])", lesson);
+        return lessonRepository.countLessonDuplicatesWithIgnoreId(lesson) !=0;
     }
 }

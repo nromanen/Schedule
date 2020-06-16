@@ -10,4 +10,5 @@ public interface LessonService extends BasicService <Lesson, Long> {
     List<Lesson> getLessonByTeacher(Long teacherId);
     List<LessonType> getAllLessonTypes();
     boolean isLessonForGroupExists(Lesson lesson);
+    boolean isLessonForGroupExistsAndIgnoreWithId(Lesson lesson);
 }

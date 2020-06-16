@@ -112,6 +112,36 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
         return query.getSingleResult();
     }
 
+    /**
+     * Method searches duplicate of lesson in the DB
+     *
+     * @param lesson Lesson entity that needs to be verified
+     * @return count of duplicates if such exist, else return 0
+     */
+    @Override
+    public Long countLessonDuplicatesWithIgnoreId(Lesson lesson) {
+        log.info("In countLessonDuplicates(lesson = [{}])", lesson);
+
+        CriteriaBuilder cb = sessionFactory.getCurrentSession().getCriteriaBuilder();
+        CriteriaQuery<Long> cq = cb.createQuery(Long.class);
+        Root<Lesson> from = cq.from(Lesson.class);
+
+        cq.where(cb.equal(from.get("teacher").get("disable"), false),
+                cb.equal(from.get("teacher").get("id"), lesson.getTeacher().getId()),
+
+                cb.equal(from.get("subject").get("disable"), false),
+                cb.equal(from.get("subject").get("id"), lesson.getSubject().getId()),
+
+                cb.equal(from.get("group").get("disable"), false),
+                cb.equal(from.get("group").get("id"), lesson.getGroup().getId()),
+
+                cb.notEqual(from.get("id"),lesson.getId()),
+                cb.equal(from.get("lessonType"),lesson.getLessonType()));
+        cq.select(cb.count(from));
+        Query<Long> query = sessionFactory.getCurrentSession().createQuery(cq);
+        return query.getSingleResult();
+    }
+
     // Checking if lesson is used in Schedule table
     @Override
     protected boolean checkReference(Lesson lesson) {
