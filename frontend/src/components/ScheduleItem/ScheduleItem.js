@@ -2,6 +2,7 @@ import React from 'react';
 import { MdDelete } from 'react-icons/md';
 
 import Card from '../../share/Card/Card';
+import { FaUserPlus } from 'react-icons/fa';
 
 const ScheduleItem = props => {
     let lesson = props.lesson;
@@ -20,6 +21,16 @@ const ScheduleItem = props => {
 
     const itemNodeId = `card-${lesson.id}-group-${lesson.group.id}-${addition}`;
     const deleteNodeId = `delete-${lesson.id}-${lesson.group.id}-${addition}`;
+
+    const isGroupped = grouped =>
+        grouped ? (
+            <FaUserPlus
+                title={t('formElements:grouped_label')}
+                className="svg-btn copy-btn align-left info-btn"
+            />
+        ) : (
+            ''
+        );
 
     return (
         <Card id={itemNodeId} class={props.class} draggable={true}>
@@ -45,6 +56,7 @@ const ScheduleItem = props => {
             ) : (
                 ''
             )}
+
             <p>
                 {fStrLetterCapital(lesson.subjectForSite)} (
                 {t(
@@ -55,10 +67,13 @@ const ScheduleItem = props => {
             <p>{lesson.teacherForSite}</p>
             {props.inBoard ? (
                 <p>
-                    {t('common:room_card_title')} <b>{item.room.name}</b>
+                    {isGroupped(lesson.grouped)}
+                    {/* {t('common:room_card_title')}  */}
+                    <b>{item.room.name}</b>
                 </p>
             ) : (
                 <p>
+                    {isGroupped(lesson.grouped)}
                     <b>1</b> {t('formElements:hours_label')}
                 </p>
             )}

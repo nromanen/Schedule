@@ -65,7 +65,8 @@ const cardObjectHandler = (card, groupId) => {
         lessonType: card.type,
         subjectForSite: card.subjectForSite,
         teacher: { id: card.teacher },
-        teacherForSite: card.teacherForSite
+        teacherForSite: card.teacherForSite,
+        grouped: card.grouped
     };
 };
 
@@ -151,8 +152,6 @@ export const selectLessonCardService = lessonCardId => {
 export const copyLessonCardService = lessonGroupObj => {
     const groupList = [];
     lessonGroupObj.group.map(groupItem => groupList.push(groupItem.id));
-    console.log('lessonGroupObj', lessonGroupObj);
-    console.log('groupList', groupList);
     axios
         .post(
             COPY_LESSON_URL + `?lessonId=${lessonGroupObj.lesson.id}`,
