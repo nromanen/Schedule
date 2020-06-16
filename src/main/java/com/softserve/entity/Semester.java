@@ -1,12 +1,10 @@
 package com.softserve.entity;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.*;
 import org.hibernate.annotations.NamedQuery;
 
 import javax.persistence.*;
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
@@ -33,7 +31,8 @@ import java.util.Set;
 
 
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name = "semesters")
 public class Semester implements Serializable {

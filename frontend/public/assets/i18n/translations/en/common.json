@@ -9,6 +9,7 @@
     "home_title": "Home",
     "schedule_title": "Schedule",
     "wishes_title": "Wishes",
+    "my_profile": "My profile",
 
     "LessonPage_management_title": "Lesson",
     "TeacherList_management_title": "Teacher",
@@ -136,5 +137,6 @@
     "download_pdf": "Download PDF",
     "select_dates_for_teacher_schedule": "Select dates",
     "block_view": "Block view",
-    "list_view": "List view"
+    "list_view": "List view",
+    "clear_schedule_label": "Clear Schedule"
 }

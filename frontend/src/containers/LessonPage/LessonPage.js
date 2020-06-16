@@ -32,7 +32,6 @@ import { cardType } from '../../constants/cardType';
 
 import './LessonPage.scss';
 
-
 const GroupField = styled(TextField)({
     display: 'inline-block',
     width: '150px'
@@ -110,9 +109,7 @@ const LessonPage = props => {
 
     const closeCopyLessonDialogHandle = lessonGroupObj => {
         setOpenCopyLessonDialog(false);
-
         if (!lessonGroupObj) return;
-
         copyLessonCardService(lessonGroupObj);
     };
 

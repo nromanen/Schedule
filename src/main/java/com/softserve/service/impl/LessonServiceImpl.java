@@ -1,22 +1,21 @@
 package com.softserve.service.impl;
 
 import com.softserve.entity.Lesson;
+import com.softserve.entity.Semester;
 import com.softserve.entity.Subject;
 import com.softserve.entity.Teacher;
 import com.softserve.entity.enums.LessonType;
 import com.softserve.exception.EntityAlreadyExistsException;
 import com.softserve.exception.EntityNotFoundException;
 import com.softserve.repository.LessonRepository;
-import com.softserve.service.LessonService;
-import com.softserve.service.SemesterService;
-import com.softserve.service.SubjectService;
-import com.softserve.service.TeacherService;
+import com.softserve.service.*;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -172,6 +171,48 @@ public class LessonServiceImpl implements LessonService {
     @Override
     public boolean isLessonForGroupExistsAndIgnoreWithId(Lesson lesson) {
         log.info("In isLessonForGroupExistsAndIgnoreWithId(lesson = [{}])", lesson);
-        return lessonRepository.countLessonDuplicatesWithIgnoreId(lesson) !=0;
+        return lessonRepository.countLessonDuplicatesWithIgnoreId(lesson) != 0;
+    }
+
+    /*
+     * The method used for getting list of lessons from database by semesterId
+     *
+     * @param semesterId Semester id for getting all lessons by this id from db
+     * @return list of entities Lesson
+     */
+    @Override
+    public List<Lesson> getLessonsBySemester(Long semesterId) {
+        log.info("In getLessonsBySemester(semesterId = [{}])", semesterId);
+        return lessonRepository.getLessonsBySemester(semesterId);
+    }
+
+    /**
+     * Method copyLessonsFromOneToAnotherSemester save lessons in db by copy from one semester to another
+     *
+     * @param lessons  List<Lesson> from one semester
+     * @param toSemester Semester entity for which save schedule
+     * @return list of lessons for toSemester
+     */
+    @Override
+    public List<Lesson> copyLessonsFromOneToAnotherSemester(List<Lesson> lessons, Semester toSemester) {
+        log.info("In method copyLessonsFromOneToAnotherSemester with lessons = {} and toSemester = {}", lessons, toSemester);
+        List<Lesson> toLessons = new ArrayList<>();
+        for (Lesson lesson: lessons) {
+            lesson.setSemester(toSemester);
+            toLessons.add(lessonRepository.save(lesson));
+        }
+        return toLessons;
+    }
+
+    /**
+     * Method saveLessonDuringCopy save lessons in db
+     *
+     * @param lesson  Lesson entity
+     * @return Lesson entity after saved in db
+     */
+    @Override
+    public Lesson saveLessonDuringCopy(Lesson lesson) {
+        log.info("In method saveLessonDuringCopy with lesson = {}", lesson);
+        return lessonRepository.save(lesson);
     }
 }

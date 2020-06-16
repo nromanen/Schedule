@@ -5,6 +5,7 @@ import com.softserve.entity.*;
 import com.softserve.entity.enums.EvenOdd;
 import com.softserve.mapper.*;
 import com.softserve.security.jwt.JwtUser;
+import com.softserve.service.LessonService;
 import com.softserve.service.ScheduleService;
 import com.softserve.service.SemesterService;
 import com.softserve.service.TeacherService;
@@ -39,10 +40,11 @@ public class ScheduleController {
     private final TeacherService teacherService;
     private final PeriodMapper periodMapper;
     private final RoomForScheduleMapper roomForScheduleMapper;
+    private final LessonService lessonService;
   //  private final MongoTemplate mongoTemplate;
 
     @Autowired
-    public ScheduleController(ScheduleService scheduleService, SemesterService semesterService, SemesterMapper semesterMapper, ScheduleMapper scheduleMapper, ScheduleSaveMapper scheduleSaveMapper, ScheduleWithoutSemesterMapper scheduleWithoutSemesterMapper, TeacherService teacherService, PeriodMapper periodMapper, RoomForScheduleMapper roomForScheduleMapper) {
+    public ScheduleController(ScheduleService scheduleService, SemesterService semesterService, SemesterMapper semesterMapper, ScheduleMapper scheduleMapper, ScheduleSaveMapper scheduleSaveMapper, ScheduleWithoutSemesterMapper scheduleWithoutSemesterMapper, TeacherService teacherService, PeriodMapper periodMapper, RoomForScheduleMapper roomForScheduleMapper, LessonService lessonService) {
         this.scheduleService = scheduleService;
         this.semesterService = semesterService;
         this.semesterMapper = semesterMapper;
@@ -52,6 +54,7 @@ public class ScheduleController {
         this.teacherService = teacherService;
         this.periodMapper = periodMapper;
         this.roomForScheduleMapper = roomForScheduleMapper;
+        this.lessonService = lessonService;
     }
 
     @GetMapping
@@ -179,14 +182,35 @@ public class ScheduleController {
     @PostMapping("/copy-schedule")
     @ApiOperation(value = "Copy full schedule from one semester to another semester")
     @PreAuthorize("hasRole('MANAGER')")
-    public ResponseEntity<List<ScheduleDTO>> copySchedule(@RequestParam Long fromSemesterId,
+    public ResponseEntity<List<ScheduleForCopyDTO>> copySchedule(@RequestParam Long fromSemesterId,
                                                           @RequestParam Long toSemesterId) {
         log.info("In copySchedule with fromSemesterId = {} and toSemesterId = {}", fromSemesterId, toSemesterId);
         Semester toSemester = semesterService.getById(toSemesterId);
-        List<Schedule> getSchedules = scheduleService.getSchedulesBySemester(fromSemesterId);
-        List<ScheduleDTO> dto = scheduleMapper.scheduleToScheduleDTOs(
-                scheduleService.copyScheduleFromOneToAnotherSemester(getSchedules, toSemester));
-        return ResponseEntity.ok().body(dto);
+        List<Schedule> schedules = scheduleService.getSchedulesBySemester(fromSemesterId);
+        List<Schedule> schedulesForToSemester = scheduleService.getSchedulesBySemester(toSemester.getId());
+        if (!schedulesForToSemester.isEmpty()) {
+            for (Schedule schedule : schedulesForToSemester) {
+                scheduleService.delete(schedule);
+            }
+        }
+        List<Schedule> schedulesForSave = new ArrayList<>();
+        for (Schedule schedule : schedules) {
+            Lesson lesson = schedule.getLesson();
+            lesson.setSemester(toSemester);
+            lessonService.saveLessonDuringCopy(lesson);
+            schedule.setLesson(lesson);
+            schedulesForSave.add(scheduleService.saveScheduleDuringCopy(schedule));
+        }
+        return ResponseEntity.ok().body(scheduleMapper.scheduleToScheduleForCopyDTOs(schedulesForSave));
+    }
+
+    @DeleteMapping("/delete-schedules")
+    @ApiOperation(value = "Delete all schedules by semester id")
+    @PreAuthorize("hasRole('MANAGER')")
+    public ResponseEntity deleteSchedulesBySemesterId(@RequestParam Long semesterId) {
+        log.info("In deleteSchedulesBySemesterId with semesterId = {}", semesterId);
+        scheduleService.deleteSchedulesBySemesterId(semesterId);
+        return ResponseEntity.ok().build();
     }
 
     //convert schedule map to schedule dto

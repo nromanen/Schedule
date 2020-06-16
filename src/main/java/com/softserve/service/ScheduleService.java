@@ -32,6 +32,8 @@ public interface ScheduleService extends BasicService<Schedule, Long> {
 
     Map<LocalDate, Map<Period, List<Schedule>>> scheduleByDateRangeForTeacher(LocalDate fromDate, LocalDate toDate, Long teacherId);
 
-    List<Schedule> copyScheduleFromOneToAnotherSemester(List<Schedule> schedules, Semester toSemester);
+    void deleteSchedulesBySemesterId(Long semesterId);
+
+    Schedule saveScheduleDuringCopy(Schedule schedule);
 }
 

@@ -135,11 +135,26 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
                 cb.equal(from.get("group").get("disable"), false),
                 cb.equal(from.get("group").get("id"), lesson.getGroup().getId()),
 
-                cb.notEqual(from.get("id"),lesson.getId()),
-                cb.equal(from.get("lessonType"),lesson.getLessonType()));
+                cb.notEqual(from.get("id"), lesson.getId()),
+                cb.equal(from.get("lessonType"), lesson.getLessonType()));
         cq.select(cb.count(from));
         Query<Long> query = sessionFactory.getCurrentSession().createQuery(cq);
         return query.getSingleResult();
+    }
+
+    /*
+     * The method used for getting list of lessons from database by semesterId
+     *
+     * @param semesterId Semester id for getting all lessons by this id from db
+     * @return list of entities Lesson
+     */
+    @Override
+    public List<Lesson> getLessonsBySemester(Long semesterId) {
+        log.info("In getLessonsBySemester(semesterId = [{}])", semesterId);
+        return sessionFactory.getCurrentSession().createQuery(
+                "select l from Lesson l " +
+                        " where l.semester.id= :semesterId").setParameter("semesterId", semesterId)
+                .getResultList();
     }
 
     // Checking if lesson is used in Schedule table

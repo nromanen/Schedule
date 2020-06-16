@@ -9,6 +9,7 @@
     "home_title": "Головна",
     "schedule_title": "Розклад",
     "wishes_title": "Бажання",
+    "my_profile": "Мій профіль",
 
     "LessonPage_management_title": "Заняття",
     "TeacherList_management_title": "Викладачі",
@@ -133,5 +134,6 @@
     "download_pdf": "Завантажити PDF",
     "select_dates_for_teacher_schedule": "Оберіть дати",
     "block_view": "Вигляд блоків",
-    "list_view": "Вигляд таблиці"
+    "list_view": "Вигляд таблиці",
+    "clear_schedule_label": "Очистити розклад"
 }
