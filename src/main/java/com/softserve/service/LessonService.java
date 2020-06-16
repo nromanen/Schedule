@@ -11,6 +11,7 @@ public interface LessonService extends BasicService <Lesson, Long> {
     List<Lesson> getLessonByTeacher(Long teacherId);
     List<LessonType> getAllLessonTypes();
     boolean isLessonForGroupExists(Lesson lesson);
+    boolean isLessonForGroupExistsAndIgnoreWithId(Lesson lesson);
     List<Lesson> getLessonsBySemester(Long semesterId);
     List<Lesson> copyLessonsFromOneToAnotherSemester(List<Lesson> lessons, Semester toSemester);
     Lesson saveLessonDuringCopy(Lesson lesson);

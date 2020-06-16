@@ -112,7 +112,7 @@ public class LessonServiceImpl implements LessonService {
     public Lesson update(Lesson object) {
         object.setSemester(semesterService.getCurrentSemester());
         log.info("In update(entity = [{}]", object);
-        if (isLessonForGroupExists(object)){
+        if (isLessonForGroupExistsAndIgnoreWithId(object)){
             throw new EntityAlreadyExistsException("Lesson with this parameters already exists");
         }
         else {
@@ -164,6 +164,17 @@ public class LessonServiceImpl implements LessonService {
     }
 
     /**
+     * Method verifies if lesson doesn't exist in Repository
+     * @param lesson Lesson entity that needs to be verified
+     * @return true if such lesson already exists
+     */
+    @Override
+    public boolean isLessonForGroupExistsAndIgnoreWithId(Lesson lesson) {
+        log.info("In isLessonForGroupExistsAndIgnoreWithId(lesson = [{}])", lesson);
+        return lessonRepository.countLessonDuplicatesWithIgnoreId(lesson) != 0;
+    }
+
+    /*
      * The method used for getting list of lessons from database by semesterId
      *
      * @param semesterId Semester id for getting all lessons by this id from db
