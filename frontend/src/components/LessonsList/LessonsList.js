@@ -2,7 +2,7 @@ import React from 'react';
 
 import Card from '../../share/Card/Card';
 
-import { FaEdit } from 'react-icons/fa';
+import { FaEdit, FaUserPlus } from 'react-icons/fa';
 import { MdDelete } from 'react-icons/md';
 import { MdContentCopy } from 'react-icons/all';
 
@@ -14,6 +14,15 @@ const LessonsList = props => {
     const firstStringLetterCapitalHandle = str => {
         return str.replace(/^\w/, c => c.toUpperCase());
     };
+    const isGroupped = grouped =>
+        grouped ? (
+            <FaUserPlus
+                title={t('formElements:grouped_label')}
+                className="svg-btn copy-btn align-left info-btn"
+            />
+        ) : (
+            ''
+        );
 
     return (
         <div>
@@ -21,6 +30,7 @@ const LessonsList = props => {
                 {lessons.map(lesson => (
                     <Card class="done-card" key={lesson.id}>
                         <div className="cards-btns">
+                            {isGroupped(lesson.grouped)}
                             <MdContentCopy
                                 title={t('copy_lesson')}
                                 className="svg-btn copy-btn"
@@ -40,8 +50,8 @@ const LessonsList = props => {
                         <p>
                             {firstStringLetterCapitalHandle(
                                 lesson.subjectForSite
-                            )}
-                            {' '}(
+                            )}{' '}
+                            (
                             {t(
                                 `formElements:lesson_type_${lesson.lessonType.toLowerCase()}_label`
                             )}
