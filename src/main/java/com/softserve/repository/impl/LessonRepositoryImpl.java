@@ -106,6 +106,7 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
                 cb.equal(from.get("group").get("disable"), false),
                 cb.equal(from.get("group").get("id"), lesson.getGroup().getId()),
 
+                cb.equal(from.get("semester").get("id"), lesson.getSemester().getId()),
                 cb.equal(from.get("lessonType"),lesson.getLessonType()));
         cq.select(cb.count(from));
         Query<Long> query = sessionFactory.getCurrentSession().createQuery(cq);
@@ -136,6 +137,7 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
                 cb.equal(from.get("group").get("id"), lesson.getGroup().getId()),
 
                 cb.notEqual(from.get("id"), lesson.getId()),
+                cb.equal(from.get("semester").get("id"), lesson.getSemester().getId()),
                 cb.equal(from.get("lessonType"), lesson.getLessonType()));
         cq.select(cb.count(from));
         Query<Long> query = sessionFactory.getCurrentSession().createQuery(cq);
