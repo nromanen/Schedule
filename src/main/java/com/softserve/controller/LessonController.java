@@ -113,7 +113,7 @@ public class LessonController {
     }
 
     @PostMapping("/copy-lesson-for-groups")
-    @ApiOperation(value = "Copy all lessons from one semester to another")
+    @ApiOperation(value = "Copy lesson for several groups")
     public ResponseEntity<List<LessonInfoDTO>> copyLessonInSameSemesterForGroups(@RequestParam Long lessonId,
                                                                                  @RequestBody List<Long> groupsId) {
         log.info("In copyLessonInSameSemesterForGroups with ");

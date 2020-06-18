@@ -1,4 +1,5 @@
 package com.softserve.repository.impl;
+
 import com.softserve.entity.Lesson;
 import com.softserve.repository.LessonRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -125,6 +126,14 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
                 "select l from Lesson l " +
                         " where l.semester.id= :semesterId").setParameter("semesterId", semesterId)
                 .getResultList();
+    }
+
+    @Override
+    public void deleteLessonBySemesterId(Long semesterId) {
+        log.info("In deleteLessonBySemesterId(semesterId = [{}])", semesterId);
+        sessionFactory.getCurrentSession().createQuery(
+                "delete from Lesson l where l.id in (select les.id from Lesson les where les.semester.id = :semesterId)")
+                .setParameter("semesterId", semesterId).executeUpdate();
     }
 
     // Checking if lesson is used in Schedule table

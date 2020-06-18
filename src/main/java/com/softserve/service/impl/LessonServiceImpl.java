@@ -201,4 +201,10 @@ public class LessonServiceImpl implements LessonService {
         log.info("In method saveLessonDuringCopy with lesson = {}", lesson);
         return lessonRepository.save(lesson);
     }
+
+    @Override
+    public void deleteLessonBySemesterId(Long semesterId) {
+        log.info("In method deleteLessonBySemesterId with semesterId = {}", semesterId);
+        lessonRepository.deleteLessonBySemesterId(semesterId);
+    }
 }

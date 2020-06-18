@@ -1,12 +1,15 @@
 package com.softserve.repository.impl;
 
+import com.softserve.dto.ScheduleForArchiveDTO;
 import com.softserve.entity.*;
 import com.softserve.entity.enums.EvenOdd;
 import com.softserve.repository.ScheduleRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -27,6 +30,12 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
             "from Schedule s where s.lesson.semester.id = :semesterId " +
             "and s.dayOfWeek = :dayOfWeek " +
             "and s.period.id = :classId "+ NOT_DISABLED_SQL;
+
+    private final MongoTemplate mongoTemplate;
+
+    public ScheduleRepositoryImpl(MongoTemplate mongoTemplate) {
+        this.mongoTemplate = mongoTemplate;
+    }
 
     /**
      * Method searches if there are any saved records in schedule for particular group
