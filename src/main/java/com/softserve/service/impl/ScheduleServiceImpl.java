@@ -480,6 +480,9 @@ public class ScheduleServiceImpl implements ScheduleService {
     public List<Schedule> getSchedulesBySemester(Long semesterId) {
         log.info("In getScheduleBySemester(Long semesterId = [{}])", semesterId);
         List<Schedule> schedules = scheduleRepository.getScheduleBySemester(semesterId);
+        if (schedules.isEmpty()) {
+            throw new EntityNotFoundException(Schedule.class, "semesterId", semesterId.toString());
+        }
         for (Schedule schedule : schedules) {
             Hibernate.initialize(schedule.getLesson().getSemester().getDaysOfWeek());
             Hibernate.initialize(schedule.getLesson().getSemester().getPeriods());
