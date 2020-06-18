@@ -77,11 +77,16 @@ const Schedule = props => {
 
     const t = props.translation;
 
-    const boardHeight = 70;
+    const dayContainerHeight = classes.length * 185.5 + 4.6 * classes.length;
 
     const useStyles = makeStyles({
+        dayContainer: {
+            height: dayContainerHeight,
+            maxHeight: dayContainerHeight
+        },
         day: {
-            top: boardHeight * classes.length
+            height: dayContainerHeight - 37,
+            maxHeight: dayContainerHeight- 37
         }
     });
     const elClasses = useStyles();
@@ -172,7 +177,7 @@ const Schedule = props => {
     });
 
     return (
-        <section className="cards-container">
+        <section className="cards-container schedule">
             <ScheduleDialog
                 translation={t}
                 itemData={itemData}
@@ -186,11 +191,16 @@ const Schedule = props => {
                 <section className="card empty-card">Група</section>
                 {days.map(day => (
                     <section
-                        className="cards-container before-border"
+                        className={
+                            elClasses.dayContainer +
+                            ' cards-container day-container'
+                        }
                         key={day}
                     >
                         <section
-                            className={elClasses.day + ' card schedule-day'}
+                            className={
+                                elClasses.day + ' card schedule-day card'
+                            }
                         >
                             {t(`day_of_week_${day}`)}
                         </section>
@@ -207,42 +217,53 @@ const Schedule = props => {
                     </section>
                 ))}
             </aside>
-            {groups.map(group => (
-                <section key={'group-' + group.id}>
-                    <div className="group-title card" id={`group-${group.id}`}>
-                        {group.title}
-                    </div>
-                    {allLessons.map((lesson, index) => (
-                        <div key={group + '-' + index} className="board-div">
-                            <Board
-                                currentSemester={currentSemester}
-                                setModalData={setItemData}
-                                openDialog={handleClickOpen}
-                                itemGroupId={itemGroupId}
-                                id={`group-${group.id}-day-${lesson.day.name}-class-${lesson.classNumber.id}-week-${lesson.week}`}
-                                className={`board card ${cssClasses.SCHEDULE_BOARD} group-${group.id} schedule-board`}
-                            >
-                                <IoMdMore
-                                    className="more-icon"
-                                    title={
-                                        `${t(
-                                            `formElements:teacher_wish_day`
-                                        )}: ` +
-                                        t(
-                                            `day_of_week_${lesson.day.name.toUpperCase()}`
-                                        ).toLowerCase() +
-                                        `\n${t(`teacher_wish_week`)}: ` +
-                                        t(`week_${lesson.week}_title`) +
-                                        `\n${t('class_schedule')}: ` +
-                                        lesson.classNumber.class_name
-                                    }
-                                />
-                                {itemInBoard(group, lesson, index)}
-                            </Board>
+            <section className="groups-section">
+                {groups.map(group => (
+                    <section
+                        key={'group-' + group.id}
+                        className="group-section"
+                    >
+                        <div
+                            className="group-title card"
+                            id={`group-${group.id}`}
+                        >
+                            {group.title}
                         </div>
-                    ))}
-                </section>
-            ))}
+                        {allLessons.map((lesson, index) => (
+                            <div
+                                key={group + '-' + index}
+                                className="board-div"
+                            >
+                                <Board
+                                    currentSemester={currentSemester}
+                                    setModalData={setItemData}
+                                    openDialog={handleClickOpen}
+                                    itemGroupId={itemGroupId}
+                                    id={`group-${group.id}-day-${lesson.day.name}-class-${lesson.classNumber.id}-week-${lesson.week}`}
+                                    className={`board card ${cssClasses.SCHEDULE_BOARD} group-${group.id} schedule-board`}
+                                >
+                                    <IoMdMore
+                                        className="more-icon"
+                                        title={
+                                            `${t(
+                                                `formElements:teacher_wish_day`
+                                            )}: ` +
+                                            t(
+                                                `day_of_week_${lesson.day.name.toUpperCase()}`
+                                            ).toLowerCase() +
+                                            `\n${t(`teacher_wish_week`)}: ` +
+                                            t(`week_${lesson.week}_title`) +
+                                            `\n${t('class_schedule')}: ` +
+                                            lesson.classNumber.class_name
+                                        }
+                                    />
+                                    {itemInBoard(group, lesson, index)}
+                                </Board>
+                            </div>
+                        ))}
+                    </section>
+                ))}
+            </section>
         </section>
     );
 };
