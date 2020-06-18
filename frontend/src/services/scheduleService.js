@@ -2,7 +2,7 @@ import { store } from '../index';
 
 import axios from '../helper/axios';
 import i18n from '../helper/i18n';
-import { errorHandler } from '../helper/handlerAxios';
+import { errorHandler, successHandler } from '../helper/handlerAxios';
 
 import {
     checkAvailabilitySchedule,
@@ -38,7 +38,8 @@ import {
     TEACHER_SCHEDULE_URL,
     PUBLIC_GROUP_URL,
     PUBLIC_TEACHER_URL,
-    FOR_TEACHER_SCHEDULE_URL
+    FOR_TEACHER_SCHEDULE_URL,
+    CLEAR_SCHEDULE_URL
 } from '../constants/axios';
 
 import { snackbarTypes } from '../constants/snackbarTypes';
@@ -256,4 +257,22 @@ export const getTeacherScheduleService = values => {
 };
 export const setTeacherServiceViewType = type => {
     store.dispatch(setTeacherViewType(type));
+};
+
+export const clearSchedule = semesterId => {
+    axios
+        .delete(CLEAR_SCHEDULE_URL + '?semesterId=' + semesterId)
+        .then(response => {
+            getScheduleItemsService();
+            successHandler(
+                i18n.t('serviceMessages:back_end_success_operation', {
+                    cardType: i18n.t('common:schedule_title'),
+                    actionType: i18n.t('serviceMessages:cleared_label')
+                })
+            );
+        })
+        .catch(err => {
+            errorHandler(err);
+            setLoadingService(false);
+        });
 };

@@ -1,7 +1,11 @@
 import i18n from '../helper/i18n';
 import { store } from '../index';
 import axios from '../helper/axios';
-import { DISABLED_SEMESTERS_URL, SEMESTERS_URL } from '../constants/axios';
+import {
+    DISABLED_SEMESTERS_URL,
+    SEMESTERS_URL,
+    SEMESTER_COPY_URL
+} from '../constants/axios';
 import { setDisabledSemesters, setError } from '../redux/actions/semesters';
 import { SEMESTER_FORM } from '../constants/reduxForms';
 import { snackbarTypes } from '../constants/snackbarTypes';
@@ -224,4 +228,24 @@ export const setDisabledSemestersService = semester => {
 export const setEnabledSemestersService = semester => {
     semester.disable = false;
     putSemester(semester);
+};
+
+export const semesterCopy = values => {
+    axios
+        .post(
+            SEMESTER_COPY_URL +
+                '?fromSemesterId=' +
+                values.fromSemesterId +
+                '&toSemesterId=' +
+                values.toSemesterId
+        )
+        .then(response => {
+            successHandler(
+                i18n.t('serviceMessages:back_end_success_operation', {
+                    cardType: i18n.t('formElements:semester_label'),
+                    actionType: i18n.t('serviceMessages:copied_label')
+                })
+            );
+        })
+        .catch(error => errorHandler(error));
 };

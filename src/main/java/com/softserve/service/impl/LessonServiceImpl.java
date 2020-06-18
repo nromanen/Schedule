@@ -10,6 +10,7 @@ import com.softserve.exception.EntityNotFoundException;
 import com.softserve.repository.LessonRepository;
 import com.softserve.service.*;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,8 +45,10 @@ public class LessonServiceImpl implements LessonService {
     @Override
     public Lesson getById(Long id) {
         log.info("In getById(id = [{}])",  id);
-        return lessonRepository.findById(id).orElseThrow(
+        Lesson lesson = lessonRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException(Lesson.class, "id", id.toString()));
+        Hibernate.initialize(lesson.getSemester().getPeriods());
+        return lesson;
     }
 
     /**
@@ -109,7 +112,7 @@ public class LessonServiceImpl implements LessonService {
     public Lesson update(Lesson object) {
         object.setSemester(semesterService.getCurrentSemester());
         log.info("In update(entity = [{}]", object);
-        if (isLessonForGroupExists(object)){
+        if (isLessonForGroupExistsAndIgnoreWithId(object)){
             throw new EntityAlreadyExistsException("Lesson with this parameters already exists");
         }
         else {
@@ -161,6 +164,17 @@ public class LessonServiceImpl implements LessonService {
     }
 
     /**
+     * Method verifies if lesson doesn't exist in Repository
+     * @param lesson Lesson entity that needs to be verified
+     * @return true if such lesson already exists
+     */
+    @Override
+    public boolean isLessonForGroupExistsAndIgnoreWithId(Lesson lesson) {
+        log.info("In isLessonForGroupExistsAndIgnoreWithId(lesson = [{}])", lesson);
+        return lessonRepository.countLessonDuplicatesWithIgnoreId(lesson) != 0;
+    }
+
+    /*
      * The method used for getting list of lessons from database by semesterId
      *
      * @param semesterId Semester id for getting all lessons by this id from db

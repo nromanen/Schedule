@@ -7,6 +7,9 @@ import { connect } from 'react-redux';
 
 import renderTextField from '../../share/renderedFields/input';
 import renderSelectField from '../../share/renderedFields/select';
+import renderCheckboxField from '../../share/renderedFields/checkbox';
+
+import { FaUserPlus } from 'react-icons/fa';
 
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
@@ -48,7 +51,11 @@ let LessonForm = props => {
 
     const groupId = props.groupId;
 
+    const [checked, setChecked] = React.useState(false);
+    const handleChange = event => setChecked(event.target.checked);
+
     useEffect(() => {
+        setChecked(false);
         if (lessonId) {
             initializeFormHandler(lesson);
         } else {
@@ -64,8 +71,10 @@ let LessonForm = props => {
             type: lesson.lessonType,
             hours: lesson.hours,
             teacherForSite: lesson.teacherForSite,
-            subjectForSite: lesson.subjectForSite
+            subjectForSite: lesson.subjectForSite,
+            grouped: lesson.grouped
         });
+        setChecked(lesson.grouped);
     };
 
     const setValueToTeacherForSiteHandler = teacherId => {
@@ -160,37 +169,56 @@ let LessonForm = props => {
                             </option>
                         ))}
                     </Field>
-                    <Field
-                        id="type"
-                        name="type"
-                        className="form-field"
-                        component={renderSelectField}
-                        label={t('type_label')}
-                        {...(!isUniqueError
-                            ? { validate: [required] }
-                            : { error: isUniqueError })}
-                        onChange={() => {
-                            setUniqueErrorService(false);
-                        }}
-                    >
-                        <option value={''} />
-                        {props.lessonTypes.map((lessonType, index) => (
-                            <option value={lessonType} key={index}>
-                                {t(
-                                    `formElements:lesson_type_${lessonType.toLowerCase()}_label`
-                                )}
-                            </option>
-                        ))}
-                    </Field>
-                    <Field
-                        id="hours"
-                        name="hours"
-                        className="form-field"
-                        type="number"
-                        component={renderTextField}
-                        label={t('hours_label')}
-                        validate={[required, lessThanZero]}
-                    />
+                    <div className="form-fields-container">
+                        <Field
+                            id="type"
+                            name="type"
+                            className="form-field"
+                            component={renderSelectField}
+                            label={t('type_label')}
+                            {...(!isUniqueError
+                                ? { validate: [required] }
+                                : { error: isUniqueError })}
+                            onChange={() => {
+                                setUniqueErrorService(false);
+                            }}
+                        >
+                            <option value={''} />
+                            {props.lessonTypes.map((lessonType, index) => (
+                                <option value={lessonType} key={index}>
+                                    {t(
+                                        `formElements:lesson_type_${lessonType.toLowerCase()}_label`
+                                    )}
+                                </option>
+                            ))}
+                        </Field>
+                        <Field
+                            id="hours"
+                            name="hours"
+                            className="form-field"
+                            type="number"
+                            component={renderTextField}
+                            label={t('hours_label')}
+                            validate={[required, lessThanZero]}
+                        />
+                        <Field
+                            id="grouped"
+                            name="grouped"
+                            className="form-field"
+                            label={
+                                <FaUserPlus
+                                    title={t('formElements:grouped_label')}
+                                    className="svg-btn copy-btn align-left info-btn"
+                                />
+                            }
+                            labelPlacement="end"
+                            defaultValue={checked}
+                            component={renderCheckboxField}
+                            checked={checked}
+                            onChange={handleChange}
+                            color="primary"
+                        />
+                    </div>
                     <Field
                         id="teacherForSite"
                         name="teacherForSite"
@@ -213,6 +241,7 @@ let LessonForm = props => {
                         label={t('subject_label') + t('for_site_label')}
                         validate={[required, maxLengthValue]}
                     />
+
                     <div className="form-buttons-container">
                         <Button
                             className="buttons-style"

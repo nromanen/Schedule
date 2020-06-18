@@ -137,5 +137,6 @@
     "download_pdf": "Download PDF",
     "select_dates_for_teacher_schedule": "Select dates",
     "block_view": "Block view",
-    "list_view": "List view"
+    "list_view": "List view",
+    "clear_schedule_label": "Clear Schedule"
 }
