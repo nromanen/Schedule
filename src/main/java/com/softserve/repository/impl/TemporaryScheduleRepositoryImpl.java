@@ -30,10 +30,11 @@ public class TemporaryScheduleRepositoryImpl extends BasicRepositoryImpl<Tempora
      * @return number of records in db
      */
     @Override
-    public Long isExistVacationByDate(LocalDate date) {
-        log.info("In isExistVacationByDate(semesterId = [{}], date = [{}])", date);
-        return (Long) sessionFactory.getCurrentSession().createQuery("select count (s.id) from  TemporarySchedule s where  s.date = :date and s.vacation =  true ")
+    public Long isExistVacationByDate(LocalDate date, Long semesterId) {
+        log.info("In isExistVacationByDate(semesterId = [{}], date = [{}])", semesterId, date);
+        return (Long) sessionFactory.getCurrentSession().createQuery("select count (s.id) from  TemporarySchedule s where  s.date = :date and s.vacation =  true and s.semester = :semesterId ")
                 .setParameter("date", date)
+                .setParameter("semesterId", semesterId)
                 .getSingleResult();
     }
 
@@ -56,6 +57,29 @@ public class TemporaryScheduleRepositoryImpl extends BasicRepositoryImpl<Tempora
                 .setParameter("lessonId", object.getLessonId())
                 .setParameter("lessonType", object.getLessonType())
                 .setParameter("semesterId", object.getSemester().getId())
+                .getSingleResult();
+    }
+
+    /**
+     * Method counts schedule records in db for group in the semester
+     *
+     * @param object
+     * @return number of records in db
+     */
+    @Override
+    public Long isExistTemporaryScheduleWithIgnoreId(TemporarySchedule object) {
+        log.info("In isExistTemporarySchedule(object = [{}]", object);
+        return (Long) sessionFactory.getCurrentSession().createQuery("select count (s.id) from  TemporarySchedule s where  s.date = :date and s.vacation =  false " +
+                "and s.room.id=:roomId and s.group.id=:groupId and s.period.id = :periodId and s.subject.id = :subjectId and s.lessonId = :lessonId and s.lessonType=:lessonType and s.semester.id = :semesterId and s.id!=:id")
+                .setParameter("date", object.getDate())
+                .setParameter("roomId", object.getRoom().getId())
+                .setParameter("groupId", object.getGroup().getId())
+                .setParameter("periodId", object.getPeriod().getId())
+                .setParameter("subjectId", object.getSubject().getId())
+                .setParameter("lessonId", object.getLessonId())
+                .setParameter("lessonType", object.getLessonType())
+                .setParameter("semesterId", object.getSemester().getId())
+                .setParameter("id", object.getId())
                 .getSingleResult();
     }
 
