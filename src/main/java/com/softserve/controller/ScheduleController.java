@@ -72,12 +72,8 @@ public class ScheduleController {
     @PreAuthorize("hasRole('MANAGER')")
     public ResponseEntity<List<ScheduleWithoutSemesterDTO>> listForSemester(@RequestParam Long semesterId) {
         log.info("In listForSemester()");
-        List<ScheduleWithoutSemesterDTO> scheduleWithoutSemesterDTOS = new ArrayList<>();
         List<Schedule> schedules = scheduleService.getSchedulesBySemester(semesterId);
-        if(!schedules.isEmpty()){
-            scheduleWithoutSemesterDTOS = scheduleWithoutSemesterMapper.scheduleToScheduleWithoutSemesterDTOs(schedules);
-        }
-        return ResponseEntity.status(HttpStatus.OK).body(scheduleWithoutSemesterDTOS);
+        return ResponseEntity.status(HttpStatus.OK).body(scheduleWithoutSemesterMapper.scheduleToScheduleWithoutSemesterDTOs(schedules));
     }
 
     @GetMapping("/data-before")

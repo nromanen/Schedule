@@ -22,7 +22,7 @@ import java.util.List;
 
 @RestController
 @Api(tags = "Temporary Schedule API")
-@RequestMapping("/temporary_schedules")
+@RequestMapping("/temporary-schedules")
 @Slf4j
 public class TemporaryScheduleController {
 
