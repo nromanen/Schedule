@@ -16,6 +16,14 @@ body {
     font-family: $font;
 }
 
+.centered-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 100%;
+    margin-top: 1em;
+}
+
 .under-line {
     position: relative;
 

@@ -12,6 +12,7 @@
     "my_profile": "Мій профіль",
 
     "LessonPage_management_title": "Заняття",
+    "Changes_management_title": "Заміни",
     "TeacherList_management_title": "Викладачі",
     "GroupList_management_title": "Групи",
     "ClassSchedule_management_title": "Уроки",
@@ -40,6 +41,7 @@
 
     "lesson_for_group_title": "Заняття для групи",
     "lesson_no_lesson_for_group_label": "Немає занять для групи ",
+    "no_changes": "Немає змін",
 
     "day_of_week_1": "Понеділок",
     "day_of_week_2": "Вівторок",
@@ -78,6 +80,9 @@
     "edit_lesson": "Редагувати заняття",
     "copy_lesson": "Скопіювати заняття",
     "copy_to_same_group_error": "Ви не можете скопіювати в ту саму групу",
+
+    "delete_lesson_changes": "Видалити зміни",
+    "edit_lesson_lesson": "Редагувати зміни",
 
     "successful_login_message": "Ви успішно увійшли",
     "successful_registered_message": "Ви успішно зареєструвалися. Підтвердьте будь ласка електронну адресу. ",

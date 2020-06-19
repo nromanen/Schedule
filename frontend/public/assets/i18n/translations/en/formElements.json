@@ -12,6 +12,7 @@
     "type_label": "Type",
     "hours_label": "Hours",
     "lesson_label": "Lesson",
+    "temporary_schedule_label": "Temporary schedule",
     "teacher_a_label": "Teacher",
     "group_y_label": "group",
     "class_y_label": "Class",
