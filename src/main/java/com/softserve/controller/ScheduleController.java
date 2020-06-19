@@ -41,7 +41,7 @@ public class ScheduleController {
     private final PeriodMapper periodMapper;
     private final RoomForScheduleMapper roomForScheduleMapper;
     private final LessonService lessonService;
-  //  private final MongoTemplate mongoTemplate;
+
 
     @Autowired
     public ScheduleController(ScheduleService scheduleService, SemesterService semesterService, SemesterMapper semesterMapper, ScheduleMapper scheduleMapper, ScheduleSaveMapper scheduleSaveMapper, ScheduleWithoutSemesterMapper scheduleWithoutSemesterMapper, TeacherService teacherService, PeriodMapper periodMapper, RoomForScheduleMapper roomForScheduleMapper, LessonService lessonService) {
@@ -154,14 +154,8 @@ public class ScheduleController {
         LocalDate toDate = LocalDate.parse(LocalDate.parse(to, formatter).toString(), currentFormatter);
         Teacher teacher = teacherService.findByUserId(Integer.parseInt(jwtUser.getId().toString()));
         List<ScheduleDateRangeFullDTO> dto = fullDTOForTeacherDateRange(scheduleService.scheduleByDateRangeForTeacher(fromDate, toDate, teacher.getId()));
-
-        TestDTO testDTO = new TestDTO();
-        testDTO.setName("for Teacher");
-        testDTO.setFull(dto);
-       // mongoTemplate.insert(testDTO);
         return ResponseEntity.status(HttpStatus.OK).body(dto);
     }
-
 
     @GetMapping("/full/teachers/date-range")
     @ApiOperation(value = "Get full schedule for teacher by date range")
