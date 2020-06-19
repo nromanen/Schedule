@@ -54,3 +54,4 @@ export const SEMESTER_COPY_URL = '/schedules/copy-schedule';
 export const CLEAR_SCHEDULE_URL = '/schedules/delete-schedules';
 
 export const COPY_LESSON_URL = '/lessons/copy-lesson-for-groups';
+export const LESSONS_FROM_SEMESTER_COPY_URL = '/lessons/copy-lessons';
