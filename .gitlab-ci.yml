@@ -34,7 +34,7 @@ test:
         policy: pull
     only:
         #- develop
-        #- master
+        - master
 
 build_frontend:
     stage: build_frontend
