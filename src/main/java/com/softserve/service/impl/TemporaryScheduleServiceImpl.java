@@ -89,7 +89,7 @@ public class TemporaryScheduleServiceImpl implements TemporaryScheduleService {
     @Override
     public List<TemporarySchedule> getAllByTeacher(Long teacherId) {
         log.info("Enter into getAllByTeacher of TemporaryScheduleServiceImpl");
-        return temporaryScheduleRepository.getAllByTeacher(teacherId);
+        return temporaryScheduleRepository.getAllByTeacher(teacherId, semesterService.getCurrentSemester().getId());
     }
 
 
