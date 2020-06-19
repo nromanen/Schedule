@@ -6,6 +6,7 @@ import com.softserve.dto.ScheduleWithoutSemesterDTO;
 import com.softserve.dto.SemesterDTO;
 import com.softserve.entity.Schedule;
 import com.softserve.entity.Semester;
+import com.softserve.exception.EntityNotFoundException;
 import com.softserve.mapper.ScheduleWithoutSemesterMapper;
 import com.softserve.mapper.SemesterMapper;
 import com.softserve.service.ArchiveService;
@@ -49,11 +50,15 @@ public class ArchiveController {
     @PostMapping("/{semesterId}")
     @ApiOperation(value = "Save archive schedule by semesterId in mongo db")
     @PreAuthorize("hasRole('MANAGER')")
-    public ResponseEntity<ScheduleForArchiveDTO> archiveScheduleBySemester(@PathVariable("semesterId") Long semesterId) {
+    public ResponseEntity archiveScheduleBySemester(@PathVariable("semesterId") Long semesterId) {
         log.info("In archiveScheduleBySemester with semesterId = {}", semesterId);
         Semester semester = semesterService.getById(semesterId);
         SemesterDTO semesterDTO = semesterMapper.semesterToSemesterDTO(semester);
         List<Schedule> schedules = scheduleService.getSchedulesBySemester(semesterId);
+        if (schedules.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    new MessageDTO(String.format("Schedules with semesterId = %d not found.", semesterId)));
+        }
         List<ScheduleWithoutSemesterDTO> scheduleWithoutSemesterDTOS = scheduleWithoutSemesterMapper.scheduleToScheduleWithoutSemesterDTOs(schedules);
         ScheduleForArchiveDTO scheduleForArchiveDTO = new ScheduleForArchiveDTO(semesterDTO ,scheduleWithoutSemesterDTOS);
         scheduleService.deleteSchedulesBySemesterId(semesterId);
