@@ -81,6 +81,17 @@ public class TemporaryScheduleServiceImpl implements TemporaryScheduleService {
         return temporaryScheduleRepository.getAll();
     }
 
+    /**
+     * The method used for getting all temporary schedules
+     *
+     * @return list of  temporary schedules
+     */
+    @Override
+    public List<TemporarySchedule> getAllByTeacher(Long teacherId) {
+        log.info("Enter into getAllByTeacher of TemporaryScheduleServiceImpl");
+        return temporaryScheduleRepository.getAllByTeacher(teacherId);
+    }
+
 
     /**
      * The method used for saving temporary schedule in database
