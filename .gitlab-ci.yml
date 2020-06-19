@@ -5,9 +5,8 @@ stages:
     - production_deploy
     - develop_deploy
 
-
 variables:
-    GRADLE_OPTS: "-Dorg.gradle.daemon=true"
+    GRADLE_OPTS: '-Dorg.gradle.daemon=true'
 
 before_script:
     - export GRADLE_USER_HOME=`pwd`/.gradle
@@ -17,7 +16,7 @@ build:
     stage: build
     script: gradle --build-cache assemble
     cache:
-        key: "$CI_COMMIT_REF_NAME"
+        key: '$CI_COMMIT_REF_NAME'
         policy: push
         paths:
             - build
@@ -41,7 +40,7 @@ build_frontend:
     stage: build_frontend
     image: node:latest
     cache:
-        key: "$CI_COMMIT_REF_NAME"
+        key: '$CI_COMMIT_REF_NAME'
         policy: push
         paths:
             - src/main/webapp
@@ -66,7 +65,7 @@ production_deploy:
     stage: production_deploy
     image: ruby:latest
     artifacts:
-           when: always
+        when: always
     dependencies:
         - build_frontend
     script:
@@ -81,7 +80,7 @@ develop_deploy:
     stage: develop_deploy
     image: ruby:latest
     artifacts:
-           when: always
+        when: always
     dependencies:
         - build_frontend
     script:
