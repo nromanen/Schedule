@@ -1,6 +1,6 @@
 stages:
     - build
-    - test
+    #- test
     - build_frontend
     - production_deploy
     - develop_deploy
@@ -25,17 +25,17 @@ build:
     only:
          - master
          - develop
-test:
-    image: gradle:alpine
-    stage: test
-    script:
-        - gradle check
-    cache:
-        key: "$CI_COMMIT_REF_NAME"
-        policy: pull
-    only:
-        #- develop
-        - master
+#test:
+#    image: gradle:alpine
+#    stage: test
+#    script:
+#        - gradle check
+#    cache:
+#        key: "$CI_COMMIT_REF_NAME"
+#        policy: pull
+#    only:
+#        #- develop
+#        - master
 
 build_frontend:
     stage: build_frontend
