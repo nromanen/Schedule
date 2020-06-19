@@ -19,6 +19,7 @@ import { connect } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import MergeRolePage from '../MergeRolePage/MergeRolePage';
 import { setCurrentSemester } from '../../redux/actions';
+import './AdminPage.scss';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -81,7 +82,7 @@ const SimpleTabs = props => {
         { name: 'LessonPage', component: <LessonPage /> },
         { name: 'TeacherList', component: <TeacherList /> },
         { name: 'GroupList', component: <GroupList /> },
-        { name: 'ClassSchedule', component: <ClassSchedule /> },
+        { name: 'ClassScheduleTitle', component: <ClassSchedule /> },
         { name: 'RoomList', component: <RoomList /> },
         { name: 'SubjectPage', component: <SubjectPage /> },
         { name: 'BusyRooms', component: <BusyRooms /> },

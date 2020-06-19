@@ -1,10 +1,6 @@
 package com.softserve.service;
 
-import com.softserve.dto.CreateScheduleInfoDTO;
-import com.softserve.dto.ScheduleForRoomDTO;
-import com.softserve.dto.ScheduleForGroupDTO;
-import com.softserve.dto.ScheduleForTeacherDTO;
-import com.softserve.dto.ScheduleFullDTO;
+import com.softserve.dto.*;
 import com.softserve.entity.Period;
 import com.softserve.entity.Schedule;
 import com.softserve.entity.enums.EvenOdd;
@@ -30,5 +26,9 @@ public interface ScheduleService extends BasicService<Schedule, Long> {
     List<Schedule> getSchedulesBySemester(Long semesterId);
 
     Map<LocalDate, Map<Period, List<Schedule>>> scheduleByDateRangeForTeacher(LocalDate fromDate, LocalDate toDate, Long teacherId);
+
+    void deleteSchedulesBySemesterId(Long semesterId);
+
+    Schedule saveScheduleDuringCopy(Schedule schedule);
 }
 

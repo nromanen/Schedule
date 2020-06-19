@@ -9,12 +9,14 @@ import lombok.*;
 @AllArgsConstructor
 @ToString
 public class UserDataDTO {
-    @JsonProperty(value = "teacher_name")
+    @JsonProperty(value = "id")
+    private Long teacherId;
+    @JsonProperty(value = "name")
     private String teacherName;
-    @JsonProperty(value = "teacher_surname")
+    @JsonProperty(value = "surname")
     private String teacherSurname;
-    @JsonProperty(value = "teacher_patronymic")
+    @JsonProperty(value = "patronymic")
     private String teacherPatronymic;
-    @JsonProperty(value = "teacher_position")
+    @JsonProperty(value = "position")
     private String teacherPosition;
 }

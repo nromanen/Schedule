@@ -1,7 +1,11 @@
 import axios from '../helper/axios';
 import { store } from '../index';
 
-import { LESSON_TYPES_URL, LESSON_URL } from '../constants/axios';
+import {
+    LESSON_TYPES_URL,
+    LESSON_URL,
+    COPY_LESSON_URL
+} from '../constants/axios';
 import { LESSON_FORM } from '../constants/reduxForms';
 
 import { handleSnackbarOpenService } from './snackbarService';
@@ -61,7 +65,8 @@ const cardObjectHandler = (card, groupId) => {
         lessonType: card.type,
         subjectForSite: card.subjectForSite,
         teacher: { id: card.teacher },
-        teacherForSite: card.teacherForSite
+        teacherForSite: card.teacherForSite,
+        grouped: card.grouped
     };
 };
 
@@ -145,10 +150,24 @@ export const selectLessonCardService = lessonCardId => {
 };
 
 export const copyLessonCardService = lessonGroupObj => {
-    const lesson = lessonGroupObj.lesson;
-    lesson.group = lessonGroupObj.group;
-    lesson.id = null;
-    createLessonHandler(lesson, true);
+    const groupList = [];
+    lessonGroupObj.group.map(groupItem => groupList.push(groupItem.id));
+    axios
+        .post(
+            COPY_LESSON_URL + `?lessonId=${lessonGroupObj.lesson.id}`,
+            groupList
+        )
+        .then(response => {
+            successHandler(
+                i18n.t('serviceMessages:back_end_success_operation', {
+                    cardType: i18n.t('formElements:lesson_label'),
+                    actionType: i18n.t('serviceMessages:copied_label')
+                })
+            );
+        })
+        .catch(err => {
+            errorHandler(err);
+        });
 };
 
 export const selectGroupIdService = groupId => {

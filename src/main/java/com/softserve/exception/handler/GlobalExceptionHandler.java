@@ -53,7 +53,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
      * teacher wishes json / time in period / password, entered during registration by User, are incorrect;
      * schedule / period have conflicts with already existed entities;
      * object already exists in an another class.
-    */
+     */
     @ExceptionHandler({IncorrectWishException.class, IncorrectTimeException.class, IncorrectPasswordException.class,
             ScheduleConflictException.class, PeriodConflictException.class, EntityAlreadyExistsException.class,
             IncorrectEmailException.class})

@@ -1,5 +1,13 @@
 import * as actionTypes from '../actions/actionsType';
-
+function compare(a, b) {
+    let comparison = 0;
+    if (a.name > b.name) {
+        comparison = 1;
+    } else if (a.name < b.name) {
+        comparison = -1;
+    }
+    return comparison;
+}
 const rooms = (
     state = {
         rooms: [],
@@ -13,7 +21,7 @@ const rooms = (
             return {
                 ...state,
                 oneRoom: {},
-                rooms: [...state.rooms, action.result]
+                rooms: [...state.rooms, action.result].sort(compare)
             };
         case actionTypes.DELETE_ROOM:
             return {

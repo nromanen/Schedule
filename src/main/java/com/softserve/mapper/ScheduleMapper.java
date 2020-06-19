@@ -1,6 +1,7 @@
 package com.softserve.mapper;
 
 import com.softserve.dto.ScheduleDTO;
+import com.softserve.dto.ScheduleForCopyDTO;
 import com.softserve.entity.Schedule;
 import org.mapstruct.Mapper;
 
@@ -12,4 +13,5 @@ public interface ScheduleMapper {
     Schedule scheduleDTOToSchedule(ScheduleDTO scheduleDTO);
 
     List<ScheduleDTO> scheduleToScheduleDTOs(List<Schedule> schedules);
+    List<ScheduleForCopyDTO> scheduleToScheduleForCopyDTOs(List<Schedule> schedules);
 }

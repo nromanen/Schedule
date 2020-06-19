@@ -16,6 +16,7 @@ import SchedulePage from '../containers/SchedulePage/SchedulePage';
 import AdminPage from '../containers/AdminPage/AdminPage';
 import Logout from '../containers/Auth/Logout/Logout';
 import ActivationPage from '../containers/ActivationPage/ActivationPage';
+import ProfilePage from '../containers/ProfilePage/ProfilePage';
 import { links } from '../constants/links';
 import { userRoles } from '../constants/userRoles';
 
@@ -33,6 +34,7 @@ const Routers = props => {
             </Route>
             <Route path={links.AUTH} component={Auth} />
             <Route path={links.ACTIVATION_PAGE} component={ActivationPage} />
+            <Route path={links.MY_PROFILE} component={ProfilePage} />
         </Switch>
     );
 
@@ -48,6 +50,7 @@ const Routers = props => {
 
                 <Route path={links.ADMIN_PAGE} component={AdminPage} />
                 <Route path={links.LOGOUT} component={Logout} />
+                <Route path={links.MY_PROFILE} component={ProfilePage} />
             </Switch>
         );
     } else if (userRole) {
@@ -68,6 +71,7 @@ const Routers = props => {
                 <Route path={links.ACTIVATION_PAGE}>
                     <Redirect to={links.HOME_PAGE} />
                 </Route>
+                <Route path={links.MY_PROFILE} component={ProfilePage} />
                 <Route path={links.LOGOUT} component={Logout} />
             </Switch>
         );

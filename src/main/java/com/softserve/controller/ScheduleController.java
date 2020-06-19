@@ -1,13 +1,11 @@
 package com.softserve.controller;
 
 import com.softserve.dto.*;
-import com.softserve.entity.CurrentUser;
-import com.softserve.entity.Period;
-import com.softserve.entity.Schedule;
-import com.softserve.entity.Teacher;
+import com.softserve.entity.*;
 import com.softserve.entity.enums.EvenOdd;
 import com.softserve.mapper.*;
 import com.softserve.security.jwt.JwtUser;
+import com.softserve.service.LessonService;
 import com.softserve.service.ScheduleService;
 import com.softserve.service.SemesterService;
 import com.softserve.service.TeacherService;
@@ -42,10 +40,11 @@ public class ScheduleController {
     private final TeacherService teacherService;
     private final PeriodMapper periodMapper;
     private final RoomForScheduleMapper roomForScheduleMapper;
-  //  private final MongoTemplate mongoTemplate;
+    private final LessonService lessonService;
+
 
     @Autowired
-    public ScheduleController(ScheduleService scheduleService, SemesterService semesterService, SemesterMapper semesterMapper, ScheduleMapper scheduleMapper, ScheduleSaveMapper scheduleSaveMapper, ScheduleWithoutSemesterMapper scheduleWithoutSemesterMapper, TeacherService teacherService, PeriodMapper periodMapper, RoomForScheduleMapper roomForScheduleMapper) {
+    public ScheduleController(ScheduleService scheduleService, SemesterService semesterService, SemesterMapper semesterMapper, ScheduleMapper scheduleMapper, ScheduleSaveMapper scheduleSaveMapper, ScheduleWithoutSemesterMapper scheduleWithoutSemesterMapper, TeacherService teacherService, PeriodMapper periodMapper, RoomForScheduleMapper roomForScheduleMapper, LessonService lessonService) {
         this.scheduleService = scheduleService;
         this.semesterService = semesterService;
         this.semesterMapper = semesterMapper;
@@ -55,6 +54,7 @@ public class ScheduleController {
         this.teacherService = teacherService;
         this.periodMapper = periodMapper;
         this.roomForScheduleMapper = roomForScheduleMapper;
+        this.lessonService = lessonService;
     }
 
     @GetMapping
@@ -63,6 +63,7 @@ public class ScheduleController {
     public ResponseEntity<List<ScheduleDTO>> list() {
         log.info("In list()");
         List<Schedule> schedules = scheduleService.getAll();
+
         return ResponseEntity.status(HttpStatus.OK).body(scheduleMapper.scheduleToScheduleDTOs(schedules));
     }
 
@@ -146,19 +147,64 @@ public class ScheduleController {
     public ResponseEntity<List<ScheduleDateRangeFullDTO>> getScheduleByDateRangeForCurrentTeacher(@RequestParam String from,
                                                                   @RequestParam String to,
                                                                   @CurrentUser JwtUser jwtUser) {
-        log.info("In, getScheduleByDateRangeForCurrentTeacher with from = {} and to = {}", from, to);
+        log.info("In getScheduleByDateRangeForCurrentTeacher with from = {} and to = {}", from, to);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         DateTimeFormatter currentFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate fromDate = LocalDate.parse(LocalDate.parse(from, formatter).toString(), currentFormatter);
         LocalDate toDate = LocalDate.parse(LocalDate.parse(to, formatter).toString(), currentFormatter);
         Teacher teacher = teacherService.findByUserId(Integer.parseInt(jwtUser.getId().toString()));
         List<ScheduleDateRangeFullDTO> dto = fullDTOForTeacherDateRange(scheduleService.scheduleByDateRangeForTeacher(fromDate, toDate, teacher.getId()));
-
-        TestDTO testDTO = new TestDTO();
-        testDTO.setName("for Teacher");
-        testDTO.setFull(dto);
-       // mongoTemplate.insert(testDTO);
         return ResponseEntity.status(HttpStatus.OK).body(dto);
+    }
+
+    @GetMapping("/full/teachers/date-range")
+    @ApiOperation(value = "Get full schedule for teacher by date range")
+    @PreAuthorize("hasRole('MANAGER')")
+    public ResponseEntity<List<ScheduleDateRangeFullDTO>> getScheduleByDateRangeForTeacher(@RequestParam String from,
+                                                                              @RequestParam String to,
+                                                                                                  @RequestParam Long teacherId) {
+        log.info("In getScheduleByDateForTeacher with from = {}, to={}, teacherId = {}", from, to, teacherId);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        DateTimeFormatter currentFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate fromDate = LocalDate.parse(LocalDate.parse(from, formatter).toString(), currentFormatter);
+        LocalDate toDate = LocalDate.parse(LocalDate.parse(to, formatter).toString(), currentFormatter);
+        teacherService.getById(teacherId);
+        List<ScheduleDateRangeFullDTO> dto = fullDTOForTeacherDateRange(scheduleService.scheduleByDateRangeForTeacher(fromDate, toDate, teacherId));
+        return ResponseEntity.status(HttpStatus.OK).body(dto);
+    }
+
+    @PostMapping("/copy-schedule")
+    @ApiOperation(value = "Copy full schedule from one semester to another semester")
+    @PreAuthorize("hasRole('MANAGER')")
+    public ResponseEntity<List<ScheduleForCopyDTO>> copySchedule(@RequestParam Long fromSemesterId,
+                                                          @RequestParam Long toSemesterId) {
+        log.info("In copySchedule with fromSemesterId = {} and toSemesterId = {}", fromSemesterId, toSemesterId);
+        Semester toSemester = semesterService.getById(toSemesterId);
+        List<Schedule> schedules = scheduleService.getSchedulesBySemester(fromSemesterId);
+        List<Schedule> schedulesForToSemester = scheduleService.getSchedulesBySemester(toSemester.getId());
+        if (!schedulesForToSemester.isEmpty()) {
+            for (Schedule schedule : schedulesForToSemester) {
+                scheduleService.delete(schedule);
+            }
+        }
+        List<Schedule> schedulesForSave = new ArrayList<>();
+        for (Schedule schedule : schedules) {
+            Lesson lesson = schedule.getLesson();
+            lesson.setSemester(toSemester);
+            lessonService.saveLessonDuringCopy(lesson);
+            schedule.setLesson(lesson);
+            schedulesForSave.add(scheduleService.saveScheduleDuringCopy(schedule));
+        }
+        return ResponseEntity.ok().body(scheduleMapper.scheduleToScheduleForCopyDTOs(schedulesForSave));
+    }
+
+    @DeleteMapping("/delete-schedules")
+    @ApiOperation(value = "Delete all schedules by semester id")
+    @PreAuthorize("hasRole('MANAGER')")
+    public ResponseEntity deleteSchedulesBySemesterId(@RequestParam Long semesterId) {
+        log.info("In deleteSchedulesBySemesterId with semesterId = {}", semesterId);
+        scheduleService.deleteSchedulesBySemesterId(semesterId);
+        return ResponseEntity.ok().build();
     }
 
     //convert schedule map to schedule dto

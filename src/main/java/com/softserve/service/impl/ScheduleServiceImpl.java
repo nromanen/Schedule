@@ -71,8 +71,8 @@ public class ScheduleServiceImpl implements ScheduleService {
         log.info("In getById(id = [{}])", id);
         Schedule schedule = scheduleRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException(Schedule.class, "id", id.toString()));
-        Hibernate.initialize(schedule.getSemester().getDaysOfWeek());
-        Hibernate.initialize(schedule.getSemester().getPeriods());
+        Hibernate.initialize(schedule.getLesson().getSemester().getDaysOfWeek());
+        Hibernate.initialize(schedule.getLesson().getSemester().getPeriods());
         return schedule;
     }
 
@@ -86,8 +86,8 @@ public class ScheduleServiceImpl implements ScheduleService {
         log.info("In getAll()");
         List<Schedule> schedules = scheduleRepository.getAll();
         for (Schedule schedule : schedules) {
-            Hibernate.initialize(schedule.getSemester().getDaysOfWeek());
-            Hibernate.initialize(schedule.getSemester().getPeriods());
+            Hibernate.initialize(schedule.getLesson().getSemester().getDaysOfWeek());
+            Hibernate.initialize(schedule.getLesson().getSemester().getPeriods());
         }
         return schedules;
     }
@@ -101,7 +101,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Override
     public Schedule save(Schedule object) {
         log.info("In save(entity = [{}]", object);
-        if (isConflictForGroupInSchedule(object.getSemester().getId(), object.getDayOfWeek(), object.getEvenOdd(), object.getPeriod().getId(), object.getLesson().getId())) {
+        if (isConflictForGroupInSchedule(semesterService.getCurrentSemester().getId(), object.getDayOfWeek(), object.getEvenOdd(), object.getPeriod().getId(), object.getLesson().getId())) {
             log.error("Schedule for group with id [{}] has conflict with already existing", object.getLesson().getGroup().getId());
             throw new ScheduleConflictException("You can't create schedule item for this group, because one already exists");
         } else {
@@ -118,7 +118,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Override
     public Schedule update(Schedule object) {
         log.info("In update(entity = [{}]", object);
-        if (isConflictForGroupInSchedule(object.getSemester().getId(), object.getDayOfWeek(), object.getEvenOdd(), object.getPeriod().getId(), object.getLesson().getId())) {
+        if (isConflictForGroupInSchedule(object.getLesson().getSemester().getId(), object.getDayOfWeek(), object.getEvenOdd(), object.getPeriod().getId(), object.getLesson().getId())) {
             throw new ScheduleConflictException("You can't update schedule item for this group, because it violates already existing");
         } else {
             return scheduleRepository.update(object);
@@ -479,7 +479,12 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Override
     public List<Schedule> getSchedulesBySemester(Long semesterId) {
         log.info("In getScheduleBySemester(Long semesterId = [{}])", semesterId);
-        return scheduleRepository.getScheduleBySemester(semesterId);
+        List<Schedule> schedules = scheduleRepository.getScheduleBySemester(semesterId);
+        for (Schedule schedule : schedules) {
+            Hibernate.initialize(schedule.getLesson().getSemester().getDaysOfWeek());
+            Hibernate.initialize(schedule.getLesson().getSemester().getPeriods());
+        }
+        return schedules;
     }
 
     /**
@@ -505,37 +510,60 @@ public class ScheduleServiceImpl implements ScheduleService {
         return fullScheduleForTeacherByDateRange(dateRangeSchedule, fromDate, toDate);
     }
 
+    /**
+     * Method deleteSchedulesBySemesterId delete all schedules from db in with current seemsterId
+     *
+     * @param semesterId id Semester for delete schedule
+     */
+    @Override
+    public void deleteSchedulesBySemesterId(Long semesterId) {
+        log.info("In deleteSchedulesBySemesterId with semesterId = {}", semesterId);
+        scheduleRepository.deleteSchedulesBySemesterId(semesterId);
+    }
+
+    /**
+     * Method saveScheduleDuringCopy save Schedule in db
+     *
+     * @param schedule Schedule entity for save schedule in db
+     * @return Schedule entity after saved in db
+     */
+    @Override
+    public Schedule saveScheduleDuringCopy(Schedule schedule) {
+        log.info("In saveScheduleDuringCopy with schedule = {}", schedule);
+        return scheduleRepository.save(schedule);
+    }
+
     //check date in semester date range, if yes return - true, else - false
     private boolean isDateInSemesterDateRange(Schedule schedule, LocalDate toDate) {
-        DayOfWeek startSemester = schedule.getSemester().getStartDay().getDayOfWeek();
+        DayOfWeek startSemester = schedule.getLesson().getSemester().getStartDay().getDayOfWeek();
 
         if (schedule.getEvenOdd() == EvenOdd.ODD) {
             if (startSemester.getValue() > schedule.getDayOfWeek().getValue()) {
                 int i = startSemester.getValue() - schedule.getDayOfWeek().getValue();
-                LocalDate firstCaseDate = schedule.getSemester().getStartDay().plusDays(14 - i);
+                LocalDate firstCaseDate = schedule.getLesson().getSemester().getStartDay().plusDays(14 - i);
 
-                return checkDateRangeForReturn(firstCaseDate, schedule.getSemester().getEndDay(), toDate);
+                return checkDateRangeForReturn(firstCaseDate, schedule.getLesson().getSemester().getEndDay(), toDate);
             }
             int k = schedule.getDayOfWeek().getValue() - startSemester.getValue();
-            LocalDate secondCaseDate = schedule.getSemester().getStartDay().plusDays(k);
+            LocalDate secondCaseDate = schedule.getLesson().getSemester().getStartDay().plusDays(k);
 
-            return checkDateRangeForReturn(secondCaseDate, schedule.getSemester().getEndDay(), toDate);
+            return checkDateRangeForReturn(secondCaseDate, schedule.getLesson().getSemester().getEndDay(), toDate);
         }
 
         if (schedule.getEvenOdd() == EvenOdd.EVEN || schedule.getEvenOdd() == EvenOdd.WEEKLY) {
             if (startSemester.getValue() > schedule.getDayOfWeek().getValue()) {
                 int i = startSemester.getValue() - schedule.getDayOfWeek().getValue();
-                LocalDate firstCaseDate = schedule.getSemester().getStartDay().plusDays(7 - i);
+                LocalDate firstCaseDate = schedule.getLesson().getSemester().getStartDay().plusDays(7 - i);
 
-                return checkDateRangeForReturn(firstCaseDate, schedule.getSemester().getEndDay(), toDate);
+                return checkDateRangeForReturn(firstCaseDate, schedule.getLesson().getSemester().getEndDay(), toDate);
             }
             int k = schedule.getDayOfWeek().getValue() - startSemester.getValue();
             if (schedule.getEvenOdd() == EvenOdd.WEEKLY) {
-                LocalDate secondCaseDate = schedule.getSemester().getStartDay().plusDays(k);
-                return checkDateRangeForReturn(secondCaseDate, schedule.getSemester().getEndDay(), toDate);
+                LocalDate secondCaseDate = schedule.getLesson().getSemester().getStartDay().plusDays(k);
+                return checkDateRangeForReturn(secondCaseDate, schedule.getLesson().getSemester().getEndDay(), toDate);
             }
-            LocalDate thirdCaseDate = schedule.getSemester().getStartDay().plusDays(7 + k);
-            return checkDateRangeForReturn(thirdCaseDate, schedule.getSemester().getEndDay(), toDate);
+            LocalDate thirdCaseDate = schedule.getLesson().getSemester().getStartDay().plusDays(7 + k);
+            return checkDateRangeForReturn(thirdCaseDate, schedule.getLesson().getSemester().getEndDay(), toDate);
         }
         return false;
     }
@@ -553,13 +581,13 @@ public class ScheduleServiceImpl implements ScheduleService {
         for (LocalDate date = fromDate; date.isBefore(toDate.plusDays(1)); date = date.plusDays(1)) {
             List<Schedule> scheduleList = new ArrayList<>();
             for (Schedule schedule : schedules) {
-                if (date.getDayOfWeek() == schedule.getDayOfWeek() && (date.isBefore(schedule.getSemester().getEndDay()) ||
-                        date.isEqual(schedule.getSemester().getEndDay())) && (date.isAfter(schedule.getSemester().getStartDay())
-                        || date.isEqual(schedule.getSemester().getStartDay()))) {
-                    int countStartDate = schedule.getSemester().getStartDay().getDayOfWeek().getValue();
+                if (date.getDayOfWeek() == schedule.getDayOfWeek() && (date.isBefore(schedule.getLesson().getSemester().getEndDay()) ||
+                        date.isEqual(schedule.getLesson().getSemester().getEndDay())) && (date.isAfter(schedule.getLesson().getSemester().getStartDay())
+                        || date.isEqual(schedule.getLesson().getSemester().getStartDay()))) {
+                    int countStartDate = schedule.getLesson().getSemester().getStartDay().getDayOfWeek().getValue();
                     int countEndDate = date.getDayOfWeek().getValue();
                     int countDays = Integer.parseInt(String.valueOf(ChronoUnit.DAYS.between(
-                            schedule.getSemester().getStartDay().minusDays(countStartDate), date.plusDays(7 - countEndDate))));
+                            schedule.getLesson().getSemester().getStartDay().minusDays(countStartDate), date.plusDays(7 - countEndDate))));
 
                     switch (schedule.getEvenOdd()) {
                         case ODD:
