@@ -6,6 +6,7 @@ import com.softserve.dto.ScheduleWithoutSemesterDTO;
 import com.softserve.dto.SemesterDTO;
 import com.softserve.entity.Schedule;
 import com.softserve.entity.Semester;
+import com.softserve.exception.EntityNotFoundException;
 import com.softserve.mapper.ScheduleWithoutSemesterMapper;
 import com.softserve.mapper.SemesterMapper;
 import com.softserve.service.ArchiveService;
@@ -54,8 +55,11 @@ public class ArchiveController {
         Semester semester = semesterService.getById(semesterId);
         SemesterDTO semesterDTO = semesterMapper.semesterToSemesterDTO(semester);
         List<Schedule> schedules = scheduleService.getSchedulesBySemester(semesterId);
+        if (schedules.isEmpty()) {
+            throw new EntityNotFoundException(Schedule.class, "semesterId", semesterId.toString());
+        }
         List<ScheduleWithoutSemesterDTO> scheduleWithoutSemesterDTOS = scheduleWithoutSemesterMapper.scheduleToScheduleWithoutSemesterDTOs(schedules);
-        ScheduleForArchiveDTO scheduleForArchiveDTO = new ScheduleForArchiveDTO(semesterDTO ,scheduleWithoutSemesterDTOS);
+        ScheduleForArchiveDTO scheduleForArchiveDTO = new ScheduleForArchiveDTO(semesterDTO, scheduleWithoutSemesterDTOS);
         scheduleService.deleteSchedulesBySemesterId(semesterId);
         lessonService.deleteLessonBySemesterId(semesterId);
         semesterService.delete(semester);
