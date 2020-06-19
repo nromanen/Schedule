@@ -2,7 +2,8 @@ import * as actionTypes from '../actions/actionsType';
 import { updateObject } from '../utility';
 
 const initialState = {
-    users: []
+    users: [],
+    user: {}
 };
 
 const reducer = (state = initialState, action) => {
@@ -10,6 +11,10 @@ const reducer = (state = initialState, action) => {
         case actionTypes.SET_USERS:
             return updateObject(state, {
                 users: action.result
+            });
+        case actionTypes.SET_USER:
+            return updateObject(state, {
+                user: action.result
             });
         default:
             return state;

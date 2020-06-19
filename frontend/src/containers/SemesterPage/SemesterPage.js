@@ -9,10 +9,12 @@ import Card from '../../share/Card/Card';
 import { search } from '../../helper/search';
 import NotFound from '../../share/NotFound/NotFound';
 import ConfirmDialog from '../../share/modals/dialog';
+import ModalWindow from '../../share/modals/modal/modal';
 import SearchPanel from '../../share/SearchPanel/SearchPanel';
 import SnackbarComponent from '../../share/Snackbar/SnackbarComponent';
 import { handleSnackbarCloseService } from '../../services/snackbarService';
 import SemesterForm from '../../components/SemesterForm/SemesterForm';
+import SemesterCopyForm from '../../components/SemesterCopyForm/SemesterCopyForm';
 import {
     clearSemesterService,
     getDisabledSemestersService,
@@ -21,14 +23,16 @@ import {
     selectSemesterService,
     setDisabledSemestersService,
     setEnabledSemestersService,
-    showAllSemestersService
+    showAllSemestersService,
+    semesterCopy
 } from '../../services/semesterService';
 import { disabledCard } from '../../constants/disabledCard';
-import { GiSightDisabled, IoMdEye } from 'react-icons/all';
+import { GiSightDisabled, IoMdEye, FaCopy } from 'react-icons/all';
 
 const SemesterPage = props => {
     const { t } = useTranslation('formElements');
     const [open, setOpen] = useState(false);
+    const [openModal, setOpenModal] = useState(false);
     const [semesterId, setSemesterId] = useState(-1);
     const [term, setTerm] = useState('');
     const { isSnackbarOpen, snackbarType, snackbarMessage } = props;
@@ -39,6 +43,7 @@ const SemesterPage = props => {
     }, []);
 
     const [hideDialog, setHideDialog] = useState(null);
+    const [hideDialogModal, setHideDialogModal] = useState(null);
     const [disabled, setDisabled] = useState(false);
 
     const SearchChange = setTerm;
@@ -55,10 +60,20 @@ const SemesterPage = props => {
         setSemesterId(semesterId);
         setOpen(true);
     };
+    const handleClickOpenModal = semesterId => {
+        setSemesterId(semesterId);
+        setOpenModal(true);
+    };
 
     const handleSnackbarClose = (event, reason) => {
         if (reason === 'clickaway') return;
         handleSnackbarCloseService();
+    };
+
+    const handleCloseModal = (event, reason) => {
+        setOpenModal(false);
+        setHideDialogModal(null);
+        if (reason === 'clickaway') return;
     };
 
     const handleClose = semesterId => {
@@ -85,6 +100,14 @@ const SemesterPage = props => {
     const showDisabledHandle = () => {
         setDisabled(!disabled);
     };
+    const handleSemesterCopySubmit = values => {
+        semesterCopy({
+            fromSemesterId: +semesterId,
+            toSemesterId: +values.toSemesterId
+        });
+        setOpenModal(false);
+        setHideDialogModal(null);
+    };
 
     return (
         <>
@@ -95,6 +118,22 @@ const SemesterPage = props => {
                 open={open}
                 onClose={handleClose}
             />
+            <ModalWindow
+                whatDelete={'semester'}
+                isHide={hideDialogModal}
+                open={openModal}
+                onClose={handleCloseModal}
+                windowTitle={t('semester_copy_label')}
+                isOkButton={false}
+                isNoButton={true}
+                noButtonLabel={t('close_label')}
+            >
+                <SemesterCopyForm
+                    semesterId={semesterId}
+                    onSubmit={handleSemesterCopySubmit}
+                    submitButtonLabel={t('copy_label')}
+                />
+            </ModalWindow>
             <div className="cards-container">
                 <aside className="search-list__panel">
                     <SearchPanel
@@ -148,6 +187,15 @@ const SemesterPage = props => {
                                                 onClick={() =>
                                                     handleEdit(semester.id)
                                                 }
+                                            />
+                                            <FaCopy
+                                                className="svg-btn copy-btn"
+                                                title={t('common:set_disabled')}
+                                                onClick={() => {
+                                                    handleClickOpenModal(
+                                                        semester.id
+                                                    );
+                                                }}
                                             />
                                         </>
                                     ) : (

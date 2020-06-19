@@ -9,11 +9,13 @@
     "home_title": "Home",
     "schedule_title": "Schedule",
     "wishes_title": "Wishes",
+    "my_profile": "My profile",
 
     "LessonPage_management_title": "Lesson",
     "TeacherList_management_title": "Teacher",
     "GroupList_management_title": "Group",
     "ClassSchedule_management_title": "Classes",
+    "ClassScheduleTitle_management_title": "Bells",
     "RoomList_management_title": "Room",
     "SubjectPage_management_title": "Subject",
     "BusyRooms_management_title": "Busy Rooms",
@@ -135,5 +137,7 @@
     "download_pdf": "Download PDF",
     "select_dates_for_teacher_schedule": "Select dates",
     "block_view": "Block view",
-    "list_view": "List view"
+    "list_view": "List view",
+    "clear_schedule_label": "Clear Schedule",
+    "copy_lessons_from_semester_to_current": "Copy all lessons from selected semester to current"
 }

@@ -9,11 +9,13 @@
     "home_title": "Головна",
     "schedule_title": "Розклад",
     "wishes_title": "Бажання",
+    "my_profile": "Мій профіль",
 
     "LessonPage_management_title": "Заняття",
     "TeacherList_management_title": "Викладачі",
     "GroupList_management_title": "Групи",
     "ClassSchedule_management_title": "Уроки",
+    "ClassScheduleTitle_management_title": "Дзвінки",
     "RoomList_management_title": "Аудиторії",
     "SubjectPage_management_title": "Предмети",
     "BusyRooms_management_title": "Зайнятість Кімнат",
@@ -132,5 +134,7 @@
     "download_pdf": "Завантажити PDF",
     "select_dates_for_teacher_schedule": "Оберіть дати",
     "block_view": "Вигляд блоків",
-    "list_view": "Вигляд таблиці"
+    "list_view": "Вигляд таблиці",
+    "clear_schedule_label": "Очистити розклад",
+    "copy_lessons_from_semester_to_current": "Копіювати всі заняття із обраного семестру в поточний"
 }

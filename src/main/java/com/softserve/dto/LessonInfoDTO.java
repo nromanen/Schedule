@@ -10,11 +10,12 @@ import lombok.*;
 public class LessonInfoDTO {
     private Long id;
     private int hours;
+    private SemesterDTO semester;
     private String teacherForSite;
     private String subjectForSite;
     private LessonType lessonType;
     private SubjectDTO subject;
     private GroupDTO group;
     private TeacherNameDTO teacher;
-
+    private boolean grouped;
 }

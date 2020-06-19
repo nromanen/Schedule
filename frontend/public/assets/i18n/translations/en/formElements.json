@@ -20,6 +20,7 @@
     "email_label": "Email",
     "password_label": "Password",
     "retype_password_label": "Retype password",
+    "new_password_label": "New password",
     "semester_label": "Semester",
     "semestry_label": "semesters",
     "semester_start": "Begin",
@@ -72,9 +73,14 @@
     "day_free_rooms": "Choose the day",
     "class_free_rooms": "Choose the class number",
 
-
-
-
     "merge_button": "Merge",
-    "max_count_classes_reached": "You reach maximum classes quantity"
+    "max_count_classes_reached": "You reach maximum classes quantity",
+    "change_password_form_title": "Change password",
+    "login_via_google": "Login via Google",
+    "semester_copy_label": "Copy semester data",
+    "semester_copy_hint": "When copying, the lessons and the actual schedule will be copied to the selected semester",
+    "close_label": "Close",
+    "copy_label": "Copy",
+    "semester_copy_red_hint": "If there are Lessons in the semester in which you are copying, they will be added; if there are records of the actual schedule, they will be replaced by new ones from the semester with which you copy.",
+    "grouped_label": "Grouped"
 }

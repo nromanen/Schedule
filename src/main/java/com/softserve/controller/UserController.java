@@ -101,18 +101,18 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(userMapper.toUserDTOs(userService.getAllUsersWithRoleUser()));
     }
 
-    @GetMapping("/my-data")
+    @GetMapping("/profile")
     @ApiOperation(value = "Get current user data")
     public ResponseEntity getCurrentUser(@CurrentUser JwtUser jwtUser) {
         User user = userService.getById(jwtUser.getId());
         if (user.getRole() == Role.ROLE_TEACHER) {
             Teacher teacher = teacherService.findByUserId(user.getId().intValue());
-            return ResponseEntity.ok().body(new UserDataDTO(teacher.getName(), teacher.getSurname(), teacher.getPatronymic(), teacher.getPosition()));
+            return ResponseEntity.ok().body(new UserDataDTO(teacher.getId(), teacher.getName(), teacher.getSurname(), teacher.getPatronymic(), teacher.getPosition()));
         }
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/change-data")
+    @PutMapping("/change-profile")
     @ApiOperation(value = "Change data for current user")
     public ResponseEntity<MessageDTO> changeDataForCurrentUser(@CurrentUser JwtUser jwtUser, @RequestBody UserDataForChangeDTO data) {
         User user = userService.getById(jwtUser.getId());

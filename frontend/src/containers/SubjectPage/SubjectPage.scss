@@ -1,16 +1,18 @@
 .subject-card {
-    width: 10em;
-    min-height: 105px;
+    width: 100%;
+    min-height: 35px;
     overflow: hidden;
+    display: flex;
+    justify-content: space-between;
 
     &__description {
         text-align: center;
         margin: 5px 0 0 0;
     }
     &__name {
-        text-align: center;
+        text-align: left;
         margin: 0;
-        max-width: 160px;
+        max-width: auto;
         overflow: hidden;
     }
 }

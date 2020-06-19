@@ -14,7 +14,6 @@ import java.time.DayOfWeek;
 @ToString
 public class ScheduleDTO {
     private Long id;
-    private SemesterDTO semester;
     private DayOfWeek dayOfWeek;
     private EvenOdd evenOdd;
     private LessonInfoDTO lesson;

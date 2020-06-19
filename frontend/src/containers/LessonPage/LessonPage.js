@@ -8,6 +8,7 @@ import CopyLessonDialog from '../../share/modals/chooseGroupDialog/CopyLessonDia
 
 import LessonForm from '../../components/LessonForm/LessonForm';
 import LessonsList from '../../components/LessonsList/LessonsList';
+import CopyLessonsFromSemesterForm from '../../components/CopyLessonsFromSemesterForm/CopyLessonsFromSemesterForm';
 
 import {
     copyLessonCardService,
@@ -22,6 +23,10 @@ import { showAllTeachersService } from '../../services/teacherService';
 import { showAllGroupsService } from '../../services/groupService';
 import { setLoadingService } from '../../services/loadingService';
 import { showAllSubjectsService } from '../../services/subjectService';
+import {
+    showAllSemestersService,
+    CopyLessonsFromSemesterService
+} from '../../services/semesterService';
 
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
@@ -31,7 +36,6 @@ import { styled } from '@material-ui/core/styles';
 import { cardType } from '../../constants/cardType';
 
 import './LessonPage.scss';
-
 
 const GroupField = styled(TextField)({
     display: 'inline-block',
@@ -66,6 +70,7 @@ const LessonPage = props => {
         }
     }, [groupId]);
     useEffect(() => showAllTeachersService(), []);
+    useEffect(() => showAllSemestersService(), []);
     useEffect(() => getLessonTypesService(), []);
     useEffect(() => showAllGroupsService(), []);
     useEffect(() => {
@@ -110,9 +115,7 @@ const LessonPage = props => {
 
     const closeCopyLessonDialogHandle = lessonGroupObj => {
         setOpenCopyLessonDialog(false);
-
         if (!lessonGroupObj) return;
-
         copyLessonCardService(lessonGroupObj);
     };
 
@@ -128,6 +131,12 @@ const LessonPage = props => {
     const groupFinderHandle = groupId => {
         if (groupId) return groups.find(group => group.id === groupId);
         else return '';
+    };
+
+    const submitCopy = values => {
+        values.toSemesterId = props.currentSemester.id;
+        values.fromSemesterId = +values.fromSemesterId;
+        CopyLessonsFromSemesterService(values);
     };
 
     let cardsContainer = (
@@ -202,15 +211,18 @@ const LessonPage = props => {
                 </div>
             </Card>
             <div className="cards-container">
-                <LessonForm
-                    lessonTypes={props.lessonTypes}
-                    isUniqueError={isUniqueError}
-                    groupId={groupId}
-                    subjects={subjects}
-                    teachers={teachers}
-                    onSubmit={createLessonCardHandler}
-                    onSetSelectedCard={selectLessonCardHandler}
-                />
+                <section>
+                    <LessonForm
+                        lessonTypes={props.lessonTypes}
+                        isUniqueError={isUniqueError}
+                        groupId={groupId}
+                        subjects={subjects}
+                        teachers={teachers}
+                        onSubmit={createLessonCardHandler}
+                        onSetSelectedCard={selectLessonCardHandler}
+                    />
+                    <CopyLessonsFromSemesterForm onSubmit={submitCopy} />
+                </section>
                 {cardsContainer}
             </div>
         </>
@@ -224,7 +236,9 @@ const mapStateToProps = state => ({
     teachers: state.teachers.teachers,
     groups: state.groups.groups,
     subjects: state.subjects.subjects,
-    loading: state.loadingIndicator.loading
+    loading: state.loadingIndicator.loading,
+    semesters: state.semesters.semesters,
+    currentSemester: state.schedule.currentSemester
 });
 
 export default connect(mapStateToProps)(LessonPage);

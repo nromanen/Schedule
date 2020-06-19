@@ -1,4 +1,13 @@
 import * as actionTypes from '../actions/actionsType';
+function compare(a, b) {
+    let comparison = 0;
+    if (a.surname > b.surname) {
+        comparison = 1;
+    } else if (a.surname < b.surname) {
+        comparison = -1;
+    }
+    return comparison;
+}
 
 const teachers = (
     state = {
@@ -12,7 +21,7 @@ const teachers = (
         case actionTypes.ADD_TEACHER:
             return {
                 ...state,
-                teachers: [...state.teachers, action.result]
+                teachers: [...state.teachers, action.result].sort(compare)
             };
 
         case actionTypes.DELETE_TEACHER:
@@ -25,6 +34,11 @@ const teachers = (
                 ]
             };
 
+        case actionTypes.SET_TEACHER:
+            return {
+                ...state,
+                teacher: action.result
+            };
         case actionTypes.SELECT_TEACHER:
             let teacher = state.teachers.filter(
                 teacher => teacher.id === action.result
