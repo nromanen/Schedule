@@ -59,4 +59,21 @@ public class TemporaryScheduleRepositoryImpl extends BasicRepositoryImpl<Tempora
                 .getSingleResult();
     }
 
+    /**
+     * Method counts schedule records in db for group in the semester
+     *
+     * @param teacherId, semesterId
+     * @return number of records in db
+     */
+    @Override
+    public List<TemporarySchedule> getAllByTeacher(Long teacherId, Long semesterId) {
+        log.info("In getAllByTeacher(teacherId = [{}], semesterId = [{}]", teacherId, semesterId);
+        return  sessionFactory.getCurrentSession().createQuery("select t from  TemporarySchedule t  " +
+                "join Lesson l on t.lessonId=l.id " +
+                "where  (t.teacher.id = :teacherId  or l.teacher.id = :teacherId) and t.semester.id = :semesterId ")
+                .setParameter("teacherId", teacherId)
+                .setParameter("semesterId", semesterId)
+                .getResultList();
+    }
+
 }
