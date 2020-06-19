@@ -9,4 +9,5 @@ public interface LessonRepository extends BasicRepository <Lesson, Long>  {
     Long countLessonDuplicates(Lesson lesson);
     Long countLessonDuplicatesWithIgnoreId(Lesson lesson);
     List<Lesson> getLessonsBySemester(Long semesterId);
+    void deleteLessonBySemesterId(Long semesterId);
 }

@@ -1,13 +1,8 @@
 package com.softserve.service;
 
-import com.softserve.dto.CreateScheduleInfoDTO;
-import com.softserve.dto.ScheduleForRoomDTO;
-import com.softserve.dto.ScheduleForGroupDTO;
-import com.softserve.dto.ScheduleForTeacherDTO;
-import com.softserve.dto.ScheduleFullDTO;
+import com.softserve.dto.*;
 import com.softserve.entity.Period;
 import com.softserve.entity.Schedule;
-import com.softserve.entity.Semester;
 import com.softserve.entity.enums.EvenOdd;
 
 import java.time.DayOfWeek;
