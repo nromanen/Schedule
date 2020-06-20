@@ -20,12 +20,14 @@ import {
 } from '../redux/actions';
 import { errorHandler, successHandler } from '../helper/handlerAxios';
 import { resetFormHandler } from '../helper/formHelper';
+import { setLoadingService } from './loadingService';
 
 export const showAllTeachersService = () => {
     axios
         .get(TEACHER_URL)
         .then(response => {
             store.dispatch(showAllTeachers(response.data));
+            setLoadingService(false);
         })
         .catch(error => errorHandler(error));
 };

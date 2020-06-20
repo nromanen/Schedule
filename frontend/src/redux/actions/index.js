@@ -14,7 +14,8 @@ export {
     updateTemporarySchedule,
     deleteTemporarySchedule,
     selectTemporarySchedule,
-    addTemporarySchedule
+    addTemporarySchedule,
+    selectTeacherId
 } from './temporarySchedule';
 
 export { setOpenSnackbar } from './snackbar';
@@ -31,7 +32,11 @@ export {
     resetUserPassword
 } from './auth';
 
-export { setLoading, setScheduleLoading } from './loadingIndicator';
+export {
+    setLoading,
+    setScheduleLoading,
+    setSemesterLoading
+} from './loadingIndicator';
 
 export {
     setScheduleItems,

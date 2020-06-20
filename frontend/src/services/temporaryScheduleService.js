@@ -6,16 +6,18 @@ import { setLoadingService } from './loadingService';
 
 import {
     deleteTemporarySchedule,
+    selectGroupId,
     selectTemporarySchedule,
     setTemporarySchedules
 } from '../redux/actions/index';
 
 import i18n from '../helper/i18n';
 import { errorHandler, successHandler } from '../helper/handlerAxios';
+import { selectTeacherId } from '../redux/actions/temporarySchedule';
 
-export const getTemporarySchedulesService = () => {
+export const getTemporarySchedulesService = teacherId => {
     axios
-        .get(TEMPORARY_SCHEDULE_URL)
+        .get(`${TEMPORARY_SCHEDULE_URL}?id=${teacherId}`)
         .then(response => {
             store.dispatch(setTemporarySchedules(response.data));
             setLoadingService(false);
@@ -45,4 +47,8 @@ export const deleteTemporaryScheduleService = temporaryScheduleId => {
 
 export const selectTemporaryScheduleId = temporaryScheduleId => {
     store.dispatch(selectTemporarySchedule(temporaryScheduleId));
+};
+
+export const selectTeacherIdService = teacherId => {
+    store.dispatch(selectTeacherId(teacherId));
 };

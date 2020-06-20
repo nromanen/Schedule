@@ -3,6 +3,8 @@ import { useTranslation } from 'react-i18next';
 import Card from '../../../share/Card/Card';
 import { reduxForm } from 'redux-form';
 import { TEMPORARY_SCHEDULE_FORM } from '../../../constants/reduxForms';
+import Button from '@material-ui/core/Button';
+import { setUniqueErrorService } from '../../../services/lessonService';
 
 let TemporaryScheduleForm = props => {
     const { t } = useTranslation('formElements');
@@ -33,7 +35,32 @@ let TemporaryScheduleForm = props => {
             ) : (
                 ''
             )}
-            <form onSubmit={handleSubmit}></form>
+            <form onSubmit={handleSubmit}>
+                <div className="form-buttons-container">
+                    <Button
+                        className="buttons-style"
+                        type="submit"
+                        variant="contained"
+                        color="primary"
+                        disabled={pristine || submitting}
+                    >
+                        {t('save_button_label')}
+                    </Button>
+                    <Button
+                        className="buttons-style"
+                        type="button"
+                        variant="contained"
+                        disabled={pristine || submitting}
+                        onClick={() => {
+                            reset();
+                            setUniqueErrorService(null);
+                            props.onSetSelectedCard(null);
+                        }}
+                    >
+                        {t('clear_button_label')}
+                    </Button>
+                </div>
+            </form>
         </Card>
     );
 };

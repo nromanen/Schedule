@@ -3,7 +3,8 @@ import { updateObject } from '../utility';
 
 const initialState = {
     temporarySchedules: [],
-    temporarySchedule: {}
+    temporarySchedule: {},
+    teacherId: null
 };
 
 const reducer = (state = initialState, action) => {
@@ -44,6 +45,11 @@ const reducer = (state = initialState, action) => {
             return updateObject(state, {
                 changes: updatedLessonChanges,
                 change: {}
+            });
+        case actionTypes.SELECT_TEACHER_ID:
+            return updateObject(state, {
+                temporarySchedule: {},
+                teacherId: action.result
             });
         default:
             return state;

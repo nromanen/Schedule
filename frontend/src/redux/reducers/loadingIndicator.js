@@ -3,7 +3,8 @@ import { updateObject } from '../utility';
 
 const initialState = {
     loading: false,
-    scheduleLoading: false
+    scheduleLoading: false,
+    semesterLoading: false
 };
 
 const reducer = (state = initialState, action) => {
@@ -12,9 +13,13 @@ const reducer = (state = initialState, action) => {
             return updateObject(state, {
                 loading: action.result
             });
-            case actionTypes.SET_SCHEDULE_LOADING_INDICATOR:
+        case actionTypes.SET_SCHEDULE_LOADING_INDICATOR:
             return updateObject(state, {
                 scheduleLoading: action.result
+            });
+        case actionTypes.SET_SEMESTER_LOADING_INDICATOR:
+            return updateObject(state, {
+                semesterLoading: action.result
             });
         default:
             return state;

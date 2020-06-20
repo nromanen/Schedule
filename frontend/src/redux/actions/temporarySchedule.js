@@ -34,3 +34,10 @@ export const updateTemporarySchedule = res => {
         result: res
     };
 };
+
+export const selectTeacherId = res => {
+    return {
+        type: actionTypes.SELECT_TEACHER_ID,
+        result: res
+    };
+};
