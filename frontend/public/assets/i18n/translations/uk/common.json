@@ -140,5 +140,6 @@
     "select_dates_for_teacher_schedule": "Оберіть дати",
     "block_view": "Вигляд блоків",
     "list_view": "Вигляд таблиці",
-    "clear_schedule_label": "Очистити розклад"
+    "clear_schedule_label": "Очистити розклад",
+    "copy_lessons_from_semester_to_current": "Копіювати всі заняття із обраного семестру в поточний"
 }

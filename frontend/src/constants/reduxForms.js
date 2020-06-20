@@ -16,3 +16,4 @@ export const TEACHER_SCHEDULE_FORM = 'teacherScheduleForm';
 export const SCHEDULE_SEARCH_FORM = 'GroupSchedulePageTop';
 export const PROFILE_FORM = 'ProfilePage';
 export const SEMESTER_COPY_FORM = 'SemesterCopyForm';
+export const COPY_LESSONS_FROM_SEMESTER_FORM = 'CopyLessonsFromSemesterForm';
