@@ -55,8 +55,9 @@ public class TemporaryScheduleController {
     @GetMapping
     @ApiOperation(value = "Get all temporary schedules by teacher")
     @PreAuthorize("hasRole('MANAGER')")
-    public ResponseEntity<List<TemporaryScheduleDTO>> getAll(@PathVariable("id") long id) {
+    public ResponseEntity<List<TemporaryScheduleDTO>> getAll(@RequestParam("id") long id) {
         log.info("Enter into getAll of TemporaryScheduleController");
+        teacherService.getById(id);
         return ResponseEntity.ok().body(temporaryScheduleMapper.convertToDtoList(temporaryScheduleService.getAllByTeacher(id)));
     }
 
