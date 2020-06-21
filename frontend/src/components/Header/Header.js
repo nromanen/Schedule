@@ -81,7 +81,7 @@ const Header = props => {
             setSemesterLoadingService(true);
             getCurrentSemesterService();
         }
-    }, []);
+    }, [props.userRole]);
 
     const handleClickOpenWish = teacher => {
         setTeacher(teacher);

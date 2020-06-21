@@ -2,10 +2,8 @@ import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 
-import TemporaryScheduleForm
-    from '../../components/Changes/TemporaryScheduleForm/TemporaryScheduleForm';
-import TemporaryScheduleList
-    from '../../components/Changes/TemporaryScheduleList/TemporaryScheduleList';
+import TemporaryScheduleForm from '../../components/Changes/TemporaryScheduleForm/TemporaryScheduleForm';
+import TemporaryScheduleList from '../../components/Changes/TemporaryScheduleList/TemporaryScheduleList';
 
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Autocomplete from '@material-ui/lab/Autocomplete';
@@ -33,7 +31,6 @@ const TemporarySchedule = props => {
     const isLoading = props.loading;
 
     const { teachers, teacherId } = props;
-
 
     useEffect(() => {
         setLoadingService(true);
@@ -98,6 +95,7 @@ const TemporarySchedule = props => {
             <div className="cards-container">
                 <TemporaryScheduleForm
                     temporarySchedule={props.temporarySchedule}
+                    teacherId={teacherId}
                 />
                 {isLoading ? (
                     <section className="centered-container">

@@ -92,6 +92,7 @@ body {
     @include flexWrap();
     align-items: center;
     justify-content: space-between;
+    margin-top: 10px;
 
     .buttons-style {
         width: 48%;
