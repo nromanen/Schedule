@@ -94,7 +94,7 @@ public class TemporaryScheduleRepositoryImpl extends BasicRepositoryImpl<Tempora
         log.info("In getAllByTeacher(teacherId = [{}], semesterId = [{}]", teacherId, semesterId);
         return  sessionFactory.getCurrentSession().createQuery("select t from  TemporarySchedule t  " +
                 "join Lesson l on t.lessonId=l.id " +
-                "where  (t.teacher.id = :teacherId  or l.teacher.id = :teacherId) and t.semester.id = :semesterId ")
+                "where  (t.teacher.id = :teacherId  or l.teacher.id = :teacherId or t.vacation = true) and t.semester.id = :semesterId ")
                 .setParameter("teacherId", teacherId)
                 .setParameter("semesterId", semesterId)
                 .getResultList();
