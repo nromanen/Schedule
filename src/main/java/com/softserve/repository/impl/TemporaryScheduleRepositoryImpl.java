@@ -32,7 +32,7 @@ public class TemporaryScheduleRepositoryImpl extends BasicRepositoryImpl<Tempora
     @Override
     public Long isExistVacationByDate(LocalDate date, Long semesterId) {
         log.info("In isExistVacationByDate(semesterId = [{}], date = [{}])", semesterId, date);
-        return (Long) sessionFactory.getCurrentSession().createQuery("select count (s.id) from  TemporarySchedule s where  s.date = :date and s.vacation =  true and s.semester = :semesterId ")
+        return (Long) sessionFactory.getCurrentSession().createQuery("select count (s.id) from  TemporarySchedule s where  s.date = :date and s.vacation =  true and s.semester.id = :semesterId ")
                 .setParameter("date", date)
                 .setParameter("semesterId", semesterId)
                 .getSingleResult();
