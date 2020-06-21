@@ -1,6 +1,5 @@
 package com.softserve.repository.impl;
 
-import com.softserve.entity.Subject;
 import com.softserve.exception.DeleteDisabledException;
 import com.softserve.repository.BasicRepository;
 import lombok.extern.slf4j.Slf4j;
