@@ -48,6 +48,23 @@ import { showBusyRooms } from './busyRooms';
 import { TEACHER_SCHEDULE_FORM } from '../constants/reduxForms';
 import { resetFormHandler } from '../helper/formHelper';
 
+export const getCurrentSemesterService = () => {
+    axios
+        .get(CURRENT_SEMESTER_URL)
+        .then(response => {
+            setLoadingService(false);
+            store.dispatch(setCurrentSemester(response.data));
+        })
+        .catch(err => {
+            handleSnackbarOpenService(
+                true,
+                snackbarTypes.ERROR,
+                i18n.t('common:no_current_semester_error')
+            );
+            setLoadingService(false);
+        });
+};
+
 export const getScheduleItemsService = () => {
     axios
         .get(CURRENT_SEMESTER_URL)
