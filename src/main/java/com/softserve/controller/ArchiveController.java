@@ -1,9 +1,6 @@
 package com.softserve.controller;
 
-import com.softserve.dto.MessageDTO;
-import com.softserve.dto.ScheduleForArchiveDTO;
-import com.softserve.dto.ScheduleWithoutSemesterDTO;
-import com.softserve.dto.SemesterDTO;
+import com.softserve.dto.*;
 import com.softserve.entity.Schedule;
 import com.softserve.entity.Semester;
 import com.softserve.exception.EntityNotFoundException;
@@ -50,7 +47,7 @@ public class ArchiveController {
     @PostMapping("/{semesterId}")
     @ApiOperation(value = "Save archive schedule by semesterId in mongo db")
     @PreAuthorize("hasRole('MANAGER')")
-    public ResponseEntity<ScheduleForArchiveDTO> archiveScheduleBySemester(@PathVariable("semesterId") Long semesterId) {
+    public ResponseEntity<ScheduleFullForArchiveDTO> archiveScheduleBySemester(@PathVariable("semesterId") Long semesterId) {
         log.info("In archiveScheduleBySemester with semesterId = {}", semesterId);
         Semester semester = semesterService.getById(semesterId);
         SemesterDTO semesterDTO = semesterMapper.semesterToSemesterDTO(semester);
@@ -58,8 +55,8 @@ public class ArchiveController {
         if (schedules.isEmpty()) {
             throw new EntityNotFoundException(Schedule.class, "semesterId", semesterId.toString());
         }
-        List<ScheduleWithoutSemesterDTO> scheduleWithoutSemesterDTOS = scheduleWithoutSemesterMapper.scheduleToScheduleWithoutSemesterDTOs(schedules);
-        ScheduleForArchiveDTO scheduleForArchiveDTO = new ScheduleForArchiveDTO(semesterDTO, scheduleWithoutSemesterDTOS);
+        List<ScheduleForArchiveDTO> scheduleArchiveDTOs = scheduleWithoutSemesterMapper.scheduleToScheduleForArchiveDTOs(schedules);
+        ScheduleFullForArchiveDTO scheduleForArchiveDTO = new ScheduleFullForArchiveDTO(semesterDTO, scheduleArchiveDTOs);
         scheduleService.deleteSchedulesBySemesterId(semesterId);
         lessonService.deleteLessonBySemesterId(semesterId);
         semesterService.delete(semester);
@@ -69,7 +66,7 @@ public class ArchiveController {
     @GetMapping
     @ApiOperation(value = "Get archive schedule by semesterId from mongo db")
     @PreAuthorize("hasRole('MANAGER')")
-    public ResponseEntity<ScheduleForArchiveDTO> getScheduleBySemesterId(@RequestParam Long semesterId) {
+    public ResponseEntity<ScheduleFullForArchiveDTO> getScheduleBySemesterId(@RequestParam Long semesterId) {
         log.info("In getScheduleBySemesterId with semesterId = {}", semesterId);
         return ResponseEntity.ok().body(archiveService.getArchiveScheduleBySemesterId(semesterId));
     }
