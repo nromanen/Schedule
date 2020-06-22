@@ -17,5 +17,6 @@ public class LessonsTemporaryTeacherDateRangeDTO {
     @JsonProperty(value = "group_name")
     private String groupName;
     private RoomForScheduleDTO room;
+    @JsonProperty(value = "class")
     private PeriodDTO period;
 }
