@@ -1,17 +1,22 @@
 package com.softserve.dto;
 
-import lombok.*;
-import org.springframework.data.mongodb.core.mapping.Document;
+import com.softserve.entity.enums.EvenOdd;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-import java.util.List;
+import java.time.DayOfWeek;
 
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 @ToString
-@Document(value = "archive_schedule")
 public class ScheduleForArchiveDTO {
-    private SemesterDTO semesterDTO;
-    private List<ScheduleWithoutSemesterDTO> scheduleWithoutSemesterDTOS;
+    private Long id;
+    private DayOfWeek dayOfWeek;
+    private EvenOdd evenOdd;
+    private LessonWithoutSemesterDTO lesson;
+    private PeriodDTO period;
+    private RoomDTO room;
 }

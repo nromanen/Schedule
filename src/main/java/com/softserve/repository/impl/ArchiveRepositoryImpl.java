@@ -1,6 +1,6 @@
 package com.softserve.repository.impl;
 
-import com.softserve.dto.ScheduleForArchiveDTO;
+import com.softserve.dto.ScheduleFullForArchiveDTO;
 import com.softserve.repository.ArchiveRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,10 +30,10 @@ public class ArchiveRepositoryImpl implements ArchiveRepository {
      * @return Optional of schedule
      */
     @Override
-    public Optional<ScheduleForArchiveDTO> getArchiveScheduleBySemesterId(Long semesterId) {
+    public Optional<ScheduleFullForArchiveDTO> getArchiveScheduleBySemesterId(Long semesterId) {
         log.info("In getArchiveScheduleBySemesterId with semesterId = {}", semesterId);
         return Optional.ofNullable(
-                mongoOperations.findOne(new Query().addCriteria(Criteria.where("semesterDTO.id").is(semesterId)), ScheduleForArchiveDTO.class));
+                mongoOperations.findOne(new Query().addCriteria(Criteria.where("semesterDTO.id").is(semesterId)), ScheduleFullForArchiveDTO.class));
     }
 
     /**
@@ -42,21 +42,21 @@ public class ArchiveRepositoryImpl implements ArchiveRepository {
      * @return list of schedules
      */
     @Override
-    public List<ScheduleForArchiveDTO> getAllArchiveSchedule() {
+    public List<ScheduleFullForArchiveDTO> getAllArchiveSchedule() {
         log.info("In getAllArchiveSchedule");
-        return mongoOperations.findAll(ScheduleForArchiveDTO.class);
+        return mongoOperations.findAll(ScheduleFullForArchiveDTO.class);
     }
 
     /**
      * The method used for save schedule in mongo database
      *
-     * @param scheduleForArchiveDTO object ScheduleForArchiveDTO for save schedule in mongo db
-     * @return ScheduleForArchiveDTO object
+     * @param fullForArchiveDTO object ScheduleFullForArchiveDTO for save schedule in mongo db
+     * @return ScheduleFullForArchiveDTO object
      */
     @Override
-    public ScheduleForArchiveDTO saveScheduleForArchive(ScheduleForArchiveDTO scheduleForArchiveDTO) {
-        log.info("In saveScheduleForArchive with scheduleForArchiveDTO = {}", scheduleForArchiveDTO);
-        return mongoOperations.insert(scheduleForArchiveDTO);
+    public ScheduleFullForArchiveDTO saveScheduleForArchive(ScheduleFullForArchiveDTO fullForArchiveDTO) {
+        log.info("In saveScheduleForArchive with scheduleForArchiveDTO = {}", fullForArchiveDTO);
+        return mongoOperations.insert(fullForArchiveDTO);
     }
 
     /**
@@ -67,6 +67,6 @@ public class ArchiveRepositoryImpl implements ArchiveRepository {
     @Override
     public void deleteArchiveScheduleBySemesterId(Long semesterId) {
         log.info("In removeArchiveScheduleBySemesterId with semesterId = {}", semesterId);
-        mongoOperations.remove(new Query().addCriteria(Criteria.where("semesterDTO.id").is(semesterId)), ScheduleForArchiveDTO.class);
+        mongoOperations.remove(new Query().addCriteria(Criteria.where("semesterDTO.id").is(semesterId)), ScheduleFullForArchiveDTO.class);
     }
 }
