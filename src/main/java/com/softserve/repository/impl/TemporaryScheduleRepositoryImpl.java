@@ -1,22 +1,12 @@
 package com.softserve.repository.impl;
 
-import com.softserve.dto.TemporaryScheduleSaveDTO;
 import com.softserve.entity.*;
-import com.softserve.entity.enums.EvenOdd;
-import com.softserve.repository.ScheduleRepository;
 import com.softserve.repository.TemporaryScheduleRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
-import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 @Slf4j
@@ -24,17 +14,18 @@ public class TemporaryScheduleRepositoryImpl extends BasicRepositoryImpl<Tempora
 
 
     /**
-     * Method counts schedule records in db for group in the semester
+     * Method counts temporary schedule records in db for date and vacation  in the semester
      *
-     * @param date
+     * @param date, semesterId, vacation
      * @return number of records in db
      */
     @Override
-    public Long isExistVacationByDate(LocalDate date, Long semesterId) {
+    public Long isExistTemporaryScheduleByVacationByDate(LocalDate date, Long semesterId, boolean vacation) {
         log.info("In isExistVacationByDate(semesterId = [{}], date = [{}])", semesterId, date);
-        return (Long) sessionFactory.getCurrentSession().createQuery("select count (s.id) from  TemporarySchedule s where  s.date = :date and s.vacation =  true and s.semester.id = :semesterId ")
+        return (Long) sessionFactory.getCurrentSession().createQuery("select count (s.id) from  TemporarySchedule s where  s.date = :date and s.vacation =  :vacation and s.semester.id = :semesterId ")
                 .setParameter("date", date)
                 .setParameter("semesterId", semesterId)
+                .setParameter("vacation", vacation)
                 .getSingleResult();
     }
 
