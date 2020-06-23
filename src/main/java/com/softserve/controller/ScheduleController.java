@@ -5,10 +5,7 @@ import com.softserve.entity.*;
 import com.softserve.entity.enums.EvenOdd;
 import com.softserve.mapper.*;
 import com.softserve.security.jwt.JwtUser;
-import com.softserve.service.LessonService;
-import com.softserve.service.ScheduleService;
-import com.softserve.service.SemesterService;
-import com.softserve.service.TeacherService;
+import com.softserve.service.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -41,10 +38,10 @@ public class ScheduleController {
     private final PeriodMapper periodMapper;
     private final RoomForScheduleMapper roomForScheduleMapper;
     private final LessonService lessonService;
-
+    private final RoomService roomService;
 
     @Autowired
-    public ScheduleController(ScheduleService scheduleService, SemesterService semesterService, SemesterMapper semesterMapper, ScheduleMapper scheduleMapper, ScheduleSaveMapper scheduleSaveMapper, ScheduleWithoutSemesterMapper scheduleWithoutSemesterMapper, TeacherService teacherService, PeriodMapper periodMapper, RoomForScheduleMapper roomForScheduleMapper, LessonService lessonService) {
+    public ScheduleController(ScheduleService scheduleService, SemesterService semesterService, SemesterMapper semesterMapper, ScheduleMapper scheduleMapper, ScheduleSaveMapper scheduleSaveMapper, ScheduleWithoutSemesterMapper scheduleWithoutSemesterMapper, TeacherService teacherService, PeriodMapper periodMapper, RoomForScheduleMapper roomForScheduleMapper, LessonService lessonService, RoomService roomService) {
         this.scheduleService = scheduleService;
         this.semesterService = semesterService;
         this.semesterMapper = semesterMapper;
@@ -55,6 +52,7 @@ public class ScheduleController {
         this.periodMapper = periodMapper;
         this.roomForScheduleMapper = roomForScheduleMapper;
         this.lessonService = lessonService;
+        this.roomService = roomService;
     }
 
     @GetMapping
@@ -177,7 +175,7 @@ public class ScheduleController {
     @ApiOperation(value = "Copy full schedule from one semester to another semester")
     @PreAuthorize("hasRole('MANAGER')")
     public ResponseEntity<List<ScheduleForCopyDTO>> copySchedule(@RequestParam Long fromSemesterId,
-                                                          @RequestParam Long toSemesterId) {
+                                                                 @RequestParam Long toSemesterId) {
         log.info("In copySchedule with fromSemesterId = {} and toSemesterId = {}", fromSemesterId, toSemesterId);
         Semester toSemester = semesterService.getById(toSemesterId);
         List<Schedule> schedules = scheduleService.getSchedulesBySemester(fromSemesterId);
@@ -205,6 +203,22 @@ public class ScheduleController {
         log.info("In deleteSchedulesBySemesterId with semesterId = {}", semesterId);
         scheduleService.deleteSchedulesBySemesterId(semesterId);
         return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/by-room")
+    @ApiOperation(value = "Change schedule by room Id")
+    @PreAuthorize("hasRole('MANAGER')")
+    public ResponseEntity<ScheduleDTO> changeScheduleByRoom(@RequestParam Long scheduleId,
+                                                            @RequestParam Long roomId) {
+        log.info("In changeScheduleByRoom with scheduleId = {} and roomId = {}", scheduleId, roomId);
+        Schedule schedule = scheduleService.getById(scheduleId);
+        Room room = roomService.getById(roomId);
+        if (schedule.getRoom().getId() == room.getId()) {
+            return ResponseEntity.ok().body(scheduleMapper.scheduleToScheduleDTO(schedule));
+        }
+        schedule.setRoom(room);
+        Schedule updateSchedule = scheduleService.updateWithoutChecks(schedule);
+        return ResponseEntity.ok().body(scheduleMapper.scheduleToScheduleDTO(updateSchedule));
     }
 
     //convert schedule map to schedule dto

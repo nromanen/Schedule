@@ -30,5 +30,7 @@ public interface ScheduleService extends BasicService<Schedule, Long> {
     void deleteSchedulesBySemesterId(Long semesterId);
 
     Schedule saveScheduleDuringCopy(Schedule schedule);
+
+    Schedule updateWithoutChecks(Schedule schedule);
 }
 

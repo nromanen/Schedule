@@ -533,6 +533,18 @@ public class ScheduleServiceImpl implements ScheduleService {
         return scheduleRepository.save(schedule);
     }
 
+    /**
+     * Method updateWithoutChecks update Schedule in db
+     *
+     * @param schedule Schedule entity for update schedule in db
+     * @return Schedule entity after update in db
+     */
+    @Override
+    public Schedule updateWithoutChecks(Schedule schedule) {
+        log.info("In updateWithoutChecks with schedule = {}", schedule);
+        return scheduleRepository.update(schedule);
+    }
+
     //check date in semester date range, if yes return - true, else - false
     private boolean isDateInSemesterDateRange(Schedule schedule, LocalDate toDate) {
         DayOfWeek startSemester = schedule.getLesson().getSemester().getStartDay().getDayOfWeek();
