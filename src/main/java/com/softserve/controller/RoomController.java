@@ -109,7 +109,6 @@ public class RoomController {
         List<RoomForScheduleInfoDTO> notAvailableRoomsDTO = roomForScheduleInfoMapper.toRoomForScheduleDTOList(notAvailableRooms);
 
         availableRoomsDTO.forEach(s -> s.setAvailable(true));
-        //notAvailableRoomsDTO.forEach(s -> s.setAvailable(false));
         availableRoomsDTO.addAll(notAvailableRoomsDTO);
         return ResponseEntity.ok().body(availableRoomsDTO);
     }
