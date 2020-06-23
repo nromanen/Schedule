@@ -29,7 +29,7 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
         cq.where(cb.equal(from.get("teacher").get("disable"), false),
                 cb.equal(from.get("subject").get("disable"), false),
                 cb.equal(from.get("group").get("disable"), false));
-        cq.orderBy(cb.asc(from.get("subject_for_site")));
+        cq.orderBy(cb.asc(from.get("subjectForSite")));
 
         TypedQuery<Lesson> tq = sessionFactory.getCurrentSession().createQuery(cq);
         return tq.getResultList();
@@ -55,7 +55,7 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
                 cb.equal(from.get("group").get("disable"), false),
                 cb.equal(from.get("group").get("id"), groupId),
                 cb.equal(from.get("semester").get("id"), semesterId));
-        cq.orderBy(cb.asc(from.get("subject_for_site")));
+        cq.orderBy(cb.asc(from.get("subjectForSite")));
         TypedQuery<Lesson> tq = sessionFactory.getCurrentSession().createQuery(cq);
         return  tq.getResultList();
     }
@@ -80,7 +80,7 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
 
                 cb.equal(from.get("group").get("disable"), false),
                 cb.equal(from.get("semester").get("id"), semesterId));
-        cq.orderBy(cb.asc(from.get("subject_for_site")));
+        cq.orderBy(cb.asc(from.get("subjectForSite")));
         TypedQuery<Lesson> tq = sessionFactory.getCurrentSession().createQuery(cq);
         return  tq.getResultList();
     }
