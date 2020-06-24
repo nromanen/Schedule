@@ -252,7 +252,6 @@ export const semesterCopy = values => {
 };
 
 export const CopyLessonsFromSemesterService = values => {
-    console.log('VALUES', values);
     axios
         .post(
             LESSONS_FROM_SEMESTER_COPY_URL +

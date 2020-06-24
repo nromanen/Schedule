@@ -139,6 +139,12 @@ const LessonPage = props => {
         CopyLessonsFromSemesterService(values);
     };
 
+    const renderCopyLessonsForm = () => {
+        if (!groupId) {
+            return <CopyLessonsFromSemesterForm onSubmit={submitCopy} />;
+        }
+    };
+
     let cardsContainer = (
         <>
             {lessonLength > 0 ? (
@@ -221,7 +227,7 @@ const LessonPage = props => {
                         onSubmit={createLessonCardHandler}
                         onSetSelectedCard={selectLessonCardHandler}
                     />
-                    <CopyLessonsFromSemesterForm onSubmit={submitCopy} />
+                    {renderCopyLessonsForm()}
                 </section>
                 {cardsContainer}
             </div>

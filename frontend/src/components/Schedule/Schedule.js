@@ -9,8 +9,11 @@ import { firstStringLetterCapital } from '../../helper/strings';
 
 import {
     addItemToScheduleService,
-    deleteItemFromScheduleService
+    deleteItemFromScheduleService,
+    checkAvailabilityChangeRoomScheduleService,
+    editRoomItemToScheduleService
 } from '../../services/scheduleService';
+
 import {
     getLessonsByGroupService,
     selectGroupIdService
@@ -35,6 +38,12 @@ const Schedule = props => {
         addItemToScheduleService({ ...item, roomId: room.id });
     };
 
+    const setEditItemHandle = (itemId, roomId, groupId) => {
+        getLessonsByGroupService(groupId);
+        selectGroupIdService(groupId);
+        editRoomItemToScheduleService({ itemId, roomId });
+    };
+
     const handleClickOpen = () => {
         setOpen(true);
     };
@@ -43,21 +52,43 @@ const Schedule = props => {
         setOpen(false);
         if (value) {
             setLoadingService(true);
-            setNewItemHandle(
-                value.itemData.item,
-                value.room,
-                value.itemData.groupId
-            );
-            const el = document.getElementById(
-                'group-' +
-                    value.itemData.groupId +
-                    '-day-' +
-                    value.itemData.item.dayOfWeek.toLowerCase() +
-                    '-class-' +
-                    value.itemData.item.periodId +
-                    '-week-' +
-                    value.itemData.item.evenOdd.toLowerCase()
-            );
+            let el = '';
+            if (value.itemData.item.id) {
+                setEditItemHandle(
+                    value.itemData.item.id,
+                    value.room.id,
+                    value.itemData.groupId
+                );
+
+                el = document.getElementById(
+                    'card-' +
+                        value.itemData.item.lesson.id +
+                        '-group-' +
+                        value.itemData.groupId +
+                        '-in-day-' +
+                        value.itemData.item.dayOfWeek.toLowerCase() +
+                        '-class-' +
+                        value.itemData.item.period.id +
+                        '-week-' +
+                        value.itemData.item.evenOdd.toLowerCase()
+                );
+            } else {
+                setNewItemHandle(
+                    value.itemData.item,
+                    value.room,
+                    value.itemData.groupId
+                );
+                el = document.getElementById(
+                    'group-' +
+                        value.itemData.groupId +
+                        '-day-' +
+                        value.itemData.item.dayOfWeek.toLowerCase() +
+                        '-class-' +
+                        value.itemData.item.periodId +
+                        '-week-' +
+                        value.itemData.item.evenOdd.toLowerCase()
+                );
+            }
             el.scrollIntoView();
             setTimeout(() => {
                 el.style.backgroundColor = colors.ALLOW;
@@ -99,6 +130,24 @@ const Schedule = props => {
         deleteItemFromScheduleService(itemId);
         getLessonsByGroupService(groupId);
         selectGroupIdService(groupId);
+    };
+    const editItemOnScheduleHandler = item => {
+        setItemData({ item: item, groupId: item.lesson.group.id });
+        getLessonsByGroupService(item.lesson.group.id);
+        selectGroupIdService(item.lesson.group.id);
+
+        let itemId = item.id;
+
+        let obj = {
+            dayOfWeek: item.dayOfWeek,
+            periodId: +item.period.id,
+            evenOdd: item.evenOdd,
+            semesterId: item.lesson.semester.id
+        };
+        checkAvailabilityChangeRoomScheduleService(obj);
+        setLoadingService(true);
+        if (itemId) obj = { ...obj, id: itemId };
+        setOpen(true);
     };
 
     const conditionFunc = (item, lesson, group) => {
@@ -146,6 +195,7 @@ const Schedule = props => {
                             class={cssClasses.IN_BOARD_CARD}
                             item={item}
                             deleteItem={deleteItemFromScheduleHandler}
+                            editItem={editItemOnScheduleHandler}
                             fStrLetterCapital={firstStringLetterCapitalHandle}
                             translation={t}
                         />
