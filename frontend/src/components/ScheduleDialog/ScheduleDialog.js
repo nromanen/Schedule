@@ -31,6 +31,7 @@ const ScheduleDialog = props => {
         translation,
         isLoading
     } = props;
+
     const [room, setRoom] = useState('');
     const [sure, setSure] = useState(true);
 

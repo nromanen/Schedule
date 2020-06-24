@@ -39,7 +39,9 @@ import {
     PUBLIC_GROUP_URL,
     PUBLIC_TEACHER_URL,
     FOR_TEACHER_SCHEDULE_URL,
-    CLEAR_SCHEDULE_URL
+    CLEAR_SCHEDULE_URL,
+    ROOMS_AVAILABILITY,
+    SCHEDULE_ITEM_ROOM_CHANGE
 } from '../constants/axios';
 
 import { snackbarTypes } from '../constants/snackbarTypes';
@@ -120,6 +122,34 @@ export const checkAvailabilityScheduleService = item => {
             setLoadingService(false);
         });
 };
+export const checkAvailabilityChangeRoomScheduleService = item => {
+    axios
+        .get(
+            ROOMS_AVAILABILITY +
+                '?classId=' +
+                item.periodId +
+                '&dayOfWeek=' +
+                item.dayOfWeek +
+                '&evenOdd=' +
+                item.evenOdd +
+                '&semesterId=' +
+                item.semesterId
+        )
+        .then(response => {
+            setLoadingService(false);
+            store.dispatch(
+                checkAvailabilitySchedule({
+                    classSuitsToTeacher: true,
+                    teacherAvailable: true,
+                    rooms: response.data
+                })
+            );
+        })
+        .catch(err => {
+            errorHandler(err);
+            setLoadingService(false);
+        });
+};
 export const addItemToScheduleService = item => {
     axios
         .post(SCHEDULE_ITEMS_URL, item)
@@ -128,7 +158,26 @@ export const addItemToScheduleService = item => {
         })
         .catch(err => errorHandler(err));
 };
-
+export const editRoomItemToScheduleService = item => {
+    axios
+        .put(
+            SCHEDULE_ITEM_ROOM_CHANGE +
+                '?roomId=' +
+                item.roomId +
+                '&scheduleId=' +
+                item.itemId
+        )
+        .then(response => {
+            successHandler(
+                i18n.t('serviceMessages:back_end_success_operation', {
+                    cardType: i18n.t('common:schedule_title'),
+                    actionType: i18n.t('serviceMessages:updated_label')
+                })
+            );
+            getScheduleItemsService();
+        })
+        .catch(err => errorHandler(err));
+};
 export const deleteItemFromScheduleService = itemId => {
     axios
         .delete(`${SCHEDULE_ITEMS_URL}/${itemId}`)

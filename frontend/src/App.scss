@@ -98,7 +98,7 @@ body {
     align-items: center;
     justify-content: flex-end;
     position: relative;
-    height: $btn-size;
+    width: $btn-size;
 
     .svg-btn {
         @include buttonStyle;
