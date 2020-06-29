@@ -414,7 +414,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         List<LessonsInRoomScheduleDTO> evenLessonsInRoomScheduleDTOList = new ArrayList<>();
         List<LessonsInRoomScheduleDTO> oddLessonsInRoomScheduleDTOList = new ArrayList<>();
         for (Period period : uniquePeriods) {
-            //change
+
             List<Lesson> evenLesson = scheduleRepository.lessonForRoomByDayBySemesterByPeriodByWeek(semesterId, roomId, period.getId(), day, EvenOdd.EVEN);
             for (Lesson lessonItem : evenLesson) {
                 LessonsInRoomScheduleDTO even = lessonsInScheduleMapper.lessonToLessonsInRoomScheduleDTO(lessonItem);

@@ -134,19 +134,18 @@ public class TemporaryScheduleRepositoryImpl extends BasicRepositoryImpl<Tempora
     /**
      * Method counts schedule records in db for group in the semester
      *
-     * @param semesterId
+     * @param
      * @return number of records in db
      */
     @Override
-    public List<TemporarySchedule> getAllByRange(LocalDate fromDate, LocalDate toDate, Long semesterId) {
-        log.info("In getAllByRange(semesterId = [{}]", semesterId);
+    public List<TemporarySchedule> getAllByRange(LocalDate fromDate, LocalDate toDate) {
+        log.info("In getAllByRange");
         return sessionFactory.getCurrentSession().createQuery("SELECT t from TemporarySchedule t " +
                 " join Schedule  s on t.scheduleId = s.id" +
                 " join Lesson l on s.lesson.id  = l.id " +
-                "where t.date <= :toDate  and t.date >= :fromDate and t.semester.id = :semesterId")
+                "where t.date <= :toDate  and t.date >= :fromDate")
                 .setParameter("fromDate", fromDate)
                 .setParameter("toDate", toDate)
-                .setParameter("semesterId", semesterId)
                 .getResultList();
     }
 
@@ -157,13 +156,12 @@ public class TemporaryScheduleRepositoryImpl extends BasicRepositoryImpl<Tempora
      * @return number of records in db
      */
     @Override
-    public List<TemporarySchedule> vacationByDateRangeForTeacher(LocalDate fromDate, LocalDate toDate,  Long semesterId) {
-        log.info("In vacationByDateRangeForTeacher(semesterId = [{}]", semesterId);
+    public List<TemporarySchedule> vacationByDateRangeForTeacher(LocalDate fromDate, LocalDate toDate) {
+        log.info("In vacationByDateRangeForTeacher");
         return sessionFactory.getCurrentSession().createQuery("SELECT t from TemporarySchedule t " +
-                "where t.date <= :toDate  and t.date >= :fromDate and t.semester.id = :semesterId and t.vacation = true ")
+                "where t.date <= :toDate  and t.date >= :fromDate and t.vacation = true ")
                 .setParameter("fromDate", fromDate)
                 .setParameter("toDate", toDate)
-                .setParameter("semesterId", semesterId)
                 .getResultList();
     }
 }

@@ -112,7 +112,7 @@ public class TemporaryScheduleServiceImpl implements TemporaryScheduleService {
     @Override
     public List<TemporarySchedule> getAllByRange(LocalDate fromDate, LocalDate toDate) {
         log.info("Enter into getAllBySemester of TemporaryScheduleServiceImpl");
-        return temporaryScheduleRepository.getAllByRange(fromDate, toDate, semesterService.getCurrentSemester().getId());
+        return temporaryScheduleRepository.getAllByRange(fromDate, toDate);
     }
 
     /**
@@ -123,7 +123,11 @@ public class TemporaryScheduleServiceImpl implements TemporaryScheduleService {
     @Override
     public List<TemporarySchedule> vacationByDateRangeForTeacher(LocalDate fromDate, LocalDate toDate) {
         log.info("Enter into vacationByDateRangeForTeacher of TemporaryScheduleServiceImpl");
-        return temporaryScheduleRepository.vacationByDateRangeForTeacher(fromDate, toDate, semesterService.getCurrentSemester().getId());
+        List<TemporarySchedule> temporarySchedules = temporaryScheduleRepository.vacationByDateRangeForTeacher(fromDate, toDate);
+        for (TemporarySchedule temporarySchedule: temporarySchedules) {
+            Hibernate.initialize(temporarySchedule.getSemester().getPeriods());
+        }
+        return temporarySchedules;
     }
 
 
@@ -247,11 +251,6 @@ public class TemporaryScheduleServiceImpl implements TemporaryScheduleService {
 
     private boolean isExistTemporaryScheduleByVacationByDateAndTeacher(LocalDate date, Long semesterId, Long teacherId, boolean vacation) {
         log.info("In isExistTemporaryScheduleByVacationByDateAndTeacher(date = [{}], semesterId = [{}] , teacherId = [{}], vacation = [{}])", date, semesterId, teacherId, vacation);
-        return temporaryScheduleRepository.isExistTemporaryScheduleByVacationByDate(date, semesterId, vacation) != 0;
-    }
-
-    private boolean isExistTemporaryScheduleByVacationByDateAndTeacherAndPeriod(LocalDate date, Long semesterId, Long teacherId, Long periodId, boolean vacation) {
-        log.info("In isExistTemporaryScheduleByVacationByDateAndTeacher(date = [{}], semesterId = [{}] , teacherId = [{}] , periodId = [{}], vacation = [{}])", date, semesterId, teacherId, periodId, vacation);
         return temporaryScheduleRepository.isExistTemporaryScheduleByVacationByDate(date, semesterId, vacation) != 0;
     }
 
