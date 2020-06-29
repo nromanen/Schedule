@@ -2,8 +2,10 @@ package com.softserve.controller;
 
 import com.softserve.dto.MessageDTO;
 import com.softserve.dto.RoomDTO;
+import com.softserve.dto.RoomForScheduleInfoDTO;
 import com.softserve.entity.Room;
 import com.softserve.entity.enums.EvenOdd;
+import com.softserve.mapper.RoomForScheduleInfoMapper;
 import com.softserve.service.RoomService;
 import com.softserve.mapper.RoomMapper;
 import io.swagger.annotations.Api;
@@ -25,11 +27,13 @@ public class RoomController {
 
     private final RoomService roomService;
     private final RoomMapper roomMapper;
+    private final RoomForScheduleInfoMapper roomForScheduleInfoMapper;
 
     @Autowired
-    public RoomController(RoomService roomService, RoomMapper roomMapper) {
+    public RoomController(RoomService roomService, RoomMapper roomMapper, RoomForScheduleInfoMapper roomForScheduleInfoMapper) {
         this.roomService = roomService;
         this.roomMapper = roomMapper;
+        this.roomForScheduleInfoMapper = roomForScheduleInfoMapper;
     }
 
     @GetMapping
@@ -92,4 +96,20 @@ public class RoomController {
         return ResponseEntity.ok().body(roomMapper.convertToDtoList(roomService.getDisabled()));
     }
 
+    @GetMapping("/available")
+    @ApiOperation(value = "Get the list of all rooms (available/not available) with status")
+    public ResponseEntity<List<RoomForScheduleInfoDTO>> getAvailableAndNotAvailableRoomsForSchedule(@RequestParam(value = "semesterId") Long semesterId,
+                                                                     @RequestParam(value = "classId") Long classId,
+                                                                     @RequestParam(value = "dayOfWeek") DayOfWeek dayOfWeek,
+                                                                     @RequestParam(value = "evenOdd") EvenOdd evenOdd) {
+        List<Room> availableRooms = roomService.getAvailableRoomsForSchedule(semesterId, dayOfWeek, evenOdd, classId);
+        List<Room> notAvailableRooms = roomService.getNotAvailableRoomsForSchedule(semesterId,dayOfWeek, evenOdd, classId);
+
+        List<RoomForScheduleInfoDTO> availableRoomsDTO = roomForScheduleInfoMapper.toRoomForScheduleDTOList(availableRooms);
+        List<RoomForScheduleInfoDTO> notAvailableRoomsDTO = roomForScheduleInfoMapper.toRoomForScheduleDTOList(notAvailableRooms);
+
+        availableRoomsDTO.forEach(s -> s.setAvailable(true));
+        availableRoomsDTO.addAll(notAvailableRoomsDTO);
+        return ResponseEntity.ok().body(availableRoomsDTO);
+    }
 }

@@ -4,7 +4,8 @@ import axios from '../helper/axios';
 import {
     DISABLED_SEMESTERS_URL,
     SEMESTERS_URL,
-    SEMESTER_COPY_URL
+    SEMESTER_COPY_URL,
+    LESSONS_FROM_SEMESTER_COPY_URL
 } from '../constants/axios';
 import { setDisabledSemesters, setError } from '../redux/actions/semesters';
 import { SEMESTER_FORM } from '../constants/reduxForms';
@@ -243,6 +244,26 @@ export const semesterCopy = values => {
             successHandler(
                 i18n.t('serviceMessages:back_end_success_operation', {
                     cardType: i18n.t('formElements:semester_label'),
+                    actionType: i18n.t('serviceMessages:copied_label')
+                })
+            );
+        })
+        .catch(error => errorHandler(error));
+};
+
+export const CopyLessonsFromSemesterService = values => {
+    axios
+        .post(
+            LESSONS_FROM_SEMESTER_COPY_URL +
+                '?fromSemesterId=' +
+                values.fromSemesterId +
+                '&toSemesterId=' +
+                values.toSemesterId
+        )
+        .then(response => {
+            successHandler(
+                i18n.t('serviceMessages:back_end_success_operation', {
+                    cardType: i18n.t('formElements:lesson_label'),
                     actionType: i18n.t('serviceMessages:copied_label')
                 })
             );

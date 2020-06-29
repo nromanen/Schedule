@@ -1,5 +1,6 @@
 package com.softserve.mapper;
 
+import com.softserve.dto.ScheduleForArchiveDTO;
 import com.softserve.dto.ScheduleWithoutSemesterDTO;
 import com.softserve.entity.Schedule;
 import org.mapstruct.Mapper;
@@ -13,4 +14,6 @@ public interface ScheduleWithoutSemesterMapper {
     Schedule ScheduleWithoutSemesterDTOToSchedule(ScheduleWithoutSemesterDTO scheduleWithoutSemesterDTO);
 
     List<ScheduleWithoutSemesterDTO> scheduleToScheduleWithoutSemesterDTOs(List<Schedule> schedules);
+
+    List<ScheduleForArchiveDTO> scheduleToScheduleForArchiveDTOs(List<Schedule> schedules);
 }

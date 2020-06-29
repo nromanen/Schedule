@@ -25,18 +25,7 @@ const Card = props => {
             groupTitle.style.backgroundColor = colors.ALLOW;
             const boards = document.getElementsByClassName(`group-${groupId}`);
 
-            const allBoards = document.getElementsByClassName('schedule-board');
-            const groupTitles = document.getElementsByClassName('group-title');
-
             setTimeout(() => {
-                for (const board of allBoards) {
-                    board.style.display = 'none';
-                }
-
-                for (const groupTitle of groupTitles) {
-                    groupTitle.style.display = 'none';
-                }
-
                 groupTitle.style.display = 'flex';
 
                 for (const board of boards) {
