@@ -68,7 +68,7 @@ let AddSemesterForm = props => {
     const setEndTime = startTime =>
         props.change(
             'endDay',
-            moment(startTime, 'DD/MM/YYYY').add(7, 'd').format('DD/MM/YYYY')
+            `moment(startTime, 'DD/MM/YYYY').add(7, 'd').format('DD/MM/YYYY')`
         );
 
     const setCheckedDaysHandler = React.useCallback(

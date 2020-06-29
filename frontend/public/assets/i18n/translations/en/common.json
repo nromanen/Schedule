@@ -51,7 +51,7 @@
     "security_error_message": "Security doesn't work",
 
     "lesson_for_group_title": "Lessons for group",
-    "temporary_schedule_for_teacher_title": "Temporary schedule for teacher",
+    "temporary_schedule_for_teacher_title": "Temporary schedule",
     "lesson_no_lesson_for_group_label": "There are no lessons for group ",
     "no_changes": "There are no changes",
 
@@ -127,6 +127,8 @@
 
     "days_label": "Days",
     "current_label": "Current",
+    "holiday_label": "Holiday",
+    "few_days_label": "Few days",
     "show_disabled": "Show disabled",
     "show_enabled": "Show enabled",
     "set_disabled": "Set disabled",

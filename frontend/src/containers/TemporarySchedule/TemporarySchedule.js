@@ -1,33 +1,37 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 
-import TemporaryScheduleForm from '../../components/Changes/TemporaryScheduleForm/TemporaryScheduleForm';
-import TemporaryScheduleList from '../../components/Changes/TemporaryScheduleList/TemporaryScheduleList';
+import TemporaryScheduleForm from '../../components/TemporarySchedule/TemporaryScheduleForm/TemporaryScheduleForm';
+import TemporaryScheduleList from '../../components/TemporarySchedule/TemporaryScheduleList/TemporaryScheduleList';
+import TemporaryScheduleTitle from '../../components/TemporarySchedule/TemporaryScheduleTitle/TemporaryScheduleTitle';
 
 import CircularProgress from '@material-ui/core/CircularProgress';
-import Autocomplete from '@material-ui/lab/Autocomplete';
-import { styled } from '@material-ui/core/styles';
-import TextField from '@material-ui/core/TextField';
-
-import {
-    getTemporarySchedulesService,
-    selectTeacherIdService
-} from '../../services/temporaryScheduleService';
-import { showAllTeachersService } from '../../services/teacherService';
-import { setLoadingService } from '../../services/loadingService';
 
 import Card from '../../share/Card/Card';
 
-import './TemporarySchedule.scss';
+import { setLoadingService } from '../../services/loadingService';
+import { showAllTeachersService } from '../../services/teacherService';
+import { addTemporaryScheduleService } from '../../services/temporaryScheduleService';
 
-const TeacherField = styled(TextField)({
-    display: 'inline-block',
-    width: '250px'
-});
+import './TemporarySchedule.scss';
+import { makeStyles } from '@material-ui/core/styles';
+
+const useStyles = makeStyles(() => ({
+    notSelected: {
+        '&': {
+            textAlign: 'center',
+            margin: 'auto'
+        }
+    }
+}));
 
 const TemporarySchedule = props => {
     const { t } = useTranslation('common');
+    const classes = useStyles();
+
+    const [isDateSelected, setIsDateSelected] = useState(false);
+
     const isLoading = props.loading;
 
     const { teachers, teacherId } = props;
@@ -37,72 +41,51 @@ const TemporarySchedule = props => {
         showAllTeachersService();
     }, []);
 
-    useEffect(() => {
-        if (teacherId) {
-            setLoadingService(true);
-            getTemporarySchedulesService(teacherId);
-        }
-    }, [teacherId]);
-
-    const defaultProps = {
-        options: teachers,
-        getOptionLabel: option =>
-            option
-                ? option.surname +
-                  ' ' +
-                  option.name +
-                  ' ' +
-                  option.patronymic +
-                  `(${option.position})`
-                : ''
-    };
-
-    const handleFindTeacher = teacherId => {
-        if (teacherId)
-            return teachers.find(teacher => teacher.id === teacherId);
-        else return '';
-    };
-
-    const handleTeacherSelect = teacher => {
-        if (teacher) selectTeacherIdService(teacher.id);
+    const handleSubmit = values => {
+        addTemporaryScheduleService(teacherId, values);
     };
 
     return (
         <>
             <Card class="card-title lesson-card">
-                <div className="page-title">
-                    <h1 className="page-h">
-                        {t('temporary_schedule_for_teacher_title')}
-                    </h1>
-                    <Autocomplete
-                        {...defaultProps}
-                        clearOnEscape
-                        openOnFocus
-                        value={handleFindTeacher(teacherId)}
-                        onChange={(event, newValue) => {
-                            handleTeacherSelect(newValue);
-                        }}
-                        renderInput={params => (
-                            <TeacherField
-                                {...params}
-                                label={t('formElements:teacher_label')}
-                                margin="normal"
-                            />
-                        )}
-                    />
-                </div>
+                <h1 className="page-h">
+                    {t('temporary_schedule_for_teacher_title')}
+                </h1>
+                <TemporaryScheduleTitle
+                    teacherId={teacherId}
+                    teachers={teachers}
+                    setIsDateSelected={setIsDateSelected}
+                />
             </Card>
             <div className="cards-container">
-                <TemporaryScheduleForm
-                    temporarySchedule={props.temporarySchedule}
-                    teacherId={teacherId}
-                />
+                <aside>
+                    {isDateSelected ? (
+                        <TemporaryScheduleForm
+                            temporarySchedule={props.temporarySchedule}
+                            teacherRangeSchedule={props.teacherRangeSchedule}
+                            teacherId={teacherId}
+                            onSubmit={handleSubmit}
+                            lessons={props.lessons}
+                            lessonTypes={props.lessonTypes}
+                        />
+                    ) : (
+                        <Card class="form-card">
+                            <div className={classes.notSelected}>
+                                <h2>Date is not selected</h2>
+                            </div>
+                        </Card>
+                    )}
+                </aside>
                 {isLoading ? (
                     <section className="centered-container">
                         <CircularProgress />
                     </section>
                 ) : (
-                    <TemporaryScheduleList changes={props.temporarySchedules} />
+                    <main className="temporary-schedule-list">
+                        <TemporaryScheduleList
+                            changes={props.temporarySchedules}
+                        />
+                    </main>
                 )}
             </div>
         </>

@@ -1,6 +1,7 @@
 {
     "edit_title": "Редагування ",
     "create_title": "Створення ",
+    "create_vacation_title": "Добавити вихідний",
     "delete_title": "Видалення",
 
     "teacher_label": "Викладач",
@@ -48,6 +49,7 @@
 
     "class_from_label": "З",
     "class_to_label": "До",
+    "day_label": "День",
 
     "type_to_search": "Введіть для пошуку",
     "there_is_no": "Немає",

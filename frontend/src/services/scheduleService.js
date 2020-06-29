@@ -276,6 +276,24 @@ export const getTeacherScheduleService = values => {
             setLoadingService(false);
         });
 };
+
+export const getTeacherScheduleByDateRangeService = (teacherId, to, from) => {
+    axios
+        .get(
+            FOR_TEACHER_SCHEDULE_URL +
+                '?teacherId' +
+                teacherId +
+                '&from=' +
+                from.replace(/\//g, '-') +
+                '&to=' +
+                to.replace(/\//g, '-')
+        )
+        .then(response => {})
+        .catch(err => {
+            errorHandler(err);
+        });
+};
+
 export const setTeacherServiceViewType = type => {
     store.dispatch(setTeacherViewType(type));
 };

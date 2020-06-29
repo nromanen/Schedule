@@ -1,6 +1,7 @@
 {
     "edit_title": "Edit ",
     "create_title": "Create ",
+    "create_vacation_title": "add vacation",
     "delete_title": "Delete",
 
     "teacher_label": "Teacher",
@@ -48,6 +49,7 @@
 
     "class_from_label": "From",
     "class_to_label": "To",
+    "day_label": "Day",
 
     "type_to_search": "Type to search",
     "there_is_no": "There isn't any",
