@@ -12,7 +12,7 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface TemporaryScheduleMapper {
 
-    @Mapping(source = "lesson.id", target = "lessonId")
+    @Mapping(source = "schedule.id", target = "scheduleId")
     TemporarySchedule convertToEntity(TemporaryScheduleSaveDTO dto);
 
     //@Mapping(target = "lesson.id", source = "lessonId")

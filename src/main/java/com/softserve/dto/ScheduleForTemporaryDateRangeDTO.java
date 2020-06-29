@@ -16,5 +16,5 @@ import java.util.List;
 public class ScheduleForTemporaryDateRangeDTO {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     private LocalDate date;
-    private List<ScheduleForTemporaryTeacherDateRangeDTO> schedule;
+    private List<ScheduleForTemporaryTeacherDateRangeDTO> schedules;
 }

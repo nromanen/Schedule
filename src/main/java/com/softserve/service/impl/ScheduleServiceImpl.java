@@ -34,6 +34,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     private final TeacherWishesService teacherWishesService;
     private final TeacherService teacherService;
     private final SemesterService semesterService;
+    private final TemporaryScheduleService temporaryScheduleService;
 
     private final GroupMapper groupMapper;
     private final PeriodMapper periodMapper;
@@ -44,13 +45,14 @@ public class ScheduleServiceImpl implements ScheduleService {
 
 
     @Autowired
-    public ScheduleServiceImpl(ScheduleRepository scheduleRepository, LessonService lessonService, RoomService roomService, GroupService groupService, TeacherWishesService teacherWishesService, TeacherService teacherService, SemesterService semesterService, GroupMapper groupMapper, PeriodMapper periodMapper, LessonsInScheduleMapper lessonsInScheduleMapper, RoomForScheduleMapper roomForScheduleMapper, TeacherMapper teacherMapper, LessonForTeacherScheduleMapper lessonForTeacherScheduleMapper) {
+    public ScheduleServiceImpl(ScheduleRepository scheduleRepository, LessonService lessonService, RoomService roomService, GroupService groupService, TeacherWishesService teacherWishesService, TeacherService teacherService, SemesterService semesterService, GroupMapper groupMapper, PeriodMapper periodMapper, LessonsInScheduleMapper lessonsInScheduleMapper, RoomForScheduleMapper roomForScheduleMapper, TeacherMapper teacherMapper, LessonForTeacherScheduleMapper lessonForTeacherScheduleMapper, TemporaryScheduleService temporaryScheduleService) {
         this.scheduleRepository = scheduleRepository;
         this.lessonService = lessonService;
         this.roomService = roomService;
         this.groupService = groupService;
         this.teacherService = teacherService;
         this.semesterService = semesterService;
+        this.temporaryScheduleService = temporaryScheduleService;
         this.groupMapper = groupMapper;
         this.teacherWishesService = teacherWishesService;
         this.periodMapper = periodMapper;
@@ -507,7 +509,33 @@ public class ScheduleServiceImpl implements ScheduleService {
             }
         }
 
-        return fullScheduleForTeacherByDateRange(dateRangeSchedule, fromDate, toDate);
+return fullScheduleForTeacherByDateRange(dateRangeSchedule,  fromDate, toDate);
+    }
+
+
+    /**
+     * Method temporaryScheduleByDateRangeForTeacher get all schedules and temporary schedules from db in particular date range
+     *
+     * @param fromDate  LocalDate from
+     * @param toDate    LocalDate to
+     * @param teacherId id teacher
+     * @return list of schedules and temporary schedules
+     */
+    @Override
+    public Map<LocalDate, Map<Period, List<Map<Schedule, TemporarySchedule>>>> temporaryScheduleByDateRangeForTeacher(LocalDate fromDate, LocalDate toDate, Long teacherId) {
+        log.info("In temporaryScheduleByDateRangeForTeacher with fromDate = {} and toDate = {} and teacher = {}", fromDate, toDate, teacherId);
+        List<Schedule> schedules = scheduleRepository.scheduleByDateRangeForTeacher(fromDate, toDate, teacherId);
+        List<TemporarySchedule> temporarySchedules = temporaryScheduleService.temporaryScheduleByDateRangeForTeacher(fromDate, toDate, teacherId);
+        List<TemporarySchedule> vacationByDateRangeForTeacher = temporaryScheduleService.vacationByDateRangeForTeacher(fromDate, toDate);
+
+        List<Schedule> dateRangeSchedule = new ArrayList<>();
+        for (Schedule schedule : schedules) {
+            if (isDateInSemesterDateRange(schedule, toDate)) {
+                dateRangeSchedule.add(schedule);
+            }
+        }
+
+        return convertToMapTemporaryScheduleDateRange(fullScheduleForTeacherByDateRange(dateRangeSchedule, fromDate, toDate), temporarySchedules, vacationByDateRangeForTeacher);
     }
 
     /**
@@ -641,6 +669,39 @@ public class ScheduleServiceImpl implements ScheduleService {
             collect.entrySet().stream().sorted(Map.Entry.comparingByKey(Comparator.comparing(Period::getName)))
                     .forEachOrdered(x -> sorted.put(x.getKey(), x.getValue()));
             map.put(itr.getKey(), sorted);
+        }
+        return map;
+    }
+
+
+    private Map<LocalDate, Map<Period, List<Map<Schedule, TemporarySchedule>>>> convertToMapTemporaryScheduleDateRange(Map<LocalDate, Map<Period, List<Schedule>>> scheduleByDateRange,
+                                                                                                                       List<TemporarySchedule> temporarySchedules,
+                                                                                                                       List<TemporarySchedule> vacationByDateRangeForTeacher) {
+        Map<LocalDate, Map<Period, List<Map<Schedule, TemporarySchedule>>>> map = new LinkedHashMap<>();
+        for (Map.Entry<LocalDate, Map<Period, List<Schedule>>> itr : scheduleByDateRange.entrySet()) {
+            Map<Period, List<Map<Schedule, TemporarySchedule>>> periodListHashMap = new HashMap<>();
+
+            for (Map.Entry<Period, List<Schedule>> entry : itr.getValue().entrySet()) {
+                List<Map<Schedule, TemporarySchedule>> mapList = new ArrayList<>();
+                Map<Schedule, TemporarySchedule> temporaryScheduleMap = new LinkedHashMap<>();
+
+                for (Schedule schedule : entry.getValue()) {
+                    TemporarySchedule temporarySchedule = temporarySchedules.stream().filter(temporarySchedule1 ->
+                            temporarySchedule1.getScheduleId().equals(schedule.getId()) && temporarySchedule1.getDate().equals(itr.getKey())
+                    ).findFirst().orElse(vacationByDateRangeForTeacher.stream().filter(temporarySchedule1 ->
+                           temporarySchedule1.getDate().equals(itr.getKey())
+                    ).findFirst().orElse(new TemporarySchedule()));
+
+                    temporaryScheduleMap.put(schedule, temporarySchedule);
+                    mapList.add(temporaryScheduleMap);
+                }
+
+                periodListHashMap.put(entry.getKey(), mapList);
+            }
+
+
+            map.put(itr.getKey(), periodListHashMap);
+
         }
         return map;
     }

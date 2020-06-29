@@ -26,4 +26,5 @@ public class TemporaryScheduleDTO {
     private Period period;
     private boolean grouped;
     private boolean vacation;
+    //private ScheduleTemporaryTeacherDateRangeDTO temporarySchedule;
 }
