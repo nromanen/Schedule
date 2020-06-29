@@ -40,11 +40,12 @@ public class ScheduleController {
     private final TeacherService teacherService;
     private final PeriodMapper periodMapper;
     private final RoomForScheduleMapper roomForScheduleMapper;
+    private final LessonsInScheduleMapper lessonsInScheduleMapper;
     private final LessonService lessonService;
 
 
     @Autowired
-    public ScheduleController(ScheduleService scheduleService, SemesterService semesterService, SemesterMapper semesterMapper, ScheduleMapper scheduleMapper, ScheduleSaveMapper scheduleSaveMapper, ScheduleWithoutSemesterMapper scheduleWithoutSemesterMapper, TeacherService teacherService, PeriodMapper periodMapper, RoomForScheduleMapper roomForScheduleMapper, LessonService lessonService) {
+    public ScheduleController(ScheduleService scheduleService, SemesterService semesterService, SemesterMapper semesterMapper, ScheduleMapper scheduleMapper, ScheduleSaveMapper scheduleSaveMapper, ScheduleWithoutSemesterMapper scheduleWithoutSemesterMapper, TeacherService teacherService, PeriodMapper periodMapper, RoomForScheduleMapper roomForScheduleMapper, LessonService lessonService, LessonsInScheduleMapper lessonsInScheduleMapper) {
         this.scheduleService = scheduleService;
         this.semesterService = semesterService;
         this.semesterMapper = semesterMapper;
@@ -55,6 +56,7 @@ public class ScheduleController {
         this.periodMapper = periodMapper;
         this.roomForScheduleMapper = roomForScheduleMapper;
         this.lessonService = lessonService;
+        this.lessonsInScheduleMapper = lessonsInScheduleMapper;
     }
 
     @GetMapping
@@ -169,7 +171,9 @@ public class ScheduleController {
         LocalDate fromDate = LocalDate.parse(LocalDate.parse(from, formatter).toString(), currentFormatter);
         LocalDate toDate = LocalDate.parse(LocalDate.parse(to, formatter).toString(), currentFormatter);
         teacherService.getById(teacherId);
-        List<ScheduleForTemporaryDateRangeDTO> dto = fullDTOForTemporaryScheduleByTeacherDateRange(scheduleService.scheduleByDateRangeForTeacher(fromDate, toDate, teacherId));
+        Map<LocalDate, Map<Period, List<Map<Schedule, TemporarySchedule>>>>  mapSchedules = scheduleService.temporaryScheduleByDateRangeForTeacher(fromDate, toDate, teacherId);
+
+        List<ScheduleForTemporaryDateRangeDTO> dto = fullDTOForTemporaryScheduleByTeacherDateRange(mapSchedules);
         return ResponseEntity.status(HttpStatus.OK).body(dto);
     }
 
@@ -241,36 +245,47 @@ public class ScheduleController {
     }
 
 
-    //convert schedule map to schedule dto
-    private List<ScheduleForTemporaryDateRangeDTO> fullDTOForTemporaryScheduleByTeacherDateRange(Map<LocalDate, Map<Period, List<Schedule>>> map) {
+    private List<ScheduleForTemporaryDateRangeDTO> fullDTOForTemporaryScheduleByTeacherDateRange(Map<LocalDate, Map<Period, List<Map<Schedule, TemporarySchedule>>>>  map) {
         List<ScheduleForTemporaryDateRangeDTO> fullDTO = new ArrayList<>();
 
-        for (Map.Entry<LocalDate, Map<Period, List<Schedule>>> itr: map.entrySet()) {
+        for (Map.Entry<LocalDate, Map<Period, List<Map<Schedule, TemporarySchedule>>>> itr: map.entrySet()) {
             ScheduleForTemporaryDateRangeDTO scheduleForTemporaryDateRangeDTO = new ScheduleForTemporaryDateRangeDTO();
             scheduleForTemporaryDateRangeDTO.setDate(itr.getKey());
 
             List<ScheduleForTemporaryTeacherDateRangeDTO> scheduleForTemporaryTeacherDateRangeDTOS = new ArrayList<>();
-            for (Map.Entry<Period, List<Schedule>> entry : itr.getValue().entrySet()) {
+            for (Map.Entry<Period, List<Map<Schedule, TemporarySchedule>>> entry : itr.getValue().entrySet()) {
                 ScheduleForTemporaryTeacherDateRangeDTO scheduleForTemporaryTeacherDateRangeDTO = new ScheduleForTemporaryTeacherDateRangeDTO();
 
-                List<LessonTemporaryTeacherDTO> lessonTemporaryTeacherDTOS = new ArrayList<>();
-                for (Schedule schedule : entry.getValue()) {
-                    LessonsTemporaryTeacherDateRangeDTO lessonsInScheduleDTO = new LessonsTemporaryTeacherDateRangeDTO();
-                    lessonsInScheduleDTO.setId(schedule.getLesson().getId());
-                    lessonsInScheduleDTO.setSubjectForSite(schedule.getLesson().getSubjectForSite());
-                    lessonsInScheduleDTO.setSubjectForSite(schedule.getLesson().getSubjectForSite());
-                    lessonsInScheduleDTO.setGroupName(schedule.getLesson().getGroup().getTitle());
+                 for(Map<Schedule, TemporarySchedule> mapList : entry.getValue()) {
+                     for (Map.Entry<Schedule, TemporarySchedule> item : mapList.entrySet()) {
+                    ScheduleTemporaryTeacherDateRangeDTO lessonsInScheduleDTO = new ScheduleTemporaryTeacherDateRangeDTO();
+                    lessonsInScheduleDTO.setId(item.getKey().getId());
                     lessonsInScheduleDTO.setPeriod(periodMapper.convertToDto(entry.getKey()));
-                    lessonsInScheduleDTO.setRoom(roomForScheduleMapper.roomToRoomForScheduleDTO(schedule.getRoom()));
+                    lessonsInScheduleDTO.setLesson(lessonsInScheduleMapper.lessonToLessonsInTemporaryScheduleDTO(item.getKey().getLesson()));
+                    lessonsInScheduleDTO.setPeriod(periodMapper.convertToDto(entry.getKey()));
+                    lessonsInScheduleDTO.setRoom(roomForScheduleMapper.roomToRoomForScheduleDTO(item.getKey().getRoom()));
 
-                    LessonTemporaryTeacherDTO lessonTemporaryTeacherDTO = new LessonTemporaryTeacherDTO();
-                    lessonTemporaryTeacherDTO.setLesson(lessonsInScheduleDTO);
-                    lessonTemporaryTeacherDTOS.add(lessonTemporaryTeacherDTO);
-                }
-                scheduleForTemporaryTeacherDateRangeDTO.setLessons(lessonTemporaryTeacherDTOS);
-                scheduleForTemporaryTeacherDateRangeDTOS.add(scheduleForTemporaryTeacherDateRangeDTO);
+                    if(item.getValue().isVacation()){
+                        lessonsInScheduleDTO.setVacation(true);
+                    }else{
+                        lessonsInScheduleDTO.setVacation(false);
+                    }
+                    scheduleForTemporaryTeacherDateRangeDTO.setSchedule(lessonsInScheduleDTO);
+
+                    if (item.getValue().getScheduleId()!=null) {
+                        ScheduleTemporaryTeacherDateRangeDTO temporaryLessonsInScheduleDTO = new ScheduleTemporaryTeacherDateRangeDTO();
+                        temporaryLessonsInScheduleDTO.setId(item.getValue().getId());
+                        temporaryLessonsInScheduleDTO.setPeriod(periodMapper.convertToDto(item.getValue().getPeriod()));
+                        temporaryLessonsInScheduleDTO.setLesson(lessonsInScheduleMapper.lessonToLessonsInTemporaryScheduleDTO(item.getValue()));
+                        temporaryLessonsInScheduleDTO.setRoom(roomForScheduleMapper.roomToRoomForScheduleDTO(item.getValue().getRoom()));
+                        temporaryLessonsInScheduleDTO.setVacation(false);
+                        scheduleForTemporaryTeacherDateRangeDTO.setTemporarySchedule(temporaryLessonsInScheduleDTO);
+                    }
+                    scheduleForTemporaryTeacherDateRangeDTOS.add(scheduleForTemporaryTeacherDateRangeDTO);
+                     }
+                 }
             }
-            scheduleForTemporaryDateRangeDTO.setSchedule(scheduleForTemporaryTeacherDateRangeDTOS);
+            scheduleForTemporaryDateRangeDTO.setSchedules(scheduleForTemporaryTeacherDateRangeDTOS);
             fullDTO.add(scheduleForTemporaryDateRangeDTO);
         }
         return fullDTO;

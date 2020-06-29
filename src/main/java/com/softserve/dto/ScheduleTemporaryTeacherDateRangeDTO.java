@@ -10,13 +10,12 @@ import lombok.ToString;
 @Setter
 @ToString
 @NoArgsConstructor
-public class LessonsTemporaryTeacherDateRangeDTO {
+public class ScheduleTemporaryTeacherDateRangeDTO {
     Long id;
-    @JsonProperty(value = "subject_for_site")
-    private String subjectForSite;
-    @JsonProperty(value = "group_name")
-    private String groupName;
     private RoomForScheduleDTO room;
     @JsonProperty(value = "class")
     private PeriodDTO period;
+    private LessonInfoDTO lesson;
+    private boolean vacation;
+
 }

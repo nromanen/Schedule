@@ -1,5 +1,7 @@
 package com.softserve.service.impl;
 
+import com.softserve.entity.Period;
+import com.softserve.entity.Schedule;
 import com.softserve.entity.Semester;
 import com.softserve.entity.TemporarySchedule;
 import com.softserve.exception.EntityAlreadyExistsException;
@@ -29,14 +31,13 @@ public class TemporaryScheduleServiceImpl implements TemporaryScheduleService {
     private final PeriodService periodService;
     private final SubjectService subjectService;
     private final TeacherService teacherService;
-    private final LessonService lessonService;
+    //private final ScheduleService scheduleService;
 
 
 
     @Autowired
     public TemporaryScheduleServiceImpl(TemporaryScheduleRepository temporaryScheduleRepository, SemesterService semesterService, GroupService groupService,
-                                        RoomService roomService, PeriodService periodService, SubjectService subjectService, TeacherService teacherService,
-                                        LessonService lessonService) {
+                                        RoomService roomService, PeriodService periodService, SubjectService subjectService, TeacherService teacherService) {
         this.temporaryScheduleRepository = temporaryScheduleRepository;
         this.semesterService = semesterService;
         this.groupService = groupService;
@@ -44,7 +45,7 @@ public class TemporaryScheduleServiceImpl implements TemporaryScheduleService {
         this.periodService = periodService;
         this.subjectService = subjectService;
         this.teacherService = teacherService;
-        this.lessonService = lessonService;
+       // this.scheduleService = scheduleService;
     }
 
     /**
@@ -59,7 +60,7 @@ public class TemporaryScheduleServiceImpl implements TemporaryScheduleService {
         log.info("Enter into getById of TemporaryScheduleServiceImpl with id {}", id);
         TemporarySchedule temporarySchedule = temporaryScheduleRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException(TemporarySchedule.class, "id", id.toString()));
-        Hibernate.initialize(temporarySchedule.getTeacher());
+      //  Hibernate.initialize(temporarySchedule.getTeacher());
 //        Hibernate.initialize(temporarySchedule.getTeacher().getSurname());
 //        Hibernate.initialize(temporarySchedule.getSubject());
 //        Hibernate.initialize(temporarySchedule.getRoom());
@@ -92,6 +93,39 @@ public class TemporaryScheduleServiceImpl implements TemporaryScheduleService {
         return temporaryScheduleRepository.getAllByTeacher(teacherId, semesterService.getCurrentSemester().getId());
     }
 
+    /**
+     * The method used for getting all temporary schedules
+     *
+     * @return list of  temporary schedules
+     */
+    @Override
+    public List<TemporarySchedule> getAllBySemester() {
+        log.info("Enter into getAllBySemester of TemporaryScheduleServiceImpl");
+        return temporaryScheduleRepository.getAllBySemester(semesterService.getCurrentSemester().getId());
+    }
+
+    /**
+     * The method used for getting all temporary schedules
+     *
+     * @return list of  temporary schedules
+     */
+    @Override
+    public List<TemporarySchedule> getAllByRange(LocalDate fromDate, LocalDate toDate) {
+        log.info("Enter into getAllBySemester of TemporaryScheduleServiceImpl");
+        return temporaryScheduleRepository.getAllByRange(fromDate, toDate, semesterService.getCurrentSemester().getId());
+    }
+
+    /**
+     * The method used for getting all temporary schedules
+     *
+     * @return list of  temporary schedules
+     */
+    @Override
+    public List<TemporarySchedule> vacationByDateRangeForTeacher(LocalDate fromDate, LocalDate toDate) {
+        log.info("Enter into vacationByDateRangeForTeacher of TemporaryScheduleServiceImpl");
+        return temporaryScheduleRepository.vacationByDateRangeForTeacher(fromDate, toDate, semesterService.getCurrentSemester().getId());
+    }
+
 
     /**
      * The method used for saving temporary schedule in database
@@ -105,15 +139,12 @@ public class TemporaryScheduleServiceImpl implements TemporaryScheduleService {
         Semester semester = new Semester();
         semester.setId(semesterService.getCurrentSemester().getId());
         object.setSemester(semester);
-        if(object.isVacation()){
-            if(isExistTemporaryScheduleByVacationByDate(object.getDate(), object.getSemester().getId(), false)){
-                throw new EntityAlreadyExistsException("Please remove schedule before add vacation");
-            }
 
-            if(isExistTemporaryScheduleByVacationByDate(object.getDate(), object.getSemester().getId(), true)){
-                throw new EntityAlreadyExistsException("Vacation with this date already exists");
-            }
-        } else{
+        if(object.isVacation()){
+            check(object);
+
+        }else {
+
             if(isExistTemporaryScheduleByVacationByDate(object.getDate(), object.getSemester().getId(), true)){
                 throw new EntityAlreadyExistsException("Please remove vacation before");
             }
@@ -123,6 +154,7 @@ public class TemporaryScheduleServiceImpl implements TemporaryScheduleService {
                 checkReferencedElement(object);
             }
         }
+
         TemporarySchedule entity = temporaryScheduleRepository.save(object);
             return this.getById(entity.getId());
     }
@@ -140,14 +172,8 @@ public class TemporaryScheduleServiceImpl implements TemporaryScheduleService {
         semester.setId(semesterService.getCurrentSemester().getId());
         object.setSemester(semester);
         if(object.isVacation()){
-            if(isExistTemporaryScheduleByVacationByDate(object.getDate(), object.getSemester().getId(), false)){
-                throw new EntityAlreadyExistsException("Please remove schedule before add vacation");
-            }
-
-            if(isExistTemporaryScheduleByVacationByDate(object.getDate(), object.getSemester().getId(), true)){
-                throw new EntityAlreadyExistsException("Vacation with this date already exists");
-            }
-        } else{
+            check(object);
+        }else {
             if(isExistTemporaryScheduleByVacationByDate(object.getDate(), object.getSemester().getId(), true)){
                 throw new EntityAlreadyExistsException("Please remove vacation before");
             }
@@ -159,6 +185,26 @@ public class TemporaryScheduleServiceImpl implements TemporaryScheduleService {
         }
         TemporarySchedule entity = temporaryScheduleRepository.update(object);
         return this.getById(entity.getId());
+    }
+
+    private void check(TemporarySchedule object) {
+        if(object.getTeacher()!=null){
+            if(isExistTemporaryScheduleByVacationByDateAndTeacher(object.getDate(), object.getSemester().getId(), object.getTeacher().getId(), false)){
+                throw new EntityAlreadyExistsException("Please remove temporary schedule for "+ object.getTeacher().getSurname() +"  before add vacation");
+            }
+
+            if(isExistTemporaryScheduleByVacationByDateAndTeacher(object.getDate(), object.getSemester().getId(), object.getTeacher().getId(), true)){
+                throw new EntityAlreadyExistsException("Vacation for "+ object.getTeacher().getSurname() +"  already exists");
+            }
+        }else{
+            if(isExistTemporaryScheduleByVacationByDate(object.getDate(), object.getSemester().getId(), false)){
+                throw new EntityAlreadyExistsException("Please remove schedule before add vacation");
+            }
+
+            if(isExistTemporaryScheduleByVacationByDate(object.getDate(), object.getSemester().getId(), true)){
+                throw new EntityAlreadyExistsException("Vacation with this date already exists");
+            }
+        }
     }
 
     /**
@@ -174,8 +220,38 @@ public class TemporaryScheduleServiceImpl implements TemporaryScheduleService {
     }
 
 
+    /**
+     * Method scheduleByDateRangeForTeacher get all schedules from db in particular date range
+     *
+     * @param fromDate  LocalDate from
+     * @param toDate    LocalDate to
+     * @param teacherId id teacher
+     * @return list of schedules
+     */
+    @Override
+    public List<TemporarySchedule> temporaryScheduleByDateRangeForTeacher(LocalDate fromDate, LocalDate toDate, Long teacherId) {
+        log.info("In scheduleByDateRangeForTeacher with fromDate = {} and toDate = {}", fromDate, toDate);
+        List<TemporarySchedule> temporarySchedules = temporaryScheduleRepository.temporaryScheduleByDateRangeForTeacher(fromDate, toDate, teacherId);
+
+        for (TemporarySchedule temporarySchedule: temporarySchedules) {
+            Hibernate.initialize(temporarySchedule.getSemester().getPeriods());
+        }
+        return temporarySchedules;
+    }
+
+
     private boolean isExistTemporaryScheduleByVacationByDate(LocalDate date, Long semesterId, boolean vacation) {
         log.info("In isExistTemporaryScheduleByVacationByDate(date = [{}], semesterId = [{}] ,vacation = [{}])", date, semesterId, vacation);
+        return temporaryScheduleRepository.isExistTemporaryScheduleByVacationByDate(date, semesterId, vacation) != 0;
+    }
+
+    private boolean isExistTemporaryScheduleByVacationByDateAndTeacher(LocalDate date, Long semesterId, Long teacherId, boolean vacation) {
+        log.info("In isExistTemporaryScheduleByVacationByDateAndTeacher(date = [{}], semesterId = [{}] , teacherId = [{}], vacation = [{}])", date, semesterId, teacherId, vacation);
+        return temporaryScheduleRepository.isExistTemporaryScheduleByVacationByDate(date, semesterId, vacation) != 0;
+    }
+
+    private boolean isExistTemporaryScheduleByVacationByDateAndTeacherAndPeriod(LocalDate date, Long semesterId, Long teacherId, Long periodId, boolean vacation) {
+        log.info("In isExistTemporaryScheduleByVacationByDateAndTeacher(date = [{}], semesterId = [{}] , teacherId = [{}] , periodId = [{}], vacation = [{}])", date, semesterId, teacherId, periodId, vacation);
         return temporaryScheduleRepository.isExistTemporaryScheduleByVacationByDate(date, semesterId, vacation) != 0;
     }
 
@@ -192,7 +268,7 @@ public class TemporaryScheduleServiceImpl implements TemporaryScheduleService {
 
     private void checkReferencedElement(TemporarySchedule object) {
         log.info("In checkReferenceExist(object = [{}])", object);
-        lessonService.getById(object.getLessonId());
+        //scheduleService.getById(object.getScheduleId());
         subjectService.getById(object.getSubject().getId());
         roomService.getById(object.getRoom().getId());
         groupService.getById(object.getGroup().getId());

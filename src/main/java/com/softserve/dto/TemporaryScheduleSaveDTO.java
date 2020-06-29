@@ -19,7 +19,7 @@ public class TemporaryScheduleSaveDTO {
     private String teacherForSite;
     private String subjectForSite;
     private Teacher teacher;
-    private Lesson lesson;
+    private Schedule schedule;
     private LessonType lessonType;
     private Subject subject;
     private Group group;

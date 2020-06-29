@@ -39,31 +39,31 @@ public class TemporarySchedule implements Serializable {
     private LessonType lessonType;
 
 
-    @Column(name ="lesson_id")
-    private Long lessonId;
+    @Column(name ="schedule_id")
+    private Long scheduleId;
 
-    @ManyToOne(targetEntity = Teacher.class, fetch = FetchType.EAGER)
+    @ManyToOne(targetEntity = Teacher.class)
     @JoinColumn(name = "teacher_id")
     private Teacher teacher;
 
-    @ManyToOne(targetEntity = Subject.class, fetch = FetchType.EAGER)
-    @JoinColumn(name = "subject_id", nullable = true)
+    @ManyToOne(targetEntity = Subject.class)
+    @JoinColumn(name = "subject_id")
     private Subject subject;
 
-    @ManyToOne(targetEntity = Group.class, fetch = FetchType.EAGER)
-    @JoinColumn(name = "group_id", nullable = true)
+    @ManyToOne(targetEntity = Group.class)
+    @JoinColumn(name = "group_id")
     private Group group;
 
-    @ManyToOne(targetEntity = Semester.class, fetch = FetchType.EAGER)
-    @JoinColumn(name = "semester_id", nullable = true)
+    @ManyToOne(targetEntity = Semester.class)
+    @JoinColumn(name = "semester_id")
     private Semester semester;
 
-    @ManyToOne(targetEntity = Room.class, fetch = FetchType.EAGER)
-    @JoinColumn(name = "room_id", nullable = true)
+    @ManyToOne(targetEntity = Room.class)
+    @JoinColumn(name = "room_id")
     private Room room;
 
-    @ManyToOne(targetEntity = Period.class, fetch = FetchType.EAGER)
-    @JoinColumn(name = "period_id", nullable = true)
+    @ManyToOne(targetEntity = Period.class)
+    @JoinColumn(name = "period_id")
     private Period period;
 
 
