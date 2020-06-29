@@ -136,9 +136,9 @@ public class TemporaryScheduleServiceImpl implements TemporaryScheduleService {
     @Override
     public TemporarySchedule save(TemporarySchedule object) {
         log.info("Enter into save of TemporaryScheduleServiceImpl with entity:{}", object );
-        Semester semester = new Semester();
-        semester.setId(semesterService.getCurrentSemester().getId());
-        object.setSemester(semester);
+        //Semester semester = new Semester();
+        //semester.setId(semesterService.getCurrentSemester().getId());
+        //object.setSemester(semester);
 
         if(object.isVacation()){
             check(object);
@@ -168,9 +168,9 @@ public class TemporaryScheduleServiceImpl implements TemporaryScheduleService {
     @Override
     public TemporarySchedule update(TemporarySchedule object) {
         log.info("Enter into update of TemporaryScheduleServiceImpl with entity:{}", object);
-        Semester semester = new Semester();
-        semester.setId(semesterService.getCurrentSemester().getId());
-        object.setSemester(semester);
+        //Semester semester = new Semester();
+        //semester.setId(semesterService.getCurrentSemester().getId());
+        //object.setSemester(semester);
         if(object.isVacation()){
             check(object);
         }else {
