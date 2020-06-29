@@ -1,6 +1,5 @@
 package com.softserve.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.softserve.entity.enums.LessonType;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
