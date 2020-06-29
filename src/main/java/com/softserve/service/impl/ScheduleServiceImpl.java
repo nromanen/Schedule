@@ -531,6 +531,7 @@ return fullScheduleForTeacherByDateRange(dateRangeSchedule,  fromDate, toDate);
 
         List<Schedule> dateRangeSchedule = new ArrayList<>();
         for (Schedule schedule : schedules) {
+            Hibernate.initialize(schedule.getLesson().getSemester().getPeriods());
             if (isDateInSemesterDateRange(schedule, toDate)) {
                 dateRangeSchedule.add(schedule);
             }
