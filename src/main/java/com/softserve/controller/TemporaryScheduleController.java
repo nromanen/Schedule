@@ -49,7 +49,7 @@ public class TemporaryScheduleController {
     }
     @GetMapping("/{id}")
     @ApiOperation(value = "Get temporary schedule by id")
-    //@PreAuthorize("hasRole('MANAGER')")
+    @PreAuthorize("hasRole('MANAGER')")
     public ResponseEntity<TemporaryScheduleDTO> getById(@PathVariable("id") long id) {
         log.info("Enter into getById of TemporaryScheduleController");
         return ResponseEntity.ok().body(temporaryScheduleMapper.convertToDto(temporaryScheduleService.getById(id)));
