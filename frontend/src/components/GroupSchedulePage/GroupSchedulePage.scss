@@ -63,6 +63,9 @@ a.pdf_link {
                     font-weight: bold;
                     font-size: 1.2em;
                 }
+                &.intersection-on-schedule {
+                    background-color: $danger-background-color;
+                }
             }
 
             &.grouped {

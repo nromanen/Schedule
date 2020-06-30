@@ -437,10 +437,21 @@ const renderTeacherClassCell = cards => {
     let cellText = '';
     let subCellText = '';
     let groupCellText = '';
+
+    let teacherLessonAddCellClass = '';
+
     if (cards !== undefined) {
-        cards.cards.map((card, cardIndex) => {
-            if (cardIndex === 0) {
-                cellText += prepareTeacherCardCell(card);
+        if (cards.cards.length > 1) {
+            cards.cards.map((card, cardIndex) => {
+                if (
+                    cards.cards[cardIndex + 1] &&
+                    card.room !== cards.cards[cardIndex + 1].room
+                ) {
+                    teacherLessonAddCellClass += 'intersection-on-schedule';
+                }
+                if (cardIndex === 0) {
+                    cellText += prepareTeacherCardCell(card);
+                }
                 subCellText +=
                     ' (' +
                     i18next.t(
@@ -448,15 +459,36 @@ const renderTeacherClassCell = cards => {
                     ) +
                     ', ' +
                     card.room +
-                    ')';
-                groupCellText +=
-                    i18next.t('common:GroupList_management_title') + ': ';
-            }
-            groupCellText += card.group.title + ' ';
-        });
+                    ') ' +
+                    i18next.t('common:GroupList_management_title') +
+                    ': ' +
+                    card.group.title +
+                    '\n\r';
+            });
+        } else {
+            cards.cards.map((card, cardIndex) => {
+                if (cardIndex === 0) {
+                    cellText += prepareTeacherCardCell(card);
+                    subCellText +=
+                        ' (' +
+                        i18next.t(
+                            `formElements:lesson_type_${card.lessonType.toLowerCase()}_label`
+                        ) +
+                        ', ' +
+                        card.room +
+                        ')';
+                    groupCellText +=
+                        i18next.t('common:GroupList_management_title') + ': ';
+                }
+                groupCellText += card.group.title + ' ';
+            });
+        }
     }
     return (
-        <TableCell key={shortid.generate()} className="lesson">
+        <TableCell
+            key={shortid.generate()}
+            className={`lesson ${teacherLessonAddCellClass}`}
+        >
             <p>{cellText}</p>
             <p>{subCellText}</p>
             <p>{groupCellText}</p>
