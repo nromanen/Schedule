@@ -80,6 +80,9 @@ $height-for-block: 50px;
             .more-then-one {
                 background: $need-attention;
             }
+            .more-then-one-conflict {
+                background: $danger-background-color;
+            }
 
             .group-height {
                 min-height: $height-for-block;

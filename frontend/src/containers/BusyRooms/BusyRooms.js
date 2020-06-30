@@ -21,14 +21,14 @@ const BusyRooms = props => {
 
     const isLoading = props.loading;
 
-    let moreThen = 'more-then-one';
+    let conflictLesson = '-conflict';
+    let grouppedLesson = 'more-then-one';
 
     let busyRoomsLength;
 
     if (busyRooms !== undefined) {
         busyRoomsLength = busyRooms.length;
     }
-
     return (
         <div className="busy-rooms-container">
             {isLoading ? (
@@ -114,12 +114,10 @@ const BusyRooms = props => {
                                                                                             }
                                                                                         >
                                                                                             <div className="class-info-data">
-                                                                                                {' '}
                                                                                                 {
                                                                                                     scheduleClass.class_name
                                                                                                 }
                                                                                             </div>
-
                                                                                             <div className="class-info-data">
                                                                                                 <div className="green-free"></div>
                                                                                             </div>
@@ -127,6 +125,17 @@ const BusyRooms = props => {
                                                                                     );
                                                                                 } else {
                                                                                     evenOne.groups = [];
+                                                                                    let intersectClass =
+                                                                                        '';
+                                                                                    if (
+                                                                                        schedule
+                                                                                            .classes[0]
+                                                                                            .even
+                                                                                            .length >
+                                                                                        1
+                                                                                    ) {
+                                                                                        intersectClass = conflictLesson;
+                                                                                    }
                                                                                     schedule.classes[0].even.map(
                                                                                         evenItemMap => {
                                                                                             if (
@@ -159,7 +168,7 @@ const BusyRooms = props => {
                                                                                                 .length >
                                                                                             1 ? (
                                                                                                 <div
-                                                                                                    className={`class-info-data group-height ${moreThen}`}
+                                                                                                    className={`class-info-data group-height ${grouppedLesson} ${intersectClass}`}
                                                                                                 >
                                                                                                     {evenOne.groups.join(
                                                                                                         ', '
@@ -211,12 +220,10 @@ const BusyRooms = props => {
                                                                                             }
                                                                                         >
                                                                                             <div className="class-info-data">
-                                                                                                {' '}
                                                                                                 {
                                                                                                     scheduleClass.class_name
                                                                                                 }
                                                                                             </div>
-
                                                                                             <div className="class-info-data">
                                                                                                 <div className="green-free"></div>
                                                                                             </div>
@@ -224,6 +231,17 @@ const BusyRooms = props => {
                                                                                     );
                                                                                 } else {
                                                                                     oddOne.groups = [];
+                                                                                    let intersectClass =
+                                                                                        '';
+                                                                                    if (
+                                                                                        schedule
+                                                                                            .classes[0]
+                                                                                            .odd
+                                                                                            .length >
+                                                                                        1
+                                                                                    ) {
+                                                                                        intersectClass = conflictLesson;
+                                                                                    }
                                                                                     schedule.classes[0].odd.map(
                                                                                         oddItemMap => {
                                                                                             if (
@@ -256,7 +274,7 @@ const BusyRooms = props => {
                                                                                                 .length >
                                                                                             1 ? (
                                                                                                 <div
-                                                                                                    className={`class-info-data group-height ${moreThen}`}
+                                                                                                    className={`class-info-data group-height ${grouppedLesson}${intersectClass}`}
                                                                                                 >
                                                                                                     {oddOne.groups.join(
                                                                                                         ', '
