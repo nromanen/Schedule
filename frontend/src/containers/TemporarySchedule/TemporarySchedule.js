@@ -12,10 +12,16 @@ import Card from '../../share/Card/Card';
 
 import { setLoadingService } from '../../services/loadingService';
 import { showAllTeachersService } from '../../services/teacherService';
-import { addTemporaryScheduleService } from '../../services/temporaryScheduleService';
+import {
+    addTemporaryScheduleService,
+    getTeacherTemporarySchedulesService
+} from '../../services/temporaryScheduleService';
 
 import './TemporarySchedule.scss';
 import { makeStyles } from '@material-ui/core/styles';
+import { showListOfRooms } from '../../redux/actions';
+import { getClassScheduleListService } from '../../services/classService';
+import { showListOfRoomsService } from '../../services/roomService';
 
 const useStyles = makeStyles(() => ({
     notSelected: {
@@ -31,14 +37,17 @@ const TemporarySchedule = props => {
     const classes = useStyles();
 
     const [isDateSelected, setIsDateSelected] = useState(false);
+    const [fromDate, setFromDate] = useState(null);
+    const [toDate, setToDate] = useState(null);
 
     const isLoading = props.loading;
 
     const { teachers, teacherId } = props;
-
     useEffect(() => {
         setLoadingService(true);
         showAllTeachersService();
+        showListOfRoomsService();
+        getClassScheduleListService(null);
     }, []);
 
     const handleSubmit = values => {
@@ -55,6 +64,10 @@ const TemporarySchedule = props => {
                     teacherId={teacherId}
                     teachers={teachers}
                     setIsDateSelected={setIsDateSelected}
+                    fromDate={fromDate}
+                    setFromDate={setFromDate}
+                    toDate={toDate}
+                    setToDate={setToDate}
                 />
             </Card>
             <div className="cards-container">
@@ -67,6 +80,9 @@ const TemporarySchedule = props => {
                             onSubmit={handleSubmit}
                             lessons={props.lessons}
                             lessonTypes={props.lessonTypes}
+                            teachers={teachers}
+                            rooms={props.rooms}
+                            periods={props.periods}
                         />
                     ) : (
                         <Card class="form-card">
@@ -81,9 +97,9 @@ const TemporarySchedule = props => {
                         <CircularProgress />
                     </section>
                 ) : (
-                    <main className="temporary-schedule-list">
+                    <main className="temporary-schedule-section">
                         <TemporaryScheduleList
-                            changes={props.temporarySchedules}
+                            temporarySchedules={props.temporarySchedules}
                         />
                     </main>
                 )}
@@ -95,6 +111,8 @@ const TemporarySchedule = props => {
 const mapStateToProps = state => ({
     temporarySchedules: state.temporarySchedule.temporarySchedules,
     temporarySchedule: state.temporarySchedule.temporarySchedule,
+    rooms: state.rooms.rooms,
+    periods: state.classActions.classScheduler,
     loading: state.loadingIndicator.loading,
     teachers: state.teachers.teachers,
     teacherId: state.temporarySchedule.teacherId

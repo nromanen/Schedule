@@ -24,6 +24,7 @@ import {
     getTemporarySchedulesService,
     selectTeacherIdService
 } from '../../../services/temporaryScheduleService';
+import { handleTeacherInfo } from '../../../helper/handleTeacherInfo';
 
 const useStyles = makeStyles({
     teacherField: {
@@ -60,11 +61,13 @@ const TemporaryScheduleTitle = props => {
     const { t } = useTranslation('common');
     const classes = useStyles();
     const [day, setDay] = useState(null);
-    const [fromDate, setFromDate] = useState(null);
-    const [toDate, setToDate] = useState(null);
+
     const [radio, setRadio] = useState(temporaryScheduleRadioTypes.SEMESTER);
 
     const { teachers, teacherId } = props;
+    const { toDate, setToDate } = props;
+    const { fromDate, setFromDate } = props;
+
     const setIsDateSelected = props.setIsDateSelected;
 
     const handleChange = event => {
@@ -123,15 +126,7 @@ const TemporaryScheduleTitle = props => {
 
     const defaultProps = {
         options: teachers,
-        getOptionLabel: option =>
-            option
-                ? option.surname +
-                  ' ' +
-                  option.name +
-                  ' ' +
-                  option.patronymic +
-                  `(${option.position})`
-                : ''
+        getOptionLabel: option => (option ? handleTeacherInfo(option) : '')
     };
 
     const handleFindTeacher = teacherId => {

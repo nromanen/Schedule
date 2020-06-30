@@ -11,39 +11,39 @@ const reducer = (state = initialState, action) => {
     switch (action.type) {
         case actionTypes.ADD_TEMPORARY_SCHEDULE:
             return updateObject(state, {
-                changes: state.temporarySchedules.concat(action.result)
+                temporarySchedules: state.temporarySchedules.concat(action.result)
             });
         case actionTypes.GET_TEMPORARY_SCHEDULES:
             return updateObject(state, {
-                changes: action.result
+                temporarySchedules: action.result
             });
         case actionTypes.DELETE_TEMPORARY_SCHEDULE:
             state.temporarySchedules = state.temporarySchedules.filter(
-                change => change.id !== action.result
+                temporarySchedule => temporarySchedule.id !== action.result
             );
             return updateObject(state, {
-                changes: state.temporarySchedules
+                temporarySchedules: state.temporarySchedules
             });
         case actionTypes.SELECT_TEMPORARY_SCHEDULE:
-            let change = state.temporarySchedules.filter(
-                change => change.id === action.result
+            let temporarySchedule = state.temporarySchedules.filter(
+                temporarySchedule => temporarySchedule.id === action.result
             )[0];
-            if (!change) {
-                change = { id: null };
+            if (!temporarySchedule) {
+                temporarySchedule = { id: null };
             }
             return updateObject(state, {
-                change: change
+                temporarySchedule: temporarySchedule
             });
         case actionTypes.UPDATE_TEMPORARY_SCHEDULE:
             const updatedLessonChanges = [];
-            state.temporarySchedules.forEach(change => {
-                if (change.id === action.result.id) {
-                    change = { ...change, ...action.result };
+            state.temporarySchedules.forEach(temporarySchedule => {
+                if (temporarySchedule.id === action.result.id) {
+                    temporarySchedule = { ...temporarySchedule, ...action.result };
                 }
-                updatedLessonChanges.push(change);
+                updatedLessonChanges.push(temporarySchedule);
             });
             return updateObject(state, {
-                changes: updatedLessonChanges,
+                temporarySchedules: updatedLessonChanges,
                 change: {}
             });
         case actionTypes.SELECT_TEACHER_ID:

@@ -11,16 +11,21 @@
     margin: 0;
 }
 
-.temporary-schedule-list {
+.temporary-schedule-section {
     display: flex;
     flex-direction: column;
     width: 72%;
-    .temporary-schedule-row {
+    .temporary-schedule-list {
         display: flex;
-        justify-content: space-between;
-        margin: 0;
-        .divider {
-            background-color: #000000;
+        flex-direction: column;
+        width: 100%;
+        .temporary-schedule-row {
+            display: flex;
+            justify-content: space-between;
+            margin: 0;
+            .divider {
+                background-color: #000000;
+            }
         }
     }
 }
