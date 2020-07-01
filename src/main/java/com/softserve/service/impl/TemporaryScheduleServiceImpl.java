@@ -88,9 +88,9 @@ public class TemporaryScheduleServiceImpl implements TemporaryScheduleService {
      * @return list of  temporary schedules
      */
     @Override
-    public List<TemporarySchedule> getAllByTeacher(Long teacherId) {
-        log.info("Enter into getAllByTeacher of TemporaryScheduleServiceImpl");
-        return temporaryScheduleRepository.getAllByTeacher(teacherId, semesterService.getCurrentSemester().getId());
+    public List<TemporarySchedule> getAllByTeacherAndRange(LocalDate fromDate, LocalDate toDate, Long teacherId) {
+        log.info("Enter into getAllByTeacherAndRange of TemporaryScheduleServiceImpl");
+        return temporaryScheduleRepository.getAllByTeacherAndRange(fromDate, toDate, teacherId);
     }
 
     /**
@@ -148,7 +148,6 @@ public class TemporaryScheduleServiceImpl implements TemporaryScheduleService {
             check(object);
 
         }else {
-
             if(isExistTemporaryScheduleByVacationByDate(object.getDate(), object.getSemester().getId(), true)){
                 throw new EntityAlreadyExistsException("Please remove vacation before");
             }
@@ -256,7 +255,7 @@ public class TemporaryScheduleServiceImpl implements TemporaryScheduleService {
 
     private boolean isExistTemporarySchedule(TemporarySchedule object) {
         log.info("In isExistTemporarySchedule(object = [{}])", object);
-        return temporaryScheduleRepository.isExistTemporarySchedule(object) != 0;
+            return temporaryScheduleRepository.isExistTemporarySchedule(object) != 0;
     }
 
     private boolean isExistTemporaryScheduleWithIgnoreId(TemporarySchedule object) {

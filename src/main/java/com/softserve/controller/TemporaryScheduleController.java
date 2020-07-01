@@ -58,20 +58,22 @@ public class TemporaryScheduleController {
     @GetMapping
     @ApiOperation(value = "Get all temporary schedules")
     @PreAuthorize("hasRole('MANAGER')")
-    public ResponseEntity<List<TemporaryScheduleDTO>> getAll(@RequestParam("id") Optional<Long> id,
+    public ResponseEntity<List<TemporaryScheduleDTO>> getAll(@RequestParam("teacherId") Optional<Long> teacherId,
                                                              @RequestParam Optional<String> from,
                                                              @RequestParam Optional<String> to) {
         log.info("Enter into getAll of TemporaryScheduleController");
         List<TemporarySchedule> temporaryScheduleList;
-        if(id.isPresent()){
-            teacherService.getById(id.get());
-             temporaryScheduleList = temporaryScheduleService.getAllByTeacher(id.get());
-        }else if(from.isPresent() && to.isPresent()){
+        if(from.isPresent() && to.isPresent()){
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
             DateTimeFormatter currentFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             LocalDate fromDate = LocalDate.parse(LocalDate.parse(from.get(), formatter).toString(), currentFormatter);
             LocalDate toDate = LocalDate.parse(LocalDate.parse(to.get(), formatter).toString(), currentFormatter);
-            temporaryScheduleList = temporaryScheduleService.getAllByRange(fromDate, toDate);
+            if(teacherId.isPresent()){
+                teacherService.getById(teacherId.get());
+                temporaryScheduleList = temporaryScheduleService.getAllByTeacherAndRange(fromDate, toDate, teacherId.get());
+            }else{
+                temporaryScheduleList = temporaryScheduleService.getAllByRange(fromDate, toDate);
+            }
         }else{
             temporaryScheduleList = temporaryScheduleService.getAllBySemester();
         }
