@@ -96,20 +96,21 @@ public class TemporaryScheduleRepositoryImpl extends BasicRepositoryImpl<Tempora
     }
 
     /**
-     * Method counts schedule records in db for group in the semester
+     * Method counts temporary schedule records in db for teacher
      *
-     * @param teacherId, semesterId
+     * @param teacherId, fromDate, toDate
      * @return number of records in db
      */
     @Override
-    public List<TemporarySchedule> getAllByTeacher(Long teacherId, Long semesterId) {
-        log.info("In getAllByTeacher(teacherId = [{}], semesterId = [{}]", teacherId, semesterId);
+    public List<TemporarySchedule> getAllByTeacherAndRange(LocalDate fromDate, LocalDate toDate, Long teacherId) {
+        log.info("In getAllByTeacherAndRange(teacherId = [{}], fromDate = [{}], toDate = [{}]", teacherId, fromDate, teacherId);
         return sessionFactory.getCurrentSession().createQuery("SELECT t from TemporarySchedule t " +
                 " join Schedule  s on t.scheduleId = s.id" +
                 " join Lesson l on s.lesson.id  = l.id " +
-                "where ( t.teacher.id = :teacherId or l.teacher.id = :teacherId ) and t.semester.id = :semesterId")
+                "where t.date <= :toDate  and t.date >= :fromDate and ( t.teacher.id = :teacherId or l.teacher.id = :teacherId )")
+                .setParameter("fromDate", fromDate)
+                .setParameter("toDate", toDate)
                 .setParameter("teacherId", teacherId)
-                .setParameter("semesterId", semesterId)
                 .getResultList();
     }
 
@@ -124,8 +125,6 @@ public class TemporaryScheduleRepositoryImpl extends BasicRepositoryImpl<Tempora
     public List<TemporarySchedule> getAllBySemester(Long semesterId) {
         log.info("In getAllBySemester(semesterId = [{}]", semesterId);
         return sessionFactory.getCurrentSession().createQuery("SELECT t from TemporarySchedule t " +
-                " join Schedule  s on t.scheduleId = s.id" +
-                " join Lesson l on s.lesson.id  = l.id " +
                 "where t.semester.id = :semesterId")
                 .setParameter("semesterId", semesterId)
                 .getResultList();
@@ -141,8 +140,6 @@ public class TemporaryScheduleRepositoryImpl extends BasicRepositoryImpl<Tempora
     public List<TemporarySchedule> getAllByRange(LocalDate fromDate, LocalDate toDate) {
         log.info("In getAllByRange");
         return sessionFactory.getCurrentSession().createQuery("SELECT t from TemporarySchedule t " +
-                " join Schedule  s on t.scheduleId = s.id" +
-                " join Lesson l on s.lesson.id  = l.id " +
                 "where t.date <= :toDate  and t.date >= :fromDate")
                 .setParameter("fromDate", fromDate)
                 .setParameter("toDate", toDate)

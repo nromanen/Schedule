@@ -9,7 +9,7 @@ public interface TemporaryScheduleRepository extends BasicRepository<TemporarySc
     Long isExistTemporarySchedule(TemporarySchedule object);
     Long isExistTemporaryScheduleWithIgnoreId(TemporarySchedule object);
     List<TemporarySchedule> temporaryScheduleByDateRangeForTeacher(LocalDate fromDate, LocalDate toDate, Long teacherId);
-    List<TemporarySchedule> getAllByTeacher(Long teacherId, Long semesterId);
+    List<TemporarySchedule> getAllByTeacherAndRange(LocalDate fromDate, LocalDate toDate, Long teacherId);
     List<TemporarySchedule> getAllBySemester(Long semesterId);
     List<TemporarySchedule> getAllByRange(LocalDate fromDate, LocalDate toDate);
     List<TemporarySchedule> vacationByDateRangeForTeacher(LocalDate fromDate, LocalDate toDate);
