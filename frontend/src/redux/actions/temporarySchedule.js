@@ -9,7 +9,14 @@ export const addTemporarySchedule = res => {
 
 export const setTemporarySchedules = res => {
     return {
-        type: actionTypes.GET_TEMPORARY_SCHEDULES,
+        type: actionTypes.SET_TEMPORARY_SCHEDULES,
+        result: res
+    };
+};
+
+export const setSchedulesAndTemporarySchedules = res => {
+    return {
+        type: actionTypes.SET_SCHEDULES_AND_TEMPORARY_SCHEDULES,
         result: res
     };
 };

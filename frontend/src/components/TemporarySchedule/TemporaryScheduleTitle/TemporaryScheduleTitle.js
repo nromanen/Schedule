@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
@@ -20,6 +20,7 @@ import * as moment from 'moment';
 import { temporaryScheduleRadioTypes } from '../../../constants/temporaryScheduleRadioTypes';
 
 import {
+    eliminateSchedulesAndTemporarySchedulesService,
     getTeacherTemporarySchedulesService,
     getTemporarySchedulesService,
     selectTeacherIdService
@@ -68,13 +69,15 @@ const TemporaryScheduleTitle = props => {
     const { toDate, setToDate } = props;
     const { fromDate, setFromDate } = props;
 
-    const setIsDateSelected = props.setIsDateSelected;
+    useEffect(() => {
+        if (radio === temporaryScheduleRadioTypes.SEMESTER)
+            getTemporarySchedulesService(null, null);
+    }, []);
 
     const handleChange = event => {
         setToDate(false);
         setFromDate(false);
         setDay(false);
-        setIsDateSelected(false);
         setRadio(event.target.value);
     };
 
@@ -93,9 +96,6 @@ const TemporaryScheduleTitle = props => {
         setDay(null);
         setToDate(moment(date, 'DD-MM-YYYY').format('DD-MM-YYYY'));
     };
-
-    if ((fromDate && toDate) || day) setIsDateSelected(true);
-    else setIsDateSelected(false);
 
     const handleClick = () => {
         let fDate;
@@ -244,6 +244,9 @@ const TemporaryScheduleTitle = props => {
                         className={classes.button}
                         color="primary"
                         onClick={handleClick}
+                        disabled={
+                            ((!toDate || !fromDate) && !day) || !teacherId
+                        }
                     >
                         Search
                     </Button>

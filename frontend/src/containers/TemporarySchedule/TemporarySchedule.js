@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 
 import TemporaryScheduleForm from '../../components/TemporarySchedule/TemporaryScheduleForm/TemporaryScheduleForm';
-import TemporaryScheduleList from '../../components/TemporarySchedule/TemporaryScheduleList/TemporaryScheduleList';
+import ScheduleAndTemporaryScheduleList from '../../components/TemporarySchedule/ScheduleAndTemporaryScheduleList/ScheduleAndTemporaryScheduleList';
 import TemporaryScheduleTitle from '../../components/TemporarySchedule/TemporaryScheduleTitle/TemporaryScheduleTitle';
 
 import CircularProgress from '@material-ui/core/CircularProgress';
@@ -12,31 +12,20 @@ import Card from '../../share/Card/Card';
 
 import { setLoadingService } from '../../services/loadingService';
 import { showAllTeachersService } from '../../services/teacherService';
-import {
-    addTemporaryScheduleService,
-    getTeacherTemporarySchedulesService
-} from '../../services/temporaryScheduleService';
+import { addTemporaryScheduleService } from '../../services/temporaryScheduleService';
 
 import './TemporarySchedule.scss';
 import { makeStyles } from '@material-ui/core/styles';
-import { showListOfRooms } from '../../redux/actions';
 import { getClassScheduleListService } from '../../services/classService';
 import { showListOfRoomsService } from '../../services/roomService';
-
-const useStyles = makeStyles(() => ({
-    notSelected: {
-        '&': {
-            textAlign: 'center',
-            margin: 'auto'
-        }
-    }
-}));
+import { showAllSubjectsService } from '../../services/subjectService';
+import { getLessonTypesService } from '../../services/lessonService';
+import TemporaryScheduleList from '../../components/TemporarySchedule/TemporaryScheduleList/TemporaryScheduleList';
+import TemporaryScheduleVacationForm from '../../components/TemporarySchedule/TemporaryScheduleVacationForm/TemporaryScheduleVacationForm';
 
 const TemporarySchedule = props => {
     const { t } = useTranslation('common');
-    const classes = useStyles();
 
-    const [isDateSelected, setIsDateSelected] = useState(false);
     const [fromDate, setFromDate] = useState(null);
     const [toDate, setToDate] = useState(null);
 
@@ -47,10 +36,16 @@ const TemporarySchedule = props => {
         setLoadingService(true);
         showAllTeachersService();
         showListOfRoomsService();
+        showAllSubjectsService();
         getClassScheduleListService(null);
+        getLessonTypesService();
     }, []);
 
-    const handleSubmit = values => {
+    const handleTemporaryScheduleSubmit = values => {
+        addTemporaryScheduleService(teacherId, values);
+    };
+
+    const handleTemporaryScheduleVacationSubmit = values => {
         addTemporaryScheduleService(teacherId, values);
     };
 
@@ -63,7 +58,6 @@ const TemporarySchedule = props => {
                 <TemporaryScheduleTitle
                     teacherId={teacherId}
                     teachers={teachers}
-                    setIsDateSelected={setIsDateSelected}
                     fromDate={fromDate}
                     setFromDate={setFromDate}
                     toDate={toDate}
@@ -72,24 +66,22 @@ const TemporarySchedule = props => {
             </Card>
             <div className="cards-container">
                 <aside>
-                    {isDateSelected ? (
+                    {props.temporarySchedule.id ? (
                         <TemporaryScheduleForm
                             temporarySchedule={props.temporarySchedule}
                             teacherRangeSchedule={props.teacherRangeSchedule}
                             teacherId={teacherId}
-                            onSubmit={handleSubmit}
-                            lessons={props.lessons}
+                            onSubmit={handleTemporaryScheduleSubmit}
                             lessonTypes={props.lessonTypes}
                             teachers={teachers}
                             rooms={props.rooms}
                             periods={props.periods}
+                            subjects={props.subjects}
                         />
                     ) : (
-                        <Card class="form-card">
-                            <div className={classes.notSelected}>
-                                <h2>Date is not selected</h2>
-                            </div>
-                        </Card>
+                        <TemporaryScheduleVacationForm
+                            onSubmit={handleTemporaryScheduleVacationSubmit}
+                        />
                     )}
                 </aside>
                 {isLoading ? (
@@ -97,11 +89,20 @@ const TemporarySchedule = props => {
                         <CircularProgress />
                     </section>
                 ) : (
-                    <main className="temporary-schedule-section">
-                        <TemporaryScheduleList
-                            temporarySchedules={props.temporarySchedules}
-                        />
-                    </main>
+                    <>
+                        {props.schedulesAndTemporarySchedules.length > 0 && (
+                            <ScheduleAndTemporaryScheduleList
+                                schedulesAndTemporarySchedules={
+                                    props.schedulesAndTemporarySchedules
+                                }
+                            />
+                        )}
+                        {props.temporarySchedules.length > 0 && (
+                            <TemporaryScheduleList
+                                temporarySchedules={props.temporarySchedules}
+                            />
+                        )}
+                    </>
                 )}
             </div>
         </>
@@ -109,8 +110,12 @@ const TemporarySchedule = props => {
 };
 
 const mapStateToProps = state => ({
+    schedulesAndTemporarySchedules:
+        state.temporarySchedule.schedulesAndTemporarySchedules,
     temporarySchedules: state.temporarySchedule.temporarySchedules,
     temporarySchedule: state.temporarySchedule.temporarySchedule,
+    lessonTypes: state.lesson.lessonTypes,
+    subjects: state.subjects.subjects,
     rooms: state.rooms.rooms,
     periods: state.classActions.classScheduler,
     loading: state.loadingIndicator.loading,

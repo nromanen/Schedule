@@ -1,26 +1,30 @@
 import axios from '../helper/axios';
+import { errorHandler, successHandler } from '../helper/handlerAxios';
+
 import { store } from '../index';
 
 import {
     TEACHER_TEMPORARY_SCHEDULE,
     TEMPORARY_SCHEDULE_URL
 } from '../constants/axios';
+
 import { setLoadingService } from './loadingService';
 
 import {
     deleteTemporarySchedule,
     selectTemporarySchedule,
+    setSchedulesAndTemporarySchedules,
     setTemporarySchedules
 } from '../redux/actions/index';
+import { selectTeacherId } from '../redux/actions/temporarySchedule';
 
 import i18n from '../helper/i18n';
-import { errorHandler, successHandler } from '../helper/handlerAxios';
-import { selectTeacherId } from '../redux/actions/temporarySchedule';
 
 export const getTemporarySchedulesService = (from, to) => {
     axios
         .get(TEMPORARY_SCHEDULE_URL, { params: { from, to } })
         .then(response => {
+            store.dispatch(setSchedulesAndTemporarySchedules([]));
             store.dispatch(setTemporarySchedules(response.data));
             setLoadingService(false);
         })
@@ -34,7 +38,8 @@ export const getTeacherTemporarySchedulesService = (teacherId, from, to) => {
     axios
         .get(TEACHER_TEMPORARY_SCHEDULE, { params: { teacherId, from, to } })
         .then(response => {
-            store.dispatch(setTemporarySchedules(response.data));
+            store.dispatch(setTemporarySchedules([]));
+            store.dispatch(setSchedulesAndTemporarySchedules(response.data));
             setLoadingService(false);
         })
         .catch(err => {
@@ -80,8 +85,8 @@ export const addTemporaryScheduleService = (teacherId, formValues) => {
         });
 };
 
-export const selectTemporaryScheduleId = temporaryScheduleId => {
-    store.dispatch(selectTemporarySchedule(temporaryScheduleId));
+export const selectTemporaryScheduleService = temporarySchedule => {
+    store.dispatch(selectTemporarySchedule(temporarySchedule));
 };
 
 export const selectTeacherIdService = teacherId => {
