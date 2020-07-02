@@ -140,13 +140,13 @@ public class TemporaryScheduleServiceImpl implements TemporaryScheduleService {
     @Override
     public TemporarySchedule save(TemporarySchedule object) {
         log.info("Enter into save of TemporaryScheduleServiceImpl with entity:{}", object );
-        //Semester semester = new Semester();
-        //semester.setId(semesterService.getCurrentSemester().getId());
-        //object.setSemester(semester);
-
+        if(object.getSemester() == null) {
+            Semester semester = new Semester();
+            semester.setId(semesterService.getCurrentSemester().getId());
+            object.setSemester(semester);
+        }
         if(object.isVacation()){
             check(object);
-
         }else {
             if(isExistTemporaryScheduleByVacationByDate(object.getDate(), object.getSemester().getId(), true)){
                 throw new EntityAlreadyExistsException("Please remove vacation before");
@@ -171,9 +171,11 @@ public class TemporaryScheduleServiceImpl implements TemporaryScheduleService {
     @Override
     public TemporarySchedule update(TemporarySchedule object) {
         log.info("Enter into update of TemporaryScheduleServiceImpl with entity:{}", object);
-        //Semester semester = new Semester();
-        //semester.setId(semesterService.getCurrentSemester().getId());
-        //object.setSemester(semester);
+        if(object.getSemester() == null) {
+            Semester semester = new Semester();
+            semester.setId(semesterService.getCurrentSemester().getId());
+            object.setSemester(semester);
+        }
         if(object.isVacation()){
             check(object);
         }else {
