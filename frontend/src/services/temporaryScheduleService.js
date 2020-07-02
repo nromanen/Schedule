@@ -52,7 +52,6 @@ export const deleteTemporaryScheduleService = temporaryScheduleId => {
     axios
         .delete(TEMPORARY_SCHEDULE_URL + `/${temporaryScheduleId}`)
         .then(() => {
-            store.dispatch(deleteTemporarySchedule(temporaryScheduleId));
             successHandler(
                 i18n.t('serviceMessages:back_end_success_operation', {
                     cardType: i18n.t('formElements:temporary_schedule_label'),
@@ -67,12 +66,34 @@ export const deleteTemporaryScheduleService = temporaryScheduleId => {
 
 export const addTemporaryScheduleService = (teacherId, formValues) => {
     formValues.date = formValues.date.replace(/\//g, '-');
+    let obj = {};
+    if (teacherId) obj = { teacher: { id: teacherId } };
+    if (formValues.scheduleId)
+        obj = {
+            ...obj,
+            class: { id: formValues.period },
+            date: formValues.date,
+            group: { id: formValues.group },
+            id: formValues.id ? formValues.id : null,
+            lessonType: formValues.lessonType,
+            room: { id: formValues.room },
+            schedule: { id: formValues.scheduleId },
+            semester: { id: 14 },
+            subject: { id: formValues.subject },
+            subjectForSite: formValues.subjectForSite,
+            teacherForSite: formValues.teacherForSite
+        };
     axios
         .post(TEMPORARY_SCHEDULE_URL, {
             ...formValues,
-            teacher: !teacherId ? null : { id: teacherId }
+            ...obj
         })
         .then(() => {
+            getTeacherTemporarySchedulesService(
+                teacherId,
+                formValues.date,
+                formValues.date
+            );
             successHandler(
                 i18n.t('serviceMessages:back_end_success_operation', {
                     cardType: i18n.t('formElements:temporary_schedule_label'),

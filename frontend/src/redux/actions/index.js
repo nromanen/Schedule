@@ -12,10 +12,7 @@ export {
 export {
     setTemporarySchedules,
     setSchedulesAndTemporarySchedules,
-    updateTemporarySchedule,
-    deleteTemporarySchedule,
     selectTemporarySchedule,
-    addTemporarySchedule,
     selectTeacherId
 } from './temporarySchedule';
 

@@ -147,5 +147,7 @@
     "block_view": "Block view",
     "list_view": "List view",
     "clear_schedule_label": "Clear Schedule",
-    "copy_lessons_from_semester_to_current": "Copy all lessons from selected semester to current"
+    "copy_lessons_from_semester_to_current": "Copy all lessons from selected semester to current",
+
+    "for_all": "For all"
 }

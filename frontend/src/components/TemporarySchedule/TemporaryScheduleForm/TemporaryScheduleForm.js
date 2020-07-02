@@ -5,6 +5,7 @@ import { Field, reduxForm } from 'redux-form';
 import { TEMPORARY_SCHEDULE_FORM } from '../../../constants/reduxForms';
 
 import Button from '@material-ui/core/Button';
+import Hidden from '@material-ui/core/Hidden';
 
 import Card from '../../../share/Card/Card';
 import renderCheckboxField from '../../../share/renderedFields/checkbox';
@@ -29,7 +30,7 @@ let TemporaryScheduleForm = props => {
     const temporarySchedule = props.temporarySchedule;
     const temporaryScheduleId = temporarySchedule?.id;
 
-    const { teachers, periods, rooms, subjects, lessonTypes } = props;
+    const { teachers, periods, rooms, subjects, lessonTypes, groups } = props;
 
     useEffect(() => {
         if (temporaryScheduleId) {
@@ -45,11 +46,15 @@ let TemporaryScheduleForm = props => {
             vacation: isVacation,
             teacher: temporarySchedule.teacher.id,
             subject: temporarySchedule.subject.id,
+            group: temporarySchedule.group.id,
             room: temporarySchedule.room.id,
             period: temporarySchedule.class.id,
             lessonType: temporarySchedule.lessonType,
             teacherForSite: temporarySchedule.teacherForSite,
-            subjectForSite: temporarySchedule.subjectForSite
+            subjectForSite: temporarySchedule.subjectForSite,
+            date: temporarySchedule.date,
+            id: temporarySchedule.id,
+            scheduleId: temporarySchedule.scheduleId
         });
     };
 
@@ -120,6 +125,21 @@ let TemporaryScheduleForm = props => {
                             ))}
                         </Field>
                         <Field
+                            name="group"
+                            className="form-field"
+                            component={renderSelectField}
+                            label={t('group_label')}
+                            validate={[required]}
+                            disabled={isVacation}
+                        >
+                            <option value={''} />
+                            {groups.map(group => (
+                                <option key={group.id} value={group.id}>
+                                    {group.title}
+                                </option>
+                            ))}
+                        </Field>
+                        <Field
                             name="lessonType"
                             className="form-field"
                             component={renderSelectField}
@@ -165,7 +185,6 @@ let TemporaryScheduleForm = props => {
                             ))}
                         </Field>
                         <Field
-                            id="teacherForSite"
                             name="teacherForSite"
                             className="form-field"
                             multiline
@@ -177,7 +196,6 @@ let TemporaryScheduleForm = props => {
                             disabled={isVacation}
                         />
                         <Field
-                            id="subjectForSite"
                             name="subjectForSite"
                             className="form-field"
                             multiline
@@ -188,6 +206,14 @@ let TemporaryScheduleForm = props => {
                             validate={[required, maxLengthValue]}
                             disabled={isVacation}
                         />
+                        <Hidden smUp smDown xsDown xsUp>
+                            <Field name="date" component={renderTextField} />
+                            <Field name="id" component={renderTextField} />
+                            <Field
+                                name="scheduleId"
+                                component={renderTextField}
+                            />
+                        </Hidden>
                     </>
                     <div className="form-buttons-container">
                         <Button

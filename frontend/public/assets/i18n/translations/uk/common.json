@@ -144,5 +144,7 @@
     "block_view": "Вигляд блоків",
     "list_view": "Вигляд таблиці",
     "clear_schedule_label": "Очистити розклад",
-    "copy_lessons_from_semester_to_current": "Копіювати всі заняття із обраного семестру в поточний"
+    "copy_lessons_from_semester_to_current": "Копіювати всі заняття із обраного семестру в поточний",
+
+    "for_all": "Для всіх"
 }

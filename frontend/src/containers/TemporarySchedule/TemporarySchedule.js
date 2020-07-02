@@ -15,13 +15,13 @@ import { showAllTeachersService } from '../../services/teacherService';
 import { addTemporaryScheduleService } from '../../services/temporaryScheduleService';
 
 import './TemporarySchedule.scss';
-import { makeStyles } from '@material-ui/core/styles';
 import { getClassScheduleListService } from '../../services/classService';
 import { showListOfRoomsService } from '../../services/roomService';
 import { showAllSubjectsService } from '../../services/subjectService';
 import { getLessonTypesService } from '../../services/lessonService';
 import TemporaryScheduleList from '../../components/TemporarySchedule/TemporaryScheduleList/TemporaryScheduleList';
 import TemporaryScheduleVacationForm from '../../components/TemporarySchedule/TemporaryScheduleVacationForm/TemporaryScheduleVacationForm';
+import { showAllGroupsService } from '../../services/groupService';
 
 const TemporarySchedule = props => {
     const { t } = useTranslation('common');
@@ -39,6 +39,7 @@ const TemporarySchedule = props => {
         showAllSubjectsService();
         getClassScheduleListService(null);
         getLessonTypesService();
+        showAllGroupsService();
     }, []);
 
     const handleTemporaryScheduleSubmit = values => {
@@ -46,7 +47,7 @@ const TemporarySchedule = props => {
     };
 
     const handleTemporaryScheduleVacationSubmit = values => {
-        addTemporaryScheduleService(teacherId, values);
+        addTemporaryScheduleService(teacherId, { ...values, vacation: true });
     };
 
     return (
@@ -77,10 +78,13 @@ const TemporarySchedule = props => {
                             rooms={props.rooms}
                             periods={props.periods}
                             subjects={props.subjects}
+                            groups={props.groups}
                         />
                     ) : (
                         <TemporaryScheduleVacationForm
+                            teachers={teachers}
                             onSubmit={handleTemporaryScheduleVacationSubmit}
+                            teacherId={teacherId}
                         />
                     )}
                 </aside>
@@ -118,6 +122,7 @@ const mapStateToProps = state => ({
     subjects: state.subjects.subjects,
     rooms: state.rooms.rooms,
     periods: state.classActions.classScheduler,
+    groups: state.groups.groups,
     loading: state.loadingIndicator.loading,
     teachers: state.teachers.teachers,
     teacherId: state.temporarySchedule.teacherId
