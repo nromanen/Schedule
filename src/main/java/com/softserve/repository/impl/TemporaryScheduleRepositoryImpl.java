@@ -30,16 +30,32 @@ public class TemporaryScheduleRepositoryImpl extends BasicRepositoryImpl<Tempora
     }
 
     /**
+     * Method counts temporary schedule records in db for date and vacation  in the semester
+     *
+     * @param date, semesterId, vacation
+     * @return number of records in db
+     */
+    @Override
+    public Long isExistTemporaryScheduleByVacationByDateAndTeacher(LocalDate date, Long semesterId, Long teacherId, boolean vacation) {
+        log.info("In isExistVacationByDate(semesterId = [{}], date = [{}])", semesterId, date);
+        return (Long) sessionFactory.getCurrentSession().createQuery("select count (s.id) from  TemporarySchedule s where  s.date = :date and s.vacation =  :vacation and s.semester.id = :semesterId ")
+                .setParameter("date", date)
+                .setParameter("semesterId", semesterId)
+                .setParameter("vacation", vacation)
+                .getSingleResult();
+    }
+
+    /**
      * Method counts schedule records in db for group in the semester
      *
      * @param object
      * @return number of records in db
      */
     @Override
-    public Long isExistTemporarySchedule(TemporarySchedule object) {
+    public Long isExistTemporarySchedule(TemporarySchedule object, boolean vacation) {
         log.info("In isExistTemporarySchedule(object = [{}]", object);
         return (Long) sessionFactory.getCurrentSession().createQuery("select count (s.id) from  TemporarySchedule s where  s.date = :date and s.vacation =  false " +
-                "and s.room.id=:roomId and s.group.id=:groupId and s.period.id = :periodId and s.subject.id = :subjectId and s.scheduleId = :scheduleId and s.lessonType=:lessonType and s.semester.id = :semesterId")
+                "and s.room.id=:roomId and s.group.id=:groupId and s.period.id = :periodId and s.subject.id = :subjectId and s.scheduleId = :scheduleId and s.lessonType=:lessonType and s.semester.id = :semesterId and s.vacation = :vacation")
                 .setParameter("date", object.getDate())
                 .setParameter("roomId", object.getRoom().getId())
                 .setParameter("groupId", object.getGroup().getId())
@@ -48,6 +64,7 @@ public class TemporaryScheduleRepositoryImpl extends BasicRepositoryImpl<Tempora
                 .setParameter("scheduleId", object.getScheduleId())
                 .setParameter("lessonType", object.getLessonType())
                 .setParameter("semesterId", object.getSemester().getId())
+                .setParameter("vacation", vacation)
                 .getSingleResult();
     }
 
