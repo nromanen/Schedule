@@ -75,6 +75,24 @@ public class TemporaryScheduleRepositoryImpl extends BasicRepositoryImpl<Tempora
      * @return number of records in db
      */
     @Override
+    public Long isExistTemporaryScheduleByDateAndScheduleId(TemporarySchedule object, boolean vacation) {
+        log.info("In isExistTemporarySchedule(object = [{}]", object);
+        return (Long) sessionFactory.getCurrentSession().createQuery("select count (t.id) from  TemporarySchedule t where  t.date = :date and t.vacation =  false " +
+                " and t.scheduleId = :scheduleId  and t.semester.id = :semesterId and t.vacation = :vacation")
+                .setParameter("date", object.getDate())
+                .setParameter("scheduleId", object.getScheduleId())
+                .setParameter("semesterId", object.getSemester().getId())
+                .setParameter("vacation", vacation)
+                .getSingleResult();
+    }
+
+    /**
+     * Method counts schedule records in db for group in the semester
+     *
+     * @param object
+     * @return number of records in db
+     */
+    @Override
     public Long isExistTemporaryScheduleWithIgnoreId(TemporarySchedule object) {
         log.info("In isExistTemporarySchedule(object = [{}]", object);
         return (Long) sessionFactory.getCurrentSession().createQuery("select count (s.id) from  TemporarySchedule s where  s.date = :date and s.vacation =  false " +
