@@ -1,13 +1,10 @@
 package com.softserve.repository.impl;
 
-import com.softserve.dto.ScheduleForArchiveDTO;
 import com.softserve.entity.*;
 import com.softserve.entity.enums.EvenOdd;
 import com.softserve.repository.ScheduleRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.TypedQuery;

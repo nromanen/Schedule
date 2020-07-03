@@ -6,9 +6,12 @@ import java.util.List;
 
 public interface TemporaryScheduleRepository extends BasicRepository<TemporarySchedule, Long> {
     Long isExistTemporaryScheduleByVacationByDate(LocalDate date, Long semesterId, boolean vacation);
+    Long isExistTemporaryScheduleByVacationByDateWithIgnoreId(Long id, LocalDate date, Long semesterId, boolean vacation);
     Long isExistTemporaryScheduleByVacationByDateAndTeacher(LocalDate date, Long semesterId, Long teacherId, boolean vacation);
+    Long isExistTemporaryScheduleByVacationByDateAndTeacherWithIgnoreId(Long id, LocalDate date, Long semesterId, Long teacherId, boolean vacation);
     Long isExistTemporarySchedule(TemporarySchedule object, boolean vacation);
     Long isExistTemporaryScheduleByDateAndScheduleId(TemporarySchedule object, boolean vacation);
+    Long isExistTemporaryScheduleByDateAndScheduleIdWithIgnoreId(TemporarySchedule object, boolean vacation);
     Long isExistTemporaryScheduleWithIgnoreId(TemporarySchedule object);
     List<TemporarySchedule> temporaryScheduleByDateRangeForTeacher(LocalDate fromDate, LocalDate toDate, Long teacherId);
     List<TemporarySchedule> getAllByTeacherAndRange(LocalDate fromDate, LocalDate toDate, Long teacherId);
