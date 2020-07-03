@@ -47,6 +47,18 @@ public class TemporaryScheduleController {
         TemporarySchedule temporarySchedule = temporaryScheduleService.save(temporaryScheduleMapper.convertToEntity(temporaryScheduleDTO));
         return ResponseEntity.status(HttpStatus.CREATED).body(temporaryScheduleMapper.convertToDto(temporarySchedule));
     }
+
+    @PutMapping
+    @ApiOperation(value = "Update existing temporary schedule by id")
+    @PreAuthorize("hasRole('MANAGER')")
+    public ResponseEntity<TemporaryScheduleDTO> update(@RequestBody TemporaryScheduleSaveDTO temporaryScheduleDTO) {
+        log.info("Enter into update method with temporaryScheduleDTO: {}", temporaryScheduleDTO);
+        TemporarySchedule temporarySchedule = temporaryScheduleService.update(temporaryScheduleMapper.convertToEntity(temporaryScheduleDTO));
+        return ResponseEntity.status(HttpStatus.OK).body(temporaryScheduleMapper.convertToDto(temporarySchedule));
+    }
+
+
+
     @GetMapping("/{id}")
     @ApiOperation(value = "Get temporary schedule by id")
     @PreAuthorize("hasRole('MANAGER')")
