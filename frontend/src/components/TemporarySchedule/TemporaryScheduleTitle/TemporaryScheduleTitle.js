@@ -245,7 +245,8 @@ const TemporaryScheduleTitle = props => {
                         color="primary"
                         onClick={handleClick}
                         disabled={
-                            ((!toDate || !fromDate) && !day) || !teacherId
+                            (((!toDate || !fromDate) && !day) || !teacherId) &&
+                            !temporaryScheduleRadioTypes.SEMESTER
                         }
                     >
                         Search

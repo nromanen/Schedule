@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Card from '../../../share/Card/Card';
 import { useTranslation } from 'react-i18next';
 import Divider from '@material-ui/core/Divider';
@@ -8,6 +8,9 @@ import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import { MdExpandMore } from 'react-icons/all';
+import { cardType } from '../../../constants/cardType';
+import ConfirmDialog from '../../../share/modals/dialog';
+import { deleteTemporaryScheduleService } from '../../../services/temporaryScheduleService';
 
 const ScheduleAndTemporaryScheduleList = props => {
     const shortId = require('shortid');
@@ -15,8 +18,33 @@ const ScheduleAndTemporaryScheduleList = props => {
     const schedulesAndTemporarySchedules =
         props.schedulesAndTemporarySchedules || [];
 
+    const [open, setOpen] = useState(false);
+    const [temporaryScheduleId, setTemporaryScheduleId] = useState(-1);
+    const [date, setDate] = useState(null);
+    const [teacherId, setTeacherId] = useState(null);
+
+    const handleClickOpen = temporaryScheduleId => {
+        setTemporaryScheduleId(temporaryScheduleId);
+        setOpen(true);
+    };
+
+    const handleClose = temporaryScheduleId => {
+        setOpen(false);
+        if (!temporaryScheduleId) {
+            return;
+        }
+        deleteTemporaryScheduleService(temporaryScheduleId, date, teacherId);
+    };
+
     return (
         <main className="temporary-schedule-section">
+            <ConfirmDialog
+                selectedValue={''}
+                cardId={temporaryScheduleId}
+                whatDelete={cardType.TEMPORARY_SCHEDULE.toLowerCase()}
+                open={open}
+                onClose={handleClose}
+            />
             {schedulesAndTemporarySchedules.map(
                 scheduleAndTemporarySchedule => (
                     <ExpansionPanel key={shortId.generate()}>
@@ -51,7 +79,14 @@ const ScheduleAndTemporaryScheduleList = props => {
                                                         date={
                                                             scheduleAndTemporarySchedule.date
                                                         }
+                                                        openDialog={
+                                                            handleClickOpen
+                                                        }
                                                         isTemporary={false}
+                                                        setDate={setDate}
+                                                        setTeacherId={
+                                                            setTeacherId
+                                                        }
                                                     />
                                                 )}
                                                 <TemporaryScheduleCard
@@ -79,6 +114,7 @@ const ScheduleAndTemporaryScheduleList = props => {
                                                         date={
                                                             scheduleAndTemporarySchedule.date
                                                         }
+                                                        scheduleId={schedule.schedule.id}
                                                         isTemporary={true}
                                                     />
                                                     <TemporaryScheduleCard

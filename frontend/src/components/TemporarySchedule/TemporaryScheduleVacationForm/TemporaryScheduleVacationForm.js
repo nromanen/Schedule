@@ -10,26 +10,56 @@ import { TEMPORARY_SCHEDULE_VACATION_FORM } from '../../../constants/reduxForms'
 import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Button from '@material-ui/core/Button';
+import Switch from '@material-ui/core/Switch';
+import TextField from '@material-ui/core/TextField';
+import Autocomplete from '@material-ui/lab/Autocomplete';
 
 import {
     greaterThanDate,
     lessThanDate,
     required
 } from '../../../validation/validateFields';
-import Switch from '@material-ui/core/Switch';
+
 import { handleTeacherInfo } from '../../../helper/handleTeacherInfo';
-import { selectTeacherIdService } from '../../../services/temporaryScheduleService';
-import TextField from '@material-ui/core/TextField';
-import Autocomplete from '@material-ui/lab/Autocomplete';
+
+import {
+    selectTeacherIdService,
+    selectVacationService
+} from '../../../services/temporaryScheduleService';
+
 
 let TemporaryScheduleVacationForm = props => {
     const { t } = useTranslation('formElements');
-    const { handleSubmit, pristine, reset, submitting } = props;
+    const { handleSubmit, invalid, reset, submitting } = props;
 
     const [isFewDays, setIsFewDays] = useState(false);
     const [forAll, setForAll] = useState(true);
 
     const { teachers, teacherId } = props;
+
+    const { vacation } = props;
+    const vacationId = vacation.id;
+
+    useEffect(() => {
+        if (vacationId) {
+            initializeFormHandler(vacation);
+        } else {
+            props.initialize();
+        }
+    }, [vacationId]);
+
+    const initializeFormHandler = vacation => {
+        if (vacation.teacher?.id) {
+            selectTeacherIdService(vacation.teacher.id);
+            setForAll(false);
+        } else {
+            setForAll(true);
+        }
+        props.initialize({
+            id: vacation.id,
+            date: vacation.date
+        });
+    };
 
     const handleForAllChange = event => {
         setForAll(event.target.checked);
@@ -64,6 +94,9 @@ let TemporaryScheduleVacationForm = props => {
 
     return (
         <Card class="form-card">
+            <h2 className="form-title under-line">
+                {vacationId ? t('edit_title') : t('create_title')}
+            </h2>
             <form onSubmit={handleSubmit}>
                 <FormControlLabel
                     control={
@@ -139,7 +172,7 @@ let TemporaryScheduleVacationForm = props => {
                         type="submit"
                         variant="contained"
                         color="primary"
-                        disabled={pristine || submitting}
+                        disabled={submitting || invalid}
                     >
                         {t('save_button_label')}
                     </Button>
@@ -147,9 +180,11 @@ let TemporaryScheduleVacationForm = props => {
                         className="buttons-style"
                         type="button"
                         variant="contained"
-                        disabled={pristine || submitting}
+                        disabled={submitting || invalid}
                         onClick={() => {
                             reset();
+                            selectVacationService({});
+                            selectTeacherIdService(null);
                         }}
                     >
                         {t('clear_button_label')}

@@ -13,6 +13,7 @@ export {
     setTemporarySchedules,
     setSchedulesAndTemporarySchedules,
     selectTemporarySchedule,
+    selectVacation,
     selectTeacherId
 } from './temporarySchedule';
 

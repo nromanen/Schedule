@@ -24,7 +24,7 @@ import { selectTemporaryScheduleService } from '../../../services/temporarySched
 
 let TemporaryScheduleForm = props => {
     const { t } = useTranslation('formElements');
-    const { handleSubmit, pristine, reset, submitting } = props;
+    const { handleSubmit, invalid, reset, submitting } = props;
     const [isVacation, setIsVacation] = useState(false);
 
     const temporarySchedule = props.temporarySchedule;
@@ -45,6 +45,7 @@ let TemporaryScheduleForm = props => {
         props.initialize({
             vacation: isVacation,
             teacher: temporarySchedule.teacher.id,
+            semester: temporarySchedule.semester.id,
             subject: temporarySchedule.subject.id,
             group: temporarySchedule.group.id,
             room: temporarySchedule.room.id,
@@ -213,6 +214,10 @@ let TemporaryScheduleForm = props => {
                                 name="scheduleId"
                                 component={renderTextField}
                             />
+                            <Field
+                                name="semester"
+                                component={renderTextField}
+                            />
                         </Hidden>
                     </>
                     <div className="form-buttons-container">
@@ -221,7 +226,7 @@ let TemporaryScheduleForm = props => {
                             type="submit"
                             variant="contained"
                             color="primary"
-                            disabled={pristine || submitting}
+                            disabled={invalid || submitting}
                         >
                             {t('save_button_label')}
                         </Button>
@@ -229,7 +234,7 @@ let TemporaryScheduleForm = props => {
                             className="buttons-style"
                             type="button"
                             variant="contained"
-                            disabled={pristine || submitting}
+                            disabled={invalid || submitting}
                             onClick={() => {
                                 reset();
                                 selectTemporaryScheduleService({});

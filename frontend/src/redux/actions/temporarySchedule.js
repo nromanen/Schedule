@@ -21,6 +21,13 @@ export const selectTemporarySchedule = res => {
     };
 };
 
+export const selectVacation = res => {
+    return {
+        type: actionTypes.SELECT_VACATION,
+        result: res
+    };
+};
+
 export const selectTeacherId = res => {
     return {
         type: actionTypes.SELECT_TEACHER_ID,
