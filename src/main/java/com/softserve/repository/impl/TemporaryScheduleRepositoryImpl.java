@@ -36,11 +36,47 @@ public class TemporaryScheduleRepositoryImpl extends BasicRepositoryImpl<Tempora
      * @return number of records in db
      */
     @Override
+    public Long isExistTemporaryScheduleByVacationByDateWithIgnoreId(Long id, LocalDate date, Long semesterId, boolean vacation) {
+        log.info("In isExistVacationByDate(semesterId = [{}], date = [{}])", semesterId, date);
+        return (Long) sessionFactory.getCurrentSession().createQuery("select count (t.id) from  TemporarySchedule t " +
+                "where  t.date = :date and t.vacation = :vacation and t.semester.id = :semesterId and t.id!= :id")
+                .setParameter("date", date)
+                .setParameter("semesterId", semesterId)
+                .setParameter("id", id)
+                .setParameter("vacation", vacation)
+                .getSingleResult();
+    }
+
+    /**
+     * Method counts temporary schedule records in db for date and vacation  in the semester
+     *
+     * @param date, semesterId, vacation
+     * @return number of records in db
+     */
+    @Override
     public Long isExistTemporaryScheduleByVacationByDateAndTeacher(LocalDate date, Long semesterId, Long teacherId, boolean vacation) {
         log.info("In isExistVacationByDate(semesterId = [{}], date = [{}])", semesterId, date);
         return (Long) sessionFactory.getCurrentSession().createQuery("select count (s.id) from  TemporarySchedule s where  s.date = :date and s.vacation =  :vacation and s.semester.id = :semesterId ")
                 .setParameter("date", date)
                 .setParameter("semesterId", semesterId)
+                .setParameter("vacation", vacation)
+                .getSingleResult();
+    }
+
+    /**
+     * Method counts temporary schedule records in db for date and vacation  in the semester
+     *
+     * @param date, semesterId, vacation
+     * @return number of records in db
+     */
+    @Override
+    public Long isExistTemporaryScheduleByVacationByDateAndTeacherWithIgnoreId(Long id, LocalDate date, Long semesterId, Long teacherId, boolean vacation) {
+        log.info("In isExistVacationByDate(semesterId = [{}], date = [{}])", semesterId, date);
+        return (Long) sessionFactory.getCurrentSession().createQuery("select count (t.id) from  TemporarySchedule t" +
+                " where  t.date = :date and t.vacation =  :vacation and t.semester.id = :semesterId and t.id!= :id ")
+                .setParameter("date", date)
+                .setParameter("semesterId", semesterId)
+                .setParameter("id", id)
                 .setParameter("vacation", vacation)
                 .getSingleResult();
     }
@@ -82,6 +118,25 @@ public class TemporaryScheduleRepositoryImpl extends BasicRepositoryImpl<Tempora
                 .setParameter("date", object.getDate())
                 .setParameter("scheduleId", object.getScheduleId())
                 .setParameter("semesterId", object.getSemester().getId())
+                .setParameter("vacation", vacation)
+                .getSingleResult();
+    }
+
+    /**
+     * Method counts schedule records in db for group in the semester
+     *
+     * @param object
+     * @return number of records in db
+     */
+    @Override
+    public Long isExistTemporaryScheduleByDateAndScheduleIdWithIgnoreId(TemporarySchedule object, boolean vacation) {
+        log.info("In isExistTemporarySchedule(object = [{}]", object);
+        return (Long) sessionFactory.getCurrentSession().createQuery("select count (t.id) from  TemporarySchedule t where  t.date = :date and t.vacation =  false " +
+                " and t.scheduleId = :scheduleId  and t.semester.id = :semesterId and t.vacation = :vacation and t.id!= :id")
+                .setParameter("date", object.getDate())
+                .setParameter("scheduleId", object.getScheduleId())
+                .setParameter("semesterId", object.getSemester().getId())
+                .setParameter("id", object.getId())
                 .setParameter("vacation", vacation)
                 .getSingleResult();
     }

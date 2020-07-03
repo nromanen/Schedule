@@ -9,9 +9,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ScheduleRepository extends BasicRepository<Schedule, Long> {
-    Long conflictForGroupInSchedule(Long semesterId, java.time.DayOfWeek dayOfWeek, EvenOdd evenOdd, Long classId, Long groupId);
+    Long conflictForGroupInSchedule(Long semesterId, DayOfWeek dayOfWeek, EvenOdd evenOdd, Long classId, Long groupId);
 
-    Long conflictForTeacherInSchedule(Long semesterId, java.time.DayOfWeek dayOfWeek, EvenOdd evenOdd, Long classId, Long teacherId);
+    Long conflictForTeacherInSchedule(Long semesterId, DayOfWeek dayOfWeek, EvenOdd evenOdd, Long classId, Long teacherId);
 
     List<Group> uniqueGroupsInScheduleBySemester(Long semesterID);
 

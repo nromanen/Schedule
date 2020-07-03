@@ -687,26 +687,35 @@ return fullScheduleForTeacherByDateRange(dateRangeSchedule,  fromDate, toDate);
                 Map<Schedule, TemporarySchedule> temporaryScheduleMap = new LinkedHashMap<>();
 
                 for (Schedule schedule : entry.getValue()) {
-                    TemporarySchedule temporarySchedule = temporarySchedules.stream().filter(temporarySchedule1 ->
-                            temporarySchedule1.getScheduleId().equals(schedule.getId()) &&
-                                    temporarySchedule1.getSemester().getId() == schedule.getLesson().getSemester().getId()
-                                    && temporarySchedule1.getDate().equals(itr.getKey())
-                    ).findFirst().orElse(vacationByDateRangeForTeacher.stream().filter(temporarySchedule1 ->
-                                     temporarySchedule1.getScheduleId().equals(schedule.getId()) &&
-                                     temporarySchedule1.getDate().equals(itr.getKey()) &&
-                                     temporarySchedule1.getSemester().getId() == schedule.getLesson().getSemester().getId()
-                    ).findFirst().orElse(vacationByDateRangeForTeacher.stream().filter(temporarySchedule1 ->
-                                     temporarySchedule1.getTeacher().getId() == schedule.getLesson().getTeacher().getId() &&
-                                     temporarySchedule1.getDate().equals(itr.getKey()) &&
-                                     temporarySchedule1.getSemester().getId() == schedule.getLesson().getSemester().getId()
-                    ).findFirst().orElse(vacationByDateRangeForTeacher.stream().filter(temporarySchedule1 ->
-                            temporarySchedule1.getScheduleId() == null &&
-                                    temporarySchedule1.getDate().equals(itr.getKey()) &&
-                                    temporarySchedule1.getSemester().getId() == schedule.getLesson().getSemester().getId()
-                    ).findFirst().orElse(new TemporarySchedule()))));
+                    try {
+                        TemporarySchedule temporarySchedule = temporarySchedules.stream().filter(temporarySchedule1 ->
+                                temporarySchedule1.getScheduleId().equals(schedule.getId()) &&
+                                        temporarySchedule1.getSemester().getId() == schedule.getLesson().getSemester().getId()
+                                        && temporarySchedule1.getDate().equals(itr.getKey())
 
-                    temporaryScheduleMap.put(schedule, temporarySchedule);
-                    mapList.add(temporaryScheduleMap);
+                        ).findFirst().orElse(vacationByDateRangeForTeacher.stream().filter(temporarySchedule1 ->
+                                temporarySchedule1.getScheduleId()!=null &&
+                                        temporarySchedule1.getScheduleId().equals(schedule.getId()) &&
+                                        temporarySchedule1.getDate().equals(itr.getKey()) &&
+                                        temporarySchedule1.getSemester().getId() == schedule.getLesson().getSemester().getId()
+
+                        ).findFirst().orElse(vacationByDateRangeForTeacher.stream().filter(temporarySchedule1 ->
+                                        temporarySchedule1.getTeacher()!=null &&
+                                        temporarySchedule1.getTeacher().getId() == schedule.getLesson().getTeacher().getId() &&
+                                        temporarySchedule1.getDate().equals(itr.getKey()) &&
+                                        temporarySchedule1.getSemester().getId() == schedule.getLesson().getSemester().getId()
+
+                        ).findFirst().orElse(vacationByDateRangeForTeacher.stream().filter(temporarySchedule1 ->
+                                temporarySchedule1.getScheduleId() == null &&
+                                        temporarySchedule1.getDate().equals(itr.getKey()) &&
+                                        temporarySchedule1.getSemester().getId() == schedule.getLesson().getSemester().getId()
+
+                        ).findFirst().orElse(new TemporarySchedule()))));
+                        temporaryScheduleMap.put(schedule, temporarySchedule);
+                        mapList.add(temporaryScheduleMap);
+                    }catch (NullPointerException e){
+                       log.error(e.getMessage());
+                    }
                 }
 
                 periodListHashMap.put(entry.getKey(), mapList);
