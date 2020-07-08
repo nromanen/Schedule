@@ -1,6 +1,7 @@
 package com.softserve.mapper;
 
 import com.softserve.dto.TemporaryScheduleDTO;
+import com.softserve.dto.TemporaryScheduleForArchiveDTO;
 import com.softserve.dto.TemporaryScheduleSaveDTO;
 import com.softserve.entity.TemporarySchedule;
 import org.mapstruct.Mapper;
@@ -19,4 +20,6 @@ public interface TemporaryScheduleMapper {
     TemporaryScheduleDTO convertToDto(TemporarySchedule entity);
 
     List<TemporaryScheduleDTO> convertToDtoList(List<TemporarySchedule> schedules);
+
+    List<TemporaryScheduleForArchiveDTO> convertToNewDtoList(List<TemporarySchedule> schedules);
 }

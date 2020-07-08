@@ -18,4 +18,5 @@ public interface TemporaryScheduleRepository extends BasicRepository<TemporarySc
     List<TemporarySchedule> getAllBySemester(Long semesterId);
     List<TemporarySchedule> getAllByRange(LocalDate fromDate, LocalDate toDate);
     List<TemporarySchedule> vacationByDateRangeForTeacher(LocalDate fromDate, LocalDate toDate);
+    void deleteTemporarySchedulesBySemesterId(Long semesterId);
 }

@@ -13,5 +13,6 @@ import java.util.List;
 @Document(value = "archive_schedule")
 public class ScheduleFullForArchiveDTO {
     private SemesterDTO semesterDTO;
-    private List<ScheduleForArchiveDTO> scheduleForArchiveDTOs;
+    private List<ScheduleForGroupDTO> schedule;
+    private List<TemporaryScheduleForArchiveDTO> temporarySchedule;
 }
