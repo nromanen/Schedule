@@ -540,7 +540,7 @@ return fullScheduleForTeacherByDateRange(dateRangeSchedule,  fromDate, toDate);
     }
 
     /**
-     * Method deleteSchedulesBySemesterId delete all schedules from db in with current seemsterId
+     * Method deleteSchedulesBySemesterId delete all schedules from db in with current semesterId
      *
      * @param semesterId id Semester for delete schedule
      */
