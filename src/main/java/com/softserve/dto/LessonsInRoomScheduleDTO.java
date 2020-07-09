@@ -3,6 +3,8 @@ package com.softserve.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
+import java.util.List;
+
 @Getter
 @Setter
 @ToString
@@ -15,11 +17,7 @@ public class LessonsInRoomScheduleDTO {
     @JsonProperty("class_name")
     private String className;
 
-    @JsonProperty("group_id")
-    private Long groupId;
-
-    @JsonProperty("group_name")
-    private String groupName;
+    private List<GroupDTOInRoomSchedule> groups;
 
     @JsonProperty("lesson_id")
     private Long lessonId;
