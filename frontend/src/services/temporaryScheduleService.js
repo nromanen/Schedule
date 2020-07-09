@@ -13,6 +13,7 @@ import { actionType } from '../constants/actionTypes';
 import { setLoadingService } from './loadingService';
 
 import {
+    selectChangedScheduleId,
     selectTeacherId,
     selectTemporarySchedule,
     selectVacation,
@@ -58,15 +59,17 @@ export const deleteTemporaryScheduleService = (
     date,
     teacherId
 ) => {
+    console.log('Here');
     axios
         .delete(TEMPORARY_SCHEDULE_URL + `/${temporaryScheduleId}`)
         .then(() => {
             if (teacherId)
                 getTeacherTemporarySchedulesService(teacherId, date, date);
             else getTemporarySchedulesService(null, null);
-            successHandler(handleSuccess(actionType.DELETED));
+            successHandler(actionType.DELETED);
         })
         .catch(err => {
+            console.log(err);
             errorHandler(err);
         });
 };
@@ -74,7 +77,8 @@ export const deleteTemporaryScheduleService = (
 const formatObj = (formValues, teacherId) => {
     let obj = {};
     if (teacherId) obj = { teacher: { id: teacherId } };
-    if (!formValues.vacation)
+    else if (formValues.teacher) obj = { teacher: { id: formValues.teacher } };
+    if (!formValues.vacation || (formValues.vacation && formValues.scheduleId))
         obj = {
             ...obj,
             id: formValues.id ? formValues.id : null,
@@ -93,7 +97,9 @@ const formatObj = (formValues, teacherId) => {
 };
 
 const handleSuccess = (isVacation, teacherId, formValues) => {
-    if (!isVacation) {
+    store.dispatch(selectTemporarySchedule({}));
+    store.dispatch(selectVacation({}));
+    if (!isVacation || (isVacation && formValues.scheduleId)) {
         resetFormHandler(TEMPORARY_SCHEDULE_FORM);
         getTeacherTemporarySchedulesService(
             teacherId,
@@ -114,10 +120,6 @@ export const addTemporaryScheduleService = (
 ) => {
     formValues.date = formValues.date.replace(/\//g, '-');
     const obj = formatObj(formValues, teacherId);
-    console.log({
-        ...formValues,
-        ...obj
-    });
     axios
         .post(TEMPORARY_SCHEDULE_URL, {
             ...formValues,
@@ -139,13 +141,18 @@ export const editTemporaryScheduleService = (
 ) => {
     formValues.date = formValues.date.replace(/\//g, '-');
     const obj = formatObj(formValues, teacherId);
+    console.log({
+        ...formValues,
+        ...obj
+    });
     axios
         .put(TEMPORARY_SCHEDULE_URL, {
             ...formValues,
             ...obj
         })
         .then(() => {
-            handleSuccess(isVacation, teacherId, formValues);
+            const tId = teacherId || formValues.teacher;
+            handleSuccess(isVacation, tId, formValues);
             successHandler(handleSuccessMessage(actionType.UPDATED));
             resetFormHandler(TEMPORARY_SCHEDULE_VACATION_FORM);
             resetFormHandler(TEMPORARY_SCHEDULE_FORM);

@@ -6,7 +6,8 @@ const initialState = {
     temporarySchedule: {},
     vacation: {},
     schedulesAndTemporarySchedules: [],
-    teacherId: null
+    teacherId: null,
+    changedScheduleId: null
 };
 
 const reducer = (state = initialState, action) => {

@@ -6,7 +6,8 @@ import { selectTemporaryScheduleService } from '../../../services/temporarySched
 const TemporaryScheduleCardButtons = props => {
     const { t } = useTranslation('common');
 
-    const { schedule, date, isTemporary } = props;
+    const { schedule, date, isTemporary, scheduleId } = props;
+    const { onOpenDialog, setDate, setTeacherId } = props;
 
     const selectTemporarySchedule = schedule => {
         selectTemporaryScheduleService({
@@ -15,16 +16,15 @@ const TemporaryScheduleCardButtons = props => {
             class: schedule.class,
             id: schedule.id,
             vacation: schedule.vacation,
-            scheduleId: schedule.scheduleId
-                ? schedule.scheduleId
-                : props.scheduleId,
+            scheduleId: schedule.scheduleId ? schedule.scheduleId : scheduleId,
             date: schedule.date
         });
     };
 
     const handleScheduleSelect = schedule => {
-        schedule.lesson.id = null;
         schedule.scheduleId = schedule.id;
+        schedule.id = null;
+        schedule.lesson.id = null;
         selectTemporarySchedule(schedule);
     };
 
@@ -46,10 +46,10 @@ const TemporaryScheduleCardButtons = props => {
                 <MdDelete
                     title={t('common:delete_hover_title')}
                     className="svg-btn delete-btn"
-                    onChange={() => {
-                        props.openDialog(schedule.id);
-                        props.setDate(date);
-                        props.setTeacherId(schedule.teacher.id);
+                    onClick={() => {
+                        onOpenDialog(schedule.id);
+                        setDate(date);
+                        setTeacherId(schedule.lesson.teacher.id);
                     }}
                 />
             )}

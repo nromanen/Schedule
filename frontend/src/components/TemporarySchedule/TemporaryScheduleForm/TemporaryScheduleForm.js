@@ -28,12 +28,13 @@ let TemporaryScheduleForm = props => {
     const [isVacation, setIsVacation] = useState(false);
 
     const temporarySchedule = props.temporarySchedule;
+    const scheduleId = temporarySchedule?.scheduleId;
     const temporaryScheduleId = temporarySchedule?.id;
 
     const { teachers, periods, rooms, subjects, lessonTypes, groups } = props;
 
     useEffect(() => {
-        if (temporaryScheduleId) {
+        if (temporaryScheduleId || scheduleId) {
             initializeFormHandler(temporarySchedule);
         } else {
             props.initialize({ vacation: isVacation });
@@ -98,7 +99,7 @@ let TemporaryScheduleForm = props => {
                         >
                             <option value={''} />
                             {teachers.map(teacher => (
-                                <option value={teacher.id}>
+                                <option value={teacher.id} key={teacher.id}>
                                     {handleTeacherInfo(teacher)}
                                 </option>
                             ))}
@@ -167,7 +168,7 @@ let TemporaryScheduleForm = props => {
                         >
                             <option value={''} />
                             {rooms.map(room => (
-                                <option value={room.id}>{room.name}</option>
+                                <option value={room.id} key={room.id}>{room.name}</option>
                             ))}
                         </Field>
                         <Field
@@ -180,7 +181,7 @@ let TemporaryScheduleForm = props => {
                         >
                             <option value={''} />
                             {periods.map(period => (
-                                <option value={period.id}>
+                                <option value={period.id} key={period.id}>
                                     {period.startTime} - {period.endTime}
                                 </option>
                             ))}

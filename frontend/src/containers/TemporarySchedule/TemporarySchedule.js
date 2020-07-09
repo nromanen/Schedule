@@ -16,14 +16,15 @@ import { setLoadingService } from '../../services/loadingService';
 import { showAllTeachersService } from '../../services/teacherService';
 import {
     addTemporaryScheduleService,
-    editTemporaryScheduleService
+    editTemporaryScheduleService,
 } from '../../services/temporaryScheduleService';
-import './TemporarySchedule.scss';
 import { getClassScheduleListService } from '../../services/classService';
 import { showListOfRoomsService } from '../../services/roomService';
 import { showAllSubjectsService } from '../../services/subjectService';
 import { getLessonTypesService } from '../../services/lessonService';
 import { showAllGroupsService } from '../../services/groupService';
+
+import './TemporarySchedule.scss';
 
 const TemporarySchedule = props => {
     const { t } = useTranslation('common');
@@ -45,8 +46,7 @@ const TemporarySchedule = props => {
     }, []);
 
     const handleTemporaryScheduleSubmit = values => {
-        if (values.id !== values.scheduleId)
-            editTemporaryScheduleService(teacherId, values);
+        if (values.id) editTemporaryScheduleService(teacherId, values);
         else addTemporaryScheduleService(teacherId, values, false);
     };
 
@@ -88,7 +88,8 @@ const TemporarySchedule = props => {
             </Card>
             <div className="cards-container">
                 <aside>
-                    {props.temporarySchedule.id ? (
+                    {props.temporarySchedule.id ||
+                    props.temporarySchedule.scheduleId ? (
                         <TemporaryScheduleForm
                             temporarySchedule={props.temporarySchedule}
                             teacherRangeSchedule={props.teacherRangeSchedule}
@@ -148,7 +149,7 @@ const mapStateToProps = state => ({
     groups: state.groups.groups,
     loading: state.loadingIndicator.loading,
     teachers: state.teachers.teachers,
-    teacherId: state.temporarySchedule.teacherId
+    teacherId: state.temporarySchedule.teacherId,
 });
 
 export default connect(mapStateToProps)(TemporarySchedule);

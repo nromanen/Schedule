@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import Card from '../../../share/Card/Card';
-import { useTranslation } from 'react-i18next';
 import Divider from '@material-ui/core/Divider';
 import TemporaryScheduleCard from '../TemporaryScheduleCard/TemporaryScheduleCard';
 import TemporaryScheduleCardButtons from '../TemporaryScheduleCardButtons/TemporaryScheduleCardButtons';
@@ -23,6 +22,14 @@ const ScheduleAndTemporaryScheduleList = props => {
     const [date, setDate] = useState(null);
     const [teacherId, setTeacherId] = useState(null);
 
+    let expandedProp;
+
+    if (schedulesAndTemporarySchedules.length === 1) {
+        expandedProp = {
+            expanded: true
+        };
+    }
+
     const handleClickOpen = temporaryScheduleId => {
         setTemporaryScheduleId(temporaryScheduleId);
         setOpen(true);
@@ -39,7 +46,6 @@ const ScheduleAndTemporaryScheduleList = props => {
     return (
         <main className="temporary-schedule-section">
             <ConfirmDialog
-                selectedValue={''}
                 cardId={temporaryScheduleId}
                 whatDelete={cardType.TEMPORARY_SCHEDULE.toLowerCase()}
                 open={open}
@@ -47,7 +53,7 @@ const ScheduleAndTemporaryScheduleList = props => {
             />
             {schedulesAndTemporarySchedules.map(
                 scheduleAndTemporarySchedule => (
-                    <ExpansionPanel key={shortId.generate()}>
+                    <ExpansionPanel key={shortId.generate()} {...expandedProp}>
                         <ExpansionPanelSummary
                             expandIcon={<MdExpandMore />}
                             id={'panel1a-header' + shortId.generate()}
@@ -66,9 +72,9 @@ const ScheduleAndTemporaryScheduleList = props => {
                                             <Card
                                                 class={
                                                     'done-card text-center ' +
-                                                    (schedule.schedule.vacation
-                                                        ? 'vacation-card'
-                                                        : '')
+                                                    (schedule.schedule
+                                                        .vacation &&
+                                                        'vacation-card ')
                                                 }
                                             >
                                                 {!schedule.temporary_schedule && (
@@ -79,13 +85,9 @@ const ScheduleAndTemporaryScheduleList = props => {
                                                         date={
                                                             scheduleAndTemporarySchedule.date
                                                         }
-                                                        openDialog={
-                                                            handleClickOpen
-                                                        }
                                                         isTemporary={false}
-                                                        setDate={setDate}
-                                                        setTeacherId={
-                                                            setTeacherId
+                                                        scheduleId={
+                                                            schedule.schedule.id
                                                         }
                                                     />
                                                 )}
@@ -102,9 +104,8 @@ const ScheduleAndTemporaryScheduleList = props => {
                                                 <Card
                                                     class={
                                                         'done-card text-center ' +
-                                                        schedule.temporary_schedule_vacation
-                                                            ? 'vacation-card'
-                                                            : ''
+                                                        (schedule.temporary_schedule_vacation &&
+                                                            'vacation-card ')
                                                     }
                                                 >
                                                     <TemporaryScheduleCardButtons
@@ -114,8 +115,17 @@ const ScheduleAndTemporaryScheduleList = props => {
                                                         date={
                                                             scheduleAndTemporarySchedule.date
                                                         }
-                                                        scheduleId={schedule.schedule.id}
+                                                        scheduleId={
+                                                            schedule.schedule.id
+                                                        }
                                                         isTemporary={true}
+                                                        onOpenDialog={
+                                                            handleClickOpen
+                                                        }
+                                                        setDate={setDate}
+                                                        setTeacherId={
+                                                            setTeacherId
+                                                        }
                                                     />
                                                     <TemporaryScheduleCard
                                                         schedule={
