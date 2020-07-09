@@ -21,6 +21,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @Api(tags = "Schedule API")
@@ -118,7 +119,8 @@ public class ScheduleController {
     @ApiOperation(value = "Get full schedule for semester. Returns schedule for  rooms")
     public ResponseEntity<List<ScheduleForRoomDTO>> getFullScheduleForRoom(@RequestParam Long semesterId) {
         log.info("In, getFullScheduleForRoom (semesterId = [{}]) ", semesterId);
-        return ResponseEntity.status(HttpStatus.OK).body(scheduleService.getScheduleForRooms(semesterId));
+        List<ScheduleForRoomDTO> scheduleForRoomDTOS = fullDTOForRoomSchedule(scheduleService.getScheduleForRooms(semesterId));
+        return ResponseEntity.status(HttpStatus.OK).body(scheduleForRoomDTOS);
     }
 
 
@@ -303,5 +305,65 @@ public class ScheduleController {
             fullDTO.add(scheduleForTemporaryDateRangeDTO);
         }
         return fullDTO;
+    }
+
+    private List<ScheduleForRoomDTO> fullDTOForRoomSchedule(Map<Room, Map<DayOfWeek, Map<EvenOdd, Map<Period, List<Lesson>>>>> schedules) {
+        List<ScheduleForRoomDTO> scheduleForRoomDTOS = new ArrayList<>();
+
+        for (Map.Entry<Room, Map<DayOfWeek, Map<EvenOdd, Map<Period, List<Lesson>>>>> roomItem : schedules.entrySet()) {
+            ScheduleForRoomDTO scheduleForRoomDTO = new ScheduleForRoomDTO();
+            scheduleForRoomDTO.setRoomId(roomItem.getKey().getId());
+            scheduleForRoomDTO.setRoomName(roomItem.getKey().getName());
+            scheduleForRoomDTO.setRoomType(roomItem.getKey().getType().getDescription());
+            List<DaysOfWeekWithClassesForRoomDTO> daysOfWeekWithClassesForRoomDTOList = new ArrayList<>();
+            for (Map.Entry<DayOfWeek, Map<EvenOdd, Map<Period, List<Lesson>>>> dayItem : roomItem.getValue().entrySet()) {
+                DaysOfWeekWithClassesForRoomDTO daysOfWeekWithClassesForRoomDTO = new DaysOfWeekWithClassesForRoomDTO();
+                daysOfWeekWithClassesForRoomDTO.setDay(dayItem.getKey());
+                List<RoomClassesInScheduleDTO> roomClassesInScheduleDTOList = new ArrayList<>();
+                RoomClassesInScheduleDTO roomClassesInScheduleDTO = new RoomClassesInScheduleDTO();
+                for (Map.Entry<EvenOdd, Map<Period, List<Lesson>>> evenOddMapEntry : dayItem.getValue().entrySet()) {
+                    List<LessonsInRoomScheduleDTO> evenOddLessonsInRoomScheduleDTOList = new ArrayList<>();
+                    if (evenOddMapEntry.getValue() != null) {
+                        for (Map.Entry<Period, List<Lesson>> periodListEntry : evenOddMapEntry.getValue().entrySet()) {
+                                Map<String, List<Lesson>> groupedLessonBySubject = periodListEntry.getValue().stream().collect(Collectors.groupingBy(Lesson::getSubjectForSite));
+                                for (Map.Entry<String, List<Lesson>> lessonItem : groupedLessonBySubject.entrySet()) {
+                                    LessonsInRoomScheduleDTO even = lessonsInScheduleMapper.lessonToLessonsInRoomScheduleDTO(lessonItem.getValue().get(0));
+                                    even.setSurname(lessonItem.getValue().get(0).getTeacher().getSurname());
+                                    even.setSubjectName(lessonItem.getKey());
+                                    even.setLessonId(lessonItem.getValue().get(0).getId());
+                                    even.setClassName(periodListEntry.getKey().getName());
+                                    even.setClassId(periodListEntry.getKey().getId());
+
+                                    List<GroupDTOInRoomSchedule> groupDTOInRoomScheduleList = new ArrayList<>();
+                                    for (Lesson lesson : lessonItem.getValue()) {
+                                        GroupDTOInRoomSchedule groupDTOInRoomSchedule = new GroupDTOInRoomSchedule();
+                                        groupDTOInRoomSchedule.setGroupId(lesson.getGroup().getId());
+                                        groupDTOInRoomSchedule.setGroupName(lesson.getGroup().getTitle());
+                                        groupDTOInRoomScheduleList.add(groupDTOInRoomSchedule);
+                                    }
+                                    even.setGroups(groupDTOInRoomScheduleList);
+                                    evenOddLessonsInRoomScheduleDTOList.add(even);
+                                }
+                        }
+                    }
+                    if (evenOddMapEntry.getKey().equals(EvenOdd.EVEN)) {
+                        roomClassesInScheduleDTO.setEven(evenOddLessonsInRoomScheduleDTOList);
+                    } else {
+                        roomClassesInScheduleDTO.setOdd(evenOddLessonsInRoomScheduleDTOList);
+                    }
+                }
+                roomClassesInScheduleDTOList.add(roomClassesInScheduleDTO);
+
+                daysOfWeekWithClassesForRoomDTO.setClasses(roomClassesInScheduleDTOList);
+                daysOfWeekWithClassesForRoomDTOList.add(daysOfWeekWithClassesForRoomDTO);
+            }
+
+            scheduleForRoomDTO.setSchedules(daysOfWeekWithClassesForRoomDTOList);
+            scheduleForRoomDTOS.add(scheduleForRoomDTO);
+        }
+
+
+        return scheduleForRoomDTOS;
+
     }
 }

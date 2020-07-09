@@ -33,14 +33,12 @@ public interface ScheduleRepository extends BasicRepository<Schedule, Long> {
 
     List<Schedule> getAllSchedulesByTeacherIdAndSemesterId(Long teacherId, Long semesterId);
 
+
+
     //rooms
-    List<DayOfWeek> getDaysWhenRoomHasClassesBySemester(Long semesterId, Long roomId);
-
-    List<Period> getPeriodsForRoomBySemesterByDayOfWeek(Long semesterId, Long roomId, DayOfWeek day);
-
-    List<Lesson> lessonForRoomByDayBySemesterByPeriodByWeek(Long semesterId, Long roomId, Long periodId, DayOfWeek day, EvenOdd evenOdd);
-
     List<Schedule> getScheduleBySemester(Long semesterId);
+
+    List<Schedule> scheduleForRoomBySemester(Long semesterId, Long roomId);
 
     List<Schedule> scheduleByDateRangeForTeacher(LocalDate fromDate, LocalDate toDate, Long teacherId);
 

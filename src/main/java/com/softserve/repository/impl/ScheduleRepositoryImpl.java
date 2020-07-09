@@ -302,66 +302,6 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
     }
 
     /**
-     * Method gets unique days when Room have classes in semester
-     *
-     * @param semesterId id of the semester
-     * @param roomId    id of the room
-     * @return List of days
-     */
-    @Override
-    public List<DayOfWeek> getDaysWhenRoomHasClassesBySemester(Long semesterId, Long roomId) {
-        log.info("In getDaysWhenRoomHasClassesBySemester(semesterId = [{}], roomId = [{}]", semesterId, roomId);
-        return sessionFactory.getCurrentSession().createQuery("select distinct s.dayOfWeek from  Schedule s where s.lesson.semester.id = :semesterId and s.room.id= :roomId " + NOT_DISABLED_SQL)
-                .setParameter("semesterId", semesterId)
-                .setParameter("roomId", roomId)
-                .getResultList();
-    }
-
-    /**
-     * Method gets the list of periods/classes for room in  semester at  day
-     *
-     * @param semesterId id of the semester
-     * @param roomId    id of the room
-     * @param day        day of the week
-     * @return the list of periods/classes
-     */
-    @Override
-    public List<Period> getPeriodsForRoomBySemesterByDayOfWeek(Long semesterId, Long roomId, DayOfWeek day) {
-        log.info("In getPeriodsForRoomBySemesterByDayOfWeek(semesterId = [{}], roomId = [{}], day = [{}])", semesterId, roomId, day);
-        return sessionFactory.getCurrentSession().createQuery("select distinct p1 from Period p1" +
-                " where p1.id in" +
-                " (select p.id from Schedule s join s.period p where s.lesson.semester.id = :semesterId and s.room.id = :roomId and s.dayOfWeek = :dayOfWeek " + NOT_DISABLED_SQL+ ") order by p1.startTime")
-                .setParameter("semesterId", semesterId)
-                .setParameter("roomId", roomId)
-                .setParameter("dayOfWeek", day)
-                .getResultList();
-    }
-
-    /**
-     * Method gets Lesson for room in some semester at some day(even/odd) at some period/class
-     *
-     * @param semesterId id of the semester
-     * @param roomId    id of the group
-     * @param periodId   id of the period/class
-     * @param day        day of the week
-     * @param evenOdd    even/odd/weekly
-     * @return Optional Lesson object
-     */
-    @Override
-    public List<Lesson> lessonForRoomByDayBySemesterByPeriodByWeek(Long semesterId, Long roomId, Long periodId, DayOfWeek day, EvenOdd evenOdd) {
-        log.info("In lessonForRoomByDayBySemesterByPeriodByWeek(semesterId = [{}], groupId = [{}], periodId = [{}], day = [{}], evenOdd = [{}], teacherId = [{}])", semesterId, roomId, periodId, day, evenOdd);
-        return sessionFactory.getCurrentSession().createQuery("select l1 from Lesson l1" +
-                " where l1.id in" +
-                " (select l.id from Schedule s join s.lesson l where (s.lesson.semester.id = :semesterId and s.dayOfWeek = :dayOfWeek and s.period.id = :periodId and s.room.id = :roomId " + NOT_DISABLED_SQL + ") and (s.evenOdd = :evenOdd or s.evenOdd = 'WEEKLY'))")
-                .setParameter("semesterId", semesterId)
-                .setParameter("roomId", roomId)
-                .setParameter("periodId", periodId)
-                .setParameter("dayOfWeek", day)
-                .setParameter("evenOdd", evenOdd)
-                .getResultList();
-    }
-
-    /**
      * Method geets all schedules from db in particular semester
      * @param semesterId id of the semester
      * @return list of schedules
@@ -413,6 +353,23 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
                 .setParameter("teacherId", teacherId)
                 .getResultList();
     }
+
+    /**
+     * Method scheduleForRoomBySemester get all schedules for specific  room and  semester
+     * @param semesterId
+     * @param roomId
+     * @return list of schedules
+     */
+    @Override
+    public List<Schedule> scheduleForRoomBySemester(Long semesterId, Long roomId) {
+        log.info("In scheduleForRoomBySemester with semesterId = {} and roomId = {}", semesterId, roomId);
+        return sessionFactory.getCurrentSession().createQuery("SELECT s from Schedule s " +
+                "where s.room.id = :roomId and s.lesson.semester.id = :semesterId order by s.period.startTime asc ")
+                .setParameter("roomId", roomId)
+                .setParameter("semesterId", semesterId)
+                .getResultList();
+    }
+
 
     /**
      * Method deleteSchedulesBySemesterId delete all schedules from db in with current semesterId
