@@ -51,7 +51,7 @@ public class ArchiveController {
         }
         ScheduleFullDTO scheduleFullDTO = scheduleService.getFullScheduleForSemester(semesterId);
         List<TemporaryScheduleForArchiveDTO> temporaryScheduleDTOs = temporaryScheduleMapper.convertToNewDtoList(temporaryScheduleService.getAllBySemesterId(semesterId));
-        ScheduleFullForArchiveDTO scheduleForArchiveDTO = new ScheduleFullForArchiveDTO(scheduleFullDTO.getSemester(), scheduleFullDTO.getSchedule(), temporaryScheduleDTOs);
+        ScheduleFullForArchiveDTO scheduleForArchiveDTO = new ScheduleFullForArchiveDTO(true, scheduleFullDTO.getSemester(), scheduleFullDTO.getSchedule(), temporaryScheduleDTOs);
         temporaryScheduleService.deleteTemporarySchedulesBySemesterId(semesterId);
         scheduleService.deleteSchedulesBySemesterId(semesterId);
         lessonService.deleteLessonBySemesterId(semesterId);
