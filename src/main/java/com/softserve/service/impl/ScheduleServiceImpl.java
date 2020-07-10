@@ -683,6 +683,8 @@ return fullScheduleForTeacherByDateRange(dateRangeSchedule,  fromDate, toDate);
                                         temporarySchedule1.getSemester().getId() == schedule.getLesson().getSemester().getId()
 
                         ).findFirst().orElse(vacationByDateRangeForTeacher.stream().filter(temporarySchedule1 ->
+                                        temporarySchedule1.getPeriod() == null &&
+                                        temporarySchedule1.getScheduleId() == null &&
                                         temporarySchedule1.getTeacher()!=null &&
                                         temporarySchedule1.getTeacher().getId() == schedule.getLesson().getTeacher().getId() &&
                                         temporarySchedule1.getDate().equals(itr.getKey()) &&
