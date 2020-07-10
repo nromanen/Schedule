@@ -4,6 +4,7 @@ package com.softserve.service.impl;
 import com.softserve.dto.*;
 import com.softserve.entity.*;
 import com.softserve.entity.enums.EvenOdd;
+import com.softserve.entity.enums.LessonType;
 import com.softserve.exception.EntityNotFoundException;
 import com.softserve.exception.ScheduleConflictException;
 import com.softserve.mapper.*;
@@ -404,38 +405,37 @@ public class ScheduleServiceImpl implements ScheduleService {
         return scheduleRepository.getAllSchedulesByTeacherIdAndSemesterId(teacherId, semesterId);
     }
 
-    private Map<DayOfWeek, Map<EvenOdd, Map<Period, List<Lesson>>>> getLessonsForRoomBySemester(Long semesterId, Long roomId) {
-        log.info("In getPeriodsForRoomBySemesterByDayOfWeek(semesterId = [{}], groupId = [{}])", semesterId, roomId);
+    private Map<DayOfWeek, Map<EvenOdd, Map<Period, Map<String, Map<String, Map<LessonType, List<Lesson>>>>>>> getLessonsForRoomBySemester(Long semesterId, Long roomId) {
+        log.info("In getLessonsForRoomBySemester(semesterId = [{}], roomId = [{}])", semesterId, roomId);
         List<Schedule> schedules = scheduleRepository.scheduleForRoomBySemester(semesterId, roomId);
 
-            Map<DayOfWeek, Map<EvenOdd, Map<Period, List<Lesson>>>> dayOfWeekMapMap = new LinkedHashMap<>();
+        Map<Period, List<Schedule>> uniquePeriodMap = new HashMap<>();
+        for (Schedule schedule1 : schedules) {
+            uniquePeriodMap.computeIfAbsent(schedule1.getPeriod(), k -> new ArrayList<>()).add(schedule1);
+        }
+        Map<DayOfWeek, Map<EvenOdd, Map<Period, Map<String, Map<String, Map<LessonType, List<Lesson>>>>>>> dayOfWeekMapMap = new LinkedHashMap<>();
             for (DayOfWeek day : DayOfWeek.values()) {
-                Map<EvenOdd, Map<Period, List<Lesson>>> evenMap = new HashMap<>();
-                Map<Period, List<Lesson>> evenPeriodListMap = new LinkedHashMap<>();
-                Map<Period, List<Lesson>> oddPeriodListMap = new LinkedHashMap<>();
-
-                Map<Period, List<Schedule>> map = new HashMap<>();
-                for (Schedule schedule1 : schedules) {
-                    map.computeIfAbsent(schedule1.getPeriod(), k -> new ArrayList<>()).add(schedule1);
-                }
-                for (Map.Entry<Period, List<Schedule>> periodListEntry : map.entrySet()) {
-                    List<Lesson> evenLessonList = new ArrayList<>();
-                    List<Lesson> oddLessonList = new ArrayList<>();
-                    for (Schedule schedule:periodListEntry.getValue()){
-                    Hibernate.initialize(schedule.getLesson().getSemester().getPeriods());
-                    if (schedule.getDayOfWeek().equals(day)) {
-                        if (schedule.getEvenOdd().equals(EvenOdd.EVEN) || schedule.getEvenOdd().equals(EvenOdd.WEEKLY)) {
-                            evenLessonList.add(schedule.getLesson());
-                        }
-
-                        if (schedule.getEvenOdd().equals(EvenOdd.ODD) || schedule.getEvenOdd().equals(EvenOdd.WEEKLY)) {
-                            oddLessonList.add(schedule.getLesson());
-                        }
+                Map<EvenOdd, Map<Period, Map<String, Map<String, Map<LessonType, List<Lesson>>>>>> evenMap = new HashMap<>();
+                Map<Period, Map<String, Map<String, Map<LessonType, List<Lesson>>>>> evenPeriodListMap = new LinkedHashMap<>();
+                Map<Period, Map<String, Map<String, Map<LessonType, List<Lesson>>>>> oddPeriodListMap = new LinkedHashMap<>();
+                for (Map.Entry<Period, List<Schedule>> periodListEntry : uniquePeriodMap.entrySet()) {
+                    for (Schedule schedule:periodListEntry.getValue()) {
+                        Hibernate.initialize(schedule.getLesson().getSemester().getPeriods());
                     }
-                }
-                    evenPeriodListMap.put(periodListEntry.getKey(), evenLessonList);
+                    Map<String, Map<String, Map<LessonType,  List<Lesson>>>> resultEven = periodListEntry.getValue().stream().filter(schedule ->
+                            schedule.getDayOfWeek().equals(day) && (schedule.getEvenOdd().equals(EvenOdd.EVEN) || schedule.getEvenOdd().equals(EvenOdd.WEEKLY)))
+                            .map(Schedule::getLesson).collect(Collectors.groupingBy(Lesson::getSubjectForSite,
+                                    Collectors.groupingBy(Lesson::getTeacherForSite,
+                                    Collectors.groupingBy(Lesson::getLessonType))));
+
+                    Map<String, Map<String, Map<LessonType,  List<Lesson>>>> resultOdd = periodListEntry.getValue().stream().filter(schedule ->
+                            schedule.getDayOfWeek().equals(day) && (schedule.getEvenOdd().equals(EvenOdd.ODD) || schedule.getEvenOdd().equals(EvenOdd.WEEKLY)))
+                            .map(Schedule::getLesson).collect(Collectors.groupingBy(Lesson::getSubjectForSite,
+                                    Collectors.groupingBy(Lesson::getTeacherForSite,
+                                    Collectors.groupingBy(Lesson::getLessonType))));
+                    evenPeriodListMap.put(periodListEntry.getKey(), resultEven);
                     evenMap.put(EvenOdd.EVEN, evenPeriodListMap);
-                    oddPeriodListMap.put(periodListEntry.getKey(), oddLessonList);
+                    oddPeriodListMap.put(periodListEntry.getKey(), resultOdd);
                     evenMap.put(EvenOdd.ODD, oddPeriodListMap);
                 }
                 if (!evenMap.containsKey(EvenOdd.EVEN)) {
@@ -451,10 +451,10 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
-    public Map<Room, Map<DayOfWeek, Map<EvenOdd, Map<Period, List<Lesson>>>>> getScheduleForRooms(Long semesterId) {
+    public Map<Room, Map<DayOfWeek, Map<EvenOdd, Map<Period, Map<String, Map<String, Map<LessonType, List<Lesson>>>>>>>> getScheduleForRooms(Long semesterId) {
         log.info("Enter into getScheduleForRooms");
         List<Room> roomForDetails = roomService.getAll();
-        Map<Room, Map<DayOfWeek, Map<EvenOdd, Map<Period, List<Lesson>>>>> roomMap = new LinkedHashMap<>();
+        Map<Room, Map<DayOfWeek, Map<EvenOdd, Map<Period, Map<String, Map<String, Map<LessonType, List<Lesson>>>>>>>> roomMap = new LinkedHashMap<>();
         for (Room room : roomForDetails) {
             roomMap.put(room, getLessonsForRoomBySemester(semesterId, room.getId()));
         }
