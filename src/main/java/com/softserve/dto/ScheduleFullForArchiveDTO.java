@@ -13,7 +13,7 @@ import java.util.List;
 @Document(value = "archive_schedule")
 public class ScheduleFullForArchiveDTO {
     private boolean archived;
-    private SemesterDTO semesterDTO;
+    private SemesterDTO semester;
     private List<ScheduleForGroupDTO> schedule;
     private List<TemporaryScheduleForArchiveDTO> temporarySchedule;
 }
