@@ -33,7 +33,7 @@ public class ArchiveRepositoryImpl implements ArchiveRepository {
     public Optional<ScheduleFullForArchiveDTO> getArchiveScheduleBySemesterId(Long semesterId) {
         log.info("In getArchiveScheduleBySemesterId with semesterId = {}", semesterId);
         return Optional.ofNullable(
-                mongoOperations.findOne(new Query().addCriteria(Criteria.where("semesterDTO.id").is(semesterId)), ScheduleFullForArchiveDTO.class));
+                mongoOperations.findOne(new Query().addCriteria(Criteria.where("semester.id").is(semesterId)), ScheduleFullForArchiveDTO.class));
     }
 
     /**
@@ -67,6 +67,6 @@ public class ArchiveRepositoryImpl implements ArchiveRepository {
     @Override
     public void deleteArchiveScheduleBySemesterId(Long semesterId) {
         log.info("In removeArchiveScheduleBySemesterId with semesterId = {}", semesterId);
-        mongoOperations.remove(new Query().addCriteria(Criteria.where("semesterDTO.id").is(semesterId)), ScheduleFullForArchiveDTO.class);
+        mongoOperations.remove(new Query().addCriteria(Criteria.where("semester.id").is(semesterId)), ScheduleFullForArchiveDTO.class);
     }
 }
