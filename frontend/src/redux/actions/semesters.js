@@ -13,6 +13,12 @@ export const setDisabledSemesters = res => {
         result: res
     };
 };
+export const setArchivedSemesters = res => {
+    return {
+        type: actionTypes.SET_ARCHIVED_SEMESTERS,
+        result: res
+    };
+};
 
 export const addSemester = res => {
     return {
@@ -38,6 +44,13 @@ export const selectSemester = res => {
 export const updateSemester = res => {
     return {
         type: actionTypes.UPDATE_SEMESTER,
+        result: res
+    };
+};
+
+export const moveToArchivedSemester = res => {
+    return {
+        type: actionTypes.MOVE_SEMESTER_TO_ARCHIVE,
         result: res
     };
 };

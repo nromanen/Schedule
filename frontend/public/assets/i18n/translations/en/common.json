@@ -125,6 +125,7 @@
     "show_enabled": "Show enabled",
     "set_disabled": "Set disabled",
     "set_enabled": "Set enabled",
+    "make_archive": "Create archive",
     "no_current_semester": "Please choose current semester",
 
     "no_current_semester_error": "Current semester is not selected",
@@ -139,5 +140,6 @@
     "block_view": "Block view",
     "list_view": "List view",
     "clear_schedule_label": "Clear Schedule",
-    "copy_lessons_from_semester_to_current": "Copy all lessons from selected semester to current"
+    "copy_lessons_from_semester_to_current": "Copy all lessons from selected semester to current",
+    "preview": "Preview"
 }
