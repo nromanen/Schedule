@@ -129,6 +129,7 @@ $board-min-width: 120px;
                         position: absolute;
                         display: none;
                         right: 0px;
+                        width: $btn-size;
                         .delete-btn,
                         .edit-btn {
                             width: $schedule-button-size;
