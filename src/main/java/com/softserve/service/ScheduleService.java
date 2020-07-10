@@ -3,6 +3,7 @@ package com.softserve.service;
 import com.softserve.dto.*;
 import com.softserve.entity.*;
 import com.softserve.entity.enums.EvenOdd;
+import com.softserve.entity.enums.LessonType;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -20,7 +21,7 @@ public interface ScheduleService extends BasicService<Schedule, Long> {
 
     List<Schedule> getAllSchedulesByTeacherIdAndSemesterId(Long teacherId, Long semesterId);
 
-    Map<Room, Map<DayOfWeek, Map<EvenOdd, Map<Period, List<Lesson>>>>> getScheduleForRooms(Long semesterId);
+    Map<Room, Map<DayOfWeek, Map<EvenOdd, Map<Period, Map<String, Map<String, Map<LessonType, List<Lesson>>>>>>>> getScheduleForRooms(Long semesterId);
 
     List<Schedule> getSchedulesBySemester(Long semesterId);
 
