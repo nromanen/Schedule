@@ -123,6 +123,7 @@
     "show_enabled": "Показати включені",
     "set_disabled": "Відключити",
     "set_enabled": "Включити",
+    "make_archive": "Заархівувати",
     "no_current_semester": "Будь ласка виберіть поточний семестер",
     "no_current_semester_error": "Поточний семестр не вибраний",
     "error_message": "Помилка. Будь ласка перезавантажте сторінку.",
@@ -136,5 +137,6 @@
     "block_view": "Вигляд блоків",
     "list_view": "Вигляд таблиці",
     "clear_schedule_label": "Очистити розклад",
-    "copy_lessons_from_semester_to_current": "Копіювати всі заняття із обраного семестру в поточний"
+    "copy_lessons_from_semester_to_current": "Копіювати всі заняття із обраного семестру в поточний",
+    "preview": "Переглянути"
 }

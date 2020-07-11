@@ -82,5 +82,7 @@
     "close_label": "Close",
     "copy_label": "Copy",
     "semester_copy_red_hint": "If there are Lessons in the semester in which you are copying, they will be added; if there are records of the actual schedule, they will be replaced by new ones from the semester with which you copy.",
-    "grouped_label": "Grouped"
+    "grouped_label": "Grouped",
+    "show_archived": "Show archived",
+    "show_regular": "Show regular"
 }
