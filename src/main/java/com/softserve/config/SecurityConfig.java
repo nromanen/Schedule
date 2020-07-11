@@ -207,8 +207,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             User user = userService.createSocialUser(oAuth2User);
 
             String url = env.getProperty("backend.url");
+            String frontEndURL = env.getProperty("cors.localurl");
             String jwtToken = jwtTokenProvider.createToken(user.getEmail(), user.getRole().toString());
-            response.sendRedirect(url + "auth/social/login-success?token=" + jwtToken);
+            response.sendRedirect(frontEndURL + "/login?social=true&token=" + jwtToken);
+           // response.sendRedirect(url + "auth/social/login-success?token=" + jwtToken);
         };
     }
 }
