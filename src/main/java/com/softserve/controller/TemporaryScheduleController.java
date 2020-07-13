@@ -19,7 +19,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 
@@ -46,6 +48,23 @@ public class TemporaryScheduleController {
         log.info("Enter into save of TemporaryScheduleController with temporaryScheduleDTO: {}", temporaryScheduleDTO);
         TemporarySchedule temporarySchedule = temporaryScheduleService.save(temporaryScheduleMapper.convertToEntity(temporaryScheduleDTO));
         return ResponseEntity.status(HttpStatus.CREATED).body(temporaryScheduleMapper.convertToDto(temporarySchedule));
+    }
+
+    @PostMapping("/add-range")
+    @ApiOperation(value = "Create new temporary schedules by date range")
+    @PreAuthorize("hasRole('MANAGER')")
+    public ResponseEntity<List<TemporaryAddedMessagesDTO>> addByRange(@RequestBody TemporaryScheduleSaveRangeDTO temporaryScheduleSaveRangeDTO) {
+        log.info("Enter into addByRange of TemporaryScheduleController with temporaryScheduleDTO: {}", temporaryScheduleSaveRangeDTO);
+        LocalDate to = temporaryScheduleSaveRangeDTO.getTo();
+        LocalDate from = temporaryScheduleSaveRangeDTO.getFrom();
+        List<String> temporaryAddedMessagesDTOS = temporaryScheduleService.addRange(from, to, temporaryScheduleMapper.convertToEntity(temporaryScheduleSaveRangeDTO.getTemporarySchedule()));
+
+        List<TemporaryAddedMessagesDTO> temporaryAddedMessagesDTOList = new ArrayList<>();
+        for (String message : temporaryAddedMessagesDTOS){
+            TemporaryAddedMessagesDTO temporaryAddedMessagesDTO = new TemporaryAddedMessagesDTO(message);
+            temporaryAddedMessagesDTOList.add(temporaryAddedMessagesDTO);
+        }
+        return ResponseEntity.status(HttpStatus.CREATED).body(temporaryAddedMessagesDTOList);
     }
 
     @PutMapping

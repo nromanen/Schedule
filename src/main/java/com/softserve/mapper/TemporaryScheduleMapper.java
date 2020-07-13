@@ -14,8 +14,6 @@ public interface TemporaryScheduleMapper {
 
     @Mapping(source = "schedule.id", target = "scheduleId")
     TemporarySchedule convertToEntity(TemporaryScheduleSaveDTO dto);
-
-    //@Mapping(target = "lesson.id", source = "lessonId")
     TemporaryScheduleDTO convertToDto(TemporarySchedule entity);
 
     List<TemporaryScheduleDTO> convertToDtoList(List<TemporarySchedule> schedules);
