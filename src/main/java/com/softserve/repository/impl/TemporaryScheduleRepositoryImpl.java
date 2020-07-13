@@ -3,6 +3,7 @@ package com.softserve.repository.impl;
 import com.softserve.entity.*;
 import com.softserve.repository.TemporaryScheduleRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.resource.transaction.spi.TransactionStatus;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
@@ -16,12 +17,14 @@ public class TemporaryScheduleRepositoryImpl extends BasicRepositoryImpl<Tempora
     /**
      * Method counts temporary schedule records in db for date and vacation  in the semester
      *
-     * @param date, semesterId, vacation
+     * @param date
+     * @param semesterId
+     * @param  vacation
      * @return number of records in db
      */
     @Override
     public Long isExistTemporaryScheduleByVacationByDate(LocalDate date, Long semesterId, boolean vacation) {
-        log.info("In isExistVacationByDate(semesterId = [{}], date = [{}])", semesterId, date);
+        log.info("In isExistTemporaryScheduleByVacationByDate(semesterId = [{}], date = [{}], vacation = [{}])", semesterId, date, vacation);
         return (Long) sessionFactory.getCurrentSession().createQuery("select count (t.id) from  TemporarySchedule t where  t.date = :date and t.vacation =  :vacation and t.semester.id = :semesterId and t.scheduleId = null  and t.teacher = null  and t.period = null ")
                 .setParameter("date", date)
                 .setParameter("semesterId", semesterId)
@@ -37,7 +40,7 @@ public class TemporaryScheduleRepositoryImpl extends BasicRepositoryImpl<Tempora
      */
     @Override
     public Long isExistTemporaryScheduleByVacationByDateWithIgnoreId(Long id, LocalDate date, Long semesterId, boolean vacation) {
-        log.info("In isExistVacationByDate(semesterId = [{}], date = [{}])", semesterId, date);
+        log.info("In isExistTemporaryScheduleByVacationByDateWithIgnoreId(semesterId = [{}], date = [{}])", semesterId, date);
         return (Long) sessionFactory.getCurrentSession().createQuery("select count (t.id) from  TemporarySchedule t " +
                 "where  t.date = :date and t.vacation = :vacation and t.semester.id = :semesterId and t.id!= :id and t.period = null " +
                 "and t.teacher = null  and t.scheduleId = null ")

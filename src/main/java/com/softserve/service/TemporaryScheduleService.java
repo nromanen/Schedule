@@ -13,6 +13,7 @@ public interface TemporaryScheduleService extends BasicService<TemporarySchedule
     List<TemporarySchedule> getAllByRange(LocalDate fromDate, LocalDate toDate);
     List<TemporarySchedule> temporaryScheduleByDateRangeForTeacher(LocalDate fromDate, LocalDate toDate, Long teacherId);
     List<TemporarySchedule> vacationByDateRangeForTeacher(LocalDate fromDate, LocalDate toDate);
+    List<String>  addRange(LocalDate from, LocalDate to, TemporarySchedule object);
     void deleteTemporarySchedulesBySemesterId(Long semesterId);
 }
 
