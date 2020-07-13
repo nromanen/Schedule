@@ -7,14 +7,19 @@ import com.softserve.exception.EntityNotFoundException;
 import com.softserve.repository.TemporaryScheduleRepository;
 import com.softserve.service.*;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.SerializationUtils;
 import org.hibernate.Hibernate;
+import org.joda.time.Days;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Transactional
 @Service
@@ -29,13 +34,13 @@ public class TemporaryScheduleServiceImpl implements TemporaryScheduleService {
     private final PeriodService periodService;
     private final SubjectService subjectService;
     private final TeacherService teacherService;
-    //private final ScheduleService scheduleService;
+    private final ScheduleService scheduleService;
 
 
 
     @Autowired
     public TemporaryScheduleServiceImpl(TemporaryScheduleRepository temporaryScheduleRepository, SemesterService semesterService, GroupService groupService,
-                                        RoomService roomService, PeriodService periodService, SubjectService subjectService, TeacherService teacherService) {
+                                        RoomService roomService, PeriodService periodService, SubjectService subjectService, TeacherService teacherService, @Lazy ScheduleService scheduleService) {
         this.temporaryScheduleRepository = temporaryScheduleRepository;
         this.semesterService = semesterService;
         this.groupService = groupService;
@@ -43,7 +48,7 @@ public class TemporaryScheduleServiceImpl implements TemporaryScheduleService {
         this.periodService = periodService;
         this.subjectService = subjectService;
         this.teacherService = teacherService;
-       // this.scheduleService = scheduleService;
+        this.scheduleService = scheduleService;
     }
 
     /**
@@ -99,7 +104,11 @@ public class TemporaryScheduleServiceImpl implements TemporaryScheduleService {
     @Override
     public List<TemporarySchedule> getAllBySemester() {
         log.info("Enter into getAllBySemester of TemporaryScheduleServiceImpl");
-        return temporaryScheduleRepository.getAllBySemester(semesterService.getCurrentSemester().getId());
+        List<TemporarySchedule> temporarySchedules=  temporaryScheduleRepository.getAllBySemester(semesterService.getCurrentSemester().getId());
+        for (TemporarySchedule temporarySchedule: temporarySchedules) {
+            Hibernate.initialize(temporarySchedule.getSemester().getPeriods());
+        }
+        return temporarySchedules;
     }
 
     /**
@@ -160,6 +169,33 @@ public class TemporaryScheduleServiceImpl implements TemporaryScheduleService {
      * @return save temporary schedule
      */
     @Override
+    public List<String>  addRange(LocalDate from, LocalDate to, TemporarySchedule object) {
+        log.info("Enter into addRange of TemporaryScheduleServiceImpl with entity:{}", object );
+        List<String> messagesList = new ArrayList<>();
+        if(object.getSemester() == null) {
+            Semester semester = new Semester();
+            semester.setId(semesterService.getCurrentSemester().getId());
+            object.setSemester(semester);
+        }
+        List<LocalDate> datesList = from.datesUntil(to.plusDays(1)).collect(Collectors.toList());
+        for(LocalDate date : datesList){
+            TemporarySchedule temporarySchedule =  SerializationUtils.clone(object);
+            temporarySchedule.setDate(date);
+            try {
+                this.save(temporarySchedule);
+            }catch (EntityAlreadyExistsException | EntityNotFoundException  e){
+                messagesList.add(temporarySchedule.getDate() + " " + e.getMessage());
+            }
+        }
+            return messagesList;
+    }
+    /**
+     * The method used for saving temporary schedule in database
+     *
+     * @param object temporary schedule
+     * @return save temporary schedule
+     */
+    @Override
     public TemporarySchedule save(TemporarySchedule object) {
         log.info("Enter into save of TemporaryScheduleServiceImpl with entity:{}", object );
         if(object.getSemester() == null) {
@@ -180,8 +216,7 @@ public class TemporaryScheduleServiceImpl implements TemporaryScheduleService {
             }
         }
 
-        TemporarySchedule entity = temporaryScheduleRepository.save(object);
-            return this.getById(entity.getId());
+        return temporaryScheduleRepository.save(object);
     }
 
     /**
@@ -367,7 +402,7 @@ public class TemporaryScheduleServiceImpl implements TemporaryScheduleService {
     }
 
 
-    private void checkReferencedElement(TemporarySchedule object) {
+    private void checkReferencedElement(TemporarySchedule object)  throws EntityNotFoundException{
         log.info("In checkReferenceExist(object = [{}])", object);
         //scheduleService.getById(object.getScheduleId());
         subjectService.getById(object.getSubject().getId());
