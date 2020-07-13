@@ -9,11 +9,9 @@ import com.softserve.service.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.SerializationUtils;
 import org.hibernate.Hibernate;
-import org.joda.time.Days;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 
@@ -177,8 +175,8 @@ public class TemporaryScheduleServiceImpl implements TemporaryScheduleService {
             semester.setId(semesterService.getCurrentSemester().getId());
             object.setSemester(semester);
         }
-        List<LocalDate> datesList = from.datesUntil(to.plusDays(1)).collect(Collectors.toList());
-        for(LocalDate date : datesList){
+        for (LocalDate date = from; date.isBefore(to.plusDays(1)); date = date.plusDays(1))
+        {
             TemporarySchedule temporarySchedule =  SerializationUtils.clone(object);
             temporarySchedule.setDate(date);
             try {
