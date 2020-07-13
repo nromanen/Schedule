@@ -117,5 +117,7 @@ export {
     selectSemester,
     updateSemester,
     clearSemester,
-    setDisabledSemesters
+    setDisabledSemesters,
+    setArchivedSemesters,
+    moveToArchivedSemester
 } from './semesters';

@@ -4,6 +4,7 @@ import com.softserve.dto.*;
 import com.softserve.entity.CurrentUser;
 import com.softserve.entity.Teacher;
 import com.softserve.entity.TemporarySchedule;
+import com.softserve.entity.User;
 import com.softserve.mapper.TemporaryScheduleMapper;
 import com.softserve.security.jwt.JwtUser;
 import com.softserve.service.TeacherService;
@@ -41,6 +42,7 @@ public class TemporaryScheduleController {
         this.temporaryScheduleMapper = temporaryScheduleMapper;
         this.teacherService = teacherService;
     }
+
     @PostMapping
     @ApiOperation(value = "Create new temporary schedule")
     @PreAuthorize("hasRole('MANAGER')")
@@ -60,23 +62,12 @@ public class TemporaryScheduleController {
         List<String> temporaryAddedMessagesDTOS = temporaryScheduleService.addRange(from, to, temporaryScheduleMapper.convertToEntity(temporaryScheduleSaveRangeDTO.getTemporarySchedule()));
 
         List<TemporaryAddedMessagesDTO> temporaryAddedMessagesDTOList = new ArrayList<>();
-        for (String message : temporaryAddedMessagesDTOS){
+        for (String message : temporaryAddedMessagesDTOS) {
             TemporaryAddedMessagesDTO temporaryAddedMessagesDTO = new TemporaryAddedMessagesDTO(message);
             temporaryAddedMessagesDTOList.add(temporaryAddedMessagesDTO);
         }
         return ResponseEntity.status(HttpStatus.CREATED).body(temporaryAddedMessagesDTOList);
     }
-
-    @PutMapping
-    @ApiOperation(value = "Update existing temporary schedule by id")
-    @PreAuthorize("hasRole('MANAGER')")
-    public ResponseEntity<TemporaryScheduleDTO> update(@RequestBody TemporaryScheduleSaveDTO temporaryScheduleDTO) {
-        log.info("Enter into update method with temporaryScheduleDTO: {}", temporaryScheduleDTO);
-        TemporarySchedule temporarySchedule = temporaryScheduleService.update(temporaryScheduleMapper.convertToEntity(temporaryScheduleDTO));
-        return ResponseEntity.status(HttpStatus.OK).body(temporaryScheduleMapper.convertToDto(temporarySchedule));
-    }
-
-
 
     @GetMapping("/{id}")
     @ApiOperation(value = "Get temporary schedule by id")
@@ -85,6 +76,16 @@ public class TemporaryScheduleController {
         log.info("Enter into getById of TemporaryScheduleController");
         return ResponseEntity.ok().body(temporaryScheduleMapper.convertToDto(temporaryScheduleService.getById(id)));
     }
+
+    @PutMapping
+    @ApiOperation(value = "Update existing temporary schedule by id")
+    @PreAuthorize("hasRole('MANAGER')")
+    public ResponseEntity<TemporaryScheduleDTO> update(@RequestBody TemporaryScheduleSaveDTO temporaryScheduleDTO) {
+        log.info("Enter into update method with temporaryScheduleDTO: {}", temporaryScheduleDTO);
+        TemporarySchedule temporarySchedule = temporaryScheduleService.update(temporaryScheduleMapper.convertToEntity(temporaryScheduleDTO));
+        return ResponseEntity.status(HttpStatus.CREATED).body(temporaryScheduleMapper.convertToDto(temporarySchedule));
+    }
+
 
     @GetMapping
     @ApiOperation(value = "Get all temporary schedules")

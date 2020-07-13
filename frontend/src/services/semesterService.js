@@ -5,7 +5,9 @@ import {
     DISABLED_SEMESTERS_URL,
     SEMESTERS_URL,
     SEMESTER_COPY_URL,
-    LESSONS_FROM_SEMESTER_COPY_URL
+    LESSONS_FROM_SEMESTER_COPY_URL,
+    CREATE_ARCHIVE_SEMESTER,
+    ARCHIVED_SEMESTERS_URL
 } from '../constants/axios';
 import { setDisabledSemesters, setError } from '../redux/actions/semesters';
 import { SEMESTER_FORM } from '../constants/reduxForms';
@@ -18,7 +20,11 @@ import {
     deleteSemester,
     selectSemester,
     showAllSemesters,
-    updateSemester
+    updateSemester,
+    setArchivedSemesters,
+    moveToArchivedSemester,
+    setScheduleType,
+    setFullSchedule
 } from '../redux/actions/index';
 
 import { errorHandler, successHandler } from '../helper/handlerAxios';
@@ -176,6 +182,7 @@ const putSemester = data => {
             store.dispatch(updateSemester(response.data));
             selectSemesterService(null);
             getDisabledSemestersService();
+            getArchivedSemestersService();
             showAllSemestersService();
             resetFormHandler(SEMESTER_FORM);
             successHandler(
@@ -269,4 +276,38 @@ export const CopyLessonsFromSemesterService = values => {
             );
         })
         .catch(error => errorHandler(error));
+};
+
+export const createArchiveSemesterService = semesterId => {
+    axios
+        .post(CREATE_ARCHIVE_SEMESTER + '/' + semesterId)
+        .then(response => {
+            store.dispatch(moveToArchivedSemester(semesterId));
+            successHandler(
+                i18n.t('serviceMessages:back_end_success_operation', {
+                    cardType: i18n.t('formElements:semester_label'),
+                    actionType: i18n.t('serviceMessages:archived_label')
+                })
+            );
+        })
+        .catch(error => errorHandler(error));
+};
+
+export const getArchivedSemestersService = () => {
+    axios
+        .get(ARCHIVED_SEMESTERS_URL)
+        .then(response => {
+            store.dispatch(setArchivedSemesters(response.data));
+        })
+        .catch(err => errorHandler(err));
+};
+
+export const viewArchivedSemester = semesterId => {
+    setScheduleType('archived');
+    axios
+        .get(CREATE_ARCHIVE_SEMESTER + '/' + semesterId)
+        .then(response => {
+            store.dispatch(setFullSchedule(response.data));
+        })
+        .catch(err => errorHandler(err));
 };

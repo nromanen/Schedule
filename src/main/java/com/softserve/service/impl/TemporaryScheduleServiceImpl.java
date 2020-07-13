@@ -112,6 +112,22 @@ public class TemporaryScheduleServiceImpl implements TemporaryScheduleService {
     }
 
     /**
+     * The method used for getting all temporary schedules by semesterId
+     *
+     * @return list of  temporary schedules
+     */
+    @Override
+    public List<TemporarySchedule> getAllBySemesterId(Long semesterId) {
+        log.info("Enter into getAllBySemesterId of TemporaryScheduleServiceImpl");
+        List<TemporarySchedule> temporarySchedules = temporaryScheduleRepository.getAllBySemester(semesterId);
+        for (TemporarySchedule temp: temporarySchedules) {
+           // Hibernate.initialize(temp.getTeacher().getTeacherWishesList());
+            Hibernate.initialize(temp.getSemester().getPeriods());
+        }
+        return temporarySchedules;
+    }
+
+    /**
      * The method used for getting all temporary schedules
      *
      * @return list of  temporary schedules
@@ -131,12 +147,20 @@ public class TemporaryScheduleServiceImpl implements TemporaryScheduleService {
     public List<TemporarySchedule> vacationByDateRangeForTeacher(LocalDate fromDate, LocalDate toDate) {
         log.info("Enter into vacationByDateRangeForTeacher of TemporaryScheduleServiceImpl");
         List<TemporarySchedule> temporarySchedules = temporaryScheduleRepository.vacationByDateRangeForTeacher(fromDate, toDate);
-        for (TemporarySchedule temporarySchedule: temporarySchedules) {
-            Hibernate.initialize(temporarySchedule.getSemester().getPeriods());
-        }
+        temporarySchedules.forEach(t -> Hibernate.initialize(t.getSemester().getPeriods()));
         return temporarySchedules;
     }
 
+    /**
+     * Method deleteTemporarySchedulesBySemesterId delete all temporarySchedule from db in with current semesterId
+     *
+     * @param semesterId id Semester for delete schedule
+     */
+    @Override
+    public void deleteTemporarySchedulesBySemesterId(Long semesterId) {
+        log.info("In deleteTemporarySchedulesBySemesterId with semesterId = {}", semesterId);
+        temporaryScheduleRepository.deleteTemporarySchedulesBySemesterId(semesterId);
+    }
 
     /**
      * The method used for saving temporary schedule in database

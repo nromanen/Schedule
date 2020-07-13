@@ -22,7 +22,6 @@ export const CURRENT_SEMESTER_URL = 'semesters/current';
 
 export const TEMPORARY_SCHEDULE_URL = 'temporary-schedules';
 
-
 export const SCHEDULE_CHECK_AVAILABILITY_URL = 'schedules/data-before';
 export const BUSY_ROOMS = 'schedules/full/rooms';
 export const ROOMS_AVAILABILITY = 'rooms/available';
@@ -60,3 +59,5 @@ export const CLEAR_SCHEDULE_URL = '/schedules/delete-schedules';
 export const COPY_LESSON_URL = '/lessons/copy-lesson-for-groups';
 export const LESSONS_FROM_SEMESTER_COPY_URL = '/lessons/copy-lessons';
 export const SCHEDULE_ITEM_ROOM_CHANGE = '/schedules/by-room';
+export const CREATE_ARCHIVE_SEMESTER = '/archive';
+export const ARCHIVED_SEMESTERS_URL = '/archive/all-semesters';

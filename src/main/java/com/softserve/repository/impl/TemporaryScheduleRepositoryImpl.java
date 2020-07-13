@@ -256,4 +256,17 @@ public class TemporaryScheduleRepositoryImpl extends BasicRepositoryImpl<Tempora
                 .setParameter("toDate", toDate)
                 .getResultList();
     }
+
+    /**
+     * Method deleteTemporarySchedulesBySemesterId delete all temporarySchedule from db in with current semesterId
+     *
+     * @param semesterId id Semester for delete TemporarySchedule
+     */
+    @Override
+    public void deleteTemporarySchedulesBySemesterId(Long semesterId) {
+        log.info("In deleteTemporarySchedulesBySemesterId with semesterId = {}", semesterId);
+        sessionFactory.getCurrentSession().createQuery(
+                "delete from TemporarySchedule t where t.id in (select temp.id from TemporarySchedule temp where temp.semester.id = :semesterId)")
+                .setParameter("semesterId", semesterId).executeUpdate();
+    }
 }

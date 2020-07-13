@@ -24,10 +24,17 @@ import {
     setDisabledSemestersService,
     setEnabledSemestersService,
     showAllSemestersService,
-    semesterCopy
+    semesterCopy,
+    createArchiveSemesterService,
+    getArchivedSemestersService,
+    viewArchivedSemester
 } from '../../services/semesterService';
+import { setScheduleTypeService } from '../../services/scheduleService';
 import { disabledCard } from '../../constants/disabledCard';
 import { GiSightDisabled, IoMdEye, FaCopy } from 'react-icons/all';
+import { FaFileArchive } from 'react-icons/fa';
+
+import GroupSchedulePage from '../../components/GroupSchedulePage/GroupSchedulePage';
 
 const SemesterPage = props => {
     const { t } = useTranslation('formElements');
@@ -41,20 +48,32 @@ const SemesterPage = props => {
     useEffect(() => {
         getDisabledSemestersService();
     }, []);
+    useEffect(() => getArchivedSemestersService(), []);
 
     const [hideDialog, setHideDialog] = useState(null);
     const [hideDialogModal, setHideDialogModal] = useState(null);
     const [disabled, setDisabled] = useState(false);
+    const [archived, setArchived] = useState(false);
+
+    setScheduleTypeService('archived');
 
     const SearchChange = setTerm;
     const handleFormReset = () => clearSemesterService();
     const submit = values => handleSemesterService(values);
     const handleEdit = semesterId => selectSemesterService(semesterId);
+    const handleCreateArchive = semesterId =>
+        createArchiveSemesterService(semesterId);
 
     const searchArr = ['year', 'description', 'startDay', 'endDay'];
-    const visibleItems = disabled
-        ? search(props.disabledSemesters, term, searchArr)
-        : search(props.semesters, term, searchArr);
+
+    let visibleItems = [];
+    if (disabled) {
+        visibleItems = search(props.disabledSemesters, term, searchArr);
+    } else if (archived) {
+        visibleItems = search(props.archivedSemesters, term, searchArr);
+    } else {
+        visibleItems = search(props.semesters, term, searchArr);
+    }
 
     const handleClickOpen = semesterId => {
         setSemesterId(semesterId);
@@ -99,6 +118,15 @@ const SemesterPage = props => {
 
     const showDisabledHandle = () => {
         setDisabled(!disabled);
+        setArchived(false);
+    };
+
+    const showArchivedHandler = () => {
+        setArchived(!archived);
+        !archived === true
+            ? setScheduleTypeService('archived')
+            : setScheduleTypeService('default');
+        setDisabled(false);
     };
     const handleSemesterCopySubmit = values => {
         semesterCopy({
@@ -107,6 +135,10 @@ const SemesterPage = props => {
         });
         setOpenModal(false);
         setHideDialogModal(null);
+    };
+
+    const handleSemesterArchivedPreview = semesterId => {
+        viewArchivedSemester(+semesterId);
     };
 
     return (
@@ -139,8 +171,9 @@ const SemesterPage = props => {
                     <SearchPanel
                         SearchChange={SearchChange}
                         showDisabled={showDisabledHandle}
+                        showArchived={showArchivedHandler}
                     />
-                    {disabled ? (
+                    {disabled || archived ? (
                         ''
                     ) : (
                         <SemesterForm
@@ -156,6 +189,7 @@ const SemesterPage = props => {
                     )}
                     {visibleItems.map((semester, index) => {
                         const sem_days = [];
+
                         semester.semester_days.forEach(day =>
                             sem_days.push(t(`common:day_of_week_${day}`))
                         );
@@ -167,7 +201,7 @@ const SemesterPage = props => {
                                 }`}
                             >
                                 <div className="cards-btns">
-                                    {!disabled ? (
+                                    {!disabled && !archived ? (
                                         <>
                                             <GiSightDisabled
                                                 className="svg-btn copy-btn"
@@ -190,15 +224,30 @@ const SemesterPage = props => {
                                             />
                                             <FaCopy
                                                 className="svg-btn copy-btn"
-                                                title={t('common:set_disabled')}
+                                                title={t('copy_label')}
                                                 onClick={() => {
                                                     handleClickOpenModal(
                                                         semester.id
                                                     );
                                                 }}
                                             />
+                                            {semester.currentSemester ? (
+                                                ''
+                                            ) : (
+                                                <FaFileArchive
+                                                    className="svg-btn archive-btn"
+                                                    title={t(
+                                                        'common:make_archive'
+                                                    )}
+                                                    onClick={() => {
+                                                        handleCreateArchive(
+                                                            semester.id
+                                                        );
+                                                    }}
+                                                />
+                                            )}
                                         </>
-                                    ) : (
+                                    ) : !archived ? (
                                         <IoMdEye
                                             className="svg-btn copy-btn"
                                             title={t('common:set_enabled')}
@@ -207,6 +256,16 @@ const SemesterPage = props => {
                                                     disabledCard.SHOW
                                                 );
                                                 handleClickOpen(semester.id);
+                                            }}
+                                        />
+                                    ) : (
+                                        <IoMdEye
+                                            className="svg-btn copy-btn"
+                                            title={t('common:preview')}
+                                            onClick={() => {
+                                                handleSemesterArchivedPreview(
+                                                    semester.id
+                                                );
                                             }}
                                         />
                                     )}
@@ -254,12 +313,14 @@ const SemesterPage = props => {
                 isOpen={isSnackbarOpen}
                 handleSnackbarClose={handleSnackbarClose}
             />
+            <GroupSchedulePage scheduleType="archived" />
         </>
     );
 };
 const mapStateToProps = state => ({
     semesters: state.semesters.semesters,
     disabledSemesters: state.semesters.disabledSemesters,
+    archivedSemesters: state.semesters.archivedSemesters,
     isSnackbarOpen: state.snackbar.isSnackbarOpen,
     snackbarType: state.snackbar.snackbarType,
     snackbarMessage: state.snackbar.message
