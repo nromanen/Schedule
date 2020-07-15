@@ -11,13 +11,14 @@ import renderTextField from '../../share/renderedFields/input';
 
 import { LOGIN_FORM } from '../../constants/reduxForms';
 import { authTypes } from '../../constants/auth';
+import { GOOGLE_LOGIN_URL } from '../../constants/axios';
 
 import { required } from '../../validation/validateFields';
 import { FaGoogle } from 'react-icons/fa';
 
 let LoginForm = props => {
     const { t } = useTranslation('formElements');
-    const { handleSubmit, socialLogin } = props;
+    const { handleSubmit } = props;
 
     const error = props.loginError;
 
@@ -78,14 +79,18 @@ let LoginForm = props => {
                     {translation('forgot_password')}
                 </button>
             </div>
+            {}
             <Button
-                // className="buttons-style under-line"
                 variant="contained"
                 color="secondary"
-                onClick={socialLogin}
+                onClick={() =>
+                    (window.document.location.href =
+                        process.env.REACT_APP_API_BASE_URL.trim() +
+                        GOOGLE_LOGIN_URL)
+                }
             >
                 <FaGoogle />
-                {'   ' + t('login_via_google')}
+                {t('login_via_google')}
             </Button>
         </form>
     );

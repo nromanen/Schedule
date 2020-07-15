@@ -3,7 +3,6 @@ import axios from '../helper/axios';
 import {
     ACTIVATE_ACCOUNT_URL,
     LOGIN_URL,
-    GOOGLE_LOGIN_URL,
     LOGOUT_URL,
     REGISTRATION_URL,
     RESET_PASSWORD_URL
@@ -14,10 +13,8 @@ export const authUserService = request => {
         request.result.hasOwnProperty('authType') &&
         request.result.authType === 'google'
     ) {
-        return axios.get(GOOGLE_LOGIN_URL).then(response => {
-            console.log('google response', response);
-            return response;
-        });
+        const response = { data: { token: request.result.token, email: '' } };
+        return response;
     }
     return axios.post(LOGIN_URL, request.result).then(response => {
         return response;
