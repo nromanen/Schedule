@@ -90,7 +90,7 @@ public class TemporaryScheduleController {
     @GetMapping
     @ApiOperation(value = "Get all temporary schedules")
     @PreAuthorize("hasRole('MANAGER')")
-    public ResponseEntity<List<TemporaryScheduleDTO>> getAll(@RequestParam("teacherId") Optional<Long> teacherId,
+    public ResponseEntity<List<TemporaryScheduleForArchiveDTO>> getAll(@RequestParam("teacherId") Optional<Long> teacherId,
                                                              @RequestParam Optional<String> from,
                                                              @RequestParam Optional<String> to) {
         log.info("Enter into getAll of TemporaryScheduleController");
@@ -109,7 +109,7 @@ public class TemporaryScheduleController {
         }else{
             temporaryScheduleList = temporaryScheduleService.getAllByCurrentSemester();
         }
-        return ResponseEntity.ok().body(temporaryScheduleMapper.convertToDtoList(temporaryScheduleList));
+        return ResponseEntity.ok().body(temporaryScheduleMapper.convertToNewDtoList(temporaryScheduleList));
     }
 
     @DeleteMapping("/{id}")
