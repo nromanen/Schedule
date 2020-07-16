@@ -22,7 +22,4 @@ public interface TemporaryScheduleMapper {
 
     @Named("temporary_schedule")
     List<TemporaryScheduleDTO> convertToDtoList(List<TemporarySchedule> schedules);
-
-    @Named("temporary_schedule_for_archive")
-    List<TemporaryScheduleForArchiveDTO> convertToNewDtoList(List<TemporarySchedule> schedules);
 }
