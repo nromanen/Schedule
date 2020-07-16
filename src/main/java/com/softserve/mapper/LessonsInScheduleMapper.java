@@ -12,6 +12,7 @@ import org.mapstruct.Mapping;
 public interface LessonsInScheduleMapper {
 
     @Mapping(source = "lessonType", target = "lessonType")
+    @Mapping(source = "teacher.id", target = "teacherId")
     LessonsInScheduleDTO lessonToLessonsInScheduleDTO(Lesson lesson);
 
     LessonsInRoomScheduleDTO lessonToLessonsInRoomScheduleDTO(Lesson lesson);

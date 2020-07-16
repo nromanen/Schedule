@@ -5,14 +5,16 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.softserve.entity.*;
 import com.softserve.entity.enums.LessonType;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDate;
 
-@Data
+@Setter
+@Getter
 @NoArgsConstructor
-public class TemporaryScheduleDTO {
-    private Long id;
+public class TemporaryScheduleDTOForDashboard {
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     private LocalDate date;
@@ -24,7 +26,6 @@ public class TemporaryScheduleDTO {
     private Subject subject;
     private Group group;
     private Room room;
-    private Semester semester;
     @JsonProperty("class")
     private Period period;
     private boolean grouped;

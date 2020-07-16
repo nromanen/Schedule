@@ -107,7 +107,7 @@ public class TemporaryScheduleController {
                 temporaryScheduleList = temporaryScheduleService.getAllByRange(fromDate, toDate);
             }
         }else{
-            temporaryScheduleList = temporaryScheduleService.getAllBySemester();
+            temporaryScheduleList = temporaryScheduleService.getAllByCurrentSemester();
         }
         return ResponseEntity.ok().body(temporaryScheduleMapper.convertToDtoList(temporaryScheduleList));
     }

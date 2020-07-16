@@ -244,6 +244,23 @@ public class TemporaryScheduleRepositoryImpl extends BasicRepositoryImpl<Tempora
     /**
      * Method counts schedule records in db for group in the semester
      *
+     * @param
+     * @return number of records in db
+     */
+    @Override
+    public List<TemporarySchedule> getAllBySemesterAndRange(Long semesterId, LocalDate fromDate, LocalDate toDate) {
+        log.info("In getAllBySemesterAndRange");
+        return sessionFactory.getCurrentSession().createQuery("SELECT t from TemporarySchedule t " +
+                "where t.date <= :toDate  and t.date >= :fromDate and t.semester.id = :semesterId")
+                .setParameter("fromDate", fromDate)
+                .setParameter("toDate", toDate)
+                .setParameter("semesterId", semesterId)
+                .getResultList();
+    }
+
+    /**
+     * Method counts schedule records in db for group in the semester
+     *
      * @param fromDate, toDate, teacherId, semesterId
      * @return number of records in db
      */
