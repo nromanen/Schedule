@@ -1,7 +1,8 @@
 package com.softserve.service.impl;
 
-import com.softserve.entity.Semester;
-import com.softserve.entity.TemporarySchedule;
+import com.softserve.entity.*;
+import com.softserve.entity.enums.EvenOdd;
+import com.softserve.entity.enums.LessonType;
 import com.softserve.exception.EntityAlreadyExistsException;
 import com.softserve.exception.EntityNotFoundException;
 import com.softserve.repository.TemporaryScheduleRepository;
@@ -15,9 +16,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static java.time.DayOfWeek.MONDAY;
+import static java.time.temporal.TemporalAdjusters.previousOrSame;
 
 @Transactional
 @Service
@@ -94,14 +100,26 @@ public class TemporaryScheduleServiceImpl implements TemporaryScheduleService {
         return temporaryScheduleRepository.getAllByTeacherAndRange(fromDate, toDate, teacherId);
     }
 
+
     /**
      * The method used for getting all temporary schedules
      *
      * @return list of  temporary schedules
      */
     @Override
-    public List<TemporarySchedule> getAllBySemester() {
-        log.info("Enter into getAllBySemester of TemporaryScheduleServiceImpl");
+    public List<TemporarySchedule> getAllBySemesterAndRange(Long semesterId, LocalDate fromDate, LocalDate toDate) {
+        log.info("Enter into getAllBySemesterAndRange of TemporaryScheduleServiceImpl");
+        return temporaryScheduleRepository.getAllBySemesterAndRange(semesterId, fromDate, toDate);
+    }
+
+    /**
+     * The method used for getting all temporary schedules
+     *
+     * @return list of  temporary schedules
+     */
+    @Override
+    public List<TemporarySchedule> getAllByCurrentSemester() {
+        log.info("Enter into getAllByCurrentSemester of TemporaryScheduleServiceImpl");
         List<TemporarySchedule> temporarySchedules=  temporaryScheduleRepository.getAllBySemester(semesterService.getCurrentSemester().getId());
         for (TemporarySchedule temporarySchedule: temporarySchedules) {
             Hibernate.initialize(temporarySchedule.getSemester().getPeriods());
@@ -136,14 +154,19 @@ public class TemporaryScheduleServiceImpl implements TemporaryScheduleService {
         return temporaryScheduleRepository.getAllByRange(fromDate, toDate);
     }
 
+    @Override
+    public List<TemporarySchedule> temporaryScheduleByDateRangeForTeacher(LocalDate fromDate, LocalDate toDate, Long teacherId) {
+        return null;
+    }
+
     /**
      * The method used for getting all temporary schedules
      *
      * @return list of  temporary schedules
      */
     @Override
-    public List<TemporarySchedule> vacationByDateRangeForTeacher(LocalDate fromDate, LocalDate toDate) {
-        log.info("Enter into vacationByDateRangeForTeacher of TemporaryScheduleServiceImpl");
+    public List<TemporarySchedule> vacationByDateRange(LocalDate fromDate, LocalDate toDate) {
+        log.info("Enter into vacationByDateRange of TemporaryScheduleServiceImpl");
         List<TemporarySchedule> temporarySchedules = temporaryScheduleRepository.vacationByDateRangeForTeacher(fromDate, toDate);
         temporarySchedules.forEach(t -> Hibernate.initialize(t.getSemester().getPeriods()));
         return temporarySchedules;
@@ -160,6 +183,45 @@ public class TemporaryScheduleServiceImpl implements TemporaryScheduleService {
         temporaryScheduleRepository.deleteTemporarySchedulesBySemesterId(semesterId);
     }
 
+    @Override
+    public Map<EvenOdd, Map<DayOfWeek, List<TemporarySchedule>>> getTemporaryScheduleForEvenOddWeeks(Long semesterId) {
+        log.info("In getTemporaryScheduleForEvenOddWeeks with semesterId = {}", semesterId);
+        Map<EvenOdd, Map<DayOfWeek, List<TemporarySchedule>>> evenOddListMap = new HashMap<>();
+        Semester semester = semesterService.getById(semesterId);
+        LocalDate today = LocalDate.now();
+        LocalDate from = today.with(previousOrSame(MONDAY));
+        int countStartDate = semester.getStartDay().getDayOfWeek().getValue();
+        int countEndDate = today.getDayOfWeek().getValue();
+        int countDays = Integer.parseInt(String.valueOf(ChronoUnit.DAYS.between(
+                semester.getStartDay().minusDays(countStartDate), today.plusDays(7 - countEndDate))));
+
+        EvenOdd keyOne = (countDays / 7) % 2 != 0?EvenOdd.EVEN:EvenOdd.ODD;
+        EvenOdd keyTwo = keyOne.equals(EvenOdd.EVEN)?EvenOdd.ODD:EvenOdd.EVEN;
+        try {
+            List<TemporarySchedule> one = getAllBySemesterAndRange(semesterId, from, from.plusDays(7));
+            List<TemporarySchedule> two = getAllBySemesterAndRange(semesterId, from.plusDays(8), from.plusDays(14));
+
+            Map<DayOfWeek, List<TemporarySchedule>> oneMap = new HashMap<>();
+            Map<DayOfWeek, List<TemporarySchedule>> twoMap = new HashMap<>();
+
+
+            for (TemporarySchedule temporarySchedule : one) {
+                oneMap.computeIfAbsent(temporarySchedule.getDate().getDayOfWeek(), k -> new ArrayList<>()).add(temporarySchedule);
+            }
+
+            for (TemporarySchedule temporarySchedule : two) {
+                twoMap.computeIfAbsent(temporarySchedule.getDate().getDayOfWeek(), k -> new ArrayList<>()).add(temporarySchedule);
+            }
+            evenOddListMap.put(keyOne, oneMap);
+            evenOddListMap.put(keyTwo, twoMap);
+        }catch (NullPointerException e){
+        e.printStackTrace();
+    }
+
+
+        return evenOddListMap;
+    }
+
     /**
      * The method used for saving temporary schedule in database
      *
@@ -167,7 +229,7 @@ public class TemporaryScheduleServiceImpl implements TemporaryScheduleService {
      * @return save temporary schedule
      */
     @Override
-    public List<String>  addRange(LocalDate from, LocalDate to, TemporarySchedule object) {
+    public List<String> addRange(LocalDate from, LocalDate to, TemporarySchedule object) {
         log.info("Enter into addRange of TemporaryScheduleServiceImpl with entity:{}", object );
         List<String> messagesList = new ArrayList<>();
         if(object.getSemester() == null) {
@@ -338,27 +400,6 @@ public class TemporaryScheduleServiceImpl implements TemporaryScheduleService {
         log.info("Enter into delete of TemporaryScheduleServiceImpl with entity:{}", object);
         return temporaryScheduleRepository.delete(object);
     }
-
-
-    /**
-     * Method scheduleByDateRangeForTeacher get all schedules from db in particular date range
-     *
-     * @param fromDate  LocalDate from
-     * @param toDate    LocalDate to
-     * @param teacherId id teacher
-     * @return list of schedules
-     */
-    @Override
-    public List<TemporarySchedule> temporaryScheduleByDateRangeForTeacher(LocalDate fromDate, LocalDate toDate, Long teacherId) {
-        log.info("In scheduleByDateRangeForTeacher with fromDate = {} and toDate = {}", fromDate, toDate);
-        List<TemporarySchedule> temporarySchedules = temporaryScheduleRepository.temporaryScheduleByDateRangeForTeacher(fromDate, toDate, teacherId);
-
-        for (TemporarySchedule temporarySchedule: temporarySchedules) {
-            Hibernate.initialize(temporarySchedule.getSemester().getPeriods());
-        }
-        return temporarySchedules;
-    }
-
 
     private boolean isExistTemporaryScheduleByVacationByDate(LocalDate date, Long semesterId, boolean vacation) {
         log.info("In isExistTemporaryScheduleByVacationByDate(date = [{}], semesterId = [{}] ,vacation = [{}])", date, semesterId, vacation);
