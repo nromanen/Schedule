@@ -90,7 +90,7 @@ public class TemporaryScheduleController {
     @GetMapping
     @ApiOperation(value = "Get all temporary schedules")
     @PreAuthorize("hasRole('MANAGER')")
-    public ResponseEntity<List<TemporaryScheduleForArchiveDTO>> getAll(@RequestParam("teacherId") Optional<Long> teacherId,
+    public ResponseEntity<List<TemporaryScheduleDTO>> getAll(@RequestParam("teacherId") Optional<Long> teacherId,
                                                              @RequestParam Optional<String> from,
                                                              @RequestParam Optional<String> to) {
         log.info("Enter into getAll of TemporaryScheduleController");
@@ -109,7 +109,7 @@ public class TemporaryScheduleController {
         }else{
             temporaryScheduleList = temporaryScheduleService.getAllByCurrentSemester();
         }
-        return ResponseEntity.ok().body(temporaryScheduleMapper.convertToNewDtoList(temporaryScheduleList));
+        return ResponseEntity.ok().body(temporaryScheduleMapper.convertToDtoList(temporaryScheduleList));
     }
 
     @DeleteMapping("/{id}")
@@ -124,10 +124,16 @@ public class TemporaryScheduleController {
 //    @GetMapping("/teacher")
 //    @ApiOperation(value = "Get temporary schedules for current teacher")
 //    @PreAuthorize("hasRole('TEACHER')")
-//    public ResponseEntity<List<TemporaryScheduleDTO>> getTemporarySchedulesForCurrentTeacher(@CurrentUser JwtUser jwtUser) {
+//    public ResponseEntity<List<TemporaryScheduleDTO>> getTemporarySchedulesForCurrentTeacher(@CurrentUser JwtUser jwtUser,
+//                                                                                             @RequestParam String from,
+//                                                                                             @RequestParam String to) {
 //        log.info("In getTemporarySchedulesForCurrentTeacher");
 //        Teacher teacher = teacherService.findByUserId(Integer.parseInt(jwtUser.getId().toString()));
-//        return ResponseEntity.ok().body(temporaryScheduleMapper.convertToDtoList(temporaryScheduleService.getAllByTeacher(teacher.getId())));
+//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+//        DateTimeFormatter currentFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+//        LocalDate fromDate = LocalDate.parse(LocalDate.parse(from, formatter).toString(), currentFormatter);
+//        LocalDate toDate = LocalDate.parse(LocalDate.parse(to, formatter).toString(), currentFormatter);
+//        return ResponseEntity.ok().body(temporaryScheduleMapper.convertToDtoList(temporaryScheduleService.getAllByTeacherAndRange(fromDate, toDate, teacher.getId())));
 //    }
 
 
