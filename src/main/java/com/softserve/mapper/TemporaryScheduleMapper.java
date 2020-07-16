@@ -20,9 +20,8 @@ public interface TemporaryScheduleMapper {
     TemporaryScheduleDTO convertToDto(TemporarySchedule entity);
     TemporaryScheduleDTOForDashboard convertToDtoForDashboard(TemporarySchedule entity);
 
-//    @Named("temporary_schedule")
-//    @Mapping(target = "businesses", qualifiedBy = TemporarySchedule.class)
-//    List<TemporaryScheduleDTO> convertToDtoList(List<TemporarySchedule> schedules);
+    @Named("temporary_schedule")
+    List<TemporaryScheduleDTO> convertToDtoList(List<TemporarySchedule> schedules);
 
     @Named("temporary_schedule_for_archive")
     List<TemporaryScheduleForArchiveDTO> convertToNewDtoList(List<TemporarySchedule> schedules);
