@@ -7,6 +7,7 @@ import com.softserve.dto.TemporaryScheduleSaveDTO;
 import com.softserve.entity.TemporarySchedule;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.Named;
 
 import java.util.List;
 
@@ -19,7 +20,9 @@ public interface TemporaryScheduleMapper {
     TemporaryScheduleDTO convertToDto(TemporarySchedule entity);
     TemporaryScheduleDTOForDashboard convertToDtoForDashboard(TemporarySchedule entity);
 
+    @Named("temporary_schedule")
     List<TemporaryScheduleDTO> convertToDtoList(List<TemporarySchedule> schedules);
 
+    @Named("temporary_schedule_for_archive")
     List<TemporaryScheduleForArchiveDTO> convertToNewDtoList(List<TemporarySchedule> schedules);
 }
