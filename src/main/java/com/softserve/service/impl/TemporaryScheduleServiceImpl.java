@@ -2,7 +2,6 @@ package com.softserve.service.impl;
 
 import com.softserve.entity.*;
 import com.softserve.entity.enums.EvenOdd;
-import com.softserve.entity.enums.LessonType;
 import com.softserve.exception.EntityAlreadyExistsException;
 import com.softserve.exception.EntityNotFoundException;
 import com.softserve.repository.TemporaryScheduleRepository;
@@ -20,7 +19,6 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static java.time.DayOfWeek.MONDAY;
 import static java.time.temporal.TemporalAdjusters.previousOrSame;
@@ -39,12 +37,13 @@ public class TemporaryScheduleServiceImpl implements TemporaryScheduleService {
     private final SubjectService subjectService;
     private final TeacherService teacherService;
     private final ScheduleService scheduleService;
+    private final MailService mailService;
 
 
 
     @Autowired
     public TemporaryScheduleServiceImpl(TemporaryScheduleRepository temporaryScheduleRepository, SemesterService semesterService, GroupService groupService,
-                                        RoomService roomService, PeriodService periodService, SubjectService subjectService, TeacherService teacherService, @Lazy ScheduleService scheduleService) {
+                                        RoomService roomService, PeriodService periodService, SubjectService subjectService, TeacherService teacherService, @Lazy ScheduleService scheduleService, MailService mailService) {
         this.temporaryScheduleRepository = temporaryScheduleRepository;
         this.semesterService = semesterService;
         this.groupService = groupService;
@@ -53,6 +52,8 @@ public class TemporaryScheduleServiceImpl implements TemporaryScheduleService {
         this.subjectService = subjectService;
         this.teacherService = teacherService;
         this.scheduleService = scheduleService;
+        this.mailService = mailService;
+
     }
 
     /**
@@ -137,7 +138,6 @@ public class TemporaryScheduleServiceImpl implements TemporaryScheduleService {
         log.info("Enter into getAllBySemesterId of TemporaryScheduleServiceImpl");
         List<TemporarySchedule> temporarySchedules = temporaryScheduleRepository.getAllBySemester(semesterId);
         for (TemporarySchedule temp: temporarySchedules) {
-           // Hibernate.initialize(temp.getTeacher().getTeacherWishesList());
             Hibernate.initialize(temp.getSemester().getPeriods());
         }
         return temporarySchedules;
@@ -152,11 +152,6 @@ public class TemporaryScheduleServiceImpl implements TemporaryScheduleService {
     public List<TemporarySchedule> getAllByRange(LocalDate fromDate, LocalDate toDate) {
         log.info("Enter into getAllBySemester of TemporaryScheduleServiceImpl");
         return temporaryScheduleRepository.getAllByRange(fromDate, toDate);
-    }
-
-    @Override
-    public List<TemporarySchedule> temporaryScheduleByDateRangeForTeacher(LocalDate fromDate, LocalDate toDate, Long teacherId) {
-        return null;
     }
 
     /**
@@ -275,7 +270,6 @@ public class TemporaryScheduleServiceImpl implements TemporaryScheduleService {
                 checkReferencedElement(object);
             }
         }
-
         return temporaryScheduleRepository.save(object);
     }
 
