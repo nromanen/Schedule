@@ -14,9 +14,8 @@ public interface TemporaryScheduleService extends BasicService<TemporarySchedule
     List<TemporarySchedule> getAllBySemesterId(Long semesterId);
     List<TemporarySchedule> getAllByRange(LocalDate fromDate, LocalDate toDate);
     List<TemporarySchedule> getAllBySemesterAndRange(Long semesterId, LocalDate fromDate, LocalDate toDate);
-    List<TemporarySchedule> temporaryScheduleByDateRangeForTeacher(LocalDate fromDate, LocalDate toDate, Long teacherId);
     List<TemporarySchedule> vacationByDateRange(LocalDate fromDate, LocalDate toDate);
-    List<String>  addRange(LocalDate from, LocalDate to, TemporarySchedule object);
+    List<String> addRange(LocalDate from, LocalDate to, TemporarySchedule object);
     void deleteTemporarySchedulesBySemesterId(Long semesterId);
 
     Map<EvenOdd, Map<DayOfWeek, List<TemporarySchedule>>> getTemporaryScheduleForEvenOddWeeks(Long semesterId);

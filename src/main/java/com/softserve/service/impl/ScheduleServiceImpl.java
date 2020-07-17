@@ -639,7 +639,7 @@ return fullScheduleForTeacherByDateRange(dateRangeSchedule,  fromDate, toDate);
     public Map<LocalDate, Map<Period, List<Map<Schedule, TemporarySchedule>>>> temporaryScheduleByDateRangeForTeacher(LocalDate fromDate, LocalDate toDate, Long teacherId) {
         log.info("In temporaryScheduleByDateRangeForTeacher with fromDate = {} and toDate = {} and teacher = {}", fromDate, toDate, teacherId);
         List<Schedule> schedules = scheduleRepository.scheduleByDateRangeForTeacher(fromDate, toDate, teacherId);
-        List<TemporarySchedule> temporarySchedules = temporaryScheduleService.temporaryScheduleByDateRangeForTeacher(fromDate, toDate, teacherId);
+        List<TemporarySchedule> temporarySchedules = temporaryScheduleService.getAllByTeacherAndRange(fromDate, toDate, teacherId);
         List<TemporarySchedule> vacationByDateRange = temporaryScheduleService.vacationByDateRange(fromDate, toDate);
 
         List<Schedule> dateRangeSchedule = new ArrayList<>();
