@@ -43,4 +43,6 @@ public interface ScheduleRepository extends BasicRepository<Schedule, Long> {
     List<Schedule> scheduleByDateRangeForTeacher(LocalDate fromDate, LocalDate toDate, Long teacherId);
 
     void deleteSchedulesBySemesterId(Long semesterId);
+
+    Long countInputLessonsInScheduleByLessonId(Long lessonId);
 }
