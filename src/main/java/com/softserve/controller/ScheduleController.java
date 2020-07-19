@@ -228,6 +228,19 @@ public class ScheduleController {
         return ResponseEntity.ok().body(scheduleMapper.scheduleToScheduleDTO(updateSchedule));
     }
 
+    @PostMapping("/grouped-lesson")
+    @ApiOperation(value = "Save grouped lesson to schedule for all groups")
+    @PreAuthorize("hasRole('MANAGER')")
+    public ResponseEntity<MessageDTO> saveGroupedLesson(@RequestBody GroupedLessonDTO groupedLessonDTO) {
+        log.info("In saveGroupedLesson with groupedLessonDTO = {}", groupedLessonDTO);
+        Schedule schedule = scheduleService.getById(groupedLessonDTO.getScheduleId());
+        for (Long lessonId : groupedLessonDTO.getLessons()) {
+            schedule.setLesson(lessonService.getById(lessonId));
+            scheduleService.save(schedule);
+        }
+        return ResponseEntity.ok().body(new MessageDTO("Grouped lesson successfully saved to schedule"));
+    }
+
     //convert schedule map to schedule dto
     private List<ScheduleDateRangeFullDTO> fullDTOForTeacherDateRange(Map<LocalDate, Map<Period, List<Schedule>>> map) {
         List<ScheduleDateRangeFullDTO> fullDTO = new ArrayList<>();

@@ -33,5 +33,7 @@ public interface ScheduleService extends BasicService<Schedule, Long> {
     Schedule saveScheduleDuringCopy(Schedule schedule);
 
     Schedule updateWithoutChecks(Schedule schedule);
+
+    Long countInputLessonsInScheduleByLessonId(Long lessonId);
 }
 

@@ -688,6 +688,18 @@ return fullScheduleForTeacherByDateRange(dateRangeSchedule,  fromDate, toDate);
         return scheduleRepository.update(schedule);
     }
 
+    /**
+     * Method counts schedule records in db for lesson by lessonsId
+     *
+     * @param lessonId id of the lesson
+     * @return number of records in db
+     */
+    @Override
+    public Long countInputLessonsInScheduleByLessonId(Long lessonId) {
+        log.info("In countInputLessonsInScheduleByLessonId(lessonId = [{}])", lessonId);
+        return scheduleRepository.countInputLessonsInScheduleByLessonId(lessonId);
+    }
+
     //check date in semester date range, if yes return - true, else - false
     private boolean isDateInSemesterDateRange(Schedule schedule, LocalDate toDate) {
         DayOfWeek startSemester = schedule.getLesson().getSemester().getStartDay().getDayOfWeek();

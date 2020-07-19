@@ -28,12 +28,6 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
             "and s.dayOfWeek = :dayOfWeek " +
             "and s.period.id = :classId "+ NOT_DISABLED_SQL;
 
-    private final MongoTemplate mongoTemplate;
-
-    public ScheduleRepositoryImpl(MongoTemplate mongoTemplate) {
-        this.mongoTemplate = mongoTemplate;
-    }
-
     /**
      * Method searches if there are any saved records in schedule for particular group
      *
@@ -382,5 +376,19 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
         sessionFactory.getCurrentSession().createQuery(
                 "delete from Schedule s where s.id in (select sch.id from Schedule sch where sch.lesson.semester.id = :semesterId)")
                 .setParameter("semesterId", semesterId).executeUpdate();
+    }
+
+    /**
+     * Method counts schedule records in db for lesson by lessonsId
+     *
+     * @param lessonId id of the lesson
+     * @return number of records in db
+     */
+    @Override
+    public Long countInputLessonsInScheduleByLessonId(Long lessonId) {
+        log.info("In countInputLessonsInScheduleByLessonId(lessonId = [{}])", lessonId);
+        return (Long) sessionFactory.getCurrentSession().createQuery("select count (s.id) from  Schedule s where s.lesson.id = :lessonId " + NOT_DISABLED_SQL)
+                .setParameter("lessonId", lessonId)
+                .getSingleResult();
     }
 }
