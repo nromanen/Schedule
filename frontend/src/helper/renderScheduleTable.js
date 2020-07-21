@@ -59,7 +59,7 @@ const renderClassCell = classItem =>
 export const prepareLessonCardCell = card => {
     let inner = '';
     if (card !== undefined && card !== null) {
-        inner = card.teacherForSite + '\n\r' + card.subjectForSite;
+        inner = card.teacherForSite + '\n' + card.subjectForSite;
     }
     return inner;
 };
@@ -76,6 +76,52 @@ export const prepareLessonSubCardCell = card => {
         }
     }
     return inner;
+};
+export const prepareLessonTemporaryCardCell = card => {
+    let inner = '';
+    if (card !== undefined && card !== null) {
+        if (card.temporary_schedule) {
+            if (card.temporary_schedule.vacation === true) {
+                inner +=
+                    card.temporary_schedule.date +
+                    '\n\r' +
+                    i18next.t(`common:vacation_label`);
+            } else {
+                inner +=
+                    card.temporary_schedule.date +
+                    '\n\r' +
+                    card.temporary_schedule.teacherForSite +
+                    '\n\r' +
+                    card.temporary_schedule.subjectForSite;
+                if (card.temporary_schedule.room) {
+                    inner += ', ' + card.temporary_schedule.room.name + ' )';
+                }
+            }
+            let title =
+                i18next.t(`common:regular_lesson_label`) +
+                '\r' +
+                prepareLessonCardCell(card) +
+                '\r' +
+                prepareLessonSubCardCell(card);
+
+            return inner.length > 0 ? (
+                <p className="temporary-class" title={title}>
+                    {inner}
+                </p>
+            ) : (
+                ''
+            );
+        } else {
+            return (
+                <>
+                    <p>{prepareLessonCardCell(card)}</p>
+                    <p>{prepareLessonSubCardCell(card)}</p>
+                </>
+            );
+        }
+    } else {
+        return '';
+    }
 };
 
 export const renderGroupDayClass = (classDay, isOddWeek) => {
@@ -190,8 +236,7 @@ export const renderGroupCells = (
                 rowSpan={rowspan}
                 className={classname}
             >
-                <p>{prepareLessonCardCell(group.card)}</p>
-                <p>{prepareLessonSubCardCell(group.card)}</p>
+                {prepareLessonTemporaryCardCell(group.card)}
             </TableCell>
         );
     });
