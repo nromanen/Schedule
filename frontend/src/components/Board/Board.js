@@ -30,7 +30,9 @@ const Board = props => {
             evenOdd: week.toUpperCase(),
             semesterId: props.currentSemester.id
         };
+
         checkAvailabilityScheduleService(obj);
+
         setLoadingService(true);
         if (itemId) obj = { ...obj, id: itemId };
 

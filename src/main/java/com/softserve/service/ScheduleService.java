@@ -1,9 +1,9 @@
 package com.softserve.service;
 
 import com.softserve.dto.*;
-import com.softserve.entity.Period;
-import com.softserve.entity.Schedule;
+import com.softserve.entity.*;
 import com.softserve.entity.enums.EvenOdd;
+import com.softserve.entity.enums.LessonType;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -21,14 +21,19 @@ public interface ScheduleService extends BasicService<Schedule, Long> {
 
     List<Schedule> getAllSchedulesByTeacherIdAndSemesterId(Long teacherId, Long semesterId);
 
-    List<ScheduleForRoomDTO> getScheduleForRooms(Long semesterId);
+    Map<Room, Map<DayOfWeek, Map<EvenOdd, Map<Period, Map<String, Map<String, Map<LessonType, List<Lesson>>>>>>>> getScheduleForRooms(Long semesterId);
 
     List<Schedule> getSchedulesBySemester(Long semesterId);
 
     Map<LocalDate, Map<Period, List<Schedule>>> scheduleByDateRangeForTeacher(LocalDate fromDate, LocalDate toDate, Long teacherId);
+    Map<LocalDate, Map<Period, List<Map<Schedule, TemporarySchedule>>>>  temporaryScheduleByDateRangeForTeacher(LocalDate fromDate, LocalDate toDate, Long teacherId);
 
     void deleteSchedulesBySemesterId(Long semesterId);
 
     Schedule saveScheduleDuringCopy(Schedule schedule);
+
+    Schedule updateWithoutChecks(Schedule schedule);
+
+    Long countInputLessonsInScheduleByLessonId(Long lessonId);
 }
 

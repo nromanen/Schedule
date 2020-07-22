@@ -1,6 +1,6 @@
 package com.softserve.service.impl;
 
-import com.softserve.dto.ScheduleForArchiveDTO;
+import com.softserve.dto.ScheduleFullForArchiveDTO;
 import com.softserve.dto.SemesterDTO;
 import com.softserve.exception.EntityNotFoundException;
 import com.softserve.repository.ArchiveRepository;
@@ -29,29 +29,29 @@ public class ArchiveServiceImpl implements ArchiveService {
      * The method used for getting schedule from mongo database by semesterId
      *
      * @param semesterId Semester id for getting schedule by this id from mongo db
-     * @return ScheduleForArchiveDTO
+     * @return ScheduleFullForArchiveDTO
      * @throws EntityNotFoundException if schedule by current semesterId not found
      */
     @Override
-    public ScheduleForArchiveDTO getArchiveScheduleBySemesterId(Long semesterId) {
+    public ScheduleFullForArchiveDTO getArchiveScheduleBySemesterId(Long semesterId) {
         log.info("In getArchiveScheduleBySemesterId with semesterId = {}", semesterId);
         return archiveRepository.getArchiveScheduleBySemesterId(semesterId).orElseThrow(
-                () -> new EntityNotFoundException(ScheduleForArchiveDTO.class, "semesterId", semesterId.toString())
+                () -> new EntityNotFoundException(ScheduleFullForArchiveDTO.class, "semesterId", semesterId.toString())
         );
     }
 
     /**
      * The method used for getting all of archived schedules from mongo database
      *
-     * @return list of schedules
+     * @return list of semesters
      */
     @Override
     public List<SemesterDTO> getAllSemestersInArchiveSchedule() {
         log.info("In getAllSemestersInArchiveSchedule");
-        List<ScheduleForArchiveDTO> schedules = archiveRepository.getAllArchiveSchedule();
+        List<ScheduleFullForArchiveDTO> schedules = archiveRepository.getAllArchiveSchedule();
         List<SemesterDTO> semesters = new ArrayList<>();
-        for (ScheduleForArchiveDTO schedule: schedules) {
-            semesters.add(schedule.getSemesterDTO());
+        for (ScheduleFullForArchiveDTO schedule: schedules) {
+            semesters.add(schedule.getSemester());
         }
         return semesters;
     }
@@ -59,13 +59,13 @@ public class ArchiveServiceImpl implements ArchiveService {
     /**
      * The method used for save schedule in mongo database
      *
-     * @param scheduleForArchiveDTO object ScheduleForArchiveDTO for save schedule in mongo db
-     * @return ScheduleForArchiveDTO object
+     * @param scheduleFullForArchiveDTO object ScheduleFullForArchiveDTO for save schedule in mongo db
+     * @return ScheduleFullForArchiveDTO object
      */
     @Override
-    public ScheduleForArchiveDTO saveScheduleForArchive(ScheduleForArchiveDTO scheduleForArchiveDTO) {
-        log.info("In saveScheduleForArchive with scheduleForArchiveDTO = {}", scheduleForArchiveDTO);
-        return archiveRepository.saveScheduleForArchive(scheduleForArchiveDTO);
+    public ScheduleFullForArchiveDTO saveScheduleForArchive(ScheduleFullForArchiveDTO scheduleFullForArchiveDTO) {
+        log.info("In saveScheduleForArchive with scheduleForArchiveDTO = {}", scheduleFullForArchiveDTO);
+        return archiveRepository.saveScheduleForArchive(scheduleFullForArchiveDTO);
     }
 
     /**

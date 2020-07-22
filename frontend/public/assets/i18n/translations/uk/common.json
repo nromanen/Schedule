@@ -132,6 +132,7 @@
     "show_enabled": "Показати включені",
     "set_disabled": "Відключити",
     "set_enabled": "Включити",
+    "make_archive": "Заархівувати",
     "no_current_semester": "Будь ласка виберіть поточний семестер",
     "no_current_semester_error": "Поточний семестр не вибраний",
     "error_message": "Помилка. Будь ласка перезавантажте сторінку.",
@@ -151,5 +152,8 @@
     "for_all": "Для всіх",
     "date": "Дата",
     "filter": "Фільтер",
-    "one_day": "Один день"
+    "one_day": "Один день",
+    "preview": "Переглянути",
+    "vacation_label": "Вихідний",
+    "regular_lesson_label": "Пара за розкладом"
 }

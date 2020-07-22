@@ -4,7 +4,8 @@ import { updateObject } from '../utility';
 const initialState = {
     semesters: [],
     semester: {},
-    disabledSemesters: []
+    disabledSemesters: [],
+    archivedSemesters: []
 };
 
 const semesters = (state = initialState, action) => {
@@ -33,6 +34,10 @@ const semesters = (state = initialState, action) => {
             return updateObject(state, {
                 disabledSemesters: action.result
             });
+        case actionTypes.SET_ARCHIVED_SEMESTERS:
+            return updateObject(state, {
+                archivedSemesters: action.result
+            });
 
         case actionTypes.SELECT_SEMESTER:
             let semester = state.semesters.filter(
@@ -59,6 +64,20 @@ const semesters = (state = initialState, action) => {
                 semester: {}
             });
 
+        case actionTypes.MOVE_SEMESTER_TO_ARCHIVE:
+            const archivedSemester = state.semesters.find(
+                semester => semester.id === action.result
+            );
+            state.semesters = state.semesters.filter(
+                semester => semester.id !== action.result
+            );
+            return updateObject(state, {
+                semesters: state.semesters,
+                archivedSemesters: [
+                    ...state.archivedSemesters,
+                    archivedSemester
+                ]
+            });
         case actionTypes.CLEAR_SEMESTER:
             return {
                 ...state,

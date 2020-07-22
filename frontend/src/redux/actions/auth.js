@@ -40,22 +40,19 @@ export const authCheckState = () => {
     if (token && !token.includes(TOKEN_BEGIN)) {
         return {
             type: actionTypes.AUTH_USER_LOGOUT
-        }
+        };
     }
     const role = localStorage.getItem('userRole');
     return {
         type: actionTypes.AUTH_USER_CHECK_STATE,
         token,
         role
-    }
+    };
 };
 
 export const setAuthError = res => {
     return {
         type: actionTypes.SET_AUTH_ERROR,
         result: res
-    }
+    };
 };
-
-
-

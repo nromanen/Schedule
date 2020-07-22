@@ -45,9 +45,9 @@ build_frontend:
         paths:
             - src/main/webapp
     script:
-        - mkdir src/main/webapp
-        - mkdir src/main/webapp/WEB-INF/
-        - mkdir src/main/webapp/WEB-INF/view/
+        #- mkdir src/main/webapp
+        #- mkdir src/main/webapp/WEB-INF/
+        #- mkdir src/main/webapp/WEB-INF/view/
         - cd frontend
         - npm install
         - npm run build

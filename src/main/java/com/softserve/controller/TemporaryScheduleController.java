@@ -4,6 +4,7 @@ import com.softserve.dto.*;
 import com.softserve.entity.CurrentUser;
 import com.softserve.entity.Teacher;
 import com.softserve.entity.TemporarySchedule;
+import com.softserve.entity.User;
 import com.softserve.mapper.TemporaryScheduleMapper;
 import com.softserve.security.jwt.JwtUser;
 import com.softserve.service.TeacherService;
@@ -17,7 +18,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 
 @RestController
@@ -36,6 +42,7 @@ public class TemporaryScheduleController {
         this.temporaryScheduleMapper = temporaryScheduleMapper;
         this.teacherService = teacherService;
     }
+
     @PostMapping
     @ApiOperation(value = "Create new temporary schedule")
     @PreAuthorize("hasRole('MANAGER')")
@@ -44,6 +51,24 @@ public class TemporaryScheduleController {
         TemporarySchedule temporarySchedule = temporaryScheduleService.save(temporaryScheduleMapper.convertToEntity(temporaryScheduleDTO));
         return ResponseEntity.status(HttpStatus.CREATED).body(temporaryScheduleMapper.convertToDto(temporarySchedule));
     }
+
+    @PostMapping("/add-range")
+    @ApiOperation(value = "Create new temporary schedules by date range")
+    @PreAuthorize("hasRole('MANAGER')")
+    public ResponseEntity<List<TemporaryAddedMessagesDTO>> addByRange(@RequestBody TemporaryScheduleSaveRangeDTO temporaryScheduleSaveRangeDTO) {
+        log.info("Enter into addByRange of TemporaryScheduleController with temporaryScheduleDTO: {}", temporaryScheduleSaveRangeDTO);
+        LocalDate to = temporaryScheduleSaveRangeDTO.getTo();
+        LocalDate from = temporaryScheduleSaveRangeDTO.getFrom();
+        List<String> temporaryAddedMessagesDTOS = temporaryScheduleService.addRange(from, to, temporaryScheduleMapper.convertToEntity(temporaryScheduleSaveRangeDTO.getTemporarySchedule()));
+
+        List<TemporaryAddedMessagesDTO> temporaryAddedMessagesDTOList = new ArrayList<>();
+        for (String message : temporaryAddedMessagesDTOS) {
+            TemporaryAddedMessagesDTO temporaryAddedMessagesDTO = new TemporaryAddedMessagesDTO(message);
+            temporaryAddedMessagesDTOList.add(temporaryAddedMessagesDTO);
+        }
+        return ResponseEntity.status(HttpStatus.CREATED).body(temporaryAddedMessagesDTOList);
+    }
+
     @GetMapping("/{id}")
     @ApiOperation(value = "Get temporary schedule by id")
     @PreAuthorize("hasRole('MANAGER')")
@@ -52,12 +77,39 @@ public class TemporaryScheduleController {
         return ResponseEntity.ok().body(temporaryScheduleMapper.convertToDto(temporaryScheduleService.getById(id)));
     }
 
-    @GetMapping
-    @ApiOperation(value = "Get all temporary schedules by teacher")
+    @PutMapping
+    @ApiOperation(value = "Update existing temporary schedule by id")
     @PreAuthorize("hasRole('MANAGER')")
-    public ResponseEntity<List<TemporaryScheduleDTO>> getAll(@PathVariable("id") long id) {
+    public ResponseEntity<TemporaryScheduleDTO> update(@RequestBody TemporaryScheduleSaveDTO temporaryScheduleDTO) {
+        log.info("Enter into update method with temporaryScheduleDTO: {}", temporaryScheduleDTO);
+        TemporarySchedule temporarySchedule = temporaryScheduleService.update(temporaryScheduleMapper.convertToEntity(temporaryScheduleDTO));
+        return ResponseEntity.status(HttpStatus.CREATED).body(temporaryScheduleMapper.convertToDto(temporarySchedule));
+    }
+
+
+    @GetMapping
+    @ApiOperation(value = "Get all temporary schedules")
+    @PreAuthorize("hasRole('MANAGER')")
+    public ResponseEntity<List<TemporaryScheduleDTO>> getAll(@RequestParam("teacherId") Optional<Long> teacherId,
+                                                             @RequestParam Optional<String> from,
+                                                             @RequestParam Optional<String> to) {
         log.info("Enter into getAll of TemporaryScheduleController");
-        return ResponseEntity.ok().body(temporaryScheduleMapper.convertToDtoList(temporaryScheduleService.getAllByTeacher(id)));
+        List<TemporarySchedule> temporaryScheduleList;
+        if(from.isPresent() && to.isPresent()){
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+            DateTimeFormatter currentFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            LocalDate fromDate = LocalDate.parse(LocalDate.parse(from.get(), formatter).toString(), currentFormatter);
+            LocalDate toDate = LocalDate.parse(LocalDate.parse(to.get(), formatter).toString(), currentFormatter);
+            if(teacherId.isPresent()){
+                teacherService.getById(teacherId.get());
+                temporaryScheduleList = temporaryScheduleService.getAllByTeacherAndRange(fromDate, toDate, teacherId.get());
+            }else{
+                temporaryScheduleList = temporaryScheduleService.getAllByRange(fromDate, toDate);
+            }
+        }else{
+            temporaryScheduleList = temporaryScheduleService.getAllByCurrentSemester();
+        }
+        return ResponseEntity.ok().body(temporaryScheduleMapper.convertToDtoList(temporaryScheduleList));
     }
 
     @DeleteMapping("/{id}")
@@ -69,14 +121,20 @@ public class TemporaryScheduleController {
         return ResponseEntity.ok().body(new MessageDTO("Temporary schedule has been deleted successfully."));
     }
 
-    @GetMapping("/teacher")
-    @ApiOperation(value = "Get temporary schedules for current teacher")
-    @PreAuthorize("hasRole('TEACHER')")
-    public ResponseEntity<List<TemporaryScheduleDTO>> getTemporarySchedulesForCurrentTeacher(@CurrentUser JwtUser jwtUser) {
-        log.info("In getTemporarySchedulesForCurrentTeacher");
-        Teacher teacher = teacherService.findByUserId(Integer.parseInt(jwtUser.getId().toString()));
-        return ResponseEntity.ok().body(temporaryScheduleMapper.convertToDtoList(temporaryScheduleService.getAllByTeacher(teacher.getId())));
-    }
+//    @GetMapping("/teacher")
+//    @ApiOperation(value = "Get temporary schedules for current teacher")
+//    @PreAuthorize("hasRole('TEACHER')")
+//    public ResponseEntity<List<TemporaryScheduleDTO>> getTemporarySchedulesForCurrentTeacher(@CurrentUser JwtUser jwtUser,
+//                                                                                             @RequestParam String from,
+//                                                                                             @RequestParam String to) {
+//        log.info("In getTemporarySchedulesForCurrentTeacher");
+//        Teacher teacher = teacherService.findByUserId(Integer.parseInt(jwtUser.getId().toString()));
+//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+//        DateTimeFormatter currentFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+//        LocalDate fromDate = LocalDate.parse(LocalDate.parse(from, formatter).toString(), currentFormatter);
+//        LocalDate toDate = LocalDate.parse(LocalDate.parse(to, formatter).toString(), currentFormatter);
+//        return ResponseEntity.ok().body(temporaryScheduleMapper.convertToDtoList(temporaryScheduleService.getAllByTeacherAndRange(fromDate, toDate, teacher.getId())));
+//    }
 
 
 }

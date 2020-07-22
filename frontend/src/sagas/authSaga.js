@@ -11,6 +11,7 @@ import i18n from '../helper/i18n';
 export function* authSaga(payload) {
     try {
         const response = yield call(authUserService, payload);
+
         const jwtDecode = require('jwt-decode');
         const token = response.data.token;
         const email = response.data.email;
@@ -22,7 +23,7 @@ export function* authSaga(payload) {
         yield localStorage.setItem('token', TOKEN_BEGIN + token);
         yield localStorage.setItem('expirationDate', expirationDate);
         yield localStorage.setItem('userRole', decodedJWT.roles);
-        yield localStorage.setItem('email', email);
+        yield localStorage.setItem('email', email ? email : decodedJWT.sub);
 
         yield put({
             type: actionTypes.AUTH_USER_SUCCESS,

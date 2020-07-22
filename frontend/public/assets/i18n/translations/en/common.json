@@ -135,6 +135,7 @@
     "show_enabled": "Show enabled",
     "set_disabled": "Set disabled",
     "set_enabled": "Set enabled",
+    "make_archive": "Create archive",
     "no_current_semester": "Please choose current semester",
 
     "no_current_semester_error": "Current semester is not selected",
@@ -154,5 +155,8 @@
     "for_all": "For all",
     "date": "Date",
     "filter": "Filter",
-    "one_day": "One day"
+    "one_day": "One day",
+    "preview": "Preview",
+    "vacation_label": "Vacation",
+    "regular_lesson_label": "Regular lesson"
 }

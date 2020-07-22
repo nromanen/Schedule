@@ -1,6 +1,7 @@
 package com.softserve.repository.impl;
 
 import com.softserve.entity.Lesson;
+import com.softserve.entity.enums.LessonType;
 import com.softserve.repository.LessonRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.query.Query;
@@ -29,6 +30,7 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
         cq.where(cb.equal(from.get("teacher").get("disable"), false),
                 cb.equal(from.get("subject").get("disable"), false),
                 cb.equal(from.get("group").get("disable"), false));
+        cq.orderBy(cb.asc(from.get("subjectForSite")));
 
         TypedQuery<Lesson> tq = sessionFactory.getCurrentSession().createQuery(cq);
         return tq.getResultList();
@@ -54,6 +56,7 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
                 cb.equal(from.get("group").get("disable"), false),
                 cb.equal(from.get("group").get("id"), groupId),
                 cb.equal(from.get("semester").get("id"), semesterId));
+        cq.orderBy(cb.asc(from.get("subjectForSite")));
         TypedQuery<Lesson> tq = sessionFactory.getCurrentSession().createQuery(cq);
         return  tq.getResultList();
     }
@@ -78,6 +81,7 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
 
                 cb.equal(from.get("group").get("disable"), false),
                 cb.equal(from.get("semester").get("id"), semesterId));
+        cq.orderBy(cb.asc(from.get("subjectForSite")));
         TypedQuery<Lesson> tq = sessionFactory.getCurrentSession().createQuery(cq);
         return  tq.getResultList();
     }
@@ -156,7 +160,7 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
         log.info("In getLessonsBySemester(semesterId = [{}])", semesterId);
         return sessionFactory.getCurrentSession().createQuery(
                 "select l from Lesson l " +
-                        " where l.semester.id= :semesterId").setParameter("semesterId", semesterId)
+                        " where l.semester.id= :semesterId order by subjectForSite ASC ").setParameter("semesterId", semesterId)
                 .getResultList();
     }
 
@@ -166,6 +170,26 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
         sessionFactory.getCurrentSession().createQuery(
                 "delete from Lesson l where l.id in (select les.id from Lesson les where les.semester.id = :semesterId)")
                 .setParameter("semesterId", semesterId).executeUpdate();
+    }
+
+    /**
+     * The method used for getting all lessons from database by subjectForSite, teacherForSite and semesterId
+     *
+     * @param lesson Lesson object for getting lessons from db by this param
+     * @return List of Lessons
+     */
+    @Override
+    public List<Lesson> getLessonsBySubjectIdTeacherIdSemesterIdLessonTypeAndExcludeCurrentLessonId(Lesson lesson) {
+        log.info("In getLessonsBySubjectForSiteTeacherForSiteAndSemester(lesson = [{}]", lesson);
+        return sessionFactory.getCurrentSession().createQuery(
+                "select l from Lesson l " +
+                        " where l.subject.id= :subjectId and l.teacher.id= :teacherId and l.semester.id= :semesterId and l.lessonType= :lessonType and l.id != :lessonId")
+                .setParameter("subjectId", lesson.getSubject().getId())
+                .setParameter("teacherId", lesson.getTeacher().getId())
+                .setParameter("semesterId", lesson.getSemester().getId())
+                .setParameter("lessonType", lesson.getLessonType())
+                .setParameter("lessonId", lesson.getId())
+                .getResultList();
     }
 
     // Checking if lesson is used in Schedule table

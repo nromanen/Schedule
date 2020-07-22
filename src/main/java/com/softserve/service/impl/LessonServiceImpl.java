@@ -221,4 +221,18 @@ public class LessonServiceImpl implements LessonService {
         log.info("In method deleteLessonBySemesterId with semesterId = {}", semesterId);
         lessonRepository.deleteLessonBySemesterId(semesterId);
     }
+
+    /**
+     * The method used for getting all lessons from database by subjectId, teacherId, semesterId and lessonType and exclude current lessonId
+     *
+     * @param lesson Lesson object for getting lessons from db by this param
+     * @return List of Lessons
+     */
+    @Override
+    public List<Lesson> getLessonsBySubjectIdTeacherIdSemesterIdLessonTypeAndExcludeCurrentLessonId(Lesson lesson) {
+        log.info("In getLessonsBySubjectForSiteTeacherForSiteAndSemester(lesson = [{}]", lesson);
+        List<Lesson> lessons = lessonRepository.getLessonsBySubjectIdTeacherIdSemesterIdLessonTypeAndExcludeCurrentLessonId(lesson);
+        lessons.forEach(e -> Hibernate.initialize(e.getSemester().getPeriods()));
+        return lessons;
+    }
 }

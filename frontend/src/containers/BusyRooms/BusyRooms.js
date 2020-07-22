@@ -21,7 +21,8 @@ const BusyRooms = props => {
 
     const isLoading = props.loading;
 
-    let moreThen = 'more-then-one';
+    let conflictLesson = 'more-then-one-conflict';
+    let grouppedLesson = 'more-then-one';
 
     let busyRoomsLength;
 
@@ -29,6 +30,118 @@ const BusyRooms = props => {
         busyRoomsLength = busyRooms.length;
     }
 
+    const renderRoomTitle = (name, type) => (
+        <h3 className="room-heading">
+            <span className="room-name">{name}</span>
+            <span className="room-type">{type}</span>
+        </h3>
+    );
+
+    const renderWeekRoomInfo = (schedule, index, type = 'odd') => {
+        return props.currentSemester.semester_classes.map(scheduleClass => {
+            let in_arrayIndex = -1;
+            in_arrayIndex =
+                type === 'odd'
+                    ? schedule.classes[0].odd.findIndex(
+                          classItem => classItem.class_id === scheduleClass.id
+                      )
+                    : schedule.classes[0].even.findIndex(
+                          classItem => classItem.class_id === scheduleClass.id
+                      );
+            let classOne =
+                type === 'odd'
+                    ? schedule.classes[0].odd.find(
+                          classItem => classItem.class_id === scheduleClass.id
+                      )
+                    : schedule.classes[0].even.find(
+                          classItem => classItem.class_id === scheduleClass.id
+                      );
+            if (
+                in_arrayIndex < 0 ||
+                !classOne ||
+                classOne.lessons.length <= 0
+            ) {
+                return (
+                    <div
+                        className="class-info"
+                        key={index + scheduleClass.class_name}
+                    >
+                        <div className="class-info-data">
+                            {scheduleClass.class_name}
+                        </div>
+                        <div className="class-info-data">
+                            <div className="green-free"></div>
+                        </div>
+                    </div>
+                );
+            } else {
+                let intersectClass = '';
+                if (
+                    classOne &&
+                    classOne.lessons &&
+                    classOne.lessons.length > 1
+                ) {
+                    intersectClass = conflictLesson;
+                }
+                let grouppedLessonClass = '';
+                classOne.lessons.map(lessonOne => {
+                    grouppedLessonClass =
+                        lessonOne.groups.length > 1 ? grouppedLesson : '';
+                });
+                return (
+                    <div
+                        className="class-info"
+                        key={index + classOne.class_name + classOne.group_name}
+                    >
+                        <div className="class-info-data">
+                            {classOne.class_name}
+                        </div>
+                        <div
+                            className={`class-info-data group-height ${grouppedLessonClass}${intersectClass}`}
+                        >
+                            {classOne.lessons.map(lessonOne => {
+                                return lessonOne.groups.map(groupItem => {
+                                    const hoverInfo =
+                                        lessonOne.teacher_for_site +
+                                        lessonOne.subject_for_site;
+                                    return (
+                                        <p
+                                            title={hoverInfo}
+                                            key={hoverInfo + lessonOne.name}
+                                        >
+                                            {groupItem.group_name}
+                                        </p>
+                                    );
+                                });
+                            })}
+                        </div>
+                    </div>
+                );
+            }
+        });
+    };
+
+    const renderRoomDay = (schedule, index) => (
+        <section className="room-day" key={index + schedule.day}>
+            <h3 className="room-heading">{t(`day_of_week_${schedule.day}`)}</h3>
+            <section>
+                <Fragment key={index}>
+                    <div className="even-odd-week">
+                        <span className="even-odd-heading">
+                            {t('week_odd_title')}
+                        </span>
+                        {renderWeekRoomInfo(schedule, index, 'odd')}
+                    </div>
+                    <div className="even-odd-week">
+                        <span className="even-odd-heading">
+                            {t('week_even_title')}
+                        </span>
+                        {renderWeekRoomInfo(schedule, index, 'even')}
+                    </div>
+                </Fragment>
+            </section>
+        </section>
+    );
     return (
         <div className="busy-rooms-container">
             {isLoading ? (
@@ -48,237 +161,21 @@ const BusyRooms = props => {
                                         class="busy-room"
                                         key={busyRoom.room_id}
                                     >
-                                        <h3 className="room-heading">
-                                            <span className="room-name">
-                                                {busyRoom.room_name}
-                                            </span>
-                                            <span className="room-type">
-                                                {busyRoom.room_type}
-                                            </span>
-                                        </h3>
+                                        {renderRoomTitle(
+                                            busyRoom.room_name,
+                                            busyRoom.room_type
+                                        )}
 
                                         {busyRoom.schedules.map(
                                             (schedule, index) => {
-                                                if (
-                                                    props.currentSemester.semester_days.includes(
-                                                        schedule.day
-                                                    )
+                                                return props.currentSemester.semester_days.includes(
+                                                    schedule.day
                                                 )
-                                                    return (
-                                                        <section
-                                                            className="room-day"
-                                                            key={
-                                                                index +
-                                                                schedule.day
-                                                            }
-                                                        >
-                                                            <h3 className="room-heading">
-                                                                {t(
-                                                                    `day_of_week_${schedule.day}`
-                                                                )}
-                                                            </h3>
-
-                                                            <section>
-                                                                <Fragment
-                                                                    key={index}
-                                                                >
-                                                                    <div className="even-odd-week">
-                                                                        <span className="even-odd-heading">
-                                                                            {t(
-                                                                                'week_even_title'
-                                                                            )}
-                                                                        </span>
-                                                                        {props.currentSemester.semester_classes.map(
-                                                                            scheduleClass => {
-                                                                                const in_arrayIndex = schedule.classes[0].even.findIndex(
-                                                                                    evenItem =>
-                                                                                        evenItem.class_id ===
-                                                                                        scheduleClass.id
-                                                                                );
-                                                                                let evenOne = schedule.classes[0].even.find(
-                                                                                    evenItem =>
-                                                                                        evenItem.class_id ===
-                                                                                        scheduleClass.id
-                                                                                );
-
-                                                                                if (
-                                                                                    in_arrayIndex <
-                                                                                    0
-                                                                                ) {
-                                                                                    return (
-                                                                                        <div
-                                                                                            className="class-info"
-                                                                                            key={
-                                                                                                index +
-                                                                                                scheduleClass.class_name
-                                                                                            }
-                                                                                        >
-                                                                                            <div className="class-info-data">
-                                                                                                {' '}
-                                                                                                {
-                                                                                                    scheduleClass.class_name
-                                                                                                }
-                                                                                            </div>
-
-                                                                                            <div className="class-info-data">
-                                                                                                <div className="green-free"></div>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    );
-                                                                                } else {
-                                                                                    evenOne.groups = [];
-                                                                                    schedule.classes[0].even.map(
-                                                                                        evenItemMap => {
-                                                                                            if (
-                                                                                                evenOne.class_id ===
-                                                                                                evenItemMap.class_id
-                                                                                            ) {
-                                                                                                evenOne.groups.push(
-                                                                                                    evenItemMap.group_name
-                                                                                                );
-                                                                                            }
-                                                                                        }
-                                                                                    );
-
-                                                                                    return (
-                                                                                        <div
-                                                                                            className="class-info"
-                                                                                            key={
-                                                                                                index +
-                                                                                                evenOne.class_name +
-                                                                                                evenOne.group_name
-                                                                                            }
-                                                                                        >
-                                                                                            <div className="class-info-data">
-                                                                                                {
-                                                                                                    evenOne.class_name
-                                                                                                }
-                                                                                            </div>
-                                                                                            {evenOne
-                                                                                                .groups
-                                                                                                .length >
-                                                                                            1 ? (
-                                                                                                <div
-                                                                                                    className={`class-info-data group-height ${moreThen}`}
-                                                                                                >
-                                                                                                    {evenOne.groups.join(
-                                                                                                        ', '
-                                                                                                    )}
-                                                                                                </div>
-                                                                                            ) : (
-                                                                                                <div className="class-info-data group-height">
-                                                                                                    {evenOne.groups.join(
-                                                                                                        ', '
-                                                                                                    )}
-                                                                                                </div>
-                                                                                            )}
-                                                                                        </div>
-                                                                                    );
-                                                                                }
-                                                                            }
-                                                                        )}
-                                                                    </div>
-
-                                                                    <div className="even-odd-week">
-                                                                        <span className="even-odd-heading">
-                                                                            {t(
-                                                                                'week_odd_title'
-                                                                            )}
-                                                                        </span>
-                                                                        {props.currentSemester.semester_classes.map(
-                                                                            scheduleClass => {
-                                                                                const in_arrayIndex = schedule.classes[0].odd.findIndex(
-                                                                                    oddItem =>
-                                                                                        oddItem.class_id ===
-                                                                                        scheduleClass.id
-                                                                                );
-                                                                                let oddOne = schedule.classes[0].odd.find(
-                                                                                    oddItem =>
-                                                                                        oddItem.class_id ===
-                                                                                        scheduleClass.id
-                                                                                );
-
-                                                                                if (
-                                                                                    in_arrayIndex <
-                                                                                    0
-                                                                                ) {
-                                                                                    return (
-                                                                                        <div
-                                                                                            className="class-info"
-                                                                                            key={
-                                                                                                index +
-                                                                                                scheduleClass.class_name
-                                                                                            }
-                                                                                        >
-                                                                                            <div className="class-info-data">
-                                                                                                {' '}
-                                                                                                {
-                                                                                                    scheduleClass.class_name
-                                                                                                }
-                                                                                            </div>
-
-                                                                                            <div className="class-info-data">
-                                                                                                <div className="green-free"></div>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    );
-                                                                                } else {
-                                                                                    oddOne.groups = [];
-                                                                                    schedule.classes[0].odd.map(
-                                                                                        oddItemMap => {
-                                                                                            if (
-                                                                                                oddOne.class_id ===
-                                                                                                oddItemMap.class_id
-                                                                                            ) {
-                                                                                                oddOne.groups.push(
-                                                                                                    oddItemMap.group_name
-                                                                                                );
-                                                                                            }
-                                                                                        }
-                                                                                    );
-
-                                                                                    return (
-                                                                                        <div
-                                                                                            className="class-info"
-                                                                                            key={
-                                                                                                index +
-                                                                                                oddOne.class_name +
-                                                                                                oddOne.group_name
-                                                                                            }
-                                                                                        >
-                                                                                            <div className="class-info-data">
-                                                                                                {
-                                                                                                    oddOne.class_name
-                                                                                                }
-                                                                                            </div>
-                                                                                            {oddOne
-                                                                                                .groups
-                                                                                                .length >
-                                                                                            1 ? (
-                                                                                                <div
-                                                                                                    className={`class-info-data group-height ${moreThen}`}
-                                                                                                >
-                                                                                                    {oddOne.groups.join(
-                                                                                                        ', '
-                                                                                                    )}
-                                                                                                </div>
-                                                                                            ) : (
-                                                                                                <div className="class-info-data group-height">
-                                                                                                    {oddOne.groups.join(
-                                                                                                        ', '
-                                                                                                    )}
-                                                                                                </div>
-                                                                                            )}
-                                                                                        </div>
-                                                                                    );
-                                                                                }
-                                                                            }
-                                                                        )}
-                                                                    </div>
-                                                                </Fragment>
-                                                            </section>
-                                                        </section>
-                                                    );
+                                                    ? renderRoomDay(
+                                                          schedule,
+                                                          index
+                                                      )
+                                                    : '';
                                             }
                                         )}
                                     </Card>

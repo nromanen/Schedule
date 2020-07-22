@@ -1,18 +1,10 @@
 package com.softserve.controller;
 
-import com.softserve.dto.MessageDTO;
-import com.softserve.dto.ScheduleForArchiveDTO;
-import com.softserve.dto.ScheduleWithoutSemesterDTO;
-import com.softserve.dto.SemesterDTO;
+import com.softserve.dto.*;
 import com.softserve.entity.Schedule;
 import com.softserve.entity.Semester;
-import com.softserve.exception.EntityNotFoundException;
-import com.softserve.mapper.ScheduleWithoutSemesterMapper;
-import com.softserve.mapper.SemesterMapper;
-import com.softserve.service.ArchiveService;
-import com.softserve.service.LessonService;
-import com.softserve.service.ScheduleService;
-import com.softserve.service.SemesterService;
+import com.softserve.mapper.TemporaryScheduleMapperForArchive;
+import com.softserve.service.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -31,45 +23,46 @@ import java.util.List;
 public class ArchiveController {
 
     private final ArchiveService archiveService;
-    private final SemesterMapper semesterMapper;
     private final ScheduleService scheduleService;
-    private final ScheduleWithoutSemesterMapper scheduleWithoutSemesterMapper;
     private final SemesterService semesterService;
     private final LessonService lessonService;
+    private final TemporaryScheduleService temporaryScheduleService;
+    private final TemporaryScheduleMapperForArchive temporaryScheduleMapper;
 
     @Autowired
-    public ArchiveController(ArchiveService archiveService, SemesterMapper semesterMapper, ScheduleService scheduleService, ScheduleWithoutSemesterMapper scheduleWithoutSemesterMapper, SemesterService semesterService, LessonService lessonService) {
+    public ArchiveController(ArchiveService archiveService, ScheduleService scheduleService, SemesterService semesterService, LessonService lessonService, TemporaryScheduleService temporaryScheduleService, TemporaryScheduleMapperForArchive temporaryScheduleMapper) {
         this.archiveService = archiveService;
-        this.semesterMapper = semesterMapper;
         this.scheduleService = scheduleService;
-        this.scheduleWithoutSemesterMapper = scheduleWithoutSemesterMapper;
         this.semesterService = semesterService;
         this.lessonService = lessonService;
+        this.temporaryScheduleService = temporaryScheduleService;
+        this.temporaryScheduleMapper = temporaryScheduleMapper;
     }
 
     @PostMapping("/{semesterId}")
     @ApiOperation(value = "Save archive schedule by semesterId in mongo db")
     @PreAuthorize("hasRole('MANAGER')")
-    public ResponseEntity<ScheduleForArchiveDTO> archiveScheduleBySemester(@PathVariable("semesterId") Long semesterId) {
+    public ResponseEntity archiveScheduleBySemester(@PathVariable("semesterId") Long semesterId) {
         log.info("In archiveScheduleBySemester with semesterId = {}", semesterId);
         Semester semester = semesterService.getById(semesterId);
-        SemesterDTO semesterDTO = semesterMapper.semesterToSemesterDTO(semester);
         List<Schedule> schedules = scheduleService.getSchedulesBySemester(semesterId);
         if (schedules.isEmpty()) {
-            throw new EntityNotFoundException(Schedule.class, "semesterId", semesterId.toString());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageDTO(String.format("Schedules with semesterId = %d not found.", semesterId)));
         }
-        List<ScheduleWithoutSemesterDTO> scheduleWithoutSemesterDTOS = scheduleWithoutSemesterMapper.scheduleToScheduleWithoutSemesterDTOs(schedules);
-        ScheduleForArchiveDTO scheduleForArchiveDTO = new ScheduleForArchiveDTO(semesterDTO, scheduleWithoutSemesterDTOS);
+        ScheduleFullDTO scheduleFullDTO = scheduleService.getFullScheduleForSemester(semesterId);
+        List<TemporaryScheduleForArchiveDTO> temporaryScheduleDTOs = temporaryScheduleMapper.convertToNewDtoList(temporaryScheduleService.getAllBySemesterId(semesterId));
+        ScheduleFullForArchiveDTO scheduleForArchiveDTO = new ScheduleFullForArchiveDTO(true, scheduleFullDTO.getSemester(), scheduleFullDTO.getSchedule(), temporaryScheduleDTOs);
+        temporaryScheduleService.deleteTemporarySchedulesBySemesterId(semesterId);
         scheduleService.deleteSchedulesBySemesterId(semesterId);
         lessonService.deleteLessonBySemesterId(semesterId);
         semesterService.delete(semester);
         return ResponseEntity.status(HttpStatus.OK).body(archiveService.saveScheduleForArchive(scheduleForArchiveDTO));
     }
 
-    @GetMapping
+    @GetMapping("/{semesterId}")
     @ApiOperation(value = "Get archive schedule by semesterId from mongo db")
     @PreAuthorize("hasRole('MANAGER')")
-    public ResponseEntity<ScheduleForArchiveDTO> getScheduleBySemesterId(@RequestParam Long semesterId) {
+    public ResponseEntity<ScheduleFullForArchiveDTO> getScheduleBySemesterId(@PathVariable("semesterId") Long semesterId) {
         log.info("In getScheduleBySemesterId with semesterId = {}", semesterId);
         return ResponseEntity.ok().body(archiveService.getArchiveScheduleBySemesterId(semesterId));
     }
@@ -82,10 +75,10 @@ public class ArchiveController {
         return ResponseEntity.ok().body(archiveService.getAllSemestersInArchiveSchedule());
     }
 
-    @DeleteMapping
+    @DeleteMapping("/{semesterId}")
     @ApiOperation(value = "Delete archive schedule by semesterId from mongo db")
     @PreAuthorize("hasRole('MANAGER')")
-    public ResponseEntity<MessageDTO> removeArchiveScheduleBySemesterId(@RequestParam Long semesterId) {
+    public ResponseEntity<MessageDTO> removeArchiveScheduleBySemesterId(@PathVariable("semesterId") Long semesterId) {
         log.info("In removeArchiveScheduleBySemesterId with semesterId = {}", semesterId);
         archiveService.deleteArchiveScheduleBySemesterId(semesterId);
         return ResponseEntity.ok().body(new MessageDTO("Object deleted successfully"));
