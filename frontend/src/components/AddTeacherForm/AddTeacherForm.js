@@ -15,10 +15,6 @@ import { useTranslation } from 'react-i18next';
 
 import './AddTeacherForm.scss';
 
-const CreateBtn = styled(Button)({
-    marginTop: '20px'
-});
-
 let AddTeacher = props => {
     const { t } = useTranslation('formElements');
     const { handleSubmit, pristine, submitting, reset } = props;
@@ -97,7 +93,7 @@ let AddTeacher = props => {
                 />
 
                 <div className="form-buttons-container">
-                    <CreateBtn
+                    <Button
                         className="buttons-style"
                         variant="contained"
                         color="primary"
@@ -105,8 +101,8 @@ let AddTeacher = props => {
                         type="submit"
                     >
                         {t('save_button_label')}
-                    </CreateBtn>
-                    <CreateBtn
+                    </Button>
+                    <Button
                         className="buttons-style"
                         variant="contained"
                         disabled={pristine || submitting}
@@ -116,7 +112,7 @@ let AddTeacher = props => {
                         }}
                     >
                         {t('clear_button_label')}
-                    </CreateBtn>
+                    </Button>
                 </div>
             </form>
         </Card>

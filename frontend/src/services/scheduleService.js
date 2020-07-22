@@ -24,7 +24,11 @@ import {
     setTeacherViewType
 } from '../redux/actions/index';
 
-import { setLoadingService, setScheduleLoadingService } from './loadingService';
+import {
+    setLoadingService,
+    setScheduleLoadingService,
+    setSemesterLoadingService
+} from './loadingService';
 import { handleSnackbarOpenService } from './snackbarService';
 
 import {
@@ -54,7 +58,7 @@ export const getCurrentSemesterService = () => {
     axios
         .get(CURRENT_SEMESTER_URL)
         .then(response => {
-            setLoadingService(false);
+            setSemesterLoadingService(false);
             store.dispatch(setCurrentSemester(response.data));
         })
         .catch(err => {
@@ -63,7 +67,7 @@ export const getCurrentSemesterService = () => {
                 snackbarTypes.ERROR,
                 i18n.t('common:no_current_semester_error')
             );
-            setLoadingService(false);
+            setSemesterLoadingService(false);
         });
 };
 
@@ -321,6 +325,24 @@ export const getTeacherScheduleService = values => {
             setLoadingService(false);
         });
 };
+
+export const getTeacherScheduleByDateRangeService = (teacherId, to, from) => {
+    axios
+        .get(
+            FOR_TEACHER_SCHEDULE_URL +
+                '?teacherId' +
+                teacherId +
+                '&from=' +
+                from.replace(/\//g, '-') +
+                '&to=' +
+                to.replace(/\//g, '-')
+        )
+        .then(response => {})
+        .catch(err => {
+            errorHandler(err);
+        });
+};
+
 export const setTeacherServiceViewType = type => {
     store.dispatch(setTeacherViewType(type));
 };

@@ -9,6 +9,14 @@ export {
     setLessonTypes
 } from './lesson';
 
+export {
+    setTemporarySchedules,
+    setSchedulesAndTemporarySchedules,
+    selectTemporarySchedule,
+    selectVacation,
+    selectTeacherId
+} from './temporarySchedule';
+
 export { setOpenSnackbar } from './snackbar';
 
 export { setUsers, setUser } from './users';
@@ -23,7 +31,11 @@ export {
     resetUserPassword
 } from './auth';
 
-export { setLoading, setScheduleLoading } from './loadingIndicator';
+export {
+    setLoading,
+    setScheduleLoading,
+    setSemesterLoading
+} from './loadingIndicator';
 
 export {
     setScheduleItems,

@@ -1,4 +1,6 @@
 export const LESSON_FORM = 'lessonForm';
+export const TEMPORARY_SCHEDULE_FORM = 'temporaryScheduleForm';
+export const TEMPORARY_SCHEDULE_VACATION_FORM = 'temporaryScheduleVacationForm';
 export const GROUP_FORM = 'addGroup';
 export const ROOM_FORM = 'AddRoom';
 export const ROOM_FORM_TYPE = 'roomType';

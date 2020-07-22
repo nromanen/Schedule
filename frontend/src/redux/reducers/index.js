@@ -3,6 +3,7 @@ import { reducer as formReducer } from 'redux-form';
 
 import teachers from './teachers';
 import lesson from './lesson';
+import temporarySchedule from './temporarySchedule';
 import snackbar from './snackbar';
 import auth from './auth';
 import loadingIndicator from './loadingIndicator';
@@ -18,9 +19,9 @@ import semesters from './semesters';
 import users from './users';
 import freeRooms from './freeRooms';
 
-
 const rootReducer = combineReducers({
     lesson,
+    temporarySchedule,
     auth,
     snackbar,
     schedule,

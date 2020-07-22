@@ -1,6 +1,8 @@
 {
     "edit_title": "Edit ",
+    "edit_vacation_title": "Edit vacation",
     "create_title": "Create ",
+    "create_vacation_title": "add vacation",
     "delete_title": "Delete",
 
     "teacher_label": "Teacher",
@@ -12,6 +14,7 @@
     "type_label": "Type",
     "hours_label": "Hours",
     "lesson_label": "Lesson",
+    "temporary_schedule_label": "Temporary schedule",
     "teacher_a_label": "Teacher",
     "group_y_label": "group",
     "class_y_label": "Class",
@@ -37,6 +40,8 @@
 
     "for_site_label": " for site",
     "not_selected_label": "is not selected",
+    "for_all": "For all",
+    "for_teacher": "For teacher",
 
     "save_button_label": "Save",
     "clear_button_label": "Clear",
@@ -47,6 +52,7 @@
 
     "class_from_label": "From",
     "class_to_label": "To",
+    "day_label": "Day",
 
     "type_to_search": "Type to search",
     "there_is_no": "There isn't any",

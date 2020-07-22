@@ -1,7 +1,8 @@
 {
     "edit_title": "Редагування ",
     "create_title": "Створення ",
-    "delete_title": "Видалити",
+    "create_vacation_title": "Добавити вихідний",
+    "delete_title": "Видалення",
 
     "teacher_label": "Викладач",
     "user_label": "Користувач",
@@ -10,6 +11,7 @@
     "room_label": "Аудиторія",
     "subject_label": "Предмет",
     "lesson_label": "Заняття",
+    "temporary_schedule_label": "Зміна",
     "teacher_a_label": "Викладачa",
     "group_y_label": "групи",
     "class_y_label": "Уроку",
@@ -37,6 +39,8 @@
 
     "for_site_label": " для сайту",
     "not_selected_label": " не обрана",
+    "for_all": "Для всіх",
+    "for_teacher": "Для викладача",
 
     "save_button_label": "Зберегти",
     "clear_button_label": "Очистити",
@@ -47,6 +51,7 @@
 
     "class_from_label": "З",
     "class_to_label": "До",
+    "day_label": "День",
 
     "type_to_search": "Введіть для пошуку",
     "there_is_no": "Немає",

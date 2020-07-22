@@ -8,7 +8,7 @@ export const errorHandler = error => {
         snackbarTypes.ERROR,
         error.response
             ? i18n.t(error.response.data.message, error.response.data.message)
-            : error
+            : 'Error'
     );
 };
 

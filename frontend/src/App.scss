@@ -16,6 +16,38 @@ body {
     font-family: $font;
 }
 
+.centered-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 100%;
+    margin-top: 1em;
+}
+
+.page-title {
+    display: flex;
+    justify-content: center;
+
+    @media (max-width: 500px) {
+        flex-direction: column;
+    }
+
+    .page-h {
+        @media (max-width: 850px) {
+            font-size: 1.1rem;
+            line-height: 80px;
+            margin-right: 20px;
+        }
+
+        @media (max-width: 500px) {
+            line-height: 20px;
+        }
+
+        line-height: 50px;
+        margin-right: 10px;
+    }
+}
+
 .under-line {
     position: relative;
 
@@ -59,6 +91,7 @@ body {
     @include flexWrap();
     align-items: center;
     justify-content: space-between;
+    margin-top: 10px;
 
     .buttons-style {
         width: 48%;
@@ -176,3 +209,4 @@ body {
     max-width: 30px;
     margin-right: 25px;
 }
+

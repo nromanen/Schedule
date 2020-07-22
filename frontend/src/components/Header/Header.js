@@ -3,13 +3,13 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import {
     FaCaretDown,
-    FaHome,
-    FaClock,
-    FaUser,
-    FaSignOutAlt,
-    FaRunning,
     FaClipboardList,
-    FaDoorOpen
+    FaClock,
+    FaDoorOpen,
+    FaHome,
+    FaRunning,
+    FaSignOutAlt,
+    FaUser
 } from 'react-icons/fa';
 import Menu from '@material-ui/core/Menu';
 import Button from '@material-ui/core/Button';
@@ -27,14 +27,11 @@ import * as colors from '../../constants/schedule/colors';
 import { getMyTeacherWishesService } from '../../services/teacherWishService';
 
 import WishModal from '../../containers/WishModal/WishModal';
-import {
-    getCurrentSemesterService,
-    getScheduleItemsService
-} from '../../services/scheduleService';
+import { getCurrentSemesterService } from '../../services/scheduleService';
 
 import FreeRooms from '../../containers/FreeRooms/freeRooms';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import { setLoadingService } from '../../services/loadingService';
+import { setSemesterLoadingService } from '../../services/loadingService';
 
 const StyledMenu = withStyles({
     paper: {
@@ -81,10 +78,10 @@ const Header = props => {
 
     useEffect(() => {
         if (props.userRole === roles.MANAGER) {
-            setLoadingService(true);
+            setSemesterLoadingService(true);
             getCurrentSemesterService();
         }
-    }, []);
+    }, [props.userRole]);
 
     const handleClickOpenWish = teacher => {
         setTeacher(teacher);
@@ -328,7 +325,7 @@ const Header = props => {
             <>
                 {props.loading ? (
                     <span className="navLinks nav-semester">
-                        <CircularProgress size='20'/>
+                        <CircularProgress size={20} />
                     </span>
                 ) : (
                     <span className="navLinks nav-semester">
@@ -599,7 +596,7 @@ const mapStateToProps = state => ({
     classScheduler: state.classActions.classScheduler,
     currentSemester: state.schedule.currentSemester,
     teacherWishes: state.teachersWish.wishes,
-    loading: state.loadingIndicator.loading
+    loading: state.loadingIndicator.semesterLoading
 });
 
 export default connect(mapStateToProps, {})(Header);

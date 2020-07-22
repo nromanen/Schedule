@@ -21,6 +21,8 @@ export const SCHEDULE_ITEMS_URL = 'schedules';
 export const CURRENT_SEMESTER_URL = 'semesters/current';
 
 export const TEMPORARY_SCHEDULE_URL = 'temporary-schedules';
+export const TEMPORARY_SCHEDULE_RANGE_URL = 'temporary-schedules/add-range';
+export const TEACHER_TEMPORARY_SCHEDULE = 'schedules/full/teachers/date-range';
 
 export const SCHEDULE_CHECK_AVAILABILITY_URL = 'schedules/data-before';
 export const BUSY_ROOMS = 'schedules/full/rooms';
@@ -55,6 +57,7 @@ export const PUBLIC_DOWNLOAD_TEACHER_SCHEDULE_URL =
 export const FOR_TEACHER_SCHEDULE_URL = 'schedules/teacher';
 export const SEMESTER_COPY_URL = '/schedules/copy-schedule';
 export const CLEAR_SCHEDULE_URL = '/schedules/delete-schedules';
+export const TEACHER_SCHEDULE_BY_DATE_RANGE_URL = 'schedules/full/teachers/date-range';
 
 export const COPY_LESSON_URL = '/lessons/copy-lesson-for-groups';
 export const LESSONS_FROM_SEMESTER_COPY_URL = '/lessons/copy-lessons';

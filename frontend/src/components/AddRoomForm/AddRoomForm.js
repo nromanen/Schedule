@@ -14,10 +14,6 @@ import Card from '../../share/Card/Card';
 
 import './AddRoomForm.scss';
 
-const CreateBtn = styled(Button)({
-    marginTop: '20px'
-});
-
 let AddRoom = props => {
     const { t } = useTranslation('formElements')
     const { handleSubmit, pristine, submitting, onReset } = props;
@@ -72,21 +68,21 @@ let AddRoom = props => {
                     ))}
                 </Field>
                 <div className='form-buttons-container'>
-                    <CreateBtn
+                    <Button
                         className='buttons-style'
                         variant='contained'
                         color='primary'
                         disabled={pristine || submitting}
                         type='submit'>
                         {t('save_button_label')}
-                    </CreateBtn>
-                    <CreateBtn
+                    </Button>
+                    <Button
                         className='buttons-style'
                         variant='contained'
                         disabled={pristine || submitting}
                         onClick={onReset}>
                         {t('clear_button_label')}
-                    </CreateBtn>
+                    </Button>
                 </div>
             </form>
         </Card>

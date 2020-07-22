@@ -23,6 +23,14 @@ import {
 } from '../../validation/validateFields';
 import { useTranslation } from 'react-i18next';
 import { setUniqueErrorService } from '../../services/lessonService';
+import {
+    handleTeacherInfo,
+    handleTeacherShortInfo
+} from '../../helper/handleTeacherInfo';
+import {
+    setValueToSubjectForSiteHandler,
+    setValueToTeacherForSiteHandler
+} from '../../helper/reduxFormHelper';
 
 const useStyles = makeStyles(() => ({
     notSelected: {
@@ -77,44 +85,6 @@ let LessonForm = props => {
         setChecked(lesson.grouped);
     };
 
-    const setValueToTeacherForSiteHandler = teacherId => {
-        const teacher = teachers.find(teacher => teacher.id === +teacherId);
-        props.change(
-            'teacherForSite',
-            concatTeacherNameHandler(teacher, false)
-        );
-    };
-
-    const setValueToSubjectForSiteHandler = subjectId => {
-        const subject = subjects.find(subject => subject.id === +subjectId);
-
-        if (!subject) return props.change('subjectForSite', '');
-
-        const subjectName = subject.name;
-        props.change('subjectForSite', subjectName);
-    };
-
-    const concatTeacherNameHandler = (teacher, isFullName) => {
-        if (!teacher) return '';
-
-        if (isFullName) {
-            return (
-                teacher.surname + ' ' + teacher.name + ' ' + teacher.patronymic
-            );
-        } else {
-            return (
-                teacher.position +
-                ' ' +
-                teacher.surname +
-                ' ' +
-                teacher.name.split('')[0] +
-                '.' +
-                teacher.patronymic.split('')[0] +
-                '.'
-            );
-        }
-    };
-
     return (
         <Card class="form-card">
             {groupId ? (
@@ -137,14 +107,18 @@ let LessonForm = props => {
                             ? { validate: [required] }
                             : { error: isUniqueError })}
                         onChange={event => {
-                            setValueToTeacherForSiteHandler(event.target.value);
+                            setValueToTeacherForSiteHandler(
+                                teachers,
+                                event.target.value,
+                                props.change
+                            );
                             setUniqueErrorService(false);
                         }}
                     >
-                        <option value={''} />
+                        <option />
                         {teachers.map(teacher => (
                             <option key={teacher.id} value={teacher.id}>
-                                {concatTeacherNameHandler(teacher, true)}
+                                {handleTeacherInfo(teacher)}
                             </option>
                         ))}
                     </Field>
@@ -158,7 +132,11 @@ let LessonForm = props => {
                             ? { validate: [required] }
                             : { error: isUniqueError })}
                         onChange={event => {
-                            setValueToSubjectForSiteHandler(event.target.value);
+                            setValueToSubjectForSiteHandler(
+                                subjects,
+                                event.target.value,
+                                props.change
+                            );
                             setUniqueErrorService(false);
                         }}
                     >
