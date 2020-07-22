@@ -90,6 +90,7 @@
     "delete_lesson_changes": "Delete changes",
     "edit_lesson_lesson": "Edit changes",
 
+    "empty": "Empty",
     "empty_fields": "Fields are required",
     "different_passwords": "Passwords are different",
     "no_account": "Don't have account?",
@@ -128,6 +129,7 @@
     "days_label": "Days",
     "current_label": "Current",
     "holiday_label": "Holiday",
+    "notify_label": "Notify",
     "few_days_label": "Few days",
     "show_disabled": "Show disabled",
     "show_enabled": "Show enabled",
@@ -149,5 +151,8 @@
     "clear_schedule_label": "Clear Schedule",
     "copy_lessons_from_semester_to_current": "Copy all lessons from selected semester to current",
 
-    "for_all": "For all"
+    "for_all": "For all",
+    "date": "Date",
+    "filter": "Filter",
+    "one_day": "One day"
 }

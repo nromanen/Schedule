@@ -21,6 +21,7 @@ export const SCHEDULE_ITEMS_URL = 'schedules';
 export const CURRENT_SEMESTER_URL = 'semesters/current';
 
 export const TEMPORARY_SCHEDULE_URL = 'temporary-schedules';
+export const TEMPORARY_SCHEDULE_RANGE_URL = 'temporary-schedules/add-range';
 export const TEACHER_TEMPORARY_SCHEDULE = 'schedules/full/teachers/date-range';
 
 export const SCHEDULE_CHECK_AVAILABILITY_URL = 'schedules/data-before';

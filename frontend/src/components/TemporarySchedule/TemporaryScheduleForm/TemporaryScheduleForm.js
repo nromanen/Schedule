@@ -26,6 +26,7 @@ let TemporaryScheduleForm = props => {
     const { t } = useTranslation('formElements');
     const { handleSubmit, invalid, reset, submitting } = props;
     const [isVacation, setIsVacation] = useState(false);
+    const [notify, setNotify] = useState(false);
 
     const temporarySchedule = props.temporarySchedule;
     const scheduleId = temporarySchedule?.scheduleId;
@@ -61,6 +62,7 @@ let TemporaryScheduleForm = props => {
     };
 
     const handleVacationChange = event => setIsVacation(event.target.checked);
+    const handleNotifyChange = event => setNotify(event.target.checked);
 
     return (
         <Card class="form-card">
@@ -79,148 +81,150 @@ let TemporaryScheduleForm = props => {
                         onChange={handleVacationChange}
                         color="primary"
                     />
-                    <>
-                        <Field
-                            name="teacher"
-                            className="form-field"
-                            component={renderSelectField}
-                            label={t('teacher_label')}
-                            validate={[required]}
-                            disabled={isVacation}
-                            onChange={event => {
-                                if (event.target.value)
-                                    setValueToTeacherForSiteHandler(
-                                        teachers,
-                                        event.target.value,
-                                        props.change
-                                    );
-                                else props.change('teacherForSite', '');
-                            }}
-                        >
-                            <option value={''} />
-                            {teachers.map(teacher => (
-                                <option value={teacher.id} key={teacher.id}>
-                                    {handleTeacherInfo(teacher)}
-                                </option>
-                            ))}
-                        </Field>
-                        <Field
-                            name="subject"
-                            className="form-field"
-                            component={renderSelectField}
-                            label={t('subject_label')}
-                            validate={[required]}
-                            disabled={isVacation}
-                            onChange={event => {
-                                setValueToSubjectForSiteHandler(
-                                    subjects,
+                    <Field
+                        name="teacher"
+                        className="form-field"
+                        component={renderSelectField}
+                        label={t('teacher_label')}
+                        validate={[required]}
+                        disabled={isVacation}
+                        onChange={event => {
+                            if (event.target.value)
+                                setValueToTeacherForSiteHandler(
+                                    teachers,
                                     event.target.value,
                                     props.change
                                 );
-                            }}
-                        >
-                            <option value={''} />
-                            {subjects.map(subject => (
-                                <option key={subject.id} value={subject.id}>
-                                    {subject.name}
-                                </option>
-                            ))}
-                        </Field>
-                        <Field
-                            name="group"
-                            className="form-field"
-                            component={renderSelectField}
-                            label={t('group_label')}
-                            validate={[required]}
-                            disabled={isVacation}
-                        >
-                            <option value={''} />
-                            {groups.map(group => (
-                                <option key={group.id} value={group.id}>
-                                    {group.title}
-                                </option>
-                            ))}
-                        </Field>
-                        <Field
-                            name="lessonType"
-                            className="form-field"
-                            component={renderSelectField}
-                            label={t('type_label')}
-                            validate={[required]}
-                            disabled={isVacation}
-                        >
-                            <option value={''} />
-                            {lessonTypes.map((lessonType, index) => (
-                                <option value={lessonType} key={index}>
-                                    {t(
-                                        `formElements:lesson_type_${lessonType.toLowerCase()}_label`
-                                    )}
-                                </option>
-                            ))}
-                        </Field>
-                        <Field
-                            name="room"
-                            className="form-field"
-                            component={renderSelectField}
-                            label={t('room_label')}
-                            validate={[required]}
-                            disabled={isVacation}
-                        >
-                            <option value={''} />
-                            {rooms.map(room => (
-                                <option value={room.id} key={room.id}>{room.name}</option>
-                            ))}
-                        </Field>
-                        <Field
-                            name="period"
-                            className="form-field"
-                            component={renderSelectField}
-                            label={t('class_label')}
-                            validate={[required]}
-                            disabled={isVacation}
-                        >
-                            <option value={''} />
-                            {periods.map(period => (
-                                <option value={period.id} key={period.id}>
-                                    {period.startTime} - {period.endTime}
-                                </option>
-                            ))}
-                        </Field>
-                        <Field
-                            name="teacherForSite"
-                            className="form-field"
-                            multiline
-                            rowsMax="1"
-                            margin="normal"
-                            component={renderTextField}
-                            label={t('teacher_label') + t('for_site_label')}
-                            validate={[required, maxLengthValue]}
-                            disabled={isVacation}
-                        />
-                        <Field
-                            name="subjectForSite"
-                            className="form-field"
-                            multiline
-                            rowsMax="1"
-                            margin="normal"
-                            component={renderTextField}
-                            label={t('subject_label') + t('for_site_label')}
-                            validate={[required, maxLengthValue]}
-                            disabled={isVacation}
-                        />
-                        <Hidden smUp smDown xsDown xsUp>
-                            <Field name="date" component={renderTextField} />
-                            <Field name="id" component={renderTextField} />
-                            <Field
-                                name="scheduleId"
-                                component={renderTextField}
-                            />
-                            <Field
-                                name="semester"
-                                component={renderTextField}
-                            />
-                        </Hidden>
-                    </>
+                            else props.change('teacherForSite', '');
+                        }}
+                    >
+                        <option value={''} />
+                        {teachers.map(teacher => (
+                            <option value={teacher.id} key={teacher.id}>
+                                {handleTeacherInfo(teacher)}
+                            </option>
+                        ))}
+                    </Field>
+                    <Field
+                        name="subject"
+                        className="form-field"
+                        component={renderSelectField}
+                        label={t('subject_label')}
+                        validate={[required]}
+                        disabled={isVacation}
+                        onChange={event => {
+                            setValueToSubjectForSiteHandler(
+                                subjects,
+                                event.target.value,
+                                props.change
+                            );
+                        }}
+                    >
+                        <option value={''} />
+                        {subjects.map(subject => (
+                            <option key={subject.id} value={subject.id}>
+                                {subject.name}
+                            </option>
+                        ))}
+                    </Field>
+                    <Field
+                        name="group"
+                        className="form-field"
+                        component={renderSelectField}
+                        label={t('group_label')}
+                        validate={[required]}
+                        disabled={isVacation}
+                    >
+                        <option value={''} />
+                        {groups.map(group => (
+                            <option key={group.id} value={group.id}>
+                                {group.title}
+                            </option>
+                        ))}
+                    </Field>
+                    <Field
+                        name="lessonType"
+                        className="form-field"
+                        component={renderSelectField}
+                        label={t('type_label')}
+                        validate={[required]}
+                        disabled={isVacation}
+                    >
+                        <option value={''} />
+                        {lessonTypes.map((lessonType, index) => (
+                            <option value={lessonType} key={index}>
+                                {t(
+                                    `formElements:lesson_type_${lessonType.toLowerCase()}_label`
+                                )}
+                            </option>
+                        ))}
+                    </Field>
+                    <Field
+                        name="room"
+                        className="form-field"
+                        component={renderSelectField}
+                        label={t('room_label')}
+                        validate={[required]}
+                        disabled={isVacation}
+                    >
+                        <option value={''} />
+                        {rooms.map(room => (
+                            <option value={room.id} key={room.id}>
+                                {room.name}
+                            </option>
+                        ))}
+                    </Field>
+                    <Field
+                        name="period"
+                        className="form-field"
+                        component={renderSelectField}
+                        label={t('class_label')}
+                        validate={[required]}
+                        disabled={isVacation}
+                    >
+                        <option value={''} />
+                        {periods.map(period => (
+                            <option value={period.id} key={period.id}>
+                                {period.startTime} - {period.endTime}
+                            </option>
+                        ))}
+                    </Field>
+                    <Field
+                        name="teacherForSite"
+                        className="form-field"
+                        multiline
+                        rowsMax="1"
+                        margin="normal"
+                        component={renderTextField}
+                        label={t('teacher_label') + t('for_site_label')}
+                        validate={[required, maxLengthValue]}
+                        disabled={isVacation}
+                    />
+                    <Field
+                        name="subjectForSite"
+                        className="form-field"
+                        multiline
+                        rowsMax="1"
+                        margin="normal"
+                        component={renderTextField}
+                        label={t('subject_label') + t('for_site_label')}
+                        validate={[required, maxLengthValue]}
+                        disabled={isVacation}
+                    />
+                    <Field
+                        name="notify"
+                        label={t('common:notify_label')}
+                        component={renderCheckboxField}
+                        checked={notify}
+                        onChange={handleNotifyChange}
+                        color="primary"
+                    />
+                    <Hidden smUp smDown xsDown xsUp>
+                        <Field name="date" component={renderTextField} />
+                        <Field name="id" component={renderTextField} />
+                        <Field name="scheduleId" component={renderTextField} />
+                        <Field name="semester" component={renderTextField} />
+                    </Hidden>
                     <div className="form-buttons-container">
                         <Button
                             className="buttons-style"

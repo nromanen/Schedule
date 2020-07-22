@@ -40,6 +40,8 @@
 
     "for_site_label": " for site",
     "not_selected_label": "is not selected",
+    "for_all": "For all",
+    "for_teacher": "For teacher",
 
     "save_button_label": "Save",
     "clear_button_label": "Clear",

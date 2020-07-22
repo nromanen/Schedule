@@ -6,6 +6,7 @@ import { store } from '../index';
 
 import {
     TEACHER_TEMPORARY_SCHEDULE,
+    TEMPORARY_SCHEDULE_RANGE_URL,
     TEMPORARY_SCHEDULE_URL
 } from '../constants/axios';
 import { actionType } from '../constants/actionTypes';
@@ -59,7 +60,6 @@ export const deleteTemporaryScheduleService = (
     date,
     teacherId
 ) => {
-    console.log('Here');
     axios
         .delete(TEMPORARY_SCHEDULE_URL + `/${temporaryScheduleId}`)
         .then(() => {
@@ -69,7 +69,6 @@ export const deleteTemporaryScheduleService = (
             successHandler(actionType.DELETED);
         })
         .catch(err => {
-            console.log(err);
             errorHandler(err);
         });
 };
@@ -134,6 +133,32 @@ export const addTemporaryScheduleService = (
         });
 };
 
+export const addTemporaryScheduleForRangeService = (
+    teacherId,
+    formValues,
+    isVacation
+) => {
+    formValues.from = formValues.from.replace(/\//g, '-');
+    formValues.to = formValues.to.replace(/\//g, '-');
+    const obj = formatObj(formValues, teacherId);
+    axios
+        .post(TEMPORARY_SCHEDULE_RANGE_URL, {
+            from: formValues.from,
+            to: formValues.to,
+            temporary_schedule: {
+                ...formValues,
+                ...obj
+            }
+        })
+        .then(() => {
+            handleSuccess(isVacation, teacherId, formValues);
+            successHandler(handleSuccessMessage(actionType.CREATED));
+        })
+        .catch(err => {
+            errorHandler(err);
+        });
+};
+
 export const editTemporaryScheduleService = (
     teacherId,
     formValues,
@@ -141,10 +166,6 @@ export const editTemporaryScheduleService = (
 ) => {
     formValues.date = formValues.date.replace(/\//g, '-');
     const obj = formatObj(formValues, teacherId);
-    console.log({
-        ...formValues,
-        ...obj
-    });
     axios
         .put(TEMPORARY_SCHEDULE_URL, {
             ...formValues,
@@ -154,10 +175,6 @@ export const editTemporaryScheduleService = (
             const tId = teacherId || formValues.teacher;
             handleSuccess(isVacation, tId, formValues);
             successHandler(handleSuccessMessage(actionType.UPDATED));
-            resetFormHandler(TEMPORARY_SCHEDULE_VACATION_FORM);
-            resetFormHandler(TEMPORARY_SCHEDULE_FORM);
-            store.dispatch(selectTemporarySchedule({}));
-            store.dispatch(selectVacation({}));
         })
         .catch(err => {
             errorHandler(err);

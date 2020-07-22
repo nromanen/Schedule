@@ -16,6 +16,7 @@ import Divider from '@material-ui/core/Divider';
 import { handleTeacherShortInfo } from '../../../helper/handleTeacherInfo';
 
 import { cardType } from '../../../constants/cardType';
+import TemporaryScheduleCard from '../TemporaryScheduleCard/TemporaryScheduleCard';
 
 const TemporaryScheduleList = props => {
     const { t } = useTranslation('common');
@@ -79,30 +80,9 @@ const TemporaryScheduleList = props => {
                     </div>
                     {!temporarySchedule.vacation ? (
                         <>
-                            <p>
-                                Subject:{' '}
-                                <b>
-                                    {temporarySchedule.subjectForSite}(
-                                    {temporarySchedule.lessonType})
-                                </b>
-                            </p>
-                            <p>
-                                Room: <b>{temporarySchedule.room?.name}</b>
-                            </p>
-                            <p>
-                                Teacher:{' '}
-                                <b>{temporarySchedule.teacherForSite}</b>
-                            </p>
-                            <p>
-                                Period:{' '}
-                                <b>
-                                    {temporarySchedule.class?.startTime} -{' '}
-                                    {temporarySchedule.class?.endTime}
-                                </b>
-                            </p>
-                            <p>
-                                Group: <b>{temporarySchedule.group?.title}</b>
-                            </p>
+                            <TemporaryScheduleCard
+                                schedule={temporarySchedule}
+                            />
                         </>
                     ) : (
                         <>
@@ -120,7 +100,7 @@ const TemporaryScheduleList = props => {
                         </>
                     )}
                     <p>
-                        {!temporarySchedule.vacation && <>Date:</>}
+                        {!temporarySchedule.vacation && <>{t('date')}{' '}:</>}
                         <b>{temporarySchedule.date}</b>
                     </p>
                 </Card>

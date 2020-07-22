@@ -15,8 +15,9 @@ import Card from '../../share/Card/Card';
 import { setLoadingService } from '../../services/loadingService';
 import { showAllTeachersService } from '../../services/teacherService';
 import {
+    addTemporaryScheduleForRangeService,
     addTemporaryScheduleService,
-    editTemporaryScheduleService,
+    editTemporaryScheduleService
 } from '../../services/temporaryScheduleService';
 import { getClassScheduleListService } from '../../services/classService';
 import { showListOfRoomsService } from '../../services/roomService';
@@ -51,8 +52,27 @@ const TemporarySchedule = props => {
     };
 
     const handleTemporaryScheduleVacationSubmit = values => {
-        if (values.id)
-            editTemporaryScheduleService(
+        if (!values.from && !values.to) {
+            if (values.id)
+                editTemporaryScheduleService(
+                    teacherId,
+                    {
+                        ...values,
+                        vacation: true
+                    },
+                    true
+                );
+            else
+                addTemporaryScheduleService(
+                    teacherId,
+                    {
+                        ...values,
+                        vacation: true
+                    },
+                    true
+                );
+        } else {
+            addTemporaryScheduleForRangeService(
                 teacherId,
                 {
                     ...values,
@@ -60,15 +80,7 @@ const TemporarySchedule = props => {
                 },
                 true
             );
-        else
-            addTemporaryScheduleService(
-                teacherId,
-                {
-                    ...values,
-                    vacation: true
-                },
-                true
-            );
+        }
     };
 
     return (
@@ -129,6 +141,12 @@ const TemporarySchedule = props => {
                                 temporarySchedules={props.temporarySchedules}
                             />
                         )}
+                        {props.schedulesAndTemporarySchedules.length === 0 &&
+                            props.temporarySchedules.length === 0 && (
+                                <section className="centered-container">
+                                    <h2>{t('empty')}</h2>
+                                </section>
+                            )}
                     </>
                 )}
             </div>
@@ -149,7 +167,7 @@ const mapStateToProps = state => ({
     groups: state.groups.groups,
     loading: state.loadingIndicator.loading,
     teachers: state.teachers.teachers,
-    teacherId: state.temporarySchedule.teacherId,
+    teacherId: state.temporarySchedule.teacherId
 });
 
 export default connect(mapStateToProps)(TemporarySchedule);

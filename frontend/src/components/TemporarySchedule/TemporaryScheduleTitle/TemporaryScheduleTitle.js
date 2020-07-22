@@ -75,6 +75,8 @@ const TemporaryScheduleTitle = props => {
     }, []);
 
     const handleChange = event => {
+        if (event.target.value === temporaryScheduleRadioTypes.SEMESTER)
+            selectTeacherIdService(null);
         setToDate(false);
         setFromDate(false);
         setDay(false);
@@ -143,7 +145,9 @@ const TemporaryScheduleTitle = props => {
         <section className={classes.panel}>
             <ExpansionPanel>
                 <ExpansionPanelSummary aria-controls="panel1a-content">
-                    <Typography className={classes.heading}>Filter</Typography>
+                    <Typography className={classes.heading}>
+                        {t('filter')}
+                    </Typography>
                 </ExpansionPanelSummary>
                 <ExpansionPanelDetails className={classes.block}>
                     <RadioGroup
@@ -154,17 +158,17 @@ const TemporaryScheduleTitle = props => {
                         <FormControlLabel
                             value={temporaryScheduleRadioTypes.SEMESTER}
                             control={<Radio color="primary" />}
-                            label="Semester"
+                            label={t('formElements:semester_label')}
                         />
                         <FormControlLabel
                             value={temporaryScheduleRadioTypes.FEW_DAYS}
                             control={<Radio color="primary" />}
-                            label="Few days"
+                            label={t('few_days_label')}
                         />
                         <FormControlLabel
                             value={temporaryScheduleRadioTypes.ONE_DAY}
                             control={<Radio color="primary" />}
-                            label="One day"
+                            label={t('one_day')}
                         />
                     </RadioGroup>
                     {radio !== temporaryScheduleRadioTypes.SEMESTER && (
@@ -173,7 +177,9 @@ const TemporaryScheduleTitle = props => {
                                 <div className={classes.dateGroup}>
                                     <DatePicker
                                         margin="normal"
-                                        label="From"
+                                        label={t(
+                                            'formElements:class_from_label'
+                                        )}
                                         format="DD/MM/YYYY"
                                         className={classes.dateField}
                                         value={
@@ -189,7 +195,7 @@ const TemporaryScheduleTitle = props => {
                                     <DatePicker
                                         margin="normal"
                                         className={classes.dateField}
-                                        label="To"
+                                        label={t('formElements:class_to_label')}
                                         format="DD/MM/YYYY"
                                         value={
                                             toDate
@@ -206,7 +212,7 @@ const TemporaryScheduleTitle = props => {
                                 <DatePicker
                                     margin="normal"
                                     className={classes.day}
-                                    label="Day"
+                                    label={t('date')}
                                     format="DD/MM/YYYY"
                                     value={
                                         day

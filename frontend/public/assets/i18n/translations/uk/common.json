@@ -126,6 +126,7 @@
     "days_label": "Дні",
     "current_label": "Поточний",
     "holiday_label": "Вихідний",
+    "notify_label": "Повідомити",
     "few_days_label": "Декілька днів",
     "show_disabled": "Показати відключені",
     "show_enabled": "Показати включені",
@@ -137,6 +138,7 @@
     "semester_service_is_active": "Цей семестер не може бути видалений, оскільки він є поточним",
     "use_pc": "Тільки з персонального комп'ютера можна створювати розклад",
     "empty_schedule": "Розклад порожній",
+    "empty": "Пусто",
 
     "menu_button": "МЕНЮ",
     "download_pdf": "Завантажити PDF",
@@ -146,5 +148,8 @@
     "clear_schedule_label": "Очистити розклад",
     "copy_lessons_from_semester_to_current": "Копіювати всі заняття із обраного семестру в поточний",
 
-    "for_all": "Для всіх"
+    "for_all": "Для всіх",
+    "date": "Дата",
+    "filter": "Фільтер",
+    "one_day": "Один день"
 }

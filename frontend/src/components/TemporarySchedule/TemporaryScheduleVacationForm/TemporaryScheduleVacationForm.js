@@ -26,7 +26,7 @@ import {
     selectTeacherIdService,
     selectVacationService
 } from '../../../services/temporaryScheduleService';
-
+import renderCheckboxField from '../../../share/renderedFields/checkbox';
 
 let TemporaryScheduleVacationForm = props => {
     const { t } = useTranslation('formElements');
@@ -34,6 +34,7 @@ let TemporaryScheduleVacationForm = props => {
 
     const [isFewDays, setIsFewDays] = useState(false);
     const [forAll, setForAll] = useState(true);
+    const [notify, setNotify] = useState(false);
 
     const { teachers, teacherId } = props;
 
@@ -68,6 +69,8 @@ let TemporaryScheduleVacationForm = props => {
     const handleChange = event => {
         setIsFewDays(event.target.checked);
     };
+
+    const handleNotifyChange = event => setNotify(event.target.checked);
 
     const defaultProps = {
         options: teachers,
@@ -112,25 +115,25 @@ let TemporaryScheduleVacationForm = props => {
                     <>
                         <Field
                             className="time-input"
-                            name="startDay"
+                            name="from"
                             component={renderMonthPicker}
                             label={t('class_from_label') + ':'}
                             validate={[required, lessThanDate]}
                         />
                         <Field
                             className="time-input"
-                            name="endDay"
+                            name="to"
                             component={renderMonthPicker}
                             label={t('class_to_label') + ':'}
                             validate={[required, greaterThanDate]}
-                        />{' '}
+                        />
                     </>
                 ) : (
                     <Field
                         className="time-input"
                         name="date"
                         component={renderMonthPicker}
-                        label={t('class_to_label') + ':'}
+                        label={t('common:date') + ':'}
                         validate={[required]}
                     />
                 )}
@@ -143,7 +146,7 @@ let TemporaryScheduleVacationForm = props => {
                                 onChange={handleForAllChange}
                             />
                         }
-                        label={forAll ? 'For all' : 'For teacher'}
+                        label={forAll ? t('for_all') : t('for_teacher')}
                     />
                 </div>
                 {!forAll && (
@@ -165,6 +168,14 @@ let TemporaryScheduleVacationForm = props => {
                         )}
                     />
                 )}
+                <Field
+                    name="notify"
+                    label={t('common:notify_label')}
+                    component={renderCheckboxField}
+                    checked={notify}
+                    onChange={handleNotifyChange}
+                    color="primary"
+                />
 
                 <div className="form-buttons-container">
                     <Button
@@ -184,7 +195,6 @@ let TemporaryScheduleVacationForm = props => {
                         onClick={() => {
                             reset();
                             selectVacationService({});
-                            selectTeacherIdService(null);
                         }}
                     >
                         {t('clear_button_label')}
