@@ -629,7 +629,7 @@ return fullScheduleForTeacherByDateRange(dateRangeSchedule,  fromDate, toDate);
 
     /**
      * Method temporaryScheduleByDateRangeForTeacher get all schedules and temporary schedules from db in particular date range
-     *
+     *temporaryScheduleByDateRangeForTeacher
      * @param fromDate  LocalDate from
      * @param toDate    LocalDate to
      * @param teacherId id teacher
@@ -833,13 +833,9 @@ return fullScheduleForTeacherByDateRange(dateRangeSchedule,  fromDate, toDate);
                        log.error(e.getMessage());
                     }
                 }
-
                 periodListHashMap.put(entry.getKey(), mapList);
             }
-
-
             map.put(itr.getKey(), periodListHashMap);
-
         }
         return map;
     }

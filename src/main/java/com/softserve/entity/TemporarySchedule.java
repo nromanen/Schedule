@@ -71,4 +71,7 @@ public class TemporarySchedule implements Serializable {
 
     @Column(name = "vacation",  columnDefinition = "boolean default 'false'")
     private boolean vacation = false;
+
+    @Column(name = "notification",  columnDefinition = "boolean default 'false'")
+    private boolean notification = false;
 }

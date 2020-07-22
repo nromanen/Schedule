@@ -31,4 +31,5 @@ public class TemporaryScheduleSaveDTO {
     private Period period;
     private boolean grouped;
     private boolean vacation;
+    private boolean notification;
 }
