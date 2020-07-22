@@ -123,6 +123,7 @@ const GroupSchedulePage = props => {
                 ) {
                     return emptySchedule();
                 }
+
                 const resultArrays = makeGroupSchedule(groupSchedule);
                 if (resultArrays.done) {
                     setLoadingService(false);
