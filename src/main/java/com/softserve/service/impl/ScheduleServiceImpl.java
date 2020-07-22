@@ -603,14 +603,14 @@ public class ScheduleServiceImpl implements ScheduleService {
         return schedules;
     }
 
-    /**
+   /* **
      * Method scheduleByDateRangeForTeacher get all schedules from db in particular date range
      *
      * @param fromDate  LocalDate from
      * @param toDate    LocalDate to
      * @param teacherId id teacher
      * @return list of schedules
-     */
+     *
     @Override
     public Map<LocalDate, Map<Period, List<Schedule>>> scheduleByDateRangeForTeacher(LocalDate fromDate, LocalDate toDate, Long teacherId) {
         log.info("In scheduleByDateRangeForTeacher with fromDate = {} and toDate = {}", fromDate, toDate);
@@ -624,7 +624,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         }
 
 return fullScheduleForTeacherByDateRange(dateRangeSchedule,  fromDate, toDate);
-    }
+    }*/
 
 
     /**
@@ -636,7 +636,7 @@ return fullScheduleForTeacherByDateRange(dateRangeSchedule,  fromDate, toDate);
      * @return list of schedules and temporary schedules
      */
     @Override
-    public Map<LocalDate, Map<Period, List<Map<Schedule, TemporarySchedule>>>> temporaryScheduleByDateRangeForTeacher(LocalDate fromDate, LocalDate toDate, Long teacherId) {
+    public Map<LocalDate, Map<Period, Map<Schedule, TemporarySchedule>>> temporaryScheduleByDateRangeForTeacher(LocalDate fromDate, LocalDate toDate, Long teacherId) {
         log.info("In temporaryScheduleByDateRangeForTeacher with fromDate = {} and toDate = {} and teacher = {}", fromDate, toDate, teacherId);
         List<Schedule> schedules = scheduleRepository.scheduleByDateRangeForTeacher(fromDate, toDate, teacherId);
         List<TemporarySchedule> temporarySchedules = temporaryScheduleService.getAllByTeacherAndRange(fromDate, toDate, teacherId);
@@ -789,15 +789,15 @@ return fullScheduleForTeacherByDateRange(dateRangeSchedule,  fromDate, toDate);
     }
 
 
-    private Map<LocalDate, Map<Period, List<Map<Schedule, TemporarySchedule>>>> convertToMapTemporaryScheduleDateRange(Map<LocalDate, Map<Period, List<Schedule>>> scheduleByDateRange,
+    private Map<LocalDate, Map<Period, Map<Schedule, TemporarySchedule>>> convertToMapTemporaryScheduleDateRange(Map<LocalDate, Map<Period, List<Schedule>>> scheduleByDateRange,
                                                                                                                        List<TemporarySchedule> temporarySchedules,
                                                                                                                        List<TemporarySchedule> vacationByDateRangeForTeacher) {
-        Map<LocalDate, Map<Period, List<Map<Schedule, TemporarySchedule>>>> map = new LinkedHashMap<>();
+        Map<LocalDate, Map<Period, Map<Schedule, TemporarySchedule>>> map = new LinkedHashMap<>();
         for (Map.Entry<LocalDate, Map<Period, List<Schedule>>> itr : scheduleByDateRange.entrySet()) {
-            Map<Period, List<Map<Schedule, TemporarySchedule>>> periodListHashMap = new HashMap<>();
+            Map<Period, Map<Schedule, TemporarySchedule>> periodListHashMap = new HashMap<>();
 
             for (Map.Entry<Period, List<Schedule>> entry : itr.getValue().entrySet()) {
-                List<Map<Schedule, TemporarySchedule>> mapList = new ArrayList<>();
+                //HashMap<Schedule, TemporarySchedule> hashMap = new HashMap<>();
                 Map<Schedule, TemporarySchedule> temporaryScheduleMap = new LinkedHashMap<>();
 
                 for (Schedule schedule : entry.getValue()) {
@@ -828,12 +828,12 @@ return fullScheduleForTeacherByDateRange(dateRangeSchedule,  fromDate, toDate);
 
                         ).findFirst().orElse(new TemporarySchedule()))));
                         temporaryScheduleMap.put(schedule, temporarySchedule);
-                        mapList.add(temporaryScheduleMap);
+                        //mapList.add(temporaryScheduleMap);
                     }catch (NullPointerException e){
                        log.error(e.getMessage());
                     }
                 }
-                periodListHashMap.put(entry.getKey(), mapList);
+                periodListHashMap.put(entry.getKey(), temporaryScheduleMap);
             }
             map.put(itr.getKey(), periodListHashMap);
         }

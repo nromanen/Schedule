@@ -7,6 +7,7 @@ import com.softserve.entity.enums.LessonType;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -25,8 +26,8 @@ public interface ScheduleService extends BasicService<Schedule, Long> {
 
     List<Schedule> getSchedulesBySemester(Long semesterId);
 
-    Map<LocalDate, Map<Period, List<Schedule>>> scheduleByDateRangeForTeacher(LocalDate fromDate, LocalDate toDate, Long teacherId);
-    Map<LocalDate, Map<Period, List<Map<Schedule, TemporarySchedule>>>>  temporaryScheduleByDateRangeForTeacher(LocalDate fromDate, LocalDate toDate, Long teacherId);
+    //Map<LocalDate, Map<Period, List<Schedule>>> scheduleByDateRangeForTeacher(LocalDate fromDate, LocalDate toDate, Long teacherId);
+    Map<LocalDate, Map<Period, Map<Schedule, TemporarySchedule>>>  temporaryScheduleByDateRangeForTeacher(LocalDate fromDate, LocalDate toDate, Long teacherId);
 
     void deleteSchedulesBySemesterId(Long semesterId);
 
