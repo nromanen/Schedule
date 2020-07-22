@@ -44,9 +44,8 @@ const TemporaryScheduleList = props => {
     return (
         <main className="container-flex-wrap">
             <ConfirmDialog
-                selectedValue={''}
                 cardId={temporaryScheduleId}
-                whatDelete={cardType.TEMPORARY_SCHEDULE.toLowerCase()}
+                whatDelete={cardType.TEMPORARY_SCHEDULE}
                 open={open}
                 onClose={handleClose}
             />

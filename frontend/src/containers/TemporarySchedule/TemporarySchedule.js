@@ -86,9 +86,6 @@ const TemporarySchedule = props => {
     return (
         <>
             <Card class="card-title lesson-card">
-                <h1 className="page-h">
-                    {t('temporary_schedule_for_teacher_title')}
-                </h1>
                 <TemporaryScheduleTitle
                     teacherId={teacherId}
                     teachers={teachers}

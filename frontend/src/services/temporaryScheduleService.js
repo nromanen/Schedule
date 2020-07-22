@@ -14,6 +14,7 @@ import { actionType } from '../constants/actionTypes';
 import { setLoadingService } from './loadingService';
 
 import {
+    logout,
     selectChangedScheduleId,
     selectTeacherId,
     selectTemporarySchedule,
@@ -66,7 +67,7 @@ export const deleteTemporaryScheduleService = (
             if (teacherId)
                 getTeacherTemporarySchedulesService(teacherId, date, date);
             else getTemporarySchedulesService(null, null);
-            successHandler(actionType.DELETED);
+            successHandler(handleSuccessMessage(actionType.DELETED));
         })
         .catch(err => {
             errorHandler(err);

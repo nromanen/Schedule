@@ -4,6 +4,11 @@
     "create_vacation_title": "Добавити вихідний",
     "delete_title": "Видалення",
 
+    "edit_temporary_schedule_form": "Редагування заміни",
+    "create_temporary_schedule_form": "Створення заміни",
+    "edit_vacation_form": "Редагування вихідного",
+    "create_vacation_form": "Створення вихідного",
+
     "teacher_label": "Викладач",
     "user_label": "Користувач",
     "group_label": "Група",
@@ -11,7 +16,7 @@
     "room_label": "Аудиторія",
     "subject_label": "Предмет",
     "lesson_label": "Заняття",
-    "temporary_schedule_label": "Зміна",
+    "temporary_schedule_label": "Зміну",
     "teacher_a_label": "Викладачa",
     "group_y_label": "групи",
     "class_y_label": "Уроку",
@@ -67,6 +72,7 @@
     "add_type_label": "Додати новий тип",
 
     "lesson_element": "це заняття",
+    "temporary_schedule_element": "цю заміну",
     "Teacher_element": "цього викладача",
     "group_element": "цю групу",
     "class_element": "цей урок",
