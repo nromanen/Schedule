@@ -13,8 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-
+import org.thymeleaf.spring5.SpringTemplateEngine;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
@@ -37,13 +36,11 @@ public class TemporaryScheduleServiceImpl implements TemporaryScheduleService {
     private final SubjectService subjectService;
     private final TeacherService teacherService;
     private final ScheduleService scheduleService;
-    private final MailService mailService;
-
 
 
     @Autowired
     public TemporaryScheduleServiceImpl(TemporaryScheduleRepository temporaryScheduleRepository, SemesterService semesterService, GroupService groupService,
-                                        RoomService roomService, PeriodService periodService, SubjectService subjectService, TeacherService teacherService, @Lazy ScheduleService scheduleService, MailService mailService) {
+                                        RoomService roomService, PeriodService periodService, SubjectService subjectService, TeacherService teacherService, @Lazy ScheduleService scheduleService) {
         this.temporaryScheduleRepository = temporaryScheduleRepository;
         this.semesterService = semesterService;
         this.groupService = groupService;
@@ -52,8 +49,6 @@ public class TemporaryScheduleServiceImpl implements TemporaryScheduleService {
         this.subjectService = subjectService;
         this.teacherService = teacherService;
         this.scheduleService = scheduleService;
-        this.mailService = mailService;
-
     }
 
     /**
@@ -99,6 +94,20 @@ public class TemporaryScheduleServiceImpl implements TemporaryScheduleService {
     public List<TemporarySchedule> getAllByTeacherAndRange(LocalDate fromDate, LocalDate toDate, Long teacherId) {
         log.info("Enter into getAllByTeacherAndRange of TemporaryScheduleServiceImpl");
         return temporaryScheduleRepository.getAllByTeacherAndRange(fromDate, toDate, teacherId);
+    }
+    /**
+     * The method used for getting all temporary schedules
+     *
+     * @return list of  temporary schedules
+     */
+    @Override
+    public List<TemporarySchedule> getTemporaryScheduleByTeacherAndRange(LocalDate fromDate, LocalDate toDate, Long teacherId) {
+        log.info("Enter into getAllByTeacherAndRange of TemporaryScheduleServiceImpl");
+        List<TemporarySchedule> temporarySchedules = temporaryScheduleRepository.temporaryScheduleByDateRangeForTeacher(fromDate, toDate, teacherId);
+        for (TemporarySchedule temp: temporarySchedules) {
+            Hibernate.initialize(temp.getSemester().getPeriods());
+        }
+        return temporarySchedules;
     }
 
 
@@ -151,7 +160,11 @@ public class TemporaryScheduleServiceImpl implements TemporaryScheduleService {
     @Override
     public List<TemporarySchedule> getAllByRange(LocalDate fromDate, LocalDate toDate) {
         log.info("Enter into getAllBySemester of TemporaryScheduleServiceImpl");
-        return temporaryScheduleRepository.getAllByRange(fromDate, toDate);
+        List<TemporarySchedule> temporarySchedules = temporaryScheduleRepository.getAllByRange(fromDate, toDate);;
+        for (TemporarySchedule temp: temporarySchedules) {
+            Hibernate.initialize(temp.getSemester().getPeriods());
+        }
+        return temporarySchedules;
     }
 
     /**
@@ -270,7 +283,11 @@ public class TemporaryScheduleServiceImpl implements TemporaryScheduleService {
                 checkReferencedElement(object);
             }
         }
-        return temporaryScheduleRepository.save(object);
+        TemporarySchedule temporarySchedule = temporaryScheduleRepository.save(object);
+//        if(temporarySchedule.isNotification()){
+//            sendMailByAddEvent(temporarySchedule);
+//        }
+        return temporarySchedule;
     }
 
     /**
@@ -434,6 +451,10 @@ public class TemporaryScheduleServiceImpl implements TemporaryScheduleService {
         return temporaryScheduleRepository.isExistTemporaryScheduleByDateAndScheduleIdWithIgnoreId(object, vacation) != 0;
     }
 
+
+    private void sendMailByAddEvent(TemporarySchedule temporarySchedule){
+
+    }
 
     private void checkReferencedElement(TemporarySchedule object)  throws EntityNotFoundException{
         log.info("In checkReferenceExist(object = [{}])", object);

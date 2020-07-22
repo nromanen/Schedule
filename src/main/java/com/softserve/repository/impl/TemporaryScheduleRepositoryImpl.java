@@ -179,11 +179,9 @@ public class TemporaryScheduleRepositoryImpl extends BasicRepositoryImpl<Tempora
      */
     @Override
     public List<TemporarySchedule> temporaryScheduleByDateRangeForTeacher(LocalDate fromDate, LocalDate toDate, Long teacherId) {
-        log.info("In scheduleByDateRangeForTeacher with fromDate = {} and toDate = {}", fromDate, toDate);
+        log.info("In temporaryScheduleByDateRangeForTeacher with fromDate = {} and toDate = {} and teacherId = {}", fromDate, toDate, teacherId);
         return sessionFactory.getCurrentSession().createQuery("SELECT t from TemporarySchedule t " +
-                " join Schedule  s on t.scheduleId = s.id" +
-                " join Lesson l on s.lesson.id  = l.id " +
-                "where t.date <= :toDate  and t.date >= :fromDate and ( t.teacher.id = :teacherId or l.teacher.id = :teacherId ) and t.vacation=false ")
+                "where t.date <= :toDate  and t.date >= :fromDate and t.teacher.id = :teacherId  and t.vacation=false ")
                 .setParameter("fromDate", fromDate)
                 .setParameter("toDate", toDate)
                 .setParameter("teacherId", teacherId)

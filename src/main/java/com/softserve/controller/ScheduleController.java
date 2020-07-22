@@ -147,7 +147,7 @@ public class ScheduleController {
     @GetMapping("/teacher")
     @ApiOperation(value = "Get full schedule for current teacher by date range")
     @PreAuthorize("hasRole('TEACHER')")
-    public ResponseEntity<List<ScheduleDateRangeFullDTO>> getScheduleByDateRangeForCurrentTeacher(@RequestParam String from,
+    public ResponseEntity<List<ScheduleForTemporaryDateRangeDTO>> getScheduleByDateRangeForCurrentTeacher(@RequestParam String from,
                                                                   @RequestParam String to,
                                                                   @CurrentUser JwtUser jwtUser) {
         log.info("In getScheduleByDateRangeForCurrentTeacher with from = {} and to = {}", from, to);
@@ -156,7 +156,7 @@ public class ScheduleController {
         LocalDate fromDate = LocalDate.parse(LocalDate.parse(from, formatter).toString(), currentFormatter);
         LocalDate toDate = LocalDate.parse(LocalDate.parse(to, formatter).toString(), currentFormatter);
         Teacher teacher = teacherService.findByUserId(Integer.parseInt(jwtUser.getId().toString()));
-        List<ScheduleDateRangeFullDTO> dto = fullDTOForTeacherDateRange(scheduleService.scheduleByDateRangeForTeacher(fromDate, toDate, teacher.getId()));
+        List<ScheduleForTemporaryDateRangeDTO> dto = fullDTOForTemporaryScheduleByTeacherDateRange(scheduleService.temporaryScheduleByDateRangeForTeacher(fromDate, toDate, teacher.getId()));
         return ResponseEntity.status(HttpStatus.OK).body(dto);
     }
 
@@ -242,7 +242,7 @@ public class ScheduleController {
     }
 
     //convert schedule map to schedule dto
-    private List<ScheduleDateRangeFullDTO> fullDTOForTeacherDateRange(Map<LocalDate, Map<Period, List<Schedule>>> map) {
+    /*private List<ScheduleDateRangeFullDTO> fullDTOForTeacherDateRange(Map<LocalDate, Map<Period, List<Schedule>>> map) {
         List<ScheduleDateRangeFullDTO> fullDTO = new ArrayList<>();
 
         for (Map.Entry<LocalDate, Map<Period, List<Schedule>>> itr: map.entrySet()) {
@@ -272,7 +272,7 @@ public class ScheduleController {
             fullDTO.add(scheduleDateRangeFullDTO);
         }
         return fullDTO;
-    }
+    }*/
 
 
     private List<ScheduleForTemporaryDateRangeDTO> fullDTOForTemporaryScheduleByTeacherDateRange(Map<LocalDate, Map<Period, List<Map<Schedule, TemporarySchedule>>>>  map) {
@@ -314,8 +314,9 @@ public class ScheduleController {
                     scheduleForTemporaryTeacherDateRangeDTOS.add(scheduleForTemporaryTeacherDateRangeDTO);
                      }
                  }
+                 scheduleForTemporaryDateRangeDTO.setSchedules(scheduleForTemporaryTeacherDateRangeDTOS);
+
             }
-            scheduleForTemporaryDateRangeDTO.setSchedules(scheduleForTemporaryTeacherDateRangeDTOS);
             fullDTO.add(scheduleForTemporaryDateRangeDTO);
         }
         return fullDTO;
