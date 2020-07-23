@@ -181,7 +181,7 @@ public class TemporaryScheduleRepositoryImpl extends BasicRepositoryImpl<Tempora
     public List<TemporarySchedule> temporaryScheduleByDateRangeForTeacher(LocalDate fromDate, LocalDate toDate, Long teacherId) {
         log.info("In temporaryScheduleByDateRangeForTeacher with fromDate = {} and toDate = {} and teacherId = {}", fromDate, toDate, teacherId);
         return sessionFactory.getCurrentSession().createQuery("SELECT t from TemporarySchedule t " +
-                "where t.date <= :toDate  and t.date >= :fromDate and t.teacher.id = :teacherId  and t.vacation=false ")
+                "where t.date <= :toDate  and t.date >= :fromDate and t.teacher.id = :teacherId  and t.vacation=false  ORDER BY t.date asc ")
                 .setParameter("fromDate", fromDate)
                 .setParameter("toDate", toDate)
                 .setParameter("teacherId", teacherId)
@@ -200,7 +200,7 @@ public class TemporaryScheduleRepositoryImpl extends BasicRepositoryImpl<Tempora
         return sessionFactory.getCurrentSession().createQuery("SELECT t from TemporarySchedule t " +
                 " join Schedule  s on t.scheduleId = s.id" +
                 " join Lesson l on s.lesson.id  = l.id " +
-                "where t.date <= :toDate  and t.date >= :fromDate and ( t.teacher.id = :teacherId or l.teacher.id = :teacherId )")
+                "where t.date <= :toDate  and t.date >= :fromDate and ( t.teacher.id = :teacherId or l.teacher.id = :teacherId )  ORDER BY t.date asc ")
                 .setParameter("fromDate", fromDate)
                 .setParameter("toDate", toDate)
                 .setParameter("teacherId", teacherId)
@@ -218,7 +218,7 @@ public class TemporaryScheduleRepositoryImpl extends BasicRepositoryImpl<Tempora
     public List<TemporarySchedule> getAllBySemester(Long semesterId) {
         log.info("In getAllBySemester(semesterId = [{}]", semesterId);
         return sessionFactory.getCurrentSession().createQuery("SELECT t from TemporarySchedule t " +
-                "where t.semester.id = :semesterId")
+                "where t.semester.id = :semesterId ORDER BY t.date asc ")
                 .setParameter("semesterId", semesterId)
                 .getResultList();
     }
@@ -233,7 +233,7 @@ public class TemporaryScheduleRepositoryImpl extends BasicRepositoryImpl<Tempora
     public List<TemporarySchedule> getAllByRange(LocalDate fromDate, LocalDate toDate) {
         log.info("In getAllByRange");
         return sessionFactory.getCurrentSession().createQuery("SELECT t from TemporarySchedule t " +
-                "where t.date <= :toDate  and t.date >= :fromDate")
+                "where t.date <= :toDate  and t.date >= :fromDate  ORDER BY t.date asc ")
                 .setParameter("fromDate", fromDate)
                 .setParameter("toDate", toDate)
                 .getResultList();
@@ -249,7 +249,7 @@ public class TemporaryScheduleRepositoryImpl extends BasicRepositoryImpl<Tempora
     public List<TemporarySchedule> getAllBySemesterAndRange(Long semesterId, LocalDate fromDate, LocalDate toDate) {
         log.info("In getAllBySemesterAndRange");
         return sessionFactory.getCurrentSession().createQuery("SELECT t from TemporarySchedule t " +
-                "where t.date <= :toDate  and t.date >= :fromDate and t.semester.id = :semesterId")
+                "where t.date <= :toDate  and t.date >= :fromDate and t.semester.id = :semesterId  ORDER BY t.date asc ")
                 .setParameter("fromDate", fromDate)
                 .setParameter("toDate", toDate)
                 .setParameter("semesterId", semesterId)
@@ -266,7 +266,7 @@ public class TemporaryScheduleRepositoryImpl extends BasicRepositoryImpl<Tempora
     public List<TemporarySchedule> vacationByDateRangeForTeacher(LocalDate fromDate, LocalDate toDate) {
         log.info("In vacationByDateRangeForTeacher");
         return sessionFactory.getCurrentSession().createQuery("SELECT t from TemporarySchedule t " +
-                "where t.date <= :toDate  and t.date >= :fromDate and t.vacation = true ")
+                "where t.date <= :toDate  and t.date >= :fromDate and t.vacation = true  ORDER BY t.date asc ")
                 .setParameter("fromDate", fromDate)
                 .setParameter("toDate", toDate)
                 .getResultList();
