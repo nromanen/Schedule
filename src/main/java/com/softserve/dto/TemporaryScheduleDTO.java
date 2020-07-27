@@ -26,7 +26,7 @@ public class TemporaryScheduleDTO {
     private Room room;
     private Semester semester;
     @JsonProperty("class")
-    private Period period;
+    private PeriodDTO period;
     private boolean grouped;
     private boolean vacation;
 }

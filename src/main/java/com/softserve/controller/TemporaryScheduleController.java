@@ -4,7 +4,6 @@ import com.softserve.dto.*;
 import com.softserve.entity.CurrentUser;
 import com.softserve.entity.Teacher;
 import com.softserve.entity.TemporarySchedule;
-import com.softserve.entity.User;
 import com.softserve.mapper.TemporaryScheduleMapper;
 import com.softserve.security.jwt.JwtUser;
 import com.softserve.service.TeacherService;
@@ -22,7 +21,6 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 
@@ -121,20 +119,18 @@ public class TemporaryScheduleController {
         return ResponseEntity.ok().body(new MessageDTO("Temporary schedule has been deleted successfully."));
     }
 
-//    @GetMapping("/teacher")
-//    @ApiOperation(value = "Get temporary schedules for current teacher")
-//    @PreAuthorize("hasRole('TEACHER')")
-//    public ResponseEntity<List<TemporaryScheduleDTO>> getTemporarySchedulesForCurrentTeacher(@CurrentUser JwtUser jwtUser,
-//                                                                                             @RequestParam String from,
-//                                                                                             @RequestParam String to) {
-//        log.info("In getTemporarySchedulesForCurrentTeacher");
-//        Teacher teacher = teacherService.findByUserId(Integer.parseInt(jwtUser.getId().toString()));
-//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-//        DateTimeFormatter currentFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-//        LocalDate fromDate = LocalDate.parse(LocalDate.parse(from, formatter).toString(), currentFormatter);
-//        LocalDate toDate = LocalDate.parse(LocalDate.parse(to, formatter).toString(), currentFormatter);
-//        return ResponseEntity.ok().body(temporaryScheduleMapper.convertToDtoList(temporaryScheduleService.getAllByTeacherAndRange(fromDate, toDate, teacher.getId())));
-//    }
-
-
+    @GetMapping("/teacher")
+    @ApiOperation(value = "Get temporary schedules for current teacher")
+    @PreAuthorize("hasRole('TEACHER')")
+    public ResponseEntity<List<TemporaryScheduleDTO>> getTemporarySchedulesForCurrentTeacher(@CurrentUser JwtUser jwtUser,
+                                                                                             @RequestParam String from,
+                                                                                             @RequestParam String to) {
+        log.info("In getTemporarySchedulesForCurrentTeacher");
+        Teacher teacher = teacherService.findByUserId(Integer.parseInt(jwtUser.getId().toString()));
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        DateTimeFormatter currentFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate fromDate = LocalDate.parse(LocalDate.parse(from, formatter).toString(), currentFormatter);
+        LocalDate toDate = LocalDate.parse(LocalDate.parse(to, formatter).toString(), currentFormatter);
+        return ResponseEntity.ok().body(temporaryScheduleMapper.convertToDtoList(temporaryScheduleService.getTemporaryScheduleByTeacherAndRange(fromDate, toDate, teacher.getId())));
+    }
 }
