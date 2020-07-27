@@ -5,7 +5,7 @@ export const cardType = {
     GROUP: 'Group',
     ROOM: 'Room',
     TYPE: 'Type',
-    TEMPORARY_SCHEDULE: 'Temporary schedule',
+    TEMPORARY_SCHEDULE: 'temporary_schedule',
     SUBJECT: 'Subject',
     WISH: 'Wish',
     SEMESTER: 'Semester'

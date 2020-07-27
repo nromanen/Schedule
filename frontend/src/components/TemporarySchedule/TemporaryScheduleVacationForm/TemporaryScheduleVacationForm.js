@@ -98,7 +98,7 @@ let TemporaryScheduleVacationForm = props => {
     return (
         <Card class="form-card">
             <h2 className="form-title under-line">
-                {vacationId ? t('edit_title') : t('create_title')}
+                {vacationId ? t('edit_vacation_form') : t('create_vacation_form')}
             </h2>
             <form onSubmit={handleSubmit}>
                 <FormControlLabel

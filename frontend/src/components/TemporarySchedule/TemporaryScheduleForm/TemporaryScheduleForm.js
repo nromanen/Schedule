@@ -69,8 +69,8 @@ let TemporaryScheduleForm = props => {
             <>
                 <h2 className="form-title under-line">
                     {!temporarySchedule.scheduleId
-                        ? t('edit_title')
-                        : t('create_title')}
+                        ? t('edit_temporary_schedule_form')
+                        : t('create_temporary_schedule_form')}
                 </h2>
                 <form onSubmit={handleSubmit}>
                     <Field

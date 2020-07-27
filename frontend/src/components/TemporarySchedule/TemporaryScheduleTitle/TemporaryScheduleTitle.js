@@ -20,12 +20,12 @@ import * as moment from 'moment';
 import { temporaryScheduleRadioTypes } from '../../../constants/temporaryScheduleRadioTypes';
 
 import {
-    eliminateSchedulesAndTemporarySchedulesService,
     getTeacherTemporarySchedulesService,
     getTemporarySchedulesService,
     selectTeacherIdService
 } from '../../../services/temporaryScheduleService';
 import { handleTeacherInfo } from '../../../helper/handleTeacherInfo';
+import Divider from '@material-ui/core/Divider';
 
 const useStyles = makeStyles({
     teacherField: {
@@ -55,6 +55,16 @@ const useStyles = makeStyles({
     },
     block: {
         display: 'block'
+    },
+    legendBlock: {
+        textAlign: 'left',
+        margin: '10px 0'
+    },
+    legend: {
+        display: 'inline-block',
+        width: '10px',
+        height: '10px',
+        backgroundColor: '#F5DEB3'
     }
 });
 
@@ -146,10 +156,16 @@ const TemporaryScheduleTitle = props => {
             <ExpansionPanel>
                 <ExpansionPanelSummary aria-controls="panel1a-content">
                     <Typography className={classes.heading}>
-                        {t('filter')}
+                        {t('temporary_schedule_for_teacher_title')}
                     </Typography>
                 </ExpansionPanelSummary>
                 <ExpansionPanelDetails className={classes.block}>
+                    <Divider />
+                    <div className={classes.legendBlock}>
+                        <div className={classes.legend} /> -{' '}
+                        {t('holiday_label')}
+                    </div>
+                    <Divider />
                     <RadioGroup
                         className={classes.dateGroup}
                         value={radio}
