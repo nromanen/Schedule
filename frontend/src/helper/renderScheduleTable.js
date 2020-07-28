@@ -59,7 +59,7 @@ const renderClassCell = classItem =>
 export const prepareLessonCardCell = card => {
     let inner = '';
     if (card !== undefined && card !== null) {
-        inner = card.teacherForSite + '\n\r' + card.subjectForSite;
+        inner = card.teacherForSite + '\n' + card.subjectForSite;
     }
     return inner;
 };
@@ -76,6 +76,155 @@ export const prepareLessonSubCardCell = card => {
         }
     }
     return inner;
+};
+export const prepareLessonTemporaryCardCell = card => {
+    let inner = '';
+    if (card !== undefined && card !== null) {
+        if (card.temporary_schedule) {
+            if (card.temporary_schedule.vacation === true) {
+                inner +=
+                    card.temporary_schedule.date +
+                    '\n\r' +
+                    i18next.t(`common:vacation_label`);
+            } else {
+                inner +=
+                    card.temporary_schedule.date +
+                    '\n\r' +
+                    card.temporary_schedule.teacherForSite +
+                    '\n\r' +
+                    card.temporary_schedule.subjectForSite;
+                if (card.temporary_schedule.room) {
+                    inner += ', ' + card.temporary_schedule.room.name + ' )';
+                }
+            }
+            let title =
+                i18next.t(`common:regular_lesson_label`) +
+                '\r' +
+                prepareLessonCardCell(card) +
+                '\r' +
+                prepareLessonSubCardCell(card);
+
+            return inner.length > 0 ? (
+                <p className="temporary-class" title={title}>
+                    {inner}
+                </p>
+            ) : (
+                ''
+            );
+        } else {
+            return (
+                <>
+                    <p>{prepareLessonCardCell(card)}</p>
+                    <p>{prepareLessonSubCardCell(card)}</p>
+                </>
+            );
+        }
+    } else {
+        return '';
+    }
+};
+
+export const prepareTeacherCardCell = card => {
+    let inner = '';
+    if (card !== undefined && card !== null) {
+        inner = card.subjectForSite;
+    }
+    return inner;
+};
+
+export const prepareTeacherCardRegularCell = card =>
+    prepareTeacherCardCell(card) +
+    '\r(' +
+    i18next.t(
+        `formElements:lesson_type_${card.lessonType.toLowerCase()}_label`
+    ) +
+    ', ' +
+    card.room +
+    ')' +
+    '\r' +
+    i18next.t('common:GroupList_management_title') +
+    ': ' +
+    card.group.title;
+
+export const prepareTeacherTemporaryCardCell = cards => {
+    let inner = '';
+    let title = '';
+    if (!cards) {
+        return '';
+    }
+
+    if (cards.length === 1) {
+        if (cards[0] === undefined || cards[0] === null) {
+            return '';
+        }
+        const card = cards[0];
+        if (!card.temporary_schedule) {
+            return prepareTeacherCardRegularCell(card);
+        }
+        if (card.temporary_schedule.vacation === true) {
+            inner +=
+                card.temporary_schedule.date +
+                '\n\r' +
+                i18next.t(`common:vacation_label`);
+        } else {
+            inner +=
+                card.temporary_schedule.date +
+                '\n\r' +
+                card.temporary_schedule.teacherForSite +
+                '\n\r' +
+                card.temporary_schedule.subjectForSite;
+            if (card.temporary_schedule.room) {
+                inner += ', ' + card.temporary_schedule.room.name + ' )';
+            }
+        }
+        title =
+            i18next.t(`common:regular_lesson_label`) +
+            '\r' +
+            prepareTeacherCardRegularCell(card);
+        return inner.length > 0 ? (
+            <p className="temporary-class" title={title}>
+                {inner}
+            </p>
+        ) : (
+            ''
+        );
+    }
+    cards.map(card => {
+        if (!card.temporary_schedule) {
+            return prepareTeacherCardRegularCell(card);
+        }
+        if (card.temporary_schedule.vacation === true) {
+            inner +=
+                card.temporary_schedule.date +
+                '\n\r' +
+                i18next.t(`common:vacation_label`) +
+                '\n\r';
+        } else {
+            inner +=
+                card.temporary_schedule.date +
+                '\n\r' +
+                card.temporary_schedule.teacherForSite +
+                '\n\r' +
+                card.temporary_schedule.subjectForSite;
+            if (card.temporary_schedule.room) {
+                inner += ', ' + card.temporary_schedule.room.name + ' )';
+            }
+            inner += '\n\r';
+        }
+        title +=
+            i18next.t(`common:regular_lesson_label`) +
+            '\r' +
+            prepareTeacherCardRegularCell(card) +
+            '\r';
+    });
+
+    return inner.length > 0 ? (
+        <p className="temporary-class" title={title}>
+            {inner}
+        </p>
+    ) : (
+        ''
+    );
 };
 
 export const renderGroupDayClass = (classDay, isOddWeek) => {
@@ -96,8 +245,9 @@ export const renderGroupDayClass = (classDay, isOddWeek) => {
                 }
                 return (
                     <TableCell key={shortid.generate()} className={className}>
-                        <p>{prepareLessonCardCell(day.card, currentDay)}</p>
-                        <p>{prepareLessonSubCardCell(day.card, currentDay)}</p>
+                        {/* <p>{prepareLessonCardCell(day.card, currentDay)}</p>
+                        <p>{prepareLessonSubCardCell(day.card, currentDay)}</p> */}
+                        {prepareLessonTemporaryCardCell(day.card)}
                     </TableCell>
                 );
             })}
@@ -190,8 +340,7 @@ export const renderGroupCells = (
                 rowSpan={rowspan}
                 className={classname}
             >
-                <p>{prepareLessonCardCell(group.card)}</p>
-                <p>{prepareLessonSubCardCell(group.card)}</p>
+                {prepareLessonTemporaryCardCell(group.card)}
             </TableCell>
         );
     });
@@ -411,14 +560,6 @@ export const renderFullSchedule = fullResultSchedule => {
     );
 };
 
-export const prepareTeacherCardCell = card => {
-    let inner = '';
-    if (card !== undefined && card !== null) {
-        inner = card.subjectForSite;
-    }
-    return inner;
-};
-
 const renderClassRow = (classItem, days, scheduleRow) => (
     <TableRow key={shortid.generate()}>
         <TableCell className="lesson groupLabelCell">
@@ -434,32 +575,26 @@ const renderClassRow = (classItem, days, scheduleRow) => (
     </TableRow>
 );
 const renderTeacherClassCell = cards => {
-    let cellText = '';
-    let subCellText = '';
-    let groupCellText = '';
+    let teacherLessonAddCellClass = '';
+
     if (cards !== undefined) {
-        cards.cards.map((card, cardIndex) => {
-            if (cardIndex === 0) {
-                cellText += prepareTeacherCardCell(card);
-                subCellText +=
-                    ' (' +
-                    i18next.t(
-                        `formElements:lesson_type_${card.lessonType.toLowerCase()}_label`
-                    ) +
-                    ', ' +
-                    card.room +
-                    ')';
-                groupCellText +=
-                    i18next.t('common:GroupList_management_title') + ': ';
-            }
-            groupCellText += card.group.title + ' ';
-        });
+        if (cards.cards.length > 1) {
+            cards.cards.map((card, cardIndex) => {
+                if (
+                    cards.cards[cardIndex + 1] &&
+                    card.room !== cards.cards[cardIndex + 1].room
+                ) {
+                    teacherLessonAddCellClass += 'intersection-on-schedule';
+                }
+            });
+        }
     }
     return (
-        <TableCell key={shortid.generate()} className="lesson">
-            <p>{cellText}</p>
-            <p>{subCellText}</p>
-            <p>{groupCellText}</p>
+        <TableCell
+            key={shortid.generate()}
+            className={`lesson ${teacherLessonAddCellClass}`}
+        >
+            {prepareTeacherTemporaryCardCell(cards.cards)}
         </TableCell>
     );
 };

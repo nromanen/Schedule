@@ -12,6 +12,7 @@
     "my_profile": "Мій профіль",
 
     "LessonPage_management_title": "Заняття",
+    "Changes_management_title": "Заміни",
     "TeacherList_management_title": "Викладачі",
     "GroupList_management_title": "Групи",
     "ClassSchedule_management_title": "Уроки",
@@ -39,7 +40,9 @@
     "teacher_wish_class_status_BAD": "Зайнято",
 
     "lesson_for_group_title": "Заняття для групи",
+    "temporary_schedule_for_teacher_title": "Заміни",
     "lesson_no_lesson_for_group_label": "Немає занять для групи ",
+    "no_changes": "Немає змін",
 
     "day_of_week_1": "Понеділок",
     "day_of_week_2": "Вівторок",
@@ -78,6 +81,9 @@
     "edit_lesson": "Редагувати заняття",
     "copy_lesson": "Скопіювати заняття",
     "copy_to_same_group_error": "Ви не можете скопіювати в ту саму групу",
+
+    "delete_lesson_changes": "Видалити зміни",
+    "edit_lesson_lesson": "Редагувати зміни",
 
     "successful_login_message": "Ви успішно увійшли",
     "successful_registered_message": "Ви успішно зареєструвалися. Підтвердьте будь ласка електронну адресу. ",
@@ -119,16 +125,21 @@
 
     "days_label": "Дні",
     "current_label": "Поточний",
+    "holiday_label": "Вихідний",
+    "notify_label": "Повідомити",
+    "few_days_label": "Декілька днів",
     "show_disabled": "Показати відключені",
     "show_enabled": "Показати включені",
     "set_disabled": "Відключити",
     "set_enabled": "Включити",
+    "make_archive": "Заархівувати",
     "no_current_semester": "Будь ласка виберіть поточний семестер",
     "no_current_semester_error": "Поточний семестр не вибраний",
     "error_message": "Помилка. Будь ласка перезавантажте сторінку.",
     "semester_service_is_active": "Цей семестер не може бути видалений, оскільки він є поточним",
     "use_pc": "Тільки з персонального комп'ютера можна створювати розклад",
     "empty_schedule": "Розклад порожній",
+    "empty": "Пусто",
 
     "menu_button": "МЕНЮ",
     "download_pdf": "Завантажити PDF",
@@ -136,5 +147,13 @@
     "block_view": "Вигляд блоків",
     "list_view": "Вигляд таблиці",
     "clear_schedule_label": "Очистити розклад",
-    "copy_lessons_from_semester_to_current": "Копіювати всі заняття із обраного семестру в поточний"
+    "copy_lessons_from_semester_to_current": "Копіювати всі заняття із обраного семестру в поточний",
+
+    "for_all": "Для всіх",
+    "date": "Дата",
+    "filter": "Фільтер",
+    "one_day": "Один день",
+    "preview": "Переглянути",
+    "vacation_label": "Вихідний",
+    "regular_lesson_label": "Пара за розкладом"
 }

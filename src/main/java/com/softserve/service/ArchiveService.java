@@ -1,16 +1,16 @@
 package com.softserve.service;
 
-import com.softserve.dto.ScheduleForArchiveDTO;
+import com.softserve.dto.ScheduleFullForArchiveDTO;
 import com.softserve.dto.SemesterDTO;
 
 import java.util.List;
 
 public interface ArchiveService {
-    ScheduleForArchiveDTO getArchiveScheduleBySemesterId(Long semesterId);
+    ScheduleFullForArchiveDTO getArchiveScheduleBySemesterId(Long semesterId);
 
     List<SemesterDTO> getAllSemestersInArchiveSchedule();
 
-    ScheduleForArchiveDTO saveScheduleForArchive(ScheduleForArchiveDTO scheduleForArchiveDTO);
+    ScheduleFullForArchiveDTO saveScheduleForArchive(ScheduleFullForArchiveDTO fullScheduleForArchiveDTO);
 
     void deleteArchiveScheduleBySemesterId(Long semesterId);
 }

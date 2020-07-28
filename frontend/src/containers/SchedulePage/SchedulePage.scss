@@ -3,7 +3,18 @@
 $board-height: 70px;
 $board-min-width: 120px;
 
+.schedule.cards-container {
+    overflow-y: scroll;
+    overflow-x: hidden;
+    .groups-section {
+        margin: 0;
+        display: flex;
+        overflow-x: scroll;
+    }
+}
+
 .in-board-section {
+    margin: 0;
     position: relative;
     &:hover {
         transition: all 0.7s;
@@ -48,6 +59,10 @@ $board-min-width: 120px;
         }
     }
 
+    section.group-section {
+        margin: 0;
+    }
+
     .day-classes-aside {
         .card.empty-card {
             min-width: 97px;
@@ -55,20 +70,9 @@ $board-min-width: 120px;
             font-size: 13px;
             text-align: center;
         }
-        .before-border {
-            position: relative;
-            &:before {
-                content: '';
-                display: flex;
-                position: absolute;
-                width: 45%;
-                top: -0.5px;
-                left: 7px;
-                border-top: 0.5px outset $label-color;
-                border-radius: 5px;
-            }
+        .day-container {
+            margin: 0;
             .schedule-day {
-                box-shadow: none;
                 position: relative;
                 text-align: center;
                 font-size: 1.5rem;
@@ -76,7 +80,7 @@ $board-min-width: 120px;
                 text-orientation: upright;
             }
             .schedule-class {
-                min-height: 2 * $board-height + 14;
+                min-height: 2 * $board-height + 13.5;
                 text-align: center;
                 font-size: 1.5rem;
                 writing-mode: vertical-rl;
@@ -123,9 +127,11 @@ $board-min-width: 120px;
                     padding: 3px;
                     .delete-item {
                         position: absolute;
-                        right: 0;
                         display: none;
-                        .delete-btn {
+                        right: 0px;
+                        width: $btn-size;
+                        .delete-btn,
+                        .edit-btn {
                             width: $schedule-button-size;
                             height: $schedule-button-size;
                         }
@@ -160,7 +166,8 @@ $board-min-width: 120px;
 }
 
 .class-section {
-    max-width: 60px;
+    width: 60px;
+    margin: 0;
 }
 
 .availability-warning {

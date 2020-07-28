@@ -63,6 +63,14 @@ a.pdf_link {
                     font-weight: bold;
                     font-size: 1.2em;
                 }
+                &.intersection-on-schedule {
+                    background-color: $danger-background-color;
+                }
+                p.temporary-class {
+                    background-color: $good-color-light;
+                    padding: 5px 0;
+                    cursor: pointer;
+                }
             }
 
             &.grouped {

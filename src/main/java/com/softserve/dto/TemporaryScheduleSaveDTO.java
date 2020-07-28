@@ -1,6 +1,7 @@
 package com.softserve.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.softserve.entity.*;
 import com.softserve.entity.enums.LessonType;
 import lombok.Data;
@@ -19,12 +20,16 @@ public class TemporaryScheduleSaveDTO {
     private String teacherForSite;
     private String subjectForSite;
     private Teacher teacher;
-    private Lesson lesson;
+    private Schedule schedule;
     private LessonType lessonType;
     private Subject subject;
     private Group group;
     private Room room;
+    private Semester semester;
+
+    @JsonProperty("class")
     private Period period;
     private boolean grouped;
     private boolean vacation;
+    private boolean notification;
 }

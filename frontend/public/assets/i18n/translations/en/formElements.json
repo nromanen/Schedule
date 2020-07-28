@@ -1,7 +1,15 @@
 {
     "edit_title": "Edit ",
+    "edit_vacation_title": "Edit vacation",
     "create_title": "Create ",
+    "create_vacation_title": "add vacation",
     "delete_title": "Delete",
+
+
+    "edit_temporary_schedule_form": "Edit temporary schedule",
+    "create_temporary_schedule_form": "Create temporary schedule",
+    "edit_vacation_form": "Edit vacation",
+    "create_vacation_form": "Create vacation",
 
     "teacher_label": "Teacher",
     "user_label": "User",
@@ -12,6 +20,7 @@
     "type_label": "Type",
     "hours_label": "Hours",
     "lesson_label": "Lesson",
+    "temporary_schedule_label": "Temporary schedule",
     "teacher_a_label": "Teacher",
     "group_y_label": "group",
     "class_y_label": "Class",
@@ -37,6 +46,8 @@
 
     "for_site_label": " for site",
     "not_selected_label": "is not selected",
+    "for_all": "For all",
+    "for_teacher": "For teacher",
 
     "save_button_label": "Save",
     "clear_button_label": "Clear",
@@ -47,6 +58,7 @@
 
     "class_from_label": "From",
     "class_to_label": "To",
+    "day_label": "Day",
 
     "type_to_search": "Type to search",
     "there_is_no": "There isn't any",
@@ -62,6 +74,7 @@
     "add_type_label": "Add new type here",
 
     "lesson_element": "lesson",
+    "temporary_schedule_element": "Temporary_schedule",
     "Teacher_element": "teacher",
     "group_element": "group",
     "class_element": "class",
@@ -82,5 +95,7 @@
     "close_label": "Close",
     "copy_label": "Copy",
     "semester_copy_red_hint": "If there are Lessons in the semester in which you are copying, they will be added; if there are records of the actual schedule, they will be replaced by new ones from the semester with which you copy.",
-    "grouped_label": "Grouped"
+    "grouped_label": "Grouped",
+    "show_archived": "Show archived",
+    "show_regular": "Show regular"
 }

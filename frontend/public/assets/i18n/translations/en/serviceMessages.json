@@ -7,5 +7,6 @@
     "back_end_success_operation": "{{cardType}} was successfully {{actionType}}",
     "successfully_merged": "User and teacher have been successfully merged",
     "copied_label": "copied",
-    "cleared_label": "cleared"
+    "cleared_label": "cleared",
+    "archived_label": "archived"
 }

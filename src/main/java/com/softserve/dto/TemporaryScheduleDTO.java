@@ -1,6 +1,7 @@
 package com.softserve.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.softserve.entity.*;
 import com.softserve.entity.enums.LessonType;
 import lombok.Data;
@@ -23,7 +24,9 @@ public class TemporaryScheduleDTO {
     private Subject subject;
     private Group group;
     private Room room;
-    private Period period;
+    private Semester semester;
+    @JsonProperty("class")
+    private PeriodDTO period;
     private boolean grouped;
     private boolean vacation;
 }

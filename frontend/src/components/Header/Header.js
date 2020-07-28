@@ -3,13 +3,13 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import {
     FaCaretDown,
-    FaHome,
-    FaClock,
-    FaUser,
-    FaSignOutAlt,
-    FaRunning,
     FaClipboardList,
-    FaDoorOpen
+    FaClock,
+    FaDoorOpen,
+    FaHome,
+    FaRunning,
+    FaSignOutAlt,
+    FaUser
 } from 'react-icons/fa';
 import Menu from '@material-ui/core/Menu';
 import Button from '@material-ui/core/Button';
@@ -27,9 +27,11 @@ import * as colors from '../../constants/schedule/colors';
 import { getMyTeacherWishesService } from '../../services/teacherWishService';
 
 import WishModal from '../../containers/WishModal/WishModal';
-import { getScheduleItemsService } from '../../services/scheduleService';
+import { getCurrentSemesterService } from '../../services/scheduleService';
 
 import FreeRooms from '../../containers/FreeRooms/freeRooms';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import { setSemesterLoadingService } from '../../services/loadingService';
 
 const StyledMenu = withStyles({
     paper: {
@@ -75,8 +77,11 @@ const Header = props => {
     const [teacher, setTeacher] = useState(0);
 
     useEffect(() => {
-        if (props.userRole === roles.MANAGER) getScheduleItemsService();
-    }, []);
+        if (props.userRole === roles.MANAGER) {
+            setSemesterLoadingService(true);
+            getCurrentSemesterService();
+        }
+    }, [props.userRole]);
 
     const handleClickOpenWish = teacher => {
         setTeacher(teacher);
@@ -139,7 +144,7 @@ const Header = props => {
                             >
                                 <StyledMenuItem>
                                     <ListItemIcon>
-                                        <FaClock fontSize="normall" />
+                                        <FaClock fontSize="normal" />
                                     </ListItemIcon>
                                     {t('schedule_title')}
                                 </StyledMenuItem>
@@ -151,7 +156,7 @@ const Header = props => {
                             >
                                 <StyledMenuItem>
                                     <ListItemIcon>
-                                        <FaDoorOpen fontSize="normall" />
+                                        <FaDoorOpen fontSize="normal" />
                                     </ListItemIcon>
                                     <FreeRooms
                                         classScheduler={props.classScheduler}
@@ -166,7 +171,7 @@ const Header = props => {
                             >
                                 <StyledMenuItem>
                                     <ListItemIcon>
-                                        <FaUser fontSize="normall" />
+                                        <FaUser fontSize="normal" />
                                     </ListItemIcon>
                                     {t('my_profile')}
                                 </StyledMenuItem>
@@ -179,7 +184,7 @@ const Header = props => {
                             >
                                 <StyledMenuItem>
                                     <ListItemIcon>
-                                        <FaSignOutAlt fontSize="normall" />
+                                        <FaSignOutAlt fontSize="normal" />
                                     </ListItemIcon>
                                     {t('logout_title')}
                                 </StyledMenuItem>
@@ -200,7 +205,7 @@ const Header = props => {
                         >
                             {localStorage.getItem('email')}
                             <ListItemIcon>
-                                <FaCaretDown fontSize="normall" />
+                                <FaCaretDown fontSize="normal" />
                             </ListItemIcon>
                         </Button>
                         <StyledMenu
@@ -218,7 +223,7 @@ const Header = props => {
                             >
                                 <StyledMenuItem>
                                     <ListItemIcon>
-                                        <FaClock fontSize="normall" />
+                                        <FaClock fontSize="normal" />
                                     </ListItemIcon>
                                     {t('schedule_title')}
                                 </StyledMenuItem>
@@ -236,7 +241,7 @@ const Header = props => {
                             >
                                 <StyledMenuItem>
                                     <ListItemIcon>
-                                        <FaClipboardList fontSize="normall" />
+                                        <FaClipboardList fontSize="normal" />
                                     </ListItemIcon>
                                     {t('wishes_title')}
                                 </StyledMenuItem>
@@ -249,7 +254,7 @@ const Header = props => {
                             >
                                 <StyledMenuItem>
                                     <ListItemIcon>
-                                        <FaUser fontSize="normall" />
+                                        <FaUser fontSize="normal" />
                                     </ListItemIcon>
                                     {t('my_profile')}
                                 </StyledMenuItem>
@@ -262,7 +267,7 @@ const Header = props => {
                             >
                                 <StyledMenuItem>
                                     <ListItemIcon>
-                                        <FaSignOutAlt fontSize="normall" />
+                                        <FaSignOutAlt fontSize="normal" />
                                     </ListItemIcon>
                                     {t('logout_title')}
                                 </StyledMenuItem>
@@ -298,7 +303,7 @@ const Header = props => {
                             >
                                 <StyledMenuItem>
                                     <ListItemIcon>
-                                        <FaSignOutAlt fontSize="normall" />
+                                        <FaSignOutAlt fontSize="normal" />
                                     </ListItemIcon>
                                     {t('logout_title')}
                                 </StyledMenuItem>
@@ -318,10 +323,16 @@ const Header = props => {
     if (props.userRole === roles.MANAGER) {
         leftLinks = (
             <>
-                <span className="navLinks nav-semester">
-                    {t('formElements:semester_label')}:{' '}
-                    {props.currentSemester.description}
-                </span>
+                {props.loading ? (
+                    <span className="navLinks nav-semester">
+                        <CircularProgress size={20} />
+                    </span>
+                ) : (
+                    <span className="navLinks nav-semester">
+                        {t('formElements:semester_label')}:{' '}
+                        {props.currentSemester.description}
+                    </span>
+                )}
             </>
         );
         menu = (
@@ -584,7 +595,8 @@ const mapStateToProps = state => ({
     myWishes: state.teachersWish.myWishes,
     classScheduler: state.classActions.classScheduler,
     currentSemester: state.schedule.currentSemester,
-    teacherWishes: state.teachersWish.wishes
+    teacherWishes: state.teachersWish.wishes,
+    loading: state.loadingIndicator.semesterLoading
 });
 
 export default connect(mapStateToProps, {})(Header);

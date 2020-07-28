@@ -12,6 +12,7 @@
     "my_profile": "My profile",
 
     "LessonPage_management_title": "Lesson",
+    "Changes_management_title": "Changes",
     "TeacherList_management_title": "Teacher",
     "GroupList_management_title": "Group",
     "ClassSchedule_management_title": "Classes",
@@ -50,7 +51,9 @@
     "security_error_message": "Security doesn't work",
 
     "lesson_for_group_title": "Lessons for group",
+    "temporary_schedule_for_teacher_title": "Temporary schedule",
     "lesson_no_lesson_for_group_label": "There are no lessons for group ",
+    "no_changes": "There are no changes",
 
     "day_of_week_1": "Monday",
     "day_of_week_2": "Tuesday",
@@ -84,6 +87,10 @@
     "copy_lesson": "Copy lesson",
     "copy_to_same_group_error": "You cannot copy to the same group",
 
+    "delete_lesson_changes": "Delete changes",
+    "edit_lesson_lesson": "Edit changes",
+
+    "empty": "Empty",
     "empty_fields": "Fields are required",
     "different_passwords": "Passwords are different",
     "no_account": "Don't have account?",
@@ -121,10 +128,14 @@
 
     "days_label": "Days",
     "current_label": "Current",
+    "holiday_label": "Holiday",
+    "notify_label": "Notify",
+    "few_days_label": "Few days",
     "show_disabled": "Show disabled",
     "show_enabled": "Show enabled",
     "set_disabled": "Set disabled",
     "set_enabled": "Set enabled",
+    "make_archive": "Create archive",
     "no_current_semester": "Please choose current semester",
 
     "no_current_semester_error": "Current semester is not selected",
@@ -139,5 +150,12 @@
     "block_view": "Block view",
     "list_view": "List view",
     "clear_schedule_label": "Clear Schedule",
-    "copy_lessons_from_semester_to_current": "Copy all lessons from selected semester to current"
+    "copy_lessons_from_semester_to_current": "Copy all lessons from selected semester to current",
+    "for_all": "For all",
+    "date": "Date",
+    "filter": "Filter",
+    "one_day": "One day",
+    "preview": "Preview",
+    "vacation_label": "Vacation",
+    "regular_lesson_label": "Regular lesson"
 }

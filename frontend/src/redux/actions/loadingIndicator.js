@@ -14,5 +14,9 @@ export const setScheduleLoading = res => {
     };
 };
 
-
-
+export const setSemesterLoading = res => {
+    return {
+        type: actionTypes.SET_SEMESTER_LOADING_INDICATOR,
+        result: res
+    };
+};

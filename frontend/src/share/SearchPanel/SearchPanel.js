@@ -8,17 +8,34 @@ import Card from '../../share/Card/Card';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 
-const SearchPanel = ({ SearchChange, showDisabled }) => {
+const SearchPanel = ({ SearchChange, showDisabled, showArchived }) => {
     const { t } = useTranslation('formElements');
     const [term, setTerm] = useState('');
 
     const [state, setState] = React.useState({
-        checkedB: false
+        checkedB: false,
+        checkedArchived: false
     });
 
     const handleChange = event => {
-        setState({ ...state, [event.target.name]: event.target.checked });
-        showDisabled();
+        switch (event.target.name) {
+            case 'checkedArchived':
+                setState({
+                    ...state,
+                    checkedB: false,
+                    [event.target.name]: event.target.checked
+                });
+                showArchived();
+                break;
+            default:
+                setState({
+                    ...state,
+                    checkedArchived: false,
+                    [event.target.name]: event.target.checked
+                });
+                showDisabled();
+                break;
+        }
     };
 
     const onSearchChange = e => {
@@ -44,6 +61,26 @@ const SearchPanel = ({ SearchChange, showDisabled }) => {
                         : t('common:show_enabled')
                 }
             />
+            {showArchived ? (
+                <FormControlLabel
+                    control={
+                        <Switch
+                            checked={state.checkedArchived}
+                            onChange={handleChange}
+                            name="checkedArchived"
+                            color="secondary"
+                        />
+                    }
+                    label={
+                        !state.checkedArchived
+                            ? t('show_archived')
+                            : t('show_regular')
+                    }
+                />
+            ) : (
+                ''
+            )}
+
             <TextField
                 className="form-field"
                 label={<FaSearch />}

@@ -123,6 +123,7 @@ const GroupSchedulePage = props => {
                 ) {
                     return emptySchedule();
                 }
+
                 const resultArrays = makeGroupSchedule(groupSchedule);
                 if (resultArrays.done) {
                     setLoadingService(false);
@@ -202,6 +203,20 @@ const GroupSchedulePage = props => {
                     return renderFullSchedule(result);
                 }
                 break;
+            case 'archived':
+                if (
+                    (!fullSchedule.schedule ||
+                        fullSchedule.schedule.length === 0) &&
+                    !props.loading
+                ) {
+                    return '';
+                }
+                const archive = makeFullSchedule(fullSchedule);
+                if (archive.groupsCount || archive.done) {
+                    setLoadingService(false);
+                    return renderFullSchedule(archive);
+                }
+                break;
             default:
                 return;
         }
@@ -214,7 +229,11 @@ const GroupSchedulePage = props => {
 
     return (
         <>
-            <GroupSchedulePageTop onSubmit={handleSubmit} />
+            {props.scheduleType !== 'archived' ? (
+                <GroupSchedulePageTop onSubmit={handleSubmit} />
+            ) : (
+                ''
+            )}
             {renderSchedule()}
         </>
     );
