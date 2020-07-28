@@ -13,7 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.thymeleaf.spring5.SpringTemplateEngine;
+
+import javax.mail.MessagingException;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
@@ -36,11 +37,13 @@ public class TemporaryScheduleServiceImpl implements TemporaryScheduleService {
     private final SubjectService subjectService;
     private final TeacherService teacherService;
     private final ScheduleService scheduleService;
+    private final MailService mailService;
+    private final UserService userService;
 
 
     @Autowired
     public TemporaryScheduleServiceImpl(TemporaryScheduleRepository temporaryScheduleRepository, SemesterService semesterService, GroupService groupService,
-                                        RoomService roomService, PeriodService periodService, SubjectService subjectService, TeacherService teacherService, @Lazy ScheduleService scheduleService) {
+                                        RoomService roomService, PeriodService periodService, SubjectService subjectService, TeacherService teacherService, @Lazy ScheduleService scheduleService, MailService mailService, UserService userService) {
         this.temporaryScheduleRepository = temporaryScheduleRepository;
         this.semesterService = semesterService;
         this.groupService = groupService;
@@ -49,6 +52,8 @@ public class TemporaryScheduleServiceImpl implements TemporaryScheduleService {
         this.subjectService = subjectService;
         this.teacherService = teacherService;
         this.scheduleService = scheduleService;
+        this.mailService = mailService;
+        this.userService = userService;
     }
 
     /**
@@ -284,9 +289,13 @@ public class TemporaryScheduleServiceImpl implements TemporaryScheduleService {
             }
         }
         TemporarySchedule temporarySchedule = temporaryScheduleRepository.save(object);
-//        if(temporarySchedule.isNotification()){
-//            sendMailByAddEvent(temporarySchedule);
-//        }
+        if(temporarySchedule.isNotification()){
+            try {
+                createLetterByAddEvent(temporarySchedule);
+            } catch (MessagingException e) {
+                log.error(e.toString());
+            }
+        }
         return temporarySchedule;
     }
 
@@ -452,8 +461,31 @@ public class TemporaryScheduleServiceImpl implements TemporaryScheduleService {
     }
 
 
-    private void sendMailByAddEvent(TemporarySchedule temporarySchedule){
+    private void createLetterByAddEvent(TemporarySchedule temporarySchedule) throws MessagingException {
+        log.info("In createLetterByAddEvent(temporarySchedule = [{}])", temporarySchedule);
+        String toEmail = getTeacherEmailFromTemporarySchedule(temporarySchedule.getTeacher());
+        if(toEmail != null){
+            mailService.send(toEmail,"test", temporarySchedule,"mail/test" );
+        }
+    }
 
+    private void createLetterByDeleteEvent(TemporarySchedule temporarySchedule) throws MessagingException {
+        log.info("In createLetterByDeleteEvent(temporarySchedule = [{}])", temporarySchedule);
+        String toEmail = getTeacherEmailFromTemporarySchedule(temporarySchedule.getTeacher());
+        if(toEmail != null){
+            mailService.send(toEmail,"test", temporarySchedule,"mail/" );
+        }
+    }
+
+
+    private String getTeacherEmailFromTemporarySchedule(Teacher teacher){
+        if(teacher!=null){
+            Integer toTeacherId = teacherService.getById(teacher.getId()).getUserId();
+            if(toTeacherId!=null){
+                return userService.getById(toTeacherId.longValue()).getEmail();
+            }
+        }
+        return null;
     }
 
     private void checkReferencedElement(TemporarySchedule object)  throws EntityNotFoundException{
