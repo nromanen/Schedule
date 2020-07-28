@@ -1,7 +1,6 @@
 package com.softserve.repository.impl;
 
 import com.softserve.entity.Lesson;
-import com.softserve.entity.enums.LessonType;
 import com.softserve.repository.LessonRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.query.Query;

@@ -3,7 +3,6 @@ package com.softserve.repository.impl;
 import com.softserve.entity.*;
 import com.softserve.repository.TemporaryScheduleRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.resource.transaction.spi.TransactionStatus;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
