@@ -104,7 +104,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers(FRONTEND_ACTIVATION_PAGE_ENDPOINT, DOWNLOAD_SCHEDULE_ENDPOINT, AUTH_ENDPOINT, SCHEDULE_FOR_USERS_ENDPOINT, ALL_GROUPS_PUBLIC_ENDPOINT, ALL_TEACHERS_PUBLIC_ENDPOINT,HOME_ENDPOINT,LOGIN_ENDPOINT,ADMIN_ENDPOINT,FRONTEND_SCHEDULE_ENDPOINT,
-                         ALL_CLASSES_PUBLIC_ENDPOINT, ALL_SEMESTERS_PUBLIC_ENDPOINT).permitAll()
+                         ALL_CLASSES_PUBLIC_ENDPOINT, ALL_SEMESTERS_PUBLIC_ENDPOINT, "/1").permitAll()
                 .antMatchers(MANAGER_ENDPOINT, CLASSES_ENDPOINT, GROUPS_ENDPOINT, LESSONS_ENDPOINT,
                         ROOMS_ENDPOINT, SUBJECTS_ENDPOINT, TEACHERS_ENDPOINT, SEMESTERS_ENDPOINT, ROOM_TYPES_ENDPOINT).hasRole("MANAGER")
                 .anyRequest().authenticated()
@@ -208,7 +208,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
             String url = env.getProperty("backend.url");
             String jwtToken = jwtTokenProvider.createToken(user.getEmail(), user.getRole().toString());
-            response.sendRedirect(url + "auth/social/login-success?token=" + jwtToken);
+            response.sendRedirect(url + "login?social=true&token=" + jwtToken);
         };
     }
 }

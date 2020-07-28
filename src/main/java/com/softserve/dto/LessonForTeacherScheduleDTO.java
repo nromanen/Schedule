@@ -1,5 +1,6 @@
 package com.softserve.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.softserve.entity.enums.LessonType;
 import lombok.*;
 
@@ -17,4 +18,6 @@ public class LessonForTeacherScheduleDTO {
    // @EqualsAndHashCode.Exclude
     private GroupDTO group;
     private String room;
+    @JsonProperty("temporary_schedule")
+    private TemporaryScheduleDTOForDashboard temporaryScheduleDTO;
 }

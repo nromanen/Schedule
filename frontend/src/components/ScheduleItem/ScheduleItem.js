@@ -1,5 +1,5 @@
 import React from 'react';
-import { MdDelete } from 'react-icons/md';
+import { MdDelete, MdEdit } from 'react-icons/md';
 
 import Card from '../../share/Card/Card';
 import { FaUserPlus } from 'react-icons/fa';
@@ -51,6 +51,11 @@ const ScheduleItem = props => {
                                 props.deleteItem(itemId, item.lesson.group.id)
                             }
                         />
+                        <MdEdit
+                            title={t('common:edit_schedule_item')}
+                            className="svg-btn edit-btn"
+                            onClick={() => props.editItem(item)}
+                        />
                     </div>
                 </>
             ) : (
@@ -68,7 +73,6 @@ const ScheduleItem = props => {
             {props.inBoard ? (
                 <p>
                     {isGroupped(lesson.grouped)}
-                    {/* {t('common:room_card_title')}  */}
                     <b>{item.room.name}</b>
                 </p>
             ) : (

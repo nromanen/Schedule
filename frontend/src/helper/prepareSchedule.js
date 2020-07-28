@@ -230,6 +230,7 @@ export const makeTeacherSchedule = teacherSchedule => {
         });
         done = true;
     }
+
     return {
         done,
         teacher,

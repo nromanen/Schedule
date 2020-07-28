@@ -1,7 +1,13 @@
 {
     "edit_title": "Редагування ",
     "create_title": "Створення ",
+    "create_vacation_title": "Добавити вихідний",
     "delete_title": "Видалення",
+
+    "edit_temporary_schedule_form": "Редагування заміни",
+    "create_temporary_schedule_form": "Створення заміни",
+    "edit_vacation_form": "Редагування вихідного",
+    "create_vacation_form": "Створення вихідного",
 
     "teacher_label": "Викладач",
     "user_label": "Користувач",
@@ -10,6 +16,7 @@
     "room_label": "Аудиторія",
     "subject_label": "Предмет",
     "lesson_label": "Заняття",
+    "temporary_schedule_label": "Зміну",
     "teacher_a_label": "Викладачa",
     "group_y_label": "групи",
     "class_y_label": "Уроку",
@@ -37,6 +44,8 @@
 
     "for_site_label": " для сайту",
     "not_selected_label": " не обрана",
+    "for_all": "Для всіх",
+    "for_teacher": "Для викладача",
 
     "save_button_label": "Зберегти",
     "clear_button_label": "Очистити",
@@ -47,6 +56,7 @@
 
     "class_from_label": "З",
     "class_to_label": "До",
+    "day_label": "День",
 
     "type_to_search": "Введіть для пошуку",
     "there_is_no": "Немає",
@@ -62,6 +72,7 @@
     "add_type_label": "Додати новий тип",
 
     "lesson_element": "це заняття",
+    "temporary_schedule_element": "цю заміну",
     "Teacher_element": "цього викладача",
     "group_element": "цю групу",
     "class_element": "цей урок",
@@ -82,5 +93,7 @@
     "close_label": "Закрити",
     "copy_label": "Копіювати",
     "semester_copy_red_hint": "Якщо в семестрі, в який ви копіюєте, є записи Занять, вони додадуться; якщо є записи фактичного розкладу-вони будуть замінені новими із семестру із яково ви копіюєте.",
-    "grouped_label": "Групова"
+    "grouped_label": "Групова",
+    "show_archived": "Відобразити заархівовані",
+    "show_regular": "Віобразити звичайні"
 }

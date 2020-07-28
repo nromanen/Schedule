@@ -1,14 +1,17 @@
 package com.softserve.controller;
 
 
+import com.softserve.dto.GroupWithLessonIdDTO;
 import com.softserve.dto.LessonDTO;
 import com.softserve.dto.LessonInfoDTO;
 import com.softserve.entity.Lesson;
 import com.softserve.entity.Semester;
 import com.softserve.entity.enums.LessonType;
+import com.softserve.mapper.GroupMapper;
 import com.softserve.service.GroupService;
 import com.softserve.service.LessonService;
 import com.softserve.mapper.LessonInfoMapper;
+import com.softserve.service.ScheduleService;
 import com.softserve.service.SemesterService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -32,13 +35,17 @@ public class LessonController {
     private final LessonInfoMapper lessonInfoMapper;
     private final SemesterService semesterService;
     private final GroupService groupService;
+    private final ScheduleService scheduleService;
+    private final GroupMapper groupMapper;
 
     @Autowired
-    public LessonController(LessonService lessonService, LessonInfoMapper lessonInfoMapper, SemesterService semesterService, GroupService groupService) {
+    public LessonController(LessonService lessonService, LessonInfoMapper lessonInfoMapper, SemesterService semesterService, GroupService groupService, ScheduleService scheduleService, GroupMapper groupMapper) {
         this.lessonService = lessonService;
         this.lessonInfoMapper = lessonInfoMapper;
         this.semesterService = semesterService;
         this.groupService = groupService;
+        this.scheduleService = scheduleService;
+        this.groupMapper = groupMapper;
     }
 
 
@@ -116,7 +123,7 @@ public class LessonController {
     @ApiOperation(value = "Copy lesson for several groups")
     public ResponseEntity<List<LessonInfoDTO>> copyLessonInSameSemesterForGroups(@RequestParam Long lessonId,
                                                                                  @RequestBody List<Long> groupsId) {
-        log.info("In copyLessonInSameSemesterForGroups with ");
+        log.info("In copyLessonInSameSemesterForGroups with lessonId = {} and groupsId = {}", lessonId, groupsId);
         List<Lesson> lessonsToSave = new ArrayList<>();
         Lesson lesson = lessonService.getById(lessonId);
         for (long groupId: groupsId) {
@@ -127,5 +134,33 @@ public class LessonController {
             }
         }
         return ResponseEntity.ok().body(lessonInfoMapper.lessonsToLessonInfoDTOs(lessonsToSave));
+    }
+
+    @GetMapping("/all-groups-with-their-lessons-for-grouped-lesson/{lessonId}")
+    @ApiOperation(value = "Get all groups with their lessons for adding a group lesson to schedule")
+    public ResponseEntity<List<GroupWithLessonIdDTO>> getAllGroupsWithLessonsForSetGroupedClass(@PathVariable("lessonId") Long lessonId) {
+        log.info("In getAllGroupsWithLessonsForSetGroupedClass with lessonId = {}", lessonId);
+        Lesson lesson = lessonService.getById(lessonId);
+        List<Lesson> lessons = lessonService.getLessonsBySubjectIdTeacherIdSemesterIdLessonTypeAndExcludeCurrentLessonId(lesson);
+
+        List<Lesson> groupedLessons = new ArrayList<>();
+        for (Lesson les : lessons) {
+            if (scheduleService.countInputLessonsInScheduleByLessonId(les.getId()) < Long.parseLong(String.valueOf(les.getHours()))) {
+                groupedLessons.add(les);
+            }
+        }
+
+        return ResponseEntity.ok().body(convertToGroupWithLessonIdDTO(groupedLessons));
+    }
+
+    private List<GroupWithLessonIdDTO> convertToGroupWithLessonIdDTO(List<Lesson> lessons) {
+        List<GroupWithLessonIdDTO> groupWithLessonIdDTOs = new ArrayList<>();
+        for (Lesson lesson : lessons) {
+            GroupWithLessonIdDTO groupWithLessonIdDTO = new GroupWithLessonIdDTO();
+            groupWithLessonIdDTO.setGroupDTO(groupMapper.groupToGroupDTO(lesson.getGroup()));
+            groupWithLessonIdDTO.setLessonId(lesson.getId());
+            groupWithLessonIdDTOs.add(groupWithLessonIdDTO);
+        }
+        return groupWithLessonIdDTOs;
     }
 }

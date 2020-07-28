@@ -1,5 +1,6 @@
 package com.softserve.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 @Getter
@@ -7,10 +8,13 @@ import lombok.*;
 @ToString
 @NoArgsConstructor
 public class LessonsInScheduleDTO {
+    private Long teacherId;
     private String teacherForSite;
     private String subjectForSite;
     private String lessonType;
     private RoomForScheduleDTO room;
+    @JsonProperty("temporary_schedule")
+    private TemporaryScheduleDTOForDashboard temporaryScheduleDTO;
 
     @Override
     public int hashCode() {

@@ -55,6 +55,7 @@ const CopyLessonsFromSemesterForm = props => {
                 {renderSemesterList()}
                 <div className="form-buttons-container">
                     <Button
+                        className='semester-copy-btn'
                         variant="contained"
                         color="primary"
                         type="submit"

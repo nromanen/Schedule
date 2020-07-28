@@ -36,6 +36,51 @@ const Auth = props => {
     const [authType, setAuthType] = useState(authTypes.LOGIN);
 
     const error = props.error;
+    var url = window.document.location;
+    var parser = new URL(url);
+
+    const socialLoginHandler = data => {
+        props.setLoading(true);
+        if (!data.token || data.token.length < 20) {
+            props.setError({ login: t('broken_token') });
+            return;
+        }
+        setAuthType(authTypes.GOOGLE);
+        props.onAuth(data);
+        resetFormHandler(LOGIN_FORM);
+        window.history.replaceState({}, document.title, '/');
+        props.setLoading(false);
+    };
+
+    let social = false;
+    let isToken = false;
+    let token = '';
+
+    if (parser.search.length > 0) {
+        const params = parser.search.split('&');
+        if (params) {
+            params.map(param => {
+                const splitedParam = param.split('=');
+                if (splitedParam) {
+                    if (
+                        splitedParam[0] === '?social' &&
+                        splitedParam[1] === 'true'
+                    ) {
+                        social = true;
+                    }
+                    if (
+                        splitedParam[0] === 'token' &&
+                        splitedParam[1].length > 0
+                    ) {
+                        isToken = true;
+                        token = splitedParam[1];
+                    }
+                }
+            });
+        }
+        if (social && isToken)
+            socialLoginHandler({ authType: 'google', token });
+    }
 
     useEffect(() => {
         if (
@@ -70,11 +115,6 @@ const Auth = props => {
             return;
         }
         props.onAuth(loginData);
-        props.setLoading(true);
-        resetFormHandler(LOGIN_FORM);
-    };
-    const socialLoginHandler = () => {
-        props.onAuth({ authType: 'google' });
         props.setLoading(true);
         resetFormHandler(LOGIN_FORM);
     };
@@ -137,7 +177,6 @@ const Auth = props => {
                     isLoading={isLoading}
                     loginError={error}
                     onSubmit={loginHandler}
-                    socialLogin={socialLoginHandler}
                     switchAuthMode={switchAuthModeHandler}
                     translation={t}
                     setError={props.setError}
