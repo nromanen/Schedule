@@ -2,7 +2,6 @@ package com.softserve.mapper;
 
 import com.softserve.dto.TemporaryScheduleDTO;
 import com.softserve.dto.TemporaryScheduleDTOForDashboard;
-import com.softserve.dto.TemporaryScheduleForArchiveDTO;
 import com.softserve.dto.TemporaryScheduleSaveDTO;
 import com.softserve.entity.TemporarySchedule;
 import org.mapstruct.Mapper;

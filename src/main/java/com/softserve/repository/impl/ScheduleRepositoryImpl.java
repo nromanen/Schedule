@@ -4,7 +4,6 @@ import com.softserve.entity.*;
 import com.softserve.entity.enums.EvenOdd;
 import com.softserve.repository.ScheduleRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.TypedQuery;
