@@ -36,5 +36,7 @@ public interface ScheduleService extends BasicService<Schedule, Long> {
     Schedule updateWithoutChecks(Schedule schedule);
 
     Long countInputLessonsInScheduleByLessonId(Long lessonId);
+
+    boolean isLessonInScheduleByLessonIdPeriodIdEvenOddDayOfWeek(Long lessonId, Long periodId, EvenOdd evenOdd, DayOfWeek day);
 }
 

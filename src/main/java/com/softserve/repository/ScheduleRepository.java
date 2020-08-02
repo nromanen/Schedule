@@ -45,4 +45,6 @@ public interface ScheduleRepository extends BasicRepository<Schedule, Long> {
     void deleteSchedulesBySemesterId(Long semesterId);
 
     Long countInputLessonsInScheduleByLessonId(Long lessonId);
+
+    Long countByLessonIdPeriodIdEvenOddDayOfWeek(Long lessonId, Long periodId, EvenOdd evenOdd, DayOfWeek day);
 }

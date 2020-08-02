@@ -381,13 +381,34 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
      * Method counts schedule records in db for lesson by lessonsId
      *
      * @param lessonId id of the lesson
-     * @return number of records in db
+     * @return count of records in db
      */
     @Override
     public Long countInputLessonsInScheduleByLessonId(Long lessonId) {
         log.info("In countInputLessonsInScheduleByLessonId(lessonId = [{}])", lessonId);
         return (Long) sessionFactory.getCurrentSession().createQuery("select count (s.id) from  Schedule s where s.lesson.id = :lessonId " + NOT_DISABLED_SQL)
                 .setParameter("lessonId", lessonId)
+                .getSingleResult();
+    }
+
+    /**
+     * Method counts schedule records in db for lesson by lessonsId, periodId, EvenOdd and DayOfWeek
+     *
+     * @param lessonId id of the lesson
+     * @param periodId id of the Period
+     * @param evenOdd Even/Odd
+     * @param day day of Week
+     * @return count of records in db
+     */
+    @Override
+    public Long countByLessonIdPeriodIdEvenOddDayOfWeek(Long lessonId, Long periodId, EvenOdd evenOdd, DayOfWeek day) {
+        log.info("In countByLessonIdPeriodIdEvenOddDayOfWeek(lessonId = [{}], periodId = [{}], evenOdd = [{}], day = [{}])", lessonId, periodId, evenOdd, day);
+        return (Long) sessionFactory.getCurrentSession().createQuery(
+                "select count (s.id) from  Schedule s where s.lesson.id = :lessonId and s.period.id = :periodId and s.dayOfWeek =:dayOfWeek and (s.evenOdd =:evenOdd or s.evenOdd = 'WEEKLY')" + NOT_DISABLED_SQL)
+                .setParameter("lessonId", lessonId)
+                .setParameter("periodId", periodId)
+                .setParameter("dayOfWeek", day)
+                .setParameter("evenOdd", evenOdd)
                 .getSingleResult();
     }
 }
