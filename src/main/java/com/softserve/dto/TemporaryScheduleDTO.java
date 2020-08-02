@@ -25,7 +25,7 @@ public class TemporaryScheduleDTO {
     private Teacher teacher;
     private LessonType lessonType;
     private Subject subject;
-    private List<Group> groups;
+    private Group groups;
     private Room room;
     private Semester semester;
     @JsonProperty("class")
