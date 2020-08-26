@@ -1,5 +1,6 @@
 package com.softserve.service;
 
+import com.softserve.entity.Teacher;
 import com.softserve.entity.TemporarySchedule;
 import com.softserve.entity.enums.EvenOdd;
 
@@ -18,7 +19,8 @@ public interface TemporaryScheduleService extends BasicService<TemporarySchedule
     List<TemporarySchedule> vacationByDateRange(LocalDate fromDate, LocalDate toDate);
     List<String> addRange(LocalDate from, LocalDate to, TemporarySchedule object);
     void deleteTemporarySchedulesBySemesterId(Long semesterId);
-
+    public String getTeacherEmailFromTemporarySchedule(Teacher teacher);
+    public Teacher getTeacherByScheduleId(Long scheduleId);
     Map<EvenOdd, Map<DayOfWeek, List<TemporarySchedule>>> getTemporaryScheduleForEvenOddWeeks(Long semesterId);
 }
 

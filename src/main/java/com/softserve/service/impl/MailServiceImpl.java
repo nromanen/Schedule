@@ -17,8 +17,6 @@ import org.thymeleaf.spring5.SpringTemplateEngine;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
-import java.util.Arrays;
-import java.util.Date;
 import java.util.Locale;
 
 
@@ -69,7 +67,7 @@ public class MailServiceImpl implements MailService {
     public void send(final String emailTo, final String subject, TemporarySchedule temporarySchedule, final String emailTemplate) throws MessagingException
     {
 
-        String credentialsUsername = "schedule.fmi@gmail.com";
+        String credentialsUsername =  environment.getProperty(username);
         if (credentialsUsername == null) {
             credentialsUsername = System.getenv("HEROKU_MAIL_USERNAME");
         }

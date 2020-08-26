@@ -6,6 +6,9 @@ import com.softserve.exception.EntityAlreadyExistsException;
 import com.softserve.exception.EntityNotFoundException;
 import com.softserve.repository.TemporaryScheduleRepository;
 import com.softserve.service.*;
+import com.softserve.util.temporary_notification.DeletePeriodVacationNotify;
+import com.softserve.util.temporary_notification.DeleteTeacherVacationNotify;
+import com.softserve.util.temporary_notification.DeleteVacationNotify;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.SerializationUtils;
 import org.hibernate.Hibernate;
@@ -37,13 +40,16 @@ public class TemporaryScheduleServiceImpl implements TemporaryScheduleService {
     private final SubjectService subjectService;
     private final TeacherService teacherService;
     private final ScheduleService scheduleService;
-    private final MailService mailService;
     private final UserService userService;
+    private final DeleteVacationNotify deleteVacationNotify;
+    private final DeleteTeacherVacationNotify deleteTeacherVacationNotify;
+    private final DeletePeriodVacationNotify deletePeriodVacationNotify;
 
 
     @Autowired
     public TemporaryScheduleServiceImpl(TemporaryScheduleRepository temporaryScheduleRepository, SemesterService semesterService, GroupService groupService,
-                                        RoomService roomService, PeriodService periodService, SubjectService subjectService, TeacherService teacherService, @Lazy ScheduleService scheduleService, MailService mailService, UserService userService) {
+                                        RoomService roomService, PeriodService periodService, SubjectService subjectService, TeacherService teacherService, @Lazy ScheduleService scheduleService,
+                                        UserService userService, DeleteVacationNotify deleteVacationNotify, DeleteTeacherVacationNotify deleteTeacherVacationNotify, DeletePeriodVacationNotify deletePeriodVacationNotify) {
         this.temporaryScheduleRepository = temporaryScheduleRepository;
         this.semesterService = semesterService;
         this.groupService = groupService;
@@ -52,8 +58,10 @@ public class TemporaryScheduleServiceImpl implements TemporaryScheduleService {
         this.subjectService = subjectService;
         this.teacherService = teacherService;
         this.scheduleService = scheduleService;
-        this.mailService = mailService;
         this.userService = userService;
+        this.deleteVacationNotify = deleteVacationNotify;
+        this.deleteTeacherVacationNotify = deleteTeacherVacationNotify;
+        this.deletePeriodVacationNotify = deletePeriodVacationNotify;
     }
 
     /**
@@ -289,13 +297,14 @@ public class TemporaryScheduleServiceImpl implements TemporaryScheduleService {
             }
         }
         TemporarySchedule temporarySchedule = temporaryScheduleRepository.save(object);
-        if(temporarySchedule.isNotification()){
-            try {
-                createLetterByAddEvent(temporarySchedule);
-            } catch (MessagingException e) {
-                log.error(e.toString());
-            }
-        }
+//        if(temporarySchedule.isNotification()){
+//            try {
+//                DeleteVacationNotification deleteVacationNotification = new DeleteVacationNotification(teacherService, userService, mailService);
+//                    deleteVacationNotification.check(temporarySchedule);
+//            } catch (MessagingException e) {
+//                log.error(e.toString());
+//            }
+//        }
         return temporarySchedule;
     }
 
@@ -418,7 +427,13 @@ public class TemporaryScheduleServiceImpl implements TemporaryScheduleService {
     @Override
     public TemporarySchedule delete(TemporarySchedule object) {
         log.info("Enter into delete of TemporaryScheduleServiceImpl with entity:{}", object);
-        return temporaryScheduleRepository.delete(object);
+        TemporarySchedule temporarySchedule = temporaryScheduleRepository.delete(object);
+        try {
+            deleteVacationNotify.linkWith(deleteTeacherVacationNotify).linkWith(deletePeriodVacationNotify).check(object);
+        } catch (MessagingException e) {
+            log.error(e.toString());
+        }
+        return temporarySchedule;
     }
 
     private boolean isExistTemporaryScheduleByVacationByDate(LocalDate date, Long semesterId, boolean vacation) {
@@ -459,34 +474,23 @@ public class TemporaryScheduleServiceImpl implements TemporaryScheduleService {
         log.info("In isExistTemporaryScheduleByDateAndScheduleIdWithIgnoreId(object = [{}])", object);
         return temporaryScheduleRepository.isExistTemporaryScheduleByDateAndScheduleIdWithIgnoreId(object, vacation) != 0;
     }
-
-
-    private void createLetterByAddEvent(TemporarySchedule temporarySchedule) throws MessagingException {
-        log.info("In createLetterByAddEvent(temporarySchedule = [{}])", temporarySchedule);
-        String toEmail = getTeacherEmailFromTemporarySchedule(temporarySchedule.getTeacher());
-        if(toEmail != null){
-            mailService.send(toEmail,"test", temporarySchedule,"mail/test" );
-        }
-    }
-
-    private void createLetterByDeleteEvent(TemporarySchedule temporarySchedule) throws MessagingException {
-        log.info("In createLetterByDeleteEvent(temporarySchedule = [{}])", temporarySchedule);
-        String toEmail = getTeacherEmailFromTemporarySchedule(temporarySchedule.getTeacher());
-        if(toEmail != null){
-            mailService.send(toEmail,"test", temporarySchedule,"mail/" );
-        }
-    }
-
-
-    private String getTeacherEmailFromTemporarySchedule(Teacher teacher){
-        if(teacher!=null){
-            Integer toTeacherId = teacherService.getById(teacher.getId()).getUserId();
-            if(toTeacherId!=null){
-                return userService.getById(toTeacherId.longValue()).getEmail();
-            }
+    public Teacher getTeacherByScheduleId(Long scheduleId) {
+        if (scheduleId != null) {
+            return scheduleService.getById(scheduleId).getLesson().getTeacher();
         }
         return null;
     }
+
+
+   public String getTeacherEmailFromTemporarySchedule(Teacher teacher){
+       if(teacher!=null){
+           Integer toTeacherId = teacherService.getById(teacher.getId()).getUserId();
+           if(toTeacherId!=null){
+               return userService.getById(toTeacherId.longValue()).getEmail();
+           }
+       }
+       return null;
+   }
 
     private void checkReferencedElement(TemporarySchedule object)  throws EntityNotFoundException{
         log.info("In checkReferenceExist(object = [{}])", object);

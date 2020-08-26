@@ -7,9 +7,7 @@ import com.softserve.entity.enums.LessonType;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 import java.time.LocalDate;
-import java.util.List;
 
 @Setter
 @Getter
@@ -25,7 +23,7 @@ public class TemporaryScheduleDTO {
     private Teacher teacher;
     private LessonType lessonType;
     private Subject subject;
-    private Group groups;
+    private Group group;
     private Room room;
     private Semester semester;
     @JsonProperty("class")
