@@ -67,7 +67,7 @@ public class MailServiceImpl implements MailService {
     public void send(final String emailTo, final String subject, TemporarySchedule temporarySchedule, final String emailTemplate) throws MessagingException
     {
 
-        String credentialsUsername = "schedule.fmi@gmail.com";
+        String credentialsUsername =  username;
         if (credentialsUsername == null) {
             credentialsUsername = System.getenv("HEROKU_MAIL_USERNAME");
         }
