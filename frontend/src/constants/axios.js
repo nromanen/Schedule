@@ -50,9 +50,9 @@ export const PUBLIC_TEACHER_URL = 'public/teachers';
 export const PUBLIC_SEMESTERS_URL = 'public/semesters';
 
 export const PUBLIC_DOWNLOAD_GROUP_SCHEDULE_URL =
-    'https://develop-softserve.herokuapp.com/download/schedule-for-group-in-pdf';
+    '/download/schedule-for-group-in-pdf';
 export const PUBLIC_DOWNLOAD_TEACHER_SCHEDULE_URL =
-    'https://develop-softserve.herokuapp.com/download/schedule-for-teacher-in-pdf';
+    '/download/schedule-for-teacher-in-pdf';
 
 export const FOR_TEACHER_SCHEDULE_URL = 'schedules/teacher';
 export const SEMESTER_COPY_URL = '/schedules/copy-schedule';
