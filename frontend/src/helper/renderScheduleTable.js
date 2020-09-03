@@ -594,7 +594,7 @@ const renderTeacherClassCell = cards => {
             key={shortid.generate()}
             className={`lesson ${teacherLessonAddCellClass}`}
         >
-            {prepareTeacherTemporaryCardCell(cards.cards)}
+            {prepareTeacherTemporaryCardCell(cards && cards.cards)}
         </TableCell>
     );
 };
