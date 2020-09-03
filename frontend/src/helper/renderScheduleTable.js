@@ -589,12 +589,13 @@ const renderTeacherClassCell = cards => {
             });
         }
     }
+    console.log('cards', cards);
     return (
         <TableCell
             key={shortid.generate()}
             className={`lesson ${teacherLessonAddCellClass}`}
         >
-            {prepareTeacherTemporaryCardCell(cards.cards)}
+            {prepareTeacherTemporaryCardCell(cards && cards.cards)}
         </TableCell>
     );
 };
