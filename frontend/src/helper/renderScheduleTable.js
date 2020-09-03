@@ -589,7 +589,6 @@ const renderTeacherClassCell = cards => {
             });
         }
     }
-    console.log('cards', cards);
     return (
         <TableCell
             key={shortid.generate()}
