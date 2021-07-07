@@ -40,7 +40,7 @@
     "teacher_wish_class_status_BAD": "Busy",
 
     "lesson_service_is_not_unique": "This lesson is already exist for this group",
-    "busy_rooms_heading": "Busy rooms in this semester",
+    "busy_rooms_heading": "Busy rooms at this semester",
     "no_busy_rooms_heading": "All rooms free for this semester",
     "semester_service_is_not_unique": "This semester is already exist",
 
@@ -105,8 +105,8 @@
     "schedule_dialog_title": "Please choose room:",
     "choose_group": "Please choose group:",
 
-    "greetings_schedule_message": "On the site you have the opportunity to view the full schedule for the semester for this select semester from the drop-down list at the click of a button; if you want to see the schedule for the group, you have to select the semester and the group and click on the button; if the schedule is for the teacher, you have to select the semester and the teacher and click on the button.",
-    "greetings_schedule_message_hint": "*To view the schedule of the group and the teacher, it is necessary to choose a semester",
+    "greetings_schedule_message": "On this site you have oppotunity to view a full schedule on the semester, for this select semester from the drop-down list and click on the button; if you want to see the schedule for the group, you need to select the semester and the group and click on the button; if the schedule is for the teacher, you need to select the semester and teacher and click on the button.",
+    "greetings_schedule_message_hint": "*To view the schedule for the group or teacher, it is necessary to choose the semester.",
     "semester_is_empty": "Semester is empty. You have to chose semester!",
     "full_schedule_label": "Full Schedule",
     "group_schedule_label": "Schedule for group",
