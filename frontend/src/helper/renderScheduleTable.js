@@ -295,9 +295,9 @@ export const renderGroupCells = (
     isCurrentDay = 0
 ) => {
     return groups.map((group, groupIndex) => {
-        var colspan = 1;
-        var rowspan = 1;
-        var classname = 'lesson';
+        let colspan = 1;
+        let rowspan = 1;
+        let classname = 'lesson';
 
         if (currentWeekType === isOdd && isCurrentDay) {
             classname += ' currentDay';
@@ -309,30 +309,39 @@ export const renderGroupCells = (
             rowspan = 2;
             classname += ' weekly';
         }
-
-        for (let i = groupIndex; i < groups.length; i++) {
+        for (let i = groupIndex+1; i < groups.length; i++) {
             if (
                 group &&
-                groups[i + 1] &&
+                groups[i] &&
                 group.card !== null &&
-                groups[i + 1].card !== null
+                groups[i].card !== null
+
             ) {
                 if (
                     group.card.teacherForSite &&
                     group.card.teacherForSite ===
-                        groups[i + 1].card.teacherForSite &&
+                    groups[i].card.teacherForSite &&
                     group.card.subjectForSite ===
-                        groups[i + 1].card.subjectForSite &&
-                    group.card.room.id === groups[i + 1].card.room.id &&
+                    groups[i].card.subjectForSite &&
+                    group.card.room.id === groups[i].card.room.id
+                    &&
                     group.card.weekly_render ===
-                        groups[i + 1].card.weekly_render
+                    groups[i].card.weekly_render
+
+
                 ) {
-                    groups[i + 1].card.skip_render = 1;
+
+                    groups[i].card.skip_render = 1;
                     colspan++;
                     classname += ' grouped';
                 }
+                else break ;
+
             }
+            else break;
+
         }
+      
         return (
             <TableCell
                 key={shortid.generate()}
