@@ -66,7 +66,7 @@ const BusyRooms = props => {
                         className="class-info"
                         key={index + scheduleClass.class_name}
                     >
-                        <div className="class-info-data">
+                        <div className="class-info-data class-number">
                             {scheduleClass.class_name}
                         </div>
                         <div className="class-info-data">
@@ -93,7 +93,7 @@ const BusyRooms = props => {
                         className="class-info"
                         key={index + classOne.class_name + classOne.group_name}
                     >
-                        <div className="class-info-data">
+                        <div className="class-info-data class-number">
                             {classOne.class_name}
                         </div>
                         <div
