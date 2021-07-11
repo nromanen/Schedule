@@ -19,6 +19,8 @@ import { CircularProgress } from '@material-ui/core';
 import Card from '../../share/Card/Card';
 
 import './MergeRolePage.scss';
+import NavigationPage from '../../components/Navigation/NavigationPage';
+import { navigation } from '../../constants/navigationOrder';
 
 const useStyles = makeStyles(() => ({
     autoCompleteField: {
@@ -73,6 +75,7 @@ const MergeRolePage = props => {
 
     return (
         <>
+            <NavigationPage val={navigation.USERS}/>
             <div className="merge-role-form">
                 <Card class="merge-role-card">
                     <h2 className="under-line">{t('merge_header')}</h2>

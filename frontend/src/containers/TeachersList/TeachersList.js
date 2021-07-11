@@ -33,6 +33,8 @@ import NotFound from '../../share/NotFound/NotFound';
 import { GiSightDisabled, IoMdEye } from 'react-icons/all';
 import { disabledCard } from '../../constants/disabledCard';
 import { getPublicClassScheduleListService } from '../../services/classService';
+import NavigationPage from '../../components/Navigation/NavigationPage';
+import { navigation } from '../../constants/navigationOrder';
 
 const TeacherList = props => {
     const { t } = useTranslation('common');
@@ -121,7 +123,11 @@ const TeacherList = props => {
     };
 
     return (
+        <>
+            {console.log(props)}
+            <NavigationPage val={navigation.TEACHERS}/>
         <div className="cards-container">
+
             <ConfirmDialog
                 cardId={teacherCardId}
                 whatDelete={cardType.TEACHER}
@@ -236,6 +242,7 @@ const TeacherList = props => {
                 )}
             </section>
         </div>
+     </>
     );
 };
 const mapStateToProps = state => ({

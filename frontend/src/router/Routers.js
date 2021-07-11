@@ -19,6 +19,16 @@ import ActivationPage from '../containers/ActivationPage/ActivationPage';
 import ProfilePage from '../containers/ProfilePage/ProfilePage';
 import { links } from '../constants/links';
 import { userRoles } from '../constants/userRoles';
+import LessonPage from '../containers/LessonPage/LessonPage';
+import TeacherList from '../containers/TeachersList/TeachersList';
+import BusyRooms from '../containers/BusyRooms/BusyRooms';
+import GroupList from '../containers/GroupList/GroupList';
+import ClassSchedule  from '../containers/ClassSchedule/ClassSchedule';
+import RoomList from '../containers/RoomList/RoomList';
+import SubjectPage from '../containers/SubjectPage/SubjectPage';
+import SemesterPage from '../containers/SemesterPage/SemesterPage';
+import MergeRolePage from '../containers/MergeRolePage/MergeRolePage';
+import ChangePasswordForm from '../components/ChangePasswordForm/ChangePasswordForm';
 
 const Routers = props => {
     const userRole = props.userRole;
@@ -42,6 +52,16 @@ const Routers = props => {
         routes = (
             <Switch>
                 <Route path={links.HOME_PAGE} exact component={HomePage} />
+                <Route path={links.LessonPage}  component={AdminPage} />
+                <Route path={links.TeacherList}  component={TeacherList} />
+                <Route path={links.GroupList}  component={GroupList} />
+                <Route path={links.ClassScheduleTitle}  component={ClassSchedule} />
+                <Route path={links.RoomList}  component={RoomList} />
+                <Route path={links.SubjectPage}  component={SubjectPage} />
+                <Route path={links.BusyRooms}  component={BusyRooms} />
+                <Route path={links.SemesterPage}  component={SemesterPage} />
+                <Route path={links.MergeRolePage}  component={MergeRolePage} />
+                <Route path={links.Changes}  component={ChangePasswordForm} />
                 <Route path={links.SCHEDULE_PAGE} component={SchedulePage} />
                 <Route path={links.ACTIVATION_PAGE}>
                     <Redirect to={links.ADMIN_PAGE} />

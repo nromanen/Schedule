@@ -7,5 +7,15 @@ export const links = {
     LOGOUT: '/logout',
     WISHES: '/wishes',
     TEACHER_SCHEDULE: '/teacher-schedule',
-    MY_PROFILE: '/my-profile'
+    MY_PROFILE: '/my-profile',
+    LessonPage: "/lessons",
+    TeacherList: "/teachers",
+    GroupList: "/groups",
+    ClassScheduleTitle: "/bells",
+    RoomList: "/rooms",
+    SubjectPage: "/subjects",
+    BusyRooms: "/busy-rooms",
+    SemesterPage: "/semesters",
+    MergeRolePage: "/users",
+    Changes: "/changes",
 };
