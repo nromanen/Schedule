@@ -29,6 +29,7 @@ import SubjectPage from '../containers/SubjectPage/SubjectPage';
 import SemesterPage from '../containers/SemesterPage/SemesterPage';
 import MergeRolePage from '../containers/MergeRolePage/MergeRolePage';
 import ChangePasswordForm from '../components/ChangePasswordForm/ChangePasswordForm';
+import GroupSchedulePage from '../components/GroupSchedulePage/GroupSchedulePage';
 
 const Routers = props => {
     const userRole = props.userRole;
@@ -51,6 +52,7 @@ const Routers = props => {
     if (userRole === userRoles.MANAGER) {
         routes = (
             <Switch>
+                <Route path={links.ScheduleFor} component={GroupSchedulePage}/>
                 <Route path={links.HOME_PAGE} exact component={HomePage} />
                 <Route path={links.LessonPage}  component={AdminPage} />
                 <Route path={links.TeacherList}  component={TeacherList} />
@@ -63,6 +65,7 @@ const Routers = props => {
                 <Route path={links.MergeRolePage}  component={MergeRolePage} />
                 <Route path={links.Changes}  component={ChangePasswordForm} />
                 <Route path={links.SCHEDULE_PAGE} component={SchedulePage} />
+
                 <Route path={links.ACTIVATION_PAGE}>
                     <Redirect to={links.ADMIN_PAGE} />
                 </Route>
@@ -71,6 +74,7 @@ const Routers = props => {
                 <Route path={links.ADMIN_PAGE} component={AdminPage} />
                 <Route path={links.LOGOUT} component={Logout} />
                 <Route path={links.MY_PROFILE} component={ProfilePage} />
+
             </Switch>
         );
     } else if (userRole) {

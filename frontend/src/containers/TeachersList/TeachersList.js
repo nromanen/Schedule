@@ -124,7 +124,6 @@ const TeacherList = props => {
 
     return (
         <>
-            {console.log(props)}
             <NavigationPage val={navigation.TEACHERS}/>
         <div className="cards-container">
 

@@ -109,7 +109,6 @@ const NavigationPage = (props) => {
 
     return (
         <div className={classes.root}>
-            {console.log(props)}
             <AppBar position="static">
                 <Tabs
                     value={value}

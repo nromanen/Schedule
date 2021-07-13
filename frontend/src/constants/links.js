@@ -18,4 +18,6 @@ export const links = {
     SemesterPage: "/semesters",
     MergeRolePage: "/users",
     Changes: "/changes",
+    // ScheduleFor:"/schedule-for/semester/:semester?/(group)?/:groupId?/(teacher)?/:teacherId"
+    ScheduleFor:"/schedule-for",
 };
