@@ -2,7 +2,7 @@ export const links = {
     HOME_PAGE: '/',
     ADMIN_PAGE: '/admin',
     SCHEDULE_PAGE: '/schedule',
-    AUTH: '/login',
+    LOGIN: '/login',
     ACTIVATION_PAGE: '/activation-page',
     LOGOUT: '/logout',
     WISHES: '/wishes',
@@ -18,6 +18,7 @@ export const links = {
     SemesterPage: "/semesters",
     MergeRolePage: "/users",
     Changes: "/changes",
-    // ScheduleFor:"/schedule-for/semester/:semester?/(group)?/:groupId?/(teacher)?/:teacherId"
     ScheduleFor:"/schedule-for",
+    Registration:"/registration",
+    RESET_PASSWORD:"/reset-password"
 };

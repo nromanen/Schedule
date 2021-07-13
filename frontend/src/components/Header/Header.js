@@ -95,7 +95,7 @@ const Header = props => {
         let userMenu = null;
         if (userRole === null || userRole === undefined) {
             return (
-                <Link to={links.AUTH} className="navLinks">
+                <Link to={links.LOGIN} className="navLinks">
                     {t('login_title')}
                 </Link>
             );
@@ -540,7 +540,7 @@ const Header = props => {
                         </StyledMenuItem>
                     </Link>
                     <Link
-                        to={links.AUTH}
+                        to={links.LOGIN}
                         className="navLinks"
                         style={{ textDecoration: 'none' }}
                         onClick={handleClose}

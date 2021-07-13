@@ -30,20 +30,27 @@ import SemesterPage from '../containers/SemesterPage/SemesterPage';
 import MergeRolePage from '../containers/MergeRolePage/MergeRolePage';
 import ChangePasswordForm from '../components/ChangePasswordForm/ChangePasswordForm';
 import GroupSchedulePage from '../components/GroupSchedulePage/GroupSchedulePage';
-
+import RegistrationForm from '../components/RegistrationForm/RegistrationForm';
+import LoginForm from '../components/LoginForm/LoginForm';
+import { Register } from '../components/Register/Register';
+import { ResetPassword } from '../components/ResetPassword/ResetPassword';
+import { Login } from '../components/Login/Login';
 const Routers = props => {
     const userRole = props.userRole;
 
     let routes = (
         <Switch>
+            <Route path={links.Registration} component={Register}/>
+            <Route path={links.RESET_PASSWORD} component={ResetPassword}></Route>
+            <Route path={links.ScheduleFor} component={GroupSchedulePage}/>
             <Route path={links.HOME_PAGE} exact component={HomePage} />
             <Route path={links.SCHEDULE_PAGE}>
-                <Redirect to={links.AUTH} />
+                <Redirect to={links.LOGIN} />
             </Route>
             <Route path={links.ADMIN_PAGE}>
-                <Redirect to={links.AUTH} />
+                <Redirect to={links.LOGIN} />
             </Route>
-            <Route path={links.AUTH} component={Auth} />
+            <Route path={links.LOGIN} component={Login} />
             <Route path={links.ACTIVATION_PAGE} component={ActivationPage} />
             <Route path={links.MY_PROFILE} component={ProfilePage} />
         </Switch>
@@ -52,6 +59,8 @@ const Routers = props => {
     if (userRole === userRoles.MANAGER) {
         routes = (
             <Switch>
+                <Route path={links.Registration} component={Register}/>
+                <Route path={links.RESET_PASSWORD} component={ResetPassword}></Route>
                 <Route path={links.ScheduleFor} component={GroupSchedulePage}/>
                 <Route path={links.HOME_PAGE} exact component={HomePage} />
                 <Route path={links.LessonPage}  component={AdminPage} />
@@ -69,7 +78,7 @@ const Routers = props => {
                 <Route path={links.ACTIVATION_PAGE}>
                     <Redirect to={links.ADMIN_PAGE} />
                 </Route>
-                <Route path={links.AUTH} component={Auth} />
+                <Route path={links.LOGIN} component={Login} />
 
                 <Route path={links.ADMIN_PAGE} component={AdminPage} />
                 <Route path={links.LOGOUT} component={Logout} />
@@ -80,18 +89,21 @@ const Routers = props => {
     } else if (userRole) {
         routes = (
             <Switch>
+                <Route path={links.Registration} component={Register}/>
+                <Route path={links.RESET_PASSWORD} component={ResetPassword}></Route>
+                <Route path={links.ScheduleFor} component={GroupSchedulePage}/>
                 <Route path={links.HOME_PAGE} exact component={HomePage} />
                 <Route
                     path={links.TEACHER_SCHEDULE}
                     component={TeacherSchedule}
                 />
                 <Route path={links.SCHEDULE_PAGE}>
-                    <Redirect to={links.AUTH} />
+                    <Redirect to={links.LOGIN} />
                 </Route>
                 <Route path={links.ADMIN_PAGE}>
-                    <Redirect to={links.AUTH} />
+                    <Redirect to={links.LOGIN} />
                 </Route>
-                <Route path={links.AUTH} component={Auth} />
+                <Route path={links.LOGIN} component={Login} />
                 <Route path={links.ACTIVATION_PAGE}>
                     <Redirect to={links.HOME_PAGE} />
                 </Route>
