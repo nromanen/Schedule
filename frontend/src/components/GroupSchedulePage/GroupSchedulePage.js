@@ -240,7 +240,6 @@ const GroupSchedulePage = props => {
     };
 
     const handleSubmit = values => {
-        console.log("Submit",values)
         setLoadingService('true');
         submitSearchSchedule(values);
         const {semester,group,teacher}=values
@@ -265,7 +264,6 @@ const GroupSchedulePage = props => {
 
     return (
         <>
-            {console.log("Group schedule page", props)}
             {
                 props.scheduleType !== 'archived' ? (
                 <GroupSchedulePageTop

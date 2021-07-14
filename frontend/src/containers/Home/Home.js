@@ -24,7 +24,6 @@ const HomePage = props => {
 
     return (
         <Fragment>
-            {console.log("Home")}
             <h1>{t('home_title')}</h1>
             <GroupSchedulePage scheduleType="default" />
         </Fragment>

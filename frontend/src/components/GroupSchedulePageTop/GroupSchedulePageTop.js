@@ -98,7 +98,6 @@ const GroupSchedulePageTop = props => {
 
     return (
         <section className={classes.root}>
-            {console.log("Group schedule page top", props)}
             <p>{t('greetings_schedule_message')}</p>
             <p>{t('greetings_schedule_message_hint')}</p>
             <section className="form-buttons-container">
