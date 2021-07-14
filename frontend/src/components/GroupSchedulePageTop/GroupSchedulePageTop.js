@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { Field, reduxForm } from 'redux-form';
 
@@ -22,6 +22,7 @@ import Card from '../../share/Card/Card';
 
 import { SCHEDULE_SEARCH_FORM } from '../../constants/reduxForms';
 import { required } from '../../validation/validateFields';
+import schedule from '../../redux/reducers/schedule';
 const shortid = require('shortid');
 
 const useStyles = makeStyles(theme => ({
@@ -57,10 +58,11 @@ const GroupSchedulePageTop = props => {
     useEffect(() => showAllPublicGroupsService(), []);
     useEffect(() => showAllPublicTeachersService(), []);
     useEffect(() => showAllPublicSemestersService(), []);
-
+    
     const renderSemesterList = () => {
         if (semesters) {
             if (semesters.length > 1) {
+                // const semester=((props.location.pathname).split("/"))[2];
                 return (
                     <Field
                         id="semester"
@@ -69,15 +71,21 @@ const GroupSchedulePageTop = props => {
                         label={t('formElements:semester_label')}
                         type="text"
                         validate={[required]}
+
+
+
                     >
                         <option />
                         {semesters.map((semester, index) => (
+
                             <option
                                 key={shortid.generate()}
                                 value={semester.id}
+
                             >
                                 {semester.description}
                             </option>
+
                         ))}
                     </Field>
                 );
@@ -102,7 +110,9 @@ const GroupSchedulePageTop = props => {
                             component={renderSelectField}
                             label={t('formElements:group_label')}
                             type="text"
-                            onChange={() => props.change('teacher', 0)}
+                            onChange={() => {
+                                props.change('teacher', 0);
+                            }}
                         >
                             <option />
                             {groups.map((group, index) => (
@@ -136,17 +146,22 @@ const GroupSchedulePageTop = props => {
                                 </option>
                             ))}
                         </Field>
+
                         <Button
                             variant="contained"
                             color="primary"
                             type="submit"
                             disabled={pristine || submitting}
+
                         >
+                            {/*<Link to={"/schedule-for/"+ props.semester}>*/}
                             <MdPlayArrow
                                 title={t('teacher_schedule_label')}
                                 className="svg-btn"
                             />
+                            {/*</Link>*/}
                         </Button>
+
                     </form>
                 </Card>
             </section>
@@ -159,7 +174,12 @@ const mapStateToProps = state => ({
     groups: state.groups.groups,
     teachers: state.teachers.teachers,
     semesters: state.schedule.semesters,
-    loading: state.loadingIndicator.loading
+    loading: state.loadingIndicator.loading,
+
+    initialValues:{"semester": state.schedule.scheduleSemesterId,"group": state.schedule.scheduleGroupId,"teacher": state.schedule.scheduleTeacherId},
+    //initialValues:{"semester": state.schedule.scheduleSemesterId,"group": state.schedule.groupSchedule.group.id,"teacher": state.schedule.teacherSchedule.teacher.id},
+    //initialValues:{"semester": state.schedule.scheduleSemesterId,"group": state.groupSchedule!==undefined?state.groupSchedule.schedule[0].group.id:null,"teacher": null},
+
 });
 export default connect(mapStateToProps)(
     reduxForm({

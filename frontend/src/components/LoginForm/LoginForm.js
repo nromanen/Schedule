@@ -15,7 +15,8 @@ import { GOOGLE_LOGIN_URL } from '../../constants/axios';
 
 import { required } from '../../validation/validateFields';
 import { FaGoogle } from 'react-icons/fa';
-
+import { links } from '../../constants/links';
+import { Link } from 'react-router-dom';
 let LoginForm = props => {
     const { t } = useTranslation('formElements');
     const { handleSubmit } = props;
@@ -66,7 +67,7 @@ let LoginForm = props => {
                         props.setError(null);
                     }}
                 >
-                    {translation('no_account')}
+                   <Link  className="navLinks" to={links.Registration}>{translation('no_account')}</Link>
                 </button>
                 <button
                     type="button"
@@ -76,7 +77,7 @@ let LoginForm = props => {
                         props.setError(null);
                     }}
                 >
-                    {translation('forgot_password')}
+                   <Link  className="navLinks" to={links.RESET_PASSWORD}>{translation('forgot_password')}</Link>
                 </button>
             </div>
             {}

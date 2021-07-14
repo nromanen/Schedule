@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import {
@@ -23,15 +23,22 @@ import { submitSearchSchedule } from '../../services/scheduleService';
 
 import GroupSchedulePageTop from '../GroupSchedulePageTop/GroupSchedulePageTop';
 import { setLoadingService } from '../../services/loadingService';
-
+import {useHistory,useLocation} from 'react-router-dom';
+import { links } from '../../constants/links';
 const GroupSchedulePage = props => {
     let { groupSchedule, fullSchedule, teacherSchedule } = props;
+    let history = useHistory();
 
+    const location = useLocation();
     const emptySchedule = () => (
         <p className="empty_schedule">{t('common:empty_schedule')}</p>
     );
     const { t } = useTranslation('common');
 
+    // const onChangeSemester=({value})=>{
+    //     setSemester(value);
+    //     //history.goBack();
+    // }
     const renderDownloadLink = (entity, semesterId, entityId) => {
         let link = '';
         if (semesterId && entityId) {
@@ -113,6 +120,8 @@ const GroupSchedulePage = props => {
     };
 
     const renderSchedule = () => {
+
+
         switch (props.scheduleType) {
             case 'group':
                 if (
@@ -155,6 +164,7 @@ const GroupSchedulePage = props => {
                         </>
                     );
                 }
+                else setLoadingService(false)
                 break;
             case 'teacher':
                 if (
@@ -165,29 +175,32 @@ const GroupSchedulePage = props => {
                 ) {
                     return emptySchedule();
                 }
-                const teacher = makeTeacherSchedule(teacherSchedule);
-                if (teacher.done) {
-                    setLoadingService(false);
-                    return (
-                        <>
-                            <h1>
-                                {renderTeacherScheduleTitle(
-                                    teacher.semester,
-                                    teacher.teacher
-                                )}
-                                {renderDownloadLink(
-                                    'teacher',
-                                    props.semesterId,
-                                    props.teacherId
-                                )}
-                            </h1>
-                            <h2>{t('common:odd_week')}</h2>
-                            {renderWeekTable(teacher.odd, 1)}
-                            <h2>{t('common:even_week')}</h2>
-                            {renderWeekTable(teacher.even, 0)}
-                        </>
-                    );
-                }
+                    if(teacherSchedule) {
+                        const teacher = makeTeacherSchedule(teacherSchedule);
+                        if (teacher.done) {
+                            setLoadingService(false);
+                            return (
+                                <>
+                                    <h1>
+                                        {renderTeacherScheduleTitle(
+                                            teacher.semester,
+                                            teacher.teacher
+                                        )}
+                                        {renderDownloadLink(
+                                            'teacher',
+                                            props.semesterId,
+                                            props.teacherId
+                                        )}
+                                    </h1>
+                                    <h2>{t('common:odd_week')}</h2>
+                                    {renderWeekTable(teacher.odd, 1)}
+                                    <h2>{t('common:even_week')}</h2>
+                                    {renderWeekTable(teacher.even, 0)}
+                                </>
+                            );
+                        }
+                    }
+                    else setLoadingService(false)
                 break;
             case 'full':
                 if (
@@ -202,6 +215,7 @@ const GroupSchedulePage = props => {
                     setLoadingService(false);
                     return renderFullSchedule(result);
                 }
+                else setLoadingService(false)
                 break;
             case 'archived':
                 if (
@@ -216,7 +230,10 @@ const GroupSchedulePage = props => {
                     setLoadingService(false);
                     return renderFullSchedule(archive);
                 }
+                else setLoadingService(false)
                 break;
+
+
             default:
                 return;
         }
@@ -225,16 +242,39 @@ const GroupSchedulePage = props => {
     const handleSubmit = values => {
         setLoadingService('true');
         submitSearchSchedule(values);
+        const {semester,group,teacher}=values
+        const groupPath=group?"&group="+group:"";
+        const teacherPath=teacher?"&teacher="+teacher:"";
+        history.push("/schedule-for?semester="+semester+groupPath+teacherPath)
     };
+   const getSchedule=()=>{
+       if(props.scheduleType!==""|| location.search===links.HOME_PAGE){
+           return renderSchedule();
+       }
+
+
+       const params = new URLSearchParams(location.search);
+       const semester= params.get("semester");
+       const teacher=params.get("teacher");
+       const group=params.get("group");
+       handleSubmit({semester,"group":group!=null?group:0,"teacher":teacher!=null?teacher:0})
+    }
+
+
 
     return (
         <>
-            {props.scheduleType !== 'archived' ? (
-                <GroupSchedulePageTop onSubmit={handleSubmit} />
+            {
+                props.scheduleType !== 'archived' ? (
+                <GroupSchedulePageTop
+                    history={history} onSubmit={handleSubmit} />
             ) : (
                 ''
-            )}
-            {renderSchedule()}
+            )
+            }
+
+            {getSchedule()}
+
         </>
     );
 };

@@ -35,6 +35,8 @@ import { GiSightDisabled, IoMdEye, FaCopy } from 'react-icons/all';
 import { FaFileArchive } from 'react-icons/fa';
 
 import GroupSchedulePage from '../../components/GroupSchedulePage/GroupSchedulePage';
+import NavigationPage from '../../components/Navigation/NavigationPage';
+import { navigation } from '../../constants/navigationOrder';
 
 const SemesterPage = props => {
     const { t } = useTranslation('formElements');
@@ -143,6 +145,7 @@ const SemesterPage = props => {
 
     return (
         <>
+            <NavigationPage val={navigation.SEMESTERS}/>
             <ConfirmDialog
                 cardId={semesterId}
                 whatDelete={'semester'}

@@ -33,7 +33,7 @@ import './Auth.scss';
 
 const Auth = props => {
     const { t } = useTranslation('common');
-    const [authType, setAuthType] = useState(authTypes.LOGIN);
+    const [authType, setAuthType] = useState(props.authType);
 
     const error = props.error;
     let url = window.document.location;
@@ -224,6 +224,7 @@ const Auth = props => {
     }
 
     return (
+
         <div className="auth-form">
             {authRedirect}
             {authPage}

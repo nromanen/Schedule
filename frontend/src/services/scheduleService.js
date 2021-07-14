@@ -1,5 +1,5 @@
 import { store } from '../index';
-
+import React from 'react';
 import axios from '../helper/axios';
 import i18n from '../helper/i18n';
 import { errorHandler, successHandler } from '../helper/handlerAxios';
@@ -205,7 +205,8 @@ export const submitSearchSchedule = values => {
     }
     if (values.hasOwnProperty('teacher') && +values.teacher > 0) {
         setScheduleTypeService('teacher');
-        setScheduleGroupIdService(values.teacher);
+        // setScheduleGroupIdService(values.teacher);
+        setScheduleTeacherIdService(values.teacher)
         getTeacherSchedule(values.teacher, values.semester);
         return;
     }
@@ -233,6 +234,7 @@ export const setItemGroupIdService = groupId => {
 };
 
 export const setScheduleGroupIdService = groupId => {
+
     store.dispatch(setScheduleGroupId(groupId));
 };
 
@@ -247,6 +249,7 @@ export const getFullSchedule = semesterId => {
             store.dispatch(setFullSchedule(response.data));
         })
         .catch(err => errorHandler(err));
+
 };
 
 export const getGroupSchedule = (groupId, semesterId) => {
