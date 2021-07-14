@@ -3,7 +3,7 @@
     "updated_label": "оновлено",
     "deleted_label": "видалено",
     "back_end_success_operation": "{{cardType}} було успішно {{actionType}}",
-    "semester_service_is_active": "Цей семестер не може бути видалений, оскільки він є поточним",
+    "semester_service_is_active": "Цей семестр не може бути видалений, оскільки він є поточним",
     "semester_service_not_as_begin_or_end": "Рік семестру не співпадає із початком або кінцем семестру. Ви впевнені, що хочете створити його?",
     "successfully_merged": "Користувач з викладачем успішно з'єднані",
     "copied_label": "скопійовано",

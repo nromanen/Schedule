@@ -1,9 +1,9 @@
 package com.softserve.controller;
 
 import com.softserve.dto.*;
-import com.softserve.entity.*;
-import com.softserve.entity.enums.EvenOdd;
-import com.softserve.entity.enums.LessonType;
+import com.softserve.entity.CurrentUser;
+import com.softserve.entity.Teacher;
+import com.softserve.entity.TemporarySchedule;
 import com.softserve.mapper.TemporaryScheduleMapper;
 import com.softserve.security.jwt.JwtUser;
 import com.softserve.service.TeacherService;
@@ -21,10 +21,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
 
 
 @RestController
@@ -90,7 +87,7 @@ public class TemporaryScheduleController {
 
     @GetMapping
     @ApiOperation(value = "Get all temporary schedules")
-    //@PreAuthorize("hasRole('MANAGER')")
+    @PreAuthorize("hasRole('MANAGER')")
     public ResponseEntity<List<TemporaryScheduleDTO>> getAll(@RequestParam("teacherId") Optional<Long> teacherId,
                                                              @RequestParam Optional<String> from,
                                                              @RequestParam Optional<String> to) {
@@ -136,36 +133,4 @@ public class TemporaryScheduleController {
         LocalDate toDate = LocalDate.parse(LocalDate.parse(to, formatter).toString(), currentFormatter);
         return ResponseEntity.ok().body(temporaryScheduleMapper.convertToDtoList(temporaryScheduleService.getTemporaryScheduleByTeacherAndRange(fromDate, toDate, teacher.getId())));
     }
-
-
-    /*private List<TemporaryScheduleDTO> convertToGroupedTemporarySchedule(List<TemporarySchedule> temporarySchedules){
-    List<TemporaryScheduleDTO> temporaryScheduleDTOS = new ArrayList<>();
-        Map<LocalDate, Map<Period, Map<Room, Map<String, Map<String, List<TemporarySchedule>>>>>> groupedTemporarySchedules = temporarySchedules.stream()
-                .collect(Collectors.groupingBy(TemporarySchedule::getDate,
-                        Collectors.groupingBy(TemporarySchedule::getPeriod,
-                                Collectors.groupingBy(TemporarySchedule::getRoom,
-                                Collectors.groupingBy(TemporarySchedule::getTeacherForSite,
-                                        Collectors.groupingBy(TemporarySchedule::getSubjectForSite))))));
-
-
-        for (Map.Entry<LocalDate, Map<Period, Map<Room, Map<String, Map<String, List<TemporarySchedule>>>>>> dateMapEntry : groupedTemporarySchedules.entrySet()) {
-            for (Map.Entry<Period,Map<Room, Map<String, Map<String, List<TemporarySchedule>>>>> periodMapEntry : dateMapEntry.getValue().entrySet()) {
-            for (Map.Entry<Room, Map<String, Map<String, List<TemporarySchedule>>>> roomMapEntry : periodMapEntry.getValue().entrySet()) {
-                for (Map.Entry<String, Map<String, List<TemporarySchedule>>> teacherForSiteMap : roomMapEntry.getValue().entrySet()) {
-                    for (Map.Entry<String, List<TemporarySchedule>> subjectForSiteMap : teacherForSiteMap.getValue().entrySet()) {
-                        TemporaryScheduleDTO temporaryScheduleDTO = new TemporaryScheduleDTO();
-                        temporaryScheduleDTO.setDate(dateMapEntry.getKey());
-                        temporaryScheduleDTO.setRoom(roomMapEntry.getKey());
-                        temporaryScheduleDTO.setGroups(temporarySchedules.stream().map(TemporarySchedule::getGroup).collect(Collectors.toList()));
-                        temporaryScheduleDTOS.add(temporaryScheduleDTO);
-                    }
-                }
-                    }
-                }
-            }
-    return temporaryScheduleDTOS;
-    }*/
-
-
-
 }
