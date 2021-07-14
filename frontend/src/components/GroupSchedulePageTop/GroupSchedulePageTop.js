@@ -36,7 +36,6 @@ const useStyles = makeStyles(theme => ({
 const GroupSchedulePageTop = props => {
     const classes = useStyles();
     const { t } = useTranslation('common');
-    const [semester,setSemester]=useState();
     const {
         groups,
         teachers,
@@ -72,9 +71,7 @@ const GroupSchedulePageTop = props => {
                         label={t('formElements:semester_label')}
                         type="text"
                         validate={[required]}
-                        onChange={(e)=> {
-                            setSemester(e.target.value);
-                        }}
+
 
 
                     >
@@ -101,6 +98,7 @@ const GroupSchedulePageTop = props => {
 
     return (
         <section className={classes.root}>
+            {console.log("Group schedule page top", props)}
             <p>{t('greetings_schedule_message')}</p>
             <p>{t('greetings_schedule_message_hint')}</p>
             <section className="form-buttons-container">

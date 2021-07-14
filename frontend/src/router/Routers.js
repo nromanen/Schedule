@@ -11,7 +11,6 @@ import Header from '../components/Header/Header';
 
 import HomePage from '../containers/Home/Home';
 import TeacherSchedule from '../components/TeacherSchedule/TeacherSchedule';
-import Auth from '../containers/Auth/Auth';
 import SchedulePage from '../containers/SchedulePage/SchedulePage';
 import AdminPage from '../containers/AdminPage/AdminPage';
 import Logout from '../containers/Auth/Logout/Logout';
@@ -19,7 +18,6 @@ import ActivationPage from '../containers/ActivationPage/ActivationPage';
 import ProfilePage from '../containers/ProfilePage/ProfilePage';
 import { links } from '../constants/links';
 import { userRoles } from '../constants/userRoles';
-import LessonPage from '../containers/LessonPage/LessonPage';
 import TeacherList from '../containers/TeachersList/TeachersList';
 import BusyRooms from '../containers/BusyRooms/BusyRooms';
 import GroupList from '../containers/GroupList/GroupList';
@@ -30,8 +28,6 @@ import SemesterPage from '../containers/SemesterPage/SemesterPage';
 import MergeRolePage from '../containers/MergeRolePage/MergeRolePage';
 import ChangePasswordForm from '../components/ChangePasswordForm/ChangePasswordForm';
 import GroupSchedulePage from '../components/GroupSchedulePage/GroupSchedulePage';
-import RegistrationForm from '../components/RegistrationForm/RegistrationForm';
-import LoginForm from '../components/LoginForm/LoginForm';
 import { Register } from '../components/Register/Register';
 import { ResetPassword } from '../components/ResetPassword/ResetPassword';
 import { Login } from '../components/Login/Login';
@@ -41,9 +37,10 @@ const Routers = props => {
     let routes = (
         <Switch>
             <Route path={links.Registration} component={Register}/>
-            <Route path={links.RESET_PASSWORD} component={ResetPassword}></Route>
-            <Route path={links.ScheduleFor} component={GroupSchedulePage}/>
+            <Route path={links.RESET_PASSWORD} component={ResetPassword}/>
+
             <Route path={links.HOME_PAGE} exact component={HomePage} />
+
             <Route path={links.SCHEDULE_PAGE}>
                 <Redirect to={links.LOGIN} />
             </Route>
@@ -53,6 +50,7 @@ const Routers = props => {
             <Route path={links.LOGIN} component={Login} />
             <Route path={links.ACTIVATION_PAGE} component={ActivationPage} />
             <Route path={links.MY_PROFILE} component={ProfilePage} />
+            <Route path={links.ScheduleFor} component={GroupSchedulePage}/>
         </Switch>
     );
 
@@ -60,9 +58,9 @@ const Routers = props => {
         routes = (
             <Switch>
                 <Route path={links.Registration} component={Register}/>
-                <Route path={links.RESET_PASSWORD} component={ResetPassword}></Route>
-                <Route path={links.ScheduleFor} component={GroupSchedulePage}/>
+                <Route path={links.RESET_PASSWORD} component={ResetPassword}/>
                 <Route path={links.HOME_PAGE} exact component={HomePage} />
+
                 <Route path={links.LessonPage}  component={AdminPage} />
                 <Route path={links.TeacherList}  component={TeacherList} />
                 <Route path={links.GroupList}  component={GroupList} />
@@ -83,6 +81,7 @@ const Routers = props => {
                 <Route path={links.ADMIN_PAGE} component={AdminPage} />
                 <Route path={links.LOGOUT} component={Logout} />
                 <Route path={links.MY_PROFILE} component={ProfilePage} />
+                <Route path={links.ScheduleFor} component={GroupSchedulePage}/>
 
             </Switch>
         );
@@ -90,9 +89,10 @@ const Routers = props => {
         routes = (
             <Switch>
                 <Route path={links.Registration} component={Register}/>
-                <Route path={links.RESET_PASSWORD} component={ResetPassword}></Route>
-                <Route path={links.ScheduleFor} component={GroupSchedulePage}/>
+                <Route path={links.RESET_PASSWORD} component={ResetPassword}/>
                 <Route path={links.HOME_PAGE} exact component={HomePage} />
+
+
                 <Route
                     path={links.TEACHER_SCHEDULE}
                     component={TeacherSchedule}
@@ -109,6 +109,7 @@ const Routers = props => {
                 </Route>
                 <Route path={links.MY_PROFILE} component={ProfilePage} />
                 <Route path={links.LOGOUT} component={Logout} />
+                <Route path={links.ScheduleFor} component={GroupSchedulePage}/>
             </Switch>
         );
     }

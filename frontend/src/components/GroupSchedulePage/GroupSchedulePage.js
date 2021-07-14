@@ -24,23 +24,21 @@ import { submitSearchSchedule } from '../../services/scheduleService';
 import GroupSchedulePageTop from '../GroupSchedulePageTop/GroupSchedulePageTop';
 import { setLoadingService } from '../../services/loadingService';
 import {useHistory,useLocation} from 'react-router-dom';
+import { links } from '../../constants/links';
 const GroupSchedulePage = props => {
     let { groupSchedule, fullSchedule, teacherSchedule } = props;
     let history = useHistory();
-    const [semester,setSemester]=useState();
-    const [teacher,setTeacher]=useState("");
+
     const location = useLocation();
     const emptySchedule = () => (
         <p className="empty_schedule">{t('common:empty_schedule')}</p>
     );
     const { t } = useTranslation('common');
-    useEffect(()=>{
-        setTeacher(props.teacherId)
-    },[])
-    const onChangeSemester=({value})=>{
-        setSemester(value);
-        //history.goBack();
-    }
+
+    // const onChangeSemester=({value})=>{
+    //     setSemester(value);
+    //     //history.goBack();
+    // }
     const renderDownloadLink = (entity, semesterId, entityId) => {
         let link = '';
         if (semesterId && entityId) {
@@ -166,6 +164,7 @@ const GroupSchedulePage = props => {
                         </>
                     );
                 }
+                else setLoadingService(false)
                 break;
             case 'teacher':
                 if (
@@ -201,13 +200,12 @@ const GroupSchedulePage = props => {
                             );
                         }
                     }
-
+                    else setLoadingService(false)
                 break;
             case 'full':
                 if (
                     (!fullSchedule.schedule ||
                         fullSchedule.schedule.length === 0) &&
-                    // ((props.location.pathname).split("/")[2]!== props.scheduleId)&&
                     !props.loading
                 ) {
                     return emptySchedule();
@@ -217,6 +215,7 @@ const GroupSchedulePage = props => {
                     setLoadingService(false);
                     return renderFullSchedule(result);
                 }
+                else setLoadingService(false)
                 break;
             case 'archived':
                 if (
@@ -231,6 +230,7 @@ const GroupSchedulePage = props => {
                     setLoadingService(false);
                     return renderFullSchedule(archive);
                 }
+                else setLoadingService(false)
                 break;
 
 
@@ -240,6 +240,7 @@ const GroupSchedulePage = props => {
     };
 
     const handleSubmit = values => {
+        console.log("Submit",values)
         setLoadingService('true');
         submitSearchSchedule(values);
         const {semester,group,teacher}=values
@@ -248,28 +249,27 @@ const GroupSchedulePage = props => {
         history.push("/schedule-for?semester="+semester+groupPath+teacherPath)
     };
    const getSchedule=()=>{
-        if(props.scheduleType!==""|| props.location===undefined){
-            return renderSchedule();
-        }
+       if(props.scheduleType!==""|| location.search===links.HOME_PAGE){
+           return renderSchedule();
+       }
 
 
        const params = new URLSearchParams(location.search);
        const semester= params.get("semester");
        const teacher=params.get("teacher");
        const group=params.get("group");
-        handleSubmit({semester,"group":group!=null?group:0,"teacher":teacher!=null?teacher:0})
+       handleSubmit({semester,"group":group!=null?group:0,"teacher":teacher!=null?teacher:0})
     }
+
 
 
     return (
         <>
+            {console.log("Group schedule page", props)}
             {
                 props.scheduleType !== 'archived' ? (
                 <GroupSchedulePageTop
-                    teacherSchedule={teacherSchedule}
-                    groupSchedule={groupSchedule}
-
-                    history={history} semester={semester} onChangeSemester={onChangeSemester} onSubmit={handleSubmit} />
+                    history={history} onSubmit={handleSubmit} />
             ) : (
                 ''
             )
