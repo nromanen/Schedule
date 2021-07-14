@@ -56,7 +56,7 @@ let LoginForm = props => {
                 variant="contained"
                 color="primary"
             >
-                {t('login_title')}
+                {translation('login_title')}
             </Button>
             <div className="group-btns">
                 <button
@@ -67,7 +67,7 @@ let LoginForm = props => {
                         props.setError(null);
                     }}
                 >
-                   <Link  className="navLinks" to={links.Registration}>{t('no_account')}</Link>
+                   <Link  className="navLinks" to={links.Registration}>{translation('no_account')}</Link>
                 </button>
                 <button
                     type="button"
@@ -77,7 +77,7 @@ let LoginForm = props => {
                         props.setError(null);
                     }}
                 >
-                   <Link  className="navLinks" to={links.RESET_PASSWORD}>{t('forgot_password')}</Link>
+                   <Link  className="navLinks" to={links.RESET_PASSWORD}>{translation('forgot_password')}</Link>
                 </button>
             </div>
             {}
@@ -102,7 +102,7 @@ let LoginForm = props => {
 
     return (
         <Card class="auth-card">
-            <h2 className="under-line">{t('login_page_title')}</h2>
+            <h2 className="under-line">{translation('login_page_title')}</h2>
             {form}
         </Card>
     );
