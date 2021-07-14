@@ -15,7 +15,7 @@ const HomePage = props => {
     const { t } = useTranslation('common');
 
     useEffect(() => getPublicClassScheduleListService(), []);
-    useEffect(()=>setScheduleSemesterIdService(null))
+    useEffect(()=>setScheduleSemesterIdService(0))
     useEffect(() => {
         if (props.userRole === userRoles.TEACHER) {
             getMyTeacherWishesService();
