@@ -36,8 +36,8 @@ const Auth = props => {
     const [authType, setAuthType] = useState(authTypes.LOGIN);
 
     const error = props.error;
-    var url = window.document.location;
-    var parser = new URL(url);
+    let url = window.document.location;
+    let parser = new URL(url);
 
     const socialLoginHandler = data => {
         props.setLoading(true);

@@ -38,7 +38,7 @@ build:
 
 build_frontend:
     stage: build_frontend
-    image: node:latest
+    image: node:15.0.0
     cache:
         key: '$CI_COMMIT_REF_NAME'
         policy: push
