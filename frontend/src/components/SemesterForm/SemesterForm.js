@@ -22,7 +22,8 @@ import { daysUppercase } from '../../constants/schedule/days';
 
 let AddSemesterForm = props => {
     const clearCheckboxes = () => {
-        setChecked(false);
+        setCurrent(false);
+        setByDefault(false);
         setCheckedDates({
             MONDAY: false,
             TUESDAY: false,
@@ -47,7 +48,8 @@ let AddSemesterForm = props => {
         clearCheckboxes();
     }, [props.classScheduler, props.semester.id]);
 
-    const [checked, setChecked] = React.useState(false);
+    const [current, setCurrent] = React.useState(false);
+    const [byDefault, setByDefault] = React.useState(false);
 
     const [checkedDates, setCheckedDates] = React.useState({
         MONDAY: false,
@@ -63,7 +65,7 @@ let AddSemesterForm = props => {
         prepSetCheckedClasses
     );
 
-    const handleChange = event => setChecked(event.target.checked);
+    const handleChange = (event,setState) => setState(event.target.checked);
 
     const setEndTime = startTime =>
         props.change(
@@ -156,6 +158,7 @@ let AddSemesterForm = props => {
                     startDay: props.semester.startDay,
                     endDay: props.semester.endDay,
                     currentSemester: props.semester.currentSemester,
+                    defaultSemester:props.semester.defaultSemester,
                     semester_days: props.semester.semester_days,
                     semester_classes: props.semester.semester_classes
                 };
@@ -197,7 +200,8 @@ let AddSemesterForm = props => {
                     {}
                 );
 
-                setChecked(props.semester.currentSemester);
+                setCurrent(props.semester.currentSemester);
+                setByDefault(props.semester.defaultSemester);
 
                 setCheckedDates({
                     MONDAY: false,
@@ -226,7 +230,9 @@ let AddSemesterForm = props => {
     }, [props.semester.id]);
 
     return (
+
         <Card class="form-card semester-form">
+            {console.log("PROPS",props)}
             <h2 style={{ textAlign: 'center' }}>
                 {props.semester.id ? t('edit_title') : t('create_title')}
                 {t('semestry_label')}
@@ -239,8 +245,19 @@ let AddSemesterForm = props => {
                         label={t('common:current_label')}
                         labelPlacement="start"
                         component={renderCheckboxField}
-                        checked={checked}
-                        onChange={handleChange}
+                        checked={current}
+                        onChange={(e)=>handleChange(e,setCurrent)}
+                        color="primary"
+                    />
+                </div>
+                <div className="semester-checkbox">
+                    <Field
+                        name="defaultSemester"
+                        label={t('common:default_label')}
+                        labelPlacement="start"
+                        component={renderCheckboxField}
+                        checked={byDefault}
+                        onChange={(e)=>handleChange(e,setByDefault)}
                         color="primary"
                     />
                 </div>
@@ -315,7 +332,8 @@ let AddSemesterForm = props => {
 
 const mapStateToProps = state => ({
     semester: state.semesters.semester,
-    classScheduler: state.classActions.classScheduler
+    classScheduler: state.classActions.classScheduler,
+
 });
 
 export default connect(mapStateToProps)(

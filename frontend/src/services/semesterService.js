@@ -91,6 +91,7 @@ const cardSemester = semester => {
         startDay: semester.startDay,
         endDay: semester.endDay,
         currentSemester: semester.currentSemester,
+        defaultSemester: semester.defaultSemester,
         semester_days: semester_days,
         semester_classes: semester_classes
     };
@@ -176,22 +177,22 @@ const checkSemesterYears = (endDay, startDay, year) => {
 };
 
 const putSemester = data => {
-    axios
-        .put(SEMESTERS_URL, data)
+     axios
+    .put(SEMESTERS_URL, data)
         .then(response => {
-            store.dispatch(updateSemester(response.data));
+           store.dispatch(updateSemester(response.data));
             selectSemesterService(null);
-            getDisabledSemestersService();
+             getDisabledSemestersService();
             getArchivedSemestersService();
-            showAllSemestersService();
-            resetFormHandler(SEMESTER_FORM);
-            successHandler(
-                i18n.t('serviceMessages:back_end_success_operation', {
-                    cardType: i18n.t('formElements:semester_label'),
-                    actionType: i18n.t('serviceMessages:updated_label')
-                })
-            );
-        })
+             showAllSemestersService();
+             resetFormHandler(SEMESTER_FORM);
+             successHandler(
+                 i18n.t('serviceMessages:back_end_success_operation', {
+                     cardType: i18n.t('formElements:semester_label'),
+                     actionType: i18n.t('serviceMessages:updated_label')
+                 })
+             );
+         })
         .catch(error => errorHandler(error));
 };
 const postSemester = data => {

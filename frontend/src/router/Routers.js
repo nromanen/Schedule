@@ -40,7 +40,7 @@ const Routers = props => {
             <Route path={links.RESET_PASSWORD} component={ResetPassword}/>
 
             <Route path={links.HOME_PAGE} exact component={HomePage} />
-
+            <Route path={links.ScheduleFor} component={GroupSchedulePage}/>
             <Route path={links.SCHEDULE_PAGE}>
                 <Redirect to={links.LOGIN} />
             </Route>
@@ -50,7 +50,7 @@ const Routers = props => {
             <Route path={links.LOGIN} component={Login} />
             <Route path={links.ACTIVATION_PAGE} component={ActivationPage} />
             <Route path={links.MY_PROFILE} component={ProfilePage} />
-            <Route path={links.ScheduleFor} component={GroupSchedulePage}/>
+
         </Switch>
     );
 

@@ -1,5 +1,5 @@
 import { store } from '../index';
-import React from 'react';
+import React, { useEffect } from 'react';
 import axios from '../helper/axios';
 import i18n from '../helper/i18n';
 import { errorHandler, successHandler } from '../helper/handlerAxios';
@@ -53,6 +53,7 @@ import { snackbarTypes } from '../constants/snackbarTypes';
 import { showBusyRooms } from './busyRooms';
 import { TEACHER_SCHEDULE_FORM } from '../constants/reduxForms';
 import { resetFormHandler } from '../helper/formHelper';
+import { useHistory } from 'react-router-dom';
 
 export const getCurrentSemesterService = () => {
     axios
@@ -197,6 +198,7 @@ export const deleteItemFromScheduleService = itemId => {
 
 export const submitSearchSchedule = values => {
     setScheduleSemesterIdService(values.semester);
+
     if (values.hasOwnProperty('group') && +values.group > 0) {
         setScheduleTypeService('group');
         setScheduleGroupIdService(values.group);
@@ -226,6 +228,7 @@ export const submitSearchSchedule = values => {
     ) {
         setScheduleTypeService('full');
         getFullSchedule(values.semester);
+        return;
     }
 };
 

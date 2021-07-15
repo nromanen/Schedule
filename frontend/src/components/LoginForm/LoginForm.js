@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { Field, reduxForm } from 'redux-form';
@@ -17,7 +17,17 @@ import { required } from '../../validation/validateFields';
 import { FaGoogle } from 'react-icons/fa';
 import { links } from '../../constants/links';
 import { Link } from 'react-router-dom';
+import {
+    setScheduleGroupIdService,
+    setScheduleSemesterIdService,
+    setScheduleTeacherIdService, setScheduleTypeService
+} from '../../services/scheduleService';
 let LoginForm = props => {
+
+    useEffect(()=>setScheduleSemesterIdService(0))
+    useEffect(()=>setScheduleTeacherIdService(0))
+    useEffect(()=>setScheduleGroupIdService(0))
+    useEffect(()=>setScheduleTypeService(""))
     const { t } = useTranslation('formElements');
     const { handleSubmit } = props;
 

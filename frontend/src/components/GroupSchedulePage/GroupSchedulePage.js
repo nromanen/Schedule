@@ -19,13 +19,19 @@ import {
     renderFullSchedule,
     renderWeekTable
 } from '../../helper/renderScheduleTable';
-import { submitSearchSchedule } from '../../services/scheduleService';
+import {
+    setScheduleGroupIdService,
+    setScheduleSemesterIdService,
+    setScheduleTeacherIdService,
+    submitSearchSchedule, submitSearchSchedule1
+} from '../../services/scheduleService';
 
 import GroupSchedulePageTop from '../GroupSchedulePageTop/GroupSchedulePageTop';
 import { setLoadingService } from '../../services/loadingService';
 import {useHistory,useLocation} from 'react-router-dom';
 import { links } from '../../constants/links';
 const GroupSchedulePage = props => {
+    const [schedule,setSchedule]=useState("");
     let { groupSchedule, fullSchedule, teacherSchedule } = props;
     let history = useHistory();
 
@@ -34,11 +40,6 @@ const GroupSchedulePage = props => {
         <p className="empty_schedule">{t('common:empty_schedule')}</p>
     );
     const { t } = useTranslation('common');
-
-    // const onChangeSemester=({value})=>{
-    //     setSemester(value);
-    //     //history.goBack();
-    // }
     const renderDownloadLink = (entity, semesterId, entityId) => {
         let link = '';
         if (semesterId && entityId) {
@@ -240,38 +241,64 @@ const GroupSchedulePage = props => {
     };
 
     const handleSubmit = values => {
-        setLoadingService('true');
-        submitSearchSchedule(values);
         const {semester,group,teacher}=values
         const groupPath=group?"&group="+group:"";
         const teacherPath=teacher?"&teacher="+teacher:"";
-        history.push("/schedule-for?semester="+semester+groupPath+teacherPath)
+        setLoadingService('true');
+        submitSearchSchedule(values, history);
+
+        history.push(links.ScheduleFor+"?semester="+semester+groupPath+teacherPath)
+
+
+
+
     };
    const getSchedule=()=>{
+        console.log("getSchedule", props,location)
        if(props.scheduleType!==""|| location.search===links.HOME_PAGE){
+           console.log("if(props.scheduleType!== location.search===links.HOME_PAGE){")
            return renderSchedule();
        }
 
 
        const params = new URLSearchParams(location.search);
+
        const semester= params.get("semester");
        const teacher=params.get("teacher");
        const group=params.get("group");
-       handleSubmit({semester,"group":group!=null?group:0,"teacher":teacher!=null?teacher:0})
+
+       // const groupPath=group?"&group="+group:"";
+       // const teacherPath=teacher?"&teacher="+teacher:"";
+       // history.push(links.ScheduleFor+"?semester="+12+groupPath+teacherPath)
+       if(semester!==null) {
+
+           handleSubmit({ semester, 'group': group != null ? group : 0, 'teacher': teacher != null ? teacher : 0 });
+
+           console.log("set",semester,teacher,group);
+        return null
+       }
+       else return null;
     }
+    const getTop=()=>{
 
-
-
+       if(props.scheduleType !== 'archived') {
+         return ( <GroupSchedulePageTop
+             data={{semester:props.semesterId,group: props.groupId,teacher: props.teacherId}}
+               history={history} onSubmit={handleSubmit} />);
+       }
+       return null;
+    }
     return (
         <>
-            {
-                props.scheduleType !== 'archived' ? (
-                <GroupSchedulePageTop
-                    history={history} onSubmit={handleSubmit} />
-            ) : (
-                ''
-            )
-            }
+            {/*{*/}
+            {/*    props.scheduleType !== 'archived' ? (*/}
+            {/*    <GroupSchedulePageTop*/}
+            {/*        history={history} onSubmit={handleSubmit} />*/}
+            {/*) : (*/}
+            {/*    ''*/}
+            {/*)*/}
+            {/*}*/}
+            {getTop()}
 
             {getSchedule()}
 
@@ -286,6 +313,6 @@ const mapStateToProps = state => ({
     groupId: state.schedule.scheduleGroupId,
     teacherId: state.schedule.scheduleTeacherId,
     semesterId: state.schedule.scheduleSemesterId,
-    loading: state.loadingIndicator.loading
+    loading: state.loadingIndicator.loading,
 });
 export default connect(mapStateToProps)(GroupSchedulePage);

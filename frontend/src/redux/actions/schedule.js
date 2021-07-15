@@ -88,6 +88,7 @@ export const setSemesterList = result => {
     };
 };
 export const setScheduleSemesterId = semesterId => {
+    console.log("setScheduleSemesterId",semesterId)
     return {
         type: actionTypes.SET_SCHEDULE_SEMESTER_ID,
         semesterId: semesterId

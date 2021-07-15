@@ -45,7 +45,7 @@ const GroupSchedulePageTop = props => {
         submitting
     } = props;
     const isLoading = props.loading;
-
+    const initialValues=props;
     let loadingContainer = '';
     if (isLoading) {
         loadingContainer = (
@@ -54,7 +54,6 @@ const GroupSchedulePageTop = props => {
             </section>
         );
     }
-
     useEffect(() => showAllPublicGroupsService(), []);
     useEffect(() => showAllPublicTeachersService(), []);
     useEffect(() => showAllPublicSemestersService(), []);
@@ -62,7 +61,7 @@ const GroupSchedulePageTop = props => {
     const renderSemesterList = () => {
         if (semesters) {
             if (semesters.length > 1) {
-                // const semester=((props.location.pathname).split("/"))[2];
+
                 return (
                     <Field
                         id="semester"
@@ -89,63 +88,96 @@ const GroupSchedulePageTop = props => {
                         ))}
                     </Field>
                 );
-            } else if (semesters.length === 1) {
+            }
+            else if (semesters.length === 1) {
+                console.log("semesters")
                 handleSubmit({ semester: semesters[0].id });
                 return <p>{semesters[0].description}</p>;
             }
         }
     };
+    const renderTeacherList=()=>{
+      return  (<Field
+            id="teacher"
+            name="teacher"
+            component={renderSelectField}
+            label={t('formElements:teacher_label')}
+            type="text"
+            onChange={() => props.change('group', 0)}
+
+        >
+            <option />
+            {teachers.map((teacher, index) => (
+                <option
+                    key={shortid.generate()}
+                    value={teacher.id}
+                >
+                    {teacher.surname +
+                    ' ' +
+                    teacher.name +
+                    ' ' +
+                    teacher.patronymic}
+                </option>
+            ))}
+        </Field>)
+    };
+    const renderGroupList=()=>{
+       return (<Field
+            id="group"
+            name="group"
+            component={renderSelectField}
+            label={t('formElements:group_label')}
+            type="text"
+            onChange={() => {
+                props.change('teacher', 0);
+            }}
+        >
+            <option />
+            {groups.map((group, index) => (
+                <option
+                    key={shortid.generate()}
+                    value={group.id}
+                >
+                    {group.title}
+                </option>
+            ))}
+        </Field>)
+    }
+    // useEffect(()=>{
+    //     props.initialize({
+    //         semester:props.data.semester,
+    //         group: props.data.group,
+    //         teacher:props.data.teacher
+    //     })
+    // },props.data)
+    // useEffect(()=>{
+    //     props.initialize({
+    //         semester:props.data.semester,
+    //         group: props.data.group,
+    //         teacher:props.data.teacher
+    //     })
+    // },props.data.teacher)
+    // useEffect(()=>{
+    //     props.initialize({
+    //         semester:props.data.semester,
+    //         group: props.data.group,
+    //         teacher:props.data.teacher
+    //     })
+    // },props.data.group)
+
+
 
     return (
         <section className={classes.root}>
+            {console.log("Top", props)}
             <p>{t('greetings_schedule_message')}</p>
             <p>{t('greetings_schedule_message_hint')}</p>
             <section className="form-buttons-container">
                 <Card class="form-card width-auto">
                     <form onSubmit={handleSubmit}>
                         {renderSemesterList()}
-                        <Field
-                            id="group"
-                            name="group"
-                            component={renderSelectField}
-                            label={t('formElements:group_label')}
-                            type="text"
-                            onChange={() => {
-                                props.change('teacher', 0);
-                            }}
-                        >
-                            <option />
-                            {groups.map((group, index) => (
-                                <option
-                                    key={shortid.generate()}
-                                    value={group.id}
-                                >
-                                    {group.title}
-                                </option>
-                            ))}
-                        </Field>
-                        <Field
-                            id="teacher"
-                            name="teacher"
-                            component={renderSelectField}
-                            label={t('formElements:teacher_label')}
-                            type="text"
-                            onChange={() => props.change('group', 0)}
-                        >
-                            <option />
-                            {teachers.map((teacher, index) => (
-                                <option
-                                    key={shortid.generate()}
-                                    value={teacher.id}
-                                >
-                                    {teacher.surname +
-                                        ' ' +
-                                        teacher.name +
-                                        ' ' +
-                                        teacher.patronymic}
-                                </option>
-                            ))}
-                        </Field>
+                        {renderGroupList()}
+                        {renderTeacherList()}
 
                         <Button
                             variant="contained"
@@ -154,12 +186,11 @@ const GroupSchedulePageTop = props => {
                             disabled={pristine || submitting}
 
                         >
-                            {/*<Link to={"/schedule-for/"+ props.semester}>*/}
+
                             <MdPlayArrow
                                 title={t('teacher_schedule_label')}
                                 className="svg-btn"
                             />
-                            {/*</Link>*/}
                         </Button>
 
                     </form>
@@ -175,10 +206,7 @@ const mapStateToProps = state => ({
     teachers: state.teachers.teachers,
     semesters: state.schedule.semesters,
     loading: state.loadingIndicator.loading,
-
-    initialValues:{"semester": state.schedule.scheduleSemesterId,"group": state.schedule.scheduleGroupId,"teacher": state.schedule.scheduleTeacherId},
-    //initialValues:{"semester": state.schedule.scheduleSemesterId,"group": state.schedule.groupSchedule.group.id,"teacher": state.schedule.teacherSchedule.teacher.id},
-    //initialValues:{"semester": state.schedule.scheduleSemesterId,"group": state.groupSchedule!==undefined?state.groupSchedule.schedule[0].group.id:null,"teacher": null},
+    initialValues:{semester: state.schedule.scheduleSemesterId,group: state.schedule.scheduleGroupId,teacher: state.schedule.scheduleTeacherId},
 
 });
 export default connect(mapStateToProps)(
@@ -186,3 +214,5 @@ export default connect(mapStateToProps)(
         form: SCHEDULE_SEARCH_FORM
     })(GroupSchedulePageTop)
 );
+
+

@@ -128,6 +128,7 @@
 
     "days_label": "Days",
     "current_label": "Current",
+    "default_label": "Default",
     "holiday_label": "Holiday",
     "notify_label": "Notify",
     "few_days_label": "Few days",

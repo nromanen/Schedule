@@ -63,7 +63,8 @@ const reducer = (state = initialState, action) => {
         case actionTypes.SET_GROUP_SCHEDULE:
             return updateObject(state, {
                 groupSchedule: action.result,
-                fullSchedule: []
+                fullSchedule: [],
+
             });
         case actionTypes.SET_ITEM_GROUP_ID:
             return updateObject(state, {
@@ -97,6 +98,7 @@ const reducer = (state = initialState, action) => {
             return updateObject(state, {
                 scheduleGroupId: null,
                 teacherSchedule: action.result,
+                scheduleTeacherId:`${action.result.teacher.id}`,
                 groupSchedule: {},
                 fullSchedule: []
             });

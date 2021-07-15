@@ -1,7 +1,7 @@
 export const links = {
     HOME_PAGE: '/',
     ADMIN_PAGE: '/admin',
-    SCHEDULE_PAGE: '/schedule',
+    SCHEDULE_PAGE: '/schedules',
     LOGIN: '/login',
     ACTIVATION_PAGE: '/activation-page',
     LOGOUT: '/logout',
@@ -18,7 +18,7 @@ export const links = {
     SemesterPage: "/semesters",
     MergeRolePage: "/users",
     Changes: "/changes",
-    ScheduleFor:"/schedule-for",
+    ScheduleFor:"/schedule",
     Registration:"/registration",
     RESET_PASSWORD:"/reset-password"
 };

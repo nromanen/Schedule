@@ -124,6 +124,7 @@
 
     "days_label": "Дні",
     "current_label": "Поточний",
+    "default_label": "Дефолтний",
     "holiday_label": "Вихідний",
     "notify_label": "Повідомити",
     "few_days_label": "Декілька днів",
