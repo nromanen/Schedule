@@ -7,22 +7,19 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 @Slf4j
-public class DepartmentRepositoryImpl extends BasicRepositoryImpl<Department,
-                                                                  Long>
-                                      implements DepartmentRepository {
-    private static final String HQL_SELECT_BY_NAME_IGNORING_ID
+public class DepartmentRepositoryImpl extends BasicRepositoryImpl<Department, Long> implements DepartmentRepository {
+    private static final String HQL_COUNT_BY_NAME_IGNORING_ID
             = "SELECT count(*) "
             + "FROM Department d "
             + "WHERE lower(d.name) = lower(:name) and d.id!=:id";
 
-    private static final String HQL_SELECT_BY_NAME
+    private static final String HQL_COUNT_BY_NAME
             = "SELECT count(*)"
             + "FROM Department d "
-            + "Where lower(d.name) = lower(:name)";
+            + "WHERE lower(d.name) = lower(:name)";
 
     /**
      * The method used for updating Department
-     *
      * @param entity entity is going to be updated
      * @return entity that was updated
      */
@@ -38,8 +35,8 @@ public class DepartmentRepositoryImpl extends BasicRepositoryImpl<Department,
      * @return boolean : if exists - true, else - false
      */
     @Override
-    public boolean doesNameExist(String name) {
-        return findByName(name) != 0;
+    public boolean isNameExists(String name) {
+        return countByName(name) != 0;
     }
 
     /**
@@ -49,22 +46,22 @@ public class DepartmentRepositoryImpl extends BasicRepositoryImpl<Department,
      * @return boolean : if exists - true, else - false
      */
     @Override
-    public boolean doesNameExistIgnoringId(String name, Long id) {
-        return findByNameIgnoringId(name, id) != 0;
+    public boolean isNameExistsIgnoringId(String name, Long id) {
+        return countByNameIgnoringId(name, id) != 0;
     }
 
-    private Long findByName(String name) {
+    private Long countByName(String name) {
         return (Long) sessionFactory.getCurrentSession()
-                .createQuery(HQL_SELECT_BY_NAME)
+                .createQuery(HQL_COUNT_BY_NAME)
                 .setParameter("name", name)
-                .uniqueResult();
+                .getSingleResult();
     }
 
-    private Long findByNameIgnoringId(String name, Long id) {
+    private Long countByNameIgnoringId(String name, Long id) {
         return (Long) sessionFactory.getCurrentSession()
-                .createQuery(HQL_SELECT_BY_NAME_IGNORING_ID)
+                .createQuery(HQL_COUNT_BY_NAME_IGNORING_ID)
                 .setParameter("name", name)
                 .setParameter("id", id)
-                .uniqueResult();
+                .getSingleResult();
     }
 }
