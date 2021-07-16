@@ -110,7 +110,7 @@ public class ScheduleControllerTest {
         Lesson lesson = new Lesson();
         lesson.setHours(2);
         lesson.setSubjectForSite("lesson for getInfo");
-        lesson.setTeacherForSite("teacher for GetInfo");
+        lesson.setLinkToMeeting("some link....");
         lesson.setLessonType(LECTURE);
         lesson.setSubject(subjectService.getById(4L));
         lesson.setGroup(groupService.getById(4L));
