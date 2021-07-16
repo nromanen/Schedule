@@ -61,6 +61,9 @@ dependencies {
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.10.2'
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.10.2'
 
+    // BeanUtils
+    compile 'commons-beanutils:commons-beanutils:1.9.4'
+
     //Hibernate
     compile group: 'org.hibernate', name: 'hibernate-core', version: '5.4.12.Final'
     compile group: 'org.hibernate', name: 'hibernate-validator', version: '6.1.2.Final'

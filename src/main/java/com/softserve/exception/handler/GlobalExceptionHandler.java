@@ -119,7 +119,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         if (cause instanceof PSQLException) {
             PSQLException consEx = (PSQLException) cause;
             ApiError apiError = new ApiError(HttpStatus.INTERNAL_SERVER_ERROR);
-            apiError.setMessage("Object will not be deleted while there are references pointing to it");
+            apiError.setMessage(ex.getMessage());
             apiError.setDebugMessage(consEx.getLocalizedMessage());
             return buildResponseEntity(apiError);
         }
