@@ -48,6 +48,7 @@ public class LessonServiceImpl implements LessonService {
         Lesson lesson = lessonRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException(Lesson.class, "id", id.toString()));
         Hibernate.initialize(lesson.getSemester().getPeriods());
+        Hibernate.initialize(lesson.getSemester().getGroups());
         return lesson;
     }
 
@@ -58,6 +59,11 @@ public class LessonServiceImpl implements LessonService {
     @Override
     public List<Lesson> getAll() {
         log.info("In getAll()");
+        List<Lesson> lessons = lessonRepository.getAll();
+        lessons.forEach(e -> {
+            Hibernate.initialize(e.getSemester().getPeriods());
+            Hibernate.initialize(e.getSemester().getGroups());
+        });
         return lessonRepository.getAll();
     }
 
@@ -68,8 +74,13 @@ public class LessonServiceImpl implements LessonService {
     @Override
     public List<Lesson> getLessonByTeacher(Long teacherId) {
         log.info("In getLessonByTeacher()");
-        return lessonRepository.getLessonByTeacher(teacherId, semesterService.getCurrentSemester().getId());
-    }
+        List<Lesson> lessons = lessonRepository.getLessonByTeacher(teacherId, semesterService.getCurrentSemester().getId());
+        lessons.forEach(e -> {
+            Hibernate.initialize(e.getSemester().getPeriods());
+            Hibernate.initialize(e.getSemester().getGroups());
+        });
+        return lessons;
+       }
 
     /**
      * Method saves new lesson to Repository and automatically assigns
@@ -139,7 +150,12 @@ public class LessonServiceImpl implements LessonService {
     @Override
     public List<Lesson> getAllForGroup(Long groupId) {
         log.info("In getAllForGroup(groupId = [{}])",  groupId);
-        return lessonRepository.getAllForGroup(groupId, semesterService.getCurrentSemester().getId());
+        List<Lesson> lessons = lessonRepository.getAllForGroup(groupId, semesterService.getCurrentSemester().getId());
+        lessons.forEach(e -> {
+            Hibernate.initialize(e.getSemester().getPeriods());
+            Hibernate.initialize(e.getSemester().getGroups());
+        });
+        return lessons;
     }
 
     /**
@@ -174,7 +190,7 @@ public class LessonServiceImpl implements LessonService {
         return lessonRepository.countLessonDuplicatesWithIgnoreId(lesson) != 0;
     }
 
-    /*
+    /**
      * The method used for getting list of lessons from database by semesterId
      *
      * @param semesterId Semester id for getting all lessons by this id from db
@@ -183,7 +199,12 @@ public class LessonServiceImpl implements LessonService {
     @Override
     public List<Lesson> getLessonsBySemester(Long semesterId) {
         log.info("In getLessonsBySemester(semesterId = [{}])", semesterId);
-        return lessonRepository.getLessonsBySemester(semesterId);
+        List<Lesson> lessons = lessonRepository.getLessonsBySemester(semesterId);
+        lessons.forEach(e -> {
+            Hibernate.initialize(e.getSemester().getPeriods());
+            Hibernate.initialize(e.getSemester().getGroups());
+        });
+        return lessons;
     }
 
     /**
@@ -232,7 +253,10 @@ public class LessonServiceImpl implements LessonService {
     public List<Lesson> getLessonsBySubjectIdTeacherIdSemesterIdLessonTypeAndExcludeCurrentLessonId(Lesson lesson) {
         log.info("In getLessonsBySubjectForSiteTeacherForSiteAndSemester(lesson = [{}]", lesson);
         List<Lesson> lessons = lessonRepository.getLessonsBySubjectIdTeacherIdSemesterIdLessonTypeAndExcludeCurrentLessonId(lesson);
-        lessons.forEach(e -> Hibernate.initialize(e.getSemester().getPeriods()));
+        lessons.forEach(e -> {
+            Hibernate.initialize(e.getSemester().getPeriods());
+            Hibernate.initialize(e.getSemester().getGroups());
+        });
         return lessons;
     }
 }
