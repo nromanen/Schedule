@@ -249,8 +249,6 @@ let AddSemesterForm = props => {
                         onChange={(e)=>handleChange(e,setCurrent)}
                         color="primary"
                     />
-                </div>
-                <div className="semester-checkbox">
                     <Field
                         name="defaultSemester"
                         label={t('common:default_label')}
@@ -261,6 +259,7 @@ let AddSemesterForm = props => {
                         color="primary"
                     />
                 </div>
+
                 <Field
                     className="form-field"
                     name="year"

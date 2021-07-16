@@ -42,18 +42,115 @@ export const clearSemesterService = () => {
 };
 
 export const showAllSemestersService = () => {
-    axios
-        .get(SEMESTERS_URL)
-        .then(response => {
-            store.dispatch(
+    const semesters=[
+        {
+            "id": 7,
+            "description": "Семестер для архівування",
+            "year": 2020,
+            "startDay": "19/05/2020",
+            "endDay": "30/05/2020",
+            "currentSemester": false,
+            "defaultSemester":false,
+            "disable": false,
+            "semester_days": [
+                "MONDAY",
+                "TUESDAY",
+                "WEDNESDAY",
+                "THURSDAY",
+                "FRIDAY"
+            ],
+            "semester_classes": [
+                {
+                    "id": 1,
+                    "startTime": "08:20",
+                    "endTime": "09:40",
+                    "class_name": "1"
+                },
+                {
+                    "id": 2,
+                    "startTime": "09:50",
+                    "endTime": "11:10",
+                    "class_name": "2"
+                },
+                {
+                    "id": 3,
+                    "startTime": "11:30",
+                    "endTime": "12:50",
+                    "class_name": "3"
+                },
+                {
+                    "id": 4,
+                    "startTime": "13:00",
+                    "endTime": "14:20",
+                    "class_name": "4"
+                }
+            ]
+        },
+        {
+            "id": 6,
+            "description": "Весняна сесія заочники1",
+            "year": 2020,
+            "startDay": "13/06/2020",
+            "endDay": "31/07/2020",
+            "currentSemester": true,
+            "defaultSemester":true,
+            "disable": false,
+            "semester_days": [
+                "MONDAY",
+                "TUESDAY",
+                "WEDNESDAY",
+                "THURSDAY",
+                "FRIDAY"
+            ],
+            "semester_classes": [
+                {
+                    "id": 1,
+                    "startTime": "08:20",
+                    "endTime": "09:40",
+                    "class_name": "1"
+                },
+                {
+                    "id": 2,
+                    "startTime": "09:50",
+                    "endTime": "11:10",
+                    "class_name": "2"
+                },
+                {
+                    "id": 3,
+                    "startTime": "11:30",
+                    "endTime": "12:50",
+                    "class_name": "3"
+                },
+                {
+                    "id": 4,
+                    "startTime": "13:00",
+                    "endTime": "14:20",
+                    "class_name": "4"
+                }
+            ]
+        }
+    ];
+    store.dispatch(
                 showAllSemesters(
-                    response.data
+                   semesters
                         .sort((a, b) => (a.year > b.year ? 1 : -1))
                         .reverse()
                 )
             );
-        })
-        .catch(error => errorHandler(error));
+    // axios
+    //     .get(SEMESTERS_URL)
+    //     .then(response => {
+    //         console.log("showAllSemestersService",response.data)
+    //         store.dispatch(
+    //             showAllSemesters(
+    //                 response.data
+    //                     .sort((a, b) => (a.year > b.year ? 1 : -1))
+    //                     .reverse()
+    //             )
+    //         );
+    //     })
+    //     .catch(error => errorHandler(error));
+
 };
 
 const cardSemester = semester => {
@@ -175,12 +272,30 @@ const checkSemesterYears = (endDay, startDay, year) => {
     }
     return conf;
 };
+export const setDefaultSemesterById = dataId => {
+    console.log("setDefaultSemesterById", dataId)
+    //  axios
+    // .put(SEMESTERS_URL, dataId)
+    //     .then(response => {
+    //        store.dispatch(updateSemester(response.data));
+    //         selectSemesterService(null);
+    //          getDisabledSemestersService();
+    //         getArchivedSemestersService();
+    //          showAllSemestersService();
+    //          resetFormHandler(SEMESTER_FORM);
+    //          successHandler(
+    //              i18n.t('serviceMessages:back_end_success_operation', {
+    //                  cardType: i18n.t('formElements:semester_label'),
+    //                  actionType: i18n.t('serviceMessages:updated_label')
+    //              })
+    //          );
+    //      })
+    //     .catch(error => errorHandler(error));
+}
 
 const putSemester = data => {
-     axios
-    .put(SEMESTERS_URL, data)
-        .then(response => {
-           store.dispatch(updateSemester(response.data));
+    console.log("putSemester",data)
+    store.dispatch(updateSemester(data));
             selectSemesterService(null);
              getDisabledSemestersService();
             getArchivedSemestersService();
@@ -192,8 +307,25 @@ const putSemester = data => {
                      actionType: i18n.t('serviceMessages:updated_label')
                  })
              );
-         })
-        .catch(error => errorHandler(error));
+
+
+    //  axios
+    // .put(SEMESTERS_URL, data)
+    //     .then(response => {
+    //        store.dispatch(updateSemester(response.data));
+    //         selectSemesterService(null);
+    //          getDisabledSemestersService();
+    //         getArchivedSemestersService();
+    //          showAllSemestersService();
+    //          resetFormHandler(SEMESTER_FORM);
+    //          successHandler(
+    //              i18n.t('serviceMessages:back_end_success_operation', {
+    //                  cardType: i18n.t('formElements:semester_label'),
+    //                  actionType: i18n.t('serviceMessages:updated_label')
+    //              })
+    //          );
+    //      })
+    //     .catch(error => errorHandler(error));
 };
 const postSemester = data => {
     axios
@@ -219,7 +351,15 @@ const findCurrentSemester = semesterId => {
                 semesterItem.id !== semesterId
         );
 };
-
+const findDefaultSemester = semesterId => {
+    return store
+        .getState()
+        .semesters.semesters.find(
+            semesterItem =>
+                semesterItem.defaultSemester === true &&
+                semesterItem.id !== semesterId
+        );
+};
 export const getDisabledSemestersService = () => {
     axios
         .get(DISABLED_SEMESTERS_URL)

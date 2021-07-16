@@ -9,30 +9,55 @@ import GroupSchedulePage from '../../components/GroupSchedulePage/GroupScheduleP
 import { getPublicClassScheduleListService } from '../../services/classService';
 import { getMyTeacherWishesService } from '../../services/teacherWishService';
 import {
+    disableDefaultSemesterService,
+    getDefaultSemesterService,
+    getFullSchedule,
     setScheduleGroupIdService,
     setScheduleSemesterIdService,
     setScheduleTeacherIdService, setScheduleTypeService
 } from '../../services/scheduleService';
 import { Redirect, useHistory } from 'react-router-dom';
 import { setScheduleType } from '../../redux/actions';
-
+import { showAllSemestersService } from '../../services/semesterService';
 const HomePage = props => {
     const { t } = useTranslation('common');
-
     useEffect(() => getPublicClassScheduleListService(), []);
-
-    useEffect(()=>setScheduleSemesterIdService(0))
-    useEffect(()=>setScheduleTeacherIdService(0))
-    useEffect(()=>setScheduleGroupIdService(0))
-    useEffect(()=>setScheduleTypeService(""))
+    setScheduleSemesterIdService(null)
+    setScheduleTypeService("")
     useEffect(() => {
         if (props.userRole === userRoles.TEACHER) {
             //getMyTeacherWishesService();
         }
     }, []);
+    useEffect(() => {
+        if (props.userRole === null) {
+            console.log("some user")
+            //disableDefaultSemesterService();
+            getDefaultSemesterService();
+            setScheduleTypeService("");
+        }
+    }, []);
+    useEffect(() => {
+        if (props.userRole === userRoles.TEACHER) {
+            console.log("Teacher")
+            //disableDefaultSemesterService();
+            getDefaultSemesterService();
+            setScheduleTypeService("");
+        }
+    }, []);
+    useEffect(() => {
+        console.log("MANAGER")
+        if (props.userRole === userRoles.MANAGER) {
+           // disableDefaultSemesterService();
+            getDefaultSemesterService();
+            setScheduleTypeService("");
+        }
+    }, []);
 
     return (
+
         <Fragment>
+            {console.log('home')}
             <h1>{t('home_title')}</h1>
             <GroupSchedulePage scheduleType="default" />
         </Fragment>

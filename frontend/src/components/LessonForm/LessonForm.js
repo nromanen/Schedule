@@ -197,16 +197,28 @@ let LessonForm = props => {
                             color="primary"
                         />
                     </div>
+                    {/*<Field*/}
+                    {/*    id="teacherForSite"*/}
+                    {/*    name="teacherForSite"*/}
+                    {/*    className="form-field"*/}
+                    {/*    multiline*/}
+                    {/*    rowsMax="1"*/}
+                    {/*    margin="normal"*/}
+                    {/*    component={renderTextField}*/}
+                    {/*    label={t('teacher_label') + t('for_site_label')}*/}
+                    {/*    validate={[required, maxLengthValue]}*/}
+                    {/*/>*/}
                     <Field
-                        id="teacherForSite"
-                        name="teacherForSite"
+                        id="linkToMeeting"
+                        name="linkToMeeting"
                         className="form-field"
                         multiline
                         rowsMax="1"
                         margin="normal"
                         component={renderTextField}
                         label={t('teacher_label') + t('for_site_label')}
-                        validate={[required, maxLengthValue]}
+                        validate={[required,maxLengthValue]}
+
                     />
                     <Field
                         id="subjectForSite"
@@ -218,6 +230,7 @@ let LessonForm = props => {
                         component={renderTextField}
                         label={t('subject_label') + t('for_site_label')}
                         validate={[required, maxLengthValue]}
+                        type="url"
                     />
 
                     <div className="form-buttons-container">

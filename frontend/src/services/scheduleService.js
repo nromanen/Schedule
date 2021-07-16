@@ -8,6 +8,7 @@ import {
     checkAvailabilitySchedule,
     deleteItemFromSchedule,
     setCurrentSemester,
+    setDefaultSemester,
     setFullSchedule,
     setGroupSchedule,
     setItemGroupId,
@@ -33,6 +34,7 @@ import { handleSnackbarOpenService } from './snackbarService';
 
 import {
     CURRENT_SEMESTER_URL,
+    DEFAULT_SEMESTER_URL,
     FULL_SCHEDULE_URL,
     GROUP_SCHEDULE_URL,
     SCHEDULE_CHECK_AVAILABILITY_URL,
@@ -71,6 +73,1822 @@ export const getCurrentSemesterService = () => {
             setSemesterLoadingService(false);
         });
 };
+export const getDefaultSemesterService = () => {
+    const data= {
+        "semester": {
+            "id": 10,
+            "description": "20202-1",
+            "year": 2021,
+            "startDay": "04/06/2020",
+            "endDay": "30/09/2020",
+            "currentSemester": false,
+            "disable": false,
+            "semester_days": [
+                "MONDAY",
+                "TUESDAY",
+                "WEDNESDAY",
+                "THURSDAY",
+                "FRIDAY"
+            ],
+            "semester_classes": [
+                {
+                    "id": 1,
+                    "startTime": "08:20",
+                    "endTime": "09:40",
+                    "class_name": "1"
+                },
+                {
+                    "id": 2,
+                    "startTime": "09:50",
+                    "endTime": "11:10",
+                    "class_name": "2"
+                },
+                {
+                    "id": 3,
+                    "startTime": "11:30",
+                    "endTime": "12:50",
+                    "class_name": "3"
+                },
+                {
+                    "id": 4,
+                    "startTime": "13:00",
+                    "endTime": "14:20",
+                    "class_name": "4"
+                },
+                {
+                    "id": 7,
+                    "startTime": "14:40",
+                    "endTime": "16:00",
+                    "class_name": "5"
+                },
+                {
+                    "id": 8,
+                    "startTime": "16:10",
+                    "endTime": "17:30",
+                    "class_name": "6"
+                }
+            ]
+        },
+        "schedule": [
+            {
+                "group": {
+                    "id": 5,
+                    "title": "101-В",
+                    "disable": false
+                },
+                "days": [
+                    {
+                        "day": "MONDAY",
+                        "classes": [
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 1,
+                                    "startTime": "08:20",
+                                    "endTime": "09:40",
+                                    "class_name": "1"
+                                }
+                            },
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 2,
+                                    "startTime": "09:50",
+                                    "endTime": "11:10",
+                                    "class_name": "2"
+                                }
+                            },
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": {
+                                        "teacherId": 19,
+                                        "teacherForSite": "асистент Скутар І.Д.",
+                                        "subjectForSite": "Computer Science",
+                                        "lessonType": "LABORATORY",
+                                        "room": {
+                                            "id": 54,
+                                            "name": "1 к. 3 ауд."
+                                        },
+                                        "temporary_schedule": null
+                                    }
+                                },
+                                "class": {
+                                    "id": 3,
+                                    "startTime": "11:30",
+                                    "endTime": "12:50",
+                                    "class_name": "3"
+                                }
+                            },
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 4,
+                                    "startTime": "13:00",
+                                    "endTime": "14:20",
+                                    "class_name": "4"
+                                }
+                            },
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 7,
+                                    "startTime": "14:40",
+                                    "endTime": "16:00",
+                                    "class_name": "5"
+                                }
+                            },
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 8,
+                                    "startTime": "16:10",
+                                    "endTime": "17:30",
+                                    "class_name": "6"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "day": "TUESDAY",
+                        "classes": [
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 1,
+                                    "startTime": "08:20",
+                                    "endTime": "09:40",
+                                    "class_name": "1"
+                                }
+                            },
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 2,
+                                    "startTime": "09:50",
+                                    "endTime": "11:10",
+                                    "class_name": "2"
+                                }
+                            },
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 3,
+                                    "startTime": "11:30",
+                                    "endTime": "12:50",
+                                    "class_name": "3"
+                                }
+                            },
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 4,
+                                    "startTime": "13:00",
+                                    "endTime": "14:20",
+                                    "class_name": "4"
+                                }
+                            },
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 7,
+                                    "startTime": "14:40",
+                                    "endTime": "16:00",
+                                    "class_name": "5"
+                                }
+                            },
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 8,
+                                    "startTime": "16:10",
+                                    "endTime": "17:30",
+                                    "class_name": "6"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "day": "WEDNESDAY",
+                        "classes": [
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 1,
+                                    "startTime": "08:20",
+                                    "endTime": "09:40",
+                                    "class_name": "1"
+                                }
+                            },
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 2,
+                                    "startTime": "09:50",
+                                    "endTime": "11:10",
+                                    "class_name": "2"
+                                }
+                            },
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 3,
+                                    "startTime": "11:30",
+                                    "endTime": "12:50",
+                                    "class_name": "3"
+                                }
+                            },
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 4,
+                                    "startTime": "13:00",
+                                    "endTime": "14:20",
+                                    "class_name": "4"
+                                }
+                            },
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 7,
+                                    "startTime": "14:40",
+                                    "endTime": "16:00",
+                                    "class_name": "5"
+                                }
+                            },
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 8,
+                                    "startTime": "16:10",
+                                    "endTime": "17:30",
+                                    "class_name": "6"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "day": "THURSDAY",
+                        "classes": [
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 1,
+                                    "startTime": "08:20",
+                                    "endTime": "09:40",
+                                    "class_name": "1"
+                                }
+                            },
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 2,
+                                    "startTime": "09:50",
+                                    "endTime": "11:10",
+                                    "class_name": "2"
+                                }
+                            },
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 3,
+                                    "startTime": "11:30",
+                                    "endTime": "12:50",
+                                    "class_name": "3"
+                                }
+                            },
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 4,
+                                    "startTime": "13:00",
+                                    "endTime": "14:20",
+                                    "class_name": "4"
+                                }
+                            },
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 7,
+                                    "startTime": "14:40",
+                                    "endTime": "16:00",
+                                    "class_name": "5"
+                                }
+                            },
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 8,
+                                    "startTime": "16:10",
+                                    "endTime": "17:30",
+                                    "class_name": "6"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "day": "FRIDAY",
+                        "classes": [
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 1,
+                                    "startTime": "08:20",
+                                    "endTime": "09:40",
+                                    "class_name": "1"
+                                }
+                            },
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 2,
+                                    "startTime": "09:50",
+                                    "endTime": "11:10",
+                                    "class_name": "2"
+                                }
+                            },
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 3,
+                                    "startTime": "11:30",
+                                    "endTime": "12:50",
+                                    "class_name": "3"
+                                }
+                            },
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 4,
+                                    "startTime": "13:00",
+                                    "endTime": "14:20",
+                                    "class_name": "4"
+                                }
+                            },
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 7,
+                                    "startTime": "14:40",
+                                    "endTime": "16:00",
+                                    "class_name": "5"
+                                }
+                            },
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 8,
+                                    "startTime": "16:10",
+                                    "endTime": "17:30",
+                                    "class_name": "6"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "group": {
+                    "id": 27,
+                    "title": "102-А",
+                    "disable": false
+                },
+                "days": [
+                    {
+                        "day": "MONDAY",
+                        "classes": [
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 1,
+                                    "startTime": "08:20",
+                                    "endTime": "09:40",
+                                    "class_name": "1"
+                                }
+                            },
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 2,
+                                    "startTime": "09:50",
+                                    "endTime": "11:10",
+                                    "class_name": "2"
+                                }
+                            },
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": {
+                                        "teacherId": 19,
+                                        "teacherForSite": "асистент Скутар І.Д.",
+                                        "subjectForSite": "Computer Science",
+                                        "lessonType": "LABORATORY",
+                                        "room": {
+                                            "id": 54,
+                                            "name": "1 к. 3 ауд."
+                                        },
+                                        "temporary_schedule": null
+                                    }
+                                },
+                                "class": {
+                                    "id": 3,
+                                    "startTime": "11:30",
+                                    "endTime": "12:50",
+                                    "class_name": "3"
+                                }
+                            },
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 4,
+                                    "startTime": "13:00",
+                                    "endTime": "14:20",
+                                    "class_name": "4"
+                                }
+                            },
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 7,
+                                    "startTime": "14:40",
+                                    "endTime": "16:00",
+                                    "class_name": "5"
+                                }
+                            },
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 8,
+                                    "startTime": "16:10",
+                                    "endTime": "17:30",
+                                    "class_name": "6"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "day": "TUESDAY",
+                        "classes": [
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 1,
+                                    "startTime": "08:20",
+                                    "endTime": "09:40",
+                                    "class_name": "1"
+                                }
+                            },
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 2,
+                                    "startTime": "09:50",
+                                    "endTime": "11:10",
+                                    "class_name": "2"
+                                }
+                            },
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 3,
+                                    "startTime": "11:30",
+                                    "endTime": "12:50",
+                                    "class_name": "3"
+                                }
+                            },
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 4,
+                                    "startTime": "13:00",
+                                    "endTime": "14:20",
+                                    "class_name": "4"
+                                }
+                            },
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 7,
+                                    "startTime": "14:40",
+                                    "endTime": "16:00",
+                                    "class_name": "5"
+                                }
+                            },
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 8,
+                                    "startTime": "16:10",
+                                    "endTime": "17:30",
+                                    "class_name": "6"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "day": "WEDNESDAY",
+                        "classes": [
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 1,
+                                    "startTime": "08:20",
+                                    "endTime": "09:40",
+                                    "class_name": "1"
+                                }
+                            },
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 2,
+                                    "startTime": "09:50",
+                                    "endTime": "11:10",
+                                    "class_name": "2"
+                                }
+                            },
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 3,
+                                    "startTime": "11:30",
+                                    "endTime": "12:50",
+                                    "class_name": "3"
+                                }
+                            },
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 4,
+                                    "startTime": "13:00",
+                                    "endTime": "14:20",
+                                    "class_name": "4"
+                                }
+                            },
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 7,
+                                    "startTime": "14:40",
+                                    "endTime": "16:00",
+                                    "class_name": "5"
+                                }
+                            },
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 8,
+                                    "startTime": "16:10",
+                                    "endTime": "17:30",
+                                    "class_name": "6"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "day": "THURSDAY",
+                        "classes": [
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 1,
+                                    "startTime": "08:20",
+                                    "endTime": "09:40",
+                                    "class_name": "1"
+                                }
+                            },
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 2,
+                                    "startTime": "09:50",
+                                    "endTime": "11:10",
+                                    "class_name": "2"
+                                }
+                            },
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 3,
+                                    "startTime": "11:30",
+                                    "endTime": "12:50",
+                                    "class_name": "3"
+                                }
+                            },
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 4,
+                                    "startTime": "13:00",
+                                    "endTime": "14:20",
+                                    "class_name": "4"
+                                }
+                            },
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 7,
+                                    "startTime": "14:40",
+                                    "endTime": "16:00",
+                                    "class_name": "5"
+                                }
+                            },
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 8,
+                                    "startTime": "16:10",
+                                    "endTime": "17:30",
+                                    "class_name": "6"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "day": "FRIDAY",
+                        "classes": [
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 1,
+                                    "startTime": "08:20",
+                                    "endTime": "09:40",
+                                    "class_name": "1"
+                                }
+                            },
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 2,
+                                    "startTime": "09:50",
+                                    "endTime": "11:10",
+                                    "class_name": "2"
+                                }
+                            },
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 3,
+                                    "startTime": "11:30",
+                                    "endTime": "12:50",
+                                    "class_name": "3"
+                                }
+                            },
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 4,
+                                    "startTime": "13:00",
+                                    "endTime": "14:20",
+                                    "class_name": "4"
+                                }
+                            },
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 7,
+                                    "startTime": "14:40",
+                                    "endTime": "16:00",
+                                    "class_name": "5"
+                                }
+                            },
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 8,
+                                    "startTime": "16:10",
+                                    "endTime": "17:30",
+                                    "class_name": "6"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "group": {
+                    "id": 29,
+                    "title": "101-б",
+                    "disable": false
+                },
+                "days": [
+                    {
+                        "day": "MONDAY",
+                        "classes": [
+                            {
+                                "weeks": {
+                                    "even": {
+                                        "teacherId": 42,
+                                        "teacherForSite": "асистент Дорош А.Б.",
+                                        "subjectForSite": "Дискретна математика",
+                                        "lessonType": "LECTURE",
+                                        "room": {
+                                            "id": 51,
+                                            "name": "1 к.  11 ауд."
+                                        },
+                                        "temporary_schedule": null
+                                    },
+                                    "odd": {
+                                        "teacherId": 42,
+                                        "teacherForSite": "асистент Дорош А.Б.",
+                                        "subjectForSite": "Дискретна математика",
+                                        "lessonType": "LECTURE",
+                                        "room": {
+                                            "id": 51,
+                                            "name": "1 к.  11 ауд."
+                                        },
+                                        "temporary_schedule": null
+                                    }
+                                },
+                                "class": {
+                                    "id": 1,
+                                    "startTime": "08:20",
+                                    "endTime": "09:40",
+                                    "class_name": "1"
+                                }
+                            },
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": {
+                                        "teacherId": 19,
+                                        "teacherForSite": "асистент Скутар І.Д.",
+                                        "subjectForSite": "Computer Science",
+                                        "lessonType": "LABORATORY",
+                                        "room": {
+                                            "id": 54,
+                                            "name": "1 к. 3 ауд."
+                                        },
+                                        "temporary_schedule": null
+                                    }
+                                },
+                                "class": {
+                                    "id": 2,
+                                    "startTime": "09:50",
+                                    "endTime": "11:10",
+                                    "class_name": "2"
+                                }
+                            },
+                            {
+                                "weeks": {
+                                    "even": {
+                                        "teacherId": 19,
+                                        "teacherForSite": "асистент Скутар І.Д.",
+                                        "subjectForSite": "Computer Science",
+                                        "lessonType": "LABORATORY",
+                                        "room": {
+                                            "id": 54,
+                                            "name": "1 к. 3 ауд."
+                                        },
+                                        "temporary_schedule": null
+                                    },
+                                    "odd": {
+                                        "teacherId": 19,
+                                        "teacherForSite": "асистент Скутар І.Д.",
+                                        "subjectForSite": "Computer Science",
+                                        "lessonType": "LABORATORY",
+                                        "room": {
+                                            "id": 54,
+                                            "name": "1 к. 3 ауд."
+                                        },
+                                        "temporary_schedule": null
+                                    }
+                                },
+                                "class": {
+                                    "id": 3,
+                                    "startTime": "11:30",
+                                    "endTime": "12:50",
+                                    "class_name": "3"
+                                }
+                            },
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": {
+                                        "teacherId": 19,
+                                        "teacherForSite": "асистент Скутар І.Д.",
+                                        "subjectForSite": "Computer Science",
+                                        "lessonType": "LABORATORY",
+                                        "room": {
+                                            "id": 54,
+                                            "name": "1 к. 3 ауд."
+                                        },
+                                        "temporary_schedule": null
+                                    }
+                                },
+                                "class": {
+                                    "id": 4,
+                                    "startTime": "13:00",
+                                    "endTime": "14:20",
+                                    "class_name": "4"
+                                }
+                            },
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 7,
+                                    "startTime": "14:40",
+                                    "endTime": "16:00",
+                                    "class_name": "5"
+                                }
+                            },
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 8,
+                                    "startTime": "16:10",
+                                    "endTime": "17:30",
+                                    "class_name": "6"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "day": "TUESDAY",
+                        "classes": [
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 1,
+                                    "startTime": "08:20",
+                                    "endTime": "09:40",
+                                    "class_name": "1"
+                                }
+                            },
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 2,
+                                    "startTime": "09:50",
+                                    "endTime": "11:10",
+                                    "class_name": "2"
+                                }
+                            },
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 3,
+                                    "startTime": "11:30",
+                                    "endTime": "12:50",
+                                    "class_name": "3"
+                                }
+                            },
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 4,
+                                    "startTime": "13:00",
+                                    "endTime": "14:20",
+                                    "class_name": "4"
+                                }
+                            },
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 7,
+                                    "startTime": "14:40",
+                                    "endTime": "16:00",
+                                    "class_name": "5"
+                                }
+                            },
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 8,
+                                    "startTime": "16:10",
+                                    "endTime": "17:30",
+                                    "class_name": "6"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "day": "WEDNESDAY",
+                        "classes": [
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 1,
+                                    "startTime": "08:20",
+                                    "endTime": "09:40",
+                                    "class_name": "1"
+                                }
+                            },
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 2,
+                                    "startTime": "09:50",
+                                    "endTime": "11:10",
+                                    "class_name": "2"
+                                }
+                            },
+                            {
+                                "weeks": {
+                                    "even": {
+                                        "teacherId": 19,
+                                        "teacherForSite": "асистент Скутар І.Д.",
+                                        "subjectForSite": "Computer Science",
+                                        "lessonType": "LABORATORY",
+                                        "room": {
+                                            "id": 54,
+                                            "name": "1 к. 3 ауд."
+                                        },
+                                        "temporary_schedule": null
+                                    },
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 3,
+                                    "startTime": "11:30",
+                                    "endTime": "12:50",
+                                    "class_name": "3"
+                                }
+                            },
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 4,
+                                    "startTime": "13:00",
+                                    "endTime": "14:20",
+                                    "class_name": "4"
+                                }
+                            },
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 7,
+                                    "startTime": "14:40",
+                                    "endTime": "16:00",
+                                    "class_name": "5"
+                                }
+                            },
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 8,
+                                    "startTime": "16:10",
+                                    "endTime": "17:30",
+                                    "class_name": "6"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "day": "THURSDAY",
+                        "classes": [
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 1,
+                                    "startTime": "08:20",
+                                    "endTime": "09:40",
+                                    "class_name": "1"
+                                }
+                            },
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 2,
+                                    "startTime": "09:50",
+                                    "endTime": "11:10",
+                                    "class_name": "2"
+                                }
+                            },
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 3,
+                                    "startTime": "11:30",
+                                    "endTime": "12:50",
+                                    "class_name": "3"
+                                }
+                            },
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 4,
+                                    "startTime": "13:00",
+                                    "endTime": "14:20",
+                                    "class_name": "4"
+                                }
+                            },
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 7,
+                                    "startTime": "14:40",
+                                    "endTime": "16:00",
+                                    "class_name": "5"
+                                }
+                            },
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 8,
+                                    "startTime": "16:10",
+                                    "endTime": "17:30",
+                                    "class_name": "6"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "day": "FRIDAY",
+                        "classes": [
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 1,
+                                    "startTime": "08:20",
+                                    "endTime": "09:40",
+                                    "class_name": "1"
+                                }
+                            },
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 2,
+                                    "startTime": "09:50",
+                                    "endTime": "11:10",
+                                    "class_name": "2"
+                                }
+                            },
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 3,
+                                    "startTime": "11:30",
+                                    "endTime": "12:50",
+                                    "class_name": "3"
+                                }
+                            },
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 4,
+                                    "startTime": "13:00",
+                                    "endTime": "14:20",
+                                    "class_name": "4"
+                                }
+                            },
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 7,
+                                    "startTime": "14:40",
+                                    "endTime": "16:00",
+                                    "class_name": "5"
+                                }
+                            },
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 8,
+                                    "startTime": "16:10",
+                                    "endTime": "17:30",
+                                    "class_name": "6"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "group": {
+                    "id": 30,
+                    "title": "101-А",
+                    "disable": false
+                },
+                "days": [
+                    {
+                        "day": "MONDAY",
+                        "classes": [
+                            {
+                                "weeks": {
+                                    "even": {
+                                        "teacherId": 39,
+                                        "teacherForSite": "доцент Вернигора І.В.",
+                                        "subjectForSite": "Математичний аналіз",
+                                        "lessonType": "LABORATORY",
+                                        "room": {
+                                            "id": 54,
+                                            "name": "1 к. 3 ауд."
+                                        },
+                                        "temporary_schedule": null
+                                    },
+                                    "odd": {
+                                        "teacherId": 39,
+                                        "teacherForSite": "доцент Вернигора І.В.",
+                                        "subjectForSite": "Математичний аналіз",
+                                        "lessonType": "LABORATORY",
+                                        "room": {
+                                            "id": 51,
+                                            "name": "1 к.  11 ауд."
+                                        },
+                                        "temporary_schedule": null
+                                    }
+                                },
+                                "class": {
+                                    "id": 1,
+                                    "startTime": "08:20",
+                                    "endTime": "09:40",
+                                    "class_name": "1"
+                                }
+                            },
+                            {
+                                "weeks": {
+                                    "even": {
+                                        "teacherId": 39,
+                                        "teacherForSite": "доцент Вернигора І.В.",
+                                        "subjectForSite": "Математичний аналіз",
+                                        "lessonType": "LABORATORY",
+                                        "room": {
+                                            "id": 54,
+                                            "name": "1 к. 3 ауд."
+                                        },
+                                        "temporary_schedule": null
+                                    },
+                                    "odd": {
+                                        "teacherId": 19,
+                                        "teacherForSite": "асистент Скутар І.Д.",
+                                        "subjectForSite": "Computer Science",
+                                        "lessonType": "LABORATORY",
+                                        "room": {
+                                            "id": 54,
+                                            "name": "1 к. 3 ауд."
+                                        },
+                                        "temporary_schedule": null
+                                    }
+                                },
+                                "class": {
+                                    "id": 2,
+                                    "startTime": "09:50",
+                                    "endTime": "11:10",
+                                    "class_name": "2"
+                                }
+                            },
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": {
+                                        "teacherId": 19,
+                                        "teacherForSite": "асистент Скутар І.Д.",
+                                        "subjectForSite": "Computer Science",
+                                        "lessonType": "LABORATORY",
+                                        "room": {
+                                            "id": 54,
+                                            "name": "1 к. 3 ауд."
+                                        },
+                                        "temporary_schedule": null
+                                    }
+                                },
+                                "class": {
+                                    "id": 3,
+                                    "startTime": "11:30",
+                                    "endTime": "12:50",
+                                    "class_name": "3"
+                                }
+                            },
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 4,
+                                    "startTime": "13:00",
+                                    "endTime": "14:20",
+                                    "class_name": "4"
+                                }
+                            },
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 7,
+                                    "startTime": "14:40",
+                                    "endTime": "16:00",
+                                    "class_name": "5"
+                                }
+                            },
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 8,
+                                    "startTime": "16:10",
+                                    "endTime": "17:30",
+                                    "class_name": "6"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "day": "TUESDAY",
+                        "classes": [
+                            {
+                                "weeks": {
+                                    "even": {
+                                        "teacherId": 49,
+                                        "teacherForSite": "доцент Боднарук С.Б.1",
+                                        "subjectForSite": "Програмування",
+                                        "lessonType": "LECTURE",
+                                        "room": {
+                                            "id": 54,
+                                            "name": "1 к. 3 ауд."
+                                        },
+                                        "temporary_schedule": null
+                                    },
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 1,
+                                    "startTime": "08:20",
+                                    "endTime": "09:40",
+                                    "class_name": "1"
+                                }
+                            },
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 2,
+                                    "startTime": "09:50",
+                                    "endTime": "11:10",
+                                    "class_name": "2"
+                                }
+                            },
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 3,
+                                    "startTime": "11:30",
+                                    "endTime": "12:50",
+                                    "class_name": "3"
+                                }
+                            },
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 4,
+                                    "startTime": "13:00",
+                                    "endTime": "14:20",
+                                    "class_name": "4"
+                                }
+                            },
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 7,
+                                    "startTime": "14:40",
+                                    "endTime": "16:00",
+                                    "class_name": "5"
+                                }
+                            },
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 8,
+                                    "startTime": "16:10",
+                                    "endTime": "17:30",
+                                    "class_name": "6"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "day": "WEDNESDAY",
+                        "classes": [
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 1,
+                                    "startTime": "08:20",
+                                    "endTime": "09:40",
+                                    "class_name": "1"
+                                }
+                            },
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 2,
+                                    "startTime": "09:50",
+                                    "endTime": "11:10",
+                                    "class_name": "2"
+                                }
+                            },
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 3,
+                                    "startTime": "11:30",
+                                    "endTime": "12:50",
+                                    "class_name": "3"
+                                }
+                            },
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 4,
+                                    "startTime": "13:00",
+                                    "endTime": "14:20",
+                                    "class_name": "4"
+                                }
+                            },
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 7,
+                                    "startTime": "14:40",
+                                    "endTime": "16:00",
+                                    "class_name": "5"
+                                }
+                            },
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 8,
+                                    "startTime": "16:10",
+                                    "endTime": "17:30",
+                                    "class_name": "6"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "day": "THURSDAY",
+                        "classes": [
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 1,
+                                    "startTime": "08:20",
+                                    "endTime": "09:40",
+                                    "class_name": "1"
+                                }
+                            },
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 2,
+                                    "startTime": "09:50",
+                                    "endTime": "11:10",
+                                    "class_name": "2"
+                                }
+                            },
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 3,
+                                    "startTime": "11:30",
+                                    "endTime": "12:50",
+                                    "class_name": "3"
+                                }
+                            },
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 4,
+                                    "startTime": "13:00",
+                                    "endTime": "14:20",
+                                    "class_name": "4"
+                                }
+                            },
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 7,
+                                    "startTime": "14:40",
+                                    "endTime": "16:00",
+                                    "class_name": "5"
+                                }
+                            },
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 8,
+                                    "startTime": "16:10",
+                                    "endTime": "17:30",
+                                    "class_name": "6"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "day": "FRIDAY",
+                        "classes": [
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": {
+                                        "teacherId": 49,
+                                        "teacherForSite": "доцент Боднарук С.Б.1",
+                                        "subjectForSite": "Програмування",
+                                        "lessonType": "LECTURE",
+                                        "room": {
+                                            "id": 54,
+                                            "name": "1 к. 3 ауд."
+                                        },
+                                        "temporary_schedule": null
+                                    }
+                                },
+                                "class": {
+                                    "id": 1,
+                                    "startTime": "08:20",
+                                    "endTime": "09:40",
+                                    "class_name": "1"
+                                }
+                            },
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 2,
+                                    "startTime": "09:50",
+                                    "endTime": "11:10",
+                                    "class_name": "2"
+                                }
+                            },
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 3,
+                                    "startTime": "11:30",
+                                    "endTime": "12:50",
+                                    "class_name": "3"
+                                }
+                            },
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 4,
+                                    "startTime": "13:00",
+                                    "endTime": "14:20",
+                                    "class_name": "4"
+                                }
+                            },
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 7,
+                                    "startTime": "14:40",
+                                    "endTime": "16:00",
+                                    "class_name": "5"
+                                }
+                            },
+                            {
+                                "weeks": {
+                                    "even": null,
+                                    "odd": null
+                                },
+                                "class": {
+                                    "id": 8,
+                                    "startTime": "16:10",
+                                    "endTime": "17:30",
+                                    "class_name": "6"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    };
+
+    store.dispatch(setDefaultSemester(data));
+    // axios
+    //     .get(DEFAULT_SEMESTER_URL)
+    //     .then(response => {
+    //         setSemesterLoadingService(false);
+    //         store.dispatch(setDefaultSemester(response.data));
+    //     })
+    //     .catch(err => {
+    //         handleSnackbarOpenService(
+    //             true,
+    //             snackbarTypes.ERROR,
+    //             i18n.t('common:no_current_semester_error')
+    //         );
+    //         setSemesterLoadingService(false);
+    //     });
+};
+
+export const disableDefaultSemesterService=()=>{
+    store.dispatch(setDefaultSemester({}));
+}
 
 export const getScheduleItemsService = () => {
     axios

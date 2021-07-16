@@ -255,7 +255,13 @@ const GroupSchedulePage = props => {
     };
    const getSchedule=()=>{
         console.log("getSchedule", props,location)
-       if(props.scheduleType!==""|| location.search===links.HOME_PAGE){
+       if((props.scheduleType==="")&&(props.defaultSemester.semester!==undefined)){
+           const semester=`${props.defaultSemester.semester.id}`;
+          console.log("default",props.defaultSemester.semester)
+           handleSubmit({ "semester":semester });
+           return
+       }
+       if(props.scheduleType!==""|| location.pathname===links.HOME_PAGE){
            console.log("if(props.scheduleType!== location.search===links.HOME_PAGE){")
            return renderSchedule();
        }
@@ -270,6 +276,7 @@ const GroupSchedulePage = props => {
        // const groupPath=group?"&group="+group:"";
        // const teacherPath=teacher?"&teacher="+teacher:"";
        // history.push(links.ScheduleFor+"?semester="+12+groupPath+teacherPath)
+       console.log("ASFDGHJKL")
        if(semester!==null) {
 
            handleSubmit({ semester, 'group': group != null ? group : 0, 'teacher': teacher != null ? teacher : 0 });
@@ -283,7 +290,7 @@ const GroupSchedulePage = props => {
 
        if(props.scheduleType !== 'archived') {
          return ( <GroupSchedulePageTop
-             data={{semester:props.semesterId,group: props.groupId,teacher: props.teacherId}}
+             scheduleType={props.scheduleType}
                history={history} onSubmit={handleSubmit} />);
        }
        return null;
@@ -298,6 +305,7 @@ const GroupSchedulePage = props => {
             {/*    ''*/}
             {/*)*/}
             {/*}*/}
+
             {getTop()}
 
             {getSchedule()}
@@ -314,5 +322,6 @@ const mapStateToProps = state => ({
     teacherId: state.schedule.scheduleTeacherId,
     semesterId: state.schedule.scheduleSemesterId,
     loading: state.loadingIndicator.loading,
+    defaultSemester: state.schedule.defaultSemester
 });
 export default connect(mapStateToProps)(GroupSchedulePage);

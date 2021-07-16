@@ -10,6 +10,7 @@ const initialState = {
     scheduleType: '',
     scheduleGroupId: 0,
     currentSemester: {},
+    defaultSemester:{},
     viewTeacherScheduleResults: 'block-view'
 };
 
@@ -22,6 +23,10 @@ const reducer = (state = initialState, action) => {
         case actionTypes.SET_CURRENT_SEMESTER:
             return updateObject(state, {
                 currentSemester: action.result
+            });
+        case actionTypes.SET_DEFAULT_SEMESTER:
+            return updateObject(state, {
+                defaultSemester: action.result
             });
         case actionTypes.CHECK_AVAILABILITY_SCHEDULE:
             return updateObject(state, {

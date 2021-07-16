@@ -22,6 +22,7 @@ import Card from '../../share/Card/Card';
 
 import { SCHEDULE_SEARCH_FORM } from '../../constants/reduxForms';
 import { required } from '../../validation/validateFields';
+import {useLocation} from 'react-router-dom';
 import schedule from '../../redux/reducers/schedule';
 const shortid = require('shortid');
 
@@ -45,7 +46,7 @@ const GroupSchedulePageTop = props => {
         submitting
     } = props;
     const isLoading = props.loading;
-    const initialValues=props;
+    const [sem,setSemester]=useState(props.initialValues.semester)
     let loadingContainer = '';
     if (isLoading) {
         loadingContainer = (
@@ -143,33 +144,23 @@ const GroupSchedulePageTop = props => {
             ))}
         </Field>)
     }
-    // useEffect(()=>{
-    //     props.initialize({
-    //         semester:props.data.semester,
-    //         group: props.data.group,
-    //         teacher:props.data.teacher
-    //     })
-    // },props.data)
-    // useEffect(()=>{
-    //     props.initialize({
-    //         semester:props.data.semester,
-    //         group: props.data.group,
-    //         teacher:props.data.teacher
-    //     })
-    // },props.data.teacher)
-    // useEffect(()=>{
-    //     props.initialize({
-    //         semester:props.data.semester,
-    //         group: props.data.group,
-    //         teacher:props.data.teacher
-    //     })
-    // },props.data.group)
+
+    useEffect(()=>{
+        console.log("useEffect", props)
+
+        props.initialize({
+            semester:props.initialValues.semester,
+            group: props.initialValues.group,
+            teacher:props.initialValues.teacher
+        })
+    },[])
+
 
 
 
     return (
         <section className={classes.root}>
-            {console.log("Top", props)}
+            {console.log("Top",props)}
             <p>{t('greetings_schedule_message')}</p>
             <p>{t('greetings_schedule_message_hint')}</p>
             <section className="form-buttons-container">

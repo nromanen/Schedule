@@ -530,9 +530,13 @@ const Header = props => {
                         to={links.HOME_PAGE}
                         className="navLinks"
                         style={{ textDecoration: 'none' }}
-                        onClick={handleClose}
+                        onClick={ () => {
+                            setAnchorEl(null);
+                        }}
+
                     >
                         <StyledMenuItem>
+
                             <ListItemIcon>
                                 <FaHome fontSize="normall" />
                             </ListItemIcon>
@@ -576,6 +580,7 @@ const Header = props => {
                 {menu}
                 <nav className="header-blocks header-blocks_one">
                     <Link to={links.HOME_PAGE} className="navLinks">
+
                         {t('home_title')}
                     </Link>
                     {leftLinks}
