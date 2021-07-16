@@ -62,7 +62,8 @@ export const makeGroupSchedule = groupSchedule => {
                 }
             });
             if (oddClas.card !== null && oddClas.card !== undefined) {
-                if (oddClas.card.hasOwnProperty('teacherForSite')) {
+                // if (oddClas.card.hasOwnProperty('teacherForSite')) {
+                if (oddClas.card.hasOwnProperty('teacher')) {
                     oddArray[clasIndex].cards[oddDay.day] = {
                         card: oddClas.card
                     };
@@ -83,7 +84,8 @@ export const makeGroupSchedule = groupSchedule => {
                 }
             });
             if (evenClas.card !== null && evenClas.card !== undefined) {
-                if (evenClas.card.hasOwnProperty('teacherForSite')) {
+                // if (evenClas.card.hasOwnProperty('teacherForSite')) {
+                if (evenClas.card.hasOwnProperty('teacher')) {
                     evenArray[clasIndex].cards[evenDay.day] = {
                         card: evenClas.card
                     };
@@ -92,7 +94,11 @@ export const makeGroupSchedule = groupSchedule => {
         });
     });
     done = true;
-
+    console.log("HHHHHHHHHgroupSchedule.semester BUILD",groupSchedule.semester,
+        oddArray,
+        evenArray,
+        group,
+        done)
     return {
         semester: groupSchedule.semester,
         oddArray,
@@ -173,6 +179,7 @@ export const makeFullSchedule = fullSchedule => {
 };
 
 export const makeTeacherSchedule = teacherSchedule => {
+    console.log("makeTeacherSchedule",teacherSchedule)
     let teacher = {};
     let evenArray = [];
     let oddArray = [];
@@ -230,6 +237,7 @@ export const makeTeacherSchedule = teacherSchedule => {
         });
         done = true;
     }
+
 
     return {
         done,

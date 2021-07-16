@@ -24,12 +24,10 @@ import {
 import { useTranslation } from 'react-i18next';
 import { setUniqueErrorService } from '../../services/lessonService';
 import {
-    handleTeacherInfo,
-    handleTeacherShortInfo
+    handleTeacherInfo
 } from '../../helper/handleTeacherInfo';
 import {
-    setValueToSubjectForSiteHandler,
-    setValueToTeacherForSiteHandler
+    setValueToSubjectForSiteHandler
 } from '../../helper/reduxFormHelper';
 
 const useStyles = makeStyles(() => ({
@@ -78,7 +76,7 @@ let LessonForm = props => {
             subject: lesson.subject.id,
             type: lesson.lessonType,
             hours: lesson.hours,
-            teacherForSite: lesson.teacherForSite,
+            linkToMeeting:lesson.linkToMeeting,
             subjectForSite: lesson.subjectForSite,
             grouped: lesson.grouped
         });
@@ -106,14 +104,9 @@ let LessonForm = props => {
                         {...(!isUniqueError
                             ? { validate: [required] }
                             : { error: isUniqueError })}
-                        onChange={event => {
-                            setValueToTeacherForSiteHandler(
-                                teachers,
-                                event.target.value,
-                                props.change
-                            );
-                            setUniqueErrorService(false);
-                        }}
+                        onChange={()=>
+                            setUniqueErrorService(false)
+                        }
                     >
                         <option />
                         {teachers.map(teacher => (
@@ -197,28 +190,17 @@ let LessonForm = props => {
                             color="primary"
                         />
                     </div>
-                    {/*<Field*/}
-                    {/*    id="teacherForSite"*/}
-                    {/*    name="teacherForSite"*/}
-                    {/*    className="form-field"*/}
-                    {/*    multiline*/}
-                    {/*    rowsMax="1"*/}
-                    {/*    margin="normal"*/}
-                    {/*    component={renderTextField}*/}
-                    {/*    label={t('teacher_label') + t('for_site_label')}*/}
-                    {/*    validate={[required, maxLengthValue]}*/}
-                    {/*/>*/}
                     <Field
                         id="linkToMeeting"
                         name="linkToMeeting"
                         className="form-field"
-                        multiline
                         rowsMax="1"
                         margin="normal"
                         component={renderTextField}
-                        label={t('teacher_label') + t('for_site_label')}
-                        validate={[required,maxLengthValue]}
-
+                        label={t('link_to_meeting_label')}
+                        validate={[required, maxLengthValue]}
+                        type="url"
+                        placeholder={"Input URL"}
                     />
                     <Field
                         id="subjectForSite"
@@ -230,7 +212,6 @@ let LessonForm = props => {
                         component={renderTextField}
                         label={t('subject_label') + t('for_site_label')}
                         validate={[required, maxLengthValue]}
-                        type="url"
                     />
 
                     <div className="form-buttons-container">

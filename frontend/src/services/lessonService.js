@@ -65,7 +65,7 @@ const cardObjectHandler = (card, groupId) => {
         lessonType: card.type,
         subjectForSite: card.subjectForSite,
         teacher: { id: card.teacher },
-        teacherForSite: card.teacherForSite,
+        linkToMeeting:card.linkToMeeting,
         grouped: card.grouped
     };
 };
@@ -91,28 +91,31 @@ const updateLessonHandler = data => {
 };
 
 const createLessonHandler = (data, isCopy) => {
-    return axios
-        .post(LESSON_URL, data)
-        .then(response => {
-            if (!isCopy) {
-                store.dispatch(storeLessonCard(response.data));
-            }
-            resetFormHandler(LESSON_FORM);
-
-            successHandler(
-                i18n.t('serviceMessages:back_end_success_operation', {
-                    cardType: i18n.t('formElements:lesson_label'),
-                    actionType: i18n.t('serviceMessages:created_label')
-                })
-            );
-        })
-        .catch(err => {
-            errorHandler(err);
-        });
+    console.log("createLessonHandler",data)
+    // return axios
+    //     .post(LESSON_URL, data)
+    //     .then(response => {
+    //         if (!isCopy) {
+    //             store.dispatch(storeLessonCard(response.data));
+    //         }
+    //         resetFormHandler(LESSON_FORM);
+    //
+    //         successHandler(
+    //             i18n.t('serviceMessages:back_end_success_operation', {
+    //                 cardType: i18n.t('formElements:lesson_label'),
+    //                 actionType: i18n.t('serviceMessages:created_label')
+    //             })
+    //         );
+    //     })
+    //     .catch(err => {
+    //         errorHandler(err);
+    //     });
 };
 
 export const handleLessonCardService = (card, groupId) => {
+
     let cardObj = cardObjectHandler(card, groupId);
+    console.log("handleLessonCardService",cardObj)
     if (!checkUniqLesson(cardObj)) {
         handleSnackbarOpenService(
             true,

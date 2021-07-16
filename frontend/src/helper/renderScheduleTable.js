@@ -11,6 +11,7 @@ import Card from '../share/Card/Card';
 import i18next from './i18n';
 
 import { daysUppercase } from '../constants/schedule/days';
+import { common } from '@material-ui/core/colors';
 
 const shortid = require('shortid');
 
@@ -59,7 +60,9 @@ const renderClassCell = classItem =>
 export const prepareLessonCardCell = card => {
     let inner = '';
     if (card !== undefined && card !== null) {
-        inner = card.teacherForSite + '\n' + card.subjectForSite;
+        const {name,surname,patronymic,position}=card.teacher;
+        const teacherName=`${surname}\t${name}\t${patronymic}\t${position}`
+        inner = teacherName + '\n' + card.subjectForSite+'\n'+card.linkToMeeting;
     }
     return inner;
 };
@@ -78,6 +81,7 @@ export const prepareLessonSubCardCell = card => {
     return inner;
 };
 export const prepareLessonTemporaryCardCell = card => {
+    console.log("CARD",card)
     let inner = '';
     if (card !== undefined && card !== null) {
         if (card.temporary_schedule) {
@@ -90,7 +94,13 @@ export const prepareLessonTemporaryCardCell = card => {
                 inner +=
                     card.temporary_schedule.date +
                     '\n\r' +
-                    card.temporary_schedule.teacherForSite +
+                    card.temporary_schedule.teacher.name +
+                    '\r' +
+                    card.temporary_schedule.teacher.surname +
+                    '\r' +
+                    card.temporary_schedule.teacher.patronymic +
+                    '\r' +
+                    card.temporary_schedule.teacher.position +
                     '\n\r' +
                     card.temporary_schedule.subjectForSite;
                 if (card.temporary_schedule.room) {
@@ -143,7 +153,9 @@ export const prepareTeacherCardRegularCell = card => {
     card.room +
     ')' +
     '\n' +
-    card.group.title;
+    card.group.title+
+      '\n' +
+      card.linkToMeeting;
 }
 export const buildLessonWithRoom = card => {
 
@@ -155,14 +167,15 @@ export const buildLessonWithRoom = card => {
         ', ' +
         card.room +
         ')' +
-        '\n';
+        '\n'+
+        card.linkToMeeting;
 }
 export const buildGroupNumber = card => {
 
     return    card.group.title+'\n';
 }
 
-export const prepareTeacherTemporaryCardCell = cards => {
+export const prepareTeacherTemporaryCardCell = (cards) => {
 
     let inner = '';
     let title = '';
@@ -637,7 +650,7 @@ const renderTeacherClassCell = cards => {
         </TableCell>
     );
 };
-export const renderWeekTable = (schedule, isOdd) => {
+export const renderWeekTable = (schedule, isOdd,linkToMeeting) => {
     if (schedule) {
         return (
             <TableContainer>

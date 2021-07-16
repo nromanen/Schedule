@@ -96,7 +96,7 @@ const GroupSchedulePage = props => {
         }
         return title;
     };
-    const renderTeacherScheduleTitle = (semester, teacher) => {
+    const renderTeacherScheduleTitle = (semester, teacher,linkToMeeting) => {
         let title = '';
         if (semester) {
             title +=
@@ -178,6 +178,7 @@ const GroupSchedulePage = props => {
                 }
                     if(teacherSchedule) {
                         const teacher = makeTeacherSchedule(teacherSchedule);
+                        console.log("teacher",teacher)
                         if (teacher.done) {
                             setLoadingService(false);
                             return (
@@ -246,23 +247,16 @@ const GroupSchedulePage = props => {
         const teacherPath=teacher?"&teacher="+teacher:"";
         setLoadingService('true');
         submitSearchSchedule(values, history);
-
-        history.push(links.ScheduleFor+"?semester="+semester+groupPath+teacherPath)
-
-
-
-
+        history.push(links.ScheduleFor+"?semester="+semester+groupPath+teacherPath);
     };
    const getSchedule=()=>{
         console.log("getSchedule", props,location)
        if((props.scheduleType==="")&&(props.defaultSemester.semester!==undefined)){
            const semester=`${props.defaultSemester.semester.id}`;
-          console.log("default",props.defaultSemester.semester)
            handleSubmit({ "semester":semester });
            return
        }
        if(props.scheduleType!==""|| location.pathname===links.HOME_PAGE){
-           console.log("if(props.scheduleType!== location.search===links.HOME_PAGE){")
            return renderSchedule();
        }
 
@@ -272,16 +266,8 @@ const GroupSchedulePage = props => {
        const semester= params.get("semester");
        const teacher=params.get("teacher");
        const group=params.get("group");
-
-       // const groupPath=group?"&group="+group:"";
-       // const teacherPath=teacher?"&teacher="+teacher:"";
-       // history.push(links.ScheduleFor+"?semester="+12+groupPath+teacherPath)
-       console.log("ASFDGHJKL")
        if(semester!==null) {
-
            handleSubmit({ semester, 'group': group != null ? group : 0, 'teacher': teacher != null ? teacher : 0 });
-
-           console.log("set",semester,teacher,group);
         return null
        }
        else return null;
@@ -297,17 +283,7 @@ const GroupSchedulePage = props => {
     }
     return (
         <>
-            {/*{*/}
-            {/*    props.scheduleType !== 'archived' ? (*/}
-            {/*    <GroupSchedulePageTop*/}
-            {/*        history={history} onSubmit={handleSubmit} />*/}
-            {/*) : (*/}
-            {/*    ''*/}
-            {/*)*/}
-            {/*}*/}
-
             {getTop()}
-
             {getSchedule()}
 
         </>
