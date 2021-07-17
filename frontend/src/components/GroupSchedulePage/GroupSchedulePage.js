@@ -30,8 +30,13 @@ import GroupSchedulePageTop from '../GroupSchedulePageTop/GroupSchedulePageTop';
 import { setLoadingService } from '../../services/loadingService';
 import {useHistory,useLocation} from 'react-router-dom';
 import { links } from '../../constants/links';
+import RadioGroup from '@material-ui/core/RadioGroup';
+import { FormLabel } from '@material-ui/core';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Radio from '@material-ui/core/Radio';
+import { places } from '../../constants/places';
 const GroupSchedulePage = props => {
-    const [schedule,setSchedule]=useState("");
+    const [place,setPlace]=useState(places.TOGETHER);
     let { groupSchedule, fullSchedule, teacherSchedule } = props;
     let history = useHistory();
 
@@ -96,7 +101,7 @@ const GroupSchedulePage = props => {
         }
         return title;
     };
-    const renderTeacherScheduleTitle = (semester, teacher,linkToMeeting) => {
+    const renderTeacherScheduleTitle = (semester, teacher) => {
         let title = '';
         if (semester) {
             title +=
@@ -154,13 +159,15 @@ const GroupSchedulePage = props => {
                             {renderGroupTable(
                                 resultArrays.oddArray,
                                 1,
-                                resultArrays.semester
+                                resultArrays.semester,
+                                place
                             )}
                             <h2>{t('common:even_week')}</h2>
                             {renderGroupTable(
                                 resultArrays.evenArray,
                                 0,
-                                resultArrays.semester
+                                resultArrays.semester,
+                                place
                             )}
                         </>
                     );
@@ -195,9 +202,9 @@ const GroupSchedulePage = props => {
                                         )}
                                     </h1>
                                     <h2>{t('common:odd_week')}</h2>
-                                    {renderWeekTable(teacher.odd, 1)}
+                                    {renderWeekTable(teacher.odd, 1,place)}
                                     <h2>{t('common:even_week')}</h2>
-                                    {renderWeekTable(teacher.even, 0)}
+                                    {renderWeekTable(teacher.even, 0,place)}
                                 </>
                             );
                         }
@@ -215,7 +222,7 @@ const GroupSchedulePage = props => {
                 const result = makeFullSchedule(fullSchedule);
                 if (result.groupsCount || result.done) {
                     setLoadingService(false);
-                    return renderFullSchedule(result);
+                    return renderFullSchedule(result,place);
                 }
                 else setLoadingService(false)
                 break;
@@ -230,7 +237,7 @@ const GroupSchedulePage = props => {
                 const archive = makeFullSchedule(fullSchedule);
                 if (archive.groupsCount || archive.done) {
                     setLoadingService(false);
-                    return renderFullSchedule(archive);
+                    return renderFullSchedule(archive,place);
                 }
                 else setLoadingService(false)
                 break;
@@ -275,16 +282,35 @@ const GroupSchedulePage = props => {
     const getTop=()=>{
 
        if(props.scheduleType !== 'archived') {
-         return ( <GroupSchedulePageTop
-             scheduleType={props.scheduleType}
-               history={history} onSubmit={handleSubmit} />);
+         return (
+             <GroupSchedulePageTop
+                 scheduleType={props.scheduleType}
+                 history={history} onSubmit={handleSubmit} />
+         );
+
+
        }
        return null;
+    }
+    const selectPlace=()=>{
+       return (
+           <>
+               <FormLabel component="legend">Choose locations</FormLabel>
+               <RadioGroup aria-label="Location" name="place" value={place} onChange={(e)=>setPlace(e.target.value)}>
+                   <FormControlLabel value={places.TOGETHER} control={<Radio />} label="Together(in auditory/online)" />
+                   <FormControlLabel value={places.AUDITORY} control={<Radio />} label="In auditory" />
+                   <FormControlLabel value={places.ONLINE} control={<Radio />} label="Online" />
+               </RadioGroup>
+           </>
+
+    );
     }
     return (
         <>
             {getTop()}
+            {selectPlace()}
             {getSchedule()}
+
 
         </>
     );

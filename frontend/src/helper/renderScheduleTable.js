@@ -15,6 +15,8 @@ import { common } from '@material-ui/core/colors';
 import { IoMdEye, IoMdLink } from 'react-icons/all';
 import { useTranslation } from 'react-i18next';
 import { LinkToMeeting } from '../components/LinkToMeeting/LinkToMeeting';
+import { links } from '../constants/links';
+import { places } from '../constants/places';
 
 const shortid = require('shortid');
 
@@ -65,25 +67,31 @@ export const prepareLessonCardCell = card => {
     if (card !== undefined && card !== null) {
         const {name,surname,patronymic,position}=card.teacher;
         const teacherName=`${surname}\t${name}\t${patronymic}\t${position}`
-        inner = teacherName + '\n' + card.subjectForSite+'\n'+card.linkToMeeting;
+        inner = teacherName + '\n' + card.subjectForSite+'\n';
     }
     return inner;
 };
-export const prepareLessonSubCardCell = card => {
+export const prepareLessonSubCardCell = (card,place) => {
+    const room=place!==places.ONLINE?card.room:"";
+    const link=place!==places.AUDITORY?card.linkToMeeting:"";
     let inner = '';
     if (card !== undefined && card !== null) {
         inner =
-            '( ' +
             i18next.t(
                 `formElements:lesson_type_${card.lessonType.toLowerCase()}_label`
             );
-        if (card.room) {
+        if (room!=="") {
             inner += ', ' + card.room.name + ' )';
+            inner=`(${inner}, ${card.room.name})`
+        }
+        if (link!==""){
+            inner+='\t'+link;
         }
     }
     return inner;
 };
-export const prepareLessonTemporaryCardCell = card => {
+export const prepareLessonTemporaryCardCell = (card,place) => {
+    console.log("prepareLessonTemporaryCardCell = (card,place)",place)
     let inner = '';
     if (card !== undefined && card !== null) {
         if (card.temporary_schedule) {
@@ -112,28 +120,28 @@ export const prepareLessonTemporaryCardCell = card => {
             let title =
                 i18next.t(`common:regular_lesson_label`) +
                 '\r' +
-                prepareLessonCardCell(card) +
+                prepareLessonCardCell(card,place) +
                 '\r' +
-                prepareLessonSubCardCell(card);
+                prepareLessonSubCardCell(card,place)+
+                '\r'
 
             return inner.length > 0 ? (
-                <p className="temporary-class" title={title}>
-                    {inner}
-                    {/*<IoMdLink*/}
-                    {/*    className="svg-btn copy-btn"*/}
-                    {/*    onClick={() => {*/}
-                    {/*        console.log(card.temporary_schedule.linkToMeeting)*/}
-                    {/*    }}*/}
-                    {/*/>*/}
-                </p>
+                <>
+                    <p className="temporary-class" title={title}>
+                        {inner}
+                    </p>
+                    <LinkToMeeting {...card}/>
+                </>
+
             ) : (
                 ''
             );
         } else {
             return (
                 <>
-                    <p>{prepareLessonCardCell(card)}</p>
-                    <p>{prepareLessonSubCardCell(card)}</p>
+                    <p>{prepareLessonCardCell(card,place)}</p>
+                    <p>{prepareLessonSubCardCell(card,place)}</p>
+                    <LinkToMeeting {...card}/>
                     {/*{getLinkIcon(card)}*/}
                 </>
             );
@@ -151,42 +159,44 @@ export const prepareTeacherCardCell = card => {
     return inner;
 };
 
-export const prepareTeacherCardRegularCell = card => {
-    //const t=useTranslation("common");
+export const prepareTeacherCardRegularCell = (card,place) => {
+    const room=place!==places.ONLINE?card.room:"";
+    const link=place!==places.AUDITORY?card.linkToMeeting:"";
   return   prepareTeacherCardCell(card) +
     '\n(' +
     i18next.t(
         `formElements:lesson_type_${card.lessonType.toLowerCase()}_label`
     ) +
     ', ' +
-    card.room +
+    room +
     ')' +
     '\n' +
     card.group.title+
       '\n' +
-      card.linkToMeeting;
+      link;
 
 }
 
-export const buildLessonWithRoom = card => {
-
+export const buildLessonWithRoom = (card,place) => {
+    const room=place!==places.ONLINE?card.room:"";
+    const link=place!==places.AUDITORY?card.linkToMeeting:"";
     return   prepareTeacherCardCell(card) +
         '\n(' +
         i18next.t(
             `formElements:lesson_type_${card.lessonType.toLowerCase()}_label`
         ) +
         ', ' +
-        card.room +
+        room +
         ')' +
         '\n'+
-        card.linkToMeeting;
+        link;
 }
 export const buildGroupNumber = card => {
 
     return    card.group.title+'\n';
 }
 
-export const prepareTeacherTemporaryCardCell = (cards) => {
+export const prepareTeacherTemporaryCardCell = (cards,place) => {
 
     let inner = '';
     let title = '';
@@ -202,7 +212,7 @@ export const prepareTeacherTemporaryCardCell = (cards) => {
 
         if (!card.temporary_schedule) {
             return <>
-                {prepareTeacherCardRegularCell(card)}
+                {prepareTeacherCardRegularCell(card,place)}
                 <LinkToMeeting {...card}/>
             </>
 
@@ -227,7 +237,7 @@ export const prepareTeacherTemporaryCardCell = (cards) => {
         title =
             i18next.t(`common:regular_lesson_label`) +
             '\r' +
-            prepareTeacherCardRegularCell(card);
+            prepareTeacherCardRegularCell(card,place);
         return inner.length > 0 ? (
             <p className="temporary-class" title={title}>
                 {inner}
@@ -239,7 +249,7 @@ export const prepareTeacherTemporaryCardCell = (cards) => {
     }
     let card=cards[0];
 
-    inner+=buildLessonWithRoom(card);
+    inner+=buildLessonWithRoom(card,place);
     cards.map(card => {
         if (!card.temporary_schedule) {
             inner+=
@@ -268,7 +278,7 @@ export const prepareTeacherTemporaryCardCell = (cards) => {
         title +=
             i18next.t(`common:regular_lesson_label`) +
             '\r' +
-            prepareTeacherCardRegularCell(card) +
+            prepareTeacherCardRegularCell(card,place) +
             '\r';
     });
 
@@ -282,7 +292,7 @@ export const prepareTeacherTemporaryCardCell = (cards) => {
     );
 };
 
-export const renderGroupDayClass = (classDay, isOddWeek) => {
+export const renderGroupDayClass = (classDay, isOddWeek,place) => {
     let res = [];
     for (let [key, value] of Object.entries(classDay.cards)) {
         value.day = key;
@@ -302,7 +312,7 @@ export const renderGroupDayClass = (classDay, isOddWeek) => {
                     <TableCell key={shortid.generate()} className={className}>
                         {/* <p>{prepareLessonCardCell(day.card, currentDay)}</p>
                         <p>{prepareLessonSubCardCell(day.card, currentDay)}</p> */}
-                        {prepareLessonTemporaryCardCell(day.card)}
+                        {prepareLessonTemporaryCardCell(day.card,place)}
 
                     </TableCell>
                 );
@@ -324,7 +334,7 @@ export const renderScheduleGroupHeader = daysUppercase => (
     </TableHead>
 );
 
-export const renderGroupTable = (classes, isOdd, semester) => {
+export const renderGroupTable = (classes, isOdd, semester,place) => {
     if (semester) {
         currentWeekType = isOddFunction(printWeekNumber(semester.startDay));
     }
@@ -336,7 +346,7 @@ export const renderGroupTable = (classes, isOdd, semester) => {
                 <TableBody>
                     {classes.map((classDay, classIndex) => {
                         if (classDay) {
-                            return renderGroupDayClass(classDay, isOdd);
+                            return renderGroupDayClass(classDay, isOdd,place);
                         }
                     })}
                 </TableBody>
@@ -349,7 +359,8 @@ export const renderGroupCells = (
     groups,
     isOdd = 0,
     currentWeekType = 0,
-    isCurrentDay = 0
+    isCurrentDay = 0,
+    place
 ) => {
     return groups.map((group, groupIndex) => {
         let colspan = 1;
@@ -406,7 +417,7 @@ export const renderGroupCells = (
                 rowSpan={rowspan}
                 className={classname}
             >
-                {prepareLessonTemporaryCardCell(group.card)}
+                {prepareLessonTemporaryCardCell(group.card,place)}
             </TableCell>
         );
     });
@@ -429,7 +440,8 @@ export const renderFirstDayFirstClassFirstCardLine = (
     day_name,
     classItem,
     groups,
-    classesCount
+    classesCount,
+    place
 ) => {
     let dayClassName = 'dayNameCell ';
     let classClassName = 'classNameCell ';
@@ -466,7 +478,7 @@ export const renderFirstDayFirstClassFirstCardLine = (
                 >
                     1
                 </TableCell>
-                {renderGroupCells(groups.odd)}
+                {renderGroupCells(groups.odd,place)}
             </TableRow>
             <TableRow>
                 <TableCell
@@ -474,7 +486,7 @@ export const renderFirstDayFirstClassFirstCardLine = (
                 >
                     2
                 </TableCell>
-                {renderGroupCells(groups.even)}
+                {renderGroupCells(groups.even,place)}
             </TableRow>
         </React.Fragment>
     );
@@ -483,7 +495,8 @@ export const renderFirstDayFirstClassFirstCardLine = (
 export const renderFirstDayOtherClassFirstCardLine = (
     day_name,
     classItem,
-    groups
+    groups,
+    place
 ) => {
     let classClassName = 'classNameCell ';
     let oddWeekClass = '';
@@ -508,7 +521,7 @@ export const renderFirstDayOtherClassFirstCardLine = (
                 >
                     1
                 </TableCell>
-                {renderGroupCells(groups.odd, 1)}
+                {renderGroupCells(groups.odd, 1,place)}
             </TableRow>
             <TableRow>
                 <TableCell
@@ -516,7 +529,7 @@ export const renderFirstDayOtherClassFirstCardLine = (
                 >
                     2
                 </TableCell>
-                {renderGroupCells(groups.even, 0)}
+                {renderGroupCells(groups.even, 0,place)}
             </TableRow>
         </React.Fragment>
     );
@@ -552,7 +565,8 @@ const prepareForRender = classItem => {
     }
 };
 
-export const renderDay = (dayName, dayItem, semesterClassesCount) => {
+export const renderDay = (dayName, dayItem, semesterClassesCount,place) => {
+    console.log("render day",place)
     return dayItem.map((classItem, classIndex) => {
         prepareForRender(classItem);
         if (classIndex === 0) {
@@ -560,13 +574,15 @@ export const renderDay = (dayName, dayItem, semesterClassesCount) => {
                 dayName,
                 classItem.class,
                 classItem.cards,
-                semesterClassesCount
+                semesterClassesCount,
+                place
             );
         } else {
             return renderFirstDayOtherClassFirstCardLine(
                 dayName,
                 classItem.class,
-                classItem.cards
+                classItem.cards,
+                place
             );
         }
     });
@@ -587,16 +603,19 @@ export const renderScheduleFullHeader = groupList => (
     </TableHead>
 );
 
-const renderScheduleDays = fullResultSchedule =>
+const renderScheduleDays = (fullResultSchedule,place) => {
+    console.log('renderScheduleDays', place);
     fullResultSchedule.resultArray.map((dayItem, dayName) => {
         return renderDay(
             dayItem.day,
             dayItem.classes,
-            fullResultSchedule.semester_classes.length
+            fullResultSchedule.semester_classes.length,
+            place
         );
     });
+}
 
-export const renderFullSchedule = fullResultSchedule => {
+export const renderFullSchedule = (fullResultSchedule,place) => {
     currentWeekType = isOddFunction(
         printWeekNumber(fullResultSchedule.semester.startDay)
     );
@@ -618,7 +637,7 @@ export const renderFullSchedule = fullResultSchedule => {
                 <Table aria-label="sticky table">
                     {renderScheduleFullHeader(fullResultSchedule.groupList)}
                     <TableBody>
-                        {renderScheduleDays(fullResultSchedule)}
+                        {renderScheduleDays(fullResultSchedule,place)}
                     </TableBody>
                 </Table>
             </TableContainer>
@@ -626,7 +645,7 @@ export const renderFullSchedule = fullResultSchedule => {
     );
 };
 
-const renderClassRow = (classItem, days, scheduleRow) => (
+const renderClassRow = (classItem, days, scheduleRow,place) => (
 
     <TableRow key={shortid.generate()}>
         <TableCell className="lesson groupLabelCell">
@@ -637,13 +656,13 @@ const renderClassRow = (classItem, days, scheduleRow) => (
 
             if (scheduleRow) {
                 return renderTeacherClassCell(
-                    scheduleRow.find(clas => clas.day === dayName)
+                    scheduleRow.find(clas => clas.day === dayName),place
                 );
             }
         })}
     </TableRow>
 );
-const renderTeacherClassCell = cards => {
+const renderTeacherClassCell = (cards,place) => {
     let teacherLessonAddCellClass = '';
 
     if (cards !== undefined) {
@@ -664,11 +683,12 @@ const renderTeacherClassCell = cards => {
             className={`lesson ${teacherLessonAddCellClass}`}
         >
 
-            {prepareTeacherTemporaryCardCell(cards && cards.cards)}
+            {prepareTeacherTemporaryCardCell(cards && cards.cards,place)}
         </TableCell>
     );
 };
-export const renderWeekTable = (schedule, isOdd,linkToMeeting) => {
+export const renderWeekTable = (schedule, isOdd,place) => {
+    console.log("renderWeekTable",place)
     if (schedule) {
         return (
             <TableContainer>
@@ -679,7 +699,8 @@ export const renderWeekTable = (schedule, isOdd,linkToMeeting) => {
                             return renderClassRow(
                                 classItem,
                                 schedule.days,
-                                schedule.cards[classItem.id]
+                                schedule.cards[classItem.id],
+                                place
                             );
                         })}
                     </TableBody>
