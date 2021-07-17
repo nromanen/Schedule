@@ -121,10 +121,12 @@
 
     "delete_word": "delete",
     "set_default_word": "set default",
+    "go_to_meeting_word": "go to meeting",
     "do_you_wanna": "Do you want to",
     "do_you_wanna_disable": "Do you want to disable ",
     "do_you_wanna_show": "Do you want to show ",
     "this_card_type": "this {{cardType}}?",
+    "by_this_card_type": "by this {{cardType}}?",
     "teacher_schedule_label": "Schedule for teacher",
 
     "days_label": "Days",

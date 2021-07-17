@@ -12,6 +12,9 @@ import i18next from './i18n';
 
 import { daysUppercase } from '../constants/schedule/days';
 import { common } from '@material-ui/core/colors';
+import { IoMdEye, IoMdLink } from 'react-icons/all';
+import { useTranslation } from 'react-i18next';
+import { LinkToMeeting } from '../components/LinkToMeeting/LinkToMeeting';
 
 const shortid = require('shortid');
 
@@ -81,7 +84,6 @@ export const prepareLessonSubCardCell = card => {
     return inner;
 };
 export const prepareLessonTemporaryCardCell = card => {
-    console.log("CARD",card)
     let inner = '';
     if (card !== undefined && card !== null) {
         if (card.temporary_schedule) {
@@ -117,6 +119,12 @@ export const prepareLessonTemporaryCardCell = card => {
             return inner.length > 0 ? (
                 <p className="temporary-class" title={title}>
                     {inner}
+                    {/*<IoMdLink*/}
+                    {/*    className="svg-btn copy-btn"*/}
+                    {/*    onClick={() => {*/}
+                    {/*        console.log(card.temporary_schedule.linkToMeeting)*/}
+                    {/*    }}*/}
+                    {/*/>*/}
                 </p>
             ) : (
                 ''
@@ -126,6 +134,7 @@ export const prepareLessonTemporaryCardCell = card => {
                 <>
                     <p>{prepareLessonCardCell(card)}</p>
                     <p>{prepareLessonSubCardCell(card)}</p>
+                    {/*{getLinkIcon(card)}*/}
                 </>
             );
         }
@@ -143,7 +152,7 @@ export const prepareTeacherCardCell = card => {
 };
 
 export const prepareTeacherCardRegularCell = card => {
-
+    //const t=useTranslation("common");
   return   prepareTeacherCardCell(card) +
     '\n(' +
     i18next.t(
@@ -156,7 +165,9 @@ export const prepareTeacherCardRegularCell = card => {
     card.group.title+
       '\n' +
       card.linkToMeeting;
+
 }
+
 export const buildLessonWithRoom = card => {
 
     return   prepareTeacherCardCell(card) +
@@ -190,7 +201,11 @@ export const prepareTeacherTemporaryCardCell = (cards) => {
         const card = cards[0];
 
         if (!card.temporary_schedule) {
-            return prepareTeacherCardRegularCell(card);
+            return <>
+                {prepareTeacherCardRegularCell(card)}
+                <LinkToMeeting {...card}/>
+            </>
+
         }
         if (card.temporary_schedule.vacation === true) {
             inner +=
@@ -216,14 +231,15 @@ export const prepareTeacherTemporaryCardCell = (cards) => {
         return inner.length > 0 ? (
             <p className="temporary-class" title={title}>
                 {inner}
+                <LinkToMeeting {...card}/>
             </p>
         ) : (
             ''
         );
     }
     let card=cards[0];
-    inner+=buildLessonWithRoom(card);
 
+    inner+=buildLessonWithRoom(card);
     cards.map(card => {
         if (!card.temporary_schedule) {
             inner+=
@@ -259,6 +275,7 @@ export const prepareTeacherTemporaryCardCell = (cards) => {
     return inner.length > 0 ? (
         <p className="temporary-class" title={title}>
             {inner}
+            <LinkToMeeting {...card}/>
         </p>
     ) : (
         ''
@@ -286,6 +303,7 @@ export const renderGroupDayClass = (classDay, isOddWeek) => {
                         {/* <p>{prepareLessonCardCell(day.card, currentDay)}</p>
                         <p>{prepareLessonSubCardCell(day.card, currentDay)}</p> */}
                         {prepareLessonTemporaryCardCell(day.card)}
+
                     </TableCell>
                 );
             })}

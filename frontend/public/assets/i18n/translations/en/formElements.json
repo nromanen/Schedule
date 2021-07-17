@@ -82,6 +82,7 @@
     "room_element": "class",
     "subject_element": "subject",
     "semester_element": "semester",
+    "reference_element": "reference",
     "semester_free_rooms": "Choose the semester",
     "week_free_rooms": "Choose the week",
     "day_free_rooms": "Choose the day",
