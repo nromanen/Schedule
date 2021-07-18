@@ -57,7 +57,6 @@ const HomePage = props => {
     return (
 
         <Fragment>
-            {console.log('home')}
             <h1>{t('home_title')}</h1>
             <GroupSchedulePage scheduleType="default" />
         </Fragment>

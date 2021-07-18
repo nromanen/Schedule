@@ -74,7 +74,8 @@ export const getCurrentSemesterService = () => {
         });
 };
 export const getDefaultSemesterService = () => {
-    const data= {
+
+    const data={
         "semester": {
             "id": 10,
             "description": "20202-1",
@@ -168,8 +169,14 @@ export const getDefaultSemesterService = () => {
                                 "weeks": {
                                     "even": null,
                                     "odd": {
-                                        "teacherId": 19,
-                                        "teacherForSite": "асистент Скутар І.Д.",
+                                        "teacher": {
+                                            "name":"Ігор",
+                                            "surname":"Скутар",
+                                            "patronymic":"Дмитрович",
+                                            "position":"Доктор наук",
+                                            "disable":"false"
+                                        },
+                                        "linkToMeeting":"http://localhost:3000/schedule?semester=10&group=27",
                                         "subjectForSite": "Computer Science",
                                         "lessonType": "LABORATORY",
                                         "room": {
@@ -572,8 +579,14 @@ export const getDefaultSemesterService = () => {
                                 "weeks": {
                                     "even": null,
                                     "odd": {
-                                        "teacherId": 19,
-                                        "teacherForSite": "асистент Скутар І.Д.",
+                                        "teacher": {
+                                            "name":"Ігор",
+                                            "surname":"Скутар",
+                                            "patronymic":"Дмитрович",
+                                            "position":"Доктор наук",
+                                            "disable":"false"
+                                        },
+                                        "linkToMeeting":"http://localhost:3000/schedule?semester=10&group=27",
                                         "subjectForSite": "Computer Science",
                                         "lessonType": "LABORATORY",
                                         "room": {
@@ -951,8 +964,14 @@ export const getDefaultSemesterService = () => {
                             {
                                 "weeks": {
                                     "even": {
-                                        "teacherId": 42,
-                                        "teacherForSite": "асистент Дорош А.Б.",
+                                        "teacher": {
+                                            "name":"Ігор",
+                                            "surname":"Скутар",
+                                            "patronymic":"Дмитрович",
+                                            "position":"Доктор наук",
+                                            "disable":"false"
+                                        },
+                                        "linkToMeeting":"http://localhost:3000/schedule?semester=10&group=27",
                                         "subjectForSite": "Дискретна математика",
                                         "lessonType": "LECTURE",
                                         "room": {
@@ -962,8 +981,14 @@ export const getDefaultSemesterService = () => {
                                         "temporary_schedule": null
                                     },
                                     "odd": {
-                                        "teacherId": 42,
-                                        "teacherForSite": "асистент Дорош А.Б.",
+                                        "teacher": {
+                                            "name":"Ігор",
+                                            "surname":"Скутар",
+                                            "patronymic":"Дмитрович",
+                                            "position":"Доктор наук",
+                                            "disable":"false"
+                                        },
+                                        "linkToMeeting":"http://localhost:3000/schedule?semester=10&group=27",
                                         "subjectForSite": "Дискретна математика",
                                         "lessonType": "LECTURE",
                                         "room": {
@@ -984,8 +1009,14 @@ export const getDefaultSemesterService = () => {
                                 "weeks": {
                                     "even": null,
                                     "odd": {
-                                        "teacherId": 19,
-                                        "teacherForSite": "асистент Скутар І.Д.",
+                                        "teacher": {
+                                            "name":"Ігор",
+                                            "surname":"Скутар",
+                                            "patronymic":"Дмитрович",
+                                            "position":"Доктор наук",
+                                            "disable":"false"
+                                        },
+                                        "linkToMeeting":"http://localhost:3000/schedule?semester=10&group=27",
                                         "subjectForSite": "Computer Science",
                                         "lessonType": "LABORATORY",
                                         "room": {
@@ -1005,8 +1036,14 @@ export const getDefaultSemesterService = () => {
                             {
                                 "weeks": {
                                     "even": {
-                                        "teacherId": 19,
-                                        "teacherForSite": "асистент Скутар І.Д.",
+                                        "teacher": {
+                                            "name":"Ігор",
+                                            "surname":"Скутар",
+                                            "patronymic":"Дмитрович",
+                                            "position":"Доктор наук",
+                                            "disable":"false"
+                                        },
+                                        "linkToMeeting":"http://localhost:3000/schedule?semester=10&group=27",
                                         "subjectForSite": "Computer Science",
                                         "lessonType": "LABORATORY",
                                         "room": {
@@ -1016,8 +1053,14 @@ export const getDefaultSemesterService = () => {
                                         "temporary_schedule": null
                                     },
                                     "odd": {
-                                        "teacherId": 19,
-                                        "teacherForSite": "асистент Скутар І.Д.",
+                                        "teacher": {
+                                            "name":"Ігор",
+                                            "surname":"Скутар",
+                                            "patronymic":"Дмитрович",
+                                            "position":"Доктор наук",
+                                            "disable":"false"
+                                        },
+                                        "linkToMeeting":"http://localhost:3000/schedule?semester=10&group=27",
                                         "subjectForSite": "Computer Science",
                                         "lessonType": "LABORATORY",
                                         "room": {
@@ -1038,8 +1081,14 @@ export const getDefaultSemesterService = () => {
                                 "weeks": {
                                     "even": null,
                                     "odd": {
-                                        "teacherId": 19,
-                                        "teacherForSite": "асистент Скутар І.Д.",
+                                        "teacher": {
+                                            "name":"Ігор",
+                                            "surname":"Скутар",
+                                            "patronymic":"Дмитрович",
+                                            "position":"Доктор наук",
+                                            "disable":"false"
+                                        },
+                                        "linkToMeeting":"http://localhost:3000/schedule?semester=10&group=27",
                                         "subjectForSite": "Computer Science",
                                         "lessonType": "LABORATORY",
                                         "room": {
@@ -1189,8 +1238,14 @@ export const getDefaultSemesterService = () => {
                             {
                                 "weeks": {
                                     "even": {
-                                        "teacherId": 19,
-                                        "teacherForSite": "асистент Скутар І.Д.",
+                                        "teacher": {
+                                            "name":"Ігор",
+                                            "surname":"Скутар",
+                                            "patronymic":"Дмитрович",
+                                            "position":"Доктор наук",
+                                            "disable":"false"
+                                        },
+                                        "linkToMeeting":"http://localhost:3000/schedule?semester=10&group=27",
                                         "subjectForSite": "Computer Science",
                                         "lessonType": "LABORATORY",
                                         "room": {
@@ -1415,8 +1470,14 @@ export const getDefaultSemesterService = () => {
                             {
                                 "weeks": {
                                     "even": {
-                                        "teacherId": 39,
-                                        "teacherForSite": "доцент Вернигора І.В.",
+                                        "teacher": {
+                                            "name":"Ігор",
+                                            "surname":"Скутар",
+                                            "patronymic":"Дмитрович",
+                                            "position":"Доктор наук",
+                                            "disable":"false"
+                                        },
+                                        "linkToMeeting":"http://localhost:3000/schedule?semester=10&group=27",
                                         "subjectForSite": "Математичний аналіз",
                                         "lessonType": "LABORATORY",
                                         "room": {
@@ -1426,8 +1487,14 @@ export const getDefaultSemesterService = () => {
                                         "temporary_schedule": null
                                     },
                                     "odd": {
-                                        "teacherId": 39,
-                                        "teacherForSite": "доцент Вернигора І.В.",
+                                        "teacher": {
+                                            "name":"Ігор",
+                                            "surname":"Скутар",
+                                            "patronymic":"Дмитрович",
+                                            "position":"Доктор наук",
+                                            "disable":"false"
+                                        },
+                                        "linkToMeeting":"http://localhost:3000/schedule?semester=10&group=27",
                                         "subjectForSite": "Математичний аналіз",
                                         "lessonType": "LABORATORY",
                                         "room": {
@@ -1447,8 +1514,14 @@ export const getDefaultSemesterService = () => {
                             {
                                 "weeks": {
                                     "even": {
-                                        "teacherId": 39,
-                                        "teacherForSite": "доцент Вернигора І.В.",
+                                        "teacher": {
+                                            "name":"Ігор",
+                                            "surname":"Скутар",
+                                            "patronymic":"Дмитрович",
+                                            "position":"Доктор наук",
+                                            "disable":"false"
+                                        },
+                                        "linkToMeeting":"http://localhost:3000/schedule?semester=10&group=27",
                                         "subjectForSite": "Математичний аналіз",
                                         "lessonType": "LABORATORY",
                                         "room": {
@@ -1458,8 +1531,14 @@ export const getDefaultSemesterService = () => {
                                         "temporary_schedule": null
                                     },
                                     "odd": {
-                                        "teacherId": 19,
-                                        "teacherForSite": "асистент Скутар І.Д.",
+                                        "teacher": {
+                                            "name":"Ігор",
+                                            "surname":"Скутар",
+                                            "patronymic":"Дмитрович",
+                                            "position":"Доктор наук",
+                                            "disable":"false"
+                                        },
+                                        "linkToMeeting":"http://localhost:3000/schedule?semester=10&group=27",
                                         "subjectForSite": "Computer Science",
                                         "lessonType": "LABORATORY",
                                         "room": {
@@ -1480,8 +1559,14 @@ export const getDefaultSemesterService = () => {
                                 "weeks": {
                                     "even": null,
                                     "odd": {
-                                        "teacherId": 19,
-                                        "teacherForSite": "асистент Скутар І.Д.",
+                                        "teacher": {
+                                            "name":"Ігор",
+                                            "surname":"Скутар",
+                                            "patronymic":"Дмитрович",
+                                            "position":"Доктор наук",
+                                            "disable":"false"
+                                        },
+                                        "linkToMeeting":"http://localhost:3000/schedule?semester=10&group=27",
                                         "subjectForSite": "Computer Science",
                                         "lessonType": "LABORATORY",
                                         "room": {
@@ -1542,8 +1627,14 @@ export const getDefaultSemesterService = () => {
                             {
                                 "weeks": {
                                     "even": {
-                                        "teacherId": 49,
-                                        "teacherForSite": "доцент Боднарук С.Б.1",
+                                        "teacher": {
+                                            "name":"Ігор",
+                                            "surname":"Скутар",
+                                            "patronymic":"Дмитрович",
+                                            "position":"Доктор наук",
+                                            "disable":"false"
+                                        },
+                                        "linkToMeeting":"http://localhost:3000/schedule?semester=10&group=27",
                                         "subjectForSite": "Програмування",
                                         "lessonType": "LECTURE",
                                         "room": {
@@ -1784,8 +1875,14 @@ export const getDefaultSemesterService = () => {
                                 "weeks": {
                                     "even": null,
                                     "odd": {
-                                        "teacherId": 49,
-                                        "teacherForSite": "доцент Боднарук С.Б.1",
+                                        "teacher": {
+                                            "name":"Ігор",
+                                            "surname":"Скутар",
+                                            "patronymic":"Дмитрович",
+                                            "position":"Доктор наук",
+                                            "disable":"false"
+                                        },
+                                        "linkToMeeting":"http://localhost:3000/schedule?semester=10&group=27",
                                         "subjectForSite": "Програмування",
                                         "lessonType": "LECTURE",
                                         "room": {
@@ -1868,7 +1965,6 @@ export const getDefaultSemesterService = () => {
             }
         ]
     };
-
     store.dispatch(setDefaultSemester(data));
     // axios
     //     .get(DEFAULT_SEMESTER_URL)
