@@ -24,6 +24,6 @@ public class SemesterDTO {
     @JsonProperty("semester_classes")
     private LinkedHashSet<PeriodDTO> periods;
     @JsonProperty("semester_groups")
-    private LinkedHashSet<GroupDTO> groups;
+    private LinkedHashSet<GroupForSemesterDTO> groups;
     private boolean disable;
 }

@@ -1,9 +1,11 @@
 package com.softserve.service.impl;
 
-import com.softserve.entity.Group;
 import com.softserve.entity.Period;
 import com.softserve.entity.Semester;
-import com.softserve.exception.*;
+import com.softserve.exception.EntityAlreadyExistsException;
+import com.softserve.exception.EntityNotFoundException;
+import com.softserve.exception.IncorrectTimeException;
+import com.softserve.exception.ScheduleConflictException;
 import com.softserve.repository.SemesterRepository;
 import com.softserve.service.GroupService;
 import com.softserve.service.PeriodService;
@@ -96,10 +98,6 @@ public class SemesterServiceImpl implements SemesterService {
         if (object.getPeriods().isEmpty()){
             Set<Period> periodSet = new HashSet<>(periodService.getFirstFourPeriods());
             object.setPeriods(periodSet);
-        }
-        if (object.getGroups().isEmpty()){
-            Set<Group> groupSet = new HashSet<>();
-            object.setGroups(groupSet);
         }
         if (object.isCurrentSemester()) {
             semesterRepository.setCurrentSemesterToFalse();

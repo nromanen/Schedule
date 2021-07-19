@@ -75,7 +75,6 @@ public class Semester implements Serializable {
     @OrderBy("startTime")
     private Set<Period> periods;
 
-    @NotNull(message = "Semester should contain at least one group")
     @ManyToMany
     @JoinTable(name = "semester_group",
             joinColumns = { @JoinColumn(name = "semester_id")},
