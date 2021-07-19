@@ -28,8 +28,8 @@ public class TemporarySchedule implements Serializable {
     @Column(name = "date")
     private LocalDate date;
 
-    @Column(name = "teacher_for_site")
-    private String teacherForSite;
+    @Column(name = "link_to_meeting")
+    private String linkToMeeting;
 
     @Column(name = "subject_for_site")
     private String subjectForSite;

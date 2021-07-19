@@ -556,13 +556,13 @@ public class ScheduleServiceImpl implements ScheduleService {
                     Map<String, Map<String, Map<LessonType,  List<Lesson>>>> resultEven = periodListEntry.getValue().stream().filter(schedule ->
                             schedule.getDayOfWeek().equals(day) && (schedule.getEvenOdd().equals(EvenOdd.EVEN) || schedule.getEvenOdd().equals(EvenOdd.WEEKLY)))
                             .map(Schedule::getLesson).collect(Collectors.groupingBy(Lesson::getSubjectForSite,
-                                    Collectors.groupingBy(Lesson::getTeacherForSite,
+                                    Collectors.groupingBy(Lesson::getLinkToMeeting,
                                     Collectors.groupingBy(Lesson::getLessonType))));
 
                     Map<String, Map<String, Map<LessonType,  List<Lesson>>>> resultOdd = periodListEntry.getValue().stream().filter(schedule ->
                             schedule.getDayOfWeek().equals(day) && (schedule.getEvenOdd().equals(EvenOdd.ODD) || schedule.getEvenOdd().equals(EvenOdd.WEEKLY)))
                             .map(Schedule::getLesson).collect(Collectors.groupingBy(Lesson::getSubjectForSite,
-                                    Collectors.groupingBy(Lesson::getTeacherForSite,
+                                    Collectors.groupingBy(Lesson::getLinkToMeeting,
                                     Collectors.groupingBy(Lesson::getLessonType))));
                     evenPeriodListMap.put(periodListEntry.getKey(), resultEven);
                     evenMap.put(EvenOdd.EVEN, evenPeriodListMap);
