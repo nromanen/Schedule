@@ -136,6 +136,43 @@ public class SemesterServiceTest {
         verify(semesterRepository, times(1)).setCurrentSemesterToFalse();
     }
 
+    @Test
+    public void saveSemesterAndSetItAsDefault() {
+        Semester semester = new Semester();
+        semester.setId(1L);
+        semester.setYear(2020);
+        semester.setDescription("1 semester");
+        semester.setDefaultSemester(true);
+        semester.setStartDay(LocalDate.of(2020, 4, 10));
+        semester.setEndDay(LocalDate.of(2020, 5, 10));
+        Set<DayOfWeek> dayOfWeeks = new HashSet<>();
+        dayOfWeeks.add(DayOfWeek.MONDAY);
+        dayOfWeeks.add(DayOfWeek.TUESDAY);
+        semester.setDaysOfWeek(dayOfWeeks);
+        Period firstClasses = new Period();
+        firstClasses.setName("1 para");
+        Period secondClasses = new Period();
+        secondClasses.setName("2 para");
+        Period thirdClasses = new Period();
+        thirdClasses.setName("3 para");
+        Period fourthClasses = new Period();
+        fourthClasses.setName("4 para");
+        Set<Period> periodSet = new HashSet<>();
+        periodSet.add(firstClasses);
+        periodSet.add(secondClasses);
+        periodSet.add(thirdClasses);
+        periodSet.add(fourthClasses);
+        semester.setPeriods(periodSet);
+
+        when(semesterRepository.save(any(Semester.class))).thenReturn(semester);
+
+        Semester result = semesterService.save(semester);
+        assertNotNull(result);
+        assertEquals(semester.getDescription(), result.getDescription());
+        verify(semesterRepository, times(1)).save(semester);
+        verify(semesterRepository, times(1)).setDefaultSemesterToFalse();
+    }
+
     @Test(expected = EntityAlreadyExistsException.class)
     public void throwEntityAlreadyExistsExceptionIfDescriptionAlreadyExists() {
         Semester semester = new Semester();
@@ -298,6 +335,50 @@ public class SemesterServiceTest {
     }
 
     @Test
+    public void updateSemesterAndSetItAsDefault() {
+        Semester semester = new Semester();
+        semester.setId(1L);
+        semester.setYear(2020);
+        semester.setDescription("1 semester");
+        semester.setStartDay(LocalDate.of(2020, 4, 10));
+        semester.setEndDay(LocalDate.of(2020, 5, 10));
+        Set<DayOfWeek> dayOfWeeks = new HashSet<>();
+        dayOfWeeks.add(DayOfWeek.MONDAY);
+        dayOfWeeks.add(DayOfWeek.TUESDAY);
+        semester.setDaysOfWeek(dayOfWeeks);
+        Period firstClasses = new Period();
+        firstClasses.setName("1 para");
+        Period secondClasses = new Period();
+        secondClasses.setName("2 para");
+        Period thirdClasses = new Period();
+        thirdClasses.setName("3 para");
+        Period fourthClasses = new Period();
+        fourthClasses.setName("4 para");
+        Set<Period> periodSet = new HashSet<>();
+        periodSet.add(firstClasses);
+        periodSet.add(secondClasses);
+        periodSet.add(thirdClasses);
+        periodSet.add(fourthClasses);
+        semester.setPeriods(periodSet);
+        Semester updatedSemester = new Semester();
+        updatedSemester.setId(1L);
+        updatedSemester.setDescription("2 semester");
+        updatedSemester.setDefaultSemester(true);
+        updatedSemester.setStartDay(LocalDate.of(2020, 5, 11));
+        updatedSemester.setEndDay(LocalDate.of(2020, 6, 22));
+        updatedSemester.setDaysOfWeek(semester.getDaysOfWeek());
+        updatedSemester.setPeriods(semester.getPeriods());
+
+        when(semesterRepository.update(updatedSemester)).thenReturn(updatedSemester);
+
+        semester = semesterService.update(updatedSemester);
+        assertNotNull(semester);
+        assertEquals(updatedSemester, semester);
+        verify(semesterRepository, times(1)).update(semester);
+        verify(semesterRepository, times(1)).setDefaultSemesterToFalse();
+    }
+
+    @Test
     public void getCurrentSemesterIfSemesterExists() {
         Semester semester = new Semester();
         semester.setId(1L);
@@ -312,6 +393,23 @@ public class SemesterServiceTest {
         Semester currentSemester = semesterService.getCurrentSemester();
         assertEquals(semester, currentSemester);
         verify(semesterRepository, times(1)).getCurrentSemester();
+    }
+
+    @Test
+    public void getDefaultSemesterIfSemesterExists() {
+        Semester semester = new Semester();
+        semester.setId(1L);
+        semester.setYear(2020);
+        semester.setDescription("1 semester");
+        semester.setStartDay(LocalDate.of(2020, 4, 10));
+        semester.setEndDay(LocalDate.of(2020, 5, 10));
+        semester.setDefaultSemester(true);
+
+        when(semesterRepository.getDefaultSemester()).thenReturn(Optional.of(semester));
+
+        Semester defaultSemester = semesterService.getDefaultSemester();
+        assertEquals(semester, defaultSemester);
+        verify(semesterRepository, times(1)).getDefaultSemester();
     }
 
     @Test(expected = ScheduleConflictException.class)

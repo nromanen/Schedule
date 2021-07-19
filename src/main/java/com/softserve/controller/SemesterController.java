@@ -1,10 +1,9 @@
 package com.softserve.controller;
 
-import com.softserve.dto.RoomDTO;
 import com.softserve.dto.SemesterDTO;
 import com.softserve.entity.Semester;
-import com.softserve.service.SemesterService;
 import com.softserve.mapper.SemesterMapper;
+import com.softserve.service.SemesterService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -53,11 +52,27 @@ public class SemesterController {
         return ResponseEntity.status(HttpStatus.OK).body(semesterMapper.semesterToSemesterDTO(semester));
     }
 
+    @GetMapping("/semesters/default")
+    @ApiOperation(value = "Get default semester")
+    public ResponseEntity<SemesterDTO> getDefault(){
+        log.info("In getDefault()");
+        Semester semester = semesterService.getDefaultSemester();
+        return ResponseEntity.status(HttpStatus.OK).body(semesterMapper.semesterToSemesterDTO(semester));
+    }
+
     @PutMapping("/semesters/current")
     @ApiOperation(value = "Change current semester a manager is working on")
     public ResponseEntity<SemesterDTO> setCurrent(@RequestParam Long semesterId){
         log.info("In setCurrent(semesterId = [{}])", semesterId);
         Semester semester = semesterService.changeCurrentSemester(semesterId);
+        return ResponseEntity.status(HttpStatus.OK).body(semesterMapper.semesterToSemesterDTO(semester));
+    }
+
+    @PutMapping("/semesters/default")
+    @ApiOperation(value = "Change default semester a manager is working on")
+    public ResponseEntity<SemesterDTO> setDefault(@RequestParam Long semesterId){
+        log.info("In setDefault(semesterId = [{}])", semesterId);
+        Semester semester = semesterService.changeDefaultSemester(semesterId);
         return ResponseEntity.status(HttpStatus.OK).body(semesterMapper.semesterToSemesterDTO(semester));
     }
 
