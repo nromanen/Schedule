@@ -115,6 +115,6 @@ public class StudentControllerTest {
     public void deleteStudent() throws Exception {
         mockMvc.perform(delete("/students/{id}", 2L)
                 .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isAccepted());
+                .andExpect(status().isOk());
     }
 }
