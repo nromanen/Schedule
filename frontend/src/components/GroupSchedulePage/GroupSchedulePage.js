@@ -35,6 +35,7 @@ import { FormLabel } from '@material-ui/core';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Radio from '@material-ui/core/Radio';
 import { places } from '../../constants/places';
+import i18n from 'i18next';
 const GroupSchedulePage = props => {
     const [place,setPlace]=useState(places.TOGETHER);
     let { groupSchedule, fullSchedule, teacherSchedule } = props;
@@ -47,6 +48,8 @@ const GroupSchedulePage = props => {
     const { t } = useTranslation('common');
     const renderDownloadLink = (entity, semesterId, entityId) => {
         let link = '';
+        const {language}=i18n;
+        const languageToRequest=`&language=${language}`;
         if (semesterId && entityId) {
             switch (entity) {
                 case 'group':
@@ -55,7 +58,8 @@ const GroupSchedulePage = props => {
                         '?groupId=' +
                         entityId +
                         '&semesterId=' +
-                        semesterId;
+                        semesterId+
+                        languageToRequest;
                     break;
                 case 'teacher':
                     link =
@@ -63,7 +67,8 @@ const GroupSchedulePage = props => {
                         '?teacherId=' +
                         entityId +
                         '&semesterId=' +
-                        semesterId;
+                        semesterId+
+                        languageToRequest;
                     break;
                 default:
                     break;
@@ -185,7 +190,6 @@ const GroupSchedulePage = props => {
                 }
                     if(teacherSchedule) {
                         const teacher = makeTeacherSchedule(teacherSchedule);
-                        console.log("teacher",teacher)
                         if (teacher.done) {
                             setLoadingService(false);
                             return (
@@ -257,7 +261,6 @@ const GroupSchedulePage = props => {
         history.push(links.ScheduleFor+"?semester="+semester+groupPath+teacherPath);
     };
    const getSchedule=()=>{
-        console.log("getSchedule", props,location)
        if((props.scheduleType==="")&&(props.defaultSemester.semester!==undefined)){
            const semester=`${props.defaultSemester.semester.id}`;
            handleSubmit({ "semester":semester });
