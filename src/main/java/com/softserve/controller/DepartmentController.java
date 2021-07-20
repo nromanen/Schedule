@@ -32,16 +32,16 @@ public class DepartmentController {
     @GetMapping
     @ApiOperation(value = "Get the list of all departments")
     public ResponseEntity<List<DepartmentDTO>> getAll() {
-        log.info("In list ()");
+        log.info("In getAll ()");
         List<Department> departments = service.getAll();
         return ResponseEntity.status(HttpStatus.OK)
                 .body(mapper.departmentsToDepartmentDTOs(departments));
     }
 
     @GetMapping("/{id}")
-    @ApiOperation(value = "Get departmentDTO info by id")
-    public ResponseEntity<DepartmentDTO> get(@PathVariable("id") long id) {
-        log.info("In get(id = [{}])", id);
+    @ApiOperation(value = "Get department info by id")
+    public ResponseEntity<DepartmentDTO> getById(@PathVariable("id") long id) {
+        log.info("In getById (id = [{}])", id);
         Department department = service.getById(id);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(mapper.departmentToDepartmentDTO(department));
@@ -67,8 +67,8 @@ public class DepartmentController {
 
     @DeleteMapping("/{id}")
     @ApiOperation(value = "Delete department by id")
-    public ResponseEntity<DepartmentDTO> delete(@PathVariable("id") long id) {
-        log.info("In delete (id =[{}]", id);
+    public ResponseEntity<DepartmentDTO> deleteById(@PathVariable("id") long id) {
+        log.info("In deleteById (id =[{}]", id);
         Department department = service.delete(service.getById(id));
         return ResponseEntity.status(HttpStatus.OK)
                 .body(mapper.departmentToDepartmentDTO(department));
@@ -77,7 +77,7 @@ public class DepartmentController {
     @GetMapping("/disabled")
     @ApiOperation(value = "Get the list of disabled departments")
     public ResponseEntity<List<DepartmentDTO>> getDisabled() {
-        log.info("Enter into getDisabled");
+        log.info("In getDisabled ()");
         List<Department> departments = service.getDisabled();
         return ResponseEntity.status(HttpStatus.OK)
                 .body(mapper.departmentsToDepartmentDTOs(departments));
