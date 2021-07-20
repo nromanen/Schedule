@@ -23,6 +23,11 @@ import java.util.Set;
         query = "from Semester s where s.currentSemester= :currentSemester"
 )
 
+@NamedQuery(
+        name = "findDefaultSemester",
+        query = "from Semester s where s.defaultSemester= :defaultSemester"
+)
+
 @FilterDef(name="semesterDisableFilter", parameters={
         @ParamDef( name="disable", type="boolean" ),
 })
@@ -59,6 +64,9 @@ public class Semester implements Serializable {
 
     @Column(name = "current_semester", columnDefinition = "boolean default 'false'")
     private boolean currentSemester = false;
+
+    @Column(name = "default_semester", columnDefinition = "boolean default 'false'")
+    private boolean defaultSemester = false;
 
     @ElementCollection(targetClass = DayOfWeek.class, fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)

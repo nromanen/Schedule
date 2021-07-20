@@ -41,6 +41,9 @@ if (System.getenv('$buildDir') != "") {
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
+    testCompile group: 'org.assertj', name: 'assertj-core', version: '3.6.1'
+
+
 
     //Spring
     compile group: 'org.springframework', name: 'spring-core', version: '5.2.4.RELEASE'

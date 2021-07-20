@@ -95,6 +95,23 @@ public class SemesterRepositoryImpl extends BasicRepositoryImpl<Semester, Long> 
     }
 
     /**
+     * Method searches get of semester with defaultSemester = true in the DB
+     *
+     * @return Optional with Semester if such exist, else return empty Optional
+     */
+    @Override
+    public Optional<Semester> getDefaultSemester() {
+        log.info("In getDefaultSemester method");
+        TypedQuery<Semester> query = sessionFactory.getCurrentSession().createNamedQuery("findDefaultSemester", Semester.class).setMaxResults(1);
+        query.setParameter("defaultSemester", true);
+        List<Semester> semesters = query.getResultList();
+        if (semesters.isEmpty()) {
+            return Optional.empty();
+        }
+        return Optional.of(semesters.get(0));
+    }
+
+    /**
      * Method sets value current semester to false fo all entities which have it true
      *
      * @return number of updated rows
@@ -104,6 +121,19 @@ public class SemesterRepositoryImpl extends BasicRepositoryImpl<Semester, Long> 
         log.info("In setCurrentSemesterToFalse()");
         return  sessionFactory.getCurrentSession().createQuery(
                 "UPDATE Semester s set s.currentSemester = false  where currentSemester = true")
+                .executeUpdate();
+    }
+
+    /**
+     * Method sets value default semester to false fo all entities which have it true
+     *
+     * @return number of updated rows
+     */
+    @Override
+    public int setDefaultSemesterToFalse() {
+        log.info("In setDefaultSemesterToFalse()");
+        return  sessionFactory.getCurrentSession().createQuery(
+                        "UPDATE Semester s set s.defaultSemester = false  where defaultSemester = true")
                 .executeUpdate();
     }
 
@@ -118,6 +148,21 @@ public class SemesterRepositoryImpl extends BasicRepositoryImpl<Semester, Long> 
         log.info("In setCurrentSemester(semesterId = [{}])", semesterId);
         return sessionFactory.getCurrentSession().createQuery(
                 "UPDATE Semester s set s.currentSemester = true  where s.id = :semesterId")
+                .setParameter("semesterId", semesterId)
+                .executeUpdate();
+    }
+
+    /**
+     * Method sets the value default semester true for semester with id
+     *
+     * @param semesterId id of the semester
+     * @return number of updated rows
+     */
+    @Override
+    public int setDefaultSemester(Long semesterId) {
+        log.info("In setDefaultSemester(semesterId = [{}])", semesterId);
+        return sessionFactory.getCurrentSession().createQuery(
+                        "UPDATE Semester s set s.defaultSemester = true  where s.id = :semesterId")
                 .setParameter("semesterId", semesterId)
                 .executeUpdate();
     }

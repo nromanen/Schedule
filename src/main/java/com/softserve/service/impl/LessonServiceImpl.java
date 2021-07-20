@@ -97,14 +97,6 @@ public class LessonServiceImpl implements LessonService {
             throw new EntityAlreadyExistsException("Lesson with this parameters already exists");
         }
     else {
-            //Fill in teacher for site by teacher data (from JSON) if teacher for site is empty or null
-            if (object.getTeacherForSite().isEmpty() || object.getTeacherForSite() == null) {
-                Teacher teacher = teacherService.getById(object.getTeacher().getId());
-                object.setTeacherForSite(
-                                teacher.getSurname() + " "
-                                + teacher.getName() + " "
-                                + teacher.getPatronymic());
-            }
             //Fill in subject for site by subject name (from JSON) if subject for site is empty or null
             if (object.getSubjectForSite().isEmpty() || object.getSubjectForSite() == null) {
                 Subject subject = subjectService.getById(object.getSubject().getId());

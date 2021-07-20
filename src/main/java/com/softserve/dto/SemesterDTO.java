@@ -19,6 +19,7 @@ public class SemesterDTO {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
     private LocalDate endDay;
     private boolean currentSemester;
+    private boolean defaultSemester;
     @JsonProperty("semester_days")
     private TreeSet<DayOfWeek> daysOfWeek;
     @JsonProperty("semester_classes")

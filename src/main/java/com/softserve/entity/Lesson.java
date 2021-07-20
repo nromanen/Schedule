@@ -1,7 +1,10 @@
 package com.softserve.entity;
 
 import com.softserve.entity.enums.LessonType;
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
@@ -24,9 +27,9 @@ public class Lesson implements Serializable {
     @Min(1)
     private int hours;
 
-    @Column(name = "teacher_for_site")
+    @Column(name = "link_to_meeting")
     @NotNull
-    private String teacherForSite;
+    private String linkToMeeting;
 
     @Column(name = "subject_for_site")
     @NotNull

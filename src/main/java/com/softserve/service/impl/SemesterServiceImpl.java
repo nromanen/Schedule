@@ -152,6 +152,21 @@ public class SemesterServiceImpl implements SemesterService {
         return semester;
     }
 
+    /**
+     * Method searches get of semester with defaultSemester = true in the DB
+     *
+     * @return entity Semester if such exist, else return null
+     */
+    @Override
+    public Semester getDefaultSemester() {
+        log.info("In getDefaultSemester");
+        Semester semester = semesterRepository.getDefaultSemester().orElseThrow(
+                () -> new ScheduleConflictException("Default semester isn't specified"));
+        Hibernate.initialize(semester.getDaysOfWeek());
+        Hibernate.initialize(semester.getPeriods());
+        return semester;
+    }
+
     //check if the end time is not before the start time or equals return true, else - false
     private boolean isTimeInvalid(Semester object) {
         log.info("Enter into isTimeInvalid  with entity: {}", object);
@@ -191,7 +206,7 @@ public class SemesterServiceImpl implements SemesterService {
     }
 
     /**
-     * The method used to change the default semester that the Manager is working on
+     * The method used to change the current semester that the Manager is working on
      * @param semesterId id of the semester that needs to be current
      * @return changed Semester
      */
@@ -203,4 +218,16 @@ public class SemesterServiceImpl implements SemesterService {
         return getById(semesterId);
     }
 
+    /**
+     * The method used to change the default semester that the Manager is working on
+     * @param semesterId id of the semester that needs to be current
+     * @return changed Semester
+     */
+    @Override
+    public Semester changeDefaultSemester(Long semesterId) {
+        log.info("In changeDefaultSemester(Long semesterId = [{}])", semesterId);
+        semesterRepository.setDefaultSemesterToFalse();
+        semesterRepository.setDefaultSemester(semesterId);
+        return getById(semesterId);
+    }
 }
