@@ -1,7 +1,6 @@
 package com.softserve.service.impl;
 
 import com.softserve.entity.Department;
-import com.softserve.entity.Group;
 import com.softserve.exception.EntityNotFoundException;
 import com.softserve.exception.FieldAlreadyExistsException;
 import com.softserve.repository.DepartmentRepository;
@@ -27,9 +26,8 @@ public class DepartmentServiceImpl implements DepartmentService {
     @Override
     public Department getById(Long id) {
         log.info("In getById(id = [{}])",  id);
-        return repository.findById(id).orElseThrow(
-                () -> new EntityNotFoundException(Department.class,
-                                                  "id", id.toString()));
+        return repository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(Department.class, "id", id.toString()));
     }
 
     /**
@@ -62,7 +60,6 @@ public class DepartmentServiceImpl implements DepartmentService {
     @Override
     public Department update(Department object) {
         log.info("In update(entity = [{}]", object);
-        getById(object.getId());
         checkNameForUniquenessIgnoringId(object);
         return repository.update(object);
     }
@@ -80,7 +77,6 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     /**
      * The method used for getting all disabled departments
-     *
      * @return list of disabled departments
      */
     @Override
@@ -90,17 +86,14 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     private void checkNameForUniqueness(Department object) {
-        if (repository.doesNameExist(object.getName())) {
-            throw new FieldAlreadyExistsException(Department.class, "name",
-                                                  object.getName());
+        if (repository.isNameExists(object.getName())) {
+            throw new FieldAlreadyExistsException(Department.class, "name", object.getName());
         }
     }
 
     private void checkNameForUniquenessIgnoringId(Department object) {
-        if (repository.doesNameExistIgnoringId(object.getName(),
-                                              object.getId())) {
-            throw new FieldAlreadyExistsException(Group.class, "name",
-                                                  object.getName());
+        if (repository.isNameExistsIgnoringId(object.getName(), object.getId())) {
+            throw new FieldAlreadyExistsException(Department.class, "name", object.getName());
         }
     }
 }
