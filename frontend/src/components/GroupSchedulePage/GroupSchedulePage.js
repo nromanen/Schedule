@@ -31,11 +31,12 @@ import { setLoadingService } from '../../services/loadingService';
 import {useHistory,useLocation} from 'react-router-dom';
 import { links } from '../../constants/links';
 import RadioGroup from '@material-ui/core/RadioGroup';
-import { FormLabel } from '@material-ui/core';
+import { FormLabel, InputLabel, MenuItem, Select } from '@material-ui/core';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Radio from '@material-ui/core/Radio';
 import { places } from '../../constants/places';
 import i18n from 'i18next';
+import { Contactless } from '@material-ui/icons';
 const GroupSchedulePage = props => {
     const [place,setPlace]=useState(places.TOGETHER);
     let { groupSchedule, fullSchedule, teacherSchedule } = props;
@@ -216,6 +217,7 @@ const GroupSchedulePage = props => {
                     else setLoadingService(false)
                 break;
             case 'full':
+                console.log("fullFULLLLLLL",fullSchedule, props)
                 if (
                     (!fullSchedule.schedule ||
                         fullSchedule.schedule.length === 0) &&
@@ -297,13 +299,33 @@ const GroupSchedulePage = props => {
     }
     const selectPlace=()=>{
        return (
+           // <>
+           //     <FormLabel component="legend">Choose locations</FormLabel>
+           //     <RadioGroup aria-label="Location" name="place" value={place} onChange={(e)=>setPlace(e.target.value)}>
+           //         <FormControlLabel value={places.TOGETHER} control={<Radio />} label="Together(in auditory/online)" />
+           //         <FormControlLabel value={places.AUDITORY} control={<Radio />} label="In auditory" />
+           //         <FormControlLabel value={places.ONLINE} control={<Radio />} label="Online" />
+           //     </RadioGroup>
+           // </>
            <>
-               <FormLabel component="legend">Choose locations</FormLabel>
-               <RadioGroup aria-label="Location" name="place" value={place} onChange={(e)=>setPlace(e.target.value)}>
-                   <FormControlLabel value={places.TOGETHER} control={<Radio />} label="Together(in auditory/online)" />
-                   <FormControlLabel value={places.AUDITORY} control={<Radio />} label="In auditory" />
-                   <FormControlLabel value={places.ONLINE} control={<Radio />} label="Online" />
-               </RadioGroup>
+               {/*<InputLabel id="demo-controlled-open-select-label">View</InputLabel>*/}
+               <Select
+                   labelId="demo-controlled-open-select-label"
+                   id="demo-controlled-open-select"
+                   value={place}
+                   onChange={(e)=> {
+                       setPlace(e.target.value);
+                       console.log(e.target.value)
+                   }}
+               >
+
+                   {
+                       Object.entries(places).map(function(data,index) {
+                           return <MenuItem value={data[1]} key={data[0]}>{data[1]}</MenuItem>
+                       }, this)
+                   }
+
+               </Select>
            </>
 
     );

@@ -91,7 +91,6 @@ export const prepareLessonSubCardCell = (card,place) => {
     return inner;
 };
 export const prepareLessonTemporaryCardCell = (card,place) => {
-    console.log("prepareLessonTemporaryCardCell = (card,place)",place)
     let inner = '';
     if (card !== undefined && card !== null) {
         if (card.temporary_schedule) {
@@ -227,7 +226,7 @@ export const prepareTeacherTemporaryCardCell = (cards,place) => {
             inner +=
                 card.temporary_schedule.date +
                 '\n\r' +
-                card.temporary_schedule.teacherForSite +
+                card.temporary_schedule.teacher.surname+" "+card.temporary_schedule.teacher.name+
                 '\n\r' +
                 card.temporary_schedule.subjectForSite;
             if (card.temporary_schedule.room) {
@@ -267,7 +266,7 @@ export const prepareTeacherTemporaryCardCell = (cards,place) => {
             inner +=
                 card.temporary_schedule.date +
                 '\n\r' +
-                card.temporary_schedule.teacherForSite +
+                card.temporary_schedule.teacher.surname +" "+card.temporary_schedule.teacher.name +
                 '\n\r' +
                 card.temporary_schedule.subjectForSite;
             if (card.temporary_schedule.room) {
@@ -386,9 +385,11 @@ export const renderGroupCells = (
 
             ) {
                 if (
-                    group.card.teacherForSite &&
-                    group.card.teacherForSite ===
-                    groups[i].card.teacherForSite &&
+                    group.card.teacher &&
+                    group.card.teacher.surname ===
+                    groups[i].card.surname &&
+                    group.card.teacher.name ===
+                    groups[i].card.name &&
                     group.card.subjectForSite ===
                     groups[i].card.subjectForSite &&
                     group.card.room.id === groups[i].card.room.id
@@ -547,9 +548,12 @@ const prepareForRender = classItem => {
                     classItem.cards.even[cardIndex].card !== null
                 ) {
                     if (
-                        card.card.teacherForSite ===
+                        card.card.teacher.name ===
                             classItem.cards.even[cardIndex].card
-                                .teacherForSite &&
+                                .teacher.name &&
+                        card.card.teacher.surname ===
+                        classItem.cards.even[cardIndex].card
+                            .teacher.surname &&
                         card.card.subjectForSite ===
                             classItem.cards.even[cardIndex].card
                                 .subjectForSite &&

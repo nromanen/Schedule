@@ -4149,7 +4149,14 @@ export const getGroupSchedule = (groupId, semesterId) => {
                                     },
                                     "odd": {
                                         "teacherId": 42,
-                                        "teacherForSite": "асистент Дорош А.Б.",
+                                        "teacher": {
+                                            "name":"Ігор",
+                                            "surname":"Скутар",
+                                            "patronymic":"Дмитрович",
+                                            "position":"Доктор наук",
+                                            "disable":"false"
+                                        },
+                                        "linkToMeeting":"http://localhost:3000/schedule?semester=10&group=27",
                                         "subjectForSite": "Дискретна математика",
                                         "lessonType": "LECTURE",
                                         "room": {
@@ -4390,7 +4397,13 @@ export const getTeacherSchedule = (teacherId, semesterId) => {
                             "lessons": [
                                 {
                                     "id": 518,
-                                    "teacherForSite": "асистент Скутар І.Д.",
+                                    "teacher": {
+                                        "name":"Ігор",
+                                        "surname":"Скутар",
+                                        "patronymic":"Дмитрович",
+                                        "position":"Доктор наук",
+                                        "disable":"false"
+                                    },
                                     "linkToMeeting":"http://localhost:3000/schedule?semester=10&teacher=19",
                                     "subjectForSite": "Computer Science",
                                     "lessonType": "LABORATORY",
@@ -4418,8 +4431,14 @@ export const getTeacherSchedule = (teacherId, semesterId) => {
                             "lessons": [
                                 {
                                     "id": 518,
-                                    "teacherForSite": "асистент Скутар І.Д.",
-                                    "linkToMeeting":"http://localhost:3000/schedule?semester=10&teacher=19",
+                                    "teacher": {
+                                        "name":"Ігор",
+                                        "surname":"Скутар",
+                                        "patronymic":"Дмитрович",
+                                        "position":"Доктор наук",
+                                        "disable":"false"
+                                    },
+                                    "linkToMeeting":"http://localhost:3000/schedule?semester=10&group=27",
                                     "subjectForSite": "Computer Science",
                                     "lessonType": "LABORATORY",
                                     "group": {
@@ -4432,8 +4451,14 @@ export const getTeacherSchedule = (teacherId, semesterId) => {
                                 },
                                 {
                                     "id": 519,
-                                    "teacherForSite": "асистент Скутар І.Д.",
-                                    "linkToMeeting":"http://localhost:3000/schedule?semester=10&teacher=19",
+                                    "teacher": {
+                                        "name":"Ігор",
+                                        "surname":"Скутар",
+                                        "patronymic":"Дмитрович",
+                                        "position":"Доктор наук",
+                                        "disable":"false"
+                                    },
+                                    "linkToMeeting":"http://localhost:3000/schedule?semester=10&group=27",
                                     "subjectForSite": "Computer Science",
                                     "lessonType": "LABORATORY",
                                     "group": {
@@ -4456,7 +4481,13 @@ export const getTeacherSchedule = (teacherId, semesterId) => {
                             "lessons": [
                                 {
                                     "id": 518,
-                                    "teacherForSite": "асистент Скутар І.Д.",
+                                    "teacher": {
+                                        "name":"Ігор",
+                                        "surname":"Скутар",
+                                        "patronymic":"Дмитрович",
+                                        "position":"Доктор наук",
+                                        "disable":"false"
+                                    },
                                     "linkToMeeting":"http://localhost:3000/schedule?semester=10&teacher=19",
                                     "subjectForSite": "Computer Science",
                                     "lessonType": "LABORATORY",
@@ -4470,8 +4501,14 @@ export const getTeacherSchedule = (teacherId, semesterId) => {
                                 },
                                 {
                                     "id": 519,
-                                    "teacherForSite": "асистент Скутар І.Д.",
-                                    "linkToMeeting":"http://localhost:3000/schedule?semester=10&teacher=19",
+                                    "teacher": {
+                                        "name":"Ігор",
+                                        "surname":"Скутар",
+                                        "patronymic":"Дмитрович",
+                                        "position":"Доктор наук",
+                                        "disable":"false"
+                                    },
+                                    "linkToMeeting":"http://localhost:3000/schedule?semester=10&group=27",
                                     "subjectForSite": "Computer Science",
                                     "lessonType": "LABORATORY",
                                     "group": {
@@ -4484,8 +4521,14 @@ export const getTeacherSchedule = (teacherId, semesterId) => {
                                 },
                                 {
                                     "id": 521,
-                                    "teacherForSite": "асистент Скутар І.Д.",
-                                    "linkToMeeting":"http://localhost:3000/schedule?semester=10&teacher=19",
+                                    "teacher": {
+                                        "name":"Ігор",
+                                        "surname":"Скутар",
+                                        "patronymic":"Дмитрович",
+                                        "position":"Доктор наук",
+                                        "disable":"false"
+                                    },
+                                    "linkToMeeting":"http://localhost:3000/schedule?semester=10&group=27",
                                     "subjectForSite": "Computer Science",
                                     "lessonType": "LABORATORY",
                                     "group": {
@@ -4498,8 +4541,14 @@ export const getTeacherSchedule = (teacherId, semesterId) => {
                                 },
                                 {
                                     "id": 522,
-                                    "teacherForSite": "асистент Скутар І.Д.",
-                                    "linkToMeeting":"http://localhost:3000/schedule?semester=10&teacher=19",
+                                    "teacher": {
+                                        "name":"Ігор",
+                                        "surname":"Скутар",
+                                        "patronymic":"Дмитрович",
+                                        "position":"Доктор наук",
+                                        "disable":"false"
+                                    },
+                                    "linkToMeeting":"http://localhost:3000/schedule?semester=10&group=27",
                                     "subjectForSite": "Computer Science",
                                     "lessonType": "LABORATORY",
                                     "group": {
@@ -4522,8 +4571,14 @@ export const getTeacherSchedule = (teacherId, semesterId) => {
                             "lessons": [
                                 {
                                     "id": 518,
-                                    "teacherForSite": "асистент Скутар І.Д.",
-                                    "linkToMeeting":"http://localhost:3000/schedule?semester=10&teacher=19",
+                                    "teacher": {
+                                        "name":"Ігор",
+                                        "surname":"Скутар",
+                                        "patronymic":"Дмитрович",
+                                        "position":"Доктор наук",
+                                        "disable":"false"
+                                    },
+                                    "linkToMeeting":"http://localhost:3000/schedule?semester=10&group=27",
                                     "subjectForSite": "Computer Science",
                                     "lessonType": "LABORATORY",
                                     "group": {
@@ -4553,8 +4608,14 @@ export const getTeacherSchedule = (teacherId, semesterId) => {
                             "lessons": [
                                 {
                                     "id": 518,
-                                    "teacherForSite": "асистент Скутар І.Д.",
-                                    "linkToMeeting":"http://localhost:3000/schedule?semester=10&teacher=19",
+                                    "teacher": {
+                                        "name":"Ігор",
+                                        "surname":"Скутар",
+                                        "patronymic":"Дмитрович",
+                                        "position":"Доктор наук",
+                                        "disable":"false"
+                                    },
+                                    "linkToMeeting":"http://localhost:3000/schedule?semester=10&group=27",
                                     "subjectForSite": "Computer Science",
                                     "lessonType": "LABORATORY",
                                     "group": {
