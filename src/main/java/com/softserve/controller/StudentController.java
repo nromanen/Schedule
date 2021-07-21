@@ -69,12 +69,11 @@ public class StudentController {
     @ApiOperation(value = "Delete student by id")
     public ResponseEntity<Void> delete(@PathVariable("id") long id){
         log.info("Enter into delete of StudentController with id {} ", id);
-        studentService.delete(studentService.getById(id));
         try {
-            studentService.getById(id);
+            studentService.delete(studentService.getById(id));
         } catch (EntityNotFoundException e) {
-            return new ResponseEntity<>(HttpStatus.OK);
+            log.error("Exception occured in delete method : ", e);
         }
-        throw new DeleteDisabledException(Student.class);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
