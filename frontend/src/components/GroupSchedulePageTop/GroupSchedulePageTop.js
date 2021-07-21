@@ -24,6 +24,8 @@ import { SCHEDULE_SEARCH_FORM } from '../../constants/reduxForms';
 import { required } from '../../validation/validateFields';
 import {useLocation} from 'react-router-dom';
 import schedule from '../../redux/reducers/schedule';
+import { MenuItem, Select } from '@material-ui/core';
+import { places } from '../../constants/places';
 const shortid = require('shortid');
 
 const useStyles = makeStyles(theme => ({
@@ -163,7 +165,7 @@ const GroupSchedulePageTop = props => {
             {console.log("Top",props)}
             <p>{t('greetings_schedule_message')}</p>
             <p>{t('greetings_schedule_message_hint')}</p>
-            <section className="form-buttons-container">
+            <section className="form-buttons-container top">
                 <Card class="form-card width-auto">
                     <form onSubmit={handleSubmit}>
                         {renderSemesterList()}
@@ -185,7 +187,22 @@ const GroupSchedulePageTop = props => {
                         </Button>
 
                     </form>
+
                 </Card>
+                <Select className="place"
+                    labelId="demo-controlled-open-select-label"
+                    id="demo-controlled-open-select"
+                    value={props.place}
+                    onChange={props.onChange}
+                >
+
+                    {
+                        Object.entries(places).map(function(data,index) {
+                            return <MenuItem value={data[1]} key={data[0]}>{data[1]}</MenuItem>
+                        }, this)
+                    }
+
+                </Select>
             </section>
             {loadingContainer}
         </section>

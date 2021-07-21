@@ -290,23 +290,20 @@ const GroupSchedulePage = props => {
          return (
              <GroupSchedulePageTop
                  scheduleType={props.scheduleType}
-                 history={history} onSubmit={handleSubmit} />
+                 history={history} onSubmit={handleSubmit} place={place} onChange={changePlace} />
          );
 
 
        }
        return null;
     }
+    const changePlace=(e)=>{
+       console.log("LLLLLLLLL",e.target)
+        if(e.target) {
+            setPlace(e.target.value);}
+    }
     const selectPlace=()=>{
        return (
-           // <>
-           //     <FormLabel component="legend">Choose locations</FormLabel>
-           //     <RadioGroup aria-label="Location" name="place" value={place} onChange={(e)=>setPlace(e.target.value)}>
-           //         <FormControlLabel value={places.TOGETHER} control={<Radio />} label="Together(in auditory/online)" />
-           //         <FormControlLabel value={places.AUDITORY} control={<Radio />} label="In auditory" />
-           //         <FormControlLabel value={places.ONLINE} control={<Radio />} label="Online" />
-           //     </RadioGroup>
-           // </>
            <>
                {/*<InputLabel id="demo-controlled-open-select-label">View</InputLabel>*/}
                <Select
@@ -315,7 +312,6 @@ const GroupSchedulePage = props => {
                    value={place}
                    onChange={(e)=> {
                        setPlace(e.target.value);
-                       console.log(e.target.value)
                    }}
                >
 
@@ -332,8 +328,10 @@ const GroupSchedulePage = props => {
     }
     return (
         <>
-            {getTop()}
-            {selectPlace()}
+
+                {getTop()}
+                {/*{selectPlace()}*/}
+
             {getSchedule()}
 
 

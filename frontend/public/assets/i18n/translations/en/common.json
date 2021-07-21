@@ -122,6 +122,7 @@
     "delete_word": "delete",
     "set_default_word": "set default",
     "go_to_meeting_word": "go to meeting",
+    "link_to_meeting_word": "link to meeting",
     "do_you_wanna": "Do you want to",
     "do_you_wanna_disable": "Do you want to disable ",
     "do_you_wanna_show": "Do you want to show ",

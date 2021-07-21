@@ -17,6 +17,7 @@ import { useTranslation } from 'react-i18next';
 import { LinkToMeeting } from '../components/LinkToMeeting/LinkToMeeting';
 import { links } from '../constants/links';
 import { places } from '../constants/places';
+import i18n from 'i18next';
 
 const shortid = require('shortid');
 
@@ -73,7 +74,7 @@ export const prepareLessonCardCell = card => {
 };
 export const prepareLessonSubCardCell = (card,place) => {
     const room=place!==places.ONLINE?card.room:"";
-    const link=place!==places.AUDITORY?card.linkToMeeting:"";
+    // const link=place!==places.AUDITORY?card.linkToMeeting:"";
     let inner = '';
     if (card !== undefined && card !== null) {
         inner =
@@ -81,12 +82,11 @@ export const prepareLessonSubCardCell = (card,place) => {
                 `formElements:lesson_type_${card.lessonType.toLowerCase()}_label`
             );
         if (room!=="") {
-            inner += ', ' + card.room.name + ' )';
             inner=`(${inner}, ${card.room.name})`
         }
-        if (link!==""){
-            inner+='\t'+link;
-        }
+        // if (link!==""){
+        //     inner+='\t'+link;
+        // }
     }
     return inner;
 };
@@ -119,9 +119,9 @@ export const prepareLessonTemporaryCardCell = (card,place) => {
             let title =
                 i18next.t(`common:regular_lesson_label`) +
                 '\r' +
-                prepareLessonCardCell(card,place) +
+                prepareLessonCardCell(card, place) +
                 '\r' +
-                prepareLessonSubCardCell(card,place)+
+                prepareLessonSubCardCell(card, place) +
                 '\r'
 
             return inner.length > 0 ? (
@@ -129,7 +129,7 @@ export const prepareLessonTemporaryCardCell = (card,place) => {
                     <p className="temporary-class" title={title}>
                         {inner}
                     </p>
-                    <LinkToMeeting {...card}/>
+                    {place===places.AUDITORY? <LinkToMeeting {...card} />:<a>{i18n.t(`common:link_to_meeting_word`)}</a>}
                 </>
 
             ) : (
@@ -140,12 +140,11 @@ export const prepareLessonTemporaryCardCell = (card,place) => {
                 <>
                     <p>{prepareLessonCardCell(card,place)}</p>
                     <p>{prepareLessonSubCardCell(card,place)}</p>
-                    <LinkToMeeting {...card}/>
-                    {/*{getLinkIcon(card)}*/}
+                    {place===places.AUDITORY? <LinkToMeeting {...card} />:<a href={card.linkToMeeting}>{i18n.t(`common:link_to_meeting_word`)}</a>}
                 </>
             );
         }
-    } else {
+    }else {
         return '';
     }
 };
@@ -160,7 +159,7 @@ export const prepareTeacherCardCell = card => {
 
 export const prepareTeacherCardRegularCell = (card,place) => {
     const room=place!==places.ONLINE?card.room:"";
-    const link=place!==places.AUDITORY?card.linkToMeeting:"";
+    //const link=place!==places.AUDITORY?card.linkToMeeting:"";
   return   prepareTeacherCardCell(card) +
     '\n(' +
     i18next.t(
@@ -170,9 +169,7 @@ export const prepareTeacherCardRegularCell = (card,place) => {
     room +
     ')' +
     '\n' +
-    card.group.title+
-      '\n' +
-      link;
+    card.group.title;
 
 }
 
@@ -186,9 +183,10 @@ export const buildLessonWithRoom = (card,place) => {
         ) +
         ', ' +
         room +
-        ')' +
-        '\n'+
-        link;
+         ')';
+        //+
+        // '\n'+
+        // link;
 }
 export const buildGroupNumber = card => {
 
@@ -212,7 +210,7 @@ export const prepareTeacherTemporaryCardCell = (cards,place) => {
         if (!card.temporary_schedule) {
             return <>
                 {prepareTeacherCardRegularCell(card,place)}
-                <LinkToMeeting {...card}/>
+                {place===places.AUDITORY? <LinkToMeeting {...card} />:<a href={card.linkToMeeting}>{i18n.t(`common:link_to_meeting_word`)}</a>}
             </>
 
         }
@@ -240,7 +238,7 @@ export const prepareTeacherTemporaryCardCell = (cards,place) => {
         return inner.length > 0 ? (
             <p className="temporary-class" title={title}>
                 {inner}
-                <LinkToMeeting {...card}/>
+                {place===places.AUDITORY? <LinkToMeeting {...card} />:<a href={card.linkToMeeting}>{i18n.t(`common:link_to_meeting_word`)}</a>}
             </p>
         ) : (
             ''
@@ -284,7 +282,7 @@ export const prepareTeacherTemporaryCardCell = (cards,place) => {
     return inner.length > 0 ? (
         <p className="temporary-class" title={title}>
             {inner}
-            <LinkToMeeting {...card}/>
+            {place===places.AUDITORY? <LinkToMeeting {...card} />:<a href={card.linkToMeeting}>{i18n.t(`common:link_to_meeting_word`)}</a>}
         </p>
     ) : (
         ''

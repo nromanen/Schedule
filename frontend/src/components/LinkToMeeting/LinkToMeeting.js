@@ -1,26 +1,30 @@
 import React, { useState } from 'react';
 import { IoMdLink } from 'react-icons/all';
-import SetChangeDialog from '../../share/modals/modal/setDefaultDialog';
-import {
-    removeSemesterCardService, setDefaultSemesterById,
-    setDisabledSemestersService,
-    setEnabledSemestersService
-} from '../../services/semesterService';
 import LinkToMeetingDialog from '../../share/modals/modal/linkToMeetingDialog';
+import './LinkToMeeting.scss'
 const LinkToMeeting=(props)=>{
    const {linkToMeeting}=props;
    const [openDialog,setOpenDialog]=useState(false);
+   const openWindowByUrl=(url)=>{
+      let win = window.open(linkToMeeting, '_blank');
+       win.focus();
+   }
     const handleClose = semesterId => {
         setOpenDialog(false);
+        if (semesterId !== '') {
+           openWindowByUrl(linkToMeeting);
+        }
     };
 
     return (<>
                     <IoMdLink
-                        color={"red"}
-                        className="svg-btn copy-btn"
+                        color={"blue"}
+                        className="svg-btn copy-btn link"
                         onClick={() => {
                             setOpenDialog(true);
                         }}
+                        title={linkToMeeting}
+
                     />
                 <LinkToMeetingDialog
                     cardId={1}
