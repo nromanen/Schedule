@@ -11,14 +11,10 @@ import Card from '../share/Card/Card';
 import i18next from './i18n';
 
 import { daysUppercase } from '../constants/schedule/days';
-import { common } from '@material-ui/core/colors';
-import { IoMdEye, IoMdLink } from 'react-icons/all';
-import { useTranslation } from 'react-i18next';
 import { LinkToMeeting } from '../components/LinkToMeeting/LinkToMeeting';
-import { links } from '../constants/links';
 import { places } from '../constants/places';
 import i18n from 'i18next';
-
+import './renderScheduleTable.scss'
 const shortid = require('shortid');
 
 const matchDayNumberSysytemToDayName = () => {
@@ -90,6 +86,9 @@ export const prepareLessonSubCardCell = (card,place) => {
     }
     return inner;
 };
+const getHref=(link)=>{
+    return (<a title={link} className="link-to-meeting" href={link} target="_blank">{i18n.t(`common:link_to_meeting_word`)}</a>);
+}
 export const prepareLessonTemporaryCardCell = (card,place) => {
     let inner = '';
     if (card !== undefined && card !== null) {
@@ -129,7 +128,7 @@ export const prepareLessonTemporaryCardCell = (card,place) => {
                     <p className="temporary-class" title={title}>
                         {inner}
                     </p>
-                    {place===places.AUDITORY? <LinkToMeeting {...card} />:<a>{i18n.t(`common:link_to_meeting_word`)}</a>}
+                    {place===places.AUDITORY? <LinkToMeeting {...card} />:getHref(card.linkToMeeting)}
                 </>
 
             ) : (
@@ -140,7 +139,7 @@ export const prepareLessonTemporaryCardCell = (card,place) => {
                 <>
                     <p>{prepareLessonCardCell(card,place)}</p>
                     <p>{prepareLessonSubCardCell(card,place)}</p>
-                    {place===places.AUDITORY? <LinkToMeeting {...card} />:<a href={card.linkToMeeting}>{i18n.t(`common:link_to_meeting_word`)}</a>}
+                    {place===places.AUDITORY? <LinkToMeeting {...card} />:getHref(card.linkToMeeting)}
                 </>
             );
         }
@@ -210,7 +209,7 @@ export const prepareTeacherTemporaryCardCell = (cards,place) => {
         if (!card.temporary_schedule) {
             return <>
                 {prepareTeacherCardRegularCell(card,place)}
-                {place===places.AUDITORY? <LinkToMeeting {...card} />:<a href={card.linkToMeeting}>{i18n.t(`common:link_to_meeting_word`)}</a>}
+                {place===places.AUDITORY? <LinkToMeeting {...card} />:getHref(card.linkToMeeting)}
             </>
 
         }
@@ -238,7 +237,7 @@ export const prepareTeacherTemporaryCardCell = (cards,place) => {
         return inner.length > 0 ? (
             <p className="temporary-class" title={title}>
                 {inner}
-                {place===places.AUDITORY? <LinkToMeeting {...card} />:<a href={card.linkToMeeting}>{i18n.t(`common:link_to_meeting_word`)}</a>}
+                {place===places.AUDITORY? <LinkToMeeting {...card} />:getHref(card.linkToMeeting)}
             </p>
         ) : (
             ''
@@ -282,7 +281,7 @@ export const prepareTeacherTemporaryCardCell = (cards,place) => {
     return inner.length > 0 ? (
         <p className="temporary-class" title={title}>
             {inner}
-            {place===places.AUDITORY? <LinkToMeeting {...card} />:<a href={card.linkToMeeting}>{i18n.t(`common:link_to_meeting_word`)}</a>}
+            {place===places.AUDITORY? <LinkToMeeting {...card} />:getHref(card.linkToMeeting)}
         </p>
     ) : (
         ''

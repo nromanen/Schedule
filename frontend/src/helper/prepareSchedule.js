@@ -94,11 +94,6 @@ export const makeGroupSchedule = groupSchedule => {
         });
     });
     done = true;
-    console.log("HHHHHHHHHgroupSchedule.semester BUILD",groupSchedule.semester,
-        oddArray,
-        evenArray,
-        group,
-        done)
     return {
         semester: groupSchedule.semester,
         oddArray,

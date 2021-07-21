@@ -298,7 +298,6 @@ const GroupSchedulePage = props => {
        return null;
     }
     const changePlace=(e)=>{
-       console.log("LLLLLLLLL",e.target)
         if(e.target) {
             setPlace(e.target.value);}
     }
