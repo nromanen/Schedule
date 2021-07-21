@@ -53,7 +53,7 @@ public class LessonServiceTest {
         lesson.setHours(1);
         lesson.setLessonType(LessonType.LECTURE);
         lesson.setSubjectForSite("Human anatomy");
-        lesson.setLinkToMeeting("link_1234_link");
+        lesson.setLinkToMeeting("https://softserveinc.zoom.us/j/93198369163?pwd=Rk1GU281cDFtK1FCK3pJWXphRkJrQT09");
         lesson.setSemester(semester);
 
         when(lessonRepository.findById(1L)).thenReturn(Optional.of(lesson));
@@ -71,7 +71,7 @@ public class LessonServiceTest {
         lesson.setHours(1);
         lesson.setLessonType(LessonType.LECTURE);
         lesson.setSubjectForSite("Human anatomy");
-        lesson.setLinkToMeeting("Ivanov I.I.");
+        lesson.setLinkToMeeting("https://softserveinc.zoom.us/j/93198369163?pwd=Rk1GU281cDFtK1FCK3pJWXphRkJrQT09");
 
         lessonService.getById(2L);
         verify(lessonRepository, times(1)).findById(2L);
@@ -137,7 +137,7 @@ public class LessonServiceTest {
         lesson.setHours(1);
         lesson.setLessonType(LessonType.LECTURE);
         lesson.setSubjectForSite("Human anatomy");
-        lesson.setLinkToMeeting("Ivanov I.I.");
+        lesson.setLinkToMeeting("https://softserveinc.zoom.us/j/93198369163?pwd=Rk1GU281cDFtK1FCK3pJWXphRkJrQT09");
 
         when(lessonRepository.countLessonDuplicates(lesson)).thenReturn(1L);
 
@@ -169,7 +169,7 @@ public class LessonServiceTest {
         lesson.setHours(1);
         lesson.setLessonType(LessonType.LECTURE);
         lesson.setSubjectForSite("Human anatomy");
-        lesson.setLinkToMeeting("Ivanov I.I.");
+        lesson.setLinkToMeeting("https://softserveinc.zoom.us/j/93198369163?pwd=Rk1GU281cDFtK1FCK3pJWXphRkJrQT09");
 
         when(lessonRepository.countLessonDuplicatesWithIgnoreId(lesson)).thenReturn(0L);
         when(lessonRepository.update(lesson)).thenReturn(lesson);
@@ -205,7 +205,7 @@ public class LessonServiceTest {
         lesson.setHours(1);
         lesson.setLessonType(LessonType.LECTURE);
         lesson.setSubjectForSite("Human anatomy");
-        lesson.setLinkToMeeting("some link...");
+        lesson.setLinkToMeeting("https://softserveinc.zoom.us/j/93198369163?pwd=Rk1GU281cDFtK1FCK3pJWXphRkJrQT09");
 
         when(lessonRepository.countLessonDuplicatesWithIgnoreId(lesson)).thenReturn(1L);
 
