@@ -16,6 +16,23 @@ h1 {
         width: auto;
     }
 }
+.place{
+    padding: 10px;
+    border: 1px solid blue;
+    width: 120px;
+    background-color: #b8e2ff;
+    border-radius: 10px;
+
+}
+#select-place{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    label{
+        color: #9c9c9c;
+        margin-bottom: 8px;
+    }
+}
 .form-buttons-container {
     @media (max-width: 800px) {
         display: flex;

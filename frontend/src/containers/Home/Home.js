@@ -14,7 +14,11 @@ import {
     getFullSchedule,
     setScheduleGroupIdService,
     setScheduleSemesterIdService,
-    setScheduleTeacherIdService, setScheduleTypeService
+    setScheduleTeacherIdService,
+    setScheduleTypeService,
+    showAllPublicGroupsService,
+    showAllPublicSemestersService,
+    showAllPublicTeachersService
 } from '../../services/scheduleService';
 import { Redirect, useHistory } from 'react-router-dom';
 import { setScheduleType } from '../../redux/actions';
@@ -24,6 +28,8 @@ const HomePage = props => {
     useEffect(() => getPublicClassScheduleListService(), []);
     setScheduleSemesterIdService(null)
     setScheduleTypeService("")
+
+    // useEffect(() => showAllPublicSemestersService(), []);
     useEffect(() => {
         if (props.userRole === userRoles.TEACHER) {
             //getMyTeacherWishesService();
@@ -58,11 +64,13 @@ const HomePage = props => {
 
         <Fragment>
             <h1>{t('home_title')}</h1>
-            <GroupSchedulePage scheduleType="default" />
+            <GroupSchedulePage scheduleType="default"  />
         </Fragment>
     );
 };
 
-const mapStateToProps = state => ({ userRole: state.auth.role });
+const mapStateToProps = state => ({
+    userRole: state.auth.role ,
+});
 
 export default connect(mapStateToProps)(HomePage);

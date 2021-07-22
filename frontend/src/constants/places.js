@@ -1,5 +1,5 @@
 export const places={
-    TOGETHER:"together",
+    TOGETHER:"auditory+online",
     AUDITORY:"auditory",
     ONLINE:"online"
 }

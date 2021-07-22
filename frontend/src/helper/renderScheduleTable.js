@@ -73,14 +73,13 @@ export const prepareLessonCardCell = card => {
     let inner = '';
     if (card !== undefined && card !== null) {
         const {name,surname,patronymic,position}=card.teacher;
-        const teacherName=`${surname}\t${name}\t${patronymic}\t${position}`
-        inner = teacherName + '\n' + card.subjectForSite+'\n';
+        const teacherName=`${surname} ${getFirstLetter(name)} ${getFirstLetter(patronymic)}`
+        inner = position+'\n'+teacherName + '\n' + card.subjectForSite+'\n';
     }
     return inner;
 };
 export const prepareLessonSubCardCell = (card,place) => {
     const room=place!==places.ONLINE?card.room:"";
-    // const link=place!==places.AUDITORY?card.linkToMeeting:"";
     let inner = '';
     if (card !== undefined && card !== null) {
         inner =
@@ -90,14 +89,14 @@ export const prepareLessonSubCardCell = (card,place) => {
         if (room!=="") {
             inner=`(${inner}, ${card.room.name})`
         }
-        // if (link!==""){
-        //     inner+='\t'+link;
-        // }
     }
     return inner;
 };
 const getHref=(link)=>{
     return (<a title={link} className="link-to-meeting" href={link} target="_blank">{i18n.t(`common:link_to_meeting_word`)}</a>);
+}
+const getFirstLetter=(word)=>{
+    return `${word.charAt(0)}.`;
 }
 export const prepareLessonTemporaryCardCell = (card,place) => {
     let inner = '';
@@ -113,11 +112,11 @@ export const prepareLessonTemporaryCardCell = (card,place) => {
                     card.temporary_schedule.date +
                     '\n\r' +
                     card.temporary_schedule.teacher.name +
-                    '\r' +
-                    card.temporary_schedule.teacher.surname +
-                    '\r' +
-                    card.temporary_schedule.teacher.patronymic +
-                    '\r' +
+                    ' ' +
+                    getFirstLetter(card.temporary_schedule.teacher.surname) +
+                    ' ' +
+                    getFirstLetter(card.temporary_schedule.teacher.patronymic) +
+                    '\n' +
                     card.temporary_schedule.teacher.position +
                     '\n\r' +
                     card.temporary_schedule.subjectForSite;
@@ -167,35 +166,33 @@ export const prepareTeacherCardCell = card => {
 };
 
 export const prepareTeacherCardRegularCell = (card,place) => {
-    const room=place!==places.ONLINE?card.room:"";
-    //const link=place!==places.AUDITORY?card.linkToMeeting:"";
-  return   prepareTeacherCardCell(card) +
-    '\n(' +
-    i18next.t(
-        `formElements:lesson_type_${card.lessonType.toLowerCase()}_label`
-    ) +
-    ', ' +
-    room +
-    ')' +
-    '\n' +
-    card.group.title;
+    let inner=buildLessonWithRoom(card,place);
+    inner+='\n' +
+        card.group.title+'\n';
+    return inner;
 
 }
 
 export const buildLessonWithRoom = (card,place) => {
     const room=place!==places.ONLINE?card.room:"";
-    const link=place!==places.AUDITORY?card.linkToMeeting:"";
-    return   prepareTeacherCardCell(card) +
-        '\n(' +
-        i18next.t(
+    let inner="";
+    inner+=   prepareTeacherCardCell(card)+
+        '\n';
+
+    if (room!=="") {
+        inner+=`(${ i18next.t(
             `formElements:lesson_type_${card.lessonType.toLowerCase()}_label`
-        ) +
-        ', ' +
-        room +
-         ')';
-        //+
-        // '\n'+
-        // link;
+        )} ,${card.room})\n`
+    }
+    else {
+        inner+= i18next.t(
+                `formElements:lesson_type_${card.lessonType.toLowerCase()}_label`
+            )+'\n';
+    }
+    return inner;
+
+
+
 }
 export const buildGroupNumber = card => {
 
@@ -226,18 +223,18 @@ export const prepareTeacherTemporaryCardCell = (cards,place) => {
         if (card.temporary_schedule.vacation === true) {
             inner +=
                 card.temporary_schedule.date +
-                '\n\r' +
+                '\n' +
                 i18next.t(`common:vacation_label`);
         } else {
 
             inner +=
                 card.temporary_schedule.date +
-                '\n\r' +
-                card.temporary_schedule.teacher.surname+" "+card.temporary_schedule.teacher.name+
-                '\n\r' +
-                card.temporary_schedule.subjectForSite;
+                '\n' ;
             if (card.temporary_schedule.room) {
-                inner += ', ' + card.temporary_schedule.room.name + ' )';
+                inner +=`(${card.temporary_schedule.subjectForSite}, ${card.temporary_schedule.room.name})\n`;
+            }
+            else {
+                inner+=card.temporary_schedule.subjectForSite+'\n';
             }
         }
         title =
@@ -266,20 +263,21 @@ export const prepareTeacherTemporaryCardCell = (cards,place) => {
 
             inner +=
                 card.temporary_schedule.date +
-                '\n\r' +
+                '\n' +
                 i18next.t(`common:vacation_label`) +
-                '\n\r';
+                '\n';
         } else {
             inner +=
                 card.temporary_schedule.date +
-                '\n\r' +
+                '\n' +
                 card.temporary_schedule.teacher.surname +" "+card.temporary_schedule.teacher.name +
-                '\n\r' +
-                card.temporary_schedule.subjectForSite;
+                '\n';
             if (card.temporary_schedule.room) {
-                inner += ', ' + card.temporary_schedule.room.name + ' )';
+                inner +=`${card.temporary_schedule.subjectForSite}, ${card.temporary_schedule.room.name}\n`;
             }
-            inner += '\n\r';
+            else {
+                inner+=card.temporary_schedule.subjectForSite+'\n';
+            }
         }
         title +=
             i18next.t(`common:regular_lesson_label`) +

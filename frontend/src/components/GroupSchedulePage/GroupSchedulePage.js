@@ -23,7 +23,7 @@ import {
     getFullSchedule,
     setScheduleGroupIdService,
     setScheduleSemesterIdService,
-    setScheduleTeacherIdService,
+    setScheduleTeacherIdService, showAllPublicSemestersService,
     submitSearchSchedule, submitSearchSchedule1
 } from '../../services/scheduleService';
 
@@ -263,15 +263,17 @@ const GroupSchedulePage = props => {
         setLoadingService('true');
         submitSearchSchedule(values, history);
         history.push(links.ScheduleFor+"?semester="+semester+groupPath+teacherPath);
+
     };
    const getSchedule=()=>{
-
        if((props.scheduleType==="")&&(props.defaultSemester.semester!==undefined)){
            const semester=`${props.defaultSemester.semester.id}`;
            handleSubmit({ "semester":semester });
+
            return
        }
        if(props.scheduleType!==""|| location.pathname===links.HOME_PAGE){
+
            return renderSchedule();
 
        }
@@ -282,18 +284,21 @@ const GroupSchedulePage = props => {
        const semester= params.get("semester");
        const teacher=params.get("teacher");
        const group=params.get("group");
+
        if(semester!==null) {
            handleSubmit({ semester, 'group': group != null ? group : 0, 'teacher': teacher != null ? teacher : 0 });
         return null
        }
        else return null;
     }
+
     const getTop=()=>{
 
        if(props.scheduleType !== 'archived') {
+
          return (
              <GroupSchedulePageTop
-                 scheduleType={props.scheduleType}
+                  scheduleType={props.scheduleType}
                  onSubmit={handleSubmit} place={place} onChange={changePlace}
 
              />
@@ -310,6 +315,7 @@ const GroupSchedulePage = props => {
 
     return (
         <>
+            {console.log(props,"PROPS")}
 
                 {getTop()}
                 {/*{selectPlace()}*/}
@@ -330,6 +336,7 @@ const mapStateToProps = state => ({
     semesterId: state.schedule.scheduleSemesterId,
     loading: state.loadingIndicator.loading,
     defaultSemester: state.schedule.defaultSemester,
+
 
 });
 export default connect(mapStateToProps)(GroupSchedulePage);

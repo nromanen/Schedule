@@ -1965,7 +1965,7 @@ export const getDefaultSemesterService = () => {
             }
         ]
     };
-    store.dispatch(setDefaultSemester({}));
+    store.dispatch(setDefaultSemester(data));
     // axios
     //     .get(DEFAULT_SEMESTER_URL)
     //     .then(response => {
@@ -2111,12 +2111,14 @@ export const deleteItemFromScheduleService = itemId => {
 };
 
 export const submitSearchSchedule = values => {
+
     setScheduleSemesterIdService(values.semester);
 
     if (values.hasOwnProperty('group') && +values.group > 0) {
         setScheduleTypeService('group');
         setScheduleGroupIdService(values.group);
         getGroupSchedule(values.group, values.semester);
+
         return;
     }
     if (values.hasOwnProperty('teacher') && +values.teacher > 0) {
