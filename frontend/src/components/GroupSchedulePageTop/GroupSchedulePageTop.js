@@ -48,7 +48,6 @@ const GroupSchedulePageTop = props => {
         submitting
     } = props;
     const isLoading = props.loading;
-    const [sem,setSemester]=useState(props.initialValues.semester)
     let loadingContainer = '';
     if (isLoading) {
         loadingContainer = (
@@ -209,8 +208,8 @@ const GroupSchedulePageTop = props => {
 };
 
 const mapStateToProps = state => ({
-    groups: state.groups.groups,
-    teachers: state.teachers.teachers,
+     groups: state.groups.groups,
+     teachers: state.teachers.teachers,
     semesters: state.schedule.semesters,
     loading: state.loadingIndicator.loading,
     initialValues:{semester: state.schedule.scheduleSemesterId,group: state.schedule.scheduleGroupId,teacher: state.schedule.scheduleTeacherId},

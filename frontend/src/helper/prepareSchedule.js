@@ -174,7 +174,6 @@ export const makeFullSchedule = fullSchedule => {
 };
 
 export const makeTeacherSchedule = teacherSchedule => {
-    console.log("makeTeacherSchedule",teacherSchedule)
     let teacher = {};
     let evenArray = [];
     let oddArray = [];

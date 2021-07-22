@@ -445,7 +445,6 @@ export const renderFirstDayFirstClassFirstCardLine = (
     classesCount,
     place
 ) => {
-console.log("renderFirstDayFirstClassFirstCardLine")
     let dayClassName = 'dayNameCell ';
     let classClassName = 'classNameCell ';
 

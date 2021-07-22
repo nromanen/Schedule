@@ -20,6 +20,7 @@ import {
     renderWeekTable
 } from '../../helper/renderScheduleTable';
 import {
+    getFullSchedule,
     setScheduleGroupIdService,
     setScheduleSemesterIdService,
     setScheduleTeacherIdService,
@@ -38,6 +39,7 @@ import { places } from '../../constants/places';
 import i18n from 'i18next';
 import { Contactless } from '@material-ui/icons';
 const GroupSchedulePage = props => {
+
     const [place,setPlace]=useState(places.TOGETHER);
     let { groupSchedule, fullSchedule, teacherSchedule } = props;
     let history = useHistory();
@@ -263,6 +265,7 @@ const GroupSchedulePage = props => {
         history.push(links.ScheduleFor+"?semester="+semester+groupPath+teacherPath);
     };
    const getSchedule=()=>{
+
        if((props.scheduleType==="")&&(props.defaultSemester.semester!==undefined)){
            const semester=`${props.defaultSemester.semester.id}`;
            handleSubmit({ "semester":semester });
@@ -270,6 +273,7 @@ const GroupSchedulePage = props => {
        }
        if(props.scheduleType!==""|| location.pathname===links.HOME_PAGE){
            return renderSchedule();
+
        }
 
 
@@ -290,7 +294,9 @@ const GroupSchedulePage = props => {
          return (
              <GroupSchedulePageTop
                  scheduleType={props.scheduleType}
-                 onSubmit={handleSubmit} place={place} onChange={changePlace} />
+                 onSubmit={handleSubmit} place={place} onChange={changePlace}
+
+             />
          );
 
 
@@ -346,6 +352,7 @@ const mapStateToProps = state => ({
     teacherId: state.schedule.scheduleTeacherId,
     semesterId: state.schedule.scheduleSemesterId,
     loading: state.loadingIndicator.loading,
-    defaultSemester: state.schedule.defaultSemester
+    defaultSemester: state.schedule.defaultSemester,
+
 });
 export default connect(mapStateToProps)(GroupSchedulePage);
