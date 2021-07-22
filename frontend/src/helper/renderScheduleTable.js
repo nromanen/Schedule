@@ -52,12 +52,13 @@ function isOddFunction(num) {
 }
 let currentWeekType = 0;
 
-const renderClassCell = classItem =>
-    classItem.class_name +
+const renderClassCell = classItem => {
+   return (classItem.class_name +
     '\n\r\n\r' +
     classItem.startTime +
     ' - ' +
-    classItem.endTime;
+    classItem.endTime);
+}
 
 export const prepareLessonCardCell = card => {
     let inner = '';
@@ -409,7 +410,9 @@ export const renderGroupCells = (
         }
 
         return (
+
             <TableCell
+
                 key={shortid.generate()}
                 colSpan={colspan}
                 rowSpan={rowspan}
@@ -435,12 +438,14 @@ export const renderScheduleHeader = groups => (
 );
 
 export const renderFirstDayFirstClassFirstCardLine = (
+
     day_name,
     classItem,
     groups,
     classesCount,
     place
 ) => {
+console.log("renderFirstDayFirstClassFirstCardLine")
     let dayClassName = 'dayNameCell ';
     let classClassName = 'classNameCell ';
 
@@ -470,6 +475,7 @@ export const renderFirstDayFirstClassFirstCardLine = (
                 </TableCell>
                 <TableCell className={classClassName} rowSpan={2}>
                     {renderClassCell(classItem)}
+
                 </TableCell>
                 <TableCell
                     className={classClassName + oddWeekClass + ' subClassName'}
@@ -496,6 +502,7 @@ export const renderFirstDayOtherClassFirstCardLine = (
     groups,
     place
 ) => {
+
     let classClassName = 'classNameCell ';
     let oddWeekClass = '';
     let evenWeekClass = '';
@@ -564,12 +571,12 @@ const prepareForRender = classItem => {
             }
         });
     }
+    return classItem;
 };
 
 export const renderDay = (dayName, dayItem, semesterClassesCount,place) => {
-    console.log("render day",place)
     return dayItem.map((classItem, classIndex) => {
-        prepareForRender(classItem);
+      const t= prepareForRender(classItem);
         if (classIndex === 0) {
             return renderFirstDayFirstClassFirstCardLine(
                 dayName,
@@ -605,8 +612,7 @@ export const renderScheduleFullHeader = groupList => (
 );
 
 const renderScheduleDays = (fullResultSchedule,place) => {
-    console.log('renderScheduleDays', place);
-    fullResultSchedule.resultArray.map((dayItem, dayName) => {
+   return  fullResultSchedule.resultArray.map((dayItem, dayName) => {
         return renderDay(
             dayItem.day,
             dayItem.classes,
@@ -689,7 +695,6 @@ const renderTeacherClassCell = (cards,place) => {
     );
 };
 export const renderWeekTable = (schedule, isOdd,place) => {
-    console.log("renderWeekTable",place)
     if (schedule) {
         return (
             <TableContainer>

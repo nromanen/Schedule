@@ -132,8 +132,7 @@ const GroupSchedulePage = props => {
     };
 
     const renderSchedule = () => {
-
-
+        console.log("renderSchedule",props)
         switch (props.scheduleType) {
             case 'group':
                 if (
@@ -217,7 +216,7 @@ const GroupSchedulePage = props => {
                     else setLoadingService(false)
                 break;
             case 'full':
-                console.log("fullFULLLLLLL",fullSchedule, props)
+
                 if (
                     (!fullSchedule.schedule ||
                         fullSchedule.schedule.length === 0) &&
@@ -226,6 +225,7 @@ const GroupSchedulePage = props => {
                     return emptySchedule();
                 }
                 const result = makeFullSchedule(fullSchedule);
+
                 if (result.groupsCount || result.done) {
                     setLoadingService(false);
                     return renderFullSchedule(result,place);
@@ -290,7 +290,7 @@ const GroupSchedulePage = props => {
          return (
              <GroupSchedulePageTop
                  scheduleType={props.scheduleType}
-                 history={history} onSubmit={handleSubmit} place={place} onChange={changePlace} />
+                 onSubmit={handleSubmit} place={place} onChange={changePlace} />
          );
 
 
@@ -301,30 +301,30 @@ const GroupSchedulePage = props => {
         if(e.target) {
             setPlace(e.target.value);}
     }
-    const selectPlace=()=>{
-       return (
-           <>
-               {/*<InputLabel id="demo-controlled-open-select-label">View</InputLabel>*/}
-               <Select
-                   labelId="demo-controlled-open-select-label"
-                   id="demo-controlled-open-select"
-                   value={place}
-                   onChange={(e)=> {
-                       setPlace(e.target.value);
-                   }}
-               >
-
-                   {
-                       Object.entries(places).map(function(data,index) {
-                           return <MenuItem value={data[1]} key={data[0]}>{data[1]}</MenuItem>
-                       }, this)
-                   }
-
-               </Select>
-           </>
-
-    );
-    }
+    // const selectPlace=()=>{
+    //    return (
+    //        <>
+    //            {/*<InputLabel id="demo-controlled-open-select-label">View</InputLabel>*/}
+    //            <Select
+    //                labelId="demo-controlled-open-select-label"
+    //                id="demo-controlled-open-select"
+    //                value={place}
+    //                onChange={(e)=> {
+    //                    setPlace(e.target.value);
+    //                }}
+    //            >
+    //
+    //                {
+    //                    Object.entries(places).map(function(data,index) {
+    //                        return <MenuItem value={data[1]} key={data[0]}>{data[1]}</MenuItem>
+    //                    }, this)
+    //                }
+    //
+    //            </Select>
+    //        </>
+    //
+    // );
+    // }
     return (
         <>
 

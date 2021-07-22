@@ -1965,7 +1965,7 @@ export const getDefaultSemesterService = () => {
             }
         ]
     };
-    store.dispatch(setDefaultSemester(data));
+    store.dispatch(setDefaultSemester({}));
     // axios
     //     .get(DEFAULT_SEMESTER_URL)
     //     .then(response => {

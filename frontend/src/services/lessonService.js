@@ -91,7 +91,6 @@ const updateLessonHandler = data => {
 };
 
 const createLessonHandler = (data, isCopy) => {
-    console.log("createLessonHandler",data)
     // return axios
     //     .post(LESSON_URL, data)
     //     .then(response => {
@@ -115,7 +114,6 @@ const createLessonHandler = (data, isCopy) => {
 export const handleLessonCardService = (card, groupId) => {
 
     let cardObj = cardObjectHandler(card, groupId);
-    console.log("handleLessonCardService",cardObj)
     if (!checkUniqLesson(cardObj)) {
         handleSnackbarOpenService(
             true,

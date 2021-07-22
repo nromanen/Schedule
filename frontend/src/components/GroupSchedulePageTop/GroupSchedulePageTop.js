@@ -93,7 +93,6 @@ const GroupSchedulePageTop = props => {
                 );
             }
             else if (semesters.length === 1) {
-                console.log("semesters")
                 handleSubmit({ semester: semesters[0].id });
                 return <p>{semesters[0].description}</p>;
             }

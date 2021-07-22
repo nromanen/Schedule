@@ -273,7 +273,6 @@ const checkSemesterYears = (endDay, startDay, year) => {
     return conf;
 };
 export const setDefaultSemesterById = dataId => {
-    console.log("setDefaultSemesterById", dataId)
     //  axios
     // .put(SEMESTERS_URL, dataId)
     //     .then(response => {
@@ -294,7 +293,6 @@ export const setDefaultSemesterById = dataId => {
 }
 
 const putSemester = data => {
-    console.log("putSemester",data)
     store.dispatch(updateSemester(data));
             selectSemesterService(null);
              getDisabledSemestersService();

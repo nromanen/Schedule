@@ -14,7 +14,6 @@ export const setCurrentSemester = res => {
     };
 };
 export const setDefaultSemester = res => {
-    console.log("setDefaultSemester action",res)
     return {
         type: actionTypes.SET_DEFAULT_SEMESTER,
         result: res
@@ -95,7 +94,6 @@ export const setSemesterList = result => {
     };
 };
 export const setScheduleSemesterId = semesterId => {
-    console.log("setScheduleSemesterId",semesterId)
     return {
         type: actionTypes.SET_SCHEDULE_SEMESTER_ID,
         semesterId: semesterId
