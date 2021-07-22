@@ -232,7 +232,6 @@ let AddSemesterForm = props => {
     return (
 
         <Card class="form-card semester-form">
-            {console.log("PROPS",props)}
             <h2 style={{ textAlign: 'center' }}>
                 {props.semester.id ? t('edit_title') : t('create_title')}
                 {t('semestry_label')}

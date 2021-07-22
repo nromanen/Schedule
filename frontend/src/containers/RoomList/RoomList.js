@@ -188,6 +188,7 @@ const RoomList = props => {
                                     onClick={() => handleClickOpen(room.id)}
                                 />
                             </div>
+
                             <span> {t('room_label') + ':'} </span>
                             <h2 className="room-card__number">{room.name}</h2>
                             <span>{t('type_label') + ':'}</span>

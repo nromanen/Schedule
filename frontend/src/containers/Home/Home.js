@@ -37,7 +37,6 @@ const HomePage = props => {
     }, []);
     useEffect(() => {
         if (props.userRole === null) {
-            console.log("some user")
             //disableDefaultSemesterService();
             getDefaultSemesterService();
             setScheduleTypeService("");
@@ -45,14 +44,12 @@ const HomePage = props => {
     }, []);
     useEffect(() => {
         if (props.userRole === userRoles.TEACHER) {
-            console.log("Teacher")
             //disableDefaultSemesterService();
             getDefaultSemesterService();
             setScheduleTypeService("");
         }
     }, []);
     useEffect(() => {
-        console.log("MANAGER")
         if (props.userRole === userRoles.MANAGER) {
            // disableDefaultSemesterService();
             getDefaultSemesterService();

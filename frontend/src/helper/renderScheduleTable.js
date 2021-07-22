@@ -15,6 +15,7 @@ import { LinkToMeeting } from '../components/LinkToMeeting/LinkToMeeting';
 import { places } from '../constants/places';
 import i18n from 'i18next';
 import './renderScheduleTable.scss'
+import { getFirstLetter } from './renderTeacher';
 const shortid = require('shortid');
 
 const matchDayNumberSysytemToDayName = () => {
@@ -95,9 +96,7 @@ export const prepareLessonSubCardCell = (card,place) => {
 const getHref=(link)=>{
     return (<a title={link} className="link-to-meeting" href={link} target="_blank">{i18n.t(`common:link_to_meeting_word`)}</a>);
 }
-const getFirstLetter=(word)=>{
-    return `${word.charAt(0)}.`;
-}
+
 export const prepareLessonTemporaryCardCell = (card,place) => {
     let inner = '';
     if (card !== undefined && card !== null) {
@@ -367,8 +366,6 @@ export const renderGroupCells = (
     isCurrentDay = 0,
 
 ) => {
-
-    console.log("GROUP",place)
     return groups.map((group, groupIndex) => {
         let colspan = 1;
         let rowspan = 1;

@@ -5,6 +5,8 @@ import Card from '../../share/Card/Card';
 import { FaEdit, FaUserPlus } from 'react-icons/fa';
 import { MdDelete } from 'react-icons/md';
 import { MdContentCopy } from 'react-icons/all';
+import { getTeacherName } from '../../helper/renderTeacher';
+import i18n from 'i18next';
 
 const LessonsList = props => {
     const lessons = props.lessons;
@@ -23,7 +25,53 @@ const LessonsList = props => {
         ) : (
             ''
         );
-
+    const getUkWordHours=(number)=>{
+        if (number===1){
+            return "година"
+        }
+        if(number>=2&&number<=4){
+            return "години"
+        }
+        if ((number>=5&&number<=20)||number===0){
+            return "годин"
+        }
+        return
+    }
+    const getUkHour=(number)=>{
+        if(number>=20&&number<=100){
+            let toText = number.toString(); //convert to string
+            let lastChar = toText.slice(-1); //gets last character
+            let lastDigit = +(lastChar); //convert last character to number
+            return getUkWordHours(lastDigit);
+        }
+        else if(number>100){
+            let toText = number.toString(); //convert to string
+            let lastChar = toText.slice(-2); //gets last character
+            let lastDigit = +(lastChar); //convert last character to number
+            return getUkWordHours(lastDigit);
+        }
+        else {
+            return  getUkWordHours(number)
+        }
+    }
+    const getEnHour=(number)=>{
+        if (number===1){
+            return "hour"
+        }
+        return "hours"
+    }
+   const getHour=(number)=>{
+        const language=(i18n.language).toUpperCase();
+        const en="EN";
+        const uk="UK";
+        if(language===en){
+            return getEnHour(number)
+        }
+        else if(language===uk){
+            return getUkHour(number)
+        }
+        return
+   }
     return (
         <div>
             <section className="container-flex-wrap">
@@ -37,12 +85,12 @@ const LessonsList = props => {
                                 onClick={() => props.onCopyLesson(lesson)}
                             />
                             <FaEdit
-                                title={t('delete_lesson')}
+                                title={t('edit_lesson')}
                                 className="svg-btn edit-btn"
                                 onClick={() => props.onSelectLesson(lesson.id)}
                             />
                             <MdDelete
-                                title={t('edit_lesson')}
+                                title={t('delete_lesson')}
                                 className="svg-btn delete-btn"
                                 onClick={() => props.onClickOpen(lesson.id)}
                             />
@@ -57,11 +105,14 @@ const LessonsList = props => {
                             )}
                             )
                         </p>
-                        <p>{lesson.teacherForSite}</p>
+                        <p>{getTeacherName(lesson)}</p>
                         <p>
                             {' '}
                             <b>{lesson.hours}</b>{' '}
-                            {t('formElements:hours_label')}
+                            {getHour(lesson.hours)}
+                        </p>
+                        <p>
+                            <input value={lesson.linkToMeeting} disabled="disabled"/>
                         </p>
                     </Card>
                 ))}

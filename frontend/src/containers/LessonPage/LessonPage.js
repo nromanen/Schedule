@@ -78,7 +78,6 @@ const LessonPage = props => {
     }, []);
 
     const createLessonCardHandler = card => {
-        console.log("createLessonCardHandler",card)
         if (Object.keys(card).length === 0 && card.constructor === Object)
             return;
 

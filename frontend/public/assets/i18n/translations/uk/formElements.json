@@ -24,7 +24,7 @@
     "room_y_label": "аудиторії",
     "subject_y_label": "предмету",
     "type_label": "Тип",
-    "hours_label": "Годин(а)",
+    "hours_label": "Годин(а/и)",
     "email_label": "Електронна адреса",
     "password_label": "Пароль",
     "retype_password_label": "Повторіть пароль",

@@ -91,7 +91,6 @@ const updateLessonHandler = data => {
 };
 
 const createLessonHandler = (data, isCopy) => {
-    console.log("createLessonHandler",data)
     return axios
         .post(LESSON_URL, data)
         .then(response => {
