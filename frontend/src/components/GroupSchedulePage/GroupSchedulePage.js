@@ -307,30 +307,7 @@ const GroupSchedulePage = props => {
         if(e.target) {
             setPlace(e.target.value);}
     }
-    // const selectPlace=()=>{
-    //    return (
-    //        <>
-    //            {/*<InputLabel id="demo-controlled-open-select-label">View</InputLabel>*/}
-    //            <Select
-    //                labelId="demo-controlled-open-select-label"
-    //                id="demo-controlled-open-select"
-    //                value={place}
-    //                onChange={(e)=> {
-    //                    setPlace(e.target.value);
-    //                }}
-    //            >
-    //
-    //                {
-    //                    Object.entries(places).map(function(data,index) {
-    //                        return <MenuItem value={data[1]} key={data[0]}>{data[1]}</MenuItem>
-    //                    }, this)
-    //                }
-    //
-    //            </Select>
-    //        </>
-    //
-    // );
-    // }
+
     return (
         <>
 

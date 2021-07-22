@@ -22,6 +22,15 @@ const matchDayNumberSysytemToDayName = () => {
     return daysUppercase[now.getDay() - 1];
 };
 const currentDay = matchDayNumberSysytemToDayName();
+const setLink=(card,place)=>{
+    if(place===places.TOGETHER){
+        return <LinkToMeeting {...card} />
+    }
+    else if(place===places.ONLINE){
+        return getHref(card.linkToMeeting)
+    }
+    return null;
+}
 
 const getWeekNumber = (startScheduleDate, date) => {
     const parsed = Array.from(startScheduleDate);
@@ -129,7 +138,7 @@ export const prepareLessonTemporaryCardCell = (card,place) => {
                     <p className="temporary-class" title={title}>
                         {inner}
                     </p>
-                    {place===places.AUDITORY? <LinkToMeeting {...card} />:getHref(card.linkToMeeting)}
+                    {setLink(card,place)}
                 </>
 
             ) : (
@@ -140,7 +149,7 @@ export const prepareLessonTemporaryCardCell = (card,place) => {
                 <>
                     <p>{prepareLessonCardCell(card,place)}</p>
                     <p>{prepareLessonSubCardCell(card,place)}</p>
-                    {place===places.AUDITORY? <LinkToMeeting {...card} />:getHref(card.linkToMeeting)}
+                    {setLink(card,place)}
                 </>
             );
         }
@@ -210,7 +219,7 @@ export const prepareTeacherTemporaryCardCell = (cards,place) => {
         if (!card.temporary_schedule) {
             return <>
                 {prepareTeacherCardRegularCell(card,place)}
-                {place===places.AUDITORY? <LinkToMeeting {...card} />:getHref(card.linkToMeeting)}
+                {setLink(card,place)}
             </>
 
         }
@@ -238,7 +247,7 @@ export const prepareTeacherTemporaryCardCell = (cards,place) => {
         return inner.length > 0 ? (
             <p className="temporary-class" title={title}>
                 {inner}
-                {place===places.AUDITORY? <LinkToMeeting {...card} />:getHref(card.linkToMeeting)}
+                {setLink(card,place)}
             </p>
         ) : (
             ''
@@ -282,7 +291,7 @@ export const prepareTeacherTemporaryCardCell = (cards,place) => {
     return inner.length > 0 ? (
         <p className="temporary-class" title={title}>
             {inner}
-            {place===places.AUDITORY? <LinkToMeeting {...card} />:getHref(card.linkToMeeting)}
+            {setLink(card,place)}
         </p>
     ) : (
         ''
@@ -354,11 +363,14 @@ export const renderGroupTable = (classes, isOdd, semester,place) => {
 
 export const renderGroupCells = (
     groups,
+    place,
     isOdd = 0,
     currentWeekType = 0,
     isCurrentDay = 0,
-    place
+
 ) => {
+
+    console.log("GROUP",place)
     return groups.map((group, groupIndex) => {
         let colspan = 1;
         let rowspan = 1;
@@ -525,7 +537,7 @@ export const renderFirstDayOtherClassFirstCardLine = (
                 >
                     1
                 </TableCell>
-                {renderGroupCells(groups.odd, 1,place)}
+                {renderGroupCells(groups.odd, place,1)}
             </TableRow>
             <TableRow>
                 <TableCell
@@ -533,7 +545,7 @@ export const renderFirstDayOtherClassFirstCardLine = (
                 >
                     2
                 </TableCell>
-                {renderGroupCells(groups.even, 0,place)}
+                {renderGroupCells(groups.even, place,0)}
             </TableRow>
         </React.Fragment>
     );
@@ -574,6 +586,8 @@ const prepareForRender = classItem => {
 };
 
 export const renderDay = (dayName, dayItem, semesterClassesCount,place) => {
+
+
     return dayItem.map((classItem, classIndex) => {
       const t= prepareForRender(classItem);
         if (classIndex === 0) {
