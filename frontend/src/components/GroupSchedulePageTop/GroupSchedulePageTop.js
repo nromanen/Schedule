@@ -13,7 +13,7 @@ import renderSelectField from '../../share/renderedFields/select';
 import {
     showAllPublicSemestersService,
     showAllPublicGroupsService,
-    showAllPublicTeachersService
+    showAllPublicTeachersService, getFullSchedule
 } from '../../services/scheduleService';
 
 import './GroupSchedulePageTop.scss';
@@ -154,12 +154,8 @@ const GroupSchedulePageTop = props => {
         })
     },[])
 
-
-
-
     return (
         <section className={classes.root}>
-            {console.log("Top",props)}
             <p>{t('greetings_schedule_message')}</p>
             <p>{t('greetings_schedule_message_hint')}</p>
             <section className="form-buttons-container top">
@@ -187,7 +183,7 @@ const GroupSchedulePageTop = props => {
 
                 </Card>
                 <span id="select-place">
-                    <label htmlFor={"demo-controlled-open-select"}>Place for meeting</label>
+                    <label htmlFor={"demo-controlled-open-select"}>{t('place_for_class_label')}</label>
                 <Select className="place"
                         labelId="demo-controlled-open-select-label"
                         id="demo-controlled-open-select"
@@ -198,7 +194,7 @@ const GroupSchedulePageTop = props => {
 
                     {
                         Object.entries(places).map(function(data, index) {
-                            return <MenuItem value={data[1]} key={data[0]}>{data[1]}</MenuItem>
+                            return <MenuItem value={data[1]} key={data[0]}>{t(`${data[1]}_label`)}</MenuItem>
                         }, this)
                     }
 
@@ -212,9 +208,9 @@ const GroupSchedulePageTop = props => {
 };
 
 const mapStateToProps = state => ({
-     groups: state.groups.groups,
-     teachers: state.teachers.teachers,
-     semesters: state.schedule.semesters,
+    groups: state.groups.groups,
+    teachers: state.teachers.teachers,
+    semesters: state.schedule.semesters,
     loading: state.loadingIndicator.loading,
     initialValues:{semester: state.schedule.scheduleSemesterId,group: state.schedule.scheduleGroupId,teacher: state.schedule.scheduleTeacherId},
 

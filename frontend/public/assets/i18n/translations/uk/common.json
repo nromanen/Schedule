@@ -125,7 +125,10 @@
     "this_card_type": "{{cardType}}?",
     "by_this_card_type": "за цим {{cardType}}?",
     "teacher_schedule_label": "Розклад для викладача",
-
+    "auditory+online_label": "аудиторія+онлайн",
+    "auditory_label": "аудиторія",
+    "online_label": "онлайн",
+    "place_for_class_label": "Місце проведення заняття",
     "days_label": "Дні",
     "current_label": "Поточний",
     "default_label": "Дефолтний",

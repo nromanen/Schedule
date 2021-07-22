@@ -20,7 +20,7 @@ import {
     renderWeekTable
 } from '../../helper/renderScheduleTable';
 import {
-    getFullSchedule,
+    getFullSchedule, getGroupSchedule, getTeacherSchedule,
     setScheduleGroupIdService,
     setScheduleSemesterIdService,
     setScheduleTeacherIdService, showAllPublicSemestersService,
@@ -41,7 +41,7 @@ import { Contactless } from '@material-ui/icons';
 const GroupSchedulePage = props => {
 
     const [place,setPlace]=useState(places.TOGETHER);
-    let { groupSchedule, fullSchedule, teacherSchedule } = props;
+    let {scheduleType, groupSchedule, fullSchedule, teacherSchedule,groupId,teacherId ,semesterId,loading,semesters} = props;
     let history = useHistory();
 
     const location = useLocation();
@@ -265,6 +265,22 @@ const GroupSchedulePage = props => {
         history.push(links.ScheduleFor+"?semester="+semester+groupPath+teacherPath);
 
     };
+    useEffect(()=>getFullSchedule(),[place])
+     useEffect(()=> {
+         if(scheduleType==="group")
+         getGroupSchedule(groupId, semesterId);
+     },[groupId])
+     useEffect(()=> {
+         if(scheduleType==="teacher")
+         getTeacherSchedule(teacherId, semesterId);
+     },[teacherId])
+     useEffect(()=> {
+         console.log("USE",scheduleType,loading)
+         if(scheduleType==="full"&&semesters===undefined) {
+             getFullSchedule();
+         }
+     })
+
    const getSchedule=()=>{
        if((props.scheduleType==="")&&(props.defaultSemester.semester!==undefined)){
            const semester=`${props.defaultSemester.semester.id}`;
@@ -300,7 +316,6 @@ const GroupSchedulePage = props => {
              <GroupSchedulePageTop
                   scheduleType={props.scheduleType}
                  onSubmit={handleSubmit} place={place} onChange={changePlace}
-
              />
          );
 
@@ -313,16 +328,11 @@ const GroupSchedulePage = props => {
             setPlace(e.target.value);}
     }
 
+
     return (
         <>
-            {console.log(props,"PROPS")}
-
-                {getTop()}
-                {/*{selectPlace()}*/}
-
+            {getTop()}
             {getSchedule()}
-
-
         </>
     );
 };
@@ -336,6 +346,7 @@ const mapStateToProps = state => ({
     semesterId: state.schedule.scheduleSemesterId,
     loading: state.loadingIndicator.loading,
     defaultSemester: state.schedule.defaultSemester,
+    semesters: state.schedule.semesters,
 
 
 });

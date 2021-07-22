@@ -129,7 +129,10 @@
     "this_card_type": "this {{cardType}}?",
     "by_this_card_type": "by this {{cardType}}?",
     "teacher_schedule_label": "Schedule for teacher",
-
+    "auditory+online_label": "auditory+online",
+    "auditory_label": "auditory",
+    "online_label": "online",
+    "place_for_class_label": "Place for class",
     "days_label": "Days",
     "current_label": "Current",
     "default_label": "Default",
