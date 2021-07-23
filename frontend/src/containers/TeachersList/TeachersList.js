@@ -181,7 +181,7 @@ const TeacherList = props => {
                         console.log(selected)
                     }}
                 >
-                    {"send schedule..."}
+                    {t('send_schedule_for_teacher')}
                 </Button>
                 <MultiSelect open={openSelect}
                              options={options}
