@@ -35,6 +35,9 @@ import { disabledCard } from '../../constants/disabledCard';
 import { getPublicClassScheduleListService } from '../../services/classService';
 import NavigationPage from '../../components/Navigation/NavigationPage';
 import { navigation } from '../../constants/navigationOrder';
+import Multiselect, { MultiSelect } from '../../helper/multiselect';
+import Example from '../../helper/multiselect';
+import { getFirstLetter } from '../../helper/renderTeacher';
 
 const TeacherList = props => {
     const { t } = useTranslation('common');
@@ -44,15 +47,20 @@ const TeacherList = props => {
     const [term, setTerm] = useState('');
     const [disabled, setDisabled] = useState(false);
     const [hideDialog, setHideDialog] = useState(null);
+    const [openSelect,setOpenSelect]=useState(false);
+
 
     useEffect(() => showAllTeachersService(), []);
     useEffect(() => getDisabledTeachersService(), []);
     useEffect(() => getPublicClassScheduleListService(), []);
+    const {teachers ,disabledTeachers ,currentSemester}=props;
 
-    const teachers = props.teachers;
-    const disabledTeachers = props.disabledTeachers;
+    const setOptions=()=>{
+        return teachers.map(item=>{return {id:item.id,value:item.id,label:`${item.surname} ${getFirstLetter(item.name)} ${getFirstLetter(item.patronymic)}`}});
+    }
     const teacherLength = disabled ? disabledTeachers.length : teachers.length;
-
+    const [selected, setSelected] = useState([]);
+    const options = setOptions();
     const teacherSubmit = values => {
         handleTeacherService(values);
     };
@@ -92,7 +100,9 @@ const TeacherList = props => {
         }
         setHideDialog(null);
     };
-
+    const handleCloseSending = scheduleId => {
+        setOpenSelect(false);
+    };
     const [openWish, setOpenWish] = useState(false);
     const [teacher, setTeacher] = useState(0);
 
@@ -121,7 +131,20 @@ const TeacherList = props => {
     const handleToUpperCase = str => {
         return str.charAt(0).toUpperCase() + str.slice(1);
     };
-
+    const cancelSelection=()=>{
+        setSelected([]);
+        setOpenSelect(false);
+    }
+    const sendTeachers=()=>{
+        setOpenSelect(false);
+        const teachersId=selected.map(item=>{return {id:item.id}});
+        const semesterId=currentSemester.id;
+        const data={teachersId,semesterId};
+        console.log("THIS DATA IS FOR SERVER",data)
+    }
+    const isChosenSelection=()=>{
+       return  selected.length!==0
+    }
     return (
         <>
             <NavigationPage val={navigation.TEACHERS}/>
@@ -144,9 +167,29 @@ const TeacherList = props => {
             />
 
             <aside className="form-with-search-panel">
+
                 <SearchPanel
                     SearchChange={SearchChange}
                     showDisabled={showDisabledHandle}
+                />
+                <Button
+                    className="wish-button"
+                    variant="contained"
+                    color="primary"
+                    onClick={() => {
+                        setOpenSelect(true);
+                        console.log(selected)
+                    }}
+                >
+                    {"send schedule..."}
+                </Button>
+                <MultiSelect open={openSelect}
+                             options={options}
+                             value={selected}
+                             onChange={setSelected}
+                             onCancel={cancelSelection}
+                             onSentTeachers={sendTeachers}
+                             isEnabledSentBtn={isChosenSelection()}
                 />
                 {disabled ? (
                     ''
@@ -248,7 +291,8 @@ const mapStateToProps = state => ({
     teachers: state.teachers.teachers,
     disabledTeachers: state.teachers.disabledTeachers,
     classScheduler: state.classActions.classScheduler,
-    teacherWishes: state.teachersWish.wishes
+    teacherWishes: state.teachersWish.wishes,
+    currentSemester:state.schedule.currentSemester
 });
 
 export default connect(mapStateToProps, {})(TeacherList);
