@@ -6,3 +6,8 @@ export const getTeacherName=({ teacher })=>{
     return `${surname} ${getFirstLetter(name)} ${getFirstLetter(patronymic)}`;
 
 }
+export const getTeacherForSite=({ teacher })=>{
+    const {name,surname,patronymic,position}=teacher;
+    return `${position} ${surname} ${getFirstLetter(name)} ${getFirstLetter(patronymic)}`;
+
+}

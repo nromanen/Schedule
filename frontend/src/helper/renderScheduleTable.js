@@ -15,7 +15,7 @@ import { LinkToMeeting } from '../components/LinkToMeeting/LinkToMeeting';
 import { places } from '../constants/places';
 import i18n from 'i18next';
 import './renderScheduleTable.scss'
-import { getFirstLetter } from './renderTeacher';
+import { getFirstLetter, getTeacherForSite } from './renderTeacher';
 const shortid = require('shortid');
 
 const matchDayNumberSysytemToDayName = () => {
@@ -74,7 +74,7 @@ export const prepareLessonCardCell = card => {
     let inner = '';
     if (card !== undefined && card !== null) {
         const {name,surname,patronymic,position}=card.teacher;
-        const teacherName=`${surname} ${getFirstLetter(name)} ${getFirstLetter(patronymic)}`
+        const teacherName=`KKKK JJJJ ${surname} ${getFirstLetter(name)} ${getFirstLetter(patronymic)}`
         inner = position+'\n'+teacherName + '\n' + card.subjectForSite+'\n';
     }
     return inner;
@@ -110,14 +110,15 @@ export const prepareLessonTemporaryCardCell = (card,place) => {
                 inner +=
                     card.temporary_schedule.date +
                     '\n\r' +
-                    card.temporary_schedule.teacher.name +
-                    ' ' +
-                    getFirstLetter(card.temporary_schedule.teacher.surname) +
-                    ' ' +
-                    getFirstLetter(card.temporary_schedule.teacher.patronymic) +
+                    getTeacherForSite(card.temporary_schedule)+
+                    // card.temporary_schedule.teacher.name +
+                    // ' ' +
+                    // getFirstLetter(card.temporary_schedule.teacher.surname) +
+                    // ' ' +
+                    // getFirstLetter(card.temporary_schedule.teacher.patronymic) +
+                    // '\n' +
+                    // card.temporary_schedule.teacher.position +
                     '\n' +
-                    card.temporary_schedule.teacher.position +
-                    '\n\r' +
                     card.temporary_schedule.subjectForSite;
                 if (card.temporary_schedule.room) {
                     inner += ', ' + card.temporary_schedule.room.name + ' )';
