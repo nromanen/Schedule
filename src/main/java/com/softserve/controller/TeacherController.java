@@ -5,8 +5,11 @@ import com.softserve.dto.TeacherWishDTO;
 import com.softserve.entity.Teacher;
 import com.softserve.entity.User;
 import com.softserve.entity.enums.Role;
-import com.softserve.service.TeacherService;
+import com.softserve.exception.MessageNotSendException;
 import com.softserve.mapper.TeacherMapper;
+import com.softserve.service.MailService;
+import com.softserve.service.ScheduleService;
+import com.softserve.service.TeacherService;
 import com.softserve.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -15,6 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import javax.mail.MessagingException;
 import java.util.List;
 
 
@@ -26,12 +31,14 @@ public class TeacherController {
     private final TeacherService teacherService;
     private final TeacherMapper teacherMapper;
     private final UserService userService;
+    private final ScheduleService scheduleService;
 
     @Autowired
-    public TeacherController(TeacherService teacherService, TeacherMapper teacherMapper, UserService userService) {
+    public TeacherController(TeacherService teacherService, TeacherMapper teacherMapper, UserService userService, MailService mailService, ScheduleService scheduleService) {
         this.teacherService = teacherService;
         this.teacherMapper = teacherMapper;
         this.userService = userService;
+        this.scheduleService = scheduleService;
     }
 
     @GetMapping(path = {"/teachers", "/public/teachers"})
@@ -110,5 +117,18 @@ public class TeacherController {
     public ResponseEntity<List<TeacherDTO>> getAllNotRegisteredTeachers() {
         log.info("Enter into getAllNotRegisteredTeachers method");
         return ResponseEntity.ok(teacherMapper.teachersToTeacherDTOs(teacherService.getAllTeacherWithoutUser()));
+    }
+
+    @GetMapping("/send-pdf-to-email/semester/{id}")
+    @ApiOperation(value = "Send pdf with schedule to teachers emails")
+    public ResponseEntity sendPDFToEmail(@PathVariable("id") Long semesterId, @RequestParam Long[] teachersId) {
+        log.info("Enter into sendPDFToEmail method");
+        try {
+            scheduleService.sendScheduleToTeachers(semesterId, teachersId);
+        } catch (MessagingException e) {
+            log.error("Message was not sent");
+            throw new MessageNotSendException(e.getMessage());
+        }
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 }

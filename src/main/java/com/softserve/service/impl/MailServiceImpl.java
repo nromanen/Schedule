@@ -2,6 +2,7 @@ package com.softserve.service.impl;
 
 import com.softserve.entity.TemporarySchedule;
 import com.softserve.service.MailService;
+//import com.sun.istack.ByteArrayDataSource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,8 +16,17 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 
+import javax.activation.DataHandler;
+import javax.activation.DataSource;
+import javax.mail.Message;
 import javax.mail.MessagingException;
+import javax.mail.Multipart;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
+import javax.mail.util.ByteArrayDataSource;
+import java.io.ByteArrayOutputStream;
 import java.util.Locale;
 
 
@@ -61,6 +71,38 @@ public class MailServiceImpl implements MailService {
         mailMessage.setText(message);
 
         mailSender.send(mailMessage);
+    }
+
+    @Override
+    public void send(String receiver, String subject, String message, ByteArrayOutputStream bos) throws MessagingException {
+        log.info("Enter into send method with emailTo {}, subject {}", receiver, subject);
+        String credentialsUsername = environment.getProperty(username);
+        if (credentialsUsername == null) {
+            credentialsUsername = System.getenv("HEROKU_MAIL_USERNAME");
+        }
+
+        final MimeMessage mimeMessage = this.mailSender.createMimeMessage();
+
+        mimeMessage.setFrom(new InternetAddress(credentialsUsername));
+        mimeMessage.addRecipient(Message.RecipientType.TO, new InternetAddress(receiver));
+
+        mimeMessage.setSubject(subject);
+
+        DataSource fds = new ByteArrayDataSource(bos.toByteArray(), "application/pdf");
+
+        Multipart multipart = new MimeMultipart();
+
+        MimeBodyPart messageBodyPart = new MimeBodyPart();
+        messageBodyPart.setText(message, "utf-8", "html");
+        multipart.addBodyPart(messageBodyPart);
+
+        MimeBodyPart fileBodyPart = new MimeBodyPart();
+        fileBodyPart.setDataHandler(new DataHandler(fds));
+        fileBodyPart.setFileName("schedule.pdf");
+        multipart.addBodyPart(fileBodyPart);
+
+        mimeMessage.setContent(multipart);
+        this.mailSender.send(mimeMessage);
     }
 
     @Async

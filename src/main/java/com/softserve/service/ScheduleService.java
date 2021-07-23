@@ -5,6 +5,7 @@ import com.softserve.entity.*;
 import com.softserve.entity.enums.EvenOdd;
 import com.softserve.entity.enums.LessonType;
 
+import javax.mail.MessagingException;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.List;
@@ -37,5 +38,9 @@ public interface ScheduleService extends BasicService<Schedule, Long> {
     Long countInputLessonsInScheduleByLessonId(Long lessonId);
 
     boolean isLessonInScheduleByLessonIdPeriodIdEvenOddDayOfWeek(Long lessonId, Long periodId, EvenOdd evenOdd, DayOfWeek day);
+
+    void sendScheduleToTeachers(Long semesterId, Long[] teachersId) throws MessagingException;
+
+    void sendScheduleToOneTeacher(Long semesterId, Long teacherId) throws MessagingException;
 }
 
