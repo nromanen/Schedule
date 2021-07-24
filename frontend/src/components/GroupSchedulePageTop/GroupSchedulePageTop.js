@@ -59,7 +59,6 @@ const GroupSchedulePageTop = props => {
     useEffect(() => showAllPublicSemestersService(), []);
 
     const renderSemesterList = () => {
-        console.log("renderSemesterList",semesters)
         if (semesters) {
             if (semesters.length > 1) {
 
@@ -145,7 +144,6 @@ const GroupSchedulePageTop = props => {
     }
 
     useEffect(()=>{
-        console.log("useEffect", props)
 
         props.initialize({
             semester:props.initialValues.semester,

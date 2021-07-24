@@ -47,7 +47,7 @@ import {
     FOR_TEACHER_SCHEDULE_URL,
     CLEAR_SCHEDULE_URL,
     ROOMS_AVAILABILITY,
-    SCHEDULE_ITEM_ROOM_CHANGE
+    SCHEDULE_ITEM_ROOM_CHANGE, TEACHER_URL
 } from '../constants/axios';
 
 import { snackbarTypes } from '../constants/snackbarTypes';
@@ -2146,6 +2146,28 @@ export const submitSearchSchedule = values => {
         getFullSchedule(values.semester);
         return;
     }
+};
+
+export const sendTeachersScheduleService = (data) => {
+    // let data = {
+    //     teachersId: 'id',
+    //     semesterId: ['abc', 123]
+    // }
+    const supQuery=new URLSearchParams(data).toString();
+    console.log("sendTeachersScheduleService",supQuery)
+
+    //axios
+        // .get(`${SCHEDULE_ITEMS_URL}?${supQuery}`)
+        // .then(response => {
+        //     setLoadingService(false);
+            successHandler(
+                i18n.t('serviceMessages:back_end_success_operation', {
+                    cardType: i18n.t('formElements:schedule_label'),
+                    actionType: i18n.t('serviceMessages:sent_label')
+                })
+            );
+        // })
+        // .catch(error => errorHandler(error));
 };
 
 export const setItemGroupIdService = groupId => {

@@ -15,7 +15,7 @@ import { showTeacherWish } from '../../services/teacherWishService';
 import './TeachersList.scss';
 
 import { connect } from 'react-redux';
-
+import {sendTeachersScheduleService} from '../../services/scheduleService';
 import {
     getDisabledTeachersService,
     handleTeacherService,
@@ -132,15 +132,23 @@ const TeacherList = props => {
         return str.charAt(0).toUpperCase() + str.slice(1);
     };
     const cancelSelection=()=>{
-        setSelected([]);
-        setOpenSelect(false);
+        clearSelection();
+        closeSelectionDialog();
     }
     const sendTeachers=()=>{
-        setOpenSelect(false);
-        const teachersId=selected.map(item=>{return {id:item.id}});
+        closeSelectionDialog();
+        const teachersId=selected.map(item=>{return item.id});
         const semesterId=currentSemester.id;
-        const data={teachersId,semesterId};
-        console.log("THIS DATA IS FOR SERVER",data)
+        const data={semesterId,teachersId};
+        console.log("THIS DATA IS FOR SERVER",data);
+        sendTeachersScheduleService(data);
+        clearSelection();
+    }
+    const closeSelectionDialog=()=>{
+        setOpenSelect(false);
+    }
+    const clearSelection=()=>{
+        setSelected([]);
     }
     const isChosenSelection=()=>{
        return  selected.length!==0
@@ -178,7 +186,6 @@ const TeacherList = props => {
                     color="primary"
                     onClick={() => {
                         setOpenSelect(true);
-                        console.log(selected)
                     }}
                 >
                     {t('send_schedule_for_teacher')}

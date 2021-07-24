@@ -1,6 +1,7 @@
 {
     "created_label": "створено",
     "updated_label": "оновлено",
+    "sent_label": "надіслано",
     "deleted_label": "видалено",
     "back_end_success_operation": "{{cardType}} було успішно {{actionType}}",
     "semester_service_is_active": "Цей семестр не може бути видалений, оскільки він є поточним",
