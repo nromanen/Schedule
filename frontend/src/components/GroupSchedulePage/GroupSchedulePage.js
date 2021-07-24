@@ -41,7 +41,7 @@ import { Contactless } from '@material-ui/icons';
 const GroupSchedulePage = props => {
 
     const [place,setPlace]=useState(places.TOGETHER);
-    let {scheduleType, groupSchedule, fullSchedule, teacherSchedule,groupId,teacherId ,semesterId,loading,semesters} = props;
+    let {scheduleType, groupSchedule, fullSchedule, teacherSchedule,groupId,teacherId ,semesterId,loading,defaultSemester,semesters} = props;
     let history = useHistory();
 
     const location = useLocation();
@@ -266,7 +266,9 @@ const GroupSchedulePage = props => {
 
     };
     useEffect(()=>getFullSchedule(),[place])
-     useEffect(()=> {
+
+
+    useEffect(()=> {
          if(scheduleType==="group")
          getGroupSchedule(groupId, semesterId);
      },[groupId])
@@ -274,16 +276,24 @@ const GroupSchedulePage = props => {
          if(scheduleType==="teacher")
          getTeacherSchedule(teacherId, semesterId);
      },[teacherId])
-     useEffect(()=> {
-         console.log("USE",scheduleType,loading)
-         if(scheduleType==="full"&&semesters===undefined) {
-             getFullSchedule();
-         }
-     })
+     // useEffect(()=> {
+     //     console.log("USE",scheduleType,loading, props)
+     //     if((scheduleType==="full"&&semesters===undefined)) {
+     //         console.log("scheduleType,semesters",scheduleType,semesters)
+     //         getFullSchedule();
+     //     }
+     // })
+    useEffect(()=> {
+        if((scheduleType==="full"&&fullSchedule.length===0)) {
+            getFullSchedule();
+        }
+    })
 
    const getSchedule=()=>{
-       if((props.scheduleType==="")&&(props.defaultSemester.semester!==undefined)){
-           const semester=`${props.defaultSemester.semester.id}`;
+        console.log("propS DEF",props)
+       if((props.scheduleType==="")&&(props.defaultSemester.id!==undefined)){
+           console.log("DEFAULT",props.defaultSemester)
+           const semester=`${props.defaultSemester.id}`;
            handleSubmit({ "semester":semester });
 
            return

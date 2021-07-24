@@ -77,7 +77,7 @@ export const getDefaultSemesterService = () => {
 
     const data={
         "semester": {
-            "id": 10,
+            "id": 18,
             "description": "20202-1",
             "year": 2021,
             "startDay": "04/06/2020",
@@ -1965,21 +1965,21 @@ export const getDefaultSemesterService = () => {
             }
         ]
     };
-    store.dispatch(setDefaultSemester(data));
-    // axios
-    //     .get(DEFAULT_SEMESTER_URL)
-    //     .then(response => {
-    //         setSemesterLoadingService(false);
-    //         store.dispatch(setDefaultSemester(response.data));
-    //     })
-    //     .catch(err => {
-    //         handleSnackbarOpenService(
-    //             true,
-    //             snackbarTypes.ERROR,
-    //             i18n.t('common:no_current_semester_error')
-    //         );
-    //         setSemesterLoadingService(false);
-    //     });
+    //store.dispatch(setDefaultSemester(data));
+    axios
+        .get(DEFAULT_SEMESTER_URL)
+        .then(response => {
+            setSemesterLoadingService(false);
+            store.dispatch(setDefaultSemester(response.data));
+        })
+        .catch(err => {
+            handleSnackbarOpenService(
+                true,
+                snackbarTypes.ERROR,
+                i18n.t('common:no_current_semester_error')
+            );
+            setSemesterLoadingService(false);
+        });
 };
 
 export const disableDefaultSemesterService=()=>{
@@ -2164,7 +2164,7 @@ export const setScheduleTypeService = item => {
 export const getFullSchedule = semesterId => {
     const data={
         "semester": {
-            "id": 10,
+            "id": 18,
             "description": "20202-1",
             "year": 2021,
             "startDay": "04/06/2020",
