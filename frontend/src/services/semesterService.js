@@ -140,7 +140,6 @@ export const showAllSemestersService = () => {
     axios
         .get(SEMESTERS_URL)
         .then(response => {
-            console.log("showAllSemestersService",response.data)
             store.dispatch(
                 showAllSemesters(
                     response.data
@@ -273,7 +272,6 @@ const checkSemesterYears = (endDay, startDay, year) => {
     return conf;
 };
 export const setDefaultSemesterById = dataId => {
-    console.log("setDefaultSemesterById",dataId)
      axios
     .put(`${DEFAULT_SEMESTER_URL}?semesterId=${dataId}`)
         .then(response => {

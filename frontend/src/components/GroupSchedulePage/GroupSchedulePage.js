@@ -134,7 +134,6 @@ const GroupSchedulePage = props => {
     };
 
     const renderSchedule = () => {
-        console.log("renderSchedule",props)
         switch (props.scheduleType) {
             case 'group':
                 if (
@@ -290,9 +289,7 @@ const GroupSchedulePage = props => {
     })
 
    const getSchedule=()=>{
-        console.log("propS DEF",props)
        if((props.scheduleType==="")&&(props.defaultSemester.id!==undefined)){
-           console.log("DEFAULT",props.defaultSemester)
            const semester=`${props.defaultSemester.id}`;
            handleSubmit({ "semester":semester });
 
