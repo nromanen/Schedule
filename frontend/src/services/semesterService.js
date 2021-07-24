@@ -7,7 +7,7 @@ import {
     SEMESTER_COPY_URL,
     LESSONS_FROM_SEMESTER_COPY_URL,
     CREATE_ARCHIVE_SEMESTER,
-    ARCHIVED_SEMESTERS_URL
+    ARCHIVED_SEMESTERS_URL, DEFAULT_SEMESTER_URL
 } from '../constants/axios';
 import { setDisabledSemesters, setError } from '../redux/actions/semesters';
 import { SEMESTER_FORM } from '../constants/reduxForms';
@@ -130,26 +130,26 @@ export const showAllSemestersService = () => {
             ]
         }
     ];
-    store.dispatch(
-                showAllSemesters(
-                   semesters
-                        .sort((a, b) => (a.year > b.year ? 1 : -1))
-                        .reverse()
-                )
-            );
-    // axios
-    //     .get(SEMESTERS_URL)
-    //     .then(response => {
-    //         console.log("showAllSemestersService",response.data)
-    //         store.dispatch(
+    // store.dispatch(
     //             showAllSemesters(
-    //                 response.data
+    //                semesters
     //                     .sort((a, b) => (a.year > b.year ? 1 : -1))
     //                     .reverse()
     //             )
     //         );
-    //     })
-    //     .catch(error => errorHandler(error));
+    axios
+        .get(SEMESTERS_URL)
+        .then(response => {
+            console.log("showAllSemestersService",response.data)
+            store.dispatch(
+                showAllSemesters(
+                    response.data
+                        .sort((a, b) => (a.year > b.year ? 1 : -1))
+                        .reverse()
+                )
+            );
+        })
+        .catch(error => errorHandler(error));
 
 };
 
@@ -273,27 +273,11 @@ const checkSemesterYears = (endDay, startDay, year) => {
     return conf;
 };
 export const setDefaultSemesterById = dataId => {
-    //  axios
-    // .put(SEMESTERS_URL, dataId)
-    //     .then(response => {
-    //        store.dispatch(updateSemester(response.data));
-    //         selectSemesterService(null);
-    //          getDisabledSemestersService();
-    //         getArchivedSemestersService();
-    //          showAllSemestersService();
-    //          resetFormHandler(SEMESTER_FORM);
-    //          successHandler(
-    //              i18n.t('serviceMessages:back_end_success_operation', {
-    //                  cardType: i18n.t('formElements:semester_label'),
-    //                  actionType: i18n.t('serviceMessages:updated_label')
-    //              })
-    //          );
-    //      })
-    //     .catch(error => errorHandler(error));
-}
-
-const putSemester = data => {
-    store.dispatch(updateSemester(data));
+    console.log("setDefaultSemesterById",dataId)
+     axios
+    .put(`${DEFAULT_SEMESTER_URL}?semesterId=${dataId}`)
+        .then(response => {
+           store.dispatch(updateSemester(response.data));
             selectSemesterService(null);
              getDisabledSemestersService();
             getArchivedSemestersService();
@@ -305,25 +289,28 @@ const putSemester = data => {
                      actionType: i18n.t('serviceMessages:updated_label')
                  })
              );
+         })
+        .catch(error => errorHandler(error));
+}
 
-
-    //  axios
-    // .put(SEMESTERS_URL, data)
-    //     .then(response => {
-    //        store.dispatch(updateSemester(response.data));
-    //         selectSemesterService(null);
-    //          getDisabledSemestersService();
-    //         getArchivedSemestersService();
-    //          showAllSemestersService();
-    //          resetFormHandler(SEMESTER_FORM);
-    //          successHandler(
-    //              i18n.t('serviceMessages:back_end_success_operation', {
-    //                  cardType: i18n.t('formElements:semester_label'),
-    //                  actionType: i18n.t('serviceMessages:updated_label')
-    //              })
-    //          );
-    //      })
-    //     .catch(error => errorHandler(error));
+const putSemester = data => {
+     axios
+    .put(SEMESTERS_URL, data)
+        .then(response => {
+           store.dispatch(updateSemester(response.data));
+            selectSemesterService(null);
+             getDisabledSemestersService();
+            getArchivedSemestersService();
+             showAllSemestersService();
+             resetFormHandler(SEMESTER_FORM);
+             successHandler(
+                 i18n.t('serviceMessages:back_end_success_operation', {
+                     cardType: i18n.t('formElements:semester_label'),
+                     actionType: i18n.t('serviceMessages:updated_label')
+                 })
+             );
+         })
+        .catch(error => errorHandler(error));
 };
 const postSemester = data => {
     axios

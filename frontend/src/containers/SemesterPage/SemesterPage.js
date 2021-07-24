@@ -155,6 +155,11 @@ const SemesterPage = props => {
     const handleSemesterArchivedPreview = semesterId => {
         viewArchivedSemester(+semesterId);
     };
+    const setClassNameForDefaultSemester=semester=>{
+        const defaultSemesterName="default";
+        const className="svg-btn edit-btn";
+        return semester.defaultSemester===true?`${className} ${defaultSemesterName}`:className;
+    }
 
     return (
         <>
@@ -298,13 +303,16 @@ const SemesterPage = props => {
                                             handleClickOpen(semester.id)
                                         }
                                     />
-                                    <MdDonutSmall
-                                         className="svg-btn edit-btn"
-                                        title={t('set_default_title')}
-                                        onClick={() =>
-                                            handleClickOpenDefault(semester.id)
-                                        }
-                                    />
+
+                                        <MdDonutSmall
+                                            className={setClassNameForDefaultSemester(semester)}
+                                            title={t('set_default_title')}
+                                            onClick={() =>
+                                                handleClickOpenDefault(semester.id)
+                                            }
+                                        />
+
+
                                 </div>
 
                                 <p className="semester-card__description">
