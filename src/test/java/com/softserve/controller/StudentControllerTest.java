@@ -48,7 +48,7 @@ public class StudentControllerTest {
 
     @Test
     public void getAllStudents() throws Exception {
-        String email = "mazim.zh2001@gmail.com";
+        String email = "aware.123db@gmail.com";
 
         mockMvc.perform(get("/students")
                 .accept(MediaType.APPLICATION_JSON))
@@ -60,7 +60,7 @@ public class StudentControllerTest {
 
     @Test
     public void getStudentById() throws Exception {
-        String email = "mazim.zh2001@gmail.com";
+        String email = "aware.123db@gmail.com";
 
         mockMvc.perform(get("/students/{id}", 2L)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -80,7 +80,7 @@ public class StudentControllerTest {
         studentDTO.setSurname("Surname");
         studentDTO.setPatronymic("Patronymic");
         studentDTO.setEmail("12313asdasd@gmail.com");
-        studentDTO.setUser_id(1L);
+        studentDTO.setUserId(1L);
         studentDTO.setGroup(groupDTO);
 
         mockMvc.perform(post("/students")
@@ -100,7 +100,7 @@ public class StudentControllerTest {
         studentDTO.setSurname("Changed Surname");
         studentDTO.setPatronymic("Changed Patronymic");
         studentDTO.setEmail("changedTempStudent@gmail.com");
-        studentDTO.setUser_id(1L);
+        studentDTO.setUserId(1L);
         studentDTO.setGroup(groupDTO);
 
         mockMvc.perform(put("/students")

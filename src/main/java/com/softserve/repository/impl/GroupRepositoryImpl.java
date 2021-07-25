@@ -13,6 +13,16 @@ import java.util.List;
 @Slf4j
 public class GroupRepositoryImpl extends BasicRepositoryImpl<Group, Long> implements GroupRepository {
 
+    private static final String GET_ALL_QUERY = "SELECT DISTINCT g FROM Group g LEFT JOIN FETCH g.students ORDER BY g.title ASC";
+    private static final String GET_BY_ID_QUERY = "SELECT g FROM Group g LEFT JOIN FETCH g.students WHERE g.id = :id";
+    private static final String GET_DISABLED_QUERY = "SELECT DISTINCT g FROM Group g LEFT JOIN FETCH g.students WHERE g.disable = true ORDER BY g.title ASC";
+    private static final String COUNT_GROUPS_WITH_TITLE_QUERY = "SELECT COUNT (*) FROM Group g WHERE g.title = :title";
+    private static final String COUNT_GROUPS_WITH_TITLE_AND_IGNORE_WITH_ID_QUERY =
+            "SELECT COUNT (*) FROM Group g WHERE g.title = :title AND g.id!=:id";
+    private static final String COUNT_BY_GROUP_ID_QUERY = "SELECT COUNT (*) FROM Group g WHERE g.id = :id";
+    private static final String CHECK_REFERENCE_QUERY = "SELECT COUNT (l.id) " +
+            "FROM Lesson l WHERE l.group.id = :groupId";
+
     private Session getSession(){
         Session session = sessionFactory.getCurrentSession();
         Filter filter = session.enableFilter("groupDisableFilter");
@@ -28,9 +38,30 @@ public class GroupRepositoryImpl extends BasicRepositoryImpl<Group, Long> implem
     @Override
     public List<Group> getAll() {
         log.info("In getAll()");
-        Session session = getSession();
-        return session.createQuery("from Group ORDER BY title ASC")
-                .getResultList();
+        return getSession().createQuery(GET_ALL_QUERY).getResultList();
+    }
+
+    /**
+     * Overrided method that returns entity with JOIN FETCH (students)
+     *
+     * @param id Long id of entity
+     * @return found entity
+     */
+    @Override
+    public Group getById(Long id) {
+        log.info("In getById(id = [{}])", id);
+        return (Group) getSession().createQuery(GET_BY_ID_QUERY).setParameter("id", id).uniqueResult();
+    }
+
+    /**
+     * Method gets information about groups that have property "disabled" = true
+     *
+     * @return List of groups with ASCII sorting by title
+     */
+    @Override
+    public List<Group> getDisabled() {
+        log.info("In getDisabled()");
+        return sessionFactory.getCurrentSession().createQuery(GET_DISABLED_QUERY).getResultList();
     }
 
     /**
@@ -43,14 +74,14 @@ public class GroupRepositoryImpl extends BasicRepositoryImpl<Group, Long> implem
     public Long countGroupsWithTitle(String title) {
         log.info("In countGroupsWithTitle(title = [{}])", title);
         return (Long) sessionFactory.getCurrentSession().createQuery
-                ("SELECT count (*) FROM Group g WHERE g.title = :title")
+                (COUNT_GROUPS_WITH_TITLE_QUERY)
                 .setParameter("title", title).getSingleResult();
     }
 
     /**
      * The method used for getting number of groups with title from database
      *
-     * @param id Long id
+     * @param id Long id of the Group
      * @param title String title used to find Group
      * @return Long number of records with title
      */
@@ -58,31 +89,35 @@ public class GroupRepositoryImpl extends BasicRepositoryImpl<Group, Long> implem
     public Long countGroupsWithTitleAndIgnoreWithId(Long id, String title) {
         log.info("In countGroupsWithTitleAndIgnoreWithId(id = [{}], title = [{}])", id, title);
         return (Long) sessionFactory.getCurrentSession().createQuery
-                ("SELECT count (*) FROM Group g WHERE g.title = :title and g.id!=:id")
+                (COUNT_GROUPS_WITH_TITLE_AND_IGNORE_WITH_ID_QUERY)
                 .setParameter("title", title).setParameter("id", id).getSingleResult();
     }
 
     /**
      * Method used to verify if group with such id exists
      *
-     * @param id of the Group
+     * @param id long id of the Group
      * @return 0 if there is no group with such id, 1 if record with id exists
      */
     @Override
     public Long countByGroupId(Long id) {
         log.info("In countByGroupId(id = [{}])", id);
         return (Long) sessionFactory.getCurrentSession().createQuery
-                ("SELECT count (*) FROM Group g WHERE g.id = :id")
+                (COUNT_BY_GROUP_ID_QUERY)
                 .setParameter("id", id).getSingleResult();
     }
 
-    // Checking if group is used in Lesson table
+    /**
+     * The method used for checking if group is used in Lesson table
+     *
+     * @param group Group entity is going to be checked
+     * @return true if exists lesson related with this group
+     */
     @Override
     protected boolean checkReference(Group group) {
         log.info("In checkReference(group = [{}])", group);
         long count = (long) sessionFactory.getCurrentSession().createQuery
-                ("select count (l.id) " +
-                        "from Lesson l where l.group.id = :groupId")
+                (CHECK_REFERENCE_QUERY)
                 .setParameter("groupId", group.getId())
                 .getSingleResult();
         return count != 0;

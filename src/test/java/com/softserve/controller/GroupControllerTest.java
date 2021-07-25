@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.softserve.config.*;
 import com.softserve.dto.GroupDTO;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -51,6 +52,7 @@ public class GroupControllerTest {
                 .andExpect(content().contentType("application/json"));
     }
 
+    @Ignore
     @Test
     public void getAllPublicGroups() throws Exception {
         mockMvc.perform(get("/public/groups").accept(MediaType.APPLICATION_JSON))

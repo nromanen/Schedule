@@ -2,8 +2,6 @@ package com.softserve.controller;
 
 import com.softserve.dto.StudentDTO;
 import com.softserve.entity.Student;
-import com.softserve.exception.DeleteDisabledException;
-import com.softserve.exception.EntityNotFoundException;
 import com.softserve.mapper.StudentMapper;
 import com.softserve.service.StudentService;
 import io.swagger.annotations.Api;
@@ -69,11 +67,7 @@ public class StudentController {
     @ApiOperation(value = "Delete student by id")
     public ResponseEntity<Void> delete(@PathVariable("id") long id){
         log.info("Enter into delete of StudentController with id {} ", id);
-        try {
-            studentService.delete(studentService.getById(id));
-        } catch (EntityNotFoundException e) {
-            log.error("Exception occured in delete method : ", e);
-        }
+        studentService.delete(studentService.getById(id));
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

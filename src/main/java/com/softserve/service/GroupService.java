@@ -8,5 +8,4 @@ public interface GroupService extends BasicService<Group, Long> {
     boolean isGroupExistsWithTitle(String title);
     boolean isExistsWithId(Long id);
     List<Group> getDisabled();
-
 }
