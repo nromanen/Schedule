@@ -11,7 +11,7 @@ import {
     clearDepartmentForm,
     deleteDepartment,
     getAllDepartments, getDepartItemById,
-    getDisabledDepartments, setDisabledDepartment, updateDepart
+    getDisabledDepartments, setDisabledDepartment, setEnabledDepartment, updateDepart
 } from '../redux/actions/departments';
 
 export const createDepartmentService = data => {
@@ -51,6 +51,15 @@ export const setDisabledDepartmentService = (data) => {
         .put(`${DEPARTMENT_URL}`,data)
         .then(response => {
             store.dispatch(setDisabledDepartment(response.data));
+        })
+        .catch(error => errorHandler(error));
+};
+export const setEnabledDepartmentService = (data) => {
+    console.log(data);
+    axios
+        .put(`${DEPARTMENT_URL}`,data)
+        .then(response => {
+            store.dispatch(setEnabledDepartment(response.data));
         })
         .catch(error => errorHandler(error));
 };

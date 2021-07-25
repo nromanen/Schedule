@@ -24,6 +24,12 @@ export const setDisabledDepartment=res=>{
         result:res
     }
 }
+export const setEnabledDepartment=res=>{
+    return{
+        type:actionTypes.SET_ENABLED_DEPARTMENT,
+        result:res
+    }
+}
 export const clearDepartmentForm=()=>{
     return{
         type:actionTypes.CLEAR_DEPARTMENT_FORM

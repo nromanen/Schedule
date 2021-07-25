@@ -86,6 +86,7 @@
     "class_element": "class",
     "room_element": "class",
     "subject_element": "subject",
+    "department_element": "department",
     "semester_element": "semester",
     "reference_element": "reference",
     "semester_free_rooms": "Choose the semester",

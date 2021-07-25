@@ -7,7 +7,7 @@ import {
     getAllDepartmentsService,
     getDepartmentByIdService,
     getDisabledDepartmentsService,
-    setDisabledDepartmentService,
+    setDisabledDepartmentService, setEnabledDepartmentService,
     updateDepartmentService
 } from '../../services/departmentService';
 import { connect } from 'react-redux';
@@ -16,16 +16,22 @@ import { GiSightDisabled, IoMdEye } from 'react-icons/all';
 import { FaEdit } from 'react-icons/fa';
 import { MdDelete } from 'react-icons/md';
 import { useTranslation } from 'react-i18next';
-import { setDisabledDepartment } from '../../redux/actions/departments';
+import { setDisabledDepartment, setEnabledDepartment } from '../../redux/actions/departments';
 import SearchPanel from '../../share/SearchPanel/SearchPanel';
 import Button from '@material-ui/core/Button';
 import { search } from '../../helper/search';
 import NotFound from '../../share/NotFound/NotFound';
+import ConfirmDialog from '../../share/modals/dialog';
+import { disabledCard } from '../../constants/disabledCard';
 function DepartmentPage(props) {
     const { t } = useTranslation('formElements');
     const { departments,disabledDepartments } = props;
     const [isDisabled,setIsDisabled]=useState(false);
     const [term, setTerm] = useState('');
+    const [deleteDialog,setDeleteDialog]=useState(false);
+    const [departmentId,setDepartmentId]=useState("");
+    const [hideDialog, setHideDialog] = useState(null);
+    const [department,setDepartment]=useState({});
     const visibleDepartments = isDisabled
         ? search(disabledDepartments, term, ['name'])
         : search(departments, term, ['name']);
@@ -43,8 +49,8 @@ function DepartmentPage(props) {
         clearDepartment();
     }
     const deleteDepartment=(id)=>{
-        console.log("delete",id);
-        deleteDepartmentsService(id);
+        setDepartmentId(id);
+        setDeleteDialog(true);
     }
     const setDisabled=(department)=>{
 
@@ -52,21 +58,82 @@ function DepartmentPage(props) {
         console.log("setDisabledDepartment()",department,disabledDepartment)
         setDisabledDepartmentService(disabledDepartment);
     }
+    const setEnabled=(department)=>{
+        setDepartmentId(department.id);
+        setDeleteDialog(true);
+        const enabledDepartment={...department,disabled:false};
+        console.log("setDisabledDepartment()",department,enabledDepartment)
+        setEnabledDepartment(enabledDepartment);
+    }
     const setDepartmentIntoForm=(id)=>{
         getDepartmentByIdService(id)
+
+
     }
-    useEffect(() => getAllDepartmentsService(), [])
-    useEffect(()=>getDisabledDepartmentsService(),[])
-    const outputData=isDisabled?disabledDepartments:departments;
+    const handleClose=(id)=>{
+         console.log(id,hideDialog,department)
+        if(id!=='') {
+            if(department.id!==undefined) {
+                if (hideDialog === disabledCard.SHOW) {
+                    const { id, name } = department;
+                    const enabledDepartment = { id, name, disable: false };
+                    console.log('setDisabledDepartment()', department, enabledDepartment);
+                    setEnabledDepartmentService(enabledDepartment);
+                } else if (hideDialog === disabledCard.HIDE) {
+
+                    const { id, name } = department;
+                    const enabledDepartment = { id, name, disable: true };
+                    console.log('ENAMLED', enabledDepartment);
+                    setDisabledDepartmentService(enabledDepartment);
+                }
+
+            }
+            else {
+                deleteDepartmentsService(departmentId);
+            }
+        }
+
+
+
+
+        // else if (id!==""){
+        //     deleteDepartmentsService(departmentId);
+        // }
+         setDeleteDialog(false);
+        //console.log(hideDialog);
+
+    }
+    useEffect(() => getAllDepartmentsService(), [isDisabled])
+    useEffect(()=>getDisabledDepartmentsService(),[isDisabled])
+
     return (
         <>
+            <ConfirmDialog
+                isHide={hideDialog}
+                cardId={departmentId}
+                whatDelete={'department'}
+                open={deleteDialog}
+                onClose={handleClose}
+            />
+            <div className="cards-container">
             <aside>
-                <AddDepartment onSubmit={submit} clear={clearDepartmentForm} />
-                <SearchPanel
-                     SearchChange={SearchChange}
-                    showDisabled={changeDisable}
-                />
+                {
+                    isDisabled?'':
+                    <AddDepartment
+                    onSubmit={submit} clear={clearDepartmentForm}
+                    />
+                }
+
+                    <SearchPanel
+                        SearchChange={SearchChange}
+                        showDisabled={changeDisable}
+                    />
+
+
             </aside>
+
+
+
 
             <section className="container-flex-wrap wrapper">
                 {visibleDepartments.length === 0 && (
@@ -78,42 +145,53 @@ function DepartmentPage(props) {
                             {department.name}
                         </h2>
                         <div className="cards-btns">
-                            {/*{disabled ? (*/}
-                            {/*    <IoMdEye*/}
-                            {/*        className="svg-btn copy-btn"*/}
-                            {/*        title={t('common:set_enabled')}*/}
-                            {/*        onClick={() => {*/}
-                            {/*            setHideDialog(disabledCard.SHOW);*/}
-                            {/*            handleClickOpen(subject.id);*/}
-                            {/*        }}*/}
-                            {/*    />*/}
-                            {/*) : (*/}
-                            <>
-                                <GiSightDisabled
+                            {isDisabled?
+                                <IoMdEye
                                     className="svg-btn copy-btn"
-                                    title={t('common:set_disabled')}
+                                    title={t('common:set_enabled')}
                                     onClick={() => {
-                                        setDisabled(department)
-                                        // setHideDialog(
-                                        //     disabledCard.HIDE
-                                        // );
-                                        // handleClickOpen(subject.id);
+                                        setHideDialog(disabledCard.SHOW);
+                                        deleteDepartment(department.id);
+                                        setDepartment(department);
                                     }}
-                                />
-                                <FaEdit
-                                    className="svg-btn edit-btn"
-                                    title={t('edit_title')}
-                                    onClick={() =>
-                                        setDepartmentIntoForm(department.id)
-                                    }
-                                />
-                            </>
+                                />:
+
+                                (
+                                    <>
+                                        <GiSightDisabled
+                                            className="svg-btn copy-btn"
+                                            title={t('common:set_disabled')}
+                                            onClick={() => {
+                                                //setDisabled(department)
+                                                setHideDialog(
+                                                    disabledCard.HIDE
+                                                );
+                                                deleteDepartment(department.id);
+                                                setDepartment(department);
+                                            }}
+                                        />
+
+                                        <FaEdit
+                                            className="svg-btn edit-btn"
+                                            title={t('edit_title')}
+                                            onClick={() =>
+                                                setDepartmentIntoForm(department.id)
+                                            }
+                                        />
+                                    </>
+
+                                )
+                            }
+
 
 
                             <MdDelete
                                 className="svg-btn delete-btn"
                                 title={t('delete_title')}
-                                onClick={() => deleteDepartment(department.id)}
+                                onClick={() => {
+                                    setDepartment({});
+                                    deleteDepartment(department.id);
+                                }}
                             />
                         </div>
                         {/* <p className="subject-card__description">
@@ -124,6 +202,7 @@ function DepartmentPage(props) {
 
 
             </section>
+            </div>
         </>
     )
 }
