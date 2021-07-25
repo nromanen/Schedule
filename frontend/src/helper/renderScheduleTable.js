@@ -109,13 +109,6 @@ export const prepareLessonTemporaryCardCell = (card,place) => {
                     card.temporary_schedule.date +
                     '\n\r' +
                     getTeacherForSite(card.temporary_schedule)+
-                    // card.temporary_schedule.teacher.name +
-                    // ' ' +
-                    // getFirstLetter(card.temporary_schedule.teacher.surname) +
-                    // ' ' +
-                    // getFirstLetter(card.temporary_schedule.teacher.patronymic) +
-                    // '\n' +
-                    // card.temporary_schedule.teacher.position +
                     '\n' +
                     card.temporary_schedule.subjectForSite;
                 if (card.temporary_schedule.room) {

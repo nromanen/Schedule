@@ -42,6 +42,10 @@ export const updateSubject = res => {
     };
 };
 
-export const clearSubject = () => ({
-    type: actionTypes.CLEAR_SUBJECT
-});
+export const clearSubject = () => {
+    return{
+        type: actionTypes.CLEAR_SUBJECT
+    }
+
+};
+
