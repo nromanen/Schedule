@@ -15,7 +15,7 @@ import { LinkToMeeting } from '../components/LinkToMeeting/LinkToMeeting';
 import { places } from '../constants/places';
 import i18n from 'i18next';
 import './renderScheduleTable.scss'
-import { getFirstLetter, getTeacherForSite } from './renderTeacher';
+import { getFirstLetter, getTeacherForSite, getTeacherFullName } from './renderTeacher';
 const shortid = require('shortid');
 
 const matchDayNumberSysytemToDayName = () => {
@@ -73,9 +73,7 @@ const renderClassCell = classItem => {
 export const prepareLessonCardCell = card => {
     let inner = '';
     if (card !== undefined && card !== null) {
-        const {name,surname,patronymic,position}=card.teacher;
-        const teacherName=`KKKK JJJJ ${surname} ${getFirstLetter(name)} ${getFirstLetter(patronymic)}`
-        inner = position+'\n'+teacherName + '\n' + card.subjectForSite+'\n';
+        inner = getTeacherForSite(card.teacher) + '\n' + card.subjectForSite+'\n';
     }
     return inner;
 };
@@ -270,7 +268,7 @@ export const prepareTeacherTemporaryCardCell = (cards,place) => {
             inner +=
                 card.temporary_schedule.date +
                 '\n' +
-                card.temporary_schedule.teacher.surname +" "+card.temporary_schedule.teacher.name +
+                getTeacherFullName(card.temporary_schedule.teacher)+
                 '\n';
             if (card.temporary_schedule.room) {
                 inner +=`${card.temporary_schedule.subjectForSite}, ${card.temporary_schedule.room.name}\n`;

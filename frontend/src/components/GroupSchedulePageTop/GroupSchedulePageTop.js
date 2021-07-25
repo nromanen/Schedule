@@ -24,6 +24,7 @@ import { SCHEDULE_SEARCH_FORM } from '../../constants/reduxForms';
 import { required } from '../../validation/validateFields';
 import { MenuItem, Select } from '@material-ui/core';
 import { places } from '../../constants/places';
+import { getTeacherFullName } from '../../helper/renderTeacher';
 const shortid = require('shortid');
 
 const useStyles = makeStyles(theme => ({
@@ -111,11 +112,7 @@ const GroupSchedulePageTop = props => {
                     key={shortid.generate()}
                     value={teacher.id}
                 >
-                    {teacher.surname +
-                    ' ' +
-                    teacher.name +
-                    ' ' +
-                    teacher.patronymic}
+                    {getTeacherFullName(teacher)}
                 </option>
             ))}
         </Field>)

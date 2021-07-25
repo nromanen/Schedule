@@ -38,6 +38,7 @@ import Radio from '@material-ui/core/Radio';
 import { places } from '../../constants/places';
 import i18n from 'i18next';
 import { Contactless } from '@material-ui/icons';
+import { getTeacherWithPosition } from '../../helper/renderTeacher';
 const GroupSchedulePage = props => {
 
     const [place,setPlace]=useState(places.TOGETHER);
@@ -122,13 +123,7 @@ const GroupSchedulePage = props => {
         }
         if (teacher) {
             title +=
-                teacher.position +
-                ' ' +
-                teacher.surname +
-                ' ' +
-                teacher.name +
-                ' ' +
-                teacher.patronymic;
+                getTeacherWithPosition(teacher);
         }
         return title;
     };

@@ -23,9 +23,7 @@ import {
 } from '../../validation/validateFields';
 import { useTranslation } from 'react-i18next';
 import { setUniqueErrorService } from '../../services/lessonService';
-import {
-    handleTeacherInfo
-} from '../../helper/handleTeacherInfo';
+import {handleTeacherInfo } from '../../helper/renderTeacher';
 import {
     setValueToSubjectForSiteHandler
 } from '../../helper/reduxFormHelper';
