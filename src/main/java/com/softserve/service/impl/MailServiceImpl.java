@@ -2,7 +2,6 @@ package com.softserve.service.impl;
 
 import com.softserve.entity.TemporarySchedule;
 import com.softserve.service.MailService;
-//import com.sun.istack.ByteArrayDataSource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
