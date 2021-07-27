@@ -102,23 +102,27 @@ public class TeacherTableBuilder {
         HashSet<String> subjectNames = new HashSet<>();
         HashSet<String> lessonTypes = new HashSet<>();
         HashSet<String> rooms = new HashSet<>();
+        HashSet<String> links = new HashSet<>();
 
         for (LessonForTeacherScheduleDTO lesson : lessons) {
             groups.add(lesson.getGroup().getTitle());
             subjectNames.add(lesson.getSubjectForSite());
             lessonTypes.add(lesson.getLessonType().toString().toLowerCase());
             rooms.add(lesson.getRoom());
+            links.add(lesson.getLinkToMeeting());
         }
 
         String group = String.join(", ", groups);
         String subjectName = String.join(", ", subjectNames);
         String lessonType = String.join(", ", lessonTypes);
         String room = String.join(", ", rooms);
+        String link = String.join(", ", links);
 
         baseText.append(group).append(",\n")
                 .append(subjectName).append(",\n")
                 .append(lessonType).append(",\n")
-                .append(room);
+                .append(room).append(",\n")
+                .append(link);
     }
 
     // getting ClassForTeacherScheduleDTO by period
@@ -208,4 +212,7 @@ public class TeacherTableBuilder {
         style.valueCellStyle(cell);
         return cell;
     }
+
+
+
 }
