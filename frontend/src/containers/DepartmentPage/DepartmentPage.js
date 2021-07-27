@@ -42,7 +42,6 @@ function DepartmentPage(props) {
         : search(departments, term, ['name']);
     const SearchChange = setTerm;
     const changeDisable=()=>{
-        console.log("changeDisable")
         setIsDisabled(prev=>!prev);
     }
     const submit = (data) => {
@@ -98,14 +97,17 @@ function DepartmentPage(props) {
          setDeleteDialog(false);
     }
     useEffect(() => getAllDepartmentsService(), [isDisabled])
-    useEffect(()=>getDisabledDepartmentsService(),[isDisabled])
+    useEffect(()=> {
+        if (isDisabled)
+            getDisabledDepartmentsService();
+    },[])
     const handleSnackbarClose = (event, reason) => {
         if (reason === 'clickaway') return;
         handleSnackbarCloseService();
     };
     return (
         <>
-            <NavigationPage val={navigation.DEPARTMENTS}/>
+            <NavigationPage name={"Departments"} val={navigation.DEPARTMENTS}/>
             <ConfirmDialog
                 isHide={hideDialog}
                 cardId={departmentId}

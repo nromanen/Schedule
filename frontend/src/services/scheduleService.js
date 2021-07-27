@@ -2148,7 +2148,9 @@ export const submitSearchSchedule = values => {
     }
 };
 
+
 export const sendTeachersScheduleService = (data) => {
+    //TODO remove hardcode data
     // let data = {
     //     teachersId: 'id',
     //     semesterId: ['abc', 123]

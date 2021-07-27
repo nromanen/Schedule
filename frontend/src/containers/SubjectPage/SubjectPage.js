@@ -87,7 +87,7 @@ const SubjectPage = props => {
 
     return (
         <>
-            <NavigationPage val={navigation.SUBJECTS}/>
+            <NavigationPage name={"SubjectPage"} val={navigation.SUBJECTS}/>
             <ConfirmDialog
                 isHide={hideDialog}
                 cardId={subjectId}
