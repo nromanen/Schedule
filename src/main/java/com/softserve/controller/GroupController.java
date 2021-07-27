@@ -86,7 +86,7 @@ public class GroupController {
     @GetMapping("/groups/semester/{semesterId}")
     @ApiOperation(value = "Get the list of all groups for semester by id")
     public ResponseEntity<List<GroupDTO>> getGroupsBySemesterId(@PathVariable Long semesterId){
-        log.info("In getGroupsBySemesterId");
+        log.info("In getGroupsBySemesterId (semesterId =[{}]", semesterId);
         List<Group> groups = groupService.getGroupsBySemesterId(semesterId);
         return ResponseEntity.status(HttpStatus.OK).body(groupMapper.groupsToGroupDTOs(groups));
     }
