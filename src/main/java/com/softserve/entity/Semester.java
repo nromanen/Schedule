@@ -17,6 +17,7 @@ import java.io.Serializable;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.Set;
+import java.util.List;
 
 @NamedQuery(
         name = "findCurrentSemester",
@@ -87,7 +88,7 @@ public class Semester implements Serializable {
     @JoinTable(name = "semester_group",
             joinColumns = { @JoinColumn(name = "semester_id")},
             inverseJoinColumns = {@JoinColumn(name = "group_id")})
-    private Set<Group> groups;
+    private List<Group> groups;
 
     @Column(name = "disable",  columnDefinition = "boolean default 'false'")
     private boolean disable = false;
