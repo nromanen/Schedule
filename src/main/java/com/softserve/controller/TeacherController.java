@@ -34,7 +34,7 @@ public class TeacherController {
     private final ScheduleService scheduleService;
 
     @Autowired
-    public TeacherController(TeacherService teacherService, TeacherMapper teacherMapper, UserService userService, MailService mailService, ScheduleService scheduleService) {
+    public TeacherController(TeacherService teacherService, TeacherMapper teacherMapper, UserService userService, ScheduleService scheduleService) {
         this.teacherService = teacherService;
         this.teacherMapper = teacherMapper;
         this.userService = userService;
@@ -121,8 +121,8 @@ public class TeacherController {
 
     @GetMapping("/send-pdf-to-email/semester/{id}")
     @ApiOperation(value = "Send pdf with schedule to teachers emails")
-    public ResponseEntity sendPDFToEmail(@PathVariable("id") Long semesterId, @RequestParam Long[] teachersId) {
-        log.info("Enter into sendPDFToEmail method");
+    public ResponseEntity sendSchedulesToEmail(@PathVariable("id") Long semesterId, @RequestParam Long[] teachersId) {
+        log.info("Enter into sendPDFToEmail method with teachers id: {} and semester id: {}", teachersId, semesterId);
         try {
             scheduleService.sendScheduleToTeachers(semesterId, teachersId);
         } catch (MessagingException e) {
