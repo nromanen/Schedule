@@ -1,14 +1,11 @@
 package com.softserve.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.core.env.Environment;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
-
 import java.util.Properties;
 
 @Configuration
@@ -39,16 +36,12 @@ public class MailConfig {
     @Value("${spring.mail.properties.mail.smtp.starttls.enable}")
     private String enable;
 
-
-    @Autowired
-    private Environment environment;
-
     @Bean
     public JavaMailSender javaMailSender() {
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
 
-        String credentialsUsername = environment.getProperty(username);
-        String credentialsPassword = environment.getProperty(password);
+        String credentialsUsername = username;
+        String credentialsPassword = password;
 
         if (credentialsUsername == null && credentialsPassword == null) {
             credentialsUsername = System.getenv("HEROKU_MAIL_USERNAME");
@@ -69,4 +62,5 @@ public class MailConfig {
 
         return mailSender;
     }
+
 }

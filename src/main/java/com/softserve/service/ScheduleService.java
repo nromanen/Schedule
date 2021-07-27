@@ -7,7 +7,6 @@ import com.softserve.entity.enums.LessonType;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -36,5 +35,7 @@ public interface ScheduleService extends BasicService<Schedule, Long> {
     Schedule updateWithoutChecks(Schedule schedule);
 
     Long countInputLessonsInScheduleByLessonId(Long lessonId);
+
+    boolean isLessonInScheduleByLessonIdPeriodIdEvenOddDayOfWeek(Long lessonId, Long periodId, EvenOdd evenOdd, DayOfWeek day);
 }
 

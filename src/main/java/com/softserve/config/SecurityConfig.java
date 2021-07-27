@@ -65,6 +65,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private static final String AUTH_ENDPOINT = "/auth/**";
     private static final String SEMESTERS_ENDPOINT = "/semesters/**";
     private static final String ROOM_TYPES_ENDPOINT = "/room-types/**";
+    private static final String DEPARTMENTS_ENDPOINT = "/departments/**";
     //PUBLIC
     private static final String SCHEDULE_FOR_USERS_ENDPOINT = "/schedules/full/*";
     private static final String ALL_GROUPS_PUBLIC_ENDPOINT = "/public/groups";
@@ -106,7 +107,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(FRONTEND_ACTIVATION_PAGE_ENDPOINT, DOWNLOAD_SCHEDULE_ENDPOINT, AUTH_ENDPOINT, SCHEDULE_FOR_USERS_ENDPOINT, ALL_GROUPS_PUBLIC_ENDPOINT, ALL_TEACHERS_PUBLIC_ENDPOINT,HOME_ENDPOINT,LOGIN_ENDPOINT,ADMIN_ENDPOINT,FRONTEND_SCHEDULE_ENDPOINT,
                          ALL_CLASSES_PUBLIC_ENDPOINT, ALL_SEMESTERS_PUBLIC_ENDPOINT, "/1").permitAll()
                 .antMatchers(MANAGER_ENDPOINT, CLASSES_ENDPOINT, GROUPS_ENDPOINT, LESSONS_ENDPOINT,
-                        ROOMS_ENDPOINT, SUBJECTS_ENDPOINT, TEACHERS_ENDPOINT, SEMESTERS_ENDPOINT, ROOM_TYPES_ENDPOINT).hasRole("MANAGER")
+                        ROOMS_ENDPOINT, SUBJECTS_ENDPOINT, TEACHERS_ENDPOINT, SEMESTERS_ENDPOINT, ROOM_TYPES_ENDPOINT, DEPARTMENTS_ENDPOINT).hasRole("MANAGER")
                 .anyRequest().authenticated()
                 .and()
                 .oauth2Login()
@@ -135,7 +136,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Override
-    public void configure(WebSecurity web) throws Exception {
+    public void configure(WebSecurity web) {
         web.ignoring().antMatchers("/v2/api-docs",
                 "/configuration/ui",
                 "/swagger-resources/**",

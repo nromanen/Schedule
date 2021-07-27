@@ -2,8 +2,12 @@ package com.softserve.service.impl;
 
 import com.softserve.entity.Period;
 import com.softserve.entity.Semester;
-import com.softserve.exception.*;
+import com.softserve.exception.EntityAlreadyExistsException;
+import com.softserve.exception.EntityNotFoundException;
+import com.softserve.exception.IncorrectTimeException;
+import com.softserve.exception.ScheduleConflictException;
 import com.softserve.repository.SemesterRepository;
+import com.softserve.service.GroupService;
 import com.softserve.service.PeriodService;
 import com.softserve.service.SemesterService;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +31,7 @@ public class SemesterServiceImpl implements SemesterService {
     private final PeriodService periodService;
 
     @Autowired
-    public SemesterServiceImpl(SemesterRepository semesterRepository, PeriodService periodService) {
+    public SemesterServiceImpl(SemesterRepository semesterRepository, PeriodService periodService, GroupService groupService) {
         this.semesterRepository = semesterRepository;
         this.periodService = periodService;
     }
@@ -45,6 +49,7 @@ public class SemesterServiceImpl implements SemesterService {
                 () -> new EntityNotFoundException(Semester.class, "id", id.toString()));
         Hibernate.initialize(semester.getDaysOfWeek());
         Hibernate.initialize(semester.getPeriods());
+        Hibernate.initialize(semester.getGroups());
         return semester;
     }
 
@@ -60,6 +65,7 @@ public class SemesterServiceImpl implements SemesterService {
         for (Semester semester:semesters) {
             Hibernate.initialize(semester.getDaysOfWeek());
             Hibernate.initialize(semester.getPeriods());
+            Hibernate.initialize(semester.getGroups());
         }
         return  semesters;
     }
@@ -79,6 +85,11 @@ public class SemesterServiceImpl implements SemesterService {
         if (isSemesterExistsByDescriptionAndYear(object.getDescription(), object.getYear())) {
             throw new EntityAlreadyExistsException("Semester already exists with current description and year.");
         }
+        checkIsEmpty(object);
+        return semesterRepository.save(object);
+    }
+
+    private void checkIsEmpty(Semester object) {
         if (object.getDaysOfWeek().isEmpty()){
             List<DayOfWeek> dayOfWeekList = Arrays.asList(DayOfWeek.MONDAY, DayOfWeek.TUESDAY, DayOfWeek.WEDNESDAY, DayOfWeek.THURSDAY, DayOfWeek.FRIDAY);
             Set<DayOfWeek> dayOfWeekSet = new HashSet<>(dayOfWeekList);
@@ -91,7 +102,6 @@ public class SemesterServiceImpl implements SemesterService {
         if (object.isCurrentSemester()) {
             semesterRepository.setCurrentSemesterToFalse();
         }
-        return semesterRepository.save(object);
     }
 
     /**
@@ -109,18 +119,7 @@ public class SemesterServiceImpl implements SemesterService {
         if (isSemesterExistsByDescriptionAndYearForUpdate(object.getId(), object.getDescription(), object.getYear())) {
             throw new EntityAlreadyExistsException("Semester already exists with current description and year.");
         }
-        if (object.getDaysOfWeek().isEmpty()){
-            List<DayOfWeek> dayOfWeekList = Arrays.asList(DayOfWeek.MONDAY, DayOfWeek.TUESDAY, DayOfWeek.WEDNESDAY, DayOfWeek.THURSDAY, DayOfWeek.FRIDAY);
-            Set<DayOfWeek> dayOfWeekSet = new HashSet<>(dayOfWeekList);
-            object.setDaysOfWeek(dayOfWeekSet);
-        }
-        if (object.getPeriods().isEmpty()){
-            Set<Period> periodSet = new HashSet<>(periodService.getFirstFourPeriods());
-            object.setPeriods(periodSet);
-        }
-        if (object.isCurrentSemester()) {
-            semesterRepository.setCurrentSemesterToFalse();
-        }
+        checkIsEmpty(object);
         return semesterRepository.update(object);
     }
 
@@ -149,6 +148,23 @@ public class SemesterServiceImpl implements SemesterService {
                 () -> new ScheduleConflictException("Current semester for managers work isn't specified"));
         Hibernate.initialize(semester.getDaysOfWeek());
         Hibernate.initialize(semester.getPeriods());
+        Hibernate.initialize(semester.getGroups());
+        return semester;
+    }
+
+    /**
+     * Method searches get of semester with defaultSemester = true in the DB
+     *
+     * @return entity Semester if such exist, else return null
+     */
+    @Override
+    public Semester getDefaultSemester() {
+        log.info("In getDefaultSemester");
+        Semester semester = semesterRepository.getDefaultSemester().orElseThrow(
+                () -> new ScheduleConflictException("Default semester isn't specified"));
+        Hibernate.initialize(semester.getDaysOfWeek());
+        Hibernate.initialize(semester.getPeriods());
+        Hibernate.initialize(semester.getGroups());
         return semester;
     }
 
@@ -171,10 +187,7 @@ public class SemesterServiceImpl implements SemesterService {
         if (semesterByDescriptionAndYear == null){
             return false;
         }
-        if (semesterByDescriptionAndYear.getId() != semesterId) {
-            return true;
-        }
-        else return false;
+        return semesterByDescriptionAndYear.getId() != semesterId;
     }
     /**
      * The method used for getting all disabled semesters
@@ -188,12 +201,13 @@ public class SemesterServiceImpl implements SemesterService {
         for (Semester semester:semesters) {
             Hibernate.initialize(semester.getDaysOfWeek());
             Hibernate.initialize(semester.getPeriods());
+            Hibernate.initialize(semester.getGroups());
         }
         return  semesters;
     }
 
     /**
-     * The method used to change the default semester that the Manager is working on
+     * The method used to change the current semester that the Manager is working on
      * @param semesterId id of the semester that needs to be current
      * @return changed Semester
      */
@@ -205,4 +219,16 @@ public class SemesterServiceImpl implements SemesterService {
         return getById(semesterId);
     }
 
+    /**
+     * The method used to change the default semester that the Manager is working on
+     * @param semesterId id of the semester that needs to be current
+     * @return changed Semester
+     */
+    @Override
+    public Semester changeDefaultSemester(Long semesterId) {
+        log.info("In changeDefaultSemester(Long semesterId = [{}])", semesterId);
+        semesterRepository.setDefaultSemesterToFalse();
+        semesterRepository.setDefaultSemester(semesterId);
+        return getById(semesterId);
+    }
 }

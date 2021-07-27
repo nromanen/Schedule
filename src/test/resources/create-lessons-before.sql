@@ -19,7 +19,7 @@ insert into de3rldngv565ak."public".groups(id, title) values
 (5,'222'),
 (6,'333');
 
-insert into de3rldngv565ak."public".lessons(id, hours, lessontype, subject_for_site, teacher_for_site, group_id, subject_id, teacher_id) VALUES
+insert into de3rldngv565ak."public".lessons(id, hours, lessontype, subject_for_site, link_to_meeting, group_id, subject_id, teacher_id) VALUES
 (4, 1, 'LECTURE', '', '', 4, 4, 4),
 (5, 1, 'LABORATORY', '', '', 5, 5, 5),
 (6, 2, 'LABORATORY', '', '', 4, 5, 6),

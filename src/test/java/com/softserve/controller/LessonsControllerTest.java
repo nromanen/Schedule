@@ -9,7 +9,6 @@ import com.softserve.dto.LessonInfoDTO;
 import com.softserve.dto.SubjectDTO;
 import com.softserve.dto.TeacherNameDTO;
 import com.softserve.entity.Lesson;
-import com.softserve.entity.enums.LessonType;
 import com.softserve.mapper.GroupMapperImpl;
 import com.softserve.mapper.LessonInfoMapperImpl;
 import com.softserve.mapper.SubjectMapperImpl;
@@ -110,7 +109,7 @@ public class LessonsControllerTest {
         LessonInfoDTO lessonDtoForSave = new LessonInfoDTO();
         lessonDtoForSave.setHours(1);
         lessonDtoForSave.setSubjectForSite("");
-        lessonDtoForSave.setTeacherForSite("");
+        lessonDtoForSave.setLinkToMeeting("");
         lessonDtoForSave.setLessonType(LABORATORY);
         lessonDtoForSave.setTeacher(teacherDTO);
         lessonDtoForSave.setSubject(subjectDTO);
@@ -126,7 +125,7 @@ public class LessonsControllerTest {
         LessonInfoDTO lessonDtoForUpdate = new LessonInfoDTO();
         lessonDtoForUpdate.setId(5L);
         lessonDtoForUpdate.setHours(2);
-        lessonDtoForUpdate.setTeacherForSite("Ivanov I.I. updated");
+        lessonDtoForUpdate.setLinkToMeeting("https://softserveinc.zoom.us/j/93198369163?pwd=Rk1GU281cDFtK1FCK3pJWXphRkJrQT09");
         lessonDtoForUpdate.setSubjectForSite("History updated");
         lessonDtoForUpdate.setLessonType(LECTURE);
         lessonDtoForUpdate.setTeacher(new TeacherNameMapperImpl().teacherNameToTeacherDTO(teacherService.getById(6L)));
@@ -140,7 +139,7 @@ public class LessonsControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(lessonForCompare.getId()))
                 .andExpect(jsonPath("$.hours").value(lessonForCompare.getHours()))
-                .andExpect(jsonPath("$.teacherForSite").value(lessonForCompare.getTeacherForSite()))
+                .andExpect(jsonPath("$.linkToMeeting").value(lessonForCompare.getLinkToMeeting()))
                 .andExpect(jsonPath("$.subjectForSite").value(lessonForCompare.getSubjectForSite()))
                 .andExpect(jsonPath("$.lessonType").value(lessonForCompare.getLessonType().toString()))
                 .andExpect(jsonPath("$.subject").value(lessonForCompare.getSubject()))
@@ -177,7 +176,7 @@ public class LessonsControllerTest {
         LessonInfoDTO lessonDtoForSave = new LessonInfoDTO();
         lessonDtoForSave.setHours(2);
         lessonDtoForSave.setSubjectForSite("");
-        lessonDtoForSave.setTeacherForSite("");
+        lessonDtoForSave.setLinkToMeeting("");
         lessonDtoForSave.setLessonType(LABORATORY);
         lessonDtoForSave.setTeacher(null);
         lessonDtoForSave.setSubject(subjectDTO);
@@ -194,7 +193,7 @@ public class LessonsControllerTest {
         LessonInfoDTO lessonDtoForUpdate = new LessonInfoDTO();
         lessonDtoForUpdate.setId(4L);
         lessonDtoForUpdate.setHours(1);
-        lessonDtoForUpdate.setTeacherForSite("Ivanov I.I. update");
+        lessonDtoForUpdate.setLinkToMeeting("https://softserveinc.zoom.us/j/93198369163?pwd=Rk1GU281cDFtK1FCK3pJWXphRkJrQT09");
         lessonDtoForUpdate.setSubjectForSite("History of USA");
         lessonDtoForUpdate.setLessonType(LABORATORY);
         lessonDtoForUpdate.setTeacher(new TeacherNameMapperImpl().teacherNameToTeacherDTO(teacherService.getById(5L)));
@@ -212,7 +211,7 @@ public class LessonsControllerTest {
         LessonInfoDTO lessonDtoForUpdate = new LessonInfoDTO();
         lessonDtoForUpdate.setId(4L);
         lessonDtoForUpdate.setHours(1);
-        lessonDtoForUpdate.setTeacherForSite("Ivanov I.I. update");
+        lessonDtoForUpdate.setLinkToMeeting("https://softserveinc.zoom.us/j/93198369163?pwd=Rk1GU281cDFtK1FCK3pJWXphRkJrQT09");
         lessonDtoForUpdate.setSubjectForSite("History of World");
         lessonDtoForUpdate.setLessonType(LECTURE);
         lessonDtoForUpdate.setTeacher(null);

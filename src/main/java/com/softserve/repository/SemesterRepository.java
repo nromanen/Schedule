@@ -12,4 +12,7 @@ public interface SemesterRepository extends BasicRepository<Semester, Long> {
     List<Semester> getDisabled();
     int setCurrentSemesterToFalse();
     int setCurrentSemester(Long semesterId);
+    Optional<Semester> getDefaultSemester();
+    int setDefaultSemesterToFalse();
+    int setDefaultSemester(Long semesterId);
 }
