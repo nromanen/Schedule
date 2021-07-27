@@ -39,11 +39,82 @@ public class GroupServiceTest {
         group.setTitle("some group");
         group.setId(1L);
 
+        Student student = new Student();
+        student.setId(1L);
+        student.setGroup(group);
+
+        group.getStudents().add(student);
+
         when(groupRepository.getAll()).thenReturn(Arrays.asList(group));
         List<Group> actualList = groupService.getAll();
 
         assertEquals(1, actualList.size());
         assertSame(actualList.get(0), group);
+        assertEquals(1, actualList.get(0).getStudents().size());
+        assertSame(actualList.get(0).getStudents().get(0), student);
+    }
+
+    @Test
+    public void getAllWithoutStudents() {
+        Group group = new Group();
+        group.setTitle("some group");
+        group.setId(1L);
+
+        Student student = new Student();
+        student.setId(1L);
+        student.setGroup(group);
+
+        group.getStudents().add(student);
+
+        when(groupRepository.getAll()).thenReturn(Arrays.asList(group));
+        List<Group> actualList = groupService.getAllWithoutStudents();
+
+        assertEquals(1, actualList.size());
+        assertSame(actualList.get(0), group);
+        assertEquals(0, actualList.get(0).getStudents().size());
+    }
+
+    @Test
+    public void getDisabled() {
+        Group group = new Group();
+        group.setId(1L);
+        group.setTitle("some group");
+        group.setDisable(true);
+
+        Student student = new Student();
+        student.setId(1L);
+        student.setGroup(group);
+
+        group.getStudents().add(student);
+
+        when(groupRepository.getDisabled()).thenReturn(Arrays.asList(group));
+        List<Group> disabledActual = groupService.getDisabled();
+
+        assertEquals(1, disabledActual.size());
+        assertSame(disabledActual.get(0), group);
+        assertEquals(1, disabledActual.get(0).getStudents().size());
+        assertSame(disabledActual.get(0).getStudents().get(0), student);
+    }
+
+    @Test
+    public void getDisabledWithoutStudents() {
+        Group group = new Group();
+        group.setId(1L);
+        group.setTitle("some group");
+        group.setDisable(true);
+
+        Student student = new Student();
+        student.setId(1L);
+        student.setGroup(group);
+
+        group.getStudents().add(student);
+
+        when(groupRepository.getDisabled()).thenReturn(Arrays.asList(group));
+        List<Group> disabledActual = groupService.getDisabledWithoutStudents();
+
+        assertEquals(1, disabledActual.size());
+        assertSame(disabledActual.get(0), group);
+        assertEquals(0, disabledActual.get(0).getStudents().size());
     }
 
     @Test
@@ -130,20 +201,6 @@ public class GroupServiceTest {
         assertNotNull(deletedGroup);
         assertEquals(expectedGroup, deletedGroup);
         verify(groupRepository).delete(any());
-    }
-
-    @Test
-    public void getDisabled() {
-        Group expectedGroup = new Group();
-        expectedGroup.setId(1L);
-        expectedGroup.setTitle("some group");
-        expectedGroup.setDisable(true);
-
-        when(groupRepository.getDisabled()).thenReturn(Arrays.asList(expectedGroup));
-        List<Group> disabledActual = groupService.getDisabled();
-
-        assertEquals(1, disabledActual.size());
-        assertSame(disabledActual.get(0), expectedGroup);
     }
 
     @Ignore

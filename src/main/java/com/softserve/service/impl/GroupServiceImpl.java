@@ -56,6 +56,45 @@ public class GroupServiceImpl  implements GroupService {
     }
 
     /**
+     * Method gets information about all groups, but sets student list to empty
+     * @return List of all groups
+     */
+    @Transactional(readOnly = true)
+    @Override
+    public List<Group> getAllWithoutStudents() {
+        log.info("In getAll()");
+        List<Group> groups = getAll();
+        groups.forEach(group -> group.setStudents(List.of()));
+        return groups;
+    }
+
+    /**
+     * The method used for getting all disabled groups
+     *
+     * @return list of disabled groups
+     */
+    @Transactional(readOnly = true)
+    @Override
+    public List<Group> getDisabled() {
+        log.info("Enter into getAll of getDisabled");
+        return groupRepository.getDisabled();
+    }
+
+    /**
+     * The method used for getting all disabled groups, but sets student list to empty
+     *
+     * @return list of disabled groups
+     */
+    @Transactional(readOnly = true)
+    @Override
+    public List<Group> getDisabledWithoutStudents() {
+        log.info("Enter into getAll of getDisabled");
+        List<Group> groups = getDisabled();
+        groups.forEach(group -> group.setStudents(List.of()));
+        return groups;
+    }
+
+    /**
      * Method saves new group to Repository
      *
      * @param object Group entity with info to be saved
@@ -136,16 +175,5 @@ public class GroupServiceImpl  implements GroupService {
     public boolean isExistsWithId(Long id) {
         log.info("In isExistsWithId(id = [{}])",  id);
         return groupRepository.countByGroupId(id)!=0;
-    }
-    /**
-     * The method used for getting all disabled groups
-     *
-     * @return list of disabled groups
-     */
-    @Transactional(readOnly = true)
-    @Override
-    public List<Group> getDisabled() {
-        log.info("Enter into getAll of getDisabled");
-        return groupRepository.getDisabled();
     }
 }

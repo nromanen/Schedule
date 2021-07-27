@@ -30,9 +30,16 @@ public class GroupController {
 
     @GetMapping
     @ApiOperation(value = "Get the list of all groups")
-    public ResponseEntity<List<GroupDTO>> list() {
-        log.info("In list ()");
+    public ResponseEntity<List<GroupDTO>> getAll() {
+        log.info("In getAll ()");
         return ResponseEntity.status(HttpStatus.OK).body(groupMapper.convertListToDtoList(groupService.getAll()));
+    }
+
+    @GetMapping("/no-students")
+    @ApiOperation(value = "Get the list of all groups, but sets student list to empty")
+    public ResponseEntity<List<GroupDTO>> getAllWithoutStudents() {
+        log.info("In getAll ()");
+        return ResponseEntity.status(HttpStatus.OK).body(groupMapper.convertListToDtoList(groupService.getAllWithoutStudents()));
     }
 
     @GetMapping("/{id}")
@@ -71,5 +78,12 @@ public class GroupController {
     public ResponseEntity<List<GroupDTO>> getDisabled() {
         log.info("Enter into getDisabled");
         return ResponseEntity.status(HttpStatus.OK).body(groupMapper.convertListToDtoList(groupService.getDisabled()));
+    }
+
+    @GetMapping("/disabled/no-students")
+    @ApiOperation(value = "Get the list of disabled groups, but sets student list to empty")
+    public ResponseEntity<List<GroupDTO>> getDisabledWithoutStudents() {
+        log.info("Enter into getDisabled");
+        return ResponseEntity.status(HttpStatus.OK).body(groupMapper.convertListToDtoList(groupService.getDisabledWithoutStudents()));
     }
 }
