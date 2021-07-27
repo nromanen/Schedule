@@ -1,11 +1,11 @@
 package com.softserve.service.impl;
 
 import com.softserve.entity.Group;
-import com.softserve.entity.Semester;
 import com.softserve.exception.EntityNotFoundException;
 import com.softserve.exception.FieldAlreadyExistsException;
 import com.softserve.repository.GroupRepository;
 import com.softserve.service.GroupService;
+import com.softserve.service.SemesterService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,10 +19,13 @@ import java.util.List;
 public class GroupServiceImpl  implements GroupService {
 
     private final GroupRepository groupRepository;
+    private final SemesterService semesterService;
+
 
     @Autowired
-    public GroupServiceImpl(GroupRepository groupRepository) {
+    public GroupServiceImpl(GroupRepository groupRepository, SemesterService semesterService) {
         this.groupRepository = groupRepository;
+        this.semesterService = semesterService;
     }
 
     /**
@@ -135,5 +138,27 @@ public class GroupServiceImpl  implements GroupService {
     public List<Group> getDisabled() {
         log.info("Enter into getAll of getDisabled");
         return groupRepository.getDisabled();
+    }
+
+    /**
+     * The method used for getting all groups for semester
+     *
+     * @return list of groups for semester
+     */
+    @Override
+    public List<Group> getGroupsBySemesterId(Long semesterId){
+        log.info("Enter into getGroupsBySemesterId");
+        return semesterService.getById(semesterId).getGroups();
+    }
+
+    /**
+     * The method used for getting all groups for current semester
+     *
+     * @return list of groups for current semester
+     */
+    @Override
+    public List<Group> getGroupsByCurrentSemester(){
+        log.info("Enter into getGroupsByCurrentSemester");
+        return semesterService.getCurrentSemester().getGroups();
     }
 }
