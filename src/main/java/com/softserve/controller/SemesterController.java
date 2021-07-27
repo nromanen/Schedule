@@ -3,6 +3,7 @@ package com.softserve.controller;
 import com.softserve.dto.SemesterDTO;
 import com.softserve.entity.Semester;
 import com.softserve.mapper.SemesterMapper;
+import com.softserve.service.GroupService;
 import com.softserve.service.SemesterService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -21,11 +22,13 @@ public class SemesterController {
 
     private final SemesterService semesterService;
     private final SemesterMapper semesterMapper;
+    private final GroupService groupService;
 
     @Autowired
-    public SemesterController(SemesterService semesterService, SemesterMapper semesterMapper) {
+    public SemesterController(SemesterService semesterService, SemesterMapper semesterMapper, GroupService groupService) {
         this.semesterService = semesterService;
         this.semesterMapper = semesterMapper;
+        this.groupService = groupService;
     }
 
     @GetMapping(path = {"/semesters", "/public/semesters"})
@@ -110,4 +113,11 @@ public class SemesterController {
         return ResponseEntity.ok().body(semesterMapper.semestersToSemesterDTOs(semesterService.getDisabled()));
     }
 
+    @PutMapping("/semesters/add-group")
+    @ApiOperation(value = "Add group to semester by id")
+    public ResponseEntity<SemesterDTO> addGroup(@RequestParam Long semesterId,@RequestParam Long groupId) {
+        log.info("In addGroup (semesterId = [{}], groupId = [{}])", semesterId, groupId);
+        Semester semester = semesterService.addGroup(semesterId, groupService.getById(groupId));
+        return ResponseEntity.status(HttpStatus.OK).body(semesterMapper.semesterToSemesterDTO(semester));
+    }
 }
