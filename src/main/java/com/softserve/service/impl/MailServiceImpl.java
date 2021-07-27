@@ -35,17 +35,21 @@ import java.util.Locale;
 public class MailServiceImpl implements MailService {
 
     private final JavaMailSender mailSender;
-    private final Environment environment;
     private final SpringTemplateEngine springTemplateEngine;
     @Value("${spring.mail.username}")
     private String username;
+    private String credentialsUsername;
 
 
     @Autowired
     public MailServiceImpl(JavaMailSender mailSender, Environment environment, SpringTemplateEngine springTemplateEngine) {
         this.mailSender = mailSender;
-        this.environment = environment;
         this.springTemplateEngine = springTemplateEngine;
+        credentialsUsername = environment.getProperty(username);
+        if (credentialsUsername == null) {
+            credentialsUsername = System.getenv("HEROKU_MAIL_USERNAME");
+        }
+
     }
 
     /**
@@ -57,11 +61,6 @@ public class MailServiceImpl implements MailService {
     @Async
     public void send(String emailTo, String subject, String message) {
         log.info("Enter into send method with emailTo {}, subject {}", emailTo, subject);
-        String credentialsUsername = environment.getProperty(username);
-        if (credentialsUsername == null) {
-            credentialsUsername = System.getenv("HEROKU_MAIL_USERNAME");
-        }
-
         SimpleMailMessage mailMessage = new SimpleMailMessage();
 
         mailMessage.setFrom(credentialsUsername);
@@ -75,10 +74,6 @@ public class MailServiceImpl implements MailService {
     @Override
     public void send(String receiver, String subject, String message, ByteArrayOutputStream bos) throws MessagingException {
         log.info("Enter into send method with emailTo {}, subject {}", receiver, subject);
-        String credentialsUsername = environment.getProperty(username);
-        if (credentialsUsername == null) {
-            credentialsUsername = System.getenv("HEROKU_MAIL_USERNAME");
-        }
 
         final MimeMessage mimeMessage = this.mailSender.createMimeMessage();
 
@@ -105,13 +100,8 @@ public class MailServiceImpl implements MailService {
     }
 
     @Async
-    public void send(final String emailTo, final String subject, TemporarySchedule temporarySchedule, final String emailTemplate) throws MessagingException
-    {
+    public void send(final String emailTo, final String subject, TemporarySchedule temporarySchedule, final String emailTemplate) throws MessagingException {
 
-        String credentialsUsername =  username;
-        if (credentialsUsername == null) {
-            credentialsUsername = System.getenv("HEROKU_MAIL_USERNAME");
-        }
         // Prepare the evaluation context
         final Context ctx = new Context(Locale.UK);
         ctx.setVariable("temporarySchedule", temporarySchedule);
