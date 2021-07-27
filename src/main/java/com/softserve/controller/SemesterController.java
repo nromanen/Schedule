@@ -113,9 +113,9 @@ public class SemesterController {
         return ResponseEntity.ok().body(semesterMapper.semestersToSemesterDTOs(semesterService.getDisabled()));
     }
 
-    @PutMapping("/semesters/add-group")
+    @PutMapping("/semesters/{semesterId}/group")
     @ApiOperation(value = "Add group to semester by id")
-    public ResponseEntity<SemesterDTO> addGroup(@RequestParam Long semesterId,@RequestParam Long groupId) {
+    public ResponseEntity<SemesterDTO> addGroup(@PathVariable Long semesterId,@RequestParam Long groupId) {
         log.info("In addGroup (semesterId = [{}], groupId = [{}])", semesterId, groupId);
         Semester semester = semesterService.addGroup(semesterId, groupService.getById(groupId));
         return ResponseEntity.status(HttpStatus.OK).body(semesterMapper.semesterToSemesterDTO(semester));
