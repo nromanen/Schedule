@@ -24,7 +24,6 @@ import static org.mockito.Mockito.*;
 @Category(UnitTestCategory.class)
 @RunWith(MockitoJUnitRunner.class)
 public class DepartmentServiceTest {
-
     @Mock
     private DepartmentRepository repository;
 
@@ -76,29 +75,29 @@ public class DepartmentServiceTest {
 
     @Test
     public void saveIfNameIsUnique() {
-        when(repository.doesNameExist(anyString())).thenReturn(false);
+        when(repository.isNameExists(anyString())).thenReturn(false);
         when(repository.save(department)).thenReturn(department);
 
         Department result = service.save(department);
         assertNotNull(result);
         assertEquals(department.getName(), result.getName());
         verify(repository, times(1)).save(department);
-        verify(repository, times(1)).doesNameExist(anyString());
+        verify(repository, times(1)).isNameExists(anyString());
     }
 
     @Test(expected = FieldAlreadyExistsException.class)
     public void throwFieldAlreadyExistsExceptionIfNameAlreadyExists() {
-        when(repository.doesNameExist(anyString())).thenReturn(true);
+        when(repository.isNameExists(anyString())).thenReturn(true);
 
         service.save(department);
         verify(repository, times(1)).save(department);
-        verify(repository, times(1)).doesNameExist(anyString());
+        verify(repository, times(1)).isNameExists(anyString());
     }
 
     @Test
     public void updateIfNameDoesNotExists() {
         when(repository.findById(anyLong())).thenReturn(Optional.of(department));
-        when(repository.doesNameExistIgnoringId(anyString(), anyLong()))
+        when(repository.isNameExistsIgnoringId(anyString(), anyLong()))
                 .thenReturn(false);
         when(repository.update(department)).thenReturn(department);
 
@@ -107,18 +106,18 @@ public class DepartmentServiceTest {
         assertEquals(department, actualDepartment);
         verify(repository, times(1)).update(actualDepartment);
         verify(repository, times(1))
-                .doesNameExistIgnoringId(anyString(), anyLong());
+                .isNameExistsIgnoringId(anyString(), anyLong());
     }
 
     @Test(expected = FieldAlreadyExistsException.class)
     public void throwFieldAlreadyExistsExceptionIfUpdatedNameAlreadyExists() {
         when(repository.findById(anyLong())).thenReturn(Optional.of(department));
-        when(repository.doesNameExistIgnoringId(anyString(), anyLong()))
+        when(repository.isNameExistsIgnoringId(anyString(), anyLong()))
                 .thenReturn(true);
 
         service.update(department);
         verify(repository, times(1))
-                .doesNameExistIgnoringId(anyString(), anyLong());
+                .isNameExistsIgnoringId(anyString(), anyLong());
     }
 
     @Test(expected = EntityNotFoundException.class)

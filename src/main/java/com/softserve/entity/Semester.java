@@ -1,13 +1,15 @@
 package com.softserve.entity;
 
-import lombok.*;
-import org.hibernate.annotations.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.NamedQuery;
+import org.hibernate.annotations.*;
 
-import javax.persistence.*;
 import javax.persistence.Entity;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -80,6 +82,12 @@ public class Semester implements Serializable {
             inverseJoinColumns = {@JoinColumn(name = "period_id")})
     @OrderBy("startTime")
     private Set<Period> periods;
+
+    @ManyToMany
+    @JoinTable(name = "semester_group",
+            joinColumns = { @JoinColumn(name = "semester_id")},
+            inverseJoinColumns = {@JoinColumn(name = "group_id")})
+    private Set<Group> groups;
 
     @Column(name = "disable",  columnDefinition = "boolean default 'false'")
     private boolean disable = false;

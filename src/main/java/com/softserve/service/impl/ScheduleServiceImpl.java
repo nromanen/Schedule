@@ -83,6 +83,7 @@ public class ScheduleServiceImpl implements ScheduleService {
                 () -> new EntityNotFoundException(Schedule.class, "id", id.toString()));
         Hibernate.initialize(schedule.getLesson().getSemester().getDaysOfWeek());
         Hibernate.initialize(schedule.getLesson().getSemester().getPeriods());
+        Hibernate.initialize(schedule.getLesson().getSemester().getGroups());
         return schedule;
     }
 
@@ -98,6 +99,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         for (Schedule schedule : schedules) {
             Hibernate.initialize(schedule.getLesson().getSemester().getDaysOfWeek());
             Hibernate.initialize(schedule.getLesson().getSemester().getPeriods());
+            Hibernate.initialize(schedule.getLesson().getSemester().getGroups());
         }
         return schedules;
     }
@@ -552,17 +554,18 @@ public class ScheduleServiceImpl implements ScheduleService {
                 for (Map.Entry<Period, List<Schedule>> periodListEntry : uniquePeriodMap.entrySet()) {
                     for (Schedule schedule:periodListEntry.getValue()) {
                         Hibernate.initialize(schedule.getLesson().getSemester().getPeriods());
+                        Hibernate.initialize(schedule.getLesson().getSemester().getGroups());
                     }
                     Map<String, Map<String, Map<LessonType,  List<Lesson>>>> resultEven = periodListEntry.getValue().stream().filter(schedule ->
                             schedule.getDayOfWeek().equals(day) && (schedule.getEvenOdd().equals(EvenOdd.EVEN) || schedule.getEvenOdd().equals(EvenOdd.WEEKLY)))
                             .map(Schedule::getLesson).collect(Collectors.groupingBy(Lesson::getSubjectForSite,
-                                    Collectors.groupingBy(Lesson::getLinkToMeeting,
+                                    Collectors.groupingBy(lesson -> lesson.getTeacher().getSurname(),
                                     Collectors.groupingBy(Lesson::getLessonType))));
 
                     Map<String, Map<String, Map<LessonType,  List<Lesson>>>> resultOdd = periodListEntry.getValue().stream().filter(schedule ->
                             schedule.getDayOfWeek().equals(day) && (schedule.getEvenOdd().equals(EvenOdd.ODD) || schedule.getEvenOdd().equals(EvenOdd.WEEKLY)))
                             .map(Schedule::getLesson).collect(Collectors.groupingBy(Lesson::getSubjectForSite,
-                                    Collectors.groupingBy(Lesson::getLinkToMeeting,
+                                    Collectors.groupingBy(lesson -> lesson.getTeacher().getSurname(),
                                     Collectors.groupingBy(Lesson::getLessonType))));
                     evenPeriodListMap.put(periodListEntry.getKey(), resultEven);
                     evenMap.put(EvenOdd.EVEN, evenPeriodListMap);
@@ -599,6 +602,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         for (Schedule schedule : schedules) {
             Hibernate.initialize(schedule.getLesson().getSemester().getDaysOfWeek());
             Hibernate.initialize(schedule.getLesson().getSemester().getPeriods());
+            Hibernate.initialize(schedule.getLesson().getSemester().getGroups());
         }
         return schedules;
     }
@@ -645,6 +649,7 @@ return fullScheduleForTeacherByDateRange(dateRangeSchedule,  fromDate, toDate);
         List<Schedule> dateRangeSchedule = new ArrayList<>();
         for (Schedule schedule : schedules) {
             Hibernate.initialize(schedule.getLesson().getSemester().getPeriods());
+            Hibernate.initialize(schedule.getLesson().getSemester().getGroups());
             if (isDateInSemesterDateRange(schedule, toDate)) {
                 dateRangeSchedule.add(schedule);
             }
