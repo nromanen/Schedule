@@ -9,11 +9,10 @@ import Card from '../../share/Card/Card'
 import { DEPARTMENT_FORM} from '../../constants/reduxForms';
 import renderTextField from '../../share/renderedFields/input'
 import { required, uniqueSubject, maxLengthValue} from '../../validation/validateFields'
-import { store } from '../../index';
 
 const AddDepartment = props => {
     const { t } = useTranslation('formElements');
-    const {handleSubmit,clear,department}=props;
+    const {handleSubmit,clear,department,pristine,submitting}=props;
     useEffect(() => {
         if (department) {
             if (department.id) {
@@ -29,9 +28,7 @@ const AddDepartment = props => {
 
     return (
         <Card class='form-card subject-form'>
-            {console.log(props)}
             <h2 style={{ textAlign: 'center' }}>
-                {/*{props.subject.id ? t('edit_title') : t('create_title')}*/}
                 {t('department_y_label')}
             </h2>
             <form onSubmit={handleSubmit}>
@@ -47,7 +44,7 @@ const AddDepartment = props => {
                         variant='contained'
                         color='primary'
                         className='buttons-style '
-                        // disabled={pristine || submitting}
+                        disabled={pristine || submitting}
                         type='submit'>
                         {t('save_button_label')}
                     </Button>
@@ -55,7 +52,7 @@ const AddDepartment = props => {
                         type='button'
                         variant='contained'
                         className='buttons-style'
-                        // disabled={pristine || submitting}
+                        disabled={pristine || submitting}
                         onClick={clear}
                         >
                         {t('clear_button_label')}

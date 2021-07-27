@@ -21,6 +21,6 @@ export const links = {
     ScheduleFor:"/schedule",
     Registration:"/registration",
     RESET_PASSWORD:"/reset-password",
-    DEPARTMENT_PAGE:"/departments"
+    Departments:"/departments"
 
 };

@@ -8,5 +8,6 @@ export const navigation={
     "BUSY_ROOMS":6,
     "SEMESTERS":7,
     "USERS":8,
-    "CHANGES":9
+    "CHANGES":9,
+    "DEPARTMENTS":10
 }

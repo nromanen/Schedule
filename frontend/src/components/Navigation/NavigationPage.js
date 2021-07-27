@@ -24,6 +24,7 @@ import {Link} from 'react-router-dom';
 import { links } from '../../constants/links';
 import './NavigationPage.scss';
 import AdminPage from '../../containers/AdminPage/AdminPage';
+import DepartmentPage from '../../containers/DepartmentPage/DepartmentPage';
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
 
@@ -104,7 +105,8 @@ const NavigationPage = (props) => {
         { name: 'BusyRooms', component: <BusyRooms /> },
         { name: 'SemesterPage', component: <SemesterPage /> },
         { name: 'MergeRolePage', component: <MergeRolePage /> },
-        { name: 'Changes', component: <Changes /> }
+        { name: 'Changes', component: <Changes /> },
+        { name: 'Departments', component: <DepartmentPage /> }
     ];
 
     return (

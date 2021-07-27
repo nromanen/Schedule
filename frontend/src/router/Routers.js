@@ -58,7 +58,7 @@ const Routers = props => {
     if (userRole === userRoles.MANAGER) {
         routes = (
             <Switch>
-                <Route path={links.DEPARTMENT_PAGE} component={DepartmentPage}/>
+                <Route path={links.Departments} component={DepartmentPage}/>
                 <Route path={links.Registration} component={Register}/>
                 <Route path={links.RESET_PASSWORD} component={ResetPassword}/>
                 <Route path={links.HOME_PAGE} exact component={HomePage} />

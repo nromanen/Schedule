@@ -23,6 +23,10 @@ import { search } from '../../helper/search';
 import NotFound from '../../share/NotFound/NotFound';
 import ConfirmDialog from '../../share/modals/dialog';
 import { disabledCard } from '../../constants/disabledCard';
+import { navigation } from '../../constants/navigationOrder';
+import NavigationPage from '../../components/Navigation/NavigationPage';
+import SnackbarComponent from '../../share/Snackbar/SnackbarComponent';
+import { handleSnackbarCloseService } from '../../services/snackbarService';
 function DepartmentPage(props) {
     const { t } = useTranslation('formElements');
     const { departments,disabledDepartments } = props;
@@ -32,6 +36,7 @@ function DepartmentPage(props) {
     const [departmentId,setDepartmentId]=useState("");
     const [hideDialog, setHideDialog] = useState(null);
     const [department,setDepartment]=useState({});
+    const { isSnackbarOpen, snackbarType, snackbarMessage } = props;
     const visibleDepartments = isDisabled
         ? search(disabledDepartments, term, ['name'])
         : search(departments, term, ['name']);
@@ -77,13 +82,11 @@ function DepartmentPage(props) {
                 if (hideDialog === disabledCard.SHOW) {
                     const { id, name } = department;
                     const enabledDepartment = { id, name, disable: false };
-                    console.log('setDisabledDepartment()', department, enabledDepartment);
                     setEnabledDepartmentService(enabledDepartment);
                 } else if (hideDialog === disabledCard.HIDE) {
 
                     const { id, name } = department;
                     const enabledDepartment = { id, name, disable: true };
-                    console.log('ENAMLED', enabledDepartment);
                     setDisabledDepartmentService(enabledDepartment);
                 }
 
@@ -92,22 +95,17 @@ function DepartmentPage(props) {
                 deleteDepartmentsService(departmentId);
             }
         }
-
-
-
-
-        // else if (id!==""){
-        //     deleteDepartmentsService(departmentId);
-        // }
          setDeleteDialog(false);
-        //console.log(hideDialog);
-
     }
     useEffect(() => getAllDepartmentsService(), [isDisabled])
     useEffect(()=>getDisabledDepartmentsService(),[isDisabled])
-
+    const handleSnackbarClose = (event, reason) => {
+        if (reason === 'clickaway') return;
+        handleSnackbarCloseService();
+    };
     return (
         <>
+            <NavigationPage val={navigation.DEPARTMENTS}/>
             <ConfirmDialog
                 isHide={hideDialog}
                 cardId={departmentId}
@@ -116,25 +114,18 @@ function DepartmentPage(props) {
                 onClose={handleClose}
             />
             <div className="cards-container">
-            <aside>
+            <aside className="search-list__panel">
+                <SearchPanel
+                    SearchChange={SearchChange}
+                    showDisabled={changeDisable}
+                />
                 {
                     isDisabled?'':
                     <AddDepartment
                     onSubmit={submit} clear={clearDepartmentForm}
                     />
                 }
-
-                    <SearchPanel
-                        SearchChange={SearchChange}
-                        showDisabled={changeDisable}
-                    />
-
-
             </aside>
-
-
-
-
             <section className="container-flex-wrap wrapper">
                 {visibleDepartments.length === 0 && (
                     <NotFound name={t('department_y_label')} />
@@ -203,6 +194,12 @@ function DepartmentPage(props) {
 
             </section>
             </div>
+            <SnackbarComponent
+                message={snackbarMessage}
+                type={snackbarType}
+                isOpen={isSnackbarOpen}
+                handleSnackbarClose={handleSnackbarClose}
+            />
         </>
     )
 }
@@ -210,7 +207,10 @@ function DepartmentPage(props) {
 const mapStateToProps = state => ({
     departments: state.departments.departments,
     disabledDepartments: state.departments.disabledDepartments,
-    department: state.departments.department
+    department: state.departments.department,
+    isSnackbarOpen: state.snackbar.isSnackbarOpen,
+    snackbarType: state.snackbar.snackbarType,
+    snackbarMessage: state.snackbar.message
 });
 
 export default connect(mapStateToProps, {})(DepartmentPage);
