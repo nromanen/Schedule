@@ -66,7 +66,7 @@ public class GroupServiceTest {
 
         group.getStudents().add(student);
 
-        when(groupRepository.getAll()).thenReturn(Arrays.asList(group));
+        when(groupRepository.getAllWithoutStudents()).thenReturn(Arrays.asList(group));
         List<Group> actualList = groupService.getAllWithoutStudents();
 
         assertEquals(1, actualList.size());
@@ -109,7 +109,7 @@ public class GroupServiceTest {
 
         group.getStudents().add(student);
 
-        when(groupRepository.getDisabled()).thenReturn(Arrays.asList(group));
+        when(groupRepository.getDisabledWithoutStudents()).thenReturn(Arrays.asList(group));
         List<Group> disabledActual = groupService.getDisabledWithoutStudents();
 
         assertEquals(1, disabledActual.size());

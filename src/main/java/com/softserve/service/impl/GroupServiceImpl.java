@@ -62,8 +62,8 @@ public class GroupServiceImpl  implements GroupService {
     @Transactional(readOnly = true)
     @Override
     public List<Group> getAllWithoutStudents() {
-        log.info("In getAll()");
-        List<Group> groups = getAll();
+        log.info("In getAllWithoutStudents()");
+        List<Group> groups = groupRepository.getAllWithoutStudents();
         groups.forEach(group -> group.setStudents(List.of()));
         return groups;
     }
@@ -88,8 +88,8 @@ public class GroupServiceImpl  implements GroupService {
     @Transactional(readOnly = true)
     @Override
     public List<Group> getDisabledWithoutStudents() {
-        log.info("Enter into getAll of getDisabled");
-        List<Group> groups = getDisabled();
+        log.info("Enter into getAll of getDisabledWithoutStudents");
+        List<Group> groups = groupRepository.getDisabledWithoutStudents();
         groups.forEach(group -> group.setStudents(List.of()));
         return groups;
     }

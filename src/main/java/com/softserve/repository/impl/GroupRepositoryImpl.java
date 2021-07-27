@@ -14,8 +14,12 @@ import java.util.List;
 public class GroupRepositoryImpl extends BasicRepositoryImpl<Group, Long> implements GroupRepository {
 
     private static final String GET_ALL_QUERY = "SELECT DISTINCT g FROM Group g LEFT JOIN FETCH g.students ORDER BY g.title ASC";
+    private static final String GET_ALL_WITHOUT_STUDENTS_QUERY = "SELECT g FROM Group g ORDER BY g.title ASC";
     private static final String GET_BY_ID_QUERY = "SELECT g FROM Group g LEFT JOIN FETCH g.students WHERE g.id = :id";
-    private static final String GET_DISABLED_QUERY = "SELECT DISTINCT g FROM Group g LEFT JOIN FETCH g.students WHERE g.disable = true ORDER BY g.title ASC";
+    private static final String GET_DISABLED_QUERY =
+            "SELECT DISTINCT g FROM Group g LEFT JOIN FETCH g.students WHERE g.disable = true ORDER BY g.title ASC";
+    private static final String GET_DISABLED_WITHOUT_STUDENTS_QUERY =
+            "SELECT g FROM Group g WHERE g.disable = true ORDER BY g.title ASC";
     private static final String COUNT_GROUPS_WITH_TITLE_QUERY = "SELECT COUNT (*) FROM Group g WHERE g.title = :title";
     private static final String COUNT_GROUPS_WITH_TITLE_AND_IGNORE_WITH_ID_QUERY =
             "SELECT COUNT (*) FROM Group g WHERE g.title = :title AND g.id!=:id";
@@ -42,6 +46,17 @@ public class GroupRepositoryImpl extends BasicRepositoryImpl<Group, Long> implem
     }
 
     /**
+     * Method gets information about all groups, but doesn't load Students
+     *
+     * @return List of all groups with ASCII sorting by title
+     */
+    @Override
+    public List<Group> getAllWithoutStudents() {
+        log.info("In getAllWithoutStudents()");
+        return getSession().createQuery(GET_ALL_WITHOUT_STUDENTS_QUERY).getResultList();
+    }
+
+    /**
      * Overrided method that returns entity with JOIN FETCH (students)
      *
      * @param id Long id of entity
@@ -62,6 +77,17 @@ public class GroupRepositoryImpl extends BasicRepositoryImpl<Group, Long> implem
     public List<Group> getDisabled() {
         log.info("In getDisabled()");
         return sessionFactory.getCurrentSession().createQuery(GET_DISABLED_QUERY).getResultList();
+    }
+
+    /**
+     * Method gets information about groups that have property "disabled" = true, but doesn't load Students
+     *
+     * @return List of groups with ASCII sorting by title
+     */
+    @Override
+    public List<Group> getDisabledWithoutStudents() {
+        log.info("In getDisabledWithoutStudents()");
+        return sessionFactory.getCurrentSession().createQuery(GET_DISABLED_WITHOUT_STUDENTS_QUERY).getResultList();
     }
 
     /**
