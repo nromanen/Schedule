@@ -176,7 +176,7 @@ public class UserServiceImpl implements UserService {
             String link = url + "activation-page?token=" + token;
             String message = registrationMessage + " \r\n" + link;
             String subject = "Activation account";
-            //mailService.send(user.getEmail(), subject, message);
+            mailService.send(user.getEmail(), subject, message);
         } else {
             throw new IncorrectPasswordException("Password must contains at least: 8 characters(at least: 1 upper case, 1 lower case, " +
                     "1 number and 1 special character('!@#$%^&*')) and no more 30 characters.");
