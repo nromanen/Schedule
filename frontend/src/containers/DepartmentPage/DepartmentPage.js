@@ -59,14 +59,12 @@ function DepartmentPage(props) {
     const setDisabled=(department)=>{
 
         const disabledDepartment={...department,disabled:true};
-        console.log("setDisabledDepartment()",department,disabledDepartment)
         setDisabledDepartmentService(disabledDepartment);
     }
     const setEnabled=(department)=>{
         setDepartmentId(department.id);
         setDeleteDialog(true);
         const enabledDepartment={...department,disabled:false};
-        console.log("setDisabledDepartment()",department,enabledDepartment)
         setEnabledDepartment(enabledDepartment);
     }
     const setDepartmentIntoForm=(id)=>{
@@ -75,7 +73,6 @@ function DepartmentPage(props) {
 
     }
     const handleClose=(id)=>{
-         console.log(id,hideDialog,department)
         if(id!=='') {
             if(department.id!==undefined) {
                 if (hideDialog === disabledCard.SHOW) {

@@ -60,7 +60,6 @@ const departments = (state = initialState, action) => {
                 disabledDepartments: state.disabledDepartments
             });
         case actionTypes.SET_ENABLED_DEPARTMENT:
-            console.log("action.result",action.result)
             state.disabledDepartments = state.disabledDepartments.filter(
                 department => department.id !== action.result.id
             );

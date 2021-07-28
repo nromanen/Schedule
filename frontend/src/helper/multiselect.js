@@ -30,7 +30,6 @@ export const MultiSelect = props => {
         isSelectAllSelected() ? [selectAllOption] : props.value;
 
     const onChange = (newValue, actionMeta) => {
-        console.log("actionMeta",actionMeta)
         const { action, option, removedValue } = actionMeta;
 
         if (action === "select-option" && option.value === selectAllOption.value) {
@@ -56,10 +55,6 @@ export const MultiSelect = props => {
         }
     };
    const handleChange = (newValue, actionMeta) => {
-        console.group('Value Changed');
-        console.log(newValue);
-        console.log(`action: ${actionMeta.action}`);
-        console.groupEnd();
         props.onChangeSemesterValue(newValue);
     };
 
