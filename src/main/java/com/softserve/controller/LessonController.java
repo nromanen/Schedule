@@ -157,7 +157,7 @@ public class LessonController {
         List<GroupWithLessonIdDTO> groupWithLessonIdDTOs = new ArrayList<>();
         for (Lesson lesson : lessons) {
             GroupWithLessonIdDTO groupWithLessonIdDTO = new GroupWithLessonIdDTO();
-            groupWithLessonIdDTO.setGroupDTO(groupMapper.groupToGroupDTO(lesson.getGroup()));
+            groupWithLessonIdDTO.setGroupDTO(groupMapper.convertToDto(lesson.getGroup()));
             groupWithLessonIdDTO.setLessonId(lesson.getId());
             groupWithLessonIdDTOs.add(groupWithLessonIdDTO);
         }

@@ -20,7 +20,7 @@ public class Student implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(columnDefinition = "serial")
-    private long id;
+    private Long id;
 
     @NotEmpty(message = "Name cannot be empty")
     @Size(min = 2, max = 35, message = "Name must be between 2 and 35 characters long")
@@ -45,9 +45,9 @@ public class Student implements Serializable {
 
     @Nullable
     @Column(name ="user_id")
-    private Long user_id;
+    private Long userId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "group_id", referencedColumnName = "id")
     @NotNull
     private Group group;
