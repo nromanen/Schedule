@@ -12,10 +12,12 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.mock.web.MockMultipartFile;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -194,5 +196,64 @@ public class StudentServiceTest {
 
         when(studentRepository.findByEmail(anyString())).thenReturn(existingStudent);
         studentService.save(inputStudent);
+    }
+
+    @Test
+    public void importStudentsFromFile() throws IOException {
+        List<Student> expectedStudents = new ArrayList<>();
+
+        Group group = new Group();
+        group.setId(4L);
+
+        Student student1 = new Student();
+        student1.setSurname("Romaniuk");
+        student1.setName("Hanna");
+        student1.setPatronymic("Stepanivna");
+        student1.setEmail("romaniuk@gmail.com");
+        student1.setGroup(group);
+
+        Student student2 = new Student();
+        student2.setSurname("Boichuk");
+        student2.setName("Oleksandr");
+        student2.setPatronymic("Ivanovych");
+        student2.setEmail("");
+        student2.setGroup(group);
+
+        Student student3 = new Student();
+        student3.setSurname("Hanushchak");
+        student3.setName("Viktor");
+        student3.setPatronymic("Mykolaiovych");
+        student3.setEmail("hanushchak@bigmir.net");
+        student3.setGroup(group);
+
+        expectedStudents.add(student1);
+        expectedStudents.add(student3);
+
+        String fileContent = String.format("%s%n%s%n%s%n%s",
+                "\"surname\",\"name\",\"patronymic\",\"email\"",
+                "\"Romaniuk\",\"Hanna\",\"Stepanivna\",\"romaniuk@gmail.com\"",
+                "\"Boichuk\",\"Oleksandr\",\"Ivanovych\",",
+                "\"Hanushchak\",\"Viktor\",\"Mykolaiovych\",\"hanushchak@bigmir.net\"");
+
+        MockMultipartFile multipartFile = new MockMultipartFile("file",
+                "students.csv",
+                "text/csv",
+                fileContent.getBytes());
+
+
+        when(studentRepository.findByEmail(student1.getEmail())).thenReturn(null);
+        when(studentRepository.findByEmail(student2.getEmail())).thenReturn(null);
+        when(studentRepository.findByEmail(student3.getEmail())).thenReturn(null);
+
+        when(studentRepository.save(student1)).thenReturn(student1);
+        when(studentRepository.save(student2)).thenThrow(RuntimeException.class);
+        when(studentRepository.save(student3)).thenReturn(student3);
+
+        List<Student> actualStudents = studentService.saveFromFile(multipartFile, 4L);
+        assertNotNull(actualStudents);
+        assertEquals(expectedStudents, actualStudents);
+        verify(studentRepository, times(1)).save(student1);
+        verify(studentRepository, times(1)).save(student2);
+        verify(studentRepository, times(1)).save(student3);
     }
 }

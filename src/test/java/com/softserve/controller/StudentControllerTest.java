@@ -10,6 +10,7 @@ import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers;
 import org.springframework.test.context.ContextConfiguration;
@@ -116,5 +117,24 @@ public class StudentControllerTest {
         mockMvc.perform(delete("/students/{id}", 2L)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    public void saveStudentsFromFile() throws Exception {
+
+        String fileContent = String.format("%s%n%s%n%s%n%s",
+                "\"surname\",\"name\",\"patronymic\",\"email\"",
+                "\"Romaniuk\",\"Hanna\",\"Stepanivna\",\"romaniuk@gmail.com\"",
+                "\"Boichuk\",\"Oleksandr\",\"Ivanovych\",",
+                "\"Hanushchak\",\"Viktor\",\"Mykolaiovych\",\"hanushchak@bigmir.net\"");
+
+        MockMultipartFile multipartFile = new MockMultipartFile("file",
+                "students.csv",
+                "text/csv",
+                fileContent.getBytes());
+
+        mockMvc.perform(multipart("/students/import").file(multipartFile).param("groupId", "4"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json"));
     }
 }

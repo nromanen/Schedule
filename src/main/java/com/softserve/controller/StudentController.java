@@ -6,13 +6,16 @@ import com.softserve.mapper.StudentMapper;
 import com.softserve.service.StudentService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @Slf4j
@@ -69,5 +72,12 @@ public class StudentController {
         log.info("Enter into delete of StudentController with id {} ", id);
         studentService.delete(studentService.getById(id));
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping("/import")
+    @ApiOperation(value = "import students from file to database")
+    public ResponseEntity<List<StudentDTO>> importFromCsv(@ApiParam(value = "csv or txt format is required")
+            @RequestParam("file") MultipartFile file, @RequestParam Long groupId) throws IOException {
+        return ResponseEntity.ok(studentMapper.convertToDTOList(studentService.saveFromFile(file, groupId)));
     }
 }
