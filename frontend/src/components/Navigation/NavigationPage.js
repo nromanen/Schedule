@@ -126,7 +126,7 @@ const NavigationPage = (props) => {
 
                                                 {
                                                     Object.entries(tab_one).map(function(data, index) {
-                                                        return  (<MenuItem  value={data[1].name} key={data[0]}>
+                                                        return  (<MenuItem className={"menu-dictionary"}  value={data[1].name} key={data[0]}>
                                                             <Link className={classes.nav}
 
                                                                   to={links[data[1].name]}>
