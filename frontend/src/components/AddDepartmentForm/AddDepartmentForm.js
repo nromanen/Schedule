@@ -8,7 +8,7 @@ import { useTranslation}  from 'react-i18next'
 import Card from '../../share/Card/Card'
 import { DEPARTMENT_FORM} from '../../constants/reduxForms';
 import renderTextField from '../../share/renderedFields/input'
-import { required, uniqueSubject, maxLengthValue} from '../../validation/validateFields'
+import { required, uniqueSubject, maxLengthValue, uniqueDepartment } from '../../validation/validateFields';
 
 const AddDepartment = props => {
     const { t } = useTranslation('formElements');
@@ -37,7 +37,7 @@ const AddDepartment = props => {
                     name='name'
                     component={renderTextField}
                     label={t('department_add_label')+':'}
-                    validate={[required, uniqueSubject, maxLengthValue]}
+                    validate={[required, uniqueDepartment, maxLengthValue]}
                 />
                 <div className='form-buttons-container subject-btns'>
                     <Button
