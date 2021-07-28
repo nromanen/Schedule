@@ -20,7 +20,7 @@ import {
     required
 } from '../../../validation/validateFields';
 
-import { handleTeacherInfo } from '../../../helper/handleTeacherInfo';
+import { handleTeacherInfo } from '../../../helper/renderTeacher';
 
 import {
     selectTeacherIdService,

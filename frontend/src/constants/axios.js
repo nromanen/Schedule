@@ -19,6 +19,7 @@ export const TEACHER_WISHES = 'teacher_wishes';
 export const SCHEDULE_SEMESTER_ITEMS_URL = 'schedules/semester';
 export const SCHEDULE_ITEMS_URL = 'schedules';
 export const CURRENT_SEMESTER_URL = 'semesters/current';
+export const DEFAULT_SEMESTER_URL = 'semesters/default';
 
 export const TEMPORARY_SCHEDULE_URL = 'temporary-schedules';
 export const TEMPORARY_SCHEDULE_RANGE_URL = 'temporary-schedules/add-range';

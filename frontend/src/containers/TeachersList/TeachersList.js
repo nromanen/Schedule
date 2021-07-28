@@ -15,7 +15,7 @@ import { showTeacherWish } from '../../services/teacherWishService';
 import './TeachersList.scss';
 
 import { connect } from 'react-redux';
-
+import {sendTeachersScheduleService} from '../../services/scheduleService';
 import {
     getDisabledTeachersService,
     handleTeacherService,
@@ -33,6 +33,11 @@ import NotFound from '../../share/NotFound/NotFound';
 import { GiSightDisabled, IoMdEye } from 'react-icons/all';
 import { disabledCard } from '../../constants/disabledCard';
 import { getPublicClassScheduleListService } from '../../services/classService';
+import NavigationPage from '../../components/Navigation/NavigationPage';
+import { navigation } from '../../constants/navigationOrder';
+import Multiselect, { MultiSelect } from '../../helper/multiselect';
+import Example from '../../helper/multiselect';
+import { getFirstLetter } from '../../helper/renderTeacher';
 
 const TeacherList = props => {
     const { t } = useTranslation('common');
@@ -42,15 +47,20 @@ const TeacherList = props => {
     const [term, setTerm] = useState('');
     const [disabled, setDisabled] = useState(false);
     const [hideDialog, setHideDialog] = useState(null);
+    const [openSelect,setOpenSelect]=useState(false);
+
 
     useEffect(() => showAllTeachersService(), []);
     useEffect(() => getDisabledTeachersService(), []);
     useEffect(() => getPublicClassScheduleListService(), []);
+    const {teachers ,disabledTeachers ,currentSemester}=props;
 
-    const teachers = props.teachers;
-    const disabledTeachers = props.disabledTeachers;
+    const setOptions=()=>{
+        return teachers.map(item=>{return {id:item.id,value:item.id,label:`${item.surname} ${getFirstLetter(item.name)} ${getFirstLetter(item.patronymic)}`}});
+    }
     const teacherLength = disabled ? disabledTeachers.length : teachers.length;
-
+    const [selected, setSelected] = useState([]);
+    const options = setOptions();
     const teacherSubmit = values => {
         handleTeacherService(values);
     };
@@ -90,7 +100,9 @@ const TeacherList = props => {
         }
         setHideDialog(null);
     };
-
+    const handleCloseSending = scheduleId => {
+        setOpenSelect(false);
+    };
     const [openWish, setOpenWish] = useState(false);
     const [teacher, setTeacher] = useState(0);
 
@@ -119,9 +131,33 @@ const TeacherList = props => {
     const handleToUpperCase = str => {
         return str.charAt(0).toUpperCase() + str.slice(1);
     };
-
+    const cancelSelection=()=>{
+        clearSelection();
+        closeSelectionDialog();
+    }
+    const sendTeachers=()=>{
+        closeSelectionDialog();
+        const teachersId=selected.map(item=>{return item.id});
+        const semesterId=currentSemester.id;
+        const data={semesterId,teachersId};
+        console.log("THIS DATA IS FOR SERVER",data);
+        sendTeachersScheduleService(data);
+        clearSelection();
+    }
+    const closeSelectionDialog=()=>{
+        setOpenSelect(false);
+    }
+    const clearSelection=()=>{
+        setSelected([]);
+    }
+    const isChosenSelection=()=>{
+       return  selected.length!==0
+    }
     return (
+        <>
+            <NavigationPage val={navigation.TEACHERS}/>
         <div className="cards-container">
+
             <ConfirmDialog
                 cardId={teacherCardId}
                 whatDelete={cardType.TEACHER}
@@ -139,9 +175,28 @@ const TeacherList = props => {
             />
 
             <aside className="form-with-search-panel">
+
                 <SearchPanel
                     SearchChange={SearchChange}
                     showDisabled={showDisabledHandle}
+                />
+                <Button
+                    className="wish-button"
+                    variant="contained"
+                    color="primary"
+                    onClick={() => {
+                        setOpenSelect(true);
+                    }}
+                >
+                    {t('send_schedule_for_teacher')}
+                </Button>
+                <MultiSelect open={openSelect}
+                             options={options}
+                             value={selected}
+                             onChange={setSelected}
+                             onCancel={cancelSelection}
+                             onSentTeachers={sendTeachers}
+                             isEnabledSentBtn={isChosenSelection()}
                 />
                 {disabled ? (
                     ''
@@ -236,13 +291,15 @@ const TeacherList = props => {
                 )}
             </section>
         </div>
+     </>
     );
 };
 const mapStateToProps = state => ({
     teachers: state.teachers.teachers,
     disabledTeachers: state.teachers.disabledTeachers,
     classScheduler: state.classActions.classScheduler,
-    teacherWishes: state.teachersWish.wishes
+    teacherWishes: state.teachersWish.wishes,
+    currentSemester:state.schedule.currentSemester
 });
 
 export default connect(mapStateToProps, {})(TeacherList);

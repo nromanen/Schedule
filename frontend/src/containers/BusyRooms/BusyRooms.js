@@ -7,6 +7,9 @@ import { getScheduleItemsService } from '../../services/scheduleService';
 import { getClassScheduleListService } from '../../services/classService';
 import { CircularProgress } from '@material-ui/core';
 import { setLoadingService } from '../../services/loadingService';
+import AdminPage from '../AdminPage/AdminPage';
+import NavigationPage from '../../components/Navigation/NavigationPage';
+import { navigation } from '../../constants/navigationOrder';
 
 const BusyRooms = props => {
     const { t } = useTranslation('common');
@@ -66,7 +69,7 @@ const BusyRooms = props => {
                         className="class-info"
                         key={index + scheduleClass.class_name}
                     >
-                        <div className="class-info-data">
+                        <div className="class-info-data class-number">
                             {scheduleClass.class_name}
                         </div>
                         <div className="class-info-data">
@@ -93,7 +96,7 @@ const BusyRooms = props => {
                         className="class-info"
                         key={index + classOne.class_name + classOne.group_name}
                     >
-                        <div className="class-info-data">
+                        <div className="class-info-data class-number">
                             {classOne.class_name}
                         </div>
                         <div
@@ -150,8 +153,10 @@ const BusyRooms = props => {
                 </h2>
             ) : (
                 <>
+
                     {busyRoomsLength > 0 ? (
                         <>
+                            <NavigationPage val={navigation.BUSY_ROOMS}/>
                             <h2 className="busy-heading">
                                 {t('busy_rooms_heading')}
                             </h2>

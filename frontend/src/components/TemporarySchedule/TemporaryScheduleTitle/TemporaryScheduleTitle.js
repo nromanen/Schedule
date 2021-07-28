@@ -24,7 +24,7 @@ import {
     getTemporarySchedulesService,
     selectTeacherIdService
 } from '../../../services/temporaryScheduleService';
-import { handleTeacherInfo } from '../../../helper/handleTeacherInfo';
+import { handleTeacherInfo } from '../../../helper/renderTeacher';
 import Divider from '@material-ui/core/Divider';
 
 const useStyles = makeStyles({

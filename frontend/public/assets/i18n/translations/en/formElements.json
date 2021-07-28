@@ -4,6 +4,12 @@
     "create_title": "Create ",
     "create_vacation_title": "add vacation",
     "delete_title": "Delete",
+    "set_default_title": "Set default",
+
+    "edit_temporary_schedule_form": "Edit temporary schedule",
+    "create_temporary_schedule_form": "Create temporary schedule",
+    "edit_vacation_form": "Edit vacation",
+    "create_vacation_form": "Create vacation",
 
 
     "edit_temporary_schedule_form": "Edit temporary schedule",
@@ -12,13 +18,14 @@
     "create_vacation_form": "Create vacation",
 
     "teacher_label": "Teacher",
+    "link_to_meeting_label": "Online meeting",
     "user_label": "User",
     "group_label": "Group",
     "class_label": "Class",
     "room_label": "Room",
     "subject_label": "Subject",
     "type_label": "Type",
-    "hours_label": "Hours",
+    "hours_label": "Hour(s)",
     "lesson_label": "Lesson",
     "temporary_schedule_label": "Temporary schedule",
     "teacher_a_label": "Teacher",
@@ -31,6 +38,8 @@
     "retype_password_label": "Retype password",
     "new_password_label": "New password",
     "semester_label": "Semester",
+    "schedule_label": "Schedule",
+
     "semestry_label": "semesters",
     "semester_start": "Begin",
     "semester_end": "End",
@@ -81,6 +90,7 @@
     "room_element": "class",
     "subject_element": "subject",
     "semester_element": "semester",
+    "reference_element": "reference",
     "semester_free_rooms": "Choose the semester",
     "week_free_rooms": "Choose the week",
     "day_free_rooms": "Choose the day",

@@ -13,12 +13,16 @@ import { required, password } from '../../validation/validateFields';
 
 import { PROFILE_FORM } from '../../constants/reduxForms';
 import { useTranslation } from 'react-i18next';
+import NavigationPage from '../Navigation/NavigationPage';
+import { navigation } from '../../constants/navigationOrder';
 
 let ChangePasswordForm = props => {
     const { t } = useTranslation('formElements');
     const { handleSubmit, pristine, onReset, submitting } = props;
 
     return (
+        <>
+            <NavigationPage val={navigation.CHANGES}/>
         <form onSubmit={handleSubmit}>
             <h3 className="form-title">{t('change_password_form_title')}</h3>
             <Field
@@ -70,6 +74,7 @@ let ChangePasswordForm = props => {
                 </Button>
             </div>
         </form>
+        </>
     );
 };
 

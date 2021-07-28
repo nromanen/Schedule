@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import { FaEdit } from 'react-icons/fa';
-import { MdDelete } from 'react-icons/md';
+import { MdDelete, MdDonutSmall, MdEdit } from 'react-icons/md';
 import { useTranslation } from 'react-i18next';
 import React, { useEffect, useState } from 'react';
 
@@ -27,7 +27,7 @@ import {
     semesterCopy,
     createArchiveSemesterService,
     getArchivedSemestersService,
-    viewArchivedSemester
+    viewArchivedSemester, setDefaultSemesterById
 } from '../../services/semesterService';
 import { setScheduleTypeService } from '../../services/scheduleService';
 import { disabledCard } from '../../constants/disabledCard';
@@ -35,10 +35,15 @@ import { GiSightDisabled, IoMdEye, FaCopy } from 'react-icons/all';
 import { FaFileArchive } from 'react-icons/fa';
 
 import GroupSchedulePage from '../../components/GroupSchedulePage/GroupSchedulePage';
+import NavigationPage from '../../components/Navigation/NavigationPage';
+import { navigation } from '../../constants/navigationOrder';
+import SetDefaultDialog from '../../share/modals/modal/setDefaultDialog';
+import SetChangeDialog from '../../share/modals/modal/setDefaultDialog';
 
 const SemesterPage = props => {
     const { t } = useTranslation('formElements');
     const [open, setOpen] = useState(false);
+    const [openDefault, setOpenDefault] = useState(false);
     const [openModal, setOpenModal] = useState(false);
     const [semesterId, setSemesterId] = useState(-1);
     const [term, setTerm] = useState('');
@@ -79,6 +84,10 @@ const SemesterPage = props => {
         setSemesterId(semesterId);
         setOpen(true);
     };
+    const handleClickOpenDefault = semesterId => {
+        setSemesterId(semesterId);
+        setOpenDefault(true);
+    };
     const handleClickOpenModal = semesterId => {
         setSemesterId(semesterId);
         setOpenModal(true);
@@ -96,7 +105,10 @@ const SemesterPage = props => {
     };
 
     const handleClose = semesterId => {
+        const setDelete=open;
+        const setDefault=openDefault;
         setOpen(false);
+        setOpenDefault(false);
         if (!semesterId) return;
         if (hideDialog) {
             if (disabled) {
@@ -110,8 +122,11 @@ const SemesterPage = props => {
                 );
                 setDisabledSemestersService(semester);
             }
-        } else {
+        } else if(setDelete) {
             removeSemesterCardService(semesterId);
+        }
+        else if(setDefault){
+           setDefaultSemesterById(semesterId)
         }
         setHideDialog(null);
     };
@@ -140,14 +155,26 @@ const SemesterPage = props => {
     const handleSemesterArchivedPreview = semesterId => {
         viewArchivedSemester(+semesterId);
     };
+    const setClassNameForDefaultSemester=semester=>{
+        const defaultSemesterName="default";
+        const className="svg-btn edit-btn";
+        return semester.defaultSemester===true?`${className} ${defaultSemesterName}`:className;
+    }
 
     return (
         <>
+            <NavigationPage val={navigation.SEMESTERS}/>
             <ConfirmDialog
                 cardId={semesterId}
                 whatDelete={'semester'}
                 isHide={hideDialog}
                 open={open}
+                onClose={handleClose}
+            />
+            <SetChangeDialog
+                cardId={semesterId}
+                isHide={hideDialog}
+                open={openDefault}
                 onClose={handleClose}
             />
             <ModalWindow
@@ -276,6 +303,16 @@ const SemesterPage = props => {
                                             handleClickOpen(semester.id)
                                         }
                                     />
+
+                                        <MdDonutSmall
+                                            className={setClassNameForDefaultSemester(semester)}
+                                            title={t('set_default_title')}
+                                            onClick={() =>
+                                                handleClickOpenDefault(semester.id)
+                                            }
+                                        />
+
+
                                 </div>
 
                                 <p className="semester-card__description">

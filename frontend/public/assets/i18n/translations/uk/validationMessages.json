@@ -6,7 +6,7 @@
     "less_than_field_message": "Повинно бути до {{field}}",
     "bigger_than_field_message": "Повинно бути після {{field}}",
     "unique_error_message": "Значення повинно бути унікальним",
-    "intersect_time_error_message": "Час уроку перетинається із часом іншого уроку!",
+    "intersect_time_error_message": "Час пари перетинається із часом іншої пари!",
     "email": "Некоректно введена електронна адреса",
     "password": "Пароль повинен містити хоча б 1 велику літеру, 1 цифру та 1 спецсимвол",
     "bigger_than_this_year_message": "Більше ніж цей рік"

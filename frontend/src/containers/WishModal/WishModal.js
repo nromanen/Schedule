@@ -18,6 +18,7 @@ import { useTranslation } from 'react-i18next';
 
 import './WishModal.scss';
 import { userRoles } from '../../constants/userRoles';
+import { getTeacherFullName } from '../../helper/renderTeacher';
 
 const WishModal = props => {
     const { t } = useTranslation('common');
@@ -85,7 +86,7 @@ const WishModal = props => {
         <Dialog onClose={handleClose} open={openWish} maxWidth="lg">
             <h2 className="modal-teacher-title">
                 {t('teacher_wish_heading', {
-                    teacherName: teacher.name + ' ' + teacher.surname
+                    teacherName: getTeacherFullName(teacher)
                 })}
             </h2>
 
