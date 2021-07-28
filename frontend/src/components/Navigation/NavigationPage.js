@@ -6,27 +6,13 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
-import LessonPage from '../../containers/LessonPage/LessonPage';
-import TeacherList from '../../containers/TeachersList/TeachersList';
-import ClassSchedule from '../../containers/ClassSchedule/ClassSchedule';
-import GroupList from '../../containers/GroupList/GroupList';
-import RoomList from '../../containers/RoomList/RoomList';
-import SubjectPage from '../../containers/SubjectPage/SubjectPage';
-import  BusyRooms  from '../../containers/BusyRooms/BusyRooms';
-import SemesterPage from '../../containers/SemesterPage/SemesterPage';
-
 import { connect } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import MergeRolePage from '../../containers/MergeRolePage/MergeRolePage';
 import { setCurrentSemester } from '../../redux/actions';
-import Changes from "../ChangePasswordForm/ChangePasswordForm"
 import {Link} from 'react-router-dom';
 import { links } from '../../constants/links';
 import './NavigationPage.scss';
-import AdminPage from '../../containers/AdminPage/AdminPage';
-import DepartmentPage from '../../containers/DepartmentPage/DepartmentPage';
 import { MenuItem, Select } from '@material-ui/core';
-import { places } from '../../constants/places';
 import { dictionary, tabs_components } from '../../constants/navigationComponents';
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -75,7 +61,7 @@ const useStyles = makeStyles(theme => ({
             }
     },
     select:{
-        color:'black'
+       backgroundColor:'primary'
     },
 
     btn:{
@@ -89,7 +75,7 @@ const NavigationPage = (props) => {
     const { t } = useTranslation('common');
     const classes = useStyles();
     const [value, setValue] = useState(val?val:0);
-    const [dict,setDictionary]=useState(props.name);
+    const [dict,setDictionary]=useState(props.name||dictionary[0].name);
     useEffect(() => {
         setCurrentSemester();
     }, []);
@@ -101,29 +87,8 @@ const NavigationPage = (props) => {
     let document_title = title => {
         document.title = t(`${title}_management_title`);
     };
-
-    // const tabs_components = [
-    //     { name: 'LessonPage', component: <AdminPage /> },
-    //     { name: 'TeacherList', component: <TeacherList /> },
-    //     { name: 'GroupList', component: <GroupList /> },
-    //     { name: 'ClassScheduleTitle', component: <ClassSchedule /> },
-    //     { name: 'RoomList', component: <RoomList /> },
-    //     { name: 'SubjectPage', component: <SubjectPage /> },
-    //     { name: 'BusyRooms', component: <BusyRooms /> },
-    //     { name: 'SemesterPage', component: <SemesterPage /> },
-    //     { name: 'MergeRolePage', component: <MergeRolePage /> },
-    //     { name: 'Changes', component: <Changes /> },
-    //     { name: 'Departments', component: <DepartmentPage /> },
-    //     [
-    //         { name: 'SemesterPage', component: <SemesterPage /> },
-    //         { name: 'MergeRolePage', component: <MergeRolePage /> },
-    //         { name: 'Changes', component: <Changes /> },
-    //         { name: 'Departments', component: <DepartmentPage /> }]
-    // ];
-
     return (
         <div className={classes.root}>
-            {console.log(props)}
             <AppBar position="static">
                 <Tabs
                     value={value}
@@ -141,7 +106,6 @@ const NavigationPage = (props) => {
                                                 <Link className={classes.nav}
 
                                                       to={links[tab_one.name]}>
-                                                    {console.log(tab_one.length)}
                                                     <Tab className={classes.btn}
                                                         key={index + tab_one}
                                                         onClick={() => document_title(tab_one.name)}
@@ -149,20 +113,21 @@ const NavigationPage = (props) => {
                                                         {...a11yProps(index)}
                                                     />
                                                 </Link>:
-                                                <Select className="place"
+                                                <Select className="dictionary"
                                                     labelId="demo-controlled-open-select-label"
                                                     id="demo-controlled-open-select"
                                                     value={dict}
-                                                    onChange={event => {setDictionary(event.target.value);
-                                                        console.log(dict)
+                                                    onChange={event => {
+                                                        const val=event.target.value;
+                                                        setDictionary(val);
+                                                        document_title(val)
                                                     }}
                                             >
 
                                                 {
                                                     Object.entries(tab_one).map(function(data, index) {
-                                                        console.log(data)
-                                                        return  (<MenuItem value={data[1].name} key={data[0]}>
-                                                            <Link className={classes.select}
+                                                        return  (<MenuItem  value={data[1].name} key={data[0]}>
+                                                            <Link className={classes.nav}
 
                                                                   to={links[data[1].name]}>
                                                                 {t(`${ data[1].name }_management_title`)}
@@ -175,40 +140,7 @@ const NavigationPage = (props) => {
 
                                             }
                                         </>
-                        // <Link className={classes.nav}
-                        //
-                        //       to={links[tab_one.name]}>
-                        //     {console.log(tab_one.length)}
-                        //     <Tab className={classes.btn}
-                        //         key={index + tab_one}
-                        //         onClick={() => document_title(tab_one.name)}
-                        //         label={t(`${tab_one.name}_management_title`)}
-                        //         {...a11yProps(index)}
-                        //     />
-                        // </Link>
                     ))}
-                    {/*<Select className="place"*/}
-                    {/*        labelId="demo-controlled-open-select-label"*/}
-                    {/*        id="demo-controlled-open-select"*/}
-                    {/*        value={dict}*/}
-                    {/*        onChange={event => {setDictionary(event.target.value)}}*/}
-                    {/*>*/}
-
-                    {/*    {*/}
-                    {/*        Object.entries(dictionary).map(function(data, index) {*/}
-                    {/*            console.log(data)*/}
-                    {/*            return  <MenuItem value={data[1].name} key={data[0]}>*/}
-                    {/*                <Link className={classes.select}*/}
-
-                    {/*                      to={links[data[1].name]}>*/}
-                    {/*                    {t(`${ data[1].name }_management_title`)}*/}
-                    {/*                </Link>*/}
-                    {/*            </MenuItem>*/}
-                    {/*        }, this)*/}
-                    {/*    }*/}
-
-                    {/*</Select>*/}
-
                 </Tabs>
 
             </AppBar>
@@ -223,8 +155,3 @@ const mapStateToProps = state => ({
 });
 
 export default connect(mapStateToProps, {})(NavigationPage);
-// export const dictionary=[
-//     { name: 'SemesterPage', component: <SemesterPage /> },
-//     { name: 'MergeRolePage', component: <MergeRolePage /> },
-//     { name: 'Changes', component: <Changes /> },
-//     { name: 'Departments', component: <DepartmentPage /> }];

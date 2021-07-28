@@ -23,7 +23,7 @@ import { search } from '../../helper/search';
 import NotFound from '../../share/NotFound/NotFound';
 import ConfirmDialog from '../../share/modals/dialog';
 import { disabledCard } from '../../constants/disabledCard';
-import { navigation } from '../../constants/navigationOrder';
+import { navigation, navigationNames } from '../../constants/navigation';
 import NavigationPage from '../../components/Navigation/NavigationPage';
 import SnackbarComponent from '../../share/Snackbar/SnackbarComponent';
 import { handleSnackbarCloseService } from '../../services/snackbarService';
@@ -107,7 +107,7 @@ function DepartmentPage(props) {
     };
     return (
         <>
-            <NavigationPage name={"Departments"} val={navigation.DEPARTMENTS}/>
+            <NavigationPage name={navigationNames.DEPARTMENTS} val={navigation.DEPARTMENTS}/>
             <ConfirmDialog
                 isHide={hideDialog}
                 cardId={departmentId}

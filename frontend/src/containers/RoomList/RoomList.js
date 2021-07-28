@@ -34,7 +34,7 @@ import { GiSightDisabled, IoMdEye } from 'react-icons/all';
 
 import { disabledCard } from '../../constants/disabledCard';
 import NavigationPage from '../../components/Navigation/NavigationPage';
-import { navigation } from '../../constants/navigationOrder';
+import { navigation, navigationNames } from '../../constants/navigation';
 
 const RoomList = props => {
     const { rooms } = props;
@@ -119,7 +119,7 @@ const RoomList = props => {
 
     return (
         <>
-            <NavigationPage val={navigation.ROOMS}/>
+            <NavigationPage name={navigationNames.ROOM_LIST} val={navigation.ROOMS}/>
             <ConfirmDialog
                 cardId={roomId}
                 whatDelete={cardType.ROOM.toLowerCase()}

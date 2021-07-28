@@ -9,7 +9,7 @@ import { CircularProgress } from '@material-ui/core';
 import { setLoadingService } from '../../services/loadingService';
 import AdminPage from '../AdminPage/AdminPage';
 import NavigationPage from '../../components/Navigation/NavigationPage';
-import { navigation } from '../../constants/navigationOrder';
+import { navigation, navigationNames } from '../../constants/navigation';
 
 const BusyRooms = props => {
     const { t } = useTranslation('common');

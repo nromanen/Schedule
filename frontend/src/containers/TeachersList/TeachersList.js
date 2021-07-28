@@ -34,7 +34,7 @@ import { GiSightDisabled, IoMdEye } from 'react-icons/all';
 import { disabledCard } from '../../constants/disabledCard';
 import { getPublicClassScheduleListService } from '../../services/classService';
 import NavigationPage from '../../components/Navigation/NavigationPage';
-import { navigation } from '../../constants/navigationOrder';
+import { navigation, navigationNames } from '../../constants/navigation';
 import Multiselect, { MultiSelect } from '../../helper/multiselect';
 import Example from '../../helper/multiselect';
 import { getFirstLetter } from '../../helper/renderTeacher';
@@ -155,7 +155,7 @@ const TeacherList = props => {
     }
     return (
         <>
-            <NavigationPage val={navigation.TEACHERS}/>
+            <NavigationPage name={navigationNames.TEACHER_LIST} val={navigation.TEACHERS}/>
         <div className="cards-container">
 
             <ConfirmDialog

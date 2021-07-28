@@ -41,24 +41,23 @@ import SemesterPage from '../containers/SemesterPage/SemesterPage';
 import MergeRolePage from '../containers/MergeRolePage/MergeRolePage';
 import Changes from '../components/ChangePasswordForm/ChangePasswordForm';
 import DepartmentPage from '../containers/DepartmentPage/DepartmentPage';
+import { navigationNames } from './navigation';
 export const dictionary=[
-    // { name: 'LessonPage', component: <AdminPage /> },
-    { name: 'TeacherList', component: <TeacherList /> },
-    { name: 'GroupList', component: <GroupList /> },
-    { name: 'ClassScheduleTitle', component: <ClassSchedule /> },
-    { name: 'RoomList', component: <RoomList /> },
-    { name: 'SubjectPage', component: <SubjectPage /> },
-    // { name: 'BusyRooms', component: <BusyRooms /> },
-    { name: 'SemesterPage', component: <SemesterPage /> },
-    // { name: 'MergeRolePage', component: <MergeRolePage /> },
-    // { name: 'Changes', component: <Changes /> },
-    { name: 'Departments', component: <DepartmentPage /> },
+     {name: navigationNames.DICTIONARY},
+    { name: navigationNames.CLASS_SCHEDULE_TITLE, component: <ClassSchedule /> },
+    { name: navigationNames.DEPARTMENTS, component: <DepartmentPage /> },
+    { name: navigationNames.GROUP_LIST, component: <GroupList /> },
+    { name: navigationNames.ROOM_LIST, component: <RoomList /> },
+    { name: navigationNames.SUBJECT_PAGE, component: <SubjectPage /> },
+    { name: navigationNames.SEMESTER_PAGE, component: <SemesterPage /> },
+    { name: navigationNames.TEACHER_LIST, component: <TeacherList /> },
+
 ];
 export const tabs_components = [
-    { name: 'LessonPage', component: <AdminPage /> },
-    { name: 'MergeRolePage', component: <MergeRolePage /> },
-    { name: 'Changes', component: <Changes /> },
-    { name: 'BusyRooms', component: <BusyRooms /> },
+    { name: navigationNames.LESSON_PAGE, component: <AdminPage /> },
+    { name: navigationNames.MERGE_ROLE_PAGE, component: <MergeRolePage /> },
+    { name: navigationNames.CHANGES, component: <Changes /> },
+    { name: navigationNames.BUSY_ROOMS, component: <BusyRooms /> },
     dictionary,
 ];
 
