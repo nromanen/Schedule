@@ -13,7 +13,7 @@ import {Link} from 'react-router-dom';
 import { links } from '../../constants/links';
 import './NavigationPage.scss';
 import { MenuItem, Select } from '@material-ui/core';
-import { dictionary, tabs_components } from '../../constants/navigationComponents';
+import { general, tabs_components } from '../../constants/navigationComponents';
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
 
@@ -75,7 +75,7 @@ const NavigationPage = (props) => {
     const { t } = useTranslation('common');
     const classes = useStyles();
     const [value, setValue] = useState(val?val:0);
-    const [dict,setDictionary]=useState(props.name||dictionary[0].name);
+    const [general,setGeneral]=useState(props.name||general[0].name);
     useEffect(() => {
         setCurrentSemester();
     }, []);
@@ -113,13 +113,13 @@ const NavigationPage = (props) => {
                                                         {...a11yProps(index)}
                                                     />
                                                 </Link>:
-                                                <Select className="dictionary"
+                                                <Select className="general"
                                                     labelId="demo-controlled-open-select-label"
                                                     id="demo-controlled-open-select"
-                                                    value={dict}
+                                                    value={general}
                                                     onChange={event => {
                                                         const val=event.target.value;
-                                                        setDictionary(val);
+                                                        setGeneral(val);
                                                         document_title(val)
                                                     }}
                                             >

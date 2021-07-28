@@ -10,7 +10,7 @@
 // import MergeRolePage from '../containers/MergeRolePage/MergeRolePage';
 // import Changes from '../components/ChangePasswordForm/ChangePasswordForm';
 // import DepartmentPage from '../containers/DepartmentPage/DepartmentPage';
-// export const dictionary=[
+// export const general=[
 //     { name: 'SemesterPage', component: <SemesterPage /> },
 //     { name: 'MergeRolePage', component: <MergeRolePage /> },
 //     { name: 'Changes', component: <Changes /> },
@@ -27,7 +27,7 @@
 //     // { name: 'MergeRolePage', component: <MergeRolePage /> },
 //     // { name: 'Changes', component: <Changes /> },
 //     // { name: 'Departments', component: <DepartmentPage /> },
-//     dictionary,
+//     general,
 // ];
 import AdminPage from '../containers/AdminPage/AdminPage';
 import TeacherList from '../containers/TeachersList/TeachersList';
@@ -42,8 +42,8 @@ import MergeRolePage from '../containers/MergeRolePage/MergeRolePage';
 import Changes from '../components/ChangePasswordForm/ChangePasswordForm';
 import DepartmentPage from '../containers/DepartmentPage/DepartmentPage';
 import { navigationNames } from './navigation';
-export const dictionary=[
-     {name: navigationNames.DICTIONARY},
+export const general=[
+     {name: navigationNames.GENERAL},
     { name: navigationNames.CLASS_SCHEDULE_TITLE, component: <ClassSchedule /> },
     { name: navigationNames.DEPARTMENTS, component: <DepartmentPage /> },
     { name: navigationNames.GROUP_LIST, component: <GroupList /> },
@@ -58,6 +58,6 @@ export const tabs_components = [
     { name: navigationNames.MERGE_ROLE_PAGE, component: <MergeRolePage /> },
     { name: navigationNames.CHANGES, component: <Changes /> },
     { name: navigationNames.BUSY_ROOMS, component: <BusyRooms /> },
-    dictionary,
+    general,
 ];
 

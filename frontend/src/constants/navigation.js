@@ -32,5 +32,5 @@ export const navigationNames={
     MERGE_ROLE_PAGE:'MergeRolePage',
     CHANGES:'Changes',
     BUSY_ROOMS:'BusyRooms',
-    DICTIONARY:"Dictionary"
+    GENERAL:"General"
 }

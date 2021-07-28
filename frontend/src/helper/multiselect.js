@@ -16,11 +16,6 @@ export const MultiSelect = props => {
         label: t('all_teachers')
     };
 
-    // const selectNothingOption = {
-    //     value: "<SELECT_NOTHING>",
-    //     label: "Nothing Teachers"
-    // };
-
     const isSelectAllSelected = () =>
         valueRef.current.length === props.options.length;
 
@@ -40,9 +35,6 @@ export const MultiSelect = props => {
         if (action === "select-option" && option.value === selectAllOption.value) {
             props.onChange(props.options, actionMeta);
         }
-        // else if(action === "select-option" && option.value === selectNothingOption.value){
-        //     props.onChange([], actionMeta);
-        // }
         else if (
             (action === "deselect-option" &&
                 option.value === selectAllOption.value) ||
@@ -83,6 +75,16 @@ export const MultiSelect = props => {
             isMulti
             placeholder={t('choose_teachers')}
         />
+                <ReactSelect
+                    isOptionSelected={isOptionSelected}
+                    options={getOptions()}
+                    value={getValue()}
+                    onChange={onChange}
+                    hideSelectedOptions={false}
+                    closeMenuOnSelect={false}
+                    isMulti
+                    placeholder={t('choose_teachers')}
+                />
             </DialogTitle>
             <div className="buttons-container">
                 <Button
