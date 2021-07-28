@@ -1,42 +1,42 @@
 {
-  "Period": {
-    "EN": "Period",
-    "UK": "Період"
+  "period": {
+    "EN": "period",
+    "UK": "період"
   },
-  "Schedule for": {
-    "EN": "Schedule for",
-    "UK": "Розклад для"
+  "schedule for": {
+    "EN": "schedule for",
+    "UK": "розклад для"
   },
   "group": {
     "EN": "group",
     "UK": "групи"
   },
-  "MONDAY": {
-    "EN": "MONDAY",
-    "UK": "Понеділок"
+  "monday": {
+    "EN": "monday",
+    "UK": "понеділок"
   },
-  "TUESDAY": {
-    "EN": "Tuesday",
-    "UK": "Вівторок"
+  "tuesday": {
+    "EN": "tuesday",
+    "UK": "вівторок"
   },
-  "WEDNESDAY": {
-    "EN": "WEDNESDAY",
-    "UK": "Середа"
+  "wednesday": {
+    "EN": "wednesday",
+    "UK": "середа"
   },
-  "THURSDAY": {
-    "EN": "Thursday",
-    "UK": "Четверг"
+  "thursday": {
+    "EN": "thursday",
+    "UK": "четверг"
   },
-  "FRIDAY": {
-    "EN": "FRIDAY",
-    "UK": "П’ятниця"
+  "friday": {
+    "EN": "friday",
+    "UK": "п’ятниця"
   },
-  "SATURDAY": {
-    "EN": "Saturday",
-    "UK": "Субота"
+  "saturday": {
+    "EN": "saturday",
+    "UK": "субота"
   },
-  "SUNDAY": {
-    "EN": "SUNDAY",
-    "UK": "Неділя"
+  "sunday": {
+    "EN": "sunday",
+    "UK": "неділя"
   }
 }

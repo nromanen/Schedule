@@ -7,12 +7,12 @@ import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.softserve.dto.ScheduleForGroupDTO;
 import com.softserve.dto.ScheduleForTeacherDTO;
-import com.softserve.entity.enums.Language;
 import com.softserve.exception.FileDownloadException;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Locale;
 
 
 @Slf4j
@@ -25,7 +25,7 @@ public class PdfReportGenerator {
      * @param language for selected language
      * @return ByteArrayOutputStream teacher schedule in byte array format
      */
-    public ByteArrayOutputStream teacherScheduleReport(ScheduleForTeacherDTO schedule, Language language) {
+    public ByteArrayOutputStream teacherScheduleReport(ScheduleForTeacherDTO schedule, Locale language) {
         log.info("Enter into teacherScheduleReport method with schedule {}", schedule);
 
         ByteArrayOutputStream bys;
@@ -53,7 +53,7 @@ public class PdfReportGenerator {
      * @param language for selected language
      * @return ByteArrayOutputStream group schedule in byte array format
      */
-    public ByteArrayOutputStream groupScheduleReport(ScheduleForGroupDTO schedule, Language language) {
+    public ByteArrayOutputStream groupScheduleReport(ScheduleForGroupDTO schedule, Locale language) {
         log.info("Enter into groupScheduleReport method with schedule {}", schedule);
 
         ByteArrayOutputStream bys;
