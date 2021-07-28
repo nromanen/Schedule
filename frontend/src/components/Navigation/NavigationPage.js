@@ -113,7 +113,7 @@ const NavigationPage = (props) => {
                                                         {...a11yProps(index)}
                                                     />
                                                 </Link>:
-                                                <Select className="general"
+                                                <Select className="general MuiTab-root"
                                                     labelId="demo-controlled-open-select-label"
                                                     id="demo-controlled-open-select"
                                                     value={gen}
@@ -126,7 +126,7 @@ const NavigationPage = (props) => {
 
                                                 {
                                                     Object.entries(tab_one).map(function(data, index) {
-                                                        return  (<MenuItem className={"menu-dictionary"}  value={data[1].name} key={data[0]}>
+                                                        return  (<MenuItem className={"menu-dictionary MuiTab-root"}  value={data[1].name} key={data[0]} {...a11yProps(index)}>
                                                             <Link className={classes.nav}
 
                                                                   to={links[data[1].name]}>
