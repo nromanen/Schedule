@@ -75,7 +75,7 @@ const NavigationPage = (props) => {
     const { t } = useTranslation('common');
     const classes = useStyles();
     const [value, setValue] = useState(val?val:0);
-    const [general,setGeneral]=useState(props.name||general[0].name);
+    const [gen,setGen]=useState(props.name||general[0].name);
     useEffect(() => {
         setCurrentSemester();
     }, []);
@@ -116,10 +116,10 @@ const NavigationPage = (props) => {
                                                 <Select className="general"
                                                     labelId="demo-controlled-open-select-label"
                                                     id="demo-controlled-open-select"
-                                                    value={general}
+                                                    value={gen}
                                                     onChange={event => {
                                                         const val=event.target.value;
-                                                        setGeneral(val);
+                                                        setGen(val);
                                                         document_title(val)
                                                     }}
                                             >

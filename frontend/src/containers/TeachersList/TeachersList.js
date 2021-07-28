@@ -42,6 +42,7 @@ import { navigation, navigationNames } from '../../constants/navigation';
 import Multiselect, { MultiSelect } from '../../helper/multiselect';
 import Example from '../../helper/multiselect';
 import { getFirstLetter } from '../../helper/renderTeacher';
+import { showAllSemestersService } from '../../services/semesterService';
 
 const TeacherList = props => {
     const { t } = useTranslation('common');
@@ -60,16 +61,26 @@ const TeacherList = props => {
     useEffect(() => getDefaultSemesterService(), []);
     useEffect(() => getCurrentSemesterService(), []);
     useEffect(() => showAllPublicSemestersService(), []);
+    useEffect(() => showAllSemestersService(), []);
     const {teachers ,disabledTeachers ,currentSemester,semesters,defaultSemester}=props;
 
     const setOptions=()=>{
         return teachers.map(item=>{return {id:item.id,value:item.id,label:`${item.surname} ${getFirstLetter(item.name)} ${getFirstLetter(item.patronymic)}`}});
     }
+    const setSemesterOptions=()=>{
+        return semesters!==undefined? semesters.map(item=>{return {id:item.id,value:item.id,label:`${item.description}`}}):null;
+
+    }
+    const parseDefaultSemester = () => {
+      return{id:defaultSemester.id,value:defaultSemester.id,label:`${defaultSemester.description}`}
+    }
 
 
     const teacherLength = disabled ? disabledTeachers.length : teachers.length;
     const [selected, setSelected] = useState([]);
+    const[selectedSemester,setSelectedSemester]=useState('');
     const options = setOptions();
+    const semesterOptions=setSemesterOptions();
     const teacherSubmit = values => {
         handleTeacherService(values);
     };
@@ -147,9 +158,8 @@ const TeacherList = props => {
     const sendTeachers=()=>{
         closeSelectionDialog();
         const teachersId=selected.map(item=>{return item.id});
-        const semesterId=currentSemester.id;
+        const semesterId=selectedSemester===''?defaultSemester.id:selectedSemester.id;
         const data={semesterId,teachersId};
-        console.log("THIS DATA IS FOR SERVER",data);
         sendTeachersScheduleService(data);
         clearSelection();
     }
@@ -207,6 +217,10 @@ const TeacherList = props => {
                                  onCancel={cancelSelection}
                                  onSentTeachers={sendTeachers}
                                  isEnabledSentBtn={isChosenSelection()}
+                                 semesters={semesterOptions}
+                                 defaultSemester={parseDefaultSemester()}
+                                 onChangeSemesterValue={setSelectedSemester}
+
                     />
                 </>
 
@@ -313,7 +327,7 @@ const mapStateToProps = state => ({
     teacherWishes: state.teachersWish.wishes,
     currentSemester:state.schedule.currentSemester,
     defaultSemester:state.schedule.defaultSemester,
-    semesters:state.schedule.semesters
+    semesters: state.schedule.semesters,
 });
 
 export default connect(mapStateToProps, {})(TeacherList);

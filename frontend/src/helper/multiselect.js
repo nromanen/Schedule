@@ -2,6 +2,7 @@ import React, { useRef } from "react";
 import ReactSelect from "react-select";
 import { Dialog, DialogTitle } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
+import Select from 'react-select';
 import i18n from 'i18next';
 import '../helper/multiselect.scss'
 import { useTranslation } from 'react-i18next';
@@ -9,7 +10,7 @@ export const MultiSelect = props => {
     const { t } = useTranslation('common');
     const valueRef = useRef(props.value);
     valueRef.current = props.value;
-    const {open}=props;
+    const {open,defaultSemester,semesters}=props;
 
     const selectAllOption = {
         value: "<SELECT_ALL>",
@@ -54,6 +55,13 @@ export const MultiSelect = props => {
             props.onChange(newValue || [], actionMeta);
         }
     };
+   const handleChange = (newValue, actionMeta) => {
+        console.group('Value Changed');
+        console.log(newValue);
+        console.log(`action: ${actionMeta.action}`);
+        console.groupEnd();
+        props.onChangeSemesterValue(newValue);
+    };
 
     return (
 
@@ -75,16 +83,13 @@ export const MultiSelect = props => {
             isMulti
             placeholder={t('choose_teachers')}
         />
-                <ReactSelect
-                    isOptionSelected={isOptionSelected}
-                    options={getOptions()}
-                    value={getValue()}
-                    onChange={onChange}
-                    hideSelectedOptions={false}
-                    closeMenuOnSelect={false}
-                    isMulti
-                    placeholder={t('choose_teachers')}
+                <Select
+                    defaultValue={defaultSemester}
+                    options={semesters}
+                    onChange={handleChange}
+                    // formatGroupLabel={formatGroupLabel}
                 />
+
             </DialogTitle>
             <div className="buttons-container">
                 <Button
