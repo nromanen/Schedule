@@ -12,7 +12,9 @@
     "my_profile": "My profile",
 
     "LessonPage_management_title": "Lessons",
+    "General_management_title": "General",
     "Changes_management_title": "Changes",
+    "Departments_management_title": "Departments",
     "TeacherList_management_title": "Teachers",
     "GroupList_management_title": "Groups",
     "ClassSchedule_management_title": "Classes",

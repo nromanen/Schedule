@@ -65,3 +65,5 @@ export const LESSONS_FROM_SEMESTER_COPY_URL = '/lessons/copy-lessons';
 export const SCHEDULE_ITEM_ROOM_CHANGE = '/schedules/by-room';
 export const CREATE_ARCHIVE_SEMESTER = '/archive';
 export const ARCHIVED_SEMESTERS_URL = '/archive/all-semesters';
+
+export const DEPARTMENT_URL="/departments";

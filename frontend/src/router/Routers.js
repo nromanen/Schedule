@@ -31,6 +31,7 @@ import GroupSchedulePage from '../components/GroupSchedulePage/GroupSchedulePage
 import { Register } from '../components/Register/Register';
 import { ResetPassword } from '../components/ResetPassword/ResetPassword';
 import { Login } from '../components/Login/Login';
+import DepartmentPage from '../containers/DepartmentPage/DepartmentPage';
 const Routers = props => {
     const userRole = props.userRole;
 
@@ -57,6 +58,7 @@ const Routers = props => {
     if (userRole === userRoles.MANAGER) {
         routes = (
             <Switch>
+                <Route path={links.Departments} component={DepartmentPage}/>
                 <Route path={links.Registration} component={Register}/>
                 <Route path={links.RESET_PASSWORD} component={ResetPassword}/>
                 <Route path={links.HOME_PAGE} exact component={HomePage} />

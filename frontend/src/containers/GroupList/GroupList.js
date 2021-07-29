@@ -25,7 +25,7 @@ import {
 import { GiSightDisabled, IoMdEye } from 'react-icons/all';
 import { disabledCard } from '../../constants/disabledCard';
 import NavigationPage from '../../components/Navigation/NavigationPage';
-import { navigation } from '../../constants/navigationOrder';
+import { navigation, navigationNames } from '../../constants/navigation';
 
 let GroupList = props => {
     useEffect(() => showAllGroupsService(), []);
@@ -84,7 +84,7 @@ let GroupList = props => {
 
     return (
         <>
-            <NavigationPage val={navigation.GROUPS}/>
+            <NavigationPage name={navigationNames.GROUP_LIST} val={navigation.GROUPS}/>
             <ConfirmDialog
                 isHide={hideDialog}
                 cardId={groupId}

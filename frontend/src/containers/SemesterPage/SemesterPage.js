@@ -36,7 +36,7 @@ import { FaFileArchive } from 'react-icons/fa';
 
 import GroupSchedulePage from '../../components/GroupSchedulePage/GroupSchedulePage';
 import NavigationPage from '../../components/Navigation/NavigationPage';
-import { navigation } from '../../constants/navigationOrder';
+import { navigation, navigationNames } from '../../constants/navigation';
 import SetDefaultDialog from '../../share/modals/modal/setDefaultDialog';
 import SetChangeDialog from '../../share/modals/modal/setDefaultDialog';
 
@@ -163,7 +163,7 @@ const SemesterPage = props => {
 
     return (
         <>
-            <NavigationPage val={navigation.SEMESTERS}/>
+            <NavigationPage name={navigationNames.SEMESTER_PAGE} val={navigation.SEMESTERS}/>
             <ConfirmDialog
                 cardId={semesterId}
                 whatDelete={'semester'}

@@ -6,26 +6,17 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
-import LessonPage from '../../containers/LessonPage/LessonPage';
-import TeacherList from '../../containers/TeachersList/TeachersList';
-import ClassSchedule from '../../containers/ClassSchedule/ClassSchedule';
-import GroupList from '../../containers/GroupList/GroupList';
-import RoomList from '../../containers/RoomList/RoomList';
-import SubjectPage from '../../containers/SubjectPage/SubjectPage';
-import  BusyRooms  from '../../containers/BusyRooms/BusyRooms';
-import SemesterPage from '../../containers/SemesterPage/SemesterPage';
-
 import { connect } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import MergeRolePage from '../../containers/MergeRolePage/MergeRolePage';
 import { setCurrentSemester } from '../../redux/actions';
-import Changes from "../ChangePasswordForm/ChangePasswordForm"
 import {Link} from 'react-router-dom';
 import { links } from '../../constants/links';
 import './NavigationPage.scss';
-import AdminPage from '../../containers/AdminPage/AdminPage';
+import { MenuItem, Select } from '@material-ui/core';
+import { general, tabs_components } from '../../constants/navigationComponents';
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
+
 
     return (
         <Typography
@@ -69,6 +60,9 @@ const useStyles = makeStyles(theme => ({
                 color: 'purple'
             }
     },
+    select:{
+       backgroundColor:'primary'
+    },
 
     btn:{
         margin:0,
@@ -81,7 +75,7 @@ const NavigationPage = (props) => {
     const { t } = useTranslation('common');
     const classes = useStyles();
     const [value, setValue] = useState(val?val:0);
-
+    const [gen,setGen]=useState(props.name||general[0].name);
     useEffect(() => {
         setCurrentSemester();
     }, []);
@@ -93,20 +87,6 @@ const NavigationPage = (props) => {
     let document_title = title => {
         document.title = t(`${title}_management_title`);
     };
-
-    const tabs_components = [
-        { name: 'LessonPage', component: <AdminPage /> },
-        { name: 'TeacherList', component: <TeacherList /> },
-        { name: 'GroupList', component: <GroupList /> },
-        { name: 'ClassScheduleTitle', component: <ClassSchedule /> },
-        { name: 'RoomList', component: <RoomList /> },
-        { name: 'SubjectPage', component: <SubjectPage /> },
-        { name: 'BusyRooms', component: <BusyRooms /> },
-        { name: 'SemesterPage', component: <SemesterPage /> },
-        { name: 'MergeRolePage', component: <MergeRolePage /> },
-        { name: 'Changes', component: <Changes /> }
-    ];
-
     return (
         <div className={classes.root}>
             <AppBar position="static">
@@ -120,18 +100,49 @@ const NavigationPage = (props) => {
                     className={classes.header}
                 >
                     {tabs_components.map((tab_one, index) => (
-                        <Link className={classes.nav}
 
-                              to={links[tab_one.name]}>
-                            <Tab className={classes.btn}
-                                key={index + tab_one}
-                                onClick={() => document_title(tab_one.name)}
-                                label={t(`${tab_one.name}_management_title`)}
-                                {...a11yProps(index)}
-                            />
-                        </Link>
+                                        <>
+                                            {tab_one.length===undefined?
+                                                <Link className={classes.nav}
+
+                                                      to={links[tab_one.name]}>
+                                                    <Tab className={classes.btn}
+                                                        key={index + tab_one}
+                                                        onClick={() => document_title(tab_one.name)}
+                                                        label={t(`${tab_one.name}_management_title`)}
+                                                        {...a11yProps(index)}
+                                                    />
+                                                </Link>:
+                                                <Select className="general MuiTab-root"
+                                                    labelId="demo-controlled-open-select-label"
+                                                    id="demo-controlled-open-select"
+                                                    value={gen}
+                                                    onChange={event => {
+                                                        const val=event.target.value;
+                                                        setGen(val);
+                                                        document_title(val)
+                                                    }}
+                                            >
+
+                                                {
+                                                    Object.entries(tab_one).map(function(data, index) {
+                                                        return  (<MenuItem className={"menu-dictionary MuiTab-root"}  value={data[1].name} key={data[0]} {...a11yProps(index)}>
+                                                            <Link className={classes.nav}
+
+                                                                  to={links[data[1].name]}>
+                                                                {t(`${ data[1].name }_management_title`)}
+                                                            </Link>
+                                                        </MenuItem>)
+                                                    }, this)
+                                                }
+
+                                            </Select>
+
+                                            }
+                                        </>
                     ))}
                 </Tabs>
+
             </AppBar>
 
         </div>

@@ -105,7 +105,7 @@ const LessonsList = props => {
                             )}
                             )
                         </p>
-                       <p>{getTeacherName(lesson)}</p>
+                       <p>{getTeacherName(lesson.teacher)}</p>
                         <p>
                             {' '}
                             <b>{lesson.hours}</b>{' '}

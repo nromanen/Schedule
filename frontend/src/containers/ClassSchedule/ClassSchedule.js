@@ -21,7 +21,7 @@ import { useTranslation } from 'react-i18next';
 import { handleSnackbarOpenService } from '../../services/snackbarService';
 import { snackbarTypes } from '../../constants/snackbarTypes';
 import NavigationPage from '../../components/Navigation/NavigationPage';
-import { navigation } from '../../constants/navigationOrder';
+import { navigation, navigationNames } from '../../constants/navigation';
 
 const ClassSchedule =(props) => {
     const { t } = useTranslation('formElements');
@@ -62,7 +62,7 @@ const ClassSchedule =(props) => {
 
     return (
         <>
-            <NavigationPage val={navigation.BELLS}/>
+            <NavigationPage name={navigationNames.CLASS_SCHEDULE_TITLE} val={navigation.BELLS}/>
         <div className="cards-container">
             <ConfirmDialog
                 selectedValue={''}

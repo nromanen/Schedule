@@ -15,7 +15,11 @@ import { showTeacherWish } from '../../services/teacherWishService';
 import './TeachersList.scss';
 
 import { connect } from 'react-redux';
-import {sendTeachersScheduleService} from '../../services/scheduleService';
+import {
+    getCurrentSemesterService,
+    getDefaultSemesterService,
+    sendTeachersScheduleService, showAllPublicSemestersService
+} from '../../services/scheduleService';
 import {
     getDisabledTeachersService,
     handleTeacherService,
@@ -34,10 +38,11 @@ import { GiSightDisabled, IoMdEye } from 'react-icons/all';
 import { disabledCard } from '../../constants/disabledCard';
 import { getPublicClassScheduleListService } from '../../services/classService';
 import NavigationPage from '../../components/Navigation/NavigationPage';
-import { navigation } from '../../constants/navigationOrder';
+import { navigation, navigationNames } from '../../constants/navigation';
 import Multiselect, { MultiSelect } from '../../helper/multiselect';
 import Example from '../../helper/multiselect';
 import { getFirstLetter } from '../../helper/renderTeacher';
+import { showAllSemestersService } from '../../services/semesterService';
 
 const TeacherList = props => {
     const { t } = useTranslation('common');
@@ -53,14 +58,29 @@ const TeacherList = props => {
     useEffect(() => showAllTeachersService(), []);
     useEffect(() => getDisabledTeachersService(), []);
     useEffect(() => getPublicClassScheduleListService(), []);
-    const {teachers ,disabledTeachers ,currentSemester}=props;
+    useEffect(() => getDefaultSemesterService(), []);
+    useEffect(() => getCurrentSemesterService(), []);
+    useEffect(() => showAllPublicSemestersService(), []);
+    useEffect(() => showAllSemestersService(), []);
+    const {teachers ,disabledTeachers ,currentSemester,semesters,defaultSemester}=props;
 
     const setOptions=()=>{
         return teachers.map(item=>{return {id:item.id,value:item.id,label:`${item.surname} ${getFirstLetter(item.name)} ${getFirstLetter(item.patronymic)}`}});
     }
+    const setSemesterOptions=()=>{
+        return semesters!==undefined? semesters.map(item=>{return {id:item.id,value:item.id,label:`${item.description}`}}):null;
+
+    }
+    const parseDefaultSemester = () => {
+      return{id:defaultSemester.id,value:defaultSemester.id,label:`${defaultSemester.description}`}
+    }
+
+
     const teacherLength = disabled ? disabledTeachers.length : teachers.length;
     const [selected, setSelected] = useState([]);
+    const[selectedSemester,setSelectedSemester]=useState('');
     const options = setOptions();
+    const semesterOptions=setSemesterOptions();
     const teacherSubmit = values => {
         handleTeacherService(values);
     };
@@ -138,9 +158,8 @@ const TeacherList = props => {
     const sendTeachers=()=>{
         closeSelectionDialog();
         const teachersId=selected.map(item=>{return item.id});
-        const semesterId=currentSemester.id;
+        const semesterId=selectedSemester===''?defaultSemester.id:selectedSemester.id;
         const data={semesterId,teachersId};
-        console.log("THIS DATA IS FOR SERVER",data);
         sendTeachersScheduleService(data);
         clearSelection();
     }
@@ -155,7 +174,7 @@ const TeacherList = props => {
     }
     return (
         <>
-            <NavigationPage val={navigation.TEACHERS}/>
+            <NavigationPage name={navigationNames.TEACHER_LIST} val={navigation.TEACHERS}/>
         <div className="cards-container">
 
             <ConfirmDialog
@@ -190,14 +209,21 @@ const TeacherList = props => {
                 >
                     {t('send_schedule_for_teacher')}
                 </Button>
-                <MultiSelect open={openSelect}
-                             options={options}
-                             value={selected}
-                             onChange={setSelected}
-                             onCancel={cancelSelection}
-                             onSentTeachers={sendTeachers}
-                             isEnabledSentBtn={isChosenSelection()}
-                />
+                <>
+                    <MultiSelect open={openSelect}
+                                 options={options}
+                                 value={selected}
+                                 onChange={setSelected}
+                                 onCancel={cancelSelection}
+                                 onSentTeachers={sendTeachers}
+                                 isEnabledSentBtn={isChosenSelection()}
+                                 semesters={semesterOptions}
+                                 defaultSemester={parseDefaultSemester()}
+                                 onChangeSemesterValue={setSelectedSemester}
+
+                    />
+                </>
+
                 {disabled ? (
                     ''
                 ) : (
@@ -299,7 +325,9 @@ const mapStateToProps = state => ({
     disabledTeachers: state.teachers.disabledTeachers,
     classScheduler: state.classActions.classScheduler,
     teacherWishes: state.teachersWish.wishes,
-    currentSemester:state.schedule.currentSemester
+    currentSemester:state.schedule.currentSemester,
+    defaultSemester:state.schedule.defaultSemester,
+    semesters: state.schedule.semesters,
 });
 
 export default connect(mapStateToProps, {})(TeacherList);

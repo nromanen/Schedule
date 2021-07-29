@@ -1,7 +1,7 @@
 import React from 'react';
 import NavigationPage from '../../components/Navigation/NavigationPage';
 import LessonPage from '../LessonPage/LessonPage';
-import { navigation } from '../../constants/navigationOrder';
+import { navigation, navigationNames } from '../../constants/navigation';
 import { connect } from 'react-redux';
 
 

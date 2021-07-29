@@ -26,7 +26,7 @@ import {
 import { disabledCard } from '../../constants/disabledCard';
 import { GiSightDisabled, IoMdEye } from 'react-icons/all';
 import NavigationPage from '../../components/Navigation/NavigationPage';
-import { navigation } from '../../constants/navigationOrder';
+import { navigation, navigationNames } from '../../constants/navigation';
 
 const SubjectPage = props => {
     const { t } = useTranslation('formElements');
@@ -87,7 +87,7 @@ const SubjectPage = props => {
 
     return (
         <>
-            <NavigationPage val={navigation.SUBJECTS}/>
+            <NavigationPage name={navigationNames.SUBJECT_PAGE} val={navigation.SUBJECTS}/>
             <ConfirmDialog
                 isHide={hideDialog}
                 cardId={subjectId}

@@ -20,5 +20,7 @@ export const links = {
     Changes: "/changes",
     ScheduleFor:"/schedule",
     Registration:"/registration",
-    RESET_PASSWORD:"/reset-password"
+    RESET_PASSWORD:"/reset-password",
+    Departments:"/departments"
+
 };
