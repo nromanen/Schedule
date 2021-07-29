@@ -21,6 +21,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -77,6 +78,10 @@ public class StudentServiceImpl implements StudentService {
     @Transactional
     @Override
     public Student save(Student object) {
+        return saveToDatabase(object);
+    }
+
+    private Student saveToDatabase(Student object) {
         log.info("Enter into save method with entity:{}", object);
         Student foundStudent = getByEmail(object.getEmail());
         if (Objects.nonNull(foundStudent)) {
@@ -155,7 +160,7 @@ public class StudentServiceImpl implements StudentService {
      *
      * @param file file with students data
      * @return list of created students
-     * @throws IOException
+     * @throws IOException if error happens while creating or deleting file
      */
     @Override
     @Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
@@ -184,13 +189,13 @@ public class StudentServiceImpl implements StudentService {
         for (Student student : students) {
             try {
                 student.getGroup().setId(groupId);
-                savedStudents.add(save(student));
+                savedStudents.add(saveToDatabase(student));
             } catch (RuntimeException e) {
                 log.error("Error occurred while saving student with email {}", student.getEmail(), e);
             }
         }
         reader.close();
-        csvFile.delete();
+        Files.delete(csvFile.toPath());
         return savedStudents;
     }
 }
