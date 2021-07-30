@@ -1,6 +1,10 @@
-delete from "public".department;
+delete from teachers;
+delete from department;
 
-insert into "public".department(id, name) values
-(8, 'Department1'),
-(9, 'Department2'),
-(10, 'Department3');
+insert into department(id, name) values
+(1, 'Department1'),
+(2, 'Department2'),
+(3, 'Department3');
+
+insert into teachers(id, name, patronymic, position, surname, department_id)
+values (1, 'Ivan', 'Ivanovych', 'docent', 'Ivanov', 1);
