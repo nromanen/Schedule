@@ -16,18 +16,17 @@ public interface PasswordGeneratingUtil {
         }
     };
     int PASSWORD_LENGTH = 30;
+    CharacterRule SPECIAL_CHARS_RULE = new CharacterRule(SPECIAL_CHARS);
+    CharacterRule LOWER_CASE_RULE = new CharacterRule(EnglishCharacterData.LowerCase);
+    CharacterRule DIGIT_RULE = new CharacterRule(EnglishCharacterData.Digit);
+    CharacterRule UPPER_CASE_RULE = new CharacterRule(EnglishCharacterData.UpperCase);
 
     static String generatePassword() {
-        PasswordGenerator generator = new PasswordGenerator();
-        CharacterRule lowerCaseRule = new CharacterRule(EnglishCharacterData.LowerCase);
-        CharacterRule upperCaseRule = new CharacterRule(EnglishCharacterData.UpperCase);
-        CharacterRule digitRule = new CharacterRule(EnglishCharacterData.Digit);
-        CharacterRule specialCharsRule = new CharacterRule(SPECIAL_CHARS);
-        return generator.generatePassword(
+        return new PasswordGenerator().generatePassword(
                 PASSWORD_LENGTH,
-                specialCharsRule,
-                lowerCaseRule,
-                upperCaseRule,
-                digitRule);
+                SPECIAL_CHARS_RULE,
+                LOWER_CASE_RULE,
+                UPPER_CASE_RULE,
+                DIGIT_RULE);
     }
 }
