@@ -1,57 +1,52 @@
 package com.softserve.util;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PowerMockIgnore;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
-import org.powermock.reflect.Whitebox;
+import org.mockito.InjectMocks;
+import org.mockito.Spy;
+import org.mockito.junit.MockitoJUnitRunner;
 
+import java.util.HashMap;
 import java.util.Locale;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
+import static org.junit.Assert.assertEquals;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(Translator.class)
-@PowerMockIgnore({"com.sun.org.apache.xerces.*", "javax.xml.*", "org.xml.*", "javax.management.*"})
+@RunWith(MockitoJUnitRunner.class)
 public class TranslatorTest {
+    @Spy
+    private HashMap<String, HashMap<Locale, String>> dictionary;
+
+    @Spy
+    @InjectMocks
+    private Translator translator;
 
     @Test
-    public void readWordsIfFileNotExistsTest() throws Exception {
-        String expectedWord = "test";
-        Locale language = Locale.ENGLISH;
+    public void getTranslateTest() {
+        String word = "word";
+        Locale language = Locale.UK;
+        String expectedWord = "слово";
+        HashMap<Locale, String> map = new HashMap(){{
+            put(language, expectedWord);
+        }};
+        dictionary.put(word, map);
 
-        Whitebox.setInternalState(Translator.class, "FILE_NAME", "nonExistsFile.json");
+        String result = translator.getTranslation(word, language);
 
-        PowerMockito.mockStatic(Translator.class);
-        PowerMockito.when(Translator.class, "getTranslation", any(String.class), any(Locale.class)).thenReturn(expectedWord);
-
-        String value = Translator.getTranslation(expectedWord, language);
-
-        Assert.assertEquals(expectedWord, value);
-
-        PowerMockito.verifyStatic(Translator.class, times(2));
-        //it just reports which account the call should match
-        Translator.getTranslation(expectedWord, language);
+        assertEquals(expectedWord, result);
     }
 
     @Test
-    public void readWordsTest() throws Exception {
-        String expectedWord = "test";
-        Locale language = Locale.forLanguageTag("uk");
+    public void getTranslateIfLanguageNotExistsTest() {
+        String expectedWord = "word";
+        Locale language = Locale.UK;
+        String word = "слово";
+        HashMap<Locale, String> map = new HashMap(){{ put(language, word); }};
+        dictionary.put(expectedWord, map);
 
-        PowerMockito.mockStatic(Translator.class);
-        PowerMockito.when(Translator.class, "getTranslation", any(String.class), any(Locale.class)).thenReturn(expectedWord);
+        Locale nonExistLanguage = Locale.JAPAN;
 
-        String value = Translator.getTranslation(expectedWord, language);
+        String result = translator.getTranslation(expectedWord, nonExistLanguage);
 
-        Assert.assertEquals(expectedWord, value);
-
-        PowerMockito.verifyStatic(Translator.class, times(1));
-        //it just reports which account the call should match
-        Translator.getTranslation(expectedWord, language);
+        assertEquals(expectedWord, result);
     }
 }

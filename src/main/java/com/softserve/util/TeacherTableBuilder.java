@@ -62,14 +62,14 @@ public class TeacherTableBuilder {
         //creating header cells
         Font headFont = new Font(baseFont, 12, Font.BOLD, BaseColor.BLACK);
         PdfPCell header = new PdfPCell(
-                new Phrase(StringUtils.capitalize(Translator.getTranslation("period", language))
+                new Phrase(StringUtils.capitalize(Translator.getInstance().getTranslation("period", language))
                 , headFont)
         );
         style.headerCellStyle(header);
         table.addCell(header);
         // getting all days from schedule, putting em into cells
         for (DaysOfWeekWithClassesForTeacherDTO days : schedule.getDays()) {
-            String day = Translator.getTranslation(days.getDay().toString().toLowerCase(), language);
+            String day = Translator.getInstance().getTranslation(days.getDay().toString().toLowerCase(), language);
             header = new PdfPCell(new Phrase(StringUtils.capitalize(day), headFont));
             style.headerCellStyle(header);
             table.addCell(header);
@@ -144,7 +144,7 @@ public class TeacherTableBuilder {
         log.info("Enter into createTableTitleCell method with baseFont {} table {} and schedule {}", baseFont, table, schedule);
         Font titleFont = new Font(baseFont, 14, Font.BOLD, BaseColor.WHITE);
         String scheduleTitle = MessageFormat.format("{0} {1} {2} {3}, {4}",
-                StringUtils.capitalize(Translator.getTranslation("schedule for", language)) ,
+                StringUtils.capitalize(Translator.getInstance().getTranslation("schedule for", language)) ,
                 schedule.getTeacher().getSurname(), schedule.getTeacher().getName(),
                 schedule.getTeacher().getPatronymic(), schedule.getTeacher().getPosition());
         PdfPCell cellTitle = new PdfPCell(new Phrase(scheduleTitle, titleFont));

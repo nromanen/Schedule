@@ -61,7 +61,7 @@ public class GroupTableBuilder {
         //creating header cells
         Font headFont = new Font(baseFont, 12, Font.BOLD, BaseColor.BLACK);
         PdfPCell header = new PdfPCell(
-                new Phrase(StringUtils.capitalize(Translator.getTranslation("period", language))
+                new Phrase(StringUtils.capitalize(Translator.getInstance().getTranslation("period", language))
                 , headFont)
         );
         style.headerCellStyle(header);
@@ -69,7 +69,7 @@ public class GroupTableBuilder {
 
         // getting all days from schedule, putting em into cells
         for (DaysOfWeekWithClassesForGroupDTO days : schedule.getDays()) {
-            String day = Translator.getTranslation(days.getDay().toString().toLowerCase(), language);
+            String day = Translator.getInstance().getTranslation(days.getDay().toString().toLowerCase(), language);
             header = new PdfPCell(new Phrase(StringUtils.capitalize(day), headFont));
             style.headerCellStyle(header);
             table.addCell(header);
@@ -117,9 +117,9 @@ public class GroupTableBuilder {
 
         Font titleFont = new Font(baseFont, 14, Font.BOLD, BaseColor.WHITE);
         String scheduleTitle = MessageFormat.format("{0} {1} {2}"
-                , StringUtils.capitalize(Translator.getTranslation("schedule for", language))
+                , StringUtils.capitalize(Translator.getInstance().getTranslation("schedule for", language))
                 , schedule.getGroup().getTitle()
-                , Translator.getTranslation("group", language));
+                , Translator.getInstance().getTranslation("group", language));
         PdfPCell cellTitle = new PdfPCell(new Phrase(scheduleTitle, titleFont));
         cellTitle.setColspan(table.getNumberOfColumns());
         style.titleCellStyle(cellTitle);
