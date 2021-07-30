@@ -20,6 +20,7 @@ import {
     renderWeekTable
 } from '../../helper/renderScheduleTable';
 import {
+    getDefaultSemesterService,
     getFullSchedule, getGroupSchedule, getTeacherSchedule,
     setScheduleGroupIdService,
     setScheduleSemesterIdService,
@@ -282,6 +283,9 @@ const GroupSchedulePage = props => {
             getFullSchedule();
         }
     })
+    useEffect(()=>{
+        getDefaultSemesterService()
+    },[])
 
    const getSchedule=()=>{
        if((props.scheduleType==="")&&(props.defaultSemester.id!==undefined)){
