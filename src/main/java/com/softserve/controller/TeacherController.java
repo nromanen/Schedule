@@ -123,12 +123,7 @@ public class TeacherController {
     @ApiOperation(value = "Send pdf with schedule to teachers emails")
     public ResponseEntity sendSchedulesToEmail(@PathVariable("id") Long semesterId, @RequestParam Long[] teachersId) {
         log.info("Enter into sendPDFToEmail method with teachers id: {} and semester id: {}", teachersId, semesterId);
-        try {
-            scheduleService.sendScheduleToTeachers(semesterId, teachersId);
-        } catch (MessagingException e) {
-            log.error("Message was not sent");
-            throw new MessageNotSendException(e.getMessage());
-        }
+        scheduleService.sendScheduleToTeachers(semesterId, teachersId);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 }

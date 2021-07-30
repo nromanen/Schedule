@@ -39,8 +39,8 @@ public interface ScheduleService extends BasicService<Schedule, Long> {
 
     boolean isLessonInScheduleByLessonIdPeriodIdEvenOddDayOfWeek(Long lessonId, Long periodId, EvenOdd evenOdd, DayOfWeek day);
 
-    void sendScheduleToTeachers(Long semesterId, Long[] teachersId) throws MessagingException;
+    void sendScheduleToTeachers(Long semesterId, Long[] teachersId);
 
-    void sendScheduleToOneTeacher(Long semesterId, Long teacherId) throws MessagingException;
+    void sendScheduleToTeacher(Long semesterId, Long teacherId) throws MessagingException;
 }
 

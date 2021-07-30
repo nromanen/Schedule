@@ -6,6 +6,7 @@ import com.softserve.entity.*;
 import com.softserve.entity.enums.EvenOdd;
 import com.softserve.entity.enums.LessonType;
 import com.softserve.exception.EntityNotFoundException;
+import com.softserve.exception.MessageNotSendException;
 import com.softserve.exception.ScheduleConflictException;
 import com.softserve.mapper.*;
 import com.softserve.repository.ScheduleRepository;
@@ -881,11 +882,15 @@ return fullScheduleForTeacherByDateRange(dateRangeSchedule,  fromDate, toDate);
      * @param teachersId id of teachers to whom we need to send the schedule
      */
     @Override
-    public void sendScheduleToTeachers(Long semesterId, Long[] teachersId) throws MessagingException {
+    public void sendScheduleToTeachers(Long semesterId, Long[] teachersId) {
         log.info("Enter into sendScheduleToTeachers of TeacherServiceImpl");
-        for (Long teacherId : teachersId) {
-            sendScheduleToOneTeacher(semesterId, teacherId);
-        }
+        Arrays.stream(teachersId).forEach(teacherId -> {
+            try {
+                sendScheduleToTeacher(semesterId, teacherId);
+            } catch (MessagingException e) {
+                throw new MessageNotSendException(e.getMessage());
+            }
+        });
     }
 
     /**
@@ -895,7 +900,7 @@ return fullScheduleForTeacherByDateRange(dateRangeSchedule,  fromDate, toDate);
      * @param teacherId  id of teacher to which we need to send the schedule
      */
     @Override
-    public void sendScheduleToOneTeacher(Long semesterId, Long teacherId) throws MessagingException {
+    public void sendScheduleToTeacher(Long semesterId, Long teacherId) throws MessagingException {
         log.info("Enter into sendScheduleToTeacher of TeacherServiceImpl");
         Teacher teacher = teacherService.getById(teacherId);
         ScheduleForTeacherDTO schedule = getScheduleForTeacher(semesterId, teacher.getId());
