@@ -37,6 +37,7 @@ function DepartmentPage(props) {
     const [hideDialog, setHideDialog] = useState(null);
     const [department,setDepartment]=useState({});
     const { isSnackbarOpen, snackbarType, snackbarMessage } = props;
+    useEffect(()=>clearDepartmentForm(),[])
     const visibleDepartments = isDisabled
         ? search(disabledDepartments, term, ['name'])
         : search(departments, term, ['name']);

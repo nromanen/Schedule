@@ -46,6 +46,7 @@
     "teacher_surname": "Surname",
     "teacher_patronymic": "Patronymic",
     "teacher_position": "Academic title",
+    "email_field": "Email",
     "teacher_wish_class_number": "class number",
     "teacher_wish_day": "Day",
     "wish_label": "Teacher wish",

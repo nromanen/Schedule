@@ -23,13 +23,45 @@ import { resetFormHandler } from '../helper/formHelper';
 import { setLoadingService } from './loadingService';
 
 export const showAllTeachersService = () => {
-    axios
-        .get(TEACHER_URL)
-        .then(response => {
-            store.dispatch(showAllTeachers(response.data));
+    const data=[
+        {
+            "department":{
+                "id": 41,
+                "name": "mat analysi",
+                "disable": false
+            },
+            "id": 49,
+            "name": "Світлана",
+            "surname": "Боднарук",
+            "patronymic": "Богданівна",
+            "position": "доцент",
+            "disable": false,
+            "email":"nasta_2000@i.ua"
+        },
+        {
+            "department":{
+                "id": 44,
+                "name": "Computer Science1",
+                "disable": false
+            },
+            "id": 39,
+            "name": "Ірина",
+            "surname": "Вернигора",
+            "patronymic": "Володимирівна",
+            "position": "доцент",
+            "disable": false,
+            "email":"nasta_2000@i.ua"
+        }
+    ];
+    store.dispatch(showAllTeachers(data));
             setLoadingService(false);
-        })
-        .catch(error => errorHandler(error));
+    // axios
+    //     .get(TEACHER_URL)
+    //     .then(response => {
+    //         store.dispatch(showAllTeachers(response.data));
+    //         setLoadingService(false);
+    //     })
+    //     .catch(error => errorHandler(error));
 };
 
 
@@ -67,12 +99,15 @@ const cardTeacher = teacher => {
             name: teacher.name,
             surname: teacher.surname,
             patronymic: teacher.patronymic,
-            position: teacher.position
+            position: teacher.position,
+            email:teacher.email,
+            department: teacher.department
         }
     };
 };
 
 export const updateTeacherService = data => {
+    console.log("updateTeacherService",data)
     return axios
         .put(TEACHER_URL, data.teacher)
         .then(response => {
@@ -96,6 +131,7 @@ export const updateTeacherService = data => {
 };
 
 export const handleTeacherService = values => {
+    console.log("handleTeacherService",values)
     const teacher = cardTeacher(values);
 
     if (values.id) {

@@ -43,6 +43,8 @@ import Multiselect, { MultiSelect } from '../../helper/multiselect';
 import Example from '../../helper/multiselect';
 import { getFirstLetter } from '../../helper/renderTeacher';
 import { showAllSemestersService } from '../../services/semesterService';
+import { getAllDepartmentsService, getDepartmentByIdService } from '../../services/departmentService';
+import { clearDepartmentForm, getDepartItemById } from '../../redux/actions/departments';
 
 const TeacherList = props => {
     const { t } = useTranslation('common');
@@ -62,7 +64,8 @@ const TeacherList = props => {
     useEffect(() => getCurrentSemesterService(), []);
     useEffect(() => showAllPublicSemestersService(), []);
     useEffect(() => showAllSemestersService(), []);
-    const {teachers ,disabledTeachers ,currentSemester,semesters,defaultSemester}=props;
+    useEffect(()=>getAllDepartmentsService(),[])
+    const {teachers ,disabledTeachers ,currentSemester,semesters,defaultSemester,departments,department}=props;
 
     const setOptions=()=>{
         return teachers.map(item=>{return {id:item.id,value:item.id,label:`${item.surname} ${getFirstLetter(item.name)} ${getFirstLetter(item.patronymic)}`}});
@@ -74,15 +77,24 @@ const TeacherList = props => {
     const parseDefaultSemester = () => {
       return{id:defaultSemester.id,value:defaultSemester.id,label:`${defaultSemester.description}`}
     }
-
+    const setDepartmentOptions = () => {
+        return departments.map(item=>{return {id:item.id,value:item.id,label:`${item.name}`}});
+    }
 
     const teacherLength = disabled ? disabledTeachers.length : teachers.length;
     const [selected, setSelected] = useState([]);
     const[selectedSemester,setSelectedSemester]=useState('');
     const options = setOptions();
     const semesterOptions=setSemesterOptions();
+    const departmentOptions=setDepartmentOptions();
     const teacherSubmit = values => {
-        handleTeacherService(values);
+
+        console.log("teacherSubmit",values)
+        const sendData={...values,department:department}
+
+        console.log(sendData)
+        handleTeacherService(sendData);
+
     };
 
     const selectTeacherCard = teacherCardId => {
@@ -228,6 +240,7 @@ const TeacherList = props => {
                     ''
                 ) : (
                     <AddTeacherForm
+                        departments={departmentOptions}
                         teachers={teachers}
                         onSubmit={teacherSubmit}
                         onSetSelectedCard={selectTeacherCard}
@@ -328,6 +341,8 @@ const mapStateToProps = state => ({
     currentSemester:state.schedule.currentSemester,
     defaultSemester:state.schedule.defaultSemester,
     semesters: state.schedule.semesters,
+    departments:state.departments.departments,
+    department: state.departments.department,
 });
 
 export default connect(mapStateToProps, {})(TeacherList);
