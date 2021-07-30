@@ -60,7 +60,7 @@ export const SET_TEACHER = 'SET_TEACHER';
 export const UPDATE_TEACHER = 'UPDATE_TEACHER';
 export const DELETE_TEACHER = 'DELETE_TEACHER';
 export const SHOW_ALL = 'SHOW_ALL';
-
+export const GET_TEACHERS_BY_DEPARTMENT='GET_TEACHERS_BY_DEPARTMENT';
 export const UPDATE_WISH = 'UPDATE_WISH';
 export const SELECT_WISH = 'SELECT_WISH';
 export const SHOW_ALL_WISH = 'SHOW_ALL_WISH';

@@ -75,6 +75,11 @@ const teachers = (
                 ...state,
                 disabledTeachers: [...action.result]
             };
+        case actionTypes.GET_TEACHERS_BY_DEPARTMENT:
+            return {
+            ...state,
+            teachers: [...action.result]
+        };
 
         default:
             return state;

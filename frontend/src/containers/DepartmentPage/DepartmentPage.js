@@ -12,7 +12,7 @@ import {
 } from '../../services/departmentService';
 import { connect } from 'react-redux';
 import Card from '../../share/Card/Card';
-import { GiSightDisabled, IoMdEye } from 'react-icons/all';
+import { GiSightDisabled, IoMdEye, MdFace } from 'react-icons/all';
 import { FaEdit } from 'react-icons/fa';
 import { MdDelete } from 'react-icons/md';
 import { useTranslation } from 'react-i18next';
@@ -27,6 +27,9 @@ import { navigation, navigationNames } from '../../constants/navigation';
 import NavigationPage from '../../components/Navigation/NavigationPage';
 import SnackbarComponent from '../../share/Snackbar/SnackbarComponent';
 import { handleSnackbarCloseService } from '../../services/snackbarService';
+import { getAllTeachersByDepartmentId } from '../../redux/actions/teachers';
+import { showAllPublicTeachersByDepartmentService } from '../../services/scheduleService';
+import ShowDataDialog from '../../share/modals/modal/showDataDialog';
 function DepartmentPage(props) {
     const { t } = useTranslation('formElements');
     const { departments,disabledDepartments } = props;
@@ -36,7 +39,8 @@ function DepartmentPage(props) {
     const [departmentId,setDepartmentId]=useState("");
     const [hideDialog, setHideDialog] = useState(null);
     const [department,setDepartment]=useState({});
-    const { isSnackbarOpen, snackbarType, snackbarMessage } = props;
+    const [teacherDialog,setTeacherDialog]=useState(false);
+    const { isSnackbarOpen, snackbarType, snackbarMessage,teachers } = props;
     useEffect(()=>clearDepartmentForm(),[])
     const visibleDepartments = isDisabled
         ? search(disabledDepartments, term, ['name'])
@@ -72,6 +76,9 @@ function DepartmentPage(props) {
         getDepartmentByIdService(id)
 
 
+    }
+    const closeTeacherDialog = () => {
+      setTeacherDialog(false)
     }
     const handleClose=(id)=>{
         if(id!=='') {
@@ -112,6 +119,13 @@ function DepartmentPage(props) {
                 whatDelete={'department'}
                 open={deleteDialog}
                 onClose={handleClose}
+            />
+            <ShowDataDialog
+                isHide={hideDialog}
+                cardId={departmentId}
+                open={teacherDialog}
+                onClose={closeTeacherDialog}
+                teachers={teachers}
             />
             <div className="cards-container">
             <aside className="search-list__panel">
@@ -184,6 +198,26 @@ function DepartmentPage(props) {
                                     deleteDepartment(department.id);
                                 }}
                             />
+                            <MdFace
+                                className="svg-btn delete-btn"
+                                title={t('show_teacher_title')}
+                                onClick={() => {
+                                    showAllPublicTeachersByDepartmentService(department.id);
+                                    setTeacherDialog(true)
+                                    // setDepartment({});
+                                    // deleteDepartment(department.id);
+                                }}
+                            />
+                            {/*<Button*/}
+                            {/*    type='button'*/}
+                            {/*    variant='contained'*/}
+                            {/*    className='buttons-style'*/}
+                            {/*    */}
+                            {/*    onClick={()=>console.log(props.teachers)}*/}
+                            {/*>*/}
+                            {/*    {t('clear_button_label')}*/}
+                            {/*</Button>*/}
+
                         </div>
                         {/* <p className="subject-card__description">
                                 {t('subject_label') + ':'}{' '}
@@ -210,7 +244,9 @@ const mapStateToProps = state => ({
     department: state.departments.department,
     isSnackbarOpen: state.snackbar.isSnackbarOpen,
     snackbarType: state.snackbar.snackbarType,
-    snackbarMessage: state.snackbar.message
+    snackbarMessage: state.snackbar.message,
+    teachers:state.teachers.teachers
+
 });
 
 export default connect(mapStateToProps, {})(DepartmentPage);

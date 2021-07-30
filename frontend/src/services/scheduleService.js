@@ -56,6 +56,7 @@ import { showBusyRooms } from './busyRooms';
 import { TEACHER_SCHEDULE_FORM } from '../constants/reduxForms';
 import { resetFormHandler } from '../helper/formHelper';
 import { useHistory } from 'react-router-dom';
+import { getAllTeachersByDepartmentId } from '../redux/actions/teachers';
 
 export const getCurrentSemesterService = () => {
     axios
@@ -4710,6 +4711,45 @@ export const showAllPublicTeachersService = () => {
             store.dispatch(showAllTeachers(response.data));
         })
         .catch(err => errorHandler(err));
+};
+export const showAllPublicTeachersByDepartmentService = (departmentId) => {
+    const data=[
+        {
+            "department":{
+                "id": 41,
+                "name": "mat analysi",
+                "disable": false
+            },
+            "id": 49,
+            "name": "Світлана",
+            "surname": "Боднарук",
+            "patronymic": "Богданівна",
+            "position": "доцент",
+            "disable": false,
+            "email":"nasta_2000@i.ua"
+        },
+        {
+            "department":{
+                "id": 44,
+                "name": "Computer Science1",
+                "disable": false
+            },
+            "id": 39,
+            "name": "Ірина",
+            "surname": "Вернигора",
+            "patronymic": "Володимирівна",
+            "position": "доцент",
+            "disable": false,
+            "email":"nasta_2000@i.ua"
+        }
+    ];
+    store.dispatch(getAllTeachersByDepartmentId(data));
+    // axios
+    //     .get(`${PUBLIC_TEACHER_URL}/departmentId=${departmentId}`)
+    //     .then(response => {
+    //         store.dispatch(getAllTeachersByDepartmentId(response.data));
+    //     })
+    //     .catch(err => errorHandler(err));
 };
 
 export const clearTeacherScheduleFormService = () => {

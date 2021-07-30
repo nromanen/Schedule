@@ -4,6 +4,7 @@
     "create_title": "Create ",
     "create_vacation_title": "add vacation",
     "delete_title": "Delete",
+    "show_teacher_title": "Show all department's teachers",
     "set_default_title": "Set default",
 
     "edit_temporary_schedule_form": "Edit temporary schedule",
