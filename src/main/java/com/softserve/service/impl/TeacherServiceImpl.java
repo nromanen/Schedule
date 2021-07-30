@@ -92,7 +92,7 @@ public class TeacherServiceImpl implements TeacherService {
     @Override
     public Teacher save(TeacherDTO teacherDTO) {
         log.info("Enter into save method with dto:{}", teacherDTO);
-        if (teacherDTO.getEmail() == null || teacherDTO.getEmail().isEmpty()) {
+        if (isEmailNullOrEmpty(teacherDTO)) {
             return save(teacherMapper.teacherDTOToTeacher(teacherDTO));
         }
         return save(registerTeacher(teacherDTO));
@@ -106,7 +106,7 @@ public class TeacherServiceImpl implements TeacherService {
     @Override
     public Teacher update(TeacherDTO teacherDTO) {
         log.info("Enter into update method with dto:{}", teacherDTO);
-        if (teacherDTO.getEmail() == null || teacherDTO.getEmail().isEmpty()) {
+        if (isEmailNullOrEmpty(teacherDTO)) {
             return update(teacherMapper.teacherDTOToTeacher(teacherDTO));
         }
         Integer userId = getById(teacherDTO.getId()).getUserId();
@@ -272,5 +272,9 @@ public class TeacherServiceImpl implements TeacherService {
         User userForTeacher = userService.getById(userId);
         userForTeacher.setEmail(email);
         userService.update(userForTeacher);
+    }
+
+    private boolean isEmailNullOrEmpty(TeacherDTO teacherDTO) {
+        return teacherDTO.getEmail() == null || teacherDTO.getEmail().isEmpty();
     }
 }
