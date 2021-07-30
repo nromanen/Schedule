@@ -18,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import java.text.MessageFormat;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -31,17 +32,29 @@ import static org.apache.commons.lang3.StringUtils.length;
 @Service
 @PropertySource({"classpath:cors.properties"})
 public class UserServiceImpl implements UserService {
-
     @Value("${backend.url}")
     private String url;
 
     private static final char[] NUMBERS = ("0123456789").toCharArray();
+
     private static final char[] SPECIAL_CHARACTERS = ("!@#$%^&*").toCharArray();
+
     public static final String PASSWORD_FOR_SOCIAL_USER = "A&vbSdvSeук4му%ца349ІВмк432ем0!Qfdruevvb";
+
     private static final String EMAIL_MATCHES = "([a-z0-9][-a-z0-9_\\+\\.]*[a-z0-9])@([a-z0-9][-a-z0-9\\.]*[a-z0-9]\\.(arpa|root|aero|biz|cat|com|coop|edu|gov|info|int|jobs|mil|mobi|museum|name|net|org|pro|tel|travel|ac|ad|ae|af|ag|ai|al|am|an|ao|aq|ar|as|at|au|aw|ax|az|ba|bb|bd|be|bf|bg|bh|bi|bj|bm|bn|bo|br|bs|bt|bv|bw|by|bz|ca|cc|cd|cf|cg|ch|ci|ck|cl|cm|cn|co|cr|cu|cv|cx|cy|cz|de|dj|dk|dm|do|dz|ec|ee|eg|er|es|et|eu|fi|fj|fk|fm|fo|fr|ga|gb|gd|ge|gf|gg|gh|gi|gl|gm|gn|gp|gq|gr|gs|gt|gu|gw|gy|hk|hm|hn|hr|ht|hu|id|ie|il|im|in|io|iq|ir|is|it|je|jm|jo|jp|ke|kg|kh|ki|km|kn|kr|kw|ky|kz|la|lb|lc|li|lk|lr|ls|lt|lu|lv|ly|ma|mc|md|mg|mh|mk|ml|mm|mn|mo|mp|mq|mr|ms|mt|mu|mv|mw|mx|my|mz|na|nc|ne|nf|ng|ni|nl|no|np|nr|nu|nz|om|pa|pe|pf|pg|ph|pk|pl|pm|pn|pr|ps|pt|pw|py|qa|re|ro|ru|rw|sa|sb|sc|sd|se|sg|sh|si|sj|sk|sl|sm|sn|so|sr|st|su|sv|sy|sz|tc|td|tf|tg|th|tj|tk|tl|tm|tn|to|tp|tr|tt|tv|tw|tz|ua|ug|uk|um|us|uy|uz|va|vc|ve|vg|vi|vn|vu|wf|ws|ye|yt|yu|za|zm|zw)|([0-9]{1,3}\\.{3}[0-9]{1,3}))";
 
+    private static final String REGISTRATION_MESSAGE = "Hello, {0}.\n" +
+            "You received this email because you requested to registration on our site.\n" +
+            "For successful profile activation, you have to follow the next link: ";
+
+    private static final String AUTOMATIC_REGISTRATION_MESSAGE = "Hello, {0}.\n" +
+            "You received this email due to automatic registration on our site.\n" +
+            "For successful profile activation and signing in, you have to follow the next link and reset password: ";
+
     private final UserRepository userRepository;
+
     private final PasswordEncoder passwordEncoder;
+    
     private final MailService mailService;
 
     @Autowired
@@ -162,10 +175,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User registration(User user) {
         log.info("Enter into registration method  with email:{}", user.getEmail());
-        String registrationMessage = "Hello, " + user.getEmail() + ".\n" +
-                    "You received this email because you requested to registration on our site.\n" +
-                    "For successful profile activation, you have to follow the next link: ";
-        return registration(user, registrationMessage);
+        return registration(user, MessageFormat.format(REGISTRATION_MESSAGE, user.getEmail()));
     }
 
     /**
@@ -183,10 +193,7 @@ public class UserServiceImpl implements UserService {
         user.setRole(role);
         user.setEmail(email);
         user.setPassword(PasswordGeneratingUtil.generatePassword());
-        String registrationMessage = "Hello, " + user.getEmail() + ".\n" +
-                "You received this email due to automatic registration on our site.\n" +
-                "For successful profile activation and signing in, you have to follow the next link and reset password: ";
-        return registration(user, registrationMessage);
+        return registration(user, MessageFormat.format(AUTOMATIC_REGISTRATION_MESSAGE, user.getEmail()));
     }
 
     /**
@@ -265,8 +272,7 @@ public class UserServiceImpl implements UserService {
             throw new IncorrectPasswordException("Password you entered is not equal to the current password for this profile");
         }
         if (!isPasswordValid(newPassword)) {
-            throw new IncorrectPasswordException("Password must contains at least: 8 characters(at least: 1 upper case, 1 lower case, " +
-                    "1 number and 1 special character('!@#$%^&*')) and no more 30 characters.");
+            throw new IncorrectPasswordException();
         }
         return passwordEncoder.encode(newPassword);
     }
@@ -279,8 +285,7 @@ public class UserServiceImpl implements UserService {
             sendRegistrationMail(user, registrationMessage);
             return registrationUser;
         } else {
-            throw new IncorrectPasswordException("Password must contains at least: 8 characters(at least: 1 upper case, 1 lower case, " +
-                    "1 number and 1 special character('!@#$%^&*')) and no more 30 characters.");
+            throw new IncorrectPasswordException();
         }
     }
 
