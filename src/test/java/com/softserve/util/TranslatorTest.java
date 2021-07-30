@@ -23,8 +23,8 @@ public class TranslatorTest {
     @Test
     public void getTranslateTest() {
         String word = "word";
-        Locale language = Locale.UK;
-        String expectedWord = "слово";
+        Locale language = Locale.GERMAN;
+        String expectedWord = "wort";
         HashMap<Locale, String> map = new HashMap(){{
             put(language, expectedWord);
         }};
@@ -38,9 +38,11 @@ public class TranslatorTest {
     @Test
     public void getTranslateIfLanguageNotExistsTest() {
         String expectedWord = "word";
-        Locale language = Locale.UK;
-        String word = "слово";
-        HashMap<Locale, String> map = new HashMap(){{ put(language, word); }};
+        Locale language = Locale.GERMAN;
+        String word = "wort";
+        HashMap<Locale, String> map = new HashMap(){{
+            put(language, word);
+        }};
         dictionary.put(expectedWord, map);
 
         Locale nonExistLanguage = Locale.JAPAN;
