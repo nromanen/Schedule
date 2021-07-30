@@ -13,4 +13,9 @@ public class PasswordGeneratingUtilTest {
         assertThat(PasswordGeneratingUtil.generatePassword())
                 .matches("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?=.*[!@#$%^&*]).{8,}$");
     }
+
+    @Test
+    public void testIfEveryTimeGeneratedPasswordIsNew() {
+        assertThat(PasswordGeneratingUtil.generatePassword()).isNotEqualTo(PasswordGeneratingUtil.generatePassword());
+    }
 }
