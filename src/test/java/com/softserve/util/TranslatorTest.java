@@ -40,12 +40,11 @@ public class TranslatorTest {
         String expectedWord = "word";
         Locale language = Locale.GERMAN;
         String word = "wort";
+        Locale nonExistLanguage = Locale.JAPAN;
         HashMap<Locale, String> map = new HashMap(){{
             put(language, word);
         }};
         dictionary.put(expectedWord, map);
-
-        Locale nonExistLanguage = Locale.JAPAN;
 
         String result = translator.getTranslation(expectedWord, nonExistLanguage);
 
