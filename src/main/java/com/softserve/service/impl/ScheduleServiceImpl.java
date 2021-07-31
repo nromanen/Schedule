@@ -83,6 +83,7 @@ public class ScheduleServiceImpl implements ScheduleService {
                 () -> new EntityNotFoundException(Schedule.class, "id", id.toString()));
         Hibernate.initialize(schedule.getLesson().getSemester().getDaysOfWeek());
         Hibernate.initialize(schedule.getLesson().getSemester().getPeriods());
+        Hibernate.initialize(schedule.getLesson().getSemester().getGroups());
         return schedule;
     }
 
@@ -98,6 +99,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         for (Schedule schedule : schedules) {
             Hibernate.initialize(schedule.getLesson().getSemester().getDaysOfWeek());
             Hibernate.initialize(schedule.getLesson().getSemester().getPeriods());
+            Hibernate.initialize(schedule.getLesson().getSemester().getGroups());
         }
         return schedules;
     }
@@ -206,7 +208,7 @@ public class ScheduleServiceImpl implements ScheduleService {
             if (groupHasScheduleInSemester(semesterId, groupId)) {
                 groupsForSchedule.add(groupService.getById(groupId));
                 ScheduleForGroupDTO scheduleForGroupDTO = new ScheduleForGroupDTO();
-                scheduleForGroupDTO.setGroup(groupMapper.groupToGroupDTO(groupsForSchedule.get(0)));
+                scheduleForGroupDTO.setGroup(groupMapper.convertToDto(groupsForSchedule.get(0)));
                 scheduleForGroupDTO.setDays(getDaysWhenGroupHasClassesBySemester(semesterId, groupId));
                 scheduleForGroupDTOList.add(scheduleForGroupDTO);
             }
@@ -215,7 +217,7 @@ public class ScheduleServiceImpl implements ScheduleService {
             groupsForSchedule.addAll(scheduleRepository.uniqueGroupsInScheduleBySemester(semesterId));
             for (Group group : groupsForSchedule) {
                 ScheduleForGroupDTO scheduleForGroupDTO = new ScheduleForGroupDTO();
-                scheduleForGroupDTO.setGroup(groupMapper.groupToGroupDTO(group));
+                scheduleForGroupDTO.setGroup(groupMapper.convertToDto(group));
                 scheduleForGroupDTO.setDays(getDaysWhenGroupHasClassesBySemester(semesterId, group.getId()));
                 scheduleForGroupDTOList.add(scheduleForGroupDTO);
             }
@@ -303,7 +305,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         groupsForSchedule.addAll(scheduleRepository.uniqueGroupsInScheduleBySemester(semesterId));
         for (Group group : groupsForSchedule) {
             ScheduleForGroupDTO scheduleForGroupDTO = new ScheduleForGroupDTO();
-            scheduleForGroupDTO.setGroup(groupMapper.groupToGroupDTO(group));
+            scheduleForGroupDTO.setGroup(groupMapper.convertToDto(group));
             scheduleForGroupDTO.setDays(getDaysForSemester(semesterId, group.getId()));
             scheduleForGroupDTOList.add(scheduleForGroupDTO);
 
@@ -552,6 +554,7 @@ public class ScheduleServiceImpl implements ScheduleService {
                 for (Map.Entry<Period, List<Schedule>> periodListEntry : uniquePeriodMap.entrySet()) {
                     for (Schedule schedule:periodListEntry.getValue()) {
                         Hibernate.initialize(schedule.getLesson().getSemester().getPeriods());
+                        Hibernate.initialize(schedule.getLesson().getSemester().getGroups());
                     }
                     Map<String, Map<String, Map<LessonType,  List<Lesson>>>> resultEven = periodListEntry.getValue().stream().filter(schedule ->
                             schedule.getDayOfWeek().equals(day) && (schedule.getEvenOdd().equals(EvenOdd.EVEN) || schedule.getEvenOdd().equals(EvenOdd.WEEKLY)))
@@ -599,6 +602,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         for (Schedule schedule : schedules) {
             Hibernate.initialize(schedule.getLesson().getSemester().getDaysOfWeek());
             Hibernate.initialize(schedule.getLesson().getSemester().getPeriods());
+            Hibernate.initialize(schedule.getLesson().getSemester().getGroups());
         }
         return schedules;
     }
@@ -645,6 +649,7 @@ return fullScheduleForTeacherByDateRange(dateRangeSchedule,  fromDate, toDate);
         List<Schedule> dateRangeSchedule = new ArrayList<>();
         for (Schedule schedule : schedules) {
             Hibernate.initialize(schedule.getLesson().getSemester().getPeriods());
+            Hibernate.initialize(schedule.getLesson().getSemester().getGroups());
             if (isDateInSemesterDateRange(schedule, toDate)) {
                 dateRangeSchedule.add(schedule);
             }

@@ -13,7 +13,8 @@ import { REGISTRATION_FORM } from '../../constants/reduxForms';
 import { authTypes } from '../../constants/auth';
 
 import { email, password, required } from '../../validation/validateFields';
-
+import { links } from '../../constants/links';
+import {Link} from 'react-router-dom';
 let RegistrationForm = props => {
     const { t } = useTranslation('formElements');
     const { handleSubmit } = props;
@@ -88,7 +89,7 @@ let RegistrationForm = props => {
                         props.setError(null);
                     }}
                 >
-                    {translation('account_exist')}
+                   <Link  className="navLinks" to={links.LOGIN}>{translation('account_exist')}</Link>
                 </button>
             </div>
         </form>

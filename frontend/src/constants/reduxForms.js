@@ -11,6 +11,7 @@ export const LOGIN_FORM = 'loginForm';
 export const REGISTRATION_FORM = 'registrationForm';
 export const RESET_PASSWORD_FORM = 'resetPasswordForm';
 export const SUBJECT_FORM = 'addSubject';
+export const DEPARTMENT_FORM = 'addDepartment';
 export const TEACHER_WISH_FORM = 'teacherWish';
 export const SEMESTER_FORM = 'addSemester';
 export const TEACHER_SCHEDULE_FORM = 'teacherScheduleForm';

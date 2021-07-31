@@ -23,13 +23,9 @@ import {
 } from '../../validation/validateFields';
 import { useTranslation } from 'react-i18next';
 import { setUniqueErrorService } from '../../services/lessonService';
+import {handleTeacherInfo } from '../../helper/renderTeacher';
 import {
-    handleTeacherInfo,
-    handleTeacherShortInfo
-} from '../../helper/handleTeacherInfo';
-import {
-    setValueToSubjectForSiteHandler,
-    setValueToTeacherForSiteHandler
+    setValueToSubjectForSiteHandler
 } from '../../helper/reduxFormHelper';
 
 const useStyles = makeStyles(() => ({
@@ -78,7 +74,7 @@ let LessonForm = props => {
             subject: lesson.subject.id,
             type: lesson.lessonType,
             hours: lesson.hours,
-            teacherForSite: lesson.teacherForSite,
+            linkToMeeting:lesson.linkToMeeting,
             subjectForSite: lesson.subjectForSite,
             grouped: lesson.grouped
         });
@@ -106,14 +102,9 @@ let LessonForm = props => {
                         {...(!isUniqueError
                             ? { validate: [required] }
                             : { error: isUniqueError })}
-                        onChange={event => {
-                            setValueToTeacherForSiteHandler(
-                                teachers,
-                                event.target.value,
-                                props.change
-                            );
-                            setUniqueErrorService(false);
-                        }}
+                        onChange={()=>
+                            setUniqueErrorService(false)
+                        }
                     >
                         <option />
                         {teachers.map(teacher => (
@@ -198,15 +189,16 @@ let LessonForm = props => {
                         />
                     </div>
                     <Field
-                        id="teacherForSite"
-                        name="teacherForSite"
+                        id="linkToMeeting"
+                        name="linkToMeeting"
                         className="form-field"
-                        multiline
                         rowsMax="1"
                         margin="normal"
                         component={renderTextField}
-                        label={t('teacher_label') + t('for_site_label')}
+                        label={t('link_to_meeting_label')}
                         validate={[required, maxLengthValue]}
+                        type="url"
+                        placeholder={"Input URL"}
                     />
                     <Field
                         id="subjectForSite"
