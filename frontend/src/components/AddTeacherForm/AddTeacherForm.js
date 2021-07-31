@@ -112,7 +112,7 @@ let AddTeacher = props => {
                     name="department"
                     className="week-days"
                     component={renderSelectField}
-                    label={t('department_label')}
+                    label={t('department_teachers_label')}
                     type="text"
                     onChange={({target})=> {
                         getDepartmentByIdService(target.value)

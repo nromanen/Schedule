@@ -24,7 +24,3 @@ export const getTeacherWithPosition = (teacher) => {
     const {name,surname,patronymic,position}=teacher;
     return `${position} ${surname} ${name} ${patronymic}`;
 };
-export const getTeacherWithDepartmentAndEmail = (teacher) => {
-    const {name,surname,patronymic,department,email}=teacher;
-    return `${surname} ${name} ${patronymic}   department:${department.name}    email:${email}`;
-};

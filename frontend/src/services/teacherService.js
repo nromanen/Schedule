@@ -25,7 +25,7 @@ import { setLoadingService } from './loadingService';
 export const showAllTeachersService = () => {
     const data=[
         {
-            "department":{
+            "department": {
                 "id": 41,
                 "name": "mat analysi",
                 "disable": false
@@ -36,7 +36,38 @@ export const showAllTeachersService = () => {
             "patronymic": "Богданівна",
             "position": "доцент",
             "disable": false,
+            "email": "nasta_2000@i.ua"
+        },
+
+        {
+            "department":{
+                "id": 41,
+                "name": "mat analysi",
+                "disable": false
+            },
+            "id": 78,
+            "name": "Наталія",
+            "surname": "Романенко",
+            "patronymic": "Богданівна",
+            "position": "доцент",
+            "disable": false,
             "email":"nasta_2000@i.ua"
+
+        },
+        {
+            "department":{
+                "id": 41,
+                "name": "mat analysi",
+                "disable": false
+            },
+            "id": 79,
+            "name": "Анна",
+            "surname": "Івах",
+            "patronymic": "Іванівна",
+            "position": "доцент",
+            "disable": false,
+            "email":"nasta_2000@i.ua"
+
         },
         {
             "department":{

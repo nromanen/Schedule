@@ -40,6 +40,7 @@ function DepartmentPage(props) {
     const [hideDialog, setHideDialog] = useState(null);
     const [department,setDepartment]=useState({});
     const [teacherDialog,setTeacherDialog]=useState(false);
+    const [editDepartment,setEditDepartment]=useState(false);
     const { isSnackbarOpen, snackbarType, snackbarMessage,teachers } = props;
     useEffect(()=>clearDepartmentForm(),[])
     const visibleDepartments = isDisabled
@@ -74,8 +75,6 @@ function DepartmentPage(props) {
     }
     const setDepartmentIntoForm=(id)=>{
         getDepartmentByIdService(id)
-
-
     }
     const closeTeacherDialog = () => {
       setTeacherDialog(false)
@@ -136,7 +135,7 @@ function DepartmentPage(props) {
                 {
                     isDisabled?'':
                     <AddDepartment
-                    onSubmit={submit} clear={clearDepartmentForm}
+                    onSubmit={submit} clear={clearDepartmentForm} editDepartment={editDepartment}
                     />
                 }
             </aside>
@@ -179,8 +178,10 @@ function DepartmentPage(props) {
                                         <FaEdit
                                             className="svg-btn edit-btn"
                                             title={t('edit_title')}
-                                            onClick={() =>
-                                                setDepartmentIntoForm(department.id)
+                                            onClick={() => {
+                                                setEditDepartment(true);
+                                                setDepartmentIntoForm(department.id);
+                                            }
                                             }
                                         />
                                     </>
@@ -203,7 +204,10 @@ function DepartmentPage(props) {
                                 title={t('show_teacher_title')}
                                 onClick={() => {
                                     showAllPublicTeachersByDepartmentService(department.id);
-                                    setTeacherDialog(true)
+                                    getDepartmentByIdService(department.id);
+                                    setDepartmentIntoForm(department.id)
+                                    setTeacherDialog(true);
+
                                     // setDepartment({});
                                     // deleteDepartment(department.id);
                                 }}

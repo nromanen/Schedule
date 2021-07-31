@@ -1,5 +1,8 @@
 {
     "edit_title": "Редагування ",
+    "send_letter_title": "Надіслати листа",
+    "rows_per_page": "Рядків на сторінку",
+    "all_page": "Усі",
     "create_title": "Створення ",
     "create_vacation_title": "Добавити вихідний",
     "delete_title": "Видалення",
@@ -11,6 +14,7 @@
     "show_teacher_title": "Показати всіх викладачів кафедри",
 
     "teacher_label": "Викладач",
+    "teachers_label": "Викладачі",
     "link_to_meeting_label": "Онлайн-заняття",
     "user_label": "Користувач",
     "group_label": "Група",
@@ -19,6 +23,9 @@
     "subject_label": "Предмет",
     "department_add_label": "Кафедра",
     "department_label": "Кафедру",
+    "department_teachers_label": "Кафедра",
+    "department_teachers": "кафедри",
+
 
     "lesson_label": "пари",
     "temporary_schedule_label": "Зміну",
@@ -105,5 +112,6 @@
     "semester_copy_red_hint": "Якщо в семестрі, в який ви копіюєте, є записи Занять, вони додадуться; якщо є записи фактичного розкладу-вони будуть замінені новими із семестру із яково ви копіюєте.",
     "grouped_label": "Групова",
     "show_archived": "Відобразити заархівовані",
-    "show_regular": "Віобразити звичайні"
+    "show_regular": "Віобразити звичайні",
+    "no_exist_teachers_at_department": "Немає викладачів на цій кафедрі"
 }
