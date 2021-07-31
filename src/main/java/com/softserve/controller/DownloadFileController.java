@@ -2,7 +2,6 @@ package com.softserve.controller;
 
 import com.softserve.dto.ScheduleForGroupDTO;
 import com.softserve.dto.ScheduleForTeacherDTO;
-import com.softserve.entity.enums.Language;
 import com.softserve.service.ScheduleService;
 import com.softserve.util.PdfReportGenerator;
 import io.swagger.annotations.Api;
@@ -20,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.List;
+import java.util.Locale;
 
 @AllArgsConstructor
 @RestController
@@ -31,11 +31,11 @@ public class DownloadFileController {
     private final ScheduleService scheduleService;
 
     @GetMapping(value = "/schedule-for-teacher-in-pdf", produces = MediaType.APPLICATION_PDF_VALUE)
-    public ResponseEntity<InputStreamResource> teacherSchedulesReport(@RequestParam Long teacherId, @RequestParam Long semesterId, @RequestParam String language) {
+    public ResponseEntity<InputStreamResource> teacherSchedulesReport(@RequestParam Long teacherId, @RequestParam Long semesterId, @RequestParam Locale language) {
         ScheduleForTeacherDTO schedule = scheduleService.getScheduleForTeacher(semesterId, teacherId);
 
         PdfReportGenerator generatePdfReport = new PdfReportGenerator();
-        ByteArrayOutputStream bis = generatePdfReport.teacherScheduleReport(schedule, Language.getLanguage(language));
+        ByteArrayOutputStream bis = generatePdfReport.teacherScheduleReport(schedule, language);
 
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=schedule.pdf");
@@ -48,11 +48,11 @@ public class DownloadFileController {
     }
 
     @GetMapping(value = "/schedule-for-group-in-pdf", produces = MediaType.APPLICATION_PDF_VALUE)
-    public ResponseEntity<InputStreamResource> groupSchedulesReport(@RequestParam Long groupId, @RequestParam Long semesterId, @RequestParam String language) {
+    public ResponseEntity<InputStreamResource> groupSchedulesReport(@RequestParam Long groupId, @RequestParam Long semesterId, @RequestParam Locale language) {
         List<ScheduleForGroupDTO> schedules = scheduleService.getFullScheduleForGroup(semesterId, groupId);
         ScheduleForGroupDTO schedule = schedules.get(0);
         PdfReportGenerator generatePdfReport = new PdfReportGenerator();
-        ByteArrayOutputStream bis = generatePdfReport.groupScheduleReport(schedule, Language.getLanguage(language));
+        ByteArrayOutputStream bis = generatePdfReport.groupScheduleReport(schedule, language);
 
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=schedule.pdf");
