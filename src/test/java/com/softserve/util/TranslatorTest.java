@@ -28,25 +28,25 @@ public class TranslatorTest {
         dictionary.put("word", new HashMap<>(){{
             put(Locale.ENGLISH, "word");
             put(Locale.GERMAN, "wort");
-            put(Locale.UK, "слово");
+            put(Locale.ITALIAN, "parola");
         }});
         dictionary.put("car", new HashMap<>(){{
             put(Locale.ENGLISH, "car");
             put(Locale.GERMAN, "auto");
-            put(Locale.UK, "машина");
+            put(Locale.UK, "macchina");
         }});
         dictionary.put("language", new HashMap<>(){{
             put(Locale.ENGLISH, "language");
             put(Locale.GERMAN, "sprache");
-            put(Locale.UK, "мова");
+            put(Locale.ITALIAN, "linguaggio");
         }});
     }
 
     @Test
     public void getTranslateTest() {
         String wordForTranslate = "word";
-        Locale languageForTranslate = Locale.UK;
-        String expectedWord = "слово";
+        Locale languageForTranslate = Locale.ITALIAN;
+        String expectedWord = "parola";
 
         String result = translator.getTranslation(wordForTranslate, languageForTranslate);
 
