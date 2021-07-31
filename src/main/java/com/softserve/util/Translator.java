@@ -27,7 +27,7 @@ public class Translator {
     public static Translator getInstance() {
         if(translator == null) {
             ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext
-                    ("applicationContext.xml");
+                    ("dictionary.xml");
             translator = (Translator) context.getBean("translator");
             context.close();
         }

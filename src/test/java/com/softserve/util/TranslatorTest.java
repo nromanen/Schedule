@@ -1,5 +1,6 @@
 package com.softserve.util;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -20,34 +21,56 @@ public class TranslatorTest {
     @InjectMocks
     private Translator translator;
 
+    @Before
+    public void setUp() {
+        dictionary.clear();
+
+        dictionary.put("word", new HashMap<>(){{
+            put(Locale.ENGLISH, "word");
+            put(Locale.GERMAN, "wort");
+            put(Locale.UK, "слово");
+        }});
+        dictionary.put("car", new HashMap<>(){{
+            put(Locale.ENGLISH, "car");
+            put(Locale.GERMAN, "auto");
+            put(Locale.UK, "машина");
+        }});
+        dictionary.put("language", new HashMap<>(){{
+            put(Locale.ENGLISH, "language");
+            put(Locale.GERMAN, "sprache");
+            put(Locale.UK, "мова");
+        }});
+    }
+
     @Test
     public void getTranslateTest() {
-        String word = "word";
-        Locale language = Locale.GERMAN;
-        String expectedWord = "wort";
-        HashMap<Locale, String> map = new HashMap(){{
-            put(language, expectedWord);
-        }};
-        dictionary.put(word, map);
+        String wordForTranslate = "word";
+        Locale languageForTranslate = Locale.UK;
+        String expectedWord = "слово";
 
-        String result = translator.getTranslation(word, language);
+        String result = translator.getTranslation(wordForTranslate, languageForTranslate);
 
         assertEquals(expectedWord, result);
     }
 
     @Test
     public void getTranslateIfLanguageNotExistsTest() {
+        String wordForTranslate = "word";
+        Locale languageForTranslate = Locale.FRANCE;
         String expectedWord = "word";
-        Locale language = Locale.GERMAN;
-        String word = "wort";
-        HashMap<Locale, String> map = new HashMap(){{
-            put(language, word);
-        }};
-        dictionary.put(expectedWord, map);
 
-        Locale nonExistLanguage = Locale.JAPAN;
+        String result = translator.getTranslation(wordForTranslate, languageForTranslate);
 
-        String result = translator.getTranslation(expectedWord, nonExistLanguage);
+        assertEquals(expectedWord, result);
+    }
+
+    @Test
+    public void getTranslateIfWordNotExistsTest() {
+        String wordForTranslate = "java";
+        Locale languageForTranslate = Locale.ENGLISH;
+        String expectedWord = "java";
+
+        String result = translator.getTranslation(wordForTranslate, languageForTranslate);
 
         assertEquals(expectedWord, result);
     }
