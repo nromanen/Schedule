@@ -103,7 +103,7 @@ let AddTeacher = props => {
                     name="email"
                     id="email"
                     component={renderTextField}
-                    type="text"
+                    type="email"
                     placeholder={t('email_field')}
                     label={t('email_field')}
                     validate={[required]}
@@ -125,15 +125,6 @@ let AddTeacher = props => {
                         </option>
                     ))}
                 </Field>
-
-                {/*<Select*/}
-                {/*    name="department"*/}
-                {/*    options={departments}*/}
-                {/*    //onChange={handleChange}*/}
-                {/*    // formatGroupLabel={formatGroupLabel}*/}
-                {/*/>*/}
-                {/*<Field id="department" name="department" type="select" component={Select} options={departments} />*/}
-                {/*<Field id="department" name="currentUser" component={ReduxFormSelect} options={departments} />*/}
 
                 <div className="form-buttons-container">
                     <Button
