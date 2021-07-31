@@ -20,6 +20,7 @@
     "group_label": "Група",
     "class_label": "Пара",
     "room_label": "Аудиторія",
+    "student_label": "Студент",
     "subject_label": "Предмет",
     "department_add_label": "Кафедра",
     "department_label": "Кафедру",
@@ -30,6 +31,7 @@
     "lesson_label": "пари",
     "temporary_schedule_label": "Зміну",
     "teacher_a_label": "Викладачa",
+    "student_a_label": "Студента",
     "group_y_label": "групи",
     "class_y_label": "Пари",
     "room_y_label": "аудиторії",
@@ -49,7 +51,12 @@
     "year_label": "Рік",
 
     "teacher_first_name": "Ім'я",
+
     "teacher_surname": "Прізвище",
+
+    "surname_placeholder": "Прізвище",
+    "name_placeholder": "Ім'я",
+    "patronymic_placeholder": "По батькові",
     "teacher_patronymic": "По батькові",
     "teacher_position": "Академічне звання",
     "email_field": "Імейл",
@@ -111,6 +118,7 @@
     "copy_label": "Копіювати",
     "semester_copy_red_hint": "Якщо в семестрі, в який ви копіюєте, є записи Занять, вони додадуться; якщо є записи фактичного розкладу-вони будуть замінені новими із семестру із яково ви копіюєте.",
     "grouped_label": "Групова",
+    "student_add_label": "Додати студента",
     "show_archived": "Відобразити заархівовані",
     "show_regular": "Віобразити звичайні",
     "no_exist_teachers_at_department": "Немає викладачів на цій кафедрі"

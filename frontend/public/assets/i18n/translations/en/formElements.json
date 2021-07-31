@@ -22,6 +22,7 @@
     "group_label": "Group",
     "class_label": "Class",
     "room_label": "Room",
+    "student_label": "Student",
     "subject_label": "Subject",
     "department_add_label": "Department",
     "department_label": "Department",
@@ -32,6 +33,7 @@
     "lesson_label": "Lesson",
     "temporary_schedule_label": "Temporary schedule",
     "teacher_a_label": "Teacher",
+    "student_a_label": "Student",
     "group_y_label": "group",
     "class_y_label": "Class",
     "room_y_label": "room",
@@ -51,6 +53,10 @@
 
     "teacher_first_name": "First Name",
     "teacher_surname": "Surname",
+    "surname_placeholder": "Surname",
+    "name_placeholder": "Name",
+    "patronymic_placeholder": "Patronymic",
+
     "teacher_patronymic": "Patronymic",
     "teacher_position": "Academic title",
     "email_field": "Email",
@@ -112,6 +118,7 @@
     "copy_label": "Copy",
     "semester_copy_red_hint": "If there are Lessons in the semester in which you are copying, they will be added; if there are records of the actual schedule, they will be replaced by new ones from the semester with which you copy.",
     "grouped_label": "Grouped",
+    "student_add_label": "Add student",
     "show_archived": "Show archived",
     "show_regular": "Show regular",
     "no_exist_teachers_at_department": "There aren't teachers at this department"

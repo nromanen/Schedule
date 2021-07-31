@@ -83,6 +83,8 @@ export const SELECT_GROUP = 'SELECT_GROUP';
 export const UPDATE_GROUP = 'UPDATE_GROUP';
 export const CLEAR_GROUP = 'CLEAR_GROUP';
 
+export const ADD_STUDENT='ADD_STUDENT';
+
 export const ADD_ROOM = 'ADD_ROOM';
 export const DELETE_ROOM = 'DELETE_ROOM';
 export const SHOW_LIST_OF_ROOMS = 'SHOW_LIST_OF_ROOMS';

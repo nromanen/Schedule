@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { FaEdit } from 'react-icons/fa';
+import { FaEdit, FaUserPlus } from 'react-icons/fa';
 import { MdDelete } from 'react-icons/md';
 import { useTranslation } from 'react-i18next';
 import React, { useEffect, useState } from 'react';
@@ -26,6 +26,14 @@ import { GiSightDisabled, IoMdEye } from 'react-icons/all';
 import { disabledCard } from '../../constants/disabledCard';
 import NavigationPage from '../../components/Navigation/NavigationPage';
 import { navigation, navigationNames } from '../../constants/navigation';
+import AddTeacherForm from '../../components/AddTeacherForm/AddTeacherForm';
+import { AddStudentDialog } from '../../share/modals/modal/addStdentDialog';
+import {
+    selectTeacherCardService,
+    setDisabledTeachersService,
+    setEnabledTeachersService
+} from '../../services/teacherService';
+import { createStudentService } from '../../services/studentService';
 
 let GroupList = props => {
     useEffect(() => showAllGroupsService(), []);
@@ -38,8 +46,10 @@ let GroupList = props => {
     const [groupId, setGroupId] = useState(-1);
     const [term, setTerm] = useState('');
     const [hideDialog, setHideDialog] = useState(null);
+    const [addStudentDialog, setAddStudentDialog] = useState(false);
 
     const [disabled, setDisabled] = useState(false);
+    const [currentGroup,setCurrentGroup]=useState({});
 
     const SearchChange = setTerm;
     const handleFormReset = () => clearGroupService();
@@ -81,7 +91,17 @@ let GroupList = props => {
     const showDisabledHandle = () => {
         setDisabled(!disabled);
     };
+    const studentSubmit = (data) => {
 
+      const sendData={...data,group:currentGroup}
+        console.log("studentSubmit",sendData);
+      setAddStudentDialog(false)
+        createStudentService(sendData)
+    }
+    const selectStudentCard = teacherCardId => {
+        setAddStudentDialog(false)
+       console.log("selectStudentCard",teacherCardId);
+    };
     return (
         <>
             <NavigationPage name={navigationNames.GROUP_LIST} val={navigation.GROUPS}/>
@@ -148,6 +168,15 @@ let GroupList = props => {
                                     title={t('delete_title')}
                                     onClick={() => handleClickOpen(group.id)}
                                 />
+                                <FaUserPlus
+                                    title={t('formElements:student_add_label')}
+                                    className="svg-btn copy-btn align-left info-btn"
+                                    onClick={()=> {
+                                        setAddStudentDialog(true);
+                                        setCurrentGroup(group)
+
+                                    }}
+                                />
                             </div>
                             <p className="group-card__description">
                                 {t('group_label') + ':'}
@@ -164,6 +193,11 @@ let GroupList = props => {
                 type={snackbarType}
                 isOpen={isSnackbarOpen}
                 handleSnackbarClose={handleSnackbarClose}
+            />
+            <AddStudentDialog
+                open={addStudentDialog}
+                onSubmit={studentSubmit}
+                onSetSelectedCard={selectStudentCard}
             />
         </>
     );
