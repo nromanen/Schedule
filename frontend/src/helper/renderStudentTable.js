@@ -180,7 +180,7 @@ export default function RenderStudentTable(props) {
                                 />
                                 <ConfirmDialog
                                     selectedValue={''}
-                                    card={student}
+                                    cardId={student}
                                     whatDelete={'student'}
                                     open={openDeleteDialog}
                                     onClose={deleteStudent}

@@ -109,7 +109,7 @@ let GroupList = props => {
         getAllStudentsByGroupId(group.id)
     }
     const onDeleteStudent = (student) => {
-        if (student.id!=='') {
+        if (student!=='') {
             deleteStudentService(student);
         }
     }
