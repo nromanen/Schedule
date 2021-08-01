@@ -13,6 +13,19 @@ const students = (state = initialState, action) => {
                 students: state.students.concat(action.result),
                 student: state.student
             });
+        case actionTypes.SHOW_ALL_STUDENTS_BY_GROUP_ID:
+            return updateObject(state, {
+                ...state,
+                students: action.result
+            });
+        case actionTypes.DELETE_STUDENT:
+            state.students = state.students.filter(
+                student => student.id !== action.result
+            );
+            return updateObject(state, {
+                students: state.students,
+                student: state.student
+            });
         default:
             return state;
     }

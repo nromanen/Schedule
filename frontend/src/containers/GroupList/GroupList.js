@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { FaEdit, FaUserPlus } from 'react-icons/fa';
+import { FaEdit, FaUserPlus, FaUsers } from 'react-icons/fa';
 import { MdDelete } from 'react-icons/md';
 import { useTranslation } from 'react-i18next';
 import React, { useEffect, useState } from 'react';
@@ -26,20 +26,17 @@ import { GiSightDisabled, IoMdEye } from 'react-icons/all';
 import { disabledCard } from '../../constants/disabledCard';
 import NavigationPage from '../../components/Navigation/NavigationPage';
 import { navigation, navigationNames } from '../../constants/navigation';
-import AddTeacherForm from '../../components/AddTeacherForm/AddTeacherForm';
 import { AddStudentDialog } from '../../share/modals/modal/addStdentDialog';
-import {
-    selectTeacherCardService,
-    setDisabledTeachersService,
-    setEnabledTeachersService
-} from '../../services/teacherService';
-import { createStudentService } from '../../services/studentService';
+
+import { createStudentService, deleteStudentService, getAllStudentsByGroupId } from '../../services/studentService';
+import { ShowStudentsDialog } from '../../share/modals/modal/showStudentsDialog';
+import { getAllDepartmentsService } from '../../services/departmentService';
 
 let GroupList = props => {
     useEffect(() => showAllGroupsService(), []);
     useEffect(() => getDisabledGroupsService(), []);
 
-    const { isSnackbarOpen, snackbarType, snackbarMessage } = props;
+    const { isSnackbarOpen, snackbarType, snackbarMessage,students } = props;
     const { t } = useTranslation('formElements');
 
     const [open, setOpen] = useState(false);
@@ -50,6 +47,8 @@ let GroupList = props => {
 
     const [disabled, setDisabled] = useState(false);
     const [currentGroup,setCurrentGroup]=useState({});
+    const [currentStudent,setCurrentStudent]=useState({});
+    const [showStudents, setShowStudents]=useState(false);
 
     const SearchChange = setTerm;
     const handleFormReset = () => clearGroupService();
@@ -68,6 +67,7 @@ let GroupList = props => {
         if (reason === 'clickaway') return;
         handleSnackbarCloseService();
     };
+
 
     const handleClose = groupId => {
         setOpen(false);
@@ -94,14 +94,26 @@ let GroupList = props => {
     const studentSubmit = (data) => {
 
       const sendData={...data,group:currentGroup}
-        console.log("studentSubmit",sendData);
       setAddStudentDialog(false)
         createStudentService(sendData)
     }
     const selectStudentCard = teacherCardId => {
         setAddStudentDialog(false)
-       console.log("selectStudentCard",teacherCardId);
     };
+    const onCloseShowStudents = () => {
+      setShowStudents(false)
+    }
+    const onShowStudentByGroup = (group) => {
+        setShowStudents(true)
+        setCurrentGroup(group);
+        getAllStudentsByGroupId(group.id)
+    }
+    const onDeleteStudent = (student) => {
+        if (student.id!=='') {
+            deleteStudentService(student);
+        }
+    }
+
     return (
         <>
             <NavigationPage name={navigationNames.GROUP_LIST} val={navigation.GROUPS}/>
@@ -112,6 +124,19 @@ let GroupList = props => {
                 open={open}
                 onClose={handleClose}
             />
+            <AddStudentDialog
+                open={addStudentDialog}
+                onSubmit={studentSubmit}
+                onSetSelectedCard={selectStudentCard}
+            />
+            <ShowStudentsDialog
+                onClose={onCloseShowStudents}
+                open={showStudents}
+                students={students}
+                group={currentGroup}
+                onDeleteStudent={onDeleteStudent}
+            />
+
             <div className="cards-container">
                 <aside className="search-list__panel">
                     <SearchPanel
@@ -177,6 +202,7 @@ let GroupList = props => {
 
                                     }}
                                 />
+
                             </div>
                             <p className="group-card__description">
                                 {t('group_label') + ':'}
@@ -184,6 +210,18 @@ let GroupList = props => {
                             <h1 className="group-card__number">
                                 {group.title}
                             </h1>
+                            <span className="students-group">
+                                <FaUsers
+                                    title={t('formElements:show_students')}
+                                    className="svg-btn copy-btn align-left info-btn students"
+                                    onClick={
+                                        ()=> {
+                                        onShowStudentByGroup(group)
+                                    }
+                                }
+                                />
+                            </span>
+
                         </section>
                     ))}
                 </div>
@@ -194,11 +232,7 @@ let GroupList = props => {
                 isOpen={isSnackbarOpen}
                 handleSnackbarClose={handleSnackbarClose}
             />
-            <AddStudentDialog
-                open={addStudentDialog}
-                onSubmit={studentSubmit}
-                onSetSelectedCard={selectStudentCard}
-            />
+
         </>
     );
 };
@@ -207,7 +241,8 @@ const mapStateToProps = state => ({
     disabledGroups: state.groups.disabledGroups,
     isSnackbarOpen: state.snackbar.isSnackbarOpen,
     snackbarType: state.snackbar.snackbarType,
-    snackbarMessage: state.snackbar.message
+    snackbarMessage: state.snackbar.message,
+    students: state.students.students
 });
 
 export default connect(mapStateToProps, {})(GroupList);

@@ -12,10 +12,10 @@ import i18n from '../../helper/i18n';
 import { disabledCard } from '../../constants/disabledCard';
 
 export const ConfirmDialog = props => {
-    const { onClose, whatDelete, cardId, isHide, open } = props;
+    const { onClose, whatDelete, card, isHide, open } = props;
 
     const handleClose = () => {
-        onClose(cardId);
+        onClose(card);
     };
 
     return (
@@ -54,7 +54,7 @@ export const ConfirmDialog = props => {
                     className="dialog-button"
                     variant="contained"
                     color="primary"
-                    onClick={() => onClose(cardId)}
+                    onClick={() => onClose(card)}
                 >
                     {i18n.t('common:yes_button_title')}
                 </Button>

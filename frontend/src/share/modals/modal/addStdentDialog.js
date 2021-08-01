@@ -70,7 +70,6 @@ export let AddStudentDialog = props => {
             />
             <DialogTitle id="confirm-dialog-title">
                 <Card class="form-card teacher-form">
-                    {console.log(props)}
 
                     <form className="createTeacherForm w-100" onSubmit={handleSubmit}>
 

@@ -1,6 +1,7 @@
 {
     "edit_title": "Edit ",
     "send_letter_title": "Send letter ",
+    "change_student": "Change student",
     "rows_per_page": "Rows per page",
     "all_page": "All",
     "edit_vacation_title": "Edit vacation",
@@ -17,6 +18,7 @@
 
     "teacher_label": "Teacher",
     "teachers_label": "Teachers",
+    "students_label": "Students",
     "link_to_meeting_label": "Online meeting",
     "user_label": "User",
     "group_label": "Group",
@@ -28,6 +30,7 @@
     "department_label": "Department",
     "department_teachers_label": "Department",
     "department_teachers": "of department",
+    "group_students": "of group",
     "type_label": "Type",
     "hours_label": "Hour(s)",
     "lesson_label": "Lesson",
@@ -119,7 +122,9 @@
     "semester_copy_red_hint": "If there are Lessons in the semester in which you are copying, they will be added; if there are records of the actual schedule, they will be replaced by new ones from the semester with which you copy.",
     "grouped_label": "Grouped",
     "student_add_label": "Add student",
+    "show_students": "Show students by this group",
     "show_archived": "Show archived",
     "show_regular": "Show regular",
-    "no_exist_teachers_at_department": "There aren't teachers at this department"
+    "no_exist_teachers_at_department": "There aren't teachers at this department",
+    "no_exist_students_in_group": "There aren't students in this group"
 }

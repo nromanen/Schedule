@@ -138,7 +138,6 @@ const cardTeacher = teacher => {
 };
 
 export const updateTeacherService = data => {
-    console.log("updateTeacherService",data)
     return axios
         .put(TEACHER_URL, data.teacher)
         .then(response => {
@@ -162,7 +161,6 @@ export const updateTeacherService = data => {
 };
 
 export const handleTeacherService = values => {
-    console.log("handleTeacherService",values)
     const teacher = cardTeacher(values);
 
     if (values.id) {

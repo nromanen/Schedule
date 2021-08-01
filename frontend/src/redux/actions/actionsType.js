@@ -84,6 +84,8 @@ export const UPDATE_GROUP = 'UPDATE_GROUP';
 export const CLEAR_GROUP = 'CLEAR_GROUP';
 
 export const ADD_STUDENT='ADD_STUDENT';
+export const SHOW_ALL_STUDENTS_BY_GROUP_ID='SHOW_ALL_STUDENTS_BY_GROUP_ID';
+export const DELETE_STUDENT='DELETE_STUDENT';
 
 export const ADD_ROOM = 'ADD_ROOM';
 export const DELETE_ROOM = 'DELETE_ROOM';

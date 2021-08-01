@@ -1,12 +1,13 @@
 import axios from '../helper/axios';
 import { STUDENT_URL, SUBJECT_URL } from '../constants/axios';
 import { store } from '../index';
-import { addSubject } from '../redux/actions';
+import { addSubject, deleteSubject } from '../redux/actions';
 import { resetFormHandler } from '../helper/formHelper';
 import { STUDENT_FORM, SUBJECT_FORM } from '../constants/reduxForms';
 import { errorHandler, successHandler } from '../helper/handlerAxios';
 import i18n from '../helper/i18n';
-import { addStudent } from '../redux/actions/students';
+import { addStudent, deleteStudent, showAllStudentsByGroupId } from '../redux/actions/students';
+import { getDisabledSubjectsService } from './subjectService';
 
 export const createStudentService = data => {
     axios
@@ -18,6 +19,31 @@ export const createStudentService = data => {
                 i18n.t('serviceMessages:back_end_success_operation', {
                     cardType: i18n.t('formElements:student_label'),
                     actionType: i18n.t('serviceMessages:created_label')
+                })
+            );
+        })
+        .catch(error => errorHandler(error));
+};
+export const getAllStudentsByGroupId = groupId => {
+    axios
+        .get(STUDENT_URL)
+        .then(response => {
+            let result=response.data.filter(({ group })=>group.id===groupId)
+            store.dispatch(showAllStudentsByGroupId(result));
+        })
+        .catch(error => errorHandler(error));
+};
+export const deleteStudentService = student => {
+    console.log(student)
+    axios
+        .delete(STUDENT_URL + `/${student.id}`)
+        .then(response => {
+            store.dispatch(deleteStudent(student.id));
+            getAllStudentsByGroupId(student.group.id)
+            successHandler(
+                i18n.t('serviceMessages:back_end_success_operation', {
+                    cardType: i18n.t('formElements:student_label'),
+                    actionType: i18n.t('serviceMessages:deleted_label')
                 })
             );
         })
