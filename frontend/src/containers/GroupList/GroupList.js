@@ -26,11 +26,17 @@ import { GiSightDisabled, IoMdEye } from 'react-icons/all';
 import { disabledCard } from '../../constants/disabledCard';
 import NavigationPage from '../../components/Navigation/NavigationPage';
 import { navigation, navigationNames } from '../../constants/navigation';
-import { AddStudentDialog } from '../../share/modals/modal/addStdentDialog';
 
-import { createStudentService, deleteStudentService, getAllStudentsByGroupId } from '../../services/studentService';
+
+import {
+    createStudentService,
+    deleteStudentService,
+    getAllStudentsByGroupId,
+    updateStudentService
+} from '../../services/studentService';
 import { ShowStudentsDialog } from '../../share/modals/modal/showStudentsDialog';
 import { getAllDepartmentsService } from '../../services/departmentService';
+import AddStudentDialog from '../../share/modals/modal/AddStudentDialog';
 
 let GroupList = props => {
     useEffect(() => showAllGroupsService(), []);
@@ -92,12 +98,22 @@ let GroupList = props => {
         setDisabled(!disabled);
     };
     const studentSubmit = (data) => {
-
-      const sendData={...data,group:currentGroup}
-      setAddStudentDialog(false)
-        createStudentService(sendData)
+        if(data.id!==undefined){
+            const sendData={...data,group:{id:data.group}};
+            updateStudentService(sendData);
+        }
+        else {
+            const sendData={...data,group:currentGroup}
+           
+              createStudentService(sendData)
+        }
+        setAddStudentDialog(false)
+        console.log("studentSubmit",data)
+      // const sendData={...data,group:currentGroup}
+      // setAddStudentDialog(false)
+      //   createStudentService(sendData)
     }
-    const selectStudentCard = teacherCardId => {
+    const selectStudentCard = () => {
         setAddStudentDialog(false)
     };
     const onCloseShowStudents = () => {
@@ -135,6 +151,8 @@ let GroupList = props => {
                 students={students}
                 group={currentGroup}
                 onDeleteStudent={onDeleteStudent}
+
+                onSubmit={studentSubmit}
             />
 
             <div className="cards-container">

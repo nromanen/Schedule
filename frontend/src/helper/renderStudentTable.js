@@ -23,6 +23,8 @@ import { FaEdit } from 'react-icons/all';
 import { Delete } from '@material-ui/icons';
 import { cardType } from '../constants/cardType';
 import ConfirmDialog from '../share/modals/dialog';
+import  AddStudentDialog  from '../share/modals/modal/AddStudentDialog';
+import { selectStudentService } from '../services/studentService';
 const useStyles1 = makeStyles((theme) => ({
     root: {
         flexShrink: 0,
@@ -117,8 +119,9 @@ export default function RenderStudentTable(props) {
     const classes = useStyles2();
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
-    const {students,onDeleteStudent}=props;
+    const {students,onDeleteStudent,onSubmit}=props;
     const [openDeleteDialog,setOpenDeleteDialog]=useState(false);
+    const [openEditDialog,setOpenEditDialog]=useState(false);
     const { t } = useTranslation('formElements');
 
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, students.length - page * rowsPerPage);
@@ -140,6 +143,14 @@ export default function RenderStudentTable(props) {
     const deleteStudent = (student) => {
         setOpenDeleteDialog(false);
         onDeleteStudent(student);
+    }
+    const handleEdit=(studentId)=>{
+        setOpenEditDialog(true);
+        selectStudentService(studentId)
+    }
+    const handleCloseEditDialog=()=>{
+        setOpenEditDialog(false);
+        selectStudentService(null)
     }
 
     return (
@@ -174,9 +185,17 @@ export default function RenderStudentTable(props) {
                             <StyledTableCell style={{ width: 160 }}>
 
                                 <FaEdit
+                                    className="group__buttons-edit"
+                                    title={t('edit_title')}
+                                    onClick={() => handleEdit(student.id)}
                                 />
                                 <Delete
                                     onClick={()=>setOpenDeleteDialog(true)}
+                                />
+                                <AddStudentDialog
+                                    open={openEditDialog}
+                                    onSubmit={onSubmit}
+                                    onSetSelectedCard={handleCloseEditDialog}
                                 />
                                 <ConfirmDialog
                                     selectedValue={''}

@@ -17,7 +17,7 @@ import RenderStudentTable from '../../../helper/renderStudentTable';
 import { getAllStudentsByGroupId } from '../../../services/studentService';
 
 export const ShowStudentsDialog = props => {
-    const { onClose,  cardId, open,group,onDeleteStudent,students } = props;
+    const { onClose,  cardId, open,group,onDeleteStudent,students,onSubmit} = props;
     const { t } = useTranslation('formElements');
     const handleClose = () => {
         onClose(cardId);
@@ -46,7 +46,7 @@ export const ShowStudentsDialog = props => {
                             :
                             <>
                                 <h3 className="title-align"><span>{students.length!==1?`${t('students_label')} `:`${t('student_label')}`}</span>{`${t('group_students')} `}<span>{`${group.title}`}</span></h3>
-                                <RenderStudentTable onDeleteStudent={onDeleteStudent} students={students}/>
+                                <RenderStudentTable onDeleteStudent={onDeleteStudent} students={students} onSubmit={onSubmit}/>
                             </>
                         }
                     </>

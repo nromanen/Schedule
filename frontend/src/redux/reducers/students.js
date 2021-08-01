@@ -26,6 +26,30 @@ const students = (state = initialState, action) => {
                 students: state.students,
                 student: state.student
             });
+        case actionTypes.SET_STUDENT:
+            let student = state.students.filter(
+                student => student.id === action.result
+            )[0];
+
+            if (!student) {
+                student = { id: null };
+            }
+            return updateObject(state, {
+                students: state.students,
+                student: student
+            });
+        case actionTypes.UPDATE_STUDENT:
+            const updatedStudents = [];
+            state.students.forEach(student => {
+                if (student.id === action.result.id) {
+                    student = { ...student, ...action.result };
+                }
+                updatedStudents.push(student);
+            });
+            return updateObject(state, {
+                students: updatedStudents,
+                student: {}
+            });
         default:
             return state;
     }

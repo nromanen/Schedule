@@ -15,6 +15,18 @@ export const showAllStudentsByGroupId=res=>{
 export const deleteStudent=res=>{
     return{
         type:actionTypes.DELETE_STUDENT,
-        return:res
+        result:res
     }
 }
+export const setStudent=res=>{
+    return{
+        type:actionTypes.SET_STUDENT,
+        result:res
+    }
+}
+export const updateStudent = res => {
+    return {
+        type: actionTypes.UPDATE_STUDENT,
+        result: res
+    };
+};

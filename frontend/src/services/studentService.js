@@ -1,13 +1,19 @@
 import axios from '../helper/axios';
 import { STUDENT_URL, SUBJECT_URL } from '../constants/axios';
 import { store } from '../index';
-import { addSubject, deleteSubject } from '../redux/actions';
+import { addSubject, deleteSubject, selectGroup, updateSubject } from '../redux/actions';
 import { resetFormHandler } from '../helper/formHelper';
 import { STUDENT_FORM, SUBJECT_FORM } from '../constants/reduxForms';
 import { errorHandler, successHandler } from '../helper/handlerAxios';
 import i18n from '../helper/i18n';
-import { addStudent, deleteStudent, showAllStudentsByGroupId } from '../redux/actions/students';
-import { getDisabledSubjectsService } from './subjectService';
+import {
+    addStudent,
+    deleteStudent,
+    setStudent,
+    showAllStudentsByGroupId,
+    updateStudent
+} from '../redux/actions/students';
+import { getDisabledSubjectsService, selectSubjectService, showAllSubjectsService } from './subjectService';
 
 export const createStudentService = data => {
     axios
@@ -49,3 +55,23 @@ export const deleteStudentService = student => {
         })
         .catch(error => errorHandler(error));
 };
+export const updateStudentService = data => {
+    return axios
+        .put(STUDENT_URL, data)
+        .then(response => {
+            store.dispatch(updateStudent(response.data));
+            selectStudentService(null);
+            // showAllSubjectsService();
+            // getDisabledSubjectsService();
+            resetFormHandler(STUDENT_FORM);
+            successHandler(
+                i18n.t('serviceMessages:back_end_success_operation', {
+                    cardType: i18n.t('formElements:student_label'),
+                    actionType: i18n.t('serviceMessages:updated_label')
+                })
+            );
+        })
+        .catch(error => errorHandler(error));
+};
+export const selectStudentService = studentId =>
+    store.dispatch(setStudent(studentId));
