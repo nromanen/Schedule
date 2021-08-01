@@ -82,11 +82,17 @@ public class SemesterServiceImpl implements SemesterService {
         if (isSemesterExistsByDescriptionAndYear(object.getDescription(), object.getYear())) {
             throw new EntityAlreadyExistsException("Semester already exists with current description and year.");
         }
-        checkIsEmpty(object);
+        if (object.isCurrentSemester()) {
+            semesterRepository.setCurrentSemesterToFalse();
+        }
+        if (object.isDefaultSemester()) {
+            semesterRepository.setDefaultSemesterToFalse();
+        }
+        insertDefaultValues(object);
         return semesterRepository.save(object);
     }
 
-    private void checkIsEmpty(Semester object) {
+    private void insertDefaultValues(Semester object) {
         if (object.getDaysOfWeek().isEmpty()){
             List<DayOfWeek> dayOfWeekList = Arrays.asList(DayOfWeek.MONDAY, DayOfWeek.TUESDAY, DayOfWeek.WEDNESDAY, DayOfWeek.THURSDAY, DayOfWeek.FRIDAY);
             Set<DayOfWeek> dayOfWeekSet = new HashSet<>(dayOfWeekList);
@@ -95,9 +101,6 @@ public class SemesterServiceImpl implements SemesterService {
         if (object.getPeriods().isEmpty()){
             Set<Period> periodSet = new HashSet<>(periodService.getFirstFourPeriods());
             object.setPeriods(periodSet);
-        }
-        if (object.isCurrentSemester()) {
-            semesterRepository.setCurrentSemesterToFalse();
         }
     }
 
@@ -116,7 +119,7 @@ public class SemesterServiceImpl implements SemesterService {
         if (isSemesterExistsByDescriptionAndYearForUpdate(object.getId(), object.getDescription(), object.getYear())) {
             throw new EntityAlreadyExistsException("Semester already exists with current description and year.");
         }
-        checkIsEmpty(object);
+        insertDefaultValues(object);
         return semesterRepository.update(object);
     }
 
