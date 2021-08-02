@@ -24,7 +24,5 @@ public class SemesterDTO {
     private TreeSet<DayOfWeek> daysOfWeek;
     @JsonProperty("semester_classes")
     private LinkedHashSet<PeriodDTO> periods;
-    @JsonProperty("semester_groups")
-    private LinkedHashSet<GroupForSemesterDTO> groups;
     private boolean disable;
 }

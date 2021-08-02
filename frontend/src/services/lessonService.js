@@ -28,6 +28,7 @@ import { checkUniqLesson } from '../validation/storeValidation';
 import i18n from '../helper/i18n';
 import { errorHandler, successHandler } from '../helper/handlerAxios';
 import { resetFormHandler } from '../helper/formHelper';
+import { getTeacherById } from './teacherService';
 
 export const getLessonsByGroupService = groupId => {
     axios
@@ -65,7 +66,7 @@ const cardObjectHandler = (card, groupId) => {
         lessonType: card.type,
         subjectForSite: card.subjectForSite,
         teacher: { id: card.teacher },
-        teacherForSite: card.teacherForSite,
+        linkToMeeting:card.linkToMeeting,
         grouped: card.grouped
     };
 };
@@ -112,6 +113,7 @@ const createLessonHandler = (data, isCopy) => {
 };
 
 export const handleLessonCardService = (card, groupId) => {
+
     let cardObj = cardObjectHandler(card, groupId);
     if (!checkUniqLesson(cardObj)) {
         handleSnackbarOpenService(
@@ -123,7 +125,14 @@ export const handleLessonCardService = (card, groupId) => {
         return;
     }
     if (cardObj.id) {
-        updateLessonHandler(cardObj);
+        axios
+            .get(`teachers/${cardObj.teacher.id}`)
+            .then(res => {
+                cardObj={...cardObj,teacher: res.data}
+                updateLessonHandler(cardObj);
+            })
+            .catch(error => errorHandler(error));
+
     } else {
         createLessonHandler(cardObj, false);
     }

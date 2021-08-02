@@ -13,6 +13,12 @@ export const setCurrentSemester = res => {
         result: res
     };
 };
+export const setDefaultSemester = res => {
+    return {
+        type: actionTypes.SET_DEFAULT_SEMESTER,
+        result: res
+    };
+};
 
 export const addItemToSchedule = res => {
     return {

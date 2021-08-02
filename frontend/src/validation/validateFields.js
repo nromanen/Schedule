@@ -6,7 +6,7 @@ import {
     checkUniqueSubject,
     checkUniqWish,
     timeIntersectService,
-    checkUniqSemester
+    checkUniqSemester, checkUniqueDepartment
 } from './storeValidation';
 import i18n from '../helper/i18n';
 import { validation } from '../constants/validation';
@@ -69,7 +69,9 @@ export const uniqueGroup = value => {
 export const uniqueSubject = value => {
     return checkUniqueSubject(value);
 };
-
+export const uniqueDepartment = value => {
+    return checkUniqueDepartment(value);
+};
 export const timeIntersect = (value, previousValue, allValues) => {
     return timeIntersectService(
         allValues.values['startTime'],

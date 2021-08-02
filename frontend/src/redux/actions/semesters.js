@@ -1,6 +1,7 @@
 import * as actionTypes from './actionsType';
 
 export const showAllSemesters = res => {
+
     return {
         type: actionTypes.SHOW_ALL_SEMESTERS,
         result: res
@@ -35,6 +36,7 @@ export const deleteSemester = res => {
 };
 
 export const selectSemester = res => {
+
     return {
         type: actionTypes.SELECT_SEMESTER,
         result: res

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import {
@@ -19,21 +19,41 @@ import {
     renderFullSchedule,
     renderWeekTable
 } from '../../helper/renderScheduleTable';
-import { submitSearchSchedule } from '../../services/scheduleService';
+import {
+    getFullSchedule, getGroupSchedule, getTeacherSchedule,
+    setScheduleGroupIdService,
+    setScheduleSemesterIdService,
+    setScheduleTeacherIdService, showAllPublicSemestersService,
+    submitSearchSchedule, submitSearchSchedule1
+} from '../../services/scheduleService';
 
 import GroupSchedulePageTop from '../GroupSchedulePageTop/GroupSchedulePageTop';
 import { setLoadingService } from '../../services/loadingService';
-
+import {useHistory,useLocation} from 'react-router-dom';
+import { links } from '../../constants/links';
+import RadioGroup from '@material-ui/core/RadioGroup';
+import { FormLabel, InputLabel, MenuItem, Select } from '@material-ui/core';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Radio from '@material-ui/core/Radio';
+import { places } from '../../constants/places';
+import i18n from 'i18next';
+import { Contactless } from '@material-ui/icons';
+import { getTeacherWithPosition } from '../../helper/renderTeacher';
 const GroupSchedulePage = props => {
-    let { groupSchedule, fullSchedule, teacherSchedule } = props;
 
+    const [place,setPlace]=useState(places.TOGETHER);
+    let {scheduleType, groupSchedule, fullSchedule, teacherSchedule,groupId,teacherId ,semesterId,loading,defaultSemester,semesters} = props;
+    let history = useHistory();
+
+    const location = useLocation();
     const emptySchedule = () => (
         <p className="empty_schedule">{t('common:empty_schedule')}</p>
     );
     const { t } = useTranslation('common');
-
     const renderDownloadLink = (entity, semesterId, entityId) => {
         let link = '';
+        const {language}=i18n;
+        const languageToRequest=`&language=${language}`;
         if (semesterId && entityId) {
             switch (entity) {
                 case 'group':
@@ -42,7 +62,8 @@ const GroupSchedulePage = props => {
                         '?groupId=' +
                         entityId +
                         '&semesterId=' +
-                        semesterId;
+                        semesterId+
+                        languageToRequest;
                     break;
                 case 'teacher':
                     link =
@@ -50,7 +71,8 @@ const GroupSchedulePage = props => {
                         '?teacherId=' +
                         entityId +
                         '&semesterId=' +
-                        semesterId;
+                        semesterId+
+                        languageToRequest;
                     break;
                 default:
                     break;
@@ -101,13 +123,7 @@ const GroupSchedulePage = props => {
         }
         if (teacher) {
             title +=
-                teacher.position +
-                ' ' +
-                teacher.surname +
-                ' ' +
-                teacher.name +
-                ' ' +
-                teacher.patronymic;
+                getTeacherWithPosition(teacher);
         }
         return title;
     };
@@ -144,17 +160,20 @@ const GroupSchedulePage = props => {
                             {renderGroupTable(
                                 resultArrays.oddArray,
                                 1,
-                                resultArrays.semester
+                                resultArrays.semester,
+                                place
                             )}
                             <h2>{t('common:even_week')}</h2>
                             {renderGroupTable(
                                 resultArrays.evenArray,
                                 0,
-                                resultArrays.semester
+                                resultArrays.semester,
+                                place
                             )}
                         </>
                     );
                 }
+                else setLoadingService(false)
                 break;
             case 'teacher':
                 if (
@@ -165,31 +184,35 @@ const GroupSchedulePage = props => {
                 ) {
                     return emptySchedule();
                 }
-                const teacher = makeTeacherSchedule(teacherSchedule);
-                if (teacher.done) {
-                    setLoadingService(false);
-                    return (
-                        <>
-                            <h1>
-                                {renderTeacherScheduleTitle(
-                                    teacher.semester,
-                                    teacher.teacher
-                                )}
-                                {renderDownloadLink(
-                                    'teacher',
-                                    props.semesterId,
-                                    props.teacherId
-                                )}
-                            </h1>
-                            <h2>{t('common:odd_week')}</h2>
-                            {renderWeekTable(teacher.odd, 1)}
-                            <h2>{t('common:even_week')}</h2>
-                            {renderWeekTable(teacher.even, 0)}
-                        </>
-                    );
-                }
+                    if(teacherSchedule) {
+                        const teacher = makeTeacherSchedule(teacherSchedule);
+                        if (teacher.done) {
+                            setLoadingService(false);
+                            return (
+                                <>
+                                    <h1>
+                                        {renderTeacherScheduleTitle(
+                                            teacher.semester,
+                                            teacher.teacher
+                                        )}
+                                        {renderDownloadLink(
+                                            'teacher',
+                                            props.semesterId,
+                                            props.teacherId
+                                        )}
+                                    </h1>
+                                    <h2>{t('common:odd_week')}</h2>
+                                    {renderWeekTable(teacher.odd, 1,place)}
+                                    <h2>{t('common:even_week')}</h2>
+                                    {renderWeekTable(teacher.even, 0,place)}
+                                </>
+                            );
+                        }
+                    }
+                    else setLoadingService(false)
                 break;
             case 'full':
+
                 if (
                     (!fullSchedule.schedule ||
                         fullSchedule.schedule.length === 0) &&
@@ -198,10 +221,12 @@ const GroupSchedulePage = props => {
                     return emptySchedule();
                 }
                 const result = makeFullSchedule(fullSchedule);
+
                 if (result.groupsCount || result.done) {
                     setLoadingService(false);
-                    return renderFullSchedule(result);
+                    return renderFullSchedule(result,place);
                 }
+                else setLoadingService(false)
                 break;
             case 'archived':
                 if (
@@ -214,27 +239,102 @@ const GroupSchedulePage = props => {
                 const archive = makeFullSchedule(fullSchedule);
                 if (archive.groupsCount || archive.done) {
                     setLoadingService(false);
-                    return renderFullSchedule(archive);
+                    return renderFullSchedule(archive,place);
                 }
+                else setLoadingService(false)
                 break;
+
+
             default:
                 return;
         }
     };
 
     const handleSubmit = values => {
+        const {semester,group,teacher}=values
+        const groupPath=group?"&group="+group:"";
+        const teacherPath=teacher?"&teacher="+teacher:"";
         setLoadingService('true');
-        submitSearchSchedule(values);
+        submitSearchSchedule(values, history);
+        history.push(links.ScheduleFor+"?semester="+semester+groupPath+teacherPath);
+
     };
+    useEffect(()=>getFullSchedule(),[place])
+
+
+    useEffect(()=> {
+         if(scheduleType==="group")
+         getGroupSchedule(groupId, semesterId);
+     },[groupId])
+     useEffect(()=> {
+         if(scheduleType==="teacher")
+         getTeacherSchedule(teacherId, semesterId);
+     },[teacherId])
+     // useEffect(()=> {
+     //     console.log("USE",scheduleType,loading, props)
+     //     if((scheduleType==="full"&&semesters===undefined)) {
+     //         console.log("scheduleType,semesters",scheduleType,semesters)
+     //         getFullSchedule();
+     //     }
+     // })
+    useEffect(()=> {
+        if((scheduleType==="full"&&fullSchedule.length===0)) {
+            getFullSchedule();
+        }
+    })
+
+   const getSchedule=()=>{
+       if((props.scheduleType==="")&&(props.defaultSemester.id!==undefined)){
+           const semester=`${props.defaultSemester.id}`;
+           handleSubmit({ "semester":semester });
+
+           return
+       }
+       if(props.scheduleType!==""|| location.pathname===links.HOME_PAGE){
+
+           return renderSchedule();
+
+       }
+
+
+       const params = new URLSearchParams(location.search);
+
+       const semester= params.get("semester");
+       const teacher=params.get("teacher");
+       const group=params.get("group");
+
+       if(semester!==null) {
+           handleSubmit({ semester, 'group': group != null ? group : 0, 'teacher': teacher != null ? teacher : 0 });
+        return null
+       }
+       else return null;
+    }
+
+    const getTop=()=>{
+
+       if(props.scheduleType !== 'archived') {
+
+         return (
+             <GroupSchedulePageTop
+                  scheduleType={props.scheduleType}
+                 onSubmit={handleSubmit} place={place} onChange={changePlace}
+             />
+         );
+
+
+       }
+       return null;
+    }
+    const changePlace=(e)=>{
+        if(e.target) {
+            setPlace(e.target.value);}
+    }
+
 
     return (
         <>
-            {props.scheduleType !== 'archived' ? (
-                <GroupSchedulePageTop onSubmit={handleSubmit} />
-            ) : (
-                ''
-            )}
-            {renderSchedule()}
+            {getTop()}
+            {getSchedule()}
         </>
     );
 };
@@ -246,6 +346,10 @@ const mapStateToProps = state => ({
     groupId: state.schedule.scheduleGroupId,
     teacherId: state.schedule.scheduleTeacherId,
     semesterId: state.schedule.scheduleSemesterId,
-    loading: state.loadingIndicator.loading
+    loading: state.loadingIndicator.loading,
+    defaultSemester: state.schedule.defaultSemester,
+    semesters: state.schedule.semesters,
+
+
 });
 export default connect(mapStateToProps)(GroupSchedulePage);

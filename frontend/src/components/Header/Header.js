@@ -95,7 +95,7 @@ const Header = props => {
         let userMenu = null;
         if (userRole === null || userRole === undefined) {
             return (
-                <Link to={links.AUTH} className="navLinks">
+                <Link to={links.LOGIN} className="navLinks">
                     {t('login_title')}
                 </Link>
             );
@@ -530,9 +530,13 @@ const Header = props => {
                         to={links.HOME_PAGE}
                         className="navLinks"
                         style={{ textDecoration: 'none' }}
-                        onClick={handleClose}
+                        onClick={ () => {
+                            setAnchorEl(null);
+                        }}
+
                     >
                         <StyledMenuItem>
+
                             <ListItemIcon>
                                 <FaHome fontSize="normall" />
                             </ListItemIcon>
@@ -540,7 +544,7 @@ const Header = props => {
                         </StyledMenuItem>
                     </Link>
                     <Link
-                        to={links.AUTH}
+                        to={links.LOGIN}
                         className="navLinks"
                         style={{ textDecoration: 'none' }}
                         onClick={handleClose}
@@ -576,6 +580,7 @@ const Header = props => {
                 {menu}
                 <nav className="header-blocks header-blocks_one">
                     <Link to={links.HOME_PAGE} className="navLinks">
+
                         {t('home_title')}
                     </Link>
                     {leftLinks}

@@ -138,6 +138,18 @@ export const checkUniqueSubject = subjectTitle => {
     });
     return find ? i18n.t('validationMessages:unique_error_message') : undefined;
 };
+export const checkUniqueDepartment = departmentTitle => {
+    if (!departmentTitle) {
+        return;
+    }
+    const find = store.getState().departments.departments.some(function (value) {
+        return (
+            value.name.toUpperCase().trim() ===
+            departmentTitle.toUpperCase().trim()
+        );
+    });
+    return find ? i18n.t('validationMessages:unique_error_message') : undefined;
+};
 
 export const checkUniqWish = wish => {
     if (!wish) {

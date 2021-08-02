@@ -2,8 +2,9 @@ package com.softserve.service;
 
 import com.softserve.entity.Group;
 import com.softserve.entity.Student;
+import com.softserve.exception.EntityNotFoundException;
+import com.softserve.exception.FieldAlreadyExistsException;
 import com.softserve.repository.StudentRepository;
-import com.softserve.service.impl.GroupServiceImpl;
 import com.softserve.service.impl.StudentServiceImpl;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -28,9 +29,6 @@ public class StudentServiceTest {
     @Mock
     StudentRepository studentRepository;
 
-    @Mock
-    GroupServiceImpl groupService;
-
     @InjectMocks
     StudentServiceImpl studentService;
 
@@ -41,7 +39,7 @@ public class StudentServiceTest {
         student.setSurname("Surname");
         student.setPatronymic("Patronymic");
         student.setEmail("tempStudent@gmail.com");
-        student.setUser_id(1L);
+        student.setUserId(1L);
         student.setGroup(new Group());
 
         when(studentRepository.getAll()).thenReturn(Arrays.asList(student));
@@ -59,10 +57,10 @@ public class StudentServiceTest {
         expectedStudent.setSurname("Surname");
         expectedStudent.setPatronymic("Patronymic");
         expectedStudent.setEmail("tempStudent@gmail.com");
-        expectedStudent.setUser_id(1L);
+        expectedStudent.setUserId(1L);
         expectedStudent.setGroup(new Group());
 
-        when(studentRepository.findById(anyLong())).thenReturn(java.util.Optional.of(expectedStudent));
+        when(studentRepository.getById(anyLong())).thenReturn(expectedStudent);
 
         Student actualStudent = studentService.getById(expectedStudent.getId());
 
@@ -80,11 +78,10 @@ public class StudentServiceTest {
         expectedStudent.setSurname("Surname");
         expectedStudent.setPatronymic("Patronymic");
         expectedStudent.setEmail("tempStudent@gmail.com");
-        expectedStudent.setUser_id(1L);
+        expectedStudent.setUserId(1L);
         expectedStudent.setGroup(group);
 
         when(studentRepository.save(any(Student.class))).thenReturn(expectedStudent);
-        when(groupService.isExistsWithId(anyLong())).thenReturn(true);
 
         Student actualStudent = studentService.save(expectedStudent);
 
@@ -102,7 +99,7 @@ public class StudentServiceTest {
         oldStudent.setSurname("Surname");
         oldStudent.setPatronymic("Patronymic");
         oldStudent.setEmail("tempStudent@gmail.com");
-        oldStudent.setUser_id(1L);
+        oldStudent.setUserId(1L);
         oldStudent.setGroup(group);
 
         Student updatedStudent = new Student();
@@ -111,12 +108,11 @@ public class StudentServiceTest {
         updatedStudent.setSurname("Changed Surname");
         updatedStudent.setPatronymic("Changed Patronymic");
         updatedStudent.setEmail("changedTempStudent@gmail.com");
-        updatedStudent.setUser_id(oldStudent.getUser_id());
+        updatedStudent.setUserId(oldStudent.getUserId());
         updatedStudent.setGroup(oldStudent.getGroup());
 
         when(studentRepository.update(any(Student.class))).thenReturn(updatedStudent);
-        when(groupService.isExistsWithId(anyLong())).thenReturn(true);
-        when(studentRepository.findById(anyLong())).thenReturn(Optional.of(oldStudent));
+        when(studentRepository.getById(anyLong())).thenReturn(oldStudent);
 
         oldStudent = studentService.update(updatedStudent);
 
@@ -132,11 +128,11 @@ public class StudentServiceTest {
         expectedStudent.setSurname("Surname");
         expectedStudent.setPatronymic("Patronymic");
         expectedStudent.setEmail("tempStudent@gmail.com");
-        expectedStudent.setUser_id(1L);
+        expectedStudent.setUserId(1L);
         expectedStudent.setGroup(new Group());
 
         when(studentRepository.delete(any(Student.class))).thenReturn(expectedStudent);
-
+        when(studentRepository.getById(anyLong())).thenReturn(expectedStudent);
         Student deletedStudent = studentService.delete(expectedStudent);
 
         assertNotNull(deletedStudent);
@@ -152,7 +148,7 @@ public class StudentServiceTest {
         expectedStudent.setSurname("Surname");
         expectedStudent.setPatronymic("Patronymic");
         expectedStudent.setEmail("tempStudent@gmail.com");
-        expectedStudent.setUser_id(1L);
+        expectedStudent.setUserId(1L);
         expectedStudent.setGroup(new Group());
 
         when(studentRepository.findByEmail(anyString())).thenReturn(expectedStudent);
@@ -171,14 +167,32 @@ public class StudentServiceTest {
         expectedStudent.setSurname("Surname");
         expectedStudent.setPatronymic("Patronymic");
         expectedStudent.setEmail("tempStudent@gmail.com");
-        expectedStudent.setUser_id(1L);
+        expectedStudent.setUserId(1L);
         expectedStudent.setGroup(new Group());
 
         when(studentRepository.findByUserId(anyLong())).thenReturn(expectedStudent);
 
-        Student actualStudent = studentService.getByUserId(expectedStudent.getUser_id());
+        Student actualStudent = studentService.getByUserId(expectedStudent.getUserId());
 
         assertNotNull(actualStudent);
         assertEquals(expectedStudent, actualStudent);
+    }
+
+    @Test(expected = EntityNotFoundException.class)
+    public void throwEntityNotFoundExceptionWhenGetById() {
+        when(studentRepository.getById(anyLong())).thenReturn(null);
+        studentService.getById(anyLong());
+    }
+
+    @Test(expected = FieldAlreadyExistsException.class)
+    public void throwFieldAlreadyExistsExceptionWhenSave() {
+        Student inputStudent = new Student();
+        inputStudent.setEmail("tempStudent@gmail.com");
+
+        Student existingStudent = new Student();
+        inputStudent.setEmail("tempStudent@gmail.com");
+
+        when(studentRepository.findByEmail(anyString())).thenReturn(existingStudent);
+        studentService.save(inputStudent);
     }
 }
