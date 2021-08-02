@@ -29,11 +29,12 @@ public class TeacherTableBuilder {
      * Method used for generating teacher schedule table in pdf
      *
      * @param schedule for selected teacher and semester
+     * @param language for selected language
      * @return PdfPTable schedule for teacher
      * @throws DocumentException when creating table failed
      * @throws IOException       when there's no needed resource (font file)
      */
-    public PdfPTable createTeacherTable(ScheduleForTeacherDTO schedule) throws DocumentException, IOException {
+    public PdfPTable createTeacherTable(ScheduleForTeacherDTO schedule, Locale language) throws DocumentException, IOException {
         log.info("Enter into createTeacherTable method with schedule {}", schedule);
 
         // getting number of columns, setting columns width when creating main table
@@ -56,16 +57,20 @@ public class TeacherTableBuilder {
                 .getResource("font/times.ttf")).toString(), BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
 
         //creating table title cell
-        table.addCell(createTableTitleCell(baseFont, table, schedule));
+        table.addCell(createTableTitleCell(baseFont, table, schedule, language));
 
         //creating header cells
         Font headFont = new Font(baseFont, 12, Font.BOLD, BaseColor.BLACK);
-        PdfPCell header = new PdfPCell(new Phrase("Period", headFont));
+        PdfPCell header = new PdfPCell(
+                new Phrase(StringUtils.capitalize(Translator.getInstance().getTranslation("period", language))
+                , headFont)
+        );
         style.headerCellStyle(header);
         table.addCell(header);
         // getting all days from schedule, putting em into cells
         for (DaysOfWeekWithClassesForTeacherDTO days : schedule.getDays()) {
-            header = new PdfPCell(new Phrase(StringUtils.capitalize(days.getDay().toString().toLowerCase()), headFont));
+            String day = Translator.getInstance().getTranslation(days.getDay().toString().toLowerCase(), language);
+            header = new PdfPCell(new Phrase(StringUtils.capitalize(day), headFont));
             style.headerCellStyle(header);
             table.addCell(header);
         }
@@ -135,11 +140,11 @@ public class TeacherTableBuilder {
     }
 
     // creating table title cell
-    private PdfPCell createTableTitleCell(BaseFont baseFont, PdfPTable table, ScheduleForTeacherDTO schedule) {
+    private PdfPCell createTableTitleCell(BaseFont baseFont, PdfPTable table, ScheduleForTeacherDTO schedule, Locale language) {
         log.info("Enter into createTableTitleCell method with baseFont {} table {} and schedule {}", baseFont, table, schedule);
-
         Font titleFont = new Font(baseFont, 14, Font.BOLD, BaseColor.WHITE);
-        String scheduleTitle = MessageFormat.format("Schedule for {0} {1} {2}, {3}",
+        String scheduleTitle = MessageFormat.format("{0} {1} {2} {3}, {4}",
+                StringUtils.capitalize(Translator.getInstance().getTranslation("schedule for", language)) ,
                 schedule.getTeacher().getSurname(), schedule.getTeacher().getName(),
                 schedule.getTeacher().getPatronymic(), schedule.getTeacher().getPosition());
         PdfPCell cellTitle = new PdfPCell(new Phrase(scheduleTitle, titleFont));
@@ -209,3 +214,4 @@ public class TeacherTableBuilder {
         return cell;
     }
 }
+

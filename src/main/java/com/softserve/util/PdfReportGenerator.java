@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Locale;
 
 
 @Slf4j
@@ -21,9 +22,10 @@ public class PdfReportGenerator {
      * Method used for generating byte array, which we convert into pdf in controller
      *
      * @param schedule for selected teacher and semester
+     * @param language for selected language
      * @return ByteArrayOutputStream teacher schedule in byte array format
      */
-    public ByteArrayOutputStream teacherScheduleReport(ScheduleForTeacherDTO schedule) {
+    public ByteArrayOutputStream teacherScheduleReport(ScheduleForTeacherDTO schedule, Locale language) {
         log.info("Enter into teacherScheduleReport method with schedule {}", schedule);
 
         ByteArrayOutputStream bys;
@@ -34,7 +36,7 @@ public class PdfReportGenerator {
             bys = new ByteArrayOutputStream();
             PdfWriter.getInstance(document, bys);
             document.open();
-            PdfPTable table = new TeacherTableBuilder().createTeacherTable(schedule);
+            PdfPTable table = new TeacherTableBuilder().createTeacherTable(schedule, language);
             document.add(table);
             document.close();
         } catch (DocumentException | IOException e) {
@@ -48,9 +50,10 @@ public class PdfReportGenerator {
      * Method used for generating byte array, which we convert into pdf in controller
      *
      * @param schedule for selected group and semester
+     * @param language for selected language
      * @return ByteArrayOutputStream group schedule in byte array format
      */
-    public ByteArrayOutputStream groupScheduleReport(ScheduleForGroupDTO schedule) {
+    public ByteArrayOutputStream groupScheduleReport(ScheduleForGroupDTO schedule, Locale language) {
         log.info("Enter into groupScheduleReport method with schedule {}", schedule);
 
         ByteArrayOutputStream bys;
@@ -61,7 +64,7 @@ public class PdfReportGenerator {
             bys = new ByteArrayOutputStream();
             PdfWriter.getInstance(document, bys);
             document.open();
-            PdfPTable table = new GroupTableBuilder().createGroupTable(schedule);
+            PdfPTable table = new GroupTableBuilder().createGroupTable(schedule, language);
             document.add(table);
             document.close();
         } catch (DocumentException | IOException e) {
