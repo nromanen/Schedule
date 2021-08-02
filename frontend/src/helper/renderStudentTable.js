@@ -194,11 +194,12 @@ export default function RenderStudentTable(props) {
                             <StyledTableCell  style={{ width: 160 }}>
                                 <span className="edit-cell">
                                     <FaEdit
-                                        className="group__buttons-edit"
+                                        className="edit-button"
                                         title={t('edit_title')}
                                         onClick={() => handleEdit(student.id)}
                                     />
                                 <Delete
+                                    title={t('delete-title')}
                                     className="delete-button"
                                     onClick={()=>setOpenDeleteDialog(true)}
                                 />

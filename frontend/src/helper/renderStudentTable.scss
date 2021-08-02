@@ -5,10 +5,13 @@
   align-items: center;
   align-content: center;
   margin: 0 30px;
-  .group__buttons-edit{
+  .edit-button{
     color: #265d26;
+    margin-right: 10px;
+    font-size: 25px;
   }
   .delete-button{
     color: #de2f23;
+    font-size: 25px;
   }
 }

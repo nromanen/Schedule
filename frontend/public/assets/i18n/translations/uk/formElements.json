@@ -74,6 +74,7 @@
 
     "save_button_label": "Зберегти",
     "clear_button_label": "Очистити",
+    "cancel_button_label": "Відмінити",
 
     "lesson_type_lecture_label": "Лекція",
     "lesson_type_laboratory_label": "Лабораторна",

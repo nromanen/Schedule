@@ -141,14 +141,6 @@ import renderSelectField from '../../renderedFields/select';
                         />
                         {console.log(groups)}
                         {studentId?
-                            // <Select
-                            //     name="group"
-                            //     id="group"
-                            //     defaultValue={defaultGroupOption}
-                            //     options={groupOptions}
-                            //     onChange={handleChange}
-                            //     // formatGroupLabel={formatGroupLabel}
-                            // />
 
                             <Field
                                 className='form-field'
@@ -182,22 +174,12 @@ import renderSelectField from '../../renderedFields/select';
                                 variant="contained"
                                 disabled={pristine || submitting}
                                 onClick={() => {
-                                    reset();
-                                    props.onSetSelectedCard(null);
+                                   reset();
+                                    //props.onSetSelectedCard(null);
                                 }}
                             >
-                                {t('clear_button_label')}
+                                {studentId?t('cancel_button_label'):t('clear_button_label')}
                             </Button>
-                            {/*<Button*/}
-                            {/*    className="buttons-style"*/}
-                            {/*    variant="contained"*/}
-                            {/*    onClick={() => {*/}
-                            {/*        //reset();*/}
-                            {/*        props.onSetSelectedCard(null);*/}
-                            {/*    }}*/}
-                            {/*>*/}
-                            {/*    {t('close_label')}*/}
-                            {/*</Button>*/}
                         </div>
                     </form>
                 </Card>

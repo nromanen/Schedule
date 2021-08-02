@@ -49,7 +49,7 @@ export const deleteStudentService = student => {
             getAllStudentsByGroupId(student.group.id)
             successHandler(
                 i18n.t('serviceMessages:back_end_success_operation', {
-                    cardType: i18n.t('formElements:student_label'),
+                    cardType: i18n.t('formElements:student_a_label'),
                     actionType: i18n.t('serviceMessages:deleted_label')
                 })
             );

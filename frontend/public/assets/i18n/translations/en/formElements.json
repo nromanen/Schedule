@@ -74,6 +74,7 @@
 
     "save_button_label": "Save",
     "clear_button_label": "Clear",
+    "cancel_button_label": "Cancel",
 
     "lesson_type_lecture_label": "Lecture",
     "lesson_type_laboratory_label": "Laboratory",
