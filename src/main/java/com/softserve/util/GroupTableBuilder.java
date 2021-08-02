@@ -8,6 +8,7 @@ import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.softserve.dto.*;
+import com.softserve.mapper.TeacherMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
@@ -103,7 +104,7 @@ public class GroupTableBuilder {
     private void generateCellStringValue(StringBuilder baseText, LessonsInScheduleDTO lessons) {
         String subjectName = lessons.getSubjectForSite();
         String lessonType = lessons.getLessonType().toLowerCase();
-        String teacher = lessons.getTeacherForSite();
+        String teacher = TeacherMapper.teacherDTOToTeacherForSite(lessons.getTeacher());
         String room = lessons.getRoom().getName();
         baseText.append(subjectName).append(",\n")
                 .append(lessonType).append(",\n")

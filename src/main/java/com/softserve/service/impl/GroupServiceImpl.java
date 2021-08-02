@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -64,7 +65,7 @@ public class GroupServiceImpl  implements GroupService {
     public List<Group> getAllWithoutStudents() {
         log.info("In getAllWithoutStudents()");
         List<Group> groups = groupRepository.getAllWithoutStudents();
-        groups.forEach(group -> group.setStudents(List.of()));
+        groups.forEach(group -> group.setStudents(Collections.emptyList()));
         return groups;
     }
 
@@ -90,7 +91,7 @@ public class GroupServiceImpl  implements GroupService {
     public List<Group> getDisabledWithoutStudents() {
         log.info("Enter into getAll of getDisabledWithoutStudents");
         List<Group> groups = groupRepository.getDisabledWithoutStudents();
-        groups.forEach(group -> group.setStudents(List.of()));
+        groups.forEach(group -> group.setStudents(Collections.emptyList()));
         return groups;
     }
 

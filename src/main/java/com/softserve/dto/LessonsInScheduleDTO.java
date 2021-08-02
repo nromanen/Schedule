@@ -8,8 +8,8 @@ import lombok.*;
 @ToString
 @NoArgsConstructor
 public class LessonsInScheduleDTO {
-    private Long teacherId;
-    private String teacherForSite;
+    private TeacherDTO teacher;
+    private String linkToMeeting;
     private String subjectForSite;
     private String lessonType;
     private RoomForScheduleDTO room;
@@ -18,7 +18,7 @@ public class LessonsInScheduleDTO {
 
     @Override
     public int hashCode() {
-        return (int) (teacherForSite.hashCode() + subjectForSite.hashCode() + lessonType.hashCode() + room.getId());
+        return (int) (teacher.hashCode() + subjectForSite.hashCode() + lessonType.hashCode() + room.getId());
     }
 
     @Override
@@ -35,7 +35,7 @@ public class LessonsInScheduleDTO {
 
         LessonsInScheduleDTO lesson = (LessonsInScheduleDTO) obj;
 
-        return lesson.teacherForSite.equals(teacherForSite) &&
+        return lesson.teacher.equals(teacher) &&
                 lesson.subjectForSite.equals(subjectForSite) &&
                 lesson.lessonType.equals(lessonType) &&
                 lesson.room.equals(room);

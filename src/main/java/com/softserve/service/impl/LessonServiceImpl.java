@@ -3,12 +3,14 @@ package com.softserve.service.impl;
 import com.softserve.entity.Lesson;
 import com.softserve.entity.Semester;
 import com.softserve.entity.Subject;
-import com.softserve.entity.Teacher;
 import com.softserve.entity.enums.LessonType;
 import com.softserve.exception.EntityAlreadyExistsException;
 import com.softserve.exception.EntityNotFoundException;
 import com.softserve.repository.LessonRepository;
-import com.softserve.service.*;
+import com.softserve.service.LessonService;
+import com.softserve.service.SemesterService;
+import com.softserve.service.SubjectService;
+import com.softserve.service.TeacherService;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -243,7 +245,7 @@ public class LessonServiceImpl implements LessonService {
      */
     @Override
     public List<Lesson> getLessonsBySubjectIdTeacherIdSemesterIdLessonTypeAndExcludeCurrentLessonId(Lesson lesson) {
-        log.info("In getLessonsBySubjectForSiteTeacherForSiteAndSemester(lesson = [{}]", lesson);
+        log.info("In getLessonsBySubjectIdTeacherIdSemesterIdLessonTypeAndExcludeCurrentLessonId(lesson = [{}]", lesson);
         List<Lesson> lessons = lessonRepository.getLessonsBySubjectIdTeacherIdSemesterIdLessonTypeAndExcludeCurrentLessonId(lesson);
         lessons.forEach(e -> {
             Hibernate.initialize(e.getSemester().getPeriods());
