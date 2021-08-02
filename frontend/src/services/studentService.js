@@ -16,6 +16,7 @@ import {
 import { getDisabledSubjectsService, selectSubjectService, showAllSubjectsService } from './subjectService';
 
 export const createStudentService = data => {
+
     axios
         .post(STUDENT_URL, data)
         .then(response => {
@@ -61,8 +62,7 @@ export const updateStudentService = data => {
         .then(response => {
             store.dispatch(updateStudent(response.data));
             selectStudentService(null);
-            // showAllSubjectsService();
-            // getDisabledSubjectsService();
+            getAllStudentsByGroupId(data.prevGroup.id)
             resetFormHandler(STUDENT_FORM);
             successHandler(
                 i18n.t('serviceMessages:back_end_success_operation', {

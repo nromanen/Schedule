@@ -119,7 +119,7 @@ export default function RenderStudentTable(props) {
     const classes = useStyles2();
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
-    const {students,onDeleteStudent,onSubmit}=props;
+    const {students,onDeleteStudent,onSubmit,group}=props;
     const [openDeleteDialog,setOpenDeleteDialog]=useState(false);
     const [openEditDialog,setOpenEditDialog]=useState(false);
     const { t } = useTranslation('formElements');
@@ -151,6 +151,11 @@ export default function RenderStudentTable(props) {
     const handleCloseEditDialog=()=>{
         setOpenEditDialog(false);
         selectStudentService(null)
+    }
+    const handleSubmit=(data)=>{
+        setOpenEditDialog(false);
+        const sendObject={...data,prevGroup:group}
+        onSubmit(sendObject);
     }
 
     return (
@@ -194,7 +199,7 @@ export default function RenderStudentTable(props) {
                                 />
                                 <AddStudentDialog
                                     open={openEditDialog}
-                                    onSubmit={onSubmit}
+                                    onSubmit={handleSubmit}
                                     onSetSelectedCard={handleCloseEditDialog}
                                 />
                                 <ConfirmDialog

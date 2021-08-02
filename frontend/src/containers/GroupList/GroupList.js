@@ -104,20 +104,18 @@ let GroupList = props => {
         }
         else {
             const sendData={...data,group:currentGroup}
-           
-              createStudentService(sendData)
+            // setAddStudentDialog(false)
+            createStudentService(sendData)
         }
+        // const sendData={...data,group:currentGroup}
         setAddStudentDialog(false)
-        console.log("studentSubmit",data)
-      // const sendData={...data,group:currentGroup}
-      // setAddStudentDialog(false)
-      //   createStudentService(sendData)
+        //   createStudentService(sendData)
     }
     const selectStudentCard = () => {
         setAddStudentDialog(false)
     };
     const onCloseShowStudents = () => {
-      setShowStudents(false)
+        setShowStudents(false)
     }
     const onShowStudentByGroup = (group) => {
         setShowStudents(true)
@@ -234,9 +232,9 @@ let GroupList = props => {
                                     className="svg-btn copy-btn align-left info-btn students"
                                     onClick={
                                         ()=> {
-                                        onShowStudentByGroup(group)
+                                            onShowStudentByGroup(group)
+                                        }
                                     }
-                                }
                                 />
                             </span>
 

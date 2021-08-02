@@ -46,7 +46,7 @@ export const ShowStudentsDialog = props => {
                             :
                             <>
                                 <h3 className="title-align"><span>{students.length!==1?`${t('students_label')} `:`${t('student_label')}`}</span>{`${t('group_students')} `}<span>{`${group.title}`}</span></h3>
-                                <RenderStudentTable onDeleteStudent={onDeleteStudent} students={students} onSubmit={onSubmit}/>
+                                <RenderStudentTable group={group} onDeleteStudent={onDeleteStudent} students={students} onSubmit={onSubmit}/>
                             </>
                         }
                     </>
