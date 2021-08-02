@@ -19,7 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import javax.mail.MessagingException;
 import java.util.List;
 
@@ -75,17 +74,14 @@ public class TeacherController {
     public ResponseEntity<TeacherDTO> save(@RequestBody TeacherDTO teacherDTO) {
         log.info("Enter into save method with teacherDTO: {}", teacherDTO);
         Teacher teacher = teacherService.save(teacherDTO);
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(teacherMapper.teacherToTeacherDTO(teacher));
+        return ResponseEntity.status(HttpStatus.CREATED).body(teacherMapper.teacherToTeacherDTO(teacher));
     }
 
     @PutMapping("/teachers")
     @ApiOperation(value = "Update existing teacher by id")
     public ResponseEntity<TeacherForUpdateDTO> update(@RequestBody TeacherForUpdateDTO teacherForUpdateDTO) {
         log.info("Enter into update method with updateTeacherDTO: {}", teacherForUpdateDTO);
-        Teacher teacherToUpdate = teacherMapper.teacherForUpdateDTOToTeacher(teacherForUpdateDTO);
-        teacherToUpdate.setUserId(teacherService.getById(teacherToUpdate.getId()).getUserId());
-        Teacher teacher = teacherService.update(teacherToUpdate);
+        Teacher teacher = teacherService.update(teacherMapper.teacherForUpdateDTOToTeacher(teacherForUpdateDTO));
         return ResponseEntity.status(HttpStatus.OK).body(teacherMapper.teacherToTeacherForUpdateDTO(teacher));
     }
 

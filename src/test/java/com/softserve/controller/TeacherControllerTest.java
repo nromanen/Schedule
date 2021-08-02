@@ -6,6 +6,7 @@ import com.softserve.config.MyWebAppInitializer;
 import com.softserve.config.WebMvcConfig;
 import com.softserve.dto.DepartmentDTO;
 import com.softserve.dto.TeacherDTO;
+import com.softserve.dto.TeacherForUpdateDTO;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -19,6 +20,7 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import static org.hamcrest.Matchers.hasSize;
@@ -47,6 +49,10 @@ public class TeacherControllerTest {
 
     private TeacherDTO disabledTeacherDtoWithId2LAndWithoutEmail;
 
+    private TeacherForUpdateDTO teacherForUpdateDtoWithId1L;
+
+    private TeacherForUpdateDTO teacherForUpdateDtoWithId2LAndWithoutEmail;
+
     @Autowired
     private WebApplicationContext wac;
 
@@ -60,40 +66,50 @@ public class TeacherControllerTest {
         departmentDTO.setId(20L);
         departmentDTO.setName("Department1");
 
+        String teacherName = "Ivan";
+        String teacherSurname = "Ivanov";
+        String teacherPatronymic = "Ivanovych";
+        String teacherPosition = "docent";
+        String teacherEmail = "teacher@gmail.com";
+
         teacherDtoWithId1L = new TeacherDTO();
         teacherDtoWithId1L.setId(1L);
-        teacherDtoWithId1L.setName("Ivan");
-        teacherDtoWithId1L.setSurname("Ivanov");
-        teacherDtoWithId1L.setPatronymic("Ivanovych");
-        teacherDtoWithId1L.setPosition("docent");
+        teacherDtoWithId1L.setName(teacherName);
+        teacherDtoWithId1L.setSurname(teacherSurname);
+        teacherDtoWithId1L.setPatronymic(teacherPatronymic);
+        teacherDtoWithId1L.setPosition(teacherPosition);
         teacherDtoWithId1L.setDepartmentDTO(departmentDTO);
-        teacherDtoWithId1L.setEmail("teacher@gmail.com");
-        teacherDtoWithId1L.setDisable(false);
+        teacherDtoWithId1L.setEmail(teacherEmail);
 
         disabledTeacherDtoWithId2LAndWithoutEmail = new TeacherDTO();
         disabledTeacherDtoWithId2LAndWithoutEmail.setId(2L);
-        disabledTeacherDtoWithId2LAndWithoutEmail.setName("Ivan");
-        disabledTeacherDtoWithId2LAndWithoutEmail.setSurname("Ivanov");
-        disabledTeacherDtoWithId2LAndWithoutEmail.setPatronymic("Ivanovych");
-        disabledTeacherDtoWithId2LAndWithoutEmail.setPosition("docent");
+        disabledTeacherDtoWithId2LAndWithoutEmail.setName(teacherName);
+        disabledTeacherDtoWithId2LAndWithoutEmail.setSurname(teacherSurname);
+        disabledTeacherDtoWithId2LAndWithoutEmail.setPatronymic(teacherPatronymic);
+        disabledTeacherDtoWithId2LAndWithoutEmail.setPosition(teacherPosition);
         disabledTeacherDtoWithId2LAndWithoutEmail.setDepartmentDTO(departmentDTO);
-        disabledTeacherDtoWithId2LAndWithoutEmail.setDisable(true);
+
+        teacherForUpdateDtoWithId1L = new TeacherForUpdateDTO();
+        teacherForUpdateDtoWithId1L.setId(1L);
+        teacherForUpdateDtoWithId1L.setName(teacherName);
+        teacherForUpdateDtoWithId1L.setSurname(teacherSurname);
+        teacherForUpdateDtoWithId1L.setPatronymic(teacherPatronymic);
+        teacherForUpdateDtoWithId1L.setPosition(teacherPosition);
+        teacherForUpdateDtoWithId1L.setDepartmentDTO(departmentDTO);
+        teacherForUpdateDtoWithId1L.setEmail(teacherEmail);
+
+        teacherForUpdateDtoWithId2LAndWithoutEmail = new TeacherForUpdateDTO();
+        teacherForUpdateDtoWithId2LAndWithoutEmail.setId(2L);
+        teacherForUpdateDtoWithId2LAndWithoutEmail.setName(teacherName);
+        teacherForUpdateDtoWithId2LAndWithoutEmail.setSurname(teacherSurname);
+        teacherForUpdateDtoWithId2LAndWithoutEmail.setPatronymic(teacherPatronymic);
+        teacherForUpdateDtoWithId2LAndWithoutEmail.setPosition(teacherPosition);
+        teacherForUpdateDtoWithId2LAndWithoutEmail.setDepartmentDTO(departmentDTO);
     }
 
     @Test
     public void getAllTeachers() throws Exception {
-        TeacherDTO expected = teacherDtoWithId1L;
-        mockMvc.perform(get("/teachers").accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType("application/json"))
-                .andExpect(jsonPath("$", hasSize(1)))
-                .andExpect(jsonPath("$[0].id").value(expected.getId()))
-                .andExpect(jsonPath("$[0].name").value(expected.getName()))
-                .andExpect(jsonPath("$[0].surname").value(expected.getSurname()))
-                .andExpect(jsonPath("$[0].patronymic").value(expected.getPatronymic()))
-                .andExpect(jsonPath("$[0].position").value(expected.getPosition()))
-                .andExpect(jsonPath("$[0].departmentDTO").value(expected.getDepartmentDTO()))
-                .andExpect(jsonPath("$[0].disable").value(expected.isDisable()));
+        assertThatByUrlReturnedListWithOneTeacher("/teachers", teacherDtoWithId1L);
     }
 
     @Test
@@ -116,13 +132,7 @@ public class TeacherControllerTest {
         mockMvc.perform(get("/teachers/{id}", 1).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"))
-                .andExpect(jsonPath("$.id").value(expected.getId()))
-                .andExpect(jsonPath("$.name").value(expected.getName()))
-                .andExpect(jsonPath("$.surname").value(expected.getSurname()))
-                .andExpect(jsonPath("$.patronymic").value(expected.getPatronymic()))
-                .andExpect(jsonPath("$.position").value(expected.getPosition()))
-                .andExpect(jsonPath("$.departmentDTO").value(expected.getDepartmentDTO()))
-                .andExpect(jsonPath("$.disable").value(expected.isDisable()));
+                .andExpect(matchTeacher(expected));
     }
 
     @Test
@@ -139,41 +149,25 @@ public class TeacherControllerTest {
         mockMvc.perform(post("/teachers").content(objectMapper.writeValueAsString(expected))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.name").value(expected.getName()))
-                .andExpect(jsonPath("$.surname").value(expected.getSurname()))
-                .andExpect(jsonPath("$.patronymic").value(expected.getPatronymic()))
-                .andExpect(jsonPath("$.position").value(expected.getPosition()))
-                .andExpect(jsonPath("$.departmentDTO").value(expected.getDepartmentDTO()))
-                .andExpect(jsonPath("$.disable").value(expected.isDisable()));
+                .andExpect(matchTeacherExcludingId(expected));
     }
 
     @Test
     public void updateTeacherIfEmailAndUserIdNotExist() throws Exception {
-        TeacherDTO expected = disabledTeacherDtoWithId2LAndWithoutEmail;
+        TeacherForUpdateDTO expected = teacherForUpdateDtoWithId2LAndWithoutEmail;
         mockMvc.perform(put("/teachers").content(objectMapper.writeValueAsString(expected))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(expected.getId()))
-                .andExpect(jsonPath("$.name").value(expected.getName()))
-                .andExpect(jsonPath("$.surname").value(expected.getSurname()))
-                .andExpect(jsonPath("$.patronymic").value(expected.getPatronymic()))
-                .andExpect(jsonPath("$.position").value(expected.getPosition()))
-                .andExpect(jsonPath("$.departmentDTO").value(expected.getDepartmentDTO()))
-                .andExpect(jsonPath("$.disable").value(expected.isDisable()));
+                .andExpect(matchTeacherForUpdate(expected));
     }
 
+    @Test
     public void updateTeacherIfEmailAndUserIdExist() throws Exception {
-        TeacherDTO expected = teacherDtoWithId1L;
+        TeacherForUpdateDTO expected = teacherForUpdateDtoWithId1L;
         mockMvc.perform(put("/teachers").content(objectMapper.writeValueAsString(expected))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(expected.getId()))
-                .andExpect(jsonPath("$.name").value(expected.getName()))
-                .andExpect(jsonPath("$.surname").value(expected.getSurname()))
-                .andExpect(jsonPath("$.patronymic").value(expected.getPatronymic()))
-                .andExpect(jsonPath("$.position").value(expected.getPosition()))
-                .andExpect(jsonPath("$.departmentDTO").value(expected.getDepartmentDTO()))
-                .andExpect(jsonPath("$.disable").value(expected.isDisable()));
+                .andExpect(matchTeacherForUpdate(expected));
     }
 
     @Test
@@ -216,50 +210,62 @@ public class TeacherControllerTest {
 
     @Test
     public void getAllPublicTeachers() throws Exception {
-        TeacherDTO expected = teacherDtoWithId1L;
-        mockMvc.perform(get("/public/teachers").accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType("application/json"))
-                .andExpect(jsonPath("$", hasSize(1)))
-                .andExpect(jsonPath("$[0].id").value(expected.getId()))
-                .andExpect(jsonPath("$[0].name").value(expected.getName()))
-                .andExpect(jsonPath("$[0].surname").value(expected.getSurname()))
-                .andExpect(jsonPath("$[0].patronymic").value(expected.getPatronymic()))
-                .andExpect(jsonPath("$[0].position").value(expected.getPosition()))
-                .andExpect(jsonPath("$[0].departmentDTO").value(expected.getDepartmentDTO()))
-                .andExpect(jsonPath("$[0].disable").value(expected.isDisable()));
+        assertThatByUrlReturnedListWithOneTeacher("/public/teachers", teacherDtoWithId1L);
     }
 
     @Test
     public void getDisableTeachers() throws Exception {
-        TeacherDTO expected = disabledTeacherDtoWithId2LAndWithoutEmail;
-        mockMvc.perform(get("/teachers/disabled").accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType("application/json"))
-                .andExpect(jsonPath("$", hasSize(1)))
-                .andExpect(jsonPath("$[0].id").value(expected.getId()))
-                .andExpect(jsonPath("$[0].name").value(expected.getName()))
-                .andExpect(jsonPath("$[0].surname").value(expected.getSurname()))
-                .andExpect(jsonPath("$[0].patronymic").value(expected.getPatronymic()))
-                .andExpect(jsonPath("$[0].position").value(expected.getPosition()))
-                .andExpect(jsonPath("$[0].departmentDTO").value(expected.getDepartmentDTO()))
-                .andExpect(jsonPath("$[0].disable").value(expected.isDisable()));
+        assertThatByUrlReturnedListWithOneTeacher("/teachers/disabled", disabledTeacherDtoWithId2LAndWithoutEmail);
     }
 
     @Test
     public void getAllNotRegisteredTeachers() throws Exception {
-        TeacherDTO expected = disabledTeacherDtoWithId2LAndWithoutEmail;
-        mockMvc.perform(get("/not-registered-teachers").accept(MediaType.APPLICATION_JSON))
+        assertThatByUrlReturnedListWithOneTeacher("/not-registered-teachers",
+                                                  disabledTeacherDtoWithId2LAndWithoutEmail);
+    }
+
+    private static ResultMatcher matchTeacher(TeacherDTO expected) {
+        return matchTeacher("$", expected);
+    }
+
+    private static ResultMatcher matchTeacher(String prefix, TeacherDTO expected) {
+        return ResultMatcher.matchAll(
+                jsonPath(prefix + ".id").value(expected.getId()),
+                matchTeacherExcludingId(prefix, expected)
+        );
+    }
+
+    private static ResultMatcher matchTeacherExcludingId(TeacherDTO expected) {
+        return matchTeacherExcludingId("$", expected);
+    }
+
+    private static ResultMatcher matchTeacherExcludingId(String prefix, TeacherDTO expected) {
+        return ResultMatcher.matchAll(
+                jsonPath(prefix + ".name").value(expected.getName()),
+                jsonPath(prefix + ".surname").value(expected.getSurname()),
+                jsonPath(prefix + ".patronymic").value(expected.getPatronymic()),
+                jsonPath(prefix + ".position").value(expected.getPosition()),
+                jsonPath(prefix + ".department").value(expected.getDepartmentDTO())
+        );
+    }
+
+    private static ResultMatcher matchTeacherForUpdate(TeacherForUpdateDTO expected) {
+        return ResultMatcher.matchAll(
+                jsonPath("$.id").value(expected.getId()),
+                jsonPath("$.name").value(expected.getName()),
+                jsonPath("$.surname").value(expected.getSurname()),
+                jsonPath("$.patronymic").value(expected.getPatronymic()),
+                jsonPath("$.position").value(expected.getPosition()),
+                jsonPath("$.department").value(expected.getDepartmentDTO())
+        );
+    }
+
+    private void assertThatByUrlReturnedListWithOneTeacher(String url, TeacherDTO expected) throws Exception {
+        mockMvc.perform(get(url).accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"))
                 .andExpect(jsonPath("$", hasSize(1)))
-                .andExpect(jsonPath("$[0].id").value(expected.getId()))
-                .andExpect(jsonPath("$[0].name").value(expected.getName()))
-                .andExpect(jsonPath("$[0].surname").value(expected.getSurname()))
-                .andExpect(jsonPath("$[0].patronymic").value(expected.getPatronymic()))
-                .andExpect(jsonPath("$[0].position").value(expected.getPosition()))
-                .andExpect(jsonPath("$[0].departmentDTO").value(expected.getDepartmentDTO()))
-                .andExpect(jsonPath("$[0].disable").value(expected.isDisable()));
+                .andExpect(matchTeacher("$[0]", expected));
     }
 }
 
