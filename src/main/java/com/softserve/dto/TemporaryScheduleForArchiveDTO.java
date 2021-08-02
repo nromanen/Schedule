@@ -16,7 +16,7 @@ public class TemporaryScheduleForArchiveDTO {
     private Long id;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     private LocalDate date;
-    private String teacherForSite;
+    private String linkToMeeting;
     private String subjectForSite;
     private TeacherDTO teacher;
     private LessonType lessonType;
