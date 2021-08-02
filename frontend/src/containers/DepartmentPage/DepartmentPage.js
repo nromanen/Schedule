@@ -13,7 +13,7 @@ import {
 import { connect } from 'react-redux';
 import Card from '../../share/Card/Card';
 import { GiSightDisabled, IoMdEye, MdFace } from 'react-icons/all';
-import { FaEdit } from 'react-icons/fa';
+import { FaChalkboardTeacher, FaEdit } from 'react-icons/fa';
 import { MdDelete } from 'react-icons/md';
 import { useTranslation } from 'react-i18next';
 import { setDisabledDepartment, setEnabledDepartment } from '../../redux/actions/departments';
@@ -199,7 +199,7 @@ function DepartmentPage(props) {
                                     deleteDepartment(department.id);
                                 }}
                             />
-                            <MdFace
+                            <FaChalkboardTeacher
                                 className="svg-btn delete-btn"
                                 title={t('show_teacher_title')}
                                 onClick={() => {
