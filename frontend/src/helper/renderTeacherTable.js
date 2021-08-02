@@ -151,19 +151,22 @@ export default function RenderTeacherTable(props) {
                             : teachers
                     ).map((teacher) => (
                         <StyledTableRow key={teacher.position}>
-                            <StyledTableCell style={{ width: 160 }}>
+                            <StyledTableCell align="center" style={{ width: 160 }}>
                                 {getTeacherFullName(teacher)}
                             </StyledTableCell>
                             <StyledTableCell component="th" scope="row" align="center">
                                 {teacher.position}
                             </StyledTableCell>
-                            <StyledTableCell style={{ width: 160 }}>
-                                {teacher.email}
-                                <FaEnvelope
-                                                    className="svg-btn send-message"
-                                                    title={`${t('send_letter_title')} ${teacher.email}`}
-                                                    onClick={()=>sendMail(teacher.email)}
-                                                />
+                            <StyledTableCell style={{ width: 160 }} align="center">
+                                <span>
+                                    <p>{teacher.email}</p>
+                                    <FaEnvelope
+                                        className="svg-btn send-message"
+                                        title={`${t('send_letter_title')} ${teacher.email}`}
+                                        onClick={()=>sendMail(teacher.email)}
+                                    />
+                                </span>
+
                             </StyledTableCell>
                         </StyledTableRow>
                     ))}

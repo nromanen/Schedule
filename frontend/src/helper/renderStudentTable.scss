@@ -1,0 +1,14 @@
+.edit-cell{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  align-content: center;
+  margin: 0 30px;
+  .group__buttons-edit{
+    color: #265d26;
+  }
+  .delete-button{
+    color: #de2f23;
+  }
+}

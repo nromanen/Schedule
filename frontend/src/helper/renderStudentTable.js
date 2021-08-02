@@ -25,6 +25,7 @@ import { cardType } from '../constants/cardType';
 import ConfirmDialog from '../share/modals/dialog';
 import  AddStudentDialog  from '../share/modals/modal/AddStudentDialog';
 import { selectStudentService } from '../services/studentService';
+import './renderStudentTable.scss'
 const useStyles1 = makeStyles((theme) => ({
     root: {
         flexShrink: 0,
@@ -180,36 +181,42 @@ export default function RenderStudentTable(props) {
                                 {getTeacherFullName(student)}
                             </StyledTableCell>
                             <StyledTableCell component="th" scope="row" align="center">
-                                {student.email}
-                                <FaEnvelope
-                                    className="svg-btn send-message"
-                                    title={`${t('send_letter_title')} ${student.email}`}
-                                    onClick={()=>sendMail(student.email)}
-                                />
-                            </StyledTableCell>
-                            <StyledTableCell style={{ width: 160 }}>
+                                <span>
+                                   <p>{student.email}</p>
+                                    <FaEnvelope
+                                        className="svg-btn send-message"
+                                        title={`${t('send_letter_title')} ${student.email}`}
+                                        onClick={()=>sendMail(student.email)}
+                                    />
+                                </span>
 
-                                <FaEdit
-                                    className="group__buttons-edit"
-                                    title={t('edit_title')}
-                                    onClick={() => handleEdit(student.id)}
-                                />
+                            </StyledTableCell>
+                            <StyledTableCell  style={{ width: 160 }}>
+                                <span className="edit-cell">
+                                    <FaEdit
+                                        className="group__buttons-edit"
+                                        title={t('edit_title')}
+                                        onClick={() => handleEdit(student.id)}
+                                    />
                                 <Delete
+                                    className="delete-button"
                                     onClick={()=>setOpenDeleteDialog(true)}
                                 />
-                                <AddStudentDialog
-                                    open={openEditDialog}
-                                    onSubmit={handleSubmit}
-                                    onSetSelectedCard={handleCloseEditDialog}
-                                />
-                                <ConfirmDialog
-                                    selectedValue={''}
-                                    cardId={student}
-                                    whatDelete={'student'}
-                                    open={openDeleteDialog}
-                                    onClose={deleteStudent}
-                                />
+                                </span>
+
                             </StyledTableCell>
+                            <AddStudentDialog
+                                open={openEditDialog}
+                                onSubmit={handleSubmit}
+                                onSetSelectedCard={handleCloseEditDialog}
+                            />
+                            <ConfirmDialog
+                                selectedValue={''}
+                                cardId={student}
+                                whatDelete={'student'}
+                                open={openDeleteDialog}
+                                onClose={deleteStudent}
+                            />
                         </StyledTableRow>
                     ))}
 
