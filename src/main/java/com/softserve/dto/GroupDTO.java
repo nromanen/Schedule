@@ -12,6 +12,4 @@ import lombok.NoArgsConstructor;
 public class GroupDTO {
     private Long id;
     private String title;
-//    @JsonInclude(NON_EMPTY)
-//    private List<StudentDTO> students = new ArrayList<>();
 }
