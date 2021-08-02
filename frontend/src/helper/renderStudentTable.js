@@ -166,7 +166,12 @@ export default function RenderStudentTable(props) {
                 <TableHead>
                     <TableRow>
                         <StyledTableCell>{t('student_label')}</StyledTableCell>
-                        <StyledTableCell>{t('send_letter_title')}</StyledTableCell>
+                        <StyledTableCell>
+                            <FaEnvelope
+                                className="svg-btn send-message"
+                                title={`${t('send_letter_title')}`}
+                            />
+                        </StyledTableCell>
                         <StyledTableCell>{t('change_student')}</StyledTableCell>
                     </TableRow>
                 </TableHead>
@@ -177,21 +182,21 @@ export default function RenderStudentTable(props) {
                             : students
                     ).map((student) => (
                         <StyledTableRow key={student.id}>
-                            <StyledTableCell style={{ width: 160 }}>
+                            <StyledTableCell component="th" scope="row" align="center" style={{ width: 160 }}>
                                 {getTeacherFullName(student)}
                             </StyledTableCell>
                             <StyledTableCell component="th" scope="row" align="center">
                                 <span>
-                                   <p>{student.email}</p>
-                                    <FaEnvelope
-                                        className="svg-btn send-message"
-                                        title={`${t('send_letter_title')} ${student.email}`}
-                                        onClick={()=>sendMail(student.email)}
-                                    />
+                                   <button className="send-letter-button"
+                                       title={`${t('send_letter_title')} ${student.email}`}
+                                       onClick={()=>sendMail(student.email)}
+                                   >
+                                       {student.email}
+                                   </button>
                                 </span>
 
                             </StyledTableCell>
-                            <StyledTableCell  style={{ width: 160 }}>
+                            <StyledTableCell component="th" scope="row" align="center"  style={{ width: 160 }}>
                                 <span className="edit-cell">
                                     <FaEdit
                                         className="edit-button"

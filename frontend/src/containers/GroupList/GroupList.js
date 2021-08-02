@@ -3,7 +3,7 @@ import { FaEdit, FaUserPlus, FaUsers } from 'react-icons/fa';
 import { MdDelete } from 'react-icons/md';
 import { useTranslation } from 'react-i18next';
 import React, { useEffect, useState } from 'react';
-
+import {Link} from 'react-router-dom'
 import './GroupList.scss';
 import { search } from '../../helper/search';
 import NotFound from '../../share/NotFound/NotFound';
@@ -37,8 +37,23 @@ import {
 import { ShowStudentsDialog } from '../../share/modals/modal/showStudentsDialog';
 import { getAllDepartmentsService } from '../../services/departmentService';
 import AddStudentDialog from '../../share/modals/modal/AddStudentDialog';
+import groups from '../../redux/reducers/groups';
+import { links } from '../../constants/links';
 
 let GroupList = props => {
+    useEffect(()=>{
+        if(props.match.path.includes("edit")) {
+            selectGroupService(props.match.params.id);
+        }
+
+    },[props.groups.length])
+    useEffect(()=>{
+        if(props.match.path.includes("delete")) {
+            handleClickOpen(props.match.params.id);
+        }
+
+    },[props.groups.length])
+
     useEffect(() => showAllGroupsService(), []);
     useEffect(() => getDisabledGroupsService(), []);
 
@@ -130,6 +145,8 @@ let GroupList = props => {
 
     return (
         <>
+
+            {console.log(props.match.params.id)}
             <NavigationPage name={navigationNames.GROUP_LIST} val={navigation.GROUPS}/>
             <ConfirmDialog
                 isHide={hideDialog}
@@ -162,6 +179,7 @@ let GroupList = props => {
                     {disabled ? (
                         ''
                     ) : (
+
                         <AddGroup
                             className="form"
                             onSubmit={submit}
@@ -175,6 +193,7 @@ let GroupList = props => {
                     )}
                     {visibleGroups.map(group => (
                         <section key={group.id} className="group-card">
+
                             <div className="group__buttons-wrapper">
                                 {!disabled ? (
                                     <>
@@ -188,11 +207,13 @@ let GroupList = props => {
                                                 handleClickOpen(group.id);
                                             }}
                                         />
+                                        <Link to={`${links.GroupList}${links.Group}${links.Edit}/${group.id}`}>
                                         <FaEdit
                                             className="group__buttons-edit"
                                             title={t('edit_title')}
                                             onClick={() => handleEdit(group.id)}
                                         />
+                                        </Link>
                                     </>
                                 ) : (
                                     <IoMdEye
@@ -204,11 +225,13 @@ let GroupList = props => {
                                         }}
                                     />
                                 )}
+                                <Link to={`${links.GroupList}${links.Group}${links.Delete}/${group.id}`}>
                                 <MdDelete
                                     className="group__buttons-delete"
                                     title={t('delete_title')}
                                     onClick={() => handleClickOpen(group.id)}
                                 />
+                                </Link>
                                 <FaUserPlus
                                     title={t('formElements:student_add_label')}
                                     className="svg-btn copy-btn align-left info-btn"

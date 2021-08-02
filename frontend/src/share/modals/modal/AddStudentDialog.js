@@ -22,19 +22,6 @@ import renderSelectField from '../../renderedFields/select';
  let AddStudentDialog =( props) => {
     const { t } = useTranslation('formElements');
     const { handleSubmit, pristine, submitting, reset,open,groups,student} = props;
-    // const student={
-    //     // id: 6,
-    //     // name: "Nastia",
-    //     // surname: "Gerasymchuk",
-    //     // patronymic: "Borisovna",
-    //     // email: "nasta7_2000@i.ua",
-    //     // user_id: 0,
-    //     // group: {
-    //     //     id: 5,
-    //     //     title: null,
-    //     //     disable: false
-    //     // }
-    // };
     const studentId = student.id;
 
     useEffect(() => {
@@ -55,22 +42,9 @@ import renderSelectField from '../../renderedFields/select';
             group:student.group.id
         });
     };
-    const getGroupOptions = () => {
-        return groups.map(item=>{return {value:item.id,label:item.title}})
-    }
-    const parseStudentGroupOption = () => {
-        const currentStudent=student;
-        return currentStudent.group!==undefined?{value:currentStudent.group.id,label:currentStudent.group.title}:currentStudent;
-    }
-    const groupOptions=getGroupOptions();
-    const defaultGroupOption=parseStudentGroupOption();
-     // const handleChange = (newValue, actionMeta) => {
-     //     props.onChangeSemesterValue(newValue);
-     // };
     return (
         <Dialog
             disableBackdropClick={true}
-            // onClose={handleClose}
             aria-labelledby="confirm-dialog-title"
             open={open}
         >
@@ -85,7 +59,6 @@ import renderSelectField from '../../renderedFields/select';
             />
             <DialogTitle id="confirm-dialog-title">
                 <Card class="form-card teacher-form">
-                    {console.log(props)}
 
                     <form className="createTeacherForm w-100" onSubmit={handleSubmit}>
 
@@ -139,7 +112,6 @@ import renderSelectField from '../../renderedFields/select';
                             label={t('email_field')}
                             validate={[required]}
                         />
-                        {console.log(groups)}
                         {studentId?
 
                             <Field
@@ -203,20 +175,3 @@ AddStudentDialog = reduxForm({
     form: STUDENT_FORM
 })(AddStudentDialog);
 export default connect(mapStateToProps, {})(AddStudentDialog);
-// const mapStateToProps = state => ({
-//     groups: state.groups.groups,
-//     student: state.students.student,
-//
-// });
-//
-// connect(mapStateToProps)(
-//     reduxForm({
-//         form: STUDENT_FORM
-//     })(AddStudentDialog))
-// const mapStateToProps = state => ({ group: state.groups.group });
-//
-// AddStudentDialog = reduxForm({
-//     form: STUDENT_FORM
-// })(AddStudentDialog);
-//
-// export default connect(mapStateToProps)(AddStudentDialog);
