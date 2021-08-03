@@ -173,14 +173,12 @@ public class StudentServiceImpl implements StudentService {
 
         File csvFile = new File(fileName);
         file.transferTo(csvFile);
-        Reader reader = new FileReader(csvFile, StandardCharsets.UTF_8);
-
         List<Student> students = new ArrayList<>();
 
-        try {
-            students = new CsvToBeanBuilder<Student>(reader)
-                    .withType(Student.class)
-                    .build().parse();
+        try (Reader reader = new FileReader(csvFile, StandardCharsets.UTF_8)) {
+                students = new CsvToBeanBuilder<Student>(reader)
+                        .withType(Student.class)
+                        .build().parse();
         } catch (RuntimeException e) {
             log.error("Error occurred while parsing file {}", file.getOriginalFilename(), e);
         }
@@ -195,7 +193,6 @@ public class StudentServiceImpl implements StudentService {
                 log.error("Error occurred while saving student with email {}", student.getEmail(), e);
             }
         }
-        reader.close();
         Files.delete(csvFile.toPath());
         return savedStudents;
     }
