@@ -167,6 +167,7 @@ AddStudentDialog.propTypes = {
 const mapStateToProps = state => ({
     student: state.students.student,
     groups: state.groups.groups,
+    group: state.groups.group,
 });
 
 

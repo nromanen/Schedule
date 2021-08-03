@@ -69,6 +69,10 @@ const Routers = props => {
 
                 <Route path={`${links.GroupList}${links.Group}${links.Edit}${links.IdParam}`}  component={GroupList} />
                 <Route path={`${links.GroupList}${links.Group}${links.Delete}${links.IdParam}`}  component={GroupList} />
+                <Route path={`${links.GroupList}${links.Group}${links.IdParam}${links.AddStudent}`}  component={GroupList} />
+                <Route path={`${links.GroupList}${links.Group}${links.IdParam}${links.SetDisable}`}  component={GroupList} />
+                <Route path={`${links.GroupList}${links.Group}${links.IdParam}${links.ShowStudents}`}  component={GroupList} />
+                {/*${links.GroupList}${links.Group}/${group.id}${links.AddStudent}*/}
                 <Route path={links.ClassScheduleTitle}  component={ClassSchedule} />
                 <Route path={links.RoomList}  component={RoomList} />
                 <Route path={links.SubjectPage}  component={SubjectPage} />

@@ -13,13 +13,14 @@ import {
     uniqueGroup,
     minLengthValue
 } from '../../validation/validateFields';
+import { links } from '../../constants/links';
 
 let AddGroup = props => {
     const { t } = useTranslation('formElements');
-    const { handleSubmit, pristine, onReset, submitting } = props;
+    const { handleSubmit, pristine, onReset, submitting,match } = props;
 
     useEffect(() => {
-        if (props.group) {
+        if (props.group&&match.url.includes(links.Edit)) {
             if (props.group.id) {
                 props.initialize({
                     id: props.group.id,

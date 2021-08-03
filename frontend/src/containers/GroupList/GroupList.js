@@ -53,11 +53,29 @@ let GroupList = props => {
         }
 
     },[props.groups.length])
+    useEffect(()=>{
+        if(props.match.path.includes("add-student")) {
+            handleAddUser(props.match.params.id);
+        }
+
+    },[props.groups.length])
+    useEffect(()=>{
+        if(props.match.path.includes(links.SetDisable)) {
+            handleSetDisable(props.match.params.id);
+        }
+
+    },[])
+    useEffect(()=>{
+        if(props.match.path.includes(links.ShowStudents)) {
+            onShowStudentByGroup(Number(props.match.params.id));
+        }
+
+    },[props.students.length])
 
     useEffect(() => showAllGroupsService(), []);
     useEffect(() => getDisabledGroupsService(), []);
 
-    const { isSnackbarOpen, snackbarType, snackbarMessage,students } = props;
+    const { isSnackbarOpen, snackbarType, snackbarMessage,students,groups,group } = props;
     const { t } = useTranslation('formElements');
 
     const [open, setOpen] = useState(false);
@@ -88,7 +106,10 @@ let GroupList = props => {
         if (reason === 'clickaway') return;
         handleSnackbarCloseService();
     };
-
+    const handleAddUser = groupId => {
+        setGroupId(groupId);
+        setAddStudentDialog(true);
+    };
 
     const handleClose = groupId => {
         setOpen(false);
@@ -100,7 +121,7 @@ let GroupList = props => {
                 );
                 setEnabledGroupService(group);
             } else {
-                const group = props.groups.find(group => group.id === groupId);
+                const group = groups.find(group => Number(group.id) === Number(groupId));
                 setDisabledGroupService(group);
             }
         } else {
@@ -118,7 +139,7 @@ let GroupList = props => {
             updateStudentService(sendData);
         }
         else {
-            const sendData={...data,group:currentGroup}
+            const sendData={...data,group:{id:groupId}}
             // setAddStudentDialog(false)
             createStudentService(sendData)
         }
@@ -132,21 +153,26 @@ let GroupList = props => {
     const onCloseShowStudents = () => {
         setShowStudents(false)
     }
-    const onShowStudentByGroup = (group) => {
+    const onShowStudentByGroup = (groupId) => {
+
         setShowStudents(true)
-        setCurrentGroup(group);
-        getAllStudentsByGroupId(group.id)
+        selectGroupService(groupId);
+        getAllStudentsByGroupId(groupId)
     }
     const onDeleteStudent = (student) => {
         if (student!=='') {
             deleteStudentService(student);
         }
     }
+    const handleSetDisable = (groupId) => {
+        setHideDialog(
+            disabledCard.HIDE
+        );
+        handleClickOpen(groupId);
+    }
 
     return (
         <>
-
-            {console.log(props.match.params.id)}
             <NavigationPage name={navigationNames.GROUP_LIST} val={navigation.GROUPS}/>
             <ConfirmDialog
                 isHide={hideDialog}
@@ -164,9 +190,8 @@ let GroupList = props => {
                 onClose={onCloseShowStudents}
                 open={showStudents}
                 students={students}
-                group={currentGroup}
+                group={group}
                 onDeleteStudent={onDeleteStudent}
-
                 onSubmit={studentSubmit}
             />
 
@@ -181,6 +206,7 @@ let GroupList = props => {
                     ) : (
 
                         <AddGroup
+                            match={props.match}
                             className="form"
                             onSubmit={submit}
                             onReset={handleFormReset}
@@ -197,16 +223,15 @@ let GroupList = props => {
                             <div className="group__buttons-wrapper">
                                 {!disabled ? (
                                     <>
+                                    <Link to={`${links.GroupList}${links.Group}/${group.id}${links.SetDisable}`}>
                                         <GiSightDisabled
                                             className="group__buttons-hide"
                                             title={t('common:set_disabled')}
                                             onClick={() => {
-                                                setHideDialog(
-                                                    disabledCard.HIDE
-                                                );
-                                                handleClickOpen(group.id);
+                                                handleSetDisable(group.id);
                                             }}
                                         />
+                                    </Link>
                                         <Link to={`${links.GroupList}${links.Group}${links.Edit}/${group.id}`}>
                                         <FaEdit
                                             className="group__buttons-edit"
@@ -232,15 +257,16 @@ let GroupList = props => {
                                     onClick={() => handleClickOpen(group.id)}
                                 />
                                 </Link>
+                            <Link to={`${links.GroupList}${links.Group}/${group.id}${links.AddStudent}`}>
                                 <FaUserPlus
                                     title={t('formElements:student_add_label')}
                                     className="svg-btn copy-btn align-left info-btn"
                                     onClick={()=> {
-                                        setAddStudentDialog(true);
-                                        setCurrentGroup(group)
-
+                                        handleAddUser(groupId);
+                                        setCurrentGroup(group);
                                     }}
                                 />
+                            </Link>
 
                             </div>
                             <p className="group-card__description">
@@ -249,17 +275,19 @@ let GroupList = props => {
                             <h1 className="group-card__number">
                                 {group.title}
                             </h1>
+                            <Link to={`${links.GroupList}${links.Group}/${group.id}${links.ShowStudents}`}>
                             <span className="students-group">
                                 <FaUsers
                                     title={t('formElements:show_students')}
                                     className="svg-btn copy-btn align-left info-btn students"
                                     onClick={
                                         ()=> {
-                                            onShowStudentByGroup(group)
+                                            onShowStudentByGroup(group.id)
                                         }
                                     }
                                 />
                             </span>
+                            </Link>
 
                         </section>
                     ))}
@@ -277,6 +305,7 @@ let GroupList = props => {
 };
 const mapStateToProps = state => ({
     groups: state.groups.groups,
+    group: state.groups.group,
     disabledGroups: state.groups.disabledGroups,
     isSnackbarOpen: state.snackbar.isSnackbarOpen,
     snackbarType: state.snackbar.snackbarType,
