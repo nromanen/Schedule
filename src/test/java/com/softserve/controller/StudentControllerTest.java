@@ -21,6 +21,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -120,21 +123,27 @@ public class StudentControllerTest {
     }
 
     @Test
+    @Sql(value = {"classpath:create-students-before-import.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(value = {"classpath:delete-students-after.sql"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void saveStudentsFromFile() throws Exception {
-
-        String fileContent = String.format("%s%n%s%n%s%n%s",
-                "\"surname\",\"name\",\"patronymic\",\"email\"",
-                "\"Romaniuk\",\"Hanna\",\"Stepanivna\",\"romaniuk@gmail.com\"",
-                "\"Boichuk\",\"Oleksandr\",\"Ivanovych\",",
-                "\"Hanushchak\",\"Viktor\",\"Mykolaiovych\",\"hanushchak@bigmir.net\"");
 
         MockMultipartFile multipartFile = new MockMultipartFile("file",
                 "students.csv",
                 "text/csv",
-                fileContent.getBytes());
+                Files.readAllBytes(Path.of("src/test/resources/test_students.csv")));
 
-        mockMvc.perform(multipart("/students/import").file(multipartFile).param("groupId", "4"))
+        mockMvc.perform(multipart("/students/import").file(multipartFile).param("groupId", "1"))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType("application/json"));
+                .andExpect(content().contentType("application/json"))
+                .andExpect(jsonPath("$", hasSize(2)))
+                .andExpect(jsonPath("$[0].name").value("Hanna"))
+                .andExpect(jsonPath("$[0].surname").value("Romaniuk"))
+                .andExpect(jsonPath("$[0].patronymic").value("Stepanivna"))
+                .andExpect(jsonPath("$[0].email").value("romaniuk@gmail.com"))
+                .andExpect(jsonPath("$[1].name").value("Viktor"))
+                .andExpect(jsonPath("$[1].surname").value("Hanushchak"))
+                .andExpect(jsonPath("$[1].patronymic").value("Mykolaiovych"))
+                .andExpect(jsonPath("$[1].email").value("hanushchak@bigmir.net"));
+
     }
 }

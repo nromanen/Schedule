@@ -6,15 +6,21 @@ import com.softserve.exception.EntityNotFoundException;
 import com.softserve.exception.FieldAlreadyExistsException;
 import com.softserve.repository.StudentRepository;
 import com.softserve.service.impl.StudentServiceImpl;
+import junitparams.JUnitParamsRunner;
+import junitparams.Parameters;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnit;
+import org.mockito.junit.MockitoRule;
 import org.springframework.mock.web.MockMultipartFile;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -25,8 +31,11 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
 @Category(UnitTestCategory.class)
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(JUnitParamsRunner.class)
 public class StudentServiceTest {
+
+    @Rule
+    public MockitoRule mockitoRule = MockitoJUnit.rule();
 
     @Mock
     StudentRepository studentRepository;
@@ -199,7 +208,8 @@ public class StudentServiceTest {
     }
 
     @Test
-    public void importStudentsFromFile() throws IOException {
+    @Parameters(method = "parametersToTestImport")
+    public void importStudentsFromFile(MockMultipartFile multipartFile) throws IOException {
         List<Student> expectedStudents = new ArrayList<>();
 
         Group group = new Group();
@@ -229,18 +239,6 @@ public class StudentServiceTest {
         expectedStudents.add(student1);
         expectedStudents.add(student3);
 
-        String fileContent = String.format("%s%n%s%n%s%n%s",
-                "\"surname\",\"name\",\"patronymic\",\"email\"",
-                "\"Romaniuk\",\"Hanna\",\"Stepanivna\",\"romaniuk@gmail.com\"",
-                "\"Boichuk\",\"Oleksandr\",\"Ivanovych\",",
-                "\"Hanushchak\",\"Viktor\",\"Mykolaiovych\",\"hanushchak@bigmir.net\"");
-
-        MockMultipartFile multipartFile = new MockMultipartFile("file",
-                "students.csv",
-                "text/csv",
-                fileContent.getBytes());
-
-
         when(studentRepository.findByEmail(student1.getEmail())).thenReturn(null);
         when(studentRepository.findByEmail(student2.getEmail())).thenReturn(null);
         when(studentRepository.findByEmail(student3.getEmail())).thenReturn(null);
@@ -252,8 +250,23 @@ public class StudentServiceTest {
         List<Student> actualStudents = studentService.saveFromFile(multipartFile, 4L);
         assertNotNull(actualStudents);
         assertEquals(expectedStudents, actualStudents);
-        verify(studentRepository, times(1)).save(student1);
-        verify(studentRepository, times(1)).save(student2);
-        verify(studentRepository, times(1)).save(student3);
+        verify(studentRepository).save(student1);
+        verify(studentRepository).save(student2);
+        verify(studentRepository).save(student3);
+    }
+
+    private Object[] parametersToTestImport() throws IOException {
+
+        MockMultipartFile multipartFileCsv = new MockMultipartFile("file",
+                "students.csv",
+                "text/csv",
+                Files.readAllBytes(Path.of("src/test/resources/test_students.csv")));
+
+        MockMultipartFile multipartFileTxt = new MockMultipartFile("file",
+                "students.txt",
+                "text/plain",
+                Files.readAllBytes(Path.of("src/test/resources/test_students.csv")));
+
+        return new Object[] {multipartFileCsv, multipartFileTxt};
     }
 }

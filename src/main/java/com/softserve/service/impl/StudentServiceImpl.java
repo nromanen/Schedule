@@ -158,6 +158,7 @@ public class StudentServiceImpl implements StudentService {
      * "Boichuk","Oleksandr","Ivanovych","boichuk@ukr.net"
      *  etc.
      *
+     * The method is not transactional in order to prevent interruptions while reading a file
      * @param file file with students data
      * @return list of created students
      * @throws IOException if error happens while creating or deleting file
