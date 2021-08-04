@@ -19,7 +19,7 @@ build:
         paths:
             - build/libs/*.jar
         expire_in: 1 week
-    image: gradle:latest
+    image: gradle:jdk11
     stage: build
     cache:
         key: '$CI_COMMIT_REF_NAME'
