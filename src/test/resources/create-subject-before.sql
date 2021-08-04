@@ -1,7 +1,7 @@
-delete from de3rldngv565ak."public".lessons;
-delete from de3rldngv565ak."public".subjects;
+delete from "public".lessons;
+delete from "public".subjects;
 
-insert into de3rldngv565ak."public".subjects(id, name) VALUES
+insert into "public".subjects(id, name) VALUES
 (4, 'Biology'),
 (5, 'History'),
 (6, 'Astronomy');

@@ -1,6 +1,6 @@
-delete from department;
+delete from "public".department;
 
-insert into department(id, name) values
+insert into "public".department(id, name) values
 (8, 'Department1'),
 (9, 'Department2'),
 (10, 'Department3');
