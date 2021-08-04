@@ -1,7 +1,7 @@
-delete from de3rldngv565ak."public".lessons;
-delete from de3rldngv565ak."public".teacher_wishes;
-delete from de3rldngv565ak."public".teachers;
+delete from "public".lessons;
+delete from "public".teacher_wishes;
+delete from "public".teachers;
 
-insert into de3rldngv565ak."public".teachers(id, name, patronymic, "position", surname) VALUES
+insert into "public".teachers(id, name, patronymic, "position", surname) VALUES
 (4, 'Ivan', 'Ivanovych', 'docent', 'Ivanov'),
 (5, 'Petro', 'Petrovych', 'doctor','Petrov');
