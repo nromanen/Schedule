@@ -167,7 +167,7 @@ public class SemesterControllerTest {
         SemesterDTO semesterDtoForSave = new SemesterDTO();
         semesterDtoForSave.setDaysOfWeek(dayOfWeeks);
         semesterDtoForSave.setPeriods(periodDTOS);
-        semesterDtoForSave.setId(4);
+        semesterDtoForSave.setId(0);
         semesterDtoForSave.setDescription("1 semester");
         semesterDtoForSave.setYear(2020);
         semesterDtoForSave.setStartDay(LocalDate.parse("2020/08/20", DateTimeFormatter.ofPattern("yyyy/MM/dd")));
@@ -207,7 +207,7 @@ public class SemesterControllerTest {
     }
 
     @Test
-    public void                      returnBadRequestIfSavedDescriptionIsNull() throws Exception {
+    public void returnBadRequestIfSavedDescriptionIsNull() throws Exception {
         TreeSet<DayOfWeek> dayOfWeeks = new TreeSet<>();
         dayOfWeeks.add(DayOfWeek.MONDAY);
         dayOfWeeks.add(DayOfWeek.FRIDAY);
@@ -233,7 +233,6 @@ public class SemesterControllerTest {
                 .andExpect(status().isBadRequest());
     }
 
-    @Ignore("Remove ignore when return checking for duplicates")
     @Test
     public void returnBadRequestIfUpdatedSemesterAlreadyExists() throws Exception {
         TreeSet<DayOfWeek> dayOfWeeks = new TreeSet<>();
