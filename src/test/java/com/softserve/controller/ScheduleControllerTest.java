@@ -4,15 +4,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.softserve.config.DBConfigTest;
 import com.softserve.config.MyWebAppInitializer;
 import com.softserve.config.WebMvcConfig;
-import com.softserve.dto.*;
+import com.softserve.dto.ScheduleSaveDTO;
 import com.softserve.entity.Lesson;
 import com.softserve.entity.Teacher;
 import com.softserve.entity.enums.EvenOdd;
-import com.softserve.mapper.GroupMapperImpl;
-import com.softserve.mapper.SubjectMapperImpl;
-import com.softserve.mapper.TeacherNameMapperImpl;
 import com.softserve.service.*;
-import com.softserve.service.impl.TeacherServiceImpl;
 import org.hamcrest.Matchers;
 import org.hamcrest.collection.IsEmptyCollection;
 import org.junit.Before;
@@ -33,7 +29,6 @@ import org.springframework.web.context.WebApplicationContext;
 
 import java.time.DayOfWeek;
 
-import static com.softserve.entity.enums.LessonType.LABORATORY;
 import static com.softserve.entity.enums.LessonType.LECTURE;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -45,7 +40,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebAppConfiguration
 @WithMockUser(username = "first@mail.com", password = "$2a$04$SpUhTZ/SjkDQop/Zvx1.seftJdqvOploGce/wau247zQhpEvKtz9.", roles = "MANAGER")
 @Sql(value = "classpath:create-schedule-before.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-@Sql(value = "classpath:delete-schedule-after.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 public class ScheduleControllerTest {
 
     private MockMvc mockMvc;
@@ -71,7 +65,9 @@ public class ScheduleControllerTest {
 
     @Before
     public void setUp() {
-        mockMvc = MockMvcBuilders.webAppContextSetup(wac).apply(SecurityMockMvcConfigurers.springSecurity()).build();
+        mockMvc = MockMvcBuilders.webAppContextSetup(wac)
+                .apply(SecurityMockMvcConfigurers.springSecurity())
+                .build();
     }
 
     @Test
@@ -232,6 +228,7 @@ public class ScheduleControllerTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
     }
+
 //  Uncomment when fix response statusCode
     /*@Test
     public void saveScheduleIfScheduleIsExist() throws Exception {

@@ -6,16 +6,24 @@ import com.softserve.exception.EntityNotFoundException;
 import com.softserve.exception.FieldAlreadyExistsException;
 import com.softserve.repository.StudentRepository;
 import com.softserve.service.impl.StudentServiceImpl;
+import junitparams.JUnitParamsRunner;
+import junitparams.Parameters;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnit;
+import org.mockito.junit.MockitoRule;
+import org.springframework.mock.web.MockMultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -23,8 +31,11 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
 @Category(UnitTestCategory.class)
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(JUnitParamsRunner.class)
 public class StudentServiceTest {
+
+    @Rule
+    public MockitoRule mockitoRule = MockitoJUnit.rule();
 
     @Mock
     StudentRepository studentRepository;
@@ -194,5 +205,68 @@ public class StudentServiceTest {
 
         when(studentRepository.findByEmail(anyString())).thenReturn(existingStudent);
         studentService.save(inputStudent);
+    }
+
+    @Test
+    @Parameters(method = "parametersToTestImport")
+    public void importStudentsFromFile(MockMultipartFile multipartFile) throws IOException {
+        List<Student> expectedStudents = new ArrayList<>();
+
+        Group group = new Group();
+        group.setId(4L);
+
+        Student student1 = new Student();
+        student1.setSurname("Romaniuk");
+        student1.setName("Hanna");
+        student1.setPatronymic("Stepanivna");
+        student1.setEmail("romaniuk@gmail.com");
+        student1.setGroup(group);
+
+        Student student2 = new Student();
+        student2.setSurname("Boichuk");
+        student2.setName("Oleksandr");
+        student2.setPatronymic("Ivanovych");
+        student2.setEmail("");
+        student2.setGroup(group);
+
+        Student student3 = new Student();
+        student3.setSurname("Hanushchak");
+        student3.setName("Viktor");
+        student3.setPatronymic("Mykolaiovych");
+        student3.setEmail("hanushchak@bigmir.net");
+        student3.setGroup(group);
+
+        expectedStudents.add(student1);
+        expectedStudents.add(student3);
+
+        when(studentRepository.findByEmail(student1.getEmail())).thenReturn(null);
+        when(studentRepository.findByEmail(student2.getEmail())).thenReturn(null);
+        when(studentRepository.findByEmail(student3.getEmail())).thenReturn(null);
+
+        when(studentRepository.save(student1)).thenReturn(student1);
+        when(studentRepository.save(student2)).thenThrow(RuntimeException.class);
+        when(studentRepository.save(student3)).thenReturn(student3);
+
+        List<Student> actualStudents = studentService.saveFromFile(multipartFile, 4L);
+        assertNotNull(actualStudents);
+        assertEquals(expectedStudents, actualStudents);
+        verify(studentRepository).save(student1);
+        verify(studentRepository).save(student2);
+        verify(studentRepository).save(student3);
+    }
+
+    private Object[] parametersToTestImport() throws IOException {
+
+        MockMultipartFile multipartFileCsv = new MockMultipartFile("file",
+                "students.csv",
+                "text/csv",
+                Files.readAllBytes(Path.of("src/test/resources/test_students.csv")));
+
+        MockMultipartFile multipartFileTxt = new MockMultipartFile("file",
+                "students.txt",
+                "text/plain",
+                Files.readAllBytes(Path.of("src/test/resources/test_students.csv")));
+
+        return new Object[] {multipartFileCsv, multipartFileTxt};
     }
 }

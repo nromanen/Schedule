@@ -1,5 +1,6 @@
 package com.softserve.service.impl;
 
+import com.opencsv.bean.CsvToBeanBuilder;
 import com.softserve.entity.Student;
 import com.softserve.exception.EntityNotFoundException;
 import com.softserve.exception.FieldAlreadyExistsException;
@@ -11,8 +12,18 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.beanutils.BeanUtilsBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.Reader;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -67,6 +78,10 @@ public class StudentServiceImpl implements StudentService {
     @Transactional
     @Override
     public Student save(Student object) {
+        return saveToDatabase(object);
+    }
+
+    private Student saveToDatabase(Student object) {
         log.info("Enter into save method with entity:{}", object);
         Student foundStudent = getByEmail(object.getEmail());
         if (Objects.nonNull(foundStudent)) {
@@ -129,5 +144,56 @@ public class StudentServiceImpl implements StudentService {
     public Student getByUserId(Long userId) {
         log.info("Enter into getByUserId method with UserId {}", userId);
         return studentRepository.findByUserId(userId);
+    }
+
+    /**
+     * The method used for importing students from csv file.
+     * Each line of the file should consist of one or more fields, separated by commas.
+     * Each field may or may not be enclosed in double-quotes.
+     * First line of the file is a header.
+     * All subsequent lines contain data about students, i.e.:
+     *
+     * "surname","name","patronymic","email"
+     * "Romaniuk","Hanna","Stepanivna","romaniuk@gmail.com"
+     * "Boichuk","Oleksandr","Ivanovych","boichuk@ukr.net"
+     *  etc.
+     *
+     * The method is not transactional in order to prevent interruptions while reading a file
+     * @param file file with students data
+     * @return list of created students
+     * @throws IOException if error happens while creating or deleting file
+     */
+    @Override
+    @Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
+    public List<Student> saveFromFile(MultipartFile file, Long groupId) throws IOException {
+        log.info("Enter into saveFromFile of StudentServiceImpl");
+
+        String fileName = String.join("","students_group",
+                String.valueOf(groupId),"_",String.valueOf(LocalDateTime.now().getNano()),".csv");
+
+        File csvFile = new File(fileName);
+        file.transferTo(csvFile);
+        List<Student> students = new ArrayList<>();
+
+        try (Reader reader = new FileReader(csvFile, StandardCharsets.UTF_8)) {
+                students = new CsvToBeanBuilder<Student>(reader)
+                        .withType(Student.class)
+                        .build().parse();
+        } catch (RuntimeException e) {
+            log.error("Error occurred while parsing file {}", file.getOriginalFilename(), e);
+        }
+
+        List<Student> savedStudents = new ArrayList<>();
+
+        for (Student student : students) {
+            try {
+                student.getGroup().setId(groupId);
+                savedStudents.add(saveToDatabase(student));
+            } catch (RuntimeException e) {
+                log.error("Error occurred while saving student with email {}", student.getEmail(), e);
+            }
+        }
+        Files.delete(csvFile.toPath());
+        return savedStudents;
     }
 }
