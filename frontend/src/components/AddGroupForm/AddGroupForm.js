@@ -14,6 +14,7 @@ import {
     minLengthValue
 } from '../../validation/validateFields';
 import { links } from '../../constants/links';
+import { setDisableButton } from '../../helper/disableComponent';
 
 let AddGroup = props => {
     const { t } = useTranslation('formElements');
@@ -31,20 +32,7 @@ let AddGroup = props => {
             }
         }
     }, [group.id]);
-    const setDisableButton = () => {
-        if(group.id!==undefined){
-            return false
-        }
-        if(!pristine){
-            return false
-        }
-        if (submitting){
-            return true
-        }
-        if(group.id===undefined){
-            return true
-        }
-    }
+
     return (
         <Card class="form-card group-form">
             <h2 className="group-form__title">
@@ -74,7 +62,7 @@ let AddGroup = props => {
                         type="button"
                         className="buttons-style"
                         variant="contained"
-                        disabled={setDisableButton()}
+                        disabled={setDisableButton(pristine,submitting,group.id)}
                         onClick={onReset}
                     >
                         {group.id===undefined?t('clear_button_label'):t('cancel_button_title')}
