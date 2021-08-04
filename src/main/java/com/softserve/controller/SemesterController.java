@@ -1,8 +1,12 @@
 package com.softserve.controller;
 
+import com.softserve.dto.GroupDTO;
 import com.softserve.dto.SemesterDTO;
+import com.softserve.entity.Group;
 import com.softserve.entity.Semester;
+import com.softserve.mapper.GroupMapper;
 import com.softserve.mapper.SemesterMapper;
+import com.softserve.service.GroupService;
 import com.softserve.service.SemesterService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -21,11 +25,15 @@ public class SemesterController {
 
     private final SemesterService semesterService;
     private final SemesterMapper semesterMapper;
+    private final GroupMapper groupMapper;
+    private final GroupService groupService;
 
     @Autowired
-    public SemesterController(SemesterService semesterService, SemesterMapper semesterMapper) {
+    public SemesterController(SemesterService semesterService, SemesterMapper semesterMapper, GroupMapper groupMapper, GroupService groupService) {
         this.semesterService = semesterService;
         this.semesterMapper = semesterMapper;
+        this.groupMapper = groupMapper;
+        this.groupService = groupService;
     }
 
     @GetMapping(path = {"/semesters", "/public/semesters"})
@@ -110,4 +118,27 @@ public class SemesterController {
         return ResponseEntity.ok().body(semesterMapper.semestersToSemesterDTOs(semesterService.getDisabled()));
     }
 
+    @PutMapping("/semesters/{semesterId}/group")
+    @ApiOperation(value = "Add group to semester by id")
+    public ResponseEntity<SemesterDTO> addGroupToSemester(@PathVariable Long semesterId, @RequestParam Long groupId) {
+        log.info("In addGroup (semesterId = [{}], groupId = [{}])", semesterId, groupId);
+        Semester semester = semesterService.addGroupToSemester(semesterService.getById(semesterId), groupService.getById(groupId));
+        return ResponseEntity.status(HttpStatus.OK).body(semesterMapper.semesterToSemesterDTO(semester));
+    }
+
+    @GetMapping("/semesters/current/groups")
+    @ApiOperation(value = "Get the list of all groups for current semester")
+    public ResponseEntity<List<GroupDTO>> getGroupsForCurrentSemester(){
+        log.info("In getGroupsByCurrentSemester"    );
+        List<Group> groups = groupService.getGroupsForCurrentSemester();
+        return ResponseEntity.status(HttpStatus.OK).body(groupMapper.groupsToGroupDTOs(groups));
+    }
+
+    @GetMapping("/semesters/{semesterId}/groups")
+    @ApiOperation(value = "Get the list of all groups for semester by id")
+    public ResponseEntity<List<GroupDTO>> getGroupsBySemesterId(@PathVariable Long semesterId){
+        log.info("In getGroupsBySemesterId (semesterId =[{}]", semesterId);
+        List<Group> groups = groupService.getGroupsBySemesterId(semesterId);
+        return ResponseEntity.status(HttpStatus.OK).body(groupMapper.groupsToGroupDTOs(groups));
+    }
 }

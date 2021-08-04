@@ -1,5 +1,6 @@
 package com.softserve.service.impl;
 
+import com.softserve.entity.Group;
 import com.softserve.entity.Period;
 import com.softserve.entity.Semester;
 import com.softserve.exception.EntityAlreadyExistsException;
@@ -7,7 +8,6 @@ import com.softserve.exception.EntityNotFoundException;
 import com.softserve.exception.IncorrectTimeException;
 import com.softserve.exception.ScheduleConflictException;
 import com.softserve.repository.SemesterRepository;
-import com.softserve.service.GroupService;
 import com.softserve.service.PeriodService;
 import com.softserve.service.SemesterService;
 import lombok.extern.slf4j.Slf4j;
@@ -17,10 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.DayOfWeek;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Slf4j
 @Transactional
@@ -31,7 +28,7 @@ public class SemesterServiceImpl implements SemesterService {
     private final PeriodService periodService;
 
     @Autowired
-    public SemesterServiceImpl(SemesterRepository semesterRepository, PeriodService periodService, GroupService groupService) {
+    public SemesterServiceImpl(SemesterRepository semesterRepository, PeriodService periodService) {
         this.semesterRepository = semesterRepository;
         this.periodService = periodService;
     }
@@ -230,5 +227,26 @@ public class SemesterServiceImpl implements SemesterService {
         semesterRepository.setDefaultSemesterToFalse();
         semesterRepository.setDefaultSemester(semesterId);
         return getById(semesterId);
+    }
+
+    /**
+     *
+     *  Method updates information for an existing semester about groups
+     *
+     * @param semester semester id in which we need to change groups
+     * @param group group to add
+     * @return changed Semester
+     */
+    @Override
+    public Semester addGroupToSemester(Semester semester, Group group) {
+        log.info("In addGroup");
+        List<Group> groups = semester.getGroups();
+        if (groups == null){
+            groups = new ArrayList<>();
+        }
+        groups.add(group);
+        semester.setGroups(groups);
+        getById(semester.getId()).setGroups(groups);
+        return semester;
     }
 }

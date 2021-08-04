@@ -1,5 +1,6 @@
 package com.softserve.service;
 
+import com.softserve.entity.Group;
 import com.softserve.entity.Period;
 import com.softserve.entity.Semester;
 import com.softserve.exception.*;
@@ -14,12 +15,9 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
@@ -423,5 +421,32 @@ public class SemesterServiceTest {
         semester.setCurrentSemester(false);
 
         semesterService.getCurrentSemester();
+    }
+
+    @Test
+    public void addGroupToSemester() {
+        Group group = new Group();
+        group.setTitle("some group");
+        group.setId(1L);
+        List<Group> groupList = new ArrayList<>();
+        groupList.add(group);
+        Semester semester = new Semester();
+        semester.setId(1L);
+        semester.setYear(2020);
+        semester.setDescription("1 semester");
+        semester.setStartDay(LocalDate.of(2020, 4, 10));
+        semester.setEndDay(LocalDate.of(2020, 5, 10));
+        semester.setCurrentSemester(false);
+        Semester updatedSemester = new Semester();
+        updatedSemester.setId(1L);
+        updatedSemester.setYear(2020);
+        updatedSemester.setDescription("1 semester");
+        updatedSemester.setStartDay(LocalDate.of(2020, 4, 10));
+        updatedSemester.setEndDay(LocalDate.of(2020, 5, 10));
+        updatedSemester.setCurrentSemester(false);
+        updatedSemester.setGroups(groupList);
+        Semester semesterWithGroup = semesterService.addGroupToSemester(semester, group);
+        assertNotNull(semesterWithGroup);
+        assertTrue(semesterWithGroup.getGroups().contains(group));
     }
 }
