@@ -8,6 +8,6 @@ import lombok.Setter;
 @Getter
 public class WishesWithTeacherDTO {
     private Long id;
-    private TeacherIdDTO teacher;
+    private TeacherNameDTO teacher;
     private Wishes[] teacherWishesList;
 }

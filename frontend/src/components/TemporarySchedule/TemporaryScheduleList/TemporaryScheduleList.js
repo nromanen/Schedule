@@ -13,10 +13,9 @@ import {
 
 import Divider from '@material-ui/core/Divider';
 
-import { handleTeacherShortInfo } from '../../../helper/handleTeacherInfo';
-
 import { cardType } from '../../../constants/cardType';
 import TemporaryScheduleCard from '../TemporaryScheduleCard/TemporaryScheduleCard';
+import { getTeacherForSite } from '../../../helper/renderTeacher';
 
 const TemporaryScheduleList = props => {
     const { t } = useTranslation('common');
@@ -89,7 +88,7 @@ const TemporaryScheduleList = props => {
                             <p>
                                 (
                                 {temporarySchedule.teacher?.name
-                                    ? handleTeacherShortInfo(
+                                    ? getTeacherForSite(
                                           temporarySchedule.teacher
                                       )
                                     : t('for_all')}

@@ -13,7 +13,8 @@ import { RESET_PASSWORD_FORM } from '../../constants/reduxForms';
 import { authTypes } from '../../constants/auth';
 
 import { email, required } from '../../validation/validateFields';
-
+import { links } from '../../constants/links';
+import {Link} from 'react-router-dom';
 
 let ResetPasswordForm = props => {
     const { t } = useTranslation('formElements');
@@ -62,7 +63,7 @@ let ResetPasswordForm = props => {
                         props.setError(null);
                     }}
                 >
-                    {translation('login_page_title')}
+                  <Link  className="navLinks" to={links.LOGIN} >{translation('login_page_title')}</Link>
                 </button>
             </div>
         </form>

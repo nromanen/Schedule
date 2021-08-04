@@ -12,9 +12,10 @@ import java.util.List;
 @Slf4j
 public class StudentRepositoryImpl extends BasicRepositoryImpl<Student, Long> implements StudentRepository {
 
-    private static final String GET_ALL_QUERY = "from Student s order by s.surname ASC";
-    private static final String FIND_BY_EMAIL = "from Student s where s.email = :email";
-    private static final String FIND_BY_USER_ID = "from Student s where s.user_id = :user_id";
+    private static final String GET_ALL_QUERY = "FROM Student s JOIN FETCH s.group ORDER BY s.surname ASC";
+    private static final String GET_BY_ID_QUERY = "FROM Student s JOIN FETCH s.group WHERE s.id = :id";
+    private static final String FIND_BY_EMAIL = "FROM Student s JOIN FETCH s.group WHERE s.email = :email";
+    private static final String FIND_BY_USER_ID = "FROM Student s JOIN FETCH s.group WHERE s.user_id = :user_id";
 
     /**
      * Modified GetAll method used for getting list of Student entities by surname ascending from database
@@ -25,6 +26,12 @@ public class StudentRepositoryImpl extends BasicRepositoryImpl<Student, Long> im
     public List<Student> getAll() {
         log.info("In getAll()");
         return sessionFactory.getCurrentSession().createQuery(GET_ALL_QUERY).getResultList();
+    }
+
+    @Override
+    public Student getById(Long id) {
+        log.info("In getById(id = [{}])", id);
+        return (Student) sessionFactory.getCurrentSession().createQuery(GET_BY_ID_QUERY).setParameter("id", id).uniqueResult();
     }
 
     /**

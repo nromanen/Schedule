@@ -33,6 +33,8 @@ import NotFound from '../../share/NotFound/NotFound';
 import { GiSightDisabled, IoMdEye } from 'react-icons/all';
 
 import { disabledCard } from '../../constants/disabledCard';
+import NavigationPage from '../../components/Navigation/NavigationPage';
+import { navigation, navigationNames } from '../../constants/navigation';
 
 const RoomList = props => {
     const { rooms } = props;
@@ -117,6 +119,7 @@ const RoomList = props => {
 
     return (
         <>
+            <NavigationPage name={navigationNames.ROOM_LIST} val={navigation.ROOMS}/>
             <ConfirmDialog
                 cardId={roomId}
                 whatDelete={cardType.ROOM.toLowerCase()}
@@ -185,6 +188,7 @@ const RoomList = props => {
                                     onClick={() => handleClickOpen(room.id)}
                                 />
                             </div>
+
                             <span> {t('room_label') + ':'} </span>
                             <h2 className="room-card__number">{room.name}</h2>
                             <span>{t('type_label') + ':'}</span>

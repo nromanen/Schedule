@@ -146,6 +146,17 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return buildResponseEntity(apiError);
     }
 
+    // Handle MessageNotSendException. Triggered when we cannot send message on email.
+    @ExceptionHandler(MessageNotSendException.class)
+    protected ResponseEntity<Object> handleMessageNotSendException(
+            MessageNotSendException ex) {
+        ApiError apiError = new ApiError(BAD_REQUEST);
+        apiError.setMessage(ex.getMessage());
+        apiError.setDebugMessage(ex.getMessage());
+        log.error(ex.getMessage());
+        return buildResponseEntity(apiError);
+    }
+
     //Handle HttpMessageNotReadableException. Happens when request JSON is malformed.
     @Override
     protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {

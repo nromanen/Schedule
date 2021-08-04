@@ -32,6 +32,8 @@ export const showAllTeachersService = () => {
         .catch(error => errorHandler(error));
 };
 
+
+
 export const getTeachersWithoutAccount = () => {
     axios
         .get(TEACHERS_WITHOUT_ACCOUNT_URL)

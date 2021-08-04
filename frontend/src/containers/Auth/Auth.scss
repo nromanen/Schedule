@@ -6,7 +6,9 @@
     justify-content: center;
     text-align: center;
     margin-top: 10em;
-
+    .navLinks{
+        text-decoration: none;
+    }
     .auth-link {
         display: inline-block;
         color: $background-color;

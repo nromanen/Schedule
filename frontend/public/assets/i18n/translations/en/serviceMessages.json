@@ -1,6 +1,7 @@
 {
     "created_label": "created",
     "updated_label": "updated",
+    "sent_label": "sent",
     "deleted_label": "deleted",
     "semester_service_is_active": "This semester can not be deleted, beacause it is active right now",
     "semester_service_not_as_begin_or_end": "Your year is not the same as year of begin or end of semester. Are you sure you want to create it?",

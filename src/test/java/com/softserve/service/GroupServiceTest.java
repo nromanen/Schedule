@@ -2,10 +2,12 @@ package com.softserve.service;
 
 import com.softserve.entity.Group;
 import com.softserve.entity.Semester;
+import com.softserve.entity.Student;
 import com.softserve.exception.EntityNotFoundException;
 import com.softserve.exception.FieldAlreadyExistsException;
 import com.softserve.repository.GroupRepository;
 import com.softserve.service.impl.GroupServiceImpl;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -15,10 +17,10 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Optional;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
@@ -36,17 +38,101 @@ public class GroupServiceTest {
     private GroupServiceImpl groupService;
 
     @Test
+    public void getAll() {
+        Group group = new Group();
+        group.setTitle("some group");
+        group.setId(1L);
+
+        Student student = new Student();
+        student.setId(1L);
+        student.setGroup(group);
+
+        group.getStudents().add(student);
+
+        when(groupRepository.getAll()).thenReturn(Arrays.asList(group));
+        List<Group> actualList = groupService.getAll();
+
+        assertEquals(1, actualList.size());
+        assertSame(actualList.get(0), group);
+        assertEquals(1, actualList.get(0).getStudents().size());
+        assertSame(actualList.get(0).getStudents().get(0), student);
+    }
+
+    @Test
+    public void getAllWithoutStudents() {
+        Group group = new Group();
+        group.setTitle("some group");
+        group.setId(1L);
+
+        Student student = new Student();
+        student.setId(1L);
+        student.setGroup(group);
+
+        group.getStudents().add(student);
+
+        when(groupRepository.getAllWithoutStudents()).thenReturn(Arrays.asList(group));
+        List<Group> actualList = groupService.getAllWithoutStudents();
+
+        assertEquals(1, actualList.size());
+        assertSame(actualList.get(0), group);
+        assertEquals(0, actualList.get(0).getStudents().size());
+    }
+
+    @Test
+    public void getDisabled() {
+        Group group = new Group();
+        group.setId(1L);
+        group.setTitle("some group");
+        group.setDisable(true);
+
+        Student student = new Student();
+        student.setId(1L);
+        student.setGroup(group);
+
+        group.getStudents().add(student);
+
+        when(groupRepository.getDisabled()).thenReturn(Arrays.asList(group));
+        List<Group> disabledActual = groupService.getDisabled();
+
+        assertEquals(1, disabledActual.size());
+        assertSame(disabledActual.get(0), group);
+        assertEquals(1, disabledActual.get(0).getStudents().size());
+        assertSame(disabledActual.get(0).getStudents().get(0), student);
+    }
+
+    @Test
+    public void getDisabledWithoutStudents() {
+        Group group = new Group();
+        group.setId(1L);
+        group.setTitle("some group");
+        group.setDisable(true);
+
+        Student student = new Student();
+        student.setId(1L);
+        student.setGroup(group);
+
+        group.getStudents().add(student);
+
+        when(groupRepository.getDisabledWithoutStudents()).thenReturn(Arrays.asList(group));
+        List<Group> disabledActual = groupService.getDisabledWithoutStudents();
+
+        assertEquals(1, disabledActual.size());
+        assertSame(disabledActual.get(0), group);
+        assertEquals(0, disabledActual.get(0).getStudents().size());
+    }
+
+    @Test
     public void getGroupById() {
         Group group = new Group();
         group.setTitle("some group");
         group.setId(1L);
 
-        when(groupRepository.findById(1L)).thenReturn(Optional.of(group));
+        when(groupRepository.getById(1L)).thenReturn(group);
 
         Group result = groupService.getById(1L);
         assertNotNull(result);
         assertEquals(group.getId(), result.getId());
-        verify(groupRepository, times(1)).findById(anyLong());
+        verify(groupRepository, times(1)).getById(anyLong());
     }
 
     @Test(expected = EntityNotFoundException.class)
@@ -56,7 +142,7 @@ public class GroupServiceTest {
         group.setId(1L);
 
         groupService.getById(2L);
-        verify(groupRepository, times(1)).findById(2L);
+        verify(groupRepository, times(1)).getById(2L);
     }
 
     @Test
@@ -97,17 +183,31 @@ public class GroupServiceTest {
         updatedGroup.setTitle("updated title");
         updatedGroup.setId(1L);
 
-        when(groupRepository.countByGroupId(anyLong())).thenReturn(1L);
-        when(groupRepository.countGroupsWithTitleAndIgnoreWithId(anyLong(), anyString())).thenReturn(0L);
         when(groupRepository.update(updatedGroup)).thenReturn(updatedGroup);
+        when(groupRepository.getById(anyLong())).thenReturn(oldGroup);
 
         oldGroup = groupService.update(updatedGroup);
         assertNotNull(oldGroup);
         assertEquals(updatedGroup, oldGroup);
         verify(groupRepository, times(1)).update(oldGroup);
-        verify(groupRepository, times(1)).countGroupsWithTitleAndIgnoreWithId(anyLong(), anyString());
     }
 
+    @Test
+    public void delete() {
+        Group expectedGroup = new Group();
+        expectedGroup.setTitle("some group");
+        expectedGroup.setId(1L);
+
+        when(groupRepository.delete(any(Group.class))).thenReturn(expectedGroup);
+        when(groupRepository.getById(anyLong())).thenReturn(expectedGroup);
+        Group deletedGroup = groupService.delete(expectedGroup);
+
+        assertNotNull(deletedGroup);
+        assertEquals(expectedGroup, deletedGroup);
+        verify(groupRepository).delete(any());
+    }
+
+    @Ignore
     @Test(expected = FieldAlreadyExistsException.class)
     public void throwFieldAlreadyExistsExceptionIfUpdatedTitleAlreadyExists() {
         Group oldGroup = new Group();
@@ -125,6 +225,7 @@ public class GroupServiceTest {
         verify(groupRepository, times(1)).countGroupsWithTitleAndIgnoreWithId(anyLong(), anyString());
     }
 
+    @Ignore
     @Test(expected = EntityNotFoundException.class)
     public void throwEntityNotFoundExceptionIfTryToUpdateNotFoundedGroup() {
         Group group = new Group();

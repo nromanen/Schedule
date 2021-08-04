@@ -179,7 +179,7 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
      */
     @Override
     public List<Lesson> getLessonsBySubjectIdTeacherIdSemesterIdLessonTypeAndExcludeCurrentLessonId(Lesson lesson) {
-        log.info("In getLessonsBySubjectForSiteTeacherForSiteAndSemester(lesson = [{}]", lesson);
+        log.info("In getLessonsBySubjectIdTeacherIdSemesterIdLessonTypeAndExcludeCurrentLessonId(lesson = [{}]", lesson);
         return sessionFactory.getCurrentSession().createQuery(
                 "select l from Lesson l " +
                         " where l.subject.id= :subjectId and l.teacher.id= :teacherId and l.semester.id= :semesterId and l.lessonType= :lessonType and l.id != :lessonId")

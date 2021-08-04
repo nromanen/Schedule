@@ -161,6 +161,7 @@ public class SemesterServiceImpl implements SemesterService {
                 () -> new ScheduleConflictException("Default semester isn't specified"));
         Hibernate.initialize(semester.getDaysOfWeek());
         Hibernate.initialize(semester.getPeriods());
+        Hibernate.initialize(semester.getGroups());
         return semester;
     }
 
