@@ -24,6 +24,7 @@ build:
     only:
          - master
          - develop
+         - issue/78(change_.gitlab-ci.yml)
 #test:
 #    image: gradle:alpine
 #    stage: test
