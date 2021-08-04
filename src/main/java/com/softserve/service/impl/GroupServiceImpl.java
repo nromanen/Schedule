@@ -74,18 +74,6 @@ public class GroupServiceImpl  implements GroupService {
     }
 
     /**
-     * The method used for getting all disabled groups
-     *
-     * @return list of disabled groups
-     */
-    @Transactional(readOnly = true)
-    @Override
-    public List<Group> getDisabled() {
-        log.info("Enter into getAll of getDisabled");
-        return groupRepository.getDisabled();
-    }
-
-    /**
      * The method used for getting all disabled groups, but sets student list to empty
      *
      * @return list of disabled groups
