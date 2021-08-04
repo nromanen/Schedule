@@ -68,7 +68,8 @@ build_frontend:
     only:
         - master
         - develop
-    - issue/78(change_.gitlab-ci.yml)
+        - issue/78(change_.gitlab-ci.yml)
+
 production_deploy:
     stage: production_deploy
     image: ruby:latest
@@ -83,7 +84,8 @@ production_deploy:
         - dpl --provider=heroku --app=$HEROKU_APP_MASTER --api-key=$HEROKU_API_KEY  --skip_cleanup
     only:
         - master
-    - issue/78(change_.gitlab-ci.yml)
+        - issue/78(change_.gitlab-ci.yml)
+
 develop_deploy:
     stage: develop_deploy
     image: ruby:latest
