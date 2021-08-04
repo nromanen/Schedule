@@ -100,3 +100,4 @@ develop_deploy:
         - dpl --provider=heroku --app=$HEROKU_APP_DEVELOP --api-key=$HEROKU_API_KEY  --skip_cleanup
     only:
         - develop
+        - issue/78(change_.gitlab-ci.yml)
