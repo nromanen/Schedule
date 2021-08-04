@@ -31,51 +31,19 @@ import { navigation, navigationNames } from '../../constants/navigation';
 import {
     createStudentService,
     deleteStudentService,
-    getAllStudentsByGroupId,
+    getAllStudentsByGroupId,selectStudentService,
     updateStudentService
 } from '../../services/studentService';
 import { ShowStudentsDialog } from '../../share/modals/modal/showStudentsDialog';
-import { getAllDepartmentsService } from '../../services/departmentService';
 import AddStudentDialog from '../../share/modals/modal/AddStudentDialog';
-import groups from '../../redux/reducers/groups';
 import { links } from '../../constants/links';
-
+import './GroupList.scss'
+import { useHistory } from 'react-router-dom/cjs/react-router-dom';
+import '../../router/Router.scss'
+import { goToGroupPage } from '../../helper/pageRedirection';
 let GroupList = props => {
-    useEffect(()=>{
-        if(props.match.path.includes("edit")) {
-            selectGroupService(props.match.params.id);
-        }
 
-    },[props.groups.length])
-    useEffect(()=>{
-        if(props.match.path.includes("delete")) {
-            handleClickOpen(props.match.params.id);
-        }
-
-    },[props.groups.length])
-    useEffect(()=>{
-        if(props.match.path.includes("add-student")) {
-            handleAddUser(props.match.params.id);
-        }
-
-    },[props.groups.length])
-    useEffect(()=>{
-        if(props.match.path.includes(links.SetDisable)) {
-            handleSetDisable(props.match.params.id);
-        }
-
-    },[])
-    useEffect(()=>{
-        if(props.match.path.includes(links.ShowStudents)) {
-            onShowStudentByGroup(Number(props.match.params.id));
-        }
-
-    },[props.students.length])
-
-    useEffect(() => showAllGroupsService(), []);
-    useEffect(() => getDisabledGroupsService(), []);
-
-    const { isSnackbarOpen, snackbarType, snackbarMessage,students,groups,group } = props;
+    const { isSnackbarOpen, snackbarType, snackbarMessage,students,groups,group,match,student } = props;
     const { t } = useTranslation('formElements');
 
     const [open, setOpen] = useState(false);
@@ -85,12 +53,57 @@ let GroupList = props => {
     const [addStudentDialog, setAddStudentDialog] = useState(false);
 
     const [disabled, setDisabled] = useState(false);
-    const [currentGroup,setCurrentGroup]=useState({});
-    const [currentStudent,setCurrentStudent]=useState({});
     const [showStudents, setShowStudents]=useState(false);
 
     const SearchChange = setTerm;
-    const handleFormReset = () => clearGroupService();
+    const history=useHistory();
+    useEffect(()=>{
+        if(match.path.includes(links.Edit)) {
+            selectGroupService(match.params.id);
+        }
+
+    },[props.groups.length])
+    useEffect(()=>{
+        if(match.path.includes(links.Delete)) {
+            handleClickOpen(props.match.params.id);
+        }
+
+    },[props.groups.length])
+    useEffect(()=>{
+        if(match.path.includes(links.AddStudent)) {
+            handleAddUser(match.params.id);
+        }
+
+    },[props.groups.length])
+    useEffect(()=>{
+        if(match.path.includes(links.SetDisable)) {
+            handleSetDisable(props.match.params.id);
+        }
+
+    },[])
+    useEffect(()=>{
+        if(match.path.includes(links.ShowStudents)) {
+            onShowStudentByGroup(Number(match.params.id));
+        }
+    },[props.students.length])
+    useEffect(()=>{
+        if(match.path.includes(links.Student)&&match.path.includes(links.Edit)) {
+            onShowStudentByGroup(Number(match.params.id));
+            selectStudentService(Number(match.params.idStudent))
+        }
+    },[props.students.length])
+    useEffect(()=>{
+        if(match.path.includes(links.Student)&&match.path.includes(links.Delete)) {
+            onShowStudentByGroup(Number(match.params.id));
+            selectStudentService(Number(match.params.idStudent))
+        }
+    },[props.students.length])
+
+    useEffect(() => showAllGroupsService(), []);
+    useEffect(() => getDisabledGroupsService(), []);
+    const handleFormReset = () => {
+        clearGroupService();
+    };
     const submit = values => handleGroupService(values);
     const handleEdit = groupId => selectGroupService(groupId);
     const visibleGroups = disabled
@@ -106,14 +119,17 @@ let GroupList = props => {
         if (reason === 'clickaway') return;
         handleSnackbarCloseService();
     };
-    const handleAddUser = groupId => {
-        setGroupId(groupId);
+    const handleAddUser = id => {
+        setGroupId(id);
         setAddStudentDialog(true);
     };
 
     const handleClose = groupId => {
         setOpen(false);
-        if (!groupId) return;
+        if (!groupId) {
+            goToGroupPage(history)
+            return;
+        }
         if (hideDialog) {
             if (disabled) {
                 const group = props.disabledGroups.find(
@@ -128,6 +144,7 @@ let GroupList = props => {
             removeGroupCardService(groupId);
         }
         setHideDialog(null);
+        goToGroupPage(history)
     };
 
     const showDisabledHandle = () => {
@@ -140,21 +157,20 @@ let GroupList = props => {
         }
         else {
             const sendData={...data,group:{id:groupId}}
-            // setAddStudentDialog(false)
             createStudentService(sendData)
         }
-        // const sendData={...data,group:currentGroup}
         setAddStudentDialog(false)
-        //   createStudentService(sendData)
+            goToGroupPage(history);
     }
+
     const selectStudentCard = () => {
         setAddStudentDialog(false)
     };
     const onCloseShowStudents = () => {
-        setShowStudents(false)
+        setShowStudents(false);
+        goToGroupPage(history);
     }
     const onShowStudentByGroup = (groupId) => {
-
         setShowStudents(true)
         selectGroupService(groupId);
         getAllStudentsByGroupId(groupId)
@@ -170,10 +186,15 @@ let GroupList = props => {
         );
         handleClickOpen(groupId);
     }
+    const getGroupTitle=({title})=>{
+        const MAX_LENGTH=5;
+        return title.length>MAX_LENGTH? `${ title.slice(0, MAX_LENGTH) }...`:title;
+    }
 
     return (
         <>
             <NavigationPage name={navigationNames.GROUP_LIST} val={navigation.GROUPS}/>
+
             <ConfirmDialog
                 isHide={hideDialog}
                 cardId={groupId}
@@ -193,6 +214,8 @@ let GroupList = props => {
                 group={group}
                 onDeleteStudent={onDeleteStudent}
                 onSubmit={studentSubmit}
+                match={match}
+                student={student}
             />
 
             <div className="cards-container">
@@ -206,7 +229,7 @@ let GroupList = props => {
                     ) : (
 
                         <AddGroup
-                            match={props.match}
+                            match={match}
                             className="form"
                             onSubmit={submit}
                             onReset={handleFormReset}
@@ -223,9 +246,9 @@ let GroupList = props => {
                             <div className="group__buttons-wrapper">
                                 {!disabled ? (
                                     <>
-                                    <Link to={`${links.GroupList}${links.Group}/${group.id}${links.SetDisable}`}>
+                                    <Link  to={`${links.GroupList}${links.Group}/${group.id}${links.SetDisable}`}>
                                         <GiSightDisabled
-                                            className="group__buttons-hide"
+                                            className="group__buttons-hide link-href"
                                             title={t('common:set_disabled')}
                                             onClick={() => {
                                                 handleSetDisable(group.id);
@@ -234,7 +257,7 @@ let GroupList = props => {
                                     </Link>
                                         <Link to={`${links.GroupList}${links.Group}${links.Edit}/${group.id}`}>
                                         <FaEdit
-                                            className="group__buttons-edit"
+                                            className="group__buttons-edit link-href"
                                             title={t('edit_title')}
                                             onClick={() => handleEdit(group.id)}
                                         />
@@ -242,7 +265,7 @@ let GroupList = props => {
                                     </>
                                 ) : (
                                     <IoMdEye
-                                        className="group__buttons-hide"
+                                        className="group__buttons-hide link-href"
                                         title={t('common:set_enabled')}
                                         onClick={() => {
                                             setHideDialog(disabledCard.SHOW);
@@ -252,7 +275,7 @@ let GroupList = props => {
                                 )}
                                 <Link to={`${links.GroupList}${links.Group}${links.Delete}/${group.id}`}>
                                 <MdDelete
-                                    className="group__buttons-delete"
+                                    className="group__buttons-delete link-href"
                                     title={t('delete_title')}
                                     onClick={() => handleClickOpen(group.id)}
                                 />
@@ -263,7 +286,7 @@ let GroupList = props => {
                                     className="svg-btn copy-btn align-left info-btn"
                                     onClick={()=> {
                                         handleAddUser(groupId);
-                                        setCurrentGroup(group);
+                                        // setCurrentGroup(group);
                                     }}
                                 />
                             </Link>
@@ -273,7 +296,7 @@ let GroupList = props => {
                                 {t('group_label') + ':'}
                             </p>
                             <h1 className="group-card__number">
-                                {group.title}
+                                {getGroupTitle(group)}
                             </h1>
                             <Link to={`${links.GroupList}${links.Group}/${group.id}${links.ShowStudents}`}>
                             <span className="students-group">
@@ -310,7 +333,8 @@ const mapStateToProps = state => ({
     isSnackbarOpen: state.snackbar.isSnackbarOpen,
     snackbarType: state.snackbar.snackbarType,
     snackbarMessage: state.snackbar.message,
-    students: state.students.students
+    students: state.students.students,
+    student: state.students.student
 });
 
 export default connect(mapStateToProps, {})(GroupList);

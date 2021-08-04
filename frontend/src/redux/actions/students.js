@@ -6,6 +6,12 @@ export const addStudent = res => {
         result: res
     };
 };
+export const showAllStudents=res=>{
+    return{
+        type:actionTypes.SHOW_ALL_STUDENTS,
+        result:res
+    };
+}
 export const showAllStudentsByGroupId=res=>{
     return{
         type:actionTypes.SHOW_ALL_STUDENTS_BY_GROUP_ID,

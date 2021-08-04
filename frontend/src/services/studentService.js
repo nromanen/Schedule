@@ -9,7 +9,7 @@ import i18n from '../helper/i18n';
 import {
     addStudent,
     deleteStudent,
-    setStudent,
+    setStudent, showAllStudents,
     showAllStudentsByGroupId,
     updateStudent
 } from '../redux/actions/students';
@@ -24,7 +24,7 @@ export const createStudentService = data => {
             resetFormHandler(STUDENT_FORM);
             successHandler(
                 i18n.t('serviceMessages:back_end_success_operation', {
-                    cardType: i18n.t('formElements:student_label'),
+                    cardType: i18n.t('formElements:student_a_label'),
                     actionType: i18n.t('serviceMessages:created_label')
                 })
             );
@@ -37,6 +37,14 @@ export const getAllStudentsByGroupId = groupId => {
         .then(response => {
             let result=response.data.filter(({ group })=>group.id===groupId)
             store.dispatch(showAllStudentsByGroupId(result));
+        })
+        .catch(error => errorHandler(error));
+};
+export const getAllStudentsService = () => {
+    axios
+        .get(STUDENT_URL)
+        .then(response => {
+            store.dispatch(showAllStudents(response.data));
         })
         .catch(error => errorHandler(error));
 };
@@ -66,7 +74,7 @@ export const updateStudentService = data => {
             resetFormHandler(STUDENT_FORM);
             successHandler(
                 i18n.t('serviceMessages:back_end_success_operation', {
-                    cardType: i18n.t('formElements:student_label'),
+                    cardType: i18n.t('formElements:student_a_label'),
                     actionType: i18n.t('serviceMessages:updated_label')
                 })
             );

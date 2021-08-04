@@ -101,6 +101,7 @@
     "temporary_schedule_element": "Temporary_schedule",
     "Teacher_element": "teacher",
     "group_element": "group",
+    "student_element": "student",
     "class_element": "class",
     "room_element": "class",
     "subject_element": "subject",

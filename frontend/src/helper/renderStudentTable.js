@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
@@ -21,11 +21,14 @@ import TableHead from '@material-ui/core/TableHead';
 import { withStyles } from '@material-ui/core';
 import { FaEdit } from 'react-icons/all';
 import { Delete } from '@material-ui/icons';
-import { cardType } from '../constants/cardType';
 import ConfirmDialog from '../share/modals/dialog';
 import  AddStudentDialog  from '../share/modals/modal/AddStudentDialog';
 import { selectStudentService } from '../services/studentService';
 import './renderStudentTable.scss'
+import { links } from '../constants/links';
+import { connect } from 'react-redux';
+import {Link} from 'react-router-dom';
+
 const useStyles1 = makeStyles((theme) => ({
     root: {
         flexShrink: 0,
@@ -124,6 +127,7 @@ export default function RenderStudentTable(props) {
     const [openDeleteDialog,setOpenDeleteDialog]=useState(false);
     const [openEditDialog,setOpenEditDialog]=useState(false);
     const { t } = useTranslation('formElements');
+    const {match,student}=props;
 
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, students.length - page * rowsPerPage);
 
@@ -158,7 +162,16 @@ export default function RenderStudentTable(props) {
         const sendObject={...data,prevGroup:group}
         onSubmit(sendObject);
     }
-
+    useEffect(()=>{
+        if(match.path.includes(links.Student)&&match.path.includes(links.Edit)) {
+            handleEdit(student.id)
+        }
+    },[props.group.id])
+    useEffect(()=>{
+        if(match.path.includes(links.Student)&&match.path.includes(links.Delete)) {
+            setOpenDeleteDialog(true)
+        }
+    },[props.group.id])
     return (
         <TableContainer component={Paper}>
             <Table className={classes.table} aria-label="custom pagination table">
@@ -198,24 +211,31 @@ export default function RenderStudentTable(props) {
                             </StyledTableCell>
                             <StyledTableCell component="th" scope="row" align="center"  style={{ width: 160 }}>
                                 <span className="edit-cell">
+                                     <Link to={`${links.GroupList}${links.Group}/${group.id}${links.Student}/${student.id}${links.Edit}`}>
                                     <FaEdit
                                         className="edit-button"
                                         title={t('edit_title')}
                                         onClick={() => handleEdit(student.id)}
                                     />
+                                     </Link>
+                                     <Link to={`${links.GroupList}${links.Group}/${group.id}${links.Student}/${student.id}${links.Delete}`}>
                                 <Delete
                                     title={t('delete-title')}
                                     className="delete-button"
                                     onClick={()=>setOpenDeleteDialog(true)}
                                 />
+                                     </Link>
                                 </span>
 
                             </StyledTableCell>
+
                             <AddStudentDialog
                                 open={openEditDialog}
                                 onSubmit={handleSubmit}
                                 onSetSelectedCard={handleCloseEditDialog}
+                                match={match}
                             />
+
                             <ConfirmDialog
                                 selectedValue={''}
                                 cardId={student}
@@ -255,3 +275,9 @@ export default function RenderStudentTable(props) {
         </TableContainer>
     );
 }
+
+const mapStateToProps = state => ({
+    student:state.students.student
+});
+
+ connect(mapStateToProps, {})(RenderStudentTable);

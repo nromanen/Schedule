@@ -17,20 +17,22 @@ import renderTextField from '../../renderedFields/input';
 import { required } from '../../../validation/validateFields';
 import { STUDENT_FORM, TEACHER_FORM } from '../../../constants/reduxForms';
 import { FaWindowClose } from 'react-icons/fa';
-import Select from 'react-select';
 import renderSelectField from '../../renderedFields/select';
+import { useHistory } from 'react-router-dom/cjs/react-router-dom';
+import { goToGroupPage } from '../../../helper/pageRedirection';
  let AddStudentDialog =( props) => {
     const { t } = useTranslation('formElements');
-    const { handleSubmit, pristine, submitting, reset,open,groups,student} = props;
+    const { handleSubmit, pristine, submitting, reset,open,groups,student,match} = props;
     const studentId = student.id;
-
+    const history =useHistory();
     useEffect(() => {
         if (studentId) {
             initializeFormHandler(student);
         } else {
             props.initialize();
         }
-    }, [studentId]);
+    },[studentId]);
+
 
     const initializeFormHandler = student => {
         props.initialize({
@@ -48,6 +50,7 @@ import renderSelectField from '../../renderedFields/select';
             aria-labelledby="confirm-dialog-title"
             open={open}
         >
+            {console.log(student)}
             <FaWindowClose
                 title={t('close_label')}
                 className="close-dialog"
@@ -55,7 +58,9 @@ import renderSelectField from '../../renderedFields/select';
                 onClick={() => {
                     //reset();
                     props.onSetSelectedCard(null);
+                    goToGroupPage(history);
                 }}
+
             />
             <DialogTitle id="confirm-dialog-title">
                 <Card class="form-card teacher-form">
@@ -147,6 +152,7 @@ import renderSelectField from '../../renderedFields/select';
                                 disabled={pristine || submitting}
                                 onClick={() => {
                                    reset();
+                                   goToGroupPage(history);
                                     //props.onSetSelectedCard(null);
                                 }}
                             >

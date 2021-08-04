@@ -18,6 +18,11 @@ const students = (state = initialState, action) => {
                 ...state,
                 students: action.result
             });
+        case actionTypes.SHOW_ALL_STUDENTS:
+            return updateObject(state, {
+                ...state,
+                students: action.result
+            });
         case actionTypes.DELETE_STUDENT:
             state.students = state.students.filter(
                 student => student.id !== action.result
@@ -27,8 +32,9 @@ const students = (state = initialState, action) => {
                 student: state.student
             });
         case actionTypes.SET_STUDENT:
+            console.log(action.result,state.students)
             let student = state.students.filter(
-                student => student.id === action.result
+                student => student.id === Number(action.result)
             )[0];
 
             if (!student) {

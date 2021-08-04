@@ -17,25 +17,38 @@ import { links } from '../../constants/links';
 
 let AddGroup = props => {
     const { t } = useTranslation('formElements');
-    const { handleSubmit, pristine, onReset, submitting,match } = props;
+    const { handleSubmit, pristine, onReset, submitting,match,group } = props;
 
     useEffect(() => {
-        if (props.group&&match.url.includes(links.Edit)) {
-            if (props.group.id) {
+        if (group&&match.url.includes(links.Edit)&&!match.url.includes(links.Student)) {
+            if (group.id) {
                 props.initialize({
-                    id: props.group.id,
-                    title: props.group.title
+                    id: group.id,
+                    title: group.title
                 });
             } else {
                 props.initialize();
             }
         }
-    }, [props.group.id]);
-
+    }, [group.id]);
+    const setDisableButton = () => {
+        if(group.id!==undefined){
+            return false
+        }
+        if(!pristine){
+            return false
+        }
+        if (submitting){
+            return true
+        }
+        if(group.id===undefined){
+            return true
+        }
+    }
     return (
         <Card class="form-card group-form">
             <h2 className="group-form__title">
-                {props.group.id ? t('edit_title') : t('create_title')}
+                {group.id ? t('edit_title') : t('create_title')}
                 {t('group_y_label')}
             </h2>
             <form onSubmit={handleSubmit}>
@@ -61,10 +74,10 @@ let AddGroup = props => {
                         type="button"
                         className="buttons-style"
                         variant="contained"
-                        disabled={pristine || submitting}
+                        disabled={setDisableButton()}
                         onClick={onReset}
                     >
-                        {t('clear_button_label')}
+                        {group.id===undefined?t('clear_button_label'):t('cancel_button_title')}
                     </Button>
                 </div>
             </form>

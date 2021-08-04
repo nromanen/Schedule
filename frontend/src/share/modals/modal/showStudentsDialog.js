@@ -12,16 +12,12 @@ import './showDataDialog.scss'
 import i18n from '../../../helper/i18n';
 import { connect } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import RenderTeacherTable from '../../../helper/renderTeacherTable';
 import RenderStudentTable from '../../../helper/renderStudentTable';
 import { getAllStudentsByGroupId } from '../../../services/studentService';
-import { reduxForm } from 'redux-form';
-import { GROUP_FORM } from '../../../constants/reduxForms';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import { ShowDataDialog } from './showDataDialog';
+
 
 export const ShowStudentsDialog = props => {
-    const { onClose,  cardId, open,onDeleteStudent,students,onSubmit} = props;
+    const { onClose,  cardId, open,onDeleteStudent,students,onSubmit,match,student} = props;
     const { t } = useTranslation('formElements');
     const handleClose = () => {
         onClose(cardId);
@@ -31,6 +27,7 @@ export const ShowStudentsDialog = props => {
 
 
     },[open])
+
     return (
         <Dialog
             disableBackdropClick={true}
@@ -52,7 +49,10 @@ export const ShowStudentsDialog = props => {
                                 <span className="table-student-data">
                                 <h3 className="title-align"><span>{students.length !== 1 ? `${t('students_label')} ` : `${t('student_label')} `}</span>{`${t('group_students')} `}<span>{`${props.group.title}`}</span></h3>
                                 <RenderStudentTable group={props.group} onDeleteStudent={onDeleteStudent}
-                                                    students={students} onSubmit={onSubmit} />
+                                                    students={students} onSubmit={onSubmit}
+                                                    match={match}
+                                                    student={props.student}
+                                />
                             </span>
                             }
                         </>
@@ -77,7 +77,7 @@ ShowStudentsDialog.propTypes = {
     open: PropTypes.bool.isRequired
 };
 const mapStateToProps = state => ({
-    group:{id:29}
+   // student: state.students.student
 });
 
 export default connect(mapStateToProps, {})(ShowStudentsDialog);
