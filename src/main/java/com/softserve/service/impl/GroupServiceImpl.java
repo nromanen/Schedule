@@ -181,7 +181,7 @@ public class GroupServiceImpl  implements GroupService {
         log.info("In isExistsWithId(id = [{}])",  id);
         return groupRepository.countByGroupId(id)!=0;
     }
-<<<<<<< src/main/java/com/softserve/service/impl/GroupServiceImpl.java
+
     /**
      * The method used for getting all disabled groups
      *
@@ -214,6 +214,5 @@ public class GroupServiceImpl  implements GroupService {
         log.info("Enter into getGroupsByCurrentSemester");
         return semesterService.getCurrentSemester().getGroups();
     }
-=======
->>>>>>> src/main/java/com/softserve/service/impl/GroupServiceImpl.java
+
 }
