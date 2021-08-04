@@ -73,7 +73,7 @@ public class MailServiceImpl implements MailService {
     }
 
     @Override
-    public void send(String filename, String receiver, String subject, String message, ByteArrayOutputStream bos) throws MessagingException {
+    public void send(String fileName, String receiver, String subject, String message, ByteArrayOutputStream bos) throws MessagingException {
         log.info("Enter into send method with emailTo - {}, subject - {}", receiver, subject);
         String credentialsUsername = environment.getProperty(username);
         if (credentialsUsername == null) {
@@ -97,7 +97,7 @@ public class MailServiceImpl implements MailService {
 
         MimeBodyPart fileBodyPart = new MimeBodyPart();
         fileBodyPart.setDataHandler(new DataHandler(fds));
-        fileBodyPart.setFileName(filename);
+        fileBodyPart.setFileName(fileName);
         multipart.addBodyPart(fileBodyPart);
 
         mimeMessage.setContent(multipart);
