@@ -907,7 +907,7 @@ return fullScheduleForTeacherByDateRange(dateRangeSchedule,  fromDate, toDate);
         PdfReportGenerator generatePdfReport = new PdfReportGenerator();
         ByteArrayOutputStream bos = generatePdfReport.teacherScheduleReport(schedule);
         String teacherEmail = userService.getById(Long.valueOf(teacher.getUserId())).getEmail();
-        mailService.send(teacherEmail, "Schedule", String.format("Schedule for %s %s %s", teacher.getSurname() ,teacher.getName(), teacher.getPatronymic()), bos);
+        mailService.send("Schedule.pdf", teacherEmail, "Schedule", String.format("Schedule for %s %s %s", teacher.getSurname() ,teacher.getName(), teacher.getPatronymic()), bos);
     }
 }
 
