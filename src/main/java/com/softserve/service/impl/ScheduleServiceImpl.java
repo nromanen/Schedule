@@ -887,11 +887,11 @@ return fullScheduleForTeacherByDateRange(dateRangeSchedule,  fromDate, toDate);
      * @param teachersId id of teachers to whom we need to send the schedule
      */
     @Override
-    public void sendScheduleToTeachers(Long semesterId, Long[] teachersId) {
+    public void sendScheduleToTeachers(Long semesterId, Long[] teachersId, Locale language) {
         log.info("Enter into sendScheduleToTeachers of TeacherServiceImpl");
         Arrays.stream(teachersId).forEach(teacherId -> {
             try {
-                sendScheduleToTeacher(semesterId, teacherId);
+                sendScheduleToTeacher(semesterId, teacherId, language);
             } catch (MessagingException e) {
                 throw new MessageNotSendException(e.getMessage());
             }
@@ -905,12 +905,12 @@ return fullScheduleForTeacherByDateRange(dateRangeSchedule,  fromDate, toDate);
      * @param teacherId  id of teacher to which we need to send the schedule
      */
     @Override
-    public void sendScheduleToTeacher(Long semesterId, Long teacherId) throws MessagingException {
+    public void sendScheduleToTeacher(Long semesterId, Long teacherId, Locale language) throws MessagingException {
         log.info("Enter into sendScheduleToTeacher of TeacherServiceImpl");
         Teacher teacher = teacherService.getById(teacherId);
         ScheduleForTeacherDTO schedule = getScheduleForTeacher(semesterId, teacher.getId());
         PdfReportGenerator generatePdfReport = new PdfReportGenerator();
-        ByteArrayOutputStream bos = generatePdfReport.teacherScheduleReport(schedule);
+        ByteArrayOutputStream bos = generatePdfReport.teacherScheduleReport(schedule, language);
         String teacherEmail = userService.getById(Long.valueOf(teacher.getUserId())).getEmail();
         mailService.send("Schedule.pdf", teacherEmail, "Schedule", String.format("Schedule for %s %s %s", teacher.getSurname() ,teacher.getName(), teacher.getPatronymic()), bos);
     }
