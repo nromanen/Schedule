@@ -216,7 +216,7 @@ public class ScheduleServiceImpl implements ScheduleService {
             if (groupHasScheduleInSemester(semesterId, groupId)) {
                 groupsForSchedule.add(groupService.getById(groupId));
                 ScheduleForGroupDTO scheduleForGroupDTO = new ScheduleForGroupDTO();
-                scheduleForGroupDTO.setGroup(groupMapper.convertToDto(groupsForSchedule.get(0)));
+                scheduleForGroupDTO.setGroup(groupMapper.groupToGroupDTO(groupsForSchedule.get(0)));
                 scheduleForGroupDTO.setDays(getDaysWhenGroupHasClassesBySemester(semesterId, groupId));
                 scheduleForGroupDTOList.add(scheduleForGroupDTO);
             }
@@ -225,7 +225,7 @@ public class ScheduleServiceImpl implements ScheduleService {
             groupsForSchedule.addAll(scheduleRepository.uniqueGroupsInScheduleBySemester(semesterId));
             for (Group group : groupsForSchedule) {
                 ScheduleForGroupDTO scheduleForGroupDTO = new ScheduleForGroupDTO();
-                scheduleForGroupDTO.setGroup(groupMapper.convertToDto(group));
+                scheduleForGroupDTO.setGroup(groupMapper.groupToGroupDTO(group));
                 scheduleForGroupDTO.setDays(getDaysWhenGroupHasClassesBySemester(semesterId, group.getId()));
                 scheduleForGroupDTOList.add(scheduleForGroupDTO);
             }
@@ -313,7 +313,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         groupsForSchedule.addAll(scheduleRepository.uniqueGroupsInScheduleBySemester(semesterId));
         for (Group group : groupsForSchedule) {
             ScheduleForGroupDTO scheduleForGroupDTO = new ScheduleForGroupDTO();
-            scheduleForGroupDTO.setGroup(groupMapper.convertToDto(group));
+            scheduleForGroupDTO.setGroup(groupMapper.groupToGroupDTO(group));
             scheduleForGroupDTO.setDays(getDaysForSemester(semesterId, group.getId()));
             scheduleForGroupDTOList.add(scheduleForGroupDTO);
 
@@ -342,7 +342,7 @@ public class ScheduleServiceImpl implements ScheduleService {
                     if (even != null && !temporarySchedules.get(EvenOdd.EVEN).isEmpty()) {
                         if(temporarySchedules.get(EvenOdd.EVEN).get(daysOfWeekWithClassesForGroupDTO.getDay())!=null) {
                             TemporaryScheduleDTOForDashboard temporaryScheduleDTO = compareScheduleWithTemporarySchedule(temporarySchedules.get(EvenOdd.EVEN).get(daysOfWeekWithClassesForGroupDTO.getDay()),
-                                    scheduleForGroupDTO.getGroup().getId(), classesInScheduleForGroupDTO.getPeriod().getId(), classesInScheduleForGroupDTO.getWeeks().getEven().getTeacherId());
+                                    scheduleForGroupDTO.getGroup().getId(), classesInScheduleForGroupDTO.getPeriod().getId(), classesInScheduleForGroupDTO.getWeeks().getEven().getTeacher().getId());
                             if (temporaryScheduleDTO != null) {
                                 even.setTemporaryScheduleDTO(temporaryScheduleDTO);
                             }
@@ -351,7 +351,7 @@ public class ScheduleServiceImpl implements ScheduleService {
                     if (odd != null && !temporarySchedules.get(EvenOdd.ODD).isEmpty()) {
                         if(temporarySchedules.get(EvenOdd.ODD).get(daysOfWeekWithClassesForGroupDTO.getDay())!=null) {
                             TemporaryScheduleDTOForDashboard temporaryScheduleDTO = compareScheduleWithTemporarySchedule(temporarySchedules.get(EvenOdd.ODD).get(daysOfWeekWithClassesForGroupDTO.getDay()),
-                                    scheduleForGroupDTO.getGroup().getId(), classesInScheduleForGroupDTO.getPeriod().getId(), classesInScheduleForGroupDTO.getWeeks().getOdd().getTeacherId());
+                                    scheduleForGroupDTO.getGroup().getId(), classesInScheduleForGroupDTO.getPeriod().getId(), classesInScheduleForGroupDTO.getWeeks().getOdd().getTeacher().getId());
                             if (temporaryScheduleDTO != null) {
                                 odd.setTemporaryScheduleDTO(temporaryScheduleDTO);
                             }

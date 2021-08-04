@@ -1,6 +1,7 @@
 package com.softserve.controller;
 
 import com.softserve.dto.TeacherDTO;
+import com.softserve.dto.TeacherForUpdateDTO;
 import com.softserve.dto.TeacherWishDTO;
 import com.softserve.entity.Teacher;
 import com.softserve.entity.User;
@@ -81,12 +82,12 @@ public class TeacherController {
 
     @PutMapping("/teachers")
     @ApiOperation(value = "Update existing teacher by id")
-    public ResponseEntity<TeacherDTO> update(@RequestBody TeacherDTO updateTeacherDTO) {
-        log.info("Enter into update method with updateTeacherDTO: {}",updateTeacherDTO);
-        Teacher teacherToUpdate = teacherMapper.teacherDTOToTeacher(updateTeacherDTO);
+    public ResponseEntity<TeacherForUpdateDTO> update(@RequestBody TeacherForUpdateDTO teacherForUpdateDTO) {
+        log.info("Enter into update method with updateTeacherDTO: {}", teacherForUpdateDTO);
+        Teacher teacherToUpdate = teacherMapper.teacherForUpdateDTOToTeacher(teacherForUpdateDTO);
         teacherToUpdate.setUserId(teacherService.getById(teacherToUpdate.getId()).getUserId());
         Teacher teacher = teacherService.update(teacherToUpdate);
-        return ResponseEntity.status(HttpStatus.OK).body(teacherMapper.teacherToTeacherDTO(teacher));
+        return ResponseEntity.status(HttpStatus.OK).body(teacherMapper.teacherToTeacherForUpdateDTO(teacher));
     }
 
     @DeleteMapping("/teachers/{id}")

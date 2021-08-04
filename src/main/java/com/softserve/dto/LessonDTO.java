@@ -13,7 +13,7 @@ import lombok.ToString;
 public class LessonDTO {
     private Long id;
     private int hours;
-    private String teacherForSite;
+    private String linkToMeeting;
     private String subjectForSite;
     private LessonType lessonType;
     private SubjectDTO subject;

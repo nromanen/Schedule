@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.softserve.entity.*;
 import com.softserve.entity.enums.LessonType;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -19,7 +18,7 @@ public class TemporaryScheduleDTOForDashboard {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     private LocalDate date;
 
-    private String teacherForSite;
+    private String linkToMeeting;
     private String subjectForSite;
     private Teacher teacher;
     private LessonType lessonType;
