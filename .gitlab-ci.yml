@@ -12,7 +12,10 @@ before_script:
     - export GRADLE_USER_HOME=`pwd`/.gradle
 
 build:
-    image: gradle:latest
+    artifacts:
+        paths:
+            - build/libs/*.jar
+        expire_in: 1 week
     stage: build
     script: gradle --build-cache assemble
     cache:
