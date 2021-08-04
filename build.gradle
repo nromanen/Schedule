@@ -42,8 +42,7 @@ if (System.getenv('$buildDir') != "") {
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
     testCompile group: 'org.assertj', name: 'assertj-core', version: '3.6.1'
-
-
+    testCompile('pl.pragmatists:JUnitParams:1.0.5')
 
     //Spring
     compile group: 'org.springframework', name: 'spring-core', version: '5.2.4.RELEASE'
@@ -155,6 +154,14 @@ dependencies {
     compile group: 'org.springframework.data', name: 'spring-data-mongodb', version: '2.2.4.RELEASE'
     compile group: 'org.mongodb', name: 'mongo-java-driver', version: '3.4.2'
 
-// https://mvnrepository.com/artifact/org.thymeleaf/thymeleaf-spring5
+    // https://mvnrepository.com/artifact/org.thymeleaf/thymeleaf-spring5
     compile group: 'org.thymeleaf', name: 'thymeleaf-spring5', version: '3.0.11.RELEASE'
+
+    //for parsing cvs files
+    implementation group: 'com.opencsv', name: 'opencsv', version: '5.5'
+    implementation group: 'commons-fileupload', name: 'commons-fileupload', version: '1.4'
+    implementation group: 'commons-io', name: 'commons-io', version: '2.11.0'
+
+
+
 }
