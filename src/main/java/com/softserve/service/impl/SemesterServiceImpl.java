@@ -240,7 +240,7 @@ public class SemesterServiceImpl implements SemesterService {
      * @return changed Semester
      */
     @Override
-    public Semester addGroup(Long semesterId, Group group) {
+    public Semester addGroupToSemester(Long semesterId, Group group) {
         log.info("In addGroup");
         Semester semester = getById(semesterId);
         List<Group> groups = semester.getGroups();
