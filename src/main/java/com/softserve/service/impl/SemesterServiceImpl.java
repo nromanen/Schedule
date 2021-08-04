@@ -17,10 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.DayOfWeek;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Slf4j
 @Transactional
@@ -235,15 +232,17 @@ public class SemesterServiceImpl implements SemesterService {
      *
      *  Method updates information for an existing semester about groups
      *
-     * @param semesterId semester id in which we need to change groups
+     * @param semester semester id in which we need to change groups
      * @param group group to add
      * @return changed Semester
      */
     @Override
-    public Semester addGroupToSemester(Long semesterId, Group group) {
+    public Semester addGroupToSemester(Semester semester, Group group) {
         log.info("In addGroup");
-        Semester semester = getById(semesterId);
         List<Group> groups = semester.getGroups();
+        if (groups == null){
+            groups = new ArrayList<>();
+        }
         groups.add(group);
         semester.setGroups(groups);
         update(semester);

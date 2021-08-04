@@ -122,7 +122,7 @@ public class SemesterController {
     @ApiOperation(value = "Add group to semester by id")
     public ResponseEntity<SemesterDTO> addGroupToSemester(@PathVariable Long semesterId, @RequestParam Long groupId) {
         log.info("In addGroup (semesterId = [{}], groupId = [{}])", semesterId, groupId);
-        Semester semester = semesterService.addGroupToSemester(semesterId, groupService.getById(groupId));
+        Semester semester = semesterService.addGroupToSemester(semesterService.getById(semesterId), groupService.getById(groupId));
         return ResponseEntity.status(HttpStatus.OK).body(semesterMapper.semesterToSemesterDTO(semester));
     }
 
