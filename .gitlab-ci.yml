@@ -15,11 +15,10 @@ build:
 
     script:
         - ./gradlew assemble
-#    - gradle --build-cache assemble
     artifacts:
         paths:
             - build/libs/*.jar
-        expire_in: 1 week
+        expire_in: 2h
     image: gradle:jdk11
     stage: build
     cache:
@@ -31,7 +30,7 @@ build:
     only:
          - master
          - develop
-         - issue/78(change_.gitlab-ci.yml)
+
 #test:
 #    image: gradle:alpine
 #    stage: test
@@ -68,7 +67,6 @@ build_frontend:
     only:
         - master
         - develop
-        - issue/78(change_.gitlab-ci.yml)
 
 production_deploy:
     stage: production_deploy
@@ -99,4 +97,3 @@ develop_deploy:
         - dpl --provider=heroku --app=$HEROKU_APP_DEVELOP --api-key=$HEROKU_API_KEY  --skip_cleanup
     only:
         - develop
-        - issue/78(change_.gitlab-ci.yml)
