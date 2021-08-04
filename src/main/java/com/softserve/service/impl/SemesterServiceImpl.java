@@ -245,7 +245,7 @@ public class SemesterServiceImpl implements SemesterService {
         }
         groups.add(group);
         semester.setGroups(groups);
-        update(semester);
+        getById(semester.getId()).setGroups(groups);
         return semester;
     }
 }
