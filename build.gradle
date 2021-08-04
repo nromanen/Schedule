@@ -6,9 +6,6 @@ buildscript {
     dependencies {
         classpath 'com.bmuschko:gradle-tomcat-plugin:2.5'
     }
-    configurations {
-        runtime
-    }
 }
 
 plugins {
