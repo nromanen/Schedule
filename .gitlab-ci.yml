@@ -14,7 +14,8 @@ before_script:
 build:
 
     script:
-        - ./gradlew assemble
+#        - ./gradlew assemble
+    - gradle --build-cache assemble
     artifacts:
         paths:
             - build/libs/*.jar
