@@ -131,7 +131,7 @@ public class SemesterServiceTest {
         assertNotNull(result);
         assertEquals(semester.getDescription(), result.getDescription());
         verify(semesterRepository, times(1)).save(semester);
-        verify(semesterRepository, times(1)).setAllSemesterCurrentToFalse();
+        verify(semesterRepository, times(1)).updateAllSemesterCurrentToFalse();
     }
 
     @Test
@@ -168,7 +168,7 @@ public class SemesterServiceTest {
         assertNotNull(result);
         assertEquals(semester.getDescription(), result.getDescription());
         verify(semesterRepository, times(1)).save(semester);
-        verify(semesterRepository, times(1)).setAllSemesterDefaultToFalse();
+        verify(semesterRepository, times(1)).updateAllSemesterDefaultToFalse();
     }
 
     @Test(expected = EntityAlreadyExistsException.class)
@@ -337,7 +337,7 @@ public class SemesterServiceTest {
         assertNotNull(semester);
         assertEquals(updatedSemester, semester);
         verify(semesterRepository, times(1)).update(semester);
-        verify(semesterRepository, times(1)).setAllSemesterCurrentToFalse();
+        verify(semesterRepository, times(1)).updateAllSemesterCurrentToFalse();
     }
 
     @Test
@@ -381,7 +381,7 @@ public class SemesterServiceTest {
         assertNotNull(semester);
         assertEquals(updatedSemester, semester);
         verify(semesterRepository, times(1)).update(semester);
-        verify(semesterRepository, times(1)).setAllSemesterDefaultToFalse();
+        verify(semesterRepository, times(1)).updateAllSemesterDefaultToFalse();
     }
 
     @Test
