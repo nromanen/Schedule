@@ -16,7 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 
 @Mapper(componentModel = "spring")
-@MapperConfig(uses = {DepartmentMapper.class})
+@MapperConfig(uses = DepartmentMapper.class)
 public abstract class TeacherMapper {
     @Autowired
     protected UserService userService;
