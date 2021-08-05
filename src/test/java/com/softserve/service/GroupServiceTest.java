@@ -1,6 +1,7 @@
 package com.softserve.service;
 
 import com.softserve.entity.Group;
+import com.softserve.entity.Semester;
 import com.softserve.entity.Student;
 import com.softserve.exception.EntityNotFoundException;
 import com.softserve.exception.FieldAlreadyExistsException;
@@ -14,8 +15,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import java.util.Arrays;
 import java.util.List;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Optional;
 
 import static org.junit.Assert.*;
@@ -29,6 +31,8 @@ public class GroupServiceTest {
 
     @Mock
     private GroupRepository groupRepository;
+    @Mock
+    private SemesterService semesterService;
 
     @InjectMocks
     private GroupServiceImpl groupService;
@@ -233,4 +237,36 @@ public class GroupServiceTest {
         groupService.update(group);
         verify(groupService, times(1)).update(group);
     }
+
+    @Test
+    public void getGroupsBySemesterId() {
+        Group group = new Group();
+        group.setTitle("some group");
+        group.setId(1L);
+        List<Group> groupList = new ArrayList<>();
+        groupList.add(group);
+        Semester semester = new Semester();
+        semester.setId(1L);
+        semester.setGroups(groupList);
+        when(semesterService.getById(1L)).thenReturn(semester);
+        assertEquals(groupService.getGroupsBySemesterId(1L), semester.getGroups());
+        verify(semesterService, times(1)).getById(1L);
+    }
+
+   @Test
+    public void getGroupsForCurrentSemester() {
+        Group group = new Group();
+        group.setTitle("some group");
+        group.setId(1L);
+        List<Group> groupList = new ArrayList<>();
+        groupList.add(group);
+        Semester semester = new Semester();
+        semester.setCurrentSemester(true);
+        semester.setGroups(groupList);
+        when(semesterService.getCurrentSemester()).thenReturn(semester);
+        assertEquals(groupService.getGroupsForCurrentSemester(), semester.getGroups());
+        verify(semesterService, times(1)).getCurrentSemester();
+    }
+
+
 }

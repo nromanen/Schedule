@@ -6,16 +6,20 @@ import com.softserve.entity.*;
 import com.softserve.entity.enums.EvenOdd;
 import com.softserve.entity.enums.LessonType;
 import com.softserve.exception.EntityNotFoundException;
+import com.softserve.exception.MessageNotSendException;
 import com.softserve.exception.ScheduleConflictException;
 import com.softserve.mapper.*;
 import com.softserve.repository.ScheduleRepository;
 import com.softserve.service.*;
+import com.softserve.util.PdfReportGenerator;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.mail.MessagingException;
+import java.io.ByteArrayOutputStream;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
@@ -36,6 +40,8 @@ public class ScheduleServiceImpl implements ScheduleService {
     private final TeacherService teacherService;
     private final SemesterService semesterService;
     private final TemporaryScheduleService temporaryScheduleService;
+    private final UserService userService;
+    private final MailService mailService;
 
     private final GroupMapper groupMapper;
     private final PeriodMapper periodMapper;
@@ -49,7 +55,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Autowired
     public ScheduleServiceImpl(ScheduleRepository scheduleRepository, LessonService lessonService, RoomService roomService,
                                GroupService groupService, TeacherWishesService teacherWishesService, TeacherService teacherService,
-                               SemesterService semesterService, GroupMapper groupMapper, PeriodMapper periodMapper,
+                               SemesterService semesterService, UserService userService, MailService mailService, GroupMapper groupMapper, PeriodMapper periodMapper,
                                LessonsInScheduleMapper lessonsInScheduleMapper, RoomForScheduleMapper roomForScheduleMapper,
                                TeacherMapper teacherMapper, LessonForTeacherScheduleMapper lessonForTeacherScheduleMapper,
                                TemporaryScheduleService temporaryScheduleService, TemporaryScheduleMapper temporaryScheduleMapper) {
@@ -59,6 +65,8 @@ public class ScheduleServiceImpl implements ScheduleService {
         this.groupService = groupService;
         this.teacherService = teacherService;
         this.semesterService = semesterService;
+        this.userService = userService;
+        this.mailService = mailService;
         this.temporaryScheduleService = temporaryScheduleService;
         this.groupMapper = groupMapper;
         this.teacherWishesService = teacherWishesService;
@@ -870,6 +878,41 @@ return fullScheduleForTeacherByDateRange(dateRangeSchedule,  fromDate, toDate);
             map.put(itr.getKey(), periodListHashMap);
         }
         return map;
+    }
+
+    /**
+     * The method used for sending schedules to teachers
+     *
+     * @param semesterId semester for schedule
+     * @param teachersId id of teachers to whom we need to send the schedule
+     */
+    @Override
+    public void sendScheduleToTeachers(Long semesterId, Long[] teachersId) {
+        log.info("Enter into sendScheduleToTeachers of TeacherServiceImpl");
+        Arrays.stream(teachersId).forEach(teacherId -> {
+            try {
+                sendScheduleToTeacher(semesterId, teacherId);
+            } catch (MessagingException e) {
+                throw new MessageNotSendException(e.getMessage());
+            }
+        });
+    }
+
+    /**
+     * The method used for sending schedules to one teacher
+     *
+     * @param semesterId semester for schedule
+     * @param teacherId  id of teacher to which we need to send the schedule
+     */
+    @Override
+    public void sendScheduleToTeacher(Long semesterId, Long teacherId) throws MessagingException {
+        log.info("Enter into sendScheduleToTeacher of TeacherServiceImpl");
+        Teacher teacher = teacherService.getById(teacherId);
+        ScheduleForTeacherDTO schedule = getScheduleForTeacher(semesterId, teacher.getId());
+        PdfReportGenerator generatePdfReport = new PdfReportGenerator();
+        ByteArrayOutputStream bos = generatePdfReport.teacherScheduleReport(schedule);
+        String teacherEmail = userService.getById(Long.valueOf(teacher.getUserId())).getEmail();
+        mailService.send("Schedule.pdf", teacherEmail, "Schedule", String.format("Schedule for %s %s %s", teacher.getSurname() ,teacher.getName(), teacher.getPatronymic()), bos);
     }
 }
 

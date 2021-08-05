@@ -88,4 +88,5 @@ public class GroupController {
         log.info("Enter into getDisabled");
         return ResponseEntity.status(HttpStatus.OK).body(groupMapper.convertListToDtoList(groupService.getDisabledWithoutStudents()));
     }
+
 }
