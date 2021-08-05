@@ -89,10 +89,8 @@ const TeacherList = props => {
     const departmentOptions=setDepartmentOptions();
     const teacherSubmit = values => {
 
-        console.log("teacherSubmit",values)
         const sendData={...values,department:department}
 
-        console.log(sendData)
         handleTeacherService(sendData);
 
     };

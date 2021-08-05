@@ -32,7 +32,6 @@ const students = (state = initialState, action) => {
                 student: state.student
             });
         case actionTypes.SET_STUDENT:
-            console.log(action.result,state.students)
             let student = state.students.filter(
                 student => student.id === Number(action.result)
             )[0];

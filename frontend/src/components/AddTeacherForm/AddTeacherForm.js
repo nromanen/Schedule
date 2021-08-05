@@ -48,7 +48,6 @@ let AddTeacher = props => {
 
     return (
         <Card class="form-card teacher-form">
-            {console.log(props)}
             <form className="createTeacherForm w-100" onSubmit={handleSubmit}>
                 <h2 className="form-title">
                     {teacherId ? t('edit_title') : t('create_title')}{' '}

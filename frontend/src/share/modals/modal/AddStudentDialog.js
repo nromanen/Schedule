@@ -50,7 +50,7 @@ import { goToGroupPage } from '../../../helper/pageRedirection';
             aria-labelledby="confirm-dialog-title"
             open={open}
         >
-            {console.log(student)}
+
             <FaWindowClose
                 title={t('close_label')}
                 className="close-dialog"
