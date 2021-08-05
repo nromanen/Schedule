@@ -4,7 +4,6 @@ import com.softserve.dto.TeacherForUpdateDTO;
 import org.apache.commons.lang3.StringUtils;
 import com.softserve.dto.TeacherDTO;
 import com.softserve.dto.TeacherWithUserDTO;
-import com.softserve.dto.TeacherWishDTO;
 import com.softserve.dto.UserDataDTO;
 import com.softserve.entity.Teacher;
 import com.softserve.service.UserService;
@@ -39,12 +38,12 @@ public abstract class TeacherMapper {
     @Mapping(target = "email", source = "userId", qualifiedByName = "userIdToEmail")
     public abstract TeacherForUpdateDTO teacherToTeacherForUpdateDTO(Teacher teacher);
 
+    List<TeacherDTO> teachersToTeacherDTOs(List<Teacher> teachers);
     @Mapping(target = "department", source = "departmentDTO")
     public abstract Teacher teacherDTOToTeacher(TeacherDTO teacherDTO);
 
     public abstract TeacherWithUserDTO toTeacherWithUserDTO(Teacher teacher);
 
-    public abstract TeacherWishDTO toTeacherWithWishesDTOs(Teacher teacher);
 
     @Mapping(target = "teacherId", source = "id")
     @Mapping(target = "teacherName", source = "name")
@@ -54,7 +53,6 @@ public abstract class TeacherMapper {
     @Mapping(target = "teacherDepartmentDTO", source = "department")
     public abstract UserDataDTO teacherToUserDataDTO(Teacher teacher);
 
-    public abstract List<TeacherWishDTO> toTeacherWithWishesDTOs(List<Teacher> teachers);
 
     public abstract List<TeacherDTO> teachersToTeacherDTOs(List<Teacher> teachers);
 

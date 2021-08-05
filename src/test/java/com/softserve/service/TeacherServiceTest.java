@@ -1,10 +1,10 @@
 package com.softserve.service;
 
+import com.softserve.entity.*;
 import com.softserve.dto.TeacherDTO;
 import com.softserve.dto.TeacherForUpdateDTO;
 import com.softserve.entity.Period;
 import com.softserve.entity.Teacher;
-import com.softserve.entity.TeacherWishes;
 import com.softserve.entity.User;
 import com.softserve.exception.EntityAlreadyExistsException;
 import com.softserve.exception.EntityNotFoundException;
@@ -62,9 +62,6 @@ public class TeacherServiceTest {
 
     @Mock
     PeriodService periodService;
-
-    @Mock
-    TeacherWishesService teacherWishesService;
 
     @InjectMocks
     TeacherServiceImpl teacherService;
@@ -331,7 +328,6 @@ public class TeacherServiceTest {
         periodList.add(period);
 
         when(periodService.getAll()).thenReturn(periodList);
-        when(teacherWishesService.save(any(TeacherWishes.class))).thenReturn(null);
         when(teacherRepository.save(teacher)).thenReturn(teacher);
 
         Teacher result = teacherService.save(teacher);
@@ -339,7 +335,6 @@ public class TeacherServiceTest {
         assertThat(result).isEqualToComparingFieldByField(teacher);
         verify(periodService, times(1)).getAll();
         verify(teacherRepository, times(1)).save(teacher);
-        verify(teacherWishesService, times(1)).save(any(TeacherWishes.class));
     }
 
     @Test
