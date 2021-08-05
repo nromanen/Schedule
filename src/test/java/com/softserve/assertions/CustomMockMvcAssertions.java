@@ -6,8 +6,10 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Function;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasSize;
@@ -87,18 +89,18 @@ public class CustomMockMvcAssertions {
     }
 
     public <T> void assertThatSavedEntityIsEqualTo(T expected,
-                                                   ResultMatcherIgnoringId<T> matcher) throws Exception {
-        assertThatSavedEntityIsEqualTo(expected, matcher, defaultUrl);
+                                                   Function<T, ResultMatcher> matcherIgnoringId) throws Exception {
+        assertThatSavedEntityIsEqualTo(expected, matcherIgnoringId, defaultUrl);
     }
 
     public <T> void assertThatSavedEntityIsEqualTo(T expected,
-                                                   ResultMatcherIgnoringId<T> matcher,
+                                                   Function<T, ResultMatcher> matcherIgnoringId,
                                                    String url) throws Exception {
         mockMvc.perform(post(url).content(objectMapper.writeValueAsString(expected))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
                 .andExpect(content().contentType("application/json"))
-                .andExpect(matcher.apply(expected));
+                .andExpect(matcherIgnoringId.apply(expected));
     }
 
     public <T> void assertThatDeleteRequestReturnedOk(int id) throws Exception {
