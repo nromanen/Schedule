@@ -203,4 +203,10 @@ public class GroupServiceImpl  implements GroupService {
         return semesterService.getCurrentSemester().getGroups();
     }
 
+    @Override
+    public List<Group> getGroupsForDefaultSemester(){
+        log.info("Enter into getGroupsByCurrentSemester");
+        return semesterService.getDefaultSemester().getGroups();
+    }
+
 }
