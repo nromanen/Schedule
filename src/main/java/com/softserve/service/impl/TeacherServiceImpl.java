@@ -2,8 +2,8 @@ package com.softserve.service.impl;
 
 import com.softserve.dto.TeacherDTO;
 import com.softserve.dto.TeacherForUpdateDTO;
-import com.softserve.entity.*;
-import com.softserve.entity.enums.EvenOdd;
+import com.softserve.entity.Teacher;
+import com.softserve.entity.User;
 import com.softserve.entity.enums.Role;
 import com.softserve.exception.EntityAlreadyExistsException;
 import com.softserve.exception.EntityNotFoundException;
@@ -13,12 +13,10 @@ import com.softserve.service.MailService;
 import com.softserve.service.TeacherService;
 import com.softserve.service.UserService;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.time.DayOfWeek;
-import java.util.ArrayList;
+
 import java.util.List;
 
 @Transactional
