@@ -43,6 +43,7 @@ public abstract class TeacherMapper {
 
     public abstract TeacherWithUserDTO toTeacherWithUserDTO(Teacher teacher);
 
+
     @Mapping(target = "teacherId", source = "id")
     @Mapping(target = "teacherName", source = "name")
     @Mapping(target = "teacherSurname", source = "surname")
@@ -50,6 +51,7 @@ public abstract class TeacherMapper {
     @Mapping(target = "teacherPosition", source = "position")
     @Mapping(target = "teacherDepartmentDTO", source = "department")
     public abstract UserDataDTO teacherToUserDataDTO(Teacher teacher);
+
 
     public abstract List<TeacherDTO> teachersToTeacherDTOs(List<Teacher> teachers);
 
