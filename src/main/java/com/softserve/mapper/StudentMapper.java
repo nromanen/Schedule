@@ -26,8 +26,6 @@ public interface StudentMapper {
         return GroupDTO.builder()
                 .id(group.getId())
                 .title(group.getTitle())
-                .disable(group.isDisable())
-                .students(List.of())
                 .build();
     }
 

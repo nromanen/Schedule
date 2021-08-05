@@ -5,6 +5,7 @@ import com.softserve.exception.EntityNotFoundException;
 import com.softserve.exception.FieldAlreadyExistsException;
 import com.softserve.repository.GroupRepository;
 import com.softserve.service.GroupService;
+import com.softserve.service.SemesterService;
 import com.softserve.util.NullAwareBeanUtils;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -21,10 +23,13 @@ import java.util.Objects;
 public class GroupServiceImpl  implements GroupService {
 
     private final GroupRepository groupRepository;
+    private final SemesterService semesterService;
+
 
     @Autowired
-    public GroupServiceImpl(GroupRepository groupRepository) {
+    public GroupServiceImpl(GroupRepository groupRepository, SemesterService semesterService) {
         this.groupRepository = groupRepository;
+        this.semesterService = semesterService;
     }
 
     /**
@@ -64,20 +69,8 @@ public class GroupServiceImpl  implements GroupService {
     public List<Group> getAllWithoutStudents() {
         log.info("In getAllWithoutStudents()");
         List<Group> groups = groupRepository.getAllWithoutStudents();
-        groups.forEach(group -> group.setStudents(List.of()));
+        groups.forEach(group -> group.setStudents(Collections.emptyList()));
         return groups;
-    }
-
-    /**
-     * The method used for getting all disabled groups
-     *
-     * @return list of disabled groups
-     */
-    @Transactional(readOnly = true)
-    @Override
-    public List<Group> getDisabled() {
-        log.info("Enter into getAll of getDisabled");
-        return groupRepository.getDisabled();
     }
 
     /**
@@ -90,7 +83,7 @@ public class GroupServiceImpl  implements GroupService {
     public List<Group> getDisabledWithoutStudents() {
         log.info("Enter into getAll of getDisabledWithoutStudents");
         List<Group> groups = groupRepository.getDisabledWithoutStudents();
-        groups.forEach(group -> group.setStudents(List.of()));
+        groups.forEach(group -> group.setStudents(Collections.emptyList()));
         return groups;
     }
 
@@ -176,4 +169,38 @@ public class GroupServiceImpl  implements GroupService {
         log.info("In isExistsWithId(id = [{}])",  id);
         return groupRepository.countByGroupId(id)!=0;
     }
+
+    /**
+     * The method used for getting all disabled groups
+     *
+     * @return list of disabled groups
+     */
+    @Override
+    public List<Group> getDisabled() {
+        log.info("Enter into getAll of getDisabled");
+        return groupRepository.getDisabled();
+    }
+
+    /**
+     * The method used for getting all groups for semester
+     *
+     * @return list of groups for semester
+     */
+    @Override
+    public List<Group> getGroupsBySemesterId(Long semesterId){
+        log.info("Enter into getGroupsBySemesterId");
+        return semesterService.getById(semesterId).getGroups();
+    }
+
+    /**
+     * The method used for getting all groups for current semester
+     *
+     * @return list of groups for current semester
+     */
+    @Override
+    public List<Group> getGroupsForCurrentSemester(){
+        log.info("Enter into getGroupsByCurrentSemester");
+        return semesterService.getCurrentSemester().getGroups();
+    }
+
 }

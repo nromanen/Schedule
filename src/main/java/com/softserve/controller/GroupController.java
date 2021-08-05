@@ -1,9 +1,10 @@
 package com.softserve.controller;
 
 import com.softserve.dto.GroupDTO;
+import com.softserve.dto.GroupForUpdateDTO;
 import com.softserve.entity.Group;
-import com.softserve.service.GroupService;
 import com.softserve.mapper.GroupMapper;
+import com.softserve.service.GroupService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @Slf4j
@@ -46,23 +48,23 @@ public class GroupController {
     @ApiOperation(value = "Get group info by id")
     public ResponseEntity<GroupDTO> get(@PathVariable("id") long id){
         log.info("In get(id = [{}])", id);
-        return ResponseEntity.status(HttpStatus.OK).body(groupMapper.convertToDto(groupService.getById(id)));
+        return ResponseEntity.status(HttpStatus.OK).body(groupMapper.groupToGroupDTO(groupService.getById(id)));
     }
 
     @PostMapping
     @ApiOperation(value = "Create new group")
     public ResponseEntity<GroupDTO> save(@RequestBody GroupDTO groupDTO) {
         log.info("In save (groupDTO = [{}])", groupDTO);
-        Group group = groupService.save(groupMapper.convertToEntity(groupDTO));
-        return ResponseEntity.status(HttpStatus.CREATED).body(groupMapper.convertToDto(group));
+        Group group = groupService.save(groupMapper.groupDTOToGroup(groupDTO));
+        return ResponseEntity.status(HttpStatus.CREATED).body(groupMapper.groupToGroupDTO(group));
     }
 
     @PutMapping
     @ApiOperation(value = "Update existing group by id")
-    public ResponseEntity<GroupDTO> update(@RequestBody GroupDTO groupDTO) {
-        log.info("In update (groupDTO = [{}])", groupDTO);
-        Group group = groupService.update(groupMapper.convertToEntity(groupDTO));
-        return ResponseEntity.status(HttpStatus.OK).body(groupMapper.convertToDto(group));
+    public ResponseEntity<GroupForUpdateDTO> update(@RequestBody GroupForUpdateDTO groupForUpdateDTO) {
+        log.info("In update (groupDTO = [{}])", groupForUpdateDTO);
+        Group group = groupService.update(groupMapper.groupForUpdateDTOToGroup(groupForUpdateDTO));
+        return ResponseEntity.status(HttpStatus.OK).body(groupMapper.groupToGroupForUpdateDTO(group));
     }
 
     @DeleteMapping("/{id}")
@@ -86,4 +88,5 @@ public class GroupController {
         log.info("Enter into getDisabled");
         return ResponseEntity.status(HttpStatus.OK).body(groupMapper.convertListToDtoList(groupService.getDisabledWithoutStudents()));
     }
+
 }
