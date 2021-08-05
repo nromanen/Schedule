@@ -158,7 +158,6 @@ export default function RenderStudentTable(props) {
     };
     const sendMail = (email) => {
         const mailto =
-            // "mailto:mail@gmail.com?subject=Test subject&body=Body content";
             `mailto:${email}`;
         window.location.href = mailto;
     }
@@ -197,8 +196,8 @@ const handleAllOnPageClick = (event) => {
 
                 <TableHead>
                     <span className={'checked-all'}>
-                        <input id={'checked-all-input'} type="checkbox" checked={checkedAllBtn} onClick={handleAllOnPageClick}  value="checkedAll" />
-                    <label to={'checked-all-input'}  >Check / Uncheck All</label>
+                        <input id={'checked-all-input'} className={'checked-box'} type="checkbox" checked={checkedAllBtn} onClick={handleAllOnPageClick}  value="checkedAll" />
+                    <label to={'checked-all-input'}  >{t('check_unCheck_all_title')}</label>
 
                     </span>
 
@@ -222,7 +221,7 @@ const handleAllOnPageClick = (event) => {
                     ).map((student) => (
                         <StyledTableRow key={student.id}>
                             <StyledTableCell component="th" scope="row" align="center" style={{ width: 160 }}>
-                                <input key={student.id} onClick={handleCheckElement} type="checkbox" checked={student.checked} value={student.id} />
+                                <input key={student.id} onClick={handleCheckElement} type="checkbox" checked={student.checked} value={student.id} className={'checked-box'} />
                             </StyledTableCell>
                             <StyledTableCell component="th" scope="row" align="center" style={{ width: 160 }}>
                                 {getTeacherFullName(student)}

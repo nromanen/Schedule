@@ -15,6 +15,14 @@
   flex-direction: column;
   flex-wrap: wrap;
   align-items: center;
+  h6{
+    width: 500px;
+    padding: 5px;
+  }
+
+}
+.group-select{
+  z-index: 1000;
 }
 .MuiDialog-paperWidthSm{
   max-width: 800px!important;

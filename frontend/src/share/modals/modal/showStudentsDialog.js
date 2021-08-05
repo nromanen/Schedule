@@ -163,13 +163,13 @@ export const ShowStudentsDialog = props => {
 
                                 :
                                 <span className="table-student-data">
-                                    <h6 style={{ width: '500px' }}>
+                                    <h6>
                                       <Select
+                                          className={'group-select'}
                                           defaultValue={defaultGroup}
                                           options={groupsOption}
                                           onChange={setCurrentGroupOption}
                                           isOptionDisabled={()=>setSelectDisabled()}
-                                          // formatGroupLabel={formatGroupLabel}
                                       />
                                   </h6>
                                 <h3 className="title-align"><span>{students.length !== 1 ? `${t('students_label')} ` : `${t('student_label')} `}</span>{`${t('group_students')} `}<span>{`${props.group.title}`}</span></h3>
