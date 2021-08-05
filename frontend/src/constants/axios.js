@@ -13,6 +13,8 @@ export const ROOM_URL = 'rooms';
 export const ROOM_TYPES_URL = 'room-types';
 export const FREE_ROOMS_URL = 'rooms/free';
 export const SUBJECT_URL = 'subjects';
+export const STUDENT_URL = 'students';
+
 export const FULL_SCHEDULE_URL = 'schedules/full/semester?semesterId=';
 export const GROUP_SCHEDULE_URL = 'schedules/full/groups?semesterId=';
 export const TEACHER_WISHES = 'teacher_wishes';
