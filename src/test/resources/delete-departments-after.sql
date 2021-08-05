@@ -1,2 +1,5 @@
-delete from teachers;
-delete from department;
+TRUNCATE
+    "public".department,
+    "public".teachers
+    RESTART IDENTITY
+    CASCADE;

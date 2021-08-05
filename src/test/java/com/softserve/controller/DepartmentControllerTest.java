@@ -3,7 +3,6 @@ package com.softserve.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.softserve.config.*;
 import com.softserve.dto.DepartmentDTO;
-import com.softserve.dto.GroupDTO;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -29,7 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ContextConfiguration(classes = {WebMvcConfig.class, DBConfigTest.class, MyWebAppInitializer.class, SecurityConfig.class, SecurityWebApplicationInitializer.class})
 @WebAppConfiguration
 @WithMockUser(username = "vbforwork702@mail.com", password = "$2a$10$42sZYaqffhxKah7sTFsm3OXF02qdUUykPfVWPO3GguHvoDui.WsIi", roles = "MANAGER")
-@Sql(value = {"classpath:create-departments-before.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+@Sql(value = "classpath:create-departments-before.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 @Sql(value = "classpath:delete-departments-after.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 public class DepartmentControllerTest {
 

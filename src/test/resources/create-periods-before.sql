@@ -1,6 +1,9 @@
-delete from "public".semester_day;
-delete from "public".semester_period;
-delete from "public".periods;
+TRUNCATE
+    "public".semester_day,
+    "public".semester_period,
+    "public".periods
+    RESTART IDENTITY
+    CASCADE;
 
 insert into "public".periods(id, end_time, name, start_time) VALUES
 (4, '2020-04-15 02:00', '1 para', '2020-04-15 01:00'),

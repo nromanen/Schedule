@@ -1,4 +1,7 @@
-delete from lessons;
-delete from teachers;
-delete from department;
-delete from users;
+TRUNCATE
+    "public".lessons,
+    "public".teachers,
+    "public".department,
+    "public".users
+    RESTART IDENTITY
+    CASCADE;

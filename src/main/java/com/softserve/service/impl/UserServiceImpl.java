@@ -293,7 +293,7 @@ public class UserServiceImpl implements UserService {
         String link = url + "activation-page?token=" + user.getToken();
         String message = registrationMessage + " \r\n" + link;
         String subject = "Activation account";
-        mailService.send(user.getEmail(), subject, message);
+        //mailService.send(user.getEmail(), subject, message);
     }
 
     // method for checking email in database
