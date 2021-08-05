@@ -1,19 +1,17 @@
 package com.softserve.entity;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.*;
+import org.hibernate.annotations.Filter;
+import org.hibernate.annotations.FilterDef;
+import org.hibernate.annotations.Filters;
+import org.hibernate.annotations.ParamDef;
 
 import javax.persistence.*;
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.util.Set;
 
 @Setter
 @Getter
@@ -55,11 +53,6 @@ public class Teacher implements Serializable {
 
     @Column(name ="user_id")
     private Integer userId;
-
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
-    @JoinColumn(name="teacher_id", updatable = false)
-    @JsonIgnore
-    private Set<TeacherWishes> teacherWishesList;
 
     @Column(name = "disable",  columnDefinition = "boolean default 'false'")
     private boolean disable = false;

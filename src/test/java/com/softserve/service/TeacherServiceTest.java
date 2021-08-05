@@ -1,8 +1,6 @@
 package com.softserve.service;
 
 import com.softserve.entity.*;
-import com.softserve.entity.enums.EvenOdd;
-import com.softserve.entity.enums.WishStatuses;
 import com.softserve.exception.EntityAlreadyExistsException;
 import com.softserve.exception.EntityNotFoundException;
 import com.softserve.repository.TeacherRepository;
@@ -15,7 +13,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.util.*;
 
@@ -39,9 +36,6 @@ public class TeacherServiceTest {
 
     @Mock
     PeriodService periodService;
-
-    @Mock
-    TeacherWishesService teacherWishesService;
 
     @InjectMocks
     TeacherServiceImpl teacherService;
@@ -169,7 +163,6 @@ public class TeacherServiceTest {
         periodList.add(period);
 
         when(periodService.getAll()).thenReturn(periodList);
-        when(teacherWishesService.save(any(TeacherWishes.class))).thenReturn(null);
         when(teacherRepository.save(teacher)).thenReturn(teacher);
 
         Teacher result = teacherService.save(teacher);
@@ -177,7 +170,6 @@ public class TeacherServiceTest {
         assertEquals(teacher, result);
         verify(periodService, times(1)).getAll();
         verify(teacherRepository, times(1)).save(teacher);
-        verify(teacherWishesService, times(1)).save(any(TeacherWishes.class));
     }
 
     @Test

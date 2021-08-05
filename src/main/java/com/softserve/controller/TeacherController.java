@@ -2,13 +2,10 @@ package com.softserve.controller;
 
 import com.softserve.dto.TeacherDTO;
 import com.softserve.dto.TeacherForUpdateDTO;
-import com.softserve.dto.TeacherWishDTO;
 import com.softserve.entity.Teacher;
 import com.softserve.entity.User;
 import com.softserve.entity.enums.Role;
-import com.softserve.exception.MessageNotSendException;
 import com.softserve.mapper.TeacherMapper;
-import com.softserve.service.MailService;
 import com.softserve.service.ScheduleService;
 import com.softserve.service.TeacherService;
 import com.softserve.service.UserService;
@@ -20,7 +17,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.mail.MessagingException;
 import java.util.List;
 
 
@@ -55,21 +51,6 @@ public class TeacherController {
         log.info("Enter into get method with id {} ", id);
         Teacher teacher = teacherService.getById(id);
         return ResponseEntity.ok().body(teacherMapper.teacherToTeacherDTO(teacher));
-    }
-
-    @GetMapping("/teachers/with-wishes")
-    @ApiOperation(value = "Get the list of all teachers with wishes")
-    public ResponseEntity<List<TeacherWishDTO>> getAllWithWishes() {
-        log.info("Enter into getAllWithWishes method");
-        return ResponseEntity.ok(teacherMapper.toTeacherWithWishesDTOs(teacherService.getAllTeachersWithWishes()));
-    }
-
-    @GetMapping("/teachers/{id}/with-wishes")
-    @ApiOperation(value = "Get teacher with wish by id")
-    public ResponseEntity<TeacherWishDTO> getTeacherWithWishes(@PathVariable("id") Long id) {
-        log.info("Enter into getTeacherWithWishes method with id {} ", id);
-        Teacher teacher = teacherService.getTeacherWithWishes(id);
-        return ResponseEntity.ok().body(teacherMapper.toTeacherWithWishesDTOs(teacher));
     }
 
     @PostMapping("/teachers")
