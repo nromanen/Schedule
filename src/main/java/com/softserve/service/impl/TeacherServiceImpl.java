@@ -5,16 +5,13 @@ import com.softserve.dto.TeacherForUpdateDTO;
 import com.softserve.entity.*;
 import com.softserve.entity.enums.EvenOdd;
 import com.softserve.entity.enums.Role;
-import com.softserve.entity.enums.WishStatuses;
 import com.softserve.exception.EntityAlreadyExistsException;
 import com.softserve.exception.EntityNotFoundException;
 import com.softserve.mapper.TeacherMapper;
 import com.softserve.repository.TeacherRepository;
 import com.softserve.service.MailService;
 import com.softserve.service.TeacherService;
-import com.softserve.service.TeacherWishesService;
 import com.softserve.service.UserService;
-import com.softserve.service.PeriodService;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,19 +29,14 @@ public class TeacherServiceImpl implements TeacherService {
     private final TeacherRepository teacherRepository;
     private final UserService userService;
     private final MailService mailService;
-    private final PeriodService periodService;
-    private final TeacherWishesService teacherWishesService;
     private final TeacherMapper teacherMapper;
 
     @Autowired
     public TeacherServiceImpl(TeacherRepository teacherRepository, UserService userService, MailService mailService,
-                              PeriodService periodService, TeacherWishesService teacherWishesService,
                               TeacherMapper teacherMapper) {
         this.teacherRepository = teacherRepository;
         this.userService = userService;
         this.mailService = mailService;
-        this.periodService = periodService;
-        this.teacherWishesService = teacherWishesService;
         this.teacherMapper = teacherMapper;
     }
 
@@ -79,9 +71,7 @@ public class TeacherServiceImpl implements TeacherService {
     @Override
     public Teacher save(Teacher object) {
         log.info("Enter into save method with entity:{}", object);
-        Teacher teacher = teacherRepository.save(object);
-        saveTeacherWishesByNewTeacher(teacher);
-        return teacher;
+        return teacherRepository.save(object);
     }
 
     /**
@@ -154,62 +144,6 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     /**
-     * Method save information for Teacher Wishes in Repository
-     * @param teacher Teacher entity
-     * @return saved TeacherWishes entity
-     */
-    private TeacherWishes saveTeacherWishesByNewTeacher(Teacher teacher)
-    {
-        log.info("Enter into saveTeacherWishesByNewTeacher method with entity:{}", teacher);
-        List<Period> periods = periodService.getAll();
-        Wishes[] teacherWishesArray= new Wishes[7];
-        int index = 0;
-        for(DayOfWeek day : DayOfWeek.values())
-        {
-            List<Wish> wishes = new ArrayList<>();
-            for(Period period: periods){
-                Wish wish = new Wish();
-                wish.setClassName(period.getName());
-                wish.setStatus(WishStatuses.OK);
-                wishes.add(wish);
-            }
-            Wishes teacherWish = new Wishes();
-            teacherWish.withDayOfWeek(day);
-            teacherWish.setEvenOdd(EvenOdd.WEEKLY);
-            teacherWish.setWishes(wishes);
-            teacherWishesArray[index]=teacherWish;
-            index++;
-        }
-        TeacherWishes teacherWishes = new TeacherWishes();
-        teacherWishes.setTeacher(teacher);
-        teacherWishes.setTeacherWishesList(teacherWishesArray);
-        return teacherWishesService.save(teacherWishes);
-    }
-
-    /**
-     * Method gets information about teachers with wishes from Repository
-     * @return List of all teachers with wishes
-     */
-    @Override
-    public List<Teacher> getAllTeachersWithWishes() {
-        List<Teacher> teachers = teacherRepository.getAll();
-        teachers.forEach(teacher -> Hibernate.initialize(teacher.getTeacherWishesList()));
-        return teachers;
-    }
-
-    /**
-     * The method used for getting teacher with wishes by id
-     * @param id Identity teacher id
-     * @return target teacher with wishes
-     */
-    @Override
-    public Teacher getTeacherWithWishes(Long id) {
-        Teacher teacher = this.getById(id);
-        Hibernate.initialize(teacher.getTeacherWishesList());
-        return teacher;
-    }
-
-    /**
      * The method used for join Teacher and User
      * @param teacherId Long teacherId used to find Teacher by it
      * @param userId Long userId used to find User by it
@@ -238,6 +172,7 @@ public class TeacherServiceImpl implements TeacherService {
 
         return update(getTeacher);
     }
+
 
     /**
      * The method used for getting teacher by userId

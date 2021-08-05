@@ -36,7 +36,6 @@ public class ScheduleServiceImpl implements ScheduleService {
     private final LessonService lessonService;
     private final RoomService roomService;
     private final GroupService groupService;
-    private final TeacherWishesService teacherWishesService;
     private final TeacherService teacherService;
     private final SemesterService semesterService;
     private final TemporaryScheduleService temporaryScheduleService;
@@ -54,7 +53,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     @Autowired
     public ScheduleServiceImpl(ScheduleRepository scheduleRepository, LessonService lessonService, RoomService roomService,
-                               GroupService groupService, TeacherWishesService teacherWishesService, TeacherService teacherService,
+                               GroupService groupService, TeacherService teacherService,
                                SemesterService semesterService, UserService userService, MailService mailService, GroupMapper groupMapper, PeriodMapper periodMapper,
                                LessonsInScheduleMapper lessonsInScheduleMapper, RoomForScheduleMapper roomForScheduleMapper,
                                TeacherMapper teacherMapper, LessonForTeacherScheduleMapper lessonForTeacherScheduleMapper,
@@ -69,7 +68,6 @@ public class ScheduleServiceImpl implements ScheduleService {
         this.mailService = mailService;
         this.temporaryScheduleService = temporaryScheduleService;
         this.groupMapper = groupMapper;
-        this.teacherWishesService = teacherWishesService;
         this.periodMapper = periodMapper;
         this.lessonsInScheduleMapper = lessonsInScheduleMapper;
         this.roomForScheduleMapper = roomForScheduleMapper;
@@ -177,7 +175,6 @@ public class ScheduleServiceImpl implements ScheduleService {
             CreateScheduleInfoDTO createScheduleInfoDTO = new CreateScheduleInfoDTO();
             createScheduleInfoDTO.setTeacherAvailable(isTeacherAvailableForSchedule(semesterId, dayOfWeek, evenOdd, classId, lessonId));
             createScheduleInfoDTO.setRooms(roomService.getAllRoomsForCreatingSchedule(semesterId, dayOfWeek, evenOdd, classId));
-            createScheduleInfoDTO.setClassSuitsToTeacher(teacherWishesService.isClassSuits(lessonService.getById(lessonId).getTeacher().getId(), dayOfWeek, evenOdd, classId));
             return createScheduleInfoDTO;
         }
 
