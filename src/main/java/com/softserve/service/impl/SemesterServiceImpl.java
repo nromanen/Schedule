@@ -113,7 +113,7 @@ public class SemesterServiceImpl implements SemesterService {
      */
     private void setCurrentToFalse(Semester semester) {
         if (semester.isCurrentSemester()) {
-            semesterRepository.setAllSemesterCurrentToFalse();
+            semesterRepository.updateAllSemesterCurrentToFalse();
             semester.setCurrentSemester(true);
         }
     }
@@ -124,7 +124,7 @@ public class SemesterServiceImpl implements SemesterService {
      */
     private void setDefaultToFalse(Semester semester) {
         if (semester.isDefaultSemester()) {
-            semesterRepository.setAllSemesterDefaultToFalse();
+            semesterRepository.updateAllSemesterDefaultToFalse();
             semester.setDefaultSemester(true);
         }
     }
@@ -230,7 +230,7 @@ public class SemesterServiceImpl implements SemesterService {
     @Override
     public Semester changeCurrentSemester(Long semesterId) {
         log.info("In changeCurrentSemester(Long semesterId = [{}])", semesterId);
-        semesterRepository.setAllSemesterCurrentToFalse();
+        semesterRepository.updateAllSemesterCurrentToFalse();
         semesterRepository.setCurrentSemester(semesterId);
         return getById(semesterId);
     }
@@ -243,7 +243,7 @@ public class SemesterServiceImpl implements SemesterService {
     @Override
     public Semester changeDefaultSemester(Long semesterId) {
         log.info("In changeDefaultSemester(Long semesterId = [{}])", semesterId);
-        semesterRepository.setAllSemesterDefaultToFalse();
+        semesterRepository.updateAllSemesterDefaultToFalse();
         semesterRepository.setDefaultSemester(semesterId);
         return getById(semesterId);
     }
