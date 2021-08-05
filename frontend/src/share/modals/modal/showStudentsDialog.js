@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import PropTypes from 'prop-types';
 
@@ -13,21 +13,132 @@ import i18n from '../../../helper/i18n';
 import { connect } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import RenderStudentTable from '../../../helper/renderStudentTable';
-import { getAllStudentsByGroupId } from '../../../services/studentService';
+import { getAllStudentsByGroupId, updateStudentService } from '../../../services/studentService';
+import renderSelectField from '../../renderedFields/select';
+import { required } from '../../../validation/validateFields';
+import { Field } from 'redux-form';
+import Select from 'react-select';
+import { isObjectEmpty } from '../../../helper/ObjectRevision';
 
 
 export const ShowStudentsDialog = props => {
-    const { onClose,  cardId, open,onDeleteStudent,students,onSubmit,match,student} = props;
+    const { onClose,  cardId, open,onDeleteStudent,students,onSubmit,match,student,groups,group} = props;
+    const [checkBoxStudents,setCheckBoxStudents]=useState([]);
+    const [checkedAll,setCheckedAll]=useState(false);
+    const setDefaultGroupOption=()=>{
+        return {value: `${ group.id }`,label: `${ group.title }`,...group};
+    }
+    const [groupOption,setGroupOption]=useState({});
+    const [defaultGroup,setDefaultGroup]=useState({})
+    useEffect(()=>{
+        if(group.id!==null)
+        setDefaultGroup(setDefaultGroupOption());
+    },[group.id])
     const { t } = useTranslation('formElements');
+    useEffect(()=> {
+        getAllStudentsByGroupId(props.group.id);
+
+
+    },[open]);
+
+    useEffect(()=>{
+        parseStudentToCheckBox();
+    },[props.students]);
+
+    const setGroupsOption=()=>{
+        return groups!==undefined? groups.map(item=>{return {value:item.id,label:`${item.title}`,...item}}):null;
+
+    }
+
+    const groupsOption=setGroupsOption();
     const handleClose = () => {
         onClose(cardId);
     };
-    useEffect(()=> {
-            getAllStudentsByGroupId(props.group.id);
 
 
-    },[open])
+    const parseStudentToCheckBox = () => {
+        const studentsCheckBox=[...students];
+        const res=studentsCheckBox.map((item)=> {
+            return {...item,checked:false};
+        });
+        setCheckBoxStudents(res);
+    }
+    const handleCheckElement = (event) => {
+        let studentsTmp = [...checkBoxStudents];
+        studentsTmp.forEach(student => {
+            if (student.id ===Number( event.target.value))
+                student.checked =  event.target.checked
+        })
+        setCheckBoxStudents(studentsTmp);
+    }
+   const handleAllChecked = (event,pageItemsCount) => {
+        let studentsTmp = [...checkBoxStudents];
 
+        const resPage=pageItemsCount>checkBoxStudents.length?checkBoxStudents.length:pageItemsCount;
+       for (let i = 0; i <resPage ; i++) {
+           studentsTmp[i].checked = event.target.checked
+       }
+        setCheckBoxStudents(studentsTmp)
+    }
+    const handleAllClear = () => {
+        let studentsTmp = [...checkBoxStudents];
+        studentsTmp.forEach(student => {
+                if(student.checked) {
+                    student.checked = false;
+                }
+        })
+        setCheckBoxStudents(studentsTmp);
+    }
+    const handleChangeCheckedAllBtn = () => {
+        setCheckedAll(prevState => !prevState);
+    }
+    const handleClearCheckedAllBtn = () => {
+        setCheckedAll(false);
+    }
+
+
+    const setCurrentGroupOption = (group) => {
+      setGroupOption(group)
+    }
+    const isChecked=({checked})=>{
+        return checked;
+    }
+    const setSelectDisabled=()=>{
+        let resChecked=true;
+        for (let i = 0; i < checkBoxStudents.length; i++) {
+            if(isChecked(checkBoxStudents[i])){
+                resChecked= false;
+                break;
+            }
+        }
+        return resChecked;
+    }
+    const setDisabledMoveToGroupBtn=()=>{
+        return setSelectDisabled();
+    }
+    const changeStudentItem = (group,student) => {
+        let resData={};
+        if(student.checked){
+            const {checked, ...res} = student;
+            resData= {...res,group:{id:group.id}}
+        }
+        return resData;
+    }
+    const handleSubmitGroupStudents = () => {
+        const currentStudents=[...checkBoxStudents];
+        const {value,label,...res}=isObjectEmpty(groupOption)?defaultGroup:groupOption;
+        const resData=[];
+        const prevGroup={id:defaultGroup.id};
+        for (let i = 0; i < currentStudents.length; i++) {
+            const resItem=changeStudentItem(res,currentStudents[i]);
+            if(!isObjectEmpty(resItem)){
+                resData.push(resItem)
+            }
+        };
+        resData.forEach(item=>updateStudentService({ ...item, prevGroup }));
+        handleClearCheckedAllBtn();
+
+    }
     return (
         <Dialog
             disableBackdropClick={true}
@@ -35,11 +146,16 @@ export const ShowStudentsDialog = props => {
             aria-labelledby="confirm-dialog-title"
             open={open}
         >
+
             <DialogTitle id="confirm-dialog-title">
                 <>
+
                         <>
+
                             {students.length === 0 ?
+
                                 <>
+
                                     <h2 className="title-align">{`${t('group_label')} - `}<span>{`${props.group.title}`}</span>
                                     </h2>
                                     {t('no_exist_students_in_group')}
@@ -47,11 +163,28 @@ export const ShowStudentsDialog = props => {
 
                                 :
                                 <span className="table-student-data">
+                                    <h6 style={{ width: '500px' }}>
+                                      <Select
+                                          defaultValue={defaultGroup}
+                                          options={groupsOption}
+                                          onChange={setCurrentGroupOption}
+                                          isOptionDisabled={()=>setSelectDisabled()}
+                                          // formatGroupLabel={formatGroupLabel}
+                                      />
+                                  </h6>
                                 <h3 className="title-align"><span>{students.length !== 1 ? `${t('students_label')} ` : `${t('student_label')} `}</span>{`${t('group_students')} `}<span>{`${props.group.title}`}</span></h3>
-                                <RenderStudentTable group={props.group} onDeleteStudent={onDeleteStudent}
+
+                                    <RenderStudentTable group={props.group} onDeleteStudent={onDeleteStudent}
                                                     students={students} onSubmit={onSubmit}
                                                     match={match}
                                                     student={props.student}
+                                                    checkBoxStudents={checkBoxStudents}
+                                                    handleCheckElement={handleCheckElement}
+                                                    handleAllChecked={handleAllChecked}
+                                                    handleAllClear={handleAllClear}
+                                                    handleChangeCheckedAllBtn={handleChangeCheckedAllBtn}
+                                                    handleClearCheckedAllBtn={handleClearCheckedAllBtn}
+                                                    checkedAllBtn={checkedAll}
                                 />
                             </span>
                             }
@@ -67,6 +200,16 @@ export const ShowStudentsDialog = props => {
                 >
                     {i18n.t('common:close_title')}
                 </Button>
+
+                <Button
+                    className="dialog-button"
+                    variant="contained"
+                    onClick={handleSubmitGroupStudents}
+                    color="primary"
+                    disabled={setDisabledMoveToGroupBtn()}
+                >
+                    {i18n.t('common:move_to_group_title')}
+                </Button>
             </div>
         </Dialog>
     );
@@ -77,7 +220,7 @@ ShowStudentsDialog.propTypes = {
     open: PropTypes.bool.isRequired
 };
 const mapStateToProps = state => ({
-   // student: state.students.student
+   //currentGroup:state.groups.currentGroup
 });
 
 export default connect(mapStateToProps, {})(ShowStudentsDialog);

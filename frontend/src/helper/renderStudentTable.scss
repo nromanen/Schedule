@@ -15,3 +15,16 @@
     font-size: 25px;
   }
 }
+.checked-all{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 200px;
+  align-items: center;
+  margin: 10px;
+  label{
+    font-size: 16px;
+    margin-left: 8px;
+  }
+
+}

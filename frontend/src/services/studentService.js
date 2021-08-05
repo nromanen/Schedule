@@ -49,7 +49,6 @@ export const getAllStudentsService = () => {
         .catch(error => errorHandler(error));
 };
 export const deleteStudentService = student => {
-    console.log(student)
     axios
         .delete(STUDENT_URL + `/${student.id}`)
         .then(response => {

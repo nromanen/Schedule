@@ -121,15 +121,29 @@ const StyledTableRow = withStyles((theme) => ({
 
 export default function RenderStudentTable(props) {
     const classes = useStyles2();
+    const {students,onDeleteStudent,onSubmit,group,
+           match,student,checkBoxStudents,handleCheckElement,
+           handleAllChecked,handleAllClear,handleChangeCheckedAllBtn,
+        handleClearCheckedAllBtn,checkedAllBtn}=props;
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
-    const {students,onDeleteStudent,onSubmit,group}=props;
     const [openDeleteDialog,setOpenDeleteDialog]=useState(false);
     const [openEditDialog,setOpenEditDialog]=useState(false);
+    const [checkedAll,setCheckedAll]=useState(false);
     const { t } = useTranslation('formElements');
-    const {match,student}=props;
+    useEffect(()=>{
+        if(match.path.includes(links.Student)&&match.path.includes(links.Edit)) {
+            handleEdit(student.id)
+        }
+    },[props.group.id])
+    useEffect(()=>{
+        if(match.path.includes(links.Student)&&match.path.includes(links.Delete)) {
+            setOpenDeleteDialog(true)
+        }
+    },[props.group.id]);
 
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, students.length - page * rowsPerPage);
+
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -138,6 +152,9 @@ export default function RenderStudentTable(props) {
     const handleChangeRowsPerPage = (event) => {
         setRowsPerPage(parseInt(event.target.value, 10));
         setPage(0);
+        handleAllClear();
+        handleClearCheckedAllBtn();
+
     };
     const sendMail = (email) => {
         const mailto =
@@ -162,22 +179,31 @@ export default function RenderStudentTable(props) {
         const sendObject={...data,prevGroup:group}
         onSubmit(sendObject);
     }
-    useEffect(()=>{
-        if(match.path.includes(links.Student)&&match.path.includes(links.Edit)) {
-            handleEdit(student.id)
-        }
-    },[props.group.id])
-    useEffect(()=>{
-        if(match.path.includes(links.Student)&&match.path.includes(links.Delete)) {
-            setOpenDeleteDialog(true)
-        }
-    },[props.group.id])
+    const getCorrectRowCount = (pageItemsCount) => {
+       if  (pageItemsCount>checkBoxStudents.length||pageItemsCount==-1){
+           return checkBoxStudents.length;
+       }
+       return pageItemsCount;
+    }
+const handleAllOnPageClick = (event) => {
+        const rowsCount=getCorrectRowCount(rowsPerPage)
+        handleChangeCheckedAllBtn();
+        handleAllChecked(event,rowsCount);
+}
+
     return (
         <TableContainer component={Paper}>
             <Table className={classes.table} aria-label="custom pagination table">
 
                 <TableHead>
+                    <span className={'checked-all'}>
+                        <input id={'checked-all-input'} type="checkbox" checked={checkedAllBtn} onClick={handleAllOnPageClick}  value="checkedAll" />
+                    <label to={'checked-all-input'}  >Check / Uncheck All</label>
+
+                    </span>
+
                     <TableRow>
+                        <StyledTableCell>{'change group'}</StyledTableCell>
                         <StyledTableCell>{t('student_label')}</StyledTableCell>
                         <StyledTableCell>
                             <FaEnvelope
@@ -191,10 +217,13 @@ export default function RenderStudentTable(props) {
 
                 <TableBody>
                     {(rowsPerPage > 0
-                            ? students.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                            : students
+                            ? checkBoxStudents.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                            : checkBoxStudents
                     ).map((student) => (
                         <StyledTableRow key={student.id}>
+                            <StyledTableCell component="th" scope="row" align="center" style={{ width: 160 }}>
+                                <input key={student.id} onClick={handleCheckElement} type="checkbox" checked={student.checked} value={student.id} />
+                            </StyledTableCell>
                             <StyledTableCell component="th" scope="row" align="center" style={{ width: 160 }}>
                                 {getTeacherFullName(student)}
                             </StyledTableCell>

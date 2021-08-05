@@ -216,6 +216,7 @@ let GroupList = props => {
                 onSubmit={studentSubmit}
                 match={match}
                 student={student}
+                groups={groups}
             />
 
             <div className="cards-container">
@@ -285,7 +286,7 @@ let GroupList = props => {
                                     title={t('formElements:student_add_label')}
                                     className="svg-btn copy-btn align-left info-btn"
                                     onClick={()=> {
-                                        handleAddUser(groupId);
+                                        handleAddUser(group.id);
                                         // setCurrentGroup(group);
                                     }}
                                 />
