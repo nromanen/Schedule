@@ -1,6 +1,7 @@
 package com.softserve.service;
 
 import com.softserve.dto.TeacherDTO;
+import com.softserve.dto.TeacherForUpdateDTO;
 import com.softserve.entity.Period;
 import com.softserve.entity.Teacher;
 import com.softserve.entity.TeacherWishes;
@@ -74,49 +75,55 @@ public class TeacherServiceTest {
 
     Teacher teacherWithId1LAndWithoutUser;
 
-    TeacherDTO teacherDtoWithId1L;
-
     TeacherDTO teacherDtoWithoutId;
+
+    TeacherForUpdateDTO teacherForUpdateDTOWithId1L;
 
     @Before
     public void setUp() {
+        String name = "Name1";
+        String surname = "Surname1";
+        String patronymic = "Patronymic1";
+        String position = "Position1";
+        String email = "teacher@gmail.com";
+
         teacherWithoutId = new Teacher();
-        teacherWithoutId.setName("Name1");
-        teacherWithoutId.setSurname("Surname1");
-        teacherWithoutId.setPatronymic("Patronymic1");
-        teacherWithoutId.setPosition("Position");
+        teacherWithoutId.setName(name);
+        teacherWithoutId.setSurname(surname);
+        teacherWithoutId.setPatronymic(patronymic);
+        teacherWithoutId.setPosition(position);
         teacherWithoutId.setUserId(null);
 
         teacherWithId1LAndWithUserId1 = new Teacher();
         teacherWithId1LAndWithUserId1.setId(1L);
-        teacherWithId1LAndWithUserId1.setName("Name1");
-        teacherWithId1LAndWithUserId1.setSurname("Surname1");
-        teacherWithId1LAndWithUserId1.setPatronymic("Patronymic1");
-        teacherWithId1LAndWithUserId1.setPosition("Position");
+        teacherWithId1LAndWithUserId1.setName(name);
+        teacherWithId1LAndWithUserId1.setSurname(surname);
+        teacherWithId1LAndWithUserId1.setPatronymic(patronymic);
+        teacherWithId1LAndWithUserId1.setPosition(position);
         teacherWithId1LAndWithUserId1.setUserId(1);
 
         teacherWithId1LAndWithoutUser = new Teacher();
         teacherWithId1LAndWithoutUser.setId(1L);
-        teacherWithId1LAndWithoutUser.setName("Name1");
-        teacherWithId1LAndWithoutUser.setSurname("Surname1");
-        teacherWithId1LAndWithoutUser.setPatronymic("Patronymic1");
-        teacherWithId1LAndWithoutUser.setPosition("Position");
+        teacherWithId1LAndWithoutUser.setName(name);
+        teacherWithId1LAndWithoutUser.setSurname(surname);
+        teacherWithId1LAndWithoutUser.setPatronymic(patronymic);
+        teacherWithId1LAndWithoutUser.setPosition(position);
         teacherWithId1LAndWithoutUser.setUserId(null);
 
-        teacherDtoWithId1L = new TeacherDTO();
-        teacherDtoWithId1L.setId(1L);
-        teacherDtoWithId1L.setName("Name1");
-        teacherDtoWithId1L.setSurname("Surname1");
-        teacherDtoWithId1L.setPatronymic("Patronymic1");
-        teacherDtoWithId1L.setPosition("Position");
-        teacherDtoWithId1L.setEmail("teacher@gmail.com");
-
         teacherDtoWithoutId = new TeacherDTO();
-        teacherDtoWithoutId.setName("Name1");
-        teacherDtoWithoutId.setSurname("Surname1");
-        teacherDtoWithoutId.setPatronymic("Patronymic1");
-        teacherDtoWithoutId.setPosition("Position");
-        teacherDtoWithoutId.setEmail("teacher@gmail.com");
+        teacherDtoWithoutId.setName(name);
+        teacherDtoWithoutId.setSurname(surname);
+        teacherDtoWithoutId.setPatronymic(patronymic);
+        teacherDtoWithoutId.setPosition(position);
+        teacherDtoWithoutId.setEmail(email);
+
+        teacherForUpdateDTOWithId1L = new TeacherForUpdateDTO();
+        teacherForUpdateDTOWithId1L.setId(1L);
+        teacherForUpdateDTOWithId1L.setName(name);
+        teacherForUpdateDTOWithId1L.setSurname(surname);
+        teacherForUpdateDTOWithId1L.setPatronymic(patronymic);
+        teacherForUpdateDTOWithId1L.setPosition(position);
+        teacherForUpdateDTOWithId1L.setEmail(email);
     }
 
     @Test
@@ -207,11 +214,11 @@ public class TeacherServiceTest {
     @Parameters({ "null", "" })
     @Test
     public void updateDTOIfEmailNotExist(@Nullable String teacherEmail) {
-        TeacherDTO teacherDTO = teacherDtoWithId1L;
+        TeacherForUpdateDTO teacherDTO = teacherForUpdateDTOWithId1L;
         teacherDTO.setEmail(teacherEmail);
         Teacher expectedTeacher = teacherWithId1LAndWithUserId1;
 
-        when(teacherMapper.teacherDTOToTeacher(teacherDTO)).thenReturn(expectedTeacher);
+        when(teacherMapper.teacherForUpdateDTOToTeacher(teacherDTO)).thenReturn(expectedTeacher);
         when(teacherRepository.update(argThat(t -> deepEqualsForTeachers(t, expectedTeacher))))
                 .thenReturn(expectedTeacher);
 
@@ -219,19 +226,19 @@ public class TeacherServiceTest {
 
         assertThat(actualTeacher).isEqualToComparingFieldByField(expectedTeacher);
         verify(teacherRepository, times(1)).update(argThat(t -> deepEqualsForTeachers(t, expectedTeacher)));
-        verify(teacherMapper, times(1)).teacherDTOToTeacher(teacherDTO);
+        verify(teacherMapper, times(1)).teacherForUpdateDTOToTeacher(teacherDTO);
     }
 
     @Test
     public void updateDTOIfEmailAndUserIdExist() {
-        TeacherDTO teacherDTO = teacherDtoWithId1L;
+        TeacherForUpdateDTO teacherDTO = teacherForUpdateDTOWithId1L;
         Teacher expectedTeacher = teacherWithId1LAndWithUserId1;
 
         User userForTeacher = new User();
         userForTeacher.setId(1L);
         userForTeacher.setEmail(teacherDTO.getEmail());
 
-        when(teacherMapper.teacherDTOToTeacher(teacherDTO)).thenReturn(expectedTeacher);
+        when(teacherMapper.teacherForUpdateDTOToTeacher(teacherDTO)).thenReturn(expectedTeacher);
         when(teacherRepository.update(argThat(t -> deepEqualsForTeachers(t, expectedTeacher))))
                 .thenReturn(expectedTeacher);
         when(teacherRepository.findById(1L)).thenReturn(Optional.of(expectedTeacher));
@@ -243,7 +250,7 @@ public class TeacherServiceTest {
 
         assertThat(actualTeacher).isEqualToComparingFieldByField(expectedTeacher);
         verify(teacherRepository, times(1)).update(argThat(t -> deepEqualsForTeachers(t, expectedTeacher)));
-        verify(teacherMapper, times(1)).teacherDTOToTeacher(teacherDTO);
+        verify(teacherMapper, times(1)).teacherForUpdateDTOToTeacher(teacherDTO);
         verify(teacherRepository, times(1)).findById(1L);
         verify(userService, times(1)).getById(1L);
         verify(userService, times(1)).update(argThat(u -> equalsForUsersByIdAndEmail(u, userForTeacher)));
@@ -251,14 +258,14 @@ public class TeacherServiceTest {
 
     @Test
     public void updateDTOIfEmailExistsAndUserIdNotExist() {
-        TeacherDTO teacherDTO = teacherDtoWithId1L;
+        TeacherForUpdateDTO teacherDTO = teacherForUpdateDTOWithId1L;
         Teacher teacherAfterMapper = teacherWithId1LAndWithoutUser;
         Teacher expectedTeacher = teacherWithId1LAndWithUserId1;
 
         User userForTeacher = new User();
         userForTeacher.setId(1L);
 
-        when(teacherMapper.teacherDTOToTeacher(teacherDTO)).thenReturn(teacherAfterMapper);
+        when(teacherMapper.teacherForUpdateDTOToTeacher(teacherDTO)).thenReturn(teacherAfterMapper);
         when(userService.automaticRegistration(teacherDTO.getEmail(), ROLE_TEACHER)).thenReturn(userForTeacher);
         when(teacherRepository.update(argThat(u -> deepEqualsForTeachers(u, expectedTeacher))))
                 .thenReturn(expectedTeacher);
@@ -268,7 +275,7 @@ public class TeacherServiceTest {
 
         assertThat(actualTeacher).isEqualToComparingFieldByField(expectedTeacher);
         verify(teacherRepository, times(1)).update(argThat(t -> deepEqualsForTeachers(t, expectedTeacher)));
-        verify(teacherMapper, times(1)).teacherDTOToTeacher(teacherDTO);
+        verify(teacherMapper, times(1)).teacherForUpdateDTOToTeacher(teacherDTO);
         verify(userService, times(1)).automaticRegistration(teacherDTO.getEmail(), ROLE_TEACHER);
         verify(teacherRepository, times(1)).findById(1L);
     }
