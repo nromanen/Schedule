@@ -2187,6 +2187,7 @@ export const setScheduleTypeService = item => {
     store.dispatch(setScheduleType(item));
 };
 
+//TODO
 export const getFullSchedule = semesterId => {
     const data={
         "semester": {
@@ -4078,16 +4079,17 @@ export const getFullSchedule = semesterId => {
             }
         ]
     };
-    store.dispatch(setFullSchedule(data));
-    // axios
-    //     .get(FULL_SCHEDULE_URL + semesterId)
-    //     .then(response => {
-    //         store.dispatch(setFullSchedule(response.data));
-    //     })
-    //     .catch(err => errorHandler(err));
+   // store.dispatch(setFullSchedule(data));
+    axios
+        .get(FULL_SCHEDULE_URL + semesterId)
+        .then(response => {
+            store.dispatch(setFullSchedule(response.data));
+        })
+        .catch(err => errorHandler(err));
 
 };
 
+//TODO
 export const getGroupSchedule = (groupId, semesterId) => {
     console.log("getGroupSchedule");
     const data={
@@ -4341,7 +4343,7 @@ export const getGroupSchedule = (groupId, semesterId) => {
             }
         ]
     };
-    store.dispatch(setGroupSchedule(data));
+    //store.dispatch(setGroupSchedule(data));
     // if (groupId > 0) {
     //     axios
     //         .get(GROUP_SCHEDULE_URL + semesterId + '&groupId=' + groupId)
@@ -4352,6 +4354,8 @@ export const getGroupSchedule = (groupId, semesterId) => {
     //         .catch(err => errorHandler(err));
     // }
 };
+
+//TODO
 export const getTeacherSchedule = (teacherId, semesterId) => {
     const data={
         "semester": {
@@ -4670,15 +4674,15 @@ export const getTeacherSchedule = (teacherId, semesterId) => {
             }
         ]
     };
-    store.dispatch(setTeacherSchedule(data));
-    // if (teacherId > 0) {
-    //     axios
-    //         .get(TEACHER_SCHEDULE_URL + semesterId + '&teacherId=' + teacherId)
-    //         .then(response => {
-    //             store.dispatch(setTeacherSchedule(response.data));
-    //         })
-    //         .catch(err => errorHandler(err));
-    // }
+    //store.dispatch(setTeacherSchedule(data));
+    if (teacherId > 0) {
+        axios
+            .get(TEACHER_SCHEDULE_URL + semesterId + '&teacherId=' + teacherId)
+            .then(response => {
+                store.dispatch(setTeacherSchedule(response.data));
+            })
+            .catch(err => errorHandler(err));
+    }
 };
 export const setScheduleTeacherIdService = teacherId => {
     store.dispatch(setScheduleTeacherId(teacherId));

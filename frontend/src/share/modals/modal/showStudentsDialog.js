@@ -19,6 +19,7 @@ import { required } from '../../../validation/validateFields';
 import { Field } from 'redux-form';
 import Select from 'react-select';
 import { isObjectEmpty } from '../../../helper/ObjectRevision';
+import { successHandler } from '../../../helper/handlerAxios';
 
 
 export const ShowStudentsDialog = props => {
@@ -125,18 +126,40 @@ export const ShowStudentsDialog = props => {
         return resData;
     }
     const handleSubmitGroupStudents = () => {
-        const currentStudents=[...checkBoxStudents];
-        const {value,label,...res}=isObjectEmpty(groupOption)?defaultGroup:groupOption;
-        const resData=[];
-        const prevGroup={id:defaultGroup.id};
-        for (let i = 0; i < currentStudents.length; i++) {
-            const resItem=changeStudentItem(res,currentStudents[i]);
-            if(!isObjectEmpty(resItem)){
-                resData.push(resItem)
-            }
-        };
-        resData.forEach(item=>updateStudentService({ ...item, prevGroup }));
+        if(isObjectEmpty(groupOption)){
+            successHandler(
+                i18n.t('serviceMessages:students_exist_in_this_group', {
+                    cardType: i18n.t('common:student_title'),
+                    actionType: i18n.t('serviceMessages:student_label')
+                })
+            );
+        }
+        else{
+            const {value,label,...res}=groupOption;
+            const currentStudents=[...checkBoxStudents];
+            const resData=[];
+            const prevGroup={id:defaultGroup.id};
+            for (let i = 0; i < currentStudents.length; i++) {
+                const resItem=changeStudentItem(res,currentStudents[i]);
+                if(!isObjectEmpty(resItem)){
+                    resData.push(resItem)
+                }
+            };
+            resData.forEach(item=>updateStudentService({ ...item, prevGroup }));
+        }
         handleClearCheckedAllBtn();
+        // const {value,label,...res}=isObjectEmpty(groupOption)?defaultGroup:groupOption;
+        // const currentStudents=[...checkBoxStudents];
+        // const resData=[];
+        // const prevGroup={id:defaultGroup.id};
+        // for (let i = 0; i < currentStudents.length; i++) {
+        //     const resItem=changeStudentItem(res,currentStudents[i]);
+        //     if(!isObjectEmpty(resItem)){
+        //         resData.push(resItem)
+        //     }
+        // };
+        // resData.forEach(item=>updateStudentService({ ...item, prevGroup }));
+        // handleClearCheckedAllBtn();
 
     }
     return (
@@ -201,15 +224,17 @@ export const ShowStudentsDialog = props => {
                     {i18n.t('common:close_title')}
                 </Button>
 
+                {students.length !== 0?
                 <Button
-                    className="dialog-button"
-                    variant="contained"
+                    className='dialog-button'
+                    variant='contained'
                     onClick={handleSubmitGroupStudents}
-                    color="primary"
+                    color='primary'
                     disabled={setDisabledMoveToGroupBtn()}
                 >
                     {i18n.t('common:move_to_group_title')}
                 </Button>
+                :null}
             </div>
         </Dialog>
     );

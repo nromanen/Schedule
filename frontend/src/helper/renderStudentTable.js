@@ -195,14 +195,14 @@ const handleAllOnPageClick = (event) => {
             <Table className={classes.table} aria-label="custom pagination table">
 
                 <TableHead>
-                    <span className={'checked-all'}>
-                        <input id={'checked-all-input'} className={'checked-box'} type="checkbox" checked={checkedAllBtn} onClick={handleAllOnPageClick}  value="checkedAll" />
-                    <label to={'checked-all-input'}  >{t('check_unCheck_all_title')}</label>
-
-                    </span>
 
                     <TableRow>
-                        <StyledTableCell>{'change group'}</StyledTableCell>
+                        <StyledTableCell>
+                            <span className={'checked-all'}>
+                            <input id={'checked-all-input'} className={'checked-box'} type="checkbox" checked={checkedAllBtn} onClick={handleAllOnPageClick}  value="checkedAll" />
+                            <label to={'checked-all-input'}  >{t('check_students')}</label>
+                            </span>
+                        </StyledTableCell>
                         <StyledTableCell>{t('student_label')}</StyledTableCell>
                         <StyledTableCell>
                             <FaEnvelope

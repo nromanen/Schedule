@@ -100,7 +100,7 @@ let GroupList = props => {
     },[props.students.length])
 
     useEffect(() => showAllGroupsService(), []);
-    useEffect(() => getDisabledGroupsService(), []);
+    // useEffect(() => getDisabledGroupsService(), []);
     const handleFormReset = () => {
         clearGroupService();
     };
