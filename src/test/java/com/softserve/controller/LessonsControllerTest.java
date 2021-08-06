@@ -112,7 +112,7 @@ public class LessonsControllerTest {
     }
 
     @Test
-    public void updateIfUpdatedEntityExists() throws Exception {
+    public void updateIfUpdatedEntityNotExists() throws Exception {
         LessonInfoDTO lessonDtoForUpdate = new LessonInfoDTO();
         lessonDtoForUpdate.setId(5L);
         lessonDtoForUpdate.setHours(2);
