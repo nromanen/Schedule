@@ -63,7 +63,6 @@ export const MultiSelect = props => {
         <Dialog id="select-dialog"
 
                 disableBackdropClick={true}
-                // onClose={handleClose}
                 aria-labelledby="confirm-dialog-title"
                 open={open}
         >
@@ -82,7 +81,6 @@ export const MultiSelect = props => {
                     defaultValue={defaultSemester}
                     options={semesters}
                     onChange={handleChange}
-                    // formatGroupLabel={formatGroupLabel}
                 />
 
             </DialogTitle>
@@ -98,6 +96,7 @@ export const MultiSelect = props => {
                 <Button
                     className="dialog-button"
                     variant="contained"
+                    color="primary"
                     onClick={props.onSentTeachers}
                     disabled={!props.isEnabledSentBtn}
                 >

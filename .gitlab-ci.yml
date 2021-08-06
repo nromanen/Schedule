@@ -12,9 +12,15 @@ before_script:
     - export GRADLE_USER_HOME=`pwd`/.gradle
 
 build:
-    image: gradle:alpine
+
+    script:
+        - ./gradlew assemble
+    artifacts:
+        paths:
+            - build/libs/*.jar
+        expire_in: 2h
+    image: gradle:jdk11
     stage: build
-    script: gradle --build-cache assemble
     cache:
         key: '$CI_COMMIT_REF_NAME'
         policy: push
@@ -24,6 +30,8 @@ build:
     only:
          - master
          - develop
+         - merge_requests
+
 #test:
 #    image: gradle:alpine
 #    stage: test
@@ -38,7 +46,7 @@ build:
 
 build_frontend:
     stage: build_frontend
-    image: node:latest
+    image: node:15.0.0
     cache:
         key: '$CI_COMMIT_REF_NAME'
         policy: push
@@ -60,6 +68,7 @@ build_frontend:
     only:
         - master
         - develop
+        - merge_requests
 
 production_deploy:
     stage: production_deploy

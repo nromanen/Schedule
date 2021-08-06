@@ -1,8 +1,12 @@
 package com.softserve.entity;
 
+import com.opencsv.bean.CsvBindByName;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.*;
+import org.hibernate.annotations.OrderBy;
 
 import javax.persistence.*;
 import javax.persistence.Entity;
@@ -11,12 +15,15 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-
+import java.util.ArrayList;
+import java.util.List;
 
 @NoArgsConstructor
+@AllArgsConstructor
 @Data
 @Entity
 @Table(name = "groups")
+@Builder(toBuilder = true)
 
 @FilterDef(name="groupDisableFilter", parameters={
         @ParamDef( name="disable", type="boolean" ),
@@ -36,7 +43,13 @@ public class Group implements Serializable {
     @Size(min = 2, max = 35, message = "Title must be between 2 and 35 characters long")
     @Column(length = 35, nullable = false, unique = true)
     @NotNull
+    @CsvBindByName(column = "group")
     private String title;
+
+    @NotNull
+    @OneToMany(mappedBy = "group")
+    @OrderBy(clause = "surname ASC")
+    private List<Student> students = new ArrayList<>();
 
     @Column(name = "disable",  columnDefinition = "boolean default 'false'")
     private boolean disable = false;

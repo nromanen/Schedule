@@ -5,15 +5,16 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.PathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.config.annotation.*;
 import org.springframework.web.servlet.resource.PathResourceResolver;
-
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring5.view.ThymeleafViewResolver;
+
+import java.io.IOException;
 
 
 @Configuration
@@ -41,7 +42,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 .addResolver(new PathResourceResolver());
     }
 
-    @Bean
+    @Bean("mailTemplate")
     public SpringResourceTemplateResolver templateResolver() {
         SpringResourceTemplateResolver templateResolver = new SpringResourceTemplateResolver();
         templateResolver.setApplicationContext(applicationContext);
@@ -68,5 +69,14 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
         configurer.enable();
+    }
+
+    @Bean(name = "multipartResolver")
+    public CommonsMultipartResolver multipartResolver() throws IOException {
+        CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();
+        multipartResolver.setMaxUploadSize(100000);
+        Resource resource = new PathResource(System.getProperty("user.dir"));
+        multipartResolver.setUploadTempDir(resource);
+        return multipartResolver;
     }
 }

@@ -3,12 +3,14 @@ package com.softserve.service.impl;
 import com.softserve.entity.Lesson;
 import com.softserve.entity.Semester;
 import com.softserve.entity.Subject;
-import com.softserve.entity.Teacher;
 import com.softserve.entity.enums.LessonType;
 import com.softserve.exception.EntityAlreadyExistsException;
 import com.softserve.exception.EntityNotFoundException;
 import com.softserve.repository.LessonRepository;
-import com.softserve.service.*;
+import com.softserve.service.LessonService;
+import com.softserve.service.SemesterService;
+import com.softserve.service.SubjectService;
+import com.softserve.service.TeacherService;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +50,7 @@ public class LessonServiceImpl implements LessonService {
         Lesson lesson = lessonRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException(Lesson.class, "id", id.toString()));
         Hibernate.initialize(lesson.getSemester().getPeriods());
+        Hibernate.initialize(lesson.getSemester().getGroups());
         return lesson;
     }
 
@@ -58,6 +61,11 @@ public class LessonServiceImpl implements LessonService {
     @Override
     public List<Lesson> getAll() {
         log.info("In getAll()");
+        List<Lesson> lessons = lessonRepository.getAll();
+        lessons.forEach(e -> {
+            Hibernate.initialize(e.getSemester().getPeriods());
+            Hibernate.initialize(e.getSemester().getGroups());
+        });
         return lessonRepository.getAll();
     }
 
@@ -68,8 +76,13 @@ public class LessonServiceImpl implements LessonService {
     @Override
     public List<Lesson> getLessonByTeacher(Long teacherId) {
         log.info("In getLessonByTeacher()");
-        return lessonRepository.getLessonByTeacher(teacherId, semesterService.getCurrentSemester().getId());
-    }
+        List<Lesson> lessons = lessonRepository.getLessonByTeacher(teacherId, semesterService.getCurrentSemester().getId());
+        lessons.forEach(e -> {
+            Hibernate.initialize(e.getSemester().getPeriods());
+            Hibernate.initialize(e.getSemester().getGroups());
+        });
+        return lessons;
+       }
 
     /**
      * Method saves new lesson to Repository and automatically assigns
@@ -86,14 +99,6 @@ public class LessonServiceImpl implements LessonService {
             throw new EntityAlreadyExistsException("Lesson with this parameters already exists");
         }
     else {
-            //Fill in teacher for site by teacher data (from JSON) if teacher for site is empty or null
-            if (object.getTeacherForSite().isEmpty() || object.getTeacherForSite() == null) {
-                Teacher teacher = teacherService.getById(object.getTeacher().getId());
-                object.setTeacherForSite(
-                                teacher.getSurname() + " "
-                                + teacher.getName() + " "
-                                + teacher.getPatronymic());
-            }
             //Fill in subject for site by subject name (from JSON) if subject for site is empty or null
             if (object.getSubjectForSite().isEmpty() || object.getSubjectForSite() == null) {
                 Subject subject = subjectService.getById(object.getSubject().getId());
@@ -139,7 +144,12 @@ public class LessonServiceImpl implements LessonService {
     @Override
     public List<Lesson> getAllForGroup(Long groupId) {
         log.info("In getAllForGroup(groupId = [{}])",  groupId);
-        return lessonRepository.getAllForGroup(groupId, semesterService.getCurrentSemester().getId());
+        List<Lesson> lessons = lessonRepository.getAllForGroup(groupId, semesterService.getCurrentSemester().getId());
+        lessons.forEach(e -> {
+            Hibernate.initialize(e.getSemester().getPeriods());
+            Hibernate.initialize(e.getSemester().getGroups());
+        });
+        return lessons;
     }
 
     /**
@@ -174,7 +184,7 @@ public class LessonServiceImpl implements LessonService {
         return lessonRepository.countLessonDuplicatesWithIgnoreId(lesson) != 0;
     }
 
-    /*
+    /**
      * The method used for getting list of lessons from database by semesterId
      *
      * @param semesterId Semester id for getting all lessons by this id from db
@@ -183,7 +193,12 @@ public class LessonServiceImpl implements LessonService {
     @Override
     public List<Lesson> getLessonsBySemester(Long semesterId) {
         log.info("In getLessonsBySemester(semesterId = [{}])", semesterId);
-        return lessonRepository.getLessonsBySemester(semesterId);
+        List<Lesson> lessons = lessonRepository.getLessonsBySemester(semesterId);
+        lessons.forEach(e -> {
+            Hibernate.initialize(e.getSemester().getPeriods());
+            Hibernate.initialize(e.getSemester().getGroups());
+        });
+        return lessons;
     }
 
     /**
@@ -230,9 +245,12 @@ public class LessonServiceImpl implements LessonService {
      */
     @Override
     public List<Lesson> getLessonsBySubjectIdTeacherIdSemesterIdLessonTypeAndExcludeCurrentLessonId(Lesson lesson) {
-        log.info("In getLessonsBySubjectForSiteTeacherForSiteAndSemester(lesson = [{}]", lesson);
+        log.info("In getLessonsBySubjectIdTeacherIdSemesterIdLessonTypeAndExcludeCurrentLessonId(lesson = [{}]", lesson);
         List<Lesson> lessons = lessonRepository.getLessonsBySubjectIdTeacherIdSemesterIdLessonTypeAndExcludeCurrentLessonId(lesson);
-        lessons.forEach(e -> Hibernate.initialize(e.getSemester().getPeriods()));
+        lessons.forEach(e -> {
+            Hibernate.initialize(e.getSemester().getPeriods());
+            Hibernate.initialize(e.getSemester().getGroups());
+        });
         return lessons;
     }
 }

@@ -11,7 +11,7 @@ public class LessonInfoDTO {
     private Long id;
     private int hours;
     private SemesterDTO semester;
-    private String teacherForSite;
+    private String linkToMeeting;
     private String subjectForSite;
     private LessonType lessonType;
     private SubjectDTO subject;

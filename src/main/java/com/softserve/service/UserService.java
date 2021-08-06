@@ -1,8 +1,6 @@
 package com.softserve.service;
 
-import com.softserve.dto.UserDataForChangeDTO;
 import com.softserve.entity.User;
-import com.softserve.security.jwt.JwtUser;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import java.util.List;

@@ -72,14 +72,26 @@ export const ShowStudentsDialog = props => {
         })
         setCheckBoxStudents(studentsTmp);
     }
-   const handleAllChecked = (event,pageItemsCount) => {
+   const handleAllChecked = (event,pageItemsCount,page,rowsPerPage) => {
         let studentsTmp = [...checkBoxStudents];
-
-        const resPage=pageItemsCount>checkBoxStudents.length?checkBoxStudents.length:pageItemsCount;
-       for (let i = 0; i <resPage ; i++) {
+       for (let i = (page)*rowsPerPage; i <pageItemsCount+(page)*rowsPerPage ; i++) {
            studentsTmp[i].checked = event.target.checked
        }
         setCheckBoxStudents(studentsTmp)
+    }
+    const handleAllCheckedBtn = (pageItemsCount,page,rowsPerPage) => {
+        let studentsTmp = [...checkBoxStudents];
+        let start=(page)*rowsPerPage;
+        let finish=pageItemsCount+(page)*rowsPerPage;
+        while (start<finish){
+            if (studentsTmp[start].checked){
+                start++;
+            }
+            else {
+                break;
+            }
+        }
+        setCheckedAll(start===finish&&start!==0)
     }
     const handleAllClear = () => {
         let studentsTmp = [...checkBoxStudents];
@@ -148,19 +160,6 @@ export const ShowStudentsDialog = props => {
             resData.forEach(item=>updateStudentService({ ...item, prevGroup }));
         }
         handleClearCheckedAllBtn();
-        // const {value,label,...res}=isObjectEmpty(groupOption)?defaultGroup:groupOption;
-        // const currentStudents=[...checkBoxStudents];
-        // const resData=[];
-        // const prevGroup={id:defaultGroup.id};
-        // for (let i = 0; i < currentStudents.length; i++) {
-        //     const resItem=changeStudentItem(res,currentStudents[i]);
-        //     if(!isObjectEmpty(resItem)){
-        //         resData.push(resItem)
-        //     }
-        // };
-        // resData.forEach(item=>updateStudentService({ ...item, prevGroup }));
-        // handleClearCheckedAllBtn();
-
     }
     return (
         <Dialog
@@ -208,6 +207,7 @@ export const ShowStudentsDialog = props => {
                                                     handleChangeCheckedAllBtn={handleChangeCheckedAllBtn}
                                                     handleClearCheckedAllBtn={handleClearCheckedAllBtn}
                                                     checkedAllBtn={checkedAll}
+                                                    handleAllCheckedBtn={handleAllCheckedBtn}
                                 />
                             </span>
                             }
@@ -215,14 +215,6 @@ export const ShowStudentsDialog = props => {
                 </>
             </DialogTitle>
             <div className="buttons-container">
-                <Button
-                    className="dialog-button"
-                    variant="contained"
-                    onClick={() => onClose('')}
-                    color="primary"
-                >
-                    {i18n.t('common:close_title')}
-                </Button>
 
                 {students.length !== 0?
                 <Button
@@ -235,6 +227,14 @@ export const ShowStudentsDialog = props => {
                     {i18n.t('common:move_to_group_title')}
                 </Button>
                 :null}
+                <Button
+                    className="dialog-button"
+                    variant="contained"
+                    onClick={() => onClose('')}
+                    color="primary"
+                >
+                    {i18n.t('common:close_title')}
+                </Button>
             </div>
         </Dialog>
     );
