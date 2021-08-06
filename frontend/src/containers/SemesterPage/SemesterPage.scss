@@ -19,3 +19,11 @@
   .current {
     box-shadow: 0 0px 15px 1px $good-color
   }
+  .default{
+    width: 25px;
+    height: 25px;
+    border: 1px solid green;
+    border-radius: 50%;
+    box-shadow: 0 0px 4px 0.5px $good-color;
+    color: #028802;
+  }

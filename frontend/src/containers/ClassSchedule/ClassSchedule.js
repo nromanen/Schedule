@@ -20,8 +20,10 @@ import { useTranslation } from 'react-i18next';
 
 import { handleSnackbarOpenService } from '../../services/snackbarService';
 import { snackbarTypes } from '../../constants/snackbarTypes';
+import NavigationPage from '../../components/Navigation/NavigationPage';
+import { navigation, navigationNames } from '../../constants/navigation';
 
-export const ClassSchedule = props => {
+const ClassSchedule =(props) => {
     const { t } = useTranslation('formElements');
     const [open, setOpen] = useState(false);
     const [classId, setClassId] = React.useState(-1);
@@ -59,6 +61,8 @@ export const ClassSchedule = props => {
     };
 
     return (
+        <>
+            <NavigationPage name={navigationNames.CLASS_SCHEDULE_TITLE} val={navigation.BELLS}/>
         <div className="cards-container">
             <ConfirmDialog
                 selectedValue={''}
@@ -96,6 +100,7 @@ export const ClassSchedule = props => {
                 ))}
             </section>
         </div>
+        </>
     );
 };
 

@@ -14,10 +14,14 @@ import { TEACHER_FORM } from '../../constants/reduxForms';
 import { useTranslation } from 'react-i18next';
 
 import './AddTeacherForm.scss';
+import Select from 'react-select';
+import { ReduxFormSelect } from '../../helper/ReduxFormSelect';
+import renderSelectField from '../../share/renderedFields/select';
+import { getDepartmentByIdService } from '../../services/departmentService';
 
 let AddTeacher = props => {
     const { t } = useTranslation('formElements');
-    const { handleSubmit, pristine, submitting, reset } = props;
+    const { handleSubmit, pristine, submitting, reset,departments } = props;
 
     const teacher = props.teacher;
     const teacherId = teacher.id;
@@ -36,7 +40,9 @@ let AddTeacher = props => {
             surname: teacher.surname,
             name: teacher.name,
             patronymic: teacher.patronymic,
-            position: teacher.position
+            position: teacher.position,
+            email:teacher.email,
+            department: teacher.department.id
         });
     };
 
@@ -91,6 +97,33 @@ let AddTeacher = props => {
                     label={t('teacher_position')}
                     validate={[required]}
                 />
+                <Field
+                    className="form-field"
+                    name="email"
+                    id="email"
+                    component={renderTextField}
+                    type="email"
+                    placeholder={t('email_field')}
+                    label={t('email_field')}
+                    validate={[required]}
+                />
+                <Field
+                    name="department"
+                    className="week-days"
+                    component={renderSelectField}
+                    label={t('department_teachers_label')}
+                    type="text"
+                    onChange={({target})=> {
+                        getDepartmentByIdService(target.value)
+                    }}
+                >
+                    <option />
+                    {departments.map((item) => (
+                        <option key={item.id} value={item.value}>
+                            {item.label}
+                        </option>
+                    ))}
+                </Field>
 
                 <div className="form-buttons-container">
                     <Button

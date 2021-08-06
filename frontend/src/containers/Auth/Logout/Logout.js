@@ -3,12 +3,15 @@ import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import { logout } from '../../../redux/actions/index';
-
+import { setScheduleSemesterIdService } from '../../../services/scheduleService';
+import { useHistory } from 'react-router-dom';
 const Logout = props => {
     useEffect(() => {
         props.onLogout();
     }, []);
-
+    // useEffect(()=>setScheduleSemesterIdService(0))
+    // const history=useHistory();
+    // useEffect(()=>history.push("/"));
     return <Redirect to="/" />;
 };
 

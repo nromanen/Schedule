@@ -1,12 +1,16 @@
 package com.softserve.controller;
 
 import com.softserve.dto.TeacherDTO;
+import com.softserve.dto.TeacherForUpdateDTO;
 import com.softserve.dto.TeacherWishDTO;
 import com.softserve.entity.Teacher;
 import com.softserve.entity.User;
 import com.softserve.entity.enums.Role;
-import com.softserve.service.TeacherService;
+import com.softserve.exception.MessageNotSendException;
 import com.softserve.mapper.TeacherMapper;
+import com.softserve.service.MailService;
+import com.softserve.service.ScheduleService;
+import com.softserve.service.TeacherService;
 import com.softserve.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -15,6 +19,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import javax.mail.MessagingException;
 import java.util.List;
 
 
@@ -26,12 +32,14 @@ public class TeacherController {
     private final TeacherService teacherService;
     private final TeacherMapper teacherMapper;
     private final UserService userService;
+    private final ScheduleService scheduleService;
 
     @Autowired
-    public TeacherController(TeacherService teacherService, TeacherMapper teacherMapper, UserService userService) {
+    public TeacherController(TeacherService teacherService, TeacherMapper teacherMapper, UserService userService, ScheduleService scheduleService) {
         this.teacherService = teacherService;
         this.teacherMapper = teacherMapper;
         this.userService = userService;
+        this.scheduleService = scheduleService;
     }
 
     @GetMapping(path = {"/teachers", "/public/teachers"})
@@ -74,12 +82,12 @@ public class TeacherController {
 
     @PutMapping("/teachers")
     @ApiOperation(value = "Update existing teacher by id")
-    public ResponseEntity<TeacherDTO> update(@RequestBody TeacherDTO updateTeacherDTO) {
-        log.info("Enter into update method with updateTeacherDTO: {}",updateTeacherDTO);
-        Teacher teacherToUpdate = teacherMapper.teacherDTOToTeacher(updateTeacherDTO);
+    public ResponseEntity<TeacherForUpdateDTO> update(@RequestBody TeacherForUpdateDTO teacherForUpdateDTO) {
+        log.info("Enter into update method with updateTeacherDTO: {}", teacherForUpdateDTO);
+        Teacher teacherToUpdate = teacherMapper.teacherForUpdateDTOToTeacher(teacherForUpdateDTO);
         teacherToUpdate.setUserId(teacherService.getById(teacherToUpdate.getId()).getUserId());
         Teacher teacher = teacherService.update(teacherToUpdate);
-        return ResponseEntity.status(HttpStatus.OK).body(teacherMapper.teacherToTeacherDTO(teacher));
+        return ResponseEntity.status(HttpStatus.OK).body(teacherMapper.teacherToTeacherForUpdateDTO(teacher));
     }
 
     @DeleteMapping("/teachers/{id}")
@@ -110,5 +118,13 @@ public class TeacherController {
     public ResponseEntity<List<TeacherDTO>> getAllNotRegisteredTeachers() {
         log.info("Enter into getAllNotRegisteredTeachers method");
         return ResponseEntity.ok(teacherMapper.teachersToTeacherDTOs(teacherService.getAllTeacherWithoutUser()));
+    }
+
+    @GetMapping("/send-pdf-to-email/semester/{id}")
+    @ApiOperation(value = "Send pdf with schedule to teachers emails")
+    public ResponseEntity sendSchedulesToEmail(@PathVariable("id") Long semesterId, @RequestParam Long[] teachersId) {
+        log.info("Enter into sendPDFToEmail method with teachers id: {} and semester id: {}", teachersId, semesterId);
+        scheduleService.sendScheduleToTeachers(semesterId, teachersId);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 }

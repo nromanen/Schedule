@@ -48,6 +48,7 @@ export {
     checkAvailabilitySchedule,
     setScheduleGroupId,
     setCurrentSemester,
+    setDefaultSemester,
     setScheduleTeacherId,
     setTeacherSchedule,
     setScheduleSemesterId,

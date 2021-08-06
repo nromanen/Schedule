@@ -18,6 +18,8 @@ import busyRooms from './busyRooms';
 import semesters from './semesters';
 import users from './users';
 import freeRooms from './freeRooms';
+import departments from './departments';
+import students from './students';
 
 const rootReducer = combineReducers({
     lesson,
@@ -37,6 +39,8 @@ const rootReducer = combineReducers({
     busyRooms,
     semesters,
     freeRooms,
+    departments,
+    students,
 
     form: formReducer
 });

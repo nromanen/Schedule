@@ -91,7 +91,8 @@ const formatObj = (formValues, teacherId) => {
             semester: { id: formValues.semester },
             subject: { id: formValues.subject },
             subjectForSite: formValues.subjectForSite,
-            teacherForSite: formValues.teacherForSite
+            // teacherForSite: formValues.teacherForSite
+            linkToMeeting:formValues.linkToMeeting
         };
     return obj;
 };

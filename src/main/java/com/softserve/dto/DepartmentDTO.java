@@ -3,9 +3,8 @@ package com.softserve.dto;
 import lombok.Data;
 
 @Data
-public class TeacherIdDTO {
+public class DepartmentDTO {
     private Long id;
     private String name;
-    private String surname;
-    private String patronymic;
+    private boolean disable;
 }

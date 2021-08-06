@@ -9,6 +9,12 @@ a.pdf_link {
         margin: 0px 10px;
     }
 }
+.top{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
 .MuiTableContainer-root {
     max-height: 40em;
     max-width: 100%;

@@ -12,7 +12,7 @@ import lombok.*;
 public class LessonForTeacherScheduleDTO {
     //@EqualsAndHashCode.Exclude
     private Long id;
-    private String teacherForSite;
+    private String linkToMeeting;
     private String subjectForSite;
     private LessonType lessonType;
    // @EqualsAndHashCode.Exclude

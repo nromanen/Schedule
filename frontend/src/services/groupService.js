@@ -17,8 +17,9 @@ import { errorHandler, successHandler } from '../helper/handlerAxios';
 import i18n from '../helper/i18n';
 import { resetFormHandler } from '../helper/formHelper';
 
-export const selectGroupService = groupId =>
+export const selectGroupService = groupId => {
     store.dispatch(selectGroup(groupId));
+}
 
 export const handleGroupService = values =>
     values.id ? updateGroupService(values) : createGroupService(values);

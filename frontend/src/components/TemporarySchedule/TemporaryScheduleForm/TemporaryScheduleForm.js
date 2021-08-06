@@ -12,7 +12,7 @@ import renderCheckboxField from '../../../share/renderedFields/checkbox';
 import renderSelectField from '../../../share/renderedFields/select';
 import renderTextField from '../../../share/renderedFields/input';
 
-import { handleTeacherInfo } from '../../../helper/handleTeacherInfo';
+import { handleTeacherInfo } from '../../../helper/renderTeacher';
 import {
     setValueToSubjectForSiteHandler,
     setValueToTeacherForSiteHandler

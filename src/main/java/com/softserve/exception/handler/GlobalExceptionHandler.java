@@ -119,7 +119,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         if (cause instanceof PSQLException) {
             PSQLException consEx = (PSQLException) cause;
             ApiError apiError = new ApiError(HttpStatus.INTERNAL_SERVER_ERROR);
-            apiError.setMessage("Object will not be deleted while there are references pointing to it");
+            apiError.setMessage(ex.getMessage());
             apiError.setDebugMessage(consEx.getLocalizedMessage());
             return buildResponseEntity(apiError);
         }
@@ -139,6 +139,17 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(DeleteDisabledException.class)
     protected ResponseEntity<Object> handleDeleteDisabledException(
             DeleteDisabledException ex) {
+        ApiError apiError = new ApiError(BAD_REQUEST);
+        apiError.setMessage(ex.getMessage());
+        apiError.setDebugMessage(ex.getMessage());
+        log.error(ex.getMessage());
+        return buildResponseEntity(apiError);
+    }
+
+    // Handle MessageNotSendException. Triggered when we cannot send message on email.
+    @ExceptionHandler(MessageNotSendException.class)
+    protected ResponseEntity<Object> handleMessageNotSendException(
+            MessageNotSendException ex) {
         ApiError apiError = new ApiError(BAD_REQUEST);
         apiError.setMessage(ex.getMessage());
         apiError.setDebugMessage(ex.getMessage());

@@ -33,9 +33,11 @@ const SearchPanel = ({ SearchChange, showDisabled, showArchived }) => {
                     checkedArchived: false,
                     [event.target.name]: event.target.checked
                 });
-                showDisabled();
+
                 break;
         }
+        showDisabled();
+
     };
 
     const onSearchChange = e => {
