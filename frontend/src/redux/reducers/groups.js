@@ -37,8 +37,9 @@ const groups = (state = initialState, action) => {
 
         case actionTypes.SELECT_GROUP:
             let group = state.groups.filter(
-                group => group.id === action.result
+                group => group.id === Number(action.result)
             )[0];
+
             if (!group) {
                 group = { id: null };
             }

@@ -12,9 +12,9 @@ import { required, uniqueSubject, maxLengthValue, uniqueDepartment } from '../..
 
 const AddDepartment = props => {
     const { t } = useTranslation('formElements');
-    const {handleSubmit,clear,department,pristine,submitting}=props;
+    const {handleSubmit,clear,department,pristine,submitting,editDepartment}=props;
     useEffect(() => {
-        if (department) {
+        if (department&&editDepartment) {
             if (department.id) {
                 props.initialize({
                     name: department.name,

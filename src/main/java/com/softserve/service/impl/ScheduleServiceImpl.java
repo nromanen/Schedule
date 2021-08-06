@@ -910,7 +910,7 @@ return fullScheduleForTeacherByDateRange(dateRangeSchedule,  fromDate, toDate);
         Teacher teacher = teacherService.getById(teacherId);
         ScheduleForTeacherDTO schedule = getScheduleForTeacher(semesterId, teacher.getId());
         PdfReportGenerator generatePdfReport = new PdfReportGenerator();
-        ByteArrayOutputStream bos = generatePdfReport.teacherScheduleReport(schedule);
+        ByteArrayOutputStream bos = generatePdfReport.teacherScheduleReport(schedule, Locale.ENGLISH);
         String teacherEmail = userService.getById(Long.valueOf(teacher.getUserId())).getEmail();
         mailService.send("Schedule.pdf", teacherEmail, "Schedule", String.format("Schedule for %s %s %s", teacher.getSurname() ,teacher.getName(), teacher.getPatronymic()), bos);
     }

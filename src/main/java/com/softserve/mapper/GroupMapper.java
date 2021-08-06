@@ -18,6 +18,5 @@ public interface GroupMapper {
     GroupForUpdateDTO groupToGroupForUpdateDTO(Group group);
     Group groupForUpdateDTOToGroup(GroupForUpdateDTO groupForUpdateDTO);
 
-
-    List<GroupDTO> convertListToDtoList(List<Group> groups);
+    List<GroupDTO> groupsToGroupDTOs(List<Group> groups);
 }
