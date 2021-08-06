@@ -136,7 +136,7 @@ public class SemesterController {
     }
 
     @GetMapping("/semesters/default/groups")
-    @ApiOperation(value = "Get the list of all groups for current semester")
+    @ApiOperation(value = "Get the list of all groups for default semester")
     public ResponseEntity<List<GroupDTO>> getGroupsForDefaultSemester(){
         log.info("In getGroupsForDefaultSemester"    );
         List<Group> groups = groupService.getGroupsForDefaultSemester();
