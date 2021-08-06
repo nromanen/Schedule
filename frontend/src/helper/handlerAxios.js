@@ -15,3 +15,7 @@ export const errorHandler = error => {
 export const successHandler = message => {
     handleSnackbarOpenService(true, snackbarTypes.SUCCESS, message);
 };
+
+export const infoHandler = message => {
+    handleSnackbarOpenService(true, snackbarTypes.INFO, message);
+};

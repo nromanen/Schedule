@@ -36,6 +36,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const GroupSchedulePageTop = props => {
+    const [groupDisabled,setGroupDisabled]=useState(true);
     const classes = useStyles();
     const { t } = useTranslation('common');
     const {
@@ -59,6 +60,14 @@ const GroupSchedulePageTop = props => {
     useEffect(() => showAllPublicGroupsService(semesterId), [semesterId]);
     useEffect(() => showAllPublicTeachersService(), []);
     useEffect(() => showAllPublicSemestersService(), []);
+    useEffect(() => {
+        if(groups.length!==0){
+            setGroupDisabled(false)
+        }
+        else {
+            setGroupDisabled(true)
+        }
+    }, [groups]);
     const renderSemesterList = () => {
         if (semesters) {
             if (semesters.length > 1) {
@@ -117,6 +126,7 @@ const GroupSchedulePageTop = props => {
     };
     const renderGroupList=()=>{
        return (<Field
+            disabled={groupDisabled}
             id="group"
             name="group"
             component={renderSelectField}

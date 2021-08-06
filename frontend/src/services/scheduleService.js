@@ -2,7 +2,7 @@ import { store } from '../index';
 import React, { useEffect } from 'react';
 import axios from '../helper/axios';
 import i18n from '../helper/i18n';
-import { errorHandler, successHandler } from '../helper/handlerAxios';
+import { errorHandler, infoHandler, successHandler } from '../helper/handlerAxios';
 
 import {
     checkAvailabilitySchedule,
@@ -47,7 +47,7 @@ import {
     FOR_TEACHER_SCHEDULE_URL,
     CLEAR_SCHEDULE_URL,
     ROOMS_AVAILABILITY,
-    SCHEDULE_ITEM_ROOM_CHANGE, TEACHER_URL
+    SCHEDULE_ITEM_ROOM_CHANGE, TEACHER_URL, SEMESTERS_URL, GROUPS_URL
 } from '../constants/axios';
 
 import { snackbarTypes } from '../constants/snackbarTypes';
@@ -2239,10 +2239,19 @@ export const setScheduleSemesterIdService = semesterId => {
 };
 
 export const showAllPublicGroupsService = (id) => {
+    if(id!==null&&id!==undefined)
     axios
-        .get(`/semesters/${id}/groups`)
+        .get(`/${SEMESTERS_URL}/${id}/${GROUPS_URL}`)
         .then(response => {
             store.dispatch(showAllGroups(response.data.sort((a, b) => a - b)));
+            if(response.data.length===0) {
+                infoHandler(
+                    i18n.t('serviceMessages:chosen_semester_has_not_groups', {
+                        cardType: i18n.t('formElements:chosen_semester_label'),
+                        actionType: i18n.t('serviceMessages:group_label')
+                    })
+                );
+            }
         })
         .catch(err => errorHandler(err));
 };
