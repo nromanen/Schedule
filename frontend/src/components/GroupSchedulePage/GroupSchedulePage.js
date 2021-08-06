@@ -278,11 +278,12 @@ const GroupSchedulePage = props => {
      //         getFullSchedule();
      //     }
      // })
+
     useEffect(()=> {
         if((scheduleType==="full"&&fullSchedule.length===0)) {
             getFullSchedule();
         }
-    })
+    },)
     useEffect(()=>{
         getDefaultSemesterService()
     },[])
@@ -308,6 +309,7 @@ const GroupSchedulePage = props => {
        const group=params.get("group");
 
        if(semester!==null) {
+           console.log(semester)
            handleSubmit({ semester, 'group': group != null ? group : 0, 'teacher': teacher != null ? teacher : 0 });
         return null
        }

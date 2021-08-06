@@ -47,6 +47,7 @@ const GroupSchedulePageTop = props => {
         submitting
     } = props;
     const isLoading = props.loading;
+    const [semesterId,setSemesterId]=useState(props.initialValues.semester);
     let loadingContainer = '';
     if (isLoading) {
         loadingContainer = (
@@ -55,10 +56,9 @@ const GroupSchedulePageTop = props => {
             </section>
         );
     }
-    useEffect(() => showAllPublicGroupsService(), []);
+    useEffect(() => showAllPublicGroupsService(semesterId), [semesterId]);
     useEffect(() => showAllPublicTeachersService(), []);
     useEffect(() => showAllPublicSemestersService(), []);
-
     const renderSemesterList = () => {
         if (semesters) {
             if (semesters.length > 1) {
@@ -71,9 +71,7 @@ const GroupSchedulePageTop = props => {
                         label={t('formElements:semester_label')}
                         type="text"
                         validate={[required]}
-
-
-
+                        onChange={(e)=>setSemesterId(e.target.value)}
                     >
                         <option />
                         {semesters.map((semester, index) => (
