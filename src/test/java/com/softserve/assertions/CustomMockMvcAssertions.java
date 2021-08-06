@@ -35,28 +35,28 @@ public class CustomMockMvcAssertions {
         this.defaultUrlWithId = defaultUrl + "/{id}";
     }
 
-    public <T> void assertThatReceivedByIdEntityIsEqualTo(T expected, int id) throws Exception {
-        assertThatReceivedByIdEntityIsEqualTo(expected, id, defaultUrlWithId);
+    public <T> void assertForGetById(int id, T expected) throws Exception {
+        assertForGetById(id, expected, defaultUrlWithId);
     }
 
-    public <T> void assertThatReceivedByIdEntityIsEqualTo(T expected, int id, String url) throws Exception {
+    public <T> void assertForGetById(int id, T expected, String url) throws Exception {
         MockHttpServletRequestBuilder getByIdRequest = get(url, id).contentType(MediaType.APPLICATION_JSON);
         performRequestWithReturnedStatusOkAndExpectedObject(getByIdRequest, expected);
     }
 
-    public <T> void assertThatReturnedByGetRequestListHas(T expected) throws Exception {
-        assertThatReturnedByGetRequestListHas(expected, defaultUrl);
+    public <T> void assertForGetListWithOneEntity(T expected) throws Exception {
+        assertForGetListWithOneEntity(expected, defaultUrl);
     }
 
-    public <T> void assertThatReturnedByGetRequestListHas(T expected, String url) throws Exception {
-        assertThatReturnedByGetRequestListHas(Collections.singletonList(expected), url);
+    public <T> void assertForGetListWithOneEntity(T expected, String url) throws Exception {
+        assertForGetList(Collections.singletonList(expected), url);
     }
 
-    public <T> void assertThatReturnedByGetRequestListHas(List<T> expected) throws Exception {
-        assertThatReturnedByGetRequestListHas(expected, defaultUrl);
+    public <T> void assertForGetList(List<T> expected) throws Exception {
+        assertForGetList(expected, defaultUrl);
     }
 
-    public <T> void assertThatReturnedByGetRequestListHas(List<T> expected, String url) throws Exception {
+    public <T> void assertForGetList(List<T> expected, String url) throws Exception {
         mockMvc.perform(get(url).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"))
@@ -64,38 +64,36 @@ public class CustomMockMvcAssertions {
                 .andExpect(content().string(objectMapper.writeValueAsString(expected)));
     }
 
-    public <T> void assertThatReturnedByGetRequestEntityIsEqualTo(T expected, String url) throws Exception {
+    public <T> void assertForGet(T expected, String url) throws Exception {
         MockHttpServletRequestBuilder getRequest = get(url).contentType(MediaType.APPLICATION_JSON);
         performRequestWithReturnedStatusOkAndExpectedObject(getRequest, expected);
     }
 
-    public <T> void assertThatGetByIdRequestReturnedNotFound(int id) throws Exception {
-        assertThatGetByIdRequestReturnedNotFound(id, defaultUrlWithId);
+    public <T> void assertForGetWhenEntityNotFound(int id) throws Exception {
+        assertForGetWhenEntityNotFound(id, defaultUrlWithId);
     }
 
-    public <T> void assertThatGetByIdRequestReturnedNotFound(int id, String url) throws Exception {
+    public <T> void assertForGetWhenEntityNotFound(int id, String url) throws Exception {
         mockMvc.perform(get(url, id).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
     }
 
-    public <T> void assertThatUpdatedEntityIsEqualTo(T expected) throws Exception {
-        assertThatUpdatedEntityIsEqualTo(expected, defaultUrl);
+    public <T> void assertForUpdate(T expected) throws Exception {
+        assertForUpdate(expected, defaultUrl);
     }
 
-    public <T> void assertThatUpdatedEntityIsEqualTo(T expected, String url) throws Exception {
+    public <T> void assertForUpdate(T expected, String url) throws Exception {
         MockHttpServletRequestBuilder putRequest = put(url).content(objectMapper.writeValueAsString(expected))
                 .contentType(MediaType.APPLICATION_JSON);
         performRequestWithReturnedStatusOkAndExpectedObject(putRequest, expected);
     }
 
-    public <T> void assertThatSavedEntityIsEqualTo(T expected,
-                                                   Function<T, ResultMatcher> matcherIgnoringId) throws Exception {
-        assertThatSavedEntityIsEqualTo(expected, matcherIgnoringId, defaultUrl);
+    public <T> void assertForSave(T expected, Function<T, ResultMatcher> matcherIgnoringId) throws Exception {
+        assertForSave(expected, matcherIgnoringId, defaultUrl);
     }
 
-    public <T> void assertThatSavedEntityIsEqualTo(T expected,
-                                                   Function<T, ResultMatcher> matcherIgnoringId,
-                                                   String url) throws Exception {
+    public <T> void assertForSave(T expected, Function<T, ResultMatcher> matcherIgnoringId,
+                                  String url) throws Exception {
         mockMvc.perform(post(url).content(objectMapper.writeValueAsString(expected))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
@@ -103,23 +101,22 @@ public class CustomMockMvcAssertions {
                 .andExpect(matcherIgnoringId.apply(expected));
     }
 
-    public <T> void assertThatDeleteRequestReturnedOk(int id) throws Exception {
-        assertThatDeleteRequestReturnedOk(defaultUrlWithId, id);
+    public <T> void assertForDelete(int id) throws Exception {
+        assertForDelete(id, defaultUrlWithId);
     }
 
-    public <T> void assertThatDeleteRequestReturnedOk(String url, int id) throws Exception {
+    public <T> void assertForDelete(int id, String url) throws Exception {
         mockMvc.perform(delete(url, id).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
 
-    public <T> void assertThatReturnedBySaveRequestValidationErrorListHas(List<ApiValidationError> errorList,
-                                                                          T incorrectEntity) throws Exception {
-        assertThatReturnedBySaveRequestValidationErrorListHas(errorList, incorrectEntity, defaultUrl);
+    public <T> void assertForValidationErrorsOnSave(List<ApiValidationError> errorList,
+                                                    T incorrectEntity) throws Exception {
+        assertForValidationErrorsOnSave(errorList, incorrectEntity, defaultUrl);
     }
 
-    public <T> void assertThatReturnedBySaveRequestValidationErrorListHas(List<ApiValidationError> errorList,
-                                                                          T incorrectEntity,
-                                                                          String url) throws Exception {
+    public <T> void assertForValidationErrorsOnSave(List<ApiValidationError> errorList, T incorrectEntity,
+                                                    String url) throws Exception {
         MvcResult result = getResultOfBadPostRequest(incorrectEntity, url);
         ApiError apiError = objectMapper.readValue(result.getResponse().getContentAsString(), ApiError.class);
         assertThat(apiError.getSubErrors()).hasSameSizeAs(errorList).hasSameElementsAs(errorList);
