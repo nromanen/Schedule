@@ -4,19 +4,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.softserve.config.DBConfigTest;
 import com.softserve.config.MyWebAppInitializer;
 import com.softserve.config.WebMvcConfig;
-import com.softserve.dto.GroupDTO;
-import com.softserve.dto.LessonInfoDTO;
-import com.softserve.dto.SubjectDTO;
-import com.softserve.dto.TeacherNameDTO;
+import com.softserve.dto.*;
 import com.softserve.entity.Lesson;
-import com.softserve.mapper.GroupMapperImpl;
-import com.softserve.mapper.LessonInfoMapperImpl;
-import com.softserve.mapper.SubjectMapperImpl;
-import com.softserve.mapper.TeacherNameMapperImpl;
-import com.softserve.service.GroupService;
-import com.softserve.service.LessonService;
-import com.softserve.service.SubjectService;
-import com.softserve.service.TeacherService;
+import com.softserve.mapper.*;
+import com.softserve.service.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -186,24 +177,6 @@ public class LessonsControllerTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isInternalServerError());
-    }
-
-    @Test
-    public void returnBadRequestIfUpdateExistLesson() throws Exception {
-        LessonInfoDTO lessonDtoForUpdate = new LessonInfoDTO();
-        lessonDtoForUpdate.setId(4L);
-        lessonDtoForUpdate.setHours(1);
-        lessonDtoForUpdate.setLinkToMeeting("https://softserveinc.zoom.us/j/93198369163?pwd=Rk1GU281cDFtK1FCK3pJWXphRkJrQT09");
-        lessonDtoForUpdate.setSubjectForSite("History of USA");
-        lessonDtoForUpdate.setLessonType(LABORATORY);
-        lessonDtoForUpdate.setTeacher(new TeacherNameMapperImpl().teacherNameToTeacherDTO(teacherService.getById(5L)));
-        lessonDtoForUpdate.setSubject(new SubjectMapperImpl().subjectToSubjectDTO(subjectService.getById(5L)));
-        lessonDtoForUpdate.setGroup(new GroupMapperImpl().groupToGroupDTO(groupService.getById(5L)));
-
-        mockMvc.perform(put("/lessons", 4).content(objectMapper.writeValueAsString(lessonDtoForUpdate))
-                .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isBadRequest());
     }
 
     @Test
