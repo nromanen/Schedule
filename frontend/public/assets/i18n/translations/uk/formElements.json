@@ -1,7 +1,10 @@
 {
     "edit_title": "Редагування ",
     "send_letter_title": "Надіслати листа",
-    "check_unCheck_all_title": "Вибрати/Відмінити Всі",
+    "select_all": "Вибрати всіх",
+    "select_student": "Вибрати студента",
+    "check_students": "вибрати студент(а/ів)",
+    "student_actions": "Дії",
     "change_student": "Змінити студента",
     "rows_per_page": "Рядків на сторінку",
     "all_page": "Усі",
