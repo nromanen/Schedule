@@ -1,7 +1,6 @@
 package com.softserve.service.impl;
 
 import com.softserve.entity.Group;
-import com.softserve.entity.Period;
 import com.softserve.entity.Semester;
 import com.softserve.exception.EntityAlreadyExistsException;
 import com.softserve.exception.EntityNotFoundException;
@@ -18,7 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.DayOfWeek;
-import java.util.*;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
