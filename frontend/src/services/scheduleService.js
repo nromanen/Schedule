@@ -2193,7 +2193,6 @@ export const getFullSchedule = semesterId => {
     axios
         .get(FULL_SCHEDULE_URL + semesterId)
         .then(response => {
-            console.log("getFullSchedule",response.data)
             store.dispatch(setFullSchedule(response.data));
         })
         .catch(err => errorHandler(err));
