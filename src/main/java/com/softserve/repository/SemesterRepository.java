@@ -10,9 +10,9 @@ public interface SemesterRepository extends BasicRepository<Semester, Long> {
     Optional<Semester> getCurrentSemester();
     Optional<Semester> getSemesterByDescriptionAndYear(String description, int year);
     List<Semester> getDisabled();
-    int setCurrentSemesterToFalse();
+    int updateAllSemesterCurrentToFalse();
     int setCurrentSemester(Long semesterId);
     Optional<Semester> getDefaultSemester();
-    int setDefaultSemesterToFalse();
+    int updateAllSemesterDefaultToFalse();
     int setDefaultSemester(Long semesterId);
 }

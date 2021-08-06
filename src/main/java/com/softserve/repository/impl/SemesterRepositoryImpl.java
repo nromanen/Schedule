@@ -117,7 +117,7 @@ public class SemesterRepositoryImpl extends BasicRepositoryImpl<Semester, Long> 
      * @return number of updated rows
      */
     @Override
-    public int setCurrentSemesterToFalse() {
+    public int updateAllSemesterCurrentToFalse() {
         log.info("In setCurrentSemesterToFalse()");
         return  sessionFactory.getCurrentSession().createQuery(
                 "UPDATE Semester s set s.currentSemester = false  where currentSemester = true")
@@ -130,7 +130,7 @@ public class SemesterRepositoryImpl extends BasicRepositoryImpl<Semester, Long> 
      * @return number of updated rows
      */
     @Override
-    public int setDefaultSemesterToFalse() {
+    public int updateAllSemesterDefaultToFalse() {
         log.info("In setDefaultSemesterToFalse()");
         return  sessionFactory.getCurrentSession().createQuery(
                         "UPDATE Semester s set s.defaultSemester = false  where defaultSemester = true")

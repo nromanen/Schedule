@@ -1,7 +1,6 @@
 package com.softserve.service.impl;
 
 import com.softserve.entity.Group;
-import com.softserve.entity.Period;
 import com.softserve.entity.Semester;
 import com.softserve.exception.EntityAlreadyExistsException;
 import com.softserve.exception.EntityNotFoundException;
@@ -11,13 +10,17 @@ import com.softserve.repository.SemesterRepository;
 import com.softserve.service.PeriodService;
 import com.softserve.service.SemesterService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.CollectionUtils;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.DayOfWeek;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
 
 @Slf4j
 @Transactional
@@ -26,6 +29,8 @@ public class SemesterServiceImpl implements SemesterService {
 
     private final SemesterRepository semesterRepository;
     private final PeriodService periodService;
+    private final List<DayOfWeek> workDaysList = Arrays.asList(DayOfWeek.MONDAY, DayOfWeek.TUESDAY,
+            DayOfWeek.WEDNESDAY, DayOfWeek.THURSDAY, DayOfWeek.FRIDAY);
 
     @Autowired
     public SemesterServiceImpl(SemesterRepository semesterRepository, PeriodService periodService) {
@@ -70,54 +75,72 @@ public class SemesterServiceImpl implements SemesterService {
     /**
      * Method saves new semester to Repository
      *
-     * @param object Semester entity to be saved
+     * @param semester Semester entity to be saved
      * @return saved Semester entity
      */
     @Override
-    public Semester save(Semester object) {
-        log.info("In save(entity = [{}]", object);
-        if (isTimeInvalid(object)) {
-            throw new IncorrectTimeException("The end day cannot be before the start day");
-        }
-        if (isSemesterExistsByDescriptionAndYear(object.getDescription(), object.getYear())) {
-            throw new EntityAlreadyExistsException("Semester already exists with current description and year.");
-        }
-        checkIsEmpty(object);
-        return semesterRepository.save(object);
+    public Semester save(Semester semester) {
+        log.info("In save(entity = [{}]", semester);
+        checkConstraints(semester);
+        fillDefaultValues(semester);
+        setCurrentToFalse(semester);
+        setDefaultToFalse(semester);
+        return semesterRepository.save(semester);
     }
 
-    private void checkIsEmpty(Semester object) {
-        if (object.getDaysOfWeek().isEmpty()){
-            List<DayOfWeek> dayOfWeekList = Arrays.asList(DayOfWeek.MONDAY, DayOfWeek.TUESDAY, DayOfWeek.WEDNESDAY, DayOfWeek.THURSDAY, DayOfWeek.FRIDAY);
-            Set<DayOfWeek> dayOfWeekSet = new HashSet<>(dayOfWeekList);
-            object.setDaysOfWeek(dayOfWeekSet);
+    private void checkConstraints(Semester semester) {
+        if (isTimeInvalid(semester)) {
+            throw new IncorrectTimeException("The end day cannot be before the start day");
         }
-        if (object.getPeriods().isEmpty()){
-            Set<Period> periodSet = new HashSet<>(periodService.getFirstFourPeriods());
-            object.setPeriods(periodSet);
+        if (isSemesterExists(semester.getId(), semester.getDescription(), semester.getYear())) {
+            throw new EntityAlreadyExistsException("Semester already exists with current description and year.");
         }
-        if (object.isCurrentSemester()) {
-            semesterRepository.setCurrentSemesterToFalse();
+    }
+
+    private void fillDefaultValues(Semester semester) {
+        if (CollectionUtils.isEmpty(semester.getDaysOfWeek())) {
+            semester.setDaysOfWeek(new HashSet<>(workDaysList));
+        }
+        if (CollectionUtils.isEmpty(semester.getPeriods())) {
+            semester.setPeriods(new HashSet<>(periodService.getFirstFourPeriods()));
+        }
+    }
+
+    /**
+     * Method sets current semester in database to false while saving new current semester or updating current semester
+     * @param semester Semester entity to be saved or updated
+     */
+    private void setCurrentToFalse(Semester semester) {
+        if (semester.isCurrentSemester()) {
+            semesterRepository.updateAllSemesterCurrentToFalse();
+            semester.setCurrentSemester(true);
+        }
+    }
+
+    /**
+     * Method sets default semester in database to false while saving new default semester or updating default semester
+     * @param semester Semester entity to be saved or updated
+     */
+    private void setDefaultToFalse(Semester semester) {
+        if (semester.isDefaultSemester()) {
+            semesterRepository.updateAllSemesterDefaultToFalse();
+            semester.setDefaultSemester(true);
         }
     }
 
     /**
      * Method updates information for an existing semester in Repository
      *
-     * @param object Semester entity with updated fields
+     * @param semester Semester entity with updated fields
      * @return updated Semester entity
      */
     @Override
-    public Semester update(Semester object) {
-        log.info("In update(entity = [{}]", object);
-        if (isTimeInvalid(object)) {
-            throw new IncorrectTimeException("The end day cannot be before the start day");
-        }
-        if (isSemesterExistsByDescriptionAndYearForUpdate(object.getId(), object.getDescription(), object.getYear())) {
-            throw new EntityAlreadyExistsException("Semester already exists with current description and year.");
-        }
-        checkIsEmpty(object);
-        return semesterRepository.update(object);
+    public Semester update(Semester semester) {
+        log.info("In update(entity = [{}]", semester);
+        checkConstraints(semester);
+        setCurrentToFalse(semester);
+        setDefaultToFalse(semester);
+        return semesterRepository.update(semester);
     }
 
     /**
@@ -172,20 +195,15 @@ public class SemesterServiceImpl implements SemesterService {
                 object.getStartDay().equals(object.getEndDay());
     }
 
-    //check if there is a semester with description and year return true, else - false
-    private boolean isSemesterExistsByDescriptionAndYear(String description, int year) {
-        log.info("In isSemesterExistsByDescriptionAndYear (description = [{}], year = [{}])", description, year);
-        return semesterRepository.countSemesterDuplicatesByDescriptionAndYear(description, year) !=0 ;
-    }
-
-    private boolean isSemesterExistsByDescriptionAndYearForUpdate(Long semesterId, String description, int year){
-        log.info("In isSemesterExistsByDescriptionAndYearForUpdate (semesterId = [{}],description = [{}], year = [{}])", semesterId, description, year);
-        Semester semesterByDescriptionAndYear = semesterRepository.getSemesterByDescriptionAndYear(description, year).orElse(null);
-        if (semesterByDescriptionAndYear == null){
+    private boolean isSemesterExists(long semesterId, String description, int year){
+        log.info("In isSemesterExists (semesterId = [{}],description = [{}], year = [{}])", semesterId, description, year);
+        Semester existingSemester = semesterRepository.getSemesterByDescriptionAndYear(description, year).orElse(null);
+        if (existingSemester == null){
             return false;
         }
-        return semesterByDescriptionAndYear.getId() != semesterId;
+        return existingSemester.getId() != semesterId;
     }
+
     /**
      * The method used for getting all disabled semesters
      *
@@ -211,7 +229,7 @@ public class SemesterServiceImpl implements SemesterService {
     @Override
     public Semester changeCurrentSemester(Long semesterId) {
         log.info("In changeCurrentSemester(Long semesterId = [{}])", semesterId);
-        semesterRepository.setCurrentSemesterToFalse();
+        semesterRepository.updateAllSemesterCurrentToFalse();
         semesterRepository.setCurrentSemester(semesterId);
         return getById(semesterId);
     }
@@ -224,7 +242,7 @@ public class SemesterServiceImpl implements SemesterService {
     @Override
     public Semester changeDefaultSemester(Long semesterId) {
         log.info("In changeDefaultSemester(Long semesterId = [{}])", semesterId);
-        semesterRepository.setDefaultSemesterToFalse();
+        semesterRepository.updateAllSemesterDefaultToFalse();
         semesterRepository.setDefaultSemester(semesterId);
         return getById(semesterId);
     }
