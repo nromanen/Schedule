@@ -148,19 +148,6 @@ export const ShowStudentsDialog = props => {
             resData.forEach(item=>updateStudentService({ ...item, prevGroup }));
         }
         handleClearCheckedAllBtn();
-        // const {value,label,...res}=isObjectEmpty(groupOption)?defaultGroup:groupOption;
-        // const currentStudents=[...checkBoxStudents];
-        // const resData=[];
-        // const prevGroup={id:defaultGroup.id};
-        // for (let i = 0; i < currentStudents.length; i++) {
-        //     const resItem=changeStudentItem(res,currentStudents[i]);
-        //     if(!isObjectEmpty(resItem)){
-        //         resData.push(resItem)
-        //     }
-        // };
-        // resData.forEach(item=>updateStudentService({ ...item, prevGroup }));
-        // handleClearCheckedAllBtn();
-
     }
     return (
         <Dialog

@@ -18,7 +18,7 @@ import { getTeacherFullName } from './renderTeacher';
 import { useTranslation } from 'react-i18next';
 import { FaEnvelope } from 'react-icons/fa';
 import TableHead from '@material-ui/core/TableHead';
-import { withStyles } from '@material-ui/core';
+import { Checkbox, withStyles } from '@material-ui/core';
 import { FaEdit } from 'react-icons/all';
 import { Delete } from '@material-ui/icons';
 import ConfirmDialog from '../share/modals/dialog';
@@ -199,8 +199,14 @@ const handleAllOnPageClick = (event) => {
                     <TableRow>
                         <StyledTableCell>
                             <span className={'checked-all'}>
-                            <input id={'checked-all-input'} className={'checked-box'} type="checkbox" checked={checkedAllBtn} onClick={handleAllOnPageClick}  value="checkedAll" />
-                            <label to={'checked-all-input'}  >{t('check_students')}</label>
+                            <input
+                                id={'checked-all-input'}
+                                type="checkbox"
+                                checked={checkedAllBtn}
+                                onClick={handleAllOnPageClick}
+                                value="checkedAll"
+                                title={`${t('select_all')}`}
+                            />
                             </span>
                         </StyledTableCell>
                         <StyledTableCell>{t('student_label')}</StyledTableCell>
@@ -210,7 +216,7 @@ const handleAllOnPageClick = (event) => {
                                 title={`${t('send_letter_title')}`}
                             />
                         </StyledTableCell>
-                        <StyledTableCell>{t('change_student')}</StyledTableCell>
+                        <StyledTableCell>{t('student_actions')}</StyledTableCell>
                     </TableRow>
                 </TableHead>
 
@@ -221,7 +227,15 @@ const handleAllOnPageClick = (event) => {
                     ).map((student) => (
                         <StyledTableRow key={student.id}>
                             <StyledTableCell component="th" scope="row" align="center" style={{ width: 160 }}>
-                                <input key={student.id} onClick={handleCheckElement} type="checkbox" checked={student.checked} value={student.id} className={'checked-box'} />
+                                <input
+                                    key={student.id}
+                                    onClick={handleCheckElement}
+                                    type="checkbox"
+                                    checked={student.checked}
+                                    value={student.id}
+                                    className={'checked-box'}
+                                    title={`${t("select_student")} ${getTeacherFullName(student)}`}
+                                />
                             </StyledTableCell>
                             <StyledTableCell component="th" scope="row" align="center" style={{ width: 160 }}>
                                 {getTeacherFullName(student)}
