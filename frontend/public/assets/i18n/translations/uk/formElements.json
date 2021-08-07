@@ -71,7 +71,6 @@
     "teacher_wish_class_number": "номер пари",
     "teacher_wish_day": "День",
     "wish_label": "Бажання вчителя",
-
     "for_site_label": " для сайту",
     "not_selected_label": " не обрана",
     "for_all": "Для всіх",
@@ -107,6 +106,7 @@
     "Teacher_element": "цього викладача",
     "group_element": "цю групу",
     "student_element": "цього студента",
+    "students_file_label": "Студентів",
     "class_element": "ця пара",
     "room_element": "цю кімнату",
     "subject_element": "цей предмет",
