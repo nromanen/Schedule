@@ -1,6 +1,6 @@
 import * as moment from 'moment';
 import { connect } from 'react-redux';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Field, reduxForm } from 'redux-form';
 import Button from '@material-ui/core/Button';
@@ -20,6 +20,9 @@ import {
 import { getClassScheduleListService } from '../../services/classService';
 import { daysUppercase } from '../../constants/schedule/days';
 import { getClearOrCancelTitle, setDisableButton } from '../../helper/disableComponent';
+import { showAllGroupsService } from '../../services/groupService';
+import { MultiselectForGroups } from '../../helper/MultiselectForGroups';
+import { getFirstLetter } from '../../helper/renderTeacher';
 
 let AddSemesterForm = props => {
     const clearCheckboxes = () => {
@@ -36,9 +39,39 @@ let AddSemesterForm = props => {
         });
     };
     useEffect(() => getClassScheduleListService(), []);
+    useEffect(()=>showAllGroupsService(),[])
 
     const { t } = useTranslation('formElements');
-    const { handleSubmit, pristine, onReset, submitting,semester } = props;
+    const { handleSubmit, pristine, onReset, submitting,semester,groups } = props;
+    const [openGroupDialog,setOpenGroupDialog]=useState(false);
+    const [selected, setSelected] = useState([]);
+    const getGroupOptions=()=>{
+
+        return groups.map(item=>{return {id:item.id,value:item.id,label:`${item.title}`}});
+    }
+    const options=getGroupOptions();
+
+    const openDialogForGroup = () => {
+      setOpenGroupDialog(true)
+    }
+    const closeDialogForGroup = () => {
+        setOpenGroupDialog(false)
+    }
+    const clearSelection = () => {
+      setSelected([])
+    }
+    const onCancel = () => {
+      clearSelection();
+      closeDialogForGroup();
+    }
+
+    const onClose = () => {
+        closeDialogForGroup();
+    }
+    const onSubmit = (values) => {
+        console.log(selected);
+      handleSubmit(values);
+    }
 
     let prepSetCheckedClasses = {};
     useEffect(() => {
@@ -237,27 +270,68 @@ let AddSemesterForm = props => {
                 {props.semester.id ? t('edit_title') : t('create_title')}
                 {t('semestry_label')}
             </h2>
+            <MultiselectForGroups
+                open={openGroupDialog}
+                options={options}
+                value={selected}
+                onChange={setSelected}
+                onCancel={onCancel}
+                onClose={onClose}
+            />
+            <form onSubmit={onSubmit}>
+                {/*<Field*/}
+                {/*    component={MultiselectForGroups}*/}
+                {/*    label={t('common:current_label')}*/}
+                {/*    labelPlacement="start"*/}
 
-            <form onSubmit={handleSubmit}>
-                <div className="semester-checkbox">
-                    <Field
-                        name="currentSemester"
-                        label={t('common:current_label')}
-                        labelPlacement="start"
-                        component={renderCheckboxField}
-                        checked={current}
-                        onChange={(e)=>handleChange(e,setCurrent)}
+                {/*    name="groups"*/}
+                {/*    open={openGroupDialog}*/}
+                {/*    options={options}*/}
+                {/*    value={selected}*/}
+                {/*    onChange={setSelected}*/}
+                {/*    onCancel={onCancel}*/}
+                {/*    onClose={onClose}*/}
+
+                {/*/>*/}
+                {/*<MultiselectForGroups*/}
+                {/*    name="groups"*/}
+                {/*    open={openGroupDialog}*/}
+                {/*    options={options}*/}
+                {/*    value={selected}*/}
+                {/*    onChange={setSelected}*/}
+                {/*    onCancel={onCancel}*/}
+                {/*    onClose={onClose}*/}
+                {/*/>*/}
+
+                <div className="semester-checkbox group-options">
+                    <div>
+                        <Field
+                            name="currentSemester"
+                            label={t('common:current_label')}
+                            labelPlacement="start"
+                            component={renderCheckboxField}
+                            checked={current}
+                            onChange={(e)=>handleChange(e,setCurrent)}
+                            color="primary"
+                        />
+                        <Field
+                            name="defaultSemester"
+                            label={t('common:default_label')}
+                            labelPlacement="start"
+                            component={renderCheckboxField}
+                            checked={byDefault}
+                            onChange={(e)=>handleChange(e,setByDefault)}
+                            color="primary"
+                        />
+                    </div>
+                    <Button
+                        variant="contained"
                         color="primary"
-                    />
-                    <Field
-                        name="defaultSemester"
-                        label={t('common:default_label')}
-                        labelPlacement="start"
-                        component={renderCheckboxField}
-                        checked={byDefault}
-                        onChange={(e)=>handleChange(e,setByDefault)}
-                        color="primary"
-                    />
+                        className="buttons-style "
+                        onClick={openDialogForGroup}
+                    >
+                        {t('choose_groups_button_label')}
+                    </Button>
                 </div>
 
                 <Field
@@ -332,6 +406,7 @@ let AddSemesterForm = props => {
 const mapStateToProps = state => ({
     semester: state.semesters.semester,
     classScheduler: state.classActions.classScheduler,
+    groups:state.groups.groups,
 
 });
 

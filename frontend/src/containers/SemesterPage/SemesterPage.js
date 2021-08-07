@@ -64,7 +64,10 @@ const SemesterPage = props => {
 
     const SearchChange = setTerm;
     const handleFormReset = () => clearSemesterService();
-    const submit = values => handleSemesterService(values);
+    const submit = values => {
+        console.log("SEMESTER page")
+        handleSemesterService(values);
+    };
     const handleEdit = semesterId => selectSemesterService(semesterId);
     const handleCreateArchive = semesterId =>
         createArchiveSemesterService(semesterId);
