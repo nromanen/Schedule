@@ -358,7 +358,7 @@ public class ScheduleServiceImpl implements ScheduleService {
                         }
                     }
                 } catch (NullPointerException e) {
-                    e.printStackTrace();
+                    log.error(e.getMessage());
                 }
 
             }
@@ -399,7 +399,7 @@ public class ScheduleServiceImpl implements ScheduleService {
                     ).findFirst().orElse(new TemporarySchedule()))));
             temporaryScheduleDTO = temporaryScheduleMapper.convertToDtoForDashboard(temporarySchedule);
         } catch (NullPointerException e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
         }
         return temporaryScheduleDTO;
     }
@@ -913,16 +913,11 @@ return fullScheduleForTeacherByDateRange(dateRangeSchedule,  fromDate, toDate);
         PdfReportGenerator generatePdfReport = new PdfReportGenerator();
         ByteArrayOutputStream bos = generatePdfReport.teacherScheduleReport(schedule, language);
         String teacherEmail = userService.getById(Long.valueOf(teacher.getUserId())).getEmail();
-        mailService.send( "Schedule.pdf",
-                            teacherEmail,
-                    "Schedule",
-                            String.format   ( "Schedule for %s %s %s",
-                                                teacher.getSurname(),
-                                                teacher.getName(),
-                                                teacher.getPatronymic()
-                                            ),
-                            bos
-                        );
+        mailService.send("Schedule.pdf",
+                teacherEmail,
+                "Schedule",
+                String.format("Schedule for %s %s %s", teacher.getSurname(), teacher.getName(), teacher.getPatronymic()),
+                bos);
     }
 }
 
