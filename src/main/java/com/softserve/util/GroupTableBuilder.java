@@ -1,7 +1,6 @@
 package com.softserve.util;
 
 import com.itextpdf.text.*;
-import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.softserve.dto.*;
@@ -11,78 +10,60 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.text.MessageFormat;
+import java.time.DayOfWeek;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 
 @Slf4j
-public class GroupTableBuilder {
-
-    private static final String EMPTY_CELL = "--//--";
-    private final Style style = new Style();
+public class GroupTableBuilder extends BaseTableBuilder {
 
     /**
-     * Method used for generating group schedule table in pdf
+     * Constructs a GroupTableBuilder.
      *
-     * @param schedule for selected group and semester
-     * @param language for selected language
-     * @return PdfPTable schedule for group
-     * @throws DocumentException when creating table failed
-     * @throws IOException       when there's no needed resource (font file)
+     * @throws IOException if the font file could not be read
+     * @throws DocumentException if the font is invalid, or when size of table is wrong
      */
-    public PdfPTable createGroupTable(ScheduleForGroupDTO schedule, Locale language) throws DocumentException, IOException {
-        log.info("Enter into createGroupTable method with schedule {}", schedule);
+    public GroupTableBuilder() throws DocumentException, IOException {
+        super();
+    }
 
-        // getting number of columns, setting columns width when creating main table
-        int numColumns = schedule.getDays().size() + 1;
-        PdfPTable table = new PdfPTable(numColumns);
-        table.setWidthPercentage(100);
-        float columnWidthAverage = 7f / table.getNumberOfColumns();
-        //1st column width is about twice less than the others
-        float firstColumnWidth = columnWidthAverage / 1.5f;
-        float otherColumnWidth = (7f - firstColumnWidth) / (table.getNumberOfColumns() - 1);
-        float[] columnsWidth = new float[numColumns];
-        columnsWidth[0] = firstColumnWidth;
-        for (int i = 1; i < numColumns; i++) {
-            columnsWidth[i] = otherColumnWidth;
-        }
-        table.setWidths(columnsWidth);
+    /**
+     * Method used for creating group schedule table in pdf
+     *
+     * @param schedule the schedule of group
+     * @param language the selected language
+     * @return PdfPTable schedule for group
+     * @throws DocumentException if the table could not be created
+     */
+    public PdfPTable createGroupTable(ScheduleForGroupDTO schedule, Locale language) throws DocumentException {
+        log.info("Enter into createGroupTable method with schedule {} and language {}", schedule, language);
 
-        //loading Times new roman font from sources
-        BaseFont baseFont = BaseFont.createFont(Objects.requireNonNull(getClass().getClassLoader()
-                .getResource("font/times.ttf")).toString(), BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
+        // getting amount of columns, setting columns width when creating main table
+        int tableWidth = schedule.getDays().size() + 1;
+        PdfPTable table = generateEmptyTable(tableWidth);
 
         //creating table title cell
-        table.addCell(createTableTitleCell(baseFont, table, schedule, language));
+        table.addCell(createTitleCell(tableWidth, schedule, language));
 
-        //creating header cells
-        Font headFont = new Font(baseFont, 12, Font.BOLD, BaseColor.BLACK);
-        PdfPCell header = new PdfPCell(
-                new Phrase(StringUtils.capitalize(Translator.getInstance().getTranslation("period", language))
-                , headFont)
-        );
-        style.headerCellStyle(header);
-        table.addCell(header);
-
-        // getting all days from schedule, putting em into cells
-        for (DaysOfWeekWithClassesForGroupDTO days : schedule.getDays()) {
-            String day = Translator.getInstance().getTranslation(days.getDay().toString().toLowerCase(), language);
-            header = new PdfPCell(new Phrase(StringUtils.capitalize(day), headFont));
-            style.headerCellStyle(header);
-            table.addCell(header);
-        }
+        //creating table header cell
+        List<DayOfWeek> days = schedule.getDays()
+                .stream()
+                .map(DaysOfWeekWithClassesForGroupDTO::getDay)
+                .collect(Collectors.toList());
+        PdfPCell[] cells =  createHeaderCells(days, language);
+        Arrays.stream(cells).forEach(table::addCell);
 
         // getting all unique periods from schedule
         TreeSet<PeriodDTO> periods = getAllPeriods(schedule);
 
         // creating table cells with values
         PdfPCell cell;
-        Font cellFont = new Font(baseFont, 11, Font.NORMAL, BaseColor.BLACK);
-        Font linkFont = new Font(baseFont, 11, Font.NORMAL, BaseColor.BLUE);
 
         //getting in first loop layer - iterating every period
         for (PeriodDTO period : periods) {
@@ -94,29 +75,20 @@ public class GroupTableBuilder {
             table.addCell(cell);
             //getting in second loop layer - iterating days
             for (DaysOfWeekWithClassesForGroupDTO day : schedule.getDays()) {
-                cell = cellBuilder(day, period, cellFont, linkFont);
+                cell = createInnerCell(day, period);
                 table.addCell(cell);
             }
         }
         return table;
     }
 
-    // creating table title cell
-    private PdfPCell createTableTitleCell(BaseFont baseFont, PdfPTable table, ScheduleForGroupDTO schedule, Locale language) {
-        log.info("Enter into createTableTitleCell method with baseFont {} table {} and schedule {}", baseFont, table, schedule);
-
-        Font titleFont = new Font(baseFont, 14, Font.BOLD, BaseColor.WHITE);
-        String scheduleTitle = MessageFormat.format("{0} {1} {2}"
-                , StringUtils.capitalize(Translator.getInstance().getTranslation("schedule for", language))
-                , schedule.getGroup().getTitle()
-                , Translator.getInstance().getTranslation("group", language));
-        PdfPCell cellTitle = new PdfPCell(new Phrase(scheduleTitle, titleFont));
-        cellTitle.setColspan(table.getNumberOfColumns());
-        style.titleCellStyle(cellTitle);
-        return cellTitle;
-    }
-
-    // getting all periods from schedule using TreeSet to avoid duplicating values, then sorting them by start time
+    /**
+     *  Method used for getting all periods from schedule using TreeSet to avoid
+     *  duplicating values, then sorting them by start time
+     *
+     * @param schedule the schedule of group
+     * @return sorted treeSet of periodDTO
+     */
     private TreeSet<PeriodDTO> getAllPeriods(ScheduleForGroupDTO schedule) {
         log.info("Enter into getAllPeriods method with schedule {}", schedule);
 
@@ -131,40 +103,54 @@ public class GroupTableBuilder {
                 );
     }
 
-    // creating main table cells depending on whether they are odd or even
-    private PdfPCell cellBuilder(DaysOfWeekWithClassesForGroupDTO day, PeriodDTO period, Font cellFont, Font linkFont) {
-        log.info("Enter into cellBuilder method with day {} period {} and cellFont {}", day, period, cellFont);
+    /**
+     * Method used for creating title cell for table
+     *
+     * @param tableWidth the width of table
+     * @param schedule the schedule of group
+     * @param language the selected language
+     * @return PdfPTable schedule for group
+     */
+    private PdfPCell createTitleCell(int tableWidth, ScheduleForGroupDTO schedule, Locale language) {
+        log.info("Enter into createTableTitleCell method with tableWidth {} and schedule {} and language {}", tableWidth, schedule, language);
+
+        Font titleFont = new Font(baseFont, 14, Font.BOLD, BaseColor.WHITE);
+        String scheduleTitle = MessageFormat.format("{0} {1} {2}"
+                , StringUtils.capitalize(Translator.getInstance().getTranslation("schedule for", language))
+                , schedule.getGroup().getTitle()
+                , Translator.getInstance().getTranslation("group", language));
+        PdfPCell cellTitle = new PdfPCell(new Phrase(scheduleTitle, titleFont));
+        cellTitle.setColspan(tableWidth);
+        style.titleCellStyle(cellTitle);
+        return cellTitle;
+    }
+
+    /**
+     * Method used for creating  main table cells
+     * depending on whether they are odd or even
+     *
+     * @param day the day of week and classes for group
+     * @param period the period for group
+     * @return inner PdfPCell for table
+     */
+    private PdfPCell createInnerCell(DaysOfWeekWithClassesForGroupDTO day, PeriodDTO period) {
+        log.info("Enter into cellBuilder method with day {} period {}", day, period);
 
         PdfPCell cell = new PdfPCell(new Phrase(EMPTY_CELL, cellFont));
-        for (int k = 0; k < day.getClasses().size(); k++) {
+        for (int i = 0; i < day.getClasses().size(); i++) {
             // filling in column raws checking needed period
-            if (day.getClasses().get(k).getPeriod().equals(period)) {
+            if (day.getClasses().get(i).getPeriod().equals(period)) {
                 //checking if odd and even lessons r equal
-                if (day.getClasses().get(k).getWeeks().getEven() != null &&
-                        day.getClasses().get(k).getWeeks().getEven().equals(day.getClasses().get(k).getWeeks().getOdd())) {
-                    cell = generateCell(day.getClasses().get(k).getWeeks().getEven(), cellFont, linkFont);
+                if (day.getClasses().get(i).getWeeks().getEven() != null &&
+                        day.getClasses().get(i).getWeeks().getEven().equals(day.getClasses().get(i).getWeeks().getOdd())) {
+                    cell = generateCell(day.getClasses().get(i).getWeeks().getEven());
                 } else {
                     // creating new inner table with two cells - odd and even
                     PdfPTable inner = new PdfPTable(1);
-                    PdfPCell upperInnerCell;
-                    PdfPCell lowerInnerCell;
                     //upper (odd) cell
-                    if (day.getClasses().get(k).getWeeks().getOdd() == null) {
-                        upperInnerCell = new PdfPCell(new Phrase(EMPTY_CELL, cellFont));
-                    } else {
-                        upperInnerCell = generateCell(day.getClasses().get(k).getWeeks().getOdd(), cellFont, linkFont);
-                    }
-                    style.innerValueCellStyle(upperInnerCell);
-                    upperInnerCell.setBorderWidthBottom(0.5f);
-                    inner.addCell(upperInnerCell);
+                    inner.addCell(createUpperInnerCell(day, i));
                     //lower (even) cell
-                    if (day.getClasses().get(k).getWeeks().getEven() == null) {
-                        lowerInnerCell = new PdfPCell(new Phrase(EMPTY_CELL, cellFont));
-                    } else {
-                        lowerInnerCell = generateCell(day.getClasses().get(k).getWeeks().getEven(), cellFont, linkFont);
-                    }
-                    style.innerValueCellStyle(lowerInnerCell);
-                    inner.addCell(lowerInnerCell);
+                    inner.addCell(createLowerInnerCell(day, i));
                     // adding inner table to main table's cell
                     cell = new PdfPCell(inner);
                 }
@@ -174,35 +160,89 @@ public class GroupTableBuilder {
         return cell;
     }
 
-    // generating schedule text in table's cell
-    private PdfPCell generateCell(LessonsInScheduleDTO lessons, Font cellFont, Font linkFont) {
-        StringBuilder baseText = new StringBuilder();
-        StringBuilder linkText = new StringBuilder();
-        getBaseTextFromLessonsInScheduleDTO(baseText, lessons);
-        getLinkTextFromLessonsInScheduleDTO(linkText, lessons);
-        Phrase phrase = new Phrase(String.valueOf(baseText), cellFont);
+    /**
+     *  Method used for creating upper (odd) cell of table
+     *
+     * @param day the day of week and classes for group
+     * @param number the number of cell
+     * @return inner PdfPCell for table
+     */
+    private PdfPCell createUpperInnerCell(DaysOfWeekWithClassesForGroupDTO day, int number) {
+        PdfPCell upperInnerCell;
+        if (day.getClasses().get(number).getWeeks().getOdd() == null) {
+            upperInnerCell = new PdfPCell(new Phrase(EMPTY_CELL, cellFont));
+        } else {
+            upperInnerCell = generateCell(day.getClasses().get(number).getWeeks().getOdd());
+        }
+        style.innerValueCellStyle(upperInnerCell);
+        upperInnerCell.setBorderWidthBottom(0.5f);
+        return upperInnerCell;
+    }
+
+    /**
+     *  Method used for creating lower (even) cell of table
+     *
+     * @param day the day of week and classes for group
+     * @param number the number of cell
+     * @return inner PdfPCell for table
+     */
+    private PdfPCell createLowerInnerCell(DaysOfWeekWithClassesForGroupDTO day, int number) {
+        PdfPCell lowerInnerCell;
+        if (day.getClasses().get(number).getWeeks().getEven() == null) {
+            lowerInnerCell = new PdfPCell(new Phrase(EMPTY_CELL, cellFont));
+        } else {
+            lowerInnerCell = generateCell(day.getClasses().get(number).getWeeks().getEven());
+        }
+        style.innerValueCellStyle(lowerInnerCell);
+        return lowerInnerCell;
+    }
+
+    /**
+     *  Method used for generating schedule text in table's cell
+     *
+     * @param lessons the lessons of schedule
+     * @return inner PdfPCell for table
+     */
+    private PdfPCell generateCell(LessonsInScheduleDTO lessons) {
+        String baseText = getBaseTextFromLessonsInScheduleDTO(lessons);
+        String linkText = getLinkTextFromLessonsInScheduleDTO(lessons);
+        Phrase phrase = new Phrase(baseText, cellFont);
         Chunk chunk = new Chunk("follow the link", linkFont);
-        chunk.setAnchor(String.valueOf(linkText));
+        chunk.setAnchor(linkText);
         phrase.add(chunk);
         return new PdfPCell(phrase);
     }
 
-    // get all fields except linkToMeeting from LessonsInScheduleDTO
-    private void getBaseTextFromLessonsInScheduleDTO(StringBuilder baseText, LessonsInScheduleDTO lessons) {
+    /**
+     *  Method used for get subjectName, lesson type, teacher and room from lessons
+     *
+     * @param lessons the lessons of schedule
+     * @return text of subjectName, lesson type, teacher and room from lessons
+     */
+    private String getBaseTextFromLessonsInScheduleDTO(LessonsInScheduleDTO lessons) {
+        StringBuilder stringBuilder = new StringBuilder();
         String subjectName = lessons.getSubjectForSite();
         String lessonType = lessons.getLessonType().toLowerCase();
         String teacher = TeacherMapper.teacherDTOToTeacherForSite(lessons.getTeacher());
         String room = lessons.getRoom().getName();
-        baseText.append(subjectName).append(",\n")
+        stringBuilder.append(subjectName).append(",\n")
                 .append(lessonType).append(",\n")
                 .append(teacher).append(",\n")
                 .append(room).append("\n");
+        return stringBuilder.toString();
     }
 
-    // get link from LessonsInScheduleDTO
-    private void getLinkTextFromLessonsInScheduleDTO(StringBuilder baseText, LessonsInScheduleDTO lessons) {
+    /**
+     *  Method used for get link from lessons
+     *
+     * @param lessons the lessons of schedule
+     * @return text of link from lessons
+     */
+    private String getLinkTextFromLessonsInScheduleDTO(LessonsInScheduleDTO lessons) {
+        StringBuilder stringBuilder = new StringBuilder();
         String link = lessons.getLinkToMeeting();
-        baseText.append(link);
+        stringBuilder.append(link);
+        return stringBuilder.toString();
     }
 }
 
