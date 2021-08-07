@@ -1,0 +1,34 @@
+.edit-cell{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  align-content: center;
+  margin: 0 20px;
+  .edit-button{
+    color: #265d26;
+    margin-right: 10px;
+    font-size: 25px;
+  }
+  .delete-button{
+    color: #de2f23;
+    font-size: 25px;
+  }
+}
+.checked-all{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 200px;
+  align-items: center;
+  margin: 10px;
+  label{
+    font-size: 16px;
+    margin-left: 8px;
+  }
+
+}
+.checked-box{
+  width: 15px;
+  height: 15px;
+}

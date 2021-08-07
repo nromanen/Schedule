@@ -41,6 +41,12 @@ export const showAllTeachers = teachers => {
         result: teachers
     };
 };
+export const getAllTeachersByDepartmentId=teachers=>{
+    return{
+        type:actionsType.GET_TEACHERS_BY_DEPARTMENT,
+        result:teachers
+    }
+}
 
 export const setDisabledTeachers = teachers => {
     return {

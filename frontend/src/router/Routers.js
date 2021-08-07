@@ -65,7 +65,16 @@ const Routers = props => {
 
                 <Route path={links.LessonPage}  component={AdminPage} />
                 <Route path={links.TeacherList}  component={TeacherList} />
-                <Route path={links.GroupList}  component={GroupList} />
+                <Route exact path={links.GroupList} component={GroupList} />
+
+                <Route path={`${links.GroupList}${links.Group}${links.Edit}${links.IdParam}`}  component={GroupList} />
+                <Route path={`${links.GroupList}${links.Group}${links.Delete}${links.IdParam}`}  component={GroupList} />
+                <Route path={`${links.GroupList}${links.Group}${links.IdParam}${links.AddStudent}`}  component={GroupList} />
+                <Route path={`${links.GroupList}${links.Group}${links.IdParam}${links.SetDisable}`}  component={GroupList} />
+                <Route path={`${links.GroupList}${links.Group}${links.IdParam}${links.ShowStudents}`}  component={GroupList} />
+                <Route path={`${links.GroupList}${links.Group}${links.IdParam}${links.Student}${links.IdStudentParam}${links.Edit}`}  component={GroupList} />
+                <Route path={`${links.GroupList}${links.Group}${links.IdParam}${links.Student}${links.IdStudentParam}${links.Delete}`}  component={GroupList} />
+                {/*${links.GroupList}${links.Group}/${group.id}${links.AddStudent}*/}
                 <Route path={links.ClassScheduleTitle}  component={ClassSchedule} />
                 <Route path={links.RoomList}  component={RoomList} />
                 <Route path={links.SubjectPage}  component={SubjectPage} />
@@ -84,6 +93,7 @@ const Routers = props => {
                 <Route path={links.LOGOUT} component={Logout} />
                 <Route path={links.MY_PROFILE} component={ProfilePage} />
                 <Route path={links.ScheduleFor} component={GroupSchedulePage}/>
+
 
             </Switch>
         );

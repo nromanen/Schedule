@@ -56,6 +56,8 @@ import { showBusyRooms } from './busyRooms';
 import { TEACHER_SCHEDULE_FORM } from '../constants/reduxForms';
 import { resetFormHandler } from '../helper/formHelper';
 import { useHistory } from 'react-router-dom';
+import { getAllTeachersByDepartmentId } from '../redux/actions/teachers';
+import departments from '../redux/reducers/departments';
 
 export const getCurrentSemesterService = () => {
     axios
@@ -4710,6 +4712,141 @@ export const showAllPublicTeachersService = () => {
             store.dispatch(showAllTeachers(response.data));
         })
         .catch(err => errorHandler(err));
+};
+export const showAllPublicTeachersByDepartmentService = (departmentId) => {
+    const data=[
+
+        {
+            "department": {
+                "id": 41,
+                "name": "mat analysi",
+                "disable": false
+            },
+            "id": 49,
+            "name": "Svitlana",
+            "surname": "Боднарук",
+            "patronymic": "Богданівна",
+            "position": "доцент",
+            "disable": false,
+            "email": "nasta_2000@i.ua"
+        },
+
+        {
+            "department":{
+                "id": 41,
+                "name": "mat analysi",
+                "disable": false
+            },
+            "id": 78,
+            "name": "Anna",
+            "surname": "Романенко",
+            "patronymic": "Богданівна",
+            "position": "доцент",
+            "disable": false,
+            "email":"nasta_2000@i.ua"
+
+        },
+        {
+            "department":{
+                "id": 41,
+                "name": "mat analysi",
+                "disable": false
+            },
+            "id": 79,
+            "name": "Анна",
+            "surname": "Івах",
+            "patronymic": "Іванівна",
+            "position": "доцент",
+            "disable": false,
+            "email":"nasta_2000@i.ua"
+
+        },
+        {
+            "department":{
+                "id": 44,
+                "name": "Computer Science1",
+                "disable": false
+            },
+            "id": 39,
+            "name": "Ірина",
+            "surname": "Вернигора",
+            "patronymic": "Володимирівна",
+            "position": "доцент",
+            "disable": false,
+            "email":"nasta_2000@i.ua"
+        },
+        {
+            "department": {
+                "id": 41,
+                "name": "mat analysi",
+                "disable": false
+            },
+            "id": 50,
+            "name": "Світлана",
+            "surname": "Боднарук",
+            "patronymic": "Богданівна",
+            "position": "доцент",
+            "disable": false,
+            "email": "nasta_2000@i.ua"
+        },
+
+        {
+            "department":{
+                "id": 41,
+                "name": "mat analysi",
+                "disable": false
+            },
+            "id": 51,
+            "name": "Наталія",
+            "surname": "Романенко",
+            "patronymic": "Богданівна",
+            "position": "доцент",
+            "disable": false,
+            "email":"nasta_2000@i.ua"
+
+        },
+        {
+            "department":{
+                "id": 41,
+                "name": "mat analysi",
+                "disable": false
+            },
+            "id": 52,
+            "name": "Анна",
+            "surname": "Івах",
+            "patronymic": "Іванівна",
+            "position": "доцент",
+            "disable": false,
+            "email":"nasta_2000@i.ua"
+
+        },
+        {
+            "department":{
+                "id": 44,
+                "name": "Computer Science1",
+                "disable": false
+            },
+            "id": 53,
+            "name": "Ірина",
+            "surname": "Вернигора",
+            "patronymic": "Володимирівна",
+            "position": "доцент",
+            "disable": false,
+            "email":"nasta_2000@i.ua"
+        }
+    ];
+    function isDepartment(value) {
+        return value ===departmentId;
+    }
+
+    let filtered = data.filter(({department})=>isDepartment(department.id))
+    store.dispatch(getAllTeachersByDepartmentId(filtered));
+    // axios
+    //     .get(`${PUBLIC_TEACHER_URL}/departmentId=${departmentId}`)
+    //     .then(response => {
+    //         store.dispatch(getAllTeachersByDepartmentId(response.data));
+    //     })
+    //     .catch(err => errorHandler(err));
 };
 
 export const clearTeacherScheduleFormService = () => {
