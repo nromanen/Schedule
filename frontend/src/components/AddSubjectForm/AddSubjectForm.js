@@ -9,10 +9,11 @@ import Card from '../../share/Card/Card'
 import { SUBJECT_FORM } from '../../constants/reduxForms'
 import renderTextField from '../../share/renderedFields/input'
 import { required, uniqueSubject, maxLengthValue} from '../../validation/validateFields'
+import { getClearOrCancelTitle, setDisableButton } from '../../helper/disableComponent';
 
 let AddSubject = props => {
     const { t } = useTranslation('formElements');
-    const { handleSubmit, pristine, onReset, submitting } = props;
+    const { handleSubmit, pristine, onReset, submitting,subject } = props;
 
     useEffect(() => {
         if (props.subject) {
@@ -54,9 +55,9 @@ let AddSubject = props => {
                     type='button'
                     variant='contained'
                     className='buttons-style'
-                    disabled={pristine || submitting}
+                    disabled={setDisableButton(pristine,submitting,subject.id)}
                     onClick={onReset}>
-                    {t('clear_button_label')}
+                    {getClearOrCancelTitle(subject.id,t)}
                 </Button>
                 </div>
             </form>
