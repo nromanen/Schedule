@@ -23,6 +23,12 @@ import { getClearOrCancelTitle, setDisableButton } from '../../helper/disableCom
 import { showAllGroupsService } from '../../services/groupService';
 import { MultiselectForGroups } from '../../helper/MultiselectForGroups';
 import { getFirstLetter } from '../../helper/renderTeacher';
+import { MultiSelect } from '../../helper/multiselect';
+import Multiselect from 'multiselect-react-dropdown';
+import Select from 'react-select';
+import { useForm } from "react-hook-form";
+import renderSelectField from '../../share/renderedFields/select';
+import { isObjectEmpty } from '../../helper/ObjectRevision';
 
 let AddSemesterForm = props => {
     const clearCheckboxes = () => {
@@ -42,15 +48,19 @@ let AddSemesterForm = props => {
     useEffect(()=>showAllGroupsService(),[])
 
     const { t } = useTranslation('formElements');
-    const { handleSubmit, pristine, onReset, submitting,semester,groups } = props;
+    const { handleSubmit, pristine, onReset, submitting,semester,groups,selected,setSelected,selectedGroups,setSelectedGroups } = props;
     const [openGroupDialog,setOpenGroupDialog]=useState(false);
-    const [selected, setSelected] = useState([]);
-    const getGroupOptions=()=>{
+    useEffect(()=>{
+        if(semester.semester_groups!==undefined){
+            setSelectedGroups(getGroupOptions(semester.semester_groups))
+        }
+    },[semester.id])
+    const getGroupOptions=(groupOptions)=>{
 
-        return groups.map(item=>{return {id:item.id,value:item.id,label:`${item.title}`}});
+        return groupOptions.map(item=>{return {id:item.id,value:item.id,label:`${item.title}`}});
     }
-    const options=getGroupOptions();
-
+    const options=getGroupOptions(groups);
+    const semesterOptions=getGroupOptions(groups.filter(x => !selectedGroups.includes(x)));
     const openDialogForGroup = () => {
       setOpenGroupDialog(true)
     }
@@ -69,9 +79,10 @@ let AddSemesterForm = props => {
         closeDialogForGroup();
     }
     const onSubmit = (values) => {
-        console.log(selected);
-      handleSubmit(values);
+        console.log(values)
+        handleSubmit(values);
     }
+    const { setValue } = useForm();
 
     let prepSetCheckedClasses = {};
     useEffect(() => {
@@ -194,7 +205,9 @@ let AddSemesterForm = props => {
                     currentSemester: props.semester.currentSemester,
                     defaultSemester:props.semester.defaultSemester,
                     semester_days: props.semester.semester_days,
-                    semester_classes: props.semester.semester_classes
+                    semester_classes: props.semester.semester_classes,
+                    semester_groups:props.semester.semester_groups
+
                 };
 
                 daysUppercase.forEach(dayItem => {
@@ -270,6 +283,7 @@ let AddSemesterForm = props => {
                 {props.semester.id ? t('edit_title') : t('create_title')}
                 {t('semestry_label')}
             </h2>
+            {selectedGroups.length===0?
             <MultiselectForGroups
                 open={openGroupDialog}
                 options={options}
@@ -277,20 +291,18 @@ let AddSemesterForm = props => {
                 onChange={setSelected}
                 onCancel={onCancel}
                 onClose={onClose}
-            />
+            />:
+                <MultiselectForGroups
+                    open={openGroupDialog}
+                    options={semesterOptions}
+                    value={selectedGroups}
+                    onChange={setSelectedGroups}
+                    onCancel={onCancel}
+                    onClose={onClose}
+                />}
             <form onSubmit={onSubmit}>
-                {/*<Field*/}
-                {/*    component={MultiselectForGroups}*/}
-                {/*    label={t('common:current_label')}*/}
-                {/*    labelPlacement="start"*/}
 
-                {/*    name="groups"*/}
-                {/*    open={openGroupDialog}*/}
-                {/*    options={options}*/}
-                {/*    value={selected}*/}
-                {/*    onChange={setSelected}*/}
-                {/*    onCancel={onCancel}*/}
-                {/*    onClose={onClose}*/}
+
 
                 {/*/>*/}
                 {/*<MultiselectForGroups*/}
@@ -333,6 +345,33 @@ let AddSemesterForm = props => {
                         {t('choose_groups_button_label')}
                     </Button>
                 </div>
+
+                {/*<Field*/}
+                {/*    isMulti*/}
+                {/*    className='form-field'*/}
+                {/*    component={renderSelectField}*/}
+                {/*    name='group'*/}
+                {/*    label={t('type_label')}*/}
+                {/*    validate={[required]}>*/}
+                {/*    defaultValue={groups.id}*/}
+                {/*    {groups.map(group => (*/}
+                {/*        <option key={group.id} value={group.id}>*/}
+                {/*            {group.title}*/}
+                {/*        </option>*/}
+                {/*    ))}*/}
+                {/*</Field>*/}
+                {/*<Field*/}
+
+                {/*    id={"groups"}*/}
+                {/*    name={"groups"}*/}
+                {/*    component={Multiselect}*/}
+                {/*    displayValue="label"*/}
+                {/*    // onRemove={function noRefCheck(){}}*/}
+                {/*    // onSearch={function noRefCheck(){}}*/}
+                {/*    onChange={setSelected}*/}
+                {/*    value={selected}*/}
+                {/*    options={options}*/}
+                {/*/>*/}
 
                 <Field
                     className="form-field"
@@ -404,7 +443,7 @@ let AddSemesterForm = props => {
 };
 
 const mapStateToProps = state => ({
-    semester: state.semesters.semester,
+    //semester: state.semesters.semester,
     classScheduler: state.classActions.classScheduler,
     groups:state.groups.groups,
 

@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { FaEdit } from 'react-icons/fa';
+import { FaEdit, FaUsers } from 'react-icons/fa';
 import { MdDelete, MdDonutSmall, MdEdit } from 'react-icons/md';
 import { useTranslation } from 'react-i18next';
 import React, { useEffect, useState } from 'react';
@@ -39,22 +39,38 @@ import NavigationPage from '../../components/Navigation/NavigationPage';
 import { navigation, navigationNames } from '../../constants/navigation';
 import SetDefaultDialog from '../../share/modals/modal/setDefaultDialog';
 import SetChangeDialog from '../../share/modals/modal/setDefaultDialog';
+import { MultiselectForGroups } from '../../helper/MultiselectForGroups';
+import { showAllGroupsService } from '../../services/groupService';
 
 const SemesterPage = props => {
     const { t } = useTranslation('formElements');
     const [open, setOpen] = useState(false);
     const [openDefault, setOpenDefault] = useState(false);
     const [openModal, setOpenModal] = useState(false);
+    const [openGroupsDialog,setOpenGroupsDialog]=useState(false)
     const [semesterId, setSemesterId] = useState(-1);
     const [term, setTerm] = useState('');
-    const { isSnackbarOpen, snackbarType, snackbarMessage } = props;
+    const { isSnackbarOpen, snackbarType, snackbarMessage,semester,groups } = props;
+    const [selected, setSelected] = useState([]);
+    const [selectedGroups,setSelectedGroups]=useState([]);
+    const [semesterOptions,setSemesterOptions]=useState([]);
+    const [edit,setEdit]=useState(false);
+    const getGroupOptions=(groupOptions)=>{
 
+        return groupOptions.map(item=>{return {id:item.id,value:item.id,label:`${item.title}`}});
+    }
+    const options=getGroupOptions(groups.filter(x => !selectedGroups.includes(x)));
+    useEffect(()=>{
+        if(semester.semester_groups!==undefined){
+            setSemesterOptions(getGroupOptions(semester.semester_groups))
+        }
+    },[semester.id])
     useEffect(() => showAllSemestersService(), []);
     useEffect(() => {
         getDisabledSemestersService();
     }, []);
     useEffect(() => getArchivedSemestersService(), []);
-
+    useEffect(()=>showAllGroupsService(),[])
     const [hideDialog, setHideDialog] = useState(null);
     const [hideDialogModal, setHideDialogModal] = useState(null);
     const [disabled, setDisabled] = useState(false);
@@ -63,10 +79,23 @@ const SemesterPage = props => {
     setScheduleTypeService('archived');
 
     const SearchChange = setTerm;
-    const handleFormReset = () => clearSemesterService();
-    const submit = values => {
-        console.log("SEMESTER page")
-        handleSemesterService(values);
+    const onChangeGroups=()=>{
+        console.log("It is for service",semesterOptions,semester.id)
+    }
+    const onCancel = () => {
+        setSemesterOptions(getGroupOptions(semester.semester_groups));
+        setOpenGroupsDialog(false);
+    }
+    const handleFormReset = () => {
+        setSelectedGroups([])
+        clearSemesterService();
+    };
+
+    const submit = (values)=> {
+        console.log(selected,selectedGroups);
+        const semester_groups=selected.length===0?selectedGroups:selected;
+        const data={...values,semester_groups}
+        handleSemesterService(data);
     };
     const handleEdit = semesterId => selectSemesterService(semesterId);
     const handleCreateArchive = semesterId =>
@@ -205,13 +234,19 @@ const SemesterPage = props => {
                     />
                     {disabled || archived ? (
                         ''
-                    ) : (
+                    ) :
                         <SemesterForm
+                            selectedGroups={selectedGroups}
+                            setSelectedGroups={setSelectedGroups}
+                            selected={selected}
+                            setSelected={setSelected}
                             className="form"
                             onSubmit={submit}
                             onReset={handleFormReset}
+                            semester={edit?semester:{}}
+
                         />
-                    )}
+                    }
                 </aside>
                 <section className="container-flex-wrap wrapper">
                     {visibleItems.length === 0 && (
@@ -248,8 +283,11 @@ const SemesterPage = props => {
                                             <FaEdit
                                                 className="svg-btn edit-btn"
                                                 title={t('edit_title')}
-                                                onClick={() =>
-                                                    handleEdit(semester.id)
+                                                onClick={() => {
+                                                    handleEdit(semester.id);
+                                                    setEdit(true);
+                                                }
+
                                                 }
                                             />
                                             <FaCopy
@@ -342,7 +380,19 @@ const SemesterPage = props => {
                                         })
                                         .join(', ')}
                                 </p>
+
+                                <FaUsers
+                                    title={t('formElements:show_groups')}
+                                    className="svg-btn copy-btn  semester-groups"
+                                    onClick={
+                                        ()=> {
+                                            selectSemesterService(semester.id)
+                                            setOpenGroupsDialog(true)
+                                        }
+                                    }
+                                />
                             </Card>
+
                         );
                     })}
                 </section>
@@ -354,16 +404,26 @@ const SemesterPage = props => {
                 handleSnackbarClose={handleSnackbarClose}
             />
             <GroupSchedulePage scheduleType="archived" />
+            <MultiselectForGroups
+                open={openGroupsDialog}
+                options={options}
+                value={semesterOptions}
+                onChange={setSemesterOptions}
+                onCancel={onCancel}
+                onClose={onChangeGroups}
+            />
         </>
     );
 };
 const mapStateToProps = state => ({
     semesters: state.semesters.semesters,
+    semester: state.semesters.semester,
     disabledSemesters: state.semesters.disabledSemesters,
     archivedSemesters: state.semesters.archivedSemesters,
     isSnackbarOpen: state.snackbar.isSnackbarOpen,
     snackbarType: state.snackbar.snackbarType,
-    snackbarMessage: state.snackbar.message
+    snackbarMessage: state.snackbar.message,
+    groups:state.groups.groups,
 });
 
 export default connect(mapStateToProps, {})(SemesterPage);

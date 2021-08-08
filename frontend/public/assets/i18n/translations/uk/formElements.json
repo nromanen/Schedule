@@ -131,6 +131,7 @@
     "grouped_label": "Групова",
     "student_add_label": "Додати студента",
     "show_students": "Показати студентів даної групи",
+    "show_groups": "Показати групи цього семестру",
     "show_archived": "Відобразити заархівовані",
     "show_regular": "Віобразити звичайні",
     "no_exist_teachers_at_department": "Немає викладачів на цій кафедрі",

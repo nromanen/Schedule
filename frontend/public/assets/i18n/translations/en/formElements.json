@@ -137,6 +137,7 @@
     "grouped_label": "Grouped",
     "student_add_label": "Add student",
     "show_students": "Show students by this group",
+    "show_groups": "Show groups of this semester",
     "show_archived": "Show archived",
     "show_regular": "Show regular",
     "no_exist_teachers_at_department": "There aren't teachers at this department",
