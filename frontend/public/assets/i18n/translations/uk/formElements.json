@@ -26,6 +26,7 @@
     "group_label": "Група",
     "class_label": "Пара",
     "room_label": "Аудиторія",
+    "chosen_semester_label": "Вибраний семестр",
     "student_label": "Студент",
     "subject_label": "Предмет",
     "department_add_label": "Кафедра",

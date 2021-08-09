@@ -31,6 +31,7 @@ export const SCHEDULE_CHECK_AVAILABILITY_URL = 'schedules/data-before';
 export const BUSY_ROOMS = 'schedules/full/rooms';
 export const ROOMS_AVAILABILITY = 'rooms/available';
 export const SEMESTERS_URL = 'semesters';
+export const GROUPS_URL = 'groups';
 export const TEACHER_SCHEDULE_URL = 'schedules/full/teachers?semesterId=';
 
 export const DISABLED_ROOMS_URL = 'rooms/disabled';

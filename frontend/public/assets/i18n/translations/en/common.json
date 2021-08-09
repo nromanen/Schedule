@@ -27,7 +27,7 @@
     "MergeRolePage_management_title": "Users",
     "merge_header": "Merging",
     "cancel_schedule": "Cancel",
-    "sent_schedule": "Sent",
+    "sent_schedule": "Send",
     "choose_teachers": "Choose teachers...",
     "all_teachers": "All teachers",
 
@@ -113,7 +113,7 @@
     "schedule_dialog_title": "Please choose room:",
     "choose_group": "Please choose group:",
 
-    "greetings_schedule_message": "On this site you have oppotunity to view a full schedule on the semester, for this select semester from the drop-down list and click on the button; if you want to see the schedule for the group, you need to select the semester and the group and click on the button; if the schedule is for the teacher, you need to select the semester and teacher and click on the button.",
+    "greetings_schedule_message": "On this site you have opportunity to view a full schedule on the semester, for this select semester from the drop-down list and click on the button; if you want to see the schedule for the group, you need to select the semester and the group and click on the button; if the schedule is for the teacher, you need to select the semester and teacher and click on the button.",
     "greetings_schedule_message_hint": "*To view the schedule for the group or teacher, it is necessary to choose the semester.",
     "semester_is_empty": "Semester is empty. You have to chose semester!",
     "full_schedule_label": "Full Schedule",

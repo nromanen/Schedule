@@ -120,16 +120,16 @@ const StyledTableRow = withStyles((theme) => ({
 }))(TableRow);
 
 export default function RenderStudentTable(props) {
+    const ALL_ROWS=-1;
     const classes = useStyles2();
     const {students,onDeleteStudent,onSubmit,group,
            match,student,checkBoxStudents,handleCheckElement,
            handleAllChecked,handleAllClear,handleChangeCheckedAllBtn,
-        handleClearCheckedAllBtn,checkedAllBtn}=props;
+        handleClearCheckedAllBtn,checkedAllBtn,handleAllCheckedBtn}=props;
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
     const [openDeleteDialog,setOpenDeleteDialog]=useState(false);
     const [openEditDialog,setOpenEditDialog]=useState(false);
-    const [checkedAll,setCheckedAll]=useState(false);
     const { t } = useTranslation('formElements');
     useEffect(()=>{
         if(match.path.includes(links.Student)&&match.path.includes(links.Edit)) {
@@ -145,9 +145,6 @@ export default function RenderStudentTable(props) {
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, students.length - page * rowsPerPage);
 
 
-    const handleChangePage = (event, newPage) => {
-        setPage(newPage);
-    };
 
     const handleChangeRowsPerPage = (event) => {
         setRowsPerPage(parseInt(event.target.value, 10));
@@ -179,16 +176,35 @@ export default function RenderStudentTable(props) {
         onSubmit(sendObject);
     }
     const getCorrectRowCount = (pageItemsCount) => {
-       if  (pageItemsCount>checkBoxStudents.length||pageItemsCount==-1){
-           return checkBoxStudents.length;
+        const resRows=checkBoxStudents.length-pageItemsCount*page;
+       if  (pageItemsCount>resRows||pageItemsCount===ALL_ROWS){
+         return   resRows;
        }
        return pageItemsCount;
     }
 const handleAllOnPageClick = (event) => {
         const rowsCount=getCorrectRowCount(rowsPerPage)
         handleChangeCheckedAllBtn();
-        handleAllChecked(event,rowsCount);
+        handleAllChecked(event,rowsCount,page,rowsPerPage);
 }
+    const detectCheckingCheckAllBtn=()=>{
+        const rowsCount=getCorrectRowCount(rowsPerPage);
+        handleAllCheckedBtn (rowsCount,page,rowsPerPage);
+    }
+    const handleChangePage = (event, newPage) => {
+        setPage(newPage);
+
+
+    };
+    const handleCheckElem = (event) => {
+        handleCheckElement(event);
+        detectCheckingCheckAllBtn();
+    }
+    useEffect(()=>{
+        detectCheckingCheckAllBtn()
+    },[page])
+
+
 
     return (
         <TableContainer component={Paper}>
@@ -197,7 +213,7 @@ const handleAllOnPageClick = (event) => {
                 <TableHead>
 
                     <TableRow>
-                        <StyledTableCell>
+                        <StyledTableCell className="check-box">
                             <span className={'checked-all'}>
                             <input
                                 id={'checked-all-input'}
@@ -226,10 +242,10 @@ const handleAllOnPageClick = (event) => {
                             : checkBoxStudents
                     ).map((student) => (
                         <StyledTableRow key={student.id}>
-                            <StyledTableCell component="th" scope="row" align="center" style={{ width: 160 }}>
+                            <StyledTableCell component="th" scope="row" align="center">
                                 <input
                                     key={student.id}
-                                    onClick={handleCheckElement}
+                                    onClick={handleCheckElem}
                                     type="checkbox"
                                     checked={student.checked}
                                     value={student.id}
@@ -237,7 +253,7 @@ const handleAllOnPageClick = (event) => {
                                     title={`${t("select_student")} ${getTeacherFullName(student)}`}
                                 />
                             </StyledTableCell>
-                            <StyledTableCell component="th" scope="row" align="center" style={{ width: 160 }}>
+                            <StyledTableCell component="th" scope="row" align="center">
                                 {getTeacherFullName(student)}
                             </StyledTableCell>
                             <StyledTableCell component="th" scope="row" align="center">
@@ -251,7 +267,7 @@ const handleAllOnPageClick = (event) => {
                                 </span>
 
                             </StyledTableCell>
-                            <StyledTableCell component="th" scope="row" align="center"  style={{ width: 160 }}>
+                            <StyledTableCell component="th" scope="row" align="center">
                                 <span className="edit-cell">
                                      <Link to={`${links.GroupList}${links.Group}/${group.id}${links.Student}/${student.id}${links.Edit}`}>
                                     <FaEdit
@@ -298,7 +314,7 @@ const handleAllOnPageClick = (event) => {
                     <StyledTableRow>
                         <TablePagination
                             labelRowsPerPage={`${t('rows_per_page')}`}
-                            rowsPerPageOptions={[5, 10, 25, { label: `${t('all_page')}`, value: -1 }]}
+                            rowsPerPageOptions={[5, 10, 25, { label: `${t('all_page')}`, value: ALL_ROWS }]}
                             colSpan={3}
                             count={students.length}
                             rowsPerPage={rowsPerPage}

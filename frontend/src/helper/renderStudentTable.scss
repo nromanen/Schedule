@@ -15,22 +15,9 @@
     font-size: 25px;
   }
 }
-.checked-all{
-  display: flex;
-  flex-direction: column;
-  flex-wrap: wrap;
-  width: 200px;
-  align-items: center;
-  margin: 10px;
-
-
-}
-.checked-box{
-  width: 15px;
-  height: 15px;
-}
 #checked-all-input{
-  width: 25px;
-  height: 25px;
+  margin: -1px;
+  width: 20px;
+  height: 20px;
   box-shadow: rgb(131, 148, 231) 0px 5px 10px;
 }
