@@ -302,28 +302,7 @@ let AddSemesterForm = props => {
                     onCancel={onCancel}
                     onClose={onClose}
                 />}
-            <form onSubmit={onSubmit}>                
-                {/*<Field*/}
-                {/*    isMulti*/}
-                {/*    name={"select1"}*/}
-                {/*    defaultValue={selected}*/}
-                {/*    onChange={setSelected}*/}
-                {/*    options={options}*/}
-                {/*    value={selected}*/}
-                {/*    component={RenderSelectInput} />*/}
-
-
-                {/*/>*/}
-                {/*<MultiselectForGroups*/}
-                {/*    name="groups"*/}
-                {/*    open={openGroupDialog}*/}
-                {/*    options={options}*/}
-                {/*    value={selected}*/}
-                {/*    onChange={setSelected}*/}
-                {/*    onCancel={onCancel}*/}
-                {/*    onClose={onClose}*/}
-                {/*/>*/}
-
+            <form onSubmit={onSubmit}>
                 <div className="semester-checkbox group-options">
                     <div>
                         <Field
@@ -354,34 +333,6 @@ let AddSemesterForm = props => {
                         {t('choose_groups_button_label')}
                     </Button>
                 </div>
-
-                {/*<Field*/}
-                {/*    isMulti*/}
-                {/*    className='form-field'*/}
-                {/*    component={renderSelectField}*/}
-                {/*    name='group'*/}
-                {/*    label={t('type_label')}*/}
-                {/*    validate={[required]}>*/}
-                {/*    defaultValue={groups.id}*/}
-                {/*    {groups.map(group => (*/}
-                {/*        <option key={group.id} value={group.id}>*/}
-                {/*            {group.title}*/}
-                {/*        </option>*/}
-                {/*    ))}*/}
-                {/*</Field>*/}
-                {/*<Field*/}
-
-                {/*    id={"groups"}*/}
-                {/*    name={"groups"}*/}
-                {/*    component={Multiselect}*/}
-                {/*    displayValue="label"*/}
-                {/*    // onRemove={function noRefCheck(){}}*/}
-                {/*    // onSearch={function noRefCheck(){}}*/}
-                {/*    onChange={setSelected}*/}
-                {/*    value={selected}*/}
-                {/*    options={options}*/}
-                {/*/>*/}
-
                 <Field
                     className="form-field"
                     name="year"

@@ -15,7 +15,7 @@ import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
 
 import { LESSON_FORM } from '../../constants/reduxForms';
-
+import './LessonForm.scss'
 import {
     lessThanZero,
     maxLengthValue,
@@ -28,6 +28,8 @@ import {
     setValueToSubjectForSiteHandler
 } from '../../helper/reduxFormHelper';
 import { getClearOrCancelTitle, setDisableButton } from '../../helper/disableComponent';
+import { selectGroupService } from '../../services/groupService';
+import { RenderMultiselect, renderMultiselect } from '../../share/renderedFields/renderMultiselect';
 
 const useStyles = makeStyles(() => ({
     notSelected: {
@@ -41,7 +43,7 @@ const useStyles = makeStyles(() => ({
 let LessonForm = props => {
     const { t } = useTranslation('formElements');
 
-    const { handleSubmit, pristine, reset, submitting } = props;
+    const { handleSubmit, pristine, reset, submitting,groups,group } = props;
 
     const classes = useStyles();
 
@@ -58,7 +60,9 @@ let LessonForm = props => {
 
     const [checked, setChecked] = React.useState(false);
     const handleChange = event => setChecked(event.target.checked);
-
+    useEffect(()=>{
+        selectGroupService(groupId)
+    },groupId)
     useEffect(() => {
         setChecked(false);
         if (lessonId) {
@@ -77,7 +81,8 @@ let LessonForm = props => {
             hours: lesson.hours,
             linkToMeeting:lesson.linkToMeeting,
             subjectForSite: lesson.subjectForSite,
-            grouped: lesson.grouped
+            grouped: lesson.grouped,
+            groups:[group]
         });
         setChecked(lesson.grouped);
     };
@@ -188,6 +193,8 @@ let LessonForm = props => {
                             onChange={handleChange}
                             color="primary"
                         />
+
+
                     </div>
                     <Field
                         id="linkToMeeting"
@@ -211,6 +218,19 @@ let LessonForm = props => {
                         component={renderTextField}
                         label={t('subject_label') + t('for_site_label')}
                         validate={[required, maxLengthValue]}
+                    />
+                    <Field
+                        id="groups"
+                        name="groups"
+                        component={RenderMultiselect}
+                        options={groups}
+                        displayValue={"title"}
+                        className="form-control mt-2"
+                        placeholder={t('groups_label')}
+                        hidePlaceholder={true}
+                        selectedValues={[group]}
+                        alwaysDisplayedItem={group}
+
                     />
 
                     <div className="form-buttons-container">
@@ -247,7 +267,12 @@ let LessonForm = props => {
     );
 };
 
-const mapStateToProps = state => ({ lesson: state.lesson.lesson });
+const mapStateToProps = state => (
+    {
+        lesson: state.lesson.lesson,
+        groups:state.groups.groups,
+        group:state.groups.group
+    });
 
 LessonForm = reduxForm({
     form: LESSON_FORM
