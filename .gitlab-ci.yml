@@ -3,7 +3,7 @@ stages:
     #- test
     - build_frontend
     - production_deploy
-    #- develop_deploy
+    - develop_deploy
 
 variables:
     GRADLE_OPTS: '-Dorg.gradle.daemon=true'
