@@ -4,7 +4,6 @@ import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Field, reduxForm } from 'redux-form';
 import Button from '@material-ui/core/Button';
-
 import './SemesterForm.scss';
 import Card from '../../share/Card/Card';
 import renderCheckboxField from '../../share/renderedFields/checkbox';
@@ -24,11 +23,14 @@ import { showAllGroupsService } from '../../services/groupService';
 import { MultiselectForGroups } from '../../helper/MultiselectForGroups';
 import { getFirstLetter } from '../../helper/renderTeacher';
 import { MultiSelect } from '../../helper/multiselect';
-import Multiselect from 'multiselect-react-dropdown';
 import Select from 'react-select';
 import { useForm } from "react-hook-form";
 import renderSelectField from '../../share/renderedFields/select';
 import { isObjectEmpty } from '../../helper/ObjectRevision';
+import FormControl from '@material-ui/core/FormControl';
+import { Checkbox, FormControlLabel } from '@material-ui/core';
+import RenderSelectInput from '../../share/renderedFields/renderMultiselect';
+import Multiselect from 'react-widgets/Multiselect';
 
 let AddSemesterForm = props => {
     const clearCheckboxes = () => {
@@ -300,8 +302,15 @@ let AddSemesterForm = props => {
                     onCancel={onCancel}
                     onClose={onClose}
                 />}
-            <form onSubmit={onSubmit}>
-
+            <form onSubmit={onSubmit}>                
+                {/*<Field*/}
+                {/*    isMulti*/}
+                {/*    name={"select1"}*/}
+                {/*    defaultValue={selected}*/}
+                {/*    onChange={setSelected}*/}
+                {/*    options={options}*/}
+                {/*    value={selected}*/}
+                {/*    component={RenderSelectInput} />*/}
 
 
                 {/*/>*/}
@@ -443,7 +452,6 @@ let AddSemesterForm = props => {
 };
 
 const mapStateToProps = state => ({
-    //semester: state.semesters.semester,
     classScheduler: state.classActions.classScheduler,
     groups:state.groups.groups,
 
@@ -454,3 +462,4 @@ export default connect(mapStateToProps)(
         form: SEMESTER_FORM
     })(AddSemesterForm)
 );
+

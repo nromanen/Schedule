@@ -1,34 +1,17 @@
-import React from "react";
+import Multiselect from 'react-widgets/Multiselect';
+import React from 'react';
 
-import FormControl from '@material-ui/core/FormControl'
-import Select from '@material-ui/core/Select'
-import InputLabel from '@material-ui/core/InputLabel'
+export const renderMultiselect = ({ input, data, valueField, textField, placeholder,
+                                      meta: { touched, invalid, error } }) =>
+    <>
 
-import {renderFromHelper} from './error';
+        <Multiselect {...input}
+                     onBlur={() => input.onBlur()}
+                     value={input.value || []}
+                     data={data}
+                     valueField={valueField}
+                     textField={textField}
+                     placeholder={placeholder}
+        />
 
-const renderMultiSelectField = ({
-                               input,
-                               label,
-                               name,
-                               id,
-                               meta: { touched, error },
-                               children,
-                               ...custom
-                           }) => (
-    <FormControl error={touched && !!error}>
-        <InputLabel htmlFor={id}>{label}</InputLabel>
-        <Select
-            isMulti={true}
-            native
-            {...input}
-            {...custom}
-            name={name}
-            id={id}
-        >
-            {children}
-        </Select>
-        {renderFromHelper({ touched, error })}
-    </FormControl>
-)
-
-export default renderMultiSelectField;
+    </>
