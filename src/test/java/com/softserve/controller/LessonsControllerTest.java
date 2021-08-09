@@ -94,7 +94,7 @@ public class LessonsControllerTest {
 
     @Test
     public void saveLessonsIfLessonDoesNotExist() throws Exception {
-        TeacherNameDTO teacherDTO = new TeacherNameMapperImpl().teacherNameToTeacherDTO(teacherService.getById(5L));
+        TeacherDTO teacherDTO = new TeacherNameMapperImpl().teacherDTOToTeacher(teacherService.getById(5L));
         SubjectDTO subjectDTO = new SubjectMapperImpl().subjectToSubjectDTO(subjectService.getById(4L));
         GroupDTO groupDTO = new GroupMapperImpl().groupToGroupDTO(groupService.getById(4L));
         LessonInfoDTO lessonDtoForSave = new LessonInfoDTO();
@@ -119,7 +119,7 @@ public class LessonsControllerTest {
         lessonDtoForUpdate.setLinkToMeeting("https://softserveinc.zoom.us/j/93198369163?pwd=Rk1GU281cDFtK1FCK3pJWXphRkJrQT09");
         lessonDtoForUpdate.setSubjectForSite("History updated");
         lessonDtoForUpdate.setLessonType(LECTURE);
-        lessonDtoForUpdate.setTeacher(new TeacherNameMapperImpl().teacherNameToTeacherDTO(teacherService.getById(6L)));
+        lessonDtoForUpdate.setTeacher(new TeacherNameMapperImpl().teacherDTOToTeacher(teacherService.getById(6L)));
         lessonDtoForUpdate.setSubject(new SubjectMapperImpl().subjectToSubjectDTO(subjectService.getById(6L)));
         lessonDtoForUpdate.setGroup(new GroupMapperImpl().groupToGroupDTO(groupService.getById(4L)));
 
