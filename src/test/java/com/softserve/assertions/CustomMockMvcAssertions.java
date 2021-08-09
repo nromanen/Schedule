@@ -35,35 +35,6 @@ public class CustomMockMvcAssertions {
         this.defaultUrlWithId = defaultUrl + "/{id}";
     }
 
-    public <T> void assertForGetById(int id, T expected) throws Exception {
-        assertForGetById(id, expected, defaultUrlWithId);
-    }
-
-    public <T> void assertForGetById(int id, T expected, String url) throws Exception {
-        MockHttpServletRequestBuilder getByIdRequest = get(url, id).contentType(MediaType.APPLICATION_JSON);
-        performRequestWithReturnedStatusOkAndExpectedObject(getByIdRequest, expected);
-    }
-
-    public <T> void assertForGetListWithOneEntity(T expected) throws Exception {
-        assertForGetListWithOneEntity(expected, defaultUrl);
-    }
-
-    public <T> void assertForGetListWithOneEntity(T expected, String url) throws Exception {
-        assertForGetList(Collections.singletonList(expected), url);
-    }
-
-    public <T> void assertForGetList(List<T> expected) throws Exception {
-        assertForGetList(expected, defaultUrl);
-    }
-
-    public <T> void assertForGetList(List<T> expected, String url) throws Exception {
-        mockMvc.perform(get(url).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType("application/json"))
-                .andExpect(jsonPath("$", hasSize(expected.size())))
-                .andExpect(content().string(objectMapper.writeValueAsString(expected)));
-    }
-
     public <T> void assertForGet(T expected, String url) throws Exception {
         MockHttpServletRequestBuilder getRequest = get(url).contentType(MediaType.APPLICATION_JSON);
         performRequestWithReturnedStatusOkAndExpectedObject(getRequest, expected);
@@ -108,6 +79,26 @@ public class CustomMockMvcAssertions {
     public <T> void assertForDelete(int id, String url) throws Exception {
         mockMvc.perform(delete(url, id).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
+    }
+
+    public <T> void assertForGetListWithOneEntity(T expected) throws Exception {
+        assertForGetListWithOneEntity(expected, defaultUrl);
+    }
+
+    public <T> void assertForGetListWithOneEntity(T expected, String url) throws Exception {
+        assertForGetList(Collections.singletonList(expected), url);
+    }
+
+    public <T> void assertForGetList(List<T> expected) throws Exception {
+        assertForGetList(expected, defaultUrl);
+    }
+
+    public <T> void assertForGetList(List<T> expected, String url) throws Exception {
+        mockMvc.perform(get(url).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json"))
+                .andExpect(jsonPath("$", hasSize(expected.size())))
+                .andExpect(content().string(objectMapper.writeValueAsString(expected)));
     }
 
     public <T> void assertForValidationErrorsOnSave(List<ApiValidationError> errorList,
