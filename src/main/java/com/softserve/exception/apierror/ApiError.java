@@ -2,13 +2,14 @@ package com.softserve.exception.apierror;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.validator.internal.engine.path.PathImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
-
 import javax.validation.ConstraintViolation;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +17,7 @@ import java.util.Set;
 
 @Getter
 @Setter
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ApiError {
     @JsonIgnore
     private HttpStatus status;
