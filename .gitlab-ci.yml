@@ -3,7 +3,7 @@ stages:
     #- test
     - build_frontend
     - production_deploy
-    - develop_deploy
+    #- develop_deploy
 
 variables:
     GRADLE_OPTS: '-Dorg.gradle.daemon=true'
@@ -30,7 +30,7 @@ build:
     only:
          - master
          - develop
-         - merge_requests
+        # - merge_requests
 
 #test:
 #    image: gradle:alpine
@@ -68,7 +68,7 @@ build_frontend:
     only:
         - master
         - develop
-        - merge_requests
+        #- merge_requests
 
 production_deploy:
     stage: production_deploy
