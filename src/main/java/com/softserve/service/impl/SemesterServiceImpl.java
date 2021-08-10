@@ -113,7 +113,7 @@ public class SemesterServiceImpl implements SemesterService {
     private void setCurrentToFalse(Semester semester) {
         if (semester.isCurrentSemester()) {
             semesterRepository.updateAllSemesterCurrentToFalse();
-            semester.setCurrentSemester(true);
+            semesterRepository.setCurrentSemester(semester.getId());
         }
     }
 
@@ -124,7 +124,7 @@ public class SemesterServiceImpl implements SemesterService {
     private void setDefaultToFalse(Semester semester) {
         if (semester.isDefaultSemester()) {
             semesterRepository.updateAllSemesterDefaultToFalse();
-            semester.setDefaultSemester(true);
+            semesterRepository.setDefaultSemester(semester.getId());
         }
     }
 
