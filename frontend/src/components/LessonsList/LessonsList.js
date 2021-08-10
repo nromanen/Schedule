@@ -7,7 +7,7 @@ import { MdDelete } from 'react-icons/md';
 import { MdContentCopy } from 'react-icons/all';
 import { getTeacherName } from '../../helper/renderTeacher';
 import i18n from 'i18next';
-
+import './LessonList.scss'
 const LessonsList = props => {
     const lessons = props.lessons;
 
@@ -18,10 +18,11 @@ const LessonsList = props => {
     };
     const isGroupped = grouped =>
         grouped ? (
-            <FaUserPlus
-                title={t('formElements:grouped_label')}
-                className="svg-btn copy-btn align-left info-btn"
-            />
+            <p className={"grouped-class"}>{t('formElements:grouped_label')}</p>
+            // <FaUserPlus
+            //     title={t('formElements:grouped_label')}
+            //     className="svg-btn copy-btn align-left info-btn"
+            // />
         ) : (
             ''
         );
@@ -77,6 +78,7 @@ const LessonsList = props => {
             <section className="container-flex-wrap">
                 {lessons.map(lesson => (
                     <Card class="done-card" key={lesson.id}>
+
                         <div className="cards-btns">
                             {isGroupped(lesson.grouped)}
                             <MdContentCopy

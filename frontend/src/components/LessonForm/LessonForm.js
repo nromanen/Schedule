@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import Card from '../../share/Card/Card';
 
@@ -59,6 +59,7 @@ let LessonForm = props => {
     const groupId = props.groupId;
 
     const [checked, setChecked] = React.useState(false);
+    const [displayGroups,setDisplayGroups]=useState(false);
     const handleChange = event => setChecked(event.target.checked);
     useEffect(()=>{
         selectGroupService(groupId)
@@ -180,12 +181,7 @@ let LessonForm = props => {
                             id="grouped"
                             name="grouped"
                             className="form-field"
-                            label={
-                                <FaUserPlus
-                                    title={t('formElements:grouped_label')}
-                                    className="svg-btn copy-btn align-left info-btn"
-                                />
-                            }
+                            label={t('formElements:grouped_label')}
                             labelPlacement="end"
                             defaultValue={checked}
                             component={renderCheckboxField}
@@ -219,19 +215,34 @@ let LessonForm = props => {
                         label={t('subject_label') + t('for_site_label')}
                         validate={[required, maxLengthValue]}
                     />
-                    <Field
-                        id="groups"
-                        name="groups"
-                        component={RenderMultiselect}
-                        options={groups}
-                        displayValue={"title"}
-                        className="form-control mt-2"
-                        placeholder={t('groups_label')}
-                        hidePlaceholder={true}
-                        selectedValues={[group]}
-                        alwaysDisplayedItem={group}
-                    />
-
+                    {displayGroups?
+                        <>
+                            <p className="group-label">
+                                <label htmlFor={"groups"}>{t('copy_groups_label')}</label>
+                            </p>
+                            <Field
+                                id='groups'
+                                name='groups'
+                                component={RenderMultiselect}
+                                options={groups}
+                                displayValue={'title'}
+                                className='form-control mt-2'
+                                placeholder={t('groups_label')}
+                                hidePlaceholder={true}
+                                selectedValues={[group]}
+                                alwaysDisplayedItem={group}
+                            />
+                        </>
+                        :null}
+                    <Button
+                        className="copy-for-button"
+                        type="button"
+                        variant="contained"
+                        color="primary"
+                        onClick={()=>setDisplayGroups((prevState => !prevState))}
+                    >
+                        {t('copy_for_button_label')}
+                    </Button>
                     <div className="form-buttons-container">
                         <Button
                             className="buttons-style"
