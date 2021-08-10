@@ -21,16 +21,7 @@ import { daysUppercase } from '../../constants/schedule/days';
 import { getClearOrCancelTitle, setDisableButton } from '../../helper/disableComponent';
 import { showAllGroupsService } from '../../services/groupService';
 import { MultiselectForGroups } from '../../helper/MultiselectForGroups';
-import { getFirstLetter } from '../../helper/renderTeacher';
-import { MultiSelect } from '../../helper/multiselect';
-import Select from 'react-select';
 import { useForm } from "react-hook-form";
-import renderSelectField from '../../share/renderedFields/select';
-import { isObjectEmpty } from '../../helper/ObjectRevision';
-import FormControl from '@material-ui/core/FormControl';
-import { Checkbox, FormControlLabel } from '@material-ui/core';
-import RenderSelectInput from '../../share/renderedFields/renderMultiselect';
-import Multiselect from 'react-widgets/Multiselect';
 
 let AddSemesterForm = props => {
     const clearCheckboxes = () => {
@@ -117,7 +108,7 @@ let AddSemesterForm = props => {
     const setEndTime = startTime =>
         props.change(
             'endDay',
-            `moment(startTime, 'DD/MM/YYYY').add(7, 'd').format('DD/MM/YYYY')`
+            moment(startTime, 'DD/MM/YYYY').add(7, 'd').format('DD/MM/YYYY')
         );
 
     const setCheckedDaysHandler = React.useCallback(
