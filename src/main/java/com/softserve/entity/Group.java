@@ -46,7 +46,7 @@ public class Group implements Serializable {
     private String title;
 
     @NotNull
-    @OneToMany(mappedBy = "group", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "group")
     @OrderBy(clause = "surname ASC")
     private List<Student> students = new ArrayList<>();
 
