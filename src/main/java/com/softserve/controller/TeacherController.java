@@ -6,9 +6,7 @@ import com.softserve.dto.TeacherWishDTO;
 import com.softserve.entity.Teacher;
 import com.softserve.entity.User;
 import com.softserve.entity.enums.Role;
-import com.softserve.exception.MessageNotSendException;
 import com.softserve.mapper.TeacherMapper;
-import com.softserve.service.MailService;
 import com.softserve.service.ScheduleService;
 import com.softserve.service.TeacherService;
 import com.softserve.service.UserService;
@@ -18,8 +16,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import javax.mail.MessagingException;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
@@ -73,16 +77,16 @@ public class TeacherController {
     @ApiOperation(value = "Create new teacher")
     public ResponseEntity<TeacherDTO> save(@RequestBody TeacherDTO teacherDTO) {
         log.info("Enter into save method with teacherDTO: {}", teacherDTO);
-        Teacher teacher = teacherService.save(teacherDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(teacherMapper.teacherToTeacherDTO(teacher));
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(teacherMapper.teacherToTeacherDTO(teacherService.save(teacherDTO)));
     }
 
     @PutMapping("/teachers")
     @ApiOperation(value = "Update existing teacher by id")
     public ResponseEntity<TeacherForUpdateDTO> update(@RequestBody TeacherForUpdateDTO teacherForUpdateDTO) {
         log.info("Enter into update method with updateTeacherDTO: {}", teacherForUpdateDTO);
-        Teacher teacher = teacherService.update(teacherMapper.teacherForUpdateDTOToTeacher(teacherForUpdateDTO));
-        return ResponseEntity.status(HttpStatus.OK).body(teacherMapper.teacherToTeacherForUpdateDTO(teacher));
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(teacherMapper.teacherToTeacherForUpdateDTO(teacherService.update(teacherForUpdateDTO)));
     }
 
     @DeleteMapping("/teachers/{id}")
