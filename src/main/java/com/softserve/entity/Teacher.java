@@ -8,17 +8,8 @@ import lombok.ToString;
 import org.hibernate.annotations.Filter;
 import org.hibernate.annotations.FilterDef;
 import org.hibernate.annotations.ParamDef;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+
+import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
@@ -64,8 +55,7 @@ public class Teacher implements Serializable {
     private Integer userId;
 
     @ManyToOne
-    @JoinColumn(name = "department_id",
-                columnDefinition = "integer DEFAULT nextval('teachers_department_id_seq'::regclass)")
+    @JoinColumn(name = "department_id",  columnDefinition = "integer")
     private Department department;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
