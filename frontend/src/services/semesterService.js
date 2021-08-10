@@ -194,25 +194,25 @@ export const showAllSemestersService = () => {
             ]
         }
     ];
-    // store.dispatch(
-    //             showAllSemesters(
-    //                data
-    //                     .sort((a, b) => (a.year > b.year ? 1 : -1))
-    //                     .reverse()
-    //             )
-    //         );
-    axios
-        .get(SEMESTERS_URL)
-        .then(response => {
-            store.dispatch(
+    store.dispatch(
                 showAllSemesters(
-                    response.data
+                   data
                         .sort((a, b) => (a.year > b.year ? 1 : -1))
                         .reverse()
                 )
             );
-        })
-        .catch(error => errorHandler(error));
+    // axios
+    //     .get(SEMESTERS_URL)
+    //     .then(response => {
+    //         store.dispatch(
+    //             showAllSemesters(
+    //                 response.data
+    //                     .sort((a, b) => (a.year > b.year ? 1 : -1))
+    //                     .reverse()
+    //             )
+    //         );
+    //     })
+    //     .catch(error => errorHandler(error));
 
 };
 

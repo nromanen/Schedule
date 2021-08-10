@@ -41,6 +41,8 @@ import SetDefaultDialog from '../../share/modals/modal/setDefaultDialog';
 import SetChangeDialog from '../../share/modals/modal/setDefaultDialog';
 import { MultiselectForGroups } from '../../helper/MultiselectForGroups';
 import { showAllGroupsService } from '../../services/groupService';
+import { successHandler } from '../../helper/handlerAxios';
+import i18n from '../../helper/i18n';
 
 const SemesterPage = props => {
     const { t } = useTranslation('formElements');
@@ -79,8 +81,34 @@ const SemesterPage = props => {
     setScheduleTypeService('archived');
 
     const SearchChange = setTerm;
+    const isEqualsArrObjects = (arr1,arr2) => {
+        const a=[...arr1];
+        const b=[...arr2];
+        if(a.length!==b.length)
+            return false;
+
+            for(let i=0;i<a.length;i++)
+                if(a[i].id!==b[i].id)
+                    return false;
+            return true;
+    }
     const onChangeGroups=()=>{
-        console.log("It is for service",semesterOptions,semester.id)
+        // console.log("It is for service",semesterOptions,semester.id);
+        // setOpenGroupsDialog(false);
+        const beginGroups=semester.semester_groups!==undefined?getGroupOptions(semester.semester_groups):[];
+        const finishGroups=[...semesterOptions];
+        //console.log("beginGroups,finishGroups",isEqualsArrObjects(beginGroups,finishGroups),beginGroups,finishGroups)
+        if(isEqualsArrObjects(beginGroups,finishGroups)){
+            successHandler(
+                i18n.t('serviceMessages:group_exist_in_this_semester', {
+                    cardType: i18n.t('common:group_title'),
+                    actionType: i18n.t('serviceMessages:student_label')
+                })
+            );
+            return
+        }
+        console.log("It is for service",semesterOptions,semester.id);
+        setOpenGroupsDialog(false);
     }
     const onCancel = () => {
         setSemesterOptions(getGroupOptions(semester.semester_groups));
@@ -92,7 +120,6 @@ const SemesterPage = props => {
     };
 
     const submit = (values)=> {
-        console.log(selected,selectedGroups);
         const semester_groups=selected.length===0?selectedGroups:selected;
         const data={...values,semester_groups}
         handleSemesterService(data);
