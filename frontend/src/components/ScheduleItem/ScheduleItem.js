@@ -3,6 +3,7 @@ import { MdDelete, MdEdit } from 'react-icons/md';
 
 import Card from '../../share/Card/Card';
 import { FaUserPlus } from 'react-icons/fa';
+import { getTeacherFullName } from '../../helper/renderTeacher';
 
 const ScheduleItem = props => {
     let lesson = props.lesson;
@@ -69,7 +70,7 @@ const ScheduleItem = props => {
                 )}
                 )
             </p>
-            <p>{lesson.teacherForSite}</p>
+            <p>{getTeacherFullName(lesson.teacher)}</p>
             {props.inBoard ? (
                 <p>
                     {isGroupped(lesson.grouped)}
