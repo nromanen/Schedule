@@ -27,7 +27,8 @@
 
     "teacher_label": "Teacher",
     "teachers_label": "Teachers",
-    "students_file_label": "Students",
+    "students_file_label": "students were",
+    "student_file_label": "student was",
     "link_to_meeting_label": "Online meeting",
     "user_label": "User",
     "group_label": "Group",
