@@ -257,7 +257,7 @@ public class SemesterServiceImpl implements SemesterService {
      */
     @Override
     public Semester addGroupToSemester(Semester semester, Group group) {
-        log.info("In addGroup");
+        log.info("In addGroupToSemester");
         List<Group> groups = semester.getGroups();
         if (groups == null){
             groups = new ArrayList<>();
@@ -265,6 +265,33 @@ public class SemesterServiceImpl implements SemesterService {
         groups.add(group);
         semester.setGroups(groups);
         getById(semester.getId()).setGroups(groups);
+        return semester;
+    }
+
+    @Override
+    public Semester addGroupsToSemester(Semester semester, List<Group> groups) {
+        log.info("In addGroupsToSemester");
+        groups.forEach(group -> addGroupToSemester(semester, group));
+        return semester;
+    }
+
+    @Override
+    public Semester deleteGroupFromSemester(Semester semester, Group group) {
+        log.info("In deleteGroupFromSemester");
+        List<Group> groups = semester.getGroups();
+        if (groups == null){
+            return semester;
+        }
+        groups.remove(group);
+        semester.setGroups(groups);
+        getById(semester.getId()).setGroups(groups);
+        return semester;
+    }
+
+    @Override
+    public Semester deleteGroupsFromSemester(Semester semester, List<Group> groups) {
+        log.info("In deleteGroupsFromSemester");
+        groups.forEach(group -> deleteGroupFromSemester(semester, group));
         return semester;
     }
 }
