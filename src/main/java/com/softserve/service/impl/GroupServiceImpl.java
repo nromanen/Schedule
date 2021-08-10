@@ -14,9 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -207,6 +205,15 @@ public class GroupServiceImpl  implements GroupService {
     public List<Group> getGroupsForDefaultSemester(){
         log.info("Enter into getGroupsByCurrentSemester");
         return semesterService.getDefaultSemester().getGroups();
+    }
+
+    @Override
+    @Transactional
+    public List<Group> getGroupsByGroupIds(Long[] groupIds) {
+        log.info("Enter into getGroupsByGroupIds");
+        List<Group> groups = new ArrayList<>();
+        Arrays.stream(groupIds).forEach(groupId -> groups.add(getById(groupId)));
+        return groups;
     }
 
 }

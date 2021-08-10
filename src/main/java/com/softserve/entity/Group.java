@@ -1,10 +1,7 @@
 package com.softserve.entity;
 
 import com.opencsv.bean.CsvBindByName;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.*;
 import org.hibernate.annotations.OrderBy;
 
@@ -17,7 +14,9 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
@@ -47,10 +46,23 @@ public class Group implements Serializable {
     private String title;
 
     @NotNull
-    @OneToMany(mappedBy = "group")
+    @OneToMany(mappedBy = "group", fetch = FetchType.EAGER)
     @OrderBy(clause = "surname ASC")
     private List<Student> students = new ArrayList<>();
 
     @Column(name = "disable",  columnDefinition = "boolean default 'false'")
     private boolean disable = false;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Group group = (Group) o;
+        return disable == group.disable && id.equals(group.id) && title.equals(group.title);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, title, disable);
+    }
 }
