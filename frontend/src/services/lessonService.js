@@ -113,6 +113,7 @@ const createLessonHandler = (data, isCopy) => {
 };
 
 export const handleLessonCardService = (card, groupId) => {
+    console.log("card",card);
 
     let cardObj = cardObjectHandler(card, groupId);
     if (!checkUniqLesson(cardObj)) {
@@ -124,18 +125,32 @@ export const handleLessonCardService = (card, groupId) => {
         setUniqueErrorService(true);
         return;
     }
-    if (cardObj.id) {
-        axios
-            .get(`teachers/${cardObj.teacher.id}`)
-            .then(res => {
-                cardObj={...cardObj,teacher: res.data}
-                updateLessonHandler(cardObj);
-            })
-            .catch(error => errorHandler(error));
-
-    } else {
-        createLessonHandler(cardObj, false);
-    }
+    axios
+        .get(`teachers/${cardObj.teacher.id}`)
+        .then(res => {
+            cardObj={...cardObj,teacher: res.data}
+            cardObj.id?updateLessonHandler(cardObj):createLessonHandler(cardObj, false);
+        })
+        .catch(error => errorHandler(error));
+    // if (cardObj.id) {
+    //     axios
+    //         .get(`teachers/${cardObj.teacher.id}`)
+    //         .then(res => {
+    //             cardObj={...cardObj,teacher: res.data}
+    //             updateLessonHandler(cardObj);
+    //         })
+    //         .catch(error => errorHandler(error));
+    //
+    // } else {
+    //     axios
+    //         .get(`teachers/${cardObj.teacher.id}`)
+    //         .then(res => {
+    //             cardObj={...cardObj,teacher: res.data}
+    //             createLessonHandler(cardObj, false);
+    //         })
+    //         .catch(error => errorHandler(error));
+    //
+    // }
 };
 export const removeLessonCardService = lessonCardId => {
     axios

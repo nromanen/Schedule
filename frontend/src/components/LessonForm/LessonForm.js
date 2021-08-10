@@ -230,7 +230,6 @@ let LessonForm = props => {
                         hidePlaceholder={true}
                         selectedValues={[group]}
                         alwaysDisplayedItem={group}
-
                     />
 
                     <div className="form-buttons-container">
