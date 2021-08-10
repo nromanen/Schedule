@@ -1,6 +1,7 @@
 package com.softserve.service.impl;
 
 import com.softserve.dto.TeacherDTO;
+import com.softserve.dto.TeacherForUpdateDTO;
 import com.softserve.entity.*;
 import com.softserve.entity.enums.EvenOdd;
 import com.softserve.entity.enums.Role;
@@ -19,7 +20,6 @@ import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.time.DayOfWeek;
 import java.util.ArrayList;
 import java.util.List;
@@ -92,31 +92,32 @@ public class TeacherServiceImpl implements TeacherService {
     @Override
     public Teacher save(TeacherDTO teacherDTO) {
         log.info("Enter into save method with dto:{}", teacherDTO);
-        if (isEmailNullOrEmpty(teacherDTO)) {
-            return save(teacherMapper.teacherDTOToTeacher(teacherDTO));
+        Teacher teacher = teacherMapper.teacherDTOToTeacher(teacherDTO);
+        if (isEmailNullOrEmpty(teacherDTO.getEmail())) {
+            return save(teacher);
         }
-        return save(registerTeacher(teacherDTO));
+        return save(registerTeacher(teacher, teacherDTO.getEmail()));
     }
 
     /**
      * Method updates information for an existing teacher in Repository and register user if email was added
-     * @param teacherDTO TeacherDTO instance with info to be updated
+     * @param teacherForUpdateDTO TeacherForUpdateDTO instance with info to be updated
      * @return updated Teacher entity
      */
     @Override
-    public Teacher update(TeacherDTO teacherDTO) {
-        log.info("Enter into update method with dto:{}", teacherDTO);
-        if (isEmailNullOrEmpty(teacherDTO)) {
-            return update(teacherMapper.teacherDTOToTeacher(teacherDTO));
-        }
-        Integer userId = getById(teacherDTO.getId()).getUserId();
-        if (userId != null) {
-            Teacher teacher = teacherMapper.teacherDTOToTeacher(teacherDTO);
-            teacher.setUserId(userId);
-            updateEmailInUserForTeacher(teacherDTO.getEmail(), userId.longValue());
+    public Teacher update(TeacherForUpdateDTO teacherForUpdateDTO) {
+        log.info("Enter into update method with dto:{}", teacherForUpdateDTO);
+        Teacher teacher =  teacherMapper.teacherForUpdateDTOToTeacher(teacherForUpdateDTO);
+        if (isEmailNullOrEmpty(teacherForUpdateDTO.getEmail())) {
             return update(teacher);
         }
-        return update(registerTeacher(teacherDTO));
+        Integer userId = getById(teacherForUpdateDTO.getId()).getUserId();
+        if (userId != null) {
+            teacher.setUserId(userId);
+            updateEmailInUserForTeacher(teacherForUpdateDTO.getEmail(), userId.longValue());
+            return update(teacher);
+        }
+        return update(registerTeacher(teacher, teacherForUpdateDTO.getEmail()));
     }
 
     /**
@@ -261,9 +262,8 @@ public class TeacherServiceImpl implements TeacherService {
         return teacherRepository.getAllTeacherWithoutUser();
     }
 
-    private Teacher registerTeacher(TeacherDTO teacherDTO) {
-        Teacher teacher = teacherMapper.teacherDTOToTeacher(teacherDTO);
-        User registeredUserForTeacher = userService.automaticRegistration(teacherDTO.getEmail(), Role.ROLE_TEACHER);
+    private Teacher registerTeacher(Teacher teacher, String email) {
+        User registeredUserForTeacher = userService.automaticRegistration(email, Role.ROLE_TEACHER);
         teacher.setUserId(registeredUserForTeacher.getId().intValue());
         return teacher;
     }
@@ -274,7 +274,7 @@ public class TeacherServiceImpl implements TeacherService {
         userService.update(userForTeacher);
     }
 
-    private boolean isEmailNullOrEmpty(TeacherDTO teacherDTO) {
-        return teacherDTO.getEmail() == null || teacherDTO.getEmail().isEmpty();
+    private boolean isEmailNullOrEmpty(String email) {
+        return email == null || email.isEmpty();
     }
 }
