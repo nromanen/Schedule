@@ -2,20 +2,20 @@ package com.softserve.entity;
 
 import com.opencsv.bean.CsvBindByName;
 import lombok.*;
-import org.hibernate.annotations.*;
 import org.hibernate.annotations.OrderBy;
+import org.hibernate.annotations.*;
 
-import javax.persistence.*;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
@@ -45,6 +45,7 @@ public class Group implements Serializable {
     @CsvBindByName(column = "group")
     private String title;
 
+    @EqualsAndHashCode.Exclude
     @NotNull
     @OneToMany(mappedBy = "group")
     @OrderBy(clause = "surname ASC")
@@ -53,16 +54,4 @@ public class Group implements Serializable {
     @Column(name = "disable",  columnDefinition = "boolean default 'false'")
     private boolean disable = false;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Group group = (Group) o;
-        return disable == group.disable && id.equals(group.id) && title.equals(group.title);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, title, disable);
-    }
 }
