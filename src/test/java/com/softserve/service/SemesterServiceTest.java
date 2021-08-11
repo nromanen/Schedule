@@ -296,6 +296,40 @@ public class SemesterServiceTest {
         semesterService.update(semester);
     }
 
+    @Test(expected = UsedEntityException.class)
+    public void throwEntityUsedEntityExceptionIfDaysHasLessons() {
+        Semester semester = new Semester();
+        semester.setId(1L);
+        semester.setDescription("1 semester");
+        semester.setYear(2020);
+        semester.setStartDay(LocalDate.of(2020, 4, 10));
+        semester.setEndDay(LocalDate.of(2020, 5, 10));
+        Set<DayOfWeek> dayOfWeeks = new HashSet<>();
+        dayOfWeeks.add(DayOfWeek.TUESDAY);
+        dayOfWeeks.add(DayOfWeek.WEDNESDAY);
+        semester.setDaysOfWeek(dayOfWeeks);
+        Period firstClasses = new Period();
+        firstClasses.setName("1 para");
+        Period secondClasses = new Period();
+        secondClasses.setName("2 para");
+        Period thirdClasses = new Period();
+        thirdClasses.setName("3 para");
+        Period fourthClasses = new Period();
+        fourthClasses.setName("4 para");
+        Set<Period> periodSet = new HashSet<>();
+        periodSet.add(firstClasses);
+        periodSet.add(secondClasses);
+        periodSet.add(thirdClasses);
+        periodSet.add(fourthClasses);
+        semester.setPeriods(periodSet);
+
+        List<DayOfWeek> daysWithLessonsInSchedule = Arrays.asList(DayOfWeek.MONDAY, DayOfWeek.TUESDAY, DayOfWeek.WEDNESDAY);
+
+        when(semesterRepository.getDaysWithLessonsBySemester(semester.getId())).thenReturn(daysWithLessonsInSchedule);
+
+        semesterService.update(semester);
+    }
+
     @Test
     public void updateSemesterAndSetItAsCurrent() {
         Semester semester = new Semester();
