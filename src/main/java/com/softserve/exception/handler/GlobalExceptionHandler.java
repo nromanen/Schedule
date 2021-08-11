@@ -50,7 +50,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     /** Handles IncorrectTimeException, IncorrectPasswordException, ScheduleConflictException,
      * PeriodConflictException, EntityAlreadyExistsException. Triggered when:
-     * teacher wishes json / time in period / password, entered during registration by User, are incorrect;
+     * time in period / password, entered during registration by User, are incorrect;
      * schedule / period have conflicts with already existed entities;
      * object already exists in an another class.
      */
