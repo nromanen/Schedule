@@ -35,7 +35,7 @@ public class TeacherRepositoryImpl extends BasicRepositoryImpl<Teacher, Long> im
                         " order by t.surname ASC").getResultList();
     }
 
-    // Checking if teacher is used in Lesson and TeacherWishes tables
+    // Checking if teacher is used in Lesson table
     @Override
     protected boolean checkReference(Teacher teacher) {
         log.info("In checkReference(teacher = [{}])", teacher);

@@ -1,5 +1,4 @@
 delete from "public".lessons;
-delete from "public".teacher_wishes;
 delete from "public".teachers;
 
 insert into "public".teachers(id, name, patronymic, "position", surname) VALUES

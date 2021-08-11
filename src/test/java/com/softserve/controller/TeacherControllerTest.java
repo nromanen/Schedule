@@ -56,20 +56,6 @@ public class TeacherControllerTest {
     }
 
     @Test
-    public void getAllTeachersWithWishes() throws Exception {
-        mockMvc.perform(get("/teachers/with-wishes").accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType("application/json"));
-    }
-
-    @Test
-    public void getTeacherWithWishesById() throws Exception {
-        mockMvc.perform(get("/teachers/{id}/with-wishes", 4).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType("application/json"));
-    }
-
-    @Test
     public void getTeacherById() throws Exception {
         mockMvc.perform(get("/teachers/{id}", 4).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -126,11 +112,6 @@ public class TeacherControllerTest {
     @Test
     public void returnNotFoundIfTeacherNotFoundedById() throws Exception {
         mockMvc.perform(get("/teachers/100")).andExpect(status().isNotFound());
-    }
-
-    @Test
-    public void returnNotFoundIfTeacherWithWishesNotFoundedById() throws Exception {
-        mockMvc.perform(get("/teachers/100/with-wishes")).andExpect(status().isNotFound());
     }
 
     @Test
