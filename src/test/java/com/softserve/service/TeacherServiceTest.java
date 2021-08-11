@@ -52,9 +52,6 @@ public class TeacherServiceTest {
     @Mock
     MailService mailService;
 
-    @Mock
-    PeriodService periodService;
-
     @InjectMocks
     TeacherServiceImpl teacherService;
 
