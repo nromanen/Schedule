@@ -14,18 +14,17 @@ import { connect } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import RenderStudentTable from '../../../helper/renderStudentTable';
 import { getAllStudentsByGroupId, updateStudentService } from '../../../services/studentService';
-import renderSelectField from '../../renderedFields/select';
-import { required } from '../../../validation/validateFields';
-import { Field } from 'redux-form';
 import Select from 'react-select';
 import { isObjectEmpty } from '../../../helper/ObjectRevision';
 import { successHandler } from '../../../helper/handlerAxios';
+import { UploadFile } from '../../../components/UploadFile/UploadFile';
 
 
 export const ShowStudentsDialog = props => {
     const { onClose,  cardId, open,onDeleteStudent,students,onSubmit,match,student,groups,group} = props;
     const [checkBoxStudents,setCheckBoxStudents]=useState([]);
     const [checkedAll,setCheckedAll]=useState(false);
+    const [openUploadFile,setOpenUploadFile]=useState(false);
     const setDefaultGroupOption=()=>{
         return {value: `${ group.id }`,label: `${ group.title }`,...group};
     }
@@ -161,6 +160,12 @@ export const ShowStudentsDialog = props => {
         }
         handleClearCheckedAllBtn();
     }
+    const handleOpenDialogFile=()=>{
+        setOpenUploadFile(true)
+    }
+    const handleCloseDialogFile=()=>{
+        setOpenUploadFile(false)
+    }
     return (
         <Dialog
             disableBackdropClick={true}
@@ -215,23 +220,34 @@ export const ShowStudentsDialog = props => {
                 </>
             </DialogTitle>
             <div className="buttons-container">
-
+                {<UploadFile group={group} open={openUploadFile} handleCloseDialogFile={handleCloseDialogFile}/>}
+                <Button
+                    className={students.length !== 0?'student-dialog-button-data':'student-dialog-button-no-data'}
+                    variant='contained'
+                    onClick={handleOpenDialogFile}
+                    color='primary'
+                    title={i18n.t('upload_from_file')}
+                >
+                    {i18n.t('common:upload_from_file_title')}
+                </Button>
                 {students.length !== 0?
                 <Button
-                    className='dialog-button'
+                    className='student-dialog-button-data'
                     variant='contained'
                     onClick={handleSubmitGroupStudents}
                     color='primary'
                     disabled={setDisabledMoveToGroupBtn()}
+                    title={i18n.t('move_to_group_title')}
                 >
                     {i18n.t('common:move_to_group_title')}
                 </Button>
                 :null}
                 <Button
-                    className="dialog-button"
+                    className={students.length !== 0?'student-dialog-button-data':'student-dialog-button-no-data'}
                     variant="contained"
                     onClick={() => onClose('')}
                     color="primary"
+                    title={i18n.t('close_title')}
                 >
                     {i18n.t('common:close_title')}
                 </Button>
