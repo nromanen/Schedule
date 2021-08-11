@@ -2,10 +2,7 @@ package com.softserve.service.impl;
 
 import com.softserve.entity.Group;
 import com.softserve.entity.Semester;
-import com.softserve.exception.EntityAlreadyExistsException;
-import com.softserve.exception.EntityNotFoundException;
-import com.softserve.exception.IncorrectTimeException;
-import com.softserve.exception.ScheduleConflictException;
+import com.softserve.exception.*;
 import com.softserve.repository.SemesterRepository;
 import com.softserve.service.PeriodService;
 import com.softserve.service.SemesterService;
@@ -21,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Transactional
@@ -94,6 +92,9 @@ public class SemesterServiceImpl implements SemesterService {
         }
         if (isSemesterExists(semester.getId(), semester.getDescription(), semester.getYear())) {
             throw new EntityAlreadyExistsException("Semester already exists with current description and year.");
+        }
+        if (isDayContainingLessons(semester)) {
+            throw new UsedEntityException("The day in the semester has lessons and can't be removed");
         }
     }
 
@@ -202,6 +203,20 @@ public class SemesterServiceImpl implements SemesterService {
             return false;
         }
         return existingSemester.getId() != semesterId;
+    }
+
+    /**
+     * The method is used for checking if days in a semester has lessons and can't be removed when the semester is being updated
+     *
+     * @return list of disabled semesters
+     */
+    private boolean isDayContainingLessons(Semester semester) {
+        log.info("Enter into isDayContainingLessons with entity: {}", semester);
+        List<DayOfWeek> daysWithLessonsInSchedule = semesterRepository.getDaysWithLessonsBySemester(semester.getId());
+        List<DayOfWeek> daysWithLessonsInSemester = daysWithLessonsInSchedule.stream()
+                .filter(s -> !semester.getDaysOfWeek().contains(s))
+                .collect(Collectors.toList());
+        return !daysWithLessonsInSemester.isEmpty();
     }
 
     /**
