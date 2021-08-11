@@ -55,18 +55,18 @@ public class SemesterController {
 
     @GetMapping("/semesters/current")
     @ApiOperation(value = "Get current semester a manager is working on")
-    public ResponseEntity<SemesterDTO> getCurrent(){
+    public ResponseEntity<SemesterWithGroupsDTO> getCurrent(){
         log.info("In getCurrent()");
         Semester semester = semesterService.getCurrentSemester();
-        return ResponseEntity.status(HttpStatus.OK).body(semesterMapper.semesterToSemesterDTO(semester));
+        return ResponseEntity.status(HttpStatus.OK).body(semesterMapper.semesterToSemesterWithGroupsDTO(semester));
     }
 
     @GetMapping("/semesters/default")
     @ApiOperation(value = "Get default semester")
-    public ResponseEntity<SemesterDTO> getDefault(){
+    public ResponseEntity<SemesterWithGroupsDTO> getDefault(){
         log.info("In getDefault()");
         Semester semester = semesterService.getDefaultSemester();
-        return ResponseEntity.status(HttpStatus.OK).body(semesterMapper.semesterToSemesterDTO(semester));
+        return ResponseEntity.status(HttpStatus.OK).body(semesterMapper.semesterToSemesterWithGroupsDTO(semester));
     }
 
     @PutMapping("/semesters/current")
