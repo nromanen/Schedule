@@ -38,12 +38,10 @@ public abstract class TeacherMapper {
     @Mapping(target = "email", source = "userId", qualifiedByName = "userIdToEmail")
     public abstract TeacherForUpdateDTO teacherToTeacherForUpdateDTO(Teacher teacher);
 
-    List<TeacherDTO> teachersToTeacherDTOs(List<Teacher> teachers);
     @Mapping(target = "department", source = "departmentDTO")
     public abstract Teacher teacherDTOToTeacher(TeacherDTO teacherDTO);
 
     public abstract TeacherWithUserDTO toTeacherWithUserDTO(Teacher teacher);
-
 
     @Mapping(target = "teacherId", source = "id")
     @Mapping(target = "teacherName", source = "name")
@@ -52,7 +50,6 @@ public abstract class TeacherMapper {
     @Mapping(target = "teacherPosition", source = "position")
     @Mapping(target = "teacherDepartmentDTO", source = "department")
     public abstract UserDataDTO teacherToUserDataDTO(Teacher teacher);
-
 
     public abstract List<TeacherDTO> teachersToTeacherDTOs(List<Teacher> teachers);
 
