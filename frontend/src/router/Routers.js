@@ -38,13 +38,8 @@ const Routers = props => {
     let routes = (
         <Switch>
             <Route path={links.Registration} component={Register}/>
-            <Route path={links.RESET_PASSWORD} component={ResetPassword}/>
-
             <Route path={links.HOME_PAGE} exact component={HomePage} />
             <Route path={links.ScheduleFor} component={GroupSchedulePage}/>
-            <Route path={links.SCHEDULE_PAGE}>
-                <Redirect to={links.LOGIN} />
-            </Route>
             <Route path={links.ADMIN_PAGE}>
                 <Redirect to={links.LOGIN} />
             </Route>
@@ -58,6 +53,7 @@ const Routers = props => {
     if (userRole === userRoles.MANAGER) {
         routes = (
             <Switch>
+                <Route path={links.SCHEDULE_PAGE} component={SchedulePage} />
                 <Route path={links.Departments} component={DepartmentPage}/>
                 <Route path={links.Registration} component={Register}/>
                 <Route path={links.RESET_PASSWORD} component={ResetPassword}/>
@@ -74,7 +70,7 @@ const Routers = props => {
                 <Route path={`${links.GroupList}${links.Group}${links.IdParam}${links.ShowStudents}`}  component={GroupList} />
                 <Route path={`${links.GroupList}${links.Group}${links.IdParam}${links.Student}${links.IdStudentParam}${links.Edit}`}  component={GroupList} />
                 <Route path={`${links.GroupList}${links.Group}${links.IdParam}${links.Student}${links.IdStudentParam}${links.Delete}`}  component={GroupList} />
-                {/*${links.GroupList}${links.Group}/${group.id}${links.AddStudent}*/}
+
                 <Route path={links.ClassScheduleTitle}  component={ClassSchedule} />
                 <Route path={links.RoomList}  component={RoomList} />
                 <Route path={links.SubjectPage}  component={SubjectPage} />
@@ -82,7 +78,7 @@ const Routers = props => {
                 <Route path={links.SemesterPage}  component={SemesterPage} />
                 <Route path={links.MergeRolePage}  component={MergeRolePage} />
                 <Route path={links.Changes}  component={ChangePasswordForm} />
-                <Route path={links.SCHEDULE_PAGE} component={SchedulePage} />
+
 
                 <Route path={links.ACTIVATION_PAGE}>
                     <Redirect to={links.ADMIN_PAGE} />
