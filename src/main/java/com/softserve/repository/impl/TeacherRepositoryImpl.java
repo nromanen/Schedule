@@ -14,7 +14,6 @@ import java.util.Optional;
 @SuppressWarnings("unchecked")
 public class TeacherRepositoryImpl extends BasicRepositoryImpl<Teacher, Long> implements TeacherRepository {
 
-
     private Session getSession(){
         Session session = sessionFactory.getCurrentSession();
         Filter filter = session.enableFilter("teachersDisableFilter");
@@ -33,6 +32,18 @@ public class TeacherRepositoryImpl extends BasicRepositoryImpl<Teacher, Long> im
         Session session = getSession();
         return session.createQuery("select t from " + basicClass.getName() + " t" +
                         " order by t.surname ASC").getResultList();
+    }
+
+    /**
+     * The method used for updating Teacher
+     *
+     * @param entity entity is going to be updated
+     * @return entity that was updated
+     */
+    @Override
+    public Teacher update(Teacher entity) {
+        sessionFactory.getCurrentSession().clear();
+        return super.update(entity);
     }
 
     // Checking if teacher is used in Lesson and TeacherWishes tables
