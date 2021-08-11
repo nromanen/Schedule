@@ -18,7 +18,6 @@ public class StudentDTO {
     private String surname;
     private String patronymic;
     private String email;
-    private Long userId;
     @JsonInclude(NON_NULL)
     private GroupDTO group;
 }

@@ -84,7 +84,6 @@ public class StudentControllerTest {
         studentDTO.setSurname("Surname");
         studentDTO.setPatronymic("Patronymic");
         studentDTO.setEmail("12313asdasd@gmail.com");
-        studentDTO.setUserId(1L);
         studentDTO.setGroup(groupDTO);
 
         mockMvc.perform(post("/students")
@@ -104,7 +103,6 @@ public class StudentControllerTest {
         studentDTO.setSurname("Changed Surname");
         studentDTO.setPatronymic("Changed Patronymic");
         studentDTO.setEmail("changedTempStudent@gmail.com");
-        studentDTO.setUserId(1L);
         studentDTO.setGroup(groupDTO);
 
         mockMvc.perform(put("/students")
