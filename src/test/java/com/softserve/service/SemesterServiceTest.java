@@ -325,7 +325,7 @@ public class SemesterServiceTest {
 
         List<DayOfWeek> daysWithLessonsInSchedule = Arrays.asList(DayOfWeek.MONDAY, DayOfWeek.TUESDAY, DayOfWeek.WEDNESDAY);
 
-        when(semesterRepository.getDaysWithLessonsBySemester(semester.getId())).thenReturn(daysWithLessonsInSchedule);
+        when(semesterRepository.getDaysWithLessonsBySemesterId(semester.getId())).thenReturn(daysWithLessonsInSchedule);
 
         semesterService.update(semester);
     }

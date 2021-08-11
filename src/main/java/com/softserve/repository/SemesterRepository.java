@@ -16,5 +16,5 @@ public interface SemesterRepository extends BasicRepository<Semester, Long> {
     Optional<Semester> getDefaultSemester();
     int updateAllSemesterDefaultToFalse();
     int setDefaultSemester(Long semesterId);
-    List<DayOfWeek> getDaysWithLessonsBySemester(Long semesterId);
+    List<DayOfWeek> getDaysWithLessonsBySemesterId(Long semesterId);
 }
