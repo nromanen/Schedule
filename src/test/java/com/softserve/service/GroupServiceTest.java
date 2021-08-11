@@ -268,5 +268,42 @@ public class GroupServiceTest {
         verify(semesterService, times(1)).getCurrentSemester();
     }
 
+    @Test
+    public void getGroupsForDefaultSemester() {
+        Group group = new Group();
+        group.setTitle("some group");
+        group.setId(1L);
+        List<Group> groupList = new ArrayList<>();
+        groupList.add(group);
+        Semester semester = new Semester();
+        semester.setDefaultSemester(true);
+        semester.setGroups(groupList);
+        when(semesterService.getDefaultSemester()).thenReturn(semester);
+        assertEquals(groupService.getGroupsForDefaultSemester(), semester.getGroups());
+        verify(semesterService, times(1)).getDefaultSemester();
+    }
+
+    @Test
+    public void getGroupsByGroupIds() {
+        Group group1 = new Group();
+        group1.setTitle("some group1");
+        group1.setId(1L);
+        Group group2 = new Group();
+        group2.setTitle("some group2");
+        group2.setId(2L);
+        List<Group> groupList = new ArrayList<>();
+        groupList.add(group1);
+        groupList.add(group2);
+        Semester semester = new Semester();
+        semester.setDefaultSemester(true);
+        semester.setGroups(groupList);
+        Long[] groupIds = {1L, 2L};
+
+        when(groupRepository.getById(1L)).thenReturn(group1);
+        when(groupRepository.getById(2L)).thenReturn(group2);
+
+        assertEquals(groupService.getGroupsByGroupIds(groupIds), groupList);
+    }
+
 
 }
