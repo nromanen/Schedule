@@ -91,5 +91,5 @@ export const clearDepartment=()=>{
     resetFormHandler(DEPARTMENT_FORM);
 }
 export const getDepartmentByIdService=(id)=>{
-    store.dispatch(getDepartItemById(id));
+    store.dispatch(getDepartItemById(Number(id)));
 }

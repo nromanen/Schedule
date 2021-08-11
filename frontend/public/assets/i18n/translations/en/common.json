@@ -8,6 +8,7 @@
     "admin_title": "Admin",
     "home_title": "Home",
     "schedule_title": "Schedule",
+    "student_title": "Student(s)",
     "wishes_title": "Wishes",
     "my_profile": "My profile",
 
@@ -26,7 +27,7 @@
     "MergeRolePage_management_title": "Users",
     "merge_header": "Merging",
     "cancel_schedule": "Cancel",
-    "sent_schedule": "Sent",
+    "sent_schedule": "Send",
     "choose_teachers": "Choose teachers...",
     "all_teachers": "All teachers",
 
@@ -112,7 +113,7 @@
     "schedule_dialog_title": "Please choose room:",
     "choose_group": "Please choose group:",
 
-    "greetings_schedule_message": "On this site you have oppotunity to view a full schedule on the semester, for this select semester from the drop-down list and click on the button; if you want to see the schedule for the group, you need to select the semester and the group and click on the button; if the schedule is for the teacher, you need to select the semester and teacher and click on the button.",
+    "greetings_schedule_message": "On this site you have opportunity to view a full schedule on the semester, for this select semester from the drop-down list and click on the button; if you want to see the schedule for the group, you need to select the semester and the group and click on the button; if the schedule is for the teacher, you need to select the semester and teacher and click on the button.",
     "greetings_schedule_message_hint": "*To view the schedule for the group or teacher, it is necessary to choose the semester.",
     "semester_is_empty": "Semester is empty. You have to chose semester!",
     "full_schedule_label": "Full Schedule",
@@ -122,6 +123,8 @@
     "class_does_not_suit_for_teacher": "This class doesn't suit for teacher",
     "are_you_sure": "Are you sure?",
     "no_button_title": "No",
+    "close_title": "Close",
+    "move_to_group_title": "Move to group...",
     "yes_button_title": "Yes",
     "available": "Available",
     "unavailable": "Unavailable",

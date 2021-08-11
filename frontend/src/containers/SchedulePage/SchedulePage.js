@@ -70,6 +70,7 @@ const SchedulePage = props => {
 
     return (
         <>
+
             <section className="cards-container schedule-page">
                 <section className="flexbox card ">
                     {props.scheduleLoading ? (
@@ -91,7 +92,8 @@ const SchedulePage = props => {
                                     availability={props.availability}
                                     isLoading={isLoading}
                                 />
-                            )}
+                            )
+                            }
                         </>
                     )}
                 </section>
@@ -139,6 +141,7 @@ const mapStateToProps = state => ({
     itemGroupId: state.schedule.itemGroupId,
     availability: state.schedule.availability,
     currentSemester: state.schedule.currentSemester,
+    semester:state.schedule.semester,
     rooms: state.rooms.rooms
 });
 

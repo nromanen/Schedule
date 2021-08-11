@@ -131,7 +131,7 @@ public class SemesterServiceTest {
         assertNotNull(result);
         assertEquals(semester.getDescription(), result.getDescription());
         verify(semesterRepository, times(1)).save(semester);
-        verify(semesterRepository, times(1)).setCurrentSemesterToFalse();
+        verify(semesterRepository, times(1)).updateAllSemesterCurrentToFalse();
     }
 
     @Test
@@ -168,20 +168,28 @@ public class SemesterServiceTest {
         assertNotNull(result);
         assertEquals(semester.getDescription(), result.getDescription());
         verify(semesterRepository, times(1)).save(semester);
-        verify(semesterRepository, times(1)).setDefaultSemesterToFalse();
+        verify(semesterRepository, times(1)).updateAllSemesterDefaultToFalse();
     }
 
     @Test(expected = EntityAlreadyExistsException.class)
     public void throwEntityAlreadyExistsExceptionIfDescriptionAlreadyExists() {
-        Semester semester = new Semester();
-        semester.setId(1L);
-        semester.setDescription("1 semester");
-        semester.setStartDay(LocalDate.of(2020, 4, 10));
-        semester.setEndDay(LocalDate.of(2020, 5, 10));
+        Semester semesterInDatabase = new Semester();
+        semesterInDatabase.setId(1L);
+        semesterInDatabase.setDescription("1 semester");
+        semesterInDatabase.setYear(2020);
+        semesterInDatabase.setStartDay(LocalDate.of(2020, 4, 10));
+        semesterInDatabase.setEndDay(LocalDate.of(2020, 5, 10));
 
-        when(semesterRepository.countSemesterDuplicatesByDescriptionAndYear(semester.getDescription(), semester.getYear())).thenReturn(1L);
+        Semester newSemester = new Semester();
+        newSemester.setId(0);
+        newSemester.setDescription("1 semester");
+        newSemester.setYear(2020);
+        newSemester.setStartDay(LocalDate.of(2020, 4, 10));
+        newSemester.setEndDay(LocalDate.of(2020, 5, 10));
 
-        semesterService.save(semester);
+        when(semesterRepository.getSemesterByDescriptionAndYear(newSemester.getDescription(), newSemester.getYear())).thenReturn(Optional.of(semesterInDatabase));
+
+        semesterService.save(newSemester);
     }
 
     @Test(expected = IncorrectTimeException.class)
@@ -329,7 +337,7 @@ public class SemesterServiceTest {
         assertNotNull(semester);
         assertEquals(updatedSemester, semester);
         verify(semesterRepository, times(1)).update(semester);
-        verify(semesterRepository, times(1)).setCurrentSemesterToFalse();
+        verify(semesterRepository, times(1)).updateAllSemesterCurrentToFalse();
     }
 
     @Test
@@ -373,7 +381,7 @@ public class SemesterServiceTest {
         assertNotNull(semester);
         assertEquals(updatedSemester, semester);
         verify(semesterRepository, times(1)).update(semester);
-        verify(semesterRepository, times(1)).setDefaultSemesterToFalse();
+        verify(semesterRepository, times(1)).updateAllSemesterDefaultToFalse();
     }
 
     @Test

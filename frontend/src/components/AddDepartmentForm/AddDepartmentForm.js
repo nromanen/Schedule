@@ -9,12 +9,13 @@ import Card from '../../share/Card/Card'
 import { DEPARTMENT_FORM} from '../../constants/reduxForms';
 import renderTextField from '../../share/renderedFields/input'
 import { required, uniqueSubject, maxLengthValue, uniqueDepartment } from '../../validation/validateFields';
+import { getClearOrCancelTitle, setDisableButton } from '../../helper/disableComponent';
 
 const AddDepartment = props => {
     const { t } = useTranslation('formElements');
-    const {handleSubmit,clear,department,pristine,submitting}=props;
+    const {handleSubmit,clear,department,pristine,submitting,editDepartment}=props;
     useEffect(() => {
-        if (department) {
+        if (department&&editDepartment) {
             if (department.id) {
                 props.initialize({
                     name: department.name,
@@ -52,10 +53,10 @@ const AddDepartment = props => {
                         type='button'
                         variant='contained'
                         className='buttons-style'
-                        disabled={pristine || submitting}
+                        disabled={setDisableButton(pristine,submitting,department.id)}
                         onClick={clear}
                         >
-                        {t('clear_button_label')}
+                        {getClearOrCancelTitle(department.id,t)}
                     </Button>
                 </div>
             </form>

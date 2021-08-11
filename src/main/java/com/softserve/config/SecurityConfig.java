@@ -68,7 +68,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private static final String DEPARTMENTS_ENDPOINT = "/departments/**";
     //PUBLIC
     private static final String SCHEDULE_FOR_USERS_ENDPOINT = "/schedules/full/*";
-    private static final String ALL_GROUPS_PUBLIC_ENDPOINT = "/public/groups";
+    private static final String GROUPS_BY_SEMESTER_ID_PUBLIC_ENDPOINT = "/semesters/{semesterId}/groups";
+    private static final String GROUPS_FOR_CURRENT_SEMESTER_PUBLIC_ENDPOINT = "/semesters/current/groups";
+    private static final String GROUPS_FOR_DEFAULT_SEMESTER_PUBLIC_ENDPOINT = "/semesters/default/groups";
     private static final String ALL_TEACHERS_PUBLIC_ENDPOINT = "/public/teachers";
     private static final String ALL_CLASSES_PUBLIC_ENDPOINT = "/public/classes";
     private static final String ALL_SEMESTERS_PUBLIC_ENDPOINT = "/public/semesters";
@@ -105,8 +107,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers(FRONTEND_ACTIVATION_PAGE_ENDPOINT, DOWNLOAD_SCHEDULE_ENDPOINT, AUTH_ENDPOINT, SCHEDULE_FOR_USERS_ENDPOINT, ALL_GROUPS_PUBLIC_ENDPOINT, ALL_TEACHERS_PUBLIC_ENDPOINT,HOME_ENDPOINT,LOGIN_ENDPOINT,ADMIN_ENDPOINT,FRONTEND_SCHEDULE_ENDPOINT,
-                         ALL_CLASSES_PUBLIC_ENDPOINT, ALL_SEMESTERS_PUBLIC_ENDPOINT, "/1", DEFAULT_SEMESTER_PUBLIC_ENDPOINT).permitAll()
+                .antMatchers(FRONTEND_ACTIVATION_PAGE_ENDPOINT, DOWNLOAD_SCHEDULE_ENDPOINT, AUTH_ENDPOINT, SCHEDULE_FOR_USERS_ENDPOINT, GROUPS_BY_SEMESTER_ID_PUBLIC_ENDPOINT, ALL_TEACHERS_PUBLIC_ENDPOINT,HOME_ENDPOINT,LOGIN_ENDPOINT,ADMIN_ENDPOINT,FRONTEND_SCHEDULE_ENDPOINT,
+                        ALL_CLASSES_PUBLIC_ENDPOINT, ALL_SEMESTERS_PUBLIC_ENDPOINT, GROUPS_FOR_DEFAULT_SEMESTER_PUBLIC_ENDPOINT, GROUPS_FOR_CURRENT_SEMESTER_PUBLIC_ENDPOINT, "/1", DEFAULT_SEMESTER_PUBLIC_ENDPOINT).permitAll()
                 .antMatchers(MANAGER_ENDPOINT, CLASSES_ENDPOINT, GROUPS_ENDPOINT, LESSONS_ENDPOINT,
                         ROOMS_ENDPOINT, SUBJECTS_ENDPOINT, TEACHERS_ENDPOINT, SEMESTERS_ENDPOINT, ROOM_TYPES_ENDPOINT, DEPARTMENTS_ENDPOINT).hasRole("MANAGER")
                 .anyRequest().authenticated()

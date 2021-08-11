@@ -1,0 +1,29 @@
+.send-message{
+  font-size: 25px;
+  color: blue;
+}
+.title-align{
+  text-align:center;
+}
+.send-letter-button{
+  color: #32408f;
+  border: none;
+  background-color: inherit;
+}
+.table-student-data{
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  align-items: center;
+  h6{
+    width: 500px;
+    padding: 5px;
+  }
+
+}
+.group-select{
+  z-index: 1000;
+}
+.MuiDialog-paperWidthSm{
+  max-width: 800px!important;
+}

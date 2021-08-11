@@ -13,28 +13,30 @@ import {
     uniqueGroup,
     minLengthValue
 } from '../../validation/validateFields';
+import { links } from '../../constants/links';
+import { getClearOrCancelTitle, setDisableButton } from '../../helper/disableComponent';
 
 let AddGroup = props => {
     const { t } = useTranslation('formElements');
-    const { handleSubmit, pristine, onReset, submitting } = props;
+    const { handleSubmit, pristine, onReset, submitting,match,group } = props;
 
     useEffect(() => {
-        if (props.group) {
-            if (props.group.id) {
+        if (group&&match.url.includes(links.Edit)&&!match.url.includes(links.Student)) {
+            if (group.id) {
                 props.initialize({
-                    id: props.group.id,
-                    title: props.group.title
+                    id: group.id,
+                    title: group.title
                 });
             } else {
                 props.initialize();
             }
         }
-    }, [props.group.id]);
+    }, [group.id]);
 
     return (
         <Card class="form-card group-form">
             <h2 className="group-form__title">
-                {props.group.id ? t('edit_title') : t('create_title')}
+                {group.id ? t('edit_title') : t('create_title')}
                 {t('group_y_label')}
             </h2>
             <form onSubmit={handleSubmit}>
@@ -60,10 +62,10 @@ let AddGroup = props => {
                         type="button"
                         className="buttons-style"
                         variant="contained"
-                        disabled={pristine || submitting}
+                        disabled={setDisableButton(pristine,submitting,group.id)}
                         onClick={onReset}
                     >
-                        {t('clear_button_label')}
+                        {getClearOrCancelTitle(group.id,t)}
                     </Button>
                 </div>
             </form>

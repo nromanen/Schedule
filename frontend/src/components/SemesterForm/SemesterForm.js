@@ -19,6 +19,7 @@ import {
 } from '../../validation/validateFields';
 import { getClassScheduleListService } from '../../services/classService';
 import { daysUppercase } from '../../constants/schedule/days';
+import { getClearOrCancelTitle, setDisableButton } from '../../helper/disableComponent';
 
 let AddSemesterForm = props => {
     const clearCheckboxes = () => {
@@ -37,7 +38,7 @@ let AddSemesterForm = props => {
     useEffect(() => getClassScheduleListService(), []);
 
     const { t } = useTranslation('formElements');
-    const { handleSubmit, pristine, onReset, submitting } = props;
+    const { handleSubmit, pristine, onReset, submitting,semester } = props;
 
     let prepSetCheckedClasses = {};
     useEffect(() => {
@@ -317,10 +318,10 @@ let AddSemesterForm = props => {
                         type="button"
                         variant="contained"
                         className="buttons-style"
-                        disabled={pristine || submitting}
+                        disabled={setDisableButton(pristine,submitting,semester.id)}
                         onClick={onReset}
                     >
-                        {t('clear_button_label')}
+                        {getClearOrCancelTitle(semester.id,t)}
                     </Button>
                 </div>
             </form>

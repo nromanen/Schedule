@@ -36,6 +36,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const GroupSchedulePageTop = props => {
+    const [groupDisabled,setGroupDisabled]=useState(true);
     const classes = useStyles();
     const { t } = useTranslation('common');
     const {
@@ -47,6 +48,7 @@ const GroupSchedulePageTop = props => {
         submitting
     } = props;
     const isLoading = props.loading;
+    const [semesterId,setSemesterId]=useState(props.initialValues.semester);
     let loadingContainer = '';
     if (isLoading) {
         loadingContainer = (
@@ -55,10 +57,17 @@ const GroupSchedulePageTop = props => {
             </section>
         );
     }
-    useEffect(() => showAllPublicGroupsService(), []);
+    useEffect(() => showAllPublicGroupsService(semesterId), [semesterId]);
     useEffect(() => showAllPublicTeachersService(), []);
     useEffect(() => showAllPublicSemestersService(), []);
-
+    useEffect(() => {
+        if(groups.length!==0){
+            setGroupDisabled(false)
+        }
+        else {
+            setGroupDisabled(true)
+        }
+    }, [groups]);
     const renderSemesterList = () => {
         if (semesters) {
             if (semesters.length > 1) {
@@ -71,9 +80,7 @@ const GroupSchedulePageTop = props => {
                         label={t('formElements:semester_label')}
                         type="text"
                         validate={[required]}
-
-
-
+                        onChange={(e)=>setSemesterId(e.target.value)}
                     >
                         <option />
                         {semesters.map((semester, index) => (
@@ -119,6 +126,7 @@ const GroupSchedulePageTop = props => {
     };
     const renderGroupList=()=>{
        return (<Field
+            disabled={groupDisabled}
             id="group"
             name="group"
             component={renderSelectField}

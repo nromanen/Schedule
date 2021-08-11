@@ -8,6 +8,7 @@
     "admin_title": "Адміністратор",
     "home_title": "Головна",
     "schedule_title": "Розклад",
+    "student_title": "Студент(и)",
     "wishes_title": "Бажання",
     "my_profile": "Мій профіль",
 
@@ -26,7 +27,7 @@
     "MergeRolePage_management_title": "Користувачі",
     "merge_header": "Об'єднання",
 
-    "teacher_card_position": "Позиція вчителя",
+    "teacher_card_position": "Посада викладача",
     "teacher_card_fullName": "П.І.Б",
     "teacher_card_wish": "Бажання вчителя",
     "teacher_card_no_cards": "Немає викладацьких карток",
@@ -114,6 +115,8 @@
     "class_does_not_suit_for_teacher": "Це пара не підходить для викладача",
     "are_you_sure": "Ви впевнені?",
     "no_button_title": "Ні",
+    "close_title": "Закрити",
+    "move_to_group_title": "Перемістити в групу...",
     "yes_button_title": "Так",
     "available": "Доступна",
     "unavailable": "Зайнята",

@@ -1,5 +1,13 @@
 {
     "edit_title": "Редагування ",
+    "send_letter_title": "Надіслати листа",
+    "select_all": "Вибрати всіх",
+    "select_student": "Вибрати студента",
+    "check_students": "вибрати студент(а/ів)",
+    "student_actions": "Дії",
+    "change_student": "Змінити студента",
+    "rows_per_page": "Рядків на сторінку",
+    "all_page": "Усі",
     "create_title": "Створення ",
     "create_vacation_title": "Добавити вихідний",
     "delete_title": "Видалення",
@@ -8,20 +16,30 @@
     "create_temporary_schedule_form": "Створення заміни",
     "edit_vacation_form": "Редагування вихідного",
     "create_vacation_form": "Створення вихідного",
+    "show_teacher_title": "Показати всіх викладачів кафедри",
 
     "teacher_label": "Викладач",
+    "teachers_label": "Викладачі",
+    "students_label": "Студенти",
     "link_to_meeting_label": "Онлайн-заняття",
     "user_label": "Користувач",
     "group_label": "Група",
     "class_label": "Пара",
     "room_label": "Аудиторія",
+    "chosen_semester_label": "Вибраний семестр",
+    "student_label": "Студент",
     "subject_label": "Предмет",
     "department_add_label": "Кафедра",
     "department_label": "Кафедру",
+    "department_teachers_label": "Кафедра",
+    "department_teachers": "кафедри",
+    "group_students": "групи",
+
 
     "lesson_label": "пари",
     "temporary_schedule_label": "Зміну",
     "teacher_a_label": "Викладачa",
+    "student_a_label": "Студента",
     "group_y_label": "групи",
     "class_y_label": "Пари",
     "room_y_label": "аудиторії",
@@ -41,9 +59,15 @@
     "year_label": "Рік",
 
     "teacher_first_name": "Ім'я",
+
     "teacher_surname": "Прізвище",
+
+    "surname_placeholder": "Прізвище",
+    "name_placeholder": "Ім'я",
+    "patronymic_placeholder": "По батькові",
     "teacher_patronymic": "По батькові",
     "teacher_position": "Академічне звання",
+    "email_field": "Імейл",
     "teacher_wish_class_number": "номер пари",
     "teacher_wish_day": "День",
     "wish_label": "Бажання вчителя",
@@ -55,6 +79,7 @@
 
     "save_button_label": "Зберегти",
     "clear_button_label": "Очистити",
+    "cancel_button_label": "Відмінити",
 
     "lesson_type_lecture_label": "Лекція",
     "lesson_type_laboratory_label": "Лабораторна",
@@ -81,6 +106,7 @@
     "temporary_schedule_element": "цю заміну",
     "Teacher_element": "цього викладача",
     "group_element": "цю групу",
+    "student_element": "цього студента",
     "class_element": "ця пара",
     "room_element": "цю кімнату",
     "subject_element": "цей предмет",
@@ -102,6 +128,10 @@
     "copy_label": "Копіювати",
     "semester_copy_red_hint": "Якщо в семестрі, в який ви копіюєте, є записи Занять, вони додадуться; якщо є записи фактичного розкладу-вони будуть замінені новими із семестру із яково ви копіюєте.",
     "grouped_label": "Групова",
+    "student_add_label": "Додати студента",
+    "show_students": "Показати студентів даної групи",
     "show_archived": "Відобразити заархівовані",
-    "show_regular": "Віобразити звичайні"
+    "show_regular": "Віобразити звичайні",
+    "no_exist_teachers_at_department": "Немає викладачів на цій кафедрі",
+    "no_exist_students_in_group": "У даній групі немає студентів"
 }
