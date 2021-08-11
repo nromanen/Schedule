@@ -190,7 +190,7 @@ public class SemesterRepositoryImpl extends BasicRepositoryImpl<Semester, Long> 
      * @return List of days
      */
     @Override
-    public List<DayOfWeek> getDaysWithLessonsBySemester(Long semesterId) {
+    public List<DayOfWeek> getDaysWithLessonsBySemesterId(Long semesterId) {
         log.info("In getDaysWhenGroupHasClassesBySemester(semesterId = [{}])", semesterId);
         return sessionFactory.getCurrentSession().createQuery(
                 "select distinct s.dayOfWeek from Schedule s where s.lesson.semester.id = :semesterId")
