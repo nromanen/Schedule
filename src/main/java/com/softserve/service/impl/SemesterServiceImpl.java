@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Transactional
@@ -213,7 +212,7 @@ public class SemesterServiceImpl implements SemesterService {
     private boolean isDayContainingLessons(Semester semester) {
         log.info("Enter into isDayContainingLessons with entity: {}", semester);
         List<DayOfWeek> daysInSchedule = semesterRepository.getDaysWithLessonsBySemesterId(semester.getId());
-        return !daysInSchedule.stream().allMatch(s -> !semester.getDaysOfWeek().contains(s));
+        return !daysInSchedule.stream().allMatch(s -> semester.getDaysOfWeek().contains(s));
     }
 
     /**
