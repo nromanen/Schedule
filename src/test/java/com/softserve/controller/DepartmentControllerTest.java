@@ -20,6 +20,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -161,5 +162,17 @@ public class DepartmentControllerTest {
         mockMvc.perform(get("/departments/disabled").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"));
+    }
+
+    @Test
+    public void getAllTeachers() throws Exception {
+        mockMvc.perform(get("/departments/{id}/teachers", 1).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json"))
+                .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$[0].name").value("Ivan"))
+                .andExpect(jsonPath("$[0].surname").value("Ivanov"))
+                .andExpect(jsonPath("$[0].patronymic").value("Ivanovych"))
+                .andExpect(jsonPath("$[0].position").value("docent"));
     }
 }
