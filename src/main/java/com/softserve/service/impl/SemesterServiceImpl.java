@@ -1,11 +1,9 @@
 package com.softserve.service.impl;
 
 import com.softserve.entity.Group;
+import com.softserve.entity.Period;
 import com.softserve.entity.Semester;
-import com.softserve.exception.EntityAlreadyExistsException;
-import com.softserve.exception.EntityNotFoundException;
-import com.softserve.exception.IncorrectTimeException;
-import com.softserve.exception.ScheduleConflictException;
+import com.softserve.exception.*;
 import com.softserve.repository.SemesterRepository;
 import com.softserve.service.PeriodService;
 import com.softserve.service.SemesterService;
@@ -94,6 +92,9 @@ public class SemesterServiceImpl implements SemesterService {
         }
         if (isSemesterExists(semester.getId(), semester.getDescription(), semester.getYear())) {
             throw new EntityAlreadyExistsException("Semester already exists with current description and year.");
+        }
+        if (isClassUsed(semester)) {
+            throw new UsedEntityException("At least one class is used in the schedule and can't be removed");
         }
     }
 
@@ -202,6 +203,17 @@ public class SemesterServiceImpl implements SemesterService {
             return false;
         }
         return existingSemester.getId() != semesterId;
+    }
+
+    /**
+     * The method is used for checking if classes are used in the schedule and can't be removed when the semester is updated
+     *
+     * @return list of the classes
+     */
+    private boolean isClassUsed(Semester semester) {
+        log.info("isClassUsed: {}", semester);
+        List<Period> classesInSchedule = semesterRepository.getClassesBySemesterId(semester.getId());
+        return !classesInSchedule.stream().allMatch(s -> semester.getPeriods().contains(s));
     }
 
     /**

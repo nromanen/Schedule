@@ -49,14 +49,14 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     /** Handles IncorrectWishException, IncorrectTimeException, IncorrectPasswordException, ScheduleConflictException,
-     * PeriodConflictException, EntityAlreadyExistsException. Triggered when:
+     * PeriodConflictException, EntityAlreadyExistsException, UsedEntityException. Triggered when:
      * teacher wishes json / time in period / password, entered during registration by User, are incorrect;
      * schedule / period have conflicts with already existed entities;
      * object already exists in an another class.
      */
     @ExceptionHandler({IncorrectWishException.class, IncorrectTimeException.class, IncorrectPasswordException.class,
             ScheduleConflictException.class, PeriodConflictException.class, EntityAlreadyExistsException.class,
-            IncorrectEmailException.class})
+            IncorrectEmailException.class, UsedEntityException.class})
     protected ResponseEntity<Object> handleIncorrectFieldExceptions(
             RuntimeException ex) {
         ApiError apiError = new ApiError(BAD_REQUEST);

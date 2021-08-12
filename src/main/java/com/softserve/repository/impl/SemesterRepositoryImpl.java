@@ -1,5 +1,6 @@
 package com.softserve.repository.impl;
 
+import com.softserve.entity.Period;
 import com.softserve.entity.Semester;
 import com.softserve.repository.SemesterRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -180,5 +181,19 @@ public class SemesterRepositoryImpl extends BasicRepositoryImpl<Semester, Long> 
                 .setParameter("description", description).
                 setParameter("year", year)
                 .uniqueResultOptional();
+    }
+
+    /**
+     * Method gets classes from the schedule by the certain semester
+     * @param semesterId id of the semester
+     * @return List of the classes
+     */
+    @Override
+    public List<Period> getClassesBySemesterId(Long semesterId) {
+        log.info("In getClassesBySemesterId(semesterId = [{}])", semesterId);
+        return sessionFactory.getCurrentSession().createQuery(
+                        "select s.period from Schedule s where s.lesson.semester.id = :semesterId")
+                .setParameter("semesterId", semesterId)
+                .getResultList();
     }
 }

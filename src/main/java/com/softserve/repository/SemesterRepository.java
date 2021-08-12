@@ -1,5 +1,6 @@
 package com.softserve.repository;
 
+import com.softserve.entity.Period;
 import com.softserve.entity.Semester;
 
 import java.util.List;
@@ -15,4 +16,5 @@ public interface SemesterRepository extends BasicRepository<Semester, Long> {
     Optional<Semester> getDefaultSemester();
     int updateAllSemesterDefaultToFalse();
     int setDefaultSemester(Long semesterId);
+    List<Period> getClassesBySemesterId(Long semesterId);
 }
