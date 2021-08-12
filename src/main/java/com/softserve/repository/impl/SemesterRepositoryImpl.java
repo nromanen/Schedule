@@ -185,13 +185,12 @@ public class SemesterRepositoryImpl extends BasicRepositoryImpl<Semester, Long> 
 
     /**
      * Method gets unique days with lessons in the semester
-     *
      * @param semesterId id of the semester
      * @return List of days
      */
     @Override
     public List<DayOfWeek> getDaysWithLessonsBySemesterId(Long semesterId) {
-        log.info("In getDaysWhenGroupHasClassesBySemester(semesterId = [{}])", semesterId);
+        log.info("In getDaysWithLessonsBySemesterId(semesterId = [{}])", semesterId);
         return sessionFactory.getCurrentSession().createQuery(
                 "select distinct s.dayOfWeek from Schedule s where s.lesson.semester.id = :semesterId")
                 .setParameter("semesterId", semesterId)

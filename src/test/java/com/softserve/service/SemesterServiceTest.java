@@ -297,7 +297,7 @@ public class SemesterServiceTest {
     }
 
     @Test(expected = UsedEntityException.class)
-    public void throwEntityUsedEntityExceptionIfDaysHasLessons() {
+    public void throwUsedEntityExceptionIfDaysHaveLessons() {
         Semester semester = new Semester();
         semester.setId(1L);
         semester.setDescription("1 semester");

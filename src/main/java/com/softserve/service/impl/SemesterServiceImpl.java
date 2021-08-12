@@ -205,9 +205,9 @@ public class SemesterServiceImpl implements SemesterService {
     }
 
     /**
-     * The method is used for checking if days in a semester has lessons and can't be removed when the semester is updated
+     * The method is used for checking if days in a semester have lessons and can't be removed when the semester is updated
      *
-     * @return list of disabled semesters
+     * @return boolean
      */
     private boolean isDayContainingLessons(Semester semester) {
         log.info("Enter into isDayContainingLessons with entity: {}", semester);
