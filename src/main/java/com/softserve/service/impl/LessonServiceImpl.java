@@ -109,6 +109,18 @@ public class LessonServiceImpl implements LessonService {
     }
 
     /**
+     * Method saves new lessons to Repository.
+     * @param lessons Lessons entities with info to be saved
+     * @return saved Lessons entities
+     */
+    @Override
+    public List<Lesson> save(List<Lesson> lessons) {
+        List<Lesson> lessonsList = new ArrayList<>();
+        lessons.forEach(object -> lessonsList.add(save(object)));
+        return lessonsList;
+    }
+
+    /**
      * Method updates information for an existing lesson in Repository
      * @param object Lesson entity with info to be updated
      * @return updated Lesson entity
