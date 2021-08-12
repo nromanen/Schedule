@@ -3,6 +3,7 @@ package com.softserve.controller;
 
 import com.softserve.dto.GroupWithLessonIdDTO;
 import com.softserve.dto.LessonDTO;
+import com.softserve.dto.LessonForGroupsDTO;
 import com.softserve.dto.LessonInfoDTO;
 import com.softserve.entity.Lesson;
 import com.softserve.entity.Semester;
@@ -77,10 +78,10 @@ public class LessonController {
 
     @PostMapping
     @ApiOperation(value = "Create new lesson")
-    public ResponseEntity<LessonInfoDTO> save(@RequestBody LessonInfoDTO lessonInfoDTO) {
-        log.info("In save (lessonInfoDTO = [{}])", lessonInfoDTO);
-        Lesson newLesson = lessonService.save(lessonInfoMapper.lessonInfoDTOToLesson(lessonInfoDTO));
-        return ResponseEntity.status(HttpStatus.CREATED).body(lessonInfoMapper.lessonToLessonInfoDTO(newLesson));
+    public ResponseEntity<List<LessonInfoDTO>> save(@RequestBody LessonForGroupsDTO lessonForGroupsDTO) {
+        log.info("In save (lessonForGroupsDTO = [{}])", lessonForGroupsDTO);
+        List<Lesson> lessons = lessonService.save(lessonInfoMapper.lessonForGroupsDTOToLessons(lessonForGroupsDTO));
+        return ResponseEntity.status(HttpStatus.CREATED).body(lessonInfoMapper.lessonsToLessonInfoDTOs(lessons));
     }
 
     @PutMapping
