@@ -1,15 +1,18 @@
 package com.softserve.dto;
 
+import com.softserve.entity.enums.LessonType;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
 @ToString
-public class LessonInfoDTO extends LessonBaseDTO{
-    private GroupDTO group;
+public class LessonForGroupsDTO extends LessonBaseDTO{
+    private List<GroupDTO> groups;
     private boolean grouped;
 }
