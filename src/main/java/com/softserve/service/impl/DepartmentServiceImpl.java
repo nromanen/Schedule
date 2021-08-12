@@ -1,6 +1,7 @@
 package com.softserve.service.impl;
 
 import com.softserve.entity.Department;
+import com.softserve.entity.Teacher;
 import com.softserve.exception.EntityNotFoundException;
 import com.softserve.exception.FieldAlreadyExistsException;
 import com.softserve.repository.DepartmentRepository;
@@ -83,6 +84,17 @@ public class DepartmentServiceImpl implements DepartmentService {
     public List<Department> getDisabled() {
         log.info("Enter into getAll of getDisabled");
         return repository.getDisabled();
+    }
+
+    /**
+     * The method used for getting all teachers from the Department
+     * @param departmentId id of the department
+     * @return list of teachers
+     */
+    @Override
+    public List<Teacher> getAllTeachers(Long departmentId) {
+        log.info("Enter into getAllTeachers with department id {}", departmentId);
+        return repository.getAllTeachers(departmentId);
     }
 
     private void checkNameForUniqueness(Department object) {
