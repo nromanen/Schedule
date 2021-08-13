@@ -16,6 +16,9 @@ import java.util.Optional;
 @Repository
 public class SemesterRepositoryImpl extends BasicRepositoryImpl<Semester, Long> implements SemesterRepository {
 
+    private static final String HQL_SELECT_DAYS_WITH_LESSONS
+            = "select distinct s.dayOfWeek from Schedule s where s.lesson.semester.id = :semesterId";
+
     private Session getSession(){
         Session session = sessionFactory.getCurrentSession();
         Filter filter = session.enableFilter("semesterDisableFilter");
@@ -191,8 +194,7 @@ public class SemesterRepositoryImpl extends BasicRepositoryImpl<Semester, Long> 
     @Override
     public List<DayOfWeek> getDaysWithLessonsBySemesterId(Long semesterId) {
         log.info("In getDaysWithLessonsBySemesterId(semesterId = [{}])", semesterId);
-        return sessionFactory.getCurrentSession().createQuery(
-                "select distinct s.dayOfWeek from Schedule s where s.lesson.semester.id = :semesterId")
+        return sessionFactory.getCurrentSession().createQuery(HQL_SELECT_DAYS_WITH_LESSONS, DayOfWeek.class)
                 .setParameter("semesterId", semesterId)
                 .getResultList();
     }

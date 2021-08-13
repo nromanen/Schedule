@@ -93,7 +93,7 @@ public class SemesterServiceImpl implements SemesterService {
             throw new EntityAlreadyExistsException("Semester already exists with current description and year.");
         }
         if (isDayContainingLessons(semester)) {
-            throw new UsedEntityException("At least one day in the semester has lessons and can't be removed");
+            throw new UsedEntityException("One or more days in a semester have lessons so they can not be removed");
         }
     }
 
@@ -212,7 +212,7 @@ public class SemesterServiceImpl implements SemesterService {
     private boolean isDayContainingLessons(Semester semester) {
         log.info("Enter into isDayContainingLessons with entity: {}", semester);
         List<DayOfWeek> daysInSchedule = semesterRepository.getDaysWithLessonsBySemesterId(semester.getId());
-        return !daysInSchedule.stream().allMatch(s -> semester.getDaysOfWeek().contains(s));
+        return !semester.getDaysOfWeek().containsAll(daysInSchedule);
     }
 
     /**
