@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 
 import Card from '../../share/Card/Card';
 
@@ -8,9 +8,6 @@ import { connect } from 'react-redux';
 import renderTextField from '../../share/renderedFields/input';
 import renderSelectField from '../../share/renderedFields/select';
 import renderCheckboxField from '../../share/renderedFields/checkbox';
-
-import { FaUserPlus } from 'react-icons/fa';
-
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -29,7 +26,7 @@ import {
 } from '../../helper/reduxFormHelper';
 import { getClearOrCancelTitle, setDisableButton } from '../../helper/disableComponent';
 import { selectGroupService } from '../../services/groupService';
-import { RenderMultiselect, renderMultiselect } from '../../share/renderedFields/renderMultiselect';
+import { RenderMultiselect} from '../../share/renderedFields/renderMultiselect';
 import { Accordion, AccordionDetails, AccordionSummary } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Typography from '@material-ui/core/Typography';
@@ -61,7 +58,6 @@ let LessonForm = props => {
     const groupId = props.groupId;
 
     const [checked, setChecked] = React.useState(false);
-    const [displayGroups,setDisplayGroups]=useState(false);
     const handleChange = event => setChecked(event.target.checked);
     useEffect(()=>{
         selectGroupService(groupId)
