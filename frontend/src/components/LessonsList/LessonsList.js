@@ -16,13 +16,9 @@ const LessonsList = props => {
     const firstStringLetterCapitalHandle = str => {
         return str.replace(/^\w/, c => c.toUpperCase());
     };
-    const isGroupped = grouped =>
+    const isGrouped = grouped =>
         grouped ? (
-            <p className={"grouped-class"}>{t('formElements:grouped_label')}</p>
-            // <FaUserPlus
-            //     title={t('formElements:grouped_label')}
-            //     className="svg-btn copy-btn align-left info-btn"
-            // />
+            <span className={"grouped-class"}>{t('formElements:grouped_label')}</span>
         ) : (
             ''
         );
@@ -73,6 +69,16 @@ const LessonsList = props => {
         }
         return
    }
+    const getLessonShortTitle=(title)=>{
+        const MAX_LENGTH=50;
+        return title.length>MAX_LENGTH? `${ title.slice(0, MAX_LENGTH) }...`:title;
+    }
+    const getTitle=(lesson)=>{
+       return  firstStringLetterCapitalHandle(
+            lesson.subjectForSite)+
+            " "+
+           t(`formElements:lesson_type_${lesson.lessonType.toLowerCase()}_label`)
+    }
     return (
         <div>
             <section className="container-flex-wrap">
@@ -80,7 +86,7 @@ const LessonsList = props => {
                     <Card class="done-card" key={lesson.id}>
 
                         <div className="cards-btns">
-                            {isGroupped(lesson.grouped)}
+                            {isGrouped(lesson.grouped)}
                             <MdContentCopy
                                 title={t('copy_lesson')}
                                 className="svg-btn copy-btn"
@@ -97,15 +103,9 @@ const LessonsList = props => {
                                 onClick={() => props.onClickOpen(lesson.id)}
                             />
                         </div>
-                        <p>
-                            {firstStringLetterCapitalHandle(
-                                lesson.subjectForSite
-                            )}{' '}
-                            (
-                            {t(
-                                `formElements:lesson_type_${lesson.lessonType.toLowerCase()}_label`
-                            )}
-                            )
+                        <p style={{height:"2em"}}>
+                            {getLessonShortTitle(getTitle(lesson))}
+
                         </p>
                        <p>{getTeacherName(lesson.teacher)}</p>
                         <p>
