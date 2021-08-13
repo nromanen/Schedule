@@ -11,11 +11,6 @@ public interface TeacherService extends BasicService<Teacher, Long> {
     Teacher update(TeacherForUpdateDTO teacherDTO);
 
     Teacher joinTeacherWithUser(Long teacherId, Long userId);
-
-    List<Teacher> getAllTeachersWithWishes();
-
-    Teacher getTeacherWithWishes(Long id);
-
     List<Teacher> getDisabled();
 
     Teacher findByUserId(int userId);
