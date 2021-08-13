@@ -116,7 +116,7 @@ public class LessonServiceImpl implements LessonService {
     @Override
     public List<Lesson> save(List<Lesson> lessons) {
         List<Lesson> lessonsList = new ArrayList<>();
-        lessons.forEach(object -> lessonsList.add(save(object)));
+        lessons.forEach(lesson -> lessonsList.add(save(lesson)));
         return lessonsList;
     }
 
