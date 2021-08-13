@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
+import java.util.Locale;
 
 @RestController
 @Api(tags = "Teacher API")
@@ -119,9 +120,9 @@ public class TeacherController {
 
     @GetMapping("/send-pdf-to-email/semester/{id}")
     @ApiOperation(value = "Send pdf with schedule to teachers emails")
-    public ResponseEntity sendSchedulesToEmail(@PathVariable("id") Long semesterId, @RequestParam Long[] teachersId) {
+    public ResponseEntity sendSchedulesToEmail(@PathVariable("id") Long semesterId, @RequestParam Long[] teachersId, @RequestParam Locale language) {
         log.info("Enter into sendPDFToEmail method with teachers id: {} and semester id: {}", teachersId, semesterId);
-        scheduleService.sendScheduleToTeachers(semesterId, teachersId);
+        scheduleService.sendScheduleToTeachers(semesterId, teachersId, language);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 }
