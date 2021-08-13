@@ -4,7 +4,6 @@ import com.softserve.dto.TeacherDTO;
 import com.softserve.dto.TeacherForUpdateDTO;
 import com.softserve.entity.Period;
 import com.softserve.entity.Teacher;
-import com.softserve.entity.TeacherWishes;
 import com.softserve.entity.User;
 import com.softserve.exception.EntityAlreadyExistsException;
 import com.softserve.exception.EntityNotFoundException;
@@ -24,23 +23,16 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
+
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
+
 import static com.softserve.entity.enums.Role.ROLE_TEACHER;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.argThat;
-import static org.mockito.Mockito.timeout;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @Category(UnitTestCategory.class)
 @RunWith(JUnitParamsRunner.class)
@@ -59,12 +51,6 @@ public class TeacherServiceTest {
 
     @Mock
     MailService mailService;
-
-    @Mock
-    PeriodService periodService;
-
-    @Mock
-    TeacherWishesService teacherWishesService;
 
     @InjectMocks
     TeacherServiceImpl teacherService;
@@ -330,16 +316,12 @@ public class TeacherServiceTest {
         List<Period> periodList = new ArrayList<>();
         periodList.add(period);
 
-        when(periodService.getAll()).thenReturn(periodList);
-        when(teacherWishesService.save(any(TeacherWishes.class))).thenReturn(null);
         when(teacherRepository.save(teacher)).thenReturn(teacher);
 
         Teacher result = teacherService.save(teacher);
 
         assertThat(result).isEqualToComparingFieldByField(teacher);
-        verify(periodService, times(1)).getAll();
         verify(teacherRepository, times(1)).save(teacher);
-        verify(teacherWishesService, times(1)).save(any(TeacherWishes.class));
     }
 
     @Test

@@ -4,7 +4,6 @@ delete from "public".semester_period;
 delete from "public".semester_day;
 delete from "public".semesters;
 delete from "public".groups;
-delete from "public".teacher_wishes;
 delete from "public".teachers;
 delete from "public".subjects;
 delete from "public".periods;
