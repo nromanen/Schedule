@@ -13,10 +13,11 @@ import { useTranslation } from 'react-i18next';
 import Card from '../../share/Card/Card';
 
 import './AddRoomForm.scss';
+import { getClearOrCancelTitle, setDisableButton } from '../../helper/disableComponent';
 
 let AddRoom = props => {
     const { t } = useTranslation('formElements')
-    const { handleSubmit, pristine, submitting, onReset } = props;
+    const { handleSubmit, pristine, submitting, onReset,oneRoom } = props;
 
     useEffect(() => {
         if (props.oneRoom) {
@@ -79,9 +80,9 @@ let AddRoom = props => {
                     <Button
                         className='buttons-style'
                         variant='contained'
-                        disabled={pristine || submitting}
+                        disabled={setDisableButton(pristine,submitting,oneRoom.id)}
                         onClick={onReset}>
-                        {t('clear_button_label')}
+                        {getClearOrCancelTitle(oneRoom.id,t)}
                     </Button>
                 </div>
             </form>

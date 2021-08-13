@@ -1,15 +1,15 @@
 package com.softserve.entity;
 
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.*;
+import lombok.ToString;
+import org.hibernate.annotations.Filter;
+import org.hibernate.annotations.FilterDef;
+import org.hibernate.annotations.ParamDef;
 
 import javax.persistence.*;
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
@@ -17,16 +17,14 @@ import java.util.Set;
 
 @Setter
 @Getter
+@ToString(exclude = "teacherWishesList")
+@EqualsAndHashCode(of = "id")
 @Entity
 @Table(name = "teachers")
 @FilterDef(name="teachersDisableFilter", parameters={
         @ParamDef( name="disable", type="boolean" ),
 })
-
-@Filters( {
-        @Filter(name="teachersDisableFilter", condition="disable = :disable"),
-} )
-
+@Filter(name="teachersDisableFilter", condition="disable = :disable")
 public class Teacher implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -55,6 +53,10 @@ public class Teacher implements Serializable {
 
     @Column(name ="user_id")
     private Integer userId;
+
+    @ManyToOne
+    @JoinColumn(name = "department_id",  columnDefinition = "integer")
+    private Department department;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
     @JoinColumn(name="teacher_id", updatable = false)

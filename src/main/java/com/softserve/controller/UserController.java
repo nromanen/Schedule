@@ -1,10 +1,15 @@
 package com.softserve.controller;
 
-import com.softserve.dto.*;
+import com.softserve.dto.MessageDTO;
+import com.softserve.dto.UserCreateDTO;
+import com.softserve.dto.UserDTO;
+import com.softserve.dto.UserDataForChangeDTO;
 import com.softserve.entity.CurrentUser;
 import com.softserve.entity.Teacher;
 import com.softserve.entity.User;
 import com.softserve.entity.enums.Role;
+import com.softserve.mapper.DepartmentMapper;
+import com.softserve.mapper.TeacherMapper;
 import com.softserve.security.jwt.JwtUser;
 import com.softserve.service.TeacherService;
 import com.softserve.service.UserService;
@@ -17,11 +22,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.*;
-
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.Optional;
-
 import static org.apache.commons.lang3.StringUtils.isNoneBlank;
 
 @Slf4j
@@ -33,6 +43,8 @@ public class UserController {
 
     private final UserService userService;
     private final UserMapper userMapper;
+    private final DepartmentMapper departmentMapper;
+    private final TeacherMapper teacherMapper;
     private final TeacherService teacherService;
     private final PasswordEncoder passwordEncoder;
 
@@ -107,14 +119,15 @@ public class UserController {
         User user = userService.getById(jwtUser.getId());
         if (user.getRole() == Role.ROLE_TEACHER) {
             Teacher teacher = teacherService.findByUserId(user.getId().intValue());
-            return ResponseEntity.ok().body(new UserDataDTO(teacher.getId(), teacher.getName(), teacher.getSurname(), teacher.getPatronymic(), teacher.getPosition()));
+            return ResponseEntity.ok().body(teacherMapper.teacherToUserDataDTO(teacher));
         }
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("/change-profile")
     @ApiOperation(value = "Change data for current user")
-    public ResponseEntity<MessageDTO> changeDataForCurrentUser(@CurrentUser JwtUser jwtUser, @RequestBody UserDataForChangeDTO data) {
+    public ResponseEntity<MessageDTO> changeDataForCurrentUser(@CurrentUser JwtUser jwtUser,
+                                                               @RequestBody UserDataForChangeDTO data) {
         User user = userService.getById(jwtUser.getId());
 
         Teacher teacher = null;
@@ -124,6 +137,7 @@ public class UserController {
             teacher.setSurname(data.getTeacherSurname());
             teacher.setPosition(data.getTeacherPosition());
             teacher.setPatronymic(data.getTeacherPatronymic());
+            teacher.setDepartment(departmentMapper.departmentDTOToDepartment(data.getTeacherDepartmentDTO()));
         }
 
         Optional<String> password = isNoneBlank(data.getCurrentPassword()) && isNoneBlank(data.getNewPassword()) ?

@@ -1,6 +1,6 @@
 import * as moment from 'moment';
 import { connect } from 'react-redux';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Field, reduxForm } from 'redux-form';
 import Button from '@material-ui/core/Button';
@@ -19,6 +19,8 @@ import {
 } from '../../validation/validateFields';
 import { getClassScheduleListService } from '../../services/classService';
 import { daysUppercase } from '../../constants/schedule/days';
+import { getClearOrCancelTitle, setDisableButton } from '../../helper/disableComponent';
+import formValueSelector from 'redux-form/lib/formValueSelector';
 
 let AddSemesterForm = props => {
     const clearCheckboxes = () => {
@@ -37,7 +39,7 @@ let AddSemesterForm = props => {
     useEffect(() => getClassScheduleListService(), []);
 
     const { t } = useTranslation('formElements');
-    const { handleSubmit, pristine, onReset, submitting } = props;
+    const { handleSubmit, pristine, onReset, submitting,semester } = props;
 
     let prepSetCheckedClasses = {};
     useEffect(() => {
@@ -47,10 +49,21 @@ let AddSemesterForm = props => {
         setCheckedClasses({ ...prepSetCheckedClasses });
         clearCheckboxes();
     }, [props.classScheduler, props.semester.id]);
-
+    const getToday = () => {
+        return  new Date();
+    }
+    const getTomorrow = () => {
+        const tomorrow = new Date(getToday());
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        return tomorrow;
+    }
     const [current, setCurrent] = React.useState(false);
     const [byDefault, setByDefault] = React.useState(false);
-
+    const [startTime,setStartTime]=useState(getToday());
+    const [finishTime,setFinishTime]=useState(getTomorrow());
+    const [startValue,setStartValue]=useState();
+    const [finishValue,setFinishValue]=useState();
+    const [disabledFinishDate,setDisabledFinishDate]=useState(true);
     const [checkedDates, setCheckedDates] = React.useState({
         MONDAY: false,
         TUESDAY: false,
@@ -67,12 +80,20 @@ let AddSemesterForm = props => {
 
     const handleChange = (event,setState) => setState(event.target.checked);
 
-    const setEndTime = startTime =>
-        props.change(
-            'endDay',
-            `moment(startTime, 'DD/MM/YYYY').add(7, 'd').format('DD/MM/YYYY')`
-        );
-
+    const setMinFinishDate=time=>{
+        let new_date = moment(time, "DD/MM/YYYY").add(1, 'd');
+        setFinishTime(new_date.toDate());
+    }
+    const setEndTime = startTime => {
+        if(disabledFinishDate||moment(startValue).isSameOrBefore(finishValue)) {
+            setFinishValue(setMinFinishDate(startTime));
+            props.change(
+                'endDay',
+                moment(startTime, 'DD/MM/YYYY').add(7, 'd').format('DD/MM/YYYY')
+            );
+        }
+        return
+    }
     const setCheckedDaysHandler = React.useCallback(
         day => {
             return function (event) {
@@ -281,9 +302,13 @@ let AddSemesterForm = props => {
                         component={renderMonthPicker}
                         label={t('class_from_label') + ':'}
                         validate={[required, lessThanDate]}
+                        minDate={startTime}
                         onChange={(event, value) => {
                             if (value) {
+                                setStartValue(value);
+                                setMinFinishDate(value);
                                 setEndTime(value);
+                                setDisabledFinishDate(false)
                             }
                         }}
                     />
@@ -293,6 +318,11 @@ let AddSemesterForm = props => {
                         component={renderMonthPicker}
                         label={t('class_to_label') + ':'}
                         validate={[required, greaterThanDate]}
+                        minDate={finishTime}
+                        disabled={disabledFinishDate}
+                        onChange={(event, value) => {
+                            setFinishValue(value)
+                        }}
                     />
                 </div>
                 <div className="">
@@ -317,10 +347,10 @@ let AddSemesterForm = props => {
                         type="button"
                         variant="contained"
                         className="buttons-style"
-                        disabled={pristine || submitting}
+                        disabled={setDisableButton(pristine,submitting,semester.id)}
                         onClick={onReset}
                     >
-                        {t('clear_button_label')}
+                        {getClearOrCancelTitle(semester.id,t)}
                     </Button>
                 </div>
             </form>

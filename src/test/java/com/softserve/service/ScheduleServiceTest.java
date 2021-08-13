@@ -161,7 +161,7 @@ public class ScheduleServiceTest {
         when(teacherMapper.teacherToTeacherDTO(any())).thenReturn(teacherDTO);
         when(scheduleRepository.getDaysWhenTeacherHasClassesBySemester(anyLong(), anyLong())).thenReturn(dayOfWeeks);
         doNothing().when(mailService).send(anyString(), anyString(), anyString(), anyString(),any());
-        scheduleServiceImpl.sendScheduleToTeachers(1L, id);
+        scheduleServiceImpl.sendScheduleToTeachers(1L, id, Locale.ENGLISH);
         verify(mailService, times(id.length)).send(anyString(), anyString(), anyString(), anyString(),any());
     }
 
@@ -185,7 +185,7 @@ public class ScheduleServiceTest {
         when(teacherMapper.teacherToTeacherDTO(any())).thenReturn(teacherDTO);
         when(scheduleRepository.getDaysWhenTeacherHasClassesBySemester(anyLong(), anyLong())).thenReturn(dayOfWeeks);
         doNothing().when(mailService).send(anyString(), anyString(), anyString(), anyString(),any());
-        scheduleServiceImpl.sendScheduleToTeacher(1L, 1L);
+        scheduleServiceImpl.sendScheduleToTeacher(1L, 1L, Locale.ENGLISH);
         verify(mailService, times(1)).send(anyString(), anyString(), anyString(), anyString(),any());
     }
 }
