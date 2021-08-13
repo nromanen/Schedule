@@ -12,7 +12,7 @@ import {
 import { getClassScheduleListService } from '../../services/classService';
 import {
     getScheduleItemsService,
-    clearSchedule
+    clearSchedule, showAllPublicGroupsService
 } from '../../services/scheduleService';
 import { showListOfRoomsService } from '../../services/roomService';
 
@@ -47,6 +47,7 @@ const SchedulePage = props => {
     useEffect(() => {
         showAllGroupsService();
     }, []);
+    // useEffect(() => showAllPublicGroupsService(props.currentSemester.id), [props.currentSemester.id]);
 
     useEffect(() => {
         if (groupId) {
