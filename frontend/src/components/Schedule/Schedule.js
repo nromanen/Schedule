@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { IoMdMore } from 'react-icons/all';
 
 import Board from '../Board/Board';
@@ -26,9 +26,27 @@ import { colors } from '../../constants/schedule/colors';
 import { makeStyles } from '@material-ui/core/styles';
 
 const Schedule = props => {
-    const { groups, itemGroupId } = props;
+    const { groups, itemGroupId,groupId } = props;
     const [open, setOpen] = useState(false);
     const [itemData, setItemData] = useState(null);
+    const ref = useRef(null);
+
+    useEffect(() => {
+
+        // window.scrollTo( ref.current.offsetLeft,0)
+        if(ref.current.id=groupId){
+            console.log(ref.current,groupId);
+            ref.current.scrollIntoView();
+        }
+    }, [ref.current])
+    useEffect(() => {
+
+        // window.scrollTo( ref.current.offsetLeft,0)
+        if(ref.current.id=groupId){
+            console.log(ref.current,groupId);
+            ref.current.scrollIntoView();
+        }
+    }, [groupId])
 
     const setNewItemHandle = (item, room, groupId) => {
         getLessonsByGroupService(groupId);
@@ -228,6 +246,7 @@ const Schedule = props => {
 
     return (
         <section className="cards-container schedule">
+
             <ScheduleDialog
                 translation={t}
                 itemData={itemData}
@@ -276,6 +295,7 @@ const Schedule = props => {
                         <div
                             className="group-title card"
                             id={`group-${group.id}`}
+                            ref={ref}
                         >
                             {group.title}
                         </div>
