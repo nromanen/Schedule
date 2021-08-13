@@ -21,6 +21,12 @@ import java.util.Objects;
 public abstract class BaseTableBuilder {
 
     protected static final String EMPTY_CELL = "--//--";
+    protected static final String NEW_LINE_SEPARATOR = "\n";
+    protected static final String COMA_SEPARATOR = ", ";
+    protected static final float MAX_COLUMN_WIDTH = 7f;
+    protected static final float FIRST_COLUMN_WIDTH_COMPARED_TO_OTHER = 0.5f;
+
+    protected final Translator translator;
     protected final Style style = new Style();
     protected final BaseFont baseFont;
     protected final Font cellFont;
@@ -41,6 +47,7 @@ public abstract class BaseTableBuilder {
         this.linkFont = new Font(baseFont, 11, Font.NORMAL, BaseColor.BLUE);
         this.titleFont = new Font(baseFont, 14, Font.BOLD, BaseColor.WHITE);
         this.headFont = new Font(baseFont, 12, Font.BOLD, BaseColor.BLACK);
+        this.translator = Translator.getInstance();
     }
 
     /**
@@ -53,10 +60,9 @@ public abstract class BaseTableBuilder {
     protected PdfPTable generateEmptyTable(int tableWidth) throws DocumentException {
         PdfPTable table = new PdfPTable(tableWidth);
         table.setWidthPercentage(100);
-        float columnWidthAverage = 7f / table.getNumberOfColumns();
-        //1st column width is about twice less than the others
-        float firstColumnWidth = columnWidthAverage / 1.5f;
-        float otherColumnWidth = (7f - firstColumnWidth) / (table.getNumberOfColumns() - 1);
+        float columnWidthAverage = MAX_COLUMN_WIDTH / tableWidth;
+        float firstColumnWidth = columnWidthAverage * FIRST_COLUMN_WIDTH_COMPARED_TO_OTHER;
+        float otherColumnWidth = (MAX_COLUMN_WIDTH - firstColumnWidth) / (tableWidth - 1);
         float[] columnsWidth = new float[tableWidth];
         columnsWidth[0] = firstColumnWidth;
         for (int i = 1; i < tableWidth; i++) {
@@ -75,18 +81,15 @@ public abstract class BaseTableBuilder {
      */
     protected PdfPCell[] createHeaderCells(List<DayOfWeek> days, Locale language) {
         PdfPCell[] cells = new PdfPCell[days.size() + 1];
-        // putting first cell for this row
-        PdfPCell header = new PdfPCell(
-                new Phrase(StringUtils.capitalize(Translator.getInstance().getTranslation("period", language))
-                        , headFont)
-        );
+        // putting first empty cell for this row
+        PdfPCell header = new PdfPCell();
         style.headerCellStyle(header);
         cells[0] = header;
 
         // getting all days from schedule, putting it into cells
         int i = 1;
         for (DayOfWeek dayOfWeek : days) {
-            String day = Translator.getInstance().getTranslation(dayOfWeek.toString().toLowerCase(), language);
+            String day = translator.getTranslation(dayOfWeek.toString().toLowerCase(), language);
             header = new PdfPCell(new Phrase(StringUtils.capitalize(day), headFont));
             style.headerCellStyle(header);
             cells[i++] = header;

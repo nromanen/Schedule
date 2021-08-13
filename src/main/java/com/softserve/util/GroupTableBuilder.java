@@ -115,10 +115,10 @@ public class GroupTableBuilder extends BaseTableBuilder {
         log.info("Enter into createTableTitleCell method with tableWidth {} and schedule {} and language {}", tableWidth, schedule, language);
 
         Font titleFont = new Font(baseFont, 14, Font.BOLD, BaseColor.WHITE);
-        String scheduleTitle = MessageFormat.format("{0} {1} {2}"
-                , StringUtils.capitalize(Translator.getInstance().getTranslation("schedule for", language))
-                , schedule.getGroup().getTitle()
-                , Translator.getInstance().getTranslation("group", language));
+        String scheduleTitle = MessageFormat.format("{0} {1} {2}",
+                StringUtils.capitalize(translator.getTranslation("schedule for", language)),
+                schedule.getGroup().getTitle(),
+                translator.getTranslation("group", language));
         PdfPCell cellTitle = new PdfPCell(new Phrase(scheduleTitle, titleFont));
         cellTitle.setColspan(tableWidth);
         style.titleCellStyle(cellTitle);
@@ -134,24 +134,20 @@ public class GroupTableBuilder extends BaseTableBuilder {
      * @return inner PdfPCell for table
      */
     private PdfPCell createInnerCell(DaysOfWeekWithClassesForGroupDTO day, PeriodDTO period) {
-        log.info("Enter into cellBuilder method with day {} period {}", day, period);
+        log.info("Enter into createInnerCell method with day {} period {}", day, period);
 
         PdfPCell cell = new PdfPCell(new Phrase(EMPTY_CELL, cellFont));
         for (int i = 0; i < day.getClasses().size(); i++) {
+            ClassesInScheduleForGroupDTO currentClasses = day.getClasses().get(i);
             // filling in column raws checking needed period
-            if (day.getClasses().get(i).getPeriod().equals(period)) {
-                //checking if odd and even lessons r equal
-                if (day.getClasses().get(i).getWeeks().getEven() != null &&
-                        day.getClasses().get(i).getWeeks().getEven().equals(day.getClasses().get(i).getWeeks().getOdd())) {
-                    cell = generateCell(day.getClasses().get(i).getWeeks().getEven());
+            if (currentClasses.getPeriod().equals(period)) {
+                if (isOddAndEvenClassesAreEqual(currentClasses)) {
+                    cell = generateCell(currentClasses.getWeeks().getEven());
                 } else {
                     // creating new inner table with two cells - odd and even
                     PdfPTable inner = new PdfPTable(1);
-                    //upper (odd) cell
-                    inner.addCell(createUpperInnerCell(day, i));
-                    //lower (even) cell
-                    inner.addCell(createLowerInnerCell(day, i));
-                    // adding inner table to main table's cell
+                    inner.addCell(createUpperInnerCell(currentClasses.getWeeks().getOdd()));
+                    inner.addCell(createLowerInnerCell(currentClasses.getWeeks().getEven()));
                     cell = new PdfPCell(inner);
                 }
             }
@@ -163,16 +159,15 @@ public class GroupTableBuilder extends BaseTableBuilder {
     /**
      *  Method used for creating upper (odd) cell of table
      *
-     * @param day the day of week and classes for group
-     * @param number the number of cell
+     * @param lessons the lessons for group
      * @return inner PdfPCell for table
      */
-    private PdfPCell createUpperInnerCell(DaysOfWeekWithClassesForGroupDTO day, int number) {
+    private PdfPCell createUpperInnerCell(LessonsInScheduleDTO lessons) {
         PdfPCell upperInnerCell;
-        if (day.getClasses().get(number).getWeeks().getOdd() == null) {
+        if (lessons == null) {
             upperInnerCell = new PdfPCell(new Phrase(EMPTY_CELL, cellFont));
         } else {
-            upperInnerCell = generateCell(day.getClasses().get(number).getWeeks().getOdd());
+            upperInnerCell = generateCell(lessons);
         }
         style.innerValueCellStyle(upperInnerCell);
         upperInnerCell.setBorderWidthBottom(0.5f);
@@ -182,16 +177,15 @@ public class GroupTableBuilder extends BaseTableBuilder {
     /**
      *  Method used for creating lower (even) cell of table
      *
-     * @param day the day of week and classes for group
-     * @param number the number of cell
+     * @param lessons the lessons for group
      * @return inner PdfPCell for table
      */
-    private PdfPCell createLowerInnerCell(DaysOfWeekWithClassesForGroupDTO day, int number) {
+    private PdfPCell createLowerInnerCell(LessonsInScheduleDTO lessons) {
         PdfPCell lowerInnerCell;
-        if (day.getClasses().get(number).getWeeks().getEven() == null) {
+        if (lessons == null) {
             lowerInnerCell = new PdfPCell(new Phrase(EMPTY_CELL, cellFont));
         } else {
-            lowerInnerCell = generateCell(day.getClasses().get(number).getWeeks().getEven());
+            lowerInnerCell = generateCell(lessons);
         }
         style.innerValueCellStyle(lowerInnerCell);
         return lowerInnerCell;
@@ -225,10 +219,10 @@ public class GroupTableBuilder extends BaseTableBuilder {
         String lessonType = lessons.getLessonType().toLowerCase();
         String teacher = TeacherMapper.teacherDTOToTeacherForSite(lessons.getTeacher());
         String room = lessons.getRoom().getName();
-        stringBuilder.append(subjectName).append(",\n")
-                .append(lessonType).append(",\n")
-                .append(teacher).append(",\n")
-                .append(room).append("\n");
+        stringBuilder.append(subjectName).append(COMA_SEPARATOR).append(NEW_LINE_SEPARATOR)
+                .append(lessonType).append(COMA_SEPARATOR).append(NEW_LINE_SEPARATOR)
+                .append(teacher).append(COMA_SEPARATOR).append(NEW_LINE_SEPARATOR)
+                .append(room).append(COMA_SEPARATOR).append(NEW_LINE_SEPARATOR);
         return stringBuilder.toString();
     }
 
@@ -243,6 +237,12 @@ public class GroupTableBuilder extends BaseTableBuilder {
         String link = lessons.getLinkToMeeting();
         stringBuilder.append(link);
         return stringBuilder.toString();
+    }
+
+    private boolean isOddAndEvenClassesAreEqual(ClassesInScheduleForGroupDTO classes) {
+        LessonsInScheduleDTO even = classes.getWeeks().getEven();
+        LessonsInScheduleDTO odd = classes.getWeeks().getOdd();
+        return even != null && even.equals(odd);
     }
 }
 

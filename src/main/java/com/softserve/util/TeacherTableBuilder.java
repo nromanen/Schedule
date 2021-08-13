@@ -83,7 +83,12 @@ public class TeacherTableBuilder extends BaseTableBuilder {
         return table;
     }
 
-    // getting ClassForTeacherScheduleDTO by period
+    /** Method used for getting ClassForTeacherScheduleDTO by period
+     *
+     * @param classes the classes to search
+     * @param period the period for class
+     * @return ClassForTeacherScheduleDTO by period
+     */
     private ClassForTeacherScheduleDTO getClassByPeriod(List<ClassForTeacherScheduleDTO> classes, PeriodDTO period) {
         log.info("Enter into getClassByPeriod method with classes {} and period {}", classes, period);
 
@@ -130,7 +135,7 @@ public class TeacherTableBuilder extends BaseTableBuilder {
         log.info("Enter into createTableTitleCell method with tableWidth {} and schedule {} and language {}", tableWidth, schedule, language);
 
         String scheduleTitle = MessageFormat.format("{0} {1} {2} {3}, {4}",
-                StringUtils.capitalize(Translator.getInstance().getTranslation("schedule for", language)) ,
+                StringUtils.capitalize(translator.getTranslation("schedule for", language)),
                 schedule.getTeacher().getSurname(), schedule.getTeacher().getName(),
                 schedule.getTeacher().getPatronymic(), schedule.getTeacher().getPosition());
         PdfPCell cellTitle = new PdfPCell(new Phrase(scheduleTitle, titleFont));
@@ -148,7 +153,7 @@ public class TeacherTableBuilder extends BaseTableBuilder {
      * @return inner PdfPCell for table
      */
     private PdfPCell createInnerCell(ClassForTeacherScheduleDTO oddClasses, ClassForTeacherScheduleDTO evenClasses) {
-        log.info("Enter into cellBuilder method with oddClasses {} evenClasses {}", oddClasses, evenClasses);
+        log.info("Enter into createInnerCell method with oddClasses {} evenClasses {}", oddClasses, evenClasses);
 
         PdfPCell cell;
         // creating one whole empty cell, if both odd and even lists of lessons r empty
@@ -165,7 +170,6 @@ public class TeacherTableBuilder extends BaseTableBuilder {
             PdfPTable inner = new PdfPTable(1);
             inner.addCell(createUpperInnerCell(oddClasses));
             inner.addCell(createLowerInnerCell(evenClasses));
-            // adding inner table to main table's cell
             cell = new PdfPCell(inner);
         }
         style.valueCellStyle(cell);
@@ -235,22 +239,22 @@ public class TeacherTableBuilder extends BaseTableBuilder {
         String group = lessons.stream()
                 .map(LessonForTeacherScheduleDTO::getGroup)
                 .map(GroupDTO::getTitle)
-                .collect(Collectors.joining(", "));
+                .collect(Collectors.joining(COMA_SEPARATOR));
         String subjectName = lessons.stream()
                 .map(LessonForTeacherScheduleDTO::getSubjectForSite)
-                .collect(Collectors.joining(", "));
+                .collect(Collectors.joining(COMA_SEPARATOR));
         String lessonType = lessons.stream()
                 .map(LessonForTeacherScheduleDTO::getLessonType)
                 .map(Object::toString)
-                .collect(Collectors.joining(", "));
+                .collect(Collectors.joining(COMA_SEPARATOR));
         String room = lessons.stream()
                 .map(LessonForTeacherScheduleDTO::getRoom)
-                .collect(Collectors.joining(", "));
+                .collect(Collectors.joining(COMA_SEPARATOR));
 
-        stringBuilder.append(group).append(",\n")
-                .append(subjectName).append(",\n")
-                .append(lessonType).append(",\n")
-                .append(room).append(",\n");
+        stringBuilder.append(group).append(COMA_SEPARATOR).append(NEW_LINE_SEPARATOR)
+                .append(subjectName).append(COMA_SEPARATOR).append(NEW_LINE_SEPARATOR)
+                .append(lessonType).append(COMA_SEPARATOR).append(NEW_LINE_SEPARATOR)
+                .append(room).append(COMA_SEPARATOR).append(NEW_LINE_SEPARATOR);
         return stringBuilder.toString();
     }
 
@@ -265,7 +269,7 @@ public class TeacherTableBuilder extends BaseTableBuilder {
 
         String link = lessons.stream()
                 .map(LessonForTeacherScheduleDTO::getLinkToMeeting)
-                .collect(Collectors.joining(", "));
+                .collect(Collectors.joining(COMA_SEPARATOR));
 
         stringBuilder.append(link);
         return stringBuilder.toString();
