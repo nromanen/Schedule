@@ -18,12 +18,12 @@ import Select from 'react-select';
 import { ReduxFormSelect } from '../../helper/ReduxFormSelect';
 import renderSelectField from '../../share/renderedFields/select';
 import { getDepartmentByIdService } from '../../services/departmentService';
+import { getClearOrCancelTitle, setDisableButton } from '../../helper/disableComponent';
 
 let AddTeacher = props => {
     const { t } = useTranslation('formElements');
-    const { handleSubmit, pristine, submitting, reset,departments } = props;
+    const { handleSubmit, pristine, submitting, reset,departments,teacher } = props;
 
-    const teacher = props.teacher;
     const teacherId = teacher.id;
 
     useEffect(() => {
@@ -138,13 +138,13 @@ let AddTeacher = props => {
                     <Button
                         className="buttons-style"
                         variant="contained"
-                        disabled={pristine || submitting}
+                        disabled={setDisableButton(pristine,submitting,teacher.id)}
                         onClick={() => {
                             reset();
                             props.onSetSelectedCard(null);
                         }}
                     >
-                        {t('clear_button_label')}
+                        {getClearOrCancelTitle(teacher.id,t)}
                     </Button>
                 </div>
             </form>

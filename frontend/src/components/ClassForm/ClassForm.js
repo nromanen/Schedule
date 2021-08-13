@@ -25,6 +25,7 @@ import { CLASS_FORM } from '../../constants/reduxForms';
 import * as moment from 'moment';
 import { CLASS_DURATION } from '../../constants/common';
 import { useTranslation } from 'react-i18next';
+import { getClearOrCancelTitle, setDisableButton } from '../../helper/disableComponent';
 
 const useStyles = makeStyles(theme => ({
     rootInput: {
@@ -34,7 +35,7 @@ const useStyles = makeStyles(theme => ({
 
 let ClassFormFunc = props => {
     const { t } = useTranslation('formElements');
-    const { handleSubmit, pristine, onReset, submitting } = props;
+    const { handleSubmit, pristine, onReset, submitting,classScheduleOne } = props;
     const classes = useStyles();
 
     useEffect(() => {
@@ -107,10 +108,10 @@ let ClassFormFunc = props => {
                         className="buttons-style"
                         type="button"
                         variant="contained"
-                        disabled={pristine || submitting}
+                        disabled={setDisableButton(pristine,submitting,classScheduleOne.id)}
                         onClick={onReset}
                     >
-                        {t('clear_button_label')}
+                        {getClearOrCancelTitle(classScheduleOne.id,t)}
                     </Button>
                 </div>
             </form>
