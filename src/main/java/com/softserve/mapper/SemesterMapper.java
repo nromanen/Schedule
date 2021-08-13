@@ -3,6 +3,7 @@ package com.softserve.mapper;
 import com.softserve.dto.SemesterDTO;
 import com.softserve.dto.SemesterWithGroupsDTO;
 import com.softserve.entity.Semester;
+import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 
 import java.util.List;
@@ -11,6 +12,7 @@ import java.util.List;
 public interface SemesterMapper {
     SemesterDTO semesterToSemesterDTO(Semester semester);
     Semester semesterDTOToSemester(SemesterDTO semesterDTO);
+    @IterableMapping(elementTargetType = SemesterDTO.class)
     List<SemesterDTO> semestersToSemesterDTOs(List<Semester> semesters);
     SemesterWithGroupsDTO semesterToSemesterWithGroupsDTO(Semester semester);
 }

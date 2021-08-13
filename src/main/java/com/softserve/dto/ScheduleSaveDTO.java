@@ -12,11 +12,9 @@ import java.time.DayOfWeek;
 @NoArgsConstructor
 public class ScheduleSaveDTO {
     private Long id;
-    private Long semesterId;
     private Long periodId;
-    private DayOfWeek dayOfWeek;
-    private EvenOdd evenOdd;
     private Long lessonId;
     private Long roomId;
-
+    private DayOfWeek dayOfWeek;
+    private EvenOdd evenOdd;
 }

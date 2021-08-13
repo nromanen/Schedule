@@ -27,6 +27,7 @@ import {handleTeacherInfo } from '../../helper/renderTeacher';
 import {
     setValueToSubjectForSiteHandler
 } from '../../helper/reduxFormHelper';
+import { getClearOrCancelTitle, setDisableButton } from '../../helper/disableComponent';
 
 const useStyles = makeStyles(() => ({
     notSelected: {
@@ -226,14 +227,14 @@ let LessonForm = props => {
                             className="buttons-style"
                             type="button"
                             variant="contained"
-                            disabled={pristine || submitting}
+                            disabled={setDisableButton(pristine,submitting,lesson.id)}
                             onClick={() => {
                                 reset();
                                 setUniqueErrorService(null);
                                 props.onSetSelectedCard(null);
                             }}
                         >
-                            {t('clear_button_label')}
+                            {getClearOrCancelTitle(lesson.id,t)}
                         </Button>
                     </div>
                 </form>

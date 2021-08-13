@@ -271,13 +271,6 @@ const GroupSchedulePage = props => {
          if(scheduleType==="teacher")
          getTeacherSchedule(teacherId, semesterId);
      },[teacherId])
-     // useEffect(()=> {
-     //     console.log("USE",scheduleType,loading, props)
-     //     if((scheduleType==="full"&&semesters===undefined)) {
-     //         console.log("scheduleType,semesters",scheduleType,semesters)
-     //         getFullSchedule();
-     //     }
-     // })
 
     useEffect(()=> {
         if((scheduleType==="full"&&fullSchedule.length===0)) {
@@ -309,7 +302,6 @@ const GroupSchedulePage = props => {
        const group=params.get("group");
 
        if(semester!==null) {
-           console.log(semester)
            handleSubmit({ semester, 'group': group != null ? group : 0, 'teacher': teacher != null ? teacher : 0 });
         return null
        }

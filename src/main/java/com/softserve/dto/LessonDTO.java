@@ -18,6 +18,6 @@ public class LessonDTO {
     private LessonType lessonType;
     private SubjectDTO subject;
     private GroupDTO group;
-    private TeacherNameDTO teacher;
+    private TeacherDTO teacher;
     private SemesterDTO semester;
 }

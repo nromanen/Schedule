@@ -173,6 +173,7 @@ public class GroupServiceImpl  implements GroupService {
      *
      * @return list of disabled groups
      */
+    @Transactional(readOnly = true)
     @Override
     public List<Group> getDisabled() {
         log.info("Enter into getAll of getDisabled");
