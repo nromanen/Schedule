@@ -30,7 +30,9 @@ import {
 import { getClearOrCancelTitle, setDisableButton } from '../../helper/disableComponent';
 import { selectGroupService } from '../../services/groupService';
 import { RenderMultiselect, renderMultiselect } from '../../share/renderedFields/renderMultiselect';
-
+import { Accordion, AccordionDetails, AccordionSummary } from '@material-ui/core';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import Typography from '@material-ui/core/Typography';
 const useStyles = makeStyles(() => ({
     notSelected: {
         '&': {
@@ -215,34 +217,36 @@ let LessonForm = props => {
                         label={t('subject_label') + t('for_site_label')}
                         validate={[required, maxLengthValue]}
                     />
-                    {displayGroups?
-                        <>
-                            <p className="group-label">
-                                <label htmlFor={"groups"}>{t('copy_groups_label')}</label>
-                            </p>
-                            <Field
-                                id='groups'
-                                name='groups'
-                                component={RenderMultiselect}
-                                options={groups}
-                                displayValue={'title'}
-                                className='form-control mt-2'
-                                placeholder={t('groups_label')}
-                                hidePlaceholder={true}
-                                selectedValues={[group]}
-                                alwaysDisplayedItem={group}
-                            />
-                        </>
-                        :null}
-                    <Button
-                        className="copy-for-button"
-                        type="button"
-                        variant="contained"
-                        color="primary"
-                        onClick={()=>setDisplayGroups((prevState => !prevState))}
-                    >
-                        {t('copy_for_button_label')}
-                    </Button>
+                    <Accordion>
+                        <AccordionSummary
+                            expandIcon={<ExpandMoreIcon />}
+                            aria-controls="panel1a-content"
+                            id="panel1a-header"
+                        >
+                            <Typography>{t('copy_for_button_label')}</Typography>
+                        </AccordionSummary>
+                        <AccordionDetails>
+                            <Typography>
+                                <>
+                                    <p className="group-label">
+                                        <label htmlFor={"groups"}>{t('copy_groups_label')}</label>
+                                    </p>
+                                    <Field
+                                        id='groups'
+                                        name='groups'
+                                        component={RenderMultiselect}
+                                        options={groups}
+                                        displayValue={'title'}
+                                        className='form-control mt-2'
+                                        placeholder={t('groups_label')}
+                                        hidePlaceholder={true}
+                                        selectedValues={[group]}
+                                        alwaysDisplayedItem={group}
+                                    />
+                                </>
+                            </Typography>
+                        </AccordionDetails>
+                    </Accordion>
                     <div className="form-buttons-container">
                         <Button
                             className="buttons-style"
