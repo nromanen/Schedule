@@ -14,17 +14,17 @@ import { connect } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import RenderStudentTable from '../../../helper/renderStudentTable';
 import { getAllStudentsByGroupId, updateStudentService } from '../../../services/studentService';
-import renderSelectField from '../../renderedFields/select';
-import { required } from '../../../validation/validateFields';
-import { Field } from 'redux-form';
 import Select from 'react-select';
 import { isObjectEmpty } from '../../../helper/ObjectRevision';
+import { successHandler } from '../../../helper/handlerAxios';
+import { UploadFile } from '../../../components/UploadFile/UploadFile';
 
 
 export const ShowStudentsDialog = props => {
     const { onClose,  cardId, open,onDeleteStudent,students,onSubmit,match,student,groups,group} = props;
     const [checkBoxStudents,setCheckBoxStudents]=useState([]);
     const [checkedAll,setCheckedAll]=useState(false);
+    const [openUploadFile,setOpenUploadFile]=useState(false);
     const setDefaultGroupOption=()=>{
         return {value: `${ group.id }`,label: `${ group.title }`,...group};
     }
@@ -71,14 +71,26 @@ export const ShowStudentsDialog = props => {
         })
         setCheckBoxStudents(studentsTmp);
     }
-   const handleAllChecked = (event,pageItemsCount) => {
+   const handleAllChecked = (event,pageItemsCount,page,rowsPerPage) => {
         let studentsTmp = [...checkBoxStudents];
-
-        const resPage=pageItemsCount>checkBoxStudents.length?checkBoxStudents.length:pageItemsCount;
-       for (let i = 0; i <resPage ; i++) {
+       for (let i = (page)*rowsPerPage; i <pageItemsCount+(page)*rowsPerPage ; i++) {
            studentsTmp[i].checked = event.target.checked
        }
         setCheckBoxStudents(studentsTmp)
+    }
+    const handleAllCheckedBtn = (pageItemsCount,page,rowsPerPage) => {
+        let studentsTmp = [...checkBoxStudents];
+        let start=(page)*rowsPerPage;
+        let finish=pageItemsCount+(page)*rowsPerPage;
+        while (start<finish){
+            if (studentsTmp[start].checked){
+                start++;
+            }
+            else {
+                break;
+            }
+        }
+        setCheckedAll(start===finish&&start!==0)
     }
     const handleAllClear = () => {
         let studentsTmp = [...checkBoxStudents];
@@ -125,19 +137,34 @@ export const ShowStudentsDialog = props => {
         return resData;
     }
     const handleSubmitGroupStudents = () => {
-        const currentStudents=[...checkBoxStudents];
-        const {value,label,...res}=isObjectEmpty(groupOption)?defaultGroup:groupOption;
-        const resData=[];
-        const prevGroup={id:defaultGroup.id};
-        for (let i = 0; i < currentStudents.length; i++) {
-            const resItem=changeStudentItem(res,currentStudents[i]);
-            if(!isObjectEmpty(resItem)){
-                resData.push(resItem)
-            }
-        };
-        resData.forEach(item=>updateStudentService({ ...item, prevGroup }));
+        if(isObjectEmpty(groupOption)){
+            successHandler(
+                i18n.t('serviceMessages:students_exist_in_this_group', {
+                    cardType: i18n.t('common:student_title'),
+                    actionType: i18n.t('serviceMessages:student_label')
+                })
+            );
+        }
+        else{
+            const {value,label,...res}=groupOption;
+            const currentStudents=[...checkBoxStudents];
+            const resData=[];
+            const prevGroup={id:defaultGroup.id};
+            for (let i = 0; i < currentStudents.length; i++) {
+                const resItem=changeStudentItem(res,currentStudents[i]);
+                if(!isObjectEmpty(resItem)){
+                    resData.push(resItem)
+                }
+            };
+            resData.forEach(item=>updateStudentService({ ...item, prevGroup }));
+        }
         handleClearCheckedAllBtn();
-
+    }
+    const handleOpenDialogFile=()=>{
+        setOpenUploadFile(true)
+    }
+    const handleCloseDialogFile=()=>{
+        setOpenUploadFile(false)
     }
     return (
         <Dialog
@@ -185,6 +212,7 @@ export const ShowStudentsDialog = props => {
                                                     handleChangeCheckedAllBtn={handleChangeCheckedAllBtn}
                                                     handleClearCheckedAllBtn={handleClearCheckedAllBtn}
                                                     checkedAllBtn={checkedAll}
+                                                    handleAllCheckedBtn={handleAllCheckedBtn}
                                 />
                             </span>
                             }
@@ -192,23 +220,36 @@ export const ShowStudentsDialog = props => {
                 </>
             </DialogTitle>
             <div className="buttons-container">
+                {<UploadFile group={group} open={openUploadFile} handleCloseDialogFile={handleCloseDialogFile}/>}
                 <Button
-                    className="dialog-button"
+                    className={students.length !== 0?'student-dialog-button-data':'student-dialog-button-no-data'}
+                    variant='contained'
+                    onClick={handleOpenDialogFile}
+                    color='primary'
+                    title={i18n.t('upload_from_file')}
+                >
+                    {i18n.t('common:upload_from_file_title')}
+                </Button>
+                {students.length !== 0?
+                <Button
+                    className='student-dialog-button-data'
+                    variant='contained'
+                    onClick={handleSubmitGroupStudents}
+                    color='primary'
+                    disabled={setDisabledMoveToGroupBtn()}
+                    title={i18n.t('move_to_group_title')}
+                >
+                    {i18n.t('common:move_to_group_title')}
+                </Button>
+                :null}
+                <Button
+                    className={students.length !== 0?'student-dialog-button-data':'student-dialog-button-no-data'}
                     variant="contained"
                     onClick={() => onClose('')}
                     color="primary"
+                    title={i18n.t('close_title')}
                 >
                     {i18n.t('common:close_title')}
-                </Button>
-
-                <Button
-                    className="dialog-button"
-                    variant="contained"
-                    onClick={handleSubmitGroupStudents}
-                    color="primary"
-                    disabled={setDisabledMoveToGroupBtn()}
-                >
-                    {i18n.t('common:move_to_group_title')}
                 </Button>
             </div>
         </Dialog>

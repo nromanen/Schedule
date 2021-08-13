@@ -1,7 +1,11 @@
 package com.softserve.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
@@ -19,4 +23,6 @@ public class UserDataDTO {
     private String teacherPatronymic;
     @JsonProperty(value = "position")
     private String teacherPosition;
+    @JsonProperty(value = "department")
+    private DepartmentDTO teacherDepartmentDTO;
 }

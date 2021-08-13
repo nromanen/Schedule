@@ -13,18 +13,22 @@ import java.util.List;
 @Slf4j
 public class GroupRepositoryImpl extends BasicRepositoryImpl<Group, Long> implements GroupRepository {
 
-    private static final String GET_ALL_QUERY = "SELECT DISTINCT g FROM Group g LEFT JOIN FETCH g.students ORDER BY g.title ASC";
-    private static final String GET_ALL_WITHOUT_STUDENTS_QUERY = "SELECT g FROM Group g ORDER BY g.title ASC";
-    private static final String GET_BY_ID_QUERY = "SELECT g FROM Group g LEFT JOIN FETCH g.students WHERE g.id = :id";
-    private static final String GET_DISABLED_QUERY =
-            "SELECT DISTINCT g FROM Group g LEFT JOIN FETCH g.students WHERE g.disable = true ORDER BY g.title ASC";
+    private static final String GET_ALL_QUERY =
+            "SELECT DISTINCT g FROM Group g LEFT JOIN FETCH g.students ORDER BY g.title ASC";
+    private static final String GET_ALL_WITHOUT_STUDENTS_QUERY =
+            "SELECT g FROM Group g ORDER BY g.title ASC";
+    private static final String GET_BY_ID_QUERY =
+            "SELECT g FROM Group g LEFT JOIN FETCH g.students WHERE g.id = :id";
     private static final String GET_DISABLED_WITHOUT_STUDENTS_QUERY =
             "SELECT g FROM Group g WHERE g.disable = true ORDER BY g.title ASC";
-    private static final String COUNT_GROUPS_WITH_TITLE_QUERY = "SELECT COUNT (*) FROM Group g WHERE g.title = :title";
+    private static final String COUNT_GROUPS_WITH_TITLE_QUERY =
+            "SELECT COUNT (*) FROM Group g WHERE g.title = :title";
     private static final String COUNT_GROUPS_WITH_TITLE_AND_IGNORE_WITH_ID_QUERY =
             "SELECT COUNT (*) FROM Group g WHERE g.title = :title AND g.id!=:id";
-    private static final String COUNT_BY_GROUP_ID_QUERY = "SELECT COUNT (*) FROM Group g WHERE g.id = :id";
-    private static final String CHECK_REFERENCE_QUERY = "SELECT COUNT (l.id) " +
+    private static final String COUNT_BY_GROUP_ID_QUERY =
+            "SELECT COUNT (*) FROM Group g WHERE g.id = :id";
+    private static final String CHECK_REFERENCE_QUERY =
+            "SELECT COUNT (l.id) " +
             "FROM Lesson l WHERE l.group.id = :groupId";
 
     private Session getSession(){
@@ -66,17 +70,6 @@ public class GroupRepositoryImpl extends BasicRepositoryImpl<Group, Long> implem
     public Group getById(Long id) {
         log.info("In getById(id = [{}])", id);
         return (Group) getSession().createQuery(GET_BY_ID_QUERY).setParameter("id", id).uniqueResult();
-    }
-
-    /**
-     * Method gets information about groups that have property "disabled" = true
-     *
-     * @return List of groups with ASCII sorting by title
-     */
-    @Override
-    public List<Group> getDisabled() {
-        log.info("In getDisabled()");
-        return sessionFactory.getCurrentSession().createQuery(GET_DISABLED_QUERY).getResultList();
     }
 
     /**

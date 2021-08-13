@@ -1,11 +1,14 @@
 package com.softserve.service.impl;
 
+import com.softserve.dto.TeacherDTO;
+import com.softserve.dto.TeacherForUpdateDTO;
 import com.softserve.entity.*;
 import com.softserve.entity.enums.EvenOdd;
 import com.softserve.entity.enums.Role;
 import com.softserve.entity.enums.WishStatuses;
 import com.softserve.exception.EntityAlreadyExistsException;
 import com.softserve.exception.EntityNotFoundException;
+import com.softserve.mapper.TeacherMapper;
 import com.softserve.repository.TeacherRepository;
 import com.softserve.service.MailService;
 import com.softserve.service.TeacherService;
@@ -17,11 +20,9 @@ import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.time.DayOfWeek;
 import java.util.ArrayList;
 import java.util.List;
-
 
 @Transactional
 @Service
@@ -33,20 +34,22 @@ public class TeacherServiceImpl implements TeacherService {
     private final MailService mailService;
     private final PeriodService periodService;
     private final TeacherWishesService teacherWishesService;
+    private final TeacherMapper teacherMapper;
 
     @Autowired
     public TeacherServiceImpl(TeacherRepository teacherRepository, UserService userService, MailService mailService,
-                              PeriodService periodService, TeacherWishesService teacherWishesService) {
+                              PeriodService periodService, TeacherWishesService teacherWishesService,
+                              TeacherMapper teacherMapper) {
         this.teacherRepository = teacherRepository;
         this.userService = userService;
         this.mailService = mailService;
         this.periodService = periodService;
         this.teacherWishesService = teacherWishesService;
+        this.teacherMapper = teacherMapper;
     }
 
     /**
      * The method used for getting teacher by id
-     *
      * @param id Identity teacher id
      * @return target teacher
      * @throws EntityNotFoundException if teacher doesn't exist
@@ -64,15 +67,57 @@ public class TeacherServiceImpl implements TeacherService {
      */
     @Override
     public List<Teacher> getAll() {
+        log.info("Enter into getAll()");
         return teacherRepository.getAll();
     }
 
+    /**
+     * Method save information for teacher in Repository
+     * @param object Teacher entity
+     * @return saved Teacher entity
+     */
     @Override
     public Teacher save(Teacher object) {
         log.info("Enter into save method with entity:{}", object);
         Teacher teacher = teacherRepository.save(object);
         saveTeacherWishesByNewTeacher(teacher);
         return teacher;
+    }
+
+    /**
+     * Method save information for teacher in Repository and register user if email exists
+     * @param teacherDTO TeacherDTO instance
+     * @return saved Teacher entity
+     */
+    @Override
+    public Teacher save(TeacherDTO teacherDTO) {
+        log.info("Enter into save method with dto:{}", teacherDTO);
+        Teacher teacher = teacherMapper.teacherDTOToTeacher(teacherDTO);
+        if (isEmailNullOrEmpty(teacherDTO.getEmail())) {
+            return save(teacher);
+        }
+        return save(registerTeacher(teacher, teacherDTO.getEmail()));
+    }
+
+    /**
+     * Method updates information for an existing teacher in Repository and register user if email was added
+     * @param teacherForUpdateDTO TeacherForUpdateDTO instance with info to be updated
+     * @return updated Teacher entity
+     */
+    @Override
+    public Teacher update(TeacherForUpdateDTO teacherForUpdateDTO) {
+        log.info("Enter into update method with dto:{}", teacherForUpdateDTO);
+        Teacher teacher =  teacherMapper.teacherForUpdateDTOToTeacher(teacherForUpdateDTO);
+        if (isEmailNullOrEmpty(teacherForUpdateDTO.getEmail())) {
+            return update(teacher);
+        }
+        Integer userId = getById(teacherForUpdateDTO.getId()).getUserId();
+        if (userId != null) {
+            teacher.setUserId(userId);
+            updateEmailInUserForTeacher(teacherForUpdateDTO.getEmail(), userId.longValue());
+            return update(teacher);
+        }
+        return update(registerTeacher(teacher, teacherForUpdateDTO.getEmail()));
     }
 
     /**
@@ -84,8 +129,28 @@ public class TeacherServiceImpl implements TeacherService {
     public Teacher update(Teacher object)
     {
         log.info("Enter into update method with entity:{}", object);
-      //  object.setUserId(getById(object.getId()).getUserId());
         return teacherRepository.update(object);
+    }
+
+    /**
+     * Method deletes an existing teacher from Repository
+     * @param object Teacher entity to be deleted
+     * @return deleted Teacher entity
+     */
+    @Override
+    public Teacher delete(Teacher object) {
+        log.info("Enter into delete method with entity:{}", object);
+        return teacherRepository.delete(object);
+    }
+
+    /**
+     * The method used for getting all disabled teachers
+     * @return list of disabled teachers
+     */
+    @Override
+    public List<Teacher> getDisabled() {
+        log.info("Enter into getAll of getDisabled");
+        return teacherRepository.getDisabled();
     }
 
     /**
@@ -122,16 +187,6 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     /**
-     * Method deletes an existing teacher from Repository
-     * @param object Teacher entity to be deleted
-     * @return deleted Teacher entity
-     */
-    @Override
-    public Teacher delete(Teacher object) {
-        log.info("Enter into delete method with entity:{}", object);
-        return teacherRepository.delete(object);
-    }
-    /**
      * Method gets information about teachers with wishes from Repository
      * @return List of all teachers with wishes
      */
@@ -156,11 +211,9 @@ public class TeacherServiceImpl implements TeacherService {
 
     /**
      * The method used for join Teacher and User
-     *
      * @param teacherId Long teacherId used to find Teacher by it
      * @param userId Long userId used to find User by it
      * @return Teacher entity
-     *
      * @throws EntityAlreadyExistsException when user already exist in some teacher/manager or teacher contains some userId
      */
     @Override
@@ -187,19 +240,7 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     /**
-     * The method used for getting all disabled teachers
-     *
-     * @return list of disabled teachers
-     */
-    @Override
-    public List<Teacher> getDisabled() {
-        log.info("Enter into getAll of getDisabled");
-        return teacherRepository.getDisabled();
-    }
-
-    /**
      * The method used for getting teacher by userId
-     *
      * @param userId Identity user id
      * @return Teacher entity
      * @throws EntityNotFoundException if teacher doesn't exist
@@ -213,12 +254,27 @@ public class TeacherServiceImpl implements TeacherService {
 
     /**
      * The method used for getting list of teachers from database, that don't registered in system
-     *
      * @return list of entities User
      */
     @Override
     public List<Teacher> getAllTeacherWithoutUser() {
         log.info("Enter into getAllTeacherWithoutUser of TeacherServiceImpl");
         return teacherRepository.getAllTeacherWithoutUser();
+    }
+
+    private Teacher registerTeacher(Teacher teacher, String email) {
+        User registeredUserForTeacher = userService.automaticRegistration(email, Role.ROLE_TEACHER);
+        teacher.setUserId(registeredUserForTeacher.getId().intValue());
+        return teacher;
+    }
+
+    private void updateEmailInUserForTeacher(String email, long userId) {
+        User userForTeacher = userService.getById(userId);
+        userForTeacher.setEmail(email);
+        userService.update(userForTeacher);
+    }
+
+    private boolean isEmailNullOrEmpty(String email) {
+        return email == null || email.isEmpty();
     }
 }

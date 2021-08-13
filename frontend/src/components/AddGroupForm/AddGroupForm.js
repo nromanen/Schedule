@@ -14,7 +14,7 @@ import {
     minLengthValue
 } from '../../validation/validateFields';
 import { links } from '../../constants/links';
-import { setDisableButton } from '../../helper/disableComponent';
+import { getClearOrCancelTitle, setDisableButton } from '../../helper/disableComponent';
 
 let AddGroup = props => {
     const { t } = useTranslation('formElements');
@@ -65,7 +65,7 @@ let AddGroup = props => {
                         disabled={setDisableButton(pristine,submitting,group.id)}
                         onClick={onReset}
                     >
-                        {group.id===undefined?t('clear_button_label'):t('cancel_button_title')}
+                        {getClearOrCancelTitle(group.id,t)}
                     </Button>
                 </div>
             </form>

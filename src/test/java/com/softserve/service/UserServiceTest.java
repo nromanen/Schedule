@@ -1,6 +1,7 @@
 package com.softserve.service;
 
 import com.softserve.entity.User;
+import com.softserve.entity.enums.Role;
 import com.softserve.exception.EntityNotFoundException;
 import com.softserve.exception.FieldAlreadyExistsException;
 import com.softserve.exception.IncorrectEmailException;
@@ -8,6 +9,7 @@ import com.softserve.exception.IncorrectPasswordException;
 import com.softserve.repository.UserRepository;
 import com.softserve.service.impl.MailServiceImpl;
 import com.softserve.service.impl.UserServiceImpl;
+import com.softserve.util.PasswordGeneratingUtil;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -16,14 +18,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import static org.assertj.core.api.Assertions.assertThat;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -192,24 +191,58 @@ public class UserServiceTest {
     @Test
     public void registrationUser() {
         String url = "/sign_up";
-        User user = new User();
-        user.setEmail("some@mail.com");
-        user.setPassword("Qwerty123!@#");
+        User expectedUser = new User();
+        expectedUser.setId(1L);
+        expectedUser.setEmail("some@mail.com");
+        expectedUser.setPassword(PasswordGeneratingUtil.generatePassword());
+        expectedUser.setRole(Role.ROLE_TEACHER);
+        expectedUser.setToken(UUID.randomUUID().toString());
 
-        when(userRepository.save(user)).thenReturn(user);
-        when(encoder.encode(any(CharSequence.class))).thenReturn("Qwerty123!@#");
+        when(userRepository
+                .save(argThat(u -> equalsForUsersByEmailAndRoleAndCheckTokenAndPassForNotNull(u, expectedUser)))
+        ).thenReturn(expectedUser);
+        when(encoder.encode(any(CharSequence.class))).thenReturn(expectedUser.getPassword());
 
-        User registeredUser = userService.registration(user);
-        assertNotNull(registeredUser);
-        assertNotNull(registeredUser.getToken());
-        assertEquals(user.getEmail(), registeredUser.getEmail());
-        assertEquals(user.getPassword(), registeredUser.getPassword());
-        verify(userRepository, times(1)).save(user);
+        User actualUser = userService.registration(expectedUser);
+        assertThat(actualUser).isEqualToComparingFieldByField(expectedUser);
+        verify(userRepository, times(1)).save(expectedUser);
         verify(mailService, times(1)).send(
-                ArgumentMatchers.eq(registeredUser.getEmail()),
+                ArgumentMatchers.eq(actualUser.getEmail()),
                 ArgumentMatchers.contains("Activation account"),
                 ArgumentMatchers.contains("activation-page?token=")
         );
+    }
+
+    @Test
+    public void automaticRegistration() {
+        User expectedUser = new User();
+        expectedUser.setId(1L);
+        expectedUser.setEmail("some@mail.com");
+        expectedUser.setPassword(PasswordGeneratingUtil.generatePassword());
+        expectedUser.setRole(Role.ROLE_TEACHER);
+        expectedUser.setToken(UUID.randomUUID().toString());
+
+        when(encoder.encode(any(CharSequence.class))).thenReturn(expectedUser.getPassword());
+        when(userRepository
+                .save(argThat(u -> equalsForUsersByEmailAndRoleAndCheckTokenAndPassForNotNull(u, expectedUser)))
+        ).thenReturn(expectedUser);
+
+        User actualUser = userService.automaticRegistration(expectedUser.getEmail(), expectedUser.getRole());
+
+        assertThat(actualUser).isEqualToComparingFieldByField(expectedUser);
+        verify(userRepository, times(1)).save(any());
+        verify(mailService, times(1)).send(
+                ArgumentMatchers.eq(actualUser.getEmail()),
+                ArgumentMatchers.contains("Activation account"),
+                ArgumentMatchers.contains("activation-page?token=")
+        );
+    }
+
+    private boolean equalsForUsersByEmailAndRoleAndCheckTokenAndPassForNotNull(User actualUser, User expectedUser) {
+        return Objects.equals(actualUser.getEmail(), expectedUser.getEmail())
+                && actualUser.getRole() == expectedUser.getRole()
+                && actualUser.getToken() != null
+                && actualUser.getPassword() != null;
     }
 
     @Test(expected = IncorrectPasswordException.class)

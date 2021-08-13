@@ -207,25 +207,10 @@ function DepartmentPage(props) {
                                     getDepartmentByIdService(department.id);
                                     setDepartmentIntoForm(department.id)
                                     setTeacherDialog(true);
-
-                                    // setDepartment({});
-                                    // deleteDepartment(department.id);
                                 }}
                             />
-                            {/*<Button*/}
-                            {/*    type='button'*/}
-                            {/*    variant='contained'*/}
-                            {/*    className='buttons-style'*/}
-                            {/*    */}
-                            {/*    onClick={()=>console.log(props.teachers)}*/}
-                            {/*>*/}
-                            {/*    {t('clear_button_label')}*/}
-                            {/*</Button>*/}
 
                         </div>
-                        {/* <p className="subject-card__description">
-                                {t('subject_label') + ':'}{' '}
-                            </p> */}
                     </Card>
                 ))}
 
