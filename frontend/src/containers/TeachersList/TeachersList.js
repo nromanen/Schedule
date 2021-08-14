@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 
 import AddTeacherForm from '../../components/AddTeacherForm/AddTeacherForm';
 import Card from '../../share/Card/Card';
-import WishModal from '../WishModal/WishModal';
 
 import ConfirmDialog from '../../share/modals/dialog';
 import { cardType } from '../../constants/cardType';
@@ -10,7 +9,6 @@ import { cardType } from '../../constants/cardType';
 import { FaEdit } from 'react-icons/fa';
 import { MdDelete } from 'react-icons/md';
 import Button from '@material-ui/core/Button';
-import { showTeacherWish } from '../../services/teacherWishService';
 
 import './TeachersList.scss';
 
@@ -133,18 +131,8 @@ const TeacherList = props => {
     const handleCloseSending = scheduleId => {
         setOpenSelect(false);
     };
-    const [openWish, setOpenWish] = useState(false);
     const [teacher, setTeacher] = useState(0);
 
-    const handleClickOpenWish = teacher => {
-        setTeacher(teacher);
-        showTeacherWish(teacher.id);
-        setOpenWish(true);
-    };
-
-    const handleCloseWish = value => {
-        setOpenWish(false);
-    };
 
     const visibleItems = disabled
         ? search(disabledTeachers, term, ['name', 'surname', 'patronymic'])
@@ -195,13 +183,6 @@ const TeacherList = props => {
                 onClose={handleClose}
             />
 
-            <WishModal
-                openWish={openWish}
-                onCloseWish={handleCloseWish}
-                teacher={teacher}
-                teacherWishes={props.teacherWishes}
-                classScheduler={props.classScheduler}
-            />
 
             <aside className="form-with-search-panel">
 
@@ -210,7 +191,7 @@ const TeacherList = props => {
                     showDisabled={showDisabledHandle}
                 />
                 <Button
-                    className="wish-button"
+                    className="send-button"
                     variant="contained"
                     color="primary"
                     onClick={() => {
@@ -309,18 +290,7 @@ const TeacherList = props => {
                             <p className="teacher-card-title">
                                 {teacher.position}
                             </p>
-                            <div className="teacher-wish-block">
-                                <Button
-                                    className="wish-button"
-                                    variant="contained"
-                                    color="primary"
-                                    onClick={() => {
-                                        handleClickOpenWish(teacher);
-                                    }}
-                                >
-                                    {t('teacher_card_wish')}
-                                </Button>
-                            </div>
+
                         </Card>
                     ))
                 ) : (
@@ -335,7 +305,6 @@ const mapStateToProps = state => ({
     teachers: state.teachers.teachers,
     disabledTeachers: state.teachers.disabledTeachers,
     classScheduler: state.classActions.classScheduler,
-    teacherWishes: state.teachersWish.wishes,
     currentSemester:state.schedule.currentSemester,
     defaultSemester:state.schedule.defaultSemester,
     semesters: state.schedule.semesters,

@@ -296,12 +296,12 @@ const Schedule = props => {
                                         className="more-icon"
                                         title={
                                             `${t(
-                                                `formElements:teacher_wish_day`
+                                                `formElements:day_label`
                                             )}: ` +
                                             t(
                                                 `day_of_week_${lesson.day.name.toUpperCase()}`
                                             ).toLowerCase() +
-                                            `\n${t(`teacher_wish_week`)}: ` +
+                                            `\n${t(`week_label`)}: ` +
                                             t(`week_${lesson.week}_title`) +
                                             `\n${t('class_schedule')}: ` +
                                             lesson.classNumber.class_name

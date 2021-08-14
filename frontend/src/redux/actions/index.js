@@ -67,11 +67,7 @@ export {
     setDisabledTeachers
 } from './teachers';
 
-export {
-    selectWishCard,
-    showAllWishes,
-    setMyTeacherWishes
-} from './teachersWish';
+
 
 export { showAllBusyRooms } from './busyRooms';
 

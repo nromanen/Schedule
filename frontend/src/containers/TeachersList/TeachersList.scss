@@ -17,24 +17,9 @@
         font-size: 0.8em;
         margin: 5px 0;
     }
-
-    .teacher-card-wishes {
-        border-top: 1px solid;
-    }
-    .teacher-wish-block {
-        position: absolute;
-        bottom: 17px;
-        width: 239px;
-        left: 50%;
-        transform: translateX(-50%);
-
-        @media (max-width: 400px) { 
-            width: 95%;
-        }
-    }
 }
 
-.wish-button {
+.send-button {
     width: 100%;
 }
 

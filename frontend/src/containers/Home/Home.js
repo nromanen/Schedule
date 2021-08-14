@@ -6,23 +6,15 @@ import { userRoles } from '../../constants/userRoles';
 
 import GroupSchedulePage from '../../components/GroupSchedulePage/GroupSchedulePage';
 
-import { getPublicClassScheduleListService } from '../../services/classService';
-import { getMyTeacherWishesService } from '../../services/teacherWishService';
+
 import {
-    disableDefaultSemesterService,
     getDefaultSemesterService,
-    getFullSchedule,
-    setScheduleGroupIdService,
+
     setScheduleSemesterIdService,
-    setScheduleTeacherIdService,
     setScheduleTypeService,
-    showAllPublicGroupsService,
-    showAllPublicSemestersService,
-    showAllPublicTeachersService
 } from '../../services/scheduleService';
-import { Redirect, useHistory } from 'react-router-dom';
-import { setScheduleType } from '../../redux/actions';
-import { showAllSemestersService } from '../../services/semesterService';
+import { getPublicClassScheduleListService } from '../../services/classService';
+
 const HomePage = props => {
     const { t } = useTranslation('common');
     useEffect(() => getPublicClassScheduleListService(), []);
@@ -30,11 +22,7 @@ const HomePage = props => {
     setScheduleTypeService("")
 
     // useEffect(() => showAllPublicSemestersService(), []);
-    useEffect(() => {
-        if (props.userRole === userRoles.TEACHER) {
-            //getMyTeacherWishesService();
-        }
-    }, []);
+
     useEffect(() => {
         if (props.userRole === null) {
             //disableDefaultSemesterService();
