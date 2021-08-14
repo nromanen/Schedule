@@ -39,10 +39,11 @@ import NavigationPage from '../../components/Navigation/NavigationPage';
 import { navigation, navigationNames } from '../../constants/navigation';
 import Multiselect, { MultiSelect } from '../../helper/multiselect';
 import Example from '../../helper/multiselect';
-import { getFirstLetter } from '../../helper/renderTeacher';
+import { getFirstLetter, getTeacherFullName } from '../../helper/renderTeacher';
 import { showAllSemestersService } from '../../services/semesterService';
 import { getAllDepartmentsService, getDepartmentByIdService } from '../../services/departmentService';
 import { clearDepartmentForm, getDepartItemById } from '../../redux/actions/departments';
+import { getShortTitle } from '../../helper/shortTitle';
 
 const TeacherList = props => {
     const { t } = useTranslation('common');
@@ -170,6 +171,10 @@ const TeacherList = props => {
     const isChosenSelection=()=>{
        return  selected.length!==0
     }
+    const getTeacherTitle=(title)=>{
+        const MAX_LENGTH=30;
+        return getShortTitle(title,MAX_LENGTH)
+    }
     return (
         <>
             <NavigationPage name={navigationNames.TEACHER_LIST} val={navigation.TEACHERS}/>
@@ -280,9 +285,7 @@ const TeacherList = props => {
                                 {t('teacher_card_fullName')}
                             </p>
                             <h2 className="teacher-card-name">
-                                {handleToUpperCase(teacher.surname)}{' '}
-                                {handleToUpperCase(teacher.name)}{' '}
-                                {handleToUpperCase(teacher.patronymic)}
+                                {getTeacherTitle(getTeacherFullName(teacher))}
                             </h2>
                             <p className="teacher-subtitle">
                                 {t('teacher_card_position')}
