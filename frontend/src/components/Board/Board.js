@@ -93,7 +93,20 @@ const Board = props => {
         }
     };
 
-
+const addDay=()=>{
+    if(props.children[1]){
+        if(day!==null&&day!==undefined) {
+            const tmp=document.getElementById(day.toUpperCase());
+            tmp.classList.add("day");
+        }
+    }
+}
+const removeDay = () => {
+    if(day!==null&&day!==undefined) {
+        const tmp=document.getElementById(day.toUpperCase());
+        tmp.classList.remove("day");
+    }
+}
     return (
         <>
 
@@ -104,16 +117,8 @@ const Board = props => {
                 onDragOver={dragOver}
                 onDragLeave={dragLeave}
                 className={props.className}
-               onMouseOver={()=>{if(props.children[1]){
-                    if(day!==null&&day!==undefined) {
-                        const tmp=document.getElementById(day.toUpperCase());
-                        tmp.classList.add("day");
-                    }
-                }}}
-                onMouseLeave={()=>{if(day!==null&&day!==undefined) {
-                    const tmp=document.getElementById(day.toUpperCase());
-                    tmp.classList.remove("day");
-                }}}
+               onMouseOver={addDay}
+                onMouseLeave={removeDay}
             >
                 {props.children}
             </div>

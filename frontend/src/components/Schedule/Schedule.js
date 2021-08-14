@@ -43,7 +43,7 @@ const Schedule = props => {
             const el = document.getElementById(`group-${groupId}`);
             el.scrollIntoView({block: "center", inline:"center"});
             const parent =el.parentNode;
-            parent.classList.add("selected-group")
+            parent.classList.add("selected-group");
         }
         if(prevGroupId){
             const prevEl = document.getElementById(`group-${prevGroupId}`);
@@ -292,16 +292,21 @@ const Schedule = props => {
                     </section>
                 ))}
             </aside>
+
+
             <section className="groups-section ">
                 {groups.map(group => (
                     <section
                         key={'group-' + group.id}
                         className="group-section"
                     >
+
                         <div
                             className="group-title card"
                             id={`group-${group.id}`}
                         >
+
+
                             {group.title}
                         </div>
                         {allLessons.map((lesson, index) => (
@@ -337,8 +342,17 @@ const Schedule = props => {
                                 </Board>
                             </div>
                         ))}
+                        <div
+                            className="group-title card"
+                            id={`group-${group.id}`}
+                        >
+
+
+                            {group.title}
+                        </div>
                     </section>
                 ))}
+
             </section>
         </section>
     );
