@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import { colors } from '../../constants/schedule/colors';
 import { cssClasses } from '../../constants/schedule/cssClasses';
@@ -7,7 +7,7 @@ import { setLoadingService } from '../../services/loadingService';
 
 const Board = props => {
     const itemGroupId = props.itemGroupId;
-
+    const {day}=props;
     const drop = e => {
         e.preventDefault();
         const card_id = e.dataTransfer.getData('card_id');
@@ -93,16 +93,32 @@ const Board = props => {
         }
     };
 
+
     return (
-        <div
-            id={props.id}
-            onDrop={drop}
-            onDragOver={dragOver}
-            onDragLeave={dragLeave}
-            className={props.className}
-        >
-            {props.children}
-        </div>
+        <>
+
+            <div
+
+                id={props.id}
+                onDrop={drop}
+                onDragOver={dragOver}
+                onDragLeave={dragLeave}
+                className={props.className}
+               onMouseOver={()=>{if(props.children[1]){
+                    if(day!==null&&day!==undefined) {
+                        const tmp=document.getElementById(day.toUpperCase());
+                        tmp.classList.add("day");
+                    }
+                }}}
+                onMouseLeave={()=>{if(day!==null&&day!==undefined) {
+                    const tmp=document.getElementById(day.toUpperCase());
+                    tmp.classList.remove("day");
+                }}}
+            >
+                {props.children}
+            </div>
+        </>
+
     );
 };
 

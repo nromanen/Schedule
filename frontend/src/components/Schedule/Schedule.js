@@ -24,27 +24,31 @@ import { cssClasses } from '../../constants/schedule/cssClasses';
 import { colors } from '../../constants/schedule/colors';
 
 import { makeStyles } from '@material-ui/core/styles';
+import './Schedule.scss'
 
 const Schedule = props => {
     const { groups, itemGroupId,groupId } = props;
     const [open, setOpen] = useState(false);
     const [itemData, setItemData] = useState(null);
-    const ref = useRef(null);
-
+    const prevGroupId = usePrevious(groupId)
+    function usePrevious(value) {
+        const ref = useRef();
+        useEffect(() => {
+            ref.current = value;
+        });
+        return ref.current;
+    }
     useEffect(() => {
-
-        // window.scrollTo( ref.current.offsetLeft,0)
-        if(ref.current.id=groupId){
-            console.log(ref.current,groupId);
-            ref.current.scrollIntoView();
+        if(groupId!==null) {
+            const el = document.getElementById(`group-${groupId}`);
+            el.scrollIntoView({block: "center", inline:"center"});
+            const parent =el.parentNode;
+            parent.classList.add("selected-group")
         }
-    }, [ref.current])
-    useEffect(() => {
-
-        // window.scrollTo( ref.current.offsetLeft,0)
-        if(ref.current.id=groupId){
-            console.log(ref.current,groupId);
-            ref.current.scrollIntoView();
+        if(prevGroupId){
+            const prevEl = document.getElementById(`group-${prevGroupId}`);
+            const parent =prevEl.parentNode;
+            parent.classList.remove("selected-group")
         }
     }, [groupId])
 
@@ -259,6 +263,7 @@ const Schedule = props => {
             <aside className="day-classes-aside">
                 <section className="card empty-card">Група</section>
                 {days.map(day => (
+
                     <section
                         className={
                             elClasses.dayContainer +
@@ -267,6 +272,7 @@ const Schedule = props => {
                         key={day}
                     >
                         <section
+                            id={day}
                             className={
                                 elClasses.day + ' card schedule-day card'
                             }
@@ -286,7 +292,7 @@ const Schedule = props => {
                     </section>
                 ))}
             </aside>
-            <section className="groups-section">
+            <section className="groups-section ">
                 {groups.map(group => (
                     <section
                         key={'group-' + group.id}
@@ -295,7 +301,6 @@ const Schedule = props => {
                         <div
                             className="group-title card"
                             id={`group-${group.id}`}
-                            ref={ref}
                         >
                             {group.title}
                         </div>
@@ -305,6 +310,7 @@ const Schedule = props => {
                                 className="board-div"
                             >
                                 <Board
+                                    day={lesson.day.name}
                                     currentSemester={currentSemester}
                                     setModalData={setItemData}
                                     openDialog={handleClickOpen}

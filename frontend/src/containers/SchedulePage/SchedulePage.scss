@@ -61,6 +61,7 @@ $board-min-width: 120px;
 
     section.group-section {
         margin: 0;
+
     }
 
     .day-classes-aside {
@@ -75,7 +76,7 @@ $board-min-width: 120px;
             .schedule-day {
                 position: relative;
                 text-align: center;
-                font-size: 1.5rem;
+                font-size: 1.1rem;
                 writing-mode: vertical-rl;
                 text-orientation: upright;
             }
@@ -97,6 +98,8 @@ $board-min-width: 120px;
         overflow: hidden;
         height: 19px;
         padding: 16px 7px;
+
+
     }
 
     .board-div {
