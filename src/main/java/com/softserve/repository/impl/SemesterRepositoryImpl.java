@@ -187,9 +187,9 @@ public class SemesterRepositoryImpl extends BasicRepositoryImpl<Semester, Long> 
     }
 
     /**
-     * Method gets unique days with lessons in the semester
+     * The method used for getting unique days with lessons in the semester
      * @param semesterId id of the semester
-     * @return List of days
+     * @return a list of days
      */
     @Override
     public List<DayOfWeek> getDaysWithLessonsBySemesterId(Long semesterId) {
