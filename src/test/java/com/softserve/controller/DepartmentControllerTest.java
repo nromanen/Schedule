@@ -29,7 +29,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebAppConfiguration
 @WithMockUser(username = "vbforwork702@mail.com", password = "$2a$10$42sZYaqffhxKah7sTFsm3OXF02qdUUykPfVWPO3GguHvoDui.WsIi", roles = "MANAGER")
 @Sql(value = "classpath:create-departments-before.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-@Sql(value = "classpath:delete-departments-after.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 public class DepartmentControllerTest {
 
     private MockMvc mockMvc;
