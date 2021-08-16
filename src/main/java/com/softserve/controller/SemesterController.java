@@ -129,7 +129,7 @@ public class SemesterController {
     }
 
     @DeleteMapping("/semesters/{semesterId}/groups")
-    @ApiOperation(value = "Delete groups to semester by id")
+    @ApiOperation(value = "Delete groups from semester by id")
     public ResponseEntity<SemesterWithGroupsDTO> deleteGroupsFromSemester(@PathVariable Long semesterId, @RequestParam Long[] groupId) {
         log.info("In deleteGroupsFromSemester (semesterId = [{}], groupId = [{}])", semesterId, groupId);
         List<Group> groups = groupService.getGroupsByGroupIds(groupId);

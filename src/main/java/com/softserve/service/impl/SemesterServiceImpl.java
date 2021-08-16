@@ -249,15 +249,15 @@ public class SemesterServiceImpl implements SemesterService {
 
     /**
      *
-     *  Method updates information for an existing semester about groups
+     * Method add group to an existing semester
      *
-     * @param semester semester id in which we need to change groups
+     * @param semester semester id in which we need to add group
      * @param group group to add
      * @return changed Semester
      */
     @Override
     public Semester addGroupToSemester(Semester semester, Group group) {
-        log.info("In addGroupToSemester");
+        log.info("In addGroupToSemester (semester = [{}], group = [{}])", semester, group);
         List<Group> groups = semester.getGroups();
         if (groups == null){
             groups = new ArrayList<>();
@@ -268,16 +268,32 @@ public class SemesterServiceImpl implements SemesterService {
         return semester;
     }
 
+    /**
+     *
+     * Method add groups to an existing semester
+     *
+     * @param semester semester id in which we need to add groups
+     * @param groups groups to add
+     * @return changed Semester
+     */
     @Override
     public Semester addGroupsToSemester(Semester semester, List<Group> groups) {
-        log.info("In addGroupsToSemester");
+        log.info("In addGroupsToSemester (semester = [{}], groups = [{}])", semester, groups);
         groups.forEach(group -> addGroupToSemester(semester, group));
         return semester;
     }
 
+    /**
+     *
+     * Method delete group from an existing semester
+     *
+     * @param semester semester id in which we need to delete group
+     * @param group group to delete
+     * @return changed Semester
+     */
     @Override
     public Semester deleteGroupFromSemester(Semester semester, Group group) {
-        log.info("In deleteGroupFromSemester");
+        log.info("In deleteGroupFromSemester (semester = [{}], group = [{}])", semester, group);
         List<Group> groups = semester.getGroups();
         if (groups == null){
             return semester;
@@ -288,9 +304,17 @@ public class SemesterServiceImpl implements SemesterService {
         return semester;
     }
 
+    /**
+     *
+     * Method delete groups from an existing semester
+     *
+     * @param semester semester id in which we need to delete groups
+     * @param groups group to delete
+     * @return changed Semester
+     */
     @Override
     public Semester deleteGroupsFromSemester(Semester semester, List<Group> groups) {
-        log.info("In deleteGroupsFromSemester");
+        log.info("In deleteGroupsFromSemester (semester = [{}], group = [{}])", semester, groups);
         groups.forEach(group -> deleteGroupFromSemester(semester, group));
         return semester;
     }
