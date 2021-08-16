@@ -212,9 +212,7 @@ public class GroupServiceImpl  implements GroupService {
     @Transactional
     public List<Group> getGroupsByGroupIds(Long[] groupIds) {
         log.info("Enter into getGroupsByGroupIds");
-        List<Group> groups = new ArrayList<>();
-        Arrays.stream(groupIds).forEach(groupId -> groups.add(getById(groupId)));
-        return groups;
-    }
+        return Arrays.stream(groupIds).map(this::getById).collect(Collectors.toList());
+        }
 
 }
