@@ -134,7 +134,7 @@ public class SemesterServiceImpl implements SemesterService {
     @Override
     public Semester update(Semester semester) {
         log.info("In update(entity = [{}]", semester);
-        if (isDaysWithLessonsRemoved(semester)) {
+        if (isDaysWithLessonsCanBeRemoved(semester)) {
             throw new UsedEntityException("One or more days in a semester have lessons so they can not be removed");
         }
         checkConstraints(semester);
@@ -210,7 +210,7 @@ public class SemesterServiceImpl implements SemesterService {
      * @return true if one or more days with lessons have been removed from the updated semester;
      * false if days with lessons have not been removed.
      */
-    private boolean isDaysWithLessonsRemoved(Semester semester) {
+    private boolean isDaysWithLessonsCanBeRemoved(Semester semester) {
         log.info("Enter into isDayContainingLessons with entity: {}", semester);
         List<DayOfWeek> daysInSchedule = semesterRepository.getDaysWithLessonsBySemesterId(semester.getId());
         return !semester.getDaysOfWeek().containsAll(daysInSchedule);
