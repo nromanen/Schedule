@@ -1,6 +1,5 @@
 package com.softserve.dto;
 
-import com.softserve.entity.enums.LessonType;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
