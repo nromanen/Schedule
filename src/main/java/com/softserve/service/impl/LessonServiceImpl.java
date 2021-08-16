@@ -10,7 +10,6 @@ import com.softserve.repository.LessonRepository;
 import com.softserve.service.LessonService;
 import com.softserve.service.SemesterService;
 import com.softserve.service.SubjectService;
-import com.softserve.service.TeacherService;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,14 +26,12 @@ import java.util.List;
 public class LessonServiceImpl implements LessonService {
 
     private final LessonRepository lessonRepository;
-    private final TeacherService teacherService;
     private final SubjectService subjectService;
     private final SemesterService semesterService;
 
     @Autowired
-    public LessonServiceImpl(LessonRepository lessonRepository, TeacherService teacherService, SubjectService subjectService, SemesterService semesterService) {
+    public LessonServiceImpl(LessonRepository lessonRepository, SubjectService subjectService, SemesterService semesterService) {
         this.lessonRepository = lessonRepository;
-        this.teacherService = teacherService;
         this.subjectService = subjectService;
         this.semesterService = semesterService;
     }
