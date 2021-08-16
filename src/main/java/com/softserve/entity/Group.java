@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@ToString
+@ToString(onlyExplicitlyIncluded = true)
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
@@ -33,11 +33,15 @@ import java.util.List;
 } )
 
 public class Group implements Serializable {
+    @EqualsAndHashCode.Include
+    @ToString.Include
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(columnDefinition = "serial")
     private Long id;
 
+    @EqualsAndHashCode.Include
+    @ToString.Include
     @NotEmpty(message = "Title cannot be empty")
     @Size(min = 2, max = 35, message = "Title must be between 2 and 35 characters long")
     @Column(length = 35, nullable = false, unique = true)
@@ -46,11 +50,14 @@ public class Group implements Serializable {
     private String title;
 
     @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     @NotNull
     @OneToMany(mappedBy = "group")
     @OrderBy(clause = "surname ASC")
     private List<Student> students = new ArrayList<>();
 
+    @EqualsAndHashCode.Include
+    @ToString.Include
     @Column(name = "disable",  columnDefinition = "boolean default 'false'")
     private boolean disable = false;
 
