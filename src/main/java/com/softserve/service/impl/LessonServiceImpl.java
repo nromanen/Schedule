@@ -107,6 +107,7 @@ public class LessonServiceImpl implements LessonService {
 
     /**
      * Method saves new lessons to Repository.
+     * Saves only lessons that did not exist in the database.
      * @param lessons Lessons entities with info to be saved
      * @return saved Lessons entities
      */
