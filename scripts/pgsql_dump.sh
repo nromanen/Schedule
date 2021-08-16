@@ -4,7 +4,7 @@
 pathA=/c/Program\ Files/PostgreSQL/13/bin
 export PATH=$PATH:$pathA
 
-#change on your password
+#write your password
 PGPASSWORD=
 export PGPASSWORD
 
