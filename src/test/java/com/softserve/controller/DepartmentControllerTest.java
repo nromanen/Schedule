@@ -1,9 +1,12 @@
 package com.softserve.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.softserve.assertions.CustomMockMvcAssertions;
 import com.softserve.config.*;
 import com.softserve.dto.DepartmentDTO;
 import com.softserve.dto.GroupDTO;
+import com.softserve.dto.TeacherDTO;
+import com.softserve.entity.Teacher;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -34,6 +37,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Sql(value = "classpath:delete-departments-after.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 public class DepartmentControllerTest {
 
+    private CustomMockMvcAssertions customMockMvcAssertions;
     private MockMvc mockMvc;
     private ObjectMapper objectMapper = new ObjectMapper();
 
@@ -45,6 +49,7 @@ public class DepartmentControllerTest {
         mockMvc = MockMvcBuilders.webAppContextSetup(wac)
                 .apply(SecurityMockMvcConfigurers.springSecurity())
                 .build();
+        customMockMvcAssertions = new CustomMockMvcAssertions(mockMvc, objectMapper, "/departments");
     }
 
     @Test
@@ -166,13 +171,20 @@ public class DepartmentControllerTest {
 
     @Test
     public void getAllTeachers() throws Exception {
-        mockMvc.perform(get("/departments/{id}/teachers", 1).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType("application/json"))
-                .andExpect(jsonPath("$", hasSize(1)))
-                .andExpect(jsonPath("$[0].name").value("Ivan"))
-                .andExpect(jsonPath("$[0].surname").value("Ivanov"))
-                .andExpect(jsonPath("$[0].patronymic").value("Ivanovych"))
-                .andExpect(jsonPath("$[0].position").value("docent"));
+
+        DepartmentDTO department = new DepartmentDTO();
+        department.setId(1L);
+        department.setName("Department1");
+        department.setDisable(false);
+
+        TeacherDTO firstTeacher = new TeacherDTO();
+        firstTeacher.setId(1L);
+        firstTeacher.setName("Ivan");
+        firstTeacher.setSurname("Ivanov");
+        firstTeacher.setPatronymic("Ivanovych");
+        firstTeacher.setPosition("docent");
+        firstTeacher.setDepartmentDTO(department);
+
+        customMockMvcAssertions.assertForGetListWithOneEntity(firstTeacher, "/departments/1/teachers");
     }
 }
