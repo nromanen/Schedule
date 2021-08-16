@@ -10,8 +10,8 @@ export PGPASSWORD
 
 #change the path to the file from which will be made restore
 pathB=../backup/
-#change to name of the file from which will be made restore
-filename=pgsql_2021-08-16-18-17.dump
+#write this on the command line as the first parameter
+filename=$1
 #change on your user
 dbUser=fmwcxyhjckqwga
 #change on your database
