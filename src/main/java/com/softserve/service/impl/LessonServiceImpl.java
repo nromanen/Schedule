@@ -116,7 +116,13 @@ public class LessonServiceImpl implements LessonService {
     @Override
     public List<Lesson> save(List<Lesson> lessons) {
         List<Lesson> lessonsList = new ArrayList<>();
-        lessons.forEach(lesson -> lessonsList.add(save(lesson)));
+        lessons.forEach(lesson -> {
+            try {
+                lessonsList.add(save(lesson));
+            } catch (EntityAlreadyExistsException e) {
+                log.warn(e.getMessage());
+            }
+        });
         return lessonsList;
     }
 
