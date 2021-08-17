@@ -128,7 +128,7 @@ dependencies {
     providedCompile group: 'com.github.jsimone', name: 'webapp-runner', version: '8.5.11.3'
 
     //for mail
-    compile group: 'javax.mail', name: 'mail', version: '1.4'
+    compile group: 'javax.mail', name: 'mail', version: '1.6.2'
 
     //generate password
     compile group: 'org.apache.commons', name: 'commons-text', version: '1.8'
