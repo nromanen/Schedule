@@ -25,6 +25,7 @@ import { setScheduleType } from '../../redux/actions';
 import { showAllSemestersService } from '../../services/semesterService';
 const HomePage = props => {
     const { t } = useTranslation('common');
+
     useEffect(() => getPublicClassScheduleListService(), []);
     setScheduleSemesterIdService(null)
     setScheduleTypeService("")
@@ -60,6 +61,7 @@ const HomePage = props => {
     return (
 
         <Fragment>
+
             <h1>{t('home_title')}</h1>
             <GroupSchedulePage scheduleType="default"  />
         </Fragment>
