@@ -300,8 +300,6 @@ public class SemesterServiceImpl implements SemesterService {
         }
         groups.remove(group);
         update(semester);
-//        semester.setGroups(groups);
-//        getById(semester.getId()).setGroups(groups);
         return semester;
     }
 
