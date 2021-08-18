@@ -270,4 +270,15 @@ public class LessonServiceImpl implements LessonService {
         });
         return lessons;
     }
+
+    /**
+     * The method used for getting all lessons which are grouped by lesson
+     *
+     * @param lesson Lesson object for getting lessons
+     * @return List of Lessons
+     */
+    @Override
+    public List<Lesson> getAllGroupedLessonsByLesson(Lesson lesson) {
+        return lessonRepository.getGroupedLessonsByLesson(lesson);
+    }
 }

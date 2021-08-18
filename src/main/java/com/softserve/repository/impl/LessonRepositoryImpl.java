@@ -191,6 +191,26 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
                 .getResultList();
     }
 
+    /**
+     * The method used for getting all lessons from database which are grouped by lesson
+     *
+     * @param lesson Lesson object for getting lessons
+     * @return List of Lessons
+     */
+    @Override
+    public List<Lesson> getGroupedLessonsByLesson(Lesson lesson) {
+        log.info("getGroupedLessonsByLessonId(lesson = [{}]", lesson);
+        return sessionFactory.getCurrentSession().createQuery(
+                "select l from Lesson l " +
+                        " where l.grouped=true and l.subject.id= :subjectId and l.hours= :hours and l.teacher.id= :teacherId and l.semester.id= :semesterId and l.lessonType= :lessonType")
+                .setParameter("subjectId", lesson.getSubject().getId())
+                .setParameter("hours", lesson.getHours())
+                .setParameter("teacherId", lesson.getTeacher().getId())
+                .setParameter("semesterId", lesson.getSemester().getId())
+                .setParameter("lessonType", lesson.getLessonType())
+                .getResultList();
+    }
+
     // Checking if lesson is used in Schedule table
     @Override
     protected boolean checkReference(Lesson lesson) {
