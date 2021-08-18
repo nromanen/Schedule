@@ -41,6 +41,7 @@ import './GroupList.scss'
 import { useHistory } from 'react-router-dom/cjs/react-router-dom';
 import '../../router/Router.scss'
 import { goToGroupPage } from '../../helper/pageRedirection';
+import { getShortTitle } from '../../helper/shortTitle';
 let GroupList = props => {
 
     const { isSnackbarOpen, snackbarType, snackbarMessage,students,groups,group,match,student } = props;
@@ -186,12 +187,13 @@ let GroupList = props => {
         );
         handleClickOpen(groupId);
     }
-    const getGroupTitle=({title})=>{
+    const getGroupTitle=(title)=>{
         const MAX_LENGTH=5;
-        return title.length>MAX_LENGTH? `${ title.slice(0, MAX_LENGTH) }...`:title;
+        return getShortTitle(title,MAX_LENGTH)
     }
 
     return (
+
         <>
             <NavigationPage name={navigationNames.GROUP_LIST} val={navigation.GROUPS}/>
 
@@ -297,7 +299,7 @@ let GroupList = props => {
                                 {t('group_label') + ':'}
                             </p>
                             <h1 className="group-card__number">
-                                {getGroupTitle(group)}
+                                {getGroupTitle(group.title)}
                             </h1>
                             <Link to={`${links.GroupList}${links.Group}/${group.id}${links.ShowStudents}`}>
                             <span className="students-group">

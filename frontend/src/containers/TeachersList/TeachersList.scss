@@ -1,9 +1,10 @@
 .teacher-card {
-    min-height: 240px;
+    height: 140px;
     position: relative;
     margin: 10px;
 
     .teacher-card-name {
+        height: 2.1em;
         margin: 8px 0;
         font-size: 1.3rem;
 
@@ -17,24 +18,9 @@
         font-size: 0.8em;
         margin: 5px 0;
     }
-
-    .teacher-card-wishes {
-        border-top: 1px solid;
-    }
-    .teacher-wish-block {
-        position: absolute;
-        bottom: 17px;
-        width: 239px;
-        left: 50%;
-        transform: translateX(-50%);
-
-        @media (max-width: 400px) { 
-            width: 95%;
-        }
-    }
 }
 
-.wish-button {
+.send-button {
     width: 100%;
 }
 
