@@ -251,7 +251,7 @@ public class SemesterServiceImpl implements SemesterService {
      *
      * Method add group to an existing semester
      *
-     * @param semester semester id in which we need to add group
+     * @param semester semester in which we need to add group
      * @param group group to add
      * @return changed Semester
      */
@@ -272,7 +272,7 @@ public class SemesterServiceImpl implements SemesterService {
      *
      * Method add groups to an existing semester
      *
-     * @param semester semester id in which we need to add groups
+     * @param semester semester in which we need to add groups
      * @param groups groups to add
      * @return changed Semester
      */
@@ -287,7 +287,7 @@ public class SemesterServiceImpl implements SemesterService {
      *
      * Method delete group from an existing semester
      *
-     * @param semester semester id in which we need to delete group
+     * @param semester semester in which we need to delete group
      * @param group group to delete
      * @return changed Semester
      */
@@ -304,7 +304,7 @@ public class SemesterServiceImpl implements SemesterService {
      *
      * Method delete groups from an existing semester
      *
-     * @param semester semester id in which we need to delete groups
+     * @param semester semester in which we need to delete groups
      * @param groups group to delete
      * @return changed Semester
      */

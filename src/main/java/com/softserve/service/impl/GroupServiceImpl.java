@@ -206,7 +206,7 @@ public class GroupServiceImpl  implements GroupService {
     /**
      * The method used for getting all groups for default semester
      *
-     * @return list of groups for current semester
+     * @return list of groups for default semester
      */
     @Override
     public List<Group> getGroupsForDefaultSemester() {
