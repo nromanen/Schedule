@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.ResourceUtils;
 
@@ -13,12 +14,18 @@ import java.util.Locale;
 import java.util.Map;
 
 @Slf4j
+@Getter
 public class Translator {
     private static Translator translator;
 
-    private Map<String, Map<Locale, String>> dictionary = null;
+    private final Map<String, Map<Locale, String>> dictionary;
 
-    public Translator() {}
+    public Translator() {
+        if(translator == null) {
+            translator = readTranslatorFromFile();
+        }
+        dictionary = translator.getDictionary();
+    }
 
     public Translator(Map<String, Map<Locale, String>> dictionary) {
         this.dictionary = dictionary;
@@ -32,16 +39,14 @@ public class Translator {
         return key;
     }
 
-    public static Translator getInstance() {
-        if(translator == null) {
-            ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
-            mapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
-            try {
-                translator = mapper.readValue(ResourceUtils.getFile("classpath:dictionary.yaml"), Translator.class);
-            } catch (IOException e) {
-                log.error("Error occurred while parsing file dictionary.yaml", e);
-                translator = new Translator(new HashMap<>());
-            }
+    private static Translator readTranslatorFromFile() {
+        ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
+        mapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
+        try {
+            translator = mapper.readValue(ResourceUtils.getFile("classpath:dictionary.yaml"), Translator.class);
+        } catch (IOException e) {
+            log.error("Error occurred while parsing file dictionary.yaml", e);
+            translator = new Translator(new HashMap<>());
         }
         return translator;
     }

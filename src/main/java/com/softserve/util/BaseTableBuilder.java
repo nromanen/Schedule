@@ -47,7 +47,7 @@ public abstract class BaseTableBuilder {
         this.linkFont = new Font(baseFont, 11, Font.NORMAL, BaseColor.BLUE);
         this.titleFont = new Font(baseFont, 14, Font.BOLD, BaseColor.WHITE);
         this.headFont = new Font(baseFont, 12, Font.BOLD, BaseColor.BLACK);
-        this.translator = Translator.getInstance();
+        this.translator = new Translator();
     }
 
     /**
