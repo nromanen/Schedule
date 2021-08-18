@@ -491,6 +491,54 @@ public class SemesterServiceTest {
         Group group = new Group();
         group.setTitle("some group");
         group.setId(1L);
+        Semester semester = new Semester();
+        semester.setId(1L);
+        semester.setYear(2020);
+        semester.setDescription("1 semester");
+        semester.setStartDay(LocalDate.of(2020, 4, 10));
+        semester.setEndDay(LocalDate.of(2020, 5, 10));
+        semester.setCurrentSemester(false);
+
+        when(semesterRepository.findById(anyLong())).thenReturn(Optional.of(semester));
+
+        Semester semesterWithGroup = semesterService.addGroupToSemester(semester, group);
+        assertNotNull(semesterWithGroup);
+        assertTrue(semesterWithGroup.getGroups().contains(group));
+    }
+
+    @Test
+    public void addGroupsToSemester() {
+        Group group1 = new Group();
+        group1.setTitle("some group");
+        group1.setId(1L);
+        Group group2 = new Group();
+        group2.setTitle("some group");
+        group2.setId(1L);
+        List<Group> groupList = new ArrayList<>();
+        groupList.add(group1);
+        groupList.add(group2);
+        Semester semester = new Semester();
+        semester.setId(1L);
+        semester.setYear(2020);
+        semester.setDescription("1 semester");
+        semester.setStartDay(LocalDate.of(2020, 4, 10));
+        semester.setEndDay(LocalDate.of(2020, 5, 10));
+        semester.setCurrentSemester(false);
+
+        when(semesterRepository.findById(anyLong())).thenReturn(Optional.of(semester));
+
+        Semester semesterWithGroup = semesterService.addGroupsToSemester(semester, groupList);
+        assertNotNull(semesterWithGroup);
+        assertTrue(semesterWithGroup.getGroups().contains(group1));
+        assertTrue(semesterWithGroup.getGroups().contains(group2));
+    }
+
+
+    @Test
+    public void deleteGroupFromSemester() {
+        Group group = new Group();
+        group.setTitle("some group");
+        group.setId(1L);
         List<Group> groupList = new ArrayList<>();
         groupList.add(group);
         Semester semester = new Semester();
@@ -500,16 +548,12 @@ public class SemesterServiceTest {
         semester.setStartDay(LocalDate.of(2020, 4, 10));
         semester.setEndDay(LocalDate.of(2020, 5, 10));
         semester.setCurrentSemester(false);
-        Semester updatedSemester = new Semester();
-        updatedSemester.setId(1L);
-        updatedSemester.setYear(2020);
-        updatedSemester.setDescription("1 semester");
-        updatedSemester.setStartDay(LocalDate.of(2020, 4, 10));
-        updatedSemester.setEndDay(LocalDate.of(2020, 5, 10));
-        updatedSemester.setCurrentSemester(false);
-        updatedSemester.setGroups(groupList);
-        Semester semesterWithGroup = semesterService.addGroupToSemester(semester, group);
-        assertNotNull(semesterWithGroup);
-        assertTrue(semesterWithGroup.getGroups().contains(group));
+        semester.setGroups(groupList);
+
+        when(semesterRepository.findById(anyLong())).thenReturn(Optional.of(semester));
+
+        Semester semesterWithoutGroup = semesterService.deleteGroupFromSemester(semester, group);
+        assertNotNull(semesterWithoutGroup);
+        assertFalse(semesterWithoutGroup.getGroups().contains(group));
     }
 }
