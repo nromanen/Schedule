@@ -48,13 +48,13 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return buildResponseEntity(apiError);
     }
 
-    /** Handles IncorrectWishException, IncorrectTimeException, IncorrectPasswordException, ScheduleConflictException,
+    /** Handles IncorrectTimeException, IncorrectPasswordException, ScheduleConflictException,
      * PeriodConflictException, EntityAlreadyExistsException. Triggered when:
-     * teacher wishes json / time in period / password, entered during registration by User, are incorrect;
+     * time in period / password, entered during registration by User, are incorrect;
      * schedule / period have conflicts with already existed entities;
      * object already exists in an another class.
      */
-    @ExceptionHandler({IncorrectWishException.class, IncorrectTimeException.class, IncorrectPasswordException.class,
+    @ExceptionHandler({IncorrectTimeException.class, IncorrectPasswordException.class,
             ScheduleConflictException.class, PeriodConflictException.class, EntityAlreadyExistsException.class,
             IncorrectEmailException.class})
     protected ResponseEntity<Object> handleIncorrectFieldExceptions(
@@ -148,8 +148,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     // Handle MessageNotSendException. Triggered when we cannot send message on email.
     @ExceptionHandler(MessageNotSendException.class)
-    protected ResponseEntity<Object> handleMessageNotSendException(
-            MessageNotSendException ex) {
+    protected ResponseEntity<Object> handleMessageNotSendException(MessageNotSendException ex) {
         ApiError apiError = new ApiError(BAD_REQUEST);
         apiError.setMessage(ex.getMessage());
         apiError.setDebugMessage(ex.getMessage());

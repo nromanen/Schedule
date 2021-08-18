@@ -12,4 +12,5 @@ public interface GroupService extends BasicService<Group, Long> {
     List<Group> getGroupsBySemesterId(Long semesterId);
     List<Group> getGroupsForCurrentSemester();
     List<Group> getDisabledWithoutStudents();
+    List<Group> getGroupsForDefaultSemester();
 }

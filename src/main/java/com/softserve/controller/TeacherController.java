@@ -2,7 +2,6 @@ package com.softserve.controller;
 
 import com.softserve.dto.TeacherDTO;
 import com.softserve.dto.TeacherForUpdateDTO;
-import com.softserve.dto.TeacherWishDTO;
 import com.softserve.entity.Teacher;
 import com.softserve.entity.User;
 import com.softserve.entity.enums.Role;
@@ -25,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
+import java.util.Locale;
 
 @RestController
 @Api(tags = "Teacher API")
@@ -56,21 +56,6 @@ public class TeacherController {
         log.info("Enter into get method with id {} ", id);
         Teacher teacher = teacherService.getById(id);
         return ResponseEntity.ok().body(teacherMapper.teacherToTeacherDTO(teacher));
-    }
-
-    @GetMapping("/teachers/with-wishes")
-    @ApiOperation(value = "Get the list of all teachers with wishes")
-    public ResponseEntity<List<TeacherWishDTO>> getAllWithWishes() {
-        log.info("Enter into getAllWithWishes method");
-        return ResponseEntity.ok(teacherMapper.toTeacherWithWishesDTOs(teacherService.getAllTeachersWithWishes()));
-    }
-
-    @GetMapping("/teachers/{id}/with-wishes")
-    @ApiOperation(value = "Get teacher with wish by id")
-    public ResponseEntity<TeacherWishDTO> getTeacherWithWishes(@PathVariable("id") Long id) {
-        log.info("Enter into getTeacherWithWishes method with id {} ", id);
-        Teacher teacher = teacherService.getTeacherWithWishes(id);
-        return ResponseEntity.ok().body(teacherMapper.toTeacherWithWishesDTOs(teacher));
     }
 
     @PostMapping("/teachers")
@@ -119,9 +104,9 @@ public class TeacherController {
 
     @GetMapping("/send-pdf-to-email/semester/{id}")
     @ApiOperation(value = "Send pdf with schedule to teachers emails")
-    public ResponseEntity sendSchedulesToEmail(@PathVariable("id") Long semesterId, @RequestParam Long[] teachersId) {
+    public ResponseEntity sendSchedulesToEmail(@PathVariable("id") Long semesterId, @RequestParam Long[] teachersId, @RequestParam Locale language) {
         log.info("Enter into sendPDFToEmail method with teachers id: {} and semester id: {}", teachersId, semesterId);
-        scheduleService.sendScheduleToTeachers(semesterId, teachersId);
+        scheduleService.sendScheduleToTeachers(semesterId, teachersId, language);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 }

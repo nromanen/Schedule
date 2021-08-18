@@ -175,6 +175,7 @@ public class GroupServiceImpl  implements GroupService {
      *
      * @return list of disabled groups
      */
+    @Transactional(readOnly = true)
     @Override
     public List<Group> getDisabled() {
         log.info("Enter into getAll of getDisabled");
@@ -201,6 +202,12 @@ public class GroupServiceImpl  implements GroupService {
     public List<Group> getGroupsForCurrentSemester(){
         log.info("Enter into getGroupsByCurrentSemester");
         return semesterService.getCurrentSemester().getGroups();
+    }
+
+    @Override
+    public List<Group> getGroupsForDefaultSemester(){
+        log.info("Enter into getGroupsByCurrentSemester");
+        return semesterService.getDefaultSemester().getGroups();
     }
 
 }
