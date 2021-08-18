@@ -11,6 +11,5 @@ import lombok.ToString;
 @ToString
 public class LessonDTO extends LessonBaseDTO{
     private GroupDTO group;
-    private TeacherDTO teacher;
     private SemesterDTO semester;
 }
