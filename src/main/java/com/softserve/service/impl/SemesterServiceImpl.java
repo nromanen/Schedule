@@ -295,9 +295,6 @@ public class SemesterServiceImpl implements SemesterService {
     public Semester deleteGroupFromSemester(Semester semester, Group group) {
         log.info("In deleteGroupFromSemester (semester = [{}], group = [{}])", semester, group);
         List<Group> groups = semester.getGroups();
-        if (groups == null){
-            return semester;
-        }
         groups.remove(group);
         update(semester);
         return semester;

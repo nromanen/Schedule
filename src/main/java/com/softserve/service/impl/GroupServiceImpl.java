@@ -187,7 +187,7 @@ public class GroupServiceImpl  implements GroupService {
      * @return list of groups for semester
      */
     @Override
-    public List<Group> getGroupsBySemesterId(Long semesterId){
+    public List<Group> getGroupsBySemesterId(Long semesterId) {
         log.info("Enter into getGroupsBySemesterId");
         return semesterService.getById(semesterId).getGroups();
     }
@@ -198,22 +198,32 @@ public class GroupServiceImpl  implements GroupService {
      * @return list of groups for current semester
      */
     @Override
-    public List<Group> getGroupsForCurrentSemester(){
+    public List<Group> getGroupsForCurrentSemester() {
         log.info("Enter into getGroupsByCurrentSemester");
         return semesterService.getCurrentSemester().getGroups();
     }
 
+    /**
+     * The method used for getting all groups for default semester
+     *
+     * @return list of groups for current semester
+     */
     @Override
-    public List<Group> getGroupsForDefaultSemester(){
+    public List<Group> getGroupsForDefaultSemester() {
         log.info("Enter into getGroupsByCurrentSemester");
         return semesterService.getDefaultSemester().getGroups();
     }
 
+    /**
+     * The method used for getting all groups by group Ids
+     *
+     * @return list of groups by Ids
+     */
     @Override
     @Transactional
     public List<Group> getGroupsByGroupIds(Long[] groupIds) {
         log.info("Enter into getGroupsByGroupIds");
         return Arrays.stream(groupIds).map(this::getById).collect(Collectors.toList());
-        }
+    }
 
 }
