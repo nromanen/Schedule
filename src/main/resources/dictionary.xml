@@ -7,14 +7,6 @@
         http://www.springframework.org/schema/context
         http://www.springframework.org/schema/context/spring-context.xsd">
 
-    <bean id="word_period" class="java.util.HashMap">
-        <constructor-arg>
-            <map key-type="java.util.Locale" value-type="java.lang.String">
-                <entry key="EN" value="period" />
-                <entry key="UK" value="період" />
-            </map>
-        </constructor-arg>
-    </bean>
     <bean id="word_schedule_for" class="java.util.HashMap">
         <constructor-arg>
             <map key-type="java.util.Locale" value-type="java.lang.String">
@@ -91,7 +83,6 @@
     <bean id="dictionary" class="java.util.HashMap" >
         <constructor-arg>
             <map key-type="java.lang.String" value-type="java.util.Map">
-                <entry key="period" value-ref="word_period"/>
                 <entry key="schedule for" value-ref="word_schedule_for"/>
                 <entry key="group" value-ref="word_group"/>
                 <entry key="monday" value-ref="word_monday"/>
