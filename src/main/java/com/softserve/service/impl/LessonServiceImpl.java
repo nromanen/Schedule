@@ -113,6 +113,7 @@ public class LessonServiceImpl implements LessonService {
      */
     @Override
     public List<Lesson> save(List<Lesson> lessons) {
+        log.info("In save(lessons = [{}])", lessons);
         List<Lesson> lessonsList = new ArrayList<>();
         lessons.forEach(lesson -> {
             try {

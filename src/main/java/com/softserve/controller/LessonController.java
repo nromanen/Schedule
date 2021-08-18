@@ -77,7 +77,7 @@ public class LessonController {
     }
 
     @PostMapping
-    @ApiOperation(value = "Create new lesson")
+    @ApiOperation(value = "Create new lessons")
     public ResponseEntity<List<LessonInfoDTO>> save(@RequestBody LessonForGroupsDTO lessonForGroupsDTO) {
         log.info("In save (lessonForGroupsDTO = [{}])", lessonForGroupsDTO);
         List<Lesson> lessons = lessonService.save(lessonInfoMapper.lessonForGroupsDTOToLessons(lessonForGroupsDTO));
