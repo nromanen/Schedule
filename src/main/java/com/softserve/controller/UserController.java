@@ -97,7 +97,7 @@ public class UserController {
         log.info("Enter into delete method with group id: {}", id);
         User user = userService.getById(id);
         if (user.getRole() == Role.ROLE_TEACHER) {
-            Teacher teacher = teacherService.findByUserId(user.getId().intValue());
+            Teacher teacher = teacherService.findByUserId(user.getId());
             teacher.setUserId(null);
             teacherService.update(teacher);
         }
@@ -116,9 +116,10 @@ public class UserController {
     @GetMapping("/profile")
     @ApiOperation(value = "Get current user data")
     public ResponseEntity getCurrentUser(@CurrentUser JwtUser jwtUser) {
+        log.info("Enter into getCurrentUser method with JwtUser: {}", jwtUser);
         User user = userService.getById(jwtUser.getId());
         if (user.getRole() == Role.ROLE_TEACHER) {
-            Teacher teacher = teacherService.findByUserId(user.getId().intValue());
+            Teacher teacher = teacherService.findByUserId(user.getId());
             return ResponseEntity.ok().body(teacherMapper.teacherToUserDataDTO(teacher));
         }
         return ResponseEntity.ok().build();
@@ -132,7 +133,7 @@ public class UserController {
 
         Teacher teacher = null;
         if (user.getRole() == Role.ROLE_TEACHER) {
-            teacher = teacherService.findByUserId(user.getId().intValue());
+            teacher = teacherService.findByUserId(user.getId());
             teacher.setName(data.getTeacherName());
             teacher.setSurname(data.getTeacherSurname());
             teacher.setPosition(data.getTeacherPosition());

@@ -65,7 +65,7 @@ public class TeacherRepositoryImpl extends BasicRepositoryImpl<Teacher, Long> im
      * @return Optional<Teacher> entity
      */
     @Override
-    public Optional<Teacher> findByUserId(int userId) {
+    public Optional<Teacher> findByUserId(long userId) {
         return sessionFactory.getCurrentSession().createQuery(
                 "select t from Teacher t " +
                         "where t.userId= :userId")
