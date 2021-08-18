@@ -8,4 +8,7 @@ insert into "public".groups(id, title, disable)
 values(1, 'First Title', false);
 
 insert into "public".students(id, name, surname, patronymic, email, group_id)
-values(2, 'First Name', 'First Surname', 'First Patronymic', 'aware.123db@gmail.com', 1);
+values(4, 'First Name1', 'First Surname1', 'First Patronymic1', 'aware.123db@gmail.com', 1);
+
+insert into "public".students(id, name, surname, patronymic, email, group_id)
+values(5, 'First Name2', 'First Surname2', 'First Patronymic2', 'student@gmail.com', 1);

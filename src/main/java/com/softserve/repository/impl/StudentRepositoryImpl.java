@@ -5,51 +5,46 @@ import com.softserve.repository.StudentRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.TypedQuery;
-import java.util.List;
-
 @Repository
 @Slf4j
 public class StudentRepositoryImpl extends BasicRepositoryImpl<Student, Long> implements StudentRepository {
+    private static final String HQL_IS_EXISTS_BY_EMAIL
+            = "SELECT (count(*) > 0) "
+            + "FROM Student s "
+            + "WHERE s.email = :email";
 
-    private static final String GET_ALL_QUERY = "FROM Student s JOIN FETCH s.group ORDER BY s.surname ASC";
-    private static final String GET_BY_ID_QUERY = "FROM Student s JOIN FETCH s.group WHERE s.id = :id";
-    private static final String FIND_BY_EMAIL = "FROM Student s JOIN FETCH s.group WHERE s.email = :email";
-
-    /**
-     * Modified GetAll method used for getting list of Student entities by surname ascending from database
-     *
-     * @return list of entities ordered by surname
-     */
-    @Override
-    public List<Student> getAll() {
-        log.info("In getAll()");
-        return sessionFactory.getCurrentSession().createQuery(GET_ALL_QUERY).getResultList();
-    }
-
-    @Override
-    public Student getById(Long id) {
-        log.info("In getById(id = [{}])", id);
-        return (Student) sessionFactory.getCurrentSession().createQuery(GET_BY_ID_QUERY).setParameter("id", id).uniqueResult();
-    }
+    private static final String HQL_IS_EXISTS_BY_EMAIL_IGNORING_ID
+            = "SELECT (count(*) > 0) "
+            + "FROM Student s "
+            + "WHERE s.email = :email AND s.id != :id";
 
     /**
-     * The method used for getting Student by email from database
+     * The method used for finding out if Student exists by email
      *
-     * @param email String email used to find Student by it
+     * @param email String email used to find Student
      * @return Student
      */
     @Override
-    public Student findByEmail(String email) {
-        log.info("In findByEmail() with email: {}", email);
-        TypedQuery<Student> query = sessionFactory.getCurrentSession()
-                .createQuery(FIND_BY_EMAIL).setMaxResults(1);
-        query.setParameter("email", email);
-        List<Student> studentList = query.getResultList();
-        if (studentList.isEmpty()) {
-            log.warn("Student List is empty.");
-            return null;
-        }
-        return query.getResultList().get(0);
+    public boolean isExistsByEmail(String email) {
+        return (boolean) sessionFactory.getCurrentSession()
+                .createQuery(HQL_IS_EXISTS_BY_EMAIL)
+                .setParameter("email", email)
+                .getSingleResult();
+    }
+
+    /**
+     * The method used for finding out if Student exists by email ignoring id
+     *
+     * @param email String email used to find Student
+     * @param id Long id, which is ignored during the search
+     * @return Student
+     */
+    @Override
+    public boolean isExistsByEmailIgnoringId(String email, Long id) {
+        return (boolean) sessionFactory.getCurrentSession()
+                .createQuery(HQL_IS_EXISTS_BY_EMAIL_IGNORING_ID)
+                .setParameter("email", email)
+                .setParameter("id", id)
+                .getSingleResult();
     }
 }
