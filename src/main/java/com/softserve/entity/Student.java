@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -24,7 +23,6 @@ import java.io.Serializable;
 @Entity
 @Table(name = "students")
 public class Student implements Serializable {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(columnDefinition = "serial")
@@ -49,15 +47,15 @@ public class Student implements Serializable {
     private String patronymic;
 
     @Email(message = "Email must match format")
-    @Size(min = 5, max = 40)
+    @Size(min = 5, max = 40, message = "Email must be between 5 and 40 characters long")
     @Column(unique = true, length = 40)
     @NotEmpty(message = "Email cannot be empty")
     @CsvBindByName
     private String email;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "group_id", referencedColumnName = "id")
-    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "group_id")
+    @NotNull(message = "Group cannot be null")
     @CsvRecurse
     private Group group;
 }
