@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.ResourceUtils;
 
@@ -14,7 +13,6 @@ import java.util.Locale;
 import java.util.Map;
 
 @Slf4j
-@Getter
 public class Translator {
     private static Translator translator;
 
@@ -24,7 +22,7 @@ public class Translator {
         if(translator == null) {
             translator = readTranslatorFromFile();
         }
-        dictionary = translator.getDictionary();
+        dictionary = translator.dictionary;
     }
 
     public Translator(Map<String, Map<Locale, String>> dictionary) {
@@ -40,6 +38,7 @@ public class Translator {
     }
 
     private static Translator readTranslatorFromFile() {
+        Translator translator;
         ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
         mapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
         try {
