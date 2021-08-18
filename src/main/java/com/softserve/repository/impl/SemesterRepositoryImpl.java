@@ -8,12 +8,16 @@ import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.TypedQuery;
+import java.time.DayOfWeek;
 import java.util.List;
 import java.util.Optional;
 
 @Slf4j
 @Repository
 public class SemesterRepositoryImpl extends BasicRepositoryImpl<Semester, Long> implements SemesterRepository {
+
+    private static final String HQL_SELECT_DAYS_WITH_LESSONS
+            = "select distinct s.dayOfWeek from Schedule s where s.lesson.semester.id = :semesterId";
 
     private Session getSession(){
         Session session = sessionFactory.getCurrentSession();
@@ -180,5 +184,18 @@ public class SemesterRepositoryImpl extends BasicRepositoryImpl<Semester, Long> 
                 .setParameter("description", description).
                 setParameter("year", year)
                 .uniqueResultOptional();
+    }
+
+    /**
+     * The method used for getting unique days with lessons in the semester
+     * @param semesterId id of the semester
+     * @return a list of days
+     */
+    @Override
+    public List<DayOfWeek> getDaysWithLessonsBySemesterId(Long semesterId) {
+        log.info("In getDaysWithLessonsBySemesterId(semesterId = [{}])", semesterId);
+        return sessionFactory.getCurrentSession().createQuery(HQL_SELECT_DAYS_WITH_LESSONS, DayOfWeek.class)
+                .setParameter("semesterId", semesterId)
+                .getResultList();
     }
 }

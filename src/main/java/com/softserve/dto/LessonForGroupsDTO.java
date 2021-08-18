@@ -5,11 +5,13 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
 @ToString
-public class LessonDTO extends LessonBaseDTO{
-    private GroupDTO group;
-    private SemesterDTO semester;
+public class LessonForGroupsDTO extends LessonBaseDTO{
+    private List<GroupDTO> groups;
+    private boolean grouped;
 }

@@ -24,9 +24,7 @@ import { links } from '../../constants/links';
 
 import LanguageSelector from '../LanguageSelector/LanguageSelector';
 import * as colors from '../../constants/schedule/colors';
-import { getMyTeacherWishesService } from '../../services/teacherWishService';
 
-import WishModal from '../../containers/WishModal/WishModal';
 import { getCurrentSemesterService } from '../../services/scheduleService';
 
 import FreeRooms from '../../containers/FreeRooms/freeRooms';
@@ -72,8 +70,6 @@ const Header = props => {
     const handleCloseUserMenu = () => setAnchorElUser(null);
 
     const { t } = useTranslation('common');
-
-    const [openWish, setOpenWish] = useState(false);
     const [teacher, setTeacher] = useState(0);
 
     useEffect(() => {
@@ -83,14 +79,9 @@ const Header = props => {
         }
     }, [props.userRole]);
 
-    const handleClickOpenWish = teacher => {
-        setTeacher(teacher);
-        setOpenWish(true);
-    };
 
-    const handleCloseWish = value => {
-        setOpenWish(false);
-    };
+
+
     const getUserMenu = userRole => {
         let userMenu = null;
         if (userRole === null || userRole === undefined) {
@@ -232,19 +223,11 @@ const Header = props => {
                                 className="navLinks"
                                 style={{ textDecoration: 'none' }}
                                 onClick={() => {
-                                    handleClickOpenWish(
-                                        props.myWishes[0].teacher
-                                    );
-                                    getMyTeacherWishesService();
+
                                     handleCloseUserMenu();
                                 }}
                             >
-                                <StyledMenuItem>
-                                    <ListItemIcon>
-                                        <FaClipboardList fontSize="normal" />
-                                    </ListItemIcon>
-                                    {t('wishes_title')}
-                                </StyledMenuItem>
+
                             </span>
                             <Link
                                 to={links.MY_PROFILE}
@@ -465,16 +448,7 @@ const Header = props => {
                         <ListItemIcon>
                             <FaClipboardList fontSize="normall" />
                         </ListItemIcon>
-                        <span
-                            className="navLinks"
-                            onClick={() => {
-                                handleClickOpenWish(props.myWishes[0].teacher);
-                                getMyTeacherWishesService();
-                                handleClose();
-                            }}
-                        >
-                            {t('wishes_title')}
-                        </span>
+
                     </StyledMenuItem>
 
                     <Link
@@ -563,19 +537,7 @@ const Header = props => {
 
     return (
         <>
-            {props.userRole === roles.TEACHER ? (
-                <>
-                    <WishModal
-                        openWish={openWish}
-                        onCloseWish={handleCloseWish}
-                        teacher={teacher}
-                        teacherWishes={props.teacherWishes}
-                        classScheduler={props.classScheduler}
-                    />
-                </>
-            ) : (
-                ''
-            )}
+
             <header className="header">
                 {menu}
                 <nav className="header-blocks header-blocks_one">
@@ -597,10 +559,8 @@ const Header = props => {
 };
 
 const mapStateToProps = state => ({
-    myWishes: state.teachersWish.myWishes,
     classScheduler: state.classActions.classScheduler,
     currentSemester: state.schedule.currentSemester,
-    teacherWishes: state.teachersWish.wishes,
     loading: state.loadingIndicator.semesterLoading
 });
 
