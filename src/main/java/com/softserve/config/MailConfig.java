@@ -43,7 +43,7 @@ public class MailConfig {
         String credentialsUsername = System.getenv("HEROKU_MAIL_USERNAME");
         String credentialsPassword = System.getenv("HEROKU_MAIL_PASSWORD");
 
-        if (credentialsUsername == null && credentialsPassword == null) {
+        if (credentialsUsername == null || credentialsPassword == null) {
             credentialsUsername = username;
             credentialsPassword = password;
         }
