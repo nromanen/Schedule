@@ -7,6 +7,7 @@ import com.softserve.entity.enums.LessonType;
 import java.util.List;
 
 public interface LessonService extends BasicService <Lesson, Long> {
+    List<Lesson> save(List<Lesson> lessons);
     List<Lesson> getAllForGroup(Long groupId);
     List<Lesson> getLessonByTeacher(Long teacherId);
     List<LessonType> getAllLessonTypes();

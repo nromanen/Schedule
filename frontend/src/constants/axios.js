@@ -17,7 +17,6 @@ export const STUDENT_URL = 'students';
 
 export const FULL_SCHEDULE_URL = 'schedules/full/semester?semesterId=';
 export const GROUP_SCHEDULE_URL = 'schedules/full/groups?semesterId=';
-export const TEACHER_WISHES = 'teacher_wishes';
 export const SCHEDULE_SEMESTER_ITEMS_URL = 'schedules/semester';
 export const SCHEDULE_ITEMS_URL = 'schedules';
 export const CURRENT_SEMESTER_URL = 'semesters/current';
@@ -47,8 +46,6 @@ export const USER_PROFILE = 'users/profile';
 export const UPDATE_USER_PROFILE = 'users/change-profile';
 export const TEACHERS_WITHOUT_ACCOUNT_URL = 'not-registered-teachers';
 export const MERGE_USER_AND_TEACHER_URL = 'managers/teacher_credentials';
-
-export const MY_TEACHER_WISHES_URL = 'teacher_wishes/my-wishes';
 
 export const PUBLIC_CLASSES_URL = 'public/classes';
 export const PUBLIC_GROUP_URL = 'public/groups';

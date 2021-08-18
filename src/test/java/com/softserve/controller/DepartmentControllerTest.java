@@ -1,6 +1,7 @@
 package com.softserve.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.softserve.assertions.CustomMockMvcAssertions;
 import com.softserve.config.*;
 import com.softserve.dto.DepartmentDTO;
 import org.junit.Before;
@@ -19,6 +20,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -31,6 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Sql(value = "classpath:create-departments-before.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 public class DepartmentControllerTest {
 
+    private CustomMockMvcAssertions customMockMvcAssertions;
     private MockMvc mockMvc;
     private ObjectMapper objectMapper = new ObjectMapper();
 
@@ -42,6 +45,7 @@ public class DepartmentControllerTest {
         mockMvc = MockMvcBuilders.webAppContextSetup(wac)
                 .apply(SecurityMockMvcConfigurers.springSecurity())
                 .build();
+        customMockMvcAssertions = new CustomMockMvcAssertions(mockMvc, objectMapper, "/departments");
     }
 
     @Test
@@ -159,5 +163,24 @@ public class DepartmentControllerTest {
         mockMvc.perform(get("/departments/disabled").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"));
+    }
+
+    @Test
+    public void getAllTeachers() throws Exception {
+
+        DepartmentDTO department = new DepartmentDTO();
+        department.setId(1L);
+        department.setName("Department1");
+        department.setDisable(false);
+
+        TeacherDTO firstTeacher = new TeacherDTO();
+        firstTeacher.setId(1L);
+        firstTeacher.setName("Ivan");
+        firstTeacher.setSurname("Ivanov");
+        firstTeacher.setPatronymic("Ivanovych");
+        firstTeacher.setPosition("docent");
+        firstTeacher.setDepartmentDTO(department);
+
+        customMockMvcAssertions.assertForGetListWithOneEntity(firstTeacher, "/departments/1/teachers");
     }
 }

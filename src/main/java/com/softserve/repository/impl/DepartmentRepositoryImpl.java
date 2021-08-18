@@ -1,10 +1,13 @@
 package com.softserve.repository.impl;
 
 import com.softserve.entity.Department;
+import com.softserve.entity.Teacher;
 import com.softserve.repository.DepartmentRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
@@ -21,7 +24,7 @@ public class DepartmentRepositoryImpl extends BasicRepositoryImpl<Department, Lo
             + "WHERE lower(d.name) = lower(:name)";
 
     private static final String HQL_SELECT_TEACHERS_FOR_DEPARTMENT_ID
-            = "FROM Teacher t "
+            = "SELECT t FROM Teacher t "
             + "WHERE t.department.id = :department_id";
 
     /**
@@ -54,6 +57,19 @@ public class DepartmentRepositoryImpl extends BasicRepositoryImpl<Department, Lo
     @Override
     public boolean isNameExistsIgnoringId(String name, Long id) {
         return countByNameIgnoringId(name, id) != 0;
+    }
+
+    /**
+     * The method used for getting all teachers from the Department
+     * @param departmentId id of the department
+     * @return list of teachers
+     */
+    @Override
+    public List<Teacher> getAllTeachers(Long departmentId) {
+        return sessionFactory.getCurrentSession()
+                .createQuery(HQL_SELECT_TEACHERS_FOR_DEPARTMENT_ID, Teacher.class)
+                .setParameter("department_id", departmentId)
+                .getResultList();
     }
 
     @Override
