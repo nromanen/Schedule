@@ -1,6 +1,7 @@
 package com.softserve.service;
 
 import com.softserve.entity.Department;
+import com.softserve.entity.Teacher;
 import com.softserve.exception.EntityNotFoundException;
 import com.softserve.exception.FieldAlreadyExistsException;
 import com.softserve.repository.DepartmentRepository;
@@ -13,6 +14,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -124,5 +126,28 @@ public class DepartmentServiceTest {
     public void throwEntityNotFoundExceptionIfTryToUpdateNotFoundedDepartment() {
         when(repository.findById(anyLong())).thenReturn(Optional.empty());
         service.update(department);
+    }
+
+    @Test
+    public void testGetAllTeachers() {
+        Teacher firstTeacher = new Teacher();
+        firstTeacher.setName("Myroniuk");
+        firstTeacher.setSurname("Ihor");
+        firstTeacher.setPatronymic("Stepanovych");
+        firstTeacher.setPosition("professor");
+
+        Teacher secondTeacher = new Teacher();
+        secondTeacher.setName("Adamovych");
+        secondTeacher.setSurname("Svitlana");
+        secondTeacher.setPatronymic("Petrivna");
+        secondTeacher.setPosition("docent");
+
+        List<Teacher> expectedTeachers = Arrays.asList(firstTeacher, secondTeacher);
+        when(repository.getAllTeachers(3L)).thenReturn(expectedTeachers);
+
+        List<Teacher> actualTeachers = service.getAllTeachers(3L);
+
+        assertThat(actualTeachers).hasSameSizeAs(expectedTeachers).hasSameElementsAs(expectedTeachers);
+        verify(repository).getAllTeachers(3L);
     }
 }
