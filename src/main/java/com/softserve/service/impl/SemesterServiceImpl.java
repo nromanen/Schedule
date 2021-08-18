@@ -1,6 +1,7 @@
 package com.softserve.service.impl;
 
 import com.softserve.entity.Group;
+import com.softserve.entity.Period;
 import com.softserve.entity.Semester;
 import com.softserve.exception.*;
 import com.softserve.repository.SemesterRepository;
@@ -92,12 +93,8 @@ public class SemesterServiceImpl implements SemesterService {
         if (isSemesterExists(semester.getId(), semester.getDescription(), semester.getYear())) {
             throw new EntityAlreadyExistsException("Semester already exists with current description and year.");
         }
-    }
-
-    private void checkUpdateConstraints(Semester semester) {
-        checkConstraints(semester);
-        if (isDaysWithLessonsCanNotBeRemoved(semester)) {
-            throw new UsedEntityException("One or more days in a semester have lessons and can not be removed");
+        if (isClassUsed(semester)) {
+            throw new UsedEntityException("At least one class is used in the schedule and can't be removed");
         }
     }
 
@@ -141,7 +138,7 @@ public class SemesterServiceImpl implements SemesterService {
     @Override
     public Semester update(Semester semester) {
         log.info("In update(entity = [{}]", semester);
-        checkUpdateConstraints(semester);
+        checkConstraints(semester);
         setCurrentToFalse(semester);
         setDefaultToFalse(semester);
         return semesterRepository.update(semester);
@@ -209,15 +206,14 @@ public class SemesterServiceImpl implements SemesterService {
     }
 
     /**
-     * The method is used for checking if days with lessons are not removed from the updated semester
+     * The method is used for checking if classes are used in the schedule and can't be removed when the semester is updated
      *
-     * @return true if one or more days with lessons have been removed from the updated semester;
-     * false if days with lessons have not been removed.
+     * @return list of the classes
      */
-    private boolean isDaysWithLessonsCanNotBeRemoved(Semester semester) {
-        log.info("Enter into isDaysWithLessonsCanBeRemoved with entity: {}", semester);
-        List<DayOfWeek> daysInSchedule = semesterRepository.getDaysWithLessonsBySemesterId(semester.getId());
-        return !semester.getDaysOfWeek().containsAll(daysInSchedule);
+    private boolean isClassUsed(Semester semester) {
+        log.info("isClassUsed: {}", semester);
+        List<Period> classesInSchedule = semesterRepository.getClassesBySemesterId(semester.getId());
+        return !classesInSchedule.stream().allMatch(s -> semester.getPeriods().contains(s));
     }
 
     /**
@@ -265,15 +261,15 @@ public class SemesterServiceImpl implements SemesterService {
 
     /**
      *
-     * Method add group to an existing semester
+     *  Method updates information for an existing semester about groups
      *
-     * @param semester semester in which we need to add group
+     * @param semester semester id in which we need to change groups
      * @param group group to add
      * @return changed Semester
      */
     @Override
     public Semester addGroupToSemester(Semester semester, Group group) {
-        log.info("In addGroupToSemester (semester = [{}], group = [{}])", semester, group);
+        log.info("In addGroup");
         List<Group> groups = semester.getGroups();
         if (groups == null){
             groups = new ArrayList<>();
@@ -281,53 +277,6 @@ public class SemesterServiceImpl implements SemesterService {
         groups.add(group);
         semester.setGroups(groups);
         getById(semester.getId()).setGroups(groups);
-        return semester;
-    }
-
-    /**
-     *
-     * Method add groups to an existing semester
-     *
-     * @param semester semester in which we need to add groups
-     * @param groups groups to add
-     * @return changed Semester
-     */
-    @Override
-    public Semester addGroupsToSemester(Semester semester, List<Group> groups) {
-        log.info("In addGroupsToSemester (semester = [{}], groups = [{}])", semester, groups);
-        groups.forEach(group -> addGroupToSemester(semester, group));
-        return semester;
-    }
-
-    /**
-     *
-     * Method delete group from an existing semester
-     *
-     * @param semester semester in which we need to delete group
-     * @param group group to delete
-     * @return changed Semester
-     */
-    @Override
-    public Semester deleteGroupFromSemester(Semester semester, Group group) {
-        log.info("In deleteGroupFromSemester (semester = [{}], group = [{}])", semester, group);
-        List<Group> groups = semester.getGroups();
-        groups.remove(group);
-        update(semester);
-        return semester;
-    }
-
-    /**
-     *
-     * Method delete groups from an existing semester
-     *
-     * @param semester semester in which we need to delete groups
-     * @param groups group to delete
-     * @return changed Semester
-     */
-    @Override
-    public Semester deleteGroupsFromSemester(Semester semester, List<Group> groups) {
-        log.info("In deleteGroupsFromSemester (semester = [{}], group = [{}])", semester, groups);
-        groups.forEach(group -> deleteGroupFromSemester(semester, group));
         return semester;
     }
 }

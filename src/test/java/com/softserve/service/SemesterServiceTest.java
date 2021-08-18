@@ -297,7 +297,7 @@ public class SemesterServiceTest {
     }
 
     @Test(expected = UsedEntityException.class)
-    public void throwUsedEntityExceptionIfDaysHaveLessons() {
+    public void throwUsedEntityExceptionIfClassIsUsed() {
         Semester semester = new Semester();
         semester.setId(1L);
         semester.setDescription("1 semester");
@@ -310,46 +310,32 @@ public class SemesterServiceTest {
         semester.setDaysOfWeek(dayOfWeeks);
         Period firstClasses = new Period();
         firstClasses.setName("1 para");
+        Period secondClasses = new Period();
+        secondClasses.setName("2 para");
+        Period thirdClasses = new Period();
+        thirdClasses.setName("3 para");
         Set<Period> periodSet = new HashSet<>();
         periodSet.add(firstClasses);
+        periodSet.add(secondClasses);
+        periodSet.add(thirdClasses);
         semester.setPeriods(periodSet);
 
-        List<DayOfWeek> daysWithLessonsInSchedule = List.of(DayOfWeek.MONDAY, DayOfWeek.TUESDAY, DayOfWeek.WEDNESDAY);
+        Period firstScheduleClasses = new Period();
+        firstScheduleClasses.setName("1 para");
+        Period secondScheduleClasses = new Period();
+        secondScheduleClasses.setName("2 para");
+        Period thirdScheduleClasses = new Period();
+        thirdScheduleClasses.setName("3 para");
+        Period fourthScheduleClasses = new Period();
+        fourthScheduleClasses.setName("4 para");
 
-        when(semesterRepository.getDaysWithLessonsBySemesterId(semester.getId())).thenReturn(daysWithLessonsInSchedule);
+        List<Period> usedClasses = Arrays.asList(firstScheduleClasses, secondScheduleClasses, thirdScheduleClasses, fourthScheduleClasses);
+
+        when(semesterRepository.getClassesBySemesterId(semester.getId())).thenReturn(usedClasses);
 
         semesterService.update(semester);
     }
 
-    @Test
-    public void updateIfUpdatedSemesterHaveDaysWithoutLessons() {
-        Semester semester = new Semester();
-        semester.setId(1L);
-        semester.setDescription("1 semester");
-        semester.setYear(2020);
-        semester.setStartDay(LocalDate.of(2020, 4, 10));
-        semester.setEndDay(LocalDate.of(2020, 5, 10));
-        Set<DayOfWeek> dayOfWeeks = new HashSet<>();
-        dayOfWeeks.add(DayOfWeek.MONDAY);
-        dayOfWeeks.add(DayOfWeek.TUESDAY);
-        semester.setDaysOfWeek(dayOfWeeks);
-        Period firstClasses = new Period();
-        firstClasses.setName("1 para");
-        Set<Period> periodSet = new HashSet<>();
-        periodSet.add(firstClasses);
-        semester.setPeriods(periodSet);
-
-        List<DayOfWeek> daysWithLessonsInSchedule = List.of(DayOfWeek.MONDAY, DayOfWeek.TUESDAY);
-
-        when(semesterRepository.getDaysWithLessonsBySemesterId(semester.getId())).thenReturn(daysWithLessonsInSchedule);
-        when(semesterRepository.update(semester)).thenReturn(semester);
-
-        Semester actualSemester = semesterService.update(semester);
-        assertNotNull(semester);
-        assertEquals(semester, actualSemester);
-        verify(semesterRepository).update(semester);
-        verify(semesterRepository).getDaysWithLessonsBySemesterId(semester.getId());
-    }
 
     @Test
     public void updateSemesterAndSetItAsCurrent() {
@@ -491,54 +477,6 @@ public class SemesterServiceTest {
         Group group = new Group();
         group.setTitle("some group");
         group.setId(1L);
-        Semester semester = new Semester();
-        semester.setId(1L);
-        semester.setYear(2020);
-        semester.setDescription("1 semester");
-        semester.setStartDay(LocalDate.of(2020, 4, 10));
-        semester.setEndDay(LocalDate.of(2020, 5, 10));
-        semester.setCurrentSemester(false);
-
-        when(semesterRepository.findById(anyLong())).thenReturn(Optional.of(semester));
-
-        Semester semesterWithGroup = semesterService.addGroupToSemester(semester, group);
-        assertNotNull(semesterWithGroup);
-        assertTrue(semesterWithGroup.getGroups().contains(group));
-    }
-
-    @Test
-    public void addGroupsToSemester() {
-        Group group1 = new Group();
-        group1.setTitle("some group");
-        group1.setId(1L);
-        Group group2 = new Group();
-        group2.setTitle("some group");
-        group2.setId(1L);
-        List<Group> groupList = new ArrayList<>();
-        groupList.add(group1);
-        groupList.add(group2);
-        Semester semester = new Semester();
-        semester.setId(1L);
-        semester.setYear(2020);
-        semester.setDescription("1 semester");
-        semester.setStartDay(LocalDate.of(2020, 4, 10));
-        semester.setEndDay(LocalDate.of(2020, 5, 10));
-        semester.setCurrentSemester(false);
-
-        when(semesterRepository.findById(anyLong())).thenReturn(Optional.of(semester));
-
-        Semester semesterWithGroup = semesterService.addGroupsToSemester(semester, groupList);
-        assertNotNull(semesterWithGroup);
-        assertTrue(semesterWithGroup.getGroups().contains(group1));
-        assertTrue(semesterWithGroup.getGroups().contains(group2));
-    }
-
-
-    @Test
-    public void deleteGroupFromSemester() {
-        Group group = new Group();
-        group.setTitle("some group");
-        group.setId(1L);
         List<Group> groupList = new ArrayList<>();
         groupList.add(group);
         Semester semester = new Semester();
@@ -548,12 +486,16 @@ public class SemesterServiceTest {
         semester.setStartDay(LocalDate.of(2020, 4, 10));
         semester.setEndDay(LocalDate.of(2020, 5, 10));
         semester.setCurrentSemester(false);
-        semester.setGroups(groupList);
-
-        when(semesterRepository.findById(anyLong())).thenReturn(Optional.of(semester));
-
-        Semester semesterWithoutGroup = semesterService.deleteGroupFromSemester(semester, group);
-        assertNotNull(semesterWithoutGroup);
-        assertFalse(semesterWithoutGroup.getGroups().contains(group));
+        Semester updatedSemester = new Semester();
+        updatedSemester.setId(1L);
+        updatedSemester.setYear(2020);
+        updatedSemester.setDescription("1 semester");
+        updatedSemester.setStartDay(LocalDate.of(2020, 4, 10));
+        updatedSemester.setEndDay(LocalDate.of(2020, 5, 10));
+        updatedSemester.setCurrentSemester(false);
+        updatedSemester.setGroups(groupList);
+        Semester semesterWithGroup = semesterService.addGroupToSemester(semester, group);
+        assertNotNull(semesterWithGroup);
+        assertTrue(semesterWithGroup.getGroups().contains(group));
     }
 }
