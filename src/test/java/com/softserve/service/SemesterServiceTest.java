@@ -296,6 +296,61 @@ public class SemesterServiceTest {
         semesterService.update(semester);
     }
 
+    @Test(expected = UsedEntityException.class)
+    public void throwUsedEntityExceptionIfDaysHaveLessons() {
+        Semester semester = new Semester();
+        semester.setId(1L);
+        semester.setDescription("1 semester");
+        semester.setYear(2020);
+        semester.setStartDay(LocalDate.of(2020, 4, 10));
+        semester.setEndDay(LocalDate.of(2020, 5, 10));
+        Set<DayOfWeek> dayOfWeeks = new HashSet<>();
+        dayOfWeeks.add(DayOfWeek.TUESDAY);
+        dayOfWeeks.add(DayOfWeek.WEDNESDAY);
+        semester.setDaysOfWeek(dayOfWeeks);
+        Period firstClasses = new Period();
+        firstClasses.setName("1 para");
+        Set<Period> periodSet = new HashSet<>();
+        periodSet.add(firstClasses);
+        semester.setPeriods(periodSet);
+
+        List<DayOfWeek> daysWithLessonsInSchedule = List.of(DayOfWeek.MONDAY, DayOfWeek.TUESDAY, DayOfWeek.WEDNESDAY);
+
+        when(semesterRepository.getDaysWithLessonsBySemesterId(semester.getId())).thenReturn(daysWithLessonsInSchedule);
+
+        semesterService.update(semester);
+    }
+
+    @Test
+    public void updateIfUpdatedSemesterHaveDaysWithoutLessons() {
+        Semester semester = new Semester();
+        semester.setId(1L);
+        semester.setDescription("1 semester");
+        semester.setYear(2020);
+        semester.setStartDay(LocalDate.of(2020, 4, 10));
+        semester.setEndDay(LocalDate.of(2020, 5, 10));
+        Set<DayOfWeek> dayOfWeeks = new HashSet<>();
+        dayOfWeeks.add(DayOfWeek.MONDAY);
+        dayOfWeeks.add(DayOfWeek.TUESDAY);
+        semester.setDaysOfWeek(dayOfWeeks);
+        Period firstClasses = new Period();
+        firstClasses.setName("1 para");
+        Set<Period> periodSet = new HashSet<>();
+        periodSet.add(firstClasses);
+        semester.setPeriods(periodSet);
+
+        List<DayOfWeek> daysWithLessonsInSchedule = List.of(DayOfWeek.MONDAY, DayOfWeek.TUESDAY);
+
+        when(semesterRepository.getDaysWithLessonsBySemesterId(semester.getId())).thenReturn(daysWithLessonsInSchedule);
+        when(semesterRepository.update(semester)).thenReturn(semester);
+
+        Semester actualSemester = semesterService.update(semester);
+        assertNotNull(semester);
+        assertEquals(semester, actualSemester);
+        verify(semesterRepository).update(semester);
+        verify(semesterRepository).getDaysWithLessonsBySemesterId(semester.getId());
+    }
+
     @Test
     public void updateSemesterAndSetItAsCurrent() {
         Semester semester = new Semester();

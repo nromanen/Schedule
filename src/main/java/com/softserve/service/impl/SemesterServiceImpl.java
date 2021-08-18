@@ -2,10 +2,7 @@ package com.softserve.service.impl;
 
 import com.softserve.entity.Group;
 import com.softserve.entity.Semester;
-import com.softserve.exception.EntityAlreadyExistsException;
-import com.softserve.exception.EntityNotFoundException;
-import com.softserve.exception.IncorrectTimeException;
-import com.softserve.exception.ScheduleConflictException;
+import com.softserve.exception.*;
 import com.softserve.repository.SemesterRepository;
 import com.softserve.service.PeriodService;
 import com.softserve.service.SemesterService;
@@ -97,6 +94,13 @@ public class SemesterServiceImpl implements SemesterService {
         }
     }
 
+    private void checkUpdateConstraints(Semester semester) {
+        checkConstraints(semester);
+        if (isDaysWithLessonsCanNotBeRemoved(semester)) {
+            throw new UsedEntityException("One or more days in a semester have lessons and can not be removed");
+        }
+    }
+
     private void fillDefaultValues(Semester semester) {
         if (CollectionUtils.isEmpty(semester.getDaysOfWeek())) {
             semester.setDaysOfWeek(new HashSet<>(workDaysList));
@@ -137,7 +141,7 @@ public class SemesterServiceImpl implements SemesterService {
     @Override
     public Semester update(Semester semester) {
         log.info("In update(entity = [{}]", semester);
-        checkConstraints(semester);
+        checkUpdateConstraints(semester);
         setCurrentToFalse(semester);
         setDefaultToFalse(semester);
         return semesterRepository.update(semester);
@@ -202,6 +206,18 @@ public class SemesterServiceImpl implements SemesterService {
             return false;
         }
         return existingSemester.getId() != semesterId;
+    }
+
+    /**
+     * The method is used for checking if days with lessons are not removed from the updated semester
+     *
+     * @return true if one or more days with lessons have been removed from the updated semester;
+     * false if days with lessons have not been removed.
+     */
+    private boolean isDaysWithLessonsCanNotBeRemoved(Semester semester) {
+        log.info("Enter into isDaysWithLessonsCanBeRemoved with entity: {}", semester);
+        List<DayOfWeek> daysInSchedule = semesterRepository.getDaysWithLessonsBySemesterId(semester.getId());
+        return !semester.getDaysOfWeek().containsAll(daysInSchedule);
     }
 
     /**
