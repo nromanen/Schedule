@@ -4,7 +4,6 @@ import {
     checkUniqueGroup,
     checkUniqueRoomName,
     checkUniqueSubject,
-    checkUniqWish,
     timeIntersectService,
     checkUniqSemester, checkUniqueDepartment
 } from './storeValidation';
@@ -83,9 +82,7 @@ export const uniqueRoomName = value => {
     return checkUniqueRoomName(value);
 };
 
-export const uniqWish = value => {
-    return checkUniqWish(value);
-};
+
 
 export const email = value =>
     value && !validation.EMAIL.test(value)

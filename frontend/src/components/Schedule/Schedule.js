@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { IoMdMore } from 'react-icons/all';
 
 import Board from '../Board/Board';
@@ -24,11 +24,33 @@ import { cssClasses } from '../../constants/schedule/cssClasses';
 import { colors } from '../../constants/schedule/colors';
 
 import { makeStyles } from '@material-ui/core/styles';
+import './Schedule.scss'
 
 const Schedule = props => {
-    const { groups, itemGroupId } = props;
+    const { groups, itemGroupId,groupId } = props;
     const [open, setOpen] = useState(false);
     const [itemData, setItemData] = useState(null);
+    const prevGroupId = usePrevious(groupId)
+    function usePrevious(value) {
+        const ref = useRef();
+        useEffect(() => {
+            ref.current = value;
+        });
+        return ref.current;
+    }
+    useEffect(() => {
+        if(groupId!==null) {
+            const el = document.getElementById(`group-${groupId}`);
+            el.scrollIntoView({block: "center", inline:"center"});
+            const parent =el.parentNode;
+            parent.classList.add("selected-group");
+        }
+        if(prevGroupId){
+            const prevEl = document.getElementById(`group-${prevGroupId}`);
+            const parent =prevEl.parentNode;
+            parent.classList.remove("selected-group")
+        }
+    }, [groupId])
 
     const setNewItemHandle = (item, room, groupId) => {
         getLessonsByGroupService(groupId);
@@ -228,6 +250,7 @@ const Schedule = props => {
 
     return (
         <section className="cards-container schedule">
+
             <ScheduleDialog
                 translation={t}
                 itemData={itemData}
@@ -240,6 +263,7 @@ const Schedule = props => {
             <aside className="day-classes-aside">
                 <section className="card empty-card">Група</section>
                 {days.map(day => (
+
                     <section
                         className={
                             elClasses.dayContainer +
@@ -248,6 +272,7 @@ const Schedule = props => {
                         key={day}
                     >
                         <section
+                            id={day}
                             className={
                                 elClasses.day + ' card schedule-day card'
                             }
@@ -267,16 +292,21 @@ const Schedule = props => {
                     </section>
                 ))}
             </aside>
-            <section className="groups-section">
+
+
+            <section className="groups-section ">
                 {groups.map(group => (
                     <section
                         key={'group-' + group.id}
                         className="group-section"
                     >
+
                         <div
                             className="group-title card"
                             id={`group-${group.id}`}
                         >
+
+
                             {group.title}
                         </div>
                         {allLessons.map((lesson, index) => (
@@ -285,6 +315,7 @@ const Schedule = props => {
                                 className="board-div"
                             >
                                 <Board
+                                    day={lesson.day.name}
                                     currentSemester={currentSemester}
                                     setModalData={setItemData}
                                     openDialog={handleClickOpen}
@@ -296,12 +327,12 @@ const Schedule = props => {
                                         className="more-icon"
                                         title={
                                             `${t(
-                                                `formElements:teacher_wish_day`
+                                                `formElements:day_label`
                                             )}: ` +
                                             t(
                                                 `day_of_week_${lesson.day.name.toUpperCase()}`
                                             ).toLowerCase() +
-                                            `\n${t(`teacher_wish_week`)}: ` +
+                                            `\n${t(`week_label`)}: ` +
                                             t(`week_${lesson.week}_title`) +
                                             `\n${t('class_schedule')}: ` +
                                             lesson.classNumber.class_name
@@ -311,8 +342,17 @@ const Schedule = props => {
                                 </Board>
                             </div>
                         ))}
+                        <div
+                            className="group-title card"
+                            id={`group-${group.id}`}
+                        >
+
+
+                            {group.title}
+                        </div>
                     </section>
                 ))}
+
             </section>
         </section>
     );

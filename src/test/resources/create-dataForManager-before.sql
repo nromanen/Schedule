@@ -1,5 +1,8 @@
-delete from "public".users;
-delete from "public".teachers;
+TRUNCATE
+    "public".users,
+    "public".teachers
+    RESTART IDENTITY
+    CASCADE;
 
 insert into "public".teachers(id, name, patronymic, "position", surname) VALUES
 (4, 'Ivan', 'Ivanovych', 'docent', 'Ivanov'),
