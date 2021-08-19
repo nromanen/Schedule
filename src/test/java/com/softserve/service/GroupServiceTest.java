@@ -119,9 +119,9 @@ public class GroupServiceTest {
     @Test(expected = EntityNotFoundException.class)
     public void throwEntityNotFoundExceptionIfGroupWithStudentsNotFoundedById() {
         Long id = 1L;
-        when(groupRepository.findWithStudentsById(id)).thenReturn(Optional.empty());
+        when(groupRepository.getWithStudentsById(id)).thenReturn(Optional.empty());
         groupService.getWithStudentsById(id);
-        verify(groupRepository).findWithStudentsById(id);
+        verify(groupRepository).getWithStudentsById(id);
     }
 
     @Test
@@ -172,9 +172,6 @@ public class GroupServiceTest {
 
     @Test
     public void getGroupsBySemesterId() {
-        Group group = new Group();
-        group.setTitle("some group");
-        group.setId(1L);
         List<Group> groupList = new ArrayList<>();
         groupList.add(group);
         Semester semester = new Semester();
@@ -187,9 +184,6 @@ public class GroupServiceTest {
 
     @Test
     public void getGroupsForCurrentSemester() {
-        Group group = new Group();
-        group.setTitle("some group");
-        group.setId(1L);
         List<Group> groupList = new ArrayList<>();
         groupList.add(group);
         Semester semester = new Semester();
@@ -202,9 +196,6 @@ public class GroupServiceTest {
 
     @Test
     public void getGroupsForDefaultSemester() {
-        Group group = new Group();
-        group.setTitle("some group");
-        group.setId(1L);
         List<Group> groupList = new ArrayList<>();
         groupList.add(group);
         Semester semester = new Semester();
@@ -231,11 +222,9 @@ public class GroupServiceTest {
         semester.setGroups(groupList);
         Long[] groupIds = {1L, 2L};
 
-        when(groupRepository.getById(1L)).thenReturn(group1);
-        when(groupRepository.getById(2L)).thenReturn(group2);
+        when(groupRepository.findById(1L)).thenReturn(Optional.of(group1));
+        when(groupRepository.findById(2L)).thenReturn(Optional.of(group2));
 
         assertEquals(groupService.getGroupsByGroupIds(groupIds), groupList);
     }
-
-
 }

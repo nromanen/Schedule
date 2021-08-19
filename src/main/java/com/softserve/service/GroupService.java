@@ -15,5 +15,6 @@ public interface GroupService extends BasicService<Group, Long> {
     List<Group> getGroupsForCurrentSemester();
 
     List<Group> getGroupsForDefaultSemester();
+
     List<Group> getGroupsByGroupIds(Long[] groupId);
 }

@@ -50,7 +50,7 @@ public class GroupServiceImpl  implements GroupService {
     @Override
     public Group getWithStudentsById(Long id) {
         log.info("In getWithStudentsById(id = [{}])",  id);
-        return groupRepository.findWithStudentsById(id)
+        return groupRepository.getWithStudentsById(id)
                 .orElseThrow(() -> new EntityNotFoundException(Group.class, "id", id.toString()));
     }
 

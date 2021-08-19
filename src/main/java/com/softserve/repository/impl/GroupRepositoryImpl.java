@@ -24,14 +24,11 @@ public class GroupRepositoryImpl extends BasicRepositoryImpl<Group, Long> implem
             + "WHERE g.id = :id";
 
     private static final String IS_EXISTS_BY_TITLE_QUERY
-            = "SELECT (count(*) > 0)"
+            = "SELECT (count(*) > 0) "
             + "FROM Group g "
-            + "WHERE g.title = :title";
+            + "WHERE lower(g.title) = lower(:title)";
 
-    private static final String IS_EXISTS_BY_TITLE_IGNORING_ID_QUERY
-            = "SELECT (count(*) > 0)"
-            + "FROM Group g "
-            + "WHERE g.title = :title AND g.id!=:id";
+    private static final String IS_EXISTS_BY_TITLE_IGNORING_ID_QUERY = IS_EXISTS_BY_TITLE_QUERY + " AND g.id!=:id";
 
     private static final String IS_EXISTS_BY_ID_QUERY
             = "SELECT (count(*) > 0) "
@@ -63,7 +60,6 @@ public class GroupRepositoryImpl extends BasicRepositoryImpl<Group, Long> implem
                 .getResultList();
     }
 
-
     /**
      * The method used for getting by id entity with students
      *
@@ -71,8 +67,8 @@ public class GroupRepositoryImpl extends BasicRepositoryImpl<Group, Long> implem
      * @return found entity
      */
     @Override
-    public Optional<Group> findWithStudentsById(Long id) {
-        log.info("In findByIdWithStudents(id = [{}])", id);
+    public Optional<Group> getWithStudentsById(Long id) {
+        log.info("In getWithStudentsById(id = [{}])", id);
         return  sessionFactory.getCurrentSession()
                 .createQuery(GET_WITH_STUDENTS_BY_ID_QUERY, Group.class)
                 .setParameter("id", id)
@@ -88,7 +84,10 @@ public class GroupRepositoryImpl extends BasicRepositoryImpl<Group, Long> implem
      */
     @Override
     public boolean isExistsByTitle(String title) {
-        log.info("In countGroupsWithTitle(title = [{}])", title);
+        log.info("In isExistsByTitle(title = [{}])", title);
+        if(title == null) {
+            return false;
+        }
         return (boolean) sessionFactory.getCurrentSession()
                 .createQuery(IS_EXISTS_BY_TITLE_QUERY)
                 .setParameter("title", title)
@@ -104,7 +103,10 @@ public class GroupRepositoryImpl extends BasicRepositoryImpl<Group, Long> implem
      */
     @Override
     public boolean isExistsByTitleIgnoringId(String title, Long id) {
-        log.info("In countGroupsWithTitleAndIgnoreWithId(id = [{}], title = [{}])", id, title);
+        log.info("In isExistsByTitleIgnoringId(id = [{}], title = [{}])", id, title);
+        if(title == null) {
+            return false;
+        }
         return (boolean) sessionFactory.getCurrentSession()
                 .createQuery(IS_EXISTS_BY_TITLE_IGNORING_ID_QUERY)
                 .setParameter("title", title)
