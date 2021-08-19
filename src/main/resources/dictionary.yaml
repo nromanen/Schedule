@@ -30,3 +30,6 @@ dictionary:
   monday:
     en: "monday"
     uk: "понеділок"
+  follow the link:
+    en: "follow the link"
+    uk: "перейти по посиланню"
