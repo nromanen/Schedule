@@ -6,30 +6,42 @@ import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Filter;
 import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
-
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @Slf4j
 public class GroupRepositoryImpl extends BasicRepositoryImpl<Group, Long> implements GroupRepository {
+    private static final String GET_ALL_QUERY
+            = "SELECT g "
+            + "FROM Group g "
+            + "ORDER BY g.title ASC";
 
-    private static final String GET_ALL_QUERY =
-            "SELECT DISTINCT g FROM Group g LEFT JOIN FETCH g.students ORDER BY g.title ASC";
-    private static final String GET_ALL_WITHOUT_STUDENTS_QUERY =
-            "SELECT g FROM Group g ORDER BY g.title ASC";
-    private static final String GET_BY_ID_QUERY =
-            "SELECT g FROM Group g LEFT JOIN FETCH g.students WHERE g.id = :id";
-    private static final String GET_DISABLED_WITHOUT_STUDENTS_QUERY =
-            "SELECT g FROM Group g WHERE g.disable = true ORDER BY g.title ASC";
-    private static final String COUNT_GROUPS_WITH_TITLE_QUERY =
-            "SELECT COUNT (*) FROM Group g WHERE g.title = :title";
-    private static final String COUNT_GROUPS_WITH_TITLE_AND_IGNORE_WITH_ID_QUERY =
-            "SELECT COUNT (*) FROM Group g WHERE g.title = :title AND g.id!=:id";
-    private static final String COUNT_BY_GROUP_ID_QUERY =
-            "SELECT COUNT (*) FROM Group g WHERE g.id = :id";
-    private static final String CHECK_REFERENCE_QUERY =
-            "SELECT COUNT (l.id) " +
-            "FROM Lesson l WHERE l.group.id = :groupId";
+    private static final String GET_WITH_STUDENTS_BY_ID_QUERY
+            = "SELECT g "
+            + "FROM Group g "
+            + "LEFT JOIN FETCH g.students "
+            + "WHERE g.id = :id";
+
+    private static final String IS_EXISTS_BY_TITLE_QUERY
+            = "SELECT (count(*) > 0)"
+            + "FROM Group g "
+            + "WHERE g.title = :title";
+
+    private static final String IS_EXISTS_BY_TITLE_IGNORING_ID_QUERY
+            = "SELECT (count(*) > 0)"
+            + "FROM Group g "
+            + "WHERE g.title = :title AND g.id!=:id";
+
+    private static final String IS_EXISTS_BY_ID_QUERY
+            = "SELECT (count(*) > 0) "
+            + "FROM Group g "
+            + "WHERE g.id = :id";
+
+    private static final String IS_LESSONS_EXIST_FOR_GROUP_ID_QUERY
+            = "SELECT (count(l.id) > 0) "
+            + "FROM Lesson l "
+            + "WHERE l.group.id = :groupId";
 
     private Session getSession(){
         Session session = sessionFactory.getCurrentSession();
@@ -41,89 +53,78 @@ public class GroupRepositoryImpl extends BasicRepositoryImpl<Group, Long> implem
     /**
      * Method gets information about all groups from DB
      *
-     * @return List of all groups with ASCII sorting by title
+     * @return List of all groups with ASC sorting by title
      */
     @Override
     public List<Group> getAll() {
         log.info("In getAll()");
-        return getSession().createQuery(GET_ALL_QUERY).getResultList();
+        return getSession()
+                .createQuery(GET_ALL_QUERY, Group.class)
+                .getResultList();
     }
 
-    /**
-     * Method gets information about all groups, but doesn't load Students
-     *
-     * @return List of all groups with ASCII sorting by title
-     */
-    @Override
-    public List<Group> getAllWithoutStudents() {
-        log.info("In getAllWithoutStudents()");
-        return getSession().createQuery(GET_ALL_WITHOUT_STUDENTS_QUERY).getResultList();
-    }
 
     /**
-     * Overrided method that returns entity with JOIN FETCH (students)
+     * The method used for getting by id entity with students
      *
      * @param id Long id of entity
      * @return found entity
      */
     @Override
-    public Group getById(Long id) {
-        log.info("In getById(id = [{}])", id);
-        return (Group) getSession().createQuery(GET_BY_ID_QUERY).setParameter("id", id).uniqueResult();
+    public Optional<Group> findWithStudentsById(Long id) {
+        log.info("In findByIdWithStudents(id = [{}])", id);
+        return  sessionFactory.getCurrentSession()
+                .createQuery(GET_WITH_STUDENTS_BY_ID_QUERY, Group.class)
+                .setParameter("id", id)
+                .uniqueResultOptional();
     }
 
-    /**
-     * Method gets information about groups that have property "disabled" = true, but doesn't load Students
-     *
-     * @return List of groups with ASCII sorting by title
-     */
-    @Override
-    public List<Group> getDisabledWithoutStudents() {
-        log.info("In getDisabledWithoutStudents()");
-        return sessionFactory.getCurrentSession().createQuery(GET_DISABLED_WITHOUT_STUDENTS_QUERY).getResultList();
-    }
 
     /**
-     * The method used for getting number of groups with title from database
+     * The method used for finding out if group with such title exists
      *
      * @param title String title used to find Group
-     * @return Long number of records with title
+     * @return true if exists, else - false
      */
     @Override
-    public Long countGroupsWithTitle(String title) {
+    public boolean isExistsByTitle(String title) {
         log.info("In countGroupsWithTitle(title = [{}])", title);
-        return (Long) sessionFactory.getCurrentSession().createQuery
-                (COUNT_GROUPS_WITH_TITLE_QUERY)
-                .setParameter("title", title).getSingleResult();
+        return (boolean) sessionFactory.getCurrentSession()
+                .createQuery(IS_EXISTS_BY_TITLE_QUERY)
+                .setParameter("title", title)
+                .getSingleResult();
     }
 
     /**
-     * The method used for getting number of groups with title from database
+     * The method used for finding out if group with such title exists ignoring id
      *
-     * @param id Long id of the Group
      * @param title String title used to find Group
-     * @return Long number of records with title
+     * @param id Long id, which is ignored during the search
+     * @return true if exists, else - false
      */
     @Override
-    public Long countGroupsWithTitleAndIgnoreWithId(Long id, String title) {
+    public boolean isExistsByTitleIgnoringId(String title, Long id) {
         log.info("In countGroupsWithTitleAndIgnoreWithId(id = [{}], title = [{}])", id, title);
-        return (Long) sessionFactory.getCurrentSession().createQuery
-                (COUNT_GROUPS_WITH_TITLE_AND_IGNORE_WITH_ID_QUERY)
-                .setParameter("title", title).setParameter("id", id).getSingleResult();
+        return (boolean) sessionFactory.getCurrentSession()
+                .createQuery(IS_EXISTS_BY_TITLE_IGNORING_ID_QUERY)
+                .setParameter("title", title)
+                .setParameter("id", id)
+                .getSingleResult();
     }
 
     /**
      * Method used to verify if group with such id exists
      *
      * @param id long id of the Group
-     * @return 0 if there is no group with such id, 1 if record with id exists
+     * @return true if there is no group with such id, false if record with id exists
      */
     @Override
-    public Long countByGroupId(Long id) {
-        log.info("In countByGroupId(id = [{}])", id);
-        return (Long) sessionFactory.getCurrentSession().createQuery
-                (COUNT_BY_GROUP_ID_QUERY)
-                .setParameter("id", id).getSingleResult();
+    public boolean isExistsById(Long id) {
+        log.info("In isExistsById(id = [{}])", id);
+        return (boolean) sessionFactory.getCurrentSession()
+                .createQuery(IS_EXISTS_BY_ID_QUERY)
+                .setParameter("id", id)
+                .getSingleResult();
     }
 
     /**
@@ -135,10 +136,9 @@ public class GroupRepositoryImpl extends BasicRepositoryImpl<Group, Long> implem
     @Override
     protected boolean checkReference(Group group) {
         log.info("In checkReference(group = [{}])", group);
-        long count = (long) sessionFactory.getCurrentSession().createQuery
-                (CHECK_REFERENCE_QUERY)
+        return (boolean) sessionFactory.getCurrentSession()
+                .createQuery(IS_LESSONS_EXIST_FOR_GROUP_ID_QUERY)
                 .setParameter("groupId", group.getId())
                 .getSingleResult();
-        return count != 0;
     }
 }
