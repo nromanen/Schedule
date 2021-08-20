@@ -179,7 +179,7 @@ public class TeacherServiceImpl implements TeacherService {
      * @throws EntityNotFoundException if teacher doesn't exist
      */
     @Override
-    public Teacher findByUserId(int userId) {
+    public Teacher findByUserId(long userId) {
         log.info("Enter into getByUserId with userId {}", userId);
         return teacherRepository.findByUserId(userId).orElseThrow(
                 () -> new EntityNotFoundException(Teacher.class, "userId", String.valueOf(userId)));

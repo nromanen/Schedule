@@ -308,15 +308,42 @@ public class SemesterServiceTest {
         dayOfWeeks.add(DayOfWeek.TUESDAY);
         dayOfWeeks.add(DayOfWeek.WEDNESDAY);
         semester.setDaysOfWeek(dayOfWeeks);
-        Period firstClasses = new Period();
-        firstClasses.setName("1 para");
+        Period firstPeriod = new Period();
+        firstPeriod.setName("1 para");
         Set<Period> periodSet = new HashSet<>();
-        periodSet.add(firstClasses);
+        periodSet.add(firstPeriod);
         semester.setPeriods(periodSet);
 
         List<DayOfWeek> daysWithLessonsInSchedule = List.of(DayOfWeek.MONDAY, DayOfWeek.TUESDAY, DayOfWeek.WEDNESDAY);
 
         when(semesterRepository.getDaysWithLessonsBySemesterId(semester.getId())).thenReturn(daysWithLessonsInSchedule);
+
+        semesterService.update(semester);
+    }
+
+    @Test(expected = UsedEntityException.class)
+    public void throwUsedEntityExceptionIfPeriodsHaveLessons() {
+        Semester semester = new Semester();
+        semester.setId(1L);
+        semester.setDescription("1 semester");
+        semester.setYear(2020);
+        semester.setStartDay(LocalDate.of(2020, 4, 10));
+        semester.setEndDay(LocalDate.of(2020, 5, 10));
+        Set<DayOfWeek> dayOfWeeks = new HashSet<>();
+        dayOfWeeks.add(DayOfWeek.MONDAY);
+        semester.setDaysOfWeek(dayOfWeeks);
+        Period firstPeriod = new Period();
+        firstPeriod.setName("1 para");
+        Set<Period> periodSet = new HashSet<>();
+        periodSet.add(firstPeriod);
+        semester.setPeriods(periodSet);
+
+        Period secondPeriod = new Period();
+        secondPeriod.setName("2 para");
+
+        List<Period> periodsWithLessonsInSchedule = List.of(firstPeriod, secondPeriod);
+
+        when(semesterRepository.getPeriodsWithLessonsBySemesterId(semester.getId())).thenReturn(periodsWithLessonsInSchedule);
 
         semesterService.update(semester);
     }
