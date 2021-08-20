@@ -1,5 +1,8 @@
-delete from "public".rooms;
-delete from "public".room_types;
+TRUNCATE
+    "public".rooms,
+    "public".room_types
+    RESTART IDENTITY
+    CASCADE;
 
 insert into "public".room_types(id, description) values
 (4,'small auditory'),

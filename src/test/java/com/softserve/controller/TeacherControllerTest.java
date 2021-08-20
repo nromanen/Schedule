@@ -43,7 +43,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebAppConfiguration
 @WithMockUser(username = "first@mail.com", password = "$2a$04$SpUhTZ/SjkDQop/Zvx1.seftJdqvOploGce/wau247zQhpEvKtz9.", roles = "MANAGER")
 @Sql(value = "classpath:create-teachers-before.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-@Sql(value = "classpath:delete-teachers-after.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 public class TeacherControllerTest {
     @ClassRule
     public static final SpringClassRule scr = new SpringClassRule();

@@ -1,5 +1,6 @@
 package com.softserve.repository;
 
+import com.softserve.entity.Period;
 import com.softserve.entity.Semester;
 
 import java.time.DayOfWeek;
@@ -17,4 +18,5 @@ public interface SemesterRepository extends BasicRepository<Semester, Long> {
     int updateAllSemesterDefaultToFalse();
     int setDefaultSemester(Long semesterId);
     List<DayOfWeek> getDaysWithLessonsBySemesterId(Long semesterId);
+    List<Period> getPeriodsWithLessonsBySemesterId(Long semesterId);
 }

@@ -1,9 +1,9 @@
 package com.softserve.controller;
 
 import com.softserve.dto.*;
-import com.softserve.entity.*;
-import com.softserve.entity.enums.EvenOdd;
-import com.softserve.entity.enums.LessonType;
+import com.softserve.entity.CurrentUser;
+import com.softserve.entity.Teacher;
+import com.softserve.entity.TemporarySchedule;
 import com.softserve.mapper.TemporaryScheduleMapper;
 import com.softserve.security.jwt.JwtUser;
 import com.softserve.service.TeacherService;
@@ -21,10 +21,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
 
 
 @RestController
@@ -129,7 +126,7 @@ public class TemporaryScheduleController {
                                                                                              @RequestParam String from,
                                                                                              @RequestParam String to) {
         log.info("In getTemporarySchedulesForCurrentTeacher");
-        Teacher teacher = teacherService.findByUserId(Integer.parseInt(jwtUser.getId().toString()));
+        Teacher teacher = teacherService.findByUserId(jwtUser.getId());
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         DateTimeFormatter currentFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate fromDate = LocalDate.parse(LocalDate.parse(from, formatter).toString(), currentFormatter);
