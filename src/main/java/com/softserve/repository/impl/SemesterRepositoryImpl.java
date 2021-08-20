@@ -1,5 +1,6 @@
 package com.softserve.repository.impl;
 
+import com.softserve.entity.Period;
 import com.softserve.entity.Semester;
 import com.softserve.repository.SemesterRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +19,9 @@ public class SemesterRepositoryImpl extends BasicRepositoryImpl<Semester, Long> 
 
     private static final String HQL_SELECT_DAYS_WITH_LESSONS
             = "select distinct s.dayOfWeek from Schedule s where s.lesson.semester.id = :semesterId";
+
+    private static final String HQL_SELECT_PERIODS_WITH_LESSONS
+            = "select s.period from Schedule s where s.lesson.semester.id = :semesterId";
 
     private Session getSession(){
         Session session = sessionFactory.getCurrentSession();
@@ -59,8 +63,8 @@ public class SemesterRepositoryImpl extends BasicRepositoryImpl<Semester, Long> 
     protected boolean checkReference(Semester semester) {
         log.info("In checkReference(semester = [{}])", semester);
         long count = (long) sessionFactory.getCurrentSession().createQuery
-                ("select count (s.id) " +
-                        "from Schedule s where s.lesson.semester.id = :semesterId")
+                        ("select count (s.id) " +
+                                "from Schedule s where s.lesson.semester.id = :semesterId")
                 .setParameter("semesterId", semester.getId()).getSingleResult();
 
         return count != 0;
@@ -124,7 +128,7 @@ public class SemesterRepositoryImpl extends BasicRepositoryImpl<Semester, Long> 
     public int updateAllSemesterCurrentToFalse() {
         log.info("In setCurrentSemesterToFalse()");
         return  sessionFactory.getCurrentSession().createQuery(
-                "UPDATE Semester s set s.currentSemester = false  where currentSemester = true")
+                        "UPDATE Semester s set s.currentSemester = false  where currentSemester = true")
                 .executeUpdate();
     }
 
@@ -151,7 +155,7 @@ public class SemesterRepositoryImpl extends BasicRepositoryImpl<Semester, Long> 
     public int setCurrentSemester(Long semesterId) {
         log.info("In setCurrentSemester(semesterId = [{}])", semesterId);
         return sessionFactory.getCurrentSession().createQuery(
-                "UPDATE Semester s set s.currentSemester = true  where s.id = :semesterId")
+                        "UPDATE Semester s set s.currentSemester = true  where s.id = :semesterId")
                 .setParameter("semesterId", semesterId)
                 .executeUpdate();
     }
@@ -195,6 +199,19 @@ public class SemesterRepositoryImpl extends BasicRepositoryImpl<Semester, Long> 
     public List<DayOfWeek> getDaysWithLessonsBySemesterId(Long semesterId) {
         log.info("In getDaysWithLessonsBySemesterId(semesterId = [{}])", semesterId);
         return sessionFactory.getCurrentSession().createQuery(HQL_SELECT_DAYS_WITH_LESSONS, DayOfWeek.class)
+                .setParameter("semesterId", semesterId)
+                .getResultList();
+    }
+
+    /**
+     * The method used for getting periods with lessons in the semester
+     * @param semesterId id of the semester
+     * @return a list of periods
+     */
+    @Override
+    public List<Period> getPeriodsWithLessonsBySemesterId(Long semesterId) {
+        log.info("In getPeriodsWithLessonsBySemesterId(semesterId = [{}])", semesterId);
+        return sessionFactory.getCurrentSession().createQuery(HQL_SELECT_PERIODS_WITH_LESSONS, Period.class)
                 .setParameter("semesterId", semesterId)
                 .getResultList();
     }

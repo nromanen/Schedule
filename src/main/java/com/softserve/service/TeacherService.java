@@ -13,7 +13,7 @@ public interface TeacherService extends BasicService<Teacher, Long> {
     Teacher joinTeacherWithUser(Long teacherId, Long userId);
     List<Teacher> getDisabled();
 
-    Teacher findByUserId(int userId);
+    Teacher findByUserId(long userId);
 
     List<Teacher> getAllTeacherWithoutUser();
 }
