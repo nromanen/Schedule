@@ -127,12 +127,21 @@ public class ScheduleController {
 
 
     @PostMapping
-    @ApiOperation(value = "Create new schedule")
+    @ApiOperation(value = "Create new schedules")
     @PreAuthorize("hasRole('MANAGER')")
-    public ResponseEntity<ScheduleSaveDTO> save(@RequestBody ScheduleSaveDTO scheduleSaveDTO) {
+    public ResponseEntity<List<ScheduleSaveDTO>> save(@RequestBody ScheduleSaveDTO scheduleSaveDTO) {
         log.info("In save(scheduleSaveDTO = [{}])", scheduleSaveDTO);
-        Schedule schedule = scheduleService.save(scheduleSaveMapper.scheduleSaveDTOToSchedule(scheduleSaveDTO));
-        return ResponseEntity.status(HttpStatus.CREATED).body(scheduleSaveMapper.scheduleToScheduleSaveDTO(schedule));
+        Schedule schedule = scheduleSaveMapper.scheduleSaveDTOToSchedule(scheduleSaveDTO);
+        schedule.setLesson(lessonService.getById(scheduleSaveDTO.getLessonId()));
+        List<Schedule> schedules = new ArrayList<>();
+        if (schedule.getLesson().isGrouped()){
+            schedules = scheduleService.scheduleForGroupedLessons(schedule);
+            log.info("Enter schedules = [{}]", schedules);
+            schedules.forEach(scheduleService::save);
+        } else {
+            schedules.add(scheduleService.save(schedule));
+        }
+        return ResponseEntity.status(HttpStatus.CREATED).body(scheduleSaveMapper.schedulesListToScheduleSaveDTOsList(schedules));
     }
 
     @DeleteMapping("/{id}")
@@ -229,29 +238,6 @@ public class ScheduleController {
         return ResponseEntity.ok().body(scheduleMapper.scheduleToScheduleDTO(updateSchedule));
     }
 
-    @PostMapping("/grouped-lesson")
-    @ApiOperation(value = "Save grouped lesson to schedule for all groups")
-    @PreAuthorize("hasRole('MANAGER')")
-    public ResponseEntity<MessageDTO> saveGroupedLesson(@RequestBody GroupedLessonDTO groupedLessonDTO) {
-        log.info("In saveGroupedLesson with groupedLessonDTO = {}", groupedLessonDTO);
-        Schedule schedule = scheduleService.getById(groupedLessonDTO.getScheduleId());
-        Long periodId = schedule.getPeriod().getId();
-        DayOfWeek day = schedule.getDayOfWeek();
-        EvenOdd evenOdd = schedule.getEvenOdd();
-        List<Group> groups = new ArrayList<>();
-        for (Long lessonId : groupedLessonDTO.getLessons()) {
-            schedule.setLesson(lessonService.getById(lessonId));
-            if (scheduleService.isLessonInScheduleByLessonIdPeriodIdEvenOddDayOfWeek(lessonId, periodId, evenOdd, day)) {
-                groups.add(lessonService.getById(lessonId).getGroup());
-            } else {
-                scheduleService.save(schedule);
-            }
-        }
-        if (!groups.isEmpty()) {
-            throw new EntityAlreadyExistsException("Lessons with this group title already exists in schedule:" + groups.stream().map(Group::getTitle).collect(Collectors.toList()));
-        }
-        return ResponseEntity.ok().body(new MessageDTO("Grouped lesson successfully saved to schedule"));
-    }
 
     //convert schedule map to schedule dto
     /*private List<ScheduleDateRangeFullDTO> fullDTOForTeacherDateRange(Map<LocalDate, Map<Period, List<Schedule>>> map) {
