@@ -134,7 +134,7 @@ public class ScheduleServiceImpl implements ScheduleService {
      * @return List of schedules for grouped lessons
      */
     @Override
-    public List<Schedule> scheduleForGroupedLessons(Schedule schedule) {
+    public List<Schedule> schedulesForGroupedLessons(Schedule schedule) {
         log.info("In saveForGroupedLessons(schedule = [{}]", schedule);
         List<Schedule> schedules = new ArrayList<>();
         List<Lesson> lessons = lessonService.getAllGroupedLessonsByLesson(schedule.getLesson());

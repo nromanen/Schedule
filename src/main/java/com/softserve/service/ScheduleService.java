@@ -13,7 +13,7 @@ import java.util.Locale;
 import java.util.Map;
 
 public interface ScheduleService extends BasicService<Schedule, Long> {
-    List<Schedule> scheduleForGroupedLessons(Schedule schedule);
+    List<Schedule> schedulesForGroupedLessons(Schedule schedule);
 
     CreateScheduleInfoDTO getInfoForCreatingSchedule(Long semesterId, DayOfWeek dayOfWeek, EvenOdd evenOdd, Long classId, Long lessonId);
 

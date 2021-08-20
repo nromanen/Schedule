@@ -4,7 +4,6 @@ import com.softserve.dto.*;
 import com.softserve.entity.*;
 import com.softserve.entity.enums.EvenOdd;
 import com.softserve.entity.enums.LessonType;
-import com.softserve.exception.EntityAlreadyExistsException;
 import com.softserve.mapper.*;
 import com.softserve.security.jwt.JwtUser;
 import com.softserve.service.*;
@@ -23,7 +22,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @RestController
 @Api(tags = "Schedule API")
@@ -135,7 +133,7 @@ public class ScheduleController {
         schedule.setLesson(lessonService.getById(scheduleSaveDTO.getLessonId()));
         List<Schedule> schedules = new ArrayList<>();
         if (schedule.getLesson().isGrouped()){
-            schedules = scheduleService.scheduleForGroupedLessons(schedule);
+            schedules = scheduleService.schedulesForGroupedLessons(schedule);
             log.info("Enter schedules = [{}]", schedules);
             schedules.forEach(scheduleService::save);
         } else {
