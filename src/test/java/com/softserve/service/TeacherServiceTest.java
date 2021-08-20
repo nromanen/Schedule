@@ -287,20 +287,20 @@ public class TeacherServiceTest {
     @Test
     public void getTeacherByUserId() {
         Teacher teacher = teacherWithId1LAndWithUserId1;
-        when(teacherRepository.findByUserId(1)).thenReturn(Optional.of(teacher));
+        when(teacherRepository.findByUserId(1L)).thenReturn(Optional.of(teacher));
 
-        Teacher result = teacherService.findByUserId(1);
+        Teacher result = teacherService.findByUserId(1L);
 
         assertNotNull(result);
         assertEquals(teacher, result);
-        verify(teacherRepository, times(1)).findByUserId(1);
+        verify(teacherRepository, times(1)).findByUserId(1L);
     }
 
     @Test(expected = EntityNotFoundException.class)
     public void throwEntityNotFoundExceptionIfTeacherNotFoundedByUserId() {
         when(teacherRepository.findByUserId(1)).thenReturn(Optional.empty());
-        teacherService.findByUserId(1);
-        verify(teacherRepository, times(1)).findByUserId(1);
+        teacherService.findByUserId(1L);
+        verify(teacherRepository, times(1)).findByUserId(1L);
     }
 
     @Test
