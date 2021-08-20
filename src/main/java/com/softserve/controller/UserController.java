@@ -1,19 +1,18 @@
 package com.softserve.controller;
 
-import com.softserve.dto.MessageDTO;
 import com.softserve.dto.UserCreateDTO;
 import com.softserve.dto.UserDTO;
-import com.softserve.dto.UserDataForChangeDTO;
+import com.softserve.dto.UserDataForChangePasswordDTO;
 import com.softserve.entity.CurrentUser;
 import com.softserve.entity.Teacher;
 import com.softserve.entity.User;
 import com.softserve.entity.enums.Role;
 import com.softserve.mapper.DepartmentMapper;
 import com.softserve.mapper.TeacherMapper;
+import com.softserve.mapper.UserMapper;
 import com.softserve.security.jwt.JwtUser;
 import com.softserve.service.TeacherService;
 import com.softserve.service.UserService;
-import com.softserve.mapper.UserMapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -22,16 +21,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 import java.util.Optional;
+
 import static org.apache.commons.lang3.StringUtils.isNoneBlank;
 
 @Slf4j
@@ -116,6 +110,7 @@ public class UserController {
     @GetMapping("/profile")
     @ApiOperation(value = "Get current user data")
     public ResponseEntity getCurrentUser(@CurrentUser JwtUser jwtUser) {
+        log.info("Enter into getCurrentUser method with JwtUser {}", jwtUser);
         User user = userService.getById(jwtUser.getId());
         if (user.getRole() == Role.ROLE_TEACHER) {
             Teacher teacher = teacherService.findByUserId(user.getId().intValue());
@@ -124,35 +119,22 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/change-profile")
-    @ApiOperation(value = "Change data for current user")
-    public ResponseEntity<MessageDTO> changeDataForCurrentUser(@CurrentUser JwtUser jwtUser,
-                                                               @RequestBody UserDataForChangeDTO data) {
+    @PostMapping("/profile/change-password")
+    @ApiOperation(value = "Change password for current user")
+    public ResponseEntity changePasswordForCurrentUser(@CurrentUser JwtUser jwtUser,
+                                                       @RequestBody UserDataForChangePasswordDTO userDTO) {
+        log.info("Enter into changePasswordForCurrentUser method with JwtUser {} userDTO {}", jwtUser, userDTO);
         User user = userService.getById(jwtUser.getId());
 
-        Teacher teacher = null;
-        if (user.getRole() == Role.ROLE_TEACHER) {
-            teacher = teacherService.findByUserId(user.getId().intValue());
-            teacher.setName(data.getTeacherName());
-            teacher.setSurname(data.getTeacherSurname());
-            teacher.setPosition(data.getTeacherPosition());
-            teacher.setPatronymic(data.getTeacherPatronymic());
-            teacher.setDepartment(departmentMapper.departmentDTOToDepartment(data.getTeacherDepartmentDTO()));
-        }
-
-        Optional<String> password = isNoneBlank(data.getCurrentPassword()) && isNoneBlank(data.getNewPassword()) ?
-                Optional.ofNullable(userService.changePasswordForCurrentUser(user, data.getCurrentPassword(), data.getNewPassword())) :
+        Optional<String> password = isNoneBlank(userDTO.getCurrentPassword()) && isNoneBlank(userDTO.getNewPassword()) ?
+                Optional.ofNullable(userService.changePasswordForCurrentUser(user, userDTO.getCurrentPassword(), userDTO.getNewPassword())) :
                 Optional.empty();
-
-        if (teacher != null) {
-            teacherService.update(teacher);
-        }
 
         if (password.isPresent()) {
             user.setPassword(password.get());
             userService.update(user);
         }
 
-        return ResponseEntity.ok().body(new MessageDTO(jwtUser.getUsername() + " data successfully changed."));
+        return ResponseEntity.ok().build();
     }
 }
