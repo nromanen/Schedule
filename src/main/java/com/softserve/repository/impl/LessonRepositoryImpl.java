@@ -14,6 +14,11 @@ import java.util.List;
 @Slf4j
 public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> implements LessonRepository {
 
+    private static final String SELECT_GROUPED = "select l from Lesson l " +
+            "where l.grouped=true and l.subject.id= :subjectId " +
+            "and l.hours= :hours and l.teacher.id= :teacherId " +
+            "and l.semester.id= :semesterId and l.lessonType= :lessonType";
+
 
     /**
      * Method gets information about all lessons from DB
@@ -200,9 +205,7 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
     @Override
     public List<Lesson> getGroupedLessonsByLesson(Lesson lesson) {
         log.info("getGroupedLessonsByLessonId(lesson = [{}]", lesson);
-        return sessionFactory.getCurrentSession().createQuery(
-                "select l from Lesson l " +
-                        " where l.grouped=true and l.subject.id= :subjectId and l.hours= :hours and l.teacher.id= :teacherId and l.semester.id= :semesterId and l.lessonType= :lessonType")
+        return sessionFactory.getCurrentSession().createQuery(SELECT_GROUPED)
                 .setParameter("subjectId", lesson.getSubject().getId())
                 .setParameter("hours", lesson.getHours())
                 .setParameter("teacherId", lesson.getTeacher().getId())
