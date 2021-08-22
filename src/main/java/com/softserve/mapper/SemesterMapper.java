@@ -14,5 +14,6 @@ public interface SemesterMapper {
     Semester semesterDTOToSemester(SemesterDTO semesterDTO);
     @IterableMapping(elementTargetType = SemesterDTO.class)
     List<SemesterDTO> semestersToSemesterDTOs(List<Semester> semesters);
+    List<SemesterWithGroupsDTO> semestersToSemesterWithGroupsDTOs(List<Semester> semesters);
     SemesterWithGroupsDTO semesterToSemesterWithGroupsDTO(Semester semester);
 }
