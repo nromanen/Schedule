@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import Card from '../../share/Card/Card';
 
@@ -58,6 +58,7 @@ let LessonForm = props => {
     const groupId = props.groupId;
 
     const [checked, setChecked] = React.useState(false);
+    const [disabledSeveralGroups,setDisabledSeveralGroups]=useState(false);
     const handleChange = event => setChecked(event.target.checked);
     useEffect(()=>{
         selectGroupService(groupId)
@@ -213,19 +214,20 @@ let LessonForm = props => {
                         label={t('subject_label') + t('for_site_label')}
                         validate={[required, maxLengthValue]}
                     />
-                    <Accordion>
+                    {!lessonId?
+                        <Accordion>
                         <AccordionSummary
                             expandIcon={<ExpandMoreIcon />}
-                            aria-controls="panel1a-content"
-                            id="panel1a-header"
+                            aria-controls='panel1a-content'
+                            id='panel1a-header'
                         >
                             <Typography>{t('copy_for_button_label')}</Typography>
                         </AccordionSummary>
                         <AccordionDetails>
                             <Typography>
                                 <>
-                                    <p className="group-label">
-                                        <label htmlFor={"groups"}>{t('copy_groups_label')}</label>
+                                    <p className='group-label'>
+                                        <label htmlFor={'groups'}>{t('copy_groups_label')}</label>
                                     </p>
                                     <Field
                                         id='groups'
@@ -243,6 +245,7 @@ let LessonForm = props => {
                             </Typography>
                         </AccordionDetails>
                     </Accordion>
+                    :null}
                     <div className="form-buttons-container">
                         <Button
                             className="buttons-style"
