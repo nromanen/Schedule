@@ -32,8 +32,8 @@ let ChangePasswordForm = props => {
             <Accordion>
                 <AccordionSummary
                     expandIcon={<ExpandMoreIcon />}
-                    aria-controls="panel1a-content"
-                    id="panel1a-header"
+                    aria-controls='panel1a-content'
+                    id='panel1a-header'
                 >
                     <Typography>{t('change_password_form_title')}</Typography>
                 </AccordionSummary>
@@ -42,46 +42,46 @@ let ChangePasswordForm = props => {
                         <form onSubmit={handleSubmit}>
                             <Field
                                 component={renderTextField}
-                                className="form-field"
-                                name="current_password"
-                                id="current_password"
+                                className='form-field'
+                                name='current_password'
+                                id='current_password'
                                 label={t('password_label')}
-                                type="password"
+                                type='password'
                                 validate={[required, password]}
                             />
                             <Field
                                 component={renderTextField}
-                                className="form-field"
-                                name="new_password"
-                                id="new_password"
+                                className='form-field'
+                                name='new_password'
+                                id='new_password'
                                 label={t('new_password_label')}
-                                type="password"
+                                type='password'
                                 validate={[required, password]}
                             />
                             <Field
                                 component={renderTextField}
-                                className="form-field"
-                                name="confirm_password"
-                                id="confirm_password"
+                                className='form-field'
+                                name='confirm_password'
+                                id='confirm_password'
                                 label={t('retype_password_label')}
-                                type="password"
+                                type='password'
                                 validate={[required, password]}
                             />
 
-                            <div className="form-buttons-container">
+                            <div className='form-buttons-container'>
                                 <Button
-                                    className="buttons-style"
-                                    type="submit"
-                                    variant="contained"
-                                    color="primary"
+                                    className='buttons-style'
+                                    type='submit'
+                                    variant='contained'
+                                    color='primary'
                                     disabled={pristine || submitting}
                                 >
                                     {t('save_button_label')}
                                 </Button>
                                 <Button
-                                    className="buttons-style"
-                                    type="button"
-                                    variant="contained"
+                                    className='buttons-style'
+                                    type='button'
+                                    variant='contained'
                                     disabled={pristine || submitting}
                                     onClick={onReset}
                                 >
