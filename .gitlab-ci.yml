@@ -30,7 +30,7 @@ build:
     only:
          - master
          - develop
-         - merge_requests
+        # - merge_requests
 
 #test:
 #    image: gradle:alpine
@@ -68,7 +68,7 @@ build_frontend:
     only:
         - master
         - develop
-        - merge_requests
+        #- merge_requests
 
 production_deploy:
     stage: production_deploy

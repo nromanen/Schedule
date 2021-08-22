@@ -10,7 +10,6 @@
     "schedule_title": "Schedule",
     "student_title": "Student(s)",
     "group_title": "Group(s)",
-    "wishes_title": "Wishes",
     "my_profile": "My profile",
 
     "LessonPage_management_title": "Lessons",
@@ -38,19 +37,13 @@
 
     "teacher_card_position": "Teacher position",
     "teacher_card_fullName": "Full name",
-    "teacher_card_wish": "Teacher Wish",
     "teacher_card_no_cards": "No Teachers cards",
     "send_schedule_for_teacher": "Sent schedule for teachers...",
-    "teacher_wish_no_wish": "No Teacher wish",
-    "teacher_wish_edit_wish": "You can edit wish day",
-    "teacher_wish_heading": "{{teacherName}}'s wish for class schedule",
-    "teacher_wish_week": "Week",
-    "teacher_wish_class": "Сlass",
+
+    "week_label": "Week",
     "edit_hover_title": "Edit",
     "delete_hover_title": "Delete",
-    "teacher_wish_class_status_OK": "All ok",
-    "teacher_wish_class_status_GOOD": "Good",
-    "teacher_wish_class_status_BAD": "Busy",
+
 
     "lesson_service_is_not_unique": "This lesson is already exist for this group",
     "busy_rooms_heading": "Busy rooms at this semester",

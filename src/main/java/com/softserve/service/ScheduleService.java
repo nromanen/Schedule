@@ -9,6 +9,7 @@ import javax.mail.MessagingException;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public interface ScheduleService extends BasicService<Schedule, Long> {
@@ -39,8 +40,8 @@ public interface ScheduleService extends BasicService<Schedule, Long> {
 
     boolean isLessonInScheduleByLessonIdPeriodIdEvenOddDayOfWeek(Long lessonId, Long periodId, EvenOdd evenOdd, DayOfWeek day);
 
-    void sendScheduleToTeachers(Long semesterId, Long[] teachersId);
+    void sendScheduleToTeachers(Long semesterId, Long[] teachersId, Locale language);
 
-    void sendScheduleToTeacher(Long semesterId, Long teacherId) throws MessagingException;
+    void sendScheduleToTeacher(Long semesterId, Long teacherId, Locale language) throws MessagingException;
 }
 

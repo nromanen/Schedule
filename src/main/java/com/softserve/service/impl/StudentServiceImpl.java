@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -131,19 +130,6 @@ public class StudentServiceImpl implements StudentService {
     public Student getByEmail(String email) {
         log.info("Enter into findByEmail method with email:{}", email);
         return studentRepository.findByEmail(email);
-    }
-
-    /**
-     * Method finds an existing Student by his userId from Repository
-     *
-     * @param userId Long userId that Student might has
-     * @return target Student
-     */
-    @Transactional(readOnly = true)
-    @Override
-    public Student getByUserId(Long userId) {
-        log.info("Enter into getByUserId method with UserId {}", userId);
-        return studentRepository.findByUserId(userId);
     }
 
     /**

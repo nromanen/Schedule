@@ -30,7 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ContextConfiguration(classes = {WebMvcConfig.class, DBConfigTest.class, MyWebAppInitializer.class, SecurityConfig.class, SecurityWebApplicationInitializer.class})
 @WebAppConfiguration
 @WithMockUser(username = "first@mail.com", password = "$2a$04$SpUhTZ/SjkDQop/Zvx1.seftJdqvOploGce/wau247zQhpEvKtz9.", roles = "MANAGER")
-@Sql(value = {"classpath:create-groups-before.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+@Sql(value = "classpath:create-groups-before.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 public class GroupControllerTest {
 
     private MockMvc mockMvc;

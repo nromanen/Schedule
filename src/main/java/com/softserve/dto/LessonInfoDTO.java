@@ -1,21 +1,15 @@
 package com.softserve.dto;
 
-import com.softserve.entity.enums.LessonType;
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @ToString
-public class LessonInfoDTO {
-    private Long id;
-    private int hours;
-    private SemesterDTO semester;
-    private String linkToMeeting;
-    private String subjectForSite;
-    private LessonType lessonType;
-    private SubjectDTO subject;
+public class LessonInfoDTO extends LessonBaseDTO{
     private GroupDTO group;
-    private TeacherNameDTO teacher;
     private boolean grouped;
 }

@@ -1,4 +1,7 @@
-delete from "public".users;
+TRUNCATE
+    "public".users
+    RESTART IDENTITY
+    CASCADE;
 
 insert into "public".users(id, email, password, role) VALUES
 (4,'first@mail.com', '$2a$04$SpUhTZ/SjkDQop/Zvx1.seftJdqvOploGce/wau247zQhpEvKtz9.', 'ROLE_MANAGER'),

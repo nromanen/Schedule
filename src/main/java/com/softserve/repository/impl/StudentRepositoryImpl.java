@@ -15,7 +15,6 @@ public class StudentRepositoryImpl extends BasicRepositoryImpl<Student, Long> im
     private static final String GET_ALL_QUERY = "FROM Student s JOIN FETCH s.group ORDER BY s.surname ASC";
     private static final String GET_BY_ID_QUERY = "FROM Student s JOIN FETCH s.group WHERE s.id = :id";
     private static final String FIND_BY_EMAIL = "FROM Student s JOIN FETCH s.group WHERE s.email = :email";
-    private static final String FIND_BY_USER_ID = "FROM Student s JOIN FETCH s.group WHERE s.user_id = :user_id";
 
     /**
      * Modified GetAll method used for getting list of Student entities by surname ascending from database
@@ -52,19 +51,5 @@ public class StudentRepositoryImpl extends BasicRepositoryImpl<Student, Long> im
             return null;
         }
         return query.getResultList().get(0);
-    }
-
-    /**
-     * The method used for getting Student by userId from database
-     *
-     * @param userId Long userId used to find Student by it
-     * @return Student
-     */
-    @Override
-    public Student findByUserId(Long userId) {
-        log.info("In findByUserId() with UserId: {}", userId);
-        return (Student) sessionFactory.getCurrentSession().createQuery(FIND_BY_USER_ID)
-                .setParameter("user_id", userId)
-                .uniqueResult();
     }
 }

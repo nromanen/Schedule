@@ -14,7 +14,6 @@ import java.util.Optional;
 @SuppressWarnings("unchecked")
 public class TeacherRepositoryImpl extends BasicRepositoryImpl<Teacher, Long> implements TeacherRepository {
 
-
     private Session getSession(){
         Session session = sessionFactory.getCurrentSession();
         Filter filter = session.enableFilter("teachersDisableFilter");
@@ -35,7 +34,19 @@ public class TeacherRepositoryImpl extends BasicRepositoryImpl<Teacher, Long> im
                         " order by t.surname ASC").getResultList();
     }
 
-    // Checking if teacher is used in Lesson and TeacherWishes tables
+    /**
+     * The method used for updating Teacher
+     *
+     * @param entity entity is going to be updated
+     * @return entity that was updated
+     */
+    @Override
+    public Teacher update(Teacher entity) {
+        sessionFactory.getCurrentSession().clear();
+        return super.update(entity);
+    }
+
+    // Checking if teacher is used in Lesson table
     @Override
     protected boolean checkReference(Teacher teacher) {
         log.info("In checkReference(teacher = [{}])", teacher);
@@ -54,7 +65,7 @@ public class TeacherRepositoryImpl extends BasicRepositoryImpl<Teacher, Long> im
      * @return Optional<Teacher> entity
      */
     @Override
-    public Optional<Teacher> findByUserId(int userId) {
+    public Optional<Teacher> findByUserId(long userId) {
         return sessionFactory.getCurrentSession().createQuery(
                 "select t from Teacher t " +
                         "where t.userId= :userId")

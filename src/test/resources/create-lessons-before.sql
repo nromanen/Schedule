@@ -1,11 +1,14 @@
-delete from "public".lessons;
-delete from "public".semester_period;
-delete from "public".periods;
-delete from "public".semester_day;
-delete from "public".semesters;
-delete from "public".groups;
-delete from "public".teachers;
-delete from "public".subjects;
+TRUNCATE
+    "public".lessons,
+    "public".semester_period,
+    "public".periods,
+    "public".semester_day,
+    "public".semesters,
+    "public".groups,
+    "public".teachers,
+    "public".subjects
+    RESTART IDENTITY
+    CASCADE;
 
 
 insert into "public".subjects(id, name) VALUES

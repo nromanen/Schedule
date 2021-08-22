@@ -1,16 +1,13 @@
 package com.softserve.entity;
 
 import com.opencsv.bean.CsvBindByName;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.hibernate.annotations.*;
+import lombok.*;
 import org.hibernate.annotations.OrderBy;
+import org.hibernate.annotations.*;
 
-import javax.persistence.*;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -18,6 +15,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+@EqualsAndHashCode
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
@@ -46,6 +45,8 @@ public class Group implements Serializable {
     @CsvBindByName(column = "group")
     private String title;
 
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     @NotNull
     @OneToMany(mappedBy = "group")
     @OrderBy(clause = "surname ASC")
@@ -53,4 +54,5 @@ public class Group implements Serializable {
 
     @Column(name = "disable",  columnDefinition = "boolean default 'false'")
     private boolean disable = false;
+
 }

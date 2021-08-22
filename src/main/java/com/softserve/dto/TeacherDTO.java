@@ -1,6 +1,7 @@
 package com.softserve.dto;
 
-import lombok.*;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
 
 @Data
 public class TeacherDTO {
@@ -9,4 +10,7 @@ public class TeacherDTO {
     private String surname;
     private String patronymic;
     private String position;
+    private String email;
+    @JsonProperty("department")
+    private DepartmentDTO departmentDTO;
 }

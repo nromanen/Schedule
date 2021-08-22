@@ -4,9 +4,15 @@ import com.opencsv.bean.CsvBindByName;
 import com.opencsv.bean.CsvRecurse;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import javax.annotation.Nullable;
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -42,16 +48,12 @@ public class Student implements Serializable {
     @CsvBindByName
     private String patronymic;
 
-    @Email
+    @Email(message = "Email must match format")
     @Size(min = 5, max = 40)
     @Column(unique = true, length = 40)
     @NotEmpty(message = "Email cannot be empty")
     @CsvBindByName
     private String email;
-
-    @Nullable
-    @Column(name ="user_id")
-    private Long userId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "group_id", referencedColumnName = "id")

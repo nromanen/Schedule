@@ -84,6 +84,7 @@ const SchedulePage = props => {
                                 </h2>
                             ) : (
                                 <Schedule
+                                    groupId={groupId}
                                     currentSemester={props.currentSemester}
                                     groups={groups}
                                     itemGroupId={itemGroupId}

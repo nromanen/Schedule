@@ -1,9 +1,17 @@
-delete from "public".lessons;
-delete from "public".teacher_wishes;
-delete from "public".teachers;
+TRUNCATE
+    "public".lessons,
+    "public".teachers,
+    "public".department,
+    "public".users
+    RESTART IDENTITY
+    CASCADE;
 
-insert into "public".teachers(id, name, patronymic, "position", surname) VALUES
-(4, 'Ivan', 'Ivanovych', 'docent', 'Ivanov'),
-(5, 'Petro', 'Petrovych', 'doctor','Petrov'),
-(6, 'Dmytro', 'Dmytrovych','aspirant', 'Dmytryk'),
-(7, 'Pavlo', 'Pavlovych', 'aspirant', 'Pavlov');
+insert into department(id, name) values (1, 'Department1');
+
+insert into users(id, email, password) values (1, 'teacher@gmail.com', 'Pass1233!');
+
+insert into teachers(id, name, patronymic, position, surname, department_id, user_id)
+values (1, 'Ivan', 'Ivanovych', 'docent', 'Ivanov', 1, 1);
+
+insert into teachers(id, name, patronymic, position, surname, department_id, disable)
+values (2, 'Ivan', 'Ivanovych', 'docent', 'Ivanov', 1, true);
