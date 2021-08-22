@@ -6,7 +6,7 @@
     "deleted_label": "видалено",
     "group_label": "груп(и)",
     "back_end_success_operation": "{{cardType}} було успішно {{actionType}}",
-    "file_backend_success_operation": "{{cardType}} було успішно {{actionType}}",
+    "file_backend_success_operation": "{{cardType}} {{actionType}}",
     "students_exist_in_this_group":"{{cardType}} уже {{actionType}} цій групі",
     "group_exist_in_this_semester":"{{cardType}} уже {{actionType}} цьому семестру",
     "chosen_semester_has_not_groups": "{{cardType}} не має {{actionType}}",

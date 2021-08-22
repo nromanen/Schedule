@@ -151,18 +151,7 @@ export const checkUniqueDepartment = departmentTitle => {
     return find ? i18n.t('validationMessages:unique_error_message') : undefined;
 };
 
-export const checkUniqWish = wish => {
-    if (!wish) {
-        return;
-    }
-    const find = store.getState().teachersWish.wishes.some(function (value) {
-        return (
-            value.teacherWishesList[0].day_of_week.toUpperCase() ===
-            wish.toUpperCase()
-        );
-    });
-    return find ? 'Day must be unique!' : undefined;
-};
+
 
 export const checkUniqSemester = semester => {
     const semesters = store.getState().semesters.semesters;

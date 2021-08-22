@@ -1,9 +1,10 @@
 package com.softserve.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.softserve.assertions.CustomMockMvcAssertions;
 import com.softserve.config.*;
 import com.softserve.dto.DepartmentDTO;
-import com.softserve.dto.GroupDTO;
+import com.softserve.dto.TeacherDTO;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -29,9 +30,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ContextConfiguration(classes = {WebMvcConfig.class, DBConfigTest.class, MyWebAppInitializer.class, SecurityConfig.class, SecurityWebApplicationInitializer.class})
 @WebAppConfiguration
 @WithMockUser(username = "vbforwork702@mail.com", password = "$2a$10$42sZYaqffhxKah7sTFsm3OXF02qdUUykPfVWPO3GguHvoDui.WsIi", roles = "MANAGER")
-@Sql(value = {"classpath:create-departments-before.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+@Sql(value = "classpath:create-departments-before.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 public class DepartmentControllerTest {
 
+    private CustomMockMvcAssertions customMockMvcAssertions;
     private MockMvc mockMvc;
     private ObjectMapper objectMapper = new ObjectMapper();
 
@@ -43,6 +45,7 @@ public class DepartmentControllerTest {
         mockMvc = MockMvcBuilders.webAppContextSetup(wac)
                 .apply(SecurityMockMvcConfigurers.springSecurity())
                 .build();
+        customMockMvcAssertions = new CustomMockMvcAssertions(mockMvc, objectMapper, "/departments");
     }
 
     @Test
@@ -54,16 +57,16 @@ public class DepartmentControllerTest {
 
     @Test
     public void getById() throws Exception {
-        mockMvc.perform(get("/departments/{id}", 8).contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/departments/{id}", 1).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"))
-                .andExpect(jsonPath("$.id").value(String.valueOf(8L)));
+                .andExpect(jsonPath("$.id").value(String.valueOf(1L)));
     }
 
     @Test
     @WithMockUser(username = "vbforwork702@mail.com", password = "$2a$04$SpUhTZ/SjkDQop/Zvx1.seftJdqvOploGce/wau247zQhpEvKtz9.", roles = "USER")
     public void returnForbiddenIfAuthenticatedUserRoleIsNotManager() throws Exception {
-        mockMvc.perform(get("/departments/{id}", 8).contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/departments/{id}", 1).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isForbidden());
     }
 
@@ -80,10 +83,10 @@ public class DepartmentControllerTest {
     @Test
     public void updateIfUpdatedEntityExists() throws Exception {
         DepartmentDTO departmentDtoForUpdate = new DepartmentDTO();
-        departmentDtoForUpdate.setId(9L);
+        departmentDtoForUpdate.setId(2L);
         departmentDtoForUpdate.setName("111epartment1");
 
-        mockMvc.perform(put("/departments", 9).content(objectMapper.writeValueAsString(departmentDtoForUpdate))
+        mockMvc.perform(put("/departments", 2).content(objectMapper.writeValueAsString(departmentDtoForUpdate))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(departmentDtoForUpdate.getId()))
@@ -92,9 +95,16 @@ public class DepartmentControllerTest {
 
     @Test
     public void deleteById() throws Exception {
-        mockMvc.perform(delete("/departments/{id}", 9)
+        mockMvc.perform(delete("/departments/{id}", 2)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    public void returnBadRequestIfReferencesOnDepartmentExist() throws Exception {
+        mockMvc.perform(delete("/departments/{id}", 1)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -127,10 +137,10 @@ public class DepartmentControllerTest {
     @Test
     public void returnBadRequestIfUpdatedEntityAlreadyExists() throws Exception {
         DepartmentDTO departmentDtoForUpdate = new DepartmentDTO();
-        departmentDtoForUpdate.setId(9L);
+        departmentDtoForUpdate.setId(2L);
         departmentDtoForUpdate.setName("Department1");
 
-        mockMvc.perform(put("/departments", 9).content(objectMapper.writeValueAsString(departmentDtoForUpdate))
+        mockMvc.perform(put("/departments", 2).content(objectMapper.writeValueAsString(departmentDtoForUpdate))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isBadRequest());
@@ -139,10 +149,10 @@ public class DepartmentControllerTest {
     @Test
     public void returnBadRequestIfUpdatedNameIsNull() throws Exception {
         DepartmentDTO departmentDtoForUpdate = new DepartmentDTO();
-        departmentDtoForUpdate.setId(9L);
+        departmentDtoForUpdate.setId(2L);
         departmentDtoForUpdate.setName(null);
 
-        mockMvc.perform(put("/departments", 9).content(objectMapper.writeValueAsString(departmentDtoForUpdate))
+        mockMvc.perform(put("/departments", 2).content(objectMapper.writeValueAsString(departmentDtoForUpdate))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().is(500));
@@ -153,5 +163,24 @@ public class DepartmentControllerTest {
         mockMvc.perform(get("/departments/disabled").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"));
+    }
+
+    @Test
+    public void getAllTeachers() throws Exception {
+
+        DepartmentDTO department = new DepartmentDTO();
+        department.setId(1L);
+        department.setName("Department1");
+        department.setDisable(false);
+
+        TeacherDTO firstTeacher = new TeacherDTO();
+        firstTeacher.setId(1L);
+        firstTeacher.setName("Ivan");
+        firstTeacher.setSurname("Ivanov");
+        firstTeacher.setPatronymic("Ivanovych");
+        firstTeacher.setPosition("docent");
+        firstTeacher.setDepartmentDTO(department);
+
+        customMockMvcAssertions.assertForGetListWithOneEntity(firstTeacher, "/departments/1/teachers");
     }
 }

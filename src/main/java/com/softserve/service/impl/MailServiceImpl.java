@@ -17,6 +17,7 @@ import org.thymeleaf.spring5.SpringTemplateEngine;
 
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
+import javax.annotation.PostConstruct;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
@@ -39,6 +40,7 @@ public class MailServiceImpl implements MailService {
     private final SpringTemplateEngine springTemplateEngine;
     @Value("${spring.mail.username}")
     private String username;
+    private String credentialsUsername;
 
 
     @Autowired
@@ -46,6 +48,14 @@ public class MailServiceImpl implements MailService {
         this.mailSender = mailSender;
         this.environment = environment;
         this.springTemplateEngine = springTemplateEngine;
+    }
+
+    @PostConstruct
+    private void postConstruct() {
+        credentialsUsername = environment.getProperty(username);
+        if (credentialsUsername == null) {
+            credentialsUsername = System.getenv("HEROKU_MAIL_USERNAME");
+        }
     }
 
     /**
@@ -57,10 +67,6 @@ public class MailServiceImpl implements MailService {
     @Async
     public void send(String emailTo, String subject, String message) {
         log.info("Enter into send method with emailTo {}, subject {}", emailTo, subject);
-        String credentialsUsername = environment.getProperty(username);
-        if (credentialsUsername == null) {
-            credentialsUsername = System.getenv("HEROKU_MAIL_USERNAME");
-        }
 
         SimpleMailMessage mailMessage = new SimpleMailMessage();
 
@@ -73,12 +79,8 @@ public class MailServiceImpl implements MailService {
     }
 
     @Override
-    public void send(String filename, String receiver, String subject, String message, ByteArrayOutputStream bos) throws MessagingException {
+    public void send(String fileName, String receiver, String subject, String message, ByteArrayOutputStream bos) throws MessagingException {
         log.info("Enter into send method with emailTo - {}, subject - {}", receiver, subject);
-        String credentialsUsername = environment.getProperty(username);
-        if (credentialsUsername == null) {
-            credentialsUsername = System.getenv("HEROKU_MAIL_USERNAME");
-        }
 
         final MimeMessage mimeMessage = this.mailSender.createMimeMessage();
 
@@ -97,7 +99,7 @@ public class MailServiceImpl implements MailService {
 
         MimeBodyPart fileBodyPart = new MimeBodyPart();
         fileBodyPart.setDataHandler(new DataHandler(fds));
-        fileBodyPart.setFileName(filename);
+        fileBodyPart.setFileName(fileName);
         multipart.addBodyPart(fileBodyPart);
 
         mimeMessage.setContent(multipart);
@@ -108,10 +110,6 @@ public class MailServiceImpl implements MailService {
     public void send(final String emailTo, final String subject, TemporarySchedule temporarySchedule, final String emailTemplate) throws MessagingException
     {
 
-        String credentialsUsername =  username;
-        if (credentialsUsername == null) {
-            credentialsUsername = System.getenv("HEROKU_MAIL_USERNAME");
-        }
         // Prepare the evaluation context
         final Context ctx = new Context(Locale.UK);
         ctx.setVariable("temporarySchedule", temporarySchedule);

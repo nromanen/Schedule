@@ -33,8 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ContextConfiguration(classes = {WebMvcConfig.class, DBConfigTest.class, MyWebAppInitializer.class, SecurityConfig.class, SecurityWebApplicationInitializer.class})
 @WebAppConfiguration
 @WithMockUser(username = "first@mail.com", password = "$2a$04$SpUhTZ/SjkDQop/Zvx1.seftJdqvOploGce/wau247zQhpEvKtz9.", roles = "MANAGER")
-@Sql(value = {"classpath:create-students-before.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-@Sql(value = {"classpath:delete-students-after.sql"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+@Sql(value = "classpath:create-students-before.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 public class StudentControllerTest {
 
     private static MockMvc mockMvc;
@@ -84,7 +83,6 @@ public class StudentControllerTest {
         studentDTO.setSurname("Surname");
         studentDTO.setPatronymic("Patronymic");
         studentDTO.setEmail("12313asdasd@gmail.com");
-        studentDTO.setUserId(1L);
         studentDTO.setGroup(groupDTO);
 
         mockMvc.perform(post("/students")
@@ -104,7 +102,6 @@ public class StudentControllerTest {
         studentDTO.setSurname("Changed Surname");
         studentDTO.setPatronymic("Changed Patronymic");
         studentDTO.setEmail("changedTempStudent@gmail.com");
-        studentDTO.setUserId(1L);
         studentDTO.setGroup(groupDTO);
 
         mockMvc.perform(put("/students")
@@ -124,7 +121,6 @@ public class StudentControllerTest {
 
     @Test
     @Sql(value = {"classpath:create-students-before-import.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(value = {"classpath:delete-students-after.sql"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void saveStudentsFromFile() throws Exception {
 
         MockMultipartFile multipartFile = new MockMultipartFile("file",

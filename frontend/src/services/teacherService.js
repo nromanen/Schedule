@@ -107,7 +107,6 @@ export const getTeachersWithoutAccount = () => {
 };
 
 export const createTeacherService = values => {
-    values.wish = [];
     axios
         .post(TEACHER_URL, values)
         .then(response => {

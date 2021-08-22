@@ -27,7 +27,8 @@
 
     "teacher_label": "Teacher",
     "teachers_label": "Teachers",
-    "students_file_label": "Students",
+    "students_file_label": "students were",
+    "student_file_label": "student was",
     "link_to_meeting_label": "Online meeting",
     "user_label": "User",
     "group_label": "Group",
@@ -73,9 +74,7 @@
     "teacher_patronymic": "Patronymic",
     "teacher_position": "Academic title",
     "email_field": "Email",
-    "teacher_wish_class_number": "class number",
-    "teacher_wish_day": "Day",
-    "wish_label": "Teacher wish",
+    "day_label": "Day",
 
     "for_site_label": " for site",
     "not_selected_label": "is not selected",
@@ -94,7 +93,6 @@
 
     "class_from_label": "From",
     "class_to_label": "To",
-    "day_label": "Day",
 
     "type_to_search": "Type to search",
     "there_is_no": "There isn't any",

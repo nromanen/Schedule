@@ -222,7 +222,6 @@ public class ScheduleControllerTest {
         scheduleSaveDTO.setLessonId(5L);
         scheduleSaveDTO.setPeriodId(4L);
         scheduleSaveDTO.setRoomId(5L);
-        scheduleSaveDTO.setSemesterId(5L);
 
         mockMvc.perform(post("/schedules").content(objectMapper.writeValueAsString(scheduleSaveDTO))
                 .contentType(MediaType.APPLICATION_JSON))
@@ -260,7 +259,6 @@ public class ScheduleControllerTest {
         scheduleSaveDTO.setLessonId(4L);
         scheduleSaveDTO.setPeriodId(5L);
         scheduleSaveDTO.setRoomId(4L);
-        scheduleSaveDTO.setSemesterId(4L);
 
         mockMvc.perform(post("/schedules").content(objectMapper.writeValueAsString(scheduleSaveDTO))
                 .contentType(MediaType.APPLICATION_JSON))
