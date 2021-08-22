@@ -54,8 +54,7 @@ export const getLessonTypesService = () => {
         });
 };
 const cardObjectHandler = (card, groupId) => {
-    console.log(card,groupId)
-    const groupData=(card.groups.map(group=>group.id).includes(groupId)&&card.groups.length!==1)?{groups:card.groups}:{group: {id: groupId }};
+    const groupData = (card.groups.map(group => group.id).includes(groupId) && card.groups.length !== 1) ? { groups: card.groups } : { group: { id: groupId } };
     return {
         ...groupData,
         id: card.lessonCardId,
