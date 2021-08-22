@@ -40,7 +40,11 @@ export const ShowStudentsDialog = props => {
 
 
     },[open]);
+    useEffect(()=> {
+        getAllStudentsByGroupId(props.group.id);
 
+
+    },[openUploadFile]);
     useEffect(()=>{
         parseStudentToCheckBox();
     },[props.students]);

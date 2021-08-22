@@ -58,6 +58,7 @@ let GroupList = props => {
 
     const SearchChange = setTerm;
     const history=useHistory();
+    // useEffect(()=>getAllStudentsByGroupId(groupId),[groupId])
     useEffect(()=>{
         if(match.path.includes(links.Edit)) {
             selectGroupService(match.params.id);
