@@ -19,7 +19,7 @@ export const links = {
     ShowStudents:"/show-students",
     IdParam:"/:id",
     IdStudentParam:"/:idStudent",
-    ClassScheduleTitle: "/bells",
+    ClassScheduleTitle: "/period",
     RoomList: "/rooms",
     SubjectPage: "/subjects",
     BusyRooms: "/busy-rooms",
