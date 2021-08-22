@@ -58,7 +58,6 @@ let LessonForm = props => {
     const groupId = props.groupId;
 
     const [checked, setChecked] = React.useState(false);
-    const [disabledSeveralGroups,setDisabledSeveralGroups]=useState(false);
     const handleChange = event => setChecked(event.target.checked);
     useEffect(()=>{
         selectGroupService(groupId)
