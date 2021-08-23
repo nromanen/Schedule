@@ -99,10 +99,10 @@ public class TeacherServiceImpl implements TeacherService {
         if (isEmailNullOrEmpty(teacherForUpdateDTO.getEmail())) {
             return update(teacher);
         }
-        Integer userId = getById(teacherForUpdateDTO.getId()).getUserId();
+        Long userId = getById(teacherForUpdateDTO.getId()).getUserId();
         if (userId != null) {
             teacher.setUserId(userId);
-            updateEmailInUserForTeacher(teacherForUpdateDTO.getEmail(), userId.longValue());
+            updateEmailInUserForTeacher(teacherForUpdateDTO.getEmail(), userId);
             return update(teacher);
         }
         return update(registerTeacher(teacher, teacherForUpdateDTO.getEmail()));
@@ -158,7 +158,7 @@ public class TeacherServiceImpl implements TeacherService {
             throw new EntityAlreadyExistsException("You cannot doing this action.");
         }
 
-        getTeacher.setUserId(Integer.parseInt(String.valueOf(userId)));
+        getTeacher.setUserId(userId);
         user.setRole(Role.ROLE_TEACHER);
         userService.update(user);
 
@@ -179,7 +179,7 @@ public class TeacherServiceImpl implements TeacherService {
      * @throws EntityNotFoundException if teacher doesn't exist
      */
     @Override
-    public Teacher findByUserId(long userId) {
+    public Teacher findByUserId(Long userId) {
         log.info("Enter into getByUserId with userId {}", userId);
         return teacherRepository.findByUserId(userId).orElseThrow(
                 () -> new EntityNotFoundException(Teacher.class, "userId", String.valueOf(userId)));
@@ -197,7 +197,7 @@ public class TeacherServiceImpl implements TeacherService {
 
     private Teacher registerTeacher(Teacher teacher, String email) {
         User registeredUserForTeacher = userService.automaticRegistration(email, Role.ROLE_TEACHER);
-        teacher.setUserId(registeredUserForTeacher.getId().intValue());
+        teacher.setUserId(registeredUserForTeacher.getId());
         return teacher;
     }
 

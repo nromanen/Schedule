@@ -56,7 +56,7 @@ public class Teacher implements Serializable {
     private String position;
 
     @Column(name ="user_id")
-    private Integer userId;
+    private Long userId;
 
     @ManyToOne
     @JoinColumn(name = "department_id",  columnDefinition = "bigint")
