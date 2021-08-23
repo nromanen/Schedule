@@ -103,7 +103,7 @@ public class GroupServiceImpl  implements GroupService {
     @Override
     public Group delete(Group object) {
         log.info("In delete(entity = [{}])",  object);
-        return groupRepository.delete(getById(object.getId()));
+        return groupRepository.delete(object);
     }
 
     /**

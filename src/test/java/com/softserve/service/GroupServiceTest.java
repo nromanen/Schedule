@@ -161,13 +161,11 @@ public class GroupServiceTest {
     public void deleteGroup() {
         Group expected = group;
         when(groupRepository.delete(group)).thenReturn(group);
-        when(groupRepository.findById(group.getId())).thenReturn(Optional.of(group));
 
         Group actual = groupService.delete(expected);
 
         assertThat(actual).isEqualToComparingFieldByField(expected);
         verify(groupRepository).delete(expected);
-        verify(groupRepository).findById(expected.getId());
     }
 
     @Test
