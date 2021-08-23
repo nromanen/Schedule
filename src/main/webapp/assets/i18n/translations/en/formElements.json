@@ -74,9 +74,7 @@
     "teacher_patronymic": "Patronymic",
     "teacher_position": "Academic title",
     "email_field": "Email",
-    "teacher_wish_class_number": "class number",
-    "teacher_wish_day": "Day",
-    "wish_label": "Teacher wish",
+    "day_label": "Day",
 
     "for_site_label": " for site",
     "not_selected_label": "is not selected",
@@ -84,6 +82,10 @@
     "for_teacher": "For teacher",
 
     "save_button_label": "Save",
+    "copy_for_button_label": "Copy for...",
+    "copy_groups_label": "Copy groups:",
+    "groups_label": "groups",
+    "choose_groups_button_label": "Choose groups...",
     "clear_button_label": "Clear",
     "cancel_button_label": "Cancel",
 
@@ -93,7 +95,6 @@
 
     "class_from_label": "From",
     "class_to_label": "To",
-    "day_label": "Day",
 
     "type_to_search": "Type to search",
     "there_is_no": "There isn't any",
@@ -137,6 +138,7 @@
     "grouped_label": "Grouped",
     "student_add_label": "Add student",
     "show_students": "Show students by this group",
+    "show_groups": "Show groups of this semester",
     "show_archived": "Show archived",
     "show_regular": "Show regular",
     "no_exist_teachers_at_department": "There aren't teachers at this department",
