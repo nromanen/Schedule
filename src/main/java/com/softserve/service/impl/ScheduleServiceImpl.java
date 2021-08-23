@@ -885,12 +885,11 @@ return fullScheduleForTeacherByDateRange(dateRangeSchedule,  fromDate, toDate);
     public void sendScheduleToTeacher(Long semesterId, Long teacherId, Locale language) throws MessagingException {
         log.info("Enter into sendScheduleToTeacher of TeacherServiceImpl");
         Teacher teacher = teacherService.getById(teacherId);
-        Semester semester = semesterService.getById(semesterId);
         ScheduleForTeacherDTO schedule = getScheduleForTeacher(semesterId, teacher.getId());
         PdfReportGenerator generatePdfReport = new PdfReportGenerator();
         ByteArrayOutputStream bos = generatePdfReport.teacherScheduleReport(schedule, language);
         String teacherEmail = userService.getById(Long.valueOf(teacher.getUserId())).getEmail();
-        mailService.send(String.format("%s_%s_%s_%s.pdf", semester.getDescription(), teacher.getSurname(), teacher.getName(), teacher.getPatronymic()),
+        mailService.send(String.format("%s_%s_%s_%s.pdf", semesterService.getById(semesterId).getDescription(), teacher.getSurname(), teacher.getName(), teacher.getPatronymic()),
                 teacherEmail,
                 "Schedule",
                 String.format("Schedule for %s %s %s", teacher.getSurname(), teacher.getName(), teacher.getPatronymic()),
