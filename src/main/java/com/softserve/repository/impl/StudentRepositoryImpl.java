@@ -22,7 +22,7 @@ public class StudentRepositoryImpl extends BasicRepositoryImpl<Student, Long> im
      * The method used for finding out if Student exists by email
      *
      * @param email String email used to find Student
-     * @return Student
+     * @return boolean : if exists - true, else - false
      */
     @Override
     public boolean isExistsByEmail(String email) {
@@ -37,7 +37,7 @@ public class StudentRepositoryImpl extends BasicRepositoryImpl<Student, Long> im
      *
      * @param email String email used to find Student
      * @param id Long id, which is ignored during the search
-     * @return Student
+     * @return boolean : if exists - true, else - false
      */
     @Override
     public boolean isExistsByEmailIgnoringId(String email, Long id) {
