@@ -33,3 +33,14 @@
         width: 48%;
     }
 }
+.group-options{
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    align-items: center;
+    align-content: center;
+
+    Button{
+        margin: 5px 0 5px 17px;
+    }
+}

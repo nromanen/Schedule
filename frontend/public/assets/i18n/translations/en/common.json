@@ -9,6 +9,7 @@
     "home_title": "Home",
     "schedule_title": "Schedule",
     "student_title": "Student(s)",
+    "group_title": "Group(s)",
     "my_profile": "My profile",
 
     "LessonPage_management_title": "Lessons",
@@ -26,9 +27,13 @@
     "MergeRolePage_management_title": "Users",
     "merge_header": "Merging",
     "cancel_schedule": "Cancel",
+    "cancel_groups": "Cancel",
     "sent_schedule": "Send",
+    "confirm_groups": "Confirm",
     "choose_teachers": "Choose teachers...",
+    "choose_groups": "Choose groups...",
     "all_teachers": "All teachers",
+    "all_groups": "All groups",
 
     "teacher_card_position": "Teacher position",
     "teacher_card_fullName": "Full name",
