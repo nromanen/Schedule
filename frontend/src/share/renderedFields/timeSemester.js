@@ -12,6 +12,7 @@ const renderMounthPicker = ({
     return (
         <MuiPickersUtilsProvider utils={MomentUtils}>
             <DatePicker
+                minDate={new Date()}
                 clearable
                 value={value ? moment(value, 'DD/MM/YYYY').toDate() : null}
                 format="DD/MM/YYYY"

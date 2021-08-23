@@ -82,6 +82,10 @@
     "for_teacher": "For teacher",
 
     "save_button_label": "Save",
+    "copy_for_button_label": "Copy for...",
+    "copy_groups_label": "Copy groups:",
+    "groups_label": "groups",
+    "choose_groups_button_label": "Choose groups...",
     "clear_button_label": "Clear",
     "cancel_button_label": "Cancel",
 
@@ -134,6 +138,7 @@
     "grouped_label": "Grouped",
     "student_add_label": "Add student",
     "show_students": "Show students by this group",
+    "show_groups": "Show groups of this semester",
     "show_archived": "Show archived",
     "show_regular": "Show regular",
     "no_exist_teachers_at_department": "There aren't teachers at this department",

@@ -13,5 +13,6 @@ export const setDisableButton = (pristine,submitting,id) => {
     }
 }
 export const getClearOrCancelTitle = ( id ,t) => {
+    console.log("id",id)
    return  id===undefined?t('clear_button_label'):t('cancel_button_title')
 }
