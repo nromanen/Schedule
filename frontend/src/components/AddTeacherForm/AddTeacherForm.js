@@ -105,7 +105,6 @@ let AddTeacher = props => {
                     type="email"
                     placeholder={t('email_field')}
                     label={t('email_field')}
-                    validate={[required]}
                 />
                 <Field
                     name="department"

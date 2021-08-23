@@ -22,6 +22,7 @@ import { errorHandler, successHandler } from '../helper/handlerAxios';
 import { resetFormHandler } from '../helper/formHelper';
 import { setLoadingService } from './loadingService';
 
+//TODO
 export const showAllTeachersService = () => {
     const data=[
         {
@@ -84,15 +85,15 @@ export const showAllTeachersService = () => {
             "email":"nasta_2000@i.ua"
         }
     ];
-    store.dispatch(showAllTeachers(data));
-            setLoadingService(false);
-    // axios
-    //     .get(TEACHER_URL)
-    //     .then(response => {
-    //         store.dispatch(showAllTeachers(response.data));
+    // store.dispatch(showAllTeachers(data));
     //         setLoadingService(false);
-    //     })
-    //     .catch(error => errorHandler(error));
+    axios
+        .get(TEACHER_URL)
+        .then(response => {
+            store.dispatch(showAllTeachers(response.data));
+            setLoadingService(false);
+        })
+        .catch(error => errorHandler(error));
 };
 
 
