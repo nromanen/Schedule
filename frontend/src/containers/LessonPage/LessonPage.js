@@ -20,7 +20,7 @@ import {
     selectLessonCardService
 } from '../../services/lessonService';
 import { showAllTeachersService } from '../../services/teacherService';
-import { showAllGroupsService } from '../../services/groupService';
+import { selectGroupService, showAllGroupsService } from '../../services/groupService';
 import { setLoadingService } from '../../services/loadingService';
 import { showAllSubjectsService } from '../../services/subjectService';
 import {
@@ -59,7 +59,7 @@ const LessonPage = props => {
 
     const isLoading = props.loading;
 
-    const { groups, groupId } = props;
+    const { groups, groupId, currentSemester } = props;
 
     const subjects = props.subjects;
 
@@ -81,7 +81,7 @@ const LessonPage = props => {
         if (Object.keys(card).length === 0 && card.constructor === Object)
             return;
 
-        handleLessonCardService(card, groupId);
+        handleLessonCardService(card, groupId, currentSemester);
     };
 
     const selectLessonCardHandler = lessonCardId => {
@@ -125,7 +125,11 @@ const LessonPage = props => {
     };
 
     const handleGroupSelect = group => {
-        if (group) selectGroupIdService(group.id);
+        if (group) {
+            selectGroupIdService(group.id);
+            selectGroupService(group.id);
+        }
+        ;
     };
 
     const groupFinderHandle = groupId => {
@@ -221,7 +225,6 @@ const LessonPage = props => {
                     <LessonForm
                         lessonTypes={props.lessonTypes}
                         isUniqueError={isUniqueError}
-                        groupId={groupId}
                         subjects={subjects}
                         teachers={teachers}
                         onSubmit={createLessonCardHandler}
