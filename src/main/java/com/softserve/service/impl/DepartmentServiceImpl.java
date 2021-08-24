@@ -98,13 +98,13 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     private void checkNameForUniqueness(Department object) {
-        if (repository.isNameExists(object.getName())) {
+        if (repository.isExistsByName(object.getName())) {
             throw new FieldAlreadyExistsException(Department.class, "name", object.getName());
         }
     }
 
     private void checkNameForUniquenessIgnoringId(Department object) {
-        if (repository.isNameExistsIgnoringId(object.getName(), object.getId())) {
+        if (repository.isExistsByNameIgnoringId(object.getName(), object.getId())) {
             throw new FieldAlreadyExistsException(Department.class, "name", object.getName());
         }
     }
