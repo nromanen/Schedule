@@ -6,11 +6,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@Builder
+@Builder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class GroupForUpdateDTO {
+public class StudentWithoutGroupDTO {
     private Long id;
-    private String title;
-    private boolean disable;
+    private String name;
+    private String surname;
+    private String patronymic;
+    private String email;
 }
