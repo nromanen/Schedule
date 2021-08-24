@@ -78,7 +78,6 @@ const LessonPage = props => {
     }, []);
 
     const createLessonCardHandler = card => {
-        console.log('create');
         if (Object.keys(card).length === 0 && card.constructor === Object)
             return;
         handleLessonCardService(card, groupId, currentSemester);
@@ -156,7 +155,6 @@ const LessonPage = props => {
 
     let cardsContainer = (
         <>
-            {console.log('lessons', lessons)}
             {lessonLength > 0 ? (
                 <LessonsList
                     lessons={lessons}

@@ -46,18 +46,17 @@ export const showAllSemestersService = () => {
     axios
         .get(SEMESTERS_URL)
         .then(response => {
-            const dataGroup=[{
+            const dataGroup = [{
                 id: 30,
                 title: '101-Аh'
-            },{
+            }, {
                 id: 5,
                 title: '101-B'
             }];
-            const data=response.data.map(item=>({...item,semester_groups:dataGroup}));
-            console.log(data)
+            const data = response.data.map(item => ({ ...item, semester_groups: dataGroup }));
             store.dispatch(
                 showAllSemesters(
-                        data
+                    data
                         .sort((a, b) => (a.year > b.year ? 1 : -1))
                         .reverse()
                 )
@@ -66,8 +65,8 @@ export const showAllSemestersService = () => {
         .catch(error => errorHandler(error));
 
 };
-export const setGroupsToSemester=(semesterId,groups)=>{
-    const groupIds=groups.map(item=>`groupId=${item.id}`).join('&');
+export const setGroupsToSemester = (semesterId, groups) => {
+    const groupIds = groups.map(item => `groupId=${item.id}`).join('&');
     axios
         .put(`${SEMESTERS_URL}/${semesterId}/groups?${groupIds}`)
         .then(response => {
@@ -85,22 +84,8 @@ export const setGroupsToSemester=(semesterId,groups)=>{
             );
         })
         .catch(error => errorHandler(error));
-}
-async function getGroupsBySemesterId  (id)  {
+};
 
-
-        try {
-            const result= await axios.get(`${SEMESTERS_URL}/5/${GROUPS_URL}`)
-            //use data destructuring to get data from the promise object
-
-            return result;
-
-        }
-
-        catch (error) {
-            console.log(error);
-        }
-}
 const cardSemester = semester => {
     const semester_days = [];
     const semester_classes = [];
@@ -122,8 +107,8 @@ const cardSemester = semester => {
                     store
                         .getState()
                         .classActions.classScheduler.find(
-                            schedule => schedule.id === +prop.substring(24)
-                        )
+                        schedule => schedule.id === +prop.substring(24)
+                    )
                 );
             }
         }
@@ -140,7 +125,7 @@ const cardSemester = semester => {
         defaultSemester: semester.defaultSemester,
         semester_days: semester_days,
         semester_classes: semester_classes,
-        semester_groups:semester.semester_groups,
+        semester_groups: semester.semester_groups
 
     };
 };
@@ -180,7 +165,6 @@ const switchSaveActions = semester => {
 };
 
 export const handleSemesterService = values => {
-    console.log(values)
     let semester = cardSemester(values);
     if (!checkUniqSemester(semester)) {
         handleSnackbarOpenService(
@@ -225,42 +209,42 @@ const checkSemesterYears = (endDay, startDay, year) => {
     return conf;
 };
 export const setDefaultSemesterById = dataId => {
-     axios
-    .put(`${DEFAULT_SEMESTER_URL}?semesterId=${dataId}`)
+    axios
+        .put(`${DEFAULT_SEMESTER_URL}?semesterId=${dataId}`)
         .then(response => {
-           store.dispatch(updateSemester(response.data));
+            store.dispatch(updateSemester(response.data));
             selectSemesterService(null);
-             getDisabledSemestersService();
+            getDisabledSemestersService();
             getArchivedSemestersService();
-             showAllSemestersService();
-             resetFormHandler(SEMESTER_FORM);
-             successHandler(
-                 i18n.t('serviceMessages:back_end_success_operation', {
-                     cardType: i18n.t('formElements:semester_label'),
-                     actionType: i18n.t('serviceMessages:updated_label')
-                 })
-             );
-         })
+            showAllSemestersService();
+            resetFormHandler(SEMESTER_FORM);
+            successHandler(
+                i18n.t('serviceMessages:back_end_success_operation', {
+                    cardType: i18n.t('formElements:semester_label'),
+                    actionType: i18n.t('serviceMessages:updated_label')
+                })
+            );
+        })
         .catch(error => errorHandler(error));
-}
+};
 
 const putSemester = data => {
-     axios
-    .put(SEMESTERS_URL, data)
+    axios
+        .put(SEMESTERS_URL, data)
         .then(response => {
-           store.dispatch(updateSemester(response.data));
+            store.dispatch(updateSemester(response.data));
             selectSemesterService(null);
-             getDisabledSemestersService();
+            getDisabledSemestersService();
             getArchivedSemestersService();
-             showAllSemestersService();
-             resetFormHandler(SEMESTER_FORM);
-             successHandler(
-                 i18n.t('serviceMessages:back_end_success_operation', {
-                     cardType: i18n.t('formElements:semester_label'),
-                     actionType: i18n.t('serviceMessages:updated_label')
-                 })
-             );
-         })
+            showAllSemestersService();
+            resetFormHandler(SEMESTER_FORM);
+            successHandler(
+                i18n.t('serviceMessages:back_end_success_operation', {
+                    cardType: i18n.t('formElements:semester_label'),
+                    actionType: i18n.t('serviceMessages:updated_label')
+                })
+            );
+        })
         .catch(error => errorHandler(error));
 };
 const postSemester = data => {
@@ -319,10 +303,10 @@ export const semesterCopy = values => {
     axios
         .post(
             SEMESTER_COPY_URL +
-                '?fromSemesterId=' +
-                values.fromSemesterId +
-                '&toSemesterId=' +
-                values.toSemesterId
+            '?fromSemesterId=' +
+            values.fromSemesterId +
+            '&toSemesterId=' +
+            values.toSemesterId
         )
         .then(response => {
             successHandler(
@@ -339,10 +323,10 @@ export const CopyLessonsFromSemesterService = values => {
     axios
         .post(
             LESSONS_FROM_SEMESTER_COPY_URL +
-                '?fromSemesterId=' +
-                values.fromSemesterId +
-                '&toSemesterId=' +
-                values.toSemesterId
+            '?fromSemesterId=' +
+            values.fromSemesterId +
+            '&toSemesterId=' +
+            values.toSemesterId
         )
         .then(response => {
             successHandler(

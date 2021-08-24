@@ -88,7 +88,6 @@ let LessonForm = props => {
 
     return (
         <Card class="form-card">
-            {console.log("props",props)}
             {groupId ? (
                 <h2 className="form-title under-line">
                     {lessonId ? t('edit_title') : t('create_title')}

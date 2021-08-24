@@ -296,7 +296,7 @@ const Schedule = props => {
 
 
             <section className="groups-section ">
-                {groups.map(group => (
+                {groups.map((group,index) => (
                     <section
                         key={'group-' + group.id}
                         className="group-section"
@@ -347,8 +347,6 @@ const Schedule = props => {
                             className="group-title card"
                             id={`group-${group.id}`}
                         >
-
-
                             {group.title}
                         </div>
                     </section>
