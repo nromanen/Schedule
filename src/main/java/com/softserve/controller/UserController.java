@@ -123,7 +123,6 @@ public class UserController {
     @ApiOperation(value = "Change password for current user")
     public ResponseEntity changePasswordForCurrentUser(@CurrentUser JwtUser jwtUser,
                                                        @RequestBody UserDataForChangePasswordDTO userDTO) {
-        log.info("Enter into changePasswordForCurrentUser method with JwtUser {} userDTO {}", jwtUser, userDTO);
         User user = userService.getById(jwtUser.getId());
 
         Optional<String> password = isNoneBlank(userDTO.getCurrentPassword()) && isNoneBlank(userDTO.getNewPassword()) ?
