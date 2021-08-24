@@ -248,6 +248,9 @@ const Schedule = props => {
             }
         });
     });
+    const getBackgroundColourGroup = (index) => {
+     return  index%2?"yellow-group":"green-group";
+    }
 
     return (
         <section className="cards-container schedule">
@@ -262,7 +265,7 @@ const Schedule = props => {
                 onClose={handleClose}
             />
             <aside className="day-classes-aside">
-                <section className="card empty-card">Група</section>
+                <section className="card empty-card group-border">Група</section>
                 {days.map(day => (
 
                     <section
@@ -296,14 +299,14 @@ const Schedule = props => {
 
 
             <section className="groups-section ">
-                {groups.map(group => (
+                {groups.map((group,index) => (
                     <section
                         key={'group-' + group.id}
                         className="group-section"
                     >
 
                         <div
-                            className="group-title card"
+                            className={`group-title card ${getBackgroundColourGroup(index)}` }
                             id={`group-${group.id}`}
                         >
 
@@ -347,8 +350,6 @@ const Schedule = props => {
                             className="group-title card"
                             id={`group-${group.id}`}
                         >
-
-
                             {group.title}
                         </div>
                     </section>

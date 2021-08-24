@@ -9,19 +9,20 @@ import Box from '@material-ui/core/Box';
 import { connect } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { setCurrentSemester } from '../../redux/actions';
-import {Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { links } from '../../constants/links';
 import './NavigationPage.scss';
 import { MenuItem, Select } from '@material-ui/core';
 import { general, tabs_components } from '../../constants/navigationComponents';
+
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
 
 
     return (
         <Typography
-            component="div"
-            role="tabpanel"
+            component='div'
+            role='tabpanel'
             hidden={value !== index}
             id={`simple-tabpanel-${index}`}
             aria-labelledby={`simple-tab-${index}`}
@@ -53,29 +54,29 @@ const useStyles = makeStyles(theme => ({
     header: {
         backgroundColor: theme.palette.info.dark
     },
-    nav:{
-        textDecoration:'none',
-            color: '#fff',
-            ':hover': {
-                color: 'purple'
-            }
+    nav: {
+        textDecoration: 'none',
+        color: '#fff',
+        ':hover': {
+            color: 'purple'
+        }
     },
-    select:{
-       backgroundColor:'primary'
+    select: {
+        backgroundColor: 'primary'
     },
 
-    btn:{
-        margin:0,
-        width: "10px"
+    btn: {
+        margin: 0,
+        width: '10px'
     }
 }));
 
 const NavigationPage = (props) => {
-    const {val}=props;
+    const { val } = props;
     const { t } = useTranslation('common');
     const classes = useStyles();
-    const [value, setValue] = useState(val?val:0);
-    const [gen,setGen]=useState(props.name||general[0].name);
+    const [value, setValue] = useState(val ? val : 0);
+    const [gen, setGen] = useState(props.name || general[0].name);
     useEffect(() => {
         setCurrentSemester();
     }, []);
@@ -89,57 +90,59 @@ const NavigationPage = (props) => {
     };
     return (
         <div className={classes.root}>
-            <AppBar position="static">
+            <AppBar position='static'>
                 <Tabs
                     value={value}
                     onChange={handleChange}
-                    aria-label="simple tabs example"
-                    indicatorColor="primary"
-                    variant="scrollable"
-                    scrollButtons="on"
+                    aria-label='simple tabs example'
+                    indicatorColor='primary'
+                    variant='scrollable'
+                    scrollButtons='on'
                     className={classes.header}
                 >
                     {tabs_components.map((tab_one, index) => (
 
-                                        <>
-                                            {tab_one.length===undefined?
-                                                <Link className={classes.nav}
+                        <>
+                            {tab_one.length === undefined ?
+                                <Link className={classes.nav}
 
-                                                      to={links[tab_one.name]}>
-                                                    <Tab className={classes.btn}
-                                                        key={index + tab_one}
-                                                        onClick={() => document_title(tab_one.name)}
-                                                        label={t(`${tab_one.name}_management_title`)}
-                                                        {...a11yProps(index)}
-                                                    />
-                                                </Link>:
-                                                <Select className="general MuiTab-root"
-                                                    labelId="demo-controlled-open-select-label"
-                                                    id="demo-controlled-open-select"
-                                                    value={gen}
-                                                    onChange={event => {
-                                                        const val=event.target.value;
-                                                        setGen(val);
-                                                        document_title(val)
-                                                    }}
-                                            >
+                                      to={links[tab_one.name]}>
+                                    <Tab className={classes.btn}
+                                         key={index + tab_one}
+                                         onClick={() => document_title(tab_one.name)}
+                                         label={t(`${tab_one.name}_management_title`)}
+                                         {...a11yProps(index)}
+                                    />
+                                </Link> :
+                                <Select className='general MuiTab-root'
+                                        labelId='demo-controlled-open-select-label'
+                                        id='demo-controlled-open-select'
+                                        value={gen}
+                                        onChange={event => {
+                                            const val = event.target.value;
+                                            setGen(val);
+                                            document_title(val);
+                                        }}
+                                >
 
-                                                {
-                                                    Object.entries(tab_one).map(function(data, index) {
-                                                        return  (<MenuItem className={"menu-dictionary MuiTab-root"}  value={data[1].name} key={data[0]} {...a11yProps(index)}>
-                                                            <Link className={classes.nav}
+                                    {
+                                        Object.entries(tab_one).map(function(data, index) {
+                                            return (
+                                                <MenuItem className={'menu-dictionary MuiTab-root'} value={data[1].name}
+                                                          key={data[0]} {...a11yProps(index)}>
+                                                    <Link className={classes.nav}
 
-                                                                  to={links[data[1].name]}>
-                                                                {t(`${ data[1].name }_management_title`)}
-                                                            </Link>
-                                                        </MenuItem>)
-                                                    }, this)
-                                                }
+                                                          to={links[data[1].name]}>
+                                                        {t(`${data[1].name}_management_title`)}
+                                                    </Link>
+                                                </MenuItem>);
+                                        }, this)
+                                    }
 
-                                            </Select>
+                                </Select>
 
-                                            }
-                                        </>
+                            }
+                        </>
                     ))}
                 </Tabs>
 
