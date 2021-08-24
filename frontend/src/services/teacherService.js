@@ -21,9 +21,9 @@ import {
 import { errorHandler, successHandler } from '../helper/handlerAxios';
 import { resetFormHandler } from '../helper/formHelper';
 import { setLoadingService } from './loadingService';
+import { isObjectEmpty } from '../helper/ObjectRevision';
 
 export const showAllTeachersService = () => {
-    setLoadingService(false);
     axios
         .get(TEACHER_URL)
         .then(response => {
@@ -32,6 +32,7 @@ export const showAllTeachersService = () => {
         })
         .catch(error => errorHandler(error));
 };
+
 
 
 export const getTeachersWithoutAccount = () => {
@@ -44,8 +45,13 @@ export const getTeachersWithoutAccount = () => {
 };
 
 export const createTeacherService = values => {
+    let result= {... values };
+   if(isObjectEmpty(values.department)||values.department.id===null){
+       const {department,...res}=values;
+       result= { ...res };
+   }
     axios
-        .post(TEACHER_URL, values)
+        .post(TEACHER_URL, result)
         .then(response => {
             store.dispatch(addTeacher(response.data));
             resetFormHandler(TEACHER_FORM);
@@ -67,15 +73,20 @@ const cardTeacher = teacher => {
             surname: teacher.surname,
             patronymic: teacher.patronymic,
             position: teacher.position,
-            email: teacher.email,
+            email:teacher.email,
             department: teacher.department
         }
     };
 };
 
 export const updateTeacherService = data => {
+    let result={...data.teacher};
+    if(result.department.id===null){
+        const {department,...res}=result;
+        result={...res};
+    }
     return axios
-        .put(TEACHER_URL, data.teacher)
+        .put(TEACHER_URL, result)
         .then(response => {
             store.dispatch(updateTeacherCard(response.data));
             if (response.data.disable) {

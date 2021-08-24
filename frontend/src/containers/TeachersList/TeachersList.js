@@ -41,7 +41,7 @@ import Multiselect, { MultiSelect } from '../../helper/multiselect';
 import Example from '../../helper/multiselect';
 import { getFirstLetter, getTeacherFullName } from '../../helper/renderTeacher';
 import { showAllSemestersService } from '../../services/semesterService';
-import { getAllDepartmentsService, getDepartmentByIdService } from '../../services/departmentService';
+import { clearDepartment, getAllDepartmentsService, getDepartmentByIdService } from '../../services/departmentService';
 import { clearDepartmentForm, getDepartItemById } from '../../redux/actions/departments';
 import { getShortTitle } from '../../helper/shortTitle';
 import i18n from 'i18next';
@@ -102,6 +102,7 @@ const TeacherList = props => {
         const sendData = { ...values, department: department };
 
         handleTeacherService(sendData);
+        clearDepartment();
 
     };
 
