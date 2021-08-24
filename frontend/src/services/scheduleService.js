@@ -47,7 +47,7 @@ import {
     FOR_TEACHER_SCHEDULE_URL,
     CLEAR_SCHEDULE_URL,
     ROOMS_AVAILABILITY,
-    SCHEDULE_ITEM_ROOM_CHANGE, TEACHER_URL, SEMESTERS_URL, GROUPS_URL
+    SCHEDULE_ITEM_ROOM_CHANGE, TEACHER_URL, SEMESTERS_URL, GROUPS_URL, SEND_PDF_TO_EMAIL
 } from '../constants/axios';
 
 import { snackbarTypes } from '../constants/snackbarTypes';
@@ -92,9 +92,9 @@ export const getDefaultSemesterService = () => {
         });
 };
 
-export const disableDefaultSemesterService=()=>{
+export const disableDefaultSemesterService = () => {
     store.dispatch(setDefaultSemester({}));
-}
+};
 
 export const getScheduleItemsService = () => {
     axios
@@ -131,16 +131,16 @@ export const checkAvailabilityScheduleService = item => {
     axios
         .get(
             SCHEDULE_CHECK_AVAILABILITY_URL +
-                '?classId=' +
-                item.periodId +
-                '&dayOfWeek=' +
-                item.dayOfWeek +
-                '&evenOdd=' +
-                item.evenOdd +
-                '&lessonId=' +
-                item.lessonId +
-                '&semesterId=' +
-                item.semesterId
+            '?classId=' +
+            item.periodId +
+            '&dayOfWeek=' +
+            item.dayOfWeek +
+            '&evenOdd=' +
+            item.evenOdd +
+            '&lessonId=' +
+            item.lessonId +
+            '&semesterId=' +
+            item.semesterId
         )
         .then(response => {
             setLoadingService(false);
@@ -155,14 +155,14 @@ export const checkAvailabilityChangeRoomScheduleService = item => {
     axios
         .get(
             ROOMS_AVAILABILITY +
-                '?classId=' +
-                item.periodId +
-                '&dayOfWeek=' +
-                item.dayOfWeek +
-                '&evenOdd=' +
-                item.evenOdd +
-                '&semesterId=' +
-                item.semesterId
+            '?classId=' +
+            item.periodId +
+            '&dayOfWeek=' +
+            item.dayOfWeek +
+            '&evenOdd=' +
+            item.evenOdd +
+            '&semesterId=' +
+            item.semesterId
         )
         .then(response => {
             setLoadingService(false);
@@ -191,10 +191,10 @@ export const editRoomItemToScheduleService = item => {
     axios
         .put(
             SCHEDULE_ITEM_ROOM_CHANGE +
-                '?roomId=' +
-                item.roomId +
-                '&scheduleId=' +
-                item.itemId
+            '?roomId=' +
+            item.roomId +
+            '&scheduleId=' +
+            item.itemId
         )
         .then(response => {
             successHandler(
@@ -234,7 +234,7 @@ export const submitSearchSchedule = values => {
     if (values.hasOwnProperty('teacher') && +values.teacher > 0) {
         setScheduleTypeService('teacher');
         // setScheduleGroupIdService(values.teacher);
-        setScheduleTeacherIdService(values.teacher)
+        setScheduleTeacherIdService(values.teacher);
         getTeacherSchedule(values.teacher, values.semester);
         return;
     }
@@ -260,26 +260,20 @@ export const submitSearchSchedule = values => {
 
 
 export const sendTeachersScheduleService = (data) => {
-    //TODO remove hardcode data
-    // let data = {
-    //     teachersId: 'id',
-    //     semesterId: ['abc', 123]
-    // }
-    const supQuery=new URLSearchParams(data).toString();
-    console.log("sendTeachersScheduleService",supQuery)
-
-    //axios
-        // .get(`${SCHEDULE_ITEMS_URL}?${supQuery}`)
-        // .then(response => {
-        //     setLoadingService(false);
+    const teachersId = data.teachersId.map(teacherId => `teachersId=${teacherId}`).join('&');//teachersId=65&teachersId=12
+    const { semesterId, language } = data;
+    axios
+        .get(`${SEND_PDF_TO_EMAIL}/semester/${semesterId}?language=${language}&${teachersId}`)
+        .then(response => {
+            setLoadingService(false);
             successHandler(
                 i18n.t('serviceMessages:back_end_success_operation', {
                     cardType: i18n.t('formElements:schedule_label'),
                     actionType: i18n.t('serviceMessages:sent_label')
                 })
             );
-        // })
-        // .catch(error => errorHandler(error));
+        })
+        .catch(error => errorHandler(error));
 };
 
 export const setItemGroupIdService = groupId => {
@@ -297,13 +291,13 @@ export const setScheduleTypeService = item => {
 
 
 export const getFullSchedule = semesterId => {
-    if(semesterId!==undefined)
-    axios
-        .get(FULL_SCHEDULE_URL + semesterId)
-        .then(response => {
-            store.dispatch(setFullSchedule(response.data));
-        })
-        .catch(err => errorHandler(err));
+    if (semesterId !== undefined)
+        axios
+            .get(FULL_SCHEDULE_URL + semesterId)
+            .then(response => {
+                store.dispatch(setFullSchedule(response.data));
+            })
+            .catch(err => errorHandler(err));
 
 };
 
@@ -347,21 +341,21 @@ export const setScheduleSemesterIdService = semesterId => {
 };
 
 export const showAllPublicGroupsService = (id) => {
-    if(id!==null&&id!==undefined)
-    axios
-        .get(`/${SEMESTERS_URL}/${id}/${GROUPS_URL}`)
-        .then(response => {
-            store.dispatch(showAllGroups(response.data.sort((a, b) => a - b)));
-            if(response.data.length===0) {
-                infoHandler(
-                    i18n.t('serviceMessages:chosen_semester_has_not_groups', {
-                        cardType: i18n.t('formElements:chosen_semester_label'),
-                        actionType: i18n.t('serviceMessages:group_label')
-                    })
-                );
-            }
-        })
-        .catch(err => errorHandler(err));
+    if (id !== null && id !== undefined)
+        axios
+            .get(`/${SEMESTERS_URL}/${id}/${GROUPS_URL}`)
+            .then(response => {
+                store.dispatch(showAllGroups(response.data.sort((a, b) => a - b)));
+                if (response.data.length === 0) {
+                    infoHandler(
+                        i18n.t('serviceMessages:chosen_semester_has_not_groups', {
+                            cardType: i18n.t('formElements:chosen_semester_label'),
+                            actionType: i18n.t('serviceMessages:group_label')
+                        })
+                    );
+                }
+            })
+            .catch(err => errorHandler(err));
 };
 
 export const showAllPublicTeachersService = () => {
@@ -373,132 +367,133 @@ export const showAllPublicTeachersService = () => {
         .catch(err => errorHandler(err));
 };
 export const showAllPublicTeachersByDepartmentService = (departmentId) => {
-    const data=[
+    const data = [
 
         {
-            "department": {
-                "id": 41,
-                "name": "mat analysi",
-                "disable": false
+            'department': {
+                'id': 41,
+                'name': 'mat analysi',
+                'disable': false
             },
-            "id": 49,
-            "name": "Svitlana",
-            "surname": "Боднарук",
-            "patronymic": "Богданівна",
-            "position": "доцент",
-            "disable": false,
-            "email": "nasta_2000@i.ua"
+            'id': 49,
+            'name': 'Svitlana',
+            'surname': 'Боднарук',
+            'patronymic': 'Богданівна',
+            'position': 'доцент',
+            'disable': false,
+            'email': 'nasta_2000@i.ua'
         },
 
         {
-            "department":{
-                "id": 41,
-                "name": "mat analysi",
-                "disable": false
+            'department': {
+                'id': 41,
+                'name': 'mat analysi',
+                'disable': false
             },
-            "id": 78,
-            "name": "Anna",
-            "surname": "Романенко",
-            "patronymic": "Богданівна",
-            "position": "доцент",
-            "disable": false,
-            "email":"nasta_2000@i.ua"
+            'id': 78,
+            'name': 'Anna',
+            'surname': 'Романенко',
+            'patronymic': 'Богданівна',
+            'position': 'доцент',
+            'disable': false,
+            'email': 'nasta_2000@i.ua'
 
         },
         {
-            "department":{
-                "id": 41,
-                "name": "mat analysi",
-                "disable": false
+            'department': {
+                'id': 41,
+                'name': 'mat analysi',
+                'disable': false
             },
-            "id": 79,
-            "name": "Анна",
-            "surname": "Івах",
-            "patronymic": "Іванівна",
-            "position": "доцент",
-            "disable": false,
-            "email":"nasta_2000@i.ua"
+            'id': 79,
+            'name': 'Анна',
+            'surname': 'Івах',
+            'patronymic': 'Іванівна',
+            'position': 'доцент',
+            'disable': false,
+            'email': 'nasta_2000@i.ua'
 
         },
         {
-            "department":{
-                "id": 44,
-                "name": "Computer Science1",
-                "disable": false
+            'department': {
+                'id': 44,
+                'name': 'Computer Science1',
+                'disable': false
             },
-            "id": 39,
-            "name": "Ірина",
-            "surname": "Вернигора",
-            "patronymic": "Володимирівна",
-            "position": "доцент",
-            "disable": false,
-            "email":"nasta_2000@i.ua"
+            'id': 39,
+            'name': 'Ірина',
+            'surname': 'Вернигора',
+            'patronymic': 'Володимирівна',
+            'position': 'доцент',
+            'disable': false,
+            'email': 'nasta_2000@i.ua'
         },
         {
-            "department": {
-                "id": 41,
-                "name": "mat analysi",
-                "disable": false
+            'department': {
+                'id': 41,
+                'name': 'mat analysi',
+                'disable': false
             },
-            "id": 50,
-            "name": "Світлана",
-            "surname": "Боднарук",
-            "patronymic": "Богданівна",
-            "position": "доцент",
-            "disable": false,
-            "email": "nasta_2000@i.ua"
+            'id': 50,
+            'name': 'Світлана',
+            'surname': 'Боднарук',
+            'patronymic': 'Богданівна',
+            'position': 'доцент',
+            'disable': false,
+            'email': 'nasta_2000@i.ua'
         },
 
         {
-            "department":{
-                "id": 41,
-                "name": "mat analysi",
-                "disable": false
+            'department': {
+                'id': 41,
+                'name': 'mat analysi',
+                'disable': false
             },
-            "id": 51,
-            "name": "Наталія",
-            "surname": "Романенко",
-            "patronymic": "Богданівна",
-            "position": "доцент",
-            "disable": false,
-            "email":"nasta_2000@i.ua"
+            'id': 51,
+            'name': 'Наталія',
+            'surname': 'Романенко',
+            'patronymic': 'Богданівна',
+            'position': 'доцент',
+            'disable': false,
+            'email': 'nasta_2000@i.ua'
 
         },
         {
-            "department":{
-                "id": 41,
-                "name": "mat analysi",
-                "disable": false
+            'department': {
+                'id': 41,
+                'name': 'mat analysi',
+                'disable': false
             },
-            "id": 52,
-            "name": "Анна",
-            "surname": "Івах",
-            "patronymic": "Іванівна",
-            "position": "доцент",
-            "disable": false,
-            "email":"nasta_2000@i.ua"
+            'id': 52,
+            'name': 'Анна',
+            'surname': 'Івах',
+            'patronymic': 'Іванівна',
+            'position': 'доцент',
+            'disable': false,
+            'email': 'nasta_2000@i.ua'
 
         },
         {
-            "department":{
-                "id": 44,
-                "name": "Computer Science1",
-                "disable": false
+            'department': {
+                'id': 44,
+                'name': 'Computer Science1',
+                'disable': false
             },
-            "id": 53,
-            "name": "Ірина",
-            "surname": "Вернигора",
-            "patronymic": "Володимирівна",
-            "position": "доцент",
-            "disable": false,
-            "email":"nasta_2000@i.ua"
+            'id': 53,
+            'name': 'Ірина',
+            'surname': 'Вернигора',
+            'patronymic': 'Володимирівна',
+            'position': 'доцент',
+            'disable': false,
+            'email': 'nasta_2000@i.ua'
         }
     ];
+
     function isDepartment(value) {
-        return value ===departmentId;
+        return value === departmentId;
     }
 
-    let filtered = data.filter(({department})=>isDepartment(department.id))
+    let filtered = data.filter(({ department }) => isDepartment(department.id));
     store.dispatch(getAllTeachersByDepartmentId(filtered));
     // axios
     //     .get(`${PUBLIC_TEACHER_URL}/departmentId=${departmentId}`)
@@ -516,10 +511,10 @@ export const getTeacherScheduleService = values => {
     axios
         .get(
             FOR_TEACHER_SCHEDULE_URL +
-                '?from=' +
-                values.startDay.replace(/\//g, '-') +
-                '&to=' +
-                values.endDay.replace(/\//g, '-')
+            '?from=' +
+            values.startDay.replace(/\//g, '-') +
+            '&to=' +
+            values.endDay.replace(/\//g, '-')
         )
         .then(response => {
             setLoadingService(false);
@@ -535,14 +530,15 @@ export const getTeacherScheduleByDateRangeService = (teacherId, to, from) => {
     axios
         .get(
             FOR_TEACHER_SCHEDULE_URL +
-                '?teacherId' +
-                teacherId +
-                '&from=' +
-                from.replace(/\//g, '-') +
-                '&to=' +
-                to.replace(/\//g, '-')
+            '?teacherId' +
+            teacherId +
+            '&from=' +
+            from.replace(/\//g, '-') +
+            '&to=' +
+            to.replace(/\//g, '-')
         )
-        .then(response => {})
+        .then(response => {
+        })
         .catch(err => {
             errorHandler(err);
         });

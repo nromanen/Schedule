@@ -156,11 +156,11 @@ const LessonPage = props => {
                     translation={t}
                 />
             ) : (
-                <section className="centered-container">
+                <section className='centered-container'>
                     <h2>
                         {groupHandle(groups, groupId)
                             ? t('lesson_no_lesson_for_group_label') +
-                              groupTitleHandle(groups, groupId)
+                            groupTitleHandle(groups, groupId)
                             : ''}
                     </h2>
                 </section>
@@ -170,7 +170,7 @@ const LessonPage = props => {
 
     if (isLoading) {
         cardsContainer = (
-            <section className="centered-container">
+            <section className='centered-container'>
                 <CircularProgress />
             </section>
         );
@@ -178,7 +178,7 @@ const LessonPage = props => {
 
     return (
         <>
-            <Card class="card-title lesson-card">
+            <Card class='card-title lesson-card'>
                 <CopyLessonDialog
                     open={openCopyLessonDialog}
                     onClose={closeCopyLessonDialogHandle}
@@ -193,13 +193,13 @@ const LessonPage = props => {
                     open={open}
                     onClose={handleClose}
                 />
-                <div className="lesson-page-title">
-                    <h1 className="lesson-page-h">
+                <div className='lesson-page-title'>
+                    <h1 className='lesson-page-h'>
                         {t('lesson_for_group_title')}
                     </h1>
                     <Autocomplete
                         {...defaultProps}
-                        id="group"
+                        id='group'
                         clearOnEscape
                         openOnFocus
                         value={groupFinderHandle(groupId)}
@@ -210,13 +210,13 @@ const LessonPage = props => {
                             <GroupField
                                 {...params}
                                 label={t('formElements:group_label')}
-                                margin="normal"
+                                margin='normal'
                             />
                         )}
                     />
                 </div>
             </Card>
-            <div className="cards-container">
+            <div className='cards-container'>
                 <section>
                     <LessonForm
                         lessonTypes={props.lessonTypes}

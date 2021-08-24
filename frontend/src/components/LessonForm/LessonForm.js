@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import Card from '../../share/Card/Card';
 
@@ -8,9 +8,6 @@ import { connect } from 'react-redux';
 import renderTextField from '../../share/renderedFields/input';
 import renderSelectField from '../../share/renderedFields/select';
 import renderCheckboxField from '../../share/renderedFields/checkbox';
-
-import { FaUserPlus } from 'react-icons/fa';
-
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -29,8 +26,10 @@ import {
 } from '../../helper/reduxFormHelper';
 import { getClearOrCancelTitle, setDisableButton } from '../../helper/disableComponent';
 import { selectGroupService } from '../../services/groupService';
-import { RenderMultiselect, renderMultiselect } from '../../share/renderedFields/renderMultiselect';
-
+import { RenderMultiselect} from '../../share/renderedFields/renderMultiselect';
+import { Accordion, AccordionDetails, AccordionSummary } from '@material-ui/core';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import Typography from '@material-ui/core/Typography';
 const useStyles = makeStyles(() => ({
     notSelected: {
         '&': {
@@ -180,12 +179,7 @@ let LessonForm = props => {
                             id="grouped"
                             name="grouped"
                             className="form-field"
-                            label={
-                                <FaUserPlus
-                                    title={t('formElements:grouped_label')}
-                                    className="svg-btn copy-btn align-left info-btn"
-                                />
-                            }
+                            label={t('formElements:grouped_label')}
                             labelPlacement="end"
                             defaultValue={checked}
                             component={renderCheckboxField}
@@ -219,19 +213,38 @@ let LessonForm = props => {
                         label={t('subject_label') + t('for_site_label')}
                         validate={[required, maxLengthValue]}
                     />
-                    <Field
-                        id="groups"
-                        name="groups"
-                        component={RenderMultiselect}
-                        options={groups}
-                        displayValue={"title"}
-                        className="form-control mt-2"
-                        placeholder={t('groups_label')}
-                        hidePlaceholder={true}
-                        selectedValues={[group]}
-                        alwaysDisplayedItem={group}
-                    />
-
+                    {!lessonId?
+                        <Accordion>
+                        <AccordionSummary
+                            expandIcon={<ExpandMoreIcon />}
+                            aria-controls='panel1a-content'
+                            id='panel1a-header'
+                        >
+                            <Typography>{t('copy_for_button_label')}</Typography>
+                        </AccordionSummary>
+                        <AccordionDetails>
+                            <Typography>
+                                <>
+                                    <p className='group-label'>
+                                        <label htmlFor={'groups'}>{t('copy_groups_label')}</label>
+                                    </p>
+                                    <Field
+                                        id='groups'
+                                        name='groups'
+                                        component={RenderMultiselect}
+                                        options={groups}
+                                        displayValue={'title'}
+                                        className='form-control mt-2'
+                                        placeholder={t('groups_label')}
+                                        hidePlaceholder={true}
+                                        selectedValues={[group]}
+                                        alwaysDisplayedItem={group}
+                                    />
+                                </>
+                            </Typography>
+                        </AccordionDetails>
+                    </Accordion>
+                    :null}
                     <div className="form-buttons-container">
                         <Button
                             className="buttons-style"
