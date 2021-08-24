@@ -49,7 +49,7 @@ export const UploadFile = (props) => {
                             <p>{`${t('common:name_label')}: ${selectedFile.name}`}</p>
                             <p>{`${t('common:type_label')}: ${selectedFile.type}`}</p>
                             <p>{`${t('common:byte_size_label')}: ${selectedFile.size}`}</p>
-                            {/*<p>{`${t('common:last_modified_date')}: ${selectedFile.lastModifiedDate.toLocaleDateString()}`}</p>*/}
+                            <p>{`${t('common:last_modified_date')}: ${selectedFile.lastModifiedDate.toLocaleDateString()}`}</p>
                         </div>
                     ) : (
                         <p>{t('common:select_file_label')}</p>
