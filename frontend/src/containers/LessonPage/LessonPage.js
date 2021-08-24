@@ -59,7 +59,7 @@ const LessonPage = props => {
 
     const isLoading = props.loading;
 
-    const { groups, groupId } = props;
+    const { groups, groupId, currentSemester } = props;
 
     const subjects = props.subjects;
 
@@ -81,7 +81,7 @@ const LessonPage = props => {
         if (Object.keys(card).length === 0 && card.constructor === Object)
             return;
 
-        handleLessonCardService(card, groupId);
+        handleLessonCardService(card, groupId, currentSemester);
     };
 
     const selectLessonCardHandler = lessonCardId => {
@@ -127,8 +127,9 @@ const LessonPage = props => {
     const handleGroupSelect = group => {
         if (group) {
             selectGroupIdService(group.id);
-            selectGroupService(group.id)
-        };
+            selectGroupService(group.id);
+        }
+        ;
     };
 
     const groupFinderHandle = groupId => {
@@ -182,7 +183,6 @@ const LessonPage = props => {
     return (
         <>
             <Card class='card-title lesson-card'>
-                {console.log("groupId",groupId)}
                 <CopyLessonDialog
                     open={openCopyLessonDialog}
                     onClose={closeCopyLessonDialogHandle}
