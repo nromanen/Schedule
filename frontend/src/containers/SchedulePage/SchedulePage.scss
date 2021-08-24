@@ -66,8 +66,8 @@ $board-min-width: 120px;
 
     .day-classes-aside {
         .card.empty-card {
-            min-width: 97px;
-            min-height: 19px;
+            width: 120px;
+            height: 19px;
             font-size: 13px;
             text-align: center;
         }
@@ -81,11 +81,12 @@ $board-min-width: 120px;
                 text-orientation: upright;
             }
             .schedule-class {
-                min-height: 2 * $board-height + 13.5;
+                min-height: 2 * $board-height + 9;
                 text-align: center;
                 font-size: 1.5rem;
                 writing-mode: vertical-rl;
                 text-orientation: upright;
+                margin-bottom: 0.8px;
             }
         }
     }
@@ -170,6 +171,11 @@ $board-min-width: 120px;
 .class-section {
     width: 60px;
     margin: 0;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    align-content: center;
+    align-items: center;
 }
 
 .availability-warning {

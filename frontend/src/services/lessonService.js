@@ -32,7 +32,7 @@ import { getTeacherById } from './teacherService';
 
 export const getLessonsByGroupService = groupId => {
     axios
-        .get(LESSON_URL + `?groupId=${groupId}`)
+        .get(LESSON_URL + `?groupId=${Number(groupId)}`)
         .then(response => {
             store.dispatch(setLessonsCards(response.data));
             setLoadingService(false);
@@ -103,7 +103,6 @@ const createLessonHandler = (data, isCopy) => {
                 store.dispatch(storeLessonCard(response.data));
             }
             resetFormHandler(LESSON_FORM);
-
             successHandler(
                 i18n.t('serviceMessages:back_end_success_operation', {
                     cardType: i18n.t('formElements:lesson_label'),
@@ -128,6 +127,7 @@ export const handleLessonCardService = (card, groupId, semester) => {
         setUniqueErrorService(true);
         return;
     }
+
     axios
         .get(`teachers/${cardObj.teacher.id}`)
         .then(res => {
