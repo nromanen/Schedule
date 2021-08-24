@@ -95,7 +95,7 @@ public class LessonController {
 
     @DeleteMapping("/{id}")
     @ApiOperation(value = "Delete lesson by id")
-    public ResponseEntity delete(@PathVariable("id") long id) {
+    public ResponseEntity<Void> delete(@PathVariable("id") long id) {
         log.info("In delete (id =[{}]", id);
         Lesson lesson = lessonService.getById(id);
         lessonService.delete(lesson);
@@ -128,7 +128,7 @@ public class LessonController {
         List<Lesson> lessonsToSave = new ArrayList<>();
         Lesson lesson = lessonService.getById(lessonId);
         for (long groupId: groupsId) {
-            if (groupService.isExistsWithId(groupId)) {
+            if (groupService.isExistsById(groupId)) {
                 lesson.setGroup(groupService.getById(groupId));
                 lessonService.saveLessonDuringCopy(lesson);
                 lessonsToSave.add(lesson);

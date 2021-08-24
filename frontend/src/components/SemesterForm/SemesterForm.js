@@ -434,4 +434,3 @@ export default connect(mapStateToProps)(
         form: SEMESTER_FORM
     })(AddSemesterForm)
 );
-

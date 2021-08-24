@@ -115,6 +115,9 @@ export const ShowStudentsDialog = props => {
 
 
     const setCurrentGroupOption = (group) => {
+        if (group.id === defaultGroup.id) {
+            getExistingGroupStudent();
+        }
         setGroupOption(group);
     };
     const isChecked = ({ checked }) => {
@@ -130,8 +133,14 @@ export const ShowStudentsDialog = props => {
         }
         return resChecked;
     };
+    const isChooseCurrentGroup = () => {
+        if (isObjectEmpty(groupOption)) {
+            return true;
+        }
+        return groupOption.id === defaultGroup.id;
+    };
     const setDisabledMoveToGroupBtn = () => {
-        return setSelectDisabled();
+        return isChooseCurrentGroup();
     };
     const changeStudentItem = (group, student) => {
         let resData = {};
@@ -141,14 +150,17 @@ export const ShowStudentsDialog = props => {
         }
         return resData;
     };
+    const getExistingGroupStudent = () => {
+        return successHandler(
+            i18n.t('serviceMessages:students_exist_in_this_group', {
+                cardType: i18n.t('common:student_title'),
+                actionType: i18n.t('serviceMessages:student_label')
+            })
+        );
+    };
     const handleSubmitGroupStudents = () => {
         if (isObjectEmpty(groupOption)) {
-            successHandler(
-                i18n.t('serviceMessages:students_exist_in_this_group', {
-                    cardType: i18n.t('common:student_title'),
-                    actionType: i18n.t('serviceMessages:student_label')
-                })
-            );
+            getExistingGroupStudent();
         } else {
             const { value, label, ...res } = groupOption;
             const currentStudents = [...checkBoxStudents];

@@ -1,6 +1,7 @@
 package com.softserve.controller;
 
 import com.softserve.dto.GroupDTO;
+import com.softserve.dto.GroupWithStudentsDTO;
 import com.softserve.dto.GroupForUpdateDTO;
 import com.softserve.entity.Group;
 import com.softserve.mapper.GroupMapper;
@@ -11,8 +12,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @Slf4j
@@ -20,7 +27,6 @@ import java.util.List;
 @Api(tags = "Group API")
 @RequestMapping("/groups")
 public class GroupController {
-
     private final GroupService groupService;
     private final GroupMapper groupMapper;
 
@@ -37,18 +43,19 @@ public class GroupController {
         return ResponseEntity.status(HttpStatus.OK).body(groupMapper.groupsToGroupDTOs(groupService.getAll()));
     }
 
-    @GetMapping("/no-students")
-    @ApiOperation(value = "Get the list of all groups, but sets student list to empty")
-    public ResponseEntity<List<GroupDTO>> getAllWithoutStudents() {
-        log.info("In getAll ()");
-        return ResponseEntity.status(HttpStatus.OK).body(groupMapper.groupsToGroupDTOs(groupService.getAllWithoutStudents()));
-    }
-
     @GetMapping("/{id}")
     @ApiOperation(value = "Get group info by id")
     public ResponseEntity<GroupDTO> get(@PathVariable("id") long id){
         log.info("In get(id = [{}])", id);
         return ResponseEntity.status(HttpStatus.OK).body(groupMapper.groupToGroupDTO(groupService.getById(id)));
+    }
+
+    @GetMapping("/{id}/with-students")
+    @ApiOperation(value = "Get group info by id")
+    public ResponseEntity<GroupWithStudentsDTO> getWithStudents(@PathVariable("id") long id){
+        log.info("In get(id = [{}])", id);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(groupMapper.groupToGroupWithStudentsDTO(groupService.getWithStudentsById(id)));
     }
 
     @PostMapping
@@ -81,12 +88,4 @@ public class GroupController {
         log.info("Enter into getDisabled");
         return ResponseEntity.status(HttpStatus.OK).body(groupMapper.groupsToGroupDTOs(groupService.getDisabled()));
     }
-
-    @GetMapping("/disabled/no-students")
-    @ApiOperation(value = "Get the list of disabled groups, but sets student list to empty")
-    public ResponseEntity<List<GroupDTO>> getDisabledWithoutStudents() {
-        log.info("Enter into getDisabled");
-        return ResponseEntity.status(HttpStatus.OK).body(groupMapper.groupsToGroupDTOs(groupService.getDisabledWithoutStudents()));
-    }
-
 }
