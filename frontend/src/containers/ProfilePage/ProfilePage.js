@@ -19,6 +19,9 @@ import {
     updateUserTeacher
 } from '../../services/userService';
 import AddTeacherForm from '../../components/AddTeacherForm/AddTeacherForm';
+import { navigation, navigationNames } from '../../constants/navigation';
+import NavigationPage from '../../components/Navigation/NavigationPage';
+
 const useStyles = makeStyles(theme => ({
     rootInput: {
         width: '20em'
@@ -30,6 +33,7 @@ let ProfilePage = props => {
     const classes = useStyles();
 
     const submitPasswordChange = values => {
+        console.log('values', values);
         if (values.new_password !== values.confirm_password) {
             props.setError({
                 registration: { passwords: t('different_passwords') }
@@ -62,8 +66,9 @@ let ProfilePage = props => {
 
     return (
         <>
-            <Card class="form-card">
-                <h2 className="form-title">{t('common:my_profile')}</h2>
+            <NavigationPage />
+            <Card class='form-card'>
+                <h2 className='form-title'>{t('common:my_profile')}</h2>
                 <section>
                     <span>{t('email_label') + ': '}</span>
                     <span>{localStorage.getItem('email')}</span>
