@@ -27,7 +27,7 @@ import {
     semesterCopy,
     createArchiveSemesterService,
     getArchivedSemestersService,
-    viewArchivedSemester, setDefaultSemesterById
+    viewArchivedSemester, setDefaultSemesterById, setGroupsToSemester
 } from '../../services/semesterService';
 import { setScheduleTypeService } from '../../services/scheduleService';
 import { disabledCard } from '../../constants/disabledCard';
@@ -93,11 +93,8 @@ const SemesterPage = props => {
             return true;
     }
     const onChangeGroups=()=>{
-        // console.log("It is for service",semesterOptions,semester.id);
-        // setOpenGroupsDialog(false);
         const beginGroups=semester.semester_groups!==undefined?getGroupOptions(semester.semester_groups):[];
         const finishGroups=[...semesterOptions];
-        //console.log("beginGroups,finishGroups",isEqualsArrObjects(beginGroups,finishGroups),beginGroups,finishGroups)
         if(isEqualsArrObjects(beginGroups,finishGroups)){
             successHandler(
                 i18n.t('serviceMessages:group_exist_in_this_semester', {
@@ -107,7 +104,7 @@ const SemesterPage = props => {
             );
             return
         }
-        console.log("It is for service",semesterOptions,semester.id);
+        setGroupsToSemester(semesterId,semesterOptions);
         setOpenGroupsDialog(false);
     }
     const onCancel = () => {
@@ -120,7 +117,10 @@ const SemesterPage = props => {
     };
 
     const submit = (values)=> {
-        const semester_groups=selected.length===0?selectedGroups:selected;
+        const groupsForService=selected.length===0?selectedGroups:selected;
+        const semester_groups=groupsForService.map(group=> {
+           return { id: group.id };
+        })
         const data={...values,semester_groups}
         handleSemesterService(data);
     };
@@ -413,6 +413,7 @@ const SemesterPage = props => {
                                     className="svg-btn copy-btn  semester-groups"
                                     onClick={
                                         ()=> {
+                                            setSemesterId(semester.id);
                                             selectSemesterService(semester.id)
                                             setOpenGroupsDialog(true)
                                         }
