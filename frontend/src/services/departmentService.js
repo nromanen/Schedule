@@ -48,16 +48,15 @@ export const getDisabledDepartmentsService = () => {
 };
 export const setDisabledDepartmentService = (data) => {
     axios
-        .put(`${DEPARTMENT_URL}`,data)
+        .put(`${DEPARTMENT_URL}`, data)
         .then(response => {
             store.dispatch(setDisabledDepartment(response.data));
         })
         .catch(error => errorHandler(error));
 };
 export const setEnabledDepartmentService = (data) => {
-    console.log(data);
     axios
-        .put(`${DEPARTMENT_URL}`,data)
+        .put(`${DEPARTMENT_URL}`, data)
         .then(response => {
             store.dispatch(setEnabledDepartment(response.data));
         })
@@ -65,7 +64,7 @@ export const setEnabledDepartmentService = (data) => {
 };
 export const updateDepartmentService = (data) => {
     axios
-        .put(`${DEPARTMENT_URL}`,data)
+        .put(`${DEPARTMENT_URL}`, data)
         .then(response => {
             store.dispatch(updateDepart(response.data));
             resetFormHandler(DEPARTMENT_FORM);
@@ -86,10 +85,10 @@ export const deleteDepartmentsService = (id) => {
         })
         .catch(error => errorHandler(error));
 };
-export const clearDepartment=()=>{
+export const clearDepartment = () => {
     store.dispatch(clearDepartmentForm());
     resetFormHandler(DEPARTMENT_FORM);
-}
-export const getDepartmentByIdService=(id)=>{
+};
+export const getDepartmentByIdService = (id) => {
     store.dispatch(getDepartItemById(Number(id)));
-}
+};
