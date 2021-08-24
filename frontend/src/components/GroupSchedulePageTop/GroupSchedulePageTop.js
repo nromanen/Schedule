@@ -211,6 +211,7 @@ const GroupSchedulePageTop = props => {
 };
 
 const mapStateToProps = state => ({
+    defaultSemester: state.schedule.defaultSemester,
     groups: state.groups.groups,
     teachers: state.teachers.teachers,
     semesters: state.schedule.semesters,
