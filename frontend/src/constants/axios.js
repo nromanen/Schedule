@@ -21,12 +21,13 @@ export const SCHEDULE_SEMESTER_ITEMS_URL = 'schedules/semester';
 export const SCHEDULE_ITEMS_URL = 'schedules';
 export const CURRENT_SEMESTER_URL = 'semesters/current';
 export const DEFAULT_SEMESTER_URL = 'semesters/default';
+export const SEND_PDF_TO_EMAIL = 'send-pdf-to-email';
 
 export const TEMPORARY_SCHEDULE_URL = 'temporary-schedules';
 export const TEMPORARY_SCHEDULE_RANGE_URL = 'temporary-schedules/add-range';
 export const TEACHER_TEMPORARY_SCHEDULE = 'schedules/full/teachers/date-range';
 
-export const STUDENTS_TO_GROUP_FILE='students/import?groupId='
+export const STUDENTS_TO_GROUP_FILE = 'students/import?groupId=';
 
 export const SCHEDULE_CHECK_AVAILABILITY_URL = 'schedules/data-before';
 export const BUSY_ROOMS = 'schedules/full/rooms';
@@ -68,4 +69,4 @@ export const SCHEDULE_ITEM_ROOM_CHANGE = '/schedules/by-room';
 export const CREATE_ARCHIVE_SEMESTER = '/archive';
 export const ARCHIVED_SEMESTERS_URL = '/archive/all-semesters';
 
-export const DEPARTMENT_URL="/departments";
+export const DEPARTMENT_URL = '/departments';

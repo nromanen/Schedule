@@ -53,27 +53,31 @@ export const getLessonTypesService = () => {
             errorHandler(err);
         });
 };
-const cardObjectHandler = (card, groupId) => {
+const cardObjectHandler = (card, groupId, semester) => {
+    const groupData = (card.groups.map(group => group.id).includes(groupId) && card.groups.length !== 1) ? { groups: card.groups } : { groups: [{ id: groupId }] };
     return {
-        id: card.lessonCardId,
-        group: {
-            id: groupId
-        },
-        hours: card.hours,
+        ...groupData,
+        id: Number(card.lessonCardId),
+        hours: Number(card.hours),
         subject: {
-            id: card.subject
+            id: Number(card.subject)
         },
         lessonType: card.type,
         subjectForSite: card.subjectForSite,
-        teacher: { id: card.teacher },
-        linkToMeeting:card.linkToMeeting,
-        grouped: card.grouped
+        teacher: { id: Number(card.teacher) },
+        linkToMeeting: card.linkToMeeting,
+        grouped: card.grouped,
+        semester
     };
 };
 
-const updateLessonHandler = data => {
+const updateLessonHandler = (data, groupId) => {
+    let res = { ...data };
+    const { groups, ...result } = res;
+    res = { ...result };
+    res.group = { id: groupId };
     return axios
-        .put(LESSON_URL, data)
+        .put(LESSON_URL, res)
         .then(response => {
             store.dispatch(updateLessonCard(response.data));
             selectLessonCardService(null);
@@ -112,9 +116,9 @@ const createLessonHandler = (data, isCopy) => {
         });
 };
 
-export const handleLessonCardService = (card, groupId) => {
+export const handleLessonCardService = (card, groupId, semester) => {
 
-    let cardObj = cardObjectHandler(card, groupId);
+    let cardObj = cardObjectHandler(card, groupId, semester);
     if (!checkUniqLesson(cardObj)) {
         handleSnackbarOpenService(
             true,
@@ -124,18 +128,13 @@ export const handleLessonCardService = (card, groupId) => {
         setUniqueErrorService(true);
         return;
     }
-    if (cardObj.id) {
-        axios
-            .get(`teachers/${cardObj.teacher.id}`)
-            .then(res => {
-                cardObj={...cardObj,teacher: res.data}
-                updateLessonHandler(cardObj);
-            })
-            .catch(error => errorHandler(error));
-
-    } else {
-        createLessonHandler(cardObj, false);
-    }
+    axios
+        .get(`teachers/${cardObj.teacher.id}`)
+        .then(res => {
+            cardObj = { ...cardObj, teacher: res.data };
+            cardObj.id ? updateLessonHandler(cardObj, groupId) : createLessonHandler(cardObj, false);
+        })
+        .catch(error => errorHandler(error));
 };
 export const removeLessonCardService = lessonCardId => {
     axios
