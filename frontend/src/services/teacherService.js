@@ -21,72 +21,9 @@ import {
 import { errorHandler, successHandler } from '../helper/handlerAxios';
 import { resetFormHandler } from '../helper/formHelper';
 import { setLoadingService } from './loadingService';
+import { isObjectEmpty } from '../helper/ObjectRevision';
 
-//TODO
 export const showAllTeachersService = () => {
-    const data=[
-        {
-            "department": {
-                "id": 41,
-                "name": "mat analysi",
-                "disable": false
-            },
-            "id": 49,
-            "name": "Світлана",
-            "surname": "Боднарук",
-            "patronymic": "Богданівна",
-            "position": "доцент",
-            "disable": false,
-            "email": "nasta_2000@i.ua"
-        },
-
-        {
-            "department":{
-                "id": 41,
-                "name": "mat analysi",
-                "disable": false
-            },
-            "id": 78,
-            "name": "Наталія",
-            "surname": "Романенко",
-            "patronymic": "Богданівна",
-            "position": "доцент",
-            "disable": false,
-            "email":"nasta_2000@i.ua"
-
-        },
-        {
-            "department":{
-                "id": 41,
-                "name": "mat analysi",
-                "disable": false
-            },
-            "id": 79,
-            "name": "Анна",
-            "surname": "Івах",
-            "patronymic": "Іванівна",
-            "position": "доцент",
-            "disable": false,
-            "email":"nasta_2000@i.ua"
-
-        },
-        {
-            "department":{
-                "id": 44,
-                "name": "Computer Science1",
-                "disable": false
-            },
-            "id": 39,
-            "name": "Ірина",
-            "surname": "Вернигора",
-            "patronymic": "Володимирівна",
-            "position": "доцент",
-            "disable": false,
-            "email":"nasta_2000@i.ua"
-        }
-    ];
-    // store.dispatch(showAllTeachers(data));
-    //         setLoadingService(false);
     axios
         .get(TEACHER_URL)
         .then(response => {
@@ -108,8 +45,13 @@ export const getTeachersWithoutAccount = () => {
 };
 
 export const createTeacherService = values => {
+    let result= {... values };
+   if(isObjectEmpty(values.department)||values.department.id===null){
+       const {department,...res}=values;
+       result= { ...res };
+   }
     axios
-        .post(TEACHER_URL, values)
+        .post(TEACHER_URL, result)
         .then(response => {
             store.dispatch(addTeacher(response.data));
             resetFormHandler(TEACHER_FORM);
@@ -138,8 +80,13 @@ const cardTeacher = teacher => {
 };
 
 export const updateTeacherService = data => {
+    let result={...data.teacher};
+    if(result.department.id===null){
+        const {department,...res}=result;
+        result={...res};
+    }
     return axios
-        .put(TEACHER_URL, data.teacher)
+        .put(TEACHER_URL, result)
         .then(response => {
             store.dispatch(updateTeacherCard(response.data));
             if (response.data.disable) {
