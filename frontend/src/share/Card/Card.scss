@@ -1,90 +1,88 @@
 @import '../../App';
 
 @mixin set-width($form-width) {
-  width: $form-width;
+    width: $form-width;
 }
 
 .card {
-  background-color: $main-color;
-  display: inline-block;
-  margin: 10px;
-  padding: 1rem;
-  border-radius: 5px;
-  box-shadow: 0 2px 8px $shadow-box;
+    background-color: $main-color;
+    display: inline-block;
+    margin: 10px;
+    padding: 1rem;
+    border-radius: 5px;
+    box-shadow: 0 2px 8px $shadow-box;
 }
 
 .form-card {
-  @include set-width(20em);
+    @include set-width(20em);
 
-  position: sticky;
-  top: 1em;
+    position: sticky;
+    top: 1em;
 
-  @media (max-width: 850px) {
-    position: relative;
-  }
+    @media (max-width: 850px) {
+        position: relative;
+    }
 
-  @media (max-width: 500px) {
-    max-width: 85%;
-    margin-bottom: 30px;
-  }
+    @media (max-width: 500px) {
+        max-width: 85%;
+        margin-bottom: 30px;
+    }
 
-  .form-title {
-    text-align: center;
-  }
+    .form-title {
+        text-align: center;
+    }
 }
 
 .form-field {
+    width: 15.5em;
 
-  width: 18em;
-
-  @media (max-width: 500px) {
-    & input {
-      max-width: 100%;
+    @media (max-width: 500px) {
+        & input {
+            max-width: 100%;
+        }
     }
-  }
 }
 
 .class-card-width {
-  width: 11em;
+    width: 11em;
 }
 
 .done-card {
-  background-color: $main-color;
-  width: 15em;
-  height: 12em;
+    background-color: $main-color;
+    width: 15em;
 }
 
 .vacation-card {
-  background-color: #f5deb3;
-  text-align: center;
-  min-width: 272px;
+    background-color: #f5deb3;
+    text-align: center;
+    min-width: 272px;
 }
 
 .text-center {
-  text-align: center;
+    text-align: center;
 }
 
 .hidden-card {
-  visibility: hidden;
+    visibility: hidden;
 }
 
 .card-title {
-  width: 95%;
-  text-align: center;
+    width: 95%;
+    text-align: center;
 }
 
 .green-card {
-  background-color: #90ee90;
+    background-color: #90ee90;
 }
 
 .auth-card {
-  width: 450px;
+    width: 450px;
 
-  @media (max-width: 500px) {
-    max-width: 90%;
-  }
+    @media (max-width: 500px) {
+        max-width: 90%;
+    }
 
-  .form-field {
-    width: 25em;
-  }
+    .form-field {
+        width: 25em;
+    }
 }
