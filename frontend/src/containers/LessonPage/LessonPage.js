@@ -20,7 +20,7 @@ import {
     selectLessonCardService
 } from '../../services/lessonService';
 import { showAllTeachersService } from '../../services/teacherService';
-import { showAllGroupsService } from '../../services/groupService';
+import { selectGroupService, showAllGroupsService } from '../../services/groupService';
 import { setLoadingService } from '../../services/loadingService';
 import { showAllSubjectsService } from '../../services/subjectService';
 import {
@@ -125,7 +125,10 @@ const LessonPage = props => {
     };
 
     const handleGroupSelect = group => {
-        if (group) selectGroupIdService(group.id);
+        if (group) {
+            selectGroupIdService(group.id);
+            selectGroupService(group.id)
+        };
     };
 
     const groupFinderHandle = groupId => {
@@ -179,6 +182,7 @@ const LessonPage = props => {
     return (
         <>
             <Card class='card-title lesson-card'>
+                {console.log("groupId",groupId)}
                 <CopyLessonDialog
                     open={openCopyLessonDialog}
                     onClose={closeCopyLessonDialogHandle}
@@ -221,7 +225,6 @@ const LessonPage = props => {
                     <LessonForm
                         lessonTypes={props.lessonTypes}
                         isUniqueError={isUniqueError}
-                        groupId={groupId}
                         subjects={subjects}
                         teachers={teachers}
                         onSubmit={createLessonCardHandler}
