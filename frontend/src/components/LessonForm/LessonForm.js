@@ -19,13 +19,13 @@ import {
     required
 } from '../../validation/validateFields';
 import { useTranslation } from 'react-i18next';
-import { setUniqueErrorService } from '../../services/lessonService';
+import { getLessonsByGroupService, setUniqueErrorService } from '../../services/lessonService';
 import {handleTeacherInfo } from '../../helper/renderTeacher';
 import {
     setValueToSubjectForSiteHandler
 } from '../../helper/reduxFormHelper';
 import { getClearOrCancelTitle, setDisableButton } from '../../helper/disableComponent';
-import { selectGroupService } from '../../services/groupService';
+import { clearGroupService, selectGroupService } from '../../services/groupService';
 import { RenderMultiselect} from '../../share/renderedFields/renderMultiselect';
 import { Accordion, AccordionDetails, AccordionSummary } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
@@ -230,6 +230,7 @@ let LessonForm = props => {
                                         <label htmlFor={'groups'}>{t('copy_groups_label')}</label>
                                     </p>
                                     <Field
+
                                         id='groups'
                                         name='groups'
                                         component={RenderMultiselect}

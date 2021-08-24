@@ -78,11 +78,16 @@ const LessonPage = props => {
     }, []);
 
     const createLessonCardHandler = card => {
+        console.log('create');
         if (Object.keys(card).length === 0 && card.constructor === Object)
             return;
-
         handleLessonCardService(card, groupId, currentSemester);
+
     };
+    useEffect(() => {
+        setLoadingService(true);
+        getLessonsByGroupService(groupId);
+    }, [lessons.length]);
 
     const selectLessonCardHandler = lessonCardId => {
         selectLessonCardService(lessonCardId);
@@ -151,6 +156,7 @@ const LessonPage = props => {
 
     let cardsContainer = (
         <>
+            {console.log('lessons', lessons)}
             {lessonLength > 0 ? (
                 <LessonsList
                     lessons={lessons}
