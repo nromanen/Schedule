@@ -62,7 +62,7 @@ const ClassSchedule =(props) => {
 
     return (
         <>
-            <NavigationPage name={navigationNames.CLASS_SCHEDULE_TITLE} val={navigation.BELLS}/>
+            <NavigationPage name={navigationNames.CLASS_SCHEDULE_TITLE} val={navigation.PERIOD}/>
         <div className="cards-container">
             <ConfirmDialog
                 selectedValue={''}

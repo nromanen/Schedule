@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import Card from '../../share/Card/Card';
 
@@ -8,14 +8,11 @@ import { connect } from 'react-redux';
 import renderTextField from '../../share/renderedFields/input';
 import renderSelectField from '../../share/renderedFields/select';
 import renderCheckboxField from '../../share/renderedFields/checkbox';
-
-import { FaUserPlus } from 'react-icons/fa';
-
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
 
 import { LESSON_FORM } from '../../constants/reduxForms';
-
+import './LessonForm.scss'
 import {
     lessThanZero,
     maxLengthValue,
@@ -28,7 +25,11 @@ import {
     setValueToSubjectForSiteHandler
 } from '../../helper/reduxFormHelper';
 import { getClearOrCancelTitle, setDisableButton } from '../../helper/disableComponent';
-
+import { selectGroupService } from '../../services/groupService';
+import { RenderMultiselect} from '../../share/renderedFields/renderMultiselect';
+import { Accordion, AccordionDetails, AccordionSummary } from '@material-ui/core';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import Typography from '@material-ui/core/Typography';
 const useStyles = makeStyles(() => ({
     notSelected: {
         '&': {
@@ -41,7 +42,7 @@ const useStyles = makeStyles(() => ({
 let LessonForm = props => {
     const { t } = useTranslation('formElements');
 
-    const { handleSubmit, pristine, reset, submitting } = props;
+    const { handleSubmit, pristine, reset, submitting,groups,group } = props;
 
     const classes = useStyles();
 
@@ -58,7 +59,9 @@ let LessonForm = props => {
 
     const [checked, setChecked] = React.useState(false);
     const handleChange = event => setChecked(event.target.checked);
-
+    useEffect(()=>{
+        selectGroupService(groupId)
+    },groupId)
     useEffect(() => {
         setChecked(false);
         if (lessonId) {
@@ -77,7 +80,8 @@ let LessonForm = props => {
             hours: lesson.hours,
             linkToMeeting:lesson.linkToMeeting,
             subjectForSite: lesson.subjectForSite,
-            grouped: lesson.grouped
+            grouped: lesson.grouped,
+            groups:[group]
         });
         setChecked(lesson.grouped);
     };
@@ -175,12 +179,7 @@ let LessonForm = props => {
                             id="grouped"
                             name="grouped"
                             className="form-field"
-                            label={
-                                <FaUserPlus
-                                    title={t('formElements:grouped_label')}
-                                    className="svg-btn copy-btn align-left info-btn"
-                                />
-                            }
+                            label={t('formElements:grouped_label')}
                             labelPlacement="end"
                             defaultValue={checked}
                             component={renderCheckboxField}
@@ -188,6 +187,8 @@ let LessonForm = props => {
                             onChange={handleChange}
                             color="primary"
                         />
+
+
                     </div>
                     <Field
                         id="linkToMeeting"
@@ -212,7 +213,38 @@ let LessonForm = props => {
                         label={t('subject_label') + t('for_site_label')}
                         validate={[required, maxLengthValue]}
                     />
-
+                    {!lessonId?
+                        <Accordion>
+                        <AccordionSummary
+                            expandIcon={<ExpandMoreIcon />}
+                            aria-controls='panel1a-content'
+                            id='panel1a-header'
+                        >
+                            <Typography>{t('copy_for_button_label')}</Typography>
+                        </AccordionSummary>
+                        <AccordionDetails>
+                            <Typography>
+                                <>
+                                    <p className='group-label'>
+                                        <label htmlFor={'groups'}>{t('copy_groups_label')}</label>
+                                    </p>
+                                    <Field
+                                        id='groups'
+                                        name='groups'
+                                        component={RenderMultiselect}
+                                        options={groups}
+                                        displayValue={'title'}
+                                        className='form-control mt-2'
+                                        placeholder={t('groups_label')}
+                                        hidePlaceholder={true}
+                                        selectedValues={[group]}
+                                        alwaysDisplayedItem={group}
+                                    />
+                                </>
+                            </Typography>
+                        </AccordionDetails>
+                    </Accordion>
+                    :null}
                     <div className="form-buttons-container">
                         <Button
                             className="buttons-style"
@@ -247,7 +279,12 @@ let LessonForm = props => {
     );
 };
 
-const mapStateToProps = state => ({ lesson: state.lesson.lesson });
+const mapStateToProps = state => (
+    {
+        lesson: state.lesson.lesson,
+        groups:state.groups.groups,
+        group:state.groups.group
+    });
 
 LessonForm = reduxForm({
     form: LESSON_FORM

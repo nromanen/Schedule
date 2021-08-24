@@ -3,6 +3,14 @@
     min-height: 175px;
     min-width: 170px;
     margin-bottom: 50px;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    align-items: center;
+  .semester-groups{
+    font-size: 25px;
+    color: #028802;
+  }
   
     &__description {
       text-align: center

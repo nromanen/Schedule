@@ -4,7 +4,6 @@ import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Field, reduxForm } from 'redux-form';
 import Button from '@material-ui/core/Button';
-
 import './SemesterForm.scss';
 import Card from '../../share/Card/Card';
 import renderCheckboxField from '../../share/renderedFields/checkbox';
@@ -20,6 +19,9 @@ import {
 import { getClassScheduleListService } from '../../services/classService';
 import { daysUppercase } from '../../constants/schedule/days';
 import { getClearOrCancelTitle, setDisableButton } from '../../helper/disableComponent';
+import { showAllGroupsService } from '../../services/groupService';
+import { MultiselectForGroups } from '../../helper/MultiselectForGroups';
+import { useForm } from "react-hook-form";
 import formValueSelector from 'redux-form/lib/formValueSelector';
 
 let AddSemesterForm = props => {
@@ -37,9 +39,44 @@ let AddSemesterForm = props => {
         });
     };
     useEffect(() => getClassScheduleListService(), []);
+    useEffect(()=>showAllGroupsService(),[])
 
     const { t } = useTranslation('formElements');
-    const { handleSubmit, pristine, onReset, submitting,semester } = props;
+    const { handleSubmit, pristine, onReset, submitting,semester,groups,selected,setSelected,selectedGroups,setSelectedGroups } = props;
+    const [openGroupDialog,setOpenGroupDialog]=useState(false);
+    useEffect(()=>{
+        if(semester.semester_groups!==undefined){
+            setSelectedGroups(getGroupOptions(semester.semester_groups))
+        }
+    },[semester.id])
+    const getGroupOptions=(groupOptions)=>{
+
+        return groupOptions.map(item=>{return {id:item.id,value:item.id,label:`${item.title}`}});
+    }
+    const options=getGroupOptions(groups);
+    const semesterOptions=getGroupOptions(groups.filter(x => !selectedGroups.includes(x)));
+    const openDialogForGroup = () => {
+      setOpenGroupDialog(true)
+    }
+    const closeDialogForGroup = () => {
+        setOpenGroupDialog(false)
+    }
+    const clearSelection = () => {
+      setSelected([])
+    }
+    const onCancel = () => {
+      clearSelection();
+      closeDialogForGroup();
+    }
+
+    const onClose = () => {
+        closeDialogForGroup();
+    }
+    const onSubmit = (values) => {
+        console.log(values)
+        handleSubmit(values);
+    }
+    const { setValue } = useForm();
 
     let prepSetCheckedClasses = {};
     useEffect(() => {
@@ -181,7 +218,9 @@ let AddSemesterForm = props => {
                     currentSemester: props.semester.currentSemester,
                     defaultSemester:props.semester.defaultSemester,
                     semester_days: props.semester.semester_days,
-                    semester_classes: props.semester.semester_classes
+                    semester_classes: props.semester.semester_classes,
+                    semester_groups:props.semester.semester_groups
+
                 };
 
                 daysUppercase.forEach(dayItem => {
@@ -257,29 +296,54 @@ let AddSemesterForm = props => {
                 {props.semester.id ? t('edit_title') : t('create_title')}
                 {t('semestry_label')}
             </h2>
-
-            <form onSubmit={handleSubmit}>
-                <div className="semester-checkbox">
-                    <Field
-                        name="currentSemester"
-                        label={t('common:current_label')}
-                        labelPlacement="start"
-                        component={renderCheckboxField}
-                        checked={current}
-                        onChange={(e)=>handleChange(e,setCurrent)}
+            {selectedGroups.length===0?
+            <MultiselectForGroups
+                open={openGroupDialog}
+                options={options}
+                value={selected}
+                onChange={setSelected}
+                onCancel={onCancel}
+                onClose={onClose}
+            />:
+                <MultiselectForGroups
+                    open={openGroupDialog}
+                    options={semesterOptions}
+                    value={selectedGroups}
+                    onChange={setSelectedGroups}
+                    onCancel={onCancel}
+                    onClose={onClose}
+                />}
+            <form onSubmit={onSubmit}>
+                <div className="semester-checkbox group-options">
+                    <div>
+                        <Field
+                            name="currentSemester"
+                            label={t('common:current_label')}
+                            labelPlacement="start"
+                            component={renderCheckboxField}
+                            checked={current}
+                            onChange={(e)=>handleChange(e,setCurrent)}
+                            color="primary"
+                        />
+                        <Field
+                            name="defaultSemester"
+                            label={t('common:default_label')}
+                            labelPlacement="start"
+                            component={renderCheckboxField}
+                            checked={byDefault}
+                            onChange={(e)=>handleChange(e,setByDefault)}
+                            color="primary"
+                        />
+                    </div>
+                    <Button
+                        variant="contained"
                         color="primary"
-                    />
-                    <Field
-                        name="defaultSemester"
-                        label={t('common:default_label')}
-                        labelPlacement="start"
-                        component={renderCheckboxField}
-                        checked={byDefault}
-                        onChange={(e)=>handleChange(e,setByDefault)}
-                        color="primary"
-                    />
+                        className="buttons-style "
+                        onClick={openDialogForGroup}
+                    >
+                        {t('choose_groups_button_label')}
+                    </Button>
                 </div>
-
                 <Field
                     className="form-field"
                     name="year"
@@ -361,6 +425,7 @@ let AddSemesterForm = props => {
 const mapStateToProps = state => ({
     semester: state.semesters.semester,
     classScheduler: state.classActions.classScheduler,
+    groups:state.groups.groups,
 
 });
 
@@ -369,3 +434,4 @@ export default connect(mapStateToProps)(
         form: SEMESTER_FORM
     })(AddSemesterForm)
 );
+

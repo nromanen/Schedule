@@ -77,7 +77,7 @@ public class TeacherTableBuilder extends BaseTableBuilder {
                 ClassForTeacherScheduleDTO oddClasses = getClassByPeriod(day.getOddWeek().getPeriods(), period);
                 ClassForTeacherScheduleDTO evenClasses = getClassByPeriod(day.getEvenWeek().getPeriods(), period);
                 // building cells
-                table.addCell(createInnerCell(oddClasses, evenClasses));
+                table.addCell(createInnerCell(oddClasses, evenClasses, language));
             }
         }
         return table;
@@ -150,9 +150,10 @@ public class TeacherTableBuilder extends BaseTableBuilder {
      *
      * @param oddClasses the upper (odd) cell of table
      * @param evenClasses the lover (even) cell of table
+     * @param language the selected language
      * @return inner PdfPCell for table
      */
-    private PdfPCell createInnerCell(ClassForTeacherScheduleDTO oddClasses, ClassForTeacherScheduleDTO evenClasses) {
+    private PdfPCell createInnerCell(ClassForTeacherScheduleDTO oddClasses, ClassForTeacherScheduleDTO evenClasses, Locale language) {
         log.info("Enter into createInnerCell method with oddClasses {} evenClasses {}", oddClasses, evenClasses);
 
         PdfPCell cell;
@@ -162,14 +163,14 @@ public class TeacherTableBuilder extends BaseTableBuilder {
         }
         // creating one whole cell, if odd and even lists of lessons r equal
         else if (oddClasses.getLessons().equals(evenClasses.getLessons())) {
-            cell = generateCell(oddClasses.getLessons());
+            cell = generateCell(oddClasses.getLessons(), language);
         }
         // dividing one cell into odd (upper) and even (lower) cells and filling them
         else {
             // creating new inner table with two cells - odd and even
             PdfPTable inner = new PdfPTable(1);
-            inner.addCell(createUpperInnerCell(oddClasses));
-            inner.addCell(createLowerInnerCell(evenClasses));
+            inner.addCell(createUpperInnerCell(oddClasses, language));
+            inner.addCell(createLowerInnerCell(evenClasses, language));
             cell = new PdfPCell(inner);
         }
         style.valueCellStyle(cell);
@@ -180,12 +181,13 @@ public class TeacherTableBuilder extends BaseTableBuilder {
      *  Method used for creating upper (odd) cell of table
      *
      * @param oddClasses the classes for teacher
+     * @param language the selected language
      * @return inner PdfPCell for table
      */
-    private PdfPCell createUpperInnerCell(ClassForTeacherScheduleDTO oddClasses) {
+    private PdfPCell createUpperInnerCell(ClassForTeacherScheduleDTO oddClasses, Locale language) {
         PdfPCell upperInnerCell = new PdfPCell(new Phrase(EMPTY_CELL, cellFont));
         if (!oddClasses.getLessons().isEmpty()) {
-            upperInnerCell = generateCell(oddClasses.getLessons());
+            upperInnerCell = generateCell(oddClasses.getLessons(), language);
         }
         style.innerValueCellStyle(upperInnerCell);
         upperInnerCell.setBorderWidthBottom(0.5f);
@@ -196,13 +198,14 @@ public class TeacherTableBuilder extends BaseTableBuilder {
      *  Method used for creating lower (even) cell of table
      *
      * @param evenClasses the classes for teacher
+     * @param language the selected language
      * @return inner PdfPCell for table
      */
-    private PdfPCell createLowerInnerCell(ClassForTeacherScheduleDTO evenClasses) {
+    private PdfPCell createLowerInnerCell(ClassForTeacherScheduleDTO evenClasses, Locale language) {
         PdfPCell lowerInnerCell = new PdfPCell(new Phrase(EMPTY_CELL, cellFont));
         // lower (even) cell
         if (!evenClasses.getLessons().isEmpty()) {
-            lowerInnerCell = generateCell(evenClasses.getLessons());
+            lowerInnerCell = generateCell(evenClasses.getLessons(), language);
         }
         style.innerValueCellStyle(lowerInnerCell);
         return lowerInnerCell;
@@ -214,13 +217,14 @@ public class TeacherTableBuilder extends BaseTableBuilder {
      *  Method used for generating schedule text in table's cell
      *
      * @param lessons the lessons of schedule
+     * @param language the selected language
      * @return inner PdfPCell for table
      */
-    private PdfPCell generateCell(List<LessonForTeacherScheduleDTO> lessons) {
+    private PdfPCell generateCell(List<LessonForTeacherScheduleDTO> lessons, Locale language) {
         String baseText = getBaseTextFromLessonsInScheduleDTOs(lessons);
         String linkText = getLinkTextFromLessonsInScheduleDTOs(lessons);
         Phrase phrase = new Phrase(baseText, cellFont);
-        Chunk chunk = new Chunk("follow the link", linkFont);
+        Chunk chunk = new Chunk(translator.getTranslation("follow the link", language), linkFont);
         chunk.setAnchor(linkText);
         phrase.add(chunk);
         return new PdfPCell(phrase);

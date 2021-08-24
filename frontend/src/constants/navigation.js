@@ -12,7 +12,7 @@ export const navigation={
     "USERS":1,
     "CHANGES":2,
     "BUSY_ROOMS":3,
-    "BELLS":4,
+    "PERIOD":4,
     "DEPARTMENTS":5,
     "GROUPS":6,
     "ROOMS":7,
