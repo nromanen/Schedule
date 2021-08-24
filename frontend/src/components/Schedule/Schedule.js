@@ -130,16 +130,17 @@ const Schedule = props => {
 
     const t = props.translation;
 
-    const dayContainerHeight = classes.length * 185.5 + 4.6 * classes.length;
+    //const dayContainerHeight = classes.length * 185.5 + 4.6 * classes.length;
+    const dayContainerHeight = classes.length * 150;
 
     const useStyles = makeStyles({
         dayContainer: {
-            height: dayContainerHeight,
-            maxHeight: dayContainerHeight
+            // height: dayContainerHeight,
+            // maxHeight: dayContainerHeight
         },
         day: {
-            height: dayContainerHeight - 37,
-            maxHeight: dayContainerHeight- 37
+            height: dayContainerHeight,
+            maxHeight: dayContainerHeight
         }
     });
     const elClasses = useStyles();
