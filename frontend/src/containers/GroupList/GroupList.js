@@ -262,7 +262,7 @@ let GroupList = props => {
                                         <Link to={`${links.GroupList}${links.Group}${links.Edit}/${group.id}`}>
                                             <FaEdit
                                                 className='group__buttons-edit link-href'
-                                                title={t('edit_title')}
+                                                title={t('common:edit')}
                                                 onClick={() => handleEdit(group.id)}
                                             />
                                         </Link>
