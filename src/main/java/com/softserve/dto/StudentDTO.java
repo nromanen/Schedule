@@ -1,12 +1,9 @@
 package com.softserve.dto;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 
 @Data
 @Builder(toBuilder = true)
@@ -18,6 +15,5 @@ public class StudentDTO {
     private String surname;
     private String patronymic;
     private String email;
-    @JsonInclude(NON_NULL)
     private GroupDTO group;
 }

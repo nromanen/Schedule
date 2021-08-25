@@ -8,6 +8,7 @@ import com.softserve.repository.StudentRepository;
 import com.softserve.service.impl.StudentServiceImpl;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -17,23 +18,22 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.springframework.mock.web.MockMultipartFile;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-
-import static org.junit.Assert.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.*;
+import java.util.Optional;
+import static java.util.Collections.singletonList;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @Category(UnitTestCategory.class)
 @RunWith(JUnitParamsRunner.class)
 public class StudentServiceTest {
-
     @Rule
     public MockitoRule mockitoRule = MockitoJUnit.rule();
 
@@ -43,142 +43,97 @@ public class StudentServiceTest {
     @InjectMocks
     StudentServiceImpl studentService;
 
+    Student studentWithId1L;
+
+    @Before
+    public void setUp() {
+        studentWithId1L = new Student();
+        studentWithId1L.setName("Name");
+        studentWithId1L.setSurname("Surname");
+        studentWithId1L.setPatronymic("Patronymic");
+        studentWithId1L.setEmail("tempStudent@gmail.com");
+    }
+
     @Test
     public void getAll() {
-        Student student = new Student();
-        student.setName("Name");
-        student.setSurname("Surname");
-        student.setPatronymic("Patronymic");
-        student.setEmail("tempStudent@gmail.com");
-        student.setGroup(new Group());
+        List<Student> expected = singletonList(studentWithId1L);
+        when(studentRepository.getAll()).thenReturn(expected);
 
-        when(studentRepository.getAll()).thenReturn(Arrays.asList(student));
-        List<Student> actualList = studentService.getAll();
+        List<Student> actual = studentService.getAll();
 
-        assertEquals(1, actualList.size());
-        assertSame(actualList.get(0), student);
+        assertThat(actual).hasSameSizeAs(expected).hasSameElementsAs(expected);
+        verify(studentRepository).getAll();
     }
 
     @Test
     public void getById() {
-        Student expectedStudent = new Student();
-        expectedStudent.setId(1L);
-        expectedStudent.setName("Name");
-        expectedStudent.setSurname("Surname");
-        expectedStudent.setPatronymic("Patronymic");
-        expectedStudent.setEmail("tempStudent@gmail.com");
-        expectedStudent.setGroup(new Group());
+        Student expected = studentWithId1L;
+        when(studentRepository.findById(expected.getId())).thenReturn(Optional.of(expected));
 
-        when(studentRepository.getById(anyLong())).thenReturn(expectedStudent);
+        Student actual = studentService.getById(expected.getId());
 
-        Student actualStudent = studentService.getById(expectedStudent.getId());
-
-        assertSame(expectedStudent, actualStudent);
+        assertThat(actual).isEqualToComparingFieldByField(expected);
+        verify(studentRepository).findById(expected.getId());
     }
 
     @Test
     public void save() {
-        Group group = new Group();
-        group.setId(1L);
+        Student expected = studentWithId1L;
+        when(studentRepository.save(expected)).thenReturn(expected);
+        when(studentRepository.isExistsByEmail(expected.getEmail())).thenReturn(false);
 
-        Student expectedStudent = new Student();
-        expectedStudent.setId(1L);
-        expectedStudent.setName("Name");
-        expectedStudent.setSurname("Surname");
-        expectedStudent.setPatronymic("Patronymic");
-        expectedStudent.setEmail("tempStudent@gmail.com");
-        expectedStudent.setGroup(group);
+        Student actual = studentService.save(expected);
 
-        when(studentRepository.save(any(Student.class))).thenReturn(expectedStudent);
-
-        Student actualStudent = studentService.save(expectedStudent);
-
-        assertEquals(expectedStudent.getEmail(), actualStudent.getEmail());
+        assertThat(actual).isEqualToComparingFieldByField(expected);
+        verify(studentRepository).save(expected);
+        verify(studentRepository).isExistsByEmail(expected.getEmail());
     }
 
     @Test
     public void update() {
-        Group group = new Group();
-        group.setId(1L);
+        Student expected= studentWithId1L;
+        when(studentRepository.update(expected)).thenReturn(expected);
+        when(studentRepository.isExistsByEmailIgnoringId(expected.getEmail(), expected.getId())).thenReturn(false);
 
-        Student oldStudent = new Student();
-        oldStudent.setId(1L);
-        oldStudent.setName("Name");
-        oldStudent.setSurname("Surname");
-        oldStudent.setPatronymic("Patronymic");
-        oldStudent.setEmail("tempStudent@gmail.com");
-        oldStudent.setGroup(group);
+        Student actual = studentService.update(expected);
 
-        Student updatedStudent = new Student();
-        updatedStudent.setId(oldStudent.getId());
-        updatedStudent.setName("Changed Name");
-        updatedStudent.setSurname("Changed Surname");
-        updatedStudent.setPatronymic("Changed Patronymic");
-        updatedStudent.setEmail("changedTempStudent@gmail.com");
-        updatedStudent.setGroup(oldStudent.getGroup());
-
-        when(studentRepository.update(any(Student.class))).thenReturn(updatedStudent);
-        when(studentRepository.getById(anyLong())).thenReturn(oldStudent);
-
-        oldStudent = studentService.update(updatedStudent);
-
-        assertNotNull(oldStudent);
-        assertEquals(updatedStudent, oldStudent);
+        assertThat(actual).isEqualToComparingFieldByField(expected);
+        verify(studentRepository).update(expected);
+        verify(studentRepository).isExistsByEmailIgnoringId(expected.getEmail(), expected.getId());
     }
 
     @Test
     public void delete() {
-        Student expectedStudent = new Student();
-        expectedStudent.setId(1L);
-        expectedStudent.setName("Name");
-        expectedStudent.setSurname("Surname");
-        expectedStudent.setPatronymic("Patronymic");
-        expectedStudent.setEmail("tempStudent@gmail.com");
-        expectedStudent.setGroup(new Group());
+        Student expected = studentWithId1L;
+        when(studentRepository.delete(expected)).thenReturn(expected);
 
-        when(studentRepository.delete(any(Student.class))).thenReturn(expectedStudent);
-        when(studentRepository.getById(anyLong())).thenReturn(expectedStudent);
-        Student deletedStudent = studentService.delete(expectedStudent);
+        Student actual = studentService.delete(expected);
 
-        assertNotNull(deletedStudent);
-        assertEquals(expectedStudent, deletedStudent);
-        verify(studentRepository).delete(any());
-    }
-
-    @Test
-    public void getByEmail() {
-        Student expectedStudent = new Student();
-        expectedStudent.setId(1L);
-        expectedStudent.setName("Name");
-        expectedStudent.setSurname("Surname");
-        expectedStudent.setPatronymic("Patronymic");
-        expectedStudent.setEmail("tempStudent@gmail.com");
-        expectedStudent.setGroup(new Group());
-
-        when(studentRepository.findByEmail(anyString())).thenReturn(expectedStudent);
-
-        Student actualStudent = studentService.getByEmail(expectedStudent.getEmail());
-
-        assertNotNull(actualStudent);
-        assertEquals(expectedStudent, actualStudent);
+        assertThat(actual).isEqualToComparingFieldByField(expected);
+        verify(studentRepository).delete(expected);
     }
 
     @Test(expected = EntityNotFoundException.class)
     public void throwEntityNotFoundExceptionWhenGetById() {
-        when(studentRepository.getById(anyLong())).thenReturn(null);
-        studentService.getById(anyLong());
+        when(studentRepository.findById(1L)).thenReturn(Optional.empty());
+        studentService.getById(1L);
+        verify(studentRepository).findById(1L);
     }
 
     @Test(expected = FieldAlreadyExistsException.class)
     public void throwFieldAlreadyExistsExceptionWhenSave() {
-        Student inputStudent = new Student();
-        inputStudent.setEmail("tempStudent@gmail.com");
+        Student expected = studentWithId1L;
+        when(studentRepository.isExistsByEmail(expected.getEmail())).thenReturn(true);
+        studentService.save(expected);
+        verify(studentRepository).isExistsByEmail(expected.getEmail());
+    }
 
-        Student existingStudent = new Student();
-        inputStudent.setEmail("tempStudent@gmail.com");
-
-        when(studentRepository.findByEmail(anyString())).thenReturn(existingStudent);
-        studentService.save(inputStudent);
+    @Test(expected = FieldAlreadyExistsException.class)
+    public void throwFieldAlreadyExistsExceptionWhenUpdate() {
+        Student expected = studentWithId1L;
+        when(studentRepository.isExistsByEmailIgnoringId(expected.getEmail(), expected.getId())).thenReturn(true);
+        studentService.update(expected);
+        verify(studentRepository).isExistsByEmailIgnoringId(expected.getEmail(), expected.getId());
     }
 
     @Test
@@ -213,9 +168,9 @@ public class StudentServiceTest {
         expectedStudents.add(student1);
         expectedStudents.add(student3);
 
-        when(studentRepository.findByEmail(student1.getEmail())).thenReturn(null);
-        when(studentRepository.findByEmail(student2.getEmail())).thenReturn(null);
-        when(studentRepository.findByEmail(student3.getEmail())).thenReturn(null);
+        when(studentRepository.isExistsByEmail(student1.getEmail())).thenReturn(false);
+        when(studentRepository.isExistsByEmail(student2.getEmail())).thenReturn(false);
+        when(studentRepository.isExistsByEmail(student2.getEmail())).thenReturn(false);
 
         when(studentRepository.save(student1)).thenReturn(student1);
         when(studentRepository.save(student2)).thenThrow(RuntimeException.class);
@@ -227,6 +182,9 @@ public class StudentServiceTest {
         verify(studentRepository).save(student1);
         verify(studentRepository).save(student2);
         verify(studentRepository).save(student3);
+        verify(studentRepository).isExistsByEmail(student1.getEmail());
+        verify(studentRepository).isExistsByEmail(student2.getEmail());
+        verify(studentRepository).isExistsByEmail(student3.getEmail());
     }
 
     private Object[] parametersToTestImport() throws IOException {
