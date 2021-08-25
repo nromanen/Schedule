@@ -24,13 +24,15 @@ import { cssClasses } from '../../constants/schedule/cssClasses';
 import { colors } from '../../constants/schedule/colors';
 
 import { makeStyles } from '@material-ui/core/styles';
-import './Schedule.scss'
+import './Schedule.scss';
+import i18n from 'i18next';
 
 const Schedule = props => {
-    const { groups, itemGroupId,groupId } = props;
+    const { groups, itemGroupId, groupId } = props;
     const [open, setOpen] = useState(false);
     const [itemData, setItemData] = useState(null);
-    const prevGroupId = usePrevious(groupId)
+    const prevGroupId = usePrevious(groupId);
+
     function usePrevious(value) {
         const ref = useRef();
         useEffect(() => {
@@ -38,19 +40,20 @@ const Schedule = props => {
         });
         return ref.current;
     }
+
     useEffect(() => {
-        if(groupId!==null) {
+        if (groupId !== null) {
             const el = document.getElementById(`group-${groupId}`);
-            el.scrollIntoView({block: "center", inline:"center"});
-            const parent =el.parentNode;
-            parent.classList.add("selected-group");
+            el.scrollIntoView({ block: 'center', inline: 'center' });
+            const parent = el.parentNode;
+            parent.classList.add('selected-group');
         }
-        if(prevGroupId){
+        if (prevGroupId) {
             const prevEl = document.getElementById(`group-${prevGroupId}`);
-            const parent =prevEl.parentNode;
-            parent.classList.remove("selected-group")
+            const parent = prevEl.parentNode;
+            parent.classList.remove('selected-group');
         }
-    }, [groupId])
+    }, [groupId]);
 
     const setNewItemHandle = (item, room, groupId) => {
         getLessonsByGroupService(groupId);
@@ -84,15 +87,15 @@ const Schedule = props => {
 
                 el = document.getElementById(
                     'card-' +
-                        value.itemData.item.lesson.id +
-                        '-group-' +
-                        value.itemData.groupId +
-                        '-in-day-' +
-                        value.itemData.item.dayOfWeek.toLowerCase() +
-                        '-class-' +
-                        value.itemData.item.period.id +
-                        '-week-' +
-                        value.itemData.item.evenOdd.toLowerCase()
+                    value.itemData.item.lesson.id +
+                    '-group-' +
+                    value.itemData.groupId +
+                    '-in-day-' +
+                    value.itemData.item.dayOfWeek.toLowerCase() +
+                    '-class-' +
+                    value.itemData.item.period.id +
+                    '-week-' +
+                    value.itemData.item.evenOdd.toLowerCase()
                 );
             } else {
                 setNewItemHandle(
@@ -102,13 +105,13 @@ const Schedule = props => {
                 );
                 el = document.getElementById(
                     'group-' +
-                        value.itemData.groupId +
-                        '-day-' +
-                        value.itemData.item.dayOfWeek.toLowerCase() +
-                        '-class-' +
-                        value.itemData.item.periodId +
-                        '-week-' +
-                        value.itemData.item.evenOdd.toLowerCase()
+                    value.itemData.groupId +
+                    '-day-' +
+                    value.itemData.item.dayOfWeek.toLowerCase() +
+                    '-class-' +
+                    value.itemData.item.periodId +
+                    '-week-' +
+                    value.itemData.item.evenOdd.toLowerCase()
                 );
             }
             el.scrollIntoView();
@@ -248,12 +251,12 @@ const Schedule = props => {
             }
         });
     });
-    const getBackgroundColourGroup = (index) => {
-     return  index%2?"yellow-group":"green-group";
-    }
+    const getDayColour = (index) => {
+        return index % 2 ? 'violet-day' : 'blue-day';
+    };
 
     return (
-        <section className="cards-container schedule">
+        <section className='cards-container schedule'>
 
             <ScheduleDialog
                 translation={t}
@@ -264,9 +267,10 @@ const Schedule = props => {
                 isLoading={props.isLoading}
                 onClose={handleClose}
             />
-            <aside className="day-classes-aside">
-                <section className="card empty-card group-border">Група</section>
-                {days.map(day => (
+            <aside className='day-classes-aside'>
+                <section className='card empty-card'>Група
+                </section>
+                {days.map((day, index) => (
 
                     <section
                         className={
@@ -277,16 +281,15 @@ const Schedule = props => {
                     >
                         <section
                             id={day}
-                            className={
-                                elClasses.day + ' card schedule-day card'
+                            className={`${elClasses.day} ${getDayColour(index)} schedule-day card`
                             }
                         >
                             {t(`day_of_week_${day}`)}
                         </section>
-                        <section className="class-section">
+                        <section className='class-section'>
                             {classes.map(classScheduler => (
                                 <section
-                                    className="card schedule-class"
+                                    className='card schedule-class'
                                     key={classScheduler.id}
                                 >
                                     {classScheduler.class_name}
@@ -298,15 +301,15 @@ const Schedule = props => {
             </aside>
 
 
-            <section className="groups-section ">
-                {groups.map((group,index) => (
+            <section className='groups-section '>
+                {groups.map((group) => (
                     <section
                         key={'group-' + group.id}
-                        className="group-section"
+                        className='group-section'
                     >
 
                         <div
-                            className={`group-title card ${getBackgroundColourGroup(index)}` }
+                            className={`group-title card`}
                             id={`group-${group.id}`}
                         >
 
@@ -316,7 +319,7 @@ const Schedule = props => {
                         {allLessons.map((lesson, index) => (
                             <div
                                 key={group + '-' + index}
-                                className="board-div"
+                                className='board-div'
                             >
                                 <Board
                                     day={lesson.day.name}
@@ -328,7 +331,7 @@ const Schedule = props => {
                                     className={`board card ${cssClasses.SCHEDULE_BOARD} group-${group.id} schedule-board`}
                                 >
                                     <IoMdMore
-                                        className="more-icon"
+                                        className='more-icon'
                                         title={
                                             `${t(
                                                 `formElements:day_label`
@@ -347,7 +350,7 @@ const Schedule = props => {
                             </div>
                         ))}
                         <div
-                            className="group-title card"
+                            className={`group-title card`}
                             id={`group-${group.id}`}
                         >
                             {group.title}
