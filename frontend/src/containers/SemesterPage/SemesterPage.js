@@ -121,7 +121,7 @@ const SemesterPage = props => {
     const submit = (values) => {
         const groupsForService = selected.length === 0 ? selectedGroups : selected;
         const semester_groups = groupsForService.map(group => {
-            return { id: group.id };
+            return { id: group.id,title:group.label };
         });
         const data = { ...values, semester_groups };
         handleSemesterService(data);
