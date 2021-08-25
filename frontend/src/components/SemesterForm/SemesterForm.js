@@ -301,12 +301,21 @@ let AddSemesterForm = props => {
         props.initialize(semesterItem);
     }, [props.semester.id]);
 
+    const getChosenSet = () => {
+        const beginGroups = semester.groups.map(item => item.id);
+        const resGroup = selectedGroups.map(item => item.id);
+        return resGroup.filter(x => !beginGroups.includes(x));
+    };
+    const isChosenGroup = () => {
+        return getChosenSet().length > 0;
+    };
+
     return (
 
         <Card class='form-card semester-form'>
             <h2 style={{ textAlign: 'center' }}>
-                {props.semester.id ? t('edit_title') : t('create_title')}
-                {t('semestry_label')}
+                {props.semester.id ? t('common:edit') : t('common:create')}
+                {` ${t('common:semester')}`}
             </h2>
             {selectedGroups.length === 0 ?
                 <MultiselectForGroups
@@ -353,7 +362,7 @@ let AddSemesterForm = props => {
                         className='buttons-style '
                         onClick={openDialogForGroup}
                     >
-                        {t('choose_groups_button_label')}
+                        {t('common:choose_groups_button_label')}
                     </Button>
                 </div>
                 <Field
@@ -361,14 +370,14 @@ let AddSemesterForm = props => {
                     name='year'
                     type='number'
                     component={renderTextField}
-                    label={t('year_label') + ':'}
+                    label={t('common:year_label') + ':'}
                     validate={[required, minYearValue]}
                 />
                 <Field
                     className='form-field'
                     name='description'
                     component={renderTextField}
-                    label={t('semester_label') + ':'}
+                    label={t('common:semester_label') + ':'}
                     validate={[required]}
                 />
                 <div className='form-time-block'>
@@ -376,7 +385,7 @@ let AddSemesterForm = props => {
                         className='time-input'
                         name='startDay'
                         component={renderMonthPicker}
-                        label={t('class_from_label') + ':'}
+                        label={t('common:class_from_label') + ':'}
                         validate={[required, lessThanDate]}
                         minDate={startTime}
                         onChange={(event, value) => {
@@ -392,7 +401,7 @@ let AddSemesterForm = props => {
                         className='time-input'
                         name='endDay'
                         component={renderMonthPicker}
-                        label={t('class_to_label') + ':'}
+                        label={t('common:class_to_label') + ':'}
                         validate={[required, greaterThanDate]}
                         minDate={finishTime}
                         disabled={disabledFinishDate}
@@ -414,17 +423,20 @@ let AddSemesterForm = props => {
                         variant='contained'
                         color='primary'
                         className='buttons-style '
-                        disabled={pristine || submitting}
+                        disabled={(selectedGroups.length > 0 ? !isChosenGroup() : selected.length === 0) && (pristine || submitting)}
                         type='submit'
                     >
-                        {t('save_button_label')}
+                        {t('common:save_button_label')}
                     </Button>
                     <Button
                         type='button'
                         variant='contained'
                         className='buttons-style'
-                        disabled={setDisableButton(pristine, submitting, semester.id)}
-                        onClick={onReset}
+                        disabled={setDisableButton(pristine, submitting, semester.id) && selected.length === 0}
+                        onClick={() => {
+                            onReset();
+                            setSelected([]);
+                        }}
                     >
                         {getClearOrCancelTitle(semester.id, t)}
                     </Button>

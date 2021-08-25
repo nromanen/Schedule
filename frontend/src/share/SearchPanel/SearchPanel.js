@@ -47,14 +47,14 @@ const SearchPanel = ({ SearchChange, showDisabled, showArchived }) => {
     };
 
     return (
-        <Card class="search-group">
+        <Card class='search-group'>
             <FormControlLabel
                 control={
                     <Switch
                         checked={state.checkedB}
                         onChange={handleChange}
-                        name="checkedB"
-                        color="primary"
+                        name='checkedB'
+                        color='primary'
                     />
                 }
                 label={
@@ -69,8 +69,8 @@ const SearchPanel = ({ SearchChange, showDisabled, showArchived }) => {
                         <Switch
                             checked={state.checkedArchived}
                             onChange={handleChange}
-                            name="checkedArchived"
-                            color="secondary"
+                            name='checkedArchived'
+                            color='secondary'
                         />
                     }
                     label={
@@ -84,7 +84,7 @@ const SearchPanel = ({ SearchChange, showDisabled, showArchived }) => {
             )}
 
             <TextField
-                className="form-field"
+                className='form-field'
                 label={<FaSearch />}
                 placeholder={t('type_to_search')}
                 value={term}
