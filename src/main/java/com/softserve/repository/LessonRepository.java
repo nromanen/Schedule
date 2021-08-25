@@ -11,4 +11,5 @@ public interface LessonRepository extends BasicRepository <Lesson, Long>  {
     List<Lesson> getLessonsBySemester(Long semesterId);
     void deleteLessonBySemesterId(Long semesterId);
     List<Lesson> getLessonsBySubjectIdTeacherIdSemesterIdLessonTypeAndExcludeCurrentLessonId(Lesson lesson);
+    List<Lesson> getGroupedLessonsByLesson(Lesson lesson);
 }
