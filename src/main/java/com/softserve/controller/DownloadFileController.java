@@ -41,7 +41,7 @@ public class DownloadFileController {
         HttpHeaders headers = new HttpHeaders();
         String fileName = "schedule for "
                 .concat(TeacherMapper.teacherDTOToTeacherForSite(schedule.getTeacher()));
-        headers.add(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=".concat(fileName));
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=".concat(fileName).concat(".pdf"));
 
         return ResponseEntity
                 .ok()
@@ -61,7 +61,7 @@ public class DownloadFileController {
         String fileName = "schedule for "
                 .concat(schedule.getGroup().getTitle())
                 .concat(" group");
-        headers.add(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=".concat(fileName));
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=".concat(fileName).concat(".pdf"));
 
         return ResponseEntity
                 .ok()
