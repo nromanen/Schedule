@@ -145,18 +145,23 @@ public class ScheduleServiceImpl implements ScheduleService {
             newSchedule.setPeriod(schedule.getPeriod());
             newSchedule.setEvenOdd(schedule.getEvenOdd());
             newSchedule.setLesson(lesson);
-            if (isLessonInScheduleByLessonIdPeriodIdEvenOddDayOfWeek(newSchedule.getLesson().getId(), newSchedule.getPeriod().getId(), newSchedule.getEvenOdd(), newSchedule.getDayOfWeek())) {
-                log.error("Lessons with group title [{}] already exists in schedule", newSchedule.getLesson().getGroup().getTitle());
-                throw new EntityAlreadyExistsException("Lessons with this group title already exists");
-            }
-            if (isConflictForGroupInSchedule(newSchedule.getLesson().getSemester().getId(), newSchedule.getDayOfWeek(), newSchedule.getEvenOdd(), newSchedule.getPeriod().getId(), newSchedule.getLesson().getId())) {
-                log.error("Schedule for group with id [{}] has conflict with already existing", newSchedule.getLesson().getGroup().getId());
-                throw new ScheduleConflictException("You can't create schedule item for this group, because one already exists");
-            }
+            checkReferences(newSchedule);
             schedules.add(newSchedule);
         });
         return schedules;
     }
+
+    private void checkReferences(Schedule schedule) {
+        if (isLessonInScheduleByLessonIdPeriodIdEvenOddDayOfWeek(schedule.getLesson().getId(), schedule.getPeriod().getId(), schedule.getEvenOdd(), schedule.getDayOfWeek())) {
+            log.error("Lessons with group title [{}] already exists in schedule", schedule.getLesson().getGroup().getTitle());
+            throw new EntityAlreadyExistsException("Lessons with this group title already exists");
+        }
+        if (isConflictForGroupInSchedule(schedule.getLesson().getSemester().getId(), schedule.getDayOfWeek(), schedule.getEvenOdd(), schedule.getPeriod().getId(), schedule.getLesson().getId())) {
+            log.error("Schedule for group with id [{}] has conflict with already existing", schedule.getLesson().getGroup().getId());
+            throw new ScheduleConflictException("You can't create schedule item for this group, because one already exists");
+        }
+    }
+
 
     /**
      * Method updates information for an existing Schedule in Repository
