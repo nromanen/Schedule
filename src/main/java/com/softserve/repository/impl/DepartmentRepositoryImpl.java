@@ -37,7 +37,7 @@ public class DepartmentRepositoryImpl extends BasicRepositoryImpl<Department, Lo
     }
 
     /**
-     * Method gets information about all departments from DB
+     * The method returns information about all departments from DB
      * @return List of all departments with ASC sorting by name
      */
     @Override
