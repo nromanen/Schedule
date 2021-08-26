@@ -307,6 +307,10 @@ let AddSemesterForm = props => {
         return resGroup.filter(x => !beginGroups.includes(x));
     };
     const isChosenGroup = () => {
+        const semesterCopy = { ...semester };
+        if (semesterCopy.groups.length < 0) {
+            return true;
+        }
         return getChosenSet().length > 0;
     };
 
