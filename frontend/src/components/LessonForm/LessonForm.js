@@ -229,7 +229,6 @@ let LessonForm = props => {
                                         <label htmlFor={'groups'}>{t('copy_groups_label')}</label>
                                     </p>
                                     <Field
-
                                         id='groups'
                                         name='groups'
                                         component={RenderMultiselect}

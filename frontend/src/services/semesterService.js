@@ -46,17 +46,9 @@ export const showAllSemestersService = () => {
     axios
         .get(SEMESTERS_URL)
         .then(response => {
-            const dataGroup = [{
-                id: 30,
-                title: '101-Аh'
-            }, {
-                id: 5,
-                title: '101-B'
-            }];
-            const data = response.data.map(item => ({ ...item, semester_groups: dataGroup }));
             store.dispatch(
                 showAllSemesters(
-                    data
+                    response.data
                         .sort((a, b) => (a.year > b.year ? 1 : -1))
                         .reverse()
                 )
