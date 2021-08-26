@@ -30,58 +30,59 @@ import { handleSnackbarCloseService } from '../../services/snackbarService';
 import { getAllTeachersByDepartmentId } from '../../redux/actions/teachers';
 import { showAllPublicTeachersByDepartmentService } from '../../services/scheduleService';
 import ShowDataDialog from '../../share/modals/modal/showDataDialog';
+
 function DepartmentPage(props) {
     const { t } = useTranslation('formElements');
-    const { departments,disabledDepartments } = props;
-    const [isDisabled,setIsDisabled]=useState(false);
+    const { departments, disabledDepartments } = props;
+    const [isDisabled, setIsDisabled] = useState(false);
     const [term, setTerm] = useState('');
-    const [deleteDialog,setDeleteDialog]=useState(false);
-    const [departmentId,setDepartmentId]=useState("");
+    const [deleteDialog, setDeleteDialog] = useState(false);
+    const [departmentId, setDepartmentId] = useState('');
     const [hideDialog, setHideDialog] = useState(null);
-    const [department,setDepartment]=useState({});
-    const [teacherDialog,setTeacherDialog]=useState(false);
-    const [editDepartment,setEditDepartment]=useState(false);
-    const { isSnackbarOpen, snackbarType, snackbarMessage,teachers } = props;
-    useEffect(()=>clearDepartmentForm(),[])
+    const [department, setDepartment] = useState({});
+    const [teacherDialog, setTeacherDialog] = useState(false);
+    const [editDepartment, setEditDepartment] = useState(false);
+    const { isSnackbarOpen, snackbarType, snackbarMessage, teachers } = props;
+    useEffect(() => clearDepartmentForm(), []);
     const visibleDepartments = isDisabled
         ? search(disabledDepartments, term, ['name'])
         : search(departments, term, ['name']);
     const SearchChange = setTerm;
-    const changeDisable=()=>{
-        setIsDisabled(prev=>!prev);
-    }
+    const changeDisable = () => {
+        setIsDisabled(prev => !prev);
+    };
     const submit = (data) => {
-        data.id===undefined?
-            createDepartmentService(data):
+        data.id === undefined ?
+            createDepartmentService(data) :
             updateDepartmentService(data);
-    }
+    };
     const clearDepartmentForm = () => {
         clearDepartment();
-    }
-    const deleteDepartment=(id)=>{
+    };
+    const deleteDepartment = (id) => {
         setDepartmentId(id);
         setDeleteDialog(true);
-    }
-    const setDisabled=(department)=>{
+    };
+    const setDisabled = (department) => {
 
-        const disabledDepartment={...department,disabled:true};
+        const disabledDepartment = { ...department, disabled: true };
         setDisabledDepartmentService(disabledDepartment);
-    }
-    const setEnabled=(department)=>{
+    };
+    const setEnabled = (department) => {
         setDepartmentId(department.id);
         setDeleteDialog(true);
-        const enabledDepartment={...department,disabled:false};
+        const enabledDepartment = { ...department, disabled: false };
         setEnabledDepartment(enabledDepartment);
-    }
-    const setDepartmentIntoForm=(id)=>{
-        getDepartmentByIdService(id)
-    }
+    };
+    const setDepartmentIntoForm = (id) => {
+        getDepartmentByIdService(id);
+    };
     const closeTeacherDialog = () => {
-      setTeacherDialog(false)
-    }
-    const handleClose=(id)=>{
-        if(id!=='') {
-            if(department.id!==undefined) {
+        setTeacherDialog(false);
+    };
+    const handleClose = (id) => {
+        if (id !== '') {
+            if (department.id !== undefined) {
                 if (hideDialog === disabledCard.SHOW) {
                     const { id, name } = department;
                     const enabledDepartment = { id, name, disable: false };
@@ -93,25 +94,24 @@ function DepartmentPage(props) {
                     setDisabledDepartmentService(enabledDepartment);
                 }
 
-            }
-            else {
+            } else {
                 deleteDepartmentsService(departmentId);
             }
         }
-         setDeleteDialog(false);
-    }
-    useEffect(() => getAllDepartmentsService(), [isDisabled])
-    useEffect(()=> {
+        setDeleteDialog(false);
+    };
+    useEffect(() => getAllDepartmentsService(), [isDisabled]);
+    useEffect(() => {
         if (isDisabled)
             getDisabledDepartmentsService();
-    },[])
+    }, []);
     const handleSnackbarClose = (event, reason) => {
         if (reason === 'clickaway') return;
         handleSnackbarCloseService();
     };
     return (
         <>
-            <NavigationPage name={navigationNames.DEPARTMENTS} val={navigation.DEPARTMENTS}/>
+            <NavigationPage name={navigationNames.DEPARTMENTS} val={navigation.DEPARTMENTS} />
             <ConfirmDialog
                 isHide={hideDialog}
                 cardId={departmentId}
@@ -126,96 +126,95 @@ function DepartmentPage(props) {
                 onClose={closeTeacherDialog}
                 teachers={teachers}
             />
-            <div className="cards-container">
-            <aside className="search-list__panel">
-                <SearchPanel
-                    SearchChange={SearchChange}
-                    showDisabled={changeDisable}
-                />
-                {
-                    isDisabled?'':
-                    <AddDepartment
-                    onSubmit={submit} clear={clearDepartmentForm} editDepartment={editDepartment}
+            <div className='cards-container'>
+                <aside className='search-list__panel'>
+                    <SearchPanel
+                        SearchChange={SearchChange}
+                        showDisabled={changeDisable}
                     />
-                }
-            </aside>
-            <section className="container-flex-wrap wrapper">
-                {visibleDepartments.length === 0 && (
-                    <NotFound name={t('department_y_label')} />
-                )}
-                {visibleDepartments.map(department => (
-                    <Card key={department.id} class="subject-card done-card">
-                        <h2 className="subject-card__name">
-                            {department.name}
-                        </h2>
-                        <div className="cards-btns">
-                            {isDisabled?
-                                <IoMdEye
-                                    className="svg-btn copy-btn"
-                                    title={t('common:set_enabled')}
+                    {
+                        isDisabled ? '' :
+                            <AddDepartment
+                                onSubmit={submit} clear={clearDepartmentForm} editDepartment={editDepartment}
+                            />
+                    }
+                </aside>
+                <section className='container-flex-wrap wrapper'>
+                    {visibleDepartments.length === 0 && (
+                        <NotFound name={t('department_y_label')} />
+                    )}
+                    {visibleDepartments.map(department => (
+                        <Card key={department.id} class='subject-card department-card'>
+                            <h2 className='subject-card__name'>
+                                {department.name}
+                            </h2>
+                            <div className='cards-btns'>
+                                {isDisabled ?
+                                    <IoMdEye
+                                        className='svg-btn copy-btn'
+                                        title={t('common:set_enabled')}
+                                        onClick={() => {
+                                            setHideDialog(disabledCard.SHOW);
+                                            deleteDepartment(department.id);
+                                            setDepartment(department);
+                                        }}
+                                    /> :
+
+                                    (
+                                        <>
+                                            <GiSightDisabled
+                                                className='svg-btn copy-btn'
+                                                title={t('common:set_disabled')}
+                                                onClick={() => {
+                                                    //setDisabled(department)
+                                                    setHideDialog(
+                                                        disabledCard.HIDE
+                                                    );
+                                                    deleteDepartment(department.id);
+                                                    setDepartment(department);
+                                                }}
+                                            />
+
+                                            <FaEdit
+                                                className='svg-btn edit-btn'
+                                                title={t('edit_title')}
+                                                onClick={() => {
+                                                    setEditDepartment(true);
+                                                    setDepartmentIntoForm(department.id);
+                                                }
+                                                }
+                                            />
+                                        </>
+
+                                    )
+                                }
+
+
+                                <MdDelete
+                                    className='svg-btn delete-btn'
+                                    title={t('delete_title')}
                                     onClick={() => {
-                                        setHideDialog(disabledCard.SHOW);
+                                        setDepartment({});
                                         deleteDepartment(department.id);
-                                        setDepartment(department);
                                     }}
-                                />:
+                                />
+                                <FaChalkboardTeacher
+                                    className='svg-btn delete-btn'
+                                    title={t('show_teacher_title')}
+                                    onClick={() => {
+                                        showAllPublicTeachersByDepartmentService(department.id);
+                                        getDepartmentByIdService(department.id);
+                                        setDepartmentIntoForm(department.id);
+                                        setTeacherDialog(true);
+                                    }}
+                                />
 
-                                (
-                                    <>
-                                        <GiSightDisabled
-                                            className="svg-btn copy-btn"
-                                            title={t('common:set_disabled')}
-                                            onClick={() => {
-                                                //setDisabled(department)
-                                                setHideDialog(
-                                                    disabledCard.HIDE
-                                                );
-                                                deleteDepartment(department.id);
-                                                setDepartment(department);
-                                            }}
-                                        />
-
-                                        <FaEdit
-                                            className="svg-btn edit-btn"
-                                            title={t('edit_title')}
-                                            onClick={() => {
-                                                setEditDepartment(true);
-                                                setDepartmentIntoForm(department.id);
-                                            }
-                                            }
-                                        />
-                                    </>
-
-                                )
-                            }
+                            </div>
+                        </Card>
+                    ))}
 
 
-
-                            <MdDelete
-                                className="svg-btn delete-btn"
-                                title={t('delete_title')}
-                                onClick={() => {
-                                    setDepartment({});
-                                    deleteDepartment(department.id);
-                                }}
-                            />
-                            <FaChalkboardTeacher
-                                className="svg-btn delete-btn"
-                                title={t('show_teacher_title')}
-                                onClick={() => {
-                                    showAllPublicTeachersByDepartmentService(department.id);
-                                    getDepartmentByIdService(department.id);
-                                    setDepartmentIntoForm(department.id)
-                                    setTeacherDialog(true);
-                                }}
-                            />
-
-                        </div>
-                    </Card>
-                ))}
-
-
-            </section>
+                </section>
             </div>
             <SnackbarComponent
                 message={snackbarMessage}
@@ -224,7 +223,7 @@ function DepartmentPage(props) {
                 handleSnackbarClose={handleSnackbarClose}
             />
         </>
-    )
+    );
 }
 
 const mapStateToProps = state => ({
@@ -234,7 +233,7 @@ const mapStateToProps = state => ({
     isSnackbarOpen: state.snackbar.isSnackbarOpen,
     snackbarType: state.snackbar.snackbarType,
     snackbarMessage: state.snackbar.message,
-    teachers:state.teachers.teachers
+    teachers: state.teachers.teachers
 
 });
 
