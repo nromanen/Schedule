@@ -56,8 +56,9 @@ let AddSemesterForm = props => {
     } = props;
     const [openGroupDialog, setOpenGroupDialog] = useState(false);
     useEffect(() => {
-        if (semester.semester_groups !== undefined) {
-            setSelectedGroups(getGroupOptions(semester.semester_groups));
+        const {semester_groups}=semester;
+        if (semester_groups !== undefined&&semester_groups!==null) {
+            setSelectedGroups(getGroupOptions(semester_groups));
         }
     }, [semester.id]);
     const getGroupOptions = (groupOptions) => {
