@@ -7,6 +7,7 @@ import com.softserve.entity.User;
 import com.softserve.entity.enums.Role;
 import com.softserve.exception.EntityAlreadyExistsException;
 import com.softserve.exception.EntityNotFoundException;
+import com.softserve.exception.FieldNullException;
 import com.softserve.mapper.TeacherMapper;
 import com.softserve.repository.TeacherRepository;
 import com.softserve.service.MailService;
@@ -177,10 +178,14 @@ public class TeacherServiceImpl implements TeacherService {
      * @param userId Identity user id
      * @return Teacher entity
      * @throws EntityNotFoundException if teacher doesn't exist
+     * @throws FieldNullException if userId is null
      */
     @Override
     public Teacher findByUserId(Long userId) {
         log.info("Enter into getByUserId with userId {}", userId);
+        if(userId == null) {
+            throw new FieldNullException(Teacher.class, "userId");
+        }
         return teacherRepository.findByUserId(userId).orElseThrow(
                 () -> new EntityNotFoundException(Teacher.class, "userId", String.valueOf(userId)));
     }
