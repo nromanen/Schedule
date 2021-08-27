@@ -89,7 +89,7 @@ public class SemesterController {
     @ApiOperation(value = "Create new semester")
     public ResponseEntity<SemesterWithGroupsDTO> save(@RequestBody SemesterWithGroupsDTO semesterDTO) {
         log.info("In save (semesterDTO = [{}])", semesterDTO);
-        Semester semester = semesterService.save(semesterMapper.semesterDTOToSemester(semesterDTO));
+        Semester semester = semesterService.save(semesterMapper.semesterWithGroupsDTOToSemester(semesterDTO));
         return ResponseEntity.status(HttpStatus.CREATED).body(semesterMapper.semesterToSemesterWithGroupsDTO(semester));
     }
 
@@ -98,7 +98,7 @@ public class SemesterController {
     public ResponseEntity<SemesterWithGroupsDTO> update(@RequestBody SemesterWithGroupsDTO semesterDTO) {
         log.info("In update (semesterDTO = [{}])", semesterDTO);
         semesterService.getById(semesterDTO.getId());
-        Semester semester = semesterService.update(semesterMapper.semesterDTOToSemester(semesterDTO));
+        Semester semester = semesterService.update(semesterMapper.semesterWithGroupsDTOToSemester(semesterDTO));
         return ResponseEntity.status(HttpStatus.OK).body(semesterMapper.semesterToSemesterWithGroupsDTO(semester));
     }
 
