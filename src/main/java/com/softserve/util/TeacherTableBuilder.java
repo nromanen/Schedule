@@ -220,16 +220,6 @@ public class TeacherTableBuilder extends BaseTableBuilder {
      * @return inner PdfPCell for table
      */
     private PdfPCell generateCell(List<LessonForTeacherScheduleDTO> lessons, Locale language) {
-        LessonForTeacherScheduleDTO l = new LessonForTeacherScheduleDTO();
-        GroupDTO group = new GroupDTO();
-        group.setTitle("632");
-        l.setGroup(group);
-        l.setSubjectForSite("English");
-        l.setLessonType(LessonType.LECTURE);
-        l.setRoom("1-room");
-        l.setLinkToMeeting("sdasdas");
-        lessons.add(l);
-
         String baseText = getBaseTextFromLessonsInScheduleDTOs(lessons);
         List<String> links = getLinksFromLessonsInScheduleDTOs(lessons);
         Phrase phrase = new Phrase(baseText, cellFont);
