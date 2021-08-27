@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.validation.ConstraintViolationException;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -22,6 +24,7 @@ import java.nio.file.Files;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -70,10 +73,6 @@ public class StudentServiceImpl implements StudentService {
     @Transactional
     @Override
     public Student save(Student object) {
-        return saveToDatabase(object);
-    }
-
-    private Student saveToDatabase(Student object) {
         log.info("Enter into save method with entity:{}", object);
         checkEmailForUniqueness(object.getEmail());
         return studentRepository.save(object);
@@ -122,6 +121,10 @@ public class StudentServiceImpl implements StudentService {
      * <p>
      * The method is not transactional in order to prevent interruptions while reading a file
      *
+     * If the student in the returned list have a non-null value of the group title then he already existed.
+     * If the student in the returned list have a null value of the group title then he saved as a new student.
+     * If the student in the returned list have a null value of the group then he didn't pass a validation.
+     *
      * @param file file with students data
      * @return list of created students
      * @throws IOException if error happens while creating or deleting file
@@ -150,10 +153,18 @@ public class StudentServiceImpl implements StudentService {
 
         for (Student student : students) {
             try {
-                student.getGroup().setId(groupId);
-                savedStudents.add(saveToDatabase(student));
-            } catch (RuntimeException e) {
+                Optional<Student> studentOptional = studentRepository.findByEmail(student.getEmail());
+                if (studentOptional.isPresent()) {
+                    savedStudents.add(studentOptional.get());
+                    log.error("Error occurred while saving student", new FieldAlreadyExistsException(Student.class, "email", student.getEmail()));
+                } else {
+                    student.getGroup().setId(groupId);
+                    savedStudents.add(studentRepository.save(student));
+                }
+            } catch (ConstraintViolationException e) {
                 log.error("Error occurred while saving student with email {}", student.getEmail(), e);
+                student.setGroup(null);
+                savedStudents.add(student);
             }
         }
         Files.delete(csvFile.toPath());

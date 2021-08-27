@@ -5,6 +5,10 @@ import com.softserve.repository.StudentRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.TypedQuery;
+import java.util.List;
+import java.util.Optional;
+
 @Repository
 @Slf4j
 public class StudentRepositoryImpl extends BasicRepositoryImpl<Student, Long> implements StudentRepository {
@@ -17,6 +21,8 @@ public class StudentRepositoryImpl extends BasicRepositoryImpl<Student, Long> im
             = "SELECT (count(*) > 0) "
             + "FROM Student s "
             + "WHERE s.email = :email AND s.id != :id";
+
+    private static final String FIND_BY_EMAIL = "SELECT s FROM Student s JOIN FETCH s.group WHERE s.email = :email";
 
     /**
      * The method used for finding out if Student exists by email
@@ -46,5 +52,18 @@ public class StudentRepositoryImpl extends BasicRepositoryImpl<Student, Long> im
                 .setParameter("email", email)
                 .setParameter("id", id)
                 .getSingleResult();
+    }
+
+    /**
+     * The method used for getting Student by email from database
+     *
+     * @param email String email used to find Student by it
+     * @return Student
+     */
+    @Override
+    public Optional<Student> findByEmail(String email) {
+        log.info("In findByEmail() with email: {}", email);
+        return sessionFactory.getCurrentSession()
+                .createQuery(FIND_BY_EMAIL, Student.class).setParameter("email", email).uniqueResultOptional();
     }
 }
