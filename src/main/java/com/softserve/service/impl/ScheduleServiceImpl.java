@@ -135,7 +135,7 @@ public class ScheduleServiceImpl implements ScheduleService {
      */
     @Override
     public List<Schedule> schedulesForGroupedLessons(Schedule schedule) {
-        log.info("In saveForGroupedLessons(schedule = [{}]", schedule);
+        log.info("In schedulesForGroupedLessons(schedule = [{}]", schedule);
         List<Schedule> schedules = new ArrayList<>();
         List<Lesson> lessons = lessonService.getAllGroupedLessonsByLesson(schedule.getLesson());
         lessons.forEach(lesson -> {
@@ -145,13 +145,23 @@ public class ScheduleServiceImpl implements ScheduleService {
             newSchedule.setPeriod(schedule.getPeriod());
             newSchedule.setEvenOdd(schedule.getEvenOdd());
             newSchedule.setLesson(lesson);
-            checkReferences(newSchedule);
             schedules.add(newSchedule);
         });
         return schedules;
     }
 
-    private void checkReferences(Schedule schedule) {
+    @Override
+    public List<Schedule> getSchedulesForGroupedLessons(Schedule schedule) {
+        log.info("In getSchedulesForGroupedLessons(schedule = [{}]", schedule);
+        List<Schedule> schedules = new ArrayList<>();
+        schedulesForGroupedLessons(schedule).forEach(schedule1 -> {
+            schedules.add(scheduleRepository.getScheduleByObject(schedule1));
+        });
+        return schedules;
+    }
+
+    @Override
+    public void checkReferences(Schedule schedule) {
         if (isLessonInScheduleByLessonIdPeriodIdEvenOddDayOfWeek(schedule.getLesson().getId(), schedule.getPeriod().getId(), schedule.getEvenOdd(), schedule.getDayOfWeek())) {
             log.error("Lessons with group title [{}] already exists in schedule", schedule.getLesson().getGroup().getTitle());
             throw new EntityAlreadyExistsException("Lessons with this group title already exists");
