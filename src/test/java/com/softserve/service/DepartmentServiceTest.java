@@ -14,12 +14,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-
-import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @Category(UnitTestCategory.class)
 @RunWith(MockitoJUnitRunner.class)
@@ -41,7 +41,7 @@ public class DepartmentServiceTest {
 
     @Test
     public void testGetAll() {
-        List<Department> expected = singletonList(department);
+        List<Department> expected = Collections.singletonList(department);
         when(repository.getAll()).thenReturn(expected);
 
         List<Department> actual = service.getAll();
@@ -52,7 +52,7 @@ public class DepartmentServiceTest {
 
     @Test
     public void testGetDisabled() {
-        List<Department> expected = singletonList(department);
+        List<Department> expected = Collections.singletonList(department);
         when(repository.getDisabled()).thenReturn(expected);
 
         List<Department> actual = service.getDisabled();
