@@ -42,6 +42,7 @@
   "teacher_card_position": "Посада викладача",
   "teacher_card_fullName": "П.І.Б",
   "teacher_card_no_cards": "Немає викладацьких карток",
+  "teacher_department": "кафедри",
   "week_label": "Тиждень",
   "send_schedule_for_teacher": "Надіслати розклад для викладачів...",
   "cancel_schedule": "Відмінити",
