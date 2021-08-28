@@ -3,10 +3,12 @@ import { connect } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 
 import TemporaryScheduleForm from '../../components/TemporarySchedule/TemporaryScheduleForm/TemporaryScheduleForm';
-import ScheduleAndTemporaryScheduleList from '../../components/TemporarySchedule/ScheduleAndTemporaryScheduleList/ScheduleAndTemporaryScheduleList';
+import ScheduleAndTemporaryScheduleList
+    from '../../components/TemporarySchedule/ScheduleAndTemporaryScheduleList/ScheduleAndTemporaryScheduleList';
 import TemporaryScheduleTitle from '../../components/TemporarySchedule/TemporaryScheduleTitle/TemporaryScheduleTitle';
 import TemporaryScheduleList from '../../components/TemporarySchedule/TemporaryScheduleList/TemporaryScheduleList';
-import TemporaryScheduleVacationForm from '../../components/TemporarySchedule/TemporaryScheduleVacationForm/TemporaryScheduleVacationForm';
+import TemporaryScheduleVacationForm
+    from '../../components/TemporarySchedule/TemporaryScheduleVacationForm/TemporaryScheduleVacationForm';
 
 import CircularProgress from '@material-ui/core/CircularProgress';
 
@@ -26,6 +28,8 @@ import { getLessonTypesService } from '../../services/lessonService';
 import { showAllGroupsService } from '../../services/groupService';
 
 import './TemporarySchedule.scss';
+import { navigation } from '../../constants/navigation';
+import NavigationPage from '../../components/Navigation/NavigationPage';
 
 const TemporarySchedule = props => {
     const { t } = useTranslation('common');
@@ -85,7 +89,8 @@ const TemporarySchedule = props => {
 
     return (
         <>
-            <Card class="card-title lesson-card">
+            <NavigationPage val={navigation.CHANGES} />'
+            <Card class='card-title lesson-card'>
                 <TemporaryScheduleTitle
                     teacherId={teacherId}
                     teachers={teachers}
@@ -95,7 +100,7 @@ const TemporarySchedule = props => {
                     setToDate={setToDate}
                 />
             </Card>
-            <div className="cards-container">
+            <div className='cards-container'>
                 <aside>
                     {props.temporarySchedule.id ||
                     props.temporarySchedule.scheduleId ? (
@@ -121,7 +126,7 @@ const TemporarySchedule = props => {
                     )}
                 </aside>
                 {isLoading ? (
-                    <section className="centered-container">
+                    <section className='centered-container'>
                         <CircularProgress />
                     </section>
                 ) : (
@@ -139,11 +144,11 @@ const TemporarySchedule = props => {
                             />
                         )}
                         {props.schedulesAndTemporarySchedules.length === 0 &&
-                            props.temporarySchedules.length === 0 && (
-                                <section className="centered-container">
-                                    <h2>{t('empty')}</h2>
-                                </section>
-                            )}
+                        props.temporarySchedules.length === 0 && (
+                            <section className='centered-container'>
+                                <h2>{t('empty')}</h2>
+                            </section>
+                        )}
                     </>
                 )}
             </div>
@@ -153,7 +158,7 @@ const TemporarySchedule = props => {
 
 const mapStateToProps = state => ({
     schedulesAndTemporarySchedules:
-        state.temporarySchedule.schedulesAndTemporarySchedules,
+    state.temporarySchedule.schedulesAndTemporarySchedules,
     temporarySchedules: state.temporarySchedule.temporarySchedules,
     temporarySchedule: state.temporarySchedule.temporarySchedule,
     vacation: state.temporarySchedule.vacation,

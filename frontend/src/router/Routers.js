@@ -32,6 +32,7 @@ import { Register } from '../components/Register/Register';
 import { ResetPassword } from '../components/ResetPassword/ResetPassword';
 import { Login } from '../components/Login/Login';
 import DepartmentPage from '../containers/DepartmentPage/DepartmentPage';
+import TemporarySchedule from '../containers/TemporarySchedule/TemporarySchedule';
 const Routers = props => {
     const userRole = props.userRole;
 
@@ -77,7 +78,7 @@ const Routers = props => {
                 <Route path={links.BusyRooms}  component={BusyRooms} />
                 <Route path={links.SemesterPage}  component={SemesterPage} />
                 <Route path={links.MergeRolePage}  component={MergeRolePage} />
-                <Route path={links.Changes}  component={ChangePasswordForm} />
+                <Route path={links.Changes}  component={TemporarySchedule} />
 
 
                 <Route path={links.ACTIVATION_PAGE}>
