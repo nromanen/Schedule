@@ -11,7 +11,7 @@ import Button from '@material-ui/core/Button';
 import { CircularProgress } from '@material-ui/core';
 
 import '../../share/modals/dialog.scss';
-import './ScheduleDialog.scss'
+import './ScheduleDialog.scss';
 
 const useStyles = makeStyles(() => ({
     roomField: {
@@ -80,23 +80,23 @@ const ScheduleDialog = props => {
         <Dialog
             disableBackdropClick={true}
             onClose={handleClose}
-            aria-labelledby="simple-dialog-title"
+            aria-labelledby='simple-dialog-title'
             open={open}
         >
             {sure ? (
                 <>
                     {isLoading ? (
-                        <div className="circular-progress-dialog">
+                        <div className='circular-progress-dialog'>
                             <CircularProgress />
                         </div>
                     ) : (
                         <>
-                            <DialogTitle id="simple-dialog-title">
+                            <DialogTitle id='simple-dialog-title'>
                                 {translation('common:schedule_dialog_title')}
                             </DialogTitle>
-                            <div className="availability-info">
+                            <div className='availability-info'>
                                 {!availability.classSuitsToTeacher ? (
-                                    <p className="availability-warning">
+                                    <p className='availability-warning'>
                                         {translation(
                                             'common:class_does_not_suit_for_teacher'
                                         )}
@@ -105,7 +105,7 @@ const ScheduleDialog = props => {
                                     ''
                                 )}
                                 {!availability.teacherAvailable ? (
-                                    <p className="availability-warning">
+                                    <p className='availability-warning'>
                                         {translation(
                                             'common:teacher_is_unavailable'
                                         )}{' '}
@@ -116,7 +116,7 @@ const ScheduleDialog = props => {
                             </div>
                             <Autocomplete
                                 {...defaultProps}
-                                id="group"
+                                id='group'
                                 clearOnEscape
                                 openOnFocus
                                 className={classes.roomField}
@@ -129,15 +129,15 @@ const ScheduleDialog = props => {
                                         label={translation(
                                             'formElements:room_label'
                                         )}
-                                        margin="normal"
+                                        margin='normal'
                                     />
                                 )}
                             />
-                            <div className="buttons-container">
+                            <div className='buttons-container'>
                                 <Button
-                                    className="dialog-button"
-                                    variant="contained"
-                                    color="primary"
+                                    className='dialog-button'
+                                    variant='contained'
+                                    color='primary'
                                     onClick={() => chooseClickHandle()}
                                 >
                                     {translation(
@@ -145,8 +145,8 @@ const ScheduleDialog = props => {
                                     )}
                                 </Button>
                                 <Button
-                                    className="dialog-button"
-                                    variant="contained"
+                                    className='dialog-button'
+                                    variant='contained'
                                     onClick={() => onClose()}
                                 >
                                     {translation(
@@ -159,35 +159,35 @@ const ScheduleDialog = props => {
                 </>
             ) : (
                 <>
-                    <DialogTitle id="simple-dialog-title">
-                        <p className="availability-warning">
+                    <DialogTitle id='simple-dialog-title'>
+                        <p className='availability-warning'>
                             {!room.available
                                 ? translation('common:room_is_unavailable') +
-                                  '. '
+                                '. '
                                 : ''}
                         </p>
-                        <p className="availability-warning">
+                        <p className='availability-warning'>
                             {!availability.teacherAvailable
                                 ? translation('common:teacher_is_unavailable') +
-                                  '. '
+                                '. '
                                 : ''}
                         </p>
 
-                        <p className="availability-warning">
+                        <p className='availability-warning'>
                             {!availability.classSuitsToTeacher
                                 ? translation(
-                                      'common:class_does_not_suit_for_teacher'
-                                  ) + '. '
+                                'common:class_does_not_suit_for_teacher'
+                            ) + '. '
                                 : ''}
                         </p>
 
                         {translation('common:are_you_sure')}
                     </DialogTitle>
-                    <div className="buttons-container">
+                    <div className='buttons-container'>
                         <Button
-                            className="dialog-button"
-                            variant="contained"
-                            color="primary"
+                            className='dialog-button'
+                            variant='contained'
+                            color='primary'
                             onClick={() => {
                                 onClose({ itemData, room });
                                 setSure(true);
@@ -196,8 +196,8 @@ const ScheduleDialog = props => {
                             {translation('common:yes_button_title')}
                         </Button>
                         <Button
-                            className="dialog-button"
-                            variant="contained"
+                            className='dialog-button'
+                            variant='contained'
                             onClick={() => setSure(true)}
                         >
                             {translation('common:no_button_title')}
