@@ -12,7 +12,7 @@ import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
 
 import { LESSON_FORM } from '../../constants/reduxForms';
-import './LessonForm.scss'
+import './LessonForm.scss';
 import {
     lessThanZero,
     maxLengthValue,
@@ -20,16 +20,17 @@ import {
 } from '../../validation/validateFields';
 import { useTranslation } from 'react-i18next';
 import { getLessonsByGroupService, setUniqueErrorService } from '../../services/lessonService';
-import {handleTeacherInfo } from '../../helper/renderTeacher';
+import { handleTeacherInfo } from '../../helper/renderTeacher';
 import {
     setValueToSubjectForSiteHandler
 } from '../../helper/reduxFormHelper';
 import { getClearOrCancelTitle, setDisableButton } from '../../helper/disableComponent';
 import { clearGroupService, selectGroupService } from '../../services/groupService';
-import { RenderMultiselect} from '../../share/renderedFields/renderMultiselect';
+import { RenderMultiselect } from '../../share/renderedFields/renderMultiselect';
 import { Accordion, AccordionDetails, AccordionSummary } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Typography from '@material-ui/core/Typography';
+
 const useStyles = makeStyles(() => ({
     notSelected: {
         '&': {
@@ -42,7 +43,7 @@ const useStyles = makeStyles(() => ({
 let LessonForm = props => {
     const { t } = useTranslation('formElements');
 
-    const { handleSubmit, pristine, reset, submitting,groups,group } = props;
+    const { handleSubmit, pristine, reset, submitting, groups, group } = props;
 
     const classes = useStyles();
 
@@ -59,9 +60,9 @@ let LessonForm = props => {
 
     const [checked, setChecked] = React.useState(false);
     const handleChange = event => setChecked(event.target.checked);
-    useEffect(()=>{
-        selectGroupService(groupId)
-    },groupId)
+    useEffect(() => {
+        selectGroupService(groupId);
+    }, groupId);
     useEffect(() => {
         setChecked(false);
         if (lessonId) {
@@ -78,18 +79,18 @@ let LessonForm = props => {
             subject: lesson.subject.id,
             type: lesson.lessonType,
             hours: lesson.hours,
-            linkToMeeting:lesson.linkToMeeting,
+            linkToMeeting: lesson.linkToMeeting,
             subjectForSite: lesson.subjectForSite,
             grouped: lesson.grouped,
-            groups:[group]
+            groups: [group]
         });
         setChecked(lesson.grouped);
     };
 
     return (
-        <Card class="form-card">
+        <Card class='form-card'>
             {groupId ? (
-                <h2 className="form-title under-line">
+                <h2 className='form-title under-line'>
                     {lessonId ? t('edit_title') : t('create_title')}
                     {t('lesson_label')}
                 </h2>
@@ -99,15 +100,15 @@ let LessonForm = props => {
             {groupId ? (
                 <form onSubmit={handleSubmit}>
                     <Field
-                        id="teacher"
-                        name="teacher"
-                        className="form-field"
+                        id='teacher'
+                        name='teacher'
+                        className='form-field'
                         component={renderSelectField}
                         label={t('teacher_label')}
                         {...(!isUniqueError
                             ? { validate: [required] }
                             : { error: isUniqueError })}
-                        onChange={()=>
+                        onChange={() =>
                             setUniqueErrorService(false)
                         }
                     >
@@ -119,9 +120,9 @@ let LessonForm = props => {
                         ))}
                     </Field>
                     <Field
-                        id="subject"
-                        name="subject"
-                        className="form-field"
+                        id='subject'
+                        name='subject'
+                        className='form-field'
                         component={renderSelectField}
                         label={t('subject_label')}
                         {...(!isUniqueError
@@ -143,11 +144,11 @@ let LessonForm = props => {
                             </option>
                         ))}
                     </Field>
-                    <div className="form-fields-container">
+                    <div className='form-fields-container'>
                         <Field
-                            id="type"
-                            name="type"
-                            className="form-field"
+                            id='type'
+                            name='type'
+                            className='form-field'
                             component={renderSelectField}
                             label={t('type_label')}
                             {...(!isUniqueError
@@ -167,106 +168,109 @@ let LessonForm = props => {
                             ))}
                         </Field>
                         <Field
-                            id="hours"
-                            name="hours"
-                            className="form-field"
-                            type="number"
+                            id='hours'
+                            name='hours'
+                            className='form-field'
+                            type='number'
                             component={renderTextField}
                             label={t('hours_label')}
                             validate={[required, lessThanZero]}
                         />
                         <Field
-                            id="grouped"
-                            name="grouped"
-                            className="form-field"
+                            id='grouped'
+                            name='grouped'
+                            className='form-field'
                             label={t('formElements:grouped_label')}
-                            labelPlacement="end"
+                            labelPlacement='end'
                             defaultValue={checked}
                             component={renderCheckboxField}
                             checked={checked}
                             onChange={handleChange}
-                            color="primary"
+                            color='primary'
                         />
 
 
                     </div>
                     <Field
-                        id="linkToMeeting"
-                        name="linkToMeeting"
-                        className="form-field"
-                        rowsMax="1"
-                        margin="normal"
+                        id='linkToMeeting'
+                        name='linkToMeeting'
+                        className='form-field'
+                        rowsMax='1'
+                        margin='normal'
                         component={renderTextField}
                         label={t('link_to_meeting_label')}
                         validate={[required, maxLengthValue]}
-                        type="url"
-                        placeholder={"Input URL"}
+                        type='url'
+                        placeholder={'Input URL'}
                     />
                     <Field
-                        id="subjectForSite"
-                        name="subjectForSite"
-                        className="form-field"
+                        id='subjectForSite'
+                        name='subjectForSite'
+                        className='form-field'
                         multiline
-                        rowsMax="1"
-                        margin="normal"
+                        rowsMax='1'
+                        margin='normal'
                         component={renderTextField}
                         label={t('subject_label') + t('for_site_label')}
                         validate={[required, maxLengthValue]}
                     />
-                    {!lessonId?
+                    {!lessonId ?
                         <Accordion>
-                        <AccordionSummary
-                            expandIcon={<ExpandMoreIcon />}
-                            aria-controls='panel1a-content'
-                            id='panel1a-header'
-                        >
-                            <Typography>{t('copy_for_button_label')}</Typography>
-                        </AccordionSummary>
-                        <AccordionDetails>
-                            <Typography>
-                                <>
-                                    <p className='group-label'>
-                                        <label htmlFor={'groups'}>{t('copy_groups_label')}</label>
-                                    </p>
-                                    <Field
-                                        id='groups'
-                                        name='groups'
-                                        component={RenderMultiselect}
-                                        options={groups}
-                                        displayValue={'title'}
-                                        className='form-control mt-2'
-                                        placeholder={t('groups_label')}
-                                        hidePlaceholder={true}
-                                        selectedValues={[group]}
-                                        alwaysDisplayedItem={group}
-                                    />
-                                </>
-                            </Typography>
-                        </AccordionDetails>
-                    </Accordion>
-                    :null}
-                    <div className="form-buttons-container">
+                            <AccordionSummary
+                                expandIcon={<ExpandMoreIcon />}
+                                aria-controls='panel1a-content'
+                                id='panel1a-header'
+                            >
+                                <Typography>{t('copy_for_button_label')}</Typography>
+                            </AccordionSummary>
+                            <AccordionDetails>
+                                <Typography>
+                                    <>
+                                        <p className='group-label'>
+                                            <label htmlFor={'groups'}>{t('copy_groups_label')}</label>
+                                        </p>
+                                        <Field
+                                            id='groups'
+                                            name='groups'
+                                            component={RenderMultiselect}
+                                            options={groups}
+                                            displayValue={'title'}
+                                            className='form-control mt-2'
+                                            placeholder={t('groups_label')}
+                                            hidePlaceholder={true}
+                                            selectedValues={[group]}
+                                            alwaysDisplayedItem={group}
+                                        />
+                                    </>
+                                </Typography>
+                            </AccordionDetails>
+                        </Accordion>
+                        : null}
+                    <div className='form-buttons-container'>
                         <Button
-                            className="buttons-style"
-                            type="submit"
-                            variant="contained"
-                            color="primary"
+                            className='buttons-style'
+                            type='submit'
+                            variant='contained'
+                            color='primary'
                             disabled={pristine || submitting}
+                            onClick={() => {
+                                setChecked(false);
+                            }}
                         >
                             {t('save_button_label')}
                         </Button>
                         <Button
-                            className="buttons-style"
-                            type="button"
-                            variant="contained"
-                            disabled={setDisableButton(pristine,submitting,lesson.id)}
+                            className='buttons-style'
+                            type='button'
+                            variant='contained'
+                            disabled={setDisableButton(pristine, submitting, lesson.id)}
                             onClick={() => {
                                 reset();
                                 setUniqueErrorService(null);
                                 props.onSetSelectedCard(null);
                             }}
                         >
-                            {getClearOrCancelTitle(lesson.id,t)}
+                            {getClearOrCancelTitle(lesson.id, t)}
                         </Button>
                     </div>
                 </form>
@@ -282,9 +286,9 @@ let LessonForm = props => {
 const mapStateToProps = state => (
     {
         lesson: state.lesson.lesson,
-        groups:state.groups.groups,
-        group:state.groups.group,
-        groupId: state.lesson.groupId,
+        groups: state.groups.groups,
+        group: state.groups.group,
+        groupId: state.lesson.groupId
     });
 
 LessonForm = reduxForm({
