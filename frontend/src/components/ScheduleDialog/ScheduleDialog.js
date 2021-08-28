@@ -11,6 +11,7 @@ import Button from '@material-ui/core/Button';
 import { CircularProgress } from '@material-ui/core';
 
 import '../../share/modals/dialog.scss';
+import './ScheduleDialog.scss'
 
 const useStyles = makeStyles(() => ({
     roomField: {
