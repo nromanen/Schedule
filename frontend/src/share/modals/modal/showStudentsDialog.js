@@ -225,15 +225,6 @@ export const ShowStudentsDialog = props => {
 
                                 :
                                 <span className='table-student-data'>
-                                  {/*  <h6>*/}
-                                    {/*    <Select*/}
-                                    {/*        className={'group-select'}*/}
-                                    {/*        defaultValue={defaultGroup}*/}
-                                    {/*        options={groupsOption}*/}
-                                    {/*        onChange={setCurrentGroupOption}*/}
-                                    {/*        isOptionDisabled={() => setSelectDisabled()}*/}
-                                    {/*    />*/}
-                                    {/*</h6>*/}
                                     <h3 className='title-align'><span>{students.length !== 1 ? `${t('students_label')} ` : `${t('student_label')} `}</span>{`${t('group_students')} `}<span>{`${props.group.title}`}</span></h3>
 
                                     <RenderStudentTable group={props.group} onDeleteStudent={onDeleteStudent}
@@ -269,10 +260,8 @@ export const ShowStudentsDialog = props => {
                         <Button
                             className='student-dialog-button-data'
                             variant='contained'
-                            // onClick={handleSubmitGroupStudents}
                             onClick={getDialog}
                             color='primary'
-                            // disabled={setDisabledMoveToGroupBtn()}
                             disabled={setSelectDisabled()}
                             title={i18n.t('choose_group_title')}
                         >
@@ -307,7 +296,6 @@ export const ShowStudentsDialog = props => {
                                 defaultValue={defaultGroup}
                                 options={groupsOption}
                                 onChange={setCurrentGroupOption}
-                                // isOptionDisabled={() => setSelectDisabled()}
                             />
                         </h6>
                     </>
