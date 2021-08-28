@@ -117,6 +117,8 @@
   "upload_from_file": "Upload from file",
   "submit_title": "Submit",
   "move_to_group_title": "Move to group...",
+  "cancel_title": "Cancel",
+  "choose_group_title": "Choose group...",
   "yes_button_title": "Yes",
   "available": "Available",
   "unavailable": "Unavailable",

@@ -25,6 +25,7 @@ export const ShowStudentsDialog = props => {
     const [checkBoxStudents, setCheckBoxStudents] = useState([]);
     const [checkedAll, setCheckedAll] = useState(false);
     const [openUploadFile, setOpenUploadFile] = useState(false);
+    const [showStudentList, setShowStudentList] = useState(false);
     const setDefaultGroupOption = () => {
         return { value: `${group.id}`, label: `${group.title}`, ...group };
     };
@@ -158,24 +159,38 @@ export const ShowStudentsDialog = props => {
             })
         );
     };
+    const clearSelection = () => {
+        // handleClearCheckedAllBtn();
+        onClose('');
+        setGroupOption({});
+        setShowStudentList(false);
+    };
     const handleSubmitGroupStudents = () => {
         if (isObjectEmpty(groupOption)) {
             getExistingGroupStudent();
-        } else {
-            const { value, label, ...res } = groupOption;
-            const currentStudents = [...checkBoxStudents];
-            const resData = [];
-            const prevGroup = { id: defaultGroup.id };
-            for (let i = 0; i < currentStudents.length; i++) {
-                const resItem = changeStudentItem(res, currentStudents[i]);
-                if (!isObjectEmpty(resItem)) {
-                    resData.push(resItem);
-                }
-            }
-            ;
-            resData.forEach(item => updateStudentService({ ...item, prevGroup }));
+            return;
         }
-        handleClearCheckedAllBtn();
+
+        const { value, label, ...res } = groupOption;
+        const currentStudents = [...checkBoxStudents];
+        const resData = [];
+        const prevGroup = { id: defaultGroup.id };
+        for (let i = 0; i < currentStudents.length; i++) {
+            const resItem = changeStudentItem(res, currentStudents[i]);
+            if (!isObjectEmpty(resItem)) {
+                resData.push(resItem);
+            }
+        }
+        ;
+        resData.forEach(item => updateStudentService({ ...item, prevGroup }));
+
+        clearSelection();
+    };
+    const cancelChoosing = () => {
+        clearSelection();
+    };
+    const getDialog = () => {
+        setShowStudentList(true);
     };
     const handleOpenDialogFile = () => {
         setOpenUploadFile(true);
@@ -184,39 +199,42 @@ export const ShowStudentsDialog = props => {
         setOpenUploadFile(false);
     };
     return (
-        <Dialog
-            disableBackdropClick={true}
-            onClose={handleClose}
-            aria-labelledby='confirm-dialog-title'
-            open={open}
-        >
+        <>
 
-            <DialogTitle id='confirm-dialog-title'>
-                <>
+            <Dialog
+                disableBackdropClick={true}
+                onClose={handleClose}
+                aria-labelledby='confirm-dialog-title'
+                open={open}
+            >
 
+                <DialogTitle id='confirm-dialog-title'>
                     <>
 
-                        {students.length === 0 ?
+                        <>
 
-                            <>
 
-                                <h2 className='title-align'>{`${t('group_label')} - `}<span>{`${props.group.title}`}</span>
-                                </h2>
-                                {t('no_exist_students_in_group')}
-                            </>
+                            {students.length === 0 ?
 
-                            :
-                            <span className='table-student-data'>
-                                    <h6>
-                                      <Select
-                                          className={'group-select'}
-                                          defaultValue={defaultGroup}
-                                          options={groupsOption}
-                                          onChange={setCurrentGroupOption}
-                                          isOptionDisabled={() => setSelectDisabled()}
-                                      />
-                                  </h6>
-                                <h3 className='title-align'><span>{students.length !== 1 ? `${t('students_label')} ` : `${t('student_label')} `}</span>{`${t('group_students')} `}<span>{`${props.group.title}`}</span></h3>
+                                <>
+
+                                    <h2 className='title-align'>{`${t('group_label')} - `}<span>{`${props.group.title}`}</span>
+                                    </h2>
+                                    {t('no_exist_students_in_group')}
+                                </>
+
+                                :
+                                <span className='table-student-data'>
+                                  {/*  <h6>*/}
+                                    {/*    <Select*/}
+                                    {/*        className={'group-select'}*/}
+                                    {/*        defaultValue={defaultGroup}*/}
+                                    {/*        options={groupsOption}*/}
+                                    {/*        onChange={setCurrentGroupOption}*/}
+                                    {/*        isOptionDisabled={() => setSelectDisabled()}*/}
+                                    {/*    />*/}
+                                    {/*</h6>*/}
+                                    <h3 className='title-align'><span>{students.length !== 1 ? `${t('students_label')} ` : `${t('student_label')} `}</span>{`${t('group_students')} `}<span>{`${props.group.title}`}</span></h3>
 
                                     <RenderStudentTable group={props.group} onDeleteStudent={onDeleteStudent}
                                                         students={students} onSubmit={onSubmit}
@@ -232,44 +250,91 @@ export const ShowStudentsDialog = props => {
                                                         handleAllCheckedBtn={handleAllCheckedBtn}
                                     />
                             </span>
-                        }
+                            }
+                        </>
                     </>
-                </>
-            </DialogTitle>
-            <div className='buttons-container'>
-                {<UploadFile group={group} open={openUploadFile} handleCloseDialogFile={handleCloseDialogFile} />}
-                <Button
-                    className={students.length !== 0 ? 'student-dialog-button-data' : 'student-dialog-button-no-data'}
-                    variant='contained'
-                    onClick={handleOpenDialogFile}
-                    color='primary'
-                    title={i18n.t('upload_from_file')}
-                >
-                    {i18n.t('common:upload_from_file_title')}
-                </Button>
-                {students.length !== 0 ?
+                </DialogTitle>
+                <div className='buttons-container'>
+                    {<UploadFile group={group} open={openUploadFile} handleCloseDialogFile={handleCloseDialogFile} />}
                     <Button
-                        className='student-dialog-button-data'
+                        className={students.length !== 0 ? 'student-dialog-button-data' : 'student-dialog-button-no-data'}
                         variant='contained'
-                        onClick={handleSubmitGroupStudents}
+                        onClick={handleOpenDialogFile}
                         color='primary'
-                        disabled={setDisabledMoveToGroupBtn()}
-                        title={i18n.t('move_to_group_title')}
+                        title={i18n.t('upload_from_file')}
                     >
-                        {i18n.t('common:move_to_group_title')}
+                        {i18n.t('common:upload_from_file_title')}
                     </Button>
-                    : null}
-                <Button
-                    className={students.length !== 0 ? 'student-dialog-button-data' : 'student-dialog-button-no-data'}
-                    variant='contained'
-                    onClick={() => onClose('')}
-                    color='primary'
-                    title={i18n.t('close_title')}
-                >
-                    {i18n.t('common:close_title')}
-                </Button>
-            </div>
-        </Dialog>
+                    {students.length !== 0 ?
+                        <Button
+                            className='student-dialog-button-data'
+                            variant='contained'
+                            // onClick={handleSubmitGroupStudents}
+                            onClick={getDialog}
+                            color='primary'
+                            // disabled={setDisabledMoveToGroupBtn()}
+                            disabled={setSelectDisabled()}
+                            title={i18n.t('choose_group_title')}
+                        >
+                            {i18n.t('choose_group_title')}
+                        </Button>
+                        : null}
+                    <Button
+                        className={students.length !== 0 ? 'student-dialog-button-data' : 'student-dialog-button-no-data'}
+                        variant='contained'
+                        onClick={() => onClose('')}
+                        color='primary'
+                        title={i18n.t('close_title')}
+                    >
+                        {i18n.t('common:close_title')}
+                    </Button>
+                </div>
+            </Dialog>
+
+
+            {showStudentList && <Dialog
+                disableBackdropClick={true}
+                onClose={handleClose}
+                aria-labelledby='confirm-dialog-title'
+                open={open}
+            >
+
+                <DialogTitle id='confirm-dialog-title' className={'group-students'}>
+                    <>
+                        <h6>
+                            <Select
+                                className={'group-select'}
+                                defaultValue={defaultGroup}
+                                options={groupsOption}
+                                onChange={setCurrentGroupOption}
+                                // isOptionDisabled={() => setSelectDisabled()}
+                            />
+                        </h6>
+                    </>
+                    <div className='buttons-container'>
+                        <Button
+
+                            variant='contained'
+                            onClick={handleSubmitGroupStudents}
+                            color='primary'
+                            title={i18n.t('move_to_group_title')}
+                        >
+                            {i18n.t('common:move_to_group_title')}
+                        </Button>
+                        <Button
+
+                            variant='contained'
+                            onClick={cancelChoosing}
+                            color='primary'
+                            title={i18n.t('cancel_title')}
+                        >
+                            {i18n.t('cancel_title')}
+                        </Button>
+                    </div>
+                </DialogTitle>
+
+            </Dialog>}
+        </>
     );
 };
 
