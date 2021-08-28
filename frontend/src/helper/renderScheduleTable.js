@@ -381,12 +381,13 @@ export const renderGroupCells = (
                 groups[i].card !== null
 
             ) {
+
                 if (
                     group.card.teacher &&
                     group.card.teacher.surname ===
-                    groups[i].card.surname &&
+                    groups[i].card.teacher.surname &&
                     group.card.teacher.name ===
-                    groups[i].card.name &&
+                    groups[i].card.teacher.name &&
                     group.card.subjectForSite ===
                     groups[i].card.subjectForSite &&
                     group.card.room.id === groups[i].card.room.id
