@@ -23,6 +23,7 @@ import { showAllGroupsService } from '../../services/groupService';
 import { MultiselectForGroups } from '../../helper/MultiselectForGroups';
 import { useForm } from 'react-hook-form';
 import formValueSelector from 'redux-form/lib/formValueSelector';
+import { isObjectEmpty } from '../../helper/ObjectRevision';
 
 let AddSemesterForm = props => {
     const clearCheckboxes = () => {
@@ -303,16 +304,34 @@ let AddSemesterForm = props => {
     }, [props.semester.id]);
 
     const getChosenSet = () => {
-        const beginGroups = semester.groups.map(item => item.id);
+        const beginGroups = semester.semester_groups.map(item => item.id);
         const resGroup = selectedGroups.map(item => item.id);
         return resGroup.filter(x => !beginGroups.includes(x));
     };
+    const getChosenSetRemove = () => {
+        const beginGroups = semester.semester_groups.map(item => item.id);
+        const resGroup = selectedGroups.map(item => item.id);
+        return beginGroups.filter(x => !resGroup.includes(x));
+    };
     const isChosenGroup = () => {
         const semesterCopy = { ...semester };
-        if (semesterCopy.groups.length < 0) {
+        if (semesterCopy.semester_groups.length < 0) {
             return true;
         }
-        return getChosenSet().length > 0;
+        if(getChosenSet().length > 0){
+            return true;
+        }
+        else return getChosenSetRemove().length>0
+    };
+    const getDisabledSaveButton = () => {
+        if(!isObjectEmpty(semester)&&semester.id!==null) {
+            return (selectedGroups.length > 0 ?
+                    !isChosenGroup() :
+                    selected.length === 0) &&
+                (pristine || submitting);
+        }
+        return (pristine||submitting)
+
     };
 
     return (
@@ -428,7 +447,7 @@ let AddSemesterForm = props => {
                         variant='contained'
                         color='primary'
                         className='buttons-style '
-                        disabled={(selectedGroups.length > 0 ? !isChosenGroup() : selected.length === 0) && (pristine || submitting)}
+                        disabled={getDisabledSaveButton()}
                         type='submit'
                     >
                         {t('common:save_button_label')}

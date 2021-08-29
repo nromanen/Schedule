@@ -81,7 +81,7 @@ const cardTeacher = teacher => {
 
 export const updateTeacherService = data => {
     let result={...data.teacher};
-    if(result.department.id===null){
+    if(isObjectEmpty(result.department)||result.department.id===null){
         const {department,...res}=result;
         result={...res};
     }

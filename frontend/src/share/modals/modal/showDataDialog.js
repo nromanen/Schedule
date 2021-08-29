@@ -39,7 +39,7 @@ export const ShowDataDialog = props => {
 
                             :
                             <>
-                                <h3 className="title-align"><span>{teachers.length!==1?`${t('teachers_label')} `:`${t('teacher_label')}`}</span>{`${t('department_teachers')} `}<span>{`${department.name}`}</span></h3>
+                                <h3 className="title-align"><span>{teachers.length!==1?`${t('teachers_label')} `:`${t('teacher_label')} `}</span>{`${t('department_teachers')} `}<span>{`${department.name}`}</span></h3>
                                 <RenderTeacherTable teachers={teachers}/>
                             </>
                         }

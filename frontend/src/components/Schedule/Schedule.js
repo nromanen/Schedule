@@ -288,24 +288,32 @@ const Schedule = props => {
                         </section>
                         <section className='class-section'>
                             {classes.map(classScheduler => (
-                                <section
-                                    className='card schedule-class'
-                                    key={classScheduler.id}
-                                >
-                                    {classScheduler.class_name}
-                                </section>
+                                <>
+                                    <p className={`day-class-week-general ${day}-${classScheduler.id}`}>
+                                    </p>
+                                    <section
+                                        id={`${classScheduler.id}-${day}`}
+                                        className='card schedule-class'
+                                        key={classScheduler.id}
+                                    >
+                                        {classScheduler.class_name}
+                                    </section>
+                                    <p className={`day-class-week-general ${day}-${classScheduler.id}`}>
+                                    </p>
+                                </>
+
                             ))}
                         </section>
                     </section>
                 ))}
             </aside>
 
-
             <section className='groups-section '>
                 {groups.map((group) => (
                     <section
                         key={'group-' + group.id}
                         className='group-section'
+                        id={`${group.id}`}
                     >
 
                         <div
@@ -319,16 +327,19 @@ const Schedule = props => {
                         {allLessons.map((lesson, index) => (
                             <div
                                 key={group + '-' + index}
-                                className='board-div'
+                                className={`board-div`}
                             >
                                 <Board
+                                    group={group.id}
                                     day={lesson.day.name}
+                                    classes={`${lesson.classNumber.id}-${(lesson.day.name).toUpperCase()}`}
+                                    classDay={`${(lesson.day.name).toUpperCase()}-${lesson.classNumber.id}`}
                                     currentSemester={currentSemester}
                                     setModalData={setItemData}
                                     openDialog={handleClickOpen}
                                     itemGroupId={itemGroupId}
                                     id={`group-${group.id}-day-${lesson.day.name}-class-${lesson.classNumber.id}-week-${lesson.week}`}
-                                    className={`board card ${cssClasses.SCHEDULE_BOARD} group-${group.id} schedule-board`}
+                                    className={`board card ${cssClasses.SCHEDULE_BOARD} group-${group.id} schedule-board `}
                                 >
                                     <IoMdMore
                                         className='more-icon'

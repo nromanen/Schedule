@@ -30,6 +30,7 @@ const AddDepartment = props => {
     return (
         <Card class='form-card subject-form'>
             <h2 style={{ textAlign: 'center' }}>
+                {department.id ? t('edit_title') : t('create_title')}
                 {t('department_y_label')}
             </h2>
             <form onSubmit={handleSubmit}>
@@ -37,7 +38,7 @@ const AddDepartment = props => {
                     className='form-field'
                     name='name'
                     component={renderTextField}
-                    label={t('department_add_label')+':'}
+                    label={t('name')+':'}
                     validate={[required, uniqueDepartment, maxLengthValue]}
                 />
                 <div className='form-buttons-container subject-btns'>
