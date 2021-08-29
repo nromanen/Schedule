@@ -36,6 +36,9 @@ import { styled } from '@material-ui/core/styles';
 import { cardType } from '../../constants/cardType';
 
 import './LessonPage.scss';
+import SearchPanel from '../../share/SearchPanel/SearchPanel';
+import AddSubject from '../../components/AddSubjectForm/AddSubjectForm';
+import { search } from '../../helper/search';
 
 const GroupField = styled(TextField)({
     display: 'inline-block',
@@ -49,6 +52,25 @@ const LessonPage = props => {
     const [openCopyLessonDialog, setOpenCopyLessonDialog] = useState(false);
     const [lessonId, setLessonId] = React.useState(-1);
     const [copiedLesson, setCopiedLesson] = React.useState(-1);
+    const [term, setTerm] = useState('');
+    const SearchChange = setTerm;
+    let visibleItems = [];
+    const isIncludeValue = (item, value) => {
+        return item.toLowerCase().includes(value.toLowerCase());
+    };
+    const getSearchTeachers = (lessons, term) => {
+        const termTmp = term.trim();
+        if (termTmp.length === 0) return lessons;
+        return lessons.filter(lesson => {
+            let { teacher, subjectForSite, lessonType, grouped } = lesson;
+            return isIncludeValue(teacher.surname, termTmp) ||
+                isIncludeValue(subjectForSite, termTmp) ||
+                isIncludeValue(lessonType, termTmp) ||
+                isIncludeValue('Grouped', term) && grouped;
+        });
+    };
+    visibleItems = getSearchTeachers(props.lessons, term);
+
 
     const teachers = props.teachers;
 
@@ -62,6 +84,7 @@ const LessonPage = props => {
     const { groups, groupId, currentSemester } = props;
 
     const subjects = props.subjects;
+
 
     useEffect(() => {
         if (groupId) {
@@ -87,6 +110,7 @@ const LessonPage = props => {
         setLoadingService(true);
         getLessonsByGroupService(groupId);
     }, [lessons.length]);
+
 
     const selectLessonCardHandler = lessonCardId => {
         selectLessonCardService(lessonCardId);
@@ -155,9 +179,9 @@ const LessonPage = props => {
 
     let cardsContainer = (
         <>
-            {lessonLength > 0 ? (
+            {visibleItems.length > 0 ? (
                 <LessonsList
-                    lessons={lessons}
+                    lessons={visibleItems}
                     onClickOpen={handleClickOpen}
                     onSelectLesson={selectLessonCardHandler}
                     onCopyLesson={openCopyLessonDialogHandle}
@@ -202,26 +226,39 @@ const LessonPage = props => {
                     onClose={handleClose}
                 />
                 <div className='lesson-page-title'>
-                    <h1 className='lesson-page-h'>
-                        {t('lesson_for_group_title')}
-                    </h1>
-                    <Autocomplete
-                        {...defaultProps}
-                        id='group'
-                        clearOnEscape
-                        openOnFocus
-                        value={groupFinderHandle(groupId)}
-                        onChange={(event, newValue) => {
-                            handleGroupSelect(newValue);
-                        }}
-                        renderInput={params => (
-                            <GroupField
-                                {...params}
-                                label={t('formElements:group_label')}
-                                margin='normal'
+                    <aside className='search-lesson-group'>
+                        {groupId &&
+                        <span className='search-lesson'>
+                                <SearchPanel
+                                    forLessons={true}
+                                    SearchChange={SearchChange}
+                                />
+                            </span>
+                        }
+                        <span className='group-lesson'>
+                            <h1 className='lesson-page-h'>
+                                {t('lesson_for_group_title')}
+                            </h1>
+                            <Autocomplete
+                                {...defaultProps}
+                                id='group'
+                                clearOnEscape
+                                openOnFocus
+                                value={groupFinderHandle(groupId)}
+                                onChange={(event, newValue) => {
+                                    handleGroupSelect(newValue);
+                                }}
+                                renderInput={params => (
+                                    <GroupField
+                                        {...params}
+                                        label={t('formElements:group_label')}
+                                        margin='normal'
+                                    />
+                                )}
                             />
-                        )}
-                    />
+                        </span>
+                    </aside>
+
                 </div>
             </Card>
             <div className='cards-container'>
