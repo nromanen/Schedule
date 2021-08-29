@@ -295,18 +295,11 @@ const TeacherList = props => {
                                         onClick={() => handleClickOpen(teacher.id)}
                                     />
                                 </div>
-
-                                <p className='teacher-subtitle'>
-                                    {t('teacher_card_fullName')}
-                                </p>
                                 <h2 className='teacher-card-name'>
                                     {getTeacherTitle(getTeacherFullName(teacher))}
                                 </h2>
-                                <p className='teacher-subtitle'>
-                                    {t('teacher_card_position')}
-                                </p>
                                 <p className='teacher-card-title'>
-                                    {teacher.position}
+                                    {`${ teacher.position } ${teacher.department!==null? t('teacher_department') + " " + teacher.department.name:""}`}
                                 </p>
 
                             </Card>

@@ -303,7 +303,7 @@ const GroupSchedulePage = props => {
 
        if(semester!==null) {
            handleSubmit({ semester, 'group': group != null ? group : 0, 'teacher': teacher != null ? teacher : 0 });
-        return null
+        return
        }
        else return null;
     }

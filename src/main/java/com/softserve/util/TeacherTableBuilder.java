@@ -6,6 +6,7 @@ import com.itextpdf.text.Phrase;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.softserve.dto.*;
+import com.softserve.entity.enums.LessonType;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
@@ -27,9 +28,7 @@ public class TeacherTableBuilder extends BaseTableBuilder {
      * @throws IOException if the font file could not be read
      * @throws DocumentException if the font is invalid, or when size of table is wrong
      */
-    protected TeacherTableBuilder() throws DocumentException, IOException {
-        super();
-    }
+    protected TeacherTableBuilder() throws DocumentException, IOException {}
 
     /**
      * Method used for creating group schedule table in pdf
@@ -222,11 +221,28 @@ public class TeacherTableBuilder extends BaseTableBuilder {
      */
     private PdfPCell generateCell(List<LessonForTeacherScheduleDTO> lessons, Locale language) {
         String baseText = getBaseTextFromLessonsInScheduleDTOs(lessons);
-        String linkText = getLinkTextFromLessonsInScheduleDTOs(lessons);
+        List<String> links = getLinksFromLessonsInScheduleDTOs(lessons);
         Phrase phrase = new Phrase(baseText, cellFont);
-        Chunk chunk = new Chunk(translator.getTranslation("follow the link", language), linkFont);
-        chunk.setAnchor(linkText);
-        phrase.add(chunk);
+
+        if(!links.isEmpty()) {
+            if(links.size() == 1) {
+                phrase.add(COMA_SEPARATOR + NEW_LINE_SEPARATOR);
+                Chunk chunk = new Chunk(translator.getTranslation("follow the link", language), linkFont);
+                chunk.setAnchor(links.get(0));
+                phrase.add(chunk);
+            }
+            else {
+                for (int i = 0; i < links.size(); i++) {
+                    phrase.add(COMA_SEPARATOR + NEW_LINE_SEPARATOR);
+                    Chunk chunk = new Chunk(
+                            translator.getTranslation("follow the link", language).concat(" (" + (i+1) + ")")
+                            , linkFont);
+                    chunk.setAnchor(links.get(i));
+                    phrase.add(chunk);
+                }
+            }
+        }
+
         return new PdfPCell(phrase);
     }
 
@@ -243,39 +259,39 @@ public class TeacherTableBuilder extends BaseTableBuilder {
         String group = lessons.stream()
                 .map(LessonForTeacherScheduleDTO::getGroup)
                 .map(GroupDTO::getTitle)
+                .distinct()
                 .collect(Collectors.joining(COMA_SEPARATOR));
         String subjectName = lessons.stream()
                 .map(LessonForTeacherScheduleDTO::getSubjectForSite)
+                .distinct()
                 .collect(Collectors.joining(COMA_SEPARATOR));
         String lessonType = lessons.stream()
                 .map(LessonForTeacherScheduleDTO::getLessonType)
                 .map(Object::toString)
+                .distinct()
                 .collect(Collectors.joining(COMA_SEPARATOR));
         String room = lessons.stream()
                 .map(LessonForTeacherScheduleDTO::getRoom)
+                .distinct()
                 .collect(Collectors.joining(COMA_SEPARATOR));
 
         stringBuilder.append(group).append(COMA_SEPARATOR).append(NEW_LINE_SEPARATOR)
                 .append(subjectName).append(COMA_SEPARATOR).append(NEW_LINE_SEPARATOR)
                 .append(lessonType).append(COMA_SEPARATOR).append(NEW_LINE_SEPARATOR)
-                .append(room).append(COMA_SEPARATOR).append(NEW_LINE_SEPARATOR);
+                .append(room);
         return stringBuilder.toString();
     }
 
     /**
-     *  Method used for get link from lessons
+     *  Method used for get list of links from lessons
      *
      * @param lessons the lessons of schedule
-     * @return text of link from lessons
+     * @return list of links from lessons
      */
-    private String getLinkTextFromLessonsInScheduleDTOs(List<LessonForTeacherScheduleDTO> lessons) {
-        StringBuilder stringBuilder = new StringBuilder();
-
-        String link = lessons.stream()
+    private List<String> getLinksFromLessonsInScheduleDTOs(List<LessonForTeacherScheduleDTO> lessons) {
+        return lessons.stream()
                 .map(LessonForTeacherScheduleDTO::getLinkToMeeting)
-                .collect(Collectors.joining(COMA_SEPARATOR));
-
-        stringBuilder.append(link);
-        return stringBuilder.toString();
+                .distinct()
+                .collect(Collectors.toList());
     }
 }

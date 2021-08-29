@@ -1,13 +1,14 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React from 'react';
 
 import { colors } from '../../constants/schedule/colors';
 import { cssClasses } from '../../constants/schedule/cssClasses';
 import { checkAvailabilityScheduleService } from '../../services/scheduleService';
 import { setLoadingService } from '../../services/loadingService';
+import './Board.scss';
 
 const Board = props => {
     const itemGroupId = props.itemGroupId;
-    const {day}=props;
+    const { day, classDay, classes,group } = props;
     const drop = e => {
         e.preventDefault();
         const card_id = e.dataTransfer.getData('card_id');
@@ -92,21 +93,72 @@ const Board = props => {
             target.style.backgroundColor = colors.NOTHING;
         }
     };
-
-const addDay=()=>{
-    if(props.children[1]){
-        if(day!==null&&day!==undefined) {
-            const tmp=document.getElementById(day.toUpperCase());
-            tmp.classList.add("day");
+    const addClassDayBoard = () => {
+        if (classDay !== null && classDay !== undefined) {
+            const dayClassWeek = document.getElementsByClassName(classDay);
+            dayClassWeek[0].classList.add('day-class-week');
+            dayClassWeek[1].classList.add('day-class-week');
         }
-    }
-}
-const removeDay = () => {
-    if(day!==null&&day!==undefined) {
-        const tmp=document.getElementById(day.toUpperCase());
-        tmp.classList.remove("day");
-    }
-}
+    };
+    const addClass = () => {
+        if (classes !== null && classes !== undefined) {
+            const classesTmp = document.getElementById(classes);
+            classesTmp.classList.add('classes');
+        }
+    };
+    const addDay = () => {
+        if (day !== null && day !== undefined) {
+            const tmp = document.getElementById(day.toUpperCase());
+            tmp.classList.add('day');
+        }
+    };
+    const addGroup = () => {
+        if (group !== null && group !== undefined) {
+            const tmp = document.getElementById(group);
+            tmp.classList.add('group');
+        }
+    };
+    const addEffect = () => {
+        if (props.children[1]) {
+            addClassDayBoard();
+            addClass();
+            addDay();
+            addGroup();
+        }
+    };
+    const removeClassDayBoard = () => {
+        if (classDay !== null && classDay !== undefined) {
+            const dayClassWeek = document.getElementsByClassName(classDay);
+            dayClassWeek[0].classList.remove('day-class-week');
+            dayClassWeek[1].classList.remove('day-class-week');
+        }
+    };
+    const removeClass = () => {
+        if (classes !== null && classes !== undefined) {
+            const classesTmp = document.getElementById(classes);
+            classesTmp.classList.remove('classes');
+        }
+    };
+    const removeDay = () => {
+        if (day !== null && day !== undefined) {
+            const tmp = document.getElementById(day.toUpperCase());
+            tmp.classList.remove('day');
+        }
+    };
+    const removeGroup = () => {
+        if (group !== null && group !== undefined) {
+            const tmp = document.getElementById(group);
+            tmp.classList.remove('group');
+        }
+    };
+    const removeEffect = () => {
+        if (props.children[1]) {
+            removeClassDayBoard();
+            removeClass();
+            removeDay();
+            removeGroup();
+        }
+    };
     return (
         <>
 
@@ -117,8 +169,8 @@ const removeDay = () => {
                 onDragOver={dragOver}
                 onDragLeave={dragLeave}
                 className={props.className}
-               onMouseOver={addDay}
-                onMouseLeave={removeDay}
+                onMouseOver={addEffect}
+                onMouseLeave={removeEffect}
             >
                 {props.children}
             </div>

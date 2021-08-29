@@ -60,6 +60,9 @@ let GroupList = props => {
     const SearchChange = setTerm;
     const history = useHistory();
     // useEffect(()=>getAllStudentsByGroupId(groupId),[groupId])
+    useEffect(()=>{
+        getDisabledGroupsService();
+    },[])
     useEffect(() => {
         if (match.path.includes(links.Edit)) {
             selectGroupService(match.params.id);

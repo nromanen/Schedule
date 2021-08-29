@@ -67,7 +67,17 @@ export const MultiSelect = props => {
                 open={open}
         >
             <DialogTitle id="select-dialog-title" className="confirm-dialog">
+                <div className="teacher-semester">
+                    <span>{`${t('schedule_for_semester')}:`}</span>
+                    <Select
+                        defaultValue={defaultSemester}
+                        options={semesters}
+                        onChange={handleChange}
+                    />
+
+
         <ReactSelect
+            classname={"teacher"}
             isOptionSelected={isOptionSelected}
             options={getOptions()}
             value={getValue()}
@@ -77,11 +87,8 @@ export const MultiSelect = props => {
             isMulti
             placeholder={t('choose_teachers')}
         />
-                <Select
-                    defaultValue={defaultSemester}
-                    options={semesters}
-                    onChange={handleChange}
-                />
+                </div>
+
 
             </DialogTitle>
             <div className="buttons-container">
