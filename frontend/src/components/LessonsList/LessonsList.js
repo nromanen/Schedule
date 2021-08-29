@@ -103,7 +103,7 @@ const LessonsList = props => {
                                 onClick={() => props.onClickOpen(lesson.id)}
                             />
                         </div>
-                        <p style={{height:"2em"}}>
+                        <p style={{height:"3em"}}>
                             {getLessonShortTitle(getTitle(lesson))}
 
                         </p>

@@ -103,6 +103,9 @@ const LessonPage = props => {
     const createLessonCardHandler = card => {
         if (Object.keys(card).length === 0 && card.constructor === Object)
             return;
+        if (card.groups === undefined) {
+            card.groups = [{ id: groupId }];
+        }
         handleLessonCardService(card, groupId, currentSemester);
 
     };
