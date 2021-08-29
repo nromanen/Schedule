@@ -4,6 +4,7 @@ import com.opencsv.bean.CsvToBeanBuilder;
 import com.softserve.entity.Student;
 import com.softserve.exception.EntityNotFoundException;
 import com.softserve.exception.FieldAlreadyExistsException;
+import com.softserve.exception.ParseFileException;
 import com.softserve.repository.StudentRepository;
 import com.softserve.service.StudentService;
 import lombok.SneakyThrows;
@@ -109,24 +110,23 @@ public class StudentServiceImpl implements StudentService {
 
     /**
      * The method used for importing students from csv file.
-     * Each line of the file should consist of one or more fields, separated by commas.
+     * Each line of the file should consist of four fields, separated by commas.
      * Each field may or may not be enclosed in double-quotes.
      * First line of the file is a header.
-     * All subsequent lines contain data about students, i.e.:
+     * All subsequent lines contain data about students.
      * <p>
      * "surname","name","patronymic","email"
      * "Romaniuk","Hanna","Stepanivna","romaniuk@gmail.com"
      * "Boichuk","Oleksandr","Ivanovych","boichuk@ukr.net"
      * etc.
      * <p>
-     * The method is not transactional in order to prevent interruptions while reading a file
+     * The method is not transactional in order to prevent interruptions while saving a student
      *
+     * @param file file with students data
+     * @return list of created students.
      * If the student in the returned list have a non-null value of the group title then he already existed.
      * If the student in the returned list have a null value of the group title then he saved as a new student.
      * If the student in the returned list have a null value of the group then he didn't pass a validation.
-     *
-     * @param file file with students data
-     * @return list of created students
      * @throws IOException if error happens while creating or deleting file
      */
     @Override
@@ -139,7 +139,7 @@ public class StudentServiceImpl implements StudentService {
 
         File csvFile = new File(fileName);
         file.transferTo(csvFile);
-        List<Student> students = new ArrayList<>();
+        List<Student> students;
 
         try (Reader reader = new FileReader(csvFile, StandardCharsets.UTF_8)) {
             students = new CsvToBeanBuilder<Student>(reader)
@@ -147,6 +147,8 @@ public class StudentServiceImpl implements StudentService {
                     .build().parse();
         } catch (RuntimeException e) {
             log.error("Error occurred while parsing file {}", file.getOriginalFilename(), e);
+            deleteTemporaryCsvFiles();
+            throw new ParseFileException("Bad file format");
         }
 
         List<Student> savedStudents = new ArrayList<>();
@@ -154,12 +156,12 @@ public class StudentServiceImpl implements StudentService {
         for (Student student : students) {
             try {
                 Optional<Student> studentOptional = studentRepository.findByEmail(student.getEmail());
-                if (studentOptional.isPresent()) {
-                    savedStudents.add(studentOptional.get());
-                    log.error("Error occurred while saving student", new FieldAlreadyExistsException(Student.class, "email", student.getEmail()));
-                } else {
+                if (studentOptional.isEmpty()) {
                     student.getGroup().setId(groupId);
                     savedStudents.add(studentRepository.save(student));
+                } else {
+                    savedStudents.add(studentOptional.get());
+                    log.error("Error occurred while saving student", new FieldAlreadyExistsException(Student.class, "email", student.getEmail()));
                 }
             } catch (ConstraintViolationException e) {
                 log.error("Error occurred while saving student with email {}", student.getEmail(), e);
@@ -167,7 +169,7 @@ public class StudentServiceImpl implements StudentService {
                 savedStudents.add(student);
             }
         }
-        Files.delete(csvFile.toPath());
+        deleteTemporaryCsvFiles();
         return savedStudents;
     }
 
@@ -181,5 +183,21 @@ public class StudentServiceImpl implements StudentService {
         if(studentRepository.isExistsByEmailIgnoringId(email, id)) {
             throw new FieldAlreadyExistsException(Student.class, "email", email);
         }
+    }
+
+    private void deleteTemporaryCsvFiles() {
+        Runnable runnable = () -> {
+            File homeDir = new File(System.getProperty("user.dir"));
+            File[] files = homeDir.listFiles(f -> f.getName().endsWith(".csv"));
+            if (files == null || files.length == 0) {return;}
+            for (File fileToDelete : files) {
+                try {
+                    Files.delete(fileToDelete.toPath());
+                } catch (IOException e) {
+                    log.error("Error occurred while deleting the file {}", fileToDelete.getName(), e);
+                }
+            }
+        };
+        new Thread(runnable).start();
     }
 }
