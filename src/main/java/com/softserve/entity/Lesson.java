@@ -28,7 +28,6 @@ public class Lesson implements Serializable {
     private int hours;
 
     @Column(name = "link_to_meeting")
-    @NotNull
     private String linkToMeeting;
 
     @Column(name = "subject_for_site")

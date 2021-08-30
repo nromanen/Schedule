@@ -29,9 +29,7 @@ public class GroupTableBuilder extends BaseTableBuilder {
      * @throws IOException if the font file could not be read
      * @throws DocumentException if the font is invalid, or when size of table is wrong
      */
-    public GroupTableBuilder() throws DocumentException, IOException {
-        super();
-    }
+    public GroupTableBuilder() throws DocumentException, IOException {}
 
     /**
      * Method used for creating group schedule table in pdf
@@ -205,9 +203,12 @@ public class GroupTableBuilder extends BaseTableBuilder {
         String baseText = getBaseTextFromLessonsInScheduleDTO(lessons);
         String linkText = getLinkTextFromLessonsInScheduleDTO(lessons);
         Phrase phrase = new Phrase(baseText, cellFont);
-        Chunk chunk = new Chunk(translator.getTranslation("follow the link", language), linkFont);
-        chunk.setAnchor(linkText);
-        phrase.add(chunk);
+        if(linkText != null) {
+            phrase.add(COMA_SEPARATOR + NEW_LINE_SEPARATOR);
+            Chunk chunk = new Chunk(translator.getTranslation("follow the link", language), linkFont);
+            chunk.setAnchor(linkText);
+            phrase.add(chunk);
+        }
         return new PdfPCell(phrase);
     }
 
@@ -226,7 +227,7 @@ public class GroupTableBuilder extends BaseTableBuilder {
         stringBuilder.append(subjectName).append(COMA_SEPARATOR).append(NEW_LINE_SEPARATOR)
                 .append(lessonType).append(COMA_SEPARATOR).append(NEW_LINE_SEPARATOR)
                 .append(teacher).append(COMA_SEPARATOR).append(NEW_LINE_SEPARATOR)
-                .append(room).append(COMA_SEPARATOR).append(NEW_LINE_SEPARATOR);
+                .append(room);
         return stringBuilder.toString();
     }
 
@@ -234,11 +235,14 @@ public class GroupTableBuilder extends BaseTableBuilder {
      *  Method used for get link from lessons
      *
      * @param lessons the lessons of schedule
-     * @return text of link from lessons
+     * @return text of link from lessons if link is not null, else null
      */
     private String getLinkTextFromLessonsInScheduleDTO(LessonsInScheduleDTO lessons) {
         StringBuilder stringBuilder = new StringBuilder();
         String link = lessons.getLinkToMeeting();
+        if(link == null) {
+            return null;
+        }
         stringBuilder.append(link);
         return stringBuilder.toString();
     }
