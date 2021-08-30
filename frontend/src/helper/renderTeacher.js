@@ -37,4 +37,7 @@ export const getTeacherShortPosition = (teacher) => {
     return `${parseShortPosition(position)} ${surname} ${getFirstLetter(name)} ${getFirstLetter(patronymic)}\n`;
 
 };
-
+export const getTeacherWithShortPosition = (teacher) => {
+    const { name, surname, patronymic, position } = teacher;
+    return `${parseShortPosition(position)} ${surname} ${name} ${patronymic}`;
+};

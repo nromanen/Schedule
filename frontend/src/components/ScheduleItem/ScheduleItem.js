@@ -3,7 +3,7 @@ import { MdDelete, MdEdit } from 'react-icons/md';
 
 import Card from '../../share/Card/Card';
 import { FaUserPlus } from 'react-icons/fa';
-import { getTeacherFullName } from '../../helper/renderTeacher';
+import { getTeacherFullName, getTeacherName } from '../../helper/renderTeacher';
 
 const ScheduleItem = props => {
     let lesson = props.lesson;
@@ -27,7 +27,7 @@ const ScheduleItem = props => {
         grouped ? (
             <FaUserPlus
                 title={t('formElements:grouped_label')}
-                className="svg-btn copy-btn align-left info-btn"
+                className='svg-btn copy-btn align-left info-btn'
             />
         ) : (
             ''
@@ -36,7 +36,7 @@ const ScheduleItem = props => {
     return (
         <Card id={itemNodeId} class={props.class} draggable={true}>
             <input
-                type="hidden"
+                type='hidden'
                 value={JSON.stringify({
                     lesson: lesson,
                     id: itemId
@@ -44,17 +44,17 @@ const ScheduleItem = props => {
             />
             {props.inBoard ? (
                 <>
-                    <div className="cards-btns delete-item" id={deleteNodeId}>
+                    <div className='cards-btns delete-item' id={deleteNodeId}>
                         <MdDelete
                             title={t('common:delete_schedule_item')}
-                            className="svg-btn delete-btn"
+                            className='svg-btn delete-btn'
                             onClick={() =>
                                 props.deleteItem(itemId, item.lesson.group.id)
                             }
                         />
                         <MdEdit
                             title={t('common:edit_schedule_item')}
-                            className="svg-btn edit-btn"
+                            className='svg-btn edit-btn'
                             onClick={() => props.editItem(item)}
                         />
                     </div>
@@ -70,7 +70,7 @@ const ScheduleItem = props => {
                 )}
                 )
             </p>
-            <p>{getTeacherFullName(lesson.teacher)}</p>
+            <p>{getTeacherName(lesson.teacher)}</p>
             {props.inBoard ? (
                 <p>
                     {isGroupped(lesson.grouped)}
