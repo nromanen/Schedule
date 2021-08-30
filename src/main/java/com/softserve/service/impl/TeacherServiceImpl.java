@@ -128,6 +128,11 @@ public class TeacherServiceImpl implements TeacherService {
     @Override
     public Teacher delete(Teacher object) {
         log.info("Enter into delete method with entity:{}", object);
+        if (object.getUserId() != null) {
+            User user = userService.getById(object.getUserId().longValue());
+            user.setRole(Role.ROLE_USER);
+            userService.update(user);
+        }
         return teacherRepository.delete(object);
     }
 
