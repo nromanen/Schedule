@@ -199,7 +199,7 @@ let LessonForm = props => {
                         margin='normal'
                         component={renderTextField}
                         label={t('link_to_meeting_label')}
-                        validate={[required, maxLengthValue]}
+                        validate={[maxLengthValue]}
                         type='url'
                         placeholder={'Input URL'}
                     />

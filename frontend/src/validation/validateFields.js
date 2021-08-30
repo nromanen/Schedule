@@ -32,7 +32,7 @@ const maxLength = max => value =>
           })
         : undefined;
 
-export const maxLengthValue = maxLength(55);
+export const maxLengthValue = maxLength(200);
 
 export const lessThanTime = (value, previousValue, allValues) => {
     const otherField = 'endTime';
