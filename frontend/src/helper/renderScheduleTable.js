@@ -136,7 +136,7 @@ export const prepareLessonTemporaryCardCell = (card, place, day) => {
                     <p className='temporary-class' title={title}>
                         {inner}
                     </p>
-                    {setLink(card, place)}
+                    {card.linkToMeeting && setLink(card, place)}
                 </>
 
             ) : (
@@ -148,7 +148,7 @@ export const prepareLessonTemporaryCardCell = (card, place, day) => {
                 <>
                     <p title={title}>{prepareLessonCardCell(card, place)}</p>
                     <p>{prepareLessonSubCardCell(card, place)}</p>
-                    {setLink(card, place)}
+                    {card.linkToMeeting && setLink(card, place)}
                 </>
             );
         }
@@ -214,7 +214,7 @@ export const prepareTeacherTemporaryCardCell = (cards, place) => {
         if (!card.temporary_schedule) {
             return <>
                 {prepareTeacherCardRegularCell(card, place)}
-                {setLink(card, place)}
+                {card.linkToMeeting && setLink(card, place)}
             </>;
 
         }
@@ -241,7 +241,7 @@ export const prepareTeacherTemporaryCardCell = (cards, place) => {
         return inner.length > 0 ? (
             <p className='temporary-class' title={title}>
                 {inner}
-                {setLink(card, place)}
+                {card.linkToMeeting && setLink(card, place)}
             </p>
         ) : (
             ''
@@ -283,7 +283,7 @@ export const prepareTeacherTemporaryCardCell = (cards, place) => {
     return inner.length > 0 ? (
         <p className='temporary-class' title={title}>
             {inner}
-            {setLink(card, place)}
+            {card.linkToMeeting && setLink(card, place)}
         </p>
     ) : (
         ''
