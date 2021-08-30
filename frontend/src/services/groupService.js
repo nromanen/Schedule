@@ -17,9 +17,13 @@ import { errorHandler, successHandler } from '../helper/handlerAxios';
 import i18n from '../helper/i18n';
 import { resetFormHandler } from '../helper/formHelper';
 
+export const sortGroup = (a, b) => {
+    return Number(a.title.substr(0, a.title.indexOf(' '))) - Number(b.title.substr(0, b.title.indexOf(' ')));
+};
+
 export const selectGroupService = groupId => {
     store.dispatch(selectGroup(groupId));
-}
+};
 
 export const handleGroupService = values =>
     values.id ? updateGroupService(values) : createGroupService(values);
@@ -33,7 +37,7 @@ export const showAllGroupsService = () => {
     axios
         .get(GROUP_URL)
         .then(response => {
-            store.dispatch(showAllGroups(response.data.sort((a, b) => a - b)));
+            store.dispatch(showAllGroups(response.data.sort((a, b) => sortGroup(a, b))));
         })
         .catch(error => errorHandler(error));
 };
@@ -93,7 +97,7 @@ export const getDisabledGroupsService = () => {
     axios
         .get(DISABLED_GROUPS_URL)
         .then(res => {
-            store.dispatch(setDisabledGroups(res.data));
+            store.dispatch(setDisabledGroups(res.data.sort((a, b) => sortGroup(a, b))));
         })
         .catch(error => {
             errorHandler(error);

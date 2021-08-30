@@ -330,11 +330,10 @@ export const renderGroupTable = (classes, isOdd, semester, place) => {
     if (semester) {
         currentWeekType = isOddFunction(printWeekNumber(semester.startDay));
     }
-
     return (
         <TableContainer>
             <Table aria-label='sticky table'>
-                {renderScheduleGroupHeader(daysUppercase)}
+                {semester && renderScheduleGroupHeader(semester.semester_days)}
                 <TableBody>
                     {classes.map((classDay, classIndex) => {
                         if (classDay) {
@@ -567,8 +566,6 @@ const prepareForRender = classItem => {
 };
 
 export const renderDay = (dayName, dayItem, semesterClassesCount, place) => {
-
-
     return dayItem.map((classItem, classIndex) => {
         const t = prepareForRender(classItem);
         if (classIndex === 0) {
