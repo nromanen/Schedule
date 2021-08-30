@@ -103,7 +103,7 @@ const getHref = (link) => {
                target='_blank'>{i18n.t(`common:link_to_meeting_word`)}</a>);
 };
 
-export const prepareLessonTemporaryCardCell = (card, place) => {
+export const prepareLessonTemporaryCardCell = (card, place, day) => {
     let inner = '';
     if (card !== undefined && card !== null) {
         if (card.temporary_schedule) {
@@ -143,9 +143,10 @@ export const prepareLessonTemporaryCardCell = (card, place) => {
                 ''
             );
         } else {
+            let title = i18next.t(`common:day_of_week_${day}`);
             return (
                 <>
-                    <p>{prepareLessonCardCell(card, place)}</p>
+                    <p title={title}>{prepareLessonCardCell(card, place)}</p>
                     <p>{prepareLessonSubCardCell(card, place)}</p>
                     {setLink(card, place)}
                 </>
@@ -308,7 +309,7 @@ export const renderGroupDayClass = (classDay, isOddWeek, place, semesterDays) =>
                 return (
                     semesterDays.includes(day.day) && <TableCell key={shortid.generate()} className={className}>
 
-                        {prepareLessonTemporaryCardCell(day.card, place)}
+                        {prepareLessonTemporaryCardCell(day.card, place, day.day)}
 
                     </TableCell>
                 );
@@ -355,7 +356,8 @@ export const renderGroupCells = (
     place,
     isOdd = 0,
     currentWeekType = 0,
-    isCurrentDay = 0
+    isCurrentDay = 0,
+    day_name
 ) => {
     return groups.map((group, groupIndex) => {
         let colspan = 1;
@@ -415,7 +417,7 @@ export const renderGroupCells = (
                 rowSpan={rowspan}
                 className={classname}
             >
-                {prepareLessonTemporaryCardCell(group.card, place)}
+                {prepareLessonTemporaryCardCell(group.card, place, day_name)}
             </TableCell>
         );
     });
@@ -477,7 +479,7 @@ export const renderFirstDayFirstClassFirstCardLine = (
                 >
                     1
                 </TableCell>
-                {renderGroupCells(groups.odd, place)}
+                {renderGroupCells(groups.odd, place, 0, 0, 0, day_name)}
             </TableRow>
             <TableRow>
                 <TableCell
@@ -485,7 +487,7 @@ export const renderFirstDayFirstClassFirstCardLine = (
                 >
                     2
                 </TableCell>
-                {renderGroupCells(groups.even, place)}
+                {renderGroupCells(groups.even, place, 0, 0, 0, day_name)}
             </TableRow>
         </React.Fragment>
     );
@@ -521,7 +523,7 @@ export const renderFirstDayOtherClassFirstCardLine = (
                 >
                     1
                 </TableCell>
-                {renderGroupCells(groups.odd, place, 1)}
+                {renderGroupCells(groups.odd, place, 1, 0, 0, day_name)}
             </TableRow>
             <TableRow>
                 <TableCell
@@ -529,7 +531,7 @@ export const renderFirstDayOtherClassFirstCardLine = (
                 >
                     2
                 </TableCell>
-                {renderGroupCells(groups.even, place, 0)}
+                {renderGroupCells(groups.even, place, 0, 0, 0, day_name)}
             </TableRow>
         </React.Fragment>
     );
