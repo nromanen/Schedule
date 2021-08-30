@@ -12,7 +12,7 @@ import {
 import { getClassScheduleListService } from '../../services/classService';
 import {
     getScheduleItemsService,
-    clearSchedule, showAllPublicGroupsService
+    clearSchedule
 } from '../../services/scheduleService';
 import { showListOfRoomsService } from '../../services/roomService';
 
@@ -72,14 +72,14 @@ const SchedulePage = props => {
     return (
         <>
 
-            <section className="cards-container schedule-page">
-                <section className="flexbox card ">
+            <section className='cards-container schedule-page'>
+                <section className='flexbox card '>
                     {props.scheduleLoading ? (
                         <CircularProgress />
                     ) : (
                         <>
                             {!props.currentSemester.id ? (
-                                <h2 className="no-current-semester">
+                                <h2 className='no-current-semester'>
                                     {t('no_current_semester')}
                                 </h2>
                             ) : (
@@ -99,15 +99,15 @@ const SchedulePage = props => {
                         </>
                     )}
                 </section>
-                <aside className="lesson-list card">
+                <aside className='lesson-list card'>
                     {isLoading ? (
                         <CircularProgress />
                     ) : (
                         <>
                             <Button
-                                className="buttons-style"
-                                variant="contained"
-                                color="primary"
+                                className='buttons-style'
+                                variant='contained'
+                                color='primary'
                                 onClick={() => handleClearSchedule()}
                             >
                                 {t('clear_schedule_label')}
@@ -126,7 +126,7 @@ const SchedulePage = props => {
                     )}
                 </aside>
             </section>
-            <section className="for-phones-and-tablets card">
+            <section className='for-phones-and-tablets card'>
                 <h1>{t('use_pc')}</h1>
             </section>
         </>
@@ -143,7 +143,7 @@ const mapStateToProps = state => ({
     itemGroupId: state.schedule.itemGroupId,
     availability: state.schedule.availability,
     currentSemester: state.schedule.currentSemester,
-    semester:state.schedule.semester,
+    semester: state.schedule.semester,
     rooms: state.rooms.rooms
 });
 

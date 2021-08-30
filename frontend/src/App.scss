@@ -212,6 +212,17 @@ body {
   }
 }
 
+.search-lesson-group {
+  display: flex;
+  align-items: center;
+  align-content: center;
+
+  .search-lesson {
+    margin-left: -300px;
+    margin-right: 110px;
+  }
+}
+
 .language-icon {
   max-width: 30px;
   margin-right: 25px;

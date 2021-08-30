@@ -58,6 +58,7 @@ import { resetFormHandler } from '../helper/formHelper';
 import { useHistory } from 'react-router-dom';
 import { getAllTeachersByDepartmentId } from '../redux/actions/teachers';
 import departments from '../redux/reducers/departments';
+import { sortGroup } from './groupService';
 
 export const getCurrentSemesterService = () => {
     axios
@@ -345,7 +346,7 @@ export const showAllPublicGroupsService = (id) => {
         axios
             .get(`/${SEMESTERS_URL}/${id}/${GROUPS_URL}`)
             .then(response => {
-                store.dispatch(showAllGroups(response.data.sort((a, b) => a - b)));
+                store.dispatch(showAllGroups(response.data.sort((a, b) => sortGroup(a, b))));
                 if (response.data.length === 0) {
                     infoHandler(
                         i18n.t('serviceMessages:chosen_semester_has_not_groups', {

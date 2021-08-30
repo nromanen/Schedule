@@ -68,41 +68,41 @@ let LoginForm = props => {
             >
                 {translation('login_title')}
             </Button>
-            <div className="group-btns">
-                <button
-                    type="button"
-                    className="auth-link"
-                    onClick={() => {
-                        props.switchAuthMode(authTypes.REGISTRATION);
-                        props.setError(null);
-                    }}
-                >
-                   <Link  className="navLinks" to={links.Registration}>{translation('no_account')}</Link>
-                </button>
-                <button
-                    type="button"
-                    className="auth-link"
-                    onClick={() => {
-                        props.switchAuthMode(authTypes.RESET_PASSWORD);
-                        props.setError(null);
-                    }}
-                >
-                   <Link  className="navLinks" to={links.RESET_PASSWORD}>{translation('forgot_password')}</Link>
-                </button>
-            </div>
-            {}
-            <Button
-                variant="contained"
-                color="secondary"
-                onClick={() =>
-                    (window.document.location.href =
-                        process.env.REACT_APP_API_BASE_URL.trim() +
-                        GOOGLE_LOGIN_URL)
-                }
-            >
-                <FaGoogle />
-                {t('login_via_google')}
-            </Button>
+            {/*<div className="group-btns">*/}
+            {/*    <button*/}
+            {/*        type="button"*/}
+            {/*        className="auth-link"*/}
+            {/*        onClick={() => {*/}
+            {/*            props.switchAuthMode(authTypes.REGISTRATION);*/}
+            {/*            props.setError(null);*/}
+            {/*        }}*/}
+            {/*    >*/}
+            {/*       <Link  className="navLinks" to={links.Registration}>{translation('no_account')}</Link>*/}
+            {/*    </button>*/}
+            {/*    <button*/}
+            {/*        type="button"*/}
+            {/*        className="auth-link"*/}
+            {/*        onClick={() => {*/}
+            {/*            props.switchAuthMode(authTypes.RESET_PASSWORD);*/}
+            {/*            props.setError(null);*/}
+            {/*        }}*/}
+            {/*    >*/}
+            {/*       <Link  className="navLinks" to={links.RESET_PASSWORD}>{translation('forgot_password')}</Link>*/}
+            {/*    </button>*/}
+            {/*</div>*/}
+
+            {/*<Button*/}
+            {/*    variant="contained"*/}
+            {/*    color="secondary"*/}
+            {/*    onClick={() =>*/}
+            {/*        (window.document.location.href =*/}
+            {/*            process.env.REACT_APP_API_BASE_URL.trim() +*/}
+            {/*            GOOGLE_LOGIN_URL)*/}
+            {/*    }*/}
+            {/*>*/}
+            {/*    <FaGoogle />*/}
+            {/*    {t('login_via_google')}*/}
+            {/*</Button>*/}
         </form>
     );
 

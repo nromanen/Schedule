@@ -8,7 +8,8 @@ import Card from '../../share/Card/Card';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 
-const SearchPanel = ({ SearchChange, showDisabled, showArchived }) => {
+const SearchPanel = ({ SearchChange, showDisabled, showArchived, forLessons }) => {
+
     const { t } = useTranslation('formElements');
     const [term, setTerm] = useState('');
 
@@ -48,7 +49,7 @@ const SearchPanel = ({ SearchChange, showDisabled, showArchived }) => {
 
     return (
         <Card class='search-group'>
-            <FormControlLabel
+            {!forLessons && <FormControlLabel
                 control={
                     <Switch
                         checked={state.checkedB}
@@ -62,8 +63,8 @@ const SearchPanel = ({ SearchChange, showDisabled, showArchived }) => {
                         ? t('common:show_disabled')
                         : t('common:show_enabled')
                 }
-            />
-            {showArchived ? (
+            />}
+            {!forLessons && showArchived ? (
                 <FormControlLabel
                     control={
                         <Switch

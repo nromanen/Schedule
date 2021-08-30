@@ -15,7 +15,12 @@ import { LinkToMeeting } from '../components/LinkToMeeting/LinkToMeeting';
 import { places } from '../constants/places';
 import i18n from 'i18next';
 import './renderScheduleTable.scss';
-import { getTeacherForSite, getTeacherFullName, getTeacherShortPosition } from './renderTeacher';
+import {
+    getTeacherForSite,
+    getTeacherFullName,
+    getTeacherShortPosition,
+    getTeacherWithPosition, getTeacherWithShortPosition
+} from './renderTeacher';
 
 const shortid = require('shortid');
 
@@ -75,7 +80,7 @@ const renderClassCell = classItem => {
 export const prepareLessonCardCell = card => {
     let inner = '';
     if (card !== undefined && card !== null) {
-        inner = getTeacherShortPosition(card.teacher) + '\n' + card.subjectForSite + '\n';
+        inner = getTeacherWithShortPosition(card.teacher) + '\n' + card.subjectForSite + '\n';
     }
     return inner;
 };
@@ -330,11 +335,10 @@ export const renderGroupTable = (classes, isOdd, semester, place) => {
     if (semester) {
         currentWeekType = isOddFunction(printWeekNumber(semester.startDay));
     }
-
     return (
         <TableContainer>
             <Table aria-label='sticky table'>
-                {renderScheduleGroupHeader(daysUppercase)}
+                {semester && renderScheduleGroupHeader(semester.semester_days)}
                 <TableBody>
                     {classes.map((classDay, classIndex) => {
                         if (classDay) {
@@ -567,8 +571,6 @@ const prepareForRender = classItem => {
 };
 
 export const renderDay = (dayName, dayItem, semesterClassesCount, place) => {
-
-
     return dayItem.map((classItem, classIndex) => {
         const t = prepareForRender(classItem);
         if (classIndex === 0) {
