@@ -289,7 +289,7 @@ export const prepareTeacherTemporaryCardCell = (cards, place) => {
     );
 };
 
-export const renderGroupDayClass = (classDay, isOddWeek, place) => {
+export const renderGroupDayClass = (classDay, isOddWeek, place, semesterDays) => {
     let res = [];
     for (let [key, value] of Object.entries(classDay.cards)) {
         value.day = key;
@@ -306,9 +306,8 @@ export const renderGroupDayClass = (classDay, isOddWeek, place) => {
                     className += ' currentDay';
                 }
                 return (
-                    <TableCell key={shortid.generate()} className={className}>
-                        {/* <p>{prepareLessonCardCell(day.card, currentDay)}</p>
-                        <p>{prepareLessonSubCardCell(day.card, currentDay)}</p> */}
+                    semesterDays.includes(day.day) && <TableCell key={shortid.generate()} className={className}>
+
                         {prepareLessonTemporaryCardCell(day.card, place)}
 
                     </TableCell>
@@ -342,7 +341,7 @@ export const renderGroupTable = (classes, isOdd, semester, place) => {
                 <TableBody>
                     {classes.map((classDay, classIndex) => {
                         if (classDay) {
-                            return renderGroupDayClass(classDay, isOdd, place);
+                            return renderGroupDayClass(classDay, isOdd, place, semester.semester_days);
                         }
                     })}
                 </TableBody>
