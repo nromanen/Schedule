@@ -7,7 +7,7 @@ import lombok.*;
 @Setter
 @ToString
 @NoArgsConstructor
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+//@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class LessonsInScheduleDTO {
     private TeacherDTO teacher;
     @EqualsAndHashCode.Exclude
