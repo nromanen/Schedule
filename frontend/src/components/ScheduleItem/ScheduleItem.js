@@ -4,6 +4,7 @@ import { MdDelete, MdEdit } from 'react-icons/md';
 import Card from '../../share/Card/Card';
 import { FaUserPlus } from 'react-icons/fa';
 import { getTeacherFullName, getTeacherName } from '../../helper/renderTeacher';
+import groups from '../../redux/reducers/groups';
 
 const ScheduleItem = props => {
     let lesson = props.lesson;
@@ -23,6 +24,20 @@ const ScheduleItem = props => {
     const itemNodeId = `card-${lesson.id}-group-${lesson.group.id}-${addition}`;
     const deleteNodeId = `delete-${lesson.id}-${lesson.group.id}-${addition}`;
 
+    const getTitleLesson = () => {
+
+        if (lesson.grouped) {
+            console.log(lesson)
+            //const groupsFilter = props.lessons.filter(les => les.grouped===true&&les.subjectForSite === lesson.subjectForSite);
+            // const groups = groupsFilter.map(item => item.subjectForSite === lesson.subjectForSite &&
+            //     item.lessonType === lesson.lessonType &&
+            //     lesson.teacher.id === item.teacher.id);
+            // console.log(groups)
+        }
+        return null
+
+    };
+
     const isGroupped = grouped =>
         grouped ? (
             <FaUserPlus
@@ -35,6 +50,7 @@ const ScheduleItem = props => {
 
     return (
         <Card id={itemNodeId} class={props.class} draggable={true}>
+            {getTitleLesson()}
             <input
                 type='hidden'
                 value={JSON.stringify({
