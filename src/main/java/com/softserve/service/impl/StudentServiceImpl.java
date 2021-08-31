@@ -7,6 +7,7 @@ import com.softserve.exception.FieldAlreadyExistsException;
 import com.softserve.exception.ParseFileException;
 import com.softserve.repository.StudentRepository;
 import com.softserve.service.StudentService;
+import com.softserve.util.AsyncTasks;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -147,7 +147,7 @@ public class StudentServiceImpl implements StudentService {
                     .build().parse();
         } catch (RuntimeException e) {
             log.error("Error occurred while parsing file {}", file.getOriginalFilename(), e);
-            deleteTemporaryCsvFiles();
+            AsyncTasks.deleteCsvFilesWithPrefix("students");
             throw new ParseFileException("Bad file format");
         }
 
@@ -169,7 +169,7 @@ public class StudentServiceImpl implements StudentService {
                 savedStudents.add(student);
             }
         }
-        deleteTemporaryCsvFiles();
+        AsyncTasks.deleteCsvFilesWithPrefix("students");
         return savedStudents;
     }
 
@@ -185,19 +185,4 @@ public class StudentServiceImpl implements StudentService {
         }
     }
 
-    private void deleteTemporaryCsvFiles() {
-        Runnable runnable = () -> {
-            File homeDir = new File(System.getProperty("user.dir"));
-            File[] files = homeDir.listFiles(f -> f.getName().endsWith(".csv"));
-            if (files == null || files.length == 0) {return;}
-            for (File fileToDelete : files) {
-                try {
-                    Files.delete(fileToDelete.toPath());
-                } catch (IOException e) {
-                    log.error("Error occurred while deleting the file {}", fileToDelete.getName(), e);
-                }
-            }
-        };
-        new Thread(runnable).start();
-    }
 }
