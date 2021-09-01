@@ -67,6 +67,18 @@ public class GroupServiceImpl  implements GroupService {
     }
 
     /**
+     * The method used for getting groups by teacher id for default semester
+     * @param id Long id of a teacher
+     * @return List of groups
+     */
+    @Transactional(readOnly = true)
+    @Override
+    public List<Group> getByTeacherId(Long id) {
+        log.info("In getByTeacherId(id = [{}])", id);
+        return groupRepository.getByTeacherId(id);
+    }
+
+    /**
      * Method saves new group to Repository
      *
      * @param object Group entity with info to be saved

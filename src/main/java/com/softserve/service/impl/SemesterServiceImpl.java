@@ -214,7 +214,7 @@ public class SemesterServiceImpl implements SemesterService {
 
     /**
      * The method is used for checking if days with lessons are not removed from the updated semester
-     *
+     * @param semester that is checked before updating
      * @return true if one or more days with lessons have been removed from the updated semester;
      * false if days with lessons have not been removed.
      */
@@ -226,7 +226,7 @@ public class SemesterServiceImpl implements SemesterService {
 
     /**
      * The method is used for checking if periods with lessons are not removed from the updated semester
-     *
+     * @param semester that is checked before updating
      * @return true if one or more periods with lessons have been removed from the updated semester;
      * false if periods with lessons have not been removed.
      */

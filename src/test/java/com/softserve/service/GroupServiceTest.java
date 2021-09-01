@@ -62,6 +62,17 @@ public class GroupServiceTest {
     }
 
     @Test
+    public void getByTeacherId() {
+        List<Group> expected = singletonList(group);
+        when(groupRepository.getByTeacherId(1L)).thenReturn(expected);
+
+        List<Group> actual = groupService.getByTeacherId(1L);
+
+        assertThat(actual).hasSameSizeAs(expected).isEqualTo(expected);
+        verify(groupRepository).getByTeacherId(1L);
+    }
+
+    @Test
     public void getDisabled() {
         List<Group> expected = singletonList(group);
         when(groupRepository.getDisabled()).thenReturn(expected);
