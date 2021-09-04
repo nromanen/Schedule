@@ -1,9 +1,11 @@
 package com.softserve.controller;
 
 import com.softserve.dto.SubjectDTO;
+import com.softserve.dto.SubjectWithTypesDTO;
 import com.softserve.entity.Subject;
 import com.softserve.service.SubjectService;
 import com.softserve.mapper.SubjectMapper;
+import com.softserve.service.TeacherService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -22,11 +24,13 @@ public class SubjectController {
 
     private final SubjectService subjectService;
     private final SubjectMapper subjectMapper;
+    private final TeacherService teacherService;
 
     @Autowired
-    public SubjectController(SubjectService subjectService, SubjectMapper subjectMapper) {
+    public SubjectController(SubjectService subjectService, SubjectMapper subjectMapper, TeacherService teacherService) {
         this.subjectService = subjectService;
         this.subjectMapper = subjectMapper;
+        this.teacherService = teacherService;
     }
 
     @GetMapping
@@ -76,5 +80,14 @@ public class SubjectController {
         log.info("In list getDisabled");
         List<Subject> subjects = subjectService.getDisabled();
         return ResponseEntity.status(HttpStatus.OK).body(subjectMapper.subjectsToSubjectDTOs(subjects));
+    }
+
+    @GetMapping("/semester/{semesterId}/teacher/{teacherId}")
+    @ApiOperation(value = "Get the list of subjects by teacher id and semester id")
+    public ResponseEntity<List<SubjectWithTypesDTO>> getForTeacherBySemesterId(@PathVariable("semesterId") Long semesterId,
+                                                                               @PathVariable("teacherId") Long teacherId) {
+        log.info("Enter into getSubjects method with semester id: {} and teacher id: {}", semesterId, teacherId);
+        return ResponseEntity.ok().body(subjectMapper
+                .subjectsToSubjectWithTypeDTOs(subjectService.getForTeacherBySemesterId(semesterId, teacherId)));
     }
 }
