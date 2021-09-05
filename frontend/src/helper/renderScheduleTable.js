@@ -296,6 +296,7 @@ export const renderGroupDayClass = (classDay, isOddWeek, place, semesterDays) =>
         value.day = key;
         res.push(value);
     }
+
     return (
         <TableRow key={shortid.generate()}>
             <TableCell className=' lesson groupLabelCell'>
@@ -303,14 +304,13 @@ export const renderGroupDayClass = (classDay, isOddWeek, place, semesterDays) =>
             </TableCell>
             {res.map(day => {
                 let className = 'lesson ';
-                if (currentDay === day.day && currentWeekType === isOddWeek) {
+                //if (currentDay === day.day && currentWeekType === isOddWeek) {
+                if (currentDay === day.day && isOddWeek) {
                     className += ' currentDay';
                 }
                 return (
                     semesterDays.includes(day.day) && <TableCell key={shortid.generate()} className={className}>
-
                         {prepareLessonTemporaryCardCell(day.card, place, day.day)}
-
                     </TableCell>
                 );
             })}
