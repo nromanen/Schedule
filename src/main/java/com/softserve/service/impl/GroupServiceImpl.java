@@ -74,7 +74,7 @@ public class GroupServiceImpl  implements GroupService {
     @Transactional(readOnly = true)
     @Override
     public List<Group> getByTeacherId(Long id) {
-        log.info("In getByTeacherId(id = [{}])", id);
+        log.info("In service getByTeacherId(id = [{}])", id);
         return groupRepository.getByTeacherId(id);
     }
 

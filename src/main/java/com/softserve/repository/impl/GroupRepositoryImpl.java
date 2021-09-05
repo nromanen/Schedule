@@ -72,7 +72,7 @@ public class GroupRepositoryImpl extends BasicRepositoryImpl<Group, Long> implem
      */
     @Override
     public List<Group> getByTeacherId(Long id) {
-        log.info("In getByTeacherId(id = [{}])", id);
+        log.info("In repository getByTeacherId(id = [{}])", id);
         return getSession()
                 .createQuery(GET_BY_TEACHER_ID, Group.class)
                 .setParameter("id", id)
