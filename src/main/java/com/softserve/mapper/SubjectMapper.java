@@ -31,7 +31,7 @@ public abstract class SubjectMapper {
                         .getTypes().add(subject.getLessonType());
 
             } else {
-                Set<LessonType> lessonTypes = new HashSet<>();
+                Set<LessonType> lessonTypes = new TreeSet<>();
                 lessonTypes.add(subject.getLessonType());
                 subjectWithType.setTypes(lessonTypes);
                 subjectsWithType.add(subjectWithType);

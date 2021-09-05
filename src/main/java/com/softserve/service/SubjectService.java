@@ -9,6 +9,6 @@ public interface SubjectService extends BasicService<Subject, Long> {
     boolean isSubjectExistsWithNameAndIgnoreWithId(Long id, String name);
     boolean isExistsWithId(Long id);
     List<Subject> getDisabled();
-    List<SubjectWithTypePOJO> getForTeacherBySemesterId(Long semesterId, Long teacherId);
+    List<SubjectWithTypePOJO> getSubjectsWithTypes(Long semesterId, Long teacherId);
 
 }

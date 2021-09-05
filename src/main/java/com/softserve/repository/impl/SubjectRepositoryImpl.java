@@ -98,7 +98,7 @@ public class SubjectRepositoryImpl extends BasicRepositoryImpl<Subject, Long> im
      * @return List of subjects with their types
      */
     @Override
-    public List<SubjectWithTypePOJO> getForTeacherBySemesterId(Long semesterId, Long teacherId) {
+    public List<SubjectWithTypePOJO> getSubjectsWithTypes(Long semesterId, Long teacherId) {
         log.info("In repository getSubjects(semesterId = [{}], teacherId = [{}])", semesterId, teacherId);
         return sessionFactory.getCurrentSession().createQuery(GET_SUBJECTS, SubjectWithTypePOJO.class)
                 .setParameter("teacherId", teacherId)

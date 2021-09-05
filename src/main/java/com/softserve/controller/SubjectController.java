@@ -84,10 +84,10 @@ public class SubjectController {
 
     @GetMapping("/semester/{semesterId}/teacher/{teacherId}")
     @ApiOperation(value = "Get the list of subjects by teacher id and semester id")
-    public ResponseEntity<List<SubjectWithTypesDTO>> getForTeacherBySemesterId(@PathVariable("semesterId") Long semesterId,
-                                                                               @PathVariable("teacherId") Long teacherId) {
+    public ResponseEntity<List<SubjectWithTypesDTO>> getSubjectsWithTypes(@PathVariable("semesterId") Long semesterId,
+                                                                          @PathVariable("teacherId") Long teacherId) {
         log.info("Enter into getSubjects method with semester id: {} and teacher id: {}", semesterId, teacherId);
         return ResponseEntity.ok().body(subjectMapper
-                .subjectsToSubjectWithTypeDTOs(subjectService.getForTeacherBySemesterId(semesterId, teacherId)));
+                .subjectsToSubjectWithTypeDTOs(subjectService.getSubjectsWithTypes(semesterId, teacherId)));
     }
 }

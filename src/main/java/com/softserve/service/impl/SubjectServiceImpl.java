@@ -146,8 +146,8 @@ public class SubjectServiceImpl implements SubjectService {
      * @return List of subjects with their types
      */
     @Override
-    public List<SubjectWithTypePOJO> getForTeacherBySemesterId(Long semesterId, Long teacherId) {
+    public List<SubjectWithTypePOJO> getSubjectsWithTypes(Long semesterId, Long teacherId) {
         log.info("In service getSubjects(semesterId = [{}], teacherId = [{}])", semesterId, teacherId);
-        return subjectRepository.getForTeacherBySemesterId(semesterId, teacherId);
+        return subjectRepository.getSubjectsWithTypes(semesterId, teacherId);
     }
 }

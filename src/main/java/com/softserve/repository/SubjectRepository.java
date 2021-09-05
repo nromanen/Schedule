@@ -9,6 +9,6 @@ public interface SubjectRepository extends BasicRepository<Subject, Long> {
     Long countSubjectsWithNameAndIgnoreWithId(Long id, String name);
     Long countBySubjectId(Long id);
     List<Subject> getDisabled();
-    List<SubjectWithTypePOJO> getForTeacherBySemesterId(Long semesterId, Long teacherId);
+    List<SubjectWithTypePOJO> getSubjectsWithTypes(Long semesterId, Long teacherId);
 
 }
