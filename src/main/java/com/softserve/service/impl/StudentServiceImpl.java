@@ -1,13 +1,12 @@
 package com.softserve.service.impl;
 
-import com.opencsv.bean.CsvToBeanBuilder;
 import com.softserve.entity.Student;
 import com.softserve.exception.EntityNotFoundException;
 import com.softserve.exception.FieldAlreadyExistsException;
-import com.softserve.exception.ParseFileException;
 import com.softserve.repository.StudentRepository;
 import com.softserve.service.StudentService;
 import com.softserve.util.AsyncTasks;
+import com.softserve.util.CsvFileParser;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,10 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.ConstraintViolationException;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.Reader;
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -139,17 +135,8 @@ public class StudentServiceImpl implements StudentService {
 
         File csvFile = new File(fileName);
         file.transferTo(csvFile);
-        List<Student> students;
 
-        try (Reader reader = new FileReader(csvFile, StandardCharsets.UTF_8)) {
-            students = new CsvToBeanBuilder<Student>(reader)
-                    .withType(Student.class)
-                    .build().parse();
-        } catch (RuntimeException e) {
-            log.error("Error occurred while parsing file {}", file.getOriginalFilename(), e);
-            AsyncTasks.deleteCsvFilesWithPrefix("students");
-            throw new ParseFileException("Bad file format");
-        }
+        List<Student> students = CsvFileParser.parse(csvFile);
 
         List<Student> savedStudents = new ArrayList<>();
 
@@ -169,7 +156,7 @@ public class StudentServiceImpl implements StudentService {
                 savedStudents.add(student);
             }
         }
-        AsyncTasks.deleteCsvFilesWithPrefix("students");
+        AsyncTasks.deleteFilesWithType("students_group", ".csv");
         return savedStudents;
     }
 

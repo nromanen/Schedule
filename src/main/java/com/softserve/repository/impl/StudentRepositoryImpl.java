@@ -56,9 +56,8 @@ public class StudentRepositoryImpl extends BasicRepositoryImpl<Student, Long> im
 
     /**
      * The method used for getting Student by email from database
-     *
      * @param email String email used to find Student by it
-     * @return Student
+     * @return optional student or empty object if student with provided email doesn't exist
      */
     @Override
     public Optional<Student> findByEmail(String email) {
