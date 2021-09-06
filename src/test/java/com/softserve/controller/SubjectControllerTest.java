@@ -164,7 +164,7 @@ public class SubjectControllerTest {
 
     @Test
     @Sql(value = "classpath:create-lessons-before.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    public void getGroupWithStudentsById() throws Exception {
+    public void getSubjectsWithTypes() throws Exception {
         mockMvc.perform(get("/subjects/semester/7/teacher/5").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"))
