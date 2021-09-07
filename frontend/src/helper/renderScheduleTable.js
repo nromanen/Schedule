@@ -18,8 +18,7 @@ import './renderScheduleTable.scss';
 import {
     getTeacherForSite,
     getTeacherFullName,
-    getTeacherShortPosition,
-    getTeacherWithPosition, getTeacherWithShortPosition
+     getTeacherWithShortPosition
 } from './renderTeacher';
 
 const shortid = require('shortid');
@@ -296,7 +295,6 @@ export const renderGroupDayClass = (classDay, isOddWeek, place, semesterDays) =>
         value.day = key;
         res.push(value);
     }
-
     return (
         <TableRow key={shortid.generate()}>
             <TableCell className=' lesson groupLabelCell'>
@@ -304,13 +302,17 @@ export const renderGroupDayClass = (classDay, isOddWeek, place, semesterDays) =>
             </TableCell>
             {res.map(day => {
                 let className = 'lesson ';
-                //if (currentDay === day.day && currentWeekType === isOddWeek) {
-                if (currentDay === day.day && isOddWeek) {
-                    className += ' currentDay';
+                // if (currentDay === day.day && currentWeekType === isOddWeek) {
+                if (currentDay === day.day) {
+                    if((currentWeekType===1&&isOddWeek===0)||(currentWeekType===0&&isOddWeek===1)) {
+                        className += ' currentDay';
+                    }
                 }
                 return (
                     semesterDays.includes(day.day) && <TableCell key={shortid.generate()} className={className}>
+
                         {prepareLessonTemporaryCardCell(day.card, place, day.day)}
+
                     </TableCell>
                 );
             })}
