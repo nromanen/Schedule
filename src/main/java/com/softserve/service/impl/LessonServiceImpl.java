@@ -281,4 +281,14 @@ public class LessonServiceImpl implements LessonService {
     public List<Lesson> getAllGroupedLessonsByLesson(Lesson lesson) {
         return lessonRepository.getGroupedLessonsByLesson(lesson);
     }
+
+    /**
+     * The method used for updating links to meeting for lessons
+     * @param lesson Lesson object with new link to meeting
+     */
+    @Override
+    public void updateLinkToMeeting(Lesson lesson) {
+        log.info("In service updateLinkToMeeting lesson = [{}]", lesson);
+        lessonRepository.updateLinkToMeeting(lesson);
+    }
 }

@@ -19,7 +19,6 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
             "and l.hours= :hours and l.teacher.id= :teacherId " +
             "and l.semester.id= :semesterId and l.lessonType= :lessonType";
 
-
     /**
      * Method gets information about all lessons from DB
      *
@@ -224,5 +223,33 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
                 .setParameter("lessonId", lesson.getId())
                 .getSingleResult();
         return count != 0;
+    }
+
+    /**
+     * The method used for updating links to meeting for lessons
+     * @param lesson Lesson object with new link to meeting
+     */
+    @Override
+    public void updateLinkToMeeting(Lesson lesson) {
+        log.info("In repository updateLinkToMeeting lesson = [{}]", lesson);
+        CriteriaBuilder cb = sessionFactory.getCurrentSession().getCriteriaBuilder();
+        CriteriaUpdate<Lesson> criteriaUpdate = cb.createCriteriaUpdate(Lesson.class);
+
+        Root<Lesson> root = criteriaUpdate.from(Lesson.class);
+
+        criteriaUpdate.set("linkToMeeting", lesson.getLinkToMeeting());
+
+        criteriaUpdate.where(cb.equal(root.get("semester").get("id"), lesson.getSemester().getId()),
+                cb.equal(root.get("teacher").get("id"), lesson.getTeacher().getId()));
+
+        if (lesson.getSubject() != null) {
+            criteriaUpdate.where(cb.equal(root.get("subject").get("id"), lesson.getSubject().getId()));
+        }
+
+        if (lesson.getLessonType() != null) {
+            criteriaUpdate.where(cb.equal(root.get("lessonType"), lesson.getLessonType()));
+        }
+
+        sessionFactory.getCurrentSession().createQuery(criteriaUpdate).executeUpdate();
     }
 }
