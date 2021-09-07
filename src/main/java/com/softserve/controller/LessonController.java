@@ -1,10 +1,7 @@
 package com.softserve.controller;
 
 
-import com.softserve.dto.GroupWithLessonIdDTO;
-import com.softserve.dto.LessonDTO;
-import com.softserve.dto.LessonForGroupsDTO;
-import com.softserve.dto.LessonInfoDTO;
+import com.softserve.dto.*;
 import com.softserve.entity.Lesson;
 import com.softserve.entity.Semester;
 import com.softserve.entity.enums.LessonType;
@@ -163,5 +160,13 @@ public class LessonController {
             groupWithLessonIdDTOs.add(groupWithLessonIdDTO);
         }
         return groupWithLessonIdDTOs;
+    }
+
+    @PutMapping("/link")
+    @ApiOperation(value = "Update link to meeting")
+    public ResponseEntity<Void> updateLinkToMeeting(@RequestBody LessonWithLinkDTO lessonWithLinkDTO) {
+        log.info("In updateLinkToMeeting (lessonWithLinkDTO = [{}])", lessonWithLinkDTO);
+        lessonService.updateLinkToMeeting(lessonInfoMapper.lessonWithLinkDTOToLesson(lessonWithLinkDTO));
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 }
