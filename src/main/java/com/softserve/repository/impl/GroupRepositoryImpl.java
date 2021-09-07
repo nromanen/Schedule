@@ -40,6 +40,11 @@ public class GroupRepositoryImpl extends BasicRepositoryImpl<Group, Long> implem
             + "FROM Lesson l "
             + "WHERE l.group.id = :groupId";
 
+    private static final String GET_BY_TEACHER_ID
+            = "SELECT DISTINCT l.group "
+            + "FROM Lesson l "
+            + "WHERE l.teacher.id = :id AND l.semester.defaultSemester = true";
+
     private Session getSession(){
         Session session = sessionFactory.getCurrentSession();
         Filter filter = session.enableFilter("groupDisableFilter");
@@ -57,6 +62,20 @@ public class GroupRepositoryImpl extends BasicRepositoryImpl<Group, Long> implem
         log.info("In getAll()");
         return getSession()
                 .createQuery(GET_ALL_QUERY, Group.class)
+                .getResultList();
+    }
+
+    /**
+     * The method used for getting groups by teacher id for default semester
+     * @param id Long id of a teacher
+     * @return List of groups
+     */
+    @Override
+    public List<Group> getByTeacherId(Long id) {
+        log.info("In repository getByTeacherId(id = [{}])", id);
+        return getSession()
+                .createQuery(GET_BY_TEACHER_ID, Group.class)
+                .setParameter("id", id)
                 .getResultList();
     }
 
