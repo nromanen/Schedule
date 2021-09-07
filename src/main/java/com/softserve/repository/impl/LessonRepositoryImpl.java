@@ -242,7 +242,7 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
         criteriaUpdate.where(cb.equal(root.get("semester").get("id"), lesson.getSemester().getId()),
                 cb.equal(root.get("teacher").get("id"), lesson.getTeacher().getId()));
 
-        if (lesson.getSubject() != null) {
+        if (lesson.getSubject().getId() != null) {
             criteriaUpdate.where(cb.equal(root.get("subject").get("id"), lesson.getSubject().getId()));
         }
 
