@@ -2,6 +2,7 @@ package com.softserve.controller;
 
 import com.softserve.dto.ScheduleForGroupDTO;
 import com.softserve.dto.ScheduleForTeacherDTO;
+import com.softserve.mapper.TeacherMapper;
 import com.softserve.service.ScheduleService;
 import com.softserve.util.PdfReportGenerator;
 import io.swagger.annotations.Api;
@@ -38,7 +39,9 @@ public class DownloadFileController {
         ByteArrayOutputStream bis = generatePdfReport.teacherScheduleReport(schedule, language);
 
         HttpHeaders headers = new HttpHeaders();
-        headers.add(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=schedule.pdf");
+        String fileName = "schedule for "
+                .concat(TeacherMapper.teacherDTOToTeacherForSite(schedule.getTeacher()));
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=".concat(fileName).concat(".pdf"));
 
         return ResponseEntity
                 .ok()
@@ -55,7 +58,10 @@ public class DownloadFileController {
         ByteArrayOutputStream bis = generatePdfReport.groupScheduleReport(schedule, language);
 
         HttpHeaders headers = new HttpHeaders();
-        headers.add(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=schedule.pdf");
+        String fileName = "schedule for "
+                .concat(schedule.getGroup().getTitle())
+                .concat(" group");
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=".concat(fileName).concat(".pdf"));
 
         return ResponseEntity
                 .ok()

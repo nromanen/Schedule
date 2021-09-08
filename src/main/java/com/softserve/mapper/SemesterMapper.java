@@ -12,7 +12,9 @@ import java.util.List;
 public interface SemesterMapper {
     SemesterDTO semesterToSemesterDTO(Semester semester);
     Semester semesterDTOToSemester(SemesterDTO semesterDTO);
+    Semester semesterWithGroupsDTOToSemester(SemesterWithGroupsDTO semesterWithGroupsDTO);
     @IterableMapping(elementTargetType = SemesterDTO.class)
     List<SemesterDTO> semestersToSemesterDTOs(List<Semester> semesters);
+    List<SemesterWithGroupsDTO> semestersToSemesterWithGroupsDTOs(List<Semester> semesters);
     SemesterWithGroupsDTO semesterToSemesterWithGroupsDTO(Semester semester);
 }

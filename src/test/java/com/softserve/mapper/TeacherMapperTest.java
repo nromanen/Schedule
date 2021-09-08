@@ -34,7 +34,7 @@ public class TeacherMapperTest {
     @Before
     public void setUp() {
         teacherOnlyWithUserId1 = new Teacher();
-        teacherOnlyWithUserId1.setUserId(1);
+        teacherOnlyWithUserId1.setUserId(1L);
 
         userOnlyWithEmail = new User();
         userOnlyWithEmail.setEmail("teacher@gmail.com");

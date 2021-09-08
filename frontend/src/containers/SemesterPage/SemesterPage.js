@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { FaEdit } from 'react-icons/fa';
+import { FaEdit, FaUsers } from 'react-icons/fa';
 import { MdDelete, MdDonutSmall, MdEdit } from 'react-icons/md';
 import { useTranslation } from 'react-i18next';
 import React, { useEffect, useState } from 'react';
@@ -27,7 +27,7 @@ import {
     semesterCopy,
     createArchiveSemesterService,
     getArchivedSemestersService,
-    viewArchivedSemester, setDefaultSemesterById
+    viewArchivedSemester, setDefaultSemesterById, setGroupsToSemester
 } from '../../services/semesterService';
 import { setScheduleTypeService } from '../../services/scheduleService';
 import { disabledCard } from '../../constants/disabledCard';
@@ -39,22 +39,42 @@ import NavigationPage from '../../components/Navigation/NavigationPage';
 import { navigation, navigationNames } from '../../constants/navigation';
 import SetDefaultDialog from '../../share/modals/modal/setDefaultDialog';
 import SetChangeDialog from '../../share/modals/modal/setDefaultDialog';
+import { MultiselectForGroups } from '../../helper/MultiselectForGroups';
+import { showAllGroupsService } from '../../services/groupService';
+import { successHandler } from '../../helper/handlerAxios';
+import i18n from '../../helper/i18n';
 
 const SemesterPage = props => {
     const { t } = useTranslation('formElements');
     const [open, setOpen] = useState(false);
     const [openDefault, setOpenDefault] = useState(false);
     const [openModal, setOpenModal] = useState(false);
+    const [openGroupsDialog, setOpenGroupsDialog] = useState(false);
     const [semesterId, setSemesterId] = useState(-1);
     const [term, setTerm] = useState('');
-    const { isSnackbarOpen, snackbarType, snackbarMessage } = props;
+    const { isSnackbarOpen, snackbarType, snackbarMessage, semester, groups } = props;
+    const [selected, setSelected] = useState([]);
+    const [selectedGroups, setSelectedGroups] = useState([]);
+    const [semesterOptions, setSemesterOptions] = useState([]);
+    const [edit, setEdit] = useState(false);
+    const getGroupOptions = (groupOptions) => {
 
+        return groupOptions.map(item => {
+            return { id: item.id, value: item.id, label: `${item.title}` };
+        });
+    };
+    const options = getGroupOptions(groups.filter(x => !selectedGroups.includes(x)));
+    useEffect(() => {
+        if (semester.semester_groups !== undefined && semester.semester_groups.length > 0) {
+            setSemesterOptions(getGroupOptions(semester.semester_groups));
+        }
+    }, [semester.id]);
     useEffect(() => showAllSemestersService(), []);
     useEffect(() => {
         getDisabledSemestersService();
     }, []);
     useEffect(() => getArchivedSemestersService(), []);
-
+    useEffect(() => showAllGroupsService(), []);
     const [hideDialog, setHideDialog] = useState(null);
     const [hideDialogModal, setHideDialogModal] = useState(null);
     const [disabled, setDisabled] = useState(false);
@@ -63,8 +83,49 @@ const SemesterPage = props => {
     setScheduleTypeService('archived');
 
     const SearchChange = setTerm;
-    const handleFormReset = () => clearSemesterService();
-    const submit = values => handleSemesterService(values);
+    const isEqualsArrObjects = (arr1, arr2) => {
+        const a = [...arr1];
+        const b = [...arr2];
+        if (a.length !== b.length)
+            return false;
+
+        for (let i = 0; i < a.length; i++)
+            if (a[i].id !== b[i].id)
+                return false;
+        return true;
+    };
+    const onChangeGroups = () => {
+        const beginGroups = semester.semester_groups !== undefined ? getGroupOptions(semester.semester_groups) : [];
+        const finishGroups = [...semesterOptions];
+        if (isEqualsArrObjects(beginGroups, finishGroups)) {
+            successHandler(
+                i18n.t('serviceMessages:group_exist_in_this_semester', {
+                    cardType: i18n.t('common:group_title'),
+                    actionType: i18n.t('serviceMessages:student_label')
+                })
+            );
+            return;
+        }
+        setGroupsToSemester(semesterId, semesterOptions);
+        setOpenGroupsDialog(false);
+    };
+    const onCancel = () => {
+        setSemesterOptions(getGroupOptions(semester.semester_groups));
+        setOpenGroupsDialog(false);
+    };
+    const handleFormReset = () => {
+        setSelectedGroups([]);
+        clearSemesterService();
+    };
+
+    const submit = (values) => {
+        const groupsForService = selected.length === 0 ? selectedGroups : selected;
+        const semester_groups = groupsForService.map(group => {
+            return { id: group.id,title:group.label };
+        });
+        const data = { ...values, semester_groups };
+        handleSemesterService(data);
+    };
     const handleEdit = semesterId => selectSemesterService(semesterId);
     const handleCreateArchive = semesterId =>
         createArchiveSemesterService(semesterId);
@@ -105,8 +166,8 @@ const SemesterPage = props => {
     };
 
     const handleClose = semesterId => {
-        const setDelete=open;
-        const setDefault=openDefault;
+        const setDelete = open;
+        const setDefault = openDefault;
         setOpen(false);
         setOpenDefault(false);
         if (!semesterId) return;
@@ -122,11 +183,10 @@ const SemesterPage = props => {
                 );
                 setDisabledSemestersService(semester);
             }
-        } else if(setDelete) {
+        } else if (setDelete) {
             removeSemesterCardService(semesterId);
-        }
-        else if(setDefault){
-           setDefaultSemesterById(semesterId)
+        } else if (setDefault) {
+            setDefaultSemesterById(semesterId);
         }
         setHideDialog(null);
     };
@@ -155,15 +215,15 @@ const SemesterPage = props => {
     const handleSemesterArchivedPreview = semesterId => {
         viewArchivedSemester(+semesterId);
     };
-    const setClassNameForDefaultSemester=semester=>{
-        const defaultSemesterName="default";
-        const className="svg-btn edit-btn";
-        return semester.defaultSemester===true?`${className} ${defaultSemesterName}`:className;
-    }
+    const setClassNameForDefaultSemester = semester => {
+        const defaultSemesterName = 'default';
+        const className = 'svg-btn edit-btn';
+        return semester.defaultSemester === true ? `${className} ${defaultSemesterName}` : className;
+    };
 
     return (
         <>
-            <NavigationPage name={navigationNames.SEMESTER_PAGE} val={navigation.SEMESTERS}/>
+            <NavigationPage name={navigationNames.SEMESTER_PAGE} val={navigation.SEMESTERS} />
             <ConfirmDialog
                 cardId={semesterId}
                 whatDelete={'semester'}
@@ -193,24 +253,30 @@ const SemesterPage = props => {
                     submitButtonLabel={t('copy_label')}
                 />
             </ModalWindow>
-            <div className="cards-container">
-                <aside className="search-list__panel">
+            <div className='cards-container'>
+                <aside className='search-list__panel'>
                     <SearchPanel
                         SearchChange={SearchChange}
                         showDisabled={showDisabledHandle}
                         showArchived={showArchivedHandler}
                     />
                     {disabled || archived ? (
-                        ''
-                    ) : (
+                            ''
+                        ) :
                         <SemesterForm
-                            className="form"
+                            selectedGroups={selectedGroups}
+                            setSelectedGroups={setSelectedGroups}
+                            selected={selected}
+                            setSelected={setSelected}
+                            className='form'
                             onSubmit={submit}
                             onReset={handleFormReset}
+                            semester={edit ? semester : {}}
+
                         />
-                    )}
+                    }
                 </aside>
-                <section className="container-flex-wrap wrapper">
+                <section className='container-flex-wrap wrapper'>
                     {visibleItems.length === 0 && (
                         <NotFound name={t('semestry_label')} />
                     )}
@@ -227,11 +293,11 @@ const SemesterPage = props => {
                                     semester.currentSemester ? 'current' : ''
                                 }`}
                             >
-                                <div className="cards-btns">
+                                <div className='cards-btns'>
                                     {!disabled && !archived ? (
                                         <>
                                             <GiSightDisabled
-                                                className="svg-btn copy-btn"
+                                                className='svg-btn copy-btn'
                                                 title={t('common:set_disabled')}
                                                 onClick={() => {
                                                     setHideDialog(
@@ -243,14 +309,17 @@ const SemesterPage = props => {
                                                 }}
                                             />
                                             <FaEdit
-                                                className="svg-btn edit-btn"
+                                                className='svg-btn edit-btn'
                                                 title={t('edit_title')}
-                                                onClick={() =>
-                                                    handleEdit(semester.id)
+                                                onClick={() => {
+                                                    handleEdit(semester.id);
+                                                    setEdit(true);
+                                                }
+
                                                 }
                                             />
                                             <FaCopy
-                                                className="svg-btn copy-btn"
+                                                className='svg-btn copy-btn'
                                                 title={t('copy_label')}
                                                 onClick={() => {
                                                     handleClickOpenModal(
@@ -262,7 +331,7 @@ const SemesterPage = props => {
                                                 ''
                                             ) : (
                                                 <FaFileArchive
-                                                    className="svg-btn archive-btn"
+                                                    className='svg-btn archive-btn'
                                                     title={t(
                                                         'common:make_archive'
                                                     )}
@@ -276,7 +345,7 @@ const SemesterPage = props => {
                                         </>
                                     ) : !archived ? (
                                         <IoMdEye
-                                            className="svg-btn copy-btn"
+                                            className='svg-btn copy-btn'
                                             title={t('common:set_enabled')}
                                             onClick={() => {
                                                 setHideDialog(
@@ -287,7 +356,7 @@ const SemesterPage = props => {
                                         />
                                     ) : (
                                         <IoMdEye
-                                            className="svg-btn copy-btn"
+                                            className='svg-btn copy-btn'
                                             title={t('common:preview')}
                                             onClick={() => {
                                                 handleSemesterArchivedPreview(
@@ -297,39 +366,39 @@ const SemesterPage = props => {
                                         />
                                     )}
                                     <MdDelete
-                                        className="svg-btn delete-btn"
+                                        className='svg-btn delete-btn'
                                         title={t('delete_title')}
                                         onClick={() =>
                                             handleClickOpen(semester.id)
                                         }
                                     />
 
-                                        <MdDonutSmall
-                                            className={setClassNameForDefaultSemester(semester)}
-                                            title={t('set_default_title')}
-                                            onClick={() =>
-                                                handleClickOpenDefault(semester.id)
-                                            }
-                                        />
+                                    <MdDonutSmall
+                                        className={setClassNameForDefaultSemester(semester)}
+                                        title={t('set_default_title')}
+                                        onClick={() =>
+                                            handleClickOpenDefault(semester.id)
+                                        }
+                                    />
 
 
                                 </div>
 
-                                <p className="semester-card__description">
+                                <p className='semester-card__description'>
                                     <small>{t('semester_label') + ':'}</small>
                                     <b>{semester.description}</b>
                                     {' ( ' + semester.year + ' )'}
                                 </p>
-                                <p className="semester-card__description">
+                                <p className='semester-card__description'>
                                     <b>
                                         {semester.startDay} - {semester.endDay}
                                     </b>
                                 </p>
-                                <p className="semester-card__description">
+                                <p className='semester-card__description'>
                                     {t('common:days_label') + ': '}
                                     {sem_days.join(', ')}
                                 </p>
-                                <p className="semester-card__description">
+                                <p className='semester-card__description'>
                                     {t(
                                         'common:ClassSchedule_management_title'
                                     ) + ': '}
@@ -339,7 +408,20 @@ const SemesterPage = props => {
                                         })
                                         .join(', ')}
                                 </p>
+
+                                <FaUsers
+                                    title={t('formElements:show_groups')}
+                                    className='svg-btn copy-btn  semester-groups'
+                                    onClick={
+                                        () => {
+                                            setSemesterId(semester.id);
+                                            selectSemesterService(semester.id);
+                                            setOpenGroupsDialog(true);
+                                        }
+                                    }
+                                />
                             </Card>
+
                         );
                     })}
                 </section>
@@ -350,17 +432,27 @@ const SemesterPage = props => {
                 isOpen={isSnackbarOpen}
                 handleSnackbarClose={handleSnackbarClose}
             />
-            <GroupSchedulePage scheduleType="archived" />
+            <GroupSchedulePage scheduleType='archived' />
+            <MultiselectForGroups
+                open={openGroupsDialog}
+                options={options}
+                value={semesterOptions}
+                onChange={setSemesterOptions}
+                onCancel={onCancel}
+                onClose={onChangeGroups}
+            />
         </>
     );
 };
 const mapStateToProps = state => ({
     semesters: state.semesters.semesters,
+    semester: state.semesters.semester,
     disabledSemesters: state.semesters.disabledSemesters,
     archivedSemesters: state.semesters.archivedSemesters,
     isSnackbarOpen: state.snackbar.isSnackbarOpen,
     snackbarType: state.snackbar.snackbarType,
-    snackbarMessage: state.snackbar.message
+    snackbarMessage: state.snackbar.message,
+    groups: state.groups.groups
 });
 
 export default connect(mapStateToProps, {})(SemesterPage);

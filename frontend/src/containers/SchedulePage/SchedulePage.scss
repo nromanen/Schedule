@@ -4,186 +4,217 @@ $board-height: 70px;
 $board-min-width: 120px;
 
 .schedule.cards-container {
-    overflow-y: scroll;
-    overflow-x: hidden;
-    .groups-section {
-        margin: 0;
-        display: flex;
-        overflow-x: scroll;
-    }
+  overflow-y: scroll;
+  overflow-x: hidden;
+
+  .groups-section {
+    margin: 0;
+    display: flex;
+    overflow-x: scroll;
+  }
 }
 
 .in-board-section {
-    margin: 0;
-    position: relative;
-    &:hover {
-        transition: all 0.7s;
+  margin: 0;
+  position: relative;
 
-        .in-board-card {
-            transition: all 0.7s;
-            position: absolute;
-            top: 0;
-            left: 0;
-            transform: scale(1.7);
-            z-index: 1000;
-        }
+  &:hover {
+    transition: all 0.7s;
+
+    .in-board-card {
+      transition: all 0.7s;
+      position: absolute;
+      top: 0;
+      left: 0;
+      transform: scale(1.7);
+      z-index: 1000;
+      box-shadow: #4c94f6 0 5px 15px;
     }
+  }
 }
+
 .for-phones-and-tablets.card {
-    display: none;
+  display: none;
 }
 
 .flexbox.card {
-    display: flex;
-    justify-content: stretch;
+  display: flex;
+  justify-content: stretch;
 
-    min-width: 75%;
-    width: auto;
+  min-width: 75%;
+  width: auto;
 
-    overflow: auto;
-    height: 75vh;
+  overflow: auto;
+  height: 75vh;
 
-    margin: 0 auto;
-    padding: 15px;
+  margin: 0 auto;
+  padding: 15px;
 
-    .no-current-semester {
-        margin: 10% auto 0;
+  .no-current-semester {
+    margin: 10% auto 0;
+  }
+
+  .card {
+    margin: 5px;
+
+    &.schedule-class,
+    &.schedule-day {
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+  }
+
+  section.group-section {
+    margin: 0;
+
+  }
+
+  .day-classes-aside {
+    .card.empty-card {
+      width: 120px;
+      height: 19px;
+      font-size: 13px;
+      text-align: center;
     }
 
-    .card {
-        margin: 5px;
-        &.schedule-class,
-        &.schedule-day {
-            margin-top: 0;
-            margin-bottom: 0;
-        }
-    }
+    .day-container {
+      margin: 0;
 
-    section.group-section {
-        margin: 0;
-
-    }
-
-    .day-classes-aside {
-        .card.empty-card {
-            min-width: 97px;
-            min-height: 19px;
-            font-size: 13px;
-            text-align: center;
-        }
-        .day-container {
-            margin: 0;
-            .schedule-day {
-                position: relative;
-                text-align: center;
-                font-size: 1.1rem;
-                writing-mode: vertical-rl;
-                text-orientation: upright;
-            }
-            .schedule-class {
-                min-height: 2 * $board-height + 13.5;
-                text-align: center;
-                font-size: 1.5rem;
-                writing-mode: vertical-rl;
-                text-orientation: upright;
-            }
-        }
-    }
-
-    .group-title {
-        display: flex;
-        font-size: 13px;
-        justify-content: center;
-        flex: 1 1 auto;
-        overflow: hidden;
-        height: 19px;
-        padding: 16px 7px;
-    }
-
-
-    .board-div {
+      .schedule-day {
         position: relative;
-        .board {
-            display: flex;
-            justify-content: center;
-            min-width: $board-min-width;
-            max-height: $board-height;
-            min-height: $board-height;
-            padding: 10px 5px;
+        text-align: center;
+        font-size: 1.1rem;
+        writing-mode: vertical-rl;
+        text-orientation: upright;
+      }
 
-            .more-icon {
-                position: absolute;
-                right: 4%;
-                cursor: pointer;
-            }
-
-            .card {
-                margin: 0;
-                max-width: 80px;
-                min-width: 80px;
-                padding: 5px 8px;
-                cursor: pointer;
-                &.in-board-card {
-                    font-size: 7px;
-                    position: relative;
-                    padding: 3px;
-                    .delete-item {
-                        position: absolute;
-                        display: none;
-                        right: 0px;
-                        width: $btn-size;
-                        .delete-btn,
-                        .edit-btn {
-                            width: $schedule-button-size;
-                            height: $schedule-button-size;
-                        }
-                    }
-                }
-            }
-        }
+      .schedule-class {
+        min-height: 2 * $board-height + 9;
+        text-align: center;
+        font-size: 1.5rem;
+        writing-mode: vertical-rl;
+        text-orientation: upright;
+        margin-bottom: 0.8px;
+      }
     }
+  }
+
+  .group-title {
+    display: flex;
+    font-size: 13px;
+    justify-content: center;
+    flex: 1 1 auto;
+    overflow: hidden;
+    height: 19px;
+    padding: 16px 7px;
+  }
+
+
+  .board-div {
+    position: relative;
+
+    .board {
+      display: flex;
+      justify-content: center;
+      min-width: $board-min-width;
+      max-height: $board-height;
+      min-height: $board-height;
+      padding: 10px 5px;
+
+      .more-icon {
+        position: absolute;
+        right: 4%;
+        cursor: pointer;
+      }
+
+      .card {
+        margin: 0;
+        max-width: 80px;
+        min-width: 80px;
+        padding: 5px 8px;
+        cursor: pointer;
+
+        &.in-board-card {
+          font-size: 7px;
+          position: relative;
+          padding: 3px;
+
+          .delete-item {
+            position: absolute;
+            display: none;
+            right: 0px;
+            width: $btn-size;
+
+            .delete-btn,
+            .edit-btn {
+              width: $schedule-button-size;
+              height: $schedule-button-size;
+            }
+          }
+        }
+      }
+    }
+  }
 }
 
 .lesson-list.card {
-    margin-top: 0;
-    margin-right: 0;
-    min-width: 15%;
-    max-width: 15%;
-    height: 75vh;
-    max-height: 75vh;
-    overflow: auto;
-    overflow-x: hidden;
-    button {
-        margin-bottom: 15px;
-    }
-    .card {
-        min-width: 60%;
-        max-width: 60%;
-        font-size: 12px;
-    }
+  margin-top: 0;
+  margin-right: 0;
+  min-width: 15%;
+  max-width: 15%;
+  height: 75vh;
+  max-height: 75vh;
+  overflow: auto;
+  overflow-x: hidden;
+
+  button {
+    margin-bottom: 15px;
+  }
+
+  .card {
+    min-width: 60%;
+    max-width: 60%;
+    font-size: 12px;
+  }
 }
 
 .lesson-board {
-    width: 250px;
+  width: 250px;
 }
 
 .class-section {
-    width: 60px;
-    margin: 0;
+  width: 60px;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  align-content: center;
+  align-items: center;
 }
 
 .availability-warning {
-    color: $delete-color;
+  color: $delete-color;
 }
 
 @media screen and (max-width: 968px) {
-    .schedule-page.cards-container {
-        display: none;
-    }
-    .for-phones-and-tablets.card {
-        display: block;
-        width: 80%;
-        margin: 15% auto 0;
-        text-align: center;
-    }
+  .schedule-page.cards-container {
+    display: none;
+  }
+  .for-phones-and-tablets.card {
+    display: block;
+    width: 80%;
+    margin: 15% auto 0;
+    text-align: center;
+  }
 }
+
+.violet-day {
+  background-color: #576fe6 !important;
+  color: white;
+}
+
+.blue-day {
+  background-color: #4c94f6 !important;
+  color: white;
+}
+

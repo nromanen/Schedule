@@ -4,7 +4,6 @@ import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Field, reduxForm } from 'redux-form';
 import Button from '@material-ui/core/Button';
-
 import './SemesterForm.scss';
 import Card from '../../share/Card/Card';
 import renderCheckboxField from '../../share/renderedFields/checkbox';
@@ -20,7 +19,11 @@ import {
 import { getClassScheduleListService } from '../../services/classService';
 import { daysUppercase } from '../../constants/schedule/days';
 import { getClearOrCancelTitle, setDisableButton } from '../../helper/disableComponent';
+import { showAllGroupsService } from '../../services/groupService';
+import { MultiselectForGroups } from '../../helper/MultiselectForGroups';
+import { useForm } from 'react-hook-form';
 import formValueSelector from 'redux-form/lib/formValueSelector';
+import { isObjectEmpty } from '../../helper/ObjectRevision';
 
 let AddSemesterForm = props => {
     const clearCheckboxes = () => {
@@ -37,9 +40,57 @@ let AddSemesterForm = props => {
         });
     };
     useEffect(() => getClassScheduleListService(), []);
+    useEffect(() => showAllGroupsService(), []);
 
     const { t } = useTranslation('formElements');
-    const { handleSubmit, pristine, onReset, submitting,semester } = props;
+    const {
+        handleSubmit,
+        pristine,
+        onReset,
+        submitting,
+        semester,
+        groups,
+        selected,
+        setSelected,
+        selectedGroups,
+        setSelectedGroups
+    } = props;
+    const [openGroupDialog, setOpenGroupDialog] = useState(false);
+    useEffect(() => {
+        const { semester_groups } = semester;
+        if (semester_groups !== undefined && semester_groups !== null) {
+            setSelectedGroups(getGroupOptions(semester_groups));
+        }
+    }, [semester.id]);
+    const getGroupOptions = (groupOptions) => {
+
+        return groupOptions.map(item => {
+            return { id: item.id, value: item.id, label: `${item.title}` };
+        });
+    };
+    const options = getGroupOptions(groups);
+    const semesterOptions = getGroupOptions(groups.filter(x => !selectedGroups.includes(x)));
+    const openDialogForGroup = () => {
+        setOpenGroupDialog(true);
+    };
+    const closeDialogForGroup = () => {
+        setOpenGroupDialog(false);
+    };
+    const clearSelection = () => {
+        setSelected([]);
+    };
+    const onCancel = () => {
+        clearSelection();
+        closeDialogForGroup();
+    };
+
+    const onClose = () => {
+        closeDialogForGroup();
+    };
+    const onSubmit = (values) => {
+        handleSubmit(values);
+    };
+    const { setValue } = useForm();
 
     let prepSetCheckedClasses = {};
     useEffect(() => {
@@ -50,20 +101,20 @@ let AddSemesterForm = props => {
         clearCheckboxes();
     }, [props.classScheduler, props.semester.id]);
     const getToday = () => {
-        return  new Date();
-    }
+        return new Date();
+    };
     const getTomorrow = () => {
         const tomorrow = new Date(getToday());
         tomorrow.setDate(tomorrow.getDate() + 1);
         return tomorrow;
-    }
+    };
     const [current, setCurrent] = React.useState(false);
     const [byDefault, setByDefault] = React.useState(false);
-    const [startTime,setStartTime]=useState(getToday());
-    const [finishTime,setFinishTime]=useState(getTomorrow());
-    const [startValue,setStartValue]=useState();
-    const [finishValue,setFinishValue]=useState();
-    const [disabledFinishDate,setDisabledFinishDate]=useState(true);
+    const [startTime, setStartTime] = useState(getToday());
+    const [finishTime, setFinishTime] = useState(getTomorrow());
+    const [startValue, setStartValue] = useState();
+    const [finishValue, setFinishValue] = useState();
+    const [disabledFinishDate, setDisabledFinishDate] = useState(true);
     const [checkedDates, setCheckedDates] = React.useState({
         MONDAY: false,
         TUESDAY: false,
@@ -78,25 +129,25 @@ let AddSemesterForm = props => {
         prepSetCheckedClasses
     );
 
-    const handleChange = (event,setState) => setState(event.target.checked);
+    const handleChange = (event, setState) => setState(event.target.checked);
 
-    const setMinFinishDate=time=>{
-        let new_date = moment(time, "DD/MM/YYYY").add(1, 'd');
+    const setMinFinishDate = time => {
+        let new_date = moment(time, 'DD/MM/YYYY').add(1, 'd');
         setFinishTime(new_date.toDate());
-    }
+    };
     const setEndTime = startTime => {
-        if(disabledFinishDate||moment(startValue).isSameOrBefore(finishValue)) {
+        if (disabledFinishDate || moment(startValue).isSameOrBefore(finishValue)) {
             setFinishValue(setMinFinishDate(startTime));
             props.change(
                 'endDay',
                 moment(startTime, 'DD/MM/YYYY').add(7, 'd').format('DD/MM/YYYY')
             );
         }
-        return
-    }
+        return;
+    };
     const setCheckedDaysHandler = React.useCallback(
         day => {
-            return function (event) {
+            return function(event) {
                 let changedDay = { [day]: event.target.checked };
                 setCheckedDates({
                     ...checkedDates,
@@ -108,7 +159,7 @@ let AddSemesterForm = props => {
     );
     const setCheckedClassesHandler = React.useCallback(
         classid => {
-            return function (event) {
+            return function(event) {
                 let changedClass = { [classid]: event.target.checked };
                 setCheckedClasses({
                     ...checkedClasses,
@@ -137,12 +188,12 @@ let AddSemesterForm = props => {
                         scheduleItem.endTime +
                         ')'
                     }
-                    labelPlacement="end"
+                    labelPlacement='end'
                     component={renderCheckboxField}
                     defaultValue={checkedClasses[classItem]}
                     checked={checkedClasses[classItem]}
                     onChange={setCheckedClassesHandler(classItem)}
-                    color="primary"
+                    color='primary'
                 />
             );
         });
@@ -155,12 +206,12 @@ let AddSemesterForm = props => {
                     key={props.semester.id + semesterDay}
                     name={`semester_days_markup_${semesterDay}`}
                     label={t(`common:day_of_week_${semesterDay}`)}
-                    labelPlacement="end"
+                    labelPlacement='end'
                     defaultValue={checkedDates[semesterDay]}
                     component={renderCheckboxField}
                     checked={checkedDates[semesterDay]}
                     onChange={setCheckedDaysHandler(semesterDay)}
-                    color="primary"
+                    color='primary'
                 />
             );
         });
@@ -179,9 +230,11 @@ let AddSemesterForm = props => {
                     startDay: props.semester.startDay,
                     endDay: props.semester.endDay,
                     currentSemester: props.semester.currentSemester,
-                    defaultSemester:props.semester.defaultSemester,
+                    defaultSemester: props.semester.defaultSemester,
                     semester_days: props.semester.semester_days,
-                    semester_classes: props.semester.semester_classes
+                    semester_classes: props.semester.semester_classes,
+                    semester_groups: props.semester.semester_groups
+
                 };
 
                 daysUppercase.forEach(dayItem => {
@@ -208,7 +261,7 @@ let AddSemesterForm = props => {
                         ) {
                             semesterItem[
                                 `semester_classes_markup_${classFullItem.id}`
-                            ] = true;
+                                ] = true;
                         }
                     });
                 }
@@ -250,57 +303,113 @@ let AddSemesterForm = props => {
         props.initialize(semesterItem);
     }, [props.semester.id]);
 
+    const getChosenSet = () => {
+        const beginGroups = semester.semester_groups.map(item => item.id);
+        const resGroup = selectedGroups.map(item => item.id);
+        return resGroup.filter(x => !beginGroups.includes(x));
+    };
+    const getChosenSetRemove = () => {
+        const beginGroups = semester.semester_groups.map(item => item.id);
+        const resGroup = selectedGroups.map(item => item.id);
+        return beginGroups.filter(x => !resGroup.includes(x));
+    };
+    const isChosenGroup = () => {
+        const semesterCopy = { ...semester };
+        if (semesterCopy.semester_groups.length < 0) {
+            return true;
+        }
+        if(getChosenSet().length > 0){
+            return true;
+        }
+        else return getChosenSetRemove().length>0
+    };
+    const getDisabledSaveButton = () => {
+        if(!isObjectEmpty(semester)&&semester.id!==null) {
+            return (selectedGroups.length > 0 ?
+                    !isChosenGroup() :
+                    selected.length === 0) &&
+                (pristine || submitting);
+        }
+        return (pristine||submitting)
+
+    };
+
     return (
 
-        <Card class="form-card semester-form">
+        <Card class='form-card semester-form'>
             <h2 style={{ textAlign: 'center' }}>
-                {props.semester.id ? t('edit_title') : t('create_title')}
-                {t('semestry_label')}
+                {props.semester.id ? t('common:edit') : t('common:create')}
+                {` ${t('common:semester')}`}
             </h2>
-
-            <form onSubmit={handleSubmit}>
-                <div className="semester-checkbox">
-                    <Field
-                        name="currentSemester"
-                        label={t('common:current_label')}
-                        labelPlacement="start"
-                        component={renderCheckboxField}
-                        checked={current}
-                        onChange={(e)=>handleChange(e,setCurrent)}
-                        color="primary"
-                    />
-                    <Field
-                        name="defaultSemester"
-                        label={t('common:default_label')}
-                        labelPlacement="start"
-                        component={renderCheckboxField}
-                        checked={byDefault}
-                        onChange={(e)=>handleChange(e,setByDefault)}
-                        color="primary"
-                    />
+            {selectedGroups.length === 0 ?
+                <MultiselectForGroups
+                    open={openGroupDialog}
+                    options={options}
+                    value={selected}
+                    onChange={setSelected}
+                    onCancel={onCancel}
+                    onClose={onClose}
+                /> :
+                <MultiselectForGroups
+                    open={openGroupDialog}
+                    options={semesterOptions}
+                    value={selectedGroups}
+                    onChange={setSelectedGroups}
+                    onCancel={onCancel}
+                    onClose={onClose}
+                />}
+            <form onSubmit={onSubmit}>
+                <div className='semester-checkbox group-options'>
+                    <div>
+                        <Field
+                            name='currentSemester'
+                            label={t('common:current_label')}
+                            labelPlacement='start'
+                            component={renderCheckboxField}
+                            checked={current}
+                            onChange={(e) => handleChange(e, setCurrent)}
+                            color='primary'
+                        />
+                        <Field
+                            name='defaultSemester'
+                            label={t('common:default_label')}
+                            labelPlacement='start'
+                            component={renderCheckboxField}
+                            checked={byDefault}
+                            onChange={(e) => handleChange(e, setByDefault)}
+                            color='primary'
+                        />
+                    </div>
+                    <Button
+                        variant='contained'
+                        color='primary'
+                        className='buttons-style '
+                        onClick={openDialogForGroup}
+                    >
+                        {t('common:choose_groups_button_label')}
+                    </Button>
                 </div>
-
                 <Field
-                    className="form-field"
-                    name="year"
-                    type="number"
+                    className='form-field'
+                    name='year'
+                    type='number'
                     component={renderTextField}
-                    label={t('year_label') + ':'}
+                    label={t('common:year_label') + ':'}
                     validate={[required, minYearValue]}
                 />
                 <Field
-                    className="form-field"
-                    name="description"
+                    className='form-field'
+                    name='description'
                     component={renderTextField}
-                    label={t('semester_label') + ':'}
+                    label={t('common:semester_label') + ':'}
                     validate={[required]}
                 />
-                <div className="form-time-block">
+                <div className='form-time-block'>
                     <Field
-                        className="time-input"
-                        name="startDay"
+                        className='time-input'
+                        name='startDay'
                         component={renderMonthPicker}
-                        label={t('class_from_label') + ':'}
+                        label={t('common:class_from_label') + ':'}
                         validate={[required, lessThanDate]}
                         minDate={startTime}
                         onChange={(event, value) => {
@@ -308,49 +417,52 @@ let AddSemesterForm = props => {
                                 setStartValue(value);
                                 setMinFinishDate(value);
                                 setEndTime(value);
-                                setDisabledFinishDate(false)
+                                setDisabledFinishDate(false);
                             }
                         }}
                     />
                     <Field
-                        className="time-input"
-                        name="endDay"
+                        className='time-input'
+                        name='endDay'
                         component={renderMonthPicker}
-                        label={t('class_to_label') + ':'}
+                        label={t('common:class_to_label') + ':'}
                         validate={[required, greaterThanDate]}
                         minDate={finishTime}
                         disabled={disabledFinishDate}
                         onChange={(event, value) => {
-                            setFinishValue(value)
+                            setFinishValue(value);
                         }}
                     />
                 </div>
-                <div className="">
+                <div className=''>
                     <p>{t('common:days_label') + ': '}</p>
                     {setSemesterDays()}
                 </div>
-                <div className="">
+                <div className=''>
                     <p>{t('common:ClassSchedule_management_title') + ': '}</p>
                     {setSemesterClasses()}
                 </div>
-                <div className="form-buttons-container semester-btns">
+                <div className='form-buttons-container semester-btns'>
                     <Button
-                        variant="contained"
-                        color="primary"
-                        className="buttons-style "
-                        disabled={pristine || submitting}
-                        type="submit"
+                        variant='contained'
+                        color='primary'
+                        className='buttons-style '
+                        disabled={getDisabledSaveButton()}
+                        type='submit'
                     >
-                        {t('save_button_label')}
+                        {t('common:save_button_label')}
                     </Button>
                     <Button
-                        type="button"
-                        variant="contained"
-                        className="buttons-style"
-                        disabled={setDisableButton(pristine,submitting,semester.id)}
-                        onClick={onReset}
+                        type='button'
+                        variant='contained'
+                        className='buttons-style'
+                        disabled={setDisableButton(pristine, submitting, semester.id) && selected.length === 0}
+                        onClick={() => {
+                            onReset();
+                            setSelected([]);
+                        }}
                     >
-                        {getClearOrCancelTitle(semester.id,t)}
+                        {getClearOrCancelTitle(semester.id, t)}
                     </Button>
                 </div>
             </form>
@@ -361,6 +473,7 @@ let AddSemesterForm = props => {
 const mapStateToProps = state => ({
     semester: state.semesters.semester,
     classScheduler: state.classActions.classScheduler,
+    groups: state.groups.groups
 
 });
 

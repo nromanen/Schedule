@@ -79,17 +79,15 @@ public class DepartmentController {
     @ApiOperation(value = "Delete department by id")
     public ResponseEntity<DepartmentDTO> deleteById(@PathVariable("id") long id) {
         log.info("In deleteById (id =[{}]", id);
-        Department department = service.delete(service.getById(id));
         return ResponseEntity.status(HttpStatus.OK)
-                .body(mapper.departmentToDepartmentDTO(department));
+                .body(mapper.departmentToDepartmentDTO(service.delete(service.getById(id))));
     }
 
     @GetMapping("/disabled")
     @ApiOperation(value = "Get the list of disabled departments")
     public ResponseEntity<List<DepartmentDTO>> getDisabled() {
         log.info("In getDisabled ()");
-        List<Department> departments = service.getDisabled();
         return ResponseEntity.status(HttpStatus.OK)
-                .body(mapper.departmentsToDepartmentDTOs(departments));
+                .body(mapper.departmentsToDepartmentDTOs(service.getDisabled()));
     }
 }

@@ -84,7 +84,7 @@ public class LessonServiceTest {
         group.setTitle("group");
         Teacher teacher = new Teacher();
         teacher.setId(1L);
-        teacher.setUserId(1);
+        teacher.setUserId(1L);
         teacher.setName("Ivan");
         teacher.setSurname("Ivanov");
         teacher.setPatronymic("Ivanovych");
@@ -121,7 +121,7 @@ public class LessonServiceTest {
         group.setTitle("group");
         Teacher teacher = new Teacher();
         teacher.setId(1L);
-        teacher.setUserId(1);
+        teacher.setUserId(1L);
         teacher.setName("Ivan");
         teacher.setSurname("Ivanov");
         teacher.setPatronymic("Ivanovych");
@@ -153,7 +153,7 @@ public class LessonServiceTest {
         group.setTitle("group");
         Teacher teacher = new Teacher();
         teacher.setId(1L);
-        teacher.setUserId(1);
+        teacher.setUserId(1L);
         teacher.setName("Ivan");
         teacher.setSurname("Ivanov");
         teacher.setPatronymic("Ivanovych");
@@ -189,7 +189,7 @@ public class LessonServiceTest {
         group.setTitle("group");
         Teacher teacher = new Teacher();
         teacher.setId(1L);
-        teacher.setUserId(1);
+        teacher.setUserId(1L);
         teacher.setName("Ivan");
         teacher.setSurname("Ivanov");
         teacher.setPatronymic("Ivanovych");

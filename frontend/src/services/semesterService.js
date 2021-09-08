@@ -7,7 +7,7 @@ import {
     SEMESTER_COPY_URL,
     LESSONS_FROM_SEMESTER_COPY_URL,
     CREATE_ARCHIVE_SEMESTER,
-    ARCHIVED_SEMESTERS_URL, DEFAULT_SEMESTER_URL
+    ARCHIVED_SEMESTERS_URL, DEFAULT_SEMESTER_URL, SCHEDULE_SEMESTER_ITEMS_URL, GROUPS_URL
 } from '../constants/axios';
 import { setDisabledSemesters, setError } from '../redux/actions/semesters';
 import { SEMESTER_FORM } from '../constants/reduxForms';
@@ -24,11 +24,12 @@ import {
     setArchivedSemesters,
     moveToArchivedSemester,
     setScheduleType,
-    setFullSchedule
+    setFullSchedule, setScheduleItems
 } from '../redux/actions/index';
 
 import { errorHandler, successHandler } from '../helper/handlerAxios';
 import { resetFormHandler } from '../helper/formHelper';
+import { setLoadingService, setScheduleLoadingService } from './loadingService';
 
 export const selectSemesterService = semesterId =>
     store.dispatch(selectSemester(semesterId));
@@ -42,101 +43,6 @@ export const clearSemesterService = () => {
 };
 
 export const showAllSemestersService = () => {
-    const semesters=[
-        {
-            "id": 7,
-            "description": "Семестер для архівування",
-            "year": 2020,
-            "startDay": "19/05/2020",
-            "endDay": "30/05/2020",
-            "currentSemester": false,
-            "defaultSemester":false,
-            "disable": false,
-            "semester_days": [
-                "MONDAY",
-                "TUESDAY",
-                "WEDNESDAY",
-                "THURSDAY",
-                "FRIDAY"
-            ],
-            "semester_classes": [
-                {
-                    "id": 1,
-                    "startTime": "08:20",
-                    "endTime": "09:40",
-                    "class_name": "1"
-                },
-                {
-                    "id": 2,
-                    "startTime": "09:50",
-                    "endTime": "11:10",
-                    "class_name": "2"
-                },
-                {
-                    "id": 3,
-                    "startTime": "11:30",
-                    "endTime": "12:50",
-                    "class_name": "3"
-                },
-                {
-                    "id": 4,
-                    "startTime": "13:00",
-                    "endTime": "14:20",
-                    "class_name": "4"
-                }
-            ]
-        },
-        {
-            "id": 6,
-            "description": "Весняна сесія заочники1",
-            "year": 2020,
-            "startDay": "13/06/2020",
-            "endDay": "31/07/2020",
-            "currentSemester": true,
-            "defaultSemester":true,
-            "disable": false,
-            "semester_days": [
-                "MONDAY",
-                "TUESDAY",
-                "WEDNESDAY",
-                "THURSDAY",
-                "FRIDAY"
-            ],
-            "semester_classes": [
-                {
-                    "id": 1,
-                    "startTime": "08:20",
-                    "endTime": "09:40",
-                    "class_name": "1"
-                },
-                {
-                    "id": 2,
-                    "startTime": "09:50",
-                    "endTime": "11:10",
-                    "class_name": "2"
-                },
-                {
-                    "id": 3,
-                    "startTime": "11:30",
-                    "endTime": "12:50",
-                    "class_name": "3"
-                },
-                {
-                    "id": 4,
-                    "startTime": "13:00",
-                    "endTime": "14:20",
-                    "class_name": "4"
-                }
-            ]
-        }
-    ];
-    // store.dispatch(
-    //             showAllSemesters(
-    //                semesters
-    //                     .sort((a, b) => (a.year > b.year ? 1 : -1))
-    //                     .reverse()
-    //             )
-    //         );
     axios
         .get(SEMESTERS_URL)
         .then(response => {
@@ -150,6 +56,26 @@ export const showAllSemestersService = () => {
         })
         .catch(error => errorHandler(error));
 
+};
+export const setGroupsToSemester = (semesterId, groups) => {
+    const groupIds = groups.map(item => `groupId=${item.id}`).join('&');
+    axios
+        .put(`${SEMESTERS_URL}/${semesterId}/groups?${groupIds}`)
+        .then(response => {
+            store.dispatch(updateSemester(response.data));
+            selectSemesterService(null);
+            getDisabledSemestersService();
+            getArchivedSemestersService();
+            showAllSemestersService();
+            resetFormHandler(SEMESTER_FORM);
+            successHandler(
+                i18n.t('serviceMessages:back_end_success_operation', {
+                    cardType: i18n.t('formElements:semester_label'),
+                    actionType: i18n.t('serviceMessages:updated_label')
+                })
+            );
+        })
+        .catch(error => errorHandler(error));
 };
 
 const cardSemester = semester => {
@@ -173,11 +99,12 @@ const cardSemester = semester => {
                     store
                         .getState()
                         .classActions.classScheduler.find(
-                            schedule => schedule.id === +prop.substring(24)
-                        )
+                        schedule => schedule.id === +prop.substring(24)
+                    )
                 );
             }
         }
+
     }
 
     return {
@@ -189,7 +116,9 @@ const cardSemester = semester => {
         currentSemester: semester.currentSemester,
         defaultSemester: semester.defaultSemester,
         semester_days: semester_days,
-        semester_classes: semester_classes
+        semester_classes: semester_classes,
+        semester_groups: semester.semester_groups
+
     };
 };
 
@@ -272,42 +201,42 @@ const checkSemesterYears = (endDay, startDay, year) => {
     return conf;
 };
 export const setDefaultSemesterById = dataId => {
-     axios
-    .put(`${DEFAULT_SEMESTER_URL}?semesterId=${dataId}`)
+    axios
+        .put(`${DEFAULT_SEMESTER_URL}?semesterId=${dataId}`)
         .then(response => {
-           store.dispatch(updateSemester(response.data));
+            store.dispatch(updateSemester(response.data));
             selectSemesterService(null);
-             getDisabledSemestersService();
+            getDisabledSemestersService();
             getArchivedSemestersService();
-             showAllSemestersService();
-             resetFormHandler(SEMESTER_FORM);
-             successHandler(
-                 i18n.t('serviceMessages:back_end_success_operation', {
-                     cardType: i18n.t('formElements:semester_label'),
-                     actionType: i18n.t('serviceMessages:updated_label')
-                 })
-             );
-         })
+            showAllSemestersService();
+            resetFormHandler(SEMESTER_FORM);
+            successHandler(
+                i18n.t('serviceMessages:back_end_success_operation', {
+                    cardType: i18n.t('formElements:semester_label'),
+                    actionType: i18n.t('serviceMessages:updated_label')
+                })
+            );
+        })
         .catch(error => errorHandler(error));
-}
+};
 
 const putSemester = data => {
-     axios
-    .put(SEMESTERS_URL, data)
+    axios
+        .put(SEMESTERS_URL, data)
         .then(response => {
-           store.dispatch(updateSemester(response.data));
+            store.dispatch(updateSemester(response.data));
             selectSemesterService(null);
-             getDisabledSemestersService();
+            getDisabledSemestersService();
             getArchivedSemestersService();
-             showAllSemestersService();
-             resetFormHandler(SEMESTER_FORM);
-             successHandler(
-                 i18n.t('serviceMessages:back_end_success_operation', {
-                     cardType: i18n.t('formElements:semester_label'),
-                     actionType: i18n.t('serviceMessages:updated_label')
-                 })
-             );
-         })
+            showAllSemestersService();
+            resetFormHandler(SEMESTER_FORM);
+            successHandler(
+                i18n.t('serviceMessages:back_end_success_operation', {
+                    cardType: i18n.t('formElements:semester_label'),
+                    actionType: i18n.t('serviceMessages:updated_label')
+                })
+            );
+        })
         .catch(error => errorHandler(error));
 };
 const postSemester = data => {
@@ -366,10 +295,10 @@ export const semesterCopy = values => {
     axios
         .post(
             SEMESTER_COPY_URL +
-                '?fromSemesterId=' +
-                values.fromSemesterId +
-                '&toSemesterId=' +
-                values.toSemesterId
+            '?fromSemesterId=' +
+            values.fromSemesterId +
+            '&toSemesterId=' +
+            values.toSemesterId
         )
         .then(response => {
             successHandler(
@@ -386,10 +315,10 @@ export const CopyLessonsFromSemesterService = values => {
     axios
         .post(
             LESSONS_FROM_SEMESTER_COPY_URL +
-                '?fromSemesterId=' +
-                values.fromSemesterId +
-                '&toSemesterId=' +
-                values.toSemesterId
+            '?fromSemesterId=' +
+            values.fromSemesterId +
+            '&toSemesterId=' +
+            values.toSemesterId
         )
         .then(response => {
             successHandler(

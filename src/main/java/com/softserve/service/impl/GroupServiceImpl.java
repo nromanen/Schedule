@@ -6,24 +6,19 @@ import com.softserve.exception.FieldAlreadyExistsException;
 import com.softserve.repository.GroupRepository;
 import com.softserve.service.GroupService;
 import com.softserve.service.SemesterService;
-import com.softserve.util.NullAwareBeanUtils;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.beanutils.BeanUtilsBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Slf4j
 @Service
 public class GroupServiceImpl  implements GroupService {
-
     private final GroupRepository groupRepository;
     private final SemesterService semesterService;
-
 
     @Autowired
     public GroupServiceImpl(GroupRepository groupRepository, SemesterService semesterService) {
@@ -32,7 +27,7 @@ public class GroupServiceImpl  implements GroupService {
     }
 
     /**
-     * Method gets information from Repository for particular group with id parameter
+     * Method gets by id group from Repository
      * @param id Identity number of the group
      * @return Group entity
      * @throws EntityNotFoundException if Group with id doesn't exist
@@ -41,12 +36,24 @@ public class GroupServiceImpl  implements GroupService {
     @Override
     public Group getById(Long id) {
         log.info("In getById(id = [{}])",  id);
-        Group group = groupRepository.getById(id);
-        if (Objects.isNull(group)) {
-            throw new EntityNotFoundException(Group.class, "id", id.toString());
-        }
-        return group;
+        return groupRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(Group.class, "id", id.toString()));
     }
+
+    /**
+     * Method gets by id group with students from Repository
+     * @param id Identity number of the group
+     * @return Group entity
+     * @throws EntityNotFoundException if Group with id doesn't exist
+     */
+    @Transactional(readOnly = true)
+    @Override
+    public Group getWithStudentsById(Long id) {
+        log.info("In getWithStudentsById(id = [{}])",  id);
+        return groupRepository.getWithStudentsById(id)
+                .orElseThrow(() -> new EntityNotFoundException(Group.class, "id", id.toString()));
+    }
+
 
     /**
      * Method gets information about all groups from Repository
@@ -60,30 +67,15 @@ public class GroupServiceImpl  implements GroupService {
     }
 
     /**
-     * Method gets information about all groups, but sets student list to empty
-     * @return List of all groups
+     * The method used for getting groups by teacher id for default semester
+     * @param id Long id of a teacher
+     * @return List of groups
      */
     @Transactional(readOnly = true)
     @Override
-    public List<Group> getAllWithoutStudents() {
-        log.info("In getAllWithoutStudents()");
-        List<Group> groups = groupRepository.getAllWithoutStudents();
-        groups.forEach(group -> group.setStudents(Collections.emptyList()));
-        return groups;
-    }
-
-    /**
-     * The method used for getting all disabled groups, but sets student list to empty
-     *
-     * @return list of disabled groups
-     */
-    @Transactional(readOnly = true)
-    @Override
-    public List<Group> getDisabledWithoutStudents() {
-        log.info("Enter into getAll of getDisabledWithoutStudents");
-        List<Group> groups = groupRepository.getDisabledWithoutStudents();
-        groups.forEach(group -> group.setStudents(Collections.emptyList()));
-        return groups;
+    public List<Group> getByTeacherId(Long id) {
+        log.info("In service getByTeacherId(id = [{}])", id);
+        return groupRepository.getByTeacherId(id);
     }
 
     /**
@@ -97,9 +89,7 @@ public class GroupServiceImpl  implements GroupService {
     @Override
     public Group save(Group object) {
         log.info("In save(entity = [{}]", object);
-        if (isGroupExistsWithTitle(object.getTitle())){
-            throw new FieldAlreadyExistsException(Group.class, "title", object.getTitle());
-        }
+        checkTitleForUniqueness(object.getTitle());
         return groupRepository.save(object);
     }
 
@@ -108,15 +98,12 @@ public class GroupServiceImpl  implements GroupService {
      * @param object Group entity with info to be updated
      * @return updated Group entity
      */
-    @SneakyThrows
     @Transactional
     @Override
     public Group update(Group object) {
         log.info("In update(entity = [{}]", object);
-        BeanUtilsBean beanUtils = new NullAwareBeanUtils();
-        Group foundGroup = getById(object.getId());
-        beanUtils.copyProperties(foundGroup, object);
-        return groupRepository.update(foundGroup);
+        checkTitleForUniquenessIgnoringId(object.getTitle(), object.getId());
+        return groupRepository.update(object);
     }
 
     /**
@@ -128,45 +115,19 @@ public class GroupServiceImpl  implements GroupService {
     @Override
     public Group delete(Group object) {
         log.info("In delete(entity = [{}])",  object);
-        return groupRepository.delete(getById(object.getId()));
-    }
-
-    /**
-     * Method finds if Group with title already exists
-     * @param id Long id of Group
-     * @param title String title of Group
-     * @return true if Group with such title already exist
-     */
-    @Transactional(readOnly = true)
-    @Override
-    public boolean isGroupExistsWithTitleAndIgnoreWithId(Long id, String title) {
-        log.info("In isGroupExistsWithTitleAndIgnoreWithId(id = [{}], title = [{}])", id, title);
-        return groupRepository.countGroupsWithTitleAndIgnoreWithId(id, title) != 0;
-    }
-
-
-    /**
-     * Method finds if Group with title already exists
-     * @param title String title of Group
-     * @return true if Group with such title already exist
-     */
-    @Transactional(readOnly = true)
-    @Override
-    public boolean isGroupExistsWithTitle(String title) {
-        log.info("In isGroupExistsWithTitle(title = [{}])",  title);
-        return groupRepository.countGroupsWithTitle(title) != 0;
+        return groupRepository.delete(object);
     }
 
     /**
      * Method verifies if Group with id param exist in repository
      * @param id Long id of Group
-     * @return true if Group with id param exist
+     * @return true if Group with id param exists, else - false
      */
     @Transactional(readOnly = true)
     @Override
-    public boolean isExistsWithId(Long id) {
-        log.info("In isExistsWithId(id = [{}])",  id);
-        return groupRepository.countByGroupId(id)!=0;
+    public boolean isExistsById(Long id) {
+        log.info("In isExistsById(id = [{}])",  id);
+        return groupRepository.isExistsById(id);
     }
 
     /**
@@ -226,4 +187,15 @@ public class GroupServiceImpl  implements GroupService {
         return Arrays.stream(groupIds).map(this::getById).collect(Collectors.toList());
     }
 
+    private void checkTitleForUniqueness(String title) {
+        if (groupRepository.isExistsByTitle(title)){
+            throw new FieldAlreadyExistsException(Group.class, "title", title);
+        }
+    }
+
+    private void checkTitleForUniquenessIgnoringId(String title, Long id) {
+        if (groupRepository.isExistsByTitleIgnoringId(title, id)){
+            throw new FieldAlreadyExistsException(Group.class, "title", title);
+        }
+    }
 }

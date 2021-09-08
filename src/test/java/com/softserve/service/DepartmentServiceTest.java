@@ -18,10 +18,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.*;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @Category(UnitTestCategory.class)
 @RunWith(MockitoJUnitRunner.class)
@@ -43,89 +41,94 @@ public class DepartmentServiceTest {
 
     @Test
     public void testGetAll() {
-        List<Department> expected = Arrays.asList(department);
+        List<Department> expected = Collections.singletonList(department);
         when(repository.getAll()).thenReturn(expected);
 
         List<Department> actual = service.getAll();
-        assertThat(actual).hasSameSizeAs(expected)
-                .hasSameElementsAs(expected);
-        verify(repository, times(1)).getAll();
+
+        assertThat(actual).hasSameSizeAs(expected).hasSameElementsAs(expected);
+        verify(repository).getAll();
+    }
+
+    @Test
+    public void testGetDisabled() {
+        List<Department> expected = Collections.singletonList(department);
+        when(repository.getDisabled()).thenReturn(expected);
+
+        List<Department> actual = service.getDisabled();
+
+        assertThat(actual).hasSameSizeAs(expected).hasSameElementsAs(expected);
+        verify(repository).getDisabled();
     }
 
     @Test
     public void testDelete() {
-        when(repository.delete(department)).thenReturn(department);
-        assertThat(service.delete(department)).isEqualTo(department);
-        verify(repository, times(1)).delete(department);
+        Department expected = department;
+        when(repository.delete(expected)).thenReturn(expected);
+
+        Department actual = service.delete(expected);
+
+        assertThat(actual).isEqualToComparingFieldByField(expected);
+        verify(repository).delete(expected);
     }
 
     @Test
     public void testGetById() {
-        when(repository.findById(1L)).thenReturn(Optional.of(department));
+        Department expected = department;
+        when(repository.findById(expected.getId())).thenReturn(Optional.of(expected));
 
-        Department result = service.getById(1L);
-        assertNotNull(result);
-        assertEquals(department.getId(), result.getId());
-        verify(repository, times(1)).findById(anyLong());
+        Department actual = service.getById(expected.getId());
+
+        assertThat(actual).isEqualToComparingFieldByField(expected);
+        verify(repository).findById(expected.getId());
     }
 
     @Test(expected = EntityNotFoundException.class)
     public void throwEntityNotFoundExceptionIfDepartmentNotFoundedById() {
-        service.getById(2L);
-        verify(repository, times(1)).findById(2L);
+        Long nonExistentId = 2L;
+        when(repository.findById(nonExistentId)).thenReturn(Optional.empty());
+        service.getById(nonExistentId);
+        verify(repository).findById(nonExistentId);
     }
 
     @Test
-    public void saveIfNameIsUnique() {
-        when(repository.isNameExists(anyString())).thenReturn(false);
-        when(repository.save(department)).thenReturn(department);
+    public void testSave() {
+        Department expected = department;
+        when(repository.isExistsByName(expected.getName())).thenReturn(false);
+        when(repository.save(expected)).thenReturn(expected);
 
-        Department result = service.save(department);
-        assertNotNull(result);
-        assertEquals(department.getName(), result.getName());
-        verify(repository, times(1)).save(department);
-        verify(repository, times(1)).isNameExists(anyString());
+        Department actual = service.save(expected);
+
+        assertThat(actual).isEqualToComparingFieldByField(expected);
+        verify(repository).save(expected);
+        verify(repository).isExistsByName(expected.getName());
     }
 
     @Test(expected = FieldAlreadyExistsException.class)
-    public void throwFieldAlreadyExistsExceptionIfNameAlreadyExists() {
-        when(repository.isNameExists(anyString())).thenReturn(true);
-
+    public void throwFieldAlreadyExistsExceptionForNameOnSave() {
+        when(repository.isExistsByName(department.getName())).thenReturn(true);
         service.save(department);
-        verify(repository, times(1)).save(department);
-        verify(repository, times(1)).isNameExists(anyString());
+        verify(repository).isExistsByName(department.getName());
     }
 
     @Test
-    public void updateIfNameDoesNotExists() {
-        when(repository.findById(anyLong())).thenReturn(Optional.of(department));
-        when(repository.isNameExistsIgnoringId(anyString(), anyLong()))
-                .thenReturn(false);
-        when(repository.update(department)).thenReturn(department);
+    public void update() {
+        Department expected = department;
+        when(repository.isExistsByNameIgnoringId(expected.getName(), expected.getId())).thenReturn(false);
+        when(repository.update(expected)).thenReturn(expected);
 
-        Department actualDepartment = service.update(department);
-        assertNotNull(actualDepartment);
-        assertEquals(department, actualDepartment);
-        verify(repository, times(1)).update(actualDepartment);
-        verify(repository, times(1))
-                .isNameExistsIgnoringId(anyString(), anyLong());
+        Department actual = service.update(expected);
+
+        assertThat(actual).isEqualToComparingFieldByField(expected);
+        verify(repository).update(expected);
+        verify(repository).isExistsByNameIgnoringId(expected.getName(), expected.getId());
     }
 
     @Test(expected = FieldAlreadyExistsException.class)
-    public void throwFieldAlreadyExistsExceptionIfUpdatedNameAlreadyExists() {
-        when(repository.findById(anyLong())).thenReturn(Optional.of(department));
-        when(repository.isNameExistsIgnoringId(anyString(), anyLong()))
-                .thenReturn(true);
-
+    public void throwFieldAlreadyExistsExceptionForNameOnUpdate() {
+        when(repository.isExistsByNameIgnoringId(department.getName(), department.getId())).thenReturn(true);
         service.update(department);
-        verify(repository, times(1))
-                .isNameExistsIgnoringId(anyString(), anyLong());
-    }
-
-    @Test(expected = EntityNotFoundException.class)
-    public void throwEntityNotFoundExceptionIfTryToUpdateNotFoundedDepartment() {
-        when(repository.findById(anyLong())).thenReturn(Optional.empty());
-        service.update(department);
+        verify(repository).isExistsByNameIgnoringId(department.getName(), department.getId());
     }
 
     @Test

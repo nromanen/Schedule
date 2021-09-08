@@ -29,9 +29,7 @@ public class GroupTableBuilder extends BaseTableBuilder {
      * @throws IOException if the font file could not be read
      * @throws DocumentException if the font is invalid, or when size of table is wrong
      */
-    public GroupTableBuilder() throws DocumentException, IOException {
-        super();
-    }
+    public GroupTableBuilder() throws DocumentException, IOException {}
 
     /**
      * Method used for creating group schedule table in pdf
@@ -75,7 +73,7 @@ public class GroupTableBuilder extends BaseTableBuilder {
             table.addCell(cell);
             //getting in second loop layer - iterating days
             for (DaysOfWeekWithClassesForGroupDTO day : schedule.getDays()) {
-                cell = createInnerCell(day, period);
+                cell = createInnerCell(day, period, language);
                 table.addCell(cell);
             }
         }
@@ -131,10 +129,11 @@ public class GroupTableBuilder extends BaseTableBuilder {
      *
      * @param day the day of week and classes for group
      * @param period the period for group
+     * @param language the selected language
      * @return inner PdfPCell for table
      */
-    private PdfPCell createInnerCell(DaysOfWeekWithClassesForGroupDTO day, PeriodDTO period) {
-        log.info("Enter into createInnerCell method with day {} period {}", day, period);
+    private PdfPCell createInnerCell(DaysOfWeekWithClassesForGroupDTO day, PeriodDTO period, Locale language) {
+        log.info("Enter into createInnerCell method with day {} period {} language {}", day, period, language);
 
         PdfPCell cell = new PdfPCell(new Phrase(EMPTY_CELL, cellFont));
         for (int i = 0; i < day.getClasses().size(); i++) {
@@ -142,12 +141,12 @@ public class GroupTableBuilder extends BaseTableBuilder {
             // filling in column raws checking needed period
             if (currentClasses.getPeriod().equals(period)) {
                 if (isOddAndEvenClassesAreEqual(currentClasses)) {
-                    cell = generateCell(currentClasses.getWeeks().getEven());
+                    cell = generateCell(currentClasses.getWeeks().getEven(), language);
                 } else {
                     // creating new inner table with two cells - odd and even
                     PdfPTable inner = new PdfPTable(1);
-                    inner.addCell(createUpperInnerCell(currentClasses.getWeeks().getOdd()));
-                    inner.addCell(createLowerInnerCell(currentClasses.getWeeks().getEven()));
+                    inner.addCell(createUpperInnerCell(currentClasses.getWeeks().getOdd(), language));
+                    inner.addCell(createLowerInnerCell(currentClasses.getWeeks().getEven(), language));
                     cell = new PdfPCell(inner);
                 }
             }
@@ -160,14 +159,15 @@ public class GroupTableBuilder extends BaseTableBuilder {
      *  Method used for creating upper (odd) cell of table
      *
      * @param lessons the lessons for group
+     * @param language the selected language
      * @return inner PdfPCell for table
      */
-    private PdfPCell createUpperInnerCell(LessonsInScheduleDTO lessons) {
+    private PdfPCell createUpperInnerCell(LessonsInScheduleDTO lessons, Locale language) {
         PdfPCell upperInnerCell;
         if (lessons == null) {
             upperInnerCell = new PdfPCell(new Phrase(EMPTY_CELL, cellFont));
         } else {
-            upperInnerCell = generateCell(lessons);
+            upperInnerCell = generateCell(lessons, language);
         }
         style.innerValueCellStyle(upperInnerCell);
         upperInnerCell.setBorderWidthBottom(0.5f);
@@ -178,14 +178,15 @@ public class GroupTableBuilder extends BaseTableBuilder {
      *  Method used for creating lower (even) cell of table
      *
      * @param lessons the lessons for group
+     * @param language the selected language
      * @return inner PdfPCell for table
      */
-    private PdfPCell createLowerInnerCell(LessonsInScheduleDTO lessons) {
+    private PdfPCell createLowerInnerCell(LessonsInScheduleDTO lessons, Locale language) {
         PdfPCell lowerInnerCell;
         if (lessons == null) {
             lowerInnerCell = new PdfPCell(new Phrase(EMPTY_CELL, cellFont));
         } else {
-            lowerInnerCell = generateCell(lessons);
+            lowerInnerCell = generateCell(lessons, language);
         }
         style.innerValueCellStyle(lowerInnerCell);
         return lowerInnerCell;
@@ -195,15 +196,19 @@ public class GroupTableBuilder extends BaseTableBuilder {
      *  Method used for generating schedule text in table's cell
      *
      * @param lessons the lessons of schedule
+     * @param language the selected language
      * @return inner PdfPCell for table
      */
-    private PdfPCell generateCell(LessonsInScheduleDTO lessons) {
+    private PdfPCell generateCell(LessonsInScheduleDTO lessons, Locale language) {
         String baseText = getBaseTextFromLessonsInScheduleDTO(lessons);
         String linkText = getLinkTextFromLessonsInScheduleDTO(lessons);
         Phrase phrase = new Phrase(baseText, cellFont);
-        Chunk chunk = new Chunk("follow the link", linkFont);
-        chunk.setAnchor(linkText);
-        phrase.add(chunk);
+        if(linkText != null) {
+            phrase.add(COMA_SEPARATOR + NEW_LINE_SEPARATOR);
+            Chunk chunk = new Chunk(translator.getTranslation("follow the link", language), linkFont);
+            chunk.setAnchor(linkText);
+            phrase.add(chunk);
+        }
         return new PdfPCell(phrase);
     }
 
@@ -222,7 +227,7 @@ public class GroupTableBuilder extends BaseTableBuilder {
         stringBuilder.append(subjectName).append(COMA_SEPARATOR).append(NEW_LINE_SEPARATOR)
                 .append(lessonType).append(COMA_SEPARATOR).append(NEW_LINE_SEPARATOR)
                 .append(teacher).append(COMA_SEPARATOR).append(NEW_LINE_SEPARATOR)
-                .append(room).append(COMA_SEPARATOR).append(NEW_LINE_SEPARATOR);
+                .append(room);
         return stringBuilder.toString();
     }
 
@@ -230,11 +235,14 @@ public class GroupTableBuilder extends BaseTableBuilder {
      *  Method used for get link from lessons
      *
      * @param lessons the lessons of schedule
-     * @return text of link from lessons
+     * @return text of link from lessons if link is not null, else null
      */
     private String getLinkTextFromLessonsInScheduleDTO(LessonsInScheduleDTO lessons) {
         StringBuilder stringBuilder = new StringBuilder();
         String link = lessons.getLinkToMeeting();
+        if(link == null) {
+            return null;
+        }
         stringBuilder.append(link);
         return stringBuilder.toString();
     }

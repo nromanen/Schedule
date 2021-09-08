@@ -35,6 +35,7 @@ let AddTeacher = props => {
     }, [teacherId]);
 
     const initializeFormHandler = teacher => {
+        const department=teacher.department?teacher.department.id:0;
         props.initialize({
             id: teacher.id,
             surname: teacher.surname,
@@ -42,7 +43,7 @@ let AddTeacher = props => {
             patronymic: teacher.patronymic,
             position: teacher.position,
             email:teacher.email,
-            department: teacher.department.id
+            department
         });
     };
 
@@ -105,7 +106,6 @@ let AddTeacher = props => {
                     type="email"
                     placeholder={t('email_field')}
                     label={t('email_field')}
-                    validate={[required]}
                 />
                 <Field
                     name="department"

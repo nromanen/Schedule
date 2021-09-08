@@ -18,4 +18,5 @@ public interface LessonService extends BasicService <Lesson, Long> {
     Lesson saveLessonDuringCopy(Lesson lesson);
     void deleteLessonBySemesterId(Long semesterId);
     List<Lesson> getLessonsBySubjectIdTeacherIdSemesterIdLessonTypeAndExcludeCurrentLessonId(Lesson lesson);
+    List<Lesson> getAllGroupedLessonsByLesson(Lesson lesson);
 }

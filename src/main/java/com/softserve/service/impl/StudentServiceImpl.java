@@ -6,10 +6,8 @@ import com.softserve.exception.EntityNotFoundException;
 import com.softserve.exception.FieldAlreadyExistsException;
 import com.softserve.repository.StudentRepository;
 import com.softserve.service.StudentService;
-import com.softserve.util.NullAwareBeanUtils;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.beanutils.BeanUtilsBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -24,12 +22,10 @@ import java.nio.file.Files;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Slf4j
 @Service
 public class StudentServiceImpl implements StudentService {
-
     private final StudentRepository studentRepository;
 
     @Autowired
@@ -48,11 +44,8 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public Student getById(Long id) {
         log.info("Enter into getById method with id {}", id);
-        Student student = studentRepository.getById(id);
-        if (Objects.isNull(student)) {
-            throw new EntityNotFoundException(Student.class, "id", id.toString());
-        }
-        return student;
+        return studentRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(Student.class, "id", id.toString()));
     }
 
     /**
@@ -82,10 +75,7 @@ public class StudentServiceImpl implements StudentService {
 
     private Student saveToDatabase(Student object) {
         log.info("Enter into save method with entity:{}", object);
-        Student foundStudent = getByEmail(object.getEmail());
-        if (Objects.nonNull(foundStudent)) {
-            throw new FieldAlreadyExistsException(Student.class, "email", object.getEmail());
-        }
+        checkEmailForUniqueness(object.getEmail());
         return studentRepository.save(object);
     }
 
@@ -94,16 +84,15 @@ public class StudentServiceImpl implements StudentService {
      *
      * @param object Student entity with info to be updated
      * @return updated Student entity
+     * @throws FieldAlreadyExistsException if Student with input email already exists
      */
     @SneakyThrows
     @Transactional
     @Override
     public Student update(Student object) {
         log.info("Enter into update method with entity:{}", object);
-        BeanUtilsBean beanUtils = new NullAwareBeanUtils();
-        Student foundStudent = getById(object.getId());
-        beanUtils.copyProperties(foundStudent, object);
-        return studentRepository.update(foundStudent);
+        checkEmailForUniquenessIgnoringId(object.getEmail(), object.getId());
+        return studentRepository.update(object);
     }
 
     /**
@@ -116,20 +105,7 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public Student delete(Student object) {
         log.info("Enter into delete method with entity:{}", object);
-        return studentRepository.delete(getById(object.getId()));
-    }
-
-    /**
-     * Method finds an existing Student by his email from Repository
-     *
-     * @param email String email of Student for search
-     * @return target Student
-     */
-    @Transactional(readOnly = true)
-    @Override
-    public Student getByEmail(String email) {
-        log.info("Enter into findByEmail method with email:{}", email);
-        return studentRepository.findByEmail(email);
+        return studentRepository.delete(object);
     }
 
     /**
@@ -138,13 +114,14 @@ public class StudentServiceImpl implements StudentService {
      * Each field may or may not be enclosed in double-quotes.
      * First line of the file is a header.
      * All subsequent lines contain data about students, i.e.:
-     *
+     * <p>
      * "surname","name","patronymic","email"
      * "Romaniuk","Hanna","Stepanivna","romaniuk@gmail.com"
      * "Boichuk","Oleksandr","Ivanovych","boichuk@ukr.net"
-     *  etc.
-     *
+     * etc.
+     * <p>
      * The method is not transactional in order to prevent interruptions while reading a file
+     *
      * @param file file with students data
      * @return list of created students
      * @throws IOException if error happens while creating or deleting file
@@ -154,17 +131,17 @@ public class StudentServiceImpl implements StudentService {
     public List<Student> saveFromFile(MultipartFile file, Long groupId) throws IOException {
         log.info("Enter into saveFromFile of StudentServiceImpl");
 
-        String fileName = String.join("","students_group",
-                String.valueOf(groupId),"_",String.valueOf(LocalDateTime.now().getNano()),".csv");
+        String fileName = String.join("", "students_group",
+                String.valueOf(groupId), "_", String.valueOf(LocalDateTime.now().getNano()), ".csv");
 
         File csvFile = new File(fileName);
         file.transferTo(csvFile);
         List<Student> students = new ArrayList<>();
 
         try (Reader reader = new FileReader(csvFile, StandardCharsets.UTF_8)) {
-                students = new CsvToBeanBuilder<Student>(reader)
-                        .withType(Student.class)
-                        .build().parse();
+            students = new CsvToBeanBuilder<Student>(reader)
+                    .withType(Student.class)
+                    .build().parse();
         } catch (RuntimeException e) {
             log.error("Error occurred while parsing file {}", file.getOriginalFilename(), e);
         }
@@ -181,5 +158,17 @@ public class StudentServiceImpl implements StudentService {
         }
         Files.delete(csvFile.toPath());
         return savedStudents;
+    }
+
+    private void checkEmailForUniqueness(String email) {
+        if(studentRepository.isExistsByEmail(email)) {
+            throw new FieldAlreadyExistsException(Student.class, "email", email);
+        }
+    }
+
+    private void checkEmailForUniquenessIgnoringId(String email, Long id) {
+        if(studentRepository.isExistsByEmailIgnoringId(email, id)) {
+            throw new FieldAlreadyExistsException(Student.class, "email", email);
+        }
     }
 }

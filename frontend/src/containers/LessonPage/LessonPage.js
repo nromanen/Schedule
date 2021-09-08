@@ -20,7 +20,7 @@ import {
     selectLessonCardService
 } from '../../services/lessonService';
 import { showAllTeachersService } from '../../services/teacherService';
-import { showAllGroupsService } from '../../services/groupService';
+import { selectGroupService, showAllGroupsService } from '../../services/groupService';
 import { setLoadingService } from '../../services/loadingService';
 import { showAllSubjectsService } from '../../services/subjectService';
 import {
@@ -36,6 +36,9 @@ import { styled } from '@material-ui/core/styles';
 import { cardType } from '../../constants/cardType';
 
 import './LessonPage.scss';
+import SearchPanel from '../../share/SearchPanel/SearchPanel';
+import AddSubject from '../../components/AddSubjectForm/AddSubjectForm';
+import { search } from '../../helper/search';
 
 const GroupField = styled(TextField)({
     display: 'inline-block',
@@ -49,6 +52,25 @@ const LessonPage = props => {
     const [openCopyLessonDialog, setOpenCopyLessonDialog] = useState(false);
     const [lessonId, setLessonId] = React.useState(-1);
     const [copiedLesson, setCopiedLesson] = React.useState(-1);
+    const [term, setTerm] = useState('');
+    const SearchChange = setTerm;
+    let visibleItems = [];
+    const isIncludeValue = (item, value) => {
+        return item.toLowerCase().includes(value.toLowerCase());
+    };
+    const getSearchTeachers = (lessons, term) => {
+        const termTmp = term.trim();
+        if (termTmp.length === 0) return lessons;
+        return lessons.filter(lesson => {
+            let { teacher, subjectForSite, lessonType, grouped } = lesson;
+            return isIncludeValue(teacher.surname, termTmp) ||
+                isIncludeValue(subjectForSite, termTmp) ||
+                isIncludeValue(lessonType, termTmp) ||
+                isIncludeValue('Grouped', term) && grouped;
+        });
+    };
+    visibleItems = getSearchTeachers(props.lessons, term);
+
 
     const teachers = props.teachers;
 
@@ -59,9 +81,10 @@ const LessonPage = props => {
 
     const isLoading = props.loading;
 
-    const { groups, groupId } = props;
+    const { groups, groupId, currentSemester } = props;
 
     const subjects = props.subjects;
+
 
     useEffect(() => {
         if (groupId) {
@@ -80,9 +103,17 @@ const LessonPage = props => {
     const createLessonCardHandler = card => {
         if (Object.keys(card).length === 0 && card.constructor === Object)
             return;
+        if (card.groups === undefined) {
+            card.groups = [{ id: groupId }];
+        }
+        handleLessonCardService(card, groupId, currentSemester);
 
-        handleLessonCardService(card, groupId);
     };
+    useEffect(() => {
+        setLoadingService(true);
+        getLessonsByGroupService(groupId);
+    }, [lessons.length]);
+
 
     const selectLessonCardHandler = lessonCardId => {
         selectLessonCardService(lessonCardId);
@@ -125,7 +156,11 @@ const LessonPage = props => {
     };
 
     const handleGroupSelect = group => {
-        if (group) selectGroupIdService(group.id);
+        if (group) {
+            selectGroupIdService(group.id);
+            selectGroupService(group.id);
+        }
+        ;
     };
 
     const groupFinderHandle = groupId => {
@@ -147,20 +182,20 @@ const LessonPage = props => {
 
     let cardsContainer = (
         <>
-            {lessonLength > 0 ? (
+            {visibleItems.length > 0 ? (
                 <LessonsList
-                    lessons={lessons}
+                    lessons={visibleItems}
                     onClickOpen={handleClickOpen}
                     onSelectLesson={selectLessonCardHandler}
                     onCopyLesson={openCopyLessonDialogHandle}
                     translation={t}
                 />
             ) : (
-                <section className="centered-container">
+                <section className='centered-container'>
                     <h2>
                         {groupHandle(groups, groupId)
                             ? t('lesson_no_lesson_for_group_label') +
-                              groupTitleHandle(groups, groupId)
+                            groupTitleHandle(groups, groupId)
                             : ''}
                     </h2>
                 </section>
@@ -170,7 +205,7 @@ const LessonPage = props => {
 
     if (isLoading) {
         cardsContainer = (
-            <section className="centered-container">
+            <section className='centered-container'>
                 <CircularProgress />
             </section>
         );
@@ -178,7 +213,7 @@ const LessonPage = props => {
 
     return (
         <>
-            <Card class="card-title lesson-card">
+            <Card class='card-title lesson-card'>
                 <CopyLessonDialog
                     open={openCopyLessonDialog}
                     onClose={closeCopyLessonDialogHandle}
@@ -193,35 +228,47 @@ const LessonPage = props => {
                     open={open}
                     onClose={handleClose}
                 />
-                <div className="lesson-page-title">
-                    <h1 className="lesson-page-h">
-                        {t('lesson_for_group_title')}
-                    </h1>
-                    <Autocomplete
-                        {...defaultProps}
-                        id="group"
-                        clearOnEscape
-                        openOnFocus
-                        value={groupFinderHandle(groupId)}
-                        onChange={(event, newValue) => {
-                            handleGroupSelect(newValue);
-                        }}
-                        renderInput={params => (
-                            <GroupField
-                                {...params}
-                                label={t('formElements:group_label')}
-                                margin="normal"
+                <div className='lesson-page-title'>
+                    <aside className='search-lesson-group'>
+                        {groupId &&
+                        <span className='search-lesson'>
+                                <SearchPanel
+                                    forLessons={true}
+                                    SearchChange={SearchChange}
+                                />
+                            </span>
+                        }
+                        <span className='group-lesson'>
+                            <h1 className='lesson-page-h'>
+                                {t('lesson_for_group_title')}
+                            </h1>
+                            <Autocomplete
+                                {...defaultProps}
+                                id='group'
+                                clearOnEscape
+                                openOnFocus
+                                value={groupFinderHandle(groupId)}
+                                onChange={(event, newValue) => {
+                                    handleGroupSelect(newValue);
+                                }}
+                                renderInput={params => (
+                                    <GroupField
+                                        {...params}
+                                        label={t('formElements:group_label')}
+                                        margin='normal'
+                                    />
+                                )}
                             />
-                        )}
-                    />
+                        </span>
+                    </aside>
+
                 </div>
             </Card>
-            <div className="cards-container">
+            <div className='cards-container'>
                 <section>
                     <LessonForm
                         lessonTypes={props.lessonTypes}
                         isUniqueError={isUniqueError}
-                        groupId={groupId}
                         subjects={subjects}
                         teachers={teachers}
                         onSubmit={createLessonCardHandler}

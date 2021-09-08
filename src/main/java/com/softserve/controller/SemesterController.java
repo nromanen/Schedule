@@ -39,10 +39,10 @@ public class SemesterController {
 
     @GetMapping(path = {"/semesters", "/public/semesters"})
     @ApiOperation(value = "Get the list of all semesters")
-    public ResponseEntity<List<SemesterDTO>> list() {
+    public ResponseEntity<List<SemesterWithGroupsDTO>> list() {
         log.info("In list ()");
         List<Semester> semesters = semesterService.getAll();
-        return ResponseEntity.status(HttpStatus.OK).body(semesterMapper.semestersToSemesterDTOs(semesters));
+        return ResponseEntity.status(HttpStatus.OK).body(semesterMapper.semestersToSemesterWithGroupsDTOs(semesters));
     }
 
     @GetMapping("/semesters/{id}")
@@ -87,18 +87,18 @@ public class SemesterController {
 
     @PostMapping("/semesters")
     @ApiOperation(value = "Create new semester")
-    public ResponseEntity<SemesterWithGroupsDTO> save(@RequestBody SemesterDTO semesterDTO) {
+    public ResponseEntity<SemesterWithGroupsDTO> save(@RequestBody SemesterWithGroupsDTO semesterDTO) {
         log.info("In save (semesterDTO = [{}])", semesterDTO);
-        Semester semester = semesterService.save(semesterMapper.semesterDTOToSemester(semesterDTO));
+        Semester semester = semesterService.save(semesterMapper.semesterWithGroupsDTOToSemester(semesterDTO));
         return ResponseEntity.status(HttpStatus.CREATED).body(semesterMapper.semesterToSemesterWithGroupsDTO(semester));
     }
 
     @PutMapping("/semesters")
     @ApiOperation(value = "Update existing semester by id")
-    public ResponseEntity<SemesterWithGroupsDTO> update(@RequestBody SemesterDTO semesterDTO) {
+    public ResponseEntity<SemesterWithGroupsDTO> update(@RequestBody SemesterWithGroupsDTO semesterDTO) {
         log.info("In update (semesterDTO = [{}])", semesterDTO);
         semesterService.getById(semesterDTO.getId());
-        Semester semester = semesterService.update(semesterMapper.semesterDTOToSemester(semesterDTO));
+        Semester semester = semesterService.update(semesterMapper.semesterWithGroupsDTOToSemester(semesterDTO));
         return ResponseEntity.status(HttpStatus.OK).body(semesterMapper.semesterToSemesterWithGroupsDTO(semester));
     }
 

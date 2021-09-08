@@ -56,11 +56,13 @@ const ScheduleLessonsList = props => {
         });
 
         for (let i = 0; i < hours - hoursInSchedule; i++) {
+            console.log(lessons)
             lessonItem.push(
                 <section key={lesson.id + i}>
                     <ScheduleItem
                         index={i}
                         lesson={lesson}
+                        lessons={lessons}
                         fStrLetterCapital={firstStringLetterCapitalHandle}
                         translation={t}
                         classScheduler={props.classScheduler}

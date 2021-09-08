@@ -82,6 +82,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private static final String ADMIN_ENDPOINT = "/admin";
     private static final String FRONTEND_SCHEDULE_ENDPOINT = "/schedule";
     private static final String FRONTEND_ACTIVATION_PAGE_ENDPOINT = "/activation-page";
+    //TEACHER
+    private static final String GROUPS_BY_TEACHER_ID_ENDPOINT = "/groups/teacher/{teacherId}";
+    private static final String GROUP_WITH_STUDENTS = "/groups/{id}/with-students";
 
 
     @Autowired
@@ -107,10 +110,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers(FRONTEND_ACTIVATION_PAGE_ENDPOINT, DOWNLOAD_SCHEDULE_ENDPOINT, AUTH_ENDPOINT, SCHEDULE_FOR_USERS_ENDPOINT, GROUPS_BY_SEMESTER_ID_PUBLIC_ENDPOINT, ALL_TEACHERS_PUBLIC_ENDPOINT,HOME_ENDPOINT,LOGIN_ENDPOINT,ADMIN_ENDPOINT,FRONTEND_SCHEDULE_ENDPOINT,
-                        ALL_CLASSES_PUBLIC_ENDPOINT, ALL_SEMESTERS_PUBLIC_ENDPOINT, GROUPS_FOR_DEFAULT_SEMESTER_PUBLIC_ENDPOINT, GROUPS_FOR_CURRENT_SEMESTER_PUBLIC_ENDPOINT, "/1", DEFAULT_SEMESTER_PUBLIC_ENDPOINT).permitAll()
+                .antMatchers(FRONTEND_ACTIVATION_PAGE_ENDPOINT, DOWNLOAD_SCHEDULE_ENDPOINT,
+                        AUTH_ENDPOINT, SCHEDULE_FOR_USERS_ENDPOINT, GROUPS_BY_SEMESTER_ID_PUBLIC_ENDPOINT,
+                        ALL_TEACHERS_PUBLIC_ENDPOINT, HOME_ENDPOINT,LOGIN_ENDPOINT,ADMIN_ENDPOINT,
+                        FRONTEND_SCHEDULE_ENDPOINT, ALL_CLASSES_PUBLIC_ENDPOINT, ALL_SEMESTERS_PUBLIC_ENDPOINT,
+                        GROUPS_FOR_DEFAULT_SEMESTER_PUBLIC_ENDPOINT, GROUPS_FOR_CURRENT_SEMESTER_PUBLIC_ENDPOINT,
+                        DEFAULT_SEMESTER_PUBLIC_ENDPOINT).permitAll()
+                .antMatchers(GROUPS_BY_TEACHER_ID_ENDPOINT, GROUP_WITH_STUDENTS).hasAnyRole("MANAGER", "TEACHER")
                 .antMatchers(MANAGER_ENDPOINT, CLASSES_ENDPOINT, GROUPS_ENDPOINT, LESSONS_ENDPOINT,
-                        ROOMS_ENDPOINT, SUBJECTS_ENDPOINT, TEACHERS_ENDPOINT, SEMESTERS_ENDPOINT, ROOM_TYPES_ENDPOINT, DEPARTMENTS_ENDPOINT).hasRole("MANAGER")
+                        ROOMS_ENDPOINT, SUBJECTS_ENDPOINT, TEACHERS_ENDPOINT, SEMESTERS_ENDPOINT, ROOM_TYPES_ENDPOINT,
+                        DEPARTMENTS_ENDPOINT).hasRole("MANAGER")
                 .anyRequest().authenticated()
                 .and()
                 .oauth2Login()

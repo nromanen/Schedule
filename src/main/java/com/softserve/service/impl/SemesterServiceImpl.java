@@ -1,6 +1,7 @@
 package com.softserve.service.impl;
 
 import com.softserve.entity.Group;
+import com.softserve.entity.Period;
 import com.softserve.entity.Semester;
 import com.softserve.exception.*;
 import com.softserve.repository.SemesterRepository;
@@ -98,6 +99,9 @@ public class SemesterServiceImpl implements SemesterService {
         checkConstraints(semester);
         if (isDaysWithLessonsCanNotBeRemoved(semester)) {
             throw new UsedEntityException("One or more days in a semester have lessons and can not be removed");
+        }
+        if (isPeriodsWithLessonsCanNotBeRemoved(semester)) {
+            throw new UsedEntityException("One or more classes in a semester have lessons and can not be removed");
         }
     }
 
@@ -210,7 +214,7 @@ public class SemesterServiceImpl implements SemesterService {
 
     /**
      * The method is used for checking if days with lessons are not removed from the updated semester
-     *
+     * @param semester that is checked before updating
      * @return true if one or more days with lessons have been removed from the updated semester;
      * false if days with lessons have not been removed.
      */
@@ -218,6 +222,18 @@ public class SemesterServiceImpl implements SemesterService {
         log.info("Enter into isDaysWithLessonsCanBeRemoved with entity: {}", semester);
         List<DayOfWeek> daysInSchedule = semesterRepository.getDaysWithLessonsBySemesterId(semester.getId());
         return !semester.getDaysOfWeek().containsAll(daysInSchedule);
+    }
+
+    /**
+     * The method is used for checking if periods with lessons are not removed from the updated semester
+     * @param semester that is checked before updating
+     * @return true if one or more periods with lessons have been removed from the updated semester;
+     * false if periods with lessons have not been removed.
+     */
+    private boolean isPeriodsWithLessonsCanNotBeRemoved(Semester semester) {
+        log.info("Enter into isPeriodsWithLessonsCanNotBeRemoved with entity: {}", semester);
+        List<Period> periodsInSchedule = semesterRepository.getPeriodsWithLessonsBySemesterId(semester.getId());
+        return !semester.getPeriods().containsAll(periodsInSchedule);
     }
 
     /**

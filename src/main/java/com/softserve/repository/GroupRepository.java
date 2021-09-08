@@ -1,14 +1,18 @@
 package com.softserve.repository;
 
 import com.softserve.entity.Group;
+
 import java.util.List;
+import java.util.Optional;
 
 public interface GroupRepository extends BasicRepository<Group, Long> {
-    Group getById(Long id);
-    List<Group> getAllWithoutStudents();
-    Long countGroupsWithTitleAndIgnoreWithId(Long id, String title);
-    Long countGroupsWithTitle(String title);
-    Long countByGroupId(Long id);
-    List<Group> getDisabled();
-    List<Group> getDisabledWithoutStudents();
+    Optional<Group> getWithStudentsById(Long id);
+
+    boolean isExistsByTitleIgnoringId(String string, Long id);
+
+    boolean isExistsByTitle(String title);
+
+    boolean isExistsById(Long id);
+
+    List<Group> getByTeacherId(Long id);
 }
