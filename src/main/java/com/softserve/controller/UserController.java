@@ -116,7 +116,7 @@ public class UserController {
     @GetMapping("/profile")
     @ApiOperation(value = "Get current user data")
     public ResponseEntity getCurrentUser(@CurrentUser JwtUser jwtUser) {
-        log.info("Enter into getCurrentUser method with JwtUser: {}", jwtUser);
+        log.info("Enter into getCurrentUser method with JwtUser {}", jwtUser.getUsername());
         User user = userService.getById(jwtUser.getId());
         if (user.getRole() == Role.ROLE_TEACHER) {
             Teacher teacher = teacherService.findByUserId(user.getId());
@@ -125,10 +125,11 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/change-profile")
-    @ApiOperation(value = "Change data for current user")
-    public ResponseEntity<MessageDTO> changeDataForCurrentUser(@CurrentUser JwtUser jwtUser,
-                                                               @RequestBody UserDataForChangeDTO data) {
+    @PostMapping("/profile/change-password")
+    @ApiOperation(value = "Change password for current user")
+    public ResponseEntity changePasswordForCurrentUser(@CurrentUser JwtUser jwtUser,
+                                                       @RequestBody UserDataForChangePasswordDTO userDTO) {
+        log.info("Enter into changePasswordForCurrentUser method with JwtUser {}", jwtUser.getUsername());
         User user = userService.getById(jwtUser.getId());
 
         Teacher teacher = null;
