@@ -51,13 +51,12 @@ public class AsyncTasks {
                             .withType(Student.class)
                             .build().parse();
                 }
-                fileDelete(csvFile);
             } catch (RuntimeException e) {
                 log.error("Error occurred while parsing file {}", csvFile.getName(), e);
-                fileDelete(csvFile);
                 throw new ParseFileException("Bad file format");
             } catch (IOException e) {
                 log.error("Error occurred while accessing to file {}", csvFile.getName(), e);
+            } finally {
                 fileDelete(csvFile);
             }
             return students;
