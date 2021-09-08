@@ -6,7 +6,6 @@ import com.softserve.exception.FieldAlreadyExistsException;
 import com.softserve.repository.StudentRepository;
 import com.softserve.service.StudentService;
 import com.softserve.util.AsyncTasks;
-import com.softserve.util.CsvFileParser;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.ConstraintViolationException;
-import java.io.File;
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -130,13 +127,7 @@ public class StudentServiceImpl implements StudentService {
     public List<Student> saveFromFile(MultipartFile file, Long groupId) throws IOException {
         log.info("Enter into saveFromFile of StudentServiceImpl");
 
-        String fileName = String.join("", "students_group",
-                String.valueOf(groupId), "_", String.valueOf(LocalDateTime.now().getNano()), ".csv");
-
-        File csvFile = new File(fileName);
-        file.transferTo(csvFile);
-
-        List<Student> students = CsvFileParser.parse(csvFile);
+        List<Student> students = AsyncTasks.getStudentsFromFile(file);
 
         List<Student> savedStudents = new ArrayList<>();
 
@@ -156,7 +147,6 @@ public class StudentServiceImpl implements StudentService {
                 savedStudents.add(student);
             }
         }
-        AsyncTasks.deleteFilesWithType("students_group", ".csv");
         return savedStudents;
     }
 
