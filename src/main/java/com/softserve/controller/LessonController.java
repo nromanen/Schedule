@@ -164,9 +164,9 @@ public class LessonController {
 
     @PutMapping("/link")
     @ApiOperation(value = "Update link to meeting")
-    public ResponseEntity<Void> updateLinkToMeeting(@RequestBody LessonWithLinkDTO lessonWithLinkDTO) {
+    public ResponseEntity<Integer> updateLinkToMeeting(@RequestBody LessonWithLinkDTO lessonWithLinkDTO) {
         log.info("In updateLinkToMeeting (lessonWithLinkDTO = [{}])", lessonWithLinkDTO);
-        lessonService.updateLinkToMeeting(lessonInfoMapper.lessonWithLinkDTOToLesson(lessonWithLinkDTO));
-        return ResponseEntity.status(HttpStatus.OK).build();
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(lessonService.updateLinkToMeeting(lessonInfoMapper.lessonWithLinkDTOToLesson(lessonWithLinkDTO)));
     }
 }

@@ -19,5 +19,5 @@ public interface LessonService extends BasicService <Lesson, Long> {
     void deleteLessonBySemesterId(Long semesterId);
     List<Lesson> getLessonsBySubjectIdTeacherIdSemesterIdLessonTypeAndExcludeCurrentLessonId(Lesson lesson);
     List<Lesson> getAllGroupedLessonsByLesson(Lesson lesson);
-    void updateLinkToMeeting(Lesson lesson);
+    Integer updateLinkToMeeting(Lesson lesson);
 }

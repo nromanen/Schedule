@@ -6,9 +6,19 @@ import com.softserve.config.MyWebAppInitializer;
 import com.softserve.config.WebMvcConfig;
 import com.softserve.dto.*;
 import com.softserve.entity.Lesson;
-import com.softserve.mapper.*;
-import com.softserve.service.*;
+import com.softserve.mapper.GroupMapperImpl;
+import com.softserve.mapper.LessonInfoMapperImpl;
+import com.softserve.mapper.SubjectMapperImpl;
+import com.softserve.mapper.TeacherNameMapperImpl;
+import com.softserve.service.GroupService;
+import com.softserve.service.LessonService;
+import com.softserve.service.SubjectService;
+import com.softserve.service.TeacherService;
+import junitparams.JUnitParamsRunner;
+import junitparams.Parameters;
 import org.junit.Before;
+import org.junit.ClassRule;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -18,7 +28,8 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit4.rules.SpringClassRule;
+import org.springframework.test.context.junit4.rules.SpringMethodRule;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -31,12 +42,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @Category(IntegrationTestCategory.class)
-@RunWith(SpringJUnit4ClassRunner.class)
+@RunWith(JUnitParamsRunner.class)
 @ContextConfiguration(classes = {WebMvcConfig.class, DBConfigTest.class, MyWebAppInitializer.class})
 @WebAppConfiguration
 @WithMockUser(username = "first@mail.com", password = "$2a$04$SpUhTZ/SjkDQop/Zvx1.seftJdqvOploGce/wau247zQhpEvKtz9.", roles = "MANAGER")
 @Sql(value = "classpath:create-lessons-before.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 public class LessonsControllerTest {
+    @ClassRule
+    public static final SpringClassRule scr = new SpringClassRule();
+
+    @Rule
+    public final SpringMethodRule smr = new SpringMethodRule();
 
     private MockMvc mockMvc;
     private ObjectMapper objectMapper = new ObjectMapper();
@@ -195,5 +211,42 @@ public class LessonsControllerTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isInternalServerError());
+    }
+
+    @Test
+    @Parameters(method = "parametersToUpdateLinkToMeeting")
+    public void updateLinkToMeeting(LessonWithLinkDTO lessonWithLinkDTO, Integer result) throws Exception {
+
+        mockMvc.perform(put("/lessons/link").content(objectMapper.writeValueAsString(lessonWithLinkDTO))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json"))
+                .andExpect(jsonPath("$").value(result));
+    }
+
+    private Object[] parametersToUpdateLinkToMeeting() {
+        LessonWithLinkDTO firstLessonWithLinkDTO = new LessonWithLinkDTO();
+        firstLessonWithLinkDTO.setLinkToMeeting("https://www.youtube.com/");
+        firstLessonWithLinkDTO.setSemesterId(7L);
+        firstLessonWithLinkDTO.setTeacherId(5L);
+        firstLessonWithLinkDTO.setSubjectId(5L);
+        firstLessonWithLinkDTO.setLessonType("LECTURE");
+
+        LessonWithLinkDTO secondLessonWithLinkDTO = new LessonWithLinkDTO();
+        secondLessonWithLinkDTO.setLinkToMeeting("https://www.youtube.com/");
+        secondLessonWithLinkDTO.setSemesterId(7L);
+        secondLessonWithLinkDTO.setTeacherId(5L);
+        secondLessonWithLinkDTO.setSubjectId(5L);
+
+        LessonWithLinkDTO thirdLessonWithLinkDTO = new LessonWithLinkDTO();
+        thirdLessonWithLinkDTO.setLinkToMeeting("https://www.youtube.com/");
+        thirdLessonWithLinkDTO.setSemesterId(7L);
+        thirdLessonWithLinkDTO.setTeacherId(5L);
+
+        return new Object[] {
+                new Object[] { firstLessonWithLinkDTO, 2 },
+                new Object[] { secondLessonWithLinkDTO, 3 },
+                new Object[] { thirdLessonWithLinkDTO, 4 }
+        };
     }
 }
