@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @Getter
 @AllArgsConstructor
-public class SubjectWithTypePOJO {
+public class SubjectWithTypeDTO {
 
     private Subject subject;
     private LessonType lessonType;

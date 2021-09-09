@@ -10,7 +10,7 @@ import java.util.Set;
 @Setter
 @Getter
 @EqualsAndHashCode
-public class SubjectWithTypesDTO {
+public class SubjectNameWithTypesDTO {
     private Long id;
     private String name;
     @EqualsAndHashCode.Exclude
