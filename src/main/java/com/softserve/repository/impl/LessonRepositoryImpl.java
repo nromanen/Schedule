@@ -227,11 +227,13 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
     }
 
     /**
-     * The method used for updating links to meeting for lessons
+     * The method used for updating links to meeting for lessons.
+     * By default, link to meeting is updated by semester id and teacher id
+     * But update can be more specific by providing additional subject id and/or lesson type in a lesson object
      * @param lesson Lesson object with new link to meeting
      */
     @Override
-    public void updateLinkToMeeting(Lesson lesson) {
+    public Integer updateLinkToMeeting(Lesson lesson) {
         log.info("In repository updateLinkToMeeting lesson = [{}]", lesson);
         CriteriaBuilder cb = sessionFactory.getCurrentSession().getCriteriaBuilder();
         CriteriaUpdate<Lesson> criteriaUpdate = cb.createCriteriaUpdate(Lesson.class);
@@ -254,6 +256,6 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
 
         criteriaUpdate.where(predicates.toArray(new Predicate[0]));
 
-        sessionFactory.getCurrentSession().createQuery(criteriaUpdate).executeUpdate();
+        return sessionFactory.getCurrentSession().createQuery(criteriaUpdate).executeUpdate();
     }
 }

@@ -287,8 +287,8 @@ public class LessonServiceImpl implements LessonService {
      * @param lesson Lesson object with new link to meeting
      */
     @Override
-    public void updateLinkToMeeting(Lesson lesson) {
+    public Integer updateLinkToMeeting(Lesson lesson) {
         log.info("In service updateLinkToMeeting lesson = [{}]", lesson);
-        lessonRepository.updateLinkToMeeting(lesson);
+        return lessonRepository.updateLinkToMeeting(lesson);
     }
 }
