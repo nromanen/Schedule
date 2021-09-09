@@ -122,18 +122,18 @@ public class TeacherServiceImpl implements TeacherService {
 
     /**
      * Method deletes an existing teacher from Repository
-     * @param object Teacher entity to be deleted
+     * @param teacher Teacher entity to be deleted
      * @return deleted Teacher entity
      */
     @Override
-    public Teacher delete(Teacher object) {
-        log.info("Enter into delete method with entity:{}", object);
-        if (object.getUserId() != null) {
-            User user = userService.getById(object.getUserId().longValue());
+    public Teacher delete(Teacher teacher) {
+        log.info("Enter into delete method with entity:{}", teacher);
+        if (teacher.getUserId() != null) {
+            User user = userService.getById(teacher.getUserId().longValue());
             user.setRole(Role.ROLE_USER);
             userService.update(user);
         }
-        return teacherRepository.delete(object);
+        return teacherRepository.delete(teacher);
     }
 
     /**
