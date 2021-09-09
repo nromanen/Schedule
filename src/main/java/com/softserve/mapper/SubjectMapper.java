@@ -1,8 +1,8 @@
 package com.softserve.mapper;
 
-import com.softserve.dto.SubjectWithTypePOJO;
+import com.softserve.dto.SubjectWithTypeDTO;
 import com.softserve.dto.SubjectDTO;
-import com.softserve.dto.SubjectWithTypesDTO;
+import com.softserve.dto.SubjectNameWithTypesDTO;
 import com.softserve.entity.Subject;
 import com.softserve.entity.enums.LessonType;
 import org.mapstruct.Mapper;
@@ -16,28 +16,28 @@ public abstract class SubjectMapper {
 
     public abstract List<SubjectDTO> subjectsToSubjectDTOs (List<Subject> subjects);
 
-    public List<SubjectWithTypesDTO> subjectsToSubjectWithTypeDTOs(List<SubjectWithTypePOJO> subjects) {
+    public List<SubjectNameWithTypesDTO> SubjectWithTypeDTOsToSubjectNameWithTypesDTOs(List<SubjectWithTypeDTO> subjects) {
 
-        List<SubjectWithTypesDTO> subjectsWithType = new ArrayList<>();
+        List<SubjectNameWithTypesDTO> subjectsNamesWithTypes = new ArrayList<>();
 
-        for (SubjectWithTypePOJO subject : subjects) {
-            SubjectWithTypesDTO subjectWithType = new SubjectWithTypesDTO();
+        for (SubjectWithTypeDTO subject : subjects) {
+            SubjectNameWithTypesDTO subjectWithType = new SubjectNameWithTypesDTO();
 
             subjectWithType.setId(subject.getSubject().getId());
             subjectWithType.setName(subject.getSubject().getName());
 
-            if (subjectsWithType.contains(subjectWithType)) {
-                subjectsWithType.get(subjectsWithType.indexOf(subjectWithType))
+            if (subjectsNamesWithTypes.contains(subjectWithType)) {
+                subjectsNamesWithTypes.get(subjectsNamesWithTypes.indexOf(subjectWithType))
                         .getTypes().add(subject.getLessonType());
 
             } else {
                 Set<LessonType> lessonTypes = new TreeSet<>();
                 lessonTypes.add(subject.getLessonType());
                 subjectWithType.setTypes(lessonTypes);
-                subjectsWithType.add(subjectWithType);
+                subjectsNamesWithTypes.add(subjectWithType);
             }
 
         }
-        return subjectsWithType;
+        return subjectsNamesWithTypes;
     }
 }

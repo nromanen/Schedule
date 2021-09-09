@@ -1,6 +1,6 @@
 package com.softserve.repository.impl;
 
-import com.softserve.dto.SubjectWithTypePOJO;
+import com.softserve.dto.SubjectWithTypeDTO;
 import com.softserve.entity.Subject;
 import com.softserve.repository.SubjectRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -14,7 +14,7 @@ import java.util.List;
 @Slf4j
 public class SubjectRepositoryImpl extends BasicRepositoryImpl<Subject, Long> implements SubjectRepository {
 
-    private static final String GET_SUBJECTS = "SELECT new com.softserve.dto.SubjectWithTypePOJO(l.subject, l.lessonType) " +
+    private static final String GET_SUBJECTS = "SELECT new com.softserve.dto.SubjectWithTypeDTO(l.subject, l.lessonType) " +
             "FROM Lesson l WHERE l.teacher.id = :teacherId AND l.semester.id = :semesterId";
 
     private Session getSession(){
@@ -98,9 +98,9 @@ public class SubjectRepositoryImpl extends BasicRepositoryImpl<Subject, Long> im
      * @return List of subjects with their types
      */
     @Override
-    public List<SubjectWithTypePOJO> getSubjectsWithTypes(Long semesterId, Long teacherId) {
+    public List<SubjectWithTypeDTO> getSubjectsWithTypes(Long semesterId, Long teacherId) {
         log.info("In repository getSubjects(semesterId = [{}], teacherId = [{}])", semesterId, teacherId);
-        return sessionFactory.getCurrentSession().createQuery(GET_SUBJECTS, SubjectWithTypePOJO.class)
+        return sessionFactory.getCurrentSession().createQuery(GET_SUBJECTS, SubjectWithTypeDTO.class)
                 .setParameter("teacherId", teacherId)
                 .setParameter("semesterId", semesterId)
                 .getResultList();

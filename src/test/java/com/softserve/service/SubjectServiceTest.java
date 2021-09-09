@@ -1,6 +1,6 @@
 package com.softserve.service;
 
-import com.softserve.dto.SubjectWithTypePOJO;
+import com.softserve.dto.SubjectWithTypeDTO;
 import com.softserve.entity.Subject;
 import com.softserve.entity.enums.LessonType;
 import com.softserve.exception.EntityNotFoundException;
@@ -135,19 +135,23 @@ public class SubjectServiceTest {
 
     @Test
     public void getSubjectsWithTypes() {
+
         Subject firstSubject = new Subject();
         firstSubject.setName("Organic chemistry");
         firstSubject.setId(1L);
+
         Subject secondSubject = new Subject();
         secondSubject.setName("Economics");
         secondSubject.setId(1L);
-        SubjectWithTypePOJO firstSubjectWithType = new SubjectWithTypePOJO(firstSubject, LessonType.LECTURE);
-        SubjectWithTypePOJO secondSubjectWithType = new SubjectWithTypePOJO(secondSubject, LessonType.PRACTICAL);
-        List<SubjectWithTypePOJO> expectedSubjectsWithTypes = List.of(firstSubjectWithType, secondSubjectWithType);
+
+        SubjectWithTypeDTO firstSubjectWithType = new SubjectWithTypeDTO(firstSubject, LessonType.LECTURE);
+        SubjectWithTypeDTO secondSubjectWithType = new SubjectWithTypeDTO(secondSubject, LessonType.PRACTICAL);
+
+        List<SubjectWithTypeDTO> expectedSubjectsWithTypes = List.of(firstSubjectWithType, secondSubjectWithType);
 
         when(subjectRepository.getSubjectsWithTypes(1L, 3L)).thenReturn(expectedSubjectsWithTypes);
 
-        List<SubjectWithTypePOJO> actualSubjectsWithTypes = subjectService.getSubjectsWithTypes(1L, 3L);
+        List<SubjectWithTypeDTO> actualSubjectsWithTypes = subjectService.getSubjectsWithTypes(1L, 3L);
         assertNotNull(actualSubjectsWithTypes);
         assertEquals(expectedSubjectsWithTypes, actualSubjectsWithTypes);
         verify(subjectRepository).getSubjectsWithTypes(1L, 3L);

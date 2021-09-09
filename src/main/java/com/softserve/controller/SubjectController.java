@@ -1,7 +1,7 @@
 package com.softserve.controller;
 
 import com.softserve.dto.SubjectDTO;
-import com.softserve.dto.SubjectWithTypesDTO;
+import com.softserve.dto.SubjectNameWithTypesDTO;
 import com.softserve.entity.Subject;
 import com.softserve.service.SubjectService;
 import com.softserve.mapper.SubjectMapper;
@@ -84,10 +84,10 @@ public class SubjectController {
 
     @GetMapping("/semester/{semesterId}/teacher/{teacherId}")
     @ApiOperation(value = "Get the list of subjects by teacher id and semester id")
-    public ResponseEntity<List<SubjectWithTypesDTO>> getSubjectsWithTypes(@PathVariable("semesterId") Long semesterId,
-                                                                          @PathVariable("teacherId") Long teacherId) {
+    public ResponseEntity<List<SubjectNameWithTypesDTO>> getSubjectsWithTypes(@PathVariable("semesterId") Long semesterId,
+                                                                              @PathVariable("teacherId") Long teacherId) {
         log.info("Enter into getSubjects method with semester id: {} and teacher id: {}", semesterId, teacherId);
         return ResponseEntity.ok().body(subjectMapper
-                .subjectsToSubjectWithTypeDTOs(subjectService.getSubjectsWithTypes(semesterId, teacherId)));
+                .SubjectWithTypeDTOsToSubjectNameWithTypesDTOs(subjectService.getSubjectsWithTypes(semesterId, teacherId)));
     }
 }
