@@ -14,6 +14,8 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -28,13 +30,7 @@ public class LessonServiceTest {
     private LessonRepository lessonRepository;
 
     @Mock
-    private TeacherService teacherService;
-
-    @Mock
     private SubjectService subjectService;
-
-    @Mock
-    private SemesterService semesterService;
 
     @InjectMocks
     private LessonServiceImpl lessonService;
@@ -212,5 +208,50 @@ public class LessonServiceTest {
         lessonService.update(lesson);
         verify(lessonRepository, times(1)).countLessonDuplicatesWithIgnoreId(lesson);
         verify(lessonRepository, times(1)).update(lesson);
+    }
+
+    @Test
+    public void updateLinkToMeeting() {
+
+        Semester semester = new Semester();
+        semester.setId(7L);
+        Teacher teacher = new Teacher();
+        teacher.setId(5L);
+        Subject subject = new Subject();
+        subject.setId(5L);
+
+        Lesson firstLesson = new Lesson();
+        firstLesson.setLinkToMeeting("https://www.youtube.com/");
+        firstLesson.setLessonType(LessonType.LECTURE);
+        firstLesson.setSemester(semester);
+        firstLesson.setTeacher(teacher);
+        firstLesson.setSubject(subject);
+
+        Lesson secondLesson = new Lesson();
+        secondLesson.setLinkToMeeting("https://www.youtube.com/");
+        secondLesson.setSemester(semester);
+        secondLesson.setTeacher(teacher);
+        secondLesson.setSubject(subject);
+
+        Lesson thirdLesson = new Lesson();
+        thirdLesson.setLinkToMeeting("https://www.youtube.com/");
+        thirdLesson.setSemester(semester);
+        thirdLesson.setTeacher(teacher);
+
+        List<Integer> expectedResults = List.of(2,3,4);
+
+        when(lessonRepository.updateLinkToMeeting(firstLesson)).thenReturn(2);
+        when(lessonRepository.updateLinkToMeeting(secondLesson)).thenReturn(3);
+        when(lessonRepository.updateLinkToMeeting(thirdLesson)).thenReturn(4);
+
+        List<Integer> actualResults = new ArrayList<>();
+        actualResults.add(lessonService.updateLinkToMeeting(firstLesson));
+        actualResults.add(lessonService.updateLinkToMeeting(secondLesson));
+        actualResults.add(lessonService.updateLinkToMeeting(thirdLesson));
+
+        assertEquals(expectedResults, actualResults);
+        verify(lessonRepository).updateLinkToMeeting(firstLesson);
+        verify(lessonRepository).updateLinkToMeeting(secondLesson);
+        verify(lessonRepository).updateLinkToMeeting(thirdLesson);
     }
 }
