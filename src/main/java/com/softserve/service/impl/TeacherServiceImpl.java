@@ -64,13 +64,13 @@ public class TeacherServiceImpl implements TeacherService {
 
     /**
      * Method save information for teacher in Repository
-     * @param object Teacher entity
+     * @param teacher Teacher entity
      * @return saved Teacher entity
      */
     @Override
-    public Teacher save(Teacher object) {
-        log.info("Enter into save method with entity:{}", object);
-        return teacherRepository.save(object);
+    public Teacher save(Teacher teacher) {
+        log.info("Enter into save method with entity:{}", teacher);
+        return teacherRepository.save(teacher);
     }
 
     /**
@@ -111,25 +111,30 @@ public class TeacherServiceImpl implements TeacherService {
 
     /**
      * Method updates information for an existing teacher in Repository
-     * @param object Teacher entity with info to be updated
+     * @param teacher Teacher entity with info to be updated
      * @return updated Teacher entity
      */
     @Override
-    public Teacher update(Teacher object)
+    public Teacher update(Teacher teacher)
     {
-        log.info("Enter into update method with entity:{}", object);
-        return teacherRepository.update(object);
+        log.info("Enter into update method with entity:{}", teacher);
+        return teacherRepository.update(teacher);
     }
 
     /**
      * Method deletes an existing teacher from Repository
-     * @param object Teacher entity to be deleted
+     * @param teacher Teacher entity to be deleted
      * @return deleted Teacher entity
      */
     @Override
-    public Teacher delete(Teacher object) {
-        log.info("Enter into delete method with entity:{}", object);
-        return teacherRepository.delete(object);
+    public Teacher delete(Teacher teacher) {
+        log.info("Enter into delete method with entity:{}", teacher);
+        if (teacher.getUserId() != null) {
+            User user = userService.getById(teacher.getUserId().longValue());
+            user.setRole(Role.ROLE_USER);
+            userService.update(user);
+        }
+        return teacherRepository.delete(teacher);
     }
 
     /**
