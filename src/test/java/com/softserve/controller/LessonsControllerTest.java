@@ -225,28 +225,36 @@ public class LessonsControllerTest {
     }
 
     private Object[] parametersToUpdateLinkToMeeting() {
-        LessonWithLinkDTO firstLessonWithLinkDTO = new LessonWithLinkDTO();
-        firstLessonWithLinkDTO.setLinkToMeeting("https://www.youtube.com/");
-        firstLessonWithLinkDTO.setSemesterId(7L);
-        firstLessonWithLinkDTO.setTeacherId(5L);
-        firstLessonWithLinkDTO.setSubjectId(5L);
-        firstLessonWithLinkDTO.setLessonType("LECTURE");
+        LessonWithLinkDTO lessonWithSubjectAndType = new LessonWithLinkDTO();
+        lessonWithSubjectAndType.setLinkToMeeting("https://www.youtube.com/");
+        lessonWithSubjectAndType.setSemesterId(7L);
+        lessonWithSubjectAndType.setTeacherId(5L);
+        lessonWithSubjectAndType.setSubjectId(5L);
+        lessonWithSubjectAndType.setLessonType("LECTURE");
 
-        LessonWithLinkDTO secondLessonWithLinkDTO = new LessonWithLinkDTO();
-        secondLessonWithLinkDTO.setLinkToMeeting("https://www.youtube.com/");
-        secondLessonWithLinkDTO.setSemesterId(7L);
-        secondLessonWithLinkDTO.setTeacherId(5L);
-        secondLessonWithLinkDTO.setSubjectId(5L);
+        LessonWithLinkDTO lessonWithSubject = new LessonWithLinkDTO();
+        lessonWithSubject.setLinkToMeeting("https://www.youtube.com/");
+        lessonWithSubject.setSemesterId(7L);
+        lessonWithSubject.setTeacherId(5L);
+        lessonWithSubject.setSubjectId(5L);
 
-        LessonWithLinkDTO thirdLessonWithLinkDTO = new LessonWithLinkDTO();
-        thirdLessonWithLinkDTO.setLinkToMeeting("https://www.youtube.com/");
-        thirdLessonWithLinkDTO.setSemesterId(7L);
-        thirdLessonWithLinkDTO.setTeacherId(5L);
+        LessonWithLinkDTO lesson = new LessonWithLinkDTO();
+        lesson.setLinkToMeeting("https://www.youtube.com/");
+        lesson.setSemesterId(7L);
+        lesson.setTeacherId(5L);
+
+        LessonWithLinkDTO lessonWithNoExistingType = new LessonWithLinkDTO();
+        lessonWithNoExistingType.setLinkToMeeting("https://www.youtube.com/");
+        lessonWithNoExistingType.setSemesterId(7L);
+        lessonWithNoExistingType.setTeacherId(5L);
+        lessonWithNoExistingType.setSubjectId(5L);
+        lessonWithNoExistingType.setLessonType("LABORATORY");
 
         return new Object[] {
-                new Object[] { firstLessonWithLinkDTO, 2 },
-                new Object[] { secondLessonWithLinkDTO, 3 },
-                new Object[] { thirdLessonWithLinkDTO, 4 }
+                new Object[] { lessonWithSubjectAndType, 2 },
+                new Object[] { lessonWithSubject, 3 },
+                new Object[] { lesson, 4 },
+                new Object[] { lessonWithNoExistingType, 0 }
         };
     }
 }
