@@ -21,6 +21,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -154,5 +155,22 @@ public class SubjectControllerTest {
         mockMvc.perform(get("/subjects/disabled").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"));
+    }
+
+    @Test
+    @Sql(value = "classpath:create-lessons-before.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    public void getSubjectsWithTypes() throws Exception {
+        mockMvc.perform(get("/subjects/semester/7/teacher/5").contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json"))
+                .andExpect(jsonPath("$", hasSize(2)))
+                .andExpect(jsonPath("$[0].id").value(5L))
+                .andExpect(jsonPath("$[0].name").value("History"))
+                .andExpect(jsonPath("$[0].types[0]").value("LECTURE"))
+                .andExpect(jsonPath("$[0].types[1]").value("PRACTICAL"))
+                .andExpect(jsonPath("$[1].id").value(4L))
+                .andExpect(jsonPath("$[1].name").value("Biology"))
+                .andExpect(jsonPath("$[1].types[0]").value("LECTURE"));
+
     }
 }

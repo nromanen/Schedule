@@ -56,4 +56,8 @@ insert into "public".lessons(id, hours, lessontype, subject_for_site, link_to_me
 (5, 1, 'LABORATORY', '', '', 6, 4, 4, 4),
 (6, 2, 'LABORATORY', '', '', 5, 4, 5, 6),
 (7, 2, 'PRACTICAL', '', '', 4, 6, 6, 6),
-(8, 1, 'LABORATORY', '', '', 7, 6, 4, 4);
+(8, 1, 'LABORATORY', '', '', 7, 6, 4, 4),
+(9, 1, 'LECTURE', '', '', 7, 4, 5, 5),
+(10, 1, 'LECTURE', '', '', 7, 4, 4, 5),
+(11, 1, 'PRACTICAL', '', '', 7, 5, 5, 5),
+(12, 1, 'PRACTICAL', '', '', 5, 5, 5, 5);

@@ -125,36 +125,4 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/profile/change-password")
-    @ApiOperation(value = "Change password for current user")
-    public ResponseEntity changePasswordForCurrentUser(@CurrentUser JwtUser jwtUser,
-                                                       @RequestBody UserDataForChangePasswordDTO userDTO) {
-        log.info("Enter into changePasswordForCurrentUser method with JwtUser {}", jwtUser.getUsername());
-        User user = userService.getById(jwtUser.getId());
-
-        Teacher teacher = null;
-        if (user.getRole() == Role.ROLE_TEACHER) {
-            teacher = teacherService.findByUserId(user.getId());
-            teacher.setName(data.getTeacherName());
-            teacher.setSurname(data.getTeacherSurname());
-            teacher.setPosition(data.getTeacherPosition());
-            teacher.setPatronymic(data.getTeacherPatronymic());
-            teacher.setDepartment(departmentMapper.departmentDTOToDepartment(data.getTeacherDepartmentDTO()));
-        }
-
-        Optional<String> password = isNoneBlank(data.getCurrentPassword()) && isNoneBlank(data.getNewPassword()) ?
-                Optional.ofNullable(userService.changePasswordForCurrentUser(user, data.getCurrentPassword(), data.getNewPassword())) :
-                Optional.empty();
-
-        if (teacher != null) {
-            teacherService.update(teacher);
-        }
-
-        if (password.isPresent()) {
-            user.setPassword(password.get());
-            userService.update(user);
-        }
-
-        return ResponseEntity.ok().body(new MessageDTO(jwtUser.getUsername() + " data successfully changed."));
-    }
 }
