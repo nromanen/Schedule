@@ -220,38 +220,38 @@ public class LessonServiceTest {
         Subject subject = new Subject();
         subject.setId(5L);
 
-        Lesson firstLesson = new Lesson();
-        firstLesson.setLinkToMeeting("https://www.youtube.com/");
-        firstLesson.setLessonType(LessonType.LECTURE);
-        firstLesson.setSemester(semester);
-        firstLesson.setTeacher(teacher);
-        firstLesson.setSubject(subject);
+        Lesson lessonWithSubjectAndType = new Lesson();
+        lessonWithSubjectAndType.setLinkToMeeting("https://www.youtube.com/");
+        lessonWithSubjectAndType.setLessonType(LessonType.LECTURE);
+        lessonWithSubjectAndType.setSemester(semester);
+        lessonWithSubjectAndType.setTeacher(teacher);
+        lessonWithSubjectAndType.setSubject(subject);
 
-        Lesson secondLesson = new Lesson();
-        secondLesson.setLinkToMeeting("https://www.youtube.com/");
-        secondLesson.setSemester(semester);
-        secondLesson.setTeacher(teacher);
-        secondLesson.setSubject(subject);
+        Lesson lessonWithSubject = new Lesson();
+        lessonWithSubject.setLinkToMeeting("https://www.youtube.com/");
+        lessonWithSubject.setSemester(semester);
+        lessonWithSubject.setTeacher(teacher);
+        lessonWithSubject.setSubject(subject);
 
-        Lesson thirdLesson = new Lesson();
-        thirdLesson.setLinkToMeeting("https://www.youtube.com/");
-        thirdLesson.setSemester(semester);
-        thirdLesson.setTeacher(teacher);
+        Lesson lesson = new Lesson();
+        lesson.setLinkToMeeting("https://www.youtube.com/");
+        lesson.setSemester(semester);
+        lesson.setTeacher(teacher);
 
         List<Integer> expectedResults = List.of(2,3,4);
 
-        when(lessonRepository.updateLinkToMeeting(firstLesson)).thenReturn(2);
-        when(lessonRepository.updateLinkToMeeting(secondLesson)).thenReturn(3);
-        when(lessonRepository.updateLinkToMeeting(thirdLesson)).thenReturn(4);
+        when(lessonRepository.updateLinkToMeeting(lessonWithSubjectAndType)).thenReturn(2);
+        when(lessonRepository.updateLinkToMeeting(lessonWithSubject)).thenReturn(3);
+        when(lessonRepository.updateLinkToMeeting(lesson)).thenReturn(4);
 
         List<Integer> actualResults = new ArrayList<>();
-        actualResults.add(lessonService.updateLinkToMeeting(firstLesson));
-        actualResults.add(lessonService.updateLinkToMeeting(secondLesson));
-        actualResults.add(lessonService.updateLinkToMeeting(thirdLesson));
+        actualResults.add(lessonService.updateLinkToMeeting(lessonWithSubjectAndType));
+        actualResults.add(lessonService.updateLinkToMeeting(lessonWithSubject));
+        actualResults.add(lessonService.updateLinkToMeeting(lesson));
 
         assertEquals(expectedResults, actualResults);
-        verify(lessonRepository).updateLinkToMeeting(firstLesson);
-        verify(lessonRepository).updateLinkToMeeting(secondLesson);
-        verify(lessonRepository).updateLinkToMeeting(thirdLesson);
+        verify(lessonRepository).updateLinkToMeeting(lessonWithSubjectAndType);
+        verify(lessonRepository).updateLinkToMeeting(lessonWithSubject);
+        verify(lessonRepository).updateLinkToMeeting(lesson);
     }
 }
