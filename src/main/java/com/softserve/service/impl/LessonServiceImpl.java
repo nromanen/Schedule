@@ -285,6 +285,7 @@ public class LessonServiceImpl implements LessonService {
     /**
      * The method used for updating links to meeting for lessons
      * @param lesson Lesson object with new link to meeting
+     * @return Integer the number of links that was updated
      */
     @Override
     public Integer updateLinkToMeeting(Lesson lesson) {
