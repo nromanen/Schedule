@@ -231,6 +231,7 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
      * By default, link to meeting is updated by semester id and teacher id
      * But update can be more specific by providing additional subject id and/or lesson type in a lesson object
      * @param lesson Lesson object with new link to meeting
+     * @return Integer the number of links that was updated
      */
     @Override
     public Integer updateLinkToMeeting(Lesson lesson) {
