@@ -16,7 +16,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 @Slf4j
 @RestController
@@ -77,7 +79,8 @@ public class StudentController {
     @PostMapping("/import")
     @ApiOperation(value = "import students from file to database")
     public ResponseEntity<List<StudentDTO>> importFromCsv(@ApiParam(value = "csv or txt format is required")
-            @RequestParam("file") MultipartFile file, @RequestParam Long groupId) throws IOException {
-        return ResponseEntity.ok(studentMapper.convertToDTOList(studentService.saveFromFile(file, groupId)));
+            @RequestParam("file") MultipartFile file, @RequestParam Long groupId) {
+        return ResponseEntity.ok(studentMapper.convertToDTOList(studentService.saveFromFile(file, groupId)
+                .getNow(new ArrayList<>())));
     }
 }

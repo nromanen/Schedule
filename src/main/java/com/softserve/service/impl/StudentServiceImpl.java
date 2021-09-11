@@ -5,20 +5,21 @@ import com.softserve.exception.EntityNotFoundException;
 import com.softserve.exception.FieldAlreadyExistsException;
 import com.softserve.repository.StudentRepository;
 import com.softserve.service.StudentService;
-import com.softserve.util.AsyncTasks;
+import com.softserve.util.CsvFileParser;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.ConstraintViolationException;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 @Slf4j
 @Service
@@ -102,7 +103,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     /**
-     * The method used for importing students from csv file.
+     * This asynchronous method used for importing students from csv file.
      * Each line of the file should consist of four fields, separated by commas.
      * Each field may or may not be enclosed in double-quotes.
      * First line of the file is a header.
@@ -120,14 +121,14 @@ public class StudentServiceImpl implements StudentService {
      * If the student in the returned list have a non-null value of the group title then he already existed.
      * If the student in the returned list have a null value of the group title then he saved as a new student.
      * If the student in the returned list have a null value of the group then he didn't pass a validation.
-     * @throws IOException if error happens while creating or deleting file
      */
     @Override
     @Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
-    public List<Student> saveFromFile(MultipartFile file, Long groupId) throws IOException {
+    @Async
+    public CompletableFuture<List<Student>> saveFromFile(MultipartFile file, Long groupId) {
         log.info("Enter into saveFromFile of StudentServiceImpl");
 
-        List<Student> students = AsyncTasks.getStudentsFromFile(file);
+        List<Student> students = CsvFileParser.getStudentsFromFile(file);
 
         List<Student> savedStudents = new ArrayList<>();
 
@@ -147,7 +148,7 @@ public class StudentServiceImpl implements StudentService {
                 savedStudents.add(student);
             }
         }
-        return savedStudents;
+        return CompletableFuture.completedFuture(savedStudents);
     }
 
     private void checkEmailForUniqueness(String email) {
