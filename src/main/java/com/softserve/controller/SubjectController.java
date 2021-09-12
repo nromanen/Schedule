@@ -3,9 +3,8 @@ package com.softserve.controller;
 import com.softserve.dto.SubjectDTO;
 import com.softserve.dto.SubjectNameWithTypesDTO;
 import com.softserve.entity.Subject;
-import com.softserve.service.SubjectService;
 import com.softserve.mapper.SubjectMapper;
-import com.softserve.service.TeacherService;
+import com.softserve.service.SubjectService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -24,13 +23,11 @@ public class SubjectController {
 
     private final SubjectService subjectService;
     private final SubjectMapper subjectMapper;
-    private final TeacherService teacherService;
 
     @Autowired
-    public SubjectController(SubjectService subjectService, SubjectMapper subjectMapper, TeacherService teacherService) {
+    public SubjectController(SubjectService subjectService, SubjectMapper subjectMapper) {
         this.subjectService = subjectService;
         this.subjectMapper = subjectMapper;
-        this.teacherService = teacherService;
     }
 
     @GetMapping
@@ -88,6 +85,6 @@ public class SubjectController {
                                                                               @PathVariable("teacherId") Long teacherId) {
         log.info("Enter into getSubjects method with semester id: {} and teacher id: {}", semesterId, teacherId);
         return ResponseEntity.ok().body(subjectMapper
-                .SubjectWithTypeDTOsToSubjectNameWithTypesDTOs(subjectService.getSubjectsWithTypes(semesterId, teacherId)));
+                .subjectWithTypeDTOsToSubjectNameWithTypesDTOs(subjectService.getSubjectsWithTypes(semesterId, teacherId)));
     }
 }

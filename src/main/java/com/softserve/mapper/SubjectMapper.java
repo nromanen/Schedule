@@ -16,7 +16,7 @@ public abstract class SubjectMapper {
 
     public abstract List<SubjectDTO> subjectsToSubjectDTOs (List<Subject> subjects);
 
-    public List<SubjectNameWithTypesDTO> SubjectWithTypeDTOsToSubjectNameWithTypesDTOs(List<SubjectWithTypeDTO> subjects) {
+    public List<SubjectNameWithTypesDTO> subjectWithTypeDTOsToSubjectNameWithTypesDTOs(List<SubjectWithTypeDTO> subjects) {
 
         List<SubjectNameWithTypesDTO> subjectsNamesWithTypes = new ArrayList<>();
 
