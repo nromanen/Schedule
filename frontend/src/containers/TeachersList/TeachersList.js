@@ -100,7 +100,6 @@ const TeacherList = props => {
     const teacherSubmit = values => {
 
         const sendData = { ...values, department: department };
-
         handleTeacherService(sendData);
         clearDepartment();
 
@@ -299,7 +298,7 @@ const TeacherList = props => {
                                     {getTeacherTitle(getTeacherFullName(teacher))}
                                 </h2>
                                 <p className='teacher-card-title'>
-                                    {`${ teacher.position } ${teacher.department!==null? t('teacher_department') + " " + teacher.department.name:""}`}
+                                    {`${teacher.position} ${teacher.department !== null ? t('teacher_department') + ' ' + teacher.department.name : ''}`}
                                 </p>
 
                             </Card>
