@@ -1,27 +1,25 @@
 package com.softserve.service.impl;
 
-import com.opencsv.bean.CsvToBeanBuilder;
 import com.softserve.entity.Student;
 import com.softserve.exception.EntityNotFoundException;
 import com.softserve.exception.FieldAlreadyExistsException;
 import com.softserve.repository.StudentRepository;
 import com.softserve.service.StudentService;
+import com.softserve.util.CsvFileParser;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.Reader;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.time.LocalDateTime;
+
+import javax.validation.ConstraintViolationException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 @Slf4j
 @Service
@@ -70,10 +68,6 @@ public class StudentServiceImpl implements StudentService {
     @Transactional
     @Override
     public Student save(Student object) {
-        return saveToDatabase(object);
-    }
-
-    private Student saveToDatabase(Student object) {
         log.info("Enter into save method with entity:{}", object);
         checkEmailForUniqueness(object.getEmail());
         return studentRepository.save(object);
@@ -109,55 +103,52 @@ public class StudentServiceImpl implements StudentService {
     }
 
     /**
-     * The method used for importing students from csv file.
-     * Each line of the file should consist of one or more fields, separated by commas.
+     * This asynchronous method used for importing students from csv file.
+     * Each line of the file should consist of four fields, separated by commas.
      * Each field may or may not be enclosed in double-quotes.
      * First line of the file is a header.
-     * All subsequent lines contain data about students, i.e.:
+     * All subsequent lines contain data about students.
      * <p>
      * "surname","name","patronymic","email"
      * "Romaniuk","Hanna","Stepanivna","romaniuk@gmail.com"
      * "Boichuk","Oleksandr","Ivanovych","boichuk@ukr.net"
      * etc.
      * <p>
-     * The method is not transactional in order to prevent interruptions while reading a file
+     * The method is not transactional in order to prevent interruptions while saving a student
      *
      * @param file file with students data
-     * @return list of created students
-     * @throws IOException if error happens while creating or deleting file
+     * @return list of created students.
+     * If the student in the returned list have a non-null value of the group title then he already existed.
+     * If the student in the returned list have a null value of the group title then he saved as a new student.
+     * If the student in the returned list have a null value of the group then he didn't pass a validation.
      */
     @Override
     @Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
-    public List<Student> saveFromFile(MultipartFile file, Long groupId) throws IOException {
+    @Async
+    public CompletableFuture<List<Student>> saveFromFile(MultipartFile file, Long groupId) {
         log.info("Enter into saveFromFile of StudentServiceImpl");
 
-        String fileName = String.join("", "students_group",
-                String.valueOf(groupId), "_", String.valueOf(LocalDateTime.now().getNano()), ".csv");
-
-        File csvFile = new File(fileName);
-        file.transferTo(csvFile);
-        List<Student> students = new ArrayList<>();
-
-        try (Reader reader = new FileReader(csvFile, StandardCharsets.UTF_8)) {
-            students = new CsvToBeanBuilder<Student>(reader)
-                    .withType(Student.class)
-                    .build().parse();
-        } catch (RuntimeException e) {
-            log.error("Error occurred while parsing file {}", file.getOriginalFilename(), e);
-        }
+        List<Student> students = CsvFileParser.getStudentsFromFile(file);
 
         List<Student> savedStudents = new ArrayList<>();
 
         for (Student student : students) {
             try {
-                student.getGroup().setId(groupId);
-                savedStudents.add(saveToDatabase(student));
-            } catch (RuntimeException e) {
+                Optional<Student> studentOptional = studentRepository.findByEmail(student.getEmail());
+                if (studentOptional.isEmpty()) {
+                    student.getGroup().setId(groupId);
+                    savedStudents.add(studentRepository.save(student));
+                } else {
+                    savedStudents.add(studentOptional.get());
+                    log.error("Error occurred while saving student", new FieldAlreadyExistsException(Student.class, "email", student.getEmail()));
+                }
+            } catch (ConstraintViolationException e) {
                 log.error("Error occurred while saving student with email {}", student.getEmail(), e);
+                student.setGroup(null);
+                savedStudents.add(student);
             }
         }
-        Files.delete(csvFile.toPath());
-        return savedStudents;
+        return CompletableFuture.completedFuture(savedStudents);
     }
 
     private void checkEmailForUniqueness(String email) {
@@ -171,4 +162,5 @@ public class StudentServiceImpl implements StudentService {
             throw new FieldAlreadyExistsException(Student.class, "email", email);
         }
     }
+
 }
