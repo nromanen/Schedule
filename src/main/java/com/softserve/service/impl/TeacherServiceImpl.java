@@ -7,6 +7,7 @@ import com.softserve.entity.User;
 import com.softserve.entity.enums.Role;
 import com.softserve.exception.EntityAlreadyExistsException;
 import com.softserve.exception.EntityNotFoundException;
+import com.softserve.exception.FieldNullException;
 import com.softserve.mapper.TeacherMapper;
 import com.softserve.repository.TeacherRepository;
 import com.softserve.service.MailService;
@@ -63,13 +64,13 @@ public class TeacherServiceImpl implements TeacherService {
 
     /**
      * Method save information for teacher in Repository
-     * @param object Teacher entity
+     * @param teacher Teacher entity
      * @return saved Teacher entity
      */
     @Override
-    public Teacher save(Teacher object) {
-        log.info("Enter into save method with entity:{}", object);
-        return teacherRepository.save(object);
+    public Teacher save(Teacher teacher) {
+        log.info("Enter into save method with entity:{}", teacher);
+        return teacherRepository.save(teacher);
     }
 
     /**
@@ -99,10 +100,10 @@ public class TeacherServiceImpl implements TeacherService {
         if (isEmailNullOrEmpty(teacherForUpdateDTO.getEmail())) {
             return update(teacher);
         }
-        Integer userId = getById(teacherForUpdateDTO.getId()).getUserId();
+        Long userId = getById(teacherForUpdateDTO.getId()).getUserId();
         if (userId != null) {
             teacher.setUserId(userId);
-            updateEmailInUserForTeacher(teacherForUpdateDTO.getEmail(), userId.longValue());
+            updateEmailInUserForTeacher(teacherForUpdateDTO.getEmail(), userId);
             return update(teacher);
         }
         return update(registerTeacher(teacher, teacherForUpdateDTO.getEmail()));
@@ -110,25 +111,30 @@ public class TeacherServiceImpl implements TeacherService {
 
     /**
      * Method updates information for an existing teacher in Repository
-     * @param object Teacher entity with info to be updated
+     * @param teacher Teacher entity with info to be updated
      * @return updated Teacher entity
      */
     @Override
-    public Teacher update(Teacher object)
+    public Teacher update(Teacher teacher)
     {
-        log.info("Enter into update method with entity:{}", object);
-        return teacherRepository.update(object);
+        log.info("Enter into update method with entity:{}", teacher);
+        return teacherRepository.update(teacher);
     }
 
     /**
      * Method deletes an existing teacher from Repository
-     * @param object Teacher entity to be deleted
+     * @param teacher Teacher entity to be deleted
      * @return deleted Teacher entity
      */
     @Override
-    public Teacher delete(Teacher object) {
-        log.info("Enter into delete method with entity:{}", object);
-        return teacherRepository.delete(object);
+    public Teacher delete(Teacher teacher) {
+        log.info("Enter into delete method with entity:{}", teacher);
+        if (teacher.getUserId() != null) {
+            User user = userService.getById(teacher.getUserId().longValue());
+            user.setRole(Role.ROLE_USER);
+            userService.update(user);
+        }
+        return teacherRepository.delete(teacher);
     }
 
     /**
@@ -158,7 +164,7 @@ public class TeacherServiceImpl implements TeacherService {
             throw new EntityAlreadyExistsException("You cannot doing this action.");
         }
 
-        getTeacher.setUserId(Integer.parseInt(String.valueOf(userId)));
+        getTeacher.setUserId(userId);
         user.setRole(Role.ROLE_TEACHER);
         userService.update(user);
 
@@ -177,10 +183,14 @@ public class TeacherServiceImpl implements TeacherService {
      * @param userId Identity user id
      * @return Teacher entity
      * @throws EntityNotFoundException if teacher doesn't exist
+     * @throws FieldNullException if userId is null
      */
     @Override
-    public Teacher findByUserId(long userId) {
+    public Teacher findByUserId(Long userId) {
         log.info("Enter into getByUserId with userId {}", userId);
+        if(userId == null) {
+            throw new FieldNullException(Teacher.class, "userId");
+        }
         return teacherRepository.findByUserId(userId).orElseThrow(
                 () -> new EntityNotFoundException(Teacher.class, "userId", String.valueOf(userId)));
     }
@@ -197,7 +207,7 @@ public class TeacherServiceImpl implements TeacherService {
 
     private Teacher registerTeacher(Teacher teacher, String email) {
         User registeredUserForTeacher = userService.automaticRegistration(email, Role.ROLE_TEACHER);
-        teacher.setUserId(registeredUserForTeacher.getId().intValue());
+        teacher.setUserId(registeredUserForTeacher.getId());
         return teacher;
     }
 

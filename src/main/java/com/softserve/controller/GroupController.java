@@ -58,6 +58,13 @@ public class GroupController {
                 .body(groupMapper.groupToGroupWithStudentsDTO(groupService.getWithStudentsById(id)));
     }
 
+    @GetMapping("/teacher/{teacherId}")
+    @ApiOperation(value = "Get groups by teacher id for the default semester")
+    public ResponseEntity<List<GroupDTO>> getByTeacherId(@PathVariable("teacherId") Long id) {
+        log.info("Enter into getByTeacherId method with teacher id {} ", id);
+        return ResponseEntity.status(HttpStatus.OK).body(groupMapper.groupsToGroupDTOs(groupService.getByTeacherId(id)));
+    }
+
     @PostMapping
     @ApiOperation(value = "Create new group")
     public ResponseEntity<GroupDTO> save(@RequestBody GroupDTO groupDTO) {

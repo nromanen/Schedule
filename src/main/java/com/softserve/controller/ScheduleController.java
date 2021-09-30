@@ -134,7 +134,7 @@ public class ScheduleController {
         List<Schedule> schedules = new ArrayList<>();
         if (schedule.getLesson().isGrouped()){
             schedules = scheduleService.schedulesForGroupedLessons(schedule);
-            log.info("Enter schedules = [{}]", schedules);
+            schedules.forEach(scheduleService::checkReferences);
             schedules.forEach(scheduleService::save);
         } else {
             schedules.add(scheduleService.save(schedule));
@@ -148,7 +148,12 @@ public class ScheduleController {
     public ResponseEntity delete(@PathVariable("id") long id) {
         log.info("In delete(id =[{}]", id);
         Schedule schedule = scheduleService.getById(id);
-        scheduleService.delete(schedule);
+        if (schedule.getLesson().isGrouped()){
+            List<Schedule> schedules = scheduleService.getSchedulesForGroupedLessons(schedule);
+            schedules.forEach(scheduleService::delete);
+        } else {
+            scheduleService.delete(schedule);
+        }
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 

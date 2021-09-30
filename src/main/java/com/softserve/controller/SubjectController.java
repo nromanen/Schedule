@@ -1,9 +1,10 @@
 package com.softserve.controller;
 
 import com.softserve.dto.SubjectDTO;
+import com.softserve.dto.SubjectNameWithTypesDTO;
 import com.softserve.entity.Subject;
-import com.softserve.service.SubjectService;
 import com.softserve.mapper.SubjectMapper;
+import com.softserve.service.SubjectService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -76,5 +77,14 @@ public class SubjectController {
         log.info("In list getDisabled");
         List<Subject> subjects = subjectService.getDisabled();
         return ResponseEntity.status(HttpStatus.OK).body(subjectMapper.subjectsToSubjectDTOs(subjects));
+    }
+
+    @GetMapping("/semester/{semesterId}/teacher/{teacherId}")
+    @ApiOperation(value = "Get the list of subjects by teacher id and semester id")
+    public ResponseEntity<List<SubjectNameWithTypesDTO>> getSubjectsWithTypes(@PathVariable("semesterId") Long semesterId,
+                                                                              @PathVariable("teacherId") Long teacherId) {
+        log.info("Enter into getSubjects method with semester id: {} and teacher id: {}", semesterId, teacherId);
+        return ResponseEntity.ok().body(subjectMapper
+                .subjectWithTypeDTOsToSubjectNameWithTypesDTOs(subjectService.getSubjectsWithTypes(semesterId, teacherId)));
     }
 }

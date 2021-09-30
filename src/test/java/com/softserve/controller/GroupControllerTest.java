@@ -7,6 +7,7 @@ import com.softserve.dto.GroupDTO;
 import com.softserve.dto.GroupForUpdateDTO;
 import com.softserve.dto.StudentDTO;
 import com.softserve.dto.StudentWithoutGroupDTO;
+import com.softserve.entity.Group;
 import com.softserve.exception.apierror.ApiValidationError;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
@@ -117,6 +118,18 @@ public class GroupControllerTest {
     }
 
     @Test
+    @WithMockUser(
+            username = "second@mail.com",
+            password = "$2a$04$SpUhTZ/SjkDQop/Zvx1.seftJdqvOploGce/wau247zQhpEvKtz9.",
+            roles = "TEACHER"
+    )
+    @Sql(value = {"classpath:create-lessons-before.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    public void getByTeacherId() throws Exception {
+        GroupDTO expectedGroup = GroupDTO.builder().id(4L).title("111").build();
+        assertions.assertForGetListWithOneEntity(expectedGroup, "/groups/teacher/4");
+    }
+
+    @Test
     public void returnNotFoundIfGroupNotFoundedById() throws Exception {
         assertions.assertForGetWhenEntityNotFound(445, "/groups/{id}");
     }
@@ -179,6 +192,14 @@ public class GroupControllerTest {
     public void returnForbiddenIfAuthenticatedUserRoleIsNotManager() throws Exception {
         mockMvc.perform(get("/groups/{id}", 4)
                 .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @WithMockUser(username = "sixth@mail.com", password = "$2a$04$SpUhTZ/SjkDQop/Zvx1.seftJdqvOploGce/wau247zQhpEvKtz9.", roles = "USER")
+    public void returnForbiddenIfAuthenticatedUserRoleIsNotTeacher() throws Exception {
+        mockMvc.perform(get("/groups/teacher/{teacherId}", 4)
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isForbidden());
     }
 

@@ -144,7 +144,7 @@ public class ScheduleServiceTest {
         user.setEmail("Test@gmail.com");
         Teacher teacher = new Teacher();
         teacher.setId(1L);
-        teacher.setUserId(1);
+        teacher.setUserId(1L);
         Semester semester = new Semester();
         semester.setId(1L);
         TeacherDTO teacherDTO = new TeacherDTO();
@@ -169,7 +169,7 @@ public class ScheduleServiceTest {
         user.setEmail("Test@gmail.com");
         Teacher teacher = new Teacher();
         teacher.setId(1L);
-        teacher.setUserId(1);
+        teacher.setUserId(1L);
         Semester semester = new Semester();
         semester.setId(1L);
         TeacherDTO teacherDTO = new TeacherDTO();

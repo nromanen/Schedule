@@ -55,7 +55,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
      */
     @ExceptionHandler({IncorrectTimeException.class, IncorrectPasswordException.class,
             ScheduleConflictException.class, PeriodConflictException.class, EntityAlreadyExistsException.class,
-            IncorrectEmailException.class, UsedEntityException.class})
+            IncorrectEmailException.class, UsedEntityException.class, ParseFileException.class})
     protected ResponseEntity<Object> handleIncorrectFieldExceptions(
             RuntimeException ex) {
         ApiError apiError = new ApiError(BAD_REQUEST);

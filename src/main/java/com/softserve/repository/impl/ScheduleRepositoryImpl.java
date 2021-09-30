@@ -27,6 +27,9 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
             "and s.dayOfWeek = :dayOfWeek " +
             "and s.period.id = :classId "+ NOT_DISABLED_SQL;
 
+    private static final String GET_BY_ALL_PARAMETERS = "FROM Schedule s where s.period.id = :periodId " +
+            "and s.lesson.id = :lessonId and s.dayOfWeek = :dayOfWeek and s.evenOdd = :evenOdd and s.room.id = :roomId";
+
     /**
      * Method searches if there are any saved records in schedule for particular group
      *
@@ -292,6 +295,25 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
                 .setParameter("semesterId", semesterId)
                 .setParameter("teacherId", teacherId)
                 .getResultList();
+    }
+
+    /**
+     * Method gets schedule by schedule all schedule parameters
+     *
+     * @param schedule schedule with parameters
+     * @return List of all schedules
+     */
+    @Override
+    public Schedule getScheduleByObject(Schedule schedule) {
+        log.info("Enter into getScheduleByObject");
+        return sessionFactory.getCurrentSession().
+                createQuery(GET_BY_ALL_PARAMETERS, Schedule.class)
+                .setParameter("periodId", schedule.getPeriod().getId())
+                .setParameter("lessonId", schedule.getLesson().getId())
+                .setParameter("dayOfWeek",  schedule.getDayOfWeek())
+                .setParameter("evenOdd",schedule.getEvenOdd())
+                .setParameter("roomId", schedule.getRoom().getId())
+                .getSingleResult();
     }
 
     /**

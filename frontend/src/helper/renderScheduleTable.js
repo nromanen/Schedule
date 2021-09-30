@@ -18,8 +18,7 @@ import './renderScheduleTable.scss';
 import {
     getTeacherForSite,
     getTeacherFullName,
-    getTeacherShortPosition,
-    getTeacherWithPosition, getTeacherWithShortPosition
+     getTeacherWithShortPosition
 } from './renderTeacher';
 
 const shortid = require('shortid');
@@ -303,8 +302,11 @@ export const renderGroupDayClass = (classDay, isOddWeek, place, semesterDays) =>
             </TableCell>
             {res.map(day => {
                 let className = 'lesson ';
-                if (currentDay === day.day && currentWeekType === isOddWeek) {
-                    className += ' currentDay';
+                // if (currentDay === day.day && currentWeekType === isOddWeek) {
+                if (currentDay === day.day) {
+                    if((currentWeekType===1&&isOddWeek===0)||(currentWeekType===0&&isOddWeek===1)) {
+                        className += ' currentDay';
+                    }
                 }
                 return (
                     semesterDays.includes(day.day) && <TableCell key={shortid.generate()} className={className}>

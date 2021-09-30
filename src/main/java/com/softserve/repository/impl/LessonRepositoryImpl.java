@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -18,7 +19,6 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
             "where l.grouped=true and l.subject.id= :subjectId " +
             "and l.hours= :hours and l.teacher.id= :teacherId " +
             "and l.semester.id= :semesterId and l.lessonType= :lessonType";
-
 
     /**
      * Method gets information about all lessons from DB
@@ -224,5 +224,39 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
                 .setParameter("lessonId", lesson.getId())
                 .getSingleResult();
         return count != 0;
+    }
+
+    /**
+     * The method used for updating links to meeting for lessons.
+     * By default, link to meeting is updated by semester id and teacher id
+     * But update can be more specific by providing additional subject id and/or lesson type in a lesson object
+     * @param lesson Lesson object with new link to meeting
+     * @return Integer the number of links that was updated
+     */
+    @Override
+    public Integer updateLinkToMeeting(Lesson lesson) {
+        log.info("In repository updateLinkToMeeting lesson = [{}]", lesson);
+        CriteriaBuilder cb = sessionFactory.getCurrentSession().getCriteriaBuilder();
+        CriteriaUpdate<Lesson> criteriaUpdate = cb.createCriteriaUpdate(Lesson.class);
+
+        Root<Lesson> root = criteriaUpdate.from(Lesson.class);
+
+        criteriaUpdate.set("linkToMeeting", lesson.getLinkToMeeting());
+
+        List<Predicate> predicates = new ArrayList<>();
+        predicates.add(cb.equal(root.get("semester").get("id"), lesson.getSemester().getId()));
+        predicates.add(cb.equal(root.get("teacher").get("id"), lesson.getTeacher().getId()));
+
+        if (lesson.getSubject().getId() != null) {
+            predicates.add(cb.equal(root.get("subject").get("id"), lesson.getSubject().getId()));
+        }
+
+        if (lesson.getLessonType() != null) {
+            predicates.add(cb.equal(root.get("lessonType"), lesson.getLessonType()));
+        }
+
+        criteriaUpdate.where(predicates.toArray(new Predicate[0]));
+
+        return sessionFactory.getCurrentSession().createQuery(criteriaUpdate).executeUpdate();
     }
 }

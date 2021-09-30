@@ -82,6 +82,8 @@ public class StudentControllerTest {
 
     private StudentDTO studentDTOWithId5L;
 
+    private StudentDTO studentDTOWithId6L;
+
     private final GroupDTO groupDTO = GroupDTO.builder()
             .id(1L)
             .title("First Title")
@@ -114,11 +116,20 @@ public class StudentControllerTest {
                 .email("student@gmail.com")
                 .group(groupDTO)
                 .build();
+
+        studentDTOWithId6L = StudentDTO.builder()
+                .id(6L)
+                .name("Hanna")
+                .surname("Romaniuk")
+                .patronymic("Stepanivna")
+                .email("romaniuk@gmail.com")
+                .group(groupDTO)
+                .build();
     }
 
     @Test
     public void getAllStudents() throws Exception {
-        assertions.assertForGetList(asList(studentDTOWithId4L, studentDTOWithId5L));
+        assertions.assertForGetList(asList(studentDTOWithId4L, studentDTOWithId5L, studentDTOWithId6L));
     }
 
     @Test
@@ -330,7 +341,6 @@ public class StudentControllerTest {
     }
 
     @Test
-    @Sql(value = {"classpath:create-students-before-import.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     public void saveStudentsFromFile() throws Exception {
 
         MockMultipartFile multipartFile = new MockMultipartFile("file",
@@ -341,15 +351,30 @@ public class StudentControllerTest {
         mockMvc.perform(multipart("/students/import").file(multipartFile).param("groupId", "1"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"))
-                .andExpect(jsonPath("$", hasSize(2)))
+                .andExpect(jsonPath("$", hasSize(3)))
+
+                .andExpect(jsonPath("$[0].id").value(6))
                 .andExpect(jsonPath("$[0].name").value("Hanna"))
                 .andExpect(jsonPath("$[0].surname").value("Romaniuk"))
                 .andExpect(jsonPath("$[0].patronymic").value("Stepanivna"))
                 .andExpect(jsonPath("$[0].email").value("romaniuk@gmail.com"))
-                .andExpect(jsonPath("$[1].name").value("Viktor"))
-                .andExpect(jsonPath("$[1].surname").value("Hanushchak"))
-                .andExpect(jsonPath("$[1].patronymic").value("Mykolaiovych"))
-                .andExpect(jsonPath("$[1].email").value("hanushchak@bigmir.net"));
+                .andExpect(jsonPath("$[0].group.id").value(1))
+                .andExpect(jsonPath("$[0].group.title").value("First Title"))
+
+                .andExpect(jsonPath("$[1].id").doesNotExist())
+                .andExpect(jsonPath("$[1].name").value("Oleksandr"))
+                .andExpect(jsonPath("$[1].surname").value("Boichuk"))
+                .andExpect(jsonPath("$[1].patronymic").value("Ivanovych"))
+                .andExpect(jsonPath("$[1].email").value(""))
+                .andExpect(jsonPath("$[1].group").doesNotExist())
+
+                .andExpect(jsonPath("$[2].id").value(1))
+                .andExpect(jsonPath("$[2].name").value("Viktor"))
+                .andExpect(jsonPath("$[2].surname").value("Hanushchak"))
+                .andExpect(jsonPath("$[2].patronymic").value("Mykolaiovych"))
+                .andExpect(jsonPath("$[2].email").value("hanushchak@bigmir.net"))
+                .andExpect(jsonPath("$[2].group.id").value(1))
+                .andExpect(jsonPath("$[2].group.title").doesNotExist());
     }
 
     private void assertThatReturnedFieldAlreadyExistsException(MockHttpServletRequestBuilder requestBuilder,

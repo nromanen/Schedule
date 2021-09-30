@@ -1,9 +1,8 @@
 package com.softserve.controller;
 
-import com.softserve.dto.MessageDTO;
+import com.softserve.dto.EmailMessageDTO;
 import com.softserve.dto.UserCreateDTO;
 import com.softserve.dto.UserDTO;
-import com.softserve.dto.UserDataForChangeDTO;
 import com.softserve.entity.CurrentUser;
 import com.softserve.entity.Teacher;
 import com.softserve.entity.User;
@@ -11,6 +10,7 @@ import com.softserve.entity.enums.Role;
 import com.softserve.mapper.DepartmentMapper;
 import com.softserve.mapper.TeacherMapper;
 import com.softserve.security.jwt.JwtUser;
+import com.softserve.service.MailService;
 import com.softserve.service.TeacherService;
 import com.softserve.service.UserService;
 import com.softserve.mapper.UserMapper;
@@ -24,6 +24,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -31,8 +32,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
-import java.util.Optional;
-import static org.apache.commons.lang3.StringUtils.isNoneBlank;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -47,6 +46,7 @@ public class UserController {
     private final TeacherMapper teacherMapper;
     private final TeacherService teacherService;
     private final PasswordEncoder passwordEncoder;
+    private final MailService mailService;
 
     @GetMapping
     @ApiOperation(value = "Get the list of all users")
@@ -116,7 +116,7 @@ public class UserController {
     @GetMapping("/profile")
     @ApiOperation(value = "Get current user data")
     public ResponseEntity getCurrentUser(@CurrentUser JwtUser jwtUser) {
-        log.info("Enter into getCurrentUser method with JwtUser: {}", jwtUser);
+        log.info("Enter into getCurrentUser method with JwtUser {}", jwtUser.getUsername());
         User user = userService.getById(jwtUser.getId());
         if (user.getRole() == Role.ROLE_TEACHER) {
             Teacher teacher = teacherService.findByUserId(user.getId());
@@ -125,35 +125,14 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/change-profile")
-    @ApiOperation(value = "Change data for current user")
-    public ResponseEntity<MessageDTO> changeDataForCurrentUser(@CurrentUser JwtUser jwtUser,
-                                                               @RequestBody UserDataForChangeDTO data) {
-        User user = userService.getById(jwtUser.getId());
-
-        Teacher teacher = null;
-        if (user.getRole() == Role.ROLE_TEACHER) {
-            teacher = teacherService.findByUserId(user.getId());
-            teacher.setName(data.getTeacherName());
-            teacher.setSurname(data.getTeacherSurname());
-            teacher.setPosition(data.getTeacherPosition());
-            teacher.setPatronymic(data.getTeacherPatronymic());
-            teacher.setDepartment(departmentMapper.departmentDTOToDepartment(data.getTeacherDepartmentDTO()));
-        }
-
-        Optional<String> password = isNoneBlank(data.getCurrentPassword()) && isNoneBlank(data.getNewPassword()) ?
-                Optional.ofNullable(userService.changePasswordForCurrentUser(user, data.getCurrentPassword(), data.getNewPassword())) :
-                Optional.empty();
-
-        if (teacher != null) {
-            teacherService.update(teacher);
-        }
-
-        if (password.isPresent()) {
-            user.setPassword(password.get());
-            userService.update(user);
-        }
-
-        return ResponseEntity.ok().body(new MessageDTO(jwtUser.getUsername() + " data successfully changed."));
+    @PostMapping(value = "/send-email")
+    @PreAuthorize("hasRole('TEACHER')")
+    @ApiOperation(value = "Send email")
+    public ResponseEntity<Void> sendEmail(@CurrentUser JwtUser jwtUser,
+                                          @ModelAttribute EmailMessageDTO emailMessageDTO) {
+        log.info("Enter into sendEmail(jwtUser(username: {}), emailMessageDTO: {})",
+                jwtUser.getUsername(), emailMessageDTO);
+        mailService.send(jwtUser.getUsername(), emailMessageDTO);
+        return ResponseEntity.ok().build();
     }
 }

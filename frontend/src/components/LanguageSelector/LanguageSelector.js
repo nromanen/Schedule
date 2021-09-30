@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -20,10 +20,16 @@ const LanguageSelector = props => {
         }
     ];
     let radioLangClasses = {};
-    i18n.languages.forEach(lang => {
-        radioLangClasses[lang] = 'languageItem ';
+    langFlags.forEach(lang => {
+        radioLangClasses[lang.lang] = 'languageItem ';
     });
     radioLangClasses[i18n.language] += ' activeLanguage';
+
+
+    useEffect(() => {
+        i18n.changeLanguage('uk');
+
+    }, []);
 
     const changeLanguage = event => {
         radioLangClasses[i18n.language] = 'languageItem ';
@@ -36,12 +42,12 @@ const LanguageSelector = props => {
             control={
                 <>
                     <Radio
-                        color="primary"
+                        color='primary'
                         value={langItem.lang}
                         onChange={changeLanguage}
                     />
                     <img
-                        className="language-icon"
+                        className='language-icon'
                         src={langItem.img}
                         alt={langItem.lang}
                         title={langItem.title}
@@ -55,10 +61,10 @@ const LanguageSelector = props => {
     return (
         <RadioGroup
             row
-            aria-label="lang"
-            name="lang"
+            aria-label='lang'
+            name='lang'
             value={i18n.language}
-            className="lang_selector"
+            className='lang_selector'
         >
             {langFlags.map(langItem => renderLangControls(langItem))}
         </RadioGroup>

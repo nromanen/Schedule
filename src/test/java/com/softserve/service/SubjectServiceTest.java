@@ -1,6 +1,8 @@
 package com.softserve.service;
 
+import com.softserve.dto.SubjectWithTypeDTO;
 import com.softserve.entity.Subject;
+import com.softserve.entity.enums.LessonType;
 import com.softserve.exception.EntityNotFoundException;
 import com.softserve.exception.FieldAlreadyExistsException;
 import com.softserve.repository.SubjectRepository;
@@ -12,6 +14,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
@@ -128,5 +131,29 @@ public class SubjectServiceTest {
 
         subjectService.update(subject);
         verify(subjectRepository, times(1)).countBySubjectId(anyLong());
+    }
+
+    @Test
+    public void getSubjectsWithTypes() {
+
+        Subject firstSubject = new Subject();
+        firstSubject.setName("Organic chemistry");
+        firstSubject.setId(1L);
+
+        Subject secondSubject = new Subject();
+        secondSubject.setName("Economics");
+        secondSubject.setId(1L);
+
+        SubjectWithTypeDTO firstSubjectWithType = new SubjectWithTypeDTO(firstSubject, LessonType.LECTURE);
+        SubjectWithTypeDTO secondSubjectWithType = new SubjectWithTypeDTO(secondSubject, LessonType.PRACTICAL);
+
+        List<SubjectWithTypeDTO> expectedSubjectsWithTypes = List.of(firstSubjectWithType, secondSubjectWithType);
+
+        when(subjectRepository.getSubjectsWithTypes(1L, 3L)).thenReturn(expectedSubjectsWithTypes);
+
+        List<SubjectWithTypeDTO> actualSubjectsWithTypes = subjectService.getSubjectsWithTypes(1L, 3L);
+        assertNotNull(actualSubjectsWithTypes);
+        assertEquals(expectedSubjectsWithTypes, actualSubjectsWithTypes);
+        verify(subjectRepository).getSubjectsWithTypes(1L, 3L);
     }
 }

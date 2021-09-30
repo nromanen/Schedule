@@ -6,9 +6,9 @@ import com.softserve.entity.Teacher;
 import java.util.List;
 
 public interface DepartmentRepository extends BasicRepository<Department, Long> {
-    boolean isNameExists(String name);
+    boolean isExistsByName(String name);
 
-    boolean isNameExistsIgnoringId(String name, Long id);
+    boolean isExistsByNameIgnoringId(String name, Long id);
 
     List<Teacher> getAllTeachers(Long departmentId);
 }

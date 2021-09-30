@@ -138,7 +138,7 @@ public class StudentServiceTest {
 
     @Test
     @Parameters(method = "parametersToTestImport")
-    public void importStudentsFromFile(MockMultipartFile multipartFile) throws IOException {
+    public void importStudentsFromFile(MockMultipartFile multipartFile) {
         List<Student> expectedStudents = new ArrayList<>();
 
         Group group = new Group();
@@ -166,25 +166,26 @@ public class StudentServiceTest {
         student3.setGroup(group);
 
         expectedStudents.add(student1);
+        expectedStudents.add(student2);
         expectedStudents.add(student3);
 
-        when(studentRepository.isExistsByEmail(student1.getEmail())).thenReturn(false);
-        when(studentRepository.isExistsByEmail(student2.getEmail())).thenReturn(false);
-        when(studentRepository.isExistsByEmail(student2.getEmail())).thenReturn(false);
+        when(studentRepository.findByEmail(student1.getEmail())).thenReturn(Optional.empty());
+        when(studentRepository.findByEmail(student2.getEmail())).thenReturn(Optional.empty());
+        when(studentRepository.findByEmail(student3.getEmail())).thenReturn(Optional.empty());
 
         when(studentRepository.save(student1)).thenReturn(student1);
-        when(studentRepository.save(student2)).thenThrow(RuntimeException.class);
+        when(studentRepository.save(student2)).thenReturn(student2);
         when(studentRepository.save(student3)).thenReturn(student3);
 
-        List<Student> actualStudents = studentService.saveFromFile(multipartFile, 4L);
+        List<Student> actualStudents = studentService.saveFromFile(multipartFile, 4L).getNow(new ArrayList<>());
         assertNotNull(actualStudents);
         assertEquals(expectedStudents, actualStudents);
         verify(studentRepository).save(student1);
         verify(studentRepository).save(student2);
         verify(studentRepository).save(student3);
-        verify(studentRepository).isExistsByEmail(student1.getEmail());
-        verify(studentRepository).isExistsByEmail(student2.getEmail());
-        verify(studentRepository).isExistsByEmail(student3.getEmail());
+        verify(studentRepository).findByEmail(student1.getEmail());
+        verify(studentRepository).findByEmail(student2.getEmail());
+        verify(studentRepository).findByEmail(student3.getEmail());
     }
 
     private Object[] parametersToTestImport() throws IOException {
