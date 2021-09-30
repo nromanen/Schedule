@@ -1,6 +1,8 @@
 package com.softserve.service.impl;
 
+import com.softserve.dto.EmailMessageDTO;
 import com.softserve.entity.TemporarySchedule;
+import com.softserve.exception.MessageNotSendException;
 import com.softserve.service.MailService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,9 +14,9 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring5.SpringTemplateEngine;
-
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import javax.annotation.PostConstruct;
@@ -27,24 +29,29 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.mail.util.ByteArrayDataSource;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.Locale;
-
+import java.util.Objects;
 
 @Service
 @PropertySource("classpath:mail.properties")
 @Slf4j
 public class MailServiceImpl implements MailService {
-
-    private final JavaMailSender mailSender;
-    private final Environment environment;
-    private final SpringTemplateEngine springTemplateEngine;
     @Value("${spring.mail.username}")
     private String username;
+
+    private final JavaMailSender mailSender;
+
+    private final Environment environment;
+
+    private final SpringTemplateEngine springTemplateEngine;
+
     private String credentialsUsername;
 
-
     @Autowired
-    public MailServiceImpl(JavaMailSender mailSender, Environment environment, SpringTemplateEngine springTemplateEngine) {
+    public MailServiceImpl(JavaMailSender mailSender,
+                           Environment environment,
+                           SpringTemplateEngine springTemplateEngine) {
         this.mailSender = mailSender;
         this.environment = environment;
         this.springTemplateEngine = springTemplateEngine;
@@ -65,6 +72,7 @@ public class MailServiceImpl implements MailService {
      * @param message message from the letter
      */
     @Async
+    @Override
     public void send(String emailTo, String subject, String message) {
         log.info("Enter into send method with emailTo {}, subject {}", emailTo, subject);
 
@@ -76,6 +84,35 @@ public class MailServiceImpl implements MailService {
         mailMessage.setText(message);
 
         mailSender.send(mailMessage);
+    }
+
+    /**
+     * Method for sending message from user to different emails
+     * @param sender from whom the message will be sent
+     * @param emailMessageDTO message that will be sent
+     */
+    @Override
+    public void send(String sender, EmailMessageDTO emailMessageDTO) {
+        log.info("Enter into send method with sender - {}, emailMessageDTO - {}", sender, emailMessageDTO);
+        try {
+            MimeMessage message = this.mailSender.createMimeMessage();
+
+            MimeMessageHelper messageHelper = new MimeMessageHelper(message, true, "UTF-8");
+            messageHelper.setFrom(credentialsUsername, sender);
+            messageHelper.setSubject(emailMessageDTO.getSubject());
+            messageHelper.setText(emailMessageDTO.getText());
+            messageHelper.setTo(emailMessageDTO.getReceivers().toArray(String[]::new));
+
+            if (emailMessageDTO.getAttachments() != null) {
+                for (MultipartFile attachment: emailMessageDTO.getAttachments()) {
+                    messageHelper.addAttachment(Objects.requireNonNull(attachment.getOriginalFilename()), attachment);
+                }
+            }
+
+            mailSender.send(messageHelper.getMimeMessage());
+        } catch (IOException | MessagingException e) {
+            throw new MessageNotSendException(e.getMessage());
+        }
     }
 
     @Override
@@ -107,6 +144,7 @@ public class MailServiceImpl implements MailService {
     }
 
     @Async
+    @Override
     public void send(final String emailTo, final String subject, TemporarySchedule temporarySchedule, final String emailTemplate) throws MessagingException
     {
 
@@ -128,5 +166,4 @@ public class MailServiceImpl implements MailService {
         // Send mail
         this.mailSender.send(mimeMessage);
     }
-
 }
