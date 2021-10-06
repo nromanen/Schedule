@@ -3,13 +3,13 @@ import { FaEdit, MdDelete } from 'react-icons/all';
 import { useTranslation } from 'react-i18next';
 import { selectTemporaryScheduleService } from '../../../services/temporaryScheduleService';
 
-const TemporaryScheduleCardButtons = props => {
+const TemporaryScheduleCardButtons = (props) => {
     const { t } = useTranslation('common');
 
     const { schedule, date, isTemporary, scheduleId } = props;
     const { onOpenDialog, setDate, setTeacherId } = props;
 
-    const selectTemporarySchedule = schedule => {
+    const selectTemporarySchedule = (schedule) => {
         selectTemporaryScheduleService({
             ...schedule.lesson,
             room: schedule.room,
@@ -17,11 +17,11 @@ const TemporaryScheduleCardButtons = props => {
             id: schedule.id,
             vacation: schedule.vacation,
             scheduleId: schedule.scheduleId ? schedule.scheduleId : scheduleId,
-            date: schedule.date
+            date: schedule.date,
         });
     };
 
-    const handleScheduleSelect = schedule => {
+    const handleScheduleSelect = (schedule) => {
         schedule.scheduleId = schedule.id;
         schedule.id = null;
         schedule.lesson.id = null;
@@ -35,10 +35,10 @@ const TemporaryScheduleCardButtons = props => {
                 className="svg-btn edit-btn"
                 onClick={() => {
                     isTemporary
-                        ? selectTemporarySchedule({ ...schedule, date: date })
+                        ? selectTemporarySchedule({ ...schedule, date })
                         : handleScheduleSelect({
                               ...schedule,
-                              date: date
+                              date,
                           });
                 }}
             />

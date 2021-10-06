@@ -2,22 +2,21 @@ import React, { useState } from 'react';
 import { FaEdit, MdDelete } from 'react-icons/all';
 import { useTranslation } from 'react-i18next';
 
+import Divider from '@material-ui/core/Divider';
 import Card from '../../../share/Card/Card';
 import ConfirmDialog from '../../../share/modals/dialog';
 
 import {
     deleteTemporaryScheduleService,
     selectTemporaryScheduleService,
-    selectVacationService
+    selectVacationService,
 } from '../../../services/temporaryScheduleService';
-
-import Divider from '@material-ui/core/Divider';
 
 import { cardType } from '../../../constants/cardType';
 import TemporaryScheduleCard from '../TemporaryScheduleCard/TemporaryScheduleCard';
 import { getTeacherForSite } from '../../../helper/renderTeacher';
 
-const TemporaryScheduleList = props => {
+const TemporaryScheduleList = (props) => {
     const { t } = useTranslation('common');
 
     const shortId = require('shortid');
@@ -27,12 +26,12 @@ const TemporaryScheduleList = props => {
     const [open, setOpen] = useState(false);
     const [temporaryScheduleId, setTemporaryScheduleId] = useState(-1);
 
-    const handleClickOpen = temporaryScheduleId => {
+    const handleClickOpen = (temporaryScheduleId) => {
         setTemporaryScheduleId(temporaryScheduleId);
         setOpen(true);
     };
 
-    const handleClose = temporaryScheduleId => {
+    const handleClose = (temporaryScheduleId) => {
         setOpen(false);
         if (!temporaryScheduleId) {
             return;
@@ -48,12 +47,9 @@ const TemporaryScheduleList = props => {
                 open={open}
                 onClose={handleClose}
             />
-            {temporarySchedules.map(temporarySchedule => (
+            {temporarySchedules.map((temporarySchedule) => (
                 <Card
-                    class={
-                        'done-card' +
-                        (temporarySchedule.vacation ? ' vacation-card' : '')
-                    }
+                    class={`done-card${temporarySchedule.vacation ? ' vacation-card' : ''}`}
                     key={shortId.generate()}
                 >
                     <div className="cards-btns">
@@ -63,9 +59,7 @@ const TemporaryScheduleList = props => {
                             onClick={() =>
                                 temporarySchedule.vacation
                                     ? selectVacationService(temporarySchedule)
-                                    : selectTemporaryScheduleService(
-                                          temporarySchedule
-                                      )
+                                    : selectTemporaryScheduleService(temporarySchedule)
                             }
                         />
                         <MdDelete
@@ -78,9 +72,7 @@ const TemporaryScheduleList = props => {
                     </div>
                     {!temporarySchedule.vacation ? (
                         <>
-                            <TemporaryScheduleCard
-                                schedule={temporarySchedule}
-                            />
+                            <TemporaryScheduleCard schedule={temporarySchedule} />
                         </>
                     ) : (
                         <>
@@ -88,9 +80,7 @@ const TemporaryScheduleList = props => {
                             <p>
                                 (
                                 {temporarySchedule.teacher?.name
-                                    ? getTeacherForSite(
-                                          temporarySchedule.teacher
-                                      )
+                                    ? getTeacherForSite(temporarySchedule.teacher)
                                     : t('for_all')}
                                 )
                             </p>
@@ -98,7 +88,7 @@ const TemporaryScheduleList = props => {
                         </>
                     )}
                     <p>
-                        {!temporarySchedule.vacation && <>{t('date')}{' '}:</>}
+                        {!temporarySchedule.vacation && <>{t('date')} :</>}
                         <b>{temporarySchedule.date}</b>
                     </p>
                 </Card>

@@ -12,9 +12,10 @@ import Card from '../../share/Card/Card';
 
 import { COPY_LESSONS_FROM_SEMESTER_FORM } from '../../constants/reduxForms';
 import { required } from '../../validation/validateFields';
+
 const shortid = require('shortid');
 
-const CopyLessonsFromSemesterForm = props => {
+const CopyLessonsFromSemesterForm = (props) => {
     const { t } = useTranslation('common');
     const { semesters, handleSubmit, pristine, submitting } = props;
     const renderSemesterList = () => {
@@ -31,16 +32,14 @@ const CopyLessonsFromSemesterForm = props => {
                     >
                         <option />
                         {semesters.map((semester, index) => (
-                            <option
-                                key={shortid.generate()}
-                                value={semester.id}
-                            >
+                            <option key={shortid.generate()} value={semester.id}>
                                 {semester.description}
                             </option>
                         ))}
                     </Field>
                 );
-            } else if (semesters.length === 1) {
+            }
+            if (semesters.length === 1) {
                 handleSubmit({ fromSemesterId: semesters[0].id });
                 return <p>{semesters[0].description}</p>;
             }
@@ -55,7 +54,7 @@ const CopyLessonsFromSemesterForm = props => {
                 {renderSemesterList()}
                 <div className="form-buttons-container">
                     <Button
-                        className='semester-copy-btn'
+                        className="semester-copy-btn"
                         variant="contained"
                         color="primary"
                         type="submit"
@@ -69,12 +68,12 @@ const CopyLessonsFromSemesterForm = props => {
     );
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
     semesters: state.semesters.semesters,
-    currentSemester: state.schedule.currentSemester
+    currentSemester: state.schedule.currentSemester,
 });
 export default connect(mapStateToProps)(
     reduxForm({
-        form: COPY_LESSONS_FROM_SEMESTER_FORM
-    })(CopyLessonsFromSemesterForm)
+        form: COPY_LESSONS_FROM_SEMESTER_FORM,
+    })(CopyLessonsFromSemesterForm),
 );

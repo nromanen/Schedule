@@ -1,19 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import Card from '../../share/Card/Card';
 import { connect } from 'react-redux';
 
 import Dialog from '@material-ui/core/Dialog';
 
-import FreeRoomForm from '../../components/FreeRoomForm/freeRoomForm';
 import { GiCancel } from 'react-icons/gi';
 import { useTranslation } from 'react-i18next';
-import { clearFreeRoomsService } from '../../services/freeRoomsService';
+import FreeRoomForm from '../../components/FreeRoomForm/freeRoomForm';
+import Card from '../../share/Card/Card';
+import { clearFreeRoomsService, showFreeRoomsService } from '../../services/freeRoomsService';
 import { getClassScheduleListService } from '../../services/classService';
-import { showFreeRoomsService } from '../../services/freeRoomsService';
 
 import './freeRooms.scss';
 
-const FreeRooms = props => {
+const FreeRooms = (props) => {
     const { t } = useTranslation('formElements');
 
     const [open, setOpen] = useState(false);
@@ -34,7 +33,7 @@ const FreeRooms = props => {
         clearFreeRoomsService();
     };
 
-    const submit = values => {
+    const submit = (values) => {
         showFreeRoomsService(values);
     };
 
@@ -54,9 +53,7 @@ const FreeRooms = props => {
                     <aside className="free-rooms__panel">
                         <Card className="free-rooms-wrapper freeRoomCard">
                             <div className="freeRoomForms">
-                                <h2 id="form-dialog-title">
-                                    {t('find_free_room')}
-                                </h2>
+                                <h2 id="form-dialog-title">{t('find_free_room')}</h2>
                                 <FreeRoomForm
                                     classScheduler={classScheduler}
                                     onReset={handleFormReset}
@@ -66,14 +63,12 @@ const FreeRooms = props => {
                         </Card>
                     </aside>
                     <section className="container-flex-wrap wrapper">
-                        {props.freeRooms.map(freeRoom => (
+                        {props.freeRooms.map((freeRoom) => (
                             <Card key={freeRoom.id} className="container">
                                 <div className="freeRoomCard">
-                                    <span> {t('room_label') + ':'} </span>
-                                    <h2 className="room-card__number">
-                                        {freeRoom.name}
-                                    </h2>
-                                    <span>{t('type_label') + ':'}</span>
+                                    <span> {`${t('room_label')}:`} </span>
+                                    <h2 className="room-card__number">{freeRoom.name}</h2>
+                                    <span>{`${t('type_label')}:`}</span>
                                     <h2 className="room-card__number">
                                         {freeRoom.type.description}
                                     </h2>
@@ -87,8 +82,8 @@ const FreeRooms = props => {
     );
 };
 
-const mapStateToProps = state => ({
-    freeRooms: state.freeRooms.freeRooms
+const mapStateToProps = (state) => ({
+    freeRooms: state.freeRooms.freeRooms,
 });
 
 export default connect(mapStateToProps)(FreeRooms);

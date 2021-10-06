@@ -2,33 +2,26 @@ import React, { useEffect, useState } from 'react';
 
 import PropTypes from 'prop-types';
 import Dialog from '@material-ui/core/Dialog';
+import { FaEdit } from 'react-icons/fa';
+import { useTranslation } from 'react-i18next';
 import Card from '../../share/Card/Card';
 import WishForm from '../../components/AddTeacherWishForm/WishForm';
 
 import {
     getMyTeacherWishesService,
     selectTeacherWishService,
-    updateTeacherWishService
+    updateTeacherWishService,
 } from '../../services/teacherWishService';
 
 import { getPublicClassScheduleListService } from '../../services/classService';
-
-import { FaEdit } from 'react-icons/fa';
-import { useTranslation } from 'react-i18next';
 
 import './WishModal.scss';
 import { userRoles } from '../../constants/userRoles';
 import { getTeacherFullName } from '../../helper/renderTeacher';
 
-const WishModal = props => {
+const WishModal = (props) => {
     const { t } = useTranslation('common');
-    const {
-        onCloseWish,
-        teacher,
-        classScheduler,
-        teacherWishes,
-        openWish
-    } = props;
+    const { onCloseWish, teacher, classScheduler, teacherWishes, openWish } = props;
 
     const [showForm, setShowForm] = useState(false);
 
@@ -37,7 +30,7 @@ const WishModal = props => {
     const class_names = [];
 
     if (classScheduler.length - 1 > 0) {
-        classScheduler.map(classSchedulerOne => {
+        classScheduler.map((classSchedulerOne) => {
             class_names.push(classSchedulerOne.class_name);
         });
     }
@@ -45,7 +38,7 @@ const WishModal = props => {
     let teacherWishList = [];
 
     if (teacherWishes[0] !== undefined) {
-        teacherWishes.map(wishes => {
+        teacherWishes.map((wishes) => {
             for (let i = 0; i < wishes.length; i++) {
                 teacherWishList.push(wishes[i]);
             }
@@ -54,21 +47,21 @@ const WishModal = props => {
         teacherWishList = undefined;
     }
 
-    const selectWishCard = day => {
+    const selectWishCard = (day) => {
         selectTeacherWishService(day);
     };
 
-    const teacherWishSubmit = values => {
+    const teacherWishSubmit = (values) => {
         const someWish = {
             day_of_week: values.day_of_week,
             evenOdd: values.evenOdd,
-            class_status: []
+            class_status: [],
         };
 
         for (let i = 0; i <= classScheduler.length - 1; i++) {
-            let new_class_status = {
+            const new_class_status = {
                 class_name: class_names[i],
-                status: values[`class_number${class_names[i]}`]
+                status: values[`class_number${class_names[i]}`],
             };
 
             someWish.class_status.push(new_class_status);
@@ -86,7 +79,7 @@ const WishModal = props => {
         <Dialog onClose={handleClose} open={openWish} maxWidth="lg">
             <h2 className="modal-teacher-title">
                 {t('teacher_wish_heading', {
-                    teacherName: getTeacherFullName(teacher)
+                    teacherName: getTeacherFullName(teacher),
                 })}
             </h2>
 
@@ -115,38 +108,26 @@ const WishModal = props => {
                                             className="svg-btn edit-btn"
                                             title={t('edit_hover_title')}
                                             onClick={() => {
-                                                selectWishCard(
-                                                    teacherWish.day_of_week
-                                                );
+                                                selectWishCard(teacherWish.day_of_week);
                                                 setShowForm(true);
                                             }}
                                         />
                                     </div>
                                     <h3 className="wish-title-day">
-                                        {t(
-                                            `day_of_week_${teacherWish.day_of_week}`
-                                        )}
+                                        {t(`day_of_week_${teacherWish.day_of_week}`)}
                                     </h3>
-                                    {teacherWish.class_status.map(
-                                        (class_status, index) => (
-                                            <div
-                                                className="class-status-block"
-                                                key={index}
-                                            >
-                                                <span>
-                                                    {t('teacher_wish_class')}{' '}
-                                                    {class_status.class_name}
-                                                </span>
-                                                <span
-                                                    className={`_${class_status.status}`}
-                                                >
-                                                    {t(
-                                                        `teacher_wish_class_status_${class_status.status}`
-                                                    )}
-                                                </span>
-                                            </div>
-                                        )
-                                    )}
+                                    {teacherWish.class_status.map((class_status, index) => (
+                                        <div className="class-status-block" key={index}>
+                                            <span>
+                                                {t('teacher_wish_class')} {class_status.class_name}
+                                            </span>
+                                            <span className={`_${class_status.status}`}>
+                                                {t(
+                                                    `teacher_wish_class_status_${class_status.status}`,
+                                                )}
+                                            </span>
+                                        </div>
+                                    ))}
                                 </Card>
                             ))}
                         </div>
@@ -163,7 +144,7 @@ const WishModal = props => {
 
 WishModal.propTypes = {
     onCloseWish: PropTypes.func.isRequired,
-    openWish: PropTypes.bool.isRequired
+    openWish: PropTypes.bool.isRequired,
 };
 
 export default WishModal;

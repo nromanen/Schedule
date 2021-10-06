@@ -8,7 +8,7 @@ import { authCheckState } from './redux/actions/index';
 import { handleSnackbarCloseService } from './services/snackbarService';
 import SnackbarComponent from './share/Snackbar/SnackbarComponent';
 
-const App = props => {
+const App = (props) => {
     const { isSnackbarOpen, snackbarType, snackbarMessage } = props;
     const handleSnackbarClose = (event, reason) => {
         if (!reason === 'clickaway') {
@@ -37,15 +37,15 @@ const App = props => {
     );
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
     isSnackbarOpen: state.snackbar.isSnackbarOpen,
     snackbarType: state.snackbar.snackbarType,
-    snackbarMessage: state.snackbar.message
+    snackbarMessage: state.snackbar.message,
 });
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
     return {
-        onTryAutoLogin: () => dispatch(authCheckState())
+        onTryAutoLogin: () => dispatch(authCheckState()),
     };
 };
 

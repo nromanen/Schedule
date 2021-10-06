@@ -4,7 +4,7 @@ import { updateObject } from '../utility';
 const initialState = {
     subjects: [],
     subject: {},
-    disabledSubjects: []
+    disabledSubjects: [],
 };
 
 const subjects = (state = initialState, action) => {
@@ -12,44 +12,40 @@ const subjects = (state = initialState, action) => {
         case actionTypes.ADD_SUBJECT:
             return updateObject(state, {
                 subjects: state.subjects.concat(action.result),
-                subject: state.subject
+                subject: state.subject,
             });
 
         case actionTypes.DELETE_SUBJECT:
-            state.subjects = state.subjects.filter(
-                subject => subject.id !== action.result
-            );
+            state.subjects = state.subjects.filter((subject) => subject.id !== action.result);
             return updateObject(state, {
                 subjects: state.subjects,
-                subject: state.subject
+                subject: state.subject,
             });
 
         case actionTypes.SHOW_ALL_SUBJECTS:
             return updateObject(state, {
                 subjects: action.result,
-                subject: state.subject
+                subject: state.subject,
             });
 
         case actionTypes.SET_DISABLED_SUBJECTS:
             return updateObject(state, {
-                disabledSubjects: action.result
+                disabledSubjects: action.result,
             });
 
         case actionTypes.SELECT_SUBJECT:
-            let subject = state.subjects.filter(
-                subject => subject.id === action.result
-            )[0];
+            let subject = state.subjects.filter((subject) => subject.id === action.result)[0];
             if (!subject) {
                 subject = { id: null };
             }
             return updateObject(state, {
                 subjects: state.subjects,
-                subject: subject
+                subject,
             });
 
         case actionTypes.UPDATE_SUBJECT:
             const updatedSubjects = [];
-            state.subjects.forEach(subject => {
+            state.subjects.forEach((subject) => {
                 if (subject.id === action.result.id) {
                     subject = { ...subject, ...action.result };
                 }
@@ -57,13 +53,13 @@ const subjects = (state = initialState, action) => {
             });
             return updateObject(state, {
                 subjects: updatedSubjects,
-                subject: {}
+                subject: {},
             });
 
         case actionTypes.CLEAR_SUBJECT:
             return {
                 ...state,
-                subject: {}
+                subject: {},
             };
 
         default:

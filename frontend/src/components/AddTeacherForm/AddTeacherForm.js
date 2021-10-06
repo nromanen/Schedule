@@ -2,27 +2,26 @@ import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Field, reduxForm } from 'redux-form';
 
-import renderTextField from '../../share/renderedFields/input';
-import { required } from '../../validation/validateFields';
-
 import Button from '@material-ui/core/Button';
 import { styled } from '@material-ui/core/styles';
+import { useTranslation } from 'react-i18next';
+import Select from 'react-select';
+import renderTextField from '../../share/renderedFields/input';
+import { required } from '../../validation/validateFields';
 
 import Card from '../../share/Card/Card';
 
 import { TEACHER_FORM } from '../../constants/reduxForms';
-import { useTranslation } from 'react-i18next';
 
 import './AddTeacherForm.scss';
-import Select from 'react-select';
 import { ReduxFormSelect } from '../../helper/ReduxFormSelect';
 import renderSelectField from '../../share/renderedFields/select';
 import { getDepartmentByIdService } from '../../services/departmentService';
 import { getClearOrCancelTitle, setDisableButton } from '../../helper/disableComponent';
 
-let AddTeacher = props => {
+let AddTeacher = (props) => {
     const { t } = useTranslation('formElements');
-    const { handleSubmit, pristine, submitting, reset,departments,teacher } = props;
+    const { handleSubmit, pristine, submitting, reset, departments, teacher } = props;
 
     const teacherId = teacher.id;
 
@@ -34,15 +33,15 @@ let AddTeacher = props => {
         }
     }, [teacherId]);
 
-    const initializeFormHandler = teacher => {
+    const initializeFormHandler = (teacher) => {
         props.initialize({
             id: teacher.id,
             surname: teacher.surname,
             name: teacher.name,
             patronymic: teacher.patronymic,
             position: teacher.position,
-            email:teacher.email,
-            department: teacher.department.id
+            email: teacher.email,
+            department: teacher.department.id,
         });
     };
 
@@ -50,8 +49,7 @@ let AddTeacher = props => {
         <Card class="form-card teacher-form">
             <form className="createTeacherForm w-100" onSubmit={handleSubmit}>
                 <h2 className="form-title">
-                    {teacherId ? t('edit_title') : t('create_title')}{' '}
-                    {t('teacher_a_label')}
+                    {teacherId ? t('edit_title') : t('create_title')} {t('teacher_a_label')}
                 </h2>
 
                 <Field
@@ -113,8 +111,8 @@ let AddTeacher = props => {
                     component={renderSelectField}
                     label={t('department_teachers_label')}
                     type="text"
-                    onChange={({target})=> {
-                        getDepartmentByIdService(target.value)
+                    onChange={({ target }) => {
+                        getDepartmentByIdService(target.value);
                     }}
                 >
                     <option />
@@ -138,13 +136,13 @@ let AddTeacher = props => {
                     <Button
                         className="buttons-style"
                         variant="contained"
-                        disabled={setDisableButton(pristine,submitting,teacher.id)}
+                        disabled={setDisableButton(pristine, submitting, teacher.id)}
                         onClick={() => {
                             reset();
                             props.onSetSelectedCard(null);
                         }}
                     >
-                        {getClearOrCancelTitle(teacher.id,t)}
+                        {getClearOrCancelTitle(teacher.id, t)}
                     </Button>
                 </div>
             </form>
@@ -152,10 +150,10 @@ let AddTeacher = props => {
     );
 };
 
-const mapStateToProps = state => ({ teacher: state.teachers.teacher });
+const mapStateToProps = (state) => ({ teacher: state.teachers.teacher });
 
 AddTeacher = reduxForm({
-    form: TEACHER_FORM
+    form: TEACHER_FORM,
 })(AddTeacher);
 
 export default connect(mapStateToProps)(AddTeacher);

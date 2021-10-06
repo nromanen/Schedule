@@ -1,26 +1,24 @@
 import React, { useState } from 'react';
 import { MdExpandMore } from 'react-icons/all';
 
+import Divider from '@material-ui/core/Divider';
+import ExpansionPanel from '@material-ui/core/ExpansionPanel';
+import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
+import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import Card from '../../../share/Card/Card';
 import ConfirmDialog from '../../../share/modals/dialog';
 
 import TemporaryScheduleCard from '../TemporaryScheduleCard/TemporaryScheduleCard';
 import TemporaryScheduleCardButtons from '../TemporaryScheduleCardButtons/TemporaryScheduleCardButtons';
 
-import Divider from '@material-ui/core/Divider';
-import ExpansionPanel from '@material-ui/core/ExpansionPanel';
-import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
-import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
-
 import { cardType } from '../../../constants/cardType';
 
 import { deleteTemporaryScheduleService } from '../../../services/temporaryScheduleService';
 
-const ScheduleAndTemporaryScheduleList = props => {
+const ScheduleAndTemporaryScheduleList = (props) => {
     const shortId = require('shortid');
 
-    const schedulesAndTemporarySchedules =
-        props.schedulesAndTemporarySchedules || [];
+    const schedulesAndTemporarySchedules = props.schedulesAndTemporarySchedules || [];
 
     const [open, setOpen] = useState(false);
     const [temporaryScheduleId, setTemporaryScheduleId] = useState(-1);
@@ -31,16 +29,16 @@ const ScheduleAndTemporaryScheduleList = props => {
 
     if (schedulesAndTemporarySchedules.length === 1) {
         expandedProp = {
-            expanded: true
+            expanded: true,
         };
     }
 
-    const handleClickOpen = temporaryScheduleId => {
+    const handleClickOpen = (temporaryScheduleId) => {
         setTemporaryScheduleId(temporaryScheduleId);
         setOpen(true);
     };
 
-    const handleClose = temporaryScheduleId => {
+    const handleClose = (temporaryScheduleId) => {
         setOpen(false);
         if (!temporaryScheduleId) {
             return;
@@ -56,101 +54,67 @@ const ScheduleAndTemporaryScheduleList = props => {
                 open={open}
                 onClose={handleClose}
             />
-            {schedulesAndTemporarySchedules.map(
-                scheduleAndTemporarySchedule => (
-                    <ExpansionPanel key={shortId.generate()} {...expandedProp}>
-                        <ExpansionPanelSummary
-                            expandIcon={<MdExpandMore />}
-                            id={'panel1a-header' + shortId.generate()}
-                        >
-                            <h2>{scheduleAndTemporarySchedule.date}</h2>
-                        </ExpansionPanelSummary>
-                        <ExpansionPanelDetails>
-                            <Divider />
-                            <section className="temporary-schedule-list">
-                                {scheduleAndTemporarySchedule.schedules.map(
-                                    schedule => (
-                                        <section
-                                            className="temporary-schedule-row"
-                                            key={shortId.generate()}
-                                        >
-                                            <Card
-                                                class={
-                                                    'done-card text-center ' +
-                                                    (schedule.schedule
-                                                        .vacation &&
-                                                        'vacation-card ')
-                                                }
-                                            >
-                                                {!schedule.temporary_schedule && (
-                                                    <TemporaryScheduleCardButtons
-                                                        schedule={
-                                                            schedule.schedule
-                                                        }
-                                                        date={
-                                                            scheduleAndTemporarySchedule.date
-                                                        }
-                                                        isTemporary={false}
-                                                        scheduleId={
-                                                            schedule.schedule.id
-                                                        }
-                                                    />
-                                                )}
-                                                <TemporaryScheduleCard
-                                                    schedule={schedule.schedule}
-                                                />
-                                            </Card>
-                                            <Divider
-                                                orientation="vertical"
-                                                flexItem
-                                                className="divider"
+            {schedulesAndTemporarySchedules.map((scheduleAndTemporarySchedule) => (
+                <ExpansionPanel key={shortId.generate()} {...expandedProp}>
+                    <ExpansionPanelSummary
+                        expandIcon={<MdExpandMore />}
+                        id={`panel1a-header${shortId.generate()}`}
+                    >
+                        <h2>{scheduleAndTemporarySchedule.date}</h2>
+                    </ExpansionPanelSummary>
+                    <ExpansionPanelDetails>
+                        <Divider />
+                        <section className="temporary-schedule-list">
+                            {scheduleAndTemporarySchedule.schedules.map((schedule) => (
+                                <section
+                                    className="temporary-schedule-row"
+                                    key={shortId.generate()}
+                                >
+                                    <Card
+                                        class={`done-card text-center ${
+                                            schedule.schedule.vacation && 'vacation-card '
+                                        }`}
+                                    >
+                                        {!schedule.temporary_schedule && (
+                                            <TemporaryScheduleCardButtons
+                                                schedule={schedule.schedule}
+                                                date={scheduleAndTemporarySchedule.date}
+                                                isTemporary={false}
+                                                scheduleId={schedule.schedule.id}
                                             />
-                                            {schedule.temporary_schedule ? (
-                                                <Card
-                                                    class={
-                                                        'done-card text-center ' +
-                                                        (schedule.temporary_schedule_vacation &&
-                                                            'vacation-card ')
-                                                    }
-                                                >
-                                                    <TemporaryScheduleCardButtons
-                                                        schedule={
-                                                            schedule.temporary_schedule
-                                                        }
-                                                        date={
-                                                            scheduleAndTemporarySchedule.date
-                                                        }
-                                                        scheduleId={
-                                                            schedule.schedule.id
-                                                        }
-                                                        isTemporary={true}
-                                                        onOpenDialog={
-                                                            handleClickOpen
-                                                        }
-                                                        setDate={setDate}
-                                                        setTeacherId={
-                                                            setTeacherId
-                                                        }
-                                                    />
-                                                    <TemporaryScheduleCard
-                                                        schedule={
-                                                            schedule.temporary_schedule
-                                                        }
-                                                    />
-                                                </Card>
-                                            ) : (
-                                                <Card class="done-card hidden-card">
-                                                    Hidden
-                                                </Card>
-                                            )}
-                                        </section>
-                                    )
-                                )}
-                            </section>
-                        </ExpansionPanelDetails>
-                    </ExpansionPanel>
-                )
-            )}
+                                        )}
+                                        <TemporaryScheduleCard schedule={schedule.schedule} />
+                                    </Card>
+                                    <Divider orientation="vertical" flexItem className="divider" />
+                                    {schedule.temporary_schedule ? (
+                                        <Card
+                                            class={`done-card text-center ${
+                                                schedule.temporary_schedule_vacation &&
+                                                'vacation-card '
+                                            }`}
+                                        >
+                                            <TemporaryScheduleCardButtons
+                                                schedule={schedule.temporary_schedule}
+                                                date={scheduleAndTemporarySchedule.date}
+                                                scheduleId={schedule.schedule.id}
+                                                isTemporary
+                                                onOpenDialog={handleClickOpen}
+                                                setDate={setDate}
+                                                setTeacherId={setTeacherId}
+                                            />
+                                            <TemporaryScheduleCard
+                                                schedule={schedule.temporary_schedule}
+                                            />
+                                        </Card>
+                                    ) : (
+                                        <Card class="done-card hidden-card">Hidden</Card>
+                                    )}
+                                </section>
+                            ))}
+                        </section>
+                    </ExpansionPanelDetails>
+                </ExpansionPanel>
+            ))}
         </main>
     );
 };

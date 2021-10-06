@@ -2,15 +2,15 @@ import * as actionTypes from '../actions/actionsType';
 
 const busyRooms = (
     state = {
-        busyRooms: []
+        busyRooms: [],
     },
-    action
+    action,
 ) => {
     switch (action.type) {
         case actionTypes.SHOW_ALL_BUSY_ROOMS:
             return {
                 ...state,
-                busyRooms: [action.result]
+                busyRooms: [action.result],
             };
 
         default:

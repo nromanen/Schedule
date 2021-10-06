@@ -3,27 +3,20 @@ import { connect } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import Button from '@material-ui/core/Button';
 
+import { CircularProgress } from '@material-ui/core';
 import { showAllGroupsService } from '../../services/groupService';
 import { getLessonsByGroupService } from '../../services/lessonService';
-import {
-    setLoadingService,
-    setScheduleLoadingService
-} from '../../services/loadingService';
+import { setLoadingService, setScheduleLoadingService } from '../../services/loadingService';
 import { getClassScheduleListService } from '../../services/classService';
-import {
-    getScheduleItemsService,
-    clearSchedule
-} from '../../services/scheduleService';
+import { getScheduleItemsService, clearSchedule } from '../../services/scheduleService';
 import { showListOfRoomsService } from '../../services/roomService';
 
 import ScheduleLessonsList from '../../components/ScheduleLessonsList/ScheduleLessonsList';
 import Schedule from '../../components/Schedule/Schedule';
 
-import { CircularProgress } from '@material-ui/core';
-
 import './SchedulePage.scss';
 
-const SchedulePage = props => {
+const SchedulePage = (props) => {
     const { t } = useTranslation('common');
 
     document.title = t('schedule_title');
@@ -34,7 +27,7 @@ const SchedulePage = props => {
 
     const scheduleItems = props.scheduleItems;
 
-    let lessons = props.lessons;
+    const lessons = props.lessons;
 
     const isLoading = props.loading;
 
@@ -70,7 +63,6 @@ const SchedulePage = props => {
 
     return (
         <>
-
             <section className="cards-container schedule-page">
                 <section className="flexbox card ">
                     {props.scheduleLoading ? (
@@ -78,9 +70,7 @@ const SchedulePage = props => {
                     ) : (
                         <>
                             {!props.currentSemester.id ? (
-                                <h2 className="no-current-semester">
-                                    {t('no_current_semester')}
-                                </h2>
+                                <h2 className="no-current-semester">{t('no_current_semester')}</h2>
                             ) : (
                                 <Schedule
                                     currentSemester={props.currentSemester}
@@ -92,8 +82,7 @@ const SchedulePage = props => {
                                     availability={props.availability}
                                     isLoading={isLoading}
                                 />
-                            )
-                            }
+                            )}
                         </>
                     )}
                 </section>
@@ -116,9 +105,7 @@ const SchedulePage = props => {
                                 lessons={lessons}
                                 groupId={groupId}
                                 translation={t}
-                                classScheduler={
-                                    props.currentSemester.semester_classes
-                                }
+                                classScheduler={props.currentSemester.semester_classes}
                             />
                         </>
                     )}
@@ -131,7 +118,7 @@ const SchedulePage = props => {
     );
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
     groups: state.groups.groups,
     lessons: state.lesson.lessons,
     groupId: state.lesson.groupId,
@@ -141,8 +128,8 @@ const mapStateToProps = state => ({
     itemGroupId: state.schedule.itemGroupId,
     availability: state.schedule.availability,
     currentSemester: state.schedule.currentSemester,
-    semester:state.schedule.semester,
-    rooms: state.rooms.rooms
+    semester: state.schedule.semester,
+    rooms: state.rooms.rooms,
 });
 
 export default connect(mapStateToProps)(SchedulePage);

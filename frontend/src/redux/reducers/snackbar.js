@@ -4,18 +4,18 @@ import { updateObject } from '../utility';
 const initialState = {
     isSnackbarOpen: false,
     snackbarType: null,
-    message: null
+    message: null,
 };
 
 const reducer = (state = initialState, action) => {
     switch (action.type) {
         case actionTypes.SET_OPEN_SNACKBAR:
-            let type = action.result.type;
-            let message = action.result.message;
+            const type = action.result.type;
+            const message = action.result.message;
             return updateObject(state, {
                 isSnackbarOpen: action.result.isOpen,
                 snackbarType: type,
-                message: message
+                message,
             });
         default:
             return state;

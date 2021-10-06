@@ -4,6 +4,6 @@ import '../../containers/Auth/Auth.scss';
 import Auth from '../../containers/Auth/Auth';
 
 const Login = () => {
-    return <Auth authType={authTypes.LOGIN}/>
+    return <Auth authType={authTypes.LOGIN} />;
 };
-export {Login}
+export { Login };

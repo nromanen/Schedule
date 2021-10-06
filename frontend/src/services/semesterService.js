@@ -7,7 +7,8 @@ import {
     SEMESTER_COPY_URL,
     LESSONS_FROM_SEMESTER_COPY_URL,
     CREATE_ARCHIVE_SEMESTER,
-    ARCHIVED_SEMESTERS_URL, DEFAULT_SEMESTER_URL
+    ARCHIVED_SEMESTERS_URL,
+    DEFAULT_SEMESTER_URL,
 } from '../constants/axios';
 import { setDisabledSemesters, setError } from '../redux/actions/semesters';
 import { SEMESTER_FORM } from '../constants/reduxForms';
@@ -24,17 +25,15 @@ import {
     setArchivedSemesters,
     moveToArchivedSemester,
     setScheduleType,
-    setFullSchedule
+    setFullSchedule,
 } from '../redux/actions/index';
 
 import { errorHandler, successHandler } from '../helper/handlerAxios';
 import { resetFormHandler } from '../helper/formHelper';
 
-export const selectSemesterService = semesterId =>
-    store.dispatch(selectSemester(semesterId));
+export const selectSemesterService = (semesterId) => store.dispatch(selectSemester(semesterId));
 
-export const setUniqueErrorService = isUniqueError =>
-    store.dispatch(setError(isUniqueError));
+export const setUniqueErrorService = (isUniqueError) => store.dispatch(setError(isUniqueError));
 
 export const clearSemesterService = () => {
     store.dispatch(clearSemester());
@@ -42,93 +41,81 @@ export const clearSemesterService = () => {
 };
 
 export const showAllSemestersService = () => {
-    const semesters=[
+    const semesters = [
         {
-            "id": 7,
-            "description": "Семестер для архівування",
-            "year": 2020,
-            "startDay": "19/05/2020",
-            "endDay": "30/05/2020",
-            "currentSemester": false,
-            "defaultSemester":false,
-            "disable": false,
-            "semester_days": [
-                "MONDAY",
-                "TUESDAY",
-                "WEDNESDAY",
-                "THURSDAY",
-                "FRIDAY"
+            id: 7,
+            description: 'Семестер для архівування',
+            year: 2020,
+            startDay: '19/05/2020',
+            endDay: '30/05/2020',
+            currentSemester: false,
+            defaultSemester: false,
+            disable: false,
+            semester_days: ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY'],
+            semester_classes: [
+                {
+                    id: 1,
+                    startTime: '08:20',
+                    endTime: '09:40',
+                    class_name: '1',
+                },
+                {
+                    id: 2,
+                    startTime: '09:50',
+                    endTime: '11:10',
+                    class_name: '2',
+                },
+                {
+                    id: 3,
+                    startTime: '11:30',
+                    endTime: '12:50',
+                    class_name: '3',
+                },
+                {
+                    id: 4,
+                    startTime: '13:00',
+                    endTime: '14:20',
+                    class_name: '4',
+                },
             ],
-            "semester_classes": [
-                {
-                    "id": 1,
-                    "startTime": "08:20",
-                    "endTime": "09:40",
-                    "class_name": "1"
-                },
-                {
-                    "id": 2,
-                    "startTime": "09:50",
-                    "endTime": "11:10",
-                    "class_name": "2"
-                },
-                {
-                    "id": 3,
-                    "startTime": "11:30",
-                    "endTime": "12:50",
-                    "class_name": "3"
-                },
-                {
-                    "id": 4,
-                    "startTime": "13:00",
-                    "endTime": "14:20",
-                    "class_name": "4"
-                }
-            ]
         },
         {
-            "id": 6,
-            "description": "Весняна сесія заочники1",
-            "year": 2020,
-            "startDay": "13/06/2020",
-            "endDay": "31/07/2020",
-            "currentSemester": true,
-            "defaultSemester":true,
-            "disable": false,
-            "semester_days": [
-                "MONDAY",
-                "TUESDAY",
-                "WEDNESDAY",
-                "THURSDAY",
-                "FRIDAY"
+            id: 6,
+            description: 'Весняна сесія заочники1',
+            year: 2020,
+            startDay: '13/06/2020',
+            endDay: '31/07/2020',
+            currentSemester: true,
+            defaultSemester: true,
+            disable: false,
+            semester_days: ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY'],
+            semester_classes: [
+                {
+                    id: 1,
+                    startTime: '08:20',
+                    endTime: '09:40',
+                    class_name: '1',
+                },
+                {
+                    id: 2,
+                    startTime: '09:50',
+                    endTime: '11:10',
+                    class_name: '2',
+                },
+                {
+                    id: 3,
+                    startTime: '11:30',
+                    endTime: '12:50',
+                    class_name: '3',
+                },
+                {
+                    id: 4,
+                    startTime: '13:00',
+                    endTime: '14:20',
+                    class_name: '4',
+                },
             ],
-            "semester_classes": [
-                {
-                    "id": 1,
-                    "startTime": "08:20",
-                    "endTime": "09:40",
-                    "class_name": "1"
-                },
-                {
-                    "id": 2,
-                    "startTime": "09:50",
-                    "endTime": "11:10",
-                    "class_name": "2"
-                },
-                {
-                    "id": 3,
-                    "startTime": "11:30",
-                    "endTime": "12:50",
-                    "class_name": "3"
-                },
-                {
-                    "id": 4,
-                    "startTime": "13:00",
-                    "endTime": "14:20",
-                    "class_name": "4"
-                }
-            ]
-        }
+        },
     ];
     // store.dispatch(
     //             showAllSemesters(
@@ -139,42 +126,33 @@ export const showAllSemestersService = () => {
     //         );
     axios
         .get(SEMESTERS_URL)
-        .then(response => {
+        .then((response) => {
             store.dispatch(
                 showAllSemesters(
-                    response.data
-                        .sort((a, b) => (a.year > b.year ? 1 : -1))
-                        .reverse()
-                )
+                    response.data.sort((a, b) => (a.year > b.year ? 1 : -1)).reverse(),
+                ),
             );
         })
-        .catch(error => errorHandler(error));
-
+        .catch((error) => errorHandler(error));
 };
 
-const cardSemester = semester => {
+const cardSemester = (semester) => {
     const semester_days = [];
     const semester_classes = [];
-    for (let prop in semester) {
+    for (const prop in semester) {
         if (Object.prototype.hasOwnProperty.call(semester, prop)) {
-            if (
-                prop.indexOf('semester_days_markup_') >= 0 &&
-                semester[prop] === true
-            ) {
+            if (prop.indexOf('semester_days_markup_') >= 0 && semester[prop] === true) {
                 semester_days.push(prop.substring(21));
             }
         }
         if (Object.prototype.hasOwnProperty.call(semester, prop)) {
-            if (
-                prop.indexOf('semester_classes_markup_') >= 0 &&
-                semester[prop] === true
-            ) {
+            if (prop.indexOf('semester_classes_markup_') >= 0 && semester[prop] === true) {
                 semester_classes.push(
                     store
                         .getState()
                         .classActions.classScheduler.find(
-                            schedule => schedule.id === +prop.substring(24)
-                        )
+                            (schedule) => schedule.id === +prop.substring(24),
+                        ),
                 );
             }
         }
@@ -188,38 +166,36 @@ const cardSemester = semester => {
         endDay: semester.endDay,
         currentSemester: semester.currentSemester,
         defaultSemester: semester.defaultSemester,
-        semester_days: semester_days,
-        semester_classes: semester_classes
+        semester_days,
+        semester_classes,
     };
 };
 
-export const removeSemesterCardService = semesterId => {
-    const semester = store
-        .getState()
-        .semesters.semesters.find(item => item.id === semesterId);
+export const removeSemesterCardService = (semesterId) => {
+    const semester = store.getState().semesters.semesters.find((item) => item.id === semesterId);
     if (semester.currentSemester === true) {
         handleSnackbarOpenService(
             true,
             snackbarTypes.ERROR,
-            i18n.t('serviceMessages:semester_service_is_active')
+            i18n.t('serviceMessages:semester_service_is_active'),
         );
         return;
     }
     axios
-        .delete(SEMESTERS_URL + `/${semesterId}`)
-        .then(response => {
+        .delete(`${SEMESTERS_URL}/${semesterId}`)
+        .then((response) => {
             store.dispatch(deleteSemester(semesterId));
             successHandler(
                 i18n.t('serviceMessages:back_end_success_operation', {
                     cardType: i18n.t('formElements:semester_label'),
-                    actionType: i18n.t('serviceMessages:deleted_label')
-                })
+                    actionType: i18n.t('serviceMessages:deleted_label'),
+                }),
             );
         })
-        .catch(error => errorHandler(error));
+        .catch((error) => errorHandler(error));
 };
 
-const switchSaveActions = semester => {
+const switchSaveActions = (semester) => {
     if (semester.id) {
         putSemester(semester);
     } else {
@@ -227,19 +203,18 @@ const switchSaveActions = semester => {
     }
 };
 
-export const handleSemesterService = values => {
-    let semester = cardSemester(values);
+export const handleSemesterService = (values) => {
+    const semester = cardSemester(values);
     if (!checkUniqSemester(semester)) {
         handleSnackbarOpenService(
             true,
             snackbarTypes.ERROR,
-            i18n.t('common:semester_service_is_not_unique')
+            i18n.t('common:semester_service_is_not_unique'),
         );
         setUniqueErrorService(true);
         return;
     }
-    if (!checkSemesterYears(semester.endDay, semester.startDay, semester.year))
-        return;
+    if (!checkSemesterYears(semester.endDay, semester.startDay, semester.year)) return;
 
     if (semester.currentSemester) {
         const currentScheduleOld = findCurrentSemester(semester.id);
@@ -247,11 +222,11 @@ export const handleSemesterService = values => {
             currentScheduleOld.currentSemester = false;
             axios
                 .put(SEMESTERS_URL, currentScheduleOld)
-                .then(response => {
+                .then((response) => {
                     store.dispatch(updateSemester(response.data));
                     switchSaveActions(semester);
                 })
-                .catch(error => errorHandler(error));
+                .catch((error) => errorHandler(error));
         } else {
             switchSaveActions(semester);
         }
@@ -265,173 +240,161 @@ const checkSemesterYears = (endDay, startDay, year) => {
     const dateStartYear = +startDay.substring(startDay.length - 4);
     let conf = true;
     if (year !== dateEndYear || year !== dateStartYear) {
-        conf = window.confirm(
-            i18n.t('serviceMessages:semester_service_not_as_begin_or_end')
-        );
+        conf = window.confirm(i18n.t('serviceMessages:semester_service_not_as_begin_or_end'));
     }
     return conf;
 };
-export const setDefaultSemesterById = dataId => {
-     axios
-    .put(`${DEFAULT_SEMESTER_URL}?semesterId=${dataId}`)
-        .then(response => {
-           store.dispatch(updateSemester(response.data));
+export const setDefaultSemesterById = (dataId) => {
+    axios
+        .put(`${DEFAULT_SEMESTER_URL}?semesterId=${dataId}`)
+        .then((response) => {
+            store.dispatch(updateSemester(response.data));
             selectSemesterService(null);
-             getDisabledSemestersService();
+            getDisabledSemestersService();
             getArchivedSemestersService();
-             showAllSemestersService();
-             resetFormHandler(SEMESTER_FORM);
-             successHandler(
-                 i18n.t('serviceMessages:back_end_success_operation', {
-                     cardType: i18n.t('formElements:semester_label'),
-                     actionType: i18n.t('serviceMessages:updated_label')
-                 })
-             );
-         })
-        .catch(error => errorHandler(error));
-}
-
-const putSemester = data => {
-     axios
-    .put(SEMESTERS_URL, data)
-        .then(response => {
-           store.dispatch(updateSemester(response.data));
-            selectSemesterService(null);
-             getDisabledSemestersService();
-            getArchivedSemestersService();
-             showAllSemestersService();
-             resetFormHandler(SEMESTER_FORM);
-             successHandler(
-                 i18n.t('serviceMessages:back_end_success_operation', {
-                     cardType: i18n.t('formElements:semester_label'),
-                     actionType: i18n.t('serviceMessages:updated_label')
-                 })
-             );
-         })
-        .catch(error => errorHandler(error));
+            showAllSemestersService();
+            resetFormHandler(SEMESTER_FORM);
+            successHandler(
+                i18n.t('serviceMessages:back_end_success_operation', {
+                    cardType: i18n.t('formElements:semester_label'),
+                    actionType: i18n.t('serviceMessages:updated_label'),
+                }),
+            );
+        })
+        .catch((error) => errorHandler(error));
 };
-const postSemester = data => {
+
+const putSemester = (data) => {
+    axios
+        .put(SEMESTERS_URL, data)
+        .then((response) => {
+            store.dispatch(updateSemester(response.data));
+            selectSemesterService(null);
+            getDisabledSemestersService();
+            getArchivedSemestersService();
+            showAllSemestersService();
+            resetFormHandler(SEMESTER_FORM);
+            successHandler(
+                i18n.t('serviceMessages:back_end_success_operation', {
+                    cardType: i18n.t('formElements:semester_label'),
+                    actionType: i18n.t('serviceMessages:updated_label'),
+                }),
+            );
+        })
+        .catch((error) => errorHandler(error));
+};
+const postSemester = (data) => {
     axios
         .post(SEMESTERS_URL, data)
-        .then(response => {
+        .then((response) => {
             store.dispatch(addSemester(response.data));
             resetFormHandler(SEMESTER_FORM);
             successHandler(
                 i18n.t('serviceMessages:back_end_success_operation', {
                     cardType: i18n.t('formElements:semester_label'),
-                    actionType: i18n.t('serviceMessages:created_label')
-                })
+                    actionType: i18n.t('serviceMessages:created_label'),
+                }),
             );
         })
-        .catch(error => errorHandler(error));
+        .catch((error) => errorHandler(error));
 };
-const findCurrentSemester = semesterId => {
+const findCurrentSemester = (semesterId) => {
     return store
         .getState()
         .semesters.semesters.find(
-            semesterItem =>
-                semesterItem.currentSemester === true &&
-                semesterItem.id !== semesterId
+            (semesterItem) =>
+                semesterItem.currentSemester === true && semesterItem.id !== semesterId,
         );
 };
-const findDefaultSemester = semesterId => {
+const findDefaultSemester = (semesterId) => {
     return store
         .getState()
         .semesters.semesters.find(
-            semesterItem =>
-                semesterItem.defaultSemester === true &&
-                semesterItem.id !== semesterId
+            (semesterItem) =>
+                semesterItem.defaultSemester === true && semesterItem.id !== semesterId,
         );
 };
 export const getDisabledSemestersService = () => {
     axios
         .get(DISABLED_SEMESTERS_URL)
-        .then(res => {
+        .then((res) => {
             store.dispatch(setDisabledSemesters(res.data));
         })
-        .catch(err => errorHandler(err));
+        .catch((err) => errorHandler(err));
 };
 
-export const setDisabledSemestersService = semester => {
+export const setDisabledSemestersService = (semester) => {
     semester.disable = true;
     putSemester(semester);
 };
 
-export const setEnabledSemestersService = semester => {
+export const setEnabledSemestersService = (semester) => {
     semester.disable = false;
     putSemester(semester);
 };
 
-export const semesterCopy = values => {
+export const semesterCopy = (values) => {
     axios
         .post(
-            SEMESTER_COPY_URL +
-                '?fromSemesterId=' +
-                values.fromSemesterId +
-                '&toSemesterId=' +
-                values.toSemesterId
+            `${SEMESTER_COPY_URL}?fromSemesterId=${values.fromSemesterId}&toSemesterId=${values.toSemesterId}`,
         )
-        .then(response => {
+        .then((response) => {
             successHandler(
                 i18n.t('serviceMessages:back_end_success_operation', {
                     cardType: i18n.t('formElements:semester_label'),
-                    actionType: i18n.t('serviceMessages:copied_label')
-                })
+                    actionType: i18n.t('serviceMessages:copied_label'),
+                }),
             );
         })
-        .catch(error => errorHandler(error));
+        .catch((error) => errorHandler(error));
 };
 
-export const CopyLessonsFromSemesterService = values => {
+export const CopyLessonsFromSemesterService = (values) => {
     axios
         .post(
-            LESSONS_FROM_SEMESTER_COPY_URL +
-                '?fromSemesterId=' +
-                values.fromSemesterId +
-                '&toSemesterId=' +
-                values.toSemesterId
+            `${LESSONS_FROM_SEMESTER_COPY_URL}?fromSemesterId=${values.fromSemesterId}&toSemesterId=${values.toSemesterId}`,
         )
-        .then(response => {
+        .then((response) => {
             successHandler(
                 i18n.t('serviceMessages:back_end_success_operation', {
                     cardType: i18n.t('formElements:lesson_label'),
-                    actionType: i18n.t('serviceMessages:copied_label')
-                })
+                    actionType: i18n.t('serviceMessages:copied_label'),
+                }),
             );
         })
-        .catch(error => errorHandler(error));
+        .catch((error) => errorHandler(error));
 };
 
-export const createArchiveSemesterService = semesterId => {
+export const createArchiveSemesterService = (semesterId) => {
     axios
-        .post(CREATE_ARCHIVE_SEMESTER + '/' + semesterId)
-        .then(response => {
+        .post(`${CREATE_ARCHIVE_SEMESTER}/${semesterId}`)
+        .then((response) => {
             store.dispatch(moveToArchivedSemester(semesterId));
             successHandler(
                 i18n.t('serviceMessages:back_end_success_operation', {
                     cardType: i18n.t('formElements:semester_label'),
-                    actionType: i18n.t('serviceMessages:archived_label')
-                })
+                    actionType: i18n.t('serviceMessages:archived_label'),
+                }),
             );
         })
-        .catch(error => errorHandler(error));
+        .catch((error) => errorHandler(error));
 };
 
 export const getArchivedSemestersService = () => {
     axios
         .get(ARCHIVED_SEMESTERS_URL)
-        .then(response => {
+        .then((response) => {
             store.dispatch(setArchivedSemesters(response.data));
         })
-        .catch(err => errorHandler(err));
+        .catch((err) => errorHandler(err));
 };
 
-export const viewArchivedSemester = semesterId => {
+export const viewArchivedSemester = (semesterId) => {
     setScheduleType('archived');
     axios
-        .get(CREATE_ARCHIVE_SEMESTER + '/' + semesterId)
-        .then(response => {
+        .get(`${CREATE_ARCHIVE_SEMESTER}/${semesterId}`)
+        .then((response) => {
             store.dispatch(setFullSchedule(response.data));
         })
-        .catch(err => errorHandler(err));
+        .catch((err) => errorHandler(err));
 };

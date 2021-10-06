@@ -8,7 +8,7 @@ import Button from '@material-ui/core/Button';
 
 import './modal.scss';
 
-export const ModalWindow = props => {
+export const ModalWindow = (props) => {
     const { onClose, cardId, isHide, open, windowTitle } = props;
 
     const handleClose = () => {
@@ -23,7 +23,7 @@ export const ModalWindow = props => {
                 className="dialog-button"
                 variant="contained"
                 color="primary"
-                //onClick={() => onClose(cardId)}
+                // onClick={() => onClose(cardId)}
             >
                 {props.okButtonLabel}
             </Button>
@@ -34,11 +34,7 @@ export const ModalWindow = props => {
             return;
         }
         return (
-            <Button
-                className="dialog-button"
-                variant="contained"
-                onClick={() => onClose('')}
-            >
+            <Button className="dialog-button" variant="contained" onClick={() => onClose('')}>
                 {props.noButtonLabel}
             </Button>
         );
@@ -58,7 +54,7 @@ export const ModalWindow = props => {
 
     return (
         <Dialog
-            disableBackdropClick={true}
+            disableBackdropClick
             onClose={handleClose}
             aria-labelledby="confirm-dialog-title"
             open={open}
@@ -72,7 +68,7 @@ export const ModalWindow = props => {
 
 ModalWindow.propTypes = {
     onClose: PropTypes.func.isRequired,
-    open: PropTypes.bool.isRequired
+    open: PropTypes.bool.isRequired,
 };
 
 export default ModalWindow;

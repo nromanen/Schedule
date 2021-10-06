@@ -1,14 +1,14 @@
 import * as actionTypes from './actionsType';
 
-export const setUsers = res => {
+export const setUsers = (res) => {
     return {
         type: actionTypes.SET_USERS,
-        result: res
+        result: res,
     };
 };
-export const setUser = res => {
+export const setUser = (res) => {
     return {
         type: actionTypes.SET_USER,
-        result: res
+        result: res,
     };
 };

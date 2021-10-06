@@ -16,21 +16,13 @@ const useStyles = makeStyles(() => ({
     roomField: {
         '&': {
             margin: '0 auto',
-            width: 250
-        }
-    }
+            width: 250,
+        },
+    },
 }));
 
-const ScheduleDialog = props => {
-    const {
-        onClose,
-        itemData,
-        open,
-        rooms,
-        availability,
-        translation,
-        isLoading
-    } = props;
+const ScheduleDialog = (props) => {
+    const { onClose, itemData, open, rooms, availability, translation, isLoading } = props;
 
     const [room, setRoom] = useState('');
     const [sure, setSure] = useState(true);
@@ -56,7 +48,7 @@ const ScheduleDialog = props => {
         setRoom(null);
     };
 
-    const groupByAvailability = arr => {
+    const groupByAvailability = (arr) => {
         arr.sort((x, y) => {
             return x === y ? 0 : x ? 1 : -1;
         });
@@ -64,20 +56,18 @@ const ScheduleDialog = props => {
     };
 
     const defaultProps = {
-        options: availability.rooms
-            ? groupByAvailability(availability.rooms)
-            : rooms,
-        getOptionLabel: option =>
+        options: availability.rooms ? groupByAvailability(availability.rooms) : rooms,
+        getOptionLabel: (option) =>
             option
                 ? option.available
-                    ? option.name + ` (${translation('common:available')})`
-                    : option.name + ` (${translation('common:unavailable')})`
-                : ''
+                    ? `${option.name} (${translation('common:available')})`
+                    : `${option.name} (${translation('common:unavailable')})`
+                : '',
     };
 
     return (
         <Dialog
-            disableBackdropClick={true}
+            disableBackdropClick
             onClose={handleClose}
             aria-labelledby="simple-dialog-title"
             open={open}
@@ -96,18 +86,14 @@ const ScheduleDialog = props => {
                             <div className="availability-info">
                                 {!availability.classSuitsToTeacher ? (
                                     <p className="availability-warning">
-                                        {translation(
-                                            'common:class_does_not_suit_for_teacher'
-                                        )}
+                                        {translation('common:class_does_not_suit_for_teacher')}
                                     </p>
                                 ) : (
                                     ''
                                 )}
                                 {!availability.teacherAvailable ? (
                                     <p className="availability-warning">
-                                        {translation(
-                                            'common:teacher_is_unavailable'
-                                        )}{' '}
+                                        {translation('common:teacher_is_unavailable')}{' '}
                                     </p>
                                 ) : (
                                     ''
@@ -122,12 +108,10 @@ const ScheduleDialog = props => {
                                 onChange={(event, newValue) => {
                                     setRoom(newValue);
                                 }}
-                                renderInput={params => (
+                                renderInput={(params) => (
                                     <TextField
                                         {...params}
-                                        label={translation(
-                                            'formElements:room_label'
-                                        )}
+                                        label={translation('formElements:room_label')}
                                         margin="normal"
                                     />
                                 )}
@@ -139,18 +123,14 @@ const ScheduleDialog = props => {
                                     color="primary"
                                     onClick={() => chooseClickHandle()}
                                 >
-                                    {translation(
-                                        'formElements:choose_button_title'
-                                    )}
+                                    {translation('formElements:choose_button_title')}
                                 </Button>
                                 <Button
                                     className="dialog-button"
                                     variant="contained"
                                     onClick={() => onClose()}
                                 >
-                                    {translation(
-                                        'formElements:cancel_button_title'
-                                    )}
+                                    {translation('formElements:cancel_button_title')}
                                 </Button>
                             </div>
                         </>
@@ -161,22 +141,18 @@ const ScheduleDialog = props => {
                     <DialogTitle id="simple-dialog-title">
                         <p className="availability-warning">
                             {!room.available
-                                ? translation('common:room_is_unavailable') +
-                                  '. '
+                                ? `${translation('common:room_is_unavailable')}. `
                                 : ''}
                         </p>
                         <p className="availability-warning">
                             {!availability.teacherAvailable
-                                ? translation('common:teacher_is_unavailable') +
-                                  '. '
+                                ? `${translation('common:teacher_is_unavailable')}. `
                                 : ''}
                         </p>
 
                         <p className="availability-warning">
                             {!availability.classSuitsToTeacher
-                                ? translation(
-                                      'common:class_does_not_suit_for_teacher'
-                                  ) + '. '
+                                ? `${translation('common:class_does_not_suit_for_teacher')}. `
                                 : ''}
                         </p>
 
@@ -212,7 +188,7 @@ ScheduleDialog.propTypes = {
     onClose: PropTypes.func.isRequired,
     open: PropTypes.bool.isRequired,
     rooms: PropTypes.array.isRequired,
-    availability: PropTypes.object.isRequired
+    availability: PropTypes.object.isRequired,
 };
 
 export default ScheduleDialog;

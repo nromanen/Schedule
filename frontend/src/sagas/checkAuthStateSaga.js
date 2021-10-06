@@ -14,8 +14,8 @@ export function* checkAuthStateSaga(payload) {
                 type: actionTypes.AUTH_USER_SUCCESS,
                 response: {
                     token: payload.token,
-                    role: payload.role
-                }
+                    role: payload.role,
+                },
             });
         }
     }

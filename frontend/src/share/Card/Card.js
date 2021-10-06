@@ -6,10 +6,10 @@ import { colors } from '../../constants/schedule/colors';
 import { setItemGroupIdService } from '../../services/scheduleService';
 import { cssClasses } from '../../constants/schedule/cssClasses';
 
-const Card = props => {
+const Card = (props) => {
     let className = 'card';
     if (props.class) {
-        className = className.concat(' ' + props.class);
+        className = className.concat(` ${props.class}`);
     }
 
     let card = <div className={className}>{props.children}</div>;
@@ -18,7 +18,7 @@ const Card = props => {
     const dragItem = useRef();
 
     if (props.draggable) {
-        const dragStart = e => {
+        const dragStart = (e) => {
             const item = JSON.parse(e.target.childNodes[0].value);
             const groupId = item.lesson.group.id;
             const groupTitle = document.getElementById(`group-${groupId}`);
@@ -31,9 +31,7 @@ const Card = props => {
                 for (const board of boards) {
                     board.style.display = 'flex';
                     if (
-                        board.childNodes[0].classList.contains(
-                            cssClasses.MORE_ICON
-                        ) &&
+                        board.childNodes[0].classList.contains(cssClasses.MORE_ICON) &&
                         !board.childNodes[1]
                     ) {
                         board.style.background = colors.POSSIBILITY;
@@ -49,9 +47,8 @@ const Card = props => {
             e.dataTransfer.setData('card_id', dragItemNode.current.id);
         };
 
-        const handleDragEnd = e => {
-            const groupId = +JSON.parse(e.target.childNodes[0].value).lesson
-                .group.id;
+        const handleDragEnd = (e) => {
+            const groupId = +JSON.parse(e.target.childNodes[0].value).lesson.group.id;
             const groupTitleEl = document.getElementById(`group-${groupId}`);
 
             const allBoards = document.getElementsByClassName('schedule-board');
@@ -68,7 +65,7 @@ const Card = props => {
                 }
             }
 
-            for (let board of allBoards) {
+            for (const board of allBoards) {
                 board.style.display = 'flex';
             }
 

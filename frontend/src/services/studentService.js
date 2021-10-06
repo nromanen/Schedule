@@ -9,76 +9,79 @@ import i18n from '../helper/i18n';
 import {
     addStudent,
     deleteStudent,
-    setStudent, showAllStudents,
+    setStudent,
+    showAllStudents,
     showAllStudentsByGroupId,
-    updateStudent
+    updateStudent,
 } from '../redux/actions/students';
-import { getDisabledSubjectsService, selectSubjectService, showAllSubjectsService } from './subjectService';
+import {
+    getDisabledSubjectsService,
+    selectSubjectService,
+    showAllSubjectsService,
+} from './subjectService';
 
-export const createStudentService = data => {
-
+export const createStudentService = (data) => {
     axios
         .post(STUDENT_URL, data)
-        .then(response => {
+        .then((response) => {
             store.dispatch(addStudent(response.data));
             resetFormHandler(STUDENT_FORM);
             successHandler(
                 i18n.t('serviceMessages:back_end_success_operation', {
                     cardType: i18n.t('formElements:student_a_label'),
-                    actionType: i18n.t('serviceMessages:created_label')
-                })
+                    actionType: i18n.t('serviceMessages:created_label'),
+                }),
             );
         })
-        .catch(error => errorHandler(error));
+        .catch((error) => errorHandler(error));
 };
-export const getAllStudentsByGroupId = groupId => {
+export const getAllStudentsByGroupId = (groupId) => {
     axios
         .get(STUDENT_URL)
-        .then(response => {
-            let result=response.data.filter(({ group })=>group.id===groupId)
+        .then((response) => {
+            const result = response.data.filter(({ group }) => group.id === groupId);
             store.dispatch(showAllStudentsByGroupId(result));
         })
-        .catch(error => errorHandler(error));
+        .catch((error) => errorHandler(error));
 };
 export const getAllStudentsService = () => {
     axios
         .get(STUDENT_URL)
-        .then(response => {
+        .then((response) => {
             store.dispatch(showAllStudents(response.data));
         })
-        .catch(error => errorHandler(error));
+        .catch((error) => errorHandler(error));
 };
-export const deleteStudentService = student => {
+export const deleteStudentService = (student) => {
     axios
-        .delete(STUDENT_URL + `/${student.id}`)
-        .then(response => {
+        .delete(`${STUDENT_URL}/${student.id}`)
+        .then((response) => {
             store.dispatch(deleteStudent(student.id));
-            getAllStudentsByGroupId(student.group.id)
+            getAllStudentsByGroupId(student.group.id);
             successHandler(
                 i18n.t('serviceMessages:back_end_success_operation', {
                     cardType: i18n.t('formElements:student_a_label'),
-                    actionType: i18n.t('serviceMessages:deleted_label')
-                })
+                    actionType: i18n.t('serviceMessages:deleted_label'),
+                }),
             );
         })
-        .catch(error => errorHandler(error));
+        .catch((error) => errorHandler(error));
 };
-export const updateStudentService = data => {
+export const updateStudentService = (data) => {
     return axios
         .put(STUDENT_URL, data)
-        .then(response => {
+        .then((response) => {
             store.dispatch(updateStudent(response.data));
             selectStudentService(null);
-            getAllStudentsByGroupId(data.prevGroup.id)
+            getAllStudentsByGroupId(data.prevGroup.id);
             resetFormHandler(STUDENT_FORM);
             successHandler(
                 i18n.t('serviceMessages:back_end_success_operation', {
                     cardType: i18n.t('formElements:student_a_label'),
-                    actionType: i18n.t('serviceMessages:updated_label')
-                })
+                    actionType: i18n.t('serviceMessages:updated_label'),
+                }),
             );
         })
-        .catch(error => errorHandler(error));
+        .catch((error) => errorHandler(error));
 };
-export const selectStudentService = studentId =>
-    store.dispatch(setStudent(studentId));
+export const selectStudentService = (studentId) => store.dispatch(setStudent(studentId));

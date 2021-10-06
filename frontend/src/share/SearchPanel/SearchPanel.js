@@ -4,9 +4,9 @@ import { TextField } from '@material-ui/core';
 import { useTranslation } from 'react-i18next';
 
 import './SearchPanel.scss';
-import Card from '../../share/Card/Card';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
+import Card from '../Card/Card';
 
 const SearchPanel = ({ SearchChange, showDisabled, showArchived }) => {
     const { t } = useTranslation('formElements');
@@ -14,16 +14,16 @@ const SearchPanel = ({ SearchChange, showDisabled, showArchived }) => {
 
     const [state, setState] = React.useState({
         checkedB: false,
-        checkedArchived: false
+        checkedArchived: false,
     });
 
-    const handleChange = event => {
+    const handleChange = (event) => {
         switch (event.target.name) {
             case 'checkedArchived':
                 setState({
                     ...state,
                     checkedB: false,
-                    [event.target.name]: event.target.checked
+                    [event.target.name]: event.target.checked,
                 });
                 showArchived();
                 break;
@@ -31,16 +31,15 @@ const SearchPanel = ({ SearchChange, showDisabled, showArchived }) => {
                 setState({
                     ...state,
                     checkedArchived: false,
-                    [event.target.name]: event.target.checked
+                    [event.target.name]: event.target.checked,
                 });
 
                 break;
         }
         showDisabled();
-
     };
 
-    const onSearchChange = e => {
+    const onSearchChange = (e) => {
         const term = e.target.value;
         setTerm(term);
         SearchChange(term);
@@ -57,11 +56,7 @@ const SearchPanel = ({ SearchChange, showDisabled, showArchived }) => {
                         color="primary"
                     />
                 }
-                label={
-                    !state.checkedB
-                        ? t('common:show_disabled')
-                        : t('common:show_enabled')
-                }
+                label={!state.checkedB ? t('common:show_disabled') : t('common:show_enabled')}
             />
             {showArchived ? (
                 <FormControlLabel
@@ -73,11 +68,7 @@ const SearchPanel = ({ SearchChange, showDisabled, showArchived }) => {
                             color="secondary"
                         />
                     }
-                    label={
-                        !state.checkedArchived
-                            ? t('show_archived')
-                            : t('show_regular')
-                    }
+                    label={!state.checkedArchived ? t('show_archived') : t('show_regular')}
                 />
             ) : (
                 ''

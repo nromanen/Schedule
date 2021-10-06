@@ -8,24 +8,20 @@ import './AddGroupForms.scss';
 import Card from '../../share/Card/Card';
 import { GROUP_FORM } from '../../constants/reduxForms';
 import renderTextField from '../../share/renderedFields/input';
-import {
-    required,
-    uniqueGroup,
-    minLengthValue
-} from '../../validation/validateFields';
+import { required, uniqueGroup, minLengthValue } from '../../validation/validateFields';
 import { links } from '../../constants/links';
 import { getClearOrCancelTitle, setDisableButton } from '../../helper/disableComponent';
 
-let AddGroup = props => {
+const AddGroup = (props) => {
     const { t } = useTranslation('formElements');
-    const { handleSubmit, pristine, onReset, submitting,match,group } = props;
+    const { handleSubmit, pristine, onReset, submitting, match, group } = props;
 
     useEffect(() => {
-        if (group&&match.url.includes(links.Edit)&&!match.url.includes(links.Student)) {
+        if (group && match.url.includes(links.Edit) && !match.url.includes(links.Student)) {
             if (group.id) {
                 props.initialize({
                     id: group.id,
-                    title: group.title
+                    title: group.title,
                 });
             } else {
                 props.initialize();
@@ -44,7 +40,7 @@ let AddGroup = props => {
                     className="form-field"
                     name="title"
                     id="title"
-                    label={t('group_label') + ':'}
+                    label={`${t('group_label')}:`}
                     component={renderTextField}
                     validate={[required, minLengthValue, uniqueGroup]}
                 />
@@ -62,10 +58,10 @@ let AddGroup = props => {
                         type="button"
                         className="buttons-style"
                         variant="contained"
-                        disabled={setDisableButton(pristine,submitting,group.id)}
+                        disabled={setDisableButton(pristine, submitting, group.id)}
                         onClick={onReset}
                     >
-                        {getClearOrCancelTitle(group.id,t)}
+                        {getClearOrCancelTitle(group.id, t)}
                     </Button>
                 </div>
             </form>
@@ -73,12 +69,12 @@ let AddGroup = props => {
     );
 };
 
-const mapStateToProps = state => ({
-    group: state.groups.group
+const mapStateToProps = (state) => ({
+    group: state.groups.group,
 });
 
 export default connect(mapStateToProps)(
     reduxForm({
-        form: GROUP_FORM
-    })(AddGroup)
+        form: GROUP_FORM,
+    })(AddGroup),
 );

@@ -1,44 +1,35 @@
 import React, { useEffect } from 'react';
 
-import Card from '../../share/Card/Card';
-
 import { Field, reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
+import { FaUserPlus } from 'react-icons/fa';
+import Button from '@material-ui/core/Button';
+import { makeStyles } from '@material-ui/core/styles';
+import { useTranslation } from 'react-i18next';
+import Card from '../../share/Card/Card';
 
 import renderTextField from '../../share/renderedFields/input';
 import renderSelectField from '../../share/renderedFields/select';
 import renderCheckboxField from '../../share/renderedFields/checkbox';
 
-import { FaUserPlus } from 'react-icons/fa';
-
-import Button from '@material-ui/core/Button';
-import { makeStyles } from '@material-ui/core/styles';
-
 import { LESSON_FORM } from '../../constants/reduxForms';
 
-import {
-    lessThanZero,
-    maxLengthValue,
-    required
-} from '../../validation/validateFields';
-import { useTranslation } from 'react-i18next';
+import { lessThanZero, maxLengthValue, required } from '../../validation/validateFields';
 import { setUniqueErrorService } from '../../services/lessonService';
-import {handleTeacherInfo } from '../../helper/renderTeacher';
-import {
-    setValueToSubjectForSiteHandler
-} from '../../helper/reduxFormHelper';
+import { handleTeacherInfo } from '../../helper/renderTeacher';
+import { setValueToSubjectForSiteHandler } from '../../helper/reduxFormHelper';
 import { getClearOrCancelTitle, setDisableButton } from '../../helper/disableComponent';
 
 const useStyles = makeStyles(() => ({
     notSelected: {
         '&': {
             textAlign: 'center',
-            margin: 'auto'
-        }
-    }
+            margin: 'auto',
+        },
+    },
 }));
 
-let LessonForm = props => {
+let LessonForm = (props) => {
     const { t } = useTranslation('formElements');
 
     const { handleSubmit, pristine, reset, submitting } = props;
@@ -57,7 +48,7 @@ let LessonForm = props => {
     const groupId = props.groupId;
 
     const [checked, setChecked] = React.useState(false);
-    const handleChange = event => setChecked(event.target.checked);
+    const handleChange = (event) => setChecked(event.target.checked);
 
     useEffect(() => {
         setChecked(false);
@@ -68,16 +59,16 @@ let LessonForm = props => {
         }
     }, [lessonId]);
 
-    const initializeFormHandler = lesson => {
+    const initializeFormHandler = (lesson) => {
         props.initialize({
             lessonCardId: lesson.id,
             teacher: lesson.teacher.id,
             subject: lesson.subject.id,
             type: lesson.lessonType,
             hours: lesson.hours,
-            linkToMeeting:lesson.linkToMeeting,
+            linkToMeeting: lesson.linkToMeeting,
             subjectForSite: lesson.subjectForSite,
-            grouped: lesson.grouped
+            grouped: lesson.grouped,
         });
         setChecked(lesson.grouped);
     };
@@ -100,15 +91,11 @@ let LessonForm = props => {
                         className="form-field"
                         component={renderSelectField}
                         label={t('teacher_label')}
-                        {...(!isUniqueError
-                            ? { validate: [required] }
-                            : { error: isUniqueError })}
-                        onChange={()=>
-                            setUniqueErrorService(false)
-                        }
+                        {...(!isUniqueError ? { validate: [required] } : { error: isUniqueError })}
+                        onChange={() => setUniqueErrorService(false)}
                     >
                         <option />
-                        {teachers.map(teacher => (
+                        {teachers.map((teacher) => (
                             <option key={teacher.id} value={teacher.id}>
                                 {handleTeacherInfo(teacher)}
                             </option>
@@ -120,20 +107,18 @@ let LessonForm = props => {
                         className="form-field"
                         component={renderSelectField}
                         label={t('subject_label')}
-                        {...(!isUniqueError
-                            ? { validate: [required] }
-                            : { error: isUniqueError })}
-                        onChange={event => {
+                        {...(!isUniqueError ? { validate: [required] } : { error: isUniqueError })}
+                        onChange={(event) => {
                             setValueToSubjectForSiteHandler(
                                 subjects,
                                 event.target.value,
-                                props.change
+                                props.change,
                             );
                             setUniqueErrorService(false);
                         }}
                     >
-                        <option value={''} />
-                        {subjects.map(subject => (
+                        <option value="" />
+                        {subjects.map((subject) => (
                             <option key={subject.id} value={subject.id}>
                                 {subject.name}
                             </option>
@@ -153,11 +138,11 @@ let LessonForm = props => {
                                 setUniqueErrorService(false);
                             }}
                         >
-                            <option value={''} />
+                            <option value="" />
                             {props.lessonTypes.map((lessonType, index) => (
                                 <option value={lessonType} key={index}>
                                     {t(
-                                        `formElements:lesson_type_${lessonType.toLowerCase()}_label`
+                                        `formElements:lesson_type_${lessonType.toLowerCase()}_label`,
                                     )}
                                 </option>
                             ))}
@@ -199,7 +184,7 @@ let LessonForm = props => {
                         label={t('link_to_meeting_label')}
                         validate={[required, maxLengthValue]}
                         type="url"
-                        placeholder={"Input URL"}
+                        placeholder="Input URL"
                     />
                     <Field
                         id="subjectForSite"
@@ -227,30 +212,30 @@ let LessonForm = props => {
                             className="buttons-style"
                             type="button"
                             variant="contained"
-                            disabled={setDisableButton(pristine,submitting,lesson.id)}
+                            disabled={setDisableButton(pristine, submitting, lesson.id)}
                             onClick={() => {
                                 reset();
                                 setUniqueErrorService(null);
                                 props.onSetSelectedCard(null);
                             }}
                         >
-                            {getClearOrCancelTitle(lesson.id,t)}
+                            {getClearOrCancelTitle(lesson.id, t)}
                         </Button>
                     </div>
                 </form>
             ) : (
                 <div className={classes.notSelected}>
-                    <h2>{t('group_label') + ' ' + t('not_selected_label')}</h2>
+                    <h2>{`${t('group_label')} ${t('not_selected_label')}`}</h2>
                 </div>
             )}
         </Card>
     );
 };
 
-const mapStateToProps = state => ({ lesson: state.lesson.lesson });
+const mapStateToProps = (state) => ({ lesson: state.lesson.lesson });
 
 LessonForm = reduxForm({
-    form: LESSON_FORM
+    form: LESSON_FORM,
 })(LessonForm);
 
 export default connect(mapStateToProps)(LessonForm);

@@ -1,1 +1,1 @@
-export const TOKEN_BEGIN= 'Bearer_';
+export const TOKEN_BEGIN = 'Bearer_';

@@ -6,6 +6,7 @@ import { Field, reduxForm } from 'redux-form';
 import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
+import { Link } from 'react-router-dom';
 import Card from '../../share/Card/Card';
 import renderTextField from '../../share/renderedFields/input';
 
@@ -14,9 +15,8 @@ import { authTypes } from '../../constants/auth';
 
 import { email, required } from '../../validation/validateFields';
 import { links } from '../../constants/links';
-import {Link} from 'react-router-dom';
 
-let ResetPasswordForm = props => {
+let ResetPasswordForm = (props) => {
     const { t } = useTranslation('formElements');
     const { handleSubmit } = props;
 
@@ -26,7 +26,7 @@ let ResetPasswordForm = props => {
 
     const emailValidate = { validate: [required, email] };
 
-    const errorHandling = value => {
+    const errorHandling = (value) => {
         if (required(value)) {
             props.setError(required(value));
         } else {
@@ -42,7 +42,7 @@ let ResetPasswordForm = props => {
                 component={renderTextField}
                 label={t('email_label')}
                 {...(!error ? emailValidate : error)}
-                onChange={e => {
+                onChange={(e) => {
                     errorHandling(e.target.value);
                 }}
             />
@@ -63,7 +63,9 @@ let ResetPasswordForm = props => {
                         props.setError(null);
                     }}
                 >
-                  <Link  className="navLinks" to={links.LOGIN} >{translation('login_page_title')}</Link>
+                    <Link className="navLinks" to={links.LOGIN}>
+                        {translation('login_page_title')}
+                    </Link>
                 </button>
             </div>
         </form>
@@ -75,16 +77,14 @@ let ResetPasswordForm = props => {
 
     return (
         <Card class="auth-card">
-            <h2 className="under-line">
-                {translation('reset_password_page_title')}
-            </h2>
+            <h2 className="under-line">{translation('reset_password_page_title')}</h2>
             {form}
         </Card>
     );
 };
 
 ResetPasswordForm = reduxForm({
-    form: RESET_PASSWORD_FORM
+    form: RESET_PASSWORD_FORM,
 })(ResetPasswordForm);
 
 export default ResetPasswordForm;

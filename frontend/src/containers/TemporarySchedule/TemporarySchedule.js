@@ -2,13 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 
+import CircularProgress from '@material-ui/core/CircularProgress';
 import TemporaryScheduleForm from '../../components/TemporarySchedule/TemporaryScheduleForm/TemporaryScheduleForm';
 import ScheduleAndTemporaryScheduleList from '../../components/TemporarySchedule/ScheduleAndTemporaryScheduleList/ScheduleAndTemporaryScheduleList';
 import TemporaryScheduleTitle from '../../components/TemporarySchedule/TemporaryScheduleTitle/TemporaryScheduleTitle';
 import TemporaryScheduleList from '../../components/TemporarySchedule/TemporaryScheduleList/TemporaryScheduleList';
 import TemporaryScheduleVacationForm from '../../components/TemporarySchedule/TemporaryScheduleVacationForm/TemporaryScheduleVacationForm';
-
-import CircularProgress from '@material-ui/core/CircularProgress';
 
 import Card from '../../share/Card/Card';
 
@@ -17,7 +16,7 @@ import { showAllTeachersService } from '../../services/teacherService';
 import {
     addTemporaryScheduleForRangeService,
     addTemporaryScheduleService,
-    editTemporaryScheduleService
+    editTemporaryScheduleService,
 } from '../../services/temporaryScheduleService';
 import { getClassScheduleListService } from '../../services/classService';
 import { showListOfRoomsService } from '../../services/roomService';
@@ -27,7 +26,7 @@ import { showAllGroupsService } from '../../services/groupService';
 
 import './TemporarySchedule.scss';
 
-const TemporarySchedule = props => {
+const TemporarySchedule = (props) => {
     const { t } = useTranslation('common');
 
     const [fromDate, setFromDate] = useState(null);
@@ -46,39 +45,39 @@ const TemporarySchedule = props => {
         showAllGroupsService();
     }, []);
 
-    const handleTemporaryScheduleSubmit = values => {
+    const handleTemporaryScheduleSubmit = (values) => {
         if (values.id) editTemporaryScheduleService(teacherId, values);
         else addTemporaryScheduleService(teacherId, values, false);
     };
 
-    const handleTemporaryScheduleVacationSubmit = values => {
+    const handleTemporaryScheduleVacationSubmit = (values) => {
         if (!values.from && !values.to) {
             if (values.id)
                 editTemporaryScheduleService(
                     teacherId,
                     {
                         ...values,
-                        vacation: true
+                        vacation: true,
                     },
-                    true
+                    true,
                 );
             else
                 addTemporaryScheduleService(
                     teacherId,
                     {
                         ...values,
-                        vacation: true
+                        vacation: true,
                     },
-                    true
+                    true,
                 );
         } else {
             addTemporaryScheduleForRangeService(
                 teacherId,
                 {
                     ...values,
-                    vacation: true
+                    vacation: true,
                 },
-                true
+                true,
             );
         }
     };
@@ -97,8 +96,7 @@ const TemporarySchedule = props => {
             </Card>
             <div className="cards-container">
                 <aside>
-                    {props.temporarySchedule.id ||
-                    props.temporarySchedule.scheduleId ? (
+                    {props.temporarySchedule.id || props.temporarySchedule.scheduleId ? (
                         <TemporaryScheduleForm
                             temporarySchedule={props.temporarySchedule}
                             teacherRangeSchedule={props.teacherRangeSchedule}
@@ -134,9 +132,7 @@ const TemporarySchedule = props => {
                             />
                         )}
                         {props.temporarySchedules.length > 0 && (
-                            <TemporaryScheduleList
-                                temporarySchedules={props.temporarySchedules}
-                            />
+                            <TemporaryScheduleList temporarySchedules={props.temporarySchedules} />
                         )}
                         {props.schedulesAndTemporarySchedules.length === 0 &&
                             props.temporarySchedules.length === 0 && (
@@ -151,9 +147,8 @@ const TemporarySchedule = props => {
     );
 };
 
-const mapStateToProps = state => ({
-    schedulesAndTemporarySchedules:
-        state.temporarySchedule.schedulesAndTemporarySchedules,
+const mapStateToProps = (state) => ({
+    schedulesAndTemporarySchedules: state.temporarySchedule.schedulesAndTemporarySchedules,
     temporarySchedules: state.temporarySchedule.temporarySchedules,
     temporarySchedule: state.temporarySchedule.temporarySchedule,
     vacation: state.temporarySchedule.vacation,
@@ -164,7 +159,7 @@ const mapStateToProps = state => ({
     groups: state.groups.groups,
     loading: state.loadingIndicator.loading,
     teachers: state.teachers.teachers,
-    teacherId: state.temporarySchedule.teacherId
+    teacherId: state.temporarySchedule.teacherId,
 });
 
 export default connect(mapStateToProps)(TemporarySchedule);

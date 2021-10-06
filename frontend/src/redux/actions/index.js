@@ -6,7 +6,7 @@ export {
     updateLessonCard,
     selectGroupId,
     setUniqueError,
-    setLessonTypes
+    setLessonTypes,
 } from './lesson';
 
 export {
@@ -14,7 +14,7 @@ export {
     setSchedulesAndTemporarySchedules,
     selectTemporarySchedule,
     selectVacation,
-    selectTeacherId
+    selectTeacherId,
 } from './temporarySchedule';
 
 export { setOpenSnackbar } from './snackbar';
@@ -28,14 +28,10 @@ export {
     authCheckState,
     setAuthError,
     activateUser,
-    resetUserPassword
+    resetUserPassword,
 } from './auth';
 
-export {
-    setLoading,
-    setScheduleLoading,
-    setSemesterLoading
-} from './loadingIndicator';
+export { setLoading, setScheduleLoading, setSemesterLoading } from './loadingIndicator';
 
 export {
     setScheduleItems,
@@ -54,7 +50,7 @@ export {
     setScheduleSemesterId,
     setSemesterList,
     setTeacherRangeSchedule,
-    setTeacherViewType
+    setTeacherViewType,
 } from './schedule';
 
 export {
@@ -64,14 +60,10 @@ export {
     selectTeacherCard,
     updateTeacherCard,
     showAllTeachers,
-    setDisabledTeachers
+    setDisabledTeachers,
 } from './teachers';
 
-export {
-    selectWishCard,
-    showAllWishes,
-    setMyTeacherWishes
-} from './teachersWish';
+export { selectWishCard, showAllWishes, setMyTeacherWishes } from './teachersWish';
 
 export { showAllBusyRooms } from './busyRooms';
 
@@ -80,7 +72,7 @@ export {
     addClassScheduleOne,
     getClassScheduleList,
     getClassScheduleOne,
-    deleteClassScheduleOne
+    deleteClassScheduleOne,
 } from './class';
 
 export {
@@ -90,7 +82,7 @@ export {
     selectGroup,
     updateGroup,
     clearGroup,
-    setDisabledGroups
+    setDisabledGroups,
 } from './groups';
 
 export {
@@ -100,7 +92,7 @@ export {
     selectOneRoom,
     updateOneRoom,
     clearRoomOne,
-    setDisabledRooms
+    setDisabledRooms,
 } from './rooms';
 
 export {
@@ -108,7 +100,7 @@ export {
     getAllRoomTypes,
     deleteType,
     updateOneType,
-    getOneNewType
+    getOneNewType,
 } from './roomTypes';
 
 export { showFreeRooms, clearFreeRooms } from './freeRooms';
@@ -120,7 +112,7 @@ export {
     selectSubject,
     updateSubject,
     clearSubject,
-    setDisabledSubjects
+    setDisabledSubjects,
 } from './subjects';
 
 export {
@@ -132,5 +124,5 @@ export {
     clearSemester,
     setDisabledSemesters,
     setArchivedSemesters,
-    moveToArchivedSemester
+    moveToArchivedSemester,
 } from './semesters';

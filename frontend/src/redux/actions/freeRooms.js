@@ -1,12 +1,12 @@
 import * as actionsType from './actionsType';
 
-export const showFreeRooms = freeRooms => {
+export const showFreeRooms = (freeRooms) => {
     return {
         type: actionsType.SHOW_FREE_ROOMS,
-        result: freeRooms
+        result: freeRooms,
     };
 };
 
 export const clearFreeRooms = () => ({
-    type: actionsType.CLEAR_FREE_ROOM
+    type: actionsType.CLEAR_FREE_ROOM,
 });

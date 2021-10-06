@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
+import { FaEdit } from 'react-icons/fa';
+import { MdDelete } from 'react-icons/md';
+import { useTranslation } from 'react-i18next';
+import { GiSightDisabled, IoMdEye } from 'react-icons/all';
 import ConfirmDialog from '../../share/modals/dialog';
 import { cardType } from '../../constants/cardType';
 import FreeRooms from '../FreeRooms/freeRooms';
@@ -7,10 +11,7 @@ import AddRoom from '../../components/AddRoomForm/AddRoomForm';
 import NewRoomType from '../../components/AddNewRoomType/AddNewRoomType';
 import SearchPanel from '../../share/SearchPanel/SearchPanel';
 import Card from '../../share/Card/Card';
-import { FaEdit } from 'react-icons/fa';
-import { MdDelete } from 'react-icons/md';
 import './RoomList.scss';
-import { useTranslation } from 'react-i18next';
 import { search } from '../../helper/search';
 
 import {
@@ -21,22 +22,18 @@ import {
     clearRoomOneService,
     getDisabledRoomsService,
     setDisabledRoomsService,
-    setEnabledRoomsService
+    setEnabledRoomsService,
 } from '../../services/roomService';
 
-import {
-    getAllRoomTypesService,
-    addNewTypeService
-} from '../../services/roomTypesService';
+import { getAllRoomTypesService, addNewTypeService } from '../../services/roomTypesService';
 
 import NotFound from '../../share/NotFound/NotFound';
-import { GiSightDisabled, IoMdEye } from 'react-icons/all';
 
 import { disabledCard } from '../../constants/disabledCard';
 import NavigationPage from '../../components/Navigation/NavigationPage';
 import { navigation, navigationNames } from '../../constants/navigation';
 
-const RoomList = props => {
+const RoomList = (props) => {
     const { rooms } = props;
 
     useEffect(() => {
@@ -59,15 +56,13 @@ const RoomList = props => {
 
     const [disabled, setDisabled] = useState(false);
 
-    const createRoom = values => {
-        const description = props.roomTypes.find(
-            type => type.id == values.type
-        );
+    const createRoom = (values) => {
+        const description = props.roomTypes.find((type) => type.id == values.type);
         values.typeDescription = description.description;
         createRoomService(values);
     };
 
-    const editHandler = roomId => {
+    const editHandler = (roomId) => {
         selectOneRoomService(roomId);
     };
 
@@ -75,24 +70,22 @@ const RoomList = props => {
         clearRoomOneService();
     };
 
-    const handleClickOpen = roomId => {
+    const handleClickOpen = (roomId) => {
         setRoomId(roomId);
         setOpen(true);
     };
 
-    const handleClose = roomId => {
+    const handleClose = (roomId) => {
         setOpen(false);
         if (!roomId) {
             return;
         }
         if (hideDialog) {
             if (disabled) {
-                const room = props.disabledRooms.find(
-                    room => room.id === roomId
-                );
+                const room = props.disabledRooms.find((room) => room.id === roomId);
                 setEnabledRoomsService(room);
             } else {
-                const room = props.rooms.find(room => room.id === roomId);
+                const room = props.rooms.find((room) => room.id === roomId);
                 setDisabledRoomsService(room);
             }
         } else {
@@ -101,7 +94,7 @@ const RoomList = props => {
         setHideDialog(null);
     };
 
-    const submitType = values => {
+    const submitType = (values) => {
         addNewTypeService(values);
     };
 
@@ -109,7 +102,7 @@ const RoomList = props => {
         ? search(props.disabledRooms, term, ['name'])
         : search(rooms, term, ['name']);
 
-    const SearchChange = term => {
+    const SearchChange = (term) => {
         setTerm(term);
     };
 
@@ -119,7 +112,7 @@ const RoomList = props => {
 
     return (
         <>
-            <NavigationPage name={navigationNames.ROOM_LIST} val={navigation.ROOMS}/>
+            <NavigationPage name={navigationNames.ROOM_LIST} val={navigation.ROOMS} />
             <ConfirmDialog
                 cardId={roomId}
                 whatDelete={cardType.ROOM.toLowerCase()}
@@ -129,29 +122,18 @@ const RoomList = props => {
             />
             <div className="cards-container">
                 <aside className="search-list__panel">
-                    <SearchPanel
-                        SearchChange={SearchChange}
-                        showDisabled={showDisabledHandle}
-                    />
+                    <SearchPanel SearchChange={SearchChange} showDisabled={showDisabledHandle} />
                     {disabled ? (
                         ''
                     ) : (
                         <>
-                            <AddRoom
-                                onSubmit={createRoom}
-                                onReset={handleFormReset}
-                            />
-                            <NewRoomType
-                                className="new-type"
-                                onSubmit={submitType}
-                            />
+                            <AddRoom onSubmit={createRoom} onReset={handleFormReset} />
+                            <NewRoomType className="new-type" onSubmit={submitType} />
                         </>
                     )}
                 </aside>
                 <section className="container-flex-wrap wrapper">
-                    {visibleItems.length === 0 && (
-                        <NotFound name={t('room_y_label')} />
-                    )}
+                    {visibleItems.length === 0 && <NotFound name={t('room_y_label')} />}
                     {visibleItems.map((room, index) => (
                         <Card key={index} {...room} class="room-card done-card">
                             <div className="cards-btns">
@@ -161,9 +143,7 @@ const RoomList = props => {
                                             className="svg-btn copy-btn"
                                             title={t('common:set_disabled')}
                                             onClick={() => {
-                                                setHideDialog(
-                                                    disabledCard.HIDE
-                                                );
+                                                setHideDialog(disabledCard.HIDE);
                                                 handleClickOpen(room.id);
                                             }}
                                         />
@@ -189,12 +169,10 @@ const RoomList = props => {
                                 />
                             </div>
 
-                            <span> {t('room_label') + ':'} </span>
+                            <span> {`${t('room_label')}:`} </span>
                             <h2 className="room-card__number">{room.name}</h2>
-                            <span>{t('type_label') + ':'}</span>
-                            <h2 className="room-card__number">
-                                {room.type.description}
-                            </h2>
+                            <span>{`${t('type_label')}:`}</span>
+                            <h2 className="room-card__number">{room.type.description}</h2>
                         </Card>
                     ))}
                 </section>
@@ -203,13 +181,13 @@ const RoomList = props => {
     );
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
     classScheduler: state.classActions.classScheduler,
     rooms: state.rooms.rooms,
     disabledRooms: state.rooms.disabledRooms,
     oneRoom: state.rooms.oneRoom,
     roomTypes: state.roomTypes.roomTypes,
-    oneType: state.roomTypes.oneType
+    oneType: state.roomTypes.oneType,
 });
 
 export default connect(mapStateToProps, {})(RoomList);

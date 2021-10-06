@@ -6,13 +6,13 @@ import axios from '../helper/axios';
 import { showAllBusyRooms } from '../redux/actions';
 import { errorHandler } from '../helper/handlerAxios';
 
-export const showBusyRooms = semesterId => {
+export const showBusyRooms = (semesterId) => {
     axios
-        .get(BUSY_ROOMS + '?semesterId=' + semesterId)
-        .then(response => {
+        .get(`${BUSY_ROOMS}?semesterId=${semesterId}`)
+        .then((response) => {
             store.dispatch(showAllBusyRooms(response.data));
         })
-        .catch(error => {
+        .catch((error) => {
             errorHandler(error);
         });
 };

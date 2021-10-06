@@ -23,25 +23,23 @@ export function* authSaga(payload) {
         yield localStorage.setItem('token', TOKEN_BEGIN + token);
         yield localStorage.setItem('expirationDate', expirationDate);
         yield localStorage.setItem('userRole', decodedJWT.roles);
-        yield localStorage.setItem('email', email ? email : decodedJWT.sub);
+        yield localStorage.setItem('email', email || decodedJWT.sub);
 
         yield put({
             type: actionTypes.AUTH_USER_SUCCESS,
-            response: { token, role: decodedJWT.roles, email }
+            response: { token, role: decodedJWT.roles, email },
         });
 
         yield put({ type: actionTypes.SET_LOADING_INDICATOR, result: false });
 
         yield put({
             type: actionTypes.AUTH_USER_AUTO_LOGOUT,
-            expirationTime: decodedJWT.exp * 1000 - new Date().getTime()
+            expirationTime: decodedJWT.exp * 1000 - new Date().getTime(),
         });
     } catch (error) {
         yield put({
             type: actionTypes.AUTH_USER_ERROR,
-            error: error.response
-                ? error.response.data.message
-                : i18n.t('common:error_message')
+            error: error.response ? error.response.data.message : i18n.t('common:error_message'),
         });
         yield put({ type: actionTypes.SET_LOADING_INDICATOR, result: false });
     }

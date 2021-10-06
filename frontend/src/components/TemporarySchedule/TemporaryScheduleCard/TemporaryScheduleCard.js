@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 
-const TemporaryScheduleCard = props => {
+const TemporaryScheduleCard = (props) => {
     const { t } = useTranslation('formElements');
     const { schedule } = props;
 
@@ -10,14 +10,8 @@ const TemporaryScheduleCard = props => {
             <p>
                 {t('subject_label')}:{' '}
                 <b>
-                    {schedule.lesson
-                        ? schedule.lesson.subjectForSite
-                        : schedule.subjectForSite}
-                    (
-                    {schedule.lesson
-                        ? schedule.lesson.lessonType
-                        : schedule.lessonType}
-                    )
+                    {schedule.lesson ? schedule.lesson.subjectForSite : schedule.subjectForSite}(
+                    {schedule.lesson ? schedule.lesson.lessonType : schedule.lessonType})
                 </b>
             </p>
             <p>
@@ -25,11 +19,7 @@ const TemporaryScheduleCard = props => {
             </p>
             <p>
                 {t('teacher_label')}:{' '}
-                <b>
-                    {schedule.lesson
-                        ? schedule.lesson.teacherForSite
-                        : schedule.teacherForSite}
-                </b>
+                <b>{schedule.lesson ? schedule.lesson.teacherForSite : schedule.teacherForSite}</b>
             </p>
             <p>
                 {t('common:class_schedule')}:{' '}
@@ -39,11 +29,7 @@ const TemporaryScheduleCard = props => {
             </p>
             <p>
                 {t('group_label')}:{' '}
-                <b>
-                    {schedule.lesson
-                        ? schedule.lesson.group.title
-                        : schedule.group.title}
-                </b>
+                <b>{schedule.lesson ? schedule.lesson.group.title : schedule.group.title}</b>
             </p>
             <p>
                 {t('semester_label')}:{' '}

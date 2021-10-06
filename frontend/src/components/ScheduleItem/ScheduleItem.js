@@ -1,10 +1,10 @@
 import React from 'react';
 import { MdDelete, MdEdit } from 'react-icons/md';
 
-import Card from '../../share/Card/Card';
 import { FaUserPlus } from 'react-icons/fa';
+import Card from '../../share/Card/Card';
 
-const ScheduleItem = props => {
+const ScheduleItem = (props) => {
     let lesson = props.lesson;
     let itemId;
 
@@ -22,7 +22,7 @@ const ScheduleItem = props => {
     const itemNodeId = `card-${lesson.id}-group-${lesson.group.id}-${addition}`;
     const deleteNodeId = `delete-${lesson.id}-${lesson.group.id}-${addition}`;
 
-    const isGroupped = grouped =>
+    const isGroupped = (grouped) =>
         grouped ? (
             <FaUserPlus
                 title={t('formElements:grouped_label')}
@@ -33,12 +33,12 @@ const ScheduleItem = props => {
         );
 
     return (
-        <Card id={itemNodeId} class={props.class} draggable={true}>
+        <Card id={itemNodeId} class={props.class} draggable>
             <input
                 type="hidden"
                 value={JSON.stringify({
-                    lesson: lesson,
-                    id: itemId
+                    lesson,
+                    id: itemId,
                 })}
             />
             {props.inBoard ? (
@@ -47,9 +47,7 @@ const ScheduleItem = props => {
                         <MdDelete
                             title={t('common:delete_schedule_item')}
                             className="svg-btn delete-btn"
-                            onClick={() =>
-                                props.deleteItem(itemId, item.lesson.group.id)
-                            }
+                            onClick={() => props.deleteItem(itemId, item.lesson.group.id)}
                         />
                         <MdEdit
                             title={t('common:edit_schedule_item')}
@@ -64,10 +62,7 @@ const ScheduleItem = props => {
 
             <p>
                 {fStrLetterCapital(lesson.subjectForSite)} (
-                {t(
-                    `formElements:lesson_type_${lesson.lessonType.toLowerCase()}_label`
-                )}
-                )
+                {t(`formElements:lesson_type_${lesson.lessonType.toLowerCase()}_label`)})
             </p>
             <p>{lesson.teacherForSite}</p>
             {props.inBoard ? (

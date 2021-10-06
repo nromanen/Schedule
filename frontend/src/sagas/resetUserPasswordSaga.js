@@ -13,9 +13,7 @@ export function* resetUserPasswordSaga(payload) {
     } catch (error) {
         yield put({
             type: actionTypes.RESET_USER_PASSWORD_ERROR,
-            error: error.response
-                ? error.response.data.message
-                : i18n.t('common:error_message')
+            error: error.response ? error.response.data.message : i18n.t('common:error_message'),
         });
         yield put({ type: actionTypes.SET_LOADING_INDICATOR, result: false });
     }

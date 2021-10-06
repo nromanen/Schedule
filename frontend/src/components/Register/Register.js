@@ -4,6 +4,6 @@ import '../../containers/Auth/Auth.scss';
 import Auth from '../../containers/Auth/Auth';
 
 const Register = () => {
-    return <Auth authType={authTypes.REGISTRATION}/>
+    return <Auth authType={authTypes.REGISTRATION} />;
 };
-export {Register}
+export { Register };

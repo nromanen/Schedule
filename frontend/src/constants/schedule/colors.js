@@ -3,5 +3,5 @@ export const colors = {
     DANGER: '#ff5e54',
     ALLOW: '#68f271',
     NOTHING: '#fff',
-    BORDER: '#d3d4d5'
+    BORDER: '#d3d4d5',
 };

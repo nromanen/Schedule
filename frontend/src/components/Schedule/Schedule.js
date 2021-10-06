@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { IoMdMore } from 'react-icons/all';
 
+import { makeStyles } from '@material-ui/core/styles';
 import Board from '../Board/Board';
 import ScheduleItem from '../ScheduleItem/ScheduleItem';
 import ScheduleDialog from '../ScheduleDialog/ScheduleDialog';
@@ -11,21 +12,16 @@ import {
     addItemToScheduleService,
     deleteItemFromScheduleService,
     checkAvailabilityChangeRoomScheduleService,
-    editRoomItemToScheduleService
+    editRoomItemToScheduleService,
 } from '../../services/scheduleService';
 
-import {
-    getLessonsByGroupService,
-    selectGroupIdService
-} from '../../services/lessonService';
+import { getLessonsByGroupService, selectGroupIdService } from '../../services/lessonService';
 import { setLoadingService } from '../../services/loadingService';
 
 import { cssClasses } from '../../constants/schedule/cssClasses';
 import { colors } from '../../constants/schedule/colors';
 
-import { makeStyles } from '@material-ui/core/styles';
-
-const Schedule = props => {
+const Schedule = (props) => {
     const { groups, itemGroupId } = props;
     const [open, setOpen] = useState(false);
     const [itemData, setItemData] = useState(null);
@@ -48,45 +44,29 @@ const Schedule = props => {
         setOpen(true);
     };
 
-    const handleClose = value => {
+    const handleClose = (value) => {
         setOpen(false);
         if (value) {
             setLoadingService(true);
             let el = '';
             if (value.itemData.item.id) {
-                setEditItemHandle(
-                    value.itemData.item.id,
-                    value.room.id,
-                    value.itemData.groupId
-                );
+                setEditItemHandle(value.itemData.item.id, value.room.id, value.itemData.groupId);
 
                 el = document.getElementById(
-                    'card-' +
-                        value.itemData.item.lesson.id +
-                        '-group-' +
-                        value.itemData.groupId +
-                        '-in-day-' +
-                        value.itemData.item.dayOfWeek.toLowerCase() +
-                        '-class-' +
-                        value.itemData.item.period.id +
-                        '-week-' +
-                        value.itemData.item.evenOdd.toLowerCase()
+                    `card-${value.itemData.item.lesson.id}-group-${
+                        value.itemData.groupId
+                    }-in-day-${value.itemData.item.dayOfWeek.toLowerCase()}-class-${
+                        value.itemData.item.period.id
+                    }-week-${value.itemData.item.evenOdd.toLowerCase()}`,
                 );
             } else {
-                setNewItemHandle(
-                    value.itemData.item,
-                    value.room,
-                    value.itemData.groupId
-                );
+                setNewItemHandle(value.itemData.item, value.room, value.itemData.groupId);
                 el = document.getElementById(
-                    'group-' +
-                        value.itemData.groupId +
-                        '-day-' +
-                        value.itemData.item.dayOfWeek.toLowerCase() +
-                        '-class-' +
-                        value.itemData.item.periodId +
-                        '-week-' +
-                        value.itemData.item.evenOdd.toLowerCase()
+                    `group-${
+                        value.itemData.groupId
+                    }-day-${value.itemData.item.dayOfWeek.toLowerCase()}-class-${
+                        value.itemData.item.periodId
+                    }-week-${value.itemData.item.evenOdd.toLowerCase()}`,
                 );
             }
             el.scrollIntoView();
@@ -113,16 +93,16 @@ const Schedule = props => {
     const useStyles = makeStyles({
         dayContainer: {
             height: dayContainerHeight,
-            maxHeight: dayContainerHeight
+            maxHeight: dayContainerHeight,
         },
         day: {
             height: dayContainerHeight - 37,
-            maxHeight: dayContainerHeight- 37
-        }
+            maxHeight: dayContainerHeight - 37,
+        },
     });
     const elClasses = useStyles();
 
-    const firstStringLetterCapitalHandle = str => {
+    const firstStringLetterCapitalHandle = (str) => {
         return firstStringLetterCapital(str);
     };
 
@@ -131,18 +111,18 @@ const Schedule = props => {
         getLessonsByGroupService(groupId);
         selectGroupIdService(groupId);
     };
-    const editItemOnScheduleHandler = item => {
-        setItemData({ item: item, groupId: item.lesson.group.id });
+    const editItemOnScheduleHandler = (item) => {
+        setItemData({ item, groupId: item.lesson.group.id });
         getLessonsByGroupService(item.lesson.group.id);
         selectGroupIdService(item.lesson.group.id);
 
-        let itemId = item.id;
+        const itemId = item.id;
 
         let obj = {
             dayOfWeek: item.dayOfWeek,
             periodId: +item.period.id,
             evenOdd: item.evenOdd,
-            semesterId: item.lesson.semester.id
+            semesterId: item.lesson.semester.id,
         };
         checkAvailabilityChangeRoomScheduleService(obj);
         setLoadingService(true);
@@ -152,9 +132,7 @@ const Schedule = props => {
 
     const conditionFunc = (item, lesson, group) => {
         return (
-            `group-${
-                item.lesson.group.id
-            }-day-${item.dayOfWeek.toLowerCase()}-class-${
+            `group-${item.lesson.group.id}-day-${item.dayOfWeek.toLowerCase()}-class-${
                 item.period.id
             }-week-${item.evenOdd.toLowerCase()}` ===
             `group-${group.id}-day-${lesson.day.name}-class-${lesson.classNumber.id}-week-${lesson.week}`
@@ -180,7 +158,7 @@ const Schedule = props => {
     };
 
     const itemInBoard = (group, lesson, index) => {
-        for (let item of items) {
+        for (const item of items) {
             if (conditionFunc(item, lesson, group)) {
                 const addition = `in-day-${lesson.day.name}-class-${lesson.classNumber.id}-week-${lesson.week}`;
                 addDeleteBtnToItem(item, group, lesson);
@@ -190,7 +168,7 @@ const Schedule = props => {
                         className={cssClasses.IN_BOARD_SECTION}
                     >
                         <ScheduleItem
-                            inBoard={true}
+                            inBoard
                             addition={addition}
                             class={cssClasses.IN_BOARD_CARD}
                             item={item}
@@ -206,20 +184,20 @@ const Schedule = props => {
     };
 
     const allLessons = [];
-    days.forEach(day => {
-        classes.forEach(classNumber => {
+    days.forEach((day) => {
+        classes.forEach((classNumber) => {
             for (let i = 0; i < 2; i++) {
                 if ((i + 1) % 2 === 0) {
                     allLessons.push({
                         day: { name: day.toLowerCase() },
                         classNumber,
-                        week: 'even'
+                        week: 'even',
                     });
                 } else {
                     allLessons.push({
                         day: { name: day.toLowerCase() },
                         classNumber,
-                        week: 'odd'
+                        week: 'odd',
                     });
                 }
             }
@@ -239,27 +217,17 @@ const Schedule = props => {
             />
             <aside className="day-classes-aside">
                 <section className="card empty-card">Група</section>
-                {days.map(day => (
+                {days.map((day) => (
                     <section
-                        className={
-                            elClasses.dayContainer +
-                            ' cards-container day-container'
-                        }
+                        className={`${elClasses.dayContainer} cards-container day-container`}
                         key={day}
                     >
-                        <section
-                            className={
-                                elClasses.day + ' card schedule-day card'
-                            }
-                        >
+                        <section className={`${elClasses.day} card schedule-day card`}>
                             {t(`day_of_week_${day}`)}
                         </section>
                         <section className="class-section">
-                            {classes.map(classScheduler => (
-                                <section
-                                    className="card schedule-class"
-                                    key={classScheduler.id}
-                                >
+                            {classes.map((classScheduler) => (
+                                <section className="card schedule-class" key={classScheduler.id}>
                                     {classScheduler.class_name}
                                 </section>
                             ))}
@@ -268,22 +236,13 @@ const Schedule = props => {
                 ))}
             </aside>
             <section className="groups-section">
-                {groups.map(group => (
-                    <section
-                        key={'group-' + group.id}
-                        className="group-section"
-                    >
-                        <div
-                            className="group-title card"
-                            id={`group-${group.id}`}
-                        >
+                {groups.map((group) => (
+                    <section key={`group-${group.id}`} className="group-section">
+                        <div className="group-title card" id={`group-${group.id}`}>
                             {group.title}
                         </div>
                         {allLessons.map((lesson, index) => (
-                            <div
-                                key={group + '-' + index}
-                                className="board-div"
-                            >
+                            <div key={`${group}-${index}`} className="board-div">
                                 <Board
                                     currentSemester={currentSemester}
                                     setModalData={setItemData}
@@ -294,18 +253,13 @@ const Schedule = props => {
                                 >
                                     <IoMdMore
                                         className="more-icon"
-                                        title={
-                                            `${t(
-                                                `formElements:teacher_wish_day`
-                                            )}: ` +
-                                            t(
-                                                `day_of_week_${lesson.day.name.toUpperCase()}`
-                                            ).toLowerCase() +
-                                            `\n${t(`teacher_wish_week`)}: ` +
-                                            t(`week_${lesson.week}_title`) +
-                                            `\n${t('class_schedule')}: ` +
+                                        title={`${t(`formElements:teacher_wish_day`)}: ${t(
+                                            `day_of_week_${lesson.day.name.toUpperCase()}`,
+                                        ).toLowerCase()}\n${t(`teacher_wish_week`)}: ${t(
+                                            `week_${lesson.week}_title`,
+                                        )}\n${t('class_schedule')}: ${
                                             lesson.classNumber.class_name
-                                        }
+                                        }`}
                                     />
                                     {itemInBoard(group, lesson, index)}
                                 </Board>

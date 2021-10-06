@@ -3,9 +3,9 @@ import Backend from 'i18next-xhr-backend';
 import { initReactI18next } from 'react-i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
 
-var supportedLangs = ['en', 'uk'];
-var userLang = (navigator.language || navigator.userLanguage).slice(0, 2);
-export const lang = supportedLangs.find(i => i === userLang) || 'en';
+const supportedLangs = ['en', 'uk'];
+const userLang = (navigator.language || navigator.userLanguage).slice(0, 2);
+export const lang = supportedLangs.find((i) => i === userLang) || 'en';
 
 i18n.use(LanguageDetector)
     .use(initReactI18next)
@@ -13,7 +13,7 @@ i18n.use(LanguageDetector)
     .init({
         lng: lang,
         backend: {
-            loadPath: '/assets/i18n/translations/{{lng}}/{{ns}}.json'
+            loadPath: '/assets/i18n/translations/{{lng}}/{{ns}}.json',
         },
         fallbackLng: 'en',
         debug: false,
@@ -23,11 +23,11 @@ i18n.use(LanguageDetector)
         useDataAttrOptions: true,
         interpolation: {
             escapeValue: false,
-            formatSeparator: ','
+            formatSeparator: ',',
         },
         react: {
-            wait: true
-        }
+            wait: true,
+        },
     });
 
 export default i18n;

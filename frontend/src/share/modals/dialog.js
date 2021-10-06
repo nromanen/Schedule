@@ -11,7 +11,7 @@ import './dialog.scss';
 import i18n from '../../helper/i18n';
 import { disabledCard } from '../../constants/disabledCard';
 
-export const ConfirmDialog = props => {
+export const ConfirmDialog = (props) => {
     const { onClose, whatDelete, cardId, isHide, open } = props;
 
     const handleClose = () => {
@@ -20,7 +20,7 @@ export const ConfirmDialog = props => {
 
     return (
         <Dialog
-            disableBackdropClick={true}
+            disableBackdropClick
             onClose={handleClose}
             aria-labelledby="confirm-dialog-title"
             open={open}
@@ -38,14 +38,12 @@ export const ConfirmDialog = props => {
                     ) : (
                         <>
                             {i18n.t('common:do_you_wanna')}{' '}
-                            <span className="delete-word">
-                                {i18n.t('common:delete_word')}
-                            </span>{' '}
+                            <span className="delete-word">{i18n.t('common:delete_word')}</span>{' '}
                         </>
                     )}
 
                     {i18n.t('common:this_card_type', {
-                        cardType: i18n.t(`formElements:${whatDelete}_element`)
+                        cardType: i18n.t(`formElements:${whatDelete}_element`),
                     })}
                 </>
             </DialogTitle>
@@ -58,11 +56,7 @@ export const ConfirmDialog = props => {
                 >
                     {i18n.t('common:yes_button_title')}
                 </Button>
-                <Button
-                    className="dialog-button"
-                    variant="contained"
-                    onClick={() => onClose('')}
-                >
+                <Button className="dialog-button" variant="contained" onClick={() => onClose('')}>
                     {i18n.t('common:no_button_title')}
                 </Button>
             </div>
@@ -72,7 +66,7 @@ export const ConfirmDialog = props => {
 
 ConfirmDialog.propTypes = {
     onClose: PropTypes.func.isRequired,
-    open: PropTypes.bool.isRequired
+    open: PropTypes.bool.isRequired,
 };
 
 export default ConfirmDialog;

@@ -1,4 +1,5 @@
 import * as actionTypes from '../actions/actionsType';
+
 function compare(a, b) {
     let comparison = 0;
     if (a.name > b.name) {
@@ -12,60 +13,53 @@ const rooms = (
     state = {
         rooms: [],
         oneRoom: {},
-        disabledRooms: []
+        disabledRooms: [],
     },
-    action
+    action,
 ) => {
     switch (action.type) {
         case actionTypes.ADD_ROOM:
             return {
                 ...state,
                 oneRoom: {},
-                rooms: [...state.rooms, action.result].sort(compare)
+                rooms: [...state.rooms, action.result].sort(compare),
             };
         case actionTypes.DELETE_ROOM:
             return {
                 ...state,
                 oneRoom: {},
-                rooms: [
-                    ...state.rooms.filter(rooms => rooms.id !== action.result)
-                ]
+                rooms: [...state.rooms.filter((rooms) => rooms.id !== action.result)],
             };
 
         case actionTypes.SHOW_LIST_OF_ROOMS:
             return {
                 ...state,
-                rooms: [...action.result]
+                rooms: [...action.result],
             };
         case actionTypes.SET_DISABLED_ROOMS:
             return {
                 ...state,
-                disabledRooms: [...action.result]
+                disabledRooms: [...action.result],
             };
         case actionTypes.SELECT_ONE_ROOM:
-            const one = state.rooms.filter(
-                roomItem => roomItem.id === action.result
-            );
+            const one = state.rooms.filter((roomItem) => roomItem.id === action.result);
             return {
                 ...state,
-                oneRoom: one[0]
+                oneRoom: one[0],
             };
         case actionTypes.UPDATE_ONE_ROOM:
-            let roomState = [...state.rooms];
-            roomState[
-                roomState.findIndex(
-                    roomItem => roomItem.id === action.result.id
-                )
-            ] = action.result;
+            const roomState = [...state.rooms];
+            roomState[roomState.findIndex((roomItem) => roomItem.id === action.result.id)] =
+                action.result;
             return {
                 ...state,
                 oneRoom: {},
-                rooms: [...roomState]
+                rooms: [...roomState],
             };
         case actionTypes.CLEAR_ROOM_ONE:
             return {
                 ...state,
-                oneRoom: {}
+                oneRoom: {},
             };
 
         default:

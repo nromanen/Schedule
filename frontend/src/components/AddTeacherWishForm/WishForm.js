@@ -1,13 +1,13 @@
 import React, { useEffect } from 'react';
 import { reduxForm, Field } from 'redux-form';
 import { connect } from 'react-redux';
-import { required } from '../../validation/validateFields';
 import Button from '@material-ui/core/Button';
+import { useTranslation } from 'react-i18next';
+import { required } from '../../validation/validateFields';
 import renderSelectField from '../../share/renderedFields/select';
 import { TEACHER_WISH_FORM } from '../../constants/reduxForms';
-import { useTranslation } from 'react-i18next';
 
-let WishForm = props => {
+let WishForm = (props) => {
     const { t } = useTranslation('formElements');
 
     const { handleSubmit, classScheduler, pristine, submitting, reset } = props;
@@ -15,7 +15,7 @@ let WishForm = props => {
     const class_on_day = [];
 
     if (classScheduler.length > 0) {
-        classScheduler.map(classSchedulerOne => {
+        classScheduler.map((classSchedulerOne) => {
             class_on_day.push(classSchedulerOne.class_name);
         });
     }
@@ -27,7 +27,7 @@ let WishForm = props => {
         'THURSDAY',
         'FRIDAY',
         'SATURDAY',
-        'SUNDAY'
+        'SUNDAY',
     ];
 
     const wishOne = props.wish;
@@ -41,22 +41,19 @@ let WishForm = props => {
         }
     }, [wishDays]);
 
-    const initializeFormWish = wishOne => {
+    const initializeFormWish = (wishOne) => {
         props.initialize({
             day_of_week: wishOne.day_of_week,
-            evenOdd: wishOne.evenOdd
+            evenOdd: wishOne.evenOdd,
         });
 
         const classStats = [];
-        wishOne.class_status.map(classStatus => {
+        wishOne.class_status.map((classStatus) => {
             classStats.push(classStatus);
         });
 
         for (let i = 0; i < classStats.length; i++) {
-            props.change(
-                `class_number${classStats[i].class_name}`,
-                `${classStats[i].status}`
-            );
+            props.change(`class_number${classStats[i].class_name}`, `${classStats[i].status}`);
         }
     };
 
@@ -78,26 +75,18 @@ let WishForm = props => {
                     </option>
                 ))}
             </Field>
-            {class_on_day.map(class_number => (
+            {class_on_day.map((class_number) => (
                 <Field
                     key={class_number}
                     name={`class_number${class_number}`}
                     component={renderSelectField}
                     validate={[required]}
-                    label={`${t(
-                        'teacher_wish_class_number'
-                    )}: ${class_number}`}
+                    label={`${t('teacher_wish_class_number')}: ${class_number}`}
                 >
                     <option />
-                    <option value={'OK'}>
-                        {t('common:teacher_wish_class_status_OK')}
-                    </option>
-                    <option value={'GOOD'}>
-                        {t('common:teacher_wish_class_status_GOOD')}
-                    </option>
-                    <option value={'BAD'}>
-                        {t('common:teacher_wish_class_status_BAD')}
-                    </option>
+                    <option value="OK">{t('common:teacher_wish_class_status_OK')}</option>
+                    <option value="GOOD">{t('common:teacher_wish_class_status_GOOD')}</option>
+                    <option value="BAD">{t('common:teacher_wish_class_status_BAD')}</option>
                 </Field>
             ))}
             <div className="form-buttons-container wish-margin-top">
@@ -125,10 +114,10 @@ let WishForm = props => {
         </form>
     );
 };
-const mapStateToProps = state => ({ wish: state.teachersWish.wish });
+const mapStateToProps = (state) => ({ wish: state.teachersWish.wish });
 
 WishForm = reduxForm({
-    form: TEACHER_WISH_FORM
+    form: TEACHER_WISH_FORM,
 })(WishForm);
 
 export default connect(mapStateToProps)(WishForm);

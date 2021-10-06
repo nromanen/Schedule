@@ -3,7 +3,7 @@ import { updateObject } from '../utility';
 
 const initialState = {
     students: [],
-    student: {}
+    student: {},
 };
 
 const students = (state = initialState, action) => {
@@ -11,29 +11,27 @@ const students = (state = initialState, action) => {
         case actionTypes.ADD_STUDENT:
             return updateObject(state, {
                 students: state.students.concat(action.result),
-                student: state.student
+                student: state.student,
             });
         case actionTypes.SHOW_ALL_STUDENTS_BY_GROUP_ID:
             return updateObject(state, {
                 ...state,
-                students: action.result
+                students: action.result,
             });
         case actionTypes.SHOW_ALL_STUDENTS:
             return updateObject(state, {
                 ...state,
-                students: action.result
+                students: action.result,
             });
         case actionTypes.DELETE_STUDENT:
-            state.students = state.students.filter(
-                student => student.id !== action.result
-            );
+            state.students = state.students.filter((student) => student.id !== action.result);
             return updateObject(state, {
                 students: state.students,
-                student: state.student
+                student: state.student,
             });
         case actionTypes.SET_STUDENT:
             let student = state.students.filter(
-                student => student.id === Number(action.result)
+                (student) => student.id === Number(action.result),
             )[0];
 
             if (!student) {
@@ -41,11 +39,11 @@ const students = (state = initialState, action) => {
             }
             return updateObject(state, {
                 students: state.students,
-                student: student
+                student,
             });
         case actionTypes.UPDATE_STUDENT:
             const updatedStudents = [];
-            state.students.forEach(student => {
+            state.students.forEach((student) => {
                 if (student.id === action.result.id) {
                     student = { ...student, ...action.result };
                 }
@@ -53,7 +51,7 @@ const students = (state = initialState, action) => {
             });
             return updateObject(state, {
                 students: updatedStudents,
-                student: {}
+                student: {},
             });
         default:
             return state;

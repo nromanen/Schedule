@@ -6,43 +6,39 @@ const initialState = {
     lessonTypes: [],
     lesson: {},
     groupId: null,
-    uniqueError: false
+    uniqueError: false,
 };
 
 const reducer = (state = initialState, action) => {
     switch (action.type) {
         case actionTypes.ADD_LESSON_CARD:
             return updateObject(state, {
-                lessons: state.lessons.concat(action.result)
+                lessons: state.lessons.concat(action.result),
             });
         case actionTypes.SET_LESSONS_CARDS:
             return updateObject(state, {
-                lessons: action.result
+                lessons: action.result,
             });
         case actionTypes.SET_LESSON_TYPES:
             return updateObject(state, {
-                lessonTypes: action.result
+                lessonTypes: action.result,
             });
         case actionTypes.DELETE_LESSON_CARD:
-            state.lessons = state.lessons.filter(
-                lesson => lesson.id !== action.result
-            );
+            state.lessons = state.lessons.filter((lesson) => lesson.id !== action.result);
             return updateObject(state, {
-                lessons: state.lessons
+                lessons: state.lessons,
             });
         case actionTypes.SELECT_LESSON_CARD:
-            let lesson = state.lessons.filter(
-                lesson => lesson.id === action.result
-            )[0];
+            let lesson = state.lessons.filter((lesson) => lesson.id === action.result)[0];
             if (!lesson) {
                 lesson = { id: null };
             }
             return updateObject(state, {
-                lesson: lesson
+                lesson,
             });
         case actionTypes.UPDATE_LESSON_CARD:
             const updatedLessons = [];
-            state.lessons.forEach(lesson => {
+            state.lessons.forEach((lesson) => {
                 if (lesson.id === action.result.id) {
                     lesson = { ...lesson, ...action.result };
                 }
@@ -50,16 +46,16 @@ const reducer = (state = initialState, action) => {
             });
             return updateObject(state, {
                 lessons: updatedLessons,
-                lesson: {}
+                lesson: {},
             });
         case actionTypes.SELECT_GROUP_ID:
             return updateObject(state, {
                 lesson: {},
-                groupId: action.result
+                groupId: action.result,
             });
         case actionTypes.SET_UNIQUE_ERROR:
             return updateObject(state, {
-                uniqueError: action.result
+                uniqueError: action.result,
             });
         default:
             return state;

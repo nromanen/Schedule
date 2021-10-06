@@ -4,7 +4,7 @@ import { updateObject } from '../utility';
 const initialState = {
     groups: [],
     group: {},
-    disabledGroups: []
+    disabledGroups: [],
 };
 
 const groups = (state = initialState, action) => {
@@ -12,45 +12,41 @@ const groups = (state = initialState, action) => {
         case actionTypes.ADD_GROUP:
             return updateObject(state, {
                 groups: state.groups.concat(action.result),
-                group: state.group
+                group: state.group,
             });
 
         case actionTypes.DELETE_GROUP:
-            state.groups = state.groups.filter(
-                group => group.id !== action.result
-            );
+            state.groups = state.groups.filter((group) => group.id !== action.result);
             return updateObject(state, {
                 groups: state.groups,
-                group: state.group
+                group: state.group,
             });
 
         case actionTypes.SHOW_ALL_GROUPS:
             return updateObject(state, {
                 ...state,
-                groups: action.result
+                groups: action.result,
             });
         case actionTypes.SET_DISABLED_GROUPS:
             return updateObject(state, {
                 ...state,
-                disabledGroups: action.result
+                disabledGroups: action.result,
             });
 
         case actionTypes.SELECT_GROUP:
-            let group = state.groups.filter(
-                group => group.id === Number(action.result)
-            )[0];
+            let group = state.groups.filter((group) => group.id === Number(action.result))[0];
 
             if (!group) {
                 group = { id: null };
             }
             return updateObject(state, {
                 groups: state.groups,
-                group: group
+                group,
             });
 
         case actionTypes.UPDATE_GROUP:
             const updatedGroups = [];
-            state.groups.forEach(group => {
+            state.groups.forEach((group) => {
                 if (group.id === action.result.id) {
                     group = { ...group, ...action.result };
                 }
@@ -58,13 +54,13 @@ const groups = (state = initialState, action) => {
             });
             return updateObject(state, {
                 groups: updatedGroups,
-                group: {}
+                group: {},
             });
 
         case actionTypes.CLEAR_GROUP:
             return {
                 ...state,
-                group: {}
+                group: {},
             };
 
         default:

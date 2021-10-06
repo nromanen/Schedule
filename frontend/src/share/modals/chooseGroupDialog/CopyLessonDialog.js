@@ -14,12 +14,12 @@ const useStyles = makeStyles(() => ({
     groupField: {
         '&': {
             margin: '0 auto',
-            width: '90%'
-        }
-    }
+            width: '90%',
+        },
+    },
 }));
 
-export const CopyLessonDialog = props => {
+export const CopyLessonDialog = (props) => {
     const { onClose, lesson, translation, groups, groupId, open } = props;
     const [group, setGroup] = useState('');
     const [error, setError] = useState('');
@@ -43,19 +43,17 @@ export const CopyLessonDialog = props => {
 
     const defaultProps = {
         options: groups,
-        getOptionLabel: option => (option ? option.title : '')
+        getOptionLabel: (option) => (option ? option.title : ''),
     };
 
     return (
         <Dialog
-            disableBackdropClick={true}
+            disableBackdropClick
             onClose={handleClose}
             aria-labelledby="confirm-dialog-title"
             open={open}
         >
-            <DialogTitle id="simple-dialog-title">
-                {translation('choose_group')}
-            </DialogTitle>
+            <DialogTitle id="simple-dialog-title">{translation('choose_group')}</DialogTitle>
             <Autocomplete
                 {...defaultProps}
                 id="group"
@@ -67,12 +65,12 @@ export const CopyLessonDialog = props => {
                     setGroup(newValue);
                     setError(null);
                 }}
-                renderInput={params => (
+                renderInput={(params) => (
                     <TextField
                         {...params}
                         label={translation('common:choose_group')}
                         error={!!error}
-                        helperText={error ? error : null}
+                        helperText={error || null}
                         margin="normal"
                     />
                 )}
@@ -86,11 +84,7 @@ export const CopyLessonDialog = props => {
                 >
                     {translation('formElements:choose_button_title')}
                 </Button>
-                <Button
-                    className="dialog-button"
-                    variant="contained"
-                    onClick={() => onClose()}
-                >
+                <Button className="dialog-button" variant="contained" onClick={() => onClose()}>
                     {translation('formElements:cancel_button_title')}
                 </Button>
             </div>
@@ -100,7 +94,7 @@ export const CopyLessonDialog = props => {
 
 CopyLessonDialog.propTypes = {
     onClose: PropTypes.func.isRequired,
-    open: PropTypes.bool.isRequired
+    open: PropTypes.bool.isRequired,
 };
 
 export default CopyLessonDialog;

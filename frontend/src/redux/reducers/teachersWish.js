@@ -4,15 +4,13 @@ const teachersWish = (
     state = {
         wishes: [],
         wish: {},
-        myWishes: {}
+        myWishes: {},
     },
-    action
+    action,
 ) => {
     switch (action.type) {
         case actionTypes.SELECT_WISH:
-            let wish = state.wishes[0].find(
-                wish => wish.day_of_week === action.result
-            );
+            let wish = state.wishes[0].find((wish) => wish.day_of_week === action.result);
 
             if (!wish) {
                 wish = { day_of_week: null };
@@ -20,20 +18,20 @@ const teachersWish = (
             return {
                 ...state,
                 wishes: state.wishes,
-                wish: wish
+                wish,
             };
 
         case actionTypes.SHOW_ALL_WISH:
             return {
                 ...state,
                 wishes: [action.result],
-                wish: {}
+                wish: {},
             };
         case actionTypes.SET_MY_TEACHER_WISHES:
             return {
                 ...state,
                 wish: {},
-                myWishes: action.result
+                myWishes: action.result,
             };
 
         default:

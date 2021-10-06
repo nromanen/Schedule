@@ -6,7 +6,7 @@ const initialState = {
     token: null,
     role: null,
     error: null,
-    activationError: null
+    activationError: null,
 };
 
 const reducer = (state = initialState, action) => {
@@ -17,12 +17,12 @@ const reducer = (state = initialState, action) => {
             return updateObject(state, {
                 token: response.token,
                 role: response.role,
-                error: null
+                error: null,
             });
         case actionTypes.AUTH_USER_ERROR:
             return updateObject(state, {
                 response,
-                error: { login: action.error }
+                error: { login: action.error },
             });
         case actionTypes.AUTH_USER_LOGOUT:
             delete axios.defaults.headers.common.Authorization;
@@ -34,35 +34,35 @@ const reducer = (state = initialState, action) => {
                 response: null,
                 token: null,
                 error: null,
-                role: null
+                role: null,
             });
         case actionTypes.REGISTER_USER_SUCCESS:
             return updateObject(state, {
-                response
+                response,
             });
         case actionTypes.REGISTER_USER_ERROR:
             return updateObject(state, {
-                error: { registration: { reg: action.error } }
+                error: { registration: { reg: action.error } },
             });
         case actionTypes.RESET_USER_PASSWORD_SUCCESS:
             return updateObject(state, {
-                resetPasswordResponse: response
+                resetPasswordResponse: response,
             });
         case actionTypes.RESET_USER_PASSWORD_ERROR:
             return updateObject(state, {
-                error: action.error
+                error: action.error,
             });
         case actionTypes.ACTIVATE_USER_SUCCESS:
             return updateObject(state, {
-                response
+                response,
             });
         case actionTypes.ACTIVATE_USER_ERROR:
             return updateObject(state, {
-                activationError: action.error
+                activationError: action.error,
             });
         case actionTypes.SET_AUTH_ERROR:
             return updateObject(state, {
-                error: action.result
+                error: action.result,
             });
         default:
             return state;

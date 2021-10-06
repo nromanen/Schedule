@@ -8,31 +8,23 @@ import { FREE_ROOMS } from '../constants/reduxForms';
 import { errorHandler } from '../helper/handlerAxios';
 import { resetFormHandler } from '../helper/formHelper';
 
-export const showFreeRoomsService = elem => {
+export const showFreeRoomsService = (elem) => {
     axios
         .get(
-            FREE_ROOMS_URL +
-                '?dayOfWeek=' +
-                elem.dayOfWeek +
-                '&evenOdd=' +
-                elem.evenOdd +
-                '&classId=' +
-                elem.class +
-                '&semesterId=' +
-                elem.semesterId
+            `${FREE_ROOMS_URL}?dayOfWeek=${elem.dayOfWeek}&evenOdd=${elem.evenOdd}&classId=${elem.class}&semesterId=${elem.semesterId}`,
         )
-        .then(response => {
-            let bufferArray = [];
+        .then((response) => {
+            const bufferArray = [];
             const results = response.data;
             for (const key in results) {
                 bufferArray.push({
                     id: key,
-                    ...results[key]
+                    ...results[key],
                 });
             }
             store.dispatch(showFreeRooms(bufferArray));
         })
-        .catch(error => {
+        .catch((error) => {
             errorHandler(error);
         });
 };

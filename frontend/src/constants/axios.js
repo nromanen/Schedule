@@ -27,7 +27,7 @@ export const TEMPORARY_SCHEDULE_URL = 'temporary-schedules';
 export const TEMPORARY_SCHEDULE_RANGE_URL = 'temporary-schedules/add-range';
 export const TEACHER_TEMPORARY_SCHEDULE = 'schedules/full/teachers/date-range';
 
-export const STUDENTS_TO_GROUP_FILE='students/import?groupId='
+export const STUDENTS_TO_GROUP_FILE = 'students/import?groupId=';
 
 export const SCHEDULE_CHECK_AVAILABILITY_URL = 'schedules/data-before';
 export const BUSY_ROOMS = 'schedules/full/rooms';
@@ -55,10 +55,8 @@ export const PUBLIC_GROUP_URL = 'public/groups';
 export const PUBLIC_TEACHER_URL = 'public/teachers';
 export const PUBLIC_SEMESTERS_URL = 'public/semesters';
 
-export const PUBLIC_DOWNLOAD_GROUP_SCHEDULE_URL =
-    '/download/schedule-for-group-in-pdf';
-export const PUBLIC_DOWNLOAD_TEACHER_SCHEDULE_URL =
-    '/download/schedule-for-teacher-in-pdf';
+export const PUBLIC_DOWNLOAD_GROUP_SCHEDULE_URL = '/download/schedule-for-group-in-pdf';
+export const PUBLIC_DOWNLOAD_TEACHER_SCHEDULE_URL = '/download/schedule-for-teacher-in-pdf';
 
 export const FOR_TEACHER_SCHEDULE_URL = 'schedules/teacher';
 export const SEMESTER_COPY_URL = '/schedules/copy-schedule';
@@ -71,4 +69,4 @@ export const SCHEDULE_ITEM_ROOM_CHANGE = '/schedules/by-room';
 export const CREATE_ARCHIVE_SEMESTER = '/archive';
 export const ARCHIVED_SEMESTERS_URL = '/archive/all-semesters';
 
-export const DEPARTMENT_URL="/departments";
+export const DEPARTMENT_URL = '/departments';

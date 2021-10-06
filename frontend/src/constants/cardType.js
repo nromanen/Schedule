@@ -8,5 +8,5 @@ export const cardType = {
     TEMPORARY_SCHEDULE: 'temporary_schedule',
     SUBJECT: 'Subject',
     WISH: 'Wish',
-    SEMESTER: 'Semester'
+    SEMESTER: 'Semester',
 };

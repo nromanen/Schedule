@@ -2,6 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 
+import TextField from '@material-ui/core/TextField';
+import Autocomplete from '@material-ui/lab/Autocomplete';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import { styled } from '@material-ui/core/styles';
 import Card from '../../share/Card/Card';
 import ConfirmDialog from '../../share/modals/dialog';
 import CopyLessonDialog from '../../share/modals/chooseGroupDialog/CopyLessonDialog';
@@ -17,7 +21,7 @@ import {
     handleLessonCardService,
     removeLessonCardService,
     selectGroupIdService,
-    selectLessonCardService
+    selectLessonCardService,
 } from '../../services/lessonService';
 import { showAllTeachersService } from '../../services/teacherService';
 import { showAllGroupsService } from '../../services/groupService';
@@ -25,13 +29,8 @@ import { setLoadingService } from '../../services/loadingService';
 import { showAllSubjectsService } from '../../services/subjectService';
 import {
     showAllSemestersService,
-    CopyLessonsFromSemesterService
+    CopyLessonsFromSemesterService,
 } from '../../services/semesterService';
-
-import TextField from '@material-ui/core/TextField';
-import Autocomplete from '@material-ui/lab/Autocomplete';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import { styled } from '@material-ui/core/styles';
 
 import { cardType } from '../../constants/cardType';
 
@@ -39,10 +38,10 @@ import './LessonPage.scss';
 
 const GroupField = styled(TextField)({
     display: 'inline-block',
-    width: '150px'
+    width: '150px',
 });
 
-const LessonPage = props => {
+const LessonPage = (props) => {
     const { t } = useTranslation('common');
 
     const [open, setOpen] = useState(false);
@@ -77,43 +76,42 @@ const LessonPage = props => {
         showAllSubjectsService();
     }, []);
 
-    const createLessonCardHandler = card => {
-        if (Object.keys(card).length === 0 && card.constructor === Object)
-            return;
+    const createLessonCardHandler = (card) => {
+        if (Object.keys(card).length === 0 && card.constructor === Object) return;
 
         handleLessonCardService(card, groupId);
     };
 
-    const selectLessonCardHandler = lessonCardId => {
+    const selectLessonCardHandler = (lessonCardId) => {
         selectLessonCardService(lessonCardId);
     };
 
     const groupTitleHandle = (groups, groupId) => {
-        return groups.find(group => group.id === +groupId).title;
+        return groups.find((group) => group.id === +groupId).title;
     };
 
     const groupHandle = (groups, groupId) => {
-        return groups.find(group => group.id === +groupId);
+        return groups.find((group) => group.id === +groupId);
     };
 
-    const handleClickOpen = lessonId => {
+    const handleClickOpen = (lessonId) => {
         setLessonId(lessonId);
         setOpen(true);
     };
 
-    const handleClose = lessonId => {
+    const handleClose = (lessonId) => {
         setOpen(false);
         if (!lessonId) return;
 
         removeLessonCardService(lessonId);
     };
 
-    const openCopyLessonDialogHandle = lesson => {
+    const openCopyLessonDialogHandle = (lesson) => {
         setCopiedLesson(lesson);
         setOpenCopyLessonDialog(true);
     };
 
-    const closeCopyLessonDialogHandle = lessonGroupObj => {
+    const closeCopyLessonDialogHandle = (lessonGroupObj) => {
         setOpenCopyLessonDialog(false);
         if (!lessonGroupObj) return;
         copyLessonCardService(lessonGroupObj);
@@ -121,19 +119,19 @@ const LessonPage = props => {
 
     const defaultProps = {
         options: groups,
-        getOptionLabel: option => (option ? option.title : '')
+        getOptionLabel: (option) => (option ? option.title : ''),
     };
 
-    const handleGroupSelect = group => {
+    const handleGroupSelect = (group) => {
         if (group) selectGroupIdService(group.id);
     };
 
-    const groupFinderHandle = groupId => {
-        if (groupId) return groups.find(group => group.id === groupId);
-        else return '';
+    const groupFinderHandle = (groupId) => {
+        if (groupId) return groups.find((group) => group.id === groupId);
+        return '';
     };
 
-    const submitCopy = values => {
+    const submitCopy = (values) => {
         values.toSemesterId = props.currentSemester.id;
         values.fromSemesterId = +values.fromSemesterId;
         CopyLessonsFromSemesterService(values);
@@ -194,9 +192,7 @@ const LessonPage = props => {
                     onClose={handleClose}
                 />
                 <div className="lesson-page-title">
-                    <h1 className="lesson-page-h">
-                        {t('lesson_for_group_title')}
-                    </h1>
+                    <h1 className="lesson-page-h">{t('lesson_for_group_title')}</h1>
                     <Autocomplete
                         {...defaultProps}
                         id="group"
@@ -206,7 +202,7 @@ const LessonPage = props => {
                         onChange={(event, newValue) => {
                             handleGroupSelect(newValue);
                         }}
-                        renderInput={params => (
+                        renderInput={(params) => (
                             <GroupField
                                 {...params}
                                 label={t('formElements:group_label')}
@@ -234,7 +230,7 @@ const LessonPage = props => {
         </>
     );
 };
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
     lessons: state.lesson.lessons,
     lessonTypes: state.lesson.lessonTypes,
     groupId: state.lesson.groupId,
@@ -244,7 +240,7 @@ const mapStateToProps = state => ({
     subjects: state.subjects.subjects,
     loading: state.loadingIndicator.loading,
     semesters: state.semesters.semesters,
-    currentSemester: state.schedule.currentSemester
+    currentSemester: state.schedule.currentSemester,
 });
 
 export default connect(mapStateToProps)(LessonPage);

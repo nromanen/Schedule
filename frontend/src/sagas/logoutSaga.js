@@ -9,14 +9,12 @@ export function* logoutSaga(payload) {
     try {
         yield call(logoutUserService, payload);
         yield put({
-            type: actionTypes.AUTH_USER_LOGOUT
+            type: actionTypes.AUTH_USER_LOGOUT,
         });
     } catch (error) {
         yield put({
             type: actionTypes.AUTH_USER_ERROR,
-            error: error.response
-                ? error.response.data.message
-                : i18n.t('common:error_message')
+            error: error.response ? error.response.data.message : i18n.t('common:error_message'),
         });
     }
 }

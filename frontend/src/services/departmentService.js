@@ -10,86 +10,90 @@ import {
     addDepartment,
     clearDepartmentForm,
     deleteDepartment,
-    getAllDepartments, getDepartItemById,
-    getDisabledDepartments, setDisabledDepartment, setEnabledDepartment, updateDepart
+    getAllDepartments,
+    getDepartItemById,
+    getDisabledDepartments,
+    setDisabledDepartment,
+    setEnabledDepartment,
+    updateDepart,
 } from '../redux/actions/departments';
 
-export const createDepartmentService = data => {
+export const createDepartmentService = (data) => {
     axios
         .post(DEPARTMENT_URL, data)
-        .then(response => {
+        .then((response) => {
             store.dispatch(addDepartment(response.data));
             resetFormHandler(DEPARTMENT_FORM);
             successHandler(
                 i18n.t('serviceMessages:back_end_success_operation', {
                     cardType: i18n.t('formElements:department_label'),
-                    actionType: i18n.t('serviceMessages:created_label')
-                })
+                    actionType: i18n.t('serviceMessages:created_label'),
+                }),
             );
         })
-        .catch(error => errorHandler(error));
+        .catch((error) => errorHandler(error));
 };
 
 export const getAllDepartmentsService = () => {
     axios
         .get(DEPARTMENT_URL)
-        .then(response => {
+        .then((response) => {
             store.dispatch(getAllDepartments(response.data));
         })
-        .catch(error => errorHandler(error));
+        .catch((error) => errorHandler(error));
 };
 export const getDisabledDepartmentsService = () => {
     axios
         .get(`${DEPARTMENT_URL}/disabled`)
-        .then(response => {
+        .then((response) => {
             store.dispatch(getDisabledDepartments(response.data));
         })
-        .catch(error => errorHandler(error));
+        .catch((error) => errorHandler(error));
 };
 export const setDisabledDepartmentService = (data) => {
     axios
-        .put(`${DEPARTMENT_URL}`,data)
-        .then(response => {
+        .put(`${DEPARTMENT_URL}`, data)
+        .then((response) => {
             store.dispatch(setDisabledDepartment(response.data));
         })
-        .catch(error => errorHandler(error));
+        .catch((error) => errorHandler(error));
 };
 export const setEnabledDepartmentService = (data) => {
     console.log(data);
     axios
-        .put(`${DEPARTMENT_URL}`,data)
-        .then(response => {
+        .put(`${DEPARTMENT_URL}`, data)
+        .then((response) => {
             store.dispatch(setEnabledDepartment(response.data));
         })
-        .catch(error => errorHandler(error));
+        .catch((error) => errorHandler(error));
 };
 export const updateDepartmentService = (data) => {
     axios
-        .put(`${DEPARTMENT_URL}`,data)
-        .then(response => {
+        .put(`${DEPARTMENT_URL}`, data)
+        .then((response) => {
             store.dispatch(updateDepart(response.data));
             resetFormHandler(DEPARTMENT_FORM);
             successHandler(
                 i18n.t('serviceMessages:back_end_success_operation', {
                     cardType: i18n.t('formElements:department_label'),
-                    actionType: i18n.t('serviceMessages:updated_label')
-                })
+                    actionType: i18n.t('serviceMessages:updated_label'),
+                }),
             );
         })
-        .catch(error => errorHandler(error));
+        .catch((error) => errorHandler(error));
 };
 export const deleteDepartmentsService = (id) => {
     axios
         .delete(`${DEPARTMENT_URL}/${id}`)
-        .then(response => {
+        .then((response) => {
             store.dispatch(deleteDepartment(response.data));
         })
-        .catch(error => errorHandler(error));
+        .catch((error) => errorHandler(error));
 };
-export const clearDepartment=()=>{
+export const clearDepartment = () => {
     store.dispatch(clearDepartmentForm());
     resetFormHandler(DEPARTMENT_FORM);
-}
-export const getDepartmentByIdService=(id)=>{
+};
+export const getDepartmentByIdService = (id) => {
     store.dispatch(getDepartItemById(Number(id)));
-}
+};

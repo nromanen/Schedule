@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react';
-import { Redirect } from 'react-router-dom';
+import { Redirect, useHistory } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import { logout } from '../../../redux/actions/index';
 import { setScheduleSemesterIdService } from '../../../services/scheduleService';
-import { useHistory } from 'react-router-dom';
-const Logout = props => {
+
+const Logout = (props) => {
     useEffect(() => {
         props.onLogout();
     }, []);
@@ -15,9 +15,9 @@ const Logout = props => {
     return <Redirect to="/" />;
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
     return {
-        onLogout: () => dispatch(logout())
+        onLogout: () => dispatch(logout()),
     };
 };
 

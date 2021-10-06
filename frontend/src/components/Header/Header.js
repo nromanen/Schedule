@@ -9,7 +9,7 @@ import {
     FaHome,
     FaRunning,
     FaSignOutAlt,
-    FaUser
+    FaUser,
 } from 'react-icons/fa';
 import Menu from '@material-ui/core/Menu';
 import Button from '@material-ui/core/Button';
@@ -20,6 +20,7 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 
 import '../../App.scss';
 import './Header.scss';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import { links } from '../../constants/links';
 
 import LanguageSelector from '../LanguageSelector/LanguageSelector';
@@ -30,45 +31,44 @@ import WishModal from '../../containers/WishModal/WishModal';
 import { getCurrentSemesterService } from '../../services/scheduleService';
 
 import FreeRooms from '../../containers/FreeRooms/freeRooms';
-import CircularProgress from '@material-ui/core/CircularProgress';
 import { setSemesterLoadingService } from '../../services/loadingService';
 
 const StyledMenu = withStyles({
     paper: {
-        border: `1px solid ${colors.colors.BORDER}`
-    }
-})(props => (
+        border: `1px solid ${colors.colors.BORDER}`,
+    },
+})((props) => (
     <Menu
         elevation={0}
         getContentAnchorEl={null}
         anchorOrigin={{
             vertical: 'bottom',
-            horizontal: 'center'
+            horizontal: 'center',
         }}
         transformOrigin={{
             vertical: 'bottom',
-            horizontal: 'center'
+            horizontal: 'center',
         }}
         {...props}
     />
 ));
 
-const StyledMenuItem = withStyles(theme => ({
+const StyledMenuItem = withStyles((theme) => ({
     root: {
         '&:focus': {
             backgroundColor: theme.palette.primary.main,
-            color: theme.palette.common.white
-        }
-    }
+            color: theme.palette.common.white,
+        },
+    },
 }))(MenuItem);
 
-const Header = props => {
+const Header = (props) => {
     const [anchorEl, setAnchorEl] = React.useState(null);
-    const handleClick = event => setAnchorEl(event.currentTarget);
+    const handleClick = (event) => setAnchorEl(event.currentTarget);
     const handleClose = () => setAnchorEl(null);
 
     const [anchorElUser, setAnchorElUser] = React.useState(null);
-    const handleClickUserMenu = event => setAnchorElUser(event.currentTarget);
+    const handleClickUserMenu = (event) => setAnchorElUser(event.currentTarget);
     const handleCloseUserMenu = () => setAnchorElUser(null);
 
     const { t } = useTranslation('common');
@@ -83,15 +83,15 @@ const Header = props => {
         }
     }, [props.userRole]);
 
-    const handleClickOpenWish = teacher => {
+    const handleClickOpenWish = (teacher) => {
         setTeacher(teacher);
         setOpenWish(true);
     };
 
-    const handleCloseWish = value => {
+    const handleCloseWish = (value) => {
         setOpenWish(false);
     };
-    const getUserMenu = userRole => {
+    const getUserMenu = (userRole) => {
         let userMenu = null;
         if (userRole === null || userRole === undefined) {
             return (
@@ -158,9 +158,7 @@ const Header = props => {
                                     <ListItemIcon>
                                         <FaDoorOpen fontSize="normal" />
                                     </ListItemIcon>
-                                    <FreeRooms
-                                        classScheduler={props.classScheduler}
-                                    />
+                                    <FreeRooms classScheduler={props.classScheduler} />
                                 </StyledMenuItem>
                             </span>
                             <Link
@@ -232,9 +230,7 @@ const Header = props => {
                                 className="navLinks"
                                 style={{ textDecoration: 'none' }}
                                 onClick={() => {
-                                    handleClickOpenWish(
-                                        props.myWishes[0].teacher
-                                    );
+                                    handleClickOpenWish(props.myWishes[0].teacher);
                                     getMyTeacherWishesService();
                                     handleCloseUserMenu();
                                 }}
@@ -319,7 +315,7 @@ const Header = props => {
 
     let leftLinks = null;
     let menu = null;
-    let userMenu = getUserMenu(props.userRole);
+    const userMenu = getUserMenu(props.userRole);
     if (props.userRole === roles.MANAGER) {
         leftLinks = (
             <>
@@ -329,8 +325,7 @@ const Header = props => {
                     </span>
                 ) : (
                     <span className="navLinks nav-semester">
-                        {t('formElements:semester_label')}:{' '}
-                        {props.currentSemester.description}
+                        {t('formElements:semester_label')}: {props.currentSemester.description}
                     </span>
                 )}
             </>
@@ -530,13 +525,11 @@ const Header = props => {
                         to={links.HOME_PAGE}
                         className="navLinks"
                         style={{ textDecoration: 'none' }}
-                        onClick={ () => {
+                        onClick={() => {
                             setAnchorEl(null);
                         }}
-
                     >
                         <StyledMenuItem>
-
                             <ListItemIcon>
                                 <FaHome fontSize="normall" />
                             </ListItemIcon>
@@ -580,14 +573,11 @@ const Header = props => {
                 {menu}
                 <nav className="header-blocks header-blocks_one">
                     <Link to={links.HOME_PAGE} className="navLinks">
-
                         {t('home_title')}
                     </Link>
                     {leftLinks}
                 </nav>
-                <nav className="header-blocks header-blocks_two">
-                    {userMenu}
-                </nav>
+                <nav className="header-blocks header-blocks_two">{userMenu}</nav>
                 <nav className="header-blocks header-blocks_three">
                     <LanguageSelector />
                 </nav>
@@ -596,12 +586,12 @@ const Header = props => {
     );
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
     myWishes: state.teachersWish.myWishes,
     classScheduler: state.classActions.classScheduler,
     currentSemester: state.schedule.currentSemester,
     teacherWishes: state.teachersWish.wishes,
-    loading: state.loadingIndicator.semesterLoading
+    loading: state.loadingIndicator.semesterLoading,
 });
 
 export default connect(mapStateToProps, {})(Header);

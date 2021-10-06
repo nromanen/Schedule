@@ -10,33 +10,33 @@ const initialState = {
     scheduleType: '',
     scheduleGroupId: 0,
     currentSemester: {},
-    defaultSemester:{},
-    viewTeacherScheduleResults: 'block-view'
+    defaultSemester: {},
+    viewTeacherScheduleResults: 'block-view',
 };
 
 const reducer = (state = initialState, action) => {
     switch (action.type) {
         case actionTypes.SET_SCHEDULE_ITEMS:
             return updateObject(state, {
-                items: action.result
+                items: action.result,
             });
         case actionTypes.SET_CURRENT_SEMESTER:
             return updateObject(state, {
-                currentSemester: action.result
+                currentSemester: action.result,
             });
         case actionTypes.SET_DEFAULT_SEMESTER:
             return updateObject(state, {
-                defaultSemester: action.result
+                defaultSemester: action.result,
             });
         case actionTypes.CHECK_AVAILABILITY_SCHEDULE:
             return updateObject(state, {
-                availability: action.result
+                availability: action.result,
             });
         case actionTypes.ADD_ITEM_TO_SCHEDULE:
             const id = action.result.id;
             let itemArr;
             if (id) {
-                const index = state.items.findIndex(item => {
+                const index = state.items.findIndex((item) => {
                     return item.id === id;
                 });
                 if (index < 0) {
@@ -49,47 +49,44 @@ const reducer = (state = initialState, action) => {
                 itemArr = state.items.concat(action.result);
             }
             return updateObject(state, {
-                items: itemArr
+                items: itemArr,
             });
         case actionTypes.SET_SCHEDULE_TYPE:
             return updateObject(state, {
                 groupSchedule: {},
                 fullSchedule: [],
-                scheduleType: action.newType
+                scheduleType: action.newType,
             });
         case actionTypes.SET_FULL_SCHEDULE:
             updateObject(state, {
                 fullSchedule: [],
-                groupSchedule: {}
+                groupSchedule: {},
             });
             return updateObject(state, {
-                fullSchedule: action.result
+                fullSchedule: action.result,
             });
         case actionTypes.SET_GROUP_SCHEDULE:
             return updateObject(state, {
                 groupSchedule: action.result,
                 fullSchedule: [],
-
             });
         case actionTypes.SET_ITEM_GROUP_ID:
             return updateObject(state, {
-                itemGroupId: action.result
+                itemGroupId: action.result,
             });
         case actionTypes.SET_SCHEDULE_GROUP_ID:
             return updateObject(state, {
                 scheduleGroupId: action.groupId,
                 scheduleTeacherId: null,
                 fullSchedule: [],
-                groupSchedule: {}
+                groupSchedule: {},
             });
         case actionTypes.DELETE_ITEM_FROM_SCHEDULE:
-            const index = state.items.findIndex(
-                item => item.id === action.result
-            );
+            const index = state.items.findIndex((item) => item.id === action.result);
             state.items.splice(index, 1);
             const newArr = state.items;
             return updateObject(state, {
-                items: newArr
+                items: newArr,
             });
 
         case actionTypes.SET_SCHEDULE_TEACHER_ID:
@@ -97,15 +94,15 @@ const reducer = (state = initialState, action) => {
                 scheduleGroupId: null,
                 scheduleTeacherId: action.teacherId,
                 fullSchedule: [],
-                groupSchedule: {}
+                groupSchedule: {},
             });
         case actionTypes.SET_TEACHER_SCHEDULE:
             return updateObject(state, {
                 scheduleGroupId: null,
                 teacherSchedule: action.result,
-                scheduleTeacherId:`${action.result.teacher.id}`,
+                scheduleTeacherId: `${action.result.teacher.id}`,
                 groupSchedule: {},
-                fullSchedule: []
+                fullSchedule: [],
             });
         case actionTypes.SET_SEMESTER_LIST:
             return updateObject(state, {
@@ -114,7 +111,7 @@ const reducer = (state = initialState, action) => {
                 teacherSchedule: {},
                 groupSchedule: {},
                 fullSchedule: [],
-                semesters: action.result
+                semesters: action.result,
             });
         case actionTypes.SET_SCHEDULE_SEMESTER_ID:
             return updateObject(state, {
@@ -122,7 +119,7 @@ const reducer = (state = initialState, action) => {
                 scheduleTeacherId: null,
                 scheduleSemesterId: action.semesterId,
                 fullSchedule: [],
-                groupSchedule: {}
+                groupSchedule: {},
             });
         case actionTypes.SET_TEACHER_RANGE_SCHEDULE:
             return updateObject(state, {
@@ -130,11 +127,11 @@ const reducer = (state = initialState, action) => {
                 scheduleGroupId: null,
                 teacherSchedule: [],
                 groupSchedule: {},
-                fullSchedule: []
+                fullSchedule: [],
             });
         case actionTypes.SET_TEACHER_VIEW_TYPE:
             return updateObject(state, {
-                viewTeacherScheduleResults: action.result
+                viewTeacherScheduleResults: action.result,
             });
         default:
             return state;
