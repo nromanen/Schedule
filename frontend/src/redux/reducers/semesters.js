@@ -5,7 +5,7 @@ const initialState = {
     semesters: [],
     semester: {},
     disabledSemesters: [],
-    archivedSemesters: []
+    archivedSemesters: [],
 };
 
 const semesters = (state = initialState, action) => {
@@ -13,47 +13,43 @@ const semesters = (state = initialState, action) => {
         case actionTypes.ADD_SEMESTER:
             return updateObject(state, {
                 semesters: state.semesters.concat(action.result),
-                semester: state.semester
+                semester: state.semester,
             });
 
         case actionTypes.DELETE_SEMESTER:
-            state.semesters = state.semesters.filter(
-                semester => semester.id !== action.result
-            );
+            state.semesters = state.semesters.filter((semester) => semester.id !== action.result);
             return updateObject(state, {
                 semesters: state.semesters,
-                semester: state.semester
+                semester: state.semester,
             });
 
         case actionTypes.SHOW_ALL_SEMESTERS:
             return updateObject(state, {
                 semesters: action.result,
-                semester: state.semester
+                semester: state.semester,
             });
         case actionTypes.SET_DISABLED_SEMESTERS:
             return updateObject(state, {
-                disabledSemesters: action.result
+                disabledSemesters: action.result,
             });
         case actionTypes.SET_ARCHIVED_SEMESTERS:
             return updateObject(state, {
-                archivedSemesters: action.result
+                archivedSemesters: action.result,
             });
 
         case actionTypes.SELECT_SEMESTER:
-            let semester = state.semesters.filter(
-                semester => semester.id === action.result
-            )[0];
+            let semester = state.semesters.filter((semester) => semester.id === action.result)[0];
             if (!semester) {
                 semester = { id: null };
             }
             return updateObject(state, {
                 semesters: state.semesters,
-                semester: semester
+                semester,
             });
 
         case actionTypes.UPDATE_SEMESTER:
             const updatedSemesters = [];
-            state.semesters.forEach(semester => {
+            state.semesters.forEach((semester) => {
                 if (semester.id === action.result.id) {
                     semester = { ...semester, ...action.result };
                 }
@@ -61,31 +57,26 @@ const semesters = (state = initialState, action) => {
             });
             return updateObject(state, {
                 semesters: updatedSemesters,
-                semester: {}
+                semester: {},
             });
 
         case actionTypes.MOVE_SEMESTER_TO_ARCHIVE:
             const archivedSemester = state.semesters.find(
-                semester => semester.id === action.result
+                (semester) => semester.id === action.result,
             );
-            state.semesters = state.semesters.filter(
-                semester => semester.id !== action.result
-            );
+            state.semesters = state.semesters.filter((semester) => semester.id !== action.result);
             return updateObject(state, {
                 semesters: state.semesters,
-                archivedSemesters: [
-                    ...state.archivedSemesters,
-                    archivedSemester
-                ]
+                archivedSemesters: [...state.archivedSemesters, archivedSemester],
             });
         case actionTypes.CLEAR_SEMESTER:
             return {
                 ...state,
-                semester: {}
+                semester: {},
             };
         case actionTypes.SET_ERROR:
             return updateObject(state, {
-                uniqueError: action.result
+                uniqueError: action.result,
             });
 
         default:

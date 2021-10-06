@@ -3,38 +3,31 @@ import { connect } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import Button from '@material-ui/core/Button';
 
+import { CircularProgress } from '@material-ui/core';
 import { showAllGroupsService } from '../../services/groupService';
 import { getLessonsByGroupService } from '../../services/lessonService';
-import {
-    setLoadingService,
-    setScheduleLoadingService
-} from '../../services/loadingService';
+import { setLoadingService, setScheduleLoadingService } from '../../services/loadingService';
 import { getClassScheduleListService } from '../../services/classService';
-import {
-    getScheduleItemsService,
-    clearSchedule
-} from '../../services/scheduleService';
+import { getScheduleItemsService, clearSchedule } from '../../services/scheduleService';
 import { showListOfRoomsService } from '../../services/roomService';
 
 import ScheduleLessonsList from '../../components/ScheduleLessonsList/ScheduleLessonsList';
 import Schedule from '../../components/Schedule/Schedule';
 
-import { CircularProgress } from '@material-ui/core';
-
 import './SchedulePage.scss';
 
-const SchedulePage = props => {
+const SchedulePage = (props) => {
     const { t } = useTranslation('common');
 
     document.title = t('schedule_title');
 
     const { groups, groupId } = props;
 
-    const itemGroupId = props.itemGroupId;
+    const { itemGroupId } = props;
 
-    const scheduleItems = props.scheduleItems;
+    const { scheduleItems } = props;
 
-    let lessons = props.lessons;
+    const { lessons } = props;
 
     const isLoading = props.loading;
 
@@ -71,17 +64,14 @@ const SchedulePage = props => {
 
     return (
         <>
-
-            <section className='cards-container schedule-page'>
-                <section className='flexbox card '>
+            <section className="cards-container schedule-page">
+                <section className="flexbox card ">
                     {props.scheduleLoading ? (
                         <CircularProgress />
                     ) : (
                         <>
                             {!props.currentSemester.id ? (
-                                <h2 className='no-current-semester'>
-                                    {t('no_current_semester')}
-                                </h2>
+                                <h2 className="no-current-semester">{t('no_current_semester')}</h2>
                             ) : (
                                 <Schedule
                                     groupId={groupId}
@@ -94,20 +84,19 @@ const SchedulePage = props => {
                                     availability={props.availability}
                                     isLoading={isLoading}
                                 />
-                            )
-                            }
+                            )}
                         </>
                     )}
                 </section>
-                <aside className='lesson-list card'>
+                <aside className="lesson-list card">
                     {isLoading ? (
                         <CircularProgress />
                     ) : (
                         <>
                             <Button
-                                className='buttons-style'
-                                variant='contained'
-                                color='primary'
+                                className="buttons-style"
+                                variant="contained"
+                                color="primary"
                                 onClick={() => handleClearSchedule()}
                             >
                                 {t('clear_schedule_label')}
@@ -118,22 +107,20 @@ const SchedulePage = props => {
                                 lessons={lessons}
                                 groupId={groupId}
                                 translation={t}
-                                classScheduler={
-                                    props.currentSemester.semester_classes
-                                }
+                                classScheduler={props.currentSemester.semester_classes}
                             />
                         </>
                     )}
                 </aside>
             </section>
-            <section className='for-phones-and-tablets card'>
+            <section className="for-phones-and-tablets card">
                 <h1>{t('use_pc')}</h1>
             </section>
         </>
     );
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
     groups: state.groups.groups,
     lessons: state.lesson.lessons,
     groupId: state.lesson.groupId,
@@ -144,7 +131,7 @@ const mapStateToProps = state => ({
     availability: state.schedule.availability,
     currentSemester: state.schedule.currentSemester,
     semester: state.schedule.semester,
-    rooms: state.rooms.rooms
+    rooms: state.rooms.rooms,
 });
 
 export default connect(mapStateToProps)(SchedulePage);

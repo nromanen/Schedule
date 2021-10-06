@@ -17,58 +17,58 @@ import { makeStyles } from '@material-ui/core/styles';
 import MomentUtils from '@date-io/moment';
 import * as moment from 'moment';
 
+import Divider from '@material-ui/core/Divider';
 import { temporaryScheduleRadioTypes } from '../../../constants/temporaryScheduleRadioTypes';
 
 import {
     getTeacherTemporarySchedulesService,
     getTemporarySchedulesService,
-    selectTeacherIdService
+    selectTeacherIdService,
 } from '../../../services/temporaryScheduleService';
 import { handleTeacherInfo } from '../../../helper/renderTeacher';
-import Divider from '@material-ui/core/Divider';
 
 const useStyles = makeStyles({
     teacherField: {
-        width: '250px'
+        width: '250px',
     },
     dateGroup: {
         display: 'flex',
         margin: '0 auto',
         width: '250px',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
     },
     dateField: {
         width: '120px',
-        margin: '0'
+        margin: '0',
     },
     day: {
         width: '250px',
-        margin: '0'
+        margin: '0',
     },
     button: {
         width: '250px',
-        margin: '0 auto'
+        margin: '0 auto',
     },
     panel: {
         width: '300px',
-        margin: '0 auto'
+        margin: '0 auto',
     },
     block: {
-        display: 'block'
+        display: 'block',
     },
     legendBlock: {
         textAlign: 'left',
-        margin: '10px 0'
+        margin: '10px 0',
     },
     legend: {
         display: 'inline-block',
         width: '10px',
         height: '10px',
-        backgroundColor: '#F5DEB3'
-    }
+        backgroundColor: '#F5DEB3',
+    },
 });
 
-const TemporaryScheduleTitle = props => {
+const TemporaryScheduleTitle = (props) => {
     const { t } = useTranslation('common');
     const classes = useStyles();
     const [day, setDay] = useState(null);
@@ -84,7 +84,7 @@ const TemporaryScheduleTitle = props => {
             getTemporarySchedulesService(null, null);
     }, []);
 
-    const handleChange = event => {
+    const handleChange = (event) => {
         if (event.target.value === temporaryScheduleRadioTypes.SEMESTER)
             selectTeacherIdService(null);
         setToDate(false);
@@ -93,18 +93,18 @@ const TemporaryScheduleTitle = props => {
         setRadio(event.target.value);
     };
 
-    const handleDayChange = date => {
+    const handleDayChange = (date) => {
         setFromDate(null);
         setToDate(null);
         setDay(moment(date, 'DD-MM-YYYY').format('DD-MM-YYYY'));
     };
 
-    const handleFromDateChange = date => {
+    const handleFromDateChange = (date) => {
         setDay(null);
         setFromDate(moment(date, 'DD-MM-YYYY').format('DD-MM-YYYY'));
     };
 
-    const handleToDateChange = date => {
+    const handleToDateChange = (date) => {
         setDay(null);
         setToDate(moment(date, 'DD-MM-YYYY').format('DD-MM-YYYY'));
     };
@@ -138,16 +138,15 @@ const TemporaryScheduleTitle = props => {
 
     const defaultProps = {
         options: teachers,
-        getOptionLabel: option => (option ? handleTeacherInfo(option) : '')
+        getOptionLabel: (option) => (option ? handleTeacherInfo(option) : ''),
     };
 
-    const handleFindTeacher = teacherId => {
-        if (teacherId)
-            return teachers.find(teacher => teacher.id === teacherId);
-        else return '';
+    const handleFindTeacher = (teacherId) => {
+        if (teacherId) return teachers.find((teacher) => teacher.id === teacherId);
+        return '';
     };
 
-    const handleTeacherSelect = teacher => {
+    const handleTeacherSelect = (teacher) => {
         if (teacher) selectTeacherIdService(teacher.id);
     };
 
@@ -162,15 +161,10 @@ const TemporaryScheduleTitle = props => {
                 <ExpansionPanelDetails className={classes.block}>
                     <Divider />
                     <div className={classes.legendBlock}>
-                        <div className={classes.legend} /> -{' '}
-                        {t('holiday_label')}
+                        <div className={classes.legend} /> - {t('holiday_label')}
                     </div>
                     <Divider />
-                    <RadioGroup
-                        className={classes.dateGroup}
-                        value={radio}
-                        onChange={handleChange}
-                    >
+                    <RadioGroup className={classes.dateGroup} value={radio} onChange={handleChange}>
                         <FormControlLabel
                             value={temporaryScheduleRadioTypes.SEMESTER}
                             control={<Radio color="primary" />}
@@ -193,17 +187,12 @@ const TemporaryScheduleTitle = props => {
                                 <div className={classes.dateGroup}>
                                     <DatePicker
                                         margin="normal"
-                                        label={t(
-                                            'formElements:class_from_label'
-                                        )}
+                                        label={t('formElements:class_from_label')}
                                         format="DD/MM/YYYY"
                                         className={classes.dateField}
                                         value={
                                             fromDate
-                                                ? moment(
-                                                      fromDate,
-                                                      'DD/MM/YYYY'
-                                                  ).toDate()
+                                                ? moment(fromDate, 'DD/MM/YYYY').toDate()
                                                 : null
                                         }
                                         onChange={handleFromDateChange}
@@ -214,12 +203,7 @@ const TemporaryScheduleTitle = props => {
                                         label={t('formElements:class_to_label')}
                                         format="DD/MM/YYYY"
                                         value={
-                                            toDate
-                                                ? moment(
-                                                      toDate,
-                                                      'DD/MM/YYYY'
-                                                  ).toDate()
-                                                : null
+                                            toDate ? moment(toDate, 'DD/MM/YYYY').toDate() : null
                                         }
                                         onChange={handleToDateChange}
                                     />
@@ -230,11 +214,7 @@ const TemporaryScheduleTitle = props => {
                                     className={classes.day}
                                     label={t('date')}
                                     format="DD/MM/YYYY"
-                                    value={
-                                        day
-                                            ? moment(day, 'DD/MM/YYYY').toDate()
-                                            : null
-                                    }
+                                    value={day ? moment(day, 'DD/MM/YYYY').toDate() : null}
                                     onChange={handleDayChange}
                                 />
                             )}
@@ -250,7 +230,7 @@ const TemporaryScheduleTitle = props => {
                                 if (!newValue) handleTeacherSelect({});
                                 else handleTeacherSelect(newValue);
                             }}
-                            renderInput={params => (
+                            renderInput={(params) => (
                                 <TextField
                                     {...params}
                                     className={classes.teacherField}

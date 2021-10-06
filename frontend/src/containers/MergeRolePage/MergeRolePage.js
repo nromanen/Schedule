@@ -2,19 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 
-import {
-    getUsersService,
-    mergeUserAndTeacherService
-} from '../../services/userService';
-import { getTeachersWithoutAccount } from '../../services/teacherService';
-import { setLoadingService } from '../../services/loadingService';
-
-
 import TextField from '@material-ui/core/TextField';
 import { makeStyles } from '@material-ui/core/styles';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import Button from '@material-ui/core/Button';
 import { CircularProgress } from '@material-ui/core';
+import { setLoadingService } from '../../services/loadingService';
+import { getTeachersWithoutAccount } from '../../services/teacherService';
+import { getUsersService, mergeUserAndTeacherService } from '../../services/userService';
 
 import Card from '../../share/Card/Card';
 
@@ -27,12 +22,12 @@ const useStyles = makeStyles(() => ({
         '&': {
             display: 'inline-block',
             margin: '0 10px 10px 0',
-            width: 200
-        }
-    }
+            width: 200,
+        },
+    },
 }));
 
-const MergeRolePage = props => {
+const MergeRolePage = (props) => {
     const { t } = useTranslation('common');
 
     const [teacher, setTeacher] = useState(null);
@@ -40,29 +35,23 @@ const MergeRolePage = props => {
 
     const classes = useStyles();
 
-    const teachers = props.teachers;
-    const users = props.users;
+    const { teachers } = props;
+    const { users } = props;
 
     useEffect(() => getTeachersWithoutAccount(), []);
     useEffect(() => getUsersService(), []);
 
     const defaultPropsTeachers = {
         options: teachers,
-        getOptionLabel: option =>
+        getOptionLabel: (option) =>
             option
-                ? option.position +
-                  ' ' +
-                  option.surname +
-                  ' ' +
-                  option.name +
-                  ' ' +
-                  option.patronymic
-                : ''
+                ? `${option.position} ${option.surname} ${option.name} ${option.patronymic}`
+                : '',
     };
 
     const defaultPropsUsers = {
         options: users,
-        getOptionLabel: option => (option ? option.email : '')
+        getOptionLabel: (option) => (option ? option.email : ''),
     };
 
     const mergeUserAndTeacherHandle = () => {
@@ -75,7 +64,7 @@ const MergeRolePage = props => {
 
     return (
         <>
-            <NavigationPage  val={navigation.USERS}/>
+            <NavigationPage val={navigation.USERS} />
             <div className="merge-role-form">
                 <Card class="merge-role-card">
                     <h2 className="under-line">{t('merge_header')}</h2>
@@ -92,12 +81,10 @@ const MergeRolePage = props => {
                                     onChange={(event, newValue) => {
                                         setTeacher(newValue);
                                     }}
-                                    renderInput={params => (
+                                    renderInput={(params) => (
                                         <TextField
                                             {...params}
-                                            label={t(
-                                                'formElements:teacher_label'
-                                            )}
+                                            label={t('formElements:teacher_label')}
                                             margin="normal"
                                         />
                                     )}
@@ -110,7 +97,7 @@ const MergeRolePage = props => {
                                     onChange={(event, newValue) => {
                                         setUser(newValue);
                                     }}
-                                    renderInput={params => (
+                                    renderInput={(params) => (
                                         <TextField
                                             {...params}
                                             label={t('formElements:user_label')}
@@ -134,10 +121,10 @@ const MergeRolePage = props => {
         </>
     );
 };
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
     teachers: state.teachers.teachers,
     users: state.users.users,
-    loading: state.loadingIndicator.loading
+    loading: state.loadingIndicator.loading,
 });
 
 export default connect(mapStateToProps)(MergeRolePage);

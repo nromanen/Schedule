@@ -3,35 +3,30 @@ import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
+import { CircularProgress } from '@material-ui/core';
 import { activateUser } from '../../redux/actions';
 
 import { links } from '../../constants/links';
 import { snackbarTypes } from '../../constants/snackbarTypes';
 
-import { CircularProgress } from '@material-ui/core';
-
 import { handleSnackbarOpenService } from '../../services/snackbarService';
 
 import './ActivationPage.scss';
 
-const ActivationPage = props => {
+const ActivationPage = (props) => {
     const { t } = useTranslation('common');
 
     const params = new URLSearchParams(props.location.search);
     const token = params.get('token');
 
-    const error = props.error;
+    const { error } = props;
 
-    const response = props.response;
+    const { response } = props;
     let redirect = null;
 
     if (response && response.data.hasOwnProperty('message')) {
         redirect = <Redirect to={links.AUTH} />;
-        handleSnackbarOpenService(
-            true,
-            snackbarTypes.SUCCESS,
-            response.data.message
-        );
+        handleSnackbarOpenService(true, snackbarTypes.SUCCESS, response.data.message);
     }
 
     let main = (
@@ -66,14 +61,14 @@ const ActivationPage = props => {
     );
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
     response: state.auth.response,
-    error: state.auth.activationError
+    error: state.auth.activationError,
 });
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
     return {
-        onActivate: data => dispatch(activateUser(data))
+        onActivate: (data) => dispatch(activateUser(data)),
     };
 };
 

@@ -40,7 +40,7 @@ const rootReducer = combineReducers({
     departments,
     students,
 
-    form: formReducer
+    form: formReducer,
 });
 
 export default rootReducer;

@@ -9,16 +9,15 @@ import {
     selectSubject,
     setDisabledSubjects,
     showAllSubjects,
-    updateSubject
+    updateSubject,
 } from '../redux/actions/index';
 import i18n from '../helper/i18n';
 import { errorHandler, successHandler } from '../helper/handlerAxios';
 import { resetFormHandler } from '../helper/formHelper';
 
-export const selectSubjectService = subjectId =>
-    store.dispatch(selectSubject(subjectId));
+export const selectSubjectService = (subjectId) => store.dispatch(selectSubject(subjectId));
 
-export const handleSubjectService = values =>
+export const handleSubjectService = (values) =>
     values.id ? updateSubjectService(values) : createSubjectService(values);
 
 export const clearSubjectService = () => {
@@ -29,48 +28,48 @@ export const clearSubjectService = () => {
 export const showAllSubjectsService = () => {
     axios
         .get(SUBJECT_URL)
-        .then(response => {
+        .then((response) => {
             store.dispatch(showAllSubjects(response.data));
         })
-        .catch(error => errorHandler(error));
+        .catch((error) => errorHandler(error));
 };
 
-export const removeSubjectCardService = subjectId => {
+export const removeSubjectCardService = (subjectId) => {
     axios
-        .delete(SUBJECT_URL + `/${subjectId}`)
-        .then(response => {
+        .delete(`${SUBJECT_URL}/${subjectId}`)
+        .then((response) => {
             store.dispatch(deleteSubject(subjectId));
             getDisabledSubjectsService();
             successHandler(
                 i18n.t('serviceMessages:back_end_success_operation', {
                     cardType: i18n.t('formElements:subject_label'),
-                    actionType: i18n.t('serviceMessages:deleted_label')
-                })
+                    actionType: i18n.t('serviceMessages:deleted_label'),
+                }),
             );
         })
-        .catch(error => errorHandler(error));
+        .catch((error) => errorHandler(error));
 };
 
-export const createSubjectService = data => {
+export const createSubjectService = (data) => {
     axios
         .post(SUBJECT_URL, data)
-        .then(response => {
+        .then((response) => {
             store.dispatch(addSubject(response.data));
             resetFormHandler(SUBJECT_FORM);
             successHandler(
                 i18n.t('serviceMessages:back_end_success_operation', {
                     cardType: i18n.t('formElements:subject_label'),
-                    actionType: i18n.t('serviceMessages:created_label')
-                })
+                    actionType: i18n.t('serviceMessages:created_label'),
+                }),
             );
         })
-        .catch(error => errorHandler(error));
+        .catch((error) => errorHandler(error));
 };
 
-export const updateSubjectService = data => {
+export const updateSubjectService = (data) => {
     return axios
         .put(SUBJECT_URL, data)
-        .then(response => {
+        .then((response) => {
             store.dispatch(updateSubject(response.data));
             selectSubjectService(null);
             showAllSubjectsService();
@@ -79,28 +78,28 @@ export const updateSubjectService = data => {
             successHandler(
                 i18n.t('serviceMessages:back_end_success_operation', {
                     cardType: i18n.t('formElements:subject_label'),
-                    actionType: i18n.t('serviceMessages:updated_label')
-                })
+                    actionType: i18n.t('serviceMessages:updated_label'),
+                }),
             );
         })
-        .catch(error => errorHandler(error));
+        .catch((error) => errorHandler(error));
 };
 
 export const getDisabledSubjectsService = () => {
     axios
         .get(DISABLED_SUBJECTS_URL)
-        .then(res => {
+        .then((res) => {
             store.dispatch(setDisabledSubjects(res.data));
         })
-        .catch(error => errorHandler(error));
+        .catch((error) => errorHandler(error));
 };
 
-export const setDisabledSubjectsService = subject => {
+export const setDisabledSubjectsService = (subject) => {
     subject.disable = true;
     updateSubjectService(subject);
 };
 
-export const setEnabledSubjectsService = subject => {
+export const setEnabledSubjectsService = (subject) => {
     subject.disable = false;
     updateSubjectService(subject);
 };

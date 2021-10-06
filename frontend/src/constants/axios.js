@@ -53,10 +53,8 @@ export const PUBLIC_GROUP_URL = 'public/groups';
 export const PUBLIC_TEACHER_URL = 'public/teachers';
 export const PUBLIC_SEMESTERS_URL = 'public/semesters';
 
-export const PUBLIC_DOWNLOAD_GROUP_SCHEDULE_URL =
-    '/download/schedule-for-group-in-pdf';
-export const PUBLIC_DOWNLOAD_TEACHER_SCHEDULE_URL =
-    '/download/schedule-for-teacher-in-pdf';
+export const PUBLIC_DOWNLOAD_GROUP_SCHEDULE_URL = '/download/schedule-for-group-in-pdf';
+export const PUBLIC_DOWNLOAD_TEACHER_SCHEDULE_URL = '/download/schedule-for-teacher-in-pdf';
 
 export const FOR_TEACHER_SCHEDULE_URL = 'schedules/teacher';
 export const SEMESTER_COPY_URL = '/schedules/copy-schedule';

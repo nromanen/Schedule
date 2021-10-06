@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import React, { useEffect, useState } from 'react';
 
 import './SubjectPage.scss';
+import { GiSightDisabled, IoMdEye } from 'react-icons/all';
 import Card from '../../share/Card/Card';
 import { search } from '../../helper/search';
 import NotFound from '../../share/NotFound/NotFound';
@@ -21,14 +22,13 @@ import {
     clearSubjectService,
     setEnabledSubjectsService,
     setDisabledSubjectsService,
-    getDisabledSubjectsService
+    getDisabledSubjectsService,
 } from '../../services/subjectService';
 import { disabledCard } from '../../constants/disabledCard';
-import { GiSightDisabled, IoMdEye } from 'react-icons/all';
 import NavigationPage from '../../components/Navigation/NavigationPage';
 import { navigation, navigationNames } from '../../constants/navigation';
 
-const SubjectPage = props => {
+const SubjectPage = (props) => {
     const { t } = useTranslation('formElements');
     const { isSnackbarOpen, snackbarType, snackbarMessage } = props;
 
@@ -42,15 +42,15 @@ const SubjectPage = props => {
     useEffect(() => showAllSubjectsService(), []);
     useEffect(() => getDisabledSubjectsService(), []);
 
-    const submit = values => handleSubjectService(values);
-    const handleEdit = subjectId => selectSubjectService(subjectId);
+    const submit = (values) => handleSubjectService(values);
+    const handleEdit = (subjectId) => selectSubjectService(subjectId);
     const handleFormReset = () => clearSubjectService();
     const visibleSubjects = disabled
         ? search(props.disabledSubjects, term, ['name'])
         : search(props.subjects, term, ['name']);
     const SearchChange = setTerm;
 
-    const handleClickOpen = subjectId => {
+    const handleClickOpen = (subjectId) => {
         setSubjectId(subjectId);
         setOpen(true);
     };
@@ -60,19 +60,15 @@ const SubjectPage = props => {
         handleSnackbarCloseService();
     };
 
-    const handleClose = subjectId => {
+    const handleClose = (subjectId) => {
         setOpen(false);
         if (!subjectId) return;
         if (hideDialog) {
             if (disabled) {
-                const group = props.disabledSubjects.find(
-                    subject => subject.id === subjectId
-                );
+                const group = props.disabledSubjects.find((subject) => subject.id === subjectId);
                 setEnabledSubjectsService(group);
             } else {
-                const group = props.subjects.find(
-                    subject => subject.id === subjectId
-                );
+                const group = props.subjects.find((subject) => subject.id === subjectId);
                 setDisabledSubjectsService(group);
             }
         } else {
@@ -87,39 +83,28 @@ const SubjectPage = props => {
 
     return (
         <>
-            <NavigationPage name={navigationNames.SUBJECT_PAGE} val={navigation.SUBJECTS}/>
+            <NavigationPage name={navigationNames.SUBJECT_PAGE} val={navigation.SUBJECTS} />
             <ConfirmDialog
                 isHide={hideDialog}
                 cardId={subjectId}
-                whatDelete={'subject'}
+                whatDelete="subject"
                 open={open}
                 onClose={handleClose}
             />
             <div className="cards-container">
                 <aside className="search-list__panel">
-                    <SearchPanel
-                        SearchChange={SearchChange}
-                        showDisabled={showDisabledHandle}
-                    />
+                    <SearchPanel SearchChange={SearchChange} showDisabled={showDisabledHandle} />
                     {disabled ? (
                         ''
                     ) : (
-                        <AddSubject
-                            className="form"
-                            onSubmit={submit}
-                            onReset={handleFormReset}
-                        />
+                        <AddSubject className="form" onSubmit={submit} onReset={handleFormReset} />
                     )}
                 </aside>
                 <section className="container-flex-wrap wrapper">
-                    {visibleSubjects.length === 0 && (
-                        <NotFound name={t('subject_y_label')} />
-                    )}
-                    {visibleSubjects.map(subject => (
+                    {visibleSubjects.length === 0 && <NotFound name={t('subject_y_label')} />}
+                    {visibleSubjects.map((subject) => (
                         <Card key={subject.id} class="subject-card done-card">
-                            <h2 className="subject-card__name">
-                                {subject.name}
-                            </h2>
+                            <h2 className="subject-card__name">{subject.name}</h2>
                             <div className="cards-btns">
                                 {disabled ? (
                                     <IoMdEye
@@ -136,18 +121,14 @@ const SubjectPage = props => {
                                             className="svg-btn copy-btn"
                                             title={t('common:set_disabled')}
                                             onClick={() => {
-                                                setHideDialog(
-                                                    disabledCard.HIDE
-                                                );
+                                                setHideDialog(disabledCard.HIDE);
                                                 handleClickOpen(subject.id);
                                             }}
                                         />
                                         <FaEdit
                                             className="svg-btn edit-btn"
                                             title={t('edit_title')}
-                                            onClick={() =>
-                                                handleEdit(subject.id)
-                                            }
+                                            onClick={() => handleEdit(subject.id)}
                                         />
                                     </>
                                 )}
@@ -174,12 +155,12 @@ const SubjectPage = props => {
         </>
     );
 };
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
     subjects: state.subjects.subjects,
     disabledSubjects: state.subjects.disabledSubjects,
     isSnackbarOpen: state.snackbar.isSnackbarOpen,
     snackbarType: state.snackbar.snackbarType,
-    snackbarMessage: state.snackbar.message
+    snackbarMessage: state.snackbar.message,
 });
 
 export default connect(mapStateToProps, {})(SubjectPage);

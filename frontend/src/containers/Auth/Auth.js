@@ -6,11 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { resetFormHandler } from '../../helper/formHelper';
 import { handleSnackbarOpenService } from '../../services/snackbarService';
 
-import {
-    LOGIN_FORM,
-    REGISTRATION_FORM,
-    RESET_PASSWORD_FORM
-} from '../../constants/reduxForms';
+import { LOGIN_FORM, REGISTRATION_FORM, RESET_PASSWORD_FORM } from '../../constants/reduxForms';
 import { snackbarTypes } from '../../constants/snackbarTypes';
 import { links } from '../../constants/links';
 import { authTypes } from '../../constants/auth';
@@ -26,20 +22,20 @@ import {
     registerUser,
     resetUserPassword,
     setAuthError,
-    setLoading
+    setLoading,
 } from '../../redux/actions/index';
 
 import './Auth.scss';
 
-const Auth = props => {
+const Auth = (props) => {
     const { t } = useTranslation('common');
     const [authType, setAuthType] = useState(authTypes.LOGIN);
 
-    const error = props.error;
-    var url = window.document.location;
-    var parser = new URL(url);
+    const { error } = props;
+    const url = window.document.location;
+    const parser = new URL(url);
 
-    const socialLoginHandler = data => {
+    const socialLoginHandler = (data) => {
         props.setLoading(true);
         if (!data.token || data.token.length < 20) {
             props.setError({ login: t('broken_token') });
@@ -59,27 +55,20 @@ const Auth = props => {
     if (parser.search.length > 0) {
         const params = parser.search.split('&');
         if (params) {
-            params.map(param => {
+            params.map((param) => {
                 const splitedParam = param.split('=');
                 if (splitedParam) {
-                    if (
-                        splitedParam[0] === '?social' &&
-                        splitedParam[1] === 'true'
-                    ) {
+                    if (splitedParam[0] === '?social' && splitedParam[1] === 'true') {
                         social = true;
                     }
-                    if (
-                        splitedParam[0] === 'token' &&
-                        splitedParam[1].length > 0
-                    ) {
+                    if (splitedParam[0] === 'token' && splitedParam[1].length > 0) {
                         isToken = true;
                         token = splitedParam[1];
                     }
                 }
             });
         }
-        if (social && isToken)
-            socialLoginHandler({ authType: 'google', token });
+        if (social && isToken) socialLoginHandler({ authType: 'google', token });
     }
 
     useEffect(() => {
@@ -105,7 +94,7 @@ const Auth = props => {
         }
     }, [props.resetPasswordResponse]);
 
-    const loginHandler = loginData => {
+    const loginHandler = (loginData) => {
         if (!loginData.email || !loginData.password) {
             props.setError({ login: t('empty_fields') });
             return;
@@ -119,34 +108,35 @@ const Auth = props => {
         resetFormHandler(LOGIN_FORM);
     };
 
-    const registrationHandler = registrationData => {
+    const registrationHandler = (registrationData) => {
         if (registrationData.password !== registrationData.retypePassword) {
             props.setError({
-                registration: { passwords: t('different_passwords') }
+                registration: { passwords: t('different_passwords') },
             });
             return;
         }
         props.onRegister({
             email: registrationData.email,
-            password: registrationData.password
+            password: registrationData.password,
         });
         props.setLoading(true);
         resetFormHandler(REGISTRATION_FORM);
     };
 
-    const resetPasswordHandler = resetPasswordData => {
+    const resetPasswordHandler = (resetPasswordData) => {
         props.onResetPassword({
-            email: resetPasswordData.email
+            email: resetPasswordData.email,
         });
         props.setLoading(true);
         resetFormHandler(RESET_PASSWORD_FORM);
     };
 
-    let isSuccess, message;
+    let isSuccess;
+    let message;
     const isLoading = props.loading;
 
     if (!error && props.userRole) {
-        const token = props.token;
+        const { token } = props;
         isSuccess = !!token;
         message = t('successful_login_message');
         handleSnackbarOpenService(true, snackbarTypes.SUCCESS, message);
@@ -163,7 +153,7 @@ const Auth = props => {
         authRedirect = <Redirect to={links.HOME_PAGE} />;
     }
 
-    const switchAuthModeHandler = authType => {
+    const switchAuthModeHandler = (authType) => {
         setAuthType(authType);
     };
 
@@ -231,22 +221,22 @@ const Auth = props => {
     );
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
     response: state.auth.response,
     resetPasswordResponse: state.auth.resetPasswordResponse,
     error: state.auth.error,
     token: state.auth.token,
     userRole: state.auth.role,
-    loading: state.loadingIndicator.loading
+    loading: state.loadingIndicator.loading,
 });
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
     return {
-        onAuth: data => dispatch(authUser(data)),
-        onRegister: data => dispatch(registerUser(data)),
-        onResetPassword: data => dispatch(resetUserPassword(data)),
-        setLoading: isLoading => dispatch(setLoading(isLoading)),
-        setError: error => dispatch(setAuthError(error))
+        onAuth: (data) => dispatch(authUser(data)),
+        onRegister: (data) => dispatch(registerUser(data)),
+        onResetPassword: (data) => dispatch(resetUserPassword(data)),
+        setLoading: (isLoading) => dispatch(setLoading(isLoading)),
+        setError: (error) => dispatch(setAuthError(error)),
     };
 };
 

@@ -1,24 +1,19 @@
-import { store } from '../index';
-
 import Moment from 'moment';
 import { extendMoment } from 'moment-range';
+import { store } from '../index';
 import i18n from '../helper/i18n';
 
-export const checkUniqClassName = className => {
+export const checkUniqClassName = (className) => {
     const classId = store.getState().classActions.classScheduleOne.id;
-    var find = false;
+    let find = false;
     if (classId) {
-        find = store
-            .getState()
-            .classActions.classScheduler.some(function (value, index, _arr) {
-                return value.class_name === className && value.id !== classId;
-            });
+        find = store.getState().classActions.classScheduler.some(function (value, index, _arr) {
+            return value.class_name === className && value.id !== classId;
+        });
     } else {
-        find = store
-            .getState()
-            .classActions.classScheduler.some(function (value, index, _arr) {
-                return value.class_name === className;
-            });
+        find = store.getState().classActions.classScheduler.some(function (value, index, _arr) {
+            return value.class_name === className;
+        });
     }
     return find ? i18n.t('validationMessages:unique_error_message') : undefined;
 };
@@ -30,146 +25,120 @@ export const timeIntersectService = (startTime, endTime) => {
     if (startTime && endTime) {
         const incomeRange = moment.range(
             moment(startTime, 'HH:mm').toDate(),
-            moment(endTime, 'HH:mm').toDate()
+            moment(endTime, 'HH:mm').toDate(),
         );
         if (classId) {
-            find = store
-                .getState()
-                .classActions.classScheduler.some(function (
-                    value,
-                    index,
-                    _arr
-                ) {
-                    return (
-                        incomeRange.intersect(
-                            moment.range(
-                                moment(value.startTime, 'HH:mm').toDate(),
-                                moment(value.endTime, 'HH:mm').toDate()
-                            )
-                        ) !== null && value.id !== classId
-                    );
-                });
+            find = store.getState().classActions.classScheduler.some(function (value, index, _arr) {
+                return (
+                    incomeRange.intersect(
+                        moment.range(
+                            moment(value.startTime, 'HH:mm').toDate(),
+                            moment(value.endTime, 'HH:mm').toDate(),
+                        ),
+                    ) !== null && value.id !== classId
+                );
+            });
         } else {
-            find = store
-                .getState()
-                .classActions.classScheduler.some(function (
-                    value,
-                    index,
-                    _arr
-                ) {
-                    return (
-                        incomeRange.intersect(
-                            moment.range(
-                                moment(value.startTime, 'HH:mm').toDate(),
-                                moment(value.endTime, 'HH:mm').toDate()
-                            )
-                        ) !== null
-                    );
-                });
+            find = store.getState().classActions.classScheduler.some(function (value, index, _arr) {
+                return (
+                    incomeRange.intersect(
+                        moment.range(
+                            moment(value.startTime, 'HH:mm').toDate(),
+                            moment(value.endTime, 'HH:mm').toDate(),
+                        ),
+                    ) !== null
+                );
+            });
         }
     }
-    return find
-        ? i18n.t('validationMessages:intersect_time_error_message')
-        : undefined;
+    return find ? i18n.t('validationMessages:intersect_time_error_message') : undefined;
 };
 
-export const checkUniqLesson = lesson => {
-    const lessons = store.getState().lesson.lessons;
+export const checkUniqLesson = (lesson) => {
+    const { lessons } = store.getState().lesson;
     let isNotUnique;
     if (!lesson.id) {
         isNotUnique = !!lessons.find(
-            storeLesson =>
+            (storeLesson) =>
                 storeLesson.subject.id === +lesson.subject.id &&
                 storeLesson.teacher.id === +lesson.teacher.id &&
-                storeLesson.lessonType === lesson.lessonType
+                storeLesson.lessonType === lesson.lessonType,
         );
     } else {
         isNotUnique = !!lessons.find(
-            storeLesson =>
+            (storeLesson) =>
                 storeLesson.subject.id === +lesson.subject.id &&
                 storeLesson.teacher.id === +lesson.teacher.id &&
                 storeLesson.lessonType === lesson.lessonType &&
-                storeLesson.id !== +lesson.id
+                storeLesson.id !== +lesson.id,
         );
     }
     return !isNotUnique;
 };
 
-export const checkUniqueRoomName = roomName => {
+export const checkUniqueRoomName = (roomName) => {
     const roomdId = store.getState().rooms.oneRoom.id;
     let find = false;
     if (roomdId) {
-        find = store
-        .getState()
-        .rooms.rooms.some(function (value, index, _arr) {
+        find = store.getState().rooms.rooms.some(function (value, index, _arr) {
             return value.name.toUpperCase() === roomName.toUpperCase() && value.id !== roomdId;
         });
     } else {
-     find = store
-        .getState()
-        .rooms.rooms.some(function (value, index, _arr) {
-            return value.name.toUpperCase() === roomName.toUpperCase()  ;
+        find = store.getState().rooms.rooms.some(function (value, index, _arr) {
+            return value.name.toUpperCase() === roomName.toUpperCase();
         });
     }
     return find ? i18n.t('validationMessages:unique_error_message') : undefined;
 };
 
-export const checkUniqueGroup = groupTitle => {
+export const checkUniqueGroup = (groupTitle) => {
     if (!groupTitle) {
         return;
     }
     const find = store.getState().groups.groups.some(function (value) {
-        return (
-            value.title.toUpperCase().trim() === groupTitle.toUpperCase().trim()
-        );
+        return value.title.toUpperCase().trim() === groupTitle.toUpperCase().trim();
     });
     return find ? i18n.t('validationMessages:unique_error_message') : undefined;
 };
 
-export const checkUniqueSubject = subjectTitle => {
+export const checkUniqueSubject = (subjectTitle) => {
     if (!subjectTitle) {
         return;
     }
     const find = store.getState().subjects.subjects.some(function (value) {
-        return (
-            value.name.toUpperCase().trim() ===
-            subjectTitle.toUpperCase().trim()
-        );
+        return value.name.toUpperCase().trim() === subjectTitle.toUpperCase().trim();
     });
     return find ? i18n.t('validationMessages:unique_error_message') : undefined;
 };
-export const checkUniqueDepartment = departmentTitle => {
+export const checkUniqueDepartment = (departmentTitle) => {
     if (!departmentTitle) {
         return;
     }
     const find = store.getState().departments.departments.some(function (value) {
-        return (
-            value.name.toUpperCase().trim() ===
-            departmentTitle.toUpperCase().trim()
-        );
+        return value.name.toUpperCase().trim() === departmentTitle.toUpperCase().trim();
     });
     return find ? i18n.t('validationMessages:unique_error_message') : undefined;
 };
 
-
-
-export const checkUniqSemester = semester => {
-    const semesters = store.getState().semesters.semesters;
+export const checkUniqSemester = (semester) => {
+    const { semesters } = store.getState().semesters;
     let isNotUnique;
     if (!semester.id) {
         isNotUnique = !!semesters.find(
-            storeSemester =>
+            (storeSemester) =>
                 storeSemester.year === +semester.year &&
-                storeSemester.description.toUpperCase().trim() === semester.description.toUpperCase().trim()
+                storeSemester.description.toUpperCase().trim() ===
+                    semester.description.toUpperCase().trim(),
         );
     } else {
         isNotUnique = !!semesters.find(
-            storeSemester =>
-            storeSemester.year=== +semester.year &&
-            storeSemester.description.toUpperCase().trim() === semester.description.toUpperCase().trim() && 
-            storeSemester.id !== +semester.id
+            (storeSemester) =>
+                storeSemester.year === +semester.year &&
+                storeSemester.description.toUpperCase().trim() ===
+                    semester.description.toUpperCase().trim() &&
+                storeSemester.id !== +semester.id,
         );
     }
-    
-    return !isNotUnique
+
+    return !isNotUnique;
 };

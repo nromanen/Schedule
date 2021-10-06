@@ -1,26 +1,26 @@
-import * as actionTypes from '../actions/actionsType';
 import actions from 'redux-form/lib/actions';
+import * as actionTypes from '../actions/actionsType';
 
 const freeRooms = (
     state = {
-        freeRooms : [],
-        freeRoom : {}
-    }, 
-    action
+        freeRooms: [],
+        freeRoom: {},
+    },
+    action,
 ) => {
-    switch(action.type) {
+    switch (action.type) {
         case actionTypes.SHOW_FREE_ROOMS:
             return {
                 ...state,
-                freeRooms: action.result
+                freeRooms: action.result,
             };
         case actionTypes.CLEAR_FREE_ROOM:
             return {
                 ...state,
-                freeRoom: {}
+                freeRoom: {},
             };
         default:
-            return state;    
+            return state;
     }
 };
 

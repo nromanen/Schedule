@@ -1,6 +1,7 @@
 import Select from 'react-select';
-import React from 'react'
-export const ReduxFormSelect = props => {
+import React from 'react';
+
+export const ReduxFormSelect = (props) => {
     const { input, options } = props;
     return (
         <Select
@@ -8,5 +9,5 @@ export const ReduxFormSelect = props => {
             // onBlur={() => input.onBlur(input.value)}
             options={options}
         />
-    )
-}
+    );
+};

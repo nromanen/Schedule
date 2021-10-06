@@ -2,25 +2,21 @@ import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Field, reduxForm } from 'redux-form';
 
+import { useTranslation } from 'react-i18next';
+import Button from '@material-ui/core/Button';
+import { MdDelete } from 'react-icons/md';
+import { FaEdit } from 'react-icons/fa';
 import { ROOM_FORM_TYPE } from '../../constants/reduxForms';
 
 import ConfirmDialog from '../../share/modals/dialog';
 import { cardType } from '../../constants/cardType';
 import Card from '../../share/Card/Card';
-import { useTranslation } from 'react-i18next';
 import renderTextField from '../../share/renderedFields/input';
-import Button from '@material-ui/core/Button';
-import { MdDelete } from 'react-icons/md';
-import { FaEdit } from 'react-icons/fa';
-import {
-    deleteTypeService,
-    getOneNewTypeService
-} from '../../services/roomTypesService';
+import { deleteTypeService, getOneNewTypeService } from '../../services/roomTypesService';
 import './AddNewRoomType.scss';
 
-let NewRoomType = props => {
+let NewRoomType = (props) => {
     const { handleSubmit, pristine, submitting, roomTypes } = props;
-   
 
     const [open, setOpen] = useState(false);
     const [typeId, setTypeId] = useState(-1);
@@ -28,21 +24,19 @@ let NewRoomType = props => {
     useEffect(() => {
         let defaultValue = {};
         if (props.oneType.id) {
-            defaultValue={ description: props.oneType.description,
-                id: props.oneType.id};
+            defaultValue = { description: props.oneType.description, id: props.oneType.id };
         }
         props.initialize(defaultValue);
-
-    }, [props.oneType]);   
+    }, [props.oneType]);
 
     const { t } = useTranslation('formElements');
 
-    const handleClickOpen = typeId => {
+    const handleClickOpen = (typeId) => {
         setTypeId(typeId);
         setOpen(true);
     };
 
-    const handleClose = typeId => {
+    const handleClose = (typeId) => {
         setOpen(false);
         if (!typeId) {
             return;
@@ -50,14 +44,14 @@ let NewRoomType = props => {
         deleteTypeService(typeId);
     };
 
-    const handleEdit = roomId => {
+    const handleEdit = (roomId) => {
         getOneNewTypeService(roomId);
     };
 
     return (
         <>
             <ConfirmDialog
-                selectedValue={''}
+                selectedValue=""
                 cardId={typeId}
                 whatDelete={cardType.TYPE.toLowerCase()}
                 open={open}
@@ -74,7 +68,7 @@ let NewRoomType = props => {
                         className="form-field"
                         variant="outlined"
                     />
-                    <div className='btn-style-wrapper'>
+                    <div className="btn-style-wrapper">
                         <Button
                             color="primary"
                             className="btn-style"
@@ -88,15 +82,13 @@ let NewRoomType = props => {
                 </form>
 
                 <ul className="new-types">
-                    {roomTypes.map(roomType => (
+                    {roomTypes.map((roomType) => (
                         <li
                             key={roomType.id}
                             value={roomType.description}
                             className="new-types-list"
                         >
-                            <span className="typeDescription">
-                                {roomType.description}
-                            </span>
+                            <span className="typeDescription">{roomType.description}</span>
                             <span className="buttons">
                                 <FaEdit
                                     className="btn edit"
@@ -115,13 +107,13 @@ let NewRoomType = props => {
     );
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
     oneType: state.roomTypes.oneType,
-    roomTypes: state.roomTypes.roomTypes
+    roomTypes: state.roomTypes.roomTypes,
 });
 
 NewRoomType = reduxForm({
-    form: ROOM_FORM_TYPE
+    form: ROOM_FORM_TYPE,
 })(NewRoomType);
 
 export default connect(mapStateToProps)(NewRoomType);

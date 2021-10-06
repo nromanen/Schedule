@@ -2,7 +2,7 @@ import { store } from '../index';
 import {
     DISABLED_TEACHERS_URL,
     TEACHER_URL,
-    TEACHERS_WITHOUT_ACCOUNT_URL
+    TEACHERS_WITHOUT_ACCOUNT_URL,
 } from '../constants/axios';
 import { TEACHER_FORM } from '../constants/reduxForms';
 
@@ -16,7 +16,7 @@ import {
     selectTeacherCard,
     setDisabledTeachers,
     showAllTeachers,
-    updateTeacherCard
+    updateTeacherCard,
 } from '../redux/actions';
 import { errorHandler, successHandler } from '../helper/handlerAxios';
 import { resetFormHandler } from '../helper/formHelper';
@@ -26,46 +26,44 @@ import { isObjectEmpty } from '../helper/ObjectRevision';
 export const showAllTeachersService = () => {
     axios
         .get(TEACHER_URL)
-        .then(response => {
+        .then((response) => {
             store.dispatch(showAllTeachers(response.data));
             setLoadingService(false);
         })
-        .catch(error => errorHandler(error));
+        .catch((error) => errorHandler(error));
 };
-
-
 
 export const getTeachersWithoutAccount = () => {
     axios
         .get(TEACHERS_WITHOUT_ACCOUNT_URL)
-        .then(response => {
+        .then((response) => {
             store.dispatch(showAllTeachers(response.data));
         })
-        .catch(error => errorHandler(error));
+        .catch((error) => errorHandler(error));
 };
 
-export const createTeacherService = values => {
-    let result= {... values };
-   if(isObjectEmpty(values.department)||values.department.id===null){
-       const {department,...res}=values;
-       result= { ...res };
-   }
+export const createTeacherService = (values) => {
+    let result = { ...values };
+    if (isObjectEmpty(values.department) || values.department.id === null) {
+        const { department, ...res } = values;
+        result = { ...res };
+    }
     axios
         .post(TEACHER_URL, result)
-        .then(response => {
+        .then((response) => {
             store.dispatch(addTeacher(response.data));
             resetFormHandler(TEACHER_FORM);
             successHandler(
                 i18n.t('serviceMessages:back_end_success_operation', {
                     cardType: i18n.t('formElements:teacher_a_label'),
-                    actionType: i18n.t('serviceMessages:created_label')
-                })
+                    actionType: i18n.t('serviceMessages:created_label'),
+                }),
             );
         })
-        .catch(error => errorHandler(error));
+        .catch((error) => errorHandler(error));
 };
 
-const cardTeacher = teacher => {
+const cardTeacher = (teacher) => {
     return {
         teacher: {
             id: teacher.id,
@@ -73,21 +71,21 @@ const cardTeacher = teacher => {
             surname: teacher.surname,
             patronymic: teacher.patronymic,
             position: teacher.position,
-            email:teacher.email,
-            department: teacher.department
-        }
+            email: teacher.email,
+            department: teacher.department,
+        },
     };
 };
 
-export const updateTeacherService = data => {
-    let result={...data.teacher};
-    if(isObjectEmpty(result.department)||result.department.id===null){
-        const {department,...res}=result;
-        result={...res};
+export const updateTeacherService = (data) => {
+    let result = { ...data.teacher };
+    if (isObjectEmpty(result.department) || result.department.id === null) {
+        const { department, ...res } = result;
+        result = { ...res };
     }
     return axios
         .put(TEACHER_URL, result)
-        .then(response => {
+        .then((response) => {
             store.dispatch(updateTeacherCard(response.data));
             if (response.data.disable) {
                 store.dispatch(deleteTeacher(response.data.id));
@@ -100,14 +98,14 @@ export const updateTeacherService = data => {
             successHandler(
                 i18n.t('serviceMessages:back_end_success_operation', {
                     cardType: i18n.t('formElements:teacher_a_label'),
-                    actionType: i18n.t('serviceMessages:updated_label')
-                })
+                    actionType: i18n.t('serviceMessages:updated_label'),
+                }),
             );
         })
-        .catch(error => errorHandler(error));
+        .catch((error) => errorHandler(error));
 };
 
-export const handleTeacherService = values => {
+export const handleTeacherService = (values) => {
     const teacher = cardTeacher(values);
 
     if (values.id) {
@@ -117,41 +115,41 @@ export const handleTeacherService = values => {
     }
 };
 
-export const removeTeacherCardService = id => {
+export const removeTeacherCardService = (id) => {
     axios
-        .delete(TEACHER_URL + `/${id}`)
-        .then(response => {
+        .delete(`${TEACHER_URL}/${id}`)
+        .then((response) => {
             store.dispatch(deleteTeacher(id));
             getDisabledTeachersService();
             successHandler(
                 i18n.t('serviceMessages:back_end_success_operation', {
                     cardType: i18n.t('formElements:teacher_a_label'),
-                    actionType: i18n.t('serviceMessages:deleted_label')
-                })
+                    actionType: i18n.t('serviceMessages:deleted_label'),
+                }),
             );
         })
-        .catch(error => errorHandler(error));
+        .catch((error) => errorHandler(error));
 };
 
-export const selectTeacherCardService = teacherCardId => {
+export const selectTeacherCardService = (teacherCardId) => {
     store.dispatch(selectTeacherCard(teacherCardId));
 };
 
 export const getDisabledTeachersService = () => {
     axios
         .get(DISABLED_TEACHERS_URL)
-        .then(res => {
+        .then((res) => {
             store.dispatch(setDisabledTeachers(res.data));
         })
-        .catch(error => errorHandler(error));
+        .catch((error) => errorHandler(error));
 };
 
-export const setDisabledTeachersService = teacher => {
+export const setDisabledTeachersService = (teacher) => {
     teacher.disable = true;
     updateTeacherService({ teacher });
 };
 
-export const setEnabledTeachersService = teacher => {
+export const setEnabledTeachersService = (teacher) => {
     teacher.disable = false;
     updateTeacherService({ teacher });
 };

@@ -14,11 +14,12 @@ import FirstPageIcon from '@material-ui/icons/FirstPage';
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import LastPageIcon from '@material-ui/icons/LastPage';
-import { getTeacherFullName } from './renderTeacher';
 import { useTranslation } from 'react-i18next';
 import { FaEnvelope } from 'react-icons/fa';
 import TableHead from '@material-ui/core/TableHead';
 import { withStyles } from '@material-ui/core';
+import { getTeacherFullName } from './renderTeacher';
+
 const useStyles1 = makeStyles((theme) => ({
     root: {
         flexShrink: 0,
@@ -56,7 +57,11 @@ function RenderTeacherTableActions(props) {
             >
                 {theme.direction === 'rtl' ? <LastPageIcon /> : <FirstPageIcon />}
             </IconButton>
-            <IconButton onClick={handleBackButtonClick} disabled={page === 0} aria-label="previous page">
+            <IconButton
+                onClick={handleBackButtonClick}
+                disabled={page === 0}
+                aria-label="previous page"
+            >
                 {theme.direction === 'rtl' ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
             </IconButton>
             <IconButton
@@ -84,7 +89,6 @@ RenderTeacherTableActions.propTypes = {
     rowsPerPage: PropTypes.number.isRequired,
 };
 
-
 const useStyles2 = makeStyles({
     table: {
         minWidth: 500,
@@ -100,7 +104,6 @@ const StyledTableCell = withStyles((theme) => ({
     },
 }))(TableCell);
 
-
 const StyledTableRow = withStyles((theme) => ({
     root: {
         '&:nth-of-type(odd)': {
@@ -113,7 +116,7 @@ export default function RenderTeacherTable(props) {
     const classes = useStyles2();
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
-    const {teachers}=props;
+    const { teachers } = props;
     const { t } = useTranslation('formElements');
 
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, teachers.length - page * rowsPerPage);
@@ -131,12 +134,11 @@ export default function RenderTeacherTable(props) {
             // "mailto:mail@gmail.com?subject=Test subject&body=Body content";
             `mailto:${email}`;
         window.location.href = mailto;
-    }
+    };
 
     return (
         <TableContainer component={Paper}>
             <Table className={classes.table} aria-label="custom pagination table">
-
                 <TableHead>
                     <TableRow>
                         <StyledTableCell>{t('teacher_label')}</StyledTableCell>
@@ -147,8 +149,8 @@ export default function RenderTeacherTable(props) {
 
                 <TableBody>
                     {(rowsPerPage > 0
-                            ? teachers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                            : teachers
+                        ? teachers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                        : teachers
                     ).map((teacher) => (
                         <StyledTableRow key={teacher.position}>
                             <StyledTableCell align="center" style={{ width: 160 }}>
@@ -163,10 +165,9 @@ export default function RenderTeacherTable(props) {
                                     <FaEnvelope
                                         className="svg-btn send-message"
                                         title={`${t('send_letter_title')} ${teacher.email}`}
-                                        onClick={()=>sendMail(teacher.email)}
+                                        onClick={() => sendMail(teacher.email)}
                                     />
                                 </span>
-
                             </StyledTableCell>
                         </StyledTableRow>
                     ))}
@@ -181,7 +182,12 @@ export default function RenderTeacherTable(props) {
                     <StyledTableRow>
                         <TablePagination
                             labelRowsPerPage={`${t('rows_per_page')}`}
-                            rowsPerPageOptions={[5, 10, 25, { label: `${t('all_page')}`, value: -1 }]}
+                            rowsPerPageOptions={[
+                                5,
+                                10,
+                                25,
+                                { label: `${t('all_page')}`, value: -1 },
+                            ]}
                             colSpan={3}
                             count={teachers.length}
                             rowsPerPage={rowsPerPage}

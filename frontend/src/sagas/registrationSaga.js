@@ -13,9 +13,7 @@ export function* registrationSaga(payload) {
     } catch (error) {
         yield put({
             type: actionTypes.REGISTER_USER_ERROR,
-            error: error.response
-                ? error.response.data.message
-                : i18n.t('common:error_message')
+            error: error.response ? error.response.data.message : i18n.t('common:error_message'),
         });
         yield put({ type: actionTypes.SET_LOADING_INDICATOR, result: false });
     }

@@ -10,18 +10,18 @@ import './modal.scss';
 
 import i18n from 'i18next';
 import { disabledCard } from '../../../constants/disabledCard';
-import './setDefaultDialog.scss'
-export const SetChangeDialog = props => {
-    const { onClose, cardId, isHide, open} = props;
+import './setDefaultDialog.scss';
+
+export const SetChangeDialog = (props) => {
+    const { onClose, cardId, isHide, open } = props;
 
     const handleClose = () => {
         onClose(cardId);
     };
-    const className="set-default";
+    const className = 'set-default';
     return (
         <Dialog
-
-            disableBackdropClick={true}
+            disableBackdropClick
             onClose={handleClose}
             aria-labelledby="confirm-dialog-title"
             open={open}
@@ -39,14 +39,12 @@ export const SetChangeDialog = props => {
                     ) : (
                         <>
                             {i18n.t('common:do_you_wanna')}{' '}
-                            <span className={className}>
-                                {i18n.t(`common:set_default_word`)}
-                            </span>{' '}
+                            <span className={className}>{i18n.t(`common:set_default_word`)}</span>{' '}
                         </>
                     )}
 
                     {i18n.t('common:this_card_type', {
-                        cardType: i18n.t(`formElements:semester_element`)
+                        cardType: i18n.t(`formElements:semester_element`),
                     })}
                 </>
             </DialogTitle>
@@ -59,11 +57,7 @@ export const SetChangeDialog = props => {
                 >
                     {i18n.t('common:yes_button_title')}
                 </Button>
-                <Button
-                    className="dialog-button"
-                    variant="contained"
-                    onClick={() => onClose('')}
-                >
+                <Button className="dialog-button" variant="contained" onClick={() => onClose('')}>
                     {i18n.t('common:no_button_title')}
                 </Button>
             </div>
@@ -73,7 +67,7 @@ export const SetChangeDialog = props => {
 
 SetChangeDialog.propTypes = {
     onClose: PropTypes.func.isRequired,
-    open: PropTypes.bool.isRequired
+    open: PropTypes.bool.isRequired,
 };
 
 export default SetChangeDialog;

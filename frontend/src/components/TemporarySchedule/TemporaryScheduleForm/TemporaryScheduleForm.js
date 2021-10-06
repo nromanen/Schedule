@@ -2,10 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Field, reduxForm } from 'redux-form';
 
-import { TEMPORARY_SCHEDULE_FORM } from '../../../constants/reduxForms';
-
 import Button from '@material-ui/core/Button';
 import Hidden from '@material-ui/core/Hidden';
+import { TEMPORARY_SCHEDULE_FORM } from '../../../constants/reduxForms';
 
 import Card from '../../../share/Card/Card';
 import renderCheckboxField from '../../../share/renderedFields/checkbox';
@@ -15,20 +14,20 @@ import renderTextField from '../../../share/renderedFields/input';
 import { handleTeacherInfo } from '../../../helper/renderTeacher';
 import {
     setValueToSubjectForSiteHandler,
-    setValueToTeacherForSiteHandler
+    setValueToTeacherForSiteHandler,
 } from '../../../helper/reduxFormHelper';
 
 import { maxLengthValue, required } from '../../../validation/validateFields';
 
 import { selectTemporaryScheduleService } from '../../../services/temporaryScheduleService';
 
-let TemporaryScheduleForm = props => {
+let TemporaryScheduleForm = (props) => {
     const { t } = useTranslation('formElements');
     const { handleSubmit, invalid, reset, submitting } = props;
     const [isVacation, setIsVacation] = useState(false);
     const [notify, setNotify] = useState(false);
 
-    const temporarySchedule = props.temporarySchedule;
+    const { temporarySchedule } = props;
     const scheduleId = temporarySchedule?.scheduleId;
     const temporaryScheduleId = temporarySchedule?.id;
 
@@ -42,7 +41,7 @@ let TemporaryScheduleForm = props => {
         }
     }, [temporaryScheduleId]);
 
-    const initializeFormHandler = temporarySchedule => {
+    const initializeFormHandler = (temporarySchedule) => {
         setIsVacation(temporarySchedule.vacation);
         props.initialize({
             vacation: isVacation,
@@ -57,12 +56,12 @@ let TemporaryScheduleForm = props => {
             subjectForSite: temporarySchedule.subjectForSite,
             date: temporarySchedule.date,
             id: temporarySchedule.id,
-            scheduleId: temporarySchedule.scheduleId
+            scheduleId: temporarySchedule.scheduleId,
         });
     };
 
-    const handleVacationChange = event => setIsVacation(event.target.checked);
-    const handleNotifyChange = event => setNotify(event.target.checked);
+    const handleVacationChange = (event) => setIsVacation(event.target.checked);
+    const handleNotifyChange = (event) => setNotify(event.target.checked);
 
     return (
         <Card class="form-card">
@@ -88,18 +87,18 @@ let TemporaryScheduleForm = props => {
                         label={t('teacher_label')}
                         validate={[required]}
                         disabled={isVacation}
-                        onChange={event => {
+                        onChange={(event) => {
                             if (event.target.value)
                                 setValueToTeacherForSiteHandler(
                                     teachers,
                                     event.target.value,
-                                    props.change
+                                    props.change,
                                 );
                             else props.change('teacherForSite', '');
                         }}
                     >
-                        <option value={''} />
-                        {teachers.map(teacher => (
+                        <option value="" />
+                        {teachers.map((teacher) => (
                             <option value={teacher.id} key={teacher.id}>
                                 {handleTeacherInfo(teacher)}
                             </option>
@@ -112,16 +111,16 @@ let TemporaryScheduleForm = props => {
                         label={t('subject_label')}
                         validate={[required]}
                         disabled={isVacation}
-                        onChange={event => {
+                        onChange={(event) => {
                             setValueToSubjectForSiteHandler(
                                 subjects,
                                 event.target.value,
-                                props.change
+                                props.change,
                             );
                         }}
                     >
-                        <option value={''} />
-                        {subjects.map(subject => (
+                        <option value="" />
+                        {subjects.map((subject) => (
                             <option key={subject.id} value={subject.id}>
                                 {subject.name}
                             </option>
@@ -135,8 +134,8 @@ let TemporaryScheduleForm = props => {
                         validate={[required]}
                         disabled={isVacation}
                     >
-                        <option value={''} />
-                        {groups.map(group => (
+                        <option value="" />
+                        {groups.map((group) => (
                             <option key={group.id} value={group.id}>
                                 {group.title}
                             </option>
@@ -150,12 +149,10 @@ let TemporaryScheduleForm = props => {
                         validate={[required]}
                         disabled={isVacation}
                     >
-                        <option value={''} />
+                        <option value="" />
                         {lessonTypes.map((lessonType, index) => (
                             <option value={lessonType} key={index}>
-                                {t(
-                                    `formElements:lesson_type_${lessonType.toLowerCase()}_label`
-                                )}
+                                {t(`formElements:lesson_type_${lessonType.toLowerCase()}_label`)}
                             </option>
                         ))}
                     </Field>
@@ -167,8 +164,8 @@ let TemporaryScheduleForm = props => {
                         validate={[required]}
                         disabled={isVacation}
                     >
-                        <option value={''} />
-                        {rooms.map(room => (
+                        <option value="" />
+                        {rooms.map((room) => (
                             <option value={room.id} key={room.id}>
                                 {room.name}
                             </option>
@@ -182,8 +179,8 @@ let TemporaryScheduleForm = props => {
                         validate={[required]}
                         disabled={isVacation}
                     >
-                        <option value={''} />
-                        {periods.map(period => (
+                        <option value="" />
+                        {periods.map((period) => (
                             <option value={period.id} key={period.id}>
                                 {period.startTime} - {period.endTime}
                             </option>
@@ -255,7 +252,7 @@ let TemporaryScheduleForm = props => {
 };
 
 TemporaryScheduleForm = reduxForm({
-    form: TEMPORARY_SCHEDULE_FORM
+    form: TEMPORARY_SCHEDULE_FORM,
 })(TemporaryScheduleForm);
 
 export default TemporaryScheduleForm;

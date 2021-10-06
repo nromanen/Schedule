@@ -10,12 +10,15 @@ export const uploadStudentsToGroupFile = (file, groupId) => {
         .post(`${STUDENTS_TO_GROUP_FILE}${groupId}`, formData)
         .then((res) => {
             let students = res.data.length;
-            students += students !== 1 ? ` ${i18n.t('formElements:students_file_label')}` : ` ${i18n.t('formElements:student_file_label')}`;
+            students +=
+                students !== 1
+                    ? ` ${i18n.t('formElements:students_file_label')}`
+                    : ` ${i18n.t('formElements:student_file_label')}`;
             successHandler(
                 i18n.t('serviceMessages:file_backend_success_operation', {
                     cardType: students,
-                    actionType: i18n.t('serviceMessages:file_label')
-                })
+                    actionType: i18n.t('serviceMessages:file_label'),
+                }),
             );
         })
         .catch((err) => alert('File Upload Error'));

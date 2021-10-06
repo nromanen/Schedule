@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 
-import Card from '../../share/Card/Card';
 import { connect } from 'react-redux';
+import Card from '../../share/Card/Card';
 
 import './ProfilePage.scss';
 
@@ -13,30 +13,26 @@ import { resetFormHandler } from '../../helper/formHelper';
 import { useTranslation } from 'react-i18next';
 import { PROFILE_FORM, TEACHER_FORM } from '../../constants/reduxForms';
 
-import {
-    getUserProfile,
-    updateUserPassword,
-    updateUserTeacher
-} from '../../services/userService';
+import { getUserProfile, updateUserPassword, updateUserTeacher } from '../../services/userService';
 import AddTeacherForm from '../../components/AddTeacherForm/AddTeacherForm';
 import { navigation, navigationNames } from '../../constants/navigation';
 import NavigationPage from '../../components/Navigation/NavigationPage';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
     rootInput: {
-        width: '20em'
-    }
+        width: '20em',
+    },
 }));
 
-let ProfilePage = props => {
+const ProfilePage = (props) => {
     const { t } = useTranslation('formElements');
     const classes = useStyles();
 
-    const submitPasswordChange = values => {
+    const submitPasswordChange = (values) => {
         console.log('values', values);
         if (values.new_password !== values.confirm_password) {
             props.setError({
-                registration: { passwords: t('different_passwords') }
+                registration: { passwords: t('different_passwords') },
             });
             return;
         }
@@ -44,7 +40,7 @@ let ProfilePage = props => {
         handlePasswordFormReset();
     };
 
-    const submitTeacherChange = values => {
+    const submitTeacherChange = (values) => {
         updateUserTeacher(values);
     };
     const handlePasswordFormReset = () => resetFormHandler(PROFILE_FORM);
@@ -56,10 +52,7 @@ let ProfilePage = props => {
     const renderTeacherdataForm = () => {
         if (localStorage.getItem('userRole') === 'ROLE_TEACHER') {
             return (
-                <AddTeacherForm
-                    onSubmit={submitTeacherChange}
-                    onReset={handleTeacherFormReset}
-                />
+                <AddTeacherForm onSubmit={submitTeacherChange} onReset={handleTeacherFormReset} />
             );
         }
     };
@@ -67,10 +60,10 @@ let ProfilePage = props => {
     return (
         <>
             <NavigationPage />
-            <Card class='form-card'>
-                <h2 className='form-title'>{t('common:my_profile')}</h2>
+            <Card class="form-card">
+                <h2 className="form-title">{t('common:my_profile')}</h2>
                 <section>
-                    <span>{t('email_label') + ': '}</span>
+                    <span>{`${t('email_label')}: `}</span>
                     <span>{localStorage.getItem('email')}</span>
                 </section>
                 <ChangePasswordForm
@@ -83,8 +76,8 @@ let ProfilePage = props => {
     );
 };
 
-const mapStateToProps = state => ({
-    user: state.users.user
+const mapStateToProps = (state) => ({
+    user: state.users.user,
 });
 
 export default connect(mapStateToProps)(ProfilePage);

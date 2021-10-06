@@ -3,23 +3,23 @@ import { useTranslation } from 'react-i18next';
 
 import { Field, reduxForm } from 'redux-form';
 
-import renderTextField from '../../share/renderedFields/input';
-import Card from '../../share/Card/Card';
-
 import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import { Link } from 'react-router-dom';
+import renderTextField from '../../share/renderedFields/input';
+import Card from '../../share/Card/Card';
 
 import { REGISTRATION_FORM } from '../../constants/reduxForms';
 import { authTypes } from '../../constants/auth';
 
 import { email, password, required } from '../../validation/validateFields';
 import { links } from '../../constants/links';
-import {Link} from 'react-router-dom';
-let RegistrationForm = props => {
+
+let RegistrationForm = (props) => {
     const { t } = useTranslation('formElements');
     const { handleSubmit } = props;
 
-    const translation = props.translation;
+    const { translation } = props;
 
     const error = props.registrationError;
 
@@ -27,19 +27,19 @@ let RegistrationForm = props => {
     const emailErrorCondition = error && error.registration.reg;
     const emailAdvancedValidate = {
         error: !!emailErrorCondition,
-        helperText: emailErrorCondition ? error.registration.reg : ''
+        helperText: emailErrorCondition ? error.registration.reg : '',
     };
 
     const passwordValidate = { validate: [required, password] };
     const passwordsCondition = error && error.registration.passwords;
     const passwordValidateAdvanced = {
         error: !!passwordsCondition,
-        helperText: passwordsCondition ? error.registration.passwords : ''
+        helperText: passwordsCondition ? error.registration.passwords : '',
     };
 
     const retypePasswordValidate = { validate: [required, password] };
     const retypePasswordValidateAdvanced = {
-        error: !!passwordsCondition
+        error: !!passwordsCondition,
     };
 
     let form = (
@@ -51,7 +51,7 @@ let RegistrationForm = props => {
                 component={renderTextField}
                 label={t('email_label')}
                 {...(!error ? emailValidate : emailAdvancedValidate)}
-                onChange={e => props.setError(null)}
+                onChange={(e) => props.setError(null)}
             />
             <Field
                 name="password"
@@ -60,7 +60,7 @@ let RegistrationForm = props => {
                 component={renderTextField}
                 label={t('password_label')}
                 {...(!error ? passwordValidate : passwordValidateAdvanced)}
-                onChange={e => props.setError(null)}
+                onChange={(e) => props.setError(null)}
             />
             <Field
                 name="retypePassword"
@@ -68,16 +68,9 @@ let RegistrationForm = props => {
                 type="password"
                 component={renderTextField}
                 label={t('retype_password_label')}
-                {...(!error
-                    ? retypePasswordValidate
-                    : retypePasswordValidateAdvanced)}
+                {...(!error ? retypePasswordValidate : retypePasswordValidateAdvanced)}
             />
-            <Button
-                className="buttons-style"
-                type="submit"
-                variant="contained"
-                color="primary"
-            >
+            <Button className="buttons-style" type="submit" variant="contained" color="primary">
                 {translation('create_account')}
             </Button>
             <div className="group-btns">
@@ -89,7 +82,9 @@ let RegistrationForm = props => {
                         props.setError(null);
                     }}
                 >
-                   <Link  className="navLinks" to={links.LOGIN}>{translation('account_exist')}</Link>
+                    <Link className="navLinks" to={links.LOGIN}>
+                        {translation('account_exist')}
+                    </Link>
                 </button>
             </div>
         </form>
@@ -100,16 +95,14 @@ let RegistrationForm = props => {
     }
     return (
         <Card class="auth-card">
-            <h2 className="under-line">
-                {props.translation('registration_page_title')}
-            </h2>
+            <h2 className="under-line">{props.translation('registration_page_title')}</h2>
             {form}
         </Card>
     );
 };
 
 RegistrationForm = reduxForm({
-    form: REGISTRATION_FORM
+    form: REGISTRATION_FORM,
 })(RegistrationForm);
 
 export default RegistrationForm;

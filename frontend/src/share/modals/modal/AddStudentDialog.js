@@ -7,71 +7,61 @@ import Dialog from '@material-ui/core/Dialog';
 import Button from '@material-ui/core/Button';
 
 import '../dialog.scss';
-import './showDataDialog.scss'
-import './addStudentDialog.scss'
+import './showDataDialog.scss';
+import './addStudentDialog.scss';
 import { connect } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import Card from '../../Card/Card';
 import { Field, reduxForm } from 'redux-form';
+import { FaWindowClose } from 'react-icons/fa';
+import { useHistory } from 'react-router-dom/cjs/react-router-dom';
+import Card from '../../Card/Card';
 import renderTextField from '../../renderedFields/input';
 import { required } from '../../../validation/validateFields';
 import { STUDENT_FORM, TEACHER_FORM } from '../../../constants/reduxForms';
-import { FaWindowClose } from 'react-icons/fa';
 import renderSelectField from '../../renderedFields/select';
-import { useHistory } from 'react-router-dom/cjs/react-router-dom';
 import { goToGroupPage } from '../../../helper/pageRedirection';
- let AddStudentDialog =( props) => {
+
+let AddStudentDialog = (props) => {
     const { t } = useTranslation('formElements');
-    const { handleSubmit, pristine, submitting, reset,open,groups,student,match} = props;
+    const { handleSubmit, pristine, submitting, reset, open, groups, student, match } = props;
     const studentId = student.id;
-    const history =useHistory();
+    const history = useHistory();
     useEffect(() => {
         if (studentId) {
             initializeFormHandler(student);
         } else {
             props.initialize();
         }
-    },[studentId]);
+    }, [studentId]);
 
-
-    const initializeFormHandler = student => {
+    const initializeFormHandler = (student) => {
         props.initialize({
             id: student.id,
             surname: student.surname,
             name: student.name,
             patronymic: student.patronymic,
-            email:student.email,
-            group:student.group.id
+            email: student.email,
+            group: student.group.id,
         });
     };
     return (
-        <Dialog
-            disableBackdropClick={true}
-            aria-labelledby="confirm-dialog-title"
-            open={open}
-        >
-
+        <Dialog disableBackdropClick aria-labelledby="confirm-dialog-title" open={open}>
             <FaWindowClose
                 title={t('close_label')}
                 className="close-dialog"
                 variant="contained"
                 onClick={() => {
-                    //reset();
+                    // reset();
                     props.onSetSelectedCard(null);
                     goToGroupPage(history);
                 }}
-
             />
             <DialogTitle id="confirm-dialog-title">
                 <Card class="form-card teacher-form">
-
                     <form className="createTeacherForm w-100" onSubmit={handleSubmit}>
-
                         <h2 className="form-title">
-                            {studentId ? t('edit_title') : t('create_title')}{' '}
-                            {t('student_a_label')}
+                            {studentId ? t('edit_title') : t('create_title')} {t('student_a_label')}
                         </h2>
-
 
                         <Field
                             className="form-field"
@@ -106,7 +96,6 @@ import { goToGroupPage } from '../../../helper/pageRedirection';
                             validate={[required]}
                         />
 
-
                         <Field
                             className="form-field"
                             name="email"
@@ -117,24 +106,22 @@ import { goToGroupPage } from '../../../helper/pageRedirection';
                             label={t('email_field')}
                             validate={[required]}
                         />
-                        {studentId?
-
+                        {studentId ? (
                             <Field
-                                className='form-field'
+                                className="form-field"
                                 component={renderSelectField}
-                                name='group'
+                                name="group"
                                 label={t('type_label')}
-                                validate={[required]}>
+                                validate={[required]}
+                            >
                                 defaultValue={student.group.id}
-                                {groups.map(group => (
+                                {groups.map((group) => (
                                     <option key={group.id} value={group.id}>
                                         {group.title}
                                     </option>
                                 ))}
                             </Field>
-                            :null
-                        }
-
+                        ) : null}
 
                         <div className="form-buttons-container">
                             <Button
@@ -151,12 +138,12 @@ import { goToGroupPage } from '../../../helper/pageRedirection';
                                 variant="contained"
                                 disabled={pristine || submitting}
                                 onClick={() => {
-                                   reset();
-                                   goToGroupPage(history);
-                                    //props.onSetSelectedCard(null);
+                                    reset();
+                                    goToGroupPage(history);
+                                    // props.onSetSelectedCard(null);
                                 }}
                             >
-                                {studentId?t('cancel_button_label'):t('clear_button_label')}
+                                {studentId ? t('cancel_button_label') : t('clear_button_label')}
                             </Button>
                         </div>
                     </form>
@@ -168,17 +155,15 @@ import { goToGroupPage } from '../../../helper/pageRedirection';
 
 AddStudentDialog.propTypes = {
     onClose: PropTypes.func.isRequired,
-    open: PropTypes.bool.isRequired
+    open: PropTypes.bool.isRequired,
 };
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
     student: state.students.student,
     groups: state.groups.groups,
     group: state.groups.group,
 });
 
-
-
 AddStudentDialog = reduxForm({
-    form: STUDENT_FORM
+    form: STUDENT_FORM,
 })(AddStudentDialog);
 export default connect(mapStateToProps, {})(AddStudentDialog);

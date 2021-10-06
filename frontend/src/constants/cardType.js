@@ -7,5 +7,5 @@ export const cardType = {
     TYPE: 'Type',
     TEMPORARY_SCHEDULE: 'temporary_schedule',
     SUBJECT: 'Subject',
-    SEMESTER: 'Semester'
+    SEMESTER: 'Semester',
 };

@@ -1,23 +1,23 @@
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Field, reduxForm } from 'redux-form';
+import Button from '@material-ui/core/Button';
+import { styled } from '@material-ui/core/styles';
+import { useTranslation } from 'react-i18next';
 import renderTextField from '../../share/renderedFields/input';
 import renderSelectField from '../../share/renderedFields/select';
 
 import { ROOM_FORM } from '../../constants/reduxForms';
 
 import { required, uniqueRoomName } from '../../validation/validateFields';
-import Button from '@material-ui/core/Button';
-import { styled } from '@material-ui/core/styles';
-import { useTranslation } from 'react-i18next';
 import Card from '../../share/Card/Card';
 
 import './AddRoomForm.scss';
 import { getClearOrCancelTitle, setDisableButton } from '../../helper/disableComponent';
 
-let AddRoom = props => {
-    const { t } = useTranslation('formElements')
-    const { handleSubmit, pristine, submitting, onReset,oneRoom } = props;
+let AddRoom = (props) => {
+    const { t } = useTranslation('formElements');
+    const { handleSubmit, pristine, submitting, onReset, oneRoom } = props;
 
     useEffect(() => {
         if (props.oneRoom) {
@@ -25,7 +25,7 @@ let AddRoom = props => {
                 props.initialize({
                     name: props.oneRoom.name,
                     type: props.oneRoom.type.id,
-                    id: props.oneRoom.id
+                    id: props.oneRoom.id,
                 });
             } else {
                 props.initialize();
@@ -33,56 +33,52 @@ let AddRoom = props => {
         }
     }, [props.oneRoom]);
 
-
-
-
     return (
-        <Card class='form-card room-form'>
-            <form className='createGroupForm w-100' onSubmit={handleSubmit}>
-                <h2 className='form-title'>
-                    {props.oneRoom.id
-                        ? t('edit_title')
-                        : t('create_title')
-                    }{' '}
-                    {t('room_y_label')}
+        <Card class="form-card room-form">
+            <form className="createGroupForm w-100" onSubmit={handleSubmit}>
+                <h2 className="form-title">
+                    {props.oneRoom.id ? t('edit_title') : t('create_title')} {t('room_y_label')}
                 </h2>
                 <Field
-                    type='text'
-                    name='name'
+                    type="text"
+                    name="name"
                     component={renderTextField}
                     placeholder={t('number_label')}
-                    className='form-field'
+                    className="form-field"
                     label={t('room_label')}
                     validate={[required, uniqueRoomName]}
                 />
                 <Field
-                    className='form-field'
+                    className="form-field"
                     component={renderSelectField}
-                    name='type'
+                    name="type"
                     label={t('type_label')}
-                    validate={[required]}>
-                    <option value={''}></option>
-                    {props.roomTypes.map(roomType => (
+                    validate={[required]}
+                >
+                    <option value=""></option>
+                    {props.roomTypes.map((roomType) => (
                         <option key={roomType.id} value={roomType.id}>
                             {roomType.description}
                         </option>
                     ))}
                 </Field>
-                <div className='form-buttons-container'>
+                <div className="form-buttons-container">
                     <Button
-                        className='buttons-style'
-                        variant='contained'
-                        color='primary'
+                        className="buttons-style"
+                        variant="contained"
+                        color="primary"
                         disabled={pristine || submitting}
-                        type='submit'>
+                        type="submit"
+                    >
                         {t('save_button_label')}
                     </Button>
                     <Button
-                        className='buttons-style'
-                        variant='contained'
-                        disabled={setDisableButton(pristine,submitting,oneRoom.id)}
-                        onClick={onReset}>
-                        {getClearOrCancelTitle(oneRoom.id,t)}
+                        className="buttons-style"
+                        variant="contained"
+                        disabled={setDisableButton(pristine, submitting, oneRoom.id)}
+                        onClick={onReset}
+                    >
+                        {getClearOrCancelTitle(oneRoom.id, t)}
                     </Button>
                 </div>
             </form>
@@ -90,13 +86,13 @@ let AddRoom = props => {
     );
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
     oneRoom: state.rooms.oneRoom,
-    roomTypes: state.roomTypes.roomTypes
+    roomTypes: state.roomTypes.roomTypes,
 });
 
 AddRoom = reduxForm({
-    form: ROOM_FORM
+    form: ROOM_FORM,
 })(AddRoom);
 
 export default connect(mapStateToProps)(AddRoom);

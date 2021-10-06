@@ -11,7 +11,7 @@ import AdminPage from '../AdminPage/AdminPage';
 import NavigationPage from '../../components/Navigation/NavigationPage';
 import { navigation, navigationNames } from '../../constants/navigation';
 
-const BusyRooms = props => {
+const BusyRooms = (props) => {
     const { t } = useTranslation('common');
 
     useEffect(() => getScheduleItemsService(), []);
@@ -24,8 +24,8 @@ const BusyRooms = props => {
 
     const isLoading = props.loading;
 
-    let conflictLesson = 'more-then-one-conflict';
-    let grouppedLesson = 'more-then-one';
+    const conflictLesson = 'more-then-one-conflict';
+    const grouppedLesson = 'more-then-one';
 
     let busyRoomsLength;
 
@@ -41,34 +41,27 @@ const BusyRooms = props => {
     );
 
     const renderWeekRoomInfo = (schedule, index, type = 'odd') => {
-        return props.currentSemester.semester_classes.map(scheduleClass => {
+        return props.currentSemester.semester_classes.map((scheduleClass) => {
             let in_arrayIndex = -1;
             in_arrayIndex =
                 type === 'odd'
                     ? schedule.classes[0].odd.findIndex(
-                          classItem => classItem.class_id === scheduleClass.id
+                          (classItem) => classItem.class_id === scheduleClass.id,
                       )
                     : schedule.classes[0].even.findIndex(
-                          classItem => classItem.class_id === scheduleClass.id
+                          (classItem) => classItem.class_id === scheduleClass.id,
                       );
-            let classOne =
+            const classOne =
                 type === 'odd'
                     ? schedule.classes[0].odd.find(
-                          classItem => classItem.class_id === scheduleClass.id
+                          (classItem) => classItem.class_id === scheduleClass.id,
                       )
                     : schedule.classes[0].even.find(
-                          classItem => classItem.class_id === scheduleClass.id
+                          (classItem) => classItem.class_id === scheduleClass.id,
                       );
-            if (
-                in_arrayIndex < 0 ||
-                !classOne ||
-                classOne.lessons.length <= 0
-            ) {
+            if (in_arrayIndex < 0 || !classOne || classOne.lessons.length <= 0) {
                 return (
-                    <div
-                        className="class-info"
-                        key={index + scheduleClass.class_name}
-                    >
+                    <div className="class-info" key={index + scheduleClass.class_name}>
                         <div className="class-info-data class-number">
                             {scheduleClass.class_name}
                         </div>
@@ -77,50 +70,35 @@ const BusyRooms = props => {
                         </div>
                     </div>
                 );
-            } else {
-                let intersectClass = '';
-                if (
-                    classOne &&
-                    classOne.lessons &&
-                    classOne.lessons.length > 1
-                ) {
-                    intersectClass = conflictLesson;
-                }
-                let grouppedLessonClass = '';
-                classOne.lessons.map(lessonOne => {
-                    grouppedLessonClass =
-                        lessonOne.groups.length > 1 ? grouppedLesson : '';
-                });
-                return (
-                    <div
-                        className="class-info"
-                        key={index + classOne.class_name + classOne.group_name}
-                    >
-                        <div className="class-info-data class-number">
-                            {classOne.class_name}
-                        </div>
-                        <div
-                            className={`class-info-data group-height ${grouppedLessonClass}${intersectClass}`}
-                        >
-                            {classOne.lessons.map(lessonOne => {
-                                return lessonOne.groups.map(groupItem => {
-                                    const hoverInfo =
-                                        lessonOne.teacher_for_site +
-                                        lessonOne.subject_for_site;
-                                    return (
-                                        <p
-                                            title={hoverInfo}
-                                            key={hoverInfo + lessonOne.name}
-                                        >
-                                            {groupItem.group_name}
-                                        </p>
-                                    );
-                                });
-                            })}
-                        </div>
-                    </div>
-                );
             }
+            let intersectClass = '';
+            if (classOne && classOne.lessons && classOne.lessons.length > 1) {
+                intersectClass = conflictLesson;
+            }
+            let grouppedLessonClass = '';
+            classOne.lessons.map((lessonOne) => {
+                grouppedLessonClass = lessonOne.groups.length > 1 ? grouppedLesson : '';
+            });
+            return (
+                <div className="class-info" key={index + classOne.class_name + classOne.group_name}>
+                    <div className="class-info-data class-number">{classOne.class_name}</div>
+                    <div
+                        className={`class-info-data group-height ${grouppedLessonClass}${intersectClass}`}
+                    >
+                        {classOne.lessons.map((lessonOne) => {
+                            return lessonOne.groups.map((groupItem) => {
+                                const hoverInfo =
+                                    lessonOne.teacher_for_site + lessonOne.subject_for_site;
+                                return (
+                                    <p title={hoverInfo} key={hoverInfo + lessonOne.name}>
+                                        {groupItem.group_name}
+                                    </p>
+                                );
+                            });
+                        })}
+                    </div>
+                </div>
+            );
         });
     };
 
@@ -130,15 +108,11 @@ const BusyRooms = props => {
             <section>
                 <Fragment key={index}>
                     <div className="even-odd-week">
-                        <span className="even-odd-heading">
-                            {t('week_odd_title')}
-                        </span>
+                        <span className="even-odd-heading">{t('week_odd_title')}</span>
                         {renderWeekRoomInfo(schedule, index, 'odd')}
                     </div>
                     <div className="even-odd-week">
-                        <span className="even-odd-heading">
-                            {t('week_even_title')}
-                        </span>
+                        <span className="even-odd-heading">{t('week_even_title')}</span>
                         {renderWeekRoomInfo(schedule, index, 'even')}
                     </div>
                 </Fragment>
@@ -153,36 +127,22 @@ const BusyRooms = props => {
                 </h2>
             ) : (
                 <>
-
                     {busyRoomsLength > 0 ? (
                         <>
-                            <NavigationPage val={navigation.BUSY_ROOMS}/>
-                            <h2 className="busy-heading">
-                                {t('busy_rooms_heading')}
-                            </h2>
+                            <NavigationPage val={navigation.BUSY_ROOMS} />
+                            <h2 className="busy-heading">{t('busy_rooms_heading')}</h2>
                             <section className="view-rooms">
-                                {busyRooms.map(busyRoom => (
-                                    <Card
-                                        class="busy-room"
-                                        key={busyRoom.room_id}
-                                    >
-                                        {renderRoomTitle(
-                                            busyRoom.room_name,
-                                            busyRoom.room_type
-                                        )}
+                                {busyRooms.map((busyRoom) => (
+                                    <Card class="busy-room" key={busyRoom.room_id}>
+                                        {renderRoomTitle(busyRoom.room_name, busyRoom.room_type)}
 
-                                        {busyRoom.schedules.map(
-                                            (schedule, index) => {
-                                                return props.currentSemester.semester_days.includes(
-                                                    schedule.day
-                                                )
-                                                    ? renderRoomDay(
-                                                          schedule,
-                                                          index
-                                                      )
-                                                    : '';
-                                            }
-                                        )}
+                                        {busyRoom.schedules.map((schedule, index) => {
+                                            return props.currentSemester.semester_days.includes(
+                                                schedule.day,
+                                            )
+                                                ? renderRoomDay(schedule, index)
+                                                : '';
+                                        })}
                                     </Card>
                                 ))}
                             </section>
@@ -200,10 +160,10 @@ const BusyRooms = props => {
     );
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
     busyRooms: state.busyRooms.busyRooms,
     loading: state.loadingIndicator.loading,
-    currentSemester: state.schedule.currentSemester
+    currentSemester: state.schedule.currentSemester,
 });
 
 export default connect(mapStateToProps, {})(BusyRooms);

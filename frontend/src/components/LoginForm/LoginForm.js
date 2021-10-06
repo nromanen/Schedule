@@ -6,6 +6,8 @@ import { Field, reduxForm } from 'redux-form';
 import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
+import { FaGoogle } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
 import Card from '../../share/Card/Card';
 import renderTextField from '../../share/renderedFields/input';
 
@@ -14,28 +16,27 @@ import { authTypes } from '../../constants/auth';
 import { GOOGLE_LOGIN_URL } from '../../constants/axios';
 
 import { required } from '../../validation/validateFields';
-import { FaGoogle } from 'react-icons/fa';
 import { links } from '../../constants/links';
-import { Link } from 'react-router-dom';
 import {
     setScheduleGroupIdService,
     setScheduleSemesterIdService,
-    setScheduleTeacherIdService, setScheduleTypeService
+    setScheduleTeacherIdService,
+    setScheduleTypeService,
 } from '../../services/scheduleService';
-let LoginForm = props => {
 
-    useEffect(()=>setScheduleSemesterIdService(0))
-    useEffect(()=>setScheduleTeacherIdService(0))
-    useEffect(()=>setScheduleGroupIdService(0))
-    useEffect(()=>setScheduleTypeService(""))
+let LoginForm = (props) => {
+    useEffect(() => setScheduleSemesterIdService(0));
+    useEffect(() => setScheduleTeacherIdService(0));
+    useEffect(() => setScheduleGroupIdService(0));
+    useEffect(() => setScheduleTypeService(''));
     const { t } = useTranslation('formElements');
     const { handleSubmit } = props;
 
     const error = props.loginError;
 
-    const translation = props.translation;
+    const { translation } = props;
 
-    const errorHandling = value => {
+    const errorHandling = (value) => {
         if (required(value)) props.setError(required(value));
         else props.setError(null);
     };
@@ -49,7 +50,7 @@ let LoginForm = props => {
                 label={t('email_label')}
                 error={!!error}
                 helperText={error ? error.login : null}
-                onChange={e => errorHandling(e.target.value)}
+                onChange={(e) => errorHandling(e.target.value)}
             />
             <Field
                 name="password"
@@ -68,41 +69,41 @@ let LoginForm = props => {
             >
                 {translation('login_title')}
             </Button>
-            {/*<div className="group-btns">*/}
-            {/*    <button*/}
-            {/*        type="button"*/}
-            {/*        className="auth-link"*/}
-            {/*        onClick={() => {*/}
-            {/*            props.switchAuthMode(authTypes.REGISTRATION);*/}
-            {/*            props.setError(null);*/}
-            {/*        }}*/}
-            {/*    >*/}
-            {/*       <Link  className="navLinks" to={links.Registration}>{translation('no_account')}</Link>*/}
-            {/*    </button>*/}
-            {/*    <button*/}
-            {/*        type="button"*/}
-            {/*        className="auth-link"*/}
-            {/*        onClick={() => {*/}
-            {/*            props.switchAuthMode(authTypes.RESET_PASSWORD);*/}
-            {/*            props.setError(null);*/}
-            {/*        }}*/}
-            {/*    >*/}
-            {/*       <Link  className="navLinks" to={links.RESET_PASSWORD}>{translation('forgot_password')}</Link>*/}
-            {/*    </button>*/}
-            {/*</div>*/}
+            {/* <div className="group-btns"> */}
+            {/*    <button */}
+            {/*        type="button" */}
+            {/*        className="auth-link" */}
+            {/*        onClick={() => { */}
+            {/*            props.switchAuthMode(authTypes.REGISTRATION); */}
+            {/*            props.setError(null); */}
+            {/*        }} */}
+            {/*    > */}
+            {/*       <Link  className="navLinks" to={links.Registration}>{translation('no_account')}</Link> */}
+            {/*    </button> */}
+            {/*    <button */}
+            {/*        type="button" */}
+            {/*        className="auth-link" */}
+            {/*        onClick={() => { */}
+            {/*            props.switchAuthMode(authTypes.RESET_PASSWORD); */}
+            {/*            props.setError(null); */}
+            {/*        }} */}
+            {/*    > */}
+            {/*       <Link  className="navLinks" to={links.RESET_PASSWORD}>{translation('forgot_password')}</Link> */}
+            {/*    </button> */}
+            {/* </div> */}
 
-            {/*<Button*/}
-            {/*    variant="contained"*/}
-            {/*    color="secondary"*/}
-            {/*    onClick={() =>*/}
-            {/*        (window.document.location.href =*/}
+            {/* <Button */}
+            {/*    variant="contained" */}
+            {/*    color="secondary" */}
+            {/*    onClick={() => */}
+            {/*        (window.document.location.href = */}
             {/*            process.env.REACT_APP_API_BASE_URL.trim() +*/}
-            {/*            GOOGLE_LOGIN_URL)*/}
-            {/*    }*/}
-            {/*>*/}
-            {/*    <FaGoogle />*/}
-            {/*    {t('login_via_google')}*/}
-            {/*</Button>*/}
+            {/*            GOOGLE_LOGIN_URL) */}
+            {/*    } */}
+            {/* > */}
+            {/*    <FaGoogle /> */}
+            {/*    {t('login_via_google')} */}
+            {/* </Button> */}
         </form>
     );
 
@@ -119,7 +120,7 @@ let LoginForm = props => {
 };
 
 LoginForm = reduxForm({
-    form: LOGIN_FORM
+    form: LOGIN_FORM,
 })(LoginForm);
 
 export default LoginForm;

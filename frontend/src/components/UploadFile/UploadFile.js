@@ -11,7 +11,11 @@ export const UploadFile = (props) => {
     const { t } = useTranslation('formElements');
     const [selectedFile, setSelectedFile] = useState(null);
     const fileInputRef = React.useRef();
-    const { group: { id }, open, handleCloseDialogFile } = props;
+    const {
+        group: { id },
+        open,
+        handleCloseDialogFile,
+    } = props;
 
     const changeHandler = (event) => {
         setSelectedFile(event.target.files[0]);
@@ -28,38 +32,38 @@ export const UploadFile = (props) => {
         return selectedFile === null;
     };
     return (
-        <Dialog
-
-            disableBackdropClick={true}
-            aria-labelledby='confirm-dialog-title'
-            open={open}
-        >
-            <DialogTitle className='upload-dialog' id='confirm-dialog-title'>
+        <Dialog disableBackdropClick aria-labelledby="confirm-dialog-title" open={open}>
+            <DialogTitle className="upload-dialog" id="confirm-dialog-title">
                 <FaWindowClose
                     title={t('close_label')}
-                    className='close-dialog'
-                    variant='contained'
+                    className="close-dialog"
+                    variant="contained"
                     onClick={handleCloseDialogFile}
-
                 />
                 <div>
-                    <input type='file' name='file' accept='.txt, .csv' onChange={changeHandler} ref={fileInputRef} />
+                    <input
+                        type="file"
+                        name="file"
+                        accept=".txt, .csv"
+                        onChange={changeHandler}
+                        ref={fileInputRef}
+                    />
                     {selectedFile ? (
                         <div>
                             <p>{`${t('common:name_label')}: ${selectedFile.name}`}</p>
                             <p>{`${t('common:type_label')}: ${selectedFile.type}`}</p>
                             <p>{`${t('common:byte_size_label')}: ${selectedFile.size}`}</p>
-                            {/*<p>{`${t('common:last_modified_date')}: ${selectedFile.lastModifiedDate.toLocaleDateString()}`}</p>*/}
+                            {/* <p>{`${t('common:last_modified_date')}: ${selectedFile.lastModifiedDate.toLocaleDateString()}`}</p> */}
                         </div>
                     ) : (
                         <p>{t('common:select_file_label')}</p>
                     )}
                     <div>
                         <Button
-                            className='dialog-button'
-                            variant='contained'
+                            className="dialog-button"
+                            variant="contained"
                             onClick={handleSubmission}
-                            color='primary'
+                            color="primary"
                             title={t('common:upload_title')}
                             disabled={setDisabledSendButton()}
                         >
@@ -68,7 +72,6 @@ export const UploadFile = (props) => {
                     </div>
                 </div>
             </DialogTitle>
-
         </Dialog>
     );
 };

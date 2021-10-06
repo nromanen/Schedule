@@ -2,34 +2,27 @@ import React, { useEffect } from 'react';
 import { reduxForm, Field } from 'redux-form';
 import { connect } from 'react-redux';
 import Button from '@material-ui/core/Button';
+import { useTranslation } from 'react-i18next';
 import { required } from '../../validation/validateFields';
 import renderSelectField from '../../share/renderedFields/select';
 import { FREE_ROOMS } from '../../constants/reduxForms';
-import { useTranslation } from 'react-i18next';
 import { showAllSemestersService } from '../../services/semesterService';
 import './freeRoomForm.scss';
 import { daysUppercase } from '../../constants/schedule/days';
 
-let FreeRoomForm = props => {
-
+let FreeRoomForm = (props) => {
     const { t } = useTranslation('formElements');
 
     const weeks = ['ODD', 'EVEN', 'WEEKLY'];
 
     useEffect(() => showAllSemestersService(), []);
 
-    const {
-        handleSubmit,
-        classScheduler,
-        pristine,
-        submitting,
-        onReset
-    } = props;
+    const { handleSubmit, classScheduler, pristine, submitting, onReset } = props;
 
     const class_names = [];
 
     if (classScheduler.length - 1 > 0) {
-        classScheduler.map(classSchedulerOne => {
+        classScheduler.map((classSchedulerOne) => {
             class_names.push(classSchedulerOne.class_name);
         });
     }
@@ -46,7 +39,7 @@ let FreeRoomForm = props => {
                         className="freeRoomsItem"
                         validate={[required]}
                     >
-                        <option value={''}></option>
+                        <option value=""></option>
                         {props.semesters.map((semesters, index) => (
                             <option key={index} value={semesters.id}>
                                 {semesters.description}
@@ -61,7 +54,7 @@ let FreeRoomForm = props => {
                         className="freeRoomsItem"
                         validate={[required]}
                     >
-                        <option value={''}></option>
+                        <option value=""></option>
                         {weeks.map((week, index) => (
                             <option key={index} value={`${week}`}>
                                 {t(`common:${week.toLowerCase()}_week`)}
@@ -76,7 +69,7 @@ let FreeRoomForm = props => {
                         className="freeRoomsItem"
                         validate={[required]}
                     >
-                        <option value={''}></option>
+                        <option value=""></option>
                         {daysUppercase.map((day, index) => (
                             <option key={index} value={`${day}`}>
                                 {t(`common:day_of_week_${day}`)}
@@ -91,7 +84,7 @@ let FreeRoomForm = props => {
                         className="freeRoomsItem"
                         validate={[required]}
                     >
-                        <option value={''}></option>
+                        <option value=""></option>
                         {class_names.map((classNum, index) => (
                             <option key={index} value={`${classNum}`}>
                                 {classNum}
@@ -123,13 +116,13 @@ let FreeRoomForm = props => {
     );
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
     freeRooms: state.freeRooms.freeRooms,
-    semesters: state.semesters.semesters
+    semesters: state.semesters.semesters,
 });
 
 FreeRoomForm = reduxForm({
-    form: FREE_ROOMS
+    form: FREE_ROOMS,
 })(FreeRoomForm);
 
 export default connect(mapStateToProps)(FreeRoomForm);
