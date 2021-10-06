@@ -120,7 +120,6 @@ export const checkUniqueDepartment = (departmentTitle) => {
     return find ? i18n.t('validationMessages:unique_error_message') : undefined;
 };
 
-
 export const checkUniqSemester = (semester) => {
     const semesters = store.getState().semesters.semesters;
     let isNotUnique;

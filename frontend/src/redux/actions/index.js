@@ -1,130 +1,126 @@
 export {
-  storeLessonCard,
-  setLessonsCards,
-  deleteLessonCard,
-  selectLessonCard,
-  updateLessonCard,
-  selectGroupId,
-  setUniqueError,
-  setLessonTypes,
-} from "./lesson";
+    storeLessonCard,
+    setLessonsCards,
+    deleteLessonCard,
+    selectLessonCard,
+    updateLessonCard,
+    selectGroupId,
+    setUniqueError,
+    setLessonTypes,
+} from './lesson';
 
 export {
-  setTemporarySchedules,
-  setSchedulesAndTemporarySchedules,
-  selectTemporarySchedule,
-  selectVacation,
-  selectTeacherId,
-} from "./temporarySchedule";
+    setTemporarySchedules,
+    setSchedulesAndTemporarySchedules,
+    selectTemporarySchedule,
+    selectVacation,
+    selectTeacherId,
+} from './temporarySchedule';
 
-export { setOpenSnackbar } from "./snackbar";
+export { setOpenSnackbar } from './snackbar';
 
-export { setUsers, setUser } from "./users";
-
-export {
-  authUser,
-  registerUser,
-  logout,
-  authCheckState,
-  setAuthError,
-  activateUser,
-  resetUserPassword,
-} from "./auth";
+export { setUsers, setUser } from './users';
 
 export {
-  setLoading,
-  setScheduleLoading,
-  setSemesterLoading,
-} from "./loadingIndicator";
+    authUser,
+    registerUser,
+    logout,
+    authCheckState,
+    setAuthError,
+    activateUser,
+    resetUserPassword,
+} from './auth';
+
+export { setLoading, setScheduleLoading, setSemesterLoading } from './loadingIndicator';
 
 export {
-  setScheduleItems,
-  addItemToSchedule,
-  setFullSchedule,
-  setGroupSchedule,
-  setScheduleType,
-  setItemGroupId,
-  deleteItemFromSchedule,
-  checkAvailabilitySchedule,
-  setScheduleGroupId,
-  setCurrentSemester,
-  setDefaultSemester,
-  setScheduleTeacherId,
-  setTeacherSchedule,
-  setScheduleSemesterId,
-  setSemesterList,
-  setTeacherRangeSchedule,
-  setTeacherViewType,
-} from "./schedule";
+    setScheduleItems,
+    addItemToSchedule,
+    setFullSchedule,
+    setGroupSchedule,
+    setScheduleType,
+    setItemGroupId,
+    deleteItemFromSchedule,
+    checkAvailabilitySchedule,
+    setScheduleGroupId,
+    setCurrentSemester,
+    setDefaultSemester,
+    setScheduleTeacherId,
+    setTeacherSchedule,
+    setScheduleSemesterId,
+    setSemesterList,
+    setTeacherRangeSchedule,
+    setTeacherViewType,
+} from './schedule';
 
 export {
-  addTeacher,
-  setTeacher,
-  deleteTeacher,
-  selectTeacherCard,
-  updateTeacherCard,
-  showAllTeachers,
-  setDisabledTeachers,
-} from "./teachers";
+    addTeacher,
+    setTeacher,
+    deleteTeacher,
+    selectTeacherCard,
+    updateTeacherCard,
+    showAllTeachers,
+    setDisabledTeachers,
+} from './teachers';
 
-export { showAllBusyRooms } from "./busyRooms";
-
-export {
-  setClassScheduleList,
-  addClassScheduleOne,
-  getClassScheduleList,
-  getClassScheduleOne,
-  deleteClassScheduleOne,
-} from "./class";
+export { showAllBusyRooms } from './busyRooms';
 
 export {
-  deleteGroup,
-  showAllGroups,
-  addGroup,
-  selectGroup,
-  updateGroup,
-  clearGroup,
-  setDisabledGroups,
-} from "./groups";
+    setClassScheduleList,
+    addClassScheduleOne,
+    getClassScheduleList,
+    getClassScheduleOne,
+    deleteClassScheduleOne,
+} from './class';
 
 export {
-  addRoom,
-  deleteRoom,
-  showListOfRooms,
-  selectOneRoom,
-  updateOneRoom,
-  clearRoomOne,
-  setDisabledRooms,
-} from "./rooms";
+    deleteGroup,
+    showAllGroups,
+    addGroup,
+    selectGroup,
+    updateGroup,
+    clearGroup,
+    setDisabledGroups,
+} from './groups';
 
 export {
-  postOneType,
-  getAllRoomTypes,
-  deleteType,
-  updateOneType,
-  getOneNewType,
-} from "./roomTypes";
-
-export { showFreeRooms, clearFreeRooms } from "./freeRooms";
-
-export {
-  deleteSubject,
-  showAllSubjects,
-  addSubject,
-  selectSubject,
-  updateSubject,
-  clearSubject,
-  setDisabledSubjects,
-} from "./subjects";
+    addRoom,
+    deleteRoom,
+    showListOfRooms,
+    selectOneRoom,
+    updateOneRoom,
+    clearRoomOne,
+    setDisabledRooms,
+} from './rooms';
 
 export {
-  deleteSemester,
-  showAllSemesters,
-  addSemester,
-  selectSemester,
-  updateSemester,
-  clearSemester,
-  setDisabledSemesters,
-  setArchivedSemesters,
-  moveToArchivedSemester,
-} from "./semesters";
+    postOneType,
+    getAllRoomTypes,
+    deleteType,
+    updateOneType,
+    getOneNewType,
+} from './roomTypes';
+
+export { showFreeRooms, clearFreeRooms } from './freeRooms';
+
+export {
+    deleteSubject,
+    showAllSubjects,
+    addSubject,
+    selectSubject,
+    updateSubject,
+    clearSubject,
+    setDisabledSubjects,
+} from './subjects';
+
+export {
+    deleteSemester,
+    showAllSemesters,
+    addSemester,
+    selectSemester,
+    updateSemester,
+    clearSemester,
+    setDisabledSemesters,
+    setArchivedSemesters,
+    moveToArchivedSemester,
+} from './semesters';

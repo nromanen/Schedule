@@ -28,7 +28,8 @@
         "singleQuote": true,
         "tabWidth": 4,
         "trailingComma": "all",
-        "printWidth": 100
+        "printWidth": 100,
+        "endOfLine": "auto"
       }
     ],
     "import/no-extraneous-dependencies": [

@@ -1,16 +1,14 @@
-import { useDispatch, useSelector } from "react-redux";
-import Snackbar from "@material-ui/core/Snackbar";
-import IconButton from "@material-ui/core/IconButton";
-import { Icon } from "@material-ui/core";
-import React from 'react'
+import { useDispatch, useSelector } from 'react-redux';
+import Snackbar from '@material-ui/core/Snackbar';
+import IconButton from '@material-ui/core/IconButton';
+import { Icon } from '@material-ui/core';
+import React from 'react';
 import { clearSnackbar } from '../../redux/actions/snackBarReducer';
 
 export default function SuccessSnackbar() {
     const dispatch = useDispatch();
 
-    const { successSnackbarMessage, successSnackbarOpen } = useSelector(
-        state => state
-    );
+    const { successSnackbarMessage, successSnackbarOpen } = useSelector((state) => state);
 
     function handleClose() {
         dispatch(clearSnackbar());
@@ -19,8 +17,8 @@ export default function SuccessSnackbar() {
     return (
         <Snackbar
             anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "left"
+                vertical: 'bottom',
+                horizontal: 'left',
             }}
             open={successSnackbarOpen}
             autoHideDuration={4000}
@@ -28,19 +26,14 @@ export default function SuccessSnackbar() {
             aria-describedby="client-snackbar"
             message={
                 <span id="client-snackbar">
-          <Icon>check_circle</Icon>
+                    <Icon>check_circle</Icon>
                     {successSnackbarMessage}
-        </span>
+                </span>
             }
             action={[
-                <IconButton
-                    key="close"
-                    aria-label="close"
-                    color="inherit"
-                    onClick={handleClose}
-                >
+                <IconButton key="close" aria-label="close" color="inherit" onClick={handleClose}>
                     <Icon>close</Icon>
-                </IconButton>
+                </IconButton>,
             ]}
         />
     );

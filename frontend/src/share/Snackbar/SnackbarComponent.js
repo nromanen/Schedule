@@ -4,8 +4,8 @@ import MuiAlert from '@material-ui/lab/Alert';
 import Snackbar from '@material-ui/core/Snackbar';
 import { snackbarTypes } from '../../constants/snackbarTypes';
 
-const Alert = props => {
-    return <MuiAlert elevation={6} variant='filled' {...props} />;
+const Alert = (props) => {
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
 };
 
 const SnackbarComponent = (props) => {
@@ -22,7 +22,6 @@ const SnackbarComponent = (props) => {
             <Alert onClose={handleSnackbarClose} severity={type}>
                 {message}
             </Alert>
-
         </Snackbar>
     );
 };

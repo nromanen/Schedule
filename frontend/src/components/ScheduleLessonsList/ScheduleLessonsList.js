@@ -56,7 +56,7 @@ const ScheduleLessonsList = (props) => {
         });
 
         for (let i = 0; i < hours - hoursInSchedule; i++) {
-            console.log(lessons)
+            console.log(lessons);
             lessonItem.push(
                 <section key={lesson.id + i}>
                     <ScheduleItem
