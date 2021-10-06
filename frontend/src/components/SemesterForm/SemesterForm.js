@@ -5,8 +5,6 @@ import { useTranslation } from 'react-i18next';
 import { Field, reduxForm } from 'redux-form';
 import Button from '@material-ui/core/Button';
 import './SemesterForm.scss';
-import { useForm } from 'react-hook-form';
-import formValueSelector from 'redux-form/lib/formValueSelector';
 import Card from '../../share/Card/Card';
 import renderCheckboxField from '../../share/renderedFields/checkbox';
 import { SEMESTER_FORM } from '../../constants/reduxForms';
@@ -89,7 +87,6 @@ const AddSemesterForm = (props) => {
     const onSubmit = (values) => {
         handleSubmit(values);
     };
-    const { setValue } = useForm();
 
     const prepSetCheckedClasses = {};
     useEffect(() => {
