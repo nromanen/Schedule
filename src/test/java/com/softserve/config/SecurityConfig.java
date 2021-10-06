@@ -13,6 +13,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -27,7 +28,6 @@ import org.springframework.security.oauth2.client.registration.InMemoryClientReg
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableOAuth2Client;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-
 import javax.servlet.http.HttpServletResponse;
 import java.util.Arrays;
 import java.util.List;
@@ -40,6 +40,11 @@ import java.util.stream.Stream;
 @EnableOAuth2Client
 @PropertySource({"classpath:social.properties", "classpath:cors.properties"})
 @ComponentScan(basePackages = {"com.softserve.*"})
+@EnableGlobalMethodSecurity(
+        prePostEnabled = true,
+        securedEnabled = true,
+        jsr250Enabled = true
+)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final JwtTokenProvider jwtTokenProvider;
 
@@ -50,6 +55,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private static final String GOOGLE = "google";
     private static final String FACEBOOK = "facebook";
 
+    //PRIVATE ENDPOINTS
     private static final String MANAGER_ENDPOINT = "/managers/**";
     private static final String CLASSES_ENDPOINT = "/classes/**";
     private static final String GROUPS_ENDPOINT = "/groups/**";
@@ -58,19 +64,31 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private static final String SUBJECTS_ENDPOINT = "/subjects/**";
     private static final String TEACHERS_ENDPOINT = "/teachers/**";
     private static final String AUTH_ENDPOINT = "/auth/**";
-    private static final String SCHEDULE_ENDPOINT = "/schedules/*";
     private static final String SEMESTERS_ENDPOINT = "/semesters/**";
-    private static final String USERS_ENDPOINT = "/users/**";
     private static final String ROOM_TYPES_ENDPOINT = "/room-types/**";
-    private static final String SOCIAL_ENDPOINT = "/social/**";
     private static final String DEPARTMENTS_ENDPOINT = "/departments/**";
 
-    //PUBLIC
+    //PUBLIC ENDPOINTS
     private static final String SCHEDULE_FOR_USERS_ENDPOINT = "/schedules/full/*";
-    private static final String ALL_GROUPS_PUBLIC_ENDPOINT = "/public/groups";
+    private static final String GROUPS_BY_SEMESTER_ID_PUBLIC_ENDPOINT = "/semesters/{semesterId}/groups";
+    private static final String GROUPS_FOR_CURRENT_SEMESTER_PUBLIC_ENDPOINT = "/semesters/current/groups";
+    private static final String GROUPS_FOR_DEFAULT_SEMESTER_PUBLIC_ENDPOINT = "/semesters/default/groups";
     private static final String ALL_TEACHERS_PUBLIC_ENDPOINT = "/public/teachers";
     private static final String ALL_CLASSES_PUBLIC_ENDPOINT = "/public/classes";
     private static final String ALL_SEMESTERS_PUBLIC_ENDPOINT = "/public/semesters";
+    private static final String DOWNLOAD_SCHEDULE_ENDPOINT = "/download/**";
+    private static final String DEFAULT_SEMESTER_PUBLIC_ENDPOINT = "/semesters/default";
+
+    //FRONTEND ENDPOINTS
+    private static final String HOME_ENDPOINT = "/";
+    private static final String LOGIN_ENDPOINT = "/login";
+    private static final String ADMIN_ENDPOINT = "/admin";
+    private static final String FRONTEND_SCHEDULE_ENDPOINT = "/schedule";
+    private static final String FRONTEND_ACTIVATION_PAGE_ENDPOINT = "/activation-page";
+
+    //TEACHER
+    private static final String GROUPS_BY_TEACHER_ID_ENDPOINT = "/groups/teacher/{teacherId}";
+    private static final String GROUP_WITH_STUDENTS = "/groups/{id}/with-students";
 
 
     @Autowired
@@ -88,16 +106,24 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.cors().and()
+        http
+                .cors()
+                .and()
                 .httpBasic().disable()
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers(SOCIAL_ENDPOINT, AUTH_ENDPOINT, SCHEDULE_FOR_USERS_ENDPOINT, ALL_GROUPS_PUBLIC_ENDPOINT, ALL_TEACHERS_PUBLIC_ENDPOINT,
-                        ALL_GROUPS_PUBLIC_ENDPOINT, ALL_CLASSES_PUBLIC_ENDPOINT, ALL_SEMESTERS_PUBLIC_ENDPOINT).permitAll()
+                .antMatchers(FRONTEND_ACTIVATION_PAGE_ENDPOINT, DOWNLOAD_SCHEDULE_ENDPOINT,
+                        AUTH_ENDPOINT, SCHEDULE_FOR_USERS_ENDPOINT, GROUPS_BY_SEMESTER_ID_PUBLIC_ENDPOINT,
+                        ALL_TEACHERS_PUBLIC_ENDPOINT, HOME_ENDPOINT,LOGIN_ENDPOINT,ADMIN_ENDPOINT,
+                        FRONTEND_SCHEDULE_ENDPOINT, ALL_CLASSES_PUBLIC_ENDPOINT, ALL_SEMESTERS_PUBLIC_ENDPOINT,
+                        GROUPS_FOR_DEFAULT_SEMESTER_PUBLIC_ENDPOINT, GROUPS_FOR_CURRENT_SEMESTER_PUBLIC_ENDPOINT,
+                        DEFAULT_SEMESTER_PUBLIC_ENDPOINT).permitAll()
+                .antMatchers(GROUPS_BY_TEACHER_ID_ENDPOINT, GROUP_WITH_STUDENTS).hasAnyRole("MANAGER", "TEACHER")
                 .antMatchers(MANAGER_ENDPOINT, CLASSES_ENDPOINT, GROUPS_ENDPOINT, LESSONS_ENDPOINT,
-                        ROOMS_ENDPOINT, SUBJECTS_ENDPOINT, TEACHERS_ENDPOINT, SCHEDULE_ENDPOINT, SEMESTERS_ENDPOINT, USERS_ENDPOINT, ROOM_TYPES_ENDPOINT, DEPARTMENTS_ENDPOINT).hasRole("MANAGER")
+                        ROOMS_ENDPOINT, SUBJECTS_ENDPOINT, TEACHERS_ENDPOINT, SEMESTERS_ENDPOINT,
+                        ROOM_TYPES_ENDPOINT, DEPARTMENTS_ENDPOINT).hasRole("MANAGER")
                 .anyRequest().authenticated()
                 .and()
                 .oauth2Login()
@@ -108,10 +134,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizedClientService(clientService())
                 .userInfoEndpoint()
                 .and()
-                .successHandler(authenticationSuccessHandler()) //allows you to use your own User entity as a authenticated user
+                .successHandler(authenticationSuccessHandler())
                 .and()
-                .apply(new JwtConfigurer(jwtTokenProvider))
-        ;
+                .apply(new JwtConfigurer(jwtTokenProvider));
 
         http
                 .exceptionHandling()
@@ -133,6 +158,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 "/swagger-resources/**",
                 "/configuration/security",
                 "/swagger-ui.html",
+                "/favicon.ico",
+                "/**/*.png",
+                "/**/*.gif",
+                "/**/*.svg",
+                "/**/*.jpg",
+                "/**/*.html",
+                "/**/*.css",
+                "/**/*.js",
+                "/**/*.json",
+                "/**/*.map",
+                "/assets/**",
                 "/webjars/**");
     }
 
@@ -189,7 +225,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
             String url = env.getProperty("backend.url");
             String jwtToken = jwtTokenProvider.createToken(user.getEmail(), user.getRole().toString());
-            response.sendRedirect(url + "social/loginSuccess?token=" + jwtToken);
+            response.sendRedirect(url + "login?social=true&token=" + jwtToken);
         };
     }
 }

@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 import { authCheckState } from './redux/actions/index';
 import { handleSnackbarCloseService } from './services/snackbarService';
 import SnackbarComponent from './share/Snackbar/SnackbarComponent';
+import SuccessSnackbar from './components/SuccessSnackbar/SuccessSnackbar';
 
 const App = (props) => {
     const { isSnackbarOpen, snackbarType, snackbarMessage } = props;
@@ -26,6 +27,7 @@ const App = (props) => {
         <Suspense fallback={null}>
             <div className="container">
                 <Routers />
+                <SuccessSnackbar />
                 <SnackbarComponent
                     message={snackbarMessage}
                     type={snackbarType}

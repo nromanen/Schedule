@@ -3,11 +3,18 @@ package com.softserve.entity;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.annotations.Filter;
 import org.hibernate.annotations.FilterDef;
 import org.hibernate.annotations.ParamDef;
-
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
@@ -15,6 +22,7 @@ import java.io.Serializable;
 @Setter
 @Getter
 @EqualsAndHashCode(of = "id")
+@ToString
 @Entity
 @Table(name = "teachers")
 @FilterDef(name="teachersDisableFilter", parameters={
@@ -48,10 +56,10 @@ public class Teacher implements Serializable {
     private String position;
 
     @Column(name ="user_id")
-    private Integer userId;
+    private Long userId;
 
     @ManyToOne
-    @JoinColumn(name = "department_id",  columnDefinition = "integer")
+    @JoinColumn(name = "department_id",  columnDefinition = "bigint")
     private Department department;
 
     @Column(name = "disable",  columnDefinition = "boolean default 'false'")

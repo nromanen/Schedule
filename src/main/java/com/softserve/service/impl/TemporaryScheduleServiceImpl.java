@@ -484,9 +484,9 @@ public class TemporaryScheduleServiceImpl implements TemporaryScheduleService {
 
    public String getTeacherEmailFromTemporarySchedule(Teacher teacher){
        if(teacher!=null){
-           Integer toTeacherId = teacherService.getById(teacher.getId()).getUserId();
+           Long toTeacherId = teacherService.getById(teacher.getId()).getUserId();
            if(toTeacherId!=null){
-               return userService.getById(toTeacherId.longValue()).getEmail();
+               return userService.getById(toTeacherId).getEmail();
            }
        }
        return null;

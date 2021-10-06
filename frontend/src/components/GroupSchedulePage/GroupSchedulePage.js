@@ -256,11 +256,27 @@ const GroupSchedulePage = (props) => {
             const semester = `${props.defaultSemester.id}`;
             handleSubmit({ semester });
 
-            return;
-        }
-        if (props.scheduleType !== '' || location.pathname === links.HOME_PAGE) {
-            return renderSchedule();
-        }
+           return renderSchedule();
+
+       }
+
+
+       const params = new URLSearchParams(location.search);
+
+       const semester= params.get("semester");
+       const teacher=params.get("teacher");
+       const group=params.get("group");
+
+       if(semester!==null) {
+           handleSubmit({ semester, 'group': group != null ? group : 0, 'teacher': teacher != null ? teacher : 0 });
+        return
+       }
+       else return null;
+    }
+
+    const getTop=()=>{
+
+       if(props.scheduleType !== 'archived') {
 
         const params = new URLSearchParams(location.search);
 

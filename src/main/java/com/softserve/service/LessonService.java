@@ -7,6 +7,7 @@ import com.softserve.entity.enums.LessonType;
 import java.util.List;
 
 public interface LessonService extends BasicService <Lesson, Long> {
+    List<Lesson> save(List<Lesson> lessons);
     List<Lesson> getAllForGroup(Long groupId);
     List<Lesson> getLessonByTeacher(Long teacherId);
     List<LessonType> getAllLessonTypes();
@@ -17,4 +18,6 @@ public interface LessonService extends BasicService <Lesson, Long> {
     Lesson saveLessonDuringCopy(Lesson lesson);
     void deleteLessonBySemesterId(Long semesterId);
     List<Lesson> getLessonsBySubjectIdTeacherIdSemesterIdLessonTypeAndExcludeCurrentLessonId(Lesson lesson);
+    List<Lesson> getAllGroupedLessonsByLesson(Lesson lesson);
+    Integer updateLinkToMeeting(Lesson lesson);
 }

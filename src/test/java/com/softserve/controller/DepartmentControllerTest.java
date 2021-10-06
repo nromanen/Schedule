@@ -1,10 +1,20 @@
 package com.softserve.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.softserve.config.*;
+import com.softserve.assertions.CustomMockMvcAssertions;
+import com.softserve.config.DBConfigTest;
+import com.softserve.config.MyWebAppInitializer;
+import com.softserve.config.SecurityConfig;
+import com.softserve.config.SecurityWebApplicationInitializer;
+import com.softserve.config.WebMvcConfig;
 import com.softserve.dto.DepartmentDTO;
-import com.softserve.dto.GroupDTO;
+import com.softserve.dto.TeacherDTO;
+import com.softserve.exception.apierror.ApiValidationError;
+import junitparams.JUnitParamsRunner;
+import junitparams.Parameters;
 import org.junit.Before;
+import org.junit.ClassRule;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -14,27 +24,57 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit4.rules.SpringClassRule;
+import org.springframework.test.context.junit4.rules.SpringMethodRule;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import java.util.Collections;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @Category(IntegrationTestCategory.class)
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {WebMvcConfig.class, DBConfigTest.class, MyWebAppInitializer.class, SecurityConfig.class, SecurityWebApplicationInitializer.class})
+@RunWith(JUnitParamsRunner.class)
+@ContextConfiguration(
+        classes = {
+                WebMvcConfig.class,
+                DBConfigTest.class,
+                MyWebAppInitializer.class,
+                SecurityConfig.class,
+                SecurityWebApplicationInitializer.class
+        }
+)
 @WebAppConfiguration
-@WithMockUser(username = "vbforwork702@mail.com", password = "$2a$10$42sZYaqffhxKah7sTFsm3OXF02qdUUykPfVWPO3GguHvoDui.WsIi", roles = "MANAGER")
-@Sql(value = {"classpath:create-departments-before.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-@Sql(value = "classpath:delete-departments-after.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+@WithMockUser(
+        username = "vbforwork702@mail.com",
+        password = "$2a$10$42sZYaqffhxKah7sTFsm3OXF02qdUUykPfVWPO3GguHvoDui.WsIi",
+        roles = "MANAGER"
+)
+@Sql(value = "classpath:create-departments-before.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 public class DepartmentControllerTest {
+    @ClassRule
+    public static final SpringClassRule scr = new SpringClassRule();
+
+    @Rule
+    public final SpringMethodRule smr = new SpringMethodRule();
+
+    private CustomMockMvcAssertions assertions;
 
     private MockMvc mockMvc;
-    private ObjectMapper objectMapper = new ObjectMapper();
+
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
+    private DepartmentDTO departmentDTOWithId4L;
+
+    private DepartmentDTO disableDepartmentDTOWithId5L;
 
     @Autowired
     private WebApplicationContext wac;
@@ -44,122 +84,137 @@ public class DepartmentControllerTest {
         mockMvc = MockMvcBuilders.webAppContextSetup(wac)
                 .apply(SecurityMockMvcConfigurers.springSecurity())
                 .build();
+
+        assertions = new CustomMockMvcAssertions(mockMvc, objectMapper, "/departments");
+
+        departmentDTOWithId4L = DepartmentDTO.builder()
+                .id(4L)
+                .name("Department4")
+                .disable(false)
+                .build();
+
+        disableDepartmentDTOWithId5L = DepartmentDTO.builder()
+                .id(5L)
+                .name("Department5")
+                .disable(true)
+                .build();
     }
 
     @Test
     public void getAll() throws Exception {
-        mockMvc.perform(get("/departments").accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType("application/json"));
+        assertions.assertForGetListWithOneEntity(departmentDTOWithId4L);
     }
 
     @Test
     public void getById() throws Exception {
-        mockMvc.perform(get("/departments/{id}", 1).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType("application/json"))
-                .andExpect(jsonPath("$.id").value(String.valueOf(1L)));
+        assertions.assertForGet(departmentDTOWithId4L, "/departments/4");
     }
 
     @Test
-    @WithMockUser(username = "vbforwork702@mail.com", password = "$2a$04$SpUhTZ/SjkDQop/Zvx1.seftJdqvOploGce/wau247zQhpEvKtz9.", roles = "USER")
+    @WithMockUser(
+            username = "vbforwork702@mail.com",
+            password = "$2a$04$SpUhTZ/SjkDQop/Zvx1.seftJdqvOploGce/wau247zQhpEvKtz9.",
+            roles = "USER"
+    )
     public void returnForbiddenIfAuthenticatedUserRoleIsNotManager() throws Exception {
         mockMvc.perform(get("/departments/{id}", 1).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isForbidden());
     }
 
     @Test
-    public void saveIfEntityDoesNotExist() throws Exception {
-        DepartmentDTO departmentDtoForSave = new DepartmentDTO();
-        departmentDtoForSave.setName("save new departments");
-
-        mockMvc.perform(post("/departments").content(objectMapper.writeValueAsString(departmentDtoForSave))
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isCreated());
+    public void saveDepartment() throws Exception {
+        DepartmentDTO expected = new DepartmentDTO();
+        expected.setName("save new departments");
+        assertions.assertForSave(expected, e -> jsonPath("$.name").value(e.getName()));
     }
 
     @Test
-    public void updateIfUpdatedEntityExists() throws Exception {
-        DepartmentDTO departmentDtoForUpdate = new DepartmentDTO();
-        departmentDtoForUpdate.setId(2L);
-        departmentDtoForUpdate.setName("111epartment1");
-
-        mockMvc.perform(put("/departments", 2).content(objectMapper.writeValueAsString(departmentDtoForUpdate))
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(departmentDtoForUpdate.getId()))
-                .andExpect(jsonPath("$.name").value(departmentDtoForUpdate.getName()));
+    public void updateDepartment() throws Exception {
+        assertions.assertForUpdate(departmentDTOWithId4L);
     }
 
     @Test
     public void deleteById() throws Exception {
-        mockMvc.perform(delete("/departments/{id}", 2)
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+        assertions.assertForDelete(5);
     }
 
     @Test
     public void returnBadRequestIfReferencesOnDepartmentExist() throws Exception {
-        mockMvc.perform(delete("/departments/{id}", 1)
+        mockMvc.perform(delete("/departments/{id}", 4)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
     }
 
     @Test
     public void returnNotFoundIfEntityNotFoundedById() throws Exception {
-        mockMvc.perform(get("/departments/100")).andExpect(status().isNotFound());
+        assertions.assertForGetWhenEntityNotFound(20);
     }
 
     @Test
-    public void returnBadRequestIfSavedEntityAlreadyExists() throws Exception {
-        DepartmentDTO departmentDtoForSave = new DepartmentDTO();
-        departmentDtoForSave.setName("Department1");
-
-        mockMvc.perform(post("/departments").content(objectMapper.writeValueAsString(departmentDtoForSave))
-                .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isBadRequest());
+    public void throwFieldAlreadyExistsExceptionOnSave() throws Exception {
+        DepartmentDTO departmentDTO = new DepartmentDTO();
+        departmentDTO.setName(departmentDTOWithId4L.getName());
+        assertThatReturnedFieldAlreadyExistsException(post("/departments"), departmentDTO);
     }
 
     @Test
-    public void returnBadRequestIfSavedNameIsNull() throws Exception {
-        DepartmentDTO departmentDtoForSave = new DepartmentDTO();
-        departmentDtoForSave.setName(null);
-
-        mockMvc.perform(post("/departments").content(objectMapper.writeValueAsString(departmentDtoForSave))
-                .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().is(500));
+    public void throwFieldAlreadyExistsExceptionOnUpdate() throws Exception {
+        DepartmentDTO departmentDTO = departmentDTOWithId4L;
+        departmentDTO.setName(disableDepartmentDTOWithId5L.getName());
+        assertThatReturnedFieldAlreadyExistsException(put("/departments"), departmentDTO);
     }
 
-    @Test
-    public void returnBadRequestIfUpdatedEntityAlreadyExists() throws Exception {
-        DepartmentDTO departmentDtoForUpdate = new DepartmentDTO();
-        departmentDtoForUpdate.setId(2L);
-        departmentDtoForUpdate.setName("Department1");
-
-        mockMvc.perform(put("/departments", 2).content(objectMapper.writeValueAsString(departmentDtoForUpdate))
-                .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isBadRequest());
+    public Object[] parametersForTestValidationException() {
+        String errorMessage = "Name cannot be blank";
+        return new Object[] {
+                new Object[] { null , errorMessage  },
+                new Object[] { "",  errorMessage },
+                new Object[] { "  ",  errorMessage },
+        };
     }
 
+    @Parameters
     @Test
-    public void returnBadRequestIfUpdatedNameIsNull() throws Exception {
-        DepartmentDTO departmentDtoForUpdate = new DepartmentDTO();
-        departmentDtoForUpdate.setId(2L);
-        departmentDtoForUpdate.setName(null);
-
-        mockMvc.perform(put("/departments", 2).content(objectMapper.writeValueAsString(departmentDtoForUpdate))
-                .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().is(500));
+    public void testValidationException(String incorrectName, String errorMessage) throws Exception {
+        DepartmentDTO departmentDTO = new DepartmentDTO();
+        departmentDTO.setName(incorrectName);
+        ApiValidationError error = new ApiValidationError(
+                "Department",
+                "name",
+                incorrectName,
+                errorMessage
+        );
+        assertions.assertForValidationErrorsOnSave(Collections.singletonList(error), departmentDTO);
     }
 
     @Test
     public void getAllDisable() throws Exception {
-        mockMvc.perform(get("/departments/disabled").accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType("application/json"));
+        assertions.assertForGetListWithOneEntity(disableDepartmentDTOWithId5L, "/departments/disabled");
+    }
+
+    @Test
+    public void getAllTeachers() throws Exception {
+        DepartmentDTO departmentDTO = departmentDTOWithId4L;
+
+        TeacherDTO firstTeacher = new TeacherDTO();
+        firstTeacher.setId(4L);
+        firstTeacher.setName("Ivan");
+        firstTeacher.setSurname("Ivanov");
+        firstTeacher.setPatronymic("Ivanovych");
+        firstTeacher.setPosition("docent");
+        firstTeacher.setDepartmentDTO(departmentDTO);
+
+        assertions.assertForGetListWithOneEntity(firstTeacher, "/departments/4/teachers");
+    }
+
+    private <T> void assertThatReturnedFieldAlreadyExistsException(MockHttpServletRequestBuilder requestBuilder,
+                                                                   T groupDTO) throws Exception {
+        mockMvc.perform(requestBuilder.content(objectMapper.writeValueAsString(groupDTO))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType("application/json"))
+                .andExpect(jsonPath("$.message")
+                        .value("Department with provided name already exists"));
     }
 }

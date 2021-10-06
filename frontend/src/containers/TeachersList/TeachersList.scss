@@ -1,58 +1,47 @@
 .teacher-card {
-    min-height: 240px;
-    position: relative;
-    margin: 10px;
+  height: 140px;
+  position: relative;
+  margin: 10px;
 
-    .teacher-card-name {
-        margin: 8px 0;
-        font-size: 1.3rem;
+  .teacher-card-name {
+    height: 3.2em;
+    margin: 0.3em 0 1em;
+    font-size: 1.3rem;
 
-        	
-	@media (max-width: 400px) { 
-		font-size: 1.1rem;
-	}
+    @media (max-width: 400px) {
+      font-size: 1.1rem;
     }
+  }
 
-    .teacher-subtitle {
-        font-size: 0.8em;
-        margin: 5px 0;
-    }
+  .teacher-card-title {
+    margin: 0.2em 0 1em;
+  }
 
-    .teacher-card-wishes {
-        border-top: 1px solid;
-    }
-    .teacher-wish-block {
-        position: absolute;
-        bottom: 17px;
-        width: 239px;
-        left: 50%;
-        transform: translateX(-50%);
-
-        @media (max-width: 400px) { 
-            width: 95%;
-        }
-    }
+  .teacher-subtitle {
+    font-size: 0.8em;
+    margin: 5px 0;
+  }
 }
 
-.wish-button {
-    width: 100%;
+.send-button {
+  width: 100%;
 }
 
 .form-with-search-panel {
-    width: 23.4em;
-    position: sticky;
-    top: 1em;
+  width: 23.4em;
+  position: sticky;
+  top: 1em;
 
-    @media (max-width: 850px) { 
-        position: relative;
-        margin-bottom: 20px;
-        max-width: 90%;
-    }
+  @media (max-width: 850px) {
+    position: relative;
+    margin-bottom: 20px;
+    max-width: 90%;
+  }
 
-    @media (max-width: 500px) { 
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
+  @media (max-width: 500px) {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
 
 }

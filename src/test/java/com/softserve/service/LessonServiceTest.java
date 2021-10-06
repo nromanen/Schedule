@@ -14,6 +14,8 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -28,13 +30,7 @@ public class LessonServiceTest {
     private LessonRepository lessonRepository;
 
     @Mock
-    private TeacherService teacherService;
-
-    @Mock
     private SubjectService subjectService;
-
-    @Mock
-    private SemesterService semesterService;
 
     @InjectMocks
     private LessonServiceImpl lessonService;
@@ -84,7 +80,7 @@ public class LessonServiceTest {
         group.setTitle("group");
         Teacher teacher = new Teacher();
         teacher.setId(1L);
-        teacher.setUserId(1);
+        teacher.setUserId(1L);
         teacher.setName("Ivan");
         teacher.setSurname("Ivanov");
         teacher.setPatronymic("Ivanovych");
@@ -121,7 +117,7 @@ public class LessonServiceTest {
         group.setTitle("group");
         Teacher teacher = new Teacher();
         teacher.setId(1L);
-        teacher.setUserId(1);
+        teacher.setUserId(1L);
         teacher.setName("Ivan");
         teacher.setSurname("Ivanov");
         teacher.setPatronymic("Ivanovych");
@@ -153,7 +149,7 @@ public class LessonServiceTest {
         group.setTitle("group");
         Teacher teacher = new Teacher();
         teacher.setId(1L);
-        teacher.setUserId(1);
+        teacher.setUserId(1L);
         teacher.setName("Ivan");
         teacher.setSurname("Ivanov");
         teacher.setPatronymic("Ivanovych");
@@ -189,7 +185,7 @@ public class LessonServiceTest {
         group.setTitle("group");
         Teacher teacher = new Teacher();
         teacher.setId(1L);
-        teacher.setUserId(1);
+        teacher.setUserId(1L);
         teacher.setName("Ivan");
         teacher.setSurname("Ivanov");
         teacher.setPatronymic("Ivanovych");
@@ -212,5 +208,50 @@ public class LessonServiceTest {
         lessonService.update(lesson);
         verify(lessonRepository, times(1)).countLessonDuplicatesWithIgnoreId(lesson);
         verify(lessonRepository, times(1)).update(lesson);
+    }
+
+    @Test
+    public void updateLinkToMeeting() {
+
+        Semester semester = new Semester();
+        semester.setId(7L);
+        Teacher teacher = new Teacher();
+        teacher.setId(5L);
+        Subject subject = new Subject();
+        subject.setId(5L);
+
+        Lesson lessonWithSubjectAndType = new Lesson();
+        lessonWithSubjectAndType.setLinkToMeeting("https://www.youtube.com/");
+        lessonWithSubjectAndType.setLessonType(LessonType.LECTURE);
+        lessonWithSubjectAndType.setSemester(semester);
+        lessonWithSubjectAndType.setTeacher(teacher);
+        lessonWithSubjectAndType.setSubject(subject);
+
+        Lesson lessonWithSubject = new Lesson();
+        lessonWithSubject.setLinkToMeeting("https://www.youtube.com/");
+        lessonWithSubject.setSemester(semester);
+        lessonWithSubject.setTeacher(teacher);
+        lessonWithSubject.setSubject(subject);
+
+        Lesson lesson = new Lesson();
+        lesson.setLinkToMeeting("https://www.youtube.com/");
+        lesson.setSemester(semester);
+        lesson.setTeacher(teacher);
+
+        List<Integer> expectedResults = List.of(2,3,4);
+
+        when(lessonRepository.updateLinkToMeeting(lessonWithSubjectAndType)).thenReturn(2);
+        when(lessonRepository.updateLinkToMeeting(lessonWithSubject)).thenReturn(3);
+        when(lessonRepository.updateLinkToMeeting(lesson)).thenReturn(4);
+
+        List<Integer> actualResults = new ArrayList<>();
+        actualResults.add(lessonService.updateLinkToMeeting(lessonWithSubjectAndType));
+        actualResults.add(lessonService.updateLinkToMeeting(lessonWithSubject));
+        actualResults.add(lessonService.updateLinkToMeeting(lesson));
+
+        assertEquals(expectedResults, actualResults);
+        verify(lessonRepository).updateLinkToMeeting(lessonWithSubjectAndType);
+        verify(lessonRepository).updateLinkToMeeting(lessonWithSubject);
+        verify(lessonRepository).updateLinkToMeeting(lesson);
     }
 }

@@ -1,0 +1,35 @@
+---
+dictionary:
+  sunday:
+    en: "sunday"
+    uk: "неділя"
+  period:
+    en: "period"
+    uk: "період"
+  saturday:
+    en: "saturday"
+    uk: "субота"
+  tuesday:
+    en: "tuesday"
+    uk: "вівторок"
+  wednesday:
+    en: "wednesday"
+    uk: "середа"
+  thursday:
+    en: "thursday"
+    uk: "четвер"
+  friday:
+    en: "friday"
+    uk: "п’ятниця"
+  schedule for:
+    en: "schedule for"
+    uk: "розклад для"
+  group:
+    en: "group"
+    uk: "групи"
+  monday:
+    en: "monday"
+    uk: "понеділок"
+  follow the link:
+    en: "follow the link"
+    uk: "перейти по посиланню"

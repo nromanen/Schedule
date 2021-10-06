@@ -3,8 +3,6 @@ package com.softserve.controller;
 import com.softserve.dto.TeacherDTO;
 import com.softserve.dto.TeacherForUpdateDTO;
 import com.softserve.entity.Teacher;
-import com.softserve.entity.User;
-import com.softserve.entity.enums.Role;
 import com.softserve.mapper.TeacherMapper;
 import com.softserve.service.ScheduleService;
 import com.softserve.service.TeacherService;
@@ -79,11 +77,6 @@ public class TeacherController {
     public ResponseEntity delete(@PathVariable("id") Long id) {
         log.info("Enter into delete method with  teacher id: {}", id);
         Teacher teacher = teacherService.getById(id);
-        if (teacher.getUserId() != null) {
-            User user = userService.getById(teacher.getUserId().longValue());
-            user.setRole(Role.ROLE_USER);
-            userService.update(user);
-        }
         teacherService.delete(teacher);
         return ResponseEntity.status(HttpStatus.OK).build();
     }

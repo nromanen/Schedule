@@ -1,7 +1,10 @@
-delete from lessons;
-delete from teachers;
-delete from department;
-delete from users;
+TRUNCATE
+    "public".lessons,
+    "public".teachers,
+    "public".department,
+    "public".users
+    RESTART IDENTITY
+    CASCADE;
 
 insert into department(id, name) values (1, 'Department1');
 

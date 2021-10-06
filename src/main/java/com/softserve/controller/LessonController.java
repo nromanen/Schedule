@@ -1,9 +1,7 @@
 package com.softserve.controller;
 
 
-import com.softserve.dto.GroupWithLessonIdDTO;
-import com.softserve.dto.LessonDTO;
-import com.softserve.dto.LessonInfoDTO;
+import com.softserve.dto.*;
 import com.softserve.entity.Lesson;
 import com.softserve.entity.Semester;
 import com.softserve.entity.enums.LessonType;
@@ -76,11 +74,11 @@ public class LessonController {
     }
 
     @PostMapping
-    @ApiOperation(value = "Create new lesson")
-    public ResponseEntity<LessonInfoDTO> save(@RequestBody LessonInfoDTO lessonInfoDTO) {
-        log.info("In save (lessonInfoDTO = [{}])", lessonInfoDTO);
-        Lesson newLesson = lessonService.save(lessonInfoMapper.lessonInfoDTOToLesson(lessonInfoDTO));
-        return ResponseEntity.status(HttpStatus.CREATED).body(lessonInfoMapper.lessonToLessonInfoDTO(newLesson));
+    @ApiOperation(value = "Create new lessons")
+    public ResponseEntity<List<LessonInfoDTO>> save(@RequestBody LessonForGroupsDTO lessonForGroupsDTO) {
+        log.info("In save (lessonForGroupsDTO = [{}])", lessonForGroupsDTO);
+        List<Lesson> lessons = lessonService.save(lessonInfoMapper.lessonForGroupsDTOToLessons(lessonForGroupsDTO));
+        return ResponseEntity.status(HttpStatus.CREATED).body(lessonInfoMapper.lessonsToLessonInfoDTOs(lessons));
     }
 
     @PutMapping
@@ -94,7 +92,7 @@ public class LessonController {
 
     @DeleteMapping("/{id}")
     @ApiOperation(value = "Delete lesson by id")
-    public ResponseEntity delete(@PathVariable("id") long id) {
+    public ResponseEntity<Void> delete(@PathVariable("id") long id) {
         log.info("In delete (id =[{}]", id);
         Lesson lesson = lessonService.getById(id);
         lessonService.delete(lesson);
@@ -127,7 +125,7 @@ public class LessonController {
         List<Lesson> lessonsToSave = new ArrayList<>();
         Lesson lesson = lessonService.getById(lessonId);
         for (long groupId: groupsId) {
-            if (groupService.isExistsWithId(groupId)) {
+            if (groupService.isExistsById(groupId)) {
                 lesson.setGroup(groupService.getById(groupId));
                 lessonService.saveLessonDuringCopy(lesson);
                 lessonsToSave.add(lesson);
@@ -162,5 +160,13 @@ public class LessonController {
             groupWithLessonIdDTOs.add(groupWithLessonIdDTO);
         }
         return groupWithLessonIdDTOs;
+    }
+
+    @PutMapping("/link")
+    @ApiOperation(value = "Update link to meeting")
+    public ResponseEntity<Integer> updateLinkToMeeting(@RequestBody LessonWithLinkDTO lessonWithLinkDTO) {
+        log.info("In updateLinkToMeeting (lessonWithLinkDTO = [{}])", lessonWithLinkDTO);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(lessonService.updateLinkToMeeting(lessonInfoMapper.lessonWithLinkDTOToLesson(lessonWithLinkDTO)));
     }
 }

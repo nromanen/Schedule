@@ -1,29 +1,46 @@
 @import '../../App';
-.semester-card {
-    min-height: 175px;
-    min-width: 170px;
-    margin-bottom: 50px;
-  
-    &__description {
-      text-align: center
-    }
-    &__name {
-      text-align: center
-    }
-  }
-  
-  .wrapper {
-    width: 100%
-  }
 
-  .current {
-    box-shadow: 0 0px 15px 1px $good-color
-  }
-  .default{
-    width: 25px;
-    height: 25px;
-    border: 1px solid green;
-    border-radius: 50%;
-    box-shadow: 0 0px 4px 0.5px $good-color;
+.semester-card {
+  min-height: 175px;
+  min-width: 170px;
+  margin-bottom: 50px;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  align-items: center;
+  height: 30em;
+
+  .semester-groups {
+    font-size: 25px;
     color: #028802;
   }
+
+  &__description {
+    text-align: center
+  }
+
+  &__name {
+    text-align: center
+  }
+}
+
+.wrapper {
+  width: 100%
+}
+
+.current {
+  box-shadow: 0 0px 15px 1px $good-color
+}
+
+.default {
+  width: 25px;
+  height: 25px;
+  border: 1px solid green;
+  border-radius: 50%;
+  box-shadow: 0 0px 4px 0.5px $good-color;
+  color: #028802;
+}
+
+p.semester-card__description {
+  height: 3em;
+}

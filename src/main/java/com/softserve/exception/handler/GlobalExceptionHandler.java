@@ -3,8 +3,6 @@ package com.softserve.exception.handler;
 import com.softserve.exception.*;
 import com.softserve.exception.apierror.ApiError;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.exception.ConstraintViolationException;
-import org.postgresql.util.PSQLException;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -49,14 +47,15 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     /** Handles IncorrectTimeException, IncorrectPasswordException, ScheduleConflictException,
-     * PeriodConflictException, EntityAlreadyExistsException. Triggered when:
+     * PeriodConflictException, EntityAlreadyExistsException, IncorrectEmailException, UsedEntityException.
+     * Triggered when:
      * time in period / password, entered during registration by User, are incorrect;
      * schedule / period have conflicts with already existed entities;
-     * object already exists in an another class.
+     * object already exists in another class.
      */
     @ExceptionHandler({IncorrectTimeException.class, IncorrectPasswordException.class,
             ScheduleConflictException.class, PeriodConflictException.class, EntityAlreadyExistsException.class,
-            IncorrectEmailException.class})
+            IncorrectEmailException.class, UsedEntityException.class, ParseFileException.class})
     protected ResponseEntity<Object> handleIncorrectFieldExceptions(
             RuntimeException ex) {
         ApiError apiError = new ApiError(BAD_REQUEST);
@@ -115,23 +114,10 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     // Handle DataIntegrityViolationException, inspects the cause for different DB causes.
     @ExceptionHandler(DataIntegrityViolationException.class)
     protected ResponseEntity<Object> handlePersistenceException(final DataIntegrityViolationException ex) {
-        Throwable cause = ex.getRootCause();
-        if (cause instanceof PSQLException) {
-            PSQLException consEx = (PSQLException) cause;
-            ApiError apiError = new ApiError(HttpStatus.INTERNAL_SERVER_ERROR);
-            apiError.setMessage(ex.getMessage());
-            apiError.setDebugMessage(consEx.getLocalizedMessage());
-            return buildResponseEntity(apiError);
-        }
-        if (cause instanceof ConstraintViolationException) {
-            ConstraintViolationException consEx = (ConstraintViolationException) cause;
-            ApiError apiError = new ApiError(HttpStatus.INTERNAL_SERVER_ERROR);
-            apiError.setMessage(consEx.getLocalizedMessage());
-            apiError.setDebugMessage(consEx.getLocalizedMessage());
-            return buildResponseEntity(apiError);
-        }
         ApiError apiError = new ApiError(INTERNAL_SERVER_ERROR);
         apiError.setMessage(ex.getLocalizedMessage());
+        apiError.setDebugMessage(ex.getLocalizedMessage());
+        log.error(ex.getMessage());
         return buildResponseEntity(apiError);
     }
 

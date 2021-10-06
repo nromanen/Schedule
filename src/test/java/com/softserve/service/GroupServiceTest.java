@@ -7,242 +7,180 @@ import com.softserve.exception.EntityNotFoundException;
 import com.softserve.exception.FieldAlreadyExistsException;
 import com.softserve.repository.GroupRepository;
 import com.softserve.service.impl.GroupServiceImpl;
-import org.junit.Ignore;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Optional;
-
+import static org.assertj.core.api.Assertions.assertThat;
+import static java.util.Collections.singletonList;
 import static org.junit.Assert.*;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 @Category(UnitTestCategory.class)
 @RunWith(MockitoJUnitRunner.class)
 public class GroupServiceTest {
-
     @Mock
     private GroupRepository groupRepository;
+
     @Mock
     private SemesterService semesterService;
 
     @InjectMocks
     private GroupServiceImpl groupService;
 
-    @Test
-    public void getAll() {
-        Group group = new Group();
+    private Group group;
+
+    private Student student;
+
+    @Before
+    public void setUp() {
+        group = new Group();
         group.setTitle("some group");
         group.setId(1L);
 
-        Student student = new Student();
+        student = new Student();
         student.setId(1L);
         student.setGroup(group);
-
-        group.getStudents().add(student);
-
-        when(groupRepository.getAll()).thenReturn(Arrays.asList(group));
-        List<Group> actualList = groupService.getAll();
-
-        assertEquals(1, actualList.size());
-        assertSame(actualList.get(0), group);
-        assertEquals(1, actualList.get(0).getStudents().size());
-        assertSame(actualList.get(0).getStudents().get(0), student);
     }
 
     @Test
-    public void getAllWithoutStudents() {
-        Group group = new Group();
-        group.setTitle("some group");
-        group.setId(1L);
+    public void getAll() {
+        List<Group> expected = singletonList(group);
+        when(groupRepository.getAll()).thenReturn(expected);
 
-        Student student = new Student();
-        student.setId(1L);
-        student.setGroup(group);
+        List<Group> actual = groupService.getAll();
 
-        group.getStudents().add(student);
+        assertThat(actual).hasSameSizeAs(expected).isEqualTo(expected);
+        verify(groupRepository).getAll();
+    }
 
-        when(groupRepository.getAllWithoutStudents()).thenReturn(Arrays.asList(group));
-        List<Group> actualList = groupService.getAllWithoutStudents();
+    @Test
+    public void getByTeacherId() {
+        List<Group> expected = singletonList(group);
+        when(groupRepository.getByTeacherId(1L)).thenReturn(expected);
 
-        assertEquals(1, actualList.size());
-        assertSame(actualList.get(0), group);
-        assertEquals(0, actualList.get(0).getStudents().size());
+        List<Group> actual = groupService.getByTeacherId(1L);
+
+        assertThat(actual).hasSameSizeAs(expected).isEqualTo(expected);
+        verify(groupRepository).getByTeacherId(1L);
     }
 
     @Test
     public void getDisabled() {
-        Group group = new Group();
-        group.setId(1L);
-        group.setTitle("some group");
-        group.setDisable(true);
+        List<Group> expected = singletonList(group);
+        when(groupRepository.getDisabled()).thenReturn(expected);
 
-        Student student = new Student();
-        student.setId(1L);
-        student.setGroup(group);
+        List<Group> actual = groupService.getDisabled();
 
-        group.getStudents().add(student);
-
-        when(groupRepository.getDisabled()).thenReturn(Arrays.asList(group));
-        List<Group> disabledActual = groupService.getDisabled();
-
-        assertEquals(1, disabledActual.size());
-        assertSame(disabledActual.get(0), group);
-        assertEquals(1, disabledActual.get(0).getStudents().size());
-        assertSame(disabledActual.get(0).getStudents().get(0), student);
-    }
-
-    @Test
-    public void getDisabledWithoutStudents() {
-        Group group = new Group();
-        group.setId(1L);
-        group.setTitle("some group");
-        group.setDisable(true);
-
-        Student student = new Student();
-        student.setId(1L);
-        student.setGroup(group);
-
-        group.getStudents().add(student);
-
-        when(groupRepository.getDisabledWithoutStudents()).thenReturn(Arrays.asList(group));
-        List<Group> disabledActual = groupService.getDisabledWithoutStudents();
-
-        assertEquals(1, disabledActual.size());
-        assertSame(disabledActual.get(0), group);
-        assertEquals(0, disabledActual.get(0).getStudents().size());
+        assertThat(actual).hasSameSizeAs(expected).isEqualTo(expected);
+        verify(groupRepository).getDisabled();
     }
 
     @Test
     public void getGroupById() {
-        Group group = new Group();
-        group.setTitle("some group");
-        group.setId(1L);
+        Group expected = group;
+        when(groupRepository.findById(expected.getId())).thenReturn(Optional.of(expected));
 
-        when(groupRepository.getById(1L)).thenReturn(group);
+        Group actual = groupService.getById(expected.getId());
 
-        Group result = groupService.getById(1L);
-        assertNotNull(result);
-        assertEquals(group.getId(), result.getId());
-        verify(groupRepository, times(1)).getById(anyLong());
+        assertThat(actual).isEqualToComparingFieldByField(expected);
+        verify(groupRepository).findById(expected.getId());
     }
 
     @Test(expected = EntityNotFoundException.class)
     public void throwEntityNotFoundExceptionIfGroupNotFoundedById() {
-        Group group = new Group();
-        group.setTitle("some group");
-        group.setId(1L);
-
-        groupService.getById(2L);
-        verify(groupRepository, times(1)).getById(2L);
+        Long id = 1L;
+        when(groupRepository.findById(id)).thenReturn(Optional.empty());
+        groupService.getById(id);
+        verify(groupRepository).findById(id);
     }
 
     @Test
-    public void saveGroupIfTitleDoestNotExists() {
-        Group group = new Group();
-        group.setTitle("some group");
-        group.setId(1L);
+    public void isExistsGroupById() {
+        boolean expected = true;
+        Long id = 1L;
+        when(groupRepository.isExistsById(id)).thenReturn(expected);
 
-        when(groupRepository.countGroupsWithTitle(anyString())).thenReturn(0L);
-        when(groupRepository.save(group)).thenReturn(group);
+        boolean actual = groupService.isExistsById(id);
 
-        Group result = groupService.save(group);
-        assertNotNull(result);
-        assertEquals(group.getTitle(), result.getTitle());
-        verify(groupRepository, times(1)).save(group);
-        verify(groupRepository, times(1)).countGroupsWithTitle(anyString());
-    }
-
-    @Test(expected = FieldAlreadyExistsException.class)
-    public void throwFieldAlreadyExistsExceptionIfSavedGroupAlreadyExists() {
-        Group group = new Group();
-        group.setTitle("some group");
-        group.setId(1L);
-
-        when(groupRepository.countGroupsWithTitle(anyString())).thenReturn(1L);
-
-        groupService.save(group);
-        verify(groupRepository, times(1)).save(group);
-        verify(groupRepository, times(1)).countGroupsWithTitle(anyString());
+        assertThat(actual).isTrue();
+        verify(groupRepository).isExistsById(id);
     }
 
     @Test
-    public void updateGroupIfTitleDoesNotExists() {
-        Group oldGroup = new Group();
-        oldGroup.setTitle("some title");
-        oldGroup.setId(1L);
-        Group updatedGroup = new Group();
-        updatedGroup.setTitle("updated title");
-        updatedGroup.setId(1L);
+    public void getGroupWithStudentsById() {
+        Group expected = group;
+        group.getStudents().add(student);
+        when(groupRepository.findById(expected.getId())).thenReturn(Optional.of(expected));
 
-        when(groupRepository.update(updatedGroup)).thenReturn(updatedGroup);
-        when(groupRepository.getById(anyLong())).thenReturn(oldGroup);
+        Group actual = groupService.getById(expected.getId());
 
-        oldGroup = groupService.update(updatedGroup);
-        assertNotNull(oldGroup);
-        assertEquals(updatedGroup, oldGroup);
-        verify(groupRepository, times(1)).update(oldGroup);
+        assertThat(actual.getStudents()).hasSize(expected.getStudents().size());
+        assertThat(actual).isEqualToComparingFieldByField(expected);
+        verify(groupRepository).findById(expected.getId());
     }
 
-    @Test
-    public void delete() {
-        Group expectedGroup = new Group();
-        expectedGroup.setTitle("some group");
-        expectedGroup.setId(1L);
-
-        when(groupRepository.delete(any(Group.class))).thenReturn(expectedGroup);
-        when(groupRepository.getById(anyLong())).thenReturn(expectedGroup);
-        Group deletedGroup = groupService.delete(expectedGroup);
-
-        assertNotNull(deletedGroup);
-        assertEquals(expectedGroup, deletedGroup);
-        verify(groupRepository).delete(any());
-    }
-
-    @Ignore
-    @Test(expected = FieldAlreadyExistsException.class)
-    public void throwFieldAlreadyExistsExceptionIfUpdatedTitleAlreadyExists() {
-        Group oldGroup = new Group();
-        oldGroup.setTitle("some group");
-        oldGroup.setId(1L);
-        Group updatedSubject = new Group();
-        updatedSubject.setTitle("updated group");
-        updatedSubject.setId(1L);
-
-        when(groupRepository.countByGroupId(anyLong())).thenReturn(1L);
-        when(groupRepository.countGroupsWithTitleAndIgnoreWithId(anyLong(), anyString())).thenReturn(1L);
-
-        oldGroup = groupService.update(updatedSubject);
-        verify(groupRepository, times(1)).countByGroupId(anyLong());
-        verify(groupRepository, times(1)).countGroupsWithTitleAndIgnoreWithId(anyLong(), anyString());
-    }
-
-    @Ignore
     @Test(expected = EntityNotFoundException.class)
-    public void throwEntityNotFoundExceptionIfTryToUpdateNotFoundedGroup() {
-        Group group = new Group();
-        group.setTitle("some group");
-        group.setId(1L);
+    public void throwEntityNotFoundExceptionIfGroupWithStudentsNotFoundedById() {
+        Long id = 1L;
+        when(groupRepository.getWithStudentsById(id)).thenReturn(Optional.empty());
+        groupService.getWithStudentsById(id);
+        verify(groupRepository).getWithStudentsById(id);
+    }
 
-        when(groupRepository.countByGroupId(anyLong())).thenReturn(0L);
+    @Test
+    public void saveGroup() {
+        Group expected = group;
+        when(groupRepository.isExistsByTitle(expected.getTitle())).thenReturn(false);
+        when(groupRepository.save(expected)).thenReturn(expected);
 
-        groupService.update(group);
-        verify(groupService, times(1)).update(group);
+        Group actual = groupService.save(expected);
+
+        assertThat(actual).isEqualToComparingFieldByField(expected);
+        verify(groupRepository).save(expected);
+        verify(groupRepository).isExistsByTitle(expected.getTitle());
+    }
+
+    @Test
+    public void updateGroup() {
+        Group expected = group;
+        when(groupRepository.isExistsByTitleIgnoringId(expected.getTitle(), expected.getId())).thenReturn(false);
+        when(groupRepository.update(expected)).thenReturn(expected);
+
+        Group actual = groupService.update(expected);
+
+        assertThat(actual).isEqualToComparingFieldByField(expected);
+        verify(groupRepository).isExistsByTitleIgnoringId(expected.getTitle(), expected.getId());
+        verify(groupRepository, times(1)).update(expected);
+    }
+
+    @Test(expected = FieldAlreadyExistsException.class)
+    public void throwFieldAlreadyExistsExceptionIfTitleAlreadyExistsOnSave() {
+        when(groupRepository.isExistsByTitle(anyString())).thenReturn(true);
+        groupService.save(group);
+        verify(groupRepository).isExistsByTitle(group.getTitle());
+    }
+
+    @Test
+    public void deleteGroup() {
+        Group expected = group;
+        when(groupRepository.delete(group)).thenReturn(group);
+
+        Group actual = groupService.delete(expected);
+
+        assertThat(actual).isEqualToComparingFieldByField(expected);
+        verify(groupRepository).delete(expected);
     }
 
     @Test
     public void getGroupsBySemesterId() {
-        Group group = new Group();
-        group.setTitle("some group");
-        group.setId(1L);
         List<Group> groupList = new ArrayList<>();
         groupList.add(group);
         Semester semester = new Semester();
@@ -253,11 +191,8 @@ public class GroupServiceTest {
         verify(semesterService, times(1)).getById(1L);
     }
 
-   @Test
+    @Test
     public void getGroupsForCurrentSemester() {
-        Group group = new Group();
-        group.setTitle("some group");
-        group.setId(1L);
         List<Group> groupList = new ArrayList<>();
         groupList.add(group);
         Semester semester = new Semester();
@@ -268,5 +203,37 @@ public class GroupServiceTest {
         verify(semesterService, times(1)).getCurrentSemester();
     }
 
+    @Test
+    public void getGroupsForDefaultSemester() {
+        List<Group> groupList = new ArrayList<>();
+        groupList.add(group);
+        Semester semester = new Semester();
+        semester.setDefaultSemester(true);
+        semester.setGroups(groupList);
+        when(semesterService.getDefaultSemester()).thenReturn(semester);
+        assertEquals(groupService.getGroupsForDefaultSemester(), semester.getGroups());
+        verify(semesterService, times(1)).getDefaultSemester();
+    }
 
+    @Test
+    public void getGroupsByGroupIds() {
+        Group group1 = new Group();
+        group1.setTitle("some group1");
+        group1.setId(1L);
+        Group group2 = new Group();
+        group2.setTitle("some group2");
+        group2.setId(2L);
+        List<Group> groupList = new ArrayList<>();
+        groupList.add(group1);
+        groupList.add(group2);
+        Semester semester = new Semester();
+        semester.setDefaultSemester(true);
+        semester.setGroups(groupList);
+        Long[] groupIds = {1L, 2L};
+
+        when(groupRepository.findById(1L)).thenReturn(Optional.of(group1));
+        when(groupRepository.findById(2L)).thenReturn(Optional.of(group2));
+
+        assertEquals(groupService.getGroupsByGroupIds(groupIds), groupList);
+    }
 }

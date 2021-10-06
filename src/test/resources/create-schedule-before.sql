@@ -1,14 +1,17 @@
-delete from "public".schedules;
-delete from "public".lessons;
-delete from "public".semester_period;
-delete from "public".semester_day;
-delete from "public".semesters;
-delete from "public".groups;
-delete from "public".teachers;
-delete from "public".subjects;
-delete from "public".periods;
-delete from "public".rooms;
-delete from "public".room_types;
+TRUNCATE
+    "public".schedules,
+    "public".lessons,
+    "public".semester_period,
+    "public".semester_day,
+    "public".semesters,
+    "public".groups,
+    "public".teachers,
+    "public".subjects,
+    "public".periods,
+    "public".rooms,
+    "public".room_types
+    RESTART IDENTITY
+    CASCADE;
 
 insert into "public".room_types(id, description) values
 (4, 'small auditory'),

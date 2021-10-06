@@ -13,7 +13,15 @@ import java.util.Locale;
 import java.util.Map;
 
 public interface ScheduleService extends BasicService<Schedule, Long> {
+    List<Schedule> schedulesForGroupedLessons(Schedule schedule);
+
+    List<Schedule> getSchedulesForGroupedLessons(Schedule schedule);
+
+    void checkReferences(Schedule schedule);
+
     CreateScheduleInfoDTO getInfoForCreatingSchedule(Long semesterId, DayOfWeek dayOfWeek, EvenOdd evenOdd, Long classId, Long lessonId);
+
+    boolean isConflictForGroupInSchedule(Long semesterId, DayOfWeek dayOfWeek, EvenOdd evenOdd, Long classId, Long lessonId);
 
     List<ScheduleForGroupDTO> getFullScheduleForGroup(Long semesterId, Long groupId);
 

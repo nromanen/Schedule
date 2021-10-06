@@ -2,7 +2,12 @@ package com.softserve.repository;
 
 import com.softserve.entity.Student;
 
+import java.util.Optional;
+
 public interface StudentRepository extends BasicRepository <Student, Long> {
-    Student getById(Long id);
-    Student findByEmail(String email);
+    boolean isExistsByEmail(String email);
+
+    boolean isExistsByEmailIgnoringId(String email, Long id);
+
+    Optional<Student> findByEmail(String email);
 }

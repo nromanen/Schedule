@@ -5,6 +5,7 @@ import com.softserve.dto.*;
 import com.softserve.entity.*;
 import com.softserve.entity.enums.EvenOdd;
 import com.softserve.entity.enums.LessonType;
+import com.softserve.exception.EntityAlreadyExistsException;
 import com.softserve.exception.EntityNotFoundException;
 import com.softserve.exception.MessageNotSendException;
 import com.softserve.exception.ScheduleConflictException;
@@ -113,19 +114,64 @@ public class ScheduleServiceImpl implements ScheduleService {
     /**
      * Method saves new Schedule to Repository
      *
-     * @param object Schedule entity with info to be saved
+     * @param schedule Schedule entity with info to be saved
      * @return saved Schedule entity
      */
     @Override
-    public Schedule save(Schedule object) {
-        log.info("In save(entity = [{}]", object);
-        if (isConflictForGroupInSchedule(semesterService.getCurrentSemester().getId(), object.getDayOfWeek(), object.getEvenOdd(), object.getPeriod().getId(), object.getLesson().getId())) {
-            log.error("Schedule for group with id [{}] has conflict with already existing", object.getLesson().getGroup().getId());
+    public Schedule save(Schedule schedule) {
+        log.info("In save(entity = [{}]", schedule);
+        if (isConflictForGroupInSchedule(schedule.getLesson().getSemester().getId(), schedule.getDayOfWeek(), schedule.getEvenOdd(), schedule.getPeriod().getId(), schedule.getLesson().getId())) {
+            log.error("Schedule for group with id [{}] has conflict with already existing", schedule.getLesson().getGroup().getId());
             throw new ScheduleConflictException("You can't create schedule item for this group, because one already exists");
         } else {
-            return scheduleRepository.save(object);
+            return scheduleRepository.save(schedule);
         }
     }
+    /**
+     * Method create List of schedules in accordance to grouped lessons
+     *
+     * @param schedule Schedule entity with grouped lesson
+     * @return List of schedules for grouped lessons
+     */
+    @Override
+    public List<Schedule> schedulesForGroupedLessons(Schedule schedule) {
+        log.info("In schedulesForGroupedLessons(schedule = [{}]", schedule);
+        List<Schedule> schedules = new ArrayList<>();
+        List<Lesson> lessons = lessonService.getAllGroupedLessonsByLesson(schedule.getLesson());
+        lessons.forEach(lesson -> {
+            Schedule newSchedule = new Schedule();
+            newSchedule.setRoom(schedule.getRoom());
+            newSchedule.setDayOfWeek(schedule.getDayOfWeek());
+            newSchedule.setPeriod(schedule.getPeriod());
+            newSchedule.setEvenOdd(schedule.getEvenOdd());
+            newSchedule.setLesson(lesson);
+            schedules.add(newSchedule);
+        });
+        return schedules;
+    }
+
+    @Override
+    public List<Schedule> getSchedulesForGroupedLessons(Schedule schedule) {
+        log.info("In getSchedulesForGroupedLessons(schedule = [{}]", schedule);
+        List<Schedule> schedules = new ArrayList<>();
+        schedulesForGroupedLessons(schedule).forEach(schedule1 -> {
+            schedules.add(scheduleRepository.getScheduleByObject(schedule1));
+        });
+        return schedules;
+    }
+
+    @Override
+    public void checkReferences(Schedule schedule) {
+        if (isLessonInScheduleByLessonIdPeriodIdEvenOddDayOfWeek(schedule.getLesson().getId(), schedule.getPeriod().getId(), schedule.getEvenOdd(), schedule.getDayOfWeek())) {
+            log.error("Lessons with group title [{}] already exists in schedule", schedule.getLesson().getGroup().getTitle());
+            throw new EntityAlreadyExistsException("Lessons with this group title already exists");
+        }
+        if (isConflictForGroupInSchedule(schedule.getLesson().getSemester().getId(), schedule.getDayOfWeek(), schedule.getEvenOdd(), schedule.getPeriod().getId(), schedule.getLesson().getId())) {
+            log.error("Schedule for group with id [{}] has conflict with already existing", schedule.getLesson().getGroup().getId());
+            throw new ScheduleConflictException("You can't create schedule item for this group, because one already exists");
+        }
+    }
+
 
     /**
      * Method updates information for an existing Schedule in Repository
@@ -181,7 +227,8 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     //verifies if group has conflict in schedule when it saves
-    private boolean isConflictForGroupInSchedule(Long semesterId, DayOfWeek dayOfWeek, EvenOdd evenOdd, Long classId, Long lessonId) {
+    @Override
+    public boolean isConflictForGroupInSchedule(Long semesterId, DayOfWeek dayOfWeek, EvenOdd evenOdd, Long classId, Long lessonId) {
         log.info("In isConflictForGroupInSchedule(semesterId = [{}], dayOfWeek = [{}], evenOdd = [{}], classId = [{}], lessonId = [{}])", semesterId, dayOfWeek, evenOdd, classId, lessonId);
         //Get group ID from Lesson by lesson ID to search further by group ID
         Long groupId = lessonService.getById(lessonId).getGroup().getId();
@@ -889,7 +936,7 @@ return fullScheduleForTeacherByDateRange(dateRangeSchedule,  fromDate, toDate);
         PdfReportGenerator generatePdfReport = new PdfReportGenerator();
         ByteArrayOutputStream bos = generatePdfReport.teacherScheduleReport(schedule, language);
         String teacherEmail = userService.getById(Long.valueOf(teacher.getUserId())).getEmail();
-        mailService.send("Schedule.pdf",
+        mailService.send(String.format("%s_%s_%s_%s.pdf", semesterService.getById(semesterId).getDescription(), teacher.getSurname(), teacher.getName(), teacher.getPatronymic()),
                 teacherEmail,
                 "Schedule",
                 String.format("Schedule for %s %s %s", teacher.getSurname(), teacher.getName(), teacher.getPatronymic()),

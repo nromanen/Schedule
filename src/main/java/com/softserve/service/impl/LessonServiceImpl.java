@@ -10,7 +10,6 @@ import com.softserve.repository.LessonRepository;
 import com.softserve.service.LessonService;
 import com.softserve.service.SemesterService;
 import com.softserve.service.SubjectService;
-import com.softserve.service.TeacherService;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,14 +26,12 @@ import java.util.List;
 public class LessonServiceImpl implements LessonService {
 
     private final LessonRepository lessonRepository;
-    private final TeacherService teacherService;
     private final SubjectService subjectService;
     private final SemesterService semesterService;
 
     @Autowired
-    public LessonServiceImpl(LessonRepository lessonRepository, TeacherService teacherService, SubjectService subjectService, SemesterService semesterService) {
+    public LessonServiceImpl(LessonRepository lessonRepository, SubjectService subjectService, SemesterService semesterService) {
         this.lessonRepository = lessonRepository;
-        this.teacherService = teacherService;
         this.subjectService = subjectService;
         this.semesterService = semesterService;
     }
@@ -106,6 +103,26 @@ public class LessonServiceImpl implements LessonService {
             }
             return lessonRepository.save(object);
         }
+    }
+
+    /**
+     * Method saves new lessons to Repository.
+     * Saves only lessons that did not exist in the database.
+     * @param lessons Lessons entities with info to be saved
+     * @return saved Lessons entities
+     */
+    @Override
+    public List<Lesson> save(List<Lesson> lessons) {
+        log.info("In save(lessons = [{}])", lessons);
+        List<Lesson> lessonsList = new ArrayList<>();
+        lessons.forEach(lesson -> {
+            try {
+                lessonsList.add(save(lesson));
+            } catch (EntityAlreadyExistsException e) {
+                log.warn(e.getMessage());
+            }
+        });
+        return lessonsList;
     }
 
     /**
@@ -252,5 +269,27 @@ public class LessonServiceImpl implements LessonService {
             Hibernate.initialize(e.getSemester().getGroups());
         });
         return lessons;
+    }
+
+    /**
+     * The method used for getting all lessons which are grouped by lesson
+     *
+     * @param lesson Lesson object for getting lessons
+     * @return List of Lessons
+     */
+    @Override
+    public List<Lesson> getAllGroupedLessonsByLesson(Lesson lesson) {
+        return lessonRepository.getGroupedLessonsByLesson(lesson);
+    }
+
+    /**
+     * The method used for updating links to meeting for lessons
+     * @param lesson Lesson object with new link to meeting
+     * @return Integer the number of links that was updated
+     */
+    @Override
+    public Integer updateLinkToMeeting(Lesson lesson) {
+        log.info("In service updateLinkToMeeting lesson = [{}]", lesson);
+        return lessonRepository.updateLinkToMeeting(lesson);
     }
 }

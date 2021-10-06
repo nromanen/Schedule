@@ -1,7 +1,7 @@
 package com.softserve.service.impl;
 
+import com.softserve.dto.SubjectWithTypeDTO;
 import com.softserve.entity.Group;
-import com.softserve.entity.Semester;
 import com.softserve.entity.Subject;
 import com.softserve.exception.EntityNotFoundException;
 import com.softserve.exception.FieldAlreadyExistsException;
@@ -139,5 +139,15 @@ public class SubjectServiceImpl implements SubjectService {
         return subjectRepository.getDisabled();
     }
 
-
+    /**
+     * The method used for getting subjects with their types from database
+     * @param semesterId Long semester from which subjects will be taken
+     * @param teacherId Long teacher who teaches subjects
+     * @return List of subjects with their types
+     */
+    @Override
+    public List<SubjectWithTypeDTO> getSubjectsWithTypes(Long semesterId, Long teacherId) {
+        log.info("In service getSubjects(semesterId = [{}], teacherId = [{}])", semesterId, teacherId);
+        return subjectRepository.getSubjectsWithTypes(semesterId, teacherId);
+    }
 }

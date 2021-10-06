@@ -1,11 +1,14 @@
-delete from "public".lessons;
-delete from "public".semester_period;
-delete from "public".periods;
-delete from "public".semester_day;
-delete from "public".semesters;
-delete from "public".groups;
-delete from "public".teachers;
-delete from "public".subjects;
+TRUNCATE
+    "public".lessons,
+    "public".semester_period,
+    "public".periods,
+    "public".semester_day,
+    "public".semesters,
+    "public".groups,
+    "public".teachers,
+    "public".subjects
+    RESTART IDENTITY
+    CASCADE;
 
 
 insert into "public".subjects(id, name) VALUES
@@ -52,4 +55,9 @@ insert into "public".lessons(id, hours, lessontype, subject_for_site, link_to_me
 (4, 1, 'LECTURE', '', '', 7, 5, 5, 5),
 (5, 1, 'LABORATORY', '', '', 6, 4, 4, 4),
 (6, 2, 'LABORATORY', '', '', 5, 4, 5, 6),
-(7, 2, 'PRACTICAL', '', '', 4, 6, 6, 6);
+(7, 2, 'PRACTICAL', '', '', 4, 6, 6, 6),
+(8, 1, 'LABORATORY', '', '', 7, 6, 4, 4),
+(9, 1, 'LECTURE', '', '', 7, 4, 5, 5),
+(10, 1, 'LECTURE', '', '', 7, 4, 4, 5),
+(11, 1, 'PRACTICAL', '', '', 7, 5, 5, 5),
+(12, 1, 'PRACTICAL', '', '', 5, 5, 5, 5);

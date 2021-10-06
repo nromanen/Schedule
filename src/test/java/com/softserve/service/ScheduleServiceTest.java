@@ -30,8 +30,6 @@ public class ScheduleServiceTest {
     @Mock
     private ScheduleRepository scheduleRepository;
     @Mock
-    private TemporaryScheduleService temporaryScheduleService;
-    @Mock
     private LessonService lessonService;
     @Mock
     private TeacherService teacherService;
@@ -141,13 +139,12 @@ public class ScheduleServiceTest {
 
     @Test
     public void sendScheduleToTeachers() throws MessagingException {
-
         User user = new User();
         user.setId(1L);
         user.setEmail("Test@gmail.com");
         Teacher teacher = new Teacher();
         teacher.setId(1L);
-        teacher.setUserId(1);
+        teacher.setUserId(1L);
         Semester semester = new Semester();
         semester.setId(1L);
         TeacherDTO teacherDTO = new TeacherDTO();
@@ -172,7 +169,7 @@ public class ScheduleServiceTest {
         user.setEmail("Test@gmail.com");
         Teacher teacher = new Teacher();
         teacher.setId(1L);
-        teacher.setUserId(1);
+        teacher.setUserId(1L);
         Semester semester = new Semester();
         semester.setId(1L);
         TeacherDTO teacherDTO = new TeacherDTO();
@@ -188,4 +185,38 @@ public class ScheduleServiceTest {
         scheduleServiceImpl.sendScheduleToTeacher(1L, 1L, Locale.ENGLISH);
         verify(mailService, times(1)).send(anyString(), anyString(), anyString(), anyString(),any());
     }
+
+    @Test
+    public void scheduleForGroupedLessons() {
+        Group group = new Group();
+        Group group2 = new Group();
+        Semester semester = new Semester();
+        Lesson lesson = new Lesson();
+        Lesson lesson2 = new Lesson();
+        Period period = new Period();
+        Room room = new Room();
+        lesson.setId(1L);
+        lesson.setSemester(semester);
+        lesson.setGroup(group);
+        lesson.setGrouped(true);
+        lesson2.setId(2L);
+        lesson2.setSemester(semester);
+        lesson2.setGroup(group2);
+        lesson2.setGrouped(true);
+        Schedule schedule = new Schedule();
+        schedule.setId(1L);
+        schedule.setEvenOdd(EvenOdd.ODD);
+        schedule.setLesson(lesson);
+        schedule.setPeriod(period);
+        schedule.setDayOfWeek(DayOfWeek.MONDAY);
+        schedule.setRoom(room);
+        when(lessonService.getAllGroupedLessonsByLesson(lesson)).thenReturn(Arrays.asList(lesson2, lesson));
+        when(lessonService.getById(1L)).thenReturn(lesson);
+        when(lessonService.getById(2L)).thenReturn(lesson2);
+        when(scheduleRepository.countByLessonIdPeriodIdEvenOddDayOfWeek(any(),any(),any(),any())).thenReturn(0L);
+        when(scheduleRepository.conflictForGroupInSchedule(any(),any(),any(),any(),any())).thenReturn(0L);
+        List<Schedule> schedules = scheduleServiceImpl.schedulesForGroupedLessons(schedule);
+        assertEquals(2, schedules.size());
+    }
+
 }
