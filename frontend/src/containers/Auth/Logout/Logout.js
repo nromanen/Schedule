@@ -1,9 +1,8 @@
 import React, { useEffect } from 'react';
-import { Redirect, useHistory } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import { logout } from '../../../redux/actions/index';
-import { setScheduleSemesterIdService } from '../../../services/scheduleService';
 
 const Logout = (props) => {
     useEffect(() => {

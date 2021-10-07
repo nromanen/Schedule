@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import * as _ from 'lodash';
 
 import { CircularProgress } from '@material-ui/core';
 import { activateUser } from '../../redux/actions';
@@ -24,7 +25,7 @@ const ActivationPage = (props) => {
     const { response } = props;
     let redirect = null;
 
-    if (response && response.data.hasOwnProperty('message')) {
+    if (response && _.has(response.data, 'message')) {
         redirect = <Redirect to={links.AUTH} />;
         handleSnackbarOpenService(true, snackbarTypes.SUCCESS, response.data.message);
     }
