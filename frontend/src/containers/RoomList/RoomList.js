@@ -5,7 +5,7 @@ import { MdDelete } from 'react-icons/md';
 import { useTranslation } from 'react-i18next';
 import { GiSightDisabled, IoMdEye } from 'react-icons/all';
 import ConfirmDialog from '../../share/modals/dialog';
-import cardType from '../../constants/cardType';
+import { cardType } from '../../constants/cardType';
 import FreeRooms from '../FreeRooms/freeRooms';
 import AddRoom from '../../components/AddRoomForm/AddRoomForm';
 import NewRoomType from '../../components/AddNewRoomType/AddNewRoomType';
@@ -29,7 +29,7 @@ import { getAllRoomTypesService, addNewTypeService } from '../../services/roomTy
 
 import NotFound from '../../share/NotFound/NotFound';
 
-import disabledCard from '../../constants/disabledCard';
+import { disabledCard } from '../../constants/disabledCard';
 import NavigationPage from '../../components/Navigation/NavigationPage';
 import { navigation, navigationNames } from '../../constants/navigation';
 
@@ -120,27 +120,27 @@ const RoomList = (props) => {
                 isHide={hideDialog}
                 onClose={handleClose}
             />
-            <div className="cards-container">
-                <aside className="search-list__panel">
+            <div className='cards-container'>
+                <aside className='search-list__panel'>
                     <SearchPanel SearchChange={SearchChange} showDisabled={showDisabledHandle} />
                     {disabled ? (
                         ''
                     ) : (
                         <>
                             <AddRoom onSubmit={createRoom} onReset={handleFormReset} />
-                            <NewRoomType className="new-type" onSubmit={submitType} />
+                            <NewRoomType className='new-type' onSubmit={submitType} />
                         </>
                     )}
                 </aside>
-                <section className="container-flex-wrap wrapper">
+                <section className='container-flex-wrap wrapper'>
                     {visibleItems.length === 0 && <NotFound name={t('room_y_label')} />}
                     {visibleItems.map((room, index) => (
-                        <Card key={index} {...room} class="room-card done-card">
-                            <div className="cards-btns">
+                        <Card key={index} {...room} class='room-card done-card'>
+                            <div className='cards-btns'>
                                 {!disabled ? (
                                     <>
                                         <GiSightDisabled
-                                            className="svg-btn copy-btn"
+                                            className='svg-btn copy-btn'
                                             title={t('common:set_disabled')}
                                             onClick={() => {
                                                 setHideDialog(disabledCard.HIDE);
@@ -148,13 +148,13 @@ const RoomList = (props) => {
                                             }}
                                         />
                                         <FaEdit
-                                            className="svg-btn"
+                                            className='svg-btn'
                                             onClick={() => editHandler(room.id)}
                                         />
                                     </>
                                 ) : (
                                     <IoMdEye
-                                        className="svg-btn copy-btn"
+                                        className='svg-btn copy-btn'
                                         title={t('common:set_enabled')}
                                         onClick={() => {
                                             setHideDialog(disabledCard.SHOW);
@@ -164,15 +164,15 @@ const RoomList = (props) => {
                                 )}
 
                                 <MdDelete
-                                    className="svg-btn"
+                                    className='svg-btn'
                                     onClick={() => handleClickOpen(room.id)}
                                 />
                             </div>
 
                             <span> {`${t('room_label')}:`} </span>
-                            <h2 className="room-card__number">{room.name}</h2>
+                            <h2 className='room-card__number'>{room.name}</h2>
                             <span>{`${t('type_label')}:`}</span>
-                            <h2 className="room-card__number">{room.type.description}</h2>
+                            <h2 className='room-card__number'>{room.type.description}</h2>
                         </Card>
                     ))}
                 </section>

@@ -1,2 +1,2 @@
 const TOKEN_BEGIN = 'Bearer_';
-export default TOKEN_BEGIN;
+export { TOKEN_BEGIN };

@@ -32,7 +32,7 @@ import {
     CopyLessonsFromSemesterService,
 } from '../../services/semesterService';
 
-import cardType from '../../constants/cardType';
+import { cardType } from '../../constants/cardType';
 
 import './LessonPage.scss';
 import SearchPanel from '../../share/SearchPanel/SearchPanel';

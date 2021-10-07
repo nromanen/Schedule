@@ -9,7 +9,7 @@ import {
     checkUniqueDepartment,
 } from './storeValidation';
 import i18n from '../helper/i18n';
-import validation from '../constants/validation';
+import { validation } from '../constants/validation';
 
 export const required = (value) =>
     value ? undefined : i18n.t('validationMessages:required_message');

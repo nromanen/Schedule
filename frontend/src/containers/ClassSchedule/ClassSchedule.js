@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 import ClassForm from '../../components/ClassForm/ClassForm';
 import Card from '../../share/Card/Card';
 import ConfirmDialog from '../../share/modals/dialog';
-import cardType from '../../constants/cardType';
+import { cardType } from '../../constants/cardType';
 
 import {
     getClassScheduleListService,
@@ -19,7 +19,7 @@ import {
 } from '../../services/classService';
 
 import { handleSnackbarOpenService } from '../../services/snackbarService';
-import snackbarTypes from '../../constants/snackbarTypes';
+import { snackbarTypes }from '../../constants/snackbarTypes';
 import NavigationPage from '../../components/Navigation/NavigationPage';
 import { navigation, navigationNames } from '../../constants/navigation';
 

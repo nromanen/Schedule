@@ -11,7 +11,7 @@ import ConfirmDialog from '../../../share/modals/dialog';
 import TemporaryScheduleCard from '../TemporaryScheduleCard/TemporaryScheduleCard';
 import TemporaryScheduleCardButtons from '../TemporaryScheduleCardButtons/TemporaryScheduleCardButtons';
 
-import cardType from '../../../constants/cardType';
+import { cardType } from '../../../constants/cardType';
 
 import { deleteTemporaryScheduleService } from '../../../services/temporaryScheduleService';
 

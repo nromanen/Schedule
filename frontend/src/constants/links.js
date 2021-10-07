@@ -32,4 +32,4 @@ const links = {
     Departments: '/departments',
 };
 
-export default links;
+export { links };

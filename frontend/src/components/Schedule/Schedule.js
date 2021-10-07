@@ -19,8 +19,8 @@ import {
 import { getLessonsByGroupService, selectGroupIdService } from '../../services/lessonService';
 import { setLoadingService } from '../../services/loadingService';
 
-import cssClasses from '../../constants/schedule/cssClasses';
-import colors from '../../constants/schedule/colors';
+import { cssClasses } from '../../constants/schedule/cssClasses';
+import { colors } from '../../constants/schedule/colors';
 
 import './Schedule.scss';
 
@@ -83,7 +83,7 @@ const Schedule = (props) => {
                         value.itemData.groupId
                     }-in-day-${value.itemData.item.dayOfWeek.toLowerCase()}-class-${
                         value.itemData.item.period.id
-                    }-week-${value.itemData.item.evenOdd.toLowerCase()}`,
+                    }-week-${value.itemData.item.evenOdd.toLowerCase()}`
                 );
             } else {
                 setNewItemHandle(value.itemData.item, value.room, value.itemData.groupId);
@@ -92,7 +92,7 @@ const Schedule = (props) => {
                         value.itemData.groupId
                     }-day-${value.itemData.item.dayOfWeek.toLowerCase()}-class-${
                         value.itemData.item.periodId
-                    }-week-${value.itemData.item.evenOdd.toLowerCase()}`,
+                    }-week-${value.itemData.item.evenOdd.toLowerCase()}`
                 );
             }
             el.scrollIntoView();
@@ -235,7 +235,7 @@ const Schedule = (props) => {
     };
 
     return (
-        <section className="cards-container schedule">
+        <section className='cards-container schedule'>
             <ScheduleDialog
                 translation={t}
                 itemData={itemData}
@@ -245,8 +245,8 @@ const Schedule = (props) => {
                 isLoading={props.isLoading}
                 onClose={handleClose}
             />
-            <aside className="day-classes-aside">
-                <section className="card empty-card">Група</section>
+            <aside className='day-classes-aside'>
+                <section className='card empty-card'>Група</section>
                 {days.map((day, index) => (
                     <section
                         className={`${elClasses.dayContainer} cards-container day-container`}
@@ -258,7 +258,7 @@ const Schedule = (props) => {
                         >
                             {t(`day_of_week_${day}`)}
                         </section>
-                        <section className="class-section">
+                        <section className='class-section'>
                             {classes.map((classScheduler) => (
                                 <>
                                     <p
@@ -266,7 +266,7 @@ const Schedule = (props) => {
                                     ></p>
                                     <section
                                         id={`${classScheduler.id}-${day}`}
-                                        className="card schedule-class"
+                                        className='card schedule-class'
                                         key={classScheduler.id}
                                     >
                                         {classScheduler.class_name}
@@ -281,14 +281,14 @@ const Schedule = (props) => {
                 ))}
             </aside>
 
-            <section className="groups-section ">
+            <section className='groups-section '>
                 {groups.map((group) => (
-                    <section key={`group-${group.id}`} className="group-section" id={`${group.id}`}>
-                        <div className="group-title card" id={`group-${group.id}`}>
+                    <section key={`group-${group.id}`} className='group-section' id={`${group.id}`}>
+                        <div className='group-title card' id={`group-${group.id}`}>
                             {group.title}
                         </div>
                         {allLessons.map((lesson, index) => (
-                            <div key={`${group}-${index}`} className="board-div">
+                            <div key={`${group}-${index}`} className='board-div'>
                                 <Board
                                     group={group.id}
                                     day={lesson.day.name}
@@ -306,11 +306,11 @@ const Schedule = (props) => {
                                     className={`board card ${cssClasses.SCHEDULE_BOARD} group-${group.id} schedule-board `}
                                 >
                                     <IoMdMore
-                                        className="more-icon"
+                                        className='more-icon'
                                         title={`${t(`formElements:day_label`)}: ${t(
-                                            `day_of_week_${lesson.day.name.toUpperCase()}`,
+                                            `day_of_week_${lesson.day.name.toUpperCase()}`
                                         ).toLowerCase()}\n${t(`week_label`)}: ${t(
-                                            `week_${lesson.week}_title`,
+                                            `week_${lesson.week}_title`
                                         )}\n${t('class_schedule')}: ${
                                             lesson.classNumber.class_name
                                         }`}
@@ -319,7 +319,7 @@ const Schedule = (props) => {
                                 </Board>
                             </div>
                         ))}
-                        <div className="group-title card" id={`group-${group.id}`}>
+                        <div className='group-title card' id={`group-${group.id}`}>
                             {group.title}
                         </div>
                     </section>

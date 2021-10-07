@@ -24,7 +24,7 @@ import {
     setEnabledGroupService,
     showAllGroupsService,
 } from '../../services/groupService';
-import disabledCard from '../../constants/disabledCard';
+import { disabledCard } from '../../constants/disabledCard';
 import NavigationPage from '../../components/Navigation/NavigationPage';
 import { navigation, navigationNames } from '../../constants/navigation';
 
@@ -37,7 +37,7 @@ import {
 } from '../../services/studentService';
 import { ShowStudentsDialog } from '../../share/modals/modal/showStudentsDialog';
 import AddStudentDialog from '../../share/modals/modal/AddStudentDialog';
-import links from '../../constants/links';
+import { links } from '../../constants/links';
 
 import '../../router/Router.scss';
 import { goToGroupPage } from '../../helper/pageRedirection';

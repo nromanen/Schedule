@@ -11,10 +11,10 @@ import Card from '../../share/Card/Card';
 import renderTextField from '../../share/renderedFields/input';
 
 import { RESET_PASSWORD_FORM } from '../../constants/reduxForms';
-import authTypes from '../../constants/auth';
+import { authTypes } from '../../constants/auth';
 
 import { email, required } from '../../validation/validateFields';
-import links from '../../constants/links';
+import { links } from '../../constants/links';
 
 let ResetPasswordForm = (props) => {
     const { t } = useTranslation('formElements');

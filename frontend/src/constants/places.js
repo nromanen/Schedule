@@ -3,4 +3,4 @@ const places = {
     AUDITORY: 'auditory',
     ONLINE: 'online',
 };
-export default places;
+export { places };

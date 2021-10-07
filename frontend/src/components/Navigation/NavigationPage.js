@@ -10,7 +10,7 @@ import { connect } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { setCurrentSemester } from '../../redux/actions';
-import links from '../../constants/links';
+import { links } from '../../constants/links';
 import './NavigationPage.scss';
 import { MenuItem, Select } from '@material-ui/core';
 import { general, tabsComponents } from '../../constants/navigationComponents';

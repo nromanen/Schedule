@@ -24,7 +24,7 @@ import Card from '../../share/Card/Card';
 
 import { SCHEDULE_SEARCH_FORM } from '../../constants/reduxForms';
 import { required } from '../../validation/validateFields';
-import places from '../../constants/places';
+import { places } from '../../constants/places';
 import { getTeacherFullName } from '../../helper/renderTeacher';
 
 const shortid = require('shortid');

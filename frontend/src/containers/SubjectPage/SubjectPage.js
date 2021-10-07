@@ -24,7 +24,7 @@ import {
     setDisabledSubjectsService,
     getDisabledSubjectsService,
 } from '../../services/subjectService';
-import disabledCard from '../../constants/disabledCard';
+import { disabledCard } from '../../constants/disabledCard';
 import NavigationPage from '../../components/Navigation/NavigationPage';
 import { navigation, navigationNames } from '../../constants/navigation';
 

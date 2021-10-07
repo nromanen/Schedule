@@ -2,7 +2,7 @@ import React, { Fragment, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 
-import userRoles from '../../constants/userRoles';
+import { userRoles } from '../../constants/userRoles';
 
 import GroupSchedulePage from '../../components/GroupSchedulePage/GroupSchedulePage';
 

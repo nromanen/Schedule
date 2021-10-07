@@ -27,7 +27,7 @@ import { selectStudentService } from '../services/studentService';
 import './renderStudentTable.scss';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import links from '../constants/links';
+import { links } from '../constants/links';
 
 const useStyles1 = makeStyles((theme) => ({
     root: {

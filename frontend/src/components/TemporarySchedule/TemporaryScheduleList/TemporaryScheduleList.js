@@ -12,7 +12,7 @@ import {
     selectVacationService,
 } from '../../../services/temporaryScheduleService';
 
-import cardType from '../../../constants/cardType';
+import { cardType } from '../../../constants/cardType';
 import TemporaryScheduleCard from '../TemporaryScheduleCard/TemporaryScheduleCard';
 import { getTeacherForSite } from '../../../helper/renderTeacher';
 

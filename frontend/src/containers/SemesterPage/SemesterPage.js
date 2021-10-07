@@ -33,7 +33,7 @@ import {
     setGroupsToSemester,
 } from '../../services/semesterService';
 import { setScheduleTypeService } from '../../services/scheduleService';
-import disabledCard from '../../constants/disabledCard';
+import { disabledCard } from '../../constants/disabledCard';
 
 import GroupSchedulePage from '../../components/GroupSchedulePage/GroupSchedulePage';
 import NavigationPage from '../../components/Navigation/NavigationPage';

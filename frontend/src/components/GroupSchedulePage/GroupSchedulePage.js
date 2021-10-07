@@ -40,8 +40,8 @@ import {
 
 import GroupSchedulePageTop from '../GroupSchedulePageTop/GroupSchedulePageTop';
 import { setLoadingService } from '../../services/loadingService';
-import links from '../../constants/links';
-import places from '../../constants/places';
+import { links } from '../../constants/links';
+import { places } from '../../constants/places';
 import { Contactless } from '@material-ui/icons';
 import { getTeacherWithPosition } from '../../helper/renderTeacher';
 

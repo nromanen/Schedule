@@ -23,7 +23,7 @@ import {
 } from '../../validation/validateFields';
 
 import { CLASS_FORM } from '../../constants/reduxForms';
-import CLASS_DURATION from '../../constants/common';
+import { CLASS_DURATION } from '../../constants/common';
 import { getClearOrCancelTitle, setDisableButton } from '../../helper/disableComponent';
 
 const useStyles = makeStyles((theme) => ({
