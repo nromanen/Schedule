@@ -1,22 +1,19 @@
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import * as _ from 'lodash';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
-
-import { resetFormHandler } from '../../helper/formHelper';
-import { handleSnackbarOpenService } from '../../services/snackbarService';
-
-import { LOGIN_FORM, REGISTRATION_FORM, RESET_PASSWORD_FORM } from '../../constants/reduxForms';
-import { snackbarTypes } from '../../constants/snackbarTypes';
 import { links } from '../../constants/links';
 import { authTypes } from '../../constants/auth';
 import { userRoles } from '../../constants/userRoles';
-import { validation } from '../../constants/validation';
-
+import { snackbarTypes } from '../../constants/snackbarTypes';
 import LoginForm from '../../components/LoginForm/LoginForm';
 import RegistrationForm from '../../components/RegistrationForm/RegistrationForm';
 import ResetPasswordForm from '../../components/ResetPasswordForm/ResetPasswordForm';
-
+import { validation } from '../../constants/validation';
+import { resetFormHandler } from '../../helper/formHelper';
+import { handleSnackbarOpenService } from '../../services/snackbarService';
+import { LOGIN_FORM, REGISTRATION_FORM, RESET_PASSWORD_FORM } from '../../constants/reduxForms';
 import {
     authUser,
     registerUser,
@@ -24,16 +21,18 @@ import {
     setAuthError,
     setLoading,
 } from '../../redux/actions/index';
-
 import './Auth.scss';
 
 const Auth = (props) => {
     const { t } = useTranslation('common');
     const [authType, setAuthType] = useState(authTypes.LOGIN);
 
-    const { error } = props;
     const url = window.document.location;
     const parser = new URL(url);
+
+    let isSuccess;
+    let message;
+    const { error, isLoading } = props;
 
     const socialLoginHandler = (data) => {
         props.setLoading(true);
@@ -55,7 +54,7 @@ const Auth = (props) => {
     if (parser.search.length > 0) {
         const params = parser.search.split('&');
         if (params) {
-            params.map((param) => {
+            params.forEach((param) => {
                 const splitedParam = param.split('=');
                 if (splitedParam) {
                     if (splitedParam[0] === '?social' && splitedParam[1] === 'true') {
@@ -75,7 +74,7 @@ const Auth = (props) => {
         if (
             authType === authTypes.REGISTRATION &&
             props.response &&
-            props.response.data.hasOwnProperty('message')
+            _.has(props.resetPasswordResponse.data, 'message')
         ) {
             setAuthType(authTypes.LOGIN);
             message = t('successful_registered_message');
@@ -84,10 +83,7 @@ const Auth = (props) => {
     }, [props.response]);
 
     useEffect(() => {
-        if (
-            props.resetPasswordResponse &&
-            props.resetPasswordResponse.data.hasOwnProperty('message')
-        ) {
+        if (props.resetPasswordResponse && _.has(props.resetPasswordResponse.data, 'message')) {
             setAuthType(authTypes.LOGIN);
             message = t('successful_reset_password_message');
             handleSnackbarOpenService(true, snackbarTypes.SUCCESS, message);
@@ -131,10 +127,6 @@ const Auth = (props) => {
         resetFormHandler(RESET_PASSWORD_FORM);
     };
 
-    let isSuccess;
-    let message;
-    const isLoading = props.loading;
-
     if (!error && props.userRole) {
         const { token } = props;
         isSuccess = !!token;
@@ -160,19 +152,6 @@ const Auth = (props) => {
     let authPage;
 
     switch (authType) {
-        case authTypes.LOGIN:
-            document.title = t('login_page_title');
-            authPage = (
-                <LoginForm
-                    isLoading={isLoading}
-                    loginError={error}
-                    onSubmit={loginHandler}
-                    switchAuthMode={switchAuthModeHandler}
-                    translation={t}
-                    setError={props.setError}
-                />
-            );
-            break;
         case authTypes.REGISTRATION:
             document.title = t('registration_page_title');
             authPage = (
