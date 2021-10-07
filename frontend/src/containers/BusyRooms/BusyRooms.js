@@ -12,7 +12,8 @@ import NavigationPage from '../../components/Navigation/NavigationPage';
 
 const BusyRooms = (props) => {
     const { t } = useTranslation('common');
-    const { busyRooms, isLoading } = props;
+    const busyRooms = props.busyRooms[0];
+    const isLoading = props.loading;
 
     useEffect(() => {
         getScheduleItemsService();
@@ -155,7 +156,7 @@ const BusyRooms = (props) => {
 };
 
 const mapStateToProps = (state) => ({
-    busyRooms: state.busyRooms.busyRooms[0],
+    busyRooms: state.busyRooms.busyRooms,
     loading: state.loadingIndicator.loading,
     currentSemester: state.schedule.currentSemester,
 });
