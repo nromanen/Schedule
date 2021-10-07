@@ -2,10 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useLocation } from 'react-router-dom';
-import RadioGroup from '@material-ui/core/RadioGroup';
-import { FormLabel, InputLabel, MenuItem, Select } from '@material-ui/core';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Radio from '@material-ui/core/Radio';
 import { MdPictureAsPdf } from 'react-icons/md';
 import i18n from 'i18next';
 import {
@@ -30,19 +26,13 @@ import {
     getFullSchedule,
     getGroupSchedule,
     getTeacherSchedule,
-    setScheduleGroupIdService,
-    setScheduleSemesterIdService,
-    setScheduleTeacherIdService,
-    showAllPublicSemestersService,
     submitSearchSchedule,
-    submitSearchSchedule1,
 } from '../../services/scheduleService';
 
 import GroupSchedulePageTop from '../GroupSchedulePageTop/GroupSchedulePageTop';
 import { setLoadingService } from '../../services/loadingService';
 import { links } from '../../constants/links';
 import { places } from '../../constants/places';
-import { Contactless } from '@material-ui/icons';
 import { getTeacherWithPosition } from '../../helper/renderTeacher';
 
 const GroupSchedulePage = (props) => {
@@ -55,26 +45,23 @@ const GroupSchedulePage = (props) => {
         groupId,
         teacherId,
         semesterId,
-        loading,
-        defaultSemester,
-        semesters,
     } = props;
     const history = useHistory();
 
     const location = useLocation();
-    const emptySchedule = () => <p className="empty_schedule">{t('common:empty_schedule')}</p>;
     const { t } = useTranslation('common');
-    const renderDownloadLink = (entity, semesterId, entityId) => {
+    const emptySchedule = () => <p className="empty_schedule">{t('common:empty_schedule')}</p>;
+    const renderDownloadLink = (entity, semester, entityId) => {
         let link = '';
         const { language } = i18n;
         const languageToRequest = `&language=${language}`;
-        if (semesterId && entityId) {
+        if (semester && entityId) {
             switch (entity) {
                 case 'group':
-                    link = `${PUBLIC_DOWNLOAD_GROUP_SCHEDULE_URL}?groupId=${entityId}&semesterId=${semesterId}${languageToRequest}`;
+                    link = `${PUBLIC_DOWNLOAD_GROUP_SCHEDULE_URL}?groupId=${entityId}&semesterId=${semester}${languageToRequest}`;
                     break;
                 case 'teacher':
-                    link = `${PUBLIC_DOWNLOAD_TEACHER_SCHEDULE_URL}?teacherId=${entityId}&semesterId=${semesterId}${languageToRequest}`;
+                    link = `${PUBLIC_DOWNLOAD_TEACHER_SCHEDULE_URL}?teacherId=${entityId}&semesterId=${semester}${languageToRequest}`;
                     break;
                 default:
                     break;
@@ -94,6 +81,7 @@ const GroupSchedulePage = (props) => {
                 </a>
             );
         }
+        return null;
     };
 
     const renderGroupScheduleTitle = (semester, group) => {
@@ -119,7 +107,7 @@ const GroupSchedulePage = (props) => {
 
     const renderSchedule = () => {
         switch (props.scheduleType) {
-            case 'group':
+            case 'group': {
                 if (
                     (!groupSchedule ||
                         (groupSchedule.schedule && groupSchedule.schedule.length === 0)) &&
@@ -159,6 +147,7 @@ const GroupSchedulePage = (props) => {
                 }
                 setLoadingService(false);
                 break;
+            }
             case 'teacher':
                 if (
                     (!teacherSchedule ||
@@ -191,7 +180,7 @@ const GroupSchedulePage = (props) => {
                     }
                 } else setLoadingService(false);
                 break;
-            case 'full':
+            case 'full': {
                 if (
                     (!fullSchedule.schedule || fullSchedule.schedule.length === 0) &&
                     !props.loading
@@ -206,7 +195,8 @@ const GroupSchedulePage = (props) => {
                 }
                 setLoadingService(false);
                 break;
-            case 'archived':
+            }
+            case 'archived': {
                 if (
                     (!fullSchedule.schedule || fullSchedule.schedule.length === 0) &&
                     !props.loading
@@ -220,8 +210,9 @@ const GroupSchedulePage = (props) => {
                 }
                 setLoadingService(false);
                 break;
-
+            }
             default:
+                return null;
         }
     };
 
@@ -256,7 +247,7 @@ const GroupSchedulePage = (props) => {
             const semester = `${props.defaultSemester.id}`;
             handleSubmit({ semester });
 
-            return;
+            return null;
         }
         if (props.scheduleType !== '' || location.pathname === links.HOME_PAGE) {
             return renderSchedule();
@@ -274,7 +265,14 @@ const GroupSchedulePage = (props) => {
                 group: group != null ? group : 0,
                 teacher: teacher != null ? teacher : 0,
             });
-        } else return null;
+        }
+        return null;
+    };
+
+    const changePlace = (e) => {
+        if (e.target) {
+            setPlace(e.target.value);
+        }
     };
 
     const getTop = () => {
@@ -290,12 +288,6 @@ const GroupSchedulePage = (props) => {
         }
         return null;
     };
-    const changePlace = (e) => {
-        if (e.target) {
-            setPlace(e.target.value);
-        }
-    };
-
     return (
         <>
             {getTop()}

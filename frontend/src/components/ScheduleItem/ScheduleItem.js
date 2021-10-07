@@ -3,8 +3,7 @@ import { MdDelete, MdEdit } from 'react-icons/md';
 
 import { FaUserPlus } from 'react-icons/fa';
 import Card from '../../share/Card/Card';
-import { getTeacherFullName, getTeacherName } from '../../helper/renderTeacher';
-import groups from '../../redux/reducers/groups';
+import { getTeacherName } from '../../helper/renderTeacher';
 
 const ScheduleItem = (props) => {
     let { lesson } = props;
@@ -12,14 +11,13 @@ const ScheduleItem = (props) => {
 
     const item = props.item || null;
     const t = props.translation;
-    const { fStrLetterCapital } = props;
+    const { fStrLetterCapital, addition } = props;
 
     if (item) {
-        lesson = item.lesson;
-        itemId = item.id;
+        const { lesson: propsItemLesson, id: propsItemId } = { item };
+        lesson = propsItemLesson;
+        itemId = propsItemId;
     }
-
-    const { addition } = props;
 
     const itemNodeId = `card-${lesson.id}-group-${lesson.group.id}-${addition}`;
     const deleteNodeId = `delete-${lesson.id}-${lesson.group.id}-${addition}`;

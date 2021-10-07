@@ -72,6 +72,7 @@ const TemporaryScheduleTitle = (props) => {
     const { t } = useTranslation('common');
     const classes = useStyles();
     const [day, setDay] = useState(null);
+    const dateFormat = 'DD-MM-YYYY';
 
     const [radio, setRadio] = useState(temporaryScheduleRadioTypes.SEMESTER);
 
@@ -96,17 +97,17 @@ const TemporaryScheduleTitle = (props) => {
     const handleDayChange = (date) => {
         setFromDate(null);
         setToDate(null);
-        setDay(moment(date, 'DD-MM-YYYY').format('DD-MM-YYYY'));
+        setDay(moment(date, dateFormat).format(dateFormat));
     };
 
     const handleFromDateChange = (date) => {
         setDay(null);
-        setFromDate(moment(date, 'DD-MM-YYYY').format('DD-MM-YYYY'));
+        setFromDate(moment(date, dateFormat).format(dateFormat));
     };
 
     const handleToDateChange = (date) => {
         setDay(null);
-        setToDate(moment(date, 'DD-MM-YYYY').format('DD-MM-YYYY'));
+        setToDate(moment(date, dateFormat).format(dateFormat));
     };
 
     const handleClick = () => {
@@ -141,8 +142,8 @@ const TemporaryScheduleTitle = (props) => {
         getOptionLabel: (option) => (option ? handleTeacherInfo(option) : ''),
     };
 
-    const handleFindTeacher = (teacherId) => {
-        if (teacherId) return teachers.find((teacher) => teacher.id === teacherId);
+    const handleFindTeacher = (id) => {
+        if (id) return teachers.find((teacher) => teacher.id === id);
         return '';
     };
 
@@ -191,9 +192,7 @@ const TemporaryScheduleTitle = (props) => {
                                         format="DD/MM/YYYY"
                                         className={classes.dateField}
                                         value={
-                                            fromDate
-                                                ? moment(fromDate, 'DD/MM/YYYY').toDate()
-                                                : null
+                                            fromDate ? moment(fromDate, dateFormat).toDate() : null
                                         }
                                         onChange={handleFromDateChange}
                                     />

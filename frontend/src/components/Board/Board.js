@@ -1,5 +1,5 @@
 import React from 'react';
-
+import { isNil } from 'lodash';
 import { colors } from '../../constants/schedule/colors';
 import { cssClasses } from '../../constants/schedule/cssClasses';
 import { checkAvailabilityScheduleService } from '../../services/scheduleService';
@@ -9,15 +9,16 @@ import './Board.scss';
 const Board = (props) => {
     const { itemGroupId } = props;
     const { day, classDay, classes, group } = props;
+    const dayClassWeekString = 'day-class-week';
     const drop = (e) => {
         e.preventDefault();
-        const card_id = e.dataTransfer.getData('card_id');
+        const cardId = e.dataTransfer.getData('card_id');
 
-        const card = document.getElementById(card_id);
+        const card = document.getElementById(cardId);
         if (card) card.style.display = 'block';
 
         const arr = e.target.id.split('-');
-        const day = arr[3];
+        const dayString = arr[3];
         const classId = arr[5];
         const week = arr[7];
 
@@ -26,7 +27,7 @@ const Board = (props) => {
 
         let obj = {
             lessonId: item.lesson.id,
-            dayOfWeek: day.toUpperCase(),
+            dayOfWeek: dayString.toUpperCase(),
             periodId: +classId,
             evenOdd: week.toUpperCase(),
             semesterId: props.currentSemester.id,
@@ -81,8 +82,8 @@ const Board = (props) => {
     const addClassDayBoard = () => {
         if (classDay !== null && classDay !== undefined) {
             const dayClassWeek = document.getElementsByClassName(classDay);
-            dayClassWeek[0].classList.add('day-class-week');
-            dayClassWeek[1].classList.add('day-class-week');
+            dayClassWeek[0].classList.add(dayClassWeekString);
+            dayClassWeek[1].classList.add(dayClassWeekString);
         }
     };
     const addClass = () => {
@@ -92,7 +93,7 @@ const Board = (props) => {
         }
     };
     const addDay = () => {
-        if (day !== null && day !== undefined) {
+        if (!isNil(day)) {
             const tmp = document.getElementById(day.toUpperCase());
             tmp.classList.add('day');
         }
@@ -114,8 +115,8 @@ const Board = (props) => {
     const removeClassDayBoard = () => {
         if (classDay !== null && classDay !== undefined) {
             const dayClassWeek = document.getElementsByClassName(classDay);
-            dayClassWeek[0].classList.remove('day-class-week');
-            dayClassWeek[1].classList.remove('day-class-week');
+            dayClassWeek[0].classList.remove(dayClassWeekString);
+            dayClassWeek[1].classList.remove(dayClassWeekString);
         }
     };
     const removeClass = () => {
@@ -125,13 +126,13 @@ const Board = (props) => {
         }
     };
     const removeDay = () => {
-        if (day !== null && day !== undefined) {
+        if (!isNil(day)) {
             const tmp = document.getElementById(day.toUpperCase());
             tmp.classList.remove('day');
         }
     };
     const removeGroup = () => {
-        if (group !== null && group !== undefined) {
+        if (!isNil(group)) {
             const tmp = document.getElementById(group);
             tmp.classList.remove('group');
         }
@@ -145,19 +146,18 @@ const Board = (props) => {
         }
     };
     return (
-        <>
-            <div
-                id={props.id}
-                onDrop={drop}
-                onDragOver={dragOver}
-                onDragLeave={dragLeave}
-                className={props.className}
-                onMouseOver={addEffect}
-                onMouseLeave={removeEffect}
-            >
-                {props.children}
-            </div>
-        </>
+        <div
+            id={props.id}
+            onDrop={drop}
+            onDragOver={dragOver}
+            onDragLeave={dragLeave}
+            className={props.className}
+            onMouseOver={addEffect}
+            onMouseLeave={removeEffect}
+            onFocus={addEffect}
+        >
+            {props.children}
+        </div>
     );
 };
 

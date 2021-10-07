@@ -16,7 +16,6 @@ import {
     showAllPublicSemestersService,
     showAllPublicGroupsService,
     showAllPublicTeachersService,
-    getFullSchedule,
 } from '../../services/scheduleService';
 
 import './GroupSchedulePageTop.scss';
@@ -26,8 +25,6 @@ import { SCHEDULE_SEARCH_FORM } from '../../constants/reduxForms';
 import { required } from '../../validation/validateFields';
 import { places } from '../../constants/places';
 import { getTeacherFullName } from '../../helper/renderTeacher';
-
-const shortid = require('shortid');
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -63,32 +60,31 @@ const GroupSchedulePageTop = (props) => {
         }
     }, [groups]);
     const renderSemesterList = () => {
-        if (semesters) {
-            if (semesters.length > 1) {
-                return (
-                    <Field
-                        id="semester"
-                        name="semester"
-                        component={renderSelectField}
-                        label={t('formElements:semester_label')}
-                        type="text"
-                        validate={[required]}
-                        onChange={(e) => setSemesterId(e.target.value)}
-                    >
-                        <option />
-                        {semesters.map((semester, index) => (
-                            <option key={shortid.generate()} value={semester.id}>
-                                {semester.description}
-                            </option>
-                        ))}
-                    </Field>
-                );
-            }
-            if (semesters.length === 1) {
-                handleSubmit({ semester: semesters[0].id });
-                return <p>{semesters[0].description}</p>;
-            }
+        if (semesters && semesters.length > 1) {
+            return (
+                <Field
+                    id="semester"
+                    name="semester"
+                    component={renderSelectField}
+                    label={t('formElements:semester_label')}
+                    type="text"
+                    validate={[required]}
+                    onChange={(e) => setSemesterId(e.target.value)}
+                >
+                    <option />
+                    {semesters.map((semester) => (
+                        <option key={semester.id} value={semester.id}>
+                            {semester.description}
+                        </option>
+                    ))}
+                </Field>
+            );
         }
+        if (semesters && semesters.length === 1) {
+            handleSubmit({ semester: semesters[0].id });
+            return <p>{semesters[0].description}</p>;
+        }
+        return null;
     };
     const renderTeacherList = () => {
         return (
@@ -101,8 +97,8 @@ const GroupSchedulePageTop = (props) => {
                 onChange={() => props.change('group', 0)}
             >
                 <option />
-                {teachers.map((teacher, index) => (
-                    <option key={shortid.generate()} value={teacher.id}>
+                {teachers.map((teacher) => (
+                    <option key={teacher.id} value={teacher.id}>
                         {getTeacherFullName(teacher)}
                     </option>
                 ))}
@@ -123,8 +119,8 @@ const GroupSchedulePageTop = (props) => {
                 }}
             >
                 <option />
-                {groups.map((group, index) => (
-                    <option key={shortid.generate()} value={group.id}>
+                {groups.map((group) => (
+                    <option key={group.id} value={group.id}>
                         {group.title}
                     </option>
                 ))}
@@ -172,7 +168,7 @@ const GroupSchedulePageTop = (props) => {
                         value={props.place}
                         onChange={props.onChange}
                     >
-                        {Object.entries(places).map(function (data, index) {
+                        {Object.entries(places).map((data) => {
                             return (
                                 <MenuItem value={data[1]} key={data[0]}>
                                     {t(`${data[1]}_label`)}

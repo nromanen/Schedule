@@ -1,11 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-import Typography from '@material-ui/core/Typography';
-import Box from '@material-ui/core/Box';
 import { connect } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
@@ -14,29 +11,6 @@ import { links } from '../../constants/links';
 import './NavigationPage.scss';
 import { MenuItem, Select } from '@material-ui/core';
 import { general, tabs_components } from '../../constants/navigationComponents';
-
-function TabPanel(props) {
-    const { children, value, index, ...other } = props;
-
-    return (
-        <Typography
-            component="div"
-            role="tabpanel"
-            hidden={value !== index}
-            id={`simple-tabpanel-${index}`}
-            aria-labelledby={`simple-tab-${index}`}
-            {...other}
-        >
-            {value === index && <Box p={3}>{children}</Box>}
-        </Typography>
-    );
-}
-
-TabPanel.propTypes = {
-    children: PropTypes.node,
-    index: PropTypes.any.isRequired,
-    value: PropTypes.any.isRequired,
-};
 
 function a11yProps(index) {
     return {
@@ -84,7 +58,7 @@ const NavigationPage = (props) => {
         setValue(newValue);
     };
 
-    const document_title = (title) => {
+    const documentTitle = (title) => {
         document.title = t(`${title}_management_title`);
     };
     return (
@@ -99,15 +73,15 @@ const NavigationPage = (props) => {
                     scrollButtons="on"
                     className={classes.header}
                 >
-                    {tabs_components.map((tab_one, index) => (
+                    {tabs_components.map((tabOne, index) => (
                         <>
-                            {tab_one.length === undefined ? (
-                                <Link className={classes.nav} to={links[tab_one.name]}>
+                            {tabOne.length === undefined ? (
+                                <Link className={classes.nav} to={links[tabOne.name]}>
                                     <Tab
                                         className={classes.btn}
-                                        key={index + tab_one}
-                                        onClick={() => document_title(tab_one.name)}
-                                        label={t(`${tab_one.name}_management_title`)}
+                                        key={tabOne.name}
+                                        onClick={() => documentTitle(tabOne.name)}
+                                        label={t(`${tabOne.name}_management_title`)}
                                         {...a11yProps(index)}
                                     />
                                 </Link>
@@ -118,18 +92,18 @@ const NavigationPage = (props) => {
                                     id="demo-controlled-open-select"
                                     value={gen}
                                     onChange={(event) => {
-                                        const val = event.target.value;
-                                        setGen(val);
-                                        document_title(val);
+                                        const { eventValue } = event.target;
+                                        setGen(eventValue);
+                                        documentTitle(eventValue);
                                     }}
                                 >
-                                    {Object.entries(tab_one).map(function (data, index) {
+                                    {Object.entries(tabOne).map(function (data, indexNested) {
                                         return (
                                             <MenuItem
                                                 className="menu-dictionary MuiTab-root"
                                                 value={data[1].name}
                                                 key={data[0]}
-                                                {...a11yProps(index)}
+                                                {...a11yProps(indexNested)}
                                             >
                                                 <Link
                                                     className={classes.nav}

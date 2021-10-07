@@ -24,6 +24,33 @@ import { MultiselectForGroups } from '../../helper/MultiselectForGroups';
 import { isObjectEmpty } from '../../helper/ObjectRevision';
 
 const AddSemesterForm = (props) => {
+    const dateFormat = 'DD/MM/YYYY';
+    const prepSetCheckedClasses = {};
+    const getToday = () => {
+        return new Date();
+    };
+    const getTomorrow = () => {
+        const tomorrow = new Date(getToday());
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        return tomorrow;
+    };
+
+    const [current, setCurrent] = React.useState(false);
+    const [byDefault, setByDefault] = React.useState(false);
+    const [startTime] = useState(getToday());
+    const [finishTime, setFinishTime] = useState(getTomorrow());
+    const [startValue, setStartValue] = useState();
+    const [finishValue, setFinishValue] = useState();
+    const [disabledFinishDate, setDisabledFinishDate] = useState(true);
+    const [checkedDates, setCheckedDates] = React.useState({
+        MONDAY: false,
+        TUESDAY: false,
+        WEDNESDAY: false,
+        THURSDAY: false,
+        FRIDAY: false,
+        SATURDAY: false,
+        SUNDAY: false,
+    });
     const clearCheckboxes = () => {
         setCurrent(false);
         setByDefault(false);
@@ -54,17 +81,18 @@ const AddSemesterForm = (props) => {
         setSelectedGroups,
     } = props;
     const [openGroupDialog, setOpenGroupDialog] = useState(false);
-    useEffect(() => {
-        const { semester_groups } = semester;
-        if (semester_groups !== undefined && semester_groups !== null) {
-            setSelectedGroups(getGroupOptions(semester_groups));
-        }
-    }, [semester.id]);
     const getGroupOptions = (groupOptions) => {
         return groupOptions.map((item) => {
             return { id: item.id, value: item.id, label: `${item.title}` };
         });
     };
+    useEffect(() => {
+        const { semesterGroups } = semester;
+        if (semesterGroups !== undefined && semesterGroups !== null) {
+            setSelectedGroups(getGroupOptions(semesterGroups));
+        }
+    }, [semester.id]);
+
     const options = getGroupOptions(groups);
     const semesterOptions = getGroupOptions(groups.filter((x) => !selectedGroups.includes(x)));
     const openDialogForGroup = () => {
@@ -88,7 +116,7 @@ const AddSemesterForm = (props) => {
         handleSubmit(values);
     };
 
-    const prepSetCheckedClasses = {};
+    const [checkedClasses, setCheckedClasses] = React.useState(prepSetCheckedClasses);
     useEffect(() => {
         props.classScheduler.forEach((classItem) => {
             prepSetCheckedClasses[`${classItem.id}`] = false;
@@ -96,51 +124,25 @@ const AddSemesterForm = (props) => {
         setCheckedClasses({ ...prepSetCheckedClasses });
         clearCheckboxes();
     }, [props.classScheduler, props.semester.id]);
-    const getToday = () => {
-        return new Date();
-    };
-    const getTomorrow = () => {
-        const tomorrow = new Date(getToday());
-        tomorrow.setDate(tomorrow.getDate() + 1);
-        return tomorrow;
-    };
-    const [current, setCurrent] = React.useState(false);
-    const [byDefault, setByDefault] = React.useState(false);
-    const [startTime, setStartTime] = useState(getToday());
-    const [finishTime, setFinishTime] = useState(getTomorrow());
-    const [startValue, setStartValue] = useState();
-    const [finishValue, setFinishValue] = useState();
-    const [disabledFinishDate, setDisabledFinishDate] = useState(true);
-    const [checkedDates, setCheckedDates] = React.useState({
-        MONDAY: false,
-        TUESDAY: false,
-        WEDNESDAY: false,
-        THURSDAY: false,
-        FRIDAY: false,
-        SATURDAY: false,
-        SUNDAY: false,
-    });
-
-    const [checkedClasses, setCheckedClasses] = React.useState(prepSetCheckedClasses);
 
     const handleChange = (event, setState) => setState(event.target.checked);
 
     const setMinFinishDate = (time) => {
-        const new_date = moment(time, 'DD/MM/YYYY').add(1, 'd');
-        setFinishTime(new_date.toDate());
+        const newDate = moment(time, dateFormat).add(1, 'd');
+        return setFinishTime(newDate.toDate());
     };
-    const setEndTime = (startTime) => {
+    const setEndTime = (startTimeParam) => {
         if (disabledFinishDate || moment(startValue).isSameOrBefore(finishValue)) {
-            setFinishValue(setMinFinishDate(startTime));
+            setFinishValue(setMinFinishDate(startTimeParam));
             props.change(
                 'endDay',
-                moment(startTime, 'DD/MM/YYYY').add(7, 'd').format('DD/MM/YYYY'),
+                moment(startTimeParam, dateFormat).add(7, 'd').format(dateFormat),
             );
         }
     };
     const setCheckedDaysHandler = React.useCallback(
         (day) => {
-            return function (event) {
+            return (event) => {
                 const changedDay = { [day]: event.target.checked };
                 setCheckedDates({
                     ...checkedDates,
@@ -152,7 +154,7 @@ const AddSemesterForm = (props) => {
     );
     const setCheckedClassesHandler = React.useCallback(
         (classid) => {
-            return function (event) {
+            return (event) => {
                 const changedClass = { [classid]: event.target.checked };
                 setCheckedClasses({
                     ...checkedClasses,
@@ -228,8 +230,9 @@ const AddSemesterForm = (props) => {
                     }
                 });
                 const newDays = props.semester.semester_days.reduce((result, day) => {
-                    result[day] = true;
-                    return result;
+                    const data = result;
+                    data[day] = true;
+                    return data;
                 }, {});
 
                 if (props.classScheduler) {
@@ -245,8 +248,9 @@ const AddSemesterForm = (props) => {
                 }
 
                 const newClasses = props.semester.semester_classes.reduce((result, classItem) => {
-                    result[classItem.id] = true;
-                    return result;
+                    const data = result;
+                    data[classItem.id] = true;
+                    return data;
                 }, {});
 
                 setCurrent(props.semester.currentSemester);
@@ -263,14 +267,14 @@ const AddSemesterForm = (props) => {
                     ...newDays,
                 });
 
-                const prepSetCheckedClasses = {};
+                const prepSetCheckedClassesNested = {};
                 if (props.classScheduler) {
                     props.classScheduler.forEach((classItem) => {
-                        prepSetCheckedClasses[`${classItem.id}`] = false;
+                        prepSetCheckedClassesNested[`${classItem.id}`] = false;
                     });
                 }
                 setCheckedClasses({
-                    ...prepSetCheckedClasses,
+                    ...prepSetCheckedClassesNested,
                     ...newClasses,
                 });
             }

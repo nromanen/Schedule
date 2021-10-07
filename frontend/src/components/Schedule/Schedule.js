@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from 'react';
 import { IoMdMore } from 'react-icons/all';
 
 import { makeStyles } from '@material-ui/core/styles';
-import i18n from 'i18next';
 import Board from '../Board/Board';
 import ScheduleItem from '../ScheduleItem/ScheduleItem';
 import ScheduleDialog from '../ScheduleDialog/ScheduleDialog';
@@ -28,7 +27,6 @@ const Schedule = (props) => {
     const { groups, itemGroupId, groupId } = props;
     const [open, setOpen] = useState(false);
     const [itemData, setItemData] = useState(null);
-    const prevGroupId = usePrevious(groupId);
 
     function usePrevious(value) {
         const ref = useRef();
@@ -37,6 +35,8 @@ const Schedule = (props) => {
         });
         return ref.current;
     }
+
+    const prevGroupId = usePrevious(groupId);
 
     useEffect(() => {
         if (groupId !== null) {
@@ -52,17 +52,17 @@ const Schedule = (props) => {
         }
     }, [groupId]);
 
-    const setNewItemHandle = (item, room, groupId) => {
-        getLessonsByGroupService(groupId);
-        selectGroupIdService(groupId);
+    const setNewItemHandle = (item, room, group) => {
+        getLessonsByGroupService(group);
+        selectGroupIdService(group);
         if (item.id) deleteItemFromScheduleService(item.id);
 
         addItemToScheduleService({ ...item, roomId: room.id });
     };
 
-    const setEditItemHandle = (itemId, roomId, groupId) => {
-        getLessonsByGroupService(groupId);
-        selectGroupIdService(groupId);
+    const setEditItemHandle = (itemId, roomId, group) => {
+        getLessonsByGroupService(group);
+        selectGroupIdService(group);
         editRoomItemToScheduleService({ itemId, roomId });
     };
 
@@ -106,9 +106,7 @@ const Schedule = (props) => {
         }
     };
 
-    const { items } = props;
-
-    const { currentSemester } = props;
+    const { items, currentSemester } = props;
     const days = currentSemester.semester_days;
     const classes = currentSemester.semester_classes;
 
@@ -133,10 +131,10 @@ const Schedule = (props) => {
         return firstStringLetterCapital(str);
     };
 
-    const deleteItemFromScheduleHandler = (itemId, groupId) => {
+    const deleteItemFromScheduleHandler = (itemId, group) => {
         deleteItemFromScheduleService(itemId);
-        getLessonsByGroupService(groupId);
-        selectGroupIdService(groupId);
+        getLessonsByGroupService(group);
+        selectGroupIdService(group);
     };
     const editItemOnScheduleHandler = (item) => {
         setItemData({ item, groupId: item.lesson.group.id });
@@ -185,7 +183,7 @@ const Schedule = (props) => {
     };
 
     const itemInBoard = (group, lesson, index) => {
-        for (const item of items) {
+        return items.map((item) => {
             if (conditionFunc(item, lesson, group)) {
                 const addition = `in-day-${lesson.day.name}-class-${lesson.classNumber.id}-week-${lesson.week}`;
                 addDeleteBtnToItem(item, group, lesson);
@@ -207,13 +205,14 @@ const Schedule = (props) => {
                     </section>
                 );
             }
-        }
+            return null;
+        });
     };
 
     const allLessons = [];
     days.forEach((day) => {
         classes.forEach((classNumber) => {
-            for (let i = 0; i < 2; i++) {
+            for (let i = 0; i < 2; i += 1) {
                 if ((i + 1) % 2 === 0) {
                     allLessons.push({
                         day: { name: day.toLowerCase() },
@@ -288,7 +287,7 @@ const Schedule = (props) => {
                             {group.title}
                         </div>
                         {allLessons.map((lesson, index) => (
-                            <div key={`${group}-${index}`} className="board-div">
+                            <div key={`${group}-${lesson.day.name}`} className="board-div">
                                 <Board
                                     group={group.id}
                                     day={lesson.day.name}

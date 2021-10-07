@@ -51,19 +51,28 @@ const ScheduleDialog = (props) => {
 
     const groupByAvailability = (arr) => {
         arr.sort((x, y) => {
-            return x === y ? 0 : x ? 1 : -1;
+            if (x === y) {
+                return 0;
+            }
+            if (x) {
+                return 1;
+            }
+            return -1;
         });
         return arr;
     };
 
     const defaultProps = {
         options: availability.rooms ? groupByAvailability(availability.rooms) : rooms,
-        getOptionLabel: (option) =>
-            option
-                ? option.available
-                    ? `${option.name} (${translation('common:available')})`
-                    : `${option.name} (${translation('common:unavailable')})`
-                : '',
+        getOptionLabel: (option) => {
+            if (option) {
+                if (option.available) {
+                    return `${option.name} (${translation('common:available')})`;
+                }
+                return `${option.name} (${translation('common:unavailable')})`;
+            }
+            return '';
+        },
     };
 
     return (

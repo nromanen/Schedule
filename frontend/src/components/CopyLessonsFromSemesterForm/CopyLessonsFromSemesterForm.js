@@ -13,37 +13,34 @@ import Card from '../../share/Card/Card';
 import { COPY_LESSONS_FROM_SEMESTER_FORM } from '../../constants/reduxForms';
 import { required } from '../../validation/validateFields';
 
-const shortid = require('shortid');
-
 const CopyLessonsFromSemesterForm = (props) => {
     const { t } = useTranslation('common');
     const { semesters, handleSubmit, pristine, submitting } = props;
     const renderSemesterList = () => {
-        if (semesters) {
-            if (semesters.length > 1) {
-                return (
-                    <Field
-                        id="fromSemesterId"
-                        name="fromSemesterId"
-                        component={renderSelectField}
-                        label={t('formElements:semester_label')}
-                        type="text"
-                        validate={[required]}
-                    >
-                        <option />
-                        {semesters.map((semester, index) => (
-                            <option key={shortid.generate()} value={semester.id}>
-                                {semester.description}
-                            </option>
-                        ))}
-                    </Field>
-                );
-            }
-            if (semesters.length === 1) {
-                handleSubmit({ fromSemesterId: semesters[0].id });
-                return <p>{semesters[0].description}</p>;
-            }
+        if (semesters && semesters.length > 1) {
+            return (
+                <Field
+                    id="fromSemesterId"
+                    name="fromSemesterId"
+                    component={renderSelectField}
+                    label={t('formElements:semester_label')}
+                    type="text"
+                    validate={[required]}
+                >
+                    <option />
+                    {semesters.map((semester) => (
+                        <option key={semester.id} value={semester.id}>
+                            {semester.description}
+                        </option>
+                    ))}
+                </Field>
+            );
         }
+        if (semesters && semesters.length === 1) {
+            handleSubmit({ fromSemesterId: semesters[0].id });
+            return <p>{semesters[0].description}</p>;
+        }
+        return null;
     };
 
     return (
