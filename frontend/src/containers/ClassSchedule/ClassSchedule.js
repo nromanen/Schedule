@@ -26,7 +26,7 @@ import { navigation, navigationNames } from '../../constants/navigation';
 const ClassSchedule = (props) => {
     const { t } = useTranslation('formElements');
     const [open, setOpen] = useState(false);
-    const [classId, setClassId] = React.useState(-1);
+    const [classId, setClassId] = useState(-1);
     useEffect(() => getClassScheduleListService(), []);
 
     const submit = (values) => {
@@ -36,28 +36,26 @@ const ClassSchedule = (props) => {
                 snackbarTypes.ERROR,
                 t('max_count_classes_reached'),
             );
-        addClassScheduleOneService(values);
+        return addClassScheduleOneService(values);
     };
 
-    const handleEdit = (classId) => {
-        getClassScheduleOneService(classId);
+    const handleEdit = (id) => {
+        getClassScheduleOneService(id);
     };
 
     const handleFormReset = () => {
         clearClassScheduleOneService();
     };
 
-    const handleClickOpen = (classId) => {
-        setClassId(classId);
+    const handleClickOpen = (id) => {
+        setClassId(id);
         setOpen(true);
     };
 
-    const handleClose = (classId) => {
+    const handleClose = (id) => {
         setOpen(false);
-        if (!classId) {
-            return;
-        }
-        deleteClassScheduleOneService(classId);
+        if (!id) return;
+        deleteClassScheduleOneService(id);
     };
 
     return (
