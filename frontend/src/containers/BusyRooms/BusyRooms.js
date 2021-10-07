@@ -1,32 +1,24 @@
-import React, { useEffect, Fragment } from 'react';
-import { connect } from 'react-redux';
-import Card from '../../share/Card/Card';
 import './BusyRooms.scss';
+import { connect } from 'react-redux';
 import { useTranslation } from 'react-i18next';
+import React, { useEffect, Fragment } from 'react';
+import { CircularProgress } from '@material-ui/core';
+import Card from '../../share/Card/Card';
+import { navigation } from '../../constants/navigation';
+import { setLoadingService } from '../../services/loadingService';
 import { getScheduleItemsService } from '../../services/scheduleService';
 import { getClassScheduleListService } from '../../services/classService';
-import { CircularProgress } from '@material-ui/core';
-import { setLoadingService } from '../../services/loadingService';
-import AdminPage from '../AdminPage/AdminPage';
 import NavigationPage from '../../components/Navigation/NavigationPage';
-import { navigation, navigationNames } from '../../constants/navigation';
 
 const BusyRooms = (props) => {
     const { t } = useTranslation('common');
+    const { busyRooms, isLoading } = props;
 
-    useEffect(() => getScheduleItemsService(), []);
     useEffect(() => {
+        getScheduleItemsService();
         getClassScheduleListService();
         setLoadingService(true);
     }, []);
-
-    const busyRooms = props.busyRooms[0];
-
-    const isLoading = props.loading;
-
-    const conflictLesson = 'more-then-one-conflict';
-    const grouppedLesson = 'more-then-one';
-
     let busyRoomsLength;
 
     if (busyRooms !== undefined) {
@@ -41,9 +33,11 @@ const BusyRooms = (props) => {
     );
 
     const renderWeekRoomInfo = (schedule, index, type = 'odd') => {
+        const conflictLesson = 'more-then-one-conflict';
+        const grouppedLesson = 'more-then-one';
         return props.currentSemester.semester_classes.map((scheduleClass) => {
-            let in_arrayIndex = -1;
-            in_arrayIndex =
+            let inArrayIndex = -1;
+            inArrayIndex =
                 type === 'odd'
                     ? schedule.classes[0].odd.findIndex(
                           (classItem) => classItem.class_id === scheduleClass.id,
@@ -59,7 +53,7 @@ const BusyRooms = (props) => {
                     : schedule.classes[0].even.find(
                           (classItem) => classItem.class_id === scheduleClass.id,
                       );
-            if (in_arrayIndex < 0 || !classOne || classOne.lessons.length <= 0) {
+            if (inArrayIndex < 0 || !classOne || classOne.lessons.length <= 0) {
                 return (
                     <div className="class-info" key={index + scheduleClass.class_name}>
                         <div className="class-info-data class-number">
@@ -76,7 +70,7 @@ const BusyRooms = (props) => {
                 intersectClass = conflictLesson;
             }
             let grouppedLessonClass = '';
-            classOne.lessons.map((lessonOne) => {
+            classOne.lessons.forEach((lessonOne) => {
                 grouppedLessonClass = lessonOne.groups.length > 1 ? grouppedLesson : '';
             });
             return (
@@ -161,7 +155,7 @@ const BusyRooms = (props) => {
 };
 
 const mapStateToProps = (state) => ({
-    busyRooms: state.busyRooms.busyRooms,
+    busyRooms: state.busyRooms.busyRooms[0],
     loading: state.loadingIndicator.loading,
     currentSemester: state.schedule.currentSemester,
 });
