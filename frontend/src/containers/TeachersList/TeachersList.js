@@ -11,7 +11,7 @@ import AddTeacherForm from '../../components/AddTeacherForm/AddTeacherForm';
 import Card from '../../share/Card/Card';
 
 import ConfirmDialog from '../../share/modals/dialog';
-import { cardType } from '../../constants/cardType';
+import cardType from '../../constants/cardType';
 
 import './TeachersList.scss';
 
@@ -34,7 +34,7 @@ import {
 import { search } from '../../helper/search';
 import SearchPanel from '../../share/SearchPanel/SearchPanel';
 import NotFound from '../../share/NotFound/NotFound';
-import { disabledCard } from '../../constants/disabledCard';
+import disabledCard from '../../constants/disabledCard';
 import { getPublicClassScheduleListService } from '../../services/classService';
 import NavigationPage from '../../components/Navigation/NavigationPage';
 import { navigation, navigationNames } from '../../constants/navigation';

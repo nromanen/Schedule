@@ -10,10 +10,10 @@ import renderTextField from '../../share/renderedFields/input';
 import Card from '../../share/Card/Card';
 
 import { REGISTRATION_FORM } from '../../constants/reduxForms';
-import { authTypes } from '../../constants/auth';
+import authTypes from '../../constants/auth';
 
 import { email, password, required } from '../../validation/validateFields';
-import { links } from '../../constants/links';
+import links from '../../constants/links';
 
 let RegistrationForm = (props) => {
     const { t } = useTranslation('formElements');

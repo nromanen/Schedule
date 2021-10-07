@@ -18,7 +18,7 @@ import MomentUtils from '@date-io/moment';
 import * as moment from 'moment';
 
 import Divider from '@material-ui/core/Divider';
-import { temporaryScheduleRadioTypes } from '../../../constants/temporaryScheduleRadioTypes';
+import temporaryScheduleRadioTypes from '../../../constants/temporaryScheduleRadioTypes';
 
 import {
     getTeacherTemporarySchedulesService,

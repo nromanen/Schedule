@@ -1,4 +1,4 @@
-export const authTypes = {
+export default {
     LOGIN: 'LOGIN',
     GOOGLE: 'GOOGLE',
     REGISTRATION: 'REGISTRATION',

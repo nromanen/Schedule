@@ -5,7 +5,7 @@ import { MdDelete } from 'react-icons/md';
 import { useTranslation } from 'react-i18next';
 import { GiSightDisabled, IoMdEye } from 'react-icons/all';
 import ConfirmDialog from '../../share/modals/dialog';
-import { cardType } from '../../constants/cardType';
+import cardType from '../../constants/cardType';
 import FreeRooms from '../FreeRooms/freeRooms';
 import AddRoom from '../../components/AddRoomForm/AddRoomForm';
 import NewRoomType from '../../components/AddNewRoomType/AddNewRoomType';
@@ -29,7 +29,7 @@ import { getAllRoomTypesService, addNewTypeService } from '../../services/roomTy
 
 import NotFound from '../../share/NotFound/NotFound';
 
-import { disabledCard } from '../../constants/disabledCard';
+import disabledCard from '../../constants/disabledCard';
 import NavigationPage from '../../components/Navigation/NavigationPage';
 import { navigation, navigationNames } from '../../constants/navigation';
 

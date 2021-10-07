@@ -21,7 +21,7 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import '../../App.scss';
 import './Header.scss';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import { links } from '../../constants/links';
+import links from '../../constants/links';
 
 import LanguageSelector from '../LanguageSelector/LanguageSelector';
 import * as colors from '../../constants/schedule/colors';

@@ -1,4 +1,4 @@
-export const snackbarTypes = {
+export default {
     ERROR: 'error',
     WARNING: 'warning',
     INFO: 'info',

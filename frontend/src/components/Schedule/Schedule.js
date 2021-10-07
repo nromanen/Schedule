@@ -19,8 +19,8 @@ import {
 import { getLessonsByGroupService, selectGroupIdService } from '../../services/lessonService';
 import { setLoadingService } from '../../services/loadingService';
 
-import { cssClasses } from '../../constants/schedule/cssClasses';
-import { colors } from '../../constants/schedule/colors';
+import cssClasses from '../../constants/schedule/cssClasses';
+import colors from '../../constants/schedule/colors';
 
 import './Schedule.scss';
 

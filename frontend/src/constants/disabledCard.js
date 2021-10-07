@@ -1,4 +1,4 @@
-export const disabledCard = {
+export default {
     SHOW: 'show',
     HIDE: 'hide',
 };

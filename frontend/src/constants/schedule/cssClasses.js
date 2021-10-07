@@ -1,4 +1,4 @@
-export const cssClasses = {
+export default {
     SCHEDULE_BOARD: 'schedule-board',
     IN_BOARD_SECTION: 'in-board-section',
     IN_BOARD_CARD: 'in-board-card',

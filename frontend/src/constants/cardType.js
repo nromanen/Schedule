@@ -1,4 +1,4 @@
-export const cardType = {
+export default {
     LESSON: 'Lesson',
     TEACHER: 'Teacher',
     CLASS: 'Class',

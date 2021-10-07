@@ -3,7 +3,7 @@ import * as actionTypes from '../redux/actions/actionsType';
 
 import { authUserService } from '../services/authService';
 
-import { TOKEN_BEGIN } from '../constants/tokenBegin';
+import TOKEN_BEGIN from '../constants/tokenBegin';
 
 import axios from '../helper/axios';
 import i18n from '../helper/i18n';

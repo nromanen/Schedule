@@ -1,10 +1,10 @@
 import React, { useRef } from 'react';
 
 import './Card.scss';
-import { colors } from '../../constants/schedule/colors';
+import colors from '../../constants/schedule/colors';
 
 import { setItemGroupIdService } from '../../services/scheduleService';
-import { cssClasses } from '../../constants/schedule/cssClasses';
+import cssClasses from '../../constants/schedule/cssClasses';
 
 const Card = (props) => {
     let className = 'card';

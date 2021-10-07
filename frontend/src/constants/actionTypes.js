@@ -1,4 +1,4 @@
-export const actionType = {
+export default {
     CREATED: 'created',
     DELETED: 'deleted',
     UPDATED: 'updated',

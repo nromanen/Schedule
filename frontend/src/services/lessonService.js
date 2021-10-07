@@ -18,7 +18,7 @@ import {
     updateLessonCard,
 } from '../redux/actions/index';
 
-import { snackbarTypes } from '../constants/snackbarTypes';
+import snackbarTypes from '../constants/snackbarTypes';
 
 import { checkUniqLesson } from '../validation/storeValidation';
 import i18n from '../helper/i18n';

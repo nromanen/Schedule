@@ -9,7 +9,7 @@ import Button from '@material-ui/core/Button';
 import './modal.scss';
 
 import i18n from 'i18next';
-import { disabledCard } from '../../../constants/disabledCard';
+import disabledCard from '../../../constants/disabledCard';
 import './linkToMeetingDialog.scss';
 
 export const LinkToMeetingDialog = (props) => {

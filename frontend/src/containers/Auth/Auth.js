@@ -7,11 +7,11 @@ import { resetFormHandler } from '../../helper/formHelper';
 import { handleSnackbarOpenService } from '../../services/snackbarService';
 
 import { LOGIN_FORM, REGISTRATION_FORM, RESET_PASSWORD_FORM } from '../../constants/reduxForms';
-import { snackbarTypes } from '../../constants/snackbarTypes';
-import { links } from '../../constants/links';
-import { authTypes } from '../../constants/auth';
-import { userRoles } from '../../constants/userRoles';
-import { validation } from '../../constants/validation';
+import snackbarTypes from '../../constants/snackbarTypes';
+import links from '../../constants/links';
+import authTypes from '../../constants/auth';
+import userRoles from '../../constants/userRoles';
+import validation from '../../constants/validation';
 
 import LoginForm from '../../components/LoginForm/LoginForm';
 import RegistrationForm from '../../components/RegistrationForm/RegistrationForm';

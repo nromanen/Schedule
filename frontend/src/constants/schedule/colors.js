@@ -1,4 +1,4 @@
-export const colors = {
+export default {
     POSSIBILITY: '#f7f7c1',
     DANGER: '#ff5e54',
     ALLOW: '#68f271',

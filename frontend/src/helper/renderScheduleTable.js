@@ -13,7 +13,7 @@ import i18next from './i18n';
 
 import { daysUppercase } from '../constants/schedule/days';
 import { LinkToMeeting } from '../components/LinkToMeeting/LinkToMeeting';
-import { places } from '../constants/places';
+import places from '../constants/places';
 import './renderScheduleTable.scss';
 import {
     getTeacherForSite,

@@ -56,7 +56,7 @@ import {
     DEPARTMENT_URL,
 } from '../constants/axios';
 
-import { snackbarTypes } from '../constants/snackbarTypes';
+import snackbarTypes from '../constants/snackbarTypes';
 
 import { showBusyRooms } from './busyRooms';
 import { TEACHER_SCHEDULE_FORM } from '../constants/reduxForms';

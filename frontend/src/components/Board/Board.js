@@ -1,7 +1,7 @@
 import React from 'react';
 
-import { colors } from '../../constants/schedule/colors';
-import { cssClasses } from '../../constants/schedule/cssClasses';
+import colors from '../../constants/schedule/colors';
+import cssClasses from '../../constants/schedule/cssClasses';
 import { checkAvailabilityScheduleService } from '../../services/scheduleService';
 import { setLoadingService } from '../../services/loadingService';
 import './Board.scss';

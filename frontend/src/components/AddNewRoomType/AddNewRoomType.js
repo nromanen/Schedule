@@ -9,7 +9,7 @@ import { FaEdit } from 'react-icons/fa';
 import { ROOM_FORM_TYPE } from '../../constants/reduxForms';
 
 import ConfirmDialog from '../../share/modals/dialog';
-import { cardType } from '../../constants/cardType';
+import cardType from '../../constants/cardType';
 import Card from '../../share/Card/Card';
 import renderTextField from '../../share/renderedFields/input';
 import { deleteTypeService, getOneNewTypeService } from '../../services/roomTypesService';

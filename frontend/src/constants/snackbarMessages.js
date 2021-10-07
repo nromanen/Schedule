@@ -1,3 +1,4 @@
-export const snackbarMessage = (cardType, actionType) => {
+const snackbarMessage = (cardType, actionType) => {
     return `${cardType} was ${actionType} successfully`;
 };
+export default snackbarMessage;
