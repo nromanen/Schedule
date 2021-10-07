@@ -45,44 +45,44 @@ let RegistrationForm = (props) => {
     let form = (
         <form onSubmit={handleSubmit}>
             <Field
-                name='email'
-                className='form-field'
-                type='email'
+                name="email"
+                className="form-field"
+                type="email"
                 component={renderTextField}
                 label={t('email_label')}
                 {...(!error ? emailValidate : emailAdvancedValidate)}
                 onChange={(e) => props.setError(null)}
             />
             <Field
-                name='password'
-                className='form-field'
-                type='password'
+                name="password"
+                className="form-field"
+                type="password"
                 component={renderTextField}
                 label={t('password_label')}
                 {...(!error ? passwordValidate : passwordValidateAdvanced)}
                 onChange={(e) => props.setError(null)}
             />
             <Field
-                name='retypePassword'
-                className='form-field'
-                type='password'
+                name="retypePassword"
+                className="form-field"
+                type="password"
                 component={renderTextField}
                 label={t('retype_password_label')}
                 {...(!error ? retypePasswordValidate : retypePasswordValidateAdvanced)}
             />
-            <Button className='buttons-style' type='submit' variant='contained' color='primary'>
+            <Button className="buttons-style" type="submit" variant="contained" color="primary">
                 {translation('create_account')}
             </Button>
-            <div className='group-btns'>
+            <div className="group-btns">
                 <button
-                    type='button'
-                    className='auth-link'
+                    type="button"
+                    className="auth-link"
                     onClick={() => {
                         props.switchAuthMode(authTypes.LOGIN);
                         props.setError(null);
                     }}
                 >
-                    <Link className='navLinks' to={links.LOGIN}>
+                    <Link className="navLinks" to={links.LOGIN}>
                         {translation('account_exist')}
                     </Link>
                 </button>
@@ -94,8 +94,8 @@ let RegistrationForm = (props) => {
         form = <CircularProgress />;
     }
     return (
-        <Card class='auth-card'>
-            <h2 className='under-line'>{props.translation('registration_page_title')}</h2>
+        <Card class="auth-card">
+            <h2 className="under-line">{props.translation('registration_page_title')}</h2>
             {form}
         </Card>
     );

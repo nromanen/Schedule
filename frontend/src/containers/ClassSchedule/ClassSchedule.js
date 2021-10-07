@@ -19,7 +19,7 @@ import {
 } from '../../services/classService';
 
 import { handleSnackbarOpenService } from '../../services/snackbarService';
-import { snackbarTypes }from '../../constants/snackbarTypes';
+import { snackbarTypes } from '../../constants/snackbarTypes';
 import NavigationPage from '../../components/Navigation/NavigationPage';
 import { navigation, navigationNames } from '../../constants/navigation';
 

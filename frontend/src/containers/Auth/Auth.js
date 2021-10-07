@@ -7,7 +7,7 @@ import { resetFormHandler } from '../../helper/formHelper';
 import { handleSnackbarOpenService } from '../../services/snackbarService';
 
 import { LOGIN_FORM, REGISTRATION_FORM, RESET_PASSWORD_FORM } from '../../constants/reduxForms';
-import { snackbarTypes }from '../../constants/snackbarTypes';
+import { snackbarTypes } from '../../constants/snackbarTypes';
 import { links } from '../../constants/links';
 import { authTypes } from '../../constants/auth';
 import { userRoles } from '../../constants/userRoles';
@@ -214,7 +214,7 @@ const Auth = (props) => {
     }
 
     return (
-        <div className='auth-form'>
+        <div className="auth-form">
             {authRedirect}
             {authPage}
         </div>

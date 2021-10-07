@@ -7,7 +7,7 @@ import { CircularProgress } from '@material-ui/core';
 import { activateUser } from '../../redux/actions';
 
 import { links } from '../../constants/links';
-import { snackbarTypes }from '../../constants/snackbarTypes';
+import { snackbarTypes } from '../../constants/snackbarTypes';
 
 import { handleSnackbarOpenService } from '../../services/snackbarService';
 

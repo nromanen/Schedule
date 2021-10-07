@@ -14,7 +14,7 @@ import {
 } from '../constants/axios';
 import { setDisabledSemesters, setError } from '../redux/actions/semesters';
 import { SEMESTER_FORM } from '../constants/reduxForms';
-import { snackbarTypes }from '../constants/snackbarTypes';
+import { snackbarTypes } from '../constants/snackbarTypes';
 import { handleSnackbarOpenService } from './snackbarService';
 import { checkUniqSemester } from '../validation/storeValidation';
 import {
