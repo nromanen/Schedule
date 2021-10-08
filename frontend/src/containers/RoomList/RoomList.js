@@ -1,3 +1,4 @@
+import './RoomList.scss';
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { FaEdit } from 'react-icons/fa';
@@ -6,14 +7,16 @@ import { useTranslation } from 'react-i18next';
 import { GiSightDisabled, IoMdEye } from 'react-icons/all';
 import ConfirmDialog from '../../share/modals/dialog';
 import { cardType } from '../../constants/cardType';
-import FreeRooms from '../FreeRooms/freeRooms';
 import AddRoom from '../../components/AddRoomForm/AddRoomForm';
 import NewRoomType from '../../components/AddNewRoomType/AddNewRoomType';
 import SearchPanel from '../../share/SearchPanel/SearchPanel';
+import { disabledCard } from '../../constants/disabledCard';
+import NavigationPage from '../../components/Navigation/NavigationPage';
+import { navigation, navigationNames } from '../../constants/navigation';
 import Card from '../../share/Card/Card';
-import './RoomList.scss';
 import { search } from '../../helper/search';
-
+import NotFound from '../../share/NotFound/NotFound';
+import { getAllRoomTypesService, addNewTypeService } from '../../services/roomTypesService';
 import {
     createRoomService,
     showListOfRoomsService,
@@ -25,69 +28,50 @@ import {
     setEnabledRoomsService,
 } from '../../services/roomService';
 
-import { getAllRoomTypesService, addNewTypeService } from '../../services/roomTypesService';
-
-import NotFound from '../../share/NotFound/NotFound';
-
-import { disabledCard } from '../../constants/disabledCard';
-import NavigationPage from '../../components/Navigation/NavigationPage';
-import { navigation, navigationNames } from '../../constants/navigation';
-
 const RoomList = (props) => {
-    const { rooms } = props;
-
+    const { t } = useTranslation('formElements');
+    const [hideDialog, setHideDialog] = useState(null);
+    const [disabled, setDisabled] = useState(false);
+    const [roomId, setRoomId] = useState(-1);
+    const [open, setOpen] = useState(false);
+    const [term, setTerm] = useState('');
+    const { rooms, roomTypes, disabledRooms } = props;
     useEffect(() => {
         showListOfRoomsService();
-    }, []);
-
-    useEffect(() => {
         getAllRoomTypesService();
-    }, []);
-
-    useEffect(() => {
         getDisabledRoomsService();
     }, []);
 
-    const { t } = useTranslation('formElements');
-    const [open, setOpen] = useState(false);
-    const [roomId, setRoomId] = useState(-1);
-    const [term, setTerm] = useState('');
-    const [hideDialog, setHideDialog] = useState(null);
-
-    const [disabled, setDisabled] = useState(false);
-
     const createRoom = (values) => {
-        const description = props.roomTypes.find((type) => type.id == values.type);
-        values.typeDescription = description.description;
-        createRoomService(values);
+        const description = roomTypes.find((type) => type.id === +values.type);
+        const typeDescription = description.description;
+        createRoomService({ ...values, typeDescription });
     };
 
-    const editHandler = (roomId) => {
-        selectOneRoomService(roomId);
+    const editHandler = (id) => {
+        selectOneRoomService(id);
     };
 
     const handleFormReset = () => {
         clearRoomOneService();
     };
 
-    const handleClickOpen = (roomId) => {
-        setRoomId(roomId);
+    const handleClickOpen = (id) => {
+        setRoomId(id);
         setOpen(true);
     };
 
-    const handleClose = (roomId) => {
+    const disabledRoomsCard = () => {
+        const allRooms = [...disabledRooms, ...rooms];
+        const room = allRooms.find((roomItem) => roomItem.id === roomId);
+        return disabled ? setEnabledRoomsService(room) : setDisabledRoomsService(room);
+    };
+
+    const handleClose = (id) => {
         setOpen(false);
-        if (!roomId) {
-            return;
-        }
+        if (!id) return;
         if (hideDialog) {
-            if (disabled) {
-                const room = props.disabledRooms.find((room) => room.id === roomId);
-                setEnabledRoomsService(room);
-            } else {
-                const room = props.rooms.find((room) => room.id === roomId);
-                setDisabledRoomsService(room);
-            }
+            disabledRoomsCard();
         } else {
             deleteRoomCardService(roomId);
         }
@@ -99,10 +83,10 @@ const RoomList = (props) => {
     };
 
     const visibleItems = disabled
-        ? search(props.disabledRooms, term, ['name'])
+        ? search(disabledRooms, term, ['name'])
         : search(rooms, term, ['name']);
 
-    const SearchChange = (term) => {
+    const SearchChange = () => {
         setTerm(term);
     };
 
@@ -123,9 +107,7 @@ const RoomList = (props) => {
             <div className="cards-container">
                 <aside className="search-list__panel">
                     <SearchPanel SearchChange={SearchChange} showDisabled={showDisabledHandle} />
-                    {disabled ? (
-                        ''
-                    ) : (
+                    {!disabled && (
                         <>
                             <AddRoom onSubmit={createRoom} onReset={handleFormReset} />
                             <NewRoomType className="new-type" onSubmit={submitType} />
@@ -134,8 +116,8 @@ const RoomList = (props) => {
                 </aside>
                 <section className="container-flex-wrap wrapper">
                     {visibleItems.length === 0 && <NotFound name={t('room_y_label')} />}
-                    {visibleItems.map((room, index) => (
-                        <Card key={index} {...room} class="room-card done-card">
+                    {visibleItems.map((room) => (
+                        <Card key={room.id} {...room} class="room-card done-card">
                             <div className="cards-btns">
                                 {!disabled ? (
                                     <>
