@@ -45,6 +45,7 @@ const GroupSchedulePage = (props) => {
         groupId,
         teacherId,
         semesterId,
+        loading,
     } = props;
     const history = useHistory();
 
@@ -106,87 +107,55 @@ const GroupSchedulePage = (props) => {
     };
 
     const renderSchedule = () => {
-        switch (props.scheduleType) {
+        if (
+            (!groupSchedule || (groupSchedule.schedule && groupSchedule.schedule.length === 0)) &&
+            !loading
+        ) {
+            return emptySchedule();
+        }
+        if (
+            (!teacherSchedule || !teacherSchedule.days || teacherSchedule.days.length === 0) &&
+            !loading
+        ) {
+            return emptySchedule();
+        }
+        if ((!fullSchedule.schedule || fullSchedule.schedule.length === 0) && !loading) {
+            return emptySchedule();
+        }
+        switch (scheduleType) {
             case 'group': {
-                if (
-                    (!groupSchedule ||
-                        (groupSchedule.schedule && groupSchedule.schedule.length === 0)) &&
-                    !props.loading
-                ) {
-                    return emptySchedule();
-                }
-
                 const resultArrays = makeGroupSchedule(groupSchedule);
-                if (resultArrays.done) {
-                    setLoadingService(false);
-                    return (
-                        <>
-                            <h1>
-                                {renderGroupScheduleTitle(
-                                    resultArrays.semester,
-                                    resultArrays.group,
-                                )}
-                                {renderDownloadLink('group', props.semesterId, props.groupId)}
-                            </h1>
-                            <h2>{t('common:odd_week')}</h2>
-                            {renderGroupTable(
-                                resultArrays.oddArray,
-                                1,
-                                resultArrays.semester,
-                                place,
-                            )}
-                            <h2>{t('common:even_week')}</h2>
-                            {renderGroupTable(
-                                resultArrays.evenArray,
-                                0,
-                                resultArrays.semester,
-                                place,
-                            )}
-                        </>
-                    );
-                }
                 setLoadingService(false);
-                break;
+                return (
+                    <>
+                        <h1>
+                            {renderGroupScheduleTitle(resultArrays.semester, resultArrays.group)}
+                            {renderDownloadLink('group', semesterId, groupId)}
+                        </h1>
+                        <h2>{t('common:odd_week')}</h2>
+                        {renderGroupTable(resultArrays.oddArray, 1, resultArrays.semester, place)}
+                        <h2>{t('common:even_week')}</h2>
+                        {renderGroupTable(resultArrays.evenArray, 0, resultArrays.semester, place)}
+                    </>
+                );
             }
-            case 'teacher':
-                if (
-                    (!teacherSchedule ||
-                        !teacherSchedule.days ||
-                        teacherSchedule.days.length === 0) &&
-                    !props.loading
-                ) {
-                    return emptySchedule();
-                }
-                if (teacherSchedule) {
-                    const teacher = makeTeacherSchedule(teacherSchedule);
-                    if (teacher.done) {
-                        setLoadingService(false);
-                        return (
-                            <>
-                                <h1>
-                                    {renderTeacherScheduleTitle(teacher.semester, teacher.teacher)}
-                                    {renderDownloadLink(
-                                        'teacher',
-                                        props.semesterId,
-                                        props.teacherId,
-                                    )}
-                                </h1>
-                                <h2>{t('common:odd_week')}</h2>
-                                {renderWeekTable(teacher.odd, 1, place)}
-                                <h2>{t('common:even_week')}</h2>
-                                {renderWeekTable(teacher.even, 0, place)}
-                            </>
-                        );
-                    }
-                } else setLoadingService(false);
-                break;
+            case 'teacher': {
+                const teacher = makeTeacherSchedule(teacherSchedule);
+                setLoadingService(false);
+                return (
+                    <>
+                        <h1>
+                            {renderTeacherScheduleTitle(teacher.semester, teacher.teacher)}
+                            {renderDownloadLink('teacher', semesterId, teacherId)}
+                        </h1>
+                        <h2>{t('common:odd_week')}</h2>
+                        {renderWeekTable(teacher.odd, 1, place)}
+                        <h2>{t('common:even_week')}</h2>
+                        {renderWeekTable(teacher.even, 0, place)}
+                    </>
+                );
+            }
             case 'full': {
-                if (
-                    (!fullSchedule.schedule || fullSchedule.schedule.length === 0) &&
-                    !props.loading
-                ) {
-                    return emptySchedule();
-                }
                 const result = makeFullSchedule(fullSchedule);
 
                 if (result.groupsCount || result.done) {
@@ -196,24 +165,10 @@ const GroupSchedulePage = (props) => {
                 setLoadingService(false);
                 break;
             }
-            case 'archived': {
-                if (
-                    (!fullSchedule.schedule || fullSchedule.schedule.length === 0) &&
-                    !props.loading
-                ) {
-                    return '';
-                }
-                const archive = makeFullSchedule(fullSchedule);
-                if (archive.groupsCount || archive.done) {
-                    setLoadingService(false);
-                    return renderFullSchedule(archive, place);
-                }
-                setLoadingService(false);
-                break;
-            }
             default:
                 return null;
         }
+        return null;
     };
 
     const handleSubmit = (values) => {

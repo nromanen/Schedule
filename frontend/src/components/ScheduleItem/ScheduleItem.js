@@ -14,7 +14,7 @@ const ScheduleItem = (props) => {
     const { fStrLetterCapital, addition } = props;
 
     if (item) {
-        const { lesson: propsItemLesson, id: propsItemId } = { item };
+        const { lesson: propsItemLesson, id: propsItemId } = item;
         lesson = propsItemLesson;
         itemId = propsItemId;
     }
