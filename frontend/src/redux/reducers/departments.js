@@ -7,102 +7,99 @@ const initialState = {
     disabledDepartments: [],
 };
 
-const departments = (state = initialState, action) => {
+const reducer = (state = initialState, action) => {
     switch (action.type) {
         case actionTypes.ADD_DEPARTMENT:
             return updateObject(state, {
                 departments: state.departments.concat(action.result),
-                department: state.department,
             });
-        case actionTypes.GET_ALL_DEPARTMENTS:
+        case actionTypes.GET_ALL_DEPARTMENTS: {
             const departments = action.result.filter((department) => department.disable === false);
             const disabledDepartments = action.result.filter(
                 (department) => department.disable === true,
             );
             return updateObject(state, {
                 departments,
-                department: state.department,
                 disabledDepartments,
             });
+        }
         case actionTypes.CLEAR_DEPARTMENT_FORM:
             return {
                 ...state,
                 department: {},
             };
-        case actionTypes.DELETE_DEPARTMENT:
-            state.departments = state.departments.filter(
+        case actionTypes.DELETE_DEPARTMENT: {
+            const departments = state.departments.filter(
                 (department) => department.id !== action.result.id,
             );
-            state.disabledDepartments = state.disabledDepartments.filter(
+            const disabledDepartments = state.disabledDepartments.filter(
                 (department) => department.id !== action.result.id,
             );
             return updateObject(state, {
-                departments: state.departments,
-                department: state.department,
-                disabledDepartments: state.disabledDepartments,
+                departments,
+                disabledDepartments,
             });
+        }
         case actionTypes.GET_DISABLED_DEPARTMENTS:
             return updateObject(state, {
-                departments: state.departments,
-                department: state.department,
                 disabledDepartments: action.result,
             });
-        case actionTypes.SET_DISABLED_DEPARTMENT:
-            state.departments = state.departments.filter(
+        case actionTypes.SET_DISABLED_DEPARTMENT: {
+            const departments = state.departments.filter(
                 (department) => department.id !== action.result.id,
             );
-            state.disabledDepartments.push(action.result);
+            const disabledDepartments = [...state.disabledDepartments, action.result];
             return updateObject(state, {
-                departments: state.departments,
-                department: state.department,
-                disabledDepartments: state.disabledDepartments,
+                departments,
+                disabledDepartments,
             });
-        case actionTypes.SET_ENABLED_DEPARTMENT:
-            state.disabledDepartments = state.disabledDepartments.filter(
+        }
+        case actionTypes.SET_ENABLED_DEPARTMENT: {
+            const disabledDepartments = state.disabledDepartments.filter(
                 (department) => department.id !== action.result.id,
             );
-            state.departments.push(action.result);
+            const departments = [...state.departments, action.result];
             return updateObject(state, {
-                departments: state.departments,
-                department: state.department,
-                disabledDepartments: state.disabledDepartments,
+                departments,
+                disabledDepartments,
             });
-        case actionTypes.GET_DEPARTMENT_BY_ID:
-            let department = state.departments.filter(
+        }
+        case actionTypes.GET_DEPARTMENT_BY_ID: {
+            let getDepartment = state.departments.filter(
                 (department) => department.id === action.result,
             )[0];
-            if (!department) {
-                department = { id: null };
+            if (!getDepartment) {
+                getDepartment = { id: null };
             }
             return updateObject(state, {
-                departments: state.departments,
-                department,
+                department: getDepartment,
             });
-        case actionTypes.UPDATE_DEPARTMENT:
-            const updatedDepartments = [];
-            state.departments.forEach((department) => {
+        }
+        case actionTypes.UPDATE_DEPARTMENT: {
+            const updatedDepartments = state.departments.map((department) => {
                 if (department.id === action.result.id) {
-                    department = { ...department, ...action.result };
+                    return { ...department, ...action.result };
                 }
-                updatedDepartments.push(department);
+                return department;
             });
-            const updatedDefaultDepartments = [];
-            state.disabledDepartments.forEach((department) => {
-                if (department.id === action.result.id) {
-                    department = { ...department, ...action.result };
+
+            const updatedDisabledDepartments = state.disabledDepartments.map((disabledDept) => {
+                if (disabledDept.id === action.result.id) {
+                    return { ...disabledDept, ...action.result };
                 }
-                updatedDefaultDepartments.push(department);
+                return disabledDept;
             });
 
             return updateObject(state, {
                 departments: updatedDepartments,
-                disabledDepartments: updatedDefaultDepartments,
+                disabledDepartments: updatedDisabledDepartments,
                 department: {},
             });
+        }
 
         default:
             return state;
     }
 };
 
-export default departments;
+export default reducer;

@@ -6,16 +6,10 @@ const busyRooms = (
     },
     action,
 ) => {
-    switch (action.type) {
-        case actionTypes.SHOW_ALL_BUSY_ROOMS:
-            return {
-                ...state,
-                busyRooms: [action.result],
-            };
-
-        default:
-            return state;
+    if (action.type === actionTypes.SHOW_ALL_BUSY_ROOMS) {
+        return { ...state, busyRooms: [action.result] };
     }
+    return state;
 };
 
 export default busyRooms;

@@ -8,18 +8,15 @@ const initialState = {
 };
 
 const reducer = (state = initialState, action) => {
-    switch (action.type) {
-        case actionTypes.SET_OPEN_SNACKBAR:
-            const { type } = action.result;
-            const { message } = action.result;
-            return updateObject(state, {
-                isSnackbarOpen: action.result.isOpen,
-                snackbarType: type,
-                message,
-            });
-        default:
-            return state;
+    if (action.type === actionTypes.SET_OPEN_SNACKBAR) {
+        const { type, message, isOpen } = action.result;
+        return updateObject(state, {
+            isSnackbarOpen: isOpen,
+            snackbarType: type,
+            message,
+        });
     }
+    return state;
 };
 
 export default reducer;

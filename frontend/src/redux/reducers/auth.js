@@ -37,6 +37,7 @@ const reducer = (state = initialState, action) => {
                 role: null,
             });
         case actionTypes.REGISTER_USER_SUCCESS:
+        case actionTypes.ACTIVATE_USER_SUCCESS:
             return updateObject(state, {
                 response,
             });
@@ -51,10 +52,6 @@ const reducer = (state = initialState, action) => {
         case actionTypes.RESET_USER_PASSWORD_ERROR:
             return updateObject(state, {
                 error: action.error,
-            });
-        case actionTypes.ACTIVATE_USER_SUCCESS:
-            return updateObject(state, {
-                response,
             });
         case actionTypes.ACTIVATE_USER_ERROR:
             return updateObject(state, {

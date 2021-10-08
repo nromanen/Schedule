@@ -1,8 +1,7 @@
-import actions from 'redux-form/lib/actions';
 import * as actionTypes from '../actions/actionsType';
-import { actionType } from '../../constants/actionTypes';
+import { updateObject } from '../utility';
 
-const roomTypes = (
+const reducer = (
     state = {
         roomTypes: [],
         oneType: {},
@@ -11,43 +10,40 @@ const roomTypes = (
 ) => {
     switch (action.type) {
         case actionTypes.POST_NEW_TYPE:
-            return {
-                ...state,
+            return updateObject(state, {
                 roomTypes: [...state.roomTypes, action.result],
-            };
+            });
 
         case actionTypes.GET_ALL_ROOM_TYPES:
-            return {
-                ...state,
+            return updateObject(state, {
                 roomTypes: [...action.result],
-            };
+            });
         case actionTypes.DELETE_TYPE:
-            return {
-                ...state,
+            return updateObject(state, {
                 roomTypes: [
-                    ...state.roomTypes.filter((roomTypes) => roomTypes.id !== action.result),
+                    ...state.roomTypes.filter((roomTypess) => roomTypess.id !== action.result),
                 ],
-            };
+            });
 
-        case actionTypes.UPDATE_ONE_TYPE:
+        case actionTypes.UPDATE_ONE_TYPE: {
             const updateTypeState = [...state.roomTypes];
             updateTypeState[
                 updateTypeState.findIndex((typeItem) => typeItem.id === action.result.id)
             ] = action.result;
-            return {
-                ...state,
+            return updateObject(state, {
                 oneType: {},
                 roomTypes: [...updateTypeState],
-            };
-        case actionTypes.GET_ONE_NEW_TYPE:
+            });
+        }
+        case actionTypes.GET_ONE_NEW_TYPE: {
             const one = state.roomTypes.filter((roomTypeItem) => roomTypeItem.id === action.result);
-            return {
-                ...state,
+            return updateObject(state, {
                 oneType: one[0],
-            };
+            });
+        }
         default:
             return state;
     }
 };
 
-export default roomTypes;
+export default reducer;
