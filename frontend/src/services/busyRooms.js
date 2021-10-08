@@ -1,8 +1,6 @@
 import { store } from '../index';
-
 import { BUSY_ROOMS } from '../constants/axios';
 import axios from '../helper/axios';
-
 import { showAllBusyRooms } from '../redux/actions';
 import { errorHandler } from '../helper/handlerAxios';
 

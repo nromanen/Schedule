@@ -1,6 +1,6 @@
 import axios from '../helper/axios';
 import { store } from '../index';
-
+import { BACK_END_SUCCESS_OPERATION, USER_LABEL } from '../constants/services';
 import {
     MERGE_USER_AND_TEACHER_URL,
     USERS_URL,
@@ -8,7 +8,6 @@ import {
     UPDATE_USER_PROFILE,
 } from '../constants/axios';
 import { setUsers, setUser, setTeacher } from '../redux/actions/index';
-
 import i18n from '../helper/i18n';
 import { setLoadingService } from './loadingService';
 import { getTeachersWithoutAccount } from './teacherService';
@@ -52,7 +51,7 @@ export const updateUserPassword = (values) => {
         .then((response) => {
             store.dispatch(setUser(response.data));
             successHandler(
-                i18n.t('serviceMessages:back_end_success_operation', {
+                i18n.t(BACK_END_SUCCESS_OPERATION, {
                     cardType: i18n.t('formElements:teacher_label'),
                     actionType: i18n.t('serviceMessages:updated'),
                 }),
@@ -60,6 +59,7 @@ export const updateUserPassword = (values) => {
         })
         .catch((error) => errorHandler(error));
 };
+
 export const updateUserTeacher = (values) => {
     axios
         .put(UPDATE_USER_PROFILE, {
@@ -80,8 +80,8 @@ export const updateUserTeacher = (values) => {
                 }),
             );
             successHandler(
-                i18n.t('serviceMessages:back_end_success_operation', {
-                    cardType: i18n.t('formElements:user_label'),
+                i18n.t(BACK_END_SUCCESS_OPERATION, {
+                    cardType: i18n.t(USER_LABEL),
                     actionType: i18n.t('serviceMessages:updated'),
                 }),
             );
@@ -92,13 +92,13 @@ export const updateUserTeacher = (values) => {
 export const mergeUserAndTeacherService = (mergeObj) => {
     axios
         .put(MERGE_USER_AND_TEACHER_URL, mergeObj)
-        .then((response) => {
+        .then(() => {
             getTeachersWithoutAccount();
             getUsersService();
             setLoadingService(false);
             successHandler(
-                i18n.t('serviceMessages:back_end_success_operation', {
-                    cardType: i18n.t('formElements:user_label'),
+                i18n.t(BACK_END_SUCCESS_OPERATION, {
+                    cardType: i18n.t(USER_LABEL),
                     actionType: i18n.t('serviceMessages:successfully_merged'),
                 }),
             );

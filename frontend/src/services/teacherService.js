@@ -1,15 +1,19 @@
 import { store } from '../index';
 import {
+    BACK_END_SUCCESS_OPERATION,
+    UPDATED_LABEL,
+    TEACHER_LABEL,
+    CREATED_LABEL,
+    DELETED_LABEL,
+} from '../constants/services';
+import {
     DISABLED_TEACHERS_URL,
     TEACHER_URL,
     TEACHERS_WITHOUT_ACCOUNT_URL,
 } from '../constants/axios';
 import { TEACHER_FORM } from '../constants/reduxForms';
-
 import axios from '../helper/axios';
-
 import i18n from '../helper/i18n';
-
 import {
     addTeacher,
     deleteTeacher,
@@ -54,9 +58,9 @@ export const createTeacherService = (values) => {
             store.dispatch(addTeacher(response.data));
             resetFormHandler(TEACHER_FORM);
             successHandler(
-                i18n.t('serviceMessages:back_end_success_operation', {
-                    cardType: i18n.t('formElements:teacher_a_label'),
-                    actionType: i18n.t('serviceMessages:created_label'),
+                i18n.t(BACK_END_SUCCESS_OPERATION, {
+                    cardType: i18n.t(TEACHER_LABEL),
+                    actionType: i18n.t(CREATED_LABEL),
                 }),
             );
         })
@@ -77,6 +81,19 @@ const cardTeacher = (teacher) => {
     };
 };
 
+export const getDisabledTeachersService = () => {
+    axios
+        .get(DISABLED_TEACHERS_URL)
+        .then((res) => {
+            store.dispatch(setDisabledTeachers(res.data));
+        })
+        .catch((error) => errorHandler(error));
+};
+
+export const selectTeacherCardService = (teacherCardId) => {
+    store.dispatch(selectTeacherCard(teacherCardId));
+};
+
 export const updateTeacherService = (data) => {
     let result = { ...data.teacher };
     if (isObjectEmpty(result.department) || result.department.id === null) {
@@ -92,13 +109,12 @@ export const updateTeacherService = (data) => {
             }
             showAllTeachersService();
             getDisabledTeachersService();
-
             selectTeacherCardService(null);
             resetFormHandler(TEACHER_FORM);
             successHandler(
-                i18n.t('serviceMessages:back_end_success_operation', {
-                    cardType: i18n.t('formElements:teacher_a_label'),
-                    actionType: i18n.t('serviceMessages:updated_label'),
+                i18n.t(BACK_END_SUCCESS_OPERATION, {
+                    cardType: i18n.t(TEACHER_LABEL),
+                    actionType: i18n.t(UPDATED_LABEL),
                 }),
             );
         })
@@ -118,28 +134,15 @@ export const handleTeacherService = (values) => {
 export const removeTeacherCardService = (id) => {
     axios
         .delete(`${TEACHER_URL}/${id}`)
-        .then((response) => {
+        .then(() => {
             store.dispatch(deleteTeacher(id));
             getDisabledTeachersService();
             successHandler(
-                i18n.t('serviceMessages:back_end_success_operation', {
-                    cardType: i18n.t('formElements:teacher_a_label'),
-                    actionType: i18n.t('serviceMessages:deleted_label'),
+                i18n.t(BACK_END_SUCCESS_OPERATION, {
+                    cardType: i18n.t(TEACHER_LABEL),
+                    actionType: i18n.t(DELETED_LABEL),
                 }),
             );
-        })
-        .catch((error) => errorHandler(error));
-};
-
-export const selectTeacherCardService = (teacherCardId) => {
-    store.dispatch(selectTeacherCard(teacherCardId));
-};
-
-export const getDisabledTeachersService = () => {
-    axios
-        .get(DISABLED_TEACHERS_URL)
-        .then((res) => {
-            store.dispatch(setDisabledTeachers(res.data));
         })
         .catch((error) => errorHandler(error));
 };

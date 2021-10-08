@@ -14,6 +14,7 @@ import './SemesterCopyForm.scss';
 
 import { SEMESTER_COPY_FORM } from '../../constants/reduxForms';
 import { required } from '../../validation/validateFields';
+import { SEMESTER_LABEL } from '../../constants/services';
 
 const shortid = require('shortid');
 
@@ -42,7 +43,7 @@ const SemesterCopyForm = (props) => {
                             id="toSemesterId"
                             name="toSemesterId"
                             component={renderSelectField}
-                            label={t('formElements:semester_label')}
+                            label={t(SEMESTER_LABEL)}
                             type="text"
                             validate={[required]}
                         >

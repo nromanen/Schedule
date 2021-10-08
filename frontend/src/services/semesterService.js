@@ -1,6 +1,15 @@
+import get from 'lodash';
 import i18n from '../helper/i18n';
 import { store } from '../index';
 import axios from '../helper/axios';
+import {
+    BACK_END_SUCCESS_OPERATION,
+    LESSON_LABEL,
+    SEMESTER_LABEL,
+    UPDATED_LABEL,
+    CREATED_LABEL,
+    DELETED_LABEL,
+} from '../constants/services';
 import {
     DISABLED_SEMESTERS_URL,
     SEMESTERS_URL,
@@ -9,8 +18,6 @@ import {
     CREATE_ARCHIVE_SEMESTER,
     ARCHIVED_SEMESTERS_URL,
     DEFAULT_SEMESTER_URL,
-    SCHEDULE_SEMESTER_ITEMS_URL,
-    GROUPS_URL,
 } from '../constants/axios';
 import { setDisabledSemesters, setError } from '../redux/actions/semesters';
 import { SEMESTER_FORM } from '../constants/reduxForms';
@@ -28,12 +35,9 @@ import {
     moveToArchivedSemester,
     setScheduleType,
     setFullSchedule,
-    setScheduleItems,
 } from '../redux/actions/index';
-
 import { errorHandler, successHandler } from '../helper/handlerAxios';
 import { resetFormHandler } from '../helper/formHelper';
-import { setLoadingService, setScheduleLoadingService } from './loadingService';
 
 export const selectSemesterService = (semesterId) => store.dispatch(selectSemester(semesterId));
 
@@ -56,39 +60,59 @@ export const showAllSemestersService = () => {
         })
         .catch((error) => errorHandler(error));
 };
+
+export const getDisabledSemestersService = () => {
+    axios
+        .get(DISABLED_SEMESTERS_URL)
+        .then((res) => {
+            store.dispatch(setDisabledSemesters(res.data));
+        })
+        .catch((err) => errorHandler(err));
+};
+
+export const getArchivedSemestersService = () => {
+    axios
+        .get(ARCHIVED_SEMESTERS_URL)
+        .then((response) => {
+            store.dispatch(setArchivedSemesters(response.data));
+        })
+        .catch((err) => errorHandler(err));
+};
+
+const setSemester = (resp) => {
+    store.dispatch(updateSemester(resp));
+    selectSemesterService(null);
+    getDisabledSemestersService();
+    getArchivedSemestersService();
+    showAllSemestersService();
+    resetFormHandler(SEMESTER_FORM);
+    successHandler(
+        i18n.t(BACK_END_SUCCESS_OPERATION, {
+            cardType: i18n.t(SEMESTER_LABEL),
+            actionType: i18n.t(UPDATED_LABEL),
+        }),
+    );
+};
+
 export const setGroupsToSemester = (semesterId, groups) => {
     const groupIds = groups.map((item) => `groupId=${item.id}`).join('&');
     axios
         .put(`${SEMESTERS_URL}/${semesterId}/groups?${groupIds}`)
         .then((response) => {
-            store.dispatch(updateSemester(response.data));
-            selectSemesterService(null);
-            getDisabledSemestersService();
-            getArchivedSemestersService();
-            showAllSemestersService();
-            resetFormHandler(SEMESTER_FORM);
-            successHandler(
-                i18n.t('serviceMessages:back_end_success_operation', {
-                    cardType: i18n.t('formElements:semester_label'),
-                    actionType: i18n.t('serviceMessages:updated_label'),
-                }),
-            );
+            setSemester(response.data);
         })
         .catch((error) => errorHandler(error));
 };
 
 const cardSemester = (semester) => {
-    const semester_days = [];
-    const semester_classes = [];
-    for (const prop in semester) {
-        if (Object.prototype.hasOwnProperty.call(semester, prop)) {
-            if (prop.indexOf('semester_days_markup_') >= 0 && semester[prop] === true) {
-                semester_days.push(prop.substring(21));
-            }
-        }
-        if (Object.prototype.hasOwnProperty.call(semester, prop)) {
-            if (prop.indexOf('semester_classes_markup_') >= 0 && semester[prop] === true) {
-                semester_classes.push(
+    const semesterDays = [];
+    const semesterClasses = [];
+    Object.keys(semester).forEach((prop) => {
+        if (get(semester, prop)) {
+            if (prop.indexOf('semesterDays_markup_') >= 0 && semester[prop] === true) {
+                semesterDays.push(prop.substring(21));
+            } else if (prop.indexOf('semesterClasses_markup_') >= 0 && semester[prop] === true) {
+                semesterClasses.push(
                     store
                         .getState()
                         .classActions.classScheduler.find(
@@ -97,7 +121,7 @@ const cardSemester = (semester) => {
                 );
             }
         }
-    }
+    });
 
     return {
         id: semester.id,
@@ -107,8 +131,8 @@ const cardSemester = (semester) => {
         endDay: semester.endDay,
         currentSemester: semester.currentSemester,
         defaultSemester: semester.defaultSemester,
-        semester_days,
-        semester_classes,
+        semesterDays,
+        semesterClasses,
         semester_groups: semester.semester_groups,
     };
 };
@@ -125,24 +149,67 @@ export const removeSemesterCardService = (semesterId) => {
     }
     axios
         .delete(`${SEMESTERS_URL}/${semesterId}`)
-        .then((response) => {
+        .then(() => {
             store.dispatch(deleteSemester(semesterId));
             successHandler(
-                i18n.t('serviceMessages:back_end_success_operation', {
-                    cardType: i18n.t('formElements:semester_label'),
-                    actionType: i18n.t('serviceMessages:deleted_label'),
+                i18n.t(BACK_END_SUCCESS_OPERATION, {
+                    cardType: i18n.t(SEMESTER_LABEL),
+                    actionType: i18n.t(DELETED_LABEL),
                 }),
             );
         })
         .catch((error) => errorHandler(error));
 };
 
+const putSemester = (data) => {
+    axios
+        .put(SEMESTERS_URL, data)
+        .then((response) => {
+            setSemester(response.data);
+        })
+        .catch((error) => errorHandler(error));
+};
+
+const postSemester = (data) => {
+    axios
+        .post(SEMESTERS_URL, data)
+        .then((response) => {
+            store.dispatch(addSemester(response.data));
+            resetFormHandler(SEMESTER_FORM);
+            successHandler(
+                i18n.t(BACK_END_SUCCESS_OPERATION, {
+                    cardType: i18n.t(SEMESTER_LABEL),
+                    actionType: i18n.t(CREATED_LABEL),
+                }),
+            );
+        })
+        .catch((error) => errorHandler(error));
+};
 const switchSaveActions = (semester) => {
     if (semester.id) {
         putSemester(semester);
     } else {
         postSemester(semester);
     }
+};
+
+const checkSemesterYears = (endDay, startDay, year) => {
+    const dateEndYear = +endDay.substring(endDay.length - 4);
+    const dateStartYear = +startDay.substring(startDay.length - 4);
+    let conf = true;
+    if (year !== dateEndYear || year !== dateStartYear) {
+        conf = window.confirm(i18n.t('serviceMessages:semester_service_not_as_begin_or_end'));
+    }
+    return conf;
+};
+
+const findCurrentSemester = (semesterId) => {
+    return store
+        .getState()
+        .semesters.semesters.find(
+            (semesterItem) =>
+                semesterItem.currentSemester === true && semesterItem.id !== semesterId,
+        );
 };
 
 export const handleSemesterService = (values) => {
@@ -177,92 +244,13 @@ export const handleSemesterService = (values) => {
     }
 };
 
-const checkSemesterYears = (endDay, startDay, year) => {
-    const dateEndYear = +endDay.substring(endDay.length - 4);
-    const dateStartYear = +startDay.substring(startDay.length - 4);
-    let conf = true;
-    if (year !== dateEndYear || year !== dateStartYear) {
-        conf = window.confirm(i18n.t('serviceMessages:semester_service_not_as_begin_or_end'));
-    }
-    return conf;
-};
 export const setDefaultSemesterById = (dataId) => {
     axios
         .put(`${DEFAULT_SEMESTER_URL}?semesterId=${dataId}`)
         .then((response) => {
-            store.dispatch(updateSemester(response.data));
-            selectSemesterService(null);
-            getDisabledSemestersService();
-            getArchivedSemestersService();
-            showAllSemestersService();
-            resetFormHandler(SEMESTER_FORM);
-            successHandler(
-                i18n.t('serviceMessages:back_end_success_operation', {
-                    cardType: i18n.t('formElements:semester_label'),
-                    actionType: i18n.t('serviceMessages:updated_label'),
-                }),
-            );
+            setSemester(response.data);
         })
         .catch((error) => errorHandler(error));
-};
-
-const putSemester = (data) => {
-    axios
-        .put(SEMESTERS_URL, data)
-        .then((response) => {
-            store.dispatch(updateSemester(response.data));
-            selectSemesterService(null);
-            getDisabledSemestersService();
-            getArchivedSemestersService();
-            showAllSemestersService();
-            resetFormHandler(SEMESTER_FORM);
-            successHandler(
-                i18n.t('serviceMessages:back_end_success_operation', {
-                    cardType: i18n.t('formElements:semester_label'),
-                    actionType: i18n.t('serviceMessages:updated_label'),
-                }),
-            );
-        })
-        .catch((error) => errorHandler(error));
-};
-const postSemester = (data) => {
-    axios
-        .post(SEMESTERS_URL, data)
-        .then((response) => {
-            store.dispatch(addSemester(response.data));
-            resetFormHandler(SEMESTER_FORM);
-            successHandler(
-                i18n.t('serviceMessages:back_end_success_operation', {
-                    cardType: i18n.t('formElements:semester_label'),
-                    actionType: i18n.t('serviceMessages:created_label'),
-                }),
-            );
-        })
-        .catch((error) => errorHandler(error));
-};
-const findCurrentSemester = (semesterId) => {
-    return store
-        .getState()
-        .semesters.semesters.find(
-            (semesterItem) =>
-                semesterItem.currentSemester === true && semesterItem.id !== semesterId,
-        );
-};
-const findDefaultSemester = (semesterId) => {
-    return store
-        .getState()
-        .semesters.semesters.find(
-            (semesterItem) =>
-                semesterItem.defaultSemester === true && semesterItem.id !== semesterId,
-        );
-};
-export const getDisabledSemestersService = () => {
-    axios
-        .get(DISABLED_SEMESTERS_URL)
-        .then((res) => {
-            store.dispatch(setDisabledSemesters(res.data));
-        })
-        .catch((err) => errorHandler(err));
 };
 
 export const setDisabledSemestersService = (semester) => {
@@ -280,10 +268,10 @@ export const semesterCopy = (values) => {
         .post(
             `${SEMESTER_COPY_URL}?fromSemesterId=${values.fromSemesterId}&toSemesterId=${values.toSemesterId}`,
         )
-        .then((response) => {
+        .then(() => {
             successHandler(
-                i18n.t('serviceMessages:back_end_success_operation', {
-                    cardType: i18n.t('formElements:semester_label'),
+                i18n.t(BACK_END_SUCCESS_OPERATION, {
+                    cardType: i18n.t(SEMESTER_LABEL),
                     actionType: i18n.t('serviceMessages:copied_label'),
                 }),
             );
@@ -296,10 +284,10 @@ export const CopyLessonsFromSemesterService = (values) => {
         .post(
             `${LESSONS_FROM_SEMESTER_COPY_URL}?fromSemesterId=${values.fromSemesterId}&toSemesterId=${values.toSemesterId}`,
         )
-        .then((response) => {
+        .then(() => {
             successHandler(
-                i18n.t('serviceMessages:back_end_success_operation', {
-                    cardType: i18n.t('formElements:lesson_label'),
+                i18n.t(BACK_END_SUCCESS_OPERATION, {
+                    cardType: i18n.t(LESSON_LABEL),
                     actionType: i18n.t('serviceMessages:copied_label'),
                 }),
             );
@@ -310,25 +298,16 @@ export const CopyLessonsFromSemesterService = (values) => {
 export const createArchiveSemesterService = (semesterId) => {
     axios
         .post(`${CREATE_ARCHIVE_SEMESTER}/${semesterId}`)
-        .then((response) => {
+        .then(() => {
             store.dispatch(moveToArchivedSemester(semesterId));
             successHandler(
-                i18n.t('serviceMessages:back_end_success_operation', {
-                    cardType: i18n.t('formElements:semester_label'),
+                i18n.t(BACK_END_SUCCESS_OPERATION, {
+                    cardType: i18n.t(SEMESTER_LABEL),
                     actionType: i18n.t('serviceMessages:archived_label'),
                 }),
             );
         })
         .catch((error) => errorHandler(error));
-};
-
-export const getArchivedSemestersService = () => {
-    axios
-        .get(ARCHIVED_SEMESTERS_URL)
-        .then((response) => {
-            store.dispatch(setArchivedSemesters(response.data));
-        })
-        .catch((err) => errorHandler(err));
 };
 
 export const viewArchivedSemester = (semesterId) => {

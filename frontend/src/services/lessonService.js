@@ -1,12 +1,16 @@
 import axios from '../helper/axios';
 import { store } from '../index';
-
+import {
+    BACK_END_SUCCESS_OPERATION,
+    LESSON_LABEL,
+    UPDATED_LABEL,
+    CREATED_LABEL,
+    DELETED_LABEL,
+} from '../constants/services';
 import { LESSON_TYPES_URL, LESSON_URL, COPY_LESSON_URL } from '../constants/axios';
 import { LESSON_FORM } from '../constants/reduxForms';
-
 import { handleSnackbarOpenService } from './snackbarService';
 import { setLoadingService } from './loadingService';
-
 import {
     deleteLessonCard,
     selectGroupId,
@@ -17,14 +21,11 @@ import {
     storeLessonCard,
     updateLessonCard,
 } from '../redux/actions/index';
-
 import { snackbarTypes } from '../constants/snackbarTypes';
-
 import { checkUniqLesson } from '../validation/storeValidation';
 import i18n from '../helper/i18n';
 import { errorHandler, successHandler } from '../helper/handlerAxios';
 import { resetFormHandler } from '../helper/formHelper';
-import { getTeacherById } from './teacherService';
 
 export const getLessonsByGroupService = (groupId) => {
     axios
@@ -49,6 +50,7 @@ export const getLessonTypesService = () => {
             errorHandler(err);
         });
 };
+
 const cardObjectHandler = (card, groupId, semester) => {
     const groupData =
         card.groups.map((group) => group.id).includes(groupId) && card.groups.length !== 1
@@ -70,6 +72,10 @@ const cardObjectHandler = (card, groupId, semester) => {
     };
 };
 
+export const selectLessonCardService = (lessonCardId) => {
+    store.dispatch(selectLessonCard(lessonCardId));
+};
+
 const updateLessonHandler = (data, groupId) => {
     let res = { ...data };
     const { groups, ...result } = res;
@@ -83,9 +89,9 @@ const updateLessonHandler = (data, groupId) => {
             resetFormHandler(LESSON_FORM);
 
             successHandler(
-                i18n.t('serviceMessages:back_end_success_operation', {
-                    cardType: i18n.t('formElements:lesson_label'),
-                    actionType: i18n.t('serviceMessages:updated_label'),
+                i18n.t(BACK_END_SUCCESS_OPERATION, {
+                    cardType: i18n.t(LESSON_LABEL),
+                    actionType: i18n.t(UPDATED_LABEL),
                 }),
             );
         })
@@ -103,15 +109,19 @@ const createLessonHandler = (data, isCopy) => {
             }
             resetFormHandler(LESSON_FORM);
             successHandler(
-                i18n.t('serviceMessages:back_end_success_operation', {
-                    cardType: i18n.t('formElements:lesson_label'),
-                    actionType: i18n.t('serviceMessages:created_label'),
+                i18n.t(BACK_END_SUCCESS_OPERATION, {
+                    cardType: i18n.t(LESSON_LABEL),
+                    actionType: i18n.t(CREATED_LABEL),
                 }),
             );
         })
         .catch((err) => {
             errorHandler(err);
         });
+};
+
+export const setUniqueErrorService = (isUniqueError) => {
+    store.dispatch(setUniqueError(isUniqueError));
 };
 
 export const handleLessonCardService = (card, groupId, semester) => {
@@ -130,21 +140,20 @@ export const handleLessonCardService = (card, groupId, semester) => {
         .get(`teachers/${cardObj.teacher.id}`)
         .then((res) => {
             cardObj = { ...cardObj, teacher: res.data };
-            cardObj.id
-                ? updateLessonHandler(cardObj, groupId)
-                : createLessonHandler(cardObj, false);
+            if (cardObj.id) updateLessonHandler(cardObj, groupId);
+            else createLessonHandler(cardObj, false);
         })
         .catch((error) => errorHandler(error));
 };
 export const removeLessonCardService = (lessonCardId) => {
     axios
         .delete(`${LESSON_URL}/${lessonCardId}`)
-        .then((res) => {
+        .then(() => {
             store.dispatch(deleteLessonCard(lessonCardId));
             successHandler(
-                i18n.t('serviceMessages:back_end_success_operation', {
-                    cardType: i18n.t('formElements:lesson_label'),
-                    actionType: i18n.t('serviceMessages:deleted_label'),
+                i18n.t(BACK_END_SUCCESS_OPERATION, {
+                    cardType: i18n.t(LESSON_LABEL),
+                    actionType: i18n.t(DELETED_LABEL),
                 }),
             );
         })
@@ -153,19 +162,15 @@ export const removeLessonCardService = (lessonCardId) => {
         });
 };
 
-export const selectLessonCardService = (lessonCardId) => {
-    store.dispatch(selectLessonCard(lessonCardId));
-};
-
 export const copyLessonCardService = (lessonGroupObj) => {
     const groupList = [];
     lessonGroupObj.group.map((groupItem) => groupList.push(groupItem.id));
     axios
         .post(`${COPY_LESSON_URL}?lessonId=${lessonGroupObj.lesson.id}`, groupList)
-        .then((response) => {
+        .then(() => {
             successHandler(
-                i18n.t('serviceMessages:back_end_success_operation', {
-                    cardType: i18n.t('formElements:lesson_label'),
+                i18n.t(BACK_END_SUCCESS_OPERATION, {
+                    cardType: i18n.t(LESSON_LABEL),
                     actionType: i18n.t('serviceMessages:copied_label'),
                 }),
             );
@@ -177,8 +182,4 @@ export const copyLessonCardService = (lessonGroupObj) => {
 
 export const selectGroupIdService = (groupId) => {
     store.dispatch(selectGroupId(groupId));
-};
-
-export const setUniqueErrorService = (isUniqueError) => {
-    store.dispatch(setUniqueError(isUniqueError));
 };
