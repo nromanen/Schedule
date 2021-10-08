@@ -66,9 +66,11 @@ export const uniqueGroup = (value) => {
 export const uniqueSubject = (value) => {
     return checkUniqueSubject(value);
 };
+
 export const uniqueDepartment = (value) => {
     return checkUniqueDepartment(value);
 };
+
 export const timeIntersect = (value, previousValue, allValues) => {
     return timeIntersectService(allValues.values.startTime, allValues.values.endTime);
 };
@@ -91,6 +93,7 @@ const minYear = (min) => (value) =>
         : undefined;
 const today = new Date();
 const year = today.getFullYear();
+
 export const minYearValue = minYear(year);
 
 export const lessThanDate = (value, previousValue, allValues) => {

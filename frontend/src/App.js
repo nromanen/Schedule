@@ -1,9 +1,8 @@
 import React, { Suspense, useEffect } from 'react';
 import './App.scss';
+import { connect } from 'react-redux';
 import Routers from './router/Routers';
 import './helper/i18n';
-import { connect } from 'react-redux';
-
 import { authCheckState } from './redux/actions/index';
 import { handleSnackbarCloseService } from './services/snackbarService';
 import SnackbarComponent from './share/Snackbar/SnackbarComponent';
