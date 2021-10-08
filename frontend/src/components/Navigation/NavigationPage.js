@@ -6,11 +6,11 @@ import Tab from '@material-ui/core/Tab';
 import { connect } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
+import { MenuItem, Select } from '@material-ui/core';
 import { setCurrentSemester } from '../../redux/actions';
 import { links } from '../../constants/links';
 import './NavigationPage.scss';
-import { MenuItem, Select } from '@material-ui/core';
-import { general, tabs_components } from '../../constants/navigationComponents';
+import { general, tabsComponents } from '../../constants/navigationComponents';
 
 function a11yProps(index) {
     return {
@@ -73,7 +73,7 @@ const NavigationPage = (props) => {
                     scrollButtons="on"
                     className={classes.header}
                 >
-                    {tabs_components.map((tabOne, index) => (
+                    {tabsComponents.map((tabOne, index) => (
                         <>
                             {tabOne.length === undefined ? (
                                 <Link className={classes.nav} to={links[tabOne.name]}>
