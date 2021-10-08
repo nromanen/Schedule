@@ -1,4 +1,4 @@
-export const cardType = {
+const cardType = {
     LESSON: 'Lesson',
     TEACHER: 'Teacher',
     CLASS: 'Class',
@@ -9,3 +9,4 @@ export const cardType = {
     SUBJECT: 'Subject',
     SEMESTER: 'Semester',
 };
+export { cardType };
