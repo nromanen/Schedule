@@ -1,6 +1,5 @@
 import actions from 'redux-form/lib/actions';
 import * as actionTypes from '../actions/actionsType';
-import { actionType } from '../../constants/actionTypes';
 
 const roomTypes = (
     state = {

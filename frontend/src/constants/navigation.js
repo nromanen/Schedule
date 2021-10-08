@@ -1,13 +1,3 @@
-import React from 'react';
-import TeacherList from '../containers/TeachersList/TeachersList';
-import GroupList from '../containers/GroupList/GroupList';
-import RoomList from '../containers/RoomList/RoomList';
-import SubjectPage from '../containers/SubjectPage/SubjectPage';
-import SemesterPage from '../containers/SemesterPage/SemesterPage';
-import MergeRolePage from '../containers/MergeRolePage/MergeRolePage';
-import Changes from '../components/ChangePasswordForm/ChangePasswordForm';
-import BusyRooms from '../containers/BusyRooms/BusyRooms';
-
 export const navigation = {
     LESSONS: 0,
     USERS: 1,
