@@ -1,5 +1,6 @@
 import axios from '../helper/axios';
-import { store } from '../index';
+import { store } from '../redux';
+
 import { CLASS_URL, PUBLIC_CLASSES_URL } from '../constants/axios';
 
 import { CLASS_FORM } from '../constants/reduxForms';

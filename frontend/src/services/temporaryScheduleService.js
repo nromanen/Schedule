@@ -2,7 +2,7 @@ import axios from '../helper/axios';
 import { errorHandler, successHandler } from '../helper/handlerAxios';
 import i18n from '../helper/i18n';
 
-import { store } from '../index';
+import { store } from '../redux';
 
 import {
     TEACHER_TEMPORARY_SCHEDULE,

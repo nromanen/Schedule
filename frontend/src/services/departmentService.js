@@ -1,6 +1,7 @@
 import axios from '../helper/axios';
 import { DEPARTMENT_URL, SUBJECT_URL } from '../constants/axios';
-import { store } from '../index';
+import { store } from '../redux';
+
 import { addSubject } from '../redux/actions';
 import { resetFormHandler } from '../helper/formHelper';
 import { DEPARTMENT_FORM, SUBJECT_FORM } from '../constants/reduxForms';

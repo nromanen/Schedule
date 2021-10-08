@@ -1,4 +1,4 @@
-import { store } from '../index';
+import { store } from '../redux';
 
 import { BUSY_ROOMS } from '../constants/axios';
 import axios from '../helper/axios';

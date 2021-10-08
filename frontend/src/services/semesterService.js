@@ -1,5 +1,6 @@
 import i18n from '../helper/i18n';
-import { store } from '../index';
+import { store } from '../redux';
+
 import axios from '../helper/axios';
 import {
     DISABLED_SEMESTERS_URL,

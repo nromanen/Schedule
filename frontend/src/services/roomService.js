@@ -1,4 +1,5 @@
-import { store } from '../index';
+import { store } from '../redux';
+
 import { DISABLED_ROOMS_URL, ROOM_URL } from '../constants/axios';
 import { ROOM_FORM } from '../constants/reduxForms';
 import axios from '../helper/axios';

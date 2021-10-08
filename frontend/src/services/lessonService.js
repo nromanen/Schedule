@@ -1,5 +1,5 @@
 import axios from '../helper/axios';
-import { store } from '../index';
+import { store } from '../redux';
 
 import { LESSON_TYPES_URL, LESSON_URL, COPY_LESSON_URL } from '../constants/axios';
 import { LESSON_FORM } from '../constants/reduxForms';

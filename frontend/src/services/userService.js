@@ -1,5 +1,5 @@
 import axios from '../helper/axios';
-import { store } from '../index';
+import { store } from '../redux';
 
 import {
     MERGE_USER_AND_TEACHER_URL,

@@ -1,4 +1,5 @@
-import { store } from '../index';
+import { store } from '../redux';
+
 import axios from '../helper/axios';
 import { DISABLED_SUBJECTS_URL, SUBJECT_URL } from '../constants/axios';
 import { SUBJECT_FORM } from '../constants/reduxForms';

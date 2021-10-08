@@ -1,4 +1,5 @@
-import { store } from '../index';
+import { store } from '../redux';
+
 import { ROOM_FORM_TYPE } from '../constants/reduxForms';
 import { ROOM_TYPES_URL } from '../constants/axios';
 import axios from '../helper/axios';

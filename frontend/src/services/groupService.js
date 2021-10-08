@@ -1,6 +1,7 @@
 import { reset } from 'redux-form';
 
-import { store } from '../index';
+import { store } from '../redux';
+
 import axios from '../helper/axios';
 import { DISABLED_GROUPS_URL, GROUP_URL } from '../constants/axios';
 import { GROUP_FORM } from '../constants/reduxForms';

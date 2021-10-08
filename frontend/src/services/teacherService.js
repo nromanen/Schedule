@@ -1,4 +1,5 @@
-import { store } from '../index';
+import { store } from '../redux';
+
 import {
     DISABLED_TEACHERS_URL,
     TEACHER_URL,

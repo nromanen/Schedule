@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
-import { store } from '../index';
+import { store } from '../redux';
+
 import axios from '../helper/axios';
 import i18n from '../helper/i18n';
 import { errorHandler, infoHandler, successHandler } from '../helper/handlerAxios';

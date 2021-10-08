@@ -1,6 +1,7 @@
 import Moment from 'moment';
 import { extendMoment } from 'moment-range';
-import { store } from '../index';
+import { store } from '../redux';
+
 import i18n from '../helper/i18n';
 
 export const checkUniqClassName = (className) => {

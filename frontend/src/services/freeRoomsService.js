@@ -1,5 +1,5 @@
 import axios from '../helper/axios';
-import { store } from '../index';
+import { store } from '../redux';
 
 import { showFreeRooms, clearFreeRooms } from '../redux/actions/freeRooms';
 import { FREE_ROOMS_URL } from '../constants/axios';

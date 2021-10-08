@@ -1,4 +1,4 @@
-import { store } from '../index';
+import { store } from '../redux';
 
 import { setLoading, setScheduleLoading, setSemesterLoading } from '../redux/actions/index';
 
