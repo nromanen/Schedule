@@ -1,4 +1,4 @@
-export const links = {
+const links = {
     HOME_PAGE: '/',
     ADMIN_PAGE: '/admin',
     SCHEDULE_PAGE: '/schedules',
@@ -31,3 +31,5 @@ export const links = {
     RESET_PASSWORD: '/reset-password',
     Departments: '/departments',
 };
+
+export { links };
