@@ -80,14 +80,14 @@ const Board = (props) => {
         }
     };
     const addClassDayBoard = () => {
-        if (classDay !== null && classDay !== undefined) {
+        if (!isNil(classDay)) {
             const dayClassWeek = document.getElementsByClassName(classDay);
             dayClassWeek[0].classList.add(dayClassWeekString);
             dayClassWeek[1].classList.add(dayClassWeekString);
         }
     };
     const addClass = () => {
-        if (classes !== null && classes !== undefined) {
+        if (!isNil(classes)) {
             const classesTmp = document.getElementById(classes);
             classesTmp.classList.add('classes');
         }
@@ -99,7 +99,7 @@ const Board = (props) => {
         }
     };
     const addGroup = () => {
-        if (group !== null && group !== undefined) {
+        if (!isNil(group)) {
             const tmp = document.getElementById(group);
             tmp.classList.add('group');
         }
@@ -113,14 +113,14 @@ const Board = (props) => {
         }
     };
     const removeClassDayBoard = () => {
-        if (classDay !== null && classDay !== undefined) {
+        if (!isNil(classDay)) {
             const dayClassWeek = document.getElementsByClassName(classDay);
             dayClassWeek[0].classList.remove(dayClassWeekString);
             dayClassWeek[1].classList.remove(dayClassWeekString);
         }
     };
     const removeClass = () => {
-        if (classes !== null && classes !== undefined) {
+        if (!isNil(classes)) {
             const classesTmp = document.getElementById(classes);
             classesTmp.classList.remove('classes');
         }

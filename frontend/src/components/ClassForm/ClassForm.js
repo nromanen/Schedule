@@ -30,11 +30,11 @@ const ClassFormFunc = (props) => {
     const { handleSubmit, pristine, onReset, submitting, classScheduleOne } = props;
     useEffect(() => {
         let initialValues = {};
-        if (props.classScheduleOne) {
-            initialValues = props.classScheduleOne;
+        if (classScheduleOne) {
+            initialValues = classScheduleOne;
         }
         props.initialize(initialValues);
-    }, [props.classScheduleOne]);
+    }, [classScheduleOne]);
 
     const setEndTime = (startTime) =>
         props.change(

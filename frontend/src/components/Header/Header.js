@@ -1,5 +1,6 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
+import { isNil } from 'lodash';
 import { Link } from 'react-router-dom';
 import {
     FaCaretDown,
@@ -62,11 +63,11 @@ const StyledMenuItem = withStyles((theme) => ({
 
 const Header = (props) => {
     const { roles } = props;
-    const [anchorEl, setAnchorEl] = React.useState(null);
+    const [anchorEl, setAnchorEl] = useState(null);
     const handleClick = (event) => setAnchorEl(event.currentTarget);
     const handleClose = () => setAnchorEl(null);
 
-    const [anchorElUser, setAnchorElUser] = React.useState(null);
+    const [anchorElUser, setAnchorElUser] = useState(null);
     const handleClickUserMenu = (event) => setAnchorElUser(event.currentTarget);
     const handleCloseUserMenu = () => setAnchorElUser(null);
 
@@ -81,7 +82,7 @@ const Header = (props) => {
 
     const getUserMenu = (userRole) => {
         let userMenu = null;
-        if (userRole === null || userRole === undefined) {
+        if (isNil(userRole)) {
             return (
                 <Link to={links.LOGIN} className="navLinks">
                     {t('login_title')}

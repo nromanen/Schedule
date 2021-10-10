@@ -84,13 +84,11 @@ let LessonForm = (props) => {
 
     return (
         <Card class="form-card">
-            {groupId ? (
+            {groupId && (
                 <h2 className="form-title under-line">
                     {lessonId ? t('edit_title') : t('create_title')}
                     {t('lesson_label')}
                 </h2>
-            ) : (
-                ''
             )}
             {groupId ? (
                 <form onSubmit={handleSubmit}>
@@ -201,7 +199,7 @@ let LessonForm = (props) => {
                         label={t('subject_label') + t('for_site_label')}
                         validate={[required, maxLengthValue]}
                     />
-                    {!lessonId ? (
+                    {!lessonId && (
                         <Accordion>
                             <AccordionSummary
                                 expandIcon={<ExpandMoreIcon />}
@@ -232,7 +230,7 @@ let LessonForm = (props) => {
                                 </Typography>
                             </AccordionDetails>
                         </Accordion>
-                    ) : null}
+                    )}
                     <div className="form-buttons-container">
                         <Button
                             className="buttons-style"

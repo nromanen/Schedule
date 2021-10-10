@@ -25,6 +25,7 @@ import { SCHEDULE_SEARCH_FORM } from '../../constants/reduxForms';
 import { required } from '../../validation/validateFields';
 import { places } from '../../constants/places';
 import { getTeacherFullName } from '../../helper/renderTeacher';
+import { isEmpty } from 'lodash';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -53,7 +54,7 @@ const GroupSchedulePageTop = (props) => {
     useEffect(() => showAllPublicTeachersService(), []);
     useEffect(() => showAllPublicSemestersService(), []);
     useEffect(() => {
-        if (groups.length !== 0) {
+        if (!isEmpty(groups)) {
             setGroupDisabled(false);
         } else {
             setGroupDisabled(true);

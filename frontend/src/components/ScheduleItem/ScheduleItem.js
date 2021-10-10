@@ -22,18 +22,6 @@ const ScheduleItem = (props) => {
     const itemNodeId = `card-${lesson.id}-group-${lesson.group.id}-${addition}`;
     const deleteNodeId = `delete-${lesson.id}-${lesson.group.id}-${addition}`;
 
-    const getTitleLesson = () => {
-        if (lesson.grouped) {
-            console.log(lesson);
-            // const groupsFilter = props.lessons.filter(les => les.grouped===true&&les.subjectForSite === lesson.subjectForSite);
-            // const groups = groupsFilter.map(item => item.subjectForSite === lesson.subjectForSite &&
-            //     item.lessonType === lesson.lessonType &&
-            //     lesson.teacher.id === item.teacher.id);
-            // console.log(groups)
-        }
-        return null;
-    };
-
     const isGroupped = (grouped) =>
         grouped ? (
             <FaUserPlus
@@ -46,7 +34,6 @@ const ScheduleItem = (props) => {
 
     return (
         <Card id={itemNodeId} class={props.class} draggable>
-            {getTitleLesson()}
             <input
                 type="hidden"
                 value={JSON.stringify({

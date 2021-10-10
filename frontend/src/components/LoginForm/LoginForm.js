@@ -20,10 +20,12 @@ import {
 } from '../../services/scheduleService';
 
 const LoginForm = (props) => {
-    useEffect(() => setScheduleSemesterIdService(0));
-    useEffect(() => setScheduleTeacherIdService(0));
-    useEffect(() => setScheduleGroupIdService(0));
-    useEffect(() => setScheduleTypeService(''));
+    useEffect(() => {
+        setScheduleSemesterIdService(0);
+        setScheduleTeacherIdService(0);
+        setScheduleGroupIdService(0);
+        setScheduleTypeService('');
+    });
     const { t } = useTranslation('formElements');
     const { handleSubmit } = props;
 

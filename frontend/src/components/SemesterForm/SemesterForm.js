@@ -64,8 +64,10 @@ const AddSemesterForm = (props) => {
             SUNDAY: false,
         });
     };
-    useEffect(() => getClassScheduleListService(), []);
-    useEffect(() => showAllGroupsService(), []);
+    useEffect(() => {
+        getClassScheduleListService();
+        showAllGroupsService();
+    }, []);
 
     const { t } = useTranslation('formElements');
     const {
@@ -116,7 +118,7 @@ const AddSemesterForm = (props) => {
         handleSubmit(values);
     };
 
-    const [checkedClasses, setCheckedClasses] = React.useState(prepSetCheckedClasses);
+    const [checkedClasses, setCheckedClasses] = useState(prepSetCheckedClasses);
     useEffect(() => {
         props.classScheduler.forEach((classItem) => {
             prepSetCheckedClasses[`${classItem.id}`] = false;

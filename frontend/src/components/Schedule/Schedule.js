@@ -112,14 +112,9 @@ const Schedule = (props) => {
 
     const t = props.translation;
 
-    // const dayContainerHeight = classes.length * 185.5 + 4.6 * classes.length;
     const dayContainerHeight = classes.length * 150;
 
     const useStyles = makeStyles({
-        dayContainer: {
-            // height: dayContainerHeight,
-            // maxHeight: dayContainerHeight
-        },
         day: {
             height: dayContainerHeight,
             maxHeight: dayContainerHeight,
@@ -247,10 +242,7 @@ const Schedule = (props) => {
             <aside className="day-classes-aside">
                 <section className="card empty-card">Група</section>
                 {days.map((day, index) => (
-                    <section
-                        className={`${elClasses.dayContainer} cards-container day-container`}
-                        key={day}
-                    >
+                    <section className="cards-container day-container" key={day}>
                         <section
                             id={day}
                             className={`${elClasses.day} ${getDayColour(index)} schedule-day card`}

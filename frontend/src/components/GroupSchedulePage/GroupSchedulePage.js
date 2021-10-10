@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useHistory, useLocation } from 'react-router-dom';
 import { MdPictureAsPdf } from 'react-icons/md';
 import i18n from 'i18next';
+import { isNil } from 'lodash';
 import {
     PUBLIC_DOWNLOAD_GROUP_SCHEDULE_URL,
     PUBLIC_DOWNLOAD_TEACHER_SCHEDULE_URL,
@@ -45,7 +46,6 @@ const GroupSchedulePage = (props) => {
         groupId,
         teacherId,
         semesterId,
-        loading,
     } = props;
     const history = useHistory();
 
@@ -249,8 +249,8 @@ const GroupSchedulePage = (props) => {
         if (semester !== null) {
             handleSubmit({
                 semester,
-                group: group != null ? group : 0,
-                teacher: teacher != null ? teacher : 0,
+                group: !isNil(group) ? group : 0,
+                teacher: !isNil(teacher) ? teacher : 0,
             });
         }
         return null;
