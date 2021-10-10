@@ -6,11 +6,11 @@ import React, { useEffect, useState } from 'react';
 
 import './SemesterPage.scss';
 import { GiSightDisabled, IoMdEye, FaCopy } from 'react-icons/all';
+import Button from '@material-ui/core/Button';
 import Card from '../../share/Card/Card';
 import { search } from '../../helper/search';
 import NotFound from '../../share/NotFound/NotFound';
-import ConfirmDialog from '../../share/modals/dialog';
-import ModalWindow from '../../share/modals/modal/modal';
+import { ConfirmDialog, SetDefaultDialog, CustomDialog } from '../../share/DialogWindows';
 import SearchPanel from '../../share/SearchPanel/SearchPanel';
 import SnackbarComponent from '../../share/Snackbar/SnackbarComponent';
 import { handleSnackbarCloseService } from '../../services/snackbarService';
@@ -38,8 +38,6 @@ import { disabledCard } from '../../constants/disabledCard';
 import GroupSchedulePage from '../../components/GroupSchedulePage/GroupSchedulePage';
 import NavigationPage from '../../components/Navigation/NavigationPage';
 import { navigation, navigationNames } from '../../constants/navigation';
-import SetDefaultDialog from '../../share/modals/modal/setDefaultDialog';
-import SetChangeDialog from '../../share/modals/modal/setDefaultDialog';
 import { MultiselectForGroups } from '../../helper/MultiselectForGroups';
 import { showAllGroupsService } from '../../services/groupService';
 import { successHandler } from '../../helper/handlerAxios';
@@ -100,7 +98,7 @@ const SemesterPage = (props) => {
                 i18n.t('serviceMessages:group_exist_in_this_semester', {
                     cardType: i18n.t('common:group_title'),
                     actionType: i18n.t('serviceMessages:student_label'),
-                }),
+                })
             );
             return;
         }
@@ -171,7 +169,7 @@ const SemesterPage = (props) => {
         if (hideDialog) {
             if (disabled) {
                 const semester = props.disabledSemesters.find(
-                    (semester) => semester.id === semesterId,
+                    (semester) => semester.id === semesterId
                 );
                 setEnabledSemestersService(semester);
             } else {
@@ -221,35 +219,39 @@ const SemesterPage = (props) => {
             <NavigationPage name={navigationNames.SEMESTER_PAGE} val={navigation.SEMESTERS} />
             <ConfirmDialog
                 cardId={semesterId}
-                whatDelete="semester"
+                whatDelete='semester'
                 isHide={hideDialog}
                 open={open}
                 onClose={handleClose}
             />
-            <SetChangeDialog
+            <SetDefaultDialog
                 cardId={semesterId}
                 isHide={hideDialog}
                 open={openDefault}
                 onClose={handleClose}
             />
-            <ModalWindow
-                whatDelete="semester"
-                isHide={hideDialogModal}
+            <CustomDialog
+                title={t('semester_copy_label')}
                 open={openModal}
                 onClose={handleCloseModal}
-                windowTitle={t('semester_copy_label')}
-                isOkButton={false}
-                isNoButton
-                noButtonLabel={t('close_label')}
+                buttons={
+                    <Button
+                        className='dialog-button'
+                        variant='contained'
+                        onClick={handleCloseModal}
+                    >
+                        {t('close_label')}
+                    </Button>
+                }
             >
                 <SemesterCopyForm
                     semesterId={semesterId}
                     onSubmit={handleSemesterCopySubmit}
                     submitButtonLabel={t('copy_label')}
                 />
-            </ModalWindow>
-            <div className="cards-container">
-                <aside className="search-list__panel">
+            </CustomDialog>
+            <div className='cards-container'>
+                <aside className='search-list__panel'>
                     <SearchPanel
                         SearchChange={SearchChange}
                         showDisabled={showDisabledHandle}
@@ -263,20 +265,20 @@ const SemesterPage = (props) => {
                             setSelectedGroups={setSelectedGroups}
                             selected={selected}
                             setSelected={setSelected}
-                            className="form"
+                            className='form'
                             onSubmit={submit}
                             onReset={handleFormReset}
                             semester={edit ? semester : {}}
                         />
                     )}
                 </aside>
-                <section className="container-flex-wrap wrapper">
+                <section className='container-flex-wrap wrapper'>
                     {visibleItems.length === 0 && <NotFound name={t('semestry_label')} />}
                     {visibleItems.map((semester, index) => {
                         const sem_days = [];
 
                         semester.semester_days.forEach((day) =>
-                            sem_days.push(t(`common:day_of_week_${day}`)),
+                            sem_days.push(t(`common:day_of_week_${day}`))
                         );
                         return (
                             <Card
@@ -285,11 +287,11 @@ const SemesterPage = (props) => {
                                     semester.currentSemester ? 'current' : ''
                                 }`}
                             >
-                                <div className="cards-btns">
+                                <div className='cards-btns'>
                                     {!disabled && !archived ? (
                                         <>
                                             <GiSightDisabled
-                                                className="svg-btn copy-btn"
+                                                className='svg-btn copy-btn'
                                                 title={t('common:set_disabled')}
                                                 onClick={() => {
                                                     setHideDialog(disabledCard.HIDE);
@@ -297,7 +299,7 @@ const SemesterPage = (props) => {
                                                 }}
                                             />
                                             <FaEdit
-                                                className="svg-btn edit-btn"
+                                                className='svg-btn edit-btn'
                                                 title={t('edit_title')}
                                                 onClick={() => {
                                                     handleEdit(semester.id);
@@ -305,7 +307,7 @@ const SemesterPage = (props) => {
                                                 }}
                                             />
                                             <FaCopy
-                                                className="svg-btn copy-btn"
+                                                className='svg-btn copy-btn'
                                                 title={t('copy_label')}
                                                 onClick={() => {
                                                     handleClickOpenModal(semester.id);
@@ -315,7 +317,7 @@ const SemesterPage = (props) => {
                                                 ''
                                             ) : (
                                                 <FaFileArchive
-                                                    className="svg-btn archive-btn"
+                                                    className='svg-btn archive-btn'
                                                     title={t('common:make_archive')}
                                                     onClick={() => {
                                                         handleCreateArchive(semester.id);
@@ -325,7 +327,7 @@ const SemesterPage = (props) => {
                                         </>
                                     ) : !archived ? (
                                         <IoMdEye
-                                            className="svg-btn copy-btn"
+                                            className='svg-btn copy-btn'
                                             title={t('common:set_enabled')}
                                             onClick={() => {
                                                 setHideDialog(disabledCard.SHOW);
@@ -334,7 +336,7 @@ const SemesterPage = (props) => {
                                         />
                                     ) : (
                                         <IoMdEye
-                                            className="svg-btn copy-btn"
+                                            className='svg-btn copy-btn'
                                             title={t('common:preview')}
                                             onClick={() => {
                                                 handleSemesterArchivedPreview(semester.id);
@@ -342,7 +344,7 @@ const SemesterPage = (props) => {
                                         />
                                     )}
                                     <MdDelete
-                                        className="svg-btn delete-btn"
+                                        className='svg-btn delete-btn'
                                         title={t('delete_title')}
                                         onClick={() => handleClickOpen(semester.id)}
                                     />
@@ -354,21 +356,21 @@ const SemesterPage = (props) => {
                                     />
                                 </div>
 
-                                <p className="semester-card__description">
+                                <p className='semester-card__description'>
                                     <small>{`${t('semester_label')}:`}</small>
                                     <b>{semester.description}</b>
                                     {` ( ${semester.year} )`}
                                 </p>
-                                <p className="semester-card__description">
+                                <p className='semester-card__description'>
                                     <b>
                                         {semester.startDay} - {semester.endDay}
                                     </b>
                                 </p>
-                                <p className="semester-card__description">
+                                <p className='semester-card__description'>
                                     {`${t('common:days_label')}: `}
                                     {sem_days.join(', ')}
                                 </p>
-                                <p className="semester-card__description">
+                                <p className='semester-card__description'>
                                     {`${t('common:ClassSchedule_management_title')}: `}
                                     {semester.semester_classes
                                         .map((classItem) => {
@@ -379,7 +381,7 @@ const SemesterPage = (props) => {
 
                                 <FaUsers
                                     title={t('formElements:show_groups')}
-                                    className="svg-btn copy-btn  semester-groups"
+                                    className='svg-btn copy-btn  semester-groups'
                                     onClick={() => {
                                         setSemesterId(semester.id);
                                         selectSemesterService(semester.id);
@@ -397,7 +399,7 @@ const SemesterPage = (props) => {
                 isOpen={isSnackbarOpen}
                 handleSnackbarClose={handleSnackbarClose}
             />
-            <GroupSchedulePage scheduleType="archived" />
+            <GroupSchedulePage scheduleType='archived' />
             <MultiselectForGroups
                 open={openGroupsDialog}
                 options={options}

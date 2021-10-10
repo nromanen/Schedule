@@ -7,7 +7,7 @@ import { MdDelete } from 'react-icons/md';
 import { useTranslation } from 'react-i18next';
 import ClassForm from '../../components/ClassForm/ClassForm';
 import Card from '../../share/Card/Card';
-import ConfirmDialog from '../../share/modals/dialog';
+import { ConfirmDialog } from '../../share/DialogWindows';
 import { cardType } from '../../constants/cardType';
 
 import {
@@ -65,7 +65,6 @@ const ClassSchedule = (props) => {
             <NavigationPage name={navigationNames.CLASS_SCHEDULE_TITLE} val={navigation.PERIOD} />
             <div className="cards-container">
                 <ConfirmDialog
-                    selectedValue=""
                     cardId={classId}
                     whatDelete={cardType.CLASS.toLowerCase()}
                     open={open}

@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import { uploadStudentsToGroupFile } from '../../services/uploadFile';
-import { Dialog, DialogTitle } from '@material-ui/core';
 import './UploadFile.scss';
-import { FaWindowClose } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
 import Button from '@material-ui/core/Button';
+import { CustomDialog } from '../../share/DialogWindows';
 import { setLoadingService } from '../../services/loadingService';
 
 export const UploadFile = (props) => {
@@ -32,46 +31,51 @@ export const UploadFile = (props) => {
         return selectedFile === null;
     };
     return (
-        <Dialog disableBackdropClick aria-labelledby="confirm-dialog-title" open={open}>
-            <DialogTitle className="upload-dialog" id="confirm-dialog-title">
-                <FaWindowClose
-                    title={t('close_label')}
-                    className="close-dialog"
-                    variant="contained"
-                    onClick={handleCloseDialogFile}
-                />
+        <CustomDialog
+            title="Upload file"
+            open={open}
+            onClick={handleCloseDialogFile}
+            buttons={
+                <>
+                    <Button
+                        className="dialog-button"
+                        variant="contained"
+                        onClick={handleSubmission}
+                        color="primary"
+                        title={t('common:upload_title')}
+                        disabled={setDisabledSendButton()}
+                    >
+                        {t('common:upload_title')}
+                    </Button>
+                    <Button
+                        className="dialog-button"
+                        variant="contained"
+                        onClick={handleCloseDialogFile}
+                        color="primary"
+                        title={t('close_label')}
+                    >
+                        {t('close_label')}
+                    </Button>
+                </>
+            }
+        >
+            <input
+                type="file"
+                name="file"
+                accept=".txt, .csv"
+                onChange={changeHandler}
+                ref={fileInputRef}
+            />
+            {selectedFile ? (
                 <div>
-                    <input
-                        type="file"
-                        name="file"
-                        accept=".txt, .csv"
-                        onChange={changeHandler}
-                        ref={fileInputRef}
-                    />
-                    {selectedFile ? (
-                        <div>
-                            <p>{`${t('common:name_label')}: ${selectedFile.name}`}</p>
-                            <p>{`${t('common:type_label')}: ${selectedFile.type}`}</p>
-                            <p>{`${t('common:byte_size_label')}: ${selectedFile.size}`}</p>
-                            {/* <p>{`${t('common:last_modified_date')}: ${selectedFile.lastModifiedDate.toLocaleDateString()}`}</p> */}
-                        </div>
-                    ) : (
-                        <p>{t('common:select_file_label')}</p>
-                    )}
-                    <div>
-                        <Button
-                            className="dialog-button"
-                            variant="contained"
-                            onClick={handleSubmission}
-                            color="primary"
-                            title={t('common:upload_title')}
-                            disabled={setDisabledSendButton()}
-                        >
-                            {t('common:upload_title')}
-                        </Button>
-                    </div>
+                    <p>{`${t('common:name_label')}: ${selectedFile.name}`}</p>
+                    <p>{`${t('common:type_label')}: ${selectedFile.type}`}</p>
+                    <p>{`${t('common:byte_size_label')}: ${selectedFile.size}`}</p>
+                    {/* <p>{`${t('common:last_modified_date')}: ${selectedFile.lastModifiedDate.toLocaleDateString()}`}</p> */}
                 </div>
-            </DialogTitle>
-        </Dialog>
+            ) : (
+                <p>{t('common:select_file_label')}</p>
+            )}
+        </CustomDialog>
     );
 };

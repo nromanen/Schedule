@@ -7,8 +7,7 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { styled } from '@material-ui/core/styles';
 import Card from '../../share/Card/Card';
-import ConfirmDialog from '../../share/modals/dialog';
-import CopyLessonDialog from '../../share/modals/chooseGroupDialog/CopyLessonDialog';
+import { ConfirmDialog, CopyLessonDialog } from '../../share/DialogWindows';
 
 import LessonForm from '../../components/LessonForm/LessonForm';
 import LessonsList from '../../components/LessonsList/LessonsList';

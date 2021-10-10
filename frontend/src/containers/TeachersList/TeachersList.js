@@ -10,7 +10,7 @@ import i18n from 'i18next';
 import AddTeacherForm from '../../components/AddTeacherForm/AddTeacherForm';
 import Card from '../../share/Card/Card';
 
-import ConfirmDialog from '../../share/modals/dialog';
+import { ConfirmDialog } from '../../share/DialogWindows';
 import { cardType } from '../../constants/cardType';
 
 import './TeachersList.scss';

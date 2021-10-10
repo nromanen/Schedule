@@ -8,7 +8,7 @@ import { MdDelete } from 'react-icons/md';
 import { FaEdit } from 'react-icons/fa';
 import { ROOM_FORM_TYPE } from '../../constants/reduxForms';
 
-import ConfirmDialog from '../../share/modals/dialog';
+import { ConfirmDialog } from '../../share/DialogWindows';
 import { cardType } from '../../constants/cardType';
 import Card from '../../share/Card/Card';
 import renderTextField from '../../share/renderedFields/input';
@@ -51,7 +51,6 @@ let NewRoomType = (props) => {
     return (
         <>
             <ConfirmDialog
-                selectedValue=""
                 cardId={typeId}
                 whatDelete={cardType.TYPE.toLowerCase()}
                 open={open}

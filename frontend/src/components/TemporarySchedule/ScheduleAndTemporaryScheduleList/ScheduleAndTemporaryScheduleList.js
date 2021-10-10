@@ -6,7 +6,7 @@ import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import Card from '../../../share/Card/Card';
-import ConfirmDialog from '../../../share/modals/dialog';
+import { ConfirmDialog } from '../../../share/DialogWindows';
 
 import TemporaryScheduleCard from '../TemporaryScheduleCard/TemporaryScheduleCard';
 import TemporaryScheduleCardButtons from '../TemporaryScheduleCardButtons/TemporaryScheduleCardButtons';

@@ -21,13 +21,13 @@ import TableHead from '@material-ui/core/TableHead';
 import { Checkbox, withStyles } from '@material-ui/core';
 import { FaEdit } from 'react-icons/all';
 import { Delete } from '@material-ui/icons';
-import ConfirmDialog from '../share/modals/dialog';
-import AddStudentDialog from '../share/modals/modal/AddStudentDialog';
+
 import { selectStudentService } from '../services/studentService';
 import './renderStudentTable.scss';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { links } from '../constants/links';
+import { ConfirmDialog, AddStudentDialog } from '../share/DialogWindows';
 
 const useStyles1 = makeStyles((theme) => ({
     root: {

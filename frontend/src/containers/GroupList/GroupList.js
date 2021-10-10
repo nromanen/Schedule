@@ -9,7 +9,11 @@ import { GiSightDisabled, IoMdEye } from 'react-icons/all';
 import { useHistory } from 'react-router-dom/cjs/react-router-dom';
 import { search } from '../../helper/search';
 import NotFound from '../../share/NotFound/NotFound';
-import ConfirmDialog from '../../share/modals/dialog';
+import {
+    ConfirmDialog,
+    ShowStudentsOnGroupDialog,
+    AddStudentDialog,
+} from '../../share/DialogWindows';
 import SearchPanel from '../../share/SearchPanel/SearchPanel';
 import AddGroup from '../../components/AddGroupForm/AddGroupForm';
 import SnackbarComponent from '../../share/Snackbar/SnackbarComponent';
@@ -35,8 +39,6 @@ import {
     selectStudentService,
     updateStudentService,
 } from '../../services/studentService';
-import { ShowStudentsDialog } from '../../share/modals/modal/showStudentsDialog';
-import AddStudentDialog from '../../share/modals/modal/AddStudentDialog';
 import { links } from '../../constants/links';
 
 import '../../router/Router.scss';
@@ -212,7 +214,7 @@ const GroupList = (props) => {
                 onSubmit={studentSubmit}
                 onSetSelectedCard={selectStudentCard}
             />
-            <ShowStudentsDialog
+            <ShowStudentsOnGroupDialog
                 onClose={onCloseShowStudents}
                 open={showStudents}
                 students={students}
