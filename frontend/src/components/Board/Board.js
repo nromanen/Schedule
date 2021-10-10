@@ -1,5 +1,4 @@
 import React from 'react';
-
 import { colors } from '../../constants/schedule/colors';
 import { cssClasses } from '../../constants/schedule/cssClasses';
 import { checkAvailabilityScheduleService } from '../../services/scheduleService';

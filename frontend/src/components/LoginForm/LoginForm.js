@@ -12,11 +12,9 @@ import Card from '../../share/Card/Card';
 import renderTextField from '../../share/renderedFields/input';
 
 import { LOGIN_FORM } from '../../constants/reduxForms';
-import { authTypes } from '../../constants/auth';
 import { GOOGLE_LOGIN_URL } from '../../constants/axios';
 
 import { required } from '../../validation/validateFields';
-import { links } from '../../constants/links';
 import {
     setScheduleGroupIdService,
     setScheduleSemesterIdService,
