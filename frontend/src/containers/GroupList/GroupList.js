@@ -38,11 +38,11 @@ import {
 const GroupList = (props) => {
     const {
         isSnackbarOpen,
-        snackbarType,
         snackbarMessage,
         disabledGroups,
+        snackbarType,
+        enabledGroup,
         students,
-        groups,
         group,
         match,
         student,
@@ -53,7 +53,7 @@ const GroupList = (props) => {
     const [term, setTerm] = useState('');
     const [isHide, setIsHide] = useState('');
     const [groupId, setGroupId] = useState(-1);
-    const [disabled, setDisabled] = useState(false);
+    const [isDisabled, setIsDisabled] = useState(false);
     const [showStudents, setShowStudents] = useState(false);
     const [addStudentDialog, setAddStudentDialog] = useState(false);
 
@@ -61,19 +61,24 @@ const GroupList = (props) => {
     useEffect(() => getDisabledGroupsService(), []);
 
     const SearchChange = setTerm;
-    const displayedGroups = disabled
+    const visibleGroups = isDisabled
         ? search(disabledGroups, term, ['title'])
-        : search(groups, term, ['title']);
+        : search(enabledGroup, term, ['title']);
+    const showDisabledHandle = () => {
+        setIsDisabled((prev) => !prev);
+    };
+    const handleSnackbarClose = () => {
+        handleSnackbarCloseService();
+    };
 
-    // group
     const handleClickDisplayDialog = (id, isHideOrNot) => {
         if (isHideOrNot) setIsHide(isHideOrNot);
         setGroupId(id);
         setOpen(true);
     };
     const hideShowGroup = (id) => {
-        const allGroups = [...disabledGroups, ...groups];
-        const foundGroup = allGroups.find((groupItem) => Number(groupItem.id) === Number(id));
+        const allGroups = [...disabledGroups, ...enabledGroup];
+        const foundGroup = allGroups.find((groupItem) => groupItem.id === id);
         const showHide = {
             Show: setEnabledGroupService(foundGroup),
             Hide: setDisabledGroupService(foundGroup),
@@ -91,7 +96,7 @@ const GroupList = (props) => {
     const handleSetGroupToUpdateForm = (id) => selectGroupService(id);
     const submitGroupForm = (values) => handleGroupService(values);
     const handleGroupFormReset = () => clearGroupService();
-    // students
+
     const onShowStudentByGroup = (id) => {
         setShowStudents(true);
         selectGroupService(id);
@@ -106,7 +111,6 @@ const GroupList = (props) => {
     };
     const onCloseShowStudents = () => {
         setShowStudents(false);
-        goToGroupPage(history);
     };
     const studentSubmit = (data) => {
         if (data.id !== undefined) {
@@ -123,13 +127,6 @@ const GroupList = (props) => {
         if (student !== '') {
             deleteStudentService(student);
         }
-    };
-    // all
-    const showDisabledHandle = () => {
-        setDisabled(!disabled);
-    };
-    const handleSnackbarClose = () => {
-        handleSnackbarCloseService();
     };
 
     return (
@@ -156,13 +153,13 @@ const GroupList = (props) => {
                 onSubmit={studentSubmit}
                 match={match}
                 student={student}
-                groups={[...groups, ...disabledGroups]}
+                groups={[...enabledGroup, ...disabledGroups]}
             />
 
             <div className="cards-container">
                 <aside className="search-list__panel">
                     <SearchPanel SearchChange={SearchChange} showDisabled={showDisabledHandle} />
-                    {!disabled && (
+                    {!isDisabled && (
                         <AddGroup
                             match={match}
                             className="form"
@@ -172,12 +169,12 @@ const GroupList = (props) => {
                     )}
                 </aside>
                 <div className="group-wrapper group-list">
-                    {displayedGroups.length === 0 && <NotFound name={t('group_y_label')} />}
-                    {displayedGroups.map((groupItem) => (
+                    {visibleGroups.length === 0 && <NotFound name={t('group_y_label')} />}
+                    {visibleGroups.map((groupItem) => (
                         <GroupCard
                             key={groupItem.id}
                             groupItem={groupItem}
-                            disabled={disabled}
+                            disabled={isDisabled}
                             disabledCard={disabledCard}
                             handleAddUser={handleAddUser}
                             onShowStudentByGroup={onShowStudentByGroup}
@@ -197,7 +194,7 @@ const GroupList = (props) => {
     );
 };
 const mapStateToProps = (state) => ({
-    groups: state.groups.groups,
+    enabledGroup: state.groups.groups,
     group: state.groups.group,
     disabledGroups: state.groups.disabledGroups,
     isSnackbarOpen: state.snackbar.isSnackbarOpen,

@@ -8,9 +8,6 @@ const Logout = (props) => {
     useEffect(() => {
         props.onLogout();
     }, []);
-    // useEffect(()=>setScheduleSemesterIdService(0))
-    // const history=useHistory();
-    // useEffect(()=>history.push("/"));
     return <Redirect to="/" />;
 };
 
