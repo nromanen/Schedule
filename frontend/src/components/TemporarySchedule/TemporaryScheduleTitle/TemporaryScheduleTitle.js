@@ -19,6 +19,7 @@ import * as moment from 'moment';
 
 import Divider from '@material-ui/core/Divider';
 import { temporaryScheduleRadioTypes } from '../../../constants/temporaryScheduleRadioTypes';
+import { dateFormat } from '../../../constants/formats';
 
 import {
     getTeacherTemporarySchedulesService,
@@ -72,7 +73,6 @@ const TemporaryScheduleTitle = (props) => {
     const { t } = useTranslation('common');
     const classes = useStyles();
     const [day, setDay] = useState(null);
-    const dateFormat = 'DD-MM-YYYY';
 
     const [radio, setRadio] = useState(temporaryScheduleRadioTypes.SEMESTER);
 
@@ -201,9 +201,7 @@ const TemporaryScheduleTitle = (props) => {
                                         className={classes.dateField}
                                         label={t('formElements:class_to_label')}
                                         format="DD/MM/YYYY"
-                                        value={
-                                            toDate ? moment(toDate, 'DD/MM/YYYY').toDate() : null
-                                        }
+                                        value={toDate ? moment(toDate, dateFormat).toDate() : null}
                                         onChange={handleToDateChange}
                                     />
                                 </div>
@@ -213,7 +211,7 @@ const TemporaryScheduleTitle = (props) => {
                                     className={classes.day}
                                     label={t('date')}
                                     format="DD/MM/YYYY"
-                                    value={day ? moment(day, 'DD/MM/YYYY').toDate() : null}
+                                    value={day ? moment(day, dateFormat).toDate() : null}
                                     onChange={handleDayChange}
                                 />
                             )}

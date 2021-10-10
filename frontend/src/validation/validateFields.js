@@ -10,6 +10,7 @@ import {
 } from './storeValidation';
 import i18n from '../helper/i18n';
 import { validation } from '../constants/validation';
+import { dateFormat } from '../constants/formats';
 
 export const required = (value) =>
     value ? undefined : i18n.t('validationMessages:required_message');
@@ -96,8 +97,8 @@ export const minYearValue = minYear(year);
 export const lessThanDate = (value, previousValue, allValues) => {
     const otherField = 'endDay';
     if (allValues.values[otherField] === undefined) return undefined;
-    return moment(value, 'DD/MM/YYYY').toDate() <=
-        moment(allValues.values[otherField], 'DD/MM/YYYY').toDate() &&
+    return moment(value, dateFormat).toDate() <=
+        moment(allValues.values[otherField], dateFormat).toDate() &&
         allValues.values[otherField] !== undefined
         ? undefined
         : i18n.t('validationMessages:less_than_field_message', {
@@ -108,8 +109,8 @@ export const lessThanDate = (value, previousValue, allValues) => {
 export const greaterThanDate = (value, previousValue, allValues) => {
     const otherField = 'startDay';
     if (allValues.values[otherField] === undefined) return undefined;
-    return moment(value, 'DD/MM/YYYY').toDate() >=
-        moment(allValues.values[otherField], 'DD/MM/YYYY').toDate()
+    return moment(value, dateFormat).toDate() >=
+        moment(allValues.values[otherField], dateFormat).toDate()
         ? undefined
         : i18n.t('validationMessages:bigger_than_field_message', {
               field: i18n.t('formElements:class_from_label'),

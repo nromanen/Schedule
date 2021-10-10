@@ -22,9 +22,9 @@ import { getClearOrCancelTitle, setDisableButton } from '../../helper/disableCom
 import { showAllGroupsService } from '../../services/groupService';
 import { MultiselectForGroups } from '../../helper/MultiselectForGroups';
 import { isObjectEmpty } from '../../helper/ObjectRevision';
+import { dateFormat } from '../../constants/formats';
 
 const AddSemesterForm = (props) => {
-    const dateFormat = 'DD/MM/YYYY';
     const prepSetCheckedClasses = {};
     const getToday = () => {
         return new Date();

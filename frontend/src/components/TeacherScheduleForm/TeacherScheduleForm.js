@@ -17,12 +17,12 @@ import { TEACHER_SCHEDULE_FORM } from '../../constants/reduxForms';
 import renderMonthPicker from '../../share/renderedFields/timeSemester';
 import Card from '../../share/Card/Card';
 import { setTeacherServiceViewType } from '../../services/scheduleService';
+import { dateFormat } from '../../constants/formats';
 
 const TeacherScheduleForm = (props) => {
     const { t } = useTranslation('formElements');
     const { handleSubmit } = props;
     const isSchedule = false;
-    const dateFormat = 'DD/MM/YYYY';
 
     useEffect(() => {
         props.initialize({
