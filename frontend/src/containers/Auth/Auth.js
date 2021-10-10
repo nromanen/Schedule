@@ -16,6 +16,7 @@ import { validation } from '../../constants/validation';
 import LoginForm from '../../components/LoginForm/LoginForm';
 import RegistrationForm from '../../components/RegistrationForm/RegistrationForm';
 import ResetPasswordForm from '../../components/ResetPasswordForm/ResetPasswordForm';
+import { GOOGLE } from '../../constants/common';
 
 import {
     authUser,
@@ -68,7 +69,7 @@ const Auth = (props) => {
                 }
             });
         }
-        if (social && isToken) socialLoginHandler({ authType: 'google', token });
+        if (social && isToken) socialLoginHandler({ authType: GOOGLE, token });
     }
 
     useEffect(() => {
