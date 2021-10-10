@@ -92,9 +92,7 @@ const ChangePasswordForm = (props) => {
     );
 };
 
-const mapStateToProps = () => ({});
-
-export default connect(mapStateToProps)(
+export default connect()(
     reduxForm({
         form: PROFILE_FORM,
     })(ChangePasswordForm),

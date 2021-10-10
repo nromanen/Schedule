@@ -29,20 +29,22 @@ const TemporaryScheduleCardButtons = (props) => {
         selectTemporarySchedule(resultSchedule);
     };
 
+    const handleEditClick = () => {
+        if (isTemporary) selectTemporarySchedule({ ...schedule, date });
+        else {
+            handleScheduleSelect({
+                ...schedule,
+                date,
+            });
+        }
+    };
+
     return (
         <div className="cards-btns">
             <FaEdit
                 title={t('common:edit_hover_title')}
                 className="svg-btn edit-btn"
-                onClick={() => {
-                    if (isTemporary) selectTemporarySchedule({ ...schedule, date });
-                    else {
-                        handleScheduleSelect({
-                            ...schedule,
-                            date,
-                        });
-                    }
-                }}
+                onClick={handleEditClick}
             />
             {isTemporary && (
                 <MdDelete

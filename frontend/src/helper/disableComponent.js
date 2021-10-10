@@ -1,5 +1,10 @@
+import { isNil } from 'lodash';
+
 export const setDisableButton = (pristine, submitting, id) => {
-    if (submitting || id === undefined) {
+    if (!pristine || !isNil(id)) {
+        return false;
+    }
+    if (submitting || isNil(id)) {
         return true;
     }
     return false;

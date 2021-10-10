@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { MenuItem, Select } from '@material-ui/core';
+import { isNil } from 'lodash';
 import { setCurrentSemester } from '../../redux/actions';
 import { links } from '../../constants/links';
 import './NavigationPage.scss';
@@ -75,7 +76,7 @@ const NavigationPage = (props) => {
                 >
                     {tabsComponents.map((tabOne, index) => (
                         <>
-                            {tabOne.length === undefined ? (
+                            {isNil(tabOne.length) ? (
                                 <Link className={classes.nav} to={links[tabOne.name]}>
                                     <Tab
                                         className={classes.btn}
@@ -97,7 +98,7 @@ const NavigationPage = (props) => {
                                         documentTitle(eventValue);
                                     }}
                                 >
-                                    {Object.entries(tabOne).map(function (data, indexNested) {
+                                    {Object.entries(tabOne).map((data, indexNested) => {
                                         return (
                                             <MenuItem
                                                 className="menu-dictionary MuiTab-root"
