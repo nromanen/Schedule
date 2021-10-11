@@ -13,7 +13,7 @@ import { setCurrentSemester } from '../../actions';
 import { links } from '../../constants/links';
 import './NavigationPage.scss';
 import { MenuItem, Select } from '@material-ui/core';
-import { general, tabs_components } from '../../constants/navigationComponents';
+import { general, tabsComponents } from '../../constants/navigationComponents';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -99,7 +99,7 @@ const NavigationPage = (props) => {
                     scrollButtons="on"
                     className={classes.header}
                 >
-                    {tabs_components.map((tab_one, index) => (
+                    {tabsComponents.map((tab_one, index) => (
                         <>
                             {tab_one.length === undefined ? (
                                 <Link className={classes.nav} to={links[tab_one.name]}>
