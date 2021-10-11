@@ -2,6 +2,7 @@ import React from 'react';
 import MomentUtils from '@date-io/moment';
 import * as moment from 'moment';
 import { MuiPickersUtilsProvider, DatePicker } from '@material-ui/pickers';
+import { dateFormat } from '../../constants/formats';
 
 const renderMonthPicker = ({
     label,
@@ -14,7 +15,7 @@ const renderMonthPicker = ({
             <DatePicker
                 minDate={new Date()}
                 clearable
-                value={value ? moment(value, 'DD/MM/YYYY').toDate() : null}
+                value={value ? moment(value, dateFormat).toDate() : null}
                 format="DD/MM/YYYY"
                 error={touched && invalid}
                 helperText={touched && error ? touched && error : label}

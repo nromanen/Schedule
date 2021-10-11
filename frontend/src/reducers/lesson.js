@@ -23,31 +23,34 @@ const reducer = (state = initialState, action) => {
             return updateObject(state, {
                 lessonTypes: action.result,
             });
-        case actionTypes.DELETE_LESSON_CARD:
-            state.lessons = state.lessons.filter((lesson) => lesson.id !== action.result);
+        case actionTypes.DELETE_LESSON_CARD: {
+            const lessons = state.lessons.filter((lesson) => lesson.id !== action.result);
             return updateObject(state, {
-                lessons: state.lessons,
+                lessons,
             });
-        case actionTypes.SELECT_LESSON_CARD:
-            let lesson = state.lessons.filter((lesson) => lesson.id === action.result)[0];
+        }
+        case actionTypes.SELECT_LESSON_CARD: {
+            let lesson = state.lessons.find((less) => less.id === action.result);
             if (!lesson) {
                 lesson = { id: null };
             }
             return updateObject(state, {
                 lesson,
             });
-        case actionTypes.UPDATE_LESSON_CARD:
-            const updatedLessons = [];
-            state.lessons.forEach((lesson) => {
-                if (lesson.id === action.result.id) {
-                    lesson = { ...lesson, ...action.result };
-                }
-                updatedLessons.push(lesson);
-            });
+        }
+        case actionTypes.UPDATE_LESSON_CARD: {
+            const lessonIndex = state.lessons.findIndex(({ id }) => id === action.result.id);
+            const lessons = [...state.lessons];
+
+            lessons[lessonIndex] = {
+                ...lessons[lessonIndex],
+                ...action.result,
+            }
             return updateObject(state, {
-                lessons: updatedLessons,
+                lessons,
                 lesson: {},
             });
+        }
         case actionTypes.SELECT_GROUP_ID:
             return updateObject(state, {
                 lesson: {},

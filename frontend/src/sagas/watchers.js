@@ -1,6 +1,6 @@
 import { takeLatest, takeEvery } from 'redux-saga/effects';
 
-import * as actionTypes from '../redux/actions/actionsType';
+import * as actionTypes from '../actions/actionsType';
 
 import { authSaga } from './authSaga';
 import { logoutSaga } from './logoutSaga';

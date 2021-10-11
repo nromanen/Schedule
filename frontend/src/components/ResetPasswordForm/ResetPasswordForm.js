@@ -16,7 +16,7 @@ import { authTypes } from '../../constants/auth';
 import { email, required } from '../../validation/validateFields';
 import { links } from '../../constants/links';
 
-let ResetPasswordForm = (props) => {
+const ResetPasswordForm = (props) => {
     const { t } = useTranslation('formElements');
     const { handleSubmit } = props;
 
@@ -83,8 +83,8 @@ let ResetPasswordForm = (props) => {
     );
 };
 
-ResetPasswordForm = reduxForm({
+const ResetPasswordReduxForm = reduxForm({
     form: RESET_PASSWORD_FORM,
 })(ResetPasswordForm);
 
-export default ResetPasswordForm;
+export default ResetPasswordReduxForm;

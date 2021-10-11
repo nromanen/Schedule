@@ -1,8 +1,14 @@
-import { reset } from 'redux-form';
+import { store } from '../store';
 
-import { store } from '../index';
 import axios from '../helper/axios';
 import { DISABLED_GROUPS_URL, GROUP_URL } from '../constants/axios';
+import {
+    BACK_END_SUCCESS_OPERATION,
+    GROUP_LABEL,
+    UPDATED_LABEL,
+    CREATED_LABEL,
+    DELETED_LABEL,
+} from '../constants/services';
 import { GROUP_FORM } from '../constants/reduxForms';
 import {
     showAllGroups,
@@ -12,7 +18,7 @@ import {
     updateGroup,
     clearGroup,
     setDisabledGroups,
-} from '../redux/actions/index';
+} from '../actions/index';
 import { errorHandler, successHandler } from '../helper/handlerAxios';
 import i18n from '../helper/i18n';
 import { resetFormHandler } from '../helper/formHelper';
@@ -28,39 +34,6 @@ export const selectGroupService = (groupId) => {
     store.dispatch(selectGroup(groupId));
 };
 
-export const handleGroupService = (values) =>
-    values.id ? updateGroupService(values) : createGroupService(values);
-
-export const clearGroupService = () => {
-    store.dispatch(clearGroup());
-    resetFormHandler(GROUP_FORM);
-};
-
-export const showAllGroupsService = () => {
-    axios
-        .get(GROUP_URL)
-        .then((response) => {
-            store.dispatch(showAllGroups(response.data.sort((a, b) => sortGroup(a, b))));
-        })
-        .catch((error) => errorHandler(error));
-};
-
-export const removeGroupCardService = (groupId) => {
-    axios
-        .delete(`${GROUP_URL}/${groupId}`)
-        .then((response) => {
-            store.dispatch(deleteGroup(groupId));
-            getDisabledGroupsService();
-            successHandler(
-                i18n.t('serviceMessages:back_end_success_operation', {
-                    cardType: i18n.t('formElements:group_label'),
-                    actionType: i18n.t('serviceMessages:deleted_label'),
-                }),
-            );
-        })
-        .catch((error) => errorHandler(error));
-};
-
 export const createGroupService = (data) => {
     axios
         .post(GROUP_URL, data)
@@ -68,28 +41,9 @@ export const createGroupService = (data) => {
             store.dispatch(addGroup(response.data));
             resetFormHandler(GROUP_FORM);
             successHandler(
-                i18n.t('serviceMessages:back_end_success_operation', {
-                    cardType: i18n.t('formElements:group_label'),
-                    actionType: i18n.t('serviceMessages:created_label'),
-                }),
-            );
-        })
-        .catch((error) => errorHandler(error));
-};
-
-export const updateGroupService = (data) => {
-    return axios
-        .put(GROUP_URL, data)
-        .then((response) => {
-            store.dispatch(updateGroup(response.data));
-            selectGroupService(null);
-            getDisabledGroupsService();
-            showAllGroupsService();
-            resetFormHandler(GROUP_FORM);
-            successHandler(
-                i18n.t('serviceMessages:back_end_success_operation', {
-                    cardType: i18n.t('formElements:group_label'),
-                    actionType: i18n.t('serviceMessages:updated_label'),
+                i18n.t(BACK_END_SUCCESS_OPERATION, {
+                    cardType: i18n.t(GROUP_LABEL),
+                    actionType: i18n.t(CREATED_LABEL),
                 }),
             );
         })
@@ -105,6 +59,60 @@ export const getDisabledGroupsService = () => {
         .catch((error) => {
             errorHandler(error);
         });
+};
+
+export const showAllGroupsService = () => {
+    axios
+        .get(GROUP_URL)
+        .then((response) => {
+            store.dispatch(showAllGroups(response.data.sort((a, b) => sortGroup(a, b))));
+        })
+        .catch((error) => errorHandler(error));
+};
+
+export const updateGroupService = (data) => {
+    return axios
+        .put(GROUP_URL, data)
+        .then((response) => {
+            store.dispatch(updateGroup(response.data));
+            selectGroupService(null);
+            getDisabledGroupsService();
+            showAllGroupsService();
+            resetFormHandler(GROUP_FORM);
+            successHandler(
+                i18n.t(BACK_END_SUCCESS_OPERATION, {
+                    cardType: i18n.t(GROUP_LABEL),
+                    actionType: i18n.t(UPDATED_LABEL),
+                }),
+            );
+        })
+        .catch((error) => errorHandler(error));
+};
+
+export const handleGroupService = (values) => {
+    if (values.id) updateGroupService(values);
+    else createGroupService(values);
+};
+
+export const clearGroupService = () => {
+    store.dispatch(clearGroup());
+    resetFormHandler(GROUP_FORM);
+};
+
+export const removeGroupCardService = (groupId) => {
+    axios
+        .delete(`${GROUP_URL}/${groupId}`)
+        .then(() => {
+            store.dispatch(deleteGroup(groupId));
+            getDisabledGroupsService();
+            successHandler(
+                i18n.t(BACK_END_SUCCESS_OPERATION, {
+                    cardType: i18n.t(GROUP_LABEL),
+                    actionType: i18n.t(DELETED_LABEL),
+                }),
+            );
+        })
+        .catch((error) => errorHandler(error));
 };
 
 export const setDisabledGroupService = (group) => {

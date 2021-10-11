@@ -3,9 +3,7 @@ import { connect } from 'react-redux';
 import { Field, reduxForm } from 'redux-form';
 
 import Button from '@material-ui/core/Button';
-import { styled } from '@material-ui/core/styles';
 import { useTranslation } from 'react-i18next';
-import Select from 'react-select';
 import renderTextField from '../../share/renderedFields/input';
 import { required } from '../../validation/validateFields';
 
@@ -14,7 +12,6 @@ import Card from '../../share/Card/Card';
 import { TEACHER_FORM } from '../../constants/reduxForms';
 
 import './AddTeacherForm.scss';
-import { ReduxFormSelect } from '../../helper/ReduxFormSelect';
 import renderSelectField from '../../share/renderedFields/select';
 import { getDepartmentByIdService } from '../../services/departmentService';
 import { getClearOrCancelTitle, setDisableButton } from '../../helper/disableComponent';
@@ -25,6 +22,20 @@ let AddTeacher = (props) => {
 
     const teacherId = teacher.id;
 
+    const initializeFormHandler = (teacherData) => {
+        const department = teacherData.department ? teacherData.department.id : 0;
+        props.initialize({
+            id: teacherData.id,
+            surname: teacherData.surname,
+            name: teacherData.name,
+            patronymic: teacherData.patronymic,
+            position: teacherData.position,
+            email: teacherData.email,
+            department,
+        });
+        if (teacherData.department) getDepartmentByIdService(teacherData.department.id);
+    };
+
     useEffect(() => {
         if (teacherId) {
             initializeFormHandler(teacher);
@@ -32,20 +43,6 @@ let AddTeacher = (props) => {
             props.initialize();
         }
     }, [teacherId]);
-
-    const initializeFormHandler = (teacher) => {
-        const department = teacher.department ? teacher.department.id : 0;
-        props.initialize({
-            id: teacher.id,
-            surname: teacher.surname,
-            name: teacher.name,
-            patronymic: teacher.patronymic,
-            position: teacher.position,
-            email: teacher.email,
-            department,
-        });
-        teacher.department && getDepartmentByIdService(teacher.department.id);
-    };
 
     return (
         <Card additionClassName="form-card teacher-form">

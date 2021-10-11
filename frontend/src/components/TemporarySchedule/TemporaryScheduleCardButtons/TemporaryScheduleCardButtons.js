@@ -9,23 +9,34 @@ const TemporaryScheduleCardButtons = (props) => {
     const { schedule, date, isTemporary, scheduleId } = props;
     const { onOpenDialog, setDate, setTeacherId } = props;
 
-    const selectTemporarySchedule = (schedule) => {
+    const selectTemporarySchedule = (scheduleData) => {
         selectTemporaryScheduleService({
-            ...schedule.lesson,
-            room: schedule.room,
-            class: schedule.class,
-            id: schedule.id,
-            vacation: schedule.vacation,
-            scheduleId: schedule.scheduleId ? schedule.scheduleId : scheduleId,
-            date: schedule.date,
+            ...scheduleData.lesson,
+            room: scheduleData.room,
+            class: scheduleData.class,
+            id: scheduleData.id,
+            vacation: scheduleData.vacation,
+            scheduleId: scheduleData.scheduleId ? scheduleData.scheduleId : scheduleId,
+            date: scheduleData.date,
         });
     };
 
-    const handleScheduleSelect = (schedule) => {
-        schedule.scheduleId = schedule.id;
-        schedule.id = null;
-        schedule.lesson.id = null;
-        selectTemporarySchedule(schedule);
+    const handleScheduleSelect = (scheduleData) => {
+        const resultSchedule = scheduleData;
+        resultSchedule.scheduleId = scheduleData.id;
+        resultSchedule.id = null;
+        resultSchedule.lesson.id = null;
+        selectTemporarySchedule(resultSchedule);
+    };
+
+    const handleEditClick = () => {
+        if (isTemporary) selectTemporarySchedule({ ...schedule, date });
+        else {
+            handleScheduleSelect({
+                ...schedule,
+                date,
+            });
+        }
     };
 
     return (
@@ -33,14 +44,7 @@ const TemporaryScheduleCardButtons = (props) => {
             <FaEdit
                 title={t('common:edit_hover_title')}
                 className="svg-btn edit-btn"
-                onClick={() => {
-                    isTemporary
-                        ? selectTemporarySchedule({ ...schedule, date })
-                        : handleScheduleSelect({
-                              ...schedule,
-                              date,
-                          });
-                }}
+                onClick={handleEditClick}
             />
             {isTemporary && (
                 <MdDelete

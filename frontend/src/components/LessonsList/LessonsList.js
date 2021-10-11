@@ -36,6 +36,7 @@ const LessonsList = (props) => {
         if ((number >= 5 && number <= 20) || number === 0) {
             return 'годин';
         }
+        return 'години';
     };
     const getUkHour = (number) => {
         if (number >= 20 && number <= 100) {
@@ -60,14 +61,10 @@ const LessonsList = (props) => {
     };
     const getHour = (number) => {
         const language = i18n.language.toUpperCase();
-        const en = 'EN';
-        const uk = 'UK';
-        if (language === en) {
+        if (language === 'EN') {
             return getEnHour(number);
         }
-        if (language === uk) {
-            return getUkHour(number);
-        }
+        return getUkHour(number);
     };
     const getLessonShortTitle = (title) => {
         const MAX_LENGTH = 50;

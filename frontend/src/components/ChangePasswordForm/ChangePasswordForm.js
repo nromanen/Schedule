@@ -14,8 +14,6 @@ import renderTextField from '../../share/renderedFields/input';
 import { required, password } from '../../validation/validateFields';
 
 import { PROFILE_FORM } from '../../constants/reduxForms';
-import NavigationPage from '../Navigation/NavigationPage';
-import { navigation, navigationNames } from '../../constants/navigation';
 
 function ExpandMoreIcon() {
     return null;
@@ -94,9 +92,7 @@ const ChangePasswordForm = (props) => {
     );
 };
 
-const mapStateToProps = (state) => ({});
-
-export default connect(mapStateToProps)(
+export default connect()(
     reduxForm({
         form: PROFILE_FORM,
     })(ChangePasswordForm),

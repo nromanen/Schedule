@@ -16,6 +16,7 @@ import Card from '../../share/Card/Card';
 import './MergeRolePage.scss';
 import NavigationPage from '../../components/Navigation/NavigationPage';
 import { navigation, navigationNames } from '../../constants/navigation';
+import { USER_LABEL } from '../../constants/services';
 
 const useStyles = makeStyles(() => ({
     autoCompleteField: {
@@ -100,7 +101,7 @@ const MergeRolePage = (props) => {
                                     renderInput={(params) => (
                                         <TextField
                                             {...params}
-                                            label={t('formElements:user_label')}
+                                            label={t(USER_LABEL)}
                                             margin="normal"
                                         />
                                     )}

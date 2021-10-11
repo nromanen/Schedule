@@ -15,7 +15,7 @@ import { authTypes } from '../../constants/auth';
 import { email, password, required } from '../../validation/validateFields';
 import { links } from '../../constants/links';
 
-let RegistrationForm = (props) => {
+const RegistrationForm = (props) => {
     const { t } = useTranslation('formElements');
     const { handleSubmit } = props;
 
@@ -51,7 +51,7 @@ let RegistrationForm = (props) => {
                 component={renderTextField}
                 label={t('email_label')}
                 {...(!error ? emailValidate : emailAdvancedValidate)}
-                onChange={(e) => props.setError(null)}
+                onChange={() => props.setError(null)}
             />
             <Field
                 name="password"
@@ -60,7 +60,7 @@ let RegistrationForm = (props) => {
                 component={renderTextField}
                 label={t('password_label')}
                 {...(!error ? passwordValidate : passwordValidateAdvanced)}
-                onChange={(e) => props.setError(null)}
+                onChange={() => props.setError(null)}
             />
             <Field
                 name="retypePassword"
@@ -101,8 +101,8 @@ let RegistrationForm = (props) => {
     );
 };
 
-RegistrationForm = reduxForm({
+const RegistrationReduxForm = reduxForm({
     form: REGISTRATION_FORM,
 })(RegistrationForm);
 
-export default RegistrationForm;
+export default RegistrationReduxForm;
