@@ -14,6 +14,15 @@ import Card from '../../share/Card/Card';
 
 import './AddRoomForm.scss';
 import { getClearOrCancelTitle, setDisableButton } from '../../helper/disableComponent';
+import {
+    EDIT_TITLE,
+    CREATE_TITLE,
+    SAVE_BUTTON_LABEL,
+    ROOM_Y_LABEL,
+    NUMBER_LABEL,
+    ROOM_LABEL,
+    TYPE_LABEL,
+} from '../../constants/translationLabels';
 
 let AddRoom = (props) => {
     const { t } = useTranslation('formElements');
@@ -37,22 +46,22 @@ let AddRoom = (props) => {
         <Card class="form-card room-form">
             <form className="createGroupForm w-100" onSubmit={handleSubmit}>
                 <h2 className="form-title">
-                    {props.oneRoom.id ? t('edit_title') : t('create_title')} {t('room_y_label')}
+                    {props.oneRoom.id ? t(EDIT_TITLE) : t(CREATE_TITLE)} {t(ROOM_Y_LABEL)}
                 </h2>
                 <Field
                     type="text"
                     name="name"
                     component={renderTextField}
-                    placeholder={t('number_label')}
+                    placeholder={t(NUMBER_LABEL)}
                     className="form-field"
-                    label={t('room_label')}
+                    label={t(ROOM_LABEL)}
                     validate={[required, uniqueRoomName]}
                 />
                 <Field
                     className="form-field"
                     component={renderSelectField}
                     name="type"
-                    label={t('type_label')}
+                    label={t(TYPE_LABEL)}
                     validate={[required]}
                 >
                     <option value=""></option>
@@ -70,7 +79,7 @@ let AddRoom = (props) => {
                         disabled={pristine || submitting}
                         type="submit"
                     >
-                        {t('save_button_label')}
+                        {t(SAVE_BUTTON_LABEL)}
                     </Button>
                     <Button
                         className="buttons-style"

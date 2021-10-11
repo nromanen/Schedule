@@ -15,6 +15,13 @@ import {
 import { cardType } from '../../../constants/cardType';
 import TemporaryScheduleCard from '../TemporaryScheduleCard/TemporaryScheduleCard';
 import { getTeacherForSite } from '../../../helper/renderTeacher';
+import {
+    EDIT_HOVER_TITLE,
+    DELETE_HOVER_TITLE,
+    HOLIDAY_LABEL,
+    DATE_LABEL,
+    FOR_ALL,
+} from '../../../constants/translationLabels';
 
 const TemporaryScheduleList = (props) => {
     const { t } = useTranslation('common');
@@ -54,7 +61,7 @@ const TemporaryScheduleList = (props) => {
                 >
                     <div className="cards-btns">
                         <FaEdit
-                            title={t('edit_hover_title')}
+                            title={t(EDIT_HOVER_TITLE)}
                             className="svg-btn edit-btn"
                             onClick={() =>
                                 temporarySchedule.vacation
@@ -63,7 +70,7 @@ const TemporaryScheduleList = (props) => {
                             }
                         />
                         <MdDelete
-                            title={t('delete_hover_title')}
+                            title={t(DELETE_HOVER_TITLE)}
                             className="svg-btn delete-btn"
                             onClick={() => {
                                 handleClickOpen(temporarySchedule.id);
@@ -76,19 +83,19 @@ const TemporaryScheduleList = (props) => {
                         </>
                     ) : (
                         <>
-                            <h2>{t('holiday_label')}</h2>
+                            <h2>{t(HOLIDAY_LABEL)}</h2>
                             <p>
                                 (
                                 {temporarySchedule.teacher?.name
                                     ? getTeacherForSite(temporarySchedule.teacher)
-                                    : t('for_all')}
+                                    : t(FOR_ALL)}
                                 )
                             </p>
                             <Divider />
                         </>
                     )}
                     <p>
-                        {!temporarySchedule.vacation && <>{t('date')} :</>}
+                        {!temporarySchedule.vacation && <>{t(DATE_LABEL)} :</>}
                         <b>{temporarySchedule.date}</b>
                     </p>
                 </Card>

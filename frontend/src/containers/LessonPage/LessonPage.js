@@ -38,6 +38,11 @@ import './LessonPage.scss';
 import SearchPanel from '../../share/SearchPanel/SearchPanel';
 import AddSubject from '../../components/AddSubjectForm/AddSubjectForm';
 import { search } from '../../helper/search';
+import {
+    FORM_GROUP_LABEL,
+    LESSON_FOR_GROUP_TITLE,
+    LESSON_NO_LESSON_FOR_GROUP_LABEL,
+} from '../../constants/translationLabels';
 
 const GroupField = styled(TextField)({
     display: 'inline-block',
@@ -189,7 +194,7 @@ const LessonPage = (props) => {
                 <section className="centered-container">
                     <h2>
                         {groupHandle(groups, groupId)
-                            ? t('lesson_no_lesson_for_group_label') +
+                            ? t(LESSON_NO_LESSON_FOR_GROUP_LABEL) +
                               groupTitleHandle(groups, groupId)
                             : ''}
                     </h2>
@@ -231,7 +236,7 @@ const LessonPage = (props) => {
                             </span>
                         )}
                         <span className="group-lesson">
-                            <h1 className="lesson-page-h">{t('lesson_for_group_title')}</h1>
+                            <h1 className="lesson-page-h">{t(LESSON_FOR_GROUP_TITLE)}</h1>
                             <Autocomplete
                                 {...defaultProps}
                                 id="group"
@@ -244,7 +249,7 @@ const LessonPage = (props) => {
                                 renderInput={(params) => (
                                     <GroupField
                                         {...params}
-                                        label={t('formElements:group_label')}
+                                        label={t(FORM_GROUP_LABEL)}
                                         margin="normal"
                                     />
                                 )}

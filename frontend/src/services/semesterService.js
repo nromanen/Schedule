@@ -4,12 +4,17 @@ import { store } from '../index';
 import axios from '../helper/axios';
 import {
     BACK_END_SUCCESS_OPERATION,
-    LESSON_LABEL,
-    SEMESTER_LABEL,
+    FORM_LESSON_LABEL,
+    FORM_SEMESTER_LABEL,
     UPDATED_LABEL,
     CREATED_LABEL,
     DELETED_LABEL,
-} from '../constants/services';
+    SEMESTER_SERVICE_IS_ACTIVE,
+    SEMESTER_SERVICE_NOT_AS_BEGIN_OR_END,
+    COMMON_SEMESTER_IS_NOT_UNIQUE,
+    COPIED_LABEL,
+    ARCHIVED_LABEL,
+} from '../constants/translationLabels';
 import {
     DISABLED_SEMESTERS_URL,
     SEMESTERS_URL,
@@ -88,7 +93,7 @@ const setSemester = (resp) => {
     resetFormHandler(SEMESTER_FORM);
     successHandler(
         i18n.t(BACK_END_SUCCESS_OPERATION, {
-            cardType: i18n.t(SEMESTER_LABEL),
+            cardType: i18n.t(FORM_SEMESTER_LABEL),
             actionType: i18n.t(UPDATED_LABEL),
         }),
     );
@@ -140,11 +145,7 @@ const cardSemester = (semester) => {
 export const removeSemesterCardService = (semesterId) => {
     const semester = store.getState().semesters.semesters.find((item) => item.id === semesterId);
     if (semester.currentSemester === true) {
-        handleSnackbarOpenService(
-            true,
-            snackbarTypes.ERROR,
-            i18n.t('serviceMessages:semester_service_is_active'),
-        );
+        handleSnackbarOpenService(true, snackbarTypes.ERROR, i18n.t(SEMESTER_SERVICE_IS_ACTIVE));
         return;
     }
     axios
@@ -153,7 +154,7 @@ export const removeSemesterCardService = (semesterId) => {
             store.dispatch(deleteSemester(semesterId));
             successHandler(
                 i18n.t(BACK_END_SUCCESS_OPERATION, {
-                    cardType: i18n.t(SEMESTER_LABEL),
+                    cardType: i18n.t(FORM_SEMESTER_LABEL),
                     actionType: i18n.t(DELETED_LABEL),
                 }),
             );
@@ -178,7 +179,7 @@ const postSemester = (data) => {
             resetFormHandler(SEMESTER_FORM);
             successHandler(
                 i18n.t(BACK_END_SUCCESS_OPERATION, {
-                    cardType: i18n.t(SEMESTER_LABEL),
+                    cardType: i18n.t(FORM_SEMESTER_LABEL),
                     actionType: i18n.t(CREATED_LABEL),
                 }),
             );
@@ -198,7 +199,7 @@ const checkSemesterYears = (endDay, startDay, year) => {
     const dateStartYear = +startDay.substring(startDay.length - 4);
     let conf = true;
     if (year !== dateEndYear || year !== dateStartYear) {
-        conf = window.confirm(i18n.t('serviceMessages:semester_service_not_as_begin_or_end'));
+        conf = window.confirm(i18n.t(SEMESTER_SERVICE_NOT_AS_BEGIN_OR_END));
     }
     return conf;
 };
@@ -215,11 +216,7 @@ const findCurrentSemester = (semesterId) => {
 export const handleSemesterService = (values) => {
     const semester = cardSemester(values);
     if (!checkUniqSemester(semester)) {
-        handleSnackbarOpenService(
-            true,
-            snackbarTypes.ERROR,
-            i18n.t('common:semester_service_is_not_unique'),
-        );
+        handleSnackbarOpenService(true, snackbarTypes.ERROR, i18n.t(COMMON_SEMESTER_IS_NOT_UNIQUE));
         setUniqueErrorService(true);
         return;
     }
@@ -271,8 +268,8 @@ export const semesterCopy = (values) => {
         .then(() => {
             successHandler(
                 i18n.t(BACK_END_SUCCESS_OPERATION, {
-                    cardType: i18n.t(SEMESTER_LABEL),
-                    actionType: i18n.t('serviceMessages:copied_label'),
+                    cardType: i18n.t(FORM_SEMESTER_LABEL),
+                    actionType: i18n.t(COPIED_LABEL),
                 }),
             );
         })
@@ -287,8 +284,8 @@ export const CopyLessonsFromSemesterService = (values) => {
         .then(() => {
             successHandler(
                 i18n.t(BACK_END_SUCCESS_OPERATION, {
-                    cardType: i18n.t(LESSON_LABEL),
-                    actionType: i18n.t('serviceMessages:copied_label'),
+                    cardType: i18n.t(FORM_LESSON_LABEL),
+                    actionType: i18n.t(COPIED_LABEL),
                 }),
             );
         })
@@ -302,8 +299,8 @@ export const createArchiveSemesterService = (semesterId) => {
             store.dispatch(moveToArchivedSemester(semesterId));
             successHandler(
                 i18n.t(BACK_END_SUCCESS_OPERATION, {
-                    cardType: i18n.t(SEMESTER_LABEL),
-                    actionType: i18n.t('serviceMessages:archived_label'),
+                    cardType: i18n.t(FORM_SEMESTER_LABEL),
+                    actionType: i18n.t(ARCHIVED_LABEL),
                 }),
             );
         })

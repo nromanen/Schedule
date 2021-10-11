@@ -13,6 +13,7 @@ import { connect } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import i18n from '../../../helper/i18n';
 import RenderTeacherTable from '../../../helper/renderTeacherTable';
+import { DEPARTMENT_TEACHER_LABEL, TEACHER_LABEL } from '../../../constants/translationLabels';
 
 export const ShowDataDialog = (props) => {
     const { onClose, cardId, open, teachers, department } = props;
@@ -33,7 +34,7 @@ export const ShowDataDialog = (props) => {
                         {teachers.length === 0 ? (
                             <>
                                 <h2 className="title-align">
-                                    {`${t('department_teachers_label')} - `}
+                                    {`${t(DEPARTMENT_TEACHER_LABEL)} - `}
                                     <span>{`${department.name}`}</span>
                                 </h2>
                                 {t('no_exist_teachers_at_department')}
@@ -44,7 +45,7 @@ export const ShowDataDialog = (props) => {
                                     <span>
                                         {teachers.length !== 1
                                             ? `${t('teachers_label')} `
-                                            : `${t('teacher_label')} `}
+                                            : `${t(TEACHER_LABEL)} `}
                                     </span>
                                     {`${t('department_teachers')} `}
                                     <span>{`${department.name}`}</span>

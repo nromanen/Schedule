@@ -7,6 +7,7 @@ import { TOKEN_BEGIN } from '../constants/tokenBegin';
 
 import axios from '../helper/axios';
 import i18n from '../helper/i18n';
+import { COMMON_ERROR_MESSAGE } from '../constants/translationLabels';
 
 export function* authSaga(payload) {
     try {
@@ -39,7 +40,7 @@ export function* authSaga(payload) {
     } catch (error) {
         yield put({
             type: actionTypes.AUTH_USER_ERROR,
-            error: error.response ? error.response.data.message : i18n.t('common:error_message'),
+            error: error.response ? error.response.data.message : i18n.t(COMMON_ERROR_MESSAGE),
         });
         yield put({ type: actionTypes.SET_LOADING_INDICATOR, result: false });
     }

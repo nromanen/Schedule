@@ -3,11 +3,11 @@ import axios from '../helper/axios';
 import { DISABLED_GROUPS_URL, GROUP_URL } from '../constants/axios';
 import {
     BACK_END_SUCCESS_OPERATION,
-    GROUP_LABEL,
+    FORM_GROUP_LABEL,
     UPDATED_LABEL,
     CREATED_LABEL,
     DELETED_LABEL,
-} from '../constants/services';
+} from '../constants/translationLabels';
 import { GROUP_FORM } from '../constants/reduxForms';
 import {
     showAllGroups,
@@ -41,7 +41,7 @@ export const createGroupService = (data) => {
             resetFormHandler(GROUP_FORM);
             successHandler(
                 i18n.t(BACK_END_SUCCESS_OPERATION, {
-                    cardType: i18n.t(GROUP_LABEL),
+                    cardType: i18n.t(FORM_GROUP_LABEL),
                     actionType: i18n.t(CREATED_LABEL),
                 }),
             );
@@ -80,7 +80,7 @@ export const updateGroupService = (data) => {
             resetFormHandler(GROUP_FORM);
             successHandler(
                 i18n.t(BACK_END_SUCCESS_OPERATION, {
-                    cardType: i18n.t(GROUP_LABEL),
+                    cardType: i18n.t(FORM_GROUP_LABEL),
                     actionType: i18n.t(UPDATED_LABEL),
                 }),
             );
@@ -106,7 +106,7 @@ export const removeGroupCardService = (groupId) => {
             getDisabledGroupsService();
             successHandler(
                 i18n.t(BACK_END_SUCCESS_OPERATION, {
-                    cardType: i18n.t(GROUP_LABEL),
+                    cardType: i18n.t(FORM_GROUP_LABEL),
                     actionType: i18n.t(DELETED_LABEL),
                 }),
             );

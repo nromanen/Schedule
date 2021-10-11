@@ -32,6 +32,13 @@ import NotFound from '../../share/NotFound/NotFound';
 import { disabledCard } from '../../constants/disabledCard';
 import NavigationPage from '../../components/Navigation/NavigationPage';
 import { navigation, navigationNames } from '../../constants/navigation';
+import {
+    ROOM_Y_LABEL,
+    ROOM_LABEL,
+    TYPE_LABEL,
+    COMMON_SET_DISABLED,
+    COMMON_SET_ENABLED,
+} from '../../constants/translationLabels';
 
 const RoomList = (props) => {
     const { rooms } = props;
@@ -133,7 +140,7 @@ const RoomList = (props) => {
                     )}
                 </aside>
                 <section className="container-flex-wrap wrapper">
-                    {visibleItems.length === 0 && <NotFound name={t('room_y_label')} />}
+                    {visibleItems.length === 0 && <NotFound name={t(ROOM_Y_LABEL)} />}
                     {visibleItems.map((room, index) => (
                         <Card key={index} {...room} class="room-card done-card">
                             <div className="cards-btns">
@@ -141,7 +148,7 @@ const RoomList = (props) => {
                                     <>
                                         <GiSightDisabled
                                             className="svg-btn copy-btn"
-                                            title={t('common:set_disabled')}
+                                            title={t(COMMON_SET_DISABLED)}
                                             onClick={() => {
                                                 setHideDialog(disabledCard.HIDE);
                                                 handleClickOpen(room.id);
@@ -155,7 +162,7 @@ const RoomList = (props) => {
                                 ) : (
                                     <IoMdEye
                                         className="svg-btn copy-btn"
-                                        title={t('common:set_enabled')}
+                                        title={t(COMMON_SET_ENABLED)}
                                         onClick={() => {
                                             setHideDialog(disabledCard.SHOW);
                                             handleClickOpen(room.id);
@@ -169,9 +176,9 @@ const RoomList = (props) => {
                                 />
                             </div>
 
-                            <span> {`${t('room_label')}:`} </span>
+                            <span> {`${t(ROOM_LABEL)}:`} </span>
                             <h2 className="room-card__number">{room.name}</h2>
-                            <span>{`${t('type_label')}:`}</span>
+                            <span>{`${t(TYPE_LABEL)}:`}</span>
                             <h2 className="room-card__number">{room.type.description}</h2>
                         </Card>
                     ))}

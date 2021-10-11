@@ -2,10 +2,10 @@ import { store } from '../index';
 import {
     BACK_END_SUCCESS_OPERATION,
     UPDATED_LABEL,
-    TEACHER_LABEL,
+    FORM_TEACHER_A_LABEL,
     CREATED_LABEL,
     DELETED_LABEL,
-} from '../constants/services';
+} from '../constants/translationLabels';
 import {
     DISABLED_TEACHERS_URL,
     TEACHER_URL,
@@ -59,7 +59,7 @@ export const createTeacherService = (values) => {
             resetFormHandler(TEACHER_FORM);
             successHandler(
                 i18n.t(BACK_END_SUCCESS_OPERATION, {
-                    cardType: i18n.t(TEACHER_LABEL),
+                    cardType: i18n.t(FORM_TEACHER_A_LABEL),
                     actionType: i18n.t(CREATED_LABEL),
                 }),
             );
@@ -113,7 +113,7 @@ export const updateTeacherService = (data) => {
             resetFormHandler(TEACHER_FORM);
             successHandler(
                 i18n.t(BACK_END_SUCCESS_OPERATION, {
-                    cardType: i18n.t(TEACHER_LABEL),
+                    cardType: i18n.t(FORM_TEACHER_A_LABEL),
                     actionType: i18n.t(UPDATED_LABEL),
                 }),
             );
@@ -139,7 +139,7 @@ export const removeTeacherCardService = (id) => {
             getDisabledTeachersService();
             successHandler(
                 i18n.t(BACK_END_SUCCESS_OPERATION, {
-                    cardType: i18n.t(TEACHER_LABEL),
+                    cardType: i18n.t(FORM_TEACHER_A_LABEL),
                     actionType: i18n.t(DELETED_LABEL),
                 }),
             );

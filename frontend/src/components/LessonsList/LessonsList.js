@@ -7,6 +7,12 @@ import i18n from 'i18next';
 import { getTeacherName } from '../../helper/renderTeacher';
 import Card from '../../share/Card/Card';
 import './LessonList.scss';
+import {
+    COPY_LESSON,
+    FORM_GROUPED_LABEL,
+    DELETE_LESSON,
+    EDIT_LESSON,
+} from '../../constants/translationLabels';
 
 const LessonsList = (props) => {
     const { lessons } = props;
@@ -20,7 +26,7 @@ const LessonsList = (props) => {
     const isGrouped = (grouped) =>
         grouped ? (
             <FaUserPlus
-                title={t('formElements:grouped_label')}
+                title={t(FORM_GROUPED_LABEL)}
                 className="svg-btn copy-btn align-left info-btn"
             />
         ) : (
@@ -86,17 +92,17 @@ const LessonsList = (props) => {
                         <div className="cards-btns">
                             {isGrouped(lesson.grouped)}
                             <MdContentCopy
-                                title={t('copy_lesson')}
+                                title={t(COPY_LESSON)}
                                 className="svg-btn copy-btn"
                                 onClick={() => props.onCopyLesson(lesson)}
                             />
                             <FaEdit
-                                title={t('edit_lesson')}
+                                title={t(EDIT_LESSON)}
                                 className="svg-btn edit-btn"
                                 onClick={() => props.onSelectLesson(lesson.id)}
                             />
                             <MdDelete
-                                title={t('delete_lesson')}
+                                title={t(DELETE_LESSON)}
                                 className="svg-btn delete-btn"
                                 onClick={() => props.onClickOpen(lesson.id)}
                             />

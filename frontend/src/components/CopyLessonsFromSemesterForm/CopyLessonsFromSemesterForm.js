@@ -12,7 +12,12 @@ import Card from '../../share/Card/Card';
 
 import { COPY_LESSONS_FROM_SEMESTER_FORM } from '../../constants/reduxForms';
 import { required } from '../../validation/validateFields';
-import { SEMESTER_LABEL } from '../../constants/services';
+import {
+    FORM_SEMESTER_LABEL,
+    COPY_LESSON,
+    COPY_LESSONS_FROM_SEMESTER,
+    FORM_COPY_LESSON,
+} from '../../constants/translationLabels';
 
 const shortid = require('shortid');
 
@@ -27,7 +32,7 @@ const CopyLessonsFromSemesterForm = (props) => {
                         id="fromSemesterId"
                         name="fromSemesterId"
                         component={renderSelectField}
-                        label={t(SEMESTER_LABEL)}
+                        label={t(FORM_SEMESTER_LABEL)}
                         type="text"
                         validate={[required]}
                     >
@@ -50,8 +55,8 @@ const CopyLessonsFromSemesterForm = (props) => {
     return (
         <Card class="form-card">
             <form onSubmit={handleSubmit}>
-                <h2 className="lesson-page-h">{t('copy_lesson')}</h2>
-                <p>{t('copy_lessons_from_semester_to_current')}</p>
+                <h2 className="lesson-page-h">{t(COPY_LESSON)}</h2>
+                <p>{t(COPY_LESSONS_FROM_SEMESTER)}</p>
                 {renderSemesterList()}
                 <div className="form-buttons-container">
                     <Button
@@ -61,7 +66,7 @@ const CopyLessonsFromSemesterForm = (props) => {
                         type="submit"
                         disabled={pristine || submitting}
                     >
-                        {t('formElements:copy_label')}
+                        {t(FORM_COPY_LESSON)}
                     </Button>
                 </div>
             </form>

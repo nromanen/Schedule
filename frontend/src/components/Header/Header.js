@@ -30,6 +30,16 @@ import { getCurrentSemesterService } from '../../services/scheduleService';
 
 import FreeRooms from '../../containers/FreeRooms/freeRooms';
 import { setSemesterLoadingService } from '../../services/loadingService';
+import {
+    LOGIN_TITLE,
+    ADMIN_TITLE,
+    SCHEDULE_TITLE,
+    MY_PROFILE,
+    LOGOUT_TITLE,
+    SEMESTER_TITLE,
+    HOME_TITLE,
+    MENU_BUTTON,
+} from '../../constants/translationLabels';
 
 const StyledMenu = withStyles({
     paper: {
@@ -84,7 +94,7 @@ const Header = (props) => {
         if (userRole === null || userRole === undefined) {
             return (
                 <Link to={links.LOGIN} className="navLinks">
-                    {t('login_title')}
+                    {t(LOGIN_TITLE)}
                 </Link>
             );
         }
@@ -121,7 +131,7 @@ const Header = (props) => {
                                     <ListItemIcon>
                                         <FaUser fontSize="normall" />
                                     </ListItemIcon>
-                                    {t('admin_title')}
+                                    {t(ADMIN_TITLE)}
                                 </StyledMenuItem>
                             </Link>
                             <Link
@@ -134,7 +144,7 @@ const Header = (props) => {
                                     <ListItemIcon>
                                         <FaClock fontSize="normal" />
                                     </ListItemIcon>
-                                    {t('schedule_title')}
+                                    {t(SCHEDULE_TITLE)}
                                 </StyledMenuItem>
                             </Link>
                             <span
@@ -159,7 +169,7 @@ const Header = (props) => {
                                     <ListItemIcon>
                                         <FaUser fontSize="normal" />
                                     </ListItemIcon>
-                                    {t('my_profile')}
+                                    {t(MY_PROFILE)}
                                 </StyledMenuItem>
                             </Link>
                             <Link
@@ -172,7 +182,7 @@ const Header = (props) => {
                                     <ListItemIcon>
                                         <FaSignOutAlt fontSize="normal" />
                                     </ListItemIcon>
-                                    {t('logout_title')}
+                                    {t(LOGOUT_TITLE)}
                                 </StyledMenuItem>
                             </Link>
                         </StyledMenu>
@@ -211,7 +221,7 @@ const Header = (props) => {
                                     <ListItemIcon>
                                         <FaClock fontSize="normal" />
                                     </ListItemIcon>
-                                    {t('schedule_title')}
+                                    {t(SCHEDULE_TITLE)}
                                 </StyledMenuItem>
                             </Link>
                             <span
@@ -231,7 +241,7 @@ const Header = (props) => {
                                     <ListItemIcon>
                                         <FaUser fontSize="normal" />
                                     </ListItemIcon>
-                                    {t('my_profile')}
+                                    {t(MY_PROFILE)}
                                 </StyledMenuItem>
                             </Link>
                             <Link
@@ -244,7 +254,7 @@ const Header = (props) => {
                                     <ListItemIcon>
                                         <FaSignOutAlt fontSize="normal" />
                                     </ListItemIcon>
-                                    {t('logout_title')}
+                                    {t(LOGOUT_TITLE)}
                                 </StyledMenuItem>
                             </Link>
                         </StyledMenu>
@@ -280,7 +290,7 @@ const Header = (props) => {
                                     <ListItemIcon>
                                         <FaSignOutAlt fontSize="normal" />
                                     </ListItemIcon>
-                                    {t('logout_title')}
+                                    {t(LOGOUT_TITLE)}
                                 </StyledMenuItem>
                             </Link>
                         </StyledMenu>
@@ -304,7 +314,7 @@ const Header = (props) => {
                     </span>
                 ) : (
                     <span className="navLinks nav-semester">
-                        {t('semester_title')}: {props.currentSemester.description}
+                        {t(SEMESTER_TITLE)}: {props.currentSemester.description}
                     </span>
                 )}
             </>
@@ -318,7 +328,7 @@ const Header = (props) => {
                     color="primary"
                     onClick={handleClick}
                 >
-                    {t('menu_button')}
+                    {t(MENU_BUTTON)}
                 </Button>
 
                 <StyledMenu
@@ -341,7 +351,7 @@ const Header = (props) => {
                             <ListItemIcon>
                                 <FaHome fontSize="normall" />
                             </ListItemIcon>
-                            {t('home_title')}
+                            {t(HOME_TITLE)}
                         </StyledMenuItem>
                     </Link>
 
@@ -355,7 +365,7 @@ const Header = (props) => {
                             <ListItemIcon>
                                 <FaClock fontSize="normall" />
                             </ListItemIcon>
-                            {t('schedule_title')}
+                            {t(SCHEDULE_TITLE)}
                         </StyledMenuItem>
                     </Link>
 
@@ -369,7 +379,7 @@ const Header = (props) => {
                             <ListItemIcon>
                                 <FaUser fontSize="normall" />
                             </ListItemIcon>
-                            {t('admin_title')}
+                            {t(ADMIN_TITLE)}
                         </StyledMenuItem>
                     </Link>
 
@@ -396,7 +406,7 @@ const Header = (props) => {
                             <ListItemIcon>
                                 <FaSignOutAlt fontSize="normall" />
                             </ListItemIcon>
-                            {t('logout_title')}
+                            {t(LOGOUT_TITLE)}
                         </StyledMenuItem>
                     </Link>
                 </StyledMenu>
@@ -412,7 +422,7 @@ const Header = (props) => {
                     color="primary"
                     onClick={handleClick}
                 >
-                    {t('menu_button')}
+                    {t(MENU_BUTTON)}
                 </Button>
 
                 <StyledMenu
@@ -432,7 +442,7 @@ const Header = (props) => {
                             <ListItemIcon>
                                 <FaHome fontSize="normall" />
                             </ListItemIcon>
-                            {t('home_title')}
+                            {t(HOME_TITLE)}
                         </StyledMenuItem>
                     </Link>
                     <StyledMenuItem>
@@ -451,7 +461,7 @@ const Header = (props) => {
                             <ListItemIcon>
                                 <FaClock fontSize="normall" />
                             </ListItemIcon>
-                            {t('schedule_title')}
+                            {t(SCHEDULE_TITLE)}
                         </StyledMenuItem>
                     </Link>
 
@@ -465,7 +475,7 @@ const Header = (props) => {
                             <ListItemIcon>
                                 <FaSignOutAlt fontSize="normall" />
                             </ListItemIcon>
-                            {t('logout_title')}
+                            {t(LOGOUT_TITLE)}
                         </StyledMenuItem>
                     </Link>
                 </StyledMenu>
@@ -481,7 +491,7 @@ const Header = (props) => {
                     color="primary"
                     onClick={handleClick}
                 >
-                    {t('menu_button')}
+                    {t(MENU_BUTTON)}
                 </Button>
                 <StyledMenu
                     id="customized-menu"
@@ -502,7 +512,7 @@ const Header = (props) => {
                             <ListItemIcon>
                                 <FaHome fontSize="normall" />
                             </ListItemIcon>
-                            {t('home_title')}
+                            {t(HOME_TITLE)}
                         </StyledMenuItem>
                     </Link>
                     <Link
@@ -515,7 +525,7 @@ const Header = (props) => {
                             <ListItemIcon>
                                 <FaRunning fontSize="normall" />
                             </ListItemIcon>
-                            {t('login_title')}
+                            {t(LOGIN_TITLE)}
                         </StyledMenuItem>
                     </Link>
                 </StyledMenu>
@@ -529,7 +539,7 @@ const Header = (props) => {
                 {menu}
                 <nav className="header-blocks header-blocks_one">
                     <Link to={links.HOME_PAGE} className="navLinks">
-                        {t('home_title')}
+                        {t(HOME_TITLE)}
                     </Link>
                     {leftLinks}
                 </nav>

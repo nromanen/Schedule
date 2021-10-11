@@ -6,6 +6,13 @@ import Select from 'react-select';
 import i18n from 'i18next';
 import './multiselect.scss';
 import { useTranslation } from 'react-i18next';
+import {
+    SCHEDULE_FOR_SEMESTER,
+    CHOOSE_TEACHER,
+    CANCEL_SCHEDULE,
+    SENT_SCHEDULE,
+    ALL_TEACHERS,
+} from '../constants/translationLabels';
 
 export const MultiSelect = (props) => {
     const { t } = useTranslation('common');
@@ -15,7 +22,7 @@ export const MultiSelect = (props) => {
 
     const selectAllOption = {
         value: '<SELECT_ALL>',
-        label: t('all_teachers'),
+        label: t(ALL_TEACHERS),
     };
 
     const isSelectAllSelected = () => valueRef.current.length === props.options.length;
@@ -59,7 +66,7 @@ export const MultiSelect = (props) => {
         >
             <DialogTitle id="select-dialog-title" className="confirm-dialog">
                 <div className="teacher-semester">
-                    <span>{`${t('schedule_for_semester')}:`}</span>
+                    <span>{`${t(SCHEDULE_FOR_SEMESTER)}:`}</span>
                     <Select
                         defaultValue={defaultSemester}
                         options={semesters}
@@ -75,7 +82,7 @@ export const MultiSelect = (props) => {
                         hideSelectedOptions={false}
                         closeMenuOnSelect={false}
                         isMulti
-                        placeholder={t('choose_teachers')}
+                        placeholder={t(CHOOSE_TEACHER)}
                     />
                 </div>
             </DialogTitle>
@@ -86,7 +93,7 @@ export const MultiSelect = (props) => {
                     color="primary"
                     onClick={props.onCancel}
                 >
-                    {t('cancel_schedule')}
+                    {t(CANCEL_SCHEDULE)}
                 </Button>
                 <Button
                     className="dialog-button"
@@ -95,7 +102,7 @@ export const MultiSelect = (props) => {
                     onClick={props.onSentTeachers}
                     disabled={!props.isEnabledSentBtn}
                 >
-                    {t('sent_schedule')}
+                    {t(SENT_SCHEDULE)}
                 </Button>
             </div>
         </Dialog>

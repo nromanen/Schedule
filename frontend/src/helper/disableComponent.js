@@ -1,3 +1,5 @@
+import { CLEAR_BUTTON_LABEL, CANCEL_BUTTON_TITLE } from '../constants/translationLabels';
+
 export const setDisableButton = (pristine, submitting, id) => {
     if (id !== undefined) {
         return false;
@@ -13,5 +15,5 @@ export const setDisableButton = (pristine, submitting, id) => {
     }
 };
 export const getClearOrCancelTitle = (id, t) => {
-    return id === undefined ? t('clear_button_label') : t('cancel_button_title');
+    return id === undefined ? t(CLEAR_BUTTON_LABEL) : t(CANCEL_BUTTON_TITLE);
 };

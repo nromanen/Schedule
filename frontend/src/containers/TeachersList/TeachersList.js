@@ -49,7 +49,15 @@ import {
 } from '../../services/departmentService';
 import { clearDepartmentForm, getDepartItemById } from '../../redux/actions/departments';
 import { getShortTitle } from '../../helper/shortTitle';
-import { TEACHER_LABEL } from '../../constants/services';
+import {
+    FORM_TEACHER_A_LABEL,
+    COMMON_SET_DISABLED,
+    COMMON_EDIT_HOVER_TITLE,
+    COMMON_DELETE_HOVER_TITLE,
+    COMMON_SET_ENABLED,
+    SEND_SCHEDULE_FOR_TEACHER,
+    TEACHER_DEPARTMENT,
+} from '../../constants/translationLabels';
 
 const TeacherList = (props) => {
     const { t } = useTranslation('common');
@@ -223,7 +231,7 @@ const TeacherList = (props) => {
                             setOpenSelect(true);
                         }}
                     >
-                        {t('send_schedule_for_teacher')}
+                        {t(SEND_SCHEDULE_FOR_TEACHER)}
                     </Button>
                     <>
                         <MultiSelect
@@ -253,7 +261,7 @@ const TeacherList = (props) => {
                 </aside>
 
                 <section className="container-flex-wrap">
-                    {visibleItems.length === 0 && <NotFound name={t(TEACHER_LABEL)} />}
+                    {visibleItems.length === 0 && <NotFound name={t(FORM_TEACHER_A_LABEL)} />}
                     {teacherLength > 0 ? (
                         visibleItems.map((teacher, index) => (
                             <Card key={index} {...teacher} class="teacher-card done-card">
@@ -262,7 +270,7 @@ const TeacherList = (props) => {
                                         <>
                                             <GiSightDisabled
                                                 className="svg-btn copy-btn"
-                                                title={t('common:set_disabled')}
+                                                title={t(COMMON_SET_DISABLED)}
                                                 onClick={() => {
                                                     setHideDialog(disabledCard.HIDE);
                                                     handleClickOpen(teacher.id);
@@ -270,14 +278,14 @@ const TeacherList = (props) => {
                                             />
                                             <FaEdit
                                                 className="svg-btn edit-btn"
-                                                title={t('common:edit_hover_title')}
+                                                title={t(COMMON_EDIT_HOVER_TITLE)}
                                                 onClick={() => selectTeacherCard(teacher.id)}
                                             />
                                         </>
                                     ) : (
                                         <IoMdEye
                                             className="svg-btn copy-btn"
-                                            title={t('common:set_enabled')}
+                                            title={t(COMMON_SET_ENABLED)}
                                             onClick={() => {
                                                 setHideDialog(disabledCard.SHOW);
                                                 handleClickOpen(teacher.id);
@@ -286,7 +294,7 @@ const TeacherList = (props) => {
                                     )}
                                     <MdDelete
                                         className="svg-btn delete-btn"
-                                        title={t('common:delete_hover_title')}
+                                        title={t(COMMON_DELETE_HOVER_TITLE)}
                                         onClick={() => handleClickOpen(teacher.id)}
                                     />
                                 </div>
@@ -296,7 +304,7 @@ const TeacherList = (props) => {
                                 <p className="teacher-card-title">
                                     {`${teacher.position} ${
                                         teacher.department !== null
-                                            ? `${t('teacher_department')} ${
+                                            ? `${t(TEACHER_DEPARTMENT)} ${
                                                   teacher.department.name
                                               }`
                                             : ''

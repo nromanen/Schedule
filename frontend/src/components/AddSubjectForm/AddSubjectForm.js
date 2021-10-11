@@ -10,6 +10,13 @@ import { SUBJECT_FORM } from '../../constants/reduxForms';
 import renderTextField from '../../share/renderedFields/input';
 import { required, uniqueSubject, maxLengthValue } from '../../validation/validateFields';
 import { getClearOrCancelTitle, setDisableButton } from '../../helper/disableComponent';
+import {
+    EDIT_TITLE,
+    CREATE_TITLE,
+    SAVE_BUTTON_LABEL,
+    SUBJECT_Y_LABEL,
+    SUBJECT_LABEL,
+} from '../../constants/translationLabels';
 
 const AddSubject = (props) => {
     const { t } = useTranslation('formElements');
@@ -31,15 +38,15 @@ const AddSubject = (props) => {
     return (
         <Card class="form-card subject-form">
             <h2 style={{ textAlign: 'center' }}>
-                {props.subject.id ? t('edit_title') : t('create_title')}
-                {t('subject_y_label')}
+                {props.subject.id ? t(EDIT_TITLE) : t(CREATE_TITLE)}
+                {t(SUBJECT_Y_LABEL)}
             </h2>
             <form onSubmit={handleSubmit}>
                 <Field
                     className="form-field"
                     name="name"
                     component={renderTextField}
-                    label={`${t('subject_label')}:`}
+                    label={`${t(SUBJECT_LABEL)}:`}
                     validate={[required, uniqueSubject, maxLengthValue]}
                 />
                 <div className="form-buttons-container subject-btns">
@@ -50,7 +57,7 @@ const AddSubject = (props) => {
                         disabled={pristine || submitting}
                         type="submit"
                     >
-                        {t('save_button_label')}
+                        {t(SAVE_BUTTON_LABEL)}
                     </Button>
                     <Button
                         type="button"

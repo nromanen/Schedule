@@ -23,6 +23,12 @@ import {
     setScheduleTeacherIdService,
     setScheduleTypeService,
 } from '../../services/scheduleService';
+import {
+    PASSWORD_LABEL,
+    LOGIN_TITLE,
+    EMAIL_LABEL,
+    LOGIN_PAGE_TITLE,
+} from '../../constants/translationLabels';
 
 let LoginForm = (props) => {
     useEffect(() => setScheduleSemesterIdService(0));
@@ -47,7 +53,7 @@ let LoginForm = (props) => {
                 name="email"
                 className="form-field"
                 component={renderTextField}
-                label={t('email_label')}
+                label={t(EMAIL_LABEL)}
                 error={!!error}
                 helperText={error ? error.login : null}
                 onChange={(e) => errorHandling(e.target.value)}
@@ -57,7 +63,7 @@ let LoginForm = (props) => {
                 className="form-field"
                 type="password"
                 component={renderTextField}
-                label={t('password_label')}
+                label={t(PASSWORD_LABEL)}
                 error={!!error}
                 onChange={() => props.setError(null)}
             />
@@ -67,7 +73,7 @@ let LoginForm = (props) => {
                 variant="contained"
                 color="primary"
             >
-                {translation('login_title')}
+                {translation(LOGIN_TITLE)}
             </Button>
             {/* <div className="group-btns"> */}
             {/*    <button */}
@@ -113,7 +119,7 @@ let LoginForm = (props) => {
 
     return (
         <Card class="auth-card">
-            <h2 className="under-line">{translation('login_page_title')}</h2>
+            <h2 className="under-line">{translation(LOGIN_PAGE_TITLE)}</h2>
             {form}
         </Card>
     );

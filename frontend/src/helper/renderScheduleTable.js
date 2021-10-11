@@ -20,6 +20,14 @@ import {
     getTeacherFullName,
     getTeacherWithShortPosition,
 } from './renderTeacher';
+import {
+    GROUP_Y_LABEL,
+    FORM_GROUP_LABEL,
+    EMPTY_SCHEDULE,
+    COMMON_REGULAR_LESSON_LABEL,
+    COMMON_LINK_TO_MEETING_WORD,
+    COMMON_VACATION_LABEL,
+} from '../constants/translationLabels';
 
 const shortid = require('shortid');
 
@@ -93,7 +101,7 @@ export const prepareLessonSubCardCell = (card, place) => {
 const getHref = (link) => {
     return (
         <a title={link} className="link-to-meeting" href={link} target="_blank" rel="noreferrer">
-            {i18n.t(`common:link_to_meeting_word`)}
+            {i18n.t(COMMON_LINK_TO_MEETING_WORD)}
         </a>
     );
 };
@@ -103,7 +111,7 @@ export const prepareLessonTemporaryCardCell = (card, place, day) => {
     if (card !== undefined && card !== null) {
         if (card.temporary_schedule) {
             if (card.temporary_schedule.vacation === true) {
-                inner += `${card.temporary_schedule.date}\n\r${i18next.t(`common:vacation_label`)}`;
+                inner += `${card.temporary_schedule.date}\n\r${i18next.t(COMMON_VACATION_LABEL)}`;
             } else {
                 inner += `${card.temporary_schedule.date}\n\r${getTeacherForSite(
                     card.temporary_schedule,
@@ -112,7 +120,7 @@ export const prepareLessonTemporaryCardCell = (card, place, day) => {
                     inner += `, ${card.temporary_schedule.room.name} )`;
                 }
             }
-            const title = `${i18next.t(`common:regular_lesson_label`)}\r${prepareLessonCardCell(
+            const title = `${i18next.t(COMMON_REGULAR_LESSON_LABEL)}\r${prepareLessonCardCell(
                 card,
                 place,
             )}\r${prepareLessonSubCardCell(card, place)}\r`;
@@ -196,7 +204,7 @@ export const prepareTeacherTemporaryCardCell = (cards, place) => {
             );
         }
         if (card.temporary_schedule.vacation === true) {
-            inner += `${card.temporary_schedule.date}\n${i18next.t(`common:vacation_label`)}`;
+            inner += `${card.temporary_schedule.date}\n${i18next.t(COMMON_VACATION_LABEL)}`;
         } else {
             inner += `${card.temporary_schedule.date}\n`;
             if (card.temporary_schedule.room) {
@@ -205,7 +213,7 @@ export const prepareTeacherTemporaryCardCell = (cards, place) => {
                 inner += `${card.temporary_schedule.subjectForSite}\n`;
             }
         }
-        title = `${i18next.t(`common:regular_lesson_label`)}\r${prepareTeacherCardRegularCell(
+        title = `${i18next.t(COMMON_REGULAR_LESSON_LABEL)}\r${prepareTeacherCardRegularCell(
             card,
             place,
         )}`;
@@ -225,7 +233,7 @@ export const prepareTeacherTemporaryCardCell = (cards, place) => {
         if (!card.temporary_schedule) {
             inner += buildGroupNumber(card);
         } else if (card.temporary_schedule.vacation === true) {
-            inner += `${card.temporary_schedule.date}\n${i18next.t(`common:vacation_label`)}\n`;
+            inner += `${card.temporary_schedule.date}\n${i18next.t(COMMON_VACATION_LABEL)}\n`;
         } else {
             inner += `${card.temporary_schedule.date}\n${getTeacherFullName(
                 card.temporary_schedule.teacher,
@@ -236,7 +244,7 @@ export const prepareTeacherTemporaryCardCell = (cards, place) => {
                 inner += `${card.temporary_schedule.subjectForSite}\n`;
             }
         }
-        title += `${i18next.t(`common:regular_lesson_label`)}\r${prepareTeacherCardRegularCell(
+        title += `${i18next.t(COMMON_REGULAR_LESSON_LABEL)}\r${prepareTeacherCardRegularCell(
             card,
             place,
         )}\r`;
@@ -379,7 +387,7 @@ export const renderScheduleHeader = (groups) => (
     <TableHead>
         <TableRow>
             <TableCell className="groupLabelCell" colSpan={3}>
-                {i18next.t('group_y_label')}
+                {i18next.t(GROUP_Y_LABEL)}
             </TableCell>
             {groups.map((group) => (
                 <TableCell key={shortid.generate()}>{group}</TableCell>
@@ -521,7 +529,7 @@ export const renderDay = (dayName, dayItem, semesterClassesCount, place) => {
 export const renderScheduleFullHeader = (groupList) => (
     <TableHead>
         <TableRow>
-            <TableCell colSpan={3}>{i18next.t('formElements:group_label')}</TableCell>
+            <TableCell colSpan={3}>{i18next.t(FORM_GROUP_LABEL)}</TableCell>
             {groupList.map((group) => (
                 <TableCell key={shortid.generate()} className="groupLabelCell">
                     {group.title}
@@ -619,7 +627,7 @@ export const renderTeacherRangeSchedule = (schedule, viewTeacherScheduleResults)
     if (schedule === undefined) return;
     if (schedule) {
         if (schedule.length === 0) {
-            return i18next.t('empty_schedule');
+            return i18next.t(EMPTY_SCHEDULE);
         }
         return schedule.map((dayItem, dayIndex) => {
             const parsed = Array.from(dayItem.date);

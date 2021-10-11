@@ -10,23 +10,36 @@ import {
 } from './storeValidation';
 import i18n from '../helper/i18n';
 import { validation } from '../constants/validation';
+import {
+    FORM_CLASS_FROM_LABEL,
+    FORM_CLASS_TO_LABEL,
+    VALIDATION_MESSAGE_EMAIL,
+    VALIDATION_MESSAGE_LESS_THAN_FIELD_MESSAGE,
+    VALIDATION_MESSAGE_BIGGER_THAN_FIELD_MESSAGE,
+    VALIDATION_MESSAGE_REQUIRED_MESSAGE,
+    VALIDATION_MESSAGE_BIGGER_THAN_ZERO_MESSAGE,
+    VALIDATION_MESSAGE_BIGGER_THAN_THIS_YEAR_MESSAGE,
+    VALIDATION_MESSAGE_BIGGER_THAN_CHAR_MESSAGE,
+    VALIDATION_MESSAGE_LESS_THAN_CHAR_MESSAGE,
+    VALIDATION_MESSAGE_PASSWORD,
+} from '../constants/translationLabels';
 
 export const required = (value) =>
-    value ? undefined : i18n.t('validationMessages:required_message');
+    value ? undefined : i18n.t(VALIDATION_MESSAGE_REQUIRED_MESSAGE);
 
 export const lessThanZero = (value) =>
-    value > 0 ? undefined : i18n.t('validationMessages:bigger_than_zero_message');
+    value > 0 ? undefined : i18n.t(VALIDATION_MESSAGE_BIGGER_THAN_ZERO_MESSAGE);
 
 const minLength = (min) => (value) =>
     value && value.length < min
-        ? i18n.t('validationMessages:bigger_than_char_message', { min })
+        ? i18n.t(VALIDATION_MESSAGE_BIGGER_THAN_CHAR_MESSAGE, { min })
         : undefined;
 
 export const minLengthValue = minLength(3);
 
 const maxLength = (max) => (value) =>
     value && value.length > max
-        ? i18n.t('validationMessages:less_than_char_message', {
+        ? i18n.t(VALIDATION_MESSAGE_LESS_THAN_CHAR_MESSAGE, {
               max,
           })
         : undefined;
@@ -40,8 +53,8 @@ export const lessThanTime = (value, previousValue, allValues) => {
         moment(allValues.values[otherField], 'HH:mm').toDate() &&
         allValues.values[otherField] !== undefined
         ? undefined
-        : i18n.t('validationMessages:less_than_field_message', {
-              field: i18n.t('formElements:class_to_label'),
+        : i18n.t(VALIDATION_MESSAGE_LESS_THAN_FIELD_MESSAGE, {
+              field: i18n.t(FORM_CLASS_TO_LABEL),
           });
 };
 
@@ -50,8 +63,8 @@ export const greaterThanTime = (value, previousValue, allValues) => {
     if (allValues.values[otherField] === undefined) return undefined;
     return moment(value, 'HH:mm').toDate() >= moment(allValues.values[otherField], 'HH:mm').toDate()
         ? undefined
-        : i18n.t('validationMessages:bigger_than_field_message', {
-              field: i18n.t('formElements:class_from_label'),
+        : i18n.t(VALIDATION_MESSAGE_BIGGER_THAN_FIELD_MESSAGE, {
+              field: i18n.t(FORM_CLASS_FROM_LABEL),
           });
 };
 
@@ -80,14 +93,14 @@ export const uniqueRoomName = (value) => {
 };
 
 export const email = (value) =>
-    value && !validation.EMAIL.test(value) ? i18n.t('validationMessages:email') : undefined;
+    value && !validation.EMAIL.test(value) ? i18n.t(VALIDATION_MESSAGE_EMAIL) : undefined;
 
 export const password = (value) =>
-    value && !validation.PASSWORD.test(value) ? i18n.t('validationMessages:password') : undefined;
+    value && !validation.PASSWORD.test(value) ? i18n.t(VALIDATION_MESSAGE_PASSWORD) : undefined;
 
 const minYear = (min) => (value) =>
     value < min
-        ? i18n.t('validationMessages:bigger_than_this_year_message', {
+        ? i18n.t(VALIDATION_MESSAGE_BIGGER_THAN_THIS_YEAR_MESSAGE, {
               min,
           })
         : undefined;
@@ -103,8 +116,8 @@ export const lessThanDate = (value, previousValue, allValues) => {
         moment(allValues.values[otherField], 'DD/MM/YYYY').toDate() &&
         allValues.values[otherField] !== undefined
         ? undefined
-        : i18n.t('validationMessages:less_than_field_message', {
-              field: i18n.t('formElements:class_to_label'),
+        : i18n.t(VALIDATION_MESSAGE_LESS_THAN_FIELD_MESSAGE, {
+              field: i18n.t(FORM_CLASS_TO_LABEL),
           });
 };
 
@@ -114,8 +127,8 @@ export const greaterThanDate = (value, previousValue, allValues) => {
     return moment(value, 'DD/MM/YYYY').toDate() >=
         moment(allValues.values[otherField], 'DD/MM/YYYY').toDate()
         ? undefined
-        : i18n.t('validationMessages:bigger_than_field_message', {
-              field: i18n.t('formElements:class_from_label'),
+        : i18n.t(VALIDATION_MESSAGE_BIGGER_THAN_FIELD_MESSAGE, {
+              field: i18n.t(FORM_CLASS_FROM_LABEL),
           });
 };
 

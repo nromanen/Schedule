@@ -11,6 +11,13 @@ import renderTextField from '../../share/renderedFields/input';
 import { required, uniqueGroup, minLengthValue } from '../../validation/validateFields';
 import { links } from '../../constants/links';
 import { getClearOrCancelTitle, setDisableButton } from '../../helper/disableComponent';
+import {
+    EDIT_TITLE,
+    CREATE_TITLE,
+    SAVE_BUTTON_LABEL,
+    GROUP_Y_LABEL,
+    GROUP_LABEL,
+} from '../../constants/translationLabels';
 
 const AddGroup = (props) => {
     const { t } = useTranslation('formElements');
@@ -32,15 +39,15 @@ const AddGroup = (props) => {
     return (
         <Card class="form-card group-form">
             <h2 className="group-form__title">
-                {group.id ? t('edit_title') : t('create_title')}
-                {t('group_y_label')}
+                {group.id ? t(EDIT_TITLE) : t(CREATE_TITLE)}
+                {t(GROUP_Y_LABEL)}
             </h2>
             <form onSubmit={handleSubmit}>
                 <Field
                     className="form-field"
                     name="title"
                     id="title"
-                    label={`${t('group_label')}:`}
+                    label={`${t(GROUP_LABEL)}:`}
                     component={renderTextField}
                     validate={[required, minLengthValue, uniqueGroup]}
                 />
@@ -52,7 +59,7 @@ const AddGroup = (props) => {
                         disabled={pristine || submitting}
                         type="submit"
                     >
-                        {t('save_button_label')}
+                        {t(SAVE_BUTTON_LABEL)}
                     </Button>
                     <Button
                         type="button"

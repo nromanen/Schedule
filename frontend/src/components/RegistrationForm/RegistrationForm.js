@@ -14,6 +14,12 @@ import { authTypes } from '../../constants/auth';
 
 import { email, password, required } from '../../validation/validateFields';
 import { links } from '../../constants/links';
+import {
+    PASSWORD_LABEL,
+    RETYPE_PASSWORD_LABEL,
+    EMAIL_LABEL,
+    REGISTRATION_PAGE_TITLE,
+} from '../../constants/translationLabels';
 
 let RegistrationForm = (props) => {
     const { t } = useTranslation('formElements');
@@ -49,7 +55,7 @@ let RegistrationForm = (props) => {
                 className="form-field"
                 type="email"
                 component={renderTextField}
-                label={t('email_label')}
+                label={t(EMAIL_LABEL)}
                 {...(!error ? emailValidate : emailAdvancedValidate)}
                 onChange={(e) => props.setError(null)}
             />
@@ -58,7 +64,7 @@ let RegistrationForm = (props) => {
                 className="form-field"
                 type="password"
                 component={renderTextField}
-                label={t('password_label')}
+                label={t(PASSWORD_LABEL)}
                 {...(!error ? passwordValidate : passwordValidateAdvanced)}
                 onChange={(e) => props.setError(null)}
             />
@@ -67,7 +73,7 @@ let RegistrationForm = (props) => {
                 className="form-field"
                 type="password"
                 component={renderTextField}
-                label={t('retype_password_label')}
+                label={t(RETYPE_PASSWORD_LABEL)}
                 {...(!error ? retypePasswordValidate : retypePasswordValidateAdvanced)}
             />
             <Button className="buttons-style" type="submit" variant="contained" color="primary">
@@ -95,7 +101,7 @@ let RegistrationForm = (props) => {
     }
     return (
         <Card class="auth-card">
-            <h2 className="under-line">{props.translation('registration_page_title')}</h2>
+            <h2 className="under-line">{props.translation(REGISTRATION_PAGE_TITLE)}</h2>
             {form}
         </Card>
     );

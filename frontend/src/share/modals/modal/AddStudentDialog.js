@@ -20,6 +20,20 @@ import { required } from '../../../validation/validateFields';
 import { STUDENT_FORM, TEACHER_FORM } from '../../../constants/reduxForms';
 import renderSelectField from '../../renderedFields/select';
 import { goToGroupPage } from '../../../helper/pageRedirection';
+import {
+    EDIT_TITLE,
+    CREATE_TITLE,
+    SAVE_BUTTON_LABEL,
+    TYPE_LABEL,
+    EMAIL_FIELD,
+    CLEAR_BUTTON_LABEL,
+    CLOSE_LABEL,
+    CANCEL_BUTTON_LABEL,
+    PATRONYMIC_PLACEHOLDER,
+    NAME_PLACEHOLDER,
+    SURNAME_PLACEHOLDER,
+    STUDENT_A_LABEL,
+} from '../../../constants/translationLabels';
 
 let AddStudentDialog = (props) => {
     const { t } = useTranslation('formElements');
@@ -47,7 +61,7 @@ let AddStudentDialog = (props) => {
     return (
         <Dialog disableBackdropClick aria-labelledby="confirm-dialog-title" open={open}>
             <FaWindowClose
-                title={t('close_label')}
+                title={t(CLOSE_LABEL)}
                 className="close-dialog"
                 variant="contained"
                 onClick={() => {
@@ -60,7 +74,7 @@ let AddStudentDialog = (props) => {
                 <Card class="form-card teacher-form">
                     <form className="createTeacherForm w-100" onSubmit={handleSubmit}>
                         <h2 className="form-title">
-                            {studentId ? t('edit_title') : t('create_title')} {t('student_a_label')}
+                            {studentId ? t(EDIT_TITLE) : t(CREATE_TITLE)} {t(STUDENT_A_LABEL)}
                         </h2>
 
                         <Field
@@ -69,8 +83,8 @@ let AddStudentDialog = (props) => {
                             id="surname"
                             component={renderTextField}
                             type="text"
-                            placeholder={t('surname_placeholder')}
-                            label={t('surname_placeholder')}
+                            placeholder={t(SURNAME_PLACEHOLDER)}
+                            label={t(SURNAME_PLACEHOLDER)}
                             validate={[required]}
                         />
 
@@ -80,8 +94,8 @@ let AddStudentDialog = (props) => {
                             id="name"
                             component={renderTextField}
                             type="text"
-                            placeholder={t('name_placeholder')}
-                            label={t('name_placeholder')}
+                            placeholder={t(NAME_PLACEHOLDER)}
+                            label={t(NAME_PLACEHOLDER)}
                             validate={[required]}
                         />
 
@@ -91,8 +105,8 @@ let AddStudentDialog = (props) => {
                             id="patronymic"
                             component={renderTextField}
                             type="text"
-                            placeholder={t('patronymic_placeholder')}
-                            label={t('patronymic_placeholder')}
+                            placeholder={t(PATRONYMIC_PLACEHOLDER)}
+                            label={t(PATRONYMIC_PLACEHOLDER)}
                             validate={[required]}
                         />
 
@@ -102,8 +116,8 @@ let AddStudentDialog = (props) => {
                             id="email"
                             component={renderTextField}
                             type="email"
-                            placeholder={t('email_field')}
-                            label={t('email_field')}
+                            placeholder={t(EMAIL_FIELD)}
+                            label={t(EMAIL_FIELD)}
                             validate={[required]}
                         />
                         {studentId ? (
@@ -111,7 +125,7 @@ let AddStudentDialog = (props) => {
                                 className="form-field"
                                 component={renderSelectField}
                                 name="group"
-                                label={t('type_label')}
+                                label={t(TYPE_LABEL)}
                                 validate={[required]}
                             >
                                 defaultValue={student.group.id}
@@ -131,7 +145,7 @@ let AddStudentDialog = (props) => {
                                 disabled={pristine || submitting}
                                 type="submit"
                             >
-                                {t('save_button_label')}
+                                {t(SAVE_BUTTON_LABEL)}
                             </Button>
                             <Button
                                 className="buttons-style"
@@ -143,7 +157,7 @@ let AddStudentDialog = (props) => {
                                     // props.onSetSelectedCard(null);
                                 }}
                             >
-                                {studentId ? t('cancel_button_label') : t('clear_button_label')}
+                                {studentId ? t(CANCEL_BUTTON_LABEL) : t(CLEAR_BUTTON_LABEL)}
                             </Button>
                         </div>
                     </form>

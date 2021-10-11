@@ -14,6 +14,11 @@ import Card from '../../share/Card/Card';
 import renderTextField from '../../share/renderedFields/input';
 import { deleteTypeService, getOneNewTypeService } from '../../services/roomTypesService';
 import './AddNewRoomType.scss';
+import {
+    SAVE_BUTTON_LABEL,
+    ADD_TYPE_LABEL,
+    NEW_TYPE_LABEL,
+} from '../../constants/translationLabels';
 
 let NewRoomType = (props) => {
     const { handleSubmit, pristine, submitting, roomTypes } = props;
@@ -63,8 +68,8 @@ let NewRoomType = (props) => {
                         type="text"
                         name="description"
                         component={renderTextField}
-                        placeholder={t('add_type_label')}
-                        label={t('new_type_label')}
+                        placeholder={t(ADD_TYPE_LABEL)}
+                        label={t(NEW_TYPE_LABEL)}
                         className="form-field"
                         variant="outlined"
                     />
@@ -76,7 +81,7 @@ let NewRoomType = (props) => {
                             variant="contained"
                             type="submit"
                         >
-                            {t('save_button_label')}
+                            {t(SAVE_BUTTON_LABEL)}
                         </Button>
                     </div>
                 </form>

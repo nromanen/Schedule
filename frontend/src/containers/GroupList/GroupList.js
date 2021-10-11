@@ -42,6 +42,16 @@ import { links } from '../../constants/links';
 import '../../router/Router.scss';
 import { goToGroupPage } from '../../helper/pageRedirection';
 import { getShortTitle } from '../../helper/shortTitle';
+import {
+    GROUP_Y_LABEL,
+    GROUP_LABEL,
+    COMMON_EDIT,
+    COMMON_SET_DISABLED,
+    COMMON_SET_ENABLED,
+    DELETE_TITLE,
+    FORM_STUDENT_ADD_LABEL,
+    FORM_SHOW_STUDENTS,
+} from '../../constants/translationLabels';
 
 const GroupList = (props) => {
     const {
@@ -239,7 +249,7 @@ const GroupList = (props) => {
                     )}
                 </aside>
                 <div className="group-wrapper group-list">
-                    {visibleGroups.length === 0 && <NotFound name={t('group_y_label')} />}
+                    {visibleGroups.length === 0 && <NotFound name={t(GROUP_Y_LABEL)} />}
                     {visibleGroups.map((group) => (
                         <section key={group.id} className="group-card">
                             <div className="group__buttons-wrapper">
@@ -250,7 +260,7 @@ const GroupList = (props) => {
                                         >
                                             <GiSightDisabled
                                                 className="group__buttons-hide link-href"
-                                                title={t('common:set_disabled')}
+                                                title={t(COMMON_SET_DISABLED)}
                                                 onClick={() => {
                                                     handleSetDisable(group.id);
                                                 }}
@@ -261,7 +271,7 @@ const GroupList = (props) => {
                                         >
                                             <FaEdit
                                                 className="group__buttons-edit link-href"
-                                                title={t('common:edit')}
+                                                title={t(COMMON_EDIT)}
                                                 onClick={() => handleEdit(group.id)}
                                             />
                                         </Link>
@@ -269,7 +279,7 @@ const GroupList = (props) => {
                                 ) : (
                                     <IoMdEye
                                         className="group__buttons-hide link-href"
-                                        title={t('common:set_enabled')}
+                                        title={t(COMMON_SET_ENABLED)}
                                         onClick={() => {
                                             setHideDialog(disabledCard.SHOW);
                                             handleClickOpen(group.id);
@@ -281,7 +291,7 @@ const GroupList = (props) => {
                                 >
                                     <MdDelete
                                         className="group__buttons-delete link-href"
-                                        title={t('delete_title')}
+                                        title={t(DELETE_TITLE)}
                                         onClick={() => handleClickOpen(group.id)}
                                     />
                                 </Link>
@@ -289,7 +299,7 @@ const GroupList = (props) => {
                                     to={`${links.GroupList}${links.Group}/${group.id}${links.AddStudent}`}
                                 >
                                     <FaUserPlus
-                                        title={t('formElements:student_add_label')}
+                                        title={t(FORM_STUDENT_ADD_LABEL)}
                                         className="svg-btn copy-btn align-left info-btn"
                                         onClick={() => {
                                             handleAddUser(group.id);
@@ -298,14 +308,14 @@ const GroupList = (props) => {
                                     />
                                 </Link>
                             </div>
-                            <p className="group-card__description">{`${t('group_label')}:`}</p>
+                            <p className="group-card__description">{`${t(GROUP_LABEL)}:`}</p>
                             <h1 className="group-card__number">{getGroupTitle(group.title)}</h1>
                             <Link
                                 to={`${links.GroupList}${links.Group}/${group.id}${links.ShowStudents}`}
                             >
                                 <span className="students-group">
                                     <FaUsers
-                                        title={t('formElements:show_students')}
+                                        title={t(FORM_SHOW_STUDENTS)}
                                         className="svg-btn copy-btn align-left info-btn students"
                                         onClick={() => {
                                             onShowStudentByGroup(group.id);

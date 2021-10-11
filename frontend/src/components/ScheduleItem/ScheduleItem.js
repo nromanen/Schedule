@@ -5,6 +5,12 @@ import { FaUserPlus } from 'react-icons/fa';
 import Card from '../../share/Card/Card';
 import { getTeacherFullName, getTeacherName } from '../../helper/renderTeacher';
 import groups from '../../redux/reducers/groups';
+import {
+    FORM_GROUPED_LABEL,
+    COMMON_DELETE_SCHEDULE_ITEM,
+    COMMON_EDIT_SCHEDULE_ITEM,
+    FORM_HOURS_LABEL,
+} from '../../constants/translationLabels';
 
 const ScheduleItem = (props) => {
     let { lesson } = props;
@@ -39,7 +45,7 @@ const ScheduleItem = (props) => {
     const isGroupped = (grouped) =>
         grouped ? (
             <FaUserPlus
-                title={t('formElements:grouped_label')}
+                title={t(FORM_GROUPED_LABEL)}
                 className="svg-btn copy-btn align-left info-btn"
             />
         ) : (
@@ -60,12 +66,12 @@ const ScheduleItem = (props) => {
                 <>
                     <div className="cards-btns delete-item" id={deleteNodeId}>
                         <MdDelete
-                            title={t('common:delete_schedule_item')}
+                            title={t(COMMON_DELETE_SCHEDULE_ITEM)}
                             className="svg-btn delete-btn"
                             onClick={() => props.deleteItem(itemId, item.lesson.group.id)}
                         />
                         <MdEdit
-                            title={t('common:edit_schedule_item')}
+                            title={t(COMMON_EDIT_SCHEDULE_ITEM)}
                             className="svg-btn edit-btn"
                             onClick={() => props.editItem(item)}
                         />
@@ -88,7 +94,7 @@ const ScheduleItem = (props) => {
             ) : (
                 <p>
                     {isGroupped(lesson.grouped)}
-                    <b>1</b> {t('formElements:hours_label')}
+                    <b>1</b> {t(FORM_HOURS_LABEL)}
                 </p>
             )}
         </Card>

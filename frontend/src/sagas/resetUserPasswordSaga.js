@@ -4,6 +4,7 @@ import * as actionTypes from '../redux/actions/actionsType';
 import { resetUserPasswordService } from '../services/authService';
 
 import i18n from '../helper/i18n';
+import { COMMON_ERROR_MESSAGE } from '../constants/translationLabels';
 
 export function* resetUserPasswordSaga(payload) {
     try {
@@ -13,7 +14,7 @@ export function* resetUserPasswordSaga(payload) {
     } catch (error) {
         yield put({
             type: actionTypes.RESET_USER_PASSWORD_ERROR,
-            error: error.response ? error.response.data.message : i18n.t('common:error_message'),
+            error: error.response ? error.response.data.message : i18n.t(COMMON_ERROR_MESSAGE),
         });
         yield put({ type: actionTypes.SET_LOADING_INDICATOR, result: false });
     }

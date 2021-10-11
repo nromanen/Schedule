@@ -9,7 +9,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import { CircularProgress } from '@material-ui/core';
-import { ROOM_LABEL } from '../../constants/services';
+import { FORM_ROOM_LABEL, COMMON_NO_BUTTON_TITLE } from '../../constants/translationLabels';
 import '../../share/modals/dialog.scss';
 import './ScheduleDialog.scss';
 
@@ -112,7 +112,7 @@ const ScheduleDialog = (props) => {
                                 renderInput={(params) => (
                                     <TextField
                                         {...params}
-                                        label={translation(ROOM_LABEL)}
+                                        label={translation(FORM_ROOM_LABEL)}
                                         margin="normal"
                                     />
                                 )}
@@ -176,7 +176,7 @@ const ScheduleDialog = (props) => {
                             variant="contained"
                             onClick={() => setSure(true)}
                         >
-                            {translation('common:no_button_title')}
+                            {translation(COMMON_NO_BUTTON_TITLE)}
                         </Button>
                     </div>
                 </>

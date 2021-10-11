@@ -44,6 +44,26 @@ import { MultiselectForGroups } from '../../helper/MultiselectForGroups';
 import { showAllGroupsService } from '../../services/groupService';
 import { successHandler } from '../../helper/handlerAxios';
 import i18n from '../../helper/i18n';
+import {
+    EDIT_TITLE,
+    COMMON_SET_DISABLED,
+    COMMON_DAY_LABEL,
+    COMMON_CLASS_SCHEDULE_MANAGEMENT_TITLE,
+    SEMESTER_LABEL,
+    CLOSE_LABEL,
+    COMMON_SET_ENABLED,
+    DELETE_TITLE,
+    SEMESTER_COPY_LABEL,
+    COPY_LABEL,
+    SEMESTERY_LABEL,
+    COMMON_MAKE_ARCHIVE,
+    FORM_SHOW_GROUPS,
+    SET_DEFAULT_TITLE,
+    COMMON_PREVIEW,
+    SERVICE_MESSAGE_STUDENT_LABEL,
+    SERVICE_GROUP_EXIST_IN_THIS_SEMESTER,
+    COMMON_GROUP_TITLE,
+} from '../../constants/translationLabels';
 
 const SemesterPage = (props) => {
     const { t } = useTranslation('formElements');
@@ -97,9 +117,9 @@ const SemesterPage = (props) => {
         const finishGroups = [...semesterOptions];
         if (isEqualsArrObjects(beginGroups, finishGroups)) {
             successHandler(
-                i18n.t('serviceMessages:group_exist_in_this_semester', {
-                    cardType: i18n.t('common:group_title'),
-                    actionType: i18n.t('serviceMessages:student_label'),
+                i18n.t(SERVICE_GROUP_EXIST_IN_THIS_SEMESTER, {
+                    cardType: i18n.t(COMMON_GROUP_TITLE),
+                    actionType: i18n.t(SERVICE_MESSAGE_STUDENT_LABEL),
                 }),
             );
             return;
@@ -237,15 +257,15 @@ const SemesterPage = (props) => {
                 isHide={hideDialogModal}
                 open={openModal}
                 onClose={handleCloseModal}
-                windowTitle={t('semester_copy_label')}
+                windowTitle={t(SEMESTER_COPY_LABEL)}
                 isOkButton={false}
                 isNoButton
-                noButtonLabel={t('close_label')}
+                noButtonLabel={t(CLOSE_LABEL)}
             >
                 <SemesterCopyForm
                     semesterId={semesterId}
                     onSubmit={handleSemesterCopySubmit}
-                    submitButtonLabel={t('copy_label')}
+                    submitButtonLabel={t(COPY_LABEL)}
                 />
             </ModalWindow>
             <div className="cards-container">
@@ -271,7 +291,7 @@ const SemesterPage = (props) => {
                     )}
                 </aside>
                 <section className="container-flex-wrap wrapper">
-                    {visibleItems.length === 0 && <NotFound name={t('semestry_label')} />}
+                    {visibleItems.length === 0 && <NotFound name={t(SEMESTERY_LABEL)} />}
                     {visibleItems.map((semester, index) => {
                         const sem_days = [];
 
@@ -290,7 +310,7 @@ const SemesterPage = (props) => {
                                         <>
                                             <GiSightDisabled
                                                 className="svg-btn copy-btn"
-                                                title={t('common:set_disabled')}
+                                                title={t(COMMON_SET_DISABLED)}
                                                 onClick={() => {
                                                     setHideDialog(disabledCard.HIDE);
                                                     handleClickOpen(semester.id);
@@ -298,7 +318,7 @@ const SemesterPage = (props) => {
                                             />
                                             <FaEdit
                                                 className="svg-btn edit-btn"
-                                                title={t('edit_title')}
+                                                title={t(EDIT_TITLE)}
                                                 onClick={() => {
                                                     handleEdit(semester.id);
                                                     setEdit(true);
@@ -306,7 +326,7 @@ const SemesterPage = (props) => {
                                             />
                                             <FaCopy
                                                 className="svg-btn copy-btn"
-                                                title={t('copy_label')}
+                                                title={t(COPY_LABEL)}
                                                 onClick={() => {
                                                     handleClickOpenModal(semester.id);
                                                 }}
@@ -316,7 +336,7 @@ const SemesterPage = (props) => {
                                             ) : (
                                                 <FaFileArchive
                                                     className="svg-btn archive-btn"
-                                                    title={t('common:make_archive')}
+                                                    title={t(COMMON_MAKE_ARCHIVE)}
                                                     onClick={() => {
                                                         handleCreateArchive(semester.id);
                                                     }}
@@ -326,7 +346,7 @@ const SemesterPage = (props) => {
                                     ) : !archived ? (
                                         <IoMdEye
                                             className="svg-btn copy-btn"
-                                            title={t('common:set_enabled')}
+                                            title={t(COMMON_SET_ENABLED)}
                                             onClick={() => {
                                                 setHideDialog(disabledCard.SHOW);
                                                 handleClickOpen(semester.id);
@@ -335,7 +355,7 @@ const SemesterPage = (props) => {
                                     ) : (
                                         <IoMdEye
                                             className="svg-btn copy-btn"
-                                            title={t('common:preview')}
+                                            title={t(COMMON_PREVIEW)}
                                             onClick={() => {
                                                 handleSemesterArchivedPreview(semester.id);
                                             }}
@@ -343,19 +363,19 @@ const SemesterPage = (props) => {
                                     )}
                                     <MdDelete
                                         className="svg-btn delete-btn"
-                                        title={t('delete_title')}
+                                        title={t(DELETE_TITLE)}
                                         onClick={() => handleClickOpen(semester.id)}
                                     />
 
                                     <MdDonutSmall
                                         className={setClassNameForDefaultSemester(semester)}
-                                        title={t('set_default_title')}
+                                        title={t(SET_DEFAULT_TITLE)}
                                         onClick={() => handleClickOpenDefault(semester.id)}
                                     />
                                 </div>
 
                                 <p className="semester-card__description">
-                                    <small>{`${t('semester_label')}:`}</small>
+                                    <small>{`${t(SEMESTER_LABEL)}:`}</small>
                                     <b>{semester.description}</b>
                                     {` ( ${semester.year} )`}
                                 </p>
@@ -365,11 +385,11 @@ const SemesterPage = (props) => {
                                     </b>
                                 </p>
                                 <p className="semester-card__description">
-                                    {`${t('common:days_label')}: `}
+                                    {`${t(COMMON_DAY_LABEL)}: `}
                                     {sem_days.join(', ')}
                                 </p>
                                 <p className="semester-card__description">
-                                    {`${t('common:ClassSchedule_management_title')}: `}
+                                    {`${t(COMMON_CLASS_SCHEDULE_MANAGEMENT_TITLE)}: `}
                                     {semester.semester_classes
                                         .map((classItem) => {
                                             return classItem.class_name;
@@ -378,7 +398,7 @@ const SemesterPage = (props) => {
                                 </p>
 
                                 <FaUsers
-                                    title={t('formElements:show_groups')}
+                                    title={t(FORM_SHOW_GROUPS)}
                                     className="svg-btn copy-btn  semester-groups"
                                     onClick={() => {
                                         setSemesterId(semester.id);

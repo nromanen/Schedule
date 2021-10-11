@@ -27,6 +27,19 @@ import {
 } from '../../redux/actions/index';
 
 import './Auth.scss';
+import {
+    DIFFERENT_PASSWORDS,
+    BROKEN_TOKEN,
+    LOGIN_TITLE,
+    REGISTRATION_PAGE_TITLE,
+    RESET_PASSWORD_PAGE_TITLE,
+    SUCCESSFUL_LOGIN_MESSAGE,
+    VALIDATION_MESSAGE_EMAIL,
+    SUCCESSFUL_REGISTERED_MESSAGE,
+    SUCCESSFUL_RESET_PASSWORD_MESSAGE,
+    EMPTY_FIELDS,
+    LOGIN_PAGE_TITLE,
+} from '../../constants/translationLabels';
 
 const Auth = (props) => {
     const { t } = useTranslation('common');
@@ -39,7 +52,7 @@ const Auth = (props) => {
     const socialLoginHandler = (data) => {
         props.setLoading(true);
         if (!data.token || data.token.length < 20) {
-            props.setError({ login: t('broken_token') });
+            props.setError({ login: t(BROKEN_TOKEN) });
             return;
         }
         setAuthType(authTypes.GOOGLE);
@@ -79,7 +92,7 @@ const Auth = (props) => {
             props.response.data.hasOwnProperty('message')
         ) {
             setAuthType(authTypes.LOGIN);
-            message = t('successful_registered_message');
+            message = t(SUCCESSFUL_REGISTERED_MESSAGE);
             handleSnackbarOpenService(true, snackbarTypes.SUCCESS, message);
         }
     }, [props.response]);
@@ -90,18 +103,18 @@ const Auth = (props) => {
             props.resetPasswordResponse.data.hasOwnProperty('message')
         ) {
             setAuthType(authTypes.LOGIN);
-            message = t('successful_reset_password_message');
+            message = t(SUCCESSFUL_RESET_PASSWORD_MESSAGE);
             handleSnackbarOpenService(true, snackbarTypes.SUCCESS, message);
         }
     }, [props.resetPasswordResponse]);
 
     const loginHandler = (loginData) => {
         if (!loginData.email || !loginData.password) {
-            props.setError({ login: t('empty_fields') });
+            props.setError({ login: t(EMPTY_FIELDS) });
             return;
         }
         if (!validation.EMAIL.test(loginData.email)) {
-            props.setError({ login: t('validationMessages:email') });
+            props.setError({ login: t(VALIDATION_MESSAGE_EMAIL) });
             return;
         }
         props.onAuth(loginData);
@@ -112,7 +125,7 @@ const Auth = (props) => {
     const registrationHandler = (registrationData) => {
         if (registrationData.password !== registrationData.retypePassword) {
             props.setError({
-                registration: { passwords: t('different_passwords') },
+                registration: { passwords: t(DIFFERENT_PASSWORDS) },
             });
             return;
         }
@@ -139,7 +152,7 @@ const Auth = (props) => {
     if (!error && props.userRole) {
         const { token } = props;
         isSuccess = !!token;
-        message = t('successful_login_message');
+        message = t(SUCCESSFUL_LOGIN_MESSAGE);
         handleSnackbarOpenService(true, snackbarTypes.SUCCESS, message);
     }
 
@@ -162,7 +175,7 @@ const Auth = (props) => {
 
     switch (authType) {
         case authTypes.LOGIN:
-            document.title = t('login_page_title');
+            document.title = t(LOGIN_PAGE_TITLE);
             authPage = (
                 <LoginForm
                     isLoading={isLoading}
@@ -175,7 +188,7 @@ const Auth = (props) => {
             );
             break;
         case authTypes.REGISTRATION:
-            document.title = t('registration_page_title');
+            document.title = t(REGISTRATION_PAGE_TITLE);
             authPage = (
                 <RegistrationForm
                     isLoading={isLoading}
@@ -188,7 +201,7 @@ const Auth = (props) => {
             );
             break;
         case authTypes.RESET_PASSWORD:
-            document.title = t('reset_password_page_title');
+            document.title = t(RESET_PASSWORD_PAGE_TITLE);
             authPage = (
                 <ResetPasswordForm
                     isLoading={isLoading}
@@ -201,7 +214,7 @@ const Auth = (props) => {
             );
             break;
         default:
-            document.title = t('login_page_title');
+            document.title = t(LOGIN_PAGE_TITLE);
             authPage = (
                 <LoginForm
                     isLoading={isLoading}

@@ -1,16 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-
 import CircularProgress from '@material-ui/core/CircularProgress';
 import TemporaryScheduleForm from '../../components/TemporarySchedule/TemporaryScheduleForm/TemporaryScheduleForm';
 import ScheduleAndTemporaryScheduleList from '../../components/TemporarySchedule/ScheduleAndTemporaryScheduleList/ScheduleAndTemporaryScheduleList';
 import TemporaryScheduleTitle from '../../components/TemporarySchedule/TemporaryScheduleTitle/TemporaryScheduleTitle';
 import TemporaryScheduleList from '../../components/TemporarySchedule/TemporaryScheduleList/TemporaryScheduleList';
 import TemporaryScheduleVacationForm from '../../components/TemporarySchedule/TemporaryScheduleVacationForm/TemporaryScheduleVacationForm';
-
 import Card from '../../share/Card/Card';
-
 import { setLoadingService } from '../../services/loadingService';
 import { showAllTeachersService } from '../../services/teacherService';
 import {
@@ -23,20 +20,17 @@ import { showListOfRoomsService } from '../../services/roomService';
 import { showAllSubjectsService } from '../../services/subjectService';
 import { getLessonTypesService } from '../../services/lessonService';
 import { showAllGroupsService } from '../../services/groupService';
-
 import './TemporarySchedule.scss';
 import { navigation } from '../../constants/navigation';
 import NavigationPage from '../../components/Navigation/NavigationPage';
+import { EMPTY_LABEL } from '../../constants/translationLabels';
 
 const TemporarySchedule = (props) => {
     const { t } = useTranslation('common');
-
+    const { teachers, teacherId, isLoading } = props;
     const [fromDate, setFromDate] = useState(null);
     const [toDate, setToDate] = useState(null);
 
-    const isLoading = props.loading;
-
-    const { teachers, teacherId } = props;
     useEffect(() => {
         setLoadingService(true);
         showAllTeachersService();
@@ -53,40 +47,19 @@ const TemporarySchedule = (props) => {
     };
 
     const handleTemporaryScheduleVacationSubmit = (values) => {
-        if (!values.from && !values.to) {
-            if (values.id)
-                editTemporaryScheduleService(
-                    teacherId,
-                    {
-                        ...values,
-                        vacation: true,
-                    },
-                    true,
-                );
-            else
-                addTemporaryScheduleService(
-                    teacherId,
-                    {
-                        ...values,
-                        vacation: true,
-                    },
-                    true,
-                );
-        } else {
-            addTemporaryScheduleForRangeService(
-                teacherId,
-                {
-                    ...values,
-                    vacation: true,
-                },
-                true,
-            );
+        const addVacation = { ...values, vacation: true };
+        if (!values.from && !values.to && values.id)
+            editTemporaryScheduleService(teacherId, addVacation, true);
+        else if (!values.from && !values.to && !values.id)
+            addTemporaryScheduleService(teacherId, addVacation, true);
+        else {
+            addTemporaryScheduleForRangeService(teacherId, addVacation, true);
         }
     };
 
     return (
         <>
-            <NavigationPage val={navigation.CHANGES} />'
+            <NavigationPage val={navigation.CHANGES} />
             <Card class="card-title lesson-card">
                 <TemporaryScheduleTitle
                     teacherId={teacherId}
@@ -140,7 +113,7 @@ const TemporarySchedule = (props) => {
                         {props.schedulesAndTemporarySchedules.length === 0 &&
                             props.temporarySchedules.length === 0 && (
                                 <section className="centered-container">
-                                    <h2>{t('empty')}</h2>
+                                    <h2>{t(EMPTY_LABEL)}</h2>
                                 </section>
                             )}
                     </>

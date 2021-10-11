@@ -4,10 +4,10 @@ import { DISABLED_SUBJECTS_URL, SUBJECT_URL } from '../constants/axios';
 import {
     BACK_END_SUCCESS_OPERATION,
     UPDATED_LABEL,
-    SUBJECT_LABEL,
+    FORM_SUBJECT_LABEL,
     CREATED_LABEL,
     DELETED_LABEL,
-} from '../constants/services';
+} from '../constants/translationLabels';
 import { SUBJECT_FORM } from '../constants/reduxForms';
 import {
     addSubject,
@@ -53,7 +53,7 @@ export const updateSubjectService = (data) => {
             resetFormHandler(SUBJECT_FORM);
             successHandler(
                 i18n.t(BACK_END_SUCCESS_OPERATION, {
-                    cardType: i18n.t(SUBJECT_LABEL),
+                    cardType: i18n.t(FORM_SUBJECT_LABEL),
                     actionType: i18n.t(UPDATED_LABEL),
                 }),
             );
@@ -69,7 +69,7 @@ export const createSubjectService = (data) => {
             resetFormHandler(SUBJECT_FORM);
             successHandler(
                 i18n.t(BACK_END_SUCCESS_OPERATION, {
-                    cardType: i18n.t(SUBJECT_LABEL),
+                    cardType: i18n.t(FORM_SUBJECT_LABEL),
                     actionType: i18n.t(CREATED_LABEL),
                 }),
             );
@@ -93,7 +93,7 @@ export const removeSubjectCardService = (subjectId) => {
             getDisabledSubjectsService();
             successHandler(
                 i18n.t(BACK_END_SUCCESS_OPERATION, {
-                    cardType: i18n.t(SUBJECT_LABEL),
+                    cardType: i18n.t(FORM_SUBJECT_LABEL),
                     actionType: i18n.t(DELETED_LABEL),
                 }),
             );

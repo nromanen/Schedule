@@ -17,6 +17,11 @@ import { getUserProfile, updateUserPassword, updateUserTeacher } from '../../ser
 import AddTeacherForm from '../../components/AddTeacherForm/AddTeacherForm';
 import { navigation, navigationNames } from '../../constants/navigation';
 import NavigationPage from '../../components/Navigation/NavigationPage';
+import {
+    EMAIL_LABEL,
+    COMMON_MY_PROFILE,
+    DIFFERENT_PASSWORDS,
+} from '../../constants/translationLabels';
 
 const useStyles = makeStyles((theme) => ({
     rootInput: {
@@ -32,7 +37,7 @@ const ProfilePage = (props) => {
         console.log('values', values);
         if (values.new_password !== values.confirm_password) {
             props.setError({
-                registration: { passwords: t('different_passwords') },
+                registration: { passwords: t(DIFFERENT_PASSWORDS) },
             });
             return;
         }
@@ -61,9 +66,9 @@ const ProfilePage = (props) => {
         <>
             <NavigationPage />
             <Card class="form-card">
-                <h2 className="form-title">{t('common:my_profile')}</h2>
+                <h2 className="form-title">{t(COMMON_MY_PROFILE)}</h2>
                 <section>
-                    <span>{`${t('email_label')}: `}</span>
+                    <span>{`${t(EMAIL_LABEL)}: `}</span>
                     <span>{localStorage.getItem('email')}</span>
                 </section>
                 <ChangePasswordForm

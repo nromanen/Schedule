@@ -10,6 +10,11 @@ import { setLoadingService } from '../../services/loadingService';
 import AdminPage from '../AdminPage/AdminPage';
 import NavigationPage from '../../components/Navigation/NavigationPage';
 import { navigation, navigationNames } from '../../constants/navigation';
+import {
+    WEEK_ODD_TITLE,
+    WEEK_EVEN_TITLE,
+    BUSY_ROOMS_HEADING,
+} from '../../constants/translationLabels';
 
 const BusyRooms = (props) => {
     const { t } = useTranslation('common');
@@ -108,11 +113,11 @@ const BusyRooms = (props) => {
             <section>
                 <Fragment key={index}>
                     <div className="even-odd-week">
-                        <span className="even-odd-heading">{t('week_odd_title')}</span>
+                        <span className="even-odd-heading">{t(WEEK_ODD_TITLE)}</span>
                         {renderWeekRoomInfo(schedule, index, 'odd')}
                     </div>
                     <div className="even-odd-week">
-                        <span className="even-odd-heading">{t('week_even_title')}</span>
+                        <span className="even-odd-heading">{t(WEEK_EVEN_TITLE)}</span>
                         {renderWeekRoomInfo(schedule, index, 'even')}
                     </div>
                 </Fragment>
@@ -130,7 +135,7 @@ const BusyRooms = (props) => {
                     {busyRoomsLength > 0 ? (
                         <>
                             <NavigationPage val={navigation.BUSY_ROOMS} />
-                            <h2 className="busy-heading">{t('busy_rooms_heading')}</h2>
+                            <h2 className="busy-heading">{t(BUSY_ROOMS_HEADING)}</h2>
                             <section className="view-rooms">
                                 {busyRooms.map((busyRoom) => (
                                     <Card class="busy-room" key={busyRoom.room_id}>

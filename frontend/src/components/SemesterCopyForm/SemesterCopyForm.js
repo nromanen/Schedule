@@ -14,7 +14,12 @@ import './SemesterCopyForm.scss';
 
 import { SEMESTER_COPY_FORM } from '../../constants/reduxForms';
 import { required } from '../../validation/validateFields';
-import { SEMESTER_LABEL } from '../../constants/services';
+import {
+    FORM_SEMESTER_LABEL,
+    FORM_SEMESTER_COPY_RED_HINT,
+    TEACHER_SCHEDULE_LABEL,
+    FORM_SEMESTER_COPY_HINT,
+} from '../../constants/translationLabels';
 
 const shortid = require('shortid');
 
@@ -43,7 +48,7 @@ const SemesterCopyForm = (props) => {
                             id="toSemesterId"
                             name="toSemesterId"
                             component={renderSelectField}
-                            label={t(SEMESTER_LABEL)}
+                            label={t(FORM_SEMESTER_LABEL)}
                             type="text"
                             validate={[required]}
                         >
@@ -65,8 +70,8 @@ const SemesterCopyForm = (props) => {
 
     return (
         <section className={classes.root}>
-            <p>{t('formElements:semester_copy_hint')}</p>
-            <p className="red-color">{t('formElements:semester_copy_red_hint')}</p>
+            <p>{t(FORM_SEMESTER_COPY_HINT)}</p>
+            <p className="red-color">{t(FORM_SEMESTER_COPY_RED_HINT)}</p>
             <form onSubmit={handleSubmit}>
                 <div className="form-buttons-container">
                     {renderSemesterList()}
@@ -77,7 +82,7 @@ const SemesterCopyForm = (props) => {
                         type="submit"
                         disabled={pristine || submitting}
                     >
-                        <MdPlayArrow title={t('teacher_schedule_label')} className="svg-btn" />
+                        <MdPlayArrow title={t(TEACHER_SCHEDULE_LABEL)} className="svg-btn" />
                         {props.submitButtonLabel}
                     </Button>
                 </div>

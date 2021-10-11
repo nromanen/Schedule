@@ -44,6 +44,12 @@ import { links } from '../../constants/links';
 import { places } from '../../constants/places';
 import { Contactless } from '@material-ui/icons';
 import { getTeacherWithPosition } from '../../helper/renderTeacher';
+import {
+    COMMON_EMPTY_SCHEDULE,
+    COMMON_DOWNLOAD_PDF,
+    COMMON_ODD_WEEK,
+    COMMON_EVEN_WEEK,
+} from '../../constants/translationLabels';
 
 const GroupSchedulePage = (props) => {
     const [place, setPlace] = useState(places.TOGETHER);
@@ -62,7 +68,7 @@ const GroupSchedulePage = (props) => {
     const history = useHistory();
 
     const location = useLocation();
-    const emptySchedule = () => <p className="empty_schedule">{t('common:empty_schedule')}</p>;
+    const emptySchedule = () => <p className="empty_schedule">{t(COMMON_EMPTY_SCHEDULE)}</p>;
     const { t } = useTranslation('common');
     const renderDownloadLink = (entity, semesterId, entityId) => {
         let link = '';
@@ -90,7 +96,7 @@ const GroupSchedulePage = (props) => {
                     download
                 >
                     <MdPictureAsPdf className="svg-btn" />
-                    {t('common:download_pdf')}
+                    {t(COMMON_DOWNLOAD_PDF)}
                 </a>
             );
         }
@@ -140,14 +146,14 @@ const GroupSchedulePage = (props) => {
                                 )}
                                 {renderDownloadLink('group', props.semesterId, props.groupId)}
                             </h1>
-                            <h2>{t('common:odd_week')}</h2>
+                            <h2>{t(COMMON_ODD_WEEK)}</h2>
                             {renderGroupTable(
                                 resultArrays.oddArray,
                                 1,
                                 resultArrays.semester,
                                 place,
                             )}
-                            <h2>{t('common:even_week')}</h2>
+                            <h2>{t(COMMON_EVEN_WEEK)}</h2>
                             {renderGroupTable(
                                 resultArrays.evenArray,
                                 0,
@@ -182,9 +188,9 @@ const GroupSchedulePage = (props) => {
                                         props.teacherId,
                                     )}
                                 </h1>
-                                <h2>{t('common:odd_week')}</h2>
+                                <h2>{t(COMMON_ODD_WEEK)}</h2>
                                 {renderWeekTable(teacher.odd, 1, place)}
-                                <h2>{t('common:even_week')}</h2>
+                                <h2>{t(COMMON_EVEN_WEEK)}</h2>
                                 {renderWeekTable(teacher.even, 0, place)}
                             </>
                         );

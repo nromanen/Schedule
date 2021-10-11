@@ -6,7 +6,14 @@ import {
     BACK_END_SUCCESS_OPERATION,
     NO_CURRENT_SEMESTER_ERROR,
     UPDATED_LABEL,
-} from '../constants/services';
+    CLEARED_LABEL,
+    COMMON_SCHEDULE_TITLE,
+    SERVICE_MESSAGE_GROUP_LABEL,
+    FORM_CHOSEN_SEMESTER_LABEL,
+    CHOSEN_SEMESTER_HAS_NOT_GROUPS,
+    SERVICE_MESSAGE_SENT_LABEL,
+    FORM_SCHEDULE_LABEL,
+} from '../constants/translationLabels';
 import { errorHandler, infoHandler, successHandler } from '../helper/handlerAxios';
 import {
     checkAvailabilitySchedule,
@@ -170,7 +177,7 @@ export const editRoomItemToScheduleService = (item) => {
         .then(() => {
             successHandler(
                 i18n.t(BACK_END_SUCCESS_OPERATION, {
-                    cardType: i18n.t('common:schedule_title'),
+                    cardType: i18n.t(COMMON_SCHEDULE_TITLE),
                     actionType: i18n.t(UPDATED_LABEL),
                 }),
             );
@@ -278,8 +285,8 @@ export const sendTeachersScheduleService = (data) => {
             setLoadingService(false);
             successHandler(
                 i18n.t(BACK_END_SUCCESS_OPERATION, {
-                    cardType: i18n.t('formElements:schedule_label'),
-                    actionType: i18n.t('serviceMessages:sent_label'),
+                    cardType: i18n.t(FORM_SCHEDULE_LABEL),
+                    actionType: i18n.t(SERVICE_MESSAGE_SENT_LABEL),
                 }),
             );
         })
@@ -307,9 +314,9 @@ export const showAllPublicGroupsService = (id) => {
                 store.dispatch(showAllGroups(response.data.sort((a, b) => sortGroup(a, b))));
                 if (response.data.length === 0) {
                     infoHandler(
-                        i18n.t('serviceMessages:chosen_semester_has_not_groups', {
-                            cardType: i18n.t('formElements:chosen_semester_label'),
-                            actionType: i18n.t('serviceMessages:group_label'),
+                        i18n.t(CHOSEN_SEMESTER_HAS_NOT_GROUPS, {
+                            cardType: i18n.t(FORM_CHOSEN_SEMESTER_LABEL),
+                            actionType: i18n.t(SERVICE_MESSAGE_GROUP_LABEL),
                         }),
                     );
                 }
@@ -382,8 +389,8 @@ export const clearSchedule = (semesterId) => {
             getScheduleItemsService();
             successHandler(
                 i18n.t(BACK_END_SUCCESS_OPERATION, {
-                    cardType: i18n.t('common:schedule_title'),
-                    actionType: i18n.t('serviceMessages:cleared_label'),
+                    cardType: i18n.t(COMMON_SCHEDULE_TITLE),
+                    actionType: i18n.t(CLEARED_LABEL),
                 }),
             );
         })

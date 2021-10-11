@@ -20,6 +20,21 @@ import {
 import { maxLengthValue, required } from '../../../validation/validateFields';
 
 import { selectTemporaryScheduleService } from '../../../services/temporaryScheduleService';
+import {
+    SAVE_BUTTON_LABEL,
+    GROUP_LABEL,
+    ROOM_LABEL,
+    TYPE_LABEL,
+    SUBJECT_LABEL,
+    CLEAR_BUTTON_LABEL,
+    CLASS_LABEL,
+    FOR_SITE_LABEL,
+    TEACHER_LABEL,
+    EDIT_TEMPORARY_SCHEDULE_FORM,
+    COMMON_HOLIDAY_LABEL,
+    CREATE_TEMPORARY_SCHEDULE_FORM,
+    COMMON_NOTIFY_LABEL,
+} from '../../../constants/translationLabels';
 
 let TemporaryScheduleForm = (props) => {
     const { t } = useTranslation('formElements');
@@ -68,13 +83,13 @@ let TemporaryScheduleForm = (props) => {
             <>
                 <h2 className="form-title under-line">
                     {!temporarySchedule.scheduleId
-                        ? t('edit_temporary_schedule_form')
-                        : t('create_temporary_schedule_form')}
+                        ? t(EDIT_TEMPORARY_SCHEDULE_FORM)
+                        : t(CREATE_TEMPORARY_SCHEDULE_FORM)}
                 </h2>
                 <form onSubmit={handleSubmit}>
                     <Field
                         name="vacation"
-                        label={t('common:holiday_label')}
+                        label={t(COMMON_HOLIDAY_LABEL)}
                         component={renderCheckboxField}
                         checked={isVacation}
                         onChange={handleVacationChange}
@@ -84,7 +99,7 @@ let TemporaryScheduleForm = (props) => {
                         name="teacher"
                         className="form-field"
                         component={renderSelectField}
-                        label={t('teacher_label')}
+                        label={t(TEACHER_LABEL)}
                         validate={[required]}
                         disabled={isVacation}
                         onChange={(event) => {
@@ -108,7 +123,7 @@ let TemporaryScheduleForm = (props) => {
                         name="subject"
                         className="form-field"
                         component={renderSelectField}
-                        label={t('subject_label')}
+                        label={t(SUBJECT_LABEL)}
                         validate={[required]}
                         disabled={isVacation}
                         onChange={(event) => {
@@ -130,7 +145,7 @@ let TemporaryScheduleForm = (props) => {
                         name="group"
                         className="form-field"
                         component={renderSelectField}
-                        label={t('group_label')}
+                        label={t(GROUP_LABEL)}
                         validate={[required]}
                         disabled={isVacation}
                     >
@@ -145,7 +160,7 @@ let TemporaryScheduleForm = (props) => {
                         name="lessonType"
                         className="form-field"
                         component={renderSelectField}
-                        label={t('type_label')}
+                        label={t(TYPE_LABEL)}
                         validate={[required]}
                         disabled={isVacation}
                     >
@@ -160,7 +175,7 @@ let TemporaryScheduleForm = (props) => {
                         name="room"
                         className="form-field"
                         component={renderSelectField}
-                        label={t('room_label')}
+                        label={t(ROOM_LABEL)}
                         validate={[required]}
                         disabled={isVacation}
                     >
@@ -175,7 +190,7 @@ let TemporaryScheduleForm = (props) => {
                         name="period"
                         className="form-field"
                         component={renderSelectField}
-                        label={t('class_label')}
+                        label={t(CLASS_LABEL)}
                         validate={[required]}
                         disabled={isVacation}
                     >
@@ -193,7 +208,7 @@ let TemporaryScheduleForm = (props) => {
                         rowsMax="1"
                         margin="normal"
                         component={renderTextField}
-                        label={t('teacher_label') + t('for_site_label')}
+                        label={t(TEACHER_LABEL) + t(FOR_SITE_LABEL)}
                         validate={[required, maxLengthValue]}
                         disabled={isVacation}
                     />
@@ -204,13 +219,13 @@ let TemporaryScheduleForm = (props) => {
                         rowsMax="1"
                         margin="normal"
                         component={renderTextField}
-                        label={t('subject_label') + t('for_site_label')}
+                        label={t(SUBJECT_LABEL) + t(FOR_SITE_LABEL)}
                         validate={[required, maxLengthValue]}
                         disabled={isVacation}
                     />
                     <Field
                         name="notify"
-                        label={t('common:notify_label')}
+                        label={t(COMMON_NOTIFY_LABEL)}
                         component={renderCheckboxField}
                         checked={notify}
                         onChange={handleNotifyChange}
@@ -230,7 +245,7 @@ let TemporaryScheduleForm = (props) => {
                             color="primary"
                             disabled={invalid || submitting}
                         >
-                            {t('save_button_label')}
+                            {t(SAVE_BUTTON_LABEL)}
                         </Button>
                         <Button
                             className="buttons-style"
@@ -242,7 +257,7 @@ let TemporaryScheduleForm = (props) => {
                                 selectTemporaryScheduleService({});
                             }}
                         >
-                            {t('clear_button_label')}
+                            {t(CLEAR_BUTTON_LABEL)}
                         </Button>
                     </div>
                 </form>

@@ -22,6 +22,21 @@ import { getClearOrCancelTitle, setDisableButton } from '../../helper/disableCom
 import { showAllGroupsService } from '../../services/groupService';
 import { MultiselectForGroups } from '../../helper/MultiselectForGroups';
 import { isObjectEmpty } from '../../helper/ObjectRevision';
+import {
+    COMMON_EDIT,
+    COMMON_CREATE,
+    COMMON_SEMESTER,
+    COMMON_CURRENT_LABEL,
+    COMMON_DEFAULT_LABEL,
+    COMMON_YEAR_LABEL,
+    COMMON_CHOOSE_GROUPS_BUTTON_LABEL,
+    COMMON_SEMESTER_LABEL,
+    COMMON_CLASS_FROM_LABEL,
+    COMMON_CLASS_TO_LABEL,
+    COMMON_DAY_LABEL,
+    COMMON_CLASS_SCHEDULE_MANAGEMENT_TITLE,
+    COMMON_SAVE_BUTTON_LABEL,
+} from '../../constants/translationLabels';
 
 const AddSemesterForm = (props) => {
     const clearCheckboxes = () => {
@@ -311,8 +326,8 @@ const AddSemesterForm = (props) => {
     return (
         <Card class="form-card semester-form">
             <h2 style={{ textAlign: 'center' }}>
-                {props.semester.id ? t('common:edit') : t('common:create')}
-                {` ${t('common:semester')}`}
+                {props.semester.id ? t(COMMON_EDIT) : t(COMMON_CREATE)}
+                {` ${t(COMMON_SEMESTER)}`}
             </h2>
             {selectedGroups.length === 0 ? (
                 <MultiselectForGroups
@@ -338,7 +353,7 @@ const AddSemesterForm = (props) => {
                     <div>
                         <Field
                             name="currentSemester"
-                            label={t('common:current_label')}
+                            label={t(COMMON_CURRENT_LABEL)}
                             labelPlacement="start"
                             component={renderCheckboxField}
                             checked={current}
@@ -347,7 +362,7 @@ const AddSemesterForm = (props) => {
                         />
                         <Field
                             name="defaultSemester"
-                            label={t('common:default_label')}
+                            label={t(COMMON_DEFAULT_LABEL)}
                             labelPlacement="start"
                             component={renderCheckboxField}
                             checked={byDefault}
@@ -361,7 +376,7 @@ const AddSemesterForm = (props) => {
                         className="buttons-style "
                         onClick={openDialogForGroup}
                     >
-                        {t('common:choose_groups_button_label')}
+                        {t(COMMON_CHOOSE_GROUPS_BUTTON_LABEL)}
                     </Button>
                 </div>
                 <Field
@@ -369,14 +384,14 @@ const AddSemesterForm = (props) => {
                     name="year"
                     type="number"
                     component={renderTextField}
-                    label={`${t('common:year_label')}:`}
+                    label={`${t(COMMON_YEAR_LABEL)}:`}
                     validate={[required, minYearValue]}
                 />
                 <Field
                     className="form-field"
                     name="description"
                     component={renderTextField}
-                    label={`${t('common:semester_label')}:`}
+                    label={`${t(COMMON_SEMESTER_LABEL)}:`}
                     validate={[required]}
                 />
                 <div className="form-time-block">
@@ -384,7 +399,7 @@ const AddSemesterForm = (props) => {
                         className="time-input"
                         name="startDay"
                         component={renderMonthPicker}
-                        label={`${t('common:class_from_label')}:`}
+                        label={`${t(COMMON_CLASS_FROM_LABEL)}:`}
                         validate={[required, lessThanDate]}
                         minDate={startTime}
                         onChange={(event, value) => {
@@ -400,7 +415,7 @@ const AddSemesterForm = (props) => {
                         className="time-input"
                         name="endDay"
                         component={renderMonthPicker}
-                        label={`${t('common:class_to_label')}:`}
+                        label={`${t(COMMON_CLASS_TO_LABEL)}:`}
                         validate={[required, greaterThanDate]}
                         minDate={finishTime}
                         disabled={disabledFinishDate}
@@ -410,11 +425,11 @@ const AddSemesterForm = (props) => {
                     />
                 </div>
                 <div className="">
-                    <p>{`${t('common:days_label')}: `}</p>
+                    <p>{`${t(COMMON_DAY_LABEL)}: `}</p>
                     {setSemesterDays()}
                 </div>
                 <div className="">
-                    <p>{`${t('common:ClassSchedule_management_title')}: `}</p>
+                    <p>{`${t(COMMON_CLASS_SCHEDULE_MANAGEMENT_TITLE)}: `}</p>
                     {setSemesterClasses()}
                 </div>
                 <div className="form-buttons-container semester-btns">
@@ -425,7 +440,7 @@ const AddSemesterForm = (props) => {
                         disabled={getDisabledSaveButton()}
                         type="submit"
                     >
-                        {t('common:save_button_label')}
+                        {t(COMMON_SAVE_BUTTON_LABEL)}
                     </Button>
                     <Button
                         type="button"

@@ -1,6 +1,5 @@
 import axios from '../helper/axios';
 import { errorHandler, successHandler } from '../helper/handlerAxios';
-import { BACK_END_SUCCESS_OPERATION } from '../constants/services';
 import i18n from '../helper/i18n';
 import { store } from '../index';
 import {
@@ -19,10 +18,14 @@ import {
 } from '../redux/actions/index';
 import { resetFormHandler } from '../helper/formHelper';
 import { TEMPORARY_SCHEDULE_FORM, TEMPORARY_SCHEDULE_VACATION_FORM } from '../constants/reduxForms';
+import {
+    FORM_TEMPORARY_SCHEDULE_LABEL,
+    BACK_END_SUCCESS_OPERATION,
+} from '../constants/translationLabels';
 
 const handleSuccessMessage = (action) => {
     return i18n.t(BACK_END_SUCCESS_OPERATION, {
-        cardType: i18n.t('formElements:temporary_schedule_label'),
+        cardType: i18n.t(FORM_TEMPORARY_SCHEDULE_LABEL),
         actionType: i18n.t(`serviceMessages:${action}_label`),
     });
 };

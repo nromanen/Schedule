@@ -18,6 +18,11 @@ import { getAllStudentsByGroupId, updateStudentService } from '../../../services
 import { isObjectEmpty } from '../../../helper/ObjectRevision';
 import { successHandler } from '../../../helper/handlerAxios';
 import { UploadFile } from '../../../components/UploadFile/UploadFile';
+import {
+    GROUP_LABEL,
+    STUDENT_LABEL,
+    SERVICE_MESSAGE_STUDENT_LABEL,
+} from '../../../constants/translationLabels';
 
 export const ShowStudentsDialog = (props) => {
     const {
@@ -158,7 +163,7 @@ export const ShowStudentsDialog = (props) => {
         return successHandler(
             i18n.t('serviceMessages:students_exist_in_this_group', {
                 cardType: i18n.t('common:student_title'),
-                actionType: i18n.t('serviceMessages:student_label'),
+                actionType: i18n.t(SERVICE_MESSAGE_STUDENT_LABEL),
             }),
         );
     };
@@ -214,7 +219,7 @@ export const ShowStudentsDialog = (props) => {
                             {students.length === 0 ? (
                                 <>
                                     <h2 className="title-align">
-                                        {`${t('group_label')} - `}
+                                        {`${t(GROUP_LABEL)} - `}
                                         <span>{`${props.group.title}`}</span>
                                     </h2>
                                     {t('no_exist_students_in_group')}
@@ -225,7 +230,7 @@ export const ShowStudentsDialog = (props) => {
                                         <span>
                                             {students.length !== 1
                                                 ? `${t('students_label')} `
-                                                : `${t('student_label')} `}
+                                                : `${t(STUDENT_LABEL)} `}
                                         </span>
                                         {`${t('group_students')} `}
                                         <span>{`${props.group.title}`}</span>

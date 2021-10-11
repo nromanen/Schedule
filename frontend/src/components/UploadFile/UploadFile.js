@@ -6,6 +6,14 @@ import { FaWindowClose } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
 import Button from '@material-ui/core/Button';
 import { setLoadingService } from '../../services/loadingService';
+import {
+    CLOSE_LABEL,
+    COMMON_NAME_LABEL,
+    COMMON_TYPE_LABEL,
+    COMMON_BYTE_SIZE_LABEL,
+    COMMON_SELECT_FILE_LABEL,
+    COMMON_UPLOAD_TITLE,
+} from '../../constants/translationLabels';
 
 export const UploadFile = (props) => {
     const { t } = useTranslation('formElements');
@@ -35,7 +43,7 @@ export const UploadFile = (props) => {
         <Dialog disableBackdropClick aria-labelledby="confirm-dialog-title" open={open}>
             <DialogTitle className="upload-dialog" id="confirm-dialog-title">
                 <FaWindowClose
-                    title={t('close_label')}
+                    title={t(CLOSE_LABEL)}
                     className="close-dialog"
                     variant="contained"
                     onClick={handleCloseDialogFile}
@@ -50,13 +58,13 @@ export const UploadFile = (props) => {
                     />
                     {selectedFile ? (
                         <div>
-                            <p>{`${t('common:name_label')}: ${selectedFile.name}`}</p>
-                            <p>{`${t('common:type_label')}: ${selectedFile.type}`}</p>
-                            <p>{`${t('common:byte_size_label')}: ${selectedFile.size}`}</p>
+                            <p>{`${t(COMMON_NAME_LABEL)}: ${selectedFile.name}`}</p>
+                            <p>{`${t(COMMON_TYPE_LABEL)}: ${selectedFile.type}`}</p>
+                            <p>{`${t(COMMON_BYTE_SIZE_LABEL)}: ${selectedFile.size}`}</p>
                             {/* <p>{`${t('common:last_modified_date')}: ${selectedFile.lastModifiedDate.toLocaleDateString()}`}</p> */}
                         </div>
                     ) : (
-                        <p>{t('common:select_file_label')}</p>
+                        <p>{t(COMMON_SELECT_FILE_LABEL)}</p>
                     )}
                     <div>
                         <Button
@@ -64,10 +72,10 @@ export const UploadFile = (props) => {
                             variant="contained"
                             onClick={handleSubmission}
                             color="primary"
-                            title={t('common:upload_title')}
+                            title={t(COMMON_UPLOAD_TITLE)}
                             disabled={setDisabledSendButton()}
                         >
-                            {t('common:upload_title')}
+                            {t(COMMON_UPLOAD_TITLE)}
                         </Button>
                     </div>
                 </div>

@@ -3,12 +3,12 @@ import { ROOM_FORM_TYPE } from '../constants/reduxForms';
 import { ROOM_TYPES_URL } from '../constants/axios';
 import {
     BACK_END_SUCCESS_OPERATION,
-    ROOM_LABEL,
-    TYPE_LABEL,
+    FORM_ROOM_LABEL,
+    FORM_TYPE_LABEL,
     UPDATED_LABEL,
     CREATED_LABEL,
     DELETED_LABEL,
-} from '../constants/services';
+} from '../constants/translationLabels';
 import axios from '../helper/axios';
 import {
     getAllRoomTypes,
@@ -37,7 +37,7 @@ export const deleteTypeService = (roomTypeId) => {
             store.dispatch(deleteType(roomTypeId));
             successHandler(
                 i18n.t(BACK_END_SUCCESS_OPERATION, {
-                    cardType: `${i18n.t(ROOM_LABEL)} ${i18n.t(TYPE_LABEL)}`,
+                    cardType: `${i18n.t(FORM_ROOM_LABEL)} ${i18n.t(FORM_TYPE_LABEL)}`,
                     actionType: i18n.t(DELETED_LABEL),
                 }),
             );
@@ -53,7 +53,7 @@ export const putNewType = (values) => {
             resetFormHandler(ROOM_FORM_TYPE);
             successHandler(
                 i18n.t(BACK_END_SUCCESS_OPERATION, {
-                    cardType: `${i18n.t(ROOM_LABEL)} ${i18n.t(TYPE_LABEL)}`,
+                    cardType: `${i18n.t(FORM_ROOM_LABEL)} ${i18n.t(FORM_TYPE_LABEL)}`,
                     actionType: i18n.t(UPDATED_LABEL),
                 }),
             );
@@ -69,7 +69,7 @@ export const postNewType = (values) => {
             resetFormHandler(ROOM_FORM_TYPE);
             successHandler(
                 i18n.t(BACK_END_SUCCESS_OPERATION, {
-                    cardType: `${i18n.t(ROOM_LABEL)} ${i18n.t(TYPE_LABEL)}`,
+                    cardType: `${i18n.t(FORM_ROOM_LABEL)} ${i18n.t(FORM_TYPE_LABEL)}`,
                     actionType: i18n.t(CREATED_LABEL),
                 }),
             );

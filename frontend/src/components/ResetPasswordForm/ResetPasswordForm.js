@@ -15,6 +15,11 @@ import { authTypes } from '../../constants/auth';
 
 import { email, required } from '../../validation/validateFields';
 import { links } from '../../constants/links';
+import {
+    EMAIL_LABEL,
+    LOGIN_TITLE,
+    RESET_PASSWORD_PAGE_TITLE,
+} from '../../constants/translationLabels';
 
 let ResetPasswordForm = (props) => {
     const { t } = useTranslation('formElements');
@@ -40,7 +45,7 @@ let ResetPasswordForm = (props) => {
                 name="email"
                 className="form-field"
                 component={renderTextField}
-                label={t('email_label')}
+                label={t(EMAIL_LABEL)}
                 {...(!error ? emailValidate : error)}
                 onChange={(e) => {
                     errorHandling(e.target.value);
@@ -64,7 +69,7 @@ let ResetPasswordForm = (props) => {
                     }}
                 >
                     <Link className="navLinks" to={links.LOGIN}>
-                        {translation('login_page_title')}
+                        {translation(LOGIN_TITLE)}
                     </Link>
                 </button>
             </div>
@@ -77,7 +82,7 @@ let ResetPasswordForm = (props) => {
 
     return (
         <Card class="auth-card">
-            <h2 className="under-line">{translation('reset_password_page_title')}</h2>
+            <h2 className="under-line">{translation(RESET_PASSWORD_PAGE_TITLE)}</h2>
             {form}
         </Card>
     );

@@ -27,6 +27,13 @@ import {
 import { disabledCard } from '../../constants/disabledCard';
 import NavigationPage from '../../components/Navigation/NavigationPage';
 import { navigation, navigationNames } from '../../constants/navigation';
+import {
+    EDIT_TITLE,
+    SUBJECT_Y_LABEL,
+    COMMON_SET_DISABLED,
+    COMMON_SET_ENABLED,
+    DELETE_TITLE,
+} from '../../constants/translationLabels';
 
 const SubjectPage = (props) => {
     const { t } = useTranslation('formElements');
@@ -101,7 +108,7 @@ const SubjectPage = (props) => {
                     )}
                 </aside>
                 <section className="container-flex-wrap wrapper">
-                    {visibleSubjects.length === 0 && <NotFound name={t('subject_y_label')} />}
+                    {visibleSubjects.length === 0 && <NotFound name={t(SUBJECT_Y_LABEL)} />}
                     {visibleSubjects.map((subject) => (
                         <Card key={subject.id} class="subject-card done-card">
                             <h2 className="subject-card__name">{subject.name}</h2>
@@ -109,7 +116,7 @@ const SubjectPage = (props) => {
                                 {disabled ? (
                                     <IoMdEye
                                         className="svg-btn copy-btn"
-                                        title={t('common:set_enabled')}
+                                        title={t(COMMON_SET_ENABLED)}
                                         onClick={() => {
                                             setHideDialog(disabledCard.SHOW);
                                             handleClickOpen(subject.id);
@@ -119,7 +126,7 @@ const SubjectPage = (props) => {
                                     <>
                                         <GiSightDisabled
                                             className="svg-btn copy-btn"
-                                            title={t('common:set_disabled')}
+                                            title={t(COMMON_SET_DISABLED)}
                                             onClick={() => {
                                                 setHideDialog(disabledCard.HIDE);
                                                 handleClickOpen(subject.id);
@@ -127,7 +134,7 @@ const SubjectPage = (props) => {
                                         />
                                         <FaEdit
                                             className="svg-btn edit-btn"
-                                            title={t('edit_title')}
+                                            title={t(EDIT_TITLE)}
                                             onClick={() => handleEdit(subject.id)}
                                         />
                                     </>
@@ -135,12 +142,12 @@ const SubjectPage = (props) => {
 
                                 <MdDelete
                                     className="svg-btn delete-btn"
-                                    title={t('delete_title')}
+                                    title={t(DELETE_TITLE)}
                                     onClick={() => handleClickOpen(subject.id)}
                                 />
                             </div>
                             {/* <p className="subject-card__description">
-                                {t('subject_label') + ':'}{' '}
+                                {t(SUBJECT_LABEL) + ':'}{' '}
                             </p> */}
                         </Card>
                     ))}

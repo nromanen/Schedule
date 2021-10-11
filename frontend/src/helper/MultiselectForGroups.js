@@ -4,6 +4,12 @@ import { Dialog, DialogTitle } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import './multiselect.scss';
 import { useTranslation } from 'react-i18next';
+import {
+    CHOOSE_GROUPS,
+    CONFIRM_GROUPS,
+    CANCEL_GROUPS,
+    ALL_GROUPS,
+} from '../constants/translationLabels';
 
 export const MultiselectForGroups = (props) => {
     const { t } = useTranslation('common');
@@ -13,7 +19,7 @@ export const MultiselectForGroups = (props) => {
 
     const selectAllOption = {
         value: '<SELECT_ALL>',
-        label: t('all_groups'),
+        label: t(ALL_GROUPS),
     };
 
     const isSelectAllSelected = () => {
@@ -63,7 +69,7 @@ export const MultiselectForGroups = (props) => {
                     hideSelectedOptions={false}
                     closeMenuOnSelect={false}
                     isMulti
-                    placeholder={t('choose_groups')}
+                    placeholder={t(CHOOSE_GROUPS)}
                 />
             </DialogTitle>
             <div className="buttons-container">
@@ -73,7 +79,7 @@ export const MultiselectForGroups = (props) => {
                     color="primary"
                     onClick={onClose}
                 >
-                    {t('confirm_groups')}
+                    {t(CONFIRM_GROUPS)}
                 </Button>
                 <Button
                     className="dialog-button"
@@ -81,7 +87,7 @@ export const MultiselectForGroups = (props) => {
                     color="primary"
                     onClick={onCancel}
                 >
-                    {t('cancel_groups')}
+                    {t(CANCEL_GROUPS)}
                 </Button>
             </div>
         </Dialog>

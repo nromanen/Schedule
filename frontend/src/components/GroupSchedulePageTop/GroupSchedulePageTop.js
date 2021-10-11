@@ -26,7 +26,15 @@ import { SCHEDULE_SEARCH_FORM } from '../../constants/reduxForms';
 import { required } from '../../validation/validateFields';
 import { places } from '../../constants/places';
 import { getTeacherFullName } from '../../helper/renderTeacher';
-import { SEMESTER_LABEL } from '../../constants/services';
+import {
+    FORM_SEMESTER_LABEL,
+    FORM_TEACHER_LABEL,
+    FORM_GROUP_LABEL,
+    GREETING_SCHEDULE_MESSAGE,
+    GREETING_SCHEDULE_MESSAGE_HINT,
+    TEACHER_SCHEDULE_LABEL,
+    PLACE_FOR_CLASS_LABEL,
+} from '../../constants/translationLabels';
 
 const shortid = require('shortid');
 
@@ -71,7 +79,7 @@ const GroupSchedulePageTop = (props) => {
                         id="semester"
                         name="semester"
                         component={renderSelectField}
-                        label={t(SEMESTER_LABEL)}
+                        label={t(FORM_SEMESTER_LABEL)}
                         type="text"
                         validate={[required]}
                         onChange={(e) => setSemesterId(e.target.value)}
@@ -97,7 +105,7 @@ const GroupSchedulePageTop = (props) => {
                 id="teacher"
                 name="teacher"
                 component={renderSelectField}
-                label={t('formElements:teacher_label')}
+                label={t(FORM_TEACHER_LABEL)}
                 type="text"
                 onChange={() => props.change('group', 0)}
             >
@@ -117,7 +125,7 @@ const GroupSchedulePageTop = (props) => {
                 id="group"
                 name="group"
                 component={renderSelectField}
-                label={t('formElements:group_label')}
+                label={t(FORM_GROUP_LABEL)}
                 type="text"
                 onChange={() => {
                     props.change('teacher', 0);
@@ -143,8 +151,8 @@ const GroupSchedulePageTop = (props) => {
 
     return (
         <section className={classes.root}>
-            <p>{t('greetings_schedule_message')}</p>
-            <p>{t('greetings_schedule_message_hint')}</p>
+            <p>{t(GREETING_SCHEDULE_MESSAGE)}</p>
+            <p>{t(GREETING_SCHEDULE_MESSAGE_HINT)}</p>
             <section className="form-buttons-container top">
                 <Card class="form-card width-auto">
                     <form onSubmit={handleSubmit}>
@@ -158,14 +166,12 @@ const GroupSchedulePageTop = (props) => {
                             type="submit"
                             disabled={pristine || submitting}
                         >
-                            <MdPlayArrow title={t('teacher_schedule_label')} className="svg-btn" />
+                            <MdPlayArrow title={t(TEACHER_SCHEDULE_LABEL)} className="svg-btn" />
                         </Button>
                     </form>
                 </Card>
                 <span id="select-place">
-                    <label htmlFor="demo-controlled-open-select">
-                        {t('place_for_class_label')}
-                    </label>
+                    <label htmlFor="demo-controlled-open-select">{t(PLACE_FOR_CLASS_LABEL)}</label>
                     <Select
                         className="place"
                         labelId="demo-controlled-open-select-label"

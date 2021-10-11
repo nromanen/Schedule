@@ -2,11 +2,11 @@ import { store } from '../index';
 import { DISABLED_ROOMS_URL, ROOM_URL } from '../constants/axios';
 import {
     BACK_END_SUCCESS_OPERATION,
-    ROOM_LABEL,
+    FORM_ROOM_LABEL,
     UPDATED_LABEL,
     CREATED_LABEL,
     DELETED_LABEL,
-} from '../constants/services';
+} from '../constants/translationLabels';
 import { ROOM_FORM } from '../constants/reduxForms';
 import axios from '../helper/axios';
 import {
@@ -49,7 +49,7 @@ export const deleteRoomCardService = (id) => {
             showListOfRoomsService();
             successHandler(
                 i18n.t(BACK_END_SUCCESS_OPERATION, {
-                    cardType: i18n.t(ROOM_LABEL),
+                    cardType: i18n.t(FORM_ROOM_LABEL),
                     actionType: i18n.t(DELETED_LABEL),
                 }),
             );
@@ -67,7 +67,7 @@ const put = (values) => {
             showListOfRoomsService();
             successHandler(
                 i18n.t(BACK_END_SUCCESS_OPERATION, {
-                    cardType: i18n.t(ROOM_LABEL),
+                    cardType: i18n.t(FORM_ROOM_LABEL),
                     actionType: i18n.t(UPDATED_LABEL),
                 }),
             );
@@ -93,7 +93,7 @@ const post = (values) => {
             resetFormHandler(ROOM_FORM);
             successHandler(
                 i18n.t(BACK_END_SUCCESS_OPERATION, {
-                    cardType: i18n.t(ROOM_LABEL),
+                    cardType: i18n.t(FORM_ROOM_LABEL),
                     actionType: i18n.t(CREATED_LABEL),
                 }),
             );

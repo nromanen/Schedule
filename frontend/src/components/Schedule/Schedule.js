@@ -21,7 +21,7 @@ import { setLoadingService } from '../../services/loadingService';
 
 import { cssClasses } from '../../constants/schedule/cssClasses';
 import { colors } from '../../constants/schedule/colors';
-
+import { CLASS_SCHEDULE, WEEK_LABEL, FORM_DAY_LABEL } from '../../constants/translationLabels';
 import './Schedule.scss';
 
 const Schedule = (props) => {
@@ -307,13 +307,11 @@ const Schedule = (props) => {
                                 >
                                     <IoMdMore
                                         className="more-icon"
-                                        title={`${t(`formElements:day_label`)}: ${t(
+                                        title={`${t(FORM_DAY_LABEL)}: ${t(
                                             `day_of_week_${lesson.day.name.toUpperCase()}`,
-                                        ).toLowerCase()}\n${t(`week_label`)}: ${t(
+                                        ).toLowerCase()}\n${t(WEEK_LABEL)}: ${t(
                                             `week_${lesson.week}_title`,
-                                        )}\n${t('class_schedule')}: ${
-                                            lesson.classNumber.class_name
-                                        }`}
+                                        )}\n${t(CLASS_SCHEDULE)}: ${lesson.classNumber.class_name}`}
                                     />
                                     {itemInBoard(group, lesson, index)}
                                 </Board>

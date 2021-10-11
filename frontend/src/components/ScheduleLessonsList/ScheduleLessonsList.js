@@ -10,6 +10,11 @@ import ScheduleItem from '../ScheduleItem/ScheduleItem';
 import { selectGroupIdService } from '../../services/lessonService';
 
 import { firstStringLetterCapital } from '../../helper/strings';
+import {
+    FORM_GROUP_LABEL,
+    COMMON_SELECT_GROUP_SCHEDULE,
+    LESSON_NO_LESSON_FOR_GROUP_LABEL,
+} from '../../constants/translationLabels';
 
 const GroupField = styled(TextField)({
     width: '150px',
@@ -75,7 +80,7 @@ const ScheduleLessonsList = (props) => {
 
     return (
         <>
-            {t('common:select_group_schedule')}
+            {t(COMMON_SELECT_GROUP_SCHEDULE)}
             <Autocomplete
                 {...defaultProps}
                 id="group"
@@ -86,7 +91,7 @@ const ScheduleLessonsList = (props) => {
                     handleGroupSelect(newValue);
                 }}
                 renderInput={(params) => (
-                    <GroupField {...params} label={t('formElements:group_label')} margin="normal" />
+                    <GroupField {...params} label={t(FORM_GROUP_LABEL)} margin="normal" />
                 )}
             />
             {lessons.length > 0 ? (
@@ -94,7 +99,7 @@ const ScheduleLessonsList = (props) => {
                     {lessons.map((lesson) => lessonItems(lesson))}
                 </Board>
             ) : groupId ? (
-                t('lesson_no_lesson_for_group_label')
+                t(LESSON_NO_LESSON_FOR_GROUP_LABEL)
             ) : (
                 ''
             )}

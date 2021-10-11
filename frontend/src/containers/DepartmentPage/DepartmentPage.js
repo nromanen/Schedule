@@ -31,6 +31,14 @@ import { handleSnackbarCloseService } from '../../services/snackbarService';
 import { getAllTeachersByDepartmentId } from '../../redux/actions/teachers';
 import { showAllPublicTeachersByDepartmentService } from '../../services/scheduleService';
 import ShowDataDialog from '../../share/modals/modal/showDataDialog';
+import {
+    EDIT_TITLE,
+    DEPARTMENT_LABEL,
+    COMMON_SET_DISABLED,
+    COMMON_SET_ENABLED,
+    DELETE_TITLE,
+    SHOW_TEACHER_TITLE,
+} from '../../constants/translationLabels';
 
 function DepartmentPage(props) {
     const { t } = useTranslation('formElements');
@@ -135,7 +143,7 @@ function DepartmentPage(props) {
                     )}
                 </aside>
                 <section className="container-flex-wrap wrapper">
-                    {visibleDepartments.length === 0 && <NotFound name={t('department_y_label')} />}
+                    {visibleDepartments.length === 0 && <NotFound name={t(DEPARTMENT_LABEL)} />}
                     {visibleDepartments.map((department) => (
                         <Card key={department.id} class="subject-card department-card">
                             <h2 className="subject-card__name">{department.name}</h2>
@@ -143,7 +151,7 @@ function DepartmentPage(props) {
                                 {isDisabled ? (
                                     <IoMdEye
                                         className="svg-btn copy-btn"
-                                        title={t('common:set_enabled')}
+                                        title={t(COMMON_SET_ENABLED)}
                                         onClick={() => {
                                             setHideDialog(disabledCard.SHOW);
                                             deleteDepartment(department.id);
@@ -154,7 +162,7 @@ function DepartmentPage(props) {
                                     <>
                                         <GiSightDisabled
                                             className="svg-btn copy-btn"
-                                            title={t('common:set_disabled')}
+                                            title={t(COMMON_SET_DISABLED)}
                                             onClick={() => {
                                                 // setDisabled(department)
                                                 setHideDialog(disabledCard.HIDE);
@@ -165,7 +173,7 @@ function DepartmentPage(props) {
 
                                         <FaEdit
                                             className="svg-btn edit-btn"
-                                            title={t('edit_title')}
+                                            title={t(EDIT_TITLE)}
                                             onClick={() => {
                                                 setEditDepartment(true);
                                                 setDepartmentIntoForm(department.id);
@@ -176,7 +184,7 @@ function DepartmentPage(props) {
 
                                 <MdDelete
                                     className="svg-btn delete-btn"
-                                    title={t('delete_title')}
+                                    title={t(DELETE_TITLE)}
                                     onClick={() => {
                                         setDepartment({});
                                         deleteDepartment(department.id);
@@ -184,7 +192,7 @@ function DepartmentPage(props) {
                                 />
                                 <FaChalkboardTeacher
                                     className="svg-btn delete-btn"
-                                    title={t('show_teacher_title')}
+                                    title={t(SHOW_TEACHER_TITLE)}
                                     onClick={() => {
                                         showAllPublicTeachersByDepartmentService(department.id);
                                         getDepartmentByIdService(department.id);
