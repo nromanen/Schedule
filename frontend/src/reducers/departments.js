@@ -65,9 +65,9 @@ const reducer = (state = initialState, action) => {
             });
         }
         case actionTypes.GET_DEPARTMENT_BY_ID: {
-            let getDepartment = state.departments.filter(
+            let getDepartment = state.departments.find(
                 (department) => department.id === action.result,
-            )[0];
+            );
             if (!getDepartment) {
                 getDepartment = { id: null };
             }
@@ -76,23 +76,26 @@ const reducer = (state = initialState, action) => {
             });
         }
         case actionTypes.UPDATE_DEPARTMENT: {
-            const updatedDepartments = state.departments.map((department) => {
-                if (department.id === action.result.id) {
-                    return { ...department, ...action.result };
-                }
-                return department;
+            const departmentIndex = state.departments.findIndex((department) => {
+                return department.id === action.result.id;
             });
+            const departments = [...state.departments];
+            departments[departmentIndex] = {
+                ...departments[departmentIndex],
+                ...action.result,
+            };
 
-            const updatedDisabledDepartments = state.disabledDepartments.map((disabledDept) => {
-                if (disabledDept.id === action.result.id) {
-                    return { ...disabledDept, ...action.result };
-                }
-                return disabledDept;
+            const disDepartmentIndex = state.disabledDepartments.findIndex((disabledDept) => {
+                return disabledDept.id === action.result;
             });
-
+            const disabledDepartments = [...state.departments];
+            disabledDepartments[disDepartmentIndex] = {
+                ...disabledDepartments[disDepartmentIndex],
+                ...action.result,
+            };
             return updateObject(state, {
-                departments: updatedDepartments,
-                disabledDepartments: updatedDisabledDepartments,
+                departments,
+                disabledDepartments,
                 department: {},
             });
         }

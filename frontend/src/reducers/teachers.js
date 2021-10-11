@@ -35,7 +35,7 @@ const reducer = (
                 teacher: action.result,
             });
         case actionTypes.SELECT_TEACHER: {
-            let teacher = state.teachers.filter((teach) => teach.id === action.result)[0];
+            let teacher = state.teachers.find((teach) => teach.id === action.result);
             if (!teacher) {
                 teacher = { id: null };
             }
@@ -44,15 +44,15 @@ const reducer = (
             });
         }
         case actionTypes.UPDATE_TEACHER: {
-            const updatedTeacher = state.teachers.map((teacher) => {
-                if (teacher.id === action.result.id) {
-                    return { ...teacher, ...action.result };
-                }
-                return teacher;
-            });
+            const teacherIndex = state.teachers.findIndex(({ id }) => id === action.result.id);
+            const teachers = [...state.teachers];
+            teachers[teacherIndex] = {
+                ...teachers[teacherIndex],
+                ...action.result,
+            };
             return updateObject(state, {
                 teacher: {},
-                teachers: updatedTeacher,
+                teachers,
             });
         }
 

@@ -39,9 +39,9 @@ const reducer = (
                 disabledRooms: [...action.result],
             });
         case actionTypes.SELECT_ONE_ROOM: {
-            const one = state.rooms.filter((roomItem) => roomItem.id === action.result);
+            const one = state.rooms.find((roomItem) => roomItem.id === action.result);
             return updateObject(state, {
-                oneRoom: one[0],
+                oneRoom: one,
             });
         }
         case actionTypes.UPDATE_ONE_ROOM: {

@@ -23,11 +23,11 @@ const reducer = (
         case actionTypes.GET_CLASS_SCHEDULE_LIST:
             return state;
         case actionTypes.GET_CLASS_SCHEDULE_ONE: {
-            const one = state.classScheduler.filter(
+            const one = state.classScheduler.find(
                 (classScheduleItem) => classScheduleItem.id === action.classSchedulOne,
             );
             return updateObject(state, {
-                classScheduleOne: one[0],
+                classScheduleOne: one,
             });
         }
         case actionTypes.DELETE_CLASS_SCHEDULE_ONE: {

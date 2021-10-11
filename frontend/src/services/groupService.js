@@ -1,6 +1,6 @@
 import { reset } from 'redux-form';
 
-import { store } from '../redux';
+import { store } from '../store';
 
 import axios from '../helper/axios';
 import { DISABLED_GROUPS_URL, GROUP_URL } from '../constants/axios';
@@ -13,7 +13,7 @@ import {
     updateGroup,
     clearGroup,
     setDisabledGroups,
-} from '../redux/actions/index';
+} from '../actions/index';
 import { errorHandler, successHandler } from '../helper/handlerAxios';
 import i18n from '../helper/i18n';
 import { resetFormHandler } from '../helper/formHelper';

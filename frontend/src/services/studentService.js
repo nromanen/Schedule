@@ -1,8 +1,8 @@
 import axios from '../helper/axios';
 import { STUDENT_URL, SUBJECT_URL } from '../constants/axios';
-import { store } from '../redux';
+import { store } from '../store';
 
-import { addSubject, deleteSubject, selectGroup, updateSubject } from '../redux/actions';
+import { addSubject, deleteSubject, selectGroup, updateSubject } from '../actions';
 import { resetFormHandler } from '../helper/formHelper';
 import { STUDENT_FORM, SUBJECT_FORM } from '../constants/reduxForms';
 import { errorHandler, successHandler } from '../helper/handlerAxios';
@@ -14,7 +14,7 @@ import {
     showAllStudents,
     showAllStudentsByGroupId,
     updateStudent,
-} from '../redux/actions/students';
+} from '../actions/students';
 import {
     getDisabledSubjectsService,
     selectSubjectService,

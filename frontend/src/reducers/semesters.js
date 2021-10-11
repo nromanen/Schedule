@@ -37,9 +37,7 @@ const reducer = (state = initialState, action) => {
             });
 
         case actionTypes.SELECT_SEMESTER: {
-            let selectSemester = state.semesters.filter(
-                (semester) => semester.id === action.result,
-            )[0];
+            let selectSemester = state.semesters.find((semester) => semester.id === action.result);
             if (!selectSemester) {
                 selectSemester = { id: null };
             }
@@ -48,14 +46,14 @@ const reducer = (state = initialState, action) => {
             });
         }
         case actionTypes.UPDATE_SEMESTER: {
-            const updatedSemesters = state.semesters.map((semester) => {
-                if (semester.id === action.result.id) {
-                    return { ...semester, ...action.result };
-                }
-                return semester;
-            });
+            const semesterIndex = state.semesters.findIndex(({ id }) => id === action.result.id);
+            const semesters = [...state.semesters];
+            semesters[semesterIndex] = {
+                ...semesters[semesterIndex],
+                ...action.result,
+            };
             return updateObject(state, {
-                semesters: updatedSemesters,
+                semesters,
                 semester: {},
             });
         }

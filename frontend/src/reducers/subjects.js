@@ -31,7 +31,7 @@ const reducer = (state = initialState, action) => {
             });
 
         case actionTypes.SELECT_SUBJECT: {
-            let subject = state.subjects.filter((subj) => subj.id === action.result)[0];
+            let subject = state.subjects.find((subj) => subj.id === action.result);
             if (!subject) {
                 subject = { id: null };
             }
@@ -40,14 +40,14 @@ const reducer = (state = initialState, action) => {
             });
         }
         case actionTypes.UPDATE_SUBJECT: {
-            const updatedSubjects = state.subjects.map((subject) => {
-                if (subject.id === action.result.id) {
-                    return { ...subject, ...action.result };
-                }
-                return subject;
-            });
+            const subjectIndex = state.subjects.findIndex(({ id }) => id === action.result.id);
+            const subjects = [...state.subjects];
+            subjects[subjectIndex] = {
+                ...subjects[subjectIndex],
+                ...action.result,
+            };
             return updateObject(state, {
-                subjects: updatedSubjects,
+                subjects,
                 subject: {},
             });
         }

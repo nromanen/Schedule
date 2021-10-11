@@ -1,5 +1,5 @@
 import axios from '../helper/axios';
-import { store } from '../redux';
+import { store } from '../store';
 
 import { LESSON_TYPES_URL, LESSON_URL, COPY_LESSON_URL } from '../constants/axios';
 import { LESSON_FORM } from '../constants/reduxForms';
@@ -16,7 +16,7 @@ import {
     setUniqueError,
     storeLessonCard,
     updateLessonCard,
-} from '../redux/actions/index';
+} from '../actions/index';
 
 import { snackbarTypes } from '../constants/snackbarTypes';
 

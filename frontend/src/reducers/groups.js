@@ -33,9 +33,7 @@ const reducer = (state = initialState, action) => {
             });
 
         case actionTypes.SELECT_GROUP: {
-            let selectedGroup = state.groups.filter(
-                (group) => group.id === Number(action.result),
-            )[0];
+            let selectedGroup = state.groups.find((group) => group.id === Number(action.result));
 
             if (!selectedGroup) {
                 selectedGroup = { id: null };
@@ -45,14 +43,16 @@ const reducer = (state = initialState, action) => {
             });
         }
         case actionTypes.UPDATE_GROUP: {
-            const updatedGroups = state.groups.map((group) => {
-                if (group.id === action.result.id) {
-                    return { ...group, ...action.result };
-                }
-                return group;
-            });
+            const groupIndex = state.groups.findIndex(({ id }) => id === action.result.id);
+            const groups = [...state.groups];
+
+            groups[groupIndex] = {
+                ...groups[groupIndex],
+                ...action.result,
+            };
+
             return updateObject(state, {
-                groups: updatedGroups,
+                groups,
                 group: {},
             });
         }

@@ -1,4 +1,4 @@
-import { store } from '../redux';
+import { store } from '../store';
 
 import { ROOM_FORM_TYPE } from '../constants/reduxForms';
 import { ROOM_TYPES_URL } from '../constants/axios';
@@ -10,7 +10,7 @@ import {
     updateOneType,
     postOneType,
     getOneNewType,
-} from '../redux/actions/roomTypes';
+} from '../actions/roomTypes';
 
 import i18n from '../helper/i18n';
 import { errorHandler, successHandler } from '../helper/handlerAxios';

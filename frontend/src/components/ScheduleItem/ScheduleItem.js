@@ -4,7 +4,7 @@ import { MdDelete, MdEdit } from 'react-icons/md';
 import { FaUserPlus } from 'react-icons/fa';
 import Card from '../../share/Card/Card';
 import { getTeacherFullName, getTeacherName } from '../../helper/renderTeacher';
-import groups from '../../redux/reducers/groups';
+import groups from '../../reducers/groups';
 
 const ScheduleItem = (props) => {
     let { lesson } = props;

@@ -24,7 +24,7 @@ const reducer = (state = initialState, action) => {
             });
         }
         case actionTypes.SET_STUDENT: {
-            let student = state.students.filter((stud) => stud.id === Number(action.result))[0];
+            let student = state.students.find((stud) => stud.id === Number(action.result));
 
             if (!student) {
                 student = { id: null };
@@ -34,14 +34,14 @@ const reducer = (state = initialState, action) => {
             });
         }
         case actionTypes.UPDATE_STUDENT: {
-            const updatedStudents = state.students.map((student) => {
-                if (student.id === action.result.id) {
-                    return { ...student, ...action.result };
-                }
-                return student;
-            });
+            const studentIndex = state.students.findIndex(({ id }) => id === action.result.id);
+            const students = [...state.students];
+            students[studentIndex] = {
+                ...students[studentIndex],
+                ...action.result,
+            };
             return updateObject(state, {
-                students: updatedStudents,
+                students,
                 student: {},
             });
         }

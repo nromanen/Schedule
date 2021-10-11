@@ -1,4 +1,4 @@
-import { store } from '../redux';
+import { store } from '../store';
 
 import axios from '../helper/axios';
 import { DISABLED_SUBJECTS_URL, SUBJECT_URL } from '../constants/axios';
@@ -11,7 +11,7 @@ import {
     setDisabledSubjects,
     showAllSubjects,
     updateSubject,
-} from '../redux/actions/index';
+} from '../actions/index';
 import i18n from '../helper/i18n';
 import { errorHandler, successHandler } from '../helper/handlerAxios';
 import { resetFormHandler } from '../helper/formHelper';

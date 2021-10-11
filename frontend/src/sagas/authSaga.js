@@ -1,6 +1,6 @@
 import { call, put } from 'redux-saga/effects';
 import jwtDecode from 'jwt-decode';
-import * as actionTypes from '../redux/actions/actionsType';
+import * as actionTypes from '../actions/actionsType';
 
 import { authUserService } from '../services/authService';
 

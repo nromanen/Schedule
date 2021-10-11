@@ -1,4 +1,4 @@
-import { store } from '../redux';
+import { store } from '../store';
 
 import {
     DISABLED_TEACHERS_URL,
@@ -18,7 +18,7 @@ import {
     setDisabledTeachers,
     showAllTeachers,
     updateTeacherCard,
-} from '../redux/actions';
+} from '../actions';
 import { errorHandler, successHandler } from '../helper/handlerAxios';
 import { resetFormHandler } from '../helper/formHelper';
 import { setLoadingService } from './loadingService';

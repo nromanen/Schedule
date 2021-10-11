@@ -30,7 +30,7 @@ const reducer = (state = initialState, action) => {
             });
         }
         case actionTypes.SELECT_LESSON_CARD: {
-            let lesson = state.lessons.filter((less) => less.id === action.result)[0];
+            let lesson = state.lessons.find((less) => less.id === action.result);
             if (!lesson) {
                 lesson = { id: null };
             }
@@ -39,14 +39,15 @@ const reducer = (state = initialState, action) => {
             });
         }
         case actionTypes.UPDATE_LESSON_CARD: {
-            const updatedLessons = state.lessons.map((lesson) => {
-                if (lesson.id === action.result.id) {
-                    return { ...lesson, ...action.result };
-                }
-                return lesson;
-            });
+            const lessonIndex = state.lessons.findIndex(({ id }) => id === action.result.id);
+            const lessons = [...state.lessons];
+
+            lessons[lessonIndex] = {
+                ...lessons[lessonIndex],
+                ...action.result,
+            }
             return updateObject(state, {
-                lessons: updatedLessons,
+                lessons,
                 lesson: {},
             });
         }

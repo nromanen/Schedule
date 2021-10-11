@@ -1,7 +1,7 @@
 import axios from '../helper/axios';
-import { store } from '../redux';
+import { store } from '../store';
 
-import { showFreeRooms, clearFreeRooms } from '../redux/actions/freeRooms';
+import { showFreeRooms, clearFreeRooms } from '../actions/freeRooms';
 import { FREE_ROOMS_URL } from '../constants/axios';
 import { FREE_ROOMS } from '../constants/reduxForms';
 

@@ -1,5 +1,5 @@
 import i18n from '../helper/i18n';
-import { store } from '../redux';
+import { store } from '../store';
 
 import axios from '../helper/axios';
 import {
@@ -13,7 +13,7 @@ import {
     SCHEDULE_SEMESTER_ITEMS_URL,
     GROUPS_URL,
 } from '../constants/axios';
-import { setDisabledSemesters, setError } from '../redux/actions/semesters';
+import { setDisabledSemesters, setError } from '../actions/semesters';
 import { SEMESTER_FORM } from '../constants/reduxForms';
 import { snackbarTypes } from '../constants/snackbarTypes';
 import { handleSnackbarOpenService } from './snackbarService';
@@ -30,7 +30,7 @@ import {
     setScheduleType,
     setFullSchedule,
     setScheduleItems,
-} from '../redux/actions/index';
+} from '../actions/index';
 
 import { errorHandler, successHandler } from '../helper/handlerAxios';
 import { resetFormHandler } from '../helper/formHelper';

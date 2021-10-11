@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
-import { store } from '../redux';
+import { store } from '../store';
 
 import axios from '../helper/axios';
 import i18n from '../helper/i18n';
@@ -25,7 +25,7 @@ import {
     showAllTeachers,
     setTeacherRangeSchedule,
     setTeacherViewType,
-} from '../redux/actions/index';
+} from '../actions/index';
 
 import {
     setLoadingService,
@@ -62,8 +62,8 @@ import { snackbarTypes } from '../constants/snackbarTypes';
 import { showBusyRooms } from './busyRooms';
 import { TEACHER_SCHEDULE_FORM } from '../constants/reduxForms';
 import { resetFormHandler } from '../helper/formHelper';
-import { getAllTeachersByDepartmentId } from '../redux/actions/teachers';
-import departments from '../redux/reducers/departments';
+import { getAllTeachersByDepartmentId } from '../actions/teachers';
+import departments from '../reducers/departments';
 import { sortGroup } from './groupService';
 
 export const getCurrentSemesterService = () => {

@@ -1,5 +1,5 @@
 import axios from '../helper/axios';
-import { store } from '../redux';
+import { store } from '../store';
 
 import { CLASS_URL, PUBLIC_CLASSES_URL } from '../constants/axios';
 
@@ -12,7 +12,7 @@ import {
     deleteClassScheduleOne,
     updateClassScheduleOne,
     clearClassScheduleOne,
-} from '../redux/actions/class';
+} from '../actions/class';
 
 import i18n from '../helper/i18n';
 import { errorHandler, successHandler } from '../helper/handlerAxios';
