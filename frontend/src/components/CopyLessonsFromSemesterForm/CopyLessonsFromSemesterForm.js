@@ -12,6 +12,7 @@ import Card from '../../share/Card/Card';
 
 import { COPY_LESSONS_FROM_SEMESTER_FORM } from '../../constants/reduxForms';
 import { required } from '../../validation/validateFields';
+import { SEMESTER_LABEL } from '../../constants/services';
 
 const shortid = require('shortid');
 
@@ -26,7 +27,7 @@ const CopyLessonsFromSemesterForm = (props) => {
                         id="fromSemesterId"
                         name="fromSemesterId"
                         component={renderSelectField}
-                        label={t('formElements:semester_label')}
+                        label={t(SEMESTER_LABEL)}
                         type="text"
                         validate={[required]}
                     >

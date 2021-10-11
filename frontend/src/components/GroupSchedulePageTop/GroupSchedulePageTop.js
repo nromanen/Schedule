@@ -26,6 +26,7 @@ import { SCHEDULE_SEARCH_FORM } from '../../constants/reduxForms';
 import { required } from '../../validation/validateFields';
 import { places } from '../../constants/places';
 import { getTeacherFullName } from '../../helper/renderTeacher';
+import { SEMESTER_LABEL } from '../../constants/services';
 
 const shortid = require('shortid');
 
@@ -70,7 +71,7 @@ const GroupSchedulePageTop = (props) => {
                         id="semester"
                         name="semester"
                         component={renderSelectField}
-                        label={t('formElements:semester_label')}
+                        label={t(SEMESTER_LABEL)}
                         type="text"
                         validate={[required]}
                         onChange={(e) => setSemesterId(e.target.value)}
