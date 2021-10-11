@@ -46,7 +46,7 @@ const ShowStudentsOnGroupDialog = (props) => {
                     checkBoxStudents[index].checked = event.target.checked;
                 }
                 return item;
-            })
+            }),
         );
     };
     const handleAllChecked = (event, pageItemsCount, page, rowsPerPage) => {
@@ -75,7 +75,7 @@ const ShowStudentsOnGroupDialog = (props) => {
                     checkBoxStudents[index].checked = false;
                 }
                 return item;
-            })
+            }),
         );
     };
     const handleChangeCheckedAllBtn = () => {
@@ -119,19 +119,19 @@ const ShowStudentsOnGroupDialog = (props) => {
                         />
                         <Button
                             className={buttonClassName}
-                            variant='contained'
+                            variant="contained"
                             onClick={handleShowDialogFile}
-                            color='primary'
+                            color="primary"
                             title={i18n.t('upload_from_file')}
                         >
                             {i18n.t('common:upload_from_file_title')}
                         </Button>
                         {!isEmpty(students) && (
                             <Button
-                                className='student-dialog-button-data'
-                                variant='contained'
+                                className="student-dialog-button-data"
+                                variant="contained"
                                 onClick={getDialog}
-                                color='primary'
+                                color="primary"
                                 disabled={setSelectDisabled()}
                                 title={i18n.t('choose_group_title')}
                             >
@@ -140,9 +140,9 @@ const ShowStudentsOnGroupDialog = (props) => {
                         )}
                         <Button
                             className={buttonClassName}
-                            variant='contained'
+                            variant="contained"
                             onClick={() => onClose('')}
-                            color='primary'
+                            color="primary"
                             title={i18n.t('close_title')}
                         >
                             {i18n.t('common:close_title')}
@@ -153,8 +153,8 @@ const ShowStudentsOnGroupDialog = (props) => {
                 {isEmpty(students) ? (
                     <>{t('no_exist_students_in_group')} </>
                 ) : (
-                    <span className='table-student-data'>
-                        <h3 className='title-align'>
+                    <span className="table-student-data">
+                        <h3 className="title-align">
                             <span>
                                 {students.length !== 1
                                     ? `${t('students_label')} `

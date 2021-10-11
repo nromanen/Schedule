@@ -19,22 +19,24 @@ import CustomDialog from '../CustomDialog';
 
 const AddStudentDialog = (props) => {
     const { t } = useTranslation('formElements');
-    const { handleSubmit, pristine, submitting, reset, open, groups, student } = props;
+    const { handleSubmit, onSetSelectedCard, pristine, submitting, reset, open, groups, student } =
+        props;
     const studentId = student.id;
     const history = useHistory();
 
     const initializeFormHandler = (currentStudent) => {
+        const { id, surname, name, patronymic, email, group } = currentStudent;
         props.initialize({
-            id: currentStudent.id,
-            surname: currentStudent.surname,
-            name: currentStudent.name,
-            patronymic: currentStudent.patronymic,
-            email: currentStudent.email,
-            group: currentStudent.group.id,
+            id,
+            surname,
+            name,
+            patronymic,
+            email,
+            group: group.id,
         });
     };
     const handleClose = () => {
-        props.onSetSelectedCard(null);
+        onSetSelectedCard(null);
         goToGroupPage(history);
     };
 
@@ -51,6 +53,18 @@ const AddStudentDialog = (props) => {
             title={studentId ? t('edit_title') : `${t('create_title')} ${t('student_a_label')}`}
             open={open}
             onClose={handleClose}
+            buttons={
+                <Button
+                    className="buttons-style"
+                    variant="contained"
+                    disabled={pristine || submitting}
+                    onClick={() => {
+                        handleClose();
+                    }}
+                >
+                    {t('cancel_button_label')}
+                </Button>
+            }
         >
             <Card class="form-card teacher-form">
                 <form className="createTeacherForm w-100" onSubmit={handleSubmit}>
@@ -130,7 +144,6 @@ const AddStudentDialog = (props) => {
                             disabled={pristine || submitting}
                             onClick={() => {
                                 reset();
-                                handleClose();
                             }}
                         >
                             {studentId ? t('cancel_button_label') : t('clear_button_label')}

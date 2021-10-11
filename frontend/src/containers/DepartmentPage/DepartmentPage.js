@@ -5,6 +5,7 @@ import { FaChalkboardTeacher, FaEdit } from 'react-icons/fa';
 import { MdDelete } from 'react-icons/md';
 import { useTranslation } from 'react-i18next';
 import Button from '@material-ui/core/Button';
+import { defaultTo } from 'lodash';
 import { setDisabledDepartment, setEnabledDepartment } from '../../redux/actions/departments';
 import SearchPanel from '../../share/SearchPanel/SearchPanel';
 import Card from '../../share/Card/Card';
@@ -22,7 +23,8 @@ import {
 import AddDepartment from '../../components/AddDepartmentForm/AddDepartmentForm';
 import { search } from '../../helper/search';
 import NotFound from '../../share/NotFound/NotFound';
-import { ConfirmDialog, ShowDepartmentDataDialog } from '../../share/DialogWindows';
+import { CustomDialog, ShowDepartmentDataDialog } from '../../share/DialogWindows';
+import { dialogTypes } from '../../constants/dialogs';
 import { disabledCard } from '../../constants/disabledCard';
 import { navigation, navigationNames } from '../../constants/navigation';
 import NavigationPage from '../../components/Navigation/NavigationPage';
@@ -36,7 +38,8 @@ function DepartmentPage(props) {
     const { departments, disabledDepartments } = props;
     const [isDisabled, setIsDisabled] = useState(false);
     const [term, setTerm] = useState('');
-    const [deleteDialog, setDeleteDialog] = useState(false);
+    const [openSubDialog, setOpenSubDialog] = useState(false);
+    const [subDialogType, setSubDialogType] = useState('');
     const [departmentId, setDepartmentId] = useState('');
     const [hideDialog, setHideDialog] = useState(null);
     const [department, setDepartment] = useState({});
@@ -59,7 +62,7 @@ function DepartmentPage(props) {
     };
     const deleteDepartment = (id) => {
         setDepartmentId(id);
-        setDeleteDialog(true);
+        setOpenSubDialog(true);
     };
     const setDisabled = (department) => {
         const disabledDepartment = { ...department, disabled: true };
@@ -67,7 +70,7 @@ function DepartmentPage(props) {
     };
     const setEnabled = (department) => {
         setDepartmentId(department.id);
-        setDeleteDialog(true);
+        setOpenSubDialog(true);
         const enabledDepartment = { ...department, disabled: false };
         setEnabledDepartment(enabledDepartment);
     };
@@ -78,22 +81,29 @@ function DepartmentPage(props) {
         setTeacherDialog(false);
     };
     const handleClose = (id) => {
-        if (id !== '') {
-            if (department.id !== undefined) {
-                if (hideDialog === disabledCard.SHOW) {
-                    const { id, name } = department;
-                    const enabledDepartment = { id, name, disable: false };
-                    setEnabledDepartmentService(enabledDepartment);
-                } else if (hideDialog === disabledCard.HIDE) {
+        if (!id) return;
+        switch (subDialogType) {
+            case dialogTypes.DELETE_CONFIRM:
+                deleteDepartmentsService(departmentId);
+                break;
+            case dialogTypes.SET_VISIBILITY_DISABLED:
+                {
                     const { id, name } = department;
                     const enabledDepartment = { id, name, disable: true };
                     setDisabledDepartmentService(enabledDepartment);
                 }
-            } else {
-                deleteDepartmentsService(departmentId);
-            }
+                break;
+            case dialogTypes.SET_VISIBILITY_ENABLED:
+                {
+                    const { id, name } = department;
+                    const enabledDepartment = { id, name, disable: false };
+                    setEnabledDepartmentService(enabledDepartment);
+                }
+                break;
+            default:
+                break;
         }
-        setDeleteDialog(false);
+        setOpenSubDialog(false);
     };
     useEffect(() => getAllDepartmentsService(), [isDisabled]);
     useEffect(() => {
@@ -106,11 +116,11 @@ function DepartmentPage(props) {
     return (
         <>
             <NavigationPage name={navigationNames.DEPARTMENTS} val={navigation.DEPARTMENTS} />
-            <ConfirmDialog
-                isHide={hideDialog}
+            <CustomDialog
+                type={subDialogType}
                 cardId={departmentId}
                 whatDelete="department"
-                open={deleteDialog}
+                open={openSubDialog}
                 onClose={handleClose}
             />
             <ShowDepartmentDataDialog
@@ -144,7 +154,7 @@ function DepartmentPage(props) {
                                         className="svg-btn copy-btn"
                                         title={t('common:set_enabled')}
                                         onClick={() => {
-                                            setHideDialog(disabledCard.SHOW);
+                                            setSubDialogType(dialogTypes.SET_VISIBILITY_ENABLED);
                                             deleteDepartment(department.id);
                                             setDepartment(department);
                                         }}
@@ -156,7 +166,9 @@ function DepartmentPage(props) {
                                             title={t('common:set_disabled')}
                                             onClick={() => {
                                                 // setDisabled(department)
-                                                setHideDialog(disabledCard.HIDE);
+                                                setSubDialogType(
+                                                    dialogTypes.SET_VISIBILITY_DISABLED,
+                                                );
                                                 deleteDepartment(department.id);
                                                 setDepartment(department);
                                             }}
@@ -178,6 +190,7 @@ function DepartmentPage(props) {
                                     title={t('delete_title')}
                                     onClick={() => {
                                         setDepartment({});
+                                        setSubDialogType(dialogTypes.DELETE_CONFIRM);
                                         deleteDepartment(department.id);
                                     }}
                                 />

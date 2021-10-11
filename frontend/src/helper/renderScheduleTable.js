@@ -19,7 +19,8 @@ import {
     getTeacherFullName,
     getTeacherWithShortPosition,
 } from './renderTeacher';
-import { MeetingLinkDialog } from '../share/DialogWindows';
+import { CustomDialog } from '../share/DialogWindows';
+import { dialogTypes } from '../constants/dialogs';
 
 const shortid = require('shortid');
 
@@ -30,7 +31,7 @@ const matchDayNumberSysytemToDayName = () => {
 const currentDay = matchDayNumberSysytemToDayName();
 const setLink = (card, place) => {
     if (place === places.TOGETHER) {
-        return <MeetingLinkDialog {...card} />;
+        return <CustomDialog type={dialogTypes.MEETING_LINK} {...card} />;
     }
     if (place === places.ONLINE) {
         return getHref(card.linkToMeeting);

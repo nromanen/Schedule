@@ -10,10 +10,11 @@ import { useHistory } from 'react-router-dom/cjs/react-router-dom';
 import { search } from '../../helper/search';
 import NotFound from '../../share/NotFound/NotFound';
 import {
-    ConfirmDialog,
+    CustomDialog,
     ShowStudentsOnGroupDialog,
     AddStudentDialog,
 } from '../../share/DialogWindows';
+import { dialogTypes } from '../../constants/dialogs';
 import SearchPanel from '../../share/SearchPanel/SearchPanel';
 import AddGroup from '../../components/AddGroupForm/AddGroupForm';
 import SnackbarComponent from '../../share/Snackbar/SnackbarComponent';
@@ -59,6 +60,7 @@ const GroupList = (props) => {
     const { t } = useTranslation('formElements');
 
     const [open, setOpen] = useState(false);
+    const [subDialogType, setSubDialogType] = useState('');
     const [groupId, setGroupId] = useState(-1);
     const [term, setTerm] = useState('');
     const [hideDialog, setHideDialog] = useState(null);
@@ -142,17 +144,40 @@ const GroupList = (props) => {
             goToGroupPage(history);
             return;
         }
-        if (hideDialog) {
-            if (disabled) {
-                const group = props.disabledGroups.find((group) => group.id === groupId);
-                setEnabledGroupService(group);
-            } else {
-                const group = groups.find((group) => Number(group.id) === Number(groupId));
-                setDisabledGroupService(group);
-            }
-        } else {
-            removeGroupCardService(groupId);
+        switch (subDialogType) {
+            case dialogTypes.DELETE_CONFIRM:
+                removeGroupCardService(groupId);
+                break;
+            case dialogTypes.SET_VISIBILITY_DISABLED:
+                {
+                    const currentGroup = groups.find(
+                        (groupItem) => Number(group.id) === Number(groupId),
+                    );
+                    setDisabledGroupService(currentGroup);
+                }
+                break;
+            case dialogTypes.SET_VISIBILITY_ENABLED:
+                {
+                    const currentGroup = props.disabledGroups.find(
+                        (groupItem) => group.id === groupId,
+                    );
+                    setEnabledGroupService(currentGroup);
+                }
+                break;
+            default:
+                break;
         }
+        // if (hideDialog) {
+        //     if (disabled) {
+        //         const group = props.disabledGroups.find((group) => group.id === groupId);
+        //         setEnabledGroupService(group);
+        //     } else {
+        //         const group = groups.find((group) => Number(group.id) === Number(groupId));
+        //         setDisabledGroupService(group);
+        //     }
+        // } else {
+        //     removeGroupCardService(groupId);
+        // }
         setHideDialog(null);
         goToGroupPage(history);
     };
@@ -202,8 +227,8 @@ const GroupList = (props) => {
         <>
             <NavigationPage name={navigationNames.GROUP_LIST} val={navigation.GROUPS} />
 
-            <ConfirmDialog
-                isHide={hideDialog}
+            <CustomDialog
+                type={subDialogType}
                 cardId={groupId}
                 whatDelete="group"
                 open={open}
@@ -254,6 +279,9 @@ const GroupList = (props) => {
                                                 className="group__buttons-hide link-href"
                                                 title={t('common:set_disabled')}
                                                 onClick={() => {
+                                                    setSubDialogType(
+                                                        dialogTypes.SET_VISIBILITY_DISABLED,
+                                                    );
                                                     handleSetDisable(group.id);
                                                 }}
                                             />
@@ -273,7 +301,7 @@ const GroupList = (props) => {
                                         className="group__buttons-hide link-href"
                                         title={t('common:set_enabled')}
                                         onClick={() => {
-                                            setHideDialog(disabledCard.SHOW);
+                                            setSubDialogType(dialogTypes.SET_VISIBILITY_ENABLED);
                                             handleClickOpen(group.id);
                                         }}
                                     />
@@ -284,7 +312,10 @@ const GroupList = (props) => {
                                     <MdDelete
                                         className="group__buttons-delete link-href"
                                         title={t('delete_title')}
-                                        onClick={() => handleClickOpen(group.id)}
+                                        onClick={() => {
+                                            setSubDialogType(dialogTypes.DELETE_CONFIRM);
+                                            handleClickOpen(group.id);
+                                        }}
                                     />
                                 </Link>
                                 <Link

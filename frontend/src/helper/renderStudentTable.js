@@ -27,7 +27,8 @@ import './renderStudentTable.scss';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { links } from '../constants/links';
-import { ConfirmDialog, AddStudentDialog } from '../share/DialogWindows';
+import { CustomDialog, AddStudentDialog } from '../share/DialogWindows';
+import { dialogTypes } from '../constants/dialogs';
 
 const useStyles1 = makeStyles((theme) => ({
     root: {
@@ -304,8 +305,8 @@ export default function RenderStudentTable(props) {
                                 match={match}
                             />
 
-                            <ConfirmDialog
-                                selectedValue=""
+                            <CustomDialog
+                                type={dialogTypes.DELETE_CONFIRM}
                                 cardId={student}
                                 whatDelete="student"
                                 open={openDeleteDialog}

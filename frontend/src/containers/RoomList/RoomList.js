@@ -4,7 +4,8 @@ import { FaEdit } from 'react-icons/fa';
 import { MdDelete } from 'react-icons/md';
 import { useTranslation } from 'react-i18next';
 import { GiSightDisabled, IoMdEye } from 'react-icons/all';
-import { ConfirmDialog } from '../../share/DialogWindows';
+import { CustomDialog } from '../../share/DialogWindows';
+import { dialogTypes } from '../../constants/dialogs';
 import { cardType } from '../../constants/cardType';
 import FreeRooms from '../FreeRooms/freeRooms';
 import AddRoom from '../../components/AddRoomForm/AddRoomForm';
@@ -50,6 +51,7 @@ const RoomList = (props) => {
 
     const { t } = useTranslation('formElements');
     const [open, setOpen] = useState(false);
+    const [subDialogType, setSubDialogType] = useState('');
     const [roomId, setRoomId] = useState(-1);
     const [term, setTerm] = useState('');
     const [hideDialog, setHideDialog] = useState(null);
@@ -80,16 +82,25 @@ const RoomList = (props) => {
         if (!roomId) {
             return;
         }
-        if (hideDialog) {
-            if (disabled) {
-                const room = props.disabledRooms.find((room) => room.id === roomId);
-                setEnabledRoomsService(room);
-            } else {
-                const room = props.rooms.find((room) => room.id === roomId);
-                setDisabledRoomsService(room);
-            }
-        } else {
-            deleteRoomCardService(roomId);
+        switch (subDialogType) {
+            case dialogTypes.DELETE_CONFIRM:
+                deleteRoomCardService(roomId);
+                break;
+            case dialogTypes.SET_VISIBILITY_DISABLED:
+                {
+                    const room = props.rooms.find((roomItem) => roomItem.id === roomId);
+                    setDisabledRoomsService(room);
+                }
+
+                break;
+            case dialogTypes.SET_VISIBILITY_ENABLED:
+                {
+                    const room = props.disabledRooms.find((roomItem) => roomItem.id === roomId);
+                    setEnabledRoomsService(room);
+                }
+                break;
+            default:
+                break;
         }
         setHideDialog(null);
     };
@@ -113,11 +124,11 @@ const RoomList = (props) => {
     return (
         <>
             <NavigationPage name={navigationNames.ROOM_LIST} val={navigation.ROOMS} />
-            <ConfirmDialog
+            <CustomDialog
+                type={subDialogType}
                 cardId={roomId}
                 whatDelete={cardType.ROOM.toLowerCase()}
                 open={open}
-                isHide={hideDialog}
                 onClose={handleClose}
             />
             <div className="cards-container">
@@ -143,7 +154,9 @@ const RoomList = (props) => {
                                             className="svg-btn copy-btn"
                                             title={t('common:set_disabled')}
                                             onClick={() => {
-                                                setHideDialog(disabledCard.HIDE);
+                                                setSubDialogType(
+                                                    dialogTypes.SET_VISIBILITY_DISABLED,
+                                                );
                                                 handleClickOpen(room.id);
                                             }}
                                         />
@@ -157,7 +170,7 @@ const RoomList = (props) => {
                                         className="svg-btn copy-btn"
                                         title={t('common:set_enabled')}
                                         onClick={() => {
-                                            setHideDialog(disabledCard.SHOW);
+                                            setSubDialogType(dialogTypes.SET_VISIBILITY_ENABLED);
                                             handleClickOpen(room.id);
                                         }}
                                     />
@@ -165,7 +178,10 @@ const RoomList = (props) => {
 
                                 <MdDelete
                                     className="svg-btn"
-                                    onClick={() => handleClickOpen(room.id)}
+                                    onClick={() => {
+                                        setSubDialogType(dialogTypes.DELETE_CONFIRM);
+                                        handleClickOpen(room.id);
+                                    }}
                                 />
                             </div>
 

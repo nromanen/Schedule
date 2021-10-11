@@ -9,7 +9,8 @@ import { GiSightDisabled, IoMdEye } from 'react-icons/all';
 import Card from '../../share/Card/Card';
 import { search } from '../../helper/search';
 import NotFound from '../../share/NotFound/NotFound';
-import { ConfirmDialog } from '../../share/DialogWindows';
+import { CustomDialog } from '../../share/DialogWindows';
+import { dialogTypes } from '../../constants/dialogs';
 import SearchPanel from '../../share/SearchPanel/SearchPanel';
 import SnackbarComponent from '../../share/Snackbar/SnackbarComponent';
 import AddSubject from '../../components/AddSubjectForm/AddSubjectForm';
@@ -33,6 +34,7 @@ const SubjectPage = (props) => {
     const { isSnackbarOpen, snackbarType, snackbarMessage } = props;
 
     const [open, setOpen] = useState(false);
+    const [subDialogType, setSubDialogType] = useState('');
     const [subjectId, setSubjectId] = useState(-1);
     const [term, setTerm] = useState('');
     const [hideDialog, setHideDialog] = useState(null);
@@ -63,16 +65,26 @@ const SubjectPage = (props) => {
     const handleClose = (subjectId) => {
         setOpen(false);
         if (!subjectId) return;
-        if (hideDialog) {
-            if (disabled) {
-                const group = props.disabledSubjects.find((subject) => subject.id === subjectId);
-                setEnabledSubjectsService(group);
-            } else {
-                const group = props.subjects.find((subject) => subject.id === subjectId);
-                setDisabledSubjectsService(group);
-            }
-        } else {
-            removeSubjectCardService(subjectId);
+        switch (subDialogType) {
+            case dialogTypes.DELETE_CONFIRM:
+                removeSubjectCardService(subjectId);
+                break;
+            case dialogTypes.SET_VISIBILITY_DISABLED:
+                {
+                    const group = props.subjects.find((subject) => subject.id === subjectId);
+                    setDisabledSubjectsService(group);
+                }
+                break;
+            case dialogTypes.SET_VISIBILITY_ENABLED:
+                {
+                    const group = props.disabledSubjects.find(
+                        (subject) => subject.id === subjectId,
+                    );
+                    setEnabledSubjectsService(group);
+                }
+                break;
+            default:
+                break;
         }
         setHideDialog(null);
     };
@@ -84,8 +96,8 @@ const SubjectPage = (props) => {
     return (
         <>
             <NavigationPage name={navigationNames.SUBJECT_PAGE} val={navigation.SUBJECTS} />
-            <ConfirmDialog
-                isHide={hideDialog}
+            <CustomDialog
+                type={subDialogType}
                 cardId={subjectId}
                 whatDelete="subject"
                 open={open}
@@ -111,7 +123,7 @@ const SubjectPage = (props) => {
                                         className="svg-btn copy-btn"
                                         title={t('common:set_enabled')}
                                         onClick={() => {
-                                            setHideDialog(disabledCard.SHOW);
+                                            setSubDialogType(dialogTypes.SET_VISIBILITY_ENABLED);
                                             handleClickOpen(subject.id);
                                         }}
                                     />
@@ -121,7 +133,9 @@ const SubjectPage = (props) => {
                                             className="svg-btn copy-btn"
                                             title={t('common:set_disabled')}
                                             onClick={() => {
-                                                setHideDialog(disabledCard.HIDE);
+                                                setSubDialogType(
+                                                    dialogTypes.SET_VISIBILITY_DISABLED,
+                                                );
                                                 handleClickOpen(subject.id);
                                             }}
                                         />
@@ -136,7 +150,10 @@ const SubjectPage = (props) => {
                                 <MdDelete
                                     className="svg-btn delete-btn"
                                     title={t('delete_title')}
-                                    onClick={() => handleClickOpen(subject.id)}
+                                    onClick={() => {
+                                        setSubDialogType(dialogTypes.DELETE_CONFIRM);
+                                        handleClickOpen(subject.id);
+                                    }}
                                 />
                             </div>
                             {/* <p className="subject-card__description">

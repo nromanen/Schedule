@@ -8,12 +8,13 @@ import { MdDelete } from 'react-icons/md';
 import { FaEdit } from 'react-icons/fa';
 import { ROOM_FORM_TYPE } from '../../constants/reduxForms';
 
-import { ConfirmDialog } from '../../share/DialogWindows';
+import { CustomDialog } from '../../share/DialogWindows';
 import { cardType } from '../../constants/cardType';
 import Card from '../../share/Card/Card';
 import renderTextField from '../../share/renderedFields/input';
 import { deleteTypeService, getOneNewTypeService } from '../../services/roomTypesService';
 import './AddNewRoomType.scss';
+import { dialogTypes } from '../../constants/dialogs';
 
 let NewRoomType = (props) => {
     const { handleSubmit, pristine, submitting, roomTypes } = props;
@@ -50,7 +51,8 @@ let NewRoomType = (props) => {
 
     return (
         <>
-            <ConfirmDialog
+            <CustomDialog
+                type={dialogTypes.DELETE_CONFIRM}
                 cardId={typeId}
                 whatDelete={cardType.TYPE.toLowerCase()}
                 open={open}

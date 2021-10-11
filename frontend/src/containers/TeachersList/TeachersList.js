@@ -10,7 +10,8 @@ import i18n from 'i18next';
 import AddTeacherForm from '../../components/AddTeacherForm/AddTeacherForm';
 import Card from '../../share/Card/Card';
 
-import { ConfirmDialog } from '../../share/DialogWindows';
+import { CustomDialog } from '../../share/DialogWindows';
+import { dialogTypes } from '../../constants/dialogs';
 import { cardType } from '../../constants/cardType';
 
 import './TeachersList.scss';
@@ -54,6 +55,7 @@ const TeacherList = (props) => {
     const { t } = useTranslation('common');
 
     const [open, setOpen] = useState(false);
+    const [subDialogType, setSubDialogType] = useState('');
     const [teacherCardId, setTeacherId] = useState();
     const [term, setTerm] = useState('');
     const [disabled, setDisabled] = useState(false);
@@ -139,16 +141,28 @@ const TeacherList = (props) => {
         if (!teacherCardId) {
             return;
         }
-        if (hideDialog) {
-            if (disabled) {
-                const teacher = disabledTeachers.find((teacher) => teacher.id === teacherCardId);
-                setEnabledTeachersService(teacher);
-            } else {
-                const teacher = teachers.find((teacher) => teacher.id === teacherCardId);
-                setDisabledTeachersService(teacher);
-            }
-        } else {
-            removeTeacherCard(teacherCardId);
+        switch (subDialogType) {
+            case dialogTypes.DELETE_CONFIRM:
+                removeTeacherCard(teacherCardId);
+                break;
+            case dialogTypes.SET_VISIBILITY_DISABLED:
+                {
+                    const teacher = teachers.find(
+                        (teacherItem) => teacherItem.id === teacherCardId,
+                    );
+                    setDisabledTeachersService(teacher);
+                }
+                break;
+            case dialogTypes.SET_VISIBILITY_ENABLED:
+                {
+                    const teacher = disabledTeachers.find(
+                        (teacherItem) => teacherItem.id === teacherCardId,
+                    );
+                    setEnabledTeachersService(teacher);
+                }
+                break;
+            default:
+                break;
         }
         setHideDialog(null);
     };
@@ -204,11 +218,11 @@ const TeacherList = (props) => {
         <>
             <NavigationPage name={navigationNames.TEACHER_LIST} val={navigation.TEACHERS} />
             <div className="cards-container">
-                <ConfirmDialog
+                <CustomDialog
+                    type={subDialogType}
                     cardId={teacherCardId}
                     whatDelete={cardType.TEACHER}
                     open={open}
-                    isHide={hideDialog}
                     onClose={handleClose}
                 />
 
@@ -265,7 +279,9 @@ const TeacherList = (props) => {
                                                 className="svg-btn copy-btn"
                                                 title={t('common:set_disabled')}
                                                 onClick={() => {
-                                                    setHideDialog(disabledCard.HIDE);
+                                                    setSubDialogType(
+                                                        dialogTypes.SET_VISIBILITY_DISABLED,
+                                                    );
                                                     handleClickOpen(teacher.id);
                                                 }}
                                             />
@@ -280,7 +296,7 @@ const TeacherList = (props) => {
                                             className="svg-btn copy-btn"
                                             title={t('common:set_enabled')}
                                             onClick={() => {
-                                                setHideDialog(disabledCard.SHOW);
+                                                setSubDialogType(dialogTypes.SET_VISIBILITY_ENABLED);
                                                 handleClickOpen(teacher.id);
                                             }}
                                         />
@@ -288,7 +304,10 @@ const TeacherList = (props) => {
                                     <MdDelete
                                         className="svg-btn delete-btn"
                                         title={t('common:delete_hover_title')}
-                                        onClick={() => handleClickOpen(teacher.id)}
+                                        onClick={() => {
+                                            setSubDialogType(dialogTypes.DELETE_CONFIRM);
+                                            handleClickOpen(teacher.id);
+                                        }}
                                     />
                                 </div>
                                 <h2 className="teacher-card-name">

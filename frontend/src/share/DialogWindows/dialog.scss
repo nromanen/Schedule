@@ -1,15 +1,5 @@
 @import '../../App';
 
-.buttons-container {
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-    margin: 15px 0;
-
-    .dialog-button {
-        width: 38%;
-    }
-}
 
 .delete-word {
     color: $delete-color;
@@ -79,4 +69,16 @@
 .go-to-meeting {
     color: forestgreen;
     text-decoration: none;
+}
+.custom-dialog{
+    .buttons-container {
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        margin: 15px 0;
+    
+        .dialog-button {
+            width: 38%;
+        }
+    }
 }

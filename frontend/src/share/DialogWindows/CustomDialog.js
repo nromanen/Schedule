@@ -5,24 +5,14 @@ import PropTypes from 'prop-types';
 import { DialogContent, Dialog, DialogTitle, DialogActions } from '@material-ui/core';
 
 import './dialog.scss';
+import { dialogMapper } from './dialogMapper';
 
 const CustomDialog = (props) => {
-    const { onClose, buttons, open, title, children, ...other } = props;
-
-    const handleClose = () => {
-        onClose();
-    };
-
+    const { onClose, buttons, open, title, children } = dialogMapper(props);
     return (
-        <Dialog
-            {...other}
-            disableBackdropClick
-            onClose={handleClose}
-            aria-labelledby="confirm-dialog-title"
-            open={open}
-        >
-            <DialogTitle id="confirm-dialog-title">{title}</DialogTitle>
-            <DialogContent>{children}</DialogContent>
+        <Dialog className="custom-dialog" disableBackdropClick onClose={onClose} open={open}>
+            <DialogTitle className="custom-dialog-title">{title}</DialogTitle>
+            <DialogContent className="custom-dialog-body">{children}</DialogContent>
             <DialogActions className="buttons-container">{buttons}</DialogActions>
         </Dialog>
     );
@@ -33,7 +23,7 @@ Dialog.propTypes = {
     open: PropTypes.bool.isRequired,
     title: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.string]).isRequired,
     children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node]),
-    buttons: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node]),
+    buttons: PropTypes.node.isRequired,
 };
 
 export default CustomDialog;

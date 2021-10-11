@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { IoMdLink } from 'react-icons/all';
-import { MeetingLinkDialog } from '../../share/DialogWindows';
+import { CustomDialog } from '../../share/DialogWindows';
+import { dialogTypes } from '../../constants/dialogs';
 import './LinkToMeeting.scss';
 
 const LinkToMeeting = (props) => {
@@ -27,9 +28,9 @@ const LinkToMeeting = (props) => {
                 }}
                 title={linkToMeeting}
             />
-            <MeetingLinkDialog
+            <CustomDialog
+                type={dialogTypes.MEETING_LINK}
                 cardId={1}
-                isHide={false}
                 open={openDialog}
                 onClose={handleClose}
                 linkToMeeting={linkToMeeting}
