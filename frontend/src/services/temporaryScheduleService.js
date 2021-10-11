@@ -9,7 +9,7 @@ import {
     TEMPORARY_SCHEDULE_RANGE_URL,
     TEMPORARY_SCHEDULE_URL,
 } from '../constants/axios';
-import actionType from '../constants/actionTypes';
+import { actionType } from '../constants/actionTypes';
 
 import { setLoadingService } from './loadingService';
 

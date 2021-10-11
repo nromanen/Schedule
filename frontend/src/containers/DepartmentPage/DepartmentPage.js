@@ -48,9 +48,9 @@ const DepartmentPage = (props) => {
     const [isEnabledDisabled, setsIsEnabledDisabled] = useState('');
 
     useEffect(() => {
-        if (isDisabled) getDisabledDepartmentsService();
-    }, [isDisabled]);
-    useEffect(() => getAllDepartmentsService(), []);
+        getDisabledDepartmentsService();
+        getAllDepartmentsService();
+    }, []);
 
     const SearchChange = setTerm;
     const visibleDepartments = isDisabled
@@ -89,8 +89,10 @@ const DepartmentPage = (props) => {
     const acceptConfirmDialogGroup = (id) => {
         setConfirmDialog(false);
         if (!id) return;
-        if (isEnabledDisabled) setEnabledDisabledDepartment(id);
-        deleteDepartmentsService(id);
+        if (isEnabledDisabled) {
+            setEnabledDisabledDepartment(id);
+        } else deleteDepartmentsService(id);
+        setsIsEnabledDisabled('');
     };
     const handleSnackbarClose = () => {
         handleSnackbarCloseService();

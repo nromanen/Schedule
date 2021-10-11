@@ -1,7 +1,7 @@
+import './LessonPage.scss';
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import CircularProgress from '@material-ui/core/CircularProgress';
@@ -9,11 +9,19 @@ import { styled } from '@material-ui/core/styles';
 import Card from '../../share/Card/Card';
 import ConfirmDialog from '../../share/modals/dialog';
 import CopyLessonDialog from '../../share/modals/chooseGroupDialog/CopyLessonDialog';
-
 import LessonForm from '../../components/LessonForm/LessonForm';
 import LessonsList from '../../components/LessonsList/LessonsList';
 import CopyLessonsFromSemesterForm from '../../components/CopyLessonsFromSemesterForm/CopyLessonsFromSemesterForm';
-
+import { showAllTeachersService } from '../../services/teacherService';
+import { selectGroupService, showAllGroupsService } from '../../services/groupService';
+import { setLoadingService } from '../../services/loadingService';
+import { showAllSubjectsService } from '../../services/subjectService';
+import { cardType } from '../../constants/cardType';
+import SearchPanel from '../../share/SearchPanel/SearchPanel';
+import {
+    showAllSemestersService,
+    CopyLessonsFromSemesterService,
+} from '../../services/semesterService';
 import {
     copyLessonCardService,
     getLessonsByGroupService,
@@ -23,21 +31,6 @@ import {
     selectGroupIdService,
     selectLessonCardService,
 } from '../../services/lessonService';
-import { showAllTeachersService } from '../../services/teacherService';
-import { selectGroupService, showAllGroupsService } from '../../services/groupService';
-import { setLoadingService } from '../../services/loadingService';
-import { showAllSubjectsService } from '../../services/subjectService';
-import {
-    showAllSemestersService,
-    CopyLessonsFromSemesterService,
-} from '../../services/semesterService';
-
-import { cardType } from '../../constants/cardType';
-
-import './LessonPage.scss';
-import SearchPanel from '../../share/SearchPanel/SearchPanel';
-import AddSubject from '../../components/AddSubjectForm/AddSubjectForm';
-import { search } from '../../helper/search';
 
 const GroupField = styled(TextField)({
     display: 'inline-block',
@@ -45,19 +38,29 @@ const GroupField = styled(TextField)({
 });
 
 const LessonPage = (props) => {
-    const { t } = useTranslation('common');
+    const {
+        loading: isLoading,
+        currentSemester,
+        isUniqueError,
+        subjects,
+        teachers,
+        lessons,
+        groups,
+        groupId,
+    } = props;
 
+    const { t } = useTranslation('common');
     const [open, setOpen] = useState(false);
     const [openCopyLessonDialog, setOpenCopyLessonDialog] = useState(false);
-    const [lessonId, setLessonId] = React.useState(-1);
-    const [copiedLesson, setCopiedLesson] = React.useState(-1);
+    const [lessonId, setLessonId] = useState(-1);
+    const [copiedLesson, setCopiedLesson] = useState(-1);
     const [term, setTerm] = useState('');
     const SearchChange = setTerm;
     let visibleItems = [];
     const isIncludeValue = (item, value) => {
         return item.toLowerCase().includes(value.toLowerCase());
     };
-    const getSearchTeachers = (lessons, term) => {
+    const getSearchTeachers = (lessons) => {
         const termTmp = term.trim();
         if (termTmp.length === 0) return lessons;
         return lessons.filter((lesson) => {
@@ -70,20 +73,7 @@ const LessonPage = (props) => {
             );
         });
     };
-    visibleItems = getSearchTeachers(props.lessons, term);
-
-    const { teachers } = props;
-
-    const { isUniqueError } = props;
-
-    const { lessons } = props;
-    const lessonLength = lessons.length;
-
-    const isLoading = props.loading;
-
-    const { groups, groupId, currentSemester } = props;
-
-    const { subjects } = props;
+    visibleItems = getSearchTeachers(lessons, term);
 
     useEffect(() => {
         if (groupId) {
@@ -91,6 +81,10 @@ const LessonPage = (props) => {
             getLessonsByGroupService(groupId);
         }
     }, [groupId]);
+    useEffect(() => {
+        setLoadingService(true);
+        getLessonsByGroupService(groupId);
+    }, [lessons.length]);
     useEffect(() => showAllTeachersService(), []);
     useEffect(() => showAllSemestersService(), []);
     useEffect(() => getLessonTypesService(), []);
@@ -106,10 +100,6 @@ const LessonPage = (props) => {
         }
         handleLessonCardService(card, groupId, currentSemester);
     };
-    useEffect(() => {
-        setLoadingService(true);
-        getLessonsByGroupService(groupId);
-    }, [lessons.length]);
 
     const selectLessonCardHandler = (lessonCardId) => {
         selectLessonCardService(lessonCardId);
