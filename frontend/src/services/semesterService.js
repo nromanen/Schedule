@@ -3,19 +3,6 @@ import i18n from '../helper/i18n';
 import { store } from '../index';
 import axios from '../helper/axios';
 import {
-    BACK_END_SUCCESS_OPERATION,
-    FORM_LESSON_LABEL,
-    FORM_SEMESTER_LABEL,
-    UPDATED_LABEL,
-    CREATED_LABEL,
-    DELETED_LABEL,
-    SEMESTER_SERVICE_IS_ACTIVE,
-    SEMESTER_SERVICE_NOT_AS_BEGIN_OR_END,
-    COMMON_SEMESTER_IS_NOT_UNIQUE,
-    COPIED_LABEL,
-    ARCHIVED_LABEL,
-} from '../constants/translationLabels';
-import {
     DISABLED_SEMESTERS_URL,
     SEMESTERS_URL,
     SEMESTER_COPY_URL,
@@ -43,6 +30,19 @@ import {
 } from '../redux/actions/index';
 import { errorHandler, successHandler } from '../helper/handlerAxios';
 import { resetFormHandler } from '../helper/formHelper';
+import {
+    BACK_END_SUCCESS_OPERATION,
+    FORM_LESSON_LABEL,
+    FORM_SEMESTER_LABEL,
+    UPDATED_LABEL,
+    CREATED_LABEL,
+    DELETED_LABEL,
+    SEMESTER_SERVICE_IS_ACTIVE,
+    SEMESTER_SERVICE_NOT_AS_BEGIN_OR_END,
+    COPIED_LABEL,
+    ARCHIVED_LABEL,
+} from '../constants/translationLabels';
+import { COMMON_SEMESTER_IS_NOT_UNIQUE } from '../constants/translationLabels/common';
 
 export const selectSemesterService = (semesterId) => store.dispatch(selectSemester(semesterId));
 

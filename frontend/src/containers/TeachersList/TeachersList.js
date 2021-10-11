@@ -49,15 +49,16 @@ import {
 } from '../../services/departmentService';
 import { clearDepartmentForm, getDepartItemById } from '../../redux/actions/departments';
 import { getShortTitle } from '../../helper/shortTitle';
+import { FORM_TEACHER_A_LABEL } from '../../constants/translationLabels';
 import {
-    FORM_TEACHER_A_LABEL,
     COMMON_SET_DISABLED,
     COMMON_EDIT_HOVER_TITLE,
     COMMON_DELETE_HOVER_TITLE,
     COMMON_SET_ENABLED,
     SEND_SCHEDULE_FOR_TEACHER,
     TEACHER_DEPARTMENT,
-} from '../../constants/translationLabels';
+    TEACHER_CARD_NO_CARD,
+} from '../../constants/translationLabels/common';
 
 const TeacherList = (props) => {
     const { t } = useTranslation('common');
@@ -313,7 +314,7 @@ const TeacherList = (props) => {
                             </Card>
                         ))
                     ) : (
-                        <h2>{t('teacher_card_no_cards')}</h2>
+                        <h2>{t(TEACHER_CARD_NO_CARD)}</h2>
                     )}
                 </section>
             </div>

@@ -28,14 +28,16 @@ import {
     CLASS_FROM_LABEL,
     CLASS_TO_LABEL,
     FORM_TEACHER_LABEL,
-    COMMON_NOTIFY_LABEL,
-    COMMON_FEW_DAYS_LABEL,
-    COMMON_DATE_LABEL,
-    FOR_ALL,
     FOR_TEACHER,
     EDIT_VACATION_FORM,
     CREATE_VACATION_FORM,
 } from '../../../constants/translationLabels';
+import {
+    COMMON_NOTIFY_LABEL,
+    COMMON_FEW_DAYS_LABEL,
+    COMMON_DATE_LABEL,
+    FOR_ALL,
+} from '../../../constants/translationLabels/common';
 
 let TemporaryScheduleVacationForm = (props) => {
     const { t } = useTranslation('formElements');

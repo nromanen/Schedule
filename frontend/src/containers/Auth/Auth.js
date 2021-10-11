@@ -27,6 +27,7 @@ import {
 } from '../../redux/actions/index';
 
 import './Auth.scss';
+import { EMAIL_MESSAGE } from '../../constants/translationLabels';
 import {
     DIFFERENT_PASSWORDS,
     BROKEN_TOKEN,
@@ -34,12 +35,10 @@ import {
     REGISTRATION_PAGE_TITLE,
     RESET_PASSWORD_PAGE_TITLE,
     SUCCESSFUL_LOGIN_MESSAGE,
-    VALIDATION_MESSAGE_EMAIL,
     SUCCESSFUL_REGISTERED_MESSAGE,
     SUCCESSFUL_RESET_PASSWORD_MESSAGE,
     EMPTY_FIELDS,
-    LOGIN_PAGE_TITLE,
-} from '../../constants/translationLabels';
+} from '../../constants/translationLabels/common';
 
 const Auth = (props) => {
     const { t } = useTranslation('common');
@@ -114,7 +113,7 @@ const Auth = (props) => {
             return;
         }
         if (!validation.EMAIL.test(loginData.email)) {
-            props.setError({ login: t(VALIDATION_MESSAGE_EMAIL) });
+            props.setError({ login: t(EMAIL_MESSAGE) });
             return;
         }
         props.onAuth(loginData);
@@ -175,7 +174,7 @@ const Auth = (props) => {
 
     switch (authType) {
         case authTypes.LOGIN:
-            document.title = t(LOGIN_PAGE_TITLE);
+            document.title = t(LOGIN_TITLE);
             authPage = (
                 <LoginForm
                     isLoading={isLoading}
@@ -214,7 +213,7 @@ const Auth = (props) => {
             );
             break;
         default:
-            document.title = t(LOGIN_PAGE_TITLE);
+            document.title = t(LOGIN_TITLE);
             authPage = (
                 <LoginForm
                     isLoading={isLoading}

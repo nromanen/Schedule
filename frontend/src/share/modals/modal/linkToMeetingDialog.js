@@ -11,7 +11,11 @@ import './modal.scss';
 import i18n from 'i18next';
 import { disabledCard } from '../../../constants/disabledCard';
 import './linkToMeetingDialog.scss';
-import { COMMON_NO_BUTTON_TITLE } from '../../../constants/translationLabels';
+import { FORM_REFERENCE_ELEMENT } from '../../../constants/translationLabels';
+import {
+    COMMON_NO_BUTTON_TITLE,
+    COMMON_YES_BUTTON_TITLE,
+} from '../../../constants/translationLabels/common';
 
 export const LinkToMeetingDialog = (props) => {
     const { onClose, cardId, isHide, open, linkToMeeting } = props;
@@ -56,7 +60,7 @@ export const LinkToMeetingDialog = (props) => {
                     )}
 
                     {i18n.t('common:by_this_card_type', {
-                        cardType: i18n.t(`formElements:reference_element`),
+                        cardType: i18n.t(FORM_REFERENCE_ELEMENT),
                     })}
                 </>
             </DialogTitle>
@@ -67,7 +71,7 @@ export const LinkToMeetingDialog = (props) => {
                     color="primary"
                     onClick={() => onClose(cardId)}
                 >
-                    {i18n.t('common:yes_button_title')}
+                    {i18n.t(COMMON_YES_BUTTON_TITLE)}
                 </Button>
                 <Button className="dialog-button" variant="contained" onClick={() => onClose('')}>
                     {i18n.t(COMMON_NO_BUTTON_TITLE)}

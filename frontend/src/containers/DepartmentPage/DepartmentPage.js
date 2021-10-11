@@ -34,11 +34,10 @@ import ShowDataDialog from '../../share/modals/modal/showDataDialog';
 import {
     EDIT_TITLE,
     DEPARTMENT_LABEL,
-    COMMON_SET_DISABLED,
-    COMMON_SET_ENABLED,
     DELETE_TITLE,
     SHOW_TEACHER_TITLE,
 } from '../../constants/translationLabels';
+import { COMMON_SET_DISABLED, COMMON_SET_ENABLED } from '../../constants/translationLabels/common';
 
 function DepartmentPage(props) {
     const { t } = useTranslation('formElements');

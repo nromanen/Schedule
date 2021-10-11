@@ -7,9 +7,9 @@ import { useTranslation } from 'react-i18next';
 import {
     CHOOSE_GROUPS,
     CONFIRM_GROUPS,
-    CANCEL_GROUPS,
+    CANCEL_SCHEDULE,
     ALL_GROUPS,
-} from '../constants/translationLabels';
+} from '../constants/translationLabels/common';
 
 export const MultiselectForGroups = (props) => {
     const { t } = useTranslation('common');
@@ -87,7 +87,7 @@ export const MultiselectForGroups = (props) => {
                     color="primary"
                     onClick={onCancel}
                 >
-                    {t(CANCEL_GROUPS)}
+                    {t(CANCEL_SCHEDULE)}
                 </Button>
             </div>
         </Dialog>

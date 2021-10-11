@@ -1,6 +1,7 @@
 import React from 'react';
 import { FaSadCry } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
+import { THERE_IS_NO } from '../../constants/translationLabels';
 
 import './NotFound.scss';
 
@@ -13,7 +14,7 @@ const NotFound = ({ name }) => {
                 <FaSadCry className="not-found__icon" />
             </div>
             <p className="not-found__text">
-                {t('there_is_no')} {name}
+                {t(THERE_IS_NO)} {name}
             </p>
         </div>
     );

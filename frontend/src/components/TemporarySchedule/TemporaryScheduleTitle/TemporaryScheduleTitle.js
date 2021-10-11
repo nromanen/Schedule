@@ -29,14 +29,16 @@ import { handleTeacherInfo } from '../../../helper/renderTeacher';
 import {
     FORM_SEMESTER_LABEL,
     FORM_TEACHER_LABEL,
+    FORM_CLASS_FROM_LABEL,
+    FORM_CLASS_TO_LABEL,
+} from '../../../constants/translationLabels';
+import {
     HOLIDAY_LABEL,
     DATE_LABEL,
     TEMPORARY_SCHEDULE_FOR_TEACHER_TITLE,
     FEW_DAYS_LABEL,
     ONE_DAY_LABEL,
-    FORM_CLASS_FROM_LABEL,
-    FORM_CLASS_TO_LABEL,
-} from '../../../constants/translationLabels';
+} from '../../../constants/translationLabels/common';
 
 const useStyles = makeStyles({
     teacherField: {

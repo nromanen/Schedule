@@ -30,11 +30,13 @@ import {
     FORM_SEMESTER_LABEL,
     FORM_TEACHER_LABEL,
     FORM_GROUP_LABEL,
+} from '../../constants/translationLabels';
+import {
     GREETING_SCHEDULE_MESSAGE,
     GREETING_SCHEDULE_MESSAGE_HINT,
     TEACHER_SCHEDULE_LABEL,
     PLACE_FOR_CLASS_LABEL,
-} from '../../constants/translationLabels';
+} from '../../constants/translationLabels/common';
 
 const shortid = require('shortid');
 

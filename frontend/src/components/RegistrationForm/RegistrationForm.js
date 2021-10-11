@@ -15,10 +15,14 @@ import { authTypes } from '../../constants/auth';
 import { email, password, required } from '../../validation/validateFields';
 import { links } from '../../constants/links';
 import {
+    REGISTRATION_PAGE_TITLE,
+    ACCOUNT_EXIST,
+    CREATE_ACCOUNT,
+} from '../../constants/translationLabels/common';
+import {
     PASSWORD_LABEL,
     RETYPE_PASSWORD_LABEL,
     EMAIL_LABEL,
-    REGISTRATION_PAGE_TITLE,
 } from '../../constants/translationLabels';
 
 let RegistrationForm = (props) => {
@@ -77,7 +81,7 @@ let RegistrationForm = (props) => {
                 {...(!error ? retypePasswordValidate : retypePasswordValidateAdvanced)}
             />
             <Button className="buttons-style" type="submit" variant="contained" color="primary">
-                {translation('create_account')}
+                {translation(CREATE_ACCOUNT)}
             </Button>
             <div className="group-btns">
                 <button
@@ -89,7 +93,7 @@ let RegistrationForm = (props) => {
                     }}
                 >
                     <Link className="navLinks" to={links.LOGIN}>
-                        {translation('account_exist')}
+                        {translation(ACCOUNT_EXIST)}
                     </Link>
                 </button>
             </div>

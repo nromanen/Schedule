@@ -45,13 +45,15 @@ import { getShortTitle } from '../../helper/shortTitle';
 import {
     GROUP_Y_LABEL,
     GROUP_LABEL,
-    COMMON_EDIT,
-    COMMON_SET_DISABLED,
-    COMMON_SET_ENABLED,
     DELETE_TITLE,
     FORM_STUDENT_ADD_LABEL,
     FORM_SHOW_STUDENTS,
 } from '../../constants/translationLabels';
+import {
+    COMMON_EDIT,
+    COMMON_SET_DISABLED,
+    COMMON_SET_ENABLED,
+} from '../../constants/translationLabels/common';
 
 const GroupList = (props) => {
     const {

@@ -24,17 +24,19 @@ import {
     SAVE_BUTTON_LABEL,
     GROUP_LABEL,
     ROOM_LABEL,
-    TYPE_LABEL,
     SUBJECT_LABEL,
     CLEAR_BUTTON_LABEL,
     CLASS_LABEL,
     FOR_SITE_LABEL,
     TEACHER_LABEL,
     EDIT_TEMPORARY_SCHEDULE_FORM,
-    COMMON_HOLIDAY_LABEL,
     CREATE_TEMPORARY_SCHEDULE_FORM,
-    COMMON_NOTIFY_LABEL,
 } from '../../../constants/translationLabels';
+import {
+    COMMON_NOTIFY_LABEL,
+    COMMON_HOLIDAY_LABEL,
+    TYPE_LABEL,
+} from '../../../constants/translationLabels/common';
 
 let TemporaryScheduleForm = (props) => {
     const { t } = useTranslation('formElements');

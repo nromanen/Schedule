@@ -26,10 +26,12 @@ import {
     CLASS_LABEL,
     CLASS_FROM_LABEL,
     CLASS_TO_LABEL,
-    COMMON_EDIT_HOVER_TITLE,
-    COMMON_DELETE_HOVER_TITLE,
     MAX_COUNT_CLASSES_REACHED,
 } from '../../constants/translationLabels';
+import {
+    COMMON_EDIT_HOVER_TITLE,
+    COMMON_DELETE_HOVER_TITLE,
+} from '../../constants/translationLabels/common';
 
 const ClassSchedule = (props) => {
     const { t } = useTranslation('formElements');

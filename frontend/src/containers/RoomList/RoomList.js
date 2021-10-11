@@ -32,13 +32,13 @@ import NotFound from '../../share/NotFound/NotFound';
 import { disabledCard } from '../../constants/disabledCard';
 import NavigationPage from '../../components/Navigation/NavigationPage';
 import { navigation, navigationNames } from '../../constants/navigation';
+import { ROOM_Y_LABEL, ROOM_LABEL } from '../../constants/translationLabels';
 import {
-    ROOM_Y_LABEL,
-    ROOM_LABEL,
     TYPE_LABEL,
     COMMON_SET_DISABLED,
     COMMON_SET_ENABLED,
-} from '../../constants/translationLabels';
+} from '../../constants/translationLabels/common';
+
 
 const RoomList = (props) => {
     const { rooms } = props;

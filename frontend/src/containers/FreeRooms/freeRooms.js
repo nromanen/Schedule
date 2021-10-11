@@ -10,7 +10,8 @@ import Card from '../../share/Card/Card';
 import { clearFreeRoomsService, showFreeRoomsService } from '../../services/freeRoomsService';
 import { getClassScheduleListService } from '../../services/classService';
 import './freeRooms.scss';
-import { ROOM_LABEL, TYPE_LABEL, FIND_FREE_ROOM } from '../../constants/translationLabels';
+import { ROOM_LABEL, FIND_FREE_ROOM } from '../../constants/translationLabels';
+import { TYPE_LABEL } from '../../constants/translationLabels/common';
 
 const FreeRooms = (props) => {
     const { t } = useTranslation('formElements');

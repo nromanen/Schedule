@@ -46,24 +46,26 @@ import { successHandler } from '../../helper/handlerAxios';
 import i18n from '../../helper/i18n';
 import {
     EDIT_TITLE,
-    COMMON_SET_DISABLED,
-    COMMON_DAY_LABEL,
-    COMMON_CLASS_SCHEDULE_MANAGEMENT_TITLE,
-    SEMESTER_LABEL,
     CLOSE_LABEL,
-    COMMON_SET_ENABLED,
     DELETE_TITLE,
     SEMESTER_COPY_LABEL,
     COPY_LABEL,
     SEMESTERY_LABEL,
-    COMMON_MAKE_ARCHIVE,
     FORM_SHOW_GROUPS,
     SET_DEFAULT_TITLE,
-    COMMON_PREVIEW,
-    SERVICE_MESSAGE_STUDENT_LABEL,
-    SERVICE_GROUP_EXIST_IN_THIS_SEMESTER,
-    COMMON_GROUP_TITLE,
+    EXIST_LABEL,
+    GROUP_EXIST_IN_THIS_SEMESTER,
 } from '../../constants/translationLabels';
+import {
+    COMMON_GROUP_TITLE,
+    COMMON_SET_DISABLED,
+    COMMON_DAY_LABEL,
+    COMMON_CLASS_SCHEDULE_MANAGEMENT_TITLE,
+    SEMESTER_LABEL,
+    COMMON_PREVIEW,
+    COMMON_MAKE_ARCHIVE,
+    COMMON_SET_ENABLED,
+} from '../../constants/translationLabels/common';
 
 const SemesterPage = (props) => {
     const { t } = useTranslation('formElements');
@@ -117,9 +119,9 @@ const SemesterPage = (props) => {
         const finishGroups = [...semesterOptions];
         if (isEqualsArrObjects(beginGroups, finishGroups)) {
             successHandler(
-                i18n.t(SERVICE_GROUP_EXIST_IN_THIS_SEMESTER, {
+                i18n.t(GROUP_EXIST_IN_THIS_SEMESTER, {
                     cardType: i18n.t(COMMON_GROUP_TITLE),
-                    actionType: i18n.t(SERVICE_MESSAGE_STUDENT_LABEL),
+                    actionType: i18n.t(EXIST_LABEL),
                 }),
             );
             return;

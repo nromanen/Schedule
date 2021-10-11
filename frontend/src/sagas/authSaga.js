@@ -7,7 +7,7 @@ import { TOKEN_BEGIN } from '../constants/tokenBegin';
 
 import axios from '../helper/axios';
 import i18n from '../helper/i18n';
-import { COMMON_ERROR_MESSAGE } from '../constants/translationLabels';
+import { COMMON_ERROR_MESSAGE } from '../constants/translationLabels/common';
 
 export function* authSaga(payload) {
     try {

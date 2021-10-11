@@ -4,7 +4,7 @@ import * as actionTypes from '../redux/actions/actionsType';
 import { activateUserService } from '../services/authService';
 
 import i18n from '../helper/i18n';
-import { COMMON_ERROR_MESSAGE } from '../constants/translationLabels';
+import { COMMON_ERROR_MESSAGE } from '../constants/translationLabels/common';
 
 export function* activateUserSaga(payload) {
     try {

@@ -5,9 +5,8 @@ import {
     ROOM_LABEL,
     SUBJECT_LABEL,
     TEACHER_LABEL,
-    COMMON_CLASS_SCHEDULE,
-    SEMESTER_LABEL,
 } from '../../../constants/translationLabels';
+import { COMMON_CLASS_SCHEDULE, SEMESTER_LABEL } from '../../../constants/translationLabels/common';
 
 const TemporaryScheduleCard = (props) => {
     const { t } = useTranslation('formElements');

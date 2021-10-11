@@ -23,7 +23,7 @@ import { showAllGroupsService } from '../../services/groupService';
 import './TemporarySchedule.scss';
 import { navigation } from '../../constants/navigation';
 import NavigationPage from '../../components/Navigation/NavigationPage';
-import { EMPTY_LABEL } from '../../constants/translationLabels';
+import { EMPTY_LABEL } from '../../constants/translationLabels/common';
 
 const TemporarySchedule = (props) => {
     const { t } = useTranslation('common');

@@ -10,7 +10,7 @@ import './dialog.scss';
 
 import i18n from '../../helper/i18n';
 import { disabledCard } from '../../constants/disabledCard';
-import { COMMON_NO_BUTTON_TITLE } from '../../constants/translationLabels';
+import { COMMON_NO_BUTTON_TITLE, COMMON_YES_BUTTON_TITLE } from '../../constants/translationLabels/common';
 
 export const ConfirmDialog = (props) => {
     const { onClose, whatDelete, cardId, isHide, open } = props;
@@ -55,7 +55,7 @@ export const ConfirmDialog = (props) => {
                     color="primary"
                     onClick={() => onClose(cardId)}
                 >
-                    {i18n.t('common:yes_button_title')}
+                    {i18n.t(COMMON_YES_BUTTON_TITLE)}
                 </Button>
                 <Button className="dialog-button" variant="contained" onClick={() => onClose('')}>
                     {i18n.t(COMMON_NO_BUTTON_TITLE)}

@@ -23,12 +23,8 @@ import {
     setScheduleTeacherIdService,
     setScheduleTypeService,
 } from '../../services/scheduleService';
-import {
-    PASSWORD_LABEL,
-    LOGIN_TITLE,
-    EMAIL_LABEL,
-    LOGIN_PAGE_TITLE,
-} from '../../constants/translationLabels';
+import { PASSWORD_LABEL, EMAIL_LABEL } from '../../constants/translationLabels';
+import { LOGIN_TITLE } from '../../constants/translationLabels/common';
 
 let LoginForm = (props) => {
     useEffect(() => setScheduleSemesterIdService(0));
@@ -119,7 +115,7 @@ let LoginForm = (props) => {
 
     return (
         <Card class="auth-card">
-            <h2 className="under-line">{translation(LOGIN_PAGE_TITLE)}</h2>
+            <h2 className="under-line">{translation(LOGIN_TITLE)}</h2>
             {form}
         </Card>
     );

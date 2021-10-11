@@ -21,7 +21,8 @@ import { setLoadingService } from '../../services/loadingService';
 
 import { cssClasses } from '../../constants/schedule/cssClasses';
 import { colors } from '../../constants/schedule/colors';
-import { CLASS_SCHEDULE, WEEK_LABEL, FORM_DAY_LABEL } from '../../constants/translationLabels';
+import { FORM_DAY_LABEL } from '../../constants/translationLabels';
+import { CLASS_SCHEDULE, WEEK_LABEL } from '../../constants/translationLabels/common';
 import './Schedule.scss';
 
 const Schedule = (props) => {

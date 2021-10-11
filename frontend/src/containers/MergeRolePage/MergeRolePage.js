@@ -19,9 +19,9 @@ import { navigation, navigationNames } from '../../constants/navigation';
 import {
     FORM_USER_LABEL,
     FORM_TEACHER_LABEL,
-    MERGE_HEADER,
     FORM_MERGE_BUTTON,
 } from '../../constants/translationLabels';
+import { MERGE_HEADER } from '../../constants/translationLabels/common';
 
 const useStyles = makeStyles(() => ({
     autoCompleteField: {

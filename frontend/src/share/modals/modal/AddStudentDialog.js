@@ -20,15 +20,14 @@ import { required } from '../../../validation/validateFields';
 import { STUDENT_FORM, TEACHER_FORM } from '../../../constants/reduxForms';
 import renderSelectField from '../../renderedFields/select';
 import { goToGroupPage } from '../../../helper/pageRedirection';
+import { TYPE_LABEL, CANCEL_BUTTON_LABEL } from '../../../constants/translationLabels/common';
 import {
     EDIT_TITLE,
     CREATE_TITLE,
     SAVE_BUTTON_LABEL,
-    TYPE_LABEL,
     EMAIL_FIELD,
     CLEAR_BUTTON_LABEL,
     CLOSE_LABEL,
-    CANCEL_BUTTON_LABEL,
     PATRONYMIC_PLACEHOLDER,
     NAME_PLACEHOLDER,
     SURNAME_PLACEHOLDER,

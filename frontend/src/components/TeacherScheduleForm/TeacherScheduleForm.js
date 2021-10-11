@@ -17,14 +17,13 @@ import { TEACHER_SCHEDULE_FORM } from '../../constants/reduxForms';
 import renderMonthPicker from '../../share/renderedFields/timeSemester';
 import Card from '../../share/Card/Card';
 import { setTeacherServiceViewType } from '../../services/scheduleService';
+import { CLASS_FROM_LABEL, CLASS_TO_LABEL } from '../../constants/translationLabels';
 import {
-    CLASS_FROM_LABEL,
-    CLASS_TO_LABEL,
     COMMON_LIST_VIEW,
     COMMON_SELECT_DATES_FOR_TEACHERS_SCHEDULE,
     COMMON_BLOCK_VIEW,
     FULL_SCHEDULE_LABEL,
-} from '../../constants/translationLabels';
+} from '../../constants/translationLabels/common';
 
 const TeacherScheduleForm = (props) => {
     const { t } = useTranslation('formElements');

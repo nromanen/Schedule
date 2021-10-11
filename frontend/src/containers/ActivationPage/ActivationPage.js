@@ -10,7 +10,7 @@ import { links } from '../../constants/links';
 import { snackbarTypes } from '../../constants/snackbarTypes';
 
 import { handleSnackbarOpenService } from '../../services/snackbarService';
-import { VERIFYING_TOKEN, TOKEN_ERROR } from '../../constants/translationLabels';
+import { VERIFYING_TOKEN, TOKEN_ERROR } from '../../constants/translationLabels/common';
 
 import './ActivationPage.scss';
 

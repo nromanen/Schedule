@@ -36,10 +36,10 @@ import {
     SCHEDULE_TITLE,
     MY_PROFILE,
     LOGOUT_TITLE,
-    SEMESTER_TITLE,
+    SEMESTER_LABEL,
     HOME_TITLE,
     MENU_BUTTON,
-} from '../../constants/translationLabels';
+} from '../../constants/translationLabels/common';
 
 const StyledMenu = withStyles({
     paper: {
@@ -314,7 +314,7 @@ const Header = (props) => {
                     </span>
                 ) : (
                     <span className="navLinks nav-semester">
-                        {t(SEMESTER_TITLE)}: {props.currentSemester.description}
+                        {t(SEMESTER_LABEL)}: {props.currentSemester.description}
                     </span>
                 )}
             </>

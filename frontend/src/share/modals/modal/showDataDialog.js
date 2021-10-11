@@ -13,7 +13,14 @@ import { connect } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import i18n from '../../../helper/i18n';
 import RenderTeacherTable from '../../../helper/renderTeacherTable';
-import { DEPARTMENT_TEACHER_LABEL, TEACHER_LABEL } from '../../../constants/translationLabels';
+import {
+    DEPARTMENT_TEACHER_LABEL,
+    TEACHER_LABEL,
+    TEACHERS_LABEL,
+    DEPARTMENT_TEACHERS,
+    NO_EXIST_TEACHER_AT_DEPARTMENT,
+} from '../../../constants/translationLabels';
+import { COMMON_CLOSE_TITLE } from '../../../constants/translationLabels/common';
 
 export const ShowDataDialog = (props) => {
     const { onClose, cardId, open, teachers, department } = props;
@@ -37,17 +44,17 @@ export const ShowDataDialog = (props) => {
                                     {`${t(DEPARTMENT_TEACHER_LABEL)} - `}
                                     <span>{`${department.name}`}</span>
                                 </h2>
-                                {t('no_exist_teachers_at_department')}
+                                {t(NO_EXIST_TEACHER_AT_DEPARTMENT)}
                             </>
                         ) : (
                             <>
                                 <h3 className="title-align">
                                     <span>
                                         {teachers.length !== 1
-                                            ? `${t('teachers_label')} `
+                                            ? `${t(TEACHERS_LABEL)} `
                                             : `${t(TEACHER_LABEL)} `}
                                     </span>
-                                    {`${t('department_teachers')} `}
+                                    {`${t(DEPARTMENT_TEACHERS)} `}
                                     <span>{`${department.name}`}</span>
                                 </h3>
                                 <RenderTeacherTable teachers={teachers} />
@@ -63,7 +70,7 @@ export const ShowDataDialog = (props) => {
                     onClick={() => onClose('')}
                     color="primary"
                 >
-                    {i18n.t('common:close_title')}
+                    {i18n.t(COMMON_CLOSE_TITLE)}
                 </Button>
             </div>
         </Dialog>

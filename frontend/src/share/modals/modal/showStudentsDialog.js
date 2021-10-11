@@ -21,8 +21,20 @@ import { UploadFile } from '../../../components/UploadFile/UploadFile';
 import {
     GROUP_LABEL,
     STUDENT_LABEL,
-    SERVICE_MESSAGE_STUDENT_LABEL,
+    EXIST_LABEL,
+    GROUP_STUDENTS,
+    STUDENTS_LABEL,
+    NO_EXIST_STUDENTS_AT_GROUP,
+    STUDENTS_EXIST_IN_THIS_GROUP,
 } from '../../../constants/translationLabels';
+import {
+    COMMON_STUDENT_TITLE,
+    COMMON_CLOSE_TITLE,
+    COMMON_UPLOAD_FROM_FILE_TITLE,
+    UPLOAD_FROM_FILE,
+    MOVE_TO_GROUP_TITLE,
+    COMMON_MOVE_TO_GROUP_TITLE,
+} from '../../../constants/translationLabels/common';
 
 export const ShowStudentsDialog = (props) => {
     const {
@@ -161,9 +173,9 @@ export const ShowStudentsDialog = (props) => {
     };
     const getExistingGroupStudent = () => {
         return successHandler(
-            i18n.t('serviceMessages:students_exist_in_this_group', {
-                cardType: i18n.t('common:student_title'),
-                actionType: i18n.t(SERVICE_MESSAGE_STUDENT_LABEL),
+            i18n.t(STUDENTS_EXIST_IN_THIS_GROUP, {
+                cardType: i18n.t(COMMON_STUDENT_TITLE),
+                actionType: i18n.t(EXIST_LABEL),
             }),
         );
     };
@@ -222,17 +234,17 @@ export const ShowStudentsDialog = (props) => {
                                         {`${t(GROUP_LABEL)} - `}
                                         <span>{`${props.group.title}`}</span>
                                     </h2>
-                                    {t('no_exist_students_in_group')}
+                                    {t(NO_EXIST_STUDENTS_AT_GROUP)}
                                 </>
                             ) : (
                                 <span className="table-student-data">
                                     <h3 className="title-align">
                                         <span>
                                             {students.length !== 1
-                                                ? `${t('students_label')} `
+                                                ? `${t(STUDENTS_LABEL)} `
                                                 : `${t(STUDENT_LABEL)} `}
                                         </span>
-                                        {`${t('group_students')} `}
+                                        {`${t(GROUP_STUDENTS)} `}
                                         <span>{`${props.group.title}`}</span>
                                     </h3>
 
@@ -272,9 +284,9 @@ export const ShowStudentsDialog = (props) => {
                         variant="contained"
                         onClick={handleOpenDialogFile}
                         color="primary"
-                        title={i18n.t('upload_from_file')}
+                        title={i18n.t(UPLOAD_FROM_FILE)}
                     >
-                        {i18n.t('common:upload_from_file_title')}
+                        {i18n.t(COMMON_UPLOAD_FROM_FILE_TITLE)}
                     </Button>
                     {students.length !== 0 ? (
                         <Button
@@ -299,7 +311,7 @@ export const ShowStudentsDialog = (props) => {
                         color="primary"
                         title={i18n.t('close_title')}
                     >
-                        {i18n.t('common:close_title')}
+                        {i18n.t(COMMON_CLOSE_TITLE)}
                     </Button>
                 </div>
             </Dialog>
@@ -327,9 +339,9 @@ export const ShowStudentsDialog = (props) => {
                                 variant="contained"
                                 onClick={handleSubmitGroupStudents}
                                 color="primary"
-                                title={i18n.t('move_to_group_title')}
+                                title={i18n.t(MOVE_TO_GROUP_TITLE)}
                             >
-                                {i18n.t('common:move_to_group_title')}
+                                {i18n.t(COMMON_MOVE_TO_GROUP_TITLE)}
                             </Button>
                             <Button
                                 variant="contained"

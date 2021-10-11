@@ -7,6 +7,11 @@ import './SearchPanel.scss';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 import Card from '../Card/Card';
+import { TYPE_TO_SEARCH, SHOW_ARCHIVED, SHOW_REGULAR } from '../../constants/translationLabels';
+import {
+    COMMON_SHOW_DISABLED,
+    COMMON_SHOW_ENABLED,
+} from '../../constants/translationLabels/common';
 
 const SearchPanel = ({ SearchChange, showDisabled, showArchived, forLessons }) => {
     const { t } = useTranslation('formElements');
@@ -57,7 +62,7 @@ const SearchPanel = ({ SearchChange, showDisabled, showArchived, forLessons }) =
                             color="primary"
                         />
                     }
-                    label={!state.checkedB ? t('common:show_disabled') : t('common:show_enabled')}
+                    label={!state.checkedB ? t(COMMON_SHOW_DISABLED) : t(COMMON_SHOW_ENABLED)}
                 />
             )}
             {!forLessons && showArchived ? (
@@ -70,7 +75,7 @@ const SearchPanel = ({ SearchChange, showDisabled, showArchived, forLessons }) =
                             color="secondary"
                         />
                     }
-                    label={!state.checkedArchived ? t('show_archived') : t('show_regular')}
+                    label={!state.checkedArchived ? t(SHOW_ARCHIVED) : t(SHOW_REGULAR)}
                 />
             ) : (
                 ''
@@ -79,7 +84,7 @@ const SearchPanel = ({ SearchChange, showDisabled, showArchived, forLessons }) =
             <TextField
                 className="form-field"
                 label={<FaSearch />}
-                placeholder={t('type_to_search')}
+                placeholder={t(TYPE_TO_SEARCH)}
                 value={term}
                 onChange={onSearchChange}
             />

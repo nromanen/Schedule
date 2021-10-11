@@ -20,14 +20,13 @@ import {
     getTeacherFullName,
     getTeacherWithShortPosition,
 } from './renderTeacher';
+import { GROUP_Y_LABEL, FORM_GROUP_LABEL } from '../constants/translationLabels';
 import {
-    GROUP_Y_LABEL,
-    FORM_GROUP_LABEL,
     EMPTY_SCHEDULE,
     COMMON_REGULAR_LESSON_LABEL,
     COMMON_LINK_TO_MEETING_WORD,
     COMMON_VACATION_LABEL,
-} from '../constants/translationLabels';
+} from '../constants/translationLabels/common';
 
 const shortid = require('shortid');
 

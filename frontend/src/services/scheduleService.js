@@ -2,18 +2,6 @@ import get from 'lodash';
 import { store } from '../index';
 import axios from '../helper/axios';
 import i18n from '../helper/i18n';
-import {
-    BACK_END_SUCCESS_OPERATION,
-    NO_CURRENT_SEMESTER_ERROR,
-    UPDATED_LABEL,
-    CLEARED_LABEL,
-    COMMON_SCHEDULE_TITLE,
-    SERVICE_MESSAGE_GROUP_LABEL,
-    FORM_CHOSEN_SEMESTER_LABEL,
-    CHOSEN_SEMESTER_HAS_NOT_GROUPS,
-    SERVICE_MESSAGE_SENT_LABEL,
-    FORM_SCHEDULE_LABEL,
-} from '../constants/translationLabels';
 import { errorHandler, infoHandler, successHandler } from '../helper/handlerAxios';
 import {
     checkAvailabilitySchedule,
@@ -68,6 +56,20 @@ import { TEACHER_SCHEDULE_FORM } from '../constants/reduxForms';
 import { resetFormHandler } from '../helper/formHelper';
 import { getAllTeachersByDepartmentId } from '../redux/actions/teachers';
 import { sortGroup } from './groupService';
+import {
+    BACK_END_SUCCESS_OPERATION,
+    UPDATED_LABEL,
+    CLEARED_LABEL,
+    SERVICE_MESSAGE_GROUP_LABEL,
+    FORM_CHOSEN_SEMESTER_LABEL,
+    CHOSEN_SEMESTER_HAS_NOT_GROUPS,
+    SERVICE_MESSAGE_SENT_LABEL,
+    FORM_SCHEDULE_LABEL,
+} from '../constants/translationLabels';
+import {
+    NO_CURRENT_SEMESTER_ERROR,
+    COMMON_SCHEDULE_TITLE,
+} from '../constants/translationLabels/common';
 
 export const getCurrentSemesterService = () => {
     axios

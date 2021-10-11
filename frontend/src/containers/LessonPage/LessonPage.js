@@ -38,11 +38,11 @@ import './LessonPage.scss';
 import SearchPanel from '../../share/SearchPanel/SearchPanel';
 import AddSubject from '../../components/AddSubjectForm/AddSubjectForm';
 import { search } from '../../helper/search';
+import { FORM_GROUP_LABEL } from '../../constants/translationLabels';
 import {
-    FORM_GROUP_LABEL,
     LESSON_FOR_GROUP_TITLE,
     LESSON_NO_LESSON_FOR_GROUP_LABEL,
-} from '../../constants/translationLabels';
+} from '../../constants/translationLabels/common';
 
 const GroupField = styled(TextField)({
     display: 'inline-block',

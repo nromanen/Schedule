@@ -12,7 +12,7 @@ import {
     CANCEL_SCHEDULE,
     SENT_SCHEDULE,
     ALL_TEACHERS,
-} from '../constants/translationLabels';
+} from '../constants/translationLabels/common';
 
 export const MultiSelect = (props) => {
     const { t } = useTranslation('common');

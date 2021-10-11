@@ -14,7 +14,7 @@ import {
     WEEK_ODD_TITLE,
     WEEK_EVEN_TITLE,
     BUSY_ROOMS_HEADING,
-} from '../../constants/translationLabels';
+} from '../../constants/translationLabels/common';
 
 const BusyRooms = (props) => {
     const { t } = useTranslation('common');

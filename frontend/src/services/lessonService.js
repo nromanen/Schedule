@@ -1,14 +1,5 @@
 import axios from '../helper/axios';
 import { store } from '../index';
-import {
-    BACK_END_SUCCESS_OPERATION,
-    FORM_LESSON_LABEL,
-    UPDATED_LABEL,
-    CREATED_LABEL,
-    DELETED_LABEL,
-    COPIED_LABEL,
-    COMMON_LESSON_SERVICE_IS_NOT_UNIQUE,
-} from '../constants/translationLabels';
 import { LESSON_TYPES_URL, LESSON_URL, COPY_LESSON_URL } from '../constants/axios';
 import { LESSON_FORM } from '../constants/reduxForms';
 import { handleSnackbarOpenService } from './snackbarService';
@@ -28,6 +19,15 @@ import { checkUniqLesson } from '../validation/storeValidation';
 import i18n from '../helper/i18n';
 import { errorHandler, successHandler } from '../helper/handlerAxios';
 import { resetFormHandler } from '../helper/formHelper';
+import {
+    BACK_END_SUCCESS_OPERATION,
+    FORM_LESSON_LABEL,
+    UPDATED_LABEL,
+    CREATED_LABEL,
+    DELETED_LABEL,
+    COPIED_LABEL,
+} from '../constants/translationLabels';
+import { COMMON_LESSON_SERVICE_IS_NOT_UNIQUE } from '../constants/translationLabels/common';
 
 export const getLessonsByGroupService = (groupId) => {
     axios

@@ -15,11 +15,12 @@ import { authTypes } from '../../constants/auth';
 
 import { email, required } from '../../validation/validateFields';
 import { links } from '../../constants/links';
+import { EMAIL_LABEL } from '../../constants/translationLabels';
 import {
-    EMAIL_LABEL,
     LOGIN_TITLE,
     RESET_PASSWORD_PAGE_TITLE,
-} from '../../constants/translationLabels';
+    RESET_PASSWORD_BUTTON,
+} from '../../constants/translationLabels/common';
 
 let ResetPasswordForm = (props) => {
     const { t } = useTranslation('formElements');
@@ -57,7 +58,7 @@ let ResetPasswordForm = (props) => {
                 variant="contained"
                 color="primary"
             >
-                {translation('reset_password_button')}
+                {translation(RESET_PASSWORD_BUTTON)}
             </Button>
             <div className="group-btns">
                 <button

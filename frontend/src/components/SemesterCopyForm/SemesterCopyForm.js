@@ -17,9 +17,9 @@ import { required } from '../../validation/validateFields';
 import {
     FORM_SEMESTER_LABEL,
     FORM_SEMESTER_COPY_RED_HINT,
-    TEACHER_SCHEDULE_LABEL,
     FORM_SEMESTER_COPY_HINT,
 } from '../../constants/translationLabels';
+import { TEACHER_SCHEDULE_LABEL } from '../../constants/translationLabels/common';
 
 const shortid = require('shortid');
 

@@ -12,7 +12,7 @@ import i18n from '../helper/i18n';
 import { setLoadingService } from './loadingService';
 import { getTeachersWithoutAccount } from './teacherService';
 import { errorHandler, successHandler } from '../helper/handlerAxios';
-import { FORM_TEACHER_LABEL } from '../constants/translationLabels';
+import { FORM_TEACHER_LABEL, SUCCESSFULLY_MERGED } from '../constants/translationLabels';
 
 export const getUsersService = () => {
     axios
@@ -100,7 +100,7 @@ export const mergeUserAndTeacherService = (mergeObj) => {
             successHandler(
                 i18n.t(BACK_END_SUCCESS_OPERATION, {
                     cardType: i18n.t(FORM_USER_LABEL),
-                    actionType: i18n.t('serviceMessages:successfully_merged'),
+                    actionType: i18n.t(SUCCESSFULLY_MERGED),
                 }),
             );
         })

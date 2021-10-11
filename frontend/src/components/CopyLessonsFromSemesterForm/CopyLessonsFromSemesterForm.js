@@ -12,12 +12,8 @@ import Card from '../../share/Card/Card';
 
 import { COPY_LESSONS_FROM_SEMESTER_FORM } from '../../constants/reduxForms';
 import { required } from '../../validation/validateFields';
-import {
-    FORM_SEMESTER_LABEL,
-    COPY_LESSON,
-    COPY_LESSONS_FROM_SEMESTER,
-    FORM_COPY_LESSON,
-} from '../../constants/translationLabels';
+import { FORM_SEMESTER_LABEL, FORM_COPY_LESSON } from '../../constants/translationLabels';
+import { COPY_LESSON, COPY_LESSONS_FROM_SEMESTER } from '../../constants/translationLabels/common';
 
 const shortid = require('shortid');
 

@@ -12,7 +12,7 @@ import {
     setScheduleTypeService,
 } from '../../services/scheduleService';
 import { getPublicClassScheduleListService } from '../../services/classService';
-import { HOME_TITLE } from '../../constants/translationLabels';
+import { HOME_TITLE } from '../../constants/translationLabels/common';
 
 const HomePage = (props) => {
     const { t } = useTranslation('common');

@@ -49,7 +49,7 @@ import {
     COMMON_DOWNLOAD_PDF,
     COMMON_ODD_WEEK,
     COMMON_EVEN_WEEK,
-} from '../../constants/translationLabels';
+} from '../../constants/translationLabels/common';
 
 const GroupSchedulePage = (props) => {
     const [place, setPlace] = useState(places.TOGETHER);

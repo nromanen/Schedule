@@ -11,7 +11,11 @@ import './modal.scss';
 import i18n from 'i18next';
 import { disabledCard } from '../../../constants/disabledCard';
 import './setDefaultDialog.scss';
-import { COMMON_NO_BUTTON_TITLE } from '../../../constants/translationLabels';
+import { FORM_SEMESTER_ELEMENT } from '../../../constants/translationLabels';
+import {
+    COMMON_NO_BUTTON_TITLE,
+    COMMON_YES_BUTTON_TITLE,
+} from '../../../constants/translationLabels/common';
 
 export const SetChangeDialog = (props) => {
     const { onClose, cardId, isHide, open } = props;
@@ -45,7 +49,7 @@ export const SetChangeDialog = (props) => {
                     )}
 
                     {i18n.t('common:this_card_type', {
-                        cardType: i18n.t(`formElements:semester_element`),
+                        cardType: i18n.t(FORM_SEMESTER_ELEMENT),
                     })}
                 </>
             </DialogTitle>
@@ -56,7 +60,7 @@ export const SetChangeDialog = (props) => {
                     color="primary"
                     onClick={() => onClose(cardId)}
                 >
-                    {i18n.t('common:yes_button_title')}
+                    {i18n.t(COMMON_YES_BUTTON_TITLE)}
                 </Button>
                 <Button className="dialog-button" variant="contained" onClick={() => onClose('')}>
                     {i18n.t(COMMON_NO_BUTTON_TITLE)}

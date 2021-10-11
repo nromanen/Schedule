@@ -21,7 +21,7 @@ import {
     HOLIDAY_LABEL,
     DATE_LABEL,
     FOR_ALL,
-} from '../../../constants/translationLabels';
+} from '../../../constants/translationLabels/common.js';
 
 const TemporaryScheduleList = (props) => {
     const { t } = useTranslation('common');

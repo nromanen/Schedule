@@ -20,7 +20,7 @@ import {
     NO_CURRENT_SEMESTER,
     CLEAR_SCHEDULE_LABEL,
     USE_PC,
-} from '../../constants/translationLabels';
+} from '../../constants/translationLabels/common';
 
 const SchedulePage = (props) => {
     const { t } = useTranslation('common');

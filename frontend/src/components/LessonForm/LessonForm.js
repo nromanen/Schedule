@@ -28,7 +28,6 @@ import {
     CREATE_TITLE,
     SAVE_BUTTON_LABEL,
     GROUP_LABEL,
-    TYPE_LABEL,
     SUBJECT_LABEL,
     LESSON_LABEL,
     NOT_SELECTED_LABEL,
@@ -41,6 +40,7 @@ import {
     HOURS_LABEL,
     TEACHER_LABEL,
 } from '../../constants/translationLabels';
+import { TYPE_LABEL } from '../../constants/translationLabels/common';
 
 const useStyles = makeStyles(() => ({
     notSelected: {

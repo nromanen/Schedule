@@ -7,12 +7,8 @@ import i18n from 'i18next';
 import { getTeacherName } from '../../helper/renderTeacher';
 import Card from '../../share/Card/Card';
 import './LessonList.scss';
-import {
-    COPY_LESSON,
-    FORM_GROUPED_LABEL,
-    DELETE_LESSON,
-    EDIT_LESSON,
-} from '../../constants/translationLabels';
+import { FORM_GROUPED_LABEL } from '../../constants/translationLabels';
+import { COPY_LESSON, DELETE_LESSON, EDIT_LESSON } from '../../constants/translationLabels/common';
 
 const LessonsList = (props) => {
     const { lessons } = props;

@@ -36,7 +36,7 @@ import {
     COMMON_DAY_LABEL,
     COMMON_CLASS_SCHEDULE_MANAGEMENT_TITLE,
     COMMON_SAVE_BUTTON_LABEL,
-} from '../../constants/translationLabels';
+} from '../../constants/translationLabels/common';
 
 const AddSemesterForm = (props) => {
     const clearCheckboxes = () => {

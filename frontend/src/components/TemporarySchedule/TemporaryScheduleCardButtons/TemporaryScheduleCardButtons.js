@@ -5,7 +5,7 @@ import { selectTemporaryScheduleService } from '../../../services/temporarySched
 import {
     COMMON_EDIT_HOVER_TITLE,
     COMMON_DELETE_HOVER_TITLE,
-} from '../../../constants/translationLabels';
+} from '../../../constants/translationLabels/common';
 
 const TemporaryScheduleCardButtons = (props) => {
     const { t } = useTranslation('common');
