@@ -20,6 +20,7 @@ export const MultiselectForGroups = (props) => {
         if (props.options !== undefined && valueRef.current) {
             return valueRef.current.length === props.options.length;
         }
+        return false;
     };
     const isOptionSelected = (option) =>
         valueRef.current.some(({ value }) => value === option.value) || isSelectAllSelected();

@@ -27,8 +27,8 @@ const ScheduleLessonsList = (props) => {
         if (group) selectGroupIdService(group.id);
     };
 
-    const groupFinderHandle = (groupId) => {
-        if (groupId) return groups.find((group) => group.id === groupId);
+    const groupFinderHandle = (groupIdProp) => {
+        if (groupIdProp) return groups.find((group) => group.id === groupIdProp);
         return '';
     };
 
@@ -55,8 +55,7 @@ const ScheduleLessonsList = (props) => {
             hoursInSchedule += 1;
         });
 
-        for (let i = 0; i < hours - hoursInSchedule; i++) {
-            console.log(lessons);
+        for (let i = 0; i < hours - hoursInSchedule; i += 1) {
             lessonItem.push(
                 <section key={lesson.id + i}>
                     <ScheduleItem
@@ -93,10 +92,8 @@ const ScheduleLessonsList = (props) => {
                 <Board className="board lesson-board">
                     {lessons.map((lesson) => lessonItems(lesson))}
                 </Board>
-            ) : groupId ? (
-                t('lesson_no_lesson_for_group_label')
             ) : (
-                ''
+                groupId && t('lesson_no_lesson_for_group_label')
             )}
         </>
     );
