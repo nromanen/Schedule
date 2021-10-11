@@ -1,5 +1,6 @@
 import axios from '../helper/axios';
-import { store } from '../index';
+import { store } from '../store';
+
 import {
     BACK_END_SUCCESS_OPERATION,
     LESSON_LABEL,
@@ -20,7 +21,8 @@ import {
     setUniqueError,
     storeLessonCard,
     updateLessonCard,
-} from '../redux/actions/index';
+} from '../actions/index';
+
 import { snackbarTypes } from '../constants/snackbarTypes';
 import { checkUniqLesson } from '../validation/storeValidation';
 import i18n from '../helper/i18n';

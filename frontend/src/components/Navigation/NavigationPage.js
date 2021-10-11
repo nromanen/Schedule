@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { MenuItem, Select } from '@material-ui/core';
 import { isNil } from 'lodash';
-import { setCurrentSemester } from '../../redux/actions';
+import { setCurrentSemester } from '../../actions';
 import { links } from '../../constants/links';
 import './NavigationPage.scss';
 import { general, tabsComponents } from '../../constants/navigationComponents';
@@ -64,14 +64,14 @@ const NavigationPage = (props) => {
     };
     return (
         <div className={classes.root}>
-            <AppBar position="static">
+            <AppBar position='static'>
                 <Tabs
                     value={value}
                     onChange={handleChange}
-                    aria-label="simple tabs example"
-                    indicatorColor="primary"
-                    variant="scrollable"
-                    scrollButtons="on"
+                    aria-label='simple tabs example'
+                    indicatorColor='primary'
+                    variant='scrollable'
+                    scrollButtons='on'
                     className={classes.header}
                 >
                     {tabsComponents.map((tabOne, index) => (
@@ -88,9 +88,9 @@ const NavigationPage = (props) => {
                                 </Link>
                             ) : (
                                 <Select
-                                    className="general MuiTab-root"
-                                    labelId="demo-controlled-open-select-label"
-                                    id="demo-controlled-open-select"
+                                    className='general MuiTab-root'
+                                    labelId='demo-controlled-open-select-label'
+                                    id='demo-controlled-open-select'
                                     value={gen}
                                     onChange={(event) => {
                                         const { eventValue } = event.target;
@@ -101,7 +101,7 @@ const NavigationPage = (props) => {
                                     {Object.entries(tabOne).map((data, indexNested) => {
                                         return (
                                             <MenuItem
-                                                className="menu-dictionary MuiTab-root"
+                                                className='menu-dictionary MuiTab-root'
                                                 value={data[1].name}
                                                 key={data[0]}
                                                 {...a11yProps(indexNested)}

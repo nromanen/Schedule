@@ -26,7 +26,7 @@ const ScheduleItem = (props) => {
         grouped ? (
             <FaUserPlus
                 title={t('formElements:grouped_label')}
-                className="svg-btn copy-btn align-left info-btn"
+                className='svg-btn copy-btn align-left info-btn'
             />
         ) : (
             ''
@@ -35,7 +35,7 @@ const ScheduleItem = (props) => {
     return (
         <Card id={itemNodeId} class={props.class} draggable>
             <input
-                type="hidden"
+                type='hidden'
                 value={JSON.stringify({
                     lesson,
                     id: itemId,
@@ -43,15 +43,15 @@ const ScheduleItem = (props) => {
             />
             {props.inBoard ? (
                 <>
-                    <div className="cards-btns delete-item" id={deleteNodeId}>
+                    <div className='cards-btns delete-item' id={deleteNodeId}>
                         <MdDelete
                             title={t('common:delete_schedule_item')}
-                            className="svg-btn delete-btn"
+                            className='svg-btn delete-btn'
                             onClick={() => props.deleteItem(itemId, item.lesson.group.id)}
                         />
                         <MdEdit
                             title={t('common:edit_schedule_item')}
-                            className="svg-btn edit-btn"
+                            className='svg-btn edit-btn'
                             onClick={() => props.editItem(item)}
                         />
                     </div>

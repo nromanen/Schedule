@@ -1,6 +1,7 @@
 import axios from '../helper/axios';
 import { DEPARTMENT_URL } from '../constants/axios';
-import { store } from '../index';
+import { store } from '../store';
+
 import { resetFormHandler } from '../helper/formHelper';
 import { DEPARTMENT_FORM } from '../constants/reduxForms';
 import { errorHandler, successHandler } from '../helper/handlerAxios';
@@ -16,7 +17,7 @@ import {
     setDisabledDepartment,
     setEnabledDepartment,
     updateDepart,
-} from '../redux/actions/departments';
+} from '../actions/departments';
 
 export const createDepartmentService = (data) => {
     axios

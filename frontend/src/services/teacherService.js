@@ -1,4 +1,5 @@
-import { store } from '../index';
+import { store } from '../store';
+
 import {
     BACK_END_SUCCESS_OPERATION,
     UPDATED_LABEL,
@@ -21,7 +22,7 @@ import {
     setDisabledTeachers,
     showAllTeachers,
     updateTeacherCard,
-} from '../redux/actions';
+} from '../actions';
 import { errorHandler, successHandler } from '../helper/handlerAxios';
 import { resetFormHandler } from '../helper/formHelper';
 import { setLoadingService } from './loadingService';

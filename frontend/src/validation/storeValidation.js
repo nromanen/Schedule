@@ -1,7 +1,8 @@
 import Moment from 'moment';
 import { extendMoment } from 'moment-range';
+import { store } from '../store';
+
 import { UNIQUE_ERROR_MESSAGE } from '../constants/validation';
-import { store } from '../index';
 import i18n from '../helper/i18n';
 
 export const checkUniqClassName = (className) => {

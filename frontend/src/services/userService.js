@@ -1,5 +1,6 @@
 import axios from '../helper/axios';
-import { store } from '../index';
+import { store } from '../store';
+
 import { BACK_END_SUCCESS_OPERATION, USER_LABEL } from '../constants/services';
 import {
     MERGE_USER_AND_TEACHER_URL,
@@ -7,7 +8,8 @@ import {
     USER_PROFILE,
     UPDATE_USER_PROFILE,
 } from '../constants/axios';
-import { setUsers, setUser, setTeacher } from '../redux/actions/index';
+import { setUsers, setUser, setTeacher } from '../actions/index';
+
 import i18n from '../helper/i18n';
 import { setLoadingService } from './loadingService';
 import { getTeachersWithoutAccount } from './teacherService';

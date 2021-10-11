@@ -1,5 +1,6 @@
+import { store } from '../store';
+
 import get from 'lodash';
-import { store } from '../index';
 import axios from '../helper/axios';
 import i18n from '../helper/i18n';
 import {
@@ -27,7 +28,8 @@ import {
     showAllTeachers,
     setTeacherRangeSchedule,
     setTeacherViewType,
-} from '../redux/actions/index';
+} from '../actions/index';
+
 import {
     setLoadingService,
     setScheduleLoadingService,
@@ -59,7 +61,7 @@ import { snackbarTypes } from '../constants/snackbarTypes';
 import { showBusyRooms } from './busyRooms';
 import { TEACHER_SCHEDULE_FORM } from '../constants/reduxForms';
 import { resetFormHandler } from '../helper/formHelper';
-import { getAllTeachersByDepartmentId } from '../redux/actions/teachers';
+import { getAllTeachersByDepartmentId } from '../actions/teachers';
 import { sortGroup } from './groupService';
 
 export const getCurrentSemesterService = () => {
