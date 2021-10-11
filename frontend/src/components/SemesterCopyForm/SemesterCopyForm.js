@@ -14,6 +14,7 @@ import './SemesterCopyForm.scss';
 
 import { SEMESTER_COPY_FORM } from '../../constants/reduxForms';
 import { required } from '../../validation/validateFields';
+import { SEMESTER_LABEL } from '../../constants/services';
 
 const useStyles = makeStyles((theme) => ({
     root: {

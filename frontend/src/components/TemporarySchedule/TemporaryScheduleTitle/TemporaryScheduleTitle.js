@@ -27,6 +27,7 @@ import {
     selectTeacherIdService,
 } from '../../../services/temporaryScheduleService';
 import { handleTeacherInfo } from '../../../helper/renderTeacher';
+import { SEMESTER_LABEL } from '../../../constants/services';
 
 const useStyles = makeStyles({
     teacherField: {
@@ -169,7 +170,7 @@ const TemporaryScheduleTitle = (props) => {
                         <FormControlLabel
                             value={temporaryScheduleRadioTypes.SEMESTER}
                             control={<Radio color="primary" />}
-                            label={t('formElements:semester_label')}
+                            label={t(SEMESTER_LABEL)}
                         />
                         <FormControlLabel
                             value={temporaryScheduleRadioTypes.FEW_DAYS}

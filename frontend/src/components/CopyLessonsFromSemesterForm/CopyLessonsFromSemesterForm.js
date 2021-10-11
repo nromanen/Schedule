@@ -12,12 +12,13 @@ import Card from '../../share/Card/Card';
 
 import { COPY_LESSONS_FROM_SEMESTER_FORM } from '../../constants/reduxForms';
 import { required } from '../../validation/validateFields';
+import { SEMESTER_LABEL } from '../../constants/services';
 
 const CopyLessonsFromSemesterForm = (props) => {
     const { t } = useTranslation('common');
     const { semesters, handleSubmit, pristine, submitting } = props;
     const renderSemesterList = () => {
-        if (semesters && semesters.length > 1) {
+        if (semesters?.length > 1) {
             return (
                 <Field
                     id="fromSemesterId"
@@ -36,7 +37,7 @@ const CopyLessonsFromSemesterForm = (props) => {
                 </Field>
             );
         }
-        if (semesters && semesters.length === 1) {
+        if (semesters?.length === 1) {
             handleSubmit({ fromSemesterId: semesters[0].id });
             return <p>{semesters[0].description}</p>;
         }

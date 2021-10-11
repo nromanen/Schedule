@@ -1,5 +1,4 @@
 import { store } from '../index';
-
 import { setLoading, setScheduleLoading, setSemesterLoading } from '../redux/actions/index';
 
 export const setLoadingService = (isLoading) => {
