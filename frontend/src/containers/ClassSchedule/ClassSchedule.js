@@ -74,7 +74,7 @@ const ClassSchedule = (props) => {
                 <ClassForm onSubmit={submit} onReset={handleFormReset} />
                 <section className="container-flex-wrap">
                     {props.classScheduler.map((schedule) => (
-                        <Card class="class-card-width" key={schedule.id}>
+                        <Card additionClassName="class-card-width" key={schedule.id}>
                             <div className="cards-btns">
                                 <FaEdit
                                     className="svg-btn"

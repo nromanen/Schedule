@@ -9,29 +9,25 @@ import Button from '@material-ui/core/Button';
 import './modal.scss';
 
 export const ModalWindow = (props) => {
-    const { onClose, cardId, isHide, open, windowTitle } = props;
+    const { onClose, cardId, open, windowTitle } = props;
 
     const handleClose = () => {
         onClose(cardId);
     };
+
     const renderOkButton = () => {
         if (!props.isOkButton) {
-            return;
+            return null;
         }
         return (
-            <Button
-                className="dialog-button"
-                variant="contained"
-                color="primary"
-                // onClick={() => onClose(cardId)}
-            >
+            <Button className="dialog-button" variant="contained" color="primary">
                 {props.okButtonLabel}
             </Button>
         );
     };
     const renderNoButton = () => {
         if (!props.isNoButton) {
-            return;
+            return null;
         }
         return (
             <Button className="dialog-button" variant="contained" onClick={() => onClose('')}>
@@ -42,7 +38,7 @@ export const ModalWindow = (props) => {
 
     const renderModalButtons = () => {
         if (!props.isOkButton && !props.isNoButton) {
-            return;
+            return null;
         }
         return (
             <div className="buttons-container">

@@ -3,7 +3,7 @@ import MomentUtils from '@date-io/moment';
 import * as moment from 'moment';
 import { MuiPickersUtilsProvider, DatePicker } from '@material-ui/pickers';
 
-const renderMounthPicker = ({
+const renderMonthPicker = ({
     label,
     input: { value, ...inputProps },
     meta: { touched, invalid, error },
@@ -24,4 +24,4 @@ const renderMounthPicker = ({
         </MuiPickersUtilsProvider>
     );
 };
-export default renderMounthPicker;
+export default renderMonthPicker;

@@ -52,7 +52,7 @@ const ClassFormFunc = (props) => {
         );
 
     return (
-        <Card class="form-card">
+        <Card additionClassName="form-card">
             <h2 className="form-title">
                 {props.classScheduleOne.id ? t('edit_title') : t('create_title')}{' '}
                 {t('class_y_label')}

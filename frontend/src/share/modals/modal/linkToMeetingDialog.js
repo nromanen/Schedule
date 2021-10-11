@@ -18,6 +18,10 @@ export const LinkToMeetingDialog = (props) => {
     const handleClose = () => {
         onClose(cardId);
     };
+    const ifHideTitle =
+        isHide === disabledCard.HIDE
+            ? i18n.t('common:do_you_wanna_disable')
+            : i18n.t('common:do_you_wanna_show');
 
     return (
         <Dialog
@@ -28,36 +32,28 @@ export const LinkToMeetingDialog = (props) => {
             open={open}
         >
             <DialogTitle id="confirm-dialog-title" className="confirm-dialog">
-                <>
-                    {isHide ? (
-                        <>
-                            {isHide === disabledCard.HIDE ? (
-                                <>{i18n.t('common:do_you_wanna_disable')}</>
-                            ) : (
-                                <>{i18n.t('common:do_you_wanna_show')}</>
-                            )}
-                        </>
-                    ) : (
-                        <>
-                            {i18n.t('common:do_you_wanna')}{' '}
-                            <span>
-                                <a
-                                    className="go-to-meeting"
-                                    href={linkToMeeting}
-                                    target="_blank"
-                                    title={linkToMeeting}
-                                    rel="noreferrer"
-                                >
-                                    {i18n.t(`common:go_to_meeting_word`)}
-                                </a>
-                            </span>{' '}
-                        </>
-                    )}
+                {isHide ? (
+                    ifHideTitle
+                ) : (
+                    <>
+                        {i18n.t('common:do_you_wanna')}{' '}
+                        <span>
+                            <a
+                                className="go-to-meeting"
+                                href={linkToMeeting}
+                                target="_blank"
+                                title={linkToMeeting}
+                                rel="noreferrer"
+                            >
+                                {i18n.t(`common:go_to_meeting_word`)}
+                            </a>
+                        </span>{' '}
+                    </>
+                )}
 
-                    {i18n.t('common:by_this_card_type', {
-                        cardType: i18n.t(`formElements:reference_element`),
-                    })}
-                </>
+                {i18n.t('common:by_this_card_type', {
+                    cardType: i18n.t(`formElements:reference_element`),
+                })}
             </DialogTitle>
             <div className="buttons-container">
                 <Button

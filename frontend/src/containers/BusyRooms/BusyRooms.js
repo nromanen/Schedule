@@ -133,7 +133,7 @@ const BusyRooms = (props) => {
                             <h2 className="busy-heading">{t('busy_rooms_heading')}</h2>
                             <section className="view-rooms">
                                 {busyRooms.map((busyRoom) => (
-                                    <Card class="busy-room" key={busyRoom.room_id}>
+                                    <Card additionClassName="busy-room" key={busyRoom.room_id}>
                                         {renderRoomTitle(busyRoom.room_name, busyRoom.room_type)}
 
                                         {busyRoom.schedules.map((schedule, index) => {

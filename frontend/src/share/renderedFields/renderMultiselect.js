@@ -9,11 +9,11 @@ export const RenderMultiselect = ({
     displayValue,
     selectedValues,
     alwaysDisplayedItem,
-    meta: { touched, invalid, error },
 }) => {
     useEffect(() => {
         input.onChange([alwaysDisplayedItem]);
     }, [alwaysDisplayedItem.id]);
+
     return (
         <>
             <Multiselect

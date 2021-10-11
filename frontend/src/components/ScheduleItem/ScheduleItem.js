@@ -47,7 +47,7 @@ const ScheduleItem = (props) => {
         );
 
     return (
-        <Card id={itemNodeId} class={props.class} draggable>
+        <Card id={itemNodeId} additionClassName={props.class} draggable>
             {getTitleLesson()}
             <input
                 type="hidden"

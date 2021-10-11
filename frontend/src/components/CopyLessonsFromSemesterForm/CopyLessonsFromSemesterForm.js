@@ -47,7 +47,7 @@ const CopyLessonsFromSemesterForm = (props) => {
     };
 
     return (
-        <Card class="form-card">
+        <Card additionClassName="form-card">
             <form onSubmit={handleSubmit}>
                 <h2 className="lesson-page-h">{t('copy_lesson')}</h2>
                 <p>{t('copy_lessons_from_semester_to_current')}</p>

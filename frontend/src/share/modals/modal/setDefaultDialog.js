@@ -18,7 +18,11 @@ export const SetChangeDialog = (props) => {
     const handleClose = () => {
         onClose(cardId);
     };
-    const className = 'set-default';
+    const ifHideTitle =
+        isHide === disabledCard.HIDE
+            ? i18n.t('common:do_you_wanna_disable')
+            : i18n.t('common:do_you_wanna_show');
+
     return (
         <Dialog
             disableBackdropClick
@@ -29,17 +33,11 @@ export const SetChangeDialog = (props) => {
             <DialogTitle id="confirm-dialog-title">
                 <>
                     {isHide ? (
-                        <>
-                            {isHide === disabledCard.HIDE ? (
-                                <>{i18n.t('common:do_you_wanna_disable')}</>
-                            ) : (
-                                <>{i18n.t('common:do_you_wanna_show')}</>
-                            )}
-                        </>
+                        ifHideTitle
                     ) : (
                         <>
                             {i18n.t('common:do_you_wanna')}{' '}
-                            <span className={className}>{i18n.t(`common:set_default_word`)}</span>{' '}
+                            <span className="set-default">{i18n.t(`common:set_default_word`)}</span>{' '}
                         </>
                     )}
 
@@ -53,7 +51,7 @@ export const SetChangeDialog = (props) => {
                     className="dialog-button"
                     variant="contained"
                     color="primary"
-                    onClick={() => onClose(cardId)}
+                    onClick={handleClose}
                 >
                     {i18n.t('common:yes_button_title')}
                 </Button>

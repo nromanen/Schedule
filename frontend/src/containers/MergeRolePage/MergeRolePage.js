@@ -66,7 +66,7 @@ const MergeRolePage = (props) => {
         <>
             <NavigationPage val={navigation.USERS} />
             <div className="merge-role-form">
-                <Card class="merge-role-card">
+                <Card additionClassName="merge-role-card">
                     <h2 className="under-line">{t('merge_header')}</h2>
                     {props.loading ? (
                         <CircularProgress />

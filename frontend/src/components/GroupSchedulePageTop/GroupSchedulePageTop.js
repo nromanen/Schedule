@@ -145,7 +145,7 @@ const GroupSchedulePageTop = (props) => {
             <p>{t('greetings_schedule_message')}</p>
             <p>{t('greetings_schedule_message_hint')}</p>
             <section className="form-buttons-container top">
-                <Card class="form-card width-auto">
+                <Card additionClassName="form-card width-auto">
                     <form onSubmit={handleSubmit}>
                         {renderSemesterList()}
                         {renderGroupList()}

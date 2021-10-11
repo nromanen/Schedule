@@ -57,7 +57,7 @@ let NewRoomType = (props) => {
                 open={open}
                 onClose={handleClose}
             />
-            <Card class="form-card room-form">
+            <Card additionClassName="form-card room-form">
                 <form className="new-type-container" onSubmit={handleSubmit}>
                     <Field
                         type="text"

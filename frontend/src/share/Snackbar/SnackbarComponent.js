@@ -9,14 +9,11 @@ const Alert = (props) => {
 };
 
 const SnackbarComponent = (props) => {
-    const { message } = props;
-    const { type } = props;
-    const { isOpen } = props;
-    const { handleSnackbarClose } = props;
+    const { message, type, isOpen, handleSnackbarClose } = props;
     return (
         <Snackbar
             open={isOpen}
-            autoHideDuration={props.type === snackbarTypes.ERROR ? null : 3000}
+            autoHideDuration={type === snackbarTypes.ERROR ? null : 3000}
             onClose={handleSnackbarClose}
         >
             <Alert onClose={handleSnackbarClose} severity={type}>

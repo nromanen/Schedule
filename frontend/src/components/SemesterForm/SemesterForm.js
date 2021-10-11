@@ -309,7 +309,7 @@ const AddSemesterForm = (props) => {
     };
 
     return (
-        <Card class="form-card semester-form">
+        <Card additionClassName="form-card semester-form">
             <h2 style={{ textAlign: 'center' }}>
                 {props.semester.id ? t('common:edit') : t('common:create')}
                 {` ${t('common:semester')}`}

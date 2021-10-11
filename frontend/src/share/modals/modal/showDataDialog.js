@@ -17,9 +17,14 @@ import RenderTeacherTable from '../../../helper/renderTeacherTable';
 export const ShowDataDialog = (props) => {
     const { onClose, cardId, open, teachers, department } = props;
     const { t } = useTranslation('formElements');
+
     const handleClose = () => {
         onClose(cardId);
     };
+
+    const teacherLabel =
+        teachers.length !== 1 ? `${t('teachers_label')} ` : `${t('teacher_label')} `;
+
     return (
         <Dialog
             disableBackdropClick
@@ -28,32 +33,24 @@ export const ShowDataDialog = (props) => {
             open={open}
         >
             <DialogTitle id="confirm-dialog-title">
-                <>
+                {teachers.length === 0 ? (
                     <>
-                        {teachers.length === 0 ? (
-                            <>
-                                <h2 className="title-align">
-                                    {`${t('department_teachers_label')} - `}
-                                    <span>{`${department.name}`}</span>
-                                </h2>
-                                {t('no_exist_teachers_at_department')}
-                            </>
-                        ) : (
-                            <>
-                                <h3 className="title-align">
-                                    <span>
-                                        {teachers.length !== 1
-                                            ? `${t('teachers_label')} `
-                                            : `${t('teacher_label')} `}
-                                    </span>
-                                    {`${t('department_teachers')} `}
-                                    <span>{`${department.name}`}</span>
-                                </h3>
-                                <RenderTeacherTable teachers={teachers} />
-                            </>
-                        )}
+                        <h2 className="title-align">
+                            {`${t('department_teachers_label')} - `}
+                            <span>{`${department.name}`}</span>
+                        </h2>
+                        {t('no_exist_teachers_at_department')}
                     </>
-                </>
+                ) : (
+                    <>
+                        <h3 className="title-align">
+                            <span>{teacherLabel}</span>
+                            {`${t('department_teachers')} `}
+                            <span>{`${department.name}`}</span>
+                        </h3>
+                        <RenderTeacherTable teachers={teachers} />
+                    </>
+                )}
             </DialogTitle>
             <div className="buttons-container">
                 <Button

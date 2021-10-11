@@ -82,7 +82,7 @@ const LessonsList = (props) => {
         <div>
             <section className="container-flex-wrap">
                 {lessons.map((lesson) => (
-                    <Card class="done-card" key={lesson.id}>
+                    <Card additionClassName="done-card" key={lesson.id}>
                         <div className="cards-btns">
                             {isGrouped(lesson.grouped)}
                             <MdContentCopy

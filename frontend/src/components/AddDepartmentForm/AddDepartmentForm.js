@@ -32,7 +32,7 @@ const AddDepartment = (props) => {
     }, [department]);
 
     return (
-        <Card class="form-card subject-form">
+        <Card additionClassName="form-card subject-form">
             <h2 style={{ textAlign: 'center' }}>
                 {department.id ? t('edit_title') : t('create_title')}
                 {t('department_y_label')}

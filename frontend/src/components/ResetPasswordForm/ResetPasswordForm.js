@@ -76,7 +76,7 @@ let ResetPasswordForm = (props) => {
     }
 
     return (
-        <Card class="auth-card">
+        <Card additionClassName="auth-card">
             <h2 className="under-line">{translation('reset_password_page_title')}</h2>
             {form}
         </Card>

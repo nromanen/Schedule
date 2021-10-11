@@ -51,7 +51,7 @@ const FreeRooms = (props) => {
             >
                 <div className="cards-container ">
                     <aside className="free-rooms__panel">
-                        <Card className="free-rooms-wrapper freeRoomCard">
+                        <Card additionClassName="free-rooms-wrapper freeRoomCard">
                             <div className="freeRoomForms">
                                 <h2 id="form-dialog-title">{t('find_free_room')}</h2>
                                 <FreeRoomForm
