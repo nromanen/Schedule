@@ -1,9 +1,15 @@
 import { store } from '../store';
 
 import { DISABLED_ROOMS_URL, ROOM_URL } from '../constants/axios';
+import {
+    BACK_END_SUCCESS_OPERATION,
+    ROOM_LABEL,
+    UPDATED_LABEL,
+    CREATED_LABEL,
+    DELETED_LABEL,
+} from '../constants/services';
 import { ROOM_FORM } from '../constants/reduxForms';
 import axios from '../helper/axios';
-
 import {
     showListOfRooms,
     deleteRoom,
@@ -16,39 +22,14 @@ import {
 
 import { errorHandler, successHandler } from '../helper/handlerAxios';
 import { resetFormHandler } from '../helper/formHelper';
-
 import i18n from '../helper/i18n';
 
 export const showListOfRoomsService = () => {
     axios
         .get(ROOM_URL)
         .then((response) => {
-            const bufferArray = [];
             const results = response.data;
-            for (const key in results) {
-                bufferArray.push({
-                    id: key,
-                    ...results[key],
-                });
-            }
-            store.dispatch(showListOfRooms(bufferArray));
-        })
-        .catch((error) => errorHandler(error));
-};
-
-export const deleteRoomCardService = (id) => {
-    axios
-        .delete(`${ROOM_URL}/${id}`)
-        .then((res) => {
-            store.dispatch(deleteRoom(id));
-            getDisabledRoomsService();
-            showListOfRoomsService();
-            successHandler(
-                i18n.t('serviceMessages:back_end_success_operation', {
-                    cardType: i18n.t('formElements:room_label'),
-                    actionType: i18n.t('serviceMessages:deleted_label'),
-                }),
-            );
+            store.dispatch(showListOfRooms(results));
         })
         .catch((error) => errorHandler(error));
 };
@@ -58,6 +39,40 @@ export const getDisabledRoomsService = () => {
         .get(DISABLED_ROOMS_URL)
         .then((res) => {
             store.dispatch(setDisabledRooms(res.data));
+        })
+        .catch((error) => errorHandler(error));
+};
+export const deleteRoomCardService = (id) => {
+    axios
+        .delete(`${ROOM_URL}/${id}`)
+        .then(() => {
+            store.dispatch(deleteRoom(id));
+            getDisabledRoomsService();
+            showListOfRoomsService();
+            successHandler(
+                i18n.t(BACK_END_SUCCESS_OPERATION, {
+                    cardType: i18n.t(ROOM_LABEL),
+                    actionType: i18n.t(DELETED_LABEL),
+                }),
+            );
+        })
+        .catch((error) => errorHandler(error));
+};
+
+const put = (values) => {
+    axios
+        .put(ROOM_URL, values)
+        .then((result) => {
+            store.dispatch(updateOneRoom(result.data));
+            resetFormHandler(ROOM_FORM);
+            getDisabledRoomsService();
+            showListOfRoomsService();
+            successHandler(
+                i18n.t(BACK_END_SUCCESS_OPERATION, {
+                    cardType: i18n.t(ROOM_LABEL),
+                    actionType: i18n.t(UPDATED_LABEL),
+                }),
+            );
         })
         .catch((error) => errorHandler(error));
 };
@@ -72,23 +87,6 @@ export const setEnabledRoomsService = (room) => {
     put(room);
 };
 
-const put = (values) => {
-    axios
-        .put(ROOM_URL, values)
-        .then((result) => {
-            store.dispatch(updateOneRoom(result.data));
-            resetFormHandler(ROOM_FORM);
-            getDisabledRoomsService();
-            showListOfRoomsService();
-            successHandler(
-                i18n.t('serviceMessages:back_end_success_operation', {
-                    cardType: i18n.t('formElements:room_label'),
-                    actionType: i18n.t('serviceMessages:updated_label'),
-                }),
-            );
-        })
-        .catch((error) => errorHandler(error));
-};
 const post = (values) => {
     axios
         .post(ROOM_URL, values)
@@ -96,9 +94,9 @@ const post = (values) => {
             store.dispatch(addRoom(res.data));
             resetFormHandler(ROOM_FORM);
             successHandler(
-                i18n.t('serviceMessages:back_end_success_operation', {
-                    cardType: i18n.t('formElements:room_label'),
-                    actionType: i18n.t('serviceMessages:created_label'),
+                i18n.t(BACK_END_SUCCESS_OPERATION, {
+                    cardType: i18n.t(ROOM_LABEL),
+                    actionType: i18n.t(CREATED_LABEL),
                 }),
             );
         })

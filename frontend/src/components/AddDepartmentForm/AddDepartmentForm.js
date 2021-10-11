@@ -7,12 +7,7 @@ import { useTranslation } from 'react-i18next';
 import Card from '../../share/Card/Card';
 import { DEPARTMENT_FORM } from '../../constants/reduxForms';
 import renderTextField from '../../share/renderedFields/input';
-import {
-    required,
-    uniqueSubject,
-    maxLengthValue,
-    uniqueDepartment,
-} from '../../validation/validateFields';
+import { required, maxLengthValue, uniqueDepartment } from '../../validation/validateFields';
 import { getClearOrCancelTitle, setDisableButton } from '../../helper/disableComponent';
 
 const AddDepartment = (props) => {

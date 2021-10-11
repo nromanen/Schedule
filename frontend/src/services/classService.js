@@ -2,9 +2,14 @@ import axios from '../helper/axios';
 import { store } from '../store';
 
 import { CLASS_URL, PUBLIC_CLASSES_URL } from '../constants/axios';
-
+import {
+    BACK_END_SUCCESS_OPERATION,
+    CLASS_LABEL,
+    UPDATED_LABEL,
+    CREATED_LABEL,
+    DELETED_LABEL,
+} from '../constants/services';
 import { CLASS_FORM } from '../constants/reduxForms';
-
 import {
     addClassScheduleOne,
     setClassScheduleList,
@@ -19,50 +24,28 @@ import { errorHandler, successHandler } from '../helper/handlerAxios';
 import { resetFormHandler } from '../helper/formHelper';
 import { setLoadingService } from './loadingService';
 
-export const getClassScheduleListService = (dispatch) => {
+export const getClassScheduleListService = () => {
     axios
         .get(CLASS_URL)
         .then((response) => {
-            const bufferArray = [];
             const results = response.data;
-            for (const key in results) {
-                bufferArray.push({
-                    id: key,
-                    ...results[key],
-                });
-            }
-            store.dispatch(setClassScheduleList(bufferArray));
+            store.dispatch(setClassScheduleList(results));
             setLoadingService(false);
         })
         .catch((error) => errorHandler(error));
 };
 
-export const getPublicClassScheduleListService = (dispatch) => {
+export const getPublicClassScheduleListService = () => {
     axios
         .get(PUBLIC_CLASSES_URL)
         .then((response) => {
-            const bufferArray = [];
             const results = response.data;
-            for (const key in results) {
-                bufferArray.push({
-                    id: key,
-                    ...results[key],
-                });
-            }
-            store.dispatch(setClassScheduleList(bufferArray));
+            store.dispatch(setClassScheduleList(results));
         })
         .catch((error) => {
             errorHandler(error);
             setLoadingService(false);
         });
-};
-
-export const addClassScheduleOneService = (values) => {
-    if (values.id) {
-        putAddClassScheduleOneService(values);
-    } else {
-        postAddClassScheduleOneService(values);
-    }
 };
 
 export const putAddClassScheduleOneService = (values) => {
@@ -72,9 +55,9 @@ export const putAddClassScheduleOneService = (values) => {
             store.dispatch(updateClassScheduleOne(response.data));
             resetFormHandler(CLASS_FORM);
             successHandler(
-                i18n.t('serviceMessages:back_end_success_operation', {
-                    cardType: i18n.t('formElements:class_label'),
-                    actionType: i18n.t('serviceMessages:updated_label'),
+                i18n.t(BACK_END_SUCCESS_OPERATION, {
+                    cardType: i18n.t(CLASS_LABEL),
+                    actionType: i18n.t(UPDATED_LABEL),
                 }),
             );
         })
@@ -88,13 +71,21 @@ export const postAddClassScheduleOneService = (values) => {
             store.dispatch(addClassScheduleOne(response.data));
             resetFormHandler(CLASS_FORM);
             successHandler(
-                i18n.t('serviceMessages:back_end_success_operation', {
-                    cardType: i18n.t('formElements:class_label'),
-                    actionType: i18n.t('serviceMessages:created_label'),
+                i18n.t(BACK_END_SUCCESS_OPERATION, {
+                    cardType: i18n.t(CLASS_LABEL),
+                    actionType: i18n.t(CREATED_LABEL),
                 }),
             );
         })
         .catch((error) => errorHandler(error));
+};
+
+export const addClassScheduleOneService = (values) => {
+    if (values.id) {
+        putAddClassScheduleOneService(values);
+    } else {
+        postAddClassScheduleOneService(values);
+    }
 };
 
 export const getClassScheduleOneService = (classId) => {
@@ -104,12 +95,12 @@ export const getClassScheduleOneService = (classId) => {
 export const deleteClassScheduleOneService = (classId) => {
     axios
         .delete(`${CLASS_URL}/${classId}`)
-        .then((response) => {
+        .then(() => {
             store.dispatch(deleteClassScheduleOne(classId));
             successHandler(
-                i18n.t('serviceMessages:back_end_success_operation', {
-                    cardType: i18n.t('formElements:class_label'),
-                    actionType: i18n.t('serviceMessages:deleted_label'),
+                i18n.t(BACK_END_SUCCESS_OPERATION, {
+                    cardType: i18n.t(CLASS_LABEL),
+                    actionType: i18n.t(DELETED_LABEL),
                 }),
             );
         })

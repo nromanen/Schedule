@@ -4,7 +4,6 @@ import { store } from '../store';
 import { showFreeRooms, clearFreeRooms } from '../actions/freeRooms';
 import { FREE_ROOMS_URL } from '../constants/axios';
 import { FREE_ROOMS } from '../constants/reduxForms';
-
 import { errorHandler } from '../helper/handlerAxios';
 import { resetFormHandler } from '../helper/formHelper';
 
@@ -14,15 +13,8 @@ export const showFreeRoomsService = (elem) => {
             `${FREE_ROOMS_URL}?dayOfWeek=${elem.dayOfWeek}&evenOdd=${elem.evenOdd}&classId=${elem.class}&semesterId=${elem.semesterId}`,
         )
         .then((response) => {
-            const bufferArray = [];
             const results = response.data;
-            for (const key in results) {
-                bufferArray.push({
-                    id: key,
-                    ...results[key],
-                });
-            }
-            store.dispatch(showFreeRooms(bufferArray));
+            store.dispatch(showFreeRooms(results));
         })
         .catch((error) => {
             errorHandler(error);

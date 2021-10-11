@@ -22,7 +22,7 @@ export default function SuccessSnackbar() {
             }}
             open={successSnackbarOpen}
             autoHideDuration={4000}
-            onClose={handleClose}
+            onClose={() => handleClose()}
             aria-describedby="client-snackbar"
             message={
                 <span id="client-snackbar">
@@ -31,7 +31,12 @@ export default function SuccessSnackbar() {
                 </span>
             }
             action={[
-                <IconButton key="close" aria-label="close" color="inherit" onClick={handleClose}>
+                <IconButton
+                    key="close"
+                    aria-label="close"
+                    color="inherit"
+                    onClick={() => handleClose()}
+                >
                     <Icon>close</Icon>
                 </IconButton>,
             ]}

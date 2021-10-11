@@ -1,11 +1,14 @@
-import React, { useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
 import { store } from '../store';
 
+import get from 'lodash';
 import axios from '../helper/axios';
 import i18n from '../helper/i18n';
+import {
+    BACK_END_SUCCESS_OPERATION,
+    NO_CURRENT_SEMESTER_ERROR,
+    UPDATED_LABEL,
+} from '../constants/services';
 import { errorHandler, infoHandler, successHandler } from '../helper/handlerAxios';
-
 import {
     checkAvailabilitySchedule,
     deleteItemFromSchedule,
@@ -33,7 +36,6 @@ import {
     setSemesterLoadingService,
 } from './loadingService';
 import { handleSnackbarOpenService } from './snackbarService';
-
 import {
     CURRENT_SEMESTER_URL,
     DEFAULT_SEMESTER_URL,
@@ -44,7 +46,6 @@ import {
     SCHEDULE_SEMESTER_ITEMS_URL,
     PUBLIC_SEMESTERS_URL,
     TEACHER_SCHEDULE_URL,
-    PUBLIC_GROUP_URL,
     PUBLIC_TEACHER_URL,
     FOR_TEACHER_SCHEDULE_URL,
     CLEAR_SCHEDULE_URL,
@@ -56,14 +57,11 @@ import {
     SEND_PDF_TO_EMAIL,
     DEPARTMENT_URL,
 } from '../constants/axios';
-
 import { snackbarTypes } from '../constants/snackbarTypes';
-
 import { showBusyRooms } from './busyRooms';
 import { TEACHER_SCHEDULE_FORM } from '../constants/reduxForms';
 import { resetFormHandler } from '../helper/formHelper';
 import { getAllTeachersByDepartmentId } from '../actions/teachers';
-import departments from '../reducers/departments';
 import { sortGroup } from './groupService';
 
 export const getCurrentSemesterService = () => {
@@ -73,15 +71,12 @@ export const getCurrentSemesterService = () => {
             setSemesterLoadingService(false);
             store.dispatch(setCurrentSemester(response.data));
         })
-        .catch((err) => {
-            handleSnackbarOpenService(
-                true,
-                snackbarTypes.ERROR,
-                i18n.t('common:no_current_semester_error'),
-            );
+        .catch(() => {
+            handleSnackbarOpenService(true, snackbarTypes.ERROR, i18n.t(NO_CURRENT_SEMESTER_ERROR));
             setSemesterLoadingService(false);
         });
 };
+
 export const getDefaultSemesterService = () => {
     axios
         .get(DEFAULT_SEMESTER_URL)
@@ -89,36 +84,14 @@ export const getDefaultSemesterService = () => {
             setSemesterLoadingService(false);
             store.dispatch(setDefaultSemester(response.data));
         })
-        .catch((err) => {
-            handleSnackbarOpenService(
-                true,
-                snackbarTypes.ERROR,
-                i18n.t('common:no_current_semester_error'),
-            );
+        .catch(() => {
+            handleSnackbarOpenService(true, snackbarTypes.ERROR, i18n.t(NO_CURRENT_SEMESTER_ERROR));
             setSemesterLoadingService(false);
         });
 };
 
 export const disableDefaultSemesterService = () => {
     store.dispatch(setDefaultSemester({}));
-};
-
-export const getScheduleItemsService = () => {
-    axios
-        .get(CURRENT_SEMESTER_URL)
-        .then((response) => {
-            store.dispatch(setCurrentSemester(response.data));
-            getScheduleItemsServiceBySemester(response.data.id);
-            showBusyRooms(response.data.id);
-        })
-        .catch((err) => {
-            handleSnackbarOpenService(
-                true,
-                snackbarTypes.ERROR,
-                i18n.t('common:no_current_semester_error'),
-            );
-            setLoadingService(false);
-        });
 };
 
 const getScheduleItemsServiceBySemester = (semesterId) => {
@@ -130,6 +103,20 @@ const getScheduleItemsServiceBySemester = (semesterId) => {
         })
         .catch((err) => {
             errorHandler(err);
+            setLoadingService(false);
+        });
+};
+
+export const getScheduleItemsService = () => {
+    axios
+        .get(CURRENT_SEMESTER_URL)
+        .then((response) => {
+            store.dispatch(setCurrentSemester(response.data));
+            getScheduleItemsServiceBySemester(response.data.id);
+            showBusyRooms(response.data.id);
+        })
+        .catch(() => {
+            handleSnackbarOpenService(true, snackbarTypes.ERROR, i18n.t(NO_CURRENT_SEMESTER_ERROR));
             setLoadingService(false);
         });
 };
@@ -148,6 +135,7 @@ export const checkAvailabilityScheduleService = (item) => {
             setLoadingService(false);
         });
 };
+
 export const checkAvailabilityChangeRoomScheduleService = (item) => {
     axios
         .get(
@@ -168,32 +156,35 @@ export const checkAvailabilityChangeRoomScheduleService = (item) => {
             setLoadingService(false);
         });
 };
+
 export const addItemToScheduleService = (item) => {
     axios
         .post(SCHEDULE_ITEMS_URL, item)
-        .then((response) => {
+        .then(() => {
             getScheduleItemsService();
         })
         .catch((err) => errorHandler(err));
 };
+
 export const editRoomItemToScheduleService = (item) => {
     axios
         .put(`${SCHEDULE_ITEM_ROOM_CHANGE}?roomId=${item.roomId}&scheduleId=${item.itemId}`)
-        .then((response) => {
+        .then(() => {
             successHandler(
-                i18n.t('serviceMessages:back_end_success_operation', {
+                i18n.t(BACK_END_SUCCESS_OPERATION, {
                     cardType: i18n.t('common:schedule_title'),
-                    actionType: i18n.t('serviceMessages:updated_label'),
+                    actionType: i18n.t(UPDATED_LABEL),
                 }),
             );
             getScheduleItemsService();
         })
         .catch((err) => errorHandler(err));
 };
+
 export const deleteItemFromScheduleService = (itemId) => {
     axios
         .delete(`${SCHEDULE_ITEMS_URL}/${itemId}`)
-        .then((response) => {
+        .then(() => {
             store.dispatch(deleteItemFromSchedule(itemId));
             getScheduleItemsService();
         })
@@ -201,80 +192,6 @@ export const deleteItemFromScheduleService = (itemId) => {
             errorHandler(err);
             setLoadingService(false);
         });
-};
-
-export const submitSearchSchedule = (values) => {
-    setScheduleSemesterIdService(values.semester);
-
-    if (values.hasOwnProperty('group') && +values.group > 0) {
-        setScheduleTypeService('group');
-        setScheduleGroupIdService(values.group);
-        getGroupSchedule(values.group, values.semester);
-
-        return;
-    }
-    if (values.hasOwnProperty('teacher') && +values.teacher > 0) {
-        setScheduleTypeService('teacher');
-        // setScheduleGroupIdService(values.teacher);
-        setScheduleTeacherIdService(values.teacher);
-        getTeacherSchedule(values.teacher, values.semester);
-        return;
-    }
-    if (
-        (!values.hasOwnProperty('group') && !values.hasOwnProperty('teacher')) ||
-        (values.hasOwnProperty('group') &&
-            !values.hasOwnProperty('teacher') &&
-            +values.group === 0) ||
-        (!values.hasOwnProperty('group') &&
-            values.hasOwnProperty('teacher') &&
-            +values.teacher === 0) ||
-        (values.hasOwnProperty('group') &&
-            values.hasOwnProperty('teacher') &&
-            +values.teacher === 0 &&
-            +values.group === 0)
-    ) {
-        setScheduleTypeService('full');
-        getFullSchedule(values.semester);
-    }
-};
-
-export const sendTeachersScheduleService = (data) => {
-    const teachersId = data.teachersId.map((teacherId) => `teachersId=${teacherId}`).join('&'); // teachersId=65&teachersId=12
-    const { semesterId, language } = data;
-    axios
-        .get(`${SEND_PDF_TO_EMAIL}/semester/${semesterId}?language=${language}&${teachersId}`)
-        .then((response) => {
-            setLoadingService(false);
-            successHandler(
-                i18n.t('serviceMessages:back_end_success_operation', {
-                    cardType: i18n.t('formElements:schedule_label'),
-                    actionType: i18n.t('serviceMessages:sent_label'),
-                }),
-            );
-        })
-        .catch((error) => errorHandler(error));
-};
-
-export const setItemGroupIdService = (groupId) => {
-    store.dispatch(setItemGroupId(groupId));
-};
-
-export const setScheduleGroupIdService = (groupId) => {
-    store.dispatch(setScheduleGroupId(groupId));
-};
-
-export const setScheduleTypeService = (item) => {
-    store.dispatch(setScheduleType(item));
-};
-
-export const getFullSchedule = (semesterId) => {
-    if (semesterId !== undefined)
-        axios
-            .get(FULL_SCHEDULE_URL + semesterId)
-            .then((response) => {
-                store.dispatch(setFullSchedule(response.data));
-            })
-            .catch((err) => errorHandler(err));
 };
 
 export const getGroupSchedule = (groupId, semesterId) => {
@@ -288,6 +205,22 @@ export const getGroupSchedule = (groupId, semesterId) => {
     }
 };
 
+export const setScheduleSemesterIdService = (semesterId) => {
+    store.dispatch(setScheduleSemesterId(semesterId));
+};
+
+export const setScheduleTypeService = (item) => {
+    store.dispatch(setScheduleType(item));
+};
+
+export const setScheduleGroupIdService = (groupId) => {
+    store.dispatch(setScheduleGroupId(groupId));
+};
+
+export const setScheduleTeacherIdService = (teacherId) => {
+    store.dispatch(setScheduleTeacherId(teacherId));
+};
+
 export const getTeacherSchedule = (teacherId, semesterId) => {
     if (teacherId > 0) {
         axios
@@ -298,8 +231,65 @@ export const getTeacherSchedule = (teacherId, semesterId) => {
             .catch((err) => errorHandler(err));
     }
 };
-export const setScheduleTeacherIdService = (teacherId) => {
-    store.dispatch(setScheduleTeacherId(teacherId));
+
+export const getFullSchedule = (semesterId) => {
+    if (semesterId !== undefined)
+        axios
+            .get(FULL_SCHEDULE_URL + semesterId)
+            .then((response) => {
+                store.dispatch(setFullSchedule(response.data));
+            })
+            .catch((err) => errorHandler(err));
+};
+
+export const submitSearchSchedule = (values) => {
+    setScheduleSemesterIdService(values.semester);
+    if (get(values, 'group') && +values.group > 0) {
+        setScheduleTypeService('group');
+        setScheduleGroupIdService(values.group);
+        getGroupSchedule(values.group, values.semester);
+
+        return;
+    }
+    if (get(values, 'teacher') && +values.teacher > 0) {
+        setScheduleTypeService('teacher');
+        setScheduleTeacherIdService(values.teacher);
+        getTeacherSchedule(values.teacher, values.semester);
+        return;
+    }
+    if (
+        (!get(values, 'group') && !get(values, 'teacher')) ||
+        (get(values, 'group') && !get(values, 'teacher') && +values.group === 0) ||
+        (!get(values, 'group') && get(values, 'teacher') && +values.teacher === 0) ||
+        (get(values, 'group') &&
+            get(values, 'teacher') &&
+            +values.teacher === 0 &&
+            +values.group === 0)
+    ) {
+        setScheduleTypeService('full');
+        getFullSchedule(values.semester);
+    }
+};
+
+export const sendTeachersScheduleService = (data) => {
+    const teachersId = data.teachersId.map((teacherId) => `teachersId=${teacherId}`).join('&'); // teachersId=65&teachersId=12
+    const { semesterId, language } = data;
+    axios
+        .get(`${SEND_PDF_TO_EMAIL}/semester/${semesterId}?language=${language}&${teachersId}`)
+        .then(() => {
+            setLoadingService(false);
+            successHandler(
+                i18n.t(BACK_END_SUCCESS_OPERATION, {
+                    cardType: i18n.t('formElements:schedule_label'),
+                    actionType: i18n.t('serviceMessages:sent_label'),
+                }),
+            );
+        })
+        .catch((error) => errorHandler(error));
+};
+
+export const setItemGroupIdService = (groupId) => {
+    store.dispatch(setItemGroupId(groupId));
 };
 
 export const showAllPublicSemestersService = () => {
@@ -309,9 +299,6 @@ export const showAllPublicSemestersService = () => {
             store.dispatch(setSemesterList(response.data));
         })
         .catch((err) => errorHandler(err));
-};
-export const setScheduleSemesterIdService = (semesterId) => {
-    store.dispatch(setScheduleSemesterId(semesterId));
 };
 
 export const showAllPublicGroupsService = (id) => {
@@ -340,6 +327,7 @@ export const showAllPublicTeachersService = () => {
         })
         .catch((err) => errorHandler(err));
 };
+
 export const showAllPublicTeachersByDepartmentService = (departmentId) => {
     axios
         .get(`${DEPARTMENT_URL}/${departmentId}/${TEACHER_URL}`)
@@ -379,7 +367,7 @@ export const getTeacherScheduleByDateRangeService = (teacherId, to, from) => {
                 '-',
             )}&to=${to.replace(/\//g, '-')}`,
         )
-        .then((response) => {})
+        .then(() => {})
         .catch((err) => {
             errorHandler(err);
         });
@@ -392,10 +380,10 @@ export const setTeacherServiceViewType = (type) => {
 export const clearSchedule = (semesterId) => {
     axios
         .delete(`${CLEAR_SCHEDULE_URL}?semesterId=${semesterId}`)
-        .then((response) => {
+        .then(() => {
             getScheduleItemsService();
             successHandler(
-                i18n.t('serviceMessages:back_end_success_operation', {
+                i18n.t(BACK_END_SUCCESS_OPERATION, {
                     cardType: i18n.t('common:schedule_title'),
                     actionType: i18n.t('serviceMessages:cleared_label'),
                 }),

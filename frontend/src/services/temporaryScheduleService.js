@@ -1,5 +1,6 @@
 import axios from '../helper/axios';
 import { errorHandler, successHandler } from '../helper/handlerAxios';
+import { BACK_END_SUCCESS_OPERATION } from '../constants/services';
 import i18n from '../helper/i18n';
 
 import { store } from '../store';
@@ -12,10 +13,7 @@ import {
 import { actionType } from '../constants/actionTypes';
 
 import { setLoadingService } from './loadingService';
-
 import {
-    logout,
-    selectChangedScheduleId,
     selectTeacherId,
     selectTemporarySchedule,
     selectVacation,
@@ -24,6 +22,13 @@ import {
 } from '../actions/index';
 import { resetFormHandler } from '../helper/formHelper';
 import { TEMPORARY_SCHEDULE_FORM, TEMPORARY_SCHEDULE_VACATION_FORM } from '../constants/reduxForms';
+
+const handleSuccessMessage = (action) => {
+    return i18n.t(BACK_END_SUCCESS_OPERATION, {
+        cardType: i18n.t('formElements:temporary_schedule_label'),
+        actionType: i18n.t(`serviceMessages:${action}_label`),
+    });
+};
 
 export const getTemporarySchedulesService = (from, to) => {
     axios
@@ -83,7 +88,6 @@ const formatObj = (formValues, teacherId) => {
             semester: { id: formValues.semester },
             subject: { id: formValues.subject },
             subjectForSite: formValues.subjectForSite,
-            // teacherForSite: formValues.teacherForSite
             linkToMeeting: formValues.linkToMeeting,
         };
     return obj;
@@ -171,11 +175,4 @@ export const selectVacationService = (vacation) => {
 
 export const selectTeacherIdService = (teacherId) => {
     store.dispatch(selectTeacherId(teacherId));
-};
-
-const handleSuccessMessage = (action) => {
-    return i18n.t('serviceMessages:back_end_success_operation', {
-        cardType: i18n.t('formElements:temporary_schedule_label'),
-        actionType: i18n.t(`serviceMessages:${action}_label`),
-    });
 };
