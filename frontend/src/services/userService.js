@@ -12,7 +12,10 @@ import i18n from '../helper/i18n';
 import { setLoadingService } from './loadingService';
 import { getTeachersWithoutAccount } from './teacherService';
 import { errorHandler, successHandler } from '../helper/handlerAxios';
-import { BACK_END_SUCCESS_OPERATION, SUCCESSFULLY_MERGED } from '../constants/translationLabels';
+import {
+    BACK_END_SUCCESS_OPERATION,
+    SUCCESSFULLY_MERGED,
+} from '../constants/translationLabels/serviceMessages';
 import { FORM_USER_LABEL, FORM_TEACHER_LABEL } from '../constants/translationLabels/formElements';
 
 export const getUsersService = () => {

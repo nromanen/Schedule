@@ -20,7 +20,7 @@ import {
     BACK_END_SUCCESS_OPERATION,
     UPDATED_LABEL,
     CREATED_LABEL,
-} from '../constants/translationLabels';
+} from '../constants/translationLabels/serviceMessages';
 import { FORM_DEPARTMENT_LABEL } from '../constants/translationLabels/formElements';
 
 export const createDepartmentService = (data) => {

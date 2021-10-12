@@ -63,7 +63,7 @@ import {
     SERVICE_MESSAGE_GROUP_LABEL,
     CHOSEN_SEMESTER_HAS_NOT_GROUPS,
     SERVICE_MESSAGE_SENT_LABEL,
-} from '../constants/translationLabels';
+} from '../constants/translationLabels/serviceMessages';
 import {
     FORM_SCHEDULE_LABEL,
     FORM_CHOSEN_SEMESTER_LABEL,

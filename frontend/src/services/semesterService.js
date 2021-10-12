@@ -39,7 +39,7 @@ import {
     SEMESTER_SERVICE_NOT_AS_BEGIN_OR_END,
     COPIED_LABEL,
     ARCHIVED_LABEL,
-} from '../constants/translationLabels';
+} from '../constants/translationLabels/serviceMessages';
 import {
     FORM_LESSON_LABEL,
     FORM_SEMESTER_LABEL,

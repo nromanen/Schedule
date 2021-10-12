@@ -44,7 +44,10 @@ import { MultiselectForGroups } from '../../helper/MultiselectForGroups';
 import { showAllGroupsService } from '../../services/groupService';
 import { successHandler } from '../../helper/handlerAxios';
 import i18n from '../../helper/i18n';
-import { EXIST_LABEL, GROUP_EXIST_IN_THIS_SEMESTER } from '../../constants/translationLabels';
+import {
+    EXIST_LABEL,
+    GROUP_EXIST_IN_THIS_SEMESTER,
+} from '../../constants/translationLabels/serviceMessages';
 import {
     EDIT_TITLE,
     CLOSE_LABEL,

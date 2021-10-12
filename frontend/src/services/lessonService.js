@@ -25,7 +25,7 @@ import {
     CREATED_LABEL,
     DELETED_LABEL,
     COPIED_LABEL,
-} from '../constants/translationLabels';
+} from '../constants/translationLabels/serviceMessages';
 import { FORM_LESSON_LABEL } from '../constants/translationLabels/formElements';
 import { COMMON_LESSON_SERVICE_IS_NOT_UNIQUE } from '../constants/translationLabels/common';
 

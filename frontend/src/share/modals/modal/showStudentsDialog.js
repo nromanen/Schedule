@@ -18,7 +18,10 @@ import { getAllStudentsByGroupId, updateStudentService } from '../../../services
 import { isObjectEmpty } from '../../../helper/ObjectRevision';
 import { successHandler } from '../../../helper/handlerAxios';
 import { UploadFile } from '../../../components/UploadFile/UploadFile';
-import { STUDENTS_EXIST_IN_THIS_GROUP, EXIST_LABEL } from '../../../constants/translationLabels';
+import {
+    STUDENTS_EXIST_IN_THIS_GROUP,
+    EXIST_LABEL,
+} from '../../../constants/translationLabels/serviceMessages';
 import {
     GROUP_LABEL,
     STUDENT_LABEL,

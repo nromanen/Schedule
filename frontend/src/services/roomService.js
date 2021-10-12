@@ -19,7 +19,7 @@ import {
     UPDATED_LABEL,
     CREATED_LABEL,
     DELETED_LABEL,
-} from '../constants/translationLabels';
+} from '../constants/translationLabels/serviceMessages';
 import { FORM_ROOM_LABEL } from '../constants/translationLabels/formElements';
 
 export const showListOfRoomsService = () => {

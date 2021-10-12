@@ -18,7 +18,7 @@ import {
 } from '../redux/actions/index';
 import { resetFormHandler } from '../helper/formHelper';
 import { TEMPORARY_SCHEDULE_FORM, TEMPORARY_SCHEDULE_VACATION_FORM } from '../constants/reduxForms';
-import { BACK_END_SUCCESS_OPERATION } from '../constants/translationLabels';
+import { BACK_END_SUCCESS_OPERATION } from '../constants/translationLabels/serviceMessages';
 import { FORM_TEMPORARY_SCHEDULE_LABEL } from '../constants/translationLabels/formElements';
 
 const handleSuccessMessage = (action) => {

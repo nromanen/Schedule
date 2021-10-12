@@ -24,7 +24,7 @@ import {
     UPDATED_LABEL,
     CREATED_LABEL,
     DELETED_LABEL,
-} from '../constants/translationLabels';
+} from '../constants/translationLabels/serviceMessages';
 import { FORM_TEACHER_A_LABEL } from '../constants/translationLabels/formElements';
 
 export const showAllTeachersService = () => {
