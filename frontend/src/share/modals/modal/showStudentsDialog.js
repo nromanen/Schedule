@@ -349,9 +349,9 @@ export const ShowStudentsDialog = (props) => {
                                 variant="contained"
                                 onClick={cancelChoosing}
                                 color="primary"
-                                title={i18n.t('cancel_title')}
+                                title={i18n.t('CANCEL_BUTTON_LABEL')}
                             >
-                                {i18n.t('cancel_title')}
+                                {i18n.t('CANCEL_BUTTON_LABEL')}
                             </Button>
                         </div>
                     </DialogTitle>

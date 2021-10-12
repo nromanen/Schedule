@@ -35,6 +35,7 @@ export const FORM_DEPARTMENT_LABEL = 'formElements:department_label';
 export const FORM_DAY_LABEL = 'formElements:day_label';
 export const FORM_CHOOSE_BUTTON_TITLE = 'formElements:choose_button_title';
 export const FORM_CANCEL_BUTTON_TITLE = 'formElements:cancel_button_title';
+export const CANCEL_BUTTON_TITLE = 'cancel_button_title';
 export const EDIT_TITLE = 'edit_title';
 export const SEND_LETTER_LABEL = 'send_letter_title';
 export const SELECT_ALL = 'select_all';

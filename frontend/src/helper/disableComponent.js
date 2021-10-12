@@ -1,5 +1,7 @@
-import { CANCEL_BUTTON_TITLE } from '../constants/translationLabels/common';
-import { CLEAR_BUTTON_LABEL } from '../constants/translationLabels/formElements';
+import {
+    CLEAR_BUTTON_LABEL,
+    CANCEL_BUTTON_TITLE,
+} from '../constants/translationLabels/formElements';
 
 export const setDisableButton = (pristine, submitting, id) => {
     if (id !== undefined) {

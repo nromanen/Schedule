@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next';
 import {
     SCHEDULE_FOR_SEMESTER,
     CHOOSE_TEACHER,
-    CANCEL_SCHEDULE,
+    CANCEL_BUTTON_LABEL,
     SENT_SCHEDULE,
     ALL_TEACHERS,
 } from '../constants/translationLabels/common';
@@ -93,7 +93,7 @@ export const MultiSelect = (props) => {
                     color="primary"
                     onClick={props.onCancel}
                 >
-                    {t(CANCEL_SCHEDULE)}
+                    {t(CANCEL_BUTTON_LABEL)}
                 </Button>
                 <Button
                     className="dialog-button"
