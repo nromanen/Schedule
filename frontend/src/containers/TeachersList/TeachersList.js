@@ -115,11 +115,11 @@ const TeacherList = (props) => {
         };
         return changeDisabledStatus[teacherCard.disabledStatus];
     };
-    const displayConfirmDialog = (id, disabledStatus) => {
+    const showConfirmDialog = (id, disabledStatus) => {
         setTeacherCard({ id, disabledStatus });
         setIsConfirmDialogOpen(true);
     };
-    const acceptConfirmDialogGroup = (id) => {
+    const acceptConfirmDialog = (id) => {
         setIsConfirmDialogOpen(false);
         if (!id) return;
         if (teacherCard.disabledStatus) {
@@ -144,7 +144,7 @@ const TeacherList = (props) => {
         const teachersId = selected.map((item) => {
             return item.id;
         });
-        const semesterId = selectedSemester === '' ? defaultSemester.id : selectedSemester.id;
+        const semesterId = selectedSemester === '' && defaultSemester.id;
         const { language } = i18n;
         const data = { semesterId, teachersId, language };
         sendTeachersScheduleService(data);
@@ -172,7 +172,7 @@ const TeacherList = (props) => {
                     whatDelete={cardType.TEACHER}
                     open={isConfirmDialogOpen}
                     isHide={teacherCard.disabledStatus}
-                    onClose={acceptConfirmDialogGroup}
+                    onClose={acceptConfirmDialog}
                 />
 
                 <aside className="form-with-search-panel">
@@ -225,7 +225,7 @@ const TeacherList = (props) => {
                                             className="svg-btn copy-btn"
                                             title={t('common:set_disabled')}
                                             onClick={() => {
-                                                displayConfirmDialog(
+                                                showConfirmDialog(
                                                     teacherItem.id,
                                                     disabledCard.HIDE,
                                                 );
@@ -242,14 +242,14 @@ const TeacherList = (props) => {
                                         className="svg-btn copy-btn"
                                         title={t('common:set_enabled')}
                                         onClick={() => {
-                                            displayConfirmDialog(teacherItem.id, disabledCard.SHOW);
+                                            showConfirmDialog(teacherItem.id, disabledCard.SHOW);
                                         }}
                                     />
                                 )}
                                 <MdDelete
                                     className="svg-btn delete-btn"
                                     title={t('common:delete_hover_title')}
-                                    onClick={() => displayConfirmDialog(teacherItem.id)}
+                                    onClick={() => showConfirmDialog(teacherItem.id)}
                                 />
                             </div>
                             <h2 className="teacher-card-name">

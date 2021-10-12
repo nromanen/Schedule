@@ -8,3 +8,20 @@ export const search = (items, term, arr) => {
         return false;
     });
 };
+
+const isIncludeValue = (item, value) => {
+    return item.toLowerCase().includes(value.toLowerCase());
+};
+export const searchLessonsByTeacher = (lessons, term) => {
+    const termTmp = term.trim();
+    if (termTmp.length === 0) return lessons;
+    return lessons.filter((lesson) => {
+        const { teacher, subjectForSite, lessonType, grouped } = lesson;
+        return (
+            isIncludeValue(teacher.surname, termTmp) ||
+            isIncludeValue(subjectForSite, termTmp) ||
+            isIncludeValue(lessonType, termTmp) ||
+            (isIncludeValue('Grouped', term) && grouped)
+        );
+    });
+};
