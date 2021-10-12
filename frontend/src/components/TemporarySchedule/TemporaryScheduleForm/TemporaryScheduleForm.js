@@ -21,7 +21,7 @@ import { maxLengthValue, required } from '../../../validation/validateFields';
 
 import { selectTemporaryScheduleService } from '../../../services/temporaryScheduleService';
 
-let TemporaryScheduleForm = (props) => {
+const TemporaryScheduleForm = (props) => {
     const { t } = useTranslation('formElements');
     const { handleSubmit, invalid, reset, submitting } = props;
     const [isVacation, setIsVacation] = useState(false);
@@ -33,6 +33,25 @@ let TemporaryScheduleForm = (props) => {
 
     const { teachers, periods, rooms, subjects, lessonTypes, groups } = props;
 
+    const initializeFormHandler = (temporaryScheduleData) => {
+        setIsVacation(temporaryScheduleData.vacation);
+        props.initialize({
+            vacation: isVacation,
+            teacher: temporaryScheduleData.teacher.id,
+            semester: temporaryScheduleData.semester.id,
+            subject: temporaryScheduleData.subject.id,
+            group: temporaryScheduleData.group.id,
+            room: temporaryScheduleData.room.id,
+            period: temporaryScheduleData.class.id,
+            lessonType: temporaryScheduleData.lessonType,
+            teacherForSite: temporaryScheduleData.teacherForSite,
+            subjectForSite: temporaryScheduleData.subjectForSite,
+            date: temporaryScheduleData.date,
+            id: temporaryScheduleData.id,
+            scheduleId: temporaryScheduleData.scheduleId,
+        });
+    };
+
     useEffect(() => {
         if (temporaryScheduleId || scheduleId) {
             initializeFormHandler(temporarySchedule);
@@ -40,25 +59,6 @@ let TemporaryScheduleForm = (props) => {
             props.initialize({ vacation: isVacation });
         }
     }, [temporaryScheduleId]);
-
-    const initializeFormHandler = (temporarySchedule) => {
-        setIsVacation(temporarySchedule.vacation);
-        props.initialize({
-            vacation: isVacation,
-            teacher: temporarySchedule.teacher.id,
-            semester: temporarySchedule.semester.id,
-            subject: temporarySchedule.subject.id,
-            group: temporarySchedule.group.id,
-            room: temporarySchedule.room.id,
-            period: temporarySchedule.class.id,
-            lessonType: temporarySchedule.lessonType,
-            teacherForSite: temporarySchedule.teacherForSite,
-            subjectForSite: temporarySchedule.subjectForSite,
-            date: temporarySchedule.date,
-            id: temporarySchedule.id,
-            scheduleId: temporarySchedule.scheduleId,
-        });
-    };
 
     const handleVacationChange = (event) => setIsVacation(event.target.checked);
     const handleNotifyChange = (event) => setNotify(event.target.checked);
@@ -150,8 +150,8 @@ let TemporaryScheduleForm = (props) => {
                         disabled={isVacation}
                     >
                         <option value="" />
-                        {lessonTypes.map((lessonType, index) => (
-                            <option value={lessonType} key={index}>
+                        {lessonTypes.map((lessonType) => (
+                            <option value={lessonType} key={lessonType}>
                                 {t(`formElements:lesson_type_${lessonType.toLowerCase()}_label`)}
                             </option>
                         ))}
@@ -251,8 +251,8 @@ let TemporaryScheduleForm = (props) => {
     );
 };
 
-TemporaryScheduleForm = reduxForm({
+const TemporaryScheduleReduxForm = reduxForm({
     form: TEMPORARY_SCHEDULE_FORM,
 })(TemporaryScheduleForm);
 
-export default TemporaryScheduleForm;
+export default TemporaryScheduleReduxForm;

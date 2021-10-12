@@ -397,7 +397,6 @@ const SemesterPage = (props) => {
                 isOpen={isSnackbarOpen}
                 handleSnackbarClose={handleSnackbarClose}
             />
-            <GroupSchedulePage scheduleType="archived" />
             <MultiselectForGroups
                 open={openGroupsDialog}
                 options={options}

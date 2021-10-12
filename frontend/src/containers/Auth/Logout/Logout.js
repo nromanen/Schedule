@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 
-import { logout } from '../../../redux/actions/index';
+import { logout } from '../../../actions/index';
 
 const Logout = (props) => {
     useEffect(() => {

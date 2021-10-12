@@ -9,7 +9,7 @@ import { GiSightDisabled, IoMdEye } from 'react-icons/all';
 import Card from '../../share/Card/Card';
 import { search } from '../../helper/search';
 import NotFound from '../../share/NotFound/NotFound';
-import ConfirmDialog from '../../share/modals/dialog';
+import { ConfirmDialog } from '../../share/modals/dialog';
 import SearchPanel from '../../share/SearchPanel/SearchPanel';
 import SnackbarComponent from '../../share/Snackbar/SnackbarComponent';
 import AddSubject from '../../components/AddSubjectForm/AddSubjectForm';
@@ -39,30 +39,27 @@ const SubjectPage = (props) => {
 
     const [disabled, setDisabled] = useState(false);
 
-    useEffect(() => showAllSubjectsService(), []);
-    useEffect(() => getDisabledSubjectsService(), []);
+    useEffect(() => {
+        showAllSubjectsService();
+        getDisabledSubjectsService();
+    }, []);
 
     const submit = (values) => handleSubjectService(values);
-    const handleEdit = (subjectId) => selectSubjectService(subjectId);
+    const handleEdit = (subId) => selectSubjectService(subId);
     const handleFormReset = () => clearSubjectService();
     const visibleSubjects = disabled
         ? search(props.disabledSubjects, term, ['name'])
         : search(props.subjects, term, ['name']);
     const SearchChange = setTerm;
 
-    const handleClickOpen = (subjectId) => {
-        setSubjectId(subjectId);
+    const handleClickOpen = (subjId) => {
+        setSubjectId(subjId);
         setOpen(true);
     };
 
-    const handleSnackbarClose = (event, reason) => {
-        if (reason === 'clickaway') return;
-        handleSnackbarCloseService();
-    };
-
-    const handleClose = (subjectId) => {
+    const handleClose = (id) => {
         setOpen(false);
-        if (!subjectId) return;
+        if (!id) return;
         if (hideDialog) {
             if (disabled) {
                 const group = props.disabledSubjects.find((subject) => subject.id === subjectId);
@@ -78,9 +75,11 @@ const SubjectPage = (props) => {
     };
 
     const showDisabledHandle = () => {
-        setDisabled(!disabled);
+        setDisabled((prev) => !prev);
     };
-
+    const handleSnackbarClose = () => {
+        handleSnackbarCloseService();
+    };
     return (
         <>
             <NavigationPage name={navigationNames.SUBJECT_PAGE} val={navigation.SUBJECTS} />

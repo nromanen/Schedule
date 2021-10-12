@@ -17,14 +17,12 @@ let FreeRoomForm = (props) => {
 
     useEffect(() => showAllSemestersService(), []);
 
-    const { handleSubmit, classScheduler, pristine, submitting, onReset } = props;
+    const { handleSubmit, classScheduler, pristine, submitting, onReset, semesters } = props;
 
-    const class_names = [];
+    const classNames = [];
 
     if (classScheduler.length - 1 > 0) {
-        classScheduler.map((classSchedulerOne) => {
-            class_names.push(classSchedulerOne.class_name);
-        });
+        classScheduler.map((classSchedulerOne) => classNames.push(classSchedulerOne.class_name));
     }
 
     return (
@@ -40,9 +38,9 @@ let FreeRoomForm = (props) => {
                         validate={[required]}
                     >
                         <option value=""></option>
-                        {props.semesters.map((semesters, index) => (
-                            <option key={index} value={semesters.id}>
-                                {semesters.description}
+                        {semesters.map((semester) => (
+                            <option key={semester.id} value={semester.id}>
+                                {semester.description}
                             </option>
                         ))}
                     </Field>
@@ -55,8 +53,8 @@ let FreeRoomForm = (props) => {
                         validate={[required]}
                     >
                         <option value=""></option>
-                        {weeks.map((week, index) => (
-                            <option key={index} value={`${week}`}>
+                        {weeks.map((week) => (
+                            <option key={week} value={`${week}`}>
                                 {t(`common:${week.toLowerCase()}_week`)}
                             </option>
                         ))}
@@ -70,8 +68,8 @@ let FreeRoomForm = (props) => {
                         validate={[required]}
                     >
                         <option value=""></option>
-                        {daysUppercase.map((day, index) => (
-                            <option key={index} value={`${day}`}>
+                        {daysUppercase.map((day) => (
+                            <option key={day} value={`${day}`}>
                                 {t(`common:day_of_week_${day}`)}
                             </option>
                         ))}
@@ -85,8 +83,8 @@ let FreeRoomForm = (props) => {
                         validate={[required]}
                     >
                         <option value=""></option>
-                        {class_names.map((classNum, index) => (
-                            <option key={index} value={`${classNum}`}>
+                        {classNames.map((classNum) => (
+                            <option key={classNum} value={`${classNum}`}>
                                 {classNum}
                             </option>
                         ))}

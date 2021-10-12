@@ -8,7 +8,7 @@ const initialState = {
     archivedSemesters: [],
 };
 
-const semesters = (state = initialState, action) => {
+const reducer = (state = initialState, action) => {
     switch (action.type) {
         case actionTypes.ADD_SEMESTER:
             return updateObject(state, {
@@ -16,13 +16,12 @@ const semesters = (state = initialState, action) => {
                 semester: state.semester,
             });
 
-        case actionTypes.DELETE_SEMESTER:
-            state.semesters = state.semesters.filter((semester) => semester.id !== action.result);
+        case actionTypes.DELETE_SEMESTER: {
+            const semesters = state.semesters.filter((semester) => semester.id !== action.result);
             return updateObject(state, {
-                semesters: state.semesters,
-                semester: state.semester,
+                semesters,
             });
-
+        }
         case actionTypes.SHOW_ALL_SEMESTERS:
             return updateObject(state, {
                 semesters: action.result,
@@ -37,38 +36,37 @@ const semesters = (state = initialState, action) => {
                 archivedSemesters: action.result,
             });
 
-        case actionTypes.SELECT_SEMESTER:
-            let semester = state.semesters.filter((semester) => semester.id === action.result)[0];
-            if (!semester) {
-                semester = { id: null };
+        case actionTypes.SELECT_SEMESTER: {
+            let selectSemester = state.semesters.find((semester) => semester.id === action.result);
+            if (!selectSemester) {
+                selectSemester = { id: null };
             }
             return updateObject(state, {
-                semesters: state.semesters,
-                semester,
+                selectSemester,
             });
-
-        case actionTypes.UPDATE_SEMESTER:
-            const updatedSemesters = [];
-            state.semesters.forEach((semester) => {
-                if (semester.id === action.result.id) {
-                    semester = { ...semester, ...action.result };
-                }
-                updatedSemesters.push(semester);
-            });
+        }
+        case actionTypes.UPDATE_SEMESTER: {
+            const semesterIndex = state.semesters.findIndex(({ id }) => id === action.result.id);
+            const semesters = [...state.semesters];
+            semesters[semesterIndex] = {
+                ...semesters[semesterIndex],
+                ...action.result,
+            };
             return updateObject(state, {
-                semesters: updatedSemesters,
+                semesters,
                 semester: {},
             });
-
-        case actionTypes.MOVE_SEMESTER_TO_ARCHIVE:
+        }
+        case actionTypes.MOVE_SEMESTER_TO_ARCHIVE: {
             const archivedSemester = state.semesters.find(
                 (semester) => semester.id === action.result,
             );
-            state.semesters = state.semesters.filter((semester) => semester.id !== action.result);
+            const semesters = state.semesters.filter((semester) => semester.id !== action.result);
             return updateObject(state, {
-                semesters: state.semesters,
+                semesters,
                 archivedSemesters: [...state.archivedSemesters, archivedSemester],
             });
+        }
         case actionTypes.CLEAR_SEMESTER:
             return {
                 ...state,
@@ -84,4 +82,4 @@ const semesters = (state = initialState, action) => {
     }
 };
 
-export default semesters;
+export default reducer;

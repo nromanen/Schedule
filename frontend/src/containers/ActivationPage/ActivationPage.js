@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import * as _ from 'lodash';
 
 import { CircularProgress } from '@material-ui/core';
-import { activateUser } from '../../redux/actions';
+import { activateUser } from '../../actions';
 
 import { links } from '../../constants/links';
 import { snackbarTypes } from '../../constants/snackbarTypes';

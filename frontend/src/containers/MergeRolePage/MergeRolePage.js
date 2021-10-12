@@ -100,7 +100,7 @@ const MergeRolePage = (props) => {
                                     renderInput={(params) => (
                                         <TextField
                                             {...params}
-                                            label={t('formElements:user_label')}
+                                            label={t(USER_LABEL)}
                                             margin="normal"
                                         />
                                     )}

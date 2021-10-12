@@ -1,6 +1,6 @@
-import { store } from '../index';
+import { store } from '../store';
 
-import { setLoading, setScheduleLoading, setSemesterLoading } from '../redux/actions/index';
+import { setLoading, setScheduleLoading, setSemesterLoading } from '../actions/index';
 
 export const setLoadingService = (isLoading) => {
     store.dispatch(setLoading(isLoading));

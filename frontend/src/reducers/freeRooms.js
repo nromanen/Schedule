@@ -1,7 +1,7 @@
-import actions from 'redux-form/lib/actions';
 import * as actionTypes from '../actions/actionsType';
+import { updateObject } from '../utility';
 
-const freeRooms = (
+const reducer = (
     state = {
         freeRooms: [],
         freeRoom: {},
@@ -10,18 +10,16 @@ const freeRooms = (
 ) => {
     switch (action.type) {
         case actionTypes.SHOW_FREE_ROOMS:
-            return {
-                ...state,
+            return updateObject(state, {
                 freeRooms: action.result,
-            };
+            });
         case actionTypes.CLEAR_FREE_ROOM:
-            return {
-                ...state,
+            return updateObject(state, {
                 freeRoom: {},
-            };
+            });
         default:
             return state;
     }
 };
 
-export default freeRooms;
+export default reducer;

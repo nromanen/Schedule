@@ -6,13 +6,10 @@ import { Field, reduxForm } from 'redux-form';
 import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
-import { FaGoogle } from 'react-icons/fa';
-import { Link } from 'react-router-dom';
 import Card from '../../share/Card/Card';
 import renderTextField from '../../share/renderedFields/input';
 
 import { LOGIN_FORM } from '../../constants/reduxForms';
-import { GOOGLE_LOGIN_URL } from '../../constants/axios';
 
 import { required } from '../../validation/validateFields';
 import {
@@ -22,11 +19,13 @@ import {
     setScheduleTypeService,
 } from '../../services/scheduleService';
 
-let LoginForm = (props) => {
-    useEffect(() => setScheduleSemesterIdService(0));
-    useEffect(() => setScheduleTeacherIdService(0));
-    useEffect(() => setScheduleGroupIdService(0));
-    useEffect(() => setScheduleTypeService(''));
+const LoginForm = (props) => {
+    useEffect(() => {
+        setScheduleSemesterIdService(0);
+        setScheduleTeacherIdService(0);
+        setScheduleGroupIdService(0);
+        setScheduleTypeService('');
+    });
     const { t } = useTranslation('formElements');
     const { handleSubmit } = props;
 
@@ -67,41 +66,6 @@ let LoginForm = (props) => {
             >
                 {translation('login_title')}
             </Button>
-            {/* <div className="group-btns"> */}
-            {/*    <button */}
-            {/*        type="button" */}
-            {/*        className="auth-link" */}
-            {/*        onClick={() => { */}
-            {/*            props.switchAuthMode(authTypes.REGISTRATION); */}
-            {/*            props.setError(null); */}
-            {/*        }} */}
-            {/*    > */}
-            {/*       <Link  className="navLinks" to={links.Registration}>{translation('no_account')}</Link> */}
-            {/*    </button> */}
-            {/*    <button */}
-            {/*        type="button" */}
-            {/*        className="auth-link" */}
-            {/*        onClick={() => { */}
-            {/*            props.switchAuthMode(authTypes.RESET_PASSWORD); */}
-            {/*            props.setError(null); */}
-            {/*        }} */}
-            {/*    > */}
-            {/*       <Link  className="navLinks" to={links.RESET_PASSWORD}>{translation('forgot_password')}</Link> */}
-            {/*    </button> */}
-            {/* </div> */}
-
-            {/* <Button */}
-            {/*    variant="contained" */}
-            {/*    color="secondary" */}
-            {/*    onClick={() => */}
-            {/*        (window.document.location.href = */}
-            {/*            process.env.REACT_APP_API_BASE_URL.trim() +*/}
-            {/*            GOOGLE_LOGIN_URL) */}
-            {/*    } */}
-            {/* > */}
-            {/*    <FaGoogle /> */}
-            {/*    {t('login_via_google')} */}
-            {/* </Button> */}
         </form>
     );
 
@@ -117,8 +81,8 @@ let LoginForm = (props) => {
     );
 };
 
-LoginForm = reduxForm({
+const LoginReduxForm = reduxForm({
     form: LOGIN_FORM,
 })(LoginForm);
 
-export default LoginForm;
+export default LoginReduxForm;

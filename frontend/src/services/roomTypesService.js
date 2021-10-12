@@ -1,15 +1,23 @@
-import { store } from '../index';
+import { store } from '../store';
+
 import { ROOM_FORM_TYPE } from '../constants/reduxForms';
 import { ROOM_TYPES_URL } from '../constants/axios';
+import {
+    BACK_END_SUCCESS_OPERATION,
+    ROOM_LABEL,
+    TYPE_LABEL,
+    UPDATED_LABEL,
+    CREATED_LABEL,
+    DELETED_LABEL,
+} from '../constants/services';
 import axios from '../helper/axios';
-
 import {
     getAllRoomTypes,
     deleteType,
     updateOneType,
     postOneType,
     getOneNewType,
-} from '../redux/actions/roomTypes';
+} from '../actions/roomTypes';
 
 import i18n from '../helper/i18n';
 import { errorHandler, successHandler } from '../helper/handlerAxios';
@@ -27,26 +35,16 @@ export const getAllRoomTypesService = () => {
 export const deleteTypeService = (roomTypeId) => {
     axios
         .delete(`${ROOM_TYPES_URL}/${roomTypeId}`)
-        .then((response) => {
+        .then(() => {
             store.dispatch(deleteType(roomTypeId));
             successHandler(
-                i18n.t('serviceMessages:back_end_success_operation', {
-                    cardType: `${i18n.t('formElements:room_label')} ${i18n.t(
-                        'formElements:type_label',
-                    )}`,
-                    actionType: i18n.t('serviceMessages:deleted_label'),
+                i18n.t(BACK_END_SUCCESS_OPERATION, {
+                    cardType: `${i18n.t(ROOM_LABEL)} ${i18n.t(TYPE_LABEL)}`,
+                    actionType: i18n.t(DELETED_LABEL),
                 }),
             );
         })
         .catch((error) => errorHandler(error));
-};
-
-export const addNewTypeService = (values) => {
-    if (values.id) {
-        putNewType(values);
-    } else {
-        postNewType(values);
-    }
 };
 
 export const putNewType = (values) => {
@@ -56,11 +54,9 @@ export const putNewType = (values) => {
             store.dispatch(updateOneType(response.data));
             resetFormHandler(ROOM_FORM_TYPE);
             successHandler(
-                i18n.t('serviceMessages:back_end_success_operation', {
-                    cardType: `${i18n.t('formElements:room_label')} ${i18n.t(
-                        'formElements:type_label',
-                    )}`,
-                    actionType: i18n.t('serviceMessages:updated_label'),
+                i18n.t(BACK_END_SUCCESS_OPERATION, {
+                    cardType: `${i18n.t(ROOM_LABEL)} ${i18n.t(TYPE_LABEL)}`,
+                    actionType: i18n.t(UPDATED_LABEL),
                 }),
             );
         })
@@ -74,15 +70,21 @@ export const postNewType = (values) => {
             store.dispatch(postOneType(response.data));
             resetFormHandler(ROOM_FORM_TYPE);
             successHandler(
-                i18n.t('serviceMessages:back_end_success_operation', {
-                    cardType: `${i18n.t('formElements:room_label')} ${i18n.t(
-                        'formElements:type_label',
-                    )}`,
-                    actionType: i18n.t('serviceMessages:created_label'),
+                i18n.t(BACK_END_SUCCESS_OPERATION, {
+                    cardType: `${i18n.t(ROOM_LABEL)} ${i18n.t(TYPE_LABEL)}`,
+                    actionType: i18n.t(CREATED_LABEL),
                 }),
             );
         })
         .catch((error) => errorHandler(error));
+};
+
+export const addNewTypeService = (values) => {
+    if (values.id) {
+        putNewType(values);
+    } else {
+        postNewType(values);
+    }
 };
 
 export const getOneNewTypeService = (roomId) => {

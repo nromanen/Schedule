@@ -2,8 +2,6 @@ import React, { useRef } from 'react';
 import ReactSelect from 'react-select';
 import { Dialog, DialogTitle } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
-import Select from 'react-select';
-import i18n from 'i18next';
 import './multiselect.scss';
 import { useTranslation } from 'react-i18next';
 
@@ -46,7 +44,7 @@ export const MultiSelect = (props) => {
             props.onChange(newValue || [], actionMeta);
         }
     };
-    const handleChange = (newValue, actionMeta) => {
+    const handleChange = (newValue) => {
         props.onChangeSemesterValue(newValue);
     };
 
@@ -60,7 +58,7 @@ export const MultiSelect = (props) => {
             <DialogTitle id="select-dialog-title" className="confirm-dialog">
                 <div className="teacher-semester">
                     <span>{`${t('schedule_for_semester')}:`}</span>
-                    <Select
+                    <ReactSelect
                         defaultValue={defaultSemester}
                         options={semesters}
                         onChange={handleChange}

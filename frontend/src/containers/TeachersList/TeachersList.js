@@ -213,6 +213,7 @@ const TeacherList = (props) => {
                 </aside>
 
                 <section className="container-flex-wrap">
+<<<<<<< HEAD
                     {visibleItems.length === 0 && (
                         <NotFound name={t('formElements:teacher_a_label')} />
                     )}
@@ -222,6 +223,31 @@ const TeacherList = (props) => {
                                 {!isDisabled ? (
                                     <>
                                         <GiSightDisabled
+=======
+                    {visibleItems.length === 0 && <NotFound name={t(TEACHER_LABEL)} />}
+                    {teacherLength > 0 ? (
+                        visibleItems.map((teacher, index) => (
+                            <Card key={index} {...teacher} class="teacher-card done-card">
+                                <div className="cards-btns">
+                                    {!disabled ? (
+                                        <>
+                                            <GiSightDisabled
+                                                className="svg-btn copy-btn"
+                                                title={t('common:set_disabled')}
+                                                onClick={() => {
+                                                    setHideDialog(disabledCard.HIDE);
+                                                    handleClickOpen(teacher.id);
+                                                }}
+                                            />
+                                            <FaEdit
+                                                className="svg-btn edit-btn"
+                                                title={t('common:edit_hover_title')}
+                                                onClick={() => selectTeacherCard(teacher.id)}
+                                            />
+                                        </>
+                                    ) : (
+                                        <IoMdEye
+>>>>>>> TS-19-v2-eslint-config
                                             className="svg-btn copy-btn"
                                             title={t('common:set_disabled')}
                                             onClick={() => {

@@ -21,5 +21,5 @@ export const uploadStudentsToGroupFile = (file, groupId) => {
                 }),
             );
         })
-        .catch((err) => alert('File Upload Error'));
+        .catch(() => alert('File Upload Error'));
 };

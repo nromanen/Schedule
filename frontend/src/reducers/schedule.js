@@ -32,7 +32,7 @@ const reducer = (state = initialState, action) => {
             return updateObject(state, {
                 availability: action.result,
             });
-        case actionTypes.ADD_ITEM_TO_SCHEDULE:
+        case actionTypes.ADD_ITEM_TO_SCHEDULE: {
             const { id } = action.result;
             let itemArr;
             if (id) {
@@ -51,6 +51,7 @@ const reducer = (state = initialState, action) => {
             return updateObject(state, {
                 items: itemArr,
             });
+        }
         case actionTypes.SET_SCHEDULE_TYPE:
             return updateObject(state, {
                 groupSchedule: {},
@@ -81,14 +82,14 @@ const reducer = (state = initialState, action) => {
                 fullSchedule: [],
                 groupSchedule: {},
             });
-        case actionTypes.DELETE_ITEM_FROM_SCHEDULE:
+        case actionTypes.DELETE_ITEM_FROM_SCHEDULE: {
             const index = state.items.findIndex((item) => item.id === action.result);
             state.items.splice(index, 1);
             const newArr = state.items;
             return updateObject(state, {
                 items: newArr,
             });
-
+        }
         case actionTypes.SET_SCHEDULE_TEACHER_ID:
             return updateObject(state, {
                 scheduleGroupId: null,
