@@ -16,7 +16,7 @@ import {
     SAVE_BUTTON_LABEL,
     SUBJECT_Y_LABEL,
     SUBJECT_LABEL,
-} from '../../constants/translationLabels';
+} from '../../constants/translationLabels/formElements';
 
 const AddSubject = (props) => {
     const { t } = useTranslation('formElements');

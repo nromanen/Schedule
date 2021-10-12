@@ -1,13 +1,6 @@
 import { store } from '../index';
 import axios from '../helper/axios';
 import { DISABLED_GROUPS_URL, GROUP_URL } from '../constants/axios';
-import {
-    BACK_END_SUCCESS_OPERATION,
-    FORM_GROUP_LABEL,
-    UPDATED_LABEL,
-    CREATED_LABEL,
-    DELETED_LABEL,
-} from '../constants/translationLabels';
 import { GROUP_FORM } from '../constants/reduxForms';
 import {
     showAllGroups,
@@ -21,6 +14,13 @@ import {
 import { errorHandler, successHandler } from '../helper/handlerAxios';
 import i18n from '../helper/i18n';
 import { resetFormHandler } from '../helper/formHelper';
+import {
+    BACK_END_SUCCESS_OPERATION,
+    UPDATED_LABEL,
+    CREATED_LABEL,
+    DELETED_LABEL,
+} from '../constants/translationLabels';
+import { FORM_GROUP_LABEL } from '../constants/translationLabels/formElements';
 
 export const sortGroup = (a, b) => {
     return (

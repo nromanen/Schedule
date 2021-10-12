@@ -39,7 +39,7 @@ import {
     FORM_GROUPED_LABEL,
     HOURS_LABEL,
     TEACHER_LABEL,
-} from '../../constants/translationLabels';
+} from '../../constants/translationLabels/formElements';
 import { TYPE_LABEL } from '../../constants/translationLabels/common';
 
 const useStyles = makeStyles(() => ({

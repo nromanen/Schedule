@@ -18,7 +18,7 @@ import {
     SAVE_BUTTON_LABEL,
     ADD_TYPE_LABEL,
     NEW_TYPE_LABEL,
-} from '../../constants/translationLabels';
+} from '../../constants/translationLabels/formElements';
 
 let NewRoomType = (props) => {
     const { handleSubmit, pristine, submitting, roomTypes } = props;

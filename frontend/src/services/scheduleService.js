@@ -61,11 +61,13 @@ import {
     UPDATED_LABEL,
     CLEARED_LABEL,
     SERVICE_MESSAGE_GROUP_LABEL,
-    FORM_CHOSEN_SEMESTER_LABEL,
     CHOSEN_SEMESTER_HAS_NOT_GROUPS,
     SERVICE_MESSAGE_SENT_LABEL,
-    FORM_SCHEDULE_LABEL,
 } from '../constants/translationLabels';
+import {
+    FORM_SCHEDULE_LABEL,
+    FORM_CHOSEN_SEMESTER_LABEL,
+} from '../constants/translationLabels/formElements';
 import {
     NO_CURRENT_SEMESTER_ERROR,
     COMMON_SCHEDULE_TITLE,

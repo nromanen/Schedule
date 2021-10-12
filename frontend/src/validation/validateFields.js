@@ -11,8 +11,6 @@ import {
 import i18n from '../helper/i18n';
 import { validation } from '../constants/validation';
 import {
-    FORM_CLASS_FROM_LABEL,
-    FORM_CLASS_TO_LABEL,
     EMAIL_MESSAGE,
     LESS_THAN_FIELD_MESSAGE,
     BIGGER_THAN_FIELD_MESSAGE,
@@ -23,6 +21,10 @@ import {
     LESS_THAN_CHAR_MESSAGE,
     PASSWORD_MESSAGE,
 } from '../constants/translationLabels';
+import {
+    FORM_CLASS_FROM_LABEL,
+    FORM_CLASS_TO_LABEL,
+} from '../constants/translationLabels/formElements';
 
 export const required = (value) =>
     value ? undefined : i18n.t(REQUIRED_MESSAGE);

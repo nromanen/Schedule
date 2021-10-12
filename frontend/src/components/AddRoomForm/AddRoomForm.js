@@ -21,7 +21,7 @@ import {
     ROOM_Y_LABEL,
     NUMBER_LABEL,
     ROOM_LABEL,
-} from '../../constants/translationLabels';
+} from '../../constants/translationLabels/formElements';
 import { TYPE_LABEL } from '../../constants/translationLabels/common';
 
 let AddRoom = (props) => {

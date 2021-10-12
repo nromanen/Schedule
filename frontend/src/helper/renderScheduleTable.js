@@ -20,7 +20,7 @@ import {
     getTeacherFullName,
     getTeacherWithShortPosition,
 } from './renderTeacher';
-import { GROUP_Y_LABEL, FORM_GROUP_LABEL } from '../constants/translationLabels';
+import { GROUP_Y_LABEL, FORM_GROUP_LABEL } from '../constants/translationLabels/formElements';
 import {
     EMPTY_SCHEDULE,
     COMMON_REGULAR_LESSON_LABEL,

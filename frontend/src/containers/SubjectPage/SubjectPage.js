@@ -27,7 +27,11 @@ import {
 import { disabledCard } from '../../constants/disabledCard';
 import NavigationPage from '../../components/Navigation/NavigationPage';
 import { navigation, navigationNames } from '../../constants/navigation';
-import { EDIT_TITLE, SUBJECT_Y_LABEL, DELETE_TITLE } from '../../constants/translationLabels';
+import {
+    EDIT_TITLE,
+    SUBJECT_Y_LABEL,
+    DELETE_TITLE,
+} from '../../constants/translationLabels/formElements';
 import { COMMON_SET_DISABLED, COMMON_SET_ENABLED } from '../../constants/translationLabels/common';
 
 const SubjectPage = (props) => {

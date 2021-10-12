@@ -15,7 +15,7 @@ import { authTypes } from '../../constants/auth';
 
 import { email, required } from '../../validation/validateFields';
 import { links } from '../../constants/links';
-import { EMAIL_LABEL } from '../../constants/translationLabels';
+import { EMAIL_LABEL } from '../../constants/translationLabels/formElements';
 import {
     LOGIN_TITLE,
     RESET_PASSWORD_PAGE_TITLE,

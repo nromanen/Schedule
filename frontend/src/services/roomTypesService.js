@@ -1,14 +1,6 @@
 import { store } from '../index';
 import { ROOM_FORM_TYPE } from '../constants/reduxForms';
 import { ROOM_TYPES_URL } from '../constants/axios';
-import {
-    BACK_END_SUCCESS_OPERATION,
-    FORM_ROOM_LABEL,
-    FORM_TYPE_LABEL,
-    UPDATED_LABEL,
-    CREATED_LABEL,
-    DELETED_LABEL,
-} from '../constants/translationLabels';
 import axios from '../helper/axios';
 import {
     getAllRoomTypes,
@@ -20,6 +12,13 @@ import {
 import i18n from '../helper/i18n';
 import { errorHandler, successHandler } from '../helper/handlerAxios';
 import { resetFormHandler } from '../helper/formHelper';
+import {
+    BACK_END_SUCCESS_OPERATION,
+    UPDATED_LABEL,
+    CREATED_LABEL,
+    DELETED_LABEL,
+} from '../constants/translationLabels';
+import { FORM_ROOM_LABEL, FORM_TYPE_LABEL } from '../constants/translationLabels/formElements';
 
 export const getAllRoomTypesService = () => {
     axios

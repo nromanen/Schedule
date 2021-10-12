@@ -44,6 +44,7 @@ import { MultiselectForGroups } from '../../helper/MultiselectForGroups';
 import { showAllGroupsService } from '../../services/groupService';
 import { successHandler } from '../../helper/handlerAxios';
 import i18n from '../../helper/i18n';
+import { EXIST_LABEL, GROUP_EXIST_IN_THIS_SEMESTER } from '../../constants/translationLabels';
 import {
     EDIT_TITLE,
     CLOSE_LABEL,
@@ -53,9 +54,7 @@ import {
     SEMESTERY_LABEL,
     FORM_SHOW_GROUPS,
     SET_DEFAULT_TITLE,
-    EXIST_LABEL,
-    GROUP_EXIST_IN_THIS_SEMESTER,
-} from '../../constants/translationLabels';
+} from '../../constants/translationLabels/formElements';
 import {
     COMMON_GROUP_TITLE,
     COMMON_SET_DISABLED,

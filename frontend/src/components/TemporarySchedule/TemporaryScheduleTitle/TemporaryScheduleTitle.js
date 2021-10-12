@@ -31,7 +31,7 @@ import {
     FORM_TEACHER_LABEL,
     FORM_CLASS_FROM_LABEL,
     FORM_CLASS_TO_LABEL,
-} from '../../../constants/translationLabels';
+} from '../../../constants/translationLabels/formElements';
 import {
     HOLIDAY_LABEL,
     DATE_LABEL,

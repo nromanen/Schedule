@@ -1,12 +1,5 @@
 import { store } from '../index';
 import { DISABLED_ROOMS_URL, ROOM_URL } from '../constants/axios';
-import {
-    BACK_END_SUCCESS_OPERATION,
-    FORM_ROOM_LABEL,
-    UPDATED_LABEL,
-    CREATED_LABEL,
-    DELETED_LABEL,
-} from '../constants/translationLabels';
 import { ROOM_FORM } from '../constants/reduxForms';
 import axios from '../helper/axios';
 import {
@@ -21,6 +14,13 @@ import {
 import { errorHandler, successHandler } from '../helper/handlerAxios';
 import { resetFormHandler } from '../helper/formHelper';
 import i18n from '../helper/i18n';
+import {
+    BACK_END_SUCCESS_OPERATION,
+    UPDATED_LABEL,
+    CREATED_LABEL,
+    DELETED_LABEL,
+} from '../constants/translationLabels';
+import { FORM_ROOM_LABEL } from '../constants/translationLabels/formElements';
 
 export const showListOfRoomsService = () => {
     axios

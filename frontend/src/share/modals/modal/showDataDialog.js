@@ -19,7 +19,7 @@ import {
     TEACHERS_LABEL,
     DEPARTMENT_TEACHERS,
     NO_EXIST_TEACHER_AT_DEPARTMENT,
-} from '../../../constants/translationLabels';
+} from '../../../constants/translationLabels/formElements';
 import { COMMON_CLOSE_TITLE } from '../../../constants/translationLabels/common';
 
 export const ShowDataDialog = (props) => {

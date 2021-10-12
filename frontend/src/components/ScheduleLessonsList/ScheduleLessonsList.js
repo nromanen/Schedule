@@ -10,7 +10,7 @@ import ScheduleItem from '../ScheduleItem/ScheduleItem';
 import { selectGroupIdService } from '../../services/lessonService';
 
 import { firstStringLetterCapital } from '../../helper/strings';
-import { FORM_GROUP_LABEL } from '../../constants/translationLabels';
+import { FORM_GROUP_LABEL } from '../../constants/translationLabels/formElements';
 import {
     COMMON_SELECT_GROUP_SCHEDULE,
     LESSON_NO_LESSON_FOR_GROUP_LABEL,

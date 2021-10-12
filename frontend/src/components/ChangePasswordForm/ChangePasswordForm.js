@@ -23,7 +23,7 @@ import {
     RETYPE_PASSWORD_LABEL,
     CLEAR_BUTTON_LABEL,
     NEW_PASSWORD_LABEL,
-} from '../../constants/translationLabels';
+} from '../../constants/translationLabels/formElements';
 
 function ExpandMoreIcon() {
     return null;

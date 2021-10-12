@@ -24,7 +24,7 @@ import {
     FORM_CHOOSE_BUTTON_TITLE,
     FORM_CANCEL_BUTTON_TITLE,
     FORM_ROOM_LABEL,
-} from '../../constants/translationLabels';
+} from '../../constants/translationLabels/formElements';
 import '../../share/modals/dialog.scss';
 import './ScheduleDialog.scss';
 

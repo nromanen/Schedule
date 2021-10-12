@@ -31,7 +31,7 @@ import {
     FOR_TEACHER,
     EDIT_VACATION_FORM,
     CREATE_VACATION_FORM,
-} from '../../../constants/translationLabels';
+} from '../../../constants/translationLabels/formElements';
 import {
     COMMON_NOTIFY_LABEL,
     COMMON_FEW_DAYS_LABEL,

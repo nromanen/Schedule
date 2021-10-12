@@ -20,7 +20,7 @@ import {
     SAVE_BUTTON_LABEL,
     DEPARTMENT_LABEL,
     NAME_LABEL,
-} from '../../constants/translationLabels';
+} from '../../constants/translationLabels/formElements';
 
 const AddDepartment = (props) => {
     const { t } = useTranslation('formElements');

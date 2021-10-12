@@ -23,7 +23,7 @@ import {
     setScheduleTeacherIdService,
     setScheduleTypeService,
 } from '../../services/scheduleService';
-import { PASSWORD_LABEL, EMAIL_LABEL } from '../../constants/translationLabels';
+import { PASSWORD_LABEL, EMAIL_LABEL } from '../../constants/translationLabels/formElements';
 import { LOGIN_TITLE } from '../../constants/translationLabels/common';
 
 let LoginForm = (props) => {

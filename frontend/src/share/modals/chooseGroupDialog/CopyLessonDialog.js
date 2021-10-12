@@ -12,7 +12,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import {
     FORM_CHOOSE_BUTTON_TITLE,
     FORM_CANCEL_BUTTON_TITLE,
-} from '../../../constants/translationLabels';
+} from '../../../constants/translationLabels/formElements';
 import {
     COPY_TO_SAME_GROUP_ERROR,
     CHOOSE_GROUP,

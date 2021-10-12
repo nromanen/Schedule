@@ -5,12 +5,14 @@ import { FaUserPlus } from 'react-icons/fa';
 import Card from '../../share/Card/Card';
 import { getTeacherFullName, getTeacherName } from '../../helper/renderTeacher';
 import groups from '../../redux/reducers/groups';
-import { FORM_GROUPED_LABEL, FORM_HOURS_LABEL } from '../../constants/translationLabels';
+import {
+    FORM_GROUPED_LABEL,
+    FORM_HOURS_LABEL,
+} from '../../constants/translationLabels/formElements';
 import {
     COMMON_DELETE_SCHEDULE_ITEM,
     COMMON_EDIT_SCHEDULE_ITEM,
 } from '../../constants/translationLabels/common';
-
 
 const ScheduleItem = (props) => {
     let { lesson } = props;

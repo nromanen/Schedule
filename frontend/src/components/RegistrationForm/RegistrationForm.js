@@ -23,7 +23,7 @@ import {
     PASSWORD_LABEL,
     RETYPE_PASSWORD_LABEL,
     EMAIL_LABEL,
-} from '../../constants/translationLabels';
+} from '../../constants/translationLabels/formElements';
 
 let RegistrationForm = (props) => {
     const { t } = useTranslation('formElements');

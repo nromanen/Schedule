@@ -2,12 +2,11 @@ import axios from '../helper/axios';
 import { STUDENTS_TO_GROUP_FILE } from '../constants/axios';
 import i18n from '../helper/i18n';
 import { successHandler } from '../helper/handlerAxios';
+import { FILE_LABEL, FILE_BACK_END_SUCCESS_OPERATION } from '../constants/translationLabels';
 import {
-    FILE_LABEL,
-    FILE_BACK_END_SUCCESS_OPERATION,
     FORM_STUDENT_FILE_LABEL,
     FORM_STUDENTS_FILE_LABEL,
-} from '../constants/translationLabels';
+} from '../constants/translationLabels/formElements';
 
 export const uploadStudentsToGroupFile = (file, groupId) => {
     const formData = new FormData();

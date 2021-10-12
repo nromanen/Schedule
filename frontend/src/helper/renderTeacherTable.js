@@ -25,7 +25,7 @@ import {
     SEND_LETTER_LABEL,
     ALL_PAGE,
     ROWS_PER_PAGE,
-} from '../constants/translationLabels';
+} from '../constants/translationLabels/formElements';
 
 const useStyles1 = makeStyles((theme) => ({
     root: {

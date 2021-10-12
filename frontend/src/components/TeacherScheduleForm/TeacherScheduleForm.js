@@ -17,7 +17,7 @@ import { TEACHER_SCHEDULE_FORM } from '../../constants/reduxForms';
 import renderMonthPicker from '../../share/renderedFields/timeSemester';
 import Card from '../../share/Card/Card';
 import { setTeacherServiceViewType } from '../../services/scheduleService';
-import { CLASS_FROM_LABEL, CLASS_TO_LABEL } from '../../constants/translationLabels';
+import { CLASS_FROM_LABEL, CLASS_TO_LABEL } from '../../constants/translationLabels/formElements';
 import {
     COMMON_LIST_VIEW,
     COMMON_SELECT_DATES_FOR_TEACHERS_SCHEDULE,

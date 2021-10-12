@@ -29,7 +29,7 @@ import {
     TEACHER_POSITION,
     EMAIL_FIELD,
     DEPARTMENT_TEACHER_LABEL,
-} from '../../constants/translationLabels';
+} from '../../constants/translationLabels/formElements';
 
 let AddTeacher = (props) => {
     const { t } = useTranslation('formElements');

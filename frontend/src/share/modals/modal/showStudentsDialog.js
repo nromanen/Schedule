@@ -18,15 +18,14 @@ import { getAllStudentsByGroupId, updateStudentService } from '../../../services
 import { isObjectEmpty } from '../../../helper/ObjectRevision';
 import { successHandler } from '../../../helper/handlerAxios';
 import { UploadFile } from '../../../components/UploadFile/UploadFile';
+import { STUDENTS_EXIST_IN_THIS_GROUP, EXIST_LABEL } from '../../../constants/translationLabels';
 import {
     GROUP_LABEL,
     STUDENT_LABEL,
-    EXIST_LABEL,
     GROUP_STUDENTS,
     STUDENTS_LABEL,
     NO_EXIST_STUDENTS_AT_GROUP,
-    STUDENTS_EXIST_IN_THIS_GROUP,
-} from '../../../constants/translationLabels';
+} from '../../../constants/translationLabels/formElements';
 import {
     COMMON_STUDENT_TITLE,
     COMMON_CLOSE_TITLE,

@@ -6,12 +6,6 @@ import { DEPARTMENT_FORM } from '../constants/reduxForms';
 import { errorHandler, successHandler } from '../helper/handlerAxios';
 import i18n from '../helper/i18n';
 import {
-    BACK_END_SUCCESS_OPERATION,
-    UPDATED_LABEL,
-    CREATED_LABEL,
-    FORM_DEPARTMENT_LABEL,
-} from '../constants/translationLabels';
-import {
     addDepartment,
     clearDepartmentForm,
     deleteDepartment,
@@ -22,6 +16,12 @@ import {
     setEnabledDepartment,
     updateDepart,
 } from '../redux/actions/departments';
+import {
+    BACK_END_SUCCESS_OPERATION,
+    UPDATED_LABEL,
+    CREATED_LABEL,
+} from '../constants/translationLabels';
+import { FORM_DEPARTMENT_LABEL } from '../constants/translationLabels/formElements';
 
 export const createDepartmentService = (data) => {
     axios

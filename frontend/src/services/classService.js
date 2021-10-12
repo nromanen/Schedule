@@ -1,13 +1,6 @@
 import axios from '../helper/axios';
 import { store } from '../index';
 import { CLASS_URL, PUBLIC_CLASSES_URL } from '../constants/axios';
-import {
-    BACK_END_SUCCESS_OPERATION,
-    FORM_CLASS_LABEL,
-    UPDATED_LABEL,
-    CREATED_LABEL,
-    DELETED_LABEL,
-} from '../constants/translationLabels';
 import { CLASS_FORM } from '../constants/reduxForms';
 import {
     addClassScheduleOne,
@@ -21,6 +14,13 @@ import i18n from '../helper/i18n';
 import { errorHandler, successHandler } from '../helper/handlerAxios';
 import { resetFormHandler } from '../helper/formHelper';
 import { setLoadingService } from './loadingService';
+import {
+    BACK_END_SUCCESS_OPERATION,
+    UPDATED_LABEL,
+    CREATED_LABEL,
+    DELETED_LABEL,
+} from '../constants/translationLabels';
+import { FORM_CLASS_LABEL } from '../constants/translationLabels/formElements';
 
 export const getClassScheduleListService = () => {
     axios

@@ -1,6 +1,6 @@
 import axios from '../helper/axios';
 import { store } from '../index';
-import { BACK_END_SUCCESS_OPERATION, FORM_USER_LABEL } from '../constants/translationLabels';
+
 import {
     MERGE_USER_AND_TEACHER_URL,
     USERS_URL,
@@ -12,7 +12,8 @@ import i18n from '../helper/i18n';
 import { setLoadingService } from './loadingService';
 import { getTeachersWithoutAccount } from './teacherService';
 import { errorHandler, successHandler } from '../helper/handlerAxios';
-import { FORM_TEACHER_LABEL, SUCCESSFULLY_MERGED } from '../constants/translationLabels';
+import { BACK_END_SUCCESS_OPERATION, SUCCESSFULLY_MERGED } from '../constants/translationLabels';
+import { FORM_USER_LABEL, FORM_TEACHER_LABEL } from '../constants/translationLabels/formElements';
 
 export const getUsersService = () => {
     axios

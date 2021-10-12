@@ -6,13 +6,6 @@ import { STUDENT_FORM } from '../constants/reduxForms';
 import { errorHandler, successHandler } from '../helper/handlerAxios';
 import i18n from '../helper/i18n';
 import {
-    BACK_END_SUCCESS_OPERATION,
-    UPDATED_LABEL,
-    FORM_STUDENT_LABEL,
-    CREATED_LABEL,
-    DELETED_LABEL,
-} from '../constants/translationLabels';
-import {
     addStudent,
     deleteStudent,
     setStudent,
@@ -20,6 +13,13 @@ import {
     showAllStudentsByGroupId,
     updateStudent,
 } from '../redux/actions/students';
+import {
+    BACK_END_SUCCESS_OPERATION,
+    UPDATED_LABEL,
+    CREATED_LABEL,
+    DELETED_LABEL,
+} from '../constants/translationLabels';
+import { FORM_STUDENT_LABEL } from '../constants/translationLabels/formElements';
 
 export const createStudentService = (data) => {
     axios

@@ -11,7 +11,7 @@ import './modal.scss';
 import i18n from 'i18next';
 import { disabledCard } from '../../../constants/disabledCard';
 import './linkToMeetingDialog.scss';
-import { FORM_REFERENCE_ELEMENT } from '../../../constants/translationLabels';
+import { FORM_REFERENCE_ELEMENT } from '../../../constants/translationLabels/formElements';
 import {
     COMMON_NO_BUTTON_TITLE,
     COMMON_YES_BUTTON_TITLE,

@@ -48,7 +48,7 @@ import {
     DELETE_TITLE,
     FORM_STUDENT_ADD_LABEL,
     FORM_SHOW_STUDENTS,
-} from '../../constants/translationLabels';
+} from '../../constants/translationLabels/formElements';
 import {
     COMMON_EDIT,
     COMMON_SET_DISABLED,

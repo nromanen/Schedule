@@ -27,7 +27,7 @@ import {
     CLASS_FROM_LABEL,
     CLASS_TO_LABEL,
     MAX_COUNT_CLASSES_REACHED,
-} from '../../constants/translationLabels';
+} from '../../constants/translationLabels/formElements';
 import {
     COMMON_EDIT_HOVER_TITLE,
     COMMON_DELETE_HOVER_TITLE,

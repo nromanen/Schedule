@@ -36,7 +36,7 @@ import {
     DEPARTMENT_LABEL,
     DELETE_TITLE,
     SHOW_TEACHER_TITLE,
-} from '../../constants/translationLabels';
+} from '../../constants/translationLabels/formElements';
 import { COMMON_SET_DISABLED, COMMON_SET_ENABLED } from '../../constants/translationLabels/common';
 
 function DepartmentPage(props) {

@@ -32,7 +32,7 @@ import {
     NAME_PLACEHOLDER,
     SURNAME_PLACEHOLDER,
     STUDENT_A_LABEL,
-} from '../../../constants/translationLabels';
+} from '../../../constants/translationLabels/formElements';
 
 let AddStudentDialog = (props) => {
     const { t } = useTranslation('formElements');

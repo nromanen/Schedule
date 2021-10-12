@@ -30,7 +30,7 @@ import {
     FORM_SEMESTER_LABEL,
     FORM_TEACHER_LABEL,
     FORM_GROUP_LABEL,
-} from '../../constants/translationLabels';
+} from '../../constants/translationLabels/formElements';
 import {
     GREETING_SCHEDULE_MESSAGE,
     GREETING_SCHEDULE_MESSAGE_HINT,

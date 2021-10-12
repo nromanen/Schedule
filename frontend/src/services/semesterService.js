@@ -32,8 +32,6 @@ import { errorHandler, successHandler } from '../helper/handlerAxios';
 import { resetFormHandler } from '../helper/formHelper';
 import {
     BACK_END_SUCCESS_OPERATION,
-    FORM_LESSON_LABEL,
-    FORM_SEMESTER_LABEL,
     UPDATED_LABEL,
     CREATED_LABEL,
     DELETED_LABEL,
@@ -42,6 +40,10 @@ import {
     COPIED_LABEL,
     ARCHIVED_LABEL,
 } from '../constants/translationLabels';
+import {
+    FORM_LESSON_LABEL,
+    FORM_SEMESTER_LABEL,
+} from '../constants/translationLabels/formElements';
 import { COMMON_SEMESTER_IS_NOT_UNIQUE } from '../constants/translationLabels/common';
 
 export const selectSemesterService = (semesterId) => store.dispatch(selectSemester(semesterId));

@@ -7,7 +7,11 @@ import './SearchPanel.scss';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 import Card from '../Card/Card';
-import { TYPE_TO_SEARCH, SHOW_ARCHIVED, SHOW_REGULAR } from '../../constants/translationLabels';
+import {
+    TYPE_TO_SEARCH,
+    SHOW_ARCHIVED,
+    SHOW_REGULAR,
+} from '../../constants/translationLabels/formElements';
 import {
     COMMON_SHOW_DISABLED,
     COMMON_SHOW_ENABLED,

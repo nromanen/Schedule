@@ -49,7 +49,7 @@ import {
 } from '../../services/departmentService';
 import { clearDepartmentForm, getDepartItemById } from '../../redux/actions/departments';
 import { getShortTitle } from '../../helper/shortTitle';
-import { FORM_TEACHER_A_LABEL } from '../../constants/translationLabels';
+import { FORM_TEACHER_A_LABEL } from '../../constants/translationLabels/formElements';
 import {
     COMMON_SET_DISABLED,
     COMMON_EDIT_HOVER_TITLE,

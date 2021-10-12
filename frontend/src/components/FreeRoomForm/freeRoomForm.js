@@ -16,7 +16,7 @@ import {
     FORM_CLASS_FREE_ROOMS,
     FORM_SUBMIT_BUTTON_LABEL,
     FORM_CLEAR_BUTTON_LABEL,
-} from '../../constants/translationLabels';
+} from '../../constants/translationLabels/formElements';
 
 let FreeRoomForm = (props) => {
     const { t } = useTranslation('formElements');

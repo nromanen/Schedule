@@ -31,7 +31,7 @@ import {
     TEACHER_LABEL,
     EDIT_TEMPORARY_SCHEDULE_FORM,
     CREATE_TEMPORARY_SCHEDULE_FORM,
-} from '../../../constants/translationLabels';
+} from '../../../constants/translationLabels/formElements';
 import {
     COMMON_NOTIFY_LABEL,
     COMMON_HOLIDAY_LABEL,

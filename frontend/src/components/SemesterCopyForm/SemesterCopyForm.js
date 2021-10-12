@@ -18,7 +18,7 @@ import {
     FORM_SEMESTER_LABEL,
     FORM_SEMESTER_COPY_RED_HINT,
     FORM_SEMESTER_COPY_HINT,
-} from '../../constants/translationLabels';
+} from '../../constants/translationLabels/formElements';
 import { TEACHER_SCHEDULE_LABEL } from '../../constants/translationLabels/common';
 
 const shortid = require('shortid');

@@ -1,12 +1,5 @@
 import { store } from '../index';
 import {
-    BACK_END_SUCCESS_OPERATION,
-    UPDATED_LABEL,
-    FORM_TEACHER_A_LABEL,
-    CREATED_LABEL,
-    DELETED_LABEL,
-} from '../constants/translationLabels';
-import {
     DISABLED_TEACHERS_URL,
     TEACHER_URL,
     TEACHERS_WITHOUT_ACCOUNT_URL,
@@ -26,6 +19,13 @@ import { errorHandler, successHandler } from '../helper/handlerAxios';
 import { resetFormHandler } from '../helper/formHelper';
 import { setLoadingService } from './loadingService';
 import { isObjectEmpty } from '../helper/ObjectRevision';
+import {
+    BACK_END_SUCCESS_OPERATION,
+    UPDATED_LABEL,
+    CREATED_LABEL,
+    DELETED_LABEL,
+} from '../constants/translationLabels';
+import { FORM_TEACHER_A_LABEL } from '../constants/translationLabels/formElements';
 
 export const showAllTeachersService = () => {
     axios

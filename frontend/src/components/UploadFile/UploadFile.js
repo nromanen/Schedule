@@ -6,14 +6,14 @@ import { FaWindowClose } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
 import Button from '@material-ui/core/Button';
 import { setLoadingService } from '../../services/loadingService';
-import { CLOSE_LABEL } from '../../constants/translationLabels';
+import { CLOSE_LABEL } from '../../constants/translationLabels/formElements';
 import {
     COMMON_NAME_LABEL,
     COMMON_TYPE_LABEL,
     COMMON_BYTE_SIZE_LABEL,
     COMMON_SELECT_FILE_LABEL,
     COMMON_UPLOAD_TITLE,
-} from '../../constants/translationLabels/common.js';
+} from '../../constants/translationLabels/common';
 
 export const UploadFile = (props) => {
     const { t } = useTranslation('formElements');

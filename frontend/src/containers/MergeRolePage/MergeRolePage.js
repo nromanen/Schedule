@@ -20,7 +20,7 @@ import {
     FORM_USER_LABEL,
     FORM_TEACHER_LABEL,
     FORM_MERGE_BUTTON,
-} from '../../constants/translationLabels';
+} from '../../constants/translationLabels/formElements';
 import { MERGE_HEADER } from '../../constants/translationLabels/common';
 
 const useStyles = makeStyles(() => ({

@@ -33,7 +33,7 @@ import {
     CLASS_FROM_LABEL,
     CLASS_TO_LABEL,
     CLASS_Y_LABEL,
-} from '../../constants/translationLabels';
+} from '../../constants/translationLabels/formElements';
 
 const useStyles = makeStyles((theme) => ({
     rootInput: {

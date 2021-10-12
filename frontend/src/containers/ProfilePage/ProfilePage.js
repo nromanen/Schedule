@@ -17,7 +17,7 @@ import { getUserProfile, updateUserPassword, updateUserTeacher } from '../../ser
 import AddTeacherForm from '../../components/AddTeacherForm/AddTeacherForm';
 import { navigation, navigationNames } from '../../constants/navigation';
 import NavigationPage from '../../components/Navigation/NavigationPage';
-import { EMAIL_LABEL } from '../../constants/translationLabels';
+import { EMAIL_LABEL } from '../../constants/translationLabels/formElements';
 import { COMMON_MY_PROFILE, DIFFERENT_PASSWORDS } from '../../constants/translationLabels/common';
 
 const useStyles = makeStyles((theme) => ({

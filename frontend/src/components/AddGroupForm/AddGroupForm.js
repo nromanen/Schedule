@@ -17,7 +17,7 @@ import {
     SAVE_BUTTON_LABEL,
     GROUP_Y_LABEL,
     GROUP_LABEL,
-} from '../../constants/translationLabels';
+} from '../../constants/translationLabels/formElements';
 
 const AddGroup = (props) => {
     const { t } = useTranslation('formElements');
