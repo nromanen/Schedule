@@ -8,7 +8,7 @@ import {
     checkUniqSemester,
     checkUniqueDepartment,
 } from './storeValidation';
-import i18n from '../helper/i18n';
+import i18n from '../i18n';
 import { validation } from '../constants/validation';
 import { dateFormat } from '../constants/formats';
 

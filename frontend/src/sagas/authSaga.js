@@ -6,7 +6,7 @@ import { authUserService } from '../services/authService';
 
 import { TOKEN_BEGIN } from '../constants/tokenBegin';
 import axios from '../helper/axios';
-import i18n from '../helper/i18n';
+import i18n from '../i18n';
 
 export function* authSaga(payload) {
     try {

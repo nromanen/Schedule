@@ -9,7 +9,7 @@ import TableRow from '@material-ui/core/TableRow';
 import i18n from 'i18next';
 import Card from '../share/Card/Card';
 
-import i18next from './i18n';
+import i18next from '../i18n';
 
 import { daysUppercase } from '../constants/schedule/days';
 import { LinkToMeeting } from '../components/LinkToMeeting/LinkToMeeting';

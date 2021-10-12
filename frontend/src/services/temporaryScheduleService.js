@@ -1,7 +1,7 @@
 import axios from '../helper/axios';
 import { errorHandler, successHandler } from '../helper/handlerAxios';
 import { BACK_END_SUCCESS_OPERATION } from '../constants/services';
-import i18n from '../helper/i18n';
+import i18n from '../i18n';
 
 import { store } from '../store';
 

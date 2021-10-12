@@ -43,7 +43,7 @@ import SetChangeDialog from '../../share/modals/modal/setDefaultDialog';
 import { MultiselectForGroups } from '../../helper/MultiselectForGroups';
 import { showAllGroupsService } from '../../services/groupService';
 import { successHandler } from '../../helper/handlerAxios';
-import i18n from '../../helper/i18n';
+import i18n from '../../i18n';
 
 const SemesterPage = (props) => {
     const { t } = useTranslation('formElements');

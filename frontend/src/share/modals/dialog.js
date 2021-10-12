@@ -8,7 +8,7 @@ import Button from '@material-ui/core/Button';
 
 import './dialog.scss';
 
-import i18n from '../../helper/i18n';
+import i18n from '../../i18n';
 import { disabledCard } from '../../constants/disabledCard';
 
 export const ConfirmDialog = (props) => {

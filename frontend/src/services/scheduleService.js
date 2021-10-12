@@ -2,7 +2,7 @@ import { store } from '../store';
 
 import get from 'lodash';
 import axios from '../helper/axios';
-import i18n from '../helper/i18n';
+import i18n from '../i18n';
 import {
     BACK_END_SUCCESS_OPERATION,
     NO_CURRENT_SEMESTER_ERROR,

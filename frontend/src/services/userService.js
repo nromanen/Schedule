@@ -10,7 +10,7 @@ import {
 } from '../constants/axios';
 import { setUsers, setUser, setTeacher } from '../actions/index';
 
-import i18n from '../helper/i18n';
+import i18n from '../i18n';
 import { setLoadingService } from './loadingService';
 import { getTeachersWithoutAccount } from './teacherService';
 import { errorHandler, successHandler } from '../helper/handlerAxios';

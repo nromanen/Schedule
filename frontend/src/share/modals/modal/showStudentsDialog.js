@@ -12,7 +12,7 @@ import './showDataDialog.scss';
 import { connect } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import Select from 'react-select';
-import i18n from '../../../helper/i18n';
+import i18n from '../../../i18n';
 import RenderStudentTable from '../../../helper/renderStudentTable';
 import { getAllStudentsByGroupId, updateStudentService } from '../../../services/studentService';
 import { isObjectEmpty } from '../../../helper/ObjectRevision';
