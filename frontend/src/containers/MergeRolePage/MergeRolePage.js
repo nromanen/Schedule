@@ -16,6 +16,7 @@ import Card from '../../share/Card/Card';
 import './MergeRolePage.scss';
 import NavigationPage from '../../components/Navigation/NavigationPage';
 import { navigation } from '../../constants/navigation';
+import { USER_LABEL } from '../../constants/services';
 
 const useStyles = makeStyles(() => ({
     autoCompleteField: {

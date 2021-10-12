@@ -7,7 +7,7 @@ import { MdDelete } from 'react-icons/md';
 import { useTranslation } from 'react-i18next';
 import ClassForm from '../../components/ClassForm/ClassForm';
 import Card from '../../share/Card/Card';
-import ConfirmDialog from '../../share/modals/dialog';
+import { ConfirmDialog } from '../../share/modals/dialog';
 import { cardType } from '../../constants/cardType';
 
 import {

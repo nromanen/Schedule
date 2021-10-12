@@ -5,7 +5,7 @@ import { FaEdit } from 'react-icons/fa';
 import { MdDelete } from 'react-icons/md';
 import { useTranslation } from 'react-i18next';
 import { GiSightDisabled, IoMdEye } from 'react-icons/all';
-import ConfirmDialog from '../../share/modals/dialog';
+import { ConfirmDialog } from '../../share/modals/dialog';
 import { cardType } from '../../constants/cardType';
 import AddRoom from '../../components/AddRoomForm/AddRoomForm';
 import NewRoomType from '../../components/AddNewRoomType/AddNewRoomType';

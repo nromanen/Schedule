@@ -6,7 +6,7 @@ import './GroupList.scss';
 import { useHistory } from 'react-router-dom/cjs/react-router-dom';
 import { search } from '../../helper/search';
 import NotFound from '../../share/NotFound/NotFound';
-import ConfirmDialog from '../../share/modals/dialog';
+import { ConfirmDialog } from '../../share/modals/dialog';
 import SearchPanel from '../../share/SearchPanel/SearchPanel';
 import AddGroup from '../../components/AddGroupForm/AddGroupForm';
 import SnackbarComponent from '../../share/Snackbar/SnackbarComponent';

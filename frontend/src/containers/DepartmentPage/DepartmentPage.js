@@ -9,14 +9,14 @@ import Card from '../../share/Card/Card';
 import AddDepartment from '../../components/AddDepartmentForm/AddDepartmentForm';
 import { search } from '../../helper/search';
 import NotFound from '../../share/NotFound/NotFound';
-import ConfirmDialog from '../../share/modals/dialog';
+import { ConfirmDialog } from '../../share/modals/dialog';
 import { disabledCard } from '../../constants/disabledCard';
 import { navigation, navigationNames } from '../../constants/navigation';
 import NavigationPage from '../../components/Navigation/NavigationPage';
 import SnackbarComponent from '../../share/Snackbar/SnackbarComponent';
 import { handleSnackbarCloseService } from '../../services/snackbarService';
 import { showAllPublicTeachersByDepartmentService } from '../../services/scheduleService';
-import ShowDataDialog from '../../share/modals/modal/showDataDialog';
+import { ShowDataDialog } from '../../share/modals/modal/showDataDialog';
 import {
     clearDepartment,
     createDepartmentService,
