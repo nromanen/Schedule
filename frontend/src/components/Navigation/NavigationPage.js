@@ -93,7 +93,7 @@ const NavigationPage = (props) => {
                                     id="demo-controlled-open-select"
                                     value={gen}
                                     onChange={(event) => {
-                                        const { eventValue } = event.target;
+                                        const eventValue = event.target.value;
                                         setGen(eventValue);
                                         documentTitle(eventValue);
                                     }}
