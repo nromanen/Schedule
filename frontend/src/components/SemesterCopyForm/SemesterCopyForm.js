@@ -21,8 +21,6 @@ import {
 } from '../../constants/translationLabels/formElements';
 import { TEACHER_SCHEDULE_LABEL } from '../../constants/translationLabels/common';
 
-const shortid = require('shortid');
-
 const useStyles = makeStyles((theme) => ({
     root: {
         '& > *': {
@@ -37,35 +35,34 @@ const SemesterCopyForm = (props) => {
     const { semesterId, semesters, handleSubmit, pristine, submitting } = props;
 
     const renderSemesterList = () => {
-        const available_semesters_for_copy = semesters.filter(
+        const availableSemestersForCopy = semesters.filter(
             (semester) => semester.id !== semesterId,
         );
-        if (available_semesters_for_copy) {
-            if (available_semesters_for_copy.length > 1) {
-                return (
-                    <>
-                        <Field
-                            id="toSemesterId"
-                            name="toSemesterId"
-                            component={renderSelectField}
-                            label={t(FORM_SEMESTER_LABEL)}
-                            type="text"
-                            validate={[required]}
-                        >
-                            <option />
-                            {available_semesters_for_copy.map((semester, index) => (
-                                <option key={shortid.generate()} value={semester.id}>
-                                    {semester.description}
-                                </option>
-                            ))}
-                        </Field>
-                    </>
-                );
-            }
-            if (available_semesters_for_copy.length === 1) {
-                return <p>{available_semesters_for_copy[0].description}</p>;
-            }
+        if (availableSemestersForCopy && availableSemestersForCopy.length > 1) {
+            return (
+                <>
+                    <Field
+                        id="toSemesterId"
+                        name="toSemesterId"
+                        component={renderSelectField}
+                        label={t(FORM_SEMESTER_LABEL)}
+                        type="text"
+                        validate={[required]}
+                    >
+                        <option />
+                        {availableSemestersForCopy.map((semester) => (
+                            <option key={semester.id} value={semester.id}>
+                                {semester.description}
+                            </option>
+                        ))}
+                    </Field>
+                </>
+            );
         }
+        if (availableSemestersForCopy && availableSemestersForCopy.length === 1) {
+            return <p>{availableSemestersForCopy[0].description}</p>;
+        }
+        return null;
     };
 
     return (

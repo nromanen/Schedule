@@ -14,19 +14,19 @@ import FirstPageIcon from '@material-ui/icons/FirstPage';
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import LastPageIcon from '@material-ui/icons/LastPage';
-import { getTeacherFullName } from './renderTeacher';
 import { useTranslation } from 'react-i18next';
 import { FaEnvelope } from 'react-icons/fa';
 import TableHead from '@material-ui/core/TableHead';
-import { Checkbox, withStyles } from '@material-ui/core';
+import { withStyles } from '@material-ui/core';
 import { FaEdit } from 'react-icons/all';
 import { Delete } from '@material-ui/icons';
+import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import ConfirmDialog from '../share/modals/dialog';
 import AddStudentDialog from '../share/modals/modal/AddStudentDialog';
 import { selectStudentService } from '../services/studentService';
 import './renderStudentTable.scss';
-import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { getTeacherFullName } from './renderTeacher';
 import { links } from '../constants/links';
 import {
     EDIT_TITLE,
@@ -156,6 +156,10 @@ export default function RenderStudentTable(props) {
     const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
     const [openEditDialog, setOpenEditDialog] = useState(false);
     const { t } = useTranslation('formElements');
+    const handleEdit = (studentId) => {
+        setOpenEditDialog(true);
+        selectStudentService(studentId);
+    };
     useEffect(() => {
         if (match.path.includes(links.Student) && match.path.includes(links.Edit)) {
             handleEdit(student.id);
@@ -179,13 +183,9 @@ export default function RenderStudentTable(props) {
         const mailto = `mailto:${email}`;
         window.location.href = mailto;
     };
-    const deleteStudent = (student) => {
+    const deleteStudent = (studentItem) => {
         setOpenDeleteDialog(false);
-        onDeleteStudent(student);
-    };
-    const handleEdit = (studentId) => {
-        setOpenEditDialog(true);
-        selectStudentService(studentId);
+        onDeleteStudent(studentItem);
     };
     const handleCloseEditDialog = () => {
         setOpenEditDialog(false);
@@ -258,37 +258,40 @@ export default function RenderStudentTable(props) {
                               page * rowsPerPage + rowsPerPage,
                           )
                         : checkBoxStudents
-                    ).map((student) => (
-                        <StyledTableRow key={student.id}>
+                    ).map((singleStudent) => (
+                        <StyledTableRow key={singleStudent.id}>
                             <StyledTableCell component="th" scope="row" align="center">
                                 <input
-                                    key={student.id}
+                                    key={singleStudent.id}
                                     onClick={handleCheckElem}
                                     type="checkbox"
-                                    checked={student.checked}
-                                    value={student.id}
+                                    checked={singleStudent.checked}
+                                    value={singleStudent.id}
                                     className="checked-box"
-                                    title={`${t(SELECT_STUDENT)} ${getTeacherFullName(student)}`}
+                                    title={`${t(SELECT_STUDENT)} ${getTeacherFullName(
+                                        singleStudent,
+                                    )}`}
                                 />
                             </StyledTableCell>
                             <StyledTableCell component="th" scope="row" align="center">
-                                {getTeacherFullName(student)}
+                                {getTeacherFullName(singleStudent)}
                             </StyledTableCell>
                             <StyledTableCell component="th" scope="row" align="center">
                                 <span>
                                     <button
                                         className="send-letter-button"
-                                        title={`${t(SEND_LETTER_LABEL)} ${student.email}`}
-                                        onClick={() => sendMail(student.email)}
+                                        title={`${t(SEND_LETTER_LABEL)} ${singleStudent.email}`}
+                                        onClick={() => sendMail(singleStudent.email)}
+                                        type="button"
                                     >
-                                        {student.email}
+                                        {singleStudent.email}
                                     </button>
                                 </span>
                             </StyledTableCell>
                             <StyledTableCell component="th" scope="row" align="center">
                                 <span className="edit-cell">
                                     <Link
-                                        to={`${links.GroupList}${links.Group}/${group.id}${links.Student}/${student.id}${links.Edit}`}
+                                        to={`${links.GroupList}${links.Group}/${group.id}${links.Student}/${singleStudent.id}${links.Edit}`}
                                     >
                                         <FaEdit
                                             className="edit-button"
@@ -297,7 +300,7 @@ export default function RenderStudentTable(props) {
                                         />
                                     </Link>
                                     <Link
-                                        to={`${links.GroupList}${links.Group}/${group.id}${links.Student}/${student.id}${links.Delete}`}
+                                        to={`${links.GroupList}${links.Group}/${group.id}${links.Student}/${singleStudent.id}${links.Delete}`}
                                     >
                                         <Delete
                                             title={t(DELETE_TITLE_LABEL)}
@@ -317,7 +320,7 @@ export default function RenderStudentTable(props) {
 
                             <ConfirmDialog
                                 selectedValue=""
-                                cardId={student}
+                                cardId={singleStudent}
                                 whatDelete="student"
                                 open={openDeleteDialog}
                                 onClose={deleteStudent}

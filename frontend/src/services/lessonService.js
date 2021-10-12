@@ -1,5 +1,5 @@
 import axios from '../helper/axios';
-import { store } from '../index';
+import { store } from '../store';
 import { LESSON_TYPES_URL, LESSON_URL, COPY_LESSON_URL } from '../constants/axios';
 import { LESSON_FORM } from '../constants/reduxForms';
 import { handleSnackbarOpenService } from './snackbarService';
@@ -13,7 +13,8 @@ import {
     setUniqueError,
     storeLessonCard,
     updateLessonCard,
-} from '../redux/actions/index';
+} from '../actions/index';
+
 import { snackbarTypes } from '../constants/snackbarTypes';
 import { checkUniqLesson } from '../validation/storeValidation';
 import i18n from '../helper/i18n';

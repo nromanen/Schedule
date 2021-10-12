@@ -39,7 +39,7 @@ import {
     FOR_ALL,
 } from '../../../constants/translationLabels/common';
 
-let TemporaryScheduleVacationForm = (props) => {
+const TemporaryScheduleVacationForm = (props) => {
     const { t } = useTranslation('formElements');
     const { handleSubmit, invalid, reset, submitting } = props;
 
@@ -52,6 +52,19 @@ let TemporaryScheduleVacationForm = (props) => {
     const { vacation } = props;
     const vacationId = vacation.id;
 
+    const initializeFormHandler = (vacationData) => {
+        if (vacationData.teacher?.id) {
+            selectTeacherIdService(vacationData.teacher.id);
+            setForAll(false);
+        } else {
+            setForAll(true);
+        }
+        props.initialize({
+            id: vacationData.id,
+            date: vacationData.date,
+        });
+    };
+
     useEffect(() => {
         if (vacationId) {
             initializeFormHandler(vacation);
@@ -59,19 +72,6 @@ let TemporaryScheduleVacationForm = (props) => {
             props.initialize();
         }
     }, [vacationId]);
-
-    const initializeFormHandler = (vacation) => {
-        if (vacation.teacher?.id) {
-            selectTeacherIdService(vacation.teacher.id);
-            setForAll(false);
-        } else {
-            setForAll(true);
-        }
-        props.initialize({
-            id: vacation.id,
-            date: vacation.date,
-        });
-    };
 
     const handleForAllChange = (event) => {
         setForAll(event.target.checked);
@@ -88,8 +88,8 @@ let TemporaryScheduleVacationForm = (props) => {
         getOptionLabel: (option) => (option ? handleTeacherInfo(option) : ''),
     };
 
-    const handleFindTeacher = (teacherId) => {
-        if (teacherId) return teachers.find((teacher) => teacher.id === teacherId);
+    const handleFindTeacher = (id) => {
+        if (id) return teachers.find((teacher) => teacher.id === id);
         return '';
     };
 
@@ -211,8 +211,8 @@ let TemporaryScheduleVacationForm = (props) => {
     );
 };
 
-TemporaryScheduleVacationForm = reduxForm({
+const TemporaryScheduleVacationReduxForm = reduxForm({
     form: TEMPORARY_SCHEDULE_VACATION_FORM,
 })(TemporaryScheduleVacationForm);
 
-export default TemporaryScheduleVacationForm;
+export default TemporaryScheduleVacationReduxForm;

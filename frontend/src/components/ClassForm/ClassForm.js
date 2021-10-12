@@ -3,7 +3,6 @@ import { Field, reduxForm } from 'redux-form';
 
 import { connect } from 'react-redux';
 import * as moment from 'moment';
-import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import { useTranslation } from 'react-i18next';
 import Card from '../../share/Card/Card';
@@ -35,24 +34,16 @@ import {
     CLASS_Y_LABEL,
 } from '../../constants/translationLabels/formElements';
 
-const useStyles = makeStyles((theme) => ({
-    rootInput: {
-        width: '20em',
-    },
-}));
-
 const ClassFormFunc = (props) => {
     const { t } = useTranslation('formElements');
     const { handleSubmit, pristine, onReset, submitting, classScheduleOne } = props;
-    const classes = useStyles();
-
     useEffect(() => {
         let initialValues = {};
-        if (props.classScheduleOne) {
-            initialValues = props.classScheduleOne;
+        if (classScheduleOne) {
+            initialValues = classScheduleOne;
         }
         props.initialize(initialValues);
-    }, [props.classScheduleOne]);
+    }, [classScheduleOne]);
 
     const setEndTime = (startTime) =>
         props.change(

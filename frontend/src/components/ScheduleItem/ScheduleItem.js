@@ -3,8 +3,6 @@ import { MdDelete, MdEdit } from 'react-icons/md';
 
 import { FaUserPlus } from 'react-icons/fa';
 import Card from '../../share/Card/Card';
-import { getTeacherFullName, getTeacherName } from '../../helper/renderTeacher';
-import groups from '../../redux/reducers/groups';
 import {
     FORM_GROUPED_LABEL,
     FORM_HOURS_LABEL,
@@ -13,6 +11,7 @@ import {
     COMMON_DELETE_SCHEDULE_ITEM,
     COMMON_EDIT_SCHEDULE_ITEM,
 } from '../../constants/translationLabels/common';
+import { getTeacherName } from '../../helper/renderTeacher';
 
 const ScheduleItem = (props) => {
     let { lesson } = props;
@@ -20,29 +19,16 @@ const ScheduleItem = (props) => {
 
     const item = props.item || null;
     const t = props.translation;
-    const { fStrLetterCapital } = props;
+    const { fStrLetterCapital, addition } = props;
 
     if (item) {
-        lesson = item.lesson;
-        itemId = item.id;
+        const { lesson: propsItemLesson, id: propsItemId } = item;
+        lesson = propsItemLesson;
+        itemId = propsItemId;
     }
-
-    const { addition } = props;
 
     const itemNodeId = `card-${lesson.id}-group-${lesson.group.id}-${addition}`;
     const deleteNodeId = `delete-${lesson.id}-${lesson.group.id}-${addition}`;
-
-    const getTitleLesson = () => {
-        if (lesson.grouped) {
-            console.log(lesson);
-            // const groupsFilter = props.lessons.filter(les => les.grouped===true&&les.subjectForSite === lesson.subjectForSite);
-            // const groups = groupsFilter.map(item => item.subjectForSite === lesson.subjectForSite &&
-            //     item.lessonType === lesson.lessonType &&
-            //     lesson.teacher.id === item.teacher.id);
-            // console.log(groups)
-        }
-        return null;
-    };
 
     const isGroupped = (grouped) =>
         grouped ? (
@@ -56,7 +42,6 @@ const ScheduleItem = (props) => {
 
     return (
         <Card id={itemNodeId} class={props.class} draggable>
-            {getTitleLesson()}
             <input
                 type="hidden"
                 value={JSON.stringify({

@@ -19,6 +19,7 @@ import * as moment from 'moment';
 
 import Divider from '@material-ui/core/Divider';
 import { temporaryScheduleRadioTypes } from '../../../constants/temporaryScheduleRadioTypes';
+import { dateFormat } from '../../../constants/formats';
 
 import {
     getTeacherTemporarySchedulesService,
@@ -109,17 +110,17 @@ const TemporaryScheduleTitle = (props) => {
     const handleDayChange = (date) => {
         setFromDate(null);
         setToDate(null);
-        setDay(moment(date, 'DD-MM-YYYY').format('DD-MM-YYYY'));
+        setDay(moment(date, dateFormat).format(dateFormat));
     };
 
     const handleFromDateChange = (date) => {
         setDay(null);
-        setFromDate(moment(date, 'DD-MM-YYYY').format('DD-MM-YYYY'));
+        setFromDate(moment(date, dateFormat).format(dateFormat));
     };
 
     const handleToDateChange = (date) => {
         setDay(null);
-        setToDate(moment(date, 'DD-MM-YYYY').format('DD-MM-YYYY'));
+        setToDate(moment(date, dateFormat).format(dateFormat));
     };
 
     const handleClick = () => {
@@ -154,8 +155,8 @@ const TemporaryScheduleTitle = (props) => {
         getOptionLabel: (option) => (option ? handleTeacherInfo(option) : ''),
     };
 
-    const handleFindTeacher = (teacherId) => {
-        if (teacherId) return teachers.find((teacher) => teacher.id === teacherId);
+    const handleFindTeacher = (id) => {
+        if (id) return teachers.find((teacher) => teacher.id === id);
         return '';
     };
 
@@ -204,9 +205,7 @@ const TemporaryScheduleTitle = (props) => {
                                         format="DD/MM/YYYY"
                                         className={classes.dateField}
                                         value={
-                                            fromDate
-                                                ? moment(fromDate, 'DD/MM/YYYY').toDate()
-                                                : null
+                                            fromDate ? moment(fromDate, dateFormat).toDate() : null
                                         }
                                         onChange={handleFromDateChange}
                                     />
@@ -215,9 +214,7 @@ const TemporaryScheduleTitle = (props) => {
                                         className={classes.dateField}
                                         label={t(FORM_CLASS_TO_LABEL)}
                                         format="DD/MM/YYYY"
-                                        value={
-                                            toDate ? moment(toDate, 'DD/MM/YYYY').toDate() : null
-                                        }
+                                        value={toDate ? moment(toDate, dateFormat).toDate() : null}
                                         onChange={handleToDateChange}
                                     />
                                 </div>
@@ -227,7 +224,7 @@ const TemporaryScheduleTitle = (props) => {
                                     className={classes.day}
                                     label={t(DATE_LABEL)}
                                     format="DD/MM/YYYY"
-                                    value={day ? moment(day, 'DD/MM/YYYY').toDate() : null}
+                                    value={day ? moment(day, dateFormat).toDate() : null}
                                     onChange={handleDayChange}
                                 />
                             )}

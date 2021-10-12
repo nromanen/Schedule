@@ -1,10 +1,10 @@
 import { call, put } from 'redux-saga/effects';
-import * as actionTypes from '../redux/actions/actionsType';
+import jwtDecode from 'jwt-decode';
+import * as actionTypes from '../actions/actionsType';
 
 import { authUserService } from '../services/authService';
 
 import { TOKEN_BEGIN } from '../constants/tokenBegin';
-
 import axios from '../helper/axios';
 import i18n from '../helper/i18n';
 import { COMMON_ERROR_MESSAGE } from '../constants/translationLabels/common';
@@ -13,7 +13,6 @@ export function* authSaga(payload) {
     try {
         const response = yield call(authUserService, payload);
 
-        const jwtDecode = require('jwt-decode');
         const { token } = response.data;
         const { email } = response.data;
         const decodedJWT = jwtDecode(token);

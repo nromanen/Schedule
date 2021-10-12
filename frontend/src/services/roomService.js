@@ -1,4 +1,5 @@
-import { store } from '../index';
+import { store } from '../store';
+
 import { DISABLED_ROOMS_URL, ROOM_URL } from '../constants/axios';
 import { ROOM_FORM } from '../constants/reduxForms';
 import axios from '../helper/axios';
@@ -10,7 +11,8 @@ import {
     updateOneRoom,
     clearRoomOne,
     setDisabledRooms,
-} from '../redux/actions/rooms';
+} from '../actions/rooms';
+
 import { errorHandler, successHandler } from '../helper/handlerAxios';
 import { resetFormHandler } from '../helper/formHelper';
 import i18n from '../helper/i18n';

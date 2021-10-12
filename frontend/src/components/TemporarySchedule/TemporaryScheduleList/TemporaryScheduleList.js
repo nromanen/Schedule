@@ -3,6 +3,7 @@ import { FaEdit, MdDelete } from 'react-icons/all';
 import { useTranslation } from 'react-i18next';
 
 import Divider from '@material-ui/core/Divider';
+import shortId from 'shortid';
 import Card from '../../../share/Card/Card';
 import ConfirmDialog from '../../../share/modals/dialog';
 
@@ -26,24 +27,22 @@ import {
 const TemporaryScheduleList = (props) => {
     const { t } = useTranslation('common');
 
-    const shortId = require('shortid');
-
     const temporarySchedules = props.temporarySchedules || [];
 
     const [open, setOpen] = useState(false);
     const [temporaryScheduleId, setTemporaryScheduleId] = useState(-1);
 
-    const handleClickOpen = (temporaryScheduleId) => {
-        setTemporaryScheduleId(temporaryScheduleId);
+    const handleClickOpen = (id) => {
+        setTemporaryScheduleId(id);
         setOpen(true);
     };
 
-    const handleClose = (temporaryScheduleId) => {
+    const handleClose = (id) => {
         setOpen(false);
-        if (!temporaryScheduleId) {
+        if (!id) {
             return;
         }
-        deleteTemporaryScheduleService(temporaryScheduleId, null, null);
+        deleteTemporaryScheduleService(id, null, null);
     };
 
     return (

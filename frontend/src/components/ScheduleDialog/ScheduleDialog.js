@@ -37,6 +37,19 @@ const useStyles = makeStyles(() => ({
     },
 }));
 
+const groupByAvailability = (arr) => {
+    arr.sort((x, y) => {
+        if (x === y) {
+            return 0;
+        }
+        if (x) {
+            return 1;
+        }
+        return -1;
+    });
+    return arr;
+};
+
 const ScheduleDialog = (props) => {
     const { onClose, itemData, open, rooms, availability, translation, isLoading } = props;
 
@@ -45,8 +58,12 @@ const ScheduleDialog = (props) => {
 
     const classes = useStyles();
 
-    const handleClose = () => {
-        onClose();
+    const getOptionLabel = (option) => {
+        if (option && option.available) {
+            return `${option.name} (${translation(COMMON_AVAILABLE)})`;
+        }
+        if (option) return `${option.name} (${translation(COMMON_UNAVAILABLE)})`;
+        return '';
     };
 
     const chooseClickHandle = () => {
@@ -64,136 +81,108 @@ const ScheduleDialog = (props) => {
         setRoom(null);
     };
 
-    const groupByAvailability = (arr) => {
-        arr.sort((x, y) => {
-            return x === y ? 0 : x ? 1 : -1;
-        });
-        return arr;
-    };
-
     const defaultProps = {
         options: availability.rooms ? groupByAvailability(availability.rooms) : rooms,
-        getOptionLabel: (option) =>
-            option
-                ? option.available
-                    ? `${option.name} (${translation(COMMON_AVAILABLE)})`
-                    : `${option.name} (${translation(COMMON_UNAVAILABLE)})`
-                : '',
+        getOptionLabel,
     };
+
+    if (sure && isLoading)
+        return (
+            <div className="circular-progress-dialog">
+                <CircularProgress />
+            </div>
+        );
+
+    const surePositive = (
+        <>
+            <DialogTitle id="simple-dialog-title">
+                {translation(COMMON_SCHEDULE_DIALOG_TITLE)}
+            </DialogTitle>
+            <div className="availability-info">
+                {!availability.classSuitsToTeacher && (
+                    <p className="availability-warning">
+                        {translation(COMMON_CLASS_DOES_NOT_SUIT_FOR_TEACHER)}
+                    </p>
+                )}
+                {!availability.teacherAvailable && (
+                    <p className="availability-warning">
+                        {translation(COMMON_TEACHER_IS_UNAVAILABLE)}{' '}
+                    </p>
+                )}
+            </div>
+            <Autocomplete
+                {...defaultProps}
+                id="group"
+                clearOnEscape
+                openOnFocus
+                className={classes.roomField}
+                onChange={(event, newValue) => {
+                    setRoom(newValue);
+                }}
+                renderInput={(params) => (
+                    <TextField {...params} label={translation(FORM_ROOM_LABEL)} margin="normal" />
+                )}
+            />
+            <div className="buttons-container">
+                <Button
+                    className="dialog-button"
+                    variant="contained"
+                    color="primary"
+                    onClick={() => chooseClickHandle()}
+                >
+                    {translation(FORM_CHOOSE_BUTTON_TITLE)}
+                </Button>
+                <Button className="dialog-button" variant="contained" onClick={() => onClose()}>
+                    {translation(FORM_CANCEL_BUTTON_TITLE)}
+                </Button>
+            </div>
+        </>
+    );
+    const sureNegative = (
+        <>
+            <DialogTitle id="simple-dialog-title">
+                <p className="availability-warning">
+                    {!room.available && `${translation(COMMON_ROOM_IS_UNAVAILABLE)}. `}
+                </p>
+                <p className="availability-warning">
+                    {!availability.teacherAvailable &&
+                        `${translation(COMMON_TEACHER_IS_UNAVAILABLE)}. `}
+                </p>
+
+                <p className="availability-warning">
+                    {!availability.classSuitsToTeacher &&
+                        `${translation(COMMON_CLASS_DOES_NOT_SUIT_FOR_TEACHER)}. `}
+                </p>
+
+                {translation(COMMON_ARE_YOU_SURE)}
+            </DialogTitle>
+            <div className="buttons-container">
+                <Button
+                    className="dialog-button"
+                    variant="contained"
+                    color="primary"
+                    onClick={() => {
+                        onClose({ itemData, room });
+                        setSure(true);
+                    }}
+                >
+                    {translation(COMMON_YES_BUTTON_TITLE)}
+                </Button>
+                <Button className="dialog-button" variant="contained" onClick={() => setSure(true)}>
+                    {translation(COMMON_NO_BUTTON_TITLE)}
+                </Button>
+            </div>
+        </>
+    );
 
     return (
         <Dialog
             disableBackdropClick
-            onClose={handleClose}
+            onClose={() => onClose()}
             aria-labelledby="simple-dialog-title"
             open={open}
         >
-            {sure ? (
-                <>
-                    {isLoading ? (
-                        <div className="circular-progress-dialog">
-                            <CircularProgress />
-                        </div>
-                    ) : (
-                        <>
-                            <DialogTitle id="simple-dialog-title">
-                                {translation(COMMON_SCHEDULE_DIALOG_TITLE)}
-                            </DialogTitle>
-                            <div className="availability-info">
-                                {!availability.classSuitsToTeacher ? (
-                                    <p className="availability-warning">
-                                        {translation(COMMON_CLASS_DOES_NOT_SUIT_FOR_TEACHER)}
-                                    </p>
-                                ) : (
-                                    ''
-                                )}
-                                {!availability.teacherAvailable ? (
-                                    <p className="availability-warning">
-                                        {translation(COMMON_TEACHER_IS_UNAVAILABLE)}{' '}
-                                    </p>
-                                ) : (
-                                    ''
-                                )}
-                            </div>
-                            <Autocomplete
-                                {...defaultProps}
-                                id="group"
-                                clearOnEscape
-                                openOnFocus
-                                className={classes.roomField}
-                                onChange={(event, newValue) => {
-                                    setRoom(newValue);
-                                }}
-                                renderInput={(params) => (
-                                    <TextField
-                                        {...params}
-                                        label={translation(FORM_ROOM_LABEL)}
-                                        margin="normal"
-                                    />
-                                )}
-                            />
-                            <div className="buttons-container">
-                                <Button
-                                    className="dialog-button"
-                                    variant="contained"
-                                    color="primary"
-                                    onClick={() => chooseClickHandle()}
-                                >
-                                    {translation(FORM_CHOOSE_BUTTON_TITLE)}
-                                </Button>
-                                <Button
-                                    className="dialog-button"
-                                    variant="contained"
-                                    onClick={() => onClose()}
-                                >
-                                    {translation(FORM_CANCEL_BUTTON_TITLE)}
-                                </Button>
-                            </div>
-                        </>
-                    )}
-                </>
-            ) : (
-                <>
-                    <DialogTitle id="simple-dialog-title">
-                        <p className="availability-warning">
-                            {!room.available ? `${translation(COMMON_ROOM_IS_UNAVAILABLE)}. ` : ''}
-                        </p>
-                        <p className="availability-warning">
-                            {!availability.teacherAvailable
-                                ? `${translation(COMMON_TEACHER_IS_UNAVAILABLE)}. `
-                                : ''}
-                        </p>
-
-                        <p className="availability-warning">
-                            {!availability.classSuitsToTeacher
-                                ? `${translation(COMMON_CLASS_DOES_NOT_SUIT_FOR_TEACHER)}. `
-                                : ''}
-                        </p>
-
-                        {translation(COMMON_ARE_YOU_SURE)}
-                    </DialogTitle>
-                    <div className="buttons-container">
-                        <Button
-                            className="dialog-button"
-                            variant="contained"
-                            color="primary"
-                            onClick={() => {
-                                onClose({ itemData, room });
-                                setSure(true);
-                            }}
-                        >
-                            {translation(COMMON_YES_BUTTON_TITLE)}
-                        </Button>
-                        <Button
-                            className="dialog-button"
-                            variant="contained"
-                            onClick={() => setSure(true)}
-                        >
-                            {translation(COMMON_NO_BUTTON_TITLE)}
-                        </Button>
-                    </div>
-                </>
-            )}
+            {sure ? surePositive : sureNegative}
         </Dialog>
     );
 };

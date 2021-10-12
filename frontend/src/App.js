@@ -1,9 +1,10 @@
 import React, { Suspense, useEffect } from 'react';
 import './App.scss';
-import { connect } from 'react-redux';
-import Routers from './router/Routers';
 import './helper/i18n';
-import { authCheckState } from './redux/actions/index';
+import { connect } from 'react-redux';
+
+import Routers from './router/Routers';
+import { authCheckState } from './actions/index';
 import { handleSnackbarCloseService } from './services/snackbarService';
 import SnackbarComponent from './share/Snackbar/SnackbarComponent';
 import SuccessSnackbar from './components/SuccessSnackbar/SuccessSnackbar';
@@ -20,11 +21,11 @@ const App = (props) => {
 
     useEffect(() => {
         props.onTryAutoLogin();
-    }, []);
+    }, [props]);
 
     return (
         <Suspense fallback={null}>
-            <div className="container">
+            <div className='container'>
                 <Routers />
                 <SuccessSnackbar />
                 <SnackbarComponent

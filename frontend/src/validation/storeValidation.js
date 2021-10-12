@@ -1,6 +1,6 @@
 import Moment from 'moment';
 import { extendMoment } from 'moment-range';
-import { store } from '../index';
+import { store } from '../store';
 import i18n from '../helper/i18n';
 import {
     UNIQUE_ERROR_MESSAGE,

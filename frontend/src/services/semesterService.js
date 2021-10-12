@@ -1,6 +1,7 @@
 import get from 'lodash';
 import i18n from '../helper/i18n';
-import { store } from '../index';
+import { store } from '../store';
+
 import axios from '../helper/axios';
 import {
     DISABLED_SEMESTERS_URL,
@@ -11,7 +12,7 @@ import {
     ARCHIVED_SEMESTERS_URL,
     DEFAULT_SEMESTER_URL,
 } from '../constants/axios';
-import { setDisabledSemesters, setError } from '../redux/actions/semesters';
+import { setDisabledSemesters, setError } from '../actions/semesters';
 import { SEMESTER_FORM } from '../constants/reduxForms';
 import { snackbarTypes } from '../constants/snackbarTypes';
 import { handleSnackbarOpenService } from './snackbarService';
@@ -27,7 +28,8 @@ import {
     moveToArchivedSemester,
     setScheduleType,
     setFullSchedule,
-} from '../redux/actions/index';
+} from '../actions/index';
+
 import { errorHandler, successHandler } from '../helper/handlerAxios';
 import { resetFormHandler } from '../helper/formHelper';
 import {

@@ -25,7 +25,7 @@ import {
     EMAIL_LABEL,
 } from '../../constants/translationLabels/formElements';
 
-let RegistrationForm = (props) => {
+const RegistrationForm = (props) => {
     const { t } = useTranslation('formElements');
     const { handleSubmit } = props;
 
@@ -61,7 +61,7 @@ let RegistrationForm = (props) => {
                 component={renderTextField}
                 label={t(EMAIL_LABEL)}
                 {...(!error ? emailValidate : emailAdvancedValidate)}
-                onChange={(e) => props.setError(null)}
+                onChange={() => props.setError(null)}
             />
             <Field
                 name="password"
@@ -70,7 +70,7 @@ let RegistrationForm = (props) => {
                 component={renderTextField}
                 label={t(PASSWORD_LABEL)}
                 {...(!error ? passwordValidate : passwordValidateAdvanced)}
-                onChange={(e) => props.setError(null)}
+                onChange={() => props.setError(null)}
             />
             <Field
                 name="retypePassword"
@@ -111,8 +111,8 @@ let RegistrationForm = (props) => {
     );
 };
 
-RegistrationForm = reduxForm({
+const RegistrationReduxForm = reduxForm({
     form: REGISTRATION_FORM,
 })(RegistrationForm);
 
-export default RegistrationForm;
+export default RegistrationReduxForm;

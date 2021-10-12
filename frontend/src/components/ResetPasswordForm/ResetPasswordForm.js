@@ -22,7 +22,7 @@ import {
     RESET_PASSWORD_BUTTON,
 } from '../../constants/translationLabels/common';
 
-let ResetPasswordForm = (props) => {
+const ResetPasswordForm = (props) => {
     const { t } = useTranslation('formElements');
     const { handleSubmit } = props;
 
@@ -89,8 +89,8 @@ let ResetPasswordForm = (props) => {
     );
 };
 
-ResetPasswordForm = reduxForm({
+const ResetPasswordReduxForm = reduxForm({
     form: RESET_PASSWORD_FORM,
 })(ResetPasswordForm);
 
-export default ResetPasswordForm;
+export default ResetPasswordReduxForm;

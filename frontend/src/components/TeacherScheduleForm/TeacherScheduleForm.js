@@ -24,6 +24,7 @@ import {
     COMMON_BLOCK_VIEW,
     FULL_SCHEDULE_LABEL,
 } from '../../constants/translationLabels/common';
+import { dateFormat } from '../../constants/formats';
 
 const TeacherScheduleForm = (props) => {
     const { t } = useTranslation('formElements');
@@ -32,8 +33,8 @@ const TeacherScheduleForm = (props) => {
 
     useEffect(() => {
         props.initialize({
-            startDay: moment(new Date(), 'DD/MM/YYYY').format('DD/MM/YYYY'),
-            endDay: moment(new Date(), 'DD/MM/YYYY').add(7, 'd').format('DD/MM/YYYY'),
+            startDay: moment(new Date(), dateFormat).format(dateFormat),
+            endDay: moment(new Date(), dateFormat).add(7, 'd').format(dateFormat),
         });
     }, [isSchedule]);
     return (

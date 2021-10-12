@@ -25,17 +25,14 @@ import {
     FORM_CLASS_FROM_LABEL,
     FORM_CLASS_TO_LABEL,
 } from '../constants/translationLabels/formElements';
+import { dateFormat } from '../constants/formats';
 
-export const required = (value) =>
-    value ? undefined : i18n.t(REQUIRED_MESSAGE);
+export const required = (value) => (value ? undefined : i18n.t(REQUIRED_MESSAGE));
 
-export const lessThanZero = (value) =>
-    value > 0 ? undefined : i18n.t(BIGGER_THAN_ZERO_MESSAGE);
+export const lessThanZero = (value) => (value > 0 ? undefined : i18n.t(BIGGER_THAN_ZERO_MESSAGE));
 
 const minLength = (min) => (value) =>
-    value && value.length < min
-        ? i18n.t(BIGGER_THAN_CHAR_MESSAGE, { min })
-        : undefined;
+    value && value.length < min ? i18n.t(BIGGER_THAN_CHAR_MESSAGE, { min }) : undefined;
 
 export const minLengthValue = minLength(3);
 
@@ -114,8 +111,8 @@ export const minYearValue = minYear(year);
 export const lessThanDate = (value, previousValue, allValues) => {
     const otherField = 'endDay';
     if (allValues.values[otherField] === undefined) return undefined;
-    return moment(value, 'DD/MM/YYYY').toDate() <=
-        moment(allValues.values[otherField], 'DD/MM/YYYY').toDate() &&
+    return moment(value, dateFormat).toDate() <=
+        moment(allValues.values[otherField], dateFormat).toDate() &&
         allValues.values[otherField] !== undefined
         ? undefined
         : i18n.t(LESS_THAN_FIELD_MESSAGE, {
@@ -126,8 +123,8 @@ export const lessThanDate = (value, previousValue, allValues) => {
 export const greaterThanDate = (value, previousValue, allValues) => {
     const otherField = 'startDay';
     if (allValues.values[otherField] === undefined) return undefined;
-    return moment(value, 'DD/MM/YYYY').toDate() >=
-        moment(allValues.values[otherField], 'DD/MM/YYYY').toDate()
+    return moment(value, dateFormat).toDate() >=
+        moment(allValues.values[otherField], dateFormat).toDate()
         ? undefined
         : i18n.t(BIGGER_THAN_FIELD_MESSAGE, {
               field: i18n.t(FORM_CLASS_FROM_LABEL),

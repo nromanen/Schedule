@@ -1,6 +1,7 @@
 import axios from '../helper/axios';
 import { STUDENT_URL } from '../constants/axios';
-import { store } from '../index';
+import { store } from '../store';
+
 import { resetFormHandler } from '../helper/formHelper';
 import { STUDENT_FORM } from '../constants/reduxForms';
 import { errorHandler, successHandler } from '../helper/handlerAxios';
@@ -12,7 +13,7 @@ import {
     showAllStudents,
     showAllStudentsByGroupId,
     updateStudent,
-} from '../redux/actions/students';
+} from '../actions/students';
 import {
     BACK_END_SUCCESS_OPERATION,
     UPDATED_LABEL,

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 
 import { Field, reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
@@ -17,11 +17,11 @@ import renderCheckboxField from '../../share/renderedFields/checkbox';
 import { LESSON_FORM } from '../../constants/reduxForms';
 import './LessonForm.scss';
 import { lessThanZero, maxLengthValue, required } from '../../validation/validateFields';
-import { getLessonsByGroupService, setUniqueErrorService } from '../../services/lessonService';
+import { setUniqueErrorService } from '../../services/lessonService';
 import { handleTeacherInfo } from '../../helper/renderTeacher';
 import { setValueToSubjectForSiteHandler } from '../../helper/reduxFormHelper';
 import { getClearOrCancelTitle, setDisableButton } from '../../helper/disableComponent';
-import { clearGroupService, selectGroupService } from '../../services/groupService';
+import { selectGroupService } from '../../services/groupService';
 import { RenderMultiselect } from '../../share/renderedFields/renderMultiselect';
 import {
     EDIT_TITLE,
@@ -54,22 +54,39 @@ const useStyles = makeStyles(() => ({
 let LessonForm = (props) => {
     const { t } = useTranslation('formElements');
 
-    const { handleSubmit, pristine, reset, submitting, groups, group } = props;
+    const {
+        handleSubmit,
+        pristine,
+        reset,
+        submitting,
+        groups,
+        group,
+        lesson,
+        isUniqueError,
+        teachers,
+        subjects,
+        groupId,
+    } = props;
 
     const classes = useStyles();
-
-    const { lesson } = props;
     const lessonId = lesson.id;
 
-    const { isUniqueError } = props;
-
-    const { teachers } = props;
-
-    const { subjects } = props;
-
-    const { groupId } = props;
-
     const [checked, setChecked] = React.useState(false);
+
+    const initializeFormHandler = (lessonData) => {
+        props.initialize({
+            lessonCardId: lessonData.id,
+            teacher: lessonData.teacher.id,
+            subject: lessonData.subject.id,
+            type: lessonData.lessonType,
+            hours: lessonData.hours,
+            linkToMeeting: lessonData.linkToMeeting,
+            subjectForSite: lessonData.subjectForSite,
+            grouped: lessonData.grouped,
+            groups: [group],
+        });
+        setChecked(lessonData.grouped);
+    };
     const handleChange = (event) => setChecked(event.target.checked);
     useEffect(() => {
         selectGroupService(groupId);
@@ -83,30 +100,13 @@ let LessonForm = (props) => {
         }
     }, [lessonId]);
 
-    const initializeFormHandler = (lesson) => {
-        props.initialize({
-            lessonCardId: lesson.id,
-            teacher: lesson.teacher.id,
-            subject: lesson.subject.id,
-            type: lesson.lessonType,
-            hours: lesson.hours,
-            linkToMeeting: lesson.linkToMeeting,
-            subjectForSite: lesson.subjectForSite,
-            grouped: lesson.grouped,
-            groups: [group],
-        });
-        setChecked(lesson.grouped);
-    };
-
     return (
         <Card class="form-card">
-            {groupId ? (
+            {groupId && (
                 <h2 className="form-title under-line">
                     {lessonId ? t(EDIT_TITLE) : t(CREATE_TITLE)}
                     {t(LESSON_LABEL)}
                 </h2>
-            ) : (
-                ''
             )}
             {groupId ? (
                 <form onSubmit={handleSubmit}>
@@ -164,8 +164,8 @@ let LessonForm = (props) => {
                             }}
                         >
                             <option value="" />
-                            {props.lessonTypes.map((lessonType, index) => (
-                                <option value={lessonType} key={index}>
+                            {props.lessonTypes.map((lessonType) => (
+                                <option value={lessonType} key={lessonType}>
                                     {t(
                                         `formElements:lesson_type_${lessonType.toLowerCase()}_label`,
                                     )}
@@ -217,7 +217,7 @@ let LessonForm = (props) => {
                         label={t(SUBJECT_LABEL) + t(FOR_SITE_LABEL)}
                         validate={[required, maxLengthValue]}
                     />
-                    {!lessonId ? (
+                    {!lessonId && (
                         <Accordion>
                             <AccordionSummary
                                 expandIcon={<ExpandMoreIcon />}
@@ -248,7 +248,7 @@ let LessonForm = (props) => {
                                 </Typography>
                             </AccordionDetails>
                         </Accordion>
-                    ) : null}
+                    )}
                     <div className="form-buttons-container">
                         <Button
                             className="buttons-style"

@@ -24,7 +24,7 @@ import {
     resetUserPassword,
     setAuthError,
     setLoading,
-} from '../../redux/actions/index';
+} from '../../actions/index';
 
 import './Auth.scss';
 import { EMAIL_MESSAGE } from '../../constants/translationLabels/validationMessages';
