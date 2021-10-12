@@ -59,13 +59,13 @@ const TeacherList = (props) => {
 
     useEffect(() => {
         showAllTeachersService();
+        showAllSemestersService();
         getAllDepartmentsService();
         getCurrentSemesterService();
         getDefaultSemesterService();
         getDisabledTeachersService();
         showAllPublicSemestersService();
         getPublicClassScheduleListService();
-        showAllSemestersService();
     }, []);
 
     const SearchChange = setTerm;
@@ -105,9 +105,9 @@ const TeacherList = (props) => {
         handleTeacherService(sendData);
         clearDepartment();
     };
-    const setEnabledDisabledDepartment = (id) => {
+    const setEnabledDisabledDepartment = (teacherId) => {
         const teacher = [...enabledTeachers, ...disabledTeachers].find(
-            (teacherEl) => teacherEl.id === id,
+            (teacherEl) => teacherEl.id === teacherId,
         );
         const changeDisabledStatus = {
             Show: setEnabledTeachersService(teacher),

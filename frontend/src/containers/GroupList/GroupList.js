@@ -49,61 +49,53 @@ const GroupList = (props) => {
     } = props;
     const history = useHistory();
     const { t } = useTranslation('formElements');
-    const [open, setOpen] = useState(false);
     const [term, setTerm] = useState('');
-    const [isHide, setIsHide] = useState('');
-    const [groupId, setGroupId] = useState(-1);
     const [isDisabled, setIsDisabled] = useState(false);
     const [showStudents, setShowStudents] = useState(false);
     const [addStudentDialog, setAddStudentDialog] = useState(false);
+    const [isOpenConfirmDialog, setIsOpenConfirmDialog] = useState(false);
+    const [groupCard, setGroupCard] = useState({ id: null, disabledStatus: null });
 
-    useEffect(() => showAllGroupsService(), []);
-    useEffect(() => getDisabledGroupsService(), []);
+    useEffect(() => {
+        showAllGroupsService();
+        getDisabledGroupsService();
+    }, []);
 
     const SearchChange = setTerm;
     const visibleGroups = isDisabled
         ? search(disabledGroups, term, ['title'])
         : search(enabledGroup, term, ['title']);
-    const showDisabledHandle = () => {
-        setIsDisabled((prev) => !prev);
-    };
-    const handleSnackbarClose = () => {
-        handleSnackbarCloseService();
-    };
 
-    const handleClickDisplayDialog = (id, isHideOrNot) => {
-        if (isHideOrNot) setIsHide(isHideOrNot);
-        setGroupId(id);
-        setOpen(true);
+    const showConfirmDialog = (id, disabledStatus) => {
+        setGroupCard({ id, disabledStatus });
+        setIsOpenConfirmDialog(true);
     };
-    const hideShowGroup = (id) => {
-        const allGroups = [...disabledGroups, ...enabledGroup];
-        const foundGroup = allGroups.find((groupItem) => groupItem.id === id);
-        const showHide = {
+    const changeGroupDisabledStatus = (groupId) => {
+        const foundGroup = [...disabledGroups, ...enabledGroup].find(
+            (groupItem) => groupItem.id === groupId,
+        );
+        const changeDisabledStatus = {
             Show: setEnabledGroupService(foundGroup),
             Hide: setDisabledGroupService(foundGroup),
         };
-        return showHide[isHide];
+        return changeDisabledStatus[groupCard.disabledStatus];
     };
-    const handleConfirmDialogGroup = (id) => {
-        setOpen(false);
-        if (!id) return;
-        if (isHide) {
-            hideShowGroup(id);
-        } else removeGroupCardService(id);
-        setIsHide('');
+    const acceptConfirmDialog = (groupId) => {
+        setIsOpenConfirmDialog(false);
+        if (!groupId) return;
+        if (groupCard) {
+            changeGroupDisabledStatus(groupId);
+        } else removeGroupCardService(groupId);
+        setGroupCard((prev) => ({ ...prev, disabledStatus: null }));
     };
-    const handleSetGroupToUpdateForm = (id) => selectGroupService(id);
-    const submitGroupForm = (values) => handleGroupService(values);
-    const handleGroupFormReset = () => clearGroupService();
 
-    const onShowStudentByGroup = (id) => {
+    const onShowStudentByGroup = (groupId) => {
         setShowStudents(true);
-        selectGroupService(id);
-        getAllStudentsByGroupId(id);
+        selectGroupService(groupId);
+        getAllStudentsByGroupId(groupId);
     };
-    const handleAddUser = (id) => {
-        setGroupId(id);
+    const handleAddUser = (groupId) => {
+        setGroupCard((prev) => ({ ...prev, id: groupId }));
         setAddStudentDialog(true);
     };
     const selectStudentCard = () => {
@@ -117,7 +109,7 @@ const GroupList = (props) => {
             const sendData = { ...data, group: { id: data.group } };
             updateStudentService(sendData);
         } else {
-            const sendData = { ...data, group: { id: groupId } };
+            const sendData = { ...data, group: { id: groupCard.id } };
             createStudentService(sendData);
         }
         setAddStudentDialog(false);
@@ -128,16 +120,22 @@ const GroupList = (props) => {
             deleteStudentService(student);
         }
     };
+    const changeDisable = () => {
+        setIsDisabled((prev) => !prev);
+    };
+    const handleSnackbarClose = () => {
+        handleSnackbarCloseService();
+    };
 
     return (
         <>
             <NavigationPage name={navigationNames.GROUP_LIST} val={navigation.GROUPS} />
             <ConfirmDialog
-                isHide={isHide}
-                cardId={groupId}
+                isHide={groupCard.disabledStatus}
+                cardId={groupCard.id}
                 whatDelete="group"
-                open={open}
-                onClose={handleConfirmDialogGroup}
+                open={isOpenConfirmDialog}
+                onClose={acceptConfirmDialog}
             />
             <AddStudentDialog
                 open={addStudentDialog}
@@ -158,13 +156,13 @@ const GroupList = (props) => {
 
             <div className="cards-container">
                 <aside className="search-list__panel">
-                    <SearchPanel SearchChange={SearchChange} showDisabled={showDisabledHandle} />
+                    <SearchPanel SearchChange={SearchChange} showDisabled={changeDisable} />
                     {!isDisabled && (
                         <AddGroup
                             match={match}
                             className="form"
-                            onSubmit={submitGroupForm}
-                            onReset={handleGroupFormReset}
+                            onSubmit={handleGroupService}
+                            onReset={clearGroupService}
                         />
                     )}
                 </aside>
@@ -178,8 +176,8 @@ const GroupList = (props) => {
                             disabledCard={disabledCard}
                             handleAddUser={handleAddUser}
                             onShowStudentByGroup={onShowStudentByGroup}
-                            handleClickDisplayDialog={handleClickDisplayDialog}
-                            handleSetGroupToUpdateForm={handleSetGroupToUpdateForm}
+                            showConfirmDialog={showConfirmDialog}
+                            handleSetGroupToUpdateForm={selectGroupService}
                         />
                     ))}
                 </div>

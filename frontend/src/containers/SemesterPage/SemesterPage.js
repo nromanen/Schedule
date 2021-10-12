@@ -18,10 +18,10 @@ import SemesterForm from '../../components/SemesterForm/SemesterForm';
 import SemesterCopyForm from '../../components/SemesterCopyForm/SemesterCopyForm';
 import {
     clearSemesterService,
-    getDisabledSemestersService,
-    handleSemesterService,
-    removeSemesterCardService,
     selectSemesterService,
+    handleSemesterService,
+    getDisabledSemestersService,
+    removeSemesterCardService,
     setDisabledSemestersService,
     setEnabledSemestersService,
     showAllSemestersService,

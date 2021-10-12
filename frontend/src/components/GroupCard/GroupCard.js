@@ -14,7 +14,7 @@ const GroupCard = (props) => {
         disabledCard,
         handleAddUser,
         onShowStudentByGroup,
-        handleClickDisplayDialog,
+        showConfirmDialog,
         handleSetGroupToUpdateForm,
     } = props;
     const { t } = useTranslation('formElements');
@@ -30,7 +30,7 @@ const GroupCard = (props) => {
                                 className="group__buttons-hide link-href"
                                 title={t('common:set_disabled')}
                                 onClick={() => {
-                                    handleClickDisplayDialog(groupItem.id, disabledCard.HIDE);
+                                    showConfirmDialog(groupItem.id, disabledCard.HIDE);
                                 }}
                             />
                         </Link>
@@ -47,7 +47,7 @@ const GroupCard = (props) => {
                         className="group__buttons-hide link-href"
                         title={t('common:set_enabled')}
                         onClick={() => {
-                            handleClickDisplayDialog(groupItem.id, disabledCard.SHOW);
+                            showConfirmDialog(groupItem.id, disabledCard.SHOW);
                         }}
                     />
                 )}
@@ -55,7 +55,7 @@ const GroupCard = (props) => {
                     <MdDelete
                         className="group__buttons-delete link-href"
                         title={t('delete_title')}
-                        onClick={() => handleClickDisplayDialog(groupItem.id)}
+                        onClick={() => showConfirmDialog(groupItem.id)}
                     />
                 </Link>
                 <Link to={`${links.GroupList}${links.Group}/${groupItem.id}${links.AddStudent}`}>

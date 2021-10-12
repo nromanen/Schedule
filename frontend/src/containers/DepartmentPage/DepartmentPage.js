@@ -41,15 +41,19 @@ const DepartmentPage = (props) => {
     const { t } = useTranslation('formElements');
     const [term, setTerm] = useState('');
     const [isDisabled, setIsDisabled] = useState(false);
-    const [updateForm, setUpdateForm] = useState(false);
-    const [departmentId, setDepartmentId] = useState('');
+    const [isUpdateForm, setIsUpdateForm] = useState(false);
+    const [departmentCard, setDepartmentCard] = useState({ id: null, disabledStatus: null });
     const [teacherDialog, setTeacherDialog] = useState(false);
-    const [confirmDialog, setConfirmDialog] = useState(false);
-    const [isEnabledDisabled, setsIsEnabledDisabled] = useState('');
+    const [isOpenConfirmDialog, setIsOpenConfirmDialog] = useState(false);
+
+    const clearDepartmentForm = () => {
+        clearDepartment();
+    };
 
     useEffect(() => {
         getDisabledDepartmentsService();
         getAllDepartmentsService();
+        clearDepartmentForm();
     }, []);
 
     const SearchChange = setTerm;
@@ -57,42 +61,35 @@ const DepartmentPage = (props) => {
         ? search(disabledDepartments, term, ['name'])
         : search(enabledDepartments, term, ['name']);
 
-    const clearDepartmentForm = () => {
-        clearDepartment();
-    };
-
-    useEffect(() => clearDepartmentForm(), []);
-
     const submitAddForm = (data) => {
         return data.id ? createDepartmentService(data) : updateDepartmentService(data);
     };
-    const displayConfirmDialog = (id, enableDisable) => {
-        if (enableDisable) setsIsEnabledDisabled(enableDisable);
-        setDepartmentId(id);
-        setConfirmDialog(true);
+    const showConfirmDialog = (departmentId, disabledStatus) => {
+        setDepartmentCard({ departmentId, disabledStatus });
+        setIsOpenConfirmDialog(true);
     };
-    const setDepartmentToUpdate = (id) => {
-        getDepartmentByIdService(id);
-        setUpdateForm(true);
+    const setDepartmentToUpdate = (departmentCurrentId) => {
+        getDepartmentByIdService(departmentCurrentId);
+        setIsUpdateForm(true);
     };
-    const setEnabledDisabledDepartment = (id) => {
-        const department = [...disabledDepartments, ...enabledDepartments].find(
-            (departmentItem) => departmentItem.id === id,
+    const changeDepartmentDisabledStatus = (departmentCurrentId) => {
+        const foundDepartment = [...disabledDepartments, ...enabledDepartments].find(
+            (departm) => departm.id === departmentCurrentId,
         );
-        const newDepartment = { ...department, disable: !department.disable };
-        const setEnabDisab = {
+        const newDepartment = { ...foundDepartment, disable: !foundDepartment.disable };
+        const changeDisabledStatus = {
             Show: setEnabledDepartmentService(newDepartment),
             Hide: setDisabledDepartmentService(newDepartment),
         };
-        return setEnabDisab[isEnabledDisabled];
+        return changeDisabledStatus[departmentCard.disabledStatus];
     };
-    const acceptConfirmDialogGroup = (id) => {
-        setConfirmDialog(false);
-        if (!id) return;
-        if (isEnabledDisabled) {
-            setEnabledDisabledDepartment(id);
-        } else deleteDepartmentsService(id);
-        setsIsEnabledDisabled('');
+    const acceptConfirmDialog = (departmentId) => {
+        setIsOpenConfirmDialog(false);
+        if (!departmentId) return;
+        if (departmentCard.disabledStatus) {
+            changeDepartmentDisabledStatus(departmentId);
+        } else deleteDepartmentsService(departmentId);
+        setDepartmentCard((prev) => ({ ...prev, disabledStatus: null }));
     };
     const handleSnackbarClose = () => {
         handleSnackbarCloseService();
@@ -103,20 +100,19 @@ const DepartmentPage = (props) => {
     const closeTeacherDialog = () => {
         setTeacherDialog(false);
     };
-
     return (
         <>
             <NavigationPage name={navigationNames.DEPARTMENTS} val={navigation.DEPARTMENTS} />
             <ConfirmDialog
-                isHide={isEnabledDisabled}
-                cardId={departmentId}
+                isHide={departmentCard.disabledStatus}
+                cardId={departmentCard.id}
                 whatDelete="department"
-                open={confirmDialog}
-                onClose={acceptConfirmDialogGroup}
+                open={isOpenConfirmDialog}
+                onClose={acceptConfirmDialog}
             />
             <ShowDataDialog
-                isHide={isEnabledDisabled}
-                cardId={departmentId}
+                isHide={teacherDialog}
+                cardId={departmentCard.id}
                 open={teacherDialog}
                 onClose={closeTeacherDialog}
                 teachers={teachers}
@@ -128,7 +124,7 @@ const DepartmentPage = (props) => {
                         <AddDepartment
                             onSubmit={submitAddForm}
                             clear={clearDepartmentForm}
-                            editDepartment={updateForm}
+                            editDepartment={isUpdateForm}
                         />
                     )}
                 </aside>
@@ -143,10 +139,7 @@ const DepartmentPage = (props) => {
                                         className="svg-btn copy-btn"
                                         title={t('common:set_enabled')}
                                         onClick={() => {
-                                            displayConfirmDialog(
-                                                departmentItem.id,
-                                                disabledCard.SHOW,
-                                            );
+                                            showConfirmDialog(departmentItem.id, disabledCard.SHOW);
                                         }}
                                     />
                                 ) : (
@@ -155,7 +148,7 @@ const DepartmentPage = (props) => {
                                             className="svg-btn copy-btn"
                                             title={t('common:set_disabled')}
                                             onClick={() => {
-                                                displayConfirmDialog(
+                                                showConfirmDialog(
                                                     departmentItem.id,
                                                     disabledCard.HIDE,
                                                 );
@@ -176,7 +169,7 @@ const DepartmentPage = (props) => {
                                     className="svg-btn delete-btn"
                                     title={t('delete_title')}
                                     onClick={() => {
-                                        displayConfirmDialog(departmentItem.id);
+                                        showConfirmDialog(departmentItem.id);
                                     }}
                                 />
                                 <FaChalkboardTeacher

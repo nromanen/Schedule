@@ -40,7 +40,7 @@ const GroupField = styled(TextField)({
 
 const LessonPage = (props) => {
     const {
-        loading: isLoading,
+        loading,
         currentSemester,
         isUniqueError,
         subjects,
@@ -51,8 +51,8 @@ const LessonPage = (props) => {
     } = props;
     const { t } = useTranslation('common');
     const [term, setTerm] = useState('');
-    const [lessonId, setLessonId] = useState(-1);
-    const [copiedLesson, setCopiedLesson] = useState(-1);
+    const [lessonId, setLessonId] = useState();
+    const [copiedLesson, setCopiedLesson] = useState();
     const [isOpenConfirmDialog, setIsOpenConfirmDialog] = useState(false);
     const [openCopyLessonDialog, setOpenCopyLessonDialog] = useState(false);
 
@@ -74,14 +74,11 @@ const LessonPage = (props) => {
         getLessonTypesService();
         showAllGroupsService();
         showAllSubjectsService();
+        showAllSemestersService();
     }, []);
 
     const submitLessonForm = (card) => {
         handleLessonCardService(card, groupId, currentSemester);
-    };
-
-    const selectLessonCardHandler = (lessonCardId) => {
-        selectLessonCardService(lessonCardId);
     };
 
     const searchTitleGroupByID = (id) => {
@@ -142,7 +139,7 @@ const LessonPage = (props) => {
                 <LessonsList
                     lessons={visibleItems}
                     onClickOpen={showConfirmDialog}
-                    onSelectLesson={selectLessonCardHandler}
+                    onSelectLesson={selectLessonCardService}
                     onCopyLesson={openCopyLessonDialogHandle}
                     translation={t}
                 />
@@ -157,7 +154,7 @@ const LessonPage = (props) => {
         </>
     );
 
-    if (isLoading) {
+    if (loading) {
         cardsContainer = (
             <section className="centered-container">
                 <CircularProgress />
@@ -220,7 +217,7 @@ const LessonPage = (props) => {
                         subjects={subjects}
                         teachers={teachers}
                         onSubmit={submitLessonForm}
-                        onSetSelectedCard={selectLessonCardHandler}
+                        onSetSelectedCard={selectLessonCardService}
                     />
                     {renderCopyLessonsForm()}
                 </section>

@@ -29,18 +29,23 @@ import {
 } from '../../services/roomService';
 
 const RoomList = (props) => {
-    const { t } = useTranslation('formElements');
-    const [hideDialog, setHideDialog] = useState(null);
-    const [disabled, setDisabled] = useState(false);
-    const [roomId, setRoomId] = useState(-1);
-    const [open, setOpen] = useState(false);
-    const [term, setTerm] = useState('');
     const { rooms, roomTypes, disabledRooms } = props;
+    const { t } = useTranslation('formElements');
+    const [term, setTerm] = useState('');
+    const [isDisabled, setIsDisabled] = useState(false);
+    const [roomCard, setRoomCard] = useState({ id: null, disabledStatus: null });
+    const [isOpenConfirmDialog, setIsOpenConfirmDialog] = useState(false);
+
     useEffect(() => {
         showListOfRoomsService();
         getAllRoomTypesService();
         getDisabledRoomsService();
     }, []);
+
+    const SearchChange = setTerm;
+    const visibleItems = isDisabled
+        ? search(disabledRooms, term, ['name'])
+        : search(rooms, term, ['name']);
 
     const createRoom = (values) => {
         const description = roomTypes.find((type) => type.id === +values.type);
@@ -48,90 +53,68 @@ const RoomList = (props) => {
         createRoomService({ ...values, typeDescription });
     };
 
-    const editHandler = (id) => {
-        selectOneRoomService(id);
+    const showConfirmDialog = (id, disabledStatus) => {
+        setRoomCard({ id, disabledStatus });
+        setIsOpenConfirmDialog(true);
     };
 
-    const handleFormReset = () => {
-        clearRoomOneService();
+    const changeGroupDisabledStatus = (roomId) => {
+        const foundRoom = [...disabledRooms, ...rooms].find((roomItem) => roomItem.id === roomId);
+        return isDisabled ? setEnabledRoomsService(foundRoom) : setDisabledRoomsService(foundRoom);
     };
 
-    const handleClickOpen = (id) => {
-        setRoomId(id);
-        setOpen(true);
-    };
-
-    const disabledRoomsCard = () => {
-        const allRooms = [...disabledRooms, ...rooms];
-        const room = allRooms.find((roomItem) => roomItem.id === roomId);
-        return disabled ? setEnabledRoomsService(room) : setDisabledRoomsService(room);
-    };
-
-    const handleClose = (id) => {
-        setOpen(false);
-        if (!id) return;
-        if (hideDialog) {
-            disabledRoomsCard();
+    const acceptConfirmDialog = (roomId) => {
+        setIsOpenConfirmDialog(false);
+        if (!roomId) return;
+        if (roomCard.disabledStatus) {
+            changeGroupDisabledStatus(roomId);
         } else {
             deleteRoomCardService(roomId);
         }
-        setHideDialog(null);
+        setRoomCard((prev) => ({ ...prev, disabledStatus: null }));
     };
 
-    const submitType = (values) => {
-        addNewTypeService(values);
-    };
-
-    const visibleItems = disabled
-        ? search(disabledRooms, term, ['name'])
-        : search(rooms, term, ['name']);
-
-    const SearchChange = () => {
-        setTerm(term);
-    };
-
-    const showDisabledHandle = () => {
-        setDisabled(!disabled);
+    const changeDisable = () => {
+        setIsDisabled((prev) => !prev);
     };
 
     return (
         <>
             <NavigationPage name={navigationNames.ROOM_LIST} val={navigation.ROOMS} />
             <ConfirmDialog
-                cardId={roomId}
+                cardId={roomCard.id}
                 whatDelete={cardType.ROOM.toLowerCase()}
-                open={open}
-                isHide={hideDialog}
-                onClose={handleClose}
+                open={isOpenConfirmDialog}
+                isHide={roomCard.disabledStatus}
+                onClose={acceptConfirmDialog}
             />
             <div className="cards-container">
                 <aside className="search-list__panel">
-                    <SearchPanel SearchChange={SearchChange} showDisabled={showDisabledHandle} />
-                    {!disabled && (
+                    <SearchPanel SearchChange={SearchChange} showDisabled={changeDisable} />
+                    {!isDisabled && (
                         <>
-                            <AddRoom onSubmit={createRoom} onReset={handleFormReset} />
-                            <NewRoomType className="new-type" onSubmit={submitType} />
+                            <AddRoom onSubmit={createRoom} onReset={clearRoomOneService} />
+                            <NewRoomType className="new-type" onSubmit={addNewTypeService} />
                         </>
                     )}
                 </aside>
                 <section className="container-flex-wrap wrapper">
                     {visibleItems.length === 0 && <NotFound name={t('room_y_label')} />}
-                    {visibleItems.map((room) => (
-                        <Card key={room.id} {...room} class="room-card done-card">
+                    {visibleItems.map((roomItem) => (
+                        <Card key={roomItem.id} class="room-card done-card">
                             <div className="cards-btns">
-                                {!disabled ? (
+                                {!isDisabled ? (
                                     <>
                                         <GiSightDisabled
                                             className="svg-btn copy-btn"
                                             title={t('common:set_disabled')}
                                             onClick={() => {
-                                                setHideDialog(disabledCard.HIDE);
-                                                handleClickOpen(room.id);
+                                                showConfirmDialog(roomItem.id, disabledCard.HIDE);
                                             }}
                                         />
                                         <FaEdit
                                             className="svg-btn"
-                                            onClick={() => editHandler(room.id)}
+                                            onClick={() => selectOneRoomService(roomItem.id)}
                                         />
                                     </>
                                 ) : (
@@ -139,22 +122,21 @@ const RoomList = (props) => {
                                         className="svg-btn copy-btn"
                                         title={t('common:set_enabled')}
                                         onClick={() => {
-                                            setHideDialog(disabledCard.SHOW);
-                                            handleClickOpen(room.id);
+                                            showConfirmDialog(roomItem.id, disabledCard.SHOW);
                                         }}
                                     />
                                 )}
 
                                 <MdDelete
                                     className="svg-btn"
-                                    onClick={() => handleClickOpen(room.id)}
+                                    onClick={() => showConfirmDialog(roomItem.id)}
                                 />
                             </div>
 
                             <span> {`${t('room_label')}:`} </span>
-                            <h2 className="room-card__number">{room.name}</h2>
+                            <h2 className="room-card__number">{roomItem.name}</h2>
                             <span>{`${t('type_label')}:`}</span>
-                            <h2 className="room-card__number">{room.type.description}</h2>
+                            <h2 className="room-card__number">{roomItem.type.description}</h2>
                         </Card>
                     ))}
                 </section>
