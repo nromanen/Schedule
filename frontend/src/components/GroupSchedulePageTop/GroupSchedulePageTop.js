@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { Field, reduxForm } from 'redux-form';
+import { isEmpty } from 'lodash';
 
 import { makeStyles } from '@material-ui/core/styles';
 import { useTranslation } from 'react-i18next';
@@ -25,7 +26,6 @@ import { SCHEDULE_SEARCH_FORM } from '../../constants/reduxForms';
 import { required } from '../../validation/validateFields';
 import { places } from '../../constants/places';
 import { getTeacherFullName } from '../../helper/renderTeacher';
-import { isEmpty } from 'lodash';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -37,29 +37,35 @@ const useStyles = makeStyles((theme) => ({
 
 const GroupSchedulePageTop = (props) => {
     const [groupDisabled, setGroupDisabled] = useState(true);
-    const classes = useStyles();
+    const { root } = useStyles();
     const { t } = useTranslation('common');
-    const { groups, teachers, semesters, handleSubmit, pristine, submitting } = props;
-    const isLoading = props.loading;
+    const {
+        loading: isLoading,
+        groups,
+        teachers,
+        semesters,
+        handleSubmit,
+        changePlace,
+        pristine,
+        submitting,
+        place,
+    } = props;
     const [semesterId, setSemesterId] = useState(props.initialValues.semester);
-    let loadingContainer = '';
-    if (isLoading) {
-        loadingContainer = (
-            <section className="centered-container">
-                <CircularProgress />
-            </section>
-        );
-    }
-    useEffect(() => showAllPublicGroupsService(semesterId), [semesterId]);
-    useEffect(() => showAllPublicTeachersService(), []);
-    useEffect(() => showAllPublicSemestersService(), []);
+    const [groupId, setGroupId] = useState('');
+    const [teacherId, setTeacherId] = useState('');
+
     useEffect(() => {
-        if (!isEmpty(groups)) {
-            setGroupDisabled(false);
-        } else {
-            setGroupDisabled(true);
-        }
-    }, [groups]);
+        showAllPublicTeachersService();
+        showAllPublicSemestersService();
+        props.initialize({
+            semester: props.initialValues.semester,
+            group: props.initialValues.group,
+            teacher: props.initialValues.teacher,
+        });
+    }, []);
+    useEffect(() => showAllPublicGroupsService(semesterId), [semesterId]);
+    useEffect(() => setGroupDisabled(isEmpty(groups)), [groups]);
+
     const renderSemesterList = () => {
         if (semesters && semesters.length > 1) {
             return (
@@ -95,7 +101,10 @@ const GroupSchedulePageTop = (props) => {
                 component={renderSelectField}
                 label={t('formElements:teacher_label')}
                 type="text"
-                onChange={() => props.change('group', 0)}
+                onChange={(e) => {
+                    setGroupId('');
+                    setTeacherId(e.target.value);
+                }}
             >
                 <option />
                 {teachers.map((teacher) => (
@@ -115,8 +124,9 @@ const GroupSchedulePageTop = (props) => {
                 component={renderSelectField}
                 label={t('formElements:group_label')}
                 type="text"
-                onChange={() => {
-                    props.change('teacher', 0);
+                onChange={(e) => {
+                    setTeacherId('');
+                    setGroupId(e.target.value);
                 }}
             >
                 <option />
@@ -129,57 +139,64 @@ const GroupSchedulePageTop = (props) => {
         );
     };
 
-    useEffect(() => {
-        props.initialize({
-            semester: props.initialValues.semester,
-            group: props.initialValues.group,
-            teacher: props.initialValues.teacher,
-        });
-    }, []);
-
     return (
-        <section className={classes.root}>
+        <section className={root}>
             <p>{t('greetings_schedule_message')}</p>
             <p>{t('greetings_schedule_message_hint')}</p>
-            <section className="form-buttons-container top">
-                <Card class="form-card width-auto">
-                    <form onSubmit={handleSubmit}>
-                        {renderSemesterList()}
-                        {renderGroupList()}
-                        {renderTeacherList()}
-
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            type="submit"
-                            disabled={pristine || submitting}
+            {isLoading ? (
+                <section className="centered-container">
+                    <CircularProgress />
+                </section>
+            ) : (
+                <section className="form-buttons-container top">
+                    <Card class="form-card width-auto">
+                        <form
+                            onSubmit={(e) => {
+                                e.preventDefault();
+                                handleSubmit({
+                                    semester: semesterId,
+                                    group: groupId,
+                                    teacher: teacherId,
+                                });
+                            }}
                         >
-                            <MdPlayArrow title={t('teacher_schedule_label')} className="svg-btn" />
-                        </Button>
-                    </form>
-                </Card>
-                <span id="select-place">
-                    <label htmlFor="demo-controlled-open-select">
-                        {t('place_for_class_label')}
-                    </label>
-                    <Select
-                        className="place"
-                        labelId="demo-controlled-open-select-label"
-                        id="demo-controlled-open-select"
-                        value={props.place}
-                        onChange={props.onChange}
-                    >
-                        {Object.entries(places).map((data) => {
-                            return (
-                                <MenuItem value={data[1]} key={data[0]}>
-                                    {t(`${data[1]}_label`)}
+                            {renderSemesterList()}
+                            {renderGroupList()}
+                            {renderTeacherList()}
+
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                type="submit"
+                                disabled={pristine || submitting}
+                            >
+                                <MdPlayArrow
+                                    title={t('teacher_schedule_label')}
+                                    className="svg-btn"
+                                />
+                            </Button>
+                        </form>
+                    </Card>
+                    <span id="select-place">
+                        <label htmlFor="demo-controlled-open-select">
+                            {t('place_for_class_label')}
+                        </label>
+                        <Select
+                            className="place"
+                            labelId="demo-controlled-open-select-label"
+                            id="demo-controlled-open-select"
+                            value={place}
+                            onChange={changePlace}
+                        >
+                            {Object.entries(places).map((placeItem) => (
+                                <MenuItem value={placeItem[1]} key={placeItem[0]}>
+                                    {t(`${placeItem[1]}_label`)}
                                 </MenuItem>
-                            );
-                        }, this)}
-                    </Select>
-                </span>
-            </section>
-            {loadingContainer}
+                            ))}
+                        </Select>
+                    </span>
+                </section>
+            )}
         </section>
     );
 };

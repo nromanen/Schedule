@@ -1,6 +1,6 @@
+import { get } from 'lodash';
 import { store } from '../store';
 
-import get from 'lodash';
 import axios from '../helper/axios';
 import i18n from '../i18n';
 import {

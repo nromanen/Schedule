@@ -1,4 +1,4 @@
-import get from 'lodash';
+import { get } from 'lodash';
 import axios from '../helper/axios';
 import {
     ACTIVATE_ACCOUNT_URL,
