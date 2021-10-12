@@ -166,11 +166,7 @@ const TemporaryScheduleVacationForm = (props) => {
                             else handleTeacherSelect(newValue);
                         }}
                         renderInput={(params) => (
-                            <TextField
-                                {...params}
-                                label={t(FORM_TEACHER_LABEL)}
-                                margin="normal"
-                            />
+                            <TextField {...params} label={t(FORM_TEACHER_LABEL)} margin="normal" />
                         )}
                     />
                 )}

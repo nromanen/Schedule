@@ -305,9 +305,7 @@ const TeacherList = (props) => {
                                 <p className="teacher-card-title">
                                     {`${teacher.position} ${
                                         teacher.department !== null
-                                            ? `${t(TEACHER_DEPARTMENT)} ${
-                                                  teacher.department.name
-                                              }`
+                                            ? `${t(TEACHER_DEPARTMENT)} ${teacher.department.name}`
                                             : ''
                                     }`}
                                 </p>

@@ -189,12 +189,7 @@ export default function RenderTeacherTable(props) {
                     <StyledTableRow>
                         <TablePagination
                             labelRowsPerPage={`${t(ROWS_PER_PAGE)}`}
-                            rowsPerPageOptions={[
-                                5,
-                                10,
-                                25,
-                                { label: `${t(ALL_PAGE)}`, value: -1 },
-                            ]}
+                            rowsPerPageOptions={[5, 10, 25, { label: `${t(ALL_PAGE)}`, value: -1 }]}
                             colSpan={3}
                             count={teachers.length}
                             rowsPerPage={rowsPerPage}

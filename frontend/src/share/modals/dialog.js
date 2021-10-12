@@ -10,9 +10,12 @@ import './dialog.scss';
 
 import i18n from '../../helper/i18n';
 import { disabledCard } from '../../constants/disabledCard';
-import { COMMON_NO_BUTTON_TITLE, COMMON_YES_BUTTON_TITLE } from '../../constants/translationLabels/common';
+import {
+    COMMON_NO_BUTTON_TITLE,
+    COMMON_YES_BUTTON_TITLE,
+} from '../../constants/translationLabels/common';
 
-export const ConfirmDialog = (props) => {
+const ConfirmDialog = (props) => {
     const { onClose, whatDelete, cardId, isHide, open } = props;
 
     const handleClose = () => {

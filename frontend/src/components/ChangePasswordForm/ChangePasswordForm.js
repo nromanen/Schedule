@@ -14,8 +14,6 @@ import renderTextField from '../../share/renderedFields/input';
 import { required, password } from '../../validation/validateFields';
 
 import { PROFILE_FORM } from '../../constants/reduxForms';
-import NavigationPage from '../Navigation/NavigationPage';
-import { navigation, navigationNames } from '../../constants/navigation';
 import {
     SAVE_BUTTON_LABEL,
     CHANGE_PASSWORD_FROM_TITLE,
@@ -102,9 +100,7 @@ const ChangePasswordForm = (props) => {
     );
 };
 
-const mapStateToProps = (state) => ({});
-
-export default connect(mapStateToProps)(
+export default connect()(
     reduxForm({
         form: PROFILE_FORM,
     })(ChangePasswordForm),

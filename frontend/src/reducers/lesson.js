@@ -45,7 +45,7 @@ const reducer = (state = initialState, action) => {
             lessons[lessonIndex] = {
                 ...lessons[lessonIndex],
                 ...action.result,
-            }
+            };
             return updateObject(state, {
                 lessons,
                 lesson: {},

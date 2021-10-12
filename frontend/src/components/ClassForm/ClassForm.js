@@ -54,8 +54,7 @@ const ClassFormFunc = (props) => {
     return (
         <Card class="form-card">
             <h2 className="form-title">
-                {props.classScheduleOne.id ? t(EDIT_TITLE) : t(CREATE_TITLE)}{' '}
-                {t(CLASS_Y_LABEL)}
+                {props.classScheduleOne.id ? t(EDIT_TITLE) : t(CREATE_TITLE)} {t(CLASS_Y_LABEL)}
             </h2>
             <form onSubmit={handleSubmit}>
                 <Field

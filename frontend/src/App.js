@@ -25,7 +25,7 @@ const App = (props) => {
 
     return (
         <Suspense fallback={null}>
-            <div className='container'>
+            <div className="container">
                 <Routers />
                 <SuccessSnackbar />
                 <SnackbarComponent
