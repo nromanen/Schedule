@@ -20,7 +20,7 @@ import {
     BIGGER_THAN_CHAR_MESSAGE,
     LESS_THAN_CHAR_MESSAGE,
     PASSWORD_MESSAGE,
-} from '../constants/translationLabels';
+} from '../constants/translationLabels/validationMessages';
 import {
     FORM_CLASS_FROM_LABEL,
     FORM_CLASS_TO_LABEL,

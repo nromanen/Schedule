@@ -27,7 +27,7 @@ import {
 } from '../../redux/actions/index';
 
 import './Auth.scss';
-import { EMAIL_MESSAGE } from '../../constants/translationLabels';
+import { EMAIL_MESSAGE } from '../../constants/translationLabels/validationMessages';
 import {
     DIFFERENT_PASSWORDS,
     BROKEN_TOKEN,
