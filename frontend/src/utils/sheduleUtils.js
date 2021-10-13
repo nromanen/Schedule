@@ -1,9 +1,9 @@
 import { isEmpty } from 'lodash';
 import { getFullSchedule, getGroupSchedule, getTeacherSchedule } from '../services/scheduleService';
 
-const getScheduleByType = (scheduleId, semesterId) => ({
-    group: () => getGroupSchedule(scheduleId, semesterId),
-    teacher: () => getTeacherSchedule(scheduleId, semesterId),
+const getScheduleByType = (entityId, semesterId) => ({
+    group: () => getGroupSchedule(entityId, semesterId),
+    teacher: () => getTeacherSchedule(entityId, semesterId),
     full: () => getFullSchedule(),
 });
 

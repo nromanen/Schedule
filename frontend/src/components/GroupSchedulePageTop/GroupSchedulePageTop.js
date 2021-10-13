@@ -9,7 +9,6 @@ import { useTranslation } from 'react-i18next';
 import Button from '@material-ui/core/Button';
 import { MdPlayArrow } from 'react-icons/md';
 
-import CircularProgress from '@material-ui/core/CircularProgress';
 import { MenuItem, Select } from '@material-ui/core';
 import renderSelectField from '../../share/renderedFields/select';
 
@@ -39,22 +38,12 @@ const GroupSchedulePageTop = (props) => {
     const [groupDisabled, setGroupDisabled] = useState(true);
     const { root } = useStyles();
     const { t } = useTranslation('common');
-    const {
-        loading: isLoading,
-        groups,
-        teachers,
-        semesters,
-        handleSubmit,
-        changePlace,
-        pristine,
-        submitting,
-        place,
-    } = props;
+    const { groups, teachers, semesters, handleSubmit, changePlace, pristine, submitting, place } =
+        props;
     const [semesterId, setSemesterId] = useState(props.initialValues.semester);
-    const [groupId, setGroupId] = useState('');
-    const [teacherId, setTeacherId] = useState('');
 
     useEffect(() => {
+        // TODO check these services
         showAllPublicTeachersService();
         showAllPublicSemestersService();
         props.initialize({
@@ -67,7 +56,7 @@ const GroupSchedulePageTop = (props) => {
     useEffect(() => setGroupDisabled(isEmpty(groups)), [groups]);
 
     const renderSemesterList = () => {
-        if (semesters && semesters.length > 1) {
+        if (!isEmpty(semesters)) {
             return (
                 <Field
                     id="semester"
@@ -78,7 +67,6 @@ const GroupSchedulePageTop = (props) => {
                     validate={[required]}
                     onChange={(e) => setSemesterId(e.target.value)}
                 >
-                    <option />
                     {semesters.map((semester) => (
                         <option key={semester.id} value={semester.id}>
                             {semester.description}
@@ -86,10 +74,6 @@ const GroupSchedulePageTop = (props) => {
                     ))}
                 </Field>
             );
-        }
-        if (semesters && semesters.length === 1) {
-            handleSubmit({ semester: semesters[0].id });
-            return <p>{semesters[0].description}</p>;
         }
         return null;
     };
@@ -102,8 +86,7 @@ const GroupSchedulePageTop = (props) => {
                 label={t('formElements:teacher_label')}
                 type="text"
                 onChange={(e) => {
-                    setGroupId('');
-                    setTeacherId(e.target.value);
+                    props.change('group', 0);
                 }}
             >
                 <option />
@@ -125,8 +108,7 @@ const GroupSchedulePageTop = (props) => {
                 label={t('formElements:group_label')}
                 type="text"
                 onChange={(e) => {
-                    setTeacherId('');
-                    setGroupId(e.target.value);
+                    props.change('teacher', 0);
                 }}
             >
                 <option />
@@ -143,60 +125,42 @@ const GroupSchedulePageTop = (props) => {
         <section className={root}>
             <p>{t('greetings_schedule_message')}</p>
             <p>{t('greetings_schedule_message_hint')}</p>
-            {isLoading ? (
-                <section className="centered-container">
-                    <CircularProgress />
-                </section>
-            ) : (
-                <section className="form-buttons-container top">
-                    <Card class="form-card width-auto">
-                        <form
-                            onSubmit={(e) => {
-                                e.preventDefault();
-                                handleSubmit({
-                                    semester: semesterId,
-                                    group: groupId,
-                                    teacher: teacherId,
-                                });
-                            }}
-                        >
-                            {renderSemesterList()}
-                            {renderGroupList()}
-                            {renderTeacherList()}
+            <section className="form-buttons-container top">
+                <Card class="form-card width-auto">
+                    <form onSubmit={handleSubmit}>
+                        {renderSemesterList()}
+                        {renderGroupList()}
+                        {renderTeacherList()}
 
-                            <Button
-                                variant="contained"
-                                color="primary"
-                                type="submit"
-                                disabled={pristine || submitting}
-                            >
-                                <MdPlayArrow
-                                    title={t('teacher_schedule_label')}
-                                    className="svg-btn"
-                                />
-                            </Button>
-                        </form>
-                    </Card>
-                    <span id="select-place">
-                        <label htmlFor="demo-controlled-open-select">
-                            {t('place_for_class_label')}
-                        </label>
-                        <Select
-                            className="place"
-                            labelId="demo-controlled-open-select-label"
-                            id="demo-controlled-open-select"
-                            value={place}
-                            onChange={changePlace}
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            type="submit"
+                            disabled={pristine || submitting}
                         >
-                            {Object.entries(places).map((placeItem) => (
-                                <MenuItem value={placeItem[1]} key={placeItem[0]}>
-                                    {t(`${placeItem[1]}_label`)}
-                                </MenuItem>
-                            ))}
-                        </Select>
-                    </span>
-                </section>
-            )}
+                            <MdPlayArrow title={t('teacher_schedule_label')} className="svg-btn" />
+                        </Button>
+                    </form>
+                </Card>
+                <span id="select-place">
+                    <label htmlFor="demo-controlled-open-select">
+                        {t('place_for_class_label')}
+                    </label>
+                    <Select
+                        className="place"
+                        labelId="demo-controlled-open-select-label"
+                        id="demo-controlled-open-select"
+                        value={place}
+                        onChange={changePlace}
+                    >
+                        {Object.entries(places).map((placeItem) => (
+                            <MenuItem value={placeItem[1]} key={placeItem[0]}>
+                                {t(`${placeItem[1]}_label`)}
+                            </MenuItem>
+                        ))}
+                    </Select>
+                </span>
+            </section>
         </section>
     );
 };

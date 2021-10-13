@@ -54,14 +54,12 @@ const renderSchedule = (
             break;
         }
         case 'teacher': {
-            if (isNotReadySchedule(teacherSchedule.days, loading)) {
+            if (!teacherSchedule || !teacherSchedule.days || teacherSchedule.days.length === 0) {
                 return emptySchedule();
             }
-
             const { done, semester, teacher, odd, even } = makeTeacherSchedule(teacherSchedule);
 
             setLoadingService(false);
-
             if (done) {
                 return (
                     <>
@@ -97,7 +95,6 @@ const renderSchedule = (
         default:
             return null;
     }
-    return null;
 };
 
 export { renderSchedule };

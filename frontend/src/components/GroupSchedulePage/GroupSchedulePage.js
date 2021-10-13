@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { useHistory, useLocation } from 'react-router-dom';
-import { isNil } from 'lodash';
 import './GroupSchedulePage.scss';
+import { CircularProgress } from '@material-ui/core';
 import { getDataFromParams } from '../../utils/urlUtils';
 import {
     getDefaultSemesterService,
@@ -21,7 +21,8 @@ const GroupSchedulePage = (props) => {
     const history = useHistory();
     const location = useLocation();
     const [place, setPlace] = useState(places.TOGETHER);
-    const { defaultSemester, scheduleType, fullSchedule, groupId, teacherId, semesterId } = props;
+    const { defaultSemester, scheduleType, fullSchedule, groupId, teacherId, semesterId, loading } =
+        props;
 
     const handleSubmit = (values) => {
         const { semester, group, teacher } = values;
@@ -33,7 +34,9 @@ const GroupSchedulePage = (props) => {
     };
 
     // TODO check if we drop first
-    useEffect(() => getFullSchedule(), [place]);
+    useEffect(() => {
+        getFullSchedule();
+    }, [place]);
     useEffect(() => {
         if (scheduleType === 'full' && fullSchedule.length === 0) {
             getScheduleByType()[SCHEDULE_TYPES.FULL]();
@@ -44,7 +47,9 @@ const GroupSchedulePage = (props) => {
         getScheduleByType(groupId, semesterId)[SCHEDULE_TYPES.GROUP]();
     }, [groupId]);
     useEffect(() => {
-        getScheduleByType(teacherId, semesterId)[SCHEDULE_TYPES.TEACHER]();
+        if (scheduleType === 'teacher') {
+            getScheduleByType(teacherId, semesterId)[scheduleType]();
+        }
     }, [teacherId]);
 
     useEffect(() => getDefaultSemesterService(), []);
@@ -80,7 +85,7 @@ const GroupSchedulePage = (props) => {
         scheduleType !== 'archived' && (
             <GroupSchedulePageTop
                 scheduleType={scheduleType}
-                handleSubmit={handleSubmit}
+                onSubmit={handleSubmit}
                 place={place}
                 changePlace={changePlace}
             />
@@ -89,20 +94,28 @@ const GroupSchedulePage = (props) => {
     return (
         <>
             {getTop()}
-            {getSchedule()}
+            {loading ? (
+                <section className="centered-container">
+                    <CircularProgress />
+                </section>
+            ) : (
+                getSchedule()
+            )}
         </>
     );
 };
-const mapStateToProps = (state) => ({
-    scheduleType: state.schedule.scheduleType,
-    groupSchedule: state.schedule.groupSchedule,
-    fullSchedule: state.schedule.fullSchedule,
-    teacherSchedule: state.schedule.teacherSchedule,
-    groupId: state.schedule.scheduleGroupId,
-    teacherId: state.schedule.scheduleTeacherId,
-    semesterId: state.schedule.scheduleSemesterId,
-    loading: state.loadingIndicator.loading,
-    defaultSemester: state.schedule.defaultSemester,
-    semesters: state.schedule.semesters,
-});
+const mapStateToProps = (state) => {
+    return {
+        scheduleType: state.schedule.scheduleType,
+        groupSchedule: state.schedule.groupSchedule,
+        fullSchedule: state.schedule.fullSchedule,
+        teacherSchedule: state.schedule.teacherSchedule,
+        groupId: state.schedule.scheduleGroupId,
+        teacherId: state.schedule.scheduleTeacherId,
+        semesterId: state.schedule.scheduleSemesterId,
+        loading: state.loadingIndicator.loading,
+        defaultSemester: state.schedule.defaultSemester,
+        semesters: state.schedule.semesters,
+    };
+};
 export default connect(mapStateToProps)(GroupSchedulePage);

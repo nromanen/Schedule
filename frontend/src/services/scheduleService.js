@@ -200,6 +200,7 @@ export const getGroupSchedule = (groupId, semesterId) => {
             .get(`${GROUP_SCHEDULE_URL + semesterId}&groupId=${groupId}`)
             .then((response) => {
                 store.dispatch(setGroupSchedule(response.data));
+                setLoadingService(false);
             })
             .catch((err) => errorHandler(err));
     }
@@ -227,6 +228,7 @@ export const getTeacherSchedule = (teacherId, semesterId) => {
             .get(`${TEACHER_SCHEDULE_URL + semesterId}&teacherId=${teacherId}`)
             .then((response) => {
                 store.dispatch(setTeacherSchedule(response.data));
+                setLoadingService(false);
             })
             .catch((err) => errorHandler(err));
     }
@@ -238,6 +240,7 @@ export const getFullSchedule = (semesterId) => {
             .get(FULL_SCHEDULE_URL + semesterId)
             .then((response) => {
                 store.dispatch(setFullSchedule(response.data));
+                setLoadingService(false);
             })
             .catch((err) => errorHandler(err));
 };
