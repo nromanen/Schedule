@@ -108,7 +108,8 @@ const handleSuccess = (isVacation, teacherId, formValues) => {
 };
 
 export const addTemporaryScheduleService = (teacherId, formValues, isVacation) => {
-    formValues.date = formValues.date.replace(/\//g, '-');
+    const bufferFormValues = formValues;
+    bufferFormValues.date = formValues.date.replace(/\//g, '-');
     const obj = formatObj(formValues, teacherId);
     axios
         .post(TEMPORARY_SCHEDULE_URL, {
@@ -125,8 +126,9 @@ export const addTemporaryScheduleService = (teacherId, formValues, isVacation) =
 };
 
 export const addTemporaryScheduleForRangeService = (teacherId, formValues, isVacation) => {
-    formValues.from = formValues.from.replace(/\//g, '-');
-    formValues.to = formValues.to.replace(/\//g, '-');
+    const bufferFormValues = formValues;
+    bufferFormValues.from = formValues.from.replace(/\//g, '-');
+    bufferFormValues.to = formValues.to.replace(/\//g, '-');
     const obj = formatObj(formValues, teacherId);
     axios
         .post(TEMPORARY_SCHEDULE_RANGE_URL, {
@@ -147,7 +149,8 @@ export const addTemporaryScheduleForRangeService = (teacherId, formValues, isVac
 };
 
 export const editTemporaryScheduleService = (teacherId, formValues, isVacation) => {
-    formValues.date = formValues.date.replace(/\//g, '-');
+    const bufferFormValues = formValues;
+    bufferFormValues.date = formValues.date.replace(/\//g, '-');
     const obj = formatObj(formValues, teacherId);
     axios
         .put(TEMPORARY_SCHEDULE_URL, {

@@ -116,11 +116,13 @@ export const removeGroupCardService = (groupId) => {
 };
 
 export const setDisabledGroupService = (group) => {
-    group.disable = true;
+    const bufferGroup = group;
+    bufferGroup.disable = true;
     updateGroupService(group);
 };
 
 export const setEnabledGroupService = (group) => {
-    group.disable = false;
+    const bufferGroup = group;
+    bufferGroup.disable = false;
     updateGroupService(group);
 };

@@ -78,12 +78,14 @@ const put = (values) => {
 };
 
 export const setDisabledRoomsService = (room) => {
-    room.disable = true;
+    const bufferRoom = room;
+    bufferRoom.disable = true;
     put(room);
 };
 
 export const setEnabledRoomsService = (room) => {
-    room.disable = false;
+    const bufferRoom = room;
+    bufferRoom.disable = false;
     put(room);
 };
 

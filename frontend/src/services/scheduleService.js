@@ -1,4 +1,4 @@
-import { has } from 'lodash';
+import { get } from 'lodash';
 import { store } from '../store';
 
 import axios from '../helper/axios';
@@ -253,38 +253,37 @@ export const getFullSchedule = (semesterId) => {
             .catch((err) => errorHandler(err));
 };
 
- export const submitSearchSchedule = (values) => {
+export const submitSearchSchedule = (values) => {
     setScheduleSemesterIdService(values.semester);
-    if (has(values, 'group') && +values.group > 0) {
+    if (get(values, 'group') && +values.group > 0) {
         setScheduleTypeService('group');
         setScheduleGroupIdService(values.group);
         getGroupSchedule(values.group, values.semester);
 
         return;
     }
-    if (has(values, 'teacher') && +values.teacher > 0) {
+    if (get(values, 'teacher') && +values.teacher > 0) {
         setScheduleTypeService('teacher');
         setScheduleTeacherIdService(values.teacher);
         getTeacherSchedule(values.teacher, values.semester);
         return;
     }
     if (
-        (!has(values, 'group') && !has(values, 'teacher')) ||
-        (has(values, 'group') && !has(values, 'teacher') && +values.group === 0) ||
-        (!has(values, 'group') && has(values, 'teacher') && +values.teacher === 0) ||
-        (has(values, 'group') &&
-            has(values, 'teacher') &&
+        (!get(values, 'group') && !get(values, 'teacher')) ||
+        (get(values, 'group') && !get(values, 'teacher') && +values.group === 0) ||
+        (!get(values, 'group') && get(values, 'teacher') && +values.teacher === 0) ||
+        (get(values, 'group') &&
+            get(values, 'teacher') &&
             +values.teacher === 0 &&
             +values.group === 0)
     ) {
         setScheduleTypeService('full');
         getFullSchedule(values.semester);
-        return;
     }
 };
 
 export const sendTeachersScheduleService = (data) => {
-    const teachersId = data.teachersId.map((teacherId) => `teachersId=${teacherId}`).join('&'); // teachersId=65&teachersId=12
+    const teachersId = data.teachersId.map((teacherId) => `teachersId=${teacherId}`).join('&');
     const { semesterId, language } = data;
     axios
         .get(`${SEND_PDF_TO_EMAIL}/semester/${semesterId}?language=${language}&${teachersId}`)

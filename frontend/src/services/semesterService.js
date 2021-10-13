@@ -1,4 +1,4 @@
-import { has } from 'lodash';
+import { get } from 'lodash';
 import i18n from '../helper/i18n';
 import { store } from '../store';
 
@@ -117,7 +117,7 @@ const cardSemester = (semester) => {
     const semesterDays = [];
     const semesterClasses = [];
     Object.keys(semester).forEach((prop) => {
-        if (has(semester, prop)) {
+        if (get(semester, prop)) {
             if (prop.indexOf('semesterDays_markup_') >= 0 && semester[prop] === true) {
                 semesterDays.push(prop.substring(21));
             } else if (prop.indexOf('semesterClasses_markup_') >= 0 && semester[prop] === true) {
@@ -255,12 +255,14 @@ export const setDefaultSemesterById = (dataId) => {
 };
 
 export const setDisabledSemestersService = (semester) => {
-    semester.disable = true;
+    const bufferSemester = semester;
+    bufferSemester.disable = true;
     putSemester(semester);
 };
 
 export const setEnabledSemestersService = (semester) => {
-    semester.disable = false;
+    const bufferSemester = semester;
+    bufferSemester.disable = false;
     putSemester(semester);
 };
 

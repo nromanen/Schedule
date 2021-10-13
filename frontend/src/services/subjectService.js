@@ -103,11 +103,13 @@ export const removeSubjectCardService = (subjectId) => {
 };
 
 export const setDisabledSubjectsService = (subject) => {
-    subject.disable = true;
+    const bufferSubject = subject;
+    bufferSubject.disable = true;
     updateSubjectService(subject);
 };
 
 export const setEnabledSubjectsService = (subject) => {
-    subject.disable = false;
+    const bufferSubject = subject;
+    bufferSubject.disable = false;
     updateSubjectService(subject);
 };
