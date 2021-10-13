@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import Divider from '@material-ui/core/Divider';
 import shortId from 'shortid';
 import Card from '../../../share/Card/Card';
-import ConfirmDialog from '../../../share/modals/dialog';
+import { ConfirmDialog } from '../../../share/modals/dialog';
 
 import {
     deleteTemporaryScheduleService,

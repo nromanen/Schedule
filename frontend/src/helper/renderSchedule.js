@@ -95,6 +95,7 @@ const renderSchedule = (
         default:
             return null;
     }
+    return null;
 };
 
 export { renderSchedule };

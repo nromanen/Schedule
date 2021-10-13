@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { uploadStudentsToGroupFile } from '../../services/uploadFile';
 import { Dialog, DialogTitle } from '@material-ui/core';
 import './UploadFile.scss';
 import { FaWindowClose } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
 import Button from '@material-ui/core/Button';
+import { uploadStudentsToGroupFile } from '../../services/uploadFile';
 import { setLoadingService } from '../../services/loadingService';
 
 export const UploadFile = (props) => {

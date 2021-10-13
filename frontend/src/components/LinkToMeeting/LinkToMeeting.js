@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { IoMdLink } from 'react-icons/all';
-import LinkToMeetingDialog from '../../share/modals/modal/linkToMeetingDialog';
+import { LinkToMeetingDialog } from '../../share/modals/modal/linkToMeetingDialog';
 import './LinkToMeeting.scss';
 
 const LinkToMeeting = (props) => {

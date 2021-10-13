@@ -26,6 +26,7 @@ const LessonsList = (props) => {
         ) : (
             ''
         );
+    // TODO move strings to constants
     const getUkWordHours = (number) => {
         if (number === 1) {
             return 'година';

@@ -43,7 +43,6 @@ const GroupSchedulePageTop = (props) => {
     const [semesterId, setSemesterId] = useState(props.initialValues.semester);
 
     useEffect(() => {
-        // TODO check these services
         showAllPublicTeachersService();
         showAllPublicSemestersService();
         props.initialize({
@@ -85,7 +84,7 @@ const GroupSchedulePageTop = (props) => {
                 component={renderSelectField}
                 label={t('formElements:teacher_label')}
                 type="text"
-                onChange={(e) => {
+                onChange={() => {
                     props.change('group', 0);
                 }}
             >
@@ -107,7 +106,7 @@ const GroupSchedulePageTop = (props) => {
                 component={renderSelectField}
                 label={t('formElements:group_label')}
                 type="text"
-                onChange={(e) => {
+                onChange={() => {
                     props.change('teacher', 0);
                 }}
             >

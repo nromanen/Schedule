@@ -22,7 +22,7 @@ import { FaEdit } from 'react-icons/all';
 import { Delete } from '@material-ui/icons';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import ConfirmDialog from '../share/modals/dialog';
+import { ConfirmDialog } from '../share/modals/dialog';
 import AddStudentDialog from '../share/modals/modal/AddStudentDialog';
 import { selectStudentService } from '../services/studentService';
 import './renderStudentTable.scss';
