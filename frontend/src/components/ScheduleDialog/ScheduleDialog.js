@@ -12,7 +12,6 @@ import { CustomDialog } from '../../share/DialogWindows';
 import '../../share/DialogWindows/dialog.scss';
 import './ScheduleDialog.scss';
 
-
 const groupByAvailability = (arr) => {
     arr.sort((x, y) => {
         if (x === y) {

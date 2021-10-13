@@ -20,7 +20,6 @@ import TableHead from '@material-ui/core/TableHead';
 import { withStyles } from '@material-ui/core';
 import { FaEdit } from 'react-icons/all';
 import { Delete } from '@material-ui/icons';
-
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { selectStudentService } from '../services/studentService';
