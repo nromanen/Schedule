@@ -17,11 +17,19 @@ const ShowStudentsOnGroupDialog = (props) => {
     const { onClose, cardId, open, onDeleteStudent, students, onSubmit, match, groups, group } =
         props;
     const [checkBoxStudents, setCheckBoxStudents] = useState([]);
+    const [isGroupButtonDisabled, setIsGroupButtonDisabled] = useState(true);
     const [checkedAll, setCheckedAll] = useState(false);
     const [openUploadFile, setOpenUploadFile] = useState(false);
     const [showStudentList, setShowStudentList] = useState(false);
     const { t } = useTranslation('formElements');
 
+    const setSelectDisabled = () => {
+        checkBoxStudents.forEach((item) => {
+            if (item.checked) {
+                setIsGroupButtonDisabled(false);
+            }
+        });
+    };
     const parseStudentToCheckBox = () => {
         const res = students.map((item) => {
             return { ...item, checked: false };
@@ -33,6 +41,9 @@ const ShowStudentsOnGroupDialog = (props) => {
     }, [open, openUploadFile]);
     useEffect(() => {
         parseStudentToCheckBox();
+    }, [props.students]);
+    useEffect(() => {
+        setSelectDisabled();
     }, [props.students]);
 
     const handleClose = () => {
@@ -84,15 +95,7 @@ const ShowStudentsOnGroupDialog = (props) => {
     const handleClearCheckedAllBtn = () => {
         setCheckedAll(false);
     };
-    const setSelectDisabled = () => {
-        let resChecked = true;
-        checkBoxStudents.forEach((item) => {
-            if (item.checked) {
-                resChecked = false;
-            }
-        });
-        return resChecked;
-    };
+
     const getDialog = () => {
         setShowStudentList(true);
     };
@@ -132,7 +135,7 @@ const ShowStudentsOnGroupDialog = (props) => {
                                 variant="contained"
                                 onClick={getDialog}
                                 color="primary"
-                                disabled={setSelectDisabled()}
+                                disabled={isGroupButtonDisabled}
                                 title={i18n.t('choose_group_title')}
                             >
                                 {i18n.t('choose_group_title')}
