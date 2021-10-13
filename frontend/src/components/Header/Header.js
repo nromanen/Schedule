@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
+import { isNil } from 'lodash';
 import { Link } from 'react-router-dom';
 import {
     FaCaretDown,
@@ -61,16 +62,16 @@ const StyledMenuItem = withStyles((theme) => ({
 }))(MenuItem);
 
 const Header = (props) => {
-    const [anchorEl, setAnchorEl] = React.useState(null);
+    const { roles } = props;
+    const [anchorEl, setAnchorEl] = useState(null);
     const handleClick = (event) => setAnchorEl(event.currentTarget);
     const handleClose = () => setAnchorEl(null);
 
-    const [anchorElUser, setAnchorElUser] = React.useState(null);
+    const [anchorElUser, setAnchorElUser] = useState(null);
     const handleClickUserMenu = (event) => setAnchorElUser(event.currentTarget);
     const handleCloseUserMenu = () => setAnchorElUser(null);
 
     const { t } = useTranslation('common');
-    const [teacher, setTeacher] = useState(0);
 
     useEffect(() => {
         if (props.userRole === roles.MANAGER) {
@@ -81,7 +82,7 @@ const Header = (props) => {
 
     const getUserMenu = (userRole) => {
         let userMenu = null;
-        if (userRole === null || userRole === undefined) {
+        if (isNil(userRole)) {
             return (
                 <Link to={links.LOGIN} className="navLinks">
                     {t('login_title')}
@@ -141,6 +142,8 @@ const Header = (props) => {
                                 className="navLinks"
                                 style={{ textDecoration: 'none' }}
                                 onClick={handleCloseUserMenu}
+                                role="button"
+                                tabIndex="0"
                             >
                                 <StyledMenuItem>
                                     <ListItemIcon>
@@ -220,6 +223,8 @@ const Header = (props) => {
                                 onClick={() => {
                                     handleCloseUserMenu();
                                 }}
+                                role="button"
+                                tabIndex="0"
                             ></span>
                             <Link
                                 to={links.MY_PROFILE}
@@ -289,8 +294,6 @@ const Header = (props) => {
         }
         return userMenu;
     };
-
-    const { roles } = props;
 
     let leftLinks = null;
     let menu = null;
@@ -377,6 +380,8 @@ const Header = (props) => {
                         className="navLinks"
                         style={{ textDecoration: 'none' }}
                         onClick={handleClose}
+                        role="button"
+                        tabIndex="0"
                     >
                         <StyledMenuItem>
                             <ListItemIcon>

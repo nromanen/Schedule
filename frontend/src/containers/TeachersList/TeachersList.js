@@ -48,8 +48,9 @@ import {
     getAllDepartmentsService,
     getDepartmentByIdService,
 } from '../../services/departmentService';
-import { clearDepartmentForm, getDepartItemById } from '../../redux/actions/departments';
+import { clearDepartmentForm, getDepartItemById } from '../../actions/departments';
 import { getShortTitle } from '../../helper/shortTitle';
+import { TEACHER_LABEL } from '../../constants/services';
 
 const TeacherList = (props) => {
     const { t } = useTranslation('common');
@@ -266,9 +267,7 @@ const TeacherList = (props) => {
                 </aside>
 
                 <section className="container-flex-wrap">
-                    {visibleItems.length === 0 && (
-                        <NotFound name={t('formElements:teacher_a_label')} />
-                    )}
+                    {visibleItems.length === 0 && <NotFound name={t(TEACHER_LABEL)} />}
                     {teacherLength > 0 ? (
                         visibleItems.map((teacher, index) => (
                             <Card key={index} {...teacher} class="teacher-card done-card">

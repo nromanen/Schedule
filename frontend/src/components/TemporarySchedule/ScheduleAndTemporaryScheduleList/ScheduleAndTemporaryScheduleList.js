@@ -5,6 +5,7 @@ import Divider from '@material-ui/core/Divider';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
+import shortId from 'shortid';
 import Card from '../../../share/Card/Card';
 import { CustomDialog } from '../../../share/DialogWindows';
 
@@ -17,8 +18,6 @@ import { deleteTemporaryScheduleService } from '../../../services/temporarySched
 import { dialogTypes } from '../../../constants/dialogs';
 
 const ScheduleAndTemporaryScheduleList = (props) => {
-    const shortId = require('shortid');
-
     const schedulesAndTemporarySchedules = props.schedulesAndTemporarySchedules || [];
 
     const [open, setOpen] = useState(false);
@@ -34,17 +33,17 @@ const ScheduleAndTemporaryScheduleList = (props) => {
         };
     }
 
-    const handleClickOpen = (temporaryScheduleId) => {
-        setTemporaryScheduleId(temporaryScheduleId);
+    const handleClickOpen = (id) => {
+        setTemporaryScheduleId(id);
         setOpen(true);
     };
 
-    const handleClose = (temporaryScheduleId) => {
+    const handleClose = (id) => {
         setOpen(false);
-        if (!temporaryScheduleId) {
+        if (!id) {
             return;
         }
-        deleteTemporaryScheduleService(temporaryScheduleId, date, teacherId);
+        deleteTemporaryScheduleService(id, date, teacherId);
     };
 
     return (

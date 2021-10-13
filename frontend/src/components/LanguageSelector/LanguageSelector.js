@@ -5,7 +5,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import { useTranslation } from 'react-i18next';
 import './LanguageSelector.scss';
 
-const LanguageSelector = (props) => {
+const LanguageSelector = () => {
     const { i18n } = useTranslation();
     const langFlags = [
         {

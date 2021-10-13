@@ -5,8 +5,7 @@ import { FaChalkboardTeacher, FaEdit } from 'react-icons/fa';
 import { MdDelete } from 'react-icons/md';
 import { useTranslation } from 'react-i18next';
 import Button from '@material-ui/core/Button';
-import { defaultTo } from 'lodash';
-import { setDisabledDepartment, setEnabledDepartment } from '../../redux/actions/departments';
+import { setDisabledDepartment, setEnabledDepartment } from '../../actions/departments';
 import SearchPanel from '../../share/SearchPanel/SearchPanel';
 import Card from '../../share/Card/Card';
 import {
@@ -30,7 +29,7 @@ import { navigation, navigationNames } from '../../constants/navigation';
 import NavigationPage from '../../components/Navigation/NavigationPage';
 import SnackbarComponent from '../../share/Snackbar/SnackbarComponent';
 import { handleSnackbarCloseService } from '../../services/snackbarService';
-import { getAllTeachersByDepartmentId } from '../../redux/actions/teachers';
+import { getAllTeachersByDepartmentId } from '../../actions/teachers';
 import { showAllPublicTeachersByDepartmentService } from '../../services/scheduleService';
 
 function DepartmentPage(props) {

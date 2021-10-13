@@ -23,7 +23,7 @@ import {
     resetUserPassword,
     setAuthError,
     setLoading,
-} from '../../redux/actions/index';
+} from '../../actions/index';
 
 import './Auth.scss';
 

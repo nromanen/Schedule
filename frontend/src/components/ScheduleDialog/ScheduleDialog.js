@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import { CircularProgress } from '@material-ui/core';
@@ -13,14 +12,19 @@ import { CustomDialog } from '../../share/DialogWindows';
 import '../../share/DialogWindows/dialog.scss';
 import './ScheduleDialog.scss';
 
-const useStyles = makeStyles(() => ({
-    roomField: {
-        '&': {
-            margin: '0 auto',
-            width: 250,
-        },
-    },
-}));
+
+const groupByAvailability = (arr) => {
+    arr.sort((x, y) => {
+        if (x === y) {
+            return 0;
+        }
+        if (x) {
+            return 1;
+        }
+        return -1;
+    });
+    return arr;
+};
 
 const ScheduleDialog = (props) => {
     const { onClose, itemData, open, rooms, availability, translation, isLoading } = props;
@@ -28,10 +32,12 @@ const ScheduleDialog = (props) => {
     const [room, setRoom] = useState('');
     const [sure, setSure] = useState(true);
 
-    const classes = useStyles();
-
-    const handleClose = () => {
-        onClose();
+    const getOptionLabel = (option) => {
+        if (option && option.available) {
+            return `${option.name} (${translation('common:available')})`;
+        }
+        if (option) return `${option.name} (${translation('common:unavailable')})`;
+        return '';
     };
 
     const chooseClickHandle = () => {
@@ -49,50 +55,45 @@ const ScheduleDialog = (props) => {
         setRoom(null);
     };
 
-    const groupByAvailability = (arr) => {
-        arr.sort((x, y) => {
-            return x === y ? 0 : x ? 1 : -1;
-        });
-        return arr;
-    };
-
     const defaultProps = {
         options: availability.rooms ? groupByAvailability(availability.rooms) : rooms,
-        getOptionLabel: (option) =>
-            option
-                ? option.available
-                    ? `${option.name} (${translation('common:available')})`
-                    : `${option.name} (${translation('common:unavailable')})`
-                : '',
+        getOptionLabel,
     };
+
+    if (sure && isLoading)
+        return (
+            <div className="circular-progress-dialog">
+                <CircularProgress />
+            </div>
+        );
 
     return (
         <CustomDialog
             title={translation('common:schedule_dialog_title')}
             open={open}
-            onClose={handleClose}
+            onClose={() => onClose()}
         >
             {sure ? (
                 <>
                     {isLoading ? (
-                        <div className='circular-progress-dialog'>
+                        <div className="circular-progress-dialog">
                             <CircularProgress />
                         </div>
                     ) : (
                         <>
-                            <DialogTitle id='simple-dialog-title'>
+                            <DialogTitle id="simple-dialog-title">
                                 {translation('common:schedule_dialog_title')}
                             </DialogTitle>
-                            <div className='availability-info'>
+                            <div className="availability-info">
                                 {!availability.classSuitsToTeacher ? (
-                                    <p className='availability-warning'>
+                                    <p className="availability-warning">
                                         {translation('common:class_does_not_suit_for_teacher')}
                                     </p>
                                 ) : (
                                     ''
                                 )}
                                 {!availability.teacherAvailable ? (
-                                    <p className='availability-warning'>
+                                    <p className="availability-warning">
                                         {translation('common:teacher_is_unavailable')}{' '}
                                     </p>
                                 ) : (
@@ -101,10 +102,10 @@ const ScheduleDialog = (props) => {
                             </div>
                             <Autocomplete
                                 {...defaultProps}
-                                id='group'
+                                id="group"
                                 clearOnEscape
                                 openOnFocus
-                                className={classes.roomField}
+                                className="room-field"
                                 onChange={(event, newValue) => {
                                     setRoom(newValue);
                                 }}
@@ -112,22 +113,22 @@ const ScheduleDialog = (props) => {
                                     <TextField
                                         {...params}
                                         label={translation('formElements:room_label')}
-                                        margin='normal'
+                                        margin="normal"
                                     />
                                 )}
                             />
-                            <div className='buttons-container'>
+                            <div className="buttons-container">
                                 <Button
-                                    className='dialog-button'
-                                    variant='contained'
-                                    color='primary'
+                                    className="dialog-button"
+                                    variant="contained"
+                                    color="primary"
                                     onClick={() => chooseClickHandle()}
                                 >
                                     {translation('formElements:choose_button_title')}
                                 </Button>
                                 <Button
-                                    className='dialog-button'
-                                    variant='contained'
+                                    className="dialog-button"
+                                    variant="contained"
                                     onClick={() => onClose()}
                                 >
                                     {translation('formElements:cancel_button_title')}
@@ -138,19 +139,19 @@ const ScheduleDialog = (props) => {
                 </>
             ) : (
                 <>
-                    <DialogTitle id='simple-dialog-title'>
-                        <p className='availability-warning'>
+                    <DialogTitle id="simple-dialog-title">
+                        <p className="availability-warning">
                             {!room.available
                                 ? `${translation('common:room_is_unavailable')}. `
                                 : ''}
                         </p>
-                        <p className='availability-warning'>
+                        <p className="availability-warning">
                             {!availability.teacherAvailable
                                 ? `${translation('common:teacher_is_unavailable')}. `
                                 : ''}
                         </p>
 
-                        <p className='availability-warning'>
+                        <p className="availability-warning">
                             {!availability.classSuitsToTeacher
                                 ? `${translation('common:class_does_not_suit_for_teacher')}. `
                                 : ''}
@@ -158,11 +159,11 @@ const ScheduleDialog = (props) => {
 
                         {translation('common:are_you_sure')}
                     </DialogTitle>
-                    <div className='buttons-container'>
+                    <div className="buttons-container">
                         <Button
-                            className='dialog-button'
-                            variant='contained'
-                            color='primary'
+                            className="dialog-button"
+                            variant="contained"
+                            color="primary"
                             onClick={() => {
                                 onClose({ itemData, room });
                                 setSure(true);
@@ -171,8 +172,8 @@ const ScheduleDialog = (props) => {
                             {translation('common:yes_button_title')}
                         </Button>
                         <Button
-                            className='dialog-button'
-                            variant='contained'
+                            className="dialog-button"
+                            variant="contained"
                             onClick={() => setSure(true)}
                         >
                             {translation('common:no_button_title')}

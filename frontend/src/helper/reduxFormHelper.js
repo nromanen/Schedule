@@ -1,13 +1,13 @@
 import { getTeacherForSite } from './renderTeacher';
 
 export const setValueToTeacherForSiteHandler = (teachers, id, setValue) => {
-    const teacher = teachers.find((teacher) => teacher.id === +id);
+    const teacher = teachers.find((teacherItem) => teacherItem.id === +id);
     if (!teacher) setValue('teacherForSite', '');
     else setValue('teacherForSite', getTeacherForSite(teacher));
 };
 
 export const setValueToSubjectForSiteHandler = (subjects, subjectId, setValue) => {
-    const subject = subjects.find((subject) => subject.id === +subjectId);
+    const subject = subjects.find((subjectItem) => subjectItem.id === +subjectId);
     if (!subject) return setValue('subjectForSite', '');
-    setValue('subjectForSite', subject.name);
+    return setValue('subjectForSite', subject.name);
 };

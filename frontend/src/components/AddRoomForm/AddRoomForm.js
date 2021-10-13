@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Field, reduxForm } from 'redux-form';
 import Button from '@material-ui/core/Button';
-import { styled } from '@material-ui/core/styles';
 import { useTranslation } from 'react-i18next';
 import renderTextField from '../../share/renderedFields/input';
 import renderSelectField from '../../share/renderedFields/select';

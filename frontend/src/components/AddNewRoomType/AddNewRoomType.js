@@ -32,17 +32,17 @@ let NewRoomType = (props) => {
 
     const { t } = useTranslation('formElements');
 
-    const handleClickOpen = (typeId) => {
-        setTypeId(typeId);
+    const handleClickOpen = (id) => {
+        setTypeId(id);
         setOpen(true);
     };
 
-    const handleClose = (typeId) => {
+    const handleClose = (id) => {
         setOpen(false);
-        if (!typeId) {
+        if (!id) {
             return;
         }
-        deleteTypeService(typeId);
+        deleteTypeService(id);
     };
 
     const handleEdit = (roomId) => {

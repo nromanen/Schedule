@@ -1,6 +1,4 @@
-import actions from 'redux-form/lib/actions';
 import * as actionsType from './actionsType';
-import roomTypes from '../reducers/roomTypes';
 
 export const postOneType = (roomType) => {
     return {

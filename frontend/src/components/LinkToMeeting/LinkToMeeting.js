@@ -8,7 +8,7 @@ const LinkToMeeting = (props) => {
     const { linkToMeeting } = props;
     const [openDialog, setOpenDialog] = useState(false);
     const openWindowByUrl = (url) => {
-        const win = window.open(linkToMeeting, '_blank');
+        const win = window.open(url, '_blank');
         win.focus();
     };
     const handleClose = (semesterId) => {
