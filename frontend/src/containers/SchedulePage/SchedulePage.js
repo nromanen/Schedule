@@ -17,30 +17,18 @@ import Schedule from '../../components/Schedule/Schedule';
 import './SchedulePage.scss';
 
 const SchedulePage = (props) => {
+    const { groups, groupId, itemGroupId, scheduleItems, lessons, isLoading } = props;
     const { t } = useTranslation('common');
-
     document.title = t('schedule_title');
-
-    const { groups, groupId } = props;
-
-    const { itemGroupId } = props;
-
-    const { scheduleItems } = props;
-
-    const { lessons } = props;
-
-    const isLoading = props.loading;
 
     useEffect(() => {
         setLoadingService(true);
         setScheduleLoadingService(true);
         getScheduleItemsService();
-    }, []);
-
-    useEffect(() => {
         showAllGroupsService();
+        showListOfRoomsService();
+        getClassScheduleListService();
     }, []);
-    // useEffect(() => showAllPublicGroupsService(props.currentSemester.id), [props.currentSemester.id]);
 
     useEffect(() => {
         if (groupId) {
@@ -49,9 +37,6 @@ const SchedulePage = (props) => {
         }
     }, [groupId]);
 
-    useEffect(() => getClassScheduleListService(), []);
-
-    useEffect(() => showListOfRoomsService(), []);
     const handleClearSchedule = () => {
         if (props.currentSemester.id) {
             clearSchedule(props.currentSemester.id);

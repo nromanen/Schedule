@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-
-import { GiCancel } from 'react-icons/gi';
 import { useTranslation } from 'react-i18next';
-import FreeRoomForm from '../../components/FreeRoomForm/freeRoomForm';
 import Card from '../../share/Card/Card';
+import FreeRoomForm from '../../components/FreeRoomForm/freeRoomForm';
 import { clearFreeRoomsService, showFreeRoomsService } from '../../services/freeRoomsService';
 import { getClassScheduleListService } from '../../services/classService';
 import { CustomDialog } from '../../share/DialogWindows';
@@ -38,7 +36,7 @@ const FreeRooms = (props) => {
 
     return (
         <>
-            <span className="navLinks" onClick={handleClickOpen}>
+            <span className="navLinks" onClick={handleClickOpen} aria-hidden="true">
                 {t('find_free_room')}
             </span>
 

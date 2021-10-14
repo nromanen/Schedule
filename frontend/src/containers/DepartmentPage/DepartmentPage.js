@@ -1,13 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { GiSightDisabled, IoMdEye, MdFace } from 'react-icons/all';
+import { GiSightDisabled, IoMdEye } from 'react-icons/all';
 import { FaChalkboardTeacher, FaEdit } from 'react-icons/fa';
 import { MdDelete } from 'react-icons/md';
 import { useTranslation } from 'react-i18next';
-import Button from '@material-ui/core/Button';
-import { setDisabledDepartment, setEnabledDepartment } from '../../actions/departments';
 import SearchPanel from '../../share/SearchPanel/SearchPanel';
 import Card from '../../share/Card/Card';
+import AddDepartment from '../../components/AddDepartmentForm/AddDepartmentForm';
+import { search } from '../../helper/search';
+import NotFound from '../../share/NotFound/NotFound';
+import { navigation, navigationNames } from '../../constants/navigation';
+import NavigationPage from '../../components/Navigation/NavigationPage';
+import SnackbarComponent from '../../share/Snackbar/SnackbarComponent';
+import { handleSnackbarCloseService } from '../../services/snackbarService';
+import { showAllPublicTeachersByDepartmentService } from '../../services/scheduleService';
 import {
     clearDepartment,
     createDepartmentService,
@@ -19,112 +25,97 @@ import {
     setEnabledDepartmentService,
     updateDepartmentService,
 } from '../../services/departmentService';
-import AddDepartment from '../../components/AddDepartmentForm/AddDepartmentForm';
-import { search } from '../../helper/search';
-import NotFound from '../../share/NotFound/NotFound';
 import { CustomDialog, ShowDepartmentDataDialog } from '../../share/DialogWindows';
 import { dialogTypes } from '../../constants/dialogs';
-import { disabledCard } from '../../constants/disabledCard';
-import { navigation, navigationNames } from '../../constants/navigation';
-import NavigationPage from '../../components/Navigation/NavigationPage';
-import SnackbarComponent from '../../share/Snackbar/SnackbarComponent';
-import { handleSnackbarCloseService } from '../../services/snackbarService';
-import { getAllTeachersByDepartmentId } from '../../actions/teachers';
-import { showAllPublicTeachersByDepartmentService } from '../../services/scheduleService';
 
-function DepartmentPage(props) {
+const DepartmentPage = (props) => {
+    const {
+        teachers,
+        snackbarType,
+        isSnackbarOpen,
+        snackbarMessage,
+        enabledDepartments,
+        disabledDepartments,
+    } = props;
     const { t } = useTranslation('formElements');
-    const { departments, disabledDepartments } = props;
-    const [isDisabled, setIsDisabled] = useState(false);
     const [term, setTerm] = useState('');
-    const [openSubDialog, setOpenSubDialog] = useState(false);
+
     const [subDialogType, setSubDialogType] = useState('');
-    const [departmentId, setDepartmentId] = useState('');
-    const [hideDialog, setHideDialog] = useState(null);
-    const [department, setDepartment] = useState({});
+
+    const [isDisabled, setIsDisabled] = useState(false);
+    const [isUpdateForm, setIsUpdateForm] = useState(false);
+    const [departmentId, setDepartmentId] = useState(-1);
     const [teacherDialog, setTeacherDialog] = useState(false);
-    const [editDepartment, setEditDepartment] = useState(false);
-    const { isSnackbarOpen, snackbarType, snackbarMessage, teachers } = props;
-    useEffect(() => clearDepartmentForm(), []);
-    const visibleDepartments = isDisabled
-        ? search(disabledDepartments, term, ['name'])
-        : search(departments, term, ['name']);
-    const SearchChange = setTerm;
-    const changeDisable = () => {
-        setIsDisabled((prev) => !prev);
-    };
-    const submit = (data) => {
-        data.id === undefined ? createDepartmentService(data) : updateDepartmentService(data);
-    };
+    const [openSubDialog, setOpenSubDialog] = useState(false);
+
     const clearDepartmentForm = () => {
         clearDepartment();
     };
-    const deleteDepartment = (id) => {
-        setDepartmentId(id);
+
+    useEffect(() => {
+        getDisabledDepartmentsService();
+        getAllDepartmentsService();
+        clearDepartmentForm();
+    }, []);
+
+    const SearchChange = setTerm;
+    const visibleDepartments = isDisabled
+        ? search(disabledDepartments, term, ['name'])
+        : search(enabledDepartments, term, ['name']);
+
+    const submitAddForm = (data) => {
+        return data.id ? createDepartmentService(data) : updateDepartmentService(data);
+    };
+    const showConfirmDialog = (currentId, dialogType) => {
+        setDepartmentId(currentId);
+        setSubDialogType(dialogType);
         setOpenSubDialog(true);
     };
-    const setDisabled = (department) => {
-        const disabledDepartment = { ...department, disabled: true };
-        setDisabledDepartmentService(disabledDepartment);
+    const setDepartmentToUpdate = (currentId) => {
+        getDepartmentByIdService(currentId);
+        setIsUpdateForm(true);
     };
-    const setEnabled = (department) => {
-        setDepartmentId(department.id);
-        setOpenSubDialog(true);
-        const enabledDepartment = { ...department, disabled: false };
-        setEnabledDepartment(enabledDepartment);
+    const changeDepartmentDisabledStatus = (currentId) => {
+        const foundDepartment = [...disabledDepartments, ...enabledDepartments].find(
+            (departm) => departm.id === currentId,
+        );
+        const newDepartment = { ...foundDepartment, disable: !foundDepartment.disable };
+        const changeDisabledStatus = {
+            [dialogTypes.SET_VISIBILITY_ENABLED]: setEnabledDepartmentService(newDepartment),
+            [dialogTypes.SET_VISIBILITY_DISABLED]: setDisabledDepartmentService(newDepartment),
+        };
+        return changeDisabledStatus[subDialogType];
     };
-    const setDepartmentIntoForm = (id) => {
-        getDepartmentByIdService(id);
+    const acceptConfirmDialog = (currentId) => {
+        setOpenSubDialog(false);
+        if (!currentId) return;
+        if (subDialogType !== dialogTypes.DELETE_CONFIRM) {
+            changeDepartmentDisabledStatus(currentId);
+        } else deleteDepartmentsService(currentId);
+    };
+    const handleSnackbarClose = () => {
+        handleSnackbarCloseService();
+    };
+    const changeDisable = () => {
+        setIsDisabled((prev) => !prev);
     };
     const closeTeacherDialog = () => {
         setTeacherDialog(false);
     };
-    const handleClose = (id) => {
-        if (!id) return;
-        switch (subDialogType) {
-            case dialogTypes.DELETE_CONFIRM:
-                deleteDepartmentsService(departmentId);
-                break;
-            case dialogTypes.SET_VISIBILITY_DISABLED:
-                {
-                    const { id, name } = department;
-                    const enabledDepartment = { id, name, disable: true };
-                    setDisabledDepartmentService(enabledDepartment);
-                }
-                break;
-            case dialogTypes.SET_VISIBILITY_ENABLED:
-                {
-                    const { id, name } = department;
-                    const enabledDepartment = { id, name, disable: false };
-                    setEnabledDepartmentService(enabledDepartment);
-                }
-                break;
-            default:
-                break;
-        }
-        setOpenSubDialog(false);
-    };
-    useEffect(() => getAllDepartmentsService(), [isDisabled]);
-    useEffect(() => {
-        if (isDisabled) getDisabledDepartmentsService();
-    }, []);
-    const handleSnackbarClose = (event, reason) => {
-        if (reason === 'clickaway') return;
-        handleSnackbarCloseService();
-    };
+
     return (
         <>
             <NavigationPage name={navigationNames.DEPARTMENTS} val={navigation.DEPARTMENTS} />
             <CustomDialog
                 type={subDialogType}
-                cardId={departmentId}
+                cardId={departmentId.id}
                 whatDelete="department"
                 open={openSubDialog}
-                onClose={handleClose}
+                onClose={acceptConfirmDialog}
             />
             <ShowDepartmentDataDialog
-                isHide={hideDialog}
-                cardId={departmentId}
+                isHide={departmentId.disabledStatus}
+                cardId={departmentId.id}
                 open={teacherDialog}
                 onClose={closeTeacherDialog}
                 teachers={teachers}
@@ -132,30 +123,29 @@ function DepartmentPage(props) {
             <div className="cards-container">
                 <aside className="search-list__panel">
                     <SearchPanel SearchChange={SearchChange} showDisabled={changeDisable} />
-                    {isDisabled ? (
-                        ''
-                    ) : (
+                    {!isDisabled && (
                         <AddDepartment
-                            onSubmit={submit}
+                            onSubmit={submitAddForm}
                             clear={clearDepartmentForm}
-                            editDepartment={editDepartment}
+                            editDepartment={isUpdateForm}
                         />
                     )}
                 </aside>
                 <section className="container-flex-wrap wrapper">
                     {visibleDepartments.length === 0 && <NotFound name={t('department_y_label')} />}
-                    {visibleDepartments.map((department) => (
-                        <Card key={department.id} class="subject-card department-card">
-                            <h2 className="subject-card__name">{department.name}</h2>
+                    {visibleDepartments.map((departmentItem) => (
+                        <Card key={departmentItem.id} class="subject-card department-card">
+                            <h2 className="subject-card__name">{departmentItem.name}</h2>
                             <div className="cards-btns">
                                 {isDisabled ? (
                                     <IoMdEye
                                         className="svg-btn copy-btn"
                                         title={t('common:set_enabled')}
                                         onClick={() => {
-                                            setSubDialogType(dialogTypes.SET_VISIBILITY_ENABLED);
-                                            deleteDepartment(department.id);
-                                            setDepartment(department);
+                                            showConfirmDialog(
+                                                departmentItem.id,
+                                                dialogTypes.SET_VISIBILITY_ENABLED,
+                                            );
                                         }}
                                     />
                                 ) : (
@@ -164,12 +154,10 @@ function DepartmentPage(props) {
                                             className="svg-btn copy-btn"
                                             title={t('common:set_disabled')}
                                             onClick={() => {
-                                                // setDisabled(department)
-                                                setSubDialogType(
+                                                showConfirmDialog(
+                                                    departmentItem.id,
                                                     dialogTypes.SET_VISIBILITY_DISABLED,
                                                 );
-                                                deleteDepartment(department.id);
-                                                setDepartment(department);
                                             }}
                                         />
 
@@ -177,8 +165,7 @@ function DepartmentPage(props) {
                                             className="svg-btn edit-btn"
                                             title={t('edit_title')}
                                             onClick={() => {
-                                                setEditDepartment(true);
-                                                setDepartmentIntoForm(department.id);
+                                                setDepartmentToUpdate(departmentItem.id);
                                             }}
                                         />
                                     </>
@@ -188,18 +175,18 @@ function DepartmentPage(props) {
                                     className="svg-btn delete-btn"
                                     title={t('delete_title')}
                                     onClick={() => {
-                                        setDepartment({});
-                                        setSubDialogType(dialogTypes.DELETE_CONFIRM);
-                                        deleteDepartment(department.id);
+                                        showConfirmDialog(
+                                            departmentItem.id,
+                                            dialogTypes.DELETE_CONFIRM,
+                                        );
                                     }}
                                 />
                                 <FaChalkboardTeacher
                                     className="svg-btn delete-btn"
                                     title={t('show_teacher_title')}
                                     onClick={() => {
-                                        showAllPublicTeachersByDepartmentService(department.id);
-                                        getDepartmentByIdService(department.id);
-                                        setDepartmentIntoForm(department.id);
+                                        showAllPublicTeachersByDepartmentService(departmentItem.id);
+                                        getDepartmentByIdService(departmentItem.id);
                                         setTeacherDialog(true);
                                     }}
                                 />
@@ -216,10 +203,10 @@ function DepartmentPage(props) {
             />
         </>
     );
-}
+};
 
 const mapStateToProps = (state) => ({
-    departments: state.departments.departments,
+    enabledDepartments: state.departments.departments,
     disabledDepartments: state.departments.disabledDepartments,
     department: state.departments.department,
     isSnackbarOpen: state.snackbar.isSnackbarOpen,

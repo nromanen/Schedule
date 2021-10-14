@@ -54,12 +54,7 @@ const AddStudentDialog = (props) => {
             open={open}
             onClose={handleClose}
             buttons={
-                <Button
-                    className="buttons-style"
-                    variant="contained"
-                    disabled={pristine || submitting}
-                    onClick={handleClose}
-                >
+                <Button className="buttons-style" variant="contained" onClick={handleClose}>
                     {t('cancel_button_label')}
                 </Button>
             }

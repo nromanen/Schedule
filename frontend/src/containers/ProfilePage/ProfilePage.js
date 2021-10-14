@@ -1,35 +1,20 @@
-import React, { useEffect } from 'react';
-
-import { connect } from 'react-redux';
-import Card from '../../share/Card/Card';
-
 import './ProfilePage.scss';
-
-import ChangePasswordForm from '../../components/ChangePasswordForm/ChangePasswordForm';
-
-import { makeStyles } from '@material-ui/core/styles';
-
-import { resetFormHandler } from '../../helper/formHelper';
+import React, { useEffect } from 'react';
+import { connect } from 'react-redux';
 import { useTranslation } from 'react-i18next';
+import Card from '../../share/Card/Card';
+import { resetFormHandler } from '../../helper/formHelper';
 import { PROFILE_FORM, TEACHER_FORM } from '../../constants/reduxForms';
-
+import ChangePasswordForm from '../../components/ChangePasswordForm/ChangePasswordForm';
 import { getUserProfile, updateUserPassword, updateUserTeacher } from '../../services/userService';
 import AddTeacherForm from '../../components/AddTeacherForm/AddTeacherForm';
-import { navigation, navigationNames } from '../../constants/navigation';
 import NavigationPage from '../../components/Navigation/NavigationPage';
-
-const useStyles = makeStyles((theme) => ({
-    rootInput: {
-        width: '20em',
-    },
-}));
 
 const ProfilePage = (props) => {
     const { t } = useTranslation('formElements');
-    const classes = useStyles();
 
+    const handlePasswordFormReset = () => resetFormHandler(PROFILE_FORM);
     const submitPasswordChange = (values) => {
-        console.log('values', values);
         if (values.new_password !== values.confirm_password) {
             props.setError({
                 registration: { passwords: t('different_passwords') },
@@ -43,7 +28,6 @@ const ProfilePage = (props) => {
     const submitTeacherChange = (values) => {
         updateUserTeacher(values);
     };
-    const handlePasswordFormReset = () => resetFormHandler(PROFILE_FORM);
     const handleTeacherFormReset = () => resetFormHandler(TEACHER_FORM);
     useEffect(() => {
         getUserProfile();
@@ -55,6 +39,7 @@ const ProfilePage = (props) => {
                 <AddTeacherForm onSubmit={submitTeacherChange} onReset={handleTeacherFormReset} />
             );
         }
+        return null;
     };
 
     return (
