@@ -12,7 +12,7 @@ import Card from '../../share/Card/Card';
 import { TEACHER_FORM } from '../../constants/reduxForms';
 
 import './AddTeacherForm.scss';
-import renderSelectField from '../../share/renderedFields/select';
+import SelectField from '../../share/renderedFields/select';
 import { getDepartmentByIdService } from '../../services/departmentService';
 import { getClearOrCancelTitle, setDisableButton } from '../../helper/disableComponent';
 
@@ -106,7 +106,7 @@ let AddTeacher = (props) => {
                 <Field
                     name="department"
                     className="week-days"
-                    component={renderSelectField}
+                    component={SelectField}
                     label={t('department_teachers_label')}
                     type="text"
                     onChange={({ target }) => {

@@ -20,6 +20,7 @@ import {
     getTeacherFullName,
     getTeacherWithShortPosition,
 } from './renderTeacher';
+import { isNil } from 'lodash';
 
 const shortid = require('shortid');
 
@@ -101,7 +102,7 @@ export const prepareLessonSubCardCell = (card, place) => {
 
 export const prepareLessonTemporaryCardCell = (card, place, day) => {
     let inner = '';
-    if (card !== undefined && card !== null) {
+    if (!isNil(card)) {
         if (card.temporary_schedule) {
             if (card.temporary_schedule.vacation === true) {
                 inner += `${card.temporary_schedule.date}\n\r${i18next.t(`common:vacation_label`)}`;

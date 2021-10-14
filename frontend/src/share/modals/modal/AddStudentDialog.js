@@ -18,7 +18,7 @@ import Card from '../../Card/Card';
 import renderTextField from '../../renderedFields/input';
 import { required } from '../../../validation/validateFields';
 import { STUDENT_FORM, TEACHER_FORM } from '../../../constants/reduxForms';
-import renderSelectField from '../../renderedFields/select';
+import SelectField from '../../renderedFields/select';
 import { goToGroupPage } from '../../../helper/pageRedirection';
 
 let AddStudentDialog = (props) => {
@@ -109,7 +109,7 @@ let AddStudentDialog = (props) => {
                         {studentId ? (
                             <Field
                                 className="form-field"
-                                component={renderSelectField}
+                                component={SelectField}
                                 name="group"
                                 label={t('type_label')}
                                 validate={[required]}

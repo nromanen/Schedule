@@ -4,7 +4,7 @@ import { Field, reduxForm } from 'redux-form';
 import Button from '@material-ui/core/Button';
 import { useTranslation } from 'react-i18next';
 import renderTextField from '../../share/renderedFields/input';
-import renderSelectField from '../../share/renderedFields/select';
+import SelectField from '../../share/renderedFields/select';
 
 import { ROOM_FORM } from '../../constants/reduxForms';
 
@@ -49,7 +49,7 @@ let AddRoom = (props) => {
                 />
                 <Field
                     className="form-field"
-                    component={renderSelectField}
+                    component={SelectField}
                     name="type"
                     label={t('type_label')}
                     validate={[required]}

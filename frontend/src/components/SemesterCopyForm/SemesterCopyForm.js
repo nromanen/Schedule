@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 import Button from '@material-ui/core/Button';
 import { MdPlayArrow } from 'react-icons/md';
 
-import renderSelectField from '../../share/renderedFields/select';
+import SelectField from '../../share/renderedFields/select';
 
 import './SemesterCopyForm.scss';
 
@@ -39,7 +39,7 @@ const SemesterCopyForm = (props) => {
                     <Field
                         id="toSemesterId"
                         name="toSemesterId"
-                        component={renderSelectField}
+                        component={SelectField}
                         label={t('formElements:semester_label')}
                         type="text"
                         validate={[required]}

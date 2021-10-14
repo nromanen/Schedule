@@ -10,7 +10,7 @@ import Button from '@material-ui/core/Button';
 import { MdPlayArrow } from 'react-icons/md';
 
 import { MenuItem, Select } from '@material-ui/core';
-import renderSelectField from '../../share/renderedFields/select';
+import SelectField from '../../share/renderedFields/select';
 
 import {
     showAllPublicSemestersService,
@@ -60,14 +60,14 @@ const GroupSchedulePageTop = (props) => {
                 <Field
                     id="semester"
                     name="semester"
-                    component={renderSelectField}
+                    component={SelectField}
                     label={t('formElements:semester_label')}
                     type="text"
                     validate={[required]}
                     onChange={(e) => setSemesterId(e.target.value)}
                 >
                     {semesters.map((semester) => (
-                        <option key={semester.id} value={semester.id}>
+                        <option key={semester.id} value={semester.id} className="option-item">
                             {semester.description}
                         </option>
                     ))}
@@ -81,16 +81,16 @@ const GroupSchedulePageTop = (props) => {
             <Field
                 id="teacher"
                 name="teacher"
-                component={renderSelectField}
+                component={SelectField}
                 label={t('formElements:teacher_label')}
                 type="text"
                 onChange={() => {
                     props.change('group', 0);
                 }}
             >
-                <option />
+                <option className="option-item" />
                 {teachers.map((teacher) => (
-                    <option key={teacher.id} value={teacher.id}>
+                    <option key={teacher.id} value={teacher.id} className="option-item">
                         {getTeacherFullName(teacher)}
                     </option>
                 ))}
@@ -103,16 +103,16 @@ const GroupSchedulePageTop = (props) => {
                 disabled={groupDisabled}
                 id="group"
                 name="group"
-                component={renderSelectField}
+                component={SelectField}
                 label={t('formElements:group_label')}
                 type="text"
                 onChange={() => {
                     props.change('teacher', 0);
                 }}
             >
-                <option />
+                <option className="option-item" />
                 {groups.map((group) => (
-                    <option key={group.id} value={group.id}>
+                    <option key={group.id} value={group.id} className="option-item">
                         {group.title}
                     </option>
                 ))}

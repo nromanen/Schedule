@@ -11,7 +11,7 @@ import Typography from '@material-ui/core/Typography';
 import Card from '../../share/Card/Card';
 
 import renderTextField from '../../share/renderedFields/input';
-import renderSelectField from '../../share/renderedFields/select';
+import SelectField from '../../share/renderedFields/select';
 import renderCheckboxField from '../../share/renderedFields/checkbox';
 
 import { LESSON_FORM } from '../../constants/reduxForms';
@@ -96,7 +96,7 @@ let LessonForm = (props) => {
                         id="teacher"
                         name="teacher"
                         className="form-field"
-                        component={renderSelectField}
+                        component={SelectField}
                         label={t('teacher_label')}
                         {...(!isUniqueError ? { validate: [required] } : { error: isUniqueError })}
                         onChange={() => setUniqueErrorService(false)}
@@ -112,7 +112,7 @@ let LessonForm = (props) => {
                         id="subject"
                         name="subject"
                         className="form-field"
-                        component={renderSelectField}
+                        component={SelectField}
                         label={t('subject_label')}
                         {...(!isUniqueError ? { validate: [required] } : { error: isUniqueError })}
                         onChange={(event) => {
@@ -136,7 +136,7 @@ let LessonForm = (props) => {
                             id="type"
                             name="type"
                             className="form-field"
-                            component={renderSelectField}
+                            component={SelectField}
                             label={t('type_label')}
                             {...(!isUniqueError
                                 ? { validate: [required] }
