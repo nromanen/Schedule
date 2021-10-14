@@ -25,19 +25,17 @@ import {
     setDisabledSubjectsService,
     getDisabledSubjectsService,
 } from '../../services/subjectService';
-import { disabledCard } from '../../constants/disabledCard';
 import NavigationPage from '../../components/Navigation/NavigationPage';
 import { navigation, navigationNames } from '../../constants/navigation';
 
 const SubjectPage = (props) => {
     const { t } = useTranslation('formElements');
-    const { isSnackbarOpen, snackbarType, snackbarMessage } = props;
+    const { isSnackbarOpen, snackbarType, snackbarMessage, disabledSubjects, subjects } = props;
 
-    const [open, setOpen] = useState(false);
+    const [openSubDialog, setOpenSubDialog] = useState(false);
     const [subDialogType, setSubDialogType] = useState('');
     const [subjectId, setSubjectId] = useState(-1);
     const [term, setTerm] = useState('');
-    const [hideDialog, setHideDialog] = useState(null);
 
     const [disabled, setDisabled] = useState(false);
 
@@ -46,44 +44,40 @@ const SubjectPage = (props) => {
         getDisabledSubjectsService();
     }, []);
 
-    const submit = (values) => handleSubjectService(values);
-    const handleEdit = (subId) => selectSubjectService(subId);
     const handleFormReset = () => clearSubjectService();
     const visibleSubjects = disabled
-        ? search(props.disabledSubjects, term, ['name'])
-        : search(props.subjects, term, ['name']);
+        ? search(disabledSubjects, term, ['name'])
+        : search(subjects, term, ['name']);
     const SearchChange = setTerm;
 
-    const handleClickOpen = (subjId) => {
+    const showConfirmDialog = (subjId, dialogType) => {
         setSubjectId(subjId);
-        setOpen(true);
+        setSubDialogType(dialogType);
+        setOpenSubDialog(true);
     };
 
-    const handleClose = (id) => {
-        setOpen(false);
-        if (!subjectId) return;
+    const acceptConfirmDialog = (id) => {
+        setOpenSubDialog(false);
+        if (!id) return;
         switch (subDialogType) {
             case dialogTypes.DELETE_CONFIRM:
                 removeSubjectCardService(subjectId);
                 break;
             case dialogTypes.SET_VISIBILITY_DISABLED:
                 {
-                    const group = props.subjects.find((subject) => subject.id === subjectId);
+                    const group = subjects.find((subject) => subject.id === subjectId);
                     setDisabledSubjectsService(group);
                 }
                 break;
             case dialogTypes.SET_VISIBILITY_ENABLED:
                 {
-                    const group = props.disabledSubjects.find(
-                        (subject) => subject.id === subjectId,
-                    );
+                    const group = disabledSubjects.find((subject) => subject.id === subjectId);
                     setEnabledSubjectsService(group);
                 }
                 break;
             default:
                 break;
         }
-        setHideDialog(null);
     };
 
     const showDisabledHandle = () => {
@@ -99,8 +93,8 @@ const SubjectPage = (props) => {
                 type={subDialogType}
                 cardId={subjectId}
                 whatDelete="subject"
-                open={open}
-                onClose={handleClose}
+                open={openSubDialog}
+                onClose={acceptConfirmDialog}
             />
             <div className="cards-container">
                 <aside className="search-list__panel">
@@ -108,7 +102,11 @@ const SubjectPage = (props) => {
                     {disabled ? (
                         ''
                     ) : (
-                        <AddSubject className="form" onSubmit={submit} onReset={handleFormReset} />
+                        <AddSubject
+                            className="form"
+                            onSubmit={handleSubjectService}
+                            onReset={handleFormReset}
+                        />
                     )}
                 </aside>
                 <section className="container-flex-wrap wrapper">
@@ -118,30 +116,32 @@ const SubjectPage = (props) => {
                             <h2 className="subject-card__name">{subject.name}</h2>
                             <div className="cards-btns">
                                 {disabled ? (
-                                    <IoMdEye
+                                    <GiSightDisabled
                                         className="svg-btn copy-btn"
                                         title={t('common:set_enabled')}
                                         onClick={() => {
-                                            setSubDialogType(dialogTypes.SET_VISIBILITY_ENABLED);
-                                            handleClickOpen(subject.id);
+                                            showConfirmDialog(
+                                                subject.id,
+                                                dialogTypes.SET_VISIBILITY_ENABLED,
+                                            );
                                         }}
                                     />
                                 ) : (
                                     <>
-                                        <GiSightDisabled
+                                        <IoMdEye
                                             className="svg-btn copy-btn"
                                             title={t('common:set_disabled')}
                                             onClick={() => {
-                                                setSubDialogType(
+                                                showConfirmDialog(
+                                                    subject.id,
                                                     dialogTypes.SET_VISIBILITY_DISABLED,
                                                 );
-                                                handleClickOpen(subject.id);
                                             }}
                                         />
                                         <FaEdit
                                             className="svg-btn edit-btn"
                                             title={t('edit_title')}
-                                            onClick={() => handleEdit(subject.id)}
+                                            onClick={() => selectSubjectService(subject.id)}
                                         />
                                     </>
                                 )}
@@ -149,15 +149,11 @@ const SubjectPage = (props) => {
                                 <MdDelete
                                     className="svg-btn delete-btn"
                                     title={t('delete_title')}
-                                    onClick={() => {
-                                        setSubDialogType(dialogTypes.DELETE_CONFIRM);
-                                        handleClickOpen(subject.id);
-                                    }}
+                                    onClick={() =>
+                                        showConfirmDialog(subject.id, dialogTypes.DELETE_CONFIRM)
+                                    }
                                 />
                             </div>
-                            {/* <p className="subject-card__description">
-                                {t('subject_label') + ':'}{' '}
-                            </p> */}
                         </Card>
                     ))}
                 </section>
