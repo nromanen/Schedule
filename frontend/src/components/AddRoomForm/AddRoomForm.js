@@ -33,7 +33,7 @@ let AddRoom = (props) => {
     }, [props.oneRoom]);
 
     return (
-        <Card class="form-card room-form">
+        <Card additionClassName="form-card room-form">
             <form className="createGroupForm w-100" onSubmit={handleSubmit}>
                 <h2 className="form-title">
                     {props.oneRoom.id ? t('edit_title') : t('create_title')} {t('room_y_label')}

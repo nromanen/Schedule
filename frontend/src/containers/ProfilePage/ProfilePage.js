@@ -60,7 +60,7 @@ const ProfilePage = (props) => {
     return (
         <>
             <NavigationPage />
-            <Card class="form-card">
+            <Card additionClassName="form-card">
                 <h2 className="form-title">{t('common:my_profile')}</h2>
                 <section>
                     <span>{`${t('email_label')}: `}</span>

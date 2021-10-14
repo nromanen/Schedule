@@ -94,7 +94,7 @@ const RegistrationForm = (props) => {
         form = <CircularProgress />;
     }
     return (
-        <Card class="auth-card">
+        <Card additionClassName="auth-card">
             <h2 className="under-line">{props.translation('registration_page_title')}</h2>
             {form}
         </Card>

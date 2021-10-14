@@ -17,15 +17,25 @@ import { useHistory } from 'react-router-dom/cjs/react-router-dom';
 import Card from '../../Card/Card';
 import renderTextField from '../../renderedFields/input';
 import { required } from '../../../validation/validateFields';
-import { STUDENT_FORM, TEACHER_FORM } from '../../../constants/reduxForms';
+import { STUDENT_FORM } from '../../../constants/reduxForms';
 import SelectField from '../../renderedFields/select';
 import { goToGroupPage } from '../../../helper/pageRedirection';
 
 let AddStudentDialog = (props) => {
     const { t } = useTranslation('formElements');
-    const { handleSubmit, pristine, submitting, reset, open, groups, student, match } = props;
+    const { handleSubmit, pristine, submitting, reset, open, groups, student } = props;
     const studentId = student.id;
     const history = useHistory();
+    const initializeFormHandler = (currentStudent) => {
+        props.initialize({
+            id: currentStudent.id,
+            surname: currentStudent.surname,
+            name: currentStudent.name,
+            patronymic: currentStudent.patronymic,
+            email: currentStudent.email,
+            group: currentStudent.group.id,
+        });
+    };
     useEffect(() => {
         if (studentId) {
             initializeFormHandler(student);
@@ -34,16 +44,6 @@ let AddStudentDialog = (props) => {
         }
     }, [studentId]);
 
-    const initializeFormHandler = (student) => {
-        props.initialize({
-            id: student.id,
-            surname: student.surname,
-            name: student.name,
-            patronymic: student.patronymic,
-            email: student.email,
-            group: student.group.id,
-        });
-    };
     return (
         <Dialog disableBackdropClick aria-labelledby="confirm-dialog-title" open={open}>
             <FaWindowClose
@@ -51,13 +51,12 @@ let AddStudentDialog = (props) => {
                 className="close-dialog"
                 variant="contained"
                 onClick={() => {
-                    // reset();
                     props.onSetSelectedCard(null);
                     goToGroupPage(history);
                 }}
             />
             <DialogTitle id="confirm-dialog-title">
-                <Card class="form-card teacher-form">
+                <Card additionClassName="form-card teacher-form">
                     <form className="createTeacherForm w-100" onSubmit={handleSubmit}>
                         <h2 className="form-title">
                             {studentId ? t('edit_title') : t('create_title')} {t('student_a_label')}
@@ -140,7 +139,6 @@ let AddStudentDialog = (props) => {
                                 onClick={() => {
                                     reset();
                                     goToGroupPage(history);
-                                    // props.onSetSelectedCard(null);
                                 }}
                             >
                                 {studentId ? t('cancel_button_label') : t('clear_button_label')}
@@ -154,7 +152,6 @@ let AddStudentDialog = (props) => {
 };
 
 AddStudentDialog.propTypes = {
-    onClose: PropTypes.func.isRequired,
     open: PropTypes.bool.isRequired,
 };
 const mapStateToProps = (state) => ({

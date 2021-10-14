@@ -64,7 +64,7 @@ const TemporaryScheduleForm = (props) => {
     const handleNotifyChange = (event) => setNotify(event.target.checked);
 
     return (
-        <Card class="form-card">
+        <Card additionClassName="form-card">
             <>
                 <h2 className="form-title under-line">
                     {!temporarySchedule.scheduleId

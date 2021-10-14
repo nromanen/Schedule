@@ -102,7 +102,7 @@ const SubjectPage = (props) => {
                 <section className="container-flex-wrap wrapper">
                     {visibleSubjects.length === 0 && <NotFound name={t('subject_y_label')} />}
                     {visibleSubjects.map((subject) => (
-                        <Card key={subject.id} class="subject-card done-card">
+                        <Card key={subject.id} additionClassName="subject-card done-card">
                             <h2 className="subject-card__name">{subject.name}</h2>
                             <div className="cards-btns">
                                 {disabled ? (

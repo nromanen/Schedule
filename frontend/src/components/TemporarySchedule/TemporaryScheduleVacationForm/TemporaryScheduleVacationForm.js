@@ -90,7 +90,7 @@ const TemporaryScheduleVacationForm = (props) => {
     }, [forAll]);
 
     return (
-        <Card class="form-card">
+        <Card additionClassName="form-card">
             <h2 className="form-title under-line">
                 {vacationId ? t('edit_vacation_form') : t('create_vacation_form')}
             </h2>

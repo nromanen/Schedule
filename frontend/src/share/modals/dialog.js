@@ -17,6 +17,10 @@ export const ConfirmDialog = (props) => {
     const handleClose = () => {
         onClose(cardId);
     };
+    const ifHideTitle =
+        isHide === disabledCard.HIDE
+            ? i18n.t('common:do_you_wanna_disable')
+            : i18n.t('common:do_you_wanna_show');
 
     return (
         <Dialog
@@ -26,26 +30,18 @@ export const ConfirmDialog = (props) => {
             open={open}
         >
             <DialogTitle id="confirm-dialog-title">
-                <>
-                    {isHide ? (
-                        <>
-                            {isHide === disabledCard.HIDE ? (
-                                <>{i18n.t('common:do_you_wanna_disable')}</>
-                            ) : (
-                                <>{i18n.t('common:do_you_wanna_show')}</>
-                            )}
-                        </>
-                    ) : (
-                        <>
-                            {i18n.t('common:do_you_wanna')}{' '}
-                            <span className="delete-word">{i18n.t('common:delete_word')}</span>{' '}
-                        </>
-                    )}
+                {isHide ? (
+                    ifHideTitle
+                ) : (
+                    <>
+                        {i18n.t('common:do_you_wanna')}{' '}
+                        <span className="delete-word">{i18n.t('common:delete_word')}</span>{' '}
+                    </>
+                )}
 
-                    {i18n.t('common:this_card_type', {
-                        cardType: i18n.t(`formElements:${whatDelete}_element`),
-                    })}
-                </>
+                {i18n.t('common:this_card_type', {
+                    cardType: i18n.t(`formElements:${whatDelete}_element`),
+                })}
             </DialogTitle>
             <div className="buttons-container">
                 <Button

@@ -106,7 +106,7 @@ const ScheduleAndTemporaryScheduleList = (props) => {
                                             />
                                         </Card>
                                     ) : (
-                                        <Card class="done-card hidden-card">Hidden</Card>
+                                        <Card additionClassName="done-card hidden-card">Hidden</Card>
                                     )}
                                 </section>
                             ))}

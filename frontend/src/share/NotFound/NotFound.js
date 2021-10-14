@@ -9,9 +9,7 @@ const NotFound = ({ name }) => {
 
     return (
         <div className="not-found__wrapper">
-            <div>
-                <FaSadCry className="not-found__icon" />
-            </div>
+            <FaSadCry className="not-found__icon" />
             <p className="not-found__text">
                 {t('there_is_no')} {name}
             </p>

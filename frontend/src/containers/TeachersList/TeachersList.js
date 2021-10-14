@@ -256,7 +256,7 @@ const TeacherList = (props) => {
                     {visibleItems.length === 0 && <NotFound name={t(TEACHER_LABEL)} />}
                     {teacherLength > 0 ? (
                         visibleItems.map((teacher, index) => (
-                            <Card key={index} {...teacher} class="teacher-card done-card">
+                            <Card key={index} {...teacher} additionClassName="teacher-card done-card">
                                 <div className="cards-btns">
                                     {!disabled ? (
                                         <>

@@ -208,7 +208,7 @@ const LessonPage = (props) => {
 
     return (
         <>
-            <Card class="card-title lesson-card">
+            <Card additionClassName="card-title lesson-card">
                 <CopyLessonDialog
                     open={openCopyLessonDialog}
                     onClose={closeCopyLessonDialogHandle}

@@ -29,7 +29,7 @@ const AddSubject = (props) => {
     }, [props.subject]);
 
     return (
-        <Card class="form-card subject-form">
+        <Card additionClassName="form-card subject-form">
             <h2 style={{ textAlign: 'center' }}>
                 {props.subject.id ? t('edit_title') : t('create_title')}
                 {t('subject_y_label')}

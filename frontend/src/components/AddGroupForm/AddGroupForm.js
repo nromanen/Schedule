@@ -30,7 +30,7 @@ const AddGroup = (props) => {
     }, [group.id]);
 
     return (
-        <Card class="form-card group-form">
+        <Card additionClassName="form-card group-form">
             <h2 className="group-form__title">
                 {group.id ? t('edit_title') : t('create_title')}
                 {t('group_y_label')}

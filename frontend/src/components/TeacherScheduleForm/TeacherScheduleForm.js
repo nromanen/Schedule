@@ -31,7 +31,7 @@ const TeacherScheduleForm = (props) => {
         });
     }, [isSchedule]);
     return (
-        <Card class="form-card teacher-schedule-form">
+        <Card additionClassName="form-card teacher-schedule-form">
             <form onSubmit={handleSubmit}>
                 <div className="form-line-block">
                     <h2 className="form-title">{t('common:select_dates_for_teacher_schedule')}</h2>
