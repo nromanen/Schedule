@@ -42,7 +42,7 @@ const DepartmentPage = (props) => {
     const [term, setTerm] = useState('');
     const [isDisabled, setIsDisabled] = useState(false);
     const [isUpdateForm, setIsUpdateForm] = useState(false);
-    const [departmentCard, setDepartmentCard] = useState({ id: null, disabledStatus: null });
+    const [departmentCard, setDepartmentCard] = useState({ id: -1, disabledStatus: null });
     const [teacherDialog, setTeacherDialog] = useState(false);
     const [isOpenConfirmDialog, setIsOpenConfirmDialog] = useState(false);
 
@@ -111,7 +111,7 @@ const DepartmentPage = (props) => {
                 onClose={acceptConfirmDialog}
             />
             <ShowDataDialog
-                isHide={teacherDialog}
+                isHide={departmentCard.disabledStatus}
                 cardId={departmentCard.id}
                 open={teacherDialog}
                 onClose={closeTeacherDialog}

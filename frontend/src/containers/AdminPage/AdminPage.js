@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import NavigationPage from '../../components/Navigation/NavigationPage';
 import LessonPage from '../LessonPage/LessonPage';
 import { navigation } from '../../constants/navigation';
+import SemesterPage from '../SemesterPage/SemesterPage';
 
 function AdminPage() {
     return (

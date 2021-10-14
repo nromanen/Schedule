@@ -9,10 +9,10 @@ export const search = (items, term, arr) => {
     });
 };
 
-const isIncludeValue = (item, value) => {
-    return item.toLowerCase().includes(value.toLowerCase());
-};
 export const searchLessonsByTeacher = (lessons, term) => {
+    const isIncludeValue = (item, value) => {
+        return item.toLowerCase().includes(value.toLowerCase());
+    };
     const termTmp = term.trim();
     if (termTmp.length === 0) return lessons;
     return lessons.filter((lesson) => {

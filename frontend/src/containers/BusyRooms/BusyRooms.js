@@ -9,11 +9,12 @@ import { setLoadingService } from '../../services/loadingService';
 import { getScheduleItemsService } from '../../services/scheduleService';
 import { getClassScheduleListService } from '../../services/classService';
 import NavigationPage from '../../components/Navigation/NavigationPage';
+import WeekRoomInfo from '../../components/WeekRoomInfo/WeekRoomInfo';
 
 const BusyRooms = (props) => {
     const { t } = useTranslation('common');
     const busyRooms = props.busyRooms[0];
-    const isLoading = props.loading;
+    const { currentSemester, isLoading } = props;
 
     useEffect(() => {
         getScheduleItemsService();
@@ -33,70 +34,6 @@ const BusyRooms = (props) => {
         </h3>
     );
 
-    const renderWeekRoomInfo = (schedule, index, type = 'odd') => {
-        const conflictLesson = 'more-then-one-conflict';
-        const grouppedLesson = 'more-then-one';
-        return props.currentSemester.semester_classes.map((scheduleClass) => {
-            let inArrayIndex = -1;
-            inArrayIndex =
-                type === 'odd'
-                    ? schedule.classes[0].odd.findIndex(
-                          (classItem) => classItem.class_id === scheduleClass.id,
-                      )
-                    : schedule.classes[0].even.findIndex(
-                          (classItem) => classItem.class_id === scheduleClass.id,
-                      );
-            const classOne =
-                type === 'odd'
-                    ? schedule.classes[0].odd.find(
-                          (classItem) => classItem.class_id === scheduleClass.id,
-                      )
-                    : schedule.classes[0].even.find(
-                          (classItem) => classItem.class_id === scheduleClass.id,
-                      );
-            if (inArrayIndex < 0 || !classOne || classOne.lessons.length <= 0) {
-                return (
-                    <div className="class-info" key={index + scheduleClass.class_name}>
-                        <div className="class-info-data class-number">
-                            {scheduleClass.class_name}
-                        </div>
-                        <div className="class-info-data">
-                            <div className="green-free"></div>
-                        </div>
-                    </div>
-                );
-            }
-            let intersectClass = '';
-            if (classOne && classOne.lessons && classOne.lessons.length > 1) {
-                intersectClass = conflictLesson;
-            }
-            let grouppedLessonClass = '';
-            classOne.lessons.forEach((lessonOne) => {
-                grouppedLessonClass = lessonOne.groups.length > 1 ? grouppedLesson : '';
-            });
-            return (
-                <div className="class-info" key={index + classOne.class_name + classOne.group_name}>
-                    <div className="class-info-data class-number">{classOne.class_name}</div>
-                    <div
-                        className={`class-info-data group-height ${grouppedLessonClass}${intersectClass}`}
-                    >
-                        {classOne.lessons.map((lessonOne) => {
-                            return lessonOne.groups.map((groupItem) => {
-                                const hoverInfo =
-                                    lessonOne.teacher_for_site + lessonOne.subject_for_site;
-                                return (
-                                    <p title={hoverInfo} key={hoverInfo + lessonOne.name}>
-                                        {groupItem.group_name}
-                                    </p>
-                                );
-                            });
-                        })}
-                    </div>
-                </div>
-            );
-        });
-    };
-
     const renderRoomDay = (schedule, index) => (
         <section className="room-day" key={index + schedule.day}>
             <h3 className="room-heading">{t(`day_of_week_${schedule.day}`)}</h3>
@@ -104,11 +41,19 @@ const BusyRooms = (props) => {
                 <Fragment key={index}>
                     <div className="even-odd-week">
                         <span className="even-odd-heading">{t('week_odd_title')}</span>
-                        {renderWeekRoomInfo(schedule, index, 'odd')}
+                        <WeekRoomInfo
+                            currentSemester={currentSemester}
+                            schedule={schedule}
+                            type="odd"
+                        />
                     </div>
                     <div className="even-odd-week">
                         <span className="even-odd-heading">{t('week_even_title')}</span>
-                        {renderWeekRoomInfo(schedule, index, 'even')}
+                        <WeekRoomInfo
+                            currentSemester={currentSemester}
+                            schedule={schedule}
+                            type="even"
+                        />
                     </div>
                 </Fragment>
             </section>
