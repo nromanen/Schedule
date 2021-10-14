@@ -43,10 +43,9 @@ export const ShowStudentsDialog = (props) => {
     }, [props.students]);
 
     const setGroupsOption = () => {
-        if (!isNil(groups)) {
-            return groups.map((item) => ({ value: item.id, label: `${item.title}`, ...item }));
-        }
-        return [];
+        return !isEmpty(groups)
+            ? groups.map((item) => ({ value: item.id, label: `${item.title}`, ...item }))
+            : [];
     };
 
     const groupsOption = setGroupsOption();
@@ -112,14 +111,7 @@ export const ShowStudentsDialog = (props) => {
     };
 
     const setSelectDisabled = () => {
-        let resChecked = true;
-        for (let i = 0; i < checkBoxStudents.length; i += 1) {
-            if (checkBoxStudents[i].checked) {
-                resChecked = false;
-                break;
-            }
-        }
-        return resChecked;
+        return checkBoxStudents.every((item) => item.checked);
     };
 
     const changeStudentItem = (newGroup, student) => {
