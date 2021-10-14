@@ -34,8 +34,8 @@ import {
 } from '../../services/semesterService';
 import { setScheduleTypeService } from '../../services/scheduleService';
 import { disabledCard } from '../../constants/disabledCard';
-// import NavigationPage from '../../components/Navigation/NavigationPage';
-// import { navigation, navigationNames } from '../../constants/navigation';
+import NavigationPage from '../../components/Navigation/NavigationPage';
+import { navigation, navigationNames } from '../../constants/navigation';
 import { SetChangeDialog } from '../../share/modals/modal/setDefaultDialog';
 import { MultiselectForGroups } from '../../helper/MultiselectForGroups';
 import { showAllGroupsService } from '../../services/groupService';
@@ -207,6 +207,7 @@ const SemesterPage = (props) => {
     // setScheduleTypeService('archived');
     return (
         <>
+            <NavigationPage name={navigationNames.SEMESTER_PAGE} val={navigation.SEMESTERS} />
             <ConfirmDialog
                 cardId={semesterCard.id}
                 whatDelete="semester"
