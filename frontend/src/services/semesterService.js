@@ -257,13 +257,13 @@ export const setDefaultSemesterById = (dataId) => {
 export const setDisabledSemestersService = (semester) => {
     const bufferSemester = semester;
     bufferSemester.disable = true;
-    putSemester(semester);
+    putSemester(bufferSemester);
 };
 
 export const setEnabledSemestersService = (semester) => {
     const bufferSemester = semester;
     bufferSemester.disable = false;
-    putSemester(semester);
+    putSemester(bufferSemester);
 };
 
 export const semesterCopy = (values) => {

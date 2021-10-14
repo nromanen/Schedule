@@ -151,11 +151,11 @@ export const removeTeacherCardService = (id) => {
 export const setDisabledTeachersService = (teacher) => {
     const bufferTeacher = teacher;
     bufferTeacher.disable = true;
-    updateTeacherService({ teacher });
+    updateTeacherService({ bufferTeacher });
 };
 
 export const setEnabledTeachersService = (teacher) => {
     const bufferTeacher = teacher;
     bufferTeacher.disable = false;
-    updateTeacherService({ teacher });
+    updateTeacherService({ bufferTeacher });
 };

@@ -118,11 +118,11 @@ export const removeGroupCardService = (groupId) => {
 export const setDisabledGroupService = (group) => {
     const bufferGroup = group;
     bufferGroup.disable = true;
-    updateGroupService(group);
+    updateGroupService(bufferGroup);
 };
 
 export const setEnabledGroupService = (group) => {
     const bufferGroup = group;
     bufferGroup.disable = false;
-    updateGroupService(group);
+    updateGroupService(bufferGroup);
 };

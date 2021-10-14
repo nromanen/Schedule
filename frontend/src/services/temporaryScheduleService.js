@@ -109,11 +109,11 @@ const handleSuccess = (isVacation, teacherId, formValues) => {
 
 export const addTemporaryScheduleService = (teacherId, formValues, isVacation) => {
     const bufferFormValues = formValues;
-    bufferFormValues.date = formValues.date.replace(/\//g, '-');
-    const obj = formatObj(formValues, teacherId);
+    bufferFormValues.date = bufferFormValues.date.replace(/\//g, '-');
+    const obj = formatObj(bufferFormValues, teacherId);
     axios
         .post(TEMPORARY_SCHEDULE_URL, {
-            ...formValues,
+            ...bufferFormValues,
             ...obj,
         })
         .then(() => {
@@ -127,15 +127,15 @@ export const addTemporaryScheduleService = (teacherId, formValues, isVacation) =
 
 export const addTemporaryScheduleForRangeService = (teacherId, formValues, isVacation) => {
     const bufferFormValues = formValues;
-    bufferFormValues.from = formValues.from.replace(/\//g, '-');
-    bufferFormValues.to = formValues.to.replace(/\//g, '-');
-    const obj = formatObj(formValues, teacherId);
+    bufferFormValues.from = bufferFormValues.from.replace(/\//g, '-');
+    bufferFormValues.to = bufferFormValues.to.replace(/\//g, '-');
+    const obj = formatObj(bufferFormValues, teacherId);
     axios
         .post(TEMPORARY_SCHEDULE_RANGE_URL, {
-            from: formValues.from,
-            to: formValues.to,
+            from: bufferFormValues.from,
+            to: bufferFormValues.to,
             temporary_schedule: {
-                ...formValues,
+                ...bufferFormValues,
                 ...obj,
             },
         })
@@ -150,16 +150,16 @@ export const addTemporaryScheduleForRangeService = (teacherId, formValues, isVac
 
 export const editTemporaryScheduleService = (teacherId, formValues, isVacation) => {
     const bufferFormValues = formValues;
-    bufferFormValues.date = formValues.date.replace(/\//g, '-');
-    const obj = formatObj(formValues, teacherId);
+    bufferFormValues.date = bufferFormValues.date.replace(/\//g, '-');
+    const obj = formatObj(bufferFormValues, teacherId);
     axios
         .put(TEMPORARY_SCHEDULE_URL, {
-            ...formValues,
+            ...bufferFormValues,
             ...obj,
         })
         .then(() => {
-            const tId = teacherId || formValues.teacher;
-            handleSuccess(isVacation, tId, formValues);
+            const tId = teacherId || bufferFormValues.teacher;
+            handleSuccess(isVacation, tId, bufferFormValues);
             successHandler(handleSuccessMessage(actionType.UPDATED));
         })
         .catch((err) => {
