@@ -31,6 +31,7 @@ export const makeGroupSchedule = (groupSchedule) => {
         { day: 'SATURDAY', class: [] },
         { day: 'SUNDAY', class: [] },
     ];
+    // TODO forEach (where errors)=>reduce
 
     if (groupSchedule.schedule && groupSchedule.schedule.length > 0) {
         const { group: groupData } = groupSchedule.schedule[0];
@@ -45,7 +46,6 @@ export const makeGroupSchedule = (groupSchedule) => {
                         };
                     }
                 });
-
                 oddDaysPrepArray.forEach((oddDayPrep) => {
                     if (oddDayPrep.day === day.day) {
                         oddDayPrep.class[classItem.class.id] = {

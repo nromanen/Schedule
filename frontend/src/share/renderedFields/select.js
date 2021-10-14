@@ -17,7 +17,6 @@ const SelectField = (props) => {
         ...custom
     } = props;
     const [isOpen, setIsOpen] = useState(false);
-
     return (
         <FormControl error={touched && !!error} onClick={() => setIsOpen((state) => !state)}>
             <InputLabel htmlFor={id}>{label}</InputLabel>
