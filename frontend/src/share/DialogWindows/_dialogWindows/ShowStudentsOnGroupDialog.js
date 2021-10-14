@@ -24,11 +24,9 @@ const ShowStudentsOnGroupDialog = (props) => {
     const { t } = useTranslation('formElements');
 
     const setSelectDisabled = () => {
-        checkBoxStudents.forEach((item) => {
-            if (item.checked) {
-                setIsGroupButtonDisabled(false);
-            }
-        });
+        if (checkBoxStudents.some((item) => item.checked)) {
+            setIsGroupButtonDisabled(false);
+        }
     };
     const parseStudentToCheckBox = () => {
         const res = students.map((item) => {

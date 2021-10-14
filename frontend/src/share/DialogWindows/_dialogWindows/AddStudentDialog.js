@@ -58,9 +58,7 @@ const AddStudentDialog = (props) => {
                     className="buttons-style"
                     variant="contained"
                     disabled={pristine || submitting}
-                    onClick={() => {
-                        handleClose();
-                    }}
+                    onClick={handleClose}
                 >
                     {t('cancel_button_label')}
                 </Button>
@@ -142,9 +140,7 @@ const AddStudentDialog = (props) => {
                             className="buttons-style"
                             variant="contained"
                             disabled={pristine || submitting}
-                            onClick={() => {
-                                reset();
-                            }}
+                            onClick={reset}
                         >
                             {studentId ? t('cancel_button_label') : t('clear_button_label')}
                         </Button>

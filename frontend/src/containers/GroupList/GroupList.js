@@ -167,17 +167,6 @@ const GroupList = (props) => {
             default:
                 break;
         }
-        // if (hideDialog) {
-        //     if (disabled) {
-        //         const group = props.disabledGroups.find((group) => group.id === groupId);
-        //         setEnabledGroupService(group);
-        //     } else {
-        //         const group = groups.find((group) => Number(group.id) === Number(groupId));
-        //         setDisabledGroupService(group);
-        //     }
-        // } else {
-        //     removeGroupCardService(groupId);
-        // }
         setHideDialog(null);
         goToGroupPage(history);
     };

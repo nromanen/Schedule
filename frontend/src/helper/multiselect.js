@@ -9,7 +9,7 @@ export const MultiSelect = (props) => {
     const { t } = useTranslation('common');
     const valueRef = useRef(props.value);
     valueRef.current = props.value;
-    const { open, defaultSemester, semesters } = props;
+    const { open, defaultSemester, semesters, onCancel, onSentTeachers, isEnabledSentBtn } = props;
 
     const selectAllOption = {
         value: '<SELECT_ALL>',
@@ -54,14 +54,14 @@ export const MultiSelect = (props) => {
             aria-labelledby="confirm-dialog-title"
             title={t('schedule_for_semester')}
             open={open}
-            onClose={props.onCancel}
+            onClose={onCancel}
             buttons={
                 <div className="buttons-container">
                     <Button
                         className="dialog-button"
                         variant="contained"
                         color="primary"
-                        onClick={props.onCancel}
+                        onClick={onCancel}
                     >
                         {t('cancel_schedule')}
                     </Button>
@@ -69,8 +69,8 @@ export const MultiSelect = (props) => {
                         className="dialog-button"
                         variant="contained"
                         color="primary"
-                        onClick={props.onSentTeachers}
-                        disabled={!props.isEnabledSentBtn}
+                        onClick={onSentTeachers}
+                        disabled={!isEnabledSentBtn}
                     >
                         {t('sent_schedule')}
                     </Button>

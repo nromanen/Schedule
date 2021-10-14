@@ -44,10 +44,6 @@ const CopyLessonDialog = (props) => {
         options: groups,
         getOptionLabel: (option) => (option ? option.title : ''),
     };
-    const handleCancel = () => {
-        onClose();
-    };
-
     return (
         <CustomDialog
             title={translation('choose_group')}
@@ -63,7 +59,7 @@ const CopyLessonDialog = (props) => {
                     >
                         {translation('formElements:choose_button_title')}
                     </Button>
-                    <Button className="dialog-button" variant="contained" onClick={handleCancel}>
+                    <Button className="dialog-button" variant="contained" onClick={onClose}>
                         {translation('formElements:cancel_button_title')}
                     </Button>
                 </>
