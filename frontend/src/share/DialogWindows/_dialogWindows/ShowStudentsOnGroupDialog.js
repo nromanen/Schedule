@@ -24,9 +24,7 @@ const ShowStudentsOnGroupDialog = (props) => {
     const { t } = useTranslation('formElements');
 
     const setSelectDisabled = () => {
-        if (checkBoxStudents.some((item) => item.checked)) {
-            setIsGroupButtonDisabled(false);
-        }
+        setIsGroupButtonDisabled(checkBoxStudents.every((item) => item.checked));
     };
     const parseStudentToCheckBox = () => {
         const res = students.map((item) => {
@@ -50,11 +48,12 @@ const ShowStudentsOnGroupDialog = (props) => {
 
     const handleCheckElement = (event) => {
         setCheckBoxStudents(
-            checkBoxStudents.map((item, index) => {
+            checkBoxStudents.map((item) => {
+                const checkbox = item;
                 if (item.id === Number(event.target.value)) {
-                    checkBoxStudents[index].checked = event.target.checked;
+                    checkbox.checked = event.target.checked;
                 }
-                return item;
+                return checkbox;
             }),
         );
     };
@@ -79,11 +78,12 @@ const ShowStudentsOnGroupDialog = (props) => {
     };
     const handleAllClear = () => {
         setCheckBoxStudents(
-            checkBoxStudents.map((item, index) => {
+            checkBoxStudents.map((item) => {
+                const checkbox = item;
                 if (item.checked) {
-                    checkBoxStudents[index].checked = false;
+                    checkbox.checked = false;
                 }
-                return item;
+                return checkbox;
             }),
         );
     };
