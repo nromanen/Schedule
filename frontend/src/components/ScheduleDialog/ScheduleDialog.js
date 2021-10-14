@@ -70,7 +70,7 @@ const ScheduleDialog = (props) => {
         <CustomDialog
             title={translation('common:schedule_dialog_title')}
             open={open}
-            onClose={() => onClose()}
+            onClose={onClose}
         >
             {sure ? (
                 <>
