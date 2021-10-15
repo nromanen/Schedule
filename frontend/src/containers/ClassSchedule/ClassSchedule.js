@@ -44,10 +44,6 @@ const ClassSchedule = (props) => {
         getClassScheduleOneService(id);
     };
 
-    const handleFormReset = () => {
-        clearClassScheduleOneService();
-    };
-
     const handleClickOpen = (id) => {
         setClassId(id);
         setOpen(true);
@@ -70,7 +66,7 @@ const ClassSchedule = (props) => {
                     open={open}
                     onClose={handleClose}
                 />
-                <ClassForm onSubmit={submit} onReset={handleFormReset} />
+                <ClassForm onSubmit={submit} onReset={clearClassScheduleOneService} />
                 <section className="container-flex-wrap">
                     {props.classScheduler.map((schedule) => (
                         <Card class="class-card-width" key={schedule.id}>

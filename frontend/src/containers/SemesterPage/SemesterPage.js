@@ -156,9 +156,7 @@ const SemesterPage = (props) => {
     const showArchivedHandler = () => {
         setArchived(!archived);
         setDisabled(false);
-        return !archived === true
-            ? setScheduleTypeService('archived')
-            : setScheduleTypeService('default');
+        return !archived ? setScheduleTypeService('archived') : setScheduleTypeService('default');
     };
     const submitSemesterCopy = (values) => {
         semesterCopy({
@@ -190,13 +188,7 @@ const SemesterPage = (props) => {
     const setClassNameForDefaultSemester = (currentSemester) => {
         const defaultSemesterName = 'default';
         const className = 'svg-btn edit-btn';
-        return currentSemester.defaultSemester === true
-            ? `${className} ${defaultSemesterName}`
-            : className;
-    };
-
-    const handleSnackbarClose = () => {
-        handleSnackbarCloseService();
+        return currentSemester.defaultSemester ? `${className} ${defaultSemesterName}` : className;
     };
 
     return (
@@ -389,7 +381,7 @@ const SemesterPage = (props) => {
                 message={snackbarMessage}
                 type={snackbarType}
                 isOpen={isSnackbarOpen}
-                handleSnackbarClose={handleSnackbarClose}
+                handleSnackbarClose={handleSnackbarCloseService}
             />
             <MultiselectForGroups
                 open={openGroupsDialog}

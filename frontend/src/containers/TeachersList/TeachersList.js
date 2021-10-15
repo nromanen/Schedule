@@ -15,7 +15,6 @@ import { cardType } from '../../constants/cardType';
 import { search } from '../../helper/search';
 import SearchPanel from '../../share/SearchPanel/SearchPanel';
 import NotFound from '../../share/NotFound/NotFound';
-import { disabledCard } from '../../constants/disabledCard';
 import { MultiSelect } from '../../helper/multiselect';
 import NavigationPage from '../../components/Navigation/NavigationPage';
 import { navigation, navigationNames } from '../../constants/navigation';

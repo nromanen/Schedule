@@ -109,7 +109,7 @@ const LessonPage = (props) => {
 
     const defaultProps = {
         options: groups,
-        getOptionLabel: (option) => option && option.title,
+        getOptionLabel: (option) => (option ? option.title : ''),
     };
 
     const handleGroupSelect = (group) => {

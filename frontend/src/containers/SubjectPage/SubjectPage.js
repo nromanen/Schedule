@@ -83,9 +83,6 @@ const SubjectPage = (props) => {
     const showDisabledHandle = () => {
         setDisabled((prev) => !prev);
     };
-    const handleSnackbarClose = () => {
-        handleSnackbarCloseService();
-    };
     return (
         <>
             <NavigationPage name={navigationNames.SUBJECT_PAGE} val={navigation.SUBJECTS} />
@@ -162,7 +159,7 @@ const SubjectPage = (props) => {
                 message={snackbarMessage}
                 type={snackbarType}
                 isOpen={isSnackbarOpen}
-                handleSnackbarClose={handleSnackbarClose}
+                handleSnackbarClose={handleSnackbarCloseService}
             />
         </>
     );

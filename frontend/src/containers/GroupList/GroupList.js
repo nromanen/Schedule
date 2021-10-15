@@ -129,9 +129,6 @@ const GroupList = (props) => {
     const changeDisable = () => {
         setIsDisabled((prev) => !prev);
     };
-    const handleSnackbarClose = () => {
-        handleSnackbarCloseService();
-    };
 
     return (
         <>
@@ -191,7 +188,7 @@ const GroupList = (props) => {
                 message={snackbarMessage}
                 type={snackbarType}
                 isOpen={isSnackbarOpen}
-                handleSnackbarClose={handleSnackbarClose}
+                handleSnackbarClose={handleSnackbarCloseService}
             />
         </>
     );

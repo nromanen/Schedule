@@ -26,10 +26,6 @@ const FreeRooms = (props) => {
         setOpen(false);
     };
 
-    const handleFormReset = () => {
-        clearFreeRoomsService();
-    };
-
     const submit = (values) => {
         showFreeRoomsService(values);
     };
@@ -54,7 +50,7 @@ const FreeRooms = (props) => {
                                 <h2 id="form-dialog-title">{t('find_free_room')}</h2>
                                 <FreeRoomForm
                                     classScheduler={classScheduler}
-                                    onReset={handleFormReset}
+                                    onReset={clearFreeRoomsService}
                                     onSubmit={submit}
                                 />
                             </div>

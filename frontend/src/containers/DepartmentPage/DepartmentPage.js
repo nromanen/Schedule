@@ -55,7 +55,7 @@ const DepartmentPage = (props) => {
     useEffect(() => {
         getDisabledDepartmentsService();
         getAllDepartmentsService();
-        clearDepartmentForm();
+        clearDepartment();
     }, []);
 
     const SearchChange = setTerm;
@@ -92,9 +92,6 @@ const DepartmentPage = (props) => {
         if (subDialogType !== dialogTypes.DELETE_CONFIRM) {
             changeDepartmentDisabledStatus(currentId);
         } else deleteDepartmentsService(currentId);
-    };
-    const handleSnackbarClose = () => {
-        handleSnackbarCloseService();
     };
     const changeDisable = () => {
         setIsDisabled((prev) => !prev);
@@ -199,7 +196,7 @@ const DepartmentPage = (props) => {
                 message={snackbarMessage}
                 type={snackbarType}
                 isOpen={isSnackbarOpen}
-                handleSnackbarClose={handleSnackbarClose}
+                handleSnackbarClose={handleSnackbarCloseService}
             />
         </>
     );
