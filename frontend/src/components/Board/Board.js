@@ -7,8 +7,19 @@ import { setLoadingService } from '../../services/loadingService';
 import './Board.scss';
 
 const Board = (props) => {
-    const { itemGroupId } = props;
-    const { day, classDay, classes, group } = props;
+    const {
+        day,
+        classDay,
+        classes,
+        group,
+        itemGroupId,
+        children,
+        id,
+        className,
+        currentSemester,
+        setModalData,
+        openDialog,
+    } = props;
     const dayClassWeekString = 'day-class-week';
     const drop = (e) => {
         e.preventDefault();
@@ -30,7 +41,7 @@ const Board = (props) => {
             dayOfWeek: dayString.toUpperCase(),
             periodId: +classId,
             evenOdd: week.toUpperCase(),
-            semesterId: props.currentSemester.id,
+            semesterId: currentSemester.id,
         };
 
         checkAvailabilityScheduleService(obj);
@@ -38,22 +49,22 @@ const Board = (props) => {
         setLoadingService(true);
         if (itemId) obj = { ...obj, id: itemId };
 
-        props.setModalData({ item: obj, groupId: item.lesson.group.id });
-        props.openDialog();
+        setModalData({ item: obj, groupId: item.lesson.group.id });
+        openDialog();
     };
 
     const dragOver = (e) => {
         const { target } = e;
-        const children = target.childNodes;
+        const childrenNodes = target.childNodes;
         const arr = target.id.split('-');
         const borderGroupId = +arr[1];
 
         if (borderGroupId !== itemGroupId && target.classList.contains(cssClasses.SCHEDULE_BOARD)) {
             target.style.backgroundColor = colors.DANGER;
-        } else if (target.classList.contains(cssClasses.SCHEDULE_BOARD) && children[1]) {
-            children[1].style.backgroundColor = colors.DANGER;
+        } else if (target.classList.contains(cssClasses.SCHEDULE_BOARD) && childrenNodes[1]) {
+            childrenNodes[1].style.backgroundColor = colors.DANGER;
             target.style.backgroundColor = colors.DANGER;
-        } else if (!children[1] && target.classList.contains(cssClasses.SCHEDULE_BOARD)) {
+        } else if (!childrenNodes[1] && target.classList.contains(cssClasses.SCHEDULE_BOARD)) {
             target.style.backgroundColor = colors.ALLOW;
             e.preventDefault();
         }
@@ -61,7 +72,7 @@ const Board = (props) => {
 
     const dragLeave = (e) => {
         const { target } = e;
-        const children = target.childNodes;
+        const childrenNodes = target.childNodes;
         const parent = target.parentNode;
 
         const arr = target.id.split('-');
@@ -69,9 +80,9 @@ const Board = (props) => {
 
         if (borderGroupId === itemGroupId && !target.childNodes[1]) {
             target.style.backgroundColor = colors.POSSIBILITY;
-        } else if (target.classList.contains(cssClasses.SCHEDULE_BOARD) && children[1]) {
+        } else if (target.classList.contains(cssClasses.SCHEDULE_BOARD) && childrenNodes[1]) {
             target.style.backgroundColor = colors.NOTHING;
-            children[1].style.backgroundColor = colors.NOTHING;
+            childrenNodes[1].style.backgroundColor = colors.NOTHING;
         } else if (parent && parent.classList.contains(cssClasses.SCHEDULE_BOARD)) {
             parent.style.backgroundColor = colors.NOTHING;
             parent.parentNode.style.backgroundColor = colors.NOTHING;
@@ -105,7 +116,7 @@ const Board = (props) => {
         }
     };
     const addEffect = () => {
-        if (props.children[1]) {
+        if (children[1]) {
             addClassDayBoard();
             addClass();
             addDay();
@@ -138,7 +149,7 @@ const Board = (props) => {
         }
     };
     const removeEffect = () => {
-        if (props.children[1]) {
+        if (children[1]) {
             removeClassDayBoard();
             removeClass();
             removeDay();
@@ -147,16 +158,16 @@ const Board = (props) => {
     };
     return (
         <div
-            id={props.id}
+            id={id}
             onDrop={drop}
             onDragOver={dragOver}
             onDragLeave={dragLeave}
-            className={props.className}
+            className={className}
             onMouseOver={addEffect}
             onMouseLeave={removeEffect}
             onFocus={addEffect}
         >
-            {props.children}
+            {children}
         </div>
     );
 };

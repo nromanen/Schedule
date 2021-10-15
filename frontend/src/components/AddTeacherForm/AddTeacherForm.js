@@ -18,19 +18,20 @@ import { getClearOrCancelTitle, setDisableButton } from '../../helper/disableCom
 
 let AddTeacher = (props) => {
     const { t } = useTranslation('formElements');
-    const { handleSubmit, pristine, submitting, reset, departments, teacher } = props;
+    const { handleSubmit, pristine, submitting, reset, departments, teacher, initialize } = props;
 
     const teacherId = teacher.id;
 
     const initializeFormHandler = (teacherData) => {
         const department = teacherData.department ? teacherData.department.id : 0;
-        props.initialize({
-            id: teacherData.id,
-            surname: teacherData.surname,
-            name: teacherData.name,
-            patronymic: teacherData.patronymic,
-            position: teacherData.position,
-            email: teacherData.email,
+        const { id, surname, name, patronymic, position, email } = teacherData;
+        initialize({
+            id,
+            surname,
+            name,
+            patronymic,
+            position,
+            email,
             department,
         });
         if (teacherData.department) getDepartmentByIdService(teacherData.department.id);
@@ -40,7 +41,7 @@ let AddTeacher = (props) => {
         if (teacherId) {
             initializeFormHandler(teacher);
         } else {
-            props.initialize();
+            initialize();
         }
     }, [teacherId]);
 

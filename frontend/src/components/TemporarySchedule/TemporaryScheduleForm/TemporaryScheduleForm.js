@@ -23,19 +23,29 @@ import { selectTemporaryScheduleService } from '../../../services/temporarySched
 
 const TemporaryScheduleForm = (props) => {
     const { t } = useTranslation('formElements');
-    const { handleSubmit, invalid, reset, submitting } = props;
+    const {
+        handleSubmit,
+        invalid,
+        reset,
+        submitting,
+        temporarySchedule,
+        teachers,
+        periods,
+        rooms,
+        subjects,
+        lessonTypes,
+        groups,
+        initialize,
+    } = props;
     const [isVacation, setIsVacation] = useState(false);
     const [notify, setNotify] = useState(false);
 
-    const { temporarySchedule } = props;
     const scheduleId = temporarySchedule?.scheduleId;
     const temporaryScheduleId = temporarySchedule?.id;
 
-    const { teachers, periods, rooms, subjects, lessonTypes, groups } = props;
-
     const initializeFormHandler = (temporaryScheduleData) => {
         setIsVacation(temporaryScheduleData.vacation);
-        props.initialize({
+        initialize({
             vacation: isVacation,
             teacher: temporaryScheduleData.teacher.id,
             semester: temporaryScheduleData.semester.id,
@@ -56,7 +66,7 @@ const TemporaryScheduleForm = (props) => {
         if (temporaryScheduleId || scheduleId) {
             initializeFormHandler(temporarySchedule);
         } else {
-            props.initialize({ vacation: isVacation });
+            initialize({ vacation: isVacation });
         }
     }, [temporaryScheduleId]);
 

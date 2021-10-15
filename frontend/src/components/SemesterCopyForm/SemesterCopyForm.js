@@ -14,7 +14,6 @@ import './SemesterCopyForm.scss';
 
 import { SEMESTER_COPY_FORM } from '../../constants/reduxForms';
 import { required } from '../../validation/validateFields';
-import { SEMESTER_LABEL } from '../../constants/services';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -27,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
 const SemesterCopyForm = (props) => {
     const classes = useStyles();
     const { t } = useTranslation('common');
-    const { semesterId, semesters, handleSubmit, pristine, submitting } = props;
+    const { semesterId, semesters, handleSubmit, pristine, submitting, submitButtonLabel } = props;
 
     const renderSemesterList = () => {
         const availableSemestersForCopy = semesters.filter(
@@ -75,7 +74,7 @@ const SemesterCopyForm = (props) => {
                         disabled={pristine || submitting}
                     >
                         <MdPlayArrow title={t('teacher_schedule_label')} className="svg-btn" />
-                        {props.submitButtonLabel}
+                        {submitButtonLabel}
                     </Button>
                 </div>
             </form>

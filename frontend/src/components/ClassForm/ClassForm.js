@@ -27,26 +27,23 @@ import { getClearOrCancelTitle, setDisableButton } from '../../helper/disableCom
 
 const ClassFormFunc = (props) => {
     const { t } = useTranslation('formElements');
-    const { handleSubmit, pristine, onReset, submitting, classScheduleOne } = props;
+    const { handleSubmit, pristine, onReset, submitting, classScheduleOne, initialize, change } =
+        props;
     useEffect(() => {
         let initialValues = {};
         if (classScheduleOne) {
             initialValues = classScheduleOne;
         }
-        props.initialize(initialValues);
+        initialize(initialValues);
     }, [classScheduleOne]);
 
     const setEndTime = (startTime) =>
-        props.change(
-            'endTime',
-            moment(startTime, 'HH:mm').add(CLASS_DURATION, 'h').format('HH:mm'),
-        );
+        change('endTime', moment(startTime, 'HH:mm').add(CLASS_DURATION, 'h').format('HH:mm'));
 
     return (
         <Card additionClassName="form-card">
             <h2 className="form-title">
-                {props.classScheduleOne.id ? t('edit_title') : t('create_title')}{' '}
-                {t('class_y_label')}
+                {classScheduleOne.id ? t('edit_title') : t('create_title')} {t('class_y_label')}
             </h2>
             <form onSubmit={handleSubmit}>
                 <Field

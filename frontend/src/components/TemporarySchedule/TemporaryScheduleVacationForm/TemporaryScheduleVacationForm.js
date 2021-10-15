@@ -25,15 +25,13 @@ import renderCheckboxField from '../../../share/renderedFields/checkbox';
 
 const TemporaryScheduleVacationForm = (props) => {
     const { t } = useTranslation('formElements');
-    const { handleSubmit, invalid, reset, submitting } = props;
+    const { handleSubmit, invalid, reset, submitting, teachers, teacherId, vacation, initialize } =
+        props;
 
     const [isFewDays, setIsFewDays] = useState(false);
     const [forAll, setForAll] = useState(true);
     const [notify, setNotify] = useState(false);
 
-    const { teachers, teacherId } = props;
-
-    const { vacation } = props;
     const vacationId = vacation.id;
 
     const initializeFormHandler = (vacationData) => {
@@ -43,7 +41,7 @@ const TemporaryScheduleVacationForm = (props) => {
         } else {
             setForAll(true);
         }
-        props.initialize({
+        initialize({
             id: vacationData.id,
             date: vacationData.date,
         });
@@ -53,17 +51,17 @@ const TemporaryScheduleVacationForm = (props) => {
         if (vacationId) {
             initializeFormHandler(vacation);
         } else {
-            props.initialize();
+            initialize();
         }
     }, [vacationId]);
 
-    const handleForAllChange = (event) => {
-        setForAll(event.target.checked);
-    };
+    useEffect(() => {
+        if (teacherId) setForAll(false);
+    }, [teacherId]);
 
-    const handleChange = (event) => {
-        setIsFewDays(event.target.checked);
-    };
+    useEffect(() => {
+        if (forAll) selectTeacherIdService(null);
+    }, [forAll]);
 
     const handleNotifyChange = (event) => setNotify(event.target.checked);
 
@@ -81,13 +79,9 @@ const TemporaryScheduleVacationForm = (props) => {
         if (teacher) selectTeacherIdService(teacher.id);
     };
 
-    useEffect(() => {
-        if (teacherId) setForAll(false);
-    }, [teacherId]);
+    const forAllLabel = forAll ? t('for_all') : t('for_teacher');
 
-    useEffect(() => {
-        if (forAll) selectTeacherIdService(null);
-    }, [forAll]);
+    const isDisabled = submitting || invalid;
 
     return (
         <Card additionClassName="form-card">
@@ -97,7 +91,13 @@ const TemporaryScheduleVacationForm = (props) => {
             <form onSubmit={handleSubmit}>
                 <FormControlLabel
                     control={
-                        <Checkbox checked={isFewDays} onChange={handleChange} color="primary" />
+                        <Checkbox
+                            checked={isFewDays}
+                            onChange={(event) => {
+                                setIsFewDays(event.target.checked);
+                            }}
+                            color="primary"
+                        />
                     }
                     label={t('common:few_days_label')}
                 />
@@ -133,10 +133,12 @@ const TemporaryScheduleVacationForm = (props) => {
                             <Switch
                                 color="primary"
                                 checked={forAll}
-                                onChange={handleForAllChange}
+                                onChange={(event) => {
+                                    setForAll(event.target.checked);
+                                }}
                             />
                         }
-                        label={forAll ? t('for_all') : t('for_teacher')}
+                        label={forAllLabel}
                     />
                 </div>
                 {!forAll && (
@@ -173,7 +175,7 @@ const TemporaryScheduleVacationForm = (props) => {
                         type="submit"
                         variant="contained"
                         color="primary"
-                        disabled={submitting || invalid}
+                        disabled={isDisabled}
                     >
                         {t('save_button_label')}
                     </Button>
@@ -181,7 +183,7 @@ const TemporaryScheduleVacationForm = (props) => {
                         className="buttons-style"
                         type="button"
                         variant="contained"
-                        disabled={submitting || invalid}
+                        disabled={isDisabled}
                         onClick={() => {
                             reset();
                             selectVacationService({});

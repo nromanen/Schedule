@@ -12,7 +12,6 @@ import Card from '../../share/Card/Card';
 
 import { COPY_LESSONS_FROM_SEMESTER_FORM } from '../../constants/reduxForms';
 import { required } from '../../validation/validateFields';
-import { SEMESTER_LABEL } from '../../constants/services';
 
 const CopyLessonsFromSemesterForm = (props) => {
     const { t } = useTranslation('common');

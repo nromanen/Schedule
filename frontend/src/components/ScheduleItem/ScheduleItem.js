@@ -6,12 +6,20 @@ import Card from '../../share/Card/Card';
 import { getTeacherName } from '../../helper/renderTeacher';
 
 const ScheduleItem = (props) => {
+    const {
+        translation: t,
+        item: propItem,
+        inBoard,
+        deleteItem,
+        editItem,
+        fStrLetterCapital,
+        addition,
+        className,
+    } = props;
     let { lesson } = props;
     let itemId;
 
-    const item = props.item || null;
-    const t = props.translation;
-    const { fStrLetterCapital, addition } = props;
+    const item = propItem || null;
 
     if (item) {
         const { lesson: propsItemLesson, id: propsItemId } = item;
@@ -33,7 +41,7 @@ const ScheduleItem = (props) => {
         );
 
     return (
-        <Card id={itemNodeId} class={props.class} draggable>
+        <Card id={itemNodeId} class={className} draggable>
             <input
                 type="hidden"
                 value={JSON.stringify({
@@ -41,18 +49,18 @@ const ScheduleItem = (props) => {
                     id: itemId,
                 })}
             />
-            {props.inBoard ? (
+            {inBoard ? (
                 <>
                     <div className="cards-btns delete-item" id={deleteNodeId}>
                         <MdDelete
                             title={t('common:delete_schedule_item')}
                             className="svg-btn delete-btn"
-                            onClick={() => props.deleteItem(itemId, item.lesson.group.id)}
+                            onClick={() => deleteItem(itemId, item.lesson.group.id)}
                         />
                         <MdEdit
                             title={t('common:edit_schedule_item')}
                             className="svg-btn edit-btn"
-                            onClick={() => props.editItem(item)}
+                            onClick={() => editItem(item)}
                         />
                     </div>
                 </>
@@ -65,7 +73,7 @@ const ScheduleItem = (props) => {
                 {t(`formElements:lesson_type_${lesson.lessonType.toLowerCase()}_label`)})
             </p>
             <p>{getTeacherName(lesson.teacher)}</p>
-            {props.inBoard ? (
+            {inBoard ? (
                 <p>
                     {isGroupped(lesson.grouped)}
                     <b>{item.room.name}</b>

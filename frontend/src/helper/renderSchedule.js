@@ -28,57 +28,46 @@ const renderSchedule = (
                 return emptySchedule();
             }
 
-            const { done, semester, group, oddArray, evenArray } = makeGroupSchedule(groupSchedule);
+            const { semester, group, oddArray, evenArray } = makeGroupSchedule(groupSchedule);
 
             setLoadingService(false);
 
-            if (done) {
-                return (
-                    <>
-                        <h1>
-                            {getGroupScheduleTitle(semester, group)}
-                            <DownloadLink
-                                entity="group"
-                                semesterId={semesterId}
-                                entityId={groupId}
-                            />
-                        </h1>
-                        <h2>{i18n.t('common:odd_week')}</h2>
-                        {renderGroupTable(oddArray, 1, semester, place)}
-                        <h2>{i18n.t('common:even_week')}</h2>
-                        {renderGroupTable(evenArray, 0, semester, place)}
-                    </>
-                );
-            }
-
-            break;
+            return (
+                <>
+                    <h1>
+                        {getGroupScheduleTitle(semester, group)}
+                        <DownloadLink entity="group" semesterId={semesterId} entityId={groupId} />
+                    </h1>
+                    <h2>{i18n.t('common:odd_week')}</h2>
+                    {renderGroupTable(oddArray, 1, semester, place)}
+                    <h2>{i18n.t('common:even_week')}</h2>
+                    {renderGroupTable(evenArray, 0, semester, place)}
+                </>
+            );
         }
         case 'teacher': {
             if (!teacherSchedule || !teacherSchedule.days || teacherSchedule.days.length === 0) {
                 return emptySchedule();
             }
-            const { done, semester, teacher, odd, even } = makeTeacherSchedule(teacherSchedule);
+            const { semester, teacher, odd, even } = makeTeacherSchedule(teacherSchedule);
 
             setLoadingService(false);
-            if (done) {
-                return (
-                    <>
-                        <h1>
-                            {getTeacherScheduleTitle(semester, teacher)}
-                            <DownloadLink
-                                entity="teacher"
-                                semesterId={semesterId}
-                                entityId={teacherId}
-                            />
-                        </h1>
-                        <h2>{i18n.t('common:odd_week')}</h2>
-                        {renderWeekTable(odd, 1, place)}
-                        <h2>{i18n.t('common:even_week')}</h2>
-                        {renderWeekTable(even, 0, place)}
-                    </>
-                );
-            }
-            break;
+            return (
+                <>
+                    <h1>
+                        {getTeacherScheduleTitle(semester, teacher)}
+                        <DownloadLink
+                            entity="teacher"
+                            semesterId={semesterId}
+                            entityId={teacherId}
+                        />
+                    </h1>
+                    <h2>{i18n.t('common:odd_week')}</h2>
+                    {renderWeekTable(odd, 1, place)}
+                    <h2>{i18n.t('common:even_week')}</h2>
+                    {renderWeekTable(even, 0, place)}
+                </>
+            );
         }
         case 'full': {
             if (isNotReadySchedule(fullSchedule.schedule, loading)) {
@@ -87,7 +76,7 @@ const renderSchedule = (
             const result = makeFullSchedule(fullSchedule);
 
             setLoadingService(false);
-            if (result.groupsCount || result.done) {
+            if (result.groupsCount) {
                 return renderFullSchedule(result, place);
             }
             break;

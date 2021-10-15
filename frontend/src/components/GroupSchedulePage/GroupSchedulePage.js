@@ -33,7 +33,6 @@ const GroupSchedulePage = (props) => {
         history.push(`${links.ScheduleFor}?semester=${semester}${groupPath}${teacherPath}`);
     };
 
-    // TODO check if we drop first
     useEffect(() => {
         getFullSchedule();
     }, [place]);

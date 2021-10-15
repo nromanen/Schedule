@@ -16,27 +16,27 @@ import { getClearOrCancelTitle, setDisableButton } from '../../helper/disableCom
 
 let AddRoom = (props) => {
     const { t } = useTranslation('formElements');
-    const { handleSubmit, pristine, submitting, onReset, oneRoom } = props;
+    const { handleSubmit, pristine, submitting, onReset, oneRoom, roomTypes, initialize } = props;
 
     useEffect(() => {
-        if (props.oneRoom) {
-            if (props.oneRoom.id) {
-                props.initialize({
-                    name: props.oneRoom.name,
-                    type: props.oneRoom.type.id,
-                    id: props.oneRoom.id,
+        if (oneRoom) {
+            if (oneRoom.id) {
+                initialize({
+                    name: oneRoom.name,
+                    type: oneRoom.type.id,
+                    id: oneRoom.id,
                 });
             } else {
-                props.initialize();
+                initialize();
             }
         }
-    }, [props.oneRoom]);
+    }, [oneRoom]);
 
     return (
         <Card additionClassName="form-card room-form">
             <form className="createGroupForm w-100" onSubmit={handleSubmit}>
                 <h2 className="form-title">
-                    {props.oneRoom.id ? t('edit_title') : t('create_title')} {t('room_y_label')}
+                    {oneRoom.id ? t('edit_title') : t('create_title')} {t('room_y_label')}
                 </h2>
                 <Field
                     type="text"
@@ -55,7 +55,7 @@ let AddRoom = (props) => {
                     validate={[required]}
                 >
                     <option value=""></option>
-                    {props.roomTypes.map((roomType) => (
+                    {roomTypes.map((roomType) => (
                         <option key={roomType.id} value={roomType.id}>
                             {roomType.description}
                         </option>

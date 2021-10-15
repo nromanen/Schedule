@@ -13,25 +13,25 @@ import { getClearOrCancelTitle, setDisableButton } from '../../helper/disableCom
 
 const AddSubject = (props) => {
     const { t } = useTranslation('formElements');
-    const { handleSubmit, pristine, onReset, submitting, subject } = props;
+    const { handleSubmit, pristine, onReset, submitting, subject, initialize } = props;
 
     useEffect(() => {
-        if (props.subject) {
-            if (props.subject.id) {
-                props.initialize({
-                    id: props.subject.id,
-                    name: props.subject.name,
+        if (subject) {
+            if (subject.id) {
+                initialize({
+                    id: subject.id,
+                    name: subject.name,
                 });
             } else {
-                props.initialize();
+                initialize();
             }
         }
-    }, [props.subject]);
+    }, [subject]);
 
     return (
         <Card additionClassName="form-card subject-form">
             <h2 style={{ textAlign: 'center' }}>
-                {props.subject.id ? t('edit_title') : t('create_title')}
+                {subject.id ? t('edit_title') : t('create_title')}
                 {t('subject_y_label')}
             </h2>
             <form onSubmit={handleSubmit}>

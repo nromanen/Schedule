@@ -16,18 +16,18 @@ import { deleteTypeService, getOneNewTypeService } from '../../services/roomType
 import './AddNewRoomType.scss';
 
 let NewRoomType = (props) => {
-    const { handleSubmit, pristine, submitting, roomTypes } = props;
+    const { handleSubmit, pristine, submitting, roomTypes, oneType, initialize } = props;
 
     const [open, setOpen] = useState(false);
     const [typeId, setTypeId] = useState(-1);
 
     useEffect(() => {
         let defaultValue = {};
-        if (props.oneType.id) {
-            defaultValue = { description: props.oneType.description, id: props.oneType.id };
+        if (oneType.id) {
+            defaultValue = { description: oneType.description, id: oneType.id };
         }
-        props.initialize(defaultValue);
-    }, [props.oneType]);
+        initialize(defaultValue);
+    }, [oneType]);
 
     const { t } = useTranslation('formElements');
 
@@ -42,10 +42,6 @@ let NewRoomType = (props) => {
             return;
         }
         deleteTypeService(id);
-    };
-
-    const handleEdit = (roomId) => {
-        getOneNewTypeService(roomId);
     };
 
     return (
@@ -92,7 +88,7 @@ let NewRoomType = (props) => {
                             <span className="buttons">
                                 <FaEdit
                                     className="btn edit"
-                                    onClick={() => handleEdit(roomType.id)}
+                                    onClick={() => getOneNewTypeService(roomType.id)}
                                 />
                                 <MdDelete
                                     className="btn delete"

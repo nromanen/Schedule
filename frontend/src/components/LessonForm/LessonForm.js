@@ -48,6 +48,10 @@ let LessonForm = (props) => {
         teachers,
         subjects,
         groupId,
+        initialize,
+        change,
+        lessonTypes,
+        onSetSelectedCard,
     } = props;
 
     const classes = useStyles();
@@ -56,15 +60,25 @@ let LessonForm = (props) => {
     const [checked, setChecked] = React.useState(false);
 
     const initializeFormHandler = (lessonData) => {
-        props.initialize({
-            lessonCardId: lessonData.id,
-            teacher: lessonData.teacher.id,
-            subject: lessonData.subject.id,
-            type: lessonData.lessonType,
-            hours: lessonData.hours,
-            linkToMeeting: lessonData.linkToMeeting,
-            subjectForSite: lessonData.subjectForSite,
-            grouped: lessonData.grouped,
+        const {
+            id: lessonCardId,
+            teacher,
+            subject,
+            lessonType: type,
+            hours,
+            linkToMeeting,
+            subjectForSite,
+            grouped,
+        } = lessonData;
+        initialize({
+            lessonCardId,
+            teacher: teacher.id,
+            subject: subject.id,
+            type,
+            hours,
+            linkToMeeting,
+            subjectForSite,
+            grouped,
             groups: [group],
         });
         setChecked(lessonData.grouped);
@@ -78,7 +92,7 @@ let LessonForm = (props) => {
         if (lessonId) {
             initializeFormHandler(lesson);
         } else {
-            props.initialize();
+            initialize();
         }
     }, [lessonId]);
 
@@ -116,11 +130,7 @@ let LessonForm = (props) => {
                         label={t('subject_label')}
                         {...(!isUniqueError ? { validate: [required] } : { error: isUniqueError })}
                         onChange={(event) => {
-                            setValueToSubjectForSiteHandler(
-                                subjects,
-                                event.target.value,
-                                props.change,
-                            );
+                            setValueToSubjectForSiteHandler(subjects, event.target.value, change);
                             setUniqueErrorService(false);
                         }}
                     >
@@ -146,7 +156,7 @@ let LessonForm = (props) => {
                             }}
                         >
                             <option value="" />
-                            {props.lessonTypes.map((lessonType) => (
+                            {lessonTypes.map((lessonType) => (
                                 <option value={lessonType} key={lessonType}>
                                     {t(
                                         `formElements:lesson_type_${lessonType.toLowerCase()}_label`,
@@ -252,7 +262,7 @@ let LessonForm = (props) => {
                             onClick={() => {
                                 reset();
                                 setUniqueErrorService(null);
-                                props.onSetSelectedCard(null);
+                                onSetSelectedCard(null);
                             }}
                         >
                             {getClearOrCancelTitle(lesson.id, t)}

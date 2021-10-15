@@ -12,16 +12,17 @@ import { getClearOrCancelTitle, setDisableButton } from '../../helper/disableCom
 
 const AddDepartment = (props) => {
     const { t } = useTranslation('formElements');
-    const { handleSubmit, clear, department, pristine, submitting, editDepartment } = props;
+    const { handleSubmit, clear, department, pristine, submitting, editDepartment, initialize } =
+        props;
     useEffect(() => {
         if (department && editDepartment) {
             if (department.id) {
-                props.initialize({
+                initialize({
                     name: department.name,
                     id: department.id,
                 });
             } else {
-                props.initialize();
+                initialize();
             }
         }
     }, [department]);

@@ -21,11 +21,11 @@ import { dateFormat } from '../../constants/formats';
 
 const TeacherScheduleForm = (props) => {
     const { t } = useTranslation('formElements');
-    const { handleSubmit } = props;
+    const { handleSubmit, initialize } = props;
     const isSchedule = false;
-
+    // TODO check if it`s necessary here
     useEffect(() => {
-        props.initialize({
+        initialize({
             startDay: moment(new Date(), dateFormat).format(dateFormat),
             endDay: moment(new Date(), dateFormat).add(7, 'd').format(dateFormat),
         });

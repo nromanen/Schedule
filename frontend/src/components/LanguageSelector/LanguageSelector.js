@@ -4,19 +4,21 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import { useTranslation } from 'react-i18next';
 import './LanguageSelector.scss';
+import { languageShorthands } from '../../constants/languages/shorthands';
+import { languageTitles } from '../../constants/languages/titles';
 
 const LanguageSelector = () => {
     const { i18n } = useTranslation();
     const langFlags = [
         {
-            lang: 'en',
+            lang: languageShorthands.English,
             img: 'https://image.flaticon.com/icons/svg/555/555417.svg',
-            title: 'English',
+            title: languageTitles.English,
         },
         {
-            lang: 'uk',
+            lang: languageShorthands.Ukrainian,
             img: 'https://image.flaticon.com/icons/svg/321/321267.svg',
-            title: 'Українська',
+            title: languageTitles.Ukrainian,
         },
     ];
     const radioLangClasses = {};
@@ -26,7 +28,7 @@ const LanguageSelector = () => {
     radioLangClasses[i18n.language] += ' activeLanguage';
 
     useEffect(() => {
-        i18n.changeLanguage('uk');
+        i18n.changeLanguage(languageShorthands.Ukrainian);
     }, []);
 
     const changeLanguage = (event) => {

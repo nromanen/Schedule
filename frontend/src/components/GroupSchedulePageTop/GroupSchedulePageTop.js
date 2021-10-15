@@ -38,17 +38,28 @@ const GroupSchedulePageTop = (props) => {
     const [groupDisabled, setGroupDisabled] = useState(true);
     const { root } = useStyles();
     const { t } = useTranslation('common');
-    const { groups, teachers, semesters, handleSubmit, changePlace, pristine, submitting, place } =
-        props;
-    const [semesterId, setSemesterId] = useState(props.initialValues.semester);
+    const {
+        groups,
+        teachers,
+        semesters,
+        handleSubmit,
+        changePlace,
+        pristine,
+        submitting,
+        place,
+        initialize,
+        initialValues,
+        change,
+    } = props;
+    const [semesterId, setSemesterId] = useState(initialValues.semester);
 
     useEffect(() => {
         showAllPublicTeachersService();
         showAllPublicSemestersService();
-        props.initialize({
-            semester: props.initialValues.semester,
-            group: props.initialValues.group,
-            teacher: props.initialValues.teacher,
+        initialize({
+            semester: initialValues.semester,
+            group: initialValues.group,
+            teacher: initialValues.teacher,
         });
     }, []);
     useEffect(() => showAllPublicGroupsService(semesterId), [semesterId]);
@@ -85,7 +96,7 @@ const GroupSchedulePageTop = (props) => {
                 label={t('formElements:teacher_label')}
                 type="text"
                 onChange={() => {
-                    props.change('group', 0);
+                    change('group', 0);
                 }}
             >
                 <option className="option-item" value={null} />
@@ -107,7 +118,7 @@ const GroupSchedulePageTop = (props) => {
                 label={t('formElements:group_label')}
                 type="text"
                 onChange={() => {
-                    props.change('teacher', 0);
+                    change('teacher', 0);
                 }}
             >
                 <option className="option-item" value={null} />

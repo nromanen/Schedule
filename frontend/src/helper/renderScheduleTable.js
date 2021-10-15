@@ -150,14 +150,15 @@ export const buildLessonWithRoom = (card, place) => {
     const room = place !== places.ONLINE ? card.room : '';
     let inner = '';
     inner += `${prepareTeacherCardCell(card)}\n`;
+    inner +=
+        room !== ''
+            ? `(${i18n.t(`formElements:lesson_type_${card.lessonType.toLowerCase()}_label`)} ,${
+                  card.room
+              })\n`
+            : (inner += `${i18n.t(
+                  `formElements:lesson_type_${card.lessonType.toLowerCase()}_label`,
+              )}\n`);
 
-    if (room !== '') {
-        inner += `(${i18n.t(`formElements:lesson_type_${card.lessonType.toLowerCase()}_label`)} ,${
-            card.room
-        })\n`;
-    } else {
-        inner += `${i18n.t(`formElements:lesson_type_${card.lessonType.toLowerCase()}_label`)}\n`;
-    }
     return inner;
 };
 
@@ -171,81 +172,90 @@ export const buildGroupNumber = (card) => {
     return `${card.group.title}\n`;
 };
 
-export const prepareTeacherTemporaryCardCell = (cards, place) => {
-    let inner = '';
-    let title = '';
-    if (!cards) {
-        return '';
-    }
-
-    if (cards.length === 1) {
-        if (cards[0] === undefined || cards[0] === null) {
-            return '';
-        }
-        const card = cards[0];
-
-        if (!card.temporary_schedule) {
-            return (
-                <>
-                    {prepareTeacherCardRegularCell(card, place)}
-                    {card.linkToMeeting && setLink(card, place)}
-                </>
-            );
-        }
-        if (card.temporary_schedule.vacation === true) {
-            inner += `${card.temporary_schedule.date}\n${i18n.t(`common:vacation_label`)}`;
-        } else {
-            inner += `${card.temporary_schedule.date}\n`;
-            if (card.temporary_schedule.room) {
-                inner += `(${card.temporary_schedule.subjectForSite}, ${card.temporary_schedule.room.name})\n`;
-            } else {
-                inner += `${card.temporary_schedule.subjectForSite}\n`;
-            }
-        }
-        title = `${i18n.t(`common:regular_lesson_label`)}\r${prepareTeacherCardRegularCell(
-            card,
-            place,
-        )}`;
-        return inner.length > 0 ? (
-            <p className="temporary-class" title={title}>
-                {inner}
-                {card.linkToMeeting && setLink(card, place)}
-            </p>
-        ) : (
-            ''
-        );
-    }
-    const card = cards[0];
-
-    inner += buildLessonWithRoom(card, place);
+const prepareTitleAndInner = (options) => {
+    const { cards, place } = options;
+    let { title, inner } = options;
     cards.forEach((cardItem) => {
-        if (!cardItem.temporary_schedule) {
+        const { temporary_schedule: tempSchedule } = cardItem;
+
+        if (!tempSchedule) {
             inner += buildGroupNumber(cardItem);
-        } else if (cardItem.temporary_schedule.vacation === true) {
-            inner += `${cardItem.temporary_schedule.date}\n${i18n.t(`common:vacation_label`)}\n`;
         } else {
-            inner += `${cardItem.temporary_schedule.date}\n${getTeacherFullName(
-                cardItem.temporary_schedule.teacher,
-            )}\n`;
-            if (cardItem.temporary_schedule.room) {
-                inner += `${cardItem.temporary_schedule.subjectForSite}, ${cardItem.temporary_schedule.room.name}\n`;
-            } else {
-                inner += `${cardItem.temporary_schedule.subjectForSite}\n`;
-            }
+            const { vacation, date, teacher, room, subjectForSite } = tempSchedule;
+
+            const roomLabel = room ? `${subjectForSite}, ${room.name}\n` : `${subjectForSite}\n`;
+            inner += vacation
+                ? `${date}\n${i18n.t(`common:vacation_label`)}\n`
+                : `${date}\n${getTeacherFullName(teacher)}\n${roomLabel}`;
         }
         title += `${i18n.t(`common:regular_lesson_label`)}\r${prepareTeacherCardRegularCell(
             cardItem,
             place,
         )}\r`;
     });
+    return { title, inner };
+};
 
-    return inner.length > 0 ? (
-        <p className="temporary-class" title={title}>
-            {inner}
+export const prepareTeacherTemporaryCardCell = (cards, place) => {
+    if (!cards) {
+        return '';
+    }
+    let inner = '';
+    let title = '';
+
+    if (cards.length === 1) {
+        if (isNil(cards[0])) {
+            return '';
+        }
+
+        const card = cards[0];
+        const { temporary_schedule: tempSchedule, linkToMeeting } = card;
+
+        const meetingLink = linkToMeeting && setLink(card, place);
+
+        if (!tempSchedule) {
+            return (
+                <>
+                    {prepareTeacherCardRegularCell(card, place)}
+                    {meetingLink}
+                </>
+            );
+        }
+
+        const { date, room, vacation, subjectForSite } = tempSchedule;
+        const roomLabel = tempSchedule.room
+            ? `(${subjectForSite}, ${room.name})\n`
+            : `${subjectForSite}\n`;
+
+        inner = `${date}\n`;
+        inner += vacation ? `${i18n.t(`common:vacation_label`)}` : `${roomLabel}`;
+
+        title = `${i18n.t(`common:regular_lesson_label`)}\r${prepareTeacherCardRegularCell(
+            card,
+            place,
+        )}`;
+        return (
+            <p className="temporary-class" title={title}>
+                {inner}
+                {meetingLink}
+            </p>
+        );
+    }
+    const card = cards[0];
+
+    inner += buildLessonWithRoom(card, place);
+
+    const { title: resTitle, inner: resInner } = prepareTitleAndInner({
+        title,
+        inner,
+        cards,
+        place,
+    });
+    return (
+        <p className="temporary-class" title={resTitle}>
+            {resInner}
             {card.linkToMeeting && setLink(card, place)}
         </p>
-    ) : (
-        ''
     );
 };
 
@@ -263,7 +273,6 @@ export const renderGroupDayClass = (classDay, isOddWeek, place, semesterDays) =>
             </TableCell>
             {res.map((day) => {
                 let className = 'lesson ';
-                // if (currentDay === day.day && currentWeekType === isOddWeek) {
                 if (currentDay === day.day) {
                     if (
                         (currentWeekType === 1 && isOddWeek === 0) ||

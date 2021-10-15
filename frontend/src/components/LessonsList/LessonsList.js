@@ -9,10 +9,8 @@ import Card from '../../share/Card/Card';
 import './LessonList.scss';
 
 const LessonsList = (props) => {
-    const { lessons } = props;
-
-    const t = props.translation;
-
+    const { lessons, translation: t, onCopyLesson, onSelectLesson, onClickOpen } = props;
+    // TODO replece with capitalize
     const firstStringLetterCapitalHandle = (str) => {
         return str.replace(/^\w/, (c) => c.toUpperCase());
     };
@@ -86,17 +84,17 @@ const LessonsList = (props) => {
                             <MdContentCopy
                                 title={t('copy_lesson')}
                                 className="svg-btn copy-btn"
-                                onClick={() => props.onCopyLesson(lesson)}
+                                onClick={() => onCopyLesson(lesson)}
                             />
                             <FaEdit
                                 title={t('edit_lesson')}
                                 className="svg-btn edit-btn"
-                                onClick={() => props.onSelectLesson(lesson.id)}
+                                onClick={() => onSelectLesson(lesson.id)}
                             />
                             <MdDelete
                                 title={t('delete_lesson')}
                                 className="svg-btn delete-btn"
-                                onClick={() => props.onClickOpen(lesson.id)}
+                                onClick={() => onClickOpen(lesson.id)}
                             />
                         </div>
                         <p style={{ height: '3em' }}>{getLessonShortTitle(getTitle(lesson))}</p>

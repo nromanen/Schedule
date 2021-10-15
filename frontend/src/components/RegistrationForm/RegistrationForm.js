@@ -17,11 +17,10 @@ import { links } from '../../constants/links';
 
 const RegistrationForm = (props) => {
     const { t } = useTranslation('formElements');
-    const { handleSubmit } = props;
+    const { handleSubmit, translation, registrationError, setError, switchAuthMode, isLoading } =
+        props;
 
-    const { translation } = props;
-
-    const error = props.registrationError;
+    const error = registrationError;
 
     const emailValidate = { validate: [required, email] };
     const emailErrorCondition = error && error.registration.reg;
@@ -78,8 +77,8 @@ const RegistrationForm = (props) => {
                     type="button"
                     className="auth-link"
                     onClick={() => {
-                        props.switchAuthMode(authTypes.LOGIN);
-                        props.setError(null);
+                        switchAuthMode(authTypes.LOGIN);
+                        setError(null);
                     }}
                 >
                     <Link className="navLinks" to={links.LOGIN}>
@@ -90,12 +89,12 @@ const RegistrationForm = (props) => {
         </form>
     );
 
-    if (props.isLoading) {
+    if (isLoading) {
         form = <CircularProgress />;
     }
     return (
         <Card additionClassName="auth-card">
-            <h2 className="under-line">{props.translation('registration_page_title')}</h2>
+            <h2 className="under-line">{translation('registration_page_title')}</h2>
             {form}
         </Card>
     );

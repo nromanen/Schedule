@@ -12,23 +12,19 @@ import {
 import { renderTeacherRangeSchedule } from '../../helper/renderScheduleTable';
 
 const TeacherSchedule = (props) => {
-    const handleFormReset = () => {
-        clearTeacherScheduleFormService();
-    };
-    const submit = (values) => {
-        getTeacherScheduleService(values);
-    };
+    const { schedule, viewTeacherScheduleResults } = props;
 
     useEffect(() => {
-        renderTeacherRangeSchedule(props.schedule, props.viewTeacherScheduleResults);
-    }, [props.viewTeacherScheduleResults]);
+        renderTeacherRangeSchedule(schedule, viewTeacherScheduleResults);
+    }, [viewTeacherScheduleResults]);
 
     return (
         <>
-            <TeacherScheduleForm onSubmit={submit} onReset={handleFormReset} />
-            <section>
-                {renderTeacherRangeSchedule(props.schedule, props.viewTeacherScheduleResults)}
-            </section>
+            <TeacherScheduleForm
+                onSubmit={getTeacherScheduleService}
+                onReset={clearTeacherScheduleFormService}
+            />
+            <section>{renderTeacherRangeSchedule(schedule, viewTeacherScheduleResults)}</section>
         </>
     );
 };
