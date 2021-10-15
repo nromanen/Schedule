@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 import Button from '@material-ui/core/Button';
 import { MdPlayArrow } from 'react-icons/md';
 
-import renderSelectField from '../../share/renderedFields/select';
+import SelectField from '../../share/renderedFields/select';
 
 import './SemesterCopyForm.scss';
 
@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
 const SemesterCopyForm = (props) => {
     const classes = useStyles();
     const { t } = useTranslation('common');
-    const { semesterId, semesters, handleSubmit, pristine, submitting } = props;
+    const { semesterId, semesters, handleSubmit, pristine, submitting, submitButtonLabel } = props;
 
     const renderSemesterList = () => {
         const availableSemestersForCopy = semesters.filter(
@@ -44,7 +44,7 @@ const SemesterCopyForm = (props) => {
                     <Field
                         id="toSemesterId"
                         name="toSemesterId"
-                        component={renderSelectField}
+                        component={SelectField}
                         label={t(FORM_SEMESTER_LABEL)}
                         type="text"
                         validate={[required]}
@@ -80,7 +80,7 @@ const SemesterCopyForm = (props) => {
                         disabled={pristine || submitting}
                     >
                         <MdPlayArrow title={t(TEACHER_SCHEDULE_LABEL)} className="svg-btn" />
-                        {props.submitButtonLabel}
+                        {submitButtonLabel}
                     </Button>
                 </div>
             </form>

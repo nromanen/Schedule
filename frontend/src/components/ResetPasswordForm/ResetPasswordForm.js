@@ -24,19 +24,18 @@ import {
 
 const ResetPasswordForm = (props) => {
     const { t } = useTranslation('formElements');
-    const { handleSubmit } = props;
+    const { handleSubmit, translation, resetPasswordError, setError, switchAuthMode, isLoading } =
+        props;
 
-    const error = props.resetPasswordError;
-
-    const { translation } = props;
+    const error = resetPasswordError;
 
     const emailValidate = { validate: [required, email] };
 
     const errorHandling = (value) => {
         if (required(value)) {
-            props.setError(required(value));
+            setError(required(value));
         } else {
-            props.setError(null);
+            setError(null);
         }
     };
 
@@ -65,8 +64,8 @@ const ResetPasswordForm = (props) => {
                     type="button"
                     className="auth-link"
                     onClick={() => {
-                        props.switchAuthMode(authTypes.LOGIN);
-                        props.setError(null);
+                        switchAuthMode(authTypes.LOGIN);
+                        setError(null);
                     }}
                 >
                     <Link className="navLinks" to={links.LOGIN}>
@@ -77,12 +76,12 @@ const ResetPasswordForm = (props) => {
         </form>
     );
 
-    if (props.isLoading) {
+    if (isLoading) {
         form = <CircularProgress />;
     }
 
     return (
-        <Card class="auth-card">
+        <Card additionClassName="auth-card">
             <h2 className="under-line">{translation(RESET_PASSWORD_PAGE_TITLE)}</h2>
             {form}
         </Card>

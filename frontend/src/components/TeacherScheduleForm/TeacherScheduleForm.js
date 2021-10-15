@@ -28,17 +28,17 @@ import { dateFormat } from '../../constants/formats';
 
 const TeacherScheduleForm = (props) => {
     const { t } = useTranslation('formElements');
-    const { handleSubmit } = props;
+    const { handleSubmit, initialize } = props;
     const isSchedule = false;
-
+    // TODO check if it`s necessary here
     useEffect(() => {
-        props.initialize({
+        initialize({
             startDay: moment(new Date(), dateFormat).format(dateFormat),
             endDay: moment(new Date(), dateFormat).add(7, 'd').format(dateFormat),
         });
     }, [isSchedule]);
     return (
-        <Card class="form-card teacher-schedule-form">
+        <Card additionClassName="form-card teacher-schedule-form">
             <form onSubmit={handleSubmit}>
                 <div className="form-line-block">
                     <h2 className="form-title">{t(COMMON_SELECT_DATES_FOR_TEACHERS_SCHEDULE)}</h2>

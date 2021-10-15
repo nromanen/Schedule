@@ -27,35 +27,25 @@ const SearchPanel = ({ SearchChange, showDisabled, showArchived, forLessons }) =
     });
 
     const handleChange = (event) => {
-        switch (event.target.name) {
-            case 'checkedArchived':
-                setState({
-                    ...state,
-                    checkedB: false,
-                    [event.target.name]: event.target.checked,
-                });
-                showArchived();
-                break;
-            default:
-                setState({
-                    ...state,
-                    checkedArchived: false,
-                    [event.target.name]: event.target.checked,
-                });
-
-                break;
+        setState({
+            ...state,
+            checkedB: false,
+            [event.target.name]: event.target.checked,
+        });
+        if (event.target.name === 'checkedArchived') {
+            showArchived();
         }
         showDisabled();
     };
 
     const onSearchChange = (e) => {
-        const term = e.target.value;
-        setTerm(term);
-        SearchChange(term);
+        const newTerm = e.target.value;
+        setTerm(newTerm);
+        SearchChange(newTerm);
     };
 
     return (
-        <Card class="search-group">
+        <Card additionClassName="search-group">
             {!forLessons && (
                 <FormControlLabel
                     control={
@@ -81,9 +71,7 @@ const SearchPanel = ({ SearchChange, showDisabled, showArchived, forLessons }) =
                     }
                     label={!state.checkedArchived ? t(SHOW_ARCHIVED) : t(SHOW_REGULAR)}
                 />
-            ) : (
-                ''
-            )}
+            ) : null}
 
             <TextField
                 className="form-field"

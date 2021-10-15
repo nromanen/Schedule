@@ -1,7 +1,7 @@
 import Moment from 'moment';
 import { extendMoment } from 'moment-range';
 import { store } from '../store';
-import i18n from '../helper/i18n';
+import i18n from '../i18n';
 import {
     UNIQUE_ERROR_MESSAGE,
     INTERSECT_TIME_ERROR_MESSAGE,

@@ -1,6 +1,6 @@
 import axios from '../helper/axios';
 import { STUDENTS_TO_GROUP_FILE } from '../constants/axios';
-import i18n from '../helper/i18n';
+import i18n from '../i18n';
 import { successHandler } from '../helper/handlerAxios';
 import {
     FILE_LABEL,

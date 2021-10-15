@@ -21,25 +21,20 @@ const HomePage = (props) => {
     setScheduleSemesterIdService(null);
     setScheduleTypeService('');
 
-    // useEffect(() => showAllPublicSemestersService(), []);
-
     useEffect(() => {
         if (props.userRole === null) {
-            // disableDefaultSemesterService();
             getDefaultSemesterService();
             setScheduleTypeService('');
         }
     }, []);
     useEffect(() => {
         if (props.userRole === userRoles.TEACHER) {
-            // disableDefaultSemesterService();
             getDefaultSemesterService();
             setScheduleTypeService('');
         }
     }, []);
     useEffect(() => {
         if (props.userRole === userRoles.MANAGER) {
-            // disableDefaultSemesterService();
             getDefaultSemesterService();
             setScheduleTypeService('');
         }

@@ -11,7 +11,7 @@ import Typography from '@material-ui/core/Typography';
 import Card from '../../share/Card/Card';
 
 import renderTextField from '../../share/renderedFields/input';
-import renderSelectField from '../../share/renderedFields/select';
+import SelectField from '../../share/renderedFields/select';
 import renderCheckboxField from '../../share/renderedFields/checkbox';
 
 import { LESSON_FORM } from '../../constants/reduxForms';
@@ -66,6 +66,10 @@ let LessonForm = (props) => {
         teachers,
         subjects,
         groupId,
+        initialize,
+        change,
+        lessonTypes,
+        onSetSelectedCard,
     } = props;
 
     const classes = useStyles();
@@ -74,15 +78,25 @@ let LessonForm = (props) => {
     const [checked, setChecked] = React.useState(false);
 
     const initializeFormHandler = (lessonData) => {
-        props.initialize({
-            lessonCardId: lessonData.id,
-            teacher: lessonData.teacher.id,
-            subject: lessonData.subject.id,
-            type: lessonData.lessonType,
-            hours: lessonData.hours,
-            linkToMeeting: lessonData.linkToMeeting,
-            subjectForSite: lessonData.subjectForSite,
-            grouped: lessonData.grouped,
+        const {
+            id: lessonCardId,
+            teacher,
+            subject,
+            lessonType: type,
+            hours,
+            linkToMeeting,
+            subjectForSite,
+            grouped,
+        } = lessonData;
+        initialize({
+            lessonCardId,
+            teacher: teacher.id,
+            subject: subject.id,
+            type,
+            hours,
+            linkToMeeting,
+            subjectForSite,
+            grouped,
             groups: [group],
         });
         setChecked(lessonData.grouped);
@@ -96,7 +110,7 @@ let LessonForm = (props) => {
         if (lessonId) {
             initializeFormHandler(lesson);
         } else {
-            props.initialize();
+            initialize();
         }
     }, [lessonId]);
 
@@ -114,7 +128,7 @@ let LessonForm = (props) => {
                         id="teacher"
                         name="teacher"
                         className="form-field"
-                        component={renderSelectField}
+                        component={SelectField}
                         label={t(TEACHER_LABEL)}
                         {...(!isUniqueError ? { validate: [required] } : { error: isUniqueError })}
                         onChange={() => setUniqueErrorService(false)}
@@ -130,15 +144,11 @@ let LessonForm = (props) => {
                         id="subject"
                         name="subject"
                         className="form-field"
-                        component={renderSelectField}
+                        component={SelectField}
                         label={t(SUBJECT_LABEL)}
                         {...(!isUniqueError ? { validate: [required] } : { error: isUniqueError })}
                         onChange={(event) => {
-                            setValueToSubjectForSiteHandler(
-                                subjects,
-                                event.target.value,
-                                props.change,
-                            );
+                            setValueToSubjectForSiteHandler(subjects, event.target.value, change);
                             setUniqueErrorService(false);
                         }}
                     >
@@ -154,7 +164,7 @@ let LessonForm = (props) => {
                             id="type"
                             name="type"
                             className="form-field"
-                            component={renderSelectField}
+                            component={SelectField}
                             label={t(TYPE_LABEL)}
                             {...(!isUniqueError
                                 ? { validate: [required] }
@@ -164,7 +174,7 @@ let LessonForm = (props) => {
                             }}
                         >
                             <option value="" />
-                            {props.lessonTypes.map((lessonType) => (
+                            {lessonTypes.map((lessonType) => (
                                 <option value={lessonType} key={lessonType}>
                                     {t(
                                         `formElements:lesson_type_${lessonType.toLowerCase()}_label`,
@@ -270,7 +280,7 @@ let LessonForm = (props) => {
                             onClick={() => {
                                 reset();
                                 setUniqueErrorService(null);
-                                props.onSetSelectedCard(null);
+                                onSetSelectedCard(null);
                             }}
                         >
                             {getClearOrCancelTitle(lesson.id, t)}

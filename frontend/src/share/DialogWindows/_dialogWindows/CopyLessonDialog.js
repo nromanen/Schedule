@@ -1,9 +1,6 @@
 import React, { useState } from 'react';
 
 import PropTypes from 'prop-types';
-
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Dialog from '@material-ui/core/Dialog';
 import Button from '@material-ui/core/Button';
 
 import Autocomplete from '@material-ui/lab/Autocomplete';
@@ -18,6 +15,7 @@ import {
     CHOOSE_GROUP,
     COMMON_CHOOSE_GROUP,
 } from '../../../constants/translationLabels/common';
+import CustomDialog from '../CustomDialog';
 
 const useStyles = makeStyles(() => ({
     groupField: {
@@ -28,16 +26,12 @@ const useStyles = makeStyles(() => ({
     },
 }));
 
-export const CopyLessonDialog = (props) => {
+const CopyLessonDialog = (props) => {
     const { onClose, lesson, translation, groups, groupId, open } = props;
     const [group, setGroup] = useState('');
     const [error, setError] = useState('');
 
     const classes = useStyles();
-
-    const handleClose = () => {
-        onClose();
-    };
 
     const chooseClickHandle = () => {
         if (!group) {
@@ -50,19 +44,36 @@ export const CopyLessonDialog = (props) => {
         onClose({ lesson, group });
     };
 
+    const handleChangeAutocomplete = (event, newValue) => {
+        setGroup(newValue);
+        setError(null);
+    };
+
     const defaultProps = {
         options: groups,
         getOptionLabel: (option) => (option ? option.title : ''),
     };
-
     return (
-        <Dialog
-            disableBackdropClick
-            onClose={handleClose}
-            aria-labelledby="confirm-dialog-title"
+        <CustomDialog
+            title={translation(CHOOSE_GROUP)}
             open={open}
+            onClose={onClose}
+            buttons={
+                <>
+                    <Button
+                        className="dialog-button"
+                        variant="contained"
+                        color="primary"
+                        onClick={chooseClickHandle}
+                    >
+                        {translation(FORM_CHOOSE_BUTTON_TITLE)}
+                    </Button>
+                    <Button className="dialog-button" variant="contained" onClick={onClose}>
+                        {translation(FORM_CANCEL_BUTTON_TITLE)}
+                    </Button>
+                </>
+            }
         >
-            <DialogTitle id="simple-dialog-title">{translation(CHOOSE_GROUP)}</DialogTitle>
             <Autocomplete
                 {...defaultProps}
                 id="group"
@@ -70,10 +81,7 @@ export const CopyLessonDialog = (props) => {
                 clearOnEscape
                 openOnFocus
                 className={classes.groupField}
-                onChange={(event, newValue) => {
-                    setGroup(newValue);
-                    setError(null);
-                }}
+                onChange={handleChangeAutocomplete}
                 renderInput={(params) => (
                     <TextField
                         {...params}
@@ -84,26 +92,15 @@ export const CopyLessonDialog = (props) => {
                     />
                 )}
             />
-            <div className="buttons-container">
-                <Button
-                    className="dialog-button"
-                    variant="contained"
-                    color="primary"
-                    onClick={() => chooseClickHandle()}
-                >
-                    {translation(FORM_CHOOSE_BUTTON_TITLE)}
-                </Button>
-                <Button className="dialog-button" variant="contained" onClick={() => onClose()}>
-                    {translation(FORM_CANCEL_BUTTON_TITLE)}
-                </Button>
-            </div>
-        </Dialog>
+        </CustomDialog>
     );
 };
-
 CopyLessonDialog.propTypes = {
     onClose: PropTypes.func.isRequired,
     open: PropTypes.bool.isRequired,
+    lesson: PropTypes.object.isRequired,
+    translation: PropTypes.func.isRequired,
+    groupId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
 };
 
 export default CopyLessonDialog;

@@ -15,6 +15,11 @@ import { FORM_REFERENCE_ELEMENT } from '../../../constants/translationLabels/for
 import {
     COMMON_NO_BUTTON_TITLE,
     COMMON_YES_BUTTON_TITLE,
+    COMMON_DO_YOU_WANNA_DISABLE,
+    COMMON_DO_YOU_WANNA_SHOW,
+    COMMON_BY_THIS_CARD_TYPE,
+    COMMON_DO_YOU_WANNA,
+    COMMON_GO_TO_MEETING_WORD,
 } from '../../../constants/translationLabels/common';
 
 export const LinkToMeetingDialog = (props) => {
@@ -37,14 +42,14 @@ export const LinkToMeetingDialog = (props) => {
                     {isHide ? (
                         <>
                             {isHide === disabledCard.HIDE ? (
-                                <>{i18n.t('common:do_you_wanna_disable')}</>
+                                <>{i18n.t(COMMON_DO_YOU_WANNA_DISABLE)}</>
                             ) : (
-                                <>{i18n.t('common:do_you_wanna_show')}</>
+                                <>{i18n.t(COMMON_DO_YOU_WANNA_SHOW)}</>
                             )}
                         </>
                     ) : (
                         <>
-                            {i18n.t('common:do_you_wanna')}{' '}
+                            {i18n.t(COMMON_DO_YOU_WANNA)}{' '}
                             <span>
                                 <a
                                     className="go-to-meeting"
@@ -53,13 +58,13 @@ export const LinkToMeetingDialog = (props) => {
                                     title={linkToMeeting}
                                     rel="noreferrer"
                                 >
-                                    {i18n.t(`common:go_to_meeting_word`)}
+                                    {i18n.t(COMMON_GO_TO_MEETING_WORD)}
                                 </a>
                             </span>{' '}
                         </>
                     )}
 
-                    {i18n.t('common:by_this_card_type', {
+                    {i18n.t(COMMON_BY_THIS_CARD_TYPE, {
                         cardType: i18n.t(FORM_REFERENCE_ELEMENT),
                     })}
                 </>

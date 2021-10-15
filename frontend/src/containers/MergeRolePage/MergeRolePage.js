@@ -15,7 +15,7 @@ import Card from '../../share/Card/Card';
 
 import './MergeRolePage.scss';
 import NavigationPage from '../../components/Navigation/NavigationPage';
-import { navigation, navigationNames } from '../../constants/navigation';
+import { navigation } from '../../constants/navigation';
 import {
     FORM_USER_LABEL,
     FORM_TEACHER_LABEL,
@@ -72,7 +72,7 @@ const MergeRolePage = (props) => {
         <>
             <NavigationPage val={navigation.USERS} />
             <div className="merge-role-form">
-                <Card class="merge-role-card">
+                <Card additionClassName="merge-role-card">
                     <h2 className="under-line">{t(MERGE_HEADER)}</h2>
                     {props.loading ? (
                         <CircularProgress />

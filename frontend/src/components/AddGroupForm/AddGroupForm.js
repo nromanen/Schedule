@@ -21,23 +21,23 @@ import {
 
 const AddGroup = (props) => {
     const { t } = useTranslation('formElements');
-    const { handleSubmit, pristine, onReset, submitting, match, group } = props;
+    const { handleSubmit, pristine, onReset, submitting, match, group, initialize } = props;
 
     useEffect(() => {
         if (group && match.url.includes(links.Edit) && !match.url.includes(links.Student)) {
             if (group.id) {
-                props.initialize({
+                initialize({
                     id: group.id,
                     title: group.title,
                 });
             } else {
-                props.initialize();
+                initialize();
             }
         }
     }, [group.id]);
 
     return (
-        <Card class="form-card group-form">
+        <Card additionClassName="form-card group-form">
             <h2 className="group-form__title">
                 {group.id ? t(EDIT_TITLE) : t(CREATE_TITLE)}
                 {t(GROUP_Y_LABEL)}

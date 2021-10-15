@@ -1,19 +1,22 @@
+import './RoomList.scss';
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { FaEdit } from 'react-icons/fa';
 import { MdDelete } from 'react-icons/md';
 import { useTranslation } from 'react-i18next';
 import { GiSightDisabled, IoMdEye } from 'react-icons/all';
-import ConfirmDialog from '../../share/modals/dialog';
+import { CustomDialog } from '../../share/DialogWindows';
+import { dialogTypes } from '../../constants/dialogs';
 import { cardType } from '../../constants/cardType';
-import FreeRooms from '../FreeRooms/freeRooms';
 import AddRoom from '../../components/AddRoomForm/AddRoomForm';
 import NewRoomType from '../../components/AddNewRoomType/AddNewRoomType';
 import SearchPanel from '../../share/SearchPanel/SearchPanel';
+import NavigationPage from '../../components/Navigation/NavigationPage';
+import { navigation, navigationNames } from '../../constants/navigation';
 import Card from '../../share/Card/Card';
-import './RoomList.scss';
 import { search } from '../../helper/search';
-
+import NotFound from '../../share/NotFound/NotFound';
+import { getAllRoomTypesService, addNewTypeService } from '../../services/roomTypesService';
 import {
     createRoomService,
     showListOfRoomsService,
@@ -24,14 +27,6 @@ import {
     setDisabledRoomsService,
     setEnabledRoomsService,
 } from '../../services/roomService';
-
-import { getAllRoomTypesService, addNewTypeService } from '../../services/roomTypesService';
-
-import NotFound from '../../share/NotFound/NotFound';
-
-import { disabledCard } from '../../constants/disabledCard';
-import NavigationPage from '../../components/Navigation/NavigationPage';
-import { navigation, navigationNames } from '../../constants/navigation';
 import { ROOM_Y_LABEL, ROOM_LABEL } from '../../constants/translationLabels/formElements';
 import {
     TYPE_LABEL,
@@ -40,122 +35,99 @@ import {
 } from '../../constants/translationLabels/common';
 
 const RoomList = (props) => {
-    const { rooms } = props;
+    const { rooms, roomTypes, disabledRooms } = props;
+    const { t } = useTranslation('formElements');
+
+    const [isDisabled, setIsDisabled] = useState(false);
+    const [openSubDialog, setOpenSubDialog] = useState(false);
+    const [subDialogType, setSubDialogType] = useState('');
+    const [roomId, setRoomId] = useState(-1);
+    const [term, setTerm] = useState('');
 
     useEffect(() => {
         showListOfRoomsService();
-    }, []);
-
-    useEffect(() => {
         getAllRoomTypesService();
-    }, []);
-
-    useEffect(() => {
         getDisabledRoomsService();
     }, []);
 
-    const { t } = useTranslation('formElements');
-    const [open, setOpen] = useState(false);
-    const [roomId, setRoomId] = useState(-1);
-    const [term, setTerm] = useState('');
-    const [hideDialog, setHideDialog] = useState(null);
-
-    const [disabled, setDisabled] = useState(false);
-
-    const createRoom = (values) => {
-        const description = props.roomTypes.find((type) => type.id == values.type);
-        values.typeDescription = description.description;
-        createRoomService(values);
-    };
-
-    const editHandler = (roomId) => {
-        selectOneRoomService(roomId);
-    };
-
-    const handleFormReset = () => {
-        clearRoomOneService();
-    };
-
-    const handleClickOpen = (roomId) => {
-        setRoomId(roomId);
-        setOpen(true);
-    };
-
-    const handleClose = (roomId) => {
-        setOpen(false);
-        if (!roomId) {
-            return;
-        }
-        if (hideDialog) {
-            if (disabled) {
-                const room = props.disabledRooms.find((room) => room.id === roomId);
-                setEnabledRoomsService(room);
-            } else {
-                const room = props.rooms.find((room) => room.id === roomId);
-                setDisabledRoomsService(room);
-            }
-        } else {
-            deleteRoomCardService(roomId);
-        }
-        setHideDialog(null);
-    };
-
-    const submitType = (values) => {
-        addNewTypeService(values);
-    };
-
-    const visibleItems = disabled
-        ? search(props.disabledRooms, term, ['name'])
+    const SearchChange = setTerm;
+    const visibleItems = isDisabled
+        ? search(disabledRooms, term, ['name'])
         : search(rooms, term, ['name']);
 
-    const SearchChange = (term) => {
-        setTerm(term);
+    const createRoom = (values) => {
+        const description = roomTypes.find((type) => type.id === +values.type);
+        const typeDescription = description.description;
+        createRoomService({ ...values, typeDescription });
     };
 
-    const showDisabledHandle = () => {
-        setDisabled(!disabled);
+    const showConfirmDialog = (id, dialogType) => {
+        setRoomId(id);
+        setSubDialogType(dialogType);
+        setOpenSubDialog(true);
+    };
+
+    const changeGroupDisabledStatus = (currentId) => {
+        const foundRoom = [...disabledRooms, ...rooms].find(
+            (roomItem) => roomItem.id === currentId,
+        );
+        return isDisabled ? setEnabledRoomsService(foundRoom) : setDisabledRoomsService(foundRoom);
+    };
+
+    const acceptConfirmDialog = (currentId) => {
+        setOpenSubDialog(false);
+        if (!currentId) return;
+        if (subDialogType !== dialogTypes.DELETE_CONFIRM) {
+            changeGroupDisabledStatus(currentId);
+        } else {
+            deleteRoomCardService(currentId);
+        }
+    };
+
+    const changeDisable = () => {
+        setIsDisabled((prev) => !prev);
     };
 
     return (
         <>
             <NavigationPage name={navigationNames.ROOM_LIST} val={navigation.ROOMS} />
-            <ConfirmDialog
+            <CustomDialog
+                type={subDialogType}
                 cardId={roomId}
                 whatDelete={cardType.ROOM.toLowerCase()}
-                open={open}
-                isHide={hideDialog}
-                onClose={handleClose}
+                open={openSubDialog}
+                onClose={acceptConfirmDialog}
             />
             <div className="cards-container">
                 <aside className="search-list__panel">
-                    <SearchPanel SearchChange={SearchChange} showDisabled={showDisabledHandle} />
-                    {disabled ? (
-                        ''
-                    ) : (
+                    <SearchPanel SearchChange={SearchChange} showDisabled={changeDisable} />
+                    {!isDisabled && (
                         <>
-                            <AddRoom onSubmit={createRoom} onReset={handleFormReset} />
-                            <NewRoomType className="new-type" onSubmit={submitType} />
+                            <AddRoom onSubmit={createRoom} onReset={clearRoomOneService} />
+                            <NewRoomType className="new-type" onSubmit={addNewTypeService} />
                         </>
                     )}
                 </aside>
                 <section className="container-flex-wrap wrapper">
                     {visibleItems.length === 0 && <NotFound name={t(ROOM_Y_LABEL)} />}
-                    {visibleItems.map((room, index) => (
-                        <Card key={index} {...room} class="room-card done-card">
+                    {visibleItems.map((roomItem) => (
+                        <Card key={roomItem.id} class="room-card done-card">
                             <div className="cards-btns">
-                                {!disabled ? (
+                                {!isDisabled ? (
                                     <>
                                         <GiSightDisabled
                                             className="svg-btn copy-btn"
                                             title={t(COMMON_SET_DISABLED)}
                                             onClick={() => {
-                                                setHideDialog(disabledCard.HIDE);
-                                                handleClickOpen(room.id);
+                                                showConfirmDialog(
+                                                    roomItem.id,
+                                                    dialogTypes.SET_VISIBILITY_DISABLED,
+                                                );
                                             }}
                                         />
                                         <FaEdit
                                             className="svg-btn"
-                                            onClick={() => editHandler(room.id)}
+                                            onClick={() => selectOneRoomService(roomItem.id)}
                                         />
                                     </>
                                 ) : (
@@ -163,22 +135,26 @@ const RoomList = (props) => {
                                         className="svg-btn copy-btn"
                                         title={t(COMMON_SET_ENABLED)}
                                         onClick={() => {
-                                            setHideDialog(disabledCard.SHOW);
-                                            handleClickOpen(room.id);
+                                            showConfirmDialog(
+                                                roomItem.id,
+                                                dialogTypes.SET_VISIBILITY_ENABLED,
+                                            );
                                         }}
                                     />
                                 )}
 
                                 <MdDelete
                                     className="svg-btn"
-                                    onClick={() => handleClickOpen(room.id)}
+                                    onClick={() =>
+                                        showConfirmDialog(roomItem.id, dialogTypes.DELETE_CONFIRM)
+                                    }
                                 />
                             </div>
 
                             <span> {`${t(ROOM_LABEL)}:`} </span>
-                            <h2 className="room-card__number">{room.name}</h2>
+                            <h2 className="room-card__number">{roomItem.name}</h2>
                             <span>{`${t(TYPE_LABEL)}:`}</span>
-                            <h2 className="room-card__number">{room.type.description}</h2>
+                            <h2 className="room-card__number">{roomItem.type.description}</h2>
                         </Card>
                     ))}
                 </section>

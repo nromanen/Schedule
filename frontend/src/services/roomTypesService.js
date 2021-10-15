@@ -11,7 +11,7 @@ import {
     getOneNewType,
 } from '../actions/roomTypes';
 
-import i18n from '../helper/i18n';
+import i18n from '../i18n';
 import { errorHandler, successHandler } from '../helper/handlerAxios';
 import { resetFormHandler } from '../helper/formHelper';
 import {

@@ -15,6 +15,10 @@ import { FORM_SEMESTER_ELEMENT } from '../../../constants/translationLabels/form
 import {
     COMMON_NO_BUTTON_TITLE,
     COMMON_YES_BUTTON_TITLE,
+    COMMON_DO_YOU_WANNA_DISABLE,
+    COMMON_DO_YOU_WANNA_SHOW,
+    COMMON_DO_YOU_WANNA,
+    COMMON_THIS_CARD_TYPE,
 } from '../../../constants/translationLabels/common';
 
 export const SetChangeDialog = (props) => {
@@ -36,19 +40,19 @@ export const SetChangeDialog = (props) => {
                     {isHide ? (
                         <>
                             {isHide === disabledCard.HIDE ? (
-                                <>{i18n.t('common:do_you_wanna_disable')}</>
+                                <>{i18n.t(COMMON_DO_YOU_WANNA_DISABLE)}</>
                             ) : (
-                                <>{i18n.t('common:do_you_wanna_show')}</>
+                                <>{i18n.t(COMMON_DO_YOU_WANNA_SHOW)}</>
                             )}
                         </>
                     ) : (
                         <>
-                            {i18n.t('common:do_you_wanna')}{' '}
-                            <span className={className}>{i18n.t(`common:set_default_word`)}</span>{' '}
+                            {i18n.t(COMMON_DO_YOU_WANNA)}{' '}
+                            <span className={className}>{i18n.t(`COMMON_SET_DEFAULT_WORD`)}</span>{' '}
                         </>
                     )}
 
-                    {i18n.t('common:this_card_type', {
+                    {i18n.t(COMMON_THIS_CARD_TYPE, {
                         cardType: i18n.t(FORM_SEMESTER_ELEMENT),
                     })}
                 </>

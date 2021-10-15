@@ -1,19 +1,28 @@
+import './LessonPage.scss';
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { styled } from '@material-ui/core/styles';
 import Card from '../../share/Card/Card';
-import ConfirmDialog from '../../share/modals/dialog';
-import CopyLessonDialog from '../../share/modals/chooseGroupDialog/CopyLessonDialog';
-
+import { CustomDialog, CopyLessonDialog } from '../../share/DialogWindows';
+import { dialogTypes } from '../../constants/dialogs';
 import LessonForm from '../../components/LessonForm/LessonForm';
 import LessonsList from '../../components/LessonsList/LessonsList';
 import CopyLessonsFromSemesterForm from '../../components/CopyLessonsFromSemesterForm/CopyLessonsFromSemesterForm';
-
+import { showAllTeachersService } from '../../services/teacherService';
+import { selectGroupService, showAllGroupsService } from '../../services/groupService';
+import { setLoadingService } from '../../services/loadingService';
+import { showAllSubjectsService } from '../../services/subjectService';
+import { cardType } from '../../constants/cardType';
+import SearchPanel from '../../share/SearchPanel/SearchPanel';
+import {
+    showAllSemestersService,
+    CopyLessonsFromSemesterService,
+} from '../../services/semesterService';
+import { searchLessonsByTeacher } from '../../helper/search';
 import {
     copyLessonCardService,
     getLessonsByGroupService,
@@ -23,21 +32,6 @@ import {
     selectGroupIdService,
     selectLessonCardService,
 } from '../../services/lessonService';
-import { showAllTeachersService } from '../../services/teacherService';
-import { selectGroupService, showAllGroupsService } from '../../services/groupService';
-import { setLoadingService } from '../../services/loadingService';
-import { showAllSubjectsService } from '../../services/subjectService';
-import {
-    showAllSemestersService,
-    CopyLessonsFromSemesterService,
-} from '../../services/semesterService';
-
-import { cardType } from '../../constants/cardType';
-
-import './LessonPage.scss';
-import SearchPanel from '../../share/SearchPanel/SearchPanel';
-import AddSubject from '../../components/AddSubjectForm/AddSubjectForm';
-import { search } from '../../helper/search';
 import { FORM_GROUP_LABEL } from '../../constants/translationLabels/formElements';
 import {
     LESSON_FOR_GROUP_TITLE,
@@ -50,45 +44,25 @@ const GroupField = styled(TextField)({
 });
 
 const LessonPage = (props) => {
+    const {
+        loading,
+        currentSemester,
+        isUniqueError,
+        subjects,
+        teachers,
+        lessons,
+        groupId,
+        groups,
+    } = props;
     const { t } = useTranslation('common');
-
-    const [open, setOpen] = useState(false);
-    const [openCopyLessonDialog, setOpenCopyLessonDialog] = useState(false);
-    const [lessonId, setLessonId] = React.useState(-1);
-    const [copiedLesson, setCopiedLesson] = React.useState(-1);
     const [term, setTerm] = useState('');
+    const [lessonId, setLessonId] = useState();
+    const [copiedLesson, setCopiedLesson] = useState();
+    const [isOpenConfirmDialog, setIsOpenConfirmDialog] = useState(false);
+    const [openCopyLessonDialog, setOpenCopyLessonDialog] = useState(false);
+
     const SearchChange = setTerm;
-    let visibleItems = [];
-    const isIncludeValue = (item, value) => {
-        return item.toLowerCase().includes(value.toLowerCase());
-    };
-    const getSearchTeachers = (lessons, term) => {
-        const termTmp = term.trim();
-        if (termTmp.length === 0) return lessons;
-        return lessons.filter((lesson) => {
-            const { teacher, subjectForSite, lessonType, grouped } = lesson;
-            return (
-                isIncludeValue(teacher.surname, termTmp) ||
-                isIncludeValue(subjectForSite, termTmp) ||
-                isIncludeValue(lessonType, termTmp) ||
-                (isIncludeValue('Grouped', term) && grouped)
-            );
-        });
-    };
-    visibleItems = getSearchTeachers(props.lessons, term);
-
-    const { teachers } = props;
-
-    const { isUniqueError } = props;
-
-    const { lessons } = props;
-    const lessonLength = lessons.length;
-
-    const isLoading = props.loading;
-
-    const { groups, groupId, currentSemester } = props;
-
-    const { subjects } = props;
+    const visibleItems = searchLessonsByTeacher(lessons, term);
 
     useEffect(() => {
         if (groupId) {
@@ -96,47 +70,34 @@ const LessonPage = (props) => {
             getLessonsByGroupService(groupId);
         }
     }, [groupId]);
-    useEffect(() => showAllTeachersService(), []);
-    useEffect(() => showAllSemestersService(), []);
-    useEffect(() => getLessonTypesService(), []);
-    useEffect(() => showAllGroupsService(), []);
-    useEffect(() => {
-        showAllSubjectsService();
-    }, []);
-
-    const createLessonCardHandler = (card) => {
-        if (Object.keys(card).length === 0 && card.constructor === Object) return;
-        if (card.groups === undefined) {
-            card.groups = [{ id: groupId }];
-        }
-        handleLessonCardService(card, groupId, currentSemester);
-    };
     useEffect(() => {
         setLoadingService(true);
         getLessonsByGroupService(groupId);
     }, [lessons.length]);
+    useEffect(() => {
+        showAllTeachersService();
+        getLessonTypesService();
+        showAllGroupsService();
+        showAllSubjectsService();
+        showAllSemestersService();
+    }, []);
 
-    const selectLessonCardHandler = (lessonCardId) => {
-        selectLessonCardService(lessonCardId);
+    const submitLessonForm = (card) => {
+        handleLessonCardService(card, groupId, currentSemester);
     };
 
-    const groupTitleHandle = (groups, groupId) => {
-        return groups.find((group) => group.id === +groupId).title;
+    const searchTitleGroupByID = (id) => {
+        return groups.find((group) => group.id === +id).title;
     };
 
-    const groupHandle = (groups, groupId) => {
-        return groups.find((group) => group.id === +groupId);
+    const showConfirmDialog = (lessonCardId) => {
+        setLessonId(lessonCardId);
+        setIsOpenConfirmDialog(true);
     };
 
-    const handleClickOpen = (lessonId) => {
-        setLessonId(lessonId);
-        setOpen(true);
-    };
-
-    const handleClose = (lessonId) => {
-        setOpen(false);
-        if (!lessonId) return;
-
+    const acceptConfirmDialog = (id) => {
+        setIsOpenConfirmDialog(false);
+        if (!id) return;
         removeLessonCardService(lessonId);
     };
 
@@ -163,21 +124,18 @@ const LessonPage = (props) => {
         }
     };
 
-    const groupFinderHandle = (groupId) => {
-        if (groupId) return groups.find((group) => group.id === groupId);
-        return '';
+    const groupFinderHandle = (id) => {
+        return id && groups.find((group) => group.id === groupId);
     };
 
     const submitCopy = (values) => {
-        values.toSemesterId = props.currentSemester.id;
-        values.fromSemesterId = +values.fromSemesterId;
-        CopyLessonsFromSemesterService(values);
+        const toSemesterId = currentSemester.id;
+        const fromSemesterId = +values.fromSemesterId;
+        CopyLessonsFromSemesterService({ ...values, toSemesterId, fromSemesterId });
     };
 
     const renderCopyLessonsForm = () => {
-        if (!groupId) {
-            return <CopyLessonsFromSemesterForm onSubmit={submitCopy} />;
-        }
+        return !groupId && <CopyLessonsFromSemesterForm onSubmit={submitCopy} />;
     };
 
     let cardsContainer = (
@@ -185,25 +143,23 @@ const LessonPage = (props) => {
             {visibleItems.length > 0 ? (
                 <LessonsList
                     lessons={visibleItems}
-                    onClickOpen={handleClickOpen}
-                    onSelectLesson={selectLessonCardHandler}
+                    onClickOpen={showConfirmDialog}
+                    onSelectLesson={selectLessonCardService}
                     onCopyLesson={openCopyLessonDialogHandle}
                     translation={t}
                 />
             ) : (
                 <section className="centered-container">
                     <h2>
-                        {groupHandle(groups, groupId)
-                            ? t(LESSON_NO_LESSON_FOR_GROUP_LABEL) +
-                              groupTitleHandle(groups, groupId)
-                            : ''}
+                        {groupId &&
+                            t(LESSON_NO_LESSON_FOR_GROUP_LABEL) + searchTitleGroupByID(groupId)}
                     </h2>
                 </section>
             )}
         </>
     );
 
-    if (isLoading) {
+    if (loading) {
         cardsContainer = (
             <section className="centered-container">
                 <CircularProgress />
@@ -213,7 +169,7 @@ const LessonPage = (props) => {
 
     return (
         <>
-            <Card class="card-title lesson-card">
+            <Card additionClassName="card-title lesson-card">
                 <CopyLessonDialog
                     open={openCopyLessonDialog}
                     onClose={closeCopyLessonDialogHandle}
@@ -222,11 +178,12 @@ const LessonPage = (props) => {
                     groups={groups}
                     translation={t}
                 />
-                <ConfirmDialog
+                <CustomDialog
+                    type={dialogTypes.DELETE_CONFIRM}
                     cardId={lessonId}
                     whatDelete={cardType.LESSON.toLowerCase()}
-                    open={open}
-                    onClose={handleClose}
+                    open={isOpenConfirmDialog}
+                    onClose={acceptConfirmDialog}
                 />
                 <div className="lesson-page-title">
                     <aside className="search-lesson-group">
@@ -265,8 +222,8 @@ const LessonPage = (props) => {
                         isUniqueError={isUniqueError}
                         subjects={subjects}
                         teachers={teachers}
-                        onSubmit={createLessonCardHandler}
-                        onSetSelectedCard={selectLessonCardHandler}
+                        onSubmit={submitLessonForm}
+                        onSetSelectedCard={selectLessonCardService}
                     />
                     {renderCopyLessonsForm()}
                 </section>

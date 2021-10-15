@@ -22,8 +22,6 @@ import { FaEdit } from 'react-icons/all';
 import { Delete } from '@material-ui/icons';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import ConfirmDialog from '../share/modals/dialog';
-import AddStudentDialog from '../share/modals/modal/AddStudentDialog';
 import { selectStudentService } from '../services/studentService';
 import './renderStudentTable.scss';
 import { getTeacherFullName } from './renderTeacher';
@@ -39,6 +37,8 @@ import {
     ALL_PAGE,
     ROWS_PER_PAGE,
 } from '../constants/translationLabels/formElements';
+import { CustomDialog, AddStudentDialog } from '../share/DialogWindows';
+import { dialogTypes } from '../constants/dialogs';
 
 const useStyles1 = makeStyles((theme) => ({
     root: {
@@ -318,9 +318,9 @@ export default function RenderStudentTable(props) {
                                 match={match}
                             />
 
-                            <ConfirmDialog
-                                selectedValue=""
-                                cardId={singleStudent}
+                            <CustomDialog
+                                type={dialogTypes.DELETE_CONFIRM}
+                                cardId={student}
                                 whatDelete="student"
                                 open={openDeleteDialog}
                                 onClose={deleteStudent}

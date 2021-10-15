@@ -15,7 +15,6 @@ import {
 
 import { errorHandler, successHandler } from '../helper/handlerAxios';
 import { resetFormHandler } from '../helper/formHelper';
-import i18n from '../helper/i18n';
 import {
     BACK_END_SUCCESS_OPERATION,
     UPDATED_LABEL,
@@ -23,6 +22,7 @@ import {
     DELETED_LABEL,
 } from '../constants/translationLabels/serviceMessages';
 import { FORM_ROOM_LABEL } from '../constants/translationLabels/formElements';
+import i18n from '../i18n';
 
 export const showListOfRoomsService = () => {
     axios

@@ -1,6 +1,5 @@
 import React, { useRef } from 'react';
 import ReactSelect from 'react-select';
-import { Dialog, DialogTitle } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import './multiselect.scss';
 import { useTranslation } from 'react-i18next';
@@ -10,6 +9,7 @@ import {
     CANCEL_BUTTON_LABEL,
     ALL_GROUPS,
 } from '../constants/translationLabels/common';
+import { CustomDialog } from '../share/DialogWindows';
 
 export const MultiselectForGroups = (props) => {
     const { t } = useTranslation('common');
@@ -55,42 +55,43 @@ export const MultiselectForGroups = (props) => {
         }
     };
     return (
-        <Dialog
+        <CustomDialog
             id="select-dialog"
-            disableBackdropClick
+            title=""
             aria-labelledby="confirm-dialog-title"
             open={open}
+            onClick={onClose}
+            buttons={
+                <div className="buttons-container">
+                    <Button
+                        className="dialog-button"
+                        variant="contained"
+                        color="primary"
+                        onClick={onClose}
+                    >
+                        {t(CONFIRM_GROUPS)}
+                    </Button>
+                    <Button
+                        className="dialog-button"
+                        variant="contained"
+                        color="primary"
+                        onClick={onCancel}
+                    >
+                        {t(CANCEL_BUTTON_LABEL)}
+                    </Button>
+                </div>
+            }
         >
-            <DialogTitle id="select-dialog-title" className="confirm-dialog">
-                <ReactSelect
-                    isOptionSelected={isOptionSelected}
-                    options={getOptions()}
-                    value={getValue()}
-                    onChange={onChange}
-                    hideSelectedOptions={false}
-                    closeMenuOnSelect={false}
-                    isMulti
-                    placeholder={t(CHOOSE_GROUPS)}
-                />
-            </DialogTitle>
-            <div className="buttons-container">
-                <Button
-                    className="dialog-button"
-                    variant="contained"
-                    color="primary"
-                    onClick={onClose}
-                >
-                    {t(CONFIRM_GROUPS)}
-                </Button>
-                <Button
-                    className="dialog-button"
-                    variant="contained"
-                    color="primary"
-                    onClick={onCancel}
-                >
-                    {t(CANCEL_BUTTON_LABEL)}
-                </Button>
-            </div>
-        </Dialog>
+            <ReactSelect
+                isOptionSelected={isOptionSelected}
+                options={getOptions()}
+                value={getValue()}
+                onChange={onChange}
+                hideSelectedOptions={false}
+                closeMenuOnSelect={false}
+                isMulti
+                placeholder={t(CHOOSE_GROUPS)}
+            />
+        </CustomDialog>
     );
 };

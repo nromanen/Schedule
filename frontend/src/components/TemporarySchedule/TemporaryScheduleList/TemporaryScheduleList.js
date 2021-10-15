@@ -5,7 +5,8 @@ import { useTranslation } from 'react-i18next';
 import Divider from '@material-ui/core/Divider';
 import shortId from 'shortid';
 import Card from '../../../share/Card/Card';
-import ConfirmDialog from '../../../share/modals/dialog';
+import { CustomDialog } from '../../../share/DialogWindows';
+import { dialogTypes } from '../../../constants/dialogs';
 
 import {
     deleteTemporaryScheduleService,
@@ -22,7 +23,7 @@ import {
     HOLIDAY_LABEL,
     DATE_LABEL,
     FOR_ALL,
-} from '../../../constants/translationLabels/common.js';
+} from '../../../constants/translationLabels/common';
 
 const TemporaryScheduleList = (props) => {
     const { t } = useTranslation('common');
@@ -47,7 +48,8 @@ const TemporaryScheduleList = (props) => {
 
     return (
         <main className="container-flex-wrap">
-            <ConfirmDialog
+            <CustomDialog
+                type={dialogTypes.DELETE_CONFIRM}
                 cardId={temporaryScheduleId}
                 whatDelete={cardType.TEMPORARY_SCHEDULE}
                 open={open}

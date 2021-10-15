@@ -3,9 +3,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
 import DialogTitle from '@material-ui/core/DialogTitle';
-import Dialog from '@material-ui/core/Dialog';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import { CircularProgress } from '@material-ui/core';
@@ -25,17 +23,9 @@ import {
     FORM_CANCEL_BUTTON_TITLE,
     FORM_ROOM_LABEL,
 } from '../../constants/translationLabels/formElements';
-import '../../share/modals/dialog.scss';
 import './ScheduleDialog.scss';
-
-const useStyles = makeStyles(() => ({
-    roomField: {
-        '&': {
-            margin: '0 auto',
-            width: 250,
-        },
-    },
-}));
+import { CustomDialog } from '../../share/DialogWindows';
+import '../../share/DialogWindows/dialog.scss';
 
 const groupByAvailability = (arr) => {
     arr.sort((x, y) => {
@@ -55,8 +45,6 @@ const ScheduleDialog = (props) => {
 
     const [room, setRoom] = useState('');
     const [sure, setSure] = useState(true);
-
-    const classes = useStyles();
 
     const getOptionLabel = (option) => {
         if (option && option.available) {
@@ -93,97 +81,119 @@ const ScheduleDialog = (props) => {
             </div>
         );
 
-    const surePositive = (
-        <>
-            <DialogTitle id="simple-dialog-title">
-                {translation(COMMON_SCHEDULE_DIALOG_TITLE)}
-            </DialogTitle>
-            <div className="availability-info">
-                {!availability.classSuitsToTeacher && (
-                    <p className="availability-warning">
-                        {translation(COMMON_CLASS_DOES_NOT_SUIT_FOR_TEACHER)}
-                    </p>
-                )}
-                {!availability.teacherAvailable && (
-                    <p className="availability-warning">
-                        {translation(COMMON_TEACHER_IS_UNAVAILABLE)}{' '}
-                    </p>
-                )}
-            </div>
-            <Autocomplete
-                {...defaultProps}
-                id="group"
-                clearOnEscape
-                openOnFocus
-                className={classes.roomField}
-                onChange={(event, newValue) => {
-                    setRoom(newValue);
-                }}
-                renderInput={(params) => (
-                    <TextField {...params} label={translation(FORM_ROOM_LABEL)} margin="normal" />
-                )}
-            />
-            <div className="buttons-container">
-                <Button
-                    className="dialog-button"
-                    variant="contained"
-                    color="primary"
-                    onClick={() => chooseClickHandle()}
-                >
-                    {translation(FORM_CHOOSE_BUTTON_TITLE)}
-                </Button>
-                <Button className="dialog-button" variant="contained" onClick={() => onClose()}>
-                    {translation(FORM_CANCEL_BUTTON_TITLE)}
-                </Button>
-            </div>
-        </>
-    );
-    const sureNegative = (
-        <>
-            <DialogTitle id="simple-dialog-title">
-                <p className="availability-warning">
-                    {!room.available && `${translation(COMMON_ROOM_IS_UNAVAILABLE)}. `}
-                </p>
-                <p className="availability-warning">
-                    {!availability.teacherAvailable &&
-                        `${translation(COMMON_TEACHER_IS_UNAVAILABLE)}. `}
-                </p>
-
-                <p className="availability-warning">
-                    {!availability.classSuitsToTeacher &&
-                        `${translation(COMMON_CLASS_DOES_NOT_SUIT_FOR_TEACHER)}. `}
-                </p>
-
-                {translation(COMMON_ARE_YOU_SURE)}
-            </DialogTitle>
-            <div className="buttons-container">
-                <Button
-                    className="dialog-button"
-                    variant="contained"
-                    color="primary"
-                    onClick={() => {
-                        onClose({ itemData, room });
-                        setSure(true);
-                    }}
-                >
-                    {translation(COMMON_YES_BUTTON_TITLE)}
-                </Button>
-                <Button className="dialog-button" variant="contained" onClick={() => setSure(true)}>
-                    {translation(COMMON_NO_BUTTON_TITLE)}
-                </Button>
-            </div>
-        </>
-    );
-
     return (
-        <Dialog
-            disableBackdropClick
-            onClose={() => onClose()}
-            aria-labelledby="simple-dialog-title"
+        <CustomDialog
+            title={translation(COMMON_SCHEDULE_DIALOG_TITLE)}
             open={open}
+            onClose={onClose}
         >
-            {sure ? surePositive : sureNegative}
-        </Dialog>
+            {sure ? (
+                <>
+                    {isLoading ? (
+                        <div className="circular-progress-dialog">
+                            <CircularProgress />
+                        </div>
+                    ) : (
+                        <>
+                            <DialogTitle id="simple-dialog-title">
+                                {translation(COMMON_SCHEDULE_DIALOG_TITLE)}
+                            </DialogTitle>
+                            <div className="availability-info">
+                                {!availability.classSuitsToTeacher ? (
+                                    <p className="availability-warning">
+                                        {translation(COMMON_CLASS_DOES_NOT_SUIT_FOR_TEACHER)}
+                                    </p>
+                                ) : (
+                                    ''
+                                )}
+                                {!availability.teacherAvailable ? (
+                                    <p className="availability-warning">
+                                        {translation(COMMON_TEACHER_IS_UNAVAILABLE)}{' '}
+                                    </p>
+                                ) : (
+                                    ''
+                                )}
+                            </div>
+                            <Autocomplete
+                                {...defaultProps}
+                                id="group"
+                                clearOnEscape
+                                openOnFocus
+                                className="room-field"
+                                onChange={(event, newValue) => {
+                                    setRoom(newValue);
+                                }}
+                                renderInput={(params) => (
+                                    <TextField
+                                        {...params}
+                                        label={translation(FORM_ROOM_LABEL)}
+                                        margin="normal"
+                                    />
+                                )}
+                            />
+                            <div className="buttons-container">
+                                <Button
+                                    className="dialog-button"
+                                    variant="contained"
+                                    color="primary"
+                                    onClick={() => chooseClickHandle()}
+                                >
+                                    {translation(FORM_CHOOSE_BUTTON_TITLE)}
+                                </Button>
+                                <Button
+                                    className="dialog-button"
+                                    variant="contained"
+                                    onClick={() => onClose()}
+                                >
+                                    {translation(FORM_CANCEL_BUTTON_TITLE)}
+                                </Button>
+                            </div>
+                        </>
+                    )}
+                </>
+            ) : (
+                <>
+                    <DialogTitle id="simple-dialog-title">
+                        <p className="availability-warning">
+                            {!room.available ? `${translation(COMMON_ROOM_IS_UNAVAILABLE)}. ` : ''}
+                        </p>
+                        <p className="availability-warning">
+                            {!availability.teacherAvailable
+                                ? `${translation(COMMON_TEACHER_IS_UNAVAILABLE)}. `
+                                : ''}
+                        </p>
+
+                        <p className="availability-warning">
+                            {!availability.classSuitsToTeacher
+                                ? `${translation(COMMON_CLASS_DOES_NOT_SUIT_FOR_TEACHER)}. `
+                                : ''}
+                        </p>
+
+                        {translation(COMMON_ARE_YOU_SURE)}
+                    </DialogTitle>
+                    <div className="buttons-container">
+                        <Button
+                            className="dialog-button"
+                            variant="contained"
+                            color="primary"
+                            onClick={() => {
+                                onClose({ itemData, room });
+                                setSure(true);
+                            }}
+                        >
+                            {translation(COMMON_YES_BUTTON_TITLE)}
+                        </Button>
+                        <Button
+                            className="dialog-button"
+                            variant="contained"
+                            onClick={() => setSure(true)}
+                        >
+                            {translation(COMMON_NO_BUTTON_TITLE)}
+                        </Button>
+                    </div>
+                </>
+            )}
+        </CustomDialog>
     );
 };
 

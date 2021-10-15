@@ -25,7 +25,17 @@ import { CLASS_SCHEDULE, WEEK_LABEL } from '../../constants/translationLabels/co
 import './Schedule.scss';
 
 const Schedule = (props) => {
-    const { groups, itemGroupId, groupId } = props;
+    const {
+        groups,
+        itemGroupId,
+        groupId,
+        items,
+        currentSemester,
+        translation: t,
+        rooms,
+        availability,
+        isLoading,
+    } = props;
     const [open, setOpen] = useState(false);
     const [itemData, setItemData] = useState(null);
 
@@ -107,11 +117,8 @@ const Schedule = (props) => {
         }
     };
 
-    const { items, currentSemester } = props;
     const days = currentSemester.semester_days;
     const classes = currentSemester.semester_classes;
-
-    const t = props.translation;
 
     const dayContainerHeight = classes.length * 150;
 
@@ -122,7 +129,7 @@ const Schedule = (props) => {
         },
     });
     const elClasses = useStyles();
-
+    // TODO delete this and replace with unified capitalize
     const firstStringLetterCapitalHandle = (str) => {
         return firstStringLetterCapital(str);
     };
@@ -234,10 +241,10 @@ const Schedule = (props) => {
             <ScheduleDialog
                 translation={t}
                 itemData={itemData}
-                rooms={props.rooms}
-                availability={props.availability}
+                rooms={rooms}
+                availability={availability}
                 open={open}
-                isLoading={props.isLoading}
+                isLoading={isLoading}
                 onClose={handleClose}
             />
             <aside className="day-classes-aside">

@@ -21,12 +21,7 @@ const GroupField = styled(TextField)({
 });
 
 const ScheduleLessonsList = (props) => {
-    const { groups, groupId } = props;
-
-    const { lessons } = props;
-    const { items } = props;
-
-    const t = props.translation;
+    const { groups, groupId, lessons, items, translation: t } = props;
 
     const handleGroupSelect = (group) => {
         if (group) selectGroupIdService(group.id);
@@ -86,7 +81,7 @@ const ScheduleLessonsList = (props) => {
                 clearOnEscape
                 openOnFocus
                 value={groupFinderHandle(groupId)}
-                onChange={(event, newValue) => {
+                onChange={(_, newValue) => {
                     handleGroupSelect(newValue);
                 }}
                 renderInput={(params) => (

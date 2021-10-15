@@ -4,7 +4,7 @@ import { store } from '../store';
 import { resetFormHandler } from '../helper/formHelper';
 import { DEPARTMENT_FORM } from '../constants/reduxForms';
 import { errorHandler, successHandler } from '../helper/handlerAxios';
-import i18n from '../helper/i18n';
+import i18n from '../i18n';
 import {
     addDepartment,
     clearDepartmentForm,

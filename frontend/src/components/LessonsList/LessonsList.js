@@ -11,10 +11,8 @@ import { FORM_GROUPED_LABEL } from '../../constants/translationLabels/formElemen
 import { COPY_LESSON, DELETE_LESSON, EDIT_LESSON } from '../../constants/translationLabels/common';
 
 const LessonsList = (props) => {
-    const { lessons } = props;
-
-    const t = props.translation;
-
+    const { lessons, translation: t, onCopyLesson, onSelectLesson, onClickOpen } = props;
+    // TODO replece with capitalize
     const firstStringLetterCapitalHandle = (str) => {
         return str.replace(/^\w/, (c) => c.toUpperCase());
     };
@@ -28,6 +26,7 @@ const LessonsList = (props) => {
         ) : (
             ''
         );
+    // TODO move strings to constants
     const getUkWordHours = (number) => {
         if (number === 1) {
             return 'година';
@@ -81,23 +80,23 @@ const LessonsList = (props) => {
         <div>
             <section className="container-flex-wrap">
                 {lessons.map((lesson) => (
-                    <Card class="done-card" key={lesson.id}>
+                    <Card additionClassName="done-card" key={lesson.id}>
                         <div className="cards-btns">
                             {isGrouped(lesson.grouped)}
                             <MdContentCopy
                                 title={t(COPY_LESSON)}
                                 className="svg-btn copy-btn"
-                                onClick={() => props.onCopyLesson(lesson)}
+                                onClick={() => onCopyLesson(lesson)}
                             />
                             <FaEdit
                                 title={t(EDIT_LESSON)}
                                 className="svg-btn edit-btn"
-                                onClick={() => props.onSelectLesson(lesson.id)}
+                                onClick={() => onSelectLesson(lesson.id)}
                             />
                             <MdDelete
                                 title={t(DELETE_LESSON)}
                                 className="svg-btn delete-btn"
-                                onClick={() => props.onClickOpen(lesson.id)}
+                                onClick={() => onClickOpen(lesson.id)}
                             />
                         </div>
                         <p style={{ height: '3em' }}>{getLessonShortTitle(getTitle(lesson))}</p>

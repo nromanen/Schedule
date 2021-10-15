@@ -89,9 +89,7 @@ const TemporaryScheduleTitle = (props) => {
 
     const [radio, setRadio] = useState(temporaryScheduleRadioTypes.SEMESTER);
 
-    const { teachers, teacherId } = props;
-    const { toDate, setToDate } = props;
-    const { fromDate, setFromDate } = props;
+    const { teachers, teacherId, toDate, setToDate, fromDate, setFromDate } = props;
 
     useEffect(() => {
         if (radio === temporaryScheduleRadioTypes.SEMESTER)

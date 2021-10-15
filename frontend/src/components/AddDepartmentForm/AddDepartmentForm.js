@@ -19,22 +19,23 @@ import {
 
 const AddDepartment = (props) => {
     const { t } = useTranslation('formElements');
-    const { handleSubmit, clear, department, pristine, submitting, editDepartment } = props;
+    const { handleSubmit, clear, department, pristine, submitting, editDepartment, initialize } =
+        props;
     useEffect(() => {
         if (department && editDepartment) {
             if (department.id) {
-                props.initialize({
+                initialize({
                     name: department.name,
                     id: department.id,
                 });
             } else {
-                props.initialize();
+                initialize();
             }
         }
     }, [department]);
 
     return (
-        <Card class="form-card subject-form">
+        <Card additionClassName="form-card subject-form">
             <h2 style={{ textAlign: 'center' }}>
                 {department.id ? t(EDIT_TITLE) : t(CREATE_TITLE)}
                 {t(DEPARTMENT_LABEL)}

@@ -7,7 +7,7 @@ import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import shortId from 'shortid';
 import Card from '../../../share/Card/Card';
-import ConfirmDialog from '../../../share/modals/dialog';
+import { CustomDialog } from '../../../share/DialogWindows';
 
 import TemporaryScheduleCard from '../TemporaryScheduleCard/TemporaryScheduleCard';
 import TemporaryScheduleCardButtons from '../TemporaryScheduleCardButtons/TemporaryScheduleCardButtons';
@@ -15,6 +15,7 @@ import TemporaryScheduleCardButtons from '../TemporaryScheduleCardButtons/Tempor
 import { cardType } from '../../../constants/cardType';
 
 import { deleteTemporaryScheduleService } from '../../../services/temporaryScheduleService';
+import { dialogTypes } from '../../../constants/dialogs';
 
 const ScheduleAndTemporaryScheduleList = (props) => {
     const schedulesAndTemporarySchedules = props.schedulesAndTemporarySchedules || [];
@@ -47,7 +48,8 @@ const ScheduleAndTemporaryScheduleList = (props) => {
 
     return (
         <main className="temporary-schedule-section">
-            <ConfirmDialog
+            <CustomDialog
+                type={dialogTypes.DELETE_CONFIRM}
                 cardId={temporaryScheduleId}
                 whatDelete={cardType.TEMPORARY_SCHEDULE.toLowerCase()}
                 open={open}
@@ -106,7 +108,9 @@ const ScheduleAndTemporaryScheduleList = (props) => {
                                             />
                                         </Card>
                                     ) : (
-                                        <Card class="done-card hidden-card">Hidden</Card>
+                                        <Card additionClassName="done-card hidden-card">
+                                            Hidden
+                                        </Card>
                                     )}
                                 </section>
                             ))}

@@ -72,7 +72,7 @@ const StyledMenuItem = withStyles((theme) => ({
 }))(MenuItem);
 
 const Header = (props) => {
-    const { roles } = props;
+    const { roles, userRole, loading, currentSemester } = props;
     const [anchorEl, setAnchorEl] = useState(null);
     const handleClick = (event) => setAnchorEl(event.currentTarget);
     const handleClose = () => setAnchorEl(null);
@@ -84,22 +84,22 @@ const Header = (props) => {
     const { t } = useTranslation('common');
 
     useEffect(() => {
-        if (props.userRole === roles.MANAGER) {
+        if (userRole === roles.MANAGER) {
             setSemesterLoadingService(true);
             getCurrentSemesterService();
         }
-    }, [props.userRole]);
+    }, [userRole]);
 
-    const getUserMenu = (userRole) => {
+    const getUserMenu = (role) => {
         let userMenu = null;
-        if (isNil(userRole)) {
+        if (isNil(role)) {
             return (
                 <Link to={links.LOGIN} className="navLinks">
                     {t(LOGIN_TITLE)}
                 </Link>
             );
         }
-        switch (userRole) {
+        switch (role) {
             case roles.MANAGER:
                 userMenu = (
                     <div className="user-menu">
@@ -307,17 +307,17 @@ const Header = (props) => {
 
     let leftLinks = null;
     let menu = null;
-    const userMenu = getUserMenu(props.userRole);
-    if (props.userRole === roles.MANAGER) {
+    const userMenu = getUserMenu(userRole);
+    if (userRole === roles.MANAGER) {
         leftLinks = (
             <>
-                {props.loading ? (
+                {loading ? (
                     <span className="navLinks nav-semester">
                         <CircularProgress size={20} />
                     </span>
                 ) : (
                     <span className="navLinks nav-semester">
-                        {t(SEMESTER_LABEL)}: {props.currentSemester.description}
+                        {t(SEMESTER_LABEL)}: {currentSemester.description}
                     </span>
                 )}
             </>
@@ -341,9 +341,7 @@ const Header = (props) => {
                     open={Boolean(anchorEl)}
                     onClose={handleClose}
                 >
-                    <span className="navLinks menu-semester">
-                        {props.currentSemester.description}
-                    </span>
+                    <span className="navLinks menu-semester">{currentSemester.description}</span>
                     <Link
                         to={links.HOME_PAGE}
                         className="navLinks"
@@ -417,7 +415,7 @@ const Header = (props) => {
                 </StyledMenu>
             </div>
         );
-    } else if (props.userRole === roles.TEACHER) {
+    } else if (userRole === roles.TEACHER) {
         menu = (
             <div className="menu">
                 <Button
@@ -486,7 +484,7 @@ const Header = (props) => {
                 </StyledMenu>
             </div>
         );
-    } else if (props.userRole === null || props.userRole === undefined) {
+    } else if (isNil(userRole)) {
         menu = (
             <div className="menu">
                 <Button

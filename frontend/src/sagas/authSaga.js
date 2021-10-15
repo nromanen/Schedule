@@ -6,8 +6,8 @@ import { authUserService } from '../services/authService';
 
 import { TOKEN_BEGIN } from '../constants/tokenBegin';
 import axios from '../helper/axios';
-import i18n from '../helper/i18n';
 import { COMMON_ERROR_MESSAGE } from '../constants/translationLabels/common';
+import i18n from '../i18n';
 
 export function* authSaga(payload) {
     try {

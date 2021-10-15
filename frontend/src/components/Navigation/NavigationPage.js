@@ -46,16 +46,16 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const NavigationPage = (props) => {
-    const { val } = props;
+    const { val, name } = props;
     const { t } = useTranslation('common');
     const classes = useStyles();
     const [value, setValue] = useState(val || 0);
-    const [gen, setGen] = useState(props.name || general[0].name);
+    const [gen, setGen] = useState(name || general[0].name);
     useEffect(() => {
         setCurrentSemester();
     }, []);
 
-    const handleChange = (event, newValue) => {
+    const handleChange = (_, newValue) => {
         setValue(newValue);
     };
 
@@ -93,7 +93,7 @@ const NavigationPage = (props) => {
                                     id="demo-controlled-open-select"
                                     value={gen}
                                     onChange={(event) => {
-                                        const eventValue = event.target.value;
+                                        const { value: eventValue } = event.target;
                                         setGen(eventValue);
                                         documentTitle(eventValue);
                                     }}

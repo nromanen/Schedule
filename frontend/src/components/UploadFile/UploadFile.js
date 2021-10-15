@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
-import { uploadStudentsToGroupFile } from '../../services/uploadFile';
-import { Dialog, DialogTitle } from '@material-ui/core';
 import './UploadFile.scss';
-import { FaWindowClose } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
 import Button from '@material-ui/core/Button';
+import { uploadStudentsToGroupFile } from '../../services/uploadFile';
+import { CustomDialog } from '../../share/DialogWindows';
 import { setLoadingService } from '../../services/loadingService';
 import { CLOSE_LABEL } from '../../constants/translationLabels/formElements';
 import {
@@ -40,46 +39,50 @@ export const UploadFile = (props) => {
         return selectedFile === null;
     };
     return (
-        <Dialog disableBackdropClick aria-labelledby="confirm-dialog-title" open={open}>
-            <DialogTitle className="upload-dialog" id="confirm-dialog-title">
-                <FaWindowClose
-                    title={t(CLOSE_LABEL)}
-                    className="close-dialog"
-                    variant="contained"
-                    onClick={handleCloseDialogFile}
-                />
+        <CustomDialog
+            title="Upload file"
+            open={open}
+            onClick={handleCloseDialogFile}
+            buttons={
+                <>
+                    <Button
+                        className="dialog-button"
+                        variant="contained"
+                        onClick={handleSubmission}
+                        color="primary"
+                        title={t(COMMON_UPLOAD_TITLE)}
+                        disabled={setDisabledSendButton()}
+                    >
+                        {t(COMMON_UPLOAD_TITLE)}
+                    </Button>
+                    <Button
+                        className="dialog-button"
+                        variant="contained"
+                        onClick={handleCloseDialogFile}
+                        color="primary"
+                        title={t(CLOSE_LABEL)}
+                    >
+                        {t(CLOSE_LABEL)}
+                    </Button>
+                </>
+            }
+        >
+            <input
+                type="file"
+                name="file"
+                accept=".txt, .csv"
+                onChange={changeHandler}
+                ref={fileInputRef}
+            />
+            {selectedFile ? (
                 <div>
-                    <input
-                        type="file"
-                        name="file"
-                        accept=".txt, .csv"
-                        onChange={changeHandler}
-                        ref={fileInputRef}
-                    />
-                    {selectedFile ? (
-                        <div>
-                            <p>{`${t(COMMON_NAME_LABEL)}: ${selectedFile.name}`}</p>
-                            <p>{`${t(COMMON_TYPE_LABEL)}: ${selectedFile.type}`}</p>
-                            <p>{`${t(COMMON_BYTE_SIZE_LABEL)}: ${selectedFile.size}`}</p>
-                            {/* <p>{`${t('common:last_modified_date')}: ${selectedFile.lastModifiedDate.toLocaleDateString()}`}</p> */}
-                        </div>
-                    ) : (
-                        <p>{t(COMMON_SELECT_FILE_LABEL)}</p>
-                    )}
-                    <div>
-                        <Button
-                            className="dialog-button"
-                            variant="contained"
-                            onClick={handleSubmission}
-                            color="primary"
-                            title={t(COMMON_UPLOAD_TITLE)}
-                            disabled={setDisabledSendButton()}
-                        >
-                            {t(COMMON_UPLOAD_TITLE)}
-                        </Button>
-                    </div>
+                    <p>{`${t(COMMON_NAME_LABEL)}: ${selectedFile.name}`}</p>
+                    <p>{`${t(COMMON_TYPE_LABEL)}: ${selectedFile.type}`}</p>
+                    <p>{`${t(COMMON_BYTE_SIZE_LABEL)}: ${selectedFile.size}`}</p>
                 </div>
-            </DialogTitle>
-        </Dialog>
+            ) : (
+                <p>{t(COMMON_SELECT_FILE_LABEL)}</p>
+            )}
+        </CustomDialog>
     );
 };

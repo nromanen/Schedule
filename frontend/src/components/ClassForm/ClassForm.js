@@ -36,25 +36,23 @@ import {
 
 const ClassFormFunc = (props) => {
     const { t } = useTranslation('formElements');
-    const { handleSubmit, pristine, onReset, submitting, classScheduleOne } = props;
+    const { handleSubmit, pristine, onReset, submitting, classScheduleOne, initialize, change } =
+        props;
     useEffect(() => {
         let initialValues = {};
         if (classScheduleOne) {
             initialValues = classScheduleOne;
         }
-        props.initialize(initialValues);
+        initialize(initialValues);
     }, [classScheduleOne]);
 
     const setEndTime = (startTime) =>
-        props.change(
-            'endTime',
-            moment(startTime, 'HH:mm').add(CLASS_DURATION, 'h').format('HH:mm'),
-        );
+        change('endTime', moment(startTime, 'HH:mm').add(CLASS_DURATION, 'h').format('HH:mm'));
 
     return (
-        <Card class="form-card">
+        <Card additionClassName="form-card">
             <h2 className="form-title">
-                {props.classScheduleOne.id ? t(EDIT_TITLE) : t(CREATE_TITLE)} {t(CLASS_Y_LABEL)}
+                {classScheduleOne.id ? t(EDIT_TITLE) : t(CREATE_TITLE)} {t(CLASS_Y_LABEL)}
             </h2>
             <form onSubmit={handleSubmit}>
                 <Field

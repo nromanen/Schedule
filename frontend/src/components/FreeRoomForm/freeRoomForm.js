@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import Button from '@material-ui/core/Button';
 import { useTranslation } from 'react-i18next';
 import { required } from '../../validation/validateFields';
-import renderSelectField from '../../share/renderedFields/select';
+import SelectField from '../../share/renderedFields/select';
 import { FREE_ROOMS } from '../../constants/reduxForms';
 import { showAllSemestersService } from '../../services/semesterService';
 import './freeRoomForm.scss';
@@ -39,7 +39,7 @@ let FreeRoomForm = (props) => {
                 <div className="roomsItems">
                     <Field
                         name="semesterId"
-                        component={renderSelectField}
+                        component={SelectField}
                         label={t(FORM_SEMESTER_FREE_ROOMS)}
                         type="text"
                         className="freeRoomsItem"
@@ -54,7 +54,7 @@ let FreeRoomForm = (props) => {
                     </Field>
                     <Field
                         name="evenOdd"
-                        component={renderSelectField}
+                        component={SelectField}
                         label={t(FORM_WEEK_FREE_ROOMS)}
                         type="text"
                         className="freeRoomsItem"
@@ -69,7 +69,7 @@ let FreeRoomForm = (props) => {
                     </Field>
                     <Field
                         name="dayOfWeek"
-                        component={renderSelectField}
+                        component={SelectField}
                         label={t(FORM_DAY_FREE_ROOMS)}
                         type="text"
                         className="freeRoomsItem"
@@ -84,7 +84,7 @@ let FreeRoomForm = (props) => {
                     </Field>
                     <Field
                         name="class"
-                        component={renderSelectField}
+                        component={SelectField}
                         label={t(FORM_CLASS_FREE_ROOMS)}
                         type="text"
                         className="freeRoomsItem"

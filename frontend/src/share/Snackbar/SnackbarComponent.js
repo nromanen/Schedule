@@ -1,22 +1,15 @@
 import React from 'react';
 
-import MuiAlert from '@material-ui/lab/Alert';
 import Snackbar from '@material-ui/core/Snackbar';
 import { snackbarTypes } from '../../constants/snackbarTypes';
-
-const Alert = (props) => {
-    return <MuiAlert elevation={6} variant="filled" {...props} />;
-};
+import { Alert } from '../Alerts';
 
 const SnackbarComponent = (props) => {
-    const { message } = props;
-    const { type } = props;
-    const { isOpen } = props;
-    const { handleSnackbarClose } = props;
+    const { message, type, isOpen, handleSnackbarClose } = props;
     return (
         <Snackbar
             open={isOpen}
-            autoHideDuration={props.type === snackbarTypes.ERROR ? null : 3000}
+            autoHideDuration={type === snackbarTypes.ERROR ? null : 3000}
             onClose={handleSnackbarClose}
         >
             <Alert onClose={handleSnackbarClose} severity={type}>

@@ -29,15 +29,13 @@ const LoginForm = (props) => {
         setScheduleTypeService('');
     });
     const { t } = useTranslation('formElements');
-    const { handleSubmit } = props;
+    const { handleSubmit, loginError, translation, setError, isLoading } = props;
 
-    const error = props.loginError;
-
-    const { translation } = props;
+    const error = loginError;
 
     const errorHandling = (value) => {
-        if (required(value)) props.setError(required(value));
-        else props.setError(null);
+        if (required(value)) setError(required(value));
+        else setError(null);
     };
 
     let form = (
@@ -71,12 +69,12 @@ const LoginForm = (props) => {
         </form>
     );
 
-    if (props.isLoading) {
+    if (isLoading) {
         form = <CircularProgress />;
     }
 
     return (
-        <Card class="auth-card">
+        <Card additionClassName="auth-card">
             <h2 className="under-line">{translation(LOGIN_TITLE)}</h2>
             {form}
         </Card>

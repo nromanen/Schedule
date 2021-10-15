@@ -5,7 +5,7 @@ import { Field, reduxForm } from 'redux-form';
 import { useTranslation } from 'react-i18next';
 
 import Button from '@material-ui/core/Button';
-import renderSelectField from '../../share/renderedFields/select';
+import SelectField from '../../share/renderedFields/select';
 
 import './CopyLessonsFromSemesterForm.scss';
 import Card from '../../share/Card/Card';
@@ -27,7 +27,7 @@ const CopyLessonsFromSemesterForm = (props) => {
                 <Field
                     id="fromSemesterId"
                     name="fromSemesterId"
-                    component={renderSelectField}
+                    component={SelectField}
                     label={t(FORM_SEMESTER_LABEL)}
                     type="text"
                     validate={[required]}
@@ -49,7 +49,7 @@ const CopyLessonsFromSemesterForm = (props) => {
     };
 
     return (
-        <Card class="form-card">
+        <Card additionClassName="form-card">
             <form onSubmit={handleSubmit}>
                 <h2 className="lesson-page-h">{t(COPY_LESSON)}</h2>
                 <p>{t(COPY_LESSONS_FROM_SEMESTER)}</p>

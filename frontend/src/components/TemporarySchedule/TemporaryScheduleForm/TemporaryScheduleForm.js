@@ -8,7 +8,7 @@ import { TEMPORARY_SCHEDULE_FORM } from '../../../constants/reduxForms';
 
 import Card from '../../../share/Card/Card';
 import renderCheckboxField from '../../../share/renderedFields/checkbox';
-import renderSelectField from '../../../share/renderedFields/select';
+import SelectField from '../../../share/renderedFields/select';
 import renderTextField from '../../../share/renderedFields/input';
 
 import { handleTeacherInfo } from '../../../helper/renderTeacher';
@@ -40,19 +40,29 @@ import {
 
 const TemporaryScheduleForm = (props) => {
     const { t } = useTranslation('formElements');
-    const { handleSubmit, invalid, reset, submitting } = props;
+    const {
+        handleSubmit,
+        invalid,
+        reset,
+        submitting,
+        temporarySchedule,
+        teachers,
+        periods,
+        rooms,
+        subjects,
+        lessonTypes,
+        groups,
+        initialize,
+    } = props;
     const [isVacation, setIsVacation] = useState(false);
     const [notify, setNotify] = useState(false);
 
-    const { temporarySchedule } = props;
     const scheduleId = temporarySchedule?.scheduleId;
     const temporaryScheduleId = temporarySchedule?.id;
 
-    const { teachers, periods, rooms, subjects, lessonTypes, groups } = props;
-
     const initializeFormHandler = (temporaryScheduleData) => {
         setIsVacation(temporaryScheduleData.vacation);
-        props.initialize({
+        initialize({
             vacation: isVacation,
             teacher: temporaryScheduleData.teacher.id,
             semester: temporaryScheduleData.semester.id,
@@ -73,7 +83,7 @@ const TemporaryScheduleForm = (props) => {
         if (temporaryScheduleId || scheduleId) {
             initializeFormHandler(temporarySchedule);
         } else {
-            props.initialize({ vacation: isVacation });
+            initialize({ vacation: isVacation });
         }
     }, [temporaryScheduleId]);
 
@@ -81,7 +91,7 @@ const TemporaryScheduleForm = (props) => {
     const handleNotifyChange = (event) => setNotify(event.target.checked);
 
     return (
-        <Card class="form-card">
+        <Card additionClassName="form-card">
             <>
                 <h2 className="form-title under-line">
                     {!temporarySchedule.scheduleId
@@ -100,7 +110,7 @@ const TemporaryScheduleForm = (props) => {
                     <Field
                         name="teacher"
                         className="form-field"
-                        component={renderSelectField}
+                        component={SelectField}
                         label={t(TEACHER_LABEL)}
                         validate={[required]}
                         disabled={isVacation}
@@ -124,7 +134,7 @@ const TemporaryScheduleForm = (props) => {
                     <Field
                         name="subject"
                         className="form-field"
-                        component={renderSelectField}
+                        component={SelectField}
                         label={t(SUBJECT_LABEL)}
                         validate={[required]}
                         disabled={isVacation}
@@ -146,7 +156,7 @@ const TemporaryScheduleForm = (props) => {
                     <Field
                         name="group"
                         className="form-field"
-                        component={renderSelectField}
+                        component={SelectField}
                         label={t(GROUP_LABEL)}
                         validate={[required]}
                         disabled={isVacation}
@@ -161,7 +171,7 @@ const TemporaryScheduleForm = (props) => {
                     <Field
                         name="lessonType"
                         className="form-field"
-                        component={renderSelectField}
+                        component={SelectField}
                         label={t(TYPE_LABEL)}
                         validate={[required]}
                         disabled={isVacation}
@@ -176,7 +186,7 @@ const TemporaryScheduleForm = (props) => {
                     <Field
                         name="room"
                         className="form-field"
-                        component={renderSelectField}
+                        component={SelectField}
                         label={t(ROOM_LABEL)}
                         validate={[required]}
                         disabled={isVacation}
@@ -191,7 +201,7 @@ const TemporaryScheduleForm = (props) => {
                     <Field
                         name="period"
                         className="form-field"
-                        component={renderSelectField}
+                        component={SelectField}
                         label={t(CLASS_LABEL)}
                         validate={[required]}
                         disabled={isVacation}

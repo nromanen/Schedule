@@ -6,13 +6,16 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import Dialog from '@material-ui/core/Dialog';
 import Button from '@material-ui/core/Button';
 
-import './dialog.scss';
-
-import i18n from '../../helper/i18n';
+import i18n from '../../i18n';
 import { disabledCard } from '../../constants/disabledCard';
 import {
     COMMON_NO_BUTTON_TITLE,
     COMMON_YES_BUTTON_TITLE,
+    COMMON_DO_YOU_WANNA_DISABLE,
+    COMMON_DO_YOU_WANNA_SHOW,
+    COMMON_DO_YOU_WANNA,
+    COMMON_DELETE_WORD,
+    COMMON_THIS_CARD_TYPE,
 } from '../../constants/translationLabels/common';
 
 const ConfirmDialog = (props) => {
@@ -34,19 +37,19 @@ const ConfirmDialog = (props) => {
                     {isHide ? (
                         <>
                             {isHide === disabledCard.HIDE ? (
-                                <>{i18n.t('common:do_you_wanna_disable')}</>
+                                <>{i18n.t(COMMON_DO_YOU_WANNA_DISABLE)}</>
                             ) : (
-                                <>{i18n.t('common:do_you_wanna_show')}</>
+                                <>{i18n.t(COMMON_DO_YOU_WANNA_SHOW)}</>
                             )}
                         </>
                     ) : (
                         <>
-                            {i18n.t('common:do_you_wanna')}{' '}
-                            <span className="delete-word">{i18n.t('common:delete_word')}</span>{' '}
+                            {i18n.t(COMMON_DO_YOU_WANNA)}{' '}
+                            <span className="delete-word">{i18n.t(COMMON_DELETE_WORD)}</span>{' '}
                         </>
                     )}
 
-                    {i18n.t('common:this_card_type', {
+                    {i18n.t(COMMON_THIS_CARD_TYPE, {
                         cardType: i18n.t(`formElements:${whatDelete}_element`),
                     })}
                 </>

@@ -1,16 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { Field, reduxForm } from 'redux-form';
+import { isEmpty } from 'lodash';
 
 import { makeStyles } from '@material-ui/core/styles';
 import { useTranslation } from 'react-i18next';
 
 import Button from '@material-ui/core/Button';
 import { MdPlayArrow } from 'react-icons/md';
-import { isEmpty } from 'lodash';
-import CircularProgress from '@material-ui/core/CircularProgress';
 import { MenuItem, Select } from '@material-ui/core';
-import renderSelectField from '../../share/renderedFields/select';
+import SelectField from '../../share/renderedFields/select';
 
 import {
     showAllPublicSemestersService,
@@ -47,53 +46,54 @@ const useStyles = makeStyles((theme) => ({
 
 const GroupSchedulePageTop = (props) => {
     const [groupDisabled, setGroupDisabled] = useState(true);
-    const classes = useStyles();
+    const { root } = useStyles();
     const { t } = useTranslation('common');
-    const { groups, teachers, semesters, handleSubmit, pristine, submitting } = props;
-    const isLoading = props.loading;
-    const [semesterId, setSemesterId] = useState(props.initialValues.semester);
-    let loadingContainer = '';
-    if (isLoading) {
-        loadingContainer = (
-            <section className="centered-container">
-                <CircularProgress />
-            </section>
-        );
-    }
-    useEffect(() => showAllPublicGroupsService(semesterId), [semesterId]);
-    useEffect(() => showAllPublicTeachersService(), []);
-    useEffect(() => showAllPublicSemestersService(), []);
+    const {
+        groups,
+        teachers,
+        semesters,
+        handleSubmit,
+        changePlace,
+        pristine,
+        submitting,
+        place,
+        initialize,
+        initialValues,
+        change,
+    } = props;
+    const [semesterId, setSemesterId] = useState(initialValues.semester);
+
     useEffect(() => {
-        if (!isEmpty(groups)) {
-            setGroupDisabled(false);
-        } else {
-            setGroupDisabled(true);
-        }
-    }, [groups]);
+        showAllPublicTeachersService();
+        showAllPublicSemestersService();
+        initialize({
+            semester: initialValues.semester,
+            group: initialValues.group,
+            teacher: initialValues.teacher,
+        });
+    }, []);
+    useEffect(() => showAllPublicGroupsService(semesterId), [semesterId]);
+    useEffect(() => setGroupDisabled(isEmpty(groups)), [groups]);
+
     const renderSemesterList = () => {
-        if (semesters && semesters.length > 1) {
+        if (!isEmpty(semesters)) {
             return (
                 <Field
                     id="semester"
                     name="semester"
-                    component={renderSelectField}
+                    component={SelectField}
                     label={t(FORM_SEMESTER_LABEL)}
                     type="text"
                     validate={[required]}
                     onChange={(e) => setSemesterId(e.target.value)}
                 >
-                    <option />
                     {semesters.map((semester) => (
-                        <option key={semester.id} value={semester.id}>
+                        <option key={semester.id} value={semester.id} className="option-item">
                             {semester.description}
                         </option>
                     ))}
                 </Field>
             );
-        }
-        if (semesters && semesters.length === 1) {
-            handleSubmit({ semester: semesters[0].id });
-            return <p>{semesters[0].description}</p>;
         }
         return null;
     };
@@ -102,14 +102,16 @@ const GroupSchedulePageTop = (props) => {
             <Field
                 id="teacher"
                 name="teacher"
-                component={renderSelectField}
+                component={SelectField}
                 label={t(FORM_TEACHER_LABEL)}
                 type="text"
-                onChange={() => props.change('group', 0)}
+                onChange={() => {
+                    change('group', 0);
+                }}
             >
-                <option />
+                <option className="option-item" value={null} />
                 {teachers.map((teacher) => (
-                    <option key={teacher.id} value={teacher.id}>
+                    <option key={teacher.id} value={teacher.id} className="option-item">
                         {getTeacherFullName(teacher)}
                     </option>
                 ))}
@@ -122,16 +124,16 @@ const GroupSchedulePageTop = (props) => {
                 disabled={groupDisabled}
                 id="group"
                 name="group"
-                component={renderSelectField}
+                component={SelectField}
                 label={t(FORM_GROUP_LABEL)}
                 type="text"
                 onChange={() => {
-                    props.change('teacher', 0);
+                    change('teacher', 0);
                 }}
             >
-                <option />
+                <option className="option-item" value={null} />
                 {groups.map((group) => (
-                    <option key={group.id} value={group.id}>
+                    <option key={group.id} value={group.id} className="option-item">
                         {group.title}
                     </option>
                 ))}
@@ -139,20 +141,12 @@ const GroupSchedulePageTop = (props) => {
         );
     };
 
-    useEffect(() => {
-        props.initialize({
-            semester: props.initialValues.semester,
-            group: props.initialValues.group,
-            teacher: props.initialValues.teacher,
-        });
-    }, []);
-
     return (
-        <section className={classes.root}>
+        <section className={root}>
             <p>{t(GREETING_SCHEDULE_MESSAGE)}</p>
             <p>{t(GREETING_SCHEDULE_MESSAGE_HINT)}</p>
             <section className="form-buttons-container top">
-                <Card class="form-card width-auto">
+                <Card additionClassName="form-card width-auto">
                     <form onSubmit={handleSubmit}>
                         {renderSemesterList()}
                         {renderGroupList()}
@@ -174,20 +168,17 @@ const GroupSchedulePageTop = (props) => {
                         className="place"
                         labelId="demo-controlled-open-select-label"
                         id="demo-controlled-open-select"
-                        value={props.place}
-                        onChange={props.onChange}
+                        value={place}
+                        onChange={changePlace}
                     >
-                        {Object.entries(places).map((data) => {
-                            return (
-                                <MenuItem value={data[1]} key={data[0]}>
-                                    {t(`${data[1]}_label`)}
-                                </MenuItem>
-                            );
-                        }, this)}
+                        {Object.entries(places).map((placeItem) => (
+                            <MenuItem value={placeItem[1]} key={placeItem[0]}>
+                                {t(`${placeItem[1]}_label`)}
+                            </MenuItem>
+                        ))}
                     </Select>
                 </span>
             </section>
-            {loadingContainer}
         </section>
     );
 };
