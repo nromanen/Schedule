@@ -6,12 +6,12 @@ import { FaEdit, FaUserPlus, FaUsers } from 'react-icons/fa';
 import { MdDelete } from 'react-icons/md';
 import { links } from '../../constants/links';
 import { getShortTitle } from '../../helper/shortTitle';
+import { dialogTypes } from '../../constants/dialogs';
 
 const GroupCard = (props) => {
     const {
         disabled,
         groupItem,
-        disabledCard,
         handleAddUser,
         onShowStudentByGroup,
         showConfirmDialog,
@@ -30,7 +30,10 @@ const GroupCard = (props) => {
                                 className="group__buttons-hide link-href"
                                 title={t('common:set_disabled')}
                                 onClick={() => {
-                                    showConfirmDialog(groupItem.id, disabledCard.HIDE);
+                                    showConfirmDialog(
+                                        groupItem.id,
+                                        dialogTypes.SET_VISIBILITY_DISABLED,
+                                    );
                                 }}
                             />
                         </Link>
@@ -47,7 +50,7 @@ const GroupCard = (props) => {
                         className="group__buttons-hide link-href"
                         title={t('common:set_enabled')}
                         onClick={() => {
-                            showConfirmDialog(groupItem.id, disabledCard.SHOW);
+                            showConfirmDialog(groupItem.id, dialogTypes.SET_VISIBILITY_ENABLED);
                         }}
                     />
                 )}

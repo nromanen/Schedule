@@ -6,11 +6,10 @@ import React, { useEffect, useState } from 'react';
 import { isEqual } from 'lodash';
 import './SemesterPage.scss';
 import { GiSightDisabled, IoMdEye, FaCopy } from 'react-icons/all';
+import Button from '@material-ui/core/Button';
 import Card from '../../share/Card/Card';
 import { search } from '../../helper/search';
 import NotFound from '../../share/NotFound/NotFound';
-import { ConfirmDialog } from '../../share/modals/dialog';
-import { ModalWindow } from '../../share/modals/modal/modal';
 import SearchPanel from '../../share/SearchPanel/SearchPanel';
 import SnackbarComponent from '../../share/Snackbar/SnackbarComponent';
 import { handleSnackbarCloseService } from '../../services/snackbarService';
@@ -33,14 +32,14 @@ import {
     setGroupsToSemester,
 } from '../../services/semesterService';
 import { setScheduleTypeService } from '../../services/scheduleService';
-import { disabledCard } from '../../constants/disabledCard';
 import NavigationPage from '../../components/Navigation/NavigationPage';
 import { navigation, navigationNames } from '../../constants/navigation';
-import { SetChangeDialog } from '../../share/modals/modal/setDefaultDialog';
 import { MultiselectForGroups } from '../../helper/MultiselectForGroups';
 import { showAllGroupsService } from '../../services/groupService';
 import { successHandler } from '../../helper/handlerAxios';
 import i18n from '../../i18n';
+import { CustomDialog } from '../../share/DialogWindows';
+import { dialogTypes } from '../../constants/dialogs';
 
 const SemesterPage = (props) => {
     const {
@@ -55,16 +54,18 @@ const SemesterPage = (props) => {
     } = props;
     const searchArr = ['year', 'description', 'startDay', 'endDay'];
     const { t } = useTranslation('formElements');
-    const [term, setTerm] = useState('');
+    const [openSubDialog, setOpenSubDialog] = useState(false);
+    const [subDialogType, setSubDialogType] = useState('');
     const [openGroupsDialog, setOpenGroupsDialog] = useState(false);
+    const [semesterId, setSemesterId] = useState(-1);
+
+    const [term, setTerm] = useState('');
     const [selected, setSelected] = useState([]);
     const [selectedGroups, setSelectedGroups] = useState([]);
     const [semesterOptions, setSemesterOptions] = useState([]);
     const [edit, setEdit] = useState(false);
     const [disabled, setDisabled] = useState(false);
     const [archived, setArchived] = useState(false);
-    const [isOpenChangeDialog, setIsOpenChangeDialog] = useState(false);
-    const [isOpenConfirmDialog, setIsOpenConfirmDialog] = useState(false);
     const [isOpenSemesterCopyForm, setIsOpenSemesterCopyForm] = useState(null);
     const [semesterCard, setSemesterCard] = useState({ id: null, disabledStatus: null });
     const [visibleItems, setVisibleItems] = useState([]);
@@ -109,48 +110,42 @@ const SemesterPage = (props) => {
         setSelectedGroups([]);
         clearSemesterService();
     };
-
-    const showConfirmDialog = (id, disabledStatus) => {
-        setSemesterCard({ id, disabledStatus });
-        setIsOpenConfirmDialog(true);
-    };
-    const showDefaultSemesterDialog = (id) => {
-        setSemesterCard({ id });
-        setIsOpenChangeDialog(true);
+    const showConfirmDialog = (id, dialogType) => {
+        setSemesterId(id);
+        setSubDialogType(dialogType);
+        setOpenSubDialog(true);
     };
 
     const showSemesterCopyForm = (id) => {
-        setSemesterCard({ id });
+        setSemesterId(id);
         setIsOpenSemesterCopyForm(true);
     };
     const closeSemesterCopyForm = () => {
         setIsOpenSemesterCopyForm(false);
         setIsOpenSemesterCopyForm(null);
     };
-    const acceptDefaultSemesterDialog = (semesterId) => {
-        setDefaultSemesterById(semesterId);
-        setIsOpenChangeDialog(false);
-    };
-    const changeGSemesterDisabledStatus = (semesterId) => {
+
+    const changeGSemesterDisabledStatus = (currentSemesterId) => {
         const foundSemester = [...disabledSemesters, ...enabledSemesters].find(
-            (semesterEl) => semesterEl.id === semesterId,
+            (semesterEl) => semesterEl.id === currentSemesterId,
         );
         const changeDisabledStatus = {
-            Show: setEnabledSemestersService(foundSemester),
-            Hide: setDisabledSemestersService(foundSemester),
+            [dialogTypes.SET_VISIBILITY_ENABLED]: setEnabledSemestersService(foundSemester),
+            [dialogTypes.SET_VISIBILITY_DISABLED]: setDisabledSemestersService(foundSemester),
         };
-        return changeDisabledStatus[semesterCard.disabledStatus];
+        return changeDisabledStatus[subDialogType];
     };
 
-    const acceptConfirmDialog = (semesterId) => {
-        setIsOpenConfirmDialog(false);
-        if (!semesterId) return;
-        if (semesterCard.disabledStatus) {
-            changeGSemesterDisabledStatus(semesterId);
+    const acceptConfirmDialog = (currentSemesterId) => {
+        setOpenSubDialog(false);
+        if (!currentSemesterId) return;
+        if (subDialogType === dialogTypes.SET_DEFAULT) {
+            setDefaultSemesterById(currentSemesterId);
+        } else if (subDialogType !== dialogTypes.DELETE_CONFIRM) {
+            changeGSemesterDisabledStatus(currentSemesterId);
         } else {
-            removeSemesterCardService(semesterId);
+            removeSemesterCardService(currentSemesterId);
         }
-        setSemesterCard((prev) => ({ ...prev, disabledStatus: null }));
     };
 
     const showDisabledHandle = () => {
@@ -161,9 +156,7 @@ const SemesterPage = (props) => {
     const showArchivedHandler = () => {
         setArchived(!archived);
         setDisabled(false);
-        return !archived === true
-            ? setScheduleTypeService('archived')
-            : setScheduleTypeService('default');
+        return !archived ? setScheduleTypeService('archived') : setScheduleTypeService('default');
     };
     const submitSemesterCopy = (values) => {
         semesterCopy({
@@ -189,54 +182,45 @@ const SemesterPage = (props) => {
         setOpenGroupsDialog(false);
     };
 
-    const handleSemesterArchivedPreview = (semesterId) => {
-        viewArchivedSemester(+semesterId);
+    const handleSemesterArchivedPreview = (currentSemesterId) => {
+        viewArchivedSemester(+currentSemesterId);
     };
     const setClassNameForDefaultSemester = (currentSemester) => {
         const defaultSemesterName = 'default';
         const className = 'svg-btn edit-btn';
-        return currentSemester.defaultSemester === true
-            ? `${className} ${defaultSemesterName}`
-            : className;
+        return currentSemester.defaultSemester ? `${className} ${defaultSemesterName}` : className;
     };
 
-    const handleSnackbarClose = () => {
-        handleSnackbarCloseService();
-    };
-
-    // setScheduleTypeService('archived');
     return (
         <>
             <NavigationPage name={navigationNames.SEMESTER_PAGE} val={navigation.SEMESTERS} />
-            <ConfirmDialog
-                cardId={semesterCard.id}
+            <CustomDialog
+                type={subDialogType}
+                cardId={semesterId}
                 whatDelete="semester"
-                isHide={semesterCard.disabledStatus}
-                open={isOpenConfirmDialog}
+                open={openSubDialog}
                 onClose={acceptConfirmDialog}
             />
-            <SetChangeDialog
-                cardId={semesterCard.id}
-                isHide={semesterCard.disabledStatus}
-                open={isOpenChangeDialog}
-                onClose={acceptDefaultSemesterDialog}
-            />
-            <ModalWindow
-                whatDelete="semester"
-                isHide={semesterCard.disabledStatus}
+            <CustomDialog
+                title={t('semester_copy_label')}
                 open={isOpenSemesterCopyForm}
                 onClose={closeSemesterCopyForm}
-                windowTitle={t('semester_copy_label')}
-                isOkButton={false}
-                isNoButton
-                noButtonLabel={t('close_label')}
+                buttons={
+                    <Button
+                        className="dialog-button"
+                        variant="contained"
+                        onClick={closeSemesterCopyForm}
+                    >
+                        {t('close_label')}
+                    </Button>
+                }
             >
                 <SemesterCopyForm
                     semesterId={semesterCard.id}
                     onSubmit={submitSemesterCopy}
                     submitButtonLabel={t('copy_label')}
                 />
-            </ModalWindow>
+            </CustomDialog>
             <div className="cards-container">
                 <aside className="search-list__panel">
                     <SearchPanel
@@ -280,7 +264,7 @@ const SemesterPage = (props) => {
                                                 onClick={() => {
                                                     showConfirmDialog(
                                                         semesterItem.id,
-                                                        disabledCard.HIDE,
+                                                        dialogTypes.SET_VISIBILITY_DISABLED,
                                                     );
                                                 }}
                                             />
@@ -319,7 +303,7 @@ const SemesterPage = (props) => {
                                             onClick={() => {
                                                 showConfirmDialog(
                                                     semesterItem.id,
-                                                    disabledCard.SHOW,
+                                                    dialogTypes.SET_VISIBILITY_ENABLED,
                                                 );
                                             }}
                                         />
@@ -336,13 +320,23 @@ const SemesterPage = (props) => {
                                     <MdDelete
                                         className="svg-btn delete-btn"
                                         title={t('delete_title')}
-                                        onClick={() => showConfirmDialog(semesterItem.id)}
+                                        onClick={() =>
+                                            showConfirmDialog(
+                                                semesterItem.id,
+                                                dialogTypes.DELETE_CONFIRM,
+                                            )
+                                        }
                                     />
 
                                     <MdDonutSmall
                                         className={setClassNameForDefaultSemester(semesterItem)}
                                         title={t('set_default_title')}
-                                        onClick={() => showDefaultSemesterDialog(semesterItem.id)}
+                                        onClick={() =>
+                                            showConfirmDialog(
+                                                semesterItem.id,
+                                                dialogTypes.SET_DEFAULT,
+                                            )
+                                        }
                                     />
                                 </div>
 
@@ -387,7 +381,7 @@ const SemesterPage = (props) => {
                 message={snackbarMessage}
                 type={snackbarType}
                 isOpen={isSnackbarOpen}
-                handleSnackbarClose={handleSnackbarClose}
+                handleSnackbarClose={handleSnackbarCloseService}
             />
             <MultiselectForGroups
                 open={openGroupsDialog}

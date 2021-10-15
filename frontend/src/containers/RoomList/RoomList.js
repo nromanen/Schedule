@@ -5,12 +5,12 @@ import { FaEdit } from 'react-icons/fa';
 import { MdDelete } from 'react-icons/md';
 import { useTranslation } from 'react-i18next';
 import { GiSightDisabled, IoMdEye } from 'react-icons/all';
-import { ConfirmDialog } from '../../share/modals/dialog';
+import { CustomDialog } from '../../share/DialogWindows';
+import { dialogTypes } from '../../constants/dialogs';
 import { cardType } from '../../constants/cardType';
 import AddRoom from '../../components/AddRoomForm/AddRoomForm';
 import NewRoomType from '../../components/AddNewRoomType/AddNewRoomType';
 import SearchPanel from '../../share/SearchPanel/SearchPanel';
-import { disabledCard } from '../../constants/disabledCard';
 import NavigationPage from '../../components/Navigation/NavigationPage';
 import { navigation, navigationNames } from '../../constants/navigation';
 import Card from '../../share/Card/Card';
@@ -31,10 +31,12 @@ import {
 const RoomList = (props) => {
     const { rooms, roomTypes, disabledRooms } = props;
     const { t } = useTranslation('formElements');
-    const [term, setTerm] = useState('');
+
     const [isDisabled, setIsDisabled] = useState(false);
-    const [roomCard, setRoomCard] = useState({ id: null, disabledStatus: null });
-    const [isOpenConfirmDialog, setIsOpenConfirmDialog] = useState(false);
+    const [openSubDialog, setOpenSubDialog] = useState(false);
+    const [subDialogType, setSubDialogType] = useState('');
+    const [roomId, setRoomId] = useState(-1);
+    const [term, setTerm] = useState('');
 
     useEffect(() => {
         showListOfRoomsService();
@@ -53,25 +55,27 @@ const RoomList = (props) => {
         createRoomService({ ...values, typeDescription });
     };
 
-    const showConfirmDialog = (id, disabledStatus) => {
-        setRoomCard({ id, disabledStatus });
-        setIsOpenConfirmDialog(true);
+    const showConfirmDialog = (id, dialogType) => {
+        setRoomId(id);
+        setSubDialogType(dialogType);
+        setOpenSubDialog(true);
     };
 
-    const changeGroupDisabledStatus = (roomId) => {
-        const foundRoom = [...disabledRooms, ...rooms].find((roomItem) => roomItem.id === roomId);
+    const changeGroupDisabledStatus = (currentId) => {
+        const foundRoom = [...disabledRooms, ...rooms].find(
+            (roomItem) => roomItem.id === currentId,
+        );
         return isDisabled ? setEnabledRoomsService(foundRoom) : setDisabledRoomsService(foundRoom);
     };
 
-    const acceptConfirmDialog = (roomId) => {
-        setIsOpenConfirmDialog(false);
-        if (!roomId) return;
-        if (roomCard.disabledStatus) {
-            changeGroupDisabledStatus(roomId);
+    const acceptConfirmDialog = (currentId) => {
+        setOpenSubDialog(false);
+        if (!currentId) return;
+        if (subDialogType !== dialogTypes.DELETE_CONFIRM) {
+            changeGroupDisabledStatus(currentId);
         } else {
-            deleteRoomCardService(roomId);
+            deleteRoomCardService(currentId);
         }
-        setRoomCard((prev) => ({ ...prev, disabledStatus: null }));
     };
 
     const changeDisable = () => {
@@ -81,11 +85,11 @@ const RoomList = (props) => {
     return (
         <>
             <NavigationPage name={navigationNames.ROOM_LIST} val={navigation.ROOMS} />
-            <ConfirmDialog
-                cardId={roomCard.id}
+            <CustomDialog
+                type={subDialogType}
+                cardId={roomId}
                 whatDelete={cardType.ROOM.toLowerCase()}
-                open={isOpenConfirmDialog}
-                isHide={roomCard.disabledStatus}
+                open={openSubDialog}
                 onClose={acceptConfirmDialog}
             />
             <div className="cards-container">
@@ -109,7 +113,10 @@ const RoomList = (props) => {
                                             className="svg-btn copy-btn"
                                             title={t('common:set_disabled')}
                                             onClick={() => {
-                                                showConfirmDialog(roomItem.id, disabledCard.HIDE);
+                                                showConfirmDialog(
+                                                    roomItem.id,
+                                                    dialogTypes.SET_VISIBILITY_DISABLED,
+                                                );
                                             }}
                                         />
                                         <FaEdit
@@ -122,14 +129,19 @@ const RoomList = (props) => {
                                         className="svg-btn copy-btn"
                                         title={t('common:set_enabled')}
                                         onClick={() => {
-                                            showConfirmDialog(roomItem.id, disabledCard.SHOW);
+                                            showConfirmDialog(
+                                                roomItem.id,
+                                                dialogTypes.SET_VISIBILITY_ENABLED,
+                                            );
                                         }}
                                     />
                                 )}
 
                                 <MdDelete
                                     className="svg-btn"
-                                    onClick={() => showConfirmDialog(roomItem.id)}
+                                    onClick={() =>
+                                        showConfirmDialog(roomItem.id, dialogTypes.DELETE_CONFIRM)
+                                    }
                                 />
                             </div>
 

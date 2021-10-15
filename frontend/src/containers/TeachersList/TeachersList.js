@@ -8,12 +8,13 @@ import { connect } from 'react-redux';
 import { GiSightDisabled, IoMdEye } from 'react-icons/all';
 import i18n from 'i18next';
 import Card from '../../share/Card/Card';
-import { ConfirmDialog } from '../../share/modals/dialog';
+
+import { CustomDialog } from '../../share/DialogWindows';
+import { dialogTypes } from '../../constants/dialogs';
 import { cardType } from '../../constants/cardType';
 import { search } from '../../helper/search';
 import SearchPanel from '../../share/SearchPanel/SearchPanel';
 import NotFound from '../../share/NotFound/NotFound';
-import { disabledCard } from '../../constants/disabledCard';
 import { MultiSelect } from '../../helper/multiselect';
 import NavigationPage from '../../components/Navigation/NavigationPage';
 import { navigation, navigationNames } from '../../constants/navigation';
@@ -40,6 +41,8 @@ import {
 } from '../../services/teacherService';
 
 const TeacherList = (props) => {
+    const { t } = useTranslation('common');
+
     const {
         enabledTeachers,
         disabledTeachers,
@@ -48,14 +51,14 @@ const TeacherList = (props) => {
         department,
         semesters,
     } = props;
-    const { t } = useTranslation('common');
     const [term, setTerm] = useState('');
     const [isDisabled, setIsDisabled] = useState(false);
     const [selected, setSelected] = useState([]);
-    const [teacherCard, setTeacherCard] = useState({ id: null, disabledStatus: null });
+    const [teacherId, setTeacherId] = useState(-1);
     const [openSelect, setOpenSelect] = useState(false);
     const [selectedSemester, setSelectedSemester] = useState('');
-    const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
+    const [openSubDialog, setOpenSubDialog] = useState(false);
+    const [subDialogType, setSubDialogType] = useState('');
 
     useEffect(() => {
         showAllTeachersService();
@@ -105,29 +108,29 @@ const TeacherList = (props) => {
         handleTeacherService(sendData);
         clearDepartment();
     };
-    const setEnabledDisabledDepartment = (teacherId) => {
+    const setEnabledDisabledDepartment = (currentTeacherId) => {
         const teacher = [...enabledTeachers, ...disabledTeachers].find(
-            (teacherEl) => teacherEl.id === teacherId,
+            (teacherEl) => teacherEl.id === currentTeacherId,
         );
         const changeDisabledStatus = {
-            Show: setEnabledTeachersService(teacher),
-            Hide: setDisabledTeachersService(teacher),
+            [dialogTypes.SET_VISIBILITY_ENABLED]: setEnabledTeachersService(teacher),
+            [dialogTypes.SET_VISIBILITY_DISABLED]: setDisabledTeachersService(teacher),
         };
-        return changeDisabledStatus[teacherCard.disabledStatus];
+        return changeDisabledStatus[subDialogType];
     };
-    const showConfirmDialog = (id, disabledStatus) => {
-        setTeacherCard({ id, disabledStatus });
-        setIsConfirmDialogOpen(true);
+    const showConfirmDialog = (id, dialogType) => {
+        setTeacherId(id);
+        setSubDialogType(dialogType);
+        setOpenSubDialog(true);
     };
     const acceptConfirmDialog = (id) => {
-        setIsConfirmDialogOpen(false);
+        setOpenSubDialog(false);
         if (!id) return;
-        if (teacherCard.disabledStatus) {
+        if (subDialogType !== dialogTypes.DELETE_CONFIRM) {
             setEnabledDisabledDepartment(id);
         } else {
             removeTeacherCardService(id);
         }
-        setTeacherCard((prev) => ({ ...prev, disabledStatus: null }));
     };
     const closeSelectionDialog = () => {
         setOpenSelect(false);
@@ -167,11 +170,11 @@ const TeacherList = (props) => {
         <>
             <NavigationPage name={navigationNames.TEACHER_LIST} val={navigation.TEACHERS} />
             <div className="cards-container">
-                <ConfirmDialog
-                    cardId={teacherCard.id}
+                <CustomDialog
+                    type={subDialogType}
+                    cardId={teacherId}
                     whatDelete={cardType.TEACHER}
-                    open={isConfirmDialogOpen}
-                    isHide={teacherCard.disabledStatus}
+                    open={openSubDialog}
                     onClose={acceptConfirmDialog}
                 />
 
@@ -227,7 +230,7 @@ const TeacherList = (props) => {
                                             onClick={() => {
                                                 showConfirmDialog(
                                                     teacherItem.id,
-                                                    disabledCard.HIDE,
+                                                    dialogTypes.SET_VISIBILITY_DISABLED,
                                                 );
                                             }}
                                         />
@@ -242,14 +245,22 @@ const TeacherList = (props) => {
                                         className="svg-btn copy-btn"
                                         title={t('common:set_enabled')}
                                         onClick={() => {
-                                            showConfirmDialog(teacherItem.id, disabledCard.SHOW);
+                                            showConfirmDialog(
+                                                teacherItem.id,
+                                                dialogTypes.SET_VISIBILITY_ENABLED,
+                                            );
                                         }}
                                     />
                                 )}
                                 <MdDelete
                                     className="svg-btn delete-btn"
                                     title={t('common:delete_hover_title')}
-                                    onClick={() => showConfirmDialog(teacherItem.id)}
+                                    onClick={() =>
+                                        showConfirmDialog(
+                                            teacherItem.id,
+                                            dialogTypes.DELETE_CONFIRM,
+                                        )
+                                    }
                                 />
                             </div>
                             <h2 className="teacher-card-name">

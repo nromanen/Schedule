@@ -9,14 +9,11 @@ import Card from '../../share/Card/Card';
 import AddDepartment from '../../components/AddDepartmentForm/AddDepartmentForm';
 import { search } from '../../helper/search';
 import NotFound from '../../share/NotFound/NotFound';
-import { ConfirmDialog } from '../../share/modals/dialog';
-import { disabledCard } from '../../constants/disabledCard';
 import { navigation, navigationNames } from '../../constants/navigation';
 import NavigationPage from '../../components/Navigation/NavigationPage';
 import SnackbarComponent from '../../share/Snackbar/SnackbarComponent';
 import { handleSnackbarCloseService } from '../../services/snackbarService';
 import { showAllPublicTeachersByDepartmentService } from '../../services/scheduleService';
-import { ShowDataDialog } from '../../share/modals/modal/showDataDialog';
 import {
     clearDepartment,
     createDepartmentService,
@@ -28,6 +25,8 @@ import {
     setEnabledDepartmentService,
     updateDepartmentService,
 } from '../../services/departmentService';
+import { CustomDialog, ShowDepartmentDataDialog } from '../../share/DialogWindows';
+import { dialogTypes } from '../../constants/dialogs';
 
 const DepartmentPage = (props) => {
     const {
@@ -40,11 +39,14 @@ const DepartmentPage = (props) => {
     } = props;
     const { t } = useTranslation('formElements');
     const [term, setTerm] = useState('');
+
+    const [subDialogType, setSubDialogType] = useState('');
+
     const [isDisabled, setIsDisabled] = useState(false);
     const [isUpdateForm, setIsUpdateForm] = useState(false);
-    const [departmentCard, setDepartmentCard] = useState({ id: -1, disabledStatus: null });
+    const [departmentId, setDepartmentId] = useState(-1);
     const [teacherDialog, setTeacherDialog] = useState(false);
-    const [isOpenConfirmDialog, setIsOpenConfirmDialog] = useState(false);
+    const [openSubDialog, setOpenSubDialog] = useState(false);
 
     const clearDepartmentForm = () => {
         clearDepartment();
@@ -53,7 +55,7 @@ const DepartmentPage = (props) => {
     useEffect(() => {
         getDisabledDepartmentsService();
         getAllDepartmentsService();
-        clearDepartmentForm();
+        clearDepartment();
     }, []);
 
     const SearchChange = setTerm;
@@ -64,35 +66,32 @@ const DepartmentPage = (props) => {
     const submitAddForm = (data) => {
         return data.id ? createDepartmentService(data) : updateDepartmentService(data);
     };
-    const showConfirmDialog = (departmentId, disabledStatus) => {
-        setDepartmentCard({ departmentId, disabledStatus });
-        setIsOpenConfirmDialog(true);
+    const showConfirmDialog = (currentId, dialogType) => {
+        setDepartmentId(currentId);
+        setSubDialogType(dialogType);
+        setOpenSubDialog(true);
     };
-    const setDepartmentToUpdate = (departmentCurrentId) => {
-        getDepartmentByIdService(departmentCurrentId);
+    const setDepartmentToUpdate = (currentId) => {
+        getDepartmentByIdService(currentId);
         setIsUpdateForm(true);
     };
-    const changeDepartmentDisabledStatus = (departmentCurrentId) => {
+    const changeDepartmentDisabledStatus = (currentId) => {
         const foundDepartment = [...disabledDepartments, ...enabledDepartments].find(
-            (departm) => departm.id === departmentCurrentId,
+            (departm) => departm.id === currentId,
         );
         const newDepartment = { ...foundDepartment, disable: !foundDepartment.disable };
         const changeDisabledStatus = {
-            Show: setEnabledDepartmentService(newDepartment),
-            Hide: setDisabledDepartmentService(newDepartment),
+            [dialogTypes.SET_VISIBILITY_ENABLED]: setEnabledDepartmentService(newDepartment),
+            [dialogTypes.SET_VISIBILITY_DISABLED]: setDisabledDepartmentService(newDepartment),
         };
-        return changeDisabledStatus[departmentCard.disabledStatus];
+        return changeDisabledStatus[subDialogType];
     };
-    const acceptConfirmDialog = (departmentId) => {
-        setIsOpenConfirmDialog(false);
-        if (!departmentId) return;
-        if (departmentCard.disabledStatus) {
-            changeDepartmentDisabledStatus(departmentId);
-        } else deleteDepartmentsService(departmentId);
-        setDepartmentCard((prev) => ({ ...prev, disabledStatus: null }));
-    };
-    const handleSnackbarClose = () => {
-        handleSnackbarCloseService();
+    const acceptConfirmDialog = (currentId) => {
+        setOpenSubDialog(false);
+        if (!currentId) return;
+        if (subDialogType !== dialogTypes.DELETE_CONFIRM) {
+            changeDepartmentDisabledStatus(currentId);
+        } else deleteDepartmentsService(currentId);
     };
     const changeDisable = () => {
         setIsDisabled((prev) => !prev);
@@ -100,19 +99,20 @@ const DepartmentPage = (props) => {
     const closeTeacherDialog = () => {
         setTeacherDialog(false);
     };
+
     return (
         <>
             <NavigationPage name={navigationNames.DEPARTMENTS} val={navigation.DEPARTMENTS} />
-            <ConfirmDialog
-                isHide={departmentCard.disabledStatus}
-                cardId={departmentCard.id}
+            <CustomDialog
+                type={subDialogType}
+                cardId={departmentId.id}
                 whatDelete="department"
-                open={isOpenConfirmDialog}
+                open={openSubDialog}
                 onClose={acceptConfirmDialog}
             />
-            <ShowDataDialog
-                isHide={departmentCard.disabledStatus}
-                cardId={departmentCard.id}
+            <ShowDepartmentDataDialog
+                isHide={departmentId.disabledStatus}
+                cardId={departmentId.id}
                 open={teacherDialog}
                 onClose={closeTeacherDialog}
                 teachers={teachers}
@@ -139,7 +139,10 @@ const DepartmentPage = (props) => {
                                         className="svg-btn copy-btn"
                                         title={t('common:set_enabled')}
                                         onClick={() => {
-                                            showConfirmDialog(departmentItem.id, disabledCard.SHOW);
+                                            showConfirmDialog(
+                                                departmentItem.id,
+                                                dialogTypes.SET_VISIBILITY_ENABLED,
+                                            );
                                         }}
                                     />
                                 ) : (
@@ -150,7 +153,7 @@ const DepartmentPage = (props) => {
                                             onClick={() => {
                                                 showConfirmDialog(
                                                     departmentItem.id,
-                                                    disabledCard.HIDE,
+                                                    dialogTypes.SET_VISIBILITY_DISABLED,
                                                 );
                                             }}
                                         />
@@ -169,7 +172,10 @@ const DepartmentPage = (props) => {
                                     className="svg-btn delete-btn"
                                     title={t('delete_title')}
                                     onClick={() => {
-                                        showConfirmDialog(departmentItem.id);
+                                        showConfirmDialog(
+                                            departmentItem.id,
+                                            dialogTypes.DELETE_CONFIRM,
+                                        );
                                     }}
                                 />
                                 <FaChalkboardTeacher
@@ -190,7 +196,7 @@ const DepartmentPage = (props) => {
                 message={snackbarMessage}
                 type={snackbarType}
                 isOpen={isSnackbarOpen}
-                handleSnackbarClose={handleSnackbarClose}
+                handleSnackbarClose={handleSnackbarCloseService}
             />
         </>
     );

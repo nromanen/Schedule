@@ -1,15 +1,15 @@
 import React, { useRef } from 'react';
 import ReactSelect from 'react-select';
-import { Dialog, DialogTitle } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import './multiselect.scss';
 import { useTranslation } from 'react-i18next';
+import { CustomDialog } from '../share/DialogWindows';
 
 export const MultiSelect = (props) => {
     const { t } = useTranslation('common');
     const valueRef = useRef(props.value);
     valueRef.current = props.value;
-    const { open, defaultSemester, semesters } = props;
+    const { open, defaultSemester, semesters, onCancel, onSentTeachers, isEnabledSentBtn } = props;
 
     const selectAllOption = {
         value: '<SELECT_ALL>',
@@ -49,53 +49,53 @@ export const MultiSelect = (props) => {
     };
 
     return (
-        <Dialog
+        <CustomDialog
             id="select-dialog"
-            disableBackdropClick
             aria-labelledby="confirm-dialog-title"
+            title={t('schedule_for_semester')}
             open={open}
-        >
-            <DialogTitle id="select-dialog-title" className="confirm-dialog">
-                <div className="teacher-semester">
-                    <span>{`${t('schedule_for_semester')}:`}</span>
-                    <ReactSelect
-                        defaultValue={defaultSemester}
-                        options={semesters}
-                        onChange={handleChange}
-                    />
-
-                    <ReactSelect
-                        classname="teacher"
-                        isOptionSelected={isOptionSelected}
-                        options={getOptions()}
-                        value={getValue()}
-                        onChange={onChange}
-                        hideSelectedOptions={false}
-                        closeMenuOnSelect={false}
-                        isMulti
-                        placeholder={t('choose_teachers')}
-                    />
+            onClose={onCancel}
+            buttons={
+                <div className="buttons-container">
+                    <Button
+                        className="dialog-button"
+                        variant="contained"
+                        color="primary"
+                        onClick={onCancel}
+                    >
+                        {t('cancel_schedule')}
+                    </Button>
+                    <Button
+                        className="dialog-button"
+                        variant="contained"
+                        color="primary"
+                        onClick={onSentTeachers}
+                        disabled={!isEnabledSentBtn}
+                    >
+                        {t('sent_schedule')}
+                    </Button>
                 </div>
-            </DialogTitle>
-            <div className="buttons-container">
-                <Button
-                    className="dialog-button"
-                    variant="contained"
-                    color="primary"
-                    onClick={props.onCancel}
-                >
-                    {t('cancel_schedule')}
-                </Button>
-                <Button
-                    className="dialog-button"
-                    variant="contained"
-                    color="primary"
-                    onClick={props.onSentTeachers}
-                    disabled={!props.isEnabledSentBtn}
-                >
-                    {t('sent_schedule')}
-                </Button>
+            }
+        >
+            <div className="teacher-semester">
+                <ReactSelect
+                    defaultValue={defaultSemester}
+                    options={semesters}
+                    onChange={handleChange}
+                />
+
+                <ReactSelect
+                    classname="teacher"
+                    isOptionSelected={isOptionSelected}
+                    options={getOptions()}
+                    value={getValue()}
+                    onChange={onChange}
+                    hideSelectedOptions={false}
+                    closeMenuOnSelect={false}
+                    isMulti
+                    placeholder={t('choose_teachers')}
+                />
             </div>
-        </Dialog>
+        </CustomDialog>
     );
 };

@@ -6,14 +6,10 @@ import './GroupList.scss';
 import { useHistory } from 'react-router-dom/cjs/react-router-dom';
 import { search } from '../../helper/search';
 import NotFound from '../../share/NotFound/NotFound';
-import { ConfirmDialog } from '../../share/modals/dialog';
 import SearchPanel from '../../share/SearchPanel/SearchPanel';
 import AddGroup from '../../components/AddGroupForm/AddGroupForm';
 import SnackbarComponent from '../../share/Snackbar/SnackbarComponent';
 import { handleSnackbarCloseService } from '../../services/snackbarService';
-import { ShowStudentsDialog } from '../../share/modals/modal/showStudentsDialog';
-import AddStudentDialog from '../../share/modals/modal/AddStudentDialog';
-import { disabledCard } from '../../constants/disabledCard';
 import NavigationPage from '../../components/Navigation/NavigationPage';
 import { navigation, navigationNames } from '../../constants/navigation';
 import { goToGroupPage } from '../../helper/pageRedirection';
@@ -34,6 +30,12 @@ import {
     setEnabledGroupService,
     showAllGroupsService,
 } from '../../services/groupService';
+import {
+    CustomDialog,
+    ShowStudentsOnGroupDialog,
+    AddStudentDialog,
+} from '../../share/DialogWindows';
+import { dialogTypes } from '../../constants/dialogs';
 
 const GroupList = (props) => {
     const {
@@ -49,12 +51,15 @@ const GroupList = (props) => {
     } = props;
     const history = useHistory();
     const { t } = useTranslation('formElements');
+
+    const [subDialogType, setSubDialogType] = useState('');
+
+    const [groupId, setGroupId] = useState(-1);
     const [term, setTerm] = useState('');
     const [isDisabled, setIsDisabled] = useState(false);
     const [showStudents, setShowStudents] = useState(false);
     const [addStudentDialog, setAddStudentDialog] = useState(false);
-    const [isOpenConfirmDialog, setIsOpenConfirmDialog] = useState(false);
-    const [groupCard, setGroupCard] = useState({ id: null, disabledStatus: null });
+    const [openSubDialog, setOpenSubDialog] = useState(false);
 
     useEffect(() => {
         showAllGroupsService();
@@ -66,38 +71,39 @@ const GroupList = (props) => {
         ? search(disabledGroups, term, ['title'])
         : search(enabledGroup, term, ['title']);
 
-    const showConfirmDialog = (id, disabledStatus) => {
-        setGroupCard({ id, disabledStatus });
-        setIsOpenConfirmDialog(true);
+    const showConfirmDialog = (currentId, disabledStatus) => {
+        setGroupId(currentId);
+        setSubDialogType(disabledStatus);
+        setOpenSubDialog(true);
     };
-    const changeGroupDisabledStatus = (groupId) => {
+    const changeGroupDisabledStatus = (currentGroupId) => {
         const foundGroup = [...disabledGroups, ...enabledGroup].find(
-            (groupItem) => groupItem.id === groupId,
+            (groupItem) => groupItem.id === currentGroupId,
         );
         const changeDisabledStatus = {
-            Show: setEnabledGroupService(foundGroup),
-            Hide: setDisabledGroupService(foundGroup),
+            [dialogTypes.SET_VISIBILITY_ENABLED]: setEnabledGroupService(foundGroup),
+            [dialogTypes.SET_VISIBILITY_DISABLED]: setDisabledGroupService(foundGroup),
         };
-        return changeDisabledStatus[groupCard.disabledStatus];
+        return changeDisabledStatus[subDialogType];
     };
-    const acceptConfirmDialog = (groupId) => {
-        setIsOpenConfirmDialog(false);
-        if (!groupId) return;
-        if (groupCard) {
-            changeGroupDisabledStatus(groupId);
-        } else removeGroupCardService(groupId);
-        setGroupCard((prev) => ({ ...prev, disabledStatus: null }));
+    const acceptConfirmDialog = (currentGroupId) => {
+        setOpenSubDialog(false);
+        if (!currentGroupId) return;
+        if (subDialogType !== dialogTypes.DELETE_CONFIRM) {
+            changeGroupDisabledStatus(currentGroupId);
+        } else removeGroupCardService(currentGroupId);
     };
 
-    const onShowStudentByGroup = (groupId) => {
+    const onShowStudentByGroup = (currentGroupId) => {
         setShowStudents(true);
-        selectGroupService(groupId);
-        getAllStudentsByGroupId(groupId);
+        selectGroupService(currentGroupId);
+        getAllStudentsByGroupId(currentGroupId);
     };
-    const handleAddUser = (groupId) => {
-        setGroupCard((prev) => ({ ...prev, id: groupId }));
+    const handleAddUser = (currentGroupId) => {
+        setGroupId(currentGroupId);
         setAddStudentDialog(true);
     };
+
     const selectStudentCard = () => {
         setAddStudentDialog(false);
     };
@@ -109,7 +115,7 @@ const GroupList = (props) => {
             const sendData = { ...data, group: { id: data.group } };
             updateStudentService(sendData);
         } else {
-            const sendData = { ...data, group: { id: groupCard.id } };
+            const sendData = { ...data, group: { id: groupId } };
             createStudentService(sendData);
         }
         setAddStudentDialog(false);
@@ -123,18 +129,15 @@ const GroupList = (props) => {
     const changeDisable = () => {
         setIsDisabled((prev) => !prev);
     };
-    const handleSnackbarClose = () => {
-        handleSnackbarCloseService();
-    };
 
     return (
         <>
             <NavigationPage name={navigationNames.GROUP_LIST} val={navigation.GROUPS} />
-            <ConfirmDialog
-                isHide={groupCard.disabledStatus}
-                cardId={groupCard.id}
+            <CustomDialog
+                type={subDialogType}
+                cardId={groupId}
                 whatDelete="group"
-                open={isOpenConfirmDialog}
+                open={openSubDialog}
                 onClose={acceptConfirmDialog}
             />
             <AddStudentDialog
@@ -142,7 +145,7 @@ const GroupList = (props) => {
                 onSubmit={studentSubmit}
                 onSetSelectedCard={selectStudentCard}
             />
-            <ShowStudentsDialog
+            <ShowStudentsOnGroupDialog
                 onClose={onCloseShowStudents}
                 open={showStudents}
                 students={students}
@@ -173,7 +176,6 @@ const GroupList = (props) => {
                             key={groupItem.id}
                             groupItem={groupItem}
                             disabled={isDisabled}
-                            disabledCard={disabledCard}
                             handleAddUser={handleAddUser}
                             onShowStudentByGroup={onShowStudentByGroup}
                             showConfirmDialog={showConfirmDialog}
@@ -186,7 +188,7 @@ const GroupList = (props) => {
                 message={snackbarMessage}
                 type={snackbarType}
                 isOpen={isSnackbarOpen}
-                handleSnackbarClose={handleSnackbarClose}
+                handleSnackbarClose={handleSnackbarCloseService}
             />
         </>
     );

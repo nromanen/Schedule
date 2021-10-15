@@ -7,8 +7,8 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { styled } from '@material-ui/core/styles';
 import Card from '../../share/Card/Card';
-import { ConfirmDialog } from '../../share/modals/dialog';
-import { CopyLessonDialog } from '../../share/modals/chooseGroupDialog/CopyLessonDialog';
+import { CustomDialog, CopyLessonDialog } from '../../share/DialogWindows';
+import { dialogTypes } from '../../constants/dialogs';
 import LessonForm from '../../components/LessonForm/LessonForm';
 import LessonsList from '../../components/LessonsList/LessonsList';
 import CopyLessonsFromSemesterForm from '../../components/CopyLessonsFromSemesterForm/CopyLessonsFromSemesterForm';
@@ -109,7 +109,7 @@ const LessonPage = (props) => {
 
     const defaultProps = {
         options: groups,
-        getOptionLabel: (option) => option && option.title,
+        getOptionLabel: (option) => (option ? option.title : ''),
     };
 
     const handleGroupSelect = (group) => {
@@ -173,7 +173,8 @@ const LessonPage = (props) => {
                     groups={groups}
                     translation={t}
                 />
-                <ConfirmDialog
+                <CustomDialog
+                    type={dialogTypes.DELETE_CONFIRM}
                     cardId={lessonId}
                     whatDelete={cardType.LESSON.toLowerCase()}
                     open={isOpenConfirmDialog}

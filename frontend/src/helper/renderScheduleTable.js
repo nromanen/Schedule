@@ -12,7 +12,6 @@ import Card from '../share/Card/Card';
 import i18n from '../i18n';
 
 import { daysUppercase } from '../constants/schedule/days';
-import { LinkToMeeting } from '../components/LinkToMeeting/LinkToMeeting';
 import { places } from '../constants/places';
 import './renderScheduleTable.scss';
 import {
@@ -20,6 +19,8 @@ import {
     getTeacherFullName,
     getTeacherWithShortPosition,
 } from './renderTeacher';
+import { CustomDialog } from '../share/DialogWindows';
+import { dialogTypes } from '../constants/dialogs';
 
 const shortid = require('shortid');
 
@@ -38,7 +39,7 @@ const getHref = (link) => {
 };
 const setLink = (card, place) => {
     if (place === places.TOGETHER) {
-        return <LinkToMeeting {...card} />;
+        return <CustomDialog type={dialogTypes.MEETING_LINK} {...card} />;
     }
     if (place === places.ONLINE) {
         return getHref(card.linkToMeeting);
