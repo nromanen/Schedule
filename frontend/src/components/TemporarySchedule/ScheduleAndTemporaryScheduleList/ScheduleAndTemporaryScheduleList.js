@@ -72,7 +72,7 @@ const ScheduleAndTemporaryScheduleList = (props) => {
                                     key={shortId.generate()}
                                 >
                                     <Card
-                                        class={`done-card text-center ${
+                                        additionClassName={`done-card text-center ${
                                             schedule.schedule.vacation && 'vacation-card '
                                         }`}
                                     >
@@ -89,7 +89,7 @@ const ScheduleAndTemporaryScheduleList = (props) => {
                                     <Divider orientation="vertical" flexItem className="divider" />
                                     {schedule.temporary_schedule ? (
                                         <Card
-                                            class={`done-card text-center ${
+                                            additionClassName={`done-card text-center ${
                                                 schedule.temporary_schedule_vacation &&
                                                 'vacation-card '
                                             }`}

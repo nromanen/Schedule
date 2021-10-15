@@ -275,7 +275,7 @@ const SemesterPage = (props) => {
                         return (
                             <Card
                                 key={semesterItem.id}
-                                class={`semester-card done-card ${
+                                additionClassName={`semester-card done-card ${
                                     semesterItem.currentSemester ? 'current' : ''
                                 }`}
                             >

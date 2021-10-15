@@ -115,7 +115,7 @@ let LessonForm = (props) => {
     }, [lessonId]);
 
     return (
-        <Card class="form-card">
+        <Card additionClassName="form-card">
             {groupId && (
                 <h2 className="form-title under-line">
                     {lessonId ? t(EDIT_TITLE) : t(CREATE_TITLE)}

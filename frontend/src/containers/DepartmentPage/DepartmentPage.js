@@ -138,7 +138,10 @@ const DepartmentPage = (props) => {
                 <section className="container-flex-wrap wrapper">
                     {visibleDepartments.length === 0 && <NotFound name={t(DEPARTMENT_LABEL)} />}
                     {visibleDepartments.map((departmentItem) => (
-                        <Card key={departmentItem.id} class="subject-card department-card">
+                        <Card
+                            key={departmentItem.id}
+                            additionClassName="subject-card department-card"
+                        >
                             <h2 className="subject-card__name">{departmentItem.name}</h2>
                             <div className="cards-btns">
                                 {isDisabled ? (

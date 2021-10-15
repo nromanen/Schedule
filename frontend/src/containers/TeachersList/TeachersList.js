@@ -227,7 +227,7 @@ const TeacherList = (props) => {
                 <section className="container-flex-wrap">
                     {visibleItems.length === 0 && <NotFound name={t(FORM_TEACHER_A_LABEL)} />}
                     {visibleItems.map((teacherItem) => (
-                        <Card key={teacherItem.id} class="teacher-card done-card">
+                        <Card key={teacherItem.id} additionClassName="teacher-card done-card">
                             <div className="cards-btns">
                                 {!isDisabled ? (
                                     <>

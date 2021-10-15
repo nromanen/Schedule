@@ -70,7 +70,7 @@ let AddStudentDialog = (props) => {
                 }}
             />
             <DialogTitle id="confirm-dialog-title">
-                <Card class="form-card teacher-form">
+                <Card additionClassName="form-card teacher-form">
                     <form className="createTeacherForm w-100" onSubmit={handleSubmit}>
                         <h2 className="form-title">
                             {studentId ? t(EDIT_TITLE) : t(CREATE_TITLE)} {t(STUDENT_A_LABEL)}

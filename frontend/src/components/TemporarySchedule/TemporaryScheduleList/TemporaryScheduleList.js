@@ -57,7 +57,9 @@ const TemporaryScheduleList = (props) => {
             />
             {temporarySchedules.map((temporarySchedule) => (
                 <Card
-                    class={`done-card${temporarySchedule.vacation ? ' vacation-card' : ''}`}
+                    additionClassName={`done-card${
+                        temporarySchedule.vacation ? ' vacation-card' : ''
+                    }`}
                     key={shortId.generate()}
                 >
                     <div className="cards-btns">

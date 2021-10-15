@@ -60,7 +60,7 @@ const AddStudentDialog = (props) => {
                 </Button>
             }
         >
-            <Card class="form-card teacher-form">
+            <Card additionClassName="form-card teacher-form">
                 <form className="createTeacherForm w-100" onSubmit={handleSubmit}>
                     <Field
                         className="form-field"

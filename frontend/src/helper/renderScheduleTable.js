@@ -706,7 +706,7 @@ export const renderTeacherRangeSchedule = (schedule, viewTeacherScheduleResults)
             );
             return (
                 <Card
-                    class={`${viewTeacherScheduleResults} form-card teacher-schedule-day-card`}
+                    additionClassName={`${viewTeacherScheduleResults} form-card teacher-schedule-day-card`}
                     key={shortid.generate()}
                 >
                     <h3>

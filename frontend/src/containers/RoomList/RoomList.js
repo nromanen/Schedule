@@ -111,7 +111,7 @@ const RoomList = (props) => {
                 <section className="container-flex-wrap wrapper">
                     {visibleItems.length === 0 && <NotFound name={t(ROOM_Y_LABEL)} />}
                     {visibleItems.map((roomItem) => (
-                        <Card key={roomItem.id} class="room-card done-card">
+                        <Card key={roomItem.id} additionClassName="room-card done-card">
                             <div className="cards-btns">
                                 {!isDisabled ? (
                                     <>
