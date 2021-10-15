@@ -7,7 +7,7 @@ import Button from '@material-ui/core/Button';
 import { connect } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { isEmpty } from 'lodash';
-import i18n from '../../../helper/i18n';
+import i18n from '../../../i18n';
 import CustomDialog from '../CustomDialog';
 import '../dialog.scss';
 import RenderTeacherTable from '../../../helper/renderTeacherTable';

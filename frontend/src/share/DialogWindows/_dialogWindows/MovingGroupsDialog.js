@@ -6,7 +6,7 @@ import Button from '@material-ui/core/Button';
 
 import Select from 'react-select';
 import { isEmpty } from 'lodash';
-import i18n from '../../../helper/i18n';
+import i18n from '../../../i18n';
 
 import { updateStudentService } from '../../../services/studentService';
 import { successHandler } from '../../../helper/handlerAxios';
@@ -37,7 +37,7 @@ const MovingGroupsDialog = (props) => {
             i18n.t('serviceMessages:students_exist_in_this_group', {
                 cardType: i18n.t('common:student_title'),
                 actionType: i18n.t('serviceMessages:student_label'),
-            })
+            }),
         );
     };
     const setCurrentGroupOption = (currentGroup) => {
@@ -76,23 +76,23 @@ const MovingGroupsDialog = (props) => {
     };
     return (
         <CustomDialog
-            title='Moving to group'
+            title="Moving to group"
             onClose={onClose}
             open={open}
             buttons={
                 <>
                     <Button
-                        variant='contained'
+                        variant="contained"
                         onClick={handleSubmitGroupStudents}
-                        color='primary'
+                        color="primary"
                         title={i18n.t('move_to_group_title')}
                     >
                         {i18n.t('common:move_to_group_title')}
                     </Button>
                     <Button
-                        variant='contained'
+                        variant="contained"
                         onClick={clearSelection}
-                        color='primary'
+                        color="primary"
                         title={i18n.t('cancel_title')}
                     >
                         {i18n.t('cancel_title')}
@@ -102,7 +102,7 @@ const MovingGroupsDialog = (props) => {
         >
             <h6>
                 <Select
-                    className='group-select'
+                    className="group-select"
                     defaultValue={defaultGroup}
                     options={groupsOption}
                     onChange={setCurrentGroupOption}

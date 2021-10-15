@@ -6,7 +6,7 @@ import Button from '@material-ui/core/Button';
 
 import { useTranslation } from 'react-i18next';
 import { isEmpty } from 'lodash';
-import i18n from '../../../helper/i18n';
+import i18n from '../../../i18n';
 import RenderStudentTable from '../../../helper/renderStudentTable';
 import { getAllStudentsByGroupId } from '../../../services/studentService';
 import { UploadFile } from '../../../components/UploadFile/UploadFile';
