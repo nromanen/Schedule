@@ -67,7 +67,7 @@ const ClassSchedule = (props) => {
 
     return (
         <>
-            <NavigationPage name={navigationNames.CLASS_SCHEDULE_TITLE} val={navigation.PERIOD} />
+            {/* <NavigationPage name={navigationNames.CLASS_SCHEDULE_TITLE} val={navigation.PERIOD} /> */}
             <div className="cards-container">
                 <CustomDialog
                     type={dialogTypes.DELETE_CONFIRM}

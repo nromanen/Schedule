@@ -46,7 +46,7 @@ const ProfilePage = (props) => {
 
     return (
         <>
-            <NavigationPage />
+            {/* <NavigationPage /> */}
             <Card additionClassName="form-card">
                 <h2 className="form-title">{t(COMMON_MY_PROFILE)}</h2>
                 <section>

@@ -217,7 +217,7 @@ const SemesterPage = (props) => {
 
     return (
         <>
-            <NavigationPage name={navigationNames.SEMESTER_PAGE} val={navigation.SEMESTERS} />
+            {/* <NavigationPage name={navigationNames.SEMESTER_PAGE} val={navigation.SEMESTERS} /> */}
             <CustomDialog
                 type={subDialogType}
                 cardId={semesterId}

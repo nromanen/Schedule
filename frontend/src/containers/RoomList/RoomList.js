@@ -90,7 +90,7 @@ const RoomList = (props) => {
 
     return (
         <>
-            <NavigationPage name={navigationNames.ROOM_LIST} val={navigation.ROOMS} />
+            {/* <NavigationPage name={navigationNames.ROOM_LIST} val={navigation.ROOMS} /> */}
             <CustomDialog
                 type={subDialogType}
                 cardId={roomId}

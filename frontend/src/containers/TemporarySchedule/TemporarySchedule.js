@@ -59,7 +59,7 @@ const TemporarySchedule = (props) => {
 
     return (
         <>
-            <NavigationPage val={navigation.CHANGES} />
+            {/* <NavigationPage val={navigation.CHANGES} /> */}
             <Card additionClassName="card-title lesson-card">
                 <TemporaryScheduleTitle
                     teacherId={teacherId}

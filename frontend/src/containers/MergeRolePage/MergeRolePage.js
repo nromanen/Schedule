@@ -70,7 +70,7 @@ const MergeRolePage = (props) => {
 
     return (
         <>
-            <NavigationPage val={navigation.USERS} />
+            {/* <NavigationPage val={navigation.USERS} /> */}
             <div className="merge-role-form">
                 <Card additionClassName="merge-role-card">
                     <h2 className="under-line">{t(MERGE_HEADER)}</h2>

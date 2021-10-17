@@ -75,7 +75,7 @@ const BusyRooms = (props) => {
                 <>
                     {busyRoomsLength > 0 ? (
                         <>
-                            <NavigationPage val={navigation.BUSY_ROOMS} />
+                            {/* <NavigationPage val={navigation.BUSY_ROOMS} /> */}
                             <h2 className="busy-heading">{t(BUSY_ROOMS_HEADING)}</h2>
                             <section className="view-rooms">
                                 {busyRooms.map((busyRoom) => (

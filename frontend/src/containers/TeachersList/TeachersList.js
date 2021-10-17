@@ -177,7 +177,7 @@ const TeacherList = (props) => {
     };
     return (
         <>
-            <NavigationPage name={navigationNames.TEACHER_LIST} val={navigation.TEACHERS} />
+            {/* <NavigationPage name={navigationNames.TEACHER_LIST} val={navigation.TEACHERS} /> */}
             <div className="cards-container">
                 <CustomDialog
                     type={subDialogType}

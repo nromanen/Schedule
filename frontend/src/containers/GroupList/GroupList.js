@@ -133,7 +133,7 @@ const GroupList = (props) => {
 
     return (
         <>
-            <NavigationPage name={navigationNames.GROUP_LIST} val={navigation.GROUPS} />
+            {/* <NavigationPage name={navigationNames.GROUP_LIST} val={navigation.GROUPS} /> */}
             <CustomDialog
                 type={subDialogType}
                 cardId={groupId}

@@ -7,7 +7,7 @@ import { navigation } from '../../constants/navigation';
 function AdminPage() {
     return (
         <>
-            <NavigationPage val={navigation.LESSONS} />
+            {/* <NavigationPage val={navigation.LESSONS} /> */}
             <LessonPage />
         </>
     );

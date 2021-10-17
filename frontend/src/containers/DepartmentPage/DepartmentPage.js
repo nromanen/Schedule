@@ -109,7 +109,7 @@ const DepartmentPage = (props) => {
 
     return (
         <>
-            <NavigationPage name={navigationNames.DEPARTMENTS} val={navigation.DEPARTMENTS} />
+            {/* <NavigationPage name={navigationNames.DEPARTMENTS} val={navigation.DEPARTMENTS} /> */}
             <CustomDialog
                 type={subDialogType}
                 cardId={departmentId.id}

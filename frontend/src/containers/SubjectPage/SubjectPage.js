@@ -91,7 +91,7 @@ const SubjectPage = (props) => {
     };
     return (
         <>
-            <NavigationPage name={navigationNames.SUBJECT_PAGE} val={navigation.SUBJECTS} />
+            {/* <NavigationPage name={navigationNames.SUBJECT_PAGE} val={navigation.SUBJECTS} /> */}
             <CustomDialog
                 type={subDialogType}
                 cardId={subjectId}
