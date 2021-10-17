@@ -70,10 +70,13 @@ const ShowStudentsOnGroupDialog = (props) => {
     const handleAllCheckedBtn = (pageItemsCount, page, rowsPerPage) => {
         let start = page * rowsPerPage;
         const finish = pageItemsCount + page * rowsPerPage;
-        while (checkBoxStudents[start].checked && start < finish) {
-            start += 1;
+        while (start < finish) {
+            if (checkBoxStudents[start].checked) {
+                start += 1;
+            } else {
+                break;
+            }
         }
-
         setCheckedAll(start === finish && start !== 0);
     };
     const handleAllClear = () => {

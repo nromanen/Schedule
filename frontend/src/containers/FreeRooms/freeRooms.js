@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
+import Button from '@material-ui/core/Button';
 import { useTranslation } from 'react-i18next';
 import Card from '../../share/Card/Card';
 import FreeRoomForm from '../../components/FreeRoomForm/freeRoomForm';
@@ -40,21 +41,29 @@ const FreeRooms = (props) => {
                 title=""
                 open={open}
                 onClose={handleClose}
+                buttons={
+                    <Button
+                        variant="contained"
+                        onClick={handleClose}
+                        color="primary"
+                        title={t('close_title')}
+                    >
+                        {t('common:close_title')}
+                    </Button>
+                }
                 maxWidth="lg"
                 aria-labelledby="form-dialog-title"
             >
                 <div className="cards-container ">
                     <aside className="free-rooms__panel">
-                        <Card className="free-rooms-wrapper freeRoomCard">
-                            <div className="freeRoomForms">
-                                <h2 id="form-dialog-title">{t('find_free_room')}</h2>
-                                <FreeRoomForm
-                                    classScheduler={classScheduler}
-                                    onReset={clearFreeRoomsService}
-                                    onSubmit={submit}
-                                />
-                            </div>
-                        </Card>
+                        <div className="freeRoomForms">
+                            <h2 id="form-dialog-title">{t('find_free_room')}</h2>
+                            <FreeRoomForm
+                                classScheduler={classScheduler}
+                                onReset={clearFreeRoomsService}
+                                onSubmit={submit}
+                            />
+                        </div>
                     </aside>
                     <section className="container-flex-wrap wrapper">
                         {props.freeRooms.map((freeRoom) => (
