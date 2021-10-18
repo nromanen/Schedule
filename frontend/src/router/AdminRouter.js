@@ -14,47 +14,17 @@ import MergeRolePage from '../containers/MergeRolePage/MergeRolePage';
 import DepartmentPage from '../containers/DepartmentPage/DepartmentPage';
 import TemporarySchedule from '../containers/TemporarySchedule/TemporarySchedule';
 import { AdminRoute } from './routes';
-import NavigationPage from '../components/Navigation/NavigationPage';
+import NavigationPanel from '../components/Navigation';
 
 export default function Routers() {
     return (
         <>
-            <NavigationPage />
+            <NavigationPanel />
             <Switch>
                 <AdminRoute path={links.Departments} component={DepartmentPage} />
                 <AdminRoute path={links.LessonPage} component={AdminPage} />
                 <AdminRoute path={links.TeacherList} component={TeacherList} />
                 <AdminRoute path={links.GroupList} component={GroupList} />
-
-                {/* <AdminRoute
-                    path={`${links.GroupList}${links.Group}${links.Edit}${links.IdParam}`}
-                    component={GroupList}
-                />
-                <AdminRoute
-                    path={`${links.GroupList}${links.Group}${links.Delete}${links.IdParam}`}
-                    component={GroupList}
-                />
-                <AdminRoute
-                    path={`${links.GroupList}${links.Group}${links.IdParam}${links.AddStudent}`}
-                    component={GroupList}
-                />
-                <AdminRoute
-                    path={`${links.GroupList}${links.Group}${links.IdParam}${links.SetDisable}`}
-                    component={GroupList}
-                />
-                <AdminRoute
-                    path={`${links.GroupList}${links.Group}${links.IdParam}${links.ShowStudents}`}
-                    component={GroupList}
-                />
-                <AdminRoute
-                    path={`${links.GroupList}${links.Group}${links.IdParam}${links.Student}${links.IdStudentParam}${links.Edit}`}
-                    component={GroupList}
-                />
-                <AdminRoute
-                    path={`${links.GroupList}${links.Group}${links.IdParam}${links.Student}${links.IdStudentParam}${links.Delete}`}
-                    component={GroupList}
-                /> */}
-
                 <AdminRoute path={links.ClassScheduleTitle} component={ClassSchedule} />
                 <AdminRoute path={links.RoomList} component={RoomList} />
                 <AdminRoute path={links.SubjectPage} component={SubjectPage} />

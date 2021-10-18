@@ -160,7 +160,6 @@ const GroupList = (props) => {
                     <SearchPanel SearchChange={SearchChange} showDisabled={changeDisable} />
                     {!isDisabled && (
                         <AddGroup
-                            match={match}
                             className="form"
                             onSubmit={handleGroupService}
                             onReset={clearGroupService}

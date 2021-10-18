@@ -1,50 +1,21 @@
 import React, { useEffect, useState } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import { connect } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
-import { MenuItem, Select, List, ListItem, ListItemText } from '@material-ui/core';
-import './NavigationPage.scss';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import './NavigationPanel.scss';
 import { general, tabsComponents } from '../../constants/navigationComponents';
 import { links } from '../../constants/links';
+import { COMMON_MORE_LABEL } from '../../constants/translationLabels/common';
 
-function a11yProps(index) {
-    return {
-        id: `simple-tab-${index}`,
-        'aria-controls': `simple-tabpanel-${index}`,
-    };
-}
-
-const useStyles = makeStyles((theme) => ({
-    root: {
-        flexGrow: 1,
-        backgroundColor: theme.palette.background.paper,
-    },
-    header: {
-        backgroundColor: theme.palette.info.dark,
-    },
-    nav: {
-        textDecoration: 'none',
-        color: '#fff',
-        ':hover': {
-            color: 'purple',
-        },
-    },
-    select: {
-        backgroundColor: 'primary',
-    },
-
-    btn: {
-        margin: 0,
-        width: '10px',
-    },
-}));
-
-const NavigationPage = () => {
+const NavigationPanel = () => {
     const history = useHistory();
     const { t } = useTranslation('common');
-    const classes = useStyles();
     const [gen, setGen] = useState('');
     const [selectedTab, setSelectedTab] = useState('');
 
@@ -72,27 +43,25 @@ const NavigationPage = () => {
         history.push({ ...history.location, pathname: `${links.ADMIN_PAGE}/${navigateTo}` });
     };
 
-    const flexContainer = {
-        display: 'flex',
-        flexDirection: 'row',
-        padding: 5,
-    };
     return (
-        <Paper className={classes.root}>
-            <List style={flexContainer} indicatorColor="primary" className={classes.header}>
+        <Paper className="admin-navigation">
+            <List indicatorColor="primary" className="navigation-container">
                 {tabsComponents.map((item, index) => (
                     <ListItem
                         selected={selectedTab === index}
                         key={item.name}
                         onClick={() => handleNavigate(item.name, index)}
-                        {...a11yProps(index)}
+                        className="navigation-link"
                     >
-                        <ListItemText>{t(`${item.title}`)}</ListItemText>
+                        <ListItemText>{t(item.title)}</ListItemText>
                     </ListItem>
                 ))}
-                <ListItem selected={selectedTab === tabsComponents.length}>
+                <ListItem
+                    className="navigation-link select-container "
+                    selected={selectedTab === tabsComponents.length}
+                >
                     <Select
-                        className="general MuiTab-root"
+                        className="navigation-select"
                         labelId="demo-controlled-open-select-label"
                         id="demo-controlled-open-select"
                         value={gen}
@@ -102,24 +71,17 @@ const NavigationPage = () => {
                             setGen(eventValue);
                         }}
                     >
-                        <MenuItem
-                            value=""
-                            disabled
-                            selected
-                            className="menu-dictionary MuiTab-root"
-                            {...a11yProps(0)}
-                        >
-                            More
+                        <MenuItem value="" disabled selected className="navigation-select-item">
+                            {t(COMMON_MORE_LABEL)}
                         </MenuItem>
-                        {general.map((item, index) => (
+                        {general.map((item) => (
                             <MenuItem
                                 key={item.name + item.title}
-                                className="menu-dictionary MuiTab-root"
+                                className="navigation-select-item"
                                 value={item.name}
                                 onClick={() => handleNavigate(item.name, tabsComponents.length)}
-                                {...a11yProps(index)}
                             >
-                                {t(`${item.title}`)}
+                                {t(item.title)}
                             </MenuItem>
                         ))}
                     </Select>
@@ -134,4 +96,4 @@ const mapStateToProps = (state) => ({
     ClassScheduleOne: state.classActions.classScheduleOne,
 });
 
-export default connect(mapStateToProps, {})(NavigationPage);
+export default connect(mapStateToProps, {})(NavigationPanel);

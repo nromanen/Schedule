@@ -1,0 +1,71 @@
+.admin-navigation {
+    flex-grow: 1;
+    background-color: #1976d2;
+    .navigation-container{
+      display: flex;
+      flex-direction: row;
+      padding: 0px 28px;
+      background-color: #1976d2;
+      @media (max-width: 800px) {
+        display: block;
+        padding: 14px 0px;
+      }
+    }
+    .navigation-link{
+      text-align: center;
+      color: #ffffff;
+      cursor: pointer;
+      &:hover{
+        background-color: rgba(0, 0, 0, 0.08);
+      }
+    }
+    .select-container{
+      justify-content: center;
+      padding: 0;
+      .navigation-select{
+        min-width: 100%;
+        color: #ffffff;
+        display: flex;
+        height: 40px;
+        .MuiSelect-select{
+          &:focus{
+            background-color: transparent;
+          }
+        }
+      }
+      
+      .MuiSelect-icon{
+        color: #ffffff;
+      }
+      &:hover{
+        .MuiInput-underline::before{
+          border-color: #ffffff;
+        }
+      }
+      .MuiInput-underline::before{
+        width: 98%;
+        left: 50%;
+        transform: translateX(-50%);
+        border-color: #ffffff;
+      }
+     
+    }
+    
+  }
+  .MuiList-root{
+      .navigation-select-item{
+        color: #3f51b5;
+        &:hover{
+          background-color: rgba(0, 0, 0, 0.08);
+        }
+        
+      }
+  } 
+  .menu-dictionary{
+    text-decoration: none;
+    color: #3f51b5;
+    background-color: #3f51b5 !important;
+    text-transform:uppercase;
+  }
+  
+  
