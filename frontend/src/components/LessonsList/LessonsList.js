@@ -3,22 +3,15 @@ import { Trans, useTranslation } from 'react-i18next';
 import { FaEdit, FaUserPlus } from 'react-icons/fa';
 import { MdContentCopy } from 'react-icons/all';
 import { MdDelete } from 'react-icons/md';
-import { makeStyles } from '@material-ui/core/styles';
 
 import Card from '../../share/Card/Card';
 import { getTeacherName } from '../../helper/renderTeacher';
 import { firstStringLetterCapital } from '../../helper/strings';
 import { FORM_GROUPED_LABEL } from '../../constants/translationLabels/formElements';
 import { COPY_LESSON, DELETE_LESSON, EDIT_LESSON } from '../../constants/translationLabels/common';
-
-const useStyles = makeStyles({
-    title: {
-        height: '3em',
-    },
-});
+import './LessonsList.scss';
 
 const LessonsList = (props) => {
-    const classes = useStyles();
     const { lessons, onCopyLesson, onSelectLesson, onClickOpen } = props;
     const { t } = useTranslation(['common', 'formElements']);
 
@@ -34,7 +27,7 @@ const LessonsList = (props) => {
     };
     return (
         <div>
-            <section className="container-flex-wrap">
+            <section className="container-flex-wrap lesson-container">
                 {lessons.map((lesson) => (
                     <Card additionClassName="done-card" key={lesson.id}>
                         <div className="cards-btns">
@@ -60,7 +53,7 @@ const LessonsList = (props) => {
                                 onClick={() => onClickOpen(lesson.id)}
                             />
                         </div>
-                        <p className={classes.title}>{getLessonShortTitle(getTitle(lesson))}</p>
+                        <p className="title">{getLessonShortTitle(getTitle(lesson))}</p>
                         <p>{getTeacherName(lesson.teacher)}</p>
                         <p>
                             <Trans
