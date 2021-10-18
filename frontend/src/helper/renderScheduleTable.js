@@ -1,5 +1,5 @@
 import React from 'react';
-import { isNil } from 'lodash';
+import { isEqual, isNil } from 'lodash';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableContainer from '@material-ui/core/TableContainer';
@@ -346,41 +346,45 @@ export const renderGroupCells = (
     isCurrentDay = 0,
     dayName,
 ) => {
-    return groups.map((group, groupIndex) => {
+    const prepareGroups = (groupsArray) => {
         // TODO map => reduce
-        const { card } = group;
-        let colspan = 1;
-        let rowspan = 1;
-        let classname = 'lesson';
+        return groupsArray.map((group, groupIndex) => {
+            const { card } = group;
+            let colspan = 1;
+            let rowspan = 1;
+            let classname = 'lesson';
 
-        if (currentWeekTypeNumber === isOdd && isCurrentDay) {
-            classname += ' currentDay';
-        }
-        if (card !== null && card.skip_render === 1) {
-            return null;
-        }
-        if (card !== null && card.weekly_render === 1) {
-            rowspan = 2;
-            classname += ' weekly';
-        }
-        for (let i = groupIndex + 1; i < groups.length; i += 1) {
-            if (
-                group &&
-                card !== null &&
-                groups[i] &&
-                groups[i].card !== null &&
-                card.teacher?.surname === groups[i].card.teacher.surname &&
-                card.teacher?.name === groups[i].card.teacher.name &&
-                card.subjectForSite === groups[i].card.subjectForSite &&
-                card.room.id === groups[i].card.room.id &&
-                card.weekly_render === groups[i].card.weekly_render
-            ) {
-                groups[i].card.skip_render = 1;
-                colspan += 1;
-                classname += ' grouped';
+            if (currentWeekTypeNumber === isOdd && isCurrentDay) {
+                classname += ' currentDay';
             }
-        }
-
+            if (card !== null && card.skip_render === 1) {
+                return null;
+            }
+            if (card !== null && card.weekly_render === 1) {
+                rowspan = 2;
+                classname += ' weekly';
+            }
+            for (let i = groupIndex + 1; i < groups.length; i += 1) {
+                const { card: tempCard } = groups[i];
+                if (
+                    group &&
+                    card !== null &&
+                    groups[i] &&
+                    tempCard !== null &&
+                    isEqual(card, tempCard)
+                ) {
+                    tempCard.skip_render = 1;
+                    colspan += 1;
+                    classname += ' grouped';
+                }
+            }
+            return { card, classname, rowspan, colspan };
+        });
+    };
+    const resultGroups = prepareGroups(groups);
+    return resultGroups.map((group) => {
+        if (!group) return null;
+        const { card, colspan, rowspan, classname } = group;
         return (
             <TableCell
                 key={shortid.generate()}
@@ -527,7 +531,7 @@ const renderScheduleDays = (fullResultSchedule, place) => {
         return renderDay(
             dayItem.day,
             dayItem.classes,
-            fullResultSchedule.semester_classes?.length || 0,
+            fullResultSchedule.semesterClasses.length || 0,
             place,
         );
     });

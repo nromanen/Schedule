@@ -12,7 +12,12 @@ import {
     COMMON_EDIT,
     COMMON_SET_ENABLED,
 } from '../../constants/translationLabels/common';
-import { GROUP_LABEL } from '../../constants/translationLabels/formElements';
+import {
+    DELETE_TITLE_LABEL,
+    FORM_SHOW_STUDENTS,
+    FORM_STUDENT_ADD_LABEL,
+    GROUP_LABEL,
+} from '../../constants/translationLabels/formElements';
 
 const GroupCard = (props) => {
     const {
@@ -63,13 +68,13 @@ const GroupCard = (props) => {
                 <Link to={`${links.GroupList}${links.Group}${links.Delete}/${groupItem.id}`}>
                     <MdDelete
                         className="group__buttons-delete link-href"
-                        title={t('delete_title')}
+                        title={t(DELETE_TITLE_LABEL)}
                         onClick={() => showConfirmDialog(groupItem.id, dialogTypes.DELETE_CONFIRM)}
                     />
                 </Link>
                 <Link to={`${links.GroupList}${links.Group}/${groupItem.id}${links.AddStudent}`}>
                     <FaUserPlus
-                        title={t('formElements:student_add_label')}
+                        title={t(FORM_STUDENT_ADD_LABEL)}
                         className="svg-btn copy-btn align-left info-btn"
                         onClick={() => {
                             handleAddUser(groupItem.id);
@@ -82,7 +87,7 @@ const GroupCard = (props) => {
             <Link to={`${links.GroupList}${links.Group}/${groupItem.id}${links.ShowStudents}`}>
                 <span className="students-group">
                     <FaUsers
-                        title={t('formElements:show_students')}
+                        title={t(FORM_SHOW_STUDENTS)}
                         className="svg-btn copy-btn align-left info-btn students"
                         onClick={() => {
                             onShowStudentByGroup(groupItem.id);

@@ -33,17 +33,17 @@ export const makeGroupSchedule = ({ semester, schedule }) => {
 
         scheduleItem.days.forEach((day) => {
             day.classes.forEach((classItem) => {
-                evenDaysPrepArray.forEach((evenDayPrep) => {
+                evenDaysPrepArray.forEach((evenDayPrep, index) => {
                     if (evenDayPrep.day === day.day) {
-                        evenDayPrep.class[classItem.class.id] = {
+                        evenDaysPrepArray[index].class[classItem.class.id] = {
                             class: classItem.class,
                             card: classItem.weeks.even,
                         };
                     }
                 });
-                oddDaysPrepArray.forEach((oddDayPrep) => {
+                oddDaysPrepArray.forEach((oddDayPrep, index) => {
                     if (oddDayPrep.day === day.day) {
-                        oddDayPrep.class[classItem.class.id] = {
+                        oddDaysPrepArray[index].class[classItem.class.id] = {
                             class: classItem.class,
                             card: classItem.weeks.odd,
                         };
