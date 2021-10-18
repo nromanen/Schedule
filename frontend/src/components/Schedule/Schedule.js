@@ -20,11 +20,22 @@ import { setLoadingService } from '../../services/loadingService';
 
 import { cssClasses } from '../../constants/schedule/cssClasses';
 import { colors } from '../../constants/schedule/colors';
-
+import { FORM_DAY_LABEL } from '../../constants/translationLabels/formElements';
+import { CLASS_SCHEDULE, WEEK_LABEL } from '../../constants/translationLabels/common';
 import './Schedule.scss';
 
 const Schedule = (props) => {
-    const { groups, itemGroupId, groupId } = props;
+    const {
+        groups,
+        itemGroupId,
+        groupId,
+        items,
+        currentSemester,
+        translation: t,
+        rooms,
+        availability,
+        isLoading,
+    } = props;
     const [open, setOpen] = useState(false);
     const [itemData, setItemData] = useState(null);
 
@@ -106,11 +117,8 @@ const Schedule = (props) => {
         }
     };
 
-    const { items, currentSemester } = props;
     const days = currentSemester.semester_days;
     const classes = currentSemester.semester_classes;
-
-    const t = props.translation;
 
     const dayContainerHeight = classes.length * 150;
 
@@ -121,7 +129,7 @@ const Schedule = (props) => {
         },
     });
     const elClasses = useStyles();
-
+    // TODO delete this and replace with unified capitalize
     const firstStringLetterCapitalHandle = (str) => {
         return firstStringLetterCapital(str);
     };
@@ -233,10 +241,10 @@ const Schedule = (props) => {
             <ScheduleDialog
                 translation={t}
                 itemData={itemData}
-                rooms={props.rooms}
-                availability={props.availability}
+                rooms={rooms}
+                availability={availability}
                 open={open}
-                isLoading={props.isLoading}
+                isLoading={isLoading}
                 onClose={handleClose}
             />
             <aside className="day-classes-aside">
@@ -298,13 +306,11 @@ const Schedule = (props) => {
                                 >
                                     <IoMdMore
                                         className="more-icon"
-                                        title={`${t(`formElements:day_label`)}: ${t(
+                                        title={`${t(FORM_DAY_LABEL)}: ${t(
                                             `day_of_week_${lesson.day.name.toUpperCase()}`,
-                                        ).toLowerCase()}\n${t(`week_label`)}: ${t(
+                                        ).toLowerCase()}\n${t(WEEK_LABEL)}: ${t(
                                             `week_${lesson.week}_title`,
-                                        )}\n${t('class_schedule')}: ${
-                                            lesson.classNumber.class_name
-                                        }`}
+                                        )}\n${t(CLASS_SCHEDULE)}: ${lesson.classNumber.class_name}`}
                                     />
                                     {itemInBoard(group, lesson, index)}
                                 </Board>

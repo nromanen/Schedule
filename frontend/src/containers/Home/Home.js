@@ -12,6 +12,7 @@ import {
     setScheduleTypeService,
 } from '../../services/scheduleService';
 import { getPublicClassScheduleListService } from '../../services/classService';
+import { HOME_TITLE } from '../../constants/translationLabels/common';
 
 const HomePage = (props) => {
     const { t } = useTranslation('common');
@@ -20,25 +21,20 @@ const HomePage = (props) => {
     setScheduleSemesterIdService(null);
     setScheduleTypeService('');
 
-    // useEffect(() => showAllPublicSemestersService(), []);
-
     useEffect(() => {
         if (props.userRole === null) {
-            // disableDefaultSemesterService();
             getDefaultSemesterService();
             setScheduleTypeService('');
         }
     }, []);
     useEffect(() => {
         if (props.userRole === userRoles.TEACHER) {
-            // disableDefaultSemesterService();
             getDefaultSemesterService();
             setScheduleTypeService('');
         }
     }, []);
     useEffect(() => {
         if (props.userRole === userRoles.MANAGER) {
-            // disableDefaultSemesterService();
             getDefaultSemesterService();
             setScheduleTypeService('');
         }
@@ -46,7 +42,7 @@ const HomePage = (props) => {
 
     return (
         <Fragment>
-            <h1>{t('home_title')}</h1>
+            <h1>{t(HOME_TITLE)}</h1>
             <GroupSchedulePage scheduleType="default" />
         </Fragment>
     );

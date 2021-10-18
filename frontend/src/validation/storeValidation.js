@@ -1,9 +1,11 @@
 import Moment from 'moment';
 import { extendMoment } from 'moment-range';
 import { store } from '../store';
-
-import { UNIQUE_ERROR_MESSAGE } from '../constants/validation';
-import i18n from '../helper/i18n';
+import i18n from '../i18n';
+import {
+    UNIQUE_ERROR_MESSAGE,
+    INTERSECT_TIME_ERROR_MESSAGE,
+} from '../constants/translationLabels/validationMessages';
 
 export const checkUniqClassName = (className) => {
     const classId = store.getState().classActions.classScheduleOne.id;
@@ -53,7 +55,7 @@ export const timeIntersectService = (startTime, endTime) => {
             });
         }
     }
-    return find ? i18n.t('validationMessages:intersect_time_error_message') : undefined;
+    return find ? i18n.t(INTERSECT_TIME_ERROR_MESSAGE) : undefined;
 };
 
 export const checkUniqLesson = (lesson) => {

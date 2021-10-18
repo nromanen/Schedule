@@ -1,22 +1,21 @@
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { get } from 'lodash';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
-
-import { resetFormHandler } from '../../helper/formHelper';
-import { handleSnackbarOpenService } from '../../services/snackbarService';
-
-import { LOGIN_FORM, REGISTRATION_FORM, RESET_PASSWORD_FORM } from '../../constants/reduxForms';
-import { snackbarTypes } from '../../constants/snackbarTypes';
 import { links } from '../../constants/links';
 import { authTypes } from '../../constants/auth';
 import { userRoles } from '../../constants/userRoles';
-import { validation } from '../../constants/validation';
-
+import { snackbarTypes } from '../../constants/snackbarTypes';
 import LoginForm from '../../components/LoginForm/LoginForm';
 import RegistrationForm from '../../components/RegistrationForm/RegistrationForm';
 import ResetPasswordForm from '../../components/ResetPasswordForm/ResetPasswordForm';
+import { GOOGLE } from '../../constants/common';
 
+import { validation } from '../../constants/validation';
+import { resetFormHandler } from '../../helper/formHelper';
+import { handleSnackbarOpenService } from '../../services/snackbarService';
+import { LOGIN_FORM, REGISTRATION_FORM, RESET_PASSWORD_FORM } from '../../constants/reduxForms';
 import {
     authUser,
     registerUser,
@@ -26,19 +25,34 @@ import {
 } from '../../actions/index';
 
 import './Auth.scss';
+import { EMAIL_MESSAGE } from '../../constants/translationLabels/validationMessages';
+import {
+    DIFFERENT_PASSWORDS,
+    BROKEN_TOKEN,
+    LOGIN_TITLE,
+    REGISTRATION_PAGE_TITLE,
+    RESET_PASSWORD_PAGE_TITLE,
+    SUCCESSFUL_LOGIN_MESSAGE,
+    SUCCESSFUL_REGISTERED_MESSAGE,
+    SUCCESSFUL_RESET_PASSWORD_MESSAGE,
+    EMPTY_FIELDS,
+} from '../../constants/translationLabels/common';
 
 const Auth = (props) => {
     const { t } = useTranslation('common');
     const [authType, setAuthType] = useState(authTypes.LOGIN);
 
-    const { error } = props;
     const url = window.document.location;
     const parser = new URL(url);
+
+    let isSuccess;
+    let message;
+    const { error, isLoading } = props;
 
     const socialLoginHandler = (data) => {
         props.setLoading(true);
         if (!data.token || data.token.length < 20) {
-            props.setError({ login: t('broken_token') });
+            props.setError({ login: t(BROKEN_TOKEN) });
             return;
         }
         setAuthType(authTypes.GOOGLE);
@@ -50,12 +64,12 @@ const Auth = (props) => {
 
     let social = false;
     let isToken = false;
-    let token = '';
+    let splitedParamToken = '';
 
     if (parser.search.length > 0) {
         const params = parser.search.split('&');
         if (params) {
-            params.map((param) => {
+            params.forEach((param) => {
                 const splitedParam = param.split('=');
                 if (splitedParam) {
                     if (splitedParam[0] === '?social' && splitedParam[1] === 'true') {
@@ -63,44 +77,42 @@ const Auth = (props) => {
                     }
                     if (splitedParam[0] === 'token' && splitedParam[1].length > 0) {
                         isToken = true;
-                        token = splitedParam[1];
+                        splitedParamToken = splitedParam;
                     }
                 }
             });
         }
-        if (social && isToken) socialLoginHandler({ authType: 'google', token });
+        if (social && isToken)
+            socialLoginHandler({ authType: GOOGLE, token: splitedParamToken[1] });
     }
 
     useEffect(() => {
         if (
             authType === authTypes.REGISTRATION &&
             props.response &&
-            props.response.data.hasOwnProperty('message')
+            get(props.resetPasswordResponse.data, 'message')
         ) {
             setAuthType(authTypes.LOGIN);
-            message = t('successful_registered_message');
+            message = t(SUCCESSFUL_REGISTERED_MESSAGE);
             handleSnackbarOpenService(true, snackbarTypes.SUCCESS, message);
         }
     }, [props.response]);
 
     useEffect(() => {
-        if (
-            props.resetPasswordResponse &&
-            props.resetPasswordResponse.data.hasOwnProperty('message')
-        ) {
+        if (props.resetPasswordResponse && get(props.resetPasswordResponse.data, 'message')) {
             setAuthType(authTypes.LOGIN);
-            message = t('successful_reset_password_message');
+            message = t(SUCCESSFUL_RESET_PASSWORD_MESSAGE);
             handleSnackbarOpenService(true, snackbarTypes.SUCCESS, message);
         }
     }, [props.resetPasswordResponse]);
 
     const loginHandler = (loginData) => {
         if (!loginData.email || !loginData.password) {
-            props.setError({ login: t('empty_fields') });
+            props.setError({ login: t(EMPTY_FIELDS) });
             return;
         }
         if (!validation.EMAIL.test(loginData.email)) {
-            props.setError({ login: t('validationMessages:email') });
+            props.setError({ login: t(EMAIL_MESSAGE) });
             return;
         }
         props.onAuth(loginData);
@@ -111,7 +123,7 @@ const Auth = (props) => {
     const registrationHandler = (registrationData) => {
         if (registrationData.password !== registrationData.retypePassword) {
             props.setError({
-                registration: { passwords: t('different_passwords') },
+                registration: { passwords: t(DIFFERENT_PASSWORDS) },
             });
             return;
         }
@@ -131,19 +143,14 @@ const Auth = (props) => {
         resetFormHandler(RESET_PASSWORD_FORM);
     };
 
-    let isSuccess;
-    let message;
-    const isLoading = props.loading;
-
     if (!error && props.userRole) {
-        const { token } = props;
-        isSuccess = !!token;
-        message = t('successful_login_message');
+        isSuccess = !!props.token;
+        message = t(SUCCESSFUL_LOGIN_MESSAGE);
         handleSnackbarOpenService(true, snackbarTypes.SUCCESS, message);
     }
 
     const commonCondition = !error && isSuccess && !isLoading;
-
+    // switch case
     let authRedirect = null;
     if (commonCondition && props.userRole === userRoles.MANAGER) {
         authRedirect = <Redirect to={links.ADMIN_PAGE} />;
@@ -153,28 +160,15 @@ const Auth = (props) => {
         authRedirect = <Redirect to={links.HOME_PAGE} />;
     }
 
-    const switchAuthModeHandler = (authType) => {
-        setAuthType(authType);
+    const switchAuthModeHandler = (newAuthType) => {
+        setAuthType(newAuthType);
     };
 
     let authPage;
 
     switch (authType) {
-        case authTypes.LOGIN:
-            document.title = t('login_page_title');
-            authPage = (
-                <LoginForm
-                    isLoading={isLoading}
-                    loginError={error}
-                    onSubmit={loginHandler}
-                    switchAuthMode={switchAuthModeHandler}
-                    translation={t}
-                    setError={props.setError}
-                />
-            );
-            break;
         case authTypes.REGISTRATION:
-            document.title = t('registration_page_title');
+            document.title = t(REGISTRATION_PAGE_TITLE);
             authPage = (
                 <RegistrationForm
                     isLoading={isLoading}
@@ -187,7 +181,7 @@ const Auth = (props) => {
             );
             break;
         case authTypes.RESET_PASSWORD:
-            document.title = t('reset_password_page_title');
+            document.title = t(RESET_PASSWORD_PAGE_TITLE);
             authPage = (
                 <ResetPasswordForm
                     isLoading={isLoading}
@@ -200,7 +194,7 @@ const Auth = (props) => {
             );
             break;
         default:
-            document.title = t('login_page_title');
+            document.title = t(LOGIN_TITLE);
             authPage = (
                 <LoginForm
                     isLoading={isLoading}

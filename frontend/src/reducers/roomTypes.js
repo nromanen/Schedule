@@ -1,7 +1,6 @@
 import * as actionTypes from '../actions/actionsType';
 import { updateObject } from '../utility';
 
-
 const reducer = (
     state = {
         roomTypes: [],

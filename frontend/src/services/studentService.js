@@ -5,14 +5,7 @@ import { store } from '../store';
 import { resetFormHandler } from '../helper/formHelper';
 import { STUDENT_FORM } from '../constants/reduxForms';
 import { errorHandler, successHandler } from '../helper/handlerAxios';
-import i18n from '../helper/i18n';
-import {
-    BACK_END_SUCCESS_OPERATION,
-    UPDATED_LABEL,
-    STUDENT_LABEL,
-    CREATED_LABEL,
-    DELETED_LABEL,
-} from '../constants/services';
+import i18n from '../i18n';
 import {
     addStudent,
     deleteStudent,
@@ -21,6 +14,13 @@ import {
     showAllStudentsByGroupId,
     updateStudent,
 } from '../actions/students';
+import {
+    BACK_END_SUCCESS_OPERATION,
+    UPDATED_LABEL,
+    CREATED_LABEL,
+    DELETED_LABEL,
+} from '../constants/translationLabels/serviceMessages';
+import { FORM_STUDENT_LABEL } from '../constants/translationLabels/formElements';
 
 export const createStudentService = (data) => {
     axios
@@ -30,7 +30,7 @@ export const createStudentService = (data) => {
             resetFormHandler(STUDENT_FORM);
             successHandler(
                 i18n.t(BACK_END_SUCCESS_OPERATION, {
-                    cardType: i18n.t(STUDENT_LABEL),
+                    cardType: i18n.t(FORM_STUDENT_LABEL),
                     actionType: i18n.t(CREATED_LABEL),
                 }),
             );
@@ -65,7 +65,7 @@ export const deleteStudentService = (student) => {
             getAllStudentsByGroupId(student.group.id);
             successHandler(
                 i18n.t(BACK_END_SUCCESS_OPERATION, {
-                    cardType: i18n.t(STUDENT_LABEL),
+                    cardType: i18n.t(FORM_STUDENT_LABEL),
                     actionType: i18n.t(DELETED_LABEL),
                 }),
             );
@@ -85,7 +85,7 @@ export const updateStudentService = (data) => {
             resetFormHandler(STUDENT_FORM);
             successHandler(
                 i18n.t(BACK_END_SUCCESS_OPERATION, {
-                    cardType: i18n.t(STUDENT_LABEL),
+                    cardType: i18n.t(FORM_STUDENT_LABEL),
                     actionType: i18n.t(UPDATED_LABEL),
                 }),
             );

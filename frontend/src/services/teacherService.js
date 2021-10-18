@@ -1,20 +1,13 @@
 import { store } from '../store';
 
 import {
-    BACK_END_SUCCESS_OPERATION,
-    UPDATED_LABEL,
-    TEACHER_LABEL,
-    CREATED_LABEL,
-    DELETED_LABEL,
-} from '../constants/services';
-import {
     DISABLED_TEACHERS_URL,
     TEACHER_URL,
     TEACHERS_WITHOUT_ACCOUNT_URL,
 } from '../constants/axios';
 import { TEACHER_FORM } from '../constants/reduxForms';
 import axios from '../helper/axios';
-import i18n from '../helper/i18n';
+import i18n from '../i18n';
 import {
     addTeacher,
     deleteTeacher,
@@ -27,6 +20,13 @@ import { errorHandler, successHandler } from '../helper/handlerAxios';
 import { resetFormHandler } from '../helper/formHelper';
 import { setLoadingService } from './loadingService';
 import { isObjectEmpty } from '../helper/ObjectRevision';
+import {
+    BACK_END_SUCCESS_OPERATION,
+    UPDATED_LABEL,
+    CREATED_LABEL,
+    DELETED_LABEL,
+} from '../constants/translationLabels/serviceMessages';
+import { FORM_TEACHER_A_LABEL } from '../constants/translationLabels/formElements';
 
 export const showAllTeachersService = () => {
     axios
@@ -60,7 +60,7 @@ export const createTeacherService = (values) => {
             resetFormHandler(TEACHER_FORM);
             successHandler(
                 i18n.t(BACK_END_SUCCESS_OPERATION, {
-                    cardType: i18n.t(TEACHER_LABEL),
+                    cardType: i18n.t(FORM_TEACHER_A_LABEL),
                     actionType: i18n.t(CREATED_LABEL),
                 }),
             );
@@ -114,7 +114,7 @@ export const updateTeacherService = (data) => {
             resetFormHandler(TEACHER_FORM);
             successHandler(
                 i18n.t(BACK_END_SUCCESS_OPERATION, {
-                    cardType: i18n.t(TEACHER_LABEL),
+                    cardType: i18n.t(FORM_TEACHER_A_LABEL),
                     actionType: i18n.t(UPDATED_LABEL),
                 }),
             );
@@ -140,7 +140,7 @@ export const removeTeacherCardService = (id) => {
             getDisabledTeachersService();
             successHandler(
                 i18n.t(BACK_END_SUCCESS_OPERATION, {
-                    cardType: i18n.t(TEACHER_LABEL),
+                    cardType: i18n.t(FORM_TEACHER_A_LABEL),
                     actionType: i18n.t(DELETED_LABEL),
                 }),
             );
@@ -149,11 +149,13 @@ export const removeTeacherCardService = (id) => {
 };
 
 export const setDisabledTeachersService = (teacher) => {
-    teacher.disable = true;
-    updateTeacherService({ teacher });
+    const bufferTeacher = teacher;
+    bufferTeacher.disable = true;
+    updateTeacherService({ bufferTeacher });
 };
 
 export const setEnabledTeachersService = (teacher) => {
-    teacher.disable = false;
-    updateTeacherService({ teacher });
+    const bufferTeacher = teacher;
+    bufferTeacher.disable = false;
+    updateTeacherService({ bufferTeacher });
 };

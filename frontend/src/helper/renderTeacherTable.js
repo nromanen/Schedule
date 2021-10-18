@@ -19,6 +19,13 @@ import { FaEnvelope } from 'react-icons/fa';
 import TableHead from '@material-ui/core/TableHead';
 import { withStyles } from '@material-ui/core';
 import { getTeacherFullName } from './renderTeacher';
+import {
+    TEACHER_POSITION,
+    TEACHER_LABEL,
+    SEND_LETTER_LABEL,
+    ALL_PAGE,
+    ROWS_PER_PAGE,
+} from '../constants/translationLabels/formElements';
 
 const useStyles1 = makeStyles((theme) => ({
     root: {
@@ -141,9 +148,9 @@ export default function RenderTeacherTable(props) {
             <Table className={classes.table} aria-label="custom pagination table">
                 <TableHead>
                     <TableRow>
-                        <StyledTableCell>{t('teacher_label')}</StyledTableCell>
-                        <StyledTableCell>{t('teacher_position')}</StyledTableCell>
-                        <StyledTableCell>{t('send_letter_title')}</StyledTableCell>
+                        <StyledTableCell>{t(TEACHER_LABEL)}</StyledTableCell>
+                        <StyledTableCell>{t(TEACHER_POSITION)}</StyledTableCell>
+                        <StyledTableCell>{t(SEND_LETTER_LABEL)}</StyledTableCell>
                     </TableRow>
                 </TableHead>
 
@@ -164,7 +171,7 @@ export default function RenderTeacherTable(props) {
                                     <p>{teacher.email}</p>
                                     <FaEnvelope
                                         className="svg-btn send-message"
-                                        title={`${t('send_letter_title')} ${teacher.email}`}
+                                        title={`${t(SEND_LETTER_LABEL)} ${teacher.email}`}
                                         onClick={() => sendMail(teacher.email)}
                                     />
                                 </span>
@@ -181,13 +188,8 @@ export default function RenderTeacherTable(props) {
                 <TableFooter>
                     <StyledTableRow>
                         <TablePagination
-                            labelRowsPerPage={`${t('rows_per_page')}`}
-                            rowsPerPageOptions={[
-                                5,
-                                10,
-                                25,
-                                { label: `${t('all_page')}`, value: -1 },
-                            ]}
+                            labelRowsPerPage={`${t(ROWS_PER_PAGE)}`}
+                            rowsPerPageOptions={[5, 10, 25, { label: `${t(ALL_PAGE)}`, value: -1 }]}
                             colSpan={3}
                             count={teachers.length}
                             rowsPerPage={rowsPerPage}

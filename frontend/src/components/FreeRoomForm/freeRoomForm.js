@@ -4,11 +4,19 @@ import { connect } from 'react-redux';
 import Button from '@material-ui/core/Button';
 import { useTranslation } from 'react-i18next';
 import { required } from '../../validation/validateFields';
-import renderSelectField from '../../share/renderedFields/select';
+import SelectField from '../../share/renderedFields/select';
 import { FREE_ROOMS } from '../../constants/reduxForms';
 import { showAllSemestersService } from '../../services/semesterService';
 import './freeRoomForm.scss';
 import { daysUppercase } from '../../constants/schedule/days';
+import {
+    FORM_SEMESTER_FREE_ROOMS,
+    FORM_WEEK_FREE_ROOMS,
+    FORM_DAY_FREE_ROOMS,
+    FORM_CLASS_FREE_ROOMS,
+    FORM_SUBMIT_BUTTON_LABEL,
+    FORM_CLEAR_BUTTON_LABEL,
+} from '../../constants/translationLabels/formElements';
 
 let FreeRoomForm = (props) => {
     const { t } = useTranslation('formElements');
@@ -31,8 +39,8 @@ let FreeRoomForm = (props) => {
                 <div className="roomsItems">
                     <Field
                         name="semesterId"
-                        component={renderSelectField}
-                        label={t('formElements:semester_free_rooms')}
+                        component={SelectField}
+                        label={t(FORM_SEMESTER_FREE_ROOMS)}
                         type="text"
                         className="freeRoomsItem"
                         validate={[required]}
@@ -46,8 +54,8 @@ let FreeRoomForm = (props) => {
                     </Field>
                     <Field
                         name="evenOdd"
-                        component={renderSelectField}
-                        label={t('formElements:week_free_rooms')}
+                        component={SelectField}
+                        label={t(FORM_WEEK_FREE_ROOMS)}
                         type="text"
                         className="freeRoomsItem"
                         validate={[required]}
@@ -61,8 +69,8 @@ let FreeRoomForm = (props) => {
                     </Field>
                     <Field
                         name="dayOfWeek"
-                        component={renderSelectField}
-                        label={t('formElements:day_free_rooms')}
+                        component={SelectField}
+                        label={t(FORM_DAY_FREE_ROOMS)}
                         type="text"
                         className="freeRoomsItem"
                         validate={[required]}
@@ -76,8 +84,8 @@ let FreeRoomForm = (props) => {
                     </Field>
                     <Field
                         name="class"
-                        component={renderSelectField}
-                        label={t('formElements:class_free_rooms')}
+                        component={SelectField}
+                        label={t(FORM_CLASS_FREE_ROOMS)}
                         type="text"
                         className="freeRoomsItem"
                         validate={[required]}
@@ -98,7 +106,7 @@ let FreeRoomForm = (props) => {
                         className="buttons-style"
                         type="submit"
                     >
-                        {t('formElements:submit_button_label')}
+                        {t(FORM_SUBMIT_BUTTON_LABEL)}
                     </Button>
                     <Button
                         variant="contained"
@@ -106,7 +114,7 @@ let FreeRoomForm = (props) => {
                         className="buttons-style"
                         onClick={onReset}
                     >
-                        {t('formElements:clear_button_label')}
+                        {t(FORM_CLEAR_BUTTON_LABEL)}
                     </Button>
                 </div>
             </form>

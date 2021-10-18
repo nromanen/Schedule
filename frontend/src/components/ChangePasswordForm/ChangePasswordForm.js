@@ -14,6 +14,14 @@ import renderTextField from '../../share/renderedFields/input';
 import { required, password } from '../../validation/validateFields';
 
 import { PROFILE_FORM } from '../../constants/reduxForms';
+import {
+    SAVE_BUTTON_LABEL,
+    CHANGE_PASSWORD_FROM_TITLE,
+    PASSWORD_LABEL,
+    RETYPE_PASSWORD_LABEL,
+    CLEAR_BUTTON_LABEL,
+    NEW_PASSWORD_LABEL,
+} from '../../constants/translationLabels/formElements';
 
 function ExpandMoreIcon() {
     return null;
@@ -31,7 +39,7 @@ const ChangePasswordForm = (props) => {
                     aria-controls="panel1a-content"
                     id="panel1a-header"
                 >
-                    <Typography>{t('change_password_form_title')}</Typography>
+                    <Typography>{t(CHANGE_PASSWORD_FROM_TITLE)}</Typography>
                 </AccordionSummary>
                 <AccordionDetails>
                     <Typography>
@@ -41,7 +49,7 @@ const ChangePasswordForm = (props) => {
                                 className="form-field"
                                 name="current_password"
                                 id="current_password"
-                                label={t('password_label')}
+                                label={t(PASSWORD_LABEL)}
                                 type="password"
                                 validate={[required, password]}
                             />
@@ -50,7 +58,7 @@ const ChangePasswordForm = (props) => {
                                 className="form-field"
                                 name="new_password"
                                 id="new_password"
-                                label={t('new_password_label')}
+                                label={t(NEW_PASSWORD_LABEL)}
                                 type="password"
                                 validate={[required, password]}
                             />
@@ -59,7 +67,7 @@ const ChangePasswordForm = (props) => {
                                 className="form-field"
                                 name="confirm_password"
                                 id="confirm_password"
-                                label={t('retype_password_label')}
+                                label={t(RETYPE_PASSWORD_LABEL)}
                                 type="password"
                                 validate={[required, password]}
                             />
@@ -72,7 +80,7 @@ const ChangePasswordForm = (props) => {
                                     color="primary"
                                     disabled={pristine || submitting}
                                 >
-                                    {t('save_button_label')}
+                                    {t(SAVE_BUTTON_LABEL)}
                                 </Button>
                                 <Button
                                     className="buttons-style"
@@ -81,7 +89,7 @@ const ChangePasswordForm = (props) => {
                                     disabled={pristine || submitting}
                                     onClick={onReset}
                                 >
-                                    {t('clear_button_label')}
+                                    {t(CLEAR_BUTTON_LABEL)}
                                 </Button>
                             </div>
                         </form>
