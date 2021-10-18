@@ -1,78 +1,33 @@
 import React from 'react';
-
+import { Trans, useTranslation } from 'react-i18next';
 import { FaEdit, FaUserPlus } from 'react-icons/fa';
-import { MdDelete } from 'react-icons/md';
 import { MdContentCopy } from 'react-icons/all';
-import i18n from 'i18next';
-import { getTeacherName } from '../../helper/renderTeacher';
+import { MdDelete } from 'react-icons/md';
+import { makeStyles } from '@material-ui/core/styles';
+
 import Card from '../../share/Card/Card';
-import './LessonList.scss';
+import { getTeacherName } from '../../helper/renderTeacher';
+import { firstStringLetterCapital } from '../../helper/strings';
+
+const useStyles = makeStyles({
+    title: {
+        height: '3em',
+    },
+});
 
 const LessonsList = (props) => {
-    const { lessons } = props;
+    const classes = useStyles();
+    const { lessons, onCopyLesson, onSelectLesson, onClickOpen } = props;
+    const { t } = useTranslation(['common', 'formElements']);
 
-    const t = props.translation;
-
-    const firstStringLetterCapitalHandle = (str) => {
-        return str.replace(/^\w/, (c) => c.toUpperCase());
-    };
-
-    const isGrouped = (grouped) =>
-        grouped ? (
-            <FaUserPlus
-                title={t('formElements:grouped_label')}
-                className="svg-btn copy-btn align-left info-btn"
-            />
-        ) : (
-            ''
-        );
-    const getUkWordHours = (number) => {
-        if (number === 1) {
-            return 'година';
-        }
-        if (number >= 2 && number <= 4) {
-            return 'години';
-        }
-        if ((number >= 5 && number <= 20) || number === 0) {
-            return 'годин';
-        }
-        return 'години';
-    };
-    const getUkHour = (number) => {
-        if (number >= 20 && number <= 100) {
-            const toText = number.toString(); // convert to string
-            const lastChar = toText.slice(-1); // gets last character
-            const lastDigit = +lastChar; // convert last character to number
-            return getUkWordHours(lastDigit);
-        }
-        if (number > 100) {
-            const toText = number.toString(); // convert to string
-            const lastChar = toText.slice(-2); // gets last character
-            const lastDigit = +lastChar; // convert last character to number
-            return getUkWordHours(lastDigit);
-        }
-        return getUkWordHours(number);
-    };
-    const getEnHour = (number) => {
-        if (number === 1) {
-            return 'hour';
-        }
-        return 'hours';
-    };
-    const getHour = (number) => {
-        const language = i18n.language.toUpperCase();
-        if (language === 'EN') {
-            return getEnHour(number);
-        }
-        return getUkHour(number);
-    };
     const getLessonShortTitle = (title) => {
         const MAX_LENGTH = 50;
         return title.length > MAX_LENGTH ? `${title.slice(0, MAX_LENGTH)}...` : title;
     };
     const getTitle = (lesson) => {
-        return `${firstStringLetterCapitalHandle(lesson.subjectForSite)} ${t(
-            `formElements:lesson_type_${lesson.lessonType.toLowerCase()}_label`,
+        return `${firstStringLetterCapital(lesson.subjectForSite)} ${t(
+            `lesson_type_${lesson.lessonType.toLowerCase()}_label`,
+            { ns: 'formElements' },
         )}`;
     };
     return (
@@ -81,32 +36,41 @@ const LessonsList = (props) => {
                 {lessons.map((lesson) => (
                     <Card class="done-card" key={lesson.id}>
                         <div className="cards-btns">
-                            {isGrouped(lesson.grouped)}
+                            {lesson.grouped && (
+                                <FaUserPlus
+                                    title={t('grouped_label', { ns: 'formElements' })}
+                                    className="svg-btn copy-btn align-left info-btn"
+                                />
+                            )}
                             <MdContentCopy
-                                title={t('copy_lesson')}
+                                title={t('copy_lesson', { ns: 'common' })}
                                 className="svg-btn copy-btn"
-                                onClick={() => props.onCopyLesson(lesson)}
+                                onClick={() => onCopyLesson(lesson)}
                             />
                             <FaEdit
-                                title={t('edit_lesson')}
+                                title={t('edit_lesson', { ns: 'common' })}
                                 className="svg-btn edit-btn"
-                                onClick={() => props.onSelectLesson(lesson.id)}
+                                onClick={() => onSelectLesson(lesson.id)}
                             />
                             <MdDelete
-                                title={t('delete_lesson')}
+                                title={t('delete_lesson', { ns: 'common' })}
                                 className="svg-btn delete-btn"
-                                onClick={() => props.onClickOpen(lesson.id)}
+                                onClick={() => onClickOpen(lesson.id)}
                             />
                         </div>
-                        <p style={{ height: '3em' }}>{getLessonShortTitle(getTitle(lesson))}</p>
+                        <p className={classes.title}>{getLessonShortTitle(getTitle(lesson))}</p>
                         <p>{getTeacherName(lesson.teacher)}</p>
                         <p>
-                            {' '}
-                            <b>{lesson.hours}</b> {getHour(lesson.hours)}
+                            <Trans
+                                i18nKey="hour"
+                                count={lesson.hours}
+                                ns="common"
+                                components={[<strong key="strong" />]}
+                            >
+                                {{ count: lesson.hours }}
+                            </Trans>
                         </p>
-                        <p>
-                            <input value={lesson.linkToMeeting} disabled="disabled" />
-                        </p>
+                        <input value={lesson.linkToMeeting} disabled />
                     </Card>
                 ))}
             </section>

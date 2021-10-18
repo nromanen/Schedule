@@ -175,27 +175,20 @@ const LessonPage = (props) => {
         }
     };
 
-    let cardsContainer = (
-        <>
-            {visibleItems.length > 0 ? (
-                <LessonsList
-                    lessons={visibleItems}
-                    onClickOpen={handleClickOpen}
-                    onSelectLesson={selectLessonCardHandler}
-                    onCopyLesson={openCopyLessonDialogHandle}
-                    translation={t}
-                />
-            ) : (
-                <section className="centered-container">
-                    <h2>
-                        {groupHandle(groups, groupId)
-                            ? t('lesson_no_lesson_for_group_label') +
-                              groupTitleHandle(groups, groupId)
-                            : ''}
-                    </h2>
-                </section>
-            )}
-        </>
+    let cardsContainer = visibleItems.length ? (
+        <LessonsList
+            lessons={visibleItems}
+            onClickOpen={handleClickOpen}
+            onSelectLesson={selectLessonCardHandler}
+            onCopyLesson={openCopyLessonDialogHandle}
+        />
+    ) : (
+        <section className="centered-container">
+            <h2>
+                {groupHandle(groups, groupId) &&
+                    t('lesson_no_lesson_for_group_label') + groupTitleHandle(groups, groupId)}
+            </h2>
+        </section>
     );
 
     if (isLoading) {

@@ -1,6 +1,4 @@
 import React, { Suspense, useEffect } from 'react';
-import './App.scss';
-import './helper/i18n';
 import { connect } from 'react-redux';
 
 import Routers from './router/Routers';
@@ -8,6 +6,7 @@ import { authCheckState } from './actions/index';
 import { handleSnackbarCloseService } from './services/snackbarService';
 import SnackbarComponent from './share/Snackbar/SnackbarComponent';
 import SuccessSnackbar from './components/SuccessSnackbar/SuccessSnackbar';
+import './App.scss';
 
 const App = (props) => {
     const { isSnackbarOpen, snackbarType, snackbarMessage } = props;
@@ -25,7 +24,7 @@ const App = (props) => {
 
     return (
         <Suspense fallback={null}>
-            <div className='container'>
+            <div className="container">
                 <Routers />
                 <SuccessSnackbar />
                 <SnackbarComponent
