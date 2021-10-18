@@ -6,6 +6,8 @@ import { MdDelete } from 'react-icons/md';
 
 import Card from '../../share/Card/Card';
 import { getTeacherName } from '../../helper/renderTeacher';
+import { getShortTitle } from '../../helper/shortTitle';
+
 import { firstStringLetterCapital } from '../../helper/strings';
 import { FORM_GROUPED_LABEL } from '../../constants/translationLabels/formElements';
 import { COPY_LESSON, DELETE_LESSON, EDIT_LESSON } from '../../constants/translationLabels/common';
@@ -15,10 +17,7 @@ const LessonsList = (props) => {
     const { lessons, onCopyLesson, onSelectLesson, onClickOpen } = props;
     const { t } = useTranslation(['common', 'formElements']);
 
-    const getLessonShortTitle = (title) => {
-        const MAX_LENGTH = 50;
-        return title.length > MAX_LENGTH ? `${title.slice(0, MAX_LENGTH)}...` : title;
-    };
+    const MAX_LENGTH = 50;
     const getTitle = (lesson) => {
         return `${firstStringLetterCapital(lesson.subjectForSite)} ${t(
             `lesson_type_${lesson.lessonType.toLowerCase()}_label`,
@@ -53,7 +52,7 @@ const LessonsList = (props) => {
                                 onClick={() => onClickOpen(lesson.id)}
                             />
                         </div>
-                        <p className="title">{getLessonShortTitle(getTitle(lesson))}</p>
+                        <p className="title">{getShortTitle(getTitle(lesson), MAX_LENGTH)}</p>
                         <p>{getTeacherName(lesson.teacher)}</p>
                         <p>
                             <Trans
