@@ -33,6 +33,7 @@ import {
     CLASS_TO_LABEL,
     CLASS_Y_LABEL,
 } from '../../constants/translationLabels/formElements';
+import { hourFormat, timeFormat } from '../../constants/formats';
 
 const ClassFormFunc = (props) => {
     const { t } = useTranslation('formElements');
@@ -47,7 +48,10 @@ const ClassFormFunc = (props) => {
     }, [classScheduleOne]);
 
     const setEndTime = (startTime) =>
-        change('endTime', moment(startTime, 'HH:mm').add(CLASS_DURATION, 'h').format('HH:mm'));
+        change(
+            'endTime',
+            moment(startTime, timeFormat).add(CLASS_DURATION, hourFormat).format(timeFormat),
+        );
 
     return (
         <Card additionClassName="form-card">
