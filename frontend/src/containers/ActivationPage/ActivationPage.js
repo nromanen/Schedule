@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { get } from 'lodash';
 
 import { CircularProgress } from '@material-ui/core';
 import { activateUser } from '../../actions';
@@ -10,6 +11,7 @@ import { links } from '../../constants/links';
 import { snackbarTypes } from '../../constants/snackbarTypes';
 
 import { handleSnackbarOpenService } from '../../services/snackbarService';
+import { VERIFYING_TOKEN, TOKEN_ERROR } from '../../constants/translationLabels/common';
 
 import './ActivationPage.scss';
 
@@ -24,14 +26,14 @@ const ActivationPage = (props) => {
     const { response } = props;
     let redirect = null;
 
-    if (response && response.data.hasOwnProperty('message')) {
+    if (response && get(response.data, 'message')) {
         redirect = <Redirect to={links.AUTH} />;
         handleSnackbarOpenService(true, snackbarTypes.SUCCESS, response.data.message);
     }
 
     let main = (
         <>
-            <h2>{t('verifying_token')}</h2>
+            <h2>{t(VERIFYING_TOKEN)}</h2>
             <CircularProgress />
         </>
     );
@@ -39,7 +41,7 @@ const ActivationPage = (props) => {
     if (error) {
         main = (
             <>
-                <h2>{t('token_error')}</h2>
+                <h2>{t(TOKEN_ERROR)}</h2>
                 <p>{error}</p>
             </>
         );

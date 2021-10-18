@@ -1,13 +1,5 @@
 import axios from '../helper/axios';
 import { store } from '../store';
-
-import {
-    BACK_END_SUCCESS_OPERATION,
-    LESSON_LABEL,
-    UPDATED_LABEL,
-    CREATED_LABEL,
-    DELETED_LABEL,
-} from '../constants/services';
 import { LESSON_TYPES_URL, LESSON_URL, COPY_LESSON_URL } from '../constants/axios';
 import { LESSON_FORM } from '../constants/reduxForms';
 import { handleSnackbarOpenService } from './snackbarService';
@@ -25,9 +17,18 @@ import {
 
 import { snackbarTypes } from '../constants/snackbarTypes';
 import { checkUniqLesson } from '../validation/storeValidation';
-import i18n from '../helper/i18n';
+import i18n from '../i18n';
 import { errorHandler, successHandler } from '../helper/handlerAxios';
 import { resetFormHandler } from '../helper/formHelper';
+import {
+    BACK_END_SUCCESS_OPERATION,
+    UPDATED_LABEL,
+    CREATED_LABEL,
+    DELETED_LABEL,
+    COPIED_LABEL,
+} from '../constants/translationLabels/serviceMessages';
+import { FORM_LESSON_LABEL } from '../constants/translationLabels/formElements';
+import { COMMON_LESSON_SERVICE_IS_NOT_UNIQUE } from '../constants/translationLabels/common';
 
 export const getLessonsByGroupService = (groupId) => {
     axios
@@ -92,7 +93,7 @@ const updateLessonHandler = (data, groupId) => {
 
             successHandler(
                 i18n.t(BACK_END_SUCCESS_OPERATION, {
-                    cardType: i18n.t(LESSON_LABEL),
+                    cardType: i18n.t(FORM_LESSON_LABEL),
                     actionType: i18n.t(UPDATED_LABEL),
                 }),
             );
@@ -112,7 +113,7 @@ const createLessonHandler = (data, isCopy) => {
             resetFormHandler(LESSON_FORM);
             successHandler(
                 i18n.t(BACK_END_SUCCESS_OPERATION, {
-                    cardType: i18n.t(LESSON_LABEL),
+                    cardType: i18n.t(FORM_LESSON_LABEL),
                     actionType: i18n.t(CREATED_LABEL),
                 }),
             );
@@ -132,7 +133,7 @@ export const handleLessonCardService = (card, groupId, semester) => {
         handleSnackbarOpenService(
             true,
             snackbarTypes.ERROR,
-            i18n.t('common:lesson_service_is_not_unique'),
+            i18n.t(COMMON_LESSON_SERVICE_IS_NOT_UNIQUE),
         );
         setUniqueErrorService(true);
         return;
@@ -154,7 +155,7 @@ export const removeLessonCardService = (lessonCardId) => {
             store.dispatch(deleteLessonCard(lessonCardId));
             successHandler(
                 i18n.t(BACK_END_SUCCESS_OPERATION, {
-                    cardType: i18n.t(LESSON_LABEL),
+                    cardType: i18n.t(FORM_LESSON_LABEL),
                     actionType: i18n.t(DELETED_LABEL),
                 }),
             );
@@ -172,8 +173,8 @@ export const copyLessonCardService = (lessonGroupObj) => {
         .then(() => {
             successHandler(
                 i18n.t(BACK_END_SUCCESS_OPERATION, {
-                    cardType: i18n.t(LESSON_LABEL),
-                    actionType: i18n.t('serviceMessages:copied_label'),
+                    cardType: i18n.t(FORM_LESSON_LABEL),
+                    actionType: i18n.t(COPIED_LABEL),
                 }),
             );
         })

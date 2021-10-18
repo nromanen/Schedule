@@ -5,14 +5,18 @@ import { Field, reduxForm } from 'redux-form';
 import { useTranslation } from 'react-i18next';
 
 import Button from '@material-ui/core/Button';
-import renderSelectField from '../../share/renderedFields/select';
+import SelectField from '../../share/renderedFields/select';
 
 import './CopyLessonsFromSemesterForm.scss';
 import Card from '../../share/Card/Card';
 
 import { COPY_LESSONS_FROM_SEMESTER_FORM } from '../../constants/reduxForms';
 import { required } from '../../validation/validateFields';
-import { SEMESTER_LABEL } from '../../constants/services';
+import {
+    FORM_SEMESTER_LABEL,
+    FORM_COPY_LESSON,
+} from '../../constants/translationLabels/formElements';
+import { COPY_LESSON, COPY_LESSONS_FROM_SEMESTER } from '../../constants/translationLabels/common';
 
 const CopyLessonsFromSemesterForm = (props) => {
     const { t } = useTranslation('common');
@@ -23,8 +27,8 @@ const CopyLessonsFromSemesterForm = (props) => {
                 <Field
                     id="fromSemesterId"
                     name="fromSemesterId"
-                    component={renderSelectField}
-                    label={t('formElements:semester_label')}
+                    component={SelectField}
+                    label={t(FORM_SEMESTER_LABEL)}
                     type="text"
                     validate={[required]}
                 >
@@ -45,10 +49,10 @@ const CopyLessonsFromSemesterForm = (props) => {
     };
 
     return (
-        <Card class="form-card">
+        <Card additionClassName="form-card">
             <form onSubmit={handleSubmit}>
-                <h2 className="lesson-page-h">{t('copy_lesson')}</h2>
-                <p>{t('copy_lessons_from_semester_to_current')}</p>
+                <h2 className="lesson-page-h">{t(COPY_LESSON)}</h2>
+                <p>{t(COPY_LESSONS_FROM_SEMESTER)}</p>
                 {renderSemesterList()}
                 <div className="form-buttons-container">
                     <Button
@@ -58,7 +62,7 @@ const CopyLessonsFromSemesterForm = (props) => {
                         type="submit"
                         disabled={pristine || submitting}
                     >
-                        {t('formElements:copy_label')}
+                        {t(FORM_COPY_LESSON)}
                     </Button>
                 </div>
             </form>

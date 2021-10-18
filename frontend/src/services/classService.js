@@ -2,13 +2,6 @@ import axios from '../helper/axios';
 import { store } from '../store';
 
 import { CLASS_URL, PUBLIC_CLASSES_URL } from '../constants/axios';
-import {
-    BACK_END_SUCCESS_OPERATION,
-    CLASS_LABEL,
-    UPDATED_LABEL,
-    CREATED_LABEL,
-    DELETED_LABEL,
-} from '../constants/services';
 import { CLASS_FORM } from '../constants/reduxForms';
 import {
     addClassScheduleOne,
@@ -19,10 +12,17 @@ import {
     clearClassScheduleOne,
 } from '../actions/class';
 
-import i18n from '../helper/i18n';
+import i18n from '../i18n';
 import { errorHandler, successHandler } from '../helper/handlerAxios';
 import { resetFormHandler } from '../helper/formHelper';
 import { setLoadingService } from './loadingService';
+import {
+    BACK_END_SUCCESS_OPERATION,
+    UPDATED_LABEL,
+    CREATED_LABEL,
+    DELETED_LABEL,
+} from '../constants/translationLabels/serviceMessages';
+import { FORM_CLASS_LABEL } from '../constants/translationLabels/formElements';
 
 export const getClassScheduleListService = () => {
     axios
@@ -56,7 +56,7 @@ export const putAddClassScheduleOneService = (values) => {
             resetFormHandler(CLASS_FORM);
             successHandler(
                 i18n.t(BACK_END_SUCCESS_OPERATION, {
-                    cardType: i18n.t(CLASS_LABEL),
+                    cardType: i18n.t(FORM_CLASS_LABEL),
                     actionType: i18n.t(UPDATED_LABEL),
                 }),
             );
@@ -72,7 +72,7 @@ export const postAddClassScheduleOneService = (values) => {
             resetFormHandler(CLASS_FORM);
             successHandler(
                 i18n.t(BACK_END_SUCCESS_OPERATION, {
-                    cardType: i18n.t(CLASS_LABEL),
+                    cardType: i18n.t(FORM_CLASS_LABEL),
                     actionType: i18n.t(CREATED_LABEL),
                 }),
             );
@@ -99,7 +99,7 @@ export const deleteClassScheduleOneService = (classId) => {
             store.dispatch(deleteClassScheduleOne(classId));
             successHandler(
                 i18n.t(BACK_END_SUCCESS_OPERATION, {
-                    cardType: i18n.t(CLASS_LABEL),
+                    cardType: i18n.t(FORM_CLASS_LABEL),
                     actionType: i18n.t(DELETED_LABEL),
                 }),
             );

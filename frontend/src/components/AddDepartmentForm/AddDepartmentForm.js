@@ -9,35 +9,43 @@ import { DEPARTMENT_FORM } from '../../constants/reduxForms';
 import renderTextField from '../../share/renderedFields/input';
 import { required, maxLengthValue, uniqueDepartment } from '../../validation/validateFields';
 import { getClearOrCancelTitle, setDisableButton } from '../../helper/disableComponent';
+import {
+    EDIT_TITLE,
+    CREATE_TITLE,
+    SAVE_BUTTON_LABEL,
+    DEPARTMENT_LABEL,
+    NAME_LABEL,
+} from '../../constants/translationLabels/formElements';
 
 const AddDepartment = (props) => {
     const { t } = useTranslation('formElements');
-    const { handleSubmit, clear, department, pristine, submitting, editDepartment } = props;
+    const { handleSubmit, clear, department, pristine, submitting, editDepartment, initialize } =
+        props;
     useEffect(() => {
         if (department && editDepartment) {
             if (department.id) {
-                props.initialize({
+                initialize({
                     name: department.name,
                     id: department.id,
                 });
             } else {
-                props.initialize();
+                initialize();
             }
         }
     }, [department]);
 
     return (
-        <Card class="form-card subject-form">
+        <Card additionClassName="form-card subject-form">
             <h2 style={{ textAlign: 'center' }}>
-                {department.id ? t('edit_title') : t('create_title')}
-                {t('department_y_label')}
+                {department.id ? t(EDIT_TITLE) : t(CREATE_TITLE)}
+                {t(DEPARTMENT_LABEL)}
             </h2>
             <form onSubmit={handleSubmit}>
                 <Field
                     className="form-field"
                     name="name"
                     component={renderTextField}
-                    label={`${t('name')}:`}
+                    label={`${t(NAME_LABEL)}:`}
                     validate={[required, uniqueDepartment, maxLengthValue]}
                 />
                 <div className="form-buttons-container subject-btns">
@@ -48,7 +56,7 @@ const AddDepartment = (props) => {
                         disabled={pristine || submitting}
                         type="submit"
                     >
-                        {t('save_button_label')}
+                        {t(SAVE_BUTTON_LABEL)}
                     </Button>
                     <Button
                         type="button"

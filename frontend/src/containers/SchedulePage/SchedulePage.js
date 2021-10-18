@@ -15,32 +15,27 @@ import ScheduleLessonsList from '../../components/ScheduleLessonsList/ScheduleLe
 import Schedule from '../../components/Schedule/Schedule';
 
 import './SchedulePage.scss';
+import {
+    SCHEDULE_TITLE,
+    NO_CURRENT_SEMESTER,
+    CLEAR_SCHEDULE_LABEL,
+    USE_PC,
+} from '../../constants/translationLabels/common';
 
 const SchedulePage = (props) => {
+    const { groups, groupId, itemGroupId, scheduleItems, lessons, isLoading } = props;
     const { t } = useTranslation('common');
 
-    document.title = t('schedule_title');
-
-    const { groups, groupId } = props;
-
-    const { itemGroupId } = props;
-
-    const { scheduleItems } = props;
-
-    const { lessons } = props;
-
-    const isLoading = props.loading;
+    document.title = t(SCHEDULE_TITLE);
 
     useEffect(() => {
         setLoadingService(true);
         setScheduleLoadingService(true);
         getScheduleItemsService();
-    }, []);
-
-    useEffect(() => {
         showAllGroupsService();
+        showListOfRoomsService();
+        getClassScheduleListService();
     }, []);
-    // useEffect(() => showAllPublicGroupsService(props.currentSemester.id), [props.currentSemester.id]);
 
     useEffect(() => {
         if (groupId) {
@@ -49,9 +44,6 @@ const SchedulePage = (props) => {
         }
     }, [groupId]);
 
-    useEffect(() => getClassScheduleListService(), []);
-
-    useEffect(() => showListOfRoomsService(), []);
     const handleClearSchedule = () => {
         if (props.currentSemester.id) {
             clearSchedule(props.currentSemester.id);
@@ -71,7 +63,7 @@ const SchedulePage = (props) => {
                     ) : (
                         <>
                             {!props.currentSemester.id ? (
-                                <h2 className="no-current-semester">{t('no_current_semester')}</h2>
+                                <h2 className="no-current-semester">{t(NO_CURRENT_SEMESTER)}</h2>
                             ) : (
                                 <Schedule
                                     groupId={groupId}
@@ -99,7 +91,7 @@ const SchedulePage = (props) => {
                                 color="primary"
                                 onClick={() => handleClearSchedule()}
                             >
-                                {t('clear_schedule_label')}
+                                {t(CLEAR_SCHEDULE_LABEL)}
                             </Button>
                             <ScheduleLessonsList
                                 items={scheduleItems}
@@ -114,7 +106,7 @@ const SchedulePage = (props) => {
                 </aside>
             </section>
             <section className="for-phones-and-tablets card">
-                <h1>{t('use_pc')}</h1>
+                <h1>{t(USE_PC)}</h1>
             </section>
         </>
     );

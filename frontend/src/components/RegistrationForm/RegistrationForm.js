@@ -14,14 +14,23 @@ import { authTypes } from '../../constants/auth';
 
 import { email, password, required } from '../../validation/validateFields';
 import { links } from '../../constants/links';
+import {
+    REGISTRATION_PAGE_TITLE,
+    ACCOUNT_EXIST,
+    CREATE_ACCOUNT,
+} from '../../constants/translationLabels/common';
+import {
+    PASSWORD_LABEL,
+    RETYPE_PASSWORD_LABEL,
+    EMAIL_LABEL,
+} from '../../constants/translationLabels/formElements';
 
 const RegistrationForm = (props) => {
     const { t } = useTranslation('formElements');
-    const { handleSubmit } = props;
+    const { handleSubmit, translation, registrationError, setError, switchAuthMode, isLoading } =
+        props;
 
-    const { translation } = props;
-
-    const error = props.registrationError;
+    const error = registrationError;
 
     const emailValidate = { validate: [required, email] };
     const emailErrorCondition = error && error.registration.reg;
@@ -49,7 +58,7 @@ const RegistrationForm = (props) => {
                 className="form-field"
                 type="email"
                 component={renderTextField}
-                label={t('email_label')}
+                label={t(EMAIL_LABEL)}
                 {...(!error ? emailValidate : emailAdvancedValidate)}
                 onChange={() => props.setError(null)}
             />
@@ -58,7 +67,7 @@ const RegistrationForm = (props) => {
                 className="form-field"
                 type="password"
                 component={renderTextField}
-                label={t('password_label')}
+                label={t(PASSWORD_LABEL)}
                 {...(!error ? passwordValidate : passwordValidateAdvanced)}
                 onChange={() => props.setError(null)}
             />
@@ -67,35 +76,35 @@ const RegistrationForm = (props) => {
                 className="form-field"
                 type="password"
                 component={renderTextField}
-                label={t('retype_password_label')}
+                label={t(RETYPE_PASSWORD_LABEL)}
                 {...(!error ? retypePasswordValidate : retypePasswordValidateAdvanced)}
             />
             <Button className="buttons-style" type="submit" variant="contained" color="primary">
-                {translation('create_account')}
+                {translation(CREATE_ACCOUNT)}
             </Button>
             <div className="group-btns">
                 <button
                     type="button"
                     className="auth-link"
                     onClick={() => {
-                        props.switchAuthMode(authTypes.LOGIN);
-                        props.setError(null);
+                        switchAuthMode(authTypes.LOGIN);
+                        setError(null);
                     }}
                 >
                     <Link className="navLinks" to={links.LOGIN}>
-                        {translation('account_exist')}
+                        {translation(ACCOUNT_EXIST)}
                     </Link>
                 </button>
             </div>
         </form>
     );
 
-    if (props.isLoading) {
+    if (isLoading) {
         form = <CircularProgress />;
     }
     return (
-        <Card class="auth-card">
-            <h2 className="under-line">{props.translation('registration_page_title')}</h2>
+        <Card additionClassName="auth-card">
+            <h2 className="under-line">{translation(REGISTRATION_PAGE_TITLE)}</h2>
             {form}
         </Card>
     );

@@ -12,25 +12,38 @@ import Card from '../../share/Card/Card';
 import { TEACHER_FORM } from '../../constants/reduxForms';
 
 import './AddTeacherForm.scss';
-import renderSelectField from '../../share/renderedFields/select';
+import SelectField from '../../share/renderedFields/select';
 import { getDepartmentByIdService } from '../../services/departmentService';
 import { getClearOrCancelTitle, setDisableButton } from '../../helper/disableComponent';
+import {
+    EDIT_TITLE,
+    CREATE_TITLE,
+    SAVE_BUTTON_LABEL,
+    TEACHER_A_LABEL,
+    TEACHER_SURNAME,
+    TEACHER_FIRST_NAME,
+    TEACHER_PATRONYMIC,
+    TEACHER_POSITION,
+    EMAIL_FIELD,
+    DEPARTMENT_TEACHER_LABEL,
+} from '../../constants/translationLabels/formElements';
 
 let AddTeacher = (props) => {
     const { t } = useTranslation('formElements');
-    const { handleSubmit, pristine, submitting, reset, departments, teacher } = props;
+    const { handleSubmit, pristine, submitting, reset, departments, teacher, initialize } = props;
 
     const teacherId = teacher.id;
 
     const initializeFormHandler = (teacherData) => {
         const department = teacherData.department ? teacherData.department.id : 0;
-        props.initialize({
-            id: teacherData.id,
-            surname: teacherData.surname,
-            name: teacherData.name,
-            patronymic: teacherData.patronymic,
-            position: teacherData.position,
-            email: teacherData.email,
+        const { id, surname, name, patronymic, position, email } = teacherData;
+        initialize({
+            id,
+            surname,
+            name,
+            patronymic,
+            position,
+            email,
             department,
         });
         if (teacherData.department) getDepartmentByIdService(teacherData.department.id);
@@ -40,15 +53,15 @@ let AddTeacher = (props) => {
         if (teacherId) {
             initializeFormHandler(teacher);
         } else {
-            props.initialize();
+            initialize();
         }
     }, [teacherId]);
 
     return (
-        <Card class="form-card teacher-form">
+        <Card additionClassName="form-card teacher-form">
             <form className="createTeacherForm w-100" onSubmit={handleSubmit}>
                 <h2 className="form-title">
-                    {teacherId ? t('edit_title') : t('create_title')} {t('teacher_a_label')}
+                    {teacherId ? t(EDIT_TITLE) : t(CREATE_TITLE)} {t(TEACHER_A_LABEL)}
                 </h2>
 
                 <Field
@@ -57,8 +70,8 @@ let AddTeacher = (props) => {
                     id="surname"
                     component={renderTextField}
                     type="text"
-                    placeholder={t('teacher_surname')}
-                    label={t('teacher_surname')}
+                    placeholder={t(TEACHER_SURNAME)}
+                    label={t(TEACHER_SURNAME)}
                     validate={[required]}
                 />
 
@@ -68,8 +81,8 @@ let AddTeacher = (props) => {
                     id="name"
                     component={renderTextField}
                     type="text"
-                    placeholder={t('teacher_first_name')}
-                    label={t('teacher_first_name')}
+                    placeholder={t(TEACHER_FIRST_NAME)}
+                    label={t(TEACHER_FIRST_NAME)}
                     validate={[required]}
                 />
 
@@ -79,8 +92,8 @@ let AddTeacher = (props) => {
                     id="patronymic"
                     component={renderTextField}
                     type="text"
-                    placeholder={t('teacher_patronymic')}
-                    label={t('teacher_patronymic')}
+                    placeholder={t(TEACHER_PATRONYMIC)}
+                    label={t(TEACHER_PATRONYMIC)}
                     validate={[required]}
                 />
 
@@ -90,8 +103,8 @@ let AddTeacher = (props) => {
                     id="position"
                     component={renderTextField}
                     type="text"
-                    placeholder={t('teacher_position')}
-                    label={t('teacher_position')}
+                    placeholder={t(TEACHER_POSITION)}
+                    label={t(TEACHER_POSITION)}
                     validate={[required]}
                 />
                 <Field
@@ -100,14 +113,14 @@ let AddTeacher = (props) => {
                     id="email"
                     component={renderTextField}
                     type="email"
-                    placeholder={t('email_field')}
-                    label={t('email_field')}
+                    placeholder={t(EMAIL_FIELD)}
+                    label={t(EMAIL_FIELD)}
                 />
                 <Field
                     name="department"
                     className="week-days"
-                    component={renderSelectField}
-                    label={t('department_teachers_label')}
+                    component={SelectField}
+                    label={t(DEPARTMENT_TEACHER_LABEL)}
                     type="text"
                     onChange={({ target }) => {
                         getDepartmentByIdService(target.value);
@@ -129,7 +142,7 @@ let AddTeacher = (props) => {
                         disabled={pristine || submitting}
                         type="submit"
                     >
-                        {t('save_button_label')}
+                        {t(SAVE_BUTTON_LABEL)}
                     </Button>
                     <Button
                         className="buttons-style"

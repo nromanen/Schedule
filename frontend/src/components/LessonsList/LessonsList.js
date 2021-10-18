@@ -8,6 +8,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import Card from '../../share/Card/Card';
 import { getTeacherName } from '../../helper/renderTeacher';
 import { firstStringLetterCapital } from '../../helper/strings';
+import { FORM_GROUPED_LABEL } from '../../constants/translationLabels/formElements';
+import { COPY_LESSON, DELETE_LESSON, EDIT_LESSON } from '../../constants/translationLabels/common';
 
 const useStyles = makeStyles({
     title: {
@@ -34,26 +36,26 @@ const LessonsList = (props) => {
         <div>
             <section className="container-flex-wrap">
                 {lessons.map((lesson) => (
-                    <Card class="done-card" key={lesson.id}>
+                    <Card additionClassName="done-card" key={lesson.id}>
                         <div className="cards-btns">
                             {lesson.grouped && (
                                 <FaUserPlus
-                                    title={t('grouped_label', { ns: 'formElements' })}
+                                    title={t(FORM_GROUPED_LABEL, { ns: 'formElements' })}
                                     className="svg-btn copy-btn align-left info-btn"
                                 />
                             )}
                             <MdContentCopy
-                                title={t('copy_lesson', { ns: 'common' })}
+                                title={t(COPY_LESSON)}
                                 className="svg-btn copy-btn"
                                 onClick={() => onCopyLesson(lesson)}
                             />
                             <FaEdit
-                                title={t('edit_lesson', { ns: 'common' })}
+                                title={t(EDIT_LESSON)}
                                 className="svg-btn edit-btn"
                                 onClick={() => onSelectLesson(lesson.id)}
                             />
                             <MdDelete
-                                title={t('delete_lesson', { ns: 'common' })}
+                                title={t(DELETE_LESSON)}
                                 className="svg-btn delete-btn"
                                 onClick={() => onClickOpen(lesson.id)}
                             />

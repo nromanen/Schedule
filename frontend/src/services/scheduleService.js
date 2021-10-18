@@ -1,13 +1,8 @@
+import { get } from 'lodash';
 import { store } from '../store';
 
-import get from 'lodash';
 import axios from '../helper/axios';
-import i18n from '../helper/i18n';
-import {
-    BACK_END_SUCCESS_OPERATION,
-    NO_CURRENT_SEMESTER_ERROR,
-    UPDATED_LABEL,
-} from '../constants/services';
+import i18n from '../i18n';
 import { errorHandler, infoHandler, successHandler } from '../helper/handlerAxios';
 import {
     checkAvailabilitySchedule,
@@ -63,6 +58,22 @@ import { TEACHER_SCHEDULE_FORM } from '../constants/reduxForms';
 import { resetFormHandler } from '../helper/formHelper';
 import { getAllTeachersByDepartmentId } from '../actions/teachers';
 import { sortGroup } from './groupService';
+import {
+    BACK_END_SUCCESS_OPERATION,
+    UPDATED_LABEL,
+    CLEARED_LABEL,
+    SERVICE_MESSAGE_GROUP_LABEL,
+    CHOSEN_SEMESTER_HAS_NOT_GROUPS,
+    SERVICE_MESSAGE_SENT_LABEL,
+} from '../constants/translationLabels/serviceMessages';
+import {
+    FORM_SCHEDULE_LABEL,
+    FORM_CHOSEN_SEMESTER_LABEL,
+} from '../constants/translationLabels/formElements';
+import {
+    NO_CURRENT_SEMESTER_ERROR,
+    COMMON_SCHEDULE_TITLE,
+} from '../constants/translationLabels/common';
 
 export const getCurrentSemesterService = () => {
     axios
@@ -172,7 +183,7 @@ export const editRoomItemToScheduleService = (item) => {
         .then(() => {
             successHandler(
                 i18n.t(BACK_END_SUCCESS_OPERATION, {
-                    cardType: i18n.t('common:schedule_title'),
+                    cardType: i18n.t(COMMON_SCHEDULE_TITLE),
                     actionType: i18n.t(UPDATED_LABEL),
                 }),
             );
@@ -200,6 +211,7 @@ export const getGroupSchedule = (groupId, semesterId) => {
             .get(`${GROUP_SCHEDULE_URL + semesterId}&groupId=${groupId}`)
             .then((response) => {
                 store.dispatch(setGroupSchedule(response.data));
+                setLoadingService(false);
             })
             .catch((err) => errorHandler(err));
     }
@@ -227,6 +239,7 @@ export const getTeacherSchedule = (teacherId, semesterId) => {
             .get(`${TEACHER_SCHEDULE_URL + semesterId}&teacherId=${teacherId}`)
             .then((response) => {
                 store.dispatch(setTeacherSchedule(response.data));
+                setLoadingService(false);
             })
             .catch((err) => errorHandler(err));
     }
@@ -238,6 +251,7 @@ export const getFullSchedule = (semesterId) => {
             .get(FULL_SCHEDULE_URL + semesterId)
             .then((response) => {
                 store.dispatch(setFullSchedule(response.data));
+                setLoadingService(false);
             })
             .catch((err) => errorHandler(err));
 };
@@ -272,7 +286,7 @@ export const submitSearchSchedule = (values) => {
 };
 
 export const sendTeachersScheduleService = (data) => {
-    const teachersId = data.teachersId.map((teacherId) => `teachersId=${teacherId}`).join('&'); // teachersId=65&teachersId=12
+    const teachersId = data.teachersId.map((teacherId) => `teachersId=${teacherId}`).join('&');
     const { semesterId, language } = data;
     axios
         .get(`${SEND_PDF_TO_EMAIL}/semester/${semesterId}?language=${language}&${teachersId}`)
@@ -280,8 +294,8 @@ export const sendTeachersScheduleService = (data) => {
             setLoadingService(false);
             successHandler(
                 i18n.t(BACK_END_SUCCESS_OPERATION, {
-                    cardType: i18n.t('formElements:schedule_label'),
-                    actionType: i18n.t('serviceMessages:sent_label'),
+                    cardType: i18n.t(FORM_SCHEDULE_LABEL),
+                    actionType: i18n.t(SERVICE_MESSAGE_SENT_LABEL),
                 }),
             );
         })
@@ -309,9 +323,9 @@ export const showAllPublicGroupsService = (id) => {
                 store.dispatch(showAllGroups(response.data.sort((a, b) => sortGroup(a, b))));
                 if (response.data.length === 0) {
                     infoHandler(
-                        i18n.t('serviceMessages:chosen_semester_has_not_groups', {
-                            cardType: i18n.t('formElements:chosen_semester_label'),
-                            actionType: i18n.t('serviceMessages:group_label'),
+                        i18n.t(CHOSEN_SEMESTER_HAS_NOT_GROUPS, {
+                            cardType: i18n.t(FORM_CHOSEN_SEMESTER_LABEL),
+                            actionType: i18n.t(SERVICE_MESSAGE_GROUP_LABEL),
                         }),
                     );
                 }
@@ -384,8 +398,8 @@ export const clearSchedule = (semesterId) => {
             getScheduleItemsService();
             successHandler(
                 i18n.t(BACK_END_SUCCESS_OPERATION, {
-                    cardType: i18n.t('common:schedule_title'),
-                    actionType: i18n.t('serviceMessages:cleared_label'),
+                    cardType: i18n.t(COMMON_SCHEDULE_TITLE),
+                    actionType: i18n.t(CLEARED_LABEL),
                 }),
             );
         })

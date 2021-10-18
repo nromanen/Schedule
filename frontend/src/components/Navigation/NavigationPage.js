@@ -46,16 +46,16 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const NavigationPage = (props) => {
-    const { val } = props;
+    const { val, name } = props;
     const { t } = useTranslation('common');
     const classes = useStyles();
     const [value, setValue] = useState(val || 0);
-    const [gen, setGen] = useState(props.name || general[0].name);
+    const [gen, setGen] = useState(name || general[0].name);
     useEffect(() => {
         setCurrentSemester();
     }, []);
 
-    const handleChange = (event, newValue) => {
+    const handleChange = (_, newValue) => {
         setValue(newValue);
     };
 
@@ -64,14 +64,14 @@ const NavigationPage = (props) => {
     };
     return (
         <div className={classes.root}>
-            <AppBar position='static'>
+            <AppBar position="static">
                 <Tabs
                     value={value}
                     onChange={handleChange}
-                    aria-label='simple tabs example'
-                    indicatorColor='primary'
-                    variant='scrollable'
-                    scrollButtons='on'
+                    aria-label="simple tabs example"
+                    indicatorColor="primary"
+                    variant="scrollable"
+                    scrollButtons="on"
                     className={classes.header}
                 >
                     {tabsComponents.map((tabOne, index) => (
@@ -88,12 +88,12 @@ const NavigationPage = (props) => {
                                 </Link>
                             ) : (
                                 <Select
-                                    className='general MuiTab-root'
-                                    labelId='demo-controlled-open-select-label'
-                                    id='demo-controlled-open-select'
+                                    className="general MuiTab-root"
+                                    labelId="demo-controlled-open-select-label"
+                                    id="demo-controlled-open-select"
                                     value={gen}
                                     onChange={(event) => {
-                                        const { eventValue } = event.target;
+                                        const { value: eventValue } = event.target;
                                         setGen(eventValue);
                                         documentTitle(eventValue);
                                     }}
@@ -101,7 +101,7 @@ const NavigationPage = (props) => {
                                     {Object.entries(tabOne).map((data, indexNested) => {
                                         return (
                                             <MenuItem
-                                                className='menu-dictionary MuiTab-root'
+                                                className="menu-dictionary MuiTab-root"
                                                 value={data[1].name}
                                                 key={data[0]}
                                                 {...a11yProps(indexNested)}

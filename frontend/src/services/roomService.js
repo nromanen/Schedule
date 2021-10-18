@@ -1,13 +1,6 @@
 import { store } from '../store';
 
 import { DISABLED_ROOMS_URL, ROOM_URL } from '../constants/axios';
-import {
-    BACK_END_SUCCESS_OPERATION,
-    ROOM_LABEL,
-    UPDATED_LABEL,
-    CREATED_LABEL,
-    DELETED_LABEL,
-} from '../constants/services';
 import { ROOM_FORM } from '../constants/reduxForms';
 import axios from '../helper/axios';
 import {
@@ -22,7 +15,14 @@ import {
 
 import { errorHandler, successHandler } from '../helper/handlerAxios';
 import { resetFormHandler } from '../helper/formHelper';
-import i18n from '../helper/i18n';
+import {
+    BACK_END_SUCCESS_OPERATION,
+    UPDATED_LABEL,
+    CREATED_LABEL,
+    DELETED_LABEL,
+} from '../constants/translationLabels/serviceMessages';
+import { FORM_ROOM_LABEL } from '../constants/translationLabels/formElements';
+import i18n from '../i18n';
 
 export const showListOfRoomsService = () => {
     axios
@@ -51,7 +51,7 @@ export const deleteRoomCardService = (id) => {
             showListOfRoomsService();
             successHandler(
                 i18n.t(BACK_END_SUCCESS_OPERATION, {
-                    cardType: i18n.t(ROOM_LABEL),
+                    cardType: i18n.t(FORM_ROOM_LABEL),
                     actionType: i18n.t(DELETED_LABEL),
                 }),
             );
@@ -69,7 +69,7 @@ const put = (values) => {
             showListOfRoomsService();
             successHandler(
                 i18n.t(BACK_END_SUCCESS_OPERATION, {
-                    cardType: i18n.t(ROOM_LABEL),
+                    cardType: i18n.t(FORM_ROOM_LABEL),
                     actionType: i18n.t(UPDATED_LABEL),
                 }),
             );
@@ -78,13 +78,15 @@ const put = (values) => {
 };
 
 export const setDisabledRoomsService = (room) => {
-    room.disable = true;
-    put(room);
+    const bufferRoom = room;
+    bufferRoom.disable = true;
+    put(bufferRoom);
 };
 
 export const setEnabledRoomsService = (room) => {
-    room.disable = false;
-    put(room);
+    const bufferRoom = room;
+    bufferRoom.disable = false;
+    put(bufferRoom);
 };
 
 const post = (values) => {
@@ -95,7 +97,7 @@ const post = (values) => {
             resetFormHandler(ROOM_FORM);
             successHandler(
                 i18n.t(BACK_END_SUCCESS_OPERATION, {
-                    cardType: i18n.t(ROOM_LABEL),
+                    cardType: i18n.t(FORM_ROOM_LABEL),
                     actionType: i18n.t(CREATED_LABEL),
                 }),
             );

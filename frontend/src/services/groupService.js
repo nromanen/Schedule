@@ -2,13 +2,6 @@ import { store } from '../store';
 
 import axios from '../helper/axios';
 import { DISABLED_GROUPS_URL, GROUP_URL } from '../constants/axios';
-import {
-    BACK_END_SUCCESS_OPERATION,
-    GROUP_LABEL,
-    UPDATED_LABEL,
-    CREATED_LABEL,
-    DELETED_LABEL,
-} from '../constants/services';
 import { GROUP_FORM } from '../constants/reduxForms';
 import {
     showAllGroups,
@@ -20,8 +13,15 @@ import {
     setDisabledGroups,
 } from '../actions/index';
 import { errorHandler, successHandler } from '../helper/handlerAxios';
-import i18n from '../helper/i18n';
+import i18n from '../i18n';
 import { resetFormHandler } from '../helper/formHelper';
+import {
+    BACK_END_SUCCESS_OPERATION,
+    UPDATED_LABEL,
+    CREATED_LABEL,
+    DELETED_LABEL,
+} from '../constants/translationLabels/serviceMessages';
+import { FORM_GROUP_LABEL } from '../constants/translationLabels/formElements';
 
 export const sortGroup = (a, b) => {
     return (
@@ -42,7 +42,7 @@ export const createGroupService = (data) => {
             resetFormHandler(GROUP_FORM);
             successHandler(
                 i18n.t(BACK_END_SUCCESS_OPERATION, {
-                    cardType: i18n.t(GROUP_LABEL),
+                    cardType: i18n.t(FORM_GROUP_LABEL),
                     actionType: i18n.t(CREATED_LABEL),
                 }),
             );
@@ -81,7 +81,7 @@ export const updateGroupService = (data) => {
             resetFormHandler(GROUP_FORM);
             successHandler(
                 i18n.t(BACK_END_SUCCESS_OPERATION, {
-                    cardType: i18n.t(GROUP_LABEL),
+                    cardType: i18n.t(FORM_GROUP_LABEL),
                     actionType: i18n.t(UPDATED_LABEL),
                 }),
             );
@@ -107,7 +107,7 @@ export const removeGroupCardService = (groupId) => {
             getDisabledGroupsService();
             successHandler(
                 i18n.t(BACK_END_SUCCESS_OPERATION, {
-                    cardType: i18n.t(GROUP_LABEL),
+                    cardType: i18n.t(FORM_GROUP_LABEL),
                     actionType: i18n.t(DELETED_LABEL),
                 }),
             );
@@ -116,11 +116,13 @@ export const removeGroupCardService = (groupId) => {
 };
 
 export const setDisabledGroupService = (group) => {
-    group.disable = true;
-    updateGroupService(group);
+    const bufferGroup = group;
+    bufferGroup.disable = true;
+    updateGroupService(bufferGroup);
 };
 
 export const setEnabledGroupService = (group) => {
-    group.disable = false;
-    updateGroupService(group);
+    const bufferGroup = group;
+    bufferGroup.disable = false;
+    updateGroupService(bufferGroup);
 };
