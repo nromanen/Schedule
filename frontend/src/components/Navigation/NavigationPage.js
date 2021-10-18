@@ -1,17 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
 import Paper from '@material-ui/core/Paper';
 import { connect } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import { Link, useHistory } from 'react-router-dom';
-import { MenuItem, Select, List, AppBar, ListItem, ListItemText } from '@material-ui/core';
-import { isNil } from 'lodash';
-import { setCurrentSemester } from '../../actions';
-import { links } from '../../constants/links';
+import { useHistory } from 'react-router-dom';
+import { MenuItem, Select, List, ListItem, ListItemText } from '@material-ui/core';
 import './NavigationPage.scss';
 import { general, tabsComponents } from '../../constants/navigationComponents';
+import { links } from '../../constants/links';
 
 function a11yProps(index) {
     return {
@@ -73,7 +69,7 @@ const NavigationPage = () => {
     const handleNavigate = (navigateTo, index) => {
         setSelectedTab(index);
         documentTitle(navigateTo);
-        history.push(navigateTo);
+        history.push({ ...history.location, pathname: `${links.ADMIN_PAGE}/${navigateTo}` });
     };
 
     const flexContainer = {
@@ -84,14 +80,14 @@ const NavigationPage = () => {
     return (
         <Paper className={classes.root}>
             <List style={flexContainer} indicatorColor="primary" className={classes.header}>
-                {tabsComponents.map((itemTitle, index) => (
+                {tabsComponents.map((item, index) => (
                     <ListItem
                         selected={selectedTab === index}
-                        key={itemTitle}
-                        onClick={() => handleNavigate(itemTitle, index)}
+                        key={item.name}
+                        onClick={() => handleNavigate(item.name, index)}
                         {...a11yProps(index)}
                     >
-                        <ListItemText>{t(`${itemTitle}_management_title`)}</ListItemText>
+                        <ListItemText>{t(`${item.title}`)}</ListItemText>
                     </ListItem>
                 ))}
                 <ListItem selected={selectedTab === tabsComponents.length}>
@@ -104,7 +100,6 @@ const NavigationPage = () => {
                         onChange={(event) => {
                             const { value: eventValue } = event.target;
                             setGen(eventValue);
-                            handleNavigate(eventValue, tabsComponents.length);
                         }}
                     >
                         <MenuItem
@@ -116,14 +111,15 @@ const NavigationPage = () => {
                         >
                             More
                         </MenuItem>
-                        {general.map((itemTitle, index) => (
+                        {general.map((item, index) => (
                             <MenuItem
+                                key={item.name + item.title}
                                 className="menu-dictionary MuiTab-root"
-                                value={itemTitle}
-                                key={itemTitle}
+                                value={item.name}
+                                onClick={() => handleNavigate(item.name, tabsComponents.length)}
                                 {...a11yProps(index)}
                             >
-                                {t(`${itemTitle}_management_title`)}
+                                {t(`${item.title}`)}
                             </MenuItem>
                         ))}
                     </Select>

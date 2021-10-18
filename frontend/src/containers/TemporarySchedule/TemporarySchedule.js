@@ -21,8 +21,6 @@ import { showAllSubjectsService } from '../../services/subjectService';
 import { getLessonTypesService } from '../../services/lessonService';
 import { showAllGroupsService } from '../../services/groupService';
 import './TemporarySchedule.scss';
-import { navigation } from '../../constants/navigation';
-import NavigationPage from '../../components/Navigation/NavigationPage';
 import { EMPTY_LABEL } from '../../constants/translationLabels/common';
 
 const TemporarySchedule = (props) => {
@@ -59,7 +57,6 @@ const TemporarySchedule = (props) => {
 
     return (
         <>
-            {/* <NavigationPage val={navigation.CHANGES} /> */}
             <Card additionClassName="card-title lesson-card">
                 <TemporaryScheduleTitle
                     teacherId={teacherId}

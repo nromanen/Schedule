@@ -10,8 +10,6 @@ import SearchPanel from '../../share/SearchPanel/SearchPanel';
 import AddGroup from '../../components/AddGroupForm/AddGroupForm';
 import SnackbarComponent from '../../share/Snackbar/SnackbarComponent';
 import { handleSnackbarCloseService } from '../../services/snackbarService';
-import NavigationPage from '../../components/Navigation/NavigationPage';
-import { navigation, navigationNames } from '../../constants/navigation';
 import { goToGroupPage } from '../../helper/pageRedirection';
 import GroupCard from '../../components/GroupCard/GroupCard';
 import {
@@ -133,7 +131,6 @@ const GroupList = (props) => {
 
     return (
         <>
-            {/* <NavigationPage name={navigationNames.GROUP_LIST} val={navigation.GROUPS} /> */}
             <CustomDialog
                 type={subDialogType}
                 cardId={groupId}

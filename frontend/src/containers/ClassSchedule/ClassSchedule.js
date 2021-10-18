@@ -21,8 +21,6 @@ import {
 
 import { handleSnackbarOpenService } from '../../services/snackbarService';
 import { snackbarTypes } from '../../constants/snackbarTypes';
-import NavigationPage from '../../components/Navigation/NavigationPage';
-import { navigation, navigationNames } from '../../constants/navigation';
 import {
     CLASS_LABEL,
     CLASS_FROM_LABEL,
@@ -66,46 +64,43 @@ const ClassSchedule = (props) => {
     };
 
     return (
-        <>
-            {/* <NavigationPage name={navigationNames.CLASS_SCHEDULE_TITLE} val={navigation.PERIOD} /> */}
-            <div className="cards-container">
-                <CustomDialog
-                    type={dialogTypes.DELETE_CONFIRM}
-                    cardId={classId}
-                    whatDelete={cardType.CLASS.toLowerCase()}
-                    open={open}
-                    onClose={handleClose}
-                />
-                <ClassForm onSubmit={submit} onReset={clearClassScheduleOneService} />
-                <section className="container-flex-wrap">
-                    {props.classScheduler.map((schedule) => (
-                        <Card additionClassName="class-card-width" key={schedule.id}>
-                            <div className="cards-btns">
-                                <FaEdit
-                                    className="svg-btn"
-                                    title={t(COMMON_EDIT_HOVER_TITLE)}
-                                    onClick={() => handleEdit(schedule.id)}
-                                />
-                                <MdDelete
-                                    className="svg-btn"
-                                    title={t(COMMON_DELETE_HOVER_TITLE)}
-                                    onClick={() => handleClickOpen(schedule.id)}
-                                />
-                            </div>
-                            <p>
-                                {t(CLASS_LABEL)}: {schedule.class_name}
-                            </p>
-                            <p>
-                                {t(CLASS_FROM_LABEL)} - {t(CLASS_TO_LABEL)}
-                            </p>
-                            <p>
-                                {schedule.startTime} - {schedule.endTime}
-                            </p>
-                        </Card>
-                    ))}
-                </section>
-            </div>
-        </>
+        <div className="cards-container">
+            <CustomDialog
+                type={dialogTypes.DELETE_CONFIRM}
+                cardId={classId}
+                whatDelete={cardType.CLASS.toLowerCase()}
+                open={open}
+                onClose={handleClose}
+            />
+            <ClassForm onSubmit={submit} onReset={clearClassScheduleOneService} />
+            <section className="container-flex-wrap">
+                {props.classScheduler.map((schedule) => (
+                    <Card additionClassName="class-card-width" key={schedule.id}>
+                        <div className="cards-btns">
+                            <FaEdit
+                                className="svg-btn"
+                                title={t(COMMON_EDIT_HOVER_TITLE)}
+                                onClick={() => handleEdit(schedule.id)}
+                            />
+                            <MdDelete
+                                className="svg-btn"
+                                title={t(COMMON_DELETE_HOVER_TITLE)}
+                                onClick={() => handleClickOpen(schedule.id)}
+                            />
+                        </div>
+                        <p>
+                            {t(CLASS_LABEL)}: {schedule.class_name}
+                        </p>
+                        <p>
+                            {t(CLASS_FROM_LABEL)} - {t(CLASS_TO_LABEL)}
+                        </p>
+                        <p>
+                            {schedule.startTime} - {schedule.endTime}
+                        </p>
+                    </Card>
+                ))}
+            </section>
+        </div>
     );
 };
 

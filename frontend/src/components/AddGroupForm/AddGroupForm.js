@@ -1,5 +1,6 @@
 import { connect } from 'react-redux';
 import React, { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { Field, reduxForm } from 'redux-form';
 import Button from '@material-ui/core/Button';
 import { useTranslation } from 'react-i18next';
@@ -21,10 +22,15 @@ import {
 
 const AddGroup = (props) => {
     const { t } = useTranslation('formElements');
-    const { handleSubmit, pristine, onReset, submitting, match, group, initialize } = props;
+    const location = useLocation();
+    const { handleSubmit, pristine, onReset, submitting, group, initialize } = props;
 
     useEffect(() => {
-        if (group && match.url.includes(links.Edit) && !match.url.includes(links.Student)) {
+        if (
+            group &&
+            location.pathname.includes(links.Edit) &&
+            !location.pathname.includes(links.Student)
+        ) {
             if (group.id) {
                 initialize({
                     id: group.id,
@@ -35,7 +41,6 @@ const AddGroup = (props) => {
             }
         }
     }, [group.id]);
-
     return (
         <Card additionClassName="form-card group-form">
             <h2 className="group-form__title">

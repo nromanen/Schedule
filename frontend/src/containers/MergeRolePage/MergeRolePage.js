@@ -14,8 +14,6 @@ import { getUsersService, mergeUserAndTeacherService } from '../../services/user
 import Card from '../../share/Card/Card';
 
 import './MergeRolePage.scss';
-import NavigationPage from '../../components/Navigation/NavigationPage';
-import { navigation } from '../../constants/navigation';
 import {
     FORM_USER_LABEL,
     FORM_TEACHER_LABEL,
@@ -70,7 +68,6 @@ const MergeRolePage = (props) => {
 
     return (
         <>
-            {/* <NavigationPage val={navigation.USERS} /> */}
             <div className="merge-role-form">
                 <Card additionClassName="merge-role-card">
                     <h2 className="under-line">{t(MERGE_HEADER)}</h2>

@@ -24,9 +24,9 @@ export default function Routers() {
                 <AdminRoute path={links.Departments} component={DepartmentPage} />
                 <AdminRoute path={links.LessonPage} component={AdminPage} />
                 <AdminRoute path={links.TeacherList} component={TeacherList} />
-                <AdminRoute exact path={links.GroupList} component={GroupList} />
+                <AdminRoute path={links.GroupList} component={GroupList} />
 
-                <AdminRoute
+                {/* <AdminRoute
                     path={`${links.GroupList}${links.Group}${links.Edit}${links.IdParam}`}
                     component={GroupList}
                 />
@@ -53,7 +53,7 @@ export default function Routers() {
                 <AdminRoute
                     path={`${links.GroupList}${links.Group}${links.IdParam}${links.Student}${links.IdStudentParam}${links.Delete}`}
                     component={GroupList}
-                />
+                /> */}
 
                 <AdminRoute path={links.ClassScheduleTitle} component={ClassSchedule} />
                 <AdminRoute path={links.RoomList} component={RoomList} />

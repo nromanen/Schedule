@@ -1,18 +1,17 @@
-import { navigationNames } from './navigation';
-import { links } from './links';
+import { navigationNames, navigationLabels } from './navigation';
 
 export const general = [
-    navigationNames.CLASS_SCHEDULE_TITLE,
-    navigationNames.DEPARTMENTS,
-    navigationNames.GROUP_LIST,
-    navigationNames.ROOM_LIST,
-    navigationNames.SUBJECT_PAGE,
-    navigationNames.SEMESTER_PAGE,
-    navigationNames.TEACHER_LIST,
+    { name: navigationNames.CLASS_SCHEDULE_TITLE, title: navigationLabels.CLASS_SCHEDULE_TITLE },
+    { name: navigationNames.DEPARTMENTS, title: navigationLabels.DEPARTMENTS },
+    { name: navigationNames.GROUP_LIST, title: navigationLabels.GROUP_LIST },
+    { name: navigationNames.ROOM_LIST, title: navigationLabels.ROOM_LIST },
+    { name: navigationNames.SUBJECT_PAGE, title: navigationLabels.SUBJECT_PAGE },
+    { name: navigationNames.SEMESTER_PAGE, title: navigationLabels.SEMESTER_PAGE },
+    { name: navigationNames.TEACHER_LIST, title: navigationLabels.TEACHER_LIST },
 ];
 export const tabsComponents = [
-    navigationNames.LESSON_PAGE,
-    navigationNames.MERGE_ROLE_PAGE,
-    navigationNames.CHANGES,
-    navigationNames.BUSY_ROOMS,
+    { name: navigationNames.LESSON_PAGE, title: navigationLabels.LESSON_PAGE },
+    { name: navigationNames.MERGE_ROLE_PAGE, title: navigationLabels.MERGE_ROLE_PAGE },
+    { name: navigationNames.CHANGES, title: navigationLabels.CHANGES },
+    { name: navigationNames.BUSY_ROOMS, title: navigationLabels.BUSY_ROOMS },
 ];

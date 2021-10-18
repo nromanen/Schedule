@@ -32,8 +32,6 @@ import {
     setGroupsToSemester,
 } from '../../services/semesterService';
 import { setScheduleTypeService } from '../../services/scheduleService';
-import NavigationPage from '../../components/Navigation/NavigationPage';
-import { navigation, navigationNames } from '../../constants/navigation';
 import { MultiselectForGroups } from '../../helper/MultiselectForGroups';
 import { showAllGroupsService } from '../../services/groupService';
 import { successHandler } from '../../helper/handlerAxios';
@@ -217,7 +215,6 @@ const SemesterPage = (props) => {
 
     return (
         <>
-            {/* <NavigationPage name={navigationNames.SEMESTER_PAGE} val={navigation.SEMESTERS} /> */}
             <CustomDialog
                 type={subDialogType}
                 cardId={semesterId}

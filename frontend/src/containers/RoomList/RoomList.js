@@ -11,8 +11,6 @@ import { cardType } from '../../constants/cardType';
 import AddRoom from '../../components/AddRoomForm/AddRoomForm';
 import NewRoomType from '../../components/AddNewRoomType/AddNewRoomType';
 import SearchPanel from '../../share/SearchPanel/SearchPanel';
-import NavigationPage from '../../components/Navigation/NavigationPage';
-import { navigation, navigationNames } from '../../constants/navigation';
 import Card from '../../share/Card/Card';
 import { search } from '../../helper/search';
 import NotFound from '../../share/NotFound/NotFound';
@@ -90,7 +88,6 @@ const RoomList = (props) => {
 
     return (
         <>
-            {/* <NavigationPage name={navigationNames.ROOM_LIST} val={navigation.ROOMS} /> */}
             <CustomDialog
                 type={subDialogType}
                 cardId={roomId}
