@@ -95,9 +95,6 @@ const ScheduleDialog = (props) => {
                         </div>
                     ) : (
                         <>
-                            <DialogTitle id="simple-dialog-title">
-                                {translation(COMMON_SCHEDULE_DIALOG_TITLE)}
-                            </DialogTitle>
                             <div className="availability-info">
                                 {!availability.classSuitsToTeacher ? (
                                     <p className="availability-warning">
@@ -153,24 +150,22 @@ const ScheduleDialog = (props) => {
                 </>
             ) : (
                 <>
-                    <DialogTitle id="simple-dialog-title">
-                        <p className="availability-warning">
-                            {!room.available ? `${translation(COMMON_ROOM_IS_UNAVAILABLE)}. ` : ''}
-                        </p>
-                        <p className="availability-warning">
-                            {!availability.teacherAvailable
-                                ? `${translation(COMMON_TEACHER_IS_UNAVAILABLE)}. `
-                                : ''}
-                        </p>
+                    <p className="availability-warning">
+                        {!room.available ? `${translation(COMMON_ROOM_IS_UNAVAILABLE)}. ` : ''}
+                    </p>
+                    <p className="availability-warning">
+                        {!availability.teacherAvailable
+                            ? `${translation(COMMON_TEACHER_IS_UNAVAILABLE)}. `
+                            : ''}
+                    </p>
 
-                        <p className="availability-warning">
-                            {!availability.classSuitsToTeacher
-                                ? `${translation(COMMON_CLASS_DOES_NOT_SUIT_FOR_TEACHER)}. `
-                                : ''}
-                        </p>
+                    <p className="availability-warning">
+                        {!availability.classSuitsToTeacher
+                            ? `${translation(COMMON_CLASS_DOES_NOT_SUIT_FOR_TEACHER)}. `
+                            : ''}
+                    </p>
 
-                        {translation(COMMON_ARE_YOU_SURE)}
-                    </DialogTitle>
+                    {translation(COMMON_ARE_YOU_SURE)}
                     <div className="buttons-container">
                         <Button
                             className="dialog-button"
