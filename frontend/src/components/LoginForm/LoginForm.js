@@ -18,6 +18,8 @@ import {
     setScheduleTeacherIdService,
     setScheduleTypeService,
 } from '../../services/scheduleService';
+import { PASSWORD_LABEL, EMAIL_LABEL } from '../../constants/translationLabels/formElements';
+import { LOGIN_TITLE } from '../../constants/translationLabels/common';
 
 const LoginForm = (props) => {
     useEffect(() => {
@@ -27,15 +29,13 @@ const LoginForm = (props) => {
         setScheduleTypeService('');
     });
     const { t } = useTranslation('formElements');
-    const { handleSubmit } = props;
+    const { handleSubmit, loginError, translation, setError, isLoading } = props;
 
-    const error = props.loginError;
-
-    const { translation } = props;
+    const error = loginError;
 
     const errorHandling = (value) => {
-        if (required(value)) props.setError(required(value));
-        else props.setError(null);
+        if (required(value)) setError(required(value));
+        else setError(null);
     };
 
     let form = (
@@ -44,7 +44,7 @@ const LoginForm = (props) => {
                 name="email"
                 className="form-field"
                 component={renderTextField}
-                label={t('email_label')}
+                label={t(EMAIL_LABEL)}
                 error={!!error}
                 helperText={error ? error.login : null}
                 onChange={(e) => errorHandling(e.target.value)}
@@ -54,7 +54,7 @@ const LoginForm = (props) => {
                 className="form-field"
                 type="password"
                 component={renderTextField}
-                label={t('password_label')}
+                label={t(PASSWORD_LABEL)}
                 error={!!error}
                 onChange={() => props.setError(null)}
             />
@@ -64,18 +64,18 @@ const LoginForm = (props) => {
                 variant="contained"
                 color="primary"
             >
-                {translation('login_title')}
+                {translation(LOGIN_TITLE)}
             </Button>
         </form>
     );
 
-    if (props.isLoading) {
+    if (isLoading) {
         form = <CircularProgress />;
     }
 
     return (
-        <Card class="auth-card">
-            <h2 className="under-line">{translation('login_page_title')}</h2>
+        <Card additionClassName="auth-card">
+            <h2 className="under-line">{translation(LOGIN_TITLE)}</h2>
             {form}
         </Card>
     );

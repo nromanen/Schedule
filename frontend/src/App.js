@@ -1,6 +1,6 @@
 import React, { Suspense, useEffect } from 'react';
 import './App.scss';
-import './helper/i18n';
+import './i18n';
 import { connect } from 'react-redux';
 
 import Routers from './router/Routers';
@@ -25,7 +25,7 @@ const App = (props) => {
 
     return (
         <Suspense fallback={null}>
-            <div className='container'>
+            <div className="container">
                 <Routers />
                 <SuccessSnackbar />
                 <SnackbarComponent

@@ -16,6 +16,7 @@ import { STUDENT_FORM } from '../../../constants/reduxForms';
 import renderSelectField from '../../renderedFields/select';
 import { goToGroupPage } from '../../../helper/pageRedirection';
 import CustomDialog from '../CustomDialog';
+import { TYPE_LABEL } from '../../../constants/translationLabels/common';
 
 const AddStudentDialog = (props) => {
     const { t } = useTranslation('formElements');
@@ -59,7 +60,7 @@ const AddStudentDialog = (props) => {
                 </Button>
             }
         >
-            <Card class="form-card teacher-form">
+            <Card additionClassName="form-card teacher-form">
                 <form className="createTeacherForm w-100" onSubmit={handleSubmit}>
                     <Field
                         className="form-field"
@@ -109,7 +110,7 @@ const AddStudentDialog = (props) => {
                             className="form-field"
                             component={renderSelectField}
                             name="group"
-                            label={t('type_label')}
+                            label={t(TYPE_LABEL)}
                             validate={[required]}
                         >
                             defaultValue={student.group.id}

@@ -26,6 +26,17 @@ import { selectStudentService } from '../services/studentService';
 import './renderStudentTable.scss';
 import { getTeacherFullName } from './renderTeacher';
 import { links } from '../constants/links';
+import {
+    EDIT_TITLE,
+    SELECT_ALL,
+    STUDENT_LABEL,
+    SEND_LETTER_LABEL,
+    STUDENT_ACTIONS,
+    SELECT_STUDENT,
+    DELETE_TITLE_LABEL,
+    ALL_PAGE,
+    ROWS_PER_PAGE,
+} from '../constants/translationLabels/formElements';
 import { CustomDialog, AddStudentDialog } from '../share/DialogWindows';
 import { dialogTypes } from '../constants/dialogs';
 
@@ -225,18 +236,18 @@ export default function RenderStudentTable(props) {
                                     checked={checkedAllBtn}
                                     onClick={handleAllOnPageClick}
                                     value="checkedAll"
-                                    title={`${t('select_all')}`}
+                                    title={`${t(SELECT_ALL)}`}
                                 />
                             </span>
                         </StyledTableCell>
-                        <StyledTableCell>{t('student_label')}</StyledTableCell>
+                        <StyledTableCell>{t(STUDENT_LABEL)}</StyledTableCell>
                         <StyledTableCell>
                             <FaEnvelope
                                 className="svg-btn send-message"
-                                title={`${t('send_letter_title')}`}
+                                title={`${t(SEND_LETTER_LABEL)}`}
                             />
                         </StyledTableCell>
-                        <StyledTableCell>{t('student_actions')}</StyledTableCell>
+                        <StyledTableCell>{t(STUDENT_ACTIONS)}</StyledTableCell>
                     </TableRow>
                 </TableHead>
 
@@ -257,7 +268,7 @@ export default function RenderStudentTable(props) {
                                     checked={singleStudent.checked}
                                     value={singleStudent.id}
                                     className="checked-box"
-                                    title={`${t('select_student')} ${getTeacherFullName(
+                                    title={`${t(SELECT_STUDENT)} ${getTeacherFullName(
                                         singleStudent,
                                     )}`}
                                 />
@@ -269,7 +280,7 @@ export default function RenderStudentTable(props) {
                                 <span>
                                     <button
                                         className="send-letter-button"
-                                        title={`${t('send_letter_title')} ${singleStudent.email}`}
+                                        title={`${t(SEND_LETTER_LABEL)} ${singleStudent.email}`}
                                         onClick={() => sendMail(singleStudent.email)}
                                         type="button"
                                     >
@@ -284,15 +295,15 @@ export default function RenderStudentTable(props) {
                                     >
                                         <FaEdit
                                             className="edit-button"
-                                            title={t('edit_title')}
-                                            onClick={() => handleEdit(singleStudent.id)}
+                                            title={t(EDIT_TITLE)}
+                                            onClick={() => handleEdit(student.id)}
                                         />
                                     </Link>
                                     <Link
                                         to={`${links.GroupList}${links.Group}/${group.id}${links.Student}/${singleStudent.id}${links.Delete}`}
                                     >
                                         <Delete
-                                            title={t('delete-title')}
+                                            title={t(DELETE_TITLE_LABEL)}
                                             className="delete-button"
                                             onClick={() => setOpenDeleteDialog(true)}
                                         />
@@ -326,12 +337,12 @@ export default function RenderStudentTable(props) {
                 <TableFooter>
                     <StyledTableRow>
                         <TablePagination
-                            labelRowsPerPage={`${t('rows_per_page')}`}
+                            labelRowsPerPage={`${t(ROWS_PER_PAGE)}`}
                             rowsPerPageOptions={[
                                 5,
                                 10,
                                 25,
-                                { label: `${t('all_page')}`, value: ALL_ROWS },
+                                { label: `${t(ALL_PAGE)}`, value: ALL_ROWS },
                             ]}
                             colSpan={3}
                             count={students.length}

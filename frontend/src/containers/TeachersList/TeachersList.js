@@ -39,6 +39,15 @@ import {
     setEnabledTeachersService,
     showAllTeachersService,
 } from '../../services/teacherService';
+import { FORM_TEACHER_A_LABEL } from '../../constants/translationLabels/formElements';
+import {
+    COMMON_SET_DISABLED,
+    COMMON_EDIT_HOVER_TITLE,
+    COMMON_DELETE_HOVER_TITLE,
+    COMMON_SET_ENABLED,
+    SEND_SCHEDULE_FOR_TEACHER,
+    TEACHER_DEPARTMENT,
+} from '../../constants/translationLabels/common';
 
 const TeacherList = (props) => {
     const { t } = useTranslation('common');
@@ -188,7 +197,7 @@ const TeacherList = (props) => {
                             setOpenSelect(true);
                         }}
                     >
-                        {t('send_schedule_for_teacher')}
+                        {t(SEND_SCHEDULE_FOR_TEACHER)}
                     </Button>
                     <>
                         <MultiSelect
@@ -216,17 +225,15 @@ const TeacherList = (props) => {
                 </aside>
 
                 <section className="container-flex-wrap">
-                    {visibleItems.length === 0 && (
-                        <NotFound name={t('formElements:teacher_a_label')} />
-                    )}
+                    {visibleItems.length === 0 && <NotFound name={t(FORM_TEACHER_A_LABEL)} />}
                     {visibleItems.map((teacherItem) => (
-                        <Card key={teacherItem.id} class="teacher-card done-card">
+                        <Card key={teacherItem.id} additionClassName="teacher-card done-card">
                             <div className="cards-btns">
                                 {!isDisabled ? (
                                     <>
                                         <GiSightDisabled
                                             className="svg-btn copy-btn"
-                                            title={t('common:set_disabled')}
+                                            title={t(COMMON_SET_DISABLED)}
                                             onClick={() => {
                                                 showConfirmDialog(
                                                     teacherItem.id,
@@ -236,14 +243,14 @@ const TeacherList = (props) => {
                                         />
                                         <FaEdit
                                             className="svg-btn edit-btn"
-                                            title={t('common:edit_hover_title')}
+                                            title={t(COMMON_EDIT_HOVER_TITLE)}
                                             onClick={() => selectTeacherCardService(teacherItem.id)}
                                         />
                                     </>
                                 ) : (
                                     <IoMdEye
                                         className="svg-btn copy-btn"
-                                        title={t('common:set_enabled')}
+                                        title={t(COMMON_SET_ENABLED)}
                                         onClick={() => {
                                             showConfirmDialog(
                                                 teacherItem.id,
@@ -254,7 +261,7 @@ const TeacherList = (props) => {
                                 )}
                                 <MdDelete
                                     className="svg-btn delete-btn"
-                                    title={t('common:delete_hover_title')}
+                                    title={t(COMMON_DELETE_HOVER_TITLE)}
                                     onClick={() =>
                                         showConfirmDialog(
                                             teacherItem.id,
@@ -269,9 +276,7 @@ const TeacherList = (props) => {
                             <p className="teacher-card-title">
                                 {`${teacherItem.position} ${
                                     teacherItem.department !== null
-                                        ? `${t('teacher_department')} ${
-                                              teacherItem.department.name
-                                          }`
+                                        ? `${t(TEACHER_DEPARTMENT)} ${teacherItem.department.name}`
                                         : ''
                                 }`}
                             </p>

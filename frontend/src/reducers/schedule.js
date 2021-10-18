@@ -107,11 +107,6 @@ const reducer = (state = initialState, action) => {
             });
         case actionTypes.SET_SEMESTER_LIST:
             return updateObject(state, {
-                scheduleGroupId: null,
-                scheduleTeacherId: null,
-                teacherSchedule: {},
-                groupSchedule: {},
-                fullSchedule: [],
                 semesters: action.result,
             });
         case actionTypes.SET_SCHEDULE_SEMESTER_ID:

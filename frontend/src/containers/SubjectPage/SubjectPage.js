@@ -27,6 +27,12 @@ import {
 } from '../../services/subjectService';
 import NavigationPage from '../../components/Navigation/NavigationPage';
 import { navigation, navigationNames } from '../../constants/navigation';
+import {
+    EDIT_TITLE,
+    SUBJECT_Y_LABEL,
+    DELETE_TITLE,
+} from '../../constants/translationLabels/formElements';
+import { COMMON_SET_DISABLED, COMMON_SET_ENABLED } from '../../constants/translationLabels/common';
 
 const SubjectPage = (props) => {
     const { t } = useTranslation('formElements');
@@ -107,15 +113,15 @@ const SubjectPage = (props) => {
                     )}
                 </aside>
                 <section className="container-flex-wrap wrapper">
-                    {visibleSubjects.length === 0 && <NotFound name={t('subject_y_label')} />}
+                    {visibleSubjects.length === 0 && <NotFound name={t(SUBJECT_Y_LABEL)} />}
                     {visibleSubjects.map((subject) => (
-                        <Card key={subject.id} class="subject-card done-card">
+                        <Card key={subject.id} additionClassName="subject-card done-card">
                             <h2 className="subject-card__name">{subject.name}</h2>
                             <div className="cards-btns">
                                 {disabled ? (
                                     <GiSightDisabled
                                         className="svg-btn copy-btn"
-                                        title={t('common:set_enabled')}
+                                        title={t(COMMON_SET_ENABLED)}
                                         onClick={() => {
                                             showConfirmDialog(
                                                 subject.id,
@@ -127,7 +133,7 @@ const SubjectPage = (props) => {
                                     <>
                                         <IoMdEye
                                             className="svg-btn copy-btn"
-                                            title={t('common:set_disabled')}
+                                            title={t(COMMON_SET_DISABLED)}
                                             onClick={() => {
                                                 showConfirmDialog(
                                                     subject.id,
@@ -137,7 +143,7 @@ const SubjectPage = (props) => {
                                         />
                                         <FaEdit
                                             className="svg-btn edit-btn"
-                                            title={t('edit_title')}
+                                            title={t(EDIT_TITLE)}
                                             onClick={() => selectSubjectService(subject.id)}
                                         />
                                     </>
@@ -145,7 +151,7 @@ const SubjectPage = (props) => {
 
                                 <MdDelete
                                     className="svg-btn delete-btn"
-                                    title={t('delete_title')}
+                                    title={t(DELETE_TITLE)}
                                     onClick={() =>
                                         showConfirmDialog(subject.id, dialogTypes.DELETE_CONFIRM)
                                     }

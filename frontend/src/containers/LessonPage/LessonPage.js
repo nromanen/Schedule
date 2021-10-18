@@ -32,6 +32,11 @@ import {
     selectGroupIdService,
     selectLessonCardService,
 } from '../../services/lessonService';
+import { FORM_GROUP_LABEL } from '../../constants/translationLabels/formElements';
+import {
+    LESSON_FOR_GROUP_TITLE,
+    LESSON_NO_LESSON_FOR_GROUP_LABEL,
+} from '../../constants/translationLabels/common';
 
 const GroupField = styled(TextField)({
     display: 'inline-block',
@@ -147,7 +152,7 @@ const LessonPage = (props) => {
                 <section className="centered-container">
                     <h2>
                         {groupId &&
-                            t('lesson_no_lesson_for_group_label') + searchTitleGroupByID(groupId)}
+                            t(LESSON_NO_LESSON_FOR_GROUP_LABEL) + searchTitleGroupByID(groupId)}
                     </h2>
                 </section>
             )}
@@ -164,7 +169,7 @@ const LessonPage = (props) => {
 
     return (
         <>
-            <Card class="card-title lesson-card">
+            <Card additionClassName="card-title lesson-card">
                 <CopyLessonDialog
                     open={openCopyLessonDialog}
                     onClose={closeCopyLessonDialogHandle}
@@ -188,7 +193,7 @@ const LessonPage = (props) => {
                             </span>
                         )}
                         <span className="group-lesson">
-                            <h1 className="lesson-page-h">{t('lesson_for_group_title')}</h1>
+                            <h1 className="lesson-page-h">{t(LESSON_FOR_GROUP_TITLE)}</h1>
                             <Autocomplete
                                 {...defaultProps}
                                 id="group"
@@ -201,7 +206,7 @@ const LessonPage = (props) => {
                                 renderInput={(params) => (
                                     <GroupField
                                         {...params}
-                                        label={t('formElements:group_label')}
+                                        label={t(FORM_GROUP_LABEL)}
                                         margin="normal"
                                     />
                                 )}

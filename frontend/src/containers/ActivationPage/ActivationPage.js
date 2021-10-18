@@ -11,6 +11,7 @@ import { links } from '../../constants/links';
 import { snackbarTypes } from '../../constants/snackbarTypes';
 
 import { handleSnackbarOpenService } from '../../services/snackbarService';
+import { VERIFYING_TOKEN, TOKEN_ERROR } from '../../constants/translationLabels/common';
 
 import './ActivationPage.scss';
 
@@ -32,7 +33,7 @@ const ActivationPage = (props) => {
 
     let main = (
         <>
-            <h2>{t('verifying_token')}</h2>
+            <h2>{t(VERIFYING_TOKEN)}</h2>
             <CircularProgress />
         </>
     );
@@ -40,7 +41,7 @@ const ActivationPage = (props) => {
     if (error) {
         main = (
             <>
-                <h2>{t('token_error')}</h2>
+                <h2>{t(TOKEN_ERROR)}</h2>
                 <p>{error}</p>
             </>
         );

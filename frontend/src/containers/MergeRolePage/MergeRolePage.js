@@ -16,7 +16,12 @@ import Card from '../../share/Card/Card';
 import './MergeRolePage.scss';
 import NavigationPage from '../../components/Navigation/NavigationPage';
 import { navigation } from '../../constants/navigation';
-import { USER_LABEL } from '../../constants/services';
+import {
+    FORM_USER_LABEL,
+    FORM_TEACHER_LABEL,
+    FORM_MERGE_BUTTON,
+} from '../../constants/translationLabels/formElements';
+import { MERGE_HEADER } from '../../constants/translationLabels/common';
 
 const useStyles = makeStyles(() => ({
     autoCompleteField: {
@@ -67,8 +72,8 @@ const MergeRolePage = (props) => {
         <>
             <NavigationPage val={navigation.USERS} />
             <div className="merge-role-form">
-                <Card class="merge-role-card">
-                    <h2 className="under-line">{t('merge_header')}</h2>
+                <Card additionClassName="merge-role-card">
+                    <h2 className="under-line">{t(MERGE_HEADER)}</h2>
                     {props.loading ? (
                         <CircularProgress />
                     ) : (
@@ -85,7 +90,7 @@ const MergeRolePage = (props) => {
                                     renderInput={(params) => (
                                         <TextField
                                             {...params}
-                                            label={t('formElements:teacher_label')}
+                                            label={t(FORM_TEACHER_LABEL)}
                                             margin="normal"
                                         />
                                     )}
@@ -101,7 +106,7 @@ const MergeRolePage = (props) => {
                                     renderInput={(params) => (
                                         <TextField
                                             {...params}
-                                            label={t(USER_LABEL)}
+                                            label={t(FORM_USER_LABEL)}
                                             margin="normal"
                                         />
                                     )}
@@ -113,7 +118,7 @@ const MergeRolePage = (props) => {
                                 color="primary"
                                 onClick={() => mergeUserAndTeacherHandle()}
                             >
-                                {t('formElements:merge_button')}
+                                {t(FORM_MERGE_BUTTON)}
                             </Button>
                         </>
                     )}

@@ -9,6 +9,8 @@ import ChangePasswordForm from '../../components/ChangePasswordForm/ChangePasswo
 import { getUserProfile, updateUserPassword, updateUserTeacher } from '../../services/userService';
 import AddTeacherForm from '../../components/AddTeacherForm/AddTeacherForm';
 import NavigationPage from '../../components/Navigation/NavigationPage';
+import { EMAIL_LABEL } from '../../constants/translationLabels/formElements';
+import { COMMON_MY_PROFILE, DIFFERENT_PASSWORDS } from '../../constants/translationLabels/common';
 
 const ProfilePage = (props) => {
     const { t } = useTranslation('formElements');
@@ -17,7 +19,7 @@ const ProfilePage = (props) => {
     const submitPasswordChange = (values) => {
         if (values.new_password !== values.confirm_password) {
             props.setError({
-                registration: { passwords: t('different_passwords') },
+                registration: { passwords: t(DIFFERENT_PASSWORDS) },
             });
             return;
         }
@@ -45,10 +47,10 @@ const ProfilePage = (props) => {
     return (
         <>
             <NavigationPage />
-            <Card class="form-card">
-                <h2 className="form-title">{t('common:my_profile')}</h2>
+            <Card additionClassName="form-card">
+                <h2 className="form-title">{t(COMMON_MY_PROFILE)}</h2>
                 <section>
-                    <span>{`${t('email_label')}: `}</span>
+                    <span>{`${t(EMAIL_LABEL)}: `}</span>
                     <span>{localStorage.getItem('email')}</span>
                 </section>
                 <ChangePasswordForm

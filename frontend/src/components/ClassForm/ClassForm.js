@@ -24,29 +24,39 @@ import {
 import { CLASS_FORM } from '../../constants/reduxForms';
 import { CLASS_DURATION } from '../../constants/common';
 import { getClearOrCancelTitle, setDisableButton } from '../../helper/disableComponent';
+import {
+    EDIT_TITLE,
+    CREATE_TITLE,
+    SAVE_BUTTON_LABEL,
+    CLASS_LABEL,
+    CLASS_FROM_LABEL,
+    CLASS_TO_LABEL,
+    CLASS_Y_LABEL,
+} from '../../constants/translationLabels/formElements';
+import { hourFormat, timeFormat } from '../../constants/formats';
 
 const ClassFormFunc = (props) => {
     const { t } = useTranslation('formElements');
-    const { handleSubmit, pristine, onReset, submitting, classScheduleOne } = props;
+    const { handleSubmit, pristine, onReset, submitting, classScheduleOne, initialize, change } =
+        props;
     useEffect(() => {
         let initialValues = {};
         if (classScheduleOne) {
             initialValues = classScheduleOne;
         }
-        props.initialize(initialValues);
+        initialize(initialValues);
     }, [classScheduleOne]);
 
     const setEndTime = (startTime) =>
-        props.change(
+        change(
             'endTime',
-            moment(startTime, 'HH:mm').add(CLASS_DURATION, 'h').format('HH:mm'),
+            moment(startTime, timeFormat).add(CLASS_DURATION, hourFormat).format(timeFormat),
         );
 
     return (
-        <Card class="form-card">
+        <Card additionClassName="form-card">
             <h2 className="form-title">
-                {props.classScheduleOne.id ? t('edit_title') : t('create_title')}{' '}
-                {t('class_y_label')}
+                {classScheduleOne.id ? t(EDIT_TITLE) : t(CREATE_TITLE)} {t(CLASS_Y_LABEL)}
             </h2>
             <form onSubmit={handleSubmit}>
                 <Field
@@ -54,7 +64,7 @@ const ClassFormFunc = (props) => {
                     className="form-field"
                     name="class_name"
                     id="class_name"
-                    label={t('class_label')}
+                    label={t(CLASS_LABEL)}
                     type="text"
                     validate={[required, uniqueClassName]}
                 />
@@ -63,7 +73,7 @@ const ClassFormFunc = (props) => {
                         component={renderTimePicker}
                         className="time-input"
                         name="startTime"
-                        label={t('class_from_label')}
+                        label={t(CLASS_FROM_LABEL)}
                         type="time"
                         validate={[required, lessThanTime, timeIntersect]}
                         onChange={(event, value) => {
@@ -76,7 +86,7 @@ const ClassFormFunc = (props) => {
                         component={renderTimePicker}
                         className="time-input"
                         name="endTime"
-                        label={t('class_to_label')}
+                        label={t(CLASS_TO_LABEL)}
                         type="time"
                         validate={[required, greaterThanTime, timeIntersect]}
                     />
@@ -90,7 +100,7 @@ const ClassFormFunc = (props) => {
                         color="primary"
                         disabled={pristine || submitting}
                     >
-                        {t('save_button_label')}
+                        {t(SAVE_BUTTON_LABEL)}
                     </Button>
                     <Button
                         className="buttons-style"

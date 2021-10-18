@@ -23,6 +23,16 @@ import { handleSnackbarOpenService } from '../../services/snackbarService';
 import { snackbarTypes } from '../../constants/snackbarTypes';
 import NavigationPage from '../../components/Navigation/NavigationPage';
 import { navigation, navigationNames } from '../../constants/navigation';
+import {
+    CLASS_LABEL,
+    CLASS_FROM_LABEL,
+    CLASS_TO_LABEL,
+    MAX_COUNT_CLASSES_REACHED,
+} from '../../constants/translationLabels/formElements';
+import {
+    COMMON_EDIT_HOVER_TITLE,
+    COMMON_DELETE_HOVER_TITLE,
+} from '../../constants/translationLabels/common';
 
 const ClassSchedule = (props) => {
     const { t } = useTranslation('formElements');
@@ -35,7 +45,7 @@ const ClassSchedule = (props) => {
             return handleSnackbarOpenService(
                 true,
                 snackbarTypes.ERROR,
-                t('max_count_classes_reached'),
+                t(MAX_COUNT_CLASSES_REACHED),
             );
         return addClassScheduleOneService(values);
     };
@@ -69,24 +79,24 @@ const ClassSchedule = (props) => {
                 <ClassForm onSubmit={submit} onReset={clearClassScheduleOneService} />
                 <section className="container-flex-wrap">
                     {props.classScheduler.map((schedule) => (
-                        <Card class="class-card-width" key={schedule.id}>
+                        <Card additionClassName="class-card-width" key={schedule.id}>
                             <div className="cards-btns">
                                 <FaEdit
                                     className="svg-btn"
-                                    title={t('common:edit_hover_title')}
+                                    title={t(COMMON_EDIT_HOVER_TITLE)}
                                     onClick={() => handleEdit(schedule.id)}
                                 />
                                 <MdDelete
                                     className="svg-btn"
-                                    title={t('common:delete_hover_title')}
+                                    title={t(COMMON_DELETE_HOVER_TITLE)}
                                     onClick={() => handleClickOpen(schedule.id)}
                                 />
                             </div>
                             <p>
-                                {t('class_label')}: {schedule.class_name}
+                                {t(CLASS_LABEL)}: {schedule.class_name}
                             </p>
                             <p>
-                                {t('class_from_label')} - {t('class_to_label')}
+                                {t(CLASS_FROM_LABEL)} - {t(CLASS_TO_LABEL)}
                             </p>
                             <p>
                                 {schedule.startTime} - {schedule.endTime}

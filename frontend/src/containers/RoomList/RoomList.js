@@ -27,6 +27,12 @@ import {
     setDisabledRoomsService,
     setEnabledRoomsService,
 } from '../../services/roomService';
+import { ROOM_Y_LABEL, ROOM_LABEL } from '../../constants/translationLabels/formElements';
+import {
+    TYPE_LABEL,
+    COMMON_SET_DISABLED,
+    COMMON_SET_ENABLED,
+} from '../../constants/translationLabels/common';
 
 const RoomList = (props) => {
     const { rooms, roomTypes, disabledRooms } = props;
@@ -103,15 +109,15 @@ const RoomList = (props) => {
                     )}
                 </aside>
                 <section className="container-flex-wrap wrapper">
-                    {visibleItems.length === 0 && <NotFound name={t('room_y_label')} />}
+                    {visibleItems.length === 0 && <NotFound name={t(ROOM_Y_LABEL)} />}
                     {visibleItems.map((roomItem) => (
-                        <Card key={roomItem.id} class="room-card done-card">
+                        <Card key={roomItem.id} additionClassName="room-card done-card">
                             <div className="cards-btns">
                                 {!isDisabled ? (
                                     <>
                                         <GiSightDisabled
                                             className="svg-btn copy-btn"
-                                            title={t('common:set_disabled')}
+                                            title={t(COMMON_SET_DISABLED)}
                                             onClick={() => {
                                                 showConfirmDialog(
                                                     roomItem.id,
@@ -127,7 +133,7 @@ const RoomList = (props) => {
                                 ) : (
                                     <IoMdEye
                                         className="svg-btn copy-btn"
-                                        title={t('common:set_enabled')}
+                                        title={t(COMMON_SET_ENABLED)}
                                         onClick={() => {
                                             showConfirmDialog(
                                                 roomItem.id,
@@ -145,9 +151,9 @@ const RoomList = (props) => {
                                 />
                             </div>
 
-                            <span> {`${t('room_label')}:`} </span>
+                            <span> {`${t(ROOM_LABEL)}:`} </span>
                             <h2 className="room-card__number">{roomItem.name}</h2>
-                            <span>{`${t('type_label')}:`}</span>
+                            <span>{`${t(TYPE_LABEL)}:`}</span>
                             <h2 className="room-card__number">{roomItem.type.description}</h2>
                         </Card>
                     ))}

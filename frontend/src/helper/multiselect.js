@@ -3,6 +3,13 @@ import ReactSelect from 'react-select';
 import Button from '@material-ui/core/Button';
 import './multiselect.scss';
 import { useTranslation } from 'react-i18next';
+import {
+    SCHEDULE_FOR_SEMESTER,
+    CHOOSE_TEACHER,
+    CANCEL_BUTTON_LABEL,
+    SENT_SCHEDULE,
+    ALL_TEACHERS,
+} from '../constants/translationLabels/common';
 import { CustomDialog } from '../share/DialogWindows';
 
 export const MultiSelect = (props) => {
@@ -13,7 +20,7 @@ export const MultiSelect = (props) => {
 
     const selectAllOption = {
         value: '<SELECT_ALL>',
-        label: t('all_teachers'),
+        label: t(ALL_TEACHERS),
     };
 
     const isSelectAllSelected = () => valueRef.current.length === props.options.length;
@@ -52,7 +59,7 @@ export const MultiSelect = (props) => {
         <CustomDialog
             id="select-dialog"
             aria-labelledby="confirm-dialog-title"
-            title={t('schedule_for_semester')}
+            title={t(SCHEDULE_FOR_SEMESTER)}
             open={open}
             onClose={onCancel}
             buttons={
@@ -63,7 +70,7 @@ export const MultiSelect = (props) => {
                         color="primary"
                         onClick={onCancel}
                     >
-                        {t('cancel_schedule')}
+                        {t(CANCEL_BUTTON_LABEL)}
                     </Button>
                     <Button
                         className="dialog-button"
@@ -72,7 +79,7 @@ export const MultiSelect = (props) => {
                         onClick={onSentTeachers}
                         disabled={!isEnabledSentBtn}
                     >
-                        {t('sent_schedule')}
+                        {t(SENT_SCHEDULE)}
                     </Button>
                 </div>
             }
@@ -93,7 +100,7 @@ export const MultiSelect = (props) => {
                     hideSelectedOptions={false}
                     closeMenuOnSelect={false}
                     isMulti
-                    placeholder={t('choose_teachers')}
+                    placeholder={t(CHOOSE_TEACHER)}
                 />
             </div>
         </CustomDialog>

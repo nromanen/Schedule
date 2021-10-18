@@ -4,7 +4,7 @@ import { Field, reduxForm } from 'redux-form';
 import Button from '@material-ui/core/Button';
 import { useTranslation } from 'react-i18next';
 import renderTextField from '../../share/renderedFields/input';
-import renderSelectField from '../../share/renderedFields/select';
+import SelectField from '../../share/renderedFields/select';
 
 import { ROOM_FORM } from '../../constants/reduxForms';
 
@@ -13,49 +13,58 @@ import Card from '../../share/Card/Card';
 
 import './AddRoomForm.scss';
 import { getClearOrCancelTitle, setDisableButton } from '../../helper/disableComponent';
+import {
+    EDIT_TITLE,
+    CREATE_TITLE,
+    SAVE_BUTTON_LABEL,
+    ROOM_Y_LABEL,
+    NUMBER_LABEL,
+    ROOM_LABEL,
+} from '../../constants/translationLabels/formElements';
+import { TYPE_LABEL } from '../../constants/translationLabels/common';
 
 let AddRoom = (props) => {
     const { t } = useTranslation('formElements');
-    const { handleSubmit, pristine, submitting, onReset, oneRoom } = props;
+    const { handleSubmit, pristine, submitting, onReset, oneRoom, roomTypes, initialize } = props;
 
     useEffect(() => {
-        if (props.oneRoom) {
-            if (props.oneRoom.id) {
-                props.initialize({
-                    name: props.oneRoom.name,
-                    type: props.oneRoom.type.id,
-                    id: props.oneRoom.id,
+        if (oneRoom) {
+            if (oneRoom.id) {
+                initialize({
+                    name: oneRoom.name,
+                    type: oneRoom.type.id,
+                    id: oneRoom.id,
                 });
             } else {
-                props.initialize();
+                initialize();
             }
         }
-    }, [props.oneRoom]);
+    }, [oneRoom]);
 
     return (
-        <Card class="form-card room-form">
+        <Card additionClassName="form-card room-form">
             <form className="createGroupForm w-100" onSubmit={handleSubmit}>
                 <h2 className="form-title">
-                    {props.oneRoom.id ? t('edit_title') : t('create_title')} {t('room_y_label')}
+                    {oneRoom.id ? t(EDIT_TITLE) : t(CREATE_TITLE)} {t(ROOM_Y_LABEL)}
                 </h2>
                 <Field
                     type="text"
                     name="name"
                     component={renderTextField}
-                    placeholder={t('number_label')}
+                    placeholder={t(NUMBER_LABEL)}
                     className="form-field"
-                    label={t('room_label')}
+                    label={t(ROOM_LABEL)}
                     validate={[required, uniqueRoomName]}
                 />
                 <Field
                     className="form-field"
-                    component={renderSelectField}
+                    component={SelectField}
                     name="type"
-                    label={t('type_label')}
+                    label={t(TYPE_LABEL)}
                     validate={[required]}
                 >
                     <option value=""></option>
-                    {props.roomTypes.map((roomType) => (
+                    {roomTypes.map((roomType) => (
                         <option key={roomType.id} value={roomType.id}>
                             {roomType.description}
                         </option>
@@ -69,7 +78,7 @@ let AddRoom = (props) => {
                         disabled={pristine || submitting}
                         type="submit"
                     >
-                        {t('save_button_label')}
+                        {t(SAVE_BUTTON_LABEL)}
                     </Button>
                     <Button
                         className="buttons-style"

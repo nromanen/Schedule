@@ -1,7 +1,23 @@
 import React from 'react';
 import Button from '@material-ui/core/Button';
-import i18n from '../../helper/i18n';
+import i18n from '../../i18n';
 import { dialogTypes } from '../../constants/dialogs';
+import {
+    COMMON_YES_BUTTON_TITLE,
+    COMMON_NO_BUTTON_TITLE,
+    COMMON_DO_YOU_WANNA,
+    COMMON_DO_YOU_WANNA_DISABLE,
+    COMMON_DELETE_WORD,
+    COMMON_DO_YOU_WANNA_SHOW,
+    COMMON_BY_THIS_CARD_TYPE,
+    COMMON_THIS_CARD_TYPE,
+    COMMON_GO_TO_MEETING_WORD,
+    COMMON_SET_DEFAULT_WORD,
+} from '../../constants/translationLabels/common';
+import {
+    FORM_REFERENCE_ELEMENT,
+    FORM_SEMESTER_ELEMENT,
+} from '../../constants/translationLabels/formElements';
 
 export const dialogMapper = (props) => {
     const { onClose, cardId, type, whatDelete, linkToMeeting = 'none' } = props;
@@ -13,10 +29,10 @@ export const dialogMapper = (props) => {
                 color="primary"
                 onClick={() => onClose(cardId)}
             >
-                {i18n.t('common:yes_button_title')}
+                {i18n.t(COMMON_YES_BUTTON_TITLE)}
             </Button>
             <Button className="dialog-button" variant="contained" onClick={() => onClose('')}>
-                {i18n.t('common:no_button_title')}
+                {i18n.t(COMMON_NO_BUTTON_TITLE)}
             </Button>
         </>
     );
@@ -25,9 +41,9 @@ export const dialogMapper = (props) => {
             return {
                 title: (
                     <>
-                        {i18n.t('common:do_you_wanna')}{' '}
-                        <span className="delete-word">{i18n.t('common:delete_word')}</span>{' '}
-                        {i18n.t('common:this_card_type', {
+                        {i18n.t(COMMON_DO_YOU_WANNA)}{' '}
+                        <span className="delete-word">{i18n.t(COMMON_DELETE_WORD)}</span>{' '}
+                        {i18n.t(COMMON_THIS_CARD_TYPE, {
                             cardType: i18n.t(`formElements:${whatDelete}_element`),
                         })}
                     </>
@@ -37,13 +53,13 @@ export const dialogMapper = (props) => {
             };
         case dialogTypes.SET_VISIBILITY_DISABLED:
             return {
-                title: i18n.t('common:do_you_wanna_disable'),
+                title: i18n.t(COMMON_DO_YOU_WANNA_DISABLE),
                 buttons: defaultModalButtons,
                 ...props,
             };
         case dialogTypes.SET_VISIBILITY_ENABLED:
             return {
-                title: i18n.t('common:do_you_wanna_show'),
+                title: i18n.t(COMMON_DO_YOU_WANNA_SHOW),
                 buttons: defaultModalButtons,
                 ...props,
             };
@@ -51,15 +67,15 @@ export const dialogMapper = (props) => {
             return {
                 title: (
                     <>
-                        {i18n.t('common:do_you_wanna_show')}{' '}
-                        {i18n.t('common:by_this_card_type', {
-                            cardType: i18n.t(`formElements:reference_element`),
+                        {i18n.t(COMMON_DO_YOU_WANNA_SHOW)}{' '}
+                        {i18n.t(COMMON_BY_THIS_CARD_TYPE, {
+                            cardType: i18n.t(FORM_REFERENCE_ELEMENT),
                         })}
                     </>
                 ),
                 children: (
                     <>
-                        {i18n.t('common:do_you_wanna')}
+                        {i18n.t(COMMON_DO_YOU_WANNA)}
                         <span>
                             <a
                                 className="go-to-meeting"
@@ -68,7 +84,7 @@ export const dialogMapper = (props) => {
                                 title={linkToMeeting}
                                 rel="noreferrer"
                             >
-                                {i18n.t(`common:go_to_meeting_word`)}
+                                {i18n.t(COMMON_GO_TO_MEETING_WORD)}
                             </a>
                         </span>
                     </>
@@ -80,10 +96,10 @@ export const dialogMapper = (props) => {
             return {
                 title: (
                     <>
-                        {i18n.t('common:do_you_wanna')}{' '}
-                        <span className="set-default">{i18n.t(`common:set_default_word`)}</span>{' '}
-                        {i18n.t('common:this_card_type', {
-                            cardType: i18n.t(`formElements:semester_element`),
+                        {i18n.t(COMMON_DO_YOU_WANNA)}{' '}
+                        <span className="set-default">{i18n.t(COMMON_SET_DEFAULT_WORD)}</span>{' '}
+                        {i18n.t(COMMON_THIS_CARD_TYPE, {
+                            cardType: i18n.t(FORM_SEMESTER_ELEMENT),
                         })}
                     </>
                 ),

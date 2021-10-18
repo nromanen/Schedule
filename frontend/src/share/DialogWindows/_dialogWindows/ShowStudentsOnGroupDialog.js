@@ -6,12 +6,14 @@ import Button from '@material-ui/core/Button';
 
 import { useTranslation } from 'react-i18next';
 import { isEmpty } from 'lodash';
-import i18n from '../../../helper/i18n';
+import i18n from '../../../i18n';
 import RenderStudentTable from '../../../helper/renderStudentTable';
 import { getAllStudentsByGroupId } from '../../../services/studentService';
 import { UploadFile } from '../../../components/UploadFile/UploadFile';
 import CustomDialog from '../CustomDialog';
 import MovingGroupsDialog from './MovingGroupsDialog';
+import { GROUP_LABEL } from '../../../constants/translationLabels/formElements';
+import { COMMON_CLOSE_TITLE } from '../../../constants/translationLabels/common';
 
 const ShowStudentsOnGroupDialog = (props) => {
     const { onClose, cardId, open, onDeleteStudent, students, onSubmit, match, groups, group } =
@@ -113,7 +115,7 @@ const ShowStudentsOnGroupDialog = (props) => {
             <CustomDialog
                 open={open}
                 onClose={handleClose}
-                title={`${t('group_label')} - ${props.group.title}`}
+                title={`${t(GROUP_LABEL)} - ${props.group.title}`}
                 buttons={
                     <>
                         <UploadFile
@@ -149,7 +151,7 @@ const ShowStudentsOnGroupDialog = (props) => {
                             color="primary"
                             title={i18n.t('close_title')}
                         >
-                            {i18n.t('common:close_title')}
+                            {i18n.t(COMMON_CLOSE_TITLE)}
                         </Button>
                     </>
                 }

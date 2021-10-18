@@ -1,4 +1,4 @@
-import get from 'lodash';
+import { get } from 'lodash';
 import axios from '../helper/axios';
 import {
     ACTIVATE_ACCOUNT_URL,
@@ -7,9 +7,10 @@ import {
     REGISTRATION_URL,
     RESET_PASSWORD_URL,
 } from '../constants/axios';
+import { GOOGLE } from '../constants/common';
 
 export const authUserService = (request) => {
-    if (get(request.result, 'authType') && request.result.authType === 'google') {
+    if (get(request.result, 'authType') && request.result.authType === GOOGLE) {
         return { data: { token: request.result.token, email: '' } };
     }
     return axios.post(LOGIN_URL, request.result).then((response) => {

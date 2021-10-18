@@ -1,7 +1,5 @@
 import axios from '../helper/axios';
 import { store } from '../store';
-
-import { BACK_END_SUCCESS_OPERATION, USER_LABEL } from '../constants/services';
 import {
     MERGE_USER_AND_TEACHER_URL,
     USERS_URL,
@@ -10,10 +8,15 @@ import {
 } from '../constants/axios';
 import { setUsers, setUser, setTeacher } from '../actions/index';
 
-import i18n from '../helper/i18n';
+import i18n from '../i18n';
 import { setLoadingService } from './loadingService';
 import { getTeachersWithoutAccount } from './teacherService';
 import { errorHandler, successHandler } from '../helper/handlerAxios';
+import {
+    BACK_END_SUCCESS_OPERATION,
+    SUCCESSFULLY_MERGED,
+} from '../constants/translationLabels/serviceMessages';
+import { FORM_USER_LABEL, FORM_TEACHER_LABEL } from '../constants/translationLabels/formElements';
 
 export const getUsersService = () => {
     axios
@@ -54,7 +57,7 @@ export const updateUserPassword = (values) => {
             store.dispatch(setUser(response.data));
             successHandler(
                 i18n.t(BACK_END_SUCCESS_OPERATION, {
-                    cardType: i18n.t('formElements:teacher_label'),
+                    cardType: i18n.t(FORM_TEACHER_LABEL),
                     actionType: i18n.t('serviceMessages:updated'),
                 }),
             );
@@ -83,7 +86,7 @@ export const updateUserTeacher = (values) => {
             );
             successHandler(
                 i18n.t(BACK_END_SUCCESS_OPERATION, {
-                    cardType: i18n.t(USER_LABEL),
+                    cardType: i18n.t(FORM_USER_LABEL),
                     actionType: i18n.t('serviceMessages:updated'),
                 }),
             );
@@ -100,8 +103,8 @@ export const mergeUserAndTeacherService = (mergeObj) => {
             setLoadingService(false);
             successHandler(
                 i18n.t(BACK_END_SUCCESS_OPERATION, {
-                    cardType: i18n.t(USER_LABEL),
-                    actionType: i18n.t('serviceMessages:successfully_merged'),
+                    cardType: i18n.t(FORM_USER_LABEL),
+                    actionType: i18n.t(SUCCESSFULLY_MERGED),
                 }),
             );
         })

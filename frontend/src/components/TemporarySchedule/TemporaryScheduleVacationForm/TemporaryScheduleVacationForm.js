@@ -22,18 +22,32 @@ import {
     selectVacationService,
 } from '../../../services/temporaryScheduleService';
 import renderCheckboxField from '../../../share/renderedFields/checkbox';
+import {
+    SAVE_BUTTON_LABEL,
+    CLEAR_BUTTON_LABEL,
+    CLASS_FROM_LABEL,
+    CLASS_TO_LABEL,
+    FORM_TEACHER_LABEL,
+    FOR_TEACHER,
+    EDIT_VACATION_FORM,
+    CREATE_VACATION_FORM,
+} from '../../../constants/translationLabels/formElements';
+import {
+    COMMON_NOTIFY_LABEL,
+    COMMON_FEW_DAYS_LABEL,
+    COMMON_DATE_LABEL,
+    FOR_ALL,
+} from '../../../constants/translationLabels/common';
 
 const TemporaryScheduleVacationForm = (props) => {
     const { t } = useTranslation('formElements');
-    const { handleSubmit, invalid, reset, submitting } = props;
+    const { handleSubmit, invalid, reset, submitting, teachers, teacherId, vacation, initialize } =
+        props;
 
     const [isFewDays, setIsFewDays] = useState(false);
     const [forAll, setForAll] = useState(true);
     const [notify, setNotify] = useState(false);
 
-    const { teachers, teacherId } = props;
-
-    const { vacation } = props;
     const vacationId = vacation.id;
 
     const initializeFormHandler = (vacationData) => {
@@ -43,7 +57,7 @@ const TemporaryScheduleVacationForm = (props) => {
         } else {
             setForAll(true);
         }
-        props.initialize({
+        initialize({
             id: vacationData.id,
             date: vacationData.date,
         });
@@ -53,17 +67,17 @@ const TemporaryScheduleVacationForm = (props) => {
         if (vacationId) {
             initializeFormHandler(vacation);
         } else {
-            props.initialize();
+            initialize();
         }
     }, [vacationId]);
 
-    const handleForAllChange = (event) => {
-        setForAll(event.target.checked);
-    };
+    useEffect(() => {
+        if (teacherId) setForAll(false);
+    }, [teacherId]);
 
-    const handleChange = (event) => {
-        setIsFewDays(event.target.checked);
-    };
+    useEffect(() => {
+        if (forAll) selectTeacherIdService(null);
+    }, [forAll]);
 
     const handleNotifyChange = (event) => setNotify(event.target.checked);
 
@@ -81,25 +95,27 @@ const TemporaryScheduleVacationForm = (props) => {
         if (teacher) selectTeacherIdService(teacher.id);
     };
 
-    useEffect(() => {
-        if (teacherId) setForAll(false);
-    }, [teacherId]);
+    const forAllLabel = forAll ? t(FOR_ALL) : t(FOR_TEACHER);
 
-    useEffect(() => {
-        if (forAll) selectTeacherIdService(null);
-    }, [forAll]);
+    const isDisabled = submitting || invalid;
 
     return (
-        <Card class="form-card">
+        <Card additionClassName="form-card">
             <h2 className="form-title under-line">
-                {vacationId ? t('edit_vacation_form') : t('create_vacation_form')}
+                {vacationId ? t(EDIT_VACATION_FORM) : t(CREATE_VACATION_FORM)}
             </h2>
             <form onSubmit={handleSubmit}>
                 <FormControlLabel
                     control={
-                        <Checkbox checked={isFewDays} onChange={handleChange} color="primary" />
+                        <Checkbox
+                            checked={isFewDays}
+                            onChange={(event) => {
+                                setIsFewDays(event.target.checked);
+                            }}
+                            color="primary"
+                        />
                     }
-                    label={t('common:few_days_label')}
+                    label={t(COMMON_FEW_DAYS_LABEL)}
                 />
                 {isFewDays ? (
                     <>
@@ -107,14 +123,14 @@ const TemporaryScheduleVacationForm = (props) => {
                             className="time-input"
                             name="from"
                             component={renderMonthPicker}
-                            label={`${t('class_from_label')}:`}
+                            label={`${t(CLASS_FROM_LABEL)}:`}
                             validate={[required, lessThanDate]}
                         />
                         <Field
                             className="time-input"
                             name="to"
                             component={renderMonthPicker}
-                            label={`${t('class_to_label')}:`}
+                            label={`${t(CLASS_TO_LABEL)}:`}
                             validate={[required, greaterThanDate]}
                         />
                     </>
@@ -123,7 +139,7 @@ const TemporaryScheduleVacationForm = (props) => {
                         className="time-input"
                         name="date"
                         component={renderMonthPicker}
-                        label={`${t('common:date')}:`}
+                        label={`${t(COMMON_DATE_LABEL)}:`}
                         validate={[required]}
                     />
                 )}
@@ -133,10 +149,12 @@ const TemporaryScheduleVacationForm = (props) => {
                             <Switch
                                 color="primary"
                                 checked={forAll}
-                                onChange={handleForAllChange}
+                                onChange={(event) => {
+                                    setForAll(event.target.checked);
+                                }}
                             />
                         }
-                        label={forAll ? t('for_all') : t('for_teacher')}
+                        label={forAllLabel}
                     />
                 </div>
                 {!forAll && (
@@ -150,17 +168,13 @@ const TemporaryScheduleVacationForm = (props) => {
                             else handleTeacherSelect(newValue);
                         }}
                         renderInput={(params) => (
-                            <TextField
-                                {...params}
-                                label={t('formElements:teacher_label')}
-                                margin="normal"
-                            />
+                            <TextField {...params} label={t(FORM_TEACHER_LABEL)} margin="normal" />
                         )}
                     />
                 )}
                 <Field
                     name="notify"
-                    label={t('common:notify_label')}
+                    label={t(COMMON_NOTIFY_LABEL)}
                     component={renderCheckboxField}
                     checked={notify}
                     onChange={handleNotifyChange}
@@ -173,21 +187,21 @@ const TemporaryScheduleVacationForm = (props) => {
                         type="submit"
                         variant="contained"
                         color="primary"
-                        disabled={submitting || invalid}
+                        disabled={isDisabled}
                     >
-                        {t('save_button_label')}
+                        {t(SAVE_BUTTON_LABEL)}
                     </Button>
                     <Button
                         className="buttons-style"
                         type="button"
                         variant="contained"
-                        disabled={submitting || invalid}
+                        disabled={isDisabled}
                         onClick={() => {
                             reset();
                             selectVacationService({});
                         }}
                     >
-                        {t('clear_button_label')}
+                        {t(CLEAR_BUTTON_LABEL)}
                     </Button>
                 </div>
             </form>

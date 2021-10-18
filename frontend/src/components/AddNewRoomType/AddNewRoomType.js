@@ -14,21 +14,26 @@ import Card from '../../share/Card/Card';
 import renderTextField from '../../share/renderedFields/input';
 import { deleteTypeService, getOneNewTypeService } from '../../services/roomTypesService';
 import './AddNewRoomType.scss';
+import {
+    SAVE_BUTTON_LABEL,
+    ADD_TYPE_LABEL,
+    NEW_TYPE_LABEL,
+} from '../../constants/translationLabels/formElements';
 import { dialogTypes } from '../../constants/dialogs';
 
 let NewRoomType = (props) => {
-    const { handleSubmit, pristine, submitting, roomTypes } = props;
+    const { handleSubmit, pristine, submitting, roomTypes, oneType, initialize } = props;
 
     const [open, setOpen] = useState(false);
     const [typeId, setTypeId] = useState(-1);
 
     useEffect(() => {
         let defaultValue = {};
-        if (props.oneType.id) {
-            defaultValue = { description: props.oneType.description, id: props.oneType.id };
+        if (oneType.id) {
+            defaultValue = { description: oneType.description, id: oneType.id };
         }
-        props.initialize(defaultValue);
-    }, [props.oneType]);
+        initialize(defaultValue);
+    }, [oneType]);
 
     const { t } = useTranslation('formElements');
 
@@ -45,10 +50,6 @@ let NewRoomType = (props) => {
         deleteTypeService(id);
     };
 
-    const handleEdit = (roomId) => {
-        getOneNewTypeService(roomId);
-    };
-
     return (
         <>
             <CustomDialog
@@ -58,14 +59,14 @@ let NewRoomType = (props) => {
                 open={open}
                 onClose={handleClose}
             />
-            <Card class="form-card room-form">
+            <Card additionClassName="form-card room-form">
                 <form className="new-type-container" onSubmit={handleSubmit}>
                     <Field
                         type="text"
                         name="description"
                         component={renderTextField}
-                        placeholder={t('add_type_label')}
-                        label={t('new_type_label')}
+                        placeholder={t(ADD_TYPE_LABEL)}
+                        label={t(NEW_TYPE_LABEL)}
                         className="form-field"
                         variant="outlined"
                     />
@@ -77,7 +78,7 @@ let NewRoomType = (props) => {
                             variant="contained"
                             type="submit"
                         >
-                            {t('save_button_label')}
+                            {t(SAVE_BUTTON_LABEL)}
                         </Button>
                     </div>
                 </form>
@@ -93,7 +94,7 @@ let NewRoomType = (props) => {
                             <span className="buttons">
                                 <FaEdit
                                     className="btn edit"
-                                    onClick={() => handleEdit(roomType.id)}
+                                    onClick={() => getOneNewTypeService(roomType.id)}
                                 />
                                 <MdDelete
                                     className="btn delete"

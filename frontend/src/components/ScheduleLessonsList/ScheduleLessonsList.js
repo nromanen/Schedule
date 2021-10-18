@@ -10,18 +10,18 @@ import ScheduleItem from '../ScheduleItem/ScheduleItem';
 import { selectGroupIdService } from '../../services/lessonService';
 
 import { firstStringLetterCapital } from '../../helper/strings';
+import { FORM_GROUP_LABEL } from '../../constants/translationLabels/formElements';
+import {
+    COMMON_SELECT_GROUP_SCHEDULE,
+    LESSON_NO_LESSON_FOR_GROUP_LABEL,
+} from '../../constants/translationLabels/common';
 
 const GroupField = styled(TextField)({
     width: '150px',
 });
 
 const ScheduleLessonsList = (props) => {
-    const { groups, groupId } = props;
-
-    const { lessons } = props;
-    const { items } = props;
-
-    const t = props.translation;
+    const { groups, groupId, lessons, items, translation: t } = props;
 
     const handleGroupSelect = (group) => {
         if (group) selectGroupIdService(group.id);
@@ -74,18 +74,18 @@ const ScheduleLessonsList = (props) => {
 
     return (
         <>
-            {t('common:select_group_schedule')}
+            {t(COMMON_SELECT_GROUP_SCHEDULE)}
             <Autocomplete
                 {...defaultProps}
                 id="group"
                 clearOnEscape
                 openOnFocus
                 value={groupFinderHandle(groupId)}
-                onChange={(event, newValue) => {
+                onChange={(_, newValue) => {
                     handleGroupSelect(newValue);
                 }}
                 renderInput={(params) => (
-                    <GroupField {...params} label={t('formElements:group_label')} margin="normal" />
+                    <GroupField {...params} label={t(FORM_GROUP_LABEL)} margin="normal" />
                 )}
             />
             {lessons.length > 0 ? (
@@ -93,7 +93,7 @@ const ScheduleLessonsList = (props) => {
                     {lessons.map((lesson) => lessonItems(lesson))}
                 </Board>
             ) : (
-                groupId && t('lesson_no_lesson_for_group_label')
+                groupId && t(LESSON_NO_LESSON_FOR_GROUP_LABEL)
             )}
         </>
     );

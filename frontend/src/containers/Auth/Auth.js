@@ -10,6 +10,8 @@ import { snackbarTypes } from '../../constants/snackbarTypes';
 import LoginForm from '../../components/LoginForm/LoginForm';
 import RegistrationForm from '../../components/RegistrationForm/RegistrationForm';
 import ResetPasswordForm from '../../components/ResetPasswordForm/ResetPasswordForm';
+import { GOOGLE } from '../../constants/common';
+
 import { validation } from '../../constants/validation';
 import { resetFormHandler } from '../../helper/formHelper';
 import { handleSnackbarOpenService } from '../../services/snackbarService';
@@ -23,6 +25,18 @@ import {
 } from '../../actions/index';
 
 import './Auth.scss';
+import { EMAIL_MESSAGE } from '../../constants/translationLabels/validationMessages';
+import {
+    DIFFERENT_PASSWORDS,
+    BROKEN_TOKEN,
+    LOGIN_TITLE,
+    REGISTRATION_PAGE_TITLE,
+    RESET_PASSWORD_PAGE_TITLE,
+    SUCCESSFUL_LOGIN_MESSAGE,
+    SUCCESSFUL_REGISTERED_MESSAGE,
+    SUCCESSFUL_RESET_PASSWORD_MESSAGE,
+    EMPTY_FIELDS,
+} from '../../constants/translationLabels/common';
 
 const Auth = (props) => {
     const { t } = useTranslation('common');
@@ -38,7 +52,7 @@ const Auth = (props) => {
     const socialLoginHandler = (data) => {
         props.setLoading(true);
         if (!data.token || data.token.length < 20) {
-            props.setError({ login: t('broken_token') });
+            props.setError({ login: t(BROKEN_TOKEN) });
             return;
         }
         setAuthType(authTypes.GOOGLE);
@@ -69,7 +83,7 @@ const Auth = (props) => {
             });
         }
         if (social && isToken)
-            socialLoginHandler({ authType: 'google', token: splitedParamToken[1] });
+            socialLoginHandler({ authType: GOOGLE, token: splitedParamToken[1] });
     }
 
     useEffect(() => {
@@ -79,7 +93,7 @@ const Auth = (props) => {
             get(props.resetPasswordResponse.data, 'message')
         ) {
             setAuthType(authTypes.LOGIN);
-            message = t('successful_registered_message');
+            message = t(SUCCESSFUL_REGISTERED_MESSAGE);
             handleSnackbarOpenService(true, snackbarTypes.SUCCESS, message);
         }
     }, [props.response]);
@@ -87,18 +101,18 @@ const Auth = (props) => {
     useEffect(() => {
         if (props.resetPasswordResponse && get(props.resetPasswordResponse.data, 'message')) {
             setAuthType(authTypes.LOGIN);
-            message = t('successful_reset_password_message');
+            message = t(SUCCESSFUL_RESET_PASSWORD_MESSAGE);
             handleSnackbarOpenService(true, snackbarTypes.SUCCESS, message);
         }
     }, [props.resetPasswordResponse]);
 
     const loginHandler = (loginData) => {
         if (!loginData.email || !loginData.password) {
-            props.setError({ login: t('empty_fields') });
+            props.setError({ login: t(EMPTY_FIELDS) });
             return;
         }
         if (!validation.EMAIL.test(loginData.email)) {
-            props.setError({ login: t('validationMessages:email') });
+            props.setError({ login: t(EMAIL_MESSAGE) });
             return;
         }
         props.onAuth(loginData);
@@ -109,7 +123,7 @@ const Auth = (props) => {
     const registrationHandler = (registrationData) => {
         if (registrationData.password !== registrationData.retypePassword) {
             props.setError({
-                registration: { passwords: t('different_passwords') },
+                registration: { passwords: t(DIFFERENT_PASSWORDS) },
             });
             return;
         }
@@ -131,7 +145,7 @@ const Auth = (props) => {
 
     if (!error && props.userRole) {
         isSuccess = !!props.token;
-        message = t('successful_login_message');
+        message = t(SUCCESSFUL_LOGIN_MESSAGE);
         handleSnackbarOpenService(true, snackbarTypes.SUCCESS, message);
     }
 
@@ -154,7 +168,7 @@ const Auth = (props) => {
 
     switch (authType) {
         case authTypes.REGISTRATION:
-            document.title = t('registration_page_title');
+            document.title = t(REGISTRATION_PAGE_TITLE);
             authPage = (
                 <RegistrationForm
                     isLoading={isLoading}
@@ -167,7 +181,7 @@ const Auth = (props) => {
             );
             break;
         case authTypes.RESET_PASSWORD:
-            document.title = t('reset_password_page_title');
+            document.title = t(RESET_PASSWORD_PAGE_TITLE);
             authPage = (
                 <ResetPasswordForm
                     isLoading={isLoading}
@@ -180,7 +194,7 @@ const Auth = (props) => {
             );
             break;
         default:
-            document.title = t('login_page_title');
+            document.title = t(LOGIN_TITLE);
             authPage = (
                 <LoginForm
                     isLoading={isLoading}

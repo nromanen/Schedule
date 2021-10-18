@@ -1,4 +1,5 @@
 import React from 'react';
+import { isEqual, isNil } from 'lodash';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableContainer from '@material-ui/core/TableContainer';
@@ -6,10 +7,9 @@ import TableHead from '@material-ui/core/TableHead';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 
-import i18n from 'i18next';
 import Card from '../share/Card/Card';
 
-import i18next from './i18n';
+import i18n from '../i18n';
 
 import { daysUppercase } from '../constants/schedule/days';
 import { places } from '../constants/places';
@@ -19,6 +19,13 @@ import {
     getTeacherFullName,
     getTeacherWithShortPosition,
 } from './renderTeacher';
+import { GROUP_Y_LABEL, FORM_GROUP_LABEL } from '../constants/translationLabels/formElements';
+import {
+    EMPTY_SCHEDULE,
+    COMMON_REGULAR_LESSON_LABEL,
+    COMMON_LINK_TO_MEETING_WORD,
+    COMMON_VACATION_LABEL,
+} from '../constants/translationLabels/common';
 import { CustomDialog } from '../share/DialogWindows';
 import { dialogTypes } from '../constants/dialogs';
 
@@ -29,6 +36,14 @@ const matchDayNumberSysytemToDayName = () => {
     return daysUppercase[now.getDay() - 1];
 };
 const currentDay = matchDayNumberSysytemToDayName();
+
+const getHref = (link) => {
+    return (
+        <a title={link} className="link-to-meeting" href={link} target="_blank" rel="noreferrer">
+            {i18n.t(COMMON_LINK_TO_MEETING_WORD)}
+        </a>
+    );
+};
 const setLink = (card, place) => {
     if (place === places.TOGETHER) {
         return <CustomDialog type={dialogTypes.MEETING_LINK} {...card} />;
@@ -84,61 +99,51 @@ export const prepareLessonSubCardCell = (card, place) => {
     const room = place !== places.ONLINE ? card.room : '';
     let inner = '';
     if (card !== undefined && card !== null) {
-        inner = i18next.t(`formElements:lesson_type_${card.lessonType.toLowerCase()}_label`);
+        inner = i18n.t(`formElements:lesson_type_${card.lessonType.toLowerCase()}_label`);
         if (room !== '') {
             inner = `(${inner}, ${card.room.name})`;
         }
     }
     return inner;
 };
-const getHref = (link) => {
-    return (
-        <a title={link} className="link-to-meeting" href={link} target="_blank" rel="noreferrer">
-            {i18n.t(`common:link_to_meeting_word`)}
-        </a>
-    );
-};
 
 export const prepareLessonTemporaryCardCell = (card, place, day) => {
-    let inner = '';
-    if (card !== undefined && card !== null) {
-        if (card.temporary_schedule) {
-            if (card.temporary_schedule.vacation === true) {
-                inner += `${card.temporary_schedule.date}\n\r${i18next.t(`common:vacation_label`)}`;
-            } else {
-                inner += `${card.temporary_schedule.date}\n\r${getTeacherForSite(
-                    card.temporary_schedule,
-                )}\n${card.temporary_schedule.subjectForSite}`;
-                if (card.temporary_schedule.room) {
-                    inner += `, ${card.temporary_schedule.room.name} )`;
-                }
-            }
-            const title = `${i18next.t(`common:regular_lesson_label`)}\r${prepareLessonCardCell(
-                card,
-                place,
-            )}\r${prepareLessonSubCardCell(card, place)}\r`;
+    if (isNil(card)) return '';
 
-            return inner.length > 0 ? (
-                <>
-                    <p className="temporary-class" title={title}>
-                        {inner}
-                    </p>
-                    {card.linkToMeeting && setLink(card, place)}
-                </>
-            ) : (
-                ''
-            );
-        }
-        const title = i18next.t(`common:day_of_week_${day}`);
+    const { temporary_schedule: tempSchedule, linkToMeeting } = card;
+
+    const meetingLink = linkToMeeting && setLink(card, place);
+
+    if (tempSchedule) {
+        const { vacation, date, subjectForSite, room } = tempSchedule;
+        const roomLabel = room ? `, ${room.name}` : '';
+        let inner = `${date}\n\r`;
+
+        inner += vacation
+            ? `${i18n.t(COMMON_VACATION_LABEL)}`
+            : `${getTeacherForSite(tempSchedule)}\n${subjectForSite}${roomLabel}`;
+
+        const title = `${i18n.t(COMMON_REGULAR_LESSON_LABEL)}\r${prepareLessonCardCell(
+            card,
+        )}\r${prepareLessonSubCardCell(card, place)}\r`;
+
         return (
             <>
-                <p title={title}>{prepareLessonCardCell(card, place)}</p>
-                <p>{prepareLessonSubCardCell(card, place)}</p>
-                {card.linkToMeeting && setLink(card, place)}
+                <p className="temporary-class" title={title}>
+                    {inner}
+                </p>
+                {meetingLink}
             </>
         );
     }
-    return '';
+
+    return (
+        <>
+            <p title={i18n.t(`common:day_of_week_${day}`)}>{prepareLessonCardCell(card)}</p>
+            <p>{prepareLessonSubCardCell(card, place)}</p>
+            {meetingLink}
+        </>
+    );
 };
 
 export const prepareTeacherCardCell = (card) => {
@@ -149,116 +154,126 @@ export const prepareTeacherCardCell = (card) => {
     return inner;
 };
 
+export const buildLessonWithRoom = (card, place) => {
+    const room = place !== places.ONLINE ? card.room : '';
+    let inner = '';
+    inner += `${prepareTeacherCardCell(card)}\n`;
+    inner +=
+        room !== ''
+            ? `(${i18n.t(`formElements:lesson_type_${card.lessonType.toLowerCase()}_label`)} ,${
+                  card.room
+              })\n`
+            : (inner += `${i18n.t(
+                  `formElements:lesson_type_${card.lessonType.toLowerCase()}_label`,
+              )}\n`);
+
+    return inner;
+};
+
 export const prepareTeacherCardRegularCell = (card, place) => {
     let inner = buildLessonWithRoom(card, place);
     inner += `\n${card.group.title}\n`;
     return inner;
 };
 
-export const buildLessonWithRoom = (card, place) => {
-    const room = place !== places.ONLINE ? card.room : '';
-    let inner = '';
-    inner += `${prepareTeacherCardCell(card)}\n`;
-
-    if (room !== '') {
-        inner += `(${i18next.t(
-            `formElements:lesson_type_${card.lessonType.toLowerCase()}_label`,
-        )} ,${card.room})\n`;
-    } else {
-        inner += `${i18next.t(
-            `formElements:lesson_type_${card.lessonType.toLowerCase()}_label`,
-        )}\n`;
-    }
-    return inner;
-};
 export const buildGroupNumber = (card) => {
     return `${card.group.title}\n`;
 };
 
+const prepareTitleAndInner = (options) => {
+    const { cards, place } = options;
+    let { title, inner } = options;
+    cards.forEach((cardItem) => {
+        const { temporary_schedule: tempSchedule } = cardItem;
+
+        if (!tempSchedule) {
+            inner += buildGroupNumber(cardItem);
+        } else {
+            const { vacation, date, teacher, room, subjectForSite } = tempSchedule;
+
+            const roomLabel = room ? `${subjectForSite}, ${room.name}\n` : `${subjectForSite}\n`;
+            inner += vacation
+                ? `${date}\n${i18n.t(COMMON_VACATION_LABEL)}\n`
+                : `${date}\n${getTeacherFullName(teacher)}\n${roomLabel}`;
+        }
+        title += `${i18n.t(COMMON_REGULAR_LESSON_LABEL)}\r${prepareTeacherCardRegularCell(
+            cardItem,
+            place,
+        )}\r`;
+    });
+    return { title, inner };
+};
+
 export const prepareTeacherTemporaryCardCell = (cards, place) => {
-    let inner = '';
-    let title = '';
     if (!cards) {
         return '';
     }
+    let inner = '';
+    let title = '';
 
     if (cards.length === 1) {
-        if (cards[0] === undefined || cards[0] === null) {
+        if (isNil(cards[0])) {
             return '';
         }
-        const card = cards[0];
 
-        if (!card.temporary_schedule) {
+        const card = cards[0];
+        const { temporary_schedule: tempSchedule, linkToMeeting } = card;
+
+        const meetingLink = linkToMeeting && setLink(card, place);
+
+        if (!tempSchedule) {
             return (
                 <>
                     {prepareTeacherCardRegularCell(card, place)}
-                    {card.linkToMeeting && setLink(card, place)}
+                    {meetingLink}
                 </>
             );
         }
-        if (card.temporary_schedule.vacation === true) {
-            inner += `${card.temporary_schedule.date}\n${i18next.t(`common:vacation_label`)}`;
-        } else {
-            inner += `${card.temporary_schedule.date}\n`;
-            if (card.temporary_schedule.room) {
-                inner += `(${card.temporary_schedule.subjectForSite}, ${card.temporary_schedule.room.name})\n`;
-            } else {
-                inner += `${card.temporary_schedule.subjectForSite}\n`;
-            }
-        }
-        title = `${i18next.t(`common:regular_lesson_label`)}\r${prepareTeacherCardRegularCell(
+
+        const { date, room, vacation, subjectForSite } = tempSchedule;
+        const roomLabel = tempSchedule.room
+            ? `(${subjectForSite}, ${room.name})\n`
+            : `${subjectForSite}\n`;
+
+        inner = `${date}\n`;
+        inner += vacation ? `${i18n.t(COMMON_VACATION_LABEL)}` : `${roomLabel}`;
+
+        title = `${i18n.t(COMMON_REGULAR_LESSON_LABEL)}\r${prepareTeacherCardRegularCell(
             card,
             place,
         )}`;
-        return inner.length > 0 ? (
+        return (
             <p className="temporary-class" title={title}>
                 {inner}
-                {card.linkToMeeting && setLink(card, place)}
+                {meetingLink}
             </p>
-        ) : (
-            ''
         );
     }
     const card = cards[0];
 
     inner += buildLessonWithRoom(card, place);
-    cards.map((card) => {
-        if (!card.temporary_schedule) {
-            inner += buildGroupNumber(card);
-        } else if (card.temporary_schedule.vacation === true) {
-            inner += `${card.temporary_schedule.date}\n${i18next.t(`common:vacation_label`)}\n`;
-        } else {
-            inner += `${card.temporary_schedule.date}\n${getTeacherFullName(
-                card.temporary_schedule.teacher,
-            )}\n`;
-            if (card.temporary_schedule.room) {
-                inner += `${card.temporary_schedule.subjectForSite}, ${card.temporary_schedule.room.name}\n`;
-            } else {
-                inner += `${card.temporary_schedule.subjectForSite}\n`;
-            }
-        }
-        title += `${i18next.t(`common:regular_lesson_label`)}\r${prepareTeacherCardRegularCell(
-            card,
-            place,
-        )}\r`;
-    });
 
-    return inner.length > 0 ? (
-        <p className="temporary-class" title={title}>
-            {inner}
+    const { title: resTitle, inner: resInner } = prepareTitleAndInner({
+        title,
+        inner,
+        cards,
+        place,
+    });
+    return (
+        <p className="temporary-class" title={resTitle}>
+            {resInner}
             {card.linkToMeeting && setLink(card, place)}
         </p>
-    ) : (
-        ''
     );
 };
 
 export const renderGroupDayClass = (classDay, isOddWeek, place, semesterDays) => {
     const res = [];
-    for (const [key, value] of Object.entries(classDay.cards)) {
+    Object.entries(classDay.cards).forEach((pair) => {
+        const [key, value] = pair;
         value.day = key;
         res.push(value);
-    }
+    });
     return (
         <TableRow key={shortid.generate()}>
             <TableCell className=" lesson groupLabelCell">
@@ -266,7 +281,6 @@ export const renderGroupDayClass = (classDay, isOddWeek, place, semesterDays) =>
             </TableCell>
             {res.map((day) => {
                 let className = 'lesson ';
-                // if (currentDay === day.day && currentWeekType === isOddWeek) {
                 if (currentDay === day.day) {
                     if (
                         (currentWeekType === 1 && isOddWeek === 0) ||
@@ -287,12 +301,12 @@ export const renderGroupDayClass = (classDay, isOddWeek, place, semesterDays) =>
     );
 };
 
-export const renderScheduleGroupHeader = (daysUppercase) => (
+export const renderScheduleGroupHeader = (days) => (
     <TableHead>
         <TableRow>
             <TableCell className="groupLabelCell"></TableCell>
-            {daysUppercase.map((day) => (
-                <TableCell key={shortid.generate()}>{i18next.t(`day_of_week_${day}`)}</TableCell>
+            {days.map((day) => (
+                <TableCell key={shortid.generate()}>{i18n.t(`day_of_week_${day}`)}</TableCell>
             ))}
         </TableRow>
     </TableHead>
@@ -307,7 +321,7 @@ export const renderGroupTable = (classes, isOdd, semester, place) => {
             <Table aria-label="sticky table">
                 {semester && renderScheduleGroupHeader(semester.semester_days)}
                 <TableBody>
-                    {classes.map((classDay, classIndex) => {
+                    {classes.map((classDay) => {
                         if (classDay) {
                             return renderGroupDayClass(
                                 classDay,
@@ -316,6 +330,7 @@ export const renderGroupTable = (classes, isOdd, semester, place) => {
                                 semester.semester_days,
                             );
                         }
+                        return null;
                     })}
                 </TableBody>
             </Table>
@@ -327,42 +342,49 @@ export const renderGroupCells = (
     groups,
     place,
     isOdd = 0,
-    currentWeekType = 0,
+    currentWeekTypeNumber = 0,
     isCurrentDay = 0,
-    day_name,
+    dayName,
 ) => {
-    return groups.map((group, groupIndex) => {
-        let colspan = 1;
-        let rowspan = 1;
-        let classname = 'lesson';
+    const prepareGroups = (groupsArray) => {
+        // TODO map => reduce
+        return groupsArray.map((group, groupIndex) => {
+            const { card } = group;
+            let colspan = 1;
+            let rowspan = 1;
+            let classname = 'lesson';
 
-        if (currentWeekType === isOdd && isCurrentDay) {
-            classname += ' currentDay';
-        }
-        if (group.card !== null && group.card.skip_render === 1) {
-            return;
-        }
-        if (group.card !== null && group.card.weekly_render === 1) {
-            rowspan = 2;
-            classname += ' weekly';
-        }
-        for (let i = groupIndex + 1; i < groups.length; i++) {
-            if (group && groups[i] && group.card !== null && groups[i].card !== null) {
+            if (currentWeekTypeNumber === isOdd && isCurrentDay) {
+                classname += ' currentDay';
+            }
+            if (card !== null && card.skip_render === 1) {
+                return null;
+            }
+            if (card !== null && card.weekly_render === 1) {
+                rowspan = 2;
+                classname += ' weekly';
+            }
+            for (let i = groupIndex + 1; i < groups.length; i += 1) {
+                const { card: tempCard } = groups[i];
                 if (
-                    group.card.teacher &&
-                    group.card.teacher.surname === groups[i].card.teacher.surname &&
-                    group.card.teacher.name === groups[i].card.teacher.name &&
-                    group.card.subjectForSite === groups[i].card.subjectForSite &&
-                    group.card.room.id === groups[i].card.room.id &&
-                    group.card.weekly_render === groups[i].card.weekly_render
+                    group &&
+                    card !== null &&
+                    groups[i] &&
+                    tempCard !== null &&
+                    isEqual(card, tempCard)
                 ) {
-                    groups[i].card.skip_render = 1;
-                    colspan++;
+                    tempCard.skip_render = 1;
+                    colspan += 1;
                     classname += ' grouped';
-                } else break;
-            } else break;
-        }
-
+                }
+            }
+            return { card, classname, rowspan, colspan };
+        });
+    };
+    const resultGroups = prepareGroups(groups);
+    return resultGroups.map((group) => {
+        if (!group) return null;
+        const { card, colspan, rowspan, classname } = group;
         return (
             <TableCell
                 key={shortid.generate()}
@@ -370,7 +392,7 @@ export const renderGroupCells = (
                 rowSpan={rowspan}
                 className={classname}
             >
-                {prepareLessonTemporaryCardCell(group.card, place, day_name)}
+                {prepareLessonTemporaryCardCell(card, place, dayName)}
             </TableCell>
         );
     });
@@ -380,7 +402,7 @@ export const renderScheduleHeader = (groups) => (
     <TableHead>
         <TableRow>
             <TableCell className="groupLabelCell" colSpan={3}>
-                {i18next.t('group_y_label')}
+                {i18n.t(GROUP_Y_LABEL)}
             </TableCell>
             {groups.map((group) => (
                 <TableCell key={shortid.generate()}>{group}</TableCell>
@@ -390,7 +412,7 @@ export const renderScheduleHeader = (groups) => (
 );
 
 export const renderFirstDayFirstClassFirstCardLine = (
-    day_name,
+    dayName,
     classItem,
     groups,
     classesCount,
@@ -401,7 +423,7 @@ export const renderFirstDayFirstClassFirstCardLine = (
 
     let oddWeekClass = '';
     let evenWeekClass = '';
-    if (currentDay === day_name) {
+    if (currentDay === dayName) {
         dayClassName += ' currentDay';
 
         if (currentWeekType === 1) {
@@ -420,31 +442,31 @@ export const renderFirstDayFirstClassFirstCardLine = (
             <TableRow>
                 <TableCell rowSpan={classesCount * 2} className={dayClassName}>
                     <span className="dayName">
-                        <b>{i18next.t(`common:day_of_week_${day_name}`)}</b>
+                        <b>{i18n.t(`common:day_of_week_${dayName}`)}</b>
                     </span>
                 </TableCell>
                 <TableCell className={classClassName} rowSpan={2}>
                     {renderClassCell(classItem)}
                 </TableCell>
                 <TableCell className={`${classClassName + oddWeekClass} subClassName`}>1</TableCell>
-                {renderGroupCells(groups.odd, place, 0, 0, 0, day_name)}
+                {renderGroupCells(groups.odd, place, 0, 0, 0, dayName)}
             </TableRow>
             <TableRow>
                 <TableCell className={`${classClassName + evenWeekClass} subClassName`}>
                     2
                 </TableCell>
-                {renderGroupCells(groups.even, place, 0, 0, 0, day_name)}
+                {renderGroupCells(groups.even, place, 0, 0, 0, dayName)}
             </TableRow>
         </React.Fragment>
     );
 };
 
-export const renderFirstDayOtherClassFirstCardLine = (day_name, classItem, groups, place) => {
+export const renderFirstDayOtherClassFirstCardLine = (dayName, classItem, groups, place) => {
     const classClassName = 'classNameCell ';
     let oddWeekClass = '';
     let evenWeekClass = '';
 
-    if (currentDay === day_name) {
+    if (currentDay === dayName) {
         if (currentWeekType === 1) {
             oddWeekClass = ' currentDay';
         } else {
@@ -459,48 +481,20 @@ export const renderFirstDayOtherClassFirstCardLine = (day_name, classItem, group
                     {renderClassCell(classItem)}
                 </TableCell>
                 <TableCell className={`${classClassName + oddWeekClass} subClassName`}>1</TableCell>
-                {renderGroupCells(groups.odd, place, 1, 0, 0, day_name)}
+                {renderGroupCells(groups.odd, place, 1, 0, 0, dayName)}
             </TableRow>
             <TableRow>
                 <TableCell className={`${classClassName + evenWeekClass} subClassName`}>
                     2
                 </TableCell>
-                {renderGroupCells(groups.even, place, 0, 0, 0, day_name)}
+                {renderGroupCells(groups.even, place, 0, 0, 0, dayName)}
             </TableRow>
         </React.Fragment>
     );
 };
 
-const prepareForRender = (classItem) => {
-    if (classItem.cards) {
-        classItem.cards.odd.forEach((card, cardIndex, map) => {
-            if (
-                classItem.cards.even[cardIndex] &&
-                card.group.id === classItem.cards.even[cardIndex].group.id
-            ) {
-                if (card.card !== null && classItem.cards.even[cardIndex].card !== null) {
-                    if (
-                        card.card.teacher.name ===
-                            classItem.cards.even[cardIndex].card.teacher.name &&
-                        card.card.teacher.surname ===
-                            classItem.cards.even[cardIndex].card.teacher.surname &&
-                        card.card.subjectForSite ===
-                            classItem.cards.even[cardIndex].card.subjectForSite &&
-                        card.card.room.id === classItem.cards.even[cardIndex].card.room.id
-                    ) {
-                        classItem.cards.odd[cardIndex].card.weekly_render = 1;
-                        classItem.cards.even[cardIndex].card.skip_render = 1;
-                    }
-                }
-            }
-        });
-    }
-    return classItem;
-};
-
 export const renderDay = (dayName, dayItem, semesterClassesCount, place) => {
     return dayItem.map((classItem, classIndex) => {
-        const t = prepareForRender(classItem);
         if (classIndex === 0) {
             return renderFirstDayFirstClassFirstCardLine(
                 dayName,
@@ -522,7 +516,7 @@ export const renderDay = (dayName, dayItem, semesterClassesCount, place) => {
 export const renderScheduleFullHeader = (groupList) => (
     <TableHead>
         <TableRow>
-            <TableCell colSpan={3}>{i18next.t('formElements:group_label')}</TableCell>
+            <TableCell colSpan={3}>{i18n.t(FORM_GROUP_LABEL)}</TableCell>
             {groupList.map((group) => (
                 <TableCell key={shortid.generate()} className="groupLabelCell">
                     {group.title}
@@ -533,11 +527,11 @@ export const renderScheduleFullHeader = (groupList) => (
 );
 
 const renderScheduleDays = (fullResultSchedule, place) => {
-    return fullResultSchedule.resultArray.map((dayItem, dayName) => {
+    return fullResultSchedule.resultArray.map((dayItem) => {
         return renderDay(
             dayItem.day,
             dayItem.classes,
-            fullResultSchedule.semester_classes.length,
+            fullResultSchedule.semesterClasses.length || 0,
             place,
         );
     });
@@ -563,25 +557,12 @@ export const renderFullSchedule = (fullResultSchedule, place) => {
     );
 };
 
-const renderClassRow = (classItem, days, scheduleRow, place) => (
-    <TableRow key={shortid.generate()}>
-        <TableCell className="lesson groupLabelCell">{renderClassCell(classItem)}</TableCell>
-        {days.map((dayName) => {
-            if (scheduleRow) {
-                return renderTeacherClassCell(
-                    scheduleRow.find((clas) => clas.day === dayName),
-                    place,
-                );
-            }
-        })}
-    </TableRow>
-);
 const renderTeacherClassCell = (cards, place) => {
     let teacherLessonAddCellClass = '';
 
     if (cards !== undefined) {
         if (cards.cards.length > 1) {
-            cards.cards.map((card, cardIndex) => {
+            cards.cards.forEach((card, cardIndex) => {
                 if (cards.cards[cardIndex + 1] && card.room !== cards.cards[cardIndex + 1].room) {
                     teacherLessonAddCellClass += 'intersection-on-schedule';
                 }
@@ -594,7 +575,23 @@ const renderTeacherClassCell = (cards, place) => {
         </TableCell>
     );
 };
-export const renderWeekTable = (schedule, isOdd, place) => {
+
+const renderClassRow = (classItem, days, scheduleRow, place) => (
+    <TableRow key={shortid.generate()}>
+        <TableCell className="lesson groupLabelCell">{renderClassCell(classItem)}</TableCell>
+        {days.map((dayName) => {
+            if (scheduleRow) {
+                return renderTeacherClassCell(
+                    scheduleRow.find((clas) => clas.day === dayName),
+                    place,
+                );
+            }
+            return null;
+        })}
+    </TableRow>
+);
+
+export const renderWeekTable = (schedule, place) => {
     if (schedule) {
         return (
             <TableContainer>
@@ -614,42 +611,7 @@ export const renderWeekTable = (schedule, isOdd, place) => {
             </TableContainer>
         );
     }
-};
-
-export const renderTeacherRangeSchedule = (schedule, viewTeacherScheduleResults) => {
-    if (schedule === undefined) return;
-    if (schedule) {
-        if (schedule.length === 0) {
-            return i18next.t('empty_schedule');
-        }
-        return schedule.map((dayItem, dayIndex) => {
-            const parsed = Array.from(dayItem.date);
-
-            const startDay = new Date(
-                parsed[3] +
-                    parsed[4] +
-                    parsed[5] +
-                    parsed[0] +
-                    parsed[1] +
-                    parsed[2] +
-                    parsed[6] +
-                    parsed[7] +
-                    parsed[8] +
-                    parsed[9],
-            );
-            return (
-                <Card
-                    class={`${viewTeacherScheduleResults} ` + `form-card teacher-schedule-day-card`}
-                    key={shortid.generate()}
-                >
-                    <h3>
-                        {`${dayItem.date} ( ${i18next.t(`day_of_week_${startDay.getDay() + 1}`)} )`}
-                    </h3>
-                    {renderTeacherRangeDay(dayItem.schedule)}
-                </Card>
-            );
-        });
-    }
+    return null;
 };
 
 const renderLessonsFirstLine = (lessonItem) => {
@@ -664,7 +626,7 @@ const renderLessonsFirstLine = (lessonItem) => {
 
 const renderLessonsRestLines = (lessons) => {
     if (lessons.length === 1) {
-        return;
+        return null;
     }
     let lessonClassName = '';
     lessonClassName = 'groupped';
@@ -680,7 +642,7 @@ const renderLessonsRestLines = (lessons) => {
     });
     return lessons.map((lessonItem, lessonIndex) => {
         if (lessonIndex === 0) {
-            return;
+            return null;
         }
         return (
             <TableRow className={lessonClassName} key={shortid.generate()}>
@@ -722,4 +684,42 @@ export const renderTeacherRangeDay = (schedule) => {
             </TableContainer>
         );
     }
+    return null;
+};
+
+export const renderTeacherRangeSchedule = (schedule, viewTeacherScheduleResults) => {
+    if (schedule === undefined) return null;
+    if (schedule) {
+        if (schedule.length === 0) {
+            return i18n.t(EMPTY_SCHEDULE);
+        }
+        return schedule.map((dayItem) => {
+            const parsed = Array.from(dayItem.date);
+
+            const startDay = new Date(
+                parsed[3] +
+                    parsed[4] +
+                    parsed[5] +
+                    parsed[0] +
+                    parsed[1] +
+                    parsed[2] +
+                    parsed[6] +
+                    parsed[7] +
+                    parsed[8] +
+                    parsed[9],
+            );
+            return (
+                <Card
+                    additionClassName={`${viewTeacherScheduleResults} form-card teacher-schedule-day-card`}
+                    key={shortid.generate()}
+                >
+                    <h3>
+                        {`${dayItem.date} ( ${i18n.t(`day_of_week_${startDay.getDay() + 1}`)} )`}
+                    </h3>
+                    {renderTeacherRangeDay(dayItem.schedule)}
+                </Card>
+            );
+        });
+    }
+    return null;
 };

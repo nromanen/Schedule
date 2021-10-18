@@ -36,6 +36,7 @@ import {
     AddStudentDialog,
 } from '../../share/DialogWindows';
 import { dialogTypes } from '../../constants/dialogs';
+import { GROUP_Y_LABEL } from '../../constants/translationLabels/formElements';
 
 const GroupList = (props) => {
     const {
@@ -170,7 +171,7 @@ const GroupList = (props) => {
                     )}
                 </aside>
                 <div className="group-wrapper group-list">
-                    {visibleGroups.length === 0 && <NotFound name={t('group_y_label')} />}
+                    {visibleGroups.length === 0 && <NotFound name={t(GROUP_Y_LABEL)} />}
                     {visibleGroups.map((groupItem) => (
                         <GroupCard
                             key={groupItem.id}

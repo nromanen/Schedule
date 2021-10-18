@@ -8,13 +8,18 @@ import { useTranslation } from 'react-i18next';
 import Button from '@material-ui/core/Button';
 import { MdPlayArrow } from 'react-icons/md';
 
-import renderSelectField from '../../share/renderedFields/select';
+import SelectField from '../../share/renderedFields/select';
 
 import './SemesterCopyForm.scss';
 
 import { SEMESTER_COPY_FORM } from '../../constants/reduxForms';
 import { required } from '../../validation/validateFields';
-import { SEMESTER_LABEL } from '../../constants/services';
+import {
+    FORM_SEMESTER_LABEL,
+    FORM_SEMESTER_COPY_RED_HINT,
+    FORM_SEMESTER_COPY_HINT,
+} from '../../constants/translationLabels/formElements';
+import { TEACHER_SCHEDULE_LABEL } from '../../constants/translationLabels/common';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -27,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
 const SemesterCopyForm = (props) => {
     const classes = useStyles();
     const { t } = useTranslation('common');
-    const { semesterId, semesters, handleSubmit, pristine, submitting } = props;
+    const { semesterId, semesters, handleSubmit, pristine, submitting, submitButtonLabel } = props;
 
     const renderSemesterList = () => {
         const availableSemestersForCopy = semesters.filter(
@@ -39,8 +44,8 @@ const SemesterCopyForm = (props) => {
                     <Field
                         id="toSemesterId"
                         name="toSemesterId"
-                        component={renderSelectField}
-                        label={t('formElements:semester_label')}
+                        component={SelectField}
+                        label={t(FORM_SEMESTER_LABEL)}
                         type="text"
                         validate={[required]}
                     >
@@ -62,8 +67,8 @@ const SemesterCopyForm = (props) => {
 
     return (
         <section className={classes.root}>
-            <p>{t('formElements:semester_copy_hint')}</p>
-            <p className="red-color">{t('formElements:semester_copy_red_hint')}</p>
+            <p>{t(FORM_SEMESTER_COPY_HINT)}</p>
+            <p className="red-color">{t(FORM_SEMESTER_COPY_RED_HINT)}</p>
             <form onSubmit={handleSubmit}>
                 <div className="form-buttons-container">
                     {renderSemesterList()}
@@ -74,8 +79,8 @@ const SemesterCopyForm = (props) => {
                         type="submit"
                         disabled={pristine || submitting}
                     >
-                        <MdPlayArrow title={t('teacher_schedule_label')} className="svg-btn" />
-                        {props.submitButtonLabel}
+                        <MdPlayArrow title={t(TEACHER_SCHEDULE_LABEL)} className="svg-btn" />
+                        {submitButtonLabel}
                     </Button>
                 </div>
             </form>

@@ -9,6 +9,12 @@ import { setLoadingService } from '../../services/loadingService';
 import { getScheduleItemsService } from '../../services/scheduleService';
 import { getClassScheduleListService } from '../../services/classService';
 import NavigationPage from '../../components/Navigation/NavigationPage';
+
+import {
+    WEEK_ODD_TITLE,
+    WEEK_EVEN_TITLE,
+    BUSY_ROOMS_HEADING,
+} from '../../constants/translationLabels/common';
 import WeekRoomInfo from '../../components/WeekRoomInfo/WeekRoomInfo';
 
 const BusyRooms = (props) => {
@@ -40,7 +46,7 @@ const BusyRooms = (props) => {
             <section>
                 <Fragment key={index}>
                     <div className="even-odd-week">
-                        <span className="even-odd-heading">{t('week_odd_title')}</span>
+                        <span className="even-odd-heading">{t(WEEK_ODD_TITLE)}</span>
                         <WeekRoomInfo
                             currentSemester={currentSemester}
                             schedule={schedule}
@@ -48,7 +54,7 @@ const BusyRooms = (props) => {
                         />
                     </div>
                     <div className="even-odd-week">
-                        <span className="even-odd-heading">{t('week_even_title')}</span>
+                        <span className="even-odd-heading">{t(WEEK_EVEN_TITLE)}</span>
                         <WeekRoomInfo
                             currentSemester={currentSemester}
                             schedule={schedule}
@@ -70,10 +76,10 @@ const BusyRooms = (props) => {
                     {busyRoomsLength > 0 ? (
                         <>
                             <NavigationPage val={navigation.BUSY_ROOMS} />
-                            <h2 className="busy-heading">{t('busy_rooms_heading')}</h2>
+                            <h2 className="busy-heading">{t(BUSY_ROOMS_HEADING)}</h2>
                             <section className="view-rooms">
                                 {busyRooms.map((busyRoom) => (
-                                    <Card class="busy-room" key={busyRoom.room_id}>
+                                    <Card additionClassName="busy-room" key={busyRoom.room_id}>
                                         {renderRoomTitle(busyRoom.room_name, busyRoom.room_type)}
 
                                         {busyRoom.schedules.map((schedule, index) => {

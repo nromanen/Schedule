@@ -1,6 +1,6 @@
 import { handleSnackbarOpenService } from '../services/snackbarService';
 import { snackbarTypes } from '../constants/snackbarTypes';
-import i18n from './i18n';
+import i18n from '../i18n';
 
 export const errorHandler = (error) => {
     handleSnackbarOpenService(

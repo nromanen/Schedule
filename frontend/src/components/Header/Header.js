@@ -31,6 +31,16 @@ import { getCurrentSemesterService } from '../../services/scheduleService';
 
 import FreeRooms from '../../containers/FreeRooms/freeRooms';
 import { setSemesterLoadingService } from '../../services/loadingService';
+import {
+    LOGIN_TITLE,
+    ADMIN_TITLE,
+    SCHEDULE_TITLE,
+    MY_PROFILE,
+    LOGOUT_TITLE,
+    SEMESTER_LABEL,
+    HOME_TITLE,
+    MENU_BUTTON,
+} from '../../constants/translationLabels/common';
 
 const StyledMenu = withStyles({
     paper: {
@@ -62,7 +72,7 @@ const StyledMenuItem = withStyles((theme) => ({
 }))(MenuItem);
 
 const Header = (props) => {
-    const { roles } = props;
+    const { roles, userRole, loading, currentSemester } = props;
     const [anchorEl, setAnchorEl] = useState(null);
     const handleClick = (event) => setAnchorEl(event.currentTarget);
     const handleClose = () => setAnchorEl(null);
@@ -74,22 +84,22 @@ const Header = (props) => {
     const { t } = useTranslation('common');
 
     useEffect(() => {
-        if (props.userRole === roles.MANAGER) {
+        if (userRole === roles.MANAGER) {
             setSemesterLoadingService(true);
             getCurrentSemesterService();
         }
-    }, [props.userRole]);
+    }, [userRole]);
 
-    const getUserMenu = (userRole) => {
+    const getUserMenu = (role) => {
         let userMenu = null;
-        if (isNil(userRole)) {
+        if (isNil(role)) {
             return (
                 <Link to={links.LOGIN} className="navLinks">
-                    {t('login_title')}
+                    {t(LOGIN_TITLE)}
                 </Link>
             );
         }
-        switch (userRole) {
+        switch (role) {
             case roles.MANAGER:
                 userMenu = (
                     <div className="user-menu">
@@ -122,7 +132,7 @@ const Header = (props) => {
                                     <ListItemIcon>
                                         <FaUser fontSize="normall" />
                                     </ListItemIcon>
-                                    {t('admin_title')}
+                                    {t(ADMIN_TITLE)}
                                 </StyledMenuItem>
                             </Link>
                             <Link
@@ -135,7 +145,7 @@ const Header = (props) => {
                                     <ListItemIcon>
                                         <FaClock fontSize="normal" />
                                     </ListItemIcon>
-                                    {t('schedule_title')}
+                                    {t(SCHEDULE_TITLE)}
                                 </StyledMenuItem>
                             </Link>
                             <span
@@ -162,7 +172,7 @@ const Header = (props) => {
                                     <ListItemIcon>
                                         <FaUser fontSize="normal" />
                                     </ListItemIcon>
-                                    {t('my_profile')}
+                                    {t(MY_PROFILE)}
                                 </StyledMenuItem>
                             </Link>
                             <Link
@@ -175,7 +185,7 @@ const Header = (props) => {
                                     <ListItemIcon>
                                         <FaSignOutAlt fontSize="normal" />
                                     </ListItemIcon>
-                                    {t('logout_title')}
+                                    {t(LOGOUT_TITLE)}
                                 </StyledMenuItem>
                             </Link>
                         </StyledMenu>
@@ -214,7 +224,7 @@ const Header = (props) => {
                                     <ListItemIcon>
                                         <FaClock fontSize="normal" />
                                     </ListItemIcon>
-                                    {t('schedule_title')}
+                                    {t(SCHEDULE_TITLE)}
                                 </StyledMenuItem>
                             </Link>
                             <span
@@ -236,7 +246,7 @@ const Header = (props) => {
                                     <ListItemIcon>
                                         <FaUser fontSize="normal" />
                                     </ListItemIcon>
-                                    {t('my_profile')}
+                                    {t(MY_PROFILE)}
                                 </StyledMenuItem>
                             </Link>
                             <Link
@@ -249,7 +259,7 @@ const Header = (props) => {
                                     <ListItemIcon>
                                         <FaSignOutAlt fontSize="normal" />
                                     </ListItemIcon>
-                                    {t('logout_title')}
+                                    {t(LOGOUT_TITLE)}
                                 </StyledMenuItem>
                             </Link>
                         </StyledMenu>
@@ -285,7 +295,7 @@ const Header = (props) => {
                                     <ListItemIcon>
                                         <FaSignOutAlt fontSize="normal" />
                                     </ListItemIcon>
-                                    {t('logout_title')}
+                                    {t(LOGOUT_TITLE)}
                                 </StyledMenuItem>
                             </Link>
                         </StyledMenu>
@@ -297,17 +307,17 @@ const Header = (props) => {
 
     let leftLinks = null;
     let menu = null;
-    const userMenu = getUserMenu(props.userRole);
-    if (props.userRole === roles.MANAGER) {
+    const userMenu = getUserMenu(userRole);
+    if (userRole === roles.MANAGER) {
         leftLinks = (
             <>
-                {props.loading ? (
+                {loading ? (
                     <span className="navLinks nav-semester">
                         <CircularProgress size={20} />
                     </span>
                 ) : (
                     <span className="navLinks nav-semester">
-                        {t('semester_title')}: {props.currentSemester.description}
+                        {t(SEMESTER_LABEL)}: {currentSemester.description}
                     </span>
                 )}
             </>
@@ -321,7 +331,7 @@ const Header = (props) => {
                     color="primary"
                     onClick={handleClick}
                 >
-                    {t('menu_button')}
+                    {t(MENU_BUTTON)}
                 </Button>
 
                 <StyledMenu
@@ -331,9 +341,7 @@ const Header = (props) => {
                     open={Boolean(anchorEl)}
                     onClose={handleClose}
                 >
-                    <span className="navLinks menu-semester">
-                        {props.currentSemester.description}
-                    </span>
+                    <span className="navLinks menu-semester">{currentSemester.description}</span>
                     <Link
                         to={links.HOME_PAGE}
                         className="navLinks"
@@ -344,7 +352,7 @@ const Header = (props) => {
                             <ListItemIcon>
                                 <FaHome fontSize="normall" />
                             </ListItemIcon>
-                            {t('home_title')}
+                            {t(HOME_TITLE)}
                         </StyledMenuItem>
                     </Link>
 
@@ -358,7 +366,7 @@ const Header = (props) => {
                             <ListItemIcon>
                                 <FaClock fontSize="normall" />
                             </ListItemIcon>
-                            {t('schedule_title')}
+                            {t(SCHEDULE_TITLE)}
                         </StyledMenuItem>
                     </Link>
 
@@ -372,7 +380,7 @@ const Header = (props) => {
                             <ListItemIcon>
                                 <FaUser fontSize="normall" />
                             </ListItemIcon>
-                            {t('admin_title')}
+                            {t(ADMIN_TITLE)}
                         </StyledMenuItem>
                     </Link>
 
@@ -401,13 +409,13 @@ const Header = (props) => {
                             <ListItemIcon>
                                 <FaSignOutAlt fontSize="normall" />
                             </ListItemIcon>
-                            {t('logout_title')}
+                            {t(LOGOUT_TITLE)}
                         </StyledMenuItem>
                     </Link>
                 </StyledMenu>
             </div>
         );
-    } else if (props.userRole === roles.TEACHER) {
+    } else if (userRole === roles.TEACHER) {
         menu = (
             <div className="menu">
                 <Button
@@ -417,7 +425,7 @@ const Header = (props) => {
                     color="primary"
                     onClick={handleClick}
                 >
-                    {t('menu_button')}
+                    {t(MENU_BUTTON)}
                 </Button>
 
                 <StyledMenu
@@ -437,7 +445,7 @@ const Header = (props) => {
                             <ListItemIcon>
                                 <FaHome fontSize="normall" />
                             </ListItemIcon>
-                            {t('home_title')}
+                            {t(HOME_TITLE)}
                         </StyledMenuItem>
                     </Link>
                     <StyledMenuItem>
@@ -456,7 +464,7 @@ const Header = (props) => {
                             <ListItemIcon>
                                 <FaClock fontSize="normall" />
                             </ListItemIcon>
-                            {t('schedule_title')}
+                            {t(SCHEDULE_TITLE)}
                         </StyledMenuItem>
                     </Link>
 
@@ -470,13 +478,13 @@ const Header = (props) => {
                             <ListItemIcon>
                                 <FaSignOutAlt fontSize="normall" />
                             </ListItemIcon>
-                            {t('logout_title')}
+                            {t(LOGOUT_TITLE)}
                         </StyledMenuItem>
                     </Link>
                 </StyledMenu>
             </div>
         );
-    } else if (props.userRole === null || props.userRole === undefined) {
+    } else if (isNil(userRole)) {
         menu = (
             <div className="menu">
                 <Button
@@ -486,7 +494,7 @@ const Header = (props) => {
                     color="primary"
                     onClick={handleClick}
                 >
-                    {t('menu_button')}
+                    {t(MENU_BUTTON)}
                 </Button>
                 <StyledMenu
                     id="customized-menu"
@@ -507,7 +515,7 @@ const Header = (props) => {
                             <ListItemIcon>
                                 <FaHome fontSize="normall" />
                             </ListItemIcon>
-                            {t('home_title')}
+                            {t(HOME_TITLE)}
                         </StyledMenuItem>
                     </Link>
                     <Link
@@ -520,7 +528,7 @@ const Header = (props) => {
                             <ListItemIcon>
                                 <FaRunning fontSize="normall" />
                             </ListItemIcon>
-                            {t('login_title')}
+                            {t(LOGIN_TITLE)}
                         </StyledMenuItem>
                     </Link>
                 </StyledMenu>
@@ -534,7 +542,7 @@ const Header = (props) => {
                 {menu}
                 <nav className="header-blocks header-blocks_one">
                     <Link to={links.HOME_PAGE} className="navLinks">
-                        {t('home_title')}
+                        {t(HOME_TITLE)}
                     </Link>
                     {leftLinks}
                 </nav>

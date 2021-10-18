@@ -9,6 +9,8 @@ import { getClassScheduleListService } from '../../services/classService';
 import { CustomDialog } from '../../share/DialogWindows';
 
 import './freeRooms.scss';
+import { ROOM_LABEL, FIND_FREE_ROOM } from '../../constants/translationLabels/formElements';
+import { TYPE_LABEL } from '../../constants/translationLabels/common';
 
 const FreeRooms = (props) => {
     const { t } = useTranslation('formElements');
@@ -34,11 +36,11 @@ const FreeRooms = (props) => {
     return (
         <>
             <span className="navLinks" onClick={handleClickOpen} aria-hidden="true">
-                {t('find_free_room')}
+                {t(FIND_FREE_ROOM)}
             </span>
 
             <CustomDialog
-                title=""
+                title={t(FIND_FREE_ROOM)}
                 open={open}
                 onClose={handleClose}
                 buttons={
@@ -57,7 +59,6 @@ const FreeRooms = (props) => {
                 <div className="cards-container ">
                     <aside className="free-rooms__panel">
                         <div className="freeRoomForms">
-                            <h2 id="form-dialog-title">{t('find_free_room')}</h2>
                             <FreeRoomForm
                                 classScheduler={classScheduler}
                                 onReset={clearFreeRoomsService}
@@ -69,9 +70,9 @@ const FreeRooms = (props) => {
                         {props.freeRooms.map((freeRoom) => (
                             <Card key={freeRoom.id} className="container">
                                 <div className="freeRoomCard">
-                                    <span> {`${t('room_label')}:`} </span>
+                                    <span> {`${t(ROOM_LABEL)}:`} </span>
                                     <h2 className="room-card__number">{freeRoom.name}</h2>
-                                    <span>{`${t('type_label')}:`}</span>
+                                    <span>{`${t(TYPE_LABEL)}:`}</span>
                                     <h2 className="room-card__number">
                                         {freeRoom.type.description}
                                     </h2>

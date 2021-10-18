@@ -3,6 +3,12 @@ import ReactSelect from 'react-select';
 import Button from '@material-ui/core/Button';
 import './multiselect.scss';
 import { useTranslation } from 'react-i18next';
+import {
+    CHOOSE_GROUPS,
+    CONFIRM_GROUPS,
+    CANCEL_BUTTON_LABEL,
+    ALL_GROUPS,
+} from '../constants/translationLabels/common';
 import { CustomDialog } from '../share/DialogWindows';
 
 export const MultiselectForGroups = (props) => {
@@ -13,7 +19,7 @@ export const MultiselectForGroups = (props) => {
 
     const selectAllOption = {
         value: '<SELECT_ALL>',
-        label: t('all_groups'),
+        label: t(ALL_GROUPS),
     };
 
     const isSelectAllSelected = () => {
@@ -63,7 +69,7 @@ export const MultiselectForGroups = (props) => {
                         color="primary"
                         onClick={onClose}
                     >
-                        {t('confirm_groups')}
+                        {t(CONFIRM_GROUPS)}
                     </Button>
                     <Button
                         className="dialog-button"
@@ -71,7 +77,7 @@ export const MultiselectForGroups = (props) => {
                         color="primary"
                         onClick={onCancel}
                     >
-                        {t('cancel_groups')}
+                        {t(CANCEL_BUTTON_LABEL)}
                     </Button>
                 </div>
             }
@@ -84,7 +90,7 @@ export const MultiselectForGroups = (props) => {
                 hideSelectedOptions={false}
                 closeMenuOnSelect={false}
                 isMulti
-                placeholder={t('choose_groups')}
+                placeholder={t(CHOOSE_GROUPS)}
             />
         </CustomDialog>
     );

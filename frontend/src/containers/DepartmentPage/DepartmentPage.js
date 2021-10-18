@@ -27,6 +27,13 @@ import {
 } from '../../services/departmentService';
 import { CustomDialog, ShowDepartmentDataDialog } from '../../share/DialogWindows';
 import { dialogTypes } from '../../constants/dialogs';
+import {
+    EDIT_TITLE,
+    DEPARTMENT_LABEL,
+    DELETE_TITLE,
+    SHOW_TEACHER_TITLE,
+} from '../../constants/translationLabels/formElements';
+import { COMMON_SET_DISABLED, COMMON_SET_ENABLED } from '../../constants/translationLabels/common';
 
 const DepartmentPage = (props) => {
     const {
@@ -129,15 +136,18 @@ const DepartmentPage = (props) => {
                     )}
                 </aside>
                 <section className="container-flex-wrap wrapper">
-                    {visibleDepartments.length === 0 && <NotFound name={t('department_y_label')} />}
+                    {visibleDepartments.length === 0 && <NotFound name={t(DEPARTMENT_LABEL)} />}
                     {visibleDepartments.map((departmentItem) => (
-                        <Card key={departmentItem.id} class="subject-card department-card">
+                        <Card
+                            key={departmentItem.id}
+                            additionClassName="subject-card department-card"
+                        >
                             <h2 className="subject-card__name">{departmentItem.name}</h2>
                             <div className="cards-btns">
                                 {isDisabled ? (
                                     <IoMdEye
                                         className="svg-btn copy-btn"
-                                        title={t('common:set_enabled')}
+                                        title={t(COMMON_SET_ENABLED)}
                                         onClick={() => {
                                             showConfirmDialog(
                                                 departmentItem.id,
@@ -149,7 +159,7 @@ const DepartmentPage = (props) => {
                                     <>
                                         <GiSightDisabled
                                             className="svg-btn copy-btn"
-                                            title={t('common:set_disabled')}
+                                            title={t(COMMON_SET_DISABLED)}
                                             onClick={() => {
                                                 showConfirmDialog(
                                                     departmentItem.id,
@@ -160,7 +170,7 @@ const DepartmentPage = (props) => {
 
                                         <FaEdit
                                             className="svg-btn edit-btn"
-                                            title={t('edit_title')}
+                                            title={t(EDIT_TITLE)}
                                             onClick={() => {
                                                 setDepartmentToUpdate(departmentItem.id);
                                             }}
@@ -170,7 +180,7 @@ const DepartmentPage = (props) => {
 
                                 <MdDelete
                                     className="svg-btn delete-btn"
-                                    title={t('delete_title')}
+                                    title={t(DELETE_TITLE)}
                                     onClick={() => {
                                         showConfirmDialog(
                                             departmentItem.id,
@@ -180,7 +190,7 @@ const DepartmentPage = (props) => {
                                 />
                                 <FaChalkboardTeacher
                                     className="svg-btn delete-btn"
-                                    title={t('show_teacher_title')}
+                                    title={t(SHOW_TEACHER_TITLE)}
                                     onClick={() => {
                                         showAllPublicTeachersByDepartmentService(departmentItem.id);
                                         getDepartmentByIdService(departmentItem.id);

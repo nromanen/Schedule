@@ -15,11 +15,18 @@ import ScheduleLessonsList from '../../components/ScheduleLessonsList/ScheduleLe
 import Schedule from '../../components/Schedule/Schedule';
 
 import './SchedulePage.scss';
+import {
+    SCHEDULE_TITLE,
+    NO_CURRENT_SEMESTER,
+    CLEAR_SCHEDULE_LABEL,
+    USE_PC,
+} from '../../constants/translationLabels/common';
 
 const SchedulePage = (props) => {
     const { groups, groupId, itemGroupId, scheduleItems, lessons, isLoading } = props;
     const { t } = useTranslation('common');
-    document.title = t('schedule_title');
+
+    document.title = t(SCHEDULE_TITLE);
 
     useEffect(() => {
         setLoadingService(true);
@@ -56,7 +63,7 @@ const SchedulePage = (props) => {
                     ) : (
                         <>
                             {!props.currentSemester.id ? (
-                                <h2 className="no-current-semester">{t('no_current_semester')}</h2>
+                                <h2 className="no-current-semester">{t(NO_CURRENT_SEMESTER)}</h2>
                             ) : (
                                 <Schedule
                                     groupId={groupId}
@@ -84,7 +91,7 @@ const SchedulePage = (props) => {
                                 color="primary"
                                 onClick={() => handleClearSchedule()}
                             >
-                                {t('clear_schedule_label')}
+                                {t(CLEAR_SCHEDULE_LABEL)}
                             </Button>
                             <ScheduleLessonsList
                                 items={scheduleItems}
@@ -99,7 +106,7 @@ const SchedulePage = (props) => {
                 </aside>
             </section>
             <section className="for-phones-and-tablets card">
-                <h1>{t('use_pc')}</h1>
+                <h1>{t(USE_PC)}</h1>
             </section>
         </>
     );
