@@ -23,7 +23,6 @@ export default function Routers() {
             <NavigationPanel />
             <Switch>
                 <AdminRoute path={links.Departments} component={DepartmentPage} />
-                <AdminRoute path={links.SCHEDULE_PAGE} component={SchedulePage} />
                 <AdminRoute path={links.LessonPage} component={AdminPage} />
                 <AdminRoute path={links.TeacherList} component={TeacherList} />
                 <AdminRoute path={links.GroupList} component={GroupList} />

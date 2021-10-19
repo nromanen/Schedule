@@ -9,6 +9,7 @@ import TeacherSchedule from '../components/TeacherSchedule/TeacherSchedule';
 import Logout from '../containers/Auth/Logout/Logout';
 import ActivationPage from '../containers/ActivationPage/ActivationPage';
 import ProfilePage from '../containers/ProfilePage/ProfilePage';
+import SchedulePage from '../containers/SchedulePage/SchedulePage';
 import { links } from '../constants/links';
 import { userRoles } from '../constants/userRoles';
 import GroupSchedulePage from '../components/GroupSchedulePage/GroupSchedulePage';
@@ -33,6 +34,7 @@ const Routers = (props) => {
                 <UserRoute path={links.RESET_PASSWORD} component={ResetPassword} />
                 <UserRoute path={links.MY_PROFILE} component={ProfilePage} />
                 <UserRoute path={links.LOGOUT} component={Logout} />
+                <AdminRoute path={links.SCHEDULE_PAGE} component={SchedulePage} />
                 <AdminRoute path={links.ADMIN_PAGE} component={AdminRouter} />
                 <UserRoute path={links.ACTIVATION_PAGE}>
                     <Redirect to={links.HOME_PAGE} />
