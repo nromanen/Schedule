@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
 import PropTypes from 'prop-types';
-
+import { useHistory } from 'react-router-dom';
 import Button from '@material-ui/core/Button';
 
 import { useTranslation } from 'react-i18next';
@@ -10,6 +10,7 @@ import i18n from '../../../i18n';
 import RenderStudentTable from '../../../helper/renderStudentTable';
 import { getAllStudentsByGroupId } from '../../../services/studentService';
 import { UploadFile } from '../../../components/UploadFile/UploadFile';
+import { goToGroupPage } from '../../../helper/pageRedirection';
 import CustomDialog from '../CustomDialog';
 import MovingGroupsDialog from './MovingGroupsDialog';
 import { GROUP_LABEL } from '../../../constants/translationLabels/formElements';
@@ -18,6 +19,7 @@ import { COMMON_CLOSE_TITLE } from '../../../constants/translationLabels/common'
 const ShowStudentsOnGroupDialog = (props) => {
     const { onClose, cardId, open, onDeleteStudent, students, onSubmit, match, groups, group } =
         props;
+    const history = useHistory();
     const [checkBoxStudents, setCheckBoxStudents] = useState([]);
     const [isGroupButtonDisabled, setIsGroupButtonDisabled] = useState(true);
     const [checkedAll, setCheckedAll] = useState(false);
@@ -147,7 +149,10 @@ const ShowStudentsOnGroupDialog = (props) => {
                         <Button
                             className={buttonClassName}
                             variant="contained"
-                            onClick={() => onClose('')}
+                            onClick={() => {
+                                goToGroupPage(history);
+                                onClose('');
+                            }}
                             color="primary"
                             title={i18n.t('close_title')}
                         >

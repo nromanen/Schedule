@@ -34,21 +34,17 @@ const GroupCard = (props) => {
             <div className="group__buttons-wrapper">
                 {!disabled ? (
                     <>
-                        <Link
-                            to={`${links.GroupList}${links.Group}/${groupItem.id}${links.SetDisable}`}
-                        >
-                            <IoMdEye
-                                className="group__buttons-hide link-href"
-                                title={t(COMMON_SET_DISABLED)}
-                                onClick={() => {
-                                    showConfirmDialog(
-                                        groupItem.id,
-                                        dialogTypes.SET_VISIBILITY_DISABLED,
-                                    );
-                                }}
-                            />
-                        </Link>
-                        <Link to={`${links.GroupList}${links.Group}${links.Edit}/${groupItem.id}`}>
+                        <IoMdEye
+                            className="group__buttons-hide link-href"
+                            title={t(COMMON_SET_DISABLED)}
+                            onClick={() => {
+                                showConfirmDialog(
+                                    groupItem.id,
+                                    dialogTypes.SET_VISIBILITY_DISABLED,
+                                );
+                            }}
+                        />
+                        <Link to={`${links.GroupList}/${groupItem.id}${links.Edit}`}>
                             <FaEdit
                                 className="group__buttons-edit link-href"
                                 title={t(COMMON_EDIT)}
@@ -65,14 +61,12 @@ const GroupCard = (props) => {
                         }}
                     />
                 )}
-                <Link to={`${links.GroupList}${links.Group}${links.Delete}/${groupItem.id}`}>
-                    <MdDelete
-                        className="group__buttons-delete link-href"
-                        title={t(DELETE_TITLE_LABEL)}
-                        onClick={() => showConfirmDialog(groupItem.id, dialogTypes.DELETE_CONFIRM)}
-                    />
-                </Link>
-                <Link to={`${links.GroupList}${links.Group}/${groupItem.id}${links.AddStudent}`}>
+                <MdDelete
+                    className="group__buttons-delete link-href"
+                    title={t(DELETE_TITLE_LABEL)}
+                    onClick={() => showConfirmDialog(groupItem.id, dialogTypes.DELETE_CONFIRM)}
+                />
+                <Link to={`${links.GroupList}/${groupItem.id}${links.AddStudent}`}>
                     <FaUserPlus
                         title={t(FORM_STUDENT_ADD_LABEL)}
                         className="svg-btn copy-btn align-left info-btn"
@@ -84,7 +78,7 @@ const GroupCard = (props) => {
             </div>
             <p className="group-card__description">{`${t(GROUP_LABEL)}:`}</p>
             <h1 className="group-card__number">{getShortTitle(groupItem.title, 5)}</h1>
-            <Link to={`${links.GroupList}${links.Group}/${groupItem.id}${links.ShowStudents}`}>
+            <Link to={`${links.GroupList}/${groupItem.id}${links.ShowStudents}`}>
                 <span className="students-group">
                     <FaUsers
                         title={t(FORM_SHOW_STUDENTS)}

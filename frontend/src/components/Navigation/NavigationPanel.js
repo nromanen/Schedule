@@ -16,7 +16,7 @@ import { COMMON_MORE_LABEL } from '../../constants/translationLabels/common';
 const NavigationPanel = () => {
     const history = useHistory();
     const { t } = useTranslation('common');
-    const [gen, setGen] = useState('');
+    const [selectItem, setSelectItem] = useState('');
     const [selectedTab, setSelectedTab] = useState('');
 
     const getCurrentTabNameByUrl = () => {
@@ -27,20 +27,19 @@ const NavigationPanel = () => {
 
     useEffect(() => {
         const tabByUrl = getCurrentTabNameByUrl();
-        if (tabsComponents.indexOf(tabByUrl) === -1) {
+        const tabIndex = tabsComponents.findIndex((item) => item.name === tabByUrl);
+        if (tabIndex === -1) {
             setSelectedTab(tabsComponents.length);
+            setSelectItem(tabByUrl);
         } else {
-            setSelectedTab(tabsComponents.indexOf(tabByUrl));
+            setSelectedTab(tabIndex);
         }
     }, []);
 
-    const documentTitle = (title) => {
-        document.title = t(`${title}_management_title`);
-    };
-    const handleNavigate = (navigateTo, index) => {
+    const handleNavigate = (item, index) => {
         setSelectedTab(index);
-        documentTitle(navigateTo);
-        history.push({ ...history.location, pathname: `${links.ADMIN_PAGE}/${navigateTo}` });
+        document.title = t(item.title);
+        history.push({ ...history.location, pathname: `${links.ADMIN_PAGE}/${item.name}` });
     };
 
     return (
@@ -50,7 +49,7 @@ const NavigationPanel = () => {
                     <ListItem
                         selected={selectedTab === index}
                         key={item.name}
-                        onClick={() => handleNavigate(item.name, index)}
+                        onClick={() => handleNavigate(item, index)}
                         className="navigation-link"
                     >
                         <ListItemText>{t(item.title)}</ListItemText>
@@ -64,11 +63,11 @@ const NavigationPanel = () => {
                         className="navigation-select"
                         labelId="demo-controlled-open-select-label"
                         id="demo-controlled-open-select"
-                        value={gen}
+                        value={selectItem}
                         displayEmpty
                         onChange={(event) => {
                             const { value: eventValue } = event.target;
-                            setGen(eventValue);
+                            setSelectItem(eventValue);
                         }}
                     >
                         <MenuItem value="" disabled selected className="navigation-select-item">
@@ -79,7 +78,7 @@ const NavigationPanel = () => {
                                 key={item.name + item.title}
                                 className="navigation-select-item"
                                 value={item.name}
-                                onClick={() => handleNavigate(item.name, tabsComponents.length)}
+                                onClick={() => handleNavigate(item, tabsComponents.length)}
                             >
                                 {t(item.title)}
                             </MenuItem>

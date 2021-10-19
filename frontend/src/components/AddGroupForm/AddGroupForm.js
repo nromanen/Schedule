@@ -11,6 +11,7 @@ import { GROUP_FORM } from '../../constants/reduxForms';
 import renderTextField from '../../share/renderedFields/input';
 import { required, uniqueGroup, minLengthValue } from '../../validation/validateFields';
 import { links } from '../../constants/links';
+
 import { getClearOrCancelTitle, setDisableButton } from '../../helper/disableComponent';
 import {
     EDIT_TITLE,
