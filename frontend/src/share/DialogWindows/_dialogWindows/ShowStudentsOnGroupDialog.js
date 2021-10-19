@@ -118,11 +118,14 @@ const ShowStudentsOnGroupDialog = (props) => {
                 title={`${t(GROUP_LABEL)} - ${props.group.title}`}
                 buttons={
                     <>
-                        <UploadFile
-                            group={group}
-                            open={openUploadFile}
-                            handleCloseDialogFile={handleShowDialogFile}
-                        />
+                        {openUploadFile && (
+                            <UploadFile
+                                group={group}
+                                open={openUploadFile}
+                                handleCloseDialogFile={handleShowDialogFile}
+                            />
+                        )}
+
                         <Button
                             className={buttonClassName}
                             variant="contained"
@@ -187,14 +190,16 @@ const ShowStudentsOnGroupDialog = (props) => {
                     </span>
                 )}
             </CustomDialog>
-            <MovingGroupsDialog
-                onClose={handleClose}
-                open={showStudentList}
-                checkBoxStudents={checkBoxStudents}
-                setShowStudentList={setShowStudentList}
-                groups={groups}
-                group={group}
-            />
+            {showStudentList && (
+                <MovingGroupsDialog
+                    onClose={handleClose}
+                    open={showStudentList}
+                    checkBoxStudents={checkBoxStudents}
+                    setShowStudentList={setShowStudentList}
+                    groups={groups}
+                    group={group}
+                />
+            )}
         </>
     );
 };

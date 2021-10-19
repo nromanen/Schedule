@@ -92,13 +92,16 @@ const SubjectPage = (props) => {
     return (
         <>
             <NavigationPage name={navigationNames.SUBJECT_PAGE} val={navigation.SUBJECTS} />
-            <CustomDialog
-                type={subDialogType}
-                cardId={subjectId}
-                whatDelete="subject"
-                open={openSubDialog}
-                onClose={acceptConfirmDialog}
-            />
+            {openSubDialog && (
+                <CustomDialog
+                    type={subDialogType}
+                    cardId={subjectId}
+                    whatDelete="subject"
+                    open={openSubDialog}
+                    onClose={acceptConfirmDialog}
+                />
+            )}
+
             <div className="cards-container">
                 <aside className="search-list__panel">
                     <SearchPanel SearchChange={SearchChange} showDisabled={showDisabledHandle} />

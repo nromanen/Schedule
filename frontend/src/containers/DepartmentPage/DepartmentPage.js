@@ -110,20 +110,24 @@ const DepartmentPage = (props) => {
     return (
         <>
             <NavigationPage name={navigationNames.DEPARTMENTS} val={navigation.DEPARTMENTS} />
-            <CustomDialog
-                type={subDialogType}
-                cardId={departmentId.id}
-                whatDelete="department"
-                open={openSubDialog}
-                onClose={acceptConfirmDialog}
-            />
-            <ShowDepartmentDataDialog
-                isHide={departmentId.disabledStatus}
-                cardId={departmentId.id}
-                open={teacherDialog}
-                onClose={closeTeacherDialog}
-                teachers={teachers}
-            />
+            {openSubDialog && (
+                <CustomDialog
+                    type={subDialogType}
+                    cardId={departmentId.id}
+                    whatDelete="department"
+                    open={openSubDialog}
+                    onClose={acceptConfirmDialog}
+                />
+            )}
+            {teacherDialog && (
+                <ShowDepartmentDataDialog
+                    isHide={departmentId.disabledStatus}
+                    cardId={departmentId.id}
+                    open={teacherDialog}
+                    onClose={closeTeacherDialog}
+                    teachers={teachers}
+                />
+            )}
             <div className="cards-container">
                 <aside className="search-list__panel">
                     <SearchPanel SearchChange={SearchChange} showDisabled={changeDisable} />

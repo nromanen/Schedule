@@ -238,15 +238,17 @@ const Schedule = (props) => {
 
     return (
         <section className="cards-container schedule">
-            <ScheduleDialog
-                translation={t}
-                itemData={itemData}
-                rooms={rooms}
-                availability={availability}
-                open={open}
-                isLoading={isLoading}
-                onClose={handleClose}
-            />
+            {open && (
+                <ScheduleDialog
+                    translation={t}
+                    itemData={itemData}
+                    rooms={rooms}
+                    availability={availability}
+                    open={open}
+                    onClose={handleClose}
+                />
+            )}
+
             <aside className="day-classes-aside">
                 <section className="card empty-card">Група</section>
                 {days.map((day, index) => (

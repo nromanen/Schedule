@@ -48,13 +48,16 @@ const TemporaryScheduleList = (props) => {
 
     return (
         <main className="container-flex-wrap">
-            <CustomDialog
-                type={dialogTypes.DELETE_CONFIRM}
-                cardId={temporaryScheduleId}
-                whatDelete={cardType.TEMPORARY_SCHEDULE}
-                open={open}
-                onClose={handleClose}
-            />
+            {open && (
+                <CustomDialog
+                    type={dialogTypes.DELETE_CONFIRM}
+                    cardId={temporaryScheduleId}
+                    whatDelete={cardType.TEMPORARY_SCHEDULE}
+                    open={open}
+                    onClose={handleClose}
+                />
+            )}
+
             {temporarySchedules.map((temporarySchedule) => (
                 <Card
                     additionClassName={`done-card${

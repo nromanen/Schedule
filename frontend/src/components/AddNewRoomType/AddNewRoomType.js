@@ -52,13 +52,15 @@ let NewRoomType = (props) => {
 
     return (
         <>
-            <CustomDialog
-                type={dialogTypes.DELETE_CONFIRM}
-                cardId={typeId}
-                whatDelete={cardType.TYPE.toLowerCase()}
-                open={open}
-                onClose={handleClose}
-            />
+            {open && (
+                <CustomDialog
+                    type={dialogTypes.DELETE_CONFIRM}
+                    cardId={typeId}
+                    whatDelete={cardType.TYPE.toLowerCase()}
+                    open={open}
+                    onClose={handleClose}
+                />
+            )}
             <Card additionClassName="form-card room-form">
                 <form className="new-type-container" onSubmit={handleSubmit}>
                     <Field

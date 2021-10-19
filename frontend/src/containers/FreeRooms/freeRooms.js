@@ -38,50 +38,51 @@ const FreeRooms = (props) => {
             <span className="navLinks" onClick={handleClickOpen} aria-hidden="true">
                 {t(FIND_FREE_ROOM)}
             </span>
-
-            <CustomDialog
-                title={t(FIND_FREE_ROOM)}
-                open={open}
-                onClose={handleClose}
-                buttons={
-                    <Button
-                        variant="contained"
-                        onClick={handleClose}
-                        color="primary"
-                        title={t('close_title')}
-                    >
-                        {t('common:close_title')}
-                    </Button>
-                }
-                maxWidth="lg"
-                aria-labelledby="form-dialog-title"
-            >
-                <div className="cards-container ">
-                    <aside className="free-rooms__panel">
-                        <div className="freeRoomForms">
-                            <FreeRoomForm
-                                classScheduler={classScheduler}
-                                onReset={clearFreeRoomsService}
-                                onSubmit={submit}
-                            />
-                        </div>
-                    </aside>
-                    <section className="container-flex-wrap wrapper">
-                        {props.freeRooms.map((freeRoom) => (
-                            <Card key={freeRoom.id} className="container">
-                                <div className="freeRoomCard">
-                                    <span> {`${t(ROOM_LABEL)}:`} </span>
-                                    <h2 className="room-card__number">{freeRoom.name}</h2>
-                                    <span>{`${t(TYPE_LABEL)}:`}</span>
-                                    <h2 className="room-card__number">
-                                        {freeRoom.type.description}
-                                    </h2>
-                                </div>
-                            </Card>
-                        ))}
-                    </section>
-                </div>
-            </CustomDialog>
+            {open && (
+                <CustomDialog
+                    title={t(FIND_FREE_ROOM)}
+                    open={open}
+                    onClose={handleClose}
+                    buttons={
+                        <Button
+                            variant="contained"
+                            onClick={handleClose}
+                            color="primary"
+                            title={t('close_title')}
+                        >
+                            {t('common:close_title')}
+                        </Button>
+                    }
+                    maxWidth="lg"
+                    aria-labelledby="form-dialog-title"
+                >
+                    <div className="cards-container ">
+                        <aside className="free-rooms__panel">
+                            <div className="freeRoomForms">
+                                <FreeRoomForm
+                                    classScheduler={classScheduler}
+                                    onReset={clearFreeRoomsService}
+                                    onSubmit={submit}
+                                />
+                            </div>
+                        </aside>
+                        <section className="container-flex-wrap wrapper">
+                            {props.freeRooms.map((freeRoom) => (
+                                <Card key={freeRoom.id} className="container">
+                                    <div className="freeRoomCard">
+                                        <span> {`${t(ROOM_LABEL)}:`} </span>
+                                        <h2 className="room-card__number">{freeRoom.name}</h2>
+                                        <span>{`${t(TYPE_LABEL)}:`}</span>
+                                        <h2 className="room-card__number">
+                                            {freeRoom.type.description}
+                                        </h2>
+                                    </div>
+                                </Card>
+                            ))}
+                        </section>
+                    </div>
+                </CustomDialog>
+            )}
         </>
     );
 };
