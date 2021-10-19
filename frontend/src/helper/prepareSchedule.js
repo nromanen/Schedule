@@ -1,21 +1,6 @@
-import { cloneDeep, get } from 'lodash';
-import { daysUppercase } from '../constants/schedule/days';
-
-const sortStrings = (a, b) => {
-    if (a > b) return 1;
-    if (b > a) return -1;
-    return 0;
-};
-
-const daysArray = [
-    { day: 'MONDAY', class: [] },
-    { day: 'TUESDAY', class: [] },
-    { day: 'WEDNESDAY', class: [] },
-    { day: 'THURSDAY', class: [] },
-    { day: 'FRIDAY', class: [] },
-    { day: 'SATURDAY', class: [] },
-    { day: 'SUNDAY', class: [] },
-];
+import { cloneDeep, get, isEmpty } from 'lodash';
+import { daysUppercase, daysWithClasses as daysArray } from '../constants/schedule/days';
+import { sortStrings } from '../utils/sortStrings';
 
 export const makeGroupSchedule = ({ semester, schedule }) => {
     const evenArray = [];
@@ -26,7 +11,7 @@ export const makeGroupSchedule = ({ semester, schedule }) => {
     const oddDaysPrepArray = cloneDeep(daysArray);
     // TODO forEach (where errors)=>reduce
 
-    if (schedule && schedule.length > 0) {
+    if (!isEmpty(schedule)) {
         const scheduleItem = schedule[0];
         const { group: groupData } = scheduleItem;
         group = groupData;
@@ -104,34 +89,22 @@ export const makeGroupSchedule = ({ semester, schedule }) => {
 };
 
 export const makeFullSchedule = (fullSchedule) => {
-    let groupsCount = 0;
+    const { schedule, semester } = fullSchedule;
+    const groupsCount = schedule?.length || 0; // nande desu ka?
+    const semesterDays = semester?.semester_days || []; // nande desu ka?
+    const semesterClasses = semester?.semester_classes || []; // nande desu ka?
     let groupList = [];
-    const groupListId = new Map([]);
-    const daysPrepArrayFull = [];
-    let semesterDays = [];
-    let semesterClasses = [];
+    const resultArray = [];
 
-    if (fullSchedule.schedule) {
-        groupsCount = fullSchedule.schedule.length;
-        semesterDays = fullSchedule.semester.semester_days;
-        semesterClasses = fullSchedule.semester.semester_classes;
-
-        fullSchedule.schedule.forEach((group) => {
-            groupList.push(group.group);
-            groupListId.set(group.group.id, {});
-        });
-        groupList = groupList.sort((a, b) => sortStrings(a.title, b.title));
-
-        fullSchedule.semester.semester_days.forEach((day) => {
-            const prepScheduleArray = [];
-            fullSchedule.semester.semester_classes.forEach((classItem) => {
+    if (schedule) {
+        groupList = schedule.map(({ group }) => group);
+        semesterDays.forEach((day) => {
+            const classesArray = [];
+            semesterClasses.forEach((classItem) => {
                 const oddArray = [];
                 const evenArray = [];
-                groupList.forEach((groupItem) => {
-                    const groupFull = fullSchedule.schedule.find(
-                        (groupFullIterate) => groupFullIterate.group.id === groupItem.id,
-                    );
-                    const dayFull = groupFull.days.find(
+                groupList.forEach((groupItem, index) => {
+                    const dayFull = schedule[index].days.find(
                         (dayFullIterate) => dayFullIterate.day === day,
                     );
                     const classFull = dayFull.classes.find(
@@ -146,23 +119,24 @@ export const makeFullSchedule = (fullSchedule) => {
                         card: classFull.weeks.even,
                     });
                 });
-                prepScheduleArray.push({
+                classesArray.push({
                     class: classItem,
                     cards: { odd: oddArray, even: evenArray },
                 });
             });
-            daysPrepArrayFull.push({ day, classes: prepScheduleArray });
+            resultArray.push({ day, classes: classesArray });
         });
+        groupList.sort((a, b) => sortStrings(a.title, b.title));
     }
 
     return {
-        semester: fullSchedule.semester,
-        schedule: fullSchedule.schedule,
+        semester,
+        schedule,
         semesterClasses,
         semesterDays,
         groupsCount,
         groupList,
-        resultArray: daysPrepArrayFull,
+        resultArray,
     };
 };
 

@@ -61,14 +61,14 @@ const reducer = (state = initialState, action) => {
         case actionTypes.SET_FULL_SCHEDULE:
             updateObject(state, {
                 fullSchedule: [],
-                groupSchedule: {},
+                groupSchedule: {}, // nani desu ka?
             });
             return updateObject(state, {
                 fullSchedule: action.result,
             });
         case actionTypes.SET_GROUP_SCHEDULE:
             return updateObject(state, {
-                groupSchedule: action.result,
+                groupSchedule: action.result, // nani desu ka?
                 fullSchedule: [],
             });
         case actionTypes.SET_ITEM_GROUP_ID:
