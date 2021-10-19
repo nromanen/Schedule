@@ -95,9 +95,6 @@ const ShowStudentsOnGroupDialog = (props) => {
     const handleChangeCheckedAllBtn = () => {
         setCheckedAll((prevState) => !prevState);
     };
-    const handleClearCheckedAllBtn = () => {
-        setCheckedAll(false);
-    };
 
     const getDialog = () => {
         setShowStudentList(true);
@@ -118,14 +115,6 @@ const ShowStudentsOnGroupDialog = (props) => {
                 title={`${t(GROUP_LABEL)} - ${props.group.title}`}
                 buttons={
                     <>
-                        {openUploadFile && (
-                            <UploadFile
-                                group={group}
-                                open={openUploadFile}
-                                handleCloseDialogFile={handleShowDialogFile}
-                            />
-                        )}
-
                         <Button
                             className={buttonClassName}
                             variant="contained"
@@ -183,7 +172,7 @@ const ShowStudentsOnGroupDialog = (props) => {
                             handleAllChecked={handleAllChecked}
                             handleAllClear={handleAllClear}
                             handleChangeCheckedAllBtn={handleChangeCheckedAllBtn}
-                            handleClearCheckedAllBtn={handleClearCheckedAllBtn}
+                            handleClearCheckedAllBtn={() => setCheckedAll(false)}
                             checkedAllBtn={checkedAll}
                             handleAllCheckedBtn={handleAllCheckedBtn}
                         />
@@ -198,6 +187,13 @@ const ShowStudentsOnGroupDialog = (props) => {
                     setShowStudentList={setShowStudentList}
                     groups={groups}
                     group={group}
+                />
+            )}
+            {openUploadFile && (
+                <UploadFile
+                    group={group}
+                    open={openUploadFile}
+                    handleCloseDialogFile={handleShowDialogFile}
                 />
             )}
         </>
