@@ -28,10 +28,10 @@ const Routers = (props) => {
                 <Route exact path={links.HOME_PAGE} component={HomePage} />
                 <Route path={links.ScheduleFor} component={GroupSchedulePage} />
                 <Route path={links.ACTIVATION_PAGE} component={ActivationPage} />
+                <Route path={links.RESET_PASSWORD} component={ResetPassword} />
                 <Route path={links.Registration} component={Register} />
                 <Route path={links.LOGIN} component={Login} />
                 <UserRoute path={links.TEACHER_SCHEDULE} component={TeacherSchedule} />
-                <UserRoute path={links.RESET_PASSWORD} component={ResetPassword} />
                 <UserRoute path={links.MY_PROFILE} component={ProfilePage} />
                 <UserRoute path={links.LOGOUT} component={Logout} />
                 <AdminRoute path={links.SCHEDULE_PAGE} component={SchedulePage} />
