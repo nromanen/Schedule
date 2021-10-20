@@ -1,14 +1,13 @@
 import React from 'react';
 import { Redirect, Switch } from 'react-router-dom';
 
-import AdminPage from '../containers/AdminPage/AdminPage';
+import LessonPage from '../containers/LessonPage/LessonPage';
 import { links } from '../constants/links';
 import TeacherList from '../containers/TeachersList/TeachersList';
 import BusyRooms from '../containers/BusyRooms/BusyRooms';
 import GroupList from '../containers/GroupList/GroupList';
 import ClassSchedule from '../containers/ClassSchedule/ClassSchedule';
 import RoomList from '../containers/RoomList/RoomList';
-import SchedulePage from '../containers/SchedulePage/SchedulePage';
 import SubjectPage from '../containers/SubjectPage/SubjectPage';
 import SemesterPage from '../containers/SemesterPage/SemesterPage';
 import MergeRolePage from '../containers/MergeRolePage/MergeRolePage';
@@ -23,7 +22,7 @@ export default function Routers() {
             <NavigationPanel />
             <Switch>
                 <AdminRoute path={links.Departments} component={DepartmentPage} />
-                <AdminRoute path={links.LessonPage} component={AdminPage} />
+                <AdminRoute path={links.LessonPage} component={LessonPage} />
                 <AdminRoute path={links.TeacherList} component={TeacherList} />
                 <AdminRoute path={links.GroupList} component={GroupList} />
                 <AdminRoute path={links.ClassScheduleTitle} component={ClassSchedule} />
