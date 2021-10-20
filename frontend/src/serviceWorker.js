@@ -3,33 +3,39 @@ const isLocalhost = Boolean(
         window.location.hostname === '[::1]' ||
         window.location.hostname.match(/^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/),
 );
+
+const registerValidSWHelper = (installingWorker, config, registration) => {
+    const worker = installingWorker;
+    worker.onstatechange = () => {
+        if (installingWorker.state === 'installed') {
+            if (navigator.serviceWorker.controller) {
+                console.log(
+                    'New content is available and will be used when all ' +
+                        'tabs for this page are closed. See https://bit.ly/CRA-PWA.',
+                );
+                if (config && config.onUpdate) {
+                    config.onUpdate(registration);
+                }
+            } else {
+                console.log('Content is cached for offline use.');
+                if (config && config.onSuccess) {
+                    config.onSuccess(registration);
+                }
+            }
+        }
+    };
+};
 function registerValidSW(swUrl, config) {
     navigator.serviceWorker
         .register(swUrl)
         .then((registration) => {
-            registration.onupdatefound = () => {
+            const reg = registration;
+            reg.onupdatefound = () => {
                 const installingWorker = registration.installing;
                 if (installingWorker == null) {
                     return;
                 }
-                installingWorker.onstatechange = () => {
-                    if (installingWorker.state === 'installed') {
-                        if (navigator.serviceWorker.controller) {
-                            console.log(
-                                'New content is available and will be used when all ' +
-                                    'tabs for this page are closed. See https://bit.ly/CRA-PWA.',
-                            );
-                            if (config && config.onUpdate) {
-                                config.onUpdate(registration);
-                            }
-                        } else {
-                            console.log('Content is cached for offline use.');
-                            if (config && config.onSuccess) {
-                                config.onSuccess(registration);
-                            }
-                        }
-                    }
-                };
+                registerValidSWHelper(installingWorker, config, registration);
             };
         })
         .catch((error) => {
