@@ -123,5 +123,7 @@
   "show_archived": "Відобразити заархівовані",
   "show_regular": "Віобразити звичайні",
   "no_exist_teachers_at_department": "Немає викладачів на цій кафедрі",
-  "no_exist_students_in_group": "У даній групі немає студентів"
+  "no_exist_students_in_group": "У даній групі немає студентів",
+  "create_account_label": "Створити аккаунт",
+  "forgot_password_label": "Забули пароль?"
 }

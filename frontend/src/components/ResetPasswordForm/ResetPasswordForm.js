@@ -11,7 +11,6 @@ import Card from '../../share/Card/Card';
 import renderTextField from '../../share/renderedFields/input';
 
 import { RESET_PASSWORD_FORM } from '../../constants/reduxForms';
-import { authTypes } from '../../constants/auth';
 
 import { email, required } from '../../validation/validateFields';
 import { links } from '../../constants/links';
@@ -24,8 +23,7 @@ import {
 
 const ResetPasswordForm = (props) => {
     const { t } = useTranslation('formElements');
-    const { handleSubmit, translation, resetPasswordError, setError, switchAuthMode, isLoading } =
-        props;
+    const { handleSubmit, translation, resetPasswordError, setError, isLoading } = props;
 
     const error = resetPasswordError;
 
@@ -39,51 +37,38 @@ const ResetPasswordForm = (props) => {
         }
     };
 
-    let form = (
-        <form onSubmit={handleSubmit}>
-            <Field
-                name="email"
-                className="form-field"
-                component={renderTextField}
-                label={t(EMAIL_LABEL)}
-                {...(!error ? emailValidate : error)}
-                onChange={(e) => {
-                    errorHandling(e.target.value);
-                }}
-            />
-            <Button
-                className="buttons-style under-line"
-                type="submit"
-                variant="contained"
-                color="primary"
-            >
-                {translation(RESET_PASSWORD_BUTTON)}
-            </Button>
-            <div className="group-btns">
-                <button
-                    type="button"
-                    className="auth-link"
-                    onClick={() => {
-                        switchAuthMode(authTypes.LOGIN);
-                        setError(null);
-                    }}
-                >
-                    <Link className="navLinks" to={links.LOGIN}>
-                        {translation(LOGIN_TITLE)}
-                    </Link>
-                </button>
-            </div>
-        </form>
-    );
-
-    if (isLoading) {
-        form = <CircularProgress />;
-    }
-
     return (
         <Card additionClassName="auth-card">
             <h2 className="under-line">{translation(RESET_PASSWORD_PAGE_TITLE)}</h2>
-            {form}
+            {isLoading ? (
+                <CircularProgress />
+            ) : (
+                <form onSubmit={handleSubmit}>
+                    <Field
+                        name="email"
+                        className="form-field"
+                        component={renderTextField}
+                        label={t(EMAIL_LABEL)}
+                        {...(!error ? emailValidate : error)}
+                        onChange={(e) => {
+                            errorHandling(e.target.value);
+                        }}
+                    />
+                    <Button
+                        className="buttons-style"
+                        type="submit"
+                        variant="contained"
+                        color="primary"
+                    >
+                        {translation(RESET_PASSWORD_BUTTON)}
+                    </Button>
+                    <div className="text-center">
+                        <Link className="navLinks" to={links.LOGIN}>
+                            {translation(LOGIN_TITLE)}
+                        </Link>
+                    </div>
+                </form>
+            )}
         </Card>
     );
 };

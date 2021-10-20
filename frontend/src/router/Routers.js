@@ -33,6 +33,7 @@ const Routers = (props) => {
 
     let routes = (
         <Switch>
+            <Route path={links.RESET_PASSWORD} component={ResetPassword} />
             <Route path={links.Registration} component={Register} />
             <Route path={links.HOME_PAGE} exact component={HomePage} />
             <Route path={links.ScheduleFor} component={GroupSchedulePage} />

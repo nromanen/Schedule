@@ -114,3 +114,5 @@ export const NO_EXIST_TEACHER_AT_DEPARTMENT = 'no_exist_teachers_at_department';
 export const NO_EXIST_STUDENTS_AT_GROUP = 'no_exist_students_in_group';
 export const NEW_TYPE_LABEL = 'new_type_label';
 export const DELETE_TITLE_LABEL = 'delete_title';
+export const CREATE_ACCOUNT_LABEL = 'create_account_label';
+export const FORGOT_PASSWORD_LABEL = 'forgot_password_label';
