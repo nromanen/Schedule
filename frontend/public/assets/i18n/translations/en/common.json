@@ -178,5 +178,7 @@
   "preview": "Preview",
   "vacation_label": "Vacation",
   "regular_lesson_label": "Regular lesson",
+  "hour_one": "<0>{{count}}</0> hour",
+  "hour_other": "<0>{{count}}</0> hours",
   "more_label": "More"
 }
