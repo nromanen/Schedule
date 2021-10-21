@@ -29,8 +29,8 @@ const AddGroup = (props) => {
     useEffect(() => {
         if (
             group &&
-            location.pathname.includes(links.Edit) &&
-            !location.pathname.includes(links.Student)
+            location.pathname.includes(links.EDIT) &&
+            !location.pathname.includes(links.STUDENT)
         ) {
             if (group.id) {
                 initialize({

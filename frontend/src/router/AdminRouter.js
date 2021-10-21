@@ -21,23 +21,23 @@ export default function Routers() {
         <>
             <NavigationPanel />
             <Switch>
-                <AdminRoute path={links.Departments} component={DepartmentPage} />
-                <AdminRoute path={links.LessonPage} component={LessonPage} />
-                <AdminRoute path={links.TeacherList} component={TeacherList} />
-                <AdminRoute path={links.GroupList} component={GroupList} />
-                <AdminRoute path={links.ClassScheduleTitle} component={ClassSchedule} />
-                <AdminRoute path={links.RoomList} component={RoomList} />
-                <AdminRoute path={links.SubjectPage} component={SubjectPage} />
-                <AdminRoute path={links.BusyRooms} component={BusyRooms} />
-                <AdminRoute path={links.SemesterPage} component={SemesterPage} />
-                <AdminRoute path={links.MergeRolePage} component={MergeRolePage} />
-                <AdminRoute path={links.Changes} component={TemporarySchedule} />
+                <AdminRoute links={links.DEPARTMENTS} component={DepartmentPage} />
+                <AdminRoute links={links.LESSON_PAGE} component={LessonPage} />
+                <AdminRoute links={links.TEACHER_LIST} component={TeacherList} />
+                <AdminRoute links={links.GROUP_LIST} component={GroupList} />
+                <AdminRoute links={links.CLASS_SCHEDULE_TITLE} component={ClassSchedule} />
+                <AdminRoute links={links.ROOM_LIST} component={RoomList} />
+                <AdminRoute links={links.SUBJECT_PAGE} component={SubjectPage} />
+                <AdminRoute links={links.BUST_ROOMS} component={BusyRooms} />
+                <AdminRoute links={links.SEMESTER_PAGE} component={SemesterPage} />
+                <AdminRoute links={links.MARGE_ROLE_PAGE} component={MergeRolePage} />
+                <AdminRoute links={links.CHANGES} component={TemporarySchedule} />
 
-                <AdminRoute path={links.ACTIVATION_PAGE}>
+                <AdminRoute links={links.ACTIVATION_PAGE}>
                     <Redirect to={links.ADMIN_PAGE} />
                 </AdminRoute>
-                <AdminRoute path="/">
-                    <Redirect to={links.LessonPage} />
+                <AdminRoute links="/">
+                    <Redirect to={links.LESSON_PAGE} />
                 </AdminRoute>
             </Switch>
         </>

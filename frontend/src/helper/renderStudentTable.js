@@ -161,12 +161,12 @@ export default function RenderStudentTable(props) {
         selectStudentService(studentId);
     };
     useEffect(() => {
-        if (match.path.includes(links.Student) && match.path.includes(links.Edit)) {
+        if (match.links.includes(links.STUDENT) && match.links.includes(links.EDIT)) {
             handleEdit(student.id);
         }
     }, [props.group.id]);
     useEffect(() => {
-        if (match.path.includes(links.Student) && match.path.includes(links.Delete)) {
+        if (match.links.includes(links.STUDENT) && match.links.includes(links.DELETE)) {
             setOpenDeleteDialog(true);
         }
     }, [props.group.id]);
@@ -291,7 +291,7 @@ export default function RenderStudentTable(props) {
                             <StyledTableCell component="th" scope="row" align="center">
                                 <span className="edit-cell">
                                     <Link
-                                        to={`${links.GroupList}${links.Group}/${group.id}${links.Student}/${singleStudent.id}${links.Edit}`}
+                                        to={`${links.GROUP_LIST}${links.GROUP}/${group.id}${links.STUDENT}/${singleStudent.id}${links.EDIT}`}
                                     >
                                         <FaEdit
                                             className="edit-button"
@@ -300,7 +300,7 @@ export default function RenderStudentTable(props) {
                                         />
                                     </Link>
                                     <Link
-                                        to={`${links.GroupList}${links.Group}/${group.id}${links.Student}/${singleStudent.id}${links.Delete}`}
+                                        to={`${links.GROUP_LIST}${links.GROUP}/${group.id}${links.STUDENT}/${singleStudent.id}${links.DELETE}`}
                                     >
                                         <Delete
                                             title={t(DELETE_TITLE_LABEL)}

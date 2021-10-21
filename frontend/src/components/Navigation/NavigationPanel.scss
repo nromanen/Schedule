@@ -1,25 +1,28 @@
+@import "../../styles/colors.scss";
+@import "../../styles/variables.scss";
+
 .admin-navigation {
     flex-grow: 1;
-    background-color: #1976d2;
+    background-color: $blue;
     .navigation-container {
         display: flex;
         flex-direction: row;
         padding: 0px 28px;
-        background-color: #1976d2;
-        @media (max-width: 800px) {
+        background-color: $blue;
+        @media (max-width: $md-width) {
             display: block;
             padding: 14px 0px;
         }
         .Mui-selected {
-            background-color: rgba(0, 0, 0, 0.1);
+            background-color: $selected-blue;
         }
     }
     .navigation-link {
         text-align: center;
-        color: #ffffff;
+        color: $snowy-white;
         cursor: pointer;
         &:hover {
-            background-color: rgba(0, 0, 0, 0.1);
+            background-color: $selected-blue;
         }
     }
     .select-container {
@@ -27,7 +30,7 @@
         padding: 0;
         .navigation-select {
             min-width: 100%;
-            color: #ffffff;
+            color: $snowy-white;
             display: flex;
             height: 40px;
             .MuiSelect-select {
@@ -38,26 +41,26 @@
         }
 
         .MuiSelect-icon {
-            color: #ffffff;
+            color: $snowy-white;
         }
         &:hover {
             .MuiInput-underline::before {
-                border-color: #ffffff;
+                border-color: $snowy-white;
             }
         }
         .MuiInput-underline::before {
             width: 98%;
             left: 50%;
             transform: translateX(-50%);
-            border-color: #ffffff;
+            border-color: $snowy-white;
         }
     }
 }
 .MuiList-root {
     .navigation-select-item {
-        color: #3f51b5;
+        color: $dark-blue;
         &:hover {
-            background-color: rgba(0, 0, 0, 0.08);
+            background-color: $selected-blue;
         }
     }
 }

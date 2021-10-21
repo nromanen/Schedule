@@ -44,7 +44,7 @@ const GroupCard = (props) => {
                                 );
                             }}
                         />
-                        <Link to={`${links.GroupList}/${groupItem.id}${links.Edit}`}>
+                        <Link to={`${links.GROUP_LIST}/${groupItem.id}${links.EDIT}`}>
                             <FaEdit
                                 className="group__buttons-edit link-href"
                                 title={t(COMMON_EDIT)}
@@ -66,7 +66,7 @@ const GroupCard = (props) => {
                     title={t(DELETE_TITLE_LABEL)}
                     onClick={() => showConfirmDialog(groupItem.id, dialogTypes.DELETE_CONFIRM)}
                 />
-                <Link to={`${links.GroupList}/${groupItem.id}${links.AddStudent}`}>
+                <Link to={`${links.GROUP_LIST}/${groupItem.id}${links.ADD_STUDENT}`}>
                     <FaUserPlus
                         title={t(FORM_STUDENT_ADD_LABEL)}
                         className="svg-btn copy-btn align-left info-btn"
@@ -78,7 +78,7 @@ const GroupCard = (props) => {
             </div>
             <p className="group-card__description">{`${t(GROUP_LABEL)}:`}</p>
             <h1 className="group-card__number">{getShortTitle(groupItem.title, 5)}</h1>
-            <Link to={`${links.GroupList}/${groupItem.id}${links.ShowStudents}`}>
+            <Link to={`${links.GROUP_LIST}/${groupItem.id}${links.SHOW_STUDENTS}`}>
                 <span className="students-group">
                     <FaUsers
                         title={t(FORM_SHOW_STUDENTS)}

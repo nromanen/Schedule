@@ -25,21 +25,21 @@ const Routers = (props) => {
         <Router>
             <Header userRole={userRole} roles={userRoles} />
             <Switch>
-                <Route exact path={links.HOME_PAGE} component={HomePage} />
-                <Route path={links.ScheduleFor} component={GroupSchedulePage} />
-                <Route path={links.ACTIVATION_PAGE} component={ActivationPage} />
-                <Route path={links.RESET_PASSWORD} component={ResetPassword} />
-                <Route path={links.Registration} component={Register} />
-                <Route path={links.LOGIN} component={Login} />
-                <UserRoute path={links.TEACHER_SCHEDULE} component={TeacherSchedule} />
-                <UserRoute path={links.MY_PROFILE} component={ProfilePage} />
-                <UserRoute path={links.LOGOUT} component={Logout} />
-                <AdminRoute path={links.SCHEDULE_PAGE} component={SchedulePage} />
-                <AdminRoute path={links.ADMIN_PAGE} component={AdminRouter} />
-                <UserRoute path={links.ACTIVATION_PAGE}>
+                <Route exact links={links.HOME_PAGE} component={HomePage} />
+                <Route links={links.SCHEDULE_FOR} component={GroupSchedulePage} />
+                <Route links={links.ACTIVATION_PAGE} component={ActivationPage} />
+                <Route links={links.RESET_PASSWORD} component={ResetPassword} />
+                <Route links={links.REGISTRATION} component={Register} />
+                <Route links={links.LOGIN} component={Login} />
+                <UserRoute links={links.TEACHER_SCHEDULE} component={TeacherSchedule} />
+                <UserRoute links={links.MY_PROFILE} component={ProfilePage} />
+                <UserRoute links={links.LOGOUT} component={Logout} />
+                <AdminRoute links={links.SCHEDULE_PAGE} component={SchedulePage} />
+                <AdminRoute links={links.ADMIN_PAGE} component={AdminRouter} />
+                <UserRoute links={links.ACTIVATION_PAGE}>
                     <Redirect to={links.HOME_PAGE} />
                 </UserRoute>
-                <UserRoute path={links.SCHEDULE_PAGE}>
+                <UserRoute links={links.SCHEDULE_PAGE}>
                     <Redirect to={links.LOGIN} />
                 </UserRoute>
             </Switch>

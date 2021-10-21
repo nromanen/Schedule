@@ -30,7 +30,7 @@ const GroupSchedulePage = (props) => {
         const teacherPath = teacher ? `&teacher=${teacher}` : '';
         setLoadingService(true);
         submitSearchSchedule(values, history);
-        history.push(`${links.ScheduleFor}?semester=${semester}${groupPath}${teacherPath}`);
+        history.push(`${links.SCHEDULE_FOR}?semester=${semester}${groupPath}${teacherPath}`);
     };
 
     useEffect(() => {
