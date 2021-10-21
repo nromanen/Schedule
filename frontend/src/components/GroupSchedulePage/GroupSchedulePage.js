@@ -32,7 +32,6 @@ const GroupSchedulePage = (props) => {
         submitSearchSchedule(values, history);
         history.push(`${links.ScheduleFor}?semester=${semester}${groupPath}${teacherPath}`);
     };
-
     useEffect(() => {
         getFullSchedule();
     }, [place]);
@@ -40,10 +39,12 @@ const GroupSchedulePage = (props) => {
         if (scheduleType === 'full' && fullSchedule.length === 0) {
             getScheduleByType()[SCHEDULE_TYPES.FULL]();
         }
-    });
+    }, [scheduleType]);
 
     useEffect(() => {
-        getScheduleByType(groupId, semesterId)[SCHEDULE_TYPES.GROUP]();
+        if (scheduleType === 'group') {
+            getScheduleByType(groupId, semesterId)[SCHEDULE_TYPES.GROUP]();
+        }
     }, [groupId]);
     useEffect(() => {
         if (scheduleType === 'teacher') {

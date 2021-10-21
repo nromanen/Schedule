@@ -19,3 +19,5 @@
 -   teacherShedule.teacher
 -   teacherShedule and (fullSchedule, groupSchedule) have different schemas
 -   schedules copied to state directly from a request
+
+refactor schedule state

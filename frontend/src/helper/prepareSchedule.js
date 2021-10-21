@@ -1,6 +1,27 @@
-import { cloneDeep, get, isEmpty } from 'lodash';
+import { cloneDeep, get, isEmpty, isNil } from 'lodash';
 import { daysUppercase, daysWithClasses as daysArray } from '../constants/schedule/days';
 import { sortStrings } from '../utils/sortStrings';
+
+const prepareGroupClassesArray = (iterationItem, uppercaseDaysArray, parityArray) => {
+    iterationItem.class.forEach((evenClas, clasIndex) => {
+        if (!get(parityArray, clasIndex)) {
+            parityArray[clasIndex] = { class: evenClas.class, cards: {} };
+        }
+
+        uppercaseDaysArray.forEach((dayArr) => {
+            if (!get(parityArray[clasIndex].cards, dayArr)) {
+                parityArray[clasIndex].cards[dayArr] = {};
+            }
+        });
+        if (!isNil(evenClas.card)) {
+            if (get(evenClas.card, 'teacher')) {
+                parityArray[clasIndex].cards[iterationItem.day] = {
+                    card: evenClas.card,
+                };
+            }
+        }
+    });
+};
 
 export const makeGroupSchedule = ({ semester, schedule }) => {
     const evenArray = [];
@@ -9,7 +30,6 @@ export const makeGroupSchedule = ({ semester, schedule }) => {
 
     const evenDaysPrepArray = cloneDeep(daysArray);
     const oddDaysPrepArray = cloneDeep(daysArray);
-    // TODO forEach (where errors)=>reduce
 
     if (!isEmpty(schedule)) {
         const scheduleItem = schedule[0];
@@ -39,45 +59,11 @@ export const makeGroupSchedule = ({ semester, schedule }) => {
     }
 
     evenDaysPrepArray.forEach((evenDay) => {
-        evenDay.class.forEach((evenClas, clasIndex) => {
-            if (!get(evenArray, clasIndex)) {
-                evenArray[clasIndex] = { class: evenClas.class, cards: {} };
-            }
-
-            daysUppercase.forEach((dayArr) => {
-                if (!get(evenArray[clasIndex].cards, dayArr)) {
-                    evenArray[clasIndex].cards[dayArr] = {};
-                }
-            });
-            if (evenClas.card !== null && evenClas.card !== undefined) {
-                if (get(evenClas.card, 'teacher')) {
-                    evenArray[clasIndex].cards[evenDay.day] = {
-                        card: evenClas.card,
-                    };
-                }
-            }
-        });
+        prepareGroupClassesArray(evenDay, daysUppercase, evenArray);
     });
 
     oddDaysPrepArray.forEach((oddDay) => {
-        oddDay.class.forEach((oddClas, clasIndex) => {
-            if (!get(oddArray, clasIndex)) {
-                oddArray[clasIndex] = { class: oddClas.class, cards: {} };
-            }
-
-            daysUppercase.forEach((dayArr) => {
-                if (!get(oddArray[clasIndex].cards, dayArr)) {
-                    oddArray[clasIndex].cards[dayArr] = {};
-                }
-            });
-            if (oddClas.card !== null && oddClas.card !== undefined) {
-                if (get(oddClas.card, 'teacher')) {
-                    oddArray[clasIndex].cards[oddDay.day] = {
-                        card: oddClas.card,
-                    };
-                }
-            }
-        });
+        prepareGroupClassesArray(oddDay, daysUppercase, oddArray);
     });
 
     return {
@@ -140,7 +126,33 @@ export const makeFullSchedule = (fullSchedule) => {
     };
 };
 
+const prepareTeacherClassesArray = (
+    iterationArray,
+    classesArray,
+    daysArrayLocal,
+    parityArray,
+    day,
+) => {
+    iterationArray.forEach((iterationItem) => {
+        if (classesArray.findIndex((oddClass) => oddClass.id === iterationItem.class.id) < 0) {
+            classesArray.push(iterationItem.class);
+        }
+        if (!daysArrayLocal.includes(day)) {
+            daysArrayLocal.push(day);
+        }
+        if (!(iterationItem.class.id in parityArray)) {
+            parityArray[iterationItem.class.id] = []; // nande desu ka?
+        }
+
+        parityArray[iterationItem.class.id].push({
+            day,
+            cards: iterationItem.lessons,
+        });
+    });
+};
+
 export const makeTeacherSchedule = (teacherSchedule) => {
+    const { semester } = teacherSchedule;
     let teacher = {};
     const evenArray = [];
     const oddArray = [];
@@ -150,49 +162,19 @@ export const makeTeacherSchedule = (teacherSchedule) => {
     const evenClasses = [];
 
     if (teacherSchedule?.days) {
-        const { teacher: teacherData } = teacherSchedule;
+        const { teacher: teacherData, days } = teacherSchedule;
         teacher = teacherData;
 
-        teacherSchedule.days.forEach((dayTeacher) => {
-            dayTeacher.odd.classes.forEach((clas) => {
-                if (oddClasses.findIndex((oddClass) => oddClass.id === clas.class.id) < 0) {
-                    oddClasses.push(clas.class);
-                }
-                if (oddDays.indexOf(dayTeacher.day) < 0) {
-                    oddDays.push(dayTeacher.day);
-                }
-                if (!(clas.class.id in oddArray)) {
-                    oddArray[clas.class.id] = [];
-                }
+        days.forEach(({ day, odd, even }) => {
+            prepareTeacherClassesArray(odd.classes, oddClasses, oddDays, oddArray, day);
 
-                oddArray[clas.class.id].push({
-                    day: dayTeacher.day,
-                    cards: clas.lessons,
-                });
-            });
-
-            dayTeacher.even.classes.forEach((clas) => {
-                if (evenClasses.findIndex((evenClass) => evenClass.id === clas.class.id) < 0) {
-                    evenClasses.push(clas.class);
-                }
-                if (evenDays.indexOf(dayTeacher.day) < 0) {
-                    evenDays.push(dayTeacher.day);
-                }
-                if (!(clas.class.id in evenArray)) {
-                    evenArray[clas.class.id] = [];
-                }
-
-                evenArray[clas.class.id].push({
-                    day: dayTeacher.day,
-                    cards: clas.lessons,
-                });
-            });
+            prepareTeacherClassesArray(even.classes, evenClasses, evenDays, evenArray, day);
         });
     }
 
     return {
         teacher,
-        semester: teacherSchedule.semester,
+        semester,
         odd: {
             days: oddDays,
             classes: oddClasses.sort((a, b) => sortStrings(a.startTime, b.startTime)),
