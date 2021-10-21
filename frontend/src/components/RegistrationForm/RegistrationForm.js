@@ -13,7 +13,7 @@ import { REGISTRATION_FORM } from '../../constants/reduxForms';
 import { authTypes } from '../../constants/auth';
 
 import { email, password, required } from '../../validation/validateFields';
-import { links } from '../../constants/links';
+import { LOGIN_LINK } from '../../constants/links';
 import {
     REGISTRATION_PAGE_TITLE,
     ACCOUNT_EXIST,
@@ -91,7 +91,7 @@ const RegistrationForm = (props) => {
                         setError(null);
                     }}
                 >
-                    <Link className="navLinks" to={links.LOGIN}>
+                    <Link className="navLinks" to={LOGIN_LINK}>
                         {translation(ACCOUNT_EXIST)}
                     </Link>
                 </button>

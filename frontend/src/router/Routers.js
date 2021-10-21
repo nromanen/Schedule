@@ -10,7 +10,20 @@ import Logout from '../containers/Auth/Logout/Logout';
 import ActivationPage from '../containers/ActivationPage/ActivationPage';
 import ProfilePage from '../containers/ProfilePage/ProfilePage';
 import SchedulePage from '../containers/SchedulePage/SchedulePage';
-import { links } from '../constants/links';
+import {
+    links,
+    HOME_PAGE_LINK,
+    SCHEDULE_FOR_LINK,
+    ACTIVATION_PAGE_LINK,
+    LOGIN_LINK,
+    LOGOUT_LINK,
+    RESET_PASSWORD_LINK,
+    REGISTRATION_LINK,
+    SCHEDULE_PAGE_LINK,
+    MY_PROFILE_LINK,
+    TEACHER_SCHEDULE_LINK,
+    ADMIN_PAGE_LINK,
+} from '../constants/links';
 import { userRoles } from '../constants/userRoles';
 import GroupSchedulePage from '../components/GroupSchedulePage/GroupSchedulePage';
 import { Register } from '../components/Register/Register';
@@ -25,22 +38,22 @@ const Routers = (props) => {
         <Router>
             <Header userRole={userRole} roles={userRoles} />
             <Switch>
-                <Route exact path={links.HOME_PAGE} component={HomePage} />
-                <Route path={links.ScheduleFor} component={GroupSchedulePage} />
-                <Route path={links.ACTIVATION_PAGE} component={ActivationPage} />
-                <Route path={links.RESET_PASSWORD} component={ResetPassword} />
-                <Route path={links.Registration} component={Register} />
-                <Route path={links.LOGIN} component={Login} />
-                <UserRoute path={links.TEACHER_SCHEDULE} component={TeacherSchedule} />
-                <UserRoute path={links.MY_PROFILE} component={ProfilePage} />
-                <UserRoute path={links.LOGOUT} component={Logout} />
-                <AdminRoute path={links.SCHEDULE_PAGE} component={SchedulePage} />
-                <AdminRoute path={links.ADMIN_PAGE} component={AdminRouter} />
-                <UserRoute path={links.ACTIVATION_PAGE}>
-                    <Redirect to={links.HOME_PAGE} />
+                <Route exact path={HOME_PAGE_LINK} component={HomePage} />
+                <Route path={SCHEDULE_FOR_LINK} component={GroupSchedulePage} />
+                <Route path={ACTIVATION_PAGE_LINK} component={ActivationPage} />
+                <Route path={RESET_PASSWORD_LINK} component={ResetPassword} />
+                <Route path={REGISTRATION_LINK} component={Register} />
+                <Route path={LOGIN_LINK} component={Login} />
+                <UserRoute path={TEACHER_SCHEDULE_LINK} component={TeacherSchedule} />
+                <UserRoute path={MY_PROFILE_LINK} component={ProfilePage} />
+                <UserRoute path={LOGOUT_LINK} component={Logout} />
+                <AdminRoute path={SCHEDULE_PAGE_LINK} component={SchedulePage} />
+                <AdminRoute path={ADMIN_PAGE_LINK} component={AdminRouter} />
+                <UserRoute path={ACTIVATION_PAGE_LINK}>
+                    <Redirect to={HOME_PAGE_LINK} />
                 </UserRoute>
-                <UserRoute path={links.SCHEDULE_PAGE}>
-                    <Redirect to={links.LOGIN} />
+                <UserRoute path={SCHEDULE_PAGE_LINK}>
+                    <Redirect to={LOGIN_LINK} />
                 </UserRoute>
             </Switch>
         </Router>

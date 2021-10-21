@@ -10,7 +10,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import './NavigationPanel.scss';
 import { general, tabsComponents } from '../../constants/navigationComponents';
-import { links } from '../../constants/links';
+import { ADMIN_PAGE_LINK } from '../../constants/links';
 import { COMMON_MORE_LABEL } from '../../constants/translationLabels/common';
 
 const NavigationPanel = () => {
@@ -39,7 +39,7 @@ const NavigationPanel = () => {
     const handleNavigate = (item, index) => {
         setSelectedTab(index);
         document.title = t(item.title);
-        history.push({ ...history.location, pathname: `${links.ADMIN_PAGE}/${item.name}` });
+        history.push({ ...history.location, pathname: `${ADMIN_PAGE_LINK}/${item.name}` });
     };
 
     return (

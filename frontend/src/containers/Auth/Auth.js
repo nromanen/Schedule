@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { get } from 'lodash';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
-import { links } from '../../constants/links';
+import { ADMIN_PAGE_LINK, HOME_PAGE_LINK } from '../../constants/links';
 import { authTypes } from '../../constants/auth';
 import { userRoles } from '../../constants/userRoles';
 import { snackbarTypes } from '../../constants/snackbarTypes';
@@ -153,11 +153,11 @@ const Auth = (props) => {
     // switch case
     let authRedirect = null;
     if (commonCondition && props.userRole === userRoles.MANAGER) {
-        authRedirect = <Redirect to={links.ADMIN_PAGE} />;
+        authRedirect = <Redirect to={ADMIN_PAGE_LINK} />;
     } else if (commonCondition && props.userRole) {
-        authRedirect = <Redirect to={links.HOME_PAGE} />;
+        authRedirect = <Redirect to={HOME_PAGE_LINK} />;
     } else if (commonCondition && props.userRole === userRoles.TEACHER) {
-        authRedirect = <Redirect to={links.HOME_PAGE} />;
+        authRedirect = <Redirect to={HOME_PAGE_LINK} />;
     }
 
     const switchAuthModeHandler = (newAuthType) => {

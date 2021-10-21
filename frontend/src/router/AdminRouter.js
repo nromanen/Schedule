@@ -2,7 +2,21 @@ import React from 'react';
 import { Redirect, Switch } from 'react-router-dom';
 
 import LessonPage from '../containers/LessonPage/LessonPage';
-import { links } from '../constants/links';
+import {
+    DEPARTMENTS_LINK,
+    LESSON_PAGE_LINK,
+    TEACHER_LIST_LINK,
+    GROUP_LIST_LINK,
+    CLASS_SCHEDULE_TITLE_LINK,
+    ROOM_LIST_LINK,
+    SUBJECT_PAGE_LINK,
+    BUST_ROOMS_LINK,
+    SEMESTER_PAGE_LINK,
+    MARGE_ROLE_PAGE_LINK,
+    CHANGES_LINK,
+    ADMIN_PAGE_LINK,
+    ACTIVATION_PAGE_LINK,
+} from '../constants/links';
 import TeacherList from '../containers/TeachersList/TeachersList';
 import BusyRooms from '../containers/BusyRooms/BusyRooms';
 import GroupList from '../containers/GroupList/GroupList';
@@ -21,23 +35,23 @@ export default function Routers() {
         <>
             <NavigationPanel />
             <Switch>
-                <AdminRoute path={links.Departments} component={DepartmentPage} />
-                <AdminRoute path={links.LessonPage} component={LessonPage} />
-                <AdminRoute path={links.TeacherList} component={TeacherList} />
-                <AdminRoute path={links.GroupList} component={GroupList} />
-                <AdminRoute path={links.ClassScheduleTitle} component={ClassSchedule} />
-                <AdminRoute path={links.RoomList} component={RoomList} />
-                <AdminRoute path={links.SubjectPage} component={SubjectPage} />
-                <AdminRoute path={links.BusyRooms} component={BusyRooms} />
-                <AdminRoute path={links.SemesterPage} component={SemesterPage} />
-                <AdminRoute path={links.MergeRolePage} component={MergeRolePage} />
-                <AdminRoute path={links.Changes} component={TemporarySchedule} />
+                <AdminRoute path={DEPARTMENTS_LINK} component={DepartmentPage} />
+                <AdminRoute path={LESSON_PAGE_LINK} component={LessonPage} />
+                <AdminRoute path={TEACHER_LIST_LINK} component={TeacherList} />
+                <AdminRoute path={GROUP_LIST_LINK} component={GroupList} />
+                <AdminRoute path={CLASS_SCHEDULE_TITLE_LINK} component={ClassSchedule} />
+                <AdminRoute path={ROOM_LIST_LINK} component={RoomList} />
+                <AdminRoute path={SUBJECT_PAGE_LINK} component={SubjectPage} />
+                <AdminRoute path={BUST_ROOMS_LINK} component={BusyRooms} />
+                <AdminRoute path={SEMESTER_PAGE_LINK} component={SemesterPage} />
+                <AdminRoute path={MARGE_ROLE_PAGE_LINK} component={MergeRolePage} />
+                <AdminRoute path={CHANGES_LINK} component={TemporarySchedule} />
 
-                <AdminRoute path={links.ACTIVATION_PAGE}>
-                    <Redirect to={links.ADMIN_PAGE} />
+                <AdminRoute path={ACTIVATION_PAGE_LINK}>
+                    <Redirect to={ADMIN_PAGE_LINK} />
                 </AdminRoute>
                 <AdminRoute path="/">
-                    <Redirect to={links.LessonPage} />
+                    <Redirect to={LESSON_PAGE_LINK} />
                 </AdminRoute>
             </Switch>
         </>

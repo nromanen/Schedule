@@ -14,7 +14,7 @@ import { RESET_PASSWORD_FORM } from '../../constants/reduxForms';
 import { authTypes } from '../../constants/auth';
 
 import { email, required } from '../../validation/validateFields';
-import { links } from '../../constants/links';
+import { LOGIN_LINK } from '../../constants/links';
 import { EMAIL_LABEL } from '../../constants/translationLabels/formElements';
 import {
     LOGIN_TITLE,
@@ -68,7 +68,7 @@ const ResetPasswordForm = (props) => {
                         setError(null);
                     }}
                 >
-                    <Link className="navLinks" to={links.LOGIN}>
+                    <Link className="navLinks" to={LOGIN_LINK}>
                         {translation(LOGIN_TITLE)}
                     </Link>
                 </button>

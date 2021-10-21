@@ -10,7 +10,7 @@ import Card from '../../share/Card/Card';
 import { GROUP_FORM } from '../../constants/reduxForms';
 import renderTextField from '../../share/renderedFields/input';
 import { required, uniqueGroup, minLengthValue } from '../../validation/validateFields';
-import { links } from '../../constants/links';
+import { EDIT_LINK, STUDENT_LINK } from '../../constants/links';
 
 import { getClearOrCancelTitle, setDisableButton } from '../../helper/disableComponent';
 import {
@@ -29,8 +29,8 @@ const AddGroup = (props) => {
     useEffect(() => {
         if (
             group &&
-            location.pathname.includes(links.Edit) &&
-            !location.pathname.includes(links.Student)
+            location.pathname.includes(EDIT_LINK) &&
+            !location.pathname.includes(STUDENT_LINK)
         ) {
             if (group.id) {
                 initialize({

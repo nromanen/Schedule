@@ -4,7 +4,12 @@ import { useTranslation } from 'react-i18next';
 import { GiSightDisabled, IoMdEye } from 'react-icons/all';
 import { FaEdit, FaUserPlus, FaUsers } from 'react-icons/fa';
 import { MdDelete } from 'react-icons/md';
-import { links } from '../../constants/links';
+import {
+    EDIT_LINK,
+    GROUP_LIST_LINK,
+    SHOW_STUDENTS_LINK,
+    STUDENT_LINK,
+} from '../../constants/links';
 import { getShortTitle } from '../../helper/shortTitle';
 import { dialogTypes } from '../../constants/dialogs';
 import {
@@ -44,7 +49,7 @@ const GroupCard = (props) => {
                                 );
                             }}
                         />
-                        <Link to={`${links.GroupList}/${groupItem.id}${links.Edit}`}>
+                        <Link to={`${GROUP_LIST_LINK}/${groupItem.id}${EDIT_LINK}`}>
                             <FaEdit
                                 className="group__buttons-edit link-href"
                                 title={t(COMMON_EDIT)}
@@ -66,7 +71,7 @@ const GroupCard = (props) => {
                     title={t(DELETE_TITLE_LABEL)}
                     onClick={() => showConfirmDialog(groupItem.id, dialogTypes.DELETE_CONFIRM)}
                 />
-                <Link to={`${links.GroupList}/${groupItem.id}${links.AddStudent}`}>
+                <Link to={`${GROUP_LIST_LINK}/${groupItem.id}${SHOW_STUDENTS_LINK}`}>
                     <FaUserPlus
                         title={t(FORM_STUDENT_ADD_LABEL)}
                         className="svg-btn copy-btn align-left info-btn"
@@ -78,7 +83,7 @@ const GroupCard = (props) => {
             </div>
             <p className="group-card__description">{`${t(GROUP_LABEL)}:`}</p>
             <h1 className="group-card__number">{getShortTitle(groupItem.title, 5)}</h1>
-            <Link to={`${links.GroupList}/${groupItem.id}${links.ShowStudents}`}>
+            <Link to={`${GROUP_LIST_LINK}/${groupItem.id}${STUDENT_LINK}`}>
                 <span className="students-group">
                     <FaUsers
                         title={t(FORM_SHOW_STUDENTS)}
