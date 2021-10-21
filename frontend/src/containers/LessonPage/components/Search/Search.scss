@@ -1,0 +1,48 @@
+// .search-panel {
+//     position: sticky;
+//     top: 1rem;
+//     width: 30rem;
+//     @media (max-width: 850px) {
+//         position: relative;
+//         margin: 0 auto 40px;
+//         max-width: 100%;
+//         display: flex;
+//         flex-direction: column;
+//         align-items: center;
+//     }
+// }
+
+.search-lesson-group {
+    display: flex;
+    align-items: center;
+    align-content: center;
+
+    .search-lesson {
+        margin-left: -300px;
+        margin-right: 110px;
+    }
+}
+
+.lesson-page-title {
+    display: flex;
+    justify-content: center;
+
+    @media (max-width: 500px) {
+        flex-direction: column;
+    }
+
+    .lesson-page-h {
+        @media (max-width: 850px) {
+            font-size: 1.1rem;
+            line-height: 80px;
+            margin-right: 20px;
+        }
+
+        @media (max-width: 500px) {
+            line-height: 20px;
+        }
+
+        line-height: 50px;
+        margin-right: 10px;
+    }
+}

@@ -8,21 +8,21 @@ import { useTranslation } from 'react-i18next';
 import { Accordion, AccordionDetails, AccordionSummary } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Typography from '@material-ui/core/Typography';
-import Card from '../../share/Card/Card';
+import Card from '../../../../share/Card/Card';
 
-import renderTextField from '../../share/renderedFields/input';
-import SelectField from '../../share/renderedFields/select';
-import renderCheckboxField from '../../share/renderedFields/checkbox';
+import renderTextField from '../../../../share/renderedFields/input';
+import SelectField from '../../../../share/renderedFields/select';
+import renderCheckboxField from '../../../../share/renderedFields/checkbox';
 
-import { LESSON_FORM } from '../../constants/reduxForms';
+import { LESSON_FORM } from '../../../../constants/reduxForms';
 import './LessonForm.scss';
-import { lessThanZero, maxLengthValue, required } from '../../validation/validateFields';
-import { setUniqueErrorService } from '../../services/lessonService';
-import { handleTeacherInfo } from '../../helper/renderTeacher';
-import { setValueToSubjectForSiteHandler } from '../../helper/reduxFormHelper';
-import { getClearOrCancelTitle, setDisableButton } from '../../helper/disableComponent';
-import { selectGroupService } from '../../services/groupService';
-import { RenderMultiselect } from '../../share/renderedFields/renderMultiselect';
+import { lessThanZero, maxLengthValue, required } from '../../../../validation/validateFields';
+import { setUniqueErrorService, selectLessonCardService } from '../../../../services/lessonService';
+import { handleTeacherInfo } from '../../../../helper/renderTeacher';
+import { setValueToSubjectForSiteHandler } from '../../../../helper/reduxFormHelper';
+import { getClearOrCancelTitle, setDisableButton } from '../../../../helper/disableComponent';
+import { selectGroupService } from '../../../../services/groupService';
+import { RenderMultiselect } from '../../../../share/renderedFields/renderMultiselect';
 import {
     EDIT_TITLE,
     CREATE_TITLE,
@@ -39,8 +39,8 @@ import {
     FORM_GROUPED_LABEL,
     HOURS_LABEL,
     TEACHER_LABEL,
-} from '../../constants/translationLabels/formElements';
-import { TYPE_LABEL } from '../../constants/translationLabels/common';
+} from '../../../../constants/translationLabels/formElements';
+import { TYPE_LABEL } from '../../../../constants/translationLabels/common';
 
 const useStyles = makeStyles(() => ({
     notSelected: {
@@ -69,7 +69,6 @@ let LessonForm = (props) => {
         initialize,
         change,
         lessonTypes,
-        onSetSelectedCard,
     } = props;
 
     const classes = useStyles();
@@ -102,9 +101,11 @@ let LessonForm = (props) => {
         setChecked(lessonData.grouped);
     };
     const handleChange = (event) => setChecked(event.target.checked);
+
     useEffect(() => {
         selectGroupService(groupId);
-    }, groupId);
+    }, [groupId]);
+
     useEffect(() => {
         setChecked(false);
         if (lessonId) {
@@ -280,7 +281,7 @@ let LessonForm = (props) => {
                             onClick={() => {
                                 reset();
                                 setUniqueErrorService(null);
-                                onSetSelectedCard(null);
+                                selectLessonCardService(null);
                             }}
                         >
                             {getClearOrCancelTitle(lesson.id, t)}
@@ -300,7 +301,12 @@ const mapStateToProps = (state) => ({
     lesson: state.lesson.lesson,
     groups: state.groups.groups,
     group: state.groups.group,
+    isUniqueError: state.lesson.uniqueError,
     groupId: state.lesson.groupId,
+    subjects: state.subjects.subjects,
+    lessonTypes: state.lesson.lessonTypes,
+    teachers: state.teachers.teachers,
+    currentSemester: state.schedule.currentSemester,
 });
 
 LessonForm = reduxForm({

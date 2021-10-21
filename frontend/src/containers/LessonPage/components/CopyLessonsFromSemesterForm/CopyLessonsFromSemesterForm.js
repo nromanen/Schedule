@@ -5,18 +5,21 @@ import { Field, reduxForm } from 'redux-form';
 import { useTranslation } from 'react-i18next';
 
 import Button from '@material-ui/core/Button';
-import SelectField from '../../share/renderedFields/select';
+import SelectField from '../../../../share/renderedFields/select';
 
 import './CopyLessonsFromSemesterForm.scss';
-import Card from '../../share/Card/Card';
+import Card from '../../../../share/Card/Card';
 
-import { COPY_LESSONS_FROM_SEMESTER_FORM } from '../../constants/reduxForms';
-import { required } from '../../validation/validateFields';
+import { COPY_LESSONS_FROM_SEMESTER_FORM } from '../../../../constants/reduxForms';
+import { required } from '../../../../validation/validateFields';
 import {
     FORM_SEMESTER_LABEL,
     FORM_COPY_LESSON,
-} from '../../constants/translationLabels/formElements';
-import { COPY_LESSON, COPY_LESSONS_FROM_SEMESTER } from '../../constants/translationLabels/common';
+} from '../../../../constants/translationLabels/formElements';
+import {
+    COPY_LESSON,
+    COPY_LESSONS_FROM_SEMESTER,
+} from '../../../../constants/translationLabels/common';
 
 const CopyLessonsFromSemesterForm = (props) => {
     const { t } = useTranslation('common');

@@ -7,7 +7,7 @@ import Button from '@material-ui/core/Button';
 import { useTranslation } from 'react-i18next';
 import Card from '../../share/Card/Card';
 
-import '../LessonForm/LessonForm';
+// import '../LessonForm/LessonForm';
 import './ClassForm.scss';
 
 import renderTextField from '../../share/renderedFields/input';
