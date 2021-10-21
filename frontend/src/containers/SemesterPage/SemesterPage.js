@@ -18,7 +18,6 @@ import SemesterCopyForm from '../../components/SemesterCopyForm/SemesterCopyForm
 import {
     clearSemesterService,
     selectSemesterService,
-    handleSemesterService,
     getDisabledSemestersService,
     removeSemesterCardService,
     setDisabledSemestersService,
@@ -82,9 +81,7 @@ const SemesterPage = (props) => {
     const [subDialogType, setSubDialogType] = useState('');
     const [openGroupsDialog, setOpenGroupsDialog] = useState(false);
     const [semesterId, setSemesterId] = useState(-1);
-
     const [term, setTerm] = useState('');
-    const [selected, setSelected] = useState([]);
     const [selectedGroups, setSelectedGroups] = useState([]);
     const [semesterOptions, setSemesterOptions] = useState([]);
     const [edit, setEdit] = useState(false);
@@ -124,12 +121,6 @@ const SemesterPage = (props) => {
         if (!(archived || disabled)) setVisibleItems(search(enabledSemesters, term, searchArr));
     }, [disabled, archived, enabledSemesters]);
 
-    const submitSemesterForm = (values) => {
-        const semesterGroups = selected.map((group) => {
-            return { id: group.id, title: group.label };
-        });
-        handleSemesterService({ ...values, semesterGroups });
-    };
     const resetSemesterForm = () => {
         setSelectedGroups([]);
         clearSemesterService();
@@ -254,12 +245,10 @@ const SemesterPage = (props) => {
                     />
                     {!(disabled || archived) && (
                         <SemesterForm
+                            groups={groups}
                             selectedGroups={selectedGroups}
                             setSelectedGroups={setSelectedGroups}
-                            selected={selected}
-                            setSelected={setSelected}
                             className="form"
-                            onSubmit={submitSemesterForm}
                             onReset={resetSemesterForm}
                             semester={edit && semester}
                         />

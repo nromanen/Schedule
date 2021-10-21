@@ -60,7 +60,7 @@ export const getDisabledGroupsService = () => {
             errorHandler(error);
         });
 };
-
+// TODO check if need sort
 export const showAllGroupsService = () => {
     axios
         .get(GROUP_URL)

@@ -112,15 +112,18 @@ export const setGroupsToSemester = (semesterId, groups) => {
         })
         .catch((error) => errorHandler(error));
 };
-
+// TODO need to refactor
 const cardSemester = (semester) => {
     const semesterDays = [];
     const semesterClasses = [];
     Object.keys(semester).forEach((prop) => {
         if (get(semester, prop)) {
-            if (prop.indexOf('semesterDays_markup_') >= 0 && semester[prop] === true) {
+            if (prop.indexOf('semester_days_markup_') >= 0 && semester[prop] === true) {
                 semesterDays.push(prop.substring(21));
-            } else if (prop.indexOf('semesterClasses_markup_') >= 0 && semester[prop] === true) {
+            }
+        }
+        if (get(semester, prop)) {
+            if (prop.indexOf('semester_classes_markup_') >= 0 && semester[prop] === true) {
                 semesterClasses.push(
                     store
                         .getState()
@@ -140,8 +143,8 @@ const cardSemester = (semester) => {
         endDay: semester.endDay,
         currentSemester: semester.currentSemester,
         defaultSemester: semester.defaultSemester,
-        semesterDays,
-        semesterClasses,
+        semester_days: semesterDays,
+        semester_classes: semesterClasses,
         semester_groups: semester.semester_groups,
     };
 };
@@ -179,6 +182,7 @@ const postSemester = (data) => {
     axios
         .post(SEMESTERS_URL, data)
         .then((response) => {
+            console.log(response.data);
             store.dispatch(addSemester(response.data));
             resetFormHandler(SEMESTER_FORM);
             successHandler(
