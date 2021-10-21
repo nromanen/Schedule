@@ -219,13 +219,13 @@ const Schedule = (props) => {
                 {
                     day: { name: day.toLowerCase() },
                     classNumber,
-                    week: 'even',
+                    week: 'odd',
                     id: `${index}-${outerIndex}`,
                 },
                 {
                     day: { name: day.toLowerCase() },
                     classNumber,
-                    week: 'odd',
+                    week: 'even',
                     id: `${index}-${outerIndex}`,
                 },
             );
