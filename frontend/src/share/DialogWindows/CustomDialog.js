@@ -13,7 +13,6 @@ const CustomDialog = (props) => {
     return ReactDOM.createPortal(
         <Dialog
             className="custom-dialog"
-            disableBackdropClick
             onClose={onClose}
             open={open}
             {...other}
