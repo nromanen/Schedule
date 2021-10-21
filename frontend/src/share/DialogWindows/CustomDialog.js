@@ -13,7 +13,7 @@ const CustomDialog = (props) => {
     return ReactDOM.createPortal(
         <Dialog
             className="custom-dialog"
-            onClose={onClose}
+            onClose={() => onClose('')}
             open={open}
             {...other}
         >

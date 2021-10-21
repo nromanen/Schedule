@@ -42,7 +42,7 @@ export const UploadFile = (props) => {
         <CustomDialog
             title="Upload file"
             open={open}
-            onClick={handleCloseDialogFile}
+            onClose={handleCloseDialogFile}
             buttons={
                 <>
                     <Button
