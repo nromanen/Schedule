@@ -170,21 +170,27 @@ const LessonPage = (props) => {
     return (
         <>
             <Card additionClassName="card-title lesson-card">
-                <CopyLessonDialog
-                    open={openCopyLessonDialog}
-                    onClose={closeCopyLessonDialogHandle}
-                    groupId={groupId}
-                    lesson={copiedLesson}
-                    groups={groups}
-                    translation={t}
-                />
-                <CustomDialog
-                    type={dialogTypes.DELETE_CONFIRM}
-                    cardId={lessonId}
-                    whatDelete={cardType.LESSON.toLowerCase()}
-                    open={isOpenConfirmDialog}
-                    onClose={acceptConfirmDialog}
-                />
+                {openCopyLessonDialog && (
+                    <CopyLessonDialog
+                        open={openCopyLessonDialog}
+                        onClose={closeCopyLessonDialogHandle}
+                        groupId={groupId}
+                        lesson={copiedLesson}
+                        groups={groups}
+                        translation={t}
+                    />
+                )}
+
+                {isOpenConfirmDialog && (
+                    <CustomDialog
+                        type={dialogTypes.DELETE_CONFIRM}
+                        cardId={lessonId}
+                        whatDelete={cardType.LESSON.toLowerCase()}
+                        open={isOpenConfirmDialog}
+                        onClose={acceptConfirmDialog}
+                    />
+                )}
+
                 <div className="lesson-page-title">
                     <aside className="search-lesson-group">
                         {groupId && (

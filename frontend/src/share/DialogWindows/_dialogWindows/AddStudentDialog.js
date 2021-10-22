@@ -16,7 +16,11 @@ import { STUDENT_FORM } from '../../../constants/reduxForms';
 import renderSelectField from '../../renderedFields/select';
 import { goToGroupPage } from '../../../helper/pageRedirection';
 import CustomDialog from '../CustomDialog';
-import { TYPE_LABEL } from '../../../constants/translationLabels/common';
+import {
+    CLEAR_BUTTON_LABEL,
+    SAVE_BUTTON_LABEL,
+} from '../../../constants/translationLabels/formElements';
+import { TYPE_LABEL, CANCEL_BUTTON_LABEL, COMMON_CLOSE_TITLE } from '../../../constants/translationLabels/common';
 
 const AddStudentDialog = (props) => {
     const { t } = useTranslation('formElements');
@@ -55,8 +59,8 @@ const AddStudentDialog = (props) => {
             open={open}
             onClose={handleClose}
             buttons={
-                <Button className="buttons-style" variant="contained" onClick={handleClose}>
-                    {t('cancel_button_label')}
+                <Button className="buttons-style" color="primary" variant="contained" onClick={handleClose}>
+                    {t(COMMON_CLOSE_TITLE)}
                 </Button>
             }
         >
@@ -130,7 +134,7 @@ const AddStudentDialog = (props) => {
                             disabled={pristine || submitting}
                             type="submit"
                         >
-                            {t('save_button_label')}
+                            {t(SAVE_BUTTON_LABEL)}
                         </Button>
                         <Button
                             className="buttons-style"
@@ -138,7 +142,7 @@ const AddStudentDialog = (props) => {
                             disabled={pristine || submitting}
                             onClick={reset}
                         >
-                            {studentId ? t('cancel_button_label') : t('clear_button_label')}
+                            {studentId ? t(CANCEL_BUTTON_LABEL) : t(CLEAR_BUTTON_LABEL)}
                         </Button>
                     </div>
                 </form>
