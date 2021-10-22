@@ -1,6 +1,7 @@
-export const snackbarTypes = {
+const snackbarTypes = {
     ERROR: 'error',
     WARNING: 'warning',
     INFO: 'info',
-    SUCCESS: 'success'
+    SUCCESS: 'success',
 };
+export { snackbarTypes };

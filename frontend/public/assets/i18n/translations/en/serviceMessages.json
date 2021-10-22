@@ -15,6 +15,6 @@
     "successfully_merged": "User and teacher have been successfully merged",
     "copied_label": "copied",
     "cleared_label": "cleared",
-    "student_label": "exist(s)",
+    "exist_label": "exist(s)",
     "archived_label": "archived"
 }

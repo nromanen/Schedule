@@ -2,22 +2,18 @@ import React, { useEffect } from 'react';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 
-import { logout } from '../../../redux/actions/index';
-import { setScheduleSemesterIdService } from '../../../services/scheduleService';
-import { useHistory } from 'react-router-dom';
-const Logout = props => {
+import { logout } from '../../../actions/index';
+
+const Logout = (props) => {
     useEffect(() => {
         props.onLogout();
     }, []);
-    // useEffect(()=>setScheduleSemesterIdService(0))
-    // const history=useHistory();
-    // useEffect(()=>history.push("/"));
     return <Redirect to="/" />;
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
     return {
-        onLogout: () => dispatch(logout())
+        onLogout: () => dispatch(logout()),
     };
 };
 

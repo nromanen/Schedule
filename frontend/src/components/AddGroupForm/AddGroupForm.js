@@ -8,43 +8,46 @@ import './AddGroupForms.scss';
 import Card from '../../share/Card/Card';
 import { GROUP_FORM } from '../../constants/reduxForms';
 import renderTextField from '../../share/renderedFields/input';
-import {
-    required,
-    uniqueGroup,
-    minLengthValue
-} from '../../validation/validateFields';
+import { required, uniqueGroup, minLengthValue } from '../../validation/validateFields';
 import { links } from '../../constants/links';
 import { getClearOrCancelTitle, setDisableButton } from '../../helper/disableComponent';
+import {
+    EDIT_TITLE,
+    CREATE_TITLE,
+    SAVE_BUTTON_LABEL,
+    GROUP_Y_LABEL,
+    GROUP_LABEL,
+} from '../../constants/translationLabels/formElements';
 
-let AddGroup = props => {
+const AddGroup = (props) => {
     const { t } = useTranslation('formElements');
-    const { handleSubmit, pristine, onReset, submitting,match,group } = props;
+    const { handleSubmit, pristine, onReset, submitting, match, group, initialize } = props;
 
     useEffect(() => {
-        if (group&&match.url.includes(links.Edit)&&!match.url.includes(links.Student)) {
+        if (group && match.url.includes(links.Edit) && !match.url.includes(links.Student)) {
             if (group.id) {
-                props.initialize({
+                initialize({
                     id: group.id,
-                    title: group.title
+                    title: group.title,
                 });
             } else {
-                props.initialize();
+                initialize();
             }
         }
     }, [group.id]);
 
     return (
-        <Card class="form-card group-form">
+        <Card additionClassName="form-card group-form">
             <h2 className="group-form__title">
-                {group.id ? t('edit_title') : t('create_title')}
-                {t('group_y_label')}
+                {group.id ? t(EDIT_TITLE) : t(CREATE_TITLE)}
+                {t(GROUP_Y_LABEL)}
             </h2>
             <form onSubmit={handleSubmit}>
                 <Field
                     className="form-field"
                     name="title"
                     id="title"
-                    label={t('group_label') + ':'}
+                    label={`${t(GROUP_LABEL)}:`}
                     component={renderTextField}
                     validate={[required, minLengthValue, uniqueGroup]}
                 />
@@ -56,16 +59,16 @@ let AddGroup = props => {
                         disabled={pristine || submitting}
                         type="submit"
                     >
-                        {t('save_button_label')}
+                        {t(SAVE_BUTTON_LABEL)}
                     </Button>
                     <Button
                         type="button"
                         className="buttons-style"
                         variant="contained"
-                        disabled={setDisableButton(pristine,submitting,group.id)}
+                        disabled={setDisableButton(pristine, submitting, group.id)}
                         onClick={onReset}
                     >
-                        {getClearOrCancelTitle(group.id,t)}
+                        {getClearOrCancelTitle(group.id, t)}
                     </Button>
                 </div>
             </form>
@@ -73,12 +76,12 @@ let AddGroup = props => {
     );
 };
 
-const mapStateToProps = state => ({
-    group: state.groups.group
+const mapStateToProps = (state) => ({
+    group: state.groups.group,
 });
 
 export default connect(mapStateToProps)(
     reduxForm({
-        form: GROUP_FORM
-    })(AddGroup)
+        form: GROUP_FORM,
+    })(AddGroup),
 );

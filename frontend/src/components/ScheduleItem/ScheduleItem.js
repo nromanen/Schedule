@@ -1,77 +1,74 @@
 import React from 'react';
 import { MdDelete, MdEdit } from 'react-icons/md';
 
-import Card from '../../share/Card/Card';
 import { FaUserPlus } from 'react-icons/fa';
-import { getTeacherFullName, getTeacherName } from '../../helper/renderTeacher';
-import groups from '../../redux/reducers/groups';
+import Card from '../../share/Card/Card';
+import {
+    FORM_GROUPED_LABEL,
+    FORM_HOURS_LABEL,
+} from '../../constants/translationLabels/formElements';
+import {
+    COMMON_DELETE_SCHEDULE_ITEM,
+    COMMON_EDIT_SCHEDULE_ITEM,
+} from '../../constants/translationLabels/common';
+import { getTeacherName } from '../../helper/renderTeacher';
 
-const ScheduleItem = props => {
-    let lesson = props.lesson;
+const ScheduleItem = (props) => {
+    const {
+        translation: t,
+        item: propItem,
+        inBoard,
+        deleteItem,
+        editItem,
+        fStrLetterCapital,
+        addition,
+        className,
+    } = props;
+    let { lesson } = props;
     let itemId;
 
-    const item = props.item || null;
-    const t = props.translation;
-    const { fStrLetterCapital } = props;
+    const item = propItem || null;
 
     if (item) {
-        lesson = item.lesson;
-        itemId = item.id;
+        const { lesson: propsItemLesson, id: propsItemId } = item;
+        lesson = propsItemLesson;
+        itemId = propsItemId;
     }
-
-    const addition = props.addition;
 
     const itemNodeId = `card-${lesson.id}-group-${lesson.group.id}-${addition}`;
     const deleteNodeId = `delete-${lesson.id}-${lesson.group.id}-${addition}`;
 
-    const getTitleLesson = () => {
-
-        if (lesson.grouped) {
-            console.log(lesson)
-            //const groupsFilter = props.lessons.filter(les => les.grouped===true&&les.subjectForSite === lesson.subjectForSite);
-            // const groups = groupsFilter.map(item => item.subjectForSite === lesson.subjectForSite &&
-            //     item.lessonType === lesson.lessonType &&
-            //     lesson.teacher.id === item.teacher.id);
-            // console.log(groups)
-        }
-        return null
-
-    };
-
-    const isGroupped = grouped =>
+    const isGroupped = (grouped) =>
         grouped ? (
             <FaUserPlus
-                title={t('formElements:grouped_label')}
-                className='svg-btn copy-btn align-left info-btn'
+                title={t(FORM_GROUPED_LABEL)}
+                className="svg-btn copy-btn align-left info-btn"
             />
         ) : (
             ''
         );
 
     return (
-        <Card id={itemNodeId} class={props.class} draggable={true}>
-            {getTitleLesson()}
+        <Card id={itemNodeId} additionClassName={className} draggable>
             <input
-                type='hidden'
+                type="hidden"
                 value={JSON.stringify({
-                    lesson: lesson,
-                    id: itemId
+                    lesson,
+                    id: itemId,
                 })}
             />
-            {props.inBoard ? (
+            {inBoard ? (
                 <>
-                    <div className='cards-btns delete-item' id={deleteNodeId}>
+                    <div className="cards-btns delete-item" id={deleteNodeId}>
                         <MdDelete
-                            title={t('common:delete_schedule_item')}
-                            className='svg-btn delete-btn'
-                            onClick={() =>
-                                props.deleteItem(itemId, item.lesson.group.id)
-                            }
+                            title={t(COMMON_DELETE_SCHEDULE_ITEM)}
+                            className="svg-btn delete-btn"
+                            onClick={() => deleteItem(itemId, item.lesson.group.id)}
                         />
                         <MdEdit
-                            title={t('common:edit_schedule_item')}
-                            className='svg-btn edit-btn'
-                            onClick={() => props.editItem(item)}
+                            title={t(COMMON_EDIT_SCHEDULE_ITEM)}
+                            className="svg-btn edit-btn"
+                            onClick={() => editItem(item)}
                         />
                     </div>
                 </>
@@ -81,13 +78,10 @@ const ScheduleItem = props => {
 
             <p>
                 {fStrLetterCapital(lesson.subjectForSite)} (
-                {t(
-                    `formElements:lesson_type_${lesson.lessonType.toLowerCase()}_label`
-                )}
-                )
+                {t(`formElements:lesson_type_${lesson.lessonType.toLowerCase()}_label`)})
             </p>
             <p>{getTeacherName(lesson.teacher)}</p>
-            {props.inBoard ? (
+            {inBoard ? (
                 <p>
                     {isGroupped(lesson.grouped)}
                     <b>{item.room.name}</b>
@@ -95,7 +89,7 @@ const ScheduleItem = props => {
             ) : (
                 <p>
                     {isGroupped(lesson.grouped)}
-                    <b>1</b> {t('formElements:hours_label')}
+                    <b>1</b> {t(FORM_HOURS_LABEL)}
                 </p>
             )}
         </Card>

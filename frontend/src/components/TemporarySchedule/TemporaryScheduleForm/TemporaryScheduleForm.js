@@ -2,80 +2,106 @@ import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Field, reduxForm } from 'redux-form';
 
-import { TEMPORARY_SCHEDULE_FORM } from '../../../constants/reduxForms';
-
 import Button from '@material-ui/core/Button';
 import Hidden from '@material-ui/core/Hidden';
+import { TEMPORARY_SCHEDULE_FORM } from '../../../constants/reduxForms';
 
 import Card from '../../../share/Card/Card';
 import renderCheckboxField from '../../../share/renderedFields/checkbox';
-import renderSelectField from '../../../share/renderedFields/select';
+import SelectField from '../../../share/renderedFields/select';
 import renderTextField from '../../../share/renderedFields/input';
 
 import { handleTeacherInfo } from '../../../helper/renderTeacher';
 import {
     setValueToSubjectForSiteHandler,
-    setValueToTeacherForSiteHandler
+    setValueToTeacherForSiteHandler,
 } from '../../../helper/reduxFormHelper';
 
 import { maxLengthValue, required } from '../../../validation/validateFields';
 
 import { selectTemporaryScheduleService } from '../../../services/temporaryScheduleService';
+import {
+    SAVE_BUTTON_LABEL,
+    GROUP_LABEL,
+    ROOM_LABEL,
+    SUBJECT_LABEL,
+    CLEAR_BUTTON_LABEL,
+    CLASS_LABEL,
+    FOR_SITE_LABEL,
+    TEACHER_LABEL,
+    EDIT_TEMPORARY_SCHEDULE_FORM,
+    CREATE_TEMPORARY_SCHEDULE_FORM,
+} from '../../../constants/translationLabels/formElements';
+import {
+    COMMON_NOTIFY_LABEL,
+    COMMON_HOLIDAY_LABEL,
+    TYPE_LABEL,
+} from '../../../constants/translationLabels/common';
 
-let TemporaryScheduleForm = props => {
+const TemporaryScheduleForm = (props) => {
     const { t } = useTranslation('formElements');
-    const { handleSubmit, invalid, reset, submitting } = props;
+    const {
+        handleSubmit,
+        invalid,
+        reset,
+        submitting,
+        temporarySchedule,
+        teachers,
+        periods,
+        rooms,
+        subjects,
+        lessonTypes,
+        groups,
+        initialize,
+    } = props;
     const [isVacation, setIsVacation] = useState(false);
     const [notify, setNotify] = useState(false);
 
-    const temporarySchedule = props.temporarySchedule;
     const scheduleId = temporarySchedule?.scheduleId;
     const temporaryScheduleId = temporarySchedule?.id;
 
-    const { teachers, periods, rooms, subjects, lessonTypes, groups } = props;
+    const initializeFormHandler = (temporaryScheduleData) => {
+        setIsVacation(temporaryScheduleData.vacation);
+        initialize({
+            vacation: isVacation,
+            teacher: temporaryScheduleData.teacher.id,
+            semester: temporaryScheduleData.semester.id,
+            subject: temporaryScheduleData.subject.id,
+            group: temporaryScheduleData.group.id,
+            room: temporaryScheduleData.room.id,
+            period: temporaryScheduleData.class.id,
+            lessonType: temporaryScheduleData.lessonType,
+            teacherForSite: temporaryScheduleData.teacherForSite,
+            subjectForSite: temporaryScheduleData.subjectForSite,
+            date: temporaryScheduleData.date,
+            id: temporaryScheduleData.id,
+            scheduleId: temporaryScheduleData.scheduleId,
+        });
+    };
 
     useEffect(() => {
         if (temporaryScheduleId || scheduleId) {
             initializeFormHandler(temporarySchedule);
         } else {
-            props.initialize({ vacation: isVacation });
+            initialize({ vacation: isVacation });
         }
     }, [temporaryScheduleId]);
 
-    const initializeFormHandler = temporarySchedule => {
-        setIsVacation(temporarySchedule.vacation);
-        props.initialize({
-            vacation: isVacation,
-            teacher: temporarySchedule.teacher.id,
-            semester: temporarySchedule.semester.id,
-            subject: temporarySchedule.subject.id,
-            group: temporarySchedule.group.id,
-            room: temporarySchedule.room.id,
-            period: temporarySchedule.class.id,
-            lessonType: temporarySchedule.lessonType,
-            teacherForSite: temporarySchedule.teacherForSite,
-            subjectForSite: temporarySchedule.subjectForSite,
-            date: temporarySchedule.date,
-            id: temporarySchedule.id,
-            scheduleId: temporarySchedule.scheduleId
-        });
-    };
-
-    const handleVacationChange = event => setIsVacation(event.target.checked);
-    const handleNotifyChange = event => setNotify(event.target.checked);
+    const handleVacationChange = (event) => setIsVacation(event.target.checked);
+    const handleNotifyChange = (event) => setNotify(event.target.checked);
 
     return (
-        <Card class="form-card">
+        <Card additionClassName="form-card">
             <>
                 <h2 className="form-title under-line">
                     {!temporarySchedule.scheduleId
-                        ? t('edit_temporary_schedule_form')
-                        : t('create_temporary_schedule_form')}
+                        ? t(EDIT_TEMPORARY_SCHEDULE_FORM)
+                        : t(CREATE_TEMPORARY_SCHEDULE_FORM)}
                 </h2>
                 <form onSubmit={handleSubmit}>
                     <Field
                         name="vacation"
-                        label={t('common:holiday_label')}
+                        label={t(COMMON_HOLIDAY_LABEL)}
                         component={renderCheckboxField}
                         checked={isVacation}
                         onChange={handleVacationChange}
@@ -84,22 +110,22 @@ let TemporaryScheduleForm = props => {
                     <Field
                         name="teacher"
                         className="form-field"
-                        component={renderSelectField}
-                        label={t('teacher_label')}
+                        component={SelectField}
+                        label={t(TEACHER_LABEL)}
                         validate={[required]}
                         disabled={isVacation}
-                        onChange={event => {
+                        onChange={(event) => {
                             if (event.target.value)
                                 setValueToTeacherForSiteHandler(
                                     teachers,
                                     event.target.value,
-                                    props.change
+                                    props.change,
                                 );
                             else props.change('teacherForSite', '');
                         }}
                     >
-                        <option value={''} />
-                        {teachers.map(teacher => (
+                        <option value="" />
+                        {teachers.map((teacher) => (
                             <option value={teacher.id} key={teacher.id}>
                                 {handleTeacherInfo(teacher)}
                             </option>
@@ -108,20 +134,20 @@ let TemporaryScheduleForm = props => {
                     <Field
                         name="subject"
                         className="form-field"
-                        component={renderSelectField}
-                        label={t('subject_label')}
+                        component={SelectField}
+                        label={t(SUBJECT_LABEL)}
                         validate={[required]}
                         disabled={isVacation}
-                        onChange={event => {
+                        onChange={(event) => {
                             setValueToSubjectForSiteHandler(
                                 subjects,
                                 event.target.value,
-                                props.change
+                                props.change,
                             );
                         }}
                     >
-                        <option value={''} />
-                        {subjects.map(subject => (
+                        <option value="" />
+                        {subjects.map((subject) => (
                             <option key={subject.id} value={subject.id}>
                                 {subject.name}
                             </option>
@@ -130,13 +156,13 @@ let TemporaryScheduleForm = props => {
                     <Field
                         name="group"
                         className="form-field"
-                        component={renderSelectField}
-                        label={t('group_label')}
+                        component={SelectField}
+                        label={t(GROUP_LABEL)}
                         validate={[required]}
                         disabled={isVacation}
                     >
-                        <option value={''} />
-                        {groups.map(group => (
+                        <option value="" />
+                        {groups.map((group) => (
                             <option key={group.id} value={group.id}>
                                 {group.title}
                             </option>
@@ -145,30 +171,28 @@ let TemporaryScheduleForm = props => {
                     <Field
                         name="lessonType"
                         className="form-field"
-                        component={renderSelectField}
-                        label={t('type_label')}
+                        component={SelectField}
+                        label={t(TYPE_LABEL)}
                         validate={[required]}
                         disabled={isVacation}
                     >
-                        <option value={''} />
-                        {lessonTypes.map((lessonType, index) => (
-                            <option value={lessonType} key={index}>
-                                {t(
-                                    `formElements:lesson_type_${lessonType.toLowerCase()}_label`
-                                )}
+                        <option value="" />
+                        {lessonTypes.map((lessonType) => (
+                            <option value={lessonType} key={lessonType}>
+                                {t(`formElements:lesson_type_${lessonType.toLowerCase()}_label`)}
                             </option>
                         ))}
                     </Field>
                     <Field
                         name="room"
                         className="form-field"
-                        component={renderSelectField}
-                        label={t('room_label')}
+                        component={SelectField}
+                        label={t(ROOM_LABEL)}
                         validate={[required]}
                         disabled={isVacation}
                     >
-                        <option value={''} />
-                        {rooms.map(room => (
+                        <option value="" />
+                        {rooms.map((room) => (
                             <option value={room.id} key={room.id}>
                                 {room.name}
                             </option>
@@ -177,13 +201,13 @@ let TemporaryScheduleForm = props => {
                     <Field
                         name="period"
                         className="form-field"
-                        component={renderSelectField}
-                        label={t('class_label')}
+                        component={SelectField}
+                        label={t(CLASS_LABEL)}
                         validate={[required]}
                         disabled={isVacation}
                     >
-                        <option value={''} />
-                        {periods.map(period => (
+                        <option value="" />
+                        {periods.map((period) => (
                             <option value={period.id} key={period.id}>
                                 {period.startTime} - {period.endTime}
                             </option>
@@ -196,7 +220,7 @@ let TemporaryScheduleForm = props => {
                         rowsMax="1"
                         margin="normal"
                         component={renderTextField}
-                        label={t('teacher_label') + t('for_site_label')}
+                        label={t(TEACHER_LABEL) + t(FOR_SITE_LABEL)}
                         validate={[required, maxLengthValue]}
                         disabled={isVacation}
                     />
@@ -207,13 +231,13 @@ let TemporaryScheduleForm = props => {
                         rowsMax="1"
                         margin="normal"
                         component={renderTextField}
-                        label={t('subject_label') + t('for_site_label')}
+                        label={t(SUBJECT_LABEL) + t(FOR_SITE_LABEL)}
                         validate={[required, maxLengthValue]}
                         disabled={isVacation}
                     />
                     <Field
                         name="notify"
-                        label={t('common:notify_label')}
+                        label={t(COMMON_NOTIFY_LABEL)}
                         component={renderCheckboxField}
                         checked={notify}
                         onChange={handleNotifyChange}
@@ -233,7 +257,7 @@ let TemporaryScheduleForm = props => {
                             color="primary"
                             disabled={invalid || submitting}
                         >
-                            {t('save_button_label')}
+                            {t(SAVE_BUTTON_LABEL)}
                         </Button>
                         <Button
                             className="buttons-style"
@@ -245,7 +269,7 @@ let TemporaryScheduleForm = props => {
                                 selectTemporaryScheduleService({});
                             }}
                         >
-                            {t('clear_button_label')}
+                            {t(CLEAR_BUTTON_LABEL)}
                         </Button>
                     </div>
                 </form>
@@ -254,8 +278,8 @@ let TemporaryScheduleForm = props => {
     );
 };
 
-TemporaryScheduleForm = reduxForm({
-    form: TEMPORARY_SCHEDULE_FORM
+const TemporaryScheduleReduxForm = reduxForm({
+    form: TEMPORARY_SCHEDULE_FORM,
 })(TemporaryScheduleForm);
 
-export default TemporaryScheduleForm;
+export default TemporaryScheduleReduxForm;

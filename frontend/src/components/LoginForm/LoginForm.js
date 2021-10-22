@@ -10,34 +10,32 @@ import Card from '../../share/Card/Card';
 import renderTextField from '../../share/renderedFields/input';
 
 import { LOGIN_FORM } from '../../constants/reduxForms';
-import { authTypes } from '../../constants/auth';
-import { GOOGLE_LOGIN_URL } from '../../constants/axios';
 
 import { required } from '../../validation/validateFields';
-import { FaGoogle } from 'react-icons/fa';
-import { links } from '../../constants/links';
-import { Link } from 'react-router-dom';
 import {
     setScheduleGroupIdService,
     setScheduleSemesterIdService,
-    setScheduleTeacherIdService, setScheduleTypeService
+    setScheduleTeacherIdService,
+    setScheduleTypeService,
 } from '../../services/scheduleService';
-let LoginForm = props => {
+import { PASSWORD_LABEL, EMAIL_LABEL } from '../../constants/translationLabels/formElements';
+import { LOGIN_TITLE } from '../../constants/translationLabels/common';
 
-    useEffect(()=>setScheduleSemesterIdService(0))
-    useEffect(()=>setScheduleTeacherIdService(0))
-    useEffect(()=>setScheduleGroupIdService(0))
-    useEffect(()=>setScheduleTypeService(""))
+const LoginForm = (props) => {
+    useEffect(() => {
+        setScheduleSemesterIdService(0);
+        setScheduleTeacherIdService(0);
+        setScheduleGroupIdService(0);
+        setScheduleTypeService('');
+    });
     const { t } = useTranslation('formElements');
-    const { handleSubmit } = props;
+    const { handleSubmit, loginError, translation, setError, isLoading } = props;
 
-    const error = props.loginError;
+    const error = loginError;
 
-    const translation = props.translation;
-
-    const errorHandling = value => {
-        if (required(value)) props.setError(required(value));
-        else props.setError(null);
+    const errorHandling = (value) => {
+        if (required(value)) setError(required(value));
+        else setError(null);
     };
 
     let form = (
@@ -46,17 +44,17 @@ let LoginForm = props => {
                 name="email"
                 className="form-field"
                 component={renderTextField}
-                label={t('email_label')}
+                label={t(EMAIL_LABEL)}
                 error={!!error}
                 helperText={error ? error.login : null}
-                onChange={e => errorHandling(e.target.value)}
+                onChange={(e) => errorHandling(e.target.value)}
             />
             <Field
                 name="password"
                 className="form-field"
                 type="password"
                 component={renderTextField}
-                label={t('password_label')}
+                label={t(PASSWORD_LABEL)}
                 error={!!error}
                 onChange={() => props.setError(null)}
             />
@@ -66,60 +64,25 @@ let LoginForm = props => {
                 variant="contained"
                 color="primary"
             >
-                {translation('login_title')}
+                {translation(LOGIN_TITLE)}
             </Button>
-            {/*<div className="group-btns">*/}
-            {/*    <button*/}
-            {/*        type="button"*/}
-            {/*        className="auth-link"*/}
-            {/*        onClick={() => {*/}
-            {/*            props.switchAuthMode(authTypes.REGISTRATION);*/}
-            {/*            props.setError(null);*/}
-            {/*        }}*/}
-            {/*    >*/}
-            {/*       <Link  className="navLinks" to={links.Registration}>{translation('no_account')}</Link>*/}
-            {/*    </button>*/}
-            {/*    <button*/}
-            {/*        type="button"*/}
-            {/*        className="auth-link"*/}
-            {/*        onClick={() => {*/}
-            {/*            props.switchAuthMode(authTypes.RESET_PASSWORD);*/}
-            {/*            props.setError(null);*/}
-            {/*        }}*/}
-            {/*    >*/}
-            {/*       <Link  className="navLinks" to={links.RESET_PASSWORD}>{translation('forgot_password')}</Link>*/}
-            {/*    </button>*/}
-            {/*</div>*/}
-
-            {/*<Button*/}
-            {/*    variant="contained"*/}
-            {/*    color="secondary"*/}
-            {/*    onClick={() =>*/}
-            {/*        (window.document.location.href =*/}
-            {/*            process.env.REACT_APP_API_BASE_URL.trim() +*/}
-            {/*            GOOGLE_LOGIN_URL)*/}
-            {/*    }*/}
-            {/*>*/}
-            {/*    <FaGoogle />*/}
-            {/*    {t('login_via_google')}*/}
-            {/*</Button>*/}
         </form>
     );
 
-    if (props.isLoading) {
+    if (isLoading) {
         form = <CircularProgress />;
     }
 
     return (
-        <Card class="auth-card">
-            <h2 className="under-line">{translation('login_page_title')}</h2>
+        <Card additionClassName="auth-card">
+            <h2 className="under-line">{translation(LOGIN_TITLE)}</h2>
             {form}
         </Card>
     );
 };
 
-LoginForm = reduxForm({
-    form: LOGIN_FORM
+const LoginReduxForm = reduxForm({
+    form: LOGIN_FORM,
 })(LoginForm);
 
-export default LoginForm;
+export default LoginReduxForm;

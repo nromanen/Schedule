@@ -4,90 +4,79 @@ import { TextField } from '@material-ui/core';
 import { useTranslation } from 'react-i18next';
 
 import './SearchPanel.scss';
-import Card from '../../share/Card/Card';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
+import Card from '../Card/Card';
+import {
+    TYPE_TO_SEARCH,
+    SHOW_ARCHIVED,
+    SHOW_REGULAR,
+} from '../../constants/translationLabels/formElements';
+import {
+    COMMON_SHOW_DISABLED,
+    COMMON_SHOW_ENABLED,
+} from '../../constants/translationLabels/common';
 
 const SearchPanel = ({ SearchChange, showDisabled, showArchived, forLessons }) => {
-
     const { t } = useTranslation('formElements');
     const [term, setTerm] = useState('');
 
     const [state, setState] = React.useState({
         checkedB: false,
-        checkedArchived: false
+        checkedArchived: false,
     });
 
-    const handleChange = event => {
-        switch (event.target.name) {
-            case 'checkedArchived':
-                setState({
-                    ...state,
-                    checkedB: false,
-                    [event.target.name]: event.target.checked
-                });
-                showArchived();
-                break;
-            default:
-                setState({
-                    ...state,
-                    checkedArchived: false,
-                    [event.target.name]: event.target.checked
-                });
-
-                break;
+    const handleChange = (event) => {
+        setState({
+            ...state,
+            checkedB: false,
+            [event.target.name]: event.target.checked,
+        });
+        if (event.target.name === 'checkedArchived') {
+            showArchived();
         }
         showDisabled();
-
     };
 
-    const onSearchChange = e => {
-        const term = e.target.value;
-        setTerm(term);
-        SearchChange(term);
+    const onSearchChange = (e) => {
+        const newTerm = e.target.value;
+        setTerm(newTerm);
+        SearchChange(newTerm);
     };
 
     return (
-        <Card class='search-group'>
-            {!forLessons && <FormControlLabel
-                control={
-                    <Switch
-                        checked={state.checkedB}
-                        onChange={handleChange}
-                        name='checkedB'
-                        color='primary'
-                    />
-                }
-                label={
-                    !state.checkedB
-                        ? t('common:show_disabled')
-                        : t('common:show_enabled')
-                }
-            />}
+        <Card additionClassName="search-group">
+            {!forLessons && (
+                <FormControlLabel
+                    control={
+                        <Switch
+                            checked={state.checkedB}
+                            onChange={handleChange}
+                            name="checkedB"
+                            color="primary"
+                        />
+                    }
+                    label={!state.checkedB ? t(COMMON_SHOW_DISABLED) : t(COMMON_SHOW_ENABLED)}
+                />
+            )}
             {!forLessons && showArchived ? (
                 <FormControlLabel
                     control={
                         <Switch
                             checked={state.checkedArchived}
                             onChange={handleChange}
-                            name='checkedArchived'
-                            color='secondary'
+                            name="checkedArchived"
+                            color="secondary"
                         />
                     }
-                    label={
-                        !state.checkedArchived
-                            ? t('show_archived')
-                            : t('show_regular')
-                    }
+                    label={!state.checkedArchived ? t(SHOW_ARCHIVED) : t(SHOW_REGULAR)}
                 />
-            ) : (
-                ''
-            )}
+            ) : null}
 
             <TextField
-                className='form-field'
+                className="form-field"
                 label={<FaSearch />}
-                placeholder={t('type_to_search')}
+                placeholder={t(TYPE_TO_SEARCH)}
                 value={term}
                 onChange={onSearchChange}
             />

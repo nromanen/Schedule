@@ -1,14 +1,14 @@
-import { store } from '../index';
+import { store } from '../store';
 
-import { setOpenSnackbar } from '../redux/actions/index';
+import { setOpenSnackbar } from '../actions/index';
 
 export const handleSnackbarOpenService = (isOpen, type, message) => {
     store.dispatch(
         setOpenSnackbar({
-            isOpen: isOpen,
-            type: type,
-            message: message
-        })
+            isOpen,
+            type,
+            message,
+        }),
     );
 };
 
@@ -18,7 +18,7 @@ export const handleSnackbarCloseService = () => {
         setOpenSnackbar({
             isOpen: false,
             type: snackbarStore.snackbarType,
-            message: null
-        })
+            message: null,
+        }),
     );
 };

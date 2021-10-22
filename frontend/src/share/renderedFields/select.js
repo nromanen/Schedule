@@ -1,33 +1,31 @@
-import React from "react";
+import React, { useState } from 'react';
 
-import FormControl from '@material-ui/core/FormControl'
-import Select from '@material-ui/core/Select'
-import InputLabel from '@material-ui/core/InputLabel'
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
+import InputLabel from '@material-ui/core/InputLabel';
 
-import {renderFromHelper} from './error';
+import { renderFromHelper } from './error';
 
-const renderSelectField = ({
-  input,
-  label,
-  name,
-  id,
-  meta: { touched, error },
-  children,
-  ...custom
-}) => (
-  <FormControl error={touched && !!error}>
-    <InputLabel htmlFor={id}>{label}</InputLabel>
-    <Select
-      native
-      {...input}
-      {...custom}
-      name={name}
-      id={id}
-    >
-      {children}
-    </Select>
-    {renderFromHelper({ touched, error })}
-  </FormControl>
-)
+const SelectField = (props) => {
+    const {
+        input,
+        label,
+        name,
+        id,
+        meta: { touched, error },
+        children,
+        ...custom
+    } = props;
+    const [isOpen, setIsOpen] = useState(false);
+    return (
+        <FormControl error={touched && !!error} onClick={() => setIsOpen((state) => !state)}>
+            <InputLabel htmlFor={id}>{label}</InputLabel>
+            <Select {...input} {...custom} name={name} id={id} open={isOpen}>
+                {children}
+            </Select>
+            {renderFromHelper({ touched, error })}
+        </FormControl>
+    );
+};
 
-export default renderSelectField;
+export default SelectField;

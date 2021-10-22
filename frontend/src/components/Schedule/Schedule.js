@@ -1,6 +1,7 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { Fragment, useEffect, useRef, useState } from 'react';
 import { IoMdMore } from 'react-icons/all';
 
+import { makeStyles } from '@material-ui/core/styles';
 import Board from '../Board/Board';
 import ScheduleItem from '../ScheduleItem/ScheduleItem';
 import ScheduleDialog from '../ScheduleDialog/ScheduleDialog';
@@ -11,27 +12,32 @@ import {
     addItemToScheduleService,
     deleteItemFromScheduleService,
     checkAvailabilityChangeRoomScheduleService,
-    editRoomItemToScheduleService
+    editRoomItemToScheduleService,
 } from '../../services/scheduleService';
 
-import {
-    getLessonsByGroupService,
-    selectGroupIdService
-} from '../../services/lessonService';
+import { getLessonsByGroupService, selectGroupIdService } from '../../services/lessonService';
 import { setLoadingService } from '../../services/loadingService';
 
 import { cssClasses } from '../../constants/schedule/cssClasses';
 import { colors } from '../../constants/schedule/colors';
-
-import { makeStyles } from '@material-ui/core/styles';
+import { FORM_DAY_LABEL } from '../../constants/translationLabels/formElements';
+import { CLASS_SCHEDULE, WEEK_LABEL } from '../../constants/translationLabels/common';
 import './Schedule.scss';
-import i18n from 'i18next';
 
-const Schedule = props => {
-    const { groups, itemGroupId, groupId } = props;
+const Schedule = (props) => {
+    const {
+        groups,
+        itemGroupId,
+        groupId,
+        items,
+        currentSemester,
+        translation: t,
+        rooms,
+        availability,
+        isLoading,
+    } = props;
     const [open, setOpen] = useState(false);
     const [itemData, setItemData] = useState(null);
-    const prevGroupId = usePrevious(groupId);
 
     function usePrevious(value) {
         const ref = useRef();
@@ -40,6 +46,8 @@ const Schedule = props => {
         });
         return ref.current;
     }
+
+    const prevGroupId = usePrevious(groupId);
 
     useEffect(() => {
         if (groupId !== null) {
@@ -55,17 +63,17 @@ const Schedule = props => {
         }
     }, [groupId]);
 
-    const setNewItemHandle = (item, room, groupId) => {
-        getLessonsByGroupService(groupId);
-        selectGroupIdService(groupId);
+    const setNewItemHandle = (item, room, group) => {
+        getLessonsByGroupService(group);
+        selectGroupIdService(group);
         if (item.id) deleteItemFromScheduleService(item.id);
 
         addItemToScheduleService({ ...item, roomId: room.id });
     };
 
-    const setEditItemHandle = (itemId, roomId, groupId) => {
-        getLessonsByGroupService(groupId);
-        selectGroupIdService(groupId);
+    const setEditItemHandle = (itemId, roomId, group) => {
+        getLessonsByGroupService(group);
+        selectGroupIdService(group);
         editRoomItemToScheduleService({ itemId, roomId });
     };
 
@@ -73,45 +81,29 @@ const Schedule = props => {
         setOpen(true);
     };
 
-    const handleClose = value => {
+    const handleClose = (value) => {
         setOpen(false);
         if (value) {
             setLoadingService(true);
             let el = '';
             if (value.itemData.item.id) {
-                setEditItemHandle(
-                    value.itemData.item.id,
-                    value.room.id,
-                    value.itemData.groupId
-                );
+                setEditItemHandle(value.itemData.item.id, value.room.id, value.itemData.groupId);
 
                 el = document.getElementById(
-                    'card-' +
-                    value.itemData.item.lesson.id +
-                    '-group-' +
-                    value.itemData.groupId +
-                    '-in-day-' +
-                    value.itemData.item.dayOfWeek.toLowerCase() +
-                    '-class-' +
-                    value.itemData.item.period.id +
-                    '-week-' +
-                    value.itemData.item.evenOdd.toLowerCase()
+                    `card-${value.itemData.item.lesson.id}-group-${
+                        value.itemData.groupId
+                    }-in-day-${value.itemData.item.dayOfWeek.toLowerCase()}-class-${
+                        value.itemData.item.period.id
+                    }-week-${value.itemData.item.evenOdd.toLowerCase()}`,
                 );
             } else {
-                setNewItemHandle(
-                    value.itemData.item,
-                    value.room,
-                    value.itemData.groupId
-                );
+                setNewItemHandle(value.itemData.item, value.room, value.itemData.groupId);
                 el = document.getElementById(
-                    'group-' +
-                    value.itemData.groupId +
-                    '-day-' +
-                    value.itemData.item.dayOfWeek.toLowerCase() +
-                    '-class-' +
-                    value.itemData.item.periodId +
-                    '-week-' +
-                    value.itemData.item.evenOdd.toLowerCase()
+                    `group-${
+                        value.itemData.groupId
+                    }-day-${value.itemData.item.dayOfWeek.toLowerCase()}-class-${
+                        value.itemData.item.periodId
+                    }-week-${value.itemData.item.evenOdd.toLowerCase()}`,
                 );
             }
             el.scrollIntoView();
@@ -125,50 +117,40 @@ const Schedule = props => {
         }
     };
 
-    const items = props.items;
-
-    const currentSemester = props.currentSemester;
     const days = currentSemester.semester_days;
     const classes = currentSemester.semester_classes;
 
-    const t = props.translation;
-
-    //const dayContainerHeight = classes.length * 185.5 + 4.6 * classes.length;
     const dayContainerHeight = classes.length * 150;
 
     const useStyles = makeStyles({
-        dayContainer: {
-            // height: dayContainerHeight,
-            // maxHeight: dayContainerHeight
-        },
         day: {
             height: dayContainerHeight,
-            maxHeight: dayContainerHeight
-        }
+            maxHeight: dayContainerHeight,
+        },
     });
     const elClasses = useStyles();
-
-    const firstStringLetterCapitalHandle = str => {
+    // TODO delete this and replace with unified capitalize
+    const firstStringLetterCapitalHandle = (str) => {
         return firstStringLetterCapital(str);
     };
 
-    const deleteItemFromScheduleHandler = (itemId, groupId) => {
+    const deleteItemFromScheduleHandler = (itemId, group) => {
         deleteItemFromScheduleService(itemId);
-        getLessonsByGroupService(groupId);
-        selectGroupIdService(groupId);
+        getLessonsByGroupService(group);
+        selectGroupIdService(group);
     };
-    const editItemOnScheduleHandler = item => {
-        setItemData({ item: item, groupId: item.lesson.group.id });
+    const editItemOnScheduleHandler = (item) => {
+        setItemData({ item, groupId: item.lesson.group.id });
         getLessonsByGroupService(item.lesson.group.id);
         selectGroupIdService(item.lesson.group.id);
 
-        let itemId = item.id;
+        const itemId = item.id;
 
         let obj = {
             dayOfWeek: item.dayOfWeek,
             periodId: +item.period.id,
             evenOdd: item.evenOdd,
-            semesterId: item.lesson.semester.id
+            semesterId: item.lesson.semester.id,
         };
         checkAvailabilityChangeRoomScheduleService(obj);
         setLoadingService(true);
@@ -178,9 +160,7 @@ const Schedule = props => {
 
     const conditionFunc = (item, lesson, group) => {
         return (
-            `group-${
-                item.lesson.group.id
-            }-day-${item.dayOfWeek.toLowerCase()}-class-${
+            `group-${item.lesson.group.id}-day-${item.dayOfWeek.toLowerCase()}-class-${
                 item.period.id
             }-week-${item.evenOdd.toLowerCase()}` ===
             `group-${group.id}-day-${lesson.day.name}-class-${lesson.classNumber.id}-week-${lesson.week}`
@@ -206,7 +186,7 @@ const Schedule = props => {
     };
 
     const itemInBoard = (group, lesson, index) => {
-        for (let item of items) {
+        return items.map((item) => {
             if (conditionFunc(item, lesson, group)) {
                 const addition = `in-day-${lesson.day.name}-class-${lesson.classNumber.id}-week-${lesson.week}`;
                 addDeleteBtnToItem(item, group, lesson);
@@ -216,7 +196,7 @@ const Schedule = props => {
                         className={cssClasses.IN_BOARD_SECTION}
                     >
                         <ScheduleItem
-                            inBoard={true}
+                            inBoard
                             addition={addition}
                             class={cssClasses.IN_BOARD_CARD}
                             item={item}
@@ -228,27 +208,27 @@ const Schedule = props => {
                     </section>
                 );
             }
-        }
+            return null;
+        });
     };
 
     const allLessons = [];
-    days.forEach(day => {
-        classes.forEach(classNumber => {
-            for (let i = 0; i < 2; i++) {
-                if ((i + 1) % 2 === 0) {
-                    allLessons.push({
-                        day: { name: day.toLowerCase() },
-                        classNumber,
-                        week: 'even'
-                    });
-                } else {
-                    allLessons.push({
-                        day: { name: day.toLowerCase() },
-                        classNumber,
-                        week: 'odd'
-                    });
-                }
-            }
+    days.forEach((day, outerIndex) => {
+        classes.forEach((classNumber, index) => {
+            allLessons.push(
+                {
+                    day: { name: day.toLowerCase() },
+                    classNumber,
+                    week: 'odd',
+                    id: `${index}-${outerIndex}`,
+                },
+                {
+                    day: { name: day.toLowerCase() },
+                    classNumber,
+                    week: 'even',
+                    id: `${index}-${outerIndex}`,
+                },
+            );
         });
     });
     const getDayColour = (index) => {
@@ -256,84 +236,69 @@ const Schedule = props => {
     };
 
     return (
-        <section className='cards-container schedule'>
-
+        <section className="cards-container schedule">
             <ScheduleDialog
                 translation={t}
                 itemData={itemData}
-                rooms={props.rooms}
-                availability={props.availability}
+                rooms={rooms}
+                availability={availability}
                 open={open}
-                isLoading={props.isLoading}
+                isLoading={isLoading}
                 onClose={handleClose}
             />
-            <aside className='day-classes-aside'>
-                <section className='card empty-card'>Група
-                </section>
+            <aside className="day-classes-aside">
+                <section className="card empty-card">Група</section>
                 {days.map((day, index) => (
-
-                    <section
-                        className={
-                            elClasses.dayContainer +
-                            ' cards-container day-container'
-                        }
-                        key={day}
-                    >
+                    <section className="cards-container day-container" key={day}>
                         <section
                             id={day}
-                            className={`${elClasses.day} ${getDayColour(index)} schedule-day card`
-                            }
+                            className={`${elClasses.day} ${getDayColour(index)} schedule-day card`}
                         >
                             {t(`day_of_week_${day}`)}
                         </section>
-                        <section className='class-section'>
-                            {classes.map(classScheduler => (
-                                <>
-                                    <p className={`day-class-week-general ${day}-${classScheduler.id}`}>
-                                    </p>
+                        <section className="class-section">
+                            {classes.map((classScheduler) => (
+                                <Fragment key={classScheduler.id}>
+                                    <p
+                                        className={`day-class-week-general ${day}-${classScheduler.id}`}
+                                    ></p>
                                     <section
                                         id={`${classScheduler.id}-${day}`}
-                                        className='card schedule-class'
+                                        className="card schedule-class"
                                         key={classScheduler.id}
                                     >
                                         {classScheduler.class_name}
                                     </section>
-                                    <p className={`day-class-week-general ${day}-${classScheduler.id}`}>
-                                    </p>
-                                </>
-
+                                    <p
+                                        className={`day-class-week-general ${day}-${classScheduler.id}`}
+                                    ></p>
+                                </Fragment>
                             ))}
                         </section>
                     </section>
                 ))}
             </aside>
 
-            <section className='groups-section '>
+            <section className="groups-section ">
                 {groups.map((group) => (
-                    <section
-                        key={'group-' + group.id}
-                        className='group-section'
-                        id={`${group.id}`}
-                    >
-
-                        <div
-                            className={`group-title card`}
-                            id={`group-${group.id}`}
-                        >
-
-
+                    <section key={`group-${group.id}`} className="group-section" id={`${group.id}`}>
+                        <div className="group-title card" id={`group-${group.id}`}>
                             {group.title}
                         </div>
                         {allLessons.map((lesson, index) => (
                             <div
-                                key={group + '-' + index}
-                                className={`board-div`}
+                                key={`${group.id}-${lesson.id}-${lesson.week}`}
+                                className="board-div"
                             >
                                 <Board
                                     group={group.id}
                                     day={lesson.day.name}
-                                    classes={`${lesson.classNumber.id}-${(lesson.day.name).toUpperCase()}`}
-                                    classDay={`${(lesson.day.name).toUpperCase()}-${lesson.classNumber.id}`}
+                                    classes={`${
+                                        lesson.classNumber.id
+                                    }-${lesson.day.name.toUpperCase()}`}
+                                    classDay={`${lesson.day.name.toUpperCase()}-${
+                                        lesson.classNumber.id
+                                    }`}
                                     currentSemester={currentSemester}
                                     setModalData={setItemData}
                                     openDialog={handleClickOpen}
@@ -342,33 +307,22 @@ const Schedule = props => {
                                     className={`board card ${cssClasses.SCHEDULE_BOARD} group-${group.id} schedule-board `}
                                 >
                                     <IoMdMore
-                                        className='more-icon'
-                                        title={
-                                            `${t(
-                                                `formElements:day_label`
-                                            )}: ` +
-                                            t(
-                                                `day_of_week_${lesson.day.name.toUpperCase()}`
-                                            ).toLowerCase() +
-                                            `\n${t(`week_label`)}: ` +
-                                            t(`week_${lesson.week}_title`) +
-                                            `\n${t('class_schedule')}: ` +
-                                            lesson.classNumber.class_name
-                                        }
+                                        className="more-icon"
+                                        title={`${t(FORM_DAY_LABEL)}: ${t(
+                                            `day_of_week_${lesson.day.name.toUpperCase()}`,
+                                        ).toLowerCase()}\n${t(WEEK_LABEL)}: ${t(
+                                            `week_${lesson.week}_title`,
+                                        )}\n${t(CLASS_SCHEDULE)}: ${lesson.classNumber.class_name}`}
                                     />
                                     {itemInBoard(group, lesson, index)}
                                 </Board>
                             </div>
                         ))}
-                        <div
-                            className={`group-title card`}
-                            id={`group-${group.id}`}
-                        >
+                        <div className="group-title card" id={`group-${group.id}`}>
                             {group.title}
                         </div>
                     </section>
                 ))}
-
             </section>
         </section>
     );

@@ -5,63 +5,64 @@ import { Field, reduxForm } from 'redux-form';
 import { useTranslation } from 'react-i18next';
 
 import Button from '@material-ui/core/Button';
-import renderSelectField from '../../share/renderedFields/select';
+import SelectField from '../../share/renderedFields/select';
 
 import './CopyLessonsFromSemesterForm.scss';
 import Card from '../../share/Card/Card';
 
 import { COPY_LESSONS_FROM_SEMESTER_FORM } from '../../constants/reduxForms';
 import { required } from '../../validation/validateFields';
-const shortid = require('shortid');
+import {
+    FORM_SEMESTER_LABEL,
+    FORM_COPY_LESSON,
+} from '../../constants/translationLabels/formElements';
+import { COPY_LESSON, COPY_LESSONS_FROM_SEMESTER } from '../../constants/translationLabels/common';
 
-const CopyLessonsFromSemesterForm = props => {
+const CopyLessonsFromSemesterForm = (props) => {
     const { t } = useTranslation('common');
     const { semesters, handleSubmit, pristine, submitting } = props;
     const renderSemesterList = () => {
-        if (semesters) {
-            if (semesters.length > 1) {
-                return (
-                    <Field
-                        id="fromSemesterId"
-                        name="fromSemesterId"
-                        component={renderSelectField}
-                        label={t('formElements:semester_label')}
-                        type="text"
-                        validate={[required]}
-                    >
-                        <option />
-                        {semesters.map((semester, index) => (
-                            <option
-                                key={shortid.generate()}
-                                value={semester.id}
-                            >
-                                {semester.description}
-                            </option>
-                        ))}
-                    </Field>
-                );
-            } else if (semesters.length === 1) {
-                handleSubmit({ fromSemesterId: semesters[0].id });
-                return <p>{semesters[0].description}</p>;
-            }
+        if (semesters?.length > 1) {
+            return (
+                <Field
+                    id="fromSemesterId"
+                    name="fromSemesterId"
+                    component={SelectField}
+                    label={t(FORM_SEMESTER_LABEL)}
+                    type="text"
+                    validate={[required]}
+                >
+                    <option />
+                    {semesters.map((semester) => (
+                        <option key={semester.id} value={semester.id}>
+                            {semester.description}
+                        </option>
+                    ))}
+                </Field>
+            );
         }
+        if (semesters?.length === 1) {
+            handleSubmit({ fromSemesterId: semesters[0].id });
+            return <p>{semesters[0].description}</p>;
+        }
+        return null;
     };
 
     return (
-        <Card class="form-card">
+        <Card additionClassName="form-card">
             <form onSubmit={handleSubmit}>
-                <h2 className="lesson-page-h">{t('copy_lesson')}</h2>
-                <p>{t('copy_lessons_from_semester_to_current')}</p>
+                <h2 className="lesson-page-h">{t(COPY_LESSON)}</h2>
+                <p>{t(COPY_LESSONS_FROM_SEMESTER)}</p>
                 {renderSemesterList()}
                 <div className="form-buttons-container">
                     <Button
-                        className='semester-copy-btn'
+                        className="semester-copy-btn"
                         variant="contained"
                         color="primary"
                         type="submit"
                         disabled={pristine || submitting}
                     >
-                        {t('formElements:copy_label')}
+                        {t(FORM_COPY_LESSON)}
                     </Button>
                 </div>
             </form>
@@ -69,12 +70,12 @@ const CopyLessonsFromSemesterForm = props => {
     );
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
     semesters: state.semesters.semesters,
-    currentSemester: state.schedule.currentSemester
+    currentSemester: state.schedule.currentSemester,
 });
 export default connect(mapStateToProps)(
     reduxForm({
-        form: COPY_LESSONS_FROM_SEMESTER_FORM
-    })(CopyLessonsFromSemesterForm)
+        form: COPY_LESSONS_FROM_SEMESTER_FORM,
+    })(CopyLessonsFromSemesterForm),
 );

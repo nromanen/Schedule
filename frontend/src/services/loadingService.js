@@ -1,19 +1,15 @@
-import { store } from '../index';
+import { store } from '../store';
 
-import {
-    setLoading,
-    setScheduleLoading,
-    setSemesterLoading
-} from '../redux/actions/index';
+import { setLoading, setScheduleLoading, setSemesterLoading } from '../actions/index';
 
-export const setLoadingService = isLoading => {
+export const setLoadingService = (isLoading) => {
     store.dispatch(setLoading(isLoading));
 };
 
-export const setScheduleLoadingService = isLoading => {
+export const setScheduleLoadingService = (isLoading) => {
     store.dispatch(setScheduleLoading(isLoading));
 };
 
-export const setSemesterLoadingService = isLoading => {
+export const setSemesterLoadingService = (isLoading) => {
     store.dispatch(setSemesterLoading(isLoading));
 };

@@ -17,74 +17,86 @@ import { makeStyles } from '@material-ui/core/styles';
 import MomentUtils from '@date-io/moment';
 import * as moment from 'moment';
 
+import Divider from '@material-ui/core/Divider';
 import { temporaryScheduleRadioTypes } from '../../../constants/temporaryScheduleRadioTypes';
+import { dateFormat } from '../../../constants/formats';
 
 import {
     getTeacherTemporarySchedulesService,
     getTemporarySchedulesService,
-    selectTeacherIdService
+    selectTeacherIdService,
 } from '../../../services/temporaryScheduleService';
 import { handleTeacherInfo } from '../../../helper/renderTeacher';
-import Divider from '@material-ui/core/Divider';
+import {
+    FORM_SEMESTER_LABEL,
+    FORM_TEACHER_LABEL,
+    FORM_CLASS_FROM_LABEL,
+    FORM_CLASS_TO_LABEL,
+} from '../../../constants/translationLabels/formElements';
+import {
+    HOLIDAY_LABEL,
+    DATE_LABEL,
+    TEMPORARY_SCHEDULE_FOR_TEACHER_TITLE,
+    FEW_DAYS_LABEL,
+    ONE_DAY_LABEL,
+} from '../../../constants/translationLabels/common';
 
 const useStyles = makeStyles({
     teacherField: {
-        width: '250px'
+        width: '250px',
     },
     dateGroup: {
         display: 'flex',
         margin: '0 auto',
         width: '250px',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
     },
     dateField: {
         width: '120px',
-        margin: '0'
+        margin: '0',
     },
     day: {
         width: '250px',
-        margin: '0'
+        margin: '0',
     },
     button: {
         width: '250px',
-        margin: '0 auto'
+        margin: '0 auto',
     },
     panel: {
         width: '300px',
-        margin: '0 auto'
+        margin: '0 auto',
     },
     block: {
-        display: 'block'
+        display: 'block',
     },
     legendBlock: {
         textAlign: 'left',
-        margin: '10px 0'
+        margin: '10px 0',
     },
     legend: {
         display: 'inline-block',
         width: '10px',
         height: '10px',
-        backgroundColor: '#F5DEB3'
-    }
+        backgroundColor: '#F5DEB3',
+    },
 });
 
-const TemporaryScheduleTitle = props => {
+const TemporaryScheduleTitle = (props) => {
     const { t } = useTranslation('common');
     const classes = useStyles();
     const [day, setDay] = useState(null);
 
     const [radio, setRadio] = useState(temporaryScheduleRadioTypes.SEMESTER);
 
-    const { teachers, teacherId } = props;
-    const { toDate, setToDate } = props;
-    const { fromDate, setFromDate } = props;
+    const { teachers, teacherId, toDate, setToDate, fromDate, setFromDate } = props;
 
     useEffect(() => {
         if (radio === temporaryScheduleRadioTypes.SEMESTER)
             getTemporarySchedulesService(null, null);
     }, []);
 
-    const handleChange = event => {
+    const handleChange = (event) => {
         if (event.target.value === temporaryScheduleRadioTypes.SEMESTER)
             selectTeacherIdService(null);
         setToDate(false);
@@ -93,20 +105,20 @@ const TemporaryScheduleTitle = props => {
         setRadio(event.target.value);
     };
 
-    const handleDayChange = date => {
+    const handleDayChange = (date) => {
         setFromDate(null);
         setToDate(null);
-        setDay(moment(date, 'DD-MM-YYYY').format('DD-MM-YYYY'));
+        setDay(moment(date, dateFormat).format(dateFormat));
     };
 
-    const handleFromDateChange = date => {
+    const handleFromDateChange = (date) => {
         setDay(null);
-        setFromDate(moment(date, 'DD-MM-YYYY').format('DD-MM-YYYY'));
+        setFromDate(moment(date, dateFormat).format(dateFormat));
     };
 
-    const handleToDateChange = date => {
+    const handleToDateChange = (date) => {
         setDay(null);
-        setToDate(moment(date, 'DD-MM-YYYY').format('DD-MM-YYYY'));
+        setToDate(moment(date, dateFormat).format(dateFormat));
     };
 
     const handleClick = () => {
@@ -138,16 +150,15 @@ const TemporaryScheduleTitle = props => {
 
     const defaultProps = {
         options: teachers,
-        getOptionLabel: option => (option ? handleTeacherInfo(option) : '')
+        getOptionLabel: (option) => (option ? handleTeacherInfo(option) : ''),
     };
 
-    const handleFindTeacher = teacherId => {
-        if (teacherId)
-            return teachers.find(teacher => teacher.id === teacherId);
-        else return '';
+    const handleFindTeacher = (id) => {
+        if (id) return teachers.find((teacher) => teacher.id === id);
+        return '';
     };
 
-    const handleTeacherSelect = teacher => {
+    const handleTeacherSelect = (teacher) => {
         if (teacher) selectTeacherIdService(teacher.id);
     };
 
@@ -156,35 +167,30 @@ const TemporaryScheduleTitle = props => {
             <ExpansionPanel>
                 <ExpansionPanelSummary aria-controls="panel1a-content">
                     <Typography className={classes.heading}>
-                        {t('temporary_schedule_for_teacher_title')}
+                        {t(TEMPORARY_SCHEDULE_FOR_TEACHER_TITLE)}
                     </Typography>
                 </ExpansionPanelSummary>
                 <ExpansionPanelDetails className={classes.block}>
                     <Divider />
                     <div className={classes.legendBlock}>
-                        <div className={classes.legend} /> -{' '}
-                        {t('holiday_label')}
+                        <div className={classes.legend} /> - {t(HOLIDAY_LABEL)}
                     </div>
                     <Divider />
-                    <RadioGroup
-                        className={classes.dateGroup}
-                        value={radio}
-                        onChange={handleChange}
-                    >
+                    <RadioGroup className={classes.dateGroup} value={radio} onChange={handleChange}>
                         <FormControlLabel
                             value={temporaryScheduleRadioTypes.SEMESTER}
                             control={<Radio color="primary" />}
-                            label={t('formElements:semester_label')}
+                            label={t(FORM_SEMESTER_LABEL)}
                         />
                         <FormControlLabel
                             value={temporaryScheduleRadioTypes.FEW_DAYS}
                             control={<Radio color="primary" />}
-                            label={t('few_days_label')}
+                            label={t(FEW_DAYS_LABEL)}
                         />
                         <FormControlLabel
                             value={temporaryScheduleRadioTypes.ONE_DAY}
                             control={<Radio color="primary" />}
-                            label={t('one_day')}
+                            label={t(ONE_DAY_LABEL)}
                         />
                     </RadioGroup>
                     {radio !== temporaryScheduleRadioTypes.SEMESTER && (
@@ -193,34 +199,20 @@ const TemporaryScheduleTitle = props => {
                                 <div className={classes.dateGroup}>
                                     <DatePicker
                                         margin="normal"
-                                        label={t(
-                                            'formElements:class_from_label'
-                                        )}
+                                        label={t(FORM_CLASS_FROM_LABEL)}
                                         format="DD/MM/YYYY"
                                         className={classes.dateField}
                                         value={
-                                            fromDate
-                                                ? moment(
-                                                      fromDate,
-                                                      'DD/MM/YYYY'
-                                                  ).toDate()
-                                                : null
+                                            fromDate ? moment(fromDate, dateFormat).toDate() : null
                                         }
                                         onChange={handleFromDateChange}
                                     />
                                     <DatePicker
                                         margin="normal"
                                         className={classes.dateField}
-                                        label={t('formElements:class_to_label')}
+                                        label={t(FORM_CLASS_TO_LABEL)}
                                         format="DD/MM/YYYY"
-                                        value={
-                                            toDate
-                                                ? moment(
-                                                      toDate,
-                                                      'DD/MM/YYYY'
-                                                  ).toDate()
-                                                : null
-                                        }
+                                        value={toDate ? moment(toDate, dateFormat).toDate() : null}
                                         onChange={handleToDateChange}
                                     />
                                 </div>
@@ -228,13 +220,9 @@ const TemporaryScheduleTitle = props => {
                                 <DatePicker
                                     margin="normal"
                                     className={classes.day}
-                                    label={t('date')}
+                                    label={t(DATE_LABEL)}
                                     format="DD/MM/YYYY"
-                                    value={
-                                        day
-                                            ? moment(day, 'DD/MM/YYYY').toDate()
-                                            : null
-                                    }
+                                    value={day ? moment(day, dateFormat).toDate() : null}
                                     onChange={handleDayChange}
                                 />
                             )}
@@ -250,11 +238,11 @@ const TemporaryScheduleTitle = props => {
                                 if (!newValue) handleTeacherSelect({});
                                 else handleTeacherSelect(newValue);
                             }}
-                            renderInput={params => (
+                            renderInput={(params) => (
                                 <TextField
                                     {...params}
                                     className={classes.teacherField}
-                                    label={t('formElements:teacher_label')}
+                                    label={t(FORM_TEACHER_LABEL)}
                                     margin="normal"
                                 />
                             )}

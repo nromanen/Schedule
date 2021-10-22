@@ -2,79 +2,75 @@ import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Field, reduxForm } from 'redux-form';
 
-import { ROOM_FORM_TYPE } from '../../constants/reduxForms';
-
-import ConfirmDialog from '../../share/modals/dialog';
-import { cardType } from '../../constants/cardType';
-import Card from '../../share/Card/Card';
 import { useTranslation } from 'react-i18next';
-import renderTextField from '../../share/renderedFields/input';
 import Button from '@material-ui/core/Button';
 import { MdDelete } from 'react-icons/md';
 import { FaEdit } from 'react-icons/fa';
-import {
-    deleteTypeService,
-    getOneNewTypeService
-} from '../../services/roomTypesService';
-import './AddNewRoomType.scss';
+import { ROOM_FORM_TYPE } from '../../constants/reduxForms';
 
-let NewRoomType = props => {
-    const { handleSubmit, pristine, submitting, roomTypes } = props;
-   
+import { CustomDialog } from '../../share/DialogWindows';
+import { cardType } from '../../constants/cardType';
+import Card from '../../share/Card/Card';
+import renderTextField from '../../share/renderedFields/input';
+import { deleteTypeService, getOneNewTypeService } from '../../services/roomTypesService';
+import './AddNewRoomType.scss';
+import {
+    SAVE_BUTTON_LABEL,
+    ADD_TYPE_LABEL,
+    NEW_TYPE_LABEL,
+} from '../../constants/translationLabels/formElements';
+import { dialogTypes } from '../../constants/dialogs';
+
+let NewRoomType = (props) => {
+    const { handleSubmit, pristine, submitting, roomTypes, oneType, initialize } = props;
 
     const [open, setOpen] = useState(false);
     const [typeId, setTypeId] = useState(-1);
 
     useEffect(() => {
         let defaultValue = {};
-        if (props.oneType.id) {
-            defaultValue={ description: props.oneType.description,
-                id: props.oneType.id};
+        if (oneType.id) {
+            defaultValue = { description: oneType.description, id: oneType.id };
         }
-        props.initialize(defaultValue);
-
-    }, [props.oneType]);   
+        initialize(defaultValue);
+    }, [oneType]);
 
     const { t } = useTranslation('formElements');
 
-    const handleClickOpen = typeId => {
-        setTypeId(typeId);
+    const handleClickOpen = (id) => {
+        setTypeId(id);
         setOpen(true);
     };
 
-    const handleClose = typeId => {
+    const handleClose = (id) => {
         setOpen(false);
-        if (!typeId) {
+        if (!id) {
             return;
         }
-        deleteTypeService(typeId);
-    };
-
-    const handleEdit = roomId => {
-        getOneNewTypeService(roomId);
+        deleteTypeService(id);
     };
 
     return (
         <>
-            <ConfirmDialog
-                selectedValue={''}
+            <CustomDialog
+                type={dialogTypes.DELETE_CONFIRM}
                 cardId={typeId}
                 whatDelete={cardType.TYPE.toLowerCase()}
                 open={open}
                 onClose={handleClose}
             />
-            <Card class="form-card room-form">
+            <Card additionClassName="form-card room-form">
                 <form className="new-type-container" onSubmit={handleSubmit}>
                     <Field
                         type="text"
                         name="description"
                         component={renderTextField}
-                        placeholder={t('add_type_label')}
-                        label={t('new_type_label')}
+                        placeholder={t(ADD_TYPE_LABEL)}
+                        label={t(NEW_TYPE_LABEL)}
                         className="form-field"
                         variant="outlined"
                     />
-                    <div className='btn-style-wrapper'>
+                    <div className="btn-style-wrapper">
                         <Button
                             color="primary"
                             className="btn-style"
@@ -82,25 +78,23 @@ let NewRoomType = props => {
                             variant="contained"
                             type="submit"
                         >
-                            {t('save_button_label')}
+                            {t(SAVE_BUTTON_LABEL)}
                         </Button>
                     </div>
                 </form>
 
                 <ul className="new-types">
-                    {roomTypes.map(roomType => (
+                    {roomTypes.map((roomType) => (
                         <li
                             key={roomType.id}
                             value={roomType.description}
                             className="new-types-list"
                         >
-                            <span className="typeDescription">
-                                {roomType.description}
-                            </span>
+                            <span className="typeDescription">{roomType.description}</span>
                             <span className="buttons">
                                 <FaEdit
                                     className="btn edit"
-                                    onClick={() => handleEdit(roomType.id)}
+                                    onClick={() => getOneNewTypeService(roomType.id)}
                                 />
                                 <MdDelete
                                     className="btn delete"
@@ -115,13 +109,13 @@ let NewRoomType = props => {
     );
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
     oneType: state.roomTypes.oneType,
-    roomTypes: state.roomTypes.roomTypes
+    roomTypes: state.roomTypes.roomTypes,
 });
 
 NewRoomType = reduxForm({
-    form: ROOM_FORM_TYPE
+    form: ROOM_FORM_TYPE,
 })(NewRoomType);
 
 export default connect(mapStateToProps)(NewRoomType);

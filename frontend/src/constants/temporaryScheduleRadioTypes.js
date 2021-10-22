@@ -1,5 +1,6 @@
-export const temporaryScheduleRadioTypes = {
+const temporaryScheduleRadioTypes = {
     SEMESTER: 'semester',
     FEW_DAYS: 'days',
-    ONE_DAY: 'day'
+    ONE_DAY: 'day',
 };
+export { temporaryScheduleRadioTypes };

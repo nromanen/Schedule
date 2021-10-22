@@ -1,3 +1,11 @@
 #simple-dialog-title {
-  width: 300px;
+    width: 300px;
+}
+.custom-dialog {
+    .room-field {
+        & {
+            width: 250px;
+            margin: 0 auto;
+        }
+    }
 }

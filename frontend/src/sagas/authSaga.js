@@ -1,20 +1,20 @@
 import { call, put } from 'redux-saga/effects';
-import * as actionTypes from '../redux/actions/actionsType';
+import jwtDecode from 'jwt-decode';
+import * as actionTypes from '../actions/actionsType';
 
 import { authUserService } from '../services/authService';
 
 import { TOKEN_BEGIN } from '../constants/tokenBegin';
-
 import axios from '../helper/axios';
-import i18n from '../helper/i18n';
+import { COMMON_ERROR_MESSAGE } from '../constants/translationLabels/common';
+import i18n from '../i18n';
 
 export function* authSaga(payload) {
     try {
         const response = yield call(authUserService, payload);
 
-        const jwtDecode = require('jwt-decode');
-        const token = response.data.token;
-        const email = response.data.email;
+        const { token } = response.data;
+        const { email } = response.data;
         const decodedJWT = jwtDecode(token);
         const expirationDate = new Date(decodedJWT.exp * 1000);
 
@@ -23,25 +23,23 @@ export function* authSaga(payload) {
         yield localStorage.setItem('token', TOKEN_BEGIN + token);
         yield localStorage.setItem('expirationDate', expirationDate);
         yield localStorage.setItem('userRole', decodedJWT.roles);
-        yield localStorage.setItem('email', email ? email : decodedJWT.sub);
+        yield localStorage.setItem('email', email || decodedJWT.sub);
 
         yield put({
             type: actionTypes.AUTH_USER_SUCCESS,
-            response: { token, role: decodedJWT.roles, email }
+            response: { token, role: decodedJWT.roles, email },
         });
 
         yield put({ type: actionTypes.SET_LOADING_INDICATOR, result: false });
 
         yield put({
             type: actionTypes.AUTH_USER_AUTO_LOGOUT,
-            expirationTime: decodedJWT.exp * 1000 - new Date().getTime()
+            expirationTime: decodedJWT.exp * 1000 - new Date().getTime(),
         });
     } catch (error) {
         yield put({
             type: actionTypes.AUTH_USER_ERROR,
-            error: error.response
-                ? error.response.data.message
-                : i18n.t('common:error_message')
+            error: error.response ? error.response.data.message : i18n.t(COMMON_ERROR_MESSAGE),
         });
         yield put({ type: actionTypes.SET_LOADING_INDICATOR, result: false });
     }

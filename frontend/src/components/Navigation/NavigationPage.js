@@ -1,160 +1,133 @@
 import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-import Typography from '@material-ui/core/Typography';
-import Box from '@material-ui/core/Box';
 import { connect } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import { setCurrentSemester } from '../../redux/actions';
 import { Link } from 'react-router-dom';
+import { MenuItem, Select } from '@material-ui/core';
+import { isNil } from 'lodash';
+import { setCurrentSemester } from '../../actions';
 import { links } from '../../constants/links';
 import './NavigationPage.scss';
-import { MenuItem, Select } from '@material-ui/core';
-import { general, tabs_components } from '../../constants/navigationComponents';
-
-function TabPanel(props) {
-    const { children, value, index, ...other } = props;
-
-
-    return (
-        <Typography
-            component='div'
-            role='tabpanel'
-            hidden={value !== index}
-            id={`simple-tabpanel-${index}`}
-            aria-labelledby={`simple-tab-${index}`}
-            {...other}
-        >
-            {value === index && <Box p={3}>{children}</Box>}
-        </Typography>
-    );
-}
-
-TabPanel.propTypes = {
-    children: PropTypes.node,
-    index: PropTypes.any.isRequired,
-    value: PropTypes.any.isRequired
-};
+import { general, tabsComponents } from '../../constants/navigationComponents';
 
 function a11yProps(index) {
     return {
         id: `simple-tab-${index}`,
-        'aria-controls': `simple-tabpanel-${index}`
+        'aria-controls': `simple-tabpanel-${index}`,
     };
 }
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
-        backgroundColor: theme.palette.background.paper
+        backgroundColor: theme.palette.background.paper,
     },
     header: {
-        backgroundColor: theme.palette.info.dark
+        backgroundColor: theme.palette.info.dark,
     },
     nav: {
         textDecoration: 'none',
         color: '#fff',
         ':hover': {
-            color: 'purple'
-        }
+            color: 'purple',
+        },
     },
     select: {
-        backgroundColor: 'primary'
+        backgroundColor: 'primary',
     },
 
     btn: {
         margin: 0,
-        width: '10px'
-    }
+        width: '10px',
+    },
 }));
 
 const NavigationPage = (props) => {
-    const { val } = props;
+    const { val, name } = props;
     const { t } = useTranslation('common');
     const classes = useStyles();
-    const [value, setValue] = useState(val ? val : 0);
-    const [gen, setGen] = useState(props.name || general[0].name);
+    const [value, setValue] = useState(val || 0);
+    const [gen, setGen] = useState(name || general[0].name);
     useEffect(() => {
         setCurrentSemester();
     }, []);
 
-    const handleChange = (event, newValue) => {
+    const handleChange = (_, newValue) => {
         setValue(newValue);
     };
 
-    let document_title = title => {
+    const documentTitle = (title) => {
         document.title = t(`${title}_management_title`);
     };
     return (
         <div className={classes.root}>
-            <AppBar position='static'>
+            <AppBar position="static">
                 <Tabs
                     value={value}
                     onChange={handleChange}
-                    aria-label='simple tabs example'
-                    indicatorColor='primary'
-                    variant='scrollable'
-                    scrollButtons='on'
+                    aria-label="simple tabs example"
+                    indicatorColor="primary"
+                    variant="scrollable"
+                    scrollButtons="on"
                     className={classes.header}
                 >
-                    {tabs_components.map((tab_one, index) => (
-
+                    {tabsComponents.map((tabOne, index) => (
                         <>
-                            {tab_one.length === undefined ?
-                                <Link className={classes.nav}
-
-                                      to={links[tab_one.name]}>
-                                    <Tab className={classes.btn}
-                                         key={index + tab_one}
-                                         onClick={() => document_title(tab_one.name)}
-                                         label={t(`${tab_one.name}_management_title`)}
-                                         {...a11yProps(index)}
+                            {isNil(tabOne.length) ? (
+                                <Link className={classes.nav} to={links[tabOne.name]}>
+                                    <Tab
+                                        className={classes.btn}
+                                        key={tabOne.name}
+                                        onClick={() => documentTitle(tabOne.name)}
+                                        label={t(`${tabOne.name}_management_title`)}
+                                        {...a11yProps(index)}
                                     />
-                                </Link> :
-                                <Select className='general MuiTab-root'
-                                        labelId='demo-controlled-open-select-label'
-                                        id='demo-controlled-open-select'
-                                        value={gen}
-                                        onChange={event => {
-                                            const val = event.target.value;
-                                            setGen(val);
-                                            document_title(val);
-                                        }}
+                                </Link>
+                            ) : (
+                                <Select
+                                    className="general MuiTab-root"
+                                    labelId="demo-controlled-open-select-label"
+                                    id="demo-controlled-open-select"
+                                    value={gen}
+                                    onChange={(event) => {
+                                        const { value: eventValue } = event.target;
+                                        setGen(eventValue);
+                                        documentTitle(eventValue);
+                                    }}
                                 >
-
-                                    {
-                                        Object.entries(tab_one).map(function(data, index) {
-                                            return (
-                                                <MenuItem className={'menu-dictionary MuiTab-root'} value={data[1].name}
-                                                          key={data[0]} {...a11yProps(index)}>
-                                                    <Link className={classes.nav}
-
-                                                          to={links[data[1].name]}>
-                                                        {t(`${data[1].name}_management_title`)}
-                                                    </Link>
-                                                </MenuItem>);
-                                        }, this)
-                                    }
-
+                                    {Object.entries(tabOne).map((data, indexNested) => {
+                                        return (
+                                            <MenuItem
+                                                className="menu-dictionary MuiTab-root"
+                                                value={data[1].name}
+                                                key={data[0]}
+                                                {...a11yProps(indexNested)}
+                                            >
+                                                <Link
+                                                    className={classes.nav}
+                                                    to={links[data[1].name]}
+                                                >
+                                                    {t(`${data[1].name}_management_title`)}
+                                                </Link>
+                                            </MenuItem>
+                                        );
+                                    }, this)}
                                 </Select>
-
-                            }
+                            )}
                         </>
                     ))}
                 </Tabs>
-
             </AppBar>
-
         </div>
     );
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
     classScheduler: state.classActions.classScheduler,
-    ClassScheduleOne: state.classActions.classScheduleOne
+    ClassScheduleOne: state.classActions.classScheduleOne,
 });
 
 export default connect(mapStateToProps, {})(NavigationPage);

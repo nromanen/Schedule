@@ -1,4 +1,4 @@
-export const cardType = {
+const cardType = {
     LESSON: 'Lesson',
     TEACHER: 'Teacher',
     CLASS: 'Class',
@@ -7,5 +7,6 @@ export const cardType = {
     TYPE: 'Type',
     TEMPORARY_SCHEDULE: 'temporary_schedule',
     SUBJECT: 'Subject',
-    SEMESTER: 'Semester'
+    SEMESTER: 'Semester',
 };
+export { cardType };

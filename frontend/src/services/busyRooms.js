@@ -1,18 +1,18 @@
-import { store } from '../index';
+import { store } from '../store';
 
 import { BUSY_ROOMS } from '../constants/axios';
 import axios from '../helper/axios';
 
-import { showAllBusyRooms } from '../redux/actions';
+import { showAllBusyRooms } from '../actions';
 import { errorHandler } from '../helper/handlerAxios';
 
-export const showBusyRooms = semesterId => {
+export const showBusyRooms = (semesterId) => {
     axios
-        .get(BUSY_ROOMS + '?semesterId=' + semesterId)
-        .then(response => {
+        .get(`${BUSY_ROOMS}?semesterId=${semesterId}`)
+        .then((response) => {
             store.dispatch(showAllBusyRooms(response.data));
         })
-        .catch(error => {
+        .catch((error) => {
             errorHandler(error);
         });
 };

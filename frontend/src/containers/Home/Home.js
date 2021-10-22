@@ -6,58 +6,50 @@ import { userRoles } from '../../constants/userRoles';
 
 import GroupSchedulePage from '../../components/GroupSchedulePage/GroupSchedulePage';
 
-
 import {
     getDefaultSemesterService,
-
     setScheduleSemesterIdService,
     setScheduleTypeService,
 } from '../../services/scheduleService';
 import { getPublicClassScheduleListService } from '../../services/classService';
+import { HOME_TITLE } from '../../constants/translationLabels/common';
 
-const HomePage = props => {
+const HomePage = (props) => {
     const { t } = useTranslation('common');
 
     useEffect(() => getPublicClassScheduleListService(), []);
-    setScheduleSemesterIdService(null)
-    setScheduleTypeService("")
-
-    // useEffect(() => showAllPublicSemestersService(), []);
+    setScheduleSemesterIdService(null);
+    setScheduleTypeService('');
 
     useEffect(() => {
         if (props.userRole === null) {
-            //disableDefaultSemesterService();
             getDefaultSemesterService();
-            setScheduleTypeService("");
+            setScheduleTypeService('');
         }
     }, []);
     useEffect(() => {
         if (props.userRole === userRoles.TEACHER) {
-            //disableDefaultSemesterService();
             getDefaultSemesterService();
-            setScheduleTypeService("");
+            setScheduleTypeService('');
         }
     }, []);
     useEffect(() => {
         if (props.userRole === userRoles.MANAGER) {
-           // disableDefaultSemesterService();
             getDefaultSemesterService();
-            setScheduleTypeService("");
+            setScheduleTypeService('');
         }
     }, []);
 
     return (
-
         <Fragment>
-
-            <h1>{t('home_title')}</h1>
-            <GroupSchedulePage scheduleType="default"  />
+            <h1>{t(HOME_TITLE)}</h1>
+            <GroupSchedulePage scheduleType="default" />
         </Fragment>
     );
 };
 
-const mapStateToProps = state => ({
-    userRole: state.auth.role ,
+const mapStateToProps = (state) => ({
+    userRole: state.auth.role,
 });
 
 export default connect(mapStateToProps)(HomePage);

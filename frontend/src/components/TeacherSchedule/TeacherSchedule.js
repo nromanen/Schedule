@@ -6,40 +6,31 @@ import './TeacherSchedule.scss';
 import TeacherScheduleForm from '../TeacherScheduleForm/TeacherScheduleForm';
 import {
     clearTeacherScheduleFormService,
-    getTeacherScheduleService
+    getTeacherScheduleService,
 } from '../../services/scheduleService';
 
 import { renderTeacherRangeSchedule } from '../../helper/renderScheduleTable';
-const TeacherSchedule = props => {
-    const handleFormReset = () => {
-        clearTeacherScheduleFormService();
-    };
-    const submit = values => {
-        getTeacherScheduleService(values);
-    };
+
+const TeacherSchedule = (props) => {
+    const { schedule, viewTeacherScheduleResults } = props;
 
     useEffect(() => {
-        renderTeacherRangeSchedule(
-            props.schedule,
-            props.viewTeacherScheduleResults
-        );
-    }, [props.viewTeacherScheduleResults]);
+        renderTeacherRangeSchedule(schedule, viewTeacherScheduleResults);
+    }, [viewTeacherScheduleResults]);
 
     return (
         <>
-            <TeacherScheduleForm onSubmit={submit} onReset={handleFormReset} />
-            <section>
-                {renderTeacherRangeSchedule(
-                    props.schedule,
-                    props.viewTeacherScheduleResults
-                )}
-            </section>
+            <TeacherScheduleForm
+                onSubmit={getTeacherScheduleService}
+                onReset={clearTeacherScheduleFormService}
+            />
+            <section>{renderTeacherRangeSchedule(schedule, viewTeacherScheduleResults)}</section>
         </>
     );
 };
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
     loading: state.loadingIndicator.loading,
     schedule: state.schedule.teacherRangeSchedule,
-    viewTeacherScheduleResults: state.schedule.viewTeacherScheduleResults
+    viewTeacherScheduleResults: state.schedule.viewTeacherScheduleResults,
 });
 export default connect(mapStateToProps)(TeacherSchedule);
