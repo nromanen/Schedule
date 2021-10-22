@@ -215,33 +215,38 @@ const SemesterPage = (props) => {
 
     return (
         <>
-            <CustomDialog
-                type={subDialogType}
-                cardId={semesterId}
-                whatDelete="semester"
-                open={openSubDialog}
-                onClose={acceptConfirmDialog}
-            />
-            <CustomDialog
-                title={t(SEMESTER_COPY_LABEL)}
-                open={isOpenSemesterCopyForm}
-                onClose={closeSemesterCopyForm}
-                buttons={
-                    <Button
-                        className="dialog-button"
-                        variant="contained"
-                        onClick={closeSemesterCopyForm}
-                    >
-                        {t(CLOSE_LABEL)}
-                    </Button>
-                }
-            >
-                <SemesterCopyForm
-                    semesterId={semesterCard.id}
-                    onSubmit={submitSemesterCopy}
-                    submitButtonLabel={t(COPY_LABEL)}
+            {openSubDialog && (
+                <CustomDialog
+                    type={subDialogType}
+                    cardId={semesterId}
+                    whatDelete="semester"
+                    open={openSubDialog}
+                    onClose={acceptConfirmDialog}
                 />
-            </CustomDialog>
+            )}
+            {isOpenSemesterCopyForm && (
+                <CustomDialog
+                    title={t(SEMESTER_COPY_LABEL)}
+                    open={isOpenSemesterCopyForm}
+                    onClose={closeSemesterCopyForm}
+                    buttons={
+                        <Button
+                            className="dialog-button"
+                            variant="contained"
+                            onClick={closeSemesterCopyForm}
+                        >
+                            {t(CLOSE_LABEL)}
+                        </Button>
+                    }
+                >
+                    <SemesterCopyForm
+                        semesterId={semesterCard.id}
+                        onSubmit={submitSemesterCopy}
+                        submitButtonLabel={t(COPY_LABEL)}
+                    />
+                </CustomDialog>
+            )}
+
             <div className="cards-container">
                 <aside className="search-list__panel">
                     <SearchPanel
@@ -404,14 +409,16 @@ const SemesterPage = (props) => {
                 isOpen={isSnackbarOpen}
                 handleSnackbarClose={handleSnackbarCloseService}
             />
-            <MultiselectForGroups
-                open={openGroupsDialog}
-                options={options}
-                value={semesterOptions}
-                onChange={setSemesterOptions}
-                onCancel={cancelMultiselect}
-                onClose={onChangeGroups}
-            />
+            {openGroupsDialog && (
+                <MultiselectForGroups
+                    open={openGroupsDialog}
+                    options={options}
+                    value={semesterOptions}
+                    onChange={setSemesterOptions}
+                    onCancel={cancelMultiselect}
+                    onClose={onChangeGroups}
+                />
+            )}
         </>
     );
 };

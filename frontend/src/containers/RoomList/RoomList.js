@@ -88,13 +88,16 @@ const RoomList = (props) => {
 
     return (
         <>
-            <CustomDialog
-                type={subDialogType}
-                cardId={roomId}
-                whatDelete={cardType.ROOM.toLowerCase()}
-                open={openSubDialog}
-                onClose={acceptConfirmDialog}
-            />
+            {openSubDialog && (
+                <CustomDialog
+                    type={subDialogType}
+                    cardId={roomId}
+                    whatDelete={cardType.ROOM.toLowerCase()}
+                    open={openSubDialog}
+                    onClose={acceptConfirmDialog}
+                />
+            )}
+
             <div className="cards-container">
                 <aside className="search-list__panel">
                     <SearchPanel SearchChange={SearchChange} showDisabled={changeDisable} />

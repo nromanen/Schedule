@@ -60,7 +60,7 @@ export const MultiselectForGroups = (props) => {
             title=""
             aria-labelledby="confirm-dialog-title"
             open={open}
-            onClick={onClose}
+            onClose={onClose}
             buttons={
                 <div className="buttons-container">
                     <Button

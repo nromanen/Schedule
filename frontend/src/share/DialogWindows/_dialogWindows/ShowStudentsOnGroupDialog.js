@@ -97,9 +97,6 @@ const ShowStudentsOnGroupDialog = (props) => {
     const handleChangeCheckedAllBtn = () => {
         setCheckedAll((prevState) => !prevState);
     };
-    const handleClearCheckedAllBtn = () => {
-        setCheckedAll(false);
-    };
 
     const getDialog = () => {
         setShowStudentList(true);
@@ -120,11 +117,6 @@ const ShowStudentsOnGroupDialog = (props) => {
                 title={`${t(GROUP_LABEL)} - ${props.group.title}`}
                 buttons={
                     <>
-                        <UploadFile
-                            group={group}
-                            open={openUploadFile}
-                            handleCloseDialogFile={handleShowDialogFile}
-                        />
                         <Button
                             className={buttonClassName}
                             variant="contained"
@@ -185,21 +177,30 @@ const ShowStudentsOnGroupDialog = (props) => {
                             handleAllChecked={handleAllChecked}
                             handleAllClear={handleAllClear}
                             handleChangeCheckedAllBtn={handleChangeCheckedAllBtn}
-                            handleClearCheckedAllBtn={handleClearCheckedAllBtn}
+                            handleClearCheckedAllBtn={() => setCheckedAll(false)}
                             checkedAllBtn={checkedAll}
                             handleAllCheckedBtn={handleAllCheckedBtn}
                         />
                     </span>
                 )}
             </CustomDialog>
-            <MovingGroupsDialog
-                onClose={handleClose}
-                open={showStudentList}
-                checkBoxStudents={checkBoxStudents}
-                setShowStudentList={setShowStudentList}
-                groups={groups}
-                group={group}
-            />
+            {showStudentList && (
+                <MovingGroupsDialog
+                    onClose={handleClose}
+                    open={showStudentList}
+                    checkBoxStudents={checkBoxStudents}
+                    setShowStudentList={setShowStudentList}
+                    groups={groups}
+                    group={group}
+                />
+            )}
+            {openUploadFile && (
+                <UploadFile
+                    group={group}
+                    open={openUploadFile}
+                    handleCloseDialogFile={handleShowDialogFile}
+                />
+            )}
         </>
     );
 };
