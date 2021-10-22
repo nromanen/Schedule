@@ -1,5 +1,5 @@
 import * as moment from 'moment';
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Field, reduxForm } from 'redux-form';
 import Button from '@material-ui/core/Button';
@@ -29,6 +29,7 @@ import {
 import { SEMESTER_FORM } from '../../constants/reduxForms';
 import { daysUppercase } from '../../constants/schedule/days';
 import { dateFormat } from '../../constants/formats';
+import { getToday, getTomorrow } from '../../utils/formUtils';
 
 const weekDays = {
     MONDAY: false,
@@ -38,16 +39,6 @@ const weekDays = {
     FRIDAY: false,
     SATURDAY: false,
     SUNDAY: false,
-};
-
-// TODO move to utils
-const getToday = () => {
-    return new Date();
-};
-const getTomorrow = () => {
-    const tomorrow = new Date(getToday());
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    return tomorrow;
 };
 
 const Form = (props) => {
@@ -78,33 +69,41 @@ const Form = (props) => {
     const [disabledFinishDate, setDisabledFinishDate] = useState(true);
 
     const clearCheckboxes = () => {
-        setCurrent(false);
-        setByDefault(false);
-        setCheckedDates(weekDays);
-    };
-    useEffect(() => {
         classScheduler.forEach((classItem) => {
             prepSetCheckedClasses[`${classItem.id}`] = false;
         });
         setCheckedClasses({ ...prepSetCheckedClasses });
-        clearCheckboxes();
-    }, [classScheduler, semester.id]);
+        setCurrent(false);
+        setByDefault(false);
+        setCheckedDates(weekDays);
+    };
+
     useEffect(() => {
         let semesterItem = {};
         clearCheckboxes();
 
-        if (semester && semester.id) {
+        if (semester.id) {
+            const {
+                id,
+                year,
+                description,
+                startDay,
+                endDay,
+                currentSemester,
+                defaultSemester,
+                semester_days: semesterDays,
+                semester_classes: semesterClasses,
+            } = semester;
             semesterItem = {
-                id: semester.id,
-                year: semester.year,
-                description: semester.description,
-                startDay: semester.startDay,
-                endDay: semester.endDay,
-                currentSemester: semester.currentSemester,
-                defaultSemester: semester.defaultSemester,
-                semester_days: semester.semester_days,
-                semester_classes: semester.semester_classes,
-                semester_groups: semester.semester_groups,
+                id,
+                year,
+                description,
+                startDay,
+                endDay,
+                currentSemester,
+                defaultSemester,
+                semester_days: semesterDays,
+                semester_classes: semesterClasses,
             };
 
             daysUppercase.forEach((dayItem) => {
@@ -118,6 +117,10 @@ const Form = (props) => {
                 return data;
             }, {});
 
+            setCheckedDates({
+                ...weekDays,
+                ...newDays,
+            });
             if (classScheduler) {
                 classScheduler.forEach((classFullItem) => {
                     if (
@@ -139,17 +142,6 @@ const Form = (props) => {
             setCurrent(semester.currentSemester);
             setByDefault(semester.defaultSemester);
 
-            setCheckedDates({
-                MONDAY: false,
-                TUESDAY: false,
-                WEDNESDAY: false,
-                THURSDAY: false,
-                FRIDAY: false,
-                SATURDAY: false,
-                SUNDAY: false,
-                ...newDays,
-            });
-
             const prepSetCheckedClassesNested = {};
             if (classScheduler) {
                 classScheduler.forEach((classItem) => {
@@ -162,7 +154,7 @@ const Form = (props) => {
             });
         }
         initialize(semesterItem);
-    }, [semester.id]);
+    }, [classScheduler, semester.id]);
 
     const setMinFinishDate = (time) => {
         const newDate = moment(time, dateFormat).add(1, 'd');
@@ -174,31 +166,14 @@ const Form = (props) => {
             change('endDay', moment(startTimeParam, dateFormat).add(7, 'd').format(dateFormat));
         }
     };
+    const setCheckedHandler = (event, day, checked, setSchecked) => {
+        const changedDay = { [day]: event.target.checked };
+        setSchecked({
+            ...checked,
+            ...changedDay,
+        });
+    };
 
-    const setCheckedClassesHandler = useCallback(
-        (classid) => {
-            return (event) => {
-                const changedClass = { [classid]: event.target.checked };
-                setCheckedClasses({
-                    ...checkedClasses,
-                    ...changedClass,
-                });
-            };
-        },
-        [checkedClasses],
-    );
-    const setCheckedDaysHandler = useCallback(
-        (day) => {
-            return (event) => {
-                const changedDay = { [day]: event.target.checked };
-                setCheckedDates({
-                    ...checkedDates,
-                    ...changedDay,
-                });
-            };
-        },
-        [checkedDates],
-    );
     const setSemesterClasses = () => {
         const classes = Object.keys(checkedClasses);
         return classes.map((classItem) => {
@@ -212,7 +187,9 @@ const Form = (props) => {
                     component={renderCheckboxField}
                     defaultValue={checkedClasses[classItem]}
                     checked={checkedClasses[classItem]}
-                    onChange={setCheckedClassesHandler(classItem)}
+                    onChange={(e) => {
+                        setCheckedHandler(e, classItem, checkedClasses, setCheckedClasses);
+                    }}
                     color="primary"
                 />
             );
@@ -230,7 +207,9 @@ const Form = (props) => {
                     defaultValue={checkedDates[semesterDay]}
                     component={renderCheckboxField}
                     checked={checkedDates[semesterDay]}
-                    onChange={setCheckedDaysHandler(semesterDay)}
+                    onChange={(e) =>
+                        setCheckedHandler(e, semesterDay, checkedDates, setCheckedDates)
+                    }
                     color="primary"
                 />
             );
@@ -354,4 +333,5 @@ const Form = (props) => {
 };
 
 const FormSemester = reduxForm({ form: SEMESTER_FORM })(Form);
+
 export default FormSemester;
