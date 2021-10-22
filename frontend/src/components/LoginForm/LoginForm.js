@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import i18n from 'i18next';
 import { Link } from 'react-router-dom';
+import '../../styles/forms.scss';
 
 import { Field, reduxForm } from 'redux-form';
 
@@ -66,12 +67,12 @@ const LoginForm = (props) => {
             {isLoading ? (
                 <CircularProgress />
             ) : (
-                <form onSubmit={handleSubmit(onLogin)}>
+                <form onSubmit={handleSubmit(onLogin)} className="auth-form">
                     <Field
                         name="email"
-                        className="form-field"
+                        className="form-input"
                         component={renderTextField}
-                        label={i18n.t(`formElements:${EMAIL_LABEL}`)}
+                        label={i18n.t(EMAIL_LABEL)}
                         error={!!errors}
                         helperText={errors ? errors.login : null}
                         onChange={(e) => errorHandling(e.target.value)}
@@ -81,7 +82,7 @@ const LoginForm = (props) => {
                         className="form-field"
                         type="password"
                         component={renderTextField}
-                        label={i18n.t(`formElements:${PASSWORD_LABEL}`)}
+                        label={i18n.t(PASSWORD_LABEL)}
                         error={!!errors}
                         onChange={() => setError(null)}
                     />
@@ -93,16 +94,16 @@ const LoginForm = (props) => {
                     >
                         {i18n.t(LOGIN_TITLE)}
                     </Button>
+                    <div className="text-center">
+                        <Link to={links.Registration} className="navLinks">
+                            {i18n.t(CREATE_ACCOUNT_LABEL)}
+                        </Link>
+                        <Link to={links.RESET_PASSWORD} className="navLinks">
+                            {i18n.t(FORGOT_PASSWORD_LABEL)}
+                        </Link>
+                    </div>
                 </form>
             )}
-            <div className="text-center">
-                <Link to={links.Registration} className="navLinks">
-                    {i18n.t(`formElements:${CREATE_ACCOUNT_LABEL}`)}
-                </Link>
-                <Link to={links.RESET_PASSWORD} className="navLinks">
-                    {i18n.t(`formElements:${FORGOT_PASSWORD_LABEL}`)}
-                </Link>
-            </div>
         </Card>
     );
 };

@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { get, isEmpty } from 'lodash';
-import { Redirect, useHistory } from 'react-router-dom';
+import { isEmpty } from 'lodash';
+import { useHistory, useLocation } from 'react-router-dom';
 import { links } from '../../constants/links';
-import { authTypes } from '../../constants/auth';
+import { authTypes, successAuthMessages } from '../../constants/auth';
 import { userRoles } from '../../constants/userRoles';
 import { snackbarTypes } from '../../constants/snackbarTypes';
 import LoginForm from '../LoginForm/LoginForm';
@@ -20,17 +20,15 @@ import {
     BROKEN_TOKEN,
     LOGIN_TITLE,
     REGISTRATION_PAGE_TITLE,
+    HOME_TITLE,
+    ADMIN_TITLE,
     RESET_PASSWORD_PAGE_TITLE,
-    SUCCESSFUL_LOGIN_MESSAGE,
-    SUCCESSFUL_REGISTERED_MESSAGE,
-    SUCCESSFUL_RESET_PASSWORD_MESSAGE,
 } from '../../constants/translationLabels/common';
 
 const Auth = (props) => {
     const {
-        type,
+        authType,
         userRole,
-        token,
         response,
         resetPasswordResponse,
         onRegister,
@@ -42,15 +40,27 @@ const Auth = (props) => {
         isLoading,
     } = props;
     const { t } = useTranslation('common');
-    const [authType, setAuthType] = useState(type);
     const history = useHistory();
-    const url = window.document.location;
-    const parser = new URL(url);
-
+    const location = useLocation();
     const loginHandler = (loginData) => {
         onAuth(loginData);
         setLoadingForm(true);
         resetFormHandler(LOGIN_FORM);
+    };
+
+    const showSuccessMessage = (massage) => {
+        handleSnackbarOpenService(true, snackbarTypes.SUCCESS, t(massage));
+    };
+
+    const successLoginRedirect = () => {
+        if (userRole === userRoles.MANAGER) {
+            document.title = t(ADMIN_TITLE);
+            history.push(links.ADMIN_PAGE);
+        } else {
+            document.title = t(HOME_TITLE);
+            history.push(links.HOME_PAGE);
+        }
+        showSuccessMessage(successAuthMessages[authType]);
     };
 
     const registrationHandler = (registrationData) => {
@@ -76,19 +86,15 @@ const Auth = (props) => {
             setError({ login: t(BROKEN_TOKEN) });
             return;
         }
-        setAuthType(authTypes.GOOGLE);
         onAuth(data);
         resetFormHandler(LOGIN_FORM);
-        window.history.replaceState({}, document.title, '/');
-        setLoadingForm(false);
     };
 
     let social = false;
     let isToken = false;
     let splitedParamToken = '';
-
-    if (parser.search.length > 0) {
-        const params = parser.search.split('&');
+    if (location.search.length > 0) {
+        const params = location.search.split('&');
         if (params) {
             params.forEach((param) => {
                 const splitedParam = param.split('=');
@@ -109,65 +115,56 @@ const Auth = (props) => {
 
     useEffect(() => {
         if (!isEmpty(response) || !isEmpty(resetPasswordResponse)) {
-            const message =
-                authType === authTypes.REGISTRATION
-                    ? t(SUCCESSFUL_REGISTERED_MESSAGE)
-                    : t(SUCCESSFUL_RESET_PASSWORD_MESSAGE);
             history.push(links.LOGIN);
-            handleSnackbarOpenService(true, snackbarTypes.SUCCESS, message);
+            showSuccessMessage(successAuthMessages[authType]);
         }
     }, [resetPasswordResponse, response]);
 
     useEffect(() => {
         if (userRole) {
-            handleSnackbarOpenService(true, snackbarTypes.SUCCESS, t(SUCCESSFUL_LOGIN_MESSAGE));
-            const redirectLink =
-                userRole === userRoles.MANAGER ? links.ADMIN_PAGE : links.HOME_PAGE;
-            history.push(redirectLink);
+            successLoginRedirect();
         }
     }, [userRole]);
-
-    let authPage;
 
     switch (authType) {
         case authTypes.REGISTRATION:
             document.title = t(REGISTRATION_PAGE_TITLE);
-            authPage = (
-                <RegistrationForm
-                    isLoading={isLoading}
-                    registrationError={error}
-                    onSubmit={registrationHandler}
-                    translation={t}
-                    setError={setError}
-                />
+            return (
+                <div className="auth-container">
+                    <RegistrationForm
+                        isLoading={isLoading}
+                        registrationError={error}
+                        registrationHandler={registrationHandler}
+                        setError={setError}
+                    />
+                </div>
             );
-            break;
         case authTypes.RESET_PASSWORD:
             document.title = t(RESET_PASSWORD_PAGE_TITLE);
-            authPage = (
-                <ResetPasswordForm
-                    isLoading={isLoading}
-                    resetPasswordError={error}
-                    onSubmit={resetPasswordHandler}
-                    translation={t}
-                    setError={setError}
-                />
+            return (
+                <div className="auth-container">
+                    <ResetPasswordForm
+                        isLoading={isLoading}
+                        resetPasswordError={error}
+                        onSubmit={resetPasswordHandler}
+                        translation={t}
+                        setError={setError}
+                    />
+                </div>
             );
-            break;
         default:
             document.title = t(LOGIN_TITLE);
-            authPage = (
-                <LoginForm
-                    isLoading={isLoading}
-                    loginHandler={loginHandler}
-                    setError={setError}
-                    translation={t}
-                    errors={error}
-                />
+            return (
+                <div className="auth-container">
+                    <LoginForm
+                        isLoading={isLoading}
+                        loginHandler={loginHandler}
+                        setError={setError}
+                        errors={error}
+                    />
+                </div>
             );
     }
-
-    return <div className="auth-form">{authPage}</div>;
 };
 
 export default Auth;

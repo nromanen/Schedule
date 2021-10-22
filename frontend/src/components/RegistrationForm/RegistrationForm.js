@@ -1,5 +1,5 @@
 import React from 'react';
-import { useTranslation } from 'react-i18next';
+import i18n from 'i18next';
 
 import { Field, reduxForm } from 'redux-form';
 
@@ -26,8 +26,7 @@ import {
 } from '../../constants/translationLabels/formElements';
 
 const RegistrationForm = (props) => {
-    const { t } = useTranslation('formElements');
-    const { handleSubmit, translation, errors, setError, registrationHandler, isLoading } = props;
+    const { handleSubmit, errors, setError, registrationHandler, isLoading } = props;
 
     const emailValidate = { validate: [required, email] };
     const emailErrorCondition = errors && errors.registration.reg;
@@ -51,7 +50,7 @@ const RegistrationForm = (props) => {
     const isValidForm = (formValues) => {
         if (formValues.password !== formValues.retypePassword) {
             setError({
-                registration: { passwords: t(DIFFERENT_PASSWORDS) },
+                registration: { passwords: i18n.t(DIFFERENT_PASSWORDS) },
             });
             return false;
         }
@@ -66,7 +65,7 @@ const RegistrationForm = (props) => {
 
     return (
         <Card additionClassName="auth-card">
-            <h2 className="under-line">{translation(REGISTRATION_PAGE_TITLE)}</h2>
+            <h2 className="under-line">{i18n.t(REGISTRATION_PAGE_TITLE)}</h2>
             {isLoading ? (
                 <CircularProgress />
             ) : (
@@ -76,7 +75,7 @@ const RegistrationForm = (props) => {
                         className="form-field"
                         type="email"
                         component={renderTextField}
-                        label={t(EMAIL_LABEL)}
+                        label={i18n.t(EMAIL_LABEL)}
                         {...(!errors ? emailValidate : emailAdvancedValidate)}
                         onChange={() => props.setError(null)}
                     />
@@ -85,7 +84,7 @@ const RegistrationForm = (props) => {
                         className="form-field"
                         type="password"
                         component={renderTextField}
-                        label={t(PASSWORD_LABEL)}
+                        label={i18n.t(PASSWORD_LABEL)}
                         {...(!errors ? passwordValidate : passwordValidateAdvanced)}
                         onChange={() => props.setError(null)}
                     />
@@ -94,7 +93,7 @@ const RegistrationForm = (props) => {
                         className="form-field"
                         type="password"
                         component={renderTextField}
-                        label={t(RETYPE_PASSWORD_LABEL)}
+                        label={i18n.t(RETYPE_PASSWORD_LABEL)}
                         {...(!errors ? retypePasswordValidate : retypePasswordValidateAdvanced)}
                     />
                     <Button
@@ -103,11 +102,11 @@ const RegistrationForm = (props) => {
                         variant="contained"
                         color="primary"
                     >
-                        {translation(CREATE_ACCOUNT)}
+                        {i18n.t(CREATE_ACCOUNT)}
                     </Button>
                     <div className="text-center">
                         <Link className="navLinks" to={links.LOGIN}>
-                            {translation(ACCOUNT_EXIST)}
+                            {i18n.t(ACCOUNT_EXIST)}
                         </Link>
                     </div>
                 </form>

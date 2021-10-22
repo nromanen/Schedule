@@ -1,5 +1,5 @@
 import React from 'react';
-import { useTranslation } from 'react-i18next';
+import i18n from 'i18next';
 
 import { Field, reduxForm } from 'redux-form';
 
@@ -18,12 +18,11 @@ import { EMAIL_LABEL } from '../../constants/translationLabels/formElements';
 import {
     LOGIN_TITLE,
     RESET_PASSWORD_PAGE_TITLE,
-    RESET_PASSWORD_BUTTON,
+    RESET_PASSWORD_LABEL,
 } from '../../constants/translationLabels/common';
 
 const ResetPasswordForm = (props) => {
-    const { t } = useTranslation('formElements');
-    const { handleSubmit, translation, resetPasswordError, setError, isLoading } = props;
+    const { handleSubmit, resetPasswordError, setError, isLoading } = props;
 
     const error = resetPasswordError;
 
@@ -39,7 +38,7 @@ const ResetPasswordForm = (props) => {
 
     return (
         <Card additionClassName="auth-card">
-            <h2 className="under-line">{translation(RESET_PASSWORD_PAGE_TITLE)}</h2>
+            <h2 className="under-line">{i18n.t(RESET_PASSWORD_PAGE_TITLE)}</h2>
             {isLoading ? (
                 <CircularProgress />
             ) : (
@@ -48,7 +47,7 @@ const ResetPasswordForm = (props) => {
                         name="email"
                         className="form-field"
                         component={renderTextField}
-                        label={t(EMAIL_LABEL)}
+                        label={i18n.t(EMAIL_LABEL)}
                         {...(!error ? emailValidate : error)}
                         onChange={(e) => {
                             errorHandling(e.target.value);
@@ -60,11 +59,11 @@ const ResetPasswordForm = (props) => {
                         variant="contained"
                         color="primary"
                     >
-                        {translation(RESET_PASSWORD_BUTTON)}
+                        {i18n.t(RESET_PASSWORD_LABEL)}
                     </Button>
                     <div className="text-center">
                         <Link className="navLinks" to={links.LOGIN}>
-                            {translation(LOGIN_TITLE)}
+                            {i18n.t(LOGIN_TITLE)}
                         </Link>
                     </div>
                 </form>

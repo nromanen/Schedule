@@ -1,9 +1,9 @@
 import React from 'react';
 import { authTypes } from '../../constants/auth';
 import '../Auth/Auth.scss';
-import Auth from '../../containers/Auth/Auth';
+import AuthContainer from '../../containers/AuthContainer/AuthContainer';
 
 const ResetPassword = () => {
-    return <Auth type={authTypes.RESET_PASSWORD} />;
+    return <AuthContainer authType={authTypes.RESET_PASSWORD} />;
 };
 export { ResetPassword };

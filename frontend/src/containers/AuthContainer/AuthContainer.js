@@ -11,14 +11,12 @@ const mapStateToProps = (state) => ({
     isLoading: state.loadingIndicator.loading,
 });
 
-const mapDispatchToProps = (dispatch) => {
-    return {
-        onAuth: (data) => dispatch(authUser(data)),
-        onRegister: (data) => dispatch(registerUser(data)),
-        onResetPassword: (data) => dispatch(resetUserPassword(data)),
-        setLoadingForm: (isLoading) => dispatch(setLoading(isLoading)),
-        setError: (error) => dispatch(setAuthError(error)),
-    };
-};
+const mapDispatchToProps = (dispatch) => ({
+    onAuth: (data) => dispatch(authUser(data)),
+    onRegister: (data) => dispatch(registerUser(data)),
+    onResetPassword: (data) => dispatch(resetUserPassword(data)),
+    setLoadingForm: (isLoading) => dispatch(setLoading(isLoading)),
+    setError: (error) => dispatch(setAuthError(error)),
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(Auth);
