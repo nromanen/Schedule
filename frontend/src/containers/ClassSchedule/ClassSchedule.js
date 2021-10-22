@@ -65,13 +65,16 @@ const ClassSchedule = (props) => {
 
     return (
         <div className="cards-container">
-            <CustomDialog
-                type={dialogTypes.DELETE_CONFIRM}
-                cardId={classId}
-                whatDelete={cardType.CLASS.toLowerCase()}
-                open={open}
-                onClose={handleClose}
-            />
+            {open && (
+                <CustomDialog
+                    type={dialogTypes.DELETE_CONFIRM}
+                    cardId={classId}
+                    whatDelete={cardType.CLASS.toLowerCase()}
+                    open={open}
+                    onClose={handleClose}
+                />
+            )}
+
             <ClassForm onSubmit={submit} onReset={clearClassScheduleOneService} />
             <section className="container-flex-wrap">
                 {props.classScheduler.map((schedule) => (

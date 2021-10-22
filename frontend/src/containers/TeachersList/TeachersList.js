@@ -175,13 +175,15 @@ const TeacherList = (props) => {
     };
     return (
         <div className="cards-container">
-            <CustomDialog
-                type={subDialogType}
-                cardId={teacherId}
-                whatDelete={cardType.TEACHER}
-                open={openSubDialog}
-                onClose={acceptConfirmDialog}
-            />
+            {openSubDialog && (
+                <CustomDialog
+                    type={subDialogType}
+                    cardId={teacherId}
+                    whatDelete={cardType.TEACHER}
+                    open={openSubDialog}
+                    onClose={acceptConfirmDialog}
+                />
+            )}
 
             <aside className="form-with-search-panel">
                 <SearchPanel SearchChange={SearchChange} showDisabled={changeDisable} />
@@ -195,7 +197,7 @@ const TeacherList = (props) => {
                 >
                     {t(SEND_SCHEDULE_FOR_TEACHER)}
                 </Button>
-                <>
+                {openSelect && (
                     <MultiSelect
                         open={openSelect}
                         options={options}
@@ -208,7 +210,7 @@ const TeacherList = (props) => {
                         defaultSemester={parseDefaultSemester()}
                         onChangeSemesterValue={setSelectedSemester}
                     />
-                </>
+                )}
 
                 {!isDisabled && (
                     <AddTeacherForm

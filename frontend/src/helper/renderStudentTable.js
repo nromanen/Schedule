@@ -316,21 +316,24 @@ export default function RenderStudentTable(props) {
                                     </Link>
                                 </span>
                             </StyledTableCell>
+                            {openEditDialog && (
+                                <AddStudentDialog
+                                    open={openEditDialog}
+                                    onSubmit={handleSubmit}
+                                    onSetSelectedCard={handleCloseEditDialog}
+                                    match={match}
+                                />
+                            )}
 
-                            <AddStudentDialog
-                                open={openEditDialog}
-                                onSubmit={handleSubmit}
-                                onSetSelectedCard={handleCloseEditDialog}
-                                match={match}
-                            />
-
-                            <CustomDialog
-                                type={dialogTypes.DELETE_CONFIRM}
-                                cardId={student}
-                                whatDelete="student"
-                                open={openDeleteDialog}
-                                onClose={deleteStudent}
-                            />
+                            {openDeleteDialog && (
+                                <CustomDialog
+                                    type={dialogTypes.DELETE_CONFIRM}
+                                    cardId={student}
+                                    whatDelete="student"
+                                    open={openDeleteDialog}
+                                    onClose={deleteStudent}
+                                />
+                            )}
                         </StyledTableRow>
                     ))}
 

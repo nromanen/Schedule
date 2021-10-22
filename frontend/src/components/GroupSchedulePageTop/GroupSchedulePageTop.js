@@ -109,7 +109,7 @@ const GroupSchedulePageTop = (props) => {
                     change('group', 0);
                 }}
             >
-                <option className="option-item" value={null} />
+                <option className="option-item" value={0} />
                 {teachers.map((teacher) => (
                     <option key={teacher.id} value={teacher.id} className="option-item">
                         {getTeacherFullName(teacher)}
@@ -131,7 +131,7 @@ const GroupSchedulePageTop = (props) => {
                     change('teacher', 0);
                 }}
             >
-                <option className="option-item" value={null} />
+                <option className="option-item" value={0} />
                 {groups.map((group) => (
                     <option key={group.id} value={group.id} className="option-item">
                         {group.title}
