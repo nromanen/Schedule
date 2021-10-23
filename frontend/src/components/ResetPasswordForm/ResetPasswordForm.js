@@ -14,7 +14,10 @@ import { RESET_PASSWORD_FORM } from '../../constants/reduxForms';
 
 import { email, required } from '../../validation/validateFields';
 import { links } from '../../constants/links';
-import { EMAIL_LABEL } from '../../constants/translationLabels/formElements';
+import {
+    EMAIL_LABEL,
+    RESET_PASSWORD_HELPER_TEXT,
+} from '../../constants/translationLabels/formElements';
 import {
     LOGIN_TITLE,
     RESET_PASSWORD_PAGE_TITLE,
@@ -38,14 +41,17 @@ const ResetPasswordForm = (props) => {
 
     return (
         <Card additionClassName="auth-card">
-            <h2 className="under-line">{i18n.t(RESET_PASSWORD_PAGE_TITLE)}</h2>
+            <div className="auth-card-header">
+                <h2 className="title">{i18n.t(RESET_PASSWORD_PAGE_TITLE)}</h2>
+                <span className="subtitle">{i18n.t(RESET_PASSWORD_HELPER_TEXT)}</span>
+            </div>
             {isLoading ? (
-                <CircularProgress />
+                <CircularProgress size="60px" className="loading-circle" />
             ) : (
-                <form onSubmit={handleSubmit}>
+                <form className="auth-form" onSubmit={handleSubmit}>
                     <Field
                         name="email"
-                        className="form-field"
+                        className="form-input"
                         component={renderTextField}
                         label={i18n.t(EMAIL_LABEL)}
                         {...(!error ? emailValidate : error)}
@@ -53,16 +59,18 @@ const ResetPasswordForm = (props) => {
                             errorHandling(e.target.value);
                         }}
                     />
-                    <Button
-                        className="buttons-style"
-                        type="submit"
-                        variant="contained"
-                        color="primary"
-                    >
-                        {i18n.t(RESET_PASSWORD_LABEL)}
-                    </Button>
-                    <div className="text-center">
-                        <Link className="navLinks" to={links.LOGIN}>
+                    <div className="auth-form-actions">
+                        <Button
+                            className="auth-confirm-button"
+                            type="submit"
+                            variant="contained"
+                            color="primary"
+                        >
+                            {i18n.t(RESET_PASSWORD_LABEL)}
+                        </Button>
+                    </div>
+                    <div className="auth-form-footer">
+                        <Link to={links.LOGIN} className="form-link">
                             {i18n.t(LOGIN_TITLE)}
                         </Link>
                     </div>

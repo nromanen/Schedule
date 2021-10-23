@@ -8,13 +8,14 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import { Link } from 'react-router-dom';
 import renderTextField from '../../share/renderedFields/input';
 import Card from '../../share/Card/Card';
-
+import '../../styles/forms.scss';
 import { REGISTRATION_FORM } from '../../constants/reduxForms';
 
 import { email, password, required } from '../../validation/validateFields';
 import { links } from '../../constants/links';
 import {
     REGISTRATION_PAGE_TITLE,
+    LOGIN_TITLE,
     ACCOUNT_EXIST,
     CREATE_ACCOUNT,
     DIFFERENT_PASSWORDS,
@@ -65,14 +66,17 @@ const RegistrationForm = (props) => {
 
     return (
         <Card additionClassName="auth-card">
-            <h2 className="under-line">{i18n.t(REGISTRATION_PAGE_TITLE)}</h2>
+            <div className="auth-card-header">
+                <h2 className="title">{i18n.t(REGISTRATION_PAGE_TITLE)}</h2>
+            </div>
+
             {isLoading ? (
-                <CircularProgress />
+                <CircularProgress size="60px" className="loading-circle" />
             ) : (
-                <form onSubmit={handleSubmit(onRegistration)}>
+                <form className="auth-form" onSubmit={handleSubmit(onRegistration)}>
                     <Field
                         name="email"
-                        className="form-field"
+                        className="form-input"
                         type="email"
                         component={renderTextField}
                         label={i18n.t(EMAIL_LABEL)}
@@ -81,7 +85,7 @@ const RegistrationForm = (props) => {
                     />
                     <Field
                         name="password"
-                        className="form-field"
+                        className="form-input"
                         type="password"
                         component={renderTextField}
                         label={i18n.t(PASSWORD_LABEL)}
@@ -90,23 +94,26 @@ const RegistrationForm = (props) => {
                     />
                     <Field
                         name="retypePassword"
-                        className="form-field"
+                        className="form-input"
                         type="password"
                         component={renderTextField}
                         label={i18n.t(RETYPE_PASSWORD_LABEL)}
                         {...(!errors ? retypePasswordValidate : retypePasswordValidateAdvanced)}
                     />
-                    <Button
-                        className="buttons-style"
-                        type="submit"
-                        variant="contained"
-                        color="primary"
-                    >
-                        {i18n.t(CREATE_ACCOUNT)}
-                    </Button>
-                    <div className="text-center">
-                        <Link className="navLinks" to={links.LOGIN}>
-                            {i18n.t(ACCOUNT_EXIST)}
+                    <div className="auth-form-actions">
+                        <Button
+                            className="auth-confirm-button"
+                            type="submit"
+                            variant="contained"
+                            color="primary"
+                        >
+                            {i18n.t(CREATE_ACCOUNT)}
+                        </Button>
+                    </div>
+                    <div className="auth-form-footer">
+                        <span>{i18n.t(ACCOUNT_EXIST)}</span>
+                        <Link to={links.LOGIN} className="form-link">
+                            {i18n.t(LOGIN_TITLE)}
                         </Link>
                     </div>
                 </form>

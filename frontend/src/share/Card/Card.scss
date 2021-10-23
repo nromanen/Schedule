@@ -10,7 +10,7 @@
   margin: 10px;
   padding: 1rem;
   border-radius: 5px;
-  box-shadow: 0 2px 8px $shadow-box;
+  box-shadow: 0 12px 20px 0px $shadow-box;
 }
 
 .form-card {
@@ -84,6 +84,7 @@
 
 .auth-card {
   width: 450px;
+  
 
   @media (max-width: 500px) {
     max-width: 90%;

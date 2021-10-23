@@ -116,3 +116,7 @@ export const NEW_TYPE_LABEL = 'new_type_label';
 export const DELETE_TITLE_LABEL = 'delete_title';
 export const CREATE_ACCOUNT_LABEL = 'formElements:create_account_label';
 export const FORGOT_PASSWORD_LABEL = 'formElements:forgot_password_label';
+export const DONT_HAVE_ACCOUNT_LABEL = 'formElements:dont_have_an_account';
+export const SING_IN_TO_ACCOUNT_LABEL = 'formElements:sign_in_to_account_label';
+export const LOGIN_VIA_GOOGLE_LABEL = 'formElements:login_via_google';
+export const RESET_PASSWORD_HELPER_TEXT = 'formElements:reset_password_helper_text';

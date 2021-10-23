@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import i18n from 'i18next';
+
 import { Link } from 'react-router-dom';
 import '../../styles/forms.scss';
 
@@ -7,7 +8,7 @@ import { Field, reduxForm } from 'redux-form';
 
 import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
-
+import GoogleLogin from 'react-google-login';
 import Card from '../../share/Card/Card';
 import renderTextField from '../../share/renderedFields/input';
 
@@ -25,11 +26,19 @@ import {
 import {
     PASSWORD_LABEL,
     EMAIL_LABEL,
-    CREATE_ACCOUNT_LABEL,
     FORGOT_PASSWORD_LABEL,
+    DONT_HAVE_ACCOUNT_LABEL,
+    SING_IN_TO_ACCOUNT_LABEL,
+    LOGIN_VIA_GOOGLE_LABEL,
 } from '../../constants/translationLabels/formElements';
-import { LOGIN_TITLE, EMPTY_FIELDS } from '../../constants/translationLabels/common';
+import {
+    LOGIN_TITLE,
+    EMPTY_FIELDS,
+    OR_LABEL,
+    REGISTRATION_PAGE_TITLE,
+} from '../../constants/translationLabels/common';
 import { links } from '../../constants/links';
+import { GOOGLE_AUTH_CLIENT_ID } from '../../constants/auth';
 
 const LoginForm = (props) => {
     const { handleSubmit, loginHandler, errors, setError, isLoading } = props;
@@ -61,11 +70,45 @@ const LoginForm = (props) => {
         if (required(value)) setError(required(value));
         else setError(null);
     };
+    const responseGoogle = (response) => {
+        console.log(response);
+    };
     return (
         <Card additionClassName="auth-card">
-            <h2 className="under-line">{i18n.t(LOGIN_TITLE)}</h2>
+            <div className="auth-card-header">
+                <h2 className="title">{i18n.t(LOGIN_TITLE)}</h2>
+                <span className="subtitle">{i18n.t(SING_IN_TO_ACCOUNT_LABEL)}</span>
+                <div className="login-via-social-container">
+                    <GoogleLogin
+                        clientId={GOOGLE_AUTH_CLIENT_ID}
+                        render={(renderProps) => (
+                            <button
+                                className="google-avatar"
+                                title={i18n.t(LOGIN_VIA_GOOGLE_LABEL)}
+                                type="button"
+                                onClick={renderProps.onClick}
+                                disabled={renderProps.disabled}
+                            >
+                                <img
+                                    alt={i18n.t(LOGIN_VIA_GOOGLE_LABEL)}
+                                    src="https://img.icons8.com/color/48/000000/google-logo.png"
+                                />
+                            </button>
+                        )}
+                        onSuccess={responseGoogle}
+                        onFailure={responseGoogle}
+                        cookiePolicy="single_host_origin"
+                    />
+                </div>
+                <div className="or-lines-container">
+                    <span className="line"></span>
+                    <span className="line-text">{i18n.t(OR_LABEL)}</span>
+                    <span className="line"></span>
+                </div>
+            </div>
+
             {isLoading ? (
-                <CircularProgress />
+                <CircularProgress size="60px" className="loading-circle" />
             ) : (
                 <form onSubmit={handleSubmit(onLogin)} className="auth-form">
                     <Field
@@ -79,27 +122,33 @@ const LoginForm = (props) => {
                     />
                     <Field
                         name="password"
-                        className="form-field"
+                        className="form-input"
                         type="password"
                         component={renderTextField}
                         label={i18n.t(PASSWORD_LABEL)}
                         error={!!errors}
                         onChange={() => setError(null)}
                     />
-                    <Button
-                        className="buttons-style"
-                        type="submit"
-                        variant="contained"
-                        color="primary"
-                    >
-                        {i18n.t(LOGIN_TITLE)}
-                    </Button>
-                    <div className="text-center">
-                        <Link to={links.Registration} className="navLinks">
-                            {i18n.t(CREATE_ACCOUNT_LABEL)}
-                        </Link>
-                        <Link to={links.RESET_PASSWORD} className="navLinks">
+                    <div className="forgot-password-label">
+                        <Link to={links.RESET_PASSWORD} className="form-link">
                             {i18n.t(FORGOT_PASSWORD_LABEL)}
+                        </Link>
+                    </div>
+                    <div className="auth-form-actions">
+                        <Button
+                            className="auth-confirm-button"
+                            type="submit"
+                            variant="contained"
+                            color="primary"
+                        >
+                            {i18n.t(LOGIN_TITLE)}
+                        </Button>
+                    </div>
+
+                    <div className="auth-form-footer">
+                        <span>{i18n.t(DONT_HAVE_ACCOUNT_LABEL)}</span>
+                        <Link to={links.Registration} className="form-link">
+                            {i18n.t(REGISTRATION_PAGE_TITLE)}
                         </Link>
                     </div>
                 </form>

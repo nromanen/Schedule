@@ -1,16 +1,80 @@
 @import './colors.scss';
+@import './variables.scss';
 
 .auth-form {
+    margin: 8px 14px;
+    &-footer {
+        color: $gray;
+        margin-top: 15px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        .form-link {
+            margin-top: 5px;
+        }
+    }
     .form-input {
-        .MuiInput-underline {
-            &::before {
-                border-color: $light-gray;
-                border-width: 1px;
+        margin: 7px 2px;
+    }
+    &-actions {
+        margin-top: 10px;
+        .auth-confirm-button {
+            min-width: 95%;
+            font: {
+                size: $font-sm;
+                weight: bold;
+            }
+            padding: 6px 15px;
+            text-transform: none;
+            background-color: $blue;
+            &:hover {
+                background-color: $blue-hover;
             }
         }
-    
-        label + .MuiInput-formControl {
-            padding-right: 0;
+    }
+}
+
+.form-input {
+    .MuiFormLabel-root {
+        &.Mui-focused {
+            color: $blue;
         }
+    }
+
+    .MuiInput-underline {
+        &.Mui-error {
+            &::after {
+                border-color: #f44336;
+            }
+        }
+        &::before {
+            border-color: $light-gray;
+            border-width: 1px;
+        }
+
+        &::after {
+            border-color: $blue;
+        }
+        &:hover:not(.Mui-disabled):before {
+            border-color: $blue;
+        }
+    }
+
+    .MuiInputBase-input {
+        padding: 6px 5px;
+    }
+
+    label + .MuiInput-formControl {
+        padding-right: 0;
+    }
+}
+
+.form-link {
+    color: $blue;
+    text-decoration: none;
+    &:hover {
+        text-decoration: underline;
     }
 }

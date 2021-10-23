@@ -230,3 +230,7 @@ body {
   margin-right: 25px;
 }
 
+.MuiCircularProgress-root.loading-circle{
+  margin: 10px;
+  color: $blue;
+}

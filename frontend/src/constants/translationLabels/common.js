@@ -138,3 +138,4 @@ export const COMMON_BY_THIS_CARD_TYPE = 'common:by_this_card_type';
 export const COMMON_THIS_CARD_TYPE = 'common:this_card_type';
 export const COMMON_GO_TO_MEETING_WORD = 'common:go_to_meeting_word';
 export const COMMON_SET_DEFAULT_WORD = 'common:set_default_word';
+export const OR_LABEL = 'common:or_label';

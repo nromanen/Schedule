@@ -2,12 +2,75 @@
 
 .auth-container {
     display: flex;
+    flex-direction: column;
+    min-height: 58vh;
     align-items: center;
     justify-content: center;
     text-align: center;
-    margin-top: 10em;
-    .navLinks{
-        text-decoration: none;
+    &::before {
+        content: '';
+        display: block;
+        flex-grow: 1;
+        height: 24px;
+    }
+    .auth-card-header {
+        .title {
+            margin: {
+                top: 24px;
+                bottom: 0px;
+            }
+        }
+        .subtitle {
+            color: $gray;
+            margin-top: 8px;
+            margin: {
+                top: 8px;
+                left: 5px;
+                right: 5px;
+            }
+            font-size: $font-sm;
+        }
+        .login-via-social-container {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            margin-top: 10px;
+            .google-avatar {
+                width: 40px;
+                height: 40px;
+                cursor: pointer;
+                padding: 5px;
+                background: transparent;
+                border: 1px solid $light-gray;
+                border-radius: 40px;
+                img {
+                    width: 28px;
+                    height: 28px;
+                }
+                &:hover {
+                    --tw-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+                        0 4px 6px -2px rgba(0, 0, 0, 0.05);
+                    box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000),
+                        var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+                }
+            }
+        }
+        .or-lines-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 10px;
+            .line {
+                width: 64px;
+                height: 1px;
+                background-color: $light-gray;
+            }
+            .line-text {
+                font-size: $font-sm;
+                margin: 0px 8px;
+            }
+        }
     }
     .auth-link {
         display: inline-block;
@@ -20,15 +83,9 @@
     .auth-link:hover {
         color: $background-color-dark;
     }
-
-    .buttons-style {
-        margin-top: 10px;
-        width: 40%;
-
-        @media (max-width: 500px) { 
-            margin-top: 20px;
-            width: 30%;
-    }
-    
-    }
+}
+.forgot-password-label {
+    font-size: 14px;
+    font-weight: bold;
+    margin-top: 10px;
 }
