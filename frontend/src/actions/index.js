@@ -1,126 +1,111 @@
 export {
-    storeLessonCard,
-    setLessonsCards,
-    deleteLessonCard,
-    selectLessonCard,
-    updateLessonCard,
-    selectGroupId,
-    setUniqueError,
-    setLessonTypes,
-} from './lesson';
-
-export {
-    setTemporarySchedules,
-    setSchedulesAndTemporarySchedules,
-    selectTemporarySchedule,
-    selectVacation,
-    selectTeacherId,
-} from './temporarySchedule';
-
-export { setOpenSnackbar } from './snackbar';
-
-export { setUsers, setUser } from './users';
-
-export {
-    authUser,
-    registerUser,
-    logout,
-    authCheckState,
-    setAuthError,
     activateUser,
+    authCheckState,
+    authUser,
+    logout,
+    registerUser,
     resetUserPassword,
+    setAuthError,
 } from './auth';
-
-export { setLoading, setScheduleLoading, setSemesterLoading } from './loadingIndicator';
-
-export {
-    setScheduleItems,
-    addItemToSchedule,
-    setFullSchedule,
-    setGroupSchedule,
-    setScheduleType,
-    setItemGroupId,
-    deleteItemFromSchedule,
-    checkAvailabilitySchedule,
-    setScheduleGroupId,
-    setCurrentSemester,
-    setDefaultSemester,
-    setScheduleTeacherId,
-    setTeacherSchedule,
-    setScheduleSemesterId,
-    setSemesterList,
-    setTeacherRangeSchedule,
-    setTeacherViewType,
-} from './schedule';
-
-export {
-    addTeacher,
-    setTeacher,
-    deleteTeacher,
-    selectTeacherCard,
-    updateTeacherCard,
-    showAllTeachers,
-    setDisabledTeachers,
-} from './teachers';
-
 export { showAllBusyRooms } from './busyRooms';
-
 export {
-    setClassScheduleList,
     addClassScheduleOne,
+    deleteClassScheduleOne,
     getClassScheduleList,
     getClassScheduleOne,
-    deleteClassScheduleOne,
+    setClassScheduleList,
 } from './class';
-
+export { clearFreeRooms, showFreeRooms } from './freeRooms';
 export {
-    deleteGroup,
-    showAllGroups,
     addGroup,
-    selectGroup,
-    updateGroup,
     clearGroup,
+    deleteGroup,
+    selectGroup,
     setDisabledGroups,
+    showAllGroups,
+    updateGroup,
 } from './groups';
-
+export {
+    deleteLessonCard,
+    selectGroupId,
+    selectLessonCard,
+    setLessonsCards,
+    setLessonTypes,
+    setUniqueError,
+    storeLessonCard,
+    updateLessonCard,
+} from './lesson';
+export { setLoading, setScheduleLoading, setSemesterLoading } from './loadingIndicator';
 export {
     addRoom,
-    deleteRoom,
-    showListOfRooms,
-    selectOneRoom,
-    updateOneRoom,
     clearRoomOne,
+    deleteRoom,
+    selectOneRoom,
     setDisabledRooms,
+    showListOfRooms,
+    updateOneRoom,
 } from './rooms';
-
 export {
-    postOneType,
-    getAllRoomTypes,
     deleteType,
-    updateOneType,
+    getAllRoomTypes,
     getOneNewType,
+    postOneType,
+    updateOneType,
 } from './roomTypes';
-
-export { showFreeRooms, clearFreeRooms } from './freeRooms';
-
 export {
-    deleteSubject,
-    showAllSubjects,
-    addSubject,
-    selectSubject,
-    updateSubject,
-    clearSubject,
-    setDisabledSubjects,
-} from './subjects';
-
+    addItemToSchedule,
+    checkAvailabilitySchedule,
+    deleteItemFromSchedule,
+    setCurrentSemester,
+    setDefaultSemester,
+    setFullSchedule,
+    setGroupSchedule,
+    setItemGroupId,
+    setScheduleGroupId,
+    setScheduleItems,
+    setScheduleSemesterId,
+    setScheduleTeacherId,
+    setScheduleType,
+    setSemesterList,
+    setTeacherRangeSchedule,
+    setTeacherSchedule,
+    setTeacherViewType,
+} from './schedule';
 export {
-    deleteSemester,
-    showAllSemesters,
     addSemester,
-    selectSemester,
-    updateSemester,
     clearSemester,
-    setDisabledSemesters,
-    setArchivedSemesters,
+    deleteSemester,
     moveToArchivedSemester,
+    selectSemester,
+    setArchivedSemesters,
+    setDisabledSemesters,
+    showAllSemesters,
+    updateSemester,
 } from './semesters';
+export { setOpenSnackbar } from './snackbar';
+export {
+    addSubject,
+    clearSubject,
+    deleteSubject,
+    selectSubject,
+    setDisabledSubjects,
+    showAllSubjects,
+    updateSubject,
+} from './subjects';
+export {
+    addTeacher,
+    deleteTeacher,
+    selectTeacherCard,
+    setDisabledTeachers,
+    setTeacher,
+    showAllTeachers,
+    updateTeacherCard,
+} from './teachers';
+export {
+    selectTeacherId,
+    selectTemporarySchedule,
+    selectVacation,
+    setSchedulesAndTemporarySchedules,
+    setTemporarySchedules,
+} from './temporarySchedule';
+export { setUser, setUsers } from './users';
