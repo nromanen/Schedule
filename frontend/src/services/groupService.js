@@ -56,10 +56,10 @@ export const updateGroupService = (data) => {
         .catch((error) => errorHandler(error));
 };
 
-export const clearGroupService = () => {
-    store.dispatch(clearGroup());
-    resetFormHandler(GROUP_FORM);
-};
+// export const clearGroupService = () => {
+//     store.dispatch(clearGroup());
+//     resetFormHandler(GROUP_FORM);
+// };
 
 // export const getDisabledGroupsService = () => {
 //     axios
@@ -111,14 +111,14 @@ export const clearGroupService = () => {
 //         .catch((error) => errorHandler(error));
 // };
 
-export const setDisabledGroupService = (group) => {
-    const bufferGroup = group;
-    bufferGroup.disable = true;
-    updateGroupService(bufferGroup);
-};
+// export const setDisabledGroupService = (group) => {
+//     const bufferGroup = group;
+//     bufferGroup.disable = true;
+//     updateGroupService(bufferGroup);
+// };
 
-export const setEnabledGroupService = (group) => {
-    const bufferGroup = group;
-    bufferGroup.disable = false;
-    updateGroupService(bufferGroup);
-};
+// export const setEnabledGroupService = (group) => {
+//     const bufferGroup = group;
+//     bufferGroup.disable = false;
+//     updateGroupService(bufferGroup);
+// };

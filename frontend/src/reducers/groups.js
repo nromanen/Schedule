@@ -16,8 +16,12 @@ const reducer = (state = initialState, action) => {
 
         case actionTypes.DELETE_GROUP: {
             const groups = state.groups.filter((group) => group.id !== action.result);
+            const disabledGroups = state.disabledGroups.filter(
+                (group) => group.id !== action.result,
+            );
             return updateObject(state, {
                 groups,
+                disabledGroups,
             });
         }
 
@@ -34,7 +38,6 @@ const reducer = (state = initialState, action) => {
 
         case actionTypes.SELECT_GROUP: {
             let selectedGroup = state.groups.find((group) => group.id === Number(action.result));
-            console.log(selectedGroup);
             if (!selectedGroup) {
                 selectedGroup = { id: null };
             }

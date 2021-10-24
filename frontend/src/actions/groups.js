@@ -77,3 +77,9 @@ export const asyncClearGroup = (data) => ({
     type: actionTypes.ASYNC_CLEAR_GROUP,
     data,
 });
+
+export const asyncToggleGroup = (enabledGroup, disabledGroup) => ({
+    type: actionTypes.ASYNC_TOGGLE_DISABLED_GROUP,
+    disabledGroup,
+    enabledGroup,
+});

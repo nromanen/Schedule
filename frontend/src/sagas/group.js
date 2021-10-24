@@ -7,6 +7,7 @@ import { GROUP_FORM } from '../constants/reduxForms';
 import { setLoading } from '../actions/loadingIndicator';
 import { errorHandler, successHandler } from '../helper/handlerAxios';
 import { FORM_GROUP_LABEL } from '../constants/translationLabels/formElements';
+import { setDisabledItem, setEnabledItem } from '../helper/toggleDisabledItem';
 import {
     BACK_END_SUCCESS_OPERATION,
     UPDATED_LABEL,
@@ -111,7 +112,20 @@ function* clearGroupWorker() {
     }
 }
 
+function* toggleDisabledGroupWorker({ enabledGroup, disabledGroup }) {
+    try {
+        if (enabledGroup) {
+            yield call(updateGroupWorker, { data: setDisabledItem(enabledGroup) });
+        } else {
+            yield call(updateGroupWorker, { data: setEnabledItem(disabledGroup) });
+        }
+    } catch (err) {
+        errorHandler(err);
+    }
+}
+
 export default function* groupWatcher() {
+    yield takeEvery(actionTypes.ASYNC_TOGGLE_DISABLED_GROUP, toggleDisabledGroupWorker);
     yield takeEvery(actionTypes.FETCH_DISABLED_GROUPS, fetchDisabledGroupsWorker);
     yield takeEvery(actionTypes.FETCH_ENABLED_GROUPS, fetchEnabledGroupsWorker);
     yield takeEvery(actionTypes.ASYNC_DELETE_GROUP, deleteGroupWorker);

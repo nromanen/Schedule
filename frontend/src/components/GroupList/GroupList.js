@@ -1,3 +1,4 @@
+import './GroupList.scss';
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
@@ -9,17 +10,18 @@ import { GROUP_Y_LABEL } from '../../constants/translationLabels/formElements';
 import { goToGroupPage } from '../../helper/pageRedirection';
 import { search } from '../../helper/search';
 import '../../router/Router.scss';
-import {
-    clearGroupService,
-    getDisabledGroupsService,
-    handleGroupService,
-    removeGroupCardService,
-    selectGroupService,
-    setDisabledGroupService,
-    setEnabledGroupService,
-    showAllGroupsService,
-} from '../../services/groupService';
 import { handleSnackbarCloseService } from '../../services/snackbarService';
+import GroupCard from '../GroupCard/GroupCard';
+import NotFound from '../../share/NotFound/NotFound';
+import AddGroup from '../AddGroupForm/AddGroupForm';
+import NavigationPage from '../Navigation/NavigationPage';
+import SearchPanel from '../../share/SearchPanel/SearchPanel';
+import SnackbarComponent from '../../share/Snackbar/SnackbarComponent';
+import {
+    AddStudentDialog,
+    CustomDialog,
+    ShowStudentsOnGroupDialog,
+} from '../../share/DialogWindows';
 import {
     createStudentService,
     deleteStudentService,
@@ -27,23 +29,12 @@ import {
     updateStudentService,
 } from '../../services/studentService';
 import {
-    AddStudentDialog,
-    CustomDialog,
-    ShowStudentsOnGroupDialog,
-} from '../../share/DialogWindows';
-import NotFound from '../../share/NotFound/NotFound';
-import SearchPanel from '../../share/SearchPanel/SearchPanel';
-import SnackbarComponent from '../../share/Snackbar/SnackbarComponent';
-import AddGroup from '../AddGroupForm/AddGroupForm';
-import GroupCard from '../GroupCard/GroupCard';
-import NavigationPage from '../Navigation/NavigationPage';
-import './GroupList.scss';
-import {
     asyncFetchDisabledGroups,
     asyncFetchEnabledGroups,
     asyncUpdateGroup,
     asyncDeleteGroup,
     asyncCreateGroup,
+    asyncToggleGroup,
     asyncClearGroup,
     selectGroup,
 } from '../../actions/groups';
@@ -84,14 +75,9 @@ const GroupList = (props) => {
         : search(enabledGroups, term, ['title']);
 
     const changeGroupDisabledStatus = (currentGroupId) => {
-        const foundGroup = [...disabledGroups, ...enabledGroups].find(
-            (groupItem) => groupItem.id === currentGroupId,
-        );
-        const changeDisabledStatus = {
-            [dialogTypes.SET_VISIBILITY_ENABLED]: setEnabledGroupService(foundGroup),
-            [dialogTypes.SET_VISIBILITY_DISABLED]: setDisabledGroupService(foundGroup),
-        };
-        return changeDisabledStatus[subDialogType];
+        const disabledGroup = disabledGroups.find((groupItem) => groupItem.id === currentGroupId);
+        const enabledGroup = enabledGroups.find((groupItem) => groupItem.id === currentGroupId);
+        dispatch(asyncToggleGroup(enabledGroup, disabledGroup));
     };
     const showCustomDialog = (currentId, disabledStatus) => {
         setGroupId(currentId);
@@ -100,7 +86,6 @@ const GroupList = (props) => {
     };
     const acceptConfirmDialog = (currentGroupId) => {
         setOpenSubDialog(false);
-        if (!currentGroupId) return;
         if (subDialogType !== dialogTypes.DELETE_CONFIRM) {
             changeGroupDisabledStatus(currentGroupId);
         } else dispatch(asyncDeleteGroup(currentGroupId));
@@ -153,6 +138,7 @@ const GroupList = (props) => {
                 whatDelete="group"
                 open={openSubDialog}
                 onClose={acceptConfirmDialog}
+                setOpenSubDialog={setOpenSubDialog}
             />
             <AddStudentDialog
                 onSubmit={studentSubmit}
