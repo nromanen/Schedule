@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { isEmpty } from 'lodash';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { links } from '../../constants/links';
 import { authTypes, successAuthMessages } from '../../constants/auth';
 import { userRoles } from '../../constants/userRoles';
@@ -9,7 +9,6 @@ import { snackbarTypes } from '../../constants/snackbarTypes';
 import LoginForm from '../LoginForm/LoginForm';
 import RegistrationForm from '../RegistrationForm/RegistrationForm';
 import ResetPasswordForm from '../ResetPasswordForm/ResetPasswordForm';
-import { GOOGLE } from '../../constants/common';
 
 import { resetFormHandler } from '../../helper/formHelper';
 import { handleSnackbarOpenService } from '../../services/snackbarService';
@@ -17,7 +16,6 @@ import { LOGIN_FORM, REGISTRATION_FORM, RESET_PASSWORD_FORM } from '../../consta
 
 import './Auth.scss';
 import {
-    BROKEN_TOKEN,
     LOGIN_TITLE,
     REGISTRATION_PAGE_TITLE,
     HOME_TITLE,
@@ -41,7 +39,6 @@ const Auth = (props) => {
     } = props;
     const { t } = useTranslation('common');
     const history = useHistory();
-    const location = useLocation();
     const loginHandler = (loginData) => {
         onAuth(loginData);
         setLoadingForm(true);
@@ -82,36 +79,9 @@ const Auth = (props) => {
 
     const socialLoginHandler = (data) => {
         setLoadingForm(true);
-        if (!data.token || data.token.length < 20) {
-            setError({ login: t(BROKEN_TOKEN) });
-            return;
-        }
         onAuth(data);
         resetFormHandler(LOGIN_FORM);
     };
-
-    let social = false;
-    let isToken = false;
-    let splitedParamToken = '';
-    if (location.search.length > 0) {
-        const params = location.search.split('&');
-        if (params) {
-            params.forEach((param) => {
-                const splitedParam = param.split('=');
-                if (splitedParam) {
-                    if (splitedParam[0] === '?social' && splitedParam[1] === 'true') {
-                        social = true;
-                    }
-                    if (splitedParam[0] === 'token' && splitedParam[1].length > 0) {
-                        isToken = true;
-                        splitedParamToken = splitedParam;
-                    }
-                }
-            });
-        }
-        if (social && isToken)
-            socialLoginHandler({ authType: GOOGLE, token: splitedParamToken[1] });
-    }
 
     useEffect(() => {
         if (!isEmpty(response) || !isEmpty(resetPasswordResponse)) {
@@ -159,6 +129,7 @@ const Auth = (props) => {
                     <LoginForm
                         isLoading={isLoading}
                         loginHandler={loginHandler}
+                        socialLoginHandler={socialLoginHandler}
                         setError={setError}
                         errors={error}
                     />

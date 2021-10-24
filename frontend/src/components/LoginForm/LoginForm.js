@@ -15,6 +15,7 @@ import renderTextField from '../../share/renderedFields/input';
 import { LOGIN_FORM } from '../../constants/reduxForms';
 import { validation } from '../../constants/validation';
 import { EMAIL_MESSAGE } from '../../constants/translationLabels/validationMessages';
+import { GOOGLE } from '../../constants/common';
 
 import { required } from '../../validation/validateFields';
 import {
@@ -41,7 +42,7 @@ import { links } from '../../constants/links';
 import { GOOGLE_AUTH_CLIENT_ID } from '../../constants/auth';
 
 const LoginForm = (props) => {
-    const { handleSubmit, loginHandler, errors, setError, isLoading } = props;
+    const { handleSubmit, loginHandler, socialLoginHandler, errors, setError, isLoading } = props;
 
     useEffect(() => {
         setScheduleSemesterIdService(0);
@@ -95,7 +96,13 @@ const LoginForm = (props) => {
                                 />
                             </button>
                         )}
-                        onSuccess={responseGoogle}
+                        onSuccess={(res) =>
+                            // console.log(res)
+                            socialLoginHandler({
+                                authType: GOOGLE,
+                                token: res.tokenObj.id_token,
+                            })
+                        }
                         onFailure={responseGoogle}
                         cookiePolicy="single_host_origin"
                     />
