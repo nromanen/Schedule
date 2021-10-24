@@ -61,37 +61,39 @@ export const makeGroupSchedule = (groupSchedule) => {
 
 const mapFullSchedule = (schedule, semesterDays, semesterClasses) => {
     const parsedGroupList = schedule.map(({ group }) => group);
+    parsedGroupList.sort((a, b) => sortStrings(a.title, b.title));
     const parsedResultArray = [];
 
     semesterDays.forEach((day) => {
-        const classesArray = [];
+        const tempClassesArray = [];
         semesterClasses.forEach((classItem) => {
-            const oddArray = [];
-            const evenArray = [];
-            parsedGroupList.forEach((groupItem, index) => {
-                const dayFull = schedule[index].days.find(
-                    (dayFullIterate) => dayFullIterate.day === day,
+            const tepmOddCardsArray = [];
+            const tempEvenCardsArray = [];
+            parsedGroupList.forEach((groupItem) => {
+                const groupFull = schedule.find(
+                    (groupFullIterate) => groupFullIterate.group.id === groupItem.id,
                 );
+                const dayFull = groupFull.days.find((dayFullIterate) => dayFullIterate.day === day);
                 const classFull = dayFull.classes.find(
                     (dayFullIterable) => dayFullIterable.class.id === classItem.id,
                 );
-                oddArray.push({
+                tepmOddCardsArray.push({
                     group: groupItem,
                     card: classFull.weeks.odd,
                 });
-                evenArray.push({
+                tempEvenCardsArray.push({
                     group: groupItem,
                     card: classFull.weeks.even,
                 });
             });
-            classesArray.push({
+            tempClassesArray.push({
                 class: classItem,
-                cards: { odd: oddArray, even: evenArray },
+                cards: { odd: tepmOddCardsArray, even: tempEvenCardsArray },
             });
         });
-        parsedResultArray.push({ day, classes: classesArray });
+        parsedResultArray.push({ day, classes: tempClassesArray });
     });
-    parsedGroupList.sort((a, b) => sortStrings(a.title, b.title));
+
     return { parsedGroupList, parsedResultArray };
 };
 
@@ -132,27 +134,42 @@ const mapTeacherSchedule = (days) => {
     const parsedOddClasses = [];
     const parsedEvenClasses = [];
 
-    days.forEach((dayItem) => {
-        if (!isEmpty(dayItem.even.classes)) {
-            parsedEvenDays.push(dayItem.day);
-            dayItem.even.classes.forEach((classItem) => {
-                parsedEvenClasses.push(classItem.class);
-                parsedEvenArray[classItem.class.id] = [{ day: dayItem.day, cards: [] }];
-                classItem.lessons.forEach((lessonItem) => {
-                    parsedEvenArray[classItem.class.id][0].cards.push(lessonItem);
-                });
-            });
-        }
-        if (!isEmpty(dayItem.odd.classes)) {
-            parsedOddDays.push(dayItem.day);
-            dayItem.odd.classes.forEach((classItem) => {
+    days.forEach(({ day, even, odd }) => {
+        odd.classes.forEach((classItem) => {
+            if (parsedOddClasses.findIndex((oddClass) => oddClass.id === classItem.class.id) < 0) {
                 parsedOddClasses.push(classItem.class);
-                parsedOddArray[classItem.class.id] = [{ day: dayItem.day, cards: [] }];
-                classItem.lessons.forEach((lessonItem) => {
-                    parsedOddArray[classItem.class.id][0].cards.push(lessonItem);
-                });
+            }
+            if (parsedOddDays.indexOf(day) < 0) {
+                parsedOddDays.push(day);
+            }
+            if (!(classItem.class.id in parsedOddArray)) {
+                parsedOddArray[classItem.class.id] = [];
+            }
+
+            parsedOddArray[classItem.class.id].push({
+                day,
+                cards: classItem.lessons,
             });
-        }
+        });
+
+        even.classes.forEach((classItem) => {
+            if (
+                parsedEvenClasses.findIndex((evenClass) => evenClass.id === classItem.class.id) < 0
+            ) {
+                parsedEvenClasses.push(classItem.class);
+            }
+            if (parsedEvenDays.indexOf(day) < 0) {
+                parsedEvenDays.push(day);
+            }
+            if (!(classItem.class.id in parsedEvenArray)) {
+                parsedEvenArray[classItem.class.id] = [];
+            }
+
+            parsedEvenArray[classItem.class.id].push({
+                day,
+                cards: classItem.lessons,
+            });
+        });
     });
 
     const parsedOdd = {
