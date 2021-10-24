@@ -1,32 +1,27 @@
 import { connect } from 'react-redux';
-import { FaEdit, FaUsers, FaFileArchive } from 'react-icons/fa';
-import { MdDelete, MdDonutSmall } from 'react-icons/md';
 import { useTranslation } from 'react-i18next';
 import React, { useEffect, useState } from 'react';
 import { isEqual } from 'lodash';
 import './SemesterPage.scss';
-import { GiSightDisabled, IoMdEye, FaCopy } from 'react-icons/all';
 import Button from '@material-ui/core/Button';
-import Card from '../../share/Card/Card';
 import { search } from '../../helper/search';
-import NotFound from '../../share/NotFound/NotFound';
+
 import SearchPanel from '../../share/SearchPanel/SearchPanel';
 import SnackbarComponent from '../../share/Snackbar/SnackbarComponent';
 import { handleSnackbarCloseService } from '../../services/snackbarService';
-import SemesterForm from '../../components/SemesterForm/SemesterForm';
+import SemesterForm from '../../components/SemesterForm/Form';
+import SemesterItem from '../../components/SemesterForm/SemesterItem';
 import SemesterCopyForm from '../../components/SemesterCopyForm/SemesterCopyForm';
 import {
     clearSemesterService,
-    selectSemesterService,
+    handleSemesterService,
     getDisabledSemestersService,
     removeSemesterCardService,
     setDisabledSemestersService,
     setEnabledSemestersService,
     showAllSemestersService,
     semesterCopy,
-    createArchiveSemesterService,
     getArchivedSemestersService,
-    viewArchivedSemester,
     setDefaultSemesterById,
     setGroupsToSemester,
 } from '../../services/semesterService';
@@ -44,25 +39,11 @@ import {
     GROUP_EXIST_IN_THIS_SEMESTER,
 } from '../../constants/translationLabels/serviceMessages';
 import {
-    EDIT_TITLE,
     CLOSE_LABEL,
-    DELETE_TITLE,
     SEMESTER_COPY_LABEL,
     COPY_LABEL,
-    SEMESTERY_LABEL,
-    FORM_SHOW_GROUPS,
-    SET_DEFAULT_TITLE,
 } from '../../constants/translationLabels/formElements';
-import {
-    COMMON_GROUP_TITLE,
-    COMMON_SET_DISABLED,
-    COMMON_DAYS_LABEL,
-    COMMON_CLASS_SCHEDULE_MANAGEMENT_TITLE,
-    SEMESTER_LABEL,
-    COMMON_PREVIEW,
-    COMMON_MAKE_ARCHIVE,
-    COMMON_SET_ENABLED,
-} from '../../constants/translationLabels/common';
+import { COMMON_GROUP_TITLE } from '../../constants/translationLabels/common';
 
 const SemesterPage = (props) => {
     const {
@@ -74,6 +55,7 @@ const SemesterPage = (props) => {
         archivedSemesters,
         enabledSemesters,
         disabledSemesters,
+        classScheduler,
     } = props;
     const searchArr = ['year', 'description', 'startDay', 'endDay'];
     const { t } = useTranslation('formElements');
@@ -81,7 +63,9 @@ const SemesterPage = (props) => {
     const [subDialogType, setSubDialogType] = useState('');
     const [openGroupsDialog, setOpenGroupsDialog] = useState(false);
     const [semesterId, setSemesterId] = useState(-1);
+
     const [term, setTerm] = useState('');
+    const [selected, setSelected] = useState([]);
     const [selectedGroups, setSelectedGroups] = useState([]);
     const [semesterOptions, setSemesterOptions] = useState([]);
     const [edit, setEdit] = useState(false);
@@ -121,20 +105,17 @@ const SemesterPage = (props) => {
         if (!(archived || disabled)) setVisibleItems(search(enabledSemesters, term, searchArr));
     }, [disabled, archived, enabledSemesters]);
 
+    const submitSemesterForm = (values) => {
+        const semesterGroups = selected.map((group) => {
+            return { id: group.id, title: group.label };
+        });
+        handleSemesterService({ ...values, semesterGroups });
+    };
     const resetSemesterForm = () => {
         setSelectedGroups([]);
         clearSemesterService();
     };
-    const showConfirmDialog = (id, dialogType) => {
-        setSemesterId(id);
-        setSubDialogType(dialogType);
-        setOpenSubDialog(true);
-    };
 
-    const showSemesterCopyForm = (id) => {
-        setSemesterId(id);
-        setIsOpenSemesterCopyForm(true);
-    };
     const closeSemesterCopyForm = () => {
         setIsOpenSemesterCopyForm(false);
         setIsOpenSemesterCopyForm(null);
@@ -197,15 +178,6 @@ const SemesterPage = (props) => {
         setOpenGroupsDialog(false);
     };
 
-    const handleSemesterArchivedPreview = (currentSemesterId) => {
-        viewArchivedSemester(+currentSemesterId);
-    };
-    const setClassNameForDefaultSemester = (currentSemester) => {
-        const defaultSemesterName = 'default';
-        const className = 'svg-btn edit-btn';
-        return currentSemester.defaultSemester ? `${className} ${defaultSemesterName}` : className;
-    };
-
     return (
         <>
             <NavigationPage name={navigationNames.SEMESTER_PAGE} val={navigation.SEMESTERS} />
@@ -245,150 +217,30 @@ const SemesterPage = (props) => {
                     />
                     {!(disabled || archived) && (
                         <SemesterForm
-                            groups={groups}
                             selectedGroups={selectedGroups}
                             setSelectedGroups={setSelectedGroups}
+                            selected={selected}
+                            setSelected={setSelected}
                             className="form"
+                            onSubmit={submitSemesterForm}
                             onReset={resetSemesterForm}
-                            semester={edit && semester}
+                            classScheduler={classScheduler}
+                            semester={edit ? semester : {}}
                         />
                     )}
                 </aside>
-                <section className="container-flex-wrap wrapper">
-                    {visibleItems.length === 0 && <NotFound name={t(SEMESTERY_LABEL)} />}
-                    {visibleItems.map((semesterItem) => {
-                        const semDays = [];
-                        semesterItem.semester_days.forEach((day) =>
-                            semDays.push(t(`common:day_of_week_${day}`)),
-                        );
-                        return (
-                            <Card
-                                key={semesterItem.id}
-                                additionClassName={`semester-card done-card ${
-                                    semesterItem.currentSemester ? 'current' : ''
-                                }`}
-                            >
-                                <div className="cards-btns">
-                                    {!(disabled || archived) && (
-                                        <>
-                                            <GiSightDisabled
-                                                className="svg-btn copy-btn"
-                                                title={t(COMMON_SET_DISABLED)}
-                                                onClick={() => {
-                                                    showConfirmDialog(
-                                                        semesterItem.id,
-                                                        dialogTypes.SET_VISIBILITY_DISABLED,
-                                                    );
-                                                }}
-                                            />
-                                            <FaEdit
-                                                className="svg-btn edit-btn"
-                                                title={t(EDIT_TITLE)}
-                                                onClick={() => {
-                                                    selectSemesterService(semesterItem.id);
-                                                    setEdit(true);
-                                                }}
-                                            />
-                                            <FaCopy
-                                                className="svg-btn copy-btn"
-                                                title={t(COPY_LABEL)}
-                                                onClick={() => {
-                                                    showSemesterCopyForm(semesterItem.id);
-                                                }}
-                                            />
-                                            {!semesterItem.currentSemester && (
-                                                <FaFileArchive
-                                                    className="svg-btn archive-btn"
-                                                    title={t(COMMON_MAKE_ARCHIVE)}
-                                                    onClick={() => {
-                                                        createArchiveSemesterService(
-                                                            semesterItem.id,
-                                                        );
-                                                    }}
-                                                />
-                                            )}
-                                        </>
-                                    )}
-                                    {!archived && (
-                                        <IoMdEye
-                                            className="svg-btn copy-btn"
-                                            title={t(COMMON_SET_ENABLED)}
-                                            onClick={() => {
-                                                showConfirmDialog(
-                                                    semesterItem.id,
-                                                    dialogTypes.SET_VISIBILITY_ENABLED,
-                                                );
-                                            }}
-                                        />
-                                    )}
-                                    {archived && (
-                                        <IoMdEye
-                                            className="svg-btn copy-btn"
-                                            title={t(COMMON_PREVIEW)}
-                                            onClick={() => {
-                                                handleSemesterArchivedPreview(semesterItem.id);
-                                            }}
-                                        />
-                                    )}
-                                    <MdDelete
-                                        className="svg-btn delete-btn"
-                                        title={t(DELETE_TITLE)}
-                                        onClick={() =>
-                                            showConfirmDialog(
-                                                semesterItem.id,
-                                                dialogTypes.DELETE_CONFIRM,
-                                            )
-                                        }
-                                    />
-
-                                    <MdDonutSmall
-                                        className={setClassNameForDefaultSemester(semesterItem)}
-                                        title={t(SET_DEFAULT_TITLE)}
-                                        onClick={() =>
-                                            showConfirmDialog(
-                                                semesterItem.id,
-                                                dialogTypes.SET_DEFAULT,
-                                            )
-                                        }
-                                    />
-                                </div>
-
-                                <p className="semester-card__description">
-                                    <small>{`${t(SEMESTER_LABEL)}:`}</small>
-                                    <b>{semesterItem.description}</b>
-                                    {` ( ${semesterItem.year} )`}
-                                </p>
-                                <p className="semester-card__description">
-                                    <b>
-                                        {semesterItem.startDay} - {semesterItem.endDay}
-                                    </b>
-                                </p>
-                                <p className="semester-card__description">
-                                    {`${t(COMMON_DAYS_LABEL)}: `}
-                                    {semDays.join(', ')}
-                                </p>
-                                <p className="semester-card__description">
-                                    {`${t(COMMON_CLASS_SCHEDULE_MANAGEMENT_TITLE)}: `}
-                                    {semesterItem.semester_classes
-                                        .map((classItem) => {
-                                            return classItem.class_name;
-                                        })
-                                        .join(', ')}
-                                </p>
-
-                                <FaUsers
-                                    title={t(FORM_SHOW_GROUPS)}
-                                    className="svg-btn copy-btn  semester-groups"
-                                    onClick={() => {
-                                        setSemesterCard(semesterItem.id);
-                                        selectSemesterService(semesterItem.id);
-                                        setOpenGroupsDialog(true);
-                                    }}
-                                />
-                            </Card>
-                        );
-                    })}
-                </section>
+                <SemesterItem
+                    archived={archived}
+                    disabled={disabled}
+                    setSemesterId={setSemesterId}
+                    setSubDialogType={setSubDialogType}
+                    setOpenSubDialog={setOpenSubDialog}
+                    setIsOpenSemesterCopyForm={setIsOpenSemesterCopyForm}
+                    visibleItems={visibleItems}
+                    setEdit={setEdit}
+                    setSemesterCard={setSemesterCard}
+                    setOpenGroupsDialog={setOpenGroupsDialog}
+                />
             </div>
             <SnackbarComponent
                 message={snackbarMessage}
@@ -415,6 +267,7 @@ const mapStateToProps = (state) => ({
     snackbarType: state.snackbar.snackbarType,
     snackbarMessage: state.snackbar.message,
     semester: state.semesters.semester,
+    classScheduler: state.classActions.classScheduler,
     groups: state.groups.groups,
 });
 

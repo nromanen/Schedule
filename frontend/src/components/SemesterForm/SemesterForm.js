@@ -77,15 +77,7 @@ const AddSemesterForm = (props) => {
         }
         return getChosenSetRemove().length > 0;
     };
-    const getDisabledSaveButton = () => {
-        if (!isEmpty(semester) && !isNull(semester.id)) {
-            return (
-                (selectedGroups.length > 0 ? !isChosenGroup() : selected.length === 0) &&
-                (pristine || submitting)
-            );
-        }
-        return pristine || submitting;
-    };
+
     const submitSemesterForm = (values) => {
         const semesterGroups = selected.map((group) => {
             return { id: group.id, title: group.label };
@@ -94,11 +86,7 @@ const AddSemesterForm = (props) => {
     };
 
     return (
-        <Card additionClassName="form-card semester-form">
-            <h2 style={{ textAlign: 'center' }}>
-                {semester.id ? t(COMMON_EDIT) : t(COMMON_CREATE)}
-                {` ${t(COMMON_SEMESTER)}`}
-            </h2>
+      <>
             <MultiselectForGroups
                 open={openGroupDialog}
                 options={options}
@@ -116,7 +104,7 @@ const AddSemesterForm = (props) => {
                 setSelected={setSelected}
                 classScheduler={classScheduler}
             />
-        </Card>
+        </>
     );
 };
 
