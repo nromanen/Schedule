@@ -13,9 +13,9 @@ $group-size: 10px;
 }
 .link-href{
   text-decoration: none;
-  color: black;
+  color: $black;
   &:hover{
-    color: black;
+    color: $black;
   }
 
 }
