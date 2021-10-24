@@ -11,7 +11,6 @@ import ActivationPage from '../containers/ActivationPage/ActivationPage';
 import ProfilePage from '../containers/ProfilePage/ProfilePage';
 import SchedulePage from '../containers/SchedulePage/SchedulePage';
 import {
-    links,
     HOME_PAGE_LINK,
     SCHEDULE_FOR_LINK,
     ACTIVATION_PAGE_LINK,
