@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import GroupList from '../../components/GroupList/GroupList';
+import GroupPage from '../../components/GroupPage/GroupPage';
 
 const mapStateToProps = (state) => ({
     isSnackbarOpen: state.snackbar.isSnackbarOpen,
@@ -13,4 +13,4 @@ const mapStateToProps = (state) => ({
     student: state.students.student,
 });
 
-export default connect(mapStateToProps, {})(GroupList);
+export default connect(mapStateToProps, {})(GroupPage);

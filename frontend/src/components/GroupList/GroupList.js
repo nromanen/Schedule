@@ -1,64 +1,43 @@
-import './GroupList.scss';
+import '../../router/Router.scss';
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom/cjs/react-router-dom';
 import { CircularProgress } from '@material-ui/core';
 import { dialogTypes } from '../../constants/dialogs';
-import { navigation, navigationNames } from '../../constants/navigation';
 import { GROUP_Y_LABEL } from '../../constants/translationLabels/formElements';
 import { goToGroupPage } from '../../helper/pageRedirection';
 import { search } from '../../helper/search';
-import '../../router/Router.scss';
-import { handleSnackbarCloseService } from '../../services/snackbarService';
 import GroupCard from '../GroupCard/GroupCard';
 import NotFound from '../../share/NotFound/NotFound';
-import AddGroup from '../AddGroupForm/AddGroupForm';
-import NavigationPage from '../Navigation/NavigationPage';
-import SearchPanel from '../../share/SearchPanel/SearchPanel';
-import SnackbarComponent from '../../share/Snackbar/SnackbarComponent';
 import {
+    ShowStudentsOnGroupDialog,
     AddStudentDialog,
     CustomDialog,
-    ShowStudentsOnGroupDialog,
 } from '../../share/DialogWindows';
 import {
+    getAllStudentsByGroupId,
     createStudentService,
     deleteStudentService,
-    getAllStudentsByGroupId,
     updateStudentService,
 } from '../../services/studentService';
 import {
     asyncFetchDisabledGroups,
     asyncFetchEnabledGroups,
-    asyncUpdateGroup,
     asyncDeleteGroup,
-    asyncCreateGroup,
     asyncToggleGroup,
-    asyncClearGroup,
     selectGroup,
 } from '../../actions/groups';
 
 const GroupList = (props) => {
-    const {
-        isSnackbarOpen,
-        snackbarMessage,
-        disabledGroups,
-        snackbarType,
-        enabledGroups,
-        students,
-        loading,
-        student,
-        match,
-    } = props;
+    const { disabledGroups, enabledGroups, students, loading, student, match, term, isDisabled } =
+        props;
     const history = useHistory();
     const dispatch = useDispatch();
     const { t } = useTranslation('formElements');
 
-    const [term, setTerm] = useState('');
     const [group, setGroup] = useState();
     const [groupId, setGroupId] = useState(-1);
-    const [isDisabled, setIsDisabled] = useState(false);
     const [subDialogType, setSubDialogType] = useState('');
     const [showStudents, setShowStudents] = useState(false);
     const [openSubDialog, setOpenSubDialog] = useState(false);
@@ -71,14 +50,10 @@ const GroupList = (props) => {
         dispatch(asyncFetchDisabledGroups());
     }, [isDisabled]);
 
-    const SearchChange = setTerm;
     const visibleGroups = isDisabled
         ? search(disabledGroups, term, ['title'])
         : search(enabledGroups, term, ['title']);
 
-    const onSubmitGroupForm = (data) => {
-        return !data.id ? dispatch(asyncCreateGroup(data)) : dispatch(asyncUpdateGroup(data));
-    };
     const changeGroupDisabledStatus = (currentGroupId) => {
         const disabledGroup = disabledGroups.find((groupItem) => groupItem.id === currentGroupId);
         const enabledGroup = enabledGroups.find((groupItem) => groupItem.id === currentGroupId);
@@ -146,7 +121,6 @@ const GroupList = (props) => {
 
     return (
         <>
-            <NavigationPage name={navigationNames.GROUP_LIST} val={navigation.GROUPS} />
             <CustomDialog
                 type={subDialogType}
                 cardId={groupId}
@@ -173,29 +147,7 @@ const GroupList = (props) => {
                     groups={enabledGroups}
                 />
             )}
-            <div className="cards-container">
-                <aside className="search-list__panel">
-                    <SearchPanel
-                        SearchChange={SearchChange}
-                        showDisabled={() => setIsDisabled((prev) => !prev)}
-                    />
-                    {!isDisabled && (
-                        <AddGroup
-                            match={match}
-                            className="form"
-                            onSubmit={onSubmitGroupForm}
-                            onReset={() => dispatch(asyncClearGroup())}
-                        />
-                    )}
-                </aside>
-                <div className="group-wrapper group-list">{groupList}</div>
-            </div>
-            <SnackbarComponent
-                type={snackbarType}
-                isOpen={isSnackbarOpen}
-                message={snackbarMessage}
-                handleSnackbarClose={handleSnackbarCloseService}
-            />
+            {groupList}
         </>
     );
 };
