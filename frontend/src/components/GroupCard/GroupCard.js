@@ -69,7 +69,7 @@ const GroupCard = (props) => {
                     <MdDelete
                         className="group__buttons-delete link-href"
                         title={t(DELETE_TITLE_LABEL)}
-                        onClick={() => showConfirmDialog(groupItem.id)}
+                        onClick={() => showConfirmDialog(groupItem.id, dialogTypes.DELETE_CONFIRM)}
                     />
                 </Link>
                 <Link to={`${links.GroupList}${links.Group}/${groupItem.id}${links.AddStudent}`}>

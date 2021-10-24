@@ -134,29 +134,35 @@ const GroupList = (props) => {
     return (
         <>
             <NavigationPage name={navigationNames.GROUP_LIST} val={navigation.GROUPS} />
-            <CustomDialog
-                type={subDialogType}
-                cardId={groupId}
-                whatDelete="group"
-                open={openSubDialog}
-                onClose={acceptConfirmDialog}
-            />
-            <AddStudentDialog
-                open={addStudentDialog}
-                onSubmit={studentSubmit}
-                onSetSelectedCard={selectStudentCard}
-            />
-            <ShowStudentsOnGroupDialog
-                onClose={onCloseShowStudents}
-                open={showStudents}
-                students={students}
-                group={group}
-                onDeleteStudent={onDeleteStudent}
-                onSubmit={studentSubmit}
-                match={match}
-                student={student}
-                groups={[...enabledGroup, ...disabledGroups]}
-            />
+            {openSubDialog && (
+                <CustomDialog
+                    type={subDialogType}
+                    cardId={groupId}
+                    whatDelete="group"
+                    open={openSubDialog}
+                    onClose={acceptConfirmDialog}
+                />
+            )}
+            {addStudentDialog && (
+                <AddStudentDialog
+                    open={addStudentDialog}
+                    onSubmit={studentSubmit}
+                    onSetSelectedCard={selectStudentCard}
+                />
+            )}
+            {showStudents && (
+                <ShowStudentsOnGroupDialog
+                    onClose={onCloseShowStudents}
+                    open={showStudents}
+                    students={students}
+                    group={group}
+                    onDeleteStudent={onDeleteStudent}
+                    onSubmit={studentSubmit}
+                    match={match}
+                    student={student}
+                    groups={[...enabledGroup, ...disabledGroups]}
+                />
+            )}
 
             <div className="cards-container">
                 <aside className="search-list__panel">
