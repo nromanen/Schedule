@@ -41,6 +41,10 @@ const weekDays = {
     SUNDAY: false,
 };
 
+const createClasslabel = (classScheduler, classItem) => {
+    const item = classScheduler.find((schedule) => schedule.id === +classItem);
+    return `${item.class_name} (${item.startTime}-${item.endTime})`;
+};
 const Form = (props) => {
     const { t } = useTranslation('formElements');
     const {
@@ -79,37 +83,14 @@ const Form = (props) => {
     };
 
     useEffect(() => {
+        console.log('semester', semester);
         let semesterItem = {};
         clearCheckboxes();
 
         if (semester.id) {
-            const {
-                id,
-                year,
-                description,
-                startDay,
-                endDay,
-                currentSemester,
-                defaultSemester,
-                semester_days: semesterDays,
-                semester_classes: semesterClasses,
-            } = semester;
-            semesterItem = {
-                id,
-                year,
-                description,
-                startDay,
-                endDay,
-                currentSemester,
-                defaultSemester,
-                semester_days: semesterDays,
-                semester_classes: semesterClasses,
-            };
-
-            daysUppercase.forEach((dayItem) => {
-                if (semester.semester_days.includes(dayItem)) {
-                    semesterItem[`semester_days_markup_${dayItem}`] = true;
-                }
+            semesterItem = semester;
+            semesterItem.semester_days.forEach((item) => {
+                semesterItem[`semester_days_markup_${item}`] = true;
             });
             const newDays = semester.semester_days.reduce((result, day) => {
                 const data = result;
@@ -121,17 +102,16 @@ const Form = (props) => {
                 ...weekDays,
                 ...newDays,
             });
-            if (classScheduler) {
-                classScheduler.forEach((classFullItem) => {
-                    if (
-                        semester.semester_classes.findIndex((classItem) => {
-                            return classFullItem.id === classItem.id;
-                        }) >= 0
-                    ) {
-                        semesterItem[`semester_classes_markup_${classFullItem.id}`] = true;
-                    }
-                });
-            }
+
+            classScheduler.forEach((classFullItem) => {
+                if (
+                    semester.semester_classes.findIndex((classItem) => {
+                        return classFullItem.id === classItem.id;
+                    }) >= 0
+                ) {
+                    semesterItem[`semester_classes_markup_${classFullItem.id}`] = true;
+                }
+            });
 
             const newClasses = semester.semester_classes.reduce((result, classItem) => {
                 const data = result;
@@ -143,11 +123,10 @@ const Form = (props) => {
             setByDefault(semester.defaultSemester);
 
             const prepSetCheckedClassesNested = {};
-            if (classScheduler) {
-                classScheduler.forEach((classItem) => {
-                    prepSetCheckedClassesNested[`${classItem.id}`] = false;
-                });
-            }
+            classScheduler.forEach((classItem) => {
+                prepSetCheckedClassesNested[`${classItem.id}`] = false;
+            });
+
             setCheckedClasses({
                 ...prepSetCheckedClassesNested,
                 ...newClasses,
@@ -174,42 +153,25 @@ const Form = (props) => {
         });
     };
 
-    const setSemesterClasses = () => {
-        const classes = Object.keys(checkedClasses);
-        return classes.map((classItem) => {
-            const scheduleItem = classScheduler.find((schedule) => schedule.id === +classItem);
+    const setSemesterCheckboxes = (checked, method, name) => {
+        const classes = Object.keys(checked);
+        return classes.map((item) => {
             return (
                 <Field
-                    key={semester.id + classItem}
-                    name={`semester_classes_markup_${classItem}`}
-                    label={`${scheduleItem.class_name} (${scheduleItem.startTime}-${scheduleItem.endTime})`}
-                    labelPlacement="end"
-                    component={renderCheckboxField}
-                    defaultValue={checkedClasses[classItem]}
-                    checked={checkedClasses[classItem]}
-                    onChange={(e) => {
-                        setCheckedHandler(e, classItem, checkedClasses, setCheckedClasses);
-                    }}
-                    color="primary"
-                />
-            );
-        });
-    };
-    const setSemesterDays = () => {
-        const days = Object.keys(checkedDates);
-        return days.map((semesterDay) => {
-            return (
-                <Field
-                    key={semester.id + semesterDay}
-                    name={`semester_days_markup_${semesterDay}`}
-                    label={t(`common:day_of_week_${semesterDay}`)}
-                    labelPlacement="end"
-                    defaultValue={checkedDates[semesterDay]}
-                    component={renderCheckboxField}
-                    checked={checkedDates[semesterDay]}
-                    onChange={(e) =>
-                        setCheckedHandler(e, semesterDay, checkedDates, setCheckedDates)
+                    key={semester.id + item}
+                    name={`${name}${item}`}
+                    label={
+                        name.indexOf('semester_days_markup_') >= 0
+                            ? t(`common:day_of_week_${item}`)
+                            : createClasslabel(classScheduler, item)
                     }
+                    labelPlacement="end"
+                    component={renderCheckboxField}
+                    defaultValue={checked[item]}
+                    checked={checked[item]}
+                    onChange={(e) => {
+                        setCheckedHandler(e, item, checked, method);
+                    }}
                     color="primary"
                 />
             );
@@ -296,11 +258,15 @@ const Form = (props) => {
             </div>
             <div className="">
                 <p>{`${t(COMMON_DAYS_LABEL)}: `}</p>
-                {setSemesterDays()}
+                {setSemesterCheckboxes(checkedDates, setCheckedDates, 'semester_days_markup_')}
             </div>
             <div className="">
                 <p>{`${t(COMMON_CLASS_SCHEDULE_MANAGEMENT_TITLE)}: `}</p>
-                {setSemesterClasses()}
+                {setSemesterCheckboxes(
+                    checkedClasses,
+                    setCheckedClasses,
+                    'semester_classes_markup_',
+                )}
             </div>
             <div className="form-buttons-container semester-btns">
                 <Button
