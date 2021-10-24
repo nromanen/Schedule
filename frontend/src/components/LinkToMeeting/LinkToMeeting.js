@@ -28,13 +28,15 @@ const LinkToMeeting = (props) => {
                 }}
                 title={linkToMeeting}
             />
-            <CustomDialog
-                type={dialogTypes.MEETING_LINK}
-                cardId={1}
-                open={openDialog}
-                onClose={handleClose}
-                linkToMeeting={linkToMeeting}
-            />
+            {openDialog && (
+                <CustomDialog
+                    type={dialogTypes.MEETING_LINK}
+                    cardId={1}
+                    open={openDialog}
+                    onClose={handleClose}
+                    linkToMeeting={linkToMeeting}
+                />
+            )}
         </>
     );
 };
