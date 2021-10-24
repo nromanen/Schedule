@@ -31,15 +31,11 @@ import { daysUppercase } from '../../constants/schedule/days';
 import { dateFormat } from '../../constants/formats';
 import { getToday, getTomorrow } from '../../utils/formUtils';
 
-const weekDays = {
-    MONDAY: false,
-    TUESDAY: false,
-    WEDNESDAY: false,
-    THURSDAY: false,
-    FRIDAY: false,
-    SATURDAY: false,
-    SUNDAY: false,
-};
+const weekDays = daysUppercase.reduce((init, item) => {
+    const isCheckedDays = init;
+    isCheckedDays[item] = false;
+    return isCheckedDays;
+}, {});
 
 const createClasslabel = (classScheduler, classItem) => {
     const item = classScheduler.find((schedule) => schedule.id === +classItem);
@@ -61,7 +57,12 @@ const Form = (props) => {
         initialize,
         change,
     } = props;
-    const prepSetCheckedClasses = {};
+
+    const prepSetCheckedClasses = classScheduler.reduce((init, item) => {
+        const isChechedClasses = init;
+        isChechedClasses[item.id] = false;
+        return isChechedClasses;
+    }, {});
     const [startValue, setStartValue] = useState();
     const [finishValue, setFinishValue] = useState();
     const [checkedClasses, setCheckedClasses] = useState(prepSetCheckedClasses);
@@ -73,67 +74,43 @@ const Form = (props) => {
     const [disabledFinishDate, setDisabledFinishDate] = useState(true);
 
     const clearCheckboxes = () => {
-        classScheduler.forEach((classItem) => {
-            prepSetCheckedClasses[`${classItem.id}`] = false;
-        });
-        setCheckedClasses({ ...prepSetCheckedClasses });
+        setCheckedClasses(prepSetCheckedClasses);
         setCurrent(false);
         setByDefault(false);
         setCheckedDates(weekDays);
     };
-
     useEffect(() => {
-        console.log('semester', semester);
-        let semesterItem = {};
+        const semesterItem = semester;
         clearCheckboxes();
 
         if (semester.id) {
-            semesterItem = semester;
+            const newDays = {};
+            const newClasses = {};
             semesterItem.semester_days.forEach((item) => {
                 semesterItem[`semester_days_markup_${item}`] = true;
+                newDays[item] = true;
             });
-            const newDays = semester.semester_days.reduce((result, day) => {
-                const data = result;
-                data[day] = true;
-                return data;
-            }, {});
 
             setCheckedDates({
                 ...weekDays,
                 ...newDays,
             });
 
-            classScheduler.forEach((classFullItem) => {
-                if (
-                    semester.semester_classes.findIndex((classItem) => {
-                        return classFullItem.id === classItem.id;
-                    }) >= 0
-                ) {
-                    semesterItem[`semester_classes_markup_${classFullItem.id}`] = true;
-                }
+            semesterItem.semester_classes.forEach((item) => {
+                semesterItem[`semester_classes_markup_${item.id}`] = true;
+                newClasses[item.id] = true;
             });
-
-            const newClasses = semester.semester_classes.reduce((result, classItem) => {
-                const data = result;
-                data[classItem.id] = true;
-                return data;
-            }, {});
 
             setCurrent(semester.currentSemester);
             setByDefault(semester.defaultSemester);
 
-            const prepSetCheckedClassesNested = {};
-            classScheduler.forEach((classItem) => {
-                prepSetCheckedClassesNested[`${classItem.id}`] = false;
-            });
-
             setCheckedClasses({
-                ...prepSetCheckedClassesNested,
+                ...prepSetCheckedClasses,
                 ...newClasses,
             });
         }
         initialize(semesterItem);
-    }, [classScheduler, semester.id]);
+    }, [semester]);
 
     const setMinFinishDate = (time) => {
         const newDate = moment(time, dateFormat).add(1, 'd');
@@ -145,11 +122,11 @@ const Form = (props) => {
             change('endDay', moment(startTimeParam, dateFormat).add(7, 'd').format(dateFormat));
         }
     };
-    const setCheckedHandler = (event, day, checked, setSchecked) => {
-        const changedDay = { [day]: event.target.checked };
+    const setCheckedHandler = (event, item, checked, setSchecked) => {
+        const changedItem = { [item]: event.target.checked };
         setSchecked({
             ...checked,
-            ...changedDay,
+            ...changedItem,
         });
     };
 
