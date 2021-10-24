@@ -41,8 +41,11 @@ import './GroupList.scss';
 import {
     asyncFetchDisabledGroups,
     asyncFetchEnabledGroups,
+    asyncUpdateGroup,
     asyncDeleteGroup,
     asyncCreateGroup,
+    asyncClearGroup,
+    selectGroup,
 } from '../../actions/groups';
 
 const GroupList = (props) => {
@@ -53,10 +56,10 @@ const GroupList = (props) => {
         snackbarType,
         enabledGroups,
         students,
+        loading,
         student,
         group,
         match,
-        loading,
     } = props;
     const history = useHistory();
     const dispatch = useDispatch();
@@ -71,8 +74,6 @@ const GroupList = (props) => {
     const [openAddStudentDialog, setAddStudentDialog] = useState(false);
 
     useEffect(() => {
-        // showAllGroupsService();
-        // getDisabledGroupsService();
         dispatch(asyncFetchDisabledGroups());
         dispatch(asyncFetchEnabledGroups());
     }, []);
@@ -112,7 +113,7 @@ const GroupList = (props) => {
 
     const showStudentsByGroup = (currentGroupId) => {
         setShowStudents(true);
-        selectGroupService(currentGroupId);
+        selectGroup(currentGroupId);
         getAllStudentsByGroupId(currentGroupId);
     };
 
@@ -138,8 +139,9 @@ const GroupList = (props) => {
             deleteStudentService(student);
         }
     };
-    const changeDisable = () => {
-        setIsDisabled((prev) => !prev);
+
+    const onSubmitGroupForm = (data) => {
+        return !data.id ? dispatch(asyncCreateGroup(data)) : dispatch(asyncUpdateGroup(data));
     };
 
     return (
@@ -171,13 +173,16 @@ const GroupList = (props) => {
 
             <div className="cards-container">
                 <aside className="search-list__panel">
-                    <SearchPanel SearchChange={SearchChange} showDisabled={changeDisable} />
+                    <SearchPanel
+                        SearchChange={SearchChange}
+                        showDisabled={() => setIsDisabled((prev) => !prev)}
+                    />
                     {!isDisabled && (
                         <AddGroup
                             match={match}
                             className="form"
-                            onSubmit={(data) => dispatch(asyncCreateGroup(data))}
-                            onReset={clearGroupService}
+                            onSubmit={onSubmitGroupForm}
+                            onReset={() => dispatch(asyncClearGroup())}
                         />
                     )}
                 </aside>
@@ -196,7 +201,7 @@ const GroupList = (props) => {
                                 item={item}
                                 disabled={isDisabled}
                                 showCustomDialog={showCustomDialog}
-                                getGroupToUpdateForm={selectGroupService}
+                                getGroupToUpdateForm={(id) => dispatch(selectGroup(id))}
                                 showAddStudentDialog={showAddStudentDialog}
                                 showStudentsByGroup={showStudentsByGroup}
                             />

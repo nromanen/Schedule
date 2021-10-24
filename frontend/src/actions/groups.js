@@ -1,22 +1,8 @@
 import * as actionTypes from './actionsType';
 
-export const addGroup = (res) => {
-    return {
-        type: actionTypes.ADD_GROUP,
-        result: res,
-    };
-};
-
 export const selectGroup = (res) => {
     return {
         type: actionTypes.SELECT_GROUP,
-        result: res,
-    };
-};
-
-export const updateGroup = (res) => {
-    return {
-        type: actionTypes.UPDATE_GROUP,
         result: res,
     };
 };
@@ -27,6 +13,19 @@ export const clearGroup = () => ({
 
 // done
 
+export const addGroup = (res) => {
+    return {
+        type: actionTypes.ADD_GROUP,
+        result: res,
+    };
+};
+
+export const updateGroup = (res) => {
+    return {
+        type: actionTypes.UPDATE_GROUP,
+        result: res,
+    };
+};
 
 export const showAllGroups = (res) => {
     return {
@@ -66,5 +65,15 @@ export const asyncDeleteGroup = (id) => ({
 
 export const asyncCreateGroup = (data) => ({
     type: actionTypes.ASYNC_CREATE_GROUP,
+    data,
+});
+
+export const asyncUpdateGroup = (data) => ({
+    type: actionTypes.ASYNC_UPDATE_GROUP,
+    data,
+});
+
+export const asyncClearGroup = (data) => ({
+    type: actionTypes.ASYNC_CLEAR_GROUP,
     data,
 });

@@ -33,6 +33,34 @@ export const showAllGroupsService = () => {
         .catch((error) => errorHandler(error));
 };
 
+export const selectGroupService = (groupId) => {
+    store.dispatch(selectGroup(groupId));
+};
+
+export const updateGroupService = (data) => {
+    return axios
+        .put(GROUP_URL, data)
+        .then((response) => {
+            store.dispatch(updateGroup(response.data));
+            selectGroupService(null);
+            // getDisabledGroupsService();
+            // showAllGroupsService();
+            resetFormHandler(GROUP_FORM);
+            successHandler(
+                i18n.t(BACK_END_SUCCESS_OPERATION, {
+                    cardType: i18n.t(FORM_GROUP_LABEL),
+                    actionType: i18n.t(UPDATED_LABEL),
+                }),
+            );
+        })
+        .catch((error) => errorHandler(error));
+};
+
+export const clearGroupService = () => {
+    store.dispatch(clearGroup());
+    resetFormHandler(GROUP_FORM);
+};
+
 // export const getDisabledGroupsService = () => {
 //     axios
 //         .get(DISABLED_GROUPS_URL)
@@ -43,10 +71,6 @@ export const showAllGroupsService = () => {
 //             errorHandler(error);
 //         });
 // };
-
-export const selectGroupService = (groupId) => {
-    store.dispatch(selectGroup(groupId));
-};
 
 // export const createGroupService = (data) => {
 //     axios
@@ -64,34 +88,10 @@ export const selectGroupService = (groupId) => {
 //         .catch((error) => errorHandler(error));
 // };
 
-export const updateGroupService = (data) => {
-    return axios
-        .put(GROUP_URL, data)
-        .then((response) => {
-            store.dispatch(updateGroup(response.data));
-            selectGroupService(null);
-            // getDisabledGroupsService();
-            showAllGroupsService();
-            resetFormHandler(GROUP_FORM);
-            successHandler(
-                i18n.t(BACK_END_SUCCESS_OPERATION, {
-                    cardType: i18n.t(FORM_GROUP_LABEL),
-                    actionType: i18n.t(UPDATED_LABEL),
-                }),
-            );
-        })
-        .catch((error) => errorHandler(error));
-};
-
-export const handleGroupService = (values) => {
-    if (values.id) updateGroupService(values);
-    //else createGroupService(values);
-};
-
-export const clearGroupService = () => {
-    store.dispatch(clearGroup());
-    resetFormHandler(GROUP_FORM);
-};
+// export const handleGroupService = (values) => {
+//     if (values.id) updateGroupService(values);
+//     else createGroupService(values);
+// };
 
 // export const removeGroupCardService = (groupId) => {
 //     console.log(groupId);
@@ -121,28 +121,4 @@ export const setEnabledGroupService = (group) => {
     const bufferGroup = group;
     bufferGroup.disable = false;
     updateGroupService(bufferGroup);
-};
-
-// new
-
-export const getDisabledGroupsApi = () => {
-    return axios.get(DISABLED_GROUPS_URL).then((res) => {
-        return res;
-    });
-};
-
-export const getEnabledGroupsApi = () => {
-    return axios.get(GROUP_URL).then((res) => {
-        return res;
-    });
-};
-
-export const deleteGroupApi = (id) => {
-    return axios.delete(`${GROUP_URL}/${id}`);
-};
-
-export const createGroupApi = (data) => {
-    return axios.post(GROUP_URL, data).then((res) => {
-        return res;
-    });
 };

@@ -34,7 +34,7 @@ const reducer = (state = initialState, action) => {
 
         case actionTypes.SELECT_GROUP: {
             let selectedGroup = state.groups.find((group) => group.id === Number(action.result));
-
+            console.log(selectedGroup);
             if (!selectedGroup) {
                 selectedGroup = { id: null };
             }
