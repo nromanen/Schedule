@@ -1,5 +1,5 @@
-@import "../../styles/colors.scss";
-@import "../../styles/variables.scss";
+@import '../../styles/colors.scss';
+@import '../../styles/variables.scss';
 
 .admin-navigation {
     flex-grow: 1;
@@ -48,11 +48,16 @@
                 border-color: $snowy-white;
             }
         }
-        .MuiInput-underline::before {
-            width: 98%;
-            left: 50%;
-            transform: translateX(-50%);
-            border-color: $snowy-white;
+        .MuiInput-underline {
+            &::before {
+                width: 98%;
+                left: 50%;
+                transform: translateX(-50%);
+                border-color: $snowy-white;
+            }
+            &::after {
+                border-color: $snowy-white;
+            }
         }
     }
 }
