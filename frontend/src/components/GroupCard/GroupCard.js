@@ -85,7 +85,7 @@ const GroupCard = (props) => {
                         title={t(FORM_SHOW_STUDENTS)}
                         className="svg-btn copy-btn align-left info-btn students"
                         onClick={() => {
-                            showStudentsByGroup(item.id);
+                            showStudentsByGroup(item);
                         }}
                     />
                 </span>

@@ -49,7 +49,6 @@ const GroupList = (props) => {
         students,
         loading,
         student,
-        group,
         match,
     } = props;
     const history = useHistory();
@@ -57,6 +56,7 @@ const GroupList = (props) => {
     const { t } = useTranslation('formElements');
 
     const [term, setTerm] = useState('');
+    const [group, setGroup] = useState();
     const [groupId, setGroupId] = useState(-1);
     const [isDisabled, setIsDisabled] = useState(false);
     const [subDialogType, setSubDialogType] = useState('');
@@ -65,15 +65,20 @@ const GroupList = (props) => {
     const [openAddStudentDialog, setAddStudentDialog] = useState(false);
 
     useEffect(() => {
-        dispatch(asyncFetchDisabledGroups());
         dispatch(asyncFetchEnabledGroups());
     }, []);
+    useEffect(() => {
+        dispatch(asyncFetchDisabledGroups());
+    }, [isDisabled]);
 
     const SearchChange = setTerm;
     const visibleGroups = isDisabled
         ? search(disabledGroups, term, ['title'])
         : search(enabledGroups, term, ['title']);
 
+    const onSubmitGroupForm = (data) => {
+        return !data.id ? dispatch(asyncCreateGroup(data)) : dispatch(asyncUpdateGroup(data));
+    };
     const changeGroupDisabledStatus = (currentGroupId) => {
         const disabledGroup = disabledGroups.find((groupItem) => groupItem.id === currentGroupId);
         const enabledGroup = enabledGroups.find((groupItem) => groupItem.id === currentGroupId);
@@ -96,18 +101,12 @@ const GroupList = (props) => {
         setAddStudentDialog(true);
     };
 
-    const showStudentsByGroup = (currentGroupId) => {
+    const showStudentsByGroup = (currentGroup) => {
+        setGroup(currentGroup);
+        getAllStudentsByGroupId(currentGroup.id);
         setShowStudents(true);
-        selectGroup(currentGroupId);
-        getAllStudentsByGroupId(currentGroupId);
     };
 
-    const selectStudentCard = () => {
-        setAddStudentDialog(false);
-    };
-    const onCloseShowStudents = () => {
-        setShowStudents(false);
-    };
     const studentSubmit = (data) => {
         if (data.id !== undefined) {
             const sendData = { ...data, group: { id: data.group } };
@@ -119,15 +118,31 @@ const GroupList = (props) => {
         setAddStudentDialog(false);
         goToGroupPage(history);
     };
-    const onDeleteStudent = () => {
-        if (student !== '') {
-            deleteStudentService(student);
-        }
-    };
 
-    const onSubmitGroupForm = (data) => {
-        return !data.id ? dispatch(asyncCreateGroup(data)) : dispatch(asyncUpdateGroup(data));
-    };
+    const groupList = (
+        <div className="group-wrapper group-list">
+            {loading && (
+                <section className="centered-container">
+                    <CircularProgress />
+                </section>
+            )}
+            {!loading && visibleGroups.length === 0 ? (
+                <NotFound name={t(GROUP_Y_LABEL)} />
+            ) : (
+                visibleGroups.map((item) => (
+                    <GroupCard
+                        key={item.id}
+                        item={item}
+                        disabled={isDisabled}
+                        showCustomDialog={showCustomDialog}
+                        getGroupToUpdateForm={(id) => dispatch(selectGroup(id))}
+                        showAddStudentDialog={showAddStudentDialog}
+                        showStudentsByGroup={showStudentsByGroup}
+                    />
+                ))
+            )}
+        </div>
+    );
 
     return (
         <>
@@ -143,20 +158,21 @@ const GroupList = (props) => {
             <AddStudentDialog
                 onSubmit={studentSubmit}
                 open={openAddStudentDialog}
-                onSetSelectedCard={selectStudentCard}
+                onSetSelectedCard={() => setAddStudentDialog(false)}
             />
-            <ShowStudentsOnGroupDialog
-                onClose={onCloseShowStudents}
-                open={showStudents}
-                students={students}
-                group={group}
-                onDeleteStudent={onDeleteStudent}
-                onSubmit={studentSubmit}
-                match={match}
-                student={student}
-                groups={[...enabledGroups, ...disabledGroups]}
-            />
-
+            {showStudents && (
+                <ShowStudentsOnGroupDialog
+                    onClose={() => setShowStudents(false)}
+                    open={showStudents}
+                    students={students}
+                    group={group}
+                    onDeleteStudent={(studentItem) => deleteStudentService(studentItem)}
+                    onSubmit={studentSubmit}
+                    match={match}
+                    student={student}
+                    groups={enabledGroups}
+                />
+            )}
             <div className="cards-container">
                 <aside className="search-list__panel">
                     <SearchPanel
@@ -172,28 +188,7 @@ const GroupList = (props) => {
                         />
                     )}
                 </aside>
-                <div className="group-wrapper group-list">
-                    {loading && (
-                        <section className="centered-container">
-                            <CircularProgress />
-                        </section>
-                    )}
-                    {!loading && visibleGroups.length === 0 ? (
-                        <NotFound name={t(GROUP_Y_LABEL)} />
-                    ) : (
-                        visibleGroups.map((item) => (
-                            <GroupCard
-                                key={item.id}
-                                item={item}
-                                disabled={isDisabled}
-                                showCustomDialog={showCustomDialog}
-                                getGroupToUpdateForm={(id) => dispatch(selectGroup(id))}
-                                showAddStudentDialog={showAddStudentDialog}
-                                showStudentsByGroup={showStudentsByGroup}
-                            />
-                        ))
-                    )}
-                </div>
+                <div className="group-wrapper group-list">{groupList}</div>
             </div>
             <SnackbarComponent
                 type={snackbarType}
@@ -206,5 +201,3 @@ const GroupList = (props) => {
 };
 
 export default GroupList;
-
-// {visibleGroups.length === 0 && <NotFound name={t(GROUP_Y_LABEL)} />}
