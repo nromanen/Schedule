@@ -1,4 +1,3 @@
-import { get } from 'lodash';
 import { store } from '../store';
 
 import axios from '../helper/axios';
@@ -74,19 +73,6 @@ import {
     NO_CURRENT_SEMESTER_ERROR,
     COMMON_SCHEDULE_TITLE,
 } from '../constants/translationLabels/common';
-
-export const getCurrentSemesterService = () => {
-    axios
-        .get(CURRENT_SEMESTER_URL)
-        .then((response) => {
-            setSemesterLoadingService(false);
-            store.dispatch(setCurrentSemester(response.data));
-        })
-        .catch(() => {
-            handleSnackbarOpenService(true, snackbarTypes.ERROR, i18n.t(NO_CURRENT_SEMESTER_ERROR));
-            setSemesterLoadingService(false);
-        });
-};
 
 export const getDefaultSemesterService = () => {
     axios
@@ -254,32 +240,6 @@ export const getFullSchedule = (semesterId) => {
                 setLoadingService(false);
             })
             .catch((err) => errorHandler(err));
-};
-
-export const submitSearchSchedule = (values) => {
-    setScheduleSemesterIdService(values.semester);
-    if (values.group > 0) {
-        setScheduleTypeService('group');
-        setScheduleGroupIdService(values.group);
-        getGroupSchedule(values.group, values.semester);
-
-        return;
-    }
-    if (values.teacher > 0) {
-        setScheduleTypeService('teacher');
-        setScheduleTeacherIdService(values.teacher);
-        getTeacherSchedule(values.teacher, values.semester);
-        return;
-    }
-    if (
-        (values.teacher === 0 && values.group === 0) ||
-        (!get(values, 'group') && values.teacher === 0) ||
-        (!get(values, 'teacher') && values.group === 0) ||
-        (!get(values, 'group') && !get(values, 'teacher'))
-    ) {
-        setScheduleTypeService('full');
-        getFullSchedule(values.semester);
-    }
 };
 
 export const sendTeachersScheduleService = (data) => {

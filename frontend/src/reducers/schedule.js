@@ -1,5 +1,5 @@
+import { assign } from 'lodash';
 import * as actionTypes from '../actions/actionsType';
-import { updateObject } from '../utility';
 
 const initialState = {
     items: [],
@@ -17,19 +17,19 @@ const initialState = {
 const reducer = (state = initialState, action) => {
     switch (action.type) {
         case actionTypes.SET_SCHEDULE_ITEMS:
-            return updateObject(state, {
+            return assign(state, {
                 items: action.result,
             });
         case actionTypes.SET_CURRENT_SEMESTER:
-            return updateObject(state, {
-                currentSemester: action.result,
+            return assign(state, {
+                currentSemester: action.payload,
             });
         case actionTypes.SET_DEFAULT_SEMESTER:
-            return updateObject(state, {
+            return assign(state, {
                 defaultSemester: action.result,
             });
         case actionTypes.CHECK_AVAILABILITY_SCHEDULE:
-            return updateObject(state, {
+            return assign(state, {
                 availability: action.result,
             });
         case actionTypes.ADD_ITEM_TO_SCHEDULE: {
@@ -48,35 +48,35 @@ const reducer = (state = initialState, action) => {
             } else {
                 itemArr = state.items.concat(action.result);
             }
-            return updateObject(state, {
+            return assign(state, {
                 items: itemArr,
             });
         }
         case actionTypes.SET_SCHEDULE_TYPE:
-            return updateObject(state, {
+            return assign(state, {
                 groupSchedule: {},
                 fullSchedule: [],
                 scheduleType: action.newType,
             });
         case actionTypes.SET_FULL_SCHEDULE:
-            updateObject(state, {
+            assign(state, {
                 fullSchedule: [],
                 groupSchedule: {}, // nani desu ka?
             });
-            return updateObject(state, {
+            return assign(state, {
                 fullSchedule: action.result,
             });
         case actionTypes.SET_GROUP_SCHEDULE:
-            return updateObject(state, {
+            return assign(state, {
                 groupSchedule: action.result, // nani desu ka?
                 fullSchedule: [],
             });
         case actionTypes.SET_ITEM_GROUP_ID:
-            return updateObject(state, {
+            return assign(state, {
                 itemGroupId: action.result,
             });
         case actionTypes.SET_SCHEDULE_GROUP_ID:
-            return updateObject(state, {
+            return assign(state, {
                 scheduleGroupId: action.groupId,
                 scheduleTeacherId: null,
                 fullSchedule: [],
@@ -86,19 +86,19 @@ const reducer = (state = initialState, action) => {
             const index = state.items.findIndex((item) => item.id === action.result);
             state.items.splice(index, 1);
             const newArr = state.items;
-            return updateObject(state, {
+            return assign(state, {
                 items: newArr,
             });
         }
         case actionTypes.SET_SCHEDULE_TEACHER_ID:
-            return updateObject(state, {
+            return assign(state, {
                 scheduleGroupId: null,
                 scheduleTeacherId: action.teacherId,
                 fullSchedule: [],
                 groupSchedule: {},
             });
         case actionTypes.SET_TEACHER_SCHEDULE:
-            return updateObject(state, {
+            return assign(state, {
                 scheduleGroupId: null,
                 teacherSchedule: action.result,
                 scheduleTeacherId: `${action.result.teacher.id}`,
@@ -106,11 +106,11 @@ const reducer = (state = initialState, action) => {
                 fullSchedule: [],
             });
         case actionTypes.SET_SEMESTER_LIST:
-            return updateObject(state, {
+            return assign(state, {
                 semesters: action.result,
             });
         case actionTypes.SET_SCHEDULE_SEMESTER_ID:
-            return updateObject(state, {
+            return assign(state, {
                 scheduleGroupId: null,
                 scheduleTeacherId: null,
                 scheduleSemesterId: action.semesterId,
@@ -118,7 +118,7 @@ const reducer = (state = initialState, action) => {
                 groupSchedule: {},
             });
         case actionTypes.SET_TEACHER_RANGE_SCHEDULE:
-            return updateObject(state, {
+            return assign(state, {
                 teacherRangeSchedule: action.result,
                 scheduleGroupId: null,
                 teacherSchedule: [],
@@ -126,7 +126,7 @@ const reducer = (state = initialState, action) => {
                 fullSchedule: [],
             });
         case actionTypes.SET_TEACHER_VIEW_TYPE:
-            return updateObject(state, {
+            return assign(state, {
                 viewTeacherScheduleResults: action.result,
             });
         default:

@@ -48,6 +48,7 @@ import {
     SEND_SCHEDULE_FOR_TEACHER,
     TEACHER_DEPARTMENT,
 } from '../../constants/translationLabels/common';
+import { getCurrentSemesterRequsted } from '../../actions/schedule';
 
 const TeacherList = (props) => {
     const { t } = useTranslation('common');
@@ -59,6 +60,7 @@ const TeacherList = (props) => {
         departments,
         department,
         semesters,
+        getCurrentSemester,
     } = props;
     const [term, setTerm] = useState('');
     const [isDisabled, setIsDisabled] = useState(false);
@@ -70,10 +72,10 @@ const TeacherList = (props) => {
     const [subDialogType, setSubDialogType] = useState('');
 
     useEffect(() => {
+        getCurrentSemester();
         showAllTeachersService();
         showAllSemestersService();
         getAllDepartmentsService();
-        getCurrentSemesterService();
         getDefaultSemesterService();
         getDisabledTeachersService();
         showAllPublicSemestersService();
@@ -300,4 +302,8 @@ const mapStateToProps = (state) => ({
     department: state.departments.department,
 });
 
-export default connect(mapStateToProps, {})(TeacherList);
+const mapDispatchToProps = (dispatch) => ({
+    getCurrentSemester: () => dispatch(getCurrentSemesterRequsted()),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(TeacherList);

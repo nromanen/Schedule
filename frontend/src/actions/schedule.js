@@ -10,9 +10,16 @@ export const setScheduleItems = (res) => {
 export const setCurrentSemester = (res) => {
     return {
         type: actionTypes.SET_CURRENT_SEMESTER,
-        result: res,
+        payload: res,
     };
 };
+
+export const getCurrentSemesterRequsted = () => {
+    return {
+        type: actionTypes.GET_CURRENT_SEMESTER_REQUESTED,
+    };
+};
+
 export const setDefaultSemester = (res) => {
     return {
         type: actionTypes.SET_DEFAULT_SEMESTER,

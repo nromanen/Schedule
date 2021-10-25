@@ -4,7 +4,7 @@ import { useHistory, useLocation } from 'react-router-dom';
 import './GroupSchedulePage.scss';
 import { CircularProgress } from '@material-ui/core';
 import { getDataFromParams } from '../../utils/urlUtils';
-import { getDefaultSemesterService, submitSearchSchedule } from '../../services/scheduleService';
+import { getDefaultSemesterService } from '../../services/scheduleService';
 import GroupSchedulePageTop from '../GroupSchedulePageTop/GroupSchedulePageTop';
 import { setLoadingService } from '../../services/loadingService';
 import { links } from '../../constants/links';
@@ -12,6 +12,7 @@ import { places } from '../../constants/places';
 import { getScheduleByType } from '../../utils/sheduleUtils';
 import { SCHEDULE_TYPES } from '../../constants/schedule/types';
 import { renderSchedule } from '../../helper/renderSchedule';
+import { submitSearchSchedule } from '../../helper/submitSearchSchedule';
 
 const GroupSchedulePage = (props) => {
     const history = useHistory();
