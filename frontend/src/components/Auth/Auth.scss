@@ -3,7 +3,7 @@
 .auth-container {
     display: flex;
     flex-direction: column;
-    min-height: 55vh;
+    min-height: 52vh;
     align-items: center;
     justify-content: center;
     text-align: center;
@@ -12,6 +12,22 @@
         display: block;
         flex-grow: 1;
         height: 24px;
+    }
+    .auth-card {
+        display: inline-block;
+        margin: 10px;
+        padding: 16px;
+        border-radius: 5px;
+        width: 450px;
+        box-shadow: 0 12px 20px 0px $shadow-box;
+    
+        @media (max-width: 500px) {
+            max-width: 90%;
+        }
+    
+        .form-field {
+            width: 25em;
+        }
     }
     .auth-card-header {
         .title {
@@ -42,6 +58,9 @@
     .auth-link:hover {
         color: $background-color-dark;
     }
+}
+.MuiCircularProgress-root.auth-loading {
+    margin: 50px;
 }
 .forgot-password-label {
     font-size: 14px;

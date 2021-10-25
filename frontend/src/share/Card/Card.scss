@@ -82,15 +82,3 @@
   background-color: #90ee90;
 }
 
-.auth-card {
-  width: 450px;
-  box-shadow: 0 12px 20px 0px $shadow-box;
-
-  @media (max-width: 500px) {
-    max-width: 90%;
-  }
-
-  .form-field {
-    width: 25em;
-  }
-}

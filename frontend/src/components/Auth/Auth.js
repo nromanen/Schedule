@@ -1,6 +1,5 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { isEmpty } from 'lodash';
 import { useHistory } from 'react-router-dom';
 import { links } from '../../constants/links';
 import { authTypes, successAuthMessages } from '../../constants/auth';
@@ -40,6 +39,7 @@ const Auth = (props) => {
         error,
         isLoading,
     } = props;
+    const [isResponse, setIsResponse] = useState(false);
     const { t } = useTranslation('common');
     const history = useHistory();
     // const url = window.document.location;
@@ -73,6 +73,7 @@ const Auth = (props) => {
         });
         setLoadingForm(true);
         resetFormHandler(REGISTRATION_FORM);
+        setIsResponse(true);
     };
 
     const resetPasswordHandler = (resetPasswordData) => {
@@ -81,6 +82,7 @@ const Auth = (props) => {
         });
         setLoadingForm(true);
         resetFormHandler(RESET_PASSWORD_FORM);
+        setIsResponse(true);
     };
 
     // const socialLoginHandler = (data) => {
@@ -121,17 +123,17 @@ const Auth = (props) => {
     // }
 
     useEffect(() => {
-        if (!isEmpty(response) || !isEmpty(resetPasswordResponse)) {
-            history.push(links.LOGIN);
-            showSuccessMessage(successAuthMessages[authType]);
-        }
-    }, [resetPasswordResponse, response]);
-
-    useEffect(() => {
         if (userRole) {
             successLoginRedirect();
         }
     }, [userRole]);
+
+    useEffect(() => {
+        if (isResponse) {
+            showSuccessMessage(successAuthMessages[authType]);
+            history.push(links.LOGIN);
+        }
+    }, [response, resetPasswordResponse]);
 
     switch (authType) {
         case authTypes.REGISTRATION:

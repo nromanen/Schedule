@@ -7,7 +7,7 @@ import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 import { Link } from 'react-router-dom';
-import Card from '../../share/Card/Card';
+import Card from '@material-ui/core/Card';
 import renderTextField from '../../share/renderedFields/input';
 
 import { RESET_PASSWORD_FORM } from '../../constants/reduxForms';
@@ -40,13 +40,13 @@ const ResetPasswordForm = (props) => {
     };
 
     return (
-        <Card additionClassName="auth-card">
+        <Card className="auth-card">
             <div className="auth-card-header">
                 <h2 className="title">{i18n.t(RESET_PASSWORD_PAGE_TITLE)}</h2>
                 <span className="subtitle">{i18n.t(RESET_PASSWORD_HELPER_TEXT)}</span>
             </div>
             {isLoading ? (
-                <CircularProgress size="60px" className="loading-circle" />
+                <CircularProgress size="70px" className="loading-circle auth-loading" />
             ) : (
                 <form className="auth-form" onSubmit={handleSubmit}>
                     <Field
