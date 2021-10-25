@@ -1,5 +1,4 @@
 import React, { Suspense, useEffect } from 'react';
-import './App.scss';
 import './i18n';
 import { connect } from 'react-redux';
 
@@ -8,6 +7,7 @@ import { authCheckState } from './actions/index';
 import { handleSnackbarCloseService } from './services/snackbarService';
 import SnackbarComponent from './share/Snackbar/SnackbarComponent';
 import SuccessSnackbar from './components/SuccessSnackbar/SuccessSnackbar';
+import './App.scss';
 
 const App = (props) => {
     const { isSnackbarOpen, snackbarType, snackbarMessage } = props;
