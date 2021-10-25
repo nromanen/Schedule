@@ -21,8 +21,8 @@ const ShowStudentsOnGroupDialog = (props) => {
     const [checkBoxStudents, setCheckBoxStudents] = useState([]);
     const [isGroupButtonDisabled, setIsGroupButtonDisabled] = useState(true);
     const [checkedAll, setCheckedAll] = useState(false);
-    const [openUploadFile, setOpenUploadFile] = useState(false);
-    const [showStudentList, setShowStudentList] = useState(false);
+    const [isOpenUploadFileDialog, setIsOpenUploadFileDialog] = useState(false);
+    const [isOpenStudentListDialog, setIsOpenStudentListDialog] = useState(false);
     const { t } = useTranslation('formElements');
 
     const setSelectDisabled = () => {
@@ -36,7 +36,7 @@ const ShowStudentsOnGroupDialog = (props) => {
     };
     useEffect(() => {
         getAllStudentsByGroupId(props.group.id);
-    }, [open, openUploadFile]);
+    }, [open, isOpenUploadFileDialog]);
     useEffect(() => {
         parseStudentToCheckBox();
     }, [props.students]);
@@ -97,10 +97,10 @@ const ShowStudentsOnGroupDialog = (props) => {
     };
 
     const getDialog = () => {
-        setShowStudentList(true);
+        setIsOpenStudentListDialog(true);
     };
     const handleShowDialogFile = () => {
-        setOpenUploadFile((prevState) => !prevState);
+        setIsOpenUploadFileDialog((prevState) => !prevState);
     };
 
     const buttonClassName = !isEmpty(students)
@@ -179,20 +179,20 @@ const ShowStudentsOnGroupDialog = (props) => {
                     </span>
                 )}
             </CustomDialog>
-            {showStudentList && (
+            {isOpenStudentListDialog && (
                 <MovingGroupsDialog
                     onClose={handleClose}
-                    open={showStudentList}
+                    open={isOpenStudentListDialog}
                     checkBoxStudents={checkBoxStudents}
-                    setShowStudentList={setShowStudentList}
+                    setShowStudentList={setIsOpenStudentListDialog}
                     groups={groups}
                     group={group}
                 />
             )}
-            {openUploadFile && (
+            {isOpenUploadFileDialog && (
                 <UploadFile
                     group={group}
-                    open={openUploadFile}
+                    open={isOpenUploadFileDialog}
                     handleCloseDialogFile={handleShowDialogFile}
                 />
             )}

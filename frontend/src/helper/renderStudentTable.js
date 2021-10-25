@@ -153,11 +153,11 @@ export default function RenderStudentTable(props) {
     } = props;
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
-    const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-    const [openEditDialog, setOpenEditDialog] = useState(false);
+    const [isOpenDeleteConfirmDialog, setIsOpenDeleteConfirmDialog] = useState(false);
+    const [isOpenEditDialog, setIsOpenEditDialog] = useState(false);
     const { t } = useTranslation('formElements');
     const handleEdit = (studentId) => {
-        setOpenEditDialog(true);
+        setIsOpenEditDialog(true);
         selectStudentService(studentId);
     };
     useEffect(() => {
@@ -167,7 +167,7 @@ export default function RenderStudentTable(props) {
     }, [props.group.id]);
     useEffect(() => {
         if (match.path.includes(links.Student) && match.path.includes(links.Delete)) {
-            setOpenDeleteDialog(true);
+            setIsOpenDeleteConfirmDialog(true);
         }
     }, [props.group.id]);
 
@@ -184,15 +184,15 @@ export default function RenderStudentTable(props) {
         window.location.href = mailto;
     };
     const deleteStudent = (studentItem) => {
-        setOpenDeleteDialog(false);
+        setIsOpenDeleteConfirmDialog(false);
         onDeleteStudent(studentItem);
     };
     const handleCloseEditDialog = () => {
-        setOpenEditDialog(false);
+        setIsOpenEditDialog(false);
         selectStudentService(null);
     };
     const handleSubmit = (data) => {
-        setOpenEditDialog(false);
+        setIsOpenEditDialog(false);
         const sendObject = { ...data, prevGroup: group };
         onSubmit(sendObject);
     };
@@ -305,26 +305,26 @@ export default function RenderStudentTable(props) {
                                         <Delete
                                             title={t(DELETE_TITLE_LABEL)}
                                             className="delete-button"
-                                            onClick={() => setOpenDeleteDialog(true)}
+                                            onClick={() => setIsOpenDeleteConfirmDialog(true)}
                                         />
                                     </Link>
                                 </span>
                             </StyledTableCell>
-                            {openEditDialog && (
+                            {isOpenEditDialog && (
                                 <AddStudentDialog
-                                    open={openEditDialog}
+                                    open={isOpenEditDialog}
                                     onSubmit={handleSubmit}
                                     onSetSelectedCard={handleCloseEditDialog}
                                     match={match}
                                 />
                             )}
 
-                            {openDeleteDialog && (
+                            {isOpenDeleteConfirmDialog && (
                                 <CustomDialog
                                     type={dialogTypes.DELETE_CONFIRM}
                                     cardId={student}
                                     whatDelete="student"
-                                    open={openDeleteDialog}
+                                    open={isOpenDeleteConfirmDialog}
                                     onClose={deleteStudent}
                                 />
                             )}

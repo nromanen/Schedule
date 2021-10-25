@@ -58,8 +58,8 @@ const LessonPage = (props) => {
     const [term, setTerm] = useState('');
     const [lessonId, setLessonId] = useState();
     const [copiedLesson, setCopiedLesson] = useState();
-    const [isOpenConfirmDialog, setIsOpenConfirmDialog] = useState(false);
-    const [openCopyLessonDialog, setOpenCopyLessonDialog] = useState(false);
+    const [isOpenDeleteConfirmDialog, setIsOpenDeleteConfirmDialog] = useState(false);
+    const [isOpenCopyLessonDialog, setIsOpenCopyLessonDialog] = useState(false);
 
     const SearchChange = setTerm;
     const visibleItems = searchLessonsByTeacher(lessons, term);
@@ -92,22 +92,22 @@ const LessonPage = (props) => {
 
     const showConfirmDialog = (lessonCardId) => {
         setLessonId(lessonCardId);
-        setIsOpenConfirmDialog(true);
+        setIsOpenDeleteConfirmDialog(true);
     };
 
     const acceptConfirmDialog = (id) => {
-        setIsOpenConfirmDialog(false);
+        setIsOpenDeleteConfirmDialog(false);
         if (!id) return;
         removeLessonCardService(lessonId);
     };
 
     const openCopyLessonDialogHandle = (lesson) => {
         setCopiedLesson(lesson);
-        setOpenCopyLessonDialog(true);
+        setIsOpenCopyLessonDialog(true);
     };
 
     const closeCopyLessonDialogHandle = (lessonGroupObj) => {
-        setOpenCopyLessonDialog(false);
+        setIsOpenCopyLessonDialog(false);
         if (!lessonGroupObj) return;
         copyLessonCardService(lessonGroupObj);
     };
@@ -170,9 +170,9 @@ const LessonPage = (props) => {
     return (
         <>
             <Card additionClassName="card-title lesson-card">
-                {openCopyLessonDialog && (
+                {isOpenCopyLessonDialog && (
                     <CopyLessonDialog
-                        open={openCopyLessonDialog}
+                        open={isOpenCopyLessonDialog}
                         onClose={closeCopyLessonDialogHandle}
                         groupId={groupId}
                         lesson={copiedLesson}
@@ -181,12 +181,12 @@ const LessonPage = (props) => {
                     />
                 )}
 
-                {isOpenConfirmDialog && (
+                {isOpenDeleteConfirmDialog && (
                     <CustomDialog
                         type={dialogTypes.DELETE_CONFIRM}
                         cardId={lessonId}
                         whatDelete={cardType.LESSON.toLowerCase()}
-                        open={isOpenConfirmDialog}
+                        open={isOpenDeleteConfirmDialog}
                         onClose={acceptConfirmDialog}
                     />
                 )}

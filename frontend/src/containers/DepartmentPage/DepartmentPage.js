@@ -47,13 +47,13 @@ const DepartmentPage = (props) => {
     const { t } = useTranslation('formElements');
     const [term, setTerm] = useState('');
 
-    const [subDialogType, setSubDialogType] = useState('');
+    const [confirmDialogType, setConfirmDialogType] = useState('');
 
     const [isDisabled, setIsDisabled] = useState(false);
     const [isUpdateForm, setIsUpdateForm] = useState(false);
     const [departmentId, setDepartmentId] = useState(-1);
-    const [teacherDialog, setTeacherDialog] = useState(false);
-    const [openSubDialog, setOpenSubDialog] = useState(false);
+    const [isOpenTeacherDialog, setIsOpenTeacherDialog] = useState(false);
+    const [isOpenConfirmDialog, setIsOpenConfirmDialog] = useState(false);
 
     const clearDepartmentForm = () => {
         clearDepartment();
@@ -75,8 +75,8 @@ const DepartmentPage = (props) => {
     };
     const showConfirmDialog = (currentId, dialogType) => {
         setDepartmentId(currentId);
-        setSubDialogType(dialogType);
-        setOpenSubDialog(true);
+        setConfirmDialogType(dialogType);
+        setIsOpenConfirmDialog(true);
     };
     const setDepartmentToUpdate = (currentId) => {
         getDepartmentByIdService(currentId);
@@ -91,12 +91,12 @@ const DepartmentPage = (props) => {
             [dialogTypes.SET_VISIBILITY_ENABLED]: setEnabledDepartmentService(newDepartment),
             [dialogTypes.SET_VISIBILITY_DISABLED]: setDisabledDepartmentService(newDepartment),
         };
-        return changeDisabledStatus[subDialogType];
+        return changeDisabledStatus[confirmDialogType];
     };
     const acceptConfirmDialog = (currentId) => {
-        setOpenSubDialog(false);
+        setIsOpenConfirmDialog(false);
         if (!currentId) return;
-        if (subDialogType !== dialogTypes.DELETE_CONFIRM) {
+        if (confirmDialogType !== dialogTypes.DELETE_CONFIRM) {
             changeDepartmentDisabledStatus(currentId);
         } else deleteDepartmentsService(currentId);
     };
@@ -104,26 +104,26 @@ const DepartmentPage = (props) => {
         setIsDisabled((prev) => !prev);
     };
     const closeTeacherDialog = () => {
-        setTeacherDialog(false);
+        setIsOpenTeacherDialog(false);
     };
 
     return (
         <>
             <NavigationPage name={navigationNames.DEPARTMENTS} val={navigation.DEPARTMENTS} />
-            {openSubDialog && (
+            {isOpenConfirmDialog && (
                 <CustomDialog
-                    type={subDialogType}
+                    type={confirmDialogType}
                     cardId={departmentId.id}
                     whatDelete="department"
-                    open={openSubDialog}
+                    open={isOpenConfirmDialog}
                     onClose={acceptConfirmDialog}
                 />
             )}
-            {teacherDialog && (
+            {isOpenTeacherDialog && (
                 <ShowDepartmentDataDialog
                     isHide={departmentId.disabledStatus}
                     cardId={departmentId.id}
-                    open={teacherDialog}
+                    open={isOpenTeacherDialog}
                     onClose={closeTeacherDialog}
                     teachers={teachers}
                 />
@@ -198,7 +198,7 @@ const DepartmentPage = (props) => {
                                     onClick={() => {
                                         showAllPublicTeachersByDepartmentService(departmentItem.id);
                                         getDepartmentByIdService(departmentItem.id);
-                                        setTeacherDialog(true);
+                                        setIsOpenTeacherDialog(true);
                                     }}
                                 />
                             </div>

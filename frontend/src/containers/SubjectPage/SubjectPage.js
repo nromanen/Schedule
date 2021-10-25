@@ -38,8 +38,8 @@ const SubjectPage = (props) => {
     const { t } = useTranslation('formElements');
     const { isSnackbarOpen, snackbarType, snackbarMessage, disabledSubjects, subjects } = props;
 
-    const [openSubDialog, setOpenSubDialog] = useState(false);
-    const [subDialogType, setSubDialogType] = useState('');
+    const [isOpenConfirmDialog, setIsOpenConfirmDialog] = useState(false);
+    const [confirmDialogType, setConfirmDialogType] = useState('');
     const [subjectId, setSubjectId] = useState(-1);
     const [term, setTerm] = useState('');
 
@@ -58,14 +58,14 @@ const SubjectPage = (props) => {
 
     const showConfirmDialog = (subjId, dialogType) => {
         setSubjectId(subjId);
-        setSubDialogType(dialogType);
-        setOpenSubDialog(true);
+        setConfirmDialogType(dialogType);
+        setIsOpenConfirmDialog(true);
     };
 
     const acceptConfirmDialog = (id) => {
-        setOpenSubDialog(false);
+        setIsOpenConfirmDialog(false);
         if (!id) return;
-        switch (subDialogType) {
+        switch (confirmDialogType) {
             case dialogTypes.DELETE_CONFIRM:
                 removeSubjectCardService(subjectId);
                 break;
@@ -92,12 +92,12 @@ const SubjectPage = (props) => {
     return (
         <>
             <NavigationPage name={navigationNames.SUBJECT_PAGE} val={navigation.SUBJECTS} />
-            {openSubDialog && (
+            {isOpenConfirmDialog && (
                 <CustomDialog
-                    type={subDialogType}
+                    type={confirmDialogType}
                     cardId={subjectId}
                     whatDelete="subject"
-                    open={openSubDialog}
+                    open={isOpenConfirmDialog}
                     onClose={acceptConfirmDialog}
                 />
             )}

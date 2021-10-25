@@ -20,7 +20,7 @@ import { dialogTypes } from '../../../constants/dialogs';
 const ScheduleAndTemporaryScheduleList = (props) => {
     const schedulesAndTemporarySchedules = props.schedulesAndTemporarySchedules || [];
 
-    const [open, setOpen] = useState(false);
+    const [isOpenDeleteConfirmDialog, setIsOpenDeleteConfirmDialog] = useState(false);
     const [temporaryScheduleId, setTemporaryScheduleId] = useState(-1);
     const [date, setDate] = useState(null);
     const [teacherId, setTeacherId] = useState(null);
@@ -35,11 +35,11 @@ const ScheduleAndTemporaryScheduleList = (props) => {
 
     const handleClickOpen = (id) => {
         setTemporaryScheduleId(id);
-        setOpen(true);
+        setIsOpenDeleteConfirmDialog(true);
     };
 
     const handleClose = (id) => {
-        setOpen(false);
+        setIsOpenDeleteConfirmDialog(false);
         if (!id) {
             return;
         }
@@ -48,12 +48,12 @@ const ScheduleAndTemporaryScheduleList = (props) => {
 
     return (
         <main className="temporary-schedule-section">
-            {open && (
+            {isOpenDeleteConfirmDialog && (
                 <CustomDialog
                     type={dialogTypes.DELETE_CONFIRM}
                     cardId={temporaryScheduleId}
                     whatDelete={cardType.TEMPORARY_SCHEDULE.toLowerCase()}
-                    open={open}
+                    open={isOpenDeleteConfirmDialog}
                     onClose={handleClose}
                 />
             )}

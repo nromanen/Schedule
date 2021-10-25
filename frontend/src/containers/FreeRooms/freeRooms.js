@@ -15,18 +15,18 @@ import { TYPE_LABEL } from '../../constants/translationLabels/common';
 const FreeRooms = (props) => {
     const { t } = useTranslation('formElements');
 
-    const [open, setOpen] = useState(false);
+    const [isOpenFreeRoomDialog, setIsOpenFreeRoomDialog] = useState(false);
 
     const { classScheduler } = props;
 
     useEffect(() => getClassScheduleListService(), []);
 
     const handleClickOpen = () => {
-        setOpen(true);
+        setIsOpenFreeRoomDialog(true);
     };
 
     const handleClose = () => {
-        setOpen(false);
+        setIsOpenFreeRoomDialog(false);
     };
 
     const submit = (values) => {
@@ -38,10 +38,10 @@ const FreeRooms = (props) => {
             <span className="navLinks" onClick={handleClickOpen} aria-hidden="true">
                 {t(FIND_FREE_ROOM)}
             </span>
-            {open && (
+            {isOpenFreeRoomDialog && (
                 <CustomDialog
                     title={t(FIND_FREE_ROOM)}
-                    open={open}
+                    open={isOpenFreeRoomDialog}
                     onClose={handleClose}
                     buttons={
                         <Button

@@ -36,7 +36,7 @@ import {
 
 const ClassSchedule = (props) => {
     const { t } = useTranslation('formElements');
-    const [open, setOpen] = useState(false);
+    const [isOpenDeleteConfirmDialog, setIsOpenDeleteConfirmDialog] = useState(false);
     const [classId, setClassId] = useState(-1);
     useEffect(() => getClassScheduleListService(), []);
 
@@ -56,11 +56,11 @@ const ClassSchedule = (props) => {
 
     const handleClickOpen = (id) => {
         setClassId(id);
-        setOpen(true);
+        setIsOpenDeleteConfirmDialog(true);
     };
 
     const handleClose = (id) => {
-        setOpen(false);
+        setIsOpenDeleteConfirmDialog(false);
         if (!id) return;
         deleteClassScheduleOneService(id);
     };
@@ -69,12 +69,12 @@ const ClassSchedule = (props) => {
         <>
             <NavigationPage name={navigationNames.CLASS_SCHEDULE_TITLE} val={navigation.PERIOD} />
             <div className="cards-container">
-                {open && (
+                {isOpenDeleteConfirmDialog && (
                     <CustomDialog
                         type={dialogTypes.DELETE_CONFIRM}
                         cardId={classId}
                         whatDelete={cardType.CLASS.toLowerCase()}
-                        open={open}
+                        open={isOpenDeleteConfirmDialog}
                         onClose={handleClose}
                     />
                 )}

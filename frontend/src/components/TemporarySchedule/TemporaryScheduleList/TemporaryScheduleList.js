@@ -30,16 +30,16 @@ const TemporaryScheduleList = (props) => {
 
     const temporarySchedules = props.temporarySchedules || [];
 
-    const [open, setOpen] = useState(false);
+    const [isOpenDeleteConfirmDialog, setIsOpenDeleteConfirmDialog] = useState(false);
     const [temporaryScheduleId, setTemporaryScheduleId] = useState(-1);
 
     const handleClickOpen = (id) => {
         setTemporaryScheduleId(id);
-        setOpen(true);
+        setIsOpenDeleteConfirmDialog(true);
     };
 
     const handleClose = (id) => {
-        setOpen(false);
+        setIsOpenDeleteConfirmDialog(false);
         if (!id) {
             return;
         }
@@ -48,12 +48,12 @@ const TemporaryScheduleList = (props) => {
 
     return (
         <main className="container-flex-wrap">
-            {open && (
+            {isOpenDeleteConfirmDialog && (
                 <CustomDialog
                     type={dialogTypes.DELETE_CONFIRM}
                     cardId={temporaryScheduleId}
                     whatDelete={cardType.TEMPORARY_SCHEDULE}
-                    open={open}
+                    open={isOpenDeleteConfirmDialog}
                     onClose={handleClose}
                 />
             )}

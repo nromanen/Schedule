@@ -39,8 +39,8 @@ const RoomList = (props) => {
     const { t } = useTranslation('formElements');
 
     const [isDisabled, setIsDisabled] = useState(false);
-    const [openSubDialog, setOpenSubDialog] = useState(false);
-    const [subDialogType, setSubDialogType] = useState('');
+    const [isOpenConfirmDialog, setIsOpenConfirmDialog] = useState(false);
+    const [confirmDialogType, setConfirmDialogType] = useState('');
     const [roomId, setRoomId] = useState(-1);
     const [term, setTerm] = useState('');
 
@@ -63,8 +63,8 @@ const RoomList = (props) => {
 
     const showConfirmDialog = (id, dialogType) => {
         setRoomId(id);
-        setSubDialogType(dialogType);
-        setOpenSubDialog(true);
+        setConfirmDialogType(dialogType);
+        setIsOpenConfirmDialog(true);
     };
 
     const changeGroupDisabledStatus = (currentId) => {
@@ -75,9 +75,9 @@ const RoomList = (props) => {
     };
 
     const acceptConfirmDialog = (currentId) => {
-        setOpenSubDialog(false);
+        setIsOpenConfirmDialog(false);
         if (!currentId) return;
-        if (subDialogType !== dialogTypes.DELETE_CONFIRM) {
+        if (confirmDialogType !== dialogTypes.DELETE_CONFIRM) {
             changeGroupDisabledStatus(currentId);
         } else {
             deleteRoomCardService(currentId);
@@ -91,12 +91,12 @@ const RoomList = (props) => {
     return (
         <>
             <NavigationPage name={navigationNames.ROOM_LIST} val={navigation.ROOMS} />
-            {openSubDialog && (
+            {isOpenConfirmDialog && (
                 <CustomDialog
-                    type={subDialogType}
+                    type={confirmDialogType}
                     cardId={roomId}
                     whatDelete={cardType.ROOM.toLowerCase()}
-                    open={openSubDialog}
+                    open={isOpenConfirmDialog}
                     onClose={acceptConfirmDialog}
                 />
             )}

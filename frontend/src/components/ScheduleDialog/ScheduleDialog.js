@@ -34,8 +34,10 @@ const ScheduleDialog = (props) => {
     const [warning, setWarning] = useState('');
 
     const getOptionLabel = (option) => {
-        if (!isNil(option)){
-            return `${option.name} (${ option.available ? translation(COMMON_AVAILABLE) : translation(COMMON_UNAVAILABLE)})`;          
+        if (!isNil(option)) {
+            return `${option.name} (${
+                option.available ? translation(COMMON_AVAILABLE) : translation(COMMON_UNAVAILABLE)
+            })`;
         }
         return '';
     };
@@ -50,7 +52,7 @@ const ScheduleDialog = (props) => {
         if (!room) return;
         setOpenConfirmDialog(true);
         if (!room.available) {
-            setWarning((prev) => prev + '\n' + translation(COMMON_ROOM_IS_UNAVAILABLE));
+            setWarning((prev) => `${prev}\n${translation(COMMON_ROOM_IS_UNAVAILABLE)}`);
         }
     };
     const defaultProps = {

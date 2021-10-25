@@ -20,7 +20,11 @@ import {
     CLEAR_BUTTON_LABEL,
     SAVE_BUTTON_LABEL,
 } from '../../../constants/translationLabels/formElements';
-import { TYPE_LABEL, CANCEL_BUTTON_LABEL, COMMON_CLOSE_TITLE } from '../../../constants/translationLabels/common';
+import {
+    TYPE_LABEL,
+    CANCEL_BUTTON_LABEL,
+    COMMON_CLOSE_TITLE,
+} from '../../../constants/translationLabels/common';
 
 const AddStudentDialog = (props) => {
     const { t } = useTranslation('formElements');
@@ -59,7 +63,12 @@ const AddStudentDialog = (props) => {
             open={open}
             onClose={handleClose}
             buttons={
-                <Button className="buttons-style" color="primary" variant="contained" onClick={handleClose}>
+                <Button
+                    className="buttons-style"
+                    color="primary"
+                    variant="contained"
+                    onClick={handleClose}
+                >
                     {t(COMMON_CLOSE_TITLE)}
                 </Button>
             }

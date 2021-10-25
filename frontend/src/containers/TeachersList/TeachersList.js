@@ -64,10 +64,10 @@ const TeacherList = (props) => {
     const [isDisabled, setIsDisabled] = useState(false);
     const [selected, setSelected] = useState([]);
     const [teacherId, setTeacherId] = useState(-1);
-    const [openSelect, setOpenSelect] = useState(false);
+    const [isOpenMultiSelectDialog, setIsOpenMultiSelectDialog] = useState(false);
     const [selectedSemester, setSelectedSemester] = useState('');
-    const [openSubDialog, setOpenSubDialog] = useState(false);
-    const [subDialogType, setSubDialogType] = useState('');
+    const [isOpenConfirmDialog, setIsOpenConfirmDialog] = useState(false);
+    const [confirmDialogType, setConfirmDialogType] = useState('');
 
     useEffect(() => {
         showAllTeachersService();
@@ -125,24 +125,24 @@ const TeacherList = (props) => {
             [dialogTypes.SET_VISIBILITY_ENABLED]: setEnabledTeachersService(teacher),
             [dialogTypes.SET_VISIBILITY_DISABLED]: setDisabledTeachersService(teacher),
         };
-        return changeDisabledStatus[subDialogType];
+        return changeDisabledStatus[confirmDialogType];
     };
     const showConfirmDialog = (id, dialogType) => {
         setTeacherId(id);
-        setSubDialogType(dialogType);
-        setOpenSubDialog(true);
+        setConfirmDialogType(dialogType);
+        setIsOpenConfirmDialog(true);
     };
     const acceptConfirmDialog = (id) => {
-        setOpenSubDialog(false);
+        setIsOpenConfirmDialog(false);
         if (!id) return;
-        if (subDialogType !== dialogTypes.DELETE_CONFIRM) {
+        if (confirmDialogType !== dialogTypes.DELETE_CONFIRM) {
             setEnabledDisabledDepartment(id);
         } else {
             removeTeacherCardService(id);
         }
     };
     const closeSelectionDialog = () => {
-        setOpenSelect(false);
+        setIsOpenMultiSelectDialog(false);
     };
     const clearSelection = () => {
         setSelected([]);
@@ -179,12 +179,12 @@ const TeacherList = (props) => {
         <>
             <NavigationPage name={navigationNames.TEACHER_LIST} val={navigation.TEACHERS} />
             <div className="cards-container">
-                {openSubDialog && (
+                {isOpenConfirmDialog && (
                     <CustomDialog
-                        type={subDialogType}
+                        type={confirmDialogType}
                         cardId={teacherId}
                         whatDelete={cardType.TEACHER}
-                        open={openSubDialog}
+                        open={isOpenConfirmDialog}
                         onClose={acceptConfirmDialog}
                     />
                 )}
@@ -196,14 +196,14 @@ const TeacherList = (props) => {
                         variant="contained"
                         color="primary"
                         onClick={() => {
-                            setOpenSelect(true);
+                            setIsOpenMultiSelectDialog(true);
                         }}
                     >
                         {t(SEND_SCHEDULE_FOR_TEACHER)}
                     </Button>
-                    {openSelect && (
+                    {isOpenMultiSelectDialog && (
                         <MultiSelect
-                            open={openSelect}
+                            open={isOpenMultiSelectDialog}
                             options={options}
                             value={selected}
                             onChange={setSelected}

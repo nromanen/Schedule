@@ -6,13 +6,13 @@ import './LinkToMeeting.scss';
 
 const LinkToMeeting = (props) => {
     const { linkToMeeting } = props;
-    const [openDialog, setOpenDialog] = useState(false);
+    const [isOpenMeetingLinkDialog, setIsOpenMeetingLinkDialog] = useState(false);
     const openWindowByUrl = (url) => {
         const win = window.open(url, '_blank');
         win.focus();
     };
     const handleClose = (semesterId) => {
-        setOpenDialog(false);
+        setIsOpenMeetingLinkDialog(false);
         if (semesterId !== '') {
             openWindowByUrl(linkToMeeting);
         }
@@ -24,15 +24,15 @@ const LinkToMeeting = (props) => {
                 color="blue"
                 className="svg-btn copy-btn link"
                 onClick={() => {
-                    setOpenDialog(true);
+                    setIsOpenMeetingLinkDialog(true);
                 }}
                 title={linkToMeeting}
             />
-            {openDialog && (
+            {isOpenMeetingLinkDialog && (
                 <CustomDialog
                     type={dialogTypes.MEETING_LINK}
                     cardId={1}
-                    open={openDialog}
+                    open={isOpenMeetingLinkDialog}
                     onClose={handleClose}
                     linkToMeeting={linkToMeeting}
                 />

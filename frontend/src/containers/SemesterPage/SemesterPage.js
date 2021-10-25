@@ -78,9 +78,9 @@ const SemesterPage = (props) => {
     } = props;
     const searchArr = ['year', 'description', 'startDay', 'endDay'];
     const { t } = useTranslation('formElements');
-    const [openSubDialog, setOpenSubDialog] = useState(false);
-    const [subDialogType, setSubDialogType] = useState('');
-    const [openGroupsDialog, setOpenGroupsDialog] = useState(false);
+    const [isOpenConfirmDialog, setIsOpenConfirmDialog] = useState(false);
+    const [confirmDialogType, setConfirmDialogType] = useState('');
+    const [isOpenGroupsDialog, setIsOpenGroupsDialog] = useState(false);
     const [semesterId, setSemesterId] = useState(-1);
 
     const [term, setTerm] = useState('');
@@ -115,7 +115,7 @@ const SemesterPage = (props) => {
 
     const cancelMultiselect = () => {
         setSemesterOptions(getGroupOptions(semester.semester_groups));
-        setOpenGroupsDialog(false);
+        setIsOpenGroupsDialog(false);
     };
 
     useEffect(() => {
@@ -136,8 +136,8 @@ const SemesterPage = (props) => {
     };
     const showConfirmDialog = (id, dialogType) => {
         setSemesterId(id);
-        setSubDialogType(dialogType);
-        setOpenSubDialog(true);
+        setConfirmDialogType(dialogType);
+        setIsOpenConfirmDialog(true);
     };
 
     const showSemesterCopyForm = (id) => {
@@ -157,15 +157,15 @@ const SemesterPage = (props) => {
             [dialogTypes.SET_VISIBILITY_ENABLED]: setEnabledSemestersService(foundSemester),
             [dialogTypes.SET_VISIBILITY_DISABLED]: setDisabledSemestersService(foundSemester),
         };
-        return changeDisabledStatus[subDialogType];
+        return changeDisabledStatus[confirmDialogType];
     };
 
     const acceptConfirmDialog = (currentSemesterId) => {
-        setOpenSubDialog(false);
+        setIsOpenConfirmDialog(false);
         if (!currentSemesterId) return;
-        if (subDialogType === dialogTypes.SET_DEFAULT) {
+        if (confirmDialogType === dialogTypes.SET_DEFAULT) {
             setDefaultSemesterById(currentSemesterId);
-        } else if (subDialogType !== dialogTypes.DELETE_CONFIRM) {
+        } else if (confirmDialogType !== dialogTypes.DELETE_CONFIRM) {
             changeGSemesterDisabledStatus(currentSemesterId);
         } else {
             removeSemesterCardService(currentSemesterId);
@@ -203,7 +203,7 @@ const SemesterPage = (props) => {
             return;
         }
         setGroupsToSemester(semesterCard.id, semesterOptions);
-        setOpenGroupsDialog(false);
+        setIsOpenGroupsDialog(false);
     };
 
     const handleSemesterArchivedPreview = (currentSemesterId) => {
@@ -218,12 +218,12 @@ const SemesterPage = (props) => {
     return (
         <>
             <NavigationPage name={navigationNames.SEMESTER_PAGE} val={navigation.SEMESTERS} />
-            {openSubDialog && (
+            {isOpenConfirmDialog && (
                 <CustomDialog
-                    type={subDialogType}
+                    type={confirmDialogType}
                     cardId={semesterId}
                     whatDelete="semester"
-                    open={openSubDialog}
+                    open={isOpenConfirmDialog}
                     onClose={acceptConfirmDialog}
                 />
             )}
@@ -398,7 +398,7 @@ const SemesterPage = (props) => {
                                     onClick={() => {
                                         setSemesterCard(semesterItem.id);
                                         selectSemesterService(semesterItem.id);
-                                        setOpenGroupsDialog(true);
+                                        setIsOpenGroupsDialog(true);
                                     }}
                                 />
                             </Card>
@@ -412,9 +412,9 @@ const SemesterPage = (props) => {
                 isOpen={isSnackbarOpen}
                 handleSnackbarClose={handleSnackbarCloseService}
             />
-            {openGroupsDialog && (
+            {isOpenGroupsDialog && (
                 <MultiselectForGroups
-                    open={openGroupsDialog}
+                    open={isOpenGroupsDialog}
                     options={options}
                     value={semesterOptions}
                     onChange={setSemesterOptions}

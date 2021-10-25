@@ -24,7 +24,7 @@ import { dialogTypes } from '../../constants/dialogs';
 let NewRoomType = (props) => {
     const { handleSubmit, pristine, submitting, roomTypes, oneType, initialize } = props;
 
-    const [open, setOpen] = useState(false);
+    const [isOpenDeleteConfirmDialog, setIsOpenDeleteConfirmDialog] = useState(false);
     const [typeId, setTypeId] = useState(-1);
 
     useEffect(() => {
@@ -39,11 +39,11 @@ let NewRoomType = (props) => {
 
     const handleClickOpen = (id) => {
         setTypeId(id);
-        setOpen(true);
+        setIsOpenDeleteConfirmDialog(true);
     };
 
     const handleClose = (id) => {
-        setOpen(false);
+        setIsOpenDeleteConfirmDialog(false);
         if (!id) {
             return;
         }
@@ -52,12 +52,12 @@ let NewRoomType = (props) => {
 
     return (
         <>
-            {open && (
+            {isOpenDeleteConfirmDialog && (
                 <CustomDialog
                     type={dialogTypes.DELETE_CONFIRM}
                     cardId={typeId}
                     whatDelete={cardType.TYPE.toLowerCase()}
-                    open={open}
+                    open={isOpenDeleteConfirmDialog}
                     onClose={handleClose}
                 />
             )}

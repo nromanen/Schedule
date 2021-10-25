@@ -53,14 +53,14 @@ const GroupList = (props) => {
     const history = useHistory();
     const { t } = useTranslation('formElements');
 
-    const [subDialogType, setSubDialogType] = useState('');
+    const [confirmDialogType, setConfirmDialogType] = useState('');
 
     const [groupId, setGroupId] = useState(-1);
     const [term, setTerm] = useState('');
     const [isDisabled, setIsDisabled] = useState(false);
-    const [showStudents, setShowStudents] = useState(false);
-    const [addStudentDialog, setAddStudentDialog] = useState(false);
-    const [openSubDialog, setOpenSubDialog] = useState(false);
+    const [isOpenShowStudentsDialog, setIsOpenShowStudentsDialog] = useState(false);
+    const [isOpenAddStudentDialog, setIsOpenAddStudentDialog] = useState(false);
+    const [isOpenConfirmDialog, setIsOpenConfirmDialog] = useState(false);
 
     useEffect(() => {
         showAllGroupsService();
@@ -74,8 +74,8 @@ const GroupList = (props) => {
 
     const showConfirmDialog = (currentId, disabledStatus) => {
         setGroupId(currentId);
-        setSubDialogType(disabledStatus);
-        setOpenSubDialog(true);
+        setConfirmDialogType(disabledStatus);
+        setIsOpenConfirmDialog(true);
     };
     const changeGroupDisabledStatus = (currentGroupId) => {
         const foundGroup = [...disabledGroups, ...enabledGroup].find(
@@ -85,31 +85,31 @@ const GroupList = (props) => {
             [dialogTypes.SET_VISIBILITY_ENABLED]: setEnabledGroupService(foundGroup),
             [dialogTypes.SET_VISIBILITY_DISABLED]: setDisabledGroupService(foundGroup),
         };
-        return changeDisabledStatus[subDialogType];
+        return changeDisabledStatus[confirmDialogType];
     };
     const acceptConfirmDialog = (currentGroupId) => {
-        setOpenSubDialog(false);
+        setIsOpenConfirmDialog(false);
         if (!currentGroupId) return;
-        if (subDialogType !== dialogTypes.DELETE_CONFIRM) {
+        if (confirmDialogType !== dialogTypes.DELETE_CONFIRM) {
             changeGroupDisabledStatus(currentGroupId);
         } else removeGroupCardService(currentGroupId);
     };
 
     const onShowStudentByGroup = (currentGroupId) => {
-        setShowStudents(true);
+        setIsOpenShowStudentsDialog(true);
         selectGroupService(currentGroupId);
         getAllStudentsByGroupId(currentGroupId);
     };
     const handleAddUser = (currentGroupId) => {
         setGroupId(currentGroupId);
-        setAddStudentDialog(true);
+        setIsOpenAddStudentDialog(true);
     };
 
     const selectStudentCard = () => {
-        setAddStudentDialog(false);
+        setIsOpenAddStudentDialog(false);
     };
     const onCloseShowStudents = () => {
-        setShowStudents(false);
+        setIsOpenShowStudentsDialog(false);
     };
     const studentSubmit = (data) => {
         if (data.id !== undefined) {
@@ -119,7 +119,7 @@ const GroupList = (props) => {
             const sendData = { ...data, group: { id: groupId } };
             createStudentService(sendData);
         }
-        setAddStudentDialog(false);
+        setIsOpenAddStudentDialog(false);
         goToGroupPage(history);
     };
     const onDeleteStudent = () => {
@@ -134,26 +134,26 @@ const GroupList = (props) => {
     return (
         <>
             <NavigationPage name={navigationNames.GROUP_LIST} val={navigation.GROUPS} />
-            {openSubDialog && (
+            {isOpenConfirmDialog && (
                 <CustomDialog
-                    type={subDialogType}
+                    type={confirmDialogType}
                     cardId={groupId}
                     whatDelete="group"
-                    open={openSubDialog}
+                    open={isOpenConfirmDialog}
                     onClose={acceptConfirmDialog}
                 />
             )}
-            {addStudentDialog && (
+            {isOpenAddStudentDialog && (
                 <AddStudentDialog
-                    open={addStudentDialog}
+                    open={isOpenAddStudentDialog}
                     onSubmit={studentSubmit}
                     onSetSelectedCard={selectStudentCard}
                 />
             )}
-            {showStudents && (
+            {isOpenShowStudentsDialog && (
                 <ShowStudentsOnGroupDialog
                     onClose={onCloseShowStudents}
-                    open={showStudents}
+                    open={isOpenShowStudentsDialog}
                     students={students}
                     group={group}
                     onDeleteStudent={onDeleteStudent}
