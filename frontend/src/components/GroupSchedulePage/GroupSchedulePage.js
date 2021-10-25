@@ -85,7 +85,7 @@ const GroupSchedulePage = (props) => {
         scheduleType !== 'archived' && (
             <GroupSchedulePageTop
                 scheduleType={scheduleType}
-                onSubmit={handleSubmit}
+                handleSubmit={handleSubmit}
                 place={place}
                 changePlace={changePlace}
             />
