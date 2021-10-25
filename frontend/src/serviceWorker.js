@@ -1,5 +1,4 @@
-/* eslint-disable no-param-reassign */
-/* eslint-disable sonarjs/cognitive-complexity */
+/* eslint-disable */
 // serviceWorker doesn't use
 const isLocalhost = Boolean(
     window.location.hostname === 'localhost' ||

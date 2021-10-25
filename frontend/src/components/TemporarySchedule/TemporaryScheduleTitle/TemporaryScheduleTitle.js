@@ -1,4 +1,4 @@
-/* eslint-disable sonarjs/cognitive-complexity */
+/* eslint-disable */
 // this functionality doesn't work
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -167,7 +167,7 @@ const TemporaryScheduleTitle = (props) => {
     return (
         <section className={classes.panel}>
             <ExpansionPanel>
-                <ExpansionPanelSummary aria-controls="panel1a-content">
+                <ExpansionPanelSummary aria-controls='panel1a-content'>
                     <Typography className={classes.heading}>
                         {t(TEMPORARY_SCHEDULE_FOR_TEACHER_TITLE)}
                     </Typography>
@@ -181,17 +181,17 @@ const TemporaryScheduleTitle = (props) => {
                     <RadioGroup className={classes.dateGroup} value={radio} onChange={handleChange}>
                         <FormControlLabel
                             value={temporaryScheduleRadioTypes.SEMESTER}
-                            control={<Radio color="primary" />}
+                            control={<Radio color='primary' />}
                             label={t(FORM_SEMESTER_LABEL)}
                         />
                         <FormControlLabel
                             value={temporaryScheduleRadioTypes.FEW_DAYS}
-                            control={<Radio color="primary" />}
+                            control={<Radio color='primary' />}
                             label={t(FEW_DAYS_LABEL)}
                         />
                         <FormControlLabel
                             value={temporaryScheduleRadioTypes.ONE_DAY}
-                            control={<Radio color="primary" />}
+                            control={<Radio color='primary' />}
                             label={t(ONE_DAY_LABEL)}
                         />
                     </RadioGroup>
@@ -200,9 +200,9 @@ const TemporaryScheduleTitle = (props) => {
                             {radio === temporaryScheduleRadioTypes.FEW_DAYS ? (
                                 <div className={classes.dateGroup}>
                                     <DatePicker
-                                        margin="normal"
+                                        margin='normal'
                                         label={t(FORM_CLASS_FROM_LABEL)}
-                                        format="DD/MM/YYYY"
+                                        format='DD/MM/YYYY'
                                         className={classes.dateField}
                                         value={
                                             fromDate ? moment(fromDate, dateFormat).toDate() : null
@@ -210,20 +210,20 @@ const TemporaryScheduleTitle = (props) => {
                                         onChange={handleFromDateChange}
                                     />
                                     <DatePicker
-                                        margin="normal"
+                                        margin='normal'
                                         className={classes.dateField}
                                         label={t(FORM_CLASS_TO_LABEL)}
-                                        format="DD/MM/YYYY"
+                                        format='DD/MM/YYYY'
                                         value={toDate ? moment(toDate, dateFormat).toDate() : null}
                                         onChange={handleToDateChange}
                                     />
                                 </div>
                             ) : (
                                 <DatePicker
-                                    margin="normal"
+                                    margin='normal'
                                     className={classes.day}
                                     label={t(DATE_LABEL)}
-                                    format="DD/MM/YYYY"
+                                    format='DD/MM/YYYY'
                                     value={day ? moment(day, dateFormat).toDate() : null}
                                     onChange={handleDayChange}
                                 />
@@ -245,16 +245,16 @@ const TemporaryScheduleTitle = (props) => {
                                     {...params}
                                     className={classes.teacherField}
                                     label={t(FORM_TEACHER_LABEL)}
-                                    margin="normal"
+                                    margin='normal'
                                 />
                             )}
                         />
                     )}
 
                     <Button
-                        variant="contained"
+                        variant='contained'
                         className={classes.button}
-                        color="primary"
+                        color='primary'
                         onClick={handleClick}
                         disabled={
                             (((!toDate || !fromDate) && !day) || !teacherId) &&
