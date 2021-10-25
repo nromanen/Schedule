@@ -13,6 +13,7 @@ import ResetPasswordForm from '../ResetPasswordForm/ResetPasswordForm';
 import { resetFormHandler } from '../../helper/formHelper';
 import { handleSnackbarOpenService } from '../../services/snackbarService';
 import { LOGIN_FORM, REGISTRATION_FORM, RESET_PASSWORD_FORM } from '../../constants/reduxForms';
+// import { GOOGLE } from '../../constants/common';
 
 import './Auth.scss';
 import {
@@ -39,6 +40,9 @@ const Auth = (props) => {
     } = props;
     const { t } = useTranslation('common');
     const history = useHistory();
+    // const url = window.document.location;
+    // const parser = new URL(url);
+
     const loginHandler = (loginData) => {
         onAuth(loginData);
         setLoadingForm(true);
@@ -82,6 +86,30 @@ const Auth = (props) => {
         onAuth(data);
         resetFormHandler(LOGIN_FORM);
     };
+
+    // let social = false;
+    // let isToken = false;
+    // let splitedParamToken = '';
+
+    // if (parser.search.length > 0) {
+    //     const params = parser.search.split('&');
+    //     if (params) {
+    //         params.forEach((param) => {
+    //             const splitedParam = param.split('=');
+    //             if (splitedParam) {
+    //                 if (splitedParam[0] === '?social' && splitedParam[1] === 'true') {
+    //                     social = true;
+    //                 }
+    //                 if (splitedParam[0] === 'token' && splitedParam[1].length > 0) {
+    //                     isToken = true;
+    //                     splitedParamToken = splitedParam;
+    //                 }
+    //             }
+    //         });
+    //     }
+    //     if (social && isToken)
+    //         socialLoginHandler({ authType: GOOGLE, token: splitedParamToken[1] });
+    // }
 
     useEffect(() => {
         if (!isEmpty(response) || !isEmpty(resetPasswordResponse)) {
