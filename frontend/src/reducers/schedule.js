@@ -26,7 +26,7 @@ const reducer = (state = initialState, action) => {
             });
         case actionTypes.SET_DEFAULT_SEMESTER:
             return assign(state, {
-                defaultSemester: action.result,
+                defaultSemester: action.payload,
             });
         case actionTypes.CHECK_AVAILABILITY_SCHEDULE:
             return assign(state, {

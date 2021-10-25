@@ -4,7 +4,6 @@ import { useHistory, useLocation } from 'react-router-dom';
 import './GroupSchedulePage.scss';
 import { CircularProgress } from '@material-ui/core';
 import { getDataFromParams } from '../../utils/urlUtils';
-import { getDefaultSemesterService } from '../../services/scheduleService';
 import GroupSchedulePageTop from '../GroupSchedulePageTop/GroupSchedulePageTop';
 import { setLoadingService } from '../../services/loadingService';
 import { links } from '../../constants/links';
@@ -13,13 +12,22 @@ import { getScheduleByType } from '../../utils/sheduleUtils';
 import { SCHEDULE_TYPES } from '../../constants/schedule/types';
 import { renderSchedule } from '../../helper/renderSchedule';
 import { submitSearchSchedule } from '../../helper/submitSearchSchedule';
+import { getDefaultSemesterRequsted } from '../../actions/schedule';
 
 const GroupSchedulePage = (props) => {
     const history = useHistory();
     const location = useLocation();
     const [place, setPlace] = useState(places.TOGETHER);
-    const { defaultSemester, scheduleType, fullSchedule, groupId, teacherId, semesterId, loading } =
-        props;
+    const {
+        defaultSemester,
+        scheduleType,
+        fullSchedule,
+        groupId,
+        teacherId,
+        semesterId,
+        loading,
+        getDefaultSemester,
+    } = props;
 
     const handleSubmit = (values) => {
         const { semester, group, teacher } = values;
@@ -47,7 +55,7 @@ const GroupSchedulePage = (props) => {
         }
     }, [teacherId]);
 
-    useEffect(() => getDefaultSemesterService(), []);
+    useEffect(() => getDefaultSemester(), []);
 
     const getSchedule = () => {
         if (scheduleType === '' && defaultSemester.id !== undefined) {
@@ -111,4 +119,9 @@ const mapStateToProps = (state) => ({
     defaultSemester: state.schedule.defaultSemester,
     semesters: state.schedule.semesters,
 });
-export default connect(mapStateToProps)(GroupSchedulePage);
+
+const mapDispatchToProps = (dispatch) => ({
+    getDefaultSemester: () => dispatch(getDefaultSemesterRequsted()),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(GroupSchedulePage);

@@ -23,7 +23,13 @@ export const getCurrentSemesterRequsted = () => {
 export const setDefaultSemester = (res) => {
     return {
         type: actionTypes.SET_DEFAULT_SEMESTER,
-        result: res,
+        payload: res,
+    };
+};
+
+export const getDefaultSemesterRequsted = () => {
+    return {
+        type: actionTypes.GET_DEFAULT_SEMESTER_REQUESTED,
     };
 };
 

@@ -25,8 +25,6 @@ import AddTeacherForm from '../../components/AddTeacherForm/AddTeacherForm';
 import { clearDepartment, getAllDepartmentsService } from '../../services/departmentService';
 import { getShortTitle } from '../../helper/shortTitle';
 import {
-    getCurrentSemesterService,
-    getDefaultSemesterService,
     sendTeachersScheduleService,
     showAllPublicSemestersService,
 } from '../../services/scheduleService';
@@ -48,7 +46,7 @@ import {
     SEND_SCHEDULE_FOR_TEACHER,
     TEACHER_DEPARTMENT,
 } from '../../constants/translationLabels/common';
-import { getCurrentSemesterRequsted } from '../../actions/schedule';
+import { getCurrentSemesterRequsted, getDefaultSemesterRequsted } from '../../actions/schedule';
 
 const TeacherList = (props) => {
     const { t } = useTranslation('common');
@@ -61,6 +59,7 @@ const TeacherList = (props) => {
         department,
         semesters,
         getCurrentSemester,
+        getDefaultSemester,
     } = props;
     const [term, setTerm] = useState('');
     const [isDisabled, setIsDisabled] = useState(false);
@@ -73,10 +72,10 @@ const TeacherList = (props) => {
 
     useEffect(() => {
         getCurrentSemester();
+        getDefaultSemester();
         showAllTeachersService();
         showAllSemestersService();
         getAllDepartmentsService();
-        getDefaultSemesterService();
         getDisabledTeachersService();
         showAllPublicSemestersService();
         getPublicClassScheduleListService();
@@ -304,6 +303,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
     getCurrentSemester: () => dispatch(getCurrentSemesterRequsted()),
+    getDefaultSemester: () => dispatch(getDefaultSemesterRequsted()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(TeacherList);

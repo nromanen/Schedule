@@ -74,19 +74,6 @@ import {
     COMMON_SCHEDULE_TITLE,
 } from '../constants/translationLabels/common';
 
-export const getDefaultSemesterService = () => {
-    axios
-        .get(DEFAULT_SEMESTER_URL)
-        .then((response) => {
-            setSemesterLoadingService(false);
-            store.dispatch(setDefaultSemester(response.data));
-        })
-        .catch(() => {
-            handleSnackbarOpenService(true, snackbarTypes.ERROR, i18n.t(NO_CURRENT_SEMESTER_ERROR));
-            setSemesterLoadingService(false);
-        });
-};
-
 export const disableDefaultSemesterService = () => {
     store.dispatch(setDefaultSemester({}));
 };
