@@ -55,21 +55,6 @@ function* fetchEnabledGroupsWorker() {
     }
 }
 
-function* deleteGroupWorker({ id }) {
-    try {
-        yield call(deleteGroupApi, id);
-        yield put(deleteGroup(id));
-        successHandler(
-            i18n.t(BACK_END_SUCCESS_OPERATION, {
-                cardType: i18n.t(FORM_GROUP_LABEL),
-                actionType: i18n.t(DELETED_LABEL),
-            }),
-        );
-    } catch (err) {
-        errorHandler(err);
-    }
-}
-
 function* createGroupWorker({ data }) {
     try {
         const res = yield call(createGroupApi, data);
@@ -103,10 +88,16 @@ function* updateGroupWorker({ data }) {
     }
 }
 
-function* clearGroupWorker() {
+function* deleteGroupWorker({ id }) {
     try {
-        yield put(clearGroup());
-        yield put(reset(GROUP_FORM));
+        yield call(deleteGroupApi, id);
+        yield put(deleteGroup(id));
+        successHandler(
+            i18n.t(BACK_END_SUCCESS_OPERATION, {
+                cardType: i18n.t(FORM_GROUP_LABEL),
+                actionType: i18n.t(DELETED_LABEL),
+            }),
+        );
     } catch (err) {
         errorHandler(err);
     }
@@ -119,6 +110,15 @@ function* toggleDisabledGroupWorker({ enabledGroup, disabledGroup }) {
         } else {
             yield call(updateGroupWorker, { data: setEnabledItem(disabledGroup) });
         }
+    } catch (err) {
+        errorHandler(err);
+    }
+}
+
+function* clearGroupWorker() {
+    try {
+        yield put(clearGroup());
+        yield put(reset(GROUP_FORM));
     } catch (err) {
         errorHandler(err);
     }

@@ -19,7 +19,6 @@ const GroupPage = (props) => {
             <NavigationPage name={navigationNames.GROUP_LIST} val={navigation.GROUPS} />
             <div className="cards-container">
                 <GroupAside
-                    match={match}
                     setTerm={setTerm}
                     isDisabled={isDisabled}
                     setIsDisabled={setIsDisabled}

@@ -9,7 +9,6 @@ import Card from '../../share/Card/Card';
 import { GROUP_FORM } from '../../constants/reduxForms';
 import renderTextField from '../../share/renderedFields/input';
 import { required, uniqueGroup, minLengthValue } from '../../validation/validateFields';
-import { links } from '../../constants/links';
 import { getClearOrCancelTitle, setDisableButton } from '../../helper/disableComponent';
 import {
     EDIT_TITLE,
@@ -21,18 +20,16 @@ import {
 
 const AddGroup = (props) => {
     const { t } = useTranslation('formElements');
-    const { handleSubmit, pristine, onReset, submitting, match, group, initialize } = props;
+    const { handleSubmit, pristine, onReset, submitting, group, initialize } = props;
 
     useEffect(() => {
-        if (group && match.url.includes(links.Edit) && !match.url.includes(links.Student)) {
-            if (group.id) {
-                initialize({
-                    id: group.id,
-                    title: group.title,
-                });
-            } else {
-                initialize();
-            }
+        if (group.id) {
+            initialize({
+                id: group.id,
+                title: group.title,
+            });
+        } else {
+            initialize();
         }
     }, [group.id]);
 

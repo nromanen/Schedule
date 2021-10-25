@@ -94,31 +94,6 @@ const GroupList = (props) => {
         goToGroupPage(history);
     };
 
-    const groupList = (
-        <div className="group-wrapper group-list">
-            {loading && (
-                <section className="centered-container">
-                    <CircularProgress />
-                </section>
-            )}
-            {!loading && visibleGroups.length === 0 ? (
-                <NotFound name={t(GROUP_Y_LABEL)} />
-            ) : (
-                visibleGroups.map((item) => (
-                    <GroupCard
-                        key={item.id}
-                        item={item}
-                        disabled={isDisabled}
-                        showCustomDialog={showCustomDialog}
-                        getGroupToUpdateForm={(id) => dispatch(selectGroup(id))}
-                        showAddStudentDialog={showAddStudentDialog}
-                        showStudentsByGroup={showStudentsByGroup}
-                    />
-                ))
-            )}
-        </div>
-    );
-
     return (
         <>
             <CustomDialog
@@ -147,7 +122,28 @@ const GroupList = (props) => {
                     groups={enabledGroups}
                 />
             )}
-            {groupList}
+            <div className="group-wrapper group-list">
+                {loading && (
+                    <section className="centered-container">
+                        <CircularProgress />
+                    </section>
+                )}
+                {!loading && visibleGroups.length === 0 ? (
+                    <NotFound name={t(GROUP_Y_LABEL)} />
+                ) : (
+                    visibleGroups.map((item) => (
+                        <GroupCard
+                            key={item.id}
+                            item={item}
+                            disabled={isDisabled}
+                            showCustomDialog={showCustomDialog}
+                            getGroupToUpdateForm={(id) => dispatch(selectGroup(id))}
+                            showAddStudentDialog={showAddStudentDialog}
+                            showStudentsByGroup={showStudentsByGroup}
+                        />
+                    ))
+                )}
+            </div>
         </>
     );
 };

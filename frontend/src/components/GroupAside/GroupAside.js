@@ -5,7 +5,7 @@ import SearchPanel from '../../share/SearchPanel/SearchPanel';
 import { asyncUpdateGroup, asyncCreateGroup, asyncClearGroup } from '../../actions/groups';
 
 const GroupAside = (props) => {
-    const { isDisabled, setIsDisabled, setTerm, match } = props;
+    const { isDisabled, setIsDisabled, setTerm } = props;
     const dispatch = useDispatch();
     const SearchChange = setTerm;
 
@@ -20,7 +20,6 @@ const GroupAside = (props) => {
             />
             {!isDisabled && (
                 <AddGroup
-                    match={match}
                     className="form"
                     onSubmit={onSubmitGroupForm}
                     onReset={() => dispatch(asyncClearGroup())}
