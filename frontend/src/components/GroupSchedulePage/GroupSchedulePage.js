@@ -4,11 +4,7 @@ import { useHistory, useLocation } from 'react-router-dom';
 import './GroupSchedulePage.scss';
 import { CircularProgress } from '@material-ui/core';
 import { getDataFromParams } from '../../utils/urlUtils';
-import {
-    getDefaultSemesterService,
-    getFullSchedule,
-    submitSearchSchedule,
-} from '../../services/scheduleService';
+import { getDefaultSemesterService, submitSearchSchedule } from '../../services/scheduleService';
 import GroupSchedulePageTop from '../GroupSchedulePageTop/GroupSchedulePageTop';
 import { setLoadingService } from '../../services/loadingService';
 import { links } from '../../constants/links';
@@ -102,18 +98,16 @@ const GroupSchedulePage = (props) => {
         </>
     );
 };
-const mapStateToProps = (state) => {
-    return {
-        scheduleType: state.schedule.scheduleType,
-        groupSchedule: state.schedule.groupSchedule,
-        fullSchedule: state.schedule.fullSchedule,
-        teacherSchedule: state.schedule.teacherSchedule,
-        groupId: state.schedule.scheduleGroupId,
-        teacherId: state.schedule.scheduleTeacherId,
-        semesterId: state.schedule.scheduleSemesterId,
-        loading: state.loadingIndicator.loading,
-        defaultSemester: state.schedule.defaultSemester,
-        semesters: state.schedule.semesters,
-    };
-};
+const mapStateToProps = (state) => ({
+    scheduleType: state.schedule.scheduleType,
+    groupSchedule: state.schedule.groupSchedule,
+    fullSchedule: state.schedule.fullSchedule,
+    teacherSchedule: state.schedule.teacherSchedule,
+    groupId: state.schedule.scheduleGroupId,
+    teacherId: state.schedule.scheduleTeacherId,
+    semesterId: state.schedule.scheduleSemesterId,
+    loading: state.loadingIndicator.loading,
+    defaultSemester: state.schedule.defaultSemester,
+    semesters: state.schedule.semesters,
+});
 export default connect(mapStateToProps)(GroupSchedulePage);

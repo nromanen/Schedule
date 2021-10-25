@@ -6,9 +6,9 @@ import { showAllPublicGroupsService } from '../../services/scheduleService';
 import SelectField from '../../share/renderedFields/select';
 
 const SemestersList = (props) => {
-    const { semesters, handleSubmit, initialValues } = props;
+    const { semesters, handleSubmit, scheduleSemesterId } = props;
     const { t } = useTranslation('common');
-    const [semesterId, setSemesterId] = useState(initialValues.semester);
+    const [semesterId, setSemesterId] = useState(scheduleSemesterId);
 
     useEffect(() => showAllPublicGroupsService(semesterId), [semesterId]);
 
