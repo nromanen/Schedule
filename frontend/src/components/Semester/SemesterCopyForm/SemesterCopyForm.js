@@ -8,18 +8,17 @@ import { useTranslation } from 'react-i18next';
 import Button from '@material-ui/core/Button';
 import { MdPlayArrow } from 'react-icons/md';
 
-import SelectField from '../../share/renderedFields/select';
+import SelectField from '../../../share/renderedFields/select';
 
 import './SemesterCopyForm.scss';
-
-import { SEMESTER_COPY_FORM } from '../../constants/reduxForms';
-import { required } from '../../validation/validateFields';
+import { SEMESTER_COPY_FORM } from '../../../constants/reduxForms';
+import { required } from '../../../validation/validateFields';
 import {
     FORM_SEMESTER_LABEL,
     FORM_SEMESTER_COPY_RED_HINT,
     FORM_SEMESTER_COPY_HINT,
-} from '../../constants/translationLabels/formElements';
-import { TEACHER_SCHEDULE_LABEL } from '../../constants/translationLabels/common';
+} from '../../../constants/translationLabels/formElements';
+import { TEACHER_SCHEDULE_LABEL } from '../../../constants/translationLabels/common';
 
 const useStyles = makeStyles((theme) => ({
     root: {

@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import React, { useEffect, useState } from 'react';
-import { isEqual } from 'lodash';
+import { isEqual, isEmpty } from 'lodash';
 import './SemesterPage.scss';
 import Button from '@material-ui/core/Button';
 import { search } from '../../helper/search';
@@ -9,9 +9,9 @@ import { search } from '../../helper/search';
 import SearchPanel from '../../share/SearchPanel/SearchPanel';
 import SnackbarComponent from '../../share/Snackbar/SnackbarComponent';
 import { handleSnackbarCloseService } from '../../services/snackbarService';
-import SemesterForm from '../../components/SemesterForm/Form';
-import SemesterItem from '../../components/SemesterForm/SemesterItem';
-import SemesterCopyForm from '../../components/SemesterCopyForm/SemesterCopyForm';
+import SemesterForm from '../../components/Semester/SemesterForm/SemesterForm';
+import SemesterItem from '../../components/Semester/SemesterItem';
+import SemesterCopyForm from '../../components/Semester/SemesterCopyForm/SemesterCopyForm';
 import {
     clearSemesterService,
     handleSemesterService,
@@ -72,7 +72,7 @@ const SemesterPage = (props) => {
     const [disabled, setDisabled] = useState(false);
     const [archived, setArchived] = useState(false);
     const [isOpenSemesterCopyForm, setIsOpenSemesterCopyForm] = useState(null);
-    const [semesterCard, setSemesterCard] = useState({ id: null, disabledStatus: null });
+    const [semesterCard, setSemesterCard] = useState(null);
     const [visibleItems, setVisibleItems] = useState([]);
     const getGroupOptions = (groupOptions) => {
         return groupOptions.map((item) => {
@@ -89,7 +89,7 @@ const SemesterPage = (props) => {
         showAllGroupsService();
         showAllSemestersService();
         getDisabledSemestersService();
-        getArchivedSemestersService();
+        // getArchivedSemestersService();
     }, []);
 
     const SearchChange = setTerm;
@@ -109,11 +109,13 @@ const SemesterPage = (props) => {
         const semesterGroups = selected.map((group) => {
             return { id: group.id, title: group.label };
         });
-        handleSemesterService({ ...values, semesterGroups });
+        handleSemesterService({ ...values, semester_groups: semesterGroups });
+        setSelectedGroups([]);
     };
     const resetSemesterForm = () => {
         setSelectedGroups([]);
         clearSemesterService();
+        if (!semester.id) setSelected([]);
     };
 
     const closeSemesterCopyForm = () => {
@@ -156,14 +158,15 @@ const SemesterPage = (props) => {
     };
     const submitSemesterCopy = (values) => {
         semesterCopy({
-            fromSemesterId: +semesterCard.id,
+            fromSemesterId: +semesterCard,
             toSemesterId: +values.toSemesterId,
         });
         setIsOpenSemesterCopyForm(null);
     };
     const onChangeGroups = () => {
-        const beginGroups =
-            semester.semester_groups !== undefined ? getGroupOptions(semester.semester_groups) : [];
+        const beginGroups = !isEmpty(semester.semester_groups)
+            ? getGroupOptions(semester.semester_groups)
+            : [];
         const finishGroups = [...semesterOptions];
         if (isEqual(beginGroups, finishGroups)) {
             successHandler(
@@ -174,7 +177,7 @@ const SemesterPage = (props) => {
             );
             return;
         }
-        setGroupsToSemester(semesterCard.id, semesterOptions);
+        setGroupsToSemester(semesterCard, semesterOptions);
         setOpenGroupsDialog(false);
     };
 
@@ -227,10 +230,15 @@ const SemesterPage = (props) => {
                             selected={selected}
                             setSelected={setSelected}
                             className="form"
+                            options={options}
                             onSubmit={submitSemesterForm}
                             onReset={resetSemesterForm}
                             classScheduler={classScheduler}
                             semester={edit ? semester : {}}
+                            semesterOptions={semesterOptions}
+                            setSemesterOptions={setSemesterOptions}
+                            groups={groups}
+
                         />
                     )}
                 </aside>

@@ -1,22 +1,22 @@
 import * as moment from 'moment';
-import { connect } from 'react-redux';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Field, reduxForm } from 'redux-form';
 import Button from '@material-ui/core/Button';
+import { isNil } from 'lodash';
 import './SemesterForm.scss';
-import { isEmpty, isNull } from 'lodash';
-import renderCheckboxField from '../../share/renderedFields/checkbox';
-import renderTextField from '../../share/renderedFields/input';
-import renderMonthPicker from '../../share/renderedFields/timeSemester';
+import renderCheckboxField from '../../../share/renderedFields/checkbox';
+import renderTextField from '../../../share/renderedFields/input';
+import renderMonthPicker from '../../../share/renderedFields/timeSemester';
+import { MultiselectForGroups } from '../../../helper/MultiselectForGroups';
 import {
     required,
     minYearValue,
     lessThanDate,
     greaterThanDate,
-} from '../../validation/validateFields';
-import { getClearOrCancelTitle, setDisableButton } from '../../helper/disableComponent';
-import Card from '../../share/Card/Card';
+} from '../../../validation/validateFields';
+import { getClearOrCancelTitle, setDisableButton } from '../../../helper/disableComponent';
+import Card from '../../../share/Card/Card';
 import {
     COMMON_EDIT,
     COMMON_CREATE,
@@ -31,11 +31,11 @@ import {
     COMMON_DAYS_LABEL,
     COMMON_CLASS_SCHEDULE_MANAGEMENT_TITLE,
     COMMON_SAVE_BUTTON_LABEL,
-} from '../../constants/translationLabels/common';
-import { SEMESTER_FORM } from '../../constants/reduxForms';
-import { daysUppercase } from '../../constants/schedule/days';
-import { dateFormat } from '../../constants/formats';
-import { getToday, getTomorrow } from '../../utils/formUtils';
+} from '../../../constants/translationLabels/common';
+import { SEMESTER_FORM } from '../../../constants/reduxForms';
+import { daysUppercase } from '../../../constants/schedule/days';
+import { dateFormat } from '../../../constants/formats';
+import { getToday, getTomorrow } from '../../../utils/formUtils';
 
 const weekDays = daysUppercase.reduce((init, item) => {
     const isCheckedDays = init;
@@ -43,10 +43,16 @@ const weekDays = daysUppercase.reduce((init, item) => {
     return isCheckedDays;
 }, {});
 
-const createClasslabel = (classScheduler, classItem) => {
-    const item = classScheduler.find((schedule) => schedule.id === +classItem);
+const createClasslabel = (lessons, classItem) => {
+    const item = lessons.find((lesson) => lesson.id === +classItem);
     return `${item.class_name} (${item.startTime}-${item.endTime})`;
 };
+const getGroupOptions = (groupOptions) => {
+    return groupOptions.map((item) => {
+        return { id: item.id, value: item.id, label: `${item.title}` };
+    });
+};
+
 const SemesterForm = (props) => {
     const { t } = useTranslation('formElements');
     const {
@@ -57,12 +63,12 @@ const SemesterForm = (props) => {
         semester,
         selected,
         setSelected,
-        openDialogForGroup,
         classScheduler,
         initialize,
         change,
         selectedGroups,
-        isChosenGroup,
+        setSelectedGroups,
+        groups,
     } = props;
 
     const prepSetCheckedClasses = classScheduler.reduce((init, item) => {
@@ -80,6 +86,7 @@ const SemesterForm = (props) => {
     const [startTime] = useState(getToday());
     const [finishTime, setFinishTime] = useState(getTomorrow());
     const [disabledFinishDate, setDisabledFinishDate] = useState(true);
+    const [openGroupDialog, setOpenGroupDialog] = useState(false);
 
     const clearCheckboxes = () => {
         setCheckedClasses(prepSetCheckedClasses);
@@ -88,9 +95,10 @@ const SemesterForm = (props) => {
         setCheckedDates(weekDays);
     };
     useEffect(() => {
-        const semesterItem = semester;
+        let semesterItem = {};
         clearCheckboxes();
         if (semester.id) {
+            semesterItem = semester;
             const newDays = {};
             const newClasses = {};
             semesterItem.semester_days.forEach((item) => {
@@ -118,14 +126,30 @@ const SemesterForm = (props) => {
         }
         initialize(semesterItem);
     }, [semester]);
-    const getDisabledSaveButton = () => {
-        if (!isEmpty(semester) && !isNull(semester.id)) {
-            return (
-                (selectedGroups.length > 0 ? !isChosenGroup() : selected.length === 0) &&
-                (pristine || submitting)
-            );
+
+    useEffect(() => {
+        const { semester_groups: semesterGroups } = semester;
+        if (!isNil(semesterGroups)) {
+            setSelectedGroups(getGroupOptions(semesterGroups));
         }
-        return pristine || submitting;
+    }, [semester.id]);
+
+    const options =
+        selectedGroups.length === 0
+            ? getGroupOptions(groups)
+            : getGroupOptions(groups.filter((x) => !selectedGroups.includes(x)));
+    const openDialogForGroup = () => {
+        setOpenGroupDialog(true);
+    };
+    const closeDialogForGroup = () => {
+        setOpenGroupDialog(false);
+    };
+    const clearSelection = () => {
+        setSelected([]);
+    };
+    const onCancel = () => {
+        clearSelection();
+        closeDialogForGroup();
     };
     const setMinFinishDate = (time) => {
         const newDate = moment(time, dateFormat).add(1, 'd');
@@ -177,6 +201,14 @@ const SemesterForm = (props) => {
                 {semester.id ? t(COMMON_EDIT) : t(COMMON_CREATE)}
                 {` ${t(COMMON_SEMESTER)}`}
             </h2>
+            <MultiselectForGroups
+                open={openGroupDialog}
+                options={options}
+                value={selectedGroups.length === 0 ? selected : selectedGroups}
+                onChange={selectedGroups.length === 0 ? setSelected : setSelectedGroups}
+                onCancel={onCancel}
+                onClose={closeDialogForGroup}
+            />
             <form onSubmit={handleSubmit}>
                 <div className="semester-checkbox group-options">
                     <div>
@@ -270,7 +302,7 @@ const SemesterForm = (props) => {
                         variant="contained"
                         color="primary"
                         className="buttons-style "
-                        disabled={getDisabledSaveButton()}
+                        disabled={(pristine || submitting) && selected.length === 0}
                         type="submit"
                     >
                         {t(COMMON_SAVE_BUTTON_LABEL)}
@@ -281,11 +313,10 @@ const SemesterForm = (props) => {
                         className="buttons-style"
                         disabled={
                             setDisableButton(pristine, submitting, semester.id) &&
-                            selected?.length === 0
+                            selected.length === 0
                         }
                         onClick={() => {
                             onReset();
-                            setSelected([]);
                         }}
                     >
                         {getClearOrCancelTitle(semester.id, t)}

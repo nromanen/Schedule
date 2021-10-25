@@ -87,12 +87,12 @@ export const getArchivedSemestersService = () => {
         })
         .catch((err) => errorHandler(err));
 };
-
+//need to refactor
 const setSemester = (resp) => {
     store.dispatch(updateSemester(resp));
     selectSemesterService(null);
     getDisabledSemestersService();
-    getArchivedSemestersService();
+    // getArchivedSemestersService();
     showAllSemestersService();
     resetFormHandler(SEMESTER_FORM);
     successHandler(
@@ -182,7 +182,6 @@ const postSemester = (data) => {
     axios
         .post(SEMESTERS_URL, data)
         .then((response) => {
-            console.log(response.data);
             store.dispatch(addSemester(response.data));
             resetFormHandler(SEMESTER_FORM);
             successHandler(
