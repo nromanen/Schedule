@@ -1,6 +1,5 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { connect } from 'react-redux';
 import { Field } from 'redux-form';
 import { FORM_TEACHER_LABEL } from '../../constants/translationLabels/formElements';
 import { getTeacherFullName } from '../../helper/renderTeacher';
@@ -30,10 +29,4 @@ const TeachersList = (props) => {
     );
 };
 
-const mapStateToProps = (state) => {
-    return {
-        teachers: state.teachers.teachers,
-    };
-};
-
-export default connect(mapStateToProps)(TeachersList);
+export default TeachersList;

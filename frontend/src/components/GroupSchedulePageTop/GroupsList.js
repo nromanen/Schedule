@@ -1,7 +1,6 @@
 import { isEmpty } from 'lodash';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { connect } from 'react-redux';
 import { Field } from 'redux-form';
 import { FORM_GROUP_LABEL } from '../../constants/translationLabels/formElements';
 import SelectField from '../../share/renderedFields/select';
@@ -32,10 +31,4 @@ const GroupsList = (props) => {
     );
 };
 
-const mapStateToProps = (state) => {
-    return {
-        groups: state.groups.groups,
-    };
-};
-
-export default connect(mapStateToProps)(GroupsList);
+export default GroupsList;

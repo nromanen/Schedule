@@ -32,9 +32,7 @@ const GroupSchedulePage = (props) => {
         submitSearchSchedule(values, history);
         history.push(`${links.ScheduleFor}?semester=${semester}${groupPath}${teacherPath}`);
     };
-    useEffect(() => {
-        getFullSchedule();
-    }, [place]);
+
     useEffect(() => {
         if (scheduleType === 'full' && fullSchedule.length === 0) {
             getScheduleByType()[SCHEDULE_TYPES.FULL]();

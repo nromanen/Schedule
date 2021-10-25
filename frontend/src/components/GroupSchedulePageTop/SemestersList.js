@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { connect } from 'react-redux';
 import { Field } from 'redux-form';
 import { FORM_SEMESTER_LABEL } from '../../constants/translationLabels/formElements';
 import { showAllPublicGroupsService } from '../../services/scheduleService';
@@ -38,13 +37,4 @@ const SemestersList = (props) => {
     return null;
 };
 
-const mapStateToProps = (state) => {
-    return {
-        semesters: state.schedule.semesters,
-        initialValues: {
-            semester: state.schedule.scheduleSemesterId,
-        },
-    };
-};
-
-export default connect(mapStateToProps)(SemestersList);
+export default SemestersList;

@@ -2,17 +2,14 @@ import { Button } from '@material-ui/core';
 import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdPlayArrow } from 'react-icons/md';
-import { connect } from 'react-redux';
-import { reduxForm } from 'redux-form';
-import { SCHEDULE_SEARCH_FORM } from '../../constants/reduxForms';
 import { TEACHER_SCHEDULE_LABEL } from '../../constants/translationLabels/common';
 import {
     showAllPublicSemestersService,
     showAllPublicTeachersService,
 } from '../../services/scheduleService';
-import GroupsList from './GroupsList';
-import SemestersList from './SemestersList';
-import TeachersList from './TeachersList';
+import GroupsList from '../../containers/GroupSchedulePageTop/GroupsList';
+import SemestersList from '../../containers/GroupSchedulePageTop/SemestersList';
+import TeachersList from '../../containers/GroupSchedulePageTop/TeachersList';
 
 const SchedulePageForm = (props) => {
     const {
@@ -55,14 +52,4 @@ const SchedulePageForm = (props) => {
     );
 };
 
-const mapStateToProps = (state) => ({
-    semester: state.schedule.scheduleSemesterId,
-    group: state.schedule.scheduleGroupId,
-    teacher: state.schedule.scheduleTeacherId,
-});
-
-export default connect(mapStateToProps)(
-    reduxForm({
-        form: SCHEDULE_SEARCH_FORM,
-    })(SchedulePageForm),
-);
+export default SchedulePageForm;
