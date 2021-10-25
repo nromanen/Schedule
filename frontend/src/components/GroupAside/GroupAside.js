@@ -1,16 +1,20 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
 import AddGroup from '../AddGroupForm/AddGroupForm';
 import SearchPanel from '../../share/SearchPanel/SearchPanel';
-import { asyncUpdateGroup, asyncCreateGroup, asyncClearGroup } from '../../actions/groups';
 
 const GroupAside = (props) => {
-    const { isDisabled, setIsDisabled, setTerm } = props;
-    const dispatch = useDispatch();
+    const {
+        asyncCreateGroup,
+        asyncUpdateGroup,
+        asyncClearGroup,
+        setIsDisabled,
+        isDisabled,
+        setTerm,
+    } = props;
     const SearchChange = setTerm;
 
     const onSubmitGroupForm = (data) => {
-        return !data.id ? dispatch(asyncCreateGroup(data)) : dispatch(asyncUpdateGroup(data));
+        return !data.id ? asyncCreateGroup(data) : asyncUpdateGroup(data);
     };
     return (
         <aside className="search-list__panel">
@@ -22,7 +26,7 @@ const GroupAside = (props) => {
                 <AddGroup
                     className="form"
                     onSubmit={onSubmitGroupForm}
-                    onReset={() => dispatch(asyncClearGroup())}
+                    onReset={() => asyncClearGroup()}
                 />
             )}
         </aside>

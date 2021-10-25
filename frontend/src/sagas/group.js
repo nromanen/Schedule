@@ -30,11 +30,13 @@ import {
     clearGroup,
     addGroup,
 } from '../actions';
+import { DISABLED_GROUPS_URL, GROUP_URL } from '../constants/axios';
+import { axiosCall } from '../services/axios';
 
 function* fetchDisabledGroupsWorker() {
     try {
         yield put(setLoading(true));
-        const res = yield call(getDisabledGroupsApi);
+        const res = yield call(axiosCall, DISABLED_GROUPS_URL, 'GET');
         yield put(setDisabledGroups(res.data.sort((a, b) => sortGroup(a, b))));
     } catch (err) {
         errorHandler(err);
@@ -57,7 +59,7 @@ function* fetchEnabledGroupsWorker() {
 
 function* createGroupWorker({ data }) {
     try {
-        const res = yield call(createGroupApi, data);
+        const res = yield call(axiosCall, GROUP_URL, 'POST', data);
         yield put(addGroup(res.data));
         yield put(reset(GROUP_FORM));
         successHandler(
@@ -104,6 +106,7 @@ function* deleteGroupWorker({ id }) {
 }
 
 function* toggleDisabledGroupWorker({ enabledGroup, disabledGroup }) {
+    debugger
     try {
         if (enabledGroup) {
             yield call(updateGroupWorker, { data: setDisabledItem(enabledGroup) });

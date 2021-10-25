@@ -1,6 +1,5 @@
 import '../../router/Router.scss';
 import React, { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom/cjs/react-router-dom';
 import { CircularProgress } from '@material-ui/core';
@@ -21,21 +20,26 @@ import {
     deleteStudentService,
     updateStudentService,
 } from '../../services/studentService';
-import {
-    asyncFetchDisabledGroups,
-    asyncFetchEnabledGroups,
-    asyncDeleteGroup,
-    asyncToggleGroup,
-    selectGroup,
-} from '../../actions/groups';
 
 const GroupList = (props) => {
-    const { disabledGroups, enabledGroups, students, loading, student, match, term, isDisabled } =
-        props;
+    const {
+        asyncFetchDisabledGroups,
+        asyncFetchEnabledGroups,
+        asyncDeleteGroup,
+        asyncToggleGroup,
+        disabledGroups,
+        enabledGroups,
+        selectGroup,
+        students,
+        loading,
+        student,
+        match,
+        term,
+        isDisabled,
+    } = props;
     const history = useHistory();
-    const dispatch = useDispatch();
     const { t } = useTranslation('formElements');
-
+    
     const [group, setGroup] = useState();
     const [groupId, setGroupId] = useState(-1);
     const [subDialogType, setSubDialogType] = useState('');
@@ -44,10 +48,10 @@ const GroupList = (props) => {
     const [openAddStudentDialog, setAddStudentDialog] = useState(false);
 
     useEffect(() => {
-        dispatch(asyncFetchEnabledGroups());
+        asyncFetchEnabledGroups();
     }, []);
     useEffect(() => {
-        dispatch(asyncFetchDisabledGroups());
+        asyncFetchDisabledGroups();
     }, [isDisabled]);
 
     const visibleGroups = isDisabled
@@ -57,7 +61,7 @@ const GroupList = (props) => {
     const changeGroupDisabledStatus = (currentGroupId) => {
         const disabledGroup = disabledGroups.find((groupItem) => groupItem.id === currentGroupId);
         const enabledGroup = enabledGroups.find((groupItem) => groupItem.id === currentGroupId);
-        dispatch(asyncToggleGroup(enabledGroup, disabledGroup));
+        asyncToggleGroup(enabledGroup, disabledGroup);
     };
     const showCustomDialog = (currentId, disabledStatus) => {
         setGroupId(currentId);
@@ -68,7 +72,7 @@ const GroupList = (props) => {
         setOpenSubDialog(false);
         if (subDialogType !== dialogTypes.DELETE_CONFIRM) {
             changeGroupDisabledStatus(currentGroupId);
-        } else dispatch(asyncDeleteGroup(currentGroupId));
+        } else asyncDeleteGroup(currentGroupId);
     };
 
     const showAddStudentDialog = (currentGroupId) => {
@@ -137,7 +141,7 @@ const GroupList = (props) => {
                             item={item}
                             disabled={isDisabled}
                             showCustomDialog={showCustomDialog}
-                            getGroupToUpdateForm={(id) => dispatch(selectGroup(id))}
+                            getGroupToUpdateForm={(id) => selectGroup(id)}
                             showAddStudentDialog={showAddStudentDialog}
                             showStudentsByGroup={showStudentsByGroup}
                         />

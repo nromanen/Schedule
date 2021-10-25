@@ -1,25 +1,12 @@
 import * as actionTypes from './actionsType';
 
-export const selectGroup = (res) => {
-    return {
-        type: actionTypes.SELECT_GROUP,
-        result: res,
-    };
-};
-
-export const clearGroup = () => ({
-    type: actionTypes.CLEAR_GROUP,
-});
-
-// done
-
 export const addGroup = (res) => {
     return {
         type: actionTypes.ADD_GROUP,
         result: res,
     };
 };
-
+// sucsees
 export const updateGroup = (res) => {
     return {
         type: actionTypes.UPDATE_GROUP,
@@ -48,6 +35,17 @@ export const deleteGroup = (res) => {
     };
 };
 
+export const selectGroup = (res) => {
+    return {
+        type: actionTypes.SELECT_GROUP,
+        result: res,
+    };
+};
+
+export const clearGroup = () => ({
+    type: actionTypes.CLEAR_GROUP,
+});
+
 // saga new
 
 export const asyncFetchDisabledGroups = () => ({
@@ -67,7 +65,7 @@ export const asyncCreateGroup = (data) => ({
     type: actionTypes.ASYNC_CREATE_GROUP,
     data,
 });
-
+// start
 export const asyncUpdateGroup = (data) => ({
     type: actionTypes.ASYNC_UPDATE_GROUP,
     data,

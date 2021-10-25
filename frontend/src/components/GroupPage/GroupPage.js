@@ -19,12 +19,13 @@ const GroupPage = (props) => {
             <NavigationPage name={navigationNames.GROUP_LIST} val={navigation.GROUPS} />
             <div className="cards-container">
                 <GroupAside
+                    {...rest}
                     setTerm={setTerm}
                     isDisabled={isDisabled}
                     setIsDisabled={setIsDisabled}
                 />
                 <div className="group-wrapper group-list">
-                    <GroupList term={term} isDisabled={isDisabled} {...rest} />
+                    <GroupList match={match} term={term} isDisabled={isDisabled} {...rest} />
                 </div>
             </div>
             <SnackbarComponent
