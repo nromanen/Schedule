@@ -6,7 +6,7 @@ export const addGroup = (res) => {
         result: res,
     };
 };
-// sucsees
+
 export const updateGroup = (res) => {
     return {
         type: actionTypes.UPDATE_GROUP,
@@ -48,35 +48,35 @@ export const clearGroup = () => ({
 
 // saga new
 
-export const asyncFetchDisabledGroups = () => ({
+export const startFetchDisabledGroups = () => ({
     type: actionTypes.FETCH_DISABLED_GROUPS,
 });
 
-export const asyncFetchEnabledGroups = () => ({
+export const startFetchEnabledGroups = () => ({
     type: actionTypes.FETCH_ENABLED_GROUPS,
 });
 
-export const asyncDeleteGroup = (id) => ({
+export const startDeleteGroup = (id) => ({
     type: actionTypes.ASYNC_DELETE_GROUP,
     id,
 });
 
-export const asyncCreateGroup = (data) => ({
+export const startCreateGroup = (data) => ({
     type: actionTypes.ASYNC_CREATE_GROUP,
     data,
 });
-// start
-export const asyncUpdateGroup = (data) => ({
+
+export const startUpdateGroup = (data) => ({
     type: actionTypes.ASYNC_UPDATE_GROUP,
     data,
 });
 
-export const asyncClearGroup = (data) => ({
+export const startClearGroup = (data) => ({
     type: actionTypes.ASYNC_CLEAR_GROUP,
     data,
 });
 
-export const asyncToggleGroup = (enabledGroup, disabledGroup) => ({
+export const startToggleGroup = (enabledGroup, disabledGroup) => ({
     type: actionTypes.ASYNC_TOGGLE_DISABLED_GROUP,
     disabledGroup,
     enabledGroup,

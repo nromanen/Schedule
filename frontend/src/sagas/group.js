@@ -1,9 +1,9 @@
 import { call, takeEvery, put } from 'redux-saga/effects';
 import { reset } from 'redux-form';
-import * as actionTypes from '../actions/actionsType';
 import i18n from '../i18n';
 import { sortGroup } from '../helper/sortGroup';
 import { GROUP_FORM } from '../constants/reduxForms';
+import * as actionTypes from '../actions/actionsType';
 import { setLoading } from '../actions/loadingIndicator';
 import { errorHandler, successHandler } from '../helper/handlerAxios';
 import { FORM_GROUP_LABEL } from '../constants/translationLabels/formElements';
@@ -14,13 +14,6 @@ import {
     CREATED_LABEL,
     DELETED_LABEL,
 } from '../constants/translationLabels/serviceMessages';
-import {
-    getDisabledGroupsApi,
-    getEnabledGroupsApi,
-    deleteGroupApi,
-    createGroupApi,
-    updateGroupApi,
-} from '../services/group';
 import {
     setDisabledGroups,
     showAllGroups,
@@ -48,7 +41,7 @@ function* fetchDisabledGroupsWorker() {
 function* fetchEnabledGroupsWorker() {
     try {
         yield put(setLoading(true));
-        const res = yield call(getEnabledGroupsApi);
+        const res = yield call(axiosCall, GROUP_URL, 'GET');
         yield put(showAllGroups(res.data.sort((a, b) => sortGroup(a, b))));
     } catch (err) {
         errorHandler(err);
@@ -75,7 +68,7 @@ function* createGroupWorker({ data }) {
 
 function* updateGroupWorker({ data }) {
     try {
-        const res = yield call(updateGroupApi, data);
+        const res = yield call(axiosCall, GROUP_URL, 'PUT', data);
         yield put(updateGroup(res.data));
         yield put(selectGroup(null));
         yield put(reset(GROUP_FORM));
@@ -92,7 +85,7 @@ function* updateGroupWorker({ data }) {
 
 function* deleteGroupWorker({ id }) {
     try {
-        yield call(deleteGroupApi, id);
+        yield call(axiosCall, `${GROUP_URL}/${id}`, 'DELETE');
         yield put(deleteGroup(id));
         successHandler(
             i18n.t(BACK_END_SUCCESS_OPERATION, {
@@ -106,7 +99,6 @@ function* deleteGroupWorker({ id }) {
 }
 
 function* toggleDisabledGroupWorker({ enabledGroup, disabledGroup }) {
-    debugger
     try {
         if (enabledGroup) {
             yield call(updateGroupWorker, { data: setDisabledItem(enabledGroup) });

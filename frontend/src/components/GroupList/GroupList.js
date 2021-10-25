@@ -23,10 +23,10 @@ import {
 
 const GroupList = (props) => {
     const {
-        asyncFetchDisabledGroups,
-        asyncFetchEnabledGroups,
-        asyncDeleteGroup,
-        asyncToggleGroup,
+        startFetchDisabledGroups,
+        startFetchEnabledGroups,
+        startDeleteGroup,
+        startToggleGroup,
         disabledGroups,
         enabledGroups,
         selectGroup,
@@ -48,10 +48,10 @@ const GroupList = (props) => {
     const [openAddStudentDialog, setAddStudentDialog] = useState(false);
 
     useEffect(() => {
-        asyncFetchEnabledGroups();
+        startFetchEnabledGroups();
     }, []);
     useEffect(() => {
-        asyncFetchDisabledGroups();
+        startFetchDisabledGroups();
     }, [isDisabled]);
 
     const visibleGroups = isDisabled
@@ -61,7 +61,7 @@ const GroupList = (props) => {
     const changeGroupDisabledStatus = (currentGroupId) => {
         const disabledGroup = disabledGroups.find((groupItem) => groupItem.id === currentGroupId);
         const enabledGroup = enabledGroups.find((groupItem) => groupItem.id === currentGroupId);
-        asyncToggleGroup(enabledGroup, disabledGroup);
+        startToggleGroup(enabledGroup, disabledGroup);
     };
     const showCustomDialog = (currentId, disabledStatus) => {
         setGroupId(currentId);
@@ -72,7 +72,7 @@ const GroupList = (props) => {
         setOpenSubDialog(false);
         if (subDialogType !== dialogTypes.DELETE_CONFIRM) {
             changeGroupDisabledStatus(currentGroupId);
-        } else asyncDeleteGroup(currentGroupId);
+        } else startDeleteGroup(currentGroupId);
     };
 
     const showAddStudentDialog = (currentGroupId) => {

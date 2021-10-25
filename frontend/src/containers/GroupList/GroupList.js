@@ -1,13 +1,13 @@
 import { connect } from 'react-redux';
 import GroupPage from '../../components/GroupPage/GroupPage';
 import {
-    asyncFetchDisabledGroups,
-    asyncFetchEnabledGroups,
-    asyncDeleteGroup,
-    asyncToggleGroup,
-    asyncCreateGroup,
-    asyncUpdateGroup,
-    asyncClearGroup,
+    startFetchDisabledGroups,
+    startFetchEnabledGroups,
+    startDeleteGroup,
+    startToggleGroup,
+    startCreateGroup,
+    startUpdateGroup,
+    startClearGroup,
     selectGroup,
 } from '../../actions/groups';
 
@@ -23,13 +23,15 @@ const mapStateToProps = (state) => ({
     group: state.groups.group,
 });
 
-export default connect(mapStateToProps, {
-    asyncFetchDisabledGroups,
-    asyncFetchEnabledGroups,
-    asyncDeleteGroup,
-    asyncToggleGroup,
-    asyncCreateGroup,
-    asyncUpdateGroup,
-    asyncClearGroup,
+const mapDispatchToProps = {
+    startFetchDisabledGroups,
+    startFetchEnabledGroups,
+    startDeleteGroup,
+    startToggleGroup,
+    startCreateGroup,
+    startUpdateGroup,
+    startClearGroup,
     selectGroup,
-})(GroupPage);
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(GroupPage);

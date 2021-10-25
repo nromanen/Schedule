@@ -2,7 +2,7 @@ import './GroupPage.scss';
 import '../../router/Router.scss';
 import React, { useState } from 'react';
 import GroupList from '../GroupList/GroupList';
-import GroupAside from '../GroupAside/GroupAside';
+import GroupSidebar from '../GroupSidebar/GroupSidebar';
 import SnackbarComponent from '../../share/Snackbar/SnackbarComponent';
 import { navigation, navigationNames } from '../../constants/navigation';
 import { handleSnackbarCloseService } from '../../services/snackbarService';
@@ -18,7 +18,7 @@ const GroupPage = (props) => {
         <>
             <NavigationPage name={navigationNames.GROUP_LIST} val={navigation.GROUPS} />
             <div className="cards-container">
-                <GroupAside
+                <GroupSidebar
                     {...rest}
                     setTerm={setTerm}
                     isDisabled={isDisabled}

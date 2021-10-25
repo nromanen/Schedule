@@ -2,11 +2,11 @@ import React from 'react';
 import AddGroup from '../AddGroupForm/AddGroupForm';
 import SearchPanel from '../../share/SearchPanel/SearchPanel';
 
-const GroupAside = (props) => {
+const GroupSidebar = (props) => {
     const {
-        asyncCreateGroup,
-        asyncUpdateGroup,
-        asyncClearGroup,
+        startCreateGroup,
+        startUpdateGroup,
+        startClearGroup,
         setIsDisabled,
         isDisabled,
         setTerm,
@@ -14,7 +14,7 @@ const GroupAside = (props) => {
     const SearchChange = setTerm;
 
     const onSubmitGroupForm = (data) => {
-        return !data.id ? asyncCreateGroup(data) : asyncUpdateGroup(data);
+        return !data.id ? startCreateGroup(data) : startUpdateGroup(data);
     };
     return (
         <aside className="search-list__panel">
@@ -26,11 +26,11 @@ const GroupAside = (props) => {
                 <AddGroup
                     className="form"
                     onSubmit={onSubmitGroupForm}
-                    onReset={() => asyncClearGroup()}
+                    onReset={() => startClearGroup()}
                 />
             )}
         </aside>
     );
 };
 
-export default GroupAside;
+export default GroupSidebar;
