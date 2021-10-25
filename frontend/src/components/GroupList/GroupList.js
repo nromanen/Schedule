@@ -25,8 +25,8 @@ const GroupList = (props) => {
     const {
         startFetchDisabledGroups,
         startFetchEnabledGroups,
+        toggleDisabledStatus,
         startDeleteGroup,
-        startToggleGroup,
         disabledGroups,
         enabledGroups,
         selectGroup,
@@ -39,7 +39,7 @@ const GroupList = (props) => {
     } = props;
     const history = useHistory();
     const { t } = useTranslation('formElements');
-    
+
     const [group, setGroup] = useState();
     const [groupId, setGroupId] = useState(-1);
     const [subDialogType, setSubDialogType] = useState('');
@@ -51,18 +51,15 @@ const GroupList = (props) => {
         startFetchEnabledGroups();
     }, []);
     useEffect(() => {
-        startFetchDisabledGroups();
+        if (isDisabled) {
+            startFetchDisabledGroups();
+        } else {
+            startFetchEnabledGroups();
+        }
     }, [isDisabled]);
 
-    const visibleGroups = isDisabled
-        ? search(disabledGroups, term, ['title'])
-        : search(enabledGroups, term, ['title']);
+    const visibleGroups = search(enabledGroups, term, ['title']);
 
-    const changeGroupDisabledStatus = (currentGroupId) => {
-        const disabledGroup = disabledGroups.find((groupItem) => groupItem.id === currentGroupId);
-        const enabledGroup = enabledGroups.find((groupItem) => groupItem.id === currentGroupId);
-        startToggleGroup(enabledGroup, disabledGroup);
-    };
     const showCustomDialog = (currentId, disabledStatus) => {
         setGroupId(currentId);
         setSubDialogType(disabledStatus);
@@ -71,7 +68,7 @@ const GroupList = (props) => {
     const acceptConfirmDialog = (currentGroupId) => {
         setOpenSubDialog(false);
         if (subDialogType !== dialogTypes.DELETE_CONFIRM) {
-            changeGroupDisabledStatus(currentGroupId);
+            toggleDisabledStatus(currentGroupId, isDisabled);
         } else startDeleteGroup(currentGroupId);
     };
 

@@ -57,27 +57,27 @@ export const startFetchEnabledGroups = () => ({
 });
 
 export const startDeleteGroup = (id) => ({
-    type: actionTypes.ASYNC_DELETE_GROUP,
+    type: actionTypes.START_DELETE_GROUP,
     id,
 });
 
 export const startCreateGroup = (data) => ({
-    type: actionTypes.ASYNC_CREATE_GROUP,
+    type: actionTypes.START_CREATE_GROUP,
     data,
 });
 
 export const startUpdateGroup = (data) => ({
-    type: actionTypes.ASYNC_UPDATE_GROUP,
+    type: actionTypes.START_UPDATE_GROUP,
     data,
 });
 
 export const startClearGroup = (data) => ({
-    type: actionTypes.ASYNC_CLEAR_GROUP,
+    type: actionTypes.START_CLEAR_GROUP,
     data,
 });
 
-export const startToggleGroup = (enabledGroup, disabledGroup) => ({
-    type: actionTypes.ASYNC_TOGGLE_DISABLED_GROUP,
-    disabledGroup,
-    enabledGroup,
+export const toggleDisabledStatus = (groupId, disabledStatus) => ({
+    type: actionTypes.TOGGLE_DISABLED_STATUS,
+    groupId,
+    disabledStatus,
 });

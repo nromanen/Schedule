@@ -30,7 +30,7 @@ function* fetchDisabledGroupsWorker() {
     try {
         yield put(setLoading(true));
         const res = yield call(axiosCall, DISABLED_GROUPS_URL, 'GET');
-        yield put(setDisabledGroups(res.data.sort((a, b) => sortGroup(a, b))));
+        yield put(showAllGroups(res.data.sort((a, b) => sortGroup(a, b))));
     } catch (err) {
         errorHandler(err);
     } finally {
@@ -98,12 +98,12 @@ function* deleteGroupWorker({ id }) {
     }
 }
 
-function* toggleDisabledGroupWorker({ enabledGroup, disabledGroup }) {
+function* toggleDisabledGroupWorker({ groupId, disabledStatus }) {
     try {
-        if (enabledGroup) {
-            yield call(updateGroupWorker, { data: setDisabledItem(enabledGroup) });
+        if (groupId) {
+            yield call(updateGroupWorker);
         } else {
-            yield call(updateGroupWorker, { data: setEnabledItem(disabledGroup) });
+            yield call(updateGroupWorker);
         }
     } catch (err) {
         errorHandler(err);
@@ -120,11 +120,11 @@ function* clearGroupWorker() {
 }
 
 export default function* groupWatcher() {
-    yield takeEvery(actionTypes.ASYNC_TOGGLE_DISABLED_GROUP, toggleDisabledGroupWorker);
+    yield takeEvery(actionTypes.TOGGLE_DISABLED_STATUS, toggleDisabledGroupWorker);
     yield takeEvery(actionTypes.FETCH_DISABLED_GROUPS, fetchDisabledGroupsWorker);
     yield takeEvery(actionTypes.FETCH_ENABLED_GROUPS, fetchEnabledGroupsWorker);
-    yield takeEvery(actionTypes.ASYNC_DELETE_GROUP, deleteGroupWorker);
-    yield takeEvery(actionTypes.ASYNC_CREATE_GROUP, createGroupWorker);
-    yield takeEvery(actionTypes.ASYNC_UPDATE_GROUP, updateGroupWorker);
-    yield takeEvery(actionTypes.ASYNC_CLEAR_GROUP, clearGroupWorker);
+    yield takeEvery(actionTypes.START_DELETE_GROUP, deleteGroupWorker);
+    yield takeEvery(actionTypes.START_CREATE_GROUP, createGroupWorker);
+    yield takeEvery(actionTypes.START_UPDATE_GROUP, updateGroupWorker);
+    yield takeEvery(actionTypes.START_CLEAR_GROUP, clearGroupWorker);
 }

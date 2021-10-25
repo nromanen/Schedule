@@ -3,8 +3,8 @@ import GroupPage from '../../components/GroupPage/GroupPage';
 import {
     startFetchDisabledGroups,
     startFetchEnabledGroups,
+    toggleDisabledStatus,
     startDeleteGroup,
-    startToggleGroup,
     startCreateGroup,
     startUpdateGroup,
     startClearGroup,
@@ -26,8 +26,8 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = {
     startFetchDisabledGroups,
     startFetchEnabledGroups,
+    toggleDisabledStatus,
     startDeleteGroup,
-    startToggleGroup,
     startCreateGroup,
     startUpdateGroup,
     startClearGroup,
