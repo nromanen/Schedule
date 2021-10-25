@@ -83,11 +83,18 @@ const Auth = (props) => {
         resetFormHandler(RESET_PASSWORD_FORM);
     };
 
-    const socialLoginHandler = (data) => {
-        setLoadingForm(true);
-        onAuth(data);
-        resetFormHandler(LOGIN_FORM);
-    };
+    // const socialLoginHandler = (data) => {
+    //     props.setLoading(true);
+    //     if (!data.token || data.token.length < 20) {
+    //         props.setError({ login: t(BROKEN_TOKEN) });
+    //         return;
+    //     }
+    //     setAuthType(authTypes.GOOGLE);
+    //     props.onAuth(data);
+    //     resetFormHandler(LOGIN_FORM);
+    //     window.history.replaceState({}, document.title, '/');
+    //     props.setLoading(false);
+    // };
 
     // let social = false;
     // let isToken = false;
@@ -159,7 +166,6 @@ const Auth = (props) => {
                     <LoginForm
                         isLoading={isLoading}
                         loginHandler={loginHandler}
-                        socialLoginHandler={socialLoginHandler}
                         setError={setError}
                         errors={error}
                     />
