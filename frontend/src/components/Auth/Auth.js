@@ -13,6 +13,8 @@ import ResetPasswordForm from '../ResetPasswordForm/ResetPasswordForm';
 import { resetFormHandler } from '../../helper/formHelper';
 import { handleSnackbarOpenService } from '../../services/snackbarService';
 import { LOGIN_FORM, REGISTRATION_FORM, RESET_PASSWORD_FORM } from '../../constants/reduxForms';
+
+// COMMENT: The functionality for the one commented below is temporarily disabled
 // import { GOOGLE } from '../../constants/common';
 
 import './Auth.scss';
