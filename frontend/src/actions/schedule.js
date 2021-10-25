@@ -47,6 +47,13 @@ export const checkAvailabilitySchedule = (res) => {
     };
 };
 
+export const checkAvailabilityScheduleRequested = (item) => {
+    return {
+        type: actionTypes.CHECK_AVAILABILITY_SCHEDULE_REQUESTED,
+        payload: item,
+    };
+};
+
 export const setFullSchedule = (result) => {
     return {
         type: actionTypes.SET_FULL_SCHEDULE,

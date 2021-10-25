@@ -37,4 +37,4 @@ const mapDispatchToProps = (dispatch) => ({
     getDefaultSemester: () => dispatch(getDefaultSemesterRequsted()),
 });
 
-export default connect({}, mapDispatchToProps)(HomePage);
+export default connect(null, mapDispatchToProps)(HomePage);

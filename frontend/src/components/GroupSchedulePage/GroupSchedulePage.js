@@ -55,7 +55,9 @@ const GroupSchedulePage = (props) => {
         }
     }, [teacherId]);
 
-    useEffect(() => getDefaultSemester(), []);
+    useEffect(() => {
+        getDefaultSemester();
+    }, []);
 
     const getSchedule = () => {
         if (scheduleType === '' && defaultSemester.id !== undefined) {

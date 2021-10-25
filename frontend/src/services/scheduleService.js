@@ -7,7 +7,6 @@ import {
     checkAvailabilitySchedule,
     deleteItemFromSchedule,
     setCurrentSemester,
-    setDefaultSemester,
     setFullSchedule,
     setGroupSchedule,
     setItemGroupId,
@@ -24,18 +23,12 @@ import {
     setTeacherViewType,
 } from '../actions/index';
 
-import {
-    setLoadingService,
-    setScheduleLoadingService,
-    setSemesterLoadingService,
-} from './loadingService';
+import { setLoadingService, setScheduleLoadingService } from './loadingService';
 import { handleSnackbarOpenService } from './snackbarService';
 import {
     CURRENT_SEMESTER_URL,
-    DEFAULT_SEMESTER_URL,
     FULL_SCHEDULE_URL,
     GROUP_SCHEDULE_URL,
-    SCHEDULE_CHECK_AVAILABILITY_URL,
     SCHEDULE_ITEMS_URL,
     SCHEDULE_SEMESTER_ITEMS_URL,
     PUBLIC_SEMESTERS_URL,
@@ -74,10 +67,6 @@ import {
     COMMON_SCHEDULE_TITLE,
 } from '../constants/translationLabels/common';
 
-export const disableDefaultSemesterService = () => {
-    store.dispatch(setDefaultSemester({}));
-};
-
 const getScheduleItemsServiceBySemester = (semesterId) => {
     axios
         .get(`${SCHEDULE_SEMESTER_ITEMS_URL}?semesterId=${semesterId}`)
@@ -101,21 +90,6 @@ export const getScheduleItemsService = () => {
         })
         .catch(() => {
             handleSnackbarOpenService(true, snackbarTypes.ERROR, i18n.t(NO_CURRENT_SEMESTER_ERROR));
-            setLoadingService(false);
-        });
-};
-
-export const checkAvailabilityScheduleService = (item) => {
-    axios
-        .get(
-            `${SCHEDULE_CHECK_AVAILABILITY_URL}?classId=${item.periodId}&dayOfWeek=${item.dayOfWeek}&evenOdd=${item.evenOdd}&lessonId=${item.lessonId}&semesterId=${item.semesterId}`,
-        )
-        .then((response) => {
-            setLoadingService(false);
-            store.dispatch(checkAvailabilitySchedule(response.data));
-        })
-        .catch((err) => {
-            errorHandler(err);
             setLoadingService(false);
         });
 };

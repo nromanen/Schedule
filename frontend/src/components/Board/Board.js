@@ -1,10 +1,11 @@
 import React from 'react';
 import { isNil } from 'lodash';
+import { connect } from 'react-redux';
 import { colors } from '../../constants/schedule/colors';
 import { cssClasses } from '../../constants/schedule/cssClasses';
-import { checkAvailabilityScheduleService } from '../../services/scheduleService';
 import { setLoadingService } from '../../services/loadingService';
 import './Board.scss';
+import { checkAvailabilityScheduleRequested } from '../../actions/schedule';
 
 const Board = (props) => {
     const {
@@ -19,6 +20,7 @@ const Board = (props) => {
         currentSemester,
         setModalData,
         openDialog,
+        checkScheduleItemAvailability,
     } = props;
     const dayClassWeekString = 'day-class-week';
     const drop = (e) => {
@@ -44,7 +46,7 @@ const Board = (props) => {
             semesterId: currentSemester.id,
         };
 
-        checkAvailabilityScheduleService(obj);
+        checkScheduleItemAvailability(obj);
 
         setLoadingService(true);
         if (itemId) obj = { ...obj, id: itemId };
@@ -172,4 +174,8 @@ const Board = (props) => {
     );
 };
 
-export default Board;
+const mapDispatchToProps = (dispatch) => ({
+    checkScheduleItemAvailability: (item) => dispatch(checkAvailabilityScheduleRequested(item)),
+});
+
+export default connect(null, mapDispatchToProps)(Board);
