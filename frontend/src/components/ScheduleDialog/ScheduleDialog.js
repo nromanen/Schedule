@@ -76,7 +76,7 @@ const ScheduleDialog = (props) => {
                         >
                             {translation(FORM_CHOOSE_BUTTON_TITLE)}
                         </Button>
-                        <Button className="dialog-button" variant="contained" onClick={onClose}>
+                        <Button className="dialog-button" variant="contained" onClick={() => onClose()}>
                             {translation(FORM_CANCEL_BUTTON_TITLE)}
                         </Button>
                     </>
