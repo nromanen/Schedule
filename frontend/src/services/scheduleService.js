@@ -258,27 +258,24 @@ export const getFullSchedule = (semesterId) => {
 
 export const submitSearchSchedule = (values) => {
     setScheduleSemesterIdService(values.semester);
-    if (get(values, 'group') && +values.group > 0) {
+    if (values.group > 0) {
         setScheduleTypeService('group');
         setScheduleGroupIdService(values.group);
         getGroupSchedule(values.group, values.semester);
 
         return;
     }
-    if (get(values, 'teacher') && +values.teacher > 0) {
+    if (values.teacher > 0) {
         setScheduleTypeService('teacher');
         setScheduleTeacherIdService(values.teacher);
         getTeacherSchedule(values.teacher, values.semester);
         return;
     }
     if (
-        (!get(values, 'group') && !get(values, 'teacher')) ||
-        (get(values, 'group') && !get(values, 'teacher') && +values.group === 0) ||
-        (!get(values, 'group') && get(values, 'teacher') && +values.teacher === 0) ||
-        (get(values, 'group') &&
-            get(values, 'teacher') &&
-            +values.teacher === 0 &&
-            +values.group === 0)
+        (values.teacher === 0 && values.group === 0) ||
+        (!get(values, 'group') && values.teacher === 0) ||
+        (!get(values, 'teacher') && values.group === 0) ||
+        (!get(values, 'group') && !get(values, 'teacher'))
     ) {
         setScheduleTypeService('full');
         getFullSchedule(values.semester);
