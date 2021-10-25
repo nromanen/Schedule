@@ -1,41 +1,39 @@
+/* eslint-disable no-param-reassign */
+/* eslint-disable sonarjs/cognitive-complexity */
+// serviceWorker doesn't use
 const isLocalhost = Boolean(
     window.location.hostname === 'localhost' ||
         window.location.hostname === '[::1]' ||
-        window.location.hostname.match(/^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/),
+        window.location.hostname.match(/^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/)
 );
 
-const registerValidSWHelper = (installingWorker, config, registration) => {
-    const worker = installingWorker;
-    worker.onstatechange = () => {
-        if (installingWorker.state === 'installed') {
-            if (navigator.serviceWorker.controller) {
-                console.log(
-                    'New content is available and will be used when all ' +
-                        'tabs for this page are closed. See https://bit.ly/CRA-PWA.',
-                );
-                if (config && config.onUpdate) {
-                    config.onUpdate(registration);
-                }
-            } else {
-                console.log('Content is cached for offline use.');
-                if (config && config.onSuccess) {
-                    config.onSuccess(registration);
-                }
-            }
-        }
-    };
-};
 function registerValidSW(swUrl, config) {
     navigator.serviceWorker
         .register(swUrl)
         .then((registration) => {
-            const reg = registration;
-            reg.onupdatefound = () => {
+            registration.onupdatefound = () => {
                 const installingWorker = registration.installing;
                 if (installingWorker == null) {
                     return;
                 }
-                registerValidSWHelper(installingWorker, config, registration);
+                installingWorker.onstatechange = () => {
+                    if (installingWorker.state === 'installed') {
+                        if (navigator.serviceWorker.controller) {
+                            console.log(
+                                'New content is available and will be used when all ' +
+                                    'tabs for this page are closed. See https://bit.ly/CRA-PWA.'
+                            );
+                            if (config && config.onUpdate) {
+                                config.onUpdate(registration);
+                            }
+                        } else {
+                            console.log('Content is cached for offline use.');
+                            if (config && config.onSuccess) {
+                                config.onSuccess(registration);
+                            }
+                        }
+                    }
+                };
             };
         })
         .catch((error) => {
@@ -82,7 +80,7 @@ export function register(config) {
                 navigator.serviceWorker.ready.then(() => {
                     console.log(
                         'This web app is being served cache-first by a service ' +
-                            'worker. To learn more, visit https://bit.ly/CRA-PWA',
+                            'worker. To learn more, visit https://bit.ly/CRA-PWA'
                     );
                 });
             } else {

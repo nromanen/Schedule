@@ -1,4 +1,5 @@
 /* eslint-disable sonarjs/cognitive-complexity */
+// this functionality doesn't work
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
