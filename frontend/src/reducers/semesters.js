@@ -39,7 +39,7 @@ const reducer = (state = initialState, action) => {
         case actionTypes.SELECT_SEMESTER: {
             let selectSemester = state.semesters.find((semester) => semester.id === action.result);
             if (!selectSemester) {
-                selectSemester = { id: null };
+                selectSemester = {};
             }
             return updateObject(state, {
                 semester: selectSemester,

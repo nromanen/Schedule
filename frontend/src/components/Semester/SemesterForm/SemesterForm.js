@@ -68,11 +68,7 @@ const SemesterForm = (props) => {
         options,
     } = props;
 
-    const prepSetCheckedClasses = classScheduler.reduce((init, item) => {
-        const isChechedClasses = init;
-        isChechedClasses[item.id] = false;
-        return isChechedClasses;
-    }, {});
+    const prepSetCheckedClasses = {};
 
     const [startValue, setStartValue] = useState();
     const [finishValue, setFinishValue] = useState();
@@ -86,16 +82,20 @@ const SemesterForm = (props) => {
     const [openGroupDialog, setOpenGroupDialog] = useState(false);
 
     const clearCheckboxes = () => {
-        setCheckedClasses(prepSetCheckedClasses);
         setCurrent(false);
         setByDefault(false);
         setCheckedDates(weekDays);
     };
+
     useEffect(() => {
-        let semesterItem = {};
+        classScheduler.forEach((classItem) => {
+            prepSetCheckedClasses[`${classItem.id}`] = false;
+        });
+        setCheckedClasses({ ...prepSetCheckedClasses });
+        clearCheckboxes();
+        const semesterItem = { ...semester };
         clearCheckboxes();
         if (semester.id) {
-            semesterItem = semester;
             const newDays = {};
             const newClasses = {};
             semesterItem.semester_days.forEach((item) => {
@@ -122,7 +122,7 @@ const SemesterForm = (props) => {
             });
         }
         initialize(semesterItem);
-    }, [semester]);
+    }, [semester, classScheduler]);
 
     useEffect(() => {
         const { semester_groups: semesterGroups } = semester;

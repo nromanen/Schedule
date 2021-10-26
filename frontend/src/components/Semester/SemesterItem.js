@@ -40,7 +40,6 @@ const SemesterItem = (props) => {
         setOpenSubDialog,
         setIsOpenSemesterCopyForm,
         visibleItems,
-        setEdit,
         setSemesterCard,
         setOpenGroupsDialog,
     } = props;
@@ -95,7 +94,6 @@ const SemesterItem = (props) => {
                                         title={t(EDIT_TITLE)}
                                         onClick={() => {
                                             selectSemesterService(semesterItem.id);
-                                            setEdit(true);
                                         }}
                                     />
                                     <FaCopy

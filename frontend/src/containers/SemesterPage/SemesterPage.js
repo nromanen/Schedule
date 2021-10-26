@@ -65,7 +65,6 @@ const SemesterPage = (props) => {
     const [term, setTerm] = useState('');
     const [prevSelectedGroups, setPrevSelectedGroups] = useState([]);
     const [semesterOptions, setSemesterOptions] = useState([]);
-    const [edit, setEdit] = useState(false);
     const [disabled, setDisabled] = useState(false);
     const [archived, setArchived] = useState(false);
     const [isOpenSemesterCopyForm, setIsOpenSemesterCopyForm] = useState(null);
@@ -221,7 +220,7 @@ const SemesterPage = (props) => {
                             setPrevSelectedGroups={setPrevSelectedGroups}
                             className="form"
                             onSubmit={submitSemesterForm}
-                            semester={edit ? semester : {}}
+                            semester={semester}
                             semesterOptions={semesterOptions}
                             setSemesterOptions={setSemesterOptions}
                             options={options}
@@ -236,7 +235,6 @@ const SemesterPage = (props) => {
                     setOpenSubDialog={setOpenSubDialog}
                     setIsOpenSemesterCopyForm={setIsOpenSemesterCopyForm}
                     visibleItems={visibleItems}
-                    setEdit={setEdit}
                     setSemesterCard={setSemesterCard}
                     setOpenGroupsDialog={setOpenGroupsDialog}
                 />
