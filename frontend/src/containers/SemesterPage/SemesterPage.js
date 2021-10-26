@@ -64,17 +64,17 @@ const SemesterPage = (props) => {
     const [semesterId, setSemesterId] = useState(-1);
 
     const [term, setTerm] = useState('');
-    const [prevSelectedGroups, setPrevSelectedGroups] = useState([]);
+    const [selectedGroups, setSelectedGroups] = useState([]);
     const [semesterOptions, setSemesterOptions] = useState([]);
     const [disabled, setDisabled] = useState(false);
     const [archived, setArchived] = useState(false);
     const [isOpenSemesterCopyForm, setIsOpenSemesterCopyForm] = useState(null);
     const [semesterCard, setSemesterCard] = useState(null);
-    const [visibleItems, setVisibleItems] = useState([]);
-   
+
     const options = getGroupsOptionsForSelect(groups);
+
     useEffect(() => {
-        if (semester.semester_groups !== undefined && semester.semester_groups.length > 0) {
+        if (!isEmpty(semester.semester_groups)) {
             setSemesterOptions(getGroupsOptionsForSelect(semester.semester_groups));
         }
     }, [semester.id]);
@@ -82,28 +82,19 @@ const SemesterPage = (props) => {
         showAllGroupsService();
         showAllSemestersService();
         getDisabledSemestersService();
+        // dont work and swagger doesn't have a route for this service
         // getArchivedSemestersService();
     }, []);
-
-    const SearchChange = setTerm;
-
-    const cancelMultiselect = () => {
-        setSemesterOptions(getGroupsOptionsForSelect(semester.semester_groups));
-        setOpenGroupsDialog(false);
-    };
-
-    useEffect(() => {
-        if (disabled) setVisibleItems(search(disabledSemesters, term, searchArr));
-        if (archived) setVisibleItems(search(archivedSemesters, term, searchArr));
-        if (!(archived || disabled)) setVisibleItems(search(enabledSemesters, term, searchArr));
-    }, [disabled, archived, enabledSemesters]);
+    const visibleItems = disabled
+        ? search(disabledSemesters, term, searchArr)
+        : search(enabledSemesters, term, searchArr);
 
     const submitSemesterForm = (values) => {
-        const semesterGroups = prevSelectedGroups.map((group) => {
+        const semesterGroups = selectedGroups.map((group) => {
             return { id: group.id, title: group.label };
         });
         handleSemesterService({ ...values, semester_groups: semesterGroups });
-        setPrevSelectedGroups([]);
+        setSelectedGroups([]);
     };
 
     const closeSemesterCopyForm = () => {
@@ -144,6 +135,7 @@ const SemesterPage = (props) => {
         setDisabled(false);
         return !archived ? setScheduleTypeService('archived') : setScheduleTypeService('default');
     };
+
     const submitSemesterCopy = (values) => {
         semesterCopy({
             fromSemesterId: +semesterCard,
@@ -151,6 +143,7 @@ const SemesterPage = (props) => {
         });
         setIsOpenSemesterCopyForm(null);
     };
+
     const onChangeGroups = () => {
         const beginGroups = !isEmpty(semester.semester_groups)
             ? getGroupsOptionsForSelect(semester.semester_groups)
@@ -166,6 +159,10 @@ const SemesterPage = (props) => {
             return;
         }
         setGroupsToSemester(semesterCard, semesterOptions);
+        setSemesterOptions(getGroupsOptionsForSelect(semester.semester_groups));
+        setOpenGroupsDialog(false);
+    };
+    const cancelMultiselect = () => {
         setOpenGroupsDialog(false);
     };
 
@@ -207,19 +204,17 @@ const SemesterPage = (props) => {
             <div className="cards-container">
                 <aside className="search-list__panel">
                     <SearchPanel
-                        SearchChange={SearchChange}
+                        SearchChange={setTerm}
                         showDisabled={showDisabledHandle}
                         showArchived={showArchivedHandler}
                     />
                     {!(disabled || archived) && (
                         <SemesterForm
-                            prevSelectedGroups={prevSelectedGroups}
-                            setPrevSelectedGroups={setPrevSelectedGroups}
+                            selectedGroups={selectedGroups}
+                            setSelectedGroups={setSelectedGroups}
                             className="form"
                             onSubmit={submitSemesterForm}
                             semester={semester}
-                            semesterOptions={semesterOptions}
-                            setSemesterOptions={setSemesterOptions}
                             options={options}
                         />
                     )}

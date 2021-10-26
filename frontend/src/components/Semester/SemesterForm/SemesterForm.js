@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Field } from 'redux-form';
 import Button from '@material-ui/core/Button';
-import { isNil } from 'lodash';
+import { isEmpty } from 'lodash';
 import './SemesterForm.scss';
 import renderCheckboxField from '../../../share/renderedFields/checkbox';
 import renderTextField from '../../../share/renderedFields/input';
@@ -52,8 +52,8 @@ const SemesterForm = (props) => {
         classScheduler,
         initialize,
         change,
-        prevSelectedGroups,
-        setPrevSelectedGroups,
+        selectedGroups,
+        setSelectedGroups,
         options,
     } = props;
 
@@ -114,9 +114,8 @@ const SemesterForm = (props) => {
     }, [semester, classScheduler]);
 
     useEffect(() => {
-        const { semester_groups: semesterGroups } = semester;
-        if (!isNil(semesterGroups)) {
-            setPrevSelectedGroups(getGroupsOptionsForSelect(semesterGroups));
+        if (!isEmpty(semester.semester_groups)) {
+            setSelectedGroups(getGroupsOptionsForSelect(semester.semester_groups));
         }
     }, [semester.id]);
 
@@ -172,7 +171,7 @@ const SemesterForm = (props) => {
 
     const handleChange = (event, setState) => setState(event.target.checked);
     const resetSemesterForm = () => {
-        setPrevSelectedGroups([]);
+        setSelectedGroups([]);
         clearSemesterService();
     };
     return (
@@ -184,8 +183,8 @@ const SemesterForm = (props) => {
             <MultiselectForGroups
                 open={openGroupDialog}
                 options={options}
-                value={prevSelectedGroups}
-                onChange={setPrevSelectedGroups}
+                value={selectedGroups}
+                onChange={setSelectedGroups}
                 onCancel={closeDialogForGroup}
                 onClose={closeDialogForGroup}
             />
@@ -282,7 +281,7 @@ const SemesterForm = (props) => {
                         variant="contained"
                         color="primary"
                         className="buttons-style "
-                        disabled={(pristine || submitting) && prevSelectedGroups.length === 0}
+                        disabled={(pristine || submitting) && selectedGroups.length === 0}
                         type="submit"
                     >
                         {t(COMMON_SAVE_BUTTON_LABEL)}
@@ -293,7 +292,7 @@ const SemesterForm = (props) => {
                         className="buttons-style"
                         disabled={
                             setDisableButton(pristine, submitting, semester.id) &&
-                            prevSelectedGroups.length === 0
+                            selectedGroups.length === 0
                         }
                         onClick={resetSemesterForm}
                     >
