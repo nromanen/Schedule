@@ -60,6 +60,12 @@ export const checkAvailabilityScheduleRequested = (item) => {
         item,
     };
 };
+export const checkAvailabilityChangeRoomScheduleRequested = (item) => {
+    return {
+        type: actionTypes.CHECK_AVAILABILITY_CHANGE_ROOM_SCHEDULE_REQUESTED,
+        item,
+    };
+};
 
 export const setFullSchedule = (result) => {
     return {

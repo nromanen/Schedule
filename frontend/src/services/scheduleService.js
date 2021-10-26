@@ -4,14 +4,12 @@ import axios from '../helper/axios';
 import i18n from '../i18n';
 import { errorHandler, infoHandler, successHandler } from '../helper/handlerAxios';
 import {
-    checkAvailabilitySchedule,
     deleteItemFromSchedule,
     setCurrentSemester,
     setFullSchedule,
     setGroupSchedule,
     setItemGroupId,
     setScheduleGroupId,
-    setScheduleItems,
     setScheduleSemesterId,
     setScheduleTeacherId,
     setScheduleType,
@@ -23,20 +21,18 @@ import {
     setTeacherViewType,
 } from '../actions/index';
 
-import { setLoadingService, setScheduleLoadingService } from './loadingService';
+import { setLoadingService } from './loadingService';
 import { handleSnackbarOpenService } from './snackbarService';
 import {
     CURRENT_SEMESTER_URL,
     FULL_SCHEDULE_URL,
     GROUP_SCHEDULE_URL,
     SCHEDULE_ITEMS_URL,
-    SCHEDULE_SEMESTER_ITEMS_URL,
     PUBLIC_SEMESTERS_URL,
     TEACHER_SCHEDULE_URL,
     PUBLIC_TEACHER_URL,
     FOR_TEACHER_SCHEDULE_URL,
     CLEAR_SCHEDULE_URL,
-    ROOMS_AVAILABILITY,
     SCHEDULE_ITEM_ROOM_CHANGE,
     TEACHER_URL,
     SEMESTERS_URL,
@@ -73,32 +69,11 @@ export const getScheduleItemsService = () => {
         .get(CURRENT_SEMESTER_URL)
         .then((response) => {
             store.dispatch(setCurrentSemester(response.data));
-            store.dispatch(getScheduleItemsRequested(response.data.id));
+            store.dispatch(getScheduleItemsRequested(response.data.id)); // saga
             showBusyRooms(response.data.id);
         })
         .catch(() => {
             handleSnackbarOpenService(true, snackbarTypes.ERROR, i18n.t(NO_CURRENT_SEMESTER_ERROR));
-            setLoadingService(false);
-        });
-};
-
-export const checkAvailabilityChangeRoomScheduleService = (item) => {
-    axios
-        .get(
-            `${ROOMS_AVAILABILITY}?classId=${item.periodId}&dayOfWeek=${item.dayOfWeek}&evenOdd=${item.evenOdd}&semesterId=${item.semesterId}`,
-        )
-        .then((response) => {
-            setLoadingService(false);
-            store.dispatch(
-                checkAvailabilitySchedule({
-                    classSuitsToTeacher: true,
-                    teacherAvailable: true,
-                    rooms: response.data,
-                }),
-            );
-        })
-        .catch((err) => {
-            errorHandler(err);
             setLoadingService(false);
         });
 };

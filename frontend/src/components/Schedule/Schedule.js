@@ -2,6 +2,7 @@ import React, { Fragment, useEffect, useRef, useState } from 'react';
 import { IoMdMore } from 'react-icons/all';
 
 import { makeStyles } from '@material-ui/core/styles';
+import { connect } from 'react-redux';
 import Board from '../Board/Board';
 import ScheduleItem from '../ScheduleItem/ScheduleItem';
 import ScheduleDialog from '../ScheduleDialog/ScheduleDialog';
@@ -11,7 +12,6 @@ import { firstStringLetterCapital } from '../../helper/strings';
 import {
     addItemToScheduleService,
     deleteItemFromScheduleService,
-    checkAvailabilityChangeRoomScheduleService,
     editRoomItemToScheduleService,
 } from '../../services/scheduleService';
 
@@ -23,6 +23,7 @@ import { colors } from '../../constants/schedule/colors';
 import { FORM_DAY_LABEL } from '../../constants/translationLabels/formElements';
 import { CLASS_SCHEDULE, WEEK_LABEL } from '../../constants/translationLabels/common';
 import './Schedule.scss';
+import { checkAvailabilityChangeRoomScheduleRequested } from '../../actions/schedule';
 
 const Schedule = (props) => {
     const {
@@ -35,6 +36,7 @@ const Schedule = (props) => {
         rooms,
         availability,
         isLoading,
+        checkRoomAvailability,
     } = props;
     const [open, setOpen] = useState(false);
     const [itemData, setItemData] = useState(null);
@@ -152,7 +154,7 @@ const Schedule = (props) => {
             evenOdd: item.evenOdd,
             semesterId: item.lesson.semester.id,
         };
-        checkAvailabilityChangeRoomScheduleService(obj);
+        checkRoomAvailability(obj);
         setLoadingService(true);
         if (itemId) obj = { ...obj, id: itemId };
         setOpen(true);
@@ -330,4 +332,8 @@ const Schedule = (props) => {
     );
 };
 
-export default Schedule;
+const mapDispatchToProps = (dispatch) => ({
+    checkRoomAvailability: (item) => dispatch(checkAvailabilityChangeRoomScheduleRequested(item)),
+});
+
+export default connect(null, mapDispatchToProps)(Schedule);
