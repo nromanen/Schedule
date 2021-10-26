@@ -31,7 +31,6 @@ import {
     setDefaultSemesterById,
     setGroupsToSemester,
 } from '../../services/semesterService';
-import { setScheduleTypeService } from '../../services/scheduleService';
 import NavigationPage from '../../components/Navigation/NavigationPage';
 import { navigation, navigationNames } from '../../constants/navigation';
 import { MultiselectForGroups } from '../../helper/MultiselectForGroups';
@@ -64,6 +63,7 @@ import {
     COMMON_MAKE_ARCHIVE,
     COMMON_SET_ENABLED,
 } from '../../constants/translationLabels/common';
+import { setScheduleType } from '../../actions/schedule';
 
 const SemesterPage = (props) => {
     const {
@@ -75,6 +75,7 @@ const SemesterPage = (props) => {
         archivedSemesters,
         enabledSemesters,
         disabledSemesters,
+        setTypeOfSchedule,
     } = props;
     const searchArr = ['year', 'description', 'startDay', 'endDay'];
     const { t } = useTranslation('formElements');
@@ -180,7 +181,7 @@ const SemesterPage = (props) => {
     const showArchivedHandler = () => {
         setArchived(!archived);
         setDisabled(false);
-        return !archived ? setScheduleTypeService('archived') : setScheduleTypeService('default');
+        return !archived ? setTypeOfSchedule('archived') : setTypeOfSchedule('default');
     };
     const submitSemesterCopy = (values) => {
         semesterCopy({
@@ -436,4 +437,8 @@ const mapStateToProps = (state) => ({
     groups: state.groups.groups,
 });
 
-export default connect(mapStateToProps, {})(SemesterPage);
+const mapDispatchToProps = (dispatch) => ({
+    setTypeOfSchedule: (type) => dispatch(setScheduleType(type)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(SemesterPage);

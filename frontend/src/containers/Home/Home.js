@@ -4,25 +4,25 @@ import { connect } from 'react-redux';
 
 import GroupSchedulePage from '../../components/GroupSchedulePage/GroupSchedulePage';
 
-import {
-    setScheduleSemesterIdService,
-    setScheduleTypeService,
-} from '../../services/scheduleService';
 import { getPublicClassScheduleListService } from '../../services/classService';
 import { HOME_TITLE } from '../../constants/translationLabels/common';
-import { getDefaultSemesterRequsted } from '../../actions/schedule';
+import {
+    getDefaultSemesterRequsted,
+    setScheduleSemesterId,
+    setScheduleType,
+} from '../../actions/schedule';
 
 const HomePage = (props) => {
-    const { getDefaultSemester } = props;
+    const { getDefaultSemester, setSemesterId, setTypeOfSchedule } = props;
     const { t } = useTranslation('common');
 
     useEffect(() => getPublicClassScheduleListService(), []);
-    setScheduleSemesterIdService(null);
-    setScheduleTypeService('');
+    setSemesterId(null);
+    setTypeOfSchedule('');
 
     useEffect(() => {
         getDefaultSemester();
-        setScheduleTypeService('');
+        setTypeOfSchedule('');
     }, []);
 
     return (
@@ -35,6 +35,8 @@ const HomePage = (props) => {
 
 const mapDispatchToProps = (dispatch) => ({
     getDefaultSemester: () => dispatch(getDefaultSemesterRequsted()),
+    setSemesterId: (id) => dispatch(setScheduleSemesterId(id)),
+    setTypeOfSchedule: (type) => dispatch(setScheduleType(type)),
 });
 
 export default connect(null, mapDispatchToProps)(HomePage);

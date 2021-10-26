@@ -1,14 +1,15 @@
 import React, { useRef, useState } from 'react';
 
 import './Card.scss';
+import { connect } from 'react-redux';
 import { colors } from '../../constants/schedule/colors';
 
-import { setItemGroupIdService } from '../../services/scheduleService';
 import { cssClasses } from '../../constants/schedule/cssClasses';
+import { setItemGroupId } from '../../actions';
 
 // TODO: #30 Refactor Card shared component
 const Card = (props) => {
-    const { id, children, additionClassName = '', draggable = false } = props;
+    const { id, children, additionClassName = '', draggable = false, setGroupIdToItem } = props;
     const [groupId, setGroupId] = useState(0);
     const dragItemNode = useRef();
     const dragItem = useRef();
@@ -58,7 +59,7 @@ const Card = (props) => {
             });
         }, 50);
 
-        setItemGroupIdService(item.lesson.group.id);
+        setGroupIdToItem(item.lesson.group.id);
 
         dragItemNode.current = e.target;
         dragItemNode.current.addEventListener('dragend', handleDragEnd);
@@ -78,4 +79,8 @@ const Card = (props) => {
     );
 };
 
-export default Card;
+const mapDispatchToProps = (dispatch) => ({
+    setGroupIdToItem: (id) => dispatch(setItemGroupId(id)),
+});
+
+export default connect(null, mapDispatchToProps)(Card);

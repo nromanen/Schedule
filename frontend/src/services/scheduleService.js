@@ -115,6 +115,24 @@ export const deleteItemFromScheduleService = (itemId) => {
         });
 };
 
+export const clearSchedule = (semesterId) => {
+    axios
+        .delete(`${CLEAR_SCHEDULE_URL}?semesterId=${semesterId}`)
+        .then(() => {
+            getScheduleItemsService();
+            successHandler(
+                i18n.t(BACK_END_SUCCESS_OPERATION, {
+                    cardType: i18n.t(COMMON_SCHEDULE_TITLE),
+                    actionType: i18n.t(CLEARED_LABEL),
+                }),
+            );
+        })
+        .catch((err) => {
+            errorHandler(err);
+            setLoadingService(false);
+        });
+};
+
 export const getGroupSchedule = (groupId, semesterId) => {
     if (groupId > 0) {
         axios
@@ -127,18 +145,19 @@ export const getGroupSchedule = (groupId, semesterId) => {
     }
 };
 
+// ALERT GONNA BE DELETED
 export const setScheduleSemesterIdService = (semesterId) => {
     store.dispatch(setScheduleSemesterId(semesterId));
 };
-
+// ALERT GONNA BE DELETED
 export const setScheduleTypeService = (item) => {
     store.dispatch(setScheduleType(item));
 };
-
+// ALERT GONNA BE DELETED
 export const setScheduleGroupIdService = (groupId) => {
     store.dispatch(setScheduleGroupId(groupId));
 };
-
+// ALERT GONNA BE DELETED
 export const setScheduleTeacherIdService = (teacherId) => {
     store.dispatch(setScheduleTeacherId(teacherId));
 };
@@ -181,10 +200,6 @@ export const sendTeachersScheduleService = (data) => {
             );
         })
         .catch((error) => errorHandler(error));
-};
-
-export const setItemGroupIdService = (groupId) => {
-    store.dispatch(setItemGroupId(groupId));
 };
 
 export const showAllPublicSemestersService = () => {
@@ -232,10 +247,6 @@ export const showAllPublicTeachersByDepartmentService = (departmentId) => {
         .catch((err) => errorHandler(err));
 };
 
-export const clearTeacherScheduleFormService = () => {
-    resetFormHandler(TEACHER_SCHEDULE_FORM);
-};
-
 export const getTeacherScheduleService = (values) => {
     axios
         .get(
@@ -265,27 +276,5 @@ export const getTeacherScheduleByDateRangeService = (teacherId, to, from) => {
         .then(() => {})
         .catch((err) => {
             errorHandler(err);
-        });
-};
-
-export const setTeacherServiceViewType = (type) => {
-    store.dispatch(setTeacherViewType(type));
-};
-
-export const clearSchedule = (semesterId) => {
-    axios
-        .delete(`${CLEAR_SCHEDULE_URL}?semesterId=${semesterId}`)
-        .then(() => {
-            getScheduleItemsService();
-            successHandler(
-                i18n.t(BACK_END_SUCCESS_OPERATION, {
-                    cardType: i18n.t(COMMON_SCHEDULE_TITLE),
-                    actionType: i18n.t(CLEARED_LABEL),
-                }),
-            );
-        })
-        .catch((err) => {
-            errorHandler(err);
-            setLoadingService(false);
         });
 };

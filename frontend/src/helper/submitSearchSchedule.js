@@ -10,17 +10,17 @@ import {
 } from '../services/scheduleService';
 
 export const submitSearchSchedule = (values) => {
-    setScheduleSemesterIdService(values.semester);
+    setScheduleSemesterIdService(values.semester); // ALERT
     if (values.group > 0) {
-        setScheduleTypeService('group');
-        setScheduleGroupIdService(values.group);
+        setScheduleTypeService('group'); // ALERT
+        setScheduleGroupIdService(values.group); // ALERT
         getGroupSchedule(values.group, values.semester);
 
         return;
     }
     if (values.teacher > 0) {
-        setScheduleTypeService('teacher');
-        setScheduleTeacherIdService(values.teacher);
+        setScheduleTypeService('teacher'); // ALERT
+        setScheduleTeacherIdService(values.teacher); // ALERT
         getTeacherSchedule(values.teacher, values.semester);
         return;
     }
@@ -30,7 +30,7 @@ export const submitSearchSchedule = (values) => {
         (!get(values, 'teacher') && values.group === 0) ||
         (!get(values, 'group') && !get(values, 'teacher'))
     ) {
-        setScheduleTypeService('full');
+        setScheduleTypeService('full'); // ALERT
         getFullSchedule(values.semester);
     }
 };

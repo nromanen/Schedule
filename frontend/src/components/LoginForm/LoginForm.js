@@ -6,6 +6,7 @@ import { Field, reduxForm } from 'redux-form';
 import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
+import { connect } from 'react-redux';
 import Card from '../../share/Card/Card';
 import renderTextField from '../../share/renderedFields/input';
 
@@ -14,22 +15,36 @@ import { LOGIN_FORM } from '../../constants/reduxForms';
 import { required } from '../../validation/validateFields';
 import {
     setScheduleGroupIdService,
-    setScheduleSemesterIdService,
     setScheduleTeacherIdService,
-    setScheduleTypeService,
 } from '../../services/scheduleService';
 import { PASSWORD_LABEL, EMAIL_LABEL } from '../../constants/translationLabels/formElements';
 import { LOGIN_TITLE } from '../../constants/translationLabels/common';
+import {
+    setScheduleSemesterId,
+    setScheduleType,
+    setScheduleGroupId,
+    setScheduleTeacherId,
+} from '../../actions';
 
 const LoginForm = (props) => {
+    const {
+        handleSubmit,
+        loginError,
+        translation,
+        setError,
+        isLoading,
+        setSemesterId,
+        setTypeOfSchedule,
+        setGroupId,
+        setTeacherId,
+    } = props;
     useEffect(() => {
-        setScheduleSemesterIdService(0);
-        setScheduleTeacherIdService(0);
-        setScheduleGroupIdService(0);
-        setScheduleTypeService('');
+        setSemesterId(0);
+        setTeacherId(0);
+        setGroupId(0);
+        setTypeOfSchedule('');
     });
     const { t } = useTranslation('formElements');
-    const { handleSubmit, loginError, translation, setError, isLoading } = props;
 
     const error = loginError;
 
@@ -85,4 +100,11 @@ const LoginReduxForm = reduxForm({
     form: LOGIN_FORM,
 })(LoginForm);
 
-export default LoginReduxForm;
+const mapDispatchToProps = (dispatch) => ({
+    setSemesterId: (id) => dispatch(setScheduleSemesterId(id)),
+    setTypeOfSchedule: (type) => dispatch(setScheduleType(type)),
+    setGroupId: (id) => dispatch(setScheduleGroupId(id)),
+    setTeacherId: (id) => dispatch(setScheduleTeacherId(id)),
+});
+
+export default connect(null, mapDispatchToProps)(LoginReduxForm);

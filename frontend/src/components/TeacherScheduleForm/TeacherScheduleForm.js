@@ -16,7 +16,6 @@ import { required, lessThanDate, greaterThanDate } from '../../validation/valida
 import { TEACHER_SCHEDULE_FORM } from '../../constants/reduxForms';
 import renderMonthPicker from '../../share/renderedFields/timeSemester';
 import Card from '../../share/Card/Card';
-import { setTeacherServiceViewType } from '../../services/scheduleService';
 import { CLASS_FROM_LABEL, CLASS_TO_LABEL } from '../../constants/translationLabels/formElements';
 import {
     COMMON_LIST_VIEW,
@@ -25,10 +24,11 @@ import {
     FULL_SCHEDULE_LABEL,
 } from '../../constants/translationLabels/common';
 import { dateFormat } from '../../constants/formats';
+import { setTeacherViewType } from '../../actions';
 
 const TeacherScheduleForm = (props) => {
     const { t } = useTranslation('formElements');
-    const { handleSubmit, initialize } = props;
+    const { handleSubmit, initialize, setTypeOfTeacherView } = props;
     const isSchedule = false;
     // TODO check if it`s necessary here
     useEffect(() => {
@@ -70,7 +70,7 @@ const TeacherScheduleForm = (props) => {
                             variant="contained"
                             color="secondary"
                             title={t(COMMON_BLOCK_VIEW)}
-                            onClick={() => setTeacherServiceViewType('blocks-view')}
+                            onClick={() => setTypeOfTeacherView('blocks-view')}
                         >
                             <MdViewModule className="svg-btn" />
                         </Button>
@@ -79,7 +79,7 @@ const TeacherScheduleForm = (props) => {
                             variant="contained"
                             color="secondary"
                             title={t(COMMON_LIST_VIEW)}
-                            onClick={() => setTeacherServiceViewType('list-view')}
+                            onClick={() => setTypeOfTeacherView('list-view')}
                         >
                             <MdViewHeadline className="svg-btn" />
                         </Button>
@@ -94,7 +94,14 @@ const mapStateToProps = (state) => ({
     classScheduleOne: state.classActions.classScheduleOne,
 });
 
-export default connect(mapStateToProps)(
+const mapDispatchToProps = (dispatch) => ({
+    setTypeOfTeacherView: (type) => dispatch(setTeacherViewType(type)),
+});
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps,
+)(
     reduxForm({
         form: TEACHER_SCHEDULE_FORM,
     })(TeacherScheduleForm),
