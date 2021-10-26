@@ -53,21 +53,6 @@ export const getScheduleItemsService = () => {
         });
 };
 
-export const editRoomItemToScheduleService = (item) => {
-    axios
-        .put(`${SCHEDULE_ITEM_ROOM_CHANGE}?roomId=${item.roomId}&scheduleId=${item.itemId}`)
-        .then(() => {
-            successHandler(
-                i18n.t(BACK_END_SUCCESS_OPERATION, {
-                    cardType: i18n.t(COMMON_SCHEDULE_TITLE),
-                    actionType: i18n.t(UPDATED_LABEL),
-                }),
-            );
-            getScheduleItemsService();
-        })
-        .catch((err) => errorHandler(err));
-};
-
 export const deleteItemFromScheduleService = (itemId) => {
     axios
         .delete(`${SCHEDULE_ITEMS_URL}/${itemId}`)
