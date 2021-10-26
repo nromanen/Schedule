@@ -3,6 +3,7 @@ import * as actionTypes from '../../actions/actionsType';
 import { checkScheduleItemAvailability } from './checkScheduleItemAvailability';
 import { getCurrentSemester } from './getCurrentSemester';
 import { getDefaultSemester } from './getDefaultSemester';
+import { getScheduleItemsBySemester } from './getScheduleItemsBySemester';
 
 export default function* watchSchedule() {
     yield takeLatest(actionTypes.GET_CURRENT_SEMESTER_REQUESTED, getCurrentSemester);
@@ -11,4 +12,5 @@ export default function* watchSchedule() {
         actionTypes.CHECK_AVAILABILITY_SCHEDULE_REQUESTED,
         checkScheduleItemAvailability,
     );
+    yield takeLatest(actionTypes.GET_SCHEDULE_ITEMS_REQUESTED, getScheduleItemsBySemester);
 }

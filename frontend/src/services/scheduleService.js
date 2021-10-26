@@ -66,26 +66,14 @@ import {
     NO_CURRENT_SEMESTER_ERROR,
     COMMON_SCHEDULE_TITLE,
 } from '../constants/translationLabels/common';
-
-const getScheduleItemsServiceBySemester = (semesterId) => {
-    axios
-        .get(`${SCHEDULE_SEMESTER_ITEMS_URL}?semesterId=${semesterId}`)
-        .then((response) => {
-            store.dispatch(setScheduleItems(response.data));
-            setScheduleLoadingService(false);
-        })
-        .catch((err) => {
-            errorHandler(err);
-            setLoadingService(false);
-        });
-};
+import { getScheduleItemsRequested } from '../actions/schedule';
 
 export const getScheduleItemsService = () => {
     axios
         .get(CURRENT_SEMESTER_URL)
         .then((response) => {
             store.dispatch(setCurrentSemester(response.data));
-            getScheduleItemsServiceBySemester(response.data.id);
+            store.dispatch(getScheduleItemsRequested(response.data.id));
             showBusyRooms(response.data.id);
         })
         .catch(() => {

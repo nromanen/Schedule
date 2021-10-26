@@ -7,6 +7,13 @@ export const setScheduleItems = (res) => {
     };
 };
 
+export const getScheduleItemsRequested = (semesterId) => {
+    return {
+        type: actionTypes.GET_SCHEDULE_ITEMS_REQUESTED,
+        semesterId,
+    };
+};
+
 export const setCurrentSemester = (res) => {
     return {
         type: actionTypes.SET_CURRENT_SEMESTER,
@@ -50,7 +57,7 @@ export const checkAvailabilitySchedule = (res) => {
 export const checkAvailabilityScheduleRequested = (item) => {
     return {
         type: actionTypes.CHECK_AVAILABILITY_SCHEDULE_REQUESTED,
-        payload: item,
+        item,
     };
 };
 

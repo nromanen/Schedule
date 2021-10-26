@@ -6,7 +6,8 @@ import { axiosCall } from '../../services/axios';
 import i18n from '../../i18n';
 
 export function* checkScheduleItemAvailability(item) {
-    const requestUrl = `${SCHEDULE_CHECK_AVAILABILITY_URL}?classId=${item.periodId}&dayOfWeek=${item.dayOfWeek}&evenOdd=${item.evenOdd}&lessonId=${item.lessonId}&semesterId=${item.semesterId}`;
+    const { periodId, dayOfWeek, evenOdd, lessonId, semesterId } = item;
+    const requestUrl = `${SCHEDULE_CHECK_AVAILABILITY_URL}?classId=${periodId}&dayOfWeek=${dayOfWeek}&evenOdd=${evenOdd}&lessonId=${lessonId}&semesterId=${semesterId}`;
     try {
         const response = yield call(axiosCall, requestUrl);
         yield put(checkAvailabilitySchedule(response.data));
