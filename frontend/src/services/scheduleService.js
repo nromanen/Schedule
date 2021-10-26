@@ -113,18 +113,6 @@ export const clearSchedule = (semesterId) => {
         });
 };
 
-export const getGroupSchedule = (groupId, semesterId) => {
-    if (groupId > 0) {
-        axios
-            .get(`${GROUP_SCHEDULE_URL + semesterId}&groupId=${groupId}`)
-            .then((response) => {
-                store.dispatch(setGroupSchedule(response.data));
-                setLoadingService(false);
-            })
-            .catch((err) => errorHandler(err));
-    }
-};
-
 // ALERT GONNA BE DELETED
 export const setScheduleSemesterIdService = (semesterId) => {
     store.dispatch(setScheduleSemesterId(semesterId));
@@ -165,21 +153,16 @@ export const getFullSchedule = (semesterId) => {
             .catch((err) => errorHandler(err));
 };
 
-export const sendTeachersScheduleService = (data) => {
-    const teachersId = data.teachersId.map((teacherId) => `teachersId=${teacherId}`).join('&');
-    const { semesterId, language } = data;
-    axios
-        .get(`${SEND_PDF_TO_EMAIL}/semester/${semesterId}?language=${language}&${teachersId}`)
-        .then(() => {
-            setLoadingService(false);
-            successHandler(
-                i18n.t(BACK_END_SUCCESS_OPERATION, {
-                    cardType: i18n.t(FORM_SCHEDULE_LABEL),
-                    actionType: i18n.t(SERVICE_MESSAGE_SENT_LABEL),
-                }),
-            );
-        })
-        .catch((error) => errorHandler(error));
+export const getGroupSchedule = (groupId, semesterId) => {
+    if (groupId > 0) {
+        axios
+            .get(`${GROUP_SCHEDULE_URL + semesterId}&groupId=${groupId}`)
+            .then((response) => {
+                store.dispatch(setGroupSchedule(response.data));
+                setLoadingService(false);
+            })
+            .catch((err) => errorHandler(err));
+    }
 };
 
 export const getTeacherScheduleService = (values) => {

@@ -42,6 +42,12 @@ export const getAllPublicGroupsRequested = (id) => {
         id,
     };
 };
+export const sendTeacherScheduleRequested = (data) => {
+    return {
+        type: actionTypes.SEND_TEACHER_SCHEDULE_REQUESTED,
+        data,
+    };
+};
 
 export const getCurrentSemesterRequsted = () => {
     return {
