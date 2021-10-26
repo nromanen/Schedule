@@ -3,7 +3,6 @@ import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MdPlayArrow } from 'react-icons/md';
 import { TEACHER_SCHEDULE_LABEL } from '../../constants/translationLabels/common';
-import { showAllPublicSemestersService } from '../../services/scheduleService';
 import GroupsList from '../../containers/GroupSchedulePageTop/GroupsList';
 import SemestersList from '../../containers/GroupSchedulePageTop/SemestersList';
 import TeachersList from '../../containers/GroupSchedulePageTop/TeachersList';
@@ -20,12 +19,13 @@ const SchedulePageForm = (props) => {
         change,
         initialize,
         getAllPublicTeachers,
+        getAllPublicSemesters,
     } = props;
     const { t } = useTranslation('common');
 
     useEffect(() => {
         getAllPublicTeachers();
-        showAllPublicSemestersService();
+        getAllPublicSemesters();
         initialize({
             semester,
             group,

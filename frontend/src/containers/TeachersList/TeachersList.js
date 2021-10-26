@@ -24,10 +24,7 @@ import { getFirstLetter, getTeacherFullName } from '../../helper/renderTeacher';
 import AddTeacherForm from '../../components/AddTeacherForm/AddTeacherForm';
 import { clearDepartment, getAllDepartmentsService } from '../../services/departmentService';
 import { getShortTitle } from '../../helper/shortTitle';
-import {
-    sendTeachersScheduleService,
-    showAllPublicSemestersService,
-} from '../../services/scheduleService';
+import { sendTeachersScheduleService } from '../../services/scheduleService';
 import {
     getDisabledTeachersService,
     handleTeacherService,
@@ -46,7 +43,11 @@ import {
     SEND_SCHEDULE_FOR_TEACHER,
     TEACHER_DEPARTMENT,
 } from '../../constants/translationLabels/common';
-import { getCurrentSemesterRequsted, getDefaultSemesterRequsted } from '../../actions/schedule';
+import {
+    getAllPublicSemestersRequested,
+    getCurrentSemesterRequsted,
+    getDefaultSemesterRequsted,
+} from '../../actions/schedule';
 
 const TeacherList = (props) => {
     const { t } = useTranslation('common');
@@ -60,6 +61,7 @@ const TeacherList = (props) => {
         semesters,
         getCurrentSemester,
         getDefaultSemester,
+        getAllPublicSemesters,
     } = props;
     const [term, setTerm] = useState('');
     const [isDisabled, setIsDisabled] = useState(false);
@@ -77,7 +79,7 @@ const TeacherList = (props) => {
         showAllSemestersService();
         getAllDepartmentsService();
         getDisabledTeachersService();
-        showAllPublicSemestersService();
+        getAllPublicSemesters();
         getPublicClassScheduleListService();
     }, []);
 
@@ -304,6 +306,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
     getCurrentSemester: () => dispatch(getCurrentSemesterRequsted()),
     getDefaultSemester: () => dispatch(getDefaultSemesterRequsted()),
+    getAllPublicSemesters: () => dispatch(getAllPublicSemestersRequested()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(TeacherList);

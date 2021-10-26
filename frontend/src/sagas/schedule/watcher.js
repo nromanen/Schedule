@@ -3,6 +3,7 @@ import * as actionTypes from '../../actions/actionsType';
 import { checkAvailabilityChangeRoomSchedule } from './checkAvailabilityChangeRoomSchedule';
 import { checkScheduleItemAvailability } from './checkScheduleItemAvailability';
 import { getAllPublicGroups } from './getAllPublicGroups';
+import { getAllPublicSemesters } from './getAllPublicSemesters';
 import { getAllPublicTeachers } from './getAllPublicTeachers';
 import { getAllPublicTeachersByDepartment } from './getAllPublicTeachersByDepartment';
 import { getCurrentSemester } from './getCurrentSemester';
@@ -27,4 +28,5 @@ export default function* watchSchedule() {
     );
     yield takeLatest(actionTypes.GET_ALL_PUBLIC_TEACHERS_REQUESTED, getAllPublicTeachers);
     yield takeLatest(actionTypes.GET_ALL_PUBLIC_GROUPS_REQUESTED, getAllPublicGroups);
+    yield takeLatest(actionTypes.GET_ALL_PUBLIC_SEMESTERS_REQUESTED, getAllPublicSemesters);
 }

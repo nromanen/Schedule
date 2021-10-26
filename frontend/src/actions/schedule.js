@@ -31,6 +31,11 @@ export const getAllPublicTeachersRequested = () => {
         type: actionTypes.GET_ALL_PUBLIC_TEACHERS_REQUESTED,
     };
 };
+export const getAllPublicSemestersRequested = () => {
+    return {
+        type: actionTypes.GET_ALL_PUBLIC_SEMESTERS_REQUESTED,
+    };
+};
 export const getAllPublicGroupsRequested = (id) => {
     return {
         type: actionTypes.GET_ALL_PUBLIC_GROUPS_REQUESTED,

@@ -2,23 +2,18 @@ import { store } from '../store';
 
 import axios from '../helper/axios';
 import i18n from '../i18n';
-import { errorHandler, infoHandler, successHandler } from '../helper/handlerAxios';
+import { errorHandler, successHandler } from '../helper/handlerAxios';
 import {
     deleteItemFromSchedule,
     setCurrentSemester,
     setFullSchedule,
     setGroupSchedule,
-    setItemGroupId,
     setScheduleGroupId,
     setScheduleSemesterId,
     setScheduleTeacherId,
     setScheduleType,
-    setSemesterList,
     setTeacherSchedule,
-    showAllGroups,
-    showAllTeachers,
     setTeacherRangeSchedule,
-    setTeacherViewType,
 } from '../actions/index';
 
 import { setLoadingService } from './loadingService';
@@ -28,36 +23,21 @@ import {
     FULL_SCHEDULE_URL,
     GROUP_SCHEDULE_URL,
     SCHEDULE_ITEMS_URL,
-    PUBLIC_SEMESTERS_URL,
     TEACHER_SCHEDULE_URL,
-    PUBLIC_TEACHER_URL,
     FOR_TEACHER_SCHEDULE_URL,
     CLEAR_SCHEDULE_URL,
     SCHEDULE_ITEM_ROOM_CHANGE,
-    TEACHER_URL,
-    SEMESTERS_URL,
-    GROUPS_URL,
     SEND_PDF_TO_EMAIL,
-    DEPARTMENT_URL,
 } from '../constants/axios';
 import { snackbarTypes } from '../constants/snackbarTypes';
 import { showBusyRooms } from './busyRooms';
-import { TEACHER_SCHEDULE_FORM } from '../constants/reduxForms';
-import { resetFormHandler } from '../helper/formHelper';
-import { getAllTeachersByDepartmentId } from '../actions/teachers';
-import { sortGroup } from './groupService';
 import {
     BACK_END_SUCCESS_OPERATION,
     UPDATED_LABEL,
     CLEARED_LABEL,
-    SERVICE_MESSAGE_GROUP_LABEL,
-    CHOSEN_SEMESTER_HAS_NOT_GROUPS,
     SERVICE_MESSAGE_SENT_LABEL,
 } from '../constants/translationLabels/serviceMessages';
-import {
-    FORM_SCHEDULE_LABEL,
-    FORM_CHOSEN_SEMESTER_LABEL,
-} from '../constants/translationLabels/formElements';
+import { FORM_SCHEDULE_LABEL } from '../constants/translationLabels/formElements';
 import {
     NO_CURRENT_SEMESTER_ERROR,
     COMMON_SCHEDULE_TITLE,
@@ -200,15 +180,6 @@ export const sendTeachersScheduleService = (data) => {
             );
         })
         .catch((error) => errorHandler(error));
-};
-
-export const showAllPublicSemestersService = () => {
-    axios
-        .get(PUBLIC_SEMESTERS_URL)
-        .then((response) => {
-            store.dispatch(setSemesterList(response.data));
-        })
-        .catch((err) => errorHandler(err));
 };
 
 export const getTeacherScheduleService = (values) => {
