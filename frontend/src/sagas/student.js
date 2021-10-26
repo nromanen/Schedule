@@ -67,8 +67,24 @@ function* updateStudentWorker({ data }) {
     }
 }
 
+function* deleteStudentWorker({ id }) {
+    try {
+        yield call(axiosCall, `${STUDENT_URL}/${id}`, 'DELETE');
+        yield put(deleteStudent(id));
+        successHandler(
+            i18n.t(BACK_END_SUCCESS_OPERATION, {
+                cardType: i18n.t(FORM_STUDENT_LABEL),
+                actionType: i18n.t(DELETED_LABEL),
+            }),
+        );
+    } catch (err) {
+        errorHandler(err);
+    }
+}
+
 export default function* studentWatcher() {
     yield takeEvery(actionTypes.FETCH_ALL_STUDENTS, fetchAllStudentsWorker);
     yield takeEvery(actionTypes.START_CREATE_STUDENTS, createStudentWorker);
     yield takeEvery(actionTypes.START_UPDATE_STUDENTS, updateStudentWorker);
+    yield takeEvery(actionTypes.START_DELETE_STUDENTS, deleteStudentWorker);
 }
