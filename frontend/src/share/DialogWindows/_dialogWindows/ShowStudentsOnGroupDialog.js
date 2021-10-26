@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
-
 import PropTypes from 'prop-types';
-
 import Button from '@material-ui/core/Button';
 
 import { useTranslation } from 'react-i18next';

@@ -15,12 +15,6 @@ import {
     CustomDialog,
 } from '../../share/DialogWindows';
 import AddStudentDialog from '../../containers/Student/AddStudentDialog';
-import {
-    getAllStudentsByGroupId,
-    createStudentService,
-    deleteStudentService,
-    updateStudentService,
-} from '../../services/studentService';
 
 const GroupList = (props) => {
     const {
@@ -79,7 +73,7 @@ const GroupList = (props) => {
 
     const showStudentsByGroup = (currentGroup) => {
         setGroup(currentGroup);
-        getAllStudentsByGroupId(currentGroup.id);
+        // getAllStudentsByGroupId(currentGroup.id);
         setShowStudents(true);
     };
 
@@ -93,7 +87,13 @@ const GroupList = (props) => {
                 onClose={acceptConfirmDialog}
                 setOpenSubDialog={setOpenSubDialog}
             />
-            {openAddStudentDialog && <AddStudentDialog group={group} open={openAddStudentDialog} />}
+            {openAddStudentDialog && (
+                <AddStudentDialog
+                    groupId={groupId}
+                    open={openAddStudentDialog}
+                    setAddStudentDialog={setAddStudentDialog}
+                />
+            )}
             {/* {showStudents && (
                 <ShowStudentsOnGroupDialog
                     onClose={() => setShowStudents(false)}

@@ -1,8 +1,8 @@
 import * as actionTypes from './actionsType';
 
-export const addStudent = (res) => {
+export const createStudent = (res) => {
     return {
-        type: actionTypes.ADD_STUDENT,
+        type: actionTypes.CREATE_STUDENT,
         result: res,
     };
 };
@@ -43,7 +43,7 @@ export const fetchAllStudents = () => {
     };
 };
 
-export const createStudent = (data) => {
+export const startCreateStudent = (data) => {
     return {
         type: actionTypes.START_CREATE_STUDENTS,
         data,

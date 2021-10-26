@@ -8,14 +8,9 @@ import { useHistory } from 'react-router-dom/cjs/react-router-dom';
 import { goToGroupPage } from '../../../helper/pageRedirection';
 import CustomDialog from '../CustomDialog';
 import AddStudentForm from '../../../containers/Student/AddStudentForm';
-import {
-    createStudentService,
-    deleteStudentService,
-    updateStudentService,
-} from '../../../services/studentService';
 
 export const AddStudentDialog = (props) => {
-    const { setAddStudentDialog, open, group, groups, student } = props;
+    const { setAddStudentDialog, open, student, groupId, startCreateStudent } = props;
     const { t } = useTranslation('formElements');
     const history = useHistory();
 
@@ -29,9 +24,10 @@ export const AddStudentDialog = (props) => {
     };
 
     const onSubmitStudent = (data) => {
+        startCreateStudent({ ...data, group: { id: groupId } });
         // if (data.id !== undefined) {
         //     const sendData = { ...data, group: { id: data.group } };
-        //     updateStudentService(sendData);
+        //     startCreateGroup(sendData);
         // } else {
         //     const sendData = { ...data, group: { id: groupId } };
         //     createStudentService(sendData);

@@ -9,13 +9,13 @@ const initialState = {
 
 const reducer = (state = initialState, action) => {
     switch (action.type) {
-        case actionTypes.ADD_STUDENT:
+        case actionTypes.CREATE_STUDENT:
             return updateObject(state, {
                 students: state.students.concat(action.result),
             });
         case actionTypes.SHOW_ALL_STUDENTS_BY_GROUP_ID: {
             const students = state.students.filter(
-                (student) => student.group.id !== action.groupId,
+                (student) => student.group.id !== action.groupId
             );
             return updateObject(state, {
                 students,

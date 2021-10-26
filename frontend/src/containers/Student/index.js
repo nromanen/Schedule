@@ -1,2 +1,4 @@
+import AddStudentForm from './AddStudentForm';
+import AddStudentDialog from './AddStudentDialog';
 
-//export {} from './Students'
+export { AddStudentForm, AddStudentDialog };
