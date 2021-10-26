@@ -2,6 +2,7 @@ import * as actionTypes from '../actions/actionsType';
 import { updateObject } from '../utility';
 
 const initialState = {
+    studentsByGroup: [],
     students: [],
     student: {},
 };
@@ -12,7 +13,14 @@ const reducer = (state = initialState, action) => {
             return updateObject(state, {
                 students: state.students.concat(action.result),
             });
-        case actionTypes.SHOW_ALL_STUDENTS_BY_GROUP_ID:
+        case actionTypes.SHOW_ALL_STUDENTS_BY_GROUP_ID: {
+            const students = state.students.filter(
+                (student) => student.group.id !== action.groupId,
+            );
+            return updateObject(state, {
+                students,
+            });
+        }
         case actionTypes.SHOW_ALL_STUDENTS:
             return updateObject(state, {
                 students: action.result,
