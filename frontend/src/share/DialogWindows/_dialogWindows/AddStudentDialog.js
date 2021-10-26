@@ -2,15 +2,17 @@ import '../dialog.scss';
 import React from 'react';
 import PropTypes from 'prop-types';
 import Button from '@material-ui/core/Button';
-
+import { reset } from 'redux-form';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom/cjs/react-router-dom';
+import { STUDENT_FORM } from '../../../constants/reduxForms';
 import { goToGroupPage } from '../../../helper/pageRedirection';
 import CustomDialog from '../CustomDialog';
 import AddStudentForm from '../../../containers/Student/AddStudentForm';
 
 export const AddStudentDialog = (props) => {
-    const { setAddStudentDialog, open, student, groupId, startCreateStudent } = props;
+    const { setAddStudentDialog, open, student, groupId, startCreateStudent, startUpdateStudent } =
+        props;
     const { t } = useTranslation('formElements');
     const history = useHistory();
 
@@ -20,25 +22,21 @@ export const AddStudentDialog = (props) => {
     };
 
     const onReset = () => {
-        goToGroupPage(history);
+        // goToGroupPage(history);
+        reset(STUDENT_FORM);
     };
 
     const onSubmitStudent = (data) => {
-        startCreateStudent({ ...data, group: { id: groupId } });
-        // if (data.id !== undefined) {
-        //     const sendData = { ...data, group: { id: data.group } };
-        //     startCreateGroup(sendData);
-        // } else {
-        //     const sendData = { ...data, group: { id: groupId } };
-        //     createStudentService(sendData);
-        // }
         // setAddStudentDialog(false);
         // goToGroupPage(history);
+        return !data.id
+            ? startCreateStudent({ ...data, group: { id: groupId } })
+            : startUpdateStudent({ ...data, group: { id: data.group } });
     };
 
     return (
         <CustomDialog
-            title={student ? t('edit_title') : `${t('create_title')} ${t('student_a_label')}`}
+            title={student.id ? t('edit_title') : `${t('create_title')} ${t('student_a_label')}`}
             open={open}
             onClose={handleClose}
             buttons={

@@ -9,11 +9,7 @@ import { goToGroupPage } from '../../helper/pageRedirection';
 import { search } from '../../helper/search';
 import GroupCard from '../GroupCard/GroupCard';
 import NotFound from '../../share/NotFound/NotFound';
-import {
-    // ShowStudentsOnGroupDialog,
-    // AddStudentDialog,
-    CustomDialog,
-} from '../../share/DialogWindows';
+import { ShowStudentsOnGroupDialog, CustomDialog } from '../../share/DialogWindows';
 import AddStudentDialog from '../../containers/Student/AddStudentDialog';
 
 const GroupList = (props) => {
@@ -33,7 +29,6 @@ const GroupList = (props) => {
     const history = useHistory();
     const { t } = useTranslation('formElements');
 
-    const [group, setGroup] = useState();
     const [groupId, setGroupId] = useState(-1);
     const [subDialogType, setSubDialogType] = useState('');
     const [showStudents, setShowStudents] = useState(false);
@@ -72,21 +67,22 @@ const GroupList = (props) => {
     };
 
     const showStudentsByGroup = (currentGroup) => {
-        setGroup(currentGroup);
-        // getAllStudentsByGroupId(currentGroup.id);
+        setGroupId(currentGroup);
         setShowStudents(true);
     };
 
     return (
         <>
-            <CustomDialog
-                type={subDialogType}
-                cardId={groupId}
-                whatDelete="group"
-                open={openSubDialog}
-                onClose={acceptConfirmDialog}
-                setOpenSubDialog={setOpenSubDialog}
-            />
+            {openSubDialog && (
+                <CustomDialog
+                    type={subDialogType}
+                    cardId={groupId}
+                    whatDelete="group"
+                    open={openSubDialog}
+                    onClose={acceptConfirmDialog}
+                    setOpenSubDialog={setOpenSubDialog}
+                />
+            )}
             {openAddStudentDialog && (
                 <AddStudentDialog
                     groupId={groupId}
@@ -94,19 +90,14 @@ const GroupList = (props) => {
                     setAddStudentDialog={setAddStudentDialog}
                 />
             )}
-            {/* {showStudents && (
+            {showStudents && (
                 <ShowStudentsOnGroupDialog
                     onClose={() => setShowStudents(false)}
                     open={showStudents}
-                    students={students}
-                    group={group}
-                    onDeleteStudent={(studentItem) => deleteStudentService(studentItem)}
-                    onSubmit={studentSubmit}
+                    groupId={groupId}
                     match={match}
-                    student={student}
-                    groups={groups}
                 />
-            )} */}
+            )}
             <div className="group-wrapper group-list">
                 {!loading && visibleGroups.length === 0 ? (
                     <NotFound name={t(GROUP_Y_LABEL)} />
