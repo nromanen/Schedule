@@ -61,14 +61,12 @@ const SemesterForm = (props) => {
         onReset,
         submitting,
         semester,
-        selected,
-        setSelected,
         classScheduler,
         initialize,
         change,
-        selectedGroups,
-        setSelectedGroups,
-        groups,
+        prevSelectedGroups,
+        setPrevSelectedGroups,
+        options,
     } = props;
 
     const prepSetCheckedClasses = classScheduler.reduce((init, item) => {
@@ -130,27 +128,17 @@ const SemesterForm = (props) => {
     useEffect(() => {
         const { semester_groups: semesterGroups } = semester;
         if (!isNil(semesterGroups)) {
-            setSelectedGroups(getGroupOptions(semesterGroups));
+            setPrevSelectedGroups(getGroupOptions(semesterGroups));
         }
     }, [semester.id]);
 
-    const options =
-        selectedGroups.length === 0
-            ? getGroupOptions(groups)
-            : getGroupOptions(groups.filter((x) => !selectedGroups.includes(x)));
     const openDialogForGroup = () => {
         setOpenGroupDialog(true);
     };
     const closeDialogForGroup = () => {
         setOpenGroupDialog(false);
     };
-    const clearSelection = () => {
-        setSelected([]);
-    };
-    const onCancel = () => {
-        clearSelection();
-        closeDialogForGroup();
-    };
+
     const setMinFinishDate = (time) => {
         const newDate = moment(time, dateFormat).add(1, 'd');
         return setFinishTime(newDate.toDate());
@@ -204,9 +192,9 @@ const SemesterForm = (props) => {
             <MultiselectForGroups
                 open={openGroupDialog}
                 options={options}
-                value={selectedGroups.length === 0 ? selected : selectedGroups}
-                onChange={selectedGroups.length === 0 ? setSelected : setSelectedGroups}
-                onCancel={onCancel}
+                value={prevSelectedGroups}
+                onChange={setPrevSelectedGroups}
+                onCancel={closeDialogForGroup}
                 onClose={closeDialogForGroup}
             />
             <form onSubmit={handleSubmit}>
@@ -302,7 +290,7 @@ const SemesterForm = (props) => {
                         variant="contained"
                         color="primary"
                         className="buttons-style "
-                        disabled={(pristine || submitting) && selected.length === 0}
+                        disabled={(pristine || submitting) && prevSelectedGroups.length === 0}
                         type="submit"
                     >
                         {t(COMMON_SAVE_BUTTON_LABEL)}
@@ -313,11 +301,9 @@ const SemesterForm = (props) => {
                         className="buttons-style"
                         disabled={
                             setDisableButton(pristine, submitting, semester.id) &&
-                            selected.length === 0
+                            prevSelectedGroups.length === 0
                         }
-                        onClick={() => {
-                            onReset();
-                        }}
+                        onClick={onReset}
                     >
                         {getClearOrCancelTitle(semester.id, t)}
                     </Button>

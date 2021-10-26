@@ -65,8 +65,7 @@ const SemesterPage = (props) => {
     const [semesterId, setSemesterId] = useState(-1);
 
     const [term, setTerm] = useState('');
-    const [selected, setSelected] = useState([]);
-    const [selectedGroups, setSelectedGroups] = useState([]);
+    const [prevSelectedGroups, setPrevSelectedGroups] = useState([]);
     const [semesterOptions, setSemesterOptions] = useState([]);
     const [edit, setEdit] = useState(false);
     const [disabled, setDisabled] = useState(false);
@@ -79,7 +78,7 @@ const SemesterPage = (props) => {
             return { id: item.id, value: item.id, label: `${item.title}` };
         });
     };
-    const options = getGroupOptions(groups.filter((x) => !selectedGroups.includes(x)));
+    const options = getGroupOptions(groups);
     useEffect(() => {
         if (semester.semester_groups !== undefined && semester.semester_groups.length > 0) {
             setSemesterOptions(getGroupOptions(semester.semester_groups));
@@ -106,16 +105,15 @@ const SemesterPage = (props) => {
     }, [disabled, archived, enabledSemesters]);
 
     const submitSemesterForm = (values) => {
-        const semesterGroups = selected.map((group) => {
+        const semesterGroups = prevSelectedGroups.map((group) => {
             return { id: group.id, title: group.label };
         });
         handleSemesterService({ ...values, semester_groups: semesterGroups });
-        setSelectedGroups([]);
+        setPrevSelectedGroups([]);
     };
     const resetSemesterForm = () => {
-        setSelectedGroups([]);
+        setPrevSelectedGroups([]);
         clearSemesterService();
-        if (!semester.id) setSelected([]);
     };
 
     const closeSemesterCopyForm = () => {
@@ -225,12 +223,9 @@ const SemesterPage = (props) => {
                     />
                     {!(disabled || archived) && (
                         <SemesterForm
-                            selectedGroups={selectedGroups}
-                            setSelectedGroups={setSelectedGroups}
-                            selected={selected}
-                            setSelected={setSelected}
+                            prevSelectedGroups={prevSelectedGroups}
+                            setPrevSelectedGroups={setPrevSelectedGroups}
                             className="form"
-                            options={options}
                             onSubmit={submitSemesterForm}
                             onReset={resetSemesterForm}
                             classScheduler={classScheduler}
@@ -238,6 +233,7 @@ const SemesterPage = (props) => {
                             semesterOptions={semesterOptions}
                             setSemesterOptions={setSemesterOptions}
                             groups={groups}
+                            options={options}
 
                         />
                     )}
