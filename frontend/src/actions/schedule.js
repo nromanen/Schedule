@@ -59,6 +59,12 @@ export const deleteScheduleItemRequested = (itemId) => {
         itemId,
     };
 };
+export const clearScheduleRequested = (semesterId) => {
+    return {
+        type: actionTypes.CLEAR_SCHEDULE_REQUESTED,
+        semesterId,
+    };
+};
 export const getAllPublicGroupsRequested = (id) => {
     return {
         type: actionTypes.GET_ALL_PUBLIC_GROUPS_REQUESTED,

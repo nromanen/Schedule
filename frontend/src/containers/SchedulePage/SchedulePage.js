@@ -8,7 +8,6 @@ import { showAllGroupsService } from '../../services/groupService';
 import { getLessonsByGroupService } from '../../services/lessonService';
 import { setLoadingService, setScheduleLoadingService } from '../../services/loadingService';
 import { getClassScheduleListService } from '../../services/classService';
-import { getScheduleItemsService, clearSchedule } from '../../services/scheduleService';
 import { showListOfRoomsService } from '../../services/roomService';
 
 import ScheduleLessonsList from '../../components/ScheduleLessonsList/ScheduleLessonsList';
@@ -21,11 +20,19 @@ import {
     CLEAR_SCHEDULE_LABEL,
     USE_PC,
 } from '../../constants/translationLabels/common';
-import { getAllScheduleItemsRequested } from '../../actions/schedule';
+import { clearScheduleRequested, getAllScheduleItemsRequested } from '../../actions/schedule';
 
 const SchedulePage = (props) => {
-    const { groups, groupId, itemGroupId, scheduleItems, lessons, isLoading, getAllScheduleItems } =
-        props;
+    const {
+        groups,
+        groupId,
+        itemGroupId,
+        scheduleItems,
+        lessons,
+        isLoading,
+        getAllScheduleItems,
+        clearScheduleItems,
+    } = props;
     const { t } = useTranslation('common');
 
     document.title = t(SCHEDULE_TITLE);
@@ -48,7 +55,7 @@ const SchedulePage = (props) => {
 
     const handleClearSchedule = () => {
         if (props.currentSemester.id) {
-            clearSchedule(props.currentSemester.id);
+            clearScheduleItems(props.currentSemester.id);
             if (groupId) {
                 setLoadingService(true);
                 getLessonsByGroupService(groupId);
@@ -130,6 +137,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
     getAllScheduleItems: () => dispatch(getAllScheduleItemsRequested()),
+    clearScheduleItems: (id) => dispatch(clearScheduleRequested(id)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SchedulePage);

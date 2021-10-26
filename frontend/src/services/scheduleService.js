@@ -2,9 +2,8 @@ import { store } from '../store';
 
 import axios from '../helper/axios';
 import i18n from '../i18n';
-import { errorHandler, successHandler } from '../helper/handlerAxios';
+import { errorHandler } from '../helper/handlerAxios';
 import {
-    deleteItemFromSchedule,
     setCurrentSemester,
     setFullSchedule,
     setGroupSchedule,
@@ -21,22 +20,11 @@ import {
     CURRENT_SEMESTER_URL,
     FULL_SCHEDULE_URL,
     GROUP_SCHEDULE_URL,
-    SCHEDULE_ITEMS_URL,
     TEACHER_SCHEDULE_URL,
-    CLEAR_SCHEDULE_URL,
-    SCHEDULE_ITEM_ROOM_CHANGE,
 } from '../constants/axios';
 import { snackbarTypes } from '../constants/snackbarTypes';
 import { showBusyRooms } from './busyRooms';
-import {
-    BACK_END_SUCCESS_OPERATION,
-    UPDATED_LABEL,
-    CLEARED_LABEL,
-} from '../constants/translationLabels/serviceMessages';
-import {
-    NO_CURRENT_SEMESTER_ERROR,
-    COMMON_SCHEDULE_TITLE,
-} from '../constants/translationLabels/common';
+import { NO_CURRENT_SEMESTER_ERROR } from '../constants/translationLabels/common';
 import { getScheduleItemsRequested } from '../actions/schedule';
 // ALERT GONNA BE DELETED
 export const getScheduleItemsService = () => {
@@ -52,25 +40,6 @@ export const getScheduleItemsService = () => {
             setLoadingService(false);
         });
 };
-
-export const clearSchedule = (semesterId) => {
-    axios
-        .delete(`${CLEAR_SCHEDULE_URL}?semesterId=${semesterId}`)
-        .then(() => {
-            getScheduleItemsService();
-            successHandler(
-                i18n.t(BACK_END_SUCCESS_OPERATION, {
-                    cardType: i18n.t(COMMON_SCHEDULE_TITLE),
-                    actionType: i18n.t(CLEARED_LABEL),
-                }),
-            );
-        })
-        .catch((err) => {
-            errorHandler(err);
-            setLoadingService(false);
-        });
-};
-
 // ALERT GONNA BE DELETED
 export const setScheduleSemesterIdService = (semesterId) => {
     store.dispatch(setScheduleSemesterId(semesterId));

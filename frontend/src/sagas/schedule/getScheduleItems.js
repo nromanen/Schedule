@@ -13,7 +13,7 @@ export function* getScheduleItems() {
         const response = yield call(axiosCall, CURRENT_SEMESTER_URL);
         yield put(setCurrentSemester(response.data));
         yield call(showBusyRooms, response.data.id);
-        yield call(getScheduleItemsBySemester, response.data.id);
+        yield call(getScheduleItemsBySemester, { semesterId: response.data.id });
     } catch (error) {
         const message = i18n.t(NO_CURRENT_SEMESTER_ERROR);
         const isOpen = true;

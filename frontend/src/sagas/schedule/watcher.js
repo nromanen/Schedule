@@ -1,8 +1,9 @@
-import { takeLatest } from 'redux-saga/effects';
+import { takeLatest, takeEvery } from 'redux-saga/effects';
 import * as actionTypes from '../../actions/actionsType';
 import { addItemsToSchedule } from './addItemsToSchedule';
 import { checkAvailabilityChangeRoomSchedule } from './checkAvailabilityChangeRoomSchedule';
 import { checkScheduleItemAvailability } from './checkScheduleItemAvailability';
+import { clearSchedule } from './clearSchedule';
 import { deleteScheduleItem } from './deleteScheduleItem';
 import { editRoomItemToSchedule } from './editRoomItemToSchedule';
 import { getAllPublicGroups } from './getAllPublicGroups';
@@ -38,7 +39,8 @@ export default function* watchSchedule() {
     yield takeLatest(actionTypes.SEND_TEACHER_SCHEDULE_REQUESTED, sendTeacherSchedule);
     yield takeLatest(actionTypes.GET_TEACHER_RANGE_SCHEDULE_REQUESTED, getTeacherRangeSchedule);
     yield takeLatest(actionTypes.GET_ALL_SCHEDULE_ITEMS_REQUESTED, getScheduleItems);
-    yield takeLatest(actionTypes.ADD_ITEM_TO_SCHEDULE_REQUESTED, addItemsToSchedule);
-    yield takeLatest(actionTypes.EDIT_ITEM_TO_SCHEDULE_REQUESTED, editRoomItemToSchedule);
-    yield takeLatest(actionTypes.DELETE_SCHEDULE_ITEM_REQUESTED, deleteScheduleItem);
+    yield takeEvery(actionTypes.ADD_ITEM_TO_SCHEDULE_REQUESTED, addItemsToSchedule);
+    yield takeEvery(actionTypes.EDIT_ITEM_TO_SCHEDULE_REQUESTED, editRoomItemToSchedule);
+    yield takeEvery(actionTypes.DELETE_SCHEDULE_ITEM_REQUESTED, deleteScheduleItem);
+    yield takeEvery(actionTypes.CLEAR_SCHEDULE_REQUESTED, clearSchedule);
 }
