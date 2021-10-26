@@ -8,7 +8,7 @@ import './dialog.scss';
 import { dialogMapper } from './dialogMapper';
 
 const CustomDialog = (props) => {
-    const { onClose, buttons, open, title, children, setOpenSubDialog } = dialogMapper(props);
+    const { onClose, buttons, open, title, children } = dialogMapper(props);
     return (
         <Dialog className="custom-dialog" disableBackdropClick onClose={onClose} open={open}>
             <DialogTitle className="custom-dialog-title">{title}</DialogTitle>

@@ -7,45 +7,42 @@ import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom/cjs/react-router-dom';
 import { goToGroupPage } from '../../../helper/pageRedirection';
 import CustomDialog from '../CustomDialog';
-import { AddStudentForm } from '../../../components/AddStudentForm/AddStudentForm';
+import AddStudentForm from '../../../containers/Student/AddStudentForm';
 import {
-    getAllStudentsByGroupId,
     createStudentService,
     deleteStudentService,
     updateStudentService,
 } from '../../../services/studentService';
 
-const AddStudentDialog = (props) => {
+export const AddStudentDialog = (props) => {
+    const { setAddStudentDialog, open, group, groups, student } = props;
     const { t } = useTranslation('formElements');
-    const { onSetSelectedCard, open, group, groups, student } = props;
-    const studentId = student.id;
     const history = useHistory();
 
     const handleClose = () => {
-        onSetSelectedCard(null);
-        goToGroupPage(history);
-    };
-
-    const onReset = () => {
-        onSetSelectedCard(null);
-        goToGroupPage(history);
-    };
-
-    const onSubmitStudent = (data) => {
-        if (data.id !== undefined) {
-            const sendData = { ...data, group: { id: data.group } };
-            updateStudentService(sendData);
-        } else {
-            const sendData = { ...data, group: { id: groupId } };
-            createStudentService(sendData);
-        }
         setAddStudentDialog(false);
         goToGroupPage(history);
     };
 
+    const onReset = () => {
+        goToGroupPage(history);
+    };
+
+    const onSubmitStudent = (data) => {
+        // if (data.id !== undefined) {
+        //     const sendData = { ...data, group: { id: data.group } };
+        //     updateStudentService(sendData);
+        // } else {
+        //     const sendData = { ...data, group: { id: groupId } };
+        //     createStudentService(sendData);
+        // }
+        // setAddStudentDialog(false);
+        // goToGroupPage(history);
+    };
+
     return (
         <CustomDialog
-            title={studentId ? t('edit_title') : `${t('create_title')} ${t('student_a_label')}`}
+            title={student ? t('edit_title') : `${t('create_title')} ${t('student_a_label')}`}
             open={open}
             onClose={handleClose}
             buttons={

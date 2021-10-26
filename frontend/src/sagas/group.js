@@ -1,6 +1,6 @@
 import { call, takeEvery, put, select } from 'redux-saga/effects';
 import { reset } from 'redux-form';
-import { get } from 'lodash';
+import { has } from 'lodash';
 import i18n from '../i18n';
 import { sortGroup } from '../helper/sortGroup';
 import { GROUP_FORM } from '../constants/reduxForms';
@@ -69,11 +69,8 @@ function* createGroupWorker({ data }) {
 
 function* updateGroupWorker({ data }) {
     try {
-        // console.log(data);
-        // console.log(_.has(data, data.disable));
         const res = yield call(axiosCall, GROUP_URL, 'PUT', data);
-        if (get(data.disable)) {
-            console.log(data);
+        if (has(data, 'disable')) {
             yield put(deleteGroup(data.id));
         } else {
             yield put(updateGroup(res.data));
@@ -128,7 +125,7 @@ function* clearGroupWorker() {
 }
 
 export default function* groupWatcher() {
-    yield takeEvery(actionTypes.TOGGLE_DISABLED_STATUS, toggleDisabledGroupWorker);
+    yield takeEvery(actionTypes.TOGGLE_DISABLED_STATUS_GROUP, toggleDisabledGroupWorker);
     yield takeEvery(actionTypes.FETCH_DISABLED_GROUPS, fetchDisabledGroupsWorker);
     yield takeEvery(actionTypes.FETCH_ENABLED_GROUPS, fetchEnabledGroupsWorker);
     yield takeEvery(actionTypes.START_DELETE_GROUP, deleteGroupWorker);

@@ -9,8 +9,8 @@ import renderSelectField from '../../share/renderedFields/select';
 import { TYPE_LABEL } from '../../constants/translationLabels/common';
 
 export const AddStudentForm = (props) => {
-    const { t } = useTranslation('formElements');
     const { handleSubmit, submitting, initialize, pristine, student, groups, reset } = props;
+    const { t } = useTranslation('formElements');
     const studentId = student.id;
 
     const initializeFormHandler = (currentStudent) => {

@@ -20,7 +20,7 @@ import {
 } from '../../constants/translationLabels/formElements';
 
 export const dialogMapper = (props) => {
-    const { onClose, cardId, type, whatDelete, linkToMeeting = 'none', setOpenSubDialog } = props;
+    const { onClose, cardId, type, whatDelete, linkToMeeting = 'none' } = props;
     const defaultModalButtons = (
         <>
             <Button
@@ -31,11 +31,7 @@ export const dialogMapper = (props) => {
             >
                 {i18n.t(COMMON_YES_BUTTON_TITLE)}
             </Button>
-            <Button
-                className="dialog-button"
-                variant="contained"
-                onClick={() => setOpenSubDialog(false)}
-            >
+            <Button className="dialog-button" variant="contained" onClick={() => onClose('')}>
                 {i18n.t(COMMON_NO_BUTTON_TITLE)}
             </Button>
         </>

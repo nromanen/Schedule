@@ -10,10 +10,11 @@ import { search } from '../../helper/search';
 import GroupCard from '../GroupCard/GroupCard';
 import NotFound from '../../share/NotFound/NotFound';
 import {
-    ShowStudentsOnGroupDialog,
-    AddStudentDialog,
+    // ShowStudentsOnGroupDialog,
+    // AddStudentDialog,
     CustomDialog,
 } from '../../share/DialogWindows';
+import AddStudentDialog from '../../containers/Student/AddStudentDialog';
 import {
     getAllStudentsByGroupId,
     createStudentService,
@@ -27,12 +28,10 @@ const GroupList = (props) => {
         startFetchEnabledGroups,
         toggleDisabledStatus,
         startDeleteGroup,
-        disabledGroups,
+        // disabledGroups,
         groups,
         selectGroup,
-        students,
         loading,
-        student,
         match,
         term,
         isDisabled,
@@ -67,6 +66,7 @@ const GroupList = (props) => {
     };
     const acceptConfirmDialog = (currentGroupId) => {
         setOpenSubDialog(false);
+        if (!currentGroupId) return;
         if (subDialogType !== dialogTypes.DELETE_CONFIRM) {
             toggleDisabledStatus(currentGroupId, isDisabled);
         } else startDeleteGroup(currentGroupId);
@@ -93,10 +93,7 @@ const GroupList = (props) => {
                 onClose={acceptConfirmDialog}
                 setOpenSubDialog={setOpenSubDialog}
             />
-            <AddStudentDialog
-                open={openAddStudentDialog}
-                onSetSelectedCard={() => setAddStudentDialog(false)}
-            />
+            {openAddStudentDialog && <AddStudentDialog group={group} open={openAddStudentDialog} />}
             {/* {showStudents && (
                 <ShowStudentsOnGroupDialog
                     onClose={() => setShowStudents(false)}

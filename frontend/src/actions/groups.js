@@ -77,7 +77,7 @@ export const startClearGroup = (data) => ({
 });
 
 export const toggleDisabledStatus = (groupId, disabledStatus) => ({
-    type: actionTypes.TOGGLE_DISABLED_STATUS,
+    type: actionTypes.TOGGLE_DISABLED_STATUS_GROUP,
     groupId,
     disabledStatus,
 });

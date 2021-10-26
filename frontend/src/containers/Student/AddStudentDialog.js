@@ -1,6 +1,4 @@
 import { connect } from 'react-redux';
-import { reduxForm } from 'redux-form';
-import { STUDENT_FORM } from '../../constants/reduxForms';
 import { AddStudentDialog } from '../../share/DialogWindows';
 
 const mapStateToProps = (state) => ({
@@ -8,8 +6,4 @@ const mapStateToProps = (state) => ({
     groups: state.groups.groups,
 });
 
-const AddStudentDialogForm = reduxForm({
-    form: STUDENT_FORM,
-})(AddStudentDialog);
-
-export default connect(mapStateToProps, {})(AddStudentDialogForm);
+export default connect(mapStateToProps, {})(AddStudentDialog);
