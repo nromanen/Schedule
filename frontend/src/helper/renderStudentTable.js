@@ -23,6 +23,7 @@ import { Delete } from '@material-ui/icons';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { selectStudentService } from '../services/studentService';
+import { setIsOpenConfirmDialogService } from '../services/dialogService';
 import './renderStudentTable.scss';
 import { getTeacherFullName } from './renderTeacher';
 import { links } from '../constants/links';
@@ -150,10 +151,10 @@ export default function RenderStudentTable(props) {
         handleClearCheckedAllBtn,
         checkedAllBtn,
         handleAllCheckedBtn,
+        isOpenConfirmDialog,
     } = props;
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
-    const [isOpenDeleteConfirmDialog, setIsOpenDeleteConfirmDialog] = useState(false);
     const [isOpenEditDialog, setIsOpenEditDialog] = useState(false);
     const { t } = useTranslation('formElements');
     const handleEdit = (studentId) => {
@@ -167,7 +168,7 @@ export default function RenderStudentTable(props) {
     }, [props.group.id]);
     useEffect(() => {
         if (match.path.includes(links.Student) && match.path.includes(links.Delete)) {
-            setIsOpenDeleteConfirmDialog(true);
+            setIsOpenConfirmDialogService(true);
         }
     }, [props.group.id]);
 
@@ -184,7 +185,7 @@ export default function RenderStudentTable(props) {
         window.location.href = mailto;
     };
     const deleteStudent = (studentItem) => {
-        setIsOpenDeleteConfirmDialog(false);
+        setIsOpenConfirmDialogService(false);
         onDeleteStudent(studentItem);
     };
     const handleCloseEditDialog = () => {
@@ -305,7 +306,7 @@ export default function RenderStudentTable(props) {
                                         <Delete
                                             title={t(DELETE_TITLE_LABEL)}
                                             className="delete-button"
-                                            onClick={() => setIsOpenDeleteConfirmDialog(true)}
+                                            onClick={() => setIsOpenConfirmDialogService(true)}
                                         />
                                     </Link>
                                 </span>
@@ -319,13 +320,12 @@ export default function RenderStudentTable(props) {
                                 />
                             )}
 
-                            {isOpenDeleteConfirmDialog && (
+                            {isOpenConfirmDialog && (
                                 <CustomDialog
                                     type={dialogTypes.DELETE_CONFIRM}
-                                    cardId={student}
                                     whatDelete="student"
-                                    open={isOpenDeleteConfirmDialog}
-                                    onClose={deleteStudent}
+                                    open={isOpenConfirmDialog}
+                                    handelConfirm={() => deleteStudent(student)}
                                 />
                             )}
                         </StyledTableRow>
@@ -368,6 +368,7 @@ export default function RenderStudentTable(props) {
 
 const mapStateToProps = (state) => ({
     student: state.students.student,
+    isOpenConfirmDialog: state.dialog.isOpenConfirmDialog,
 });
 
 connect(mapStateToProps, {})(RenderStudentTable);

@@ -2,8 +2,6 @@ import React from 'react';
 
 import PropTypes from 'prop-types';
 
-import Button from '@material-ui/core/Button';
-
 import { connect } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { isEmpty } from 'lodash';
@@ -31,16 +29,13 @@ const ShowDepartmentDataDialog = (props) => {
             onClose={handleClose}
             open={open}
             title="Show dependencies data"
-            buttons={
-                <Button
-                    className="dialog-button"
-                    variant="contained"
-                    onClick={() => onClose('')}
-                    color="primary"
-                >
-                    {i18n.t(COMMON_CLOSE_TITLE)}
-                </Button>
-            }
+            buttons={[
+                {
+                    label: i18n.t(COMMON_CLOSE_TITLE),
+                    handleClick: () => onClose(''),
+                    color: 'primary',
+                },
+            ]}
         >
             {isEmpty(teachers) ? (
                 <>

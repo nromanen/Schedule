@@ -22,6 +22,7 @@ import {
     showAllSemestersService,
     CopyLessonsFromSemesterService,
 } from '../../services/semesterService';
+import { setIsOpenConfirmDialogService } from '../../services/dialogService';
 import { searchLessonsByTeacher } from '../../helper/search';
 import {
     copyLessonCardService,
@@ -53,12 +54,12 @@ const LessonPage = (props) => {
         lessons,
         groupId,
         groups,
+        isOpenConfirmDialog,
     } = props;
     const { t } = useTranslation('common');
     const [term, setTerm] = useState('');
     const [lessonId, setLessonId] = useState();
     const [copiedLesson, setCopiedLesson] = useState();
-    const [isOpenDeleteConfirmDialog, setIsOpenDeleteConfirmDialog] = useState(false);
     const [isOpenCopyLessonDialog, setIsOpenCopyLessonDialog] = useState(false);
 
     const SearchChange = setTerm;
@@ -92,12 +93,11 @@ const LessonPage = (props) => {
 
     const showConfirmDialog = (lessonCardId) => {
         setLessonId(lessonCardId);
-        setIsOpenDeleteConfirmDialog(true);
+        setIsOpenConfirmDialogService(true);
     };
 
-    const acceptConfirmDialog = (id) => {
-        setIsOpenDeleteConfirmDialog(false);
-        if (!id) return;
+    const acceptConfirmDialog = () => {
+        setIsOpenConfirmDialogService(false);
         removeLessonCardService(lessonId);
     };
 
@@ -181,13 +181,12 @@ const LessonPage = (props) => {
                     />
                 )}
 
-                {isOpenDeleteConfirmDialog && (
+                {isOpenConfirmDialog && (
                     <CustomDialog
                         type={dialogTypes.DELETE_CONFIRM}
-                        cardId={lessonId}
+                        handelConfirm={acceptConfirmDialog}
                         whatDelete={cardType.LESSON.toLowerCase()}
-                        open={isOpenDeleteConfirmDialog}
-                        onClose={acceptConfirmDialog}
+                        open={isOpenConfirmDialog}
                     />
                 )}
 
@@ -249,6 +248,7 @@ const mapStateToProps = (state) => ({
     loading: state.loadingIndicator.loading,
     semesters: state.semesters.semesters,
     currentSemester: state.schedule.currentSemester,
+    isOpenConfirmDialog: state.dialog.isOpenConfirmDialog,
 });
 
 export default connect(mapStateToProps)(LessonPage);

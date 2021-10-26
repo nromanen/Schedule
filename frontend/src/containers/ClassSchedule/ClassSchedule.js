@@ -18,6 +18,7 @@ import {
     deleteClassScheduleOneService,
     clearClassScheduleOneService,
 } from '../../services/classService';
+import { setIsOpenConfirmDialogService } from '../../services/dialogService';
 
 import { handleSnackbarOpenService } from '../../services/snackbarService';
 import { snackbarTypes } from '../../constants/snackbarTypes';
@@ -36,7 +37,7 @@ import {
 
 const ClassSchedule = (props) => {
     const { t } = useTranslation('formElements');
-    const [isOpenDeleteConfirmDialog, setIsOpenDeleteConfirmDialog] = useState(false);
+    const { isOpenConfirmDialog } = props;
     const [classId, setClassId] = useState(-1);
     useEffect(() => getClassScheduleListService(), []);
 
@@ -56,12 +57,11 @@ const ClassSchedule = (props) => {
 
     const handleClickOpen = (id) => {
         setClassId(id);
-        setIsOpenDeleteConfirmDialog(true);
+        setIsOpenConfirmDialogService(true);
     };
 
-    const handleClose = (id) => {
-        setIsOpenDeleteConfirmDialog(false);
-        if (!id) return;
+    const handleDelete = (id) => {
+        setIsOpenConfirmDialogService(false);
         deleteClassScheduleOneService(id);
     };
 
@@ -69,13 +69,12 @@ const ClassSchedule = (props) => {
         <>
             <NavigationPage name={navigationNames.CLASS_SCHEDULE_TITLE} val={navigation.PERIOD} />
             <div className="cards-container">
-                {isOpenDeleteConfirmDialog && (
+                {isOpenConfirmDialog && (
                     <CustomDialog
                         type={dialogTypes.DELETE_CONFIRM}
-                        cardId={classId}
+                        handelConfirm={() => handleDelete(classId)}
                         whatDelete={cardType.CLASS.toLowerCase()}
-                        open={isOpenDeleteConfirmDialog}
-                        onClose={handleClose}
+                        open={isOpenConfirmDialog}
                     />
                 )}
 
@@ -115,6 +114,7 @@ const ClassSchedule = (props) => {
 const mapStateToProps = (state) => ({
     classScheduler: state.classActions.classScheduler,
     ClassScheduleOne: state.classActions.classScheduleOne,
+    isOpenConfirmDialog: state.dialog.isOpenConfirmDialog,
 });
 
 export default connect(mapStateToProps, {})(ClassSchedule);

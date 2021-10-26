@@ -62,27 +62,19 @@ export const MultiSelect = (props) => {
             title={t(SCHEDULE_FOR_SEMESTER)}
             open={open}
             onClose={onCancel}
-            buttons={
-                <div className="buttons-container">
-                    <Button
-                        className="dialog-button"
-                        variant="contained"
-                        color="primary"
-                        onClick={onCancel}
-                    >
-                        {t(CANCEL_BUTTON_LABEL)}
-                    </Button>
-                    <Button
-                        className="dialog-button"
-                        variant="contained"
-                        color="primary"
-                        onClick={onSentTeachers}
-                        disabled={!isEnabledSentBtn}
-                    >
-                        {t(SENT_SCHEDULE)}
-                    </Button>
-                </div>
-            }
+            buttons={[
+                {
+                    label: t(CANCEL_BUTTON_LABEL),
+                    handleClick: onCancel,
+                    color: 'primary',
+                },
+                {
+                    label: t(SENT_SCHEDULE),
+                    handleClick: onSentTeachers,
+                    color: 'primary',
+                    disabled: !isEnabledSentBtn,
+                },
+            ]}
         >
             <div className="teacher-semester">
                 <ReactSelect

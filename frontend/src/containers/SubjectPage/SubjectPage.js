@@ -15,6 +15,7 @@ import SearchPanel from '../../share/SearchPanel/SearchPanel';
 import SnackbarComponent from '../../share/Snackbar/SnackbarComponent';
 import AddSubject from '../../components/AddSubjectForm/AddSubjectForm';
 import { handleSnackbarCloseService } from '../../services/snackbarService';
+import { setIsOpenConfirmDialogService } from '../../services/dialogService';
 import {
     showAllSubjectsService,
     removeSubjectCardService,
@@ -36,9 +37,15 @@ import { COMMON_SET_DISABLED, COMMON_SET_ENABLED } from '../../constants/transla
 
 const SubjectPage = (props) => {
     const { t } = useTranslation('formElements');
-    const { isSnackbarOpen, snackbarType, snackbarMessage, disabledSubjects, subjects } = props;
+    const {
+        isSnackbarOpen,
+        snackbarType,
+        snackbarMessage,
+        disabledSubjects,
+        subjects,
+        isOpenConfirmDialog,
+    } = props;
 
-    const [isOpenConfirmDialog, setIsOpenConfirmDialog] = useState(false);
     const [confirmDialogType, setConfirmDialogType] = useState('');
     const [subjectId, setSubjectId] = useState(-1);
     const [term, setTerm] = useState('');
@@ -59,11 +66,11 @@ const SubjectPage = (props) => {
     const showConfirmDialog = (subjId, dialogType) => {
         setSubjectId(subjId);
         setConfirmDialogType(dialogType);
-        setIsOpenConfirmDialog(true);
+        setIsOpenConfirmDialogService(true);
     };
 
     const acceptConfirmDialog = (id) => {
-        setIsOpenConfirmDialog(false);
+        setIsOpenConfirmDialogService(false);
         if (!id) return;
         switch (confirmDialogType) {
             case dialogTypes.DELETE_CONFIRM:
@@ -95,10 +102,9 @@ const SubjectPage = (props) => {
             {isOpenConfirmDialog && (
                 <CustomDialog
                     type={confirmDialogType}
-                    cardId={subjectId}
                     whatDelete="subject"
                     open={isOpenConfirmDialog}
-                    onClose={acceptConfirmDialog}
+                    handelConfirm={() => acceptConfirmDialog(subjectId)}
                 />
             )}
 
@@ -179,6 +185,7 @@ const mapStateToProps = (state) => ({
     isSnackbarOpen: state.snackbar.isSnackbarOpen,
     snackbarType: state.snackbar.snackbarType,
     snackbarMessage: state.snackbar.message,
+    isOpenConfirmDialog: state.dialog.isOpenConfirmDialog,
 });
 
 export default connect(mapStateToProps, {})(SubjectPage);

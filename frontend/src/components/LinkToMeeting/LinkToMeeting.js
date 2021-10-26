@@ -11,7 +11,7 @@ const LinkToMeeting = (props) => {
         const win = window.open(url, '_blank');
         win.focus();
     };
-    const handleClose = (semesterId) => {
+    const handelRedirectToMeeting = (semesterId) => {
         setIsOpenMeetingLinkDialog(false);
         if (semesterId !== '') {
             openWindowByUrl(linkToMeeting);
@@ -31,13 +31,13 @@ const LinkToMeeting = (props) => {
             {isOpenMeetingLinkDialog && (
                 <CustomDialog
                     type={dialogTypes.MEETING_LINK}
-                    cardId={1}
+                    handelConfirm={handelRedirectToMeeting}
                     open={isOpenMeetingLinkDialog}
-                    onClose={handleClose}
                     linkToMeeting={linkToMeeting}
                 />
             )}
         </>
     );
 };
+
 export { LinkToMeeting };

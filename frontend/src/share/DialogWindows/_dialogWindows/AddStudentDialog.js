@@ -62,16 +62,13 @@ const AddStudentDialog = (props) => {
             title={studentId ? t('edit_title') : `${t('create_title')} ${t('student_a_label')}`}
             open={open}
             onClose={handleClose}
-            buttons={
-                <Button
-                    className="buttons-style"
-                    color="primary"
-                    variant="contained"
-                    onClick={handleClose}
-                >
-                    {t(COMMON_CLOSE_TITLE)}
-                </Button>
-            }
+            buttons={[
+                {
+                    label: t(COMMON_CLOSE_TITLE),
+                    handleClick: handleClose,
+                    color: 'primary',
+                },
+            ]}
         >
             <Card additionClassName="form-card teacher-form">
                 <form className="createTeacherForm w-100" onSubmit={handleSubmit}>

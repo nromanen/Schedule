@@ -2,8 +2,6 @@ import React, { useEffect, useState } from 'react';
 
 import PropTypes from 'prop-types';
 
-import Button from '@material-ui/core/Button';
-
 import { useTranslation } from 'react-i18next';
 import { isEmpty } from 'lodash';
 import i18n from '../../../i18n';
@@ -43,10 +41,6 @@ const ShowStudentsOnGroupDialog = (props) => {
     useEffect(() => {
         setSelectDisabled();
     }, [props.students]);
-
-    const handleClose = () => {
-        onClose(cardId);
-    };
 
     const handleCheckElement = (event) => {
         setCheckBoxStudents(
@@ -102,50 +96,40 @@ const ShowStudentsOnGroupDialog = (props) => {
     const handleShowDialogFile = () => {
         setIsOpenUploadFileDialog((prevState) => !prevState);
     };
-
-    const buttonClassName = !isEmpty(students)
-        ? 'student-dialog-button-data'
-        : 'student-dialog-button-no-data';
-
+    const buttonClassName = 'student-dialog-button-data';
+    const dialogButtons = [
+        {
+            label: i18n.t('common:upload_from_file_title'),
+            handleClick: handleShowDialogFile,
+            color: 'primary',
+            additionClassName: buttonClassName,
+        },
+        {
+            label: i18n.t(COMMON_CLOSE_TITLE),
+            handleClick: onClose,
+            color: 'primary',
+            additionClassName: buttonClassName,
+        },
+    ];
     return (
         <>
             <CustomDialog
                 open={open}
-                onClose={handleClose}
+                onClose={onClose}
                 title={`${t(GROUP_LABEL)} - ${props.group.title}`}
                 buttons={
-                    <>
-                        <Button
-                            className={buttonClassName}
-                            variant="contained"
-                            onClick={handleShowDialogFile}
-                            color="primary"
-                            title={i18n.t('upload_from_file')}
-                        >
-                            {i18n.t('common:upload_from_file_title')}
-                        </Button>
-                        {!isEmpty(students) && (
-                            <Button
-                                className="student-dialog-button-data"
-                                variant="contained"
-                                onClick={getDialog}
-                                color="primary"
-                                disabled={isGroupButtonDisabled}
-                                title={i18n.t('choose_group_title')}
-                            >
-                                {i18n.t('choose_group_title')}
-                            </Button>
-                        )}
-                        <Button
-                            className={buttonClassName}
-                            variant="contained"
-                            onClick={() => onClose('')}
-                            color="primary"
-                            title={i18n.t('close_title')}
-                        >
-                            {i18n.t(COMMON_CLOSE_TITLE)}
-                        </Button>
-                    </>
+                    !isEmpty(students)
+                        ? [
+                              {
+                                  label: i18n.t('choose_group_title'),
+                                  handleClick: getDialog,
+                                  additionClassName: 'student-dialog-button-data',
+                                  color: 'primary',
+                                  disabled: isGroupButtonDisabled,
+                              },
+                              ...dialogButtons,
+                          ]
+                        : dialogButtons
                 }
             >
                 {isEmpty(students) ? (
@@ -181,7 +165,7 @@ const ShowStudentsOnGroupDialog = (props) => {
             </CustomDialog>
             {isOpenStudentListDialog && (
                 <MovingGroupsDialog
-                    onClose={handleClose}
+                    onClose={() => setIsOpenStudentListDialog(false)}
                     open={isOpenStudentListDialog}
                     checkBoxStudents={checkBoxStudents}
                     setShowStudentList={setIsOpenStudentListDialog}

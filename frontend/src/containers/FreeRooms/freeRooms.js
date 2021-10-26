@@ -43,16 +43,13 @@ const FreeRooms = (props) => {
                     title={t(FIND_FREE_ROOM)}
                     open={isOpenFreeRoomDialog}
                     onClose={handleClose}
-                    buttons={
-                        <Button
-                            variant="contained"
-                            onClick={handleClose}
-                            color="primary"
-                            title={t('close_title')}
-                        >
-                            {t('common:close_title')}
-                        </Button>
-                    }
+                    buttons={[
+                        {
+                            label: t('common:close_title'),
+                            handleClick: handleClose,
+                            color: 'primary',
+                        },
+                    ]}
                     maxWidth="lg"
                     aria-labelledby="form-dialog-title"
                 >

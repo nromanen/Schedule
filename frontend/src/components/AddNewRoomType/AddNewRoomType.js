@@ -13,6 +13,7 @@ import { cardType } from '../../constants/cardType';
 import Card from '../../share/Card/Card';
 import renderTextField from '../../share/renderedFields/input';
 import { deleteTypeService, getOneNewTypeService } from '../../services/roomTypesService';
+import { setIsOpenConfirmDialogService } from '../../services/dialogService';
 import './AddNewRoomType.scss';
 import {
     SAVE_BUTTON_LABEL,
@@ -22,9 +23,16 @@ import {
 import { dialogTypes } from '../../constants/dialogs';
 
 let NewRoomType = (props) => {
-    const { handleSubmit, pristine, submitting, roomTypes, oneType, initialize } = props;
+    const {
+        handleSubmit,
+        pristine,
+        submitting,
+        roomTypes,
+        oneType,
+        initialize,
+        isOpenConfirmDialog,
+    } = props;
 
-    const [isOpenDeleteConfirmDialog, setIsOpenDeleteConfirmDialog] = useState(false);
     const [typeId, setTypeId] = useState(-1);
 
     useEffect(() => {
@@ -39,26 +47,22 @@ let NewRoomType = (props) => {
 
     const handleClickOpen = (id) => {
         setTypeId(id);
-        setIsOpenDeleteConfirmDialog(true);
+        setIsOpenConfirmDialogService(true);
     };
 
-    const handleClose = (id) => {
-        setIsOpenDeleteConfirmDialog(false);
-        if (!id) {
-            return;
-        }
+    const handleDelete = (id) => {
+        setIsOpenConfirmDialogService(false);
         deleteTypeService(id);
     };
 
     return (
         <>
-            {isOpenDeleteConfirmDialog && (
+            {isOpenConfirmDialog && (
                 <CustomDialog
                     type={dialogTypes.DELETE_CONFIRM}
-                    cardId={typeId}
+                    handelConfirm={() => handleDelete(typeId)}
                     whatDelete={cardType.TYPE.toLowerCase()}
-                    open={isOpenDeleteConfirmDialog}
-                    onClose={handleClose}
+                    open={isOpenConfirmDialog}
                 />
             )}
             <Card additionClassName="form-card room-form">

@@ -17,6 +17,7 @@ import Card from '../../share/Card/Card';
 import { search } from '../../helper/search';
 import NotFound from '../../share/NotFound/NotFound';
 import { getAllRoomTypesService, addNewTypeService } from '../../services/roomTypesService';
+import { setIsOpenConfirmDialogService } from '../../services/dialogService';
 import {
     createRoomService,
     showListOfRoomsService,
@@ -35,11 +36,10 @@ import {
 } from '../../constants/translationLabels/common';
 
 const RoomList = (props) => {
-    const { rooms, roomTypes, disabledRooms } = props;
+    const { rooms, roomTypes, disabledRooms, isOpenConfirmDialog } = props;
     const { t } = useTranslation('formElements');
 
     const [isDisabled, setIsDisabled] = useState(false);
-    const [isOpenConfirmDialog, setIsOpenConfirmDialog] = useState(false);
     const [confirmDialogType, setConfirmDialogType] = useState('');
     const [roomId, setRoomId] = useState(-1);
     const [term, setTerm] = useState('');
@@ -64,7 +64,7 @@ const RoomList = (props) => {
     const showConfirmDialog = (id, dialogType) => {
         setRoomId(id);
         setConfirmDialogType(dialogType);
-        setIsOpenConfirmDialog(true);
+        setIsOpenConfirmDialogService(true);
     };
 
     const changeGroupDisabledStatus = (currentId) => {
@@ -75,8 +75,7 @@ const RoomList = (props) => {
     };
 
     const acceptConfirmDialog = (currentId) => {
-        setIsOpenConfirmDialog(false);
-        if (!currentId) return;
+        setIsOpenConfirmDialogService(false);
         if (confirmDialogType !== dialogTypes.DELETE_CONFIRM) {
             changeGroupDisabledStatus(currentId);
         } else {
@@ -94,10 +93,9 @@ const RoomList = (props) => {
             {isOpenConfirmDialog && (
                 <CustomDialog
                     type={confirmDialogType}
-                    cardId={roomId}
+                    handelConfirm={() => acceptConfirmDialog(roomId)}
                     whatDelete={cardType.ROOM.toLowerCase()}
                     open={isOpenConfirmDialog}
-                    onClose={acceptConfirmDialog}
                 />
             )}
 
@@ -173,6 +171,7 @@ const mapStateToProps = (state) => ({
     oneRoom: state.rooms.oneRoom,
     roomTypes: state.roomTypes.roomTypes,
     oneType: state.roomTypes.oneType,
+    isOpenConfirmDialog: state.dialog.isOpenConfirmDialog,
 });
 
 export default connect(mapStateToProps, {})(RoomList);

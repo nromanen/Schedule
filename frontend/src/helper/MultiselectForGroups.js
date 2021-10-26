@@ -61,26 +61,18 @@ export const MultiselectForGroups = (props) => {
             aria-labelledby="confirm-dialog-title"
             open={open}
             onClose={onClose}
-            buttons={
-                <div className="buttons-container">
-                    <Button
-                        className="dialog-button"
-                        variant="contained"
-                        color="primary"
-                        onClick={onClose}
-                    >
-                        {t(CONFIRM_GROUPS)}
-                    </Button>
-                    <Button
-                        className="dialog-button"
-                        variant="contained"
-                        color="primary"
-                        onClick={onCancel}
-                    >
-                        {t(CANCEL_BUTTON_LABEL)}
-                    </Button>
-                </div>
-            }
+            buttons={[
+                {
+                    label: t(CONFIRM_GROUPS),
+                    handleClick: onClose,
+                    color: 'primary',
+                },
+                {
+                    label: t(CANCEL_BUTTON_LABEL),
+                    handleClick: onCancel,
+                    color: 'primary',
+                },
+            ]}
         >
             <ReactSelect
                 isOptionSelected={isOptionSelected}

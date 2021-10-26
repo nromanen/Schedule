@@ -23,6 +23,7 @@ import { getPublicClassScheduleListService } from '../../services/classService';
 import { getFirstLetter, getTeacherFullName } from '../../helper/renderTeacher';
 import AddTeacherForm from '../../components/AddTeacherForm/AddTeacherForm';
 import { clearDepartment, getAllDepartmentsService } from '../../services/departmentService';
+import { setIsOpenConfirmDialogService } from '../../services/dialogService';
 import { getShortTitle } from '../../helper/shortTitle';
 import {
     getCurrentSemesterService,
@@ -59,6 +60,7 @@ const TeacherList = (props) => {
         departments,
         department,
         semesters,
+        isOpenConfirmDialog,
     } = props;
     const [term, setTerm] = useState('');
     const [isDisabled, setIsDisabled] = useState(false);
@@ -66,7 +68,6 @@ const TeacherList = (props) => {
     const [teacherId, setTeacherId] = useState(-1);
     const [isOpenMultiSelectDialog, setIsOpenMultiSelectDialog] = useState(false);
     const [selectedSemester, setSelectedSemester] = useState('');
-    const [isOpenConfirmDialog, setIsOpenConfirmDialog] = useState(false);
     const [confirmDialogType, setConfirmDialogType] = useState('');
 
     useEffect(() => {
@@ -130,10 +131,10 @@ const TeacherList = (props) => {
     const showConfirmDialog = (id, dialogType) => {
         setTeacherId(id);
         setConfirmDialogType(dialogType);
-        setIsOpenConfirmDialog(true);
+        setIsOpenConfirmDialogService(true);
     };
     const acceptConfirmDialog = (id) => {
-        setIsOpenConfirmDialog(false);
+        setIsOpenConfirmDialogService(false);
         if (!id) return;
         if (confirmDialogType !== dialogTypes.DELETE_CONFIRM) {
             setEnabledDisabledDepartment(id);
@@ -182,10 +183,9 @@ const TeacherList = (props) => {
                 {isOpenConfirmDialog && (
                     <CustomDialog
                         type={confirmDialogType}
-                        cardId={teacherId}
                         whatDelete={cardType.TEACHER}
                         open={isOpenConfirmDialog}
-                        onClose={acceptConfirmDialog}
+                        handelConfirm={() => acceptConfirmDialog(teacherId)}
                     />
                 )}
 
@@ -298,6 +298,7 @@ const mapStateToProps = (state) => ({
     semesters: state.schedule.semesters,
     departments: state.departments.departments,
     department: state.departments.department,
+    isOpenConfirmDialog: state.dialog.isOpenConfirmDialog,
 });
 
 export default connect(mapStateToProps, {})(TeacherList);

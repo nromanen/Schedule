@@ -43,29 +43,19 @@ export const UploadFile = (props) => {
             title="Upload file"
             open={open}
             onClose={handleCloseDialogFile}
-            buttons={
-                <>
-                    <Button
-                        className="dialog-button"
-                        variant="contained"
-                        onClick={handleSubmission}
-                        color="primary"
-                        title={t(COMMON_UPLOAD_TITLE)}
-                        disabled={setDisabledSendButton()}
-                    >
-                        {t(COMMON_UPLOAD_TITLE)}
-                    </Button>
-                    <Button
-                        className="dialog-button"
-                        variant="contained"
-                        onClick={handleCloseDialogFile}
-                        color="primary"
-                        title={t(CLOSE_LABEL)}
-                    >
-                        {t(CLOSE_LABEL)}
-                    </Button>
-                </>
-            }
+            buttons={[
+                {
+                    label: t(COMMON_UPLOAD_TITLE),
+                    handleClick: handleSubmission,
+                    color: 'primary',
+                    disabled: setDisabledSendButton(),
+                },
+                {
+                    label: t(CLOSE_LABEL),
+                    handleClick: handleCloseDialogFile,
+                    color: 'primary',
+                },
+            ]}
         >
             <input
                 type="file"

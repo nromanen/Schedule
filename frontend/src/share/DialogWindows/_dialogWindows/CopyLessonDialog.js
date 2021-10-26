@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 
 import PropTypes from 'prop-types';
-import Button from '@material-ui/core/Button';
 
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import TextField from '@material-ui/core/TextField';
@@ -58,21 +57,17 @@ const CopyLessonDialog = (props) => {
             title={translation(CHOOSE_GROUP)}
             open={open}
             onClose={onClose}
-            buttons={
-                <>
-                    <Button
-                        className="dialog-button"
-                        variant="contained"
-                        color="primary"
-                        onClick={chooseClickHandle}
-                    >
-                        {translation(FORM_CHOOSE_BUTTON_TITLE)}
-                    </Button>
-                    <Button className="dialog-button" variant="contained" onClick={onClose}>
-                        {translation(FORM_CANCEL_BUTTON_TITLE)}
-                    </Button>
-                </>
-            }
+            buttons={[
+                {
+                    label: translation(FORM_CHOOSE_BUTTON_TITLE),
+                    handleClick: chooseClickHandle,
+                    color: 'primary',
+                },
+                {
+                    label: translation(FORM_CANCEL_BUTTON_TITLE),
+                    handleClick: onClose,
+                },
+            ]}
         >
             <Autocomplete
                 {...defaultProps}

@@ -36,6 +36,7 @@ import NavigationPage from '../../components/Navigation/NavigationPage';
 import { navigation, navigationNames } from '../../constants/navigation';
 import { MultiselectForGroups } from '../../helper/MultiselectForGroups';
 import { showAllGroupsService } from '../../services/groupService';
+import { setIsOpenConfirmDialogService } from '../../services/dialogService';
 import { successHandler } from '../../helper/handlerAxios';
 import i18n from '../../i18n';
 import { CustomDialog } from '../../share/DialogWindows';
@@ -75,10 +76,10 @@ const SemesterPage = (props) => {
         archivedSemesters,
         enabledSemesters,
         disabledSemesters,
+        isOpenConfirmDialog,
     } = props;
     const searchArr = ['year', 'description', 'startDay', 'endDay'];
     const { t } = useTranslation('formElements');
-    const [isOpenConfirmDialog, setIsOpenConfirmDialog] = useState(false);
     const [confirmDialogType, setConfirmDialogType] = useState('');
     const [isOpenGroupsDialog, setIsOpenGroupsDialog] = useState(false);
     const [semesterId, setSemesterId] = useState(-1);
@@ -137,7 +138,7 @@ const SemesterPage = (props) => {
     const showConfirmDialog = (id, dialogType) => {
         setSemesterId(id);
         setConfirmDialogType(dialogType);
-        setIsOpenConfirmDialog(true);
+        setIsOpenConfirmDialogService(true);
     };
 
     const showSemesterCopyForm = (id) => {
@@ -161,7 +162,7 @@ const SemesterPage = (props) => {
     };
 
     const acceptConfirmDialog = (currentSemesterId) => {
-        setIsOpenConfirmDialog(false);
+        setIsOpenConfirmDialogService(false);
         if (!currentSemesterId) return;
         if (confirmDialogType === dialogTypes.SET_DEFAULT) {
             setDefaultSemesterById(currentSemesterId);
@@ -221,10 +222,9 @@ const SemesterPage = (props) => {
             {isOpenConfirmDialog && (
                 <CustomDialog
                     type={confirmDialogType}
-                    cardId={semesterId}
                     whatDelete="semester"
                     open={isOpenConfirmDialog}
-                    onClose={acceptConfirmDialog}
+                    handelConfirm={() => acceptConfirmDialog(semesterId)}
                 />
             )}
             {isOpenSemesterCopyForm && (
@@ -232,15 +232,13 @@ const SemesterPage = (props) => {
                     title={t(SEMESTER_COPY_LABEL)}
                     open={isOpenSemesterCopyForm}
                     onClose={closeSemesterCopyForm}
-                    buttons={
-                        <Button
-                            className="dialog-button"
-                            variant="contained"
-                            onClick={closeSemesterCopyForm}
-                        >
-                            {t(CLOSE_LABEL)}
-                        </Button>
-                    }
+                    buttons={[
+                        {
+                            label: t(CLOSE_LABEL),
+                            handleClick: closeSemesterCopyForm,
+                            color: 'primary',
+                        },
+                    ]}
                 >
                     <SemesterCopyForm
                         semesterId={semesterCard.id}
@@ -434,6 +432,7 @@ const mapStateToProps = (state) => ({
     snackbarMessage: state.snackbar.message,
     semester: state.semesters.semester,
     groups: state.groups.groups,
+    isOpenConfirmDialog: state.dialog.isOpenConfirmDialog,
 });
 
 export default connect(mapStateToProps, {})(SemesterPage);

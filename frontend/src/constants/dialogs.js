@@ -4,4 +4,5 @@ export const dialogTypes = {
     SET_VISIBILITY_DISABLED: 'setVisibilityDisabled',
     MEETING_LINK: 'meetingLink',
     SET_DEFAULT: 'setDefault',
+    CONFIRM_WITH_WARNING: 'confirmWithWarning',
 };
