@@ -13,7 +13,6 @@ import {
     setScheduleTeacherId,
     setScheduleType,
     setTeacherSchedule,
-    setTeacherRangeSchedule,
 } from '../actions/index';
 
 import { setLoadingService } from './loadingService';
@@ -24,10 +23,8 @@ import {
     GROUP_SCHEDULE_URL,
     SCHEDULE_ITEMS_URL,
     TEACHER_SCHEDULE_URL,
-    FOR_TEACHER_SCHEDULE_URL,
     CLEAR_SCHEDULE_URL,
     SCHEDULE_ITEM_ROOM_CHANGE,
-    SEND_PDF_TO_EMAIL,
 } from '../constants/axios';
 import { snackbarTypes } from '../constants/snackbarTypes';
 import { showBusyRooms } from './busyRooms';
@@ -35,15 +32,13 @@ import {
     BACK_END_SUCCESS_OPERATION,
     UPDATED_LABEL,
     CLEARED_LABEL,
-    SERVICE_MESSAGE_SENT_LABEL,
 } from '../constants/translationLabels/serviceMessages';
-import { FORM_SCHEDULE_LABEL } from '../constants/translationLabels/formElements';
 import {
     NO_CURRENT_SEMESTER_ERROR,
     COMMON_SCHEDULE_TITLE,
 } from '../constants/translationLabels/common';
 import { getScheduleItemsRequested } from '../actions/schedule';
-
+// ALERT GONNA BE DELETED
 export const getScheduleItemsService = () => {
     axios
         .get(CURRENT_SEMESTER_URL)

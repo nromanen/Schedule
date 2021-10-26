@@ -8,6 +8,7 @@ import { getAllPublicTeachers } from './getAllPublicTeachers';
 import { getAllPublicTeachersByDepartment } from './getAllPublicTeachersByDepartment';
 import { getCurrentSemester } from './getCurrentSemester';
 import { getDefaultSemester } from './getDefaultSemester';
+import { getScheduleItems } from './getScheduleItems';
 import { getScheduleItemsBySemester } from './getScheduleItemsBySemester';
 import { getTeacherRangeSchedule } from './getTeacherRangeSchedule';
 import { sendTeacherSchedule } from './sendTeacherSchedule';
@@ -33,4 +34,5 @@ export default function* watchSchedule() {
     yield takeLatest(actionTypes.GET_ALL_PUBLIC_SEMESTERS_REQUESTED, getAllPublicSemesters);
     yield takeLatest(actionTypes.SEND_TEACHER_SCHEDULE_REQUESTED, sendTeacherSchedule);
     yield takeLatest(actionTypes.GET_TEACHER_RANGE_SCHEDULE_REQUESTED, getTeacherRangeSchedule);
+    yield takeLatest(actionTypes.GET_ALL_SCHEDULE_ITEMS_REQUESTED, getScheduleItems);
 }

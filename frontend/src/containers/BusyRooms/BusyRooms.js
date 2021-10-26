@@ -16,14 +16,15 @@ import {
     BUSY_ROOMS_HEADING,
 } from '../../constants/translationLabels/common';
 import WeekRoomInfo from '../../components/WeekRoomInfo/WeekRoomInfo';
+import { getAllScheduleItemsRequested } from '../../actions/schedule';
 
 const BusyRooms = (props) => {
     const { t } = useTranslation('common');
     const busyRooms = props.busyRooms[0];
-    const { currentSemester, isLoading } = props;
+    const { currentSemester, isLoading, getAllScheduleItems } = props;
 
     useEffect(() => {
-        getScheduleItemsService();
+        getAllScheduleItems();
         getClassScheduleListService();
         setLoadingService(true);
     }, []);
@@ -112,4 +113,8 @@ const mapStateToProps = (state) => ({
     currentSemester: state.schedule.currentSemester,
 });
 
-export default connect(mapStateToProps, {})(BusyRooms);
+const mapDispatchToProps = (dispatch) => ({
+    getAllScheduleItems: () => dispatch(getAllScheduleItemsRequested()),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(BusyRooms);

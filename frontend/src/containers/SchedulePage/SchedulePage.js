@@ -21,9 +21,11 @@ import {
     CLEAR_SCHEDULE_LABEL,
     USE_PC,
 } from '../../constants/translationLabels/common';
+import { getAllScheduleItemsRequested } from '../../actions/schedule';
 
 const SchedulePage = (props) => {
-    const { groups, groupId, itemGroupId, scheduleItems, lessons, isLoading } = props;
+    const { groups, groupId, itemGroupId, scheduleItems, lessons, isLoading, getAllScheduleItems } =
+        props;
     const { t } = useTranslation('common');
 
     document.title = t(SCHEDULE_TITLE);
@@ -31,7 +33,7 @@ const SchedulePage = (props) => {
     useEffect(() => {
         setLoadingService(true);
         setScheduleLoadingService(true);
-        getScheduleItemsService();
+        getAllScheduleItems();
         showAllGroupsService();
         showListOfRoomsService();
         getClassScheduleListService();
@@ -126,4 +128,8 @@ const mapStateToProps = (state) => ({
     rooms: state.rooms.rooms,
 });
 
-export default connect(mapStateToProps)(SchedulePage);
+const mapDispatchToProps = (dispatch) => ({
+    getAllScheduleItems: () => dispatch(getAllScheduleItemsRequested()),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(SchedulePage);

@@ -36,6 +36,11 @@ export const getAllPublicSemestersRequested = () => {
         type: actionTypes.GET_ALL_PUBLIC_SEMESTERS_REQUESTED,
     };
 };
+export const getAllScheduleItemsRequested = () => {
+    return {
+        type: actionTypes.GET_ALL_SCHEDULE_ITEMS_REQUESTED,
+    };
+};
 export const getAllPublicGroupsRequested = (id) => {
     return {
         type: actionTypes.GET_ALL_PUBLIC_GROUPS_REQUESTED,
