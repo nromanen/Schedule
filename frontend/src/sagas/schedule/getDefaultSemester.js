@@ -12,7 +12,10 @@ export function* getDefaultSemester() {
         yield put(setSemesterLoading(false));
         yield put(setDefaultSemester(response.data));
     } catch (error) {
-        yield put(setOpenSnackbar(true, snackbarTypes.ERROR, i18n.t(NO_CURRENT_SEMESTER_ERROR)));
+        const message = i18n.t(NO_CURRENT_SEMESTER_ERROR);
+        const isOpen = true;
+        const type = snackbarTypes.ERROR;
+        yield put(setOpenSnackbar({ isOpen, type, message }));
         yield put(setSemesterLoading(false));
     }
 }

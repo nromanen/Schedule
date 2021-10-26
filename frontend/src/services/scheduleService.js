@@ -238,14 +238,14 @@ export const showAllPublicTeachersService = () => {
         .catch((err) => errorHandler(err));
 };
 
-export const showAllPublicTeachersByDepartmentService = (departmentId) => {
-    axios
-        .get(`${DEPARTMENT_URL}/${departmentId}/${TEACHER_URL}`)
-        .then((response) => {
-            store.dispatch(getAllTeachersByDepartmentId(response.data));
-        })
-        .catch((err) => errorHandler(err));
-};
+// export const showAllPublicTeachersByDepartmentService = (departmentId) => {
+//     axios
+//         .get(`${DEPARTMENT_URL}/${departmentId}/${TEACHER_URL}`)
+//         .then((response) => {
+//             store.dispatch(getAllTeachersByDepartmentId(response.data));
+//         })
+//         .catch((err) => errorHandler(err));
+// };
 
 export const getTeacherScheduleService = (values) => {
     axios
@@ -262,19 +262,5 @@ export const getTeacherScheduleService = (values) => {
         .catch((err) => {
             errorHandler(err);
             setLoadingService(false);
-        });
-};
-
-export const getTeacherScheduleByDateRangeService = (teacherId, to, from) => {
-    axios
-        .get(
-            `${FOR_TEACHER_SCHEDULE_URL}?teacherId${teacherId}&from=${from.replace(
-                /\//g,
-                '-',
-            )}&to=${to.replace(/\//g, '-')}`,
-        )
-        .then(() => {})
-        .catch((err) => {
-            errorHandler(err);
         });
 };

@@ -34,6 +34,7 @@ import {
     SHOW_TEACHER_TITLE,
 } from '../../constants/translationLabels/formElements';
 import { COMMON_SET_DISABLED, COMMON_SET_ENABLED } from '../../constants/translationLabels/common';
+import { getAllPublicTeachersByDepartmentRequested } from '../../actions/schedule';
 
 const DepartmentPage = (props) => {
     const {
@@ -43,6 +44,7 @@ const DepartmentPage = (props) => {
         snackbarMessage,
         enabledDepartments,
         disabledDepartments,
+        getAllPublicTeachersByDepartment,
     } = props;
     const { t } = useTranslation('formElements');
     const [term, setTerm] = useState('');
@@ -196,7 +198,7 @@ const DepartmentPage = (props) => {
                                     className="svg-btn delete-btn"
                                     title={t(SHOW_TEACHER_TITLE)}
                                     onClick={() => {
-                                        showAllPublicTeachersByDepartmentService(departmentItem.id);
+                                        getAllPublicTeachersByDepartment(departmentItem.id);
                                         getDepartmentByIdService(departmentItem.id);
                                         setTeacherDialog(true);
                                     }}
@@ -226,4 +228,9 @@ const mapStateToProps = (state) => ({
     teachers: state.teachers.teachers,
 });
 
-export default connect(mapStateToProps, {})(DepartmentPage);
+const mapDispatchToProps = (dispatch) => ({
+    getAllPublicTeachersByDepartment: (id) =>
+        dispatch(getAllPublicTeachersByDepartmentRequested(id)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(DepartmentPage);

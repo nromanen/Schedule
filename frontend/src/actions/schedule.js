@@ -13,6 +13,12 @@ export const getScheduleItemsRequested = (semesterId) => {
         semesterId,
     };
 };
+export const getAllPublicTeachersByDepartmentRequested = (departmentId) => {
+    return {
+        type: actionTypes.GET_ALL_PUBLIC_TEACHERS_BY_DEPARTMENT_REQUESTED,
+        departmentId,
+    };
+};
 
 export const setCurrentSemester = (res) => {
     return {

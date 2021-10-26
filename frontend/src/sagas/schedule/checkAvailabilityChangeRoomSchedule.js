@@ -19,10 +19,12 @@ export function* checkAvailabilityChangeRoomSchedule({ item }) {
         );
         yield put(setLoading(false));
     } catch (error) {
-        const errorMessage = error.response
+        const message = error.response
             ? i18n.t(error.response.data.message, error.response.data.message)
             : 'Error';
-        yield put(setOpenSnackbar(true, snackbarTypes.ERROR, errorMessage));
+        const isOpen = true;
+        const type = snackbarTypes.ERROR;
+        yield put(setOpenSnackbar({ isOpen, type, message }));
         yield put(setLoading(false));
     }
 }

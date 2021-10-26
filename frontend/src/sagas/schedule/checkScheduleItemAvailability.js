@@ -13,15 +13,12 @@ export function* checkScheduleItemAvailability({ item }) {
         yield put(checkAvailabilitySchedule(response.data));
         yield put(setLoading(false));
     } catch (error) {
-        yield put(
-            setOpenSnackbar(
-                true,
-                snackbarTypes.ERROR,
-                error.response
-                    ? i18n.t(error.response.data.message, error.response.data.message)
-                    : 'Error',
-            ),
-        );
+        const message = error.response
+            ? i18n.t(error.response.data.message, error.response.data.message)
+            : 'Error';
+        const isOpen = true;
+        const type = snackbarTypes.ERROR;
+        yield put(setOpenSnackbar({ isOpen, type, message }));
         yield put(setLoading(false));
     }
 }
