@@ -9,8 +9,6 @@ import ScheduleDialog from '../ScheduleDialog/ScheduleDialog';
 
 import { firstStringLetterCapital } from '../../helper/strings';
 
-import { deleteItemFromScheduleService } from '../../services/scheduleService';
-
 import { getLessonsByGroupService, selectGroupIdService } from '../../services/lessonService';
 import { setLoadingService } from '../../services/loadingService';
 
@@ -22,6 +20,7 @@ import './Schedule.scss';
 import {
     addItemsToScheduleRequested,
     checkAvailabilityChangeRoomScheduleRequested,
+    deleteScheduleItemRequested,
     editRoomItemToScheduleRequested,
 } from '../../actions/schedule';
 
@@ -39,6 +38,7 @@ const Schedule = (props) => {
         checkRoomAvailability,
         addItemsToSchedule,
         editRoomItemToSchedule,
+        deleteScheduleItem,
     } = props;
     const [open, setOpen] = useState(false);
     const [itemData, setItemData] = useState(null);
@@ -70,7 +70,7 @@ const Schedule = (props) => {
     const setNewItemHandle = (item, room, group) => {
         getLessonsByGroupService(group);
         selectGroupIdService(group);
-        if (item.id) deleteItemFromScheduleService(item.id);
+        if (item.id) deleteScheduleItem(item.id);
 
         addItemsToSchedule({ ...item, roomId: room.id });
     };
@@ -139,7 +139,7 @@ const Schedule = (props) => {
     };
 
     const deleteItemFromScheduleHandler = (itemId, group) => {
-        deleteItemFromScheduleService(itemId);
+        deleteScheduleItem(itemId);
         getLessonsByGroupService(group);
         selectGroupIdService(group);
     };
@@ -338,6 +338,7 @@ const mapDispatchToProps = (dispatch) => ({
     checkRoomAvailability: (item) => dispatch(checkAvailabilityChangeRoomScheduleRequested(item)),
     addItemsToSchedule: (item) => dispatch(addItemsToScheduleRequested(item)),
     editRoomItemToSchedule: (item) => dispatch(editRoomItemToScheduleRequested(item)),
+    deleteScheduleItem: (item) => dispatch(deleteScheduleItemRequested(item)),
 });
 
 export default connect(null, mapDispatchToProps)(Schedule);

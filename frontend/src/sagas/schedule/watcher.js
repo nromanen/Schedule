@@ -3,6 +3,7 @@ import * as actionTypes from '../../actions/actionsType';
 import { addItemsToSchedule } from './addItemsToSchedule';
 import { checkAvailabilityChangeRoomSchedule } from './checkAvailabilityChangeRoomSchedule';
 import { checkScheduleItemAvailability } from './checkScheduleItemAvailability';
+import { deleteScheduleItem } from './deleteScheduleItem';
 import { editRoomItemToSchedule } from './editRoomItemToSchedule';
 import { getAllPublicGroups } from './getAllPublicGroups';
 import { getAllPublicSemesters } from './getAllPublicSemesters';
@@ -39,4 +40,5 @@ export default function* watchSchedule() {
     yield takeLatest(actionTypes.GET_ALL_SCHEDULE_ITEMS_REQUESTED, getScheduleItems);
     yield takeLatest(actionTypes.ADD_ITEM_TO_SCHEDULE_REQUESTED, addItemsToSchedule);
     yield takeLatest(actionTypes.EDIT_ITEM_TO_SCHEDULE_REQUESTED, editRoomItemToSchedule);
+    yield takeLatest(actionTypes.DELETE_SCHEDULE_ITEM_REQUESTED, deleteScheduleItem);
 }

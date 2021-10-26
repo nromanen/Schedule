@@ -53,6 +53,12 @@ export const editRoomItemToScheduleRequested = (item) => {
         item,
     };
 };
+export const deleteScheduleItemRequested = (itemId) => {
+    return {
+        type: actionTypes.DELETE_SCHEDULE_ITEM_REQUESTED,
+        itemId,
+    };
+};
 export const getAllPublicGroupsRequested = (id) => {
     return {
         type: actionTypes.GET_ALL_PUBLIC_GROUPS_REQUESTED,

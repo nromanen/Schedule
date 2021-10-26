@@ -53,19 +53,6 @@ export const getScheduleItemsService = () => {
         });
 };
 
-export const deleteItemFromScheduleService = (itemId) => {
-    axios
-        .delete(`${SCHEDULE_ITEMS_URL}/${itemId}`)
-        .then(() => {
-            store.dispatch(deleteItemFromSchedule(itemId));
-            getScheduleItemsService();
-        })
-        .catch((err) => {
-            errorHandler(err);
-            setLoadingService(false);
-        });
-};
-
 export const clearSchedule = (semesterId) => {
     axios
         .delete(`${CLEAR_SCHEDULE_URL}?semesterId=${semesterId}`)
