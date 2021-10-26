@@ -26,6 +26,11 @@ export const setCurrentSemester = (res) => {
         payload: res,
     };
 };
+export const getAllPublicTeachersRequested = () => {
+    return {
+        type: actionTypes.GET_ALL_PUBLIC_TEACHERS_REQUESTED,
+    };
+};
 
 export const getCurrentSemesterRequsted = () => {
     return {

@@ -2,6 +2,7 @@ import { takeLatest } from 'redux-saga/effects';
 import * as actionTypes from '../../actions/actionsType';
 import { checkAvailabilityChangeRoomSchedule } from './checkAvailabilityChangeRoomSchedule';
 import { checkScheduleItemAvailability } from './checkScheduleItemAvailability';
+import { getAllPublicTeachers } from './getAllPublicTeachers';
 import { getAllPublicTeachersByDepartment } from './getAllPublicTeachersByDepartment';
 import { getCurrentSemester } from './getCurrentSemester';
 import { getDefaultSemester } from './getDefaultSemester';
@@ -23,4 +24,5 @@ export default function* watchSchedule() {
         actionTypes.GET_ALL_PUBLIC_TEACHERS_BY_DEPARTMENT_REQUESTED,
         getAllPublicTeachersByDepartment,
     );
+    yield takeLatest(actionTypes.GET_ALL_PUBLIC_TEACHERS_REQUESTED, getAllPublicTeachers);
 }

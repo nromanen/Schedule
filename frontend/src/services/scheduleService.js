@@ -229,24 +229,6 @@ export const showAllPublicGroupsService = (id) => {
             .catch((err) => errorHandler(err));
 };
 
-export const showAllPublicTeachersService = () => {
-    axios
-        .get(PUBLIC_TEACHER_URL)
-        .then((response) => {
-            store.dispatch(showAllTeachers(response.data));
-        })
-        .catch((err) => errorHandler(err));
-};
-
-// export const showAllPublicTeachersByDepartmentService = (departmentId) => {
-//     axios
-//         .get(`${DEPARTMENT_URL}/${departmentId}/${TEACHER_URL}`)
-//         .then((response) => {
-//             store.dispatch(getAllTeachersByDepartmentId(response.data));
-//         })
-//         .catch((err) => errorHandler(err));
-// };
-
 export const getTeacherScheduleService = (values) => {
     axios
         .get(
