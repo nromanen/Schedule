@@ -1,7 +1,7 @@
 import * as moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Field, reduxForm } from 'redux-form';
+import { Field } from 'redux-form';
 import Button from '@material-ui/core/Button';
 import { isNil } from 'lodash';
 import './SemesterForm.scss';
@@ -32,10 +32,10 @@ import {
     COMMON_CLASS_SCHEDULE_MANAGEMENT_TITLE,
     COMMON_SAVE_BUTTON_LABEL,
 } from '../../../constants/translationLabels/common';
-import { SEMESTER_FORM } from '../../../constants/reduxForms';
 import { daysUppercase } from '../../../constants/schedule/days';
 import { dateFormat } from '../../../constants/formats';
 import { getToday, getTomorrow } from '../../../utils/formUtils';
+import { clearSemesterService } from '../../../services/semesterService';
 
 const weekDays = daysUppercase.reduce((init, item) => {
     const isCheckedDays = init;
@@ -58,7 +58,6 @@ const SemesterForm = (props) => {
     const {
         handleSubmit,
         pristine,
-        onReset,
         submitting,
         semester,
         classScheduler,
@@ -183,6 +182,10 @@ const SemesterForm = (props) => {
     };
 
     const handleChange = (event, setState) => setState(event.target.checked);
+    const resetSemesterForm = () => {
+        setPrevSelectedGroups([]);
+        clearSemesterService();
+    };
     return (
         <Card additionClassName="form-card semester-form">
             <h2 style={{ textAlign: 'center' }}>
@@ -303,7 +306,7 @@ const SemesterForm = (props) => {
                             setDisableButton(pristine, submitting, semester.id) &&
                             prevSelectedGroups.length === 0
                         }
-                        onClick={onReset}
+                        onClick={resetSemesterForm}
                     >
                         {getClearOrCancelTitle(semester.id, t)}
                     </Button>
@@ -313,4 +316,4 @@ const SemesterForm = (props) => {
     );
 };
 
-export default reduxForm({ form: SEMESTER_FORM })(SemesterForm);
+export default SemesterForm;

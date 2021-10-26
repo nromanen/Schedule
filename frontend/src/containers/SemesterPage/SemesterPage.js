@@ -9,11 +9,10 @@ import { search } from '../../helper/search';
 import SearchPanel from '../../share/SearchPanel/SearchPanel';
 import SnackbarComponent from '../../share/Snackbar/SnackbarComponent';
 import { handleSnackbarCloseService } from '../../services/snackbarService';
-import SemesterForm from '../../components/Semester/SemesterForm/SemesterForm';
+import SemesterForm from './SemesterForm';
 import SemesterItem from '../../components/Semester/SemesterItem';
 import SemesterCopyForm from '../../components/Semester/SemesterCopyForm/SemesterCopyForm';
 import {
-    clearSemesterService,
     handleSemesterService,
     getDisabledSemestersService,
     removeSemesterCardService,
@@ -55,7 +54,6 @@ const SemesterPage = (props) => {
         archivedSemesters,
         enabledSemesters,
         disabledSemesters,
-        classScheduler,
     } = props;
     const searchArr = ['year', 'description', 'startDay', 'endDay'];
     const { t } = useTranslation('formElements');
@@ -110,10 +108,6 @@ const SemesterPage = (props) => {
         });
         handleSemesterService({ ...values, semester_groups: semesterGroups });
         setPrevSelectedGroups([]);
-    };
-    const resetSemesterForm = () => {
-        setPrevSelectedGroups([]);
-        clearSemesterService();
     };
 
     const closeSemesterCopyForm = () => {
@@ -227,14 +221,10 @@ const SemesterPage = (props) => {
                             setPrevSelectedGroups={setPrevSelectedGroups}
                             className="form"
                             onSubmit={submitSemesterForm}
-                            onReset={resetSemesterForm}
-                            classScheduler={classScheduler}
                             semester={edit ? semester : {}}
                             semesterOptions={semesterOptions}
                             setSemesterOptions={setSemesterOptions}
-                            groups={groups}
                             options={options}
-
                         />
                     )}
                 </aside>
@@ -278,8 +268,7 @@ const mapStateToProps = (state) => ({
     snackbarType: state.snackbar.snackbarType,
     snackbarMessage: state.snackbar.message,
     semester: state.semesters.semester,
-    classScheduler: state.classActions.classScheduler,
     groups: state.groups.groups,
 });
 
-export default connect(mapStateToProps, {})(SemesterPage);
+export default connect(mapStateToProps)(SemesterPage);
