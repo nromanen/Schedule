@@ -10,7 +10,7 @@ import {
     GREETING_SCHEDULE_MESSAGE_HINT,
 } from '../../constants/translationLabels/common';
 import SelectPlace from './SelectPlace';
-import SchedulePageForm from '../../containers/GroupSchedulePageTop/GroupScheduleForm';
+import SchedulePageForm from '../../containers/GroupSchedulePageTop/SchedulePageForm';
 
 const GroupSchedulePageTop = (props) => {
     const { t } = useTranslation('common');

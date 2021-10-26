@@ -211,24 +211,6 @@ export const showAllPublicSemestersService = () => {
         .catch((err) => errorHandler(err));
 };
 
-export const showAllPublicGroupsService = (id) => {
-    if (id !== null && id !== undefined)
-        axios
-            .get(`/${SEMESTERS_URL}/${id}/${GROUPS_URL}`)
-            .then((response) => {
-                store.dispatch(showAllGroups(response.data.sort((a, b) => sortGroup(a, b))));
-                if (response.data.length === 0) {
-                    infoHandler(
-                        i18n.t(CHOSEN_SEMESTER_HAS_NOT_GROUPS, {
-                            cardType: i18n.t(FORM_CHOSEN_SEMESTER_LABEL),
-                            actionType: i18n.t(SERVICE_MESSAGE_GROUP_LABEL),
-                        }),
-                    );
-                }
-            })
-            .catch((err) => errorHandler(err));
-};
-
 export const getTeacherScheduleService = (values) => {
     axios
         .get(
