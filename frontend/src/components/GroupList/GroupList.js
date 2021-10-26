@@ -28,7 +28,7 @@ const GroupList = (props) => {
         toggleDisabledStatus,
         startDeleteGroup,
         disabledGroups,
-        enabledGroups,
+        groups,
         selectGroup,
         students,
         loading,
@@ -58,7 +58,7 @@ const GroupList = (props) => {
         }
     }, [isDisabled]);
 
-    const visibleGroups = search(enabledGroups, term, ['title']);
+    const visibleGroups = search(groups, term, ['title']);
 
     const showCustomDialog = (currentId, disabledStatus) => {
         setGroupId(currentId);
@@ -83,18 +83,6 @@ const GroupList = (props) => {
         setShowStudents(true);
     };
 
-    const studentSubmit = (data) => {
-        if (data.id !== undefined) {
-            const sendData = { ...data, group: { id: data.group } };
-            updateStudentService(sendData);
-        } else {
-            const sendData = { ...data, group: { id: groupId } };
-            createStudentService(sendData);
-        }
-        setAddStudentDialog(false);
-        goToGroupPage(history);
-    };
-
     return (
         <>
             <CustomDialog
@@ -106,11 +94,10 @@ const GroupList = (props) => {
                 setOpenSubDialog={setOpenSubDialog}
             />
             <AddStudentDialog
-                onSubmit={studentSubmit}
                 open={openAddStudentDialog}
                 onSetSelectedCard={() => setAddStudentDialog(false)}
             />
-            {showStudents && (
+            {/* {showStudents && (
                 <ShowStudentsOnGroupDialog
                     onClose={() => setShowStudents(false)}
                     open={showStudents}
@@ -120,15 +107,10 @@ const GroupList = (props) => {
                     onSubmit={studentSubmit}
                     match={match}
                     student={student}
-                    groups={enabledGroups}
+                    groups={groups}
                 />
-            )}
+            )} */}
             <div className="group-wrapper group-list">
-                {loading && (
-                    <section className="centered-container">
-                        <CircularProgress />
-                    </section>
-                )}
                 {!loading && visibleGroups.length === 0 ? (
                     <NotFound name={t(GROUP_Y_LABEL)} />
                 ) : (
@@ -143,6 +125,11 @@ const GroupList = (props) => {
                             showStudentsByGroup={showStudentsByGroup}
                         />
                     ))
+                )}
+                {loading && (
+                    <section className="centered-container">
+                        <CircularProgress />
+                    </section>
                 )}
             </div>
         </>

@@ -9,7 +9,7 @@ import {
     startUpdateGroup,
     startClearGroup,
     selectGroup,
-} from '../../actions/groups';
+} from '../../actions';
 
 const mapStateToProps = (state) => ({
     isSnackbarOpen: state.snackbar.isSnackbarOpen,
@@ -17,7 +17,7 @@ const mapStateToProps = (state) => ({
     snackbarType: state.snackbar.snackbarType,
     snackbarMessage: state.snackbar.message,
     loading: state.loadingIndicator.loading,
-    enabledGroups: state.groups.groups,
+    groups: state.groups.groups,
     students: state.students.students,
     student: state.students.student,
     group: state.groups.group,

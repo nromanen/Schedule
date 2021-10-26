@@ -1,24 +1,22 @@
-import { connect } from 'react-redux';
 import React, { useEffect } from 'react';
-import { Field, reduxForm } from 'redux-form';
+import { Field } from 'redux-form';
 import Button from '@material-ui/core/Button';
 import { useTranslation } from 'react-i18next';
 
 import './AddGroupForms.scss';
 import Card from '../../share/Card/Card';
-import { GROUP_FORM } from '../../constants/reduxForms';
 import renderTextField from '../../share/renderedFields/input';
 import { required, uniqueGroup, minLengthValue } from '../../validation/validateFields';
 import { getClearOrCancelTitle, setDisableButton } from '../../helper/disableComponent';
 import {
-    EDIT_TITLE,
-    CREATE_TITLE,
     SAVE_BUTTON_LABEL,
     GROUP_Y_LABEL,
+    CREATE_TITLE,
     GROUP_LABEL,
+    EDIT_TITLE,
 } from '../../constants/translationLabels/formElements';
 
-const AddGroup = (props) => {
+export const AddGroup = (props) => {
     const { t } = useTranslation('formElements');
     const { handleSubmit, pristine, onReset, submitting, group, initialize } = props;
 
@@ -72,13 +70,3 @@ const AddGroup = (props) => {
         </Card>
     );
 };
-
-const mapStateToProps = (state) => ({
-    group: state.groups.group,
-});
-
-export default connect(mapStateToProps)(
-    reduxForm({
-        form: GROUP_FORM,
-    })(AddGroup),
-);

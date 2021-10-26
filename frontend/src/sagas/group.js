@@ -1,5 +1,6 @@
-import { call, takeEvery, put } from 'redux-saga/effects';
+import { call, takeEvery, put, select } from 'redux-saga/effects';
 import { reset } from 'redux-form';
+import { get } from 'lodash';
 import i18n from '../i18n';
 import { sortGroup } from '../helper/sortGroup';
 import { GROUP_FORM } from '../constants/reduxForms';
@@ -7,7 +8,6 @@ import * as actionTypes from '../actions/actionsType';
 import { setLoading } from '../actions/loadingIndicator';
 import { errorHandler, successHandler } from '../helper/handlerAxios';
 import { FORM_GROUP_LABEL } from '../constants/translationLabels/formElements';
-import { setDisabledItem, setEnabledItem } from '../helper/toggleDisabledItem';
 import {
     BACK_END_SUCCESS_OPERATION,
     UPDATED_LABEL,
@@ -15,7 +15,6 @@ import {
     DELETED_LABEL,
 } from '../constants/translationLabels/serviceMessages';
 import {
-    setDisabledGroups,
     showAllGroups,
     deleteGroup,
     updateGroup,
@@ -28,6 +27,7 @@ import { axiosCall } from '../services/axios';
 
 function* fetchDisabledGroupsWorker() {
     try {
+        yield put(showAllGroups([]));
         yield put(setLoading(true));
         const res = yield call(axiosCall, DISABLED_GROUPS_URL, 'GET');
         yield put(showAllGroups(res.data.sort((a, b) => sortGroup(a, b))));
@@ -40,6 +40,7 @@ function* fetchDisabledGroupsWorker() {
 
 function* fetchEnabledGroupsWorker() {
     try {
+        yield put(showAllGroups([]));
         yield put(setLoading(true));
         const res = yield call(axiosCall, GROUP_URL, 'GET');
         yield put(showAllGroups(res.data.sort((a, b) => sortGroup(a, b))));
@@ -68,8 +69,15 @@ function* createGroupWorker({ data }) {
 
 function* updateGroupWorker({ data }) {
     try {
+        // console.log(data);
+        // console.log(_.has(data, data.disable));
         const res = yield call(axiosCall, GROUP_URL, 'PUT', data);
-        yield put(updateGroup(res.data));
+        if (get(data.disable)) {
+            console.log(data);
+            yield put(deleteGroup(data.id));
+        } else {
+            yield put(updateGroup(res.data));
+        }
         yield put(selectGroup(null));
         yield put(reset(GROUP_FORM));
         successHandler(
@@ -101,9 +109,9 @@ function* deleteGroupWorker({ id }) {
 function* toggleDisabledGroupWorker({ groupId, disabledStatus }) {
     try {
         if (groupId) {
-            yield call(updateGroupWorker);
-        } else {
-            yield call(updateGroupWorker);
+            const state = yield select();
+            const group = state.groups.groups.find((item) => item.id === groupId);
+            yield call(updateGroupWorker, { data: { ...group, disable: !disabledStatus } });
         }
     } catch (err) {
         errorHandler(err);

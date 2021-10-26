@@ -21,9 +21,16 @@ export {
     clearGroup,
     deleteGroup,
     selectGroup,
-    setDisabledGroups,
-    showAllGroups,
     updateGroup,
+    showAllGroups,
+    setDisabledGroups,
+    startFetchDisabledGroups,
+    startFetchEnabledGroups,
+    toggleDisabledStatus,
+    startDeleteGroup,
+    startCreateGroup,
+    startUpdateGroup,
+    startClearGroup,
 } from './groups';
 export {
     deleteLessonCard,

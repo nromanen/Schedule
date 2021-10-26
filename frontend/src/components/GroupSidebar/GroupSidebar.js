@@ -1,5 +1,5 @@
 import React from 'react';
-import AddGroup from '../AddGroupForm/AddGroupForm';
+import AddGroup from '../../containers/Group/GroupForm';
 import SearchPanel from '../../share/SearchPanel/SearchPanel';
 
 const GroupSidebar = (props) => {
@@ -11,11 +11,13 @@ const GroupSidebar = (props) => {
         isDisabled,
         setTerm,
     } = props;
+
     const SearchChange = setTerm;
 
     const onSubmitGroupForm = (data) => {
         return !data.id ? startCreateGroup(data) : startUpdateGroup(data);
     };
+
     return (
         <aside className="search-list__panel">
             <SearchPanel
