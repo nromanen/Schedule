@@ -53,15 +53,6 @@ export const getScheduleItemsService = () => {
         });
 };
 
-export const addItemToScheduleService = (item) => {
-    axios
-        .post(SCHEDULE_ITEMS_URL, item)
-        .then(() => {
-            getScheduleItemsService();
-        })
-        .catch((err) => errorHandler(err));
-};
-
 export const editRoomItemToScheduleService = (item) => {
     axios
         .put(`${SCHEDULE_ITEM_ROOM_CHANGE}?roomId=${item.roomId}&scheduleId=${item.itemId}`)

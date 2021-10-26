@@ -41,6 +41,12 @@ export const getAllScheduleItemsRequested = () => {
         type: actionTypes.GET_ALL_SCHEDULE_ITEMS_REQUESTED,
     };
 };
+export const addItemsToScheduleRequested = (item) => {
+    return {
+        type: actionTypes.ADD_ITEM_TO_SCHEDULE_REQUESTED,
+        item,
+    };
+};
 export const getAllPublicGroupsRequested = (id) => {
     return {
         type: actionTypes.GET_ALL_PUBLIC_GROUPS_REQUESTED,

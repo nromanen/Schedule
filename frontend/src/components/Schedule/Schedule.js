@@ -10,7 +10,6 @@ import ScheduleDialog from '../ScheduleDialog/ScheduleDialog';
 import { firstStringLetterCapital } from '../../helper/strings';
 
 import {
-    addItemToScheduleService,
     deleteItemFromScheduleService,
     editRoomItemToScheduleService,
 } from '../../services/scheduleService';
@@ -23,7 +22,10 @@ import { colors } from '../../constants/schedule/colors';
 import { FORM_DAY_LABEL } from '../../constants/translationLabels/formElements';
 import { CLASS_SCHEDULE, WEEK_LABEL } from '../../constants/translationLabels/common';
 import './Schedule.scss';
-import { checkAvailabilityChangeRoomScheduleRequested } from '../../actions/schedule';
+import {
+    addItemsToScheduleRequested,
+    checkAvailabilityChangeRoomScheduleRequested,
+} from '../../actions/schedule';
 
 const Schedule = (props) => {
     const {
@@ -37,6 +39,7 @@ const Schedule = (props) => {
         availability,
         isLoading,
         checkRoomAvailability,
+        addItemsToSchedule,
     } = props;
     const [open, setOpen] = useState(false);
     const [itemData, setItemData] = useState(null);
@@ -70,7 +73,7 @@ const Schedule = (props) => {
         selectGroupIdService(group);
         if (item.id) deleteItemFromScheduleService(item.id);
 
-        addItemToScheduleService({ ...item, roomId: room.id });
+        addItemsToSchedule({ ...item, roomId: room.id });
     };
 
     const setEditItemHandle = (itemId, roomId, group) => {
@@ -334,6 +337,7 @@ const Schedule = (props) => {
 
 const mapDispatchToProps = (dispatch) => ({
     checkRoomAvailability: (item) => dispatch(checkAvailabilityChangeRoomScheduleRequested(item)),
+    addItemsToSchedule: (item) => dispatch(addItemsToScheduleRequested(item)),
 });
 
 export default connect(null, mapDispatchToProps)(Schedule);
