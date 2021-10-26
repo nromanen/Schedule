@@ -48,6 +48,12 @@ export const sendTeacherScheduleRequested = (data) => {
         data,
     };
 };
+export const getTeacherRangeScheduleRequested = (values) => {
+    return {
+        type: actionTypes.GET_TEACHER_RANGE_SCHEDULE_REQUESTED,
+        values,
+    };
+};
 
 export const getCurrentSemesterRequsted = () => {
     return {

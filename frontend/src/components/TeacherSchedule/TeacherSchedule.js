@@ -5,13 +5,13 @@ import { reset } from 'redux-form';
 import './TeacherSchedule.scss';
 
 import TeacherScheduleForm from '../TeacherScheduleForm/TeacherScheduleForm';
-import { getTeacherScheduleService } from '../../services/scheduleService';
 
 import { renderTeacherRangeSchedule } from '../../helper/renderScheduleTable';
 import { TEACHER_SCHEDULE_FORM } from '../../constants/reduxForms';
+import { getTeacherRangeScheduleRequested } from '../../actions/schedule';
 
 const TeacherSchedule = (props) => {
-    const { schedule, viewTeacherScheduleResults, clearForm } = props;
+    const { schedule, viewTeacherScheduleResults, clearForm, getTeacherRangeSchedule } = props;
 
     useEffect(() => {
         renderTeacherRangeSchedule(schedule, viewTeacherScheduleResults);
@@ -20,7 +20,7 @@ const TeacherSchedule = (props) => {
     return (
         <>
             <TeacherScheduleForm
-                onSubmit={getTeacherScheduleService}
+                onSubmit={getTeacherRangeSchedule}
                 onReset={() => clearForm(TEACHER_SCHEDULE_FORM)}
             />
             <section>{renderTeacherRangeSchedule(schedule, viewTeacherScheduleResults)}</section>
@@ -35,6 +35,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
     clearForm: (formName) => dispatch(reset(formName)),
+    getTeacherRangeSchedule: (values) => dispatch(getTeacherRangeScheduleRequested(values)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(TeacherSchedule);

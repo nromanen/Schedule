@@ -164,21 +164,3 @@ export const getGroupSchedule = (groupId, semesterId) => {
             .catch((err) => errorHandler(err));
     }
 };
-
-export const getTeacherScheduleService = (values) => {
-    axios
-        .get(
-            `${FOR_TEACHER_SCHEDULE_URL}?from=${values.startDay.replace(
-                /\//g,
-                '-',
-            )}&to=${values.endDay.replace(/\//g, '-')}`,
-        )
-        .then((response) => {
-            setLoadingService(false);
-            store.dispatch(setTeacherRangeSchedule(response.data));
-        })
-        .catch((err) => {
-            errorHandler(err);
-            setLoadingService(false);
-        });
-};
