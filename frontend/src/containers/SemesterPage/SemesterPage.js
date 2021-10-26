@@ -43,6 +43,7 @@ import {
     COPY_LABEL,
 } from '../../constants/translationLabels/formElements';
 import { COMMON_GROUP_TITLE } from '../../constants/translationLabels/common';
+import { getGroupsOptionsForSelect } from '../../utils/selectUtils';
 
 const SemesterPage = (props) => {
     const {
@@ -70,15 +71,11 @@ const SemesterPage = (props) => {
     const [isOpenSemesterCopyForm, setIsOpenSemesterCopyForm] = useState(null);
     const [semesterCard, setSemesterCard] = useState(null);
     const [visibleItems, setVisibleItems] = useState([]);
-    const getGroupOptions = (groupOptions) => {
-        return groupOptions.map((item) => {
-            return { id: item.id, value: item.id, label: `${item.title}` };
-        });
-    };
-    const options = getGroupOptions(groups);
+   
+    const options = getGroupsOptionsForSelect(groups);
     useEffect(() => {
         if (semester.semester_groups !== undefined && semester.semester_groups.length > 0) {
-            setSemesterOptions(getGroupOptions(semester.semester_groups));
+            setSemesterOptions(getGroupsOptionsForSelect(semester.semester_groups));
         }
     }, [semester.id]);
     useEffect(() => {
@@ -91,7 +88,7 @@ const SemesterPage = (props) => {
     const SearchChange = setTerm;
 
     const cancelMultiselect = () => {
-        setSemesterOptions(getGroupOptions(semester.semester_groups));
+        setSemesterOptions(getGroupsOptionsForSelect(semester.semester_groups));
         setOpenGroupsDialog(false);
     };
 
@@ -156,7 +153,7 @@ const SemesterPage = (props) => {
     };
     const onChangeGroups = () => {
         const beginGroups = !isEmpty(semester.semester_groups)
-            ? getGroupOptions(semester.semester_groups)
+            ? getGroupsOptionsForSelect(semester.semester_groups)
             : [];
         const finishGroups = [...semesterOptions];
         if (isEqual(beginGroups, finishGroups)) {

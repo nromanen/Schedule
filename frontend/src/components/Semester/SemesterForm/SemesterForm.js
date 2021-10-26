@@ -32,26 +32,15 @@ import {
     COMMON_CLASS_SCHEDULE_MANAGEMENT_TITLE,
     COMMON_SAVE_BUTTON_LABEL,
 } from '../../../constants/translationLabels/common';
-import { daysUppercase } from '../../../constants/schedule/days';
 import { dateFormat } from '../../../constants/formats';
-import { getToday, getTomorrow } from '../../../utils/formUtils';
+import {
+    getToday,
+    getTomorrow,
+    initialCheckboxesStateForDays,
+    createClasslabel,
+} from '../../../utils/formUtils';
+import { getGroupsOptionsForSelect } from '../../../utils/selectUtils';
 import { clearSemesterService } from '../../../services/semesterService';
-
-const weekDays = daysUppercase.reduce((init, item) => {
-    const isCheckedDays = init;
-    isCheckedDays[item] = false;
-    return isCheckedDays;
-}, {});
-
-const createClasslabel = (lessons, classItem) => {
-    const item = lessons.find((lesson) => lesson.id === +classItem);
-    return `${item.class_name} (${item.startTime}-${item.endTime})`;
-};
-const getGroupOptions = (groupOptions) => {
-    return groupOptions.map((item) => {
-        return { id: item.id, value: item.id, label: `${item.title}` };
-    });
-};
 
 const SemesterForm = (props) => {
     const { t } = useTranslation('formElements');
@@ -73,7 +62,7 @@ const SemesterForm = (props) => {
     const [startValue, setStartValue] = useState();
     const [finishValue, setFinishValue] = useState();
     const [checkedClasses, setCheckedClasses] = useState(prepSetCheckedClasses);
-    const [checkedDates, setCheckedDates] = useState(weekDays);
+    const [checkedDates, setCheckedDates] = useState(initialCheckboxesStateForDays);
     const [current, setCurrent] = useState(false);
     const [byDefault, setByDefault] = useState(false);
     const [startTime] = useState(getToday());
@@ -84,7 +73,7 @@ const SemesterForm = (props) => {
     const clearCheckboxes = () => {
         setCurrent(false);
         setByDefault(false);
-        setCheckedDates(weekDays);
+        setCheckedDates(initialCheckboxesStateForDays);
     };
 
     useEffect(() => {
@@ -104,7 +93,7 @@ const SemesterForm = (props) => {
             });
 
             setCheckedDates({
-                ...weekDays,
+                ...initialCheckboxesStateForDays,
                 ...newDays,
             });
 
@@ -127,7 +116,7 @@ const SemesterForm = (props) => {
     useEffect(() => {
         const { semester_groups: semesterGroups } = semester;
         if (!isNil(semesterGroups)) {
-            setPrevSelectedGroups(getGroupOptions(semesterGroups));
+            setPrevSelectedGroups(getGroupsOptionsForSelect(semesterGroups));
         }
     }, [semester.id]);
 
