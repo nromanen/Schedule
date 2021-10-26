@@ -202,10 +202,10 @@ const switchSaveActions = (semester) => {
 };
 
 const checkSemesterYears = (endDay, startDay, year) => {
-    const dateEndYear = +endDay.substring(endDay.length - 4);
-    const dateStartYear = +startDay.substring(startDay.length - 4);
+    const dateEndYear = endDay.substring(endDay.length - 4);
+    const dateStartYear = startDay.substring(startDay.length - 4);
     let conf = true;
-    if (year !== dateEndYear || year !== dateStartYear) {
+    if (year !== +dateEndYear || year !== +dateStartYear) {
         conf = window.confirm(i18n.t(SEMESTER_SERVICE_NOT_AS_BEGIN_OR_END));
     }
     return conf;

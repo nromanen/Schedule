@@ -13,7 +13,7 @@ const reducer = (state = initialState, action) => {
         case actionTypes.ADD_SEMESTER:
             return updateObject(state, {
                 semesters: state.semesters.concat(action.result),
-                semester: state.semester,
+                semester: {},
             });
 
         case actionTypes.DELETE_SEMESTER: {
