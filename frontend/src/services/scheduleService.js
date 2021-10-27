@@ -30,14 +30,14 @@ export const getFullSchedule = (semesterId) => {
             .catch((err) => errorHandler(err));
 };
 
-export const getGroupSchedule = (groupId, semesterId) => {
-    if (groupId > 0) {
-        axios
-            .get(`${GROUP_SCHEDULE_URL + semesterId}&groupId=${groupId}`)
-            .then((response) => {
-                store.dispatch(setGroupSchedule(response.data));
-                setLoadingService(false);
-            })
-            .catch((err) => errorHandler(err));
-    }
-};
+// export const getGroupSchedule = (groupId, semesterId) => {
+//     if (groupId > 0) {
+//         axios
+//             .get(`${GROUP_SCHEDULE_URL + semesterId}&groupId=${groupId}`)
+//             .then((response) => {
+//                 store.dispatch(setGroupSchedule(response.data));
+//                 setLoadingService(false);
+//             })
+//             .catch((err) => errorHandler(err));
+//     }
+// };

@@ -149,6 +149,13 @@ export const setGroupSchedule = (result) => {
         result,
     };
 };
+export const getGroupScheduleRequested = (groupId, semesterId) => {
+    return {
+        type: actionTypes.GET_GROUP_SCHEDULE_REQUESTED,
+        groupId,
+        semesterId,
+    };
+};
 export const deleteItemFromSchedule = (res) => {
     return {
         type: actionTypes.DELETE_ITEM_FROM_SCHEDULE,

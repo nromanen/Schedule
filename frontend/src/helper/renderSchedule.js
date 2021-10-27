@@ -3,7 +3,7 @@ import i18n from '../i18n';
 import { setLoadingService } from '../services/loadingService';
 import { isNotReadySchedule } from '../utils/sheduleUtils';
 import DownloadLink from '../components/DownloadLink/DownloadLink';
-import { makeGroupSchedule, makeFullSchedule, makeTeacherSchedule } from './prepareSchedule';
+import { makeFullSchedule, makeTeacherSchedule } from './prepareSchedule';
 import { renderGroupTable, renderFullSchedule, renderWeekTable } from './renderScheduleTable';
 import { getGroupScheduleTitle, getTeacherScheduleTitle } from '../utils/titlesUtil';
 
@@ -24,13 +24,7 @@ const renderSchedule = (
 ) => {
     switch (scheduleType) {
         case 'group': {
-            if (isNotReadySchedule(groupSchedule.schedule, loading)) {
-                return emptySchedule();
-            }
-
-            const { semester, group, oddArray, evenArray } = makeGroupSchedule(groupSchedule);
-
-            setLoadingService(false);
+            const { semester, group, oddArray, evenArray } = groupSchedule;
 
             return (
                 <>

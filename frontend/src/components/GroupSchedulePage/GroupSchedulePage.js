@@ -18,6 +18,7 @@ import {
     setScheduleType,
     setScheduleGroupId,
     setScheduleTeacherId,
+    getGroupScheduleRequested,
 } from '../../actions/schedule';
 
 const GroupSchedulePage = (props) => {
@@ -37,6 +38,7 @@ const GroupSchedulePage = (props) => {
         setTypeOfSchedule,
         setGroupId,
         setTeacherId,
+        getGroupSchedule,
     } = props;
 
     const submitSearchSchedule = (values) => {
@@ -74,22 +76,22 @@ const GroupSchedulePage = (props) => {
         history.push(`${links.ScheduleFor}?semester=${semester}${groupPath}${teacherPath}`);
     };
 
-    useEffect(() => {
-        if (scheduleType === 'full' && fullSchedule.length === 0) {
-            getScheduleByType()[SCHEDULE_TYPES.FULL]();
-        }
-    }, [scheduleType]);
+    // useEffect(() => {
+    //     if (scheduleType === 'full' && fullSchedule.length === 0) {
+    //         getScheduleByType()[SCHEDULE_TYPES.FULL]();
+    //     }
+    // }, [scheduleType]);
 
-    useEffect(() => {
-        if (scheduleType === 'group') {
-            getScheduleByType(groupId, semesterId)[SCHEDULE_TYPES.GROUP]();
-        }
-    }, [groupId]);
-    useEffect(() => {
-        if (scheduleType === 'teacher') {
-            getScheduleByType(teacherId, semesterId)[scheduleType]();
-        }
-    }, [teacherId]);
+    // useEffect(() => {
+    //     if (scheduleType === 'group') {
+    //         getScheduleByType(groupId, semesterId)[SCHEDULE_TYPES.GROUP]();
+    //     }
+    // }, [groupId]);
+    // useEffect(() => {
+    //     if (scheduleType === 'teacher') {
+    //         getScheduleByType(teacherId, semesterId)[scheduleType]();
+    //     }
+    // }, [teacherId]);
 
     useEffect(() => {
         getDefaultSemester();
@@ -164,6 +166,8 @@ const mapDispatchToProps = (dispatch) => ({
     setTypeOfSchedule: (type) => dispatch(setScheduleType(type)),
     setGroupId: (id) => dispatch(setScheduleGroupId(id)),
     setTeacherId: (id) => dispatch(setScheduleTeacherId(id)),
+    getGroupSchedule: (groupId, semesterId) =>
+        dispatch(getGroupScheduleRequested(groupId, semesterId)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(GroupSchedulePage);
