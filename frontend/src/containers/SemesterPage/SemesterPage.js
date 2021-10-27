@@ -13,13 +13,10 @@ import SemesterItem from './SemesterItem';
 import SemesterCopyForm from './SemesterCopyForm';
 import {
     handleSemesterService,
-    getDisabledSemestersService,
     removeSemesterCardService,
     setDisabledSemestersService,
     setEnabledSemestersService,
-    showAllSemestersService,
     semesterCopy,
-    getArchivedSemestersService,
     setDefaultSemesterById,
     setGroupsToSemester,
 } from '../../services/semesterService';
@@ -43,6 +40,11 @@ import {
 } from '../../constants/translationLabels/formElements';
 import { COMMON_GROUP_TITLE } from '../../constants/translationLabels/common';
 import { getGroupsOptionsForSelect } from '../../utils/selectUtils';
+import {
+    getAllSemestersStart,
+    getDisabledSemestersStart,
+    getArchivedSemestersStart,
+} from '../../actions/semesters';
 
 const SemesterPage = (props) => {
     const {
@@ -51,9 +53,12 @@ const SemesterPage = (props) => {
         snackbarMessage,
         groups,
         semester,
-        archivedSemesters,
+        // archivedSemesters,
         enabledSemesters,
         disabledSemesters,
+        getAllSemestersItems,
+        getDisabledSemestersItems,
+        getArchivedSemestersItems,
     } = props;
 
     const { t } = useTranslation('formElements');
@@ -80,10 +85,10 @@ const SemesterPage = (props) => {
 
     useEffect(() => {
         showAllGroupsService();
-        showAllSemestersService();
-        getDisabledSemestersService();
+        getAllSemestersItems();
+        getDisabledSemestersItems();
         // doesnt work
-        // getArchivedSemestersService();
+        // getArchivedSemestersItems();
     }, []);
 
     const submitSemesterForm = (values) => {
@@ -249,5 +254,10 @@ const mapStateToProps = (state) => ({
     semester: state.semesters.semester,
     groups: state.groups.groups,
 });
+const mapDispatchToProps = (dispatch) => ({
+    getAllSemestersItems: () => dispatch(getAllSemestersStart()),
+    getDisabledSemestersItems: () => dispatch(getDisabledSemestersStart()),
+    getArchivedSemestersItems: () => dispatch(getArchivedSemestersStart()),
+});
 
-export default connect(mapStateToProps)(SemesterPage);
+export default connect(mapStateToProps, mapDispatchToProps)(SemesterPage);

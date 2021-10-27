@@ -6,6 +6,11 @@ export const showAllSemesters = (res) => {
         result: res,
     };
 };
+export const getAllSemestersStart = () => {
+    return {
+        type: actionTypes.GET_ALL_SEMESTERS_START,
+    };
+};
 
 export const setDisabledSemesters = (res) => {
     return {
@@ -13,10 +18,20 @@ export const setDisabledSemesters = (res) => {
         result: res,
     };
 };
+export const getDisabledSemestersStart = () => {
+    return {
+        type: actionTypes.GET_DISABLED_SEMESTERS_START,
+    };
+};
 export const setArchivedSemesters = (res) => {
     return {
         type: actionTypes.SET_ARCHIVED_SEMESTERS,
         result: res,
+    };
+};
+export const getArchivedSemestersStart = () => {
+    return {
+        type: actionTypes.SET_ARCHIVED_SEMESTERS_START,
     };
 };
 

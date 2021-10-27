@@ -56,7 +56,7 @@ export const clearSemesterService = () => {
     store.dispatch(clearSemester());
     resetFormHandler(SEMESTER_FORM);
 };
-
+// created saga
 export const showAllSemestersService = () => {
     axios
         .get(SEMESTERS_URL)
@@ -69,7 +69,7 @@ export const showAllSemestersService = () => {
         })
         .catch((error) => errorHandler(error));
 };
-
+// created saga
 export const getDisabledSemestersService = () => {
     axios
         .get(DISABLED_SEMESTERS_URL)
@@ -78,7 +78,7 @@ export const getDisabledSemestersService = () => {
         })
         .catch((err) => errorHandler(err));
 };
-
+// created saga
 export const getArchivedSemestersService = () => {
     axios
         .get(ARCHIVED_SEMESTERS_URL)
@@ -87,28 +87,39 @@ export const getArchivedSemestersService = () => {
         })
         .catch((err) => errorHandler(err));
 };
-//need to refactor
-const setSemester = (resp) => {
-    store.dispatch(updateSemester(resp));
-    selectSemesterService(null);
-    getDisabledSemestersService();
-    // getArchivedSemestersService();
-    showAllSemestersService();
-    resetFormHandler(SEMESTER_FORM);
-    successHandler(
-        i18n.t(BACK_END_SUCCESS_OPERATION, {
-            cardType: i18n.t(FORM_SEMESTER_LABEL),
-            actionType: i18n.t(UPDATED_LABEL),
-        }),
-    );
-};
+// need to refactor
+// const setSemester = (resp) => {
+//     store.dispatch(updateSemester(resp));
+//     selectSemesterService(null);
+//     getDisabledSemestersService();
+//     // getArchivedSemestersService();
+//     showAllSemestersService();
+//     resetFormHandler(SEMESTER_FORM);
+//     successHandler(
+//         i18n.t(BACK_END_SUCCESS_OPERATION, {
+//             cardType: i18n.t(FORM_SEMESTER_LABEL),
+//             actionType: i18n.t(UPDATED_LABEL),
+//         }),
+//     );
+// };
 
 export const setGroupsToSemester = (semesterId, groups) => {
     const groupIds = groups.map((item) => `groupId=${item.id}`).join('&');
     axios
         .put(`${SEMESTERS_URL}/${semesterId}/groups?${groupIds}`)
         .then((response) => {
-            setSemester(response.data);
+            store.dispatch(updateSemester(response));
+            selectSemesterService(null);
+            getDisabledSemestersService();
+            getArchivedSemestersService();
+            showAllSemestersService();
+            resetFormHandler(SEMESTER_FORM);
+            successHandler(
+                i18n.t(BACK_END_SUCCESS_OPERATION, {
+                    cardType: i18n.t(FORM_SEMESTER_LABEL),
+                    actionType: i18n.t(UPDATED_LABEL),
+                }),
+            );
         })
         .catch((error) => errorHandler(error));
 };
@@ -173,7 +184,17 @@ const putSemester = (data) => {
     axios
         .put(SEMESTERS_URL, data)
         .then((response) => {
-            setSemester(response.data);
+            store.dispatch(updateSemester(response));
+            selectSemesterService(null);
+            getDisabledSemestersService();
+            showAllSemestersService();
+            resetFormHandler(SEMESTER_FORM);
+            successHandler(
+                i18n.t(BACK_END_SUCCESS_OPERATION, {
+                    cardType: i18n.t(FORM_SEMESTER_LABEL),
+                    actionType: i18n.t(UPDATED_LABEL),
+                }),
+            );
         })
         .catch((error) => errorHandler(error));
 };
@@ -252,7 +273,18 @@ export const setDefaultSemesterById = (dataId) => {
     axios
         .put(`${DEFAULT_SEMESTER_URL}?semesterId=${dataId}`)
         .then((response) => {
-            setSemester(response.data);
+            store.dispatch(updateSemester(response));
+            selectSemesterService(null);
+            getDisabledSemestersService();
+            getArchivedSemestersService();
+            showAllSemestersService();
+            resetFormHandler(SEMESTER_FORM);
+            successHandler(
+                i18n.t(BACK_END_SUCCESS_OPERATION, {
+                    cardType: i18n.t(FORM_SEMESTER_LABEL),
+                    actionType: i18n.t(UPDATED_LABEL),
+                }),
+            );
         })
         .catch((error) => errorHandler(error));
 };
