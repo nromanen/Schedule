@@ -7,7 +7,6 @@
     }
 
     .lesson-page-h {
-
         @media (max-width: 850px) {
             font-size: 1.1rem;
             line-height: 80px;
@@ -25,6 +24,6 @@
 
 .lesson-card {
     @media (max-width: 850px) {
-       box-sizing: border-box;
+        box-sizing: border-box;
     }
 }

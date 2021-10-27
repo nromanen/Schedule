@@ -11,7 +11,7 @@ const initialState = {
 
 const reducer = (state = initialState, action) => {
     switch (action.type) {
-        case actionTypes.ADD_LESSON_CARD:
+        case actionTypes.CREATE_LESSON_CARD:
             return updateObject(state, {
                 lessons: state.lessons.concat(action.result),
             });
@@ -24,7 +24,7 @@ const reducer = (state = initialState, action) => {
                 lessonTypes: action.result,
             });
         case actionTypes.DELETE_LESSON_CARD: {
-            const lessons = state.lessons.filter((lesson) => lesson.id !== action.result);
+            const lessons = state.lessons.filter((lesson) => lesson.id !== action.id);
             return updateObject(state, {
                 lessons,
             });

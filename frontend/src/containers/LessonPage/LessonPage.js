@@ -1,6 +1,15 @@
-import '../../components/LessonsPageComponent/LessonPage.scss';
 import { connect } from 'react-redux';
-import LessonPage from '../../components/LessonsPageComponent/LessonPage';
+import '../../components/LessonsPage/LessonPage.scss';
+import LessonPage from '../../components/LessonsPage/LessonPage';
+import {
+    copyLessonCard,
+    createLessonCardStart,
+    deleteLessonCardStart,
+    getLessonsByGroup,
+    getLessonTypes,
+    selectLessonCard,
+    updateLessonCardStart,
+} from '../../actions';
 
 const mapStateToProps = (state) => ({
     lessons: state.lesson.lessons,
@@ -15,5 +24,15 @@ const mapStateToProps = (state) => ({
     currentSemester: state.schedule.currentSemester,
 });
 
-// export default connect(mapStateToProps)(LessonPage);
-export default LessonPage;
+const mapDispatchToProps = (dispatch) => ({
+    getLessonsByGroup: (groupId) => dispatch(getLessonsByGroup(groupId)),
+    getLessonTypes: () => dispatch(getLessonTypes()),
+    updateLessonCardStart: ({ info, groupId }) =>
+        dispatch(updateLessonCardStart({ info, groupId })),
+    createLessonCardStart: ({ info, isCopy }) => dispatch(createLessonCardStart({ info, isCopy })),
+    deleteLessonCardStart: (lessonId) => dispatch(deleteLessonCardStart(lessonId)),
+    copyLessonCard: (group, lesson) => dispatch(copyLessonCard(group, lesson)),
+    selectLessonCard: (lessonCardId) => dispatch(selectLessonCard(lessonCardId)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(LessonPage);
