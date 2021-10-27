@@ -13,12 +13,10 @@ import SemesterItem from './SemesterItem';
 import SemesterCopyForm from './SemesterCopyForm';
 import {
     handleSemesterService,
-    removeSemesterCardService,
     setDisabledSemestersService,
     setEnabledSemestersService,
     semesterCopy,
     setDefaultSemesterById,
-    setGroupsToSemester,
 } from '../../services/semesterService';
 import { setScheduleTypeService } from '../../services/scheduleService';
 import NavigationPage from '../../components/Navigation/NavigationPage';
@@ -44,6 +42,8 @@ import {
     getAllSemestersStart,
     getDisabledSemestersStart,
     getArchivedSemestersStart,
+    setGroupsToSemesterStart,
+    deleteSemesterStart,
 } from '../../actions/semesters';
 
 const SemesterPage = (props) => {
@@ -58,7 +58,9 @@ const SemesterPage = (props) => {
         disabledSemesters,
         getAllSemestersItems,
         getDisabledSemestersItems,
-        getArchivedSemestersItems,
+        // getArchivedSemestersItems,
+        setGroupsToSemester,
+        removeSemesterCard,
     } = props;
 
     const { t } = useTranslation('formElements');
@@ -122,7 +124,7 @@ const SemesterPage = (props) => {
         } else if (subDialogType !== dialogTypes.DELETE_CONFIRM) {
             changeGSemesterDisabledStatus(currentSemesterId);
         } else {
-            removeSemesterCardService(currentSemesterId);
+            removeSemesterCard(currentSemesterId);
         }
     };
 
@@ -258,6 +260,9 @@ const mapDispatchToProps = (dispatch) => ({
     getAllSemestersItems: () => dispatch(getAllSemestersStart()),
     getDisabledSemestersItems: () => dispatch(getDisabledSemestersStart()),
     getArchivedSemestersItems: () => dispatch(getArchivedSemestersStart()),
+    setGroupsToSemester: (semesterId, groups) =>
+        dispatch(setGroupsToSemesterStart(semesterId, groups)),
+    removeSemesterCard: (semesterId) => dispatch(deleteSemesterStart(semesterId)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SemesterPage);

@@ -41,11 +41,22 @@ export const addSemester = (res) => {
         result: res,
     };
 };
-
+export const addSemesterStart = (item) => {
+    return {
+        type: actionTypes.ADD_SEMESTER_START,
+        item,
+    };
+};
 export const deleteSemester = (res) => {
     return {
         type: actionTypes.DELETE_SEMESTER,
         result: res,
+    };
+};
+export const deleteSemesterStart = (semesterId) => {
+    return {
+        type: actionTypes.DELETE_SEMESTER_START,
+        semesterId,
     };
 };
 
@@ -63,6 +74,12 @@ export const updateSemester = (res) => {
     };
 };
 
+export const updateSemesterStart = (item) => {
+    return {
+        type: actionTypes.UPDATE_SEMESTER_START,
+        item,
+    };
+};
 export const moveToArchivedSemester = (res) => {
     return {
         type: actionTypes.MOVE_SEMESTER_TO_ARCHIVE,
@@ -78,5 +95,13 @@ export const setError = (res) => {
     return {
         type: actionTypes.SET_ERROR,
         result: res,
+    };
+};
+
+export const setGroupsToSemesterStart = (semesterId, groups) => {
+    return {
+        type: actionTypes.SET_GROUPS_TO_SEMESTER_START,
+        semesterId,
+        groups,
     };
 };
