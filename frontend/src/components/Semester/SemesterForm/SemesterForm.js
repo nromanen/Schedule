@@ -59,15 +59,15 @@ const SemesterForm = (props) => {
 
     const prepSetCheckedClasses = {};
 
-    const [startValue, setStartValue] = useState();
-    const [finishValue, setFinishValue] = useState();
+    const [startDate, setStartDate] = useState(getToday());
+    const [finishDate, setFinishDate] = useState(getTomorrow());
+    const [disabledFinishDate, setDisabledFinishDate] = useState(true);
+
     const [checkedClasses, setCheckedClasses] = useState(prepSetCheckedClasses);
     const [checkedDates, setCheckedDates] = useState(initialCheckboxesStateForDays);
     const [current, setCurrent] = useState(false);
     const [byDefault, setByDefault] = useState(false);
-    const [startTime] = useState(getToday());
-    const [finishTime, setFinishTime] = useState(getTomorrow());
-    const [disabledFinishDate, setDisabledFinishDate] = useState(true);
+
     const [openGroupDialog, setOpenGroupDialog] = useState(false);
 
     const clearCheckboxes = () => {
@@ -122,20 +122,21 @@ const SemesterForm = (props) => {
     const openDialogForGroup = () => {
         setOpenGroupDialog(true);
     };
+
     const closeDialogForGroup = () => {
         setOpenGroupDialog(false);
     };
 
-    const setMinFinishDate = (time) => {
-        const newDate = moment(time, dateFormat).add(1, 'd');
-        return setFinishTime(newDate.toDate());
-    };
-    const setEndTime = (startTimeParam) => {
-        if (disabledFinishDate || moment(startValue).isSameOrBefore(finishValue)) {
-            setFinishValue(setMinFinishDate(startTimeParam));
+    const setStartDayHandler = (startTimeParam) => {
+        setStartDate(startTimeParam);
+        if (disabledFinishDate || moment(startDate).isSameOrBefore(finishDate)) {
+            const newDate = moment(startTimeParam, dateFormat).add(1, 'd');
+            setFinishDate(newDate.toDate());
             change('endDay', moment(startTimeParam, dateFormat).add(7, 'd').format(dateFormat));
         }
+        setDisabledFinishDate(false);
     };
+
     const setCheckedHandler = (event, item, checked, setSchecked) => {
         const changedItem = { [item]: event.target.checked };
         setSchecked({
@@ -175,6 +176,7 @@ const SemesterForm = (props) => {
         setSelectedGroups([]);
         clearSemesterService();
     };
+
     return (
         <Card additionClassName="form-card semester-form">
             <h2 style={{ textAlign: 'center' }}>
@@ -242,14 +244,9 @@ const SemesterForm = (props) => {
                         component={renderMonthPicker}
                         label={`${t(COMMON_CLASS_FROM_LABEL)}:`}
                         validate={[required, lessThanDate]}
-                        minDate={startTime}
+                        minDate={startDate}
                         onChange={(_, value) => {
-                            if (value) {
-                                setStartValue(value);
-                                setMinFinishDate(value);
-                                setEndTime(value);
-                                setDisabledFinishDate(false);
-                            }
+                            setStartDayHandler(value);
                         }}
                     />
                     <Field
@@ -258,10 +255,10 @@ const SemesterForm = (props) => {
                         component={renderMonthPicker}
                         label={`${t(COMMON_CLASS_TO_LABEL)}:`}
                         validate={[required, greaterThanDate]}
-                        minDate={finishTime}
+                        minDate={finishDate}
                         disabled={disabledFinishDate}
                         onChange={(_, value) => {
-                            setFinishValue(value);
+                            setFinishDate(value);
                         }}
                     />
                 </div>
