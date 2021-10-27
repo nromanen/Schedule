@@ -45,8 +45,8 @@ import {
     ROWS_PER_PAGE,
 } from '../constants/translationLabels/formElements';
 import CustomDialog from '../containers/Dialogs/CustomDialog';
-import AddStudentDialog from '../share/DialogWindows/_dialogWindows/AddStudentDialog';
 import { dialogTypes } from '../constants/dialogs';
+import AddStudentDialog from '../containers/Student/AddStudentDialog';
 
 const useStyles1 = makeStyles((theme) => ({
     root: {
@@ -149,7 +149,6 @@ function RenderStudentTable(props) {
         onSubmit,
         group,
         match,
-        student,
         checkBoxStudents,
         handleCheckElement,
         handleAllChecked,
@@ -162,12 +161,13 @@ function RenderStudentTable(props) {
         isOpenConfirmDialog,
     } = props;
     const [page, setPage] = React.useState(0);
+    const [student, setStudent] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
     const [isOpenEditDialog, setIsOpenEditDialog] = useState(false);
     const { t } = useTranslation('formElements');
-    const handleEdit = (studentId) => {
+    const handleEdit = (curentStudent) => {
         setIsOpenEditDialog(true);
-        selectStudentService(studentId);
+        setStudent(curentStudent);
     };
     useEffect(() => {
         if (match.path.includes(STUDENT_LINK) && match.path.includes(EDIT_LINK)) {
@@ -305,7 +305,7 @@ function RenderStudentTable(props) {
                                         <FaEdit
                                             className="edit-button"
                                             title={t(EDIT_TITLE)}
-                                            onClick={() => handleEdit(student.id)}
+                                            onClick={() => handleEdit(singleStudent)}
                                         />
                                     </Link>
                                     <Link
@@ -319,12 +319,13 @@ function RenderStudentTable(props) {
                                     </Link>
                                 </span>
                             </StyledTableCell>
+
                             {isOpenEditDialog && (
                                 <AddStudentDialog
                                     open={isOpenEditDialog}
-                                    onSubmit={handleSubmit}
-                                    onSetSelectedCard={handleCloseEditDialog}
-                                    match={match}
+                                    student={student}
+                                    group={group}
+                                    setOpen={handleCloseEditDialog}
                                 />
                             )}
 

@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from 'react';
-
 import PropTypes from 'prop-types';
 
 import { useTranslation } from 'react-i18next';
 import { isEmpty } from 'lodash';
 import RenderStudentTable from '../../../helper/renderStudentTable';
-import { getAllStudentsByGroupId } from '../../../services/studentService';
 import { UploadFile } from '../../../components/UploadFile/UploadFile';
 import CustomDialog from '../../../containers/Dialogs/CustomDialog';
 import {
@@ -17,7 +15,16 @@ import MovingGroupsDialog from './MovingGroupsDialog';
 import { GROUP_LABEL } from '../../../constants/translationLabels/formElements';
 
 const ShowStudentsOnGroupDialog = (props) => {
-    const { onClose, open, onDeleteStudent, students, onSubmit, match, groups, group } = props;
+    const {
+        onClose,
+        open,
+        onDeleteStudent,
+        students,
+        match,
+        groups,
+        group,
+        fetchAllStudentsStart,
+    } = props;
     const [checkBoxStudents, setCheckBoxStudents] = useState([]);
     const [isGroupButtonDisabled, setIsGroupButtonDisabled] = useState(true);
     const [checkedAll, setCheckedAll] = useState(false);
@@ -35,8 +42,8 @@ const ShowStudentsOnGroupDialog = (props) => {
         setCheckBoxStudents(res);
     };
     useEffect(() => {
-        getAllStudentsByGroupId(props.group.id);
-    }, [open, isOpenUploadFileDialog]);
+        fetchAllStudentsStart(group.id);
+    }, [group.id]);
     useEffect(() => {
         parseStudentToCheckBox();
     }, [props.students]);
@@ -135,10 +142,9 @@ const ShowStudentsOnGroupDialog = (props) => {
                         </h3>
 
                         <RenderStudentTable
-                            group={props.group}
+                            group={group}
                             onDeleteStudent={onDeleteStudent}
                             students={students}
-                            onSubmit={onSubmit}
                             match={match}
                             student={props.student}
                             checkBoxStudents={checkBoxStudents}
