@@ -1,61 +1,11 @@
 import { store } from '../store';
 
 import axios from '../helper/axios';
-import i18n from '../i18n';
 import { errorHandler } from '../helper/handlerAxios';
-import {
-    setCurrentSemester,
-    setFullSchedule,
-    setGroupSchedule,
-    setScheduleGroupId,
-    setScheduleSemesterId,
-    setScheduleTeacherId,
-    setScheduleType,
-    setTeacherSchedule,
-} from '../actions/index';
+import { setFullSchedule, setGroupSchedule, setTeacherSchedule } from '../actions/index';
 
 import { setLoadingService } from './loadingService';
-import { handleSnackbarOpenService } from './snackbarService';
-import {
-    CURRENT_SEMESTER_URL,
-    FULL_SCHEDULE_URL,
-    GROUP_SCHEDULE_URL,
-    TEACHER_SCHEDULE_URL,
-} from '../constants/axios';
-import { snackbarTypes } from '../constants/snackbarTypes';
-import { showBusyRooms } from './busyRooms';
-import { NO_CURRENT_SEMESTER_ERROR } from '../constants/translationLabels/common';
-import { getScheduleItemsRequested } from '../actions/schedule';
-// ALERT GONNA BE DELETED
-export const getScheduleItemsService = () => {
-    axios
-        .get(CURRENT_SEMESTER_URL)
-        .then((response) => {
-            store.dispatch(setCurrentSemester(response.data));
-            store.dispatch(getScheduleItemsRequested(response.data.id)); // saga
-            showBusyRooms(response.data.id);
-        })
-        .catch(() => {
-            handleSnackbarOpenService(true, snackbarTypes.ERROR, i18n.t(NO_CURRENT_SEMESTER_ERROR));
-            setLoadingService(false);
-        });
-};
-// ALERT GONNA BE DELETED
-export const setScheduleSemesterIdService = (semesterId) => {
-    store.dispatch(setScheduleSemesterId(semesterId));
-};
-// ALERT GONNA BE DELETED
-export const setScheduleTypeService = (item) => {
-    store.dispatch(setScheduleType(item));
-};
-// ALERT GONNA BE DELETED
-export const setScheduleGroupIdService = (groupId) => {
-    store.dispatch(setScheduleGroupId(groupId));
-};
-// ALERT GONNA BE DELETED
-export const setScheduleTeacherIdService = (teacherId) => {
-    store.dispatch(setScheduleTeacherId(teacherId));
-};
+import { FULL_SCHEDULE_URL, GROUP_SCHEDULE_URL, TEACHER_SCHEDULE_URL } from '../constants/axios';
 
 export const getTeacherSchedule = (teacherId, semesterId) => {
     if (teacherId > 0) {

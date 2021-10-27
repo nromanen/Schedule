@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { useHistory, useLocation } from 'react-router-dom';
 import './GroupSchedulePage.scss';
 import { CircularProgress } from '@material-ui/core';
+import { get } from 'lodash';
 import { getDataFromParams } from '../../utils/urlUtils';
 import GroupSchedulePageTop from '../GroupSchedulePageTop/GroupSchedulePageTop';
 import { setLoadingService } from '../../services/loadingService';
@@ -11,8 +12,13 @@ import { places } from '../../constants/places';
 import { getScheduleByType } from '../../utils/sheduleUtils';
 import { SCHEDULE_TYPES } from '../../constants/schedule/types';
 import { renderSchedule } from '../../helper/renderSchedule';
-import { submitSearchSchedule } from '../../helper/submitSearchSchedule';
-import { getDefaultSemesterRequsted } from '../../actions/schedule';
+import {
+    getDefaultSemesterRequsted,
+    setScheduleSemesterId,
+    setScheduleType,
+    setScheduleGroupId,
+    setScheduleTeacherId,
+} from '../../actions/schedule';
 
 const GroupSchedulePage = (props) => {
     const history = useHistory();
@@ -27,14 +33,44 @@ const GroupSchedulePage = (props) => {
         semesterId,
         loading,
         getDefaultSemester,
+        setSemesterId,
+        setTypeOfSchedule,
+        setGroupId,
+        setTeacherId,
     } = props;
+
+    const submitSearchSchedule = (values) => {
+        setSemesterId(values.semester);
+        if (values.group > 0) {
+            setTypeOfSchedule('group');
+            setGroupId(values.group);
+            getGroupSchedule(values.group, values.semester);
+
+            return;
+        }
+        if (values.teacher > 0) {
+            setTypeOfSchedule('teacher');
+            setTeacherId(values.teacher);
+            // getTeacherSchedule(values.teacher, values.semester);
+            return;
+        }
+        if (
+            (values.teacher === 0 && values.group === 0) ||
+            (!get(values, 'group') && values.teacher === 0) ||
+            (!get(values, 'teacher') && values.group === 0) ||
+            (!get(values, 'group') && !get(values, 'teacher'))
+        ) {
+            setTypeOfSchedule('full');
+            // getFullSchedule(values.semester);
+        }
+    };
 
     const handleSubmit = (values) => {
         const { semester, group, teacher } = values;
         const groupPath = group ? `&group=${group}` : '';
         const teacherPath = teacher ? `&teacher=${teacher}` : '';
         setLoadingService(true);
-        submitSearchSchedule(values, history);
+        submitSearchSchedule(values);
         history.push(`${links.ScheduleFor}?semester=${semester}${groupPath}${teacherPath}`);
     };
 
@@ -124,6 +160,10 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
     getDefaultSemester: () => dispatch(getDefaultSemesterRequsted()),
+    setSemesterId: (id) => dispatch(setScheduleSemesterId(id)),
+    setTypeOfSchedule: (type) => dispatch(setScheduleType(type)),
+    setGroupId: (id) => dispatch(setScheduleGroupId(id)),
+    setTeacherId: (id) => dispatch(setScheduleTeacherId(id)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(GroupSchedulePage);

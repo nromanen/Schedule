@@ -13,10 +13,6 @@ import renderTextField from '../../share/renderedFields/input';
 import { LOGIN_FORM } from '../../constants/reduxForms';
 
 import { required } from '../../validation/validateFields';
-import {
-    setScheduleGroupIdService,
-    setScheduleTeacherIdService,
-} from '../../services/scheduleService';
 import { PASSWORD_LABEL, EMAIL_LABEL } from '../../constants/translationLabels/formElements';
 import { LOGIN_TITLE } from '../../constants/translationLabels/common';
 import {

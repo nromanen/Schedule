@@ -6,7 +6,6 @@ import { CircularProgress } from '@material-ui/core';
 import Card from '../../share/Card/Card';
 import { navigation } from '../../constants/navigation';
 import { setLoadingService } from '../../services/loadingService';
-import { getScheduleItemsService } from '../../services/scheduleService';
 import { getClassScheduleListService } from '../../services/classService';
 import NavigationPage from '../../components/Navigation/NavigationPage';
 
