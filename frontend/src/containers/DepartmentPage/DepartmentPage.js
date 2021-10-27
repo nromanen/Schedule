@@ -25,8 +25,9 @@ import {
     setEnabledDepartmentService,
     updateDepartmentService,
 } from '../../services/departmentService';
-import { setIsOpenConfirmDialogService } from '../../services/dialogService';
-import { CustomDialog, ShowDepartmentDataDialog } from '../../share/DialogWindows';
+import { setIsOpenConfirmDialog } from '../../actions/dialog';
+import CustomDialog from '../Dialogs/CustomDialog';
+import ShowDepartmentDataDialog from '../../share/DialogWindows/_dialogWindows/ShowDepartmentDataDialog';
 import { dialogTypes } from '../../constants/dialogs';
 import {
     EDIT_TITLE,
@@ -44,6 +45,7 @@ const DepartmentPage = (props) => {
         snackbarMessage,
         enabledDepartments,
         disabledDepartments,
+        setOpenConfirmDialog,
         isOpenConfirmDialog,
     } = props;
     const { t } = useTranslation('formElements');
@@ -77,7 +79,7 @@ const DepartmentPage = (props) => {
     const showConfirmDialog = (currentId, dialogType) => {
         setDepartmentId(currentId);
         setConfirmDialogType(dialogType);
-        setIsOpenConfirmDialogService(true);
+        setOpenConfirmDialog(true);
     };
     const setDepartmentToUpdate = (currentId) => {
         getDepartmentByIdService(currentId);
@@ -95,7 +97,7 @@ const DepartmentPage = (props) => {
         return changeDisabledStatus[confirmDialogType];
     };
     const acceptConfirmDialog = (currentId) => {
-        setIsOpenConfirmDialogService(false);
+        setOpenConfirmDialog(false);
         if (confirmDialogType !== dialogTypes.DELETE_CONFIRM) {
             changeDepartmentDisabledStatus(currentId);
         } else deleteDepartmentsService(currentId);
@@ -110,14 +112,12 @@ const DepartmentPage = (props) => {
     return (
         <>
             <NavigationPage name={navigationNames.DEPARTMENTS} val={navigation.DEPARTMENTS} />
-            {isOpenConfirmDialog && (
-                <CustomDialog
-                    type={confirmDialogType}
-                    whatDelete="department"
-                    handelConfirm={() => acceptConfirmDialog(departmentId.id)}
-                    open={isOpenConfirmDialog}
-                />
-            )}
+            <CustomDialog
+                type={confirmDialogType}
+                whatDelete="department"
+                handelConfirm={() => acceptConfirmDialog(departmentId.id)}
+                open={isOpenConfirmDialog}
+            />
             {isOpenTeacherDialog && (
                 <ShowDepartmentDataDialog
                     isHide={departmentId.disabledStatus}
@@ -225,5 +225,8 @@ const mapStateToProps = (state) => ({
     teachers: state.teachers.teachers,
     isOpenConfirmDialog: state.dialog.isOpenConfirmDialog,
 });
+const mapDispatchToProps = (dispatch) => ({
+    setOpenConfirmDialog: (newState) => dispatch(setIsOpenConfirmDialog(newState)),
+});
 
-export default connect(mapStateToProps, {})(DepartmentPage);
+export default connect(mapStateToProps, mapDispatchToProps)(DepartmentPage);

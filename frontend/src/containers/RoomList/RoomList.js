@@ -5,7 +5,7 @@ import { FaEdit } from 'react-icons/fa';
 import { MdDelete } from 'react-icons/md';
 import { useTranslation } from 'react-i18next';
 import { GiSightDisabled, IoMdEye } from 'react-icons/all';
-import { CustomDialog } from '../../share/DialogWindows';
+import CustomDialog from '../Dialogs/CustomDialog';
 import { dialogTypes } from '../../constants/dialogs';
 import { cardType } from '../../constants/cardType';
 import AddRoom from '../../components/AddRoomForm/AddRoomForm';
@@ -17,7 +17,7 @@ import Card from '../../share/Card/Card';
 import { search } from '../../helper/search';
 import NotFound from '../../share/NotFound/NotFound';
 import { getAllRoomTypesService, addNewTypeService } from '../../services/roomTypesService';
-import { setIsOpenConfirmDialogService } from '../../services/dialogService';
+import { setIsOpenConfirmDialog } from '../../actions/dialog';
 import {
     createRoomService,
     showListOfRoomsService,
@@ -36,7 +36,7 @@ import {
 } from '../../constants/translationLabels/common';
 
 const RoomList = (props) => {
-    const { rooms, roomTypes, disabledRooms, isOpenConfirmDialog } = props;
+    const { rooms, roomTypes, disabledRooms, isOpenConfirmDialog, setOpenConfirmDialog } = props;
     const { t } = useTranslation('formElements');
 
     const [isDisabled, setIsDisabled] = useState(false);
@@ -64,7 +64,7 @@ const RoomList = (props) => {
     const showConfirmDialog = (id, dialogType) => {
         setRoomId(id);
         setConfirmDialogType(dialogType);
-        setIsOpenConfirmDialogService(true);
+        setOpenConfirmDialog(true);
     };
 
     const changeGroupDisabledStatus = (currentId) => {
@@ -75,7 +75,7 @@ const RoomList = (props) => {
     };
 
     const acceptConfirmDialog = (currentId) => {
-        setIsOpenConfirmDialogService(false);
+        setOpenConfirmDialog(false);
         if (confirmDialogType !== dialogTypes.DELETE_CONFIRM) {
             changeGroupDisabledStatus(currentId);
         } else {
@@ -90,14 +90,12 @@ const RoomList = (props) => {
     return (
         <>
             <NavigationPage name={navigationNames.ROOM_LIST} val={navigation.ROOMS} />
-            {isOpenConfirmDialog && (
-                <CustomDialog
-                    type={confirmDialogType}
-                    handelConfirm={() => acceptConfirmDialog(roomId)}
-                    whatDelete={cardType.ROOM.toLowerCase()}
-                    open={isOpenConfirmDialog}
-                />
-            )}
+            <CustomDialog
+                type={confirmDialogType}
+                handelConfirm={() => acceptConfirmDialog(roomId)}
+                whatDelete={cardType.ROOM.toLowerCase()}
+                open={isOpenConfirmDialog}
+            />
 
             <div className="cards-container">
                 <aside className="search-list__panel">
@@ -173,5 +171,8 @@ const mapStateToProps = (state) => ({
     oneType: state.roomTypes.oneType,
     isOpenConfirmDialog: state.dialog.isOpenConfirmDialog,
 });
+const mapDispatchToProps = (dispatch) => ({
+    setOpenConfirmDialog: (newState) => dispatch(setIsOpenConfirmDialog(newState)),
+});
 
-export default connect(mapStateToProps, {})(RoomList);
+export default connect(mapStateToProps, mapDispatchToProps)(RoomList);

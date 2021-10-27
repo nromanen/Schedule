@@ -1,17 +1,15 @@
 import React, { useState } from 'react';
 import './UploadFile.scss';
 import { useTranslation } from 'react-i18next';
-import Button from '@material-ui/core/Button';
 import { uploadStudentsToGroupFile } from '../../services/uploadFile';
-import { CustomDialog } from '../../share/DialogWindows';
+import CustomDialog from '../../containers/Dialogs/CustomDialog';
+import { dialogCloseButton, dialogUploadButton } from '../../constants/dialogs';
 import { setLoadingService } from '../../services/loadingService';
-import { CLOSE_LABEL } from '../../constants/translationLabels/formElements';
 import {
     COMMON_NAME_LABEL,
     COMMON_TYPE_LABEL,
     COMMON_BYTE_SIZE_LABEL,
     COMMON_SELECT_FILE_LABEL,
-    COMMON_UPLOAD_TITLE,
 } from '../../constants/translationLabels/common';
 
 export const UploadFile = (props) => {
@@ -44,17 +42,8 @@ export const UploadFile = (props) => {
             open={open}
             onClose={handleCloseDialogFile}
             buttons={[
-                {
-                    label: t(COMMON_UPLOAD_TITLE),
-                    handleClick: handleSubmission,
-                    color: 'primary',
-                    disabled: setDisabledSendButton(),
-                },
-                {
-                    label: t(CLOSE_LABEL),
-                    handleClick: handleCloseDialogFile,
-                    color: 'primary',
-                },
+                dialogUploadButton(handleSubmission, setDisabledSendButton()),
+                dialogCloseButton(handleCloseDialogFile),
             ]}
         >
             <input

@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import Divider from '@material-ui/core/Divider';
 import shortId from 'shortid';
 import Card from '../../../share/Card/Card';
-import { CustomDialog } from '../../../share/DialogWindows';
+import CustomDialog from '../../../containers/Dialogs/CustomDialog';
 import { dialogTypes } from '../../../constants/dialogs';
 
 import {
@@ -14,7 +14,7 @@ import {
     selectTemporaryScheduleService,
     selectVacationService,
 } from '../../../services/temporaryScheduleService';
-import { setIsOpenConfirmDialogService } from '../../../services/dialogService';
+import { setIsOpenConfirmDialog } from '../../../actions/dialog';
 import { cardType } from '../../../constants/cardType';
 import TemporaryScheduleCard from '../TemporaryScheduleCard/TemporaryScheduleCard';
 import { getTeacherForSite } from '../../../helper/renderTeacher';
@@ -28,31 +28,28 @@ import {
 
 const TemporaryScheduleList = (props) => {
     const { t } = useTranslation('common');
-
+    const { isOpenConfirmDialog, setOpenConfirmDialog } = props;
     const temporarySchedules = props.temporarySchedules || [];
-    const { isOpenConfirmDialog } = props;
     const [temporaryScheduleId, setTemporaryScheduleId] = useState(-1);
 
     const handleClickOpen = (id) => {
         setTemporaryScheduleId(id);
-        setIsOpenConfirmDialogService(true);
+        setOpenConfirmDialog(true);
     };
 
     const handleDelete = (id) => {
-        setIsOpenConfirmDialogService(false);
+        setOpenConfirmDialog(false);
         deleteTemporaryScheduleService(id, null, null);
     };
 
     return (
         <main className="container-flex-wrap">
-            {isOpenConfirmDialog && (
-                <CustomDialog
-                    handelConfirm={() => handleDelete(temporaryScheduleId)}
-                    type={dialogTypes.DELETE_CONFIRM}
-                    whatDelete={cardType.TEMPORARY_SCHEDULE}
-                    open={isOpenConfirmDialog}
-                />
-            )}
+            <CustomDialog
+                handelConfirm={() => handleDelete(temporaryScheduleId)}
+                type={dialogTypes.DELETE_CONFIRM}
+                whatDelete={cardType.TEMPORARY_SCHEDULE}
+                open={isOpenConfirmDialog}
+            />
 
             {temporarySchedules.map((temporarySchedule) => (
                 <Card
@@ -108,5 +105,8 @@ const TemporaryScheduleList = (props) => {
 const mapStateToProps = (state) => ({
     isOpenConfirmDialog: state.dialog.isOpenConfirmDialog,
 });
+const mapDispatchToProps = (dispatch) => ({
+    setOpenConfirmDialog: (newState) => dispatch(setIsOpenConfirmDialog(newState)),
+});
 
-export default connect(mapStateToProps, {})(TemporaryScheduleList);
+export default connect(mapStateToProps, mapDispatchToProps)(TemporaryScheduleList);

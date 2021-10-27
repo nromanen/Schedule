@@ -5,11 +5,9 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { isEmpty } from 'lodash';
-import i18n from '../../../i18n';
-import CustomDialog from '../CustomDialog';
+import CustomDialog from '../../../containers/Dialogs/CustomDialog';
 import '../dialog.scss';
 import RenderTeacherTable from '../../../helper/renderTeacherTable';
-import { COMMON_CLOSE_TITLE } from '../../../constants/translationLabels/common';
 import {
     TEACHERS_LABEL,
     TEACHER_LABEL,
@@ -17,6 +15,7 @@ import {
     NO_EXIST_TEACHER_AT_DEPARTMENT,
     DEPARTMENT_TEACHERS,
 } from '../../../constants/translationLabels/formElements';
+import { dialogCloseButton } from '../../../constants/dialogs';
 
 const ShowDepartmentDataDialog = (props) => {
     const { onClose, cardId, open, teachers, department } = props;
@@ -29,13 +28,7 @@ const ShowDepartmentDataDialog = (props) => {
             onClose={handleClose}
             open={open}
             title="Show dependencies data"
-            buttons={[
-                {
-                    label: i18n.t(COMMON_CLOSE_TITLE),
-                    handleClick: () => onClose(''),
-                    color: 'primary',
-                },
-            ]}
+            buttons={[dialogCloseButton(() => onClose(''))]}
         >
             {isEmpty(teachers) ? (
                 <>

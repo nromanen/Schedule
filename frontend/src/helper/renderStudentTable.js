@@ -23,7 +23,7 @@ import { Delete } from '@material-ui/icons';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { selectStudentService } from '../services/studentService';
-import { setIsOpenConfirmDialogService } from '../services/dialogService';
+import { setIsOpenConfirmDialog } from '../actions';
 import './renderStudentTable.scss';
 import { getTeacherFullName } from './renderTeacher';
 import { links } from '../constants/links';
@@ -38,7 +38,8 @@ import {
     ALL_PAGE,
     ROWS_PER_PAGE,
 } from '../constants/translationLabels/formElements';
-import { CustomDialog, AddStudentDialog } from '../share/DialogWindows';
+import CustomDialog from '../containers/Dialogs/CustomDialog';
+import AddStudentDialog from '../share/DialogWindows/_dialogWindows/AddStudentDialog';
 import { dialogTypes } from '../constants/dialogs';
 
 const useStyles1 = makeStyles((theme) => ({
@@ -133,7 +134,7 @@ const StyledTableRow = withStyles((theme) => ({
     },
 }))(TableRow);
 
-export default function RenderStudentTable(props) {
+function RenderStudentTable(props) {
     const ALL_ROWS = -1;
     const classes = useStyles2();
     const {
@@ -151,6 +152,7 @@ export default function RenderStudentTable(props) {
         handleClearCheckedAllBtn,
         checkedAllBtn,
         handleAllCheckedBtn,
+        setOpenConfirmDialog,
         isOpenConfirmDialog,
     } = props;
     const [page, setPage] = React.useState(0);
@@ -168,7 +170,7 @@ export default function RenderStudentTable(props) {
     }, [props.group.id]);
     useEffect(() => {
         if (match.path.includes(links.Student) && match.path.includes(links.Delete)) {
-            setIsOpenConfirmDialogService(true);
+            setOpenConfirmDialog(true);
         }
     }, [props.group.id]);
 
@@ -185,7 +187,7 @@ export default function RenderStudentTable(props) {
         window.location.href = mailto;
     };
     const deleteStudent = (studentItem) => {
-        setIsOpenConfirmDialogService(false);
+        setOpenConfirmDialog(false);
         onDeleteStudent(studentItem);
     };
     const handleCloseEditDialog = () => {
@@ -306,7 +308,7 @@ export default function RenderStudentTable(props) {
                                         <Delete
                                             title={t(DELETE_TITLE_LABEL)}
                                             className="delete-button"
-                                            onClick={() => setIsOpenConfirmDialogService(true)}
+                                            onClick={() => setOpenConfirmDialog(true)}
                                         />
                                     </Link>
                                 </span>
@@ -320,14 +322,12 @@ export default function RenderStudentTable(props) {
                                 />
                             )}
 
-                            {isOpenConfirmDialog && (
-                                <CustomDialog
-                                    type={dialogTypes.DELETE_CONFIRM}
-                                    whatDelete="student"
-                                    open={isOpenConfirmDialog}
-                                    handelConfirm={() => deleteStudent(student)}
-                                />
-                            )}
+                            <CustomDialog
+                                type={dialogTypes.DELETE_CONFIRM}
+                                whatDelete="student"
+                                open={isOpenConfirmDialog}
+                                handelConfirm={() => deleteStudent(student)}
+                            />
                         </StyledTableRow>
                     ))}
 
@@ -370,5 +370,8 @@ const mapStateToProps = (state) => ({
     student: state.students.student,
     isOpenConfirmDialog: state.dialog.isOpenConfirmDialog,
 });
+const mapDispatchToProps = (dispatch) => ({
+    setOpenConfirmDialog: (newState) => dispatch(setIsOpenConfirmDialog(newState)),
+});
 
-connect(mapStateToProps, {})(RenderStudentTable);
+export default connect(mapStateToProps, mapDispatchToProps)(RenderStudentTable);

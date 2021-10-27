@@ -8,12 +8,12 @@ import { MdDelete } from 'react-icons/md';
 import { FaEdit } from 'react-icons/fa';
 import { ROOM_FORM_TYPE } from '../../constants/reduxForms';
 
-import { CustomDialog } from '../../share/DialogWindows';
+import CustomDialog from '../../containers/Dialogs/CustomDialog';
 import { cardType } from '../../constants/cardType';
 import Card from '../../share/Card/Card';
 import renderTextField from '../../share/renderedFields/input';
 import { deleteTypeService, getOneNewTypeService } from '../../services/roomTypesService';
-import { setIsOpenConfirmDialogService } from '../../services/dialogService';
+import { setIsOpenConfirmDialog } from '../../actions/dialog';
 import './AddNewRoomType.scss';
 import {
     SAVE_BUTTON_LABEL,
@@ -30,6 +30,7 @@ let NewRoomType = (props) => {
         roomTypes,
         oneType,
         initialize,
+        setOpenConfirmDialog,
         isOpenConfirmDialog,
     } = props;
 
@@ -47,24 +48,22 @@ let NewRoomType = (props) => {
 
     const handleClickOpen = (id) => {
         setTypeId(id);
-        setIsOpenConfirmDialogService(true);
+        setOpenConfirmDialog(true);
     };
 
     const handleDelete = (id) => {
-        setIsOpenConfirmDialogService(false);
+        setOpenConfirmDialog(false);
         deleteTypeService(id);
     };
 
     return (
         <>
-            {isOpenConfirmDialog && (
-                <CustomDialog
-                    type={dialogTypes.DELETE_CONFIRM}
-                    handelConfirm={() => handleDelete(typeId)}
-                    whatDelete={cardType.TYPE.toLowerCase()}
-                    open={isOpenConfirmDialog}
-                />
-            )}
+            <CustomDialog
+                type={dialogTypes.DELETE_CONFIRM}
+                handelConfirm={() => handleDelete(typeId)}
+                whatDelete={cardType.TYPE.toLowerCase()}
+                open={isOpenConfirmDialog}
+            />
             <Card additionClassName="form-card room-form">
                 <form className="new-type-container" onSubmit={handleSubmit}>
                     <Field
@@ -119,9 +118,12 @@ const mapStateToProps = (state) => ({
     oneType: state.roomTypes.oneType,
     roomTypes: state.roomTypes.roomTypes,
 });
+const mapDispatchToProps = (dispatch) => ({
+    setOpenConfirmDialog: (newState) => dispatch(setIsOpenConfirmDialog(newState)),
+});
 
 NewRoomType = reduxForm({
     form: ROOM_FORM_TYPE,
 })(NewRoomType);
 
-export default connect(mapStateToProps)(NewRoomType);
+export default connect(mapStateToProps, mapDispatchToProps)(NewRoomType);

@@ -9,13 +9,13 @@ import { GiSightDisabled, IoMdEye } from 'react-icons/all';
 import Card from '../../share/Card/Card';
 import { search } from '../../helper/search';
 import NotFound from '../../share/NotFound/NotFound';
-import { CustomDialog } from '../../share/DialogWindows';
+import CustomDialog from '../Dialogs/CustomDialog';
 import { dialogTypes } from '../../constants/dialogs';
 import SearchPanel from '../../share/SearchPanel/SearchPanel';
 import SnackbarComponent from '../../share/Snackbar/SnackbarComponent';
 import AddSubject from '../../components/AddSubjectForm/AddSubjectForm';
 import { handleSnackbarCloseService } from '../../services/snackbarService';
-import { setIsOpenConfirmDialogService } from '../../services/dialogService';
+import { setIsOpenConfirmDialog } from '../../actions/dialog';
 import {
     showAllSubjectsService,
     removeSubjectCardService,
@@ -43,6 +43,7 @@ const SubjectPage = (props) => {
         snackbarMessage,
         disabledSubjects,
         subjects,
+        setOpenConfirmDialog,
         isOpenConfirmDialog,
     } = props;
 
@@ -66,11 +67,11 @@ const SubjectPage = (props) => {
     const showConfirmDialog = (subjId, dialogType) => {
         setSubjectId(subjId);
         setConfirmDialogType(dialogType);
-        setIsOpenConfirmDialogService(true);
+        setOpenConfirmDialog(true);
     };
 
     const acceptConfirmDialog = (id) => {
-        setIsOpenConfirmDialogService(false);
+        setOpenConfirmDialog(false);
         if (!id) return;
         switch (confirmDialogType) {
             case dialogTypes.DELETE_CONFIRM:
@@ -99,14 +100,12 @@ const SubjectPage = (props) => {
     return (
         <>
             <NavigationPage name={navigationNames.SUBJECT_PAGE} val={navigation.SUBJECTS} />
-            {isOpenConfirmDialog && (
-                <CustomDialog
-                    type={confirmDialogType}
-                    whatDelete="subject"
-                    open={isOpenConfirmDialog}
-                    handelConfirm={() => acceptConfirmDialog(subjectId)}
-                />
-            )}
+            <CustomDialog
+                type={confirmDialogType}
+                whatDelete="subject"
+                open={isOpenConfirmDialog}
+                handelConfirm={() => acceptConfirmDialog(subjectId)}
+            />
 
             <div className="cards-container">
                 <aside className="search-list__panel">
@@ -187,5 +186,8 @@ const mapStateToProps = (state) => ({
     snackbarMessage: state.snackbar.message,
     isOpenConfirmDialog: state.dialog.isOpenConfirmDialog,
 });
+const mapDispatchToProps = (dispatch) => ({
+    setOpenConfirmDialog: (newState) => dispatch(setIsOpenConfirmDialog(newState)),
+})
 
-export default connect(mapStateToProps, {})(SubjectPage);
+export default connect(mapStateToProps, mapDispatchToProps)(SubjectPage);

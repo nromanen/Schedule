@@ -9,7 +9,7 @@ import { GiSightDisabled, IoMdEye } from 'react-icons/all';
 import i18n from 'i18next';
 import Card from '../../share/Card/Card';
 
-import { CustomDialog } from '../../share/DialogWindows';
+import CustomDialog from '../Dialogs/CustomDialog';
 import { dialogTypes } from '../../constants/dialogs';
 import { cardType } from '../../constants/cardType';
 import { search } from '../../helper/search';
@@ -23,7 +23,7 @@ import { getPublicClassScheduleListService } from '../../services/classService';
 import { getFirstLetter, getTeacherFullName } from '../../helper/renderTeacher';
 import AddTeacherForm from '../../components/AddTeacherForm/AddTeacherForm';
 import { clearDepartment, getAllDepartmentsService } from '../../services/departmentService';
-import { setIsOpenConfirmDialogService } from '../../services/dialogService';
+import { setIsOpenConfirmDialog } from '../../actions/dialog';
 import { getShortTitle } from '../../helper/shortTitle';
 import {
     getCurrentSemesterService,
@@ -60,6 +60,7 @@ const TeacherList = (props) => {
         departments,
         department,
         semesters,
+        setOpenConfirmDialog,
         isOpenConfirmDialog,
     } = props;
     const [term, setTerm] = useState('');
@@ -131,10 +132,10 @@ const TeacherList = (props) => {
     const showConfirmDialog = (id, dialogType) => {
         setTeacherId(id);
         setConfirmDialogType(dialogType);
-        setIsOpenConfirmDialogService(true);
+        setOpenConfirmDialog(true);
     };
     const acceptConfirmDialog = (id) => {
-        setIsOpenConfirmDialogService(false);
+        setOpenConfirmDialog(false);
         if (!id) return;
         if (confirmDialogType !== dialogTypes.DELETE_CONFIRM) {
             setEnabledDisabledDepartment(id);
@@ -180,14 +181,12 @@ const TeacherList = (props) => {
         <>
             <NavigationPage name={navigationNames.TEACHER_LIST} val={navigation.TEACHERS} />
             <div className="cards-container">
-                {isOpenConfirmDialog && (
-                    <CustomDialog
-                        type={confirmDialogType}
-                        whatDelete={cardType.TEACHER}
-                        open={isOpenConfirmDialog}
-                        handelConfirm={() => acceptConfirmDialog(teacherId)}
-                    />
-                )}
+                <CustomDialog
+                    type={confirmDialogType}
+                    whatDelete={cardType.TEACHER}
+                    open={isOpenConfirmDialog}
+                    handelConfirm={() => acceptConfirmDialog(teacherId)}
+                />
 
                 <aside className="form-with-search-panel">
                     <SearchPanel SearchChange={SearchChange} showDisabled={changeDisable} />
@@ -300,5 +299,8 @@ const mapStateToProps = (state) => ({
     department: state.departments.department,
     isOpenConfirmDialog: state.dialog.isOpenConfirmDialog,
 });
+const mapDispatchToProps = (dispatch) => ({
+    setOpenConfirmDialog: (newState) => dispatch(setIsOpenConfirmDialog(newState)),
+})
 
-export default connect(mapStateToProps, {})(TeacherList);
+export default connect(mapStateToProps, mapDispatchToProps)(TeacherList);

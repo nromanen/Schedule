@@ -4,18 +4,20 @@ import PropTypes from 'prop-types';
 
 import { useTranslation } from 'react-i18next';
 import { isEmpty } from 'lodash';
-import i18n from '../../../i18n';
 import RenderStudentTable from '../../../helper/renderStudentTable';
 import { getAllStudentsByGroupId } from '../../../services/studentService';
 import { UploadFile } from '../../../components/UploadFile/UploadFile';
-import CustomDialog from '../CustomDialog';
+import CustomDialog from '../../../containers/Dialogs/CustomDialog';
+import {
+    dialogCloseButton,
+    dialogUploadFromFileButton,
+    dialogChooseGroupButton,
+} from '../../../constants/dialogs';
 import MovingGroupsDialog from './MovingGroupsDialog';
 import { GROUP_LABEL } from '../../../constants/translationLabels/formElements';
-import { COMMON_CLOSE_TITLE } from '../../../constants/translationLabels/common';
 
 const ShowStudentsOnGroupDialog = (props) => {
-    const { onClose, cardId, open, onDeleteStudent, students, onSubmit, match, groups, group } =
-        props;
+    const { onClose, open, onDeleteStudent, students, onSubmit, match, groups, group } = props;
     const [checkBoxStudents, setCheckBoxStudents] = useState([]);
     const [isGroupButtonDisabled, setIsGroupButtonDisabled] = useState(true);
     const [checkedAll, setCheckedAll] = useState(false);
@@ -96,20 +98,10 @@ const ShowStudentsOnGroupDialog = (props) => {
     const handleShowDialogFile = () => {
         setIsOpenUploadFileDialog((prevState) => !prevState);
     };
-    const buttonClassName = 'student-dialog-button-data';
+    const buttonClassName = { additionClassName: 'student-dialog-button-data' };
     const dialogButtons = [
-        {
-            label: i18n.t('common:upload_from_file_title'),
-            handleClick: handleShowDialogFile,
-            color: 'primary',
-            additionClassName: buttonClassName,
-        },
-        {
-            label: i18n.t(COMMON_CLOSE_TITLE),
-            handleClick: onClose,
-            color: 'primary',
-            additionClassName: buttonClassName,
-        },
+        dialogUploadFromFileButton(handleShowDialogFile, buttonClassName),
+        dialogCloseButton(onClose, buttonClassName),
     ];
     return (
         <>
@@ -120,13 +112,11 @@ const ShowStudentsOnGroupDialog = (props) => {
                 buttons={
                     !isEmpty(students)
                         ? [
-                              {
-                                  label: i18n.t('choose_group_title'),
-                                  handleClick: getDialog,
-                                  additionClassName: 'student-dialog-button-data',
-                                  color: 'primary',
-                                  disabled: isGroupButtonDisabled,
-                              },
+                              dialogChooseGroupButton(
+                                  getDialog,
+                                  isGroupButtonDisabled,
+                                  buttonClassName,
+                              ),
                               ...dialogButtons,
                           ]
                         : dialogButtons

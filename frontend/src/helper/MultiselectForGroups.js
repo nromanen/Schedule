@@ -1,15 +1,10 @@
 import React, { useRef } from 'react';
-import ReactSelect from 'react-select';
-import Button from '@material-ui/core/Button';
+import Select from 'react-select';
 import './multiselect.scss';
 import { useTranslation } from 'react-i18next';
-import {
-    CHOOSE_GROUPS,
-    CONFIRM_GROUPS,
-    CANCEL_BUTTON_LABEL,
-    ALL_GROUPS,
-} from '../constants/translationLabels/common';
-import { CustomDialog } from '../share/DialogWindows';
+import { CHOOSE_GROUPS, ALL_GROUPS } from '../constants/translationLabels/common';
+import CustomDialog from '../containers/Dialogs/CustomDialog';
+import { dialogCancelButton, dialogConfirmButton } from '../constants/dialogs';
 
 export const MultiselectForGroups = (props) => {
     const { t } = useTranslation('common');
@@ -56,28 +51,16 @@ export const MultiselectForGroups = (props) => {
     };
     return (
         <CustomDialog
-            id="select-dialog"
-            title=""
-            aria-labelledby="confirm-dialog-title"
+            className="select-dialog"
             open={open}
             onClose={onClose}
-            buttons={[
-                {
-                    label: t(CONFIRM_GROUPS),
-                    handleClick: onClose,
-                    color: 'primary',
-                },
-                {
-                    label: t(CANCEL_BUTTON_LABEL),
-                    handleClick: onCancel,
-                    color: 'primary',
-                },
-            ]}
+            buttons={[dialogConfirmButton(onClose), dialogCancelButton(onCancel)]}
         >
-            <ReactSelect
+            <Select
+                classNamePrefix="react-select"
                 isOptionSelected={isOptionSelected}
                 options={getOptions()}
-                value={getValue()}
+                defaultValue={getValue()}
                 onChange={onChange}
                 hideSelectedOptions={false}
                 closeMenuOnSelect={false}

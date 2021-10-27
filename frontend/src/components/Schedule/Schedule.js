@@ -4,7 +4,7 @@ import { IoMdMore } from 'react-icons/all';
 import { makeStyles } from '@material-ui/core/styles';
 import Board from '../Board/Board';
 import ScheduleItem from '../ScheduleItem/ScheduleItem';
-import { ScheduleDialog } from '../../containers/Dialogs';
+import ScheduleDialog from '../../containers/Dialogs/ScheduleDialog';
 
 import { firstStringLetterCapital } from '../../helper/strings';
 

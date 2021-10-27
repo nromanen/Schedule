@@ -6,15 +6,12 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import TextField from '@material-ui/core/TextField';
 import { makeStyles } from '@material-ui/core/styles';
 import {
-    FORM_CHOOSE_BUTTON_TITLE,
-    FORM_CANCEL_BUTTON_TITLE,
-} from '../../../constants/translationLabels/formElements';
-import {
     COPY_TO_SAME_GROUP_ERROR,
     CHOOSE_GROUP,
     COMMON_CHOOSE_GROUP,
 } from '../../../constants/translationLabels/common';
-import CustomDialog from '../CustomDialog';
+import CustomDialog from '../../../containers/Dialogs/CustomDialog';
+import { dialogCloseButton, dialogChooseButton } from '../../../constants/dialogs';
 
 const useStyles = makeStyles(() => ({
     groupField: {
@@ -57,17 +54,7 @@ const CopyLessonDialog = (props) => {
             title={translation(CHOOSE_GROUP)}
             open={open}
             onClose={onClose}
-            buttons={[
-                {
-                    label: translation(FORM_CHOOSE_BUTTON_TITLE),
-                    handleClick: chooseClickHandle,
-                    color: 'primary',
-                },
-                {
-                    label: translation(FORM_CANCEL_BUTTON_TITLE),
-                    handleClick: onClose,
-                },
-            ]}
+            buttons={[dialogChooseButton(chooseClickHandle), dialogCloseButton(onClose)]}
         >
             <Autocomplete
                 {...defaultProps}

@@ -3,8 +3,7 @@ import PropTypes from 'prop-types';
 
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import TextField from '@material-ui/core/TextField';
-import { dialogTypes } from '../../constants/dialogs';
-import { setIsOpenConfirmDialogService } from '../../services/dialogService';
+import { dialogTypes, dialogCloseButton, dialogChooseButton } from '../../constants/dialogs';
 import {
     COMMON_SCHEDULE_DIALOG_TITLE,
     COMMON_ROOM_IS_UNAVAILABLE,
@@ -12,19 +11,23 @@ import {
     COMMON_UNAVAILABLE,
     COMMON_TEACHER_IS_UNAVAILABLE,
 } from '../../constants/translationLabels/common';
-import {
-    FORM_CHOOSE_BUTTON_TITLE,
-    FORM_CANCEL_BUTTON_TITLE,
-    FORM_ROOM_LABEL,
-} from '../../constants/translationLabels/formElements';
+import { FORM_ROOM_LABEL } from '../../constants/translationLabels/formElements';
 import './ScheduleDialog.scss';
-import { CustomDialog } from '../../share/DialogWindows';
+import CustomDialog from '../../containers/Dialogs/CustomDialog';
 import { sortByAvailability } from '../../helper/sortArray';
 import '../../share/DialogWindows/dialog.scss';
 
 const ScheduleDialog = (props) => {
-    const { onClose, itemData, open, rooms, availability, translation, isOpenConfirmDialog } =
-        props;
+    const {
+        onClose,
+        setOpenConfirmDialog,
+        itemData,
+        open,
+        rooms,
+        availability,
+        translation,
+        isOpenConfirmDialog,
+    } = props;
 
     const [room, setRoom] = useState('');
     const [warning, setWarning] = useState('');
@@ -43,7 +46,7 @@ const ScheduleDialog = (props) => {
 
     const chooseClickHandle = () => {
         if (!room) return;
-        setIsOpenConfirmDialogService(true);
+        setOpenConfirmDialog(true);
         if (!room.available) {
             setWarning((prev) => `${prev}\n${translation(COMMON_ROOM_IS_UNAVAILABLE)}`);
         }
@@ -60,15 +63,8 @@ const ScheduleDialog = (props) => {
                 open={open}
                 onClose={onClose}
                 buttons={[
-                    {
-                        label: translation(FORM_CHOOSE_BUTTON_TITLE),
-                        handleClick: chooseClickHandle,
-                        color: 'primary',
-                    },
-                    {
-                        label: translation(FORM_CANCEL_BUTTON_TITLE),
-                        handleClick: () => onClose(''),
-                    },
+                    dialogChooseButton(chooseClickHandle),
+                    dialogCloseButton(() => onClose('')),
                 ]}
             >
                 <div className="availability-info">
@@ -93,17 +89,15 @@ const ScheduleDialog = (props) => {
                 />
             </CustomDialog>
 
-            {isOpenConfirmDialog && (
-                <CustomDialog
-                    type={dialogTypes.CONFIRM_WITH_WARNING}
-                    open={isOpenConfirmDialog}
-                    warning={warning}
-                    handelConfirm={() => {
-                        onClose({ itemData, room });
-                        setIsOpenConfirmDialogService(false);
-                    }}
-                />
-            )}
+            <CustomDialog
+                type={dialogTypes.CONFIRM_WITH_WARNING}
+                open={isOpenConfirmDialog}
+                warning={warning}
+                handelConfirm={() => {
+                    onClose({ itemData, room });
+                    setOpenConfirmDialog(false);
+                }}
+            />
         </>
     );
 };

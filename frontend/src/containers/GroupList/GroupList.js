@@ -30,12 +30,10 @@ import {
     setEnabledGroupService,
     showAllGroupsService,
 } from '../../services/groupService';
-import { setIsOpenConfirmDialogService } from '../../services/dialogService';
-import {
-    CustomDialog,
-    ShowStudentsOnGroupDialog,
-    AddStudentDialog,
-} from '../../share/DialogWindows';
+import { setIsOpenConfirmDialog } from '../../actions/dialog';
+import CustomDialog from '../Dialogs/CustomDialog';
+import ShowStudentsOnGroupDialog from '../../share/DialogWindows/_dialogWindows/ShowStudentsOnGroupDialog';
+import AddStudentDialog from '../../share/DialogWindows/_dialogWindows/AddStudentDialog';
 import { dialogTypes } from '../../constants/dialogs';
 import { GROUP_Y_LABEL } from '../../constants/translationLabels/formElements';
 
@@ -49,6 +47,7 @@ const GroupList = (props) => {
         students,
         group,
         match,
+        setOpenConfirmDialog,
         isOpenConfirmDialog,
         student,
     } = props;
@@ -76,7 +75,7 @@ const GroupList = (props) => {
     const showConfirmDialog = (currentId, disabledStatus) => {
         setGroupId(currentId);
         setConfirmDialogType(disabledStatus);
-        setIsOpenConfirmDialogService(true);
+        setOpenConfirmDialog(true);
     };
     const changeGroupDisabledStatus = (currentGroupId) => {
         const foundGroup = [...disabledGroups, ...enabledGroup].find(
@@ -89,7 +88,7 @@ const GroupList = (props) => {
         return changeDisabledStatus[confirmDialogType];
     };
     const acceptConfirmDialog = (currentGroupId) => {
-        setIsOpenConfirmDialogService(false);
+        setOpenConfirmDialog(false);
         if (confirmDialogType !== dialogTypes.DELETE_CONFIRM) {
             changeGroupDisabledStatus(currentGroupId);
         } else removeGroupCardService(currentGroupId);
@@ -132,14 +131,14 @@ const GroupList = (props) => {
     return (
         <>
             <NavigationPage name={navigationNames.GROUP_LIST} val={navigation.GROUPS} />
-            {isOpenConfirmDialog && (
-                <CustomDialog
-                    type={confirmDialogType}
-                    handelConfirm={() => acceptConfirmDialog(groupId)}
-                    whatDelete="group"
-                    open={isOpenConfirmDialog}
-                />
-            )}
+
+            <CustomDialog
+                type={confirmDialogType}
+                handelConfirm={() => acceptConfirmDialog(groupId)}
+                whatDelete="group"
+                open={isOpenConfirmDialog}
+            />
+
             {isOpenAddStudentDialog && (
                 <AddStudentDialog
                     open={isOpenAddStudentDialog}
@@ -208,5 +207,8 @@ const mapStateToProps = (state) => ({
     student: state.students.student,
     isOpenConfirmDialog: state.dialog.isOpenConfirmDialog,
 });
+const mapDispatchToProps = (dispatch) => ({
+    setOpenConfirmDialog: (newState) => dispatch(setIsOpenConfirmDialog(newState)),
+});
 
-export default connect(mapStateToProps, {})(GroupList);
+export default connect(mapStateToProps, mapDispatchToProps)(GroupList);

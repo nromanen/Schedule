@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import Button from '@material-ui/core/Button';
 import { useTranslation } from 'react-i18next';
 import Card from '../../share/Card/Card';
 import FreeRoomForm from '../../components/FreeRoomForm/freeRoomForm';
 import { clearFreeRoomsService, showFreeRoomsService } from '../../services/freeRoomsService';
 import { getClassScheduleListService } from '../../services/classService';
-import { CustomDialog } from '../../share/DialogWindows';
+import CustomDialog from '../Dialogs/CustomDialog';
+import { dialogCloseButton } from '../../constants/dialogs';
 
 import './freeRooms.scss';
 import { ROOM_LABEL, FIND_FREE_ROOM } from '../../constants/translationLabels/formElements';
@@ -43,13 +43,7 @@ const FreeRooms = (props) => {
                     title={t(FIND_FREE_ROOM)}
                     open={isOpenFreeRoomDialog}
                     onClose={handleClose}
-                    buttons={[
-                        {
-                            label: t('common:close_title'),
-                            handleClick: handleClose,
-                            color: 'primary',
-                        },
-                    ]}
+                    buttons={[dialogCloseButton(handleClose)]}
                     maxWidth="lg"
                     aria-labelledby="form-dialog-title"
                 >

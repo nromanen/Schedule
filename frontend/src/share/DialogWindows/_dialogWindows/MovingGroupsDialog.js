@@ -1,17 +1,16 @@
 import React, { useEffect, useState } from 'react';
 
 import PropTypes from 'prop-types';
-import Container from '@material-ui/core/Container';
 import Select from 'react-select';
 import { isEmpty } from 'lodash';
 import i18n from '../../../i18n';
 
 import { updateStudentService } from '../../../services/studentService';
 import { successHandler } from '../../../helper/handlerAxios';
-import CustomDialog from '../CustomDialog';
-import { FORM_CANCEL_BUTTON_TITLE } from '../../../constants/translationLabels/formElements';
-import { COMMON_MOVE_TO_GROUP_TITLE } from '../../../constants/translationLabels/common';
+import CustomDialog from '../../../containers/Dialogs/CustomDialog';
 import { EXIST_LABEL } from '../../../constants/translationLabels/serviceMessages';
+import { COMMON_MOVE_TO_GROUP_TITLE } from '../../../constants/translationLabels/common';
+import { dialogCloseButton, dialogMoveToGroupButton } from '../../../constants/dialogs';
 
 const MovingGroupsDialog = (props) => {
     const { onClose, open, checkBoxStudents, setShowStudentList, groups, group } = props;
@@ -77,30 +76,21 @@ const MovingGroupsDialog = (props) => {
     };
     return (
         <CustomDialog
-            title="Moving to group"
+            title={i18n.t(COMMON_MOVE_TO_GROUP_TITLE)}
+            className="select-dialog"
             onClose={onClose}
             open={open}
             buttons={[
-                {
-                    label: i18n.t(COMMON_MOVE_TO_GROUP_TITLE),
-                    handleClick: handleSubmitGroupStudents,
-                    color: 'primary',
-                },
-                {
-                    label: i18n.t(FORM_CANCEL_BUTTON_TITLE),
-                    handleClick: clearSelection,
-                    color: 'primary',
-                },
+                dialogMoveToGroupButton(handleSubmitGroupStudents),
+                dialogCloseButton(clearSelection),
             ]}
         >
-            <h6 maxWidth="sm">
-                <Select
-                    className="group-select"
-                    defaultValue={defaultGroup}
-                    options={groupsOption}
-                    onChange={setCurrentGroupOption}
-                />
-            </h6>
+            <Select
+                classNamePrefix="react-select"
+                defaultValue={defaultGroup}
+                options={groupsOption}
+                onChange={setCurrentGroupOption}
+            />
         </CustomDialog>
     );
 };

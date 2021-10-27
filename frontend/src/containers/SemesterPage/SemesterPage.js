@@ -36,18 +36,17 @@ import NavigationPage from '../../components/Navigation/NavigationPage';
 import { navigation, navigationNames } from '../../constants/navigation';
 import { MultiselectForGroups } from '../../helper/MultiselectForGroups';
 import { showAllGroupsService } from '../../services/groupService';
-import { setIsOpenConfirmDialogService } from '../../services/dialogService';
+import { setIsOpenConfirmDialog } from '../../actions/dialog';
 import { successHandler } from '../../helper/handlerAxios';
 import i18n from '../../i18n';
-import { CustomDialog } from '../../share/DialogWindows';
-import { dialogTypes } from '../../constants/dialogs';
+import CustomDialog from '../Dialogs/CustomDialog';
+import { dialogTypes, dialogCloseButton } from '../../constants/dialogs';
 import {
     EXIST_LABEL,
     GROUP_EXIST_IN_THIS_SEMESTER,
 } from '../../constants/translationLabels/serviceMessages';
 import {
     EDIT_TITLE,
-    CLOSE_LABEL,
     DELETE_TITLE,
     SEMESTER_COPY_LABEL,
     COPY_LABEL,
@@ -76,6 +75,7 @@ const SemesterPage = (props) => {
         archivedSemesters,
         enabledSemesters,
         disabledSemesters,
+        setOpenConfirmDialog,
         isOpenConfirmDialog,
     } = props;
     const searchArr = ['year', 'description', 'startDay', 'endDay'];
@@ -138,7 +138,7 @@ const SemesterPage = (props) => {
     const showConfirmDialog = (id, dialogType) => {
         setSemesterId(id);
         setConfirmDialogType(dialogType);
-        setIsOpenConfirmDialogService(true);
+        setOpenConfirmDialog(true);
     };
 
     const showSemesterCopyForm = (id) => {
@@ -162,7 +162,7 @@ const SemesterPage = (props) => {
     };
 
     const acceptConfirmDialog = (currentSemesterId) => {
-        setIsOpenConfirmDialogService(false);
+        setOpenConfirmDialog(false);
         if (!currentSemesterId) return;
         if (confirmDialogType === dialogTypes.SET_DEFAULT) {
             setDefaultSemesterById(currentSemesterId);
@@ -219,26 +219,18 @@ const SemesterPage = (props) => {
     return (
         <>
             <NavigationPage name={navigationNames.SEMESTER_PAGE} val={navigation.SEMESTERS} />
-            {isOpenConfirmDialog && (
-                <CustomDialog
-                    type={confirmDialogType}
-                    whatDelete="semester"
-                    open={isOpenConfirmDialog}
-                    handelConfirm={() => acceptConfirmDialog(semesterId)}
-                />
-            )}
+            <CustomDialog
+                type={confirmDialogType}
+                whatDelete="semester"
+                open={isOpenConfirmDialog}
+                handelConfirm={() => acceptConfirmDialog(semesterId)}
+            />
             {isOpenSemesterCopyForm && (
                 <CustomDialog
                     title={t(SEMESTER_COPY_LABEL)}
                     open={isOpenSemesterCopyForm}
                     onClose={closeSemesterCopyForm}
-                    buttons={[
-                        {
-                            label: t(CLOSE_LABEL),
-                            handleClick: closeSemesterCopyForm,
-                            color: 'primary',
-                        },
-                    ]}
+                    buttons={[dialogCloseButton(closeSemesterCopyForm)]}
                 >
                     <SemesterCopyForm
                         semesterId={semesterCard.id}
@@ -434,5 +426,8 @@ const mapStateToProps = (state) => ({
     groups: state.groups.groups,
     isOpenConfirmDialog: state.dialog.isOpenConfirmDialog,
 });
+const mapDispatchToProps = (dispatch) => ({
+    setOpenConfirmDialog: (newState) => dispatch(setIsOpenConfirmDialog(newState)),
+});
 
-export default connect(mapStateToProps, {})(SemesterPage);
+export default connect(mapStateToProps, mapDispatchToProps)(SemesterPage);

@@ -1,16 +1,14 @@
 import React, { useRef } from 'react';
 import ReactSelect from 'react-select';
-import Button from '@material-ui/core/Button';
 import './multiselect.scss';
 import { useTranslation } from 'react-i18next';
 import {
     SCHEDULE_FOR_SEMESTER,
     CHOOSE_TEACHER,
-    CANCEL_BUTTON_LABEL,
-    SENT_SCHEDULE,
     ALL_TEACHERS,
 } from '../constants/translationLabels/common';
-import { CustomDialog } from '../share/DialogWindows';
+import CustomDialog from '../containers/Dialogs/CustomDialog';
+import { dialogCancelButton, dialogSendSchedule } from '../constants/dialogs';
 
 export const MultiSelect = (props) => {
     const { t } = useTranslation('common');
@@ -57,34 +55,25 @@ export const MultiSelect = (props) => {
 
     return (
         <CustomDialog
-            id="select-dialog"
-            aria-labelledby="confirm-dialog-title"
+            className="select-dialog"
             title={t(SCHEDULE_FOR_SEMESTER)}
             open={open}
             onClose={onCancel}
             buttons={[
-                {
-                    label: t(CANCEL_BUTTON_LABEL),
-                    handleClick: onCancel,
-                    color: 'primary',
-                },
-                {
-                    label: t(SENT_SCHEDULE),
-                    handleClick: onSentTeachers,
-                    color: 'primary',
-                    disabled: !isEnabledSentBtn,
-                },
+                dialogSendSchedule(onSentTeachers, !isEnabledSentBtn), 
+                dialogCancelButton(onCancel),
             ]}
         >
             <div className="teacher-semester">
                 <ReactSelect
+                    classNamePrefix="react-select"
                     defaultValue={defaultSemester}
                     options={semesters}
                     onChange={handleChange}
                 />
 
                 <ReactSelect
-                    classname="teacher"
+                    classNamePrefix="react-select"
                     isOptionSelected={isOptionSelected}
                     options={getOptions()}
                     value={getValue()}

@@ -71,15 +71,43 @@
     text-decoration: none;
 }
 .custom-dialog{
-    min-width: 260px;
+    .MuiPaper-root{
+        position: unset;
+        min-width: 300px;
+    }
+   .custom-dialog-title{
+        padding: 10px 20px;
+   }
+    .custom-dialog-body{
+        padding: 4px 15px;
+    }
     .buttons-container {
         display: flex;
         align-items: center;
         justify-content: space-around;
-        margin: 15px 0;
-    
+        margin: 10px 0;
         .dialog-button {
-            width: 38%;
+            text-transform: none;
+            width: 45%;
         }
     }
+}
+.select-dialog{
+    .MuiPaper-root{
+        position: unset;
+        overflow-y: unset;
+    }
+    .custom-dialog-body{
+        overflow-y: unset;
+    }
+    .teacher-semester{
+        .react-select__control{
+            margin: 5px!important;
+        }
+    }
+    .react-select__control{
+        width: 350px;
+    }
+    
+
 }

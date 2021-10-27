@@ -7,7 +7,7 @@ import { MdDelete } from 'react-icons/md';
 import { useTranslation } from 'react-i18next';
 import ClassForm from '../../components/ClassForm/ClassForm';
 import Card from '../../share/Card/Card';
-import { CustomDialog } from '../../share/DialogWindows';
+import CustomDialog from '../Dialogs/CustomDialog';
 import { dialogTypes } from '../../constants/dialogs';
 import { cardType } from '../../constants/cardType';
 
@@ -18,7 +18,7 @@ import {
     deleteClassScheduleOneService,
     clearClassScheduleOneService,
 } from '../../services/classService';
-import { setIsOpenConfirmDialogService } from '../../services/dialogService';
+import { setIsOpenConfirmDialog } from '../../actions/dialog';
 
 import { handleSnackbarOpenService } from '../../services/snackbarService';
 import { snackbarTypes } from '../../constants/snackbarTypes';
@@ -37,7 +37,7 @@ import {
 
 const ClassSchedule = (props) => {
     const { t } = useTranslation('formElements');
-    const { isOpenConfirmDialog } = props;
+    const { isOpenConfirmDialog, setOpenConfirmDialog } = props;
     const [classId, setClassId] = useState(-1);
     useEffect(() => getClassScheduleListService(), []);
 
@@ -57,11 +57,11 @@ const ClassSchedule = (props) => {
 
     const handleClickOpen = (id) => {
         setClassId(id);
-        setIsOpenConfirmDialogService(true);
+        setOpenConfirmDialog(true);
     };
 
     const handleDelete = (id) => {
-        setIsOpenConfirmDialogService(false);
+        setOpenConfirmDialog(false);
         deleteClassScheduleOneService(id);
     };
 
@@ -69,14 +69,12 @@ const ClassSchedule = (props) => {
         <>
             <NavigationPage name={navigationNames.CLASS_SCHEDULE_TITLE} val={navigation.PERIOD} />
             <div className="cards-container">
-                {isOpenConfirmDialog && (
-                    <CustomDialog
-                        type={dialogTypes.DELETE_CONFIRM}
-                        handelConfirm={() => handleDelete(classId)}
-                        whatDelete={cardType.CLASS.toLowerCase()}
-                        open={isOpenConfirmDialog}
-                    />
-                )}
+                <CustomDialog
+                    type={dialogTypes.DELETE_CONFIRM}
+                    handelConfirm={() => handleDelete(classId)}
+                    whatDelete={cardType.CLASS.toLowerCase()}
+                    open={isOpenConfirmDialog}
+                />
 
                 <ClassForm onSubmit={submit} onReset={clearClassScheduleOneService} />
                 <section className="container-flex-wrap">
@@ -117,4 +115,8 @@ const mapStateToProps = (state) => ({
     isOpenConfirmDialog: state.dialog.isOpenConfirmDialog,
 });
 
-export default connect(mapStateToProps, {})(ClassSchedule);
+const mapDispatchToProps = (dispatch) => ({
+    setOpenConfirmDialog: (newState) => dispatch(setIsOpenConfirmDialog(newState)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(ClassSchedule);
