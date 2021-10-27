@@ -7,7 +7,7 @@ export const addGroup = (res) => {
     };
 };
 
-export const updateGroup = (res) => {
+export const updateGroupSusses = (res) => {
     return {
         type: actionTypes.UPDATE_GROUP,
         result: res,
@@ -21,14 +21,7 @@ export const showAllGroups = (res) => {
     };
 };
 
-export const setDisabledGroups = (res) => {
-    return {
-        type: actionTypes.SET_DISABLED_GROUPS,
-        result: res,
-    };
-};
-
-export const deleteGroup = (res) => {
+export const deleteGroupSusses = (res) => {
     return {
         type: actionTypes.DELETE_GROUP,
         result: res,
@@ -42,37 +35,35 @@ export const selectGroup = (res) => {
     };
 };
 
-export const clearGroup = () => ({
+export const clearGroupSusses = () => ({
     type: actionTypes.CLEAR_GROUP,
 });
 
-// saga new
-
-export const startFetchDisabledGroups = () => ({
-    type: actionTypes.FETCH_DISABLED_GROUPS,
+export const fetchDisabledGroupsStart = () => ({
+    type: actionTypes.FETCH_DISABLED_GROUPS_START,
 });
 
-export const startFetchEnabledGroups = () => ({
-    type: actionTypes.FETCH_ENABLED_GROUPS,
+export const fetchEnabledGroupsStart = () => ({
+    type: actionTypes.FETCH_ENABLED_GROUPS_START,
 });
 
-export const startDeleteGroup = (id) => ({
-    type: actionTypes.START_DELETE_GROUP,
+export const deleteGroupStart = (id) => ({
+    type: actionTypes.DELETE_GROUP_START,
     id,
 });
 
-export const startCreateGroup = (data) => ({
-    type: actionTypes.START_CREATE_GROUP,
+export const createGroupStart = (data) => ({
+    type: actionTypes.CREATE_GROUP_START,
     data,
 });
 
-export const startUpdateGroup = (data) => ({
-    type: actionTypes.START_UPDATE_GROUP,
+export const updateGroupStart = (data) => ({
+    type: actionTypes.UPDATE_GROUP_START,
     data,
 });
 
-export const startClearGroup = (data) => ({
-    type: actionTypes.START_CLEAR_GROUP,
+export const clearGroupStart = (data) => ({
+    type: actionTypes.CLEAR_GROUP_START,
     data,
 });
 

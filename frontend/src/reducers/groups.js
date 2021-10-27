@@ -1,10 +1,10 @@
 import * as actionTypes from '../actions/actionsType';
 import { updateObject } from '../utility';
+import { sortGroup } from '../helper/sortGroup';
 
 const initialState = {
     groups: [],
     group: {},
-    disabledGroups: [],
 };
 
 const reducer = (state = initialState, action) => {
@@ -12,18 +12,12 @@ const reducer = (state = initialState, action) => {
         case actionTypes.SHOW_ALL_GROUPS:
             return updateObject(state, {
                 ...state,
-                groups: action.result,
-            });
-
-        case actionTypes.SET_DISABLED_GROUPS:
-            return updateObject(state, {
-                ...state,
-                disabledGroups: action.result,
+                groups: action.result.sort((a, b) => sortGroup(a, b)),
             });
 
         case actionTypes.ADD_GROUP:
             return updateObject(state, {
-                groups: state.groups.concat(action.result),
+                groups: state.groups.concat(action.result).sort((a, b) => sortGroup(a, b)),
             });
 
         case actionTypes.UPDATE_GROUP: {
@@ -43,12 +37,8 @@ const reducer = (state = initialState, action) => {
 
         case actionTypes.DELETE_GROUP: {
             const groups = state.groups.filter((group) => group.id !== action.result);
-            const disabledGroups = state.disabledGroups.filter(
-                (group) => group.id !== action.result,
-            );
             return updateObject(state, {
                 groups,
-                disabledGroups,
             });
         }
 

@@ -1,7 +1,6 @@
 import '../../router/Router.scss';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useHistory } from 'react-router-dom/cjs/react-router-dom';
 import { CircularProgress } from '@material-ui/core';
 import { dialogTypes } from '../../constants/dialogs';
 import { GROUP_Y_LABEL } from '../../constants/translationLabels/formElements';
@@ -10,16 +9,15 @@ import { search } from '../../helper/search';
 import GroupCard from '../GroupCard/GroupCard';
 import NotFound from '../../share/NotFound/NotFound';
 import { CustomDialog } from '../../share/DialogWindows';
-import AddStudentDialog from '../../containers/Student/AddStudentDialog';
-import ShowStudentsOnGroupDialog from '../../containers/Student/ShowStudentsOnGroupDialog';
+import { AddStudentDialog, ShowStudentsOnGroupDialog } from '../../containers/Student';
+import { links } from '../../constants/links';
 
 const GroupList = (props) => {
     const {
-        startFetchDisabledGroups,
-        startFetchEnabledGroups,
+        fetchDisabledGroupsStart,
+        fetchEnabledGroupsStart,
         toggleDisabledStatus,
-        startDeleteGroup,
-        fetchAllStudents,
+        deleteGroupStart,
         selectGroup,
         loading,
         groups,
@@ -27,7 +25,6 @@ const GroupList = (props) => {
         term,
         isDisabled,
     } = props;
-    const history = useHistory();
     const { t } = useTranslation('formElements');
 
     const [group, setGroup] = useState();
@@ -38,16 +35,29 @@ const GroupList = (props) => {
     const [openAddStudentDialog, setAddStudentDialog] = useState(false);
 
     useEffect(() => {
-        startFetchEnabledGroups();
-        fetchAllStudents();
+        fetchEnabledGroupsStart();
     }, []);
     useEffect(() => {
         if (isDisabled) {
-            startFetchDisabledGroups();
+            fetchDisabledGroupsStart();
         } else {
-            startFetchEnabledGroups();
+            fetchEnabledGroupsStart();
         }
     }, [isDisabled]);
+
+    // const pathIncludesParams = (linkType) => {
+    //     return match.path.includes(linkType);
+    // };
+
+    // const checkParamsActions = () => {
+    //     const { id } = match.params;
+    //     const linksActions = [links.Edit, links.Delete];
+    //     const checkParamsAndSetActions = {
+    //         [links.Edit]: selectGroupService(id),
+    //     };
+    //      const find = linksActions.find((link) => return pathIncludesParams(link));
+    //     //pathIncludesParams(checkParamsAndSetActions);
+    // };
 
     const visibleGroups = search(groups, term, ['title']);
 
@@ -61,37 +71,21 @@ const GroupList = (props) => {
         if (!currentGroupId) return;
         if (subDialogType !== dialogTypes.DELETE_CONFIRM) {
             toggleDisabledStatus(currentGroupId, isDisabled);
-        } else startDeleteGroup(currentGroupId);
+        } else deleteGroupStart(currentGroupId);
     };
 
     const showAddStudentDialog = (currentGroupId) => {
         setGroupId(currentGroupId);
         setAddStudentDialog(true);
     };
-
     const showStudentsByGroup = (currentGroup) => {
         setGroup(currentGroup);
         setShowStudents(true);
     };
-
     const onDeleteStudent = () => {
         //   deleteStudentService(student);
     };
-    const onCloseShowStudents = () => {
-        setShowStudents(false);
-    };
-    const studentSubmit = (data) => {
-        //  if (data.id !== undefined) {
-        //      const sendData = { ...data, group: { id: data.group } };
-        //      updateStudentService(sendData);
-        //  } else {
-        //      const sendData = { ...data, group: { id: groupId } };
-        //      createStudentService(sendData);
-        //  }
-        //  setAddStudentDialog(false);
-        //  goToGroupPage(history);
-    };
-
+    
     return (
         <>
             {openSubDialog && (
@@ -108,7 +102,7 @@ const GroupList = (props) => {
                 <AddStudentDialog
                     groupId={groupId}
                     open={openAddStudentDialog}
-                    setAddStudentDialog={setAddStudentDialog}
+                    setOpen={setAddStudentDialog}
                 />
             )}
             {showStudents && (
@@ -118,7 +112,6 @@ const GroupList = (props) => {
                     group={group}
                     match={match}
                     onDeleteStudent={onDeleteStudent}
-                    onSubmit={studentSubmit}
                     groups={groups}
                 />
             )}

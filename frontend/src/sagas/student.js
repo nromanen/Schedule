@@ -6,13 +6,7 @@ import * as actionTypes from '../actions/actionsType';
 import { STUDENT_FORM } from '../constants/reduxForms';
 import { errorHandler, successHandler } from '../helper/handlerAxios';
 import i18n from '../i18n';
-import {
-    createStudent,
-    deleteStudent,
-    setStudent,
-    showAllStudents,
-    updateStudent,
-} from '../actions/students';
+import { deleteStudent, setStudent, showAllStudents, updateStudent } from '../actions/students';
 import {
     BACK_END_SUCCESS_OPERATION,
     UPDATED_LABEL,
@@ -22,10 +16,10 @@ import {
 import { FORM_STUDENT_LABEL } from '../constants/translationLabels/formElements';
 import { axiosCall } from '../services/axios';
 
-function* fetchAllStudentsWorker() {
+function* fetchAllStudentsWorker({ id }) {
     try {
-        const res = yield call(axiosCall, STUDENT_URL, 'GET');
-        yield put(showAllStudents(res.data));
+        const res = yield call(axiosCall, `groups/${id}/with-students`, 'GET');
+        yield put(showAllStudents(res.data.students));
     } catch (err) {
         errorHandler(err);
     }
@@ -33,8 +27,7 @@ function* fetchAllStudentsWorker() {
 
 function* createStudentWorker({ data }) {
     try {
-        const res = yield call(axiosCall, STUDENT_URL, 'POST', data);
-        //yield put(createStudent(res.data));
+        yield call(axiosCall, STUDENT_URL, 'POST', data);
         yield put(reset(STUDENT_FORM));
         successHandler(
             i18n.t(BACK_END_SUCCESS_OPERATION, {

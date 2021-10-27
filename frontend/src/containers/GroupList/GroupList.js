@@ -1,16 +1,15 @@
 import { connect } from 'react-redux';
 import GroupPage from '../../components/GroupPage/GroupPage';
-import { fetchAllStudents } from '../../actions/students';
 import {
-    startFetchDisabledGroups,
-    startFetchEnabledGroups,
+    fetchDisabledGroupsStart,
+    fetchEnabledGroupsStart,
     toggleDisabledStatus,
-    startDeleteGroup,
-    startCreateGroup,
-    startUpdateGroup,
-    startClearGroup,
+    deleteGroupStart,
+    createGroupStart,
+    updateGroupStart,
+    clearGroupStart,
     selectGroup,
-} from '../../actions';
+} from '../../actions/groups';
 
 const mapStateToProps = (state) => ({
     isSnackbarOpen: state.snackbar.isSnackbarOpen,
@@ -25,15 +24,14 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = {
-    startFetchDisabledGroups,
-    startFetchEnabledGroups,
+    fetchDisabledGroupsStart,
+    fetchEnabledGroupsStart,
     toggleDisabledStatus,
-    startDeleteGroup,
-    startCreateGroup,
-    startUpdateGroup,
-    startClearGroup,
+    deleteGroupStart,
+    createGroupStart,
+    updateGroupStart,
+    clearGroupStart,
     selectGroup,
-    fetchAllStudents,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(GroupPage);

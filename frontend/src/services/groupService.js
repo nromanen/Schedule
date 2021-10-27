@@ -1,25 +1,15 @@
 import { store } from '../store';
 
 import axios from '../helper/axios';
-import { DISABLED_GROUPS_URL, GROUP_URL } from '../constants/axios';
+import { GROUP_URL } from '../constants/axios';
 import { GROUP_FORM } from '../constants/reduxForms';
-import {
-    showAllGroups,
-    deleteGroup,
-    addGroup,
-    selectGroup,
-    updateGroup,
-    clearGroup,
-    setDisabledGroups,
-} from '../actions/index';
+import { showAllGroups, selectGroup, updateGroupSusses } from '../actions/index';
 import { errorHandler, successHandler } from '../helper/handlerAxios';
 import i18n from '../i18n';
 import { resetFormHandler } from '../helper/formHelper';
 import {
     BACK_END_SUCCESS_OPERATION,
     UPDATED_LABEL,
-    CREATED_LABEL,
-    DELETED_LABEL,
 } from '../constants/translationLabels/serviceMessages';
 import { FORM_GROUP_LABEL } from '../constants/translationLabels/formElements';
 import { sortGroup } from '../helper/sortGroup';
@@ -41,7 +31,7 @@ export const updateGroupService = (data) => {
     return axios
         .put(GROUP_URL, data)
         .then((response) => {
-            store.dispatch(updateGroup(response.data));
+            store.dispatch(updateGroupSusses(response.data));
             selectGroupService(null);
             // getDisabledGroupsService();
             // showAllGroupsService();

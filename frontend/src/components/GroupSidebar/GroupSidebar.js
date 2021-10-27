@@ -4,9 +4,9 @@ import SearchPanel from '../../share/SearchPanel/SearchPanel';
 
 const GroupSidebar = (props) => {
     const {
-        startCreateGroup,
-        startUpdateGroup,
-        startClearGroup,
+        createGroupStart,
+        updateGroupStart,
+        clearGroupStart,
         setIsDisabled,
         isDisabled,
         setTerm,
@@ -15,7 +15,7 @@ const GroupSidebar = (props) => {
     const SearchChange = setTerm;
 
     const onSubmitGroupForm = (data) => {
-        return !data.id ? startCreateGroup(data) : startUpdateGroup(data);
+        return !data.id ? createGroupStart(data) : updateGroupStart(data);
     };
 
     return (
@@ -28,7 +28,7 @@ const GroupSidebar = (props) => {
                 <AddGroup
                     className="form"
                     onSubmit={onSubmitGroupForm}
-                    onReset={() => startClearGroup()}
+                    onReset={() => clearGroupStart()}
                 />
             )}
         </aside>

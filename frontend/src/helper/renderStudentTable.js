@@ -37,8 +37,9 @@ import {
     ALL_PAGE,
     ROWS_PER_PAGE,
 } from '../constants/translationLabels/formElements';
-import { CustomDialog, AddStudentDialog } from '../share/DialogWindows';
+import { CustomDialog } from '../share/DialogWindows';
 import { dialogTypes } from '../constants/dialogs';
+import AddStudentDialog from '../containers/Student/AddStudentDialog';
 
 const useStyles1 = makeStyles((theme) => ({
     root: {
@@ -141,7 +142,6 @@ export default function RenderStudentTable(props) {
         onSubmit,
         group,
         match,
-        student,
         checkBoxStudents,
         handleCheckElement,
         handleAllChecked,
@@ -152,13 +152,14 @@ export default function RenderStudentTable(props) {
         handleAllCheckedBtn,
     } = props;
     const [page, setPage] = React.useState(0);
+    const [student, setStudent] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
     const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
     const [openEditDialog, setOpenEditDialog] = useState(false);
     const { t } = useTranslation('formElements');
-    const handleEdit = (studentId) => {
+    const handleEdit = (curentStudent) => {
         setOpenEditDialog(true);
-        selectStudentService(studentId);
+        setStudent(curentStudent);
     };
     useEffect(() => {
         if (match.path.includes(links.Student) && match.path.includes(links.Edit)) {
@@ -296,7 +297,7 @@ export default function RenderStudentTable(props) {
                                         <FaEdit
                                             className="edit-button"
                                             title={t(EDIT_TITLE)}
-                                            onClick={() => handleEdit(student.id)}
+                                            onClick={() => handleEdit(singleStudent)}
                                         />
                                     </Link>
                                     <Link
@@ -314,9 +315,9 @@ export default function RenderStudentTable(props) {
                             {openEditDialog && (
                                 <AddStudentDialog
                                     open={openEditDialog}
-                                    onSubmit={handleSubmit}
-                                    onSetSelectedCard={handleCloseEditDialog}
-                                    match={match}
+                                    student={student}
+                                    group={group.id}
+                                    setOpen={handleCloseEditDialog}
                                 />
                             )}
 

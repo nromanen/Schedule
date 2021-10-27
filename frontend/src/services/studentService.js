@@ -11,7 +11,6 @@ import {
     deleteStudent,
     setStudent,
     showAllStudents,
-    showAllStudentsByGroupId,
     updateStudent,
 } from '../actions/students';
 import {
@@ -43,7 +42,6 @@ export const getAllStudentsByGroupId = (groupId) => {
         .get(STUDENT_URL)
         .then((response) => {
             const result = response.data.filter(({ group }) => group.id === groupId);
-            store.dispatch(showAllStudentsByGroupId(result));
         })
         .catch((error) => errorHandler(error));
 };

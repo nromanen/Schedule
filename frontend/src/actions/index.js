@@ -18,19 +18,12 @@ export {
 export { clearFreeRooms, showFreeRooms } from './freeRooms';
 export {
     addGroup,
-    clearGroup,
-    deleteGroup,
+    clearGroupSusses,
+    deleteGroupSusses,
     selectGroup,
-    updateGroup,
+    updateGroupSusses,
     showAllGroups,
-    setDisabledGroups,
-    startFetchDisabledGroups,
-    startFetchEnabledGroups,
     toggleDisabledStatus,
-    startDeleteGroup,
-    startCreateGroup,
-    startUpdateGroup,
-    startClearGroup,
 } from './groups';
 export {
     deleteLessonCard,

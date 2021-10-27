@@ -11,7 +11,7 @@ import { TYPE_LABEL } from '../../constants/translationLabels/common';
 export const AddStudentForm = (props) => {
     const { handleSubmit, submitting, initialize, pristine, student, groups, reset } = props;
     const { t } = useTranslation('formElements');
-    const studentId = student.id;
+    console.log(student)
 
     const initializeFormHandler = (currentStudent) => {
         const { id, surname, name, patronymic, email, group } = currentStudent;
@@ -26,12 +26,12 @@ export const AddStudentForm = (props) => {
     };
 
     useEffect(() => {
-        if (studentId) {
+        if (student) {
             initializeFormHandler(student);
         } else {
             initialize();
         }
-    }, [studentId]);
+    }, [student]);
 
     return (
         <Card additionClassName="form-card teacher-form">
@@ -79,7 +79,7 @@ export const AddStudentForm = (props) => {
                     label={t('email_field')}
                     validate={[required]}
                 />
-                {studentId && (
+                {student && (
                     <Field
                         className="form-field"
                         component={renderSelectField}
@@ -112,7 +112,7 @@ export const AddStudentForm = (props) => {
                         disabled={pristine || submitting}
                         onClick={reset}
                     >
-                        {studentId ? t('cancel_button_label') : t('clear_button_label')}
+                        {student ? t('cancel_button_label') : t('clear_button_label')}
                     </Button>
                 </div>
             </form>

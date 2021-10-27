@@ -12,12 +12,7 @@ export const showAllStudents = (res) => {
         res,
     };
 };
-export const showAllStudentsByGroupId = (groupId) => {
-    return {
-        type: actionTypes.SHOW_ALL_STUDENTS_BY_GROUP_ID,
-        groupId,
-    };
-};
+
 export const deleteStudent = (res) => {
     return {
         type: actionTypes.DELETE_STUDENT,
@@ -36,10 +31,11 @@ export const updateStudent = (res) => {
         result: res,
     };
 };
-// new
-export const fetchAllStudents = () => {
+
+export const fetchAllStudents = (id) => {
     return {
         type: actionTypes.FETCH_ALL_STUDENTS,
+        id,
     };
 };
 

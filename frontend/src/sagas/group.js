@@ -1,8 +1,7 @@
-import { call, takeEvery, put, select } from 'redux-saga/effects';
+import { call, takeEvery, put, select, takeLatest } from 'redux-saga/effects';
 import { reset } from 'redux-form';
 import { has } from 'lodash';
 import i18n from '../i18n';
-import { sortGroup } from '../helper/sortGroup';
 import { GROUP_FORM } from '../constants/reduxForms';
 import * as actionTypes from '../actions/actionsType';
 import { setLoading } from '../actions/loadingIndicator';
@@ -16,21 +15,21 @@ import {
 } from '../constants/translationLabels/serviceMessages';
 import {
     showAllGroups,
-    deleteGroup,
-    updateGroup,
+    deleteGroupSusses,
+    updateGroupSusses,
     selectGroup,
-    clearGroup,
+    clearGroupSusses,
     addGroup,
 } from '../actions';
 import { DISABLED_GROUPS_URL, GROUP_URL } from '../constants/axios';
 import { axiosCall } from '../services/axios';
 
-function* fetchDisabledGroupsWorker() {
+function* fetchDisabledGroups() {
     try {
         yield put(showAllGroups([]));
         yield put(setLoading(true));
         const res = yield call(axiosCall, DISABLED_GROUPS_URL, 'GET');
-        yield put(showAllGroups(res.data.sort((a, b) => sortGroup(a, b))));
+        yield put(showAllGroups(res.data));
     } catch (err) {
         errorHandler(err);
     } finally {
@@ -38,12 +37,12 @@ function* fetchDisabledGroupsWorker() {
     }
 }
 
-function* fetchEnabledGroupsWorker() {
+function* fetchEnabledGroups() {
     try {
         yield put(showAllGroups([]));
         yield put(setLoading(true));
         const res = yield call(axiosCall, GROUP_URL, 'GET');
-        yield put(showAllGroups(res.data.sort((a, b) => sortGroup(a, b))));
+        yield put(showAllGroups(res.data));
     } catch (err) {
         errorHandler(err);
     } finally {
@@ -51,7 +50,7 @@ function* fetchEnabledGroupsWorker() {
     }
 }
 
-function* createGroupWorker({ data }) {
+function* createGroup({ data }) {
     try {
         const res = yield call(axiosCall, GROUP_URL, 'POST', data);
         yield put(addGroup(res.data));
@@ -67,13 +66,13 @@ function* createGroupWorker({ data }) {
     }
 }
 
-function* updateGroupWorker({ data }) {
+function* updateGroup({ data }) {
     try {
         const res = yield call(axiosCall, GROUP_URL, 'PUT', data);
         if (has(data, 'disable')) {
-            yield put(deleteGroup(data.id));
+            yield put(deleteGroupSusses(data.id));
         } else {
-            yield put(updateGroup(res.data));
+            yield put(updateGroupSusses(res.data));
         }
         yield put(selectGroup(null));
         yield put(reset(GROUP_FORM));
@@ -88,10 +87,10 @@ function* updateGroupWorker({ data }) {
     }
 }
 
-function* deleteGroupWorker({ id }) {
+function* deleteGroup({ id }) {
     try {
         yield call(axiosCall, `${GROUP_URL}/${id}`, 'DELETE');
-        yield put(deleteGroup(id));
+        yield put(deleteGroupSusses(id));
         successHandler(
             i18n.t(BACK_END_SUCCESS_OPERATION, {
                 cardType: i18n.t(FORM_GROUP_LABEL),
@@ -103,21 +102,21 @@ function* deleteGroupWorker({ id }) {
     }
 }
 
-function* toggleDisabledGroupWorker({ groupId, disabledStatus }) {
+function* toggleDisabledGroup({ groupId, disabledStatus }) {
     try {
         if (groupId) {
             const state = yield select();
             const group = state.groups.groups.find((item) => item.id === groupId);
-            yield call(updateGroupWorker, { data: { ...group, disable: !disabledStatus } });
+            yield call(updateGroup, { data: { ...group, disable: !disabledStatus } });
         }
     } catch (err) {
         errorHandler(err);
     }
 }
 
-function* clearGroupWorker() {
+function* clearGroup() {
     try {
-        yield put(clearGroup());
+        yield put(clearGroupSusses());
         yield put(reset(GROUP_FORM));
     } catch (err) {
         errorHandler(err);
@@ -125,11 +124,11 @@ function* clearGroupWorker() {
 }
 
 export default function* groupWatcher() {
-    yield takeEvery(actionTypes.TOGGLE_DISABLED_STATUS_GROUP, toggleDisabledGroupWorker);
-    yield takeEvery(actionTypes.FETCH_DISABLED_GROUPS, fetchDisabledGroupsWorker);
-    yield takeEvery(actionTypes.FETCH_ENABLED_GROUPS, fetchEnabledGroupsWorker);
-    yield takeEvery(actionTypes.START_DELETE_GROUP, deleteGroupWorker);
-    yield takeEvery(actionTypes.START_CREATE_GROUP, createGroupWorker);
-    yield takeEvery(actionTypes.START_UPDATE_GROUP, updateGroupWorker);
-    yield takeEvery(actionTypes.START_CLEAR_GROUP, clearGroupWorker);
+    yield takeEvery(actionTypes.TOGGLE_DISABLED_STATUS_GROUP, toggleDisabledGroup);
+    yield takeLatest(actionTypes.FETCH_DISABLED_GROUPS_START, fetchDisabledGroups);
+    yield takeLatest(actionTypes.FETCH_ENABLED_GROUPS_START, fetchEnabledGroups);
+    yield takeEvery(actionTypes.DELETE_GROUP_START, deleteGroup);
+    yield takeEvery(actionTypes.CREATE_GROUP_START, createGroup);
+    yield takeEvery(actionTypes.UPDATE_GROUP_START, updateGroup);
+    yield takeEvery(actionTypes.CLEAR_GROUP_START, clearGroup);
 }

@@ -6,7 +6,6 @@ import { useTranslation } from 'react-i18next';
 import { isEmpty } from 'lodash';
 import i18n from '../../../i18n';
 import RenderStudentTable from '../../../helper/renderStudentTable';
-import { getAllStudentsByGroupId } from '../../../services/studentService';
 import { UploadFile } from '../../../components/UploadFile/UploadFile';
 import CustomDialog from '../CustomDialog';
 import MovingGroupsDialog from './MovingGroupsDialog';
@@ -15,7 +14,6 @@ import { COMMON_CLOSE_TITLE } from '../../../constants/translationLabels/common'
 
 const ShowStudentsOnGroupDialog = (props) => {
     const {
-        showAllStudentsByGroupId,
         onClose,
         cardId,
         open,
@@ -25,6 +23,7 @@ const ShowStudentsOnGroupDialog = (props) => {
         match,
         groups,
         group,
+        fetchAllStudents,
     } = props;
     const [checkBoxStudents, setCheckBoxStudents] = useState([]);
     const [isGroupButtonDisabled, setIsGroupButtonDisabled] = useState(true);
@@ -43,7 +42,10 @@ const ShowStudentsOnGroupDialog = (props) => {
         setCheckBoxStudents(res);
     };
     useEffect(() => {
-        showAllStudentsByGroupId(group.id);
+        fetchAllStudents(group.id);
+    }, [group.id]);
+    useEffect(() => {
+        fetchAllStudents(group.id);
     }, [open, openUploadFile]);
     useEffect(() => {
         parseStudentToCheckBox();
