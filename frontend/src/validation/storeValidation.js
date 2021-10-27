@@ -57,27 +57,22 @@ export const timeIntersectService = (startTime, endTime) => {
     }
     return find ? i18n.t(INTERSECT_TIME_ERROR_MESSAGE) : undefined;
 };
-
-export const checkUniqLesson = (lesson) => {
-    const { lessons } = store.getState().lesson;
-    let isNotUnique;
-    if (!lesson.id) {
-        isNotUnique = !!lessons.find(
-            (storeLesson) =>
-                storeLesson.subject.id === +lesson.subject.id &&
-                storeLesson.teacher.id === +lesson.teacher.id &&
-                storeLesson.lessonType === lesson.lessonType,
-        );
-    } else {
-        isNotUnique = !!lessons.find(
-            (storeLesson) =>
-                storeLesson.subject.id === +lesson.subject.id &&
-                storeLesson.teacher.id === +lesson.teacher.id &&
-                storeLesson.lessonType === lesson.lessonType &&
-                storeLesson.id !== +lesson.id,
+export const checkUniqLesson = (lessons, currentLesson) => {
+    if (!currentLesson?.id) {
+        return !lessons.find(
+            (lesson) =>
+                lesson.subject.id === +currentLesson.subject.id &&
+                lesson.teacher.id === +currentLesson.teacher.id &&
+                lesson.lessonType === currentLesson.lessonType,
         );
     }
-    return !isNotUnique;
+    return !lessons.find(
+        (lesson) =>
+            lesson.subject.id === +currentLesson.subject.id &&
+            lesson.teacher.id === +currentLesson.teacher.id &&
+            lesson.lessonType === currentLesson.lessonType &&
+            lesson.id !== +currentLesson.id,
+    );
 };
 
 export const checkUniqueRoomName = (roomName) => {
