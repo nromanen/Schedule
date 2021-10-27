@@ -4,7 +4,6 @@ import React, { useEffect, useState } from 'react';
 import { isEqual, isEmpty } from 'lodash';
 import './SemesterPage.scss';
 import Button from '@material-ui/core/Button';
-import { search } from '../../helper/search';
 
 import SearchPanel from '../../share/SearchPanel/SearchPanel';
 import SnackbarComponent from '../../share/Snackbar/SnackbarComponent';
@@ -56,20 +55,20 @@ const SemesterPage = (props) => {
         enabledSemesters,
         disabledSemesters,
     } = props;
-    const searchArr = ['year', 'description', 'startDay', 'endDay'];
+
     const { t } = useTranslation('formElements');
+
     const [openSubDialog, setOpenSubDialog] = useState(false);
     const [subDialogType, setSubDialogType] = useState('');
     const [openGroupsDialog, setOpenGroupsDialog] = useState(false);
-    const [semesterId, setSemesterId] = useState(-1);
+    const [isOpenSemesterCopyForm, setIsOpenSemesterCopyForm] = useState(false);
 
     const [term, setTerm] = useState('');
     const [selectedGroups, setSelectedGroups] = useState([]);
     const [semesterOptions, setSemesterOptions] = useState([]);
     const [disabled, setDisabled] = useState(false);
     const [archived, setArchived] = useState(false);
-    const [isOpenSemesterCopyForm, setIsOpenSemesterCopyForm] = useState(null);
-    const [semesterCard, setSemesterCard] = useState(null);
+    const [semesterId, setSemesterId] = useState(null);
 
     const options = getGroupsOptionsForSelect(groups);
 
@@ -78,6 +77,7 @@ const SemesterPage = (props) => {
             setSemesterOptions(getGroupsOptionsForSelect(semester.semester_groups));
         }
     }, [semester.id]);
+
     useEffect(() => {
         showAllGroupsService();
         showAllSemestersService();
@@ -85,9 +85,6 @@ const SemesterPage = (props) => {
         // dont work and swagger doesn't have a route for this service
         // getArchivedSemestersService();
     }, []);
-    const visibleItems = disabled
-        ? search(disabledSemesters, term, searchArr)
-        : search(enabledSemesters, term, searchArr);
 
     const submitSemesterForm = (values) => {
         const semesterGroups = selectedGroups.map((group) => {
@@ -99,7 +96,6 @@ const SemesterPage = (props) => {
 
     const closeSemesterCopyForm = () => {
         setIsOpenSemesterCopyForm(false);
-        setIsOpenSemesterCopyForm(null);
     };
 
     const changeGSemesterDisabledStatus = (currentSemesterId) => {
@@ -138,10 +134,10 @@ const SemesterPage = (props) => {
 
     const submitSemesterCopy = (values) => {
         semesterCopy({
-            fromSemesterId: +semesterCard,
+            fromSemesterId: +semesterId,
             toSemesterId: +values.toSemesterId,
         });
-        setIsOpenSemesterCopyForm(null);
+        setIsOpenSemesterCopyForm(false);
     };
 
     const onChangeGroups = () => {
@@ -158,7 +154,7 @@ const SemesterPage = (props) => {
             );
             return;
         }
-        setGroupsToSemester(semesterCard, semesterOptions);
+        setGroupsToSemester(semesterId, semesterOptions);
         setSemesterOptions(getGroupsOptionsForSelect(semester.semester_groups));
         setOpenGroupsDialog(false);
     };
@@ -169,37 +165,33 @@ const SemesterPage = (props) => {
     return (
         <>
             <NavigationPage name={navigationNames.SEMESTER_PAGE} val={navigation.SEMESTERS} />
-            {openSubDialog && (
-                <CustomDialog
-                    type={subDialogType}
-                    cardId={semesterId}
-                    whatDelete="semester"
-                    open={openSubDialog}
-                    onClose={acceptConfirmDialog}
+            <CustomDialog
+                type={subDialogType}
+                cardId={semesterId}
+                whatDelete="semester"
+                open={openSubDialog}
+                onClose={acceptConfirmDialog}
+            />
+            <CustomDialog
+                title={t(SEMESTER_COPY_LABEL)}
+                open={isOpenSemesterCopyForm}
+                onClose={closeSemesterCopyForm}
+                buttons={
+                    <Button
+                        className="dialog-button"
+                        variant="contained"
+                        onClick={closeSemesterCopyForm}
+                    >
+                        {t(CLOSE_LABEL)}
+                    </Button>
+                }
+            >
+                <SemesterCopyForm
+                    semesterId={semesterId}
+                    onSubmit={submitSemesterCopy}
+                    submitButtonLabel={t(COPY_LABEL)}
                 />
-            )}
-            {isOpenSemesterCopyForm && (
-                <CustomDialog
-                    title={t(SEMESTER_COPY_LABEL)}
-                    open={isOpenSemesterCopyForm}
-                    onClose={closeSemesterCopyForm}
-                    buttons={
-                        <Button
-                            className="dialog-button"
-                            variant="contained"
-                            onClick={closeSemesterCopyForm}
-                        >
-                            {t(CLOSE_LABEL)}
-                        </Button>
-                    }
-                >
-                    <SemesterCopyForm
-                        semesterId={semesterCard.id}
-                        onSubmit={submitSemesterCopy}
-                        submitButtonLabel={t(COPY_LABEL)}
-                    />
-                </CustomDialog>
-            )}
+            </CustomDialog>
 
             <div className="cards-container">
                 <aside className="search-list__panel">
@@ -220,15 +212,17 @@ const SemesterPage = (props) => {
                     )}
                 </aside>
                 <SemesterItem
+                    term={term}
                     archived={archived}
                     disabled={disabled}
                     setSemesterId={setSemesterId}
                     setSubDialogType={setSubDialogType}
                     setOpenSubDialog={setOpenSubDialog}
                     setIsOpenSemesterCopyForm={setIsOpenSemesterCopyForm}
-                    visibleItems={visibleItems}
-                    setSemesterCard={setSemesterCard}
                     setOpenGroupsDialog={setOpenGroupsDialog}
+                    disabledSemesters={disabledSemesters}
+                    enabledSemesters={enabledSemesters}
+                    archivedSemesters={archivedSemesters}
                 />
             </div>
             <SnackbarComponent
@@ -237,16 +231,14 @@ const SemesterPage = (props) => {
                 isOpen={isSnackbarOpen}
                 handleSnackbarClose={handleSnackbarCloseService}
             />
-            {openGroupsDialog && (
-                <MultiselectForGroups
-                    open={openGroupsDialog}
-                    options={options}
-                    value={semesterOptions}
-                    onChange={setSemesterOptions}
-                    onCancel={cancelMultiselect}
-                    onClose={onChangeGroups}
-                />
-            )}
+            <MultiselectForGroups
+                open={openGroupsDialog}
+                options={options}
+                value={semesterOptions}
+                onChange={setSemesterOptions}
+                onCancel={cancelMultiselect}
+                onClose={onChangeGroups}
+            />
         </>
     );
 };

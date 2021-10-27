@@ -145,11 +145,11 @@ const SemesterForm = (props) => {
     };
 
     const setSemesterCheckboxes = (checked, method, name) => {
-        const classes = Object.keys(checked);
-        return classes.map((item) => {
+        const checkboxes = Object.keys(checked);
+        return checkboxes.map((item) => {
             return (
                 <Field
-                    key={semester.id + item}
+                    key={item}
                     name={`${name}${item}`}
                     label={
                         name.indexOf('semester_days_markup_') >= 0
@@ -170,6 +170,7 @@ const SemesterForm = (props) => {
     };
 
     const handleChange = (event, setState) => setState(event.target.checked);
+
     const resetSemesterForm = () => {
         setSelectedGroups([]);
         clearSemesterService();

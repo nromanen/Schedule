@@ -1,7 +1,7 @@
+import React, { useEffect, useState } from 'react';
 import { FaEdit, FaUsers, FaFileArchive } from 'react-icons/fa';
 import { MdDelete, MdDonutSmall } from 'react-icons/md';
 import { useTranslation } from 'react-i18next';
-import React from 'react';
 import '../../containers/SemesterPage/SemesterPage.scss';
 import { GiSightDisabled, IoMdEye, FaCopy } from 'react-icons/all';
 import Card from '../../share/Card/Card';
@@ -29,6 +29,7 @@ import {
     COMMON_MAKE_ARCHIVE,
     COMMON_SET_ENABLED,
 } from '../../constants/translationLabels/common';
+import { search } from '../../helper/search';
 
 const SemesterItem = (props) => {
     const { t } = useTranslation('formElements');
@@ -39,10 +40,22 @@ const SemesterItem = (props) => {
         setSubDialogType,
         setOpenSubDialog,
         setIsOpenSemesterCopyForm,
-        visibleItems,
-        setSemesterCard,
         setOpenGroupsDialog,
+        term,
+        enabledSemesters,
+        disabledSemesters,
+        archivedSemesters,
     } = props;
+    const [visibleItems, setVisibleItems] = useState([]);
+
+    const searchArr = ['year', 'description', 'startDay', 'endDay'];
+
+    useEffect(() => {
+        if (disabled) setVisibleItems(search(disabledSemesters, term, searchArr));
+        if (archived) setVisibleItems(search(archivedSemesters, term, searchArr));
+        if (!(archived || disabled)) setVisibleItems(search(enabledSemesters, term, searchArr));
+    }, [disabled, archived, enabledSemesters, term]);
+
     const showConfirmDialog = (id, dialogType) => {
         setSemesterId(id);
         setSubDialogType(dialogType);
@@ -101,6 +114,7 @@ const SemesterItem = (props) => {
                                         title={t(COPY_LABEL)}
                                         onClick={() => {
                                             showSemesterCopyForm(semesterItem.id);
+                                            setSemesterId(semesterItem.id);
                                         }}
                                     />
                                     {!semesterItem.currentSemester && (
@@ -179,7 +193,7 @@ const SemesterItem = (props) => {
                             title={t(FORM_SHOW_GROUPS)}
                             className="svg-btn copy-btn  semester-groups"
                             onClick={() => {
-                                setSemesterCard(semesterItem.id);
+                                setSemesterId(semesterItem.id);
                                 selectSemesterService(semesterItem.id);
                                 setOpenGroupsDialog(true);
                             }}
