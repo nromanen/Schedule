@@ -11,6 +11,14 @@ $group-size: 10px;
    font-size: 20px;
  }
 }
+.link-href{
+  text-decoration: none;
+  color: $black;
+  &:hover{
+    color: $black;
+  }
+
+}
 .group {
 
   &-wrapper {

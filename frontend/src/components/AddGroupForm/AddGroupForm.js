@@ -1,5 +1,6 @@
 import { connect } from 'react-redux';
 import React, { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { Field, reduxForm } from 'redux-form';
 import Button from '@material-ui/core/Button';
 import { useTranslation } from 'react-i18next';
@@ -9,7 +10,8 @@ import Card from '../../share/Card/Card';
 import { GROUP_FORM } from '../../constants/reduxForms';
 import renderTextField from '../../share/renderedFields/input';
 import { required, uniqueGroup, minLengthValue } from '../../validation/validateFields';
-import { links } from '../../constants/links';
+import { EDIT_LINK, STUDENT_LINK } from '../../constants/links';
+
 import { getClearOrCancelTitle, setDisableButton } from '../../helper/disableComponent';
 import {
     EDIT_TITLE,
@@ -21,10 +23,15 @@ import {
 
 const AddGroup = (props) => {
     const { t } = useTranslation('formElements');
-    const { handleSubmit, pristine, onReset, submitting, match, group, initialize } = props;
+    const location = useLocation();
+    const { handleSubmit, pristine, onReset, submitting, group, initialize } = props;
 
     useEffect(() => {
-        if (group && match.url.includes(links.Edit) && !match.url.includes(links.Student)) {
+        if (
+            group &&
+            location.pathname.includes(EDIT_LINK) &&
+            !location.pathname.includes(STUDENT_LINK)
+        ) {
             if (group.id) {
                 initialize({
                     id: group.id,
@@ -35,7 +42,6 @@ const AddGroup = (props) => {
             }
         }
     }, [group.id]);
-
     return (
         <Card additionClassName="form-card group-form">
             <h2 className="group-form__title">

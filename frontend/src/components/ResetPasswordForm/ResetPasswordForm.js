@@ -13,11 +13,11 @@ import renderTextField from '../../share/renderedFields/input';
 import { RESET_PASSWORD_FORM } from '../../constants/reduxForms';
 
 import { email, required } from '../../validation/validateFields';
-import { links } from '../../constants/links';
 import {
     EMAIL_LABEL,
     RESET_PASSWORD_HELPER_TEXT,
 } from '../../constants/translationLabels/formElements';
+import { LOGIN_LINK } from '../../constants/links';
 import {
     LOGIN_TITLE,
     RESET_PASSWORD_PAGE_TITLE,
@@ -70,7 +70,7 @@ const ResetPasswordForm = (props) => {
                         </Button>
                     </div>
                     <div className="auth-form-footer">
-                        <Link to={links.LOGIN} className="form-link">
+                        <Link to={LOGIN_LINK} className="form-link">
                             {i18n.t(LOGIN_TITLE)}
                         </Link>
                     </div>

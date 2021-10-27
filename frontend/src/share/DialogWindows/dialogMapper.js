@@ -20,7 +20,7 @@ import {
 } from '../../constants/translationLabels/formElements';
 
 export const dialogMapper = (props) => {
-    const { onClose, cardId, type, whatDelete, linkToMeeting = 'none' } = props;
+    const { onClose, cardId, type, whatDelete, linkToMeeting = 'none', ...rest } = props;
     const defaultModalButtons = (
         <>
             <Button
@@ -49,19 +49,21 @@ export const dialogMapper = (props) => {
                     </>
                 ),
                 buttons: defaultModalButtons,
-                ...props,
+                onClose,
+                ...rest,
             };
         case dialogTypes.SET_VISIBILITY_DISABLED:
             return {
                 title: i18n.t(COMMON_DO_YOU_WANNA_DISABLE),
                 buttons: defaultModalButtons,
-                ...props,
+                ...rest,
             };
         case dialogTypes.SET_VISIBILITY_ENABLED:
             return {
                 title: i18n.t(COMMON_DO_YOU_WANNA_SHOW),
                 buttons: defaultModalButtons,
-                ...props,
+                onClose,
+                ...rest,
             };
         case dialogTypes.MEETING_LINK:
             return {
@@ -90,7 +92,8 @@ export const dialogMapper = (props) => {
                     </>
                 ),
                 buttons: defaultModalButtons,
-                ...props,
+                onClose,
+                ...rest,
             };
         case dialogTypes.SET_DEFAULT:
             return {
@@ -104,7 +107,8 @@ export const dialogMapper = (props) => {
                     </>
                 ),
                 buttons: defaultModalButtons,
-                ...props,
+                onClose,
+                ...rest,
             };
         default:
             return props;

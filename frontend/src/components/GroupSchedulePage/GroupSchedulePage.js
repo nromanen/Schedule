@@ -11,7 +11,7 @@ import {
 } from '../../services/scheduleService';
 import GroupSchedulePageTop from '../GroupSchedulePageTop/GroupSchedulePageTop';
 import { setLoadingService } from '../../services/loadingService';
-import { links } from '../../constants/links';
+import { HOME_PAGE_LINK, SCHEDULE_FOR_LINK } from '../../constants/links';
 import { places } from '../../constants/places';
 import { getScheduleByType } from '../../utils/sheduleUtils';
 import { SCHEDULE_TYPES } from '../../constants/schedule/types';
@@ -30,7 +30,7 @@ const GroupSchedulePage = (props) => {
         const teacherPath = teacher ? `&teacher=${teacher}` : '';
         setLoadingService(true);
         submitSearchSchedule(values, history);
-        history.push(`${links.ScheduleFor}?semester=${semester}${groupPath}${teacherPath}`);
+        history.push(`${SCHEDULE_FOR_LINK}?semester=${semester}${groupPath}${teacherPath}`);
     };
 
     useEffect(() => {
@@ -59,7 +59,7 @@ const GroupSchedulePage = (props) => {
 
             return null;
         }
-        if (scheduleType !== '' || location.pathname === links.HOME_PAGE) {
+        if (scheduleType !== '' || location.pathname === HOME_PAGE_LINK) {
             return renderSchedule(props, place);
         }
         const { semester, teacher, group } = getDataFromParams(location);

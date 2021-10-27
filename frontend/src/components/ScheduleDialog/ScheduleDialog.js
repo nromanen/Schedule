@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 import PropTypes from 'prop-types';
+import { isNil } from 'lodash';
 
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import TextField from '@material-ui/core/TextField';
@@ -33,11 +34,8 @@ const ScheduleDialog = (props) => {
     const [warning, setWarning] = useState('');
 
     const getOptionLabel = (option) => {
-        if (option.available) {
-            return `${option.name} (${translation(COMMON_AVAILABLE)})`;
-        }
-        if (!option.available) {
-            return `${option.name} (${translation(COMMON_UNAVAILABLE)})`;
+        if (!isNil(option)){
+            return `${option.name} (${ option.available ? translation(COMMON_AVAILABLE) : translation(COMMON_UNAVAILABLE)})`;          
         }
         return '';
     };
@@ -52,7 +50,7 @@ const ScheduleDialog = (props) => {
         if (!room) return;
         setOpenConfirmDialog(true);
         if (!room.available) {
-            setWarning((prev) => prev + translation(COMMON_ROOM_IS_UNAVAILABLE));
+            setWarning((prev) => prev + '\n' + translation(COMMON_ROOM_IS_UNAVAILABLE));
         }
     };
     const defaultProps = {

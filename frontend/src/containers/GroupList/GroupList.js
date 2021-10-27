@@ -1,4 +1,3 @@
-import '../../router/Router.scss';
 import { connect } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import React, { useEffect, useState } from 'react';
@@ -10,8 +9,6 @@ import SearchPanel from '../../share/SearchPanel/SearchPanel';
 import AddGroup from '../../components/AddGroupForm/AddGroupForm';
 import SnackbarComponent from '../../share/Snackbar/SnackbarComponent';
 import { handleSnackbarCloseService } from '../../services/snackbarService';
-import NavigationPage from '../../components/Navigation/NavigationPage';
-import { navigation, navigationNames } from '../../constants/navigation';
 import { goToGroupPage } from '../../helper/pageRedirection';
 import GroupCard from '../../components/GroupCard/GroupCard';
 import {
@@ -133,7 +130,6 @@ const GroupList = (props) => {
 
     return (
         <>
-            <NavigationPage name={navigationNames.GROUP_LIST} val={navigation.GROUPS} />
             {openSubDialog && (
                 <CustomDialog
                     type={subDialogType}
@@ -169,7 +165,6 @@ const GroupList = (props) => {
                     <SearchPanel SearchChange={SearchChange} showDisabled={changeDisable} />
                     {!isDisabled && (
                         <AddGroup
-                            match={match}
                             className="form"
                             onSubmit={handleGroupService}
                             onReset={clearGroupService}

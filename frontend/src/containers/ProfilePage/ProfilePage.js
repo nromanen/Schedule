@@ -8,7 +8,6 @@ import { PROFILE_FORM, TEACHER_FORM } from '../../constants/reduxForms';
 import ChangePasswordForm from '../../components/ChangePasswordForm/ChangePasswordForm';
 import { getUserProfile, updateUserPassword, updateUserTeacher } from '../../services/userService';
 import AddTeacherForm from '../../components/AddTeacherForm/AddTeacherForm';
-import NavigationPage from '../../components/Navigation/NavigationPage';
 import { EMAIL_LABEL } from '../../constants/translationLabels/formElements';
 import { COMMON_MY_PROFILE, DIFFERENT_PASSWORDS } from '../../constants/translationLabels/common';
 
@@ -46,7 +45,6 @@ const ProfilePage = (props) => {
 
     return (
         <>
-            <NavigationPage />
             <Card additionClassName="form-card">
                 <h2 className="form-title">{t(COMMON_MY_PROFILE)}</h2>
                 <section>

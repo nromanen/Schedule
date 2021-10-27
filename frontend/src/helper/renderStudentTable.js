@@ -25,7 +25,13 @@ import { Link } from 'react-router-dom';
 import { selectStudentService } from '../services/studentService';
 import './renderStudentTable.scss';
 import { getTeacherFullName } from './renderTeacher';
-import { links } from '../constants/links';
+import {
+    STUDENT_LINK,
+    EDIT_LINK,
+    DELETE_LINK,
+    GROUP_LINK,
+    GROUP_LIST_LINK,
+} from '../constants/links';
 import {
     EDIT_TITLE,
     SELECT_ALL,
@@ -161,12 +167,12 @@ export default function RenderStudentTable(props) {
         selectStudentService(studentId);
     };
     useEffect(() => {
-        if (match.path.includes(links.Student) && match.path.includes(links.Edit)) {
+        if (match.path.includes(STUDENT_LINK) && match.path.includes(EDIT_LINK)) {
             handleEdit(student.id);
         }
     }, [props.group.id]);
     useEffect(() => {
-        if (match.path.includes(links.Student) && match.path.includes(links.Delete)) {
+        if (match.path.includes(STUDENT_LINK) && match.path.includes(DELETE_LINK)) {
             setOpenDeleteDialog(true);
         }
     }, [props.group.id]);
@@ -291,7 +297,7 @@ export default function RenderStudentTable(props) {
                             <StyledTableCell component="th" scope="row" align="center">
                                 <span className="edit-cell">
                                     <Link
-                                        to={`${links.GroupList}${links.Group}/${group.id}${links.Student}/${singleStudent.id}${links.Edit}`}
+                                        to={`${GROUP_LIST_LINK}${GROUP_LINK}/${group.id}${STUDENT_LINK}/${singleStudent.id}${EDIT_LINK}`}
                                     >
                                         <FaEdit
                                             className="edit-button"
@@ -300,7 +306,7 @@ export default function RenderStudentTable(props) {
                                         />
                                     </Link>
                                     <Link
-                                        to={`${links.GroupList}${links.Group}/${group.id}${links.Student}/${singleStudent.id}${links.Delete}`}
+                                        to={`${GROUP_LIST_LINK}${GROUP_LINK}/${group.id}${STUDENT_LINK}/${singleStudent.id}${DELETE_LINK}`}
                                     >
                                         <Delete
                                             title={t(DELETE_TITLE_LABEL)}

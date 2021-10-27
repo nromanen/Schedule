@@ -25,8 +25,6 @@ import {
     setDisabledSubjectsService,
     getDisabledSubjectsService,
 } from '../../services/subjectService';
-import NavigationPage from '../../components/Navigation/NavigationPage';
-import { navigation, navigationNames } from '../../constants/navigation';
 import {
     EDIT_TITLE,
     SUBJECT_Y_LABEL,
@@ -91,7 +89,6 @@ const SubjectPage = (props) => {
     };
     return (
         <>
-            <NavigationPage name={navigationNames.SUBJECT_PAGE} val={navigation.SUBJECTS} />
             {openSubDialog && (
                 <CustomDialog
                     type={subDialogType}

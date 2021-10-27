@@ -9,8 +9,6 @@ import Card from '../../share/Card/Card';
 import AddDepartment from '../../components/AddDepartmentForm/AddDepartmentForm';
 import { search } from '../../helper/search';
 import NotFound from '../../share/NotFound/NotFound';
-import { navigation, navigationNames } from '../../constants/navigation';
-import NavigationPage from '../../components/Navigation/NavigationPage';
 import SnackbarComponent from '../../share/Snackbar/SnackbarComponent';
 import { handleSnackbarCloseService } from '../../services/snackbarService';
 import { showAllPublicTeachersByDepartmentService } from '../../services/scheduleService';
@@ -109,7 +107,6 @@ const DepartmentPage = (props) => {
 
     return (
         <>
-            <NavigationPage name={navigationNames.DEPARTMENTS} val={navigation.DEPARTMENTS} />
             {openSubDialog && (
                 <CustomDialog
                     type={subDialogType}

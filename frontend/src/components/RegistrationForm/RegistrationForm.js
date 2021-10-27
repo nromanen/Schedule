@@ -12,7 +12,7 @@ import '../../styles/forms.scss';
 import { REGISTRATION_FORM } from '../../constants/reduxForms';
 
 import { email, password, required } from '../../validation/validateFields';
-import { links } from '../../constants/links';
+import { LOGIN_LINK } from '../../constants/links';
 import {
     REGISTRATION_PAGE_TITLE,
     LOGIN_TITLE,
