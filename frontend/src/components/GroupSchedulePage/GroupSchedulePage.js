@@ -20,6 +20,7 @@ import {
     setScheduleTeacherId,
     getGroupScheduleRequested,
     getTeacherScheduleRequested,
+    getFullScheduleRequested,
 } from '../../actions/schedule';
 
 const GroupSchedulePage = (props) => {
@@ -41,6 +42,7 @@ const GroupSchedulePage = (props) => {
         setTeacherId,
         getGroupSchedule,
         getTeacherSchedule,
+        getFullSchedule,
     } = props;
 
     const submitSearchSchedule = (values) => {
@@ -65,7 +67,7 @@ const GroupSchedulePage = (props) => {
             (!get(values, 'group') && !get(values, 'teacher'))
         ) {
             setTypeOfSchedule('full');
-            // getFullSchedule(values.semester);
+            getFullSchedule(values.semester);
         }
     };
 
@@ -73,7 +75,6 @@ const GroupSchedulePage = (props) => {
         const { semester, group, teacher } = values;
         const groupPath = group ? `&group=${group}` : '';
         const teacherPath = teacher ? `&teacher=${teacher}` : '';
-        setLoadingService(true);
         submitSearchSchedule(values);
         history.push(`${links.ScheduleFor}?semester=${semester}${groupPath}${teacherPath}`);
     };
@@ -172,6 +173,7 @@ const mapDispatchToProps = (dispatch) => ({
         dispatch(getGroupScheduleRequested(groupId, semesterId)),
     getTeacherSchedule: (groupId, semesterId) =>
         dispatch(getTeacherScheduleRequested(groupId, semesterId)),
+    getFullSchedule: (semesterId) => dispatch(getFullScheduleRequested(semesterId)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(GroupSchedulePage);

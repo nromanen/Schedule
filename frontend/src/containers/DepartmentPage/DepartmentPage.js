@@ -13,7 +13,6 @@ import { navigation, navigationNames } from '../../constants/navigation';
 import NavigationPage from '../../components/Navigation/NavigationPage';
 import SnackbarComponent from '../../share/Snackbar/SnackbarComponent';
 import { handleSnackbarCloseService } from '../../services/snackbarService';
-import { showAllPublicTeachersByDepartmentService } from '../../services/scheduleService';
 import {
     clearDepartment,
     createDepartmentService,

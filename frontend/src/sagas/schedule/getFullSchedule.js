@@ -1,18 +1,18 @@
 import { call, put } from 'redux-saga/effects';
-import { setLoading, setOpenSnackbar, setTeacherSchedule } from '../../actions';
+import { setFullSchedule, setLoading, setOpenSnackbar } from '../../actions';
 import { snackbarTypes } from '../../constants/snackbarTypes';
 import { axiosCall } from '../../services/axios';
 import i18n from '../../i18n';
-import { TEACHER_SCHEDULE_URL } from '../../constants/axios';
-import { makeTeacherSchedule } from '../../mappers/teacherScheduleMapper';
+import { FULL_SCHEDULE_URL } from '../../constants/axios';
+import { makeFullSchedule } from '../../mappers/fullScheduleMapper';
 
-export function* getTeacherSchedule({ teacherId, semesterId }) {
-    const requestUrl = `${TEACHER_SCHEDULE_URL + semesterId}&teacherId=${teacherId}`;
+export function* getFullSchedule({ semesterId }) {
+    const requestUrl = FULL_SCHEDULE_URL + semesterId;
     try {
         yield put(setLoading(true));
         const response = yield call(axiosCall, requestUrl);
-        const mappedSchedule = yield call(makeTeacherSchedule, response.data);
-        yield put(setTeacherSchedule(mappedSchedule));
+        const mappedSchedule = yield call(makeFullSchedule, response.data);
+        yield put(setFullSchedule(mappedSchedule));
         yield put(setLoading(false));
     } catch (error) {
         const message = error.response

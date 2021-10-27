@@ -12,6 +12,7 @@ import { getAllPublicTeachers } from './getAllPublicTeachers';
 import { getAllPublicTeachersByDepartment } from './getAllPublicTeachersByDepartment';
 import { getCurrentSemester } from './getCurrentSemester';
 import { getDefaultSemester } from './getDefaultSemester';
+import { getFullSchedule } from './getFullSchedule';
 import { getGroupSchedule } from './getGroupSchedule';
 import { getScheduleItems } from './getScheduleItems';
 import { getScheduleItemsBySemester } from './getScheduleItemsBySemester';
@@ -47,4 +48,5 @@ export default function* watchSchedule() {
     yield takeEvery(actionTypes.CLEAR_SCHEDULE_REQUESTED, clearSchedule);
     yield takeLatest(actionTypes.GET_GROUP_SCHEDULE_REQUESTED, getGroupSchedule);
     yield takeLatest(actionTypes.GET_TEACHER_SCHEDULE_REQUESTED, getTeacherSchedule);
+    yield takeLatest(actionTypes.GET_FULL_SCHEDULE_REQUESTED, getFullSchedule);
 }

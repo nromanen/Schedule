@@ -9,6 +9,7 @@ import { makeGroupSchedule } from '../../mappers/groupScheduleMapper';
 export function* getGroupSchedule({ groupId, semesterId }) {
     const requestUrl = `${GROUP_SCHEDULE_URL + semesterId}&groupId=${groupId}`;
     try {
+        yield put(setLoading(true));
         const response = yield call(axiosCall, requestUrl);
         const mappedSchedule = yield call(makeGroupSchedule, response.data);
         yield put(setGroupSchedule(mappedSchedule));

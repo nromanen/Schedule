@@ -1,25 +1,14 @@
 import React from 'react';
+import { isEmpty } from 'lodash';
 import i18n from '../i18n';
-import { setLoadingService } from '../services/loadingService';
-import { isNotReadySchedule } from '../utils/sheduleUtils';
 import DownloadLink from '../components/DownloadLink/DownloadLink';
-import { makeFullSchedule, makeTeacherSchedule } from './prepareSchedule';
 import { renderGroupTable, renderFullSchedule, renderWeekTable } from './renderScheduleTable';
 import { getGroupScheduleTitle, getTeacherScheduleTitle } from '../utils/titlesUtil';
 
-const emptySchedule = () => <p className="empty_schedule">{i18n.t('common:empty_schedule')}</p>;
+const emptySchedule = () => <p className="empty_schedule">{i18n.t('common:empty_schedule')}</p>; // ALERT
 
 const renderSchedule = (
-    {
-        scheduleType,
-        groupSchedule,
-        fullSchedule,
-        teacherSchedule,
-        groupId,
-        teacherId,
-        semesterId,
-        loading,
-    },
+    { scheduleType, groupSchedule, fullSchedule, teacherSchedule, groupId, teacherId, semesterId },
     place,
 ) => {
     switch (scheduleType) {
@@ -60,21 +49,15 @@ const renderSchedule = (
             );
         }
         case 'full': {
-            if (isNotReadySchedule(fullSchedule.schedule, loading)) {
+            const { resultArray } = fullSchedule;
+            if (isEmpty(resultArray)) {
                 return emptySchedule();
             }
-            const result = makeFullSchedule(fullSchedule);
-
-            setLoadingService(false);
-            if (result.groupsCount) {
-                return renderFullSchedule(result, place);
-            }
-            break;
+            return renderFullSchedule(fullSchedule, place);
         }
         default:
             return null;
     }
-    return null;
 };
 
 export { renderSchedule };

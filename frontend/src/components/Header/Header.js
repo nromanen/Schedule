@@ -27,8 +27,6 @@ import { links } from '../../constants/links';
 import LanguageSelector from '../LanguageSelector/LanguageSelector';
 import * as colors from '../../constants/schedule/colors';
 
-import { getCurrentSemesterService } from '../../services/scheduleService';
-
 import FreeRooms from '../../containers/FreeRooms/freeRooms';
 import { setSemesterLoadingService } from '../../services/loadingService';
 import {

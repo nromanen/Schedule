@@ -163,6 +163,12 @@ export const getTeacherScheduleRequested = (teacherId, semesterId) => {
         semesterId,
     };
 };
+export const getFullScheduleRequested = (semesterId) => {
+    return {
+        type: actionTypes.GET_FULL_SCHEDULE_REQUESTED,
+        semesterId,
+    };
+};
 export const deleteItemFromSchedule = (res) => {
     return {
         type: actionTypes.DELETE_ITEM_FROM_SCHEDULE,
