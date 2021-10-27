@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { Fragment, useEffect, useRef, useState } from 'react';
 import { IoMdMore } from 'react-icons/all';
 import { connect } from 'react-redux';
 
@@ -219,23 +219,22 @@ const Schedule = (props) => {
     };
 
     const allLessons = [];
-    days.forEach((day) => {
-        classes.forEach((classNumber) => {
-            for (let i = 0; i < 2; i += 1) {
-                if ((i + 1) % 2 === 0) {
-                    allLessons.push({
-                        day: { name: day.toLowerCase() },
-                        classNumber,
-                        week: 'even',
-                    });
-                } else {
-                    allLessons.push({
-                        day: { name: day.toLowerCase() },
-                        classNumber,
-                        week: 'odd',
-                    });
-                }
-            }
+    days.forEach((day, outerIndex) => {
+        classes.forEach((classNumber, index) => {
+            allLessons.push(
+                {
+                    day: { name: day.toLowerCase() },
+                    classNumber,
+                    week: 'odd',
+                    id: `${index}-${outerIndex}`,
+                },
+                {
+                    day: { name: day.toLowerCase() },
+                    classNumber,
+                    week: 'even',
+                    id: `${index}-${outerIndex}`,
+                },
+            );
         });
     });
     const getDayColour = (index) => {
@@ -265,7 +264,7 @@ const Schedule = (props) => {
                         </section>
                         <section className="class-section">
                             {classes.map((classScheduler) => (
-                                <>
+                                <Fragment key={classScheduler.id}>
                                     <p
                                         className={`day-class-week-general ${day}-${classScheduler.id}`}
                                     ></p>
@@ -279,7 +278,7 @@ const Schedule = (props) => {
                                     <p
                                         className={`day-class-week-general ${day}-${classScheduler.id}`}
                                     ></p>
-                                </>
+                                </Fragment>
                             ))}
                         </section>
                     </section>
@@ -293,7 +292,10 @@ const Schedule = (props) => {
                             {group.title}
                         </div>
                         {allLessons.map((lesson, index) => (
-                            <div key={`${group}-${lesson.day.name}`} className="board-div">
+                            <div
+                                key={`${group.id}-${lesson.id}-${lesson.week}`}
+                                className="board-div"
+                            >
                                 <Board
                                     group={group.id}
                                     day={lesson.day.name}
