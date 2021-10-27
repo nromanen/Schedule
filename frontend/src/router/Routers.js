@@ -8,7 +8,7 @@ import HomePage from '../containers/Home/Home';
 import TeacherSchedule from '../components/TeacherSchedule/TeacherSchedule';
 import SchedulePage from '../containers/SchedulePage/SchedulePage';
 import AdminPage from '../containers/AdminPage/AdminPage';
-import Logout from '../containers/Auth/Logout/Logout';
+import Logout from '../containers/AuthContainer/Logout/Logout';
 import ActivationPage from '../containers/ActivationPage/ActivationPage';
 import ProfilePage from '../containers/ProfilePage/ProfilePage';
 import { links } from '../constants/links';
@@ -33,6 +33,7 @@ const Routers = (props) => {
 
     let routes = (
         <Switch>
+            <Route path={links.RESET_PASSWORD} component={ResetPassword} />
             <Route path={links.Registration} component={Register} />
             <Route path={links.HOME_PAGE} exact component={HomePage} />
             <Route path={links.ScheduleFor} component={GroupSchedulePage} />

@@ -1,9 +1,9 @@
 import React from 'react';
 import { authTypes } from '../../constants/auth';
-import '../../containers/Auth/Auth.scss';
-import Auth from '../../containers/Auth/Auth';
+import '../Auth/Auth.scss';
+import AuthContainer from '../../containers/AuthContainer/AuthContainer';
 
 const Register = () => {
-    return <Auth authType={authTypes.REGISTRATION} />;
+    return <AuthContainer authType={authTypes.REGISTRATION} />;
 };
 export { Register };

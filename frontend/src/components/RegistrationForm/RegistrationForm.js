@@ -1,23 +1,24 @@
 import React from 'react';
-import { useTranslation } from 'react-i18next';
+import i18n from 'i18next';
 
 import { Field, reduxForm } from 'redux-form';
 
 import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { Link } from 'react-router-dom';
+import Card from '@material-ui/core/Card';
 import renderTextField from '../../share/renderedFields/input';
-import Card from '../../share/Card/Card';
-
+import '../../styles/forms.scss';
 import { REGISTRATION_FORM } from '../../constants/reduxForms';
-import { authTypes } from '../../constants/auth';
 
 import { email, password, required } from '../../validation/validateFields';
 import { links } from '../../constants/links';
 import {
     REGISTRATION_PAGE_TITLE,
+    LOGIN_TITLE,
     ACCOUNT_EXIST,
     CREATE_ACCOUNT,
+    DIFFERENT_PASSWORDS,
 } from '../../constants/translationLabels/common';
 import {
     PASSWORD_LABEL,
@@ -26,24 +27,20 @@ import {
 } from '../../constants/translationLabels/formElements';
 
 const RegistrationForm = (props) => {
-    const { t } = useTranslation('formElements');
-    const { handleSubmit, translation, registrationError, setError, switchAuthMode, isLoading } =
-        props;
-
-    const error = registrationError;
+    const { handleSubmit, errors, setError, registrationHandler, isLoading } = props;
 
     const emailValidate = { validate: [required, email] };
-    const emailErrorCondition = error && error.registration.reg;
+    const emailErrorCondition = errors && errors.registration.reg;
     const emailAdvancedValidate = {
         error: !!emailErrorCondition,
-        helperText: emailErrorCondition ? error.registration.reg : '',
+        helperText: emailErrorCondition ? errors.registration.reg : '',
     };
 
     const passwordValidate = { validate: [required, password] };
-    const passwordsCondition = error && error.registration.passwords;
+    const passwordsCondition = errors && errors.registration.passwords;
     const passwordValidateAdvanced = {
         error: !!passwordsCondition,
-        helperText: passwordsCondition ? error.registration.passwords : '',
+        helperText: passwordsCondition ? errors.registration.passwords : '',
     };
 
     const retypePasswordValidate = { validate: [required, password] };
@@ -51,61 +48,76 @@ const RegistrationForm = (props) => {
         error: !!passwordsCondition,
     };
 
-    let form = (
-        <form onSubmit={handleSubmit}>
-            <Field
-                name="email"
-                className="form-field"
-                type="email"
-                component={renderTextField}
-                label={t(EMAIL_LABEL)}
-                {...(!error ? emailValidate : emailAdvancedValidate)}
-                onChange={() => props.setError(null)}
-            />
-            <Field
-                name="password"
-                className="form-field"
-                type="password"
-                component={renderTextField}
-                label={t(PASSWORD_LABEL)}
-                {...(!error ? passwordValidate : passwordValidateAdvanced)}
-                onChange={() => props.setError(null)}
-            />
-            <Field
-                name="retypePassword"
-                className="form-field"
-                type="password"
-                component={renderTextField}
-                label={t(RETYPE_PASSWORD_LABEL)}
-                {...(!error ? retypePasswordValidate : retypePasswordValidateAdvanced)}
-            />
-            <Button className="buttons-style" type="submit" variant="contained" color="primary">
-                {translation(CREATE_ACCOUNT)}
-            </Button>
-            <div className="group-btns">
-                <button
-                    type="button"
-                    className="auth-link"
-                    onClick={() => {
-                        switchAuthMode(authTypes.LOGIN);
-                        setError(null);
-                    }}
-                >
-                    <Link className="navLinks" to={links.LOGIN}>
-                        {translation(ACCOUNT_EXIST)}
-                    </Link>
-                </button>
-            </div>
-        </form>
-    );
+    const isValidForm = (formValues) => {
+        if (formValues.password !== formValues.retypePassword) {
+            setError({
+                registration: { passwords: i18n.t(DIFFERENT_PASSWORDS) },
+            });
+            return false;
+        }
+        return true;
+    };
+    const onRegistration = (values) => {
+        const isValid = isValidForm(values);
+        if (isValid) {
+            registrationHandler(values);
+        }
+    };
 
-    if (isLoading) {
-        form = <CircularProgress />;
-    }
     return (
-        <Card additionClassName="auth-card">
-            <h2 className="under-line">{translation(REGISTRATION_PAGE_TITLE)}</h2>
-            {form}
+        <Card className="auth-card">
+            <div className="auth-card-header">
+                <h2 className="title">{i18n.t(REGISTRATION_PAGE_TITLE)}</h2>
+            </div>
+
+            {isLoading ? (
+                <CircularProgress size="70px" className="loading-circle auth-loading" />
+            ) : (
+                <form className="auth-form" onSubmit={handleSubmit(onRegistration)}>
+                    <Field
+                        name="email"
+                        className="form-input"
+                        type="email"
+                        component={renderTextField}
+                        label={i18n.t(EMAIL_LABEL)}
+                        {...(!errors ? emailValidate : emailAdvancedValidate)}
+                        onChange={() => props.setError(null)}
+                    />
+                    <Field
+                        name="password"
+                        className="form-input"
+                        type="password"
+                        component={renderTextField}
+                        label={i18n.t(PASSWORD_LABEL)}
+                        {...(!errors ? passwordValidate : passwordValidateAdvanced)}
+                        onChange={() => props.setError(null)}
+                    />
+                    <Field
+                        name="retypePassword"
+                        className="form-input"
+                        type="password"
+                        component={renderTextField}
+                        label={i18n.t(RETYPE_PASSWORD_LABEL)}
+                        {...(!errors ? retypePasswordValidate : retypePasswordValidateAdvanced)}
+                    />
+                    <div className="auth-form-actions">
+                        <Button
+                            className="auth-confirm-button"
+                            type="submit"
+                            variant="contained"
+                            color="primary"
+                        >
+                            {i18n.t(CREATE_ACCOUNT)}
+                        </Button>
+                    </div>
+                    <div className="auth-form-footer">
+                        <span>{i18n.t(ACCOUNT_EXIST)}</span>
+                        <Link to={links.LOGIN} className="form-link">
+                            {i18n.t(LOGIN_TITLE)}
+                        </Link>
+                    </div>
+                </form>
+            )}
         </Card>
     );
 };

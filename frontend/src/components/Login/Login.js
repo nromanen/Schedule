@@ -1,9 +1,9 @@
 import React from 'react';
 import { authTypes } from '../../constants/auth';
-import '../../containers/Auth/Auth.scss';
-import Auth from '../../containers/Auth/Auth';
+import '../Auth/Auth.scss';
+import AuthContainer from '../../containers/AuthContainer/AuthContainer';
 
 const Login = () => {
-    return <Auth authType={authTypes.LOGIN} />;
+    return <AuthContainer authType={authTypes.LOGIN} />;
 };
 export { Login };
