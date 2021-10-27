@@ -8,7 +8,7 @@ import HomePage from '../containers/Home/Home';
 import TeacherSchedule from '../components/TeacherSchedule/TeacherSchedule';
 import SchedulePage from '../containers/SchedulePage/SchedulePage';
 import AdminPage from '../containers/AdminPage/AdminPage';
-import Logout from '../containers/AuthContainer/Logout/Logout';
+import Logout from '../containers/Auth/Logout/Logout';
 import ActivationPage from '../containers/ActivationPage/ActivationPage';
 import ProfilePage from '../containers/ProfilePage/ProfilePage';
 import { links } from '../constants/links';
