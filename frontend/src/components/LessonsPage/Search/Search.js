@@ -1,15 +1,14 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import { styled } from '@material-ui/core';
 import { useTranslation } from 'react-i18next';
 import { Autocomplete } from '@material-ui/lab';
 import TextField from '@material-ui/core/TextField';
-import { LESSON_FOR_GROUP_TITLE } from '../../../../constants/translationLabels/common';
-import { FORM_GROUP_LABEL } from '../../../../constants/translationLabels/formElements';
-import SearchPanel from '../../../../share/SearchPanel/SearchPanel';
-import { selectGroupService } from '../../../../services/groupService';
-import { selectGroupIdService } from '../../../../services/lessonService';
-import '../../LessonPage.scss';
+
+import { LESSON_FOR_GROUP_TITLE } from '../../../constants/translationLabels/common';
+import { FORM_GROUP_LABEL } from '../../../constants/translationLabels/formElements';
+import SearchPanel from '../../../share/SearchPanel/SearchPanel';
+import { selectGroupService } from '../../../services/groupService';
+import '../LessonPage.scss';
 
 const GroupField = styled(TextField)({
     display: 'inline-block',
@@ -17,12 +16,12 @@ const GroupField = styled(TextField)({
 });
 
 const Search = (props) => {
-    const { groupId, setTerm, groups } = props;
+    const { groupId, setTerm, groups, selectByGroupId } = props;
     const { t } = useTranslation();
 
     const handleGroupSelect = (group) => {
         if (group) {
-            selectGroupIdService(group.id);
+            selectByGroupId(group.id);
             selectGroupService(group.id);
         }
     };
@@ -56,9 +55,4 @@ const Search = (props) => {
     );
 };
 
-const mapStateToProps = (state) => ({
-    groupId: state.lesson.groupId,
-    groups: state.groups.groups,
-});
-
-export default connect(mapStateToProps)(Search);
+export default Search;
