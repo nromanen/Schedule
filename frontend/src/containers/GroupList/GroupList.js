@@ -1,5 +1,6 @@
 import { connect } from 'react-redux';
 import GroupPage from '../../components/GroupPage/GroupPage';
+import { deleteStudentStart } from '../../actions/students';
 import {
     fetchDisabledGroupsStart,
     fetchEnabledGroupsStart,
@@ -27,6 +28,7 @@ const mapDispatchToProps = {
     fetchDisabledGroupsStart,
     fetchEnabledGroupsStart,
     toggleDisabledStatus,
+    deleteStudentStart,
     deleteGroupStart,
     createGroupStart,
     updateGroupStart,

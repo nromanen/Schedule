@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import { ShowStudentsOnGroupDialog } from '../../share/DialogWindows';
-import { fetchAllStudents } from '../../actions/students';
+import { fetchAllStudentsStart } from '../../actions/students';
 
 const mapStateToProps = (state) => ({
     studentsByGroup: state.students.studentsByGroup,
@@ -9,4 +9,4 @@ const mapStateToProps = (state) => ({
     groups: state.groups.groups,
 });
 
-export default connect(mapStateToProps, { fetchAllStudents })(ShowStudentsOnGroupDialog);
+export default connect(mapStateToProps, { fetchAllStudentsStart })(ShowStudentsOnGroupDialog);

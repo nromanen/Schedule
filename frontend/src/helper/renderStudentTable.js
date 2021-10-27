@@ -316,7 +316,7 @@ export default function RenderStudentTable(props) {
                                 <AddStudentDialog
                                     open={openEditDialog}
                                     student={student}
-                                    group={group.id}
+                                    group={group}
                                     setOpen={handleCloseEditDialog}
                                 />
                             )}

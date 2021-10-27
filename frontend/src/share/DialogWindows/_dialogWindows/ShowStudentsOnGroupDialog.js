@@ -23,7 +23,7 @@ const ShowStudentsOnGroupDialog = (props) => {
         match,
         groups,
         group,
-        fetchAllStudents,
+        fetchAllStudentsStart,
     } = props;
     const [checkBoxStudents, setCheckBoxStudents] = useState([]);
     const [isGroupButtonDisabled, setIsGroupButtonDisabled] = useState(true);
@@ -42,11 +42,8 @@ const ShowStudentsOnGroupDialog = (props) => {
         setCheckBoxStudents(res);
     };
     useEffect(() => {
-        fetchAllStudents(group.id);
+        fetchAllStudentsStart(group.id);
     }, [group.id]);
-    useEffect(() => {
-        fetchAllStudents(group.id);
-    }, [open, openUploadFile]);
     useEffect(() => {
         parseStudentToCheckBox();
     }, [props.students]);
@@ -179,7 +176,7 @@ const ShowStudentsOnGroupDialog = (props) => {
                         </h3>
 
                         <RenderStudentTable
-                            group={props.group}
+                            group={group}
                             onDeleteStudent={onDeleteStudent}
                             students={students}
                             onSubmit={onSubmit}

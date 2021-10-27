@@ -9,12 +9,11 @@ import renderSelectField from '../../share/renderedFields/select';
 import { TYPE_LABEL } from '../../constants/translationLabels/common';
 
 export const AddStudentForm = (props) => {
-    const { handleSubmit, submitting, initialize, pristine, student, groups, reset } = props;
+    const { handleSubmit, submitting, initialize, pristine, student, group, reset, groups } = props;
     const { t } = useTranslation('formElements');
-    console.log(student)
 
     const initializeFormHandler = (currentStudent) => {
-        const { id, surname, name, patronymic, email, group } = currentStudent;
+        const { id, surname, name, patronymic, email } = currentStudent;
         initialize({
             id,
             surname,
@@ -87,10 +86,10 @@ export const AddStudentForm = (props) => {
                         label={t(TYPE_LABEL)}
                         validate={[required]}
                     >
-                        defaultValue={student.group.id}
-                        {groups.map((group) => (
-                            <option key={group.id} value={group.id}>
-                                {group.title}
+                        defaultValue={group?.id}
+                        {groups.map((groupItem) => (
+                            <option key={groupItem.id} value={groupItem.id}>
+                                {groupItem.title}
                             </option>
                         ))}
                     </Field>

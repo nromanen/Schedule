@@ -9,7 +9,8 @@ import { search } from '../../helper/search';
 import GroupCard from '../GroupCard/GroupCard';
 import NotFound from '../../share/NotFound/NotFound';
 import { CustomDialog } from '../../share/DialogWindows';
-import { AddStudentDialog, ShowStudentsOnGroupDialog } from '../../containers/Student';
+import AddStudentDialog from '../../containers/Student/AddStudentDialog';
+import ShowStudentsOnGroupDialog from '../../containers/Student/ShowStudentsOnGroupDialog';
 import { links } from '../../constants/links';
 
 const GroupList = (props) => {
@@ -17,6 +18,7 @@ const GroupList = (props) => {
         fetchDisabledGroupsStart,
         fetchEnabledGroupsStart,
         toggleDisabledStatus,
+        deleteStudentStart,
         deleteGroupStart,
         selectGroup,
         loading,
@@ -45,26 +47,13 @@ const GroupList = (props) => {
         }
     }, [isDisabled]);
 
-    // const pathIncludesParams = (linkType) => {
-    //     return match.path.includes(linkType);
-    // };
-
-    // const checkParamsActions = () => {
-    //     const { id } = match.params;
-    //     const linksActions = [links.Edit, links.Delete];
-    //     const checkParamsAndSetActions = {
-    //         [links.Edit]: selectGroupService(id),
-    //     };
-    //      const find = linksActions.find((link) => return pathIncludesParams(link));
-    //     //pathIncludesParams(checkParamsAndSetActions);
-    // };
-
     const visibleGroups = search(groups, term, ['title']);
 
     const showCustomDialog = (currentId, disabledStatus) => {
         setGroupId(currentId);
         setSubDialogType(disabledStatus);
         setOpenSubDialog(true);
+        return undefined;
     };
     const acceptConfirmDialog = (currentGroupId) => {
         setOpenSubDialog(false);
@@ -82,10 +71,10 @@ const GroupList = (props) => {
         setGroup(currentGroup);
         setShowStudents(true);
     };
-    const onDeleteStudent = () => {
-        //   deleteStudentService(student);
+    const onDeleteStudent = (id) => {
+        deleteStudentStart(id);
     };
-    
+
     return (
         <>
             {openSubDialog && (

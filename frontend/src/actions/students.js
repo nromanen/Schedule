@@ -32,23 +32,30 @@ export const updateStudent = (res) => {
     };
 };
 
-export const fetchAllStudents = (id) => {
+export const fetchAllStudentsStart = (id) => {
     return {
         type: actionTypes.FETCH_ALL_STUDENTS,
         id,
     };
 };
 
-export const startCreateStudent = (data) => {
+export const createStudentStart = (data) => {
     return {
         type: actionTypes.START_CREATE_STUDENTS,
         data,
     };
 };
 
-export const startUpdateStudent = (data) => {
+export const updateStudentStart = (data) => {
     return {
         type: actionTypes.START_UPDATE_STUDENTS,
         data,
+    };
+};
+
+export const deleteStudentStart = (id) => {
+    return {
+        type: actionTypes.START_DELETE_STUDENTS,
+        id,
     };
 };

@@ -59,6 +59,7 @@ function* updateStudentWorker({ data }) {
 
 function* deleteStudentWorker({ id }) {
     try {
+        console.log(id)
         yield call(axiosCall, `${STUDENT_URL}/${id}`, 'DELETE');
         yield put(deleteStudent(id));
         successHandler(
