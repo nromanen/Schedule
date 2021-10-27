@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { IoMdMore } from 'react-icons/all';
+import { connect } from 'react-redux';
 
 import { makeStyles } from '@material-ui/core/styles';
 import Board from '../Board/Board';
@@ -15,7 +16,6 @@ import {
     editRoomItemToScheduleService,
 } from '../../services/scheduleService';
 
-import { getLessonsByGroupService, selectGroupIdService } from '../../services/lessonService';
 import { setLoadingService } from '../../services/loadingService';
 
 import { cssClasses } from '../../constants/schedule/cssClasses';
@@ -23,6 +23,8 @@ import { colors } from '../../constants/schedule/colors';
 import { FORM_DAY_LABEL } from '../../constants/translationLabels/formElements';
 import { CLASS_SCHEDULE, WEEK_LABEL } from '../../constants/translationLabels/common';
 import './Schedule.scss';
+import { selectGroupId } from '../../actions';
+import { getLessonsByGroup } from '../../sagas/lessons';
 
 const Schedule = (props) => {
     const {
@@ -35,6 +37,8 @@ const Schedule = (props) => {
         rooms,
         availability,
         isLoading,
+        getAllLessonsByGroup,
+        selectedGroupId,
     } = props;
     const [open, setOpen] = useState(false);
     const [itemData, setItemData] = useState(null);
@@ -64,16 +68,16 @@ const Schedule = (props) => {
     }, [groupId]);
 
     const setNewItemHandle = (item, room, group) => {
-        getLessonsByGroupService(group);
-        selectGroupIdService(group);
+        getAllLessonsByGroup(group);
+        selectedGroupId(group);
         if (item.id) deleteItemFromScheduleService(item.id);
 
         addItemToScheduleService({ ...item, roomId: room.id });
     };
 
     const setEditItemHandle = (itemId, roomId, group) => {
-        getLessonsByGroupService(group);
-        selectGroupIdService(group);
+        getAllLessonsByGroup(group);
+        selectedGroupId(group);
         editRoomItemToScheduleService({ itemId, roomId });
     };
 
@@ -136,13 +140,15 @@ const Schedule = (props) => {
 
     const deleteItemFromScheduleHandler = (itemId, group) => {
         deleteItemFromScheduleService(itemId);
-        getLessonsByGroupService(group);
-        selectGroupIdService(group);
+        getAllLessonsByGroup(group);
+
+        selectedGroupId(group);
     };
     const editItemOnScheduleHandler = (item) => {
         setItemData({ item, groupId: item.lesson.group.id });
-        getLessonsByGroupService(item.lesson.group.id);
-        selectGroupIdService(item.lesson.group.id);
+        getAllLessonsByGroup(item.lesson.group.id);
+
+        selectedGroupId(item.lesson.group.id);
 
         const itemId = item.id;
 
@@ -326,4 +332,9 @@ const Schedule = (props) => {
     );
 };
 
-export default Schedule;
+const mapDispatchToProps = (dispatch) => ({
+    selectedGroupId: (groupId) => dispatch(selectGroupId(groupId)),
+    getAllLessonsByGroup: (groupId) => dispatch(getLessonsByGroup(groupId)),
+});
+
+export default connect(null, mapDispatchToProps)(Schedule);
