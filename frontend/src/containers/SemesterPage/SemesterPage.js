@@ -11,13 +11,7 @@ import { handleSnackbarCloseService } from '../../services/snackbarService';
 import SemesterForm from './SemesterForm';
 import SemesterItem from './SemesterItem';
 import SemesterCopyForm from './SemesterCopyForm';
-import {
-    handleSemesterService,
-    setDisabledSemestersService,
-    setEnabledSemestersService,
-    semesterCopy,
-    setDefaultSemesterById,
-} from '../../services/semesterService';
+import { handleSemesterService } from '../../services/semesterService';
 import { setScheduleTypeService } from '../../services/scheduleService';
 import NavigationPage from '../../components/Navigation/NavigationPage';
 import { navigation, navigationNames } from '../../constants/navigation';
@@ -44,6 +38,9 @@ import {
     getArchivedSemestersStart,
     setGroupsToSemesterStart,
     deleteSemesterStart,
+    updateSemesterByIdStart,
+    updateSemesterStart,
+    setSemesterCopyStart,
 } from '../../actions/semesters';
 
 const SemesterPage = (props) => {
@@ -61,6 +58,9 @@ const SemesterPage = (props) => {
         // getArchivedSemestersItems,
         setGroupsToSemester,
         removeSemesterCard,
+        setDefaultSemesterById,
+        updateSemester,
+        semesterCopy,
     } = props;
 
     const { t } = useTranslation('formElements');
@@ -110,8 +110,14 @@ const SemesterPage = (props) => {
             (semesterEl) => semesterEl.id === currentSemesterId,
         );
         const changeDisabledStatus = {
-            [dialogTypes.SET_VISIBILITY_ENABLED]: setEnabledSemestersService(foundSemester),
-            [dialogTypes.SET_VISIBILITY_DISABLED]: setDisabledSemestersService(foundSemester),
+            [dialogTypes.SET_VISIBILITY_ENABLED]: updateSemester({
+                ...foundSemester,
+                disable: false,
+            }),
+            [dialogTypes.SET_VISIBILITY_DISABLED]: updateSemester({
+                ...foundSemester,
+                disable: true,
+            }),
         };
         return changeDisabledStatus[subDialogType];
     };
@@ -140,6 +146,10 @@ const SemesterPage = (props) => {
     };
 
     const submitSemesterCopy = (values) => {
+        const data={
+            fromSemesterId: +semesterId,
+            toSemesterId: +values.toSemesterId,
+        }
         semesterCopy({
             fromSemesterId: +semesterId,
             toSemesterId: +values.toSemesterId,
@@ -263,6 +273,9 @@ const mapDispatchToProps = (dispatch) => ({
     setGroupsToSemester: (semesterId, groups) =>
         dispatch(setGroupsToSemesterStart(semesterId, groups)),
     removeSemesterCard: (semesterId) => dispatch(deleteSemesterStart(semesterId)),
+    setDefaultSemesterById: (semesterId) => dispatch(updateSemesterByIdStart(semesterId)),
+    updateSemester: (item) => dispatch(updateSemesterStart(item)),
+    semesterCopy: (values) => dispatch(setSemesterCopyStart(values)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SemesterPage);

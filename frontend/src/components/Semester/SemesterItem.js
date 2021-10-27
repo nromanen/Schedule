@@ -6,11 +6,7 @@ import '../../containers/SemesterPage/SemesterPage.scss';
 import { GiSightDisabled, IoMdEye, FaCopy } from 'react-icons/all';
 import Card from '../../share/Card/Card';
 import NotFound from '../../share/NotFound/NotFound';
-import {
-    selectSemesterService,
-    createArchiveSemesterService,
-    viewArchivedSemester,
-} from '../../services/semesterService';
+import { selectSemesterService } from '../../services/semesterService';
 import { dialogTypes } from '../../constants/dialogs';
 import {
     EDIT_TITLE,
@@ -45,6 +41,8 @@ const SemesterItem = (props) => {
         enabledSemesters,
         disabledSemesters,
         archivedSemesters,
+        createArchivedSemester,
+        getArchivedSemester,
     } = props;
     const [visibleItems, setVisibleItems] = useState([]);
 
@@ -67,7 +65,7 @@ const SemesterItem = (props) => {
         setIsOpenSemesterCopyForm(true);
     };
     const handleSemesterArchivedPreview = (currentSemesterId) => {
-        viewArchivedSemester(+currentSemesterId);
+        getArchivedSemester(+currentSemesterId);
     };
     const setClassNameForDefaultSemester = (currentSemester) => {
         const defaultSemesterName = 'default';
@@ -122,7 +120,7 @@ const SemesterItem = (props) => {
                                             className="svg-btn archive-btn"
                                             title={t(COMMON_MAKE_ARCHIVE)}
                                             onClick={() => {
-                                                createArchiveSemesterService(semesterItem.id);
+                                                createArchivedSemester(semesterItem.id);
                                             }}
                                         />
                                     )}

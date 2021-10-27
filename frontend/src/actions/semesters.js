@@ -29,6 +29,20 @@ export const setArchivedSemesters = (res) => {
         result: res,
     };
 };
+export const getArchivedSemesterStart = (semesterId) => {
+    return {
+        type: actionTypes.GET_ARCHIVE_SEMESTER_START,
+        semesterId,
+    };
+};
+
+export const createArchivedSemesterStart = (semesterId) => {
+    return {
+        type: actionTypes.CREATE_ARCHIVE_SEMESTER_START,
+        semesterId,
+    };
+};
+
 export const getArchivedSemestersStart = () => {
     return {
         type: actionTypes.SET_ARCHIVED_SEMESTERS_START,
@@ -80,6 +94,12 @@ export const updateSemesterStart = (item) => {
         item,
     };
 };
+export const updateSemesterByIdStart = (semesterId) => {
+    return {
+        type: actionTypes.UPDATE_SEMESTER_BY_ID_START,
+        semesterId,
+    };
+};
 export const moveToArchivedSemester = (res) => {
     return {
         type: actionTypes.MOVE_SEMESTER_TO_ARCHIVE,
@@ -103,5 +123,18 @@ export const setGroupsToSemesterStart = (semesterId, groups) => {
         type: actionTypes.SET_GROUPS_TO_SEMESTER_START,
         semesterId,
         groups,
+    };
+};
+
+export const copyLessonsFromSemesterStart = (values) => {
+    return {
+        type: actionTypes.COPY_LESSONS_FROM_SEMESTER_START,
+        values,
+    };
+};
+export const setSemesterCopyStart = (values) => {
+    return {
+        type: actionTypes.SET_SEMESTER_COPY_START,
+        values,
     };
 };

@@ -10,7 +10,9 @@ import {
     selectSemester,
     deleteSemester,
     addSemester,
+    moveToArchivedSemester,
 } from '../actions/semesters';
+import { setScheduleType, setFullSchedule } from '../actions/schedule';
 import { axiosCall } from '../services/axios';
 import i18n from '../i18n';
 import { setOpenSnackbar } from '../actions';
@@ -20,7 +22,7 @@ import {
     SEMESTERS_URL,
     SEMESTER_COPY_URL,
     LESSONS_FROM_SEMESTER_COPY_URL,
-    CREATE_ARCHIVE_SEMESTER,
+    ARCHIVE_SEMESTER,
     ARCHIVED_SEMESTERS_URL,
     DEFAULT_SEMESTER_URL,
 } from '../constants/axios';
@@ -111,7 +113,7 @@ export function* setGroupsToSemester({ semesterId, groups }) {
     }
 }
 
-export function* deleteSemesterCard({ semesterId }) {
+export function* deleteSemesterItem({ semesterId }) {
     try {
         const semester = store
             .getState()
@@ -198,13 +200,134 @@ export function* addSemesterItem({ item }) {
         yield put(setOpenSnackbar({ isOpen, type, message }));
     }
 }
+export function* setDefaultSemesterById({ semesterId }) {
+    try {
+        const responseUrl = `${DEFAULT_SEMESTER_URL}?semesterId=${semesterId}`;
+        const response = yield call(axiosCall, responseUrl, 'PUT', semesterId);
+        yield put(updateSemester(response.data));
+        yield put(selectSemester(null));
+        yield call(getAllSemestersItems);
+        yield call(getDisabledSemestersItems);
+        yield put(reset(SEMESTER_FORM));
+        yield put(
+            setOpenSnackbar(
+                true,
+                snackbarTypes.SUCCESS,
+                i18n.t(BACK_END_SUCCESS_OPERATION, {
+                    cardType: i18n.t(FORM_SEMESTER_LABEL),
+                    actionType: i18n.t(UPDATED_LABEL),
+                }),
+            ),
+        );
+    } catch (error) {
+        const message = error.response
+            ? i18n.t(error.response.data.message, error.response.data.message)
+            : 'Error';
+        const isOpen = true;
+        const type = snackbarTypes.ERROR;
+        yield put(setOpenSnackbar({ isOpen, type, message }));
+    }
+}
+
+export function* semesterCopy({ values }) {
+    try {
+        const responseUrl = `${SEMESTER_COPY_URL}?fromSemesterId=${values.fromSemesterId}&toSemesterId=${values.toSemesterId}`;
+        const response = yield call(axiosCall, responseUrl, 'POST');
+        yield put(addSemester(response.data));
+        yield put(reset(SEMESTER_FORM));
+        yield put(
+            setOpenSnackbar(
+                true,
+                snackbarTypes.SUCCESS,
+                i18n.t(BACK_END_SUCCESS_OPERATION, {
+                    cardType: i18n.t(FORM_SEMESTER_LABEL),
+                    actionType: i18n.t(COPIED_LABEL),
+                }),
+            ),
+        );
+    } catch (error) {
+        const message = error.response
+            ? i18n.t(error.response.data.message, error.response.data.message)
+            : 'Error';
+        const isOpen = true;
+        const type = snackbarTypes.ERROR;
+        yield put(setOpenSnackbar({ isOpen, type, message }));
+    }
+}
+export function* createArchiveSemester({ semesterId }) {
+    try {
+        const responseUrl = `${ARCHIVE_SEMESTER}/${semesterId}`;
+        yield call(axiosCall, responseUrl, 'POST');
+        yield put(moveToArchivedSemester(semesterId));
+        yield put(
+            setOpenSnackbar(
+                true,
+                snackbarTypes.SUCCESS,
+                i18n.t(BACK_END_SUCCESS_OPERATION, {
+                    cardType: i18n.t(FORM_SEMESTER_LABEL),
+                    actionType: i18n.t(ARCHIVED_LABEL),
+                }),
+            ),
+        );
+    } catch (error) {
+        const message = error.response
+            ? i18n.t(error.response.data.message, error.response.data.message)
+            : 'Error';
+        const isOpen = true;
+        const type = snackbarTypes.ERROR;
+        yield put(setOpenSnackbar({ isOpen, type, message }));
+    }
+}
+export function* getArchivedSemester({ semesterId }) {
+    try {
+        yield put(setScheduleType('archived'));
+        const responseUrl = `${ARCHIVE_SEMESTER}/${semesterId}`;
+        const response = yield call(axiosCall, responseUrl);
+        yield put(setFullSchedule(response.data));
+    } catch (error) {
+        const message = error.response
+            ? i18n.t(error.response.data.message, error.response.data.message)
+            : 'Error';
+        const isOpen = true;
+        const type = snackbarTypes.ERROR;
+        yield put(setOpenSnackbar({ isOpen, type, message }));
+    }
+}
+export function* CopyLessonsFromSemester({ values }) {
+    try {
+        const responseUrl = `${LESSONS_FROM_SEMESTER_COPY_URL}?fromSemesterId=${values.fromSemesterId}&toSemesterId=${values.toSemesterId}`;
+        yield call(axiosCall, responseUrl, 'POST');
+        yield put(
+            setOpenSnackbar(
+                true,
+                snackbarTypes.SUCCESS,
+                i18n.t(BACK_END_SUCCESS_OPERATION, {
+                    cardType: i18n.t(FORM_SEMESTER_LABEL),
+                    actionType: i18n.t(COPIED_LABEL),
+                }),
+            ),
+        );
+    } catch (error) {
+        const message = error.response
+            ? i18n.t(error.response.data.message, error.response.data.message)
+            : 'Error';
+        const isOpen = true;
+        const type = snackbarTypes.ERROR;
+        yield put(setOpenSnackbar({ isOpen, type, message }));
+    }
+}
 
 export function* watchSemester() {
     yield takeLatest(actionTypes.GET_ALL_SEMESTERS_START, getAllSemestersItems);
     yield takeLatest(actionTypes.GET_DISABLED_SEMESTERS_START, getDisabledSemestersItems);
     yield takeLatest(actionTypes.SET_ARCHIVED_SEMESTERS_START, getArchivedSemestersItems);
     yield takeLatest(actionTypes.SET_GROUPS_TO_SEMESTER_START, setGroupsToSemester);
-    yield takeLatest(actionTypes.DELETE_SEMESTER_START, deleteSemesterCard);
+    yield takeLatest(actionTypes.DELETE_SEMESTER_START, deleteSemesterItem);
     yield takeLatest(actionTypes.UPDATE_SEMESTER_START, updateSemesterItem);
     yield takeLatest(actionTypes.ADD_SEMESTER_START, addSemesterItem);
+    yield takeLatest(actionTypes.UPDATE_SEMESTER_BY_ID_START, setDefaultSemesterById);
+    yield takeLatest(actionTypes.SET_SEMESTER_COPY_START, semesterCopy);
+    yield takeLatest(actionTypes.CREATE_ARCHIVE_SEMESTER_START, createArchiveSemester);
+    yield takeLatest(actionTypes.GET_ARCHIVE_SEMESTER_START, getArchivedSemester);
+    yield takeLatest(actionTypes.COPY_LESSONS_FROM_SEMESTER_START, CopyLessonsFromSemester);
 }

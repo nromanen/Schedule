@@ -8,7 +8,7 @@ import {
     SEMESTERS_URL,
     SEMESTER_COPY_URL,
     LESSONS_FROM_SEMESTER_COPY_URL,
-    CREATE_ARCHIVE_SEMESTER,
+    ARCHIVE_SEMESTER,
     ARCHIVED_SEMESTERS_URL,
     DEFAULT_SEMESTER_URL,
 } from '../constants/axios';
@@ -56,75 +56,16 @@ export const clearSemesterService = () => {
     store.dispatch(clearSemester());
     resetFormHandler(SEMESTER_FORM);
 };
-// created saga
-export const showAllSemestersService = () => {
-    axios
-        .get(SEMESTERS_URL)
-        .then((response) => {
-            store.dispatch(
-                showAllSemesters(
-                    response.data.sort((a, b) => (a.year > b.year ? 1 : -1)).reverse(),
-                ),
-            );
-        })
-        .catch((error) => errorHandler(error));
-};
-// created saga
-export const getDisabledSemestersService = () => {
-    axios
-        .get(DISABLED_SEMESTERS_URL)
-        .then((res) => {
-            store.dispatch(setDisabledSemesters(res.data));
-        })
-        .catch((err) => errorHandler(err));
-};
-// created saga
-export const getArchivedSemestersService = () => {
-    axios
-        .get(ARCHIVED_SEMESTERS_URL)
-        .then((response) => {
-            store.dispatch(setArchivedSemesters(response.data));
-        })
-        .catch((err) => errorHandler(err));
-};
-// need to refactor
-// const setSemester = (resp) => {
-//     store.dispatch(updateSemester(resp));
-//     selectSemesterService(null);
-//     getDisabledSemestersService();
-//     // getArchivedSemestersService();
-//     showAllSemestersService();
-//     resetFormHandler(SEMESTER_FORM);
-//     successHandler(
-//         i18n.t(BACK_END_SUCCESS_OPERATION, {
-//             cardType: i18n.t(FORM_SEMESTER_LABEL),
-//             actionType: i18n.t(UPDATED_LABEL),
-//         }),
-//     );
-// };
 
-// export const setGroupsToSemester = ({ semesterId, groups }) => {
-//     const groupIds = groups.map((item) => `groupId=${item.id}`).join('&');
-//     axios
-//         .put(`${SEMESTERS_URL}/${semesterId}/groups?${groupIds}`)
-//         .then((response) => {
-//             store.dispatch(updateSemester(response));
-//             store.dispatch(selectSemester(null));
-//             getDisabledSemestersService();
-//             getArchivedSemestersService();
-//             showAllSemestersService();
-//             resetFormHandler(SEMESTER_FORM);
-//             successHandler(
-//                 i18n.t(BACK_END_SUCCESS_OPERATION, {
-//                     cardType: i18n.t(FORM_SEMESTER_LABEL),
-//                     actionType: i18n.t(UPDATED_LABEL),
-//                 }),
-//             );
-//         })
-//         .catch((error) => errorHandler(error));
-// };
-// TODO need to refactor
-const cardSemester = (semester) => {
+const switchSaveActions = (semester) => {
+    if (semester.id) {
+        putSemester(semester);
+    } else {
+        postSemester(semester);
+    }
+};
+// moved to share component
+const semesterFormValueMapper = (semester) => {
     const semesterDays = [];
     const semesterClasses = [];
     Object.keys(semester).forEach((prop) => {
@@ -159,69 +100,7 @@ const cardSemester = (semester) => {
         semester_groups: semester.semester_groups,
     };
 };
-
-// export const removeSemesterCardService = (semesterId) => {
-//     const semester = store.getState().semesters.semesters.find((item) => item.id === semesterId);
-//     if (semester.currentSemester === true) {
-//         handleSnackbarOpenService(true, snackbarTypes.ERROR, i18n.t(SEMESTER_SERVICE_IS_ACTIVE));
-//         return;
-//     }
-//     axios
-//         .delete(`${SEMESTERS_URL}/${semesterId}`)
-//         .then(() => {
-//             store.dispatch(deleteSemester(semesterId));
-//             successHandler(
-//                 i18n.t(BACK_END_SUCCESS_OPERATION, {
-//                     cardType: i18n.t(FORM_SEMESTER_LABEL),
-//                     actionType: i18n.t(DELETED_LABEL),
-//                 }),
-//             );
-//         })
-//         .catch((error) => errorHandler(error));
-// };
-
-const putSemester = (data) => {
-    axios
-        .put(SEMESTERS_URL, data)
-        .then((response) => {
-            store.dispatch(updateSemester(response));
-            selectSemesterService(null);
-            getDisabledSemestersService();
-            showAllSemestersService();
-            resetFormHandler(SEMESTER_FORM);
-            successHandler(
-                i18n.t(BACK_END_SUCCESS_OPERATION, {
-                    cardType: i18n.t(FORM_SEMESTER_LABEL),
-                    actionType: i18n.t(UPDATED_LABEL),
-                }),
-            );
-        })
-        .catch((error) => errorHandler(error));
-};
-
-const postSemester = (data) => {
-    axios
-        .post(SEMESTERS_URL, data)
-        .then((response) => {
-            store.dispatch(addSemester(response.data));
-            resetFormHandler(SEMESTER_FORM);
-            successHandler(
-                i18n.t(BACK_END_SUCCESS_OPERATION, {
-                    cardType: i18n.t(FORM_SEMESTER_LABEL),
-                    actionType: i18n.t(CREATED_LABEL),
-                }),
-            );
-        })
-        .catch((error) => errorHandler(error));
-};
-const switchSaveActions = (semester) => {
-    if (semester.id) {
-        putSemester(semester);
-    } else {
-        postSemester(semester);
-    }
-};
-
+// Moved to utils
 const checkSemesterYears = (endDay, startDay, year) => {
     const dateEndYear = endDay.substring(endDay.length - 4);
     const dateStartYear = startDay.substring(startDay.length - 4);
@@ -242,7 +121,7 @@ const findCurrentSemester = (semesterId) => {
 };
 
 export const handleSemesterService = (values) => {
-    const semester = cardSemester(values);
+    const semester = semesterFormValueMapper(values);
     if (!checkUniqSemester(semester)) {
         handleSnackbarOpenService(true, snackbarTypes.ERROR, i18n.t(COMMON_SEMESTER_IS_NOT_UNIQUE));
         setUniqueErrorService(true);
@@ -268,7 +147,115 @@ export const handleSemesterService = (values) => {
         switchSaveActions(semester);
     }
 };
+// created saga
+export const showAllSemestersService = () => {
+    axios
+        .get(SEMESTERS_URL)
+        .then((response) => {
+            store.dispatch(
+                showAllSemesters(
+                    response.data.sort((a, b) => (a.year > b.year ? 1 : -1)).reverse(),
+                ),
+            );
+        })
+        .catch((error) => errorHandler(error));
+};
+// created saga
+export const getDisabledSemestersService = () => {
+    axios
+        .get(DISABLED_SEMESTERS_URL)
+        .then((res) => {
+            store.dispatch(setDisabledSemesters(res.data));
+        })
+        .catch((err) => errorHandler(err));
+};
+// created saga
+export const getArchivedSemestersService = () => {
+    axios
+        .get(ARCHIVED_SEMESTERS_URL)
+        .then((response) => {
+            store.dispatch(setArchivedSemesters(response.data));
+        })
+        .catch((err) => errorHandler(err));
+};
 
+// created saga
+export const setGroupsToSemester = ({ semesterId, groups }) => {
+    const groupIds = groups.map((item) => `groupId=${item.id}`).join('&');
+    axios
+        .put(`${SEMESTERS_URL}/${semesterId}/groups?${groupIds}`)
+        .then((response) => {
+            store.dispatch(updateSemester(response));
+            store.dispatch(selectSemester(null));
+            getDisabledSemestersService();
+            getArchivedSemestersService();
+            showAllSemestersService();
+            resetFormHandler(SEMESTER_FORM);
+            successHandler(
+                i18n.t(BACK_END_SUCCESS_OPERATION, {
+                    cardType: i18n.t(FORM_SEMESTER_LABEL),
+                    actionType: i18n.t(UPDATED_LABEL),
+                }),
+            );
+        })
+        .catch((error) => errorHandler(error));
+};
+// created saga
+export const removeSemesterCardService = (semesterId) => {
+    const semester = store.getState().semesters.semesters.find((item) => item.id === semesterId);
+    if (semester.currentSemester === true) {
+        handleSnackbarOpenService(true, snackbarTypes.ERROR, i18n.t(SEMESTER_SERVICE_IS_ACTIVE));
+        return;
+    }
+    axios
+        .delete(`${SEMESTERS_URL}/${semesterId}`)
+        .then(() => {
+            store.dispatch(deleteSemester(semesterId));
+            successHandler(
+                i18n.t(BACK_END_SUCCESS_OPERATION, {
+                    cardType: i18n.t(FORM_SEMESTER_LABEL),
+                    actionType: i18n.t(DELETED_LABEL),
+                }),
+            );
+        })
+        .catch((error) => errorHandler(error));
+};
+// created saga
+const putSemester = (data) => {
+    axios
+        .put(SEMESTERS_URL, data)
+        .then((response) => {
+            store.dispatch(updateSemester(response));
+            selectSemesterService(null);
+            getDisabledSemestersService();
+            showAllSemestersService();
+            resetFormHandler(SEMESTER_FORM);
+            successHandler(
+                i18n.t(BACK_END_SUCCESS_OPERATION, {
+                    cardType: i18n.t(FORM_SEMESTER_LABEL),
+                    actionType: i18n.t(UPDATED_LABEL),
+                }),
+            );
+        })
+        .catch((error) => errorHandler(error));
+};
+// created saga
+const postSemester = (data) => {
+    axios
+        .post(SEMESTERS_URL, data)
+        .then((response) => {
+            store.dispatch(addSemester(response.data));
+            resetFormHandler(SEMESTER_FORM);
+            successHandler(
+                i18n.t(BACK_END_SUCCESS_OPERATION, {
+                    cardType: i18n.t(FORM_SEMESTER_LABEL),
+                    actionType: i18n.t(CREATED_LABEL),
+                }),
+            );
+        })
+        .catch((error) => errorHandler(error));
+};
+// created saga
 export const setDefaultSemesterById = (dataId) => {
     axios
         .put(`${DEFAULT_SEMESTER_URL}?semesterId=${dataId}`)
@@ -288,7 +275,7 @@ export const setDefaultSemesterById = (dataId) => {
         })
         .catch((error) => errorHandler(error));
 };
-
+// refactored and use putSemesterSaga
 export const setDisabledSemestersService = (semester) => {
     const bufferSemester = semester;
     bufferSemester.disable = true;
@@ -300,7 +287,7 @@ export const setEnabledSemestersService = (semester) => {
     bufferSemester.disable = false;
     putSemester(bufferSemester);
 };
-
+// created saga
 export const semesterCopy = (values) => {
     axios
         .post(
@@ -316,7 +303,7 @@ export const semesterCopy = (values) => {
         })
         .catch((error) => errorHandler(error));
 };
-
+// Саша має змінити в себе сервіс на сагу в компоненті, що він робить
 export const CopyLessonsFromSemesterService = (values) => {
     axios
         .post(
@@ -332,10 +319,10 @@ export const CopyLessonsFromSemesterService = (values) => {
         })
         .catch((error) => errorHandler(error));
 };
-
+// created saga
 export const createArchiveSemesterService = (semesterId) => {
     axios
-        .post(`${CREATE_ARCHIVE_SEMESTER}/${semesterId}`)
+        .post(`${ARCHIVE_SEMESTER}/${semesterId}`)
         .then(() => {
             store.dispatch(moveToArchivedSemester(semesterId));
             successHandler(
@@ -347,11 +334,11 @@ export const createArchiveSemesterService = (semesterId) => {
         })
         .catch((error) => errorHandler(error));
 };
-
+// created saga
 export const viewArchivedSemester = (semesterId) => {
     setScheduleType('archived');
     axios
-        .get(`${CREATE_ARCHIVE_SEMESTER}/${semesterId}`)
+        .get(`${ARCHIVE_SEMESTER}/${semesterId}`)
         .then((response) => {
             store.dispatch(setFullSchedule(response.data));
         })
