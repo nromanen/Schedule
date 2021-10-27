@@ -34,7 +34,7 @@ function* fetchAllStudentsWorker() {
 function* createStudentWorker({ data }) {
     try {
         const res = yield call(axiosCall, STUDENT_URL, 'POST', data);
-        yield put(createStudent(res.data));
+        //yield put(createStudent(res.data));
         yield put(reset(STUDENT_FORM));
         successHandler(
             i18n.t(BACK_END_SUCCESS_OPERATION, {

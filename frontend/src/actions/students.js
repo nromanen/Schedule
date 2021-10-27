@@ -9,7 +9,7 @@ export const createStudent = (res) => {
 export const showAllStudents = (res) => {
     return {
         type: actionTypes.SHOW_ALL_STUDENTS,
-        result: res,
+        res,
     };
 };
 export const showAllStudentsByGroupId = (groupId) => {

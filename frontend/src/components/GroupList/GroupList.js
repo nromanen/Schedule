@@ -9,8 +9,9 @@ import { goToGroupPage } from '../../helper/pageRedirection';
 import { search } from '../../helper/search';
 import GroupCard from '../GroupCard/GroupCard';
 import NotFound from '../../share/NotFound/NotFound';
-import { ShowStudentsOnGroupDialog, CustomDialog } from '../../share/DialogWindows';
+import { CustomDialog } from '../../share/DialogWindows';
 import AddStudentDialog from '../../containers/Student/AddStudentDialog';
+import ShowStudentsOnGroupDialog from '../../containers/Student/ShowStudentsOnGroupDialog';
 
 const GroupList = (props) => {
     const {
@@ -18,10 +19,10 @@ const GroupList = (props) => {
         startFetchEnabledGroups,
         toggleDisabledStatus,
         startDeleteGroup,
-        // disabledGroups,
-        groups,
+        fetchAllStudents,
         selectGroup,
         loading,
+        groups,
         match,
         term,
         isDisabled,
@@ -29,6 +30,7 @@ const GroupList = (props) => {
     const history = useHistory();
     const { t } = useTranslation('formElements');
 
+    const [group, setGroup] = useState();
     const [groupId, setGroupId] = useState(-1);
     const [subDialogType, setSubDialogType] = useState('');
     const [showStudents, setShowStudents] = useState(false);
@@ -37,6 +39,7 @@ const GroupList = (props) => {
 
     useEffect(() => {
         startFetchEnabledGroups();
+        fetchAllStudents();
     }, []);
     useEffect(() => {
         if (isDisabled) {
@@ -67,8 +70,26 @@ const GroupList = (props) => {
     };
 
     const showStudentsByGroup = (currentGroup) => {
-        setGroupId(currentGroup);
+        setGroup(currentGroup);
         setShowStudents(true);
+    };
+
+    const onDeleteStudent = () => {
+        //   deleteStudentService(student);
+    };
+    const onCloseShowStudents = () => {
+        setShowStudents(false);
+    };
+    const studentSubmit = (data) => {
+        //  if (data.id !== undefined) {
+        //      const sendData = { ...data, group: { id: data.group } };
+        //      updateStudentService(sendData);
+        //  } else {
+        //      const sendData = { ...data, group: { id: groupId } };
+        //      createStudentService(sendData);
+        //  }
+        //  setAddStudentDialog(false);
+        //  goToGroupPage(history);
     };
 
     return (
@@ -94,8 +115,11 @@ const GroupList = (props) => {
                 <ShowStudentsOnGroupDialog
                     onClose={() => setShowStudents(false)}
                     open={showStudents}
-                    groupId={groupId}
+                    group={group}
                     match={match}
+                    onDeleteStudent={onDeleteStudent}
+                    onSubmit={studentSubmit}
+                    groups={groups}
                 />
             )}
             <div className="group-wrapper group-list">

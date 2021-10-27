@@ -1,5 +1,6 @@
 import { connect } from 'react-redux';
 import GroupPage from '../../components/GroupPage/GroupPage';
+import { fetchAllStudents } from '../../actions/students';
 import {
     startFetchDisabledGroups,
     startFetchEnabledGroups,
@@ -32,6 +33,7 @@ const mapDispatchToProps = {
     startUpdateGroup,
     startClearGroup,
     selectGroup,
+    fetchAllStudents,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(GroupPage);

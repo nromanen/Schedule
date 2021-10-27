@@ -311,12 +311,14 @@ export default function RenderStudentTable(props) {
                                 </span>
                             </StyledTableCell>
 
-                            <AddStudentDialog
-                                open={openEditDialog}
-                                onSubmit={handleSubmit}
-                                onSetSelectedCard={handleCloseEditDialog}
-                                match={match}
-                            />
+                            {openEditDialog && (
+                                <AddStudentDialog
+                                    open={openEditDialog}
+                                    onSubmit={handleSubmit}
+                                    onSetSelectedCard={handleCloseEditDialog}
+                                    match={match}
+                                />
+                            )}
 
                             <CustomDialog
                                 type={dialogTypes.DELETE_CONFIRM}

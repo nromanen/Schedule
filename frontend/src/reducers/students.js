@@ -11,19 +11,21 @@ const reducer = (state = initialState, action) => {
     switch (action.type) {
         case actionTypes.CREATE_STUDENT:
             return updateObject(state, {
-                students: state.students.concat(action.result),
+                students: state.students.concat(action.res),
             });
         case actionTypes.SHOW_ALL_STUDENTS_BY_GROUP_ID: {
             const students = state.students.filter(
-                (student) => student.group.id !== action.groupId
+                (student) => student.group.id === action.groupId,
             );
+            console.log(state.students);
+            console.log(students);
             return updateObject(state, {
                 students,
             });
         }
         case actionTypes.SHOW_ALL_STUDENTS:
             return updateObject(state, {
-                students: action.result,
+                students: action.res,
             });
         case actionTypes.DELETE_STUDENT: {
             const students = state.students.filter((student) => student.id !== action.result);

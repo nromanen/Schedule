@@ -14,8 +14,18 @@ import { GROUP_LABEL } from '../../../constants/translationLabels/formElements';
 import { COMMON_CLOSE_TITLE } from '../../../constants/translationLabels/common';
 
 const ShowStudentsOnGroupDialog = (props) => {
-    const { onClose, cardId, open, onDeleteStudent, students, onSubmit, match, groups, group } =
-        props;
+    const {
+        showAllStudentsByGroupId,
+        onClose,
+        cardId,
+        open,
+        onDeleteStudent,
+        students,
+        onSubmit,
+        match,
+        groups,
+        group,
+    } = props;
     const [checkBoxStudents, setCheckBoxStudents] = useState([]);
     const [isGroupButtonDisabled, setIsGroupButtonDisabled] = useState(true);
     const [checkedAll, setCheckedAll] = useState(false);
@@ -33,7 +43,7 @@ const ShowStudentsOnGroupDialog = (props) => {
         setCheckBoxStudents(res);
     };
     useEffect(() => {
-        getAllStudentsByGroupId(props.group.id);
+        showAllStudentsByGroupId(group.id);
     }, [open, openUploadFile]);
     useEffect(() => {
         parseStudentToCheckBox();
