@@ -1,5 +1,5 @@
 import React from 'react';
-import { isEqual, isNil } from 'lodash';
+import { isEmpty, isEqual, isNil } from 'lodash';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableContainer from '@material-ui/core/TableContainer';
@@ -313,6 +313,7 @@ export const renderScheduleGroupHeader = (days) => (
 );
 
 export const renderGroupTable = (classes, isOdd, semester, place) => {
+    if (isEmpty(classes)) return <h2>Schedule is empty</h2>; // ALERT
     if (semester) {
         currentWeekType = isOddFunction(printWeekNumber(semester.startDay));
     }
@@ -592,7 +593,7 @@ const renderClassRow = (classItem, days, scheduleRow, place) => (
 );
 
 export const renderWeekTable = (schedule, place) => {
-    if (schedule) {
+    if (!isEmpty(schedule)) {
         return (
             <TableContainer>
                 <Table aria-label="sticky table">
@@ -611,7 +612,7 @@ export const renderWeekTable = (schedule, place) => {
             </TableContainer>
         );
     }
-    return null;
+    return <h2>Schedule is empty</h2>; // ALERT
 };
 
 const renderLessonsFirstLine = (lessonItem) => {

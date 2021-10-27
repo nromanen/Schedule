@@ -7,17 +7,17 @@ import { setFullSchedule, setGroupSchedule, setTeacherSchedule } from '../action
 import { setLoadingService } from './loadingService';
 import { FULL_SCHEDULE_URL, GROUP_SCHEDULE_URL, TEACHER_SCHEDULE_URL } from '../constants/axios';
 
-export const getTeacherSchedule = (teacherId, semesterId) => {
-    if (teacherId > 0) {
-        axios
-            .get(`${TEACHER_SCHEDULE_URL + semesterId}&teacherId=${teacherId}`)
-            .then((response) => {
-                store.dispatch(setTeacherSchedule(response.data));
-                setLoadingService(false);
-            })
-            .catch((err) => errorHandler(err));
-    }
-};
+// export const getTeacherSchedule = (teacherId, semesterId) => {
+//     if (teacherId > 0) {
+//         axios
+//             .get(`${TEACHER_SCHEDULE_URL + semesterId}&teacherId=${teacherId}`)
+//             .then((response) => {
+//                 store.dispatch(setTeacherSchedule(response.data));
+//                 setLoadingService(false);
+//             })
+//             .catch((err) => errorHandler(err));
+//     }
+// };
 
 export const getFullSchedule = (semesterId) => {
     if (semesterId !== undefined)

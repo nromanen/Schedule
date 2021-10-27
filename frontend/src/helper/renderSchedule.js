@@ -40,12 +40,8 @@ const renderSchedule = (
             );
         }
         case 'teacher': {
-            if (!teacherSchedule || !teacherSchedule.days || teacherSchedule.days.length === 0) {
-                return emptySchedule();
-            }
-            const { semester, teacher, odd, even } = makeTeacherSchedule(teacherSchedule);
+            const { semester, teacher, odd, even } = teacherSchedule;
 
-            setLoadingService(false);
             return (
                 <>
                     <h1>
@@ -57,9 +53,9 @@ const renderSchedule = (
                         />
                     </h1>
                     <h2>{i18n.t('common:odd_week')}</h2>
-                    {renderWeekTable(odd, 1, place)}
+                    {renderWeekTable(odd, place)}
                     <h2>{i18n.t('common:even_week')}</h2>
-                    {renderWeekTable(even, 0, place)}
+                    {renderWeekTable(even, place)}
                 </>
             );
         }

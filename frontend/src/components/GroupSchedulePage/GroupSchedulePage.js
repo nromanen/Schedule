@@ -19,6 +19,7 @@ import {
     setScheduleGroupId,
     setScheduleTeacherId,
     getGroupScheduleRequested,
+    getTeacherScheduleRequested,
 } from '../../actions/schedule';
 
 const GroupSchedulePage = (props) => {
@@ -39,6 +40,7 @@ const GroupSchedulePage = (props) => {
         setGroupId,
         setTeacherId,
         getGroupSchedule,
+        getTeacherSchedule,
     } = props;
 
     const submitSearchSchedule = (values) => {
@@ -53,7 +55,7 @@ const GroupSchedulePage = (props) => {
         if (values.teacher > 0) {
             setTypeOfSchedule('teacher');
             setTeacherId(values.teacher);
-            // getTeacherSchedule(values.teacher, values.semester);
+            getTeacherSchedule(values.teacher, values.semester);
             return;
         }
         if (
@@ -168,6 +170,8 @@ const mapDispatchToProps = (dispatch) => ({
     setTeacherId: (id) => dispatch(setScheduleTeacherId(id)),
     getGroupSchedule: (groupId, semesterId) =>
         dispatch(getGroupScheduleRequested(groupId, semesterId)),
+    getTeacherSchedule: (groupId, semesterId) =>
+        dispatch(getTeacherScheduleRequested(groupId, semesterId)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(GroupSchedulePage);

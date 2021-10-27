@@ -16,6 +16,7 @@ import { getGroupSchedule } from './getGroupSchedule';
 import { getScheduleItems } from './getScheduleItems';
 import { getScheduleItemsBySemester } from './getScheduleItemsBySemester';
 import { getTeacherRangeSchedule } from './getTeacherRangeSchedule';
+import { getTeacherSchedule } from './getTeacherSchedule';
 import { sendTeacherSchedule } from './sendTeacherSchedule';
 
 export default function* watchSchedule() {
@@ -45,4 +46,5 @@ export default function* watchSchedule() {
     yield takeEvery(actionTypes.DELETE_SCHEDULE_ITEM_REQUESTED, deleteScheduleItem);
     yield takeEvery(actionTypes.CLEAR_SCHEDULE_REQUESTED, clearSchedule);
     yield takeLatest(actionTypes.GET_GROUP_SCHEDULE_REQUESTED, getGroupSchedule);
+    yield takeLatest(actionTypes.GET_TEACHER_SCHEDULE_REQUESTED, getTeacherSchedule);
 }
