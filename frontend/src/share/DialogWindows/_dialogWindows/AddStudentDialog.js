@@ -15,12 +15,13 @@ import { required } from '../../../validation/validateFields';
 import { STUDENT_FORM } from '../../../constants/reduxForms';
 import renderSelectField from '../../renderedFields/select';
 import { goToGroupPage } from '../../../helper/pageRedirection';
-import CustomDialog from '../CustomDialog';
+import CustomDialog from '../../../containers/Dialogs/CustomDialog';
+import { dialogCloseButton } from '../../../constants/dialogs';
 import {
     CLEAR_BUTTON_LABEL,
     SAVE_BUTTON_LABEL,
 } from '../../../constants/translationLabels/formElements';
-import { TYPE_LABEL, CANCEL_BUTTON_LABEL, COMMON_CLOSE_TITLE } from '../../../constants/translationLabels/common';
+import { TYPE_LABEL, CANCEL_BUTTON_LABEL } from '../../../constants/translationLabels/common';
 
 const AddStudentDialog = (props) => {
     const { t } = useTranslation('formElements');
@@ -58,11 +59,7 @@ const AddStudentDialog = (props) => {
             title={studentId ? t('edit_title') : `${t('create_title')} ${t('student_a_label')}`}
             open={open}
             onClose={handleClose}
-            buttons={
-                <Button className="buttons-style" color="primary" variant="contained" onClick={handleClose}>
-                    {t(COMMON_CLOSE_TITLE)}
-                </Button>
-            }
+            buttons={[dialogCloseButton(handleClose)]}
         >
             <Card additionClassName="form-card teacher-form">
                 <form className="createTeacherForm w-100" onSubmit={handleSubmit}>

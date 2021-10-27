@@ -7,7 +7,8 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { styled } from '@material-ui/core/styles';
 import Card from '../../share/Card/Card';
-import { CustomDialog, CopyLessonDialog } from '../../share/DialogWindows';
+import CustomDialog from '../Dialogs/CustomDialog';
+import CopyLessonDialog from '../../share/DialogWindows/_dialogWindows/CopyLessonDialog';
 import { dialogTypes } from '../../constants/dialogs';
 import LessonForm from '../../components/LessonForm/LessonForm';
 import LessonsList from '../../components/LessonsList/LessonsList';
@@ -22,6 +23,7 @@ import {
     showAllSemestersService,
     CopyLessonsFromSemesterService,
 } from '../../services/semesterService';
+import { setIsOpenConfirmDialog } from '../../actions/dialog';
 import { searchLessonsByTeacher } from '../../helper/search';
 import {
     copyLessonCardService,
@@ -53,13 +55,14 @@ const LessonPage = (props) => {
         lessons,
         groupId,
         groups,
+        setOpenConfirmDialog,
+        isOpenConfirmDialog,
     } = props;
     const { t } = useTranslation('common');
     const [term, setTerm] = useState('');
     const [lessonId, setLessonId] = useState();
     const [copiedLesson, setCopiedLesson] = useState();
-    const [isOpenConfirmDialog, setIsOpenConfirmDialog] = useState(false);
-    const [openCopyLessonDialog, setOpenCopyLessonDialog] = useState(false);
+    const [isOpenCopyLessonDialog, setIsOpenCopyLessonDialog] = useState(false);
 
     const SearchChange = setTerm;
     const visibleItems = searchLessonsByTeacher(lessons, term);
@@ -92,22 +95,21 @@ const LessonPage = (props) => {
 
     const showConfirmDialog = (lessonCardId) => {
         setLessonId(lessonCardId);
-        setIsOpenConfirmDialog(true);
+        setOpenConfirmDialog(true);
     };
 
-    const acceptConfirmDialog = (id) => {
-        setIsOpenConfirmDialog(false);
-        if (!id) return;
+    const acceptConfirmDialog = () => {
+        setOpenConfirmDialog(false);
         removeLessonCardService(lessonId);
     };
 
     const openCopyLessonDialogHandle = (lesson) => {
         setCopiedLesson(lesson);
-        setOpenCopyLessonDialog(true);
+        setIsOpenCopyLessonDialog(true);
     };
 
     const closeCopyLessonDialogHandle = (lessonGroupObj) => {
-        setOpenCopyLessonDialog(false);
+        setIsOpenCopyLessonDialog(false);
         if (!lessonGroupObj) return;
         copyLessonCardService(lessonGroupObj);
     };
@@ -170,9 +172,9 @@ const LessonPage = (props) => {
     return (
         <>
             <Card additionClassName="card-title lesson-card">
-                {openCopyLessonDialog && (
+                {isOpenCopyLessonDialog && (
                     <CopyLessonDialog
-                        open={openCopyLessonDialog}
+                        open={isOpenCopyLessonDialog}
                         onClose={closeCopyLessonDialogHandle}
                         groupId={groupId}
                         lesson={copiedLesson}
@@ -184,10 +186,9 @@ const LessonPage = (props) => {
                 {isOpenConfirmDialog && (
                     <CustomDialog
                         type={dialogTypes.DELETE_CONFIRM}
-                        cardId={lessonId}
+                        handelConfirm={acceptConfirmDialog}
                         whatDelete={cardType.LESSON.toLowerCase()}
                         open={isOpenConfirmDialog}
-                        onClose={acceptConfirmDialog}
                     />
                 )}
 
@@ -249,6 +250,10 @@ const mapStateToProps = (state) => ({
     loading: state.loadingIndicator.loading,
     semesters: state.semesters.semesters,
     currentSemester: state.schedule.currentSemester,
+    isOpenConfirmDialog: state.dialog.isOpenConfirmDialog,
+});
+const mapDispatchToProps = (dispatch) => ({
+    setOpenConfirmDialog: (newState) => dispatch(setIsOpenConfirmDialog(newState)),
 });
 
-export default connect(mapStateToProps)(LessonPage);
+export default connect(mapStateToProps, mapDispatchToProps)(LessonPage);

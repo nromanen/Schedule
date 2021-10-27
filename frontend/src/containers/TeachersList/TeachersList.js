@@ -9,7 +9,7 @@ import { GiSightDisabled, IoMdEye } from 'react-icons/all';
 import i18n from 'i18next';
 import Card from '../../share/Card/Card';
 
-import { CustomDialog } from '../../share/DialogWindows';
+import CustomDialog from '../Dialogs/CustomDialog';
 import { dialogTypes } from '../../constants/dialogs';
 import { cardType } from '../../constants/cardType';
 import { search } from '../../helper/search';
@@ -21,6 +21,7 @@ import { getPublicClassScheduleListService } from '../../services/classService';
 import { getFirstLetter, getTeacherFullName } from '../../helper/renderTeacher';
 import AddTeacherForm from '../../components/AddTeacherForm/AddTeacherForm';
 import { clearDepartment, getAllDepartmentsService } from '../../services/departmentService';
+import { setIsOpenConfirmDialog } from '../../actions/dialog';
 import { getShortTitle } from '../../helper/shortTitle';
 import {
     getCurrentSemesterService,
@@ -57,15 +58,16 @@ const TeacherList = (props) => {
         departments,
         department,
         semesters,
+        setOpenConfirmDialog,
+        isOpenConfirmDialog,
     } = props;
     const [term, setTerm] = useState('');
     const [isDisabled, setIsDisabled] = useState(false);
     const [selected, setSelected] = useState([]);
     const [teacherId, setTeacherId] = useState(-1);
-    const [openSelect, setOpenSelect] = useState(false);
+    const [isOpenMultiSelectDialog, setIsOpenMultiSelectDialog] = useState(false);
     const [selectedSemester, setSelectedSemester] = useState('');
-    const [openSubDialog, setOpenSubDialog] = useState(false);
-    const [subDialogType, setSubDialogType] = useState('');
+    const [confirmDialogType, setConfirmDialogType] = useState('');
 
     useEffect(() => {
         showAllTeachersService();
@@ -123,24 +125,24 @@ const TeacherList = (props) => {
             [dialogTypes.SET_VISIBILITY_ENABLED]: setEnabledTeachersService(teacher),
             [dialogTypes.SET_VISIBILITY_DISABLED]: setDisabledTeachersService(teacher),
         };
-        return changeDisabledStatus[subDialogType];
+        return changeDisabledStatus[confirmDialogType];
     };
     const showConfirmDialog = (id, dialogType) => {
         setTeacherId(id);
-        setSubDialogType(dialogType);
-        setOpenSubDialog(true);
+        setConfirmDialogType(dialogType);
+        setOpenConfirmDialog(true);
     };
     const acceptConfirmDialog = (id) => {
-        setOpenSubDialog(false);
+        setOpenConfirmDialog(false);
         if (!id) return;
-        if (subDialogType !== dialogTypes.DELETE_CONFIRM) {
+        if (confirmDialogType !== dialogTypes.DELETE_CONFIRM) {
             setEnabledDisabledDepartment(id);
         } else {
             removeTeacherCardService(id);
         }
     };
     const closeSelectionDialog = () => {
-        setOpenSelect(false);
+        setIsOpenMultiSelectDialog(false);
     };
     const clearSelection = () => {
         setSelected([]);
@@ -175,15 +177,12 @@ const TeacherList = (props) => {
     };
     return (
         <div className="cards-container">
-            {openSubDialog && (
-                <CustomDialog
-                    type={subDialogType}
-                    cardId={teacherId}
-                    whatDelete={cardType.TEACHER}
-                    open={openSubDialog}
-                    onClose={acceptConfirmDialog}
-                />
-            )}
+            <CustomDialog
+                type={confirmDialogType}
+                whatDelete={cardType.TEACHER}
+                open={isOpenConfirmDialog}
+                handelConfirm={() => acceptConfirmDialog(teacherId)}
+            />
 
             <aside className="form-with-search-panel">
                 <SearchPanel SearchChange={SearchChange} showDisabled={changeDisable} />
@@ -192,14 +191,14 @@ const TeacherList = (props) => {
                     variant="contained"
                     color="primary"
                     onClick={() => {
-                        setOpenSelect(true);
+                        setIsOpenMultiSelectDialog(true);
                     }}
                 >
                     {t(SEND_SCHEDULE_FOR_TEACHER)}
                 </Button>
-                {openSelect && (
+                {isOpenMultiSelectDialog && (
                     <MultiSelect
-                        open={openSelect}
+                        open={isOpenMultiSelectDialog}
                         options={options}
                         value={selected}
                         onChange={setSelected}
@@ -290,6 +289,10 @@ const mapStateToProps = (state) => ({
     semesters: state.schedule.semesters,
     departments: state.departments.departments,
     department: state.departments.department,
+    isOpenConfirmDialog: state.dialog.isOpenConfirmDialog,
+});
+const mapDispatchToProps = (dispatch) => ({
+    setOpenConfirmDialog: (newState) => dispatch(setIsOpenConfirmDialog(newState)),
 });
 
-export default connect(mapStateToProps, {})(TeacherList);
+export default connect(mapStateToProps, mapDispatchToProps)(TeacherList);

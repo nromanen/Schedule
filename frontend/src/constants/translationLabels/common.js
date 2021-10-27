@@ -109,6 +109,7 @@ export const COMMON_CLOSE_TITLE = 'common:close_title';
 export const COMMON_UPLOAD_FROM_FILE_TITLE = 'common:upload_from_file_title';
 export const UPLOAD_FROM_FILE = 'upload_from_file';
 export const TYPE_LABEL = 'type_label';
+export const COMMON_MOVE_LABEL = 'common:move_label';
 export const MOVE_TO_GROUP_TITLE = 'move_to_group_title';
 export const COMMON_MOVE_TO_GROUP_TITLE = 'common:move_to_group_title';
 export const CANCEL_BUTTON_LABEL = 'cancel_button_label';

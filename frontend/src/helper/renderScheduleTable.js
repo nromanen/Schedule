@@ -26,8 +26,7 @@ import {
     COMMON_LINK_TO_MEETING_WORD,
     COMMON_VACATION_LABEL,
 } from '../constants/translationLabels/common';
-import { CustomDialog } from '../share/DialogWindows';
-import { dialogTypes } from '../constants/dialogs';
+import { LinkToMeeting } from '../components/LinkToMeeting/LinkToMeeting';
 
 const shortid = require('shortid');
 
@@ -46,7 +45,7 @@ const getHref = (link) => {
 };
 const setLink = (card, place) => {
     if (place === places.TOGETHER) {
-        return <CustomDialog type={dialogTypes.MEETING_LINK} {...card} />;
+        return <LinkToMeeting {...card} />;
     }
     if (place === places.ONLINE) {
         return getHref(card.linkToMeeting);

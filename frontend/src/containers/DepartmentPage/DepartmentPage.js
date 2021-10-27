@@ -23,7 +23,9 @@ import {
     setEnabledDepartmentService,
     updateDepartmentService,
 } from '../../services/departmentService';
-import { CustomDialog, ShowDepartmentDataDialog } from '../../share/DialogWindows';
+import { setIsOpenConfirmDialog } from '../../actions/dialog';
+import CustomDialog from '../Dialogs/CustomDialog';
+import ShowDepartmentDataDialog from '../../share/DialogWindows/_dialogWindows/ShowDepartmentDataDialog';
 import { dialogTypes } from '../../constants/dialogs';
 import {
     EDIT_TITLE,
@@ -41,17 +43,18 @@ const DepartmentPage = (props) => {
         snackbarMessage,
         enabledDepartments,
         disabledDepartments,
+        setOpenConfirmDialog,
+        isOpenConfirmDialog,
     } = props;
     const { t } = useTranslation('formElements');
     const [term, setTerm] = useState('');
 
-    const [subDialogType, setSubDialogType] = useState('');
+    const [confirmDialogType, setConfirmDialogType] = useState('');
 
     const [isDisabled, setIsDisabled] = useState(false);
     const [isUpdateForm, setIsUpdateForm] = useState(false);
     const [departmentId, setDepartmentId] = useState(-1);
-    const [teacherDialog, setTeacherDialog] = useState(false);
-    const [openSubDialog, setOpenSubDialog] = useState(false);
+    const [isOpenTeacherDialog, setIsOpenTeacherDialog] = useState(false);
 
     const clearDepartmentForm = () => {
         clearDepartment();
@@ -73,8 +76,8 @@ const DepartmentPage = (props) => {
     };
     const showConfirmDialog = (currentId, dialogType) => {
         setDepartmentId(currentId);
-        setSubDialogType(dialogType);
-        setOpenSubDialog(true);
+        setConfirmDialogType(dialogType);
+        setOpenConfirmDialog(true);
     };
     const setDepartmentToUpdate = (currentId) => {
         getDepartmentByIdService(currentId);
@@ -89,12 +92,11 @@ const DepartmentPage = (props) => {
             [dialogTypes.SET_VISIBILITY_ENABLED]: setEnabledDepartmentService(newDepartment),
             [dialogTypes.SET_VISIBILITY_DISABLED]: setDisabledDepartmentService(newDepartment),
         };
-        return changeDisabledStatus[subDialogType];
+        return changeDisabledStatus[confirmDialogType];
     };
     const acceptConfirmDialog = (currentId) => {
-        setOpenSubDialog(false);
-        if (!currentId) return;
-        if (subDialogType !== dialogTypes.DELETE_CONFIRM) {
+        setOpenConfirmDialog(false);
+        if (confirmDialogType !== dialogTypes.DELETE_CONFIRM) {
             changeDepartmentDisabledStatus(currentId);
         } else deleteDepartmentsService(currentId);
     };
@@ -102,25 +104,22 @@ const DepartmentPage = (props) => {
         setIsDisabled((prev) => !prev);
     };
     const closeTeacherDialog = () => {
-        setTeacherDialog(false);
+        setIsOpenTeacherDialog(false);
     };
 
     return (
         <>
-            {openSubDialog && (
-                <CustomDialog
-                    type={subDialogType}
-                    cardId={departmentId.id}
-                    whatDelete="department"
-                    open={openSubDialog}
-                    onClose={acceptConfirmDialog}
-                />
-            )}
-            {teacherDialog && (
+            <CustomDialog
+                type={confirmDialogType}
+                whatDelete="department"
+                handelConfirm={() => acceptConfirmDialog(departmentId.id)}
+                open={isOpenConfirmDialog}
+            />
+            {isOpenTeacherDialog && (
                 <ShowDepartmentDataDialog
                     isHide={departmentId.disabledStatus}
                     cardId={departmentId.id}
-                    open={teacherDialog}
+                    open={isOpenTeacherDialog}
                     onClose={closeTeacherDialog}
                     teachers={teachers}
                 />
@@ -195,7 +194,7 @@ const DepartmentPage = (props) => {
                                     onClick={() => {
                                         showAllPublicTeachersByDepartmentService(departmentItem.id);
                                         getDepartmentByIdService(departmentItem.id);
-                                        setTeacherDialog(true);
+                                        setIsOpenTeacherDialog(true);
                                     }}
                                 />
                             </div>
@@ -221,6 +220,10 @@ const mapStateToProps = (state) => ({
     snackbarType: state.snackbar.snackbarType,
     snackbarMessage: state.snackbar.message,
     teachers: state.teachers.teachers,
+    isOpenConfirmDialog: state.dialog.isOpenConfirmDialog,
+});
+const mapDispatchToProps = (dispatch) => ({
+    setOpenConfirmDialog: (newState) => dispatch(setIsOpenConfirmDialog(newState)),
 });
 
-export default connect(mapStateToProps, {})(DepartmentPage);
+export default connect(mapStateToProps, mapDispatchToProps)(DepartmentPage);

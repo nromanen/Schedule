@@ -1,10 +1,7 @@
 import React from 'react';
-import Button from '@material-ui/core/Button';
 import i18n from '../../i18n';
-import { dialogTypes } from '../../constants/dialogs';
+import { dialogTypes, dialogYesButton, dialogNoButton } from '../../constants/dialogs';
 import {
-    COMMON_YES_BUTTON_TITLE,
-    COMMON_NO_BUTTON_TITLE,
     COMMON_DO_YOU_WANNA,
     COMMON_DO_YOU_WANNA_DISABLE,
     COMMON_DELETE_WORD,
@@ -13,29 +10,30 @@ import {
     COMMON_THIS_CARD_TYPE,
     COMMON_GO_TO_MEETING_WORD,
     COMMON_SET_DEFAULT_WORD,
+    COMMON_ARE_YOU_SURE,
 } from '../../constants/translationLabels/common';
+
 import {
     FORM_REFERENCE_ELEMENT,
     FORM_SEMESTER_ELEMENT,
 } from '../../constants/translationLabels/formElements';
 
-export const dialogMapper = (props) => {
-    const { onClose, cardId, type, whatDelete, linkToMeeting = 'none', ...rest } = props;
-    const defaultModalButtons = (
-        <>
-            <Button
-                className="dialog-button"
-                variant="contained"
-                color="primary"
-                onClick={() => onClose(cardId)}
-            >
-                {i18n.t(COMMON_YES_BUTTON_TITLE)}
-            </Button>
-            <Button className="dialog-button" variant="contained" onClick={() => onClose('')}>
-                {i18n.t(COMMON_NO_BUTTON_TITLE)}
-            </Button>
-        </>
-    );
+const dialogMapper = (props) => {
+    const {
+        type,
+        whatDelete,
+        handelConfirm,
+        setOpenConfirmDialog,
+        warning,
+        linkToMeeting = 'none',
+    } = props;
+
+    const handelClose = () => {
+        setOpenConfirmDialog(false);
+    };
+
+    const defaultModalButtons = [dialogYesButton(handelConfirm), dialogNoButton(handelClose)];
+
     switch (type) {
         case dialogTypes.DELETE_CONFIRM:
             return {
@@ -49,21 +47,34 @@ export const dialogMapper = (props) => {
                     </>
                 ),
                 buttons: defaultModalButtons,
-                onClose,
-                ...rest,
+                onClose: handelClose,
+                ...props,
+            };
+        case dialogTypes.CONFIRM_WITH_WARNING:
+            return {
+                title: i18n.t(COMMON_ARE_YOU_SURE),
+                children: (
+                    <div className="availability-info">
+                        <p className="availability-warning">{warning}</p>
+                    </div>
+                ),
+                buttons: defaultModalButtons,
+                onClose: handelClose,
+                ...props,
             };
         case dialogTypes.SET_VISIBILITY_DISABLED:
             return {
                 title: i18n.t(COMMON_DO_YOU_WANNA_DISABLE),
                 buttons: defaultModalButtons,
-                ...rest,
+                onClose: handelClose,
+                ...props,
             };
         case dialogTypes.SET_VISIBILITY_ENABLED:
             return {
                 title: i18n.t(COMMON_DO_YOU_WANNA_SHOW),
                 buttons: defaultModalButtons,
-                onClose,
-                ...rest,
+                onClose: handelClose,
+                ...props,
             };
         case dialogTypes.MEETING_LINK:
             return {
@@ -92,8 +103,8 @@ export const dialogMapper = (props) => {
                     </>
                 ),
                 buttons: defaultModalButtons,
-                onClose,
-                ...rest,
+                onClose: handelClose,
+                ...props,
             };
         case dialogTypes.SET_DEFAULT:
             return {
@@ -107,10 +118,12 @@ export const dialogMapper = (props) => {
                     </>
                 ),
                 buttons: defaultModalButtons,
-                onClose,
-                ...rest,
+                onClose: handelClose,
+                ...props,
             };
         default:
             return props;
     }
 };
+
+export default dialogMapper;

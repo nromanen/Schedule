@@ -124,3 +124,5 @@ export {
     setArchivedSemesters,
     moveToArchivedSemester,
 } from './semesters';
+
+export { setIsOpenConfirmDialog } from './dialog';

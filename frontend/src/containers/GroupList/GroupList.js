@@ -27,11 +27,10 @@ import {
     setEnabledGroupService,
     showAllGroupsService,
 } from '../../services/groupService';
-import {
-    CustomDialog,
-    ShowStudentsOnGroupDialog,
-    AddStudentDialog,
-} from '../../share/DialogWindows';
+import { setIsOpenConfirmDialog } from '../../actions/dialog';
+import CustomDialog from '../Dialogs/CustomDialog';
+import ShowStudentsOnGroupDialog from '../../share/DialogWindows/_dialogWindows/ShowStudentsOnGroupDialog';
+import AddStudentDialog from '../../share/DialogWindows/_dialogWindows/AddStudentDialog';
 import { dialogTypes } from '../../constants/dialogs';
 import { GROUP_Y_LABEL } from '../../constants/translationLabels/formElements';
 
@@ -45,19 +44,20 @@ const GroupList = (props) => {
         students,
         group,
         match,
+        setOpenConfirmDialog,
+        isOpenConfirmDialog,
         student,
     } = props;
     const history = useHistory();
     const { t } = useTranslation('formElements');
 
-    const [subDialogType, setSubDialogType] = useState('');
+    const [confirmDialogType, setConfirmDialogType] = useState('');
 
     const [groupId, setGroupId] = useState(-1);
     const [term, setTerm] = useState('');
     const [isDisabled, setIsDisabled] = useState(false);
-    const [showStudents, setShowStudents] = useState(false);
-    const [addStudentDialog, setAddStudentDialog] = useState(false);
-    const [openSubDialog, setOpenSubDialog] = useState(false);
+    const [isOpenShowStudentsDialog, setIsOpenShowStudentsDialog] = useState(false);
+    const [isOpenAddStudentDialog, setIsOpenAddStudentDialog] = useState(false);
 
     useEffect(() => {
         showAllGroupsService();
@@ -71,8 +71,8 @@ const GroupList = (props) => {
 
     const showConfirmDialog = (currentId, disabledStatus) => {
         setGroupId(currentId);
-        setSubDialogType(disabledStatus);
-        setOpenSubDialog(true);
+        setConfirmDialogType(disabledStatus);
+        setOpenConfirmDialog(true);
     };
     const changeGroupDisabledStatus = (currentGroupId) => {
         const foundGroup = [...disabledGroups, ...enabledGroup].find(
@@ -82,31 +82,29 @@ const GroupList = (props) => {
             [dialogTypes.SET_VISIBILITY_ENABLED]: setEnabledGroupService(foundGroup),
             [dialogTypes.SET_VISIBILITY_DISABLED]: setDisabledGroupService(foundGroup),
         };
-        return changeDisabledStatus[subDialogType];
+        return changeDisabledStatus[confirmDialogType];
     };
     const acceptConfirmDialog = (currentGroupId) => {
-        setOpenSubDialog(false);
-        if (!currentGroupId) return;
-        if (subDialogType !== dialogTypes.DELETE_CONFIRM) {
+        setOpenConfirmDialog(false);
+        if (confirmDialogType !== dialogTypes.DELETE_CONFIRM) {
             changeGroupDisabledStatus(currentGroupId);
         } else removeGroupCardService(currentGroupId);
     };
-
     const onShowStudentByGroup = (currentGroupId) => {
-        setShowStudents(true);
+        setIsOpenShowStudentsDialog(true);
         selectGroupService(currentGroupId);
         getAllStudentsByGroupId(currentGroupId);
     };
     const handleAddUser = (currentGroupId) => {
         setGroupId(currentGroupId);
-        setAddStudentDialog(true);
+        setIsOpenAddStudentDialog(true);
     };
 
     const selectStudentCard = () => {
-        setAddStudentDialog(false);
+        setIsOpenAddStudentDialog(false);
     };
     const onCloseShowStudents = () => {
-        setShowStudents(false);
+        setIsOpenShowStudentsDialog(false);
     };
     const studentSubmit = (data) => {
         if (data.id !== undefined) {
@@ -116,7 +114,7 @@ const GroupList = (props) => {
             const sendData = { ...data, group: { id: groupId } };
             createStudentService(sendData);
         }
-        setAddStudentDialog(false);
+        setIsOpenAddStudentDialog(false);
         goToGroupPage(history);
     };
     const onDeleteStudent = () => {
@@ -127,29 +125,27 @@ const GroupList = (props) => {
     const changeDisable = () => {
         setIsDisabled((prev) => !prev);
     };
-
     return (
         <>
-            {openSubDialog && (
-                <CustomDialog
-                    type={subDialogType}
-                    cardId={groupId}
-                    whatDelete="group"
-                    open={openSubDialog}
-                    onClose={acceptConfirmDialog}
-                />
-            )}
-            {addStudentDialog && (
+
+            <CustomDialog
+                type={confirmDialogType}
+                handelConfirm={() => acceptConfirmDialog(groupId)}
+                whatDelete="group"
+                open={isOpenConfirmDialog}
+            />
+
+            {isOpenAddStudentDialog && (
                 <AddStudentDialog
-                    open={addStudentDialog}
+                    open={isOpenAddStudentDialog}
                     onSubmit={studentSubmit}
                     onSetSelectedCard={selectStudentCard}
                 />
             )}
-            {showStudents && (
+            {isOpenShowStudentsDialog && (
                 <ShowStudentsOnGroupDialog
                     onClose={onCloseShowStudents}
-                    open={showStudents}
+                    open={isOpenShowStudentsDialog}
                     students={students}
                     group={group}
                     onDeleteStudent={onDeleteStudent}
@@ -204,6 +200,10 @@ const mapStateToProps = (state) => ({
     snackbarMessage: state.snackbar.message,
     students: state.students.students,
     student: state.students.student,
+    isOpenConfirmDialog: state.dialog.isOpenConfirmDialog,
+});
+const mapDispatchToProps = (dispatch) => ({
+    setOpenConfirmDialog: (newState) => dispatch(setIsOpenConfirmDialog(newState)),
 });
 
-export default connect(mapStateToProps, {})(GroupList);
+export default connect(mapStateToProps, mapDispatchToProps)(GroupList);

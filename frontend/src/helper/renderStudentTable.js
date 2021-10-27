@@ -23,6 +23,7 @@ import { Delete } from '@material-ui/icons';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { selectStudentService } from '../services/studentService';
+import { setIsOpenConfirmDialog } from '../actions';
 import './renderStudentTable.scss';
 import { getTeacherFullName } from './renderTeacher';
 import {
@@ -43,7 +44,8 @@ import {
     ALL_PAGE,
     ROWS_PER_PAGE,
 } from '../constants/translationLabels/formElements';
-import { CustomDialog, AddStudentDialog } from '../share/DialogWindows';
+import CustomDialog from '../containers/Dialogs/CustomDialog';
+import AddStudentDialog from '../share/DialogWindows/_dialogWindows/AddStudentDialog';
 import { dialogTypes } from '../constants/dialogs';
 
 const useStyles1 = makeStyles((theme) => ({
@@ -138,7 +140,7 @@ const StyledTableRow = withStyles((theme) => ({
     },
 }))(TableRow);
 
-export default function RenderStudentTable(props) {
+function RenderStudentTable(props) {
     const ALL_ROWS = -1;
     const classes = useStyles2();
     const {
@@ -156,14 +158,15 @@ export default function RenderStudentTable(props) {
         handleClearCheckedAllBtn,
         checkedAllBtn,
         handleAllCheckedBtn,
+        setOpenConfirmDialog,
+        isOpenConfirmDialog,
     } = props;
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
-    const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-    const [openEditDialog, setOpenEditDialog] = useState(false);
+    const [isOpenEditDialog, setIsOpenEditDialog] = useState(false);
     const { t } = useTranslation('formElements');
     const handleEdit = (studentId) => {
-        setOpenEditDialog(true);
+        setIsOpenEditDialog(true);
         selectStudentService(studentId);
     };
     useEffect(() => {
@@ -173,7 +176,7 @@ export default function RenderStudentTable(props) {
     }, [props.group.id]);
     useEffect(() => {
         if (match.path.includes(STUDENT_LINK) && match.path.includes(DELETE_LINK)) {
-            setOpenDeleteDialog(true);
+            setOpenConfirmDialog(true);
         }
     }, [props.group.id]);
 
@@ -190,15 +193,15 @@ export default function RenderStudentTable(props) {
         window.location.href = mailto;
     };
     const deleteStudent = (studentItem) => {
-        setOpenDeleteDialog(false);
+        setOpenConfirmDialog(false);
         onDeleteStudent(studentItem);
     };
     const handleCloseEditDialog = () => {
-        setOpenEditDialog(false);
+        setIsOpenEditDialog(false);
         selectStudentService(null);
     };
     const handleSubmit = (data) => {
-        setOpenEditDialog(false);
+        setIsOpenEditDialog(false);
         const sendObject = { ...data, prevGroup: group };
         onSubmit(sendObject);
     };
@@ -311,29 +314,26 @@ export default function RenderStudentTable(props) {
                                         <Delete
                                             title={t(DELETE_TITLE_LABEL)}
                                             className="delete-button"
-                                            onClick={() => setOpenDeleteDialog(true)}
+                                            onClick={() => setOpenConfirmDialog(true)}
                                         />
                                     </Link>
                                 </span>
                             </StyledTableCell>
-                            {openEditDialog && (
+                            {isOpenEditDialog && (
                                 <AddStudentDialog
-                                    open={openEditDialog}
+                                    open={isOpenEditDialog}
                                     onSubmit={handleSubmit}
                                     onSetSelectedCard={handleCloseEditDialog}
                                     match={match}
                                 />
                             )}
 
-                            {openDeleteDialog && (
-                                <CustomDialog
-                                    type={dialogTypes.DELETE_CONFIRM}
-                                    cardId={student}
-                                    whatDelete="student"
-                                    open={openDeleteDialog}
-                                    onClose={deleteStudent}
-                                />
-                            )}
+                            <CustomDialog
+                                type={dialogTypes.DELETE_CONFIRM}
+                                whatDelete="student"
+                                open={isOpenConfirmDialog}
+                                handelConfirm={() => deleteStudent(student)}
+                            />
                         </StyledTableRow>
                     ))}
 
@@ -374,6 +374,10 @@ export default function RenderStudentTable(props) {
 
 const mapStateToProps = (state) => ({
     student: state.students.student,
+    isOpenConfirmDialog: state.dialog.isOpenConfirmDialog,
+});
+const mapDispatchToProps = (dispatch) => ({
+    setOpenConfirmDialog: (newState) => dispatch(setIsOpenConfirmDialog(newState)),
 });
 
-connect(mapStateToProps, {})(RenderStudentTable);
+export default connect(mapStateToProps, mapDispatchToProps)(RenderStudentTable);

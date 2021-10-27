@@ -8,11 +8,12 @@ import { MdDelete } from 'react-icons/md';
 import { FaEdit } from 'react-icons/fa';
 import { ROOM_FORM_TYPE } from '../../constants/reduxForms';
 
-import { CustomDialog } from '../../share/DialogWindows';
+import CustomDialog from '../../containers/Dialogs/CustomDialog';
 import { cardType } from '../../constants/cardType';
 import Card from '../../share/Card/Card';
 import renderTextField from '../../share/renderedFields/input';
 import { deleteTypeService, getOneNewTypeService } from '../../services/roomTypesService';
+import { setIsOpenConfirmDialog } from '../../actions/dialog';
 import './AddNewRoomType.scss';
 import {
     SAVE_BUTTON_LABEL,
@@ -22,9 +23,17 @@ import {
 import { dialogTypes } from '../../constants/dialogs';
 
 let NewRoomType = (props) => {
-    const { handleSubmit, pristine, submitting, roomTypes, oneType, initialize } = props;
+    const {
+        handleSubmit,
+        pristine,
+        submitting,
+        roomTypes,
+        oneType,
+        initialize,
+        setOpenConfirmDialog,
+        isOpenConfirmDialog,
+    } = props;
 
-    const [open, setOpen] = useState(false);
     const [typeId, setTypeId] = useState(-1);
 
     useEffect(() => {
@@ -39,28 +48,22 @@ let NewRoomType = (props) => {
 
     const handleClickOpen = (id) => {
         setTypeId(id);
-        setOpen(true);
+        setOpenConfirmDialog(true);
     };
 
-    const handleClose = (id) => {
-        setOpen(false);
-        if (!id) {
-            return;
-        }
+    const handleDelete = (id) => {
+        setOpenConfirmDialog(false);
         deleteTypeService(id);
     };
 
     return (
         <>
-            {open && (
-                <CustomDialog
-                    type={dialogTypes.DELETE_CONFIRM}
-                    cardId={typeId}
-                    whatDelete={cardType.TYPE.toLowerCase()}
-                    open={open}
-                    onClose={handleClose}
-                />
-            )}
+            <CustomDialog
+                type={dialogTypes.DELETE_CONFIRM}
+                handelConfirm={() => handleDelete(typeId)}
+                whatDelete={cardType.TYPE.toLowerCase()}
+                open={isOpenConfirmDialog}
+            />
             <Card additionClassName="form-card room-form">
                 <form className="new-type-container" onSubmit={handleSubmit}>
                     <Field
@@ -115,9 +118,12 @@ const mapStateToProps = (state) => ({
     oneType: state.roomTypes.oneType,
     roomTypes: state.roomTypes.roomTypes,
 });
+const mapDispatchToProps = (dispatch) => ({
+    setOpenConfirmDialog: (newState) => dispatch(setIsOpenConfirmDialog(newState)),
+});
 
 NewRoomType = reduxForm({
     form: ROOM_FORM_TYPE,
 })(NewRoomType);
 
-export default connect(mapStateToProps)(NewRoomType);
+export default connect(mapStateToProps, mapDispatchToProps)(NewRoomType);
