@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
-import { links } from '../../constants/links';
+import { HOME_PAGE_LINK, LOGIN_LINK, ADMIN_PAGE_LINK } from '../../constants/links';
 import { authTypes, successAuthMessages } from '../../constants/auth';
 import { userRoles } from '../../constants/userRoles';
 import { snackbarTypes } from '../../constants/snackbarTypes';
@@ -58,10 +58,10 @@ const Auth = (props) => {
     const successLoginRedirect = () => {
         if (userRole === userRoles.MANAGER) {
             document.title = t(ADMIN_TITLE);
-            history.push(links.ADMIN_PAGE);
+            history.push(ADMIN_PAGE_LINK);
         } else {
             document.title = t(HOME_TITLE);
-            history.push(links.HOME_PAGE);
+            history.push(HOME_PAGE_LINK);
         }
         showSuccessMessage(successAuthMessages[authType]);
     };
@@ -131,7 +131,7 @@ const Auth = (props) => {
     useEffect(() => {
         if (isResponse) {
             showSuccessMessage(successAuthMessages[authType]);
-            history.push(links.LOGIN);
+            history.push(LOGIN_LINK);
         }
     }, [response, resetPasswordResponse]);
 

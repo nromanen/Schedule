@@ -112,7 +112,7 @@ const RegistrationForm = (props) => {
                     </div>
                     <div className="auth-form-footer">
                         <span>{i18n.t(ACCOUNT_EXIST)}</span>
-                        <Link to={links.LOGIN} className="form-link">
+                        <Link to={LOGIN_LINK} className="form-link">
                             {i18n.t(LOGIN_TITLE)}
                         </Link>
                     </div>

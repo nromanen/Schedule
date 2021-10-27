@@ -33,7 +33,7 @@ import {
     EMPTY_FIELDS,
     REGISTRATION_PAGE_TITLE,
 } from '../../constants/translationLabels/common';
-import { links } from '../../constants/links';
+import { REGISTRATION_LINK, RESET_PASSWORD_LINK } from '../../constants/links';
 
 const LoginForm = (props) => {
     const { handleSubmit, loginHandler, errors, setError, isLoading } = props;
@@ -95,7 +95,7 @@ const LoginForm = (props) => {
                         onChange={() => setError(null)}
                     />
                     <div className="forgot-password-label">
-                        <Link to={links.RESET_PASSWORD} className="form-link">
+                        <Link to={RESET_PASSWORD_LINK} className="form-link">
                             {i18n.t(FORGOT_PASSWORD_LABEL)}
                         </Link>
                     </div>
@@ -112,7 +112,7 @@ const LoginForm = (props) => {
 
                     <div className="auth-form-footer">
                         <span>{i18n.t(DONT_HAVE_ACCOUNT_LABEL)}</span>
-                        <Link to={links.Registration} className="form-link">
+                        <Link to={REGISTRATION_LINK} className="form-link">
                             {i18n.t(REGISTRATION_PAGE_TITLE)}
                         </Link>
                     </div>
