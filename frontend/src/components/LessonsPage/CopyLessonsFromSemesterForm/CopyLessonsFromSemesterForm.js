@@ -1,25 +1,23 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import { Field, reduxForm } from 'redux-form';
+import { Field } from 'redux-form';
 
 import { useTranslation } from 'react-i18next';
 
 import Button from '@material-ui/core/Button';
-import SelectField from '../../../../share/renderedFields/select';
+import SelectField from '../../../share/renderedFields/select';
 
 import './CopyLessonsFromSemesterForm.scss';
-import Card from '../../../../share/Card/Card';
+import Card from '../../../share/Card/Card';
 
-import { COPY_LESSONS_FROM_SEMESTER_FORM } from '../../../../constants/reduxForms';
-import { required } from '../../../../validation/validateFields';
+import { required } from '../../../validation/validateFields';
 import {
     FORM_SEMESTER_LABEL,
     FORM_COPY_LESSON,
-} from '../../../../constants/translationLabels/formElements';
+} from '../../../constants/translationLabels/formElements';
 import {
     COPY_LESSON,
     COPY_LESSONS_FROM_SEMESTER,
-} from '../../../../constants/translationLabels/common';
+} from '../../../constants/translationLabels/common';
 
 const CopyLessonsFromSemesterForm = (props) => {
     const { t } = useTranslation('common');
@@ -73,12 +71,4 @@ const CopyLessonsFromSemesterForm = (props) => {
     );
 };
 
-const mapStateToProps = (state) => ({
-    semesters: state.semesters.semesters,
-    currentSemester: state.schedule.currentSemester,
-});
-export default connect(mapStateToProps)(
-    reduxForm({
-        form: COPY_LESSONS_FROM_SEMESTER_FORM,
-    })(CopyLessonsFromSemesterForm),
-);
+export default CopyLessonsFromSemesterForm;

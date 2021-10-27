@@ -9,13 +9,13 @@ import { makeStyles } from '@material-ui/core/styles';
 import {
     FORM_CHOOSE_BUTTON_TITLE,
     FORM_CANCEL_BUTTON_TITLE,
-} from '../../../../constants/translationLabels/formElements';
+} from '../../constants/translationLabels/formElements';
 import {
     COPY_TO_SAME_GROUP_ERROR,
     CHOOSE_GROUP,
     COMMON_CHOOSE_GROUP,
-} from '../../../../constants/translationLabels/common';
-import CustomDialog from '../../../../share/DialogWindows/CustomDialog';
+} from '../../constants/translationLabels/common';
+import CustomDialog from '../../share/DialogWindows/CustomDialog';
 
 const useStyles = makeStyles(() => ({
     groupField: {
