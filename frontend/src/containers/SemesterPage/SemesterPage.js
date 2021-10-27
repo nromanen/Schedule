@@ -9,8 +9,8 @@ import SearchPanel from '../../share/SearchPanel/SearchPanel';
 import SnackbarComponent from '../../share/Snackbar/SnackbarComponent';
 import { handleSnackbarCloseService } from '../../services/snackbarService';
 import SemesterForm from './SemesterForm';
-import SemesterItem from '../../components/Semester/SemesterItem';
-import SemesterCopyForm from '../../components/Semester/SemesterCopyForm/SemesterCopyForm';
+import SemesterItem from './SemesterItem';
+import SemesterCopyForm from './SemesterCopyForm';
 import {
     handleSemesterService,
     getDisabledSemestersService,
@@ -82,7 +82,7 @@ const SemesterPage = (props) => {
         showAllGroupsService();
         showAllSemestersService();
         getDisabledSemestersService();
-        // dont work and swagger doesn't have a route for this service
+        // doesnt work
         // getArchivedSemestersService();
     }, []);
 
@@ -220,9 +220,6 @@ const SemesterPage = (props) => {
                     setOpenSubDialog={setOpenSubDialog}
                     setIsOpenSemesterCopyForm={setIsOpenSemesterCopyForm}
                     setOpenGroupsDialog={setOpenGroupsDialog}
-                    disabledSemesters={disabledSemesters}
-                    enabledSemesters={enabledSemesters}
-                    archivedSemesters={archivedSemesters}
                 />
             </div>
             <SnackbarComponent
