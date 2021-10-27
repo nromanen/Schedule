@@ -38,7 +38,7 @@ const LoginForm = (props) => {
         setSemesterId(0);
         setTeacherId(0);
         setGroupId(0);
-        setTypeOfSchedule('');
+        setTypeOfSchedule('full');
     });
     const { t } = useTranslation('formElements');
 

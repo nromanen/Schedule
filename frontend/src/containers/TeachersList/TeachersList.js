@@ -43,10 +43,10 @@ import {
     TEACHER_DEPARTMENT,
 } from '../../constants/translationLabels/common';
 import {
-    getAllPublicSemestersRequested,
+    getAllPublicSemestersStart,
     getCurrentSemesterRequsted,
     getDefaultSemesterRequsted,
-    sendTeacherScheduleRequested,
+    sendTeacherScheduleStart,
 } from '../../actions/schedule';
 
 const TeacherList = (props) => {
@@ -307,8 +307,8 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
     getCurrentSemester: () => dispatch(getCurrentSemesterRequsted()),
     getDefaultSemester: () => dispatch(getDefaultSemesterRequsted()),
-    getAllPublicSemesters: () => dispatch(getAllPublicSemestersRequested()),
-    sendTeacherSchedule: (data) => dispatch(sendTeacherScheduleRequested(data)),
+    getAllPublicSemesters: () => dispatch(getAllPublicSemestersStart()),
+    sendTeacherSchedule: (data) => dispatch(sendTeacherScheduleStart(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(TeacherList);

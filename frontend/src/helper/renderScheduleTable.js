@@ -313,7 +313,8 @@ export const renderScheduleGroupHeader = (days) => (
 );
 
 export const renderGroupTable = (classes, isOdd, semester, place) => {
-    if (isEmpty(classes)) return <h2>Schedule is empty</h2>; // ALERT
+    if (isEmpty(classes))
+        return <p className="empty_schedule">{i18n.t('common:empty_schedule')}</p>; // ALERT
     if (semester) {
         currentWeekType = isOddFunction(printWeekNumber(semester.startDay));
     }
@@ -612,7 +613,7 @@ export const renderWeekTable = (schedule, place) => {
             </TableContainer>
         );
     }
-    return <h2>Schedule is empty</h2>; // ALERT
+    return <p className="empty_schedule">{i18n.t('common:empty_schedule')}</p>; // ALERT
 };
 
 const renderLessonsFirstLine = (lessonItem) => {

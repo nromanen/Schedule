@@ -5,7 +5,7 @@ import { colors } from '../../constants/schedule/colors';
 import { cssClasses } from '../../constants/schedule/cssClasses';
 import { setLoadingService } from '../../services/loadingService';
 import './Board.scss';
-import { checkAvailabilityScheduleRequested } from '../../actions/schedule';
+import { checkAvailabilityScheduleStart } from '../../actions/schedule';
 
 const Board = (props) => {
     const {
@@ -175,7 +175,7 @@ const Board = (props) => {
 };
 
 const mapDispatchToProps = (dispatch) => ({
-    checkScheduleItemAvailability: (item) => dispatch(checkAvailabilityScheduleRequested(item)),
+    checkScheduleItemAvailability: (item) => dispatch(checkAvailabilityScheduleStart(item)),
 });
 
 export default connect(null, mapDispatchToProps)(Board);

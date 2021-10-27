@@ -15,7 +15,7 @@ import {
     BUSY_ROOMS_HEADING,
 } from '../../constants/translationLabels/common';
 import WeekRoomInfo from '../../components/WeekRoomInfo/WeekRoomInfo';
-import { getAllScheduleItemsRequested } from '../../actions/schedule';
+import { getAllScheduleItemsStart } from '../../actions/schedule';
 
 const BusyRooms = (props) => {
     const { t } = useTranslation('common');
@@ -113,7 +113,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    getAllScheduleItems: () => dispatch(getAllScheduleItemsRequested()),
+    getAllScheduleItems: () => dispatch(getAllScheduleItemsStart()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(BusyRooms);

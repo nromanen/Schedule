@@ -18,11 +18,11 @@ const HomePage = (props) => {
 
     useEffect(() => getPublicClassScheduleListService(), []);
     setSemesterId(null);
-    setTypeOfSchedule('');
+    setTypeOfSchedule('full');
 
     useEffect(() => {
         getDefaultSemester();
-        setTypeOfSchedule('');
+        setTypeOfSchedule('full');
     }, []);
 
     return (

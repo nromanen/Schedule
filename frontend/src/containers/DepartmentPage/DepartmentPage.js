@@ -33,7 +33,7 @@ import {
     SHOW_TEACHER_TITLE,
 } from '../../constants/translationLabels/formElements';
 import { COMMON_SET_DISABLED, COMMON_SET_ENABLED } from '../../constants/translationLabels/common';
-import { getAllPublicTeachersByDepartmentRequested } from '../../actions/schedule';
+import { getAllPublicTeachersByDepartmentStart } from '../../actions/schedule';
 
 const DepartmentPage = (props) => {
     const {
@@ -228,8 +228,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    getAllPublicTeachersByDepartment: (id) =>
-        dispatch(getAllPublicTeachersByDepartmentRequested(id)),
+    getAllPublicTeachersByDepartment: (id) => dispatch(getAllPublicTeachersByDepartmentStart(id)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(DepartmentPage);

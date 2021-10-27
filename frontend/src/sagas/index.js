@@ -1,5 +1,5 @@
 import { all } from 'redux-saga/effects';
-import watchSchedule from './schedule/watcher';
+import watchSchedule from './schedule';
 import watchUserAuthentication from './watchers';
 
 export default function* startForman() {

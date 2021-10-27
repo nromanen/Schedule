@@ -3,14 +3,11 @@ import { connect } from 'react-redux';
 import { useHistory, useLocation } from 'react-router-dom';
 import './GroupSchedulePage.scss';
 import { CircularProgress } from '@material-ui/core';
-import { get } from 'lodash';
+import { get, isEmpty, isNil } from 'lodash';
 import { getDataFromParams } from '../../utils/urlUtils';
 import GroupSchedulePageTop from '../GroupSchedulePageTop/GroupSchedulePageTop';
-import { setLoadingService } from '../../services/loadingService';
 import { links } from '../../constants/links';
 import { places } from '../../constants/places';
-import { getScheduleByType } from '../../utils/sheduleUtils';
-import { SCHEDULE_TYPES } from '../../constants/schedule/types';
 import { renderSchedule } from '../../helper/renderSchedule';
 import {
     getDefaultSemesterRequsted,
@@ -18,9 +15,9 @@ import {
     setScheduleType,
     setScheduleGroupId,
     setScheduleTeacherId,
-    getGroupScheduleRequested,
-    getTeacherScheduleRequested,
-    getFullScheduleRequested,
+    getGroupScheduleStart,
+    getTeacherScheduleStart,
+    getFullScheduleStart,
 } from '../../actions/schedule';
 
 const GroupSchedulePage = (props) => {
@@ -30,10 +27,6 @@ const GroupSchedulePage = (props) => {
     const {
         defaultSemester,
         scheduleType,
-        fullSchedule,
-        groupId,
-        teacherId,
-        semesterId,
         loading,
         getDefaultSemester,
         setSemesterId,
@@ -66,6 +59,7 @@ const GroupSchedulePage = (props) => {
             (!get(values, 'teacher') && values.group === 0) ||
             (!get(values, 'group') && !get(values, 'teacher'))
         ) {
+            console.log('get full');
             setTypeOfSchedule('full');
             getFullSchedule(values.semester);
         }
@@ -101,15 +95,18 @@ const GroupSchedulePage = (props) => {
     }, []);
 
     const getSchedule = () => {
-        if (scheduleType === '' && defaultSemester.id !== undefined) {
-            handleSubmit({ semester: defaultSemester.id });
+        console.log(defaultSemester.id);
+        const { semester, group, teacher } = getDataFromParams(location);
 
-            return null;
+        if (defaultSemester.id !== undefined && isNil(semester)) {
+            console.log('first render');
+            handleSubmit({ semester: defaultSemester.id });
         }
+
         if (scheduleType !== '' || location.pathname === links.HOME_PAGE) {
+            console.log('loads data');
             return renderSchedule(props, place);
         }
-        const { semester, teacher, group } = getDataFromParams(location);
 
         if (semester !== null) {
             handleSubmit({
@@ -169,11 +166,10 @@ const mapDispatchToProps = (dispatch) => ({
     setTypeOfSchedule: (type) => dispatch(setScheduleType(type)),
     setGroupId: (id) => dispatch(setScheduleGroupId(id)),
     setTeacherId: (id) => dispatch(setScheduleTeacherId(id)),
-    getGroupSchedule: (groupId, semesterId) =>
-        dispatch(getGroupScheduleRequested(groupId, semesterId)),
+    getGroupSchedule: (groupId, semesterId) => dispatch(getGroupScheduleStart(groupId, semesterId)),
     getTeacherSchedule: (groupId, semesterId) =>
-        dispatch(getTeacherScheduleRequested(groupId, semesterId)),
-    getFullSchedule: (semesterId) => dispatch(getFullScheduleRequested(semesterId)),
+        dispatch(getTeacherScheduleStart(groupId, semesterId)),
+    getFullSchedule: (semesterId) => dispatch(getFullScheduleStart(semesterId)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(GroupSchedulePage);

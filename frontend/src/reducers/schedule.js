@@ -7,7 +7,7 @@ const initialState = {
     itemsIds: [],
     fullSchedule: [],
     groupSchedule: {},
-    scheduleType: '',
+    scheduleType: 'full',
     scheduleGroupId: 0,
     currentSemester: {},
     defaultSemester: {},

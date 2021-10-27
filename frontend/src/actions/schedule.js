@@ -7,15 +7,15 @@ export const setScheduleItems = (res) => {
     };
 };
 
-export const getScheduleItemsRequested = (semesterId) => {
+export const getScheduleItemsStart = (semesterId) => {
     return {
-        type: actionTypes.GET_SCHEDULE_ITEMS_REQUESTED,
+        type: actionTypes.GET_SCHEDULE_ITEMS_START,
         semesterId,
     };
 };
-export const getAllPublicTeachersByDepartmentRequested = (departmentId) => {
+export const getAllPublicTeachersByDepartmentStart = (departmentId) => {
     return {
-        type: actionTypes.GET_ALL_PUBLIC_TEACHERS_BY_DEPARTMENT_REQUESTED,
+        type: actionTypes.GET_ALL_PUBLIC_TEACHERS_BY_DEPARTMENT_START,
         departmentId,
     };
 };
@@ -26,67 +26,67 @@ export const setCurrentSemester = (res) => {
         payload: res,
     };
 };
-export const getAllPublicTeachersRequested = () => {
+export const getAllPublicTeachersStart = () => {
     return {
-        type: actionTypes.GET_ALL_PUBLIC_TEACHERS_REQUESTED,
+        type: actionTypes.GET_ALL_PUBLIC_TEACHERS_START,
     };
 };
-export const getAllPublicSemestersRequested = () => {
+export const getAllPublicSemestersStart = () => {
     return {
-        type: actionTypes.GET_ALL_PUBLIC_SEMESTERS_REQUESTED,
+        type: actionTypes.GET_ALL_PUBLIC_SEMESTERS_START,
     };
 };
-export const getAllScheduleItemsRequested = () => {
+export const getAllScheduleItemsStart = () => {
     return {
-        type: actionTypes.GET_ALL_SCHEDULE_ITEMS_REQUESTED,
+        type: actionTypes.GET_ALL_SCHEDULE_ITEMS_START,
     };
 };
-export const addItemsToScheduleRequested = (item) => {
+export const addItemsToScheduleStart = (item) => {
     return {
-        type: actionTypes.ADD_ITEM_TO_SCHEDULE_REQUESTED,
+        type: actionTypes.ADD_ITEM_TO_SCHEDULE_START,
         item,
     };
 };
-export const editRoomItemToScheduleRequested = (item) => {
+export const editRoomItemToScheduleStart = (item) => {
     return {
-        type: actionTypes.EDIT_ITEM_TO_SCHEDULE_REQUESTED,
+        type: actionTypes.EDIT_ITEM_TO_SCHEDULE_START,
         item,
     };
 };
-export const deleteScheduleItemRequested = (itemId) => {
+export const deleteScheduleItemStart = (itemId) => {
     return {
-        type: actionTypes.DELETE_SCHEDULE_ITEM_REQUESTED,
+        type: actionTypes.DELETE_SCHEDULE_ITEM_START,
         itemId,
     };
 };
-export const clearScheduleRequested = (semesterId) => {
+export const clearScheduleStart = (semesterId) => {
     return {
-        type: actionTypes.CLEAR_SCHEDULE_REQUESTED,
+        type: actionTypes.CLEAR_SCHEDULE_START,
         semesterId,
     };
 };
-export const getAllPublicGroupsRequested = (id) => {
+export const getAllPublicGroupsStart = (id) => {
     return {
-        type: actionTypes.GET_ALL_PUBLIC_GROUPS_REQUESTED,
+        type: actionTypes.GET_ALL_PUBLIC_GROUPS_START,
         id,
     };
 };
-export const sendTeacherScheduleRequested = (data) => {
+export const sendTeacherScheduleStart = (data) => {
     return {
-        type: actionTypes.SEND_TEACHER_SCHEDULE_REQUESTED,
+        type: actionTypes.SEND_TEACHER_SCHEDULE_START,
         data,
     };
 };
-export const getTeacherRangeScheduleRequested = (values) => {
+export const getTeacherRangeScheduleStart = (values) => {
     return {
-        type: actionTypes.GET_TEACHER_RANGE_SCHEDULE_REQUESTED,
+        type: actionTypes.GET_TEACHER_RANGE_SCHEDULE_START,
         values,
     };
 };
 
 export const getCurrentSemesterRequsted = () => {
     return {
-        type: actionTypes.GET_CURRENT_SEMESTER_REQUESTED,
+        type: actionTypes.GET_CURRENT_SEMESTER_START,
     };
 };
 
@@ -99,7 +99,7 @@ export const setDefaultSemester = (res) => {
 
 export const getDefaultSemesterRequsted = () => {
     return {
-        type: actionTypes.GET_DEFAULT_SEMESTER_REQUESTED,
+        type: actionTypes.GET_DEFAULT_SEMESTER_START,
     };
 };
 
@@ -117,15 +117,15 @@ export const checkAvailabilitySchedule = (res) => {
     };
 };
 
-export const checkAvailabilityScheduleRequested = (item) => {
+export const checkAvailabilityScheduleStart = (item) => {
     return {
-        type: actionTypes.CHECK_AVAILABILITY_SCHEDULE_REQUESTED,
+        type: actionTypes.CHECK_AVAILABILITY_SCHEDULE_START,
         item,
     };
 };
-export const checkAvailabilityChangeRoomScheduleRequested = (item) => {
+export const checkAvailabilityChangeRoomScheduleStart = (item) => {
     return {
-        type: actionTypes.CHECK_AVAILABILITY_CHANGE_ROOM_SCHEDULE_REQUESTED,
+        type: actionTypes.CHECK_AVAILABILITY_CHANGE_ROOM_SCHEDULE_START,
         item,
     };
 };
@@ -149,23 +149,23 @@ export const setGroupSchedule = (result) => {
         result,
     };
 };
-export const getGroupScheduleRequested = (groupId, semesterId) => {
+export const getGroupScheduleStart = (groupId, semesterId) => {
     return {
-        type: actionTypes.GET_GROUP_SCHEDULE_REQUESTED,
+        type: actionTypes.GET_GROUP_SCHEDULE_START,
         groupId,
         semesterId,
     };
 };
-export const getTeacherScheduleRequested = (teacherId, semesterId) => {
+export const getTeacherScheduleStart = (teacherId, semesterId) => {
     return {
-        type: actionTypes.GET_TEACHER_SCHEDULE_REQUESTED,
+        type: actionTypes.GET_TEACHER_SCHEDULE_START,
         teacherId,
         semesterId,
     };
 };
-export const getFullScheduleRequested = (semesterId) => {
+export const getFullScheduleStart = (semesterId) => {
     return {
-        type: actionTypes.GET_FULL_SCHEDULE_REQUESTED,
+        type: actionTypes.GET_FULL_SCHEDULE_START,
         semesterId,
     };
 };

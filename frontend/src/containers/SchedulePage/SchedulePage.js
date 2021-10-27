@@ -20,7 +20,7 @@ import {
     CLEAR_SCHEDULE_LABEL,
     USE_PC,
 } from '../../constants/translationLabels/common';
-import { clearScheduleRequested, getAllScheduleItemsRequested } from '../../actions/schedule';
+import { clearScheduleStart, getAllScheduleItemsStart } from '../../actions/schedule';
 
 const SchedulePage = (props) => {
     const {
@@ -136,8 +136,8 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    getAllScheduleItems: () => dispatch(getAllScheduleItemsRequested()),
-    clearScheduleItems: (id) => dispatch(clearScheduleRequested(id)),
+    getAllScheduleItems: () => dispatch(getAllScheduleItemsStart()),
+    clearScheduleItems: (id) => dispatch(clearScheduleStart(id)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SchedulePage);

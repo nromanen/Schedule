@@ -18,10 +18,10 @@ import { FORM_DAY_LABEL } from '../../constants/translationLabels/formElements';
 import { CLASS_SCHEDULE, WEEK_LABEL } from '../../constants/translationLabels/common';
 import './Schedule.scss';
 import {
-    addItemsToScheduleRequested,
-    checkAvailabilityChangeRoomScheduleRequested,
-    deleteScheduleItemRequested,
-    editRoomItemToScheduleRequested,
+    addItemsToScheduleStart,
+    checkAvailabilityChangeRoomScheduleStart,
+    deleteScheduleItemStart,
+    editRoomItemToScheduleStart,
 } from '../../actions/schedule';
 
 const Schedule = (props) => {
@@ -335,10 +335,10 @@ const Schedule = (props) => {
 };
 
 const mapDispatchToProps = (dispatch) => ({
-    checkRoomAvailability: (item) => dispatch(checkAvailabilityChangeRoomScheduleRequested(item)),
-    addItemsToSchedule: (item) => dispatch(addItemsToScheduleRequested(item)),
-    editRoomItemToSchedule: (item) => dispatch(editRoomItemToScheduleRequested(item)),
-    deleteScheduleItem: (item) => dispatch(deleteScheduleItemRequested(item)),
+    checkRoomAvailability: (item) => dispatch(checkAvailabilityChangeRoomScheduleStart(item)),
+    addItemsToSchedule: (item) => dispatch(addItemsToScheduleStart(item)),
+    editRoomItemToSchedule: (item) => dispatch(editRoomItemToScheduleStart(item)),
+    deleteScheduleItem: (item) => dispatch(deleteScheduleItemStart(item)),
 });
 
 export default connect(null, mapDispatchToProps)(Schedule);
