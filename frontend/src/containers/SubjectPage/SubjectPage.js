@@ -185,6 +185,6 @@ const mapStateToProps = (state) => ({
 });
 const mapDispatchToProps = (dispatch) => ({
     setOpenConfirmDialog: (newState) => dispatch(setIsOpenConfirmDialog(newState)),
-})
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(SubjectPage);
