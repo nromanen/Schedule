@@ -1,28 +1,24 @@
 import React, { useEffect } from 'react';
+import { Field } from 'redux-form';
+import { useTranslation } from 'react-i18next';
 
-import { Field, reduxForm } from 'redux-form';
-import { connect } from 'react-redux';
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
-import { useTranslation } from 'react-i18next';
 import { Accordion, AccordionDetails, AccordionSummary } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Typography from '@material-ui/core/Typography';
-import Card from '../../../../share/Card/Card';
 
-import renderTextField from '../../../../share/renderedFields/input';
-import SelectField from '../../../../share/renderedFields/select';
-import renderCheckboxField from '../../../../share/renderedFields/checkbox';
+import Card from '../../../share/Card/Card';
+import renderTextField from '../../../share/renderedFields/input';
+import SelectField from '../../../share/renderedFields/select';
+import renderCheckboxField from '../../../share/renderedFields/checkbox';
 
-import { LESSON_FORM } from '../../../../constants/reduxForms';
-import './LessonForm.scss';
-import { lessThanZero, maxLengthValue, required } from '../../../../validation/validateFields';
-import { setUniqueErrorService, selectLessonCardService } from '../../../../services/lessonService';
-import { handleTeacherInfo } from '../../../../helper/renderTeacher';
-import { setValueToSubjectForSiteHandler } from '../../../../helper/reduxFormHelper';
-import { getClearOrCancelTitle, setDisableButton } from '../../../../helper/disableComponent';
-import { selectGroupService } from '../../../../services/groupService';
-import { RenderMultiselect } from '../../../../share/renderedFields/renderMultiselect';
+import { lessThanZero, maxLengthValue, required } from '../../../validation/validateFields';
+import { handleTeacherInfo } from '../../../helper/renderTeacher';
+import { setValueToSubjectForSiteHandler } from '../../../helper/reduxFormHelper';
+import { getClearOrCancelTitle, setDisableButton } from '../../../helper/disableComponent';
+import { selectGroupService } from '../../../services/groupService';
+import { RenderMultiselect } from '../../../share/renderedFields/renderMultiselect';
 import {
     EDIT_TITLE,
     CREATE_TITLE,
@@ -39,8 +35,10 @@ import {
     FORM_GROUPED_LABEL,
     HOURS_LABEL,
     TEACHER_LABEL,
-} from '../../../../constants/translationLabels/formElements';
-import { TYPE_LABEL } from '../../../../constants/translationLabels/common';
+} from '../../../constants/translationLabels/formElements';
+import { TYPE_LABEL } from '../../../constants/translationLabels/common';
+
+import './LessonForm.scss';
 
 const useStyles = makeStyles(() => ({
     notSelected: {
@@ -51,7 +49,7 @@ const useStyles = makeStyles(() => ({
     },
 }));
 
-let LessonForm = (props) => {
+const LessonForm = (props) => {
     const { t } = useTranslation('formElements');
 
     const {
@@ -69,6 +67,8 @@ let LessonForm = (props) => {
         initialize,
         change,
         lessonTypes,
+        selectLessonCard,
+        setUniqueError,
     } = props;
 
     const classes = useStyles();
@@ -132,7 +132,7 @@ let LessonForm = (props) => {
                         component={SelectField}
                         label={t(TEACHER_LABEL)}
                         {...(!isUniqueError ? { validate: [required] } : { error: isUniqueError })}
-                        onChange={() => setUniqueErrorService(false)}
+                        onChange={() => setUniqueError(false)}
                     >
                         <option />
                         {teachers.map((teacher) => (
@@ -150,7 +150,7 @@ let LessonForm = (props) => {
                         {...(!isUniqueError ? { validate: [required] } : { error: isUniqueError })}
                         onChange={(event) => {
                             setValueToSubjectForSiteHandler(subjects, event.target.value, change);
-                            setUniqueErrorService(false);
+                            setUniqueError(false);
                         }}
                     >
                         <option value="" />
@@ -171,7 +171,7 @@ let LessonForm = (props) => {
                                 ? { validate: [required] }
                                 : { error: isUniqueError })}
                             onChange={() => {
-                                setUniqueErrorService(false);
+                                setUniqueError(false);
                             }}
                         >
                             <option value="" />
@@ -280,8 +280,8 @@ let LessonForm = (props) => {
                             disabled={setDisableButton(pristine, submitting, lesson.id)}
                             onClick={() => {
                                 reset();
-                                setUniqueErrorService(null);
-                                selectLessonCardService(null);
+                                setUniqueError(null);
+                                selectLessonCard(null);
                             }}
                         >
                             {getClearOrCancelTitle(lesson.id, t)}
@@ -297,20 +297,4 @@ let LessonForm = (props) => {
     );
 };
 
-const mapStateToProps = (state) => ({
-    lesson: state.lesson.lesson,
-    groups: state.groups.groups,
-    group: state.groups.group,
-    isUniqueError: state.lesson.uniqueError,
-    groupId: state.lesson.groupId,
-    subjects: state.subjects.subjects,
-    lessonTypes: state.lesson.lessonTypes,
-    teachers: state.teachers.teachers,
-    currentSemester: state.schedule.currentSemester,
-});
-
-LessonForm = reduxForm({
-    form: LESSON_FORM,
-})(LessonForm);
-
-export default connect(mapStateToProps)(LessonForm);
+export default LessonForm;
