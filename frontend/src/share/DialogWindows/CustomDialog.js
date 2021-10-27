@@ -36,7 +36,7 @@ const CustomDialog = (props) => {
                     <Button
                         key={label}
                         variant="contained"
-                        className={`dialog-button ${additionClassName}`}
+                        className={`dialog-button common-button ${additionClassName}`}
                         onClick={handleClick}
                         {...res}
                     >

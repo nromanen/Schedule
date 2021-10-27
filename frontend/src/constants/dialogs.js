@@ -24,12 +24,14 @@ export const dialogTypes = {
     CONFIRM_WITH_WARNING: 'confirmWithWarning',
 };
 
-export const dialogCloseButton = (handelFuc, additionalParams) => {
+export const dialogCloseButton = (handelFuc, additionalParams = {}) => {
+    const { additionClassName = '', ...param } = additionalParams;
     return {
         label: i18n.t(COMMON_CLOSE_TITLE),
         handleClick: handelFuc,
         color: 'primary',
-        ...additionalParams,
+        additionClassName: `close-button ${additionClassName}`,
+        ...param,
     };
 };
 
@@ -41,13 +43,15 @@ export const dialogChooseButton = (handelFuc) => {
     };
 };
 
-export const dialogChooseGroupButton = (handelFuc, isDisabled, additionalParams) => {
+export const dialogChooseGroupButton = (handelFuc, isDisabled, additionalParams = {}) => {
+    const { additionClassName = '', ...param } = additionalParams;
     return {
         label: i18n.t(FORM_CHOOSE_GROUP_LABEL),
         handleClick: handelFuc,
         color: 'primary',
         disabled: isDisabled,
-        ...additionalParams,
+        additionClassName: `choose-button ${additionClassName}`,
+        ...param,
     };
 };
 
@@ -55,7 +59,6 @@ export const dialogConfirmButton = (handelFuc) => {
     return {
         label: i18n.t(CONFIRM_GROUPS),
         handleClick: handelFuc,
-        color: 'primary',
     };
 };
 
@@ -63,7 +66,7 @@ export const dialogCancelButton = (handelFuc) => {
     return {
         label: i18n.t(FORM_CANCEL_BUTTON_TITLE),
         handleClick: handelFuc,
-        color: 'primary',
+        additionClassName: 'close-button',
     };
 };
 export const dialogSendSchedule = (handelFuc, isDisabled) => {
@@ -78,16 +81,17 @@ export const dialogUploadButton = (handelFuc, isDisabled) => {
     return {
         label: i18n.t(COMMON_UPLOAD_TITLE),
         handleClick: handelFuc,
-        color: 'primary',
+        additionClassName: `choose-button`,
         disabled: isDisabled,
     };
 };
-export const dialogUploadFromFileButton = (handelFuc, additionalParams) => {
+export const dialogUploadFromFileButton = (handelFuc, additionalParams = {}) => {
+    const { additionClassName = '', ...param } = additionalParams;
     return {
         label: i18n.t(COMMON_UPLOAD_FROM_FILE_TITLE),
         handleClick: handelFuc,
-        color: 'primary',
-        ...additionalParams,
+        additionClassName: `upload-file-button ${additionClassName}`,
+        ...param,
     };
 };
 
@@ -95,14 +99,12 @@ export const dialogMoveToGroupButton = (handelFuc) => {
     return {
         label: i18n.t(COMMON_MOVE_LABEL),
         handleClick: handelFuc,
-        color: 'primary',
     };
 };
 export const dialogYesButton = (handelFuc) => {
     return {
         label: i18n.t(COMMON_YES_BUTTON_TITLE),
         handleClick: handelFuc,
-        color: 'primary',
     };
 };
 export const dialogNoButton = (handelFuc) => {
@@ -110,5 +112,6 @@ export const dialogNoButton = (handelFuc) => {
         label: i18n.t(COMMON_NO_BUTTON_TITLE),
         handleClick: handelFuc,
         variant: 'contained',
+        additionClassName: 'close-button',
     };
 };
