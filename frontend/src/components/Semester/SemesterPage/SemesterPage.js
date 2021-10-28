@@ -225,6 +225,8 @@ const SemesterPage = (props) => {
                     setOpenSubDialog={setOpenSubDialog}
                     setIsOpenSemesterCopyForm={setIsOpenSemesterCopyForm}
                     setOpenGroupsDialog={setOpenGroupsDialog}
+                    enabledSemesters={enabledSemesters}
+                    disabledSemesters={disabledSemesters}
                 />
             </div>
             <SnackbarComponent
