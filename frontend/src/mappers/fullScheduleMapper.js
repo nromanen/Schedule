@@ -41,9 +41,9 @@ const mapFullSchedule = (schedule, semesterDays, semesterClasses) => {
 
 export const makeFullSchedule = (fullSchedule) => {
     const { schedule, semester } = fullSchedule;
-    const groupsCount = schedule?.length || 0; // nande desu ka?
-    const semesterDays = semester?.semester_days || []; // nande desu ka?
-    const semesterClasses = semester?.semester_classes || []; // nande desu ka?
+    const groupsCount = schedule?.length || 0;
+    const semesterDays = semester?.semester_days || [];
+    const semesterClasses = semester?.semester_classes || [];
     let groupList = [];
     let resultArray = [];
 
