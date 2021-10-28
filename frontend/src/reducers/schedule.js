@@ -1,5 +1,8 @@
 import { assign } from 'lodash';
 import * as actionTypes from '../actions/actionsType';
+import { makeFullSchedule } from '../mappers/fullScheduleMapper';
+import { makeTeacherSchedule } from '../mappers/teacherScheduleMapper';
+import { makeGroupSchedule } from '../mappers/groupScheduleMapper';
 
 const initialState = {
     items: [],
@@ -7,8 +10,11 @@ const initialState = {
     itemsIds: [],
     fullSchedule: [],
     groupSchedule: {},
+    teacherSchedule: {},
     scheduleType: 'full',
-    scheduleGroupId: 0,
+    scheduleGroupId: null,
+    scheduleTeacherId: null,
+    scheduleSemesterId: null,
     currentSemester: {},
     defaultSemester: {},
     viewTeacherScheduleResults: 'block-view',
@@ -58,19 +64,22 @@ const reducer = (state = initialState, action) => {
                 fullSchedule: [],
                 scheduleType: action.newType,
             });
-        case actionTypes.SET_FULL_SCHEDULE:
-            assign(state, {
-                fullSchedule: [],
-                groupSchedule: {}, // nani desu ka?
-            });
+        case actionTypes.SET_FULL_SCHEDULE: {
+            const mappedSchedule = makeFullSchedule(action.result);
             return assign(state, {
-                fullSchedule: action.result,
+                fullSchedule: mappedSchedule,
+                groupSchedule: {},
+                teacherSchedule: {},
             });
-        case actionTypes.SET_GROUP_SCHEDULE:
+        }
+        case actionTypes.SET_GROUP_SCHEDULE: {
+            const mappedSchedule = makeGroupSchedule(action.result);
             return assign(state, {
-                groupSchedule: action.result, // nani desu ka?
+                groupSchedule: mappedSchedule,
+                teacherSchedule: {},
                 fullSchedule: [],
             });
+        }
         case actionTypes.SET_ITEM_GROUP_ID:
             return assign(state, {
                 itemGroupId: action.result,
@@ -78,9 +87,6 @@ const reducer = (state = initialState, action) => {
         case actionTypes.SET_SCHEDULE_GROUP_ID:
             return assign(state, {
                 scheduleGroupId: action.groupId,
-                scheduleTeacherId: null,
-                fullSchedule: [],
-                groupSchedule: {},
             });
         case actionTypes.DELETE_ITEM_FROM_SCHEDULE: {
             const index = state.items.findIndex((item) => item.id === action.result);
@@ -92,19 +98,16 @@ const reducer = (state = initialState, action) => {
         }
         case actionTypes.SET_SCHEDULE_TEACHER_ID:
             return assign(state, {
-                scheduleGroupId: null,
                 scheduleTeacherId: action.teacherId,
-                fullSchedule: [],
-                groupSchedule: {},
             });
-        case actionTypes.SET_TEACHER_SCHEDULE:
+        case actionTypes.SET_TEACHER_SCHEDULE: {
+            const mappedSchedule = makeTeacherSchedule(action.result);
             return assign(state, {
-                scheduleGroupId: null,
-                teacherSchedule: action.result,
-                scheduleTeacherId: `${action.result.teacher.id}`,
+                teacherSchedule: mappedSchedule,
                 groupSchedule: {},
                 fullSchedule: [],
             });
+        }
         case actionTypes.SET_SEMESTER_LIST:
             return assign(state, {
                 semesters: action.result,
@@ -114,8 +117,6 @@ const reducer = (state = initialState, action) => {
                 scheduleGroupId: null,
                 scheduleTeacherId: null,
                 scheduleSemesterId: action.semesterId,
-                fullSchedule: [],
-                groupSchedule: {},
             });
         case actionTypes.SET_TEACHER_RANGE_SCHEDULE:
             return assign(state, {

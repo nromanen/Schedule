@@ -61,9 +61,7 @@ import {
     FORM_SCHEDULE_LABEL,
 } from '../constants/translationLabels/formElements';
 import { getAllTeachersByDepartmentId } from '../actions/teachers';
-import { makeFullSchedule } from '../mappers/fullScheduleMapper';
-import { makeGroupSchedule } from '../mappers/groupScheduleMapper';
-import { makeTeacherSchedule } from '../mappers/teacherScheduleMapper';
+import { setMainScheduleLoading } from '../actions/loadingIndicator';
 
 export function* getScheduleItemsBySemester({ semesterId }) {
     const requestUrl = `${SCHEDULE_SEMESTER_ITEMS_URL}?semesterId=${semesterId}`;
@@ -317,11 +315,10 @@ export function* getDefaultSemester() {
 export function* getFullSchedule({ semesterId }) {
     const requestUrl = FULL_SCHEDULE_URL + semesterId;
     try {
-        yield put(setLoading(true));
+        yield put(setMainScheduleLoading(true));
         const response = yield call(axiosCall, requestUrl);
-        const mappedSchedule = yield call(makeFullSchedule, response.data);
-        yield put(setFullSchedule(mappedSchedule));
-        yield put(setLoading(false));
+        yield put(setFullSchedule(response.data));
+        yield put(setMainScheduleLoading(false));
     } catch (error) {
         const message = error.response
             ? i18n.t(error.response.data.message, error.response.data.message)
@@ -329,18 +326,17 @@ export function* getFullSchedule({ semesterId }) {
         const isOpen = true;
         const type = snackbarTypes.ERROR;
         yield put(setOpenSnackbar({ isOpen, type, message }));
-        yield put(setLoading(false));
+        yield put(setMainScheduleLoading(false));
     }
 }
 
 export function* getGroupSchedule({ groupId, semesterId }) {
     const requestUrl = `${GROUP_SCHEDULE_URL + semesterId}&groupId=${groupId}`;
     try {
-        yield put(setLoading(true));
+        yield put(setMainScheduleLoading(true));
         const response = yield call(axiosCall, requestUrl);
-        const mappedSchedule = yield call(makeGroupSchedule, response.data);
-        yield put(setGroupSchedule(mappedSchedule));
-        yield put(setLoading(false));
+        yield put(setGroupSchedule(response.data));
+        yield put(setMainScheduleLoading(false));
     } catch (error) {
         const message = error.response
             ? i18n.t(error.response.data.message, error.response.data.message)
@@ -348,7 +344,7 @@ export function* getGroupSchedule({ groupId, semesterId }) {
         const isOpen = true;
         const type = snackbarTypes.ERROR;
         yield put(setOpenSnackbar({ isOpen, type, message }));
-        yield put(setLoading(false));
+        yield put(setMainScheduleLoading(false));
     }
 }
 
@@ -375,11 +371,10 @@ export function* getTeacherRangeSchedule({ values }) {
 export function* getTeacherSchedule({ teacherId, semesterId }) {
     const requestUrl = `${TEACHER_SCHEDULE_URL + semesterId}&teacherId=${teacherId}`;
     try {
-        yield put(setLoading(true));
+        yield put(setMainScheduleLoading(true));
         const response = yield call(axiosCall, requestUrl);
-        const mappedSchedule = yield call(makeTeacherSchedule, response.data);
-        yield put(setTeacherSchedule(mappedSchedule));
-        yield put(setLoading(false));
+        yield put(setTeacherSchedule(response.data));
+        yield put(setMainScheduleLoading(false));
     } catch (error) {
         const message = error.response
             ? i18n.t(error.response.data.message, error.response.data.message)
@@ -387,7 +382,7 @@ export function* getTeacherSchedule({ teacherId, semesterId }) {
         const isOpen = true;
         const type = snackbarTypes.ERROR;
         yield put(setOpenSnackbar({ isOpen, type, message }));
-        yield put(setLoading(false));
+        yield put(setMainScheduleLoading(false));
     }
 }
 
