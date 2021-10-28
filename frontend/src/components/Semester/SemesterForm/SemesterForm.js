@@ -33,12 +33,8 @@ import {
     COMMON_SAVE_BUTTON_LABEL,
 } from '../../../constants/translationLabels/common';
 import { dateFormat } from '../../../constants/formats';
-import {
-    getToday,
-    getTomorrow,
-    initialCheckboxesStateForDays,
-    createClasslabel,
-} from '../../../utils/formUtils';
+import SetSemesterCheckboxes from './SemesterCheckboxes';
+import { getToday, getTomorrow, initialCheckboxesStateForDays } from '../../../utils/formUtils';
 import { getGroupsOptionsForSelect } from '../../../utils/selectUtils';
 import { clearSemesterService } from '../../../services/semesterService';
 
@@ -137,39 +133,6 @@ const SemesterForm = (props) => {
         setDisabledFinishDate(false);
     };
 
-    const setCheckedHandler = (event, item, checked, setSchecked) => {
-        const changedItem = { [item]: event.target.checked };
-        setSchecked({
-            ...checked,
-            ...changedItem,
-        });
-    };
-
-    const setSemesterCheckboxes = (checked, method, name) => {
-        const checkboxes = Object.keys(checked);
-        return checkboxes.map((item) => {
-            return (
-                <Field
-                    key={item}
-                    name={`${name}${item}`}
-                    label={
-                        name.indexOf('semester_days_markup_') >= 0
-                            ? t(`common:day_of_week_${item}`)
-                            : createClasslabel(classScheduler, item)
-                    }
-                    labelPlacement="end"
-                    component={renderCheckboxField}
-                    defaultValue={checked[item]}
-                    checked={checked[item]}
-                    onChange={(e) => {
-                        setCheckedHandler(e, item, checked, method);
-                    }}
-                    color="primary"
-                />
-            );
-        });
-    };
-
     const handleChange = (event, setState) => setState(event.target.checked);
 
     const resetSemesterForm = () => {
@@ -264,15 +227,21 @@ const SemesterForm = (props) => {
                 </div>
                 <div className="">
                     <p>{`${t(COMMON_DAYS_LABEL)}: `}</p>
-                    {setSemesterCheckboxes(checkedDates, setCheckedDates, 'semester_days_markup_')}
+                    <SetSemesterCheckboxes
+                        checked={checkedDates}
+                        method={setCheckedDates}
+                        name="semester_days_markup_"
+                        classScheduler={classScheduler}
+                    />
                 </div>
                 <div className="">
                     <p>{`${t(COMMON_CLASS_SCHEDULE_MANAGEMENT_TITLE)}: `}</p>
-                    {setSemesterCheckboxes(
-                        checkedClasses,
-                        setCheckedClasses,
-                        'semester_classes_markup_',
-                    )}
+                    <SetSemesterCheckboxes
+                        checked={checkedClasses}
+                        method={setCheckedClasses}
+                        name="semester_classes_markup_"
+                        classScheduler={classScheduler}
+                    />
                 </div>
                 <div className="form-buttons-container semester-btns">
                     <Button
