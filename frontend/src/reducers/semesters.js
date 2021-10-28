@@ -13,7 +13,7 @@ const reducer = (state = initialState, action) => {
         case actionTypes.ADD_SEMESTER:
             return updateObject(state, {
                 semesters: state.semesters.concat(action.result),
-                semester: state.semester,
+                semester: {},
             });
 
         case actionTypes.DELETE_SEMESTER: {
@@ -39,7 +39,7 @@ const reducer = (state = initialState, action) => {
         case actionTypes.SELECT_SEMESTER: {
             let selectSemester = state.semesters.find((semester) => semester.id === action.result);
             if (!selectSemester) {
-                selectSemester = { id: null };
+                selectSemester = {};
             }
             return updateObject(state, {
                 semester: selectSemester,

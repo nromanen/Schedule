@@ -48,13 +48,16 @@ const ScheduleAndTemporaryScheduleList = (props) => {
 
     return (
         <main className="temporary-schedule-section">
-            <CustomDialog
-                type={dialogTypes.DELETE_CONFIRM}
-                cardId={temporaryScheduleId}
-                whatDelete={cardType.TEMPORARY_SCHEDULE.toLowerCase()}
-                open={open}
-                onClose={handleClose}
-            />
+            {open && (
+                <CustomDialog
+                    type={dialogTypes.DELETE_CONFIRM}
+                    cardId={temporaryScheduleId}
+                    whatDelete={cardType.TEMPORARY_SCHEDULE.toLowerCase()}
+                    open={open}
+                    onClose={handleClose}
+                />
+            )}
+
             {schedulesAndTemporarySchedules.map((scheduleAndTemporarySchedule) => (
                 <ExpansionPanel key={shortId.generate()} {...expandedProp}>
                     <ExpansionPanelSummary

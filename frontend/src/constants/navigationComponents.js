@@ -6,7 +6,7 @@ import ClassSchedule from '../containers/ClassSchedule/ClassSchedule';
 import RoomList from '../containers/RoomList/RoomList';
 import SubjectPage from '../containers/SubjectPage/SubjectPage';
 import BusyRooms from '../containers/BusyRooms/BusyRooms';
-import SemesterPage from '../containers/SemesterPage/SemesterPage';
+import SemesterPage from '../containers//SemesterPage/SemesterPage';
 import MergeRolePage from '../containers/MergeRolePage/MergeRolePage';
 import Changes from '../components/ChangePasswordForm/ChangePasswordForm';
 import DepartmentPage from '../containers/DepartmentPage/DepartmentPage';

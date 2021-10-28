@@ -1,4 +1,4 @@
-@import '../../App';
+@import '../../../App';
 .semester {
     &-form {
         margin: 10px;
@@ -33,14 +33,14 @@
         width: 48%;
     }
 }
-.group-options{
+.group-options {
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
     align-items: center;
     align-content: center;
 
-    Button{
+    Button {
         margin: 5px 0 5px 17px;
     }
 }

@@ -18,10 +18,7 @@ import { setLoadingService } from '../../services/loadingService';
 import { showAllSubjectsService } from '../../services/subjectService';
 import { cardType } from '../../constants/cardType';
 import SearchPanel from '../../share/SearchPanel/SearchPanel';
-import {
-    showAllSemestersService,
-    CopyLessonsFromSemesterService,
-} from '../../services/semesterService';
+import { CopyLessonsFromSemesterService } from '../../services/semesterService';
 import { searchLessonsByTeacher } from '../../helper/search';
 import {
     copyLessonCardService,
@@ -37,6 +34,7 @@ import {
     LESSON_FOR_GROUP_TITLE,
     LESSON_NO_LESSON_FOR_GROUP_LABEL,
 } from '../../constants/translationLabels/common';
+import { getAllSemestersStart } from '../../actions/semesters';
 
 const GroupField = styled(TextField)({
     display: 'inline-block',
@@ -53,6 +51,7 @@ const LessonPage = (props) => {
         lessons,
         groupId,
         groups,
+        getAllSemestersItems,
     } = props;
     const { t } = useTranslation('common');
     const [term, setTerm] = useState('');
@@ -79,7 +78,7 @@ const LessonPage = (props) => {
         getLessonTypesService();
         showAllGroupsService();
         showAllSubjectsService();
-        showAllSemestersService();
+        getAllSemestersItems();
     }, []);
 
     const submitLessonForm = (card) => {
@@ -170,21 +169,27 @@ const LessonPage = (props) => {
     return (
         <>
             <Card additionClassName="card-title lesson-card">
-                <CopyLessonDialog
-                    open={openCopyLessonDialog}
-                    onClose={closeCopyLessonDialogHandle}
-                    groupId={groupId}
-                    lesson={copiedLesson}
-                    groups={groups}
-                    translation={t}
-                />
-                <CustomDialog
-                    type={dialogTypes.DELETE_CONFIRM}
-                    cardId={lessonId}
-                    whatDelete={cardType.LESSON.toLowerCase()}
-                    open={isOpenConfirmDialog}
-                    onClose={acceptConfirmDialog}
-                />
+                {openCopyLessonDialog && (
+                    <CopyLessonDialog
+                        open={openCopyLessonDialog}
+                        onClose={closeCopyLessonDialogHandle}
+                        groupId={groupId}
+                        lesson={copiedLesson}
+                        groups={groups}
+                        translation={t}
+                    />
+                )}
+
+                {isOpenConfirmDialog && (
+                    <CustomDialog
+                        type={dialogTypes.DELETE_CONFIRM}
+                        cardId={lessonId}
+                        whatDelete={cardType.LESSON.toLowerCase()}
+                        open={isOpenConfirmDialog}
+                        onClose={acceptConfirmDialog}
+                    />
+                )}
+
                 <div className="lesson-page-title">
                     <aside className="search-lesson-group">
                         {groupId && (
@@ -244,5 +249,7 @@ const mapStateToProps = (state) => ({
     semesters: state.semesters.semesters,
     currentSemester: state.schedule.currentSemester,
 });
-
-export default connect(mapStateToProps)(LessonPage);
+const mapDispatchToProps = (dispatch) => ({
+    getAllSemestersItems: () => dispatch(getAllSemestersStart()),
+});
+export default connect(mapStateToProps, mapDispatchToProps)(LessonPage);

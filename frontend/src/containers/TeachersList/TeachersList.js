@@ -18,7 +18,6 @@ import NotFound from '../../share/NotFound/NotFound';
 import { MultiSelect } from '../../helper/multiselect';
 import NavigationPage from '../../components/Navigation/NavigationPage';
 import { navigation, navigationNames } from '../../constants/navigation';
-import { showAllSemestersService } from '../../services/semesterService';
 import { getPublicClassScheduleListService } from '../../services/classService';
 import { getFirstLetter, getTeacherFullName } from '../../helper/renderTeacher';
 import AddTeacherForm from '../../components/AddTeacherForm/AddTeacherForm';
@@ -48,6 +47,7 @@ import {
     SEND_SCHEDULE_FOR_TEACHER,
     TEACHER_DEPARTMENT,
 } from '../../constants/translationLabels/common';
+import { getAllSemestersStart } from '../../actions/semesters';
 
 const TeacherList = (props) => {
     const { t } = useTranslation('common');
@@ -59,6 +59,7 @@ const TeacherList = (props) => {
         departments,
         department,
         semesters,
+        getAllSemestersItems,
     } = props;
     const [term, setTerm] = useState('');
     const [isDisabled, setIsDisabled] = useState(false);
@@ -71,7 +72,7 @@ const TeacherList = (props) => {
 
     useEffect(() => {
         showAllTeachersService();
-        showAllSemestersService();
+        getAllSemestersItems();
         getAllDepartmentsService();
         getCurrentSemesterService();
         getDefaultSemesterService();
@@ -179,13 +180,15 @@ const TeacherList = (props) => {
         <>
             <NavigationPage name={navigationNames.TEACHER_LIST} val={navigation.TEACHERS} />
             <div className="cards-container">
-                <CustomDialog
-                    type={subDialogType}
-                    cardId={teacherId}
-                    whatDelete={cardType.TEACHER}
-                    open={openSubDialog}
-                    onClose={acceptConfirmDialog}
-                />
+                {openSubDialog && (
+                    <CustomDialog
+                        type={subDialogType}
+                        cardId={teacherId}
+                        whatDelete={cardType.TEACHER}
+                        open={openSubDialog}
+                        onClose={acceptConfirmDialog}
+                    />
+                )}
 
                 <aside className="form-with-search-panel">
                     <SearchPanel SearchChange={SearchChange} showDisabled={changeDisable} />
@@ -199,7 +202,7 @@ const TeacherList = (props) => {
                     >
                         {t(SEND_SCHEDULE_FOR_TEACHER)}
                     </Button>
-                    <>
+                    {openSelect && (
                         <MultiSelect
                             open={openSelect}
                             options={options}
@@ -212,7 +215,7 @@ const TeacherList = (props) => {
                             defaultSemester={parseDefaultSemester()}
                             onChangeSemesterValue={setSelectedSemester}
                         />
-                    </>
+                    )}
 
                     {!isDisabled && (
                         <AddTeacherForm
@@ -297,5 +300,8 @@ const mapStateToProps = (state) => ({
     departments: state.departments.departments,
     department: state.departments.department,
 });
+const mapDispatchToProps = (dispatch) => ({
+    getAllSemestersItems: () => dispatch(getAllSemestersStart()),
+});
 
-export default connect(mapStateToProps, {})(TeacherList);
+export default connect(mapStateToProps, mapDispatchToProps)(TeacherList);
