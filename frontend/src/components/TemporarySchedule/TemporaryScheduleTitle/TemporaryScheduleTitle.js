@@ -202,7 +202,7 @@ const TemporaryScheduleTitle = (props) => {
                                     <DatePicker
                                         margin='normal'
                                         label={t(FORM_CLASS_FROM_LABEL)}
-                                        format='DD/MM/YYYY'
+                                        format={dateFormat}
                                         className={classes.dateField}
                                         value={
                                             fromDate ? moment(fromDate, dateFormat).toDate() : null
@@ -213,7 +213,7 @@ const TemporaryScheduleTitle = (props) => {
                                         margin='normal'
                                         className={classes.dateField}
                                         label={t(FORM_CLASS_TO_LABEL)}
-                                        format='DD/MM/YYYY'
+                                        format={dateFormat}
                                         value={toDate ? moment(toDate, dateFormat).toDate() : null}
                                         onChange={handleToDateChange}
                                     />
@@ -223,7 +223,7 @@ const TemporaryScheduleTitle = (props) => {
                                     margin='normal'
                                     className={classes.day}
                                     label={t(DATE_LABEL)}
-                                    format='DD/MM/YYYY'
+                                    format={dateFormat}
                                     value={day ? moment(day, dateFormat).toDate() : null}
                                     onChange={handleDayChange}
                                 />
