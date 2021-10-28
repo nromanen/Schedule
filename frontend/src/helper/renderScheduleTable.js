@@ -110,7 +110,7 @@ export const prepareLessonSubCardCell = (card, place) => {
 export const prepareLessonTemporaryCardCell = (card, place, day) => {
     if (isNil(card)) return '';
 
-    const { temporary_schedule: tempSchedule, linkToMeeting } = card;
+    const { temporary_schedule: tempSchedule, linkToMeeting = 'http://zoom.us' } = card;
 
     const meetingLink = linkToMeeting && setLink(card, place);
 
@@ -313,8 +313,6 @@ export const renderScheduleGroupHeader = (days) => (
 );
 
 export const renderGroupTable = (classes, isOdd, semester, place) => {
-    if (isEmpty(classes))
-        return <p className="empty_schedule">{i18n.t('common:empty_schedule')}</p>; // ALERT
     if (semester) {
         currentWeekType = isOddFunction(printWeekNumber(semester.startDay));
     }
@@ -594,26 +592,23 @@ const renderClassRow = (classItem, days, scheduleRow, place) => (
 );
 
 export const renderWeekTable = (schedule, place) => {
-    if (!isEmpty(schedule)) {
-        return (
-            <TableContainer>
-                <Table aria-label="sticky table">
-                    {renderScheduleGroupHeader(schedule.days)}
-                    <TableBody>
-                        {schedule.classes.map((classItem) => {
-                            return renderClassRow(
-                                classItem,
-                                schedule.days,
-                                schedule.cards[classItem.id],
-                                place,
-                            );
-                        })}
-                    </TableBody>
-                </Table>
-            </TableContainer>
-        );
-    }
-    return <p className="empty_schedule">{i18n.t('common:empty_schedule')}</p>; // ALERT
+    return (
+        <TableContainer>
+            <Table aria-label="sticky table">
+                {renderScheduleGroupHeader(schedule.days)}
+                <TableBody>
+                    {schedule.classes.map((classItem) => {
+                        return renderClassRow(
+                            classItem,
+                            schedule.days,
+                            schedule.cards[classItem.id],
+                            place,
+                        );
+                    })}
+                </TableBody>
+            </Table>
+        </TableContainer>
+    );
 };
 
 const renderLessonsFirstLine = (lessonItem) => {

@@ -5,7 +5,7 @@ import DownloadLink from '../components/DownloadLink/DownloadLink';
 import { renderGroupTable, renderFullSchedule, renderWeekTable } from './renderScheduleTable';
 import { getGroupScheduleTitle, getTeacherScheduleTitle } from '../utils/titlesUtil';
 
-const emptySchedule = () => <p className="empty_schedule">{i18n.t('common:empty_schedule')}</p>; // ALERT
+const emptySchedule = () => <p className="empty_schedule">{i18n.t('common:empty_schedule')}</p>;
 
 const renderSchedule = (
     { scheduleType, groupSchedule, fullSchedule, teacherSchedule, groupId, teacherId, semesterId },
@@ -14,6 +14,8 @@ const renderSchedule = (
     switch (scheduleType) {
         case 'group': {
             const { semester, group, oddArray, evenArray } = groupSchedule;
+
+            if (isEmpty(oddArray) || isEmpty(evenArray)) return emptySchedule();
 
             return (
                 <>
@@ -30,6 +32,8 @@ const renderSchedule = (
         }
         case 'teacher': {
             const { semester, teacher, odd, even } = teacherSchedule;
+
+            if (isEmpty(odd) || isEmpty(even)) return emptySchedule();
 
             return (
                 <>
