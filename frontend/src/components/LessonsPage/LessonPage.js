@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { isNil } from 'lodash';
 
 import Card from '../../share/Card/Card';
-import { CustomDialog } from '../../share/DialogWindows';
+import CustomDialog from '../../containers/Dialogs/CustomDialog';
 import { dialogTypes } from '../../constants/dialogs';
 import { cardType } from '../../constants/cardType';
 import { COMMON_LESSON_SERVICE_IS_NOT_UNIQUE } from '../../constants/translationLabels/common';
@@ -44,6 +44,8 @@ const LessonPage = (props) => {
         createLessonCardStart,
         updateLessonCardStart,
         selectLessonCard,
+        setOpenConfirmDialog,
+        isOpenConfirmDialog,
         setOpenErrorSnackbar,
         setUniqueError,
     } = props;
@@ -51,8 +53,7 @@ const LessonPage = (props) => {
     const [term, setTerm] = useState('');
     const [lessonId, setLessonId] = useState();
     const [copiedLesson, setCopiedLesson] = useState();
-    const [isOpenConfirmDialog, setIsOpenConfirmDialog] = useState(false);
-    const [openCopyLessonDialog, setOpenCopyLessonDialog] = useState(false);
+    const [isOpenCopyLessonDialog, setIsOpenCopyLessonDialog] = useState(false);
 
     const visibleItems = searchLessonsByTeacher(lessons, term);
 
@@ -93,22 +94,22 @@ const LessonPage = (props) => {
 
     const showConfirmDialog = (lessonCardId) => {
         setLessonId(lessonCardId);
-        setIsOpenConfirmDialog(true);
+        setOpenConfirmDialog(true);
     };
 
     const acceptConfirmDialog = (id) => {
-        setIsOpenConfirmDialog(false);
+        setOpenConfirmDialog(false);
         if (!id) return;
         deleteLessonCardStart(lessonId);
     };
 
     const openCopyLessonDialogHandle = (lesson) => {
         setCopiedLesson(lesson);
-        setOpenCopyLessonDialog(true);
+        setIsOpenCopyLessonDialog(true);
     };
 
     const closeCopyLessonDialogHandle = ({ group, lesson }) => {
-        setOpenCopyLessonDialog(false);
+        setIsOpenCopyLessonDialog(false);
         if (!isNil(group)) {
             copyLessonCard(group, lesson);
         }
@@ -123,21 +124,24 @@ const LessonPage = (props) => {
     return (
         <>
             <Card additionClassName="card-title lesson-card">
-                <CopyLessonDialog
-                    open={openCopyLessonDialog}
-                    onClose={closeCopyLessonDialogHandle}
-                    groupId={groupId}
-                    lesson={copiedLesson}
-                    groups={groups}
-                    translation={t}
-                />
-                <CustomDialog
-                    type={dialogTypes.DELETE_CONFIRM}
-                    cardId={lessonId}
-                    whatDelete={cardType.LESSON.toLowerCase()}
-                    open={isOpenConfirmDialog}
-                    onClose={acceptConfirmDialog}
-                />
+                {isOpenCopyLessonDialog && (
+                    <CopyLessonDialog
+                        open={isOpenCopyLessonDialog}
+                        onClose={closeCopyLessonDialogHandle}
+                        groupId={groupId}
+                        lesson={copiedLesson}
+                        groups={groups}
+                        translation={t}
+                    />
+                )}
+                {isOpenConfirmDialog && (
+                    <CustomDialog
+                        type={dialogTypes.DELETE_CONFIRM}
+                        handelConfirm={() => acceptConfirmDialog(groupId)}
+                        whatDelete={cardType.LESSON.toLowerCase()}
+                        open={isOpenConfirmDialog}
+                    />
+                )}
                 <Search setTerm={setTerm} />
             </Card>
             <div className="cards-container">
