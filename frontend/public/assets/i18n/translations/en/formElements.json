@@ -34,7 +34,7 @@
   "department_teachers_label": "Department",
   "department_teachers": "of department",
   "group_students": "of group",
-  "type_label": "Type",
+  "type_element": "Type",
   "hours_label": "Hour(s)",
   "lesson_label": "Lesson",
   "temporary_schedule_label": "Temporary schedule",

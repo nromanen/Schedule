@@ -42,7 +42,7 @@
   "room_y_label": "аудиторії",
   "subject_y_label": "предмет",
   "department_y_label": "Кафедри",
-  "type_label": "Тип",
+  "type_element": "Тип",
   "hours_label": "Годин(а/и)",
   "email_label": "Електронна адреса",
   "password_label": "Пароль",

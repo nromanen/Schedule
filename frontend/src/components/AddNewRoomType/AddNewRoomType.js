@@ -8,11 +8,12 @@ import { MdDelete } from 'react-icons/md';
 import { FaEdit } from 'react-icons/fa';
 import { ROOM_FORM_TYPE } from '../../constants/reduxForms';
 
-import CustomDialog from '../../containers/Dialogs/CustomDialog';
 import { cardType } from '../../constants/cardType';
+import { dialogTypes } from '../../constants/dialogs';
+
 import Card from '../../share/Card/Card';
 import renderTextField from '../../share/renderedFields/input';
-import { deleteTypeService, getOneNewTypeService } from '../../services/roomTypesService';
+import { getOneNewTypeService } from '../../services/roomTypesService';
 import { setIsOpenConfirmDialog } from '../../actions/dialog';
 import './AddNewRoomType.scss';
 import {
@@ -20,7 +21,6 @@ import {
     ADD_TYPE_LABEL,
     NEW_TYPE_LABEL,
 } from '../../constants/translationLabels/formElements';
-import { dialogTypes } from '../../constants/dialogs';
 
 let NewRoomType = (props) => {
     const {
@@ -30,11 +30,11 @@ let NewRoomType = (props) => {
         roomTypes,
         oneType,
         initialize,
+        setDeleteLabel,
+        setConfirmDialogType,
+        setTypeId,
         setOpenConfirmDialog,
-        isOpenConfirmDialog,
     } = props;
-
-    const [typeId, setTypeId] = useState(-1);
 
     useEffect(() => {
         let defaultValue = {};
@@ -48,22 +48,13 @@ let NewRoomType = (props) => {
 
     const handleClickOpen = (id) => {
         setTypeId(id);
+        setDeleteLabel(cardType.TYPE.toLowerCase());
+        setConfirmDialogType(dialogTypes.DELETE_CONFIRM);
         setOpenConfirmDialog(true);
-    };
-
-    const handleDelete = (id) => {
-        setOpenConfirmDialog(false);
-        deleteTypeService(id);
     };
 
     return (
         <>
-            <CustomDialog
-                type={dialogTypes.DELETE_CONFIRM}
-                handelConfirm={() => handleDelete(typeId)}
-                whatDelete={cardType.TYPE.toLowerCase()}
-                open={isOpenConfirmDialog}
-            />
             <Card additionClassName="form-card room-form">
                 <form className="new-type-container" onSubmit={handleSubmit}>
                     <Field
@@ -103,7 +94,9 @@ let NewRoomType = (props) => {
                                 />
                                 <MdDelete
                                     className="btn delete"
-                                    onClick={() => handleClickOpen(roomType.id)}
+                                    onClick={() => {
+                                        handleClickOpen(roomType.id);
+                                    }}
                                 />
                             </span>
                         </li>
@@ -117,6 +110,7 @@ let NewRoomType = (props) => {
 const mapStateToProps = (state) => ({
     oneType: state.roomTypes.oneType,
     roomTypes: state.roomTypes.roomTypes,
+    isOpenConfirmDialog: state.dialog.isOpenConfirmDialog,
 });
 const mapDispatchToProps = (dispatch) => ({
     setOpenConfirmDialog: (newState) => dispatch(setIsOpenConfirmDialog(newState)),

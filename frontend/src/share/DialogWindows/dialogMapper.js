@@ -27,7 +27,6 @@ const dialogMapper = (props) => {
         warning,
         linkToMeeting = 'none',
     } = props;
-
     const handelClose = () => {
         setOpenConfirmDialog(false);
     };

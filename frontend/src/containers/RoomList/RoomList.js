@@ -14,7 +14,11 @@ import SearchPanel from '../../share/SearchPanel/SearchPanel';
 import Card from '../../share/Card/Card';
 import { search } from '../../helper/search';
 import NotFound from '../../share/NotFound/NotFound';
-import { getAllRoomTypesService, addNewTypeService } from '../../services/roomTypesService';
+import {
+    getAllRoomTypesService,
+    addNewTypeService,
+    deleteTypeService,
+} from '../../services/roomTypesService';
 import { setIsOpenConfirmDialog } from '../../actions/dialog';
 import {
     createRoomService,
@@ -39,6 +43,8 @@ const RoomList = (props) => {
 
     const [isDisabled, setIsDisabled] = useState(false);
     const [confirmDialogType, setConfirmDialogType] = useState('');
+    const [deleteLabel, setDeleteLabel] = useState('');
+    const [typeId, setTypeId] = useState('');
     const [roomId, setRoomId] = useState(-1);
     const [term, setTerm] = useState('');
 
@@ -61,6 +67,7 @@ const RoomList = (props) => {
 
     const showConfirmDialog = (id, dialogType) => {
         setRoomId(id);
+        setDeleteLabel(cardType.ROOM.toLowerCase());
         setConfirmDialogType(dialogType);
         setOpenConfirmDialog(true);
     };
@@ -80,7 +87,15 @@ const RoomList = (props) => {
             deleteRoomCardService(currentId);
         }
     };
-
+    const handleConfirm = () => {
+        if (deleteLabel === cardType.TYPE.toLowerCase()) {
+            setOpenConfirmDialog(false);
+            deleteTypeService(typeId);
+        }
+        if (deleteLabel === cardType.ROOM.toLowerCase()) {
+            acceptConfirmDialog(roomId);
+        }
+    };
     const changeDisable = () => {
         setIsDisabled((prev) => !prev);
     };
@@ -89,8 +104,8 @@ const RoomList = (props) => {
         <>
             <CustomDialog
                 type={confirmDialogType}
-                handelConfirm={() => acceptConfirmDialog(roomId)}
-                whatDelete={cardType.ROOM.toLowerCase()}
+                handelConfirm={handleConfirm}
+                whatDelete={deleteLabel}
                 open={isOpenConfirmDialog}
             />
 
@@ -100,7 +115,13 @@ const RoomList = (props) => {
                     {!isDisabled && (
                         <>
                             <AddRoom onSubmit={createRoom} onReset={clearRoomOneService} />
-                            <NewRoomType className="new-type" onSubmit={addNewTypeService} />
+                            <NewRoomType
+                                className="new-type"
+                                setTypeId={setTypeId}
+                                setDeleteLabel={setDeleteLabel}
+                                setConfirmDialogType={setConfirmDialogType}
+                                onSubmit={addNewTypeService}
+                            />
                         </>
                     )}
                 </aside>
