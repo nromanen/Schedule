@@ -1,8 +1,11 @@
+/* eslint-disable */
+// serviceWorker doesn't use
 const isLocalhost = Boolean(
     window.location.hostname === 'localhost' ||
         window.location.hostname === '[::1]' ||
-        window.location.hostname.match(/^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/),
+        window.location.hostname.match(/^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/)
 );
+
 function registerValidSW(swUrl, config) {
     navigator.serviceWorker
         .register(swUrl)
@@ -17,7 +20,7 @@ function registerValidSW(swUrl, config) {
                         if (navigator.serviceWorker.controller) {
                             console.log(
                                 'New content is available and will be used when all ' +
-                                    'tabs for this page are closed. See https://bit.ly/CRA-PWA.',
+                                    'tabs for this page are closed. See https://bit.ly/CRA-PWA.'
                             );
                             if (config && config.onUpdate) {
                                 config.onUpdate(registration);
@@ -76,7 +79,7 @@ export function register(config) {
                 navigator.serviceWorker.ready.then(() => {
                     console.log(
                         'This web app is being served cache-first by a service ' +
-                            'worker. To learn more, visit https://bit.ly/CRA-PWA',
+                            'worker. To learn more, visit https://bit.ly/CRA-PWA'
                     );
                 });
             } else {
