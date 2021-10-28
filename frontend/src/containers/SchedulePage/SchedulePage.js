@@ -5,7 +5,6 @@ import Button from '@material-ui/core/Button';
 
 import { CircularProgress } from '@material-ui/core';
 import { showAllGroupsService } from '../../services/groupService';
-import { getLessonsByGroupService } from '../../services/lessonService';
 import { setLoadingService, setScheduleLoadingService } from '../../services/loadingService';
 import { getClassScheduleListService } from '../../services/classService';
 import { getScheduleItemsService, clearSchedule } from '../../services/scheduleService';
@@ -21,9 +20,18 @@ import {
     CLEAR_SCHEDULE_LABEL,
     USE_PC,
 } from '../../constants/translationLabels/common';
+import { getLessonsByGroup } from '../../actions';
 
 const SchedulePage = (props) => {
-    const { groups, groupId, itemGroupId, scheduleItems, lessons, isLoading } = props;
+    const {
+        groups,
+        groupId,
+        itemGroupId,
+        scheduleItems,
+        lessons,
+        isLoading,
+        getAllLessonsByGroup,
+    } = props;
     const { t } = useTranslation('common');
 
     document.title = t(SCHEDULE_TITLE);
@@ -40,7 +48,7 @@ const SchedulePage = (props) => {
     useEffect(() => {
         if (groupId) {
             setLoadingService(true);
-            getLessonsByGroupService(groupId);
+            getAllLessonsByGroup(groupId);
         }
     }, [groupId]);
 
@@ -49,7 +57,7 @@ const SchedulePage = (props) => {
             clearSchedule(props.currentSemester.id);
             if (groupId) {
                 setLoadingService(true);
-                getLessonsByGroupService(groupId);
+                getAllLessonsByGroup(groupId);
             }
         }
     };
@@ -126,4 +134,8 @@ const mapStateToProps = (state) => ({
     rooms: state.rooms.rooms,
 });
 
-export default connect(mapStateToProps)(SchedulePage);
+const mapDispatchToProps = (dispatch) => ({
+    getAllLessonsByGroup: (groupId) => dispatch(getLessonsByGroup(groupId)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(SchedulePage);

@@ -4,13 +4,17 @@ import { FaEdit, FaUserPlus } from 'react-icons/fa';
 import { MdContentCopy } from 'react-icons/all';
 import { MdDelete } from 'react-icons/md';
 
-import Card from '../../share/Card/Card';
-import { getTeacherName } from '../../helper/renderTeacher';
-import { getShortTitle } from '../../helper/shortTitle';
+import Card from '../../../share/Card/Card';
+import { getTeacherName } from '../../../helper/renderTeacher';
+import { getShortTitle } from '../../../helper/shortTitle';
 
-import { firstStringLetterCapital } from '../../helper/strings';
-import { FORM_GROUPED_LABEL } from '../../constants/translationLabels/formElements';
-import { COPY_LESSON, DELETE_LESSON, EDIT_LESSON } from '../../constants/translationLabels/common';
+import { firstStringLetterCapital } from '../../../helper/strings';
+import { FORM_GROUPED_LABEL } from '../../../constants/translationLabels/formElements';
+import {
+    COPY_LESSON,
+    DELETE_LESSON,
+    EDIT_LESSON,
+} from '../../../constants/translationLabels/common';
 import './LessonsList.scss';
 
 const LessonsCard = (props) => {
@@ -27,7 +31,7 @@ const LessonsCard = (props) => {
     };
 
     return (
-        <Card additionClassName="done-card" key={lesson.id}>
+        <Card additionClassName="done-card">
             <div className="cards-btns">
                 {lesson.grouped && (
                     <FaUserPlus
@@ -63,7 +67,7 @@ const LessonsCard = (props) => {
                     {{ count: lesson.hours }}
                 </Trans>
             </p>
-            <input value={lesson.linkToMeeting} disabled />
+            <input value={lesson.linkToMeeting ?? ''} disabled />
         </Card>
     );
 };

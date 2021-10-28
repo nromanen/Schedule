@@ -18,12 +18,12 @@ import {
 import { getClassScheduleListService } from '../../services/classService';
 import { showListOfRoomsService } from '../../services/roomService';
 import { showAllSubjectsService } from '../../services/subjectService';
-import { getLessonTypesService } from '../../services/lessonService';
 import { showAllGroupsService } from '../../services/groupService';
 import './TemporarySchedule.scss';
 import { navigation } from '../../constants/navigation';
 import NavigationPage from '../../components/Navigation/NavigationPage';
 import { EMPTY_LABEL } from '../../constants/translationLabels/common';
+import { getLessonTypes } from '../../actions';
 
 const TemporarySchedule = (props) => {
     const { t } = useTranslation('common');
@@ -37,7 +37,7 @@ const TemporarySchedule = (props) => {
         showListOfRoomsService();
         showAllSubjectsService();
         getClassScheduleListService(null);
-        getLessonTypesService();
+        getLessonTypes();
         showAllGroupsService();
     }, []);
 
@@ -138,4 +138,8 @@ const mapStateToProps = (state) => ({
     teacherId: state.temporarySchedule.teacherId,
 });
 
-export default connect(mapStateToProps)(TemporarySchedule);
+const mapDispatchToProps = (dispatch) => ({
+    getLessonTypes: () => dispatch(getLessonTypes()),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(TemporarySchedule);
