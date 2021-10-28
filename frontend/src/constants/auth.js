@@ -4,9 +4,6 @@ import {
     SUCCESSFUL_RESET_PASSWORD_MESSAGE,
 } from './translationLabels/common';
 
-export const GOOGLE_AUTH_CLIENT_ID =
-    '733778708110-dmif84arh6rk3h3kq3cng1h8dqciodlf.apps.googleusercontent.com';
-
 export const authTypes = {
     LOGIN: 'LOGIN',
     GOOGLE: 'GOOGLE',

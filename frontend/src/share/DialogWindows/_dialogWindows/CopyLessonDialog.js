@@ -54,7 +54,7 @@ const CopyLessonDialog = (props) => {
             title={translation(CHOOSE_GROUP)}
             open={open}
             onClose={onClose}
-            buttons={[dialogChooseButton(chooseClickHandle), dialogCloseButton(onClose)]}
+            buttons={[dialogChooseButton(chooseClickHandle), dialogCloseButton(() => onClose(''))]}
         >
             <Autocomplete
                 {...defaultProps}
