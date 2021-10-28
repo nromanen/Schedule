@@ -1,3 +1,5 @@
+/* eslint-disable */
+// this functionality doesn't work
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -100,8 +102,8 @@ const TemporaryScheduleVacationForm = (props) => {
     const isDisabled = submitting || invalid;
 
     return (
-        <Card additionClassName="form-card">
-            <h2 className="form-title under-line">
+        <Card additionClassName='form-card'>
+            <h2 className='form-title under-line'>
                 {vacationId ? t(EDIT_VACATION_FORM) : t(CREATE_VACATION_FORM)}
             </h2>
             <form onSubmit={handleSubmit}>
@@ -112,7 +114,7 @@ const TemporaryScheduleVacationForm = (props) => {
                             onChange={(event) => {
                                 setIsFewDays(event.target.checked);
                             }}
-                            color="primary"
+                            color='primary'
                         />
                     }
                     label={t(COMMON_FEW_DAYS_LABEL)}
@@ -120,15 +122,15 @@ const TemporaryScheduleVacationForm = (props) => {
                 {isFewDays ? (
                     <>
                         <Field
-                            className="time-input"
-                            name="from"
+                            className='time-input'
+                            name='from'
                             component={renderMonthPicker}
                             label={`${t(CLASS_FROM_LABEL)}:`}
                             validate={[required, lessThanDate]}
                         />
                         <Field
-                            className="time-input"
-                            name="to"
+                            className='time-input'
+                            name='to'
                             component={renderMonthPicker}
                             label={`${t(CLASS_TO_LABEL)}:`}
                             validate={[required, greaterThanDate]}
@@ -136,8 +138,8 @@ const TemporaryScheduleVacationForm = (props) => {
                     </>
                 ) : (
                     <Field
-                        className="time-input"
-                        name="date"
+                        className='time-input'
+                        name='date'
                         component={renderMonthPicker}
                         label={`${t(COMMON_DATE_LABEL)}:`}
                         validate={[required]}
@@ -147,7 +149,7 @@ const TemporaryScheduleVacationForm = (props) => {
                     <FormControlLabel
                         control={
                             <Switch
-                                color="primary"
+                                color='primary'
                                 checked={forAll}
                                 onChange={(event) => {
                                     setForAll(event.target.checked);
@@ -168,33 +170,33 @@ const TemporaryScheduleVacationForm = (props) => {
                             else handleTeacherSelect(newValue);
                         }}
                         renderInput={(params) => (
-                            <TextField {...params} label={t(FORM_TEACHER_LABEL)} margin="normal" />
+                            <TextField {...params} label={t(FORM_TEACHER_LABEL)} margin='normal' />
                         )}
                     />
                 )}
                 <Field
-                    name="notify"
+                    name='notify'
                     label={t(COMMON_NOTIFY_LABEL)}
                     component={renderCheckboxField}
                     checked={notify}
                     onChange={handleNotifyChange}
-                    color="primary"
+                    color='primary'
                 />
 
-                <div className="form-buttons-container">
+                <div className='form-buttons-container'>
                     <Button
-                        className="buttons-style"
-                        type="submit"
-                        variant="contained"
-                        color="primary"
+                        className='buttons-style'
+                        type='submit'
+                        variant='contained'
+                        color='primary'
                         disabled={isDisabled}
                     >
                         {t(SAVE_BUTTON_LABEL)}
                     </Button>
                     <Button
-                        className="buttons-style"
-                        type="button"
-                        variant="contained"
+                        className='buttons-style'
+                        type='button'
+                        variant='contained'
                         disabled={isDisabled}
                         onClick={() => {
                             reset();
