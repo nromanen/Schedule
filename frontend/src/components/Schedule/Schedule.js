@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import Board from '../Board/Board';
 import ScheduleItem from '../ScheduleItem/ScheduleItem';
-import ScheduleDialog from '../ScheduleDialog/ScheduleDialog';
+import ScheduleDialog from '../../containers/Dialogs/ScheduleDialog';
 
 import { firstStringLetterCapital } from '../../helper/strings';
 
@@ -40,7 +40,7 @@ const Schedule = (props) => {
         getAllLessonsByGroup,
         selectedGroupId,
     } = props;
-    const [open, setOpen] = useState(false);
+    const [isOpenScheduleDialog, setIsOpenScheduleDialog] = useState(false);
     const [itemData, setItemData] = useState(null);
 
     function usePrevious(value) {
@@ -82,11 +82,11 @@ const Schedule = (props) => {
     };
 
     const handleClickOpen = () => {
-        setOpen(true);
+        setIsOpenScheduleDialog(true);
     };
 
     const handleClose = (value) => {
-        setOpen(false);
+        setIsOpenScheduleDialog(false);
         if (value) {
             setLoadingService(true);
             let el = '';
@@ -161,7 +161,7 @@ const Schedule = (props) => {
         checkAvailabilityChangeRoomScheduleService(obj);
         setLoadingService(true);
         if (itemId) obj = { ...obj, id: itemId };
-        setOpen(true);
+        setIsOpenScheduleDialog(true);
     };
 
     const conditionFunc = (item, lesson, group) => {
@@ -243,13 +243,13 @@ const Schedule = (props) => {
 
     return (
         <section className="cards-container schedule">
-            {open && (
+            {isOpenScheduleDialog && (
                 <ScheduleDialog
                     translation={t}
                     itemData={itemData}
                     rooms={rooms}
                     availability={availability}
-                    open={open}
+                    open={isOpenScheduleDialog}
                     onClose={handleClose}
                 />
             )}

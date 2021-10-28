@@ -4,11 +4,9 @@ import { useTranslation } from 'react-i18next';
 import React, { useEffect, Fragment } from 'react';
 import { CircularProgress } from '@material-ui/core';
 import Card from '../../share/Card/Card';
-import { navigation } from '../../constants/navigation';
 import { setLoadingService } from '../../services/loadingService';
 import { getScheduleItemsService } from '../../services/scheduleService';
 import { getClassScheduleListService } from '../../services/classService';
-import NavigationPage from '../../components/Navigation/NavigationPage';
 
 import {
     WEEK_ODD_TITLE,
@@ -75,7 +73,6 @@ const BusyRooms = (props) => {
                 <>
                     {busyRoomsLength > 0 ? (
                         <>
-                            <NavigationPage val={navigation.BUSY_ROOMS} />
                             <h2 className="busy-heading">{t(BUSY_ROOMS_HEADING)}</h2>
                             <section className="view-rooms">
                                 {busyRooms.map((busyRoom) => (

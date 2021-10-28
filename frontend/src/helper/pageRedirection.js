@@ -1,5 +1,5 @@
-import { links } from '../constants/links';
+import { GROUP_LIST_LINK } from '../constants/links';
 
 export const goToGroupPage = (history) => {
-    history.push(links.GroupList);
+    history.push(GROUP_LIST_LINK);
 };

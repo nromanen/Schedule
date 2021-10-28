@@ -57,7 +57,7 @@ import { showBusyRooms } from './busyRooms';
 import { TEACHER_SCHEDULE_FORM } from '../constants/reduxForms';
 import { resetFormHandler } from '../helper/formHelper';
 import { getAllTeachersByDepartmentId } from '../actions/teachers';
-import { sortGroup } from './groupService';
+import { sortGroup } from '../helper/sortGroup';
 import {
     BACK_END_SUCCESS_OPERATION,
     UPDATED_LABEL,

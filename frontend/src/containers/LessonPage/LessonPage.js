@@ -9,6 +9,7 @@ import {
     getLessonTypes,
     selectLessonCard,
     setUniqueError,
+    setIsOpenConfirmDialog,
     updateLessonCardStart,
 } from '../../actions';
 import { setOpenErrorSnackbar } from '../../actions/snackbar';
@@ -24,8 +25,8 @@ const mapStateToProps = (state) => ({
     loading: state.loadingIndicator.loading,
     semesters: state.semesters.semesters,
     currentSemester: state.schedule.currentSemester,
+    isOpenConfirmDialog: state.dialog.isOpenConfirmDialog,
 });
-
 const mapDispatchToProps = (dispatch) => ({
     getLessonsByGroup: (groupId) => dispatch(getLessonsByGroup(groupId)),
     getLessonTypes: () => dispatch(getLessonTypes()),
@@ -37,6 +38,7 @@ const mapDispatchToProps = (dispatch) => ({
     selectLessonCard: (lessonCardId) => dispatch(selectLessonCard(lessonCardId)),
     setOpenErrorSnackbar: (message) => dispatch(setOpenErrorSnackbar(message)),
     setUniqueError: (value) => dispatch(setUniqueError(value)),
+    setOpenConfirmDialog: (newState) => dispatch(setIsOpenConfirmDialog(newState)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(LessonPage);

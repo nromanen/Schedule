@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import Button from '@material-ui/core/Button';
 import { useTranslation } from 'react-i18next';
 import Card from '../../share/Card/Card';
 import FreeRoomForm from '../../components/FreeRoomForm/freeRoomForm';
 import { clearFreeRoomsService, showFreeRoomsService } from '../../services/freeRoomsService';
 import { getClassScheduleListService } from '../../services/classService';
-import { CustomDialog } from '../../share/DialogWindows';
+import CustomDialog from '../Dialogs/CustomDialog';
+import { dialogCloseButton } from '../../constants/dialogs';
 
 import './freeRooms.scss';
 import { ROOM_LABEL, FIND_FREE_ROOM } from '../../constants/translationLabels/formElements';
@@ -15,18 +15,18 @@ import { TYPE_LABEL } from '../../constants/translationLabels/common';
 const FreeRooms = (props) => {
     const { t } = useTranslation('formElements');
 
-    const [open, setOpen] = useState(false);
+    const [isOpenFreeRoomDialog, setIsOpenFreeRoomDialog] = useState(false);
 
     const { classScheduler } = props;
 
     useEffect(() => getClassScheduleListService(), []);
 
     const handleClickOpen = () => {
-        setOpen(true);
+        setIsOpenFreeRoomDialog(true);
     };
 
     const handleClose = () => {
-        setOpen(false);
+        setIsOpenFreeRoomDialog(false);
     };
 
     const submit = (values) => {
@@ -38,21 +38,12 @@ const FreeRooms = (props) => {
             <span className="navLinks" onClick={handleClickOpen} aria-hidden="true">
                 {t(FIND_FREE_ROOM)}
             </span>
-            {open && (
+            {isOpenFreeRoomDialog && (
                 <CustomDialog
                     title={t(FIND_FREE_ROOM)}
-                    open={open}
+                    open={isOpenFreeRoomDialog}
                     onClose={handleClose}
-                    buttons={
-                        <Button
-                            variant="contained"
-                            onClick={handleClose}
-                            color="primary"
-                            title={t('close_title')}
-                        >
-                            {t('common:close_title')}
-                        </Button>
-                    }
+                    buttons={[dialogCloseButton(handleClose)]}
                     maxWidth="lg"
                     aria-labelledby="form-dialog-title"
                 >

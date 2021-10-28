@@ -5,18 +5,21 @@ import { FaEdit } from 'react-icons/fa';
 import { MdDelete } from 'react-icons/md';
 import { useTranslation } from 'react-i18next';
 import { GiSightDisabled, IoMdEye } from 'react-icons/all';
-import { CustomDialog } from '../../share/DialogWindows';
+import CustomDialog from '../Dialogs/CustomDialog';
 import { dialogTypes } from '../../constants/dialogs';
 import { cardType } from '../../constants/cardType';
 import AddRoom from '../../components/AddRoomForm/AddRoomForm';
 import NewRoomType from '../../components/AddNewRoomType/AddNewRoomType';
 import SearchPanel from '../../share/SearchPanel/SearchPanel';
-import NavigationPage from '../../components/Navigation/NavigationPage';
-import { navigation, navigationNames } from '../../constants/navigation';
 import Card from '../../share/Card/Card';
 import { search } from '../../helper/search';
 import NotFound from '../../share/NotFound/NotFound';
-import { getAllRoomTypesService, addNewTypeService } from '../../services/roomTypesService';
+import {
+    getAllRoomTypesService,
+    addNewTypeService,
+    deleteTypeService,
+} from '../../services/roomTypesService';
+import { setIsOpenConfirmDialog } from '../../actions/dialog';
 import {
     createRoomService,
     showListOfRoomsService,
@@ -35,12 +38,13 @@ import {
 } from '../../constants/translationLabels/common';
 
 const RoomList = (props) => {
-    const { rooms, roomTypes, disabledRooms } = props;
+    const { rooms, roomTypes, disabledRooms, isOpenConfirmDialog, setOpenConfirmDialog } = props;
     const { t } = useTranslation('formElements');
 
     const [isDisabled, setIsDisabled] = useState(false);
-    const [openSubDialog, setOpenSubDialog] = useState(false);
-    const [subDialogType, setSubDialogType] = useState('');
+    const [confirmDialogType, setConfirmDialogType] = useState('');
+    const [deleteLabel, setDeleteLabel] = useState('');
+    const [typeId, setTypeId] = useState('');
     const [roomId, setRoomId] = useState(-1);
     const [term, setTerm] = useState('');
 
@@ -63,8 +67,9 @@ const RoomList = (props) => {
 
     const showConfirmDialog = (id, dialogType) => {
         setRoomId(id);
-        setSubDialogType(dialogType);
-        setOpenSubDialog(true);
+        setDeleteLabel(cardType.ROOM.toLowerCase());
+        setConfirmDialogType(dialogType);
+        setOpenConfirmDialog(true);
     };
 
     const changeGroupDisabledStatus = (currentId) => {
@@ -75,31 +80,34 @@ const RoomList = (props) => {
     };
 
     const acceptConfirmDialog = (currentId) => {
-        setOpenSubDialog(false);
-        if (!currentId) return;
-        if (subDialogType !== dialogTypes.DELETE_CONFIRM) {
+        setOpenConfirmDialog(false);
+        if (confirmDialogType !== dialogTypes.DELETE_CONFIRM) {
             changeGroupDisabledStatus(currentId);
         } else {
             deleteRoomCardService(currentId);
         }
     };
-
+    const handleConfirm = () => {
+        if (deleteLabel === cardType.TYPE.toLowerCase()) {
+            setOpenConfirmDialog(false);
+            deleteTypeService(typeId);
+        }
+        if (deleteLabel === cardType.ROOM.toLowerCase()) {
+            acceptConfirmDialog(roomId);
+        }
+    };
     const changeDisable = () => {
         setIsDisabled((prev) => !prev);
     };
 
     return (
         <>
-            <NavigationPage name={navigationNames.ROOM_LIST} val={navigation.ROOMS} />
-            {openSubDialog && (
-                <CustomDialog
-                    type={subDialogType}
-                    cardId={roomId}
-                    whatDelete={cardType.ROOM.toLowerCase()}
-                    open={openSubDialog}
-                    onClose={acceptConfirmDialog}
-                />
-            )}
+            <CustomDialog
+                type={confirmDialogType}
+                handelConfirm={handleConfirm}
+                whatDelete={deleteLabel}
+                open={isOpenConfirmDialog}
+            />
 
             <div className="cards-container">
                 <aside className="search-list__panel">
@@ -107,7 +115,13 @@ const RoomList = (props) => {
                     {!isDisabled && (
                         <>
                             <AddRoom onSubmit={createRoom} onReset={clearRoomOneService} />
-                            <NewRoomType className="new-type" onSubmit={addNewTypeService} />
+                            <NewRoomType
+                                className="new-type"
+                                setTypeId={setTypeId}
+                                setDeleteLabel={setDeleteLabel}
+                                setConfirmDialogType={setConfirmDialogType}
+                                onSubmit={addNewTypeService}
+                            />
                         </>
                     )}
                 </aside>
@@ -173,6 +187,10 @@ const mapStateToProps = (state) => ({
     oneRoom: state.rooms.oneRoom,
     roomTypes: state.roomTypes.roomTypes,
     oneType: state.roomTypes.oneType,
+    isOpenConfirmDialog: state.dialog.isOpenConfirmDialog,
+});
+const mapDispatchToProps = (dispatch) => ({
+    setOpenConfirmDialog: (newState) => dispatch(setIsOpenConfirmDialog(newState)),
 });
 
-export default connect(mapStateToProps, {})(RoomList);
+export default connect(mapStateToProps, mapDispatchToProps)(RoomList);

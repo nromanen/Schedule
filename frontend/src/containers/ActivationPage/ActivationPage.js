@@ -7,7 +7,7 @@ import { get } from 'lodash';
 import { CircularProgress } from '@material-ui/core';
 import { activateUser } from '../../actions';
 
-import { links } from '../../constants/links';
+import { LOGIN_LINK } from '../../constants/links';
 import { snackbarTypes } from '../../constants/snackbarTypes';
 
 import { handleSnackbarOpenService } from '../../services/snackbarService';
@@ -27,7 +27,7 @@ const ActivationPage = (props) => {
     let redirect = null;
 
     if (response && get(response.data, 'message')) {
-        redirect = <Redirect to={links.AUTH} />;
+        redirect = <Redirect to={LOGIN_LINK} />;
         handleSnackbarOpenService(true, snackbarTypes.SUCCESS, response.data.message);
     }
 

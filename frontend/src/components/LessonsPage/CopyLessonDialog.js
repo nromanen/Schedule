@@ -1,21 +1,18 @@
 import React, { useState } from 'react';
 
 import PropTypes from 'prop-types';
-import Button from '@material-ui/core/Button';
 
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import TextField from '@material-ui/core/TextField';
 import { makeStyles } from '@material-ui/core/styles';
-import {
-    FORM_CHOOSE_BUTTON_TITLE,
-    FORM_CANCEL_BUTTON_TITLE,
-} from '../../constants/translationLabels/formElements';
+
 import {
     COPY_TO_SAME_GROUP_ERROR,
     CHOOSE_GROUP,
     COMMON_CHOOSE_GROUP,
 } from '../../constants/translationLabels/common';
-import CustomDialog from '../../share/DialogWindows/CustomDialog';
+import CustomDialog from '../../containers/Dialogs/CustomDialog';
+import { dialogCloseButton, dialogChooseButton } from '../../constants/dialogs';
 
 const useStyles = makeStyles(() => ({
     groupField: {
@@ -58,21 +55,7 @@ const CopyLessonDialog = (props) => {
             title={translation(CHOOSE_GROUP)}
             open={open}
             onClose={onClose}
-            buttons={
-                <>
-                    <Button
-                        className="dialog-button"
-                        variant="contained"
-                        color="primary"
-                        onClick={chooseClickHandle}
-                    >
-                        {translation(FORM_CHOOSE_BUTTON_TITLE)}
-                    </Button>
-                    <Button className="dialog-button" variant="contained" onClick={onClose}>
-                        {translation(FORM_CANCEL_BUTTON_TITLE)}
-                    </Button>
-                </>
-            }
+            buttons={[dialogChooseButton(chooseClickHandle), dialogCloseButton(() => onClose(''))]}
         >
             <Autocomplete
                 {...defaultProps}

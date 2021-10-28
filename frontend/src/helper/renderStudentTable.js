@@ -23,9 +23,16 @@ import { Delete } from '@material-ui/icons';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { selectStudentService } from '../services/studentService';
+import { setIsOpenConfirmDialog } from '../actions';
 import './renderStudentTable.scss';
 import { getTeacherFullName } from './renderTeacher';
-import { links } from '../constants/links';
+import {
+    STUDENT_LINK,
+    EDIT_LINK,
+    DELETE_LINK,
+    GROUP_LINK,
+    GROUP_LIST_LINK,
+} from '../constants/links';
 import {
     EDIT_TITLE,
     SELECT_ALL,
@@ -37,8 +44,9 @@ import {
     ALL_PAGE,
     ROWS_PER_PAGE,
 } from '../constants/translationLabels/formElements';
-import { CustomDialog, AddStudentDialog } from '../share/DialogWindows';
+import CustomDialog from '../containers/Dialogs/CustomDialog';
 import { dialogTypes } from '../constants/dialogs';
+import AddStudentDialog from '../containers/Student/AddStudentDialog';
 
 const useStyles1 = makeStyles((theme) => ({
     root: {
@@ -132,7 +140,7 @@ const StyledTableRow = withStyles((theme) => ({
     },
 }))(TableRow);
 
-export default function RenderStudentTable(props) {
+function RenderStudentTable(props) {
     const ALL_ROWS = -1;
     const classes = useStyles2();
     const {
@@ -141,7 +149,6 @@ export default function RenderStudentTable(props) {
         onSubmit,
         group,
         match,
-        student,
         checkBoxStudents,
         handleCheckElement,
         handleAllChecked,
@@ -150,24 +157,26 @@ export default function RenderStudentTable(props) {
         handleClearCheckedAllBtn,
         checkedAllBtn,
         handleAllCheckedBtn,
+        setOpenConfirmDialog,
+        isOpenConfirmDialog,
     } = props;
     const [page, setPage] = React.useState(0);
+    const [student, setStudent] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
-    const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-    const [openEditDialog, setOpenEditDialog] = useState(false);
+    const [isOpenEditDialog, setIsOpenEditDialog] = useState(false);
     const { t } = useTranslation('formElements');
-    const handleEdit = (studentId) => {
-        setOpenEditDialog(true);
-        selectStudentService(studentId);
+    const handleEdit = (curentStudent) => {
+        setIsOpenEditDialog(true);
+        setStudent(curentStudent);
     };
     useEffect(() => {
-        if (match.path.includes(links.Student) && match.path.includes(links.Edit)) {
+        if (match.path.includes(STUDENT_LINK) && match.path.includes(EDIT_LINK)) {
             handleEdit(student.id);
         }
     }, [props.group.id]);
     useEffect(() => {
-        if (match.path.includes(links.Student) && match.path.includes(links.Delete)) {
-            setOpenDeleteDialog(true);
+        if (match.path.includes(STUDENT_LINK) && match.path.includes(DELETE_LINK)) {
+            setOpenConfirmDialog(true);
         }
     }, [props.group.id]);
 
@@ -184,15 +193,15 @@ export default function RenderStudentTable(props) {
         window.location.href = mailto;
     };
     const deleteStudent = (studentItem) => {
-        setOpenDeleteDialog(false);
+        setOpenConfirmDialog(false);
         onDeleteStudent(studentItem);
     };
     const handleCloseEditDialog = () => {
-        setOpenEditDialog(false);
+        setIsOpenEditDialog(false);
         selectStudentService(null);
     };
     const handleSubmit = (data) => {
-        setOpenEditDialog(false);
+        setIsOpenEditDialog(false);
         const sendObject = { ...data, prevGroup: group };
         onSubmit(sendObject);
     };
@@ -291,43 +300,41 @@ export default function RenderStudentTable(props) {
                             <StyledTableCell component="th" scope="row" align="center">
                                 <span className="edit-cell">
                                     <Link
-                                        to={`${links.GroupList}${links.Group}/${group.id}${links.Student}/${singleStudent.id}${links.Edit}`}
+                                        to={`${GROUP_LIST_LINK}${GROUP_LINK}/${group.id}${STUDENT_LINK}/${singleStudent.id}${EDIT_LINK}`}
                                     >
                                         <FaEdit
                                             className="edit-button"
                                             title={t(EDIT_TITLE)}
-                                            onClick={() => handleEdit(student.id)}
+                                            onClick={() => handleEdit(singleStudent)}
                                         />
                                     </Link>
                                     <Link
-                                        to={`${links.GroupList}${links.Group}/${group.id}${links.Student}/${singleStudent.id}${links.Delete}`}
+                                        to={`${GROUP_LIST_LINK}${GROUP_LINK}/${group.id}${STUDENT_LINK}/${singleStudent.id}${DELETE_LINK}`}
                                     >
                                         <Delete
                                             title={t(DELETE_TITLE_LABEL)}
                                             className="delete-button"
-                                            onClick={() => setOpenDeleteDialog(true)}
+                                            onClick={() => setOpenConfirmDialog(true)}
                                         />
                                     </Link>
                                 </span>
                             </StyledTableCell>
-                            {openEditDialog && (
+
+                            {isOpenEditDialog && (
                                 <AddStudentDialog
-                                    open={openEditDialog}
-                                    onSubmit={handleSubmit}
-                                    onSetSelectedCard={handleCloseEditDialog}
-                                    match={match}
+                                    open={isOpenEditDialog}
+                                    student={student}
+                                    group={group}
+                                    setOpen={handleCloseEditDialog}
                                 />
                             )}
 
-                            {openDeleteDialog && (
-                                <CustomDialog
-                                    type={dialogTypes.DELETE_CONFIRM}
-                                    cardId={student}
-                                    whatDelete="student"
-                                    open={openDeleteDialog}
-                                    onClose={deleteStudent}
-                                />
-                            )}
+                            <CustomDialog
+                                type={dialogTypes.DELETE_CONFIRM}
+                                whatDelete="student"
+                                open={isOpenConfirmDialog}
+                                handelConfirm={() => deleteStudent(student)}
+                            />
                         </StyledTableRow>
                     ))}
 
@@ -368,6 +375,10 @@ export default function RenderStudentTable(props) {
 
 const mapStateToProps = (state) => ({
     student: state.students.student,
+    isOpenConfirmDialog: state.dialog.isOpenConfirmDialog,
+});
+const mapDispatchToProps = (dispatch) => ({
+    setOpenConfirmDialog: (newState) => dispatch(setIsOpenConfirmDialog(newState)),
 });
 
-connect(mapStateToProps, {})(RenderStudentTable);
+export default connect(mapStateToProps, mapDispatchToProps)(RenderStudentTable);

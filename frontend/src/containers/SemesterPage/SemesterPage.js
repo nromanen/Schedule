@@ -10,6 +10,7 @@ import {
     updateSemesterStart,
     setSemesterCopyStart,
 } from '../../actions/semesters';
+import { setIsOpenConfirmDialog } from '../../actions/dialog';
 
 const mapStateToProps = (state) => ({
     enabledSemesters: state.semesters.semesters,
@@ -20,6 +21,7 @@ const mapStateToProps = (state) => ({
     snackbarMessage: state.snackbar.message,
     semester: state.semesters.semester,
     groups: state.groups.groups,
+    isOpenConfirmDialog: state.dialog.isOpenConfirmDialog,
 });
 const mapDispatchToProps = (dispatch) => ({
     getAllSemestersItems: () => dispatch(getAllSemestersStart()),
@@ -31,6 +33,7 @@ const mapDispatchToProps = (dispatch) => ({
     setDefaultSemesterById: (semesterId) => dispatch(updateSemesterByIdStart(semesterId)),
     updateSemester: (item) => dispatch(updateSemesterStart(item)),
     semesterCopy: (values) => dispatch(setSemesterCopyStart(values)),
+    setOpenConfirmDialog: (newState) => dispatch(setIsOpenConfirmDialog(newState)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SemesterPage);

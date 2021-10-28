@@ -1,19 +1,5 @@
 import * as actionTypes from './actionsType';
 
-export const showAllGroups = (res) => {
-    return {
-        type: actionTypes.SHOW_ALL_GROUPS,
-        result: res,
-    };
-};
-
-export const setDisabledGroups = (res) => {
-    return {
-        type: actionTypes.SET_DISABLED_GROUPS,
-        result: res,
-    };
-};
-
 export const addGroup = (res) => {
     return {
         type: actionTypes.ADD_GROUP,
@@ -21,7 +7,21 @@ export const addGroup = (res) => {
     };
 };
 
-export const deleteGroup = (res) => {
+export const updateGroupSusses = (res) => {
+    return {
+        type: actionTypes.UPDATE_GROUP,
+        result: res,
+    };
+};
+
+export const showAllGroups = (res) => {
+    return {
+        type: actionTypes.SHOW_ALL_GROUPS,
+        result: res,
+    };
+};
+
+export const deleteGroupSusses = (res) => {
     return {
         type: actionTypes.DELETE_GROUP,
         result: res,
@@ -35,13 +35,40 @@ export const selectGroup = (res) => {
     };
 };
 
-export const updateGroup = (res) => {
-    return {
-        type: actionTypes.UPDATE_GROUP,
-        result: res,
-    };
-};
-
-export const clearGroup = () => ({
+export const clearGroupSusses = () => ({
     type: actionTypes.CLEAR_GROUP,
+});
+
+export const fetchDisabledGroupsStart = () => ({
+    type: actionTypes.FETCH_DISABLED_GROUPS_START,
+});
+
+export const fetchEnabledGroupsStart = () => ({
+    type: actionTypes.FETCH_ENABLED_GROUPS_START,
+});
+
+export const deleteGroupStart = (id) => ({
+    type: actionTypes.DELETE_GROUP_START,
+    id,
+});
+
+export const createGroupStart = (data) => ({
+    type: actionTypes.CREATE_GROUP_START,
+    data,
+});
+
+export const updateGroupStart = (data) => ({
+    type: actionTypes.UPDATE_GROUP_START,
+    data,
+});
+
+export const clearGroupStart = (data) => ({
+    type: actionTypes.CLEAR_GROUP_START,
+    data,
+});
+
+export const toggleDisabledStatus = (groupId, disabledStatus) => ({
+    type: actionTypes.TOGGLE_DISABLED_STATUS_GROUP,
+    groupId,
+    disabledStatus,
 });
