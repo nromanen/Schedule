@@ -127,7 +127,7 @@ const SemesterItem = (props) => {
                                     )}
                                 </>
                             )}
-                            {!archived && (
+                            {disabled && !archived && (
                                 <IoMdEye
                                     className="svg-btn copy-btn"
                                     title={t(COMMON_SET_ENABLED)}
