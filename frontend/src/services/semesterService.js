@@ -47,7 +47,7 @@ import {
     FORM_SEMESTER_LABEL,
 } from '../constants/translationLabels/formElements';
 import { COMMON_SEMESTER_IS_NOT_UNIQUE } from '../constants/translationLabels/common';
-
+// can delete it
 export const selectSemesterService = (semesterId) => store.dispatch(selectSemester(semesterId));
 
 export const setUniqueErrorService = (isUniqueError) => store.dispatch(setError(isUniqueError));

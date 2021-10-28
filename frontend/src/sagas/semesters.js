@@ -89,20 +89,14 @@ export function* setGroupsToSemester({ semesterId, groups }) {
         const response = yield call(axiosCall, responseUrl, 'PUT');
         yield put(updateSemester(response.data));
         yield put(selectSemester(null));
-        // yield call(getAllSemestersItems);
-        // yield call(getDisabledSemestersItems);
-        // yield call(getArchivedSemestersItems);
         yield put(reset(SEMESTER_FORM));
-        yield put(
-            setOpenSnackbar(
-                true,
-                snackbarTypes.SUCCESS,
-                i18n.t(BACK_END_SUCCESS_OPERATION, {
-                    cardType: i18n.t(FORM_SEMESTER_LABEL),
-                    actionType: i18n.t(UPDATED_LABEL),
-                }),
-            ),
-        );
+        const message = i18n.t(BACK_END_SUCCESS_OPERATION, {
+            cardType: i18n.t(FORM_SEMESTER_LABEL),
+            actionType: i18n.t(UPDATED_LABEL),
+        });
+        const isOpen = true;
+        const type = snackbarTypes.SUCCESS;
+        yield put(setOpenSnackbar({ isOpen, type, message }));
     } catch (error) {
         const message = error.response
             ? i18n.t(error.response.data.message, error.response.data.message)
@@ -118,7 +112,6 @@ export function* deleteSemesterItem({ semesterId }) {
         const semester = store
             .getState()
             .semesters.semesters.find((item) => item.id === semesterId);
-        console.log('semester', semester);
         if (semester.currentSemester) {
             const message = i18n.t(SEMESTER_SERVICE_IS_ACTIVE);
             const isOpen = true;
@@ -129,16 +122,13 @@ export function* deleteSemesterItem({ semesterId }) {
         const responseUrl = `${SEMESTERS_URL}/${semesterId}`;
         yield call(axiosCall, responseUrl, 'DELETE');
         yield put(deleteSemester(semesterId));
-        yield put(
-            setOpenSnackbar(
-                true,
-                snackbarTypes.SUCCESS,
-                i18n.t(BACK_END_SUCCESS_OPERATION, {
-                    cardType: i18n.t(FORM_SEMESTER_LABEL),
-                    actionType: i18n.t(DELETED_LABEL),
-                }),
-            ),
-        );
+        const message = i18n.t(BACK_END_SUCCESS_OPERATION, {
+            cardType: i18n.t(FORM_SEMESTER_LABEL),
+            actionType: i18n.t(DELETED_LABEL),
+        });
+        const isOpen = true;
+        const type = snackbarTypes.SUCCESS;
+        yield put(setOpenSnackbar({ isOpen, type, message }));
     } catch (error) {
         const message = error.response
             ? i18n.t(error.response.data.message, error.response.data.message)
@@ -154,19 +144,14 @@ export function* updateSemesterItem({ item }) {
         const response = yield call(axiosCall, SEMESTERS_URL, 'PUT', item);
         yield put(updateSemester(response.data));
         yield put(selectSemester(null));
-        yield call(getAllSemestersItems);
-        yield call(getDisabledSemestersItems);
         yield put(reset(SEMESTER_FORM));
-        yield put(
-            setOpenSnackbar(
-                true,
-                snackbarTypes.SUCCESS,
-                i18n.t(BACK_END_SUCCESS_OPERATION, {
-                    cardType: i18n.t(FORM_SEMESTER_LABEL),
-                    actionType: i18n.t(UPDATED_LABEL),
-                }),
-            ),
-        );
+        const message = i18n.t(BACK_END_SUCCESS_OPERATION, {
+            cardType: i18n.t(FORM_SEMESTER_LABEL),
+            actionType: i18n.t(UPDATED_LABEL),
+        });
+        const isOpen = true;
+        const type = snackbarTypes.SUCCESS;
+        yield put(setOpenSnackbar({ isOpen, type, message }));
     } catch (error) {
         const message = error.response
             ? i18n.t(error.response.data.message, error.response.data.message)
@@ -181,16 +166,13 @@ export function* addSemesterItem({ item }) {
         const response = yield call(axiosCall, SEMESTERS_URL, 'POST', item);
         yield put(addSemester(response.data));
         yield put(reset(SEMESTER_FORM));
-        yield put(
-            setOpenSnackbar(
-                true,
-                snackbarTypes.SUCCESS,
-                i18n.t(BACK_END_SUCCESS_OPERATION, {
-                    cardType: i18n.t(FORM_SEMESTER_LABEL),
-                    actionType: i18n.t(CREATED_LABEL),
-                }),
-            ),
-        );
+        const message = i18n.t(BACK_END_SUCCESS_OPERATION, {
+            cardType: i18n.t(FORM_SEMESTER_LABEL),
+            actionType: i18n.t(CREATED_LABEL),
+        });
+        const isOpen = true;
+        const type = snackbarTypes.SUCCESS;
+        yield put(setOpenSnackbar({ isOpen, type, message }));
     } catch (error) {
         const message = error.response
             ? i18n.t(error.response.data.message, error.response.data.message)
@@ -209,16 +191,13 @@ export function* setDefaultSemesterById({ semesterId }) {
         yield call(getAllSemestersItems);
         yield call(getDisabledSemestersItems);
         yield put(reset(SEMESTER_FORM));
-        yield put(
-            setOpenSnackbar(
-                true,
-                snackbarTypes.SUCCESS,
-                i18n.t(BACK_END_SUCCESS_OPERATION, {
-                    cardType: i18n.t(FORM_SEMESTER_LABEL),
-                    actionType: i18n.t(UPDATED_LABEL),
-                }),
-            ),
-        );
+        const message = i18n.t(BACK_END_SUCCESS_OPERATION, {
+            cardType: i18n.t(FORM_SEMESTER_LABEL),
+            actionType: i18n.t(UPDATED_LABEL),
+        });
+        const isOpen = true;
+        const type = snackbarTypes.SUCCESS;
+        yield put(setOpenSnackbar({ isOpen, type, message }));
     } catch (error) {
         const message = error.response
             ? i18n.t(error.response.data.message, error.response.data.message)
@@ -235,16 +214,13 @@ export function* semesterCopy({ values }) {
         const response = yield call(axiosCall, responseUrl, 'POST');
         yield put(addSemester(response.data));
         yield put(reset(SEMESTER_FORM));
-        yield put(
-            setOpenSnackbar(
-                true,
-                snackbarTypes.SUCCESS,
-                i18n.t(BACK_END_SUCCESS_OPERATION, {
-                    cardType: i18n.t(FORM_SEMESTER_LABEL),
-                    actionType: i18n.t(COPIED_LABEL),
-                }),
-            ),
-        );
+        const message = i18n.t(BACK_END_SUCCESS_OPERATION, {
+            cardType: i18n.t(FORM_SEMESTER_LABEL),
+            actionType: i18n.t(COPIED_LABEL),
+        });
+        const isOpen = true;
+        const type = snackbarTypes.SUCCESS;
+        yield put(setOpenSnackbar({ isOpen, type, message }));
     } catch (error) {
         const message = error.response
             ? i18n.t(error.response.data.message, error.response.data.message)
@@ -259,16 +235,13 @@ export function* createArchiveSemester({ semesterId }) {
         const responseUrl = `${ARCHIVE_SEMESTER}/${semesterId}`;
         yield call(axiosCall, responseUrl, 'POST');
         yield put(moveToArchivedSemester(semesterId));
-        yield put(
-            setOpenSnackbar(
-                true,
-                snackbarTypes.SUCCESS,
-                i18n.t(BACK_END_SUCCESS_OPERATION, {
-                    cardType: i18n.t(FORM_SEMESTER_LABEL),
-                    actionType: i18n.t(ARCHIVED_LABEL),
-                }),
-            ),
-        );
+        const message = i18n.t(BACK_END_SUCCESS_OPERATION, {
+            cardType: i18n.t(FORM_SEMESTER_LABEL),
+            actionType: i18n.t(ARCHIVED_LABEL),
+        });
+        const isOpen = true;
+        const type = snackbarTypes.SUCCESS;
+        yield put(setOpenSnackbar({ isOpen, type, message }));
     } catch (error) {
         const message = error.response
             ? i18n.t(error.response.data.message, error.response.data.message)
@@ -297,16 +270,13 @@ export function* CopyLessonsFromSemester({ values }) {
     try {
         const responseUrl = `${LESSONS_FROM_SEMESTER_COPY_URL}?fromSemesterId=${values.fromSemesterId}&toSemesterId=${values.toSemesterId}`;
         yield call(axiosCall, responseUrl, 'POST');
-        yield put(
-            setOpenSnackbar(
-                true,
-                snackbarTypes.SUCCESS,
-                i18n.t(BACK_END_SUCCESS_OPERATION, {
-                    cardType: i18n.t(FORM_SEMESTER_LABEL),
-                    actionType: i18n.t(COPIED_LABEL),
-                }),
-            ),
-        );
+        const message = i18n.t(BACK_END_SUCCESS_OPERATION, {
+            cardType: i18n.t(FORM_LESSON_LABEL),
+            actionType: i18n.t(COPIED_LABEL),
+        });
+        const isOpen = true;
+        const type = snackbarTypes.SUCCESS;
+        yield put(setOpenSnackbar({ isOpen, type, message }));
     } catch (error) {
         const message = error.response
             ? i18n.t(error.response.data.message, error.response.data.message)

@@ -146,10 +146,6 @@ const SemesterPage = (props) => {
     };
 
     const submitSemesterCopy = (values) => {
-        const data={
-            fromSemesterId: +semesterId,
-            toSemesterId: +values.toSemesterId,
-        }
         semesterCopy({
             fromSemesterId: +semesterId,
             toSemesterId: +values.toSemesterId,
