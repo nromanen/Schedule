@@ -21,7 +21,7 @@ import RoomList from '../containers/RoomList/RoomList';
 import SubjectPage from '../containers/SubjectPage/SubjectPage';
 import SemesterPage from '../containers/SemesterPage/SemesterPage';
 import MergeRolePage from '../containers/MergeRolePage/MergeRolePage';
-import GroupSchedulePage from '../components/GroupSchedulePage/GroupSchedulePage';
+import GroupSchedulePage from '../containers/GroupSchedulePage/GroupSchedulePage';
 import { Register } from '../components/Register/Register';
 import { ResetPassword } from '../components/ResetPassword/ResetPassword';
 import { Login } from '../components/Login/Login';

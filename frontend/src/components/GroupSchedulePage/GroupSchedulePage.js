@@ -1,24 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useHistory, useLocation } from 'react-router-dom';
 import './GroupSchedulePage.scss';
 import { CircularProgress } from '@material-ui/core';
-import { get, isEmpty, isNil } from 'lodash';
+import { get, isEmpty } from 'lodash';
 import { getDataFromParams } from '../../utils/urlUtils';
-import GroupSchedulePageTop from '../GroupSchedulePageTop/GroupSchedulePageTop';
+import GroupSchedulePageTop from './GroupSchedulePageTop/GroupSchedulePageTop';
 import { links } from '../../constants/links';
 import { places } from '../../constants/places';
 import { renderSchedule } from '../../helper/renderSchedule';
-import {
-    getDefaultSemesterRequsted,
-    setScheduleSemesterId,
-    setScheduleType,
-    setScheduleGroupId,
-    setScheduleTeacherId,
-    getGroupScheduleStart,
-    getTeacherScheduleStart,
-    getFullScheduleStart,
-} from '../../actions/schedule';
 
 const GroupSchedulePage = (props) => {
     const history = useHistory();
@@ -36,11 +26,25 @@ const GroupSchedulePage = (props) => {
         getGroupSchedule,
         getTeacherSchedule,
         getFullSchedule,
+        semesterId,
+        teacherId,
+        groupId,
     } = props;
 
+    useEffect(() => {
+        getDefaultSemester();
+    }, []);
+    console.log('props', props);
+
+    const semDef = useSelector((state) => state.schedule.defaultSemester);
+    console.log('selector', semDef);
+    console.log('connect', defaultSemester);
+
     const submitSearchSchedule = (values) => {
+        console.log('values', values);
         setSemesterId(values.semester);
         if (values.group > 0) {
+            console.log('get group');
             setTypeOfSchedule('group');
             setGroupId(values.group);
             getGroupSchedule(values.group, values.semester);
@@ -48,6 +52,7 @@ const GroupSchedulePage = (props) => {
             return;
         }
         if (values.teacher > 0) {
+            console.log('get teacher');
             setTypeOfSchedule('teacher');
             setTeacherId(values.teacher);
             getTeacherSchedule(values.teacher, values.semester);
@@ -73,50 +78,25 @@ const GroupSchedulePage = (props) => {
         history.push(`${links.ScheduleFor}?semester=${semester}${groupPath}${teacherPath}`);
     };
 
-    // useEffect(() => {
-    //     if (scheduleType === 'full' && fullSchedule.length === 0) {
-    //         getScheduleByType()[SCHEDULE_TYPES.FULL]();
-    //     }
-    // }, [scheduleType]);
-
-    // useEffect(() => {
-    //     if (scheduleType === 'group') {
-    //         getScheduleByType(groupId, semesterId)[SCHEDULE_TYPES.GROUP]();
-    //     }
-    // }, [groupId]);
-    // useEffect(() => {
-    //     if (scheduleType === 'teacher') {
-    //         getScheduleByType(teacherId, semesterId)[scheduleType]();
-    //     }
-    // }, [teacherId]);
-
-    useEffect(() => {
-        getDefaultSemester();
-    }, []);
-
     const getSchedule = () => {
-        console.log(defaultSemester.id);
         const { semester, group, teacher } = getDataFromParams(location);
 
-        if (defaultSemester.id !== undefined && isNil(semester)) {
-            console.log('first render');
-            handleSubmit({ semester: defaultSemester.id });
-        }
-
-        if (scheduleType !== '' || location.pathname === links.HOME_PAGE) {
-            console.log('loads data');
-            return renderSchedule(props, place);
-        }
-
-        if (semester !== null) {
+        if (!semester) {
+            handleSubmit({ semester: semDef.id });
+        } else {
             handleSubmit({
                 semester,
                 group: group || 0,
                 teacher: teacher || 0,
             });
         }
-        return null;
     };
+
+    useEffect(() => {
+        if (semDef.id) {
+            getSchedule();
+        }
+    }, [semDef]);
 
     const changePlace = ({ target }) => {
         if (target) {
@@ -134,6 +114,13 @@ const GroupSchedulePage = (props) => {
             />
         );
 
+    if (isEmpty(semDef))
+        return (
+            <section className="centered-container">
+                <CircularProgress />
+            </section>
+        );
+
     return (
         <>
             {getTop()}
@@ -142,34 +129,9 @@ const GroupSchedulePage = (props) => {
                     <CircularProgress />
                 </section>
             ) : (
-                getSchedule()
+                renderSchedule(props, place)
             )}
         </>
     );
 };
-const mapStateToProps = (state) => ({
-    scheduleType: state.schedule.scheduleType,
-    groupSchedule: state.schedule.groupSchedule,
-    fullSchedule: state.schedule.fullSchedule,
-    teacherSchedule: state.schedule.teacherSchedule,
-    groupId: state.schedule.scheduleGroupId,
-    teacherId: state.schedule.scheduleTeacherId,
-    semesterId: state.schedule.scheduleSemesterId,
-    loading: state.loadingIndicator.loading,
-    defaultSemester: state.schedule.defaultSemester,
-    semesters: state.schedule.semesters,
-});
-
-const mapDispatchToProps = (dispatch) => ({
-    getDefaultSemester: () => dispatch(getDefaultSemesterRequsted()),
-    setSemesterId: (id) => dispatch(setScheduleSemesterId(id)),
-    setTypeOfSchedule: (type) => dispatch(setScheduleType(type)),
-    setGroupId: (id) => dispatch(setScheduleGroupId(id)),
-    setTeacherId: (id) => dispatch(setScheduleTeacherId(id)),
-    getGroupSchedule: (groupId, semesterId) => dispatch(getGroupScheduleStart(groupId, semesterId)),
-    getTeacherSchedule: (groupId, semesterId) =>
-        dispatch(getTeacherScheduleStart(groupId, semesterId)),
-    getFullSchedule: (semesterId) => dispatch(getFullScheduleStart(semesterId)),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(GroupSchedulePage);
+export default GroupSchedulePage;

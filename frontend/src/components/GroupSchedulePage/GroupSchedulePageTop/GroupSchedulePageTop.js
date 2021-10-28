@@ -3,14 +3,14 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 
 import './GroupSchedulePageTop.scss';
-import Card from '../../share/Card/Card';
+import Card from '../../../share/Card/Card';
 
 import {
     GREETING_SCHEDULE_MESSAGE,
     GREETING_SCHEDULE_MESSAGE_HINT,
-} from '../../constants/translationLabels/common';
-import SelectPlace from './SelectPlace';
-import SchedulePageForm from '../../containers/GroupSchedulePageTop/SchedulePageForm';
+} from '../../../constants/translationLabels/common';
+import SelectPlace from '../SelectPlace';
+import SchedulePageForm from '../../../containers/GroupSchedulePage/SchedulePageForm';
 
 const GroupSchedulePageTop = (props) => {
     const { t } = useTranslation('common');
