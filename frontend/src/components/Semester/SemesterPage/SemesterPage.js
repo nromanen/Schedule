@@ -212,6 +212,7 @@ const SemesterPage = (props) => {
                             onSubmit={submitSemesterForm}
                             semester={semester}
                             options={options}
+                            groups={groups}
                         />
                     )}
                 </aside>

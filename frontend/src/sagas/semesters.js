@@ -1,7 +1,6 @@
-import { call, put, takeLatest, takeEvery } from 'redux-saga/effects';
+import { call, put, takeLatest, select } from 'redux-saga/effects';
 import { reset } from 'redux-form';
 import * as actionTypes from '../actions/actionsType';
-import { store } from '../store';
 import {
     showAllSemesters,
     setDisabledSemesters,
@@ -32,7 +31,6 @@ import {
     CREATED_LABEL,
     DELETED_LABEL,
     SEMESTER_SERVICE_IS_ACTIVE,
-    SEMESTER_SERVICE_NOT_AS_BEGIN_OR_END,
     COPIED_LABEL,
     ARCHIVED_LABEL,
 } from '../constants/translationLabels/serviceMessages';
@@ -40,7 +38,6 @@ import {
     FORM_LESSON_LABEL,
     FORM_SEMESTER_LABEL,
 } from '../constants/translationLabels/formElements';
-import { COMMON_SEMESTER_IS_NOT_UNIQUE } from '../constants/translationLabels/common';
 import { SEMESTER_FORM } from '../constants/reduxForms';
 
 export function* getAllSemestersItems() {
@@ -109,9 +106,8 @@ export function* setGroupsToSemester({ semesterId, groups }) {
 
 export function* deleteSemesterItem({ semesterId }) {
     try {
-        const semester = store
-            .getState()
-            .semesters.semesters.find((item) => item.id === semesterId);
+        const state = yield select();
+        const semester = state.semesters.semesters.find((item) => item.id === semesterId);
         if (semester.currentSemester) {
             const message = i18n.t(SEMESTER_SERVICE_IS_ACTIVE);
             const isOpen = true;

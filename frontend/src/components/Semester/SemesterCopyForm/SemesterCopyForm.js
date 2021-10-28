@@ -1,17 +1,11 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import { Field, reduxForm } from 'redux-form';
-
+import { Field } from 'redux-form';
 import { makeStyles } from '@material-ui/core/styles';
 import { useTranslation } from 'react-i18next';
-
 import Button from '@material-ui/core/Button';
 import { MdPlayArrow } from 'react-icons/md';
-
 import SelectField from '../../../share/renderedFields/select';
-
 import './SemesterCopyForm.scss';
-import { SEMESTER_COPY_FORM } from '../../../constants/reduxForms';
 import { required } from '../../../validation/validateFields';
 import {
     FORM_SEMESTER_LABEL,

@@ -5,7 +5,6 @@ import SemesterForm from '../../components/Semester/SemesterForm/SemesterForm';
 
 const mapStateToProps = (state) => ({
     classScheduler: state.classActions.classScheduler,
-    groups: state.groups.groups,
 });
 export default connect(mapStateToProps)(
     reduxForm({
