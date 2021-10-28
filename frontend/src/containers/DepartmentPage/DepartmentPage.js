@@ -11,7 +11,6 @@ import { search } from '../../helper/search';
 import NotFound from '../../share/NotFound/NotFound';
 import SnackbarComponent from '../../share/Snackbar/SnackbarComponent';
 import { handleSnackbarCloseService } from '../../services/snackbarService';
-import { showAllPublicTeachersByDepartmentService } from '../../services/scheduleService';
 import {
     clearDepartment,
     createDepartmentService,
@@ -34,6 +33,7 @@ import {
     SHOW_TEACHER_TITLE,
 } from '../../constants/translationLabels/formElements';
 import { COMMON_SET_DISABLED, COMMON_SET_ENABLED } from '../../constants/translationLabels/common';
+import { getAllPublicTeachersByDepartmentStart } from '../../actions/schedule';
 
 const DepartmentPage = (props) => {
     const {
@@ -45,6 +45,7 @@ const DepartmentPage = (props) => {
         disabledDepartments,
         setOpenConfirmDialog,
         isOpenConfirmDialog,
+        getAllPublicTeachersByDepartment,
     } = props;
     const { t } = useTranslation('formElements');
     const [term, setTerm] = useState('');
@@ -192,7 +193,7 @@ const DepartmentPage = (props) => {
                                     className="svg-btn delete-btn"
                                     title={t(SHOW_TEACHER_TITLE)}
                                     onClick={() => {
-                                        showAllPublicTeachersByDepartmentService(departmentItem.id);
+                                        getAllPublicTeachersByDepartment(departmentItem.id);
                                         getDepartmentByIdService(departmentItem.id);
                                         setIsOpenTeacherDialog(true);
                                     }}
@@ -224,6 +225,7 @@ const mapStateToProps = (state) => ({
 });
 const mapDispatchToProps = (dispatch) => ({
     setOpenConfirmDialog: (newState) => dispatch(setIsOpenConfirmDialog(newState)),
+    getAllPublicTeachersByDepartment: (id) => dispatch(getAllPublicTeachersByDepartmentStart(id)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(DepartmentPage);

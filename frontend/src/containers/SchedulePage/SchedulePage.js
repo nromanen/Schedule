@@ -7,7 +7,6 @@ import { CircularProgress } from '@material-ui/core';
 import { showAllGroupsService } from '../../services/groupService';
 import { setLoadingService, setScheduleLoadingService } from '../../services/loadingService';
 import { getClassScheduleListService } from '../../services/classService';
-import { getScheduleItemsService, clearSchedule } from '../../services/scheduleService';
 import { showListOfRoomsService } from '../../services/roomService';
 
 import ScheduleLessonsList from '../../components/ScheduleLessonsList/ScheduleLessonsList';
@@ -20,7 +19,8 @@ import {
     CLEAR_SCHEDULE_LABEL,
     USE_PC,
 } from '../../constants/translationLabels/common';
-import { getLessonsByGroup } from '../../actions';
+import { getLessonsByGroup,  } from '../../actions';
+import { clearScheduleStart, getAllScheduleItemsStart } from '../../actions/schedule';
 
 const SchedulePage = (props) => {
     const {
@@ -31,6 +31,8 @@ const SchedulePage = (props) => {
         lessons,
         isLoading,
         getAllLessonsByGroup,
+        getAllScheduleItems,
+        clearScheduleItems,
     } = props;
     const { t } = useTranslation('common');
 
@@ -39,7 +41,7 @@ const SchedulePage = (props) => {
     useEffect(() => {
         setLoadingService(true);
         setScheduleLoadingService(true);
-        getScheduleItemsService();
+        getAllScheduleItems();
         showAllGroupsService();
         showListOfRoomsService();
         getClassScheduleListService();
@@ -54,7 +56,7 @@ const SchedulePage = (props) => {
 
     const handleClearSchedule = () => {
         if (props.currentSemester.id) {
-            clearSchedule(props.currentSemester.id);
+            clearScheduleItems(props.currentSemester.id);
             if (groupId) {
                 setLoadingService(true);
                 getAllLessonsByGroup(groupId);
@@ -136,6 +138,8 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
     getAllLessonsByGroup: (groupId) => dispatch(getLessonsByGroup(groupId)),
+    getAllScheduleItems: () => dispatch(getAllScheduleItemsStart()),
+    clearScheduleItems: (id) => dispatch(clearScheduleStart(id)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SchedulePage);

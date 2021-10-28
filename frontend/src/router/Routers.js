@@ -24,7 +24,7 @@ import {
     ADMIN_PAGE_LINK,
 } from '../constants/links';
 import { userRoles } from '../constants/userRoles';
-import GroupSchedulePage from '../components/GroupSchedulePage/GroupSchedulePage';
+import GroupSchedulePage from '../containers/GroupSchedulePage/GroupSchedulePage';
 import { Register } from '../components/Register/Register';
 import { ResetPassword } from '../components/ResetPassword/ResetPassword';
 import { Login } from '../components/Login/Login';

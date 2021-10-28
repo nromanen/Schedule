@@ -1,78 +1,72 @@
 import React, { useEffect, useState } from 'react';
-import { connect } from 'react-redux';
 import { useHistory, useLocation } from 'react-router-dom';
 import './GroupSchedulePage.scss';
 import { CircularProgress } from '@material-ui/core';
 import { getDataFromParams } from '../../utils/urlUtils';
-import {
-    getDefaultSemesterService,
-    getFullSchedule,
-    submitSearchSchedule,
-} from '../../services/scheduleService';
-import GroupSchedulePageTop from '../GroupSchedulePageTop/GroupSchedulePageTop';
-import { setLoadingService } from '../../services/loadingService';
-import { HOME_PAGE_LINK, SCHEDULE_FOR_LINK } from '../../constants/links';
+import GroupSchedulePageTop from './GroupSchedulePageTop/GroupSchedulePageTop';
+import { SCHEDULE_FOR_LINK } from '../../constants/links';
 import { places } from '../../constants/places';
-import { getScheduleByType } from '../../utils/sheduleUtils';
-import { SCHEDULE_TYPES } from '../../constants/schedule/types';
 import { renderSchedule } from '../../helper/renderSchedule';
+import { submitSearchSchedule } from '../../helper/submitSearchSchedule';
 
 const GroupSchedulePage = (props) => {
     const history = useHistory();
     const location = useLocation();
     const [place, setPlace] = useState(places.TOGETHER);
-    const { defaultSemester, scheduleType, fullSchedule, groupId, teacherId, semesterId, loading } =
-        props;
+    const {
+        defaultSemester,
+        scheduleType,
+        loading,
+        getDefaultSemester,
+        setSemesterId,
+        setTypeOfSchedule,
+        setGroupId,
+        setTeacherId,
+        getGroupSchedule,
+        getTeacherSchedule,
+        getFullSchedule,
+    } = props;
+
+    useEffect(() => {
+        getDefaultSemester();
+    }, []);
 
     const handleSubmit = (values) => {
+        const actionCalls = {
+            setSemesterId,
+            setTypeOfSchedule,
+            setGroupId,
+            getGroupSchedule,
+            setTeacherId,
+            getTeacherSchedule,
+            getFullSchedule,
+        };
         const { semester, group, teacher } = values;
         const groupPath = group ? `&group=${group}` : '';
         const teacherPath = teacher ? `&teacher=${teacher}` : '';
-        setLoadingService(true);
-        submitSearchSchedule(values, history);
+        submitSearchSchedule(values, actionCalls);
         history.push(`${SCHEDULE_FOR_LINK}?semester=${semester}${groupPath}${teacherPath}`);
     };
 
-    useEffect(() => {
-        getFullSchedule();
-    }, [place]);
-    useEffect(() => {
-        if (scheduleType === 'full' && fullSchedule.length === 0) {
-            getScheduleByType()[SCHEDULE_TYPES.FULL]();
-        }
-    });
-
-    useEffect(() => {
-        getScheduleByType(groupId, semesterId)[SCHEDULE_TYPES.GROUP]();
-    }, [groupId]);
-    useEffect(() => {
-        if (scheduleType === 'teacher') {
-            getScheduleByType(teacherId, semesterId)[scheduleType]();
-        }
-    }, [teacherId]);
-
-    useEffect(() => getDefaultSemesterService(), []);
-
     const getSchedule = () => {
-        if (scheduleType === '' && defaultSemester.id !== undefined) {
+        const { semester, group, teacher } = getDataFromParams(location);
+
+        if (!semester) {
             handleSubmit({ semester: defaultSemester.id });
-
-            return null;
-        }
-        if (scheduleType !== '' || location.pathname === HOME_PAGE_LINK) {
-            return renderSchedule(props, place);
-        }
-        const { semester, teacher, group } = getDataFromParams(location);
-
-        if (semester !== null) {
+        } else {
             handleSubmit({
                 semester,
                 group: group || 0,
                 teacher: teacher || 0,
             });
         }
-        return null;
     };
+
+    useEffect(() => {
+        if (defaultSemester.id) {
+            getSchedule();
+        }
+    }, [defaultSemester]);
 
     const changePlace = ({ target }) => {
         if (target) {
@@ -84,7 +78,7 @@ const GroupSchedulePage = (props) => {
         scheduleType !== 'archived' && (
             <GroupSchedulePageTop
                 scheduleType={scheduleType}
-                onSubmit={handleSubmit}
+                handleSubmit={handleSubmit}
                 place={place}
                 changePlace={changePlace}
             />
@@ -98,23 +92,9 @@ const GroupSchedulePage = (props) => {
                     <CircularProgress />
                 </section>
             ) : (
-                getSchedule()
+                renderSchedule(props, place)
             )}
         </>
     );
 };
-const mapStateToProps = (state) => {
-    return {
-        scheduleType: state.schedule.scheduleType,
-        groupSchedule: state.schedule.groupSchedule,
-        fullSchedule: state.schedule.fullSchedule,
-        teacherSchedule: state.schedule.teacherSchedule,
-        groupId: state.schedule.scheduleGroupId,
-        teacherId: state.schedule.scheduleTeacherId,
-        semesterId: state.schedule.scheduleSemesterId,
-        loading: state.loadingIndicator.loading,
-        defaultSemester: state.schedule.defaultSemester,
-        semesters: state.schedule.semesters,
-    };
-};
-export default connect(mapStateToProps)(GroupSchedulePage);
+export default GroupSchedulePage;

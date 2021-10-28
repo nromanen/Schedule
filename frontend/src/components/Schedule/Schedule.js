@@ -9,12 +9,6 @@ import ScheduleDialog from '../../containers/Dialogs/ScheduleDialog';
 
 import { firstStringLetterCapital } from '../../helper/strings';
 
-import {
-    addItemToScheduleService,
-    deleteItemFromScheduleService,
-    checkAvailabilityChangeRoomScheduleService,
-    editRoomItemToScheduleService,
-} from '../../services/scheduleService';
 
 import { setLoadingService } from '../../services/loadingService';
 
@@ -23,11 +17,18 @@ import { colors } from '../../constants/schedule/colors';
 import { FORM_DAY_LABEL } from '../../constants/translationLabels/formElements';
 import { CLASS_SCHEDULE, WEEK_LABEL } from '../../constants/translationLabels/common';
 import './Schedule.scss';
-import { selectGroupId } from '../../actions';
-import { getLessonsByGroup } from '../../sagas/lessons';
+import {
+    addItemsToScheduleStart,
+    checkAvailabilityChangeRoomScheduleStart,
+    deleteScheduleItemStart,
+    editRoomItemToScheduleStart,
+} from '../../actions/schedule';
+import { getLessonsByGroup, selectGroupId } from '../../actions';
 
 const Schedule = (props) => {
     const {
+        selectedGroupId,
+        getAllLessonsByGroup,
         groups,
         itemGroupId,
         groupId,
@@ -36,9 +37,10 @@ const Schedule = (props) => {
         translation: t,
         rooms,
         availability,
-        isLoading,
-        getAllLessonsByGroup,
-        selectedGroupId,
+        checkRoomAvailability,
+        addItemsToSchedule,
+        editRoomItemToSchedule,
+        deleteScheduleItem,
     } = props;
     const [isOpenScheduleDialog, setIsOpenScheduleDialog] = useState(false);
     const [itemData, setItemData] = useState(null);
@@ -68,17 +70,17 @@ const Schedule = (props) => {
     }, [groupId]);
 
     const setNewItemHandle = (item, room, group) => {
-        getAllLessonsByGroup(group);
-        selectedGroupId(group);
-        if (item.id) deleteItemFromScheduleService(item.id);
+        getLessonsByGroup(group);
+        selectGroupId(group);
+        if (item.id) deleteScheduleItem(item.id);
 
-        addItemToScheduleService({ ...item, roomId: room.id });
+        addItemsToSchedule({ ...item, roomId: room.id });
     };
 
     const setEditItemHandle = (itemId, roomId, group) => {
-        getAllLessonsByGroup(group);
-        selectedGroupId(group);
-        editRoomItemToScheduleService({ itemId, roomId });
+        getLessonsByGroup(group);
+        selectGroupId(group);
+        editRoomItemToSchedule({ itemId, roomId });
     };
 
     const handleClickOpen = () => {
@@ -139,10 +141,9 @@ const Schedule = (props) => {
     };
 
     const deleteItemFromScheduleHandler = (itemId, group) => {
-        deleteItemFromScheduleService(itemId);
-        getAllLessonsByGroup(group);
-
-        selectedGroupId(group);
+        deleteScheduleItem(itemId);
+        getLessonsByGroup(group);
+        selectGroupId(group);
     };
     const editItemOnScheduleHandler = (item) => {
         setItemData({ item, groupId: item.lesson.group.id });
@@ -158,7 +159,7 @@ const Schedule = (props) => {
             evenOdd: item.evenOdd,
             semesterId: item.lesson.semester.id,
         };
-        checkAvailabilityChangeRoomScheduleService(obj);
+        checkRoomAvailability(obj);
         setLoadingService(true);
         if (itemId) obj = { ...obj, id: itemId };
         setIsOpenScheduleDialog(true);
@@ -339,6 +340,10 @@ const Schedule = (props) => {
 const mapDispatchToProps = (dispatch) => ({
     selectedGroupId: (groupId) => dispatch(selectGroupId(groupId)),
     getAllLessonsByGroup: (groupId) => dispatch(getLessonsByGroup(groupId)),
+    checkRoomAvailability: (item) => dispatch(checkAvailabilityChangeRoomScheduleStart(item)),
+    addItemsToSchedule: (item) => dispatch(addItemsToScheduleStart(item)),
+    editRoomItemToSchedule: (item) => dispatch(editRoomItemToScheduleStart(item)),
+    deleteScheduleItem: (item) => dispatch(deleteScheduleItemStart(item)),
 });
 
 export default connect(null, mapDispatchToProps)(Schedule);

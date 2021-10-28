@@ -23,12 +23,6 @@ import { clearDepartment, getAllDepartmentsService } from '../../services/depart
 import { setIsOpenConfirmDialog } from '../../actions/dialog';
 import { getShortTitle } from '../../helper/shortTitle';
 import {
-    getCurrentSemesterService,
-    getDefaultSemesterService,
-    sendTeachersScheduleService,
-    showAllPublicSemestersService,
-} from '../../services/scheduleService';
-import {
     getDisabledTeachersService,
     handleTeacherService,
     removeTeacherCardService,
@@ -47,6 +41,12 @@ import {
     TEACHER_DEPARTMENT,
 } from '../../constants/translationLabels/common';
 import { getAllSemestersStart } from '../../actions/semesters';
+import {
+    getAllPublicSemestersStart,
+    getCurrentSemesterRequsted,
+    getDefaultSemesterRequsted,
+    sendTeacherScheduleStart,
+} from '../../actions/schedule';
 
 const TeacherList = (props) => {
     const { t } = useTranslation('common');
@@ -61,6 +61,10 @@ const TeacherList = (props) => {
         getAllSemestersItems,
         setOpenConfirmDialog,
         isOpenConfirmDialog,
+        getCurrentSemester,
+        getDefaultSemester,
+        getAllPublicSemesters,
+        sendTeacherSchedule,
     } = props;
     const [term, setTerm] = useState('');
     const [isDisabled, setIsDisabled] = useState(false);
@@ -71,13 +75,13 @@ const TeacherList = (props) => {
     const [confirmDialogType, setConfirmDialogType] = useState('');
 
     useEffect(() => {
+        getCurrentSemester();
+        getDefaultSemester();
         showAllTeachersService();
         getAllSemestersItems();
         getAllDepartmentsService();
-        getCurrentSemesterService();
-        getDefaultSemesterService();
         getDisabledTeachersService();
-        showAllPublicSemestersService();
+        getAllPublicSemesters();
         getPublicClassScheduleListService();
     }, []);
 
@@ -160,7 +164,7 @@ const TeacherList = (props) => {
         const semesterId = selectedSemester === '' && defaultSemester.id;
         const { language } = i18n;
         const data = { semesterId, teachersId, language };
-        sendTeachersScheduleService(data);
+        sendTeacherSchedule(data);
         clearSelection();
     };
     const isChosenSelection = () => {
@@ -295,6 +299,10 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
     setOpenConfirmDialog: (newState) => dispatch(setIsOpenConfirmDialog(newState)),
     getAllSemestersItems: () => dispatch(getAllSemestersStart()),
+    getCurrentSemester: () => dispatch(getCurrentSemesterRequsted()),
+    getDefaultSemester: () => dispatch(getDefaultSemesterRequsted()),
+    getAllPublicSemesters: () => dispatch(getAllPublicSemestersStart()),
+    sendTeacherSchedule: (data) => dispatch(sendTeacherScheduleStart(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(TeacherList);

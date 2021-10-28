@@ -1,36 +1,21 @@
 import React from 'react';
+import { isEmpty } from 'lodash';
 import i18n from '../i18n';
-import { setLoadingService } from '../services/loadingService';
-import { isNotReadySchedule } from '../utils/sheduleUtils';
 import DownloadLink from '../components/DownloadLink/DownloadLink';
-import { makeGroupSchedule, makeFullSchedule, makeTeacherSchedule } from './prepareSchedule';
 import { renderGroupTable, renderFullSchedule, renderWeekTable } from './renderScheduleTable';
 import { getGroupScheduleTitle, getTeacherScheduleTitle } from '../utils/titlesUtil';
 
 const emptySchedule = () => <p className="empty_schedule">{i18n.t('common:empty_schedule')}</p>;
 
 const renderSchedule = (
-    {
-        scheduleType,
-        groupSchedule,
-        fullSchedule,
-        teacherSchedule,
-        groupId,
-        teacherId,
-        semesterId,
-        loading,
-    },
+    { scheduleType, groupSchedule, fullSchedule, teacherSchedule, groupId, teacherId, semesterId },
     place,
 ) => {
     switch (scheduleType) {
         case 'group': {
-            if (isNotReadySchedule(groupSchedule.schedule, loading)) {
-                return emptySchedule();
-            }
+            const { semester, group, oddArray, evenArray } = groupSchedule;
 
-            const { semester, group, oddArray, evenArray } = makeGroupSchedule(groupSchedule);
-
-            setLoadingService(false);
+            if (isEmpty(oddArray) || isEmpty(evenArray)) return emptySchedule();
 
             return (
                 <>
@@ -46,12 +31,10 @@ const renderSchedule = (
             );
         }
         case 'teacher': {
-            if (!teacherSchedule || !teacherSchedule.days || teacherSchedule.days.length === 0) {
-                return emptySchedule();
-            }
-            const { semester, teacher, odd, even } = makeTeacherSchedule(teacherSchedule);
+            const { semester, teacher, odd, even } = teacherSchedule;
 
-            setLoadingService(false);
+            if (isEmpty(odd) || isEmpty(even)) return emptySchedule();
+
             return (
                 <>
                     <h1>
@@ -63,28 +46,22 @@ const renderSchedule = (
                         />
                     </h1>
                     <h2>{i18n.t('common:odd_week')}</h2>
-                    {renderWeekTable(odd, 1, place)}
+                    {renderWeekTable(odd, place)}
                     <h2>{i18n.t('common:even_week')}</h2>
-                    {renderWeekTable(even, 0, place)}
+                    {renderWeekTable(even, place)}
                 </>
             );
         }
         case 'full': {
-            if (isNotReadySchedule(fullSchedule.schedule, loading)) {
+            const { resultArray } = fullSchedule;
+            if (isEmpty(resultArray)) {
                 return emptySchedule();
             }
-            const result = makeFullSchedule(fullSchedule);
-
-            setLoadingService(false);
-            if (result.groupsCount) {
-                return renderFullSchedule(result, place);
-            }
-            break;
+            return renderFullSchedule(fullSchedule, place);
         }
         default:
             return null;
     }
-    return null;
 };
 
 export { renderSchedule };

@@ -36,8 +36,6 @@ import {
 import LanguageSelector from '../LanguageSelector/LanguageSelector';
 import * as colors from '../../constants/schedule/colors';
 
-import { getCurrentSemesterService } from '../../services/scheduleService';
-
 import FreeRooms from '../../containers/FreeRooms/freeRooms';
 import { setSemesterLoadingService } from '../../services/loadingService';
 import {
@@ -50,6 +48,7 @@ import {
     HOME_TITLE,
     MENU_BUTTON,
 } from '../../constants/translationLabels/common';
+import { getCurrentSemesterRequsted } from '../../actions/schedule';
 
 const StyledMenu = withStyles({
     paper: {
@@ -81,7 +80,7 @@ const StyledMenuItem = withStyles((theme) => ({
 }))(MenuItem);
 
 const Header = (props) => {
-    const { roles, userRole, loading, currentSemester } = props;
+    const { roles, userRole, loading, currentSemester, getCurrentSemester } = props;
     const [anchorEl, setAnchorEl] = useState(null);
     const handleClick = (event) => setAnchorEl(event.currentTarget);
     const handleClose = () => setAnchorEl(null);
@@ -95,7 +94,7 @@ const Header = (props) => {
     useEffect(() => {
         if (userRole === roles.MANAGER) {
             setSemesterLoadingService(true);
-            getCurrentSemesterService();
+            getCurrentSemester();
         }
     }, [userRole]);
 
@@ -570,4 +569,8 @@ const mapStateToProps = (state) => ({
     loading: state.loadingIndicator.semesterLoading,
 });
 
-export default connect(mapStateToProps, {})(Header);
+const mapDispatchToProps = (dispatch) => ({
+    getCurrentSemester: () => dispatch(getCurrentSemesterRequsted()),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Header);

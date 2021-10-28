@@ -1,4 +1,4 @@
-@import '../../App';
+@import '../../../App';
 
 p.empty_schedule {
     text-align: center;
@@ -47,4 +47,8 @@ h1 {
 .MuiList-root .option-item:hover {
     background: #d4dafd;
     cursor: pointer;
+}
+
+.schedule_page-container > * {
+    margin: 8px;
 }

@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import i18n from 'i18next';
-
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import '../../styles/forms.scss';
 
@@ -9,6 +9,7 @@ import { Field, reduxForm } from 'redux-form';
 import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Card from '@material-ui/core/Card';
+
 import renderTextField from '../../share/renderedFields/input';
 
 import { LOGIN_FORM } from '../../constants/reduxForms';
@@ -16,12 +17,6 @@ import { validation } from '../../constants/validation';
 import { EMAIL_MESSAGE } from '../../constants/translationLabels/validationMessages';
 
 import { required } from '../../validation/validateFields';
-import {
-    setScheduleGroupIdService,
-    setScheduleSemesterIdService,
-    setScheduleTeacherIdService,
-    setScheduleTypeService,
-} from '../../services/scheduleService';
 import {
     PASSWORD_LABEL,
     EMAIL_LABEL,
@@ -34,15 +29,30 @@ import {
     REGISTRATION_PAGE_TITLE,
 } from '../../constants/translationLabels/common';
 import { REGISTRATION_LINK, RESET_PASSWORD_LINK } from '../../constants/links';
+import {
+    setScheduleSemesterId,
+    setScheduleType,
+    setScheduleGroupId,
+    setScheduleTeacherId,
+} from '../../actions';
 
 const LoginForm = (props) => {
-    const { handleSubmit, loginHandler, errors, setError, isLoading } = props;
-
+    const {
+        handleSubmit,
+        loginHandler,
+        errors,
+        setError,
+        isLoading,
+        setSemesterId,
+        setTypeOfSchedule,
+        setGroupId,
+        setTeacherId,
+    } = props;
     useEffect(() => {
-        setScheduleSemesterIdService(0);
-        setScheduleTeacherIdService(0);
-        setScheduleGroupIdService(0);
-        setScheduleTypeService('');
+        setSemesterId(0);
+        setTeacherId(0);
+        setGroupId(0);
+        setTypeOfSchedule('full');
     });
     const isValidForm = (formValues) => {
         if (!formValues.email || !formValues.password) {
@@ -126,4 +136,11 @@ const LoginReduxForm = reduxForm({
     form: LOGIN_FORM,
 })(LoginForm);
 
-export default LoginReduxForm;
+const mapDispatchToProps = (dispatch) => ({
+    setSemesterId: (id) => dispatch(setScheduleSemesterId(id)),
+    setTypeOfSchedule: (type) => dispatch(setScheduleType(type)),
+    setGroupId: (id) => dispatch(setScheduleGroupId(id)),
+    setTeacherId: (id) => dispatch(setScheduleTeacherId(id)),
+});
+
+export default connect(null, mapDispatchToProps)(LoginReduxForm);

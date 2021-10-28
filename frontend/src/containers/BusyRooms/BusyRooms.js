@@ -5,7 +5,6 @@ import React, { useEffect, Fragment } from 'react';
 import { CircularProgress } from '@material-ui/core';
 import Card from '../../share/Card/Card';
 import { setLoadingService } from '../../services/loadingService';
-import { getScheduleItemsService } from '../../services/scheduleService';
 import { getClassScheduleListService } from '../../services/classService';
 
 import {
@@ -14,14 +13,15 @@ import {
     BUSY_ROOMS_HEADING,
 } from '../../constants/translationLabels/common';
 import WeekRoomInfo from '../../components/WeekRoomInfo/WeekRoomInfo';
+import { getAllScheduleItemsStart } from '../../actions/schedule';
 
 const BusyRooms = (props) => {
     const { t } = useTranslation('common');
     const busyRooms = props.busyRooms[0];
-    const { currentSemester, isLoading } = props;
+    const { currentSemester, isLoading, getAllScheduleItems } = props;
 
     useEffect(() => {
-        getScheduleItemsService();
+        getAllScheduleItems();
         getClassScheduleListService();
         setLoadingService(true);
     }, []);
@@ -109,4 +109,8 @@ const mapStateToProps = (state) => ({
     currentSemester: state.schedule.currentSemester,
 });
 
-export default connect(mapStateToProps, {})(BusyRooms);
+const mapDispatchToProps = (dispatch) => ({
+    getAllScheduleItems: () => dispatch(getAllScheduleItemsStart()),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(BusyRooms);
