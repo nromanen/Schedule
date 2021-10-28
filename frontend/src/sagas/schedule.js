@@ -390,8 +390,8 @@ export function* sendTeacherSchedule({ data }) {
     try {
         const teachersId = data.teachersId.map((teacherId) => `teachersId=${teacherId}`).join('&');
         const { semesterId, language } = data;
-        const responseUrl = `${SEND_PDF_TO_EMAIL}/semester/${semesterId}?language=${language}&${teachersId}`;
-        const response = yield call(axiosCall, responseUrl);
+        const requestUrl = `${SEND_PDF_TO_EMAIL}/semester/${semesterId}?language=${language}&${teachersId}`;
+        const response = yield call(axiosCall, requestUrl);
         console.log(response);
         const message = i18n.t(BACK_END_SUCCESS_OPERATION, {
             cardType: i18n.t(FORM_SCHEDULE_LABEL),
