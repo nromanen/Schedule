@@ -85,8 +85,8 @@ export function* getArchivedSemestersItems() {
 export function* setGroupsToSemester({ semesterId, groups }) {
     try {
         const groupIds = groups.map((item) => `groupId=${item.id}`).join('&');
-        const responseUrl = `${SEMESTERS_URL}/${semesterId}/groups?${groupIds}`;
-        const response = yield call(axiosCall, responseUrl, 'PUT');
+        const requestUrl = `${SEMESTERS_URL}/${semesterId}/groups?${groupIds}`;
+        const response = yield call(axiosCall, requestUrl, 'PUT');
         yield put(updateSemester(response.data));
         yield put(selectSemester(null));
         yield put(reset(SEMESTER_FORM));
@@ -119,8 +119,8 @@ export function* deleteSemesterItem({ semesterId }) {
             yield put(setOpenSnackbar({ isOpen, type, message }));
             return;
         }
-        const responseUrl = `${SEMESTERS_URL}/${semesterId}`;
-        yield call(axiosCall, responseUrl, 'DELETE');
+        const requestUrl = `${SEMESTERS_URL}/${semesterId}`;
+        yield call(axiosCall, requestUrl, 'DELETE');
         yield put(deleteSemester(semesterId));
         const message = i18n.t(BACK_END_SUCCESS_OPERATION, {
             cardType: i18n.t(FORM_SEMESTER_LABEL),
@@ -144,6 +144,8 @@ export function* updateSemesterItem({ item }) {
         const response = yield call(axiosCall, SEMESTERS_URL, 'PUT', item);
         yield put(updateSemester(response.data));
         yield put(selectSemester(null));
+        yield call(getAllSemestersItems);
+        yield call(getDisabledSemestersItems);
         yield put(reset(SEMESTER_FORM));
         const message = i18n.t(BACK_END_SUCCESS_OPERATION, {
             cardType: i18n.t(FORM_SEMESTER_LABEL),
@@ -184,8 +186,8 @@ export function* addSemesterItem({ item }) {
 }
 export function* setDefaultSemesterById({ semesterId }) {
     try {
-        const responseUrl = `${DEFAULT_SEMESTER_URL}?semesterId=${semesterId}`;
-        const response = yield call(axiosCall, responseUrl, 'PUT', semesterId);
+        const requestUrl = `${DEFAULT_SEMESTER_URL}?semesterId=${semesterId}`;
+        const response = yield call(axiosCall, requestUrl, 'PUT', semesterId);
         yield put(updateSemester(response.data));
         yield put(selectSemester(null));
         yield call(getAllSemestersItems);
@@ -210,8 +212,8 @@ export function* setDefaultSemesterById({ semesterId }) {
 
 export function* semesterCopy({ values }) {
     try {
-        const responseUrl = `${SEMESTER_COPY_URL}?fromSemesterId=${values.fromSemesterId}&toSemesterId=${values.toSemesterId}`;
-        const response = yield call(axiosCall, responseUrl, 'POST');
+        const requestUrl = `${SEMESTER_COPY_URL}?fromSemesterId=${values.fromSemesterId}&toSemesterId=${values.toSemesterId}`;
+        const response = yield call(axiosCall, requestUrl, 'POST');
         yield put(addSemester(response.data));
         yield put(reset(SEMESTER_FORM));
         const message = i18n.t(BACK_END_SUCCESS_OPERATION, {
@@ -232,8 +234,8 @@ export function* semesterCopy({ values }) {
 }
 export function* createArchiveSemester({ semesterId }) {
     try {
-        const responseUrl = `${ARCHIVE_SEMESTER}/${semesterId}`;
-        yield call(axiosCall, responseUrl, 'POST');
+        const requestUrl = `${ARCHIVE_SEMESTER}/${semesterId}`;
+        yield call(axiosCall, requestUrl, 'POST');
         yield put(moveToArchivedSemester(semesterId));
         const message = i18n.t(BACK_END_SUCCESS_OPERATION, {
             cardType: i18n.t(FORM_SEMESTER_LABEL),
@@ -254,8 +256,8 @@ export function* createArchiveSemester({ semesterId }) {
 export function* getArchivedSemester({ semesterId }) {
     try {
         yield put(setScheduleType('archived'));
-        const responseUrl = `${ARCHIVE_SEMESTER}/${semesterId}`;
-        const response = yield call(axiosCall, responseUrl);
+        const requestUrl = `${ARCHIVE_SEMESTER}/${semesterId}`;
+        const response = yield call(axiosCall, requestUrl);
         yield put(setFullSchedule(response.data));
     } catch (error) {
         const message = error.response
@@ -268,8 +270,8 @@ export function* getArchivedSemester({ semesterId }) {
 }
 export function* CopyLessonsFromSemester({ values }) {
     try {
-        const responseUrl = `${LESSONS_FROM_SEMESTER_COPY_URL}?fromSemesterId=${values.fromSemesterId}&toSemesterId=${values.toSemesterId}`;
-        yield call(axiosCall, responseUrl, 'POST');
+        const requestUrl = `${LESSONS_FROM_SEMESTER_COPY_URL}?fromSemesterId=${values.fromSemesterId}&toSemesterId=${values.toSemesterId}`;
+        yield call(axiosCall, requestUrl, 'POST');
         const message = i18n.t(BACK_END_SUCCESS_OPERATION, {
             cardType: i18n.t(FORM_LESSON_LABEL),
             actionType: i18n.t(COPIED_LABEL),

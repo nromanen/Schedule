@@ -1,8 +1,6 @@
-import { connect } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import React, { useEffect, useState } from 'react';
 import { isEqual, isEmpty } from 'lodash';
-import './SemesterPage.scss';
 import Button from '@material-ui/core/Button';
 
 import SearchPanel from '../../../share/SearchPanel/SearchPanel';
@@ -12,7 +10,6 @@ import SemesterForm from '../../../containers/SemesterPage/SemesterForm';
 import SemesterItem from '../../../containers/SemesterPage/SemesterItem';
 import SemesterCopyForm from '../../../containers/SemesterPage/SemesterCopyForm';
 import { handleSemesterService } from '../../../services/semesterService';
-import { setScheduleTypeService } from '../../../services/scheduleService';
 import NavigationPage from '../../Navigation/NavigationPage';
 import { navigation, navigationNames } from '../../../constants/navigation';
 import { MultiselectForGroups } from '../../../helper/MultiselectForGroups';

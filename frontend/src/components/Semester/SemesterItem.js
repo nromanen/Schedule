@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { FaEdit, FaUsers, FaFileArchive } from 'react-icons/fa';
 import { MdDelete, MdDonutSmall } from 'react-icons/md';
 import { useTranslation } from 'react-i18next';
-import './SemesterPage/SemesterPage.scss';
+import './SemesterItem.scss';
 import { GiSightDisabled, IoMdEye, FaCopy } from 'react-icons/all';
 import Card from '../../share/Card/Card';
 import NotFound from '../../share/NotFound/NotFound';
@@ -21,7 +21,6 @@ import {
     COMMON_DAYS_LABEL,
     COMMON_CLASS_SCHEDULE_MANAGEMENT_TITLE,
     SEMESTER_LABEL,
-    COMMON_PREVIEW,
     COMMON_MAKE_ARCHIVE,
     COMMON_SET_ENABLED,
 } from '../../constants/translationLabels/common';
@@ -42,7 +41,7 @@ const SemesterItem = (props) => {
         disabledSemesters,
         // archivedSemesters,
         createArchivedSemester,
-        getArchivedSemester,
+        // getArchivedSemester,
     } = props;
     const [visibleItems, setVisibleItems] = useState([]);
 
@@ -65,9 +64,10 @@ const SemesterItem = (props) => {
         setSemesterId(id);
         setIsOpenSemesterCopyForm(true);
     };
-    const handleSemesterArchivedPreview = (currentSemesterId) => {
-        getArchivedSemester(+currentSemesterId);
-    };
+    // it doesnt work, need to finish implement archeved functionality
+    // const handleSemesterArchivedPreview = (currentSemesterId) => {
+    //     getArchivedSemester(+currentSemesterId);
+    // };
     const setClassNameForDefaultSemester = (currentSemester) => {
         const defaultSemesterName = 'default';
         const className = 'svg-btn edit-btn';
