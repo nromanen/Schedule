@@ -10,11 +10,6 @@ import SearchPanel from '../../../share/SearchPanel/SearchPanel';
 import { selectGroupService } from '../../../services/groupService';
 import '../LessonPage.scss';
 
-const GroupField = styled(TextField)({
-    display: 'inline-block',
-    width: '150px',
-});
-
 const Search = (props) => {
     const { groupId, setTerm, groups, selectByGroupId } = props;
     const { t } = useTranslation();
@@ -46,7 +41,12 @@ const Search = (props) => {
                             handleGroupSelect(newValue);
                         }}
                         renderInput={(params) => (
-                            <GroupField {...params} label={t(FORM_GROUP_LABEL)} margin="normal" />
+                            <TextField
+                                classname="groupField"
+                                {...params}
+                                label={t(FORM_GROUP_LABEL)}
+                                margin="normal"
+                            />
                         )}
                     />
                 </span>

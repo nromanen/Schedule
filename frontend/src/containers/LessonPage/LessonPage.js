@@ -8,8 +8,10 @@ import {
     getLessonsByGroup,
     getLessonTypes,
     selectLessonCard,
+    setUniqueError,
     updateLessonCardStart,
 } from '../../actions';
+import { setOpenErrorSnackbar } from '../../actions/snackbar';
 
 const mapStateToProps = (state) => ({
     lessons: state.lesson.lessons,
@@ -33,6 +35,8 @@ const mapDispatchToProps = (dispatch) => ({
     deleteLessonCardStart: (lessonId) => dispatch(deleteLessonCardStart(lessonId)),
     copyLessonCard: (group, lesson) => dispatch(copyLessonCard(group, lesson)),
     selectLessonCard: (lessonCardId) => dispatch(selectLessonCard(lessonCardId)),
+    setOpenErrorSnackbar: (message) => dispatch(setOpenErrorSnackbar(message)),
+    setUniqueError: (value) => dispatch(setUniqueError(value)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(LessonPage);

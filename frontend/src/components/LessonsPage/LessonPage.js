@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useDispatch } from 'react-redux';
 
 import { isNil } from 'lodash';
 
@@ -23,17 +22,12 @@ import LessonForm from '../../containers/LessonPage/LessonForm';
 import CopyLessonsFromSemesterForm from '../../containers/LessonPage/CopyLessonsFromSemesterForm';
 import CopyLessonDialog from './CopyLessonDialog';
 
-import { setUniqueError } from '../../actions/lesson';
-import { setOpenErrorSnackbar } from '../../actions/snackbar';
-
 import './LessonPage.scss';
 import { showAllGroupsService } from '../../services/groupService';
 import { showAllSubjectsService } from '../../services/subjectService';
 import { showAllTeachersService } from '../../services/teacherService';
 
 const LessonPage = (props) => {
-    const dispatch = useDispatch();
-
     const {
         currentSemester,
         isUniqueError,
@@ -50,6 +44,8 @@ const LessonPage = (props) => {
         createLessonCardStart,
         updateLessonCardStart,
         selectLessonCard,
+        setOpenErrorSnackbar,
+        setUniqueError,
     } = props;
     const { t } = useTranslation('common');
     const [term, setTerm] = useState('');
@@ -78,8 +74,10 @@ const LessonPage = (props) => {
         let cardObj = cardObjectHandler(card, groupId, currentSemester);
 
         if (!checkUniqLesson(lessons, cardObj)) {
-            dispatch(setOpenErrorSnackbar(t(COMMON_LESSON_SERVICE_IS_NOT_UNIQUE)));
-            dispatch(setUniqueError(true));
+            const message = t(COMMON_LESSON_SERVICE_IS_NOT_UNIQUE);
+
+            setOpenErrorSnackbar(message);
+            setUniqueError(true);
             return;
         }
 
@@ -116,7 +114,7 @@ const LessonPage = (props) => {
         }
     };
 
-    const submitCopy = (values) => {
+    const submitCopySemester = (values) => {
         const toSemesterId = currentSemester.id;
         const fromSemesterId = +values.fromSemesterId;
         CopyLessonsFromSemesterService({ ...values, toSemesterId, fromSemesterId });
@@ -152,7 +150,7 @@ const LessonPage = (props) => {
                         onSubmit={submitLessonForm}
                         onSetSelectedCard={selectLessonCard}
                     />
-                    {!groupId && <CopyLessonsFromSemesterForm onSubmit={submitCopy} />}
+                    {!groupId && <CopyLessonsFromSemesterForm onSubmit={submitCopySemester} />}
                 </section>
                 <Lessons
                     visibleItems={visibleItems}
