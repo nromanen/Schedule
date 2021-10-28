@@ -22,7 +22,6 @@ const SchedulePageForm = (props) => {
         getAllPublicSemesters,
     } = props;
     const { t } = useTranslation('common');
-    console.log('form props', props);
     useEffect(() => {
         getAllPublicTeachers();
         getAllPublicSemesters();

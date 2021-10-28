@@ -26,25 +26,15 @@ const GroupSchedulePage = (props) => {
         getGroupSchedule,
         getTeacherSchedule,
         getFullSchedule,
-        semesterId,
-        teacherId,
-        groupId,
     } = props;
 
     useEffect(() => {
         getDefaultSemester();
     }, []);
-    console.log('props', props);
-
-    const semDef = useSelector((state) => state.schedule.defaultSemester);
-    console.log('selector', semDef);
-    console.log('connect', defaultSemester);
 
     const submitSearchSchedule = (values) => {
-        console.log('values', values);
         setSemesterId(values.semester);
         if (values.group > 0) {
-            console.log('get group');
             setTypeOfSchedule('group');
             setGroupId(values.group);
             getGroupSchedule(values.group, values.semester);
@@ -52,7 +42,6 @@ const GroupSchedulePage = (props) => {
             return;
         }
         if (values.teacher > 0) {
-            console.log('get teacher');
             setTypeOfSchedule('teacher');
             setTeacherId(values.teacher);
             getTeacherSchedule(values.teacher, values.semester);
@@ -64,7 +53,6 @@ const GroupSchedulePage = (props) => {
             (!get(values, 'teacher') && values.group === 0) ||
             (!get(values, 'group') && !get(values, 'teacher'))
         ) {
-            console.log('get full');
             setTypeOfSchedule('full');
             getFullSchedule(values.semester);
         }
@@ -82,7 +70,7 @@ const GroupSchedulePage = (props) => {
         const { semester, group, teacher } = getDataFromParams(location);
 
         if (!semester) {
-            handleSubmit({ semester: semDef.id });
+            handleSubmit({ semester: defaultSemester.id });
         } else {
             handleSubmit({
                 semester,
@@ -93,10 +81,10 @@ const GroupSchedulePage = (props) => {
     };
 
     useEffect(() => {
-        if (semDef.id) {
+        if (defaultSemester.id) {
             getSchedule();
         }
-    }, [semDef]);
+    }, [defaultSemester]);
 
     const changePlace = ({ target }) => {
         if (target) {
@@ -114,7 +102,7 @@ const GroupSchedulePage = (props) => {
             />
         );
 
-    if (isEmpty(semDef))
+    if (isEmpty(defaultSemester))
         return (
             <section className="centered-container">
                 <CircularProgress />
