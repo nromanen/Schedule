@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { FaEdit, FaUsers, FaFileArchive } from 'react-icons/fa';
 import { MdDelete, MdDonutSmall } from 'react-icons/md';
 import { useTranslation } from 'react-i18next';
-import '../../containers/SemesterPage/SemesterPage.scss';
+import './SemesterPage/SemesterPage.scss';
 import { GiSightDisabled, IoMdEye, FaCopy } from 'react-icons/all';
 import Card from '../../share/Card/Card';
 import NotFound from '../../share/NotFound/NotFound';
@@ -40,7 +40,7 @@ const SemesterItem = (props) => {
         term,
         enabledSemesters,
         disabledSemesters,
-        archivedSemesters,
+        // archivedSemesters,
         createArchivedSemester,
         getArchivedSemester,
     } = props;
@@ -50,9 +50,10 @@ const SemesterItem = (props) => {
 
     useEffect(() => {
         if (disabled) setVisibleItems(search(disabledSemesters, term, searchArr));
-        if (archived) setVisibleItems(search(archivedSemesters, term, searchArr));
-        if (!(archived || disabled)) setVisibleItems(search(enabledSemesters, term, searchArr));
-    }, [disabled, archived, enabledSemesters, term]);
+        // it doesnt work, need to finish implement archeved functionality
+        // if (archived) setVisibleItems(search(archivedSemesters, term, searchArr));
+        else setVisibleItems(search(enabledSemesters, term, searchArr));
+    }, [disabled, enabledSemesters, term]);
 
     const showConfirmDialog = (id, dialogType) => {
         setSemesterId(id);
@@ -138,7 +139,7 @@ const SemesterItem = (props) => {
                                     }}
                                 />
                             )}
-                            {archived && (
+                            {/* {archived && (
                                 <IoMdEye
                                     className="svg-btn copy-btn"
                                     title={t(COMMON_PREVIEW)}
@@ -146,7 +147,7 @@ const SemesterItem = (props) => {
                                         handleSemesterArchivedPreview(semesterItem.id);
                                     }}
                                 />
-                            )}
+                            )} */}
                             <MdDelete
                                 className="svg-btn delete-btn"
                                 title={t(DELETE_TITLE)}

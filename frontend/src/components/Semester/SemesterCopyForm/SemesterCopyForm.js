@@ -87,11 +87,4 @@ const SemesterCopyForm = (props) => {
     );
 };
 
-const mapStateToProps = (state) => ({
-    semesters: state.semesters.semesters,
-});
-export default connect(mapStateToProps)(
-    reduxForm({
-        form: SEMESTER_COPY_FORM,
-    })(SemesterCopyForm),
-);
+export default SemesterCopyForm;
