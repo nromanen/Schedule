@@ -1,5 +1,5 @@
 import React from 'react';
-import AddGroup from '../../containers/GroupList/GroupForm';
+import AddGroup from '../../containers/GroupPage/GroupForm';
 import SearchPanel from '../../share/SearchPanel/SearchPanel';
 
 const GroupSidebar = (props) => {
