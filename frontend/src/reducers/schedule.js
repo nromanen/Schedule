@@ -26,13 +26,13 @@ const reducer = (state = initialState, action) => {
             return updateObject(state, {
                 items: action.items,
             });
-        case actionTypes.SET_CURRENT_SEMESTER:
+        case actionTypes.GET_CURRENT_SEMESTER_SUCCESS:
             return updateObject(state, {
-                currentSemester: action.payload,
+                currentSemester: action.semester,
             });
-        case actionTypes.SET_DEFAULT_SEMESTER:
+        case actionTypes.GET_DEFAULT_SEMESTER_SUCCESS:
             return updateObject(state, {
-                defaultSemester: action.payload,
+                defaultSemester: action.semester,
             });
         case actionTypes.CHECK_AVAILABILITY_CHANGE_ROOM_SCHEDULE_SUCCESS:
             return updateObject(state, {
@@ -64,8 +64,8 @@ const reducer = (state = initialState, action) => {
                 fullSchedule: [],
                 scheduleType: action.newType,
             });
-        case actionTypes.SET_FULL_SCHEDULE: {
-            const mappedSchedule = makeFullSchedule(action.result);
+        case actionTypes.GET_FULL_SCHEDULE_SUCCESS: {
+            const mappedSchedule = makeFullSchedule(action.schedule);
             return updateObject(state, {
                 fullSchedule: mappedSchedule,
                 groupSchedule: {},
@@ -108,9 +108,9 @@ const reducer = (state = initialState, action) => {
                 fullSchedule: [],
             });
         }
-        case actionTypes.SET_SEMESTER_LIST:
+        case actionTypes.GET_ALL_PUBLIC_SEMESTERS_SUCCESS:
             return updateObject(state, {
-                semesters: action.result,
+                semesters: action.semesters,
             });
         case actionTypes.SET_SCHEDULE_SEMESTER_ID:
             return updateObject(state, {

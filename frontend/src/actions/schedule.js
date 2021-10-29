@@ -20,10 +20,10 @@ export const getAllPublicTeachersByDepartmentStart = (departmentId) => {
     };
 };
 
-export const setCurrentSemester = (res) => {
+export const getCurrentSemesterSuccess = (semester) => {
     return {
-        type: actionTypes.SET_CURRENT_SEMESTER,
-        payload: res,
+        type: actionTypes.GET_CURRENT_SEMESTER_SUCCESS,
+        semester,
     };
 };
 export const getAllPublicTeachersStart = () => {
@@ -34,6 +34,13 @@ export const getAllPublicTeachersStart = () => {
 export const getAllPublicSemestersStart = () => {
     return {
         type: actionTypes.GET_ALL_PUBLIC_SEMESTERS_START,
+    };
+};
+
+export const getAllPublicSemestersSuccess = (semesters) => {
+    return {
+        type: actionTypes.GET_ALL_PUBLIC_SEMESTERS_SUCCESS,
+        semesters,
     };
 };
 export const getAllScheduleItemsStart = () => {
@@ -97,16 +104,16 @@ export const getCurrentSemesterRequsted = () => {
     };
 };
 
-export const setDefaultSemester = (res) => {
-    return {
-        type: actionTypes.SET_DEFAULT_SEMESTER,
-        payload: res,
-    };
-};
-
 export const getDefaultSemesterRequsted = () => {
     return {
         type: actionTypes.GET_DEFAULT_SEMESTER_START,
+    };
+};
+
+export const getDefaultSemesterSuccess = (semester) => {
+    return {
+        type: actionTypes.GET_DEFAULT_SEMESTER_SUCCESS,
+        semester,
     };
 };
 
@@ -138,10 +145,17 @@ export const checkAvailabilityChangeRoomScheduleStart = (item) => {
     };
 };
 
-export const setFullSchedule = (result) => {
+export const getFullScheduleStart = (semesterId) => {
     return {
-        type: actionTypes.SET_FULL_SCHEDULE,
-        result,
+        type: actionTypes.GET_FULL_SCHEDULE_START,
+        semesterId,
+    };
+};
+
+export const getFullScheduleSuccess = (schedule) => {
+    return {
+        type: actionTypes.GET_FULL_SCHEDULE_SUCCESS,
+        schedule,
     };
 };
 export const setItemGroupId = (res) => {
@@ -168,12 +182,6 @@ export const getTeacherScheduleStart = (teacherId, semesterId) => {
     return {
         type: actionTypes.GET_TEACHER_SCHEDULE_START,
         teacherId,
-        semesterId,
-    };
-};
-export const getFullScheduleStart = (semesterId) => {
-    return {
-        type: actionTypes.GET_FULL_SCHEDULE_START,
         semesterId,
     };
 };
@@ -205,12 +213,6 @@ export const setTeacherSchedule = (result) => {
     };
 };
 
-export const setSemesterList = (result) => {
-    return {
-        type: actionTypes.SET_SEMESTER_LIST,
-        result,
-    };
-};
 export const setScheduleSemesterId = (semesterId) => {
     return {
         type: actionTypes.SET_SCHEDULE_SEMESTER_ID,

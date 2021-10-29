@@ -74,16 +74,12 @@ export {
 } from './roomTypes';
 export {
     addItemToSchedule,
-    setCurrentSemester,
-    setDefaultSemester,
-    setFullSchedule,
     setGroupSchedule,
     setItemGroupId,
     setScheduleGroupId,
     setScheduleSemesterId,
     setScheduleTeacherId,
     setScheduleType,
-    setSemesterList,
     setTeacherRangeSchedule,
     setTeacherSchedule,
     setTeacherViewType,
