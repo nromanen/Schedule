@@ -24,12 +24,9 @@ import {
     TEACHER_URL,
 } from '../constants/axios';
 import {
-    setGroupSchedule,
     setLoading,
     setScheduleLoading,
     setSemesterLoading,
-    setTeacherRangeSchedule,
-    setTeacherSchedule,
     showAllGroups,
     showAllTeachers,
 } from '../actions';
@@ -66,7 +63,10 @@ import {
     getCurrentSemesterSuccess,
     getDefaultSemesterSuccess,
     getFullScheduleSuccess,
+    getGroupScheduleSuccess,
     getScheduleItemsSuccess,
+    getTeacherRangeScheduleSuccess,
+    getTeacherScheduleSuccess,
 } from '../actions/schedule';
 
 export function* getScheduleItemsBySemester({ semesterId }) {
@@ -272,7 +272,7 @@ export function* getGroupSchedule({ groupId, semesterId }) {
     try {
         yield put(setMainScheduleLoading(true));
         const { data } = yield call(axiosCall, requestUrl);
-        yield put(setGroupSchedule(data));
+        yield put(getGroupScheduleSuccess(data));
     } catch (error) {
         yield put(setOpenErrorSnackbar(createErrorMessage(error)));
     } finally {
@@ -287,7 +287,7 @@ export function* getTeacherRangeSchedule({ values }) {
         const toUrlPart = endDay.replace(/\//g, '-');
         const requestUrl = `${FOR_TEACHER_SCHEDULE_URL}?from=${fromUrlPart}&to=${toUrlPart}`;
         const { data } = yield call(axiosCall, requestUrl);
-        yield put(setTeacherRangeSchedule(data));
+        yield put(getTeacherRangeScheduleSuccess(data));
     } catch (error) {
         yield put(setOpenErrorSnackbar(createErrorMessage(error)));
     } finally {
@@ -300,7 +300,7 @@ export function* getTeacherSchedule({ teacherId, semesterId }) {
     try {
         yield put(setMainScheduleLoading(true));
         const { data } = yield call(axiosCall, requestUrl);
-        yield put(setTeacherSchedule(data));
+        yield put(getTeacherScheduleSuccess(data));
     } catch (error) {
         yield put(setOpenErrorSnackbar(createErrorMessage(error)));
     } finally {

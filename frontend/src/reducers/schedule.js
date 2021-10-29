@@ -72,8 +72,8 @@ const reducer = (state = initialState, action) => {
                 teacherSchedule: {},
             });
         }
-        case actionTypes.SET_GROUP_SCHEDULE: {
-            const mappedSchedule = makeGroupSchedule(action.result);
+        case actionTypes.GET_GROUP_SCHEDULE_SUCCESS: {
+            const mappedSchedule = makeGroupSchedule(action.schedule);
             return updateObject(state, {
                 groupSchedule: mappedSchedule,
                 teacherSchedule: {},
@@ -100,8 +100,8 @@ const reducer = (state = initialState, action) => {
             return updateObject(state, {
                 scheduleTeacherId: action.teacherId,
             });
-        case actionTypes.SET_TEACHER_SCHEDULE: {
-            const mappedSchedule = makeTeacherSchedule(action.result);
+        case actionTypes.GET_TEACHER_SCHEDULE_SUCCESS: {
+            const mappedSchedule = makeTeacherSchedule(action.schedule);
             return updateObject(state, {
                 teacherSchedule: mappedSchedule,
                 groupSchedule: {},
@@ -118,9 +118,9 @@ const reducer = (state = initialState, action) => {
                 scheduleTeacherId: null,
                 scheduleSemesterId: action.semesterId,
             });
-        case actionTypes.SET_TEACHER_RANGE_SCHEDULE:
+        case actionTypes.GET_TEACHER_RANGE_SCHEDULE_SUCCESS:
             return updateObject(state, {
-                teacherRangeSchedule: action.result,
+                teacherRangeSchedule: action.schedule,
                 scheduleGroupId: null,
                 teacherSchedule: [],
                 groupSchedule: {},
