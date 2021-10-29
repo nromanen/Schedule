@@ -70,8 +70,8 @@ import { createErrorMessage, createMessage } from '../utils/sagaUtils';
 export function* getScheduleItemsBySemester({ semesterId }) {
     const requestUrl = `${SCHEDULE_SEMESTER_ITEMS_URL}?semesterId=${semesterId}`;
     try {
-        const response = yield call(axiosCall, requestUrl);
-        yield put(setScheduleItems(response.data));
+        const { data } = yield call(axiosCall, requestUrl);
+        yield put(setScheduleItems(data));
     } catch (error) {
         yield put(setOpenErrorSnackbar(createErrorMessage(error)));
     } finally {
@@ -81,10 +81,11 @@ export function* getScheduleItemsBySemester({ semesterId }) {
 
 export function* getScheduleItems() {
     try {
-        const response = yield call(axiosCall, CURRENT_SEMESTER_URL);
-        yield put(setCurrentSemester(response.data));
-        yield call(showBusyRooms, response.data.id);
-        yield call(getScheduleItemsBySemester, { semesterId: response.data.id });
+        const { data } = yield call(axiosCall, CURRENT_SEMESTER_URL);
+        yield put(setCurrentSemester(data));
+        const { id } = data;
+        yield call(showBusyRooms, id);
+        yield call(getScheduleItemsBySemester, { semesterId: id });
     } catch (error) {
         yield put(setOpenErrorSnackbar(i18n.t(NO_CURRENT_SEMESTER_ERROR)));
         yield put(setLoading(false));
@@ -104,12 +105,12 @@ export function* checkAvailabilityChangeRoomSchedule({ item }) {
     const { periodId, dayOfWeek, evenOdd, semesterId } = item;
     const requestUrl = `${ROOMS_AVAILABILITY}?classId=${periodId}&dayOfWeek=${dayOfWeek}&evenOdd=${evenOdd}&semesterId=${semesterId}`;
     try {
-        const response = yield call(axiosCall, requestUrl);
+        const { data } = yield call(axiosCall, requestUrl);
         yield put(
             checkAvailabilitySchedule({
                 classSuitsToTeacher: true,
                 teacherAvailable: true,
-                rooms: response.data,
+                rooms: data,
             }),
         );
     } catch (error) {
@@ -123,8 +124,8 @@ export function* checkScheduleItemAvailability({ item }) {
     const { periodId, dayOfWeek, evenOdd, lessonId, semesterId } = item;
     const requestUrl = `${SCHEDULE_CHECK_AVAILABILITY_URL}?classId=${periodId}&dayOfWeek=${dayOfWeek}&evenOdd=${evenOdd}&lessonId=${lessonId}&semesterId=${semesterId}`;
     try {
-        const response = yield call(axiosCall, requestUrl);
-        yield put(checkAvailabilitySchedule(response.data));
+        const { data } = yield call(axiosCall, requestUrl);
+        yield put(checkAvailabilitySchedule(data));
     } catch (error) {
         yield put(setOpenErrorSnackbar(createErrorMessage(error)));
     } finally {
@@ -201,8 +202,8 @@ export function* getAllPublicGroups({ id }) {
 
 export function* getAllPublicSemesters() {
     try {
-        const response = yield call(axiosCall, PUBLIC_SEMESTERS_URL);
-        yield put(setSemesterList(response.data));
+        const { data } = yield call(axiosCall, PUBLIC_SEMESTERS_URL);
+        yield put(setSemesterList(data));
     } catch (error) {
         yield put(setOpenErrorSnackbar(createErrorMessage(error)));
     }
@@ -210,8 +211,8 @@ export function* getAllPublicSemesters() {
 
 export function* getAllPublicTeachers() {
     try {
-        const response = yield call(axiosCall, PUBLIC_TEACHER_URL);
-        yield put(showAllTeachers(response.data));
+        const { data } = yield call(axiosCall, PUBLIC_TEACHER_URL);
+        yield put(showAllTeachers(data));
     } catch (error) {
         yield put(setOpenErrorSnackbar(createErrorMessage(error)));
     }
@@ -220,8 +221,8 @@ export function* getAllPublicTeachers() {
 export function* getAllPublicTeachersByDepartment({ departmentId }) {
     const requestUrl = `${DEPARTMENT_URL}/${departmentId}/${TEACHER_URL}`;
     try {
-        const response = yield call(axiosCall, requestUrl);
-        yield put(getAllTeachersByDepartmentId(response.data));
+        const { data } = yield call(axiosCall, requestUrl);
+        yield put(getAllTeachersByDepartmentId(data));
     } catch (error) {
         yield put(setOpenErrorSnackbar(createErrorMessage(error)));
     }
@@ -229,8 +230,8 @@ export function* getAllPublicTeachersByDepartment({ departmentId }) {
 
 export function* getCurrentSemester() {
     try {
-        const response = yield call(axiosCall, CURRENT_SEMESTER_URL);
-        yield put(setCurrentSemester(response.data));
+        const { data } = yield call(axiosCall, CURRENT_SEMESTER_URL);
+        yield put(setCurrentSemester(data));
     } catch (error) {
         yield put(setOpenErrorSnackbar(createErrorMessage(error)));
     } finally {
@@ -240,8 +241,8 @@ export function* getCurrentSemester() {
 
 export function* getDefaultSemester() {
     try {
-        const response = yield call(axiosCall, DEFAULT_SEMESTER_URL);
-        yield put(setDefaultSemester(response.data));
+        const { data } = yield call(axiosCall, DEFAULT_SEMESTER_URL);
+        yield put(setDefaultSemester(data));
     } catch (error) {
         yield put(setOpenErrorSnackbar(createErrorMessage(error)));
     } finally {
@@ -253,8 +254,8 @@ export function* getFullSchedule({ semesterId }) {
     const requestUrl = FULL_SCHEDULE_URL + semesterId;
     try {
         yield put(setMainScheduleLoading(true));
-        const response = yield call(axiosCall, requestUrl);
-        yield put(setFullSchedule(response.data));
+        const { data } = yield call(axiosCall, requestUrl);
+        yield put(setFullSchedule(data));
     } catch (error) {
         yield put(setOpenErrorSnackbar(createErrorMessage(error)));
     } finally {
@@ -266,8 +267,8 @@ export function* getGroupSchedule({ groupId, semesterId }) {
     const requestUrl = `${GROUP_SCHEDULE_URL + semesterId}&groupId=${groupId}`;
     try {
         yield put(setMainScheduleLoading(true));
-        const response = yield call(axiosCall, requestUrl);
-        yield put(setGroupSchedule(response.data));
+        const { data } = yield call(axiosCall, requestUrl);
+        yield put(setGroupSchedule(data));
     } catch (error) {
         yield put(setOpenErrorSnackbar(createErrorMessage(error)));
     } finally {
@@ -281,8 +282,8 @@ export function* getTeacherRangeSchedule({ values }) {
         const fromUrlPart = startDay.replace(/\//g, '-');
         const toUrlPart = endDay.replace(/\//g, '-');
         const requestUrl = `${FOR_TEACHER_SCHEDULE_URL}?from=${fromUrlPart}&to=${toUrlPart}`;
-        const response = yield call(axiosCall, requestUrl);
-        yield put(setTeacherRangeSchedule(response.data));
+        const { data } = yield call(axiosCall, requestUrl);
+        yield put(setTeacherRangeSchedule(data));
     } catch (error) {
         yield put(setOpenErrorSnackbar(createErrorMessage(error)));
     } finally {
@@ -294,8 +295,8 @@ export function* getTeacherSchedule({ teacherId, semesterId }) {
     const requestUrl = `${TEACHER_SCHEDULE_URL + semesterId}&teacherId=${teacherId}`;
     try {
         yield put(setMainScheduleLoading(true));
-        const response = yield call(axiosCall, requestUrl);
-        yield put(setTeacherSchedule(response.data));
+        const { data } = yield call(axiosCall, requestUrl);
+        yield put(setTeacherSchedule(data));
     } catch (error) {
         yield put(setOpenErrorSnackbar(createErrorMessage(error)));
     } finally {
