@@ -209,9 +209,7 @@ export function* setDefaultSemesterById({ semesterId }) {
 export function* semesterCopy({ values }) {
     try {
         const requestUrl = `${SEMESTER_COPY_URL}?fromSemesterId=${values.fromSemesterId}&toSemesterId=${values.toSemesterId}`;
-        const response = yield call(axiosCall, requestUrl, 'POST');
-        yield put(addSemester(response.data));
-        yield put(reset(SEMESTER_FORM));
+        yield call(axiosCall, requestUrl, 'POST');
         const message = i18n.t(BACK_END_SUCCESS_OPERATION, {
             cardType: i18n.t(FORM_SEMESTER_LABEL),
             actionType: i18n.t(COPIED_LABEL),
