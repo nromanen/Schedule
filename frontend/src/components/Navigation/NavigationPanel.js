@@ -44,7 +44,7 @@ const NavigationPanel = () => {
 
     return (
         <Paper className="admin-navigation">
-            <List indicatorColor="primary" className="navigation-container">
+            <List className="navigation-container">
                 {tabsComponents.map((item, index) => (
                     <ListItem
                         selected={selectedTab === index}
