@@ -53,13 +53,11 @@ const SemesterForm = (props) => {
         options,
     } = props;
 
-    const prepSetCheckedClasses = {};
-
     const [startDate, setStartDate] = useState(getToday());
     const [finishDate, setFinishDate] = useState(getTomorrow());
     const [disabledFinishDate, setDisabledFinishDate] = useState(true);
 
-    const [checkedClasses, setCheckedClasses] = useState(prepSetCheckedClasses);
+    const [checkedClasses, setCheckedClasses] = useState({});
     const [checkedDates, setCheckedDates] = useState(initialCheckboxesStateForDays);
     const [current, setCurrent] = useState(false);
     const [byDefault, setByDefault] = useState(false);
@@ -73,11 +71,11 @@ const SemesterForm = (props) => {
     };
 
     useEffect(() => {
+        const prepSetCheckedClasses = {};
         classScheduler.forEach((classItem) => {
             prepSetCheckedClasses[`${classItem.id}`] = false;
         });
         setCheckedClasses({ ...prepSetCheckedClasses });
-        clearCheckboxes();
         const semesterItem = { ...semester };
         clearCheckboxes();
         if (semester.id) {

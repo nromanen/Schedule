@@ -91,7 +91,7 @@ const SemesterItem = (props) => {
                         <div className="cards-btns">
                             {!(disabled || archived) && (
                                 <>
-                                    <GiSightDisabled
+                                    <IoMdEye
                                         className="svg-btn copy-btn"
                                         title={t(COMMON_SET_DISABLED)}
                                         onClick={() => {
@@ -128,7 +128,7 @@ const SemesterItem = (props) => {
                                 </>
                             )}
                             {disabled && !archived && (
-                                <IoMdEye
+                                <GiSightDisabled
                                     className="svg-btn copy-btn"
                                     title={t(COMMON_SET_ENABLED)}
                                     onClick={() => {
