@@ -1,8 +1,8 @@
-import * as actionsType from './actionsType';
+import * as actionTypes from './actionsType';
 
-export const showAllBusyRooms = (data) => {
+export const getAllBusyRoomsSuccess = (rooms) => {
     return {
-        type: actionsType.SHOW_ALL_BUSY_ROOMS,
-        result: data,
+        type: actionTypes.GET_BUSY_ROOMS_SUCCESS,
+        rooms,
     };
 };

@@ -36,7 +36,6 @@ export {
     resetUserPassword,
     setAuthError,
 } from './auth';
-export { showAllBusyRooms } from './busyRooms';
 export {
     addClassScheduleOne,
     deleteClassScheduleOne,

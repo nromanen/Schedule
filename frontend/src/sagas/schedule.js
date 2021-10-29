@@ -3,6 +3,7 @@ import * as actionTypes from '../actions/actionsType';
 import { axiosCall } from '../services/axios';
 import i18n from '../i18n';
 import {
+    BUSY_ROOMS,
     CLEAR_SCHEDULE_URL,
     CURRENT_SEMESTER_URL,
     DEFAULT_SEMESTER_URL,
@@ -35,7 +36,6 @@ import {
     setOpenErrorSnackbar,
     setOpenInfoSnackbar,
 } from '../actions/snackbar';
-import { showBusyRooms } from '../services/busyRooms';
 import {
     COMMON_SCHEDULE_TITLE,
     NO_CURRENT_SEMESTER_ERROR,
@@ -68,6 +68,7 @@ import {
     getTeacherRangeScheduleSuccess,
     getTeacherScheduleSuccess,
 } from '../actions/schedule';
+import { getAllBusyRoomsSuccess } from '../actions/busyRooms';
 
 export function* getScheduleItemsBySemester({ semesterId }) {
     const requestUrl = `${SCHEDULE_SEMESTER_ITEMS_URL}?semesterId=${semesterId}`;
@@ -81,12 +82,22 @@ export function* getScheduleItemsBySemester({ semesterId }) {
     }
 }
 
+export function* getBusyRooms(semesterId) {
+    const requestUrl = `${BUSY_ROOMS}?semesterId=${semesterId}`;
+    try {
+        const { data } = yield call(axiosCall, requestUrl);
+        yield put(getAllBusyRoomsSuccess(data));
+    } catch (error) {
+        yield put(setOpenErrorSnackbar(createErrorMessage(error)));
+    }
+}
+
 export function* getScheduleItems() {
     try {
         const { data } = yield call(axiosCall, CURRENT_SEMESTER_URL);
         yield put(getCurrentSemesterSuccess(data));
         const { id } = data;
-        yield call(showBusyRooms, id);
+        yield call(getBusyRooms, id);
         yield call(getScheduleItemsBySemester, { semesterId: id });
     } catch (error) {
         yield put(setOpenErrorSnackbar(i18n.t(NO_CURRENT_SEMESTER_ERROR)));
