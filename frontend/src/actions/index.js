@@ -30,11 +30,16 @@ export { setUsers, setUser } from './users';
 export {
     activateUser,
     authCheckState,
+    authAutoLogout,
+    activateSuccess,
+    resetUserPasswordSuccess,
+    registerUserSuccess,
     authUser,
     logout,
     registerUser,
     resetUserPassword,
     setAuthError,
+    authSuccess,
 } from './auth';
 export { showAllBusyRooms } from './busyRooms';
 export {
