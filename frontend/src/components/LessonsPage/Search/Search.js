@@ -1,5 +1,4 @@
 import React from 'react';
-import { styled } from '@material-ui/core';
 import { useTranslation } from 'react-i18next';
 import { Autocomplete } from '@material-ui/lab';
 import TextField from '@material-ui/core/TextField';
@@ -9,6 +8,7 @@ import { FORM_GROUP_LABEL } from '../../../constants/translationLabels/formEleme
 import SearchPanel from '../../../share/SearchPanel/SearchPanel';
 import { selectGroupService } from '../../../services/groupService';
 import '../LessonPage.scss';
+import './Search.scss';
 
 const Search = (props) => {
     const { groupId, setTerm, groups, selectByGroupId } = props;
@@ -42,7 +42,7 @@ const Search = (props) => {
                         }}
                         renderInput={(params) => (
                             <TextField
-                                classname="groupField"
+                                className="textField"
                                 {...params}
                                 label={t(FORM_GROUP_LABEL)}
                                 margin="normal"

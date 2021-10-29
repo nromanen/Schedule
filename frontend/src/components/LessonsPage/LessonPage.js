@@ -20,7 +20,7 @@ import Lessons from '../../containers/LessonPage/Lessons';
 import Search from '../../containers/LessonPage/Search';
 import LessonForm from '../../containers/LessonPage/LessonForm';
 import CopyLessonsFromSemesterForm from '../../containers/LessonPage/CopyLessonsFromSemesterForm';
-import CopyLessonDialog from './CopyLessonDialog';
+import CopyLessonDialog from './CopyLessonDialog/CopyLessonDialog';
 
 import './LessonPage.scss';
 import { showAllGroupsService } from '../../services/groupService';
@@ -88,8 +88,11 @@ const LessonPage = (props) => {
 
         cardObj = { ...cardObj, teacher: lessonTeacher };
 
-        if (cardObj.id) updateLessonCardStart({ info: cardObj, groupId });
-        createLessonCardStart({ info: cardObj, isCopy: false });
+        if (cardObj.id) {
+            updateLessonCardStart({ info: cardObj, groupId });
+        } else {
+            createLessonCardStart({ info: cardObj, isCopy: false });
+        }
     };
 
     const showConfirmDialog = (lessonCardId) => {

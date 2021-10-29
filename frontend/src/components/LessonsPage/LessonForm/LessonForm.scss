@@ -1,12 +1,18 @@
-.copy-for-button{
-  width: 100%;
-  margin-top: 15px!important;
+.copy-for-button {
+    width: 100%;
+    margin-top: 15px !important;
 }
-.group-label{
-  margin: 5px 5px 5px 0px!important;
-  color: #9c9c9c;
+.group-label {
+    margin: 5px 5px 5px 0px !important;
+    color: #9c9c9c;
 }
-.form-fields-container .MuiTypography-root, .form-fields-container span.MuiCheckbox-root svg{
-  margin-left: -8px;
-  margin-bottom: -10px;
+.form-fields-container .MuiTypography-root,
+.form-fields-container span.MuiCheckbox-root svg {
+    margin-left: -8px;
+    margin-bottom: -10px;
+}
+
+.notSelected {
+    text-align: center;
+    margin: auto;
 }
