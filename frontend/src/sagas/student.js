@@ -1,10 +1,10 @@
+import { errorHandler, successHandler } from '../helper/handlerAxios';
 import { call, takeEvery, put } from 'redux-saga/effects';
 import { reset } from 'redux-form';
 import { STUDENT_URL } from '../constants/axios';
 
 import * as actionTypes from '../actions/actionsType';
 import { STUDENT_FORM } from '../constants/reduxForms';
-import { errorHandler, successHandler } from '../helper/handlerAxios';
 import i18n from '../i18n';
 import { deleteStudent, setStudent, showAllStudents, updateStudent } from '../actions/students';
 import {
@@ -59,7 +59,6 @@ function* updateStudentWorker({ data }) {
 
 function* deleteStudentWorker({ id }) {
     try {
-        console.log(id)
         yield call(axiosCall, `${STUDENT_URL}/${id}`, 'DELETE');
         yield put(deleteStudent(id));
         successHandler(

@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { ShowStudentsOnGroupDialog } from '../../share/DialogWindows';
+import ShowStudentsOnGroupDialog from '../../share/DialogWindows/_dialogWindows/ShowStudentsOnGroupDialog';
 import { fetchAllStudentsStart } from '../../actions/students';
 
 const mapStateToProps = (state) => ({

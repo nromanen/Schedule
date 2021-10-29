@@ -30,7 +30,6 @@ export const AddGroup = (props) => {
             initialize();
         }
     }, [group.id]);
-
     return (
         <Card additionClassName="form-card group-form">
             <h2 className="group-form__title">

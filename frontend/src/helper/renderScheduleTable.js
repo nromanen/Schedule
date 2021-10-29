@@ -1,5 +1,5 @@
 import React from 'react';
-import { isEqual, isNil } from 'lodash';
+import { isEmpty, isEqual, isNil } from 'lodash';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableContainer from '@material-ui/core/TableContainer';
@@ -26,8 +26,7 @@ import {
     COMMON_LINK_TO_MEETING_WORD,
     COMMON_VACATION_LABEL,
 } from '../constants/translationLabels/common';
-import { CustomDialog } from '../share/DialogWindows';
-import { dialogTypes } from '../constants/dialogs';
+import { LinkToMeeting } from '../components/LinkToMeeting/LinkToMeeting';
 
 const shortid = require('shortid');
 
@@ -46,7 +45,7 @@ const getHref = (link) => {
 };
 const setLink = (card, place) => {
     if (place === places.TOGETHER) {
-        return <CustomDialog type={dialogTypes.MEETING_LINK} {...card} />;
+        return <LinkToMeeting {...card} />;
     }
     if (place === places.ONLINE) {
         return getHref(card.linkToMeeting);
@@ -110,7 +109,7 @@ export const prepareLessonSubCardCell = (card, place) => {
 export const prepareLessonTemporaryCardCell = (card, place, day) => {
     if (isNil(card)) return '';
 
-    const { temporary_schedule: tempSchedule, linkToMeeting } = card;
+    const { temporary_schedule: tempSchedule, linkToMeeting = 'http://zoom.us' } = card;
 
     const meetingLink = linkToMeeting && setLink(card, place);
 
@@ -592,26 +591,23 @@ const renderClassRow = (classItem, days, scheduleRow, place) => (
 );
 
 export const renderWeekTable = (schedule, place) => {
-    if (schedule) {
-        return (
-            <TableContainer>
-                <Table aria-label="sticky table">
-                    {renderScheduleGroupHeader(schedule.days)}
-                    <TableBody>
-                        {schedule.classes.map((classItem) => {
-                            return renderClassRow(
-                                classItem,
-                                schedule.days,
-                                schedule.cards[classItem.id],
-                                place,
-                            );
-                        })}
-                    </TableBody>
-                </Table>
-            </TableContainer>
-        );
-    }
-    return null;
+    return (
+        <TableContainer>
+            <Table aria-label="sticky table">
+                {renderScheduleGroupHeader(schedule.days)}
+                <TableBody>
+                    {schedule.classes.map((classItem) => {
+                        return renderClassRow(
+                            classItem,
+                            schedule.days,
+                            schedule.cards[classItem.id],
+                            place,
+                        );
+                    })}
+                </TableBody>
+            </Table>
+        </TableContainer>
+    );
 };
 
 const renderLessonsFirstLine = (lessonItem) => {

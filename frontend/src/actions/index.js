@@ -1,4 +1,33 @@
 export {
+    createLessonCard,
+    createLessonCardStart,
+    getLessonsByGroup,
+    setLessonsCards,
+    getLessonTypes,
+    setLessonTypes,
+    deleteLessonCard,
+    deleteLessonCardStart,
+    copyLessonCard,
+    selectLessonCard,
+    updateLessonCard,
+    updateLessonCardStart,
+    selectGroupId,
+    setUniqueError,
+} from './lesson';
+
+export {
+    selectTeacherId,
+    selectTemporarySchedule,
+    selectVacation,
+    setTemporarySchedules,
+    setSchedulesAndTemporarySchedules,
+} from './temporarySchedule';
+
+export { setOpenSnackbar } from './snackbar';
+
+export { setUsers, setUser } from './users';
+
+export {
     activateUser,
     authCheckState,
     authUser,
@@ -25,16 +54,7 @@ export {
     showAllGroups,
     toggleDisabledStatus,
 } from './groups';
-export {
-    deleteLessonCard,
-    selectGroupId,
-    selectLessonCard,
-    setLessonsCards,
-    setLessonTypes,
-    setUniqueError,
-    storeLessonCard,
-    updateLessonCard,
-} from './lesson';
+
 export { setLoading, setScheduleLoading, setSemesterLoading } from './loadingIndicator';
 export {
     addRoom,
@@ -82,7 +102,9 @@ export {
     showAllSemesters,
     updateSemester,
 } from './semesters';
-export { setOpenSnackbar } from './snackbar';
+
+export { setIsOpenConfirmDialog } from './dialog';
+
 export {
     addSubject,
     clearSubject,
@@ -101,11 +123,3 @@ export {
     showAllTeachers,
     updateTeacherCard,
 } from './teachers';
-export {
-    selectTeacherId,
-    selectTemporarySchedule,
-    selectVacation,
-    setSchedulesAndTemporarySchedules,
-    setTemporarySchedules,
-} from './temporarySchedule';
-export { setUser, setUsers } from './users';

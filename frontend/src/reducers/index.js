@@ -19,6 +19,7 @@ import users from './users';
 import freeRooms from './freeRooms';
 import departments from './departments';
 import students from './students';
+import dialog from './dialog';
 
 const rootReducer = combineReducers({
     lesson,
@@ -39,6 +40,7 @@ const rootReducer = combineReducers({
     freeRooms,
     departments,
     students,
+    dialog,
 
     form: formReducer,
 });

@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { styled } from '@material-ui/core/styles';
@@ -7,24 +8,23 @@ import TextField from '@material-ui/core/TextField';
 import Board from '../Board/Board';
 import ScheduleItem from '../ScheduleItem/ScheduleItem';
 
-import { selectGroupIdService } from '../../services/lessonService';
-
 import { firstStringLetterCapital } from '../../helper/strings';
 import { FORM_GROUP_LABEL } from '../../constants/translationLabels/formElements';
 import {
     COMMON_SELECT_GROUP_SCHEDULE,
     LESSON_NO_LESSON_FOR_GROUP_LABEL,
 } from '../../constants/translationLabels/common';
+import { selectGroupId } from '../../actions';
 
 const GroupField = styled(TextField)({
     width: '150px',
 });
 
 const ScheduleLessonsList = (props) => {
-    const { groups, groupId, lessons, items, translation: t } = props;
+    const { groups, groupId, lessons, selectByGroupId, items, translation: t } = props;
 
     const handleGroupSelect = (group) => {
-        if (group) selectGroupIdService(group.id);
+        if (group) selectByGroupId(group.id);
     };
 
     const groupFinderHandle = (groupIdProp) => {
@@ -99,4 +99,8 @@ const ScheduleLessonsList = (props) => {
     );
 };
 
-export default ScheduleLessonsList;
+const mapDispatchToProps = (dispatch) => ({
+    selectByGroupId: (groupId) => dispatch(selectGroupId(groupId)),
+});
+
+export default connect(null, mapDispatchToProps)(ScheduleLessonsList);

@@ -1,18 +1,18 @@
 import React, { useState } from 'react';
 import { IoMdLink } from 'react-icons/all';
-import { CustomDialog } from '../../share/DialogWindows';
+import CustomDialog from '../../containers/Dialogs/CustomDialog';
 import { dialogTypes } from '../../constants/dialogs';
 import './LinkToMeeting.scss';
 
 const LinkToMeeting = (props) => {
     const { linkToMeeting } = props;
-    const [openDialog, setOpenDialog] = useState(false);
+    const [isOpenMeetingLinkDialog, setIsOpenMeetingLinkDialog] = useState(false);
     const openWindowByUrl = (url) => {
         const win = window.open(url, '_blank');
         win.focus();
     };
-    const handleClose = (semesterId) => {
-        setOpenDialog(false);
+    const handelRedirectToMeeting = (semesterId) => {
+        setIsOpenMeetingLinkDialog(false);
         if (semesterId !== '') {
             openWindowByUrl(linkToMeeting);
         }
@@ -24,18 +24,20 @@ const LinkToMeeting = (props) => {
                 color="blue"
                 className="svg-btn copy-btn link"
                 onClick={() => {
-                    setOpenDialog(true);
+                    setIsOpenMeetingLinkDialog(true);
                 }}
                 title={linkToMeeting}
             />
-            <CustomDialog
-                type={dialogTypes.MEETING_LINK}
-                cardId={1}
-                open={openDialog}
-                onClose={handleClose}
-                linkToMeeting={linkToMeeting}
-            />
+            {isOpenMeetingLinkDialog && (
+                <CustomDialog
+                    type={dialogTypes.MEETING_LINK}
+                    handelConfirm={handelRedirectToMeeting}
+                    open={isOpenMeetingLinkDialog}
+                    linkToMeeting={linkToMeeting}
+                />
+            )}
         </>
     );
 };
+
 export { LinkToMeeting };

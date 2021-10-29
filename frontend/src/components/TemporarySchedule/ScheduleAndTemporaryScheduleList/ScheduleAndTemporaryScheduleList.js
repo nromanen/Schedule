@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { MdExpandMore } from 'react-icons/all';
+import { connect } from 'react-redux';
 
 import Divider from '@material-ui/core/Divider';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
@@ -7,7 +8,7 @@ import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import shortId from 'shortid';
 import Card from '../../../share/Card/Card';
-import { CustomDialog } from '../../../share/DialogWindows';
+import CustomDialog from '../../../containers/Dialogs/CustomDialog';
 
 import TemporaryScheduleCard from '../TemporaryScheduleCard/TemporaryScheduleCard';
 import TemporaryScheduleCardButtons from '../TemporaryScheduleCardButtons/TemporaryScheduleCardButtons';
@@ -15,12 +16,12 @@ import TemporaryScheduleCardButtons from '../TemporaryScheduleCardButtons/Tempor
 import { cardType } from '../../../constants/cardType';
 
 import { deleteTemporaryScheduleService } from '../../../services/temporaryScheduleService';
+import { setIsOpenConfirmDialog } from '../../../actions/dialog';
 import { dialogTypes } from '../../../constants/dialogs';
 
 const ScheduleAndTemporaryScheduleList = (props) => {
     const schedulesAndTemporarySchedules = props.schedulesAndTemporarySchedules || [];
-
-    const [open, setOpen] = useState(false);
+    const { isOpenConfirmDialog, setOpenConfirmDialog } = props;
     const [temporaryScheduleId, setTemporaryScheduleId] = useState(-1);
     const [date, setDate] = useState(null);
     const [teacherId, setTeacherId] = useState(null);
@@ -35,14 +36,11 @@ const ScheduleAndTemporaryScheduleList = (props) => {
 
     const handleClickOpen = (id) => {
         setTemporaryScheduleId(id);
-        setOpen(true);
+        setOpenConfirmDialog(true);
     };
 
-    const handleClose = (id) => {
-        setOpen(false);
-        if (!id) {
-            return;
-        }
+    const handleDelete = (id) => {
+        setOpenConfirmDialog(false);
         deleteTemporaryScheduleService(id, date, teacherId);
     };
 
@@ -50,11 +48,11 @@ const ScheduleAndTemporaryScheduleList = (props) => {
         <main className="temporary-schedule-section">
             <CustomDialog
                 type={dialogTypes.DELETE_CONFIRM}
-                cardId={temporaryScheduleId}
+                handelConfirm={() => handleDelete(temporaryScheduleId)}
                 whatDelete={cardType.TEMPORARY_SCHEDULE.toLowerCase()}
-                open={open}
-                onClose={handleClose}
+                open={isOpenConfirmDialog}
             />
+
             {schedulesAndTemporarySchedules.map((scheduleAndTemporarySchedule) => (
                 <ExpansionPanel key={shortId.generate()} {...expandedProp}>
                     <ExpansionPanelSummary
@@ -121,5 +119,11 @@ const ScheduleAndTemporaryScheduleList = (props) => {
         </main>
     );
 };
+const mapStateToProps = (state) => ({
+    isOpenConfirmDialog: state.dialog.isOpenConfirmDialog,
+});
+const mapDispatchToProps = (dispatch) => ({
+    setOpenConfirmDialog: (newState) => dispatch(setIsOpenConfirmDialog(newState)),
+});
 
-export default ScheduleAndTemporaryScheduleList;
+export default connect(mapStateToProps, mapDispatchToProps)(ScheduleAndTemporaryScheduleList);

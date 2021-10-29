@@ -1,30 +1,61 @@
 import * as actionTypes from './actionsType';
 
-export const storeLessonCard = (res) => {
+export const createLessonCard = (result) => {
     return {
-        type: actionTypes.ADD_LESSON_CARD,
-        result: res,
+        type: actionTypes.CREATE_LESSON_CARD,
+        result,
     };
 };
 
-export const setLessonsCards = (res) => {
+export const createLessonCardStart = (payload) => {
+    return {
+        type: actionTypes.CREATE_LESSON_CARD_START,
+        payload,
+    };
+};
+
+export const getLessonsByGroup = (id) => {
+    return {
+        type: actionTypes.GET_LESSONS_CARDS_START,
+        id,
+    };
+};
+
+export const setLessonsCards = (result) => {
     return {
         type: actionTypes.SET_LESSONS_CARDS,
-        result: res,
+        result,
     };
 };
 
-export const setLessonTypes = (res) => {
-    return {
-        type: actionTypes.SET_LESSON_TYPES,
-        result: res,
-    };
-};
+export const getLessonTypes = () => ({
+    type: actionTypes.GET_LESSON_TYPES_START,
+});
 
-export const deleteLessonCard = (res) => {
+export const setLessonTypes = (result) => ({
+    type: actionTypes.SET_LESSON_TYPES,
+    result,
+});
+
+export const deleteLessonCard = (id) => {
     return {
         type: actionTypes.DELETE_LESSON_CARD,
-        result: res,
+        id,
+    };
+};
+
+export const deleteLessonCardStart = (id) => {
+    return {
+        type: actionTypes.DELETE_LESSON_CARD_START,
+        id,
+    };
+};
+
+export const copyLessonCard = (group, lesson) => {
+    return {
+        type: actionTypes.COPY_LESSON_START,
+        group,
+        lesson,
     };
 };
 
@@ -39,6 +70,13 @@ export const updateLessonCard = (res) => {
     return {
         type: actionTypes.UPDATE_LESSON_CARD,
         result: res,
+    };
+};
+
+export const updateLessonCardStart = (payload) => {
+    return {
+        type: actionTypes.UPDATE_LESSON_CARD_START,
+        payload,
     };
 };
 

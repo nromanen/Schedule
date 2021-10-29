@@ -1,9 +1,9 @@
-@import '../../AppConstants';
+@import '../../styles/colors.scss';
 .lang_selector {
     label.MuiFormControlLabel-root:hover,
     .activeLanguage {
         background: $light-blue;
-        border-radius: 5px;
+    border-radius: 5px;
     }
     .MuiFormControlLabel-root {
         margin: 0px 5px;

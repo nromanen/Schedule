@@ -1,0 +1,46 @@
+@import '../../../App';
+.semester {
+    &-form {
+        margin: 10px;
+    }
+
+    &-btns {
+        margin-top: 20px;
+    }
+
+    &-checkbox {
+        margin-left: -17px;
+        margin-bottom: -10px;
+        color: $label-color;
+    }
+}
+
+.form-field-up {
+    margin-top: 30px;
+}
+
+.form-time-block {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 8px 0;
+
+    .semester-input {
+        width: 100% !important;
+    }
+
+    .time-input {
+        width: 48%;
+    }
+}
+.group-options {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    align-items: center;
+    align-content: center;
+
+    Button {
+        margin: 5px 0 5px 17px;
+    }
+}
