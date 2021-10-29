@@ -1,18 +1,18 @@
 import * as actionTypes from './actionsType';
 
-export const setScheduleItems = (res) => {
-    return {
-        type: actionTypes.SET_SCHEDULE_ITEMS,
-        result: res,
-    };
-};
-
 export const getScheduleItemsStart = (semesterId) => {
     return {
         type: actionTypes.GET_SCHEDULE_ITEMS_START,
         semesterId,
     };
 };
+export const getScheduleItemsSuccess = (items) => {
+    return {
+        type: actionTypes.GET_SCHEDULE_ITEMS_SUCCESS,
+        items,
+    };
+};
+
 export const getAllPublicTeachersByDepartmentStart = (departmentId) => {
     return {
         type: actionTypes.GET_ALL_PUBLIC_TEACHERS_BY_DEPARTMENT_START,
@@ -56,6 +56,13 @@ export const editRoomItemToScheduleStart = (item) => {
 export const deleteScheduleItemStart = (itemId) => {
     return {
         type: actionTypes.DELETE_SCHEDULE_ITEM_START,
+        itemId,
+    };
+};
+
+export const deleteScheduleItemSuccess = (itemId) => {
+    return {
+        type: actionTypes.DELETE_SCHEDULE_ITEM_SUCCESS,
         itemId,
     };
 };
@@ -110,19 +117,20 @@ export const addItemToSchedule = (res) => {
     };
 };
 
-export const checkAvailabilitySchedule = (res) => {
-    return {
-        type: actionTypes.CHECK_AVAILABILITY_SCHEDULE,
-        result: res,
-    };
-};
-
 export const checkAvailabilityScheduleStart = (item) => {
     return {
         type: actionTypes.CHECK_AVAILABILITY_SCHEDULE_START,
         item,
     };
 };
+
+export const checkAvailabilityScheduleSuccess = (result) => {
+    return {
+        type: actionTypes.CHECK_AVAILABILITY_CHANGE_ROOM_SCHEDULE_SUCCESS,
+        result,
+    };
+};
+
 export const checkAvailabilityChangeRoomScheduleStart = (item) => {
     return {
         type: actionTypes.CHECK_AVAILABILITY_CHANGE_ROOM_SCHEDULE_START,
@@ -167,12 +175,6 @@ export const getFullScheduleStart = (semesterId) => {
     return {
         type: actionTypes.GET_FULL_SCHEDULE_START,
         semesterId,
-    };
-};
-export const deleteItemFromSchedule = (res) => {
-    return {
-        type: actionTypes.DELETE_ITEM_FROM_SCHEDULE,
-        result: res,
     };
 };
 

@@ -22,9 +22,9 @@ const initialState = {
 
 const reducer = (state = initialState, action) => {
     switch (action.type) {
-        case actionTypes.SET_SCHEDULE_ITEMS:
+        case actionTypes.GET_SCHEDULE_ITEMS_SUCCESS:
             return updateObject(state, {
-                items: action.result,
+                items: action.items,
             });
         case actionTypes.SET_CURRENT_SEMESTER:
             return updateObject(state, {
@@ -34,7 +34,7 @@ const reducer = (state = initialState, action) => {
             return updateObject(state, {
                 defaultSemester: action.payload,
             });
-        case actionTypes.CHECK_AVAILABILITY_SCHEDULE:
+        case actionTypes.CHECK_AVAILABILITY_CHANGE_ROOM_SCHEDULE_SUCCESS:
             return updateObject(state, {
                 availability: action.result,
             });
@@ -88,8 +88,8 @@ const reducer = (state = initialState, action) => {
             return updateObject(state, {
                 scheduleGroupId: action.groupId,
             });
-        case actionTypes.DELETE_ITEM_FROM_SCHEDULE: {
-            const index = state.items.findIndex((item) => item.id === action.result);
+        case actionTypes.DELETE_SCHEDULE_ITEM_SUCCESS: {
+            const index = state.items.findIndex((item) => item.id === action.itemId);
             state.items.splice(index, 1);
             const newArr = state.items;
             return updateObject(state, {

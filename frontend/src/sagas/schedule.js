@@ -24,14 +24,11 @@ import {
     TEACHER_URL,
 } from '../constants/axios';
 import {
-    checkAvailabilitySchedule,
-    deleteItemFromSchedule,
     setCurrentSemester,
     setDefaultSemester,
     setFullSchedule,
     setGroupSchedule,
     setLoading,
-    setScheduleItems,
     setScheduleLoading,
     setSemesterList,
     setSemesterLoading,
@@ -66,12 +63,17 @@ import {
 import { getAllTeachersByDepartmentId } from '../actions/teachers';
 import { setMainScheduleLoading } from '../actions/loadingIndicator';
 import { createErrorMessage, createMessage } from '../utils/sagaUtils';
+import {
+    checkAvailabilityScheduleSuccess,
+    deleteScheduleItemSuccess,
+    getScheduleItemsSuccess,
+} from '../actions/schedule';
 
 export function* getScheduleItemsBySemester({ semesterId }) {
     const requestUrl = `${SCHEDULE_SEMESTER_ITEMS_URL}?semesterId=${semesterId}`;
     try {
         const { data } = yield call(axiosCall, requestUrl);
-        yield put(setScheduleItems(data));
+        yield put(getScheduleItemsSuccess(data));
     } catch (error) {
         yield put(setOpenErrorSnackbar(createErrorMessage(error)));
     } finally {
@@ -107,7 +109,7 @@ export function* checkAvailabilityChangeRoomSchedule({ item }) {
     try {
         const { data } = yield call(axiosCall, requestUrl);
         yield put(
-            checkAvailabilitySchedule({
+            checkAvailabilityScheduleSuccess({
                 classSuitsToTeacher: true,
                 teacherAvailable: true,
                 rooms: data,
@@ -125,7 +127,7 @@ export function* checkScheduleItemAvailability({ item }) {
     const requestUrl = `${SCHEDULE_CHECK_AVAILABILITY_URL}?classId=${periodId}&dayOfWeek=${dayOfWeek}&evenOdd=${evenOdd}&lessonId=${lessonId}&semesterId=${semesterId}`;
     try {
         const { data } = yield call(axiosCall, requestUrl);
-        yield put(checkAvailabilitySchedule(data));
+        yield put(checkAvailabilityScheduleSuccess(data));
     } catch (error) {
         yield put(setOpenErrorSnackbar(createErrorMessage(error)));
     } finally {
@@ -154,7 +156,7 @@ export function* deleteScheduleItem({ itemId }) {
     try {
         const requestUrl = `${SCHEDULE_ITEMS_URL}/${itemId}`;
         yield call(axiosCall, requestUrl, 'DELETE');
-        yield put(deleteItemFromSchedule(itemId));
+        yield put(deleteScheduleItemSuccess(itemId));
         yield call(getScheduleItems);
     } catch (error) {
         yield put(setOpenErrorSnackbar(createErrorMessage(error)));
