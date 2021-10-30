@@ -52,15 +52,15 @@ export const deleteGroupStart = (id) => ({
     id,
 });
 
-export const createGroupStart = (data) => ({
-    type: actionTypes.CREATE_GROUP_START,
+export const submitGroupStart = (data) => ({
+    type: actionTypes.SUBMIT_GROUP_START,
     data,
 });
 
-export const updateGroupStart = (data) => ({
-    type: actionTypes.UPDATE_GROUP_START,
-    data,
-});
+// export const updateGroupStart = (data) => ({
+//     type: actionTypes.UPDATE_GROUP_START,
+//     data,
+// });
 
 export const clearGroupStart = (data) => ({
     type: actionTypes.CLEAR_GROUP_START,

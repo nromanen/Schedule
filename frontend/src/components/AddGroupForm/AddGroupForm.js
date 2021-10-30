@@ -18,7 +18,8 @@ import {
 
 export const AddGroup = (props) => {
     const { t } = useTranslation('formElements');
-    const { handleSubmit, pristine, onReset, submitting, group, initialize } = props;
+    const { handleSubmit, pristine, onReset, submitting, group, initialize, submitGroupStart } =
+        props;
 
     useEffect(() => {
         if (group.id) {
@@ -36,7 +37,7 @@ export const AddGroup = (props) => {
                 {group.id ? t(EDIT_TITLE) : t(CREATE_TITLE)}
                 {t(GROUP_Y_LABEL)}
             </h2>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit(submitGroupStart.bind(this))}>
                 <Field
                     className="form-field"
                     name="title"

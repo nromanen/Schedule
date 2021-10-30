@@ -7,8 +7,6 @@ import {
     fetchEnabledGroupsStart,
     toggleDisabledStatus,
     deleteGroupStart,
-    createGroupStart,
-    updateGroupStart,
     clearGroupStart,
     selectGroup,
 } from '../../actions/groups';
@@ -33,8 +31,6 @@ const mapDispatchToProps = {
     toggleDisabledStatus,
     deleteStudentStart,
     deleteGroupStart,
-    createGroupStart,
-    updateGroupStart,
     clearGroupStart,
     selectGroup,
 };

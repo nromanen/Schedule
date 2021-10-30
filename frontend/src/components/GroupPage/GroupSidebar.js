@@ -3,34 +3,15 @@ import AddGroup from '../../containers/GroupPage/GroupForm';
 import SearchPanel from '../../share/SearchPanel/SearchPanel';
 
 const GroupSidebar = (props) => {
-    const {
-        createGroupStart,
-        updateGroupStart,
-        clearGroupStart,
-        setIsDisabled,
-        isDisabled,
-        setTerm,
-    } = props;
-
-    const SearchChange = setTerm;
-
-    const onSubmitGroupForm = (data) => {
-        return !data.id ? createGroupStart(data) : updateGroupStart(data);
-    };
+    const { clearGroupStart, setIsDisabled, isDisabled, setTerm } = props;
 
     return (
         <aside className="search-list__panel">
             <SearchPanel
-                SearchChange={SearchChange}
+                SearchChange={setTerm}
                 showDisabled={() => setIsDisabled((prev) => !prev)}
             />
-            {!isDisabled && (
-                <AddGroup
-                    className="form"
-                    onSubmit={onSubmitGroupForm}
-                    onReset={() => clearGroupStart()}
-                />
-            )}
+            {!isDisabled && <AddGroup className="form" onReset={() => clearGroupStart()} />}
         </aside>
     );
 };

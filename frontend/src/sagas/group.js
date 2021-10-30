@@ -82,6 +82,20 @@ function* updateGroup({ data }) {
     }
 }
 
+function* submitGroupForm() {
+    try {
+        const state = yield select();
+        const { values } = state.form.addGroup;
+        if (!values.id) {
+            yield call(createGroup, { data: values });
+        } else {
+            yield call(updateGroup, { data: values });
+        }
+    } catch (err) {
+        errorHandler(err);
+    }
+}
+
 function* deleteGroup({ id }) {
     try {
         yield call(axiosCall, `${GROUP_URL}/${id}`, 'DELETE');
@@ -123,7 +137,7 @@ export default function* groupWatcher() {
     yield takeLatest(actionTypes.FETCH_DISABLED_GROUPS_START, fetchDisabledGroups);
     yield takeLatest(actionTypes.FETCH_ENABLED_GROUPS_START, fetchEnabledGroups);
     yield takeEvery(actionTypes.DELETE_GROUP_START, deleteGroup);
-    yield takeEvery(actionTypes.CREATE_GROUP_START, createGroup);
-    yield takeEvery(actionTypes.UPDATE_GROUP_START, updateGroup);
+    yield takeEvery(actionTypes.SUBMIT_GROUP_START, submitGroupForm);
+    // yield takeEvery(actionTypes.UPDATE_GROUP_START, updateGroup);
     yield takeEvery(actionTypes.CLEAR_GROUP_START, clearGroup);
 }

@@ -99,6 +99,11 @@ const GroupList = (props) => {
                 />
             )}
             <div className="group-wrapper group-list">
+                {loading && (
+                    <section className="centered-container">
+                        <CircularProgress />
+                    </section>
+                )}
                 {!loading && visibleGroups.length === 0 ? (
                     <NotFound name={t(GROUP_Y_LABEL)} />
                 ) : (
@@ -113,11 +118,6 @@ const GroupList = (props) => {
                             showStudentsByGroup={showStudentsByGroup}
                         />
                     ))
-                )}
-                {loading && (
-                    <section className="centered-container">
-                        <CircularProgress />
-                    </section>
                 )}
             </div>
         </>
