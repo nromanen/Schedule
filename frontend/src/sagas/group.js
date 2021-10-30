@@ -1,7 +1,7 @@
-import { errorHandler, successHandler } from '../helper/handlerAxios';
 import { call, takeEvery, put, select, takeLatest } from 'redux-saga/effects';
 import { reset } from 'redux-form';
 import { has } from 'lodash';
+import { errorHandler, successHandler } from '../helper/handlerAxios';
 import i18n from '../i18n';
 import { GROUP_FORM } from '../constants/reduxForms';
 import * as actionTypes from '../actions/actionsType';
@@ -24,11 +24,11 @@ import {
 import { DISABLED_GROUPS_URL, GROUP_URL } from '../constants/axios';
 import { axiosCall } from '../services/axios';
 
-function* fetchDisabledGroups() {
+function* fetchGroups(url) {
     try {
         yield put(showAllGroups([]));
         yield put(setLoading(true));
-        const res = yield call(axiosCall, DISABLED_GROUPS_URL, 'GET');
+        const res = yield call(axiosCall, url);
         yield put(showAllGroups(res.data));
     } catch (err) {
         errorHandler(err);
@@ -37,17 +37,12 @@ function* fetchDisabledGroups() {
     }
 }
 
+function* fetchDisabledGroups() {
+    yield call(fetchGroups, DISABLED_GROUPS_URL);
+}
+
 function* fetchEnabledGroups() {
-    try {
-        yield put(showAllGroups([]));
-        yield put(setLoading(true));
-        const res = yield call(axiosCall, GROUP_URL, 'GET');
-        yield put(showAllGroups(res.data));
-    } catch (err) {
-        errorHandler(err);
-    } finally {
-        yield put(setLoading(false));
-    }
+    yield call(fetchGroups, GROUP_URL);
 }
 
 function* createGroup({ data }) {
