@@ -3,6 +3,7 @@ import * as actionTypes from '../actions/actionsType';
 import { axiosCall } from '../services/axios';
 import i18n from '../i18n';
 import {
+    BUSY_ROOMS,
     CLEAR_SCHEDULE_URL,
     CURRENT_SEMESTER_URL,
     DEFAULT_SEMESTER_URL,
@@ -24,25 +25,17 @@ import {
     TEACHER_URL,
 } from '../constants/axios';
 import {
-    checkAvailabilitySchedule,
-    deleteItemFromSchedule,
-    setCurrentSemester,
-    setDefaultSemester,
-    setFullSchedule,
-    setGroupSchedule,
     setLoading,
-    setOpenSnackbar,
-    setScheduleItems,
     setScheduleLoading,
-    setSemesterList,
     setSemesterLoading,
-    setTeacherRangeSchedule,
-    setTeacherSchedule,
     showAllGroups,
     showAllTeachers,
 } from '../actions';
-import { showBusyRooms } from '../services/busyRooms';
-import { snackbarTypes } from '../constants/snackbarTypes';
+import {
+    setOpenSuccessSnackbar,
+    setOpenErrorSnackbar,
+    setOpenInfoSnackbar,
+} from '../actions/snackbar';
 import {
     COMMON_SCHEDULE_TITLE,
     NO_CURRENT_SEMESTER_ERROR,
@@ -62,35 +55,52 @@ import {
 } from '../constants/translationLabels/formElements';
 import { getAllTeachersByDepartmentId } from '../actions/teachers';
 import { setMainScheduleLoading } from '../actions/loadingIndicator';
+import { createErrorMessage, createMessage } from '../utils/sagaUtils';
+import {
+    checkAvailabilityScheduleSuccess,
+    deleteScheduleItemSuccess,
+    getAllPublicSemestersSuccess,
+    getCurrentSemesterSuccess,
+    getDefaultSemesterSuccess,
+    getFullScheduleSuccess,
+    getGroupScheduleSuccess,
+    getScheduleItemsSuccess,
+    getTeacherRangeScheduleSuccess,
+    getTeacherScheduleSuccess,
+} from '../actions/schedule';
+import { getAllBusyRoomsSuccess } from '../actions/busyRooms';
 
 export function* getScheduleItemsBySemester({ semesterId }) {
     const requestUrl = `${SCHEDULE_SEMESTER_ITEMS_URL}?semesterId=${semesterId}`;
     try {
-        const response = yield call(axiosCall, requestUrl);
-        yield put(setScheduleItems(response.data));
-        yield put(setScheduleLoading(false));
+        const { data } = yield call(axiosCall, requestUrl);
+        yield put(getScheduleItemsSuccess(data));
     } catch (error) {
-        const message = error.response
-            ? i18n.t(error.response.data.message, error.response.data.message)
-            : 'Error';
-        const isOpen = true;
-        const type = snackbarTypes.ERROR;
-        yield put(setOpenSnackbar({ isOpen, type, message }));
+        yield put(setOpenErrorSnackbar(createErrorMessage(error)));
+    } finally {
         yield put(setScheduleLoading(false));
+    }
+}
+
+export function* getBusyRooms(semesterId) {
+    const requestUrl = `${BUSY_ROOMS}?semesterId=${semesterId}`;
+    try {
+        const { data } = yield call(axiosCall, requestUrl);
+        yield put(getAllBusyRoomsSuccess(data));
+    } catch (error) {
+        yield put(setOpenErrorSnackbar(createErrorMessage(error)));
     }
 }
 
 export function* getScheduleItems() {
     try {
-        const response = yield call(axiosCall, CURRENT_SEMESTER_URL);
-        yield put(setCurrentSemester(response.data));
-        yield call(showBusyRooms, response.data.id);
-        yield call(getScheduleItemsBySemester, { semesterId: response.data.id });
+        const { data } = yield call(axiosCall, CURRENT_SEMESTER_URL);
+        yield put(getCurrentSemesterSuccess(data));
+        const { id } = data;
+        yield call(getBusyRooms, id);
+        yield call(getScheduleItemsBySemester, { semesterId: id });
     } catch (error) {
-        const message = i18n.t(NO_CURRENT_SEMESTER_ERROR);
-        const isOpen = true;
-        const type = snackbarTypes.ERROR;
-        yield put(setOpenSnackbar({ isOpen, type, message }));
+        yield put(setOpenErrorSnackbar(i18n.t(NO_CURRENT_SEMESTER_ERROR)));
         yield put(setLoading(false));
     }
 }
@@ -100,12 +110,7 @@ export function* addItemsToSchedule({ item }) {
         yield call(axiosCall, SCHEDULE_ITEMS_URL, 'POST', item);
         yield call(getScheduleItems);
     } catch (error) {
-        const message = error.response
-            ? i18n.t(error.response.data.message, error.response.data.message)
-            : 'Error';
-        const isOpen = true;
-        const type = snackbarTypes.ERROR;
-        yield put(setOpenSnackbar({ isOpen, type, message }));
+        yield put(setOpenErrorSnackbar(createErrorMessage(error)));
     }
 }
 
@@ -113,22 +118,17 @@ export function* checkAvailabilityChangeRoomSchedule({ item }) {
     const { periodId, dayOfWeek, evenOdd, semesterId } = item;
     const requestUrl = `${ROOMS_AVAILABILITY}?classId=${periodId}&dayOfWeek=${dayOfWeek}&evenOdd=${evenOdd}&semesterId=${semesterId}`;
     try {
-        const response = yield call(axiosCall, requestUrl);
+        const { data } = yield call(axiosCall, requestUrl);
         yield put(
-            checkAvailabilitySchedule({
+            checkAvailabilityScheduleSuccess({
                 classSuitsToTeacher: true,
                 teacherAvailable: true,
-                rooms: response.data,
+                rooms: data,
             }),
         );
-        yield put(setLoading(false));
     } catch (error) {
-        const message = error.response
-            ? i18n.t(error.response.data.message, error.response.data.message)
-            : 'Error';
-        const isOpen = true;
-        const type = snackbarTypes.ERROR;
-        yield put(setOpenSnackbar({ isOpen, type, message }));
+        yield put(setOpenErrorSnackbar(createErrorMessage(error)));
+    } finally {
         yield put(setLoading(false));
     }
 }
@@ -137,16 +137,11 @@ export function* checkScheduleItemAvailability({ item }) {
     const { periodId, dayOfWeek, evenOdd, lessonId, semesterId } = item;
     const requestUrl = `${SCHEDULE_CHECK_AVAILABILITY_URL}?classId=${periodId}&dayOfWeek=${dayOfWeek}&evenOdd=${evenOdd}&lessonId=${lessonId}&semesterId=${semesterId}`;
     try {
-        const response = yield call(axiosCall, requestUrl);
-        yield put(checkAvailabilitySchedule(response.data));
-        yield put(setLoading(false));
+        const { data } = yield call(axiosCall, requestUrl);
+        yield put(checkAvailabilityScheduleSuccess(data));
     } catch (error) {
-        const message = error.response
-            ? i18n.t(error.response.data.message, error.response.data.message)
-            : 'Error';
-        const isOpen = true;
-        const type = snackbarTypes.ERROR;
-        yield put(setOpenSnackbar({ isOpen, type, message }));
+        yield put(setOpenErrorSnackbar(createErrorMessage(error)));
+    } finally {
         yield put(setLoading(false));
     }
 }
@@ -155,21 +150,15 @@ export function* clearSchedule({ semesterId }) {
     try {
         const requestUrl = `${CLEAR_SCHEDULE_URL}?semesterId=${semesterId}`;
         yield call(axiosCall, requestUrl, 'DELETE');
-        const message = i18n.t(BACK_END_SUCCESS_OPERATION, {
-            cardType: i18n.t(COMMON_SCHEDULE_TITLE),
-            actionType: i18n.t(CLEARED_LABEL),
-        });
-        const isOpen = true;
-        const type = snackbarTypes.SUCCESS;
-        yield put(setOpenSnackbar({ isOpen, type, message }));
+        const message = createMessage(
+            BACK_END_SUCCESS_OPERATION,
+            COMMON_SCHEDULE_TITLE,
+            CLEARED_LABEL,
+        );
+        yield put(setOpenSuccessSnackbar(message));
         yield call(getScheduleItems);
     } catch (error) {
-        const message = error.response
-            ? i18n.t(error.response.data.message, error.response.data.message)
-            : 'Error';
-        const isOpen = true;
-        const type = snackbarTypes.ERROR;
-        yield put(setOpenSnackbar({ isOpen, type, message }));
+        yield put(setOpenErrorSnackbar(createErrorMessage(error)));
         yield put(setLoading(false));
     }
 }
@@ -178,15 +167,10 @@ export function* deleteScheduleItem({ itemId }) {
     try {
         const requestUrl = `${SCHEDULE_ITEMS_URL}/${itemId}`;
         yield call(axiosCall, requestUrl, 'DELETE');
-        yield put(deleteItemFromSchedule(itemId));
+        yield put(deleteScheduleItemSuccess(itemId));
         yield call(getScheduleItems);
     } catch (error) {
-        const message = error.response
-            ? i18n.t(error.response.data.message, error.response.data.message)
-            : 'Error';
-        const isOpen = true;
-        const type = snackbarTypes.ERROR;
-        yield put(setOpenSnackbar({ isOpen, type, message }));
+        yield put(setOpenErrorSnackbar(createErrorMessage(error)));
         yield put(setLoading(false));
     }
 }
@@ -196,118 +180,87 @@ export function* editRoomItemToSchedule({ item }) {
         const { roomId, itemId } = item;
         const requestUrl = `${SCHEDULE_ITEM_ROOM_CHANGE}?roomId=${roomId}&scheduleId=${itemId}`;
         yield call(axiosCall, requestUrl, 'PUT');
-        const message = i18n.t(BACK_END_SUCCESS_OPERATION, {
-            cardType: i18n.t(COMMON_SCHEDULE_TITLE),
-            actionType: i18n.t(UPDATED_LABEL),
-        });
-        const isOpen = true;
-        const type = snackbarTypes.SUCCESS;
-        yield put(setOpenSnackbar({ isOpen, type, message }));
+        const message = createMessage(
+            BACK_END_SUCCESS_OPERATION,
+            COMMON_SCHEDULE_TITLE,
+            UPDATED_LABEL,
+        );
+        yield put(setOpenSuccessSnackbar(message));
         yield call(getScheduleItems);
     } catch (error) {
-        const message = error.response
-            ? i18n.t(error.response.data.message, error.response.data.message)
-            : 'Error';
-        const isOpen = true;
-        const type = snackbarTypes.ERROR;
-        yield put(setOpenSnackbar({ isOpen, type, message }));
+        yield put(setOpenErrorSnackbar(createErrorMessage(error)));
     }
 }
-
+// Check if it is necessary here
 export function* getAllPublicGroups({ id }) {
     try {
         if (id !== null && id !== undefined) {
             const requestUrl = `/${SEMESTERS_URL}/${id}/${GROUPS_URL}`;
-            const response = yield call(axiosCall, requestUrl);
-            const sortedGroups = response.data.sort((a, b) => sortGroup(a, b));
+            const { data } = yield call(axiosCall, requestUrl);
+            const sortedGroups = data.sort((a, b) => sortGroup(a, b));
             yield put(showAllGroups(sortedGroups));
-            if (response.data.length === 0) {
-                const message = i18n.t(CHOSEN_SEMESTER_HAS_NOT_GROUPS, {
-                    cardType: i18n.t(FORM_CHOSEN_SEMESTER_LABEL),
-                    actionType: i18n.t(SERVICE_MESSAGE_GROUP_LABEL),
-                });
-                const isOpen = true;
-                const type = snackbarTypes.INFO;
-                yield put(setOpenSnackbar({ isOpen, type, message }));
+            if (data.length === 0) {
+                const message = createMessage(
+                    CHOSEN_SEMESTER_HAS_NOT_GROUPS,
+                    FORM_CHOSEN_SEMESTER_LABEL,
+                    SERVICE_MESSAGE_GROUP_LABEL,
+                );
+                yield put(setOpenInfoSnackbar(message));
             }
         }
     } catch (error) {
-        const message = error.response
-            ? i18n.t(error.response.data.message, error.response.data.message)
-            : 'Error';
-        const isOpen = true;
-        const type = snackbarTypes.ERROR;
-        yield put(setOpenSnackbar({ isOpen, type, message }));
+        yield put(setOpenErrorSnackbar(createErrorMessage(error)));
     }
 }
 
 export function* getAllPublicSemesters() {
     try {
-        const response = yield call(axiosCall, PUBLIC_SEMESTERS_URL);
-        yield put(setSemesterList(response.data));
+        const { data } = yield call(axiosCall, PUBLIC_SEMESTERS_URL);
+        yield put(getAllPublicSemestersSuccess(data));
     } catch (error) {
-        const message = error.response
-            ? i18n.t(error.response.data.message, error.response.data.message)
-            : 'Error';
-        const isOpen = true;
-        const type = snackbarTypes.ERROR;
-        yield put(setOpenSnackbar({ isOpen, type, message }));
+        yield put(setOpenErrorSnackbar(createErrorMessage(error)));
     }
 }
 
+// Check if it is necessary here
 export function* getAllPublicTeachers() {
     try {
-        const response = yield call(axiosCall, PUBLIC_TEACHER_URL);
-        yield put(showAllTeachers(response.data));
+        const { data } = yield call(axiosCall, PUBLIC_TEACHER_URL);
+        yield put(showAllTeachers(data));
     } catch (error) {
-        const message = error.response
-            ? i18n.t(error.response.data.message, error.response.data.message)
-            : 'Error';
-        const isOpen = true;
-        const type = snackbarTypes.ERROR;
-        yield put(setOpenSnackbar({ isOpen, type, message }));
+        yield put(setOpenErrorSnackbar(createErrorMessage(error)));
     }
 }
 
+// Check if it is necessary here
 export function* getAllPublicTeachersByDepartment({ departmentId }) {
     const requestUrl = `${DEPARTMENT_URL}/${departmentId}/${TEACHER_URL}`;
     try {
-        const response = yield call(axiosCall, requestUrl);
-        yield put(getAllTeachersByDepartmentId(response.data));
+        const { data } = yield call(axiosCall, requestUrl);
+        yield put(getAllTeachersByDepartmentId(data));
     } catch (error) {
-        const message = error.response
-            ? i18n.t(error.response.data.message, error.response.data.message)
-            : 'Error';
-        const isOpen = true;
-        const type = snackbarTypes.ERROR;
-        yield put(setOpenSnackbar({ isOpen, type, message }));
+        yield put(setOpenErrorSnackbar(createErrorMessage(error)));
     }
 }
 
 export function* getCurrentSemester() {
     try {
-        const response = yield call(axiosCall, CURRENT_SEMESTER_URL);
-        yield put(setCurrentSemester(response.data));
-        yield put(setSemesterLoading(false));
+        const { data } = yield call(axiosCall, CURRENT_SEMESTER_URL);
+        yield put(getCurrentSemesterSuccess(data));
     } catch (error) {
-        const message = i18n.t(NO_CURRENT_SEMESTER_ERROR);
-        const isOpen = true;
-        const type = snackbarTypes.ERROR;
-        yield put(setOpenSnackbar({ isOpen, type, message }));
+        yield put(setOpenErrorSnackbar(createErrorMessage(error)));
+    } finally {
         yield put(setSemesterLoading(false));
     }
 }
 
 export function* getDefaultSemester() {
     try {
-        const response = yield call(axiosCall, DEFAULT_SEMESTER_URL);
-        yield put(setSemesterLoading(false));
-        yield put(setDefaultSemester(response.data));
+        const { data } = yield call(axiosCall, DEFAULT_SEMESTER_URL);
+        yield put(getDefaultSemesterSuccess(data));
     } catch (error) {
-        const message = i18n.t(NO_CURRENT_SEMESTER_ERROR);
-        const isOpen = true;
-        const type = snackbarTypes.ERROR;
-        yield put(setOpenSnackbar({ isOpen, type, message }));
+        yield put(setOpenErrorSnackbar(createErrorMessage(error)));
+    } finally {
         yield put(setSemesterLoading(false));
     }
 }
@@ -316,16 +269,11 @@ export function* getFullSchedule({ semesterId }) {
     const requestUrl = FULL_SCHEDULE_URL + semesterId;
     try {
         yield put(setMainScheduleLoading(true));
-        const response = yield call(axiosCall, requestUrl);
-        yield put(setFullSchedule(response.data));
-        yield put(setMainScheduleLoading(false));
+        const { data } = yield call(axiosCall, requestUrl);
+        yield put(getFullScheduleSuccess(data));
     } catch (error) {
-        const message = error.response
-            ? i18n.t(error.response.data.message, error.response.data.message)
-            : 'Error';
-        const isOpen = true;
-        const type = snackbarTypes.ERROR;
-        yield put(setOpenSnackbar({ isOpen, type, message }));
+        yield put(setOpenErrorSnackbar(createErrorMessage(error)));
+    } finally {
         yield put(setMainScheduleLoading(false));
     }
 }
@@ -334,16 +282,11 @@ export function* getGroupSchedule({ groupId, semesterId }) {
     const requestUrl = `${GROUP_SCHEDULE_URL + semesterId}&groupId=${groupId}`;
     try {
         yield put(setMainScheduleLoading(true));
-        const response = yield call(axiosCall, requestUrl);
-        yield put(setGroupSchedule(response.data));
-        yield put(setMainScheduleLoading(false));
+        const { data } = yield call(axiosCall, requestUrl);
+        yield put(getGroupScheduleSuccess(data));
     } catch (error) {
-        const message = error.response
-            ? i18n.t(error.response.data.message, error.response.data.message)
-            : 'Error';
-        const isOpen = true;
-        const type = snackbarTypes.ERROR;
-        yield put(setOpenSnackbar({ isOpen, type, message }));
+        yield put(setOpenErrorSnackbar(createErrorMessage(error)));
+    } finally {
         yield put(setMainScheduleLoading(false));
     }
 }
@@ -354,17 +297,12 @@ export function* getTeacherRangeSchedule({ values }) {
         const fromUrlPart = startDay.replace(/\//g, '-');
         const toUrlPart = endDay.replace(/\//g, '-');
         const requestUrl = `${FOR_TEACHER_SCHEDULE_URL}?from=${fromUrlPart}&to=${toUrlPart}`;
-        const response = yield call(axiosCall, requestUrl);
-        yield put(setTeacherRangeSchedule(response.data));
-        yield put(setLoading(false));
+        const { data } = yield call(axiosCall, requestUrl);
+        yield put(getTeacherRangeScheduleSuccess(data));
     } catch (error) {
+        yield put(setOpenErrorSnackbar(createErrorMessage(error)));
+    } finally {
         yield put(setLoading(false));
-        const message = error.response
-            ? i18n.t(error.response.data.message, error.response.data.message)
-            : 'Error';
-        const isOpen = true;
-        const type = snackbarTypes.ERROR;
-        yield put(setOpenSnackbar({ isOpen, type, message }));
     }
 }
 
@@ -372,16 +310,11 @@ export function* getTeacherSchedule({ teacherId, semesterId }) {
     const requestUrl = `${TEACHER_SCHEDULE_URL + semesterId}&teacherId=${teacherId}`;
     try {
         yield put(setMainScheduleLoading(true));
-        const response = yield call(axiosCall, requestUrl);
-        yield put(setTeacherSchedule(response.data));
-        yield put(setMainScheduleLoading(false));
+        const { data } = yield call(axiosCall, requestUrl);
+        yield put(getTeacherScheduleSuccess(data));
     } catch (error) {
-        const message = error.response
-            ? i18n.t(error.response.data.message, error.response.data.message)
-            : 'Error';
-        const isOpen = true;
-        const type = snackbarTypes.ERROR;
-        yield put(setOpenSnackbar({ isOpen, type, message }));
+        yield put(setOpenErrorSnackbar(createErrorMessage(error)));
+    } finally {
         yield put(setMainScheduleLoading(false));
     }
 }
@@ -393,22 +326,16 @@ export function* sendTeacherSchedule({ data }) {
         const requestUrl = `${SEND_PDF_TO_EMAIL}/semester/${semesterId}?language=${language}&${teachersId}`;
         const response = yield call(axiosCall, requestUrl);
         console.log(response);
-        const message = i18n.t(BACK_END_SUCCESS_OPERATION, {
-            cardType: i18n.t(FORM_SCHEDULE_LABEL),
-            actionType: i18n.t(SERVICE_MESSAGE_SENT_LABEL),
-        });
-        const isOpen = true;
-        const type = snackbarTypes.SUCCESS;
-        yield put(setOpenSnackbar({ isOpen, type, message }));
-        yield put(setLoading(false));
+        const message = createMessage(
+            BACK_END_SUCCESS_OPERATION,
+            FORM_SCHEDULE_LABEL,
+            SERVICE_MESSAGE_SENT_LABEL,
+        );
+        yield put(setOpenSuccessSnackbar(message));
     } catch (error) {
+        yield put(setOpenErrorSnackbar(createErrorMessage(error)));
+    } finally {
         yield put(setLoading(false));
-        const message = error.response
-            ? i18n.t(error.response.data.message, error.response.data.message)
-            : 'Error';
-        const isOpen = true;
-        const type = snackbarTypes.ERROR;
-        yield put(setOpenSnackbar({ isOpen, type, message }));
     }
 }
 

@@ -11,7 +11,7 @@ import {
     addSemester,
     moveToArchivedSemester,
 } from '../actions/semesters';
-import { setScheduleType, setFullSchedule } from '../actions/schedule';
+import { setScheduleType, getFullScheduleSuccess } from '../actions/schedule';
 import { axiosCall } from '../services/axios';
 import i18n from '../i18n';
 import { setOpenSnackbar } from '../actions';
@@ -254,7 +254,7 @@ export function* getArchivedSemester({ semesterId }) {
         yield put(setScheduleType('archived'));
         const requestUrl = `${ARCHIVE_SEMESTER}/${semesterId}`;
         const response = yield call(axiosCall, requestUrl);
-        yield put(setFullSchedule(response.data));
+        yield put(getFullScheduleSuccess(response.data));
     } catch (error) {
         const message = error.response
             ? i18n.t(error.response.data.message, error.response.data.message)

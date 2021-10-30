@@ -36,7 +36,6 @@ export {
     resetUserPassword,
     setAuthError,
 } from './auth';
-export { showAllBusyRooms } from './busyRooms';
 export {
     addClassScheduleOne,
     deleteClassScheduleOne,
@@ -74,21 +73,11 @@ export {
 } from './roomTypes';
 export {
     addItemToSchedule,
-    checkAvailabilitySchedule,
-    deleteItemFromSchedule,
-    setCurrentSemester,
-    setDefaultSemester,
-    setFullSchedule,
-    setGroupSchedule,
     setItemGroupId,
     setScheduleGroupId,
-    setScheduleItems,
     setScheduleSemesterId,
     setScheduleTeacherId,
     setScheduleType,
-    setSemesterList,
-    setTeacherRangeSchedule,
-    setTeacherSchedule,
     setTeacherViewType,
 } from './schedule';
 export {
