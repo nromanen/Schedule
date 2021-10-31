@@ -77,10 +77,9 @@ const GroupList = (props) => {
             <CustomDialog
                 type={confirmDialogType}
                 handelConfirm={() => acceptConfirmDialog(groupId)}
-                whatDelete="group"
+                whatDelete='group'
                 open={isOpenConfirmDialog}
             />
-
             {isOpenAddStudentDialog && (
                 <AddStudentDialog
                     groupId={groupId}
@@ -98,9 +97,9 @@ const GroupList = (props) => {
                     groups={groups}
                 />
             )}
-            <div className="group-wrapper group-list">
+            <div className='group-wrapper group-list'>
                 {loading && (
-                    <section className="centered-container">
+                    <section className='centered-container'>
                         <CircularProgress />
                     </section>
                 )}

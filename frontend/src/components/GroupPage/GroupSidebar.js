@@ -1,17 +1,16 @@
 import React from 'react';
-import AddGroup from '../../containers/GroupPage/GroupForm';
 import SearchPanel from '../../share/SearchPanel/SearchPanel';
 
 const GroupSidebar = (props) => {
-    const { clearGroupStart, setIsDisabled, isDisabled, setTerm } = props;
+    const { setIsDisabled, isDisabled, setSearchItem, children } = props;
 
     return (
         <aside className="search-list__panel">
             <SearchPanel
-                SearchChange={setTerm}
+                SearchChange={setSearchItem}
                 showDisabled={() => setIsDisabled((prev) => !prev)}
             />
-            {!isDisabled && <AddGroup className="form" onReset={() => clearGroupStart()} />}
+            {!isDisabled && children}
         </aside>
     );
 };

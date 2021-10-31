@@ -18,8 +18,15 @@ import {
 
 export const AddGroup = (props) => {
     const { t } = useTranslation('formElements');
-    const { handleSubmit, pristine, onReset, submitting, group, initialize, submitGroupStart } =
-        props;
+    const {
+        submitGroupStart,
+        clearGroupStart,
+        handleSubmit,
+        initialize,
+        submitting,
+        pristine,
+        group,
+    } = props;
 
     useEffect(() => {
         if (group.id) {
@@ -31,13 +38,14 @@ export const AddGroup = (props) => {
             initialize();
         }
     }, [group.id]);
+
     return (
         <Card additionClassName="form-card group-form">
             <h2 className="group-form__title">
                 {group.id ? t(EDIT_TITLE) : t(CREATE_TITLE)}
                 {t(GROUP_Y_LABEL)}
             </h2>
-            <form onSubmit={handleSubmit(submitGroupStart.bind(this))}>
+            <form onSubmit={handleSubmit((data) => submitGroupStart(data))}>
                 <Field
                     className="form-field"
                     name="title"
@@ -61,7 +69,7 @@ export const AddGroup = (props) => {
                         className="buttons-style"
                         variant="contained"
                         disabled={setDisableButton(pristine, submitting, group.id)}
-                        onClick={onReset}
+                        onClick={() => clearGroupStart()}
                     >
                         {getClearOrCancelTitle(group.id, t)}
                     </Button>

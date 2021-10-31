@@ -4,24 +4,26 @@ import GroupList from './GroupList';
 import GroupSidebar from './GroupSidebar';
 import SnackbarComponent from '../../share/Snackbar/SnackbarComponent';
 import { handleSnackbarCloseService } from '../../services/snackbarService';
+import AddGroup from '../../containers/GroupPage/GroupForm';
 
 const GroupPage = (props) => {
     const { isSnackbarOpen, snackbarMessage, snackbarType, match, ...rest } = props;
 
-    const [term, setTerm] = useState('');
+    const [searchItem, setSearchItem] = useState('');
     const [isDisabled, setIsDisabled] = useState(false);
 
     return (
         <>
             <div className="cards-container">
                 <GroupSidebar
-                    {...rest}
-                    setTerm={setTerm}
                     isDisabled={isDisabled}
                     setIsDisabled={setIsDisabled}
-                />
+                    setSearchItem={setSearchItem}
+                >
+                    <AddGroup />
+                </GroupSidebar>
                 <div className="group-wrapper group-list">
-                    <GroupList match={match} term={term} isDisabled={isDisabled} {...rest} />
+                    <GroupList match={match} term={searchItem} isDisabled={isDisabled} {...rest} />
                 </div>
             </div>
             <SnackbarComponent

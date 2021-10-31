@@ -9,15 +9,17 @@ const initialState = {
 
 const reducer = (state = initialState, action) => {
     switch (action.type) {
-        case actionTypes.SHOW_ALL_GROUPS:
+        case actionTypes.SHOW_ALL_GROUPS: {
+            const newGroup = action.result.sort((a, b) => sortGroup(a, b));
             return updateObject(state, {
                 ...state,
-                groups: action.result.sort((a, b) => sortGroup(a, b)),
+                groups: newGroup,
             });
+        }
 
         case actionTypes.ADD_GROUP:
             return updateObject(state, {
-                groups: state.groups.concat(action.result).sort((a, b) => sortGroup(a, b)),
+                groups: state.groups.concat(action.result),
             });
 
         case actionTypes.UPDATE_GROUP: {
