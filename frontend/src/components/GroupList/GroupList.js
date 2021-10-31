@@ -107,6 +107,7 @@ const GroupList = (props) => {
                         <GroupCard
                             key={item.id}
                             item={item}
+                            match={match}
                             disabled={isDisabled}
                             showConfirmDialog={showConfirmDialog}
                             getGroupToUpdateForm={(id) => selectGroup(id)}
