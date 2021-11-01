@@ -1,18 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import './GroupSchedulePage.scss';
 import { CircularProgress } from '@material-ui/core';
 import { getDataFromParams } from '../../utils/urlUtils';
 import GroupSchedulePageTop from './GroupSchedulePageTop/GroupSchedulePageTop';
 import { SCHEDULE_FOR_LINK } from '../../constants/links';
-import { places } from '../../constants/places';
 import { renderSchedule } from '../../helper/renderSchedule';
 import { submitSearchSchedule } from '../../helper/submitSearchSchedule';
 
 const GroupSchedulePage = (props) => {
     const history = useHistory();
     const location = useLocation();
-    const [place, setPlace] = useState(places.TOGETHER);
     const {
         defaultSemester,
         scheduleType,
@@ -68,20 +66,9 @@ const GroupSchedulePage = (props) => {
         }
     }, [defaultSemester]);
 
-    const changePlace = ({ target }) => {
-        if (target) {
-            setPlace(target.value);
-        }
-    };
-
     const getTop = () =>
         scheduleType !== 'archived' && (
-            <GroupSchedulePageTop
-                scheduleType={scheduleType}
-                handleSubmit={handleSubmit}
-                place={place}
-                changePlace={changePlace}
-            />
+            <GroupSchedulePageTop scheduleType={scheduleType} handleSubmit={handleSubmit} />
         );
 
     return (
@@ -92,7 +79,7 @@ const GroupSchedulePage = (props) => {
                     <CircularProgress />
                 </section>
             ) : (
-                renderSchedule(props, place)
+                renderSchedule(props)
             )}
         </>
     );

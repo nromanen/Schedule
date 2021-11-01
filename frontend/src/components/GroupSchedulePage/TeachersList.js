@@ -16,7 +16,7 @@ const TeachersList = (props) => {
             label={t(FORM_TEACHER_LABEL)}
             type="text"
             onChange={() => {
-                handleChange('group', 0);
+                handleChange('group', null);
             }}
         >
             <option className="option-item" value={0} />

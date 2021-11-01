@@ -234,3 +234,10 @@ export const setTeacherViewType = (type) => {
         result: type,
     };
 };
+
+export const setPlace = (place) => {
+    return {
+        type: actionTypes.SET_PLACE,
+        place,
+    };
+};

@@ -3,9 +3,11 @@ import * as actionTypes from '../actions/actionsType';
 import { makeFullSchedule } from '../mappers/fullScheduleMapper';
 import { makeTeacherSchedule } from '../mappers/teacherScheduleMapper';
 import { makeGroupSchedule } from '../mappers/groupScheduleMapper';
+import { places } from '../constants/places';
 
 const initialState = {
     items: [],
+    place: places.TOGETHER,
     availability: {},
     itemsIds: [],
     fullSchedule: [],
@@ -22,6 +24,8 @@ const initialState = {
 
 const reducer = (state = initialState, action) => {
     switch (action.type) {
+        case actionTypes.SET_PLACE:
+            return updateObject(state, { place: action.place });
         case actionTypes.GET_SCHEDULE_ITEMS_SUCCESS:
             return updateObject(state, {
                 items: action.items,

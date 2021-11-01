@@ -7,10 +7,16 @@ import { getGroupScheduleTitle, getTeacherScheduleTitle } from '../utils/titlesU
 
 const emptySchedule = () => <p className="empty_schedule">{i18n.t('common:empty_schedule')}</p>;
 
-const renderSchedule = (
-    { scheduleType, groupSchedule, fullSchedule, teacherSchedule, groupId, teacherId, semesterId },
-    place,
-) => {
+const renderSchedule = (props) => {
+    const {
+        scheduleType,
+        groupSchedule,
+        fullSchedule,
+        teacherSchedule,
+        groupId,
+        teacherId,
+        semesterId,
+    } = props;
     switch (scheduleType) {
         case 'group': {
             const { semester, group, oddArray, evenArray } = groupSchedule;
@@ -24,9 +30,9 @@ const renderSchedule = (
                         <DownloadLink entity="group" semesterId={semesterId} entityId={groupId} />
                     </h1>
                     <h2>{i18n.t('common:odd_week')}</h2>
-                    {renderGroupTable(oddArray, 1, semester, place)}
+                    {renderGroupTable(oddArray, 1, semester)}
                     <h2>{i18n.t('common:even_week')}</h2>
-                    {renderGroupTable(evenArray, 0, semester, place)}
+                    {renderGroupTable(evenArray, 0, semester)}
                 </>
             );
         }
@@ -46,9 +52,9 @@ const renderSchedule = (
                         />
                     </h1>
                     <h2>{i18n.t('common:odd_week')}</h2>
-                    {renderWeekTable(odd, place)}
+                    {renderWeekTable(odd)}
                     <h2>{i18n.t('common:even_week')}</h2>
-                    {renderWeekTable(even, place)}
+                    {renderWeekTable(even)}
                 </>
             );
         }
@@ -57,7 +63,7 @@ const renderSchedule = (
             if (isEmpty(resultArray)) {
                 return emptySchedule();
             }
-            return renderFullSchedule(fullSchedule, place);
+            return renderFullSchedule(fullSchedule);
         }
         default:
             return null;
