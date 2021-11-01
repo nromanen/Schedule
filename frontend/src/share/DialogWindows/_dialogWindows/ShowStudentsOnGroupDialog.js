@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 
 import { useTranslation } from 'react-i18next';
 import { isEmpty } from 'lodash';
-import RenderStudentTable from '../../../helper/renderStudentTable';
 import { UploadFile } from '../../../components/UploadFile/UploadFile';
 import CustomDialog from '../../../containers/Dialogs/CustomDialog';
 import {
@@ -12,6 +11,7 @@ import {
     dialogChooseGroupButton,
 } from '../../../constants/dialogs';
 import { GROUP_LABEL } from '../../../constants/translationLabels/formElements';
+import StudentsList from '../../../components/Students/StudentsList';
 
 const ShowStudentsOnGroupDialog = (props) => {
     const {
@@ -74,7 +74,7 @@ const ShowStudentsOnGroupDialog = (props) => {
                                     : `${t('student_label')} `}
                             </span>
                         </h3>
-                        <RenderStudentTable
+                        <StudentsList
                             group={group}
                             onDeleteStudent={onDeleteStudent}
                             students={students}

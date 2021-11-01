@@ -311,6 +311,7 @@ function RenderStudentTable(props) {
                     <TableFooterComponent />
                 </Table>
             </TableContainer>
+            
             {isOpenEditDialog && (
                 <AddStudentDialog
                     open={isOpenEditDialog}
