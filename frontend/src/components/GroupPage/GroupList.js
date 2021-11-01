@@ -7,8 +7,8 @@ import { search } from '../../helper/search';
 import GroupCard from './GroupCard';
 import NotFound from '../../share/NotFound/NotFound';
 import CustomDialog from '../../containers/Dialogs/CustomDialog';
-import AddStudentDialog from '../../containers/Student/AddStudentDialog';
-import ShowStudentsOnGroupDialog from '../../containers/Student/ShowStudentsOnGroupDialog';
+import AddStudentDialog from '../../containers/Students/AddStudentDialog';
+import ShowStudentsOnGroupDialog from '../../containers/Students/ShowStudentsOnGroupDialog';
 
 const GroupList = (props) => {
     const {
@@ -77,7 +77,7 @@ const GroupList = (props) => {
             <CustomDialog
                 type={confirmDialogType}
                 handelConfirm={() => acceptConfirmDialog(groupId)}
-                whatDelete='group'
+                whatDelete="group"
                 open={isOpenConfirmDialog}
             />
             {isOpenAddStudentDialog && (
@@ -97,9 +97,9 @@ const GroupList = (props) => {
                     groups={groups}
                 />
             )}
-            <div className='group-wrapper group-list'>
+            <div className="group-wrapper group-list">
                 {loading && (
-                    <section className='centered-container'>
+                    <section className="centered-container">
                         <CircularProgress />
                     </section>
                 )}

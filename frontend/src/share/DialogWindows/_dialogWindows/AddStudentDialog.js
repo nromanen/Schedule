@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom/cjs/react-router-dom';
 import { reset } from 'redux-form';
 import { STUDENT_FORM } from '../../../constants/reduxForms';
-import AddStudentForm from '../../../containers/Student/AddStudentForm';
+import AddStudentForm from '../../../containers/Students/AddStudentForm';
 import { goToGroupPage } from '../../../helper/pageRedirection';
 import CustomDialog from '../../../containers/Dialogs/CustomDialog';
 import { dialogCloseButton } from '../../../constants/dialogs';

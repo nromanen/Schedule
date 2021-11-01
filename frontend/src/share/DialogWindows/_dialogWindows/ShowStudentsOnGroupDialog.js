@@ -11,93 +11,28 @@ import {
     dialogUploadFromFileButton,
     dialogChooseGroupButton,
 } from '../../../constants/dialogs';
-import MovingGroupsDialog from './MovingGroupsDialog';
 import { GROUP_LABEL } from '../../../constants/translationLabels/formElements';
 
 const ShowStudentsOnGroupDialog = (props) => {
     const {
+        onDeleteStudent,
+        fetchAllStudentsStart,
         onClose,
         open,
-        onDeleteStudent,
         students,
         match,
         groups,
         group,
-        fetchAllStudentsStart,
     } = props;
-    const [checkBoxStudents, setCheckBoxStudents] = useState([]);
-    const [isGroupButtonDisabled, setIsGroupButtonDisabled] = useState(true);
-    const [checkedAll, setCheckedAll] = useState(false);
-    const [isOpenUploadFileDialog, setIsOpenUploadFileDialog] = useState(false);
-    const [isOpenStudentListDialog, setIsOpenStudentListDialog] = useState(false);
     const { t } = useTranslation('formElements');
+    const [isOpenUploadFileDialog, setIsOpenUploadFileDialog] = useState(false);
 
-    const setSelectDisabled = () => {
-        setIsGroupButtonDisabled(checkBoxStudents.every((item) => item.checked));
-    };
-    const parseStudentToCheckBox = () => {
-        const res = students.map((item) => {
-            return { ...item, checked: false };
-        });
-        setCheckBoxStudents(res);
-    };
     useEffect(() => {
         fetchAllStudentsStart(group.id);
     }, [group.id]);
-    useEffect(() => {
-        parseStudentToCheckBox();
-    }, [props.students]);
-    useEffect(() => {
-        setSelectDisabled();
-    }, [props.students]);
 
-    const handleCheckElement = (event) => {
-        setCheckBoxStudents(
-            checkBoxStudents.map((item) => {
-                const checkbox = item;
-                if (item.id === Number(event.target.value)) {
-                    checkbox.checked = event.target.checked;
-                }
-                return checkbox;
-            }),
-        );
-    };
-    const handleAllChecked = (event, pageItemsCount, page, rowsPerPage) => {
-        const studentsTmp = [...checkBoxStudents];
-        let start = page * rowsPerPage;
-        const finish = pageItemsCount + page * rowsPerPage;
-        while (start < finish) {
-            studentsTmp[start].checked = event.target.checked;
-            start += 1;
-        }
-        setCheckBoxStudents(studentsTmp);
-    };
-    const handleAllCheckedBtn = (pageItemsCount, page, rowsPerPage) => {
-        let start = page * rowsPerPage;
-        const finish = pageItemsCount + page * rowsPerPage;
-        while (start < finish) {
-            if (checkBoxStudents[start].checked) {
-                start += 1;
-            } else {
-                break;
-            }
-        }
-        setCheckedAll(start === finish && start !== 0);
-    };
-    const handleAllClear = () => {
-        setCheckBoxStudents(
-            checkBoxStudents.map((item) => {
-                const checkbox = item;
-                if (item.checked) {
-                    checkbox.checked = false;
-                }
-                return checkbox;
-            }),
-        );
-    };
-    const handleChangeCheckedAllBtn = () => {
-        setCheckedAll((prevState) => !prevState);
-    };
+    const [isGroupButtonDisabled, setIsGroupButtonDisabled] = useState(true);
+    const [isOpenStudentListDialog, setIsOpenStudentListDialog] = useState(false);
 
     const getDialog = () => {
         setIsOpenStudentListDialog(true);
@@ -115,7 +50,7 @@ const ShowStudentsOnGroupDialog = (props) => {
             <CustomDialog
                 open={open}
                 onClose={onClose}
-                title={`${t(GROUP_LABEL)} - ${props.group.title}`}
+                title={`${t(GROUP_LABEL)} - ${group.title}`}
                 buttons={
                     !isEmpty(students)
                         ? [
@@ -129,9 +64,8 @@ const ShowStudentsOnGroupDialog = (props) => {
                         : dialogButtons
                 }
             >
-                {isEmpty(students) ? (
-                    <>{t('no_exist_students_in_group')} </>
-                ) : (
+                {isEmpty(students) && <>{t('no_exist_students_in_group')} </>}
+                {!isEmpty(students) && (
                     <span className="table-student-data">
                         <h3 className="title-align">
                             <span>
@@ -140,35 +74,20 @@ const ShowStudentsOnGroupDialog = (props) => {
                                     : `${t('student_label')} `}
                             </span>
                         </h3>
-
                         <RenderStudentTable
                             group={group}
                             onDeleteStudent={onDeleteStudent}
                             students={students}
                             match={match}
                             student={props.student}
-                            checkBoxStudents={checkBoxStudents}
-                            handleCheckElement={handleCheckElement}
-                            handleAllChecked={handleAllChecked}
-                            handleAllClear={handleAllClear}
-                            handleChangeCheckedAllBtn={handleChangeCheckedAllBtn}
-                            handleClearCheckedAllBtn={() => setCheckedAll(false)}
-                            checkedAllBtn={checkedAll}
-                            handleAllCheckedBtn={handleAllCheckedBtn}
+                            groups={groups}
+                            setIsGroupButtonDisabled={setIsGroupButtonDisabled}
+                            isOpenStudentListDialog={isOpenStudentListDialog}
+                            setIsOpenStudentListDialog={setIsOpenStudentListDialog}
                         />
                     </span>
                 )}
             </CustomDialog>
-            {isOpenStudentListDialog && (
-                <MovingGroupsDialog
-                    onClose={() => setIsOpenStudentListDialog(false)}
-                    open={isOpenStudentListDialog}
-                    checkBoxStudents={checkBoxStudents}
-                    setShowStudentList={setIsOpenStudentListDialog}
-                    groups={groups}
-                    group={group}
-                />
-            )}
             {isOpenUploadFileDialog && (
                 <UploadFile
                     group={group}
