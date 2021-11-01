@@ -1,7 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import React, { useEffect, useState } from 'react';
 import { isEqual, isEmpty } from 'lodash';
-
 import SearchPanel from '../../../share/SearchPanel/SearchPanel';
 import SnackbarComponent from '../../../share/Snackbar/SnackbarComponent';
 import { handleSnackbarCloseService } from '../../../services/snackbarService';
@@ -128,10 +127,10 @@ const SemesterPage = (props) => {
     //     return !archived ? setScheduleTypeService('archived') : setScheduleTypeService('default');
     // };
 
-    const submitSemesterCopy = (values) => {
+    const submitSemesterCopy = ({ toSemesterId }) => {
         semesterCopy({
-            fromSemesterId: +semesterId,
-            toSemesterId: +values.toSemesterId,
+            fromSemesterId: semesterId,
+            toSemesterId,
         });
         setIsOpenSemesterCopyForm(false);
     };
