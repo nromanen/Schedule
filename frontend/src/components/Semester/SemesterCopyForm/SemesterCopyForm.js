@@ -1,6 +1,5 @@
 import React from 'react';
 import { Field } from 'redux-form';
-import { makeStyles } from '@material-ui/core/styles';
 import { useTranslation } from 'react-i18next';
 import Button from '@material-ui/core/Button';
 import { MdPlayArrow } from 'react-icons/md';
@@ -14,16 +13,7 @@ import {
 } from '../../../constants/translationLabels/formElements';
 import { TEACHER_SCHEDULE_LABEL } from '../../../constants/translationLabels/common';
 
-const useStyles = makeStyles((theme) => ({
-    root: {
-        '& > *': {
-            margin: theme.spacing(1),
-        },
-    },
-}));
-
 const SemesterCopyForm = (props) => {
-    const classes = useStyles();
     const { t } = useTranslation('common');
     const { semesterId, semesters, handleSubmit, pristine, submitting, submitButtonLabel } = props;
 
@@ -59,7 +49,7 @@ const SemesterCopyForm = (props) => {
     };
 
     return (
-        <section className={classes.root}>
+        <section className="copy-form">
             <p>{t(FORM_SEMESTER_COPY_HINT)}</p>
             <p className="red-color">{t(FORM_SEMESTER_COPY_RED_HINT)}</p>
             <form onSubmit={handleSubmit}>
