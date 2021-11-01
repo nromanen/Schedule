@@ -12,7 +12,9 @@
   height: $btn-size;
   transition: color 0.3s linear;
 }
-
+html {
+  height: 100%;
+}
 body {
   margin: 0;
   font-family: $font;

@@ -1,14 +1,12 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { styled } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
-
-import Board from '../Board/Board';
+import DragDropCard from '../DragDropCard/DragDropCard';
 import ScheduleItem from '../ScheduleItem/ScheduleItem';
 
-import { firstStringLetterCapital } from '../../helper/strings';
 import { FORM_GROUP_LABEL } from '../../constants/translationLabels/formElements';
 import {
     COMMON_SELECT_GROUP_SCHEDULE,
@@ -21,7 +19,52 @@ const GroupField = styled(TextField)({
 });
 
 const ScheduleLessonsList = (props) => {
-    const { groups, groupId, lessons, selectByGroupId, items, translation: t } = props;
+    const {
+        groups,
+        setDragItemData,
+        groupId,
+        lessons,
+        selectByGroupId,
+        items,
+        translation: t,
+    } = props;
+    const [listItems, setListItems] = useState([]);
+
+    const lessonItems = () => {
+        const lessonItem = [];
+        lessons.forEach((lesson) => {
+            const { hours } = lesson;
+            const modifiedLesson = lesson;
+            let els = [];
+            let hoursInSchedule = 0;
+
+            if (items.length > 0) {
+                els = items.filter((item) => item.lesson.id === lesson.id);
+            }
+
+            els.forEach(() => {
+                hoursInSchedule += 1;
+            });
+            for (let i = 0; i < hours - hoursInSchedule; i += 1) {
+                lessonItem.push(modifiedLesson);
+            }
+        });
+        // <section key={lesson.id + i}>
+        //     <ScheduleItem
+        //         index={i}
+        //         lesson={lesson}
+        //         lessons={lessons}
+        //         fStrLetterCapital={firstStringLetterCapitalHandle}
+        //         translation={t}
+        //         classScheduler={props.classScheduler}
+        //     />
+        // </section>,
+        return lessonItem;
+    };
+
+    useEffect(() => {
+        setListItems(lessonItems());
+    }, [lessons]);
 
     const handleGroupSelect = (group) => {
         if (group) selectByGroupId(group.id);
@@ -37,41 +80,7 @@ const ScheduleLessonsList = (props) => {
         getOptionLabel: (option) => (option ? option.title : ''),
     };
 
-    const firstStringLetterCapitalHandle = (str) => {
-        return firstStringLetterCapital(str);
-    };
-
-    const lessonItems = (lesson) => {
-        const { hours } = lesson;
-        const lessonItem = [];
-        let els = [];
-        let hoursInSchedule = 0;
-
-        if (items.length > 0) {
-            els = items.filter((item) => item.lesson.id === lesson.id);
-        }
-
-        els.forEach(() => {
-            hoursInSchedule += 1;
-        });
-
-        for (let i = 0; i < hours - hoursInSchedule; i += 1) {
-            lessonItem.push(
-                <section key={lesson.id + i}>
-                    <ScheduleItem
-                        index={i}
-                        lesson={lesson}
-                        lessons={lessons}
-                        fStrLetterCapital={firstStringLetterCapitalHandle}
-                        translation={t}
-                        classScheduler={props.classScheduler}
-                    />
-                </section>,
-            );
-        }
-        return lessonItem;
-    };
-
+    // console.log(listItems);
     return (
         <>
             {t(COMMON_SELECT_GROUP_SCHEDULE)}
@@ -88,13 +97,19 @@ const ScheduleLessonsList = (props) => {
                     <GroupField {...params} label={t(FORM_GROUP_LABEL)} margin="normal" />
                 )}
             />
-            {lessons.length > 0 ? (
-                <Board className="board lesson-board">
-                    {lessons.map((lesson) => lessonItems(lesson))}
-                </Board>
-            ) : (
-                groupId && t(LESSON_NO_LESSON_FOR_GROUP_LABEL)
-            )}
+            {lessons.length > 0
+                ? listItems.map((item, index) => (
+                      <DragDropCard
+                          key={`${item.id}_${index}_${item.index}`}
+                          index={index}
+                          lesson={item}
+                          lessons={lessons}
+                          setDragItemData={setDragItemData}
+                          translation={t}
+                          classScheduler={props.classScheduler}
+                      />
+                  ))
+                : groupId && t(LESSON_NO_LESSON_FOR_GROUP_LABEL)}
         </>
     );
 };

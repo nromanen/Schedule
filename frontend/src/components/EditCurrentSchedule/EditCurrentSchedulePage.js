@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { connect } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import Button from '@material-ui/core/Button';
 import { CircularProgress } from '@material-ui/core';
@@ -8,18 +7,15 @@ import { setLoadingService, setScheduleLoadingService } from '../../services/loa
 import { getClassScheduleListService } from '../../services/classService';
 import { showListOfRoomsService } from '../../services/roomService';
 
-import ScheduleLessonsList from '../../components/ScheduleLessonsList/ScheduleLessonsList';
-import Schedule from '../../components/Schedule/Schedule';
+import ScheduleLessonsList from '../ScheduleLessonsList/ScheduleLessonsList';
+import Schedule from '../../containers/EditCurrentSchedule/Schedule';
 
-import './SchedulePage.scss';
+import './EditCurrentSchedule.scss';
 import {
     SCHEDULE_TITLE,
-    NO_CURRENT_SEMESTER,
     CLEAR_SCHEDULE_LABEL,
     USE_PC,
 } from '../../constants/translationLabels/common';
-import { getLessonsByGroup } from '../../actions';
-import { clearScheduleStart, getAllScheduleItemsStart } from '../../actions/schedule';
 
 const SchedulePage = (props) => {
     const {
@@ -29,7 +25,6 @@ const SchedulePage = (props) => {
         scheduleItems,
         lessons,
         isLoading,
-        rooms,
         availability,
         scheduleLoading,
         getAllLessonsByGroup,
@@ -39,31 +34,29 @@ const SchedulePage = (props) => {
     } = props;
     const [dragItemData, setDragItemData] = useState({});
     const { t } = useTranslation('common');
-    const allLessons = [];
     const days = currentSemester.semester_days || [];
     const classes = currentSemester.semester_classes || [];
+    const allLessons = [];
     document.title = t(SCHEDULE_TITLE);
 
-    const getAllLessons = () => {
-        days.forEach((day, outerIndex) => {
-            classes.forEach((classNumber, index) => {
-                allLessons.push(
-                    {
-                        day: { name: day.toLowerCase() },
-                        classNumber,
-                        week: 'odd',
-                        id: `${index}-${outerIndex}`,
-                    },
-                    {
-                        day: { name: day.toLowerCase() },
-                        classNumber,
-                        week: 'even',
-                        id: `${index}-${outerIndex}`,
-                    },
-                );
-            });
+    days.forEach((day, outerIndex) => {
+        classes.forEach((classNumber, index) => {
+            allLessons.push(
+                {
+                    dayName: day,
+                    classId: classNumber.id,
+                    week: 'ODD',
+                    id: `${index}-${outerIndex}`,
+                },
+                {
+                    dayName: day,
+                    classId: classNumber.id,
+                    week: 'EVEN',
+                    id: `${index}-${outerIndex}`,
+                },
+            );
         });
-    };
+    });
 
     useEffect(() => {
         setLoadingService(true);
@@ -72,7 +65,6 @@ const SchedulePage = (props) => {
         showAllGroupsService();
         showListOfRoomsService();
         getClassScheduleListService();
-        getAllLessons();
     }, []);
 
     useEffect(() => {
@@ -91,7 +83,6 @@ const SchedulePage = (props) => {
             }
         }
     };
-    console.log(allLessons);
     return (
         <>
             <section className="schedule-control-panel">
@@ -100,22 +91,17 @@ const SchedulePage = (props) => {
                         <CircularProgress />
                     ) : (
                         <>
-                            {!currentSemester.id ? (
-                                <h2 className="no-current-semester">{t(NO_CURRENT_SEMESTER)}</h2>
-                            ) : (
-                                <Schedule
-                                    dragItemData={dragItemData}
-                                    groupId={groupId}
-                                    currentSemester={currentSemester}
-                                    groups={groups}
-                                    itemGroupId={itemGroupId}
-                                    items={scheduleItems}
-                                    translation={t}
-                                    rooms={rooms}
-                                    availability={availability}
-                                    isLoading={isLoading}
-                                />
-                            )}
+                            <Schedule
+                                dragItemData={dragItemData}
+                                groupId={groupId}
+                                currentSemester={currentSemester}
+                                groups={groups}
+                                itemGroupId={itemGroupId}
+                                items={scheduleItems}
+                                allLessons={allLessons}
+                                availability={availability}
+                                isLoading={isLoading}
+                            />
                         </>
                     )}
                 </section>
@@ -152,24 +138,4 @@ const SchedulePage = (props) => {
     );
 };
 
-const mapStateToProps = (state) => ({
-    groups: state.groups.groups,
-    lessons: state.lesson.lessons,
-    groupId: state.lesson.groupId,
-    loading: state.loadingIndicator.loading,
-    scheduleLoading: state.loadingIndicator.scheduleLoading,
-    scheduleItems: state.schedule.items,
-    itemGroupId: state.schedule.itemGroupId,
-    availability: state.schedule.availability,
-    currentSemester: state.schedule.currentSemester,
-    semester: state.schedule.semester,
-    rooms: state.rooms.rooms,
-});
-
-const mapDispatchToProps = (dispatch) => ({
-    getAllLessonsByGroup: (groupId) => dispatch(getLessonsByGroup(groupId)),
-    getAllScheduleItems: () => dispatch(getAllScheduleItemsStart()),
-    clearScheduleItems: (id) => dispatch(clearScheduleStart(id)),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(SchedulePage);
+export default SchedulePage;

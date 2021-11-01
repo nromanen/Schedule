@@ -9,7 +9,7 @@ import TeacherSchedule from '../components/TeacherSchedule/TeacherSchedule';
 import Logout from '../containers/Auth/Logout/Logout';
 import ActivationPage from '../containers/ActivationPage/ActivationPage';
 import ProfilePage from '../containers/ProfilePage/ProfilePage';
-import SchedulePage from '../containers/SchedulePage/SchedulePage';
+import EditCurrentSchedulePage from '../containers/EditCurrentSchedule/EditCurrentSchedulePage';
 import {
     HOME_PAGE_LINK,
     SCHEDULE_FOR_LINK,
@@ -46,7 +46,7 @@ const Routers = (props) => {
                 <UserRoute path={TEACHER_SCHEDULE_LINK} component={TeacherSchedule} />
                 <UserRoute path={MY_PROFILE_LINK} component={ProfilePage} />
                 <UserRoute path={LOGOUT_LINK} component={Logout} />
-                <AdminRoute path={SCHEDULE_PAGE_LINK} component={SchedulePage} />
+                <AdminRoute path={SCHEDULE_PAGE_LINK} component={EditCurrentSchedulePage} />
                 <AdminRoute path={ADMIN_PAGE_LINK} component={AdminRouter} />
                 <UserRoute path={ACTIVATION_PAGE_LINK}>
                     <Redirect to={HOME_PAGE_LINK} />
