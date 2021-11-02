@@ -17,7 +17,7 @@ const StyledTableRow = withStyles((theme) => ({
 }))(TableRow);
 
 export const TableFooterComponent = (props) => {
-    const { handleChangeRowsPerPage, handleChangePage, page, rowsPerPage, students = [] } = props;
+    const { page, setPage, rowsPerPage, setRowsPerPage, items } = props;
     const ALL_ROWS = -1;
     const { t } = useTranslation('formElements');
     return (
@@ -27,15 +27,15 @@ export const TableFooterComponent = (props) => {
                     labelRowsPerPage={`${t(ROWS_PER_PAGE)}`}
                     rowsPerPageOptions={[5, 10, 25, { label: `${t(ALL_PAGE)}`, value: ALL_ROWS }]}
                     colSpan={3}
-                    count={students.length}
+                    count={items.length}
                     rowsPerPage={rowsPerPage}
                     page={page}
                     SelectProps={{
                         inputProps: { 'aria-label': 'rows per page' },
                         native: true,
                     }}
-                    onPageChange={handleChangePage}
-                    onRowsPerPageChange={handleChangeRowsPerPage}
+                    onPageChange={(event, newPage) => setPage(newPage)}
+                    onRowsPerPageChange={(event, newPage) => setRowsPerPage(newPage)}
                     ActionsComponent={RenderStudentTableActions}
                 />
             </StyledTableRow>

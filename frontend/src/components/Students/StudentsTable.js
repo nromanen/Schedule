@@ -21,6 +21,7 @@ const useStyles2 = makeStyles({
 export const StudentsTable = (props) => {
     const {
         group,
+        students,
         setIsOpenConfirmDialog,
         isOpenConfirmDialog,
         deleteStudentStart,
@@ -28,6 +29,8 @@ export const StudentsTable = (props) => {
     } = props;
     const classes = useStyles2();
 
+    const [page, setPage] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = useState(5);
     const [isOpenUpdateDialog, setIsOpenUpdateDialog] = useState(false);
     const [student, setStudent] = useState(0);
 
@@ -42,29 +45,38 @@ export const StudentsTable = (props) => {
     return (
         <>
             <TableContainer component={Paper}>
-                <Table className={classes.table} aria-label='custom pagination table'>
+                <Table className={classes.table} aria-label="custom pagination table">
                     <StudentsTableHead {...props} />
                     <StudentsTableBody
+                        page={page}
+                        students={students}
+                        rowsPerPage={rowsPerPage}
                         setStudent={setStudent}
                         selectStudentSuccess={selectStudentSuccess}
                         setIsOpenUpdateDialog={setIsOpenUpdateDialog}
                         {...props}
                     />
-                    <TableFooterComponent {...props} />
+                    <TableFooterComponent
+                        page={page}
+                        items={students}
+                        setPage={setPage}
+                        rowsPerPage={rowsPerPage}
+                        setRowsPerPage={setRowsPerPage}
+                    />
                 </Table>
             </TableContainer>
             {isOpenUpdateDialog && (
                 <AddStudentDialog
-                    setOpen={closeEditStudentDialog}
-                    open={isOpenUpdateDialog}
-                    student={student}
                     group={group}
+                    student={student}
+                    open={isOpenUpdateDialog}
+                    setOpen={closeEditStudentDialog}
                 />
             )}
             <CustomDialog
-                type={dialogTypes.DELETE_CONFIRM}
-                whatDelete='student'
+                whatDelete="student"
                 open={isOpenConfirmDialog}
+                type={dialogTypes.DELETE_CONFIRM}
                 handelConfirm={() => confirmDeleteStudent(student.id)}
             />
         </>

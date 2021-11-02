@@ -44,6 +44,7 @@ const StyledTableRow = withStyles((theme) => ({
 export const StudentsTableBody = (props) => {
     const ALL_ROWS = -1;
     const {
+        page,
         group,
         students,
         setStudent,
@@ -51,17 +52,12 @@ export const StudentsTableBody = (props) => {
         setIsGroupButtonDisabled,
         setIsOpenUpdateDialog,
         selectStudentSuccess,
+        rowsPerPage,
     } = props;
-    const [page, setPage] = useState(0);
-    const [rowsPerPage, setRowsPerPage] = useState(5);
 
-    const [checkBoxStudents, setCheckBoxStudents] = useState([]);
     const [checkedAll, setCheckedAll] = useState(false);
+    const [checkBoxStudents, setCheckBoxStudents] = useState([]);
     const { t } = useTranslation('formElements');
-    const showUpdateStudentDialog = (curentStudent) => {
-        setIsOpenUpdateDialog(true);
-        selectStudentSuccess(curentStudent);
-    };
 
     const setSelectDisabled = () => {
         setIsGroupButtonDisabled(checkBoxStudents.every((item) => item.checked));
@@ -77,18 +73,6 @@ export const StudentsTableBody = (props) => {
         parseStudentToCheckBox();
         setSelectDisabled();
     }, [props.students]);
-
-    const handleCheckElement = (event) => {
-        setCheckBoxStudents(
-            checkBoxStudents.map((item) => {
-                const checkbox = item;
-                if (item.id === Number(event.target.value)) {
-                    checkbox.checked = event.target.checked;
-                }
-                return checkbox;
-            }),
-        );
-    };
 
     const handleAllCheckedBtn = (pageItemsCount, page, rowsPerPage) => {
         let start = page * rowsPerPage;
@@ -108,7 +92,6 @@ export const StudentsTableBody = (props) => {
         const mailto = `mailto:${email}`;
         window.location.href = mailto;
     };
-
     const getCorrectRowCount = (pageItemsCount) => {
         const resRows = checkBoxStudents.length - pageItemsCount * page;
         if (pageItemsCount > resRows || pageItemsCount === ALL_ROWS) {
@@ -116,18 +99,36 @@ export const StudentsTableBody = (props) => {
         }
         return pageItemsCount;
     };
+
+    const handleCheckElement = (event) => {
+        setCheckBoxStudents(
+            checkBoxStudents.map((item) => {
+                const checkbox = item;
+                if (item.id === Number(event.target.value)) {
+                    checkbox.checked = event.target.checked;
+                }
+                return checkbox;
+            })
+        );
+    };
+    
     const detectCheckingCheckAllBtn = () => {
         const rowsCount = getCorrectRowCount(rowsPerPage);
         handleAllCheckedBtn(rowsCount, page, rowsPerPage);
     };
 
-    const handleCheckElem = (event) => {
+    const checkStudent = (event) => {
         handleCheckElement(event);
         detectCheckingCheckAllBtn();
     };
     useEffect(() => {
         detectCheckingCheckAllBtn();
     }, [page]);
+
+    const showUpdateStudentDialog = (curentStudent) => {
+        setIsOpenUpdateDialog(true);
+        selectStudentSuccess(curentStudent);
+    };
 
     const studentsForList =
         rowsPerPage > 0
@@ -141,7 +142,7 @@ export const StudentsTableBody = (props) => {
                     <StyledTableCell component="th" scope="row" align="center">
                         <input
                             key={singleStudent.id}
-                            onClick={handleCheckElem}
+                            onClick={checkStudent}
                             type="checkbox"
                             checked={singleStudent.checked}
                             value={singleStudent.id}
