@@ -74,14 +74,12 @@ function* updateGroup({ data }) {
     }
 }
 
-function* submitGroupForm() {
+function* submitGroupForm({ group }) {
     try {
-        const state = yield select();
-        const { values } = state.form.addGroup;
-        if (!values.id) {
-            yield call(createGroup, { data: values });
+        if (!group.id) {
+            yield call(createGroup, { data: group });
         } else {
-            yield call(updateGroup, { data: values });
+            yield call(updateGroup, { data: group });
         }
     } catch (err) {
         yield put(setOpenErrorSnackbar(createErrorMessage(err)));

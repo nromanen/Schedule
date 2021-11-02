@@ -39,23 +39,24 @@ export const fetchAllStudentsStart = (id) => {
     };
 };
 
-export const createStudentStart = (data) => {
+export const submitStudentStart = (data, group) => {
     return {
-        type: actionTypes.START_CREATE_STUDENTS,
+        type: actionTypes.SUBMIT_STUDENT_FORM,
         data,
-    };
-};
-
-export const updateStudentStart = (data) => {
-    return {
-        type: actionTypes.START_UPDATE_STUDENTS,
-        data,
+        group,
     };
 };
 
 export const deleteStudentStart = (id) => {
     return {
-        type: actionTypes.START_DELETE_STUDENTS,
+        type: actionTypes.DELETE_STUDENT_START,
         id,
     };
 };
+
+// export const createStudentStart = (data) => {
+//     return {
+//         type: actionTypes.START_CREATE_STUDENTS,
+//         data,
+//     };
+// };

@@ -7,7 +7,7 @@ import { search } from '../../helper/search';
 import GroupCard from './GroupCard';
 import NotFound from '../../share/NotFound/NotFound';
 import CustomDialog from '../../containers/Dialogs/CustomDialog';
-import AddStudentDialog from '../../containers/Students/AddStudentDialog';
+import AddStudentDialog from '../../share/DialogWindows/_dialogWindows/AddStudentDialog';
 import ShowStudentsOnGroupDialog from '../../containers/Students/ShowStudentsOnGroupDialog';
 
 const GroupList = (props) => {
@@ -19,10 +19,10 @@ const GroupList = (props) => {
         isOpenConfirmDialog,
         deleteGroupStart,
         selectGroup,
+        searchItem,
         loading,
         groups,
         match,
-        term,
         isDisabled,
     } = props;
     const { t } = useTranslation('formElements');
@@ -44,7 +44,7 @@ const GroupList = (props) => {
         }
     }, [isDisabled]);
 
-    const visibleGroups = search(groups, term, ['title']);
+    const visibleGroups = search(groups, searchItem, ['title']);
 
     const showConfirmDialog = (currentId, disabledStatus) => {
         setGroupId(currentId);
@@ -89,6 +89,7 @@ const GroupList = (props) => {
             />
             {isOpenAddStudentDialog && (
                 <AddStudentDialog
+                    groups={groups}
                     groupId={groupId}
                     open={isOpenAddStudentDialog}
                     setOpen={setIsOpenAddStudentDialog}

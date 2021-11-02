@@ -1,4 +1,4 @@
-import { call, takeEvery, put } from 'redux-saga/effects';
+import { call, takeEvery, put, select } from 'redux-saga/effects';
 import { reset } from 'redux-form';
 import { STUDENT_URL } from '../constants/axios';
 
@@ -22,7 +22,8 @@ import {
 
 function* fetchAllStudentsWorker({ id }) {
     try {
-        const res = yield call(axiosCall, `groups/${id}/with-students`, 'GET');
+        const requestUrl = `groups/${id}/with-students`;
+        const res = yield call(axiosCall, requestUrl);
         yield put(showAllStudents(res.data.students));
     } catch (err) {
         yield put(setOpenErrorSnackbar(createErrorMessage(err)));
@@ -53,6 +54,18 @@ function* updateStudentWorker({ data }) {
     }
 }
 
+function* submitStudentForm({ data, group }) {
+    try {
+        if (!data.id) {
+            yield call(createStudentWorker, { ...data, group: { id: group.id } });
+        } else {
+            yield call(updateStudentWorker, { ...data, group: { id: data.group } });
+        }
+    } catch (err) {
+        yield put(setOpenErrorSnackbar(createErrorMessage(err)));
+    }
+}
+
 function* deleteStudentWorker({ id }) {
     try {
         yield call(axiosCall, `${STUDENT_URL}/${id}`, DELETE);
@@ -66,7 +79,8 @@ function* deleteStudentWorker({ id }) {
 
 export default function* studentWatcher() {
     yield takeEvery(actionTypes.FETCH_ALL_STUDENTS, fetchAllStudentsWorker);
-    yield takeEvery(actionTypes.START_CREATE_STUDENTS, createStudentWorker);
-    yield takeEvery(actionTypes.START_UPDATE_STUDENTS, updateStudentWorker);
-    yield takeEvery(actionTypes.START_DELETE_STUDENTS, deleteStudentWorker);
+    yield takeEvery(actionTypes.CREATE_STUDENT_START, createStudentWorker);
+    yield takeEvery(actionTypes.UPDATE_STUDENT_START, updateStudentWorker);
+    yield takeEvery(actionTypes.DELETE_STUDENT_START, deleteStudentWorker);
+    yield takeEvery(actionTypes.SUBMIT_STUDENT_FORM, submitStudentForm);
 }

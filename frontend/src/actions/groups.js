@@ -52,15 +52,10 @@ export const deleteGroupStart = (id) => ({
     id,
 });
 
-export const submitGroupStart = (data) => ({
+export const submitGroupStart = (group) => ({
     type: actionTypes.SUBMIT_GROUP_START,
-    data,
+    group,
 });
-
-// export const updateGroupStart = (data) => ({
-//     type: actionTypes.UPDATE_GROUP_START,
-//     data,
-// });
 
 export const clearGroupStart = (data) => ({
     type: actionTypes.CLEAR_GROUP_START,
@@ -72,3 +67,8 @@ export const toggleDisabledStatus = (groupId, disabledStatus) => ({
     groupId,
     disabledStatus,
 });
+
+// export const updateGroupStart = (data) => ({
+//     type: actionTypes.UPDATE_GROUP_START,
+//     data,
+// });

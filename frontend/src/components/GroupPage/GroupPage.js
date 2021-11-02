@@ -23,7 +23,12 @@ const GroupPage = (props) => {
                     <AddGroup />
                 </GroupSidebar>
                 <div className="group-wrapper group-list">
-                    <GroupList match={match} term={searchItem} isDisabled={isDisabled} {...rest} />
+                    <GroupList
+                        match={match}
+                        searchItem={searchItem}
+                        isDisabled={isDisabled}
+                        {...rest}
+                    />
                 </div>
             </div>
             <SnackbarComponent

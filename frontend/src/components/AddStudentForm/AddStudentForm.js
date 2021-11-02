@@ -17,7 +17,18 @@ import {
 } from '../../constants/translationLabels/formElements';
 
 export const AddStudentForm = (props) => {
-    const { handleSubmit, submitting, initialize, pristine, student, group, reset, groups } = props;
+    const {
+        handleSubmit,
+        submitting,
+        initialize,
+        pristine,
+        student,
+        group,
+        reset,
+        groups,
+        groupId,
+        submitStudentStart,
+    } = props;
     const { t } = useTranslation('formElements');
 
     const initializeFormHandler = (currentStudent) => {
@@ -42,7 +53,10 @@ export const AddStudentForm = (props) => {
 
     return (
         <Card additionClassName="form-card teacher-form">
-            <form className="createTeacherForm w-100" onSubmit={handleSubmit}>
+            <form
+                className="createTeacherForm w-100"
+                onSubmit={handleSubmit((data) => submitStudentStart(data, groupId))}
+            >
                 <Field
                     className="form-field"
                     name="surname"

@@ -7,7 +7,7 @@ import { StudentsTable } from './StudentsTable';
 import { deleteStudentStart, selectStudentSuccess } from '../../actions/students';
 import CustomDialog from '../../containers/Dialogs/CustomDialog';
 import { dialogTypes } from '../../constants/dialogs';
-import AddStudentDialog from '../../containers/Students/AddStudentDialog';
+import AddStudentDialog from '../../share/DialogWindows/_dialogWindows/AddStudentDialog';
 
 const StudentsPage = (props) => {
     const {
@@ -57,6 +57,7 @@ const StudentsPage = (props) => {
             {isOpenUpdateDialog && (
                 <AddStudentDialog
                     group={group}
+                    groups={groups}
                     student={student}
                     open={isOpenUpdateDialog}
                     setOpen={closeEditStudentDialog}
