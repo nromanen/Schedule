@@ -1,19 +1,12 @@
 import { call, takeEvery, put, select, takeLatest } from 'redux-saga/effects';
 import { reset } from 'redux-form';
 import { has } from 'lodash';
-import i18n from '../i18n';
 import { GROUP_FORM } from '../constants/reduxForms';
 import * as actionTypes from '../actions/actionsType';
 import { setLoading } from '../actions/loadingIndicator';
-import { FORM_GROUP_LABEL } from '../constants/translationLabels/formElements';
-import {
-    setOpenSuccessSnackbar,
-    setOpenErrorSnackbar,
-    setOpenInfoSnackbar,
-} from '../actions/snackbar';
 import { createErrorMessage, createDynamicMessage } from '../utils/sagaUtils';
+import { setOpenSuccessSnackbar, setOpenErrorSnackbar } from '../actions/snackbar';
 import {
-    BACK_END_SUCCESS_OPERATION,
     UPDATED_LABEL,
     CREATED_LABEL,
     DELETED_LABEL,
@@ -28,6 +21,7 @@ import {
 } from '../actions';
 import { DISABLED_GROUPS_URL, GROUP_URL } from '../constants/axios';
 import { axiosCall } from '../services/axios';
+import { DELETE, POST, PUT } from '../constants/methods';
 
 function* fetchGroups(url) {
     try {
@@ -52,7 +46,7 @@ function* fetchEnabledGroups() {
 
 function* createGroup({ data }) {
     try {
-        const res = yield call(axiosCall, GROUP_URL, 'POST', data);
+        const res = yield call(axiosCall, GROUP_URL, POST, data);
         yield put(addGroup(res.data));
         yield put(reset(GROUP_FORM));
         const message = createDynamicMessage('group', CREATED_LABEL);
@@ -64,7 +58,8 @@ function* createGroup({ data }) {
 
 function* updateGroup({ data }) {
     try {
-        const res = yield call(axiosCall, GROUP_URL, 'PUT', data);
+        console.log(data);
+        const res = yield call(axiosCall, GROUP_URL, PUT, data);
         if (has(data, 'disable')) {
             yield put(deleteGroupSuccess(data.id));
         } else {
@@ -95,7 +90,8 @@ function* submitGroupForm() {
 
 function* deleteGroup({ id }) {
     try {
-        yield call(axiosCall, `${GROUP_URL}/${id}`, 'DELETE');
+        const requestUrl = `${GROUP_URL}/${id}`;
+        yield call(axiosCall, requestUrl, DELETE);
         yield put(deleteGroupSuccess(id));
         const message = createDynamicMessage('group', DELETED_LABEL);
         yield put(setOpenSuccessSnackbar(message));
@@ -103,14 +99,6 @@ function* deleteGroup({ id }) {
         yield put(setOpenErrorSnackbar(createErrorMessage(err)));
     }
 }
-// const requestUrl = `${ARCHIVE_SEMESTER}/${semesterId}`;
-// const message = i18n.t(BACK_END_SUCCESS_OPERATION, {
-//             cardType: i18n.t(FORM_SEMESTER_LABEL),
-//             actionType: i18n.t(ARCHIVED_LABEL),
-//         });
-//         const isOpen = true;
-//         const type = snackbarTypes.SUCCESS;
-//         yield put(setOpenSnackbar({ isOpen, type, message }));
 
 function* toggleDisabledGroup({ groupId, disabledStatus }) {
     try {
