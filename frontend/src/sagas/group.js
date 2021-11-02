@@ -110,6 +110,14 @@ function* deleteGroup({ id }) {
         errorHandler(err);
     }
 }
+// const requestUrl = `${ARCHIVE_SEMESTER}/${semesterId}`;
+// const message = i18n.t(BACK_END_SUCCESS_OPERATION, {
+//             cardType: i18n.t(FORM_SEMESTER_LABEL),
+//             actionType: i18n.t(ARCHIVED_LABEL),
+//         });
+//         const isOpen = true;
+//         const type = snackbarTypes.SUCCESS;
+//         yield put(setOpenSnackbar({ isOpen, type, message }));
 
 function* toggleDisabledGroup({ groupId, disabledStatus }) {
     try {

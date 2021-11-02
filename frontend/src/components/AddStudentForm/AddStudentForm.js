@@ -6,7 +6,15 @@ import Card from '../../share/Card/Card';
 import { required } from '../../validation/validateFields';
 import renderTextField from '../../share/renderedFields/input';
 import renderSelectField from '../../share/renderedFields/select';
-import { TYPE_LABEL } from '../../constants/translationLabels/common';
+import { TYPE_LABEL, CANCEL_BUTTON_LABEL } from '../../constants/translationLabels/common';
+import {
+    EMAIL_FIELD,
+    NAME_PLACEHOLDER,
+    SAVE_BUTTON_LABEL,
+    CLEAR_BUTTON_LABEL,
+    SURNAME_PLACEHOLDER,
+    PATRONYMIC_PLACEHOLDER,
+} from '../../constants/translationLabels/formElements';
 
 export const AddStudentForm = (props) => {
     const { handleSubmit, submitting, initialize, pristine, student, group, reset, groups } = props;
@@ -41,8 +49,8 @@ export const AddStudentForm = (props) => {
                     id="surname"
                     component={renderTextField}
                     type="text"
-                    placeholder={t('surname_placeholder')}
-                    label={t('surname_placeholder')}
+                    placeholder={t(SURNAME_PLACEHOLDER)}
+                    label={t(SURNAME_PLACEHOLDER)}
                     validate={[required]}
                 />
 
@@ -52,8 +60,8 @@ export const AddStudentForm = (props) => {
                     id="name"
                     component={renderTextField}
                     type="text"
-                    placeholder={t('name_placeholder')}
-                    label={t('name_placeholder')}
+                    placeholder={t(NAME_PLACEHOLDER)}
+                    label={t(NAME_PLACEHOLDER)}
                     validate={[required]}
                 />
 
@@ -63,8 +71,8 @@ export const AddStudentForm = (props) => {
                     id="patronymic"
                     component={renderTextField}
                     type="text"
-                    placeholder={t('patronymic_placeholder')}
-                    label={t('patronymic_placeholder')}
+                    placeholder={t(PATRONYMIC_PLACEHOLDER)}
+                    label={t(PATRONYMIC_PLACEHOLDER)}
                     validate={[required]}
                 />
 
@@ -74,8 +82,8 @@ export const AddStudentForm = (props) => {
                     id="email"
                     component={renderTextField}
                     type="email"
-                    placeholder={t('email_field')}
-                    label={t('email_field')}
+                    placeholder={t(EMAIL_FIELD)}
+                    label={t(EMAIL_FIELD)}
                     validate={[required]}
                 />
                 {student && (
@@ -103,7 +111,7 @@ export const AddStudentForm = (props) => {
                         disabled={pristine || submitting}
                         type="submit"
                     >
-                        {t('save_button_label')}
+                        {t(SAVE_BUTTON_LABEL)}
                     </Button>
                     <Button
                         className="buttons-style"
@@ -111,7 +119,7 @@ export const AddStudentForm = (props) => {
                         disabled={pristine || submitting}
                         onClick={reset}
                     >
-                        {student ? t('cancel_button_label') : t('clear_button_label')}
+                        {student ? t(CANCEL_BUTTON_LABEL) : t(CLEAR_BUTTON_LABEL)}
                     </Button>
                 </div>
             </form>

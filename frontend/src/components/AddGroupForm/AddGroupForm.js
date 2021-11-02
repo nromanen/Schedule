@@ -69,7 +69,7 @@ export const AddGroup = (props) => {
                         className="buttons-style"
                         variant="contained"
                         disabled={setDisableButton(pristine, submitting, group.id)}
-                        onClick={() => clearGroupStart()}
+                        onClick={clearGroupStart}
                     >
                         {getClearOrCancelTitle(group.id, t)}
                     </Button>

@@ -67,6 +67,18 @@ const GroupList = (props) => {
         setIsOpenShowStudentsDialog(true);
     };
 
+    if (loading) {
+        return (
+            <section className="centered-container">
+                <CircularProgress />
+            </section>
+        );
+    }
+
+    if (!visibleGroups.length) {
+        return <NotFound name={t(GROUP_Y_LABEL)} />;
+    }
+
     return (
         <>
             <CustomDialog
@@ -92,26 +104,17 @@ const GroupList = (props) => {
                 />
             )}
             <div className="group-wrapper group-list">
-                {loading && (
-                    <section className="centered-container">
-                        <CircularProgress />
-                    </section>
-                )}
-                {!loading && visibleGroups.length === 0 ? (
-                    <NotFound name={t(GROUP_Y_LABEL)} />
-                ) : (
-                    visibleGroups.map((item) => (
-                        <GroupCard
-                            key={item.id}
-                            item={item}
-                            disabled={isDisabled}
-                            showConfirmDialog={showConfirmDialog}
-                            getGroupToUpdateForm={(id) => selectGroup(id)}
-                            showAddStudentDialog={showAddStudentDialog}
-                            showStudentsByGroup={showStudentsByGroup}
-                        />
-                    ))
-                )}
+                {visibleGroups.map((item) => (
+                    <GroupCard
+                        key={item.id}
+                        item={item}
+                        disabled={isDisabled}
+                        showConfirmDialog={showConfirmDialog}
+                        getGroupToUpdateForm={(id) => selectGroup(id)}
+                        showAddStudentDialog={showAddStudentDialog}
+                        showStudentsByGroup={showStudentsByGroup}
+                    />
+                ))}
             </div>
         </>
     );
