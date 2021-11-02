@@ -20,6 +20,10 @@ export const TableFooterComponent = (props) => {
     const { page, setPage, rowsPerPage, setRowsPerPage, items } = props;
     const ALL_ROWS = -1;
     const { t } = useTranslation('formElements');
+    const onRowsPerPageChange = (event) => {
+        setRowsPerPage(parseInt(event.target.value, 10));
+        setPage(0);
+    };
     return (
         <TableFooter>
             <StyledTableRow>
@@ -35,7 +39,7 @@ export const TableFooterComponent = (props) => {
                         native: true,
                     }}
                     onPageChange={(event, newPage) => setPage(newPage)}
-                    onRowsPerPageChange={(event, newPage) => setRowsPerPage(newPage)}
+                    onRowsPerPageChange={onRowsPerPageChange}
                     ActionsComponent={RenderStudentTableActions}
                 />
             </StyledTableRow>

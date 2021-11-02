@@ -1,12 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import Table from '@material-ui/core/Table';
 import TableContainer from '@material-ui/core/TableContainer';
 import Paper from '@material-ui/core/Paper';
 import '../../helper/renderStudentTable.scss';
 import { makeStyles } from '@material-ui/core/styles';
-import CustomDialog from '../../containers/Dialogs/CustomDialog';
-import { dialogTypes } from '../../constants/dialogs';
-import AddStudentDialog from '../../containers/Students/AddStudentDialog';
 
 import { TableFooterComponent } from '../Table/TableFooter';
 import { StudentsTableBody } from './StudentsTableBody';
@@ -19,29 +16,12 @@ const useStyles2 = makeStyles({
 });
 
 export const StudentsTable = (props) => {
-    const {
-        group,
-        students,
-        setIsOpenConfirmDialog,
-        isOpenConfirmDialog,
-        deleteStudentStart,
-        selectStudentSuccess,
-    } = props;
+    const { students } = props;
     const classes = useStyles2();
 
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
-    const [isOpenUpdateDialog, setIsOpenUpdateDialog] = useState(false);
-    const [student, setStudent] = useState(0);
-
-    const confirmDeleteStudent = (studentId) => {
-        setIsOpenConfirmDialog(false);
-        deleteStudentStart(studentId);
-    };
-    const closeEditStudentDialog = () => {
-        setIsOpenUpdateDialog(false);
-        selectStudentSuccess(null);
-    };
+console.log(rowsPerPage);
     return (
         <>
             <TableContainer component={Paper}>
@@ -51,9 +31,6 @@ export const StudentsTable = (props) => {
                         page={page}
                         students={students}
                         rowsPerPage={rowsPerPage}
-                        setStudent={setStudent}
-                        selectStudentSuccess={selectStudentSuccess}
-                        setIsOpenUpdateDialog={setIsOpenUpdateDialog}
                         {...props}
                     />
                     <TableFooterComponent
@@ -65,20 +42,6 @@ export const StudentsTable = (props) => {
                     />
                 </Table>
             </TableContainer>
-            {isOpenUpdateDialog && (
-                <AddStudentDialog
-                    group={group}
-                    student={student}
-                    open={isOpenUpdateDialog}
-                    setOpen={closeEditStudentDialog}
-                />
-            )}
-            <CustomDialog
-                whatDelete="student"
-                open={isOpenConfirmDialog}
-                type={dialogTypes.DELETE_CONFIRM}
-                handelConfirm={() => confirmDeleteStudent(student.id)}
-            />
         </>
     );
 };
