@@ -43,7 +43,7 @@ import { createErrorMessage, createMessage } from '../utils/sagaUtils';
 export function* getAllSemestersItems() {
     try {
         const response = yield call(axiosCall, SEMESTERS_URL);
-        yield put(showAllSemesters(response.data.sort((a, b) => b.year - a.year)));
+        yield put(showAllSemesters(response.data));
     } catch (error) {
         yield put(setOpenErrorSnackbar(createErrorMessage(error)));
     }

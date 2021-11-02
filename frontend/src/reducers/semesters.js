@@ -24,7 +24,7 @@ const reducer = (state = initialState, action) => {
         }
         case actionTypes.SHOW_ALL_SEMESTERS:
             return updateObject(state, {
-                semesters: action.result,
+                semesters: action.result.sort((a, b) => b.year - a.year),
                 semester: state.semester,
             });
         case actionTypes.SET_DISABLED_SEMESTERS:
