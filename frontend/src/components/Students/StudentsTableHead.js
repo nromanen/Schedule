@@ -24,18 +24,19 @@ const StyledTableCell = withStyles((theme) => ({
 }))(TableCell);
 
 export const StudentsTableHead = (props) => {
-    const { checkedAllBtn, handleAllOnPageClick } = props;
+    const { checkedAll, checkedAllOnPageClick } = props;
     const { t } = useTranslation('formElements');
+
     return (
         <TableHead>
             <TableRow>
-                <StyledTableCell className="check-box">
+                <StyledTableCell>
                     <span className="checked-all">
                         <input
                             id="checked-all-input"
                             type="checkbox"
-                            checked={checkedAllBtn}
-                            onClick={handleAllOnPageClick}
+                            checked={checkedAll}
+                            onClick={checkedAllOnPageClick}
                             value="checkedAll"
                             title={`${t(SELECT_ALL)}`}
                         />

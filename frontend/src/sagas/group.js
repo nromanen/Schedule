@@ -15,10 +15,10 @@ import {
 } from '../constants/translationLabels/serviceMessages';
 import {
     showAllGroups,
-    deleteGroupSusses,
-    updateGroupSusses,
+    deleteGroupSuccess,
+    updateGroupSuccess,
     selectGroup,
-    clearGroupSusses,
+    clearGroupSuccess,
     addGroup,
 } from '../actions';
 import { DISABLED_GROUPS_URL, GROUP_URL } from '../constants/axios';
@@ -65,9 +65,9 @@ function* updateGroup({ data }) {
     try {
         const res = yield call(axiosCall, GROUP_URL, 'PUT', data);
         if (has(data, 'disable')) {
-            yield put(deleteGroupSusses(data.id));
+            yield put(deleteGroupSuccess(data.id));
         } else {
-            yield put(updateGroupSusses(res.data));
+            yield put(updateGroupSuccess(res.data));
         }
         yield put(selectGroup(null));
         yield put(reset(GROUP_FORM));
@@ -99,7 +99,7 @@ function* submitGroupForm() {
 function* deleteGroup({ id }) {
     try {
         yield call(axiosCall, `${GROUP_URL}/${id}`, 'DELETE');
-        yield put(deleteGroupSusses(id));
+        yield put(deleteGroupSuccess(id));
         successHandler(
             i18n.t(BACK_END_SUCCESS_OPERATION, {
                 cardType: i18n.t(FORM_GROUP_LABEL),
@@ -125,7 +125,7 @@ function* toggleDisabledGroup({ groupId, disabledStatus }) {
 
 function* clearGroup() {
     try {
-        yield put(clearGroupSusses());
+        yield put(clearGroupSuccess());
         yield put(reset(GROUP_FORM));
     } catch (err) {
         errorHandler(err);

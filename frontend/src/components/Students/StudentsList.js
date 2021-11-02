@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { setIsOpenConfirmDialog } from '../../actions';
 import '../../helper/renderStudentTable.scss';
@@ -35,10 +35,13 @@ const StudentsPage = (props) => {
     return (
         <>
             <StudentsTable
-                setCheckBoxStudents={setCheckBoxStudents}
-                setStudent={setStudent}
-                groups={groups}
                 group={group}
+                groups={groups}
+                setStudent={setStudent}
+                checkBoxStudents={checkBoxStudents}
+                setCheckBoxStudents={setCheckBoxStudents}
+                setIsOpenUpdateDialog={setIsOpenUpdateDialog}
+                setIsOpenStudentListDialog={setIsOpenStudentListDialog}
                 {...rest}
             />
             {isOpenStudentListDialog && (

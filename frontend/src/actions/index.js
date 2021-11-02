@@ -47,10 +47,10 @@ export {
 export { clearFreeRooms, showFreeRooms } from './freeRooms';
 export {
     addGroup,
-    clearGroupSusses,
-    deleteGroupSusses,
+    clearGroupSuccess,
+    deleteGroupSuccess,
     selectGroup,
-    updateGroupSusses,
+    updateGroupSuccess,
     showAllGroups,
     toggleDisabledStatus,
 } from './groups';

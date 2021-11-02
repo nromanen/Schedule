@@ -17,7 +17,6 @@ const GroupList = (props) => {
         setIsOpenConfirmDialog,
         toggleDisabledStatus,
         isOpenConfirmDialog,
-        deleteStudentStart,
         deleteGroupStart,
         selectGroup,
         loading,
@@ -54,7 +53,6 @@ const GroupList = (props) => {
     };
     const acceptConfirmDialog = (currentGroupId) => {
         setIsOpenConfirmDialog(false);
-        if (!currentGroupId) return;
         if (confirmDialogType !== dialogTypes.DELETE_CONFIRM) {
             toggleDisabledStatus(currentGroupId, isDisabled);
         } else deleteGroupStart(currentGroupId);
@@ -67,9 +65,6 @@ const GroupList = (props) => {
     const showStudentsByGroup = (currentGroup) => {
         setGroup(currentGroup);
         setIsOpenShowStudentsDialog(true);
-    };
-    const onDeleteStudent = (id) => {
-        deleteStudentStart(id);
     };
 
     return (
@@ -93,7 +88,6 @@ const GroupList = (props) => {
                     open={isOpenShowStudentsDialog}
                     group={group}
                     match={match}
-                    onDeleteStudent={onDeleteStudent}
                     groups={groups}
                 />
             )}

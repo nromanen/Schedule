@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
@@ -42,107 +42,36 @@ const StyledTableRow = withStyles((theme) => ({
 }))(TableRow);
 
 export const StudentsTableBody = (props) => {
-    const ALL_ROWS = -1;
     const {
-        page,
         group,
-        students,
         setStudent,
-        setIsOpenConfirmDialog,
-        setIsGroupButtonDisabled,
-        setIsOpenUpdateDialog,
+        checkStudent,
         selectStudentSuccess,
-        rowsPerPage,
+        setIsOpenUpdateDialog,
+        currentStudentsOnList,
+        setIsOpenConfirmDialog,
     } = props;
-
-    const [checkedAll, setCheckedAll] = useState(false);
-    const [checkBoxStudents, setCheckBoxStudents] = useState([]);
     const { t } = useTranslation('formElements');
-
-    const setSelectDisabled = () => {
-        setIsGroupButtonDisabled(checkBoxStudents.every((item) => item.checked));
-    };
-    const parseStudentToCheckBox = () => {
-        const res = students.map((item) => {
-            return { ...item, checked: false };
-        });
-        setCheckBoxStudents(res);
-    };
-
-    useEffect(() => {
-        parseStudentToCheckBox();
-        setSelectDisabled();
-    }, [props.students]);
-
-    const handleAllCheckedBtn = (pageItemsCount, page, rowsPerPage) => {
-        let start = page * rowsPerPage;
-        const finish = pageItemsCount + page * rowsPerPage;
-        while (start < finish) {
-            if (checkBoxStudents[start].checked) {
-                start += 1;
-            } else {
-                break;
-            }
-        }
-        setCheckedAll(start === finish && start !== 0);
-    };
-    const emptyRows = rowsPerPage - Math.min(rowsPerPage, students.length - page * rowsPerPage);
 
     const sendMail = (email) => {
         const mailto = `mailto:${email}`;
         window.location.href = mailto;
     };
-    const getCorrectRowCount = (pageItemsCount) => {
-        const resRows = checkBoxStudents.length - pageItemsCount * page;
-        if (pageItemsCount > resRows || pageItemsCount === ALL_ROWS) {
-            return resRows;
-        }
-        return pageItemsCount;
-    };
 
-    const handleCheckElement = (event) => {
-        setCheckBoxStudents(
-            checkBoxStudents.map((item) => {
-                const checkbox = item;
-                if (item.id === Number(event.target.value)) {
-                    checkbox.checked = event.target.checked;
-                }
-                return checkbox;
-            })
-        );
-    };
-    
-    const detectCheckingCheckAllBtn = () => {
-        const rowsCount = getCorrectRowCount(rowsPerPage);
-        handleAllCheckedBtn(rowsCount, page, rowsPerPage);
-    };
-
-    const checkStudent = (event) => {
-        handleCheckElement(event);
-        detectCheckingCheckAllBtn();
-    };
-    useEffect(() => {
-        detectCheckingCheckAllBtn();
-    }, [page]);
-
-    const showUpdateStudentDialog = (curentStudent) => {
+    const showUpdateStudentDialog = (currentStudent) => {
         setIsOpenUpdateDialog(true);
-        selectStudentSuccess(curentStudent);
+        selectStudentSuccess(currentStudent);
     };
 
-    const studentsForList =
-        rowsPerPage > 0
-            ? checkBoxStudents.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-            : checkBoxStudents;
-
+    // const emptyRows = rowsPerPage - Math.min(rowsPerPage, students.length - page * rowsPerPage);
     return (
         <TableBody>
-            {studentsForList.map((singleStudent) => (
+            {currentStudentsOnList.map((singleStudent) => (
                 <StyledTableRow key={singleStudent.id}>
                     <StyledTableCell component="th" scope="row" align="center">
                         <input
                             key={singleStudent.id}
-                            onClick={checkStudent}
+                            onClick={(e) => checkStudent(e)}
                             type="checkbox"
                             checked={singleStudent.checked}
                             value={singleStudent.id}
@@ -196,11 +125,11 @@ export const StudentsTableBody = (props) => {
                 </StyledTableRow>
             ))}
 
-            {emptyRows > 0 && (
+            {/* {emptyRows > 0 && (
                 <StyledTableRow style={{ height: 53 * emptyRows }}>
                     <TableCell colSpan={6} />
                 </StyledTableRow>
-            )}
+            )} */}
         </TableBody>
     );
 };

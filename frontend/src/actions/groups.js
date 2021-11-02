@@ -7,7 +7,7 @@ export const addGroup = (res) => {
     };
 };
 
-export const updateGroupSusses = (res) => {
+export const updateGroupSuccess = (res) => {
     return {
         type: actionTypes.UPDATE_GROUP,
         result: res,
@@ -21,7 +21,7 @@ export const showAllGroups = (res) => {
     };
 };
 
-export const deleteGroupSusses = (res) => {
+export const deleteGroupSuccess = (res) => {
     return {
         type: actionTypes.DELETE_GROUP,
         result: res,
@@ -35,7 +35,7 @@ export const selectGroup = (res) => {
     };
 };
 
-export const clearGroupSusses = () => ({
+export const clearGroupSuccess = () => ({
     type: actionTypes.CLEAR_GROUP,
 });
 
