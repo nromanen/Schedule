@@ -39,7 +39,7 @@ export const setLessonTypes = (result) => ({
 
 export const deleteLessonCard = (id) => {
     return {
-        type: actionTypes.DELETE_LESSON_CARD,
+        type: actionTypes.DELETE_LESSON_CARD_SUCCESS,
         id,
     };
 };
@@ -68,7 +68,7 @@ export const selectLessonCard = (res) => {
 
 export const updateLessonCard = (res) => {
     return {
-        type: actionTypes.UPDATE_LESSON_CARD,
+        type: actionTypes.UPDATE_LESSON_CARD_SUCCESS,
         result: res,
     };
 };

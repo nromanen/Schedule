@@ -1,6 +1,5 @@
 import { reset } from 'redux-form';
 import { call, put, takeLatest } from 'redux-saga/effects';
-import i18n from '../i18n';
 
 import * as actionTypes from '../actions/actionsType';
 
@@ -17,6 +16,7 @@ import { setOpenErrorSnackbar, setOpenSuccessSnackbar } from '../actions/snackba
 
 import { createErrorMessage, createMessage } from '../utils/sagaUtils';
 
+import { DELETE, POST, PUT, GET } from '../constants/methods';
 import { LESSON_FORM } from '../constants/reduxForms';
 import { FORM_LESSON_LABEL } from '../constants/translationLabels/formElements';
 import { LESSON_URL, COPY_LESSON_URL, LESSON_TYPES_URL } from '../constants/axios';
@@ -32,7 +32,7 @@ import { axiosCall } from '../services/axios';
 export function* createLesson({ payload }) {
     const { info, isCopy } = payload;
     try {
-        const { data } = yield call(axiosCall, LESSON_URL, 'POST', info);
+        const { data } = yield call(axiosCall, LESSON_URL, POST, info);
 
         if (!isCopy) {
             yield put(createLessonCard(data));
@@ -56,42 +56,30 @@ export function* updateLesson({ payload }) {
             ...rest,
             group: { id: groupId },
         };
-        const { data } = yield call(axiosCall, LESSON_URL, 'PUT', request);
+        const { data } = yield call(axiosCall, LESSON_URL, PUT, request);
 
-        const message = i18n.t(BACK_END_SUCCESS_OPERATION, {
-            cardType: i18n.t(FORM_LESSON_LABEL),
-            actionType: i18n.t(UPDATED_LABEL),
-        });
+        const message = createMessage(BACK_END_SUCCESS_OPERATION, FORM_LESSON_LABEL, UPDATED_LABEL);
 
         yield put(updateLessonCard(data));
         yield put(selectLessonCard(null));
         yield put(reset(LESSON_FORM));
         yield put(setOpenSuccessSnackbar(message));
     } catch (error) {
-        const message = error.response
-            ? i18n.t(error.response.data.message, error.response.data.message)
-            : 'Error';
-        yield put(setOpenErrorSnackbar(message));
+        yield put(setOpenErrorSnackbar(createErrorMessage(error)));
     }
 }
 
 export function* removeLessonCard({ id }) {
     try {
         const requestUrl = `${LESSON_URL}/${id}`;
-        yield call(axiosCall, requestUrl, 'DELETE');
+        yield call(axiosCall, requestUrl, DELETE);
 
-        const message = i18n.t(BACK_END_SUCCESS_OPERATION, {
-            cardType: i18n.t(FORM_LESSON_LABEL),
-            actionType: i18n.t(DELETED_LABEL),
-        });
+        const message = createMessage(BACK_END_SUCCESS_OPERATION, FORM_LESSON_LABEL, DELETED_LABEL);
 
         yield put(deleteLessonCard(id));
         yield put(setOpenSuccessSnackbar(message));
     } catch (error) {
-        const message = error.response
-            ? i18n.t(error.response.data.message, error.response.data.message)
-            : 'Error';
-        yield put(setOpenErrorSnackbar(message));
+        yield put(setOpenErrorSnackbar(createErrorMessage(error)));
     }
 }
 
@@ -101,19 +89,13 @@ export function* copyLessonCard({ group, lesson }) {
     });
     try {
         const requestUrl = `${COPY_LESSON_URL}?lessonId=${lesson.id}`;
-        yield call(axiosCall, requestUrl, 'POST', groupList);
+        yield call(axiosCall, requestUrl, POST, groupList);
 
-        const message = i18n.t(BACK_END_SUCCESS_OPERATION, {
-            cardType: i18n.t(FORM_LESSON_LABEL),
-            actionType: i18n.t(COPIED_LABEL),
-        });
+        const message = createMessage(BACK_END_SUCCESS_OPERATION, FORM_LESSON_LABEL, COPIED_LABEL);
 
         yield put(setOpenSuccessSnackbar(message));
     } catch (error) {
-        const message = error.response
-            ? i18n.t(error.response.data.message, error.response.data.message)
-            : 'Error';
-        yield put(setOpenErrorSnackbar(message));
+        yield put(setOpenErrorSnackbar(createErrorMessage(error)));
     }
 }
 
@@ -122,29 +104,23 @@ export function* getLessonsByGroup({ id }) {
         yield put(setLoading(true));
 
         const requestUrl = `${LESSON_URL}?groupId=${Number(id)}`;
-        const { data } = yield call(axiosCall, requestUrl, 'GET', id);
+        const { data } = yield call(axiosCall, requestUrl, GET, id);
 
-        yield put(setLoading(false));
         yield put(setLessonsCards(data));
     } catch (error) {
-        const message = error.response
-            ? i18n.t(error.response.data.message, error.response.data.message)
-            : 'Error';
-
-        yield put(setOpenErrorSnackbar(message));
+        yield put(setOpenErrorSnackbar(createErrorMessage(error)));
+    } finally {
+        yield put(setLoading(false));
     }
 }
 
 export function* getLessonTypes() {
     try {
-        const { data } = yield call(axiosCall, LESSON_TYPES_URL, 'GET');
+        const { data } = yield call(axiosCall, LESSON_TYPES_URL, GET);
 
         yield put(setLessonTypes(data));
     } catch (error) {
-        const message = error.response
-            ? i18n.t(error.response.data.message, error.response.data.message)
-            : 'Error';
-        yield put(setOpenErrorSnackbar(message));
+        yield put(setOpenErrorSnackbar(createErrorMessage(error)));
     }
 }
 
