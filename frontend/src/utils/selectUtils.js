@@ -1,5 +1,10 @@
+import { isEmpty } from 'lodash';
+
 export const getGroupsOptionsForSelect = (groupOptions) => {
-    return groupOptions.map((item) => {
-        return { id: item.id, value: item.id, label: `${item.title}` };
-    });
+    if (!isEmpty(groupOptions)) {
+        return groupOptions.map((item) => {
+            return { id: item.id, value: item.id, label: `${item.title}` };
+        });
+    }
+    return groupOptions;
 };

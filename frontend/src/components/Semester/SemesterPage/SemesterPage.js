@@ -70,12 +70,7 @@ const SemesterPage = (props) => {
     const options = getGroupsOptionsForSelect(groups);
 
     useEffect(() => {
-        if (!isEmpty(semester.semester_groups)) {
-            setSemesterOptions(getGroupsOptionsForSelect(semester.semester_groups));
-        }
-    }, [semester.id]);
-
-    useEffect(() => {
+        // TODO change to saga
         showAllGroupsService();
         getAllSemestersItems();
         getDisabledSemestersItems();
@@ -99,7 +94,13 @@ const SemesterPage = (props) => {
         handleSemester(semester);
         setSelectedGroups([]);
     };
-
+    const submitSemesterCopy = ({ toSemesterId }) => {
+        semesterCopy({
+            fromSemesterId: semesterId,
+            toSemesterId,
+        });
+        setIsOpenSemesterCopyForm(false);
+    };
     const closeSemesterCopyForm = () => {
         setIsOpenSemesterCopyForm(false);
     };
@@ -144,15 +145,8 @@ const SemesterPage = (props) => {
     //     return !archived ? setScheduleTypeService('archived') : setScheduleTypeService('default');
     // };
 
-    const submitSemesterCopy = ({ toSemesterId }) => {
-        semesterCopy({
-            fromSemesterId: semesterId,
-            toSemesterId,
-        });
-        setIsOpenSemesterCopyForm(false);
-    };
-
     const onChangeGroups = () => {
+        const semester = enabledSemesters.find((semesterItem) => semesterItem.id === semesterId);
         const beginGroups = !isEmpty(semester.semester_groups)
             ? getGroupsOptionsForSelect(semester.semester_groups)
             : [];
@@ -167,7 +161,7 @@ const SemesterPage = (props) => {
             return;
         }
         setGroupsToSemester(semesterId, semesterOptions);
-        setSemesterOptions(getGroupsOptionsForSelect(semester.semester_groups));
+        // setSemesterOptions(getGroupsOptionsForSelect(semester.semester_groups));
         setIsOpenGroupsDialog(false);
     };
     const cancelMultiselect = () => {
@@ -176,12 +170,14 @@ const SemesterPage = (props) => {
 
     return (
         <>
-            <CustomDialog
-                type={confirmDialogType}
-                whatDelete="semester"
-                open={isOpenConfirmDialog}
-                handelConfirm={() => acceptConfirmDialog(semesterId)}
-            />
+            {isOpenConfirmDialog && (
+                <CustomDialog
+                    type={confirmDialogType}
+                    whatDelete="semester"
+                    open={isOpenConfirmDialog}
+                    handelConfirm={() => acceptConfirmDialog(semesterId)}
+                />
+            )}
             {isOpenSemesterCopyForm && (
                 <CustomDialog
                     title={t(SEMESTER_COPY_LABEL)}
@@ -229,6 +225,7 @@ const SemesterPage = (props) => {
                     setOpenGroupsDialog={setIsOpenGroupsDialog}
                     enabledSemesters={enabledSemesters}
                     disabledSemesters={disabledSemesters}
+                    setSemesterOptions={setSemesterOptions}
                 />
             </div>
             <SnackbarComponent

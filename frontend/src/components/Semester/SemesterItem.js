@@ -25,6 +25,7 @@ import {
     COMMON_SET_ENABLED,
 } from '../../constants/translationLabels/common';
 import { search } from '../../helper/search';
+import { getGroupsOptionsForSelect } from '../../utils/selectUtils';
 
 const SemesterItem = (props) => {
     const { t } = useTranslation('formElements');
@@ -42,6 +43,7 @@ const SemesterItem = (props) => {
         // archivedSemesters,
         createArchivedSemester,
         // getArchivedSemester,
+        setSemesterOptions,
     } = props;
     const [visibleItems, setVisibleItems] = useState([]);
 
@@ -193,7 +195,9 @@ const SemesterItem = (props) => {
                             className="svg-btn copy-btn  semester-groups"
                             onClick={() => {
                                 setSemesterId(semesterItem.id);
-                                selectSemesterService(semesterItem.id);
+                                setSemesterOptions(
+                                    getGroupsOptionsForSelect(semesterItem.semester_groups),
+                                );
                                 setOpenGroupsDialog(true);
                             }}
                         />
