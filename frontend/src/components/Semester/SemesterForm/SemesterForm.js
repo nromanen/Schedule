@@ -143,7 +143,7 @@ const SemesterForm = (props) => {
 
     return (
         <Card additionClassName="form-card semester-form">
-            <h2 style={{ textAlign: 'center' }}>
+            <h2 className="card-title">
                 {semester.id ? t(COMMON_EDIT) : t(COMMON_CREATE)}
                 {` ${t(COMMON_SEMESTER)}`}
             </h2>
