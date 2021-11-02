@@ -5,7 +5,7 @@ import SearchPanel from '../../../share/SearchPanel/SearchPanel';
 import SnackbarComponent from '../../../share/Snackbar/SnackbarComponent';
 import { handleSnackbarCloseService } from '../../../services/snackbarService';
 import SemesterForm from '../../../containers/SemesterPage/SemesterForm';
-import SemesterItem from '../../../containers/SemesterPage/SemesterItem';
+import SemesterList from '../../../containers/SemesterPage/SemesterList';
 import SemesterCopyForm from '../../../containers/SemesterPage/SemesterCopyForm';
 import { MultiselectForGroups } from '../../../helper/MultiselectForGroups';
 import { showAllGroupsService } from '../../../services/groupService';
@@ -214,7 +214,7 @@ const SemesterPage = (props) => {
                         />
                     )}
                 </aside>
-                <SemesterItem
+                <SemesterList
                     term={term}
                     archived={archived}
                     disabled={disabled}

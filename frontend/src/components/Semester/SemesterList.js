@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { FaEdit, FaUsers, FaFileArchive } from 'react-icons/fa';
 import { MdDelete, MdDonutSmall } from 'react-icons/md';
 import { useTranslation } from 'react-i18next';
-import './SemesterItem.scss';
+import './SemesterList.scss';
 import { GiSightDisabled, IoMdEye, FaCopy } from 'react-icons/all';
 import Card from '../../share/Card/Card';
 import NotFound from '../../share/NotFound/NotFound';
@@ -27,7 +27,7 @@ import {
 import { search } from '../../helper/search';
 import { getGroupsOptionsForSelect } from '../../utils/selectUtils';
 
-const SemesterItem = (props) => {
+const SemesterList = (props) => {
     const { t } = useTranslation('formElements');
     const {
         archived,
@@ -208,4 +208,4 @@ const SemesterItem = (props) => {
     );
 };
 
-export default SemesterItem;
+export default SemesterList;

@@ -133,8 +133,6 @@ const SemesterForm = (props) => {
         setDisabledFinishDate(false);
     };
 
-    const handleChange = (event, setState) => setState(event.target.checked);
-
     const resetSemesterForm = () => {
         setSelectedGroups([]);
         clearSemester();
@@ -164,7 +162,7 @@ const SemesterForm = (props) => {
                             labelPlacement="start"
                             component={renderCheckboxField}
                             checked={current}
-                            onChange={(e) => handleChange(e, setCurrent)}
+                            onChange={(event) => setCurrent(event.target.checked)}
                             color="primary"
                         />
                         <Field
@@ -173,7 +171,7 @@ const SemesterForm = (props) => {
                             labelPlacement="start"
                             component={renderCheckboxField}
                             checked={byDefault}
-                            onChange={(e) => handleChange(e, setByDefault)}
+                            onChange={(event) => setByDefault(event.target.checked)}
                             color="primary"
                         />
                     </div>

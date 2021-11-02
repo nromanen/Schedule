@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import SemesterItem from '../../components/Semester/SemesterItem';
+import SemesterList from '../../components/Semester/SemesterList';
 import { createArchivedSemesterStart, getArchivedSemesterStart } from '../../actions/semesters';
 
 const mapDispatchToProps = (dispatch) => ({
@@ -7,4 +7,4 @@ const mapDispatchToProps = (dispatch) => ({
     getArchivedSemester: (semesterId) => dispatch(getArchivedSemesterStart(semesterId)),
 });
 
-export default connect(null, mapDispatchToProps)(SemesterItem);
+export default connect(null, mapDispatchToProps)(SemesterList);
