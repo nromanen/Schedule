@@ -9,7 +9,7 @@ import i18n from '../i18n';
 import {
     createStudent,
     deleteStudent,
-    setStudent,
+    selectStudentSuccess,
     showAllStudents,
     updateStudent,
 } from '../actions/students';
@@ -71,7 +71,7 @@ export const deleteStudentService = (student) => {
         .catch((error) => errorHandler(error));
 };
 
-export const selectStudentService = (studentId) => store.dispatch(setStudent(studentId));
+export const selectStudentService = (studentId) => store.dispatch(selectStudentSuccess(studentId));
 
 export const updateStudentService = (data) => {
     return axios

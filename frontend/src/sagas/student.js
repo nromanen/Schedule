@@ -6,7 +6,12 @@ import { STUDENT_URL } from '../constants/axios';
 import * as actionTypes from '../actions/actionsType';
 import { STUDENT_FORM } from '../constants/reduxForms';
 import i18n from '../i18n';
-import { deleteStudent, setStudent, showAllStudents, updateStudent } from '../actions/students';
+import {
+    deleteStudent,
+    selectStudentSuccess,
+    showAllStudents,
+    updateStudent,
+} from '../actions/students';
 import {
     BACK_END_SUCCESS_OPERATION,
     UPDATED_LABEL,
@@ -44,7 +49,7 @@ function* updateStudentWorker({ data }) {
     try {
         const res = yield call(axiosCall, STUDENT_URL, 'PUT', data);
         yield put(updateStudent(res.data));
-        yield put(setStudent(null));
+        yield put(selectStudentSuccess(null));
         yield put(reset(STUDENT_FORM));
         successHandler(
             i18n.t(BACK_END_SUCCESS_OPERATION, {

@@ -43,7 +43,7 @@ const StyledTableRow = withStyles((theme) => ({
 
 export const StudentsTableBody = (props) => {
     const ALL_ROWS = -1;
-    const { students, group, setOpenConfirmDialog, setIsGroupButtonDisabled } = props;
+    const { students, group, setIsOpenConfirmDialog, setIsGroupButtonDisabled } = props;
     const [page, setPage] = useState(0);
     const [student, setStudent] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -79,7 +79,7 @@ export const StudentsTableBody = (props) => {
                     checkbox.checked = event.target.checked;
                 }
                 return checkbox;
-            })
+            }),
         );
     };
 
@@ -129,39 +129,39 @@ export const StudentsTableBody = (props) => {
                 : checkBoxStudents
             ).map((singleStudent) => (
                 <StyledTableRow key={singleStudent.id}>
-                    <StyledTableCell component='th' scope='row' align='center'>
+                    <StyledTableCell component="th" scope="row" align="center">
                         <input
                             key={singleStudent.id}
                             onClick={handleCheckElem}
-                            type='checkbox'
+                            type="checkbox"
                             checked={singleStudent.checked}
                             value={singleStudent.id}
-                            className='checked-box'
+                            className="checked-box"
                             title={`${t(SELECT_STUDENT)} ${getTeacherFullName(singleStudent)}`}
                         />
                     </StyledTableCell>
-                    <StyledTableCell component='th' scope='row' align='center'>
+                    <StyledTableCell component="th" scope="row" align="center">
                         {getTeacherFullName(singleStudent)}
                     </StyledTableCell>
-                    <StyledTableCell component='th' scope='row' align='center'>
+                    <StyledTableCell component="th" scope="row" align="center">
                         <span>
                             <button
-                                className='send-letter-button'
+                                className="send-letter-button"
                                 title={`${t(SEND_LETTER_LABEL)} ${singleStudent.email}`}
                                 onClick={() => sendMail(singleStudent.email)}
-                                type='button'
+                                type="button"
                             >
                                 {singleStudent.email}
                             </button>
                         </span>
                     </StyledTableCell>
-                    <StyledTableCell component='th' scope='row' align='center'>
-                        <span className='edit-cell'>
+                    <StyledTableCell component="th" scope="row" align="center">
+                        <span className="edit-cell">
                             <Link
                                 to={`${GROUP_LIST_LINK}${GROUP_LINK}/${group.id}${STUDENT_LINK}/${singleStudent.id}${EDIT_LINK}`}
                             >
                                 <FaEdit
-                                    className='edit-button'
+                                    className="edit-button"
                                     title={t(EDIT_TITLE)}
                                     onClick={() => handleEdit(singleStudent)}
                                 />
@@ -171,8 +171,8 @@ export const StudentsTableBody = (props) => {
                             >
                                 <Delete
                                     title={t(DELETE_TITLE_LABEL)}
-                                    className='delete-button'
-                                    onClick={() => setOpenConfirmDialog(true)}
+                                    className="delete-button"
+                                    onClick={() => setIsOpenConfirmDialog(true)}
                                 />
                             </Link>
                         </span>

@@ -19,7 +19,7 @@ export const deleteStudent = (res) => {
         result: res,
     };
 };
-export const setStudent = (res) => {
+export const selectStudentSuccess = (res) => {
     return {
         type: actionTypes.SET_STUDENT,
         result: res,
