@@ -43,17 +43,24 @@ const StyledTableRow = withStyles((theme) => ({
 
 export const StudentsTableBody = (props) => {
     const ALL_ROWS = -1;
-    const { students, group, setIsOpenConfirmDialog, setIsGroupButtonDisabled } = props;
+    const {
+        group,
+        students,
+        setStudent,
+        setIsOpenConfirmDialog,
+        setIsGroupButtonDisabled,
+        setIsOpenUpdateDialog,
+        selectStudentSuccess,
+    } = props;
     const [page, setPage] = useState(0);
-    const [student, setStudent] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
-    const [isOpenEditDialog, setIsOpenEditDialog] = useState(false);
+
     const [checkBoxStudents, setCheckBoxStudents] = useState([]);
     const [checkedAll, setCheckedAll] = useState(false);
     const { t } = useTranslation('formElements');
-    const handleEdit = (curentStudent) => {
-        setIsOpenEditDialog(true);
-        setStudent(curentStudent);
+    const showUpdateStudentDialog = (curentStudent) => {
+        setIsOpenUpdateDialog(true);
+        selectStudentSuccess(curentStudent);
     };
 
     const setSelectDisabled = () => {
@@ -122,12 +129,14 @@ export const StudentsTableBody = (props) => {
         detectCheckingCheckAllBtn();
     }, [page]);
 
+    const studentsForList =
+        rowsPerPage > 0
+            ? checkBoxStudents.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+            : checkBoxStudents;
+
     return (
         <TableBody>
-            {(rowsPerPage > 0
-                ? checkBoxStudents.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                : checkBoxStudents
-            ).map((singleStudent) => (
+            {studentsForList.map((singleStudent) => (
                 <StyledTableRow key={singleStudent.id}>
                     <StyledTableCell component="th" scope="row" align="center">
                         <input
@@ -163,7 +172,10 @@ export const StudentsTableBody = (props) => {
                                 <FaEdit
                                     className="edit-button"
                                     title={t(EDIT_TITLE)}
-                                    onClick={() => handleEdit(singleStudent)}
+                                    onClick={() => {
+                                        setStudent(singleStudent);
+                                        showUpdateStudentDialog(singleStudent);
+                                    }}
                                 />
                             </Link>
                             <Link
@@ -172,7 +184,10 @@ export const StudentsTableBody = (props) => {
                                 <Delete
                                     title={t(DELETE_TITLE_LABEL)}
                                     className="delete-button"
-                                    onClick={() => setIsOpenConfirmDialog(true)}
+                                    onClick={() => {
+                                        setStudent(singleStudent);
+                                        setIsOpenConfirmDialog(true);
+                                    }}
                                 />
                             </Link>
                         </span>

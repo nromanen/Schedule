@@ -28,39 +28,44 @@ export const StudentsTable = (props) => {
     } = props;
     const classes = useStyles2();
 
-    const [isOpenEditDialog, setIsOpenEditDialog] = useState(false);
+    const [isOpenUpdateDialog, setIsOpenUpdateDialog] = useState(false);
     const [student, setStudent] = useState(0);
 
-    const deleteStudent = (studentItem) => {
+    const confirmDeleteStudent = (studentId) => {
         setIsOpenConfirmDialog(false);
-        deleteStudentStart(studentItem);
+        deleteStudentStart(studentId);
     };
-    const closeEditDialog = () => {
-        setIsOpenEditDialog(false);
+    const closeEditStudentDialog = () => {
+        setIsOpenUpdateDialog(false);
         selectStudentSuccess(null);
     };
     return (
         <>
             <TableContainer component={Paper}>
-                <Table className={classes.table} aria-label="custom pagination table">
+                <Table className={classes.table} aria-label='custom pagination table'>
                     <StudentsTableHead {...props} />
-                    <StudentsTableBody {...props} />
+                    <StudentsTableBody
+                        setStudent={setStudent}
+                        selectStudentSuccess={selectStudentSuccess}
+                        setIsOpenUpdateDialog={setIsOpenUpdateDialog}
+                        {...props}
+                    />
                     <TableFooterComponent {...props} />
                 </Table>
             </TableContainer>
-            {isOpenEditDialog && (
+            {isOpenUpdateDialog && (
                 <AddStudentDialog
-                    open={isOpenEditDialog}
+                    setOpen={closeEditStudentDialog}
+                    open={isOpenUpdateDialog}
                     student={student}
                     group={group}
-                    setOpen={closeEditDialog}
                 />
             )}
             <CustomDialog
                 type={dialogTypes.DELETE_CONFIRM}
-                whatDelete="student"
+                whatDelete='student'
                 open={isOpenConfirmDialog}
-                handelConfirm={() => deleteStudent(student)}
+                handelConfirm={() => confirmDeleteStudent(student.id)}
             />
         </>
     );
