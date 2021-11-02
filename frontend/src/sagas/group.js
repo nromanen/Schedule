@@ -1,12 +1,17 @@
 import { call, takeEvery, put, select, takeLatest } from 'redux-saga/effects';
 import { reset } from 'redux-form';
 import { has } from 'lodash';
-import { errorHandler, successHandler } from '../helper/handlerAxios';
 import i18n from '../i18n';
 import { GROUP_FORM } from '../constants/reduxForms';
 import * as actionTypes from '../actions/actionsType';
 import { setLoading } from '../actions/loadingIndicator';
 import { FORM_GROUP_LABEL } from '../constants/translationLabels/formElements';
+import {
+    setOpenSuccessSnackbar,
+    setOpenErrorSnackbar,
+    setOpenInfoSnackbar,
+} from '../actions/snackbar';
+import { createErrorMessage, createDynamicMessage } from '../utils/sagaUtils';
 import {
     BACK_END_SUCCESS_OPERATION,
     UPDATED_LABEL,
@@ -31,7 +36,7 @@ function* fetchGroups(url) {
         const res = yield call(axiosCall, url);
         yield put(showAllGroups(res.data));
     } catch (err) {
-        errorHandler(err);
+        yield put(setOpenErrorSnackbar(createErrorMessage(err)));
     } finally {
         yield put(setLoading(false));
     }
@@ -50,14 +55,10 @@ function* createGroup({ data }) {
         const res = yield call(axiosCall, GROUP_URL, 'POST', data);
         yield put(addGroup(res.data));
         yield put(reset(GROUP_FORM));
-        successHandler(
-            i18n.t(BACK_END_SUCCESS_OPERATION, {
-                cardType: i18n.t(FORM_GROUP_LABEL),
-                actionType: i18n.t(CREATED_LABEL),
-            }),
-        );
+        const message = createDynamicMessage('group', CREATED_LABEL);
+        yield put(setOpenSuccessSnackbar(message));
     } catch (err) {
-        errorHandler(err);
+        yield put(setOpenErrorSnackbar(createErrorMessage(err)));
     }
 }
 
@@ -71,14 +72,10 @@ function* updateGroup({ data }) {
         }
         yield put(selectGroup(null));
         yield put(reset(GROUP_FORM));
-        successHandler(
-            i18n.t(BACK_END_SUCCESS_OPERATION, {
-                cardType: i18n.t(FORM_GROUP_LABEL),
-                actionType: i18n.t(UPDATED_LABEL),
-            }),
-        );
+        const message = createDynamicMessage('group', UPDATED_LABEL);
+        yield put(setOpenSuccessSnackbar(message));
     } catch (err) {
-        errorHandler(err);
+        yield put(setOpenErrorSnackbar(createErrorMessage(err)));
     }
 }
 
@@ -92,7 +89,7 @@ function* submitGroupForm() {
             yield call(updateGroup, { data: values });
         }
     } catch (err) {
-        errorHandler(err);
+        yield put(setOpenErrorSnackbar(createErrorMessage(err)));
     }
 }
 
@@ -100,14 +97,10 @@ function* deleteGroup({ id }) {
     try {
         yield call(axiosCall, `${GROUP_URL}/${id}`, 'DELETE');
         yield put(deleteGroupSuccess(id));
-        successHandler(
-            i18n.t(BACK_END_SUCCESS_OPERATION, {
-                cardType: i18n.t(FORM_GROUP_LABEL),
-                actionType: i18n.t(DELETED_LABEL),
-            }),
-        );
+        const message = createDynamicMessage('group', DELETED_LABEL);
+        yield put(setOpenSuccessSnackbar(message));
     } catch (err) {
-        errorHandler(err);
+        yield put(setOpenErrorSnackbar(createErrorMessage(err)));
     }
 }
 // const requestUrl = `${ARCHIVE_SEMESTER}/${semesterId}`;
@@ -127,7 +120,7 @@ function* toggleDisabledGroup({ groupId, disabledStatus }) {
             yield call(updateGroup, { data: { ...group, disable: !disabledStatus } });
         }
     } catch (err) {
-        errorHandler(err);
+        yield put(setOpenErrorSnackbar(createErrorMessage(err)));
     }
 }
 
@@ -136,7 +129,7 @@ function* clearGroup() {
         yield put(clearGroupSuccess());
         yield put(reset(GROUP_FORM));
     } catch (err) {
-        errorHandler(err);
+        yield put(setOpenErrorSnackbar(createErrorMessage(err)));
     }
 }
 
