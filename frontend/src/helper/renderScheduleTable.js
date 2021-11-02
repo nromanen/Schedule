@@ -26,7 +26,7 @@ import {
     COMMON_LINK_TO_MEETING_WORD,
     COMMON_VACATION_LABEL,
 } from '../constants/translationLabels/common';
-import { LinkToMeeting } from '../components/LinkToMeeting/LinkToMeeting';
+import MeetingLinkDialog from '../containers/Dialogs/MeetingLinkDialog';
 
 const shortid = require('shortid');
 
@@ -45,7 +45,7 @@ const getHref = (link) => {
 };
 const setLink = (card, place) => {
     if (place === places.TOGETHER) {
-        return <LinkToMeeting {...card} />;
+        return <MeetingLinkDialog {...card} />;
     }
     if (place === places.ONLINE) {
         return getHref(card.linkToMeeting);
