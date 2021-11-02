@@ -11,8 +11,6 @@ import {
     deleteSemester,
     addSemester,
     moveToArchivedSemester,
-    addSemesterStart,
-    updateSemesterStart,
 } from '../actions/semesters';
 import { setScheduleType, setFullSchedule } from '../actions/schedule';
 import { axiosCall } from '../services/axios';
@@ -153,10 +151,9 @@ export function* handleSemester({ values }) {
             yield put(updateSemester(response.data));
         }
         if (values.id) {
-            yield call(updateSemesterStart(values));
-        }
-        if (!values.id) {
-            yield put(addSemesterStart(values));
+            yield call(updateSemesterItem, { item: values });
+        } else {
+            yield call(addSemesterItem, { item: values });
         }
     } catch (error) {
         yield put(setOpenErrorSnackbar(createErrorMessage(error)));
