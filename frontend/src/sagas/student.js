@@ -1,11 +1,13 @@
-import { errorHandler, successHandler } from '../helper/handlerAxios';
 import { call, takeEvery, put } from 'redux-saga/effects';
 import { reset } from 'redux-form';
 import { STUDENT_URL } from '../constants/axios';
 
 import * as actionTypes from '../actions/actionsType';
 import { STUDENT_FORM } from '../constants/reduxForms';
-import i18n from '../i18n';
+import { createErrorMessage, createDynamicMessage } from '../utils/sagaUtils';
+import { setOpenSuccessSnackbar, setOpenErrorSnackbar } from '../actions/snackbar';
+import { DELETE, POST, PUT } from '../constants/methods';
+import { axiosCall } from '../services/axios';
 import {
     deleteStudent,
     selectStudentSuccess,
@@ -13,67 +15,52 @@ import {
     updateStudent,
 } from '../actions/students';
 import {
-    BACK_END_SUCCESS_OPERATION,
     UPDATED_LABEL,
     CREATED_LABEL,
     DELETED_LABEL,
 } from '../constants/translationLabels/serviceMessages';
-import { FORM_STUDENT_LABEL } from '../constants/translationLabels/formElements';
-import { axiosCall } from '../services/axios';
 
 function* fetchAllStudentsWorker({ id }) {
     try {
         const res = yield call(axiosCall, `groups/${id}/with-students`, 'GET');
         yield put(showAllStudents(res.data.students));
     } catch (err) {
-        errorHandler(err);
+        yield put(setOpenErrorSnackbar(createErrorMessage(err)));
     }
 }
 
 function* createStudentWorker({ data }) {
     try {
-        yield call(axiosCall, STUDENT_URL, 'POST', data);
+        yield call(axiosCall, STUDENT_URL, POST, data);
         yield put(reset(STUDENT_FORM));
-        successHandler(
-            i18n.t(BACK_END_SUCCESS_OPERATION, {
-                cardType: i18n.t(FORM_STUDENT_LABEL),
-                actionType: i18n.t(CREATED_LABEL),
-            }),
-        );
+        const message = createDynamicMessage('student', CREATED_LABEL);
+        yield put(setOpenSuccessSnackbar(message));
     } catch (err) {
-        errorHandler(err);
+        yield put(setOpenErrorSnackbar(createErrorMessage(err)));
     }
 }
 
 function* updateStudentWorker({ data }) {
     try {
-        const res = yield call(axiosCall, STUDENT_URL, 'PUT', data);
+        const res = yield call(axiosCall, STUDENT_URL, PUT, data);
         yield put(updateStudent(res.data));
         yield put(selectStudentSuccess(null));
         yield put(reset(STUDENT_FORM));
-        successHandler(
-            i18n.t(BACK_END_SUCCESS_OPERATION, {
-                cardType: i18n.t(FORM_STUDENT_LABEL),
-                actionType: i18n.t(UPDATED_LABEL),
-            }),
-        );
+        const message = createDynamicMessage('student', UPDATED_LABEL);
+        yield put(setOpenSuccessSnackbar(message));
     } catch (err) {
-        errorHandler(err);
+        yield put(setOpenErrorSnackbar(createErrorMessage(err)));
     }
 }
 
 function* deleteStudentWorker({ id }) {
     try {
-        yield call(axiosCall, `${STUDENT_URL}/${id}`, 'DELETE');
+        yield call(axiosCall, `${STUDENT_URL}/${id}`, DELETE);
         yield put(deleteStudent(id));
-        successHandler(
-            i18n.t(BACK_END_SUCCESS_OPERATION, {
-                cardType: i18n.t(FORM_STUDENT_LABEL),
-                actionType: i18n.t(DELETED_LABEL),
-            }),
-        );
+        const message = createDynamicMessage('student', DELETED_LABEL);
+        yield put(setOpenSuccessSnackbar(message));
     } catch (err) {
-        errorHandler(err);
+        yield put(setOpenErrorSnackbar(createErrorMessage(err)));
     }
 }
 

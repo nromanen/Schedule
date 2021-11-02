@@ -6,6 +6,9 @@ import * as actionTypes from '../actions/actionsType';
 import { setLoading } from '../actions/loadingIndicator';
 import { createErrorMessage, createDynamicMessage } from '../utils/sagaUtils';
 import { setOpenSuccessSnackbar, setOpenErrorSnackbar } from '../actions/snackbar';
+import { DISABLED_GROUPS_URL, GROUP_URL } from '../constants/axios';
+import { DELETE, POST, PUT } from '../constants/methods';
+import { axiosCall } from '../services/axios';
 import {
     UPDATED_LABEL,
     CREATED_LABEL,
@@ -19,9 +22,7 @@ import {
     clearGroupSuccess,
     addGroup,
 } from '../actions';
-import { DISABLED_GROUPS_URL, GROUP_URL } from '../constants/axios';
-import { axiosCall } from '../services/axios';
-import { DELETE, POST, PUT } from '../constants/methods';
+import { hasDisabled } from '../constants/disabledCard';
 
 function* fetchGroups(url) {
     try {
@@ -58,9 +59,8 @@ function* createGroup({ data }) {
 
 function* updateGroup({ data }) {
     try {
-        console.log(data);
         const res = yield call(axiosCall, GROUP_URL, PUT, data);
-        if (has(data, 'disable')) {
+        if (has(data, hasDisabled)) {
             yield put(deleteGroupSuccess(data.id));
         } else {
             yield put(updateGroupSuccess(res.data));
@@ -90,8 +90,7 @@ function* submitGroupForm() {
 
 function* deleteGroup({ id }) {
     try {
-        const requestUrl = `${GROUP_URL}/${id}`;
-        yield call(axiosCall, requestUrl, DELETE);
+        yield call(axiosCall, `${GROUP_URL}/${id}`, DELETE);
         yield put(deleteGroupSuccess(id));
         const message = createDynamicMessage('group', DELETED_LABEL);
         yield put(setOpenSuccessSnackbar(message));
