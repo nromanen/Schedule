@@ -15,6 +15,8 @@ import {
 } from '../actions';
 import { setOpenErrorSnackbar, setOpenSuccessSnackbar } from '../actions/snackbar';
 
+import { createErrorMessage, createMessage } from '../utils/sagaUtils';
+
 import { LESSON_FORM } from '../constants/reduxForms';
 import { FORM_LESSON_LABEL } from '../constants/translationLabels/formElements';
 import { LESSON_URL, COPY_LESSON_URL, LESSON_TYPES_URL } from '../constants/axios';
@@ -35,18 +37,12 @@ export function* createLesson({ payload }) {
         if (!isCopy) {
             yield put(createLessonCard(data));
         }
-        const message = i18n.t(BACK_END_SUCCESS_OPERATION, {
-            cardType: i18n.t(FORM_LESSON_LABEL),
-            actionType: i18n.t(CREATED_LABEL),
-        });
+        const message = createMessage(BACK_END_SUCCESS_OPERATION, FORM_LESSON_LABEL, CREATED_LABEL);
 
         yield put(reset(LESSON_FORM));
         yield put(setOpenSuccessSnackbar(message));
     } catch (error) {
-        const message = error.response
-            ? i18n.t(error.response.data.message, error.response.data.message)
-            : 'Error';
-        yield put(setOpenErrorSnackbar(message));
+        yield put(setOpenErrorSnackbar(createErrorMessage(error)));
     }
 }
 

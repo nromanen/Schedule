@@ -11,7 +11,7 @@ const initialState = {
 
 const reducer = (state = initialState, action) => {
     switch (action.type) {
-        case actionTypes.CREATE_LESSON_CARD:
+        case actionTypes.CREATE_LESSON_CARD_SUCCESS:
             return updateObject(state, {
                 lessons: state.lessons.concat(action.result),
             });

@@ -2,7 +2,7 @@ import * as actionTypes from './actionsType';
 
 export const createLessonCard = (result) => {
     return {
-        type: actionTypes.CREATE_LESSON_CARD,
+        type: actionTypes.CREATE_LESSON_CARD_SUCCESS,
         result,
     };
 };
