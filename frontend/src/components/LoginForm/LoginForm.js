@@ -29,12 +29,6 @@ import {
     REGISTRATION_PAGE_TITLE,
 } from '../../constants/translationLabels/common';
 import { REGISTRATION_LINK, RESET_PASSWORD_LINK } from '../../constants/links';
-import {
-    setScheduleSemesterId,
-    setScheduleType,
-    setScheduleGroupId,
-    setScheduleTeacherId,
-} from '../../actions';
 
 const LoginForm = (props) => {
     const { handleSubmit, loginHandler, errors, setError, isLoading } = props;

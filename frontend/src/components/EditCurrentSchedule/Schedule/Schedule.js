@@ -1,8 +1,6 @@
 import React, { Fragment, useEffect, useState } from 'react';
-import { connect } from 'react-redux';
 import i18n from 'i18next';
 import ScheduleBoard from '../../../containers/EditCurrentSchedule/ScheduleBoard';
-import ScheduleItem from '../../ScheduleItem/ScheduleItem';
 import ScheduleDialog from '../../../containers/Dialogs/ScheduleDialog';
 
 import { cssClasses } from '../../../constants/schedule/cssClasses';
@@ -12,11 +10,9 @@ import {
     SCHEDULE_TITLE,
     NO_CURRENT_SEMESTER,
     CLEAR_SCHEDULE_LABEL,
-    USE_PC,
 } from '../../../constants/translationLabels/common';
+import { actionType } from '../../../constants/actionTypes';
 import './Schedule.scss';
-import { addItemsToScheduleStart, editRoomItemToScheduleStart } from '../../../actions/schedule';
-import { getLessonsByGroup, selectGroupId } from '../../../actions';
 
 const Schedule = (props) => {
     const {
@@ -37,8 +33,8 @@ const Schedule = (props) => {
 
     useEffect(() => {
         if (groupId !== null) {
-            const el = document.getElementById(`group-${groupId}`);
-            el.scrollIntoView({ block: 'center', inline: 'center' });
+            const groupColumn = document.getElementById(`group-${groupId}`);
+            groupColumn.scrollIntoView({ block: 'center', inline: 'center' });
         }
     }, [groupId]);
 
@@ -50,7 +46,7 @@ const Schedule = (props) => {
     const handleChangeSchedule = (roomId, actionData) => {
         const { item, type } = actionData;
         setIsOpenScheduleDialog(false);
-        if (type === 'edit') {
+        if (type === actionType.UPDATED) {
             editRoomItemToSchedule({ itemId: item.id, roomId });
         } else {
             addItemsToSchedule({ ...item, roomId });
@@ -64,10 +60,9 @@ const Schedule = (props) => {
     };
 
     const getDayColour = (index) => {
-        return index % 2 ? 'violet-day' : 'blue-day';
+        return index % 2 ? 'dark-blue-day' : 'blue-day';
     };
 
-    // console.log(allLessons);
     return (
         <div className="schedule">
             {isOpenScheduleDialog && (
@@ -110,6 +105,7 @@ const Schedule = (props) => {
                                     className={`group-section ${
                                         isSelectedGroup ? 'selected-group' : ''
                                     }`}
+                                    id={`group-${group.id}`}
                                 >
                                     <span className="group-title card">{group.title}</span>
                                     {allLessons.map((lesson) => (
@@ -141,11 +137,4 @@ const Schedule = (props) => {
     );
 };
 
-const mapDispatchToProps = (dispatch) => ({
-    addItemsToSchedule: (item) => dispatch(addItemsToScheduleStart(item)),
-    editRoomItemToSchedule: (item) => dispatch(editRoomItemToScheduleStart(item)),
-    selectedGroupById: (id) => dispatch(selectGroupId(id)),
-    getLessonsByGroupId: (id) => dispatch(getLessonsByGroup(id)),
-});
-
-export default connect(null, mapDispatchToProps)(Schedule);
+export default Schedule;

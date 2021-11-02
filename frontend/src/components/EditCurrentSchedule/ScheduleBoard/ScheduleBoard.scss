@@ -22,7 +22,9 @@
 }
 .board-container {
     position: relative;
+    display: flex;
     height: 114px;
+    justify-content: center;
     .schedule-item,
     .board {
         position: relative;
@@ -51,11 +53,14 @@
         .lesson-duration,
         .teacher-name {
             margin-top: 4px;
-            margin-bottom: 4px;
+            margin-bottom: 3px;
             font-size: $font-xs;
             b {
                 color: $blue;
             }
+        }
+        .lesson-duration {
+            margin-top: 3px;
         }
         &-menu {
             position: absolute;
@@ -71,6 +76,8 @@
             position: absolute;
             z-index: 2;
             height: unset;
+            min-height: 100px;
+            box-shadow: 0 0 8px 4px $blue-shadow-box;
             .lesson-title {
                 display: block;
             }
@@ -90,19 +97,24 @@
             font-size: $font-xs;
         }
     }
+    .grouped-icon {
+        position: absolute;
+        right: 3px;
+        bottom: 15px;
+    }
     .posable {
-        background-color: #f7f7c1;
+        background-color: $warning-color;
     }
     .allow {
-        background-color: green;
+        background-color: $create-color;
         p {
-            color: #fff;
+            color: $main-color;
         }
     }
     .not-allow {
-        background-color: red;
+        background-color: $delete-color;
         p {
-            color: #fff;
+            color: $main-color;
         }
     }
 }

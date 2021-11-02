@@ -1,21 +1,19 @@
 import { connect } from 'react-redux';
 import {
-    checkAvailabilityScheduleStart,
     checkAvailabilityChangeRoomScheduleStart,
     deleteScheduleItemStart,
 } from '../../actions/schedule';
 import { selectGroupId, getLessonsByGroup } from '../../actions';
-import ScheduleBoard from '../../components/EditCurrentSchedule/ScheduleBoard/ScheduleBoard';
+import ScheduleBoardItem from '../../components/EditCurrentSchedule/ScheduleBoard/ScheduleBoardItem';
 
 const mapStateToProps = (state) => ({
     scheduleItems: state.schedule.items,
 });
 const mapDispatchToProps = (dispatch) => ({
-    checkScheduleItemAvailability: (item) => dispatch(checkAvailabilityScheduleStart(item)),
     selectByGroupId: (groupId) => dispatch(selectGroupId(groupId)),
     checkRoomAvailability: (item) => dispatch(checkAvailabilityChangeRoomScheduleStart(item)),
     deleteScheduleItem: (item) => dispatch(deleteScheduleItemStart(item)),
     getLessonsByGroupId: (id) => dispatch(getLessonsByGroup(id)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(ScheduleBoard);
+export default connect(mapStateToProps, mapDispatchToProps)(ScheduleBoardItem);

@@ -164,7 +164,7 @@ body {
   }
 
   .info-btn {
-    color: $good-color;
+    color: $create-color;
     cursor: default;
     left: 0;
     position: absolute;
@@ -172,13 +172,13 @@ body {
 
   .copy-btn {
     &:hover {
-      color: $good-color;
+      color: $create-color;
     }
   }
 }
 
 .info-btn {
-  color: $good-color;
+  color: $create-color;
   cursor: default;
   margin: 0 5px;
 }

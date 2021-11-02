@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import i18n from 'i18next';
 import { isEmpty } from 'lodash';
-import { connect } from 'react-redux';
 import { setLoadingService } from '../../../services/loadingService';
-import ScheduleItem from '../../ScheduleItem/ScheduleItem';
+import ScheduleBoardItem from '../../../containers/EditCurrentSchedule/ScheduleBoardItem';
+import { actionType } from '../../../constants/actionTypes';
 import './ScheduleBoard.scss';
-import { checkAvailabilityScheduleStart } from '../../../actions/schedule';
 
 const ScheduleBoard = (props) => {
     const {
@@ -56,14 +55,14 @@ const ScheduleBoard = (props) => {
             id: dragItemData.id,
             lessonId: dragItemData.id,
             dayOfWeek: dayName,
-            periodId: +classId,
+            periodId: classId,
             evenOdd: week,
             semesterId: currentSemester.id,
         };
         checkScheduleItemAvailability(AddObj);
         setClassName('posable');
         setLoadingService(true);
-        openDialogWithData({ type: 'add', item: AddObj, groupId });
+        openDialogWithData({ type: actionType.ADD, item: AddObj, groupId });
     };
 
     const dragOver = (e) => {
@@ -76,7 +75,7 @@ const ScheduleBoard = (props) => {
     return (
         <>
             {!isEmpty(boardFill) ? (
-                <ScheduleItem itemData={boardFill} openDialogWithData={openDialogWithData} />
+                <ScheduleBoardItem itemData={boardFill} openDialogWithData={openDialogWithData} />
             ) : (
                 <div
                     className={`board ${additionClassName} ${className}`}
@@ -90,11 +89,5 @@ const ScheduleBoard = (props) => {
         </>
     );
 };
-const mapStateToProps = (state) => ({
-    scheduleItems: state.schedule.items,
-});
-const mapDispatchToProps = (dispatch) => ({
-    checkScheduleItemAvailability: (item) => dispatch(checkAvailabilityScheduleStart(item)),
-});
 
-export default connect(mapStateToProps, mapDispatchToProps)(ScheduleBoard);
+export default ScheduleBoard;

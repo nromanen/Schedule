@@ -1,43 +1,48 @@
 import React, { useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import Button from '@material-ui/core/Button';
+import i18n from 'i18next';
 import { CircularProgress } from '@material-ui/core';
-import { showAllGroupsService } from '../../services/groupService';
-import { setLoadingService, setScheduleLoadingService } from '../../services/loadingService';
 import { getClassScheduleListService } from '../../services/classService';
 import { showListOfRoomsService } from '../../services/roomService';
 
-import ScheduleLessonsList from '../ScheduleLessonsList/ScheduleLessonsList';
+import ScheduleLessonsList from '../../containers/EditCurrentSchedule/ScheduleLessonsList';
 import Schedule from '../../containers/EditCurrentSchedule/Schedule';
-
+import { SCHEDULE_TITLE, USE_PC } from '../../constants/translationLabels/common';
+import { EDIT_SCHEDULE_MIN_WINDOW_SIZE } from '../../constants/windowSizes';
 import './EditCurrentSchedule.scss';
-import {
-    SCHEDULE_TITLE,
-    CLEAR_SCHEDULE_LABEL,
-    USE_PC,
-} from '../../constants/translationLabels/common';
 
 const SchedulePage = (props) => {
     const {
-        groups,
         groupId,
         itemGroupId,
         scheduleItems,
-        lessons,
         isLoading,
-        availability,
+        setLoading,
+        fetchEnabledGroupsStart,
         scheduleLoading,
+        setScheduleLoading,
         getAllLessonsByGroup,
         getAllScheduleItems,
         clearScheduleItems,
         currentSemester,
     } = props;
+    document.title = i18n.t(SCHEDULE_TITLE);
     const [dragItemData, setDragItemData] = useState({});
-    const { t } = useTranslation('common');
+    const [isHiddenSchedule, setIsHiddenSchedule] = useState(false);
     const days = currentSemester.semester_days || [];
     const classes = currentSemester.semester_classes || [];
     const allLessons = [];
-    document.title = t(SCHEDULE_TITLE);
+
+    const handleResize = () => {
+        if (window.innerWidth < EDIT_SCHEDULE_MIN_WINDOW_SIZE) {
+            setIsHiddenSchedule(true);
+        } else {
+            setIsHiddenSchedule(false);
+        }
+    };
+
+    useEffect(() => {
+        window.addEventListener('resize', handleResize);
+    }, []);
 
     days.forEach((day, outerIndex) => {
         classes.forEach((classNumber, index) => {
@@ -59,17 +64,17 @@ const SchedulePage = (props) => {
     });
 
     useEffect(() => {
-        setLoadingService(true);
-        setScheduleLoadingService(true);
+        setLoading(true);
+        setScheduleLoading(true);
         getAllScheduleItems();
-        showAllGroupsService();
+        fetchEnabledGroupsStart();
         showListOfRoomsService();
         getClassScheduleListService();
     }, []);
 
     useEffect(() => {
         if (groupId) {
-            setLoadingService(true);
+            setLoading(true);
             getAllLessonsByGroup(groupId);
         }
     }, [groupId]);
@@ -78,11 +83,18 @@ const SchedulePage = (props) => {
         if (currentSemester.id) {
             clearScheduleItems(currentSemester.id);
             if (groupId) {
-                setLoadingService(true);
+                setLoading(true);
                 getAllLessonsByGroup(groupId);
             }
         }
     };
+    if (isHiddenSchedule) {
+        return (
+            <section className="for-phones-and-tablets card">
+                <h1>{i18n.t(USE_PC)}</h1>
+            </section>
+        );
+    }
     return (
         <>
             <section className="schedule-control-panel">
@@ -95,44 +107,29 @@ const SchedulePage = (props) => {
                                 dragItemData={dragItemData}
                                 groupId={groupId}
                                 currentSemester={currentSemester}
-                                groups={groups}
                                 itemGroupId={itemGroupId}
                                 items={scheduleItems}
                                 allLessons={allLessons}
-                                availability={availability}
                                 isLoading={isLoading}
                             />
                         </>
                     )}
                 </section>
-                <aside className="lesson-list card">
+                <aside className="card lesson-list">
                     {isLoading ? (
                         <CircularProgress />
                     ) : (
                         <>
-                            <Button
-                                className="buttons-style"
-                                variant="contained"
-                                color="primary"
-                                onClick={() => handleClearSchedule()}
-                            >
-                                {t(CLEAR_SCHEDULE_LABEL)}
-                            </Button>
                             <ScheduleLessonsList
                                 setDragItemData={setDragItemData}
                                 items={scheduleItems}
-                                groups={groups}
-                                lessons={lessons}
+                                handleClearSchedule={handleClearSchedule}
                                 groupId={groupId}
-                                translation={t}
                                 classScheduler={currentSemester.semester_classes}
                             />
                         </>
                     )}
                 </aside>
-            </section>
-            <section className="for-phones-and-tablets card">
-                <h1>{t(USE_PC)}</h1>
             </section>
         </>
     );

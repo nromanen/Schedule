@@ -62,27 +62,30 @@ const ScheduleDialog = (props) => {
                 title={i18n.t(COMMON_SCHEDULE_DIALOG_TITLE)}
                 open={open}
                 onClose={onClose}
-                buttons={[
-                    dialogChooseButton(chooseClickHandle),
-                    dialogCloseButton(() => onClose('')),
-                ]}
+                buttons={[dialogChooseButton(chooseClickHandle), dialogCloseButton(onClose)]}
             >
                 <div className="availability-info">
                     <p className="availability-warning">{warning}</p>
                 </div>
-                <Autocomplete
-                    {...defaultProps}
-                    id="group"
-                    clearOnEscape
-                    openOnFocus
-                    className="room-field"
-                    onChange={(event, newValue) => {
-                        setRoom(newValue);
-                    }}
-                    renderInput={(params) => (
-                        <TextField {...params} label={i18n.t(FORM_ROOM_LABEL)} margin="normal" />
-                    )}
-                />
+                <div className="autocomplete-container">
+                    <Autocomplete
+                        {...defaultProps}
+                        id="group"
+                        clearOnEscape
+                        openOnFocus
+                        className="form-input"
+                        onChange={(_, newValue) => {
+                            setRoom(newValue);
+                        }}
+                        renderInput={(params) => (
+                            <TextField
+                                {...params}
+                                label={i18n.t(FORM_ROOM_LABEL)}
+                                margin="normal"
+                            />
+                        )}
+                    />
+                </div>
             </CustomDialog>
 
             <CustomDialog

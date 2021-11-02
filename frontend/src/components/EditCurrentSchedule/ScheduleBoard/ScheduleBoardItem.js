@@ -1,6 +1,5 @@
 import React from 'react';
 import i18n from 'i18next';
-import { connect } from 'react-redux';
 import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -13,17 +12,9 @@ import Card from '@material-ui/core/Card';
 import {
     FORM_GROUPED_LABEL,
     FORM_HOURS_LABEL,
-} from '../../constants/translationLabels/formElements';
-import {
-    COMMON_DELETE_SCHEDULE_ITEM,
-    COMMON_EDIT_SCHEDULE_ITEM,
-} from '../../constants/translationLabels/common';
-import { getTeacherName } from '../../helper/renderTeacher';
-import { getLessonsByGroup, selectGroupId } from '../../actions';
-import {
-    checkAvailabilityChangeRoomScheduleStart,
-    deleteScheduleItemStart,
-} from '../../actions/schedule';
+} from '../../../constants/translationLabels/formElements';
+import { actionType } from '../../../constants/actionTypes';
+import { getTeacherName } from '../../../helper/renderTeacher';
 
 const ScheduleItem = (props) => {
     const {
@@ -31,7 +22,7 @@ const ScheduleItem = (props) => {
         checkRoomAvailability,
         itemData,
         getLessonsByGroupId,
-        selectedGroupById,
+        selectByGroupId,
         openDialogWithData,
     } = props;
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -54,19 +45,18 @@ const ScheduleItem = (props) => {
             semesterId: lesson.semester.id,
         };
         checkRoomAvailability(editObj);
-        selectedGroupById(group.id);
-        openDialogWithData({ type: 'edit', item: editObj, groupId: group.id });
+        selectByGroupId(group.id);
+        openDialogWithData({ type: actionType.UPDATED, item: editObj, groupId: group.id });
         getLessonsByGroupId(group.id);
         handleClose();
     };
     const handelDelete = () => {
         const { group } = lesson;
         deleteScheduleItem(itemData.id);
-        selectedGroupById(group.id);
+        selectByGroupId(group.id);
         getLessonsByGroupId(group.id);
         handleClose();
     };
-
 
     return (
         <Card className="schedule-item">
@@ -94,7 +84,7 @@ const ScheduleItem = (props) => {
                 {i18n.t(`formElements:lesson_type_${lesson.lessonType.toLowerCase()}_label`)})
             </h5>
             <p className="teacher-name">{getTeacherName(lesson.teacher)}</p>
-            {!lesson.grouped && (
+            {lesson.grouped && (
                 <span className="grouped-icon">
                     <MdGroup
                         title={i18n.t(FORM_GROUPED_LABEL)}
@@ -108,10 +98,5 @@ const ScheduleItem = (props) => {
         </Card>
     );
 };
-const mapDispatchToProps = (dispatch) => ({
-    selectedGroupById: (groupId) => dispatch(selectGroupId(groupId)),
-    checkRoomAvailability: (item) => dispatch(checkAvailabilityChangeRoomScheduleStart(item)),
-    deleteScheduleItem: (item) => dispatch(deleteScheduleItemStart(item)),
-    getLessonsByGroupId: (id) => dispatch(getLessonsByGroup(id)),
-});
-export default connect(null, mapDispatchToProps)(ScheduleItem);
+
+export default ScheduleItem;
