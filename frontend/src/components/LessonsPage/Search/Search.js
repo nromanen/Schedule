@@ -11,20 +11,20 @@ import '../LessonPage.scss';
 import './Search.scss';
 
 const Search = (props) => {
-    const { groupId, setTerm, groups, selectByGroupId } = props;
+    const { setTerm, groups, selectByGroupId, group } = props;
     const { t } = useTranslation();
 
-    const handleGroupSelect = (group) => {
-        if (group) {
-            selectByGroupId(group.id);
-            selectGroupService(group.id);
+    const handleGroupSelect = (selGroup) => {
+        if (selGroup) {
+            selectByGroupId(selGroup.id);
+            selectGroupService(selGroup.id);
         }
     };
 
     return (
         <div className="lesson-page-title">
             <aside className="search-lesson-group">
-                {groupId && (
+                {group.id && (
                     <span className="search-lesson">
                         <SearchPanel forLessons SearchChange={setTerm} />
                     </span>
@@ -33,11 +33,12 @@ const Search = (props) => {
                     <h1 className="lesson-page-h">{t(LESSON_FOR_GROUP_TITLE)}</h1>
                     <Autocomplete
                         id="group"
+                        value={group}
+                        options={groups}
                         clearOnEscape
                         openOnFocus
-                        options={groups}
                         getOptionLabel={(option) => option.title}
-                        onChange={(event, newValue) => {
+                        onChange={(_, newValue) => {
                             handleGroupSelect(newValue);
                         }}
                         renderInput={(params) => (
