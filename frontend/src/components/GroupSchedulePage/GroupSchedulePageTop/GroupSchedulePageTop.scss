@@ -26,7 +26,7 @@ h1 {
     flex-direction: column;
     align-items: center;
     label {
-        color: #9c9c9c;
+        color: $label-color;
         margin-bottom: 8px;
     }
 }
@@ -45,7 +45,7 @@ h1 {
 }
 
 .MuiList-root .option-item:hover {
-    background: #d4dafd;
+    background: $light-gray;
     cursor: pointer;
 }
 

@@ -9,7 +9,7 @@ a.pdf_link {
         margin: 0px 10px;
     }
 }
-.top{
+.top {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
@@ -76,12 +76,11 @@ a.pdf_link {
                     background-color: $good-color-light;
                     padding: 5px 0;
                     cursor: pointer;
-
                 }
             }
 
             &.grouped {
-                background-color: #ffc000;
+                background-color: $dark-yellow;
             }
 
             &.currentDay {
