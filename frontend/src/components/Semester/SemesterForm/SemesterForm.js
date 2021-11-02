@@ -36,7 +36,7 @@ import { dateFormat } from '../../../constants/formats';
 import SetSemesterCheckboxes from './SemesterCheckboxes';
 import { getToday, getTomorrow, initialCheckboxesStateForDays } from '../../../utils/formUtils';
 import { getGroupsOptionsForSelect } from '../../../utils/selectUtils';
-import { clearSemesterService } from '../../../services/semesterService';
+import { SEMESTER_FORM } from '../../../constants/reduxForms';
 
 const SemesterForm = (props) => {
     const { t } = useTranslation('formElements');
@@ -48,9 +48,11 @@ const SemesterForm = (props) => {
         classScheduler,
         initialize,
         change,
+        reset,
         selectedGroups,
         setSelectedGroups,
         options,
+        clearSemester,
     } = props;
 
     const [startDate, setStartDate] = useState(getToday());
@@ -135,7 +137,8 @@ const SemesterForm = (props) => {
 
     const resetSemesterForm = () => {
         setSelectedGroups([]);
-        clearSemesterService();
+        clearSemester();
+        reset(SEMESTER_FORM);
     };
 
     return (

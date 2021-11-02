@@ -9,7 +9,10 @@ import {
     updateSemesterByIdStart,
     updateSemesterStart,
     setSemesterCopyStart,
+    handleSemesterStart,
+    setError,
 } from '../../actions/semesters';
+import { setOpenErrorSnackbar } from '../../actions/snackbar';
 import { setIsOpenConfirmDialog } from '../../actions/dialog';
 
 const mapStateToProps = (state) => ({
@@ -34,6 +37,9 @@ const mapDispatchToProps = (dispatch) => ({
     updateSemester: (item) => dispatch(updateSemesterStart(item)),
     semesterCopy: (values) => dispatch(setSemesterCopyStart(values)),
     setOpenConfirmDialog: (newState) => dispatch(setIsOpenConfirmDialog(newState)),
+    handleSemester: (values) => dispatch(handleSemesterStart(values)),
+    setOpenErrorSnackbar: (message) => dispatch(setOpenErrorSnackbar(message)),
+    setError: (res) => dispatch(setError(res)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SemesterPage);

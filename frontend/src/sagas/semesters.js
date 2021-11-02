@@ -1,11 +1,7 @@
 import { call, put, takeLatest, select } from 'redux-saga/effects';
 import { reset } from 'redux-form';
 import * as actionTypes from '../actions/actionsType';
-import {
-    setOpenSuccessSnackbar,
-    setOpenErrorSnackbar,
-    setOpenInfoSnackbar,
-} from '../actions/snackbar';
+import { setOpenSuccessSnackbar, setOpenErrorSnackbar } from '../actions/snackbar';
 import {
     showAllSemesters,
     setDisabledSemesters,
@@ -15,12 +11,12 @@ import {
     deleteSemester,
     addSemester,
     moveToArchivedSemester,
+    addSemesterStart,
+    updateSemesterStart,
 } from '../actions/semesters';
 import { setScheduleType, setFullSchedule } from '../actions/schedule';
 import { axiosCall } from '../services/axios';
 import i18n from '../i18n';
-import { setOpenSnackbar } from '../actions';
-import { snackbarTypes } from '../constants/snackbarTypes';
 import {
     DISABLED_SEMESTERS_URL,
     SEMESTERS_URL,
@@ -117,8 +113,6 @@ export function* updateSemesterItem({ item }) {
         const response = yield call(axiosCall, SEMESTERS_URL, 'PUT', item);
         yield put(updateSemester(response.data));
         yield put(selectSemester(null));
-        yield call(getAllSemestersItems);
-        yield call(getDisabledSemestersItems);
         yield put(reset(SEMESTER_FORM));
         const message = createMessage(
             BACK_END_SUCCESS_OPERATION,
@@ -145,6 +139,30 @@ export function* addSemesterItem({ item }) {
         yield put(setOpenErrorSnackbar(createErrorMessage(error)));
     }
 }
+
+export function* handleSemester({ values }) {
+    try {
+        const state = yield select();
+        const oldCurrentSemester = state.semesters.semesters.find(
+            (semesterItem) =>
+                semesterItem.currentSemester === true && semesterItem.id !== values.id,
+        );
+        if (values.currentSemester && oldCurrentSemester) {
+            oldCurrentSemester.currentSemester = false;
+            const response = yield call(axiosCall, SEMESTERS_URL, 'PUT', oldCurrentSemester);
+            yield put(updateSemester(response.data));
+        }
+        if (values.id) {
+            yield call(updateSemesterStart(values));
+        }
+        if (!values.id) {
+            yield put(addSemesterStart(values));
+        }
+    } catch (error) {
+        yield put(setOpenErrorSnackbar(createErrorMessage(error)));
+    }
+}
+
 export function* setDefaultSemesterById({ semesterId }) {
     try {
         const requestUrl = `${DEFAULT_SEMESTER_URL}?semesterId=${semesterId}`;
@@ -228,4 +246,5 @@ export function* watchSemester() {
     yield takeLatest(actionTypes.CREATE_ARCHIVE_SEMESTER_START, createArchiveSemester);
     yield takeLatest(actionTypes.GET_ARCHIVE_SEMESTER_START, getArchivedSemester);
     yield takeLatest(actionTypes.COPY_LESSONS_FROM_SEMESTER_START, CopyLessonsFromSemester);
+    yield takeLatest(actionTypes.HANDLE_SEMESTER_START, handleSemester);
 }

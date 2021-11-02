@@ -118,6 +118,13 @@ export const setError = (res) => {
     };
 };
 
+export const handleSemesterStart = (values) => {
+    return {
+        type: actionTypes.HANDLE_SEMESTER_START,
+        values,
+    };
+};
+
 export const setGroupsToSemesterStart = (semesterId, groups) => {
     return {
         type: actionTypes.SET_GROUPS_TO_SEMESTER_START,

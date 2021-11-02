@@ -7,7 +7,6 @@ import { handleSnackbarCloseService } from '../../../services/snackbarService';
 import SemesterForm from '../../../containers/SemesterPage/SemesterForm';
 import SemesterItem from '../../../containers/SemesterPage/SemesterItem';
 import SemesterCopyForm from '../../../containers/SemesterPage/SemesterCopyForm';
-import { handleSemesterService } from '../../../services/semesterService';
 import { MultiselectForGroups } from '../../../helper/MultiselectForGroups';
 import { showAllGroupsService } from '../../../services/groupService';
 import { successHandler } from '../../../helper/handlerAxios';
@@ -19,8 +18,14 @@ import {
     GROUP_EXIST_IN_THIS_SEMESTER,
 } from '../../../constants/translationLabels/serviceMessages';
 import { SEMESTER_COPY_LABEL, COPY_LABEL } from '../../../constants/translationLabels/formElements';
-import { COMMON_GROUP_TITLE } from '../../../constants/translationLabels/common';
+import {
+    COMMON_GROUP_TITLE,
+    COMMON_SEMESTER_IS_NOT_UNIQUE,
+} from '../../../constants/translationLabels/common';
 import { getGroupsOptionsForSelect } from '../../../utils/selectUtils';
+import { semesterFormValueMapper } from '../../../helper/semesterFormValueMapper';
+import { checkUniqSemester } from '../../../validation/storeValidation';
+import { checkSemesterYears } from '../../../utils/formUtils';
 
 const SemesterPage = (props) => {
     const {
@@ -44,6 +49,9 @@ const SemesterPage = (props) => {
         isOpenConfirmDialog,
         updateSemester,
         semesterCopy,
+        handleSemester,
+        setOpenErrorSnackbar,
+        setError,
     } = props;
 
     const { t } = useTranslation('formElements');
@@ -79,7 +87,16 @@ const SemesterPage = (props) => {
         const semesterGroups = selectedGroups.map((group) => {
             return { id: group.id, title: group.label };
         });
-        handleSemesterService({ ...values, semester_groups: semesterGroups });
+        const formValues = { ...values, semester_groups: semesterGroups };
+        const semester = semesterFormValueMapper(formValues);
+        if (!checkUniqSemester(semester)) {
+            const message = i18n.t(COMMON_SEMESTER_IS_NOT_UNIQUE);
+            setOpenErrorSnackbar(message);
+            setError(true);
+            return;
+        }
+        if (!checkSemesterYears(semester.endDay, semester.startDay, semester.year)) return;
+        handleSemester(semester);
         setSelectedGroups([]);
     };
 
