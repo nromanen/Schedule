@@ -3,6 +3,7 @@ export const FORM_GROUP_LABEL = 'formElements:group_label';
 export const FORM_LESSON_LABEL = 'formElements:lesson_label';
 export const FORM_ROOM_LABEL = 'formElements:room_label';
 export const FORM_TYPE_LABEL = 'formElements:type_label';
+export const TYPE_LABEL = 'formElements:type_element';
 export const FORM_CLASS_FROM_LABEL = 'formElements:class_from_label';
 export const FORM_CLASS_TO_LABEL = 'formElements:class_to_label';
 export const FORM_SEMESTER_LABEL = 'formElements:semester_label';

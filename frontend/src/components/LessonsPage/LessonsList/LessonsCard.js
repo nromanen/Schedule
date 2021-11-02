@@ -10,19 +10,19 @@ import { getShortTitle } from '../../../helper/shortTitle';
 
 import { firstStringLetterCapital } from '../../../helper/strings';
 import { FORM_GROUPED_LABEL } from '../../../constants/translationLabels/formElements';
+import { MAX_LENGTH } from '../../../constants/formats';
 import {
     COPY_LESSON,
     DELETE_LESSON,
     EDIT_LESSON,
 } from '../../../constants/translationLabels/common';
-import './LessonsList.scss';
+import '../LessonPage.scss';
 
 const LessonsCard = (props) => {
     const { lesson, onCopyLesson, onSelectLesson, onClickOpen } = props;
 
     const { t } = useTranslation(['common', 'formElements']);
 
-    const MAX_LENGTH = 50;
     const getTitle = (lessonItem) => {
         return `${firstStringLetterCapital(lessonItem.subjectForSite)} ${t(
             `lesson_type_${lessonItem.lessonType.toLowerCase()}_label`,

@@ -1,6 +1,6 @@
 import React from 'react';
-import './LessonsList.scss';
 import LessonsCard from './LessonsCard';
+import '../LessonPage.scss';
 
 const LessonsList = (props) => {
     const { lessons, ...rest } = props;
