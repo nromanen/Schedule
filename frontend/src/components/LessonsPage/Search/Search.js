@@ -7,17 +7,16 @@ import TextField from '@material-ui/core/TextField';
 import { LESSON_FOR_GROUP_TITLE } from '../../../constants/translationLabels/common';
 import { FORM_GROUP_LABEL } from '../../../constants/translationLabels/formElements';
 import SearchPanel from '../../../share/SearchPanel/SearchPanel';
-import { selectGroupService } from '../../../services/groupService';
 import '../LessonPage.scss';
 
 const Search = (props) => {
-    const { groupId, setTerm, groups, selectByGroupId } = props;
+    const { groupId, setTerm, groups, selectByGroupId, selectGroupSuccess } = props;
     const { t } = useTranslation();
 
     const handleGroupSelect = (group) => {
         if (group) {
             selectByGroupId(group.id);
-            selectGroupService(group.id);
+            selectGroupSuccess(group.id);
         }
     };
 

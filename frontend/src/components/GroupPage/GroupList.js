@@ -18,7 +18,7 @@ const GroupList = (props) => {
         toggleDisabledStatus,
         isOpenConfirmDialog,
         deleteGroupStart,
-        selectGroup,
+        selectGroupSuccess,
         searchItem,
         loading,
         groups,
@@ -84,7 +84,7 @@ const GroupList = (props) => {
             <CustomDialog
                 type={confirmDialogType}
                 handelConfirm={() => acceptConfirmDialog(groupId)}
-                whatDelete="group"
+                whatDelete='group'
                 open={isOpenConfirmDialog}
             />
             {isOpenAddStudentDialog && (
@@ -104,14 +104,14 @@ const GroupList = (props) => {
                     groups={groups}
                 />
             )}
-            <div className="group-wrapper group-list">
+            <div className='group-wrapper group-list'>
                 {visibleGroups.map((item) => (
                     <GroupCard
                         key={item.id}
                         item={item}
                         disabled={isDisabled}
                         showConfirmDialog={showConfirmDialog}
-                        getGroupToUpdateForm={(id) => selectGroup(id)}
+                        getGroupToUpdateForm={(id) => selectGroupSuccess(id)}
                         showAddStudentDialog={showAddStudentDialog}
                         showStudentsByGroup={showStudentsByGroup}
                     />

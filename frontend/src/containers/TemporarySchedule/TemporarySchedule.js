@@ -36,7 +36,7 @@ const TemporarySchedule = (props) => {
         showAllSubjectsService();
         getClassScheduleListService(null);
         getLessonTypes();
-        showAllGroupsService();
+        //fetchEnabledGroupsStart();  rename to fetchEnabledGroupsStart
     }, []);
 
     const handleTemporaryScheduleSubmit = (values) => {

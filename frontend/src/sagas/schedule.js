@@ -1,7 +1,25 @@
-import { takeLatest, takeEvery, call, put } from 'redux-saga/effects';
+import { call, put, takeEvery, takeLatest } from 'redux-saga/effects';
+import {
+    checkAvailabilitySchedule,
+    deleteItemFromSchedule,
+    setCurrentSemester,
+    setDefaultSemester,
+    setFullSchedule,
+    setGroupSchedule,
+    setLoading,
+    setOpenSnackbar,
+    setScheduleItems,
+    setScheduleLoading,
+    setSemesterList,
+    setSemesterLoading,
+    setTeacherRangeSchedule,
+    setTeacherSchedule,
+    showAllTeachers,
+    showAllGroupsSuccess,
+} from '../actions';
 import * as actionTypes from '../actions/actionsType';
-import { axiosCall } from '../services/axios';
-import i18n from '../i18n';
+import { setMainScheduleLoading } from '../actions/loadingIndicator';
+import { getAllTeachersByDepartmentId } from '../actions/teachers';
 import {
     CLEAR_SCHEDULE_URL,
     CURRENT_SEMESTER_URL,
@@ -23,30 +41,15 @@ import {
     TEACHER_SCHEDULE_URL,
     TEACHER_URL,
 } from '../constants/axios';
-import {
-    checkAvailabilitySchedule,
-    deleteItemFromSchedule,
-    setCurrentSemester,
-    setDefaultSemester,
-    setFullSchedule,
-    setGroupSchedule,
-    setLoading,
-    setOpenSnackbar,
-    setScheduleItems,
-    setScheduleLoading,
-    setSemesterList,
-    setSemesterLoading,
-    setTeacherRangeSchedule,
-    setTeacherSchedule,
-    showAllGroups,
-    showAllTeachers,
-} from '../actions';
-import { showBusyRooms } from '../services/busyRooms';
 import { snackbarTypes } from '../constants/snackbarTypes';
 import {
     COMMON_SCHEDULE_TITLE,
     NO_CURRENT_SEMESTER_ERROR,
 } from '../constants/translationLabels/common';
+import {
+    FORM_CHOSEN_SEMESTER_LABEL,
+    FORM_SCHEDULE_LABEL,
+} from '../constants/translationLabels/formElements';
 import {
     BACK_END_SUCCESS_OPERATION,
     CHOSEN_SEMESTER_HAS_NOT_GROUPS,
@@ -56,12 +59,9 @@ import {
     UPDATED_LABEL,
 } from '../constants/translationLabels/serviceMessages';
 import { sortGroup } from '../helper/sortGroup';
-import {
-    FORM_CHOSEN_SEMESTER_LABEL,
-    FORM_SCHEDULE_LABEL,
-} from '../constants/translationLabels/formElements';
-import { getAllTeachersByDepartmentId } from '../actions/teachers';
-import { setMainScheduleLoading } from '../actions/loadingIndicator';
+import i18n from '../i18n';
+import { axiosCall } from '../services/axios';
+import { showBusyRooms } from '../services/busyRooms';
 
 export function* getScheduleItemsBySemester({ semesterId }) {
     const requestUrl = `${SCHEDULE_SEMESTER_ITEMS_URL}?semesterId=${semesterId}`;
@@ -119,7 +119,7 @@ export function* checkAvailabilityChangeRoomSchedule({ item }) {
                 classSuitsToTeacher: true,
                 teacherAvailable: true,
                 rooms: response.data,
-            }),
+            })
         );
         yield put(setLoading(false));
     } catch (error) {
@@ -220,7 +220,7 @@ export function* getAllPublicGroups({ id }) {
             const requestUrl = `/${SEMESTERS_URL}/${id}/${GROUPS_URL}`;
             const response = yield call(axiosCall, requestUrl);
             const sortedGroups = response.data.sort((a, b) => sortGroup(a, b));
-            yield put(showAllGroups(sortedGroups));
+            yield put(showAllGroupsSuccess(sortedGroups));
             if (response.data.length === 0) {
                 const message = i18n.t(CHOSEN_SEMESTER_HAS_NOT_GROUPS, {
                     cardType: i18n.t(FORM_CHOSEN_SEMESTER_LABEL),
@@ -419,11 +419,11 @@ export default function* watchSchedule() {
     yield takeLatest(actionTypes.GET_SCHEDULE_ITEMS_START, getScheduleItemsBySemester);
     yield takeLatest(
         actionTypes.CHECK_AVAILABILITY_CHANGE_ROOM_SCHEDULE_START,
-        checkAvailabilityChangeRoomSchedule,
+        checkAvailabilityChangeRoomSchedule
     );
     yield takeLatest(
         actionTypes.GET_ALL_PUBLIC_TEACHERS_BY_DEPARTMENT_START,
-        getAllPublicTeachersByDepartment,
+        getAllPublicTeachersByDepartment
     );
     yield takeLatest(actionTypes.GET_ALL_PUBLIC_TEACHERS_START, getAllPublicTeachers);
     yield takeLatest(actionTypes.GET_ALL_PUBLIC_GROUPS_START, getAllPublicGroups);

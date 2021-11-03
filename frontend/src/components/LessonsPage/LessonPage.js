@@ -23,7 +23,6 @@ import CopyLessonsFromSemesterForm from '../../containers/LessonPage/CopyLessons
 import CopyLessonDialog from './CopyLessonDialog';
 
 import './LessonPage.scss';
-import { showAllGroupsService } from '../../services/groupService';
 import { showAllSubjectsService } from '../../services/subjectService';
 import { showAllTeachersService } from '../../services/teacherService';
 
@@ -48,6 +47,7 @@ const LessonPage = (props) => {
         isOpenConfirmDialog,
         setOpenErrorSnackbar,
         setUniqueError,
+        fetchEnabledGroupsStart,
     } = props;
     const { t } = useTranslation('common');
     const [term, setTerm] = useState('');
@@ -66,7 +66,7 @@ const LessonPage = (props) => {
     useEffect(() => {
         showAllTeachersService();
         getLessonTypes();
-        showAllGroupsService();
+        fetchEnabledGroupsStart();
         showAllSubjectsService();
         showAllSemestersService();
     }, []);

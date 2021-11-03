@@ -11,6 +11,7 @@ import {
     setUniqueError,
     setIsOpenConfirmDialog,
     updateLessonCardStart,
+    fetchEnabledGroupsStart,
 } from '../../actions';
 import { setOpenErrorSnackbar } from '../../actions/snackbar';
 
@@ -28,6 +29,7 @@ const mapStateToProps = (state) => ({
     isOpenConfirmDialog: state.dialog.isOpenConfirmDialog,
 });
 const mapDispatchToProps = (dispatch) => ({
+    fetchEnabledGroupsStart: () => dispatch(fetchEnabledGroupsStart()),
     getLessonsByGroup: (groupId) => dispatch(getLessonsByGroup(groupId)),
     getLessonTypes: () => dispatch(getLessonTypes()),
     updateLessonCardStart: ({ info, groupId }) =>

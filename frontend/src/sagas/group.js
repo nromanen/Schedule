@@ -15,21 +15,21 @@ import {
     DELETED_LABEL,
 } from '../constants/translationLabels/serviceMessages';
 import {
-    showAllGroups,
+    showAllGroupsSuccess,
     deleteGroupSuccess,
     updateGroupSuccess,
-    selectGroup,
+    selectGroupSuccess,
     clearGroupSuccess,
-    addGroup,
+    createGroupSuccess,
 } from '../actions';
 import { hasDisabled } from '../constants/disabledCard';
 
 function* fetchGroups(url) {
     try {
-        yield put(showAllGroups([]));
+        yield put(showAllGroupsSuccess([]));
         yield put(setLoading(true));
         const res = yield call(axiosCall, url);
-        yield put(showAllGroups(res.data));
+        yield put(showAllGroupsSuccess(res.data));
     } catch (err) {
         yield put(setOpenErrorSnackbar(createErrorMessage(err)));
     } finally {
@@ -48,7 +48,7 @@ function* fetchEnabledGroups() {
 function* createGroup({ data }) {
     try {
         const res = yield call(axiosCall, GROUP_URL, POST, data);
-        yield put(addGroup(res.data));
+        yield put(createGroupSuccess(res.data));
         yield put(reset(GROUP_FORM));
         const message = createDynamicMessage('group', CREATED_LABEL);
         yield put(setOpenSuccessSnackbar(message));
@@ -65,7 +65,7 @@ function* updateGroup({ data }) {
         } else {
             yield put(updateGroupSuccess(res.data));
         }
-        yield put(selectGroup(null));
+        yield put(selectGroupSuccess(null));
         yield put(reset(GROUP_FORM));
         const message = createDynamicMessage('group', UPDATED_LABEL);
         yield put(setOpenSuccessSnackbar(message));
@@ -122,8 +122,7 @@ export default function* groupWatcher() {
     yield takeEvery(actionTypes.TOGGLE_DISABLED_STATUS_GROUP, toggleDisabledGroup);
     yield takeLatest(actionTypes.FETCH_DISABLED_GROUPS_START, fetchDisabledGroups);
     yield takeLatest(actionTypes.FETCH_ENABLED_GROUPS_START, fetchEnabledGroups);
-    yield takeEvery(actionTypes.DELETE_GROUP_START, deleteGroup);
     yield takeEvery(actionTypes.SUBMIT_GROUP_START, submitGroupForm);
-    // yield takeEvery(actionTypes.UPDATE_GROUP_START, updateGroup);
+    yield takeEvery(actionTypes.DELETE_GROUP_START, deleteGroup);
     yield takeEvery(actionTypes.CLEAR_GROUP_START, clearGroup);
 }

@@ -46,13 +46,14 @@ export {
 } from './class';
 export { clearFreeRooms, showFreeRooms } from './freeRooms';
 export {
-    addGroup,
+    createGroupSuccess,
     clearGroupSuccess,
     deleteGroupSuccess,
-    selectGroup,
+    selectGroupSuccess,
     updateGroupSuccess,
-    showAllGroups,
+    showAllGroupsSuccess,
     toggleDisabledStatus,
+    fetchEnabledGroupsStart,
 } from './groups';
 
 export { setLoading, setScheduleLoading, setSemesterLoading } from './loadingIndicator';

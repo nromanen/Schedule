@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { selectGroupId } from '../../actions';
+import { selectGroupId, selectGroupSuccess } from '../../actions';
 import Search from '../../components/LessonsPage/Search/Search';
 
 const mapStateToProps = (state) => ({
@@ -9,6 +9,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
     selectByGroupId: (groupId) => dispatch(selectGroupId(groupId)),
+    selectGroupSuccess: (id) => dispatch(selectGroupSuccess(id)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Search);

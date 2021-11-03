@@ -1,42 +1,42 @@
 import * as actionTypes from './actionsType';
 
-export const addGroup = (res) => {
+export const createGroupSuccess = (res) => {
     return {
-        type: actionTypes.ADD_GROUP,
+        type: actionTypes.CREATE_GROUP_SUCCESS,
         result: res,
     };
 };
 
 export const updateGroupSuccess = (res) => {
     return {
-        type: actionTypes.UPDATE_GROUP,
+        type: actionTypes.UPDATE_GROUP_SUCCESS,
         result: res,
     };
 };
 
-export const showAllGroups = (res) => {
+export const showAllGroupsSuccess = (res) => {
     return {
-        type: actionTypes.SHOW_ALL_GROUPS,
+        type: actionTypes.SHOW_ALL_GROUPS_SUCCESS,
         result: res,
     };
 };
 
 export const deleteGroupSuccess = (res) => {
     return {
-        type: actionTypes.DELETE_GROUP,
+        type: actionTypes.DELETE_GROUP_SUCCESS,
         result: res,
     };
 };
 
-export const selectGroup = (res) => {
+export const selectGroupSuccess = (res) => {
     return {
-        type: actionTypes.SELECT_GROUP,
+        type: actionTypes.SELECT_GROUP_SUCCESS,
         result: res,
     };
 };
 
 export const clearGroupSuccess = () => ({
-    type: actionTypes.CLEAR_GROUP,
+    type: actionTypes.CLEAR_GROUP_SUCCESS,
 });
 
 export const fetchDisabledGroupsStart = () => ({
@@ -67,8 +67,3 @@ export const toggleDisabledStatus = (groupId, disabledStatus) => ({
     groupId,
     disabledStatus,
 });
-
-// export const updateGroupStart = (data) => ({
-//     type: actionTypes.UPDATE_GROUP_START,
-//     data,
-// });

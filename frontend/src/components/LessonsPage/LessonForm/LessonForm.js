@@ -71,6 +71,7 @@ const LessonForm = (props) => {
         lessonTypes,
         selectLessonCard,
         setUniqueError,
+        selectGroupSuccess,
     } = props;
 
     const classes = useStyles();
@@ -105,7 +106,7 @@ const LessonForm = (props) => {
     const handleChange = (event) => setChecked(event.target.checked);
 
     useEffect(() => {
-        selectGroupService(groupId);
+        selectGroupSuccess(groupId);
     }, [groupId]);
 
     useEffect(() => {
