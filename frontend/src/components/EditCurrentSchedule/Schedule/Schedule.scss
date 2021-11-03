@@ -46,11 +46,12 @@
 
         .day-container {
             position: relative;
+            display: flex;
             margin: 0;
+            place-items: stretch;
             .schedule-day {
                 position: relative;
                 font-size: 17px;
-                height: 93.1%;
                 writing-mode: vertical-rl;
                 text-orientation: upright;
                 text-align: center;
