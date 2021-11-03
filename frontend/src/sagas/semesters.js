@@ -84,7 +84,6 @@ export function* setGroupsToSemester({ semesterId, groups }) {
 }
 
 export function* deleteSemesterItem({ semesterId }) {
-    console.log('semesterId', semesterId)
     try {
         const state = yield select();
         const semester = state.semesters.semesters.find((item) => item.id === semesterId);
@@ -161,14 +160,16 @@ export function* handleSemester({ values }) {
     }
 }
 
-export function* setDefaultSemesterById({ semesterId }) {
+export function* setDefaultSemesterById({ semesterId, isDisabled }) {
     try {
         const requestUrl = `${DEFAULT_SEMESTER_URL}?semesterId=${semesterId}`;
-        const response = yield call(axiosCall, requestUrl, 'PUT', semesterId);
+        const response = yield call(axiosCall, requestUrl, 'PUT');
         yield put(updateSemester(response.data));
-        yield put(selectSemester(null));
-        yield call(getAllSemestersItems);
-        yield call(getDisabledSemestersItems);
+        if (isDisabled) {
+            yield call(getDisabledSemestersItems);
+        } else {
+            yield call(getAllSemestersItems);
+        }
         yield put(reset(SEMESTER_FORM));
         const message = createMessage(
             BACK_END_SUCCESS_OPERATION,

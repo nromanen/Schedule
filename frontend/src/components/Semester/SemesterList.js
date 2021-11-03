@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { FaEdit, FaUsers, FaFileArchive } from 'react-icons/fa';
 import { MdDelete, MdDonutSmall } from 'react-icons/md';
 import { useTranslation } from 'react-i18next';
 import './SemesterList.scss';
 import { GiSightDisabled, IoMdEye, FaCopy } from 'react-icons/all';
+import { get } from 'lodash';
 import Card from '../../share/Card/Card';
 import NotFound from '../../share/NotFound/NotFound';
-import { selectSemesterService } from '../../services/semesterService';
 import { dialogTypes } from '../../constants/dialogs';
 import {
     EDIT_TITLE,
@@ -33,7 +33,7 @@ const SemesterList = (props) => {
         archived,
         disabled,
         setSemesterId,
-        setSubDialogType,
+        setConfirmDialogType,
         setOpenSubDialog,
         setIsOpenSemesterCopyForm,
         setOpenGroupsDialog,
@@ -43,14 +43,16 @@ const SemesterList = (props) => {
         createArchivedSemester,
         // getArchivedSemester,
         setSemesterOptions,
+        selectSemester,
     } = props;
 
     const searchArr = ['year', 'description', 'startDay', 'endDay'];
 
     const visibleItems = search(semesters, term, searchArr);
+
     const showConfirmDialog = (id, dialogType) => {
         setSemesterId(id);
-        setSubDialogType(dialogType);
+        setConfirmDialogType(dialogType);
         setOpenSubDialog(true);
     };
 
@@ -62,16 +64,15 @@ const SemesterList = (props) => {
     // const handleSemesterArchivedPreview = (currentSemesterId) => {
     //     getArchivedSemester(+currentSemesterId);
     // };
-    const setClassNameForDefaultSemester = (currentSemester) => {
-        const defaultSemesterName = 'default';
-        const className = 'svg-btn edit-btn';
-        return currentSemester.defaultSemester ? `${className} ${defaultSemesterName}` : className;
-    };
+
     return (
         <section className="container-flex-wrap wrapper">
             {visibleItems.length === 0 && <NotFound name={t(SEMESTERY_LABEL)} />}
             {visibleItems.map((semesterItem) => {
                 const semDays = [];
+                const groups = get(semesterItem, 'semester_groups')
+                    ? getGroupsOptionsForSelect(semesterItem.semester_groups)
+                    : [];
                 semesterItem.semester_days.forEach((day) =>
                     semDays.push(t(`common:day_of_week_${day}`)),
                 );
@@ -99,7 +100,7 @@ const SemesterList = (props) => {
                                         className="svg-btn edit-btn"
                                         title={t(EDIT_TITLE)}
                                         onClick={() => {
-                                            selectSemesterService(semesterItem.id);
+                                            selectSemester(semesterItem.id);
                                         }}
                                     />
                                     <FaCopy
@@ -151,7 +152,11 @@ const SemesterList = (props) => {
                             />
 
                             <MdDonutSmall
-                                className={setClassNameForDefaultSemester(semesterItem)}
+                                className={
+                                    semesterItem.defaultSemester
+                                        ? 'svg-btn edit-btn default'
+                                        : 'svg-btn edit-btn'
+                                }
                                 title={t(SET_DEFAULT_TITLE)}
                                 onClick={() =>
                                     showConfirmDialog(semesterItem.id, dialogTypes.SET_DEFAULT)
@@ -187,9 +192,7 @@ const SemesterList = (props) => {
                             className="svg-btn copy-btn  semester-groups"
                             onClick={() => {
                                 setSemesterId(semesterItem.id);
-                                setSemesterOptions(
-                                    getGroupsOptionsForSelect(semesterItem.semester_groups),
-                                );
+                                setSemesterOptions(groups);
                                 setOpenGroupsDialog(true);
                             }}
                         />

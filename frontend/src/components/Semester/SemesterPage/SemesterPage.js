@@ -72,7 +72,7 @@ const SemesterPage = (props) => {
         // TODO change to saga
         getAllGroupsItems();
         getAllSemestersItems();
-        // it doesnt work, need to finish implement archeved functionality
+        // it doesnt work, need to finish implement archived functionality
         // getArchivedSemestersItems();
     }, []);
 
@@ -82,7 +82,7 @@ const SemesterPage = (props) => {
         } else {
             getAllSemestersItems();
         }
-        // it doesnt work, need to finish implement archeved functionality
+        // it doesnt work, need to finish implement archived functionality
         // getArchivedSemestersItems();
     }, [disabled]);
     const submitSemesterForm = (values) => {
@@ -112,9 +112,9 @@ const SemesterPage = (props) => {
         setIsOpenSemesterCopyForm(false);
     };
 
-    const changeGSemesterDisabledStatus = (currentSemesterId) => {
+    const changeSemesterDisabledStatus = (currentSemesterId) => {
         const foundSemester = semesters.find(
-            (semesterEl) => semesterEl.id === currentSemesterId,
+            (semesterItem) => semesterItem.id === currentSemesterId,
         );
         const changeDisabledStatus = {
             [dialogTypes.SET_VISIBILITY_ENABLED]: updateSemester({
@@ -131,11 +131,11 @@ const SemesterPage = (props) => {
 
     const acceptConfirmDialog = (currentSemesterId) => {
         setOpenConfirmDialog(false);
-        if (!currentSemesterId) return;
+        const isDisabled = disabled;
         if (confirmDialogType === dialogTypes.SET_DEFAULT) {
-            setDefaultSemesterById(currentSemesterId);
+            setDefaultSemesterById(currentSemesterId, isDisabled);
         } else if (confirmDialogType !== dialogTypes.DELETE_CONFIRM) {
-            changeGSemesterDisabledStatus(currentSemesterId);
+            changeSemesterDisabledStatus(currentSemesterId);
         } else {
             removeSemesterCard(currentSemesterId);
         }
@@ -168,7 +168,6 @@ const SemesterPage = (props) => {
             return;
         }
         setGroupsToSemester(semesterId, semesterOptions);
-        // setSemesterOptions(getGroupsOptionsForSelect(semester.semester_groups));
         setIsOpenGroupsDialog(false);
     };
     const cancelMultiselect = () => {
@@ -225,7 +224,7 @@ const SemesterPage = (props) => {
                     archived={archived}
                     disabled={disabled}
                     setSemesterId={setSemesterId}
-                    setSubDialogType={setConfirmDialogType}
+                    setConfirmDialogType={setConfirmDialogType}
                     setOpenSubDialog={setOpenConfirmDialog}
                     setIsOpenSemesterCopyForm={setIsOpenSemesterCopyForm}
                     setOpenGroupsDialog={setIsOpenGroupsDialog}

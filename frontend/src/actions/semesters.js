@@ -94,10 +94,11 @@ export const updateSemesterStart = (item) => {
         item,
     };
 };
-export const updateSemesterByIdStart = (semesterId) => {
+export const updateSemesterByIdStart = (semesterId, isDisabled) => {
     return {
         type: actionTypes.UPDATE_SEMESTER_BY_ID_START,
         semesterId,
+        isDisabled,
     };
 };
 export const moveToArchivedSemester = (res) => {
