@@ -68,7 +68,6 @@ function* submitStudentForm({ data, group }) {
 
 function* deleteStudentWorker({ id }) {
     try {
-        console.log(id);
         yield call(axiosCall, `${STUDENT_URL}/${id}`, DELETE);
         yield put(deleteStudent(id));
         const message = createDynamicMessage('student', DELETED_LABEL);

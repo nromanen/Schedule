@@ -9,8 +9,8 @@ export const StudentsPage = (props) => {
     const {
         group,
         groups,
-        isOpenConfirmDialog,
         deleteStudentStart,
+        isOpenConfirmDialog,
         selectStudentSuccess,
         setIsOpenConfirmDialog,
         isOpenStudentListDialog,
@@ -26,10 +26,6 @@ export const StudentsPage = (props) => {
         setIsOpenConfirmDialog(false);
         deleteStudentStart(studentId);
     };
-    // const closeEditStudentDialog = () => {
-    //     setIsOpenUpdateDialog(false);
-    //     selectStudentSuccess(null);
-    // };
 
     return (
         <>
