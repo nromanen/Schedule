@@ -46,7 +46,6 @@ export const StudentsTableBody = (props) => {
         group,
         setStudent,
         checkStudent,
-        selectStudentSuccess,
         setIsOpenUpdateDialog,
         currentStudentsOnList,
         setIsOpenConfirmDialog,
@@ -56,11 +55,6 @@ export const StudentsTableBody = (props) => {
     const sendMail = (email) => {
         const mailto = `mailto:${email}`;
         window.location.href = mailto;
-    };
-
-    const showUpdateStudentDialog = (currentStudent) => {
-        setIsOpenUpdateDialog(true);
-        selectStudentSuccess(currentStudent);
     };
 
     return (
@@ -102,7 +96,7 @@ export const StudentsTableBody = (props) => {
                                     title={t(EDIT_TITLE)}
                                     onClick={() => {
                                         setStudent(student);
-                                        showUpdateStudentDialog(student);
+                                        setIsOpenUpdateDialog(true);
                                     }}
                                 />
                             </Link>

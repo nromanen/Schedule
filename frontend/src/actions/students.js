@@ -53,10 +53,3 @@ export const deleteStudentStart = (id) => {
         id,
     };
 };
-
-// export const createStudentStart = (data) => {
-//     return {
-//         type: actionTypes.START_CREATE_STUDENTS,
-//         data,
-//     };
-// };

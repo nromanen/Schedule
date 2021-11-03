@@ -1,4 +1,4 @@
-import { call, takeEvery, put, select } from 'redux-saga/effects';
+import { call, takeEvery, put } from 'redux-saga/effects';
 import { reset } from 'redux-form';
 import { STUDENT_URL } from '../constants/axios';
 
@@ -68,6 +68,7 @@ function* submitStudentForm({ data, group }) {
 
 function* deleteStudentWorker({ id }) {
     try {
+        console.log(id);
         yield call(axiosCall, `${STUDENT_URL}/${id}`, DELETE);
         yield put(deleteStudent(id));
         const message = createDynamicMessage('student', DELETED_LABEL);

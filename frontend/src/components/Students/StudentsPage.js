@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import MovingGroupsDialog from '../../share/DialogWindows/_dialogWindows/MovingGroupsDialog';
 import { StudentsTable } from './StudentsTable';
-import { deleteStudentStart, selectStudentSuccess } from '../../actions/students';
 import CustomDialog from '../../containers/Dialogs/CustomDialog';
 import { dialogTypes } from '../../constants/dialogs';
 import AddStudentDialog from '../../share/DialogWindows/_dialogWindows/AddStudentDialog';
@@ -11,6 +10,8 @@ export const StudentsPage = (props) => {
         group,
         groups,
         isOpenConfirmDialog,
+        deleteStudentStart,
+        selectStudentSuccess,
         setIsOpenConfirmDialog,
         isOpenStudentListDialog,
         setIsOpenStudentListDialog,
@@ -22,14 +23,13 @@ export const StudentsPage = (props) => {
     const [student, setStudent] = useState(0);
 
     const confirmDeleteStudent = (studentId) => {
-        console.log(studentId);
         setIsOpenConfirmDialog(false);
         deleteStudentStart(studentId);
     };
-    const closeEditStudentDialog = () => {
-        setIsOpenUpdateDialog(false);
-        selectStudentSuccess(null);
-    };
+    // const closeEditStudentDialog = () => {
+    //     setIsOpenUpdateDialog(false);
+    //     selectStudentSuccess(null);
+    // };
 
     return (
         <>
@@ -40,6 +40,7 @@ export const StudentsPage = (props) => {
                 checkBoxStudents={checkBoxStudents}
                 setCheckBoxStudents={setCheckBoxStudents}
                 setIsOpenUpdateDialog={setIsOpenUpdateDialog}
+                setIsOpenConfirmDialog={setIsOpenConfirmDialog}
                 setIsOpenStudentListDialog={setIsOpenStudentListDialog}
                 {...rest}
             />
@@ -58,7 +59,7 @@ export const StudentsPage = (props) => {
                     student={student}
                     groupId={group.id}
                     open={isOpenUpdateDialog}
-                    setOpen={closeEditStudentDialog}
+                    setOpen={() => setIsOpenUpdateDialog(false)}
                 />
             )}
             <CustomDialog
