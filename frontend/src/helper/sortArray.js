@@ -1,4 +1,4 @@
-export const sortByAvailability = (arr) => {
+export const sortByLength = (arr) => {
     arr.sort((item, secondItem) => {
         if (item === secondItem) {
             return 0;
