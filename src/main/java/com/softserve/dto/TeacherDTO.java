@@ -6,6 +6,7 @@ import lombok.Data;
 @Data
 public class TeacherDTO {
     private Long id;
+    private Boolean disable;
     private String name;
     private String surname;
     private String patronymic;

@@ -11,5 +11,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class GroupDTO {
     private Long id;
+    private Boolean disable;
     private String title;
 }
