@@ -16,7 +16,7 @@ const useStyles2 = makeStyles({
 });
 
 export const StudentsTable = (props) => {
-    const { students, setCheckBoxStudents, checkBoxStudents } = props;
+    const { students, setCheckBoxStudents, checkBoxStudents, setIsGroupButtonDisabled } = props;
     const classes = useStyles2();
 
     const [page, setPage] = useState(0);
@@ -67,9 +67,17 @@ export const StudentsTable = (props) => {
         );
         isCheckedAll();
     };
+    const checkIsDisabledBtn = () => {
+        if (checkBoxStudents.find((item) => item.checked === true)) {
+            setIsGroupButtonDisabled(false);
+        } else {
+            setIsGroupButtonDisabled(true);
+        }
+    };
 
     useEffect(() => {
         isCheckedAll();
+        checkIsDisabledBtn();
     }, [currentStudentsOnList]);
 
     return (
