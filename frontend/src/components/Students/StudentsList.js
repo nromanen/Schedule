@@ -56,9 +56,8 @@ const StudentsPage = (props) => {
             )}
             {isOpenUpdateDialog && (
                 <AddStudentDialog
-                    group={group}
-                    groups={groups}
                     student={student}
+                    groupId={group.id}
                     open={isOpenUpdateDialog}
                     setOpen={closeEditStudentDialog}
                 />

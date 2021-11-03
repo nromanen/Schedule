@@ -31,7 +31,7 @@ const ShowStudentsOnGroupDialog = (props) => {
         fetchAllStudentsStart(group.id);
     }, [group.id]);
 
-    const [isGroupButtonDisabled, setIsGroupButtonDisabled] = useState(true);
+    const [isGroupButtonDisabled, setIsGroupButtonDisabled] = useState(false);
     const [isOpenStudentListDialog, setIsOpenStudentListDialog] = useState(false);
 
     const getDialog = () => {

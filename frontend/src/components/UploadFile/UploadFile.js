@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
 import './UploadFile.scss';
+import React, { useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { uploadStudentsToGroupFile } from '../../services/uploadFile';
 import CustomDialog from '../../containers/Dialogs/CustomDialog';
@@ -15,7 +15,7 @@ import {
 export const UploadFile = (props) => {
     const { t } = useTranslation('formElements');
     const [selectedFile, setSelectedFile] = useState(null);
-    const fileInputRef = React.useRef();
+    const fileInputRef = useRef();
     const {
         group: { id },
         open,

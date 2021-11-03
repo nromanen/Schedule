@@ -23,7 +23,6 @@ export const AddStudentForm = (props) => {
         initialize,
         pristine,
         student,
-        group,
         reset,
         groups,
         groupId,
@@ -39,7 +38,7 @@ export const AddStudentForm = (props) => {
             name,
             patronymic,
             email,
-            group: group.id,
+            group: groupId,
         });
     };
 
@@ -108,7 +107,7 @@ export const AddStudentForm = (props) => {
                         label={t(TYPE_LABEL)}
                         validate={[required]}
                     >
-                        defaultValue={group?.id}
+                        defaultValue={groupId}
                         {groups.map((groupItem) => (
                             <option key={groupItem.id} value={groupItem.id}>
                                 {groupItem.title}

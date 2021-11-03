@@ -25,7 +25,7 @@ export const TableFooterComponent = (props) => {
         setPage(0);
     };
     return (
-        <TableFooter>
+        <TableFooter className="table-footer">
             <StyledTableRow>
                 <TablePagination
                     labelRowsPerPage={`${t(ROWS_PER_PAGE)}`}
@@ -38,7 +38,7 @@ export const TableFooterComponent = (props) => {
                         inputProps: { 'aria-label': 'rows per page' },
                         native: true,
                     }}
-                    onPageChange={(event, newPage) => setPage(newPage)}
+                    onPageChange={(_, newPage) => setPage(newPage)}
                     onRowsPerPageChange={onRowsPerPageChange}
                     ActionsComponent={RenderStudentTableActions}
                 />
