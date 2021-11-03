@@ -13,6 +13,7 @@ import {
     FORM_GROUPED_LABEL,
     FORM_HOURS_LABEL,
 } from '../../../constants/translationLabels/formElements';
+import { COMMON_EDIT, COMMON_DELETE_HOVER_TITLE } from '../../../constants/translationLabels/common';
 import { actionType } from '../../../constants/actionTypes';
 import { getTeacherName } from '../../../helper/renderTeacher';
 
@@ -69,14 +70,18 @@ const ScheduleItem = (props) => {
                     <IoMdMore title="more" className="svg-btn delete-btn" />
                 </Button>
                 <Menu
-                    id="simple-menu"
+                    className="action-menu"
                     anchorEl={anchorEl}
                     keepMounted
                     open={Boolean(anchorEl)}
                     onClose={handleClose}
                 >
-                    <MenuItem onClick={handelDelete}>Delete</MenuItem>
-                    <MenuItem onClick={handelEdit}>Edit</MenuItem>
+                    <MenuItem className="edit-item" onClick={handelEdit}>
+                        {i18n.t(COMMON_EDIT)}
+                    </MenuItem>
+                    <MenuItem className="delete-item" onClick={handelDelete}>
+                        {i18n.t(COMMON_DELETE_HOVER_TITLE)}
+                    </MenuItem>
                 </Menu>
             </div>
             <h5 className="lesson-title">

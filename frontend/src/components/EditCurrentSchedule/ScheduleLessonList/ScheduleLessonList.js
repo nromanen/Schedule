@@ -38,11 +38,6 @@ const ScheduleLessonsList = (props) => {
         return '';
     };
 
-    const defaultProps = {
-        options: groups,
-        getOptionLabel: (option) => (option ? option.title : ''),
-    };
-
     useEffect(() => {
         setListItems(divideLessonsByOneHourLesson(items, lessons));
         setListLoading(false);
@@ -71,13 +66,15 @@ const ScheduleLessonsList = (props) => {
                 <p className="helper-text">{i18n.t(COMMON_SELECT_GROUP_SCHEDULE)}</p>
                 <div className="autocomplete-container">
                     <Autocomplete
-                        {...defaultProps}
+                        options={groups}
                         clearOnEscape
                         openOnFocus
                         value={groupFinderHandle(groupId)}
                         onChange={(_, newValue) => {
                             handleGroupSelect(newValue);
                         }}
+                        getOptionLabel={(option) => (option ? option.title : '')}
+                        getOptionSelected={(option, value) => option.id === value.id}
                         renderInput={(params) => (
                             <TextField
                                 {...params}
@@ -98,7 +95,7 @@ const ScheduleLessonsList = (props) => {
                     {!listLoading && !isListEmpty
                         ? listItems.map((item, index) => (
                               <DragDropCard
-                                  key={`${item.id}_${index}`}
+                                  key={`${item.id}_${index.toString()}`}
                                   index={index}
                                   lesson={item}
                                   lessons={lessons}

@@ -15,8 +15,6 @@ const SchedulePage = (props) => {
         groupId,
         itemGroupId,
         scheduleItems,
-        isLoading,
-        setLoading,
         fetchEnabledGroupsStart,
         scheduleLoading,
         setScheduleLoading,
@@ -64,7 +62,6 @@ const SchedulePage = (props) => {
     });
 
     useEffect(() => {
-        setLoading(true);
         setScheduleLoading(true);
         getAllScheduleItems();
         fetchEnabledGroupsStart();
@@ -74,7 +71,6 @@ const SchedulePage = (props) => {
 
     useEffect(() => {
         if (groupId) {
-            setLoading(true);
             getAllLessonsByGroup(groupId);
         }
     }, [groupId]);
@@ -83,7 +79,6 @@ const SchedulePage = (props) => {
         if (currentSemester.id) {
             clearScheduleItems(currentSemester.id);
             if (groupId) {
-                setLoading(true);
                 getAllLessonsByGroup(groupId);
             }
         }
@@ -100,7 +95,7 @@ const SchedulePage = (props) => {
             <section className="schedule-control-panel">
                 <section className="card schedule-table ">
                     {scheduleLoading ? (
-                        <CircularProgress />
+                        <CircularProgress className="loading-circle" />
                     ) : (
                         <>
                             <Schedule
@@ -110,25 +105,18 @@ const SchedulePage = (props) => {
                                 itemGroupId={itemGroupId}
                                 items={scheduleItems}
                                 allLessons={allLessons}
-                                isLoading={isLoading}
                             />
                         </>
                     )}
                 </section>
                 <aside className="card lesson-list">
-                    {isLoading ? (
-                        <CircularProgress />
-                    ) : (
-                        <>
-                            <ScheduleLessonsList
-                                setDragItemData={setDragItemData}
-                                items={scheduleItems}
-                                handleClearSchedule={handleClearSchedule}
-                                groupId={groupId}
-                                classScheduler={currentSemester.semester_classes}
-                            />
-                        </>
-                    )}
+                    <ScheduleLessonsList
+                        setDragItemData={setDragItemData}
+                        items={scheduleItems}
+                        handleClearSchedule={handleClearSchedule}
+                        groupId={groupId}
+                        classScheduler={currentSemester.semester_classes}
+                    />
                 </aside>
             </section>
         </>

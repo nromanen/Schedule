@@ -64,7 +64,6 @@ const ScheduleBoard = (props) => {
         setLoadingService(true);
         openDialogWithData({ type: actionType.ADD, item: AddObj, groupId });
     };
-
     const dragOver = (e) => {
         changeBoardStyle('allow', 'not-allow', () => e.preventDefault());
     };

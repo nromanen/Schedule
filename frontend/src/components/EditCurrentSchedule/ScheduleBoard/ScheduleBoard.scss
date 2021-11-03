@@ -1,25 +1,6 @@
 @import '../../../styles/variables.scss';
 @import '../../../styles/colors.scss';
 
-.day-class-week {
-    border: 0.5px solid #eacd12;
-    width: 1400px;
-    z-index: 1000;
-}
-
-.day-class-week-general {
-    margin: 0 0 0 340px;
-    padding: 0;
-}
-
-.classes {
-    background-color: #eacd12 !important;
-}
-
-.group,
-.day-class-week {
-    box-shadow: #eacd12 0 5px 15px;
-}
 .board-container {
     position: relative;
     display: flex;
@@ -32,7 +13,7 @@
         width: 150px;
         height: 100px;
         overflow: hidden;
-        box-shadow: 0 2px 8px #00000042;
+        box-shadow: 0 2px 8px $shadow-box;
     }
     .schedule-item {
         position: relative;
@@ -68,13 +49,15 @@
             right: 2px;
             min-width: 20px;
             padding: 0;
+
             .MuiButton-label {
                 font-size: 18px;
             }
         }
+
         &:hover {
             position: absolute;
-            z-index: 2;
+            z-index: 20;
             height: unset;
             min-height: 100px;
             box-shadow: 0 0 8px 4px $blue-shadow-box;
@@ -89,7 +72,7 @@
         }
         p {
             display: flex;
-            height: 100%;
+            height: $h-full;
             margin: 0;
             align-items: center;
             justify-content: center;
@@ -115,6 +98,20 @@
         background-color: $delete-color;
         p {
             color: $main-color;
+        }
+    }
+}
+.action-menu {
+    .MuiPaper-root {
+        .edit-item,
+        .delete-item {
+            font-size: $font-sm;
+        }
+        .delete-item {
+            color: $red;
+        }
+        .edit-item {
+            color: $blue;
         }
     }
 }

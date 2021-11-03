@@ -1,34 +1,23 @@
 @import '../../../styles/colors.scss';
 @import '../../../styles/variables.scss';
 
-
 .selected-group {
-    border: 3px solid $blue;
+    border: 2px solid $light-blue;
     .group-title {
-        color: $blue;
+        color: $light-blue;
     }
 }
 
-.schedule {
+.groups-section {
+    position: relative;
+    margin: 0;
+    padding-top: 15px;
     display: flex;
-    margin: 10px 0;
-    align-items: start;
-    overflow-y: scroll;
-    overflow-x: hidden;
-
-    .groups-section {
-        margin: 0;
-        display: flex;
-        overflow-x: scroll;
-    }
 }
-
-
 .schedule-table {
     .no-current-semester {
         margin: 10% auto 0;
     }
-
     .card {
         margin: 5px;
         &.schedule-class,
@@ -37,12 +26,17 @@
             margin-bottom: 0;
         }
     }
-
     .group-section {
         margin: 0;
     }
 
     .day-classes-aside {
+        position: sticky;
+        left: 0;
+        z-index: 10;
+        padding-left: 15px;
+        padding-top: 15px;
+        background-color: $snowy-white;
         .card.empty-card {
             width: 120px;
             height: 19px;
@@ -51,17 +45,20 @@
         }
 
         .day-container {
+            position: relative;
             margin: 0;
-
             .schedule-day {
                 position: relative;
-                text-align: center;
                 font-size: 17px;
-                height: 95%;
+                height: 93.1%;
                 writing-mode: vertical-rl;
                 text-orientation: upright;
+                text-align: center;
             }
-
+            .day-section {
+                position: relative;
+                height: 228px;
+            }
             .schedule-class {
                 height: 228px;
                 text-align: center;
@@ -69,13 +66,14 @@
                 writing-mode: vertical-rl;
                 text-orientation: upright;
                 margin-bottom: 0.8px;
+                margin: 0 5px;
             }
         }
         .dark-blue-day {
             background-color: $light-blue;
             color: $snowy-white;
         }
-        
+
         .blue-day {
             background-color: $blue;
             color: $snowy-white;
@@ -83,20 +81,47 @@
     }
     .group-title {
         display: flex;
-        font-size: $font-sm;
-        justify-content: center;
-        overflow: hidden;
         height: 34px;
         padding: 10px 7px;
+        justify-content: center;
+        font-size: $font-sm;
+        overflow: hidden;
     }
+    .focus-class {
+        box-sizing: border-box;
+        background-color: $light-blue;
+        color: $snowy-white;
+    }
+}
+.hover-line {
+    position: absolute;
+    top: 0;
+    left: 10px;
+    width: 80vw;
+    z-index: -10;
+    box-sizing: border-box;
+    border-bottom: 2px solid $light-blue;
+    &:nth-of-type(2) {
+        top: 226px;
+    }
+}
+.day-line {
+    margin: 0;
+    padding: 0;
+}
+
+.sticky-container {
+    position: sticky;
+    top: 0;
+    z-index: 9;
 }
 
 .class-section {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
     width: 60px;
     margin: 0;
-    display: flex;
-    flex-direction: column;
-    flex-wrap: wrap;
     align-content: center;
     align-items: center;
 }
@@ -109,12 +134,12 @@
     &:hover {
         position: relative;
         &::after {
-            content: '';
-            background: none;
             position: absolute;
-            width: 100%;
-            height: 100%;
             top: 0;
+            content: '';
+            width: $w-full;
+            height: 100%;
+            background: none;
             border: 2px solid $light-blue;
         }
     }

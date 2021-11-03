@@ -5,17 +5,16 @@
     height: 92vh;
     padding-bottom: 10px;
     .schedule-table {
+        align-items: start;
+        overflow-x: hidden;
         display: flex;
         width: 84%;
-        height: 100%;
+        height: $h-full;
         justify-content: stretch;
-        margin: {
-            top: 0;
-            left: auto;
-            right: auto;
-        }
-        padding: 15px;
+        margin: 0 5px;
+        padding:0px;
         overflow: auto;
+        
     }
 }
 .for-phones-and-tablets.card {

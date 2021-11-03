@@ -1,5 +1,40 @@
 @import '../../App';
 
+.auth-form {
+    margin: 8px 14px;
+    &-footer {
+        color: $gray;
+        margin-top: 15px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        .form-link {
+            margin-top: 5px;
+        }
+    }
+    .form-input {
+        margin: 7px 2px;
+    }
+    &-actions {
+        margin-top: 10px;
+        .auth-confirm-button {
+            min-width: 95%;
+            font: {
+                size: $font-sm;
+                weight: bold;
+            }
+            padding: 6px 15px;
+            text-transform: none;
+            background-color: $blue;
+            &:hover {
+                background-color: $blue-hover;
+            }
+        }
+    }
+}
+
 .auth-container {
     display: flex;
     flex-direction: column;

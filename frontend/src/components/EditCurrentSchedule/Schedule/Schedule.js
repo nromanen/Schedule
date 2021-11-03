@@ -3,13 +3,9 @@ import i18n from 'i18next';
 import ScheduleBoard from '../../../containers/EditCurrentSchedule/ScheduleBoard';
 import ScheduleDialog from '../../../containers/Dialogs/ScheduleDialog';
 
-import { cssClasses } from '../../../constants/schedule/cssClasses';
-import { colors } from '../../../constants/schedule/colors';
-import { FORM_DAY_LABEL } from '../../../constants/translationLabels/formElements';
 import {
-    SCHEDULE_TITLE,
     NO_CURRENT_SEMESTER,
-    CLEAR_SCHEDULE_LABEL,
+    COMMON_GROUP_TITLE,
 } from '../../../constants/translationLabels/common';
 import { actionType } from '../../../constants/actionTypes';
 import './Schedule.scss';
@@ -28,13 +24,14 @@ const Schedule = (props) => {
     } = props;
     const [isOpenScheduleDialog, setIsOpenScheduleDialog] = useState(false);
     const [dialogScheduleData, setDialogScheduleData] = useState(null);
+    const hoverLineClassName = 'hover-line';
     const days = currentSemester.semester_days;
     const classes = currentSemester.semester_classes;
 
     useEffect(() => {
-        if (groupId !== null) {
-            const groupColumn = document.getElementById(`group-${groupId}`);
-            groupColumn.scrollIntoView({ block: 'center', inline: 'center' });
+        if (groupId) {
+            const groupColumn = document.querySelector(`#group-${groupId}`);
+            groupColumn.scrollIntoView({ inline: 'center' });
         }
     }, [groupId]);
 
@@ -63,8 +60,23 @@ const Schedule = (props) => {
         return index % 2 ? 'dark-blue-day' : 'blue-day';
     };
 
+    const addClassDayBoard = (dayName, classId) => {
+        const dayClassWeek = document.querySelectorAll(`.${dayName}-${classId}`);
+        const dayClass = document.querySelector(`#${dayName}-${classId}`);
+        dayClass.classList.add('focus-class');
+        dayClassWeek[0].classList.add(hoverLineClassName);
+        dayClassWeek[1].classList.add(hoverLineClassName);
+    };
+    const removeClassDayBoard = (dayName, classId) => {
+        const dayClassWeek = document.querySelectorAll(`.${dayName}-${classId}`);
+        const dayClass = document.querySelector(`#${dayName}-${classId}`);
+        dayClass.classList.remove('focus-class');
+        dayClassWeek[0].classList.remove(hoverLineClassName);
+        dayClassWeek[1].classList.remove(hoverLineClassName);
+    };
+
     return (
-        <div className="schedule">
+        <>
             {isOpenScheduleDialog && (
                 <ScheduleDialog
                     itemData={dialogScheduleData}
@@ -76,7 +88,7 @@ const Schedule = (props) => {
             {currentSemester.id ? (
                 <>
                     <aside className="day-classes-aside">
-                        <div className="card group-title">Група</div>
+                        <div className="card group-title">{i18n.t(COMMON_GROUP_TITLE)}</div>
                         {days.map((day, index) => (
                             <div className="cards-container day-container" key={day}>
                                 <span className={`${getDayColour(index)} schedule-day card`}>
@@ -86,9 +98,18 @@ const Schedule = (props) => {
                                     {classes.map((classScheduler) => (
                                         <Fragment key={classScheduler.id}>
                                             <div className="day-section">
-                                                <span className="card schedule-class">
+                                                <p
+                                                    className={`day-line ${day}-${classScheduler.id}`}
+                                                ></p>
+                                                <span
+                                                    id={`${day}-${classScheduler.id}`}
+                                                    className="card schedule-class"
+                                                >
                                                     {classScheduler.class_name}
                                                 </span>
+                                                <p
+                                                    className={`day-line ${day}-${classScheduler.id}`}
+                                                ></p>
                                             </div>
                                         </Fragment>
                                     ))}
@@ -107,11 +128,25 @@ const Schedule = (props) => {
                                     }`}
                                     id={`group-${group.id}`}
                                 >
-                                    <span className="group-title card">{group.title}</span>
+                                    <span className="group-title card sticky-container">
+                                        {group.title}
+                                    </span>
                                     {allLessons.map((lesson) => (
                                         <div
                                             key={`${group.id}-${lesson.id}-${lesson.week}`}
                                             className="board-container"
+                                            onMouseOver={() =>
+                                                addClassDayBoard(lesson.dayName, lesson.classId)
+                                            }
+                                            onFocus={() =>
+                                                addClassDayBoard(lesson.dayName, lesson.classId)
+                                            }
+                                            onMouseOut={() =>
+                                                removeClassDayBoard(lesson.dayName, lesson.classId)
+                                            }
+                                            onBlur={() =>
+                                                removeClassDayBoard(lesson.dayName, lesson.classId)
+                                            }
                                         >
                                             <ScheduleBoard
                                                 lesson={lesson}
@@ -124,7 +159,6 @@ const Schedule = (props) => {
                                             />
                                         </div>
                                     ))}
-                                    <span className="group-title card">{group.title}</span>
                                 </div>
                             );
                         })}
@@ -133,7 +167,7 @@ const Schedule = (props) => {
             ) : (
                 <h2 className="no-current-semester">{i18n.t(NO_CURRENT_SEMESTER)}</h2>
             )}
-        </div>
+        </>
     );
 };
 
