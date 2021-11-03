@@ -12,6 +12,7 @@ import {
     handleSemesterStart,
     setError,
 } from '../../actions/semesters';
+import { fetchEnabledGroupsStart } from '../../actions/groups';
 import { setOpenErrorSnackbar } from '../../actions/snackbar';
 import { setIsOpenConfirmDialog } from '../../actions/dialog';
 
@@ -40,6 +41,7 @@ const mapDispatchToProps = (dispatch) => ({
     handleSemester: (values) => dispatch(handleSemesterStart(values)),
     setOpenErrorSnackbar: (message) => dispatch(setOpenErrorSnackbar(message)),
     setError: (res) => dispatch(setError(res)),
+    getAllGroupsItems: () => dispatch(fetchEnabledGroupsStart()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SemesterPage);

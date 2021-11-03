@@ -45,16 +45,12 @@ const SemesterList = (props) => {
         // getArchivedSemester,
         setSemesterOptions,
     } = props;
-    const [visibleItems, setVisibleItems] = useState([]);
 
     const searchArr = ['year', 'description', 'startDay', 'endDay'];
 
-    useEffect(() => {
-        if (disabled) setVisibleItems(search(disabledSemesters, term, searchArr));
-        // it doesnt work, need to finish implement archeved functionality
-        // if (archived) setVisibleItems(search(archivedSemesters, term, searchArr));
-        else setVisibleItems(search(enabledSemesters, term, searchArr));
-    }, [disabled, enabledSemesters, term]);
+    const visibleItems = disabled
+        ? search(disabledSemesters, term, searchArr)
+        : search(enabledSemesters, term, searchArr);
 
     const showConfirmDialog = (id, dialogType) => {
         setSemesterId(id);

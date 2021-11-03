@@ -52,6 +52,7 @@ const SemesterPage = (props) => {
         handleSemester,
         setOpenErrorSnackbar,
         setError,
+        getAllGroupsItems,
     } = props;
 
     const { t } = useTranslation('formElements');
@@ -71,7 +72,7 @@ const SemesterPage = (props) => {
 
     useEffect(() => {
         // TODO change to saga
-        showAllGroupsService();
+        getAllGroupsItems();
         getAllSemestersItems();
         getDisabledSemestersItems();
         // it doesnt work, need to finish implement archeved functionality
@@ -210,7 +211,6 @@ const SemesterPage = (props) => {
                             onSubmit={submitSemesterForm}
                             semester={semester}
                             options={options}
-                            groups={groups}
                         />
                     )}
                 </aside>
