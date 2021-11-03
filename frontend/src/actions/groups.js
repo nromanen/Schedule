@@ -69,9 +69,8 @@ export const submitGroupStart = (group) => ({
     group,
 });
 
-export const clearGroupStart = (data) => ({
+export const clearGroupStart = () => ({
     type: actionTypes.CLEAR_GROUP_START,
-    data,
 });
 
 export const toggleDisabledStatus = (groupId, disabledStatus) => ({

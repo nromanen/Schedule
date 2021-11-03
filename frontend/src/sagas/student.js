@@ -32,6 +32,7 @@ function* fetchAllStudentsWorker({ id }) {
 
 function* createStudentWorker({ data }) {
     try {
+        console.log(data);
         yield call(axiosCall, STUDENT_URL, POST, data);
         yield put(reset(STUDENT_FORM));
         const message = createDynamicMessage('student', CREATED_LABEL);
@@ -54,12 +55,14 @@ function* updateStudentWorker({ data }) {
     }
 }
 
-function* submitStudentForm({ data, group }) {
+function* submitStudentForm({ data, groupId }) {
     try {
         if (!data.id) {
-            yield call(createStudentWorker, { ...data, group: { id: group.id } });
+            const createStudent = { ...data, group: { id: groupId } };
+            yield call(createStudentWorker, { data: createStudent });
         } else {
-            yield call(updateStudentWorker, { ...data, group: { id: data.group } });
+            const updatedStudent = { ...data, group: { id: data.group } };
+            yield call(updateStudentWorker, { data: updatedStudent });
         }
     } catch (err) {
         yield put(setOpenErrorSnackbar(createErrorMessage(err)));

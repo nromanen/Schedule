@@ -17,8 +17,16 @@ import {
 } from '../../constants/translationLabels/formElements';
 
 export const AddGroup = (props) => {
-    const { submitGroupStart, handleSubmit, initialize, submitting, setGroup, pristine, group } =
-        props;
+    const {
+        clearGroupStart,
+        submitGroupStart,
+        handleSubmit,
+        initialize,
+        submitting,
+        setGroup,
+        pristine,
+        group,
+    } = props;
     const { t } = useTranslation('formElements');
 
     useEffect(() => {
@@ -32,13 +40,23 @@ export const AddGroup = (props) => {
         }
     }, [group.id]);
 
+    const onReset = () => {
+        setGroup({});
+        clearGroupStart();
+    };
+
     return (
         <Card additionClassName="form-card group-form">
             <h2 className="group-form__title">
                 {group.id ? t(EDIT_TITLE) : t(CREATE_TITLE)}
                 {t(GROUP_Y_LABEL)}
             </h2>
-            <form onSubmit={handleSubmit((data) => submitGroupStart(data))}>
+            <form
+                onSubmit={handleSubmit((data) => {
+                    submitGroupStart(data);
+                    setGroup({});
+                })}
+            >
                 <Field
                     className="form-field"
                     name="title"
@@ -62,7 +80,7 @@ export const AddGroup = (props) => {
                         className="buttons-style"
                         variant="contained"
                         disabled={setDisableButton(pristine, submitting, group.id)}
-                        onClick={() => setGroup({})}
+                        onClick={onReset}
                     >
                         {getClearOrCancelTitle(group.id, t)}
                     </Button>

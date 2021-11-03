@@ -18,9 +18,9 @@ export const StudentsPage = (props) => {
         ...rest
     } = props;
 
+    const [student, setStudent] = useState(0);
     const [checkBoxStudents, setCheckBoxStudents] = useState([]);
     const [isOpenUpdateDialog, setIsOpenUpdateDialog] = useState(false);
-    const [student, setStudent] = useState(0);
 
     const confirmDeleteStudent = (studentId) => {
         setIsOpenConfirmDialog(false);

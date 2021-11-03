@@ -39,11 +39,11 @@ export const fetchAllStudentsStart = (id) => {
     };
 };
 
-export const submitStudentStart = (data, group) => {
+export const submitStudentStart = (data, groupId) => {
     return {
         type: actionTypes.SUBMIT_STUDENT_FORM,
         data,
-        group,
+        groupId,
     };
 };
 

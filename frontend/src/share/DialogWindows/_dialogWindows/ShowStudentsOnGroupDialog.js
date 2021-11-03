@@ -5,17 +5,14 @@ import { useTranslation } from 'react-i18next';
 import { isEmpty } from 'lodash';
 import { UploadFile } from '../../../components/UploadFile/UploadFile';
 import CustomDialog from '../../../containers/Dialogs/CustomDialog';
+import { GROUP_LABEL } from '../../../constants/translationLabels/formElements';
+import StudentsPage from '../../../containers/Students/StudentsPage';
+import { StudentsPageHead } from '../../../components/Students/StudentsPageHead';
 import {
     dialogCloseButton,
     dialogUploadFromFileButton,
     dialogChooseGroupButton,
 } from '../../../constants/dialogs';
-import {
-    GROUP_LABEL,
-    STUDENTS_LABEL,
-    STUDENT_LABEL,
-} from '../../../constants/translationLabels/formElements';
-import StudentsPage from '../../../containers/Students/StudentsPage';
 
 const ShowStudentsOnGroupDialog = (props) => {
     const {
@@ -74,13 +71,7 @@ const ShowStudentsOnGroupDialog = (props) => {
 
                 {!isEmptyStudents && (
                     <span className="table-student-data">
-                        <h3 className="title-align">
-                            <span>
-                                {students.length !== 1
-                                    ? `${t(STUDENTS_LABEL)} `
-                                    : `${t(STUDENT_LABEL)} `}
-                            </span>
-                        </h3>
+                        <StudentsPageHead t={t} students={students} />
                         <StudentsPage
                             group={group}
                             match={match}

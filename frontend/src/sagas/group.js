@@ -77,9 +77,9 @@ function* updateGroup({ data }) {
             yield put(updateGroupSuccess(res.data));
         }
         yield put(selectGroupSuccess(null));
-        yield put(reset(GROUP_FORM));
         const message = createDynamicMessage('group', UPDATED_LABEL);
         yield put(setOpenSuccessSnackbar(message));
+        yield put(reset(GROUP_FORM));
     } catch (err) {
         yield put(setOpenErrorSnackbar(createErrorMessage(err)));
     }
