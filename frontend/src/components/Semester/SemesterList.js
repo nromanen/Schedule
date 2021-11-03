@@ -39,11 +39,11 @@ const SemesterList = (props) => {
         setOpenGroupsDialog,
         term,
         semesters,
-        // archivedSemesters,
-        createArchivedSemester,
-        // getArchivedSemester,
         setSemesterOptions,
         selectSemester,
+        createArchivedSemester,
+        // archivedSemesters,
+        // getArchivedSemester,
     } = props;
 
     const searchArr = ['year', 'description', 'startDay', 'endDay'];
@@ -55,27 +55,21 @@ const SemesterList = (props) => {
         setConfirmDialogType(dialogType);
         setOpenSubDialog(true);
     };
-
-    const showSemesterCopyForm = (id) => {
-        setSemesterId(id);
-        setIsOpenSemesterCopyForm(true);
-    };
     // it doesnt work, need to finish implement archeved functionality
     // const handleSemesterArchivedPreview = (currentSemesterId) => {
     //     getArchivedSemester(+currentSemesterId);
     // };
-
     return (
         <section className="container-flex-wrap wrapper">
             {visibleItems.length === 0 && <NotFound name={t(SEMESTERY_LABEL)} />}
             {visibleItems.map((semesterItem) => {
-                const semDays = [];
+                const semDays = semesterItem.semester_days.map((day) =>
+                    t(`common:day_of_week_${day}`),
+                );
                 const groups = get(semesterItem, 'semester_groups')
                     ? getGroupsOptionsForSelect(semesterItem.semester_groups)
                     : [];
-                semesterItem.semester_days.forEach((day) =>
-                    semDays.push(t(`common:day_of_week_${day}`)),
-                );
+
                 return (
                     <Card
                         key={semesterItem.id}
@@ -107,7 +101,7 @@ const SemesterList = (props) => {
                                         className="svg-btn copy-btn"
                                         title={t(COPY_LABEL)}
                                         onClick={() => {
-                                            showSemesterCopyForm(semesterItem.id);
+                                            setIsOpenSemesterCopyForm(true);
                                             setSemesterId(semesterItem.id);
                                         }}
                                     />
@@ -152,11 +146,9 @@ const SemesterList = (props) => {
                             />
 
                             <MdDonutSmall
-                                className={
-                                    semesterItem.defaultSemester
-                                        ? 'svg-btn edit-btn default'
-                                        : 'svg-btn edit-btn'
-                                }
+                                className={`svg-btn edit-btn ${
+                                    semesterItem.defaultSemester ? 'default' : ''
+                                }`}
                                 title={t(SET_DEFAULT_TITLE)}
                                 onClick={() =>
                                     showConfirmDialog(semesterItem.id, dialogTypes.SET_DEFAULT)

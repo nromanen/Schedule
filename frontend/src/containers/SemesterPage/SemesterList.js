@@ -9,7 +9,7 @@ import {
 const mapDispatchToProps = (dispatch) => ({
     createArchivedSemester: (semesterId) => dispatch(createArchivedSemesterStart(semesterId)),
     getArchivedSemester: (semesterId) => dispatch(getArchivedSemesterStart(semesterId)),
-    selectSemester: () => dispatch(selectSemester()),
+    selectSemester: (semesterId) => dispatch(selectSemester(semesterId)),
 });
 
 export default connect(null, mapDispatchToProps)(SemesterList);

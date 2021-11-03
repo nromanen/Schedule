@@ -1,10 +1,8 @@
 import { useTranslation } from 'react-i18next';
 import React, { useEffect, useState } from 'react';
 import { isEqual, isEmpty } from 'lodash';
-import SearchPanel from '../../../share/SearchPanel/SearchPanel';
 import SnackbarComponent from '../../../share/Snackbar/SnackbarComponent';
 import { handleSnackbarCloseService } from '../../../services/snackbarService';
-import SemesterForm from '../../../containers/SemesterPage/SemesterForm';
 import SemesterList from '../../../containers/SemesterPage/SemesterList';
 import SemesterCopyForm from '../../../containers/SemesterPage/SemesterCopyForm';
 import { MultiselectForGroups } from '../../../helper/MultiselectForGroups';
@@ -17,14 +15,9 @@ import {
     GROUP_EXIST_IN_THIS_SEMESTER,
 } from '../../../constants/translationLabels/serviceMessages';
 import { SEMESTER_COPY_LABEL, COPY_LABEL } from '../../../constants/translationLabels/formElements';
-import {
-    COMMON_GROUP_TITLE,
-    COMMON_SEMESTER_IS_NOT_UNIQUE,
-} from '../../../constants/translationLabels/common';
+import { COMMON_GROUP_TITLE } from '../../../constants/translationLabels/common';
 import { getGroupsOptionsForSelect } from '../../../utils/selectUtils';
-import { semesterFormValueMapper } from '../../../helper/semesterFormValueMapper';
-import { checkUniqSemester } from '../../../validation/storeValidation';
-import { checkSemesterYears } from '../../../utils/formUtils';
+import SemesterSidebar from '../SemesterSidebar';
 
 const SemesterPage = (props) => {
     const {
@@ -33,13 +26,9 @@ const SemesterPage = (props) => {
         snackbarMessage,
         groups,
         semester,
-        // it doesnt work, need to finish implement archeved functionality
-        // archivedSemesters,
         semesters,
         getAllSemestersItems,
         getDisabledSemestersItems,
-        // it doesnt work, need to finish implement archeved functionality
-        // getArchivedSemestersItems,
         setGroupsToSemester,
         removeSemesterCard,
         setDefaultSemesterById,
@@ -51,6 +40,9 @@ const SemesterPage = (props) => {
         setOpenErrorSnackbar,
         setError,
         getAllGroupsItems,
+        // it doesnt work, need to finish implement archeved functionality
+        // getArchivedSemestersItems,
+         // archivedSemesters,
     } = props;
 
     const { t } = useTranslation('formElements');
@@ -60,7 +52,6 @@ const SemesterPage = (props) => {
     const [isOpenSemesterCopyForm, setIsOpenSemesterCopyForm] = useState(false);
 
     const [term, setTerm] = useState('');
-    const [selectedGroups, setSelectedGroups] = useState([]);
     const [semesterOptions, setSemesterOptions] = useState([]);
     const [disabled, setDisabled] = useState(false);
     const [archived, setArchived] = useState(false);
@@ -69,38 +60,16 @@ const SemesterPage = (props) => {
     const options = getGroupsOptionsForSelect(groups);
 
     useEffect(() => {
-        // TODO change to saga
-        getAllGroupsItems();
-        getAllSemestersItems();
-        // it doesnt work, need to finish implement archived functionality
-        // getArchivedSemestersItems();
-    }, []);
-
-    useEffect(() => {
         if (disabled) {
             getDisabledSemestersItems();
         } else {
             getAllSemestersItems();
         }
+        getAllGroupsItems();
         // it doesnt work, need to finish implement archived functionality
         // getArchivedSemestersItems();
     }, [disabled]);
-    const submitSemesterForm = (values) => {
-        const semesterGroups = selectedGroups.map((group) => {
-            return { id: group.id, title: group.label };
-        });
-        const formValues = { ...values, semester_groups: semesterGroups };
-        const semester = semesterFormValueMapper(formValues);
-        if (!checkUniqSemester(semester)) {
-            const message = i18n.t(COMMON_SEMESTER_IS_NOT_UNIQUE);
-            setOpenErrorSnackbar(message);
-            setError(true);
-            return;
-        }
-        if (!checkSemesterYears(semester.endDay, semester.startDay, semester.year)) return;
-        handleSemester(semester);
-        setSelectedGroups([]);
-    };
+
     const submitSemesterCopy = ({ toSemesterId }) => {
         semesterCopy({
             fromSemesterId: semesterId,
@@ -139,11 +108,6 @@ const SemesterPage = (props) => {
         } else {
             removeSemesterCard(currentSemesterId);
         }
-    };
-
-    const showDisabledHandle = () => {
-        setDisabled(!disabled);
-        setArchived(false);
     };
     // it doesnt work, need to finish implement archeved functionality
     // const showArchivedHandler = () => {
@@ -201,24 +165,20 @@ const SemesterPage = (props) => {
             )}
 
             <div className="cards-container">
-                <aside className="search-list__panel">
-                    <SearchPanel
-                        SearchChange={setTerm}
-                        showDisabled={showDisabledHandle}
-                        // it doesnt work, need to finish implement archeved functionality
-                        // showArchived={showArchivedHandler}
-                    />
-                    {!(disabled || archived) && (
-                        <SemesterForm
-                            selectedGroups={selectedGroups}
-                            setSelectedGroups={setSelectedGroups}
-                            className="form"
-                            onSubmit={submitSemesterForm}
-                            semester={semester}
-                            options={options}
-                        />
-                    )}
-                </aside>
+                <SemesterSidebar
+                    setTerm={setTerm}
+                    archived={archived}
+                    disabled={disabled}
+                    showDisabledHandle={() => {
+                        setDisabled(!disabled);
+                        setArchived(false);
+                    }}
+                    setOpenErrorSnackbar={setOpenErrorSnackbar}
+                    handleSemester={handleSemester}
+                    semester={semester}
+                    options={options}
+                    setError={setError}
+                />
                 <SemesterList
                     term={term}
                     archived={archived}
