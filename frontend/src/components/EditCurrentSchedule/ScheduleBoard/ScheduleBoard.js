@@ -43,7 +43,7 @@ const ScheduleBoard = (props) => {
     };
 
     useEffect(() => {
-        changeBoardStyle('posable', '');
+        changeBoardStyle('possible', '');
     }, [isSelectedGroup]);
 
     const drop = (e) => {
@@ -60,7 +60,7 @@ const ScheduleBoard = (props) => {
             semesterId: currentSemester.id,
         };
         checkScheduleItemAvailability(AddObj);
-        setClassName('posable');
+        setClassName('possible');
         setLoadingService(true);
         openDialogWithData({ type: actionType.ADD, item: AddObj, groupId });
     };
@@ -68,7 +68,7 @@ const ScheduleBoard = (props) => {
         changeBoardStyle('allow', 'not-allow', () => e.preventDefault());
     };
     const dragLeave = (e) => {
-        changeBoardStyle('posable', '', () => e.preventDefault());
+        changeBoardStyle('possible', '', () => e.preventDefault());
     };
 
     return (
