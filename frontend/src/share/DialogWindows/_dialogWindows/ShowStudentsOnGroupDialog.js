@@ -11,7 +11,7 @@ import {
     dialogChooseGroupButton,
 } from '../../../constants/dialogs';
 import { GROUP_LABEL } from '../../../constants/translationLabels/formElements';
-import StudentsList from '../../../components/Students/StudentsList';
+import StudentsPage from '../../../containers/Students/StudentsPage';
 
 const ShowStudentsOnGroupDialog = (props) => {
     const {
@@ -74,12 +74,11 @@ const ShowStudentsOnGroupDialog = (props) => {
                                     : `${t('student_label')} `}
                             </span>
                         </h3>
-                        <StudentsList
+                        <StudentsPage
                             group={group}
                             onDeleteStudent={onDeleteStudent}
                             students={students}
                             match={match}
-                            student={props.student}
                             groups={groups}
                             setIsGroupButtonDisabled={setIsGroupButtonDisabled}
                             isOpenStudentListDialog={isOpenStudentListDialog}

@@ -63,59 +63,57 @@ export const StudentsTableBody = (props) => {
         selectStudentSuccess(currentStudent);
     };
 
-    // const emptyRows = rowsPerPage - Math.min(rowsPerPage, students.length - page * rowsPerPage);
     return (
         <TableBody>
-            {currentStudentsOnList.map((singleStudent) => (
-                <StyledTableRow key={singleStudent.id}>
+            {currentStudentsOnList.map((student) => (
+                <StyledTableRow key={student.id}>
                     <StyledTableCell component="th" scope="row" align="center">
                         <input
-                            key={singleStudent.id}
                             onClick={(e) => checkStudent(e)}
                             type="checkbox"
-                            checked={singleStudent.checked}
-                            value={singleStudent.id}
+                            checked={student.checked}
+                            value={student.id}
                             className="checked-box"
-                            title={`${t(SELECT_STUDENT)} ${getTeacherFullName(singleStudent)}`}
+                            title={`${t(SELECT_STUDENT)} ${getTeacherFullName(student)}`}
                         />
                     </StyledTableCell>
                     <StyledTableCell component="th" scope="row" align="center">
-                        {getTeacherFullName(singleStudent)}
+                        {getTeacherFullName(student)}
                     </StyledTableCell>
                     <StyledTableCell component="th" scope="row" align="center">
                         <span>
                             <button
                                 className="send-letter-button"
-                                title={`${t(SEND_LETTER_LABEL)} ${singleStudent.email}`}
-                                onClick={() => sendMail(singleStudent.email)}
+                                title={`${t(SEND_LETTER_LABEL)} ${student.email}`}
+                                onClick={() => sendMail(student.email)}
                                 type="button"
                             >
-                                {singleStudent.email}
+                                {student.email}
                             </button>
                         </span>
                     </StyledTableCell>
                     <StyledTableCell component="th" scope="row" align="center">
                         <span className="edit-cell">
                             <Link
-                                to={`${GROUP_LIST_LINK}${GROUP_LINK}/${group.id}${STUDENT_LINK}/${singleStudent.id}${EDIT_LINK}`}
+                                to={`${GROUP_LIST_LINK}${GROUP_LINK}/${group.id}${STUDENT_LINK}/${student.id}${EDIT_LINK}`}
                             >
                                 <FaEdit
                                     className="edit-button"
                                     title={t(EDIT_TITLE)}
                                     onClick={() => {
-                                        setStudent(singleStudent);
-                                        showUpdateStudentDialog(singleStudent);
+                                        setStudent(student);
+                                        showUpdateStudentDialog(student);
                                     }}
                                 />
                             </Link>
                             <Link
-                                to={`${GROUP_LIST_LINK}${GROUP_LINK}/${group.id}${STUDENT_LINK}/${singleStudent.id}${DELETE_LINK}`}
+                                to={`${GROUP_LIST_LINK}${GROUP_LINK}/${group.id}${STUDENT_LINK}/${student.id}${DELETE_LINK}`}
                             >
                                 <Delete
                                     title={t(DELETE_TITLE_LABEL)}
                                     className="delete-button"
                                     onClick={() => {
-                                        setStudent(singleStudent);
+                                        setStudent(student);
                                         setIsOpenConfirmDialog(true);
                                     }}
                                 />
@@ -124,12 +122,6 @@ export const StudentsTableBody = (props) => {
                     </StyledTableCell>
                 </StyledTableRow>
             ))}
-
-            {/* {emptyRows > 0 && (
-                <StyledTableRow style={{ height: 53 * emptyRows }}>
-                    <TableCell colSpan={6} />
-                </StyledTableRow>
-            )} */}
         </TableBody>
     );
 };

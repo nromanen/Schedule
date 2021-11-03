@@ -1,7 +1,4 @@
 import React, { useState } from 'react';
-import { connect } from 'react-redux';
-import { setIsOpenConfirmDialog } from '../../actions';
-import '../../helper/renderStudentTable.scss';
 import MovingGroupsDialog from '../../share/DialogWindows/_dialogWindows/MovingGroupsDialog';
 import { StudentsTable } from './StudentsTable';
 import { deleteStudentStart, selectStudentSuccess } from '../../actions/students';
@@ -9,11 +6,12 @@ import CustomDialog from '../../containers/Dialogs/CustomDialog';
 import { dialogTypes } from '../../constants/dialogs';
 import AddStudentDialog from '../../share/DialogWindows/_dialogWindows/AddStudentDialog';
 
-const StudentsPage = (props) => {
+export const StudentsPage = (props) => {
     const {
         group,
         groups,
         isOpenConfirmDialog,
+        setIsOpenConfirmDialog,
         isOpenStudentListDialog,
         setIsOpenStudentListDialog,
         ...rest
@@ -24,6 +22,7 @@ const StudentsPage = (props) => {
     const [student, setStudent] = useState(0);
 
     const confirmDeleteStudent = (studentId) => {
+        console.log(studentId);
         setIsOpenConfirmDialog(false);
         deleteStudentStart(studentId);
     };
@@ -71,12 +70,3 @@ const StudentsPage = (props) => {
         </>
     );
 };
-
-const mapStateToProps = (state) => ({
-    student: state.students.student,
-    isOpenConfirmDialog: state.dialog.isOpenConfirmDialog,
-});
-
-const mapDispatchToProps = { setIsOpenConfirmDialog, deleteStudentStart, selectStudentSuccess };
-
-export default connect(mapStateToProps, mapDispatchToProps)(StudentsPage);
