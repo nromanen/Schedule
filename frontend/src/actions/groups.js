@@ -21,6 +21,13 @@ export const showAllGroupsSuccess = (res) => {
     };
 };
 
+export const fetchGroupByIdSuccess = (group) => {
+    return {
+        type: actionTypes.FETCH_GROUP_BY_ID_SUCCESS,
+        group,
+    };
+};
+
 export const deleteGroupSuccess = (res) => {
     return {
         type: actionTypes.DELETE_GROUP_SUCCESS,
@@ -45,6 +52,11 @@ export const fetchDisabledGroupsStart = () => ({
 
 export const fetchEnabledGroupsStart = () => ({
     type: actionTypes.FETCH_ENABLED_GROUPS_START,
+});
+
+export const fetchGroupByIdStart = (data) => ({
+    type: actionTypes.FETCH_GROUP_BY_ID_START,
+    data,
 });
 
 export const deleteGroupStart = (id) => ({

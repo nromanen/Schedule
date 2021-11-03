@@ -46,6 +46,7 @@ export {
 } from './class';
 export { clearFreeRooms, showFreeRooms } from './freeRooms';
 export {
+    fetchGroupByIdSuccess,
     createGroupSuccess,
     clearGroupSuccess,
     deleteGroupSuccess,

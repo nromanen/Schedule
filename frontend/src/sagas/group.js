@@ -15,6 +15,7 @@ import {
     DELETED_LABEL,
 } from '../constants/translationLabels/serviceMessages';
 import {
+    fetchGroupByIdSuccess,
     showAllGroupsSuccess,
     deleteGroupSuccess,
     updateGroupSuccess,
@@ -34,6 +35,16 @@ function* fetchGroups(url) {
         yield put(setOpenErrorSnackbar(createErrorMessage(err)));
     } finally {
         yield put(setLoading(false));
+    }
+}
+
+function* fetchGroupById({ id }) {
+    try {
+        yield put(selectGroupSuccess({}));
+        const res = yield call(axiosCall, `${GROUP_URL}${id}`);
+        yield put(fetchGroupByIdSuccess(res.data));
+    } catch (err) {
+        yield put(setOpenErrorSnackbar(createErrorMessage(err)));
     }
 }
 
@@ -122,6 +133,7 @@ export default function* groupWatcher() {
     yield takeEvery(actionTypes.TOGGLE_DISABLED_STATUS_GROUP, toggleDisabledGroup);
     yield takeLatest(actionTypes.FETCH_DISABLED_GROUPS_START, fetchDisabledGroups);
     yield takeLatest(actionTypes.FETCH_ENABLED_GROUPS_START, fetchEnabledGroups);
+    yield takeEvery(actionTypes.FETCH_GROUP_BY_ID_START, fetchGroupById);
     yield takeEvery(actionTypes.SUBMIT_GROUP_START, submitGroupForm);
     yield takeEvery(actionTypes.DELETE_GROUP_START, deleteGroup);
     yield takeEvery(actionTypes.CLEAR_GROUP_START, clearGroup);
