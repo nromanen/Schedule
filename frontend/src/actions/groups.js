@@ -54,9 +54,9 @@ export const fetchEnabledGroupsStart = () => ({
     type: actionTypes.FETCH_ENABLED_GROUPS_START,
 });
 
-export const fetchGroupByIdStart = (data) => ({
+export const fetchGroupByIdStart = (id) => ({
     type: actionTypes.FETCH_GROUP_BY_ID_START,
-    data,
+    id,
 });
 
 export const deleteGroupStart = (id) => ({

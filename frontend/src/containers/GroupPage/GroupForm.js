@@ -5,7 +5,7 @@ import { AddGroup } from '../../components/AddGroupForm/AddGroupForm';
 import { submitGroupStart, clearGroupStart } from '../../actions/groups';
 
 const mapStateToProps = (state) => ({
-    group: state.groups.group,
+    //group: state.groups.group,
 });
 
 export default connect(mapStateToProps, { submitGroupStart, clearGroupStart })(

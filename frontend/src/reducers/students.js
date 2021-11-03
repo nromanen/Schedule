@@ -2,7 +2,6 @@ import * as actionTypes from '../actions/actionsType';
 import { updateObject } from '../utility';
 
 const initialState = {
-    studentsByGroup: [],
     students: [],
     student: {},
 };

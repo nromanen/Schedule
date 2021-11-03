@@ -29,10 +29,10 @@ const GroupCard = (props) => {
     const {
         item,
         disabled,
+        setGroup,
         showConfirmDialog,
         showStudentsByGroup,
         showAddStudentDialog,
-        getGroupToUpdateForm,
     } = props;
     const { t } = useTranslation('formElements');
     return (
@@ -51,7 +51,7 @@ const GroupCard = (props) => {
                             <FaEdit
                                 className="group__buttons-edit link-href"
                                 title={t(COMMON_EDIT)}
-                                onClick={() => getGroupToUpdateForm(item.id)}
+                                onClick={() => setGroup(item)}
                             />
                         </Link>
                     </>
@@ -87,7 +87,7 @@ const GroupCard = (props) => {
                         title={t(FORM_SHOW_STUDENTS)}
                         className="svg-btn copy-btn align-left info-btn students"
                         onClick={() => {
-                            showStudentsByGroup(item);
+                            showStudentsByGroup(item.id);
                         }}
                     />
                 </span>

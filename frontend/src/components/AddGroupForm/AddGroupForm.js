@@ -17,16 +17,9 @@ import {
 } from '../../constants/translationLabels/formElements';
 
 export const AddGroup = (props) => {
+    const { submitGroupStart, handleSubmit, initialize, submitting, setGroup, pristine, group } =
+        props;
     const { t } = useTranslation('formElements');
-    const {
-        submitGroupStart,
-        clearGroupStart,
-        handleSubmit,
-        initialize,
-        submitting,
-        pristine,
-        group,
-    } = props;
 
     useEffect(() => {
         if (group.id) {
@@ -69,7 +62,7 @@ export const AddGroup = (props) => {
                         className="buttons-style"
                         variant="contained"
                         disabled={setDisableButton(pristine, submitting, group.id)}
-                        onClick={clearGroupStart}
+                        onClick={() => setGroup({})}
                     >
                         {getClearOrCancelTitle(group.id, t)}
                     </Button>

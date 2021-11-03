@@ -10,31 +10,36 @@ import {
     dialogUploadFromFileButton,
     dialogChooseGroupButton,
 } from '../../../constants/dialogs';
-import { GROUP_LABEL } from '../../../constants/translationLabels/formElements';
+import {
+    GROUP_LABEL,
+    STUDENTS_LABEL,
+    STUDENT_LABEL,
+} from '../../../constants/translationLabels/formElements';
 import StudentsPage from '../../../containers/Students/StudentsPage';
 
 const ShowStudentsOnGroupDialog = (props) => {
     const {
-        onDeleteStudent,
         fetchAllStudentsStart,
-        onClose,
-        open,
+        onDeleteStudent,
         students,
+        onClose,
+        groupId,
+        open,
         match,
         groups,
         group,
     } = props;
     const { t } = useTranslation('formElements');
-    const [isOpenUploadFileDialog, setIsOpenUploadFileDialog] = useState(false);
-
-    useEffect(() => {
-        fetchAllStudentsStart(group.id);
-    }, [group.id]);
 
     const [isGroupButtonDisabled, setIsGroupButtonDisabled] = useState(false);
+    const [isOpenUploadFileDialog, setIsOpenUploadFileDialog] = useState(false);
     const [isOpenStudentListDialog, setIsOpenStudentListDialog] = useState(false);
 
-    const getDialog = () => {
+    useEffect(() => {
+        fetchAllStudentsStart(groupId);
+    }, [groupId]);
+
+    const showMoveStudentsByGroupDialog = () => {
         setIsOpenStudentListDialog(true);
     };
     const handleShowDialogFile = () => {
@@ -45,6 +50,7 @@ const ShowStudentsOnGroupDialog = (props) => {
         dialogUploadFromFileButton(handleShowDialogFile, buttonClassName),
         dialogCloseButton(onClose, buttonClassName),
     ];
+    const isEmptyStudents = isEmpty(students);
     return (
         <>
             <CustomDialog
@@ -52,10 +58,10 @@ const ShowStudentsOnGroupDialog = (props) => {
                 onClose={onClose}
                 title={`${t(GROUP_LABEL)} - ${group.title}`}
                 buttons={
-                    !isEmpty(students)
+                    !isEmptyStudents
                         ? [
                               dialogChooseGroupButton(
-                                  getDialog,
+                                  showMoveStudentsByGroupDialog,
                                   isGroupButtonDisabled,
                                   buttonClassName,
                               ),
@@ -64,22 +70,23 @@ const ShowStudentsOnGroupDialog = (props) => {
                         : dialogButtons
                 }
             >
-                {isEmpty(students) && <>{t('no_exist_students_in_group')} </>}
-                {!isEmpty(students) && (
+                {isEmptyStudents && <>{t('no_exist_students_in_group')} </>}
+
+                {!isEmptyStudents && (
                     <span className="table-student-data">
                         <h3 className="title-align">
                             <span>
                                 {students.length !== 1
-                                    ? `${t('students_label')} `
-                                    : `${t('student_label')} `}
+                                    ? `${t(STUDENTS_LABEL)} `
+                                    : `${t(STUDENT_LABEL)} `}
                             </span>
                         </h3>
                         <StudentsPage
                             group={group}
-                            onDeleteStudent={onDeleteStudent}
-                            students={students}
                             match={match}
                             groups={groups}
+                            students={students}
+                            onDeleteStudent={onDeleteStudent}
                             setIsGroupButtonDisabled={setIsGroupButtonDisabled}
                             isOpenStudentListDialog={isOpenStudentListDialog}
                             setIsOpenStudentListDialog={setIsOpenStudentListDialog}

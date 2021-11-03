@@ -3,10 +3,10 @@ import ShowStudentsOnGroupDialog from '../../share/DialogWindows/_dialogWindows/
 import { fetchAllStudentsStart } from '../../actions/students';
 
 const mapStateToProps = (state) => ({
-    studentsByGroup: state.students.studentsByGroup,
     students: state.students.students,
     student: state.students.student,
     groups: state.groups.groups,
+    group: state.groups.group,
 });
 
 export default connect(mapStateToProps, { fetchAllStudentsStart })(ShowStudentsOnGroupDialog);

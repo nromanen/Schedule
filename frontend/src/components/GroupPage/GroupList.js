@@ -17,17 +17,17 @@ const GroupList = (props) => {
         setIsOpenConfirmDialog,
         toggleDisabledStatus,
         isOpenConfirmDialog,
-        deleteGroupStart,
         selectGroupSuccess,
+        deleteGroupStart,
         searchItem,
         loading,
         groups,
         match,
+        setGroup,
         isDisabled,
     } = props;
     const { t } = useTranslation('formElements');
 
-    const [group, setGroup] = useState();
     const [groupId, setGroupId] = useState(-1);
     const [confirmDialogType, setConfirmDialogType] = useState('');
     const [isOpenShowStudentsDialog, setIsOpenShowStudentsDialog] = useState(false);
@@ -62,8 +62,9 @@ const GroupList = (props) => {
         setGroupId(currentGroupId);
         setIsOpenAddStudentDialog(true);
     };
-    const showStudentsByGroup = (currentGroup) => {
-        setGroup(currentGroup);
+    const showStudentsByGroup = (currentGroupId) => {
+        setGroupId(currentGroupId);
+        selectGroupSuccess(currentGroupId);
         setIsOpenShowStudentsDialog(true);
     };
 
@@ -99,9 +100,8 @@ const GroupList = (props) => {
                 <ShowStudentsOnGroupDialog
                     onClose={() => setIsOpenShowStudentsDialog(false)}
                     open={isOpenShowStudentsDialog}
-                    group={group}
+                    groupId={groupId}
                     match={match}
-                    groups={groups}
                 />
             )}
             <div className="group-wrapper group-list">
@@ -109,9 +109,9 @@ const GroupList = (props) => {
                     <GroupCard
                         key={item.id}
                         item={item}
+                        setGroup={setGroup}
                         disabled={isDisabled}
                         showConfirmDialog={showConfirmDialog}
-                        getGroupToUpdateForm={(id) => selectGroupSuccess(id)}
                         showAddStudentDialog={showAddStudentDialog}
                         showStudentsByGroup={showStudentsByGroup}
                     />
