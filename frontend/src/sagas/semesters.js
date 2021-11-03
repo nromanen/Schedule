@@ -51,7 +51,7 @@ export function* getAllSemestersItems() {
 export function* getDisabledSemestersItems() {
     try {
         const response = yield call(axiosCall, DISABLED_SEMESTERS_URL);
-        yield put(setDisabledSemesters(response.data));
+        yield put(showAllSemesters(response.data));
     } catch (error) {
         yield put(setOpenErrorSnackbar(createErrorMessage(error)));
     }
@@ -84,23 +84,24 @@ export function* setGroupsToSemester({ semesterId, groups }) {
 }
 
 export function* deleteSemesterItem({ semesterId }) {
+    console.log('semesterId', semesterId)
     try {
         const state = yield select();
         const semester = state.semesters.semesters.find((item) => item.id === semesterId);
         if (semester.currentSemester) {
             const message = i18n.t(SEMESTER_SERVICE_IS_ACTIVE);
             yield put(setOpenErrorSnackbar(message));
-            return;
+        } else {
+            const requestUrl = `${SEMESTERS_URL}/${semesterId}`;
+            yield call(axiosCall, requestUrl, 'DELETE');
+            yield put(deleteSemester(semesterId));
+            const message = createMessage(
+                BACK_END_SUCCESS_OPERATION,
+                FORM_SEMESTER_LABEL,
+                DELETED_LABEL,
+            );
+            yield put(setOpenSuccessSnackbar(message));
         }
-        const requestUrl = `${SEMESTERS_URL}/${semesterId}`;
-        yield call(axiosCall, requestUrl, 'DELETE');
-        yield put(deleteSemester(semesterId));
-        const message = createMessage(
-            BACK_END_SUCCESS_OPERATION,
-            FORM_SEMESTER_LABEL,
-            DELETED_LABEL,
-        );
-        yield put(setOpenSuccessSnackbar(message));
     } catch (error) {
         yield put(setOpenErrorSnackbar(createErrorMessage(error)));
     }

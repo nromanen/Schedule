@@ -38,8 +38,7 @@ const SemesterList = (props) => {
         setIsOpenSemesterCopyForm,
         setOpenGroupsDialog,
         term,
-        enabledSemesters,
-        disabledSemesters,
+        semesters,
         // archivedSemesters,
         createArchivedSemester,
         // getArchivedSemester,
@@ -48,10 +47,7 @@ const SemesterList = (props) => {
 
     const searchArr = ['year', 'description', 'startDay', 'endDay'];
 
-    const visibleItems = disabled
-        ? search(disabledSemesters, term, searchArr)
-        : search(enabledSemesters, term, searchArr);
-
+    const visibleItems = search(semesters, term, searchArr);
     const showConfirmDialog = (id, dialogType) => {
         setSemesterId(id);
         setSubDialogType(dialogType);

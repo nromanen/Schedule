@@ -17,8 +17,7 @@ import { setOpenErrorSnackbar } from '../../actions/snackbar';
 import { setIsOpenConfirmDialog } from '../../actions/dialog';
 
 const mapStateToProps = (state) => ({
-    enabledSemesters: state.semesters.semesters,
-    disabledSemesters: state.semesters.disabledSemesters,
+    semesters: state.semesters.semesters,
     archivedSemesters: state.semesters.archivedSemesters,
     isSnackbarOpen: state.snackbar.isSnackbarOpen,
     snackbarType: state.snackbar.snackbarType,

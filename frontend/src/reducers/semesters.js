@@ -4,7 +4,6 @@ import { updateObject } from '../utility';
 const initialState = {
     semesters: [],
     semester: {},
-    disabledSemesters: [],
     archivedSemesters: [],
 };
 

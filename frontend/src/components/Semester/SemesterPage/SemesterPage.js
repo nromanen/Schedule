@@ -8,7 +8,6 @@ import SemesterForm from '../../../containers/SemesterPage/SemesterForm';
 import SemesterList from '../../../containers/SemesterPage/SemesterList';
 import SemesterCopyForm from '../../../containers/SemesterPage/SemesterCopyForm';
 import { MultiselectForGroups } from '../../../helper/MultiselectForGroups';
-import { showAllGroupsService } from '../../../services/groupService';
 import { successHandler } from '../../../helper/handlerAxios';
 import i18n from '../../../i18n';
 import CustomDialog from '../../../containers/Dialogs/CustomDialog';
@@ -36,8 +35,7 @@ const SemesterPage = (props) => {
         semester,
         // it doesnt work, need to finish implement archeved functionality
         // archivedSemesters,
-        enabledSemesters,
-        disabledSemesters,
+        semesters,
         getAllSemestersItems,
         getDisabledSemestersItems,
         // it doesnt work, need to finish implement archeved functionality
@@ -74,11 +72,19 @@ const SemesterPage = (props) => {
         // TODO change to saga
         getAllGroupsItems();
         getAllSemestersItems();
-        getDisabledSemestersItems();
         // it doesnt work, need to finish implement archeved functionality
         // getArchivedSemestersItems();
     }, []);
 
+    useEffect(() => {
+        if (disabled) {
+            getDisabledSemestersItems();
+        } else {
+            getAllSemestersItems();
+        }
+        // it doesnt work, need to finish implement archeved functionality
+        // getArchivedSemestersItems();
+    }, [disabled]);
     const submitSemesterForm = (values) => {
         const semesterGroups = selectedGroups.map((group) => {
             return { id: group.id, title: group.label };
@@ -107,7 +113,7 @@ const SemesterPage = (props) => {
     };
 
     const changeGSemesterDisabledStatus = (currentSemesterId) => {
-        const foundSemester = [...disabledSemesters, ...enabledSemesters].find(
+        const foundSemester = semesters.find(
             (semesterEl) => semesterEl.id === currentSemesterId,
         );
         const changeDisabledStatus = {
@@ -147,7 +153,7 @@ const SemesterPage = (props) => {
     // };
 
     const onChangeGroups = () => {
-        const semester = enabledSemesters.find((semesterItem) => semesterItem.id === semesterId);
+        const semester = semesters.find((semesterItem) => semesterItem.id === semesterId);
         const beginGroups = !isEmpty(semester.semester_groups)
             ? getGroupsOptionsForSelect(semester.semester_groups)
             : [];
@@ -190,7 +196,7 @@ const SemesterPage = (props) => {
                         semesterId={semesterId}
                         onSubmit={submitSemesterCopy}
                         submitButtonLabel={t(COPY_LABEL)}
-                        semesters={enabledSemesters}
+                        semesters={semesters}
                     />
                 </CustomDialog>
             )}
@@ -223,8 +229,7 @@ const SemesterPage = (props) => {
                     setOpenSubDialog={setOpenConfirmDialog}
                     setIsOpenSemesterCopyForm={setIsOpenSemesterCopyForm}
                     setOpenGroupsDialog={setIsOpenGroupsDialog}
-                    enabledSemesters={enabledSemesters}
-                    disabledSemesters={disabledSemesters}
+                    semesters={semesters}
                     setSemesterOptions={setSemesterOptions}
                 />
             </div>
