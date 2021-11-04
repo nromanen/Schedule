@@ -8,11 +8,14 @@ import {
     deleteSemesterStart,
     updateSemesterByIdStart,
     setSemesterCopyStart,
+    setGroupsToSemesterStart,
 } from '../../actions/semesters';
 import { setIsOpenConfirmDialog } from '../../actions/dialog';
+import { setOpenSuccessSnackbar } from '../../actions/snackbar';
 
 const mapStateToProps = (state) => ({
     isOpenConfirmDialog: state.dialog.isOpenConfirmDialog,
+    semesters: state.semesters.semesters,
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -25,6 +28,9 @@ const mapDispatchToProps = (dispatch) => ({
     setDefaultSemesterById: (semesterId, isDisabled) =>
         dispatch(updateSemesterByIdStart(semesterId, isDisabled)),
     semesterCopy: (values) => dispatch(setSemesterCopyStart(values)),
+    setOpenSuccessSnackbar: (message) => dispatch(setOpenSuccessSnackbar(message)),
+    setGroupsToSemester: (semesterId, groups) =>
+        dispatch(setGroupsToSemesterStart(semesterId, groups)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SemesterList);

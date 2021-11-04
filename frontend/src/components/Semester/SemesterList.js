@@ -4,7 +4,7 @@ import { MdDelete, MdDonutSmall } from 'react-icons/md';
 import { useTranslation } from 'react-i18next';
 import './SemesterList.scss';
 import { GiSightDisabled, IoMdEye, FaCopy } from 'react-icons/all';
-import { get } from 'lodash';
+import { get, isEqual, isEmpty } from 'lodash';
 import Card from '../../share/Card/Card';
 import NotFound from '../../share/NotFound/NotFound';
 import { dialogTypes, dialogCloseButton } from '../../constants/dialogs';
@@ -18,17 +18,24 @@ import {
     SEMESTER_COPY_LABEL,
 } from '../../constants/translationLabels/formElements';
 import {
+    EXIST_LABEL,
+    GROUP_EXIST_IN_THIS_SEMESTER,
+} from '../../constants/translationLabels/serviceMessages';
+import {
     COMMON_SET_DISABLED,
     COMMON_DAYS_LABEL,
     COMMON_CLASS_SCHEDULE_MANAGEMENT_TITLE,
     SEMESTER_LABEL,
     COMMON_MAKE_ARCHIVE,
     COMMON_SET_ENABLED,
+    COMMON_GROUP_TITLE,
 } from '../../constants/translationLabels/common';
 import { search } from '../../helper/search';
 import { getGroupsOptionsForSelect } from '../../utils/selectUtils';
 import SemesterCopyForm from '../../containers/SemesterPage/SemesterCopyForm';
 import CustomDialog from '../../containers/Dialogs/CustomDialog';
+import { MultiselectForGroups } from '../../helper/MultiselectForGroups';
+import i18n from '../../i18n';
 
 const SemesterList = (props) => {
     const { t } = useTranslation('formElements');
@@ -36,10 +43,8 @@ const SemesterList = (props) => {
         archived,
         disabled,
         setSemesterId,
-        setOpenGroupsDialog,
         term,
         semesters,
-        setSemesterOptions,
         selectSemester,
         createArchivedSemester,
         setOpenConfirmDialog,
@@ -49,11 +54,17 @@ const SemesterList = (props) => {
         isOpenConfirmDialog,
         semesterCopy,
         semesterId,
+        options,
+        setOpenSuccessSnackbar,
+        setGroupsToSemester,
         // archivedSemesters,
         // getArchivedSemester,
     } = props;
     const [isOpenSemesterCopyForm, setIsOpenSemesterCopyForm] = useState(false);
     const [confirmDialogType, setConfirmDialogType] = useState('');
+    const [isOpenGroupsDialog, setIsOpenGroupsDialog] = useState(false);
+
+    const [semesterOptions, setSemesterOptions] = useState([]);
 
     const searchArr = ['year', 'description', 'startDay', 'endDay'];
 
@@ -106,6 +117,27 @@ const SemesterList = (props) => {
     // const handleSemesterArchivedPreview = (currentSemesterId) => {
     //     getArchivedSemester(+currentSemesterId);
     // };
+    const onChangeGroups = () => {
+        const semester = semesters.find((semesterItem) => semesterItem.id === semesterId);
+        const beginGroups = !isEmpty(semester.semester_groups)
+            ? getGroupsOptionsForSelect(semester.semester_groups)
+            : [];
+        const finishGroups = [...semesterOptions];
+        if (isEqual(beginGroups, finishGroups)) {
+            setOpenSuccessSnackbar(
+                i18n.t(GROUP_EXIST_IN_THIS_SEMESTER, {
+                    cardType: i18n.t(COMMON_GROUP_TITLE),
+                    actionType: i18n.t(EXIST_LABEL),
+                }),
+            );
+            return;
+        }
+        setGroupsToSemester(semesterId, semesterOptions);
+        setIsOpenGroupsDialog(false);
+    };
+    const cancelMultiselect = () => {
+        setIsOpenGroupsDialog(false);
+    };
     return (
         <>
             {isOpenConfirmDialog && (
@@ -259,13 +291,21 @@ const SemesterList = (props) => {
                                 onClick={() => {
                                     setSemesterId(semesterItem.id);
                                     setSemesterOptions(groups);
-                                    setOpenGroupsDialog(true);
+                                    setIsOpenGroupsDialog(true);
                                 }}
                             />
                         </Card>
                     );
                 })}
             </section>
+            <MultiselectForGroups
+                open={isOpenGroupsDialog}
+                options={options}
+                value={semesterOptions}
+                onChange={setSemesterOptions}
+                onCancel={cancelMultiselect}
+                onClose={onChangeGroups}
+            />
         </>
     );
 };
