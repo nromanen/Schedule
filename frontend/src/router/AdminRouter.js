@@ -28,7 +28,7 @@ import MergeRolePage from '../containers/MergeRolePage/MergeRolePage';
 import DepartmentPage from '../containers/DepartmentPage/DepartmentPage';
 import TemporarySchedule from '../containers/TemporarySchedule/TemporarySchedule';
 import { AdminRoute } from './routes';
-import NavigationPanel from '../components/Navigation';
+import NavigationPanel from '../components/Navigation/NavigationPanel';
 
 export default function Routers() {
     return (
