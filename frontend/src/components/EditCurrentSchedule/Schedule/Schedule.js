@@ -74,7 +74,7 @@ const Schedule = (props) => {
                         title={i18n.t(COMMON_GROUP_TITLE)}
                         classes={classes}
                     />
-                    <section className="groups-section ">
+                    <section className="groups-section">
                         {groups.map((group) => {
                             const isSelectedGroup = group.id === groupId;
                             return (
@@ -88,34 +88,37 @@ const Schedule = (props) => {
                                     <span className="group-title card sticky-container">
                                         {group.title}
                                     </span>
-                                    {allLessons.map((lesson) => (
-                                        <div
-                                            key={`${group.id}-${lesson.id}-${lesson.week}`}
-                                            className="board-container"
-                                            onMouseOver={() =>
-                                                addClassDayBoard(lesson.dayName, lesson.classId)
-                                            }
-                                            onFocus={() =>
-                                                addClassDayBoard(lesson.dayName, lesson.classId)
-                                            }
-                                            onMouseOut={() =>
-                                                removeClassDayBoard(lesson.dayName, lesson.classId)
-                                            }
-                                            onBlur={() =>
-                                                removeClassDayBoard(lesson.dayName, lesson.classId)
-                                            }
-                                        >
-                                            <ScheduleBoard
-                                                lesson={lesson}
-                                                groupId={group.id}
-                                                currentSemester={currentSemester}
-                                                openDialogWithData={openScheduleDialogWithData}
-                                                dragItemData={dragItemData}
-                                                isSelectedGroup={isSelectedGroup}
-                                                additionClassName="card schedule-board"
-                                            />
-                                        </div>
-                                    ))}
+                                    {allLessons.map((lesson) => {
+                                        return (
+                                            // eslint-disable-next-line jsx-a11y/mouse-events-have-key-events
+                                            <div
+                                                key={`${group.id}-${lesson.id}-${lesson.week}`}
+                                                className="board-container"
+                                                onMouseOver={() =>
+                                                    addClassDayBoard(
+                                                        lesson.dayName,
+                                                        lesson.className,
+                                                    )
+                                                }
+                                                onMouseOut={() =>
+                                                    removeClassDayBoard(
+                                                        lesson.dayName,
+                                                        lesson.className,
+                                                    )
+                                                }
+                                            >
+                                                <ScheduleBoard
+                                                    lesson={lesson}
+                                                    groupId={group.id}
+                                                    currentSemester={currentSemester}
+                                                    openDialogWithData={openScheduleDialogWithData}
+                                                    dragItemData={dragItemData}
+                                                    isSelectedGroup={isSelectedGroup}
+                                                    additionClassName="card schedule-board"
+                                                />
+                                            </div>
+                                        );
+                                    })}
                                 </div>
                             );
                         })}

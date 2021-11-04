@@ -1,0 +1,40 @@
+@import '../../../styles/variables.scss';
+@import '../../../styles/colors.scss';
+
+.view-rooms {
+    position: relative;
+    margin: 0;
+    padding-top: 15px;
+    display: flex;
+    .busy-room-title {
+        width: 250px;
+        display: flex;
+        height: 50px;
+        padding: 10px 7px;
+        margin: 5px;
+        align-items: center;
+        justify-content: center;
+        font-size: $font-sm;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        .type-word {
+            margin-left: 5px;
+            color: $blue;
+        }
+    }
+    .busy-room-section {
+        &:hover {
+            position: relative;
+            &::after {
+                position: absolute;
+                top: 0;
+                content: '';
+                width: $w-full;
+                height: 100%;
+                background: none;
+                border: 2px solid $light-blue;
+            }
+        }
+    }
+}

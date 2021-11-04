@@ -1,0 +1,68 @@
+@import '../../../styles/colors.scss';
+@import '../../../styles/variables.scss';
+
+.class-container {
+    position: relative;
+    margin: 0;
+    .card {
+        background-color: $snowy-white;
+        margin: 5px;
+        border-radius: 5px;
+        box-shadow: 0 2px 8px $shadow-box;
+    }
+    .class-info-container {
+        position: relative;
+        .class-info-data {
+            position: relative;
+            width: 250px;
+            z-index: 1;
+            height: 100px;
+        }
+    }
+    .group-list {
+        display: inline;
+        h5 {
+            display: flex;
+            justify-content: center;
+            margin: {
+                top: 22px;
+                left:5px;
+                right: 5px;
+                bottom: 5px;
+            }
+            font-size: $font-sm;
+            
+            &:not(:last-of-type)::after {
+                content: ',';
+            }
+        }
+    }
+    .week-type {
+        position: absolute;
+        left: 10px;
+        top: -4px;
+        color: $light-gray;
+        font-size: $font-xs;
+        &::first-letter {
+            text-transform: uppercase;
+        }
+    }
+    .possible {
+        background-color: $warning-color;
+        p {
+            color: $black;
+        }
+    }
+    .allow {
+        background-color: $light-green;
+        p {
+            color: $black;
+        }
+    }
+    .not-allow {
+        background-color: $red-light;
+        p {
+            color: $main-color;
+        }
+    }
+}

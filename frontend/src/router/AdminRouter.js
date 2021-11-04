@@ -18,7 +18,7 @@ import {
     ACTIVATION_PAGE_LINK,
 } from '../constants/links';
 import TeacherList from '../containers/TeachersList/TeachersList';
-import BusyRooms from '../containers/BusyRooms/BusyRooms';
+import BusyRoomsPage from '../containers/Room/BusyRoomsPage';
 import GroupList from '../containers/GroupPage/GroupPage';
 import ClassSchedule from '../containers/ClassSchedule/ClassSchedule';
 import RoomList from '../containers/RoomList/RoomList';
@@ -42,7 +42,7 @@ export default function Routers() {
                 <AdminRoute path={CLASS_SCHEDULE_TITLE_LINK} component={ClassSchedule} />
                 <AdminRoute path={ROOM_LIST_LINK} component={RoomList} />
                 <AdminRoute path={SUBJECT_PAGE_LINK} component={SubjectPage} />
-                <AdminRoute path={BUST_ROOMS_LINK} component={BusyRooms} />
+                <AdminRoute path={BUST_ROOMS_LINK} component={BusyRoomsPage} />
                 <AdminRoute path={SEMESTER_PAGE_LINK} component={SemesterPage} />
                 <AdminRoute path={MARGE_ROLE_PAGE_LINK} component={MergeRolePage} />
                 <AdminRoute path={CHANGES_LINK} component={TemporarySchedule} />

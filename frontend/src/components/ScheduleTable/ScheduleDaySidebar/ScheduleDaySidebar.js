@@ -20,14 +20,18 @@ const ScheduleDaySidebar = (props) => {
                         {classes.map((classScheduler) => (
                             <Fragment key={classScheduler.id}>
                                 <div className="day-section">
-                                    <p className={`day-line ${day}-${classScheduler.id}`}></p>
+                                    <p
+                                        className={`day-line ${day}-${classScheduler.class_name}`}
+                                    ></p>
                                     <span
-                                        id={`${day}-${classScheduler.id}`}
+                                        id={`${day}-${classScheduler.class_name}`}
                                         className="card schedule-class"
                                     >
                                         {classScheduler.class_name}
                                     </span>
-                                    <p className={`day-line ${day}-${classScheduler.id}`}></p>
+                                    <p
+                                        className={`day-line ${day}-${classScheduler.class_name}`}
+                                    ></p>
                                 </div>
                             </Fragment>
                         ))}

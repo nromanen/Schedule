@@ -1,4 +1,5 @@
 $red: #e62116;
+$red-light: #ff7f7f;
 $selected-blue: #0000001a;
 $black: #0f0f0f;
 $gray: #6b7280;
@@ -12,9 +13,11 @@ $light-blue: #4c94f6;
 $dark-blue: #3f51b5;
 $selected-blue: #0000001a;
 $green: #028802;
+$light-green: #c7f6b6;
 $dark-green: #184b44;
 
-$create-color-light: #90ee90;
+$create-light-color: $light-green;
+$create-color-light: #90EE90;
 $create-color: $green;
 $edit-color: $blue;
 $delete-color: $red;

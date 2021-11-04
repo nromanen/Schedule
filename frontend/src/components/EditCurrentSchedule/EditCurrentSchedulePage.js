@@ -48,12 +48,14 @@ const SchedulePage = (props) => {
                 {
                     dayName: day,
                     classId: classNumber.id,
+                    className: classNumber.class_name,
                     week: 'ODD',
                     id: `${index}-${outerIndex}`,
                 },
                 {
                     dayName: day,
                     classId: classNumber.id,
+                    className: classNumber.class_name,
                     week: 'EVEN',
                     id: `${index}-${outerIndex}`,
                 },
