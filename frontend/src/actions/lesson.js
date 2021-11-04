@@ -80,10 +80,11 @@ export const updateLessonCardStart = (payload) => {
     };
 };
 
-export const handleLessonStart = (values) => {
+export const handleLessonStart = (values, groupId) => {
     return {
         type: actionTypes.HANDLE_LESSON_CARD_START,
         values,
+        groupId,
     };
 };
 

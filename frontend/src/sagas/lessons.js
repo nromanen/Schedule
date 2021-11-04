@@ -28,12 +28,10 @@ import {
     COPIED_LABEL,
 } from '../constants/translationLabels/serviceMessages';
 import { axiosCall } from '../services/axios';
-import { cardObjectHandler } from '../helper/cardObjectHandler';
 
-export function* createLessonCard(payload) {
-    const { info } = payload;
+export function* createLessonCard({ values }) {
     try {
-        const { data } = yield call(axiosCall, LESSON_URL, POST, info);
+        const { data } = yield call(axiosCall, LESSON_URL, POST, values);
 
         yield put(createLesson(data));
         const message = createMessage(BACK_END_SUCCESS_OPERATION, FORM_LESSON_LABEL, CREATED_LABEL);
@@ -45,11 +43,9 @@ export function* createLessonCard(payload) {
     }
 }
 
-export function* updateLesson(payload) {
-    const { info, groupId } = payload;
-
+export function* updateLesson({ values, groupId }) {
     try {
-        const { groups, ...rest } = info;
+        const { groups, ...rest } = values;
 
         const request = {
             ...rest,
@@ -68,15 +64,12 @@ export function* updateLesson(payload) {
     }
 }
 
-export function* handleLesson({ values }) {
-    const { info, groupId, semester } = values;
+export function* handleLesson({ values, groupId }) {
     try {
-        const cardObj = cardObjectHandler(info, groupId, semester);
-
-        if (cardObj.id) {
-            yield call(updateLesson, { info: cardObj, groupId });
+        if (values.id) {
+            yield call(updateLesson, { values, groupId });
         } else {
-            yield call(createLessonCard, { info: cardObj });
+            yield call(createLessonCard, { values });
         }
     } catch (error) {
         yield put(setOpenErrorSnackbar(createErrorMessage(error)));

@@ -79,7 +79,7 @@ const LessonPage = (props) => {
             return;
         }
 
-        handleLesson({ info: card, groupId, semester: currentSemester, les: lessons });
+        handleLesson(cardObj, groupId);
     };
 
     const showConfirmDialog = (lessonCardId) => {
