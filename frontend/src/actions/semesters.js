@@ -146,3 +146,9 @@ export const setSemesterCopyStart = (values) => {
         values,
     };
 };
+export const toggleSemesterVisibilityStart = (semester) => {
+    return {
+        type: actionTypes.TOGGLE_SEMESTER_VISIBILITY_START,
+        semester,
+    };
+};

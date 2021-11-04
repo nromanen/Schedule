@@ -9,6 +9,7 @@ import {
     updateSemesterByIdStart,
     setSemesterCopyStart,
     setGroupsToSemesterStart,
+    toggleSemesterVisibilityStart,
 } from '../../actions/semesters';
 import { setIsOpenConfirmDialog } from '../../actions/dialog';
 import { setOpenSuccessSnackbar } from '../../actions/snackbar';
@@ -31,6 +32,7 @@ const mapDispatchToProps = (dispatch) => ({
     setOpenSuccessSnackbar: (message) => dispatch(setOpenSuccessSnackbar(message)),
     setGroupsToSemester: (semesterId, groups) =>
         dispatch(setGroupsToSemesterStart(semesterId, groups)),
+    toggleSemesterVisibility: (semester) => dispatch(toggleSemesterVisibilityStart(semester)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SemesterList);

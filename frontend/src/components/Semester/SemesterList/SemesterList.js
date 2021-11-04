@@ -33,7 +33,6 @@ const SemesterList = (props) => {
         selectSemester,
         createArchivedSemester,
         setOpenConfirmDialog,
-        updateSemester,
         removeSemesterCard,
         setDefaultSemesterById,
         isOpenConfirmDialog,
@@ -41,6 +40,7 @@ const SemesterList = (props) => {
         options,
         setOpenSuccessSnackbar,
         setGroupsToSemester,
+        toggleSemesterVisibility,
         // archivedSemesters,
         // getArchivedSemester,
     } = props;
@@ -70,30 +70,25 @@ const SemesterList = (props) => {
     const closeSemesterCopyForm = () => {
         setIsOpenSemesterCopyForm(false);
     };
-    const changeSemesterDisabledStatus = (currentSemesterId) => {
-        const foundSemester = semesters.find(
-            (semesterItem) => semesterItem.id === currentSemesterId,
-        );
-        const changeDisabledStatus = {
-            [dialogTypes.SET_VISIBILITY_ENABLED]: updateSemester({
-                ...foundSemester,
-                disable: false,
-            }),
-            [dialogTypes.SET_VISIBILITY_DISABLED]: updateSemester({
-                ...foundSemester,
-                disable: true,
-            }),
-        };
-        return changeDisabledStatus[confirmDialogType];
-    };
 
     const acceptConfirmDialog = (currentSemesterId) => {
         setOpenConfirmDialog(false);
+        const foundSemester = semesters.find(
+            (semesterItem) => semesterItem.id === currentSemesterId,
+        );
         const isDisabled = disabled;
         if (confirmDialogType === dialogTypes.SET_DEFAULT) {
             setDefaultSemesterById(currentSemesterId, isDisabled);
-        } else if (confirmDialogType !== dialogTypes.DELETE_CONFIRM) {
-            changeSemesterDisabledStatus(currentSemesterId);
+        } else if (confirmDialogType === dialogTypes.SET_VISIBILITY_ENABLED) {
+            toggleSemesterVisibility({
+                ...foundSemester,
+                disable: false,
+            });
+        } else if (confirmDialogType === dialogTypes.SET_VISIBILITY_DISABLED) {
+            toggleSemesterVisibility({
+                ...foundSemester,
+                disable: true,
+            });
         } else {
             removeSemesterCard(currentSemesterId);
         }

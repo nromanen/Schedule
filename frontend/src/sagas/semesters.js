@@ -4,7 +4,6 @@ import * as actionTypes from '../actions/actionsType';
 import { setOpenSuccessSnackbar, setOpenErrorSnackbar } from '../actions/snackbar';
 import {
     showAllSemesters,
-    setDisabledSemesters,
     setArchivedSemesters,
     updateSemester,
     selectSemester,
@@ -182,6 +181,21 @@ export function* setDefaultSemesterById({ semesterId, isDisabled }) {
     }
 }
 
+export function* toggleSemesterVisibility({ semester }) {
+    console.log(semester);
+    try {
+        yield call(axiosCall, SEMESTERS_URL, 'PUT', semester);
+        yield put(deleteSemester(semester.id));
+        const message = createMessage(
+            BACK_END_SUCCESS_OPERATION,
+            FORM_SEMESTER_LABEL,
+            UPDATED_LABEL,
+        );
+        yield put(setOpenSuccessSnackbar(message));
+    } catch (error) {
+        yield put(setOpenErrorSnackbar(createErrorMessage(error)));
+    }
+}
 export function* semesterCopy({ values }) {
     try {
         const requestUrl = `${SEMESTER_COPY_URL}?fromSemesterId=${values.fromSemesterId}&toSemesterId=${values.toSemesterId}`;
@@ -246,4 +260,5 @@ export function* watchSemester() {
     yield takeLatest(actionTypes.GET_ARCHIVE_SEMESTER_START, getArchivedSemester);
     yield takeLatest(actionTypes.COPY_LESSONS_FROM_SEMESTER_START, CopyLessonsFromSemester);
     yield takeLatest(actionTypes.HANDLE_SEMESTER_START, handleSemester);
+    yield takeLatest(actionTypes.TOGGLE_SEMESTER_VISIBILITY_START, toggleSemesterVisibility);
 }
