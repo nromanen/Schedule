@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 
 import PropTypes from 'prop-types';
 import Button from '@material-ui/core/Button';
@@ -17,12 +16,13 @@ const CustomDialog = (props) => {
         handelConfirm,
         whatDelete,
         warning,
+        linkToMeeting,
         setOpenConfirmDialog,
         title,
         buttons = [],
         ...other
     } = dialogMapper(props);
-    return ReactDOM.createPortal(
+    return (
         <Dialog
             className={`custom-dialog ${className}`}
             onClose={() => onClose('')}
@@ -44,8 +44,7 @@ const CustomDialog = (props) => {
                     </Button>
                 ))}
             </DialogActions>
-        </Dialog>,
-        document.getElementById('modal-portal'),
+        </Dialog>
     );
 };
 

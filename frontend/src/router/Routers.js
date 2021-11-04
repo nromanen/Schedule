@@ -6,7 +6,7 @@ import Header from '../components/Header/Header';
 
 import HomePage from '../containers/Home/Home';
 import TeacherSchedule from '../components/TeacherSchedule/TeacherSchedule';
-import Logout from '../containers/Auth/Logout/Logout';
+import Logout from '../containers/Auth/Logout';
 import ActivationPage from '../containers/ActivationPage/ActivationPage';
 import ProfilePage from '../containers/ProfilePage/ProfilePage';
 import EditCurrentSchedulePage from '../containers/EditCurrentSchedule/EditCurrentSchedulePage';
