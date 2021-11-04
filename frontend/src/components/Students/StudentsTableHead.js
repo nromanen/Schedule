@@ -4,7 +4,7 @@ import TableRow from '@material-ui/core/TableRow';
 import { FaEnvelope } from 'react-icons/fa';
 import TableHead from '@material-ui/core/TableHead';
 import { withStyles } from '@material-ui/core';
-import '../../helper/renderStudentTable.scss';
+import './StudentTable.scss';
 import { useTranslation } from 'react-i18next';
 import {
     SELECT_ALL,

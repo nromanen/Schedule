@@ -9,10 +9,10 @@ import { setOpenSuccessSnackbar, setOpenErrorSnackbar } from '../actions/snackba
 import { DELETE, POST, PUT } from '../constants/methods';
 import { axiosCall } from '../services/axios';
 import {
-    deleteStudent,
+    deleteStudentSuccess,
     selectStudentSuccess,
     showAllStudents,
-    updateStudent,
+    updateStudentSuccess,
 } from '../actions/students';
 import {
     UPDATED_LABEL,
@@ -32,7 +32,6 @@ function* fetchAllStudentsWorker({ id }) {
 
 function* createStudentWorker({ data }) {
     try {
-        console.log(data);
         yield call(axiosCall, STUDENT_URL, POST, data);
         yield put(reset(STUDENT_FORM));
         const message = createDynamicMessage('student', CREATED_LABEL);
@@ -45,7 +44,7 @@ function* createStudentWorker({ data }) {
 function* updateStudentWorker({ data }) {
     try {
         const res = yield call(axiosCall, STUDENT_URL, PUT, data);
-        yield put(updateStudent(res.data));
+        yield put(updateStudentSuccess(res.data));
         yield put(selectStudentSuccess(null));
         yield put(reset(STUDENT_FORM));
         const message = createDynamicMessage('student', UPDATED_LABEL);
@@ -72,7 +71,7 @@ function* submitStudentForm({ data, groupId }) {
 function* deleteStudentWorker({ id }) {
     try {
         yield call(axiosCall, `${STUDENT_URL}/${id}`, DELETE);
-        yield put(deleteStudent(id));
+        yield put(deleteStudentSuccess(id));
         const message = createDynamicMessage('student', DELETED_LABEL);
         yield put(setOpenSuccessSnackbar(message));
     } catch (err) {

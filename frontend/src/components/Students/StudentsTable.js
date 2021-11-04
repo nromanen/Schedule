@@ -2,22 +2,14 @@ import React, { useState, useEffect } from 'react';
 import Table from '@material-ui/core/Table';
 import TableContainer from '@material-ui/core/TableContainer';
 import Paper from '@material-ui/core/Paper';
-import '../../helper/renderStudentTable.scss';
-import { makeStyles } from '@material-ui/core/styles';
+import './StudentTable.scss';
 
 import { TableFooterComponent } from '../Table/TableFooter';
 import { StudentsTableBody } from './StudentsTableBody';
 import { StudentsTableHead } from './StudentsTableHead';
 
-const useStyles2 = makeStyles({
-    table: {
-        minWidth: 500,
-    },
-});
-
 export const StudentsTable = (props) => {
     const { students, setCheckBoxStudents, checkBoxStudents, setIsGroupButtonDisabled } = props;
-    const classes = useStyles2();
 
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -81,9 +73,9 @@ export const StudentsTable = (props) => {
     }, [currentStudentsOnList]);
 
     return (
-        <>
+        <div className="table">
             <TableContainer component={Paper}>
-                <Table className={classes.table} aria-label="custom pagination table">
+                <Table aria-label="custom pagination table">
                     <StudentsTableHead
                         checkedAll={checkedAll}
                         checkedAllOnPageClick={checkedAllOnPageClick}
@@ -98,6 +90,8 @@ export const StudentsTable = (props) => {
                         currentStudentsOnList={currentStudentsOnList}
                         {...props}
                     />
+                </Table>
+                <div className="table-footer">
                     <TableFooterComponent
                         page={page}
                         items={students}
@@ -105,8 +99,8 @@ export const StudentsTable = (props) => {
                         rowsPerPage={rowsPerPage}
                         setRowsPerPage={setRowsPerPage}
                     />
-                </Table>
+                </div>
             </TableContainer>
-        </>
+        </div>
     );
 };

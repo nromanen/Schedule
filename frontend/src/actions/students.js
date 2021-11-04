@@ -1,6 +1,6 @@
 import * as actionTypes from './actionsType';
 
-export const createStudent = (res) => {
+export const createStudentSuccess = (res) => {
     return {
         type: actionTypes.CREATE_STUDENT,
         result: res,
@@ -13,7 +13,7 @@ export const showAllStudents = (res) => {
     };
 };
 
-export const deleteStudent = (res) => {
+export const deleteStudentSuccess = (res) => {
     return {
         type: actionTypes.DELETE_STUDENT,
         result: res,
@@ -25,7 +25,7 @@ export const selectStudentSuccess = (res) => {
         result: res,
     };
 };
-export const updateStudent = (res) => {
+export const updateStudentSuccess = (res) => {
     return {
         type: actionTypes.UPDATE_STUDENT,
         result: res,

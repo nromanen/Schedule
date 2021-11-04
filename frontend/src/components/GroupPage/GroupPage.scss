@@ -1,49 +1,46 @@
-@import '../../App';
+@import "../../App";
 $group-size: 10px;
-.students-group{
+.students-group {
   display: flex;
   flex-direction: column;
   flex-wrap: wrap;
   align-items: center;
- .students{
-   color: #3f51b5 !important;
-   margin: -15px -8px;
-   font-size: 20px;
- }
+  .students {
+    color: #3f51b5 !important;
+    margin: -15px -8px;
+    font-size: 20px;
+  }
 }
-.link-href{
+.link-href {
   text-decoration: none;
   color: $black;
-  &:hover{
+  &:hover {
     color: $black;
   }
-
 }
 .group {
-
   &-wrapper {
     display: flex;
     flex-wrap: wrap;
     width: 100%;
 
-    @media (max-width: 850px) { 
+    @media (max-width: 850px) {
       margin: 10px auto;
       max-width: 100%;
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-  }
-
+    }
   }
 
   &-card {
     box-sizing: border-box;
-    height: 12*$group-size;;
-    width: 13*$group-size;;
+    height: 16 * $group-size;
+    width: 19 * $group-size;
 
     display: flex;
     flex-direction: column;
-    margin: $group-size ;
+    margin: $group-size;
 
     border-radius: $group-size/2;
     box-shadow: 0 2px 8px $shadow-box;
@@ -91,6 +88,4 @@ $group-size: 10px;
       color: $good-color;
     }
   }
-
 }
-

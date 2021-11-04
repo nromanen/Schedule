@@ -25,6 +25,7 @@ export const AddGroup = (props) => {
         submitting,
         setGroup,
         pristine,
+        invalid,
         group,
     } = props;
     const { t } = useTranslation('formElements');
@@ -70,7 +71,7 @@ export const AddGroup = (props) => {
                         variant="contained"
                         className="buttons-style "
                         color="primary"
-                        disabled={pristine || submitting}
+                        disabled={invalid || pristine || submitting}
                         type="submit"
                     >
                         {t(SAVE_BUTTON_LABEL)}

@@ -17,22 +17,23 @@ export const TableFooterComponent = (props) => {
     };
     return (
         <TableFooter>
-            <TablePagination
-                className="table-footer"
-                labelRowsPerPage={`${t(ROWS_PER_PAGE)}`}
-                rowsPerPageOptions={[5, 10, 25, { label: `${t(ALL_PAGE)}`, value: ALL_ROWS }]}
-                colSpan={3}
-                count={items.length}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                SelectProps={{
-                    inputProps: { 'aria-label': 'rows per page' },
-                    native: true,
-                }}
-                onPageChange={(_, newPage) => setPage(newPage)}
-                onRowsPerPageChange={onRowsPerPageChange}
-                ActionsComponent={RenderStudentTableActions}
-            />
+            <div className="table-footer">
+                <TablePagination
+                    labelRowsPerPage={`${t(ROWS_PER_PAGE)}`}
+                    rowsPerPageOptions={[5, 10, 25, { label: `${t(ALL_PAGE)}`, value: ALL_ROWS }]}
+                    colSpan={3}
+                    count={items.length}
+                    rowsPerPage={rowsPerPage}
+                    page={page}
+                    SelectProps={{
+                        inputProps: { 'aria-label': 'rows per page' },
+                        native: true,
+                    }}
+                    onPageChange={(_, newPage) => setPage(newPage)}
+                    onRowsPerPageChange={onRowsPerPageChange}
+                    ActionsComponent={RenderStudentTableActions}
+                />
+            </div>
         </TableFooter>
     );
 };

@@ -1,7 +1,7 @@
 .edit-cell{
   display: flex;
   flex-direction: row;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   align-items: center;
   align-content: center;
   margin: 0 20px;
@@ -20,4 +20,11 @@
   width: 20px;
   height: 20px;
   box-shadow: rgb(131, 148, 231) 0px 5px 10px;
+}
+
+.table-footer{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;  
 }

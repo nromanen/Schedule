@@ -7,7 +7,7 @@ import { withStyles } from '@material-ui/core';
 import { FaEdit } from 'react-icons/all';
 import { Delete } from '@material-ui/icons';
 import { Link } from 'react-router-dom';
-import '../../helper/renderStudentTable.scss';
+import './StudentTable.scss';
 import { getTeacherFullName } from '../../helper/renderTeacher';
 import {
     STUDENT_LINK,

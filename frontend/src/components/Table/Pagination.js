@@ -1,21 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
+import { useTheme } from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton';
 import FirstPageIcon from '@material-ui/icons/FirstPage';
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import LastPageIcon from '@material-ui/icons/LastPage';
-
-const useStyles1 = makeStyles((theme) => ({
-    root: {
-        flexShrink: 0,
-        marginLeft: theme.spacing(2.5),
-    },
-}));
+import './TableFooter.scss';
 
 export const RenderStudentTableActions = (props) => {
-    const classes = useStyles1();
     const theme = useTheme();
     const { count, page, rowsPerPage, onPageChange } = props;
 
@@ -36,7 +29,7 @@ export const RenderStudentTableActions = (props) => {
     };
 
     return (
-        <div className={classes.root}>
+        <div className="pagination">
             <IconButton
                 onClick={handleFirstPageButtonClick}
                 disabled={page === 0}

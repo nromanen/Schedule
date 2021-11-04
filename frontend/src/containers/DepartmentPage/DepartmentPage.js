@@ -73,7 +73,7 @@ const DepartmentPage = (props) => {
         : search(enabledDepartments, term, ['name']);
 
     const submitAddForm = (data) => {
-        return data.id ? createDepartmentService(data) : updateDepartmentService(data);
+        return data.id ? updateDepartmentService(data) : createDepartmentService(data);
     };
     const showConfirmDialog = (currentId, dialogType) => {
         setDepartmentId(currentId);

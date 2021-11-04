@@ -7,11 +7,11 @@ import { STUDENT_FORM } from '../constants/reduxForms';
 import { errorHandler, successHandler } from '../helper/handlerAxios';
 import i18n from '../i18n';
 import {
-    createStudent,
-    deleteStudent,
+    createStudentSuccess,
+    deleteStudentSuccess,
     selectStudentSuccess,
     showAllStudents,
-    updateStudent,
+    updateStudentSuccess,
 } from '../actions/students';
 import {
     BACK_END_SUCCESS_OPERATION,
@@ -25,7 +25,7 @@ export const createStudentService = (data) => {
     axios
         .post(STUDENT_URL, data)
         .then((response) => {
-            store.dispatch(createStudent(response.data));
+            store.dispatch(createStudentSuccess(response.data));
             resetFormHandler(STUDENT_FORM);
             successHandler(
                 i18n.t(BACK_END_SUCCESS_OPERATION, {
@@ -59,7 +59,7 @@ export const deleteStudentService = (student) => {
     axios
         .delete(`${STUDENT_URL}/${student.id}`)
         .then(() => {
-            store.dispatch(deleteStudent(student.id));
+            store.dispatch(deleteStudentSuccess(student.id));
             getAllStudentsByGroupId(student.group.id);
             successHandler(
                 i18n.t(BACK_END_SUCCESS_OPERATION, {
@@ -77,7 +77,7 @@ export const updateStudentService = (data) => {
     return axios
         .put(STUDENT_URL, data)
         .then((response) => {
-            store.dispatch(updateStudent(response.data));
+            store.dispatch(updateStudentSuccess(response.data));
             selectStudentService(null);
             getAllStudentsByGroupId(data.prevGroup.id);
             resetFormHandler(STUDENT_FORM);
