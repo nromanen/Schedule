@@ -95,4 +95,30 @@ public class GroupController {
         log.info("Enter into getDisabled");
         return ResponseEntity.status(HttpStatus.OK).body(groupMapper.groupsToGroupDTOs(groupService.getDisabled()));
     }
+
+
+    @GetMapping("/ordered")
+    @ApiOperation(value = "Get the list of all groups sorted by order")
+    public ResponseEntity<List<GroupDTO>> getAllBySortingOrder() {
+        log.trace("Entered getAllBySortingOrder");
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(groupMapper.groupsToGroupDTOs(groupService.getAllBySortingOrder()));
+    }
+
+    @PostMapping("/after/{id}")
+    @ApiOperation(value = "Create group ordered after another")
+    public ResponseEntity<GroupDTO> saveGroupAfter(@PathVariable("id") Long id, @RequestBody GroupDTO groupDTO) {
+        log.trace("Entered saveGroupAfter({},{})", id, groupDTO);
+        Group group = groupService.saveAfterOrder(groupMapper.groupDTOToGroup(groupDTO),id);
+        return ResponseEntity.status(HttpStatus.CREATED).body(groupMapper.groupToGroupDTO(group));
+    }
+
+    @PutMapping("/after/{id}")
+    @ApiOperation(value = "Update group order")
+    public ResponseEntity<GroupDTO> updateGroupOrder(@PathVariable("id") Long id, @RequestBody GroupDTO groupDTO) {
+        log.trace("Entered updateGroupOrder(({},{})", id, groupDTO);
+        Group group = groupService.updateGroupOrder(groupMapper.groupDTOToGroup(groupDTO), id);
+        return ResponseEntity.status(HttpStatus.OK).body(groupMapper.groupToGroupDTO(group));
+    }
 }

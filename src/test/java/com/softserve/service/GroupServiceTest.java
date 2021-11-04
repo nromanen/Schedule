@@ -236,4 +236,34 @@ public class GroupServiceTest {
 
         assertEquals(groupService.getGroupsByGroupIds(groupIds), groupList);
     }
+
+    @Test
+    public void getAllBySortingOrder() {
+        List<Group> expected = singletonList(group);
+        when(groupRepository.getAllBySortingOrder()).thenReturn(expected);
+
+        List<Group> actual = groupService.getAllBySortingOrder();
+
+        assertThat(actual).hasSameSizeAs(expected).isEqualTo(expected);
+        verify(groupRepository).getAllBySortingOrder();
+    }
+
+    @Test
+    public void saveAfterOrder() {
+        when(groupRepository.saveGroupAfterOrder(group, 1L)).thenReturn(group);
+
+        Group actual = groupRepository.saveGroupAfterOrder(group, 1L);
+        assertEquals(group, actual);
+        verify(groupRepository).saveGroupAfterOrder(group, 1L);
+    }
+
+    @Test
+    public void updateGroupOrder() {
+        when(groupRepository.updateGroupOrder(group, 1L)).thenReturn(group);
+
+        Group actual = groupRepository.updateGroupOrder(group, 1L);
+        assertEquals(group, actual);
+        verify(groupRepository).updateGroupOrder(group, 1L);
+    }
+
 }

@@ -79,6 +79,46 @@ public class GroupServiceImpl  implements GroupService {
     }
 
     /**
+     * The method is used to retrieve groups by set sorting order
+     *
+     * @return the list of groups sorted by set sorting order
+     */
+    @Transactional(readOnly = true)
+    @Override
+    public List<Group> getAllBySortingOrder() {
+        log.trace("Entered getAllBySortingOrder() method");
+        List<Group> groups = groupRepository.getAllBySortingOrder();
+        log.debug("Retrieved groups. Size: {}", groups.size());
+        return groups;
+    }
+
+    /**
+     * The method is used to save group after the specific group to get desired order
+     * @param group the group that must be saved
+     * @param afterId the id of the group after which must be saved the new one
+     * @return saved group with set order and id
+     */
+    @Transactional
+    @Override
+    public Group saveAfterOrder(Group group, Long afterId) {
+        log.trace("Entered getAllBySortingOrder({},{})", afterId, group);
+        return groupRepository.saveGroupAfterOrder(group, afterId);
+    }
+
+    /**
+     * Method updates group order position
+     * @param group group that will be replaced
+     * @param afterId id of the group after which will be placed
+     * @return group with new position
+     */
+    @Transactional
+    @Override
+    public Group updateGroupOrder(Group group, Long afterId) {
+        log.trace("Entered updateGroupOrder({}, {})", group, afterId);
+        return groupRepository.updateGroupOrder(group, afterId);
+    }
+
+    /**
      * Method saves new group to Repository
      *
      * @param object Group entity with info to be saved

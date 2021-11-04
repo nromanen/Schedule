@@ -6,6 +6,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Filter;
 import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
+
+import javax.persistence.TypedQuery;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,6 +47,26 @@ public class GroupRepositoryImpl extends BasicRepositoryImpl<Group, Long> implem
             + "FROM Lesson l "
             + "WHERE l.teacher.id = :id AND l.semester.defaultSemester = true";
 
+    private static final String GET_ALL_BY_ORDER_QUERY
+            = "SELECT g "
+            + "FROM Group g "
+            + "ORDER BY g.sortingOrder ASC, g.title ASC";
+
+    private static final String GET_MAX_SORTING_ORDER
+            = "SELECT max(g.sortingOrder) "
+            + "FROM Group g";
+
+    private static final String UPDATE_GROUP_OFFSET
+            = "UPDATE Group g "
+            + "SET g.sortingOrder = g.sortingOrder+1 "
+            + "WHERE g.sortingOrder >= :position";
+
+    public static final String GET_NEXT_POSITION
+            = "SELECT min(g.sortingOrder) "
+            + "FROM Group g "
+            + "WHERE g.sortingOrder > :position";
+
+
     private Session getSession(){
         Session session = sessionFactory.getCurrentSession();
         Filter filter = session.enableFilter("groupDisableFilter");
@@ -78,6 +100,89 @@ public class GroupRepositoryImpl extends BasicRepositoryImpl<Group, Long> implem
                 .setParameter("id", id)
                 .getResultList();
     }
+
+    /**
+     * The method is used to retrieve groups by set sorting order
+     *
+     * @return the list of groups sorted by set sorting order
+     */
+    @Override
+    public List<Group> getAllBySortingOrder() {
+        log.trace("Entered getAllBySortingOrder()");
+        return getSession()
+                .createQuery(GET_ALL_BY_ORDER_QUERY, Group.class)
+                .getResultList();
+    }
+
+
+    /**
+     * The method is used to save group after the specific group to get desired order
+     * @param group the group that must be saved
+     * @param afterId the id of the group after which must be saved the new one
+     * @return saved group with set order and id
+     */
+    @Override
+    public Group saveGroupAfterOrder(Group group, Long afterId) {
+        log.trace("Entered saveGroupAfterOrder({},{})", group, afterId);
+        Optional<Group> groupAfter = super.findById(afterId);
+        Double maxOrder = Optional.ofNullable(
+                    getSession().createQuery(GET_MAX_SORTING_ORDER, Double.class).getSingleResult()
+                ).orElse(0.0);
+        log.debug("Max order: {}", maxOrder );
+        if (groupAfter.isPresent()) {
+            Double order = Optional.ofNullable(groupAfter.get().getSortingOrder()).orElse(maxOrder);
+            group.setSortingOrder(order+1);
+            changeGroupOrderOffset(order+1);
+        } else {
+            group.setSortingOrder(maxOrder+1);
+        }
+        super.save(group);
+        return group;
+    }
+
+    /**
+     * Method updates group order position
+     * @param group group that will be replaced
+     * @param afterId id of the group after which will be placed
+     * @return group with new position
+     */
+    @Override
+    public Group updateGroupOrder(Group group, Long afterId) {
+        log.trace("Entered updateGroupOrder({}, {})", group, afterId);
+        Optional<Group> previousGroup = super.findById(afterId);
+        if (previousGroup.isPresent()) {
+            Double previousPosition = Optional.ofNullable(previousGroup.get().getSortingOrder())
+                    .orElse(0.0);
+            TypedQuery<Double> doubleTypedQuery = getSession().createQuery(GET_NEXT_POSITION, Double.class);
+            doubleTypedQuery.setParameter("position", previousPosition);
+            Double nextPosition =
+                    Optional.ofNullable(
+                        doubleTypedQuery.getSingleResult()
+                    ).orElse(previousPosition+2);
+            Double newPosition = ((nextPosition + previousPosition)/2);
+            if (newPosition - 1 < 0.01) {
+                newPosition = Optional.ofNullable(
+                        getSession().createQuery(GET_MAX_SORTING_ORDER, Double.class).getSingleResult()
+                ).orElse(0.0) + 1;
+            }
+            group.setSortingOrder(newPosition);
+        } else {
+            group.setSortingOrder(1.0);
+            changeGroupOrderOffset(0.0);
+        }
+        super.update(group);
+        return group;
+    }
+
+
+    private int changeGroupOrderOffset(Double order) {
+        TypedQuery<Group> groupTypedQuery = getSession().createQuery(UPDATE_GROUP_OFFSET);
+        groupTypedQuery.setParameter("position", order);
+        int updated = groupTypedQuery.executeUpdate();
+        log.debug("Updated order of {} groups", updated);
+        return updated;
+    }
+
 
     /**
      * The method used for getting by id entity with students
