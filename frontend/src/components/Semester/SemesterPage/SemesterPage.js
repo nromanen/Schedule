@@ -6,7 +6,6 @@ import { handleSnackbarCloseService } from '../../../services/snackbarService';
 import SemesterList from '../../../containers/SemesterPage/SemesterList';
 import SemesterCopyForm from '../../../containers/SemesterPage/SemesterCopyForm';
 import { MultiselectForGroups } from '../../../helper/MultiselectForGroups';
-import { successHandler } from '../../../helper/handlerAxios';
 import i18n from '../../../i18n';
 import CustomDialog from '../../../containers/Dialogs/CustomDialog';
 import { dialogTypes, dialogCloseButton } from '../../../constants/dialogs';
@@ -30,26 +29,17 @@ const SemesterPage = (props) => {
         getAllSemestersItems,
         getDisabledSemestersItems,
         setGroupsToSemester,
-        removeSemesterCard,
-        setDefaultSemesterById,
-        setOpenConfirmDialog,
-        isOpenConfirmDialog,
-        updateSemester,
-        semesterCopy,
         handleSemester,
         setOpenErrorSnackbar,
         setError,
         getAllGroupsItems,
+        setOpenSuccessSnackbar,
         // it doesnt work, need to finish implement archeved functionality
         // getArchivedSemestersItems,
-         // archivedSemesters,
+        // archivedSemesters,
     } = props;
 
-    const { t } = useTranslation('formElements');
-
-    const [confirmDialogType, setConfirmDialogType] = useState('');
     const [isOpenGroupsDialog, setIsOpenGroupsDialog] = useState(false);
-    const [isOpenSemesterCopyForm, setIsOpenSemesterCopyForm] = useState(false);
 
     const [term, setTerm] = useState('');
     const [semesterOptions, setSemesterOptions] = useState([]);
@@ -58,6 +48,11 @@ const SemesterPage = (props) => {
     const [semesterId, setSemesterId] = useState(null);
 
     const options = getGroupsOptionsForSelect(groups);
+    useEffect(() => {
+        getAllGroupsItems();
+        // it doesnt work, need to finish implement archived functionality
+        // getArchivedSemestersItems();
+    }, []);
 
     useEffect(() => {
         if (disabled) {
@@ -65,50 +60,9 @@ const SemesterPage = (props) => {
         } else {
             getAllSemestersItems();
         }
-        getAllGroupsItems();
         // it doesnt work, need to finish implement archived functionality
         // getArchivedSemestersItems();
     }, [disabled]);
-
-    const submitSemesterCopy = ({ toSemesterId }) => {
-        semesterCopy({
-            fromSemesterId: semesterId,
-            toSemesterId,
-        });
-        setIsOpenSemesterCopyForm(false);
-    };
-    const closeSemesterCopyForm = () => {
-        setIsOpenSemesterCopyForm(false);
-    };
-
-    const changeSemesterDisabledStatus = (currentSemesterId) => {
-        const foundSemester = semesters.find(
-            (semesterItem) => semesterItem.id === currentSemesterId,
-        );
-        const changeDisabledStatus = {
-            [dialogTypes.SET_VISIBILITY_ENABLED]: updateSemester({
-                ...foundSemester,
-                disable: false,
-            }),
-            [dialogTypes.SET_VISIBILITY_DISABLED]: updateSemester({
-                ...foundSemester,
-                disable: true,
-            }),
-        };
-        return changeDisabledStatus[confirmDialogType];
-    };
-
-    const acceptConfirmDialog = (currentSemesterId) => {
-        setOpenConfirmDialog(false);
-        const isDisabled = disabled;
-        if (confirmDialogType === dialogTypes.SET_DEFAULT) {
-            setDefaultSemesterById(currentSemesterId, isDisabled);
-        } else if (confirmDialogType !== dialogTypes.DELETE_CONFIRM) {
-            changeSemesterDisabledStatus(currentSemesterId);
-        } else {
-            removeSemesterCard(currentSemesterId);
-        }
-    };
     // it doesnt work, need to finish implement archeved functionality
     // const showArchivedHandler = () => {
     //     setArchived(!archived);
@@ -123,7 +77,7 @@ const SemesterPage = (props) => {
             : [];
         const finishGroups = [...semesterOptions];
         if (isEqual(beginGroups, finishGroups)) {
-            successHandler(
+            setOpenSuccessSnackbar(
                 i18n.t(GROUP_EXIST_IN_THIS_SEMESTER, {
                     cardType: i18n.t(COMMON_GROUP_TITLE),
                     actionType: i18n.t(EXIST_LABEL),
@@ -140,30 +94,6 @@ const SemesterPage = (props) => {
 
     return (
         <>
-            {isOpenConfirmDialog && (
-                <CustomDialog
-                    type={confirmDialogType}
-                    whatDelete="semester"
-                    open={isOpenConfirmDialog}
-                    handelConfirm={() => acceptConfirmDialog(semesterId)}
-                />
-            )}
-            {isOpenSemesterCopyForm && (
-                <CustomDialog
-                    title={t(SEMESTER_COPY_LABEL)}
-                    open={isOpenSemesterCopyForm}
-                    onClose={closeSemesterCopyForm}
-                    buttons={[dialogCloseButton(closeSemesterCopyForm)]}
-                >
-                    <SemesterCopyForm
-                        semesterId={semesterId}
-                        onSubmit={submitSemesterCopy}
-                        submitButtonLabel={t(COPY_LABEL)}
-                        semesters={semesters}
-                    />
-                </CustomDialog>
-            )}
-
             <div className="cards-container">
                 <SemesterSidebar
                     setTerm={setTerm}
@@ -184,12 +114,18 @@ const SemesterPage = (props) => {
                     archived={archived}
                     disabled={disabled}
                     setSemesterId={setSemesterId}
-                    setConfirmDialogType={setConfirmDialogType}
-                    setOpenSubDialog={setOpenConfirmDialog}
-                    setIsOpenSemesterCopyForm={setIsOpenSemesterCopyForm}
                     setOpenGroupsDialog={setIsOpenGroupsDialog}
                     semesters={semesters}
                     setSemesterOptions={setSemesterOptions}
+                    semesterId={semesterId}
+                />
+                <MultiselectForGroups
+                    open={isOpenGroupsDialog}
+                    options={options}
+                    value={semesterOptions}
+                    onChange={setSemesterOptions}
+                    onCancel={cancelMultiselect}
+                    onClose={onChangeGroups}
                 />
             </div>
             <SnackbarComponent
@@ -197,14 +133,6 @@ const SemesterPage = (props) => {
                 type={snackbarType}
                 isOpen={isSnackbarOpen}
                 handleSnackbarClose={handleSnackbarCloseService}
-            />
-            <MultiselectForGroups
-                open={isOpenGroupsDialog}
-                options={options}
-                value={semesterOptions}
-                onChange={setSemesterOptions}
-                onCancel={cancelMultiselect}
-                onClose={onChangeGroups}
             />
         </>
     );

@@ -5,16 +5,11 @@ import {
     getDisabledSemestersStart,
     getArchivedSemestersStart,
     setGroupsToSemesterStart,
-    deleteSemesterStart,
-    updateSemesterByIdStart,
-    updateSemesterStart,
-    setSemesterCopyStart,
     handleSemesterStart,
     setError,
 } from '../../actions/semesters';
 import { fetchEnabledGroupsStart } from '../../actions/groups';
-import { setOpenErrorSnackbar } from '../../actions/snackbar';
-import { setIsOpenConfirmDialog } from '../../actions/dialog';
+import { setOpenErrorSnackbar, setOpenSuccessSnackbar } from '../../actions/snackbar';
 
 const mapStateToProps = (state) => ({
     semesters: state.semesters.semesters,
@@ -32,16 +27,11 @@ const mapDispatchToProps = (dispatch) => ({
     getArchivedSemestersItems: () => dispatch(getArchivedSemestersStart()),
     setGroupsToSemester: (semesterId, groups) =>
         dispatch(setGroupsToSemesterStart(semesterId, groups)),
-    removeSemesterCard: (semesterId) => dispatch(deleteSemesterStart(semesterId)),
-    setDefaultSemesterById: (semesterId, isDisabled) =>
-        dispatch(updateSemesterByIdStart(semesterId, isDisabled)),
-    updateSemester: (item) => dispatch(updateSemesterStart(item)),
-    semesterCopy: (values) => dispatch(setSemesterCopyStart(values)),
-    setOpenConfirmDialog: (newState) => dispatch(setIsOpenConfirmDialog(newState)),
     handleSemester: (values) => dispatch(handleSemesterStart(values)),
     setOpenErrorSnackbar: (message) => dispatch(setOpenErrorSnackbar(message)),
     setError: (res) => dispatch(setError(res)),
     getAllGroupsItems: () => dispatch(fetchEnabledGroupsStart()),
+    setOpenSuccessSnackbar: (message) => dispatch(setOpenSuccessSnackbar(message)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SemesterPage);
