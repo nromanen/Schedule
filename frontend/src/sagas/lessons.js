@@ -4,7 +4,7 @@ import { call, put, takeLatest } from 'redux-saga/effects';
 import * as actionTypes from '../actions/actionsType';
 
 import {
-    createLessonCard,
+    createLesson,
     selectLessonCard,
     updateLessonCard,
     deleteLessonCard,
@@ -28,15 +28,14 @@ import {
     COPIED_LABEL,
 } from '../constants/translationLabels/serviceMessages';
 import { axiosCall } from '../services/axios';
+import { cardObjectHandler } from '../helper/cardObjectHandler';
 
-export function* createLesson({ payload }) {
-    const { info, isCopy } = payload;
+export function* createLessonCard(payload) {
+    const { info } = payload;
     try {
         const { data } = yield call(axiosCall, LESSON_URL, POST, info);
 
-        if (!isCopy) {
-            yield put(createLessonCard(data));
-        }
+        yield put(createLesson(data));
         const message = createMessage(BACK_END_SUCCESS_OPERATION, FORM_LESSON_LABEL, CREATED_LABEL);
 
         yield put(reset(LESSON_FORM));
@@ -46,7 +45,7 @@ export function* createLesson({ payload }) {
     }
 }
 
-export function* updateLesson({ payload }) {
+export function* updateLesson(payload) {
     const { info, groupId } = payload;
 
     try {
@@ -64,6 +63,21 @@ export function* updateLesson({ payload }) {
         yield put(selectLessonCard(null));
         yield put(reset(LESSON_FORM));
         yield put(setOpenSuccessSnackbar(message));
+    } catch (error) {
+        yield put(setOpenErrorSnackbar(createErrorMessage(error)));
+    }
+}
+
+export function* handleLesson({ values }) {
+    const { info, groupId, semester } = values;
+    try {
+        const cardObj = cardObjectHandler(info, groupId, semester);
+
+        if (cardObj.id) {
+            yield call(updateLesson, { info: cardObj, groupId });
+        } else {
+            yield call(createLessonCard, { info: cardObj });
+        }
     } catch (error) {
         yield put(setOpenErrorSnackbar(createErrorMessage(error)));
     }
@@ -129,6 +143,7 @@ export default function* watchLessons() {
     yield takeLatest(actionTypes.GET_LESSONS_CARDS_START, getLessonsByGroup);
     yield takeLatest(actionTypes.COPY_LESSON_START, copyLessonCard);
     yield takeLatest(actionTypes.DELETE_LESSON_CARD_START, removeLessonCard);
-    yield takeLatest(actionTypes.CREATE_LESSON_CARD_START, createLesson);
+    yield takeLatest(actionTypes.CREATE_LESSON_CARD_START, createLessonCard);
     yield takeLatest(actionTypes.UPDATE_LESSON_CARD_START, updateLesson);
+    yield takeLatest(actionTypes.HANDLE_LESSON_CARD_START, handleLesson);
 }

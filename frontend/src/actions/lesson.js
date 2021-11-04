@@ -1,13 +1,13 @@
 import * as actionTypes from './actionsType';
 
-export const createLessonCard = (result) => {
+export const createLesson = (result) => {
     return {
         type: actionTypes.CREATE_LESSON_CARD_SUCCESS,
         result,
     };
 };
 
-export const createLessonCardStart = (payload) => {
+export const createLessonStart = (payload) => {
     return {
         type: actionTypes.CREATE_LESSON_CARD_START,
         payload,
@@ -77,6 +77,13 @@ export const updateLessonCardStart = (payload) => {
     return {
         type: actionTypes.UPDATE_LESSON_CARD_START,
         payload,
+    };
+};
+
+export const handleLessonStart = (values) => {
+    return {
+        type: actionTypes.HANDLE_LESSON_CARD_START,
+        values,
     };
 };
 

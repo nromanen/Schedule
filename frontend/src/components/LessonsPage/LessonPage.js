@@ -9,10 +9,7 @@ import { dialogTypes } from '../../constants/dialogs';
 import { cardType } from '../../constants/cardType';
 import { COMMON_LESSON_SERVICE_IS_NOT_UNIQUE } from '../../constants/translationLabels/common';
 import { searchLessonsByTeacher } from '../../helper/search';
-import {
-    CopyLessonsFromSemesterService,
-    showAllSemestersService,
-} from '../../services/semesterService';
+import { showAllSemestersService } from '../../services/semesterService';
 import { checkUniqLesson } from '../../validation/storeValidation';
 import { cardObjectHandler } from '../../helper/cardObjectHandler';
 
@@ -41,13 +38,13 @@ const LessonPage = (props) => {
         deleteLessonCardStart,
         getLessonTypes,
         getLessonsByGroup,
-        createLessonCardStart,
-        updateLessonCardStart,
         selectLessonCard,
         setOpenConfirmDialog,
         isOpenConfirmDialog,
         setOpenErrorSnackbar,
         setUniqueError,
+        copyLessonsFromSemester,
+        handleLesson,
     } = props;
     const { t } = useTranslation('common');
     const [term, setTerm] = useState('');
@@ -72,7 +69,7 @@ const LessonPage = (props) => {
     }, []);
 
     const submitLessonForm = (card) => {
-        let cardObj = cardObjectHandler(card, groupId, currentSemester);
+        const cardObj = cardObjectHandler(card, groupId, currentSemester);
 
         if (!checkUniqLesson(lessons, cardObj)) {
             const message = t(COMMON_LESSON_SERVICE_IS_NOT_UNIQUE);
@@ -82,17 +79,7 @@ const LessonPage = (props) => {
             return;
         }
 
-        const lessonTeacher = teachers.find((teacher) => {
-            return card.teacher === teacher.id;
-        });
-
-        cardObj = { ...cardObj, teacher: lessonTeacher };
-
-        if (cardObj.id) {
-            updateLessonCardStart({ info: cardObj, groupId });
-        } else {
-            createLessonCardStart({ info: cardObj, isCopy: false });
-        }
+        handleLesson({ info: card, groupId, semester: currentSemester, les: lessons });
     };
 
     const showConfirmDialog = (lessonCardId) => {
@@ -100,9 +87,8 @@ const LessonPage = (props) => {
         setOpenConfirmDialog(true);
     };
 
-    const acceptConfirmDialog = (id) => {
+    const acceptConfirmDialog = () => {
         setOpenConfirmDialog(false);
-        if (!id) return;
         deleteLessonCardStart(lessonId);
     };
 
@@ -121,7 +107,7 @@ const LessonPage = (props) => {
     const submitCopySemester = (values) => {
         const toSemesterId = currentSemester.id;
         const fromSemesterId = +values.fromSemesterId;
-        CopyLessonsFromSemesterService({ ...values, toSemesterId, fromSemesterId });
+        copyLessonsFromSemester({ ...values, toSemesterId, fromSemesterId });
     };
 
     return (
@@ -140,7 +126,7 @@ const LessonPage = (props) => {
                 {isOpenConfirmDialog && (
                     <CustomDialog
                         type={dialogTypes.DELETE_CONFIRM}
-                        handelConfirm={() => acceptConfirmDialog(groupId)}
+                        handelConfirm={acceptConfirmDialog}
                         whatDelete={cardType.LESSON.toLowerCase()}
                         open={isOpenConfirmDialog}
                     />
@@ -148,7 +134,7 @@ const LessonPage = (props) => {
                 <Search setTerm={setTerm} />
             </Card>
             <div className="cards-container">
-                <section>
+                <section className="section">
                     <LessonForm
                         lessonTypes={lessonTypes}
                         isUniqueError={isUniqueError}

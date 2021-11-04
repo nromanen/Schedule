@@ -3,7 +3,7 @@ import '../../components/LessonsPage/LessonPage.scss';
 import LessonPage from '../../components/LessonsPage/LessonPage';
 import {
     copyLessonCard,
-    createLessonCardStart,
+    createLessonStart,
     deleteLessonCardStart,
     getLessonsByGroup,
     getLessonTypes,
@@ -13,6 +13,8 @@ import {
     updateLessonCardStart,
 } from '../../actions';
 import { setOpenErrorSnackbar } from '../../actions/snackbar';
+import { copyLessonsFromSemesterStart } from '../../actions/semesters';
+import { handleLessonStart } from '../../actions/lesson';
 
 const mapStateToProps = (state) => ({
     lessons: state.lesson.lessons,
@@ -32,13 +34,16 @@ const mapDispatchToProps = (dispatch) => ({
     getLessonTypes: () => dispatch(getLessonTypes()),
     updateLessonCardStart: ({ info, groupId }) =>
         dispatch(updateLessonCardStart({ info, groupId })),
-    createLessonCardStart: ({ info, isCopy }) => dispatch(createLessonCardStart({ info, isCopy })),
+    createLessonStart: ({ info, isCopy }) => dispatch(createLessonStart({ info, isCopy })),
     deleteLessonCardStart: (lessonId) => dispatch(deleteLessonCardStart(lessonId)),
     copyLessonCard: (group, lesson) => dispatch(copyLessonCard(group, lesson)),
     selectLessonCard: (lessonCardId) => dispatch(selectLessonCard(lessonCardId)),
     setOpenErrorSnackbar: (message) => dispatch(setOpenErrorSnackbar(message)),
     setUniqueError: (value) => dispatch(setUniqueError(value)),
     setOpenConfirmDialog: (newState) => dispatch(setIsOpenConfirmDialog(newState)),
+    copyLessonsFromSemester: ({ values, toSemesterId, fromSemesterId }) =>
+        dispatch(copyLessonsFromSemesterStart({ ...values, toSemesterId, fromSemesterId })),
+    handleLesson: (values, currentSemester) => dispatch(handleLessonStart(values, currentSemester)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(LessonPage);
