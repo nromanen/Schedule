@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import SemesterPage from '../../components/Semester/SemesterPage/SemesterPage';
+import SemesterPage from '../../components/Semester/SemesterPage';
 import {
     getAllSemestersStart,
     getDisabledSemestersStart,

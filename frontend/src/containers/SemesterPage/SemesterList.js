@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import SemesterList from '../../components/Semester/SemesterList';
+import SemesterList from '../../components/Semester/SemesterList/SemesterList';
 import {
     createArchivedSemesterStart,
     getArchivedSemesterStart,

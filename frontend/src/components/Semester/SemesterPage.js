@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import SnackbarComponent from '../../../share/Snackbar/SnackbarComponent';
-import { handleSnackbarCloseService } from '../../../services/snackbarService';
-import SemesterList from '../../../containers/SemesterPage/SemesterList';
-import { getGroupsOptionsForSelect } from '../../../utils/selectUtils';
-import SemesterSidebar from '../SemesterSidebar';
+import SnackbarComponent from '../../share/Snackbar/SnackbarComponent';
+import { handleSnackbarCloseService } from '../../services/snackbarService';
+import SemesterList from '../../containers/SemesterPage/SemesterList';
+import { getGroupsOptionsForSelect } from '../../utils/selectUtils';
+import SemesterSidebar from './SemesterSidebar';
 
 const SemesterPage = (props) => {
     const {
@@ -26,7 +26,7 @@ const SemesterPage = (props) => {
     const [term, setTerm] = useState('');
     const [disabled, setDisabled] = useState(false);
     const [archived, setArchived] = useState(false);
-    const [semesterId, setSemesterId] = useState(null);
+
 
     const options = getGroupsOptionsForSelect(groups);
     useEffect(() => {
@@ -70,8 +70,6 @@ const SemesterPage = (props) => {
                     term={term}
                     archived={archived}
                     disabled={disabled}
-                    setSemesterId={setSemesterId}
-                    semesterId={semesterId}
                     options={options}
                 />
             </div>

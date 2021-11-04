@@ -2,10 +2,10 @@ import React from 'react';
 import { Field } from 'redux-form';
 import { isEmpty } from 'lodash';
 import { useTranslation } from 'react-i18next';
-import SelectField from '../../../share/renderedFields/select';
+import SelectField from '../../../../share/renderedFields/select';
 import './SemesterCopyForm.scss';
-import { required } from '../../../validation/validateFields';
-import { FORM_SEMESTER_LABEL } from '../../../constants/translationLabels/formElements';
+import { required } from '../../../../validation/validateFields';
+import { FORM_SEMESTER_LABEL } from '../../../../constants/translationLabels/formElements';
 
 const SemesterSelect = (props) => {
     const { t } = useTranslation('common');
