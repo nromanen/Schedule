@@ -13,7 +13,10 @@ import {
     FORM_GROUPED_LABEL,
     FORM_HOURS_LABEL,
 } from '../../../constants/translationLabels/formElements';
-import { COMMON_EDIT, COMMON_DELETE_HOVER_TITLE } from '../../../constants/translationLabels/common';
+import {
+    COMMON_EDIT,
+    COMMON_DELETE_HOVER_TITLE,
+} from '../../../constants/translationLabels/common';
 import { actionType } from '../../../constants/actionTypes';
 import { getTeacherName } from '../../../helper/renderTeacher';
 

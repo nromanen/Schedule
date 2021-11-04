@@ -6,7 +6,7 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import DragDropCard from '../DragDropCard';
-import { divideLessonsByOneHourLesson } from '../../../helper/editSchedule';
+import { divideLessonsByOneHourLesson } from '../../../helper/schedule';
 import { FORM_GROUP_LABEL } from '../../../constants/translationLabels/formElements';
 import {
     CLEAR_SCHEDULE_LABEL,
