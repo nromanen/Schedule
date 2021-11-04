@@ -182,7 +182,6 @@ export function* setDefaultSemesterById({ semesterId, isDisabled }) {
 }
 
 export function* toggleSemesterVisibility({ semester }) {
-    console.log(semester);
     try {
         yield call(axiosCall, SEMESTERS_URL, 'PUT', semester);
         yield put(deleteSemester(semester.id));

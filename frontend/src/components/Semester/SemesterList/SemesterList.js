@@ -149,16 +149,11 @@ const SemesterList = (props) => {
                     const semDays = semesterItem.semester_days.map((day) =>
                         t(`common:day_of_week_${day}`),
                     );
-                    const groups = get(semesterItem, 'semester_groups')
-                        ? getGroupsOptionsForSelect(semesterItem.semester_groups)
-                        : [];
-
                     return (
                         <SemesterCard
                             key={semesterItem.id}
                             semesterItem={semesterItem}
                             semDays={semDays}
-                            groups={groups}
                             disabled={disabled}
                             archived={archived}
                             selectSemester={selectSemester}

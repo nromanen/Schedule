@@ -21,6 +21,7 @@ import {
     COMMON_MAKE_ARCHIVE,
     COMMON_SET_ENABLED,
 } from '../../../constants/translationLabels/common';
+import { getGroupsOptionsForSelect } from '../../../utils/selectUtils';
 
 const SemesterCard = (props) => {
     const {
@@ -34,7 +35,6 @@ const SemesterCard = (props) => {
         setSemesterGroupsOptions,
         setIsOpenGroupsDialog,
         semDays,
-        groups,
         semesterItem,
     } = props;
     const { t } = useTranslation('formElements');
@@ -108,11 +108,15 @@ const SemesterCard = (props) => {
                     onClick={() => showConfirmDialog(semesterItem.id, dialogTypes.DELETE_CONFIRM)}
                 />
 
-                <MdDonutSmall
-                    className={`svg-btn edit-btn ${semesterItem.defaultSemester ? 'default' : ''}`}
-                    title={t(SET_DEFAULT_TITLE)}
-                    onClick={() => showConfirmDialog(semesterItem.id, dialogTypes.SET_DEFAULT)}
-                />
+                {!(disabled || archived) && (
+                    <MdDonutSmall
+                        className={`svg-btn edit-btn ${
+                            semesterItem.defaultSemester ? 'default' : ''
+                        }`}
+                        title={t(SET_DEFAULT_TITLE)}
+                        onClick={() => showConfirmDialog(semesterItem.id, dialogTypes.SET_DEFAULT)}
+                    />
+                )}
             </div>
 
             <p className="semester-card__description">
@@ -138,15 +142,19 @@ const SemesterCard = (props) => {
                     .join(', ')}
             </p>
 
-            <FaUsers
-                title={t(FORM_SHOW_GROUPS)}
-                className="svg-btn copy-btn  semester-groups"
-                onClick={() => {
-                    setSemesterId(semesterItem.id);
-                    setSemesterGroupsOptions(groups);
-                    setIsOpenGroupsDialog(true);
-                }}
-            />
+            {!(disabled || archived) && (
+                <FaUsers
+                    title={t(FORM_SHOW_GROUPS)}
+                    className="svg-btn copy-btn  semester-groups"
+                    onClick={() => {
+                        setSemesterId(semesterItem.id);
+                        setSemesterGroupsOptions(
+                            getGroupsOptionsForSelect(semesterItem.semester_groups),
+                        );
+                        setIsOpenGroupsDialog(true);
+                    }}
+                />
+            )}
         </Card>
     );
 };
