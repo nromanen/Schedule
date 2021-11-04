@@ -11,22 +11,17 @@ import Typography from '@material-ui/core/Typography';
 
 import Card from '../../../share/Card/Card';
 import renderTextField from '../../../share/renderedFields/input';
-import SelectField from '../../../share/renderedFields/select';
 import renderCheckboxField from '../../../share/renderedFields/checkbox';
 
 import { lessThanZero, maxLengthValue, required } from '../../../validation/validateFields';
 import { handleTeacherInfo } from '../../../helper/renderTeacher';
-import { setValueToSubjectForSiteHandler } from '../../../helper/reduxFormHelper';
 import { getClearOrCancelTitle, setDisableButton } from '../../../helper/disableComponent';
 import { selectGroupService } from '../../../services/groupService';
 import { RenderMultiselect } from '../../../share/renderedFields/renderMultiselect';
 import {
-    EDIT_TITLE,
-    CREATE_TITLE,
     SAVE_BUTTON_LABEL,
     GROUP_LABEL,
     SUBJECT_LABEL,
-    LESSON_LABEL,
     NOT_SELECTED_LABEL,
     GROUPS_LABEL,
     COPY_GROUPS_LABEL,
@@ -36,10 +31,12 @@ import {
     FORM_GROUPED_LABEL,
     HOURS_LABEL,
     TEACHER_LABEL,
+    TYPE_LABEL,
 } from '../../../constants/translationLabels/formElements';
-import { TYPE_LABEL } from '../../../constants/translationLabels/common';
 
 import './LessonForm.scss';
+import { renderAutocompleteField } from '../../../helper/renderAutocompleteField';
+import LessonLabelForm from './LessonLabelForm';
 
 const LessonForm = (props) => {
     const { t } = useTranslation('formElements');
@@ -62,10 +59,9 @@ const LessonForm = (props) => {
         selectLessonCard,
         setUniqueError,
     } = props;
+    const [checked, setChecked] = React.useState(false);
 
     const lessonId = lesson.id;
-
-    const [checked, setChecked] = React.useState(false);
 
     const initializeFormHandler = (lessonData) => {
         const {
@@ -78,10 +74,11 @@ const LessonForm = (props) => {
             subjectForSite,
             grouped,
         } = lessonData;
+
         initialize({
             lessonCardId,
-            teacher: teacher.id,
-            subject: subject.id,
+            teacher,
+            subject,
             type,
             hours,
             linkToMeeting,
@@ -89,6 +86,7 @@ const LessonForm = (props) => {
             grouped,
             groups: [group],
         });
+
         setChecked(lessonData.grouped);
     };
     const handleChange = (event) => setChecked(event.target.checked);
@@ -102,82 +100,72 @@ const LessonForm = (props) => {
         if (lessonId) {
             initializeFormHandler(lesson);
         } else {
-            initialize();
+            initialize({ groups: [group] });
         }
-    }, [lessonId]);
+    }, [lessonId, group]);
+
+    const valid = !isUniqueError ? { validate: [required] } : { error: isUniqueError };
 
     return (
         <Card additionClassName="form-card">
-            {groupId && (
-                <h2 className="form-title under-line">
-                    {lessonId ? t(EDIT_TITLE) : t(CREATE_TITLE)}
-                    {t(LESSON_LABEL)}
-                </h2>
-            )}
+            <LessonLabelForm />
             {groupId ? (
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={handleSubmit} className="lesson-form">
                     <Field
-                        id="teacher"
                         name="teacher"
-                        className="form-field"
-                        component={SelectField}
+                        component={renderAutocompleteField}
                         label={t(TEACHER_LABEL)}
-                        {...(!isUniqueError ? { validate: [required] } : { error: isUniqueError })}
+                        type="text"
+                        getItemTitle={handleTeacherInfo}
+                        values={teachers}
+                        {...valid}
                         onChange={() => setUniqueError(false)}
-                    >
-                        <option />
-                        {teachers.map((teacher) => (
-                            <option key={teacher.id} value={teacher.id}>
-                                {handleTeacherInfo(teacher)}
-                            </option>
-                        ))}
-                    </Field>
+                        getOptionLabel={(option) => (option ? handleTeacherInfo(option) : '')}
+                    />
                     <Field
-                        id="subject"
                         name="subject"
-                        className="form-field"
-                        component={SelectField}
+                        component={renderAutocompleteField}
                         label={t(SUBJECT_LABEL)}
-                        {...(!isUniqueError ? { validate: [required] } : { error: isUniqueError })}
-                        onChange={(event) => {
-                            setValueToSubjectForSiteHandler(subjects, event.target.value, change);
+                        type="text"
+                        getItemTitle={(sub) => {
+                            return sub.name;
+                        }}
+                        values={subjects}
+                        {...valid}
+                        onChange={(subject) => {
+                            change('subjectForSite', subject?.name ?? '');
                             setUniqueError(false);
                         }}
-                    >
-                        <option value="" />
-                        {subjects.map((subject) => (
-                            <option key={subject.id} value={subject.id}>
-                                {subject.name}
-                            </option>
-                        ))}
-                    </Field>
+                        getOptionLabel={(option) =>
+                            subjects.find((subject) => subject.id === option.id)?.name ?? ''
+                        }
+                    />
                     <div className="form-fields-container">
                         <Field
-                            id="type"
                             name="type"
-                            className="form-field"
-                            component={SelectField}
+                            component={renderAutocompleteField}
                             label={t(TYPE_LABEL)}
-                            {...(!isUniqueError
-                                ? { validate: [required] }
-                                : { error: isUniqueError })}
+                            getItemTitle={(type) => {
+                                return t(`formElements:lesson_type_${type.toLowerCase()}_label`);
+                            }}
+                            type="text"
+                            values={lessonTypes}
+                            {...valid}
                             onChange={() => {
                                 setUniqueError(false);
                             }}
-                        >
-                            <option value="" />
-                            {lessonTypes.map((lessonType) => (
-                                <option value={lessonType} key={lessonType}>
-                                    {t(
-                                        `formElements:lesson_type_${lessonType.toLowerCase()}_label`,
-                                    )}
-                                </option>
-                            ))}
-                        </Field>
+                            getOptionLabel={(lessonType) =>
+                                lessonType
+                                    ? t(
+                                          `formElements:lesson_type_${lessonType.toLowerCase()}_label`,
+                                      )
+                                    : ''
+                            }
+                        />
+
                         <Field
                             id="hours"
                             name="hours"
-                            className="form-field"
                             type="number"
                             component={renderTextField}
                             label={t(HOURS_LABEL)}
@@ -186,7 +174,6 @@ const LessonForm = (props) => {
                         <Field
                             id="grouped"
                             name="grouped"
-                            className="form-field"
                             label={t(FORM_GROUPED_LABEL)}
                             labelPlacement="end"
                             defaultValue={checked}
@@ -199,7 +186,6 @@ const LessonForm = (props) => {
                     <Field
                         id="linkToMeeting"
                         name="linkToMeeting"
-                        className="form-field"
                         rowsMax="1"
                         margin="normal"
                         component={renderTextField}
@@ -211,7 +197,6 @@ const LessonForm = (props) => {
                     <Field
                         id="subjectForSite"
                         name="subjectForSite"
-                        className="form-field"
                         multiline
                         rowsMax="1"
                         margin="normal"
@@ -239,6 +224,7 @@ const LessonForm = (props) => {
                                             name="groups"
                                             component={RenderMultiselect}
                                             options={groups}
+                                            value={[group]}
                                             displayValue="title"
                                             className="form-control mt-2"
                                             placeholder={t(GROUPS_LABEL)}
