@@ -4,11 +4,8 @@ import { useTranslation } from 'react-i18next';
 import React, { useEffect, Fragment } from 'react';
 import { CircularProgress } from '@material-ui/core';
 import Card from '../../share/Card/Card';
-import { navigation } from '../../constants/navigation';
 import { setLoadingService } from '../../services/loadingService';
-import { getScheduleItemsService } from '../../services/scheduleService';
 import { getClassScheduleListService } from '../../services/classService';
-import NavigationPage from '../../components/Navigation/NavigationPage';
 
 import {
     WEEK_ODD_TITLE,
@@ -16,14 +13,15 @@ import {
     BUSY_ROOMS_HEADING,
 } from '../../constants/translationLabels/common';
 import WeekRoomInfo from '../../components/WeekRoomInfo/WeekRoomInfo';
+import { getAllScheduleItemsStart } from '../../actions/schedule';
 
 const BusyRooms = (props) => {
     const { t } = useTranslation('common');
     const busyRooms = props.busyRooms[0];
-    const { currentSemester, isLoading } = props;
+    const { currentSemester, isLoading, getAllScheduleItems } = props;
 
     useEffect(() => {
-        getScheduleItemsService();
+        getAllScheduleItems();
         getClassScheduleListService();
         setLoadingService(true);
     }, []);
@@ -75,7 +73,6 @@ const BusyRooms = (props) => {
                 <>
                     {busyRoomsLength > 0 ? (
                         <>
-                            <NavigationPage val={navigation.BUSY_ROOMS} />
                             <h2 className="busy-heading">{t(BUSY_ROOMS_HEADING)}</h2>
                             <section className="view-rooms">
                                 {busyRooms.map((busyRoom) => (
@@ -112,4 +109,8 @@ const mapStateToProps = (state) => ({
     currentSemester: state.schedule.currentSemester,
 });
 
-export default connect(mapStateToProps, {})(BusyRooms);
+const mapDispatchToProps = (dispatch) => ({
+    getAllScheduleItems: () => dispatch(getAllScheduleItemsStart()),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(BusyRooms);

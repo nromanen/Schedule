@@ -5,75 +5,70 @@ import Card from '../../share/Card/Card';
 import FreeRoomForm from '../../components/FreeRoomForm/freeRoomForm';
 import { clearFreeRoomsService, showFreeRoomsService } from '../../services/freeRoomsService';
 import { getClassScheduleListService } from '../../services/classService';
-import { CustomDialog } from '../../share/DialogWindows';
+import CustomDialog from '../Dialogs/CustomDialog';
+import { dialogCloseButton } from '../../constants/dialogs';
 
 import './freeRooms.scss';
 import { ROOM_LABEL, FIND_FREE_ROOM } from '../../constants/translationLabels/formElements';
 import { TYPE_LABEL } from '../../constants/translationLabels/common';
 
 const FreeRooms = (props) => {
-    const { t } = useTranslation('formElements');
-
-    const [open, setOpen] = useState(false);
-
     const { classScheduler } = props;
+    const { t } = useTranslation('formElements');
+    const [isOpenFreeRoomDialog, setIsOpenFreeRoomDialog] = useState(false);
 
-    useEffect(() => getClassScheduleListService(), []);
+    useEffect(() => {
+        getClassScheduleListService();
+    }, []);
 
-    const handleClickOpen = () => {
-        setOpen(true);
+    const handleIsOpenFreeRoomDialog = () => {
+        setIsOpenFreeRoomDialog((prev) => !prev);
     };
-
-    const handleClose = () => {
-        setOpen(false);
-    };
-
     const submit = (values) => {
         showFreeRoomsService(values);
     };
 
     return (
         <>
-            <span className="navLinks" onClick={handleClickOpen} aria-hidden="true">
+            <span className="navLinks" onClick={handleIsOpenFreeRoomDialog} aria-hidden="true">
                 {t(FIND_FREE_ROOM)}
             </span>
-
-            <CustomDialog
-                title=""
-                open={open}
-                onClose={handleClose}
-                maxWidth="lg"
-                aria-labelledby="form-dialog-title"
-            >
-                <div className="cards-container ">
-                    <aside className="free-rooms__panel">
-                        <Card additionClassName="free-rooms-wrapper freeRoomCard">
+            {isOpenFreeRoomDialog && (
+                <CustomDialog
+                    title={t(FIND_FREE_ROOM)}
+                    open={isOpenFreeRoomDialog}
+                    onClose={handleIsOpenFreeRoomDialog}
+                    buttons={[dialogCloseButton(handleIsOpenFreeRoomDialog)]}
+                    maxWidth="lg"
+                    aria-labelledby="form-dialog-title"
+                >
+                    <div className="cards-container ">
+                        <aside className="free-rooms__panel">
                             <div className="freeRoomForms">
-                                <h2 id="form-dialog-title">{t(FIND_FREE_ROOM)}</h2>
                                 <FreeRoomForm
                                     classScheduler={classScheduler}
                                     onReset={clearFreeRoomsService}
                                     onSubmit={submit}
                                 />
                             </div>
-                        </Card>
-                    </aside>
-                    <section className="container-flex-wrap wrapper">
-                        {props.freeRooms.map((freeRoom) => (
-                            <Card key={freeRoom.id} className="container">
-                                <div className="freeRoomCard">
-                                    <span> {`${t(ROOM_LABEL)}:`} </span>
-                                    <h2 className="room-card__number">{freeRoom.name}</h2>
-                                    <span>{`${t(TYPE_LABEL)}:`}</span>
-                                    <h2 className="room-card__number">
-                                        {freeRoom.type.description}
-                                    </h2>
-                                </div>
-                            </Card>
-                        ))}
-                    </section>
-                </div>
-            </CustomDialog>
+                        </aside>
+                        <section className="container-flex-wrap wrapper">
+                            {props.freeRooms.map((freeRoom) => (
+                                <Card key={freeRoom.id} className="container">
+                                    <div className="freeRoomCard">
+                                        <span> {`${t(ROOM_LABEL)}:`} </span>
+                                        <h2 className="room-card__number">{freeRoom.name}</h2>
+                                        <span>{`${t(TYPE_LABEL)}:`}</span>
+                                        <h2 className="room-card__number">
+                                            {freeRoom.type.description}
+                                        </h2>
+                                    </div>
+                                </Card>
+                            ))}
+                        </section>
+                    </div>
+                </CustomDialog>
+            )}
         </>
     );
 };
@@ -82,4 +77,4 @@ const mapStateToProps = (state) => ({
     freeRooms: state.freeRooms.freeRooms,
 });
 
-export default connect(mapStateToProps)(FreeRooms);
+export default connect(mapStateToProps, null)(FreeRooms);

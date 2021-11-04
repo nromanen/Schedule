@@ -1,17 +1,16 @@
 import React, { useEffect, useState } from 'react';
 
 import PropTypes from 'prop-types';
-
-import Button from '@material-ui/core/Button';
-
 import Select from 'react-select';
 import { isEmpty } from 'lodash';
 import i18n from '../../../i18n';
 
 import { updateStudentService } from '../../../services/studentService';
 import { successHandler } from '../../../helper/handlerAxios';
-import CustomDialog from '../CustomDialog';
+import CustomDialog from '../../../containers/Dialogs/CustomDialog';
 import { EXIST_LABEL } from '../../../constants/translationLabels/serviceMessages';
+import { COMMON_MOVE_TO_GROUP_TITLE } from '../../../constants/translationLabels/common';
+import { dialogCloseButton, dialogMoveToGroupButton } from '../../../constants/dialogs';
 
 const MovingGroupsDialog = (props) => {
     const { onClose, open, checkBoxStudents, setShowStudentList, groups, group } = props;
@@ -77,38 +76,21 @@ const MovingGroupsDialog = (props) => {
     };
     return (
         <CustomDialog
-            title="Moving to group"
+            title={i18n.t(COMMON_MOVE_TO_GROUP_TITLE)}
+            className="select-dialog"
             onClose={onClose}
             open={open}
-            buttons={
-                <>
-                    <Button
-                        variant="contained"
-                        onClick={handleSubmitGroupStudents}
-                        color="primary"
-                        title={i18n.t('move_to_group_title')}
-                    >
-                        {i18n.t('common:move_to_group_title')}
-                    </Button>
-                    <Button
-                        variant="contained"
-                        onClick={clearSelection}
-                        color="primary"
-                        title={i18n.t('cancel_title')}
-                    >
-                        {i18n.t('cancel_title')}
-                    </Button>
-                </>
-            }
+            buttons={[
+                dialogMoveToGroupButton(handleSubmitGroupStudents),
+                dialogCloseButton(clearSelection),
+            ]}
         >
-            <h6>
-                <Select
-                    className="group-select"
-                    defaultValue={defaultGroup}
-                    options={groupsOption}
-                    onChange={setCurrentGroupOption}
-                />
-            </h6>
+            <Select
+                classNamePrefix="react-select"
+                defaultValue={defaultGroup}
+                options={groupsOption}
+                onChange={setCurrentGroupOption}
+            />
         </CustomDialog>
     );
 };

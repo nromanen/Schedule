@@ -1,4 +1,6 @@
-@import './AppConstants';
+@import './styles/colors.scss';
+@import './styles/fonts.scss';
+@import './styles/variables.scss';
 
 @mixin flexWrap {
   display: flex;
@@ -228,3 +230,7 @@ body {
   margin-right: 25px;
 }
 
+.MuiCircularProgress-root.loading-circle{
+  margin: 10px;
+  color: $blue;
+}

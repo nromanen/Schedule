@@ -9,27 +9,19 @@ import { GiSightDisabled, IoMdEye } from 'react-icons/all';
 import i18n from 'i18next';
 import Card from '../../share/Card/Card';
 
-import { CustomDialog } from '../../share/DialogWindows';
+import CustomDialog from '../Dialogs/CustomDialog';
 import { dialogTypes } from '../../constants/dialogs';
 import { cardType } from '../../constants/cardType';
 import { search } from '../../helper/search';
 import SearchPanel from '../../share/SearchPanel/SearchPanel';
 import NotFound from '../../share/NotFound/NotFound';
 import { MultiSelect } from '../../helper/multiselect';
-import NavigationPage from '../../components/Navigation/NavigationPage';
-import { navigation, navigationNames } from '../../constants/navigation';
-import { showAllSemestersService } from '../../services/semesterService';
 import { getPublicClassScheduleListService } from '../../services/classService';
 import { getFirstLetter, getTeacherFullName } from '../../helper/renderTeacher';
 import AddTeacherForm from '../../components/AddTeacherForm/AddTeacherForm';
 import { clearDepartment, getAllDepartmentsService } from '../../services/departmentService';
+import { setIsOpenConfirmDialog } from '../../actions/dialog';
 import { getShortTitle } from '../../helper/shortTitle';
-import {
-    getCurrentSemesterService,
-    getDefaultSemesterService,
-    sendTeachersScheduleService,
-    showAllPublicSemestersService,
-} from '../../services/scheduleService';
 import {
     getDisabledTeachersService,
     handleTeacherService,
@@ -48,6 +40,13 @@ import {
     SEND_SCHEDULE_FOR_TEACHER,
     TEACHER_DEPARTMENT,
 } from '../../constants/translationLabels/common';
+import { getAllSemestersStart } from '../../actions/semesters';
+import {
+    getAllPublicSemestersStart,
+    getCurrentSemesterRequsted,
+    getDefaultSemesterRequsted,
+    sendTeacherScheduleStart,
+} from '../../actions/schedule';
 
 const TeacherList = (props) => {
     const { t } = useTranslation('common');
@@ -59,24 +58,30 @@ const TeacherList = (props) => {
         departments,
         department,
         semesters,
+        getAllSemestersItems,
+        setOpenConfirmDialog,
+        isOpenConfirmDialog,
+        getCurrentSemester,
+        getDefaultSemester,
+        getAllPublicSemesters,
+        sendTeacherSchedule,
     } = props;
     const [term, setTerm] = useState('');
     const [isDisabled, setIsDisabled] = useState(false);
     const [selected, setSelected] = useState([]);
     const [teacherId, setTeacherId] = useState(-1);
-    const [openSelect, setOpenSelect] = useState(false);
+    const [isOpenMultiSelectDialog, setIsOpenMultiSelectDialog] = useState(false);
     const [selectedSemester, setSelectedSemester] = useState('');
-    const [openSubDialog, setOpenSubDialog] = useState(false);
-    const [subDialogType, setSubDialogType] = useState('');
+    const [confirmDialogType, setConfirmDialogType] = useState('');
 
     useEffect(() => {
+        getCurrentSemester();
+        getDefaultSemester();
         showAllTeachersService();
-        showAllSemestersService();
+        getAllSemestersItems();
         getAllDepartmentsService();
-        getCurrentSemesterService();
-        getDefaultSemesterService();
         getDisabledTeachersService();
-        showAllPublicSemestersService();
+        getAllPublicSemesters();
         getPublicClassScheduleListService();
     }, []);
 
@@ -125,24 +130,24 @@ const TeacherList = (props) => {
             [dialogTypes.SET_VISIBILITY_ENABLED]: setEnabledTeachersService(teacher),
             [dialogTypes.SET_VISIBILITY_DISABLED]: setDisabledTeachersService(teacher),
         };
-        return changeDisabledStatus[subDialogType];
+        return changeDisabledStatus[confirmDialogType];
     };
     const showConfirmDialog = (id, dialogType) => {
         setTeacherId(id);
-        setSubDialogType(dialogType);
-        setOpenSubDialog(true);
+        setConfirmDialogType(dialogType);
+        setOpenConfirmDialog(true);
     };
     const acceptConfirmDialog = (id) => {
-        setOpenSubDialog(false);
+        setOpenConfirmDialog(false);
         if (!id) return;
-        if (subDialogType !== dialogTypes.DELETE_CONFIRM) {
+        if (confirmDialogType !== dialogTypes.DELETE_CONFIRM) {
             setEnabledDisabledDepartment(id);
         } else {
             removeTeacherCardService(id);
         }
     };
     const closeSelectionDialog = () => {
-        setOpenSelect(false);
+        setIsOpenMultiSelectDialog(false);
     };
     const clearSelection = () => {
         setSelected([]);
@@ -159,7 +164,7 @@ const TeacherList = (props) => {
         const semesterId = selectedSemester === '' && defaultSemester.id;
         const { language } = i18n;
         const data = { semesterId, teachersId, language };
-        sendTeachersScheduleService(data);
+        sendTeacherSchedule(data);
         clearSelection();
     };
     const isChosenSelection = () => {
@@ -176,115 +181,108 @@ const TeacherList = (props) => {
         };
     };
     return (
-        <>
-            <NavigationPage name={navigationNames.TEACHER_LIST} val={navigation.TEACHERS} />
-            <div className="cards-container">
-                <CustomDialog
-                    type={subDialogType}
-                    cardId={teacherId}
-                    whatDelete={cardType.TEACHER}
-                    open={openSubDialog}
-                    onClose={acceptConfirmDialog}
-                />
+        <div className="cards-container">
+            <CustomDialog
+                type={confirmDialogType}
+                whatDelete={cardType.TEACHER}
+                open={isOpenConfirmDialog}
+                handelConfirm={() => acceptConfirmDialog(teacherId)}
+            />
 
-                <aside className="form-with-search-panel">
-                    <SearchPanel SearchChange={SearchChange} showDisabled={changeDisable} />
-                    <Button
-                        className="send-button"
-                        variant="contained"
-                        color="primary"
-                        onClick={() => {
-                            setOpenSelect(true);
-                        }}
-                    >
-                        {t(SEND_SCHEDULE_FOR_TEACHER)}
-                    </Button>
-                    <>
-                        <MultiSelect
-                            open={openSelect}
-                            options={options}
-                            value={selected}
-                            onChange={setSelected}
-                            onCancel={cancelSelection}
-                            onSentTeachers={sendTeachers}
-                            isEnabledSentBtn={isChosenSelection()}
-                            semesters={semesterOptions}
-                            defaultSemester={parseDefaultSemester()}
-                            onChangeSemesterValue={setSelectedSemester}
-                        />
-                    </>
+            <aside className="form-with-search-panel">
+                <SearchPanel SearchChange={SearchChange} showDisabled={changeDisable} />
+                <Button
+                    className="send-button"
+                    variant="contained"
+                    color="primary"
+                    onClick={() => {
+                        setIsOpenMultiSelectDialog(true);
+                    }}
+                >
+                    {t(SEND_SCHEDULE_FOR_TEACHER)}
+                </Button>
+                {isOpenMultiSelectDialog && (
+                    <MultiSelect
+                        open={isOpenMultiSelectDialog}
+                        options={options}
+                        value={selected}
+                        onChange={setSelected}
+                        onCancel={cancelSelection}
+                        onSentTeachers={sendTeachers}
+                        isEnabledSentBtn={isChosenSelection()}
+                        semesters={semesterOptions}
+                        defaultSemester={parseDefaultSemester()}
+                        onChangeSemesterValue={setSelectedSemester}
+                    />
+                )}
 
-                    {!isDisabled && (
-                        <AddTeacherForm
-                            departments={departmentOptions}
-                            teachers={enabledTeachers}
-                            onSubmit={teacherSubmit}
-                            onSetSelectedCard={selectTeacherCardService}
-                        />
-                    )}
-                </aside>
+                {!isDisabled && (
+                    <AddTeacherForm
+                        departments={departmentOptions}
+                        teachers={enabledTeachers}
+                        onSubmit={teacherSubmit}
+                        onSetSelectedCard={selectTeacherCardService}
+                    />
+                )}
+            </aside>
 
-                <section className="container-flex-wrap">
-                    {visibleItems.length === 0 && <NotFound name={t(FORM_TEACHER_A_LABEL)} />}
-                    {visibleItems.map((teacherItem) => (
-                        <Card key={teacherItem.id} additionClassName="teacher-card done-card">
-                            <div className="cards-btns">
-                                {!isDisabled ? (
-                                    <>
-                                        <GiSightDisabled
-                                            className="svg-btn copy-btn"
-                                            title={t(COMMON_SET_DISABLED)}
-                                            onClick={() => {
-                                                showConfirmDialog(
-                                                    teacherItem.id,
-                                                    dialogTypes.SET_VISIBILITY_DISABLED,
-                                                );
-                                            }}
-                                        />
-                                        <FaEdit
-                                            className="svg-btn edit-btn"
-                                            title={t(COMMON_EDIT_HOVER_TITLE)}
-                                            onClick={() => selectTeacherCardService(teacherItem.id)}
-                                        />
-                                    </>
-                                ) : (
-                                    <IoMdEye
+            <section className="container-flex-wrap">
+                {visibleItems.length === 0 && <NotFound name={t(FORM_TEACHER_A_LABEL)} />}
+                {visibleItems.map((teacherItem) => (
+                    <Card key={teacherItem.id} additionClassName="teacher-card done-card">
+                        <div className="cards-btns">
+                            {!isDisabled ? (
+                                <>
+                                    <GiSightDisabled
                                         className="svg-btn copy-btn"
-                                        title={t(COMMON_SET_ENABLED)}
+                                        title={t(COMMON_SET_DISABLED)}
                                         onClick={() => {
                                             showConfirmDialog(
                                                 teacherItem.id,
-                                                dialogTypes.SET_VISIBILITY_ENABLED,
+                                                dialogTypes.SET_VISIBILITY_DISABLED,
                                             );
                                         }}
                                     />
-                                )}
-                                <MdDelete
-                                    className="svg-btn delete-btn"
-                                    title={t(COMMON_DELETE_HOVER_TITLE)}
-                                    onClick={() =>
+                                    <FaEdit
+                                        className="svg-btn edit-btn"
+                                        title={t(COMMON_EDIT_HOVER_TITLE)}
+                                        onClick={() => selectTeacherCardService(teacherItem.id)}
+                                    />
+                                </>
+                            ) : (
+                                <IoMdEye
+                                    className="svg-btn copy-btn"
+                                    title={t(COMMON_SET_ENABLED)}
+                                    onClick={() => {
                                         showConfirmDialog(
                                             teacherItem.id,
-                                            dialogTypes.DELETE_CONFIRM,
-                                        )
-                                    }
+                                            dialogTypes.SET_VISIBILITY_ENABLED,
+                                        );
+                                    }}
                                 />
-                            </div>
-                            <h2 className="teacher-card-name">
-                                {getShortTitle(getTeacherFullName(teacherItem), 30)}
-                            </h2>
-                            <p className="teacher-card-title">
-                                {`${teacherItem.position} ${
-                                    teacherItem.department !== null
-                                        ? `${t(TEACHER_DEPARTMENT)} ${teacherItem.department.name}`
-                                        : ''
-                                }`}
-                            </p>
-                        </Card>
-                    ))}
-                </section>
-            </div>
-        </>
+                            )}
+                            <MdDelete
+                                className="svg-btn delete-btn"
+                                title={t(COMMON_DELETE_HOVER_TITLE)}
+                                onClick={() =>
+                                    showConfirmDialog(teacherItem.id, dialogTypes.DELETE_CONFIRM)
+                                }
+                            />
+                        </div>
+                        <h2 className="teacher-card-name">
+                            {getShortTitle(getTeacherFullName(teacherItem), 30)}
+                        </h2>
+                        <p className="teacher-card-title">
+                            {`${teacherItem.position} ${
+                                teacherItem.department !== null
+                                    ? `${t(TEACHER_DEPARTMENT)} ${teacherItem.department.name}`
+                                    : ''
+                            }`}
+                        </p>
+                    </Card>
+                ))}
+            </section>
+        </div>
     );
 };
 const mapStateToProps = (state) => ({
@@ -296,6 +294,15 @@ const mapStateToProps = (state) => ({
     semesters: state.schedule.semesters,
     departments: state.departments.departments,
     department: state.departments.department,
+    isOpenConfirmDialog: state.dialog.isOpenConfirmDialog,
+});
+const mapDispatchToProps = (dispatch) => ({
+    setOpenConfirmDialog: (newState) => dispatch(setIsOpenConfirmDialog(newState)),
+    getAllSemestersItems: () => dispatch(getAllSemestersStart()),
+    getCurrentSemester: () => dispatch(getCurrentSemesterRequsted()),
+    getDefaultSemester: () => dispatch(getDefaultSemesterRequsted()),
+    getAllPublicSemesters: () => dispatch(getAllPublicSemestersStart()),
+    sendTeacherSchedule: (data) => dispatch(sendTeacherScheduleStart(data)),
 });
 
-export default connect(mapStateToProps, {})(TeacherList);
+export default connect(mapStateToProps, mapDispatchToProps)(TeacherList);

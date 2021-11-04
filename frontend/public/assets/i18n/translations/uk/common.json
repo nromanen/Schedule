@@ -177,5 +177,7 @@
     "regular_lesson_label": "Пара за розкладом",
     "hour_one": "<0>{{count}}</0> година",
     "hour_few": "<0>{{count}}</0> години",
-    "hour_many": "<0>{{count}}</0> годин"
+    "hour_many": "<0>{{count}}</0> годин",
+    "more_label": "Більше",
+    "move_label": "Перемістити"
 }

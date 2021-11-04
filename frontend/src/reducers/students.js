@@ -2,20 +2,20 @@ import * as actionTypes from '../actions/actionsType';
 import { updateObject } from '../utility';
 
 const initialState = {
+    studentsByGroup: [],
     students: [],
     student: {},
 };
 
 const reducer = (state = initialState, action) => {
     switch (action.type) {
-        case actionTypes.ADD_STUDENT:
+        case actionTypes.CREATE_STUDENT:
             return updateObject(state, {
-                students: state.students.concat(action.result),
+                students: state.students.concat(action.res),
             });
-        case actionTypes.SHOW_ALL_STUDENTS_BY_GROUP_ID:
         case actionTypes.SHOW_ALL_STUDENTS:
             return updateObject(state, {
-                students: action.result,
+                students: action.res,
             });
         case actionTypes.DELETE_STUDENT: {
             const students = state.students.filter((student) => student.id !== action.result);

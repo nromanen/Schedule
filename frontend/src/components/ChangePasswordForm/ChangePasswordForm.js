@@ -7,7 +7,9 @@ import './ChangePasswordForm.scss';
 
 import Button from '@material-ui/core/Button';
 import { useTranslation } from 'react-i18next';
-import { Accordion, AccordionDetails, AccordionSummary } from '@material-ui/core';
+import Accordion from '@material-ui/core/Accordion';
+import AccordionSummary from '@material-ui/core/AccordionSummary';
+import AccordionDetails from '@material-ui/core/AccordionDetails';
 import Typography from '@material-ui/core/Typography';
 import renderTextField from '../../share/renderedFields/input';
 

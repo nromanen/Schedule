@@ -22,12 +22,19 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import '../../App.scss';
 import './Header.scss';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import { links } from '../../constants/links';
+import {
+    TEACHER_SCHEDULE_LINK,
+    HOME_PAGE_LINK,
+    LOGIN_LINK,
+    ADMIN_PAGE_LINK,
+    SCHEDULE_PAGE_LINK,
+    MY_PROFILE_LINK,
+    TEACHER_LIST_LINK,
+    LOGOUT_LINK,
+} from '../../constants/links';
 
 import LanguageSelector from '../LanguageSelector/LanguageSelector';
 import * as colors from '../../constants/schedule/colors';
-
-import { getCurrentSemesterService } from '../../services/scheduleService';
 
 import FreeRooms from '../../containers/FreeRooms/freeRooms';
 import { setSemesterLoadingService } from '../../services/loadingService';
@@ -41,6 +48,7 @@ import {
     HOME_TITLE,
     MENU_BUTTON,
 } from '../../constants/translationLabels/common';
+import { getCurrentSemesterRequsted } from '../../actions/schedule';
 
 const StyledMenu = withStyles({
     paper: {
@@ -72,7 +80,7 @@ const StyledMenuItem = withStyles((theme) => ({
 }))(MenuItem);
 
 const Header = (props) => {
-    const { roles, userRole, loading, currentSemester } = props;
+    const { roles, userRole, loading, currentSemester, getCurrentSemester } = props;
     const [anchorEl, setAnchorEl] = useState(null);
     const handleClick = (event) => setAnchorEl(event.currentTarget);
     const handleClose = () => setAnchorEl(null);
@@ -86,7 +94,7 @@ const Header = (props) => {
     useEffect(() => {
         if (userRole === roles.MANAGER) {
             setSemesterLoadingService(true);
-            getCurrentSemesterService();
+            getCurrentSemester();
         }
     }, [userRole]);
 
@@ -94,7 +102,7 @@ const Header = (props) => {
         let userMenu = null;
         if (isNil(role)) {
             return (
-                <Link to={links.LOGIN} className="navLinks">
+                <Link to={LOGIN_LINK} className="navLinks">
                     {t(LOGIN_TITLE)}
                 </Link>
             );
@@ -123,7 +131,7 @@ const Header = (props) => {
                             onClose={handleCloseUserMenu}
                         >
                             <Link
-                                to={links.ADMIN_PAGE}
+                                to={ADMIN_PAGE_LINK}
                                 className="navLinks"
                                 style={{ textDecoration: 'none' }}
                                 onClick={handleCloseUserMenu}
@@ -136,7 +144,7 @@ const Header = (props) => {
                                 </StyledMenuItem>
                             </Link>
                             <Link
-                                to={links.SCHEDULE_PAGE}
+                                to={SCHEDULE_PAGE_LINK}
                                 className="navLinks"
                                 style={{ textDecoration: 'none' }}
                                 onClick={handleCloseUserMenu}
@@ -163,7 +171,7 @@ const Header = (props) => {
                                 </StyledMenuItem>
                             </span>
                             <Link
-                                to={links.MY_PROFILE}
+                                to={MY_PROFILE_LINK}
                                 className="navLinks"
                                 style={{ textDecoration: 'none' }}
                                 onClick={handleCloseUserMenu}
@@ -176,7 +184,7 @@ const Header = (props) => {
                                 </StyledMenuItem>
                             </Link>
                             <Link
-                                to={links.LOGOUT}
+                                to={LOGOUT_LINK}
                                 className="navLinks"
                                 style={{ textDecoration: 'none' }}
                                 onClick={handleCloseUserMenu}
@@ -215,7 +223,7 @@ const Header = (props) => {
                             onClose={handleCloseUserMenu}
                         >
                             <Link
-                                to={links.TEACHER_SCHEDULE}
+                                to={TEACHER_LIST_LINK}
                                 className="navLinks"
                                 style={{ textDecoration: 'none' }}
                                 onClick={handleCloseUserMenu}
@@ -237,7 +245,7 @@ const Header = (props) => {
                                 tabIndex="0"
                             ></span>
                             <Link
-                                to={links.MY_PROFILE}
+                                to={MY_PROFILE_LINK}
                                 className="navLinks"
                                 style={{ textDecoration: 'none' }}
                                 onClick={handleCloseUserMenu}
@@ -250,7 +258,7 @@ const Header = (props) => {
                                 </StyledMenuItem>
                             </Link>
                             <Link
-                                to={links.LOGOUT}
+                                to={LOGOUT_LINK}
                                 className="navLinks"
                                 style={{ textDecoration: 'none' }}
                                 onClick={handleCloseUserMenu}
@@ -286,7 +294,7 @@ const Header = (props) => {
                             onClose={handleCloseUserMenu}
                         >
                             <Link
-                                to={links.LOGOUT}
+                                to={LOGOUT_LINK}
                                 className="navLinks"
                                 style={{ textDecoration: 'none' }}
                                 onClick={handleCloseUserMenu}
@@ -343,7 +351,7 @@ const Header = (props) => {
                 >
                     <span className="navLinks menu-semester">{currentSemester.description}</span>
                     <Link
-                        to={links.HOME_PAGE}
+                        to={HOME_PAGE_LINK}
                         className="navLinks"
                         style={{ textDecoration: 'none' }}
                         onClick={handleClose}
@@ -357,7 +365,7 @@ const Header = (props) => {
                     </Link>
 
                     <Link
-                        to={links.SCHEDULE_PAGE}
+                        to={SCHEDULE_PAGE_LINK}
                         className="navLinks"
                         style={{ textDecoration: 'none' }}
                         onClick={handleClose}
@@ -371,7 +379,7 @@ const Header = (props) => {
                     </Link>
 
                     <Link
-                        to={links.ADMIN_PAGE}
+                        to={ADMIN_PAGE_LINK}
                         className="navLinks"
                         style={{ textDecoration: 'none' }}
                         onClick={handleClose}
@@ -400,7 +408,7 @@ const Header = (props) => {
                     </span>
 
                     <Link
-                        to={links.LOGOUT}
+                        to={LOGOUT_LINK}
                         className="navLinks"
                         style={{ textDecoration: 'none' }}
                         onClick={handleClose}
@@ -436,7 +444,7 @@ const Header = (props) => {
                     onClose={handleClose}
                 >
                     <Link
-                        to={links.HOME_PAGE}
+                        to={HOME_PAGE_LINK}
                         className="navLinks"
                         style={{ textDecoration: 'none' }}
                         onClick={handleClose}
@@ -455,7 +463,7 @@ const Header = (props) => {
                     </StyledMenuItem>
 
                     <Link
-                        to={links.TEACHER_SCHEDULE}
+                        to={TEACHER_SCHEDULE_LINK}
                         className="navLinks"
                         style={{ textDecoration: 'none' }}
                         onClick={handleClose}
@@ -469,7 +477,7 @@ const Header = (props) => {
                     </Link>
 
                     <Link
-                        to={links.LOGOUT}
+                        to={LOGOUT_LINK}
                         className="navLinks"
                         style={{ textDecoration: 'none' }}
                         onClick={handleClose}
@@ -504,7 +512,7 @@ const Header = (props) => {
                     onClose={handleClose}
                 >
                     <Link
-                        to={links.HOME_PAGE}
+                        to={HOME_PAGE_LINK}
                         className="navLinks"
                         style={{ textDecoration: 'none' }}
                         onClick={() => {
@@ -519,7 +527,7 @@ const Header = (props) => {
                         </StyledMenuItem>
                     </Link>
                     <Link
-                        to={links.LOGIN}
+                        to={LOGIN_LINK}
                         className="navLinks"
                         style={{ textDecoration: 'none' }}
                         onClick={handleClose}
@@ -541,7 +549,7 @@ const Header = (props) => {
             <header className="header">
                 {menu}
                 <nav className="header-blocks header-blocks_one">
-                    <Link to={links.HOME_PAGE} className="navLinks">
+                    <Link to={HOME_PAGE_LINK} className="navLinks">
                         {t(HOME_TITLE)}
                     </Link>
                     {leftLinks}
@@ -561,4 +569,8 @@ const mapStateToProps = (state) => ({
     loading: state.loadingIndicator.semesterLoading,
 });
 
-export default connect(mapStateToProps, {})(Header);
+const mapDispatchToProps = (dispatch) => ({
+    getCurrentSemester: () => dispatch(getCurrentSemesterRequsted()),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Header);
