@@ -4,16 +4,12 @@ import { SEMESTER_FORM } from '../../constants/reduxForms';
 import SemesterForm from '../../components/Semester/SemesterForm/SemesterForm';
 import { clearSemester } from '../../actions/semesters';
 
-const mapStateToProps = (state) => ({
-    classScheduler: state.classActions.classScheduler,
-});
-
 const mapDispatchToProps = (dispatch) => ({
     clearSemester: () => dispatch(clearSemester()),
 });
 
 export default connect(
-    mapStateToProps,
+    null,
     mapDispatchToProps,
 )(
     reduxForm({

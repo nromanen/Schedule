@@ -71,10 +71,6 @@ const reducer = (state = initialState, action) => {
                 ...state,
                 semester: {},
             };
-        case actionTypes.SET_ERROR:
-            return updateObject(state, {
-                uniqueError: action.result,
-            });
 
         default:
             return state;

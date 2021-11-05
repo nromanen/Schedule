@@ -11,7 +11,7 @@ import {
     ARCHIVED_SEMESTERS_URL,
     DEFAULT_SEMESTER_URL,
 } from '../constants/axios';
-import { setDisabledSemesters, setError } from '../actions/semesters';
+import { setDisabledSemesters } from '../actions/semesters';
 import { SEMESTER_FORM } from '../constants/reduxForms';
 import { snackbarTypes } from '../constants/snackbarTypes';
 import { handleSnackbarOpenService } from './snackbarService';
@@ -48,8 +48,8 @@ import {
 import { COMMON_SEMESTER_IS_NOT_UNIQUE } from '../constants/translationLabels/common';
 // can delete it
 export const selectSemesterService = (semesterId) => store.dispatch(selectSemester(semesterId));
-
-export const setUniqueErrorService = (isUniqueError) => store.dispatch(setError(isUniqueError));
+// it doesnt work within project
+// export const setUniqueErrorService = (isUniqueError) => store.dispatch(setError(isUniqueError));
 // can delete it
 export const clearSemesterService = () => {
     store.dispatch(clearSemester());
@@ -119,7 +119,7 @@ export const handleSemesterService = (values) => {
     const semester = semesterFormValueMapper(values);
     if (!checkUniqSemester(semester)) {
         handleSnackbarOpenService(true, snackbarTypes.ERROR, i18n.t(COMMON_SEMESTER_IS_NOT_UNIQUE));
-        setUniqueErrorService(true);
+        // setUniqueErrorService(true);
         return;
     }
     if (!checkSemesterYears(semester.endDay, semester.startDay, semester.year)) return;

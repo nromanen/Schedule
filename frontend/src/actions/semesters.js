@@ -112,13 +112,6 @@ export const clearSemester = () => ({
     type: actionTypes.CLEAR_SEMESTER,
 });
 
-export const setError = (res) => {
-    return {
-        type: actionTypes.SET_ERROR,
-        result: res,
-    };
-};
-
 export const handleSemesterStart = (values) => {
     return {
         type: actionTypes.HANDLE_SEMESTER_START,

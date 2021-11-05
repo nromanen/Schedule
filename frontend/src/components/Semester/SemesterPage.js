@@ -16,7 +16,6 @@ const SemesterPage = (props) => {
         getDisabledSemestersItems,
         handleSemester,
         setOpenErrorSnackbar,
-        setError,
         getAllGroupsItems,
         classScheduler,
         // it doesnt work, need to finish implement archived functionality
@@ -65,7 +64,6 @@ const SemesterPage = (props) => {
                     handleSemester={handleSemester}
                     semester={semester}
                     options={options}
-                    setError={setError}
                     classScheduler={classScheduler}
                 />
                 <SemesterList

@@ -13,7 +13,6 @@ const SemesterSidebar = (props) => {
         disabled,
         showDisabledHandle,
         setOpenErrorSnackbar,
-        setError,
         handleSemester,
         semester,
         options,
@@ -30,10 +29,10 @@ const SemesterSidebar = (props) => {
         });
 
         Object.keys(values).forEach((prop) => {
-            if (prop.indexOf('semester_days_markup_') >= 0 && values[prop] === true) {
+            if (prop.indexOf('semester_days_markup_') >= 0 && values[prop]) {
                 semesterDays.push(prop.substring(21));
             }
-            if (prop.indexOf('semester_classes_markup_') >= 0 && values[prop] === true) {
+            if (prop.indexOf('semester_classes_markup_') >= 0 && values[prop]) {
                 semesterClasses.push(
                     classScheduler.find((schedule) => schedule.id === +prop.substring(24)),
                 );
@@ -48,7 +47,6 @@ const SemesterSidebar = (props) => {
         if (!checkUniqSemester(semesterItem)) {
             const message = i18n.t(COMMON_SEMESTER_IS_NOT_UNIQUE);
             setOpenErrorSnackbar(message);
-            setError(true);
             return;
         }
         if (!checkSemesterYears(semesterItem.endDay, semesterItem.startDay, semesterItem.year))
@@ -73,6 +71,7 @@ const SemesterSidebar = (props) => {
                     onSubmit={submitSemesterForm}
                     semester={semester}
                     options={options}
+                    classScheduler={classScheduler}
                 />
             )}
         </aside>
