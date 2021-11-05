@@ -289,7 +289,7 @@ public class SemesterServiceImpl implements SemesterService {
      */
     @Override
     public Semester addGroupToSemester(Semester semester, Group group) {
-        log.info("In addGroupToSemester (semester = [{}], group = [{}])", semester, group);
+        log.trace("In addGroupToSemester (semester = [{}], group = [{}])", semester, group);
         List<Group> groups = semester.getGroups();
         if (groups == null){
             groups = new ArrayList<>();
@@ -310,40 +310,10 @@ public class SemesterServiceImpl implements SemesterService {
      */
     @Override
     public Semester addGroupsToSemester(Semester semester, List<Group> groups) {
-        log.info("In addGroupsToSemester (semester = [{}], groups = [{}])", semester, groups);
-        groups.forEach(group -> addGroupToSemester(semester, group));
-        return semester;
-    }
-
-    /**
-     *
-     * Method delete group from an existing semester
-     *
-     * @param semester semester in which we need to delete group
-     * @param group group to delete
-     * @return changed Semester
-     */
-    @Override
-    public Semester deleteGroupFromSemester(Semester semester, Group group) {
-        log.info("In deleteGroupFromSemester (semester = [{}], group = [{}])", semester, group);
-        List<Group> groups = semester.getGroups();
-        groups.remove(group);
-        update(semester);
-        return semester;
-    }
-
-    /**
-     *
-     * Method delete groups from an existing semester
-     *
-     * @param semester semester in which we need to delete groups
-     * @param groups group to delete
-     * @return changed Semester
-     */
-    @Override
-    public Semester deleteGroupsFromSemester(Semester semester, List<Group> groups) {
-        log.info("In deleteGroupsFromSemester (semester = [{}], group = [{}])", semester, groups);
-        groups.forEach(group -> deleteGroupFromSemester(semester, group));
+        log.trace("In addGroupsToSemester (semester = [{}], groups = [{}])", semester, groups);
+        semester.setGroups(groups);
+        semesterRepository.update(semester);
+        log.debug("Semester groups has been updated");
         return semester;
     }
 }

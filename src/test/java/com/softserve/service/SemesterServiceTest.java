@@ -559,28 +559,4 @@ public class SemesterServiceTest {
         assertTrue(semesterWithGroup.getGroups().contains(group1));
         assertTrue(semesterWithGroup.getGroups().contains(group2));
     }
-
-
-    @Test
-    public void deleteGroupFromSemester() {
-        Group group = new Group();
-        group.setTitle("some group");
-        group.setId(1L);
-        List<Group> groupList = new ArrayList<>();
-        groupList.add(group);
-        Semester semester = new Semester();
-        semester.setId(1L);
-        semester.setYear(2020);
-        semester.setDescription("1 semester");
-        semester.setStartDay(LocalDate.of(2020, 4, 10));
-        semester.setEndDay(LocalDate.of(2020, 5, 10));
-        semester.setCurrentSemester(false);
-        semester.setGroups(groupList);
-
-        when(semesterRepository.findById(anyLong())).thenReturn(Optional.of(semester));
-
-        Semester semesterWithoutGroup = semesterService.deleteGroupFromSemester(semester, group);
-        assertNotNull(semesterWithoutGroup);
-        assertFalse(semesterWithoutGroup.getGroups().contains(group));
-    }
 }
