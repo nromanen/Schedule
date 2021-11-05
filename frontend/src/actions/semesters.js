@@ -112,9 +112,9 @@ export const clearSemesterSuccess = () => ({
     type: actionTypes.CLEAR_SEMESTER_SUCCESS,
 });
 
-export const handleSemesterStart = (values) => {
+export const handleSemesterFormSubmitStart = (values) => {
     return {
-        type: actionTypes.HANDLE_SEMESTER_START,
+        type: actionTypes.HANDLE_SEMESTER_FORM_SUBMIT_START,
         values,
     };
 };

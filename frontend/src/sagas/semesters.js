@@ -1,6 +1,7 @@
-import { call, put, takeLatest, select } from 'redux-saga/effects';
+import { call, put, takeLatest, takeEvery, select } from 'redux-saga/effects';
 import { reset } from 'redux-form';
 import * as actionTypes from '../actions/actionsType';
+import { setLoading } from '../actions/loadingIndicator';
 import { setOpenSuccessSnackbar, setOpenErrorSnackbar } from '../actions/snackbar';
 import {
     getAllSemestersSuccess,
@@ -41,26 +42,35 @@ import { createErrorMessage, createMessage } from '../utils/sagaUtils';
 
 export function* getAllSemestersItems() {
     try {
+        yield put(setLoading(true));
         const response = yield call(axiosCall, SEMESTERS_URL);
         yield put(getAllSemestersSuccess(response.data));
     } catch (error) {
         yield put(setOpenErrorSnackbar(createErrorMessage(error)));
+    } finally {
+        yield put(setLoading(false));
     }
 }
 export function* getDisabledSemestersItems() {
     try {
+        yield put(setLoading(true));
         const response = yield call(axiosCall, DISABLED_SEMESTERS_URL);
         yield put(getAllSemestersSuccess(response.data));
     } catch (error) {
         yield put(setOpenErrorSnackbar(createErrorMessage(error)));
+    } finally {
+        yield put(setLoading(false));
     }
 }
 export function* getArchivedSemestersItems() {
     try {
+        yield put(setLoading(true));
         const response = yield call(axiosCall, ARCHIVED_SEMESTERS_URL);
         yield put(getArchivedSemestersSuccess(response.data));
     } catch (error) {
         yield put(setOpenErrorSnackbar(createErrorMessage(error)));
+    } finally {
+        yield put(setLoading(false));
     }
 }
 export function* setGroupsToSemester({ semesterId, groups }) {
@@ -105,9 +115,9 @@ export function* deleteSemesterItem({ semesterId }) {
     }
 }
 
-export function* updateSemesterItem({ item }) {
+export function* updateSemesterItem({ values }) {
     try {
-        const response = yield call(axiosCall, SEMESTERS_URL, 'PUT', item);
+        const response = yield call(axiosCall, SEMESTERS_URL, 'PUT', values);
         yield put(updateSemesterSuccess(response.data));
         yield put(selectSemesterSuccess(null));
         yield put(reset(SEMESTER_FORM));
@@ -121,9 +131,9 @@ export function* updateSemesterItem({ item }) {
         yield put(setOpenErrorSnackbar(createErrorMessage(error)));
     }
 }
-export function* addSemesterItem({ item }) {
+export function* addSemesterItem({ values }) {
     try {
-        const response = yield call(axiosCall, SEMESTERS_URL, 'POST', item);
+        const response = yield call(axiosCall, SEMESTERS_URL, 'POST', values);
         yield put(addSemesterSuccess(response.data));
         yield put(reset(SEMESTER_FORM));
         const message = createMessage(
@@ -137,7 +147,7 @@ export function* addSemesterItem({ item }) {
     }
 }
 
-export function* handleSemester({ values }) {
+export function* handleSemesterFormSubmit({ values }) {
     try {
         const state = yield select();
         const oldCurrentSemester = state.semesters.semesters.find(
@@ -150,9 +160,9 @@ export function* handleSemester({ values }) {
             yield put(updateSemesterSuccess(response.data));
         }
         if (values.id) {
-            yield call(updateSemesterItem, { item: values });
+            yield call(updateSemesterItem, { values });
         } else {
-            yield call(addSemesterItem, { item: values });
+            yield call(addSemesterItem, { values });
         }
     } catch (error) {
         yield put(setOpenErrorSnackbar(createErrorMessage(error)));
@@ -249,15 +259,15 @@ export function* watchSemester() {
     yield takeLatest(actionTypes.GET_ALL_SEMESTERS_START, getAllSemestersItems);
     yield takeLatest(actionTypes.GET_DISABLED_SEMESTERS_START, getDisabledSemestersItems);
     yield takeLatest(actionTypes.SET_ARCHIVED_SEMESTERS_START, getArchivedSemestersItems);
-    yield takeLatest(actionTypes.SET_GROUPS_TO_SEMESTER_START, setGroupsToSemester);
-    yield takeLatest(actionTypes.DELETE_SEMESTER_START, deleteSemesterItem);
-    yield takeLatest(actionTypes.UPDATE_SEMESTER_START, updateSemesterItem);
-    yield takeLatest(actionTypes.ADD_SEMESTER_START, addSemesterItem);
-    yield takeLatest(actionTypes.UPDATE_SEMESTER_BY_ID_START_SUCCESS, setDefaultSemesterById);
-    yield takeLatest(actionTypes.SET_SEMESTER_COPY_START, semesterCopy);
-    yield takeLatest(actionTypes.CREATE_ARCHIVE_SEMESTER_START, createArchiveSemester);
     yield takeLatest(actionTypes.GET_ARCHIVE_SEMESTER_BY_ID_START, getArchivedSemesterById);
-    yield takeLatest(actionTypes.COPY_LESSONS_FROM_SEMESTER_START, CopyLessonsFromSemester);
-    yield takeLatest(actionTypes.HANDLE_SEMESTER_START, handleSemester);
-    yield takeLatest(actionTypes.TOGGLE_SEMESTER_VISIBILITY_START, toggleSemesterVisibility);
+    yield takeEvery(actionTypes.SET_GROUPS_TO_SEMESTER_START, setGroupsToSemester);
+    yield takeEvery(actionTypes.DELETE_SEMESTER_START, deleteSemesterItem);
+    yield takeEvery(actionTypes.UPDATE_SEMESTER_START, updateSemesterItem);
+    yield takeEvery(actionTypes.ADD_SEMESTER_START, addSemesterItem);
+    yield takeLatest(actionTypes.UPDATE_SEMESTER_BY_ID_START_SUCCESS, setDefaultSemesterById);
+    yield takeEvery(actionTypes.SET_SEMESTER_COPY_START, semesterCopy);
+    yield takeEvery(actionTypes.CREATE_ARCHIVE_SEMESTER_START, createArchiveSemester);
+    yield takeEvery(actionTypes.COPY_LESSONS_FROM_SEMESTER_START, CopyLessonsFromSemester);
+    yield takeEvery(actionTypes.HANDLE_SEMESTER_FORM_SUBMIT_START, handleSemesterFormSubmit);
+    yield takeEvery(actionTypes.TOGGLE_SEMESTER_VISIBILITY_START, toggleSemesterVisibility);
 }

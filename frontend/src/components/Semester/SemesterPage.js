@@ -14,7 +14,7 @@ const SemesterPage = (props) => {
         semester,
         getAllSemestersItems,
         getDisabledSemestersItems,
-        handleSemester,
+        handleSemesterFormSubmit,
         setOpenErrorSnackbar,
         getAllGroupsItems,
         classScheduler,
@@ -61,7 +61,7 @@ const SemesterPage = (props) => {
                         setArchived(false);
                     }}
                     setOpenErrorSnackbar={setOpenErrorSnackbar}
-                    handleSemester={handleSemester}
+                    handleSemesterFormSubmit={handleSemesterFormSubmit}
                     semester={semester}
                     options={options}
                     classScheduler={classScheduler}

@@ -35,14 +35,14 @@ const SemesterCard = (props) => {
         setSemesterGroupsOptions,
         setIsOpenGroupsDialog,
         semDays,
-        semesterItem,
+        semester,
     } = props;
     const { t } = useTranslation('formElements');
 
     return (
         <Card
             additionClassName={`semester-card done-card ${
-                semesterItem.currentSemester ? 'current' : ''
+                semester.currentSemester ? 'current' : ''
             }`}
         >
             <div className="cards-btns">
@@ -52,17 +52,14 @@ const SemesterCard = (props) => {
                             className="svg-btn copy-btn"
                             title={t(COMMON_SET_DISABLED)}
                             onClick={() => {
-                                showConfirmDialog(
-                                    semesterItem.id,
-                                    dialogTypes.SET_VISIBILITY_DISABLED,
-                                );
+                                showConfirmDialog(semester.id, dialogTypes.SET_VISIBILITY_DISABLED);
                             }}
                         />
                         <FaEdit
                             className="svg-btn edit-btn"
                             title={t(EDIT_TITLE)}
                             onClick={() => {
-                                selectSemesterSuccess(semesterItem.id);
+                                selectSemesterSuccess(semester.id);
                             }}
                         />
                         <FaCopy
@@ -70,15 +67,15 @@ const SemesterCard = (props) => {
                             title={t(COPY_LABEL)}
                             onClick={() => {
                                 setIsOpenSemesterCopyForm(true);
-                                setSemesterId(semesterItem.id);
+                                setSemesterId(semester.id);
                             }}
                         />
-                        {!semesterItem.currentSemester && (
+                        {!semester.currentSemester && (
                             <FaFileArchive
                                 className="svg-btn archive-btn"
                                 title={t(COMMON_MAKE_ARCHIVE)}
                                 onClick={() => {
-                                    createArchivedSemester(semesterItem.id);
+                                    createArchivedSemester(semester.id);
                                 }}
                             />
                         )}
@@ -89,7 +86,7 @@ const SemesterCard = (props) => {
                         className="svg-btn copy-btn"
                         title={t(COMMON_SET_ENABLED)}
                         onClick={() => {
-                            showConfirmDialog(semesterItem.id, dialogTypes.SET_VISIBILITY_ENABLED);
+                            showConfirmDialog(semester.id, dialogTypes.SET_VISIBILITY_ENABLED);
                         }}
                     />
                 )}
@@ -98,35 +95,33 @@ const SemesterCard = (props) => {
                                     className="svg-btn copy-btn"
                                     title={t(COMMON_PREVIEW)}
                                     onClick={() => {
-                                        handleSemesterArchivedPreview(semesterItem.id);
+                                        handleSemesterArchivedPreview(semester.id);
                                     }}
                                 />
                             )} */}
                 <MdDelete
                     className="svg-btn delete-btn"
                     title={t(DELETE_TITLE)}
-                    onClick={() => showConfirmDialog(semesterItem.id, dialogTypes.DELETE_CONFIRM)}
+                    onClick={() => showConfirmDialog(semester.id, dialogTypes.DELETE_CONFIRM)}
                 />
 
                 {!(disabled || archived) && (
                     <MdDonutSmall
-                        className={`svg-btn edit-btn ${
-                            semesterItem.defaultSemester ? 'default' : ''
-                        }`}
+                        className={`svg-btn edit-btn ${semester.defaultSemester ? 'default' : ''}`}
                         title={t(SET_DEFAULT_TITLE)}
-                        onClick={() => showConfirmDialog(semesterItem.id, dialogTypes.SET_DEFAULT)}
+                        onClick={() => showConfirmDialog(semester.id, dialogTypes.SET_DEFAULT)}
                     />
                 )}
             </div>
 
             <p className="semester-card__description">
                 <small>{`${t(SEMESTER_LABEL)}:`}</small>
-                <b>{semesterItem.description}</b>
-                {` ( ${semesterItem.year} )`}
+                <b>{semester.description}</b>
+                {` ( ${semester.year} )`}
             </p>
             <p className="semester-card__description">
                 <b>
-                    {semesterItem.startDay} - {semesterItem.endDay}
+                    {semester.startDay} - {semester.endDay}
                 </b>
             </p>
             <p className="semester-card__description">
@@ -135,7 +130,7 @@ const SemesterCard = (props) => {
             </p>
             <p className="semester-card__description">
                 {`${t(COMMON_CLASS_SCHEDULE_MANAGEMENT_TITLE)}: `}
-                {semesterItem.semester_classes
+                {semester.semester_classes
                     .map((classItem) => {
                         return classItem.class_name;
                     })
@@ -147,9 +142,9 @@ const SemesterCard = (props) => {
                     title={t(FORM_SHOW_GROUPS)}
                     className="svg-btn copy-btn  semester-groups"
                     onClick={() => {
-                        setSemesterId(semesterItem.id);
+                        setSemesterId(semester.id);
                         setSemesterGroupsOptions(
-                            getGroupsOptionsForSelect(semesterItem.semester_groups),
+                            getGroupsOptionsForSelect(semester.semester_groups),
                         );
                         setIsOpenGroupsDialog(true);
                     }}

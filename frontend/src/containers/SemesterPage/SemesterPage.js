@@ -4,7 +4,7 @@ import {
     getAllSemestersStart,
     getDisabledSemestersStart,
     getArchivedSemestersStart,
-    handleSemesterStart,
+    handleSemesterFormSubmitStart,
 } from '../../actions/semesters';
 import { fetchEnabledGroupsStart } from '../../actions/groups';
 import { setOpenErrorSnackbar } from '../../actions/snackbar';
@@ -23,7 +23,7 @@ const mapDispatchToProps = (dispatch) => ({
     getAllSemestersItems: () => dispatch(getAllSemestersStart()),
     getDisabledSemestersItems: () => dispatch(getDisabledSemestersStart()),
     getArchivedSemestersItems: () => dispatch(getArchivedSemestersStart()),
-    handleSemester: (values) => dispatch(handleSemesterStart(values)),
+    handleSemesterFormSubmit: (values) => dispatch(handleSemesterFormSubmitStart(values)),
     setOpenErrorSnackbar: (message) => dispatch(setOpenErrorSnackbar(message)),
     getAllGroupsItems: () => dispatch(fetchEnabledGroupsStart()),
 });

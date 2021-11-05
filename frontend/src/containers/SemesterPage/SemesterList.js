@@ -17,6 +17,7 @@ import { setOpenSuccessSnackbar } from '../../actions/snackbar';
 const mapStateToProps = (state) => ({
     isOpenConfirmDialog: state.dialog.isOpenConfirmDialog,
     semesters: state.semesters.semesters,
+    loading: state.loadingIndicator.loading,
 });
 
 const mapDispatchToProps = (dispatch) => ({

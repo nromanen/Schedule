@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import './SemesterList.scss';
-import { isEqual, isEmpty, get } from 'lodash';
+import { isEqual, isEmpty } from 'lodash';
+import { CircularProgress } from '@material-ui/core';
 import NotFound from '../../../share/NotFound/NotFound';
 import { dialogTypes, dialogCloseButton } from '../../../constants/dialogs';
 import {
@@ -41,6 +42,7 @@ const SemesterList = (props) => {
         setOpenSuccessSnackbar,
         setGroupsToSemester,
         toggleSemesterVisibility,
+        loading,
         // archivedSemesters,
         // getArchivedSemesterById,
     } = props;
@@ -118,6 +120,16 @@ const SemesterList = (props) => {
     const cancelMultiselect = () => {
         setIsOpenGroupsDialog(false);
     };
+    if (loading) {
+        return (
+            <section className="centered-container">
+                <CircularProgress />
+            </section>
+        );
+    }
+    if (!visibleItems.length) {
+        return <NotFound name={t(SEMESTERY_LABEL)} />;
+    }
     return (
         <>
             {isOpenConfirmDialog && (
@@ -144,15 +156,14 @@ const SemesterList = (props) => {
                 </CustomDialog>
             )}
             <section className="container-flex-wrap wrapper">
-                {visibleItems.length === 0 && <NotFound name={t(SEMESTERY_LABEL)} />}
-                {visibleItems.map((semesterItem) => {
-                    const semDays = semesterItem.semester_days.map((day) =>
+                {visibleItems.map((semester) => {
+                    const semDays = semester.semester_days.map((day) =>
                         t(`common:day_of_week_${day}`),
                     );
                     return (
                         <SemesterCard
-                            key={semesterItem.id}
-                            semesterItem={semesterItem}
+                            key={semester.id}
+                            semester={semester}
                             semDays={semDays}
                             disabled={disabled}
                             archived={archived}

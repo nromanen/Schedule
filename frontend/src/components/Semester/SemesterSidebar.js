@@ -13,7 +13,7 @@ const SemesterSidebar = (props) => {
         disabled,
         showDisabledHandle,
         setOpenErrorSnackbar,
-        handleSemester,
+        handleSemesterFormSubmit,
         semester,
         options,
         classScheduler,
@@ -51,7 +51,7 @@ const SemesterSidebar = (props) => {
         }
         if (!checkSemesterYears(semesterItem.endDay, semesterItem.startDay, semesterItem.year))
             return;
-        handleSemester(semesterItem);
+        handleSemesterFormSubmit(semesterItem);
         setSelectedGroups([]);
     };
 
