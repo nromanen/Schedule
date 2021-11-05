@@ -7,7 +7,6 @@ import TextField from '@material-ui/core/TextField';
 
 import {
     COPY_TO_SAME_GROUP_ERROR,
-    CHOOSE_GROUP,
     COMMON_CHOOSE_GROUP,
 } from '../../../constants/translationLabels/common';
 import CustomDialog from '../../../containers/Dialogs/CustomDialog';
@@ -41,7 +40,6 @@ const CopyLessonDialog = (props) => {
     };
     return (
         <CustomDialog
-            title={translation(CHOOSE_GROUP)}
             open={open}
             onClose={onClose}
             buttons={[dialogChooseButton(chooseClickHandle), dialogCloseButton(() => onClose(''))]}

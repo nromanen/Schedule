@@ -3,7 +3,8 @@ import { useTranslation } from 'react-i18next';
 
 import { isNil } from 'lodash';
 
-import Card from '../../share/Card/Card';
+import TextField from '@material-ui/core/TextField';
+import { Autocomplete } from '@material-ui/lab';
 import CustomDialog from '../../containers/Dialogs/CustomDialog';
 import { dialogTypes } from '../../constants/dialogs';
 import { cardType } from '../../constants/cardType';
@@ -20,11 +21,15 @@ import CopyLessonsFromSemesterForm from '../../containers/LessonPage/CopyLessons
 import CopyLessonDialog from './CopyLessonDialog/CopyLessonDialog';
 
 import './LessonPage.scss';
-import { showAllGroupsService } from '../../services/groupService';
+import { showAllGroupsService, selectGroupService } from '../../services/groupService';
 import { showAllSubjectsService } from '../../services/subjectService';
 import { showAllTeachersService } from '../../services/teacherService';
 
+import { FORM_GROUP_LABEL } from '../../constants/translationLabels/formElements';
+
 const LessonPage = (props) => {
+    const { selectByGroupId, group } = props;
+
     const {
         currentSemester,
         isUniqueError,
@@ -110,9 +115,67 @@ const LessonPage = (props) => {
         copyLessonsFromSemester({ ...values, toSemesterId, fromSemesterId });
     };
 
+    const handleGroupSelect = (selGroup) => {
+        if (selGroup) {
+            selectByGroupId(selGroup.id);
+            selectGroupService(selGroup.id);
+        }
+    };
+
     return (
         <>
-            <Card additionClassName="card-title lesson-card">
+            <div className="wrapper">
+                <div className="side-one">
+                    <Search setTerm={setTerm} />
+                    <div className="cards-container">
+                        <section className="section">
+                            <LessonForm
+                                lessonTypes={lessonTypes}
+                                isUniqueError={isUniqueError}
+                                subjects={subjects}
+                                teachers={teachers}
+                                onSubmit={submitLessonForm}
+                                onSetSelectedCard={selectLessonCard}
+                            />
+                            {!groupId && (
+                                <CopyLessonsFromSemesterForm onSubmit={submitCopySemester} />
+                            )}
+                        </section>
+                    </div>
+                </div>
+                <div className="side-two">
+                    <div className="group-lesson">
+                        <Autocomplete
+                            id="group"
+                            value={group}
+                            options={groups}
+                            clearOnEscape
+                            openOnFocus
+                            getOptionLabel={(option) => option.title}
+                            onChange={(_, newValue) => {
+                                handleGroupSelect(newValue);
+                            }}
+                            renderInput={(params) => (
+                                <TextField
+                                    className="textField"
+                                    {...params}
+                                    label={t(FORM_GROUP_LABEL)}
+                                    margin="normal"
+                                />
+                            )}
+                        />
+                    </div>
+                    <div className="cards-container">
+                        <Lessons
+                            visibleItems={visibleItems}
+                            onClickOpen={showConfirmDialog}
+                            onCopyLesson={openCopyLessonDialogHandle}
+                        />
+                    </div>
+                </div>
+            </div>
+
+            <div className="card-title lesson-card">
                 {isOpenCopyLessonDialog && (
                     <CopyLessonDialog
                         open={isOpenCopyLessonDialog}
@@ -131,25 +194,6 @@ const LessonPage = (props) => {
                         open={isOpenConfirmDialog}
                     />
                 )}
-                <Search setTerm={setTerm} />
-            </Card>
-            <div className="cards-container">
-                <section className="section">
-                    <LessonForm
-                        lessonTypes={lessonTypes}
-                        isUniqueError={isUniqueError}
-                        subjects={subjects}
-                        teachers={teachers}
-                        onSubmit={submitLessonForm}
-                        onSetSelectedCard={selectLessonCard}
-                    />
-                    {!groupId && <CopyLessonsFromSemesterForm onSubmit={submitCopySemester} />}
-                </section>
-                <Lessons
-                    visibleItems={visibleItems}
-                    onClickOpen={showConfirmDialog}
-                    onCopyLesson={openCopyLessonDialogHandle}
-                />
             </div>
         </>
     );

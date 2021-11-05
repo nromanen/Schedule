@@ -15,7 +15,6 @@ import {
     COPY_LESSON,
     DELETE_LESSON,
     EDIT_LESSON,
-    NO_LINK,
 } from '../../../constants/translationLabels/common';
 import '../LessonPage.scss';
 
@@ -62,7 +61,7 @@ const LessonsCard = (props) => {
             <p className="title" title={lesson.subjectForSite}>
                 {getShortTitle(getTitle(lesson), MAX_LENGTH)}
             </p>
-            <b>{getType(lesson)}</b>
+            <p>{getType(lesson)}</p>
             <p>{getTeacherName(lesson.teacher)}</p>
             <p>
                 <Trans
@@ -74,7 +73,18 @@ const LessonsCard = (props) => {
                     {{ count: lesson.hours }}
                 </Trans>
             </p>
-            <input value={lesson.linkToMeeting ?? `${t(NO_LINK)}`} disabled />
+            {lesson.linkToMeeting ? (
+                <a
+                    className="lesson-link"
+                    href={lesson.linkToMeeting}
+                    target="_blank"
+                    rel="noreferrer"
+                >
+                    {lesson.linkToMeeting}
+                </a>
+            ) : (
+                ''
+            )}
         </Card>
     );
 };

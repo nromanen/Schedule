@@ -9,6 +9,7 @@ import {
     selectLessonCard,
     setUniqueError,
     setIsOpenConfirmDialog,
+    selectGroupId,
 } from '../../actions';
 import { setOpenErrorSnackbar } from '../../actions/snackbar';
 import { copyLessonsFromSemesterStart } from '../../actions/semesters';
@@ -38,6 +39,7 @@ const mapDispatchToProps = (dispatch) => ({
     setOpenConfirmDialog: (newState) => dispatch(setIsOpenConfirmDialog(newState)),
     copyLessonsFromSemester: (values) => dispatch(copyLessonsFromSemesterStart(values)),
     handleLesson: (values, groupId) => dispatch(handleLessonStart(values, groupId)),
+    selectByGroupId: (groupId) => dispatch(selectGroupId(groupId)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(LessonPage);

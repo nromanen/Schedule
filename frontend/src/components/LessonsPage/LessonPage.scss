@@ -145,5 +145,85 @@
 }
 
 .lesson-container .title {
+    font-weight: bold;
     height: 3em;
+}
+
+.wrapper {
+    display: flex;
+
+    @media (max-width: 500px) {
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+}
+
+.lesson-link {
+    text-decoration: none;
+    overflow: hidden;
+    white-space: nowrap;
+    display: block;
+    text-overflow: ellipsis;
+}
+.side-one {
+    display: flex;
+    flex-direction: column;
+    width: min-content;
+
+    .cards-container {
+        transition: all 1s ease-out;
+        margin: 0;
+    }
+    .cards-container .section {
+        margin-top: 20px;
+    }
+
+    .not-selected {
+        width: 320px;
+        display: flex;
+        height: 85px;
+        align-items: center;
+        margin-bottom: 30px;
+    }
+
+    .search-lesson {
+        margin-top: 20px;
+    }
+    .search-group {
+        max-width: 320px;
+        width: 100%;
+    }
+
+    .form-field {
+        width: 100%;
+    }
+
+    @media (max-width: 500px) {
+        display: flex;
+        flex-direction: column;
+        width: min-content;
+        text-align: center;
+    }
+}
+
+.side-two {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+
+    .group-lesson {
+        height: 105px;
+        display: flex;
+        margin-top: 20px;
+        justify-content: center;
+        align-content: center;
+        align-items: center;
+
+        .MuiAutocomplete-root {
+            width: 150px;
+            margin-bottom: 4px;
+        }
+    }
 }
