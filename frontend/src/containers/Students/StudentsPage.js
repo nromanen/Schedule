@@ -3,6 +3,7 @@ import { setIsOpenConfirmDialog } from '../../actions';
 import { StudentsPage } from '../../components/Students/StudentsPage';
 import {
     deleteStudentStart,
+    updateStudentSuccess,
     selectStudentSuccess,
     moveStudentsToGroupStart,
     setExistingGroupStudentStart,
@@ -14,6 +15,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = {
     deleteStudentStart,
+    updateStudentSuccess,
     selectStudentSuccess,
     setIsOpenConfirmDialog,
     moveStudentsToGroupStart,

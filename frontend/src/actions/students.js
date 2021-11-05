@@ -25,10 +25,18 @@ export const selectStudentSuccess = (res) => {
         result: res,
     };
 };
+
 export const updateStudentSuccess = (res) => {
     return {
         type: actionTypes.UPDATE_STUDENT,
         result: res,
+    };
+};
+
+export const checkStudent = (checkedStudent) => {
+    return {
+        type: actionTypes.CHECK_STUDENT,
+        checkedStudent,
     };
 };
 

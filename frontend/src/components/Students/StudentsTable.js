@@ -9,21 +9,20 @@ import { StudentsTableBody } from './StudentsTableBody';
 import { StudentsTableHead } from './StudentsTableHead';
 
 export const StudentsTable = (props) => {
-    const { students, setCheckBoxStudents, checkBoxStudents, setIsGroupButtonDisabled } = props;
+    const {
+        students,
+        checkBoxStudents,
+        setCheckBoxStudents,
+        updateStudentSuccess,
+        setIsGroupButtonDisabled,
+    } = props;
 
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
     const [checkedAll, setCheckedAll] = useState(false);
 
-    const parseStudentToCheckBox = () => {
-        const newData = students.map((item) => {
-            return { ...item, checked: false };
-        });
-        setCheckBoxStudents(newData);
-    };
-
     useEffect(() => {
-        parseStudentToCheckBox();
+        setCheckBoxStudents(students);
     }, [students]);
 
     const currentStudentsOnList = checkBoxStudents.slice(
@@ -48,15 +47,9 @@ export const StudentsTable = (props) => {
     };
 
     const checkStudent = (event) => {
-        setCheckBoxStudents(
-            checkBoxStudents.map((item) => {
-                const checkbox = item;
-                if (item.id === Number(event.target.value)) {
-                    checkbox.checked = event.target.checked;
-                }
-                return checkbox;
-            }),
-        );
+        const { value, checked } = event.target;
+        const checkedStudent = students.filter((student) => student.id === Number(value));
+        updateStudentSuccess({ ...checkedStudent[0], checked });
         isCheckedAll();
     };
     const checkIsDisabledBtn = () => {

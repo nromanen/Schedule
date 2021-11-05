@@ -12,6 +12,7 @@ export const StudentsPage = (props) => {
         deleteStudentStart,
         isOpenConfirmDialog,
         selectStudentSuccess,
+        updateStudentSuccess,
         setIsOpenConfirmDialog,
         isOpenStudentListDialog,
         moveStudentsToGroupStart,
@@ -37,6 +38,7 @@ export const StudentsPage = (props) => {
                 setStudent={setStudent}
                 checkBoxStudents={checkBoxStudents}
                 setCheckBoxStudents={setCheckBoxStudents}
+                updateStudentSuccess={updateStudentSuccess}
                 setIsOpenUpdateDialog={setIsOpenUpdateDialog}
                 setIsOpenConfirmDialog={setIsOpenConfirmDialog}
                 setIsOpenStudentListDialog={setIsOpenStudentListDialog}
@@ -62,7 +64,7 @@ export const StudentsPage = (props) => {
                 />
             )}
             <CustomDialog
-                whatDelete="student"
+                whatDelete='student'
                 open={isOpenConfirmDialog}
                 type={dialogTypes.DELETE_CONFIRM}
                 handelConfirm={() => confirmDeleteStudent(student.id)}
