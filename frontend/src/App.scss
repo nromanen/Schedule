@@ -1,17 +1,7 @@
 @import './styles/colors.scss';
 @import './styles/fonts.scss';
 @import './styles/variables.scss';
-
-@mixin flexWrap {
-  display: flex;
-}
-
-@mixin buttonStyle {
-  cursor: pointer;
-  width: $btn-size;
-  height: $btn-size;
-  transition: color 0.3s linear;
-}
+@import './styles/mixin.scss';
 
 body {
   margin: 0;

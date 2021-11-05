@@ -1,4 +1,8 @@
-@import "../../App";
+@import '../../styles/colors.scss';
+@import '../../styles/fonts.scss';
+@import '../../styles/variables.scss';
+@import '../../styles/mixin.scss';
+
 $group-size: 10px;
 .students-group {
   display: flex;
@@ -36,24 +40,28 @@ $group-size: 10px;
   &-card {
     box-sizing: border-box;
     height: 16 * $group-size;
-    width: 19 * $group-size;
+    width: 20 * $group-size;
 
     display: flex;
     flex-direction: column;
     margin: $group-size;
+    padding: 5 + $group-size;
 
-    border-radius: $group-size/2;
-    box-shadow: 0 2px 8px $shadow-box;
+    border-radius: 2px;
+    border: 1px solid $light-gray;
+    -webkit-box-shadow: 4px 4px 8px -4px rgba(34, 60, 80, 0.2);
+    -moz-box-shadow: 4px 4px 8px -4px rgba(34, 60, 80, 0.2);
+    box-shadow: 4px 4px 8px -4px rgba(34, 60, 80, 0.2);
 
     &__number {
       text-align: center;
-      margin-top: 0;
+      margin-top: $group-size/2;
       text-transform: uppercase;
     }
 
     &__description {
-      margin: 5px 0 0;
-      font-size: 0.7rem;
+      margin: 5px 0 5px 0;
+      font-size: 0.8rem;
       text-align: center;
     }
   }
@@ -88,4 +96,9 @@ $group-size: 10px;
       color: $good-color;
     }
   }
+}
+
+.aside{
+  width: 40%;
+
 }

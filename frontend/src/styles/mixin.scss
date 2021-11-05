@@ -1,0 +1,10 @@
+@mixin flexWrap {
+  display: flex;
+}
+
+@mixin buttonStyle {
+  cursor: pointer;
+  width: $btn-size;
+  height: $btn-size;
+  transition: color 0.3s linear;
+}

@@ -14,7 +14,9 @@ export const StudentsPage = (props) => {
         selectStudentSuccess,
         setIsOpenConfirmDialog,
         isOpenStudentListDialog,
+        moveStudentsToGroupStart,
         setIsOpenStudentListDialog,
+        setExistingGroupStudentStart,
         ...rest
     } = props;
 
@@ -46,8 +48,9 @@ export const StudentsPage = (props) => {
                     groups={groups}
                     open={isOpenStudentListDialog}
                     checkBoxStudents={checkBoxStudents}
-                    setShowStudentList={setIsOpenStudentListDialog}
                     onClose={() => setIsOpenStudentListDialog(false)}
+                    moveStudentsToGroupStart={moveStudentsToGroupStart}
+                    setExistingGroupStudentStart={setExistingGroupStudentStart}
                 />
             )}
             {isOpenUpdateDialog && (

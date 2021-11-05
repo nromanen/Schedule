@@ -53,6 +53,7 @@ export const AddGroup = (props) => {
                 {t(GROUP_Y_LABEL)}
             </h2>
             <form
+                className="group-form"
                 onSubmit={handleSubmit((data) => {
                     submitGroupStart(data);
                     setGroup({});
@@ -66,7 +67,7 @@ export const AddGroup = (props) => {
                     component={renderTextField}
                     validate={[required, minLengthValue, uniqueGroup]}
                 />
-                <div className="form-buttons-container group-btns">
+                <div className="form-buttons-container">
                     <Button
                         variant="contained"
                         className="buttons-style "

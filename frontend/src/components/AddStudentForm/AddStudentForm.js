@@ -2,7 +2,7 @@ import Button from '@material-ui/core/Button';
 import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Field } from 'redux-form';
-import Card from '../../share/Card/Card';
+import './AddStudentForm.scss';
 import { required } from '../../validation/validateFields';
 import renderTextField from '../../share/renderedFields/input';
 import renderSelectField from '../../share/renderedFields/select';
@@ -51,9 +51,9 @@ export const AddStudentForm = (props) => {
     }, [student]);
 
     return (
-        <Card additionClassName="form-card teacher-form">
+        <div className="student-container">
             <form
-                className="createTeacherForm w-100"
+                className="student-form"
                 onSubmit={handleSubmit((data) => submitStudentStart(data, groupId))}
             >
                 <Field
@@ -116,7 +116,7 @@ export const AddStudentForm = (props) => {
                     </Field>
                 )}
 
-                <div className="form-buttons-container">
+                <div className="form-buttons">
                     <Button
                         className="buttons-style"
                         variant="contained"
@@ -136,6 +136,6 @@ export const AddStudentForm = (props) => {
                     </Button>
                 </div>
             </form>
-        </Card>
+        </div>
     );
 };

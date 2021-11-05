@@ -53,3 +53,16 @@ export const deleteStudentStart = (id) => {
         id,
     };
 };
+
+export const setExistingGroupStudentStart = () => {
+    return {
+        type: actionTypes.SET_EXISTING_GROUP_START,
+    };
+};
+
+export const moveStudentsToGroupStart = (data) => {
+    return {
+        type: actionTypes.MOVE_STUDENTS_TO_GROUP_START,
+        data,
+    };
+};

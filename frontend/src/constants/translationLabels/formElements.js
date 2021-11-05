@@ -57,6 +57,7 @@ export const LINK_TO_MEETING_LABEL = 'link_to_meeting_label';
 export const GROUP_LABEL = 'group_label';
 export const CLASS_LABEL = 'class_label';
 export const ROOM_LABEL = 'room_label';
+export const STUDENT_FULL_NAME = 'full_name';
 export const STUDENT_LABEL = 'exist_label';
 export const SUBJECT_LABEL = 'subject_label';
 export const DEPARTMENT_TEACHER_LABEL = 'department_teachers_label';

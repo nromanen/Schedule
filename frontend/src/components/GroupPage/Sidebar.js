@@ -1,11 +1,12 @@
 import React from 'react';
+import './GroupPage.scss';
 import SearchPanel from '../../share/SearchPanel/SearchPanel';
 
 const Sidebar = (props) => {
     const { setIsDisabled, isDisabled, setSearchItem, children } = props;
 
     return (
-        <aside className="search-list__panel">
+        <aside className="aside">
             <SearchPanel
                 SearchChange={setSearchItem}
                 showDisabled={() => setIsDisabled((prev) => !prev)}

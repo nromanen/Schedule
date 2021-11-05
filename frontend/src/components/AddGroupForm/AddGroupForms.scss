@@ -1,10 +1,15 @@
-.group {
+.group-form{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  .MuiFormControl-root{
+    margin-left: 17px;
+    margin-bottom: 10px;
+  }
+}
 
+.group {
     &-form__title {
         text-align: center
     }
-  
-  &-btns {
-    margin-top: 20px
-  }
 }

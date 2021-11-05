@@ -4,8 +4,12 @@ import { STUDENT_URL } from '../constants/axios';
 
 import * as actionTypes from '../actions/actionsType';
 import { STUDENT_FORM } from '../constants/reduxForms';
-import { createErrorMessage, createDynamicMessage } from '../utils/sagaUtils';
-import { setOpenSuccessSnackbar, setOpenErrorSnackbar } from '../actions/snackbar';
+import { createErrorMessage, createDynamicMessage, createMessage } from '../utils/sagaUtils';
+import {
+    setOpenSuccessSnackbar,
+    setOpenErrorSnackbar,
+    setOpenInfoSnackbar,
+} from '../actions/snackbar';
 import { DELETE, POST, PUT } from '../constants/methods';
 import { axiosCall } from '../services/axios';
 import {
@@ -15,12 +19,13 @@ import {
     updateStudentSuccess,
 } from '../actions/students';
 import {
+    EXIST_LABEL,
     UPDATED_LABEL,
     CREATED_LABEL,
     DELETED_LABEL,
 } from '../constants/translationLabels/serviceMessages';
 
-function* fetchAllStudentsWorker({ id }) {
+function* fetchAllStudents({ id }) {
     try {
         const requestUrl = `groups/${id}/with-students`;
         const res = yield call(axiosCall, requestUrl);
@@ -30,7 +35,7 @@ function* fetchAllStudentsWorker({ id }) {
     }
 }
 
-function* createStudentWorker({ data }) {
+function* createStudent({ data }) {
     try {
         yield call(axiosCall, STUDENT_URL, POST, data);
         yield put(reset(STUDENT_FORM));
@@ -41,7 +46,7 @@ function* createStudentWorker({ data }) {
     }
 }
 
-function* updateStudentWorker({ data }) {
+function* updateStudent({ data }) {
     try {
         const res = yield call(axiosCall, STUDENT_URL, PUT, data);
         yield put(updateStudentSuccess(res.data));
@@ -57,18 +62,18 @@ function* updateStudentWorker({ data }) {
 function* submitStudentForm({ data, groupId }) {
     try {
         if (!data.id) {
-            const createStudent = { ...data, group: { id: groupId } };
-            yield call(createStudentWorker, { data: createStudent });
+            const newStudent = { ...data, group: { id: groupId } };
+            yield call(createStudent, { data: newStudent });
         } else {
             const updatedStudent = { ...data, group: { id: data.group } };
-            yield call(updateStudentWorker, { data: updatedStudent });
+            yield call(updateStudent, { data: updatedStudent });
         }
     } catch (err) {
         yield put(setOpenErrorSnackbar(createErrorMessage(err)));
     }
 }
 
-function* deleteStudentWorker({ id }) {
+function* deleteStudent({ id }) {
     try {
         yield call(axiosCall, `${STUDENT_URL}/${id}`, DELETE);
         yield put(deleteStudentSuccess(id));
@@ -79,10 +84,33 @@ function* deleteStudentWorker({ id }) {
     }
 }
 
+function* setExistingGroupStudent() {
+    try {
+        const message = createMessage(
+            'serviceMessages:students_exist_in_this_group',
+            'common:student_title',
+            EXIST_LABEL,
+        );
+        yield put(setOpenInfoSnackbar(message));
+    } catch (err) {
+        yield put(setOpenErrorSnackbar(createErrorMessage(err)));
+    }
+}
+
+function* moveStudentsToGroup({ data }) {
+    try {
+        console.log(data);
+    } catch (err) {
+        yield put(setOpenErrorSnackbar(createErrorMessage(err)));
+    }
+}
+
 export default function* studentWatcher() {
-    yield takeEvery(actionTypes.FETCH_ALL_STUDENTS, fetchAllStudentsWorker);
-    yield takeEvery(actionTypes.CREATE_STUDENT_START, createStudentWorker);
-    yield takeEvery(actionTypes.UPDATE_STUDENT_START, updateStudentWorker);
-    yield takeEvery(actionTypes.DELETE_STUDENT_START, deleteStudentWorker);
+    yield takeEvery(actionTypes.MOVE_STUDENTS_TO_GROUP_START, moveStudentsToGroup);
+    yield takeEvery(actionTypes.SET_EXISTING_GROUP_START, setExistingGroupStudent);
     yield takeEvery(actionTypes.SUBMIT_STUDENT_FORM, submitStudentForm);
+    yield takeEvery(actionTypes.FETCH_ALL_STUDENTS, fetchAllStudents);
+    yield takeEvery(actionTypes.CREATE_STUDENT_START, createStudent);
+    yield takeEvery(actionTypes.UPDATE_STUDENT_START, updateStudent);
+    yield takeEvery(actionTypes.DELETE_STUDENT_START, deleteStudent);
 }

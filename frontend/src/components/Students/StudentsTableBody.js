@@ -3,7 +3,6 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 import { useTranslation } from 'react-i18next';
-import { withStyles } from '@material-ui/core';
 import { FaEdit } from 'react-icons/all';
 import { Delete } from '@material-ui/icons';
 import { Link } from 'react-router-dom';
@@ -22,24 +21,6 @@ import {
     SELECT_STUDENT,
     DELETE_TITLE_LABEL,
 } from '../../constants/translationLabels/formElements';
-
-const StyledTableCell = withStyles((theme) => ({
-    head: {
-        backgroundColor: theme.palette.common.white,
-        color: theme.palette.common.black,
-    },
-    body: {
-        fontSize: 14,
-    },
-}))(TableCell);
-
-const StyledTableRow = withStyles((theme) => ({
-    root: {
-        '&:nth-of-type(odd)': {
-            backgroundColor: theme.palette.action.hover,
-        },
-    },
-}))(TableRow);
 
 export const StudentsTableBody = (props) => {
     const {
@@ -60,8 +41,8 @@ export const StudentsTableBody = (props) => {
     return (
         <TableBody>
             {currentStudentsOnList.map((student) => (
-                <StyledTableRow key={student.id}>
-                    <StyledTableCell component="th" scope="row" align="center">
+                <TableRow key={student.id}>
+                    <TableCell component="th" scope="row" align="center">
                         <input
                             onClick={(e) => checkStudent(e)}
                             type="checkbox"
@@ -70,11 +51,11 @@ export const StudentsTableBody = (props) => {
                             className="checked-box"
                             title={`${t(SELECT_STUDENT)} ${getTeacherFullName(student)}`}
                         />
-                    </StyledTableCell>
-                    <StyledTableCell component="th" scope="row" align="center">
+                    </TableCell>
+                    <TableCell component="th" scope="row" align="center">
                         {getTeacherFullName(student)}
-                    </StyledTableCell>
-                    <StyledTableCell component="th" scope="row" align="center">
+                    </TableCell>
+                    <TableCell component="th" scope="row" align="center">
                         <span>
                             <button
                                 className="send-letter-button"
@@ -85,8 +66,8 @@ export const StudentsTableBody = (props) => {
                                 {student.email}
                             </button>
                         </span>
-                    </StyledTableCell>
-                    <StyledTableCell component="th" scope="row" align="center">
+                    </TableCell>
+                    <TableCell component="th" scope="row" align="center">
                         <span className="edit-cell">
                             <Link
                                 to={`${GROUP_LIST_LINK}${GROUP_LINK}/${group.id}${STUDENT_LINK}/${student.id}${EDIT_LINK}`}
@@ -113,8 +94,8 @@ export const StudentsTableBody = (props) => {
                                 />
                             </Link>
                         </span>
-                    </StyledTableCell>
-                </StyledTableRow>
+                    </TableCell>
+                </TableRow>
             ))}
         </TableBody>
     );

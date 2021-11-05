@@ -3,25 +3,14 @@ import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 import { FaEnvelope } from 'react-icons/fa';
 import TableHead from '@material-ui/core/TableHead';
-import { withStyles } from '@material-ui/core';
 import './StudentTable.scss';
 import { useTranslation } from 'react-i18next';
 import {
     SELECT_ALL,
-    STUDENT_LABEL,
     SEND_LETTER_LABEL,
     STUDENT_ACTIONS,
+    STUDENT_FULL_NAME,
 } from '../../constants/translationLabels/formElements';
-
-const StyledTableCell = withStyles((theme) => ({
-    head: {
-        backgroundColor: theme.palette.common.white,
-        color: theme.palette.common.black,
-    },
-    body: {
-        fontSize: 14,
-    },
-}))(TableCell);
 
 export const StudentsTableHead = (props) => {
     const { checkedAll, checkedAllOnPageClick } = props;
@@ -30,7 +19,7 @@ export const StudentsTableHead = (props) => {
     return (
         <TableHead>
             <TableRow>
-                <StyledTableCell>
+                <TableCell>
                     <span className="checked-all">
                         <input
                             id="checked-all-input"
@@ -41,15 +30,15 @@ export const StudentsTableHead = (props) => {
                             title={`${t(SELECT_ALL)}`}
                         />
                     </span>
-                </StyledTableCell>
-                <StyledTableCell>{t(STUDENT_LABEL)}</StyledTableCell>
-                <StyledTableCell>
+                </TableCell>
+                <TableCell>{t(STUDENT_FULL_NAME)}</TableCell>
+                <TableCell>
                     <FaEnvelope
                         className="svg-btn send-message"
                         title={`${t(SEND_LETTER_LABEL)}`}
                     />
-                </StyledTableCell>
-                <StyledTableCell>{t(STUDENT_ACTIONS)}</StyledTableCell>
+                </TableCell>
+                <TableCell>{t(STUDENT_ACTIONS)}</TableCell>
             </TableRow>
         </TableHead>
     );
