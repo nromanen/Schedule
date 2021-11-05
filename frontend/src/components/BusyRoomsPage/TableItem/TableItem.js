@@ -1,9 +1,7 @@
 import React from 'react';
-import i18n from 'i18next';
 import { isEmpty } from 'lodash';
 import Card from '@material-ui/core/Card';
 import './TableItem.scss';
-import { WEEK_ODD_TITLE, WEEK_EVEN_TITLE } from '../../../constants/translationLabels/common';
 import { addClassDayBoard, removeClassDayBoard } from '../../../helper/schedule';
 
 const TableItem = (props) => {
@@ -11,16 +9,16 @@ const TableItem = (props) => {
     const getClassLessons = (lessonArray) => {
         return lessonArray.map((lessonOne) => {
             return (
-                <span key={`${lessonOne.name}`} className="group-list">
+                <h5 key={`${lessonOne.name}`} className="group-list">
                     {lessonOne.groups.map((groupItem) => {
                         const hoverInfo = `${lessonOne.teacher_for_site} / ${lessonOne.subject_for_site}`;
                         return (
-                            <h5 title={hoverInfo} key={`${hoverInfo}`}>
+                            <span title={hoverInfo} key={`${hoverInfo}`}>
                                 {groupItem.group_name}
-                            </h5>
+                            </span>
                         );
                     })}
-                </span>
+                </h5>
             );
         });
     };
@@ -62,7 +60,6 @@ const TableItem = (props) => {
                             classOdd?.lessons.length,
                         )}`}
                     >
-                        <p className="week-type">{i18n.t(WEEK_ODD_TITLE)}</p>
                         {inArrayIndex || !classOdd || isEmpty(classOdd.lessons) ? (
                             <> </>
                         ) : (
@@ -77,7 +74,6 @@ const TableItem = (props) => {
                             classEven?.lessons.length,
                         )}`}
                     >
-                        <p className="week-type">{i18n.t(WEEK_EVEN_TITLE)}</p>
                         {inArrayIndex || !classEven || isEmpty(classEven.lessons) ? (
                             <> </>
                         ) : (

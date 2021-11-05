@@ -7,6 +7,18 @@ import { ROOM_LIST_TITLE } from '../../../constants/translationLabels/common';
 
 const BusyRoomsTable = (props) => {
     const { busyRooms, days, classes } = props;
+
+    // const getTitleColorByRoomType = (roomType) => {
+    //     const type = roomType.toLowerCase();
+    //     switch (type) {
+    //         case 'лекційна':
+    //             return 'dd';
+    //         case 'лабораторія':
+    //             return 'aa';
+    //         default:
+    //             return 'ff';
+    //     }
+    // };
     return (
         <section className="card busy-rooms-table-container">
             <ScheduleDaySidebar title={i18n.t(ROOM_LIST_TITLE)} days={days} classes={classes} />

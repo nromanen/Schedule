@@ -6,6 +6,7 @@ const mapStateToProps = (state) => ({
     busyRooms: state.busyRooms.busyRooms,
     loading: state.loadingIndicator.loading,
     currentSemester: state.schedule.currentSemester,
+    roomTypes: state.roomTypes.roomTypes,
 });
 
 const mapDispatchToProps = (dispatch) => ({
