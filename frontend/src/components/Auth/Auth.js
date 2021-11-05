@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 import { HOME_PAGE_LINK, LOGIN_LINK, ADMIN_PAGE_LINK } from '../../constants/links';
 import { authTypes, successAuthMessages } from '../../constants/auth';
@@ -51,10 +51,10 @@ const Auth = (props) => {
     };
 
     const showSuccessMessage = (massage) => {
-        handleSnackbarOpenService(true, snackbarTypes.SUCCESS, t(massage));
+        handleSnackbarOpenService(true, snackbarTypes.SUCCESS, i18n.t(massage));
     };
 
-    const successLoginRedirect = () => {
+    const successLoginRedirect = useCallback(() => {
         if (userRole === userRoles.MANAGER) {
             document.title = i18n.t(ADMIN_TITLE);
             history.push(ADMIN_PAGE_LINK);
@@ -63,7 +63,7 @@ const Auth = (props) => {
             history.push(HOME_PAGE_LINK);
         }
         showSuccessMessage(successAuthMessages[authType]);
-    };
+    }, []);
 
     const registrationHandler = (registrationData) => {
         onRegister({
