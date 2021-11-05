@@ -24,6 +24,7 @@ import {
     createGroupSuccess,
 } from '../actions';
 import { hasDisabled } from '../constants/disabledCard';
+import { GROUP } from '../constants/names';
 
 function* fetchGroups(url) {
     try {
@@ -61,7 +62,7 @@ function* createGroup({ data }) {
         const res = yield call(axiosCall, GROUP_URL, POST, data);
         yield put(createGroupSuccess(res.data));
         yield put(reset(GROUP_FORM));
-        const message = createDynamicMessage('group', CREATED_LABEL);
+        const message = createDynamicMessage(GROUP, CREATED_LABEL);
         yield put(setOpenSuccessSnackbar(message));
     } catch (err) {
         yield put(setOpenErrorSnackbar(createErrorMessage(err)));
@@ -77,7 +78,7 @@ function* updateGroup({ data }) {
             yield put(updateGroupSuccess(res.data));
         }
         yield put(selectGroupSuccess(null));
-        const message = createDynamicMessage('group', UPDATED_LABEL);
+        const message = createDynamicMessage(GROUP, UPDATED_LABEL);
         yield put(setOpenSuccessSnackbar(message));
         yield put(reset(GROUP_FORM));
     } catch (err) {
@@ -101,7 +102,7 @@ function* deleteGroup({ id }) {
     try {
         yield call(axiosCall, `${GROUP_URL}/${id}`, DELETE);
         yield put(deleteGroupSuccess(id));
-        const message = createDynamicMessage('group', DELETED_LABEL);
+        const message = createDynamicMessage(GROUP, DELETED_LABEL);
         yield put(setOpenSuccessSnackbar(message));
     } catch (err) {
         yield put(setOpenErrorSnackbar(createErrorMessage(err)));

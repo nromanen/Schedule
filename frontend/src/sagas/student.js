@@ -24,6 +24,7 @@ import {
     CREATED_LABEL,
     DELETED_LABEL,
 } from '../constants/translationLabels/serviceMessages';
+import { STUDENT } from '../constants/names';
 
 function* fetchAllStudents({ id }) {
     try {
@@ -39,7 +40,7 @@ function* createStudent({ data }) {
     try {
         yield call(axiosCall, STUDENT_URL, POST, data);
         yield put(reset(STUDENT_FORM));
-        const message = createDynamicMessage('student', CREATED_LABEL);
+        const message = createDynamicMessage(STUDENT, CREATED_LABEL);
         yield put(setOpenSuccessSnackbar(message));
     } catch (err) {
         yield put(setOpenErrorSnackbar(createErrorMessage(err)));
@@ -52,7 +53,7 @@ function* updateStudent({ data }) {
         yield put(updateStudentSuccess(res.data));
         yield put(selectStudentSuccess(null));
         yield put(reset(STUDENT_FORM));
-        const message = createDynamicMessage('student', UPDATED_LABEL);
+        const message = createDynamicMessage(STUDENT, UPDATED_LABEL);
         yield put(setOpenSuccessSnackbar(message));
     } catch (err) {
         yield put(setOpenErrorSnackbar(createErrorMessage(err)));
@@ -77,7 +78,7 @@ function* deleteStudent({ id }) {
     try {
         yield call(axiosCall, `${STUDENT_URL}/${id}`, DELETE);
         yield put(deleteStudentSuccess(id));
-        const message = createDynamicMessage('student', DELETED_LABEL);
+        const message = createDynamicMessage(STUDENT, DELETED_LABEL);
         yield put(setOpenSuccessSnackbar(message));
     } catch (err) {
         yield put(setOpenErrorSnackbar(createErrorMessage(err)));
