@@ -18,6 +18,7 @@ const mapStateToProps = (state) => ({
     semester: state.semesters.semester,
     groups: state.groups.groups,
     isOpenConfirmDialog: state.dialog.isOpenConfirmDialog,
+    classScheduler: state.classActions.classScheduler,
 });
 const mapDispatchToProps = (dispatch) => ({
     getAllSemestersItems: () => dispatch(getAllSemestersStart()),
