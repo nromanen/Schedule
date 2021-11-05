@@ -54,10 +54,10 @@
 
 .cards-container {
     margin: 20px 0px 50px 0px;
-    // margin-bottom: 50px;
     @media (max-width: 850px) {
         flex-direction: column;
         align-items: center;
+        text-align: center;
     }
     @include flexWrap();
     align-items: start;
@@ -70,7 +70,7 @@
         justify-content: space-around;
         flex-wrap: wrap;
         @media (max-width: 850px) {
-            margin-top: 15px;
+            margin-top: 3rem;
         }
     }
 }
@@ -87,10 +87,19 @@
 
 // card
 
-.done-card {
+.card {
+    background-color: $main-color;
+    display: inline-block;
+    margin: 10px;
+    padding: 1rem;
+    border-radius: 5px;
+    box-shadow: 0 2px 8px $shadow-box;
+}
+
+.done-lesson-card {
     background-color: $main-color;
     width: 15em;
-    height: 14.5em;
+    height: 16.5em;
 }
 
 .cards-btns {

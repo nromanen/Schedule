@@ -36,6 +36,7 @@
     "group_students": "of group",
     "type_element": "Type",
     "hours_label": "Hour(s)",
+    "hours_label_short": "Hour",
     "lesson_label": "Lesson",
     "temporary_schedule_label": "Temporary schedule",
     "teacher_a_label": "Teacher",

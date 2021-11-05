@@ -15,6 +15,7 @@ import {
     COPY_LESSON,
     DELETE_LESSON,
     EDIT_LESSON,
+    NO_LINK,
 } from '../../../constants/translationLabels/common';
 import '../LessonPage.scss';
 
@@ -24,14 +25,17 @@ const LessonsCard = (props) => {
     const { t } = useTranslation(['common', 'formElements']);
 
     const getTitle = (lessonItem) => {
-        return `${firstStringLetterCapital(lessonItem.subjectForSite)} ${t(
-            `lesson_type_${lessonItem.lessonType.toLowerCase()}_label`,
-            { ns: 'formElements' },
-        )}`;
+        return `${firstStringLetterCapital(lessonItem.subjectForSite)}`;
+    };
+
+    const getType = (lessonItem) => {
+        return `${t(`lesson_type_${lessonItem.lessonType.toLowerCase()}_label`, {
+            ns: 'formElements',
+        })}`;
     };
 
     return (
-        <Card additionClassName="done-card">
+        <Card additionClassName="done-lesson-card">
             <div className="cards-btns">
                 {lesson.grouped && (
                     <FaUserPlus
@@ -55,7 +59,10 @@ const LessonsCard = (props) => {
                     onClick={() => onClickOpen(lesson.id)}
                 />
             </div>
-            <p className="title">{getShortTitle(getTitle(lesson), MAX_LENGTH)}</p>
+            <p className="title" title={lesson.subjectForSite}>
+                {getShortTitle(getTitle(lesson), MAX_LENGTH)}
+            </p>
+            <b>{getType(lesson)}</b>
             <p>{getTeacherName(lesson.teacher)}</p>
             <p>
                 <Trans
@@ -67,7 +74,7 @@ const LessonsCard = (props) => {
                     {{ count: lesson.hours }}
                 </Trans>
             </p>
-            <input value={lesson.linkToMeeting ?? ''} disabled />
+            <input value={lesson.linkToMeeting ?? `${t(NO_LINK)}`} disabled />
         </Card>
     );
 };

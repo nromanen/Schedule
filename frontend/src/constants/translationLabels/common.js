@@ -82,6 +82,7 @@ export const WEEK_ODD_TITLE = 'week_odd_title';
 export const WEEK_EVEN_TITLE = 'week_even_title';
 export const CLASS_SCHEDULE = 'class_schedule';
 export const DELETE_LESSON = 'delete_lesson';
+export const NO_LINK = 'no meeting link';
 export const EDIT_LESSON = 'edit_lesson';
 export const COPY_LESSON = 'copy_lesson';
 export const COPY_TO_SAME_GROUP_ERROR = 'copy_to_same_group_error';

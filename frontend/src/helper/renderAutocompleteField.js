@@ -2,7 +2,6 @@ import React from 'react';
 import { Autocomplete } from '@material-ui/lab';
 import { FormControl, TextField } from '@material-ui/core';
 import { renderFromHelper } from '../share/renderedFields/error';
-import { handleTeacherInfo } from './renderTeacher';
 
 export const renderAutocompleteField = ({
     values,

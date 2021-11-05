@@ -64,6 +64,7 @@ export const DEPARTMENT_TEACHER_LABEL = 'department_teachers_label';
 export const DEPARTMENT_TEACHERS = 'department_teachers';
 export const GROUP_STUDENTS = 'group_students';
 export const HOURS_LABEL = 'hours_label';
+export const HOURS_LABEL_SHORT = 'hours_label_short';
 export const LESSON_LABEL = 'lesson_label';
 export const TEACHER_A_LABEL = 'teacher_a_label';
 export const STUDENT_A_LABEL = 'student_a_label';

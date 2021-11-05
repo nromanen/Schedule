@@ -77,6 +77,7 @@
     "select_group_schedule": "Please select group:",
     "delete_lesson": "Delete lesson",
     "edit_lesson": "Edit lesson",
+    "no meeting link": "No meeting link",
     "copy_lesson": "Copy lesson",
     "copy_to_same_group_error": "You cannot copy to the same group",
     "delete_lesson_changes": "Delete changes",

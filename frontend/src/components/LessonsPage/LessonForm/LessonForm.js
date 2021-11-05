@@ -29,9 +29,9 @@ import {
     LINK_TO_MEETING_LABEL,
     FOR_SITE_LABEL,
     FORM_GROUPED_LABEL,
-    HOURS_LABEL,
     TEACHER_LABEL,
     TYPE_LABEL,
+    HOURS_LABEL_SHORT,
 } from '../../../constants/translationLabels/formElements';
 
 import './LessonForm.scss';
@@ -166,16 +166,16 @@ const LessonForm = (props) => {
                         <Field
                             id="hours"
                             name="hours"
-                            type="number"
+                            type="tel"
                             component={renderTextField}
-                            label={t(HOURS_LABEL)}
+                            label={t(HOURS_LABEL_SHORT)}
                             validate={[required, lessThanZero]}
                         />
                         <Field
                             id="grouped"
                             name="grouped"
                             label={t(FORM_GROUPED_LABEL)}
-                            labelPlacement="end"
+                            labelPlacement="Top"
                             defaultValue={checked}
                             component={renderCheckboxField}
                             checked={checked}

@@ -44,6 +44,7 @@
     "department_y_label": "Кафедри",
     "type_element": "Тип",
     "hours_label": "Годин(а/и)",
+    "hours_label_short": "Год",
     "email_label": "Електронна адреса",
     "password_label": "Пароль",
     "retype_password_label": "Повторіть пароль",
