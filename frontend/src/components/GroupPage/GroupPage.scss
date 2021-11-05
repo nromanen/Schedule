@@ -23,10 +23,18 @@ $group-size: 10px;
   }
 }
 .group {
+
+  &-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+  }
+
   &-wrapper {
     display: flex;
     flex-wrap: wrap;
-    width: 100%;
+    width: 80%;
 
     @media (max-width: 850px) {
       margin: 10px auto;
@@ -39,8 +47,9 @@ $group-size: 10px;
 
   &-card {
     box-sizing: border-box;
+    max-width: 19 * $group-size; 
+    min-width: 18 * $group-size;
     height: 16 * $group-size;
-    width: 20 * $group-size;
 
     display: flex;
     flex-direction: column;
@@ -98,7 +107,16 @@ $group-size: 10px;
   }
 }
 
-.aside{
+.group-sidebar{
+  position: sticky;
   width: 40%;
-
+  top: 1rem;
+  width: 420px;
+  @media (max-width: 850px) {
+      margin: 10px auto;
+      width: 50%;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
 }

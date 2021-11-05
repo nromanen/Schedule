@@ -16,14 +16,16 @@ const GroupPage = (props) => {
     return (
         <>
             <div className="cards-container">
-                <Sidebar
-                    isDisabled={isDisabled}
-                    setIsDisabled={setIsDisabled}
-                    setSearchItem={setSearchItem}
-                >
-                    <AddGroup group={group} setGroup={setGroup} />
-                </Sidebar>
-                <div className="group-wrapper group-list">
+                <div className="group-sidebar">
+                    <Sidebar
+                        isDisabled={isDisabled}
+                        setIsDisabled={setIsDisabled}
+                        setSearchItem={setSearchItem}
+                    >
+                        <AddGroup group={group} setGroup={setGroup} />
+                    </Sidebar>
+                </div>
+                <div className="group-wrapper">
                     <GroupList
                         match={match}
                         setGroup={setGroup}

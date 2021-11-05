@@ -6,7 +6,7 @@ const Sidebar = (props) => {
     const { setIsDisabled, isDisabled, setSearchItem, children } = props;
 
     return (
-        <aside className="aside">
+        <aside>
             <SearchPanel
                 SearchChange={setSearchItem}
                 showDisabled={() => setIsDisabled((prev) => !prev)}

@@ -1,7 +1,6 @@
 import React from 'react';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
-import { FaEnvelope } from 'react-icons/fa';
 import TableHead from '@material-ui/core/TableHead';
 import './StudentTable.scss';
 import { useTranslation } from 'react-i18next';
@@ -32,12 +31,7 @@ export const StudentsTableHead = (props) => {
                     </span>
                 </TableCell>
                 <TableCell>{t(STUDENT_FULL_NAME)}</TableCell>
-                <TableCell>
-                    <FaEnvelope
-                        className="svg-btn send-message"
-                        title={`${t(SEND_LETTER_LABEL)}`}
-                    />
-                </TableCell>
+                <TableCell>{t(SEND_LETTER_LABEL)}</TableCell>
                 <TableCell>{t(STUDENT_ACTIONS)}</TableCell>
             </TableRow>
         </TableHead>

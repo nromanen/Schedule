@@ -104,7 +104,7 @@ const GroupList = (props) => {
                     match={match}
                 />
             )}
-            <div className="group-wrapper group-list">
+            <div className="group-list">
                 {visibleGroups.map((item) => (
                     <GroupCard
                         key={item.id}
