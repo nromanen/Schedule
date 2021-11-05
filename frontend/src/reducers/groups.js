@@ -10,7 +10,7 @@ const initialState = {
 const reducer = (state = initialState, action) => {
     switch (action.type) {
         case actionTypes.SHOW_ALL_GROUPS_SUCCESS: {
-            const newGroup = action.result.sort((a, b) => sortGroup(a, b));
+            const newGroup = action.result;
             return updateObject(state, {
                 ...state,
                 groups: newGroup,
@@ -24,10 +24,11 @@ const reducer = (state = initialState, action) => {
             });
         }
 
-        case actionTypes.CREATE_GROUP_SUCCESS:
+        case actionTypes.CREATE_GROUP_SUCCESS: {
             return updateObject(state, {
-                groups: state.groups.concat(action.result),
+                groups: [action.result, ...state.groups],
             });
+        }
 
         case actionTypes.UPDATE_GROUP_SUCCESS: {
             const groupIndex = state.groups.findIndex(({ id }) => id === action.result.id);
@@ -37,9 +38,10 @@ const reducer = (state = initialState, action) => {
                 ...groups[groupIndex],
                 ...action.result,
             };
+            const sortedGroups = groups.sort((a, b) => sortGroup(a, b));
 
             return updateObject(state, {
-                groups,
+                groups: sortedGroups,
                 group: {},
             });
         }
