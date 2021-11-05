@@ -11,20 +11,20 @@ import {
     ARCHIVED_SEMESTERS_URL,
     DEFAULT_SEMESTER_URL,
 } from '../constants/axios';
-import { setDisabledSemesters } from '../actions/semesters';
+import { getDisabledSemestersSuccess } from '../actions/semesters';
 import { SEMESTER_FORM } from '../constants/reduxForms';
 import { snackbarTypes } from '../constants/snackbarTypes';
 import { handleSnackbarOpenService } from './snackbarService';
 import { checkUniqSemester } from '../validation/storeValidation';
 import {
-    addSemester,
-    clearSemester,
-    deleteSemester,
-    selectSemester,
-    showAllSemesters,
-    updateSemester,
-    setArchivedSemesters,
-    moveToArchivedSemester,
+    addSemesterSuccess,
+    clearSemesterSuccess,
+    deleteSemesterSuccess,
+    selectSemesterSuccess,
+    getAllSemestersSuccess,
+    updateSemesterSuccess,
+    getArchivedSemestersSuccess,
+    moveToArchivedSemesterSuccess,
     setScheduleType,
     setFullSchedule,
 } from '../actions/index';
@@ -47,12 +47,12 @@ import {
 } from '../constants/translationLabels/formElements';
 import { COMMON_SEMESTER_IS_NOT_UNIQUE } from '../constants/translationLabels/common';
 // can delete it
-export const selectSemesterService = (semesterId) => store.dispatch(selectSemester(semesterId));
+export const selectSemesterService = (semesterId) => store.dispatch(selectSemesterSuccess(semesterId));
 // it doesnt work within project
 // export const setUniqueErrorService = (isUniqueError) => store.dispatch(setError(isUniqueError));
 // can delete it
 export const clearSemesterService = () => {
-    store.dispatch(clearSemester());
+    store.dispatch(clearSemesterSuccess());
     resetFormHandler(SEMESTER_FORM);
 };
 
@@ -129,7 +129,7 @@ export const handleSemesterService = (values) => {
         axios
             .put(SEMESTERS_URL, oldCurrentSemester)
             .then((response) => {
-                store.dispatch(updateSemester(response.data));
+                store.dispatch(updateSemesterSuccess(response.data));
             })
             .catch((error) => errorHandler(error));
     }
@@ -145,7 +145,7 @@ export const showAllSemestersService = () => {
         .get(SEMESTERS_URL)
         .then((response) => {
             store.dispatch(
-                showAllSemesters(
+                getAllSemestersSuccess(
                     response.data.sort((a, b) => (a.year > b.year ? 1 : -1)).reverse(),
                 ),
             );
@@ -157,7 +157,7 @@ export const getDisabledSemestersService = () => {
     axios
         .get(DISABLED_SEMESTERS_URL)
         .then((res) => {
-            store.dispatch(setDisabledSemesters(res.data));
+            store.dispatch(getDisabledSemestersSuccess(res.data));
         })
         .catch((err) => errorHandler(err));
 };
@@ -166,7 +166,7 @@ export const getArchivedSemestersService = () => {
     axios
         .get(ARCHIVED_SEMESTERS_URL)
         .then((response) => {
-            store.dispatch(setArchivedSemesters(response.data));
+            store.dispatch(getArchivedSemestersSuccess(response.data));
         })
         .catch((err) => errorHandler(err));
 };
@@ -177,8 +177,8 @@ export const setGroupsToSemester = ({ semesterId, groups }) => {
     axios
         .put(`${SEMESTERS_URL}/${semesterId}/groups?${groupIds}`)
         .then((response) => {
-            store.dispatch(updateSemester(response));
-            store.dispatch(selectSemester(null));
+            store.dispatch(updateSemesterSuccess(response));
+            store.dispatch(selectSemesterSuccess(null));
             getDisabledSemestersService();
             getArchivedSemestersService();
             showAllSemestersService();
@@ -202,7 +202,7 @@ export const removeSemesterCardService = (semesterId) => {
     axios
         .delete(`${SEMESTERS_URL}/${semesterId}`)
         .then(() => {
-            store.dispatch(deleteSemester(semesterId));
+            store.dispatch(deleteSemesterSuccess(semesterId));
             successHandler(
                 i18n.t(BACK_END_SUCCESS_OPERATION, {
                     cardType: i18n.t(FORM_SEMESTER_LABEL),
@@ -217,7 +217,7 @@ const putSemester = (data) => {
     axios
         .put(SEMESTERS_URL, data)
         .then((response) => {
-            store.dispatch(updateSemester(response));
+            store.dispatch(updateSemesterSuccess(response));
             selectSemesterService(null);
             getDisabledSemestersService();
             showAllSemestersService();
@@ -236,7 +236,7 @@ const postSemester = (data) => {
     axios
         .post(SEMESTERS_URL, data)
         .then((response) => {
-            store.dispatch(addSemester(response.data));
+            store.dispatch(addSemesterSuccess(response.data));
             resetFormHandler(SEMESTER_FORM);
             successHandler(
                 i18n.t(BACK_END_SUCCESS_OPERATION, {
@@ -252,7 +252,7 @@ export const setDefaultSemesterById = (dataId) => {
     axios
         .put(`${DEFAULT_SEMESTER_URL}?semesterId=${dataId}`)
         .then((response) => {
-            store.dispatch(updateSemester(response));
+            store.dispatch(updateSemesterSuccess(response));
             selectSemesterService(null);
             getDisabledSemestersService();
             getArchivedSemestersService();
@@ -316,7 +316,7 @@ export const createArchiveSemesterService = (semesterId) => {
     axios
         .post(`${ARCHIVE_SEMESTER}/${semesterId}`)
         .then(() => {
-            store.dispatch(moveToArchivedSemester(semesterId));
+            store.dispatch(moveToArchivedSemesterSuccess(semesterId));
             successHandler(
                 i18n.t(BACK_END_SUCCESS_OPERATION, {
                     cardType: i18n.t(FORM_SEMESTER_LABEL),

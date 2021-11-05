@@ -92,15 +92,15 @@ export {
     setTeacherViewType,
 } from './schedule';
 export {
-    addSemester,
-    clearSemester,
-    deleteSemester,
-    moveToArchivedSemester,
-    selectSemester,
-    setArchivedSemesters,
-    setDisabledSemesters,
-    showAllSemesters,
-    updateSemester,
+    addSemesterSuccess,
+    clearSemesterSuccess,
+    deleteSemesterSuccess,
+    moveToArchivedSemesterSuccess,
+    selectSemesterSuccess,
+    getArchivedSemestersSuccess,
+    getDisabledSemestersSuccess,
+    getAllSemestersSuccess,
+    updateSemesterSuccess,
 } from './semesters';
 
 export { setIsOpenConfirmDialog } from './dialog';

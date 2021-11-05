@@ -30,7 +30,7 @@ const SemesterList = (props) => {
         disabled,
         term,
         semesters,
-        selectSemester,
+        selectSemesterSuccess,
         createArchivedSemester,
         setOpenConfirmDialog,
         removeSemesterCard,
@@ -42,7 +42,7 @@ const SemesterList = (props) => {
         setGroupsToSemester,
         toggleSemesterVisibility,
         // archivedSemesters,
-        // getArchivedSemester,
+        // getArchivedSemesterById,
     } = props;
     const [isOpenSemesterCopyForm, setIsOpenSemesterCopyForm] = useState(false);
     const [confirmDialogType, setConfirmDialogType] = useState('');
@@ -95,7 +95,7 @@ const SemesterList = (props) => {
     };
     // it doesnt work, need to finish implement archeved functionality
     // const handleSemesterArchivedPreview = (currentSemesterId) => {
-    //     getArchivedSemester(+currentSemesterId);
+    //     getArchivedSemesterById(+currentSemesterId);
     // };
     const onChangeGroups = () => {
         const semester = semesters.find((semesterItem) => semesterItem.id === semesterId);
@@ -156,7 +156,7 @@ const SemesterList = (props) => {
                             semDays={semDays}
                             disabled={disabled}
                             archived={archived}
-                            selectSemester={selectSemester}
+                            selectSemesterSuccess={selectSemesterSuccess}
                             showConfirmDialog={showConfirmDialog}
                             setIsOpenSemesterCopyForm={setIsOpenSemesterCopyForm}
                             setSemesterId={setSemesterId}

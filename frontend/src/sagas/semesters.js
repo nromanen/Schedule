@@ -3,13 +3,13 @@ import { reset } from 'redux-form';
 import * as actionTypes from '../actions/actionsType';
 import { setOpenSuccessSnackbar, setOpenErrorSnackbar } from '../actions/snackbar';
 import {
-    showAllSemesters,
-    setArchivedSemesters,
-    updateSemester,
-    selectSemester,
-    deleteSemester,
-    addSemester,
-    moveToArchivedSemester,
+    getAllSemestersSuccess,
+    getArchivedSemestersSuccess,
+    updateSemesterSuccess,
+    selectSemesterSuccess,
+    deleteSemesterSuccess,
+    addSemesterSuccess,
+    moveToArchivedSemesterSuccess,
 } from '../actions/semesters';
 import { setScheduleType, setFullSchedule } from '../actions/schedule';
 import { axiosCall } from '../services/axios';
@@ -42,7 +42,7 @@ import { createErrorMessage, createMessage } from '../utils/sagaUtils';
 export function* getAllSemestersItems() {
     try {
         const response = yield call(axiosCall, SEMESTERS_URL);
-        yield put(showAllSemesters(response.data));
+        yield put(getAllSemestersSuccess(response.data));
     } catch (error) {
         yield put(setOpenErrorSnackbar(createErrorMessage(error)));
     }
@@ -50,7 +50,7 @@ export function* getAllSemestersItems() {
 export function* getDisabledSemestersItems() {
     try {
         const response = yield call(axiosCall, DISABLED_SEMESTERS_URL);
-        yield put(showAllSemesters(response.data));
+        yield put(getAllSemestersSuccess(response.data));
     } catch (error) {
         yield put(setOpenErrorSnackbar(createErrorMessage(error)));
     }
@@ -58,7 +58,7 @@ export function* getDisabledSemestersItems() {
 export function* getArchivedSemestersItems() {
     try {
         const response = yield call(axiosCall, ARCHIVED_SEMESTERS_URL);
-        yield put(setArchivedSemesters(response.data));
+        yield put(getArchivedSemestersSuccess(response.data));
     } catch (error) {
         yield put(setOpenErrorSnackbar(createErrorMessage(error)));
     }
@@ -68,8 +68,8 @@ export function* setGroupsToSemester({ semesterId, groups }) {
         const groupIds = groups.map((item) => `groupId=${item.id}`).join('&');
         const requestUrl = `${SEMESTERS_URL}/${semesterId}/groups?${groupIds}`;
         const response = yield call(axiosCall, requestUrl, 'PUT');
-        yield put(updateSemester(response.data));
-        yield put(selectSemester(null));
+        yield put(updateSemesterSuccess(response.data));
+        yield put(selectSemesterSuccess(null));
         yield put(reset(SEMESTER_FORM));
         const message = createMessage(
             BACK_END_SUCCESS_OPERATION,
@@ -92,7 +92,7 @@ export function* deleteSemesterItem({ semesterId }) {
         } else {
             const requestUrl = `${SEMESTERS_URL}/${semesterId}`;
             yield call(axiosCall, requestUrl, 'DELETE');
-            yield put(deleteSemester(semesterId));
+            yield put(deleteSemesterSuccess(semesterId));
             const message = createMessage(
                 BACK_END_SUCCESS_OPERATION,
                 FORM_SEMESTER_LABEL,
@@ -108,8 +108,8 @@ export function* deleteSemesterItem({ semesterId }) {
 export function* updateSemesterItem({ item }) {
     try {
         const response = yield call(axiosCall, SEMESTERS_URL, 'PUT', item);
-        yield put(updateSemester(response.data));
-        yield put(selectSemester(null));
+        yield put(updateSemesterSuccess(response.data));
+        yield put(selectSemesterSuccess(null));
         yield put(reset(SEMESTER_FORM));
         const message = createMessage(
             BACK_END_SUCCESS_OPERATION,
@@ -124,7 +124,7 @@ export function* updateSemesterItem({ item }) {
 export function* addSemesterItem({ item }) {
     try {
         const response = yield call(axiosCall, SEMESTERS_URL, 'POST', item);
-        yield put(addSemester(response.data));
+        yield put(addSemesterSuccess(response.data));
         yield put(reset(SEMESTER_FORM));
         const message = createMessage(
             BACK_END_SUCCESS_OPERATION,
@@ -147,7 +147,7 @@ export function* handleSemester({ values }) {
         if (values.currentSemester && oldCurrentSemester) {
             oldCurrentSemester.currentSemester = false;
             const response = yield call(axiosCall, SEMESTERS_URL, 'PUT', oldCurrentSemester);
-            yield put(updateSemester(response.data));
+            yield put(updateSemesterSuccess(response.data));
         }
         if (values.id) {
             yield call(updateSemesterItem, { item: values });
@@ -163,7 +163,7 @@ export function* setDefaultSemesterById({ semesterId, isDisabled }) {
     try {
         const requestUrl = `${DEFAULT_SEMESTER_URL}?semesterId=${semesterId}`;
         const response = yield call(axiosCall, requestUrl, 'PUT');
-        yield put(updateSemester(response.data));
+        yield put(updateSemesterSuccess(response.data));
         if (isDisabled) {
             yield call(getDisabledSemestersItems);
         } else {
@@ -184,7 +184,7 @@ export function* setDefaultSemesterById({ semesterId, isDisabled }) {
 export function* toggleSemesterVisibility({ semester }) {
     try {
         yield call(axiosCall, SEMESTERS_URL, 'PUT', semester);
-        yield put(deleteSemester(semester.id));
+        yield put(deleteSemesterSuccess(semester.id));
         const message = createMessage(
             BACK_END_SUCCESS_OPERATION,
             FORM_SEMESTER_LABEL,
@@ -213,7 +213,7 @@ export function* createArchiveSemester({ semesterId }) {
     try {
         const requestUrl = `${ARCHIVE_SEMESTER}/${semesterId}`;
         yield call(axiosCall, requestUrl, 'POST');
-        yield put(moveToArchivedSemester(semesterId));
+        yield put(moveToArchivedSemesterSuccess(semesterId));
         const message = createMessage(
             BACK_END_SUCCESS_OPERATION,
             FORM_SEMESTER_LABEL,
@@ -224,7 +224,7 @@ export function* createArchiveSemester({ semesterId }) {
         yield put(setOpenErrorSnackbar(createErrorMessage(error)));
     }
 }
-export function* getArchivedSemester({ semesterId }) {
+export function* getArchivedSemesterById({ semesterId }) {
     try {
         yield put(setScheduleType('archived'));
         const requestUrl = `${ARCHIVE_SEMESTER}/${semesterId}`;
@@ -253,10 +253,10 @@ export function* watchSemester() {
     yield takeLatest(actionTypes.DELETE_SEMESTER_START, deleteSemesterItem);
     yield takeLatest(actionTypes.UPDATE_SEMESTER_START, updateSemesterItem);
     yield takeLatest(actionTypes.ADD_SEMESTER_START, addSemesterItem);
-    yield takeLatest(actionTypes.UPDATE_SEMESTER_BY_ID_START, setDefaultSemesterById);
+    yield takeLatest(actionTypes.UPDATE_SEMESTER_BY_ID_START_SUCCESS, setDefaultSemesterById);
     yield takeLatest(actionTypes.SET_SEMESTER_COPY_START, semesterCopy);
     yield takeLatest(actionTypes.CREATE_ARCHIVE_SEMESTER_START, createArchiveSemester);
-    yield takeLatest(actionTypes.GET_ARCHIVE_SEMESTER_START, getArchivedSemester);
+    yield takeLatest(actionTypes.GET_ARCHIVE_SEMESTER_BY_ID_START, getArchivedSemesterById);
     yield takeLatest(actionTypes.COPY_LESSONS_FROM_SEMESTER_START, CopyLessonsFromSemester);
     yield takeLatest(actionTypes.HANDLE_SEMESTER_START, handleSemester);
     yield takeLatest(actionTypes.TOGGLE_SEMESTER_VISIBILITY_START, toggleSemesterVisibility);

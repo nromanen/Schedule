@@ -2,11 +2,11 @@ import { connect } from 'react-redux';
 import SemesterList from '../../components/Semester/SemesterList/SemesterList';
 import {
     createArchivedSemesterStart,
-    getArchivedSemesterStart,
-    selectSemester,
+    getArchivedSemesterByIdStart,
+    selectSemesterSuccess,
     updateSemesterStart,
     deleteSemesterStart,
-    updateSemesterByIdStart,
+    updateSemesterByIdStartSuccess,
     setSemesterCopyStart,
     setGroupsToSemesterStart,
     toggleSemesterVisibilityStart,
@@ -21,13 +21,13 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
     createArchivedSemester: (semesterId) => dispatch(createArchivedSemesterStart(semesterId)),
-    getArchivedSemester: (semesterId) => dispatch(getArchivedSemesterStart(semesterId)),
-    selectSemester: (semesterId) => dispatch(selectSemester(semesterId)),
+    getArchivedSemesterById: (semesterId) => dispatch(getArchivedSemesterByIdStart(semesterId)),
+    selectSemesterSuccess: (semesterId) => dispatch(selectSemesterSuccess(semesterId)),
     setOpenConfirmDialog: (newState) => dispatch(setIsOpenConfirmDialog(newState)),
-    updateSemester: (item) => dispatch(updateSemesterStart(item)),
+    updateSemesterSuccess: (item) => dispatch(updateSemesterStart(item)),
     removeSemesterCard: (semesterId) => dispatch(deleteSemesterStart(semesterId)),
     setDefaultSemesterById: (semesterId, isDisabled) =>
-        dispatch(updateSemesterByIdStart(semesterId, isDisabled)),
+        dispatch(updateSemesterByIdStartSuccess(semesterId, isDisabled)),
     semesterCopy: (values) => dispatch(setSemesterCopyStart(values)),
     setOpenSuccessSnackbar: (message) => dispatch(setOpenSuccessSnackbar(message)),
     setGroupsToSemester: (semesterId, groups) =>

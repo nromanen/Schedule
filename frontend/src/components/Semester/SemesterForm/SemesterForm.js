@@ -52,7 +52,7 @@ const SemesterForm = (props) => {
         selectedGroups,
         setSelectedGroups,
         options,
-        clearSemester,
+        clearSemesterSuccess,
     } = props;
 
     const [startDate, setStartDate] = useState(getToday());
@@ -136,7 +136,7 @@ const SemesterForm = (props) => {
 
     const resetSemesterForm = () => {
         setSelectedGroups([]);
-        clearSemester();
+        clearSemesterSuccess();
         reset(SEMESTER_FORM);
     };
 
