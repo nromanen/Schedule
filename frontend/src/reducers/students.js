@@ -52,6 +52,19 @@ const reducer = (state = initialState, action) => {
                 student: {},
             });
         }
+
+        case actionTypes.CHECK_ALL_STUDENTS: {
+            const newData = state.students.map((item) => {
+                const newItem = item;
+                action.checkedStudents.forEach((element) => {
+                    if (element.id === item.id) newItem.checked = !action.checkedAll;
+                });
+                return newItem;
+            });
+            return updateObject(state, {
+                students: newData,
+            });
+        }
         default:
             return state;
     }

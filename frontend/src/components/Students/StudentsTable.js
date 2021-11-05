@@ -11,9 +11,9 @@ import { StudentsTableHead } from './StudentsTableHead';
 export const StudentsTable = (props) => {
     const {
         students,
-        checkBoxStudents,
         setCheckBoxStudents,
         updateStudentSuccess,
+        checkAllStudentsSuccess,
         setIsGroupButtonDisabled,
     } = props;
 
@@ -21,25 +21,13 @@ export const StudentsTable = (props) => {
     const [rowsPerPage, setRowsPerPage] = useState(5);
     const [checkedAll, setCheckedAll] = useState(false);
 
-    useEffect(() => {
-        setCheckBoxStudents(students);
-    }, [students]);
-
-    const currentStudentsOnList = checkBoxStudents.slice(
+    const currentStudentsOnList = students.slice(
         page * rowsPerPage,
         page * rowsPerPage + rowsPerPage,
     );
 
     const checkedAllOnPageClick = () => {
-        setCheckBoxStudents(
-            checkBoxStudents.map((item) => {
-                const newItem = item;
-                currentStudentsOnList.forEach((element) => {
-                    if (element.id === item.id) newItem.checked = !checkedAll;
-                });
-                return newItem;
-            }),
-        );
+        checkAllStudentsSuccess(currentStudentsOnList, checkedAll);
     };
 
     const isCheckedAll = () => {
@@ -52,8 +40,9 @@ export const StudentsTable = (props) => {
         updateStudentSuccess({ ...checkedStudent[0], checked });
         isCheckedAll();
     };
+
     const checkIsDisabledBtn = () => {
-        if (checkBoxStudents.find((item) => item.checked === true)) {
+        if (students.find((item) => item.checked === true)) {
             setIsGroupButtonDisabled(false);
         } else {
             setIsGroupButtonDisabled(true);

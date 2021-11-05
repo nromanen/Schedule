@@ -5,6 +5,7 @@ import {
     deleteStudentStart,
     updateStudentSuccess,
     selectStudentSuccess,
+    checkAllStudentsSuccess,
     moveStudentsToGroupStart,
     setExistingGroupStudentStart,
 } from '../../actions/students';
@@ -18,6 +19,7 @@ const mapDispatchToProps = {
     updateStudentSuccess,
     selectStudentSuccess,
     setIsOpenConfirmDialog,
+    checkAllStudentsSuccess,
     moveStudentsToGroupStart,
     setExistingGroupStudentStart,
 };

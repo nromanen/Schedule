@@ -33,10 +33,11 @@ export const updateStudentSuccess = (res) => {
     };
 };
 
-export const checkStudent = (checkedStudent) => {
+export const checkAllStudentsSuccess = (checkedStudents, checkedAll) => {
     return {
-        type: actionTypes.CHECK_STUDENT,
-        checkedStudent,
+        type: actionTypes.CHECK_ALL_STUDENTS,
+        checkedStudents,
+        checkedAll,
     };
 };
 
