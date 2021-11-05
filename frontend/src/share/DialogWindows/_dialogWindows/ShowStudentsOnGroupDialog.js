@@ -28,16 +28,16 @@ const ShowStudentsOnGroupDialog = (props) => {
     } = props;
     const { t } = useTranslation('formElements');
 
-    const [isGroupButtonDisabled, setIsGroupButtonDisabled] = useState(false);
     const [isOpenUploadFileDialog, setIsOpenUploadFileDialog] = useState(false);
-    const [isOpenStudentListDialog, setIsOpenStudentListDialog] = useState(false);
+    const [isOpenMoveStudentsDialog, setIsOpenMoveStudentDialog] = useState(false);
+    const [isDisabledBtnMoveStudent, setIsDisabledBtnMoveStudent] = useState(false);
 
     useEffect(() => {
         fetchAllStudentsStart(groupId);
     }, [groupId]);
 
     const showMoveStudentsByGroupDialog = () => {
-        setIsOpenStudentListDialog(true);
+        setIsOpenMoveStudentDialog(true);
     };
     const handleShowDialogFile = () => {
         setIsOpenUploadFileDialog((prevState) => !prevState);
@@ -59,7 +59,7 @@ const ShowStudentsOnGroupDialog = (props) => {
                         ? [
                               dialogChooseGroupButton(
                                   showMoveStudentsByGroupDialog,
-                                  isGroupButtonDisabled,
+                                  isDisabledBtnMoveStudent,
                                   buttonClassName,
                               ),
                               ...dialogButtons,
@@ -78,9 +78,9 @@ const ShowStudentsOnGroupDialog = (props) => {
                             groups={groups}
                             students={students}
                             onDeleteStudent={onDeleteStudent}
-                            setIsGroupButtonDisabled={setIsGroupButtonDisabled}
-                            isOpenStudentListDialog={isOpenStudentListDialog}
-                            setIsOpenStudentListDialog={setIsOpenStudentListDialog}
+                            isOpenMoveStudentsDialog={isOpenMoveStudentsDialog}
+                            setIsOpenMoveStudentDialog={setIsOpenMoveStudentDialog}
+                            setIsDisabledBtnMoveStudent={setIsDisabledBtnMoveStudent}
                         />
                     </span>
                 )}

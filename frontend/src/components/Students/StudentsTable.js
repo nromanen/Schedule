@@ -14,7 +14,7 @@ export const StudentsTable = (props) => {
         setCheckBoxStudents,
         updateStudentSuccess,
         checkAllStudentsSuccess,
-        setIsGroupButtonDisabled,
+        setIsDisabledBtnMoveStudent,
         ...rest
     } = props;
 
@@ -44,9 +44,9 @@ export const StudentsTable = (props) => {
 
     const checkIsDisabledBtn = () => {
         if (students.find((item) => item.checked === true)) {
-            setIsGroupButtonDisabled(false);
+            setIsDisabledBtnMoveStudent(false);
         } else {
-            setIsGroupButtonDisabled(true);
+            setIsDisabledBtnMoveStudent(true);
         }
     };
 
@@ -69,7 +69,6 @@ export const StudentsTable = (props) => {
                         rowsPerPage={rowsPerPage}
                         checkStudent={checkStudent}
                         setCheckedAll={setCheckedAll}
-                        setCheckBoxStudents={setCheckBoxStudents}
                         currentStudentsOnList={currentStudentsOnList}
                         {...rest}
                     />
