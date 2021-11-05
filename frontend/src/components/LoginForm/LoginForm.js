@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import i18n from 'i18next';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import '../../styles/forms.scss';
@@ -35,6 +34,7 @@ import {
     setScheduleGroupId,
     setScheduleTeacherId,
 } from '../../actions';
+import i18n from '../../i18n';
 
 const LoginForm = (props) => {
     const {

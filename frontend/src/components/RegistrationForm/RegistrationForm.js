@@ -1,5 +1,4 @@
 import React from 'react';
-import i18n from 'i18next';
 
 import { Field, reduxForm } from 'redux-form';
 
@@ -25,6 +24,7 @@ import {
     RETYPE_PASSWORD_LABEL,
     EMAIL_LABEL,
 } from '../../constants/translationLabels/formElements';
+import i18n from '../../i18n';
 
 const RegistrationForm = (props) => {
     const { handleSubmit, errors, setError, registrationHandler, isLoading } = props;
