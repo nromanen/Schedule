@@ -10,41 +10,29 @@ import { dialogCloseButton, dialogMoveToGroupButton } from '../../../constants/d
 import { getGroupsOptionsForSelect } from '../../../utils/selectUtils';
 
 const MovingGroupsDialog = (props) => {
-    const {
-        open,
-        group,
-        groups,
-        onClose,
-        checkBoxStudents,
-        moveStudentsToGroupStart,
-        setExistingGroupStudentStart,
-    } = props;
+    const { open, group, groups, onClose, moveStudentsToGroupStart } = props;
 
     const [newGroup, setNewGroup] = useState({});
+    const [isDisabled, setIsDisabled] = useState(true);
 
-    const groupsOption = getGroupsOptionsForSelect(groups);
-    const defaultGroup = { value: `${group.id}`, label: `${group.title}`, ...group };
+    const groupsWithoutCurrentGroup = groups.filter((item) => item.id !== group.id);
+    const groupsOption = getGroupsOptionsForSelect(groupsWithoutCurrentGroup);
 
     const clearSelection = () => {
         onClose();
         setNewGroup({});
     };
 
-    const setCurrentGroupOption = (currentGroup) => {
-        if (currentGroup.id === defaultGroup.id) {
-            setExistingGroupStudentStart();
+    const selectGroup = (currentGroup) => {
+        if (isEmpty(currentGroup)) {
             return;
         }
+        setIsDisabled(false);
         setNewGroup(currentGroup);
     };
 
     const handleSubmitGroupStudents = () => {
-        if (isEmpty(newGroup)) {
-            setExistingGroupStudentStart();
-            return;
-        }
-        const movedStudents = checkBoxStudents.filter((item) => item.checked === true);
-        moveStudentsToGroupStart({ movedStudents, group, newGroup });
+        moveStudentsToGroupStart(group, newGroup);
         clearSelection();
     };
 
@@ -55,15 +43,15 @@ const MovingGroupsDialog = (props) => {
             onClose={onClose}
             open={open}
             buttons={[
-                dialogMoveToGroupButton(handleSubmitGroupStudents),
+                dialogMoveToGroupButton(handleSubmitGroupStudents, isDisabled),
                 dialogCloseButton(clearSelection),
             ]}
         >
             <Select
+                disabled="disabled"
                 classNamePrefix="react-select"
-                defaultValue={defaultGroup}
                 options={groupsOption}
-                onChange={setCurrentGroupOption}
+                onChange={selectGroup}
             />
         </CustomDialog>
     );

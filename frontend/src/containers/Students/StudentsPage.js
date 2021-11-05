@@ -7,7 +7,6 @@ import {
     selectStudentSuccess,
     checkAllStudentsSuccess,
     moveStudentsToGroupStart,
-    setExistingGroupStudentStart,
 } from '../../actions/students';
 
 const mapStateToProps = (state) => ({
@@ -21,7 +20,6 @@ const mapDispatchToProps = {
     setIsOpenConfirmDialog,
     checkAllStudentsSuccess,
     moveStudentsToGroupStart,
-    setExistingGroupStudentStart,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(StudentsPage);

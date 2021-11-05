@@ -98,10 +98,10 @@ const GroupList = (props) => {
             )}
             {isOpenShowStudentsDialog && (
                 <ShowStudentsOnGroupDialog
-                    onClose={() => setIsOpenShowStudentsDialog(false)}
-                    open={isOpenShowStudentsDialog}
-                    groupId={groupId}
                     match={match}
+                    groupId={groupId}
+                    open={isOpenShowStudentsDialog}
+                    onClose={() => setIsOpenShowStudentsDialog(false)}
                 />
             )}
             <div className="group-list">

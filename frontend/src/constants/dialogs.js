@@ -2,7 +2,6 @@ import i18n from 'i18next';
 import {
     FORM_CANCEL_BUTTON_TITLE,
     FORM_CHOOSE_BUTTON_TITLE,
-    FORM_CHOOSE_GROUP_LABEL,
 } from './translationLabels/formElements';
 import {
     COMMON_CLOSE_TITLE,
@@ -13,6 +12,7 @@ import {
     COMMON_YES_BUTTON_TITLE,
     COMMON_NO_BUTTON_TITLE,
     COMMON_MOVE_LABEL,
+    COMMON_MOVE_TO_GROUP_TITLE,
 } from './translationLabels/common';
 
 export const dialogTypes = {
@@ -46,7 +46,7 @@ export const dialogChooseButton = (handelFuc) => {
 export const dialogChooseGroupButton = (handelFuc, isDisabled, additionalParams = {}) => {
     const { additionClassName = '', ...param } = additionalParams;
     return {
-        label: i18n.t(FORM_CHOOSE_GROUP_LABEL),
+        label: i18n.t(COMMON_MOVE_TO_GROUP_TITLE),
         handleClick: handelFuc,
         color: 'primary',
         disabled: isDisabled,
@@ -95,10 +95,11 @@ export const dialogUploadFromFileButton = (handelFuc, additionalParams = {}) => 
     };
 };
 
-export const dialogMoveToGroupButton = (handelFuc) => {
+export const dialogMoveToGroupButton = (handelFuc, isDisabled) => {
     return {
         label: i18n.t(COMMON_MOVE_LABEL),
         handleClick: handelFuc,
+        disabled: isDisabled,
     };
 };
 export const dialogYesButton = (handelFuc) => {

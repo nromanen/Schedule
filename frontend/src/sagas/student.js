@@ -1,15 +1,11 @@
-import { call, takeEvery, put } from 'redux-saga/effects';
+import { call, takeEvery, put, select } from 'redux-saga/effects';
 import { reset } from 'redux-form';
 import { STUDENT_URL } from '../constants/axios';
 
 import * as actionTypes from '../actions/actionsType';
 import { STUDENT_FORM } from '../constants/reduxForms';
-import { createErrorMessage, createDynamicMessage, createMessage } from '../utils/sagaUtils';
-import {
-    setOpenSuccessSnackbar,
-    setOpenErrorSnackbar,
-    setOpenInfoSnackbar,
-} from '../actions/snackbar';
+import { createErrorMessage, createDynamicMessage } from '../utils/sagaUtils';
+import { setOpenSuccessSnackbar, setOpenErrorSnackbar } from '../actions/snackbar';
 import { DELETE, POST, PUT } from '../constants/methods';
 import { axiosCall } from '../services/axios';
 import {
@@ -19,7 +15,6 @@ import {
     updateStudentSuccess,
 } from '../actions/students';
 import {
-    EXIST_LABEL,
     UPDATED_LABEL,
     CREATED_LABEL,
     DELETED_LABEL,
@@ -85,22 +80,13 @@ function* deleteStudent({ id }) {
     }
 }
 
-function* setExistingGroupStudent() {
-    try {
-        const message = createMessage(
-            'serviceMessages:students_exist_in_this_group',
-            'common:student_title',
-            EXIST_LABEL,
-        );
-        yield put(setOpenInfoSnackbar(message));
-    } catch (err) {
-        yield put(setOpenErrorSnackbar(createErrorMessage(err)));
-    }
-}
+const getStudents = (state) => state.students.students;
 
-function* moveStudentsToGroup({ data }) {
+function* moveStudentsToGroup({ group, newGroup }) {
     try {
-        console.log(data);
+        const students = yield select(getStudents);
+        const movedStudents = students.filter((item) => item.checked === true);
+        console.log(movedStudents, group, newGroup);
     } catch (err) {
         yield put(setOpenErrorSnackbar(createErrorMessage(err)));
     }
@@ -108,7 +94,6 @@ function* moveStudentsToGroup({ data }) {
 
 export default function* studentWatcher() {
     yield takeEvery(actionTypes.MOVE_STUDENTS_TO_GROUP_START, moveStudentsToGroup);
-    yield takeEvery(actionTypes.SET_EXISTING_GROUP_START, setExistingGroupStudent);
     yield takeEvery(actionTypes.SUBMIT_STUDENT_FORM, submitStudentForm);
     yield takeEvery(actionTypes.FETCH_ALL_STUDENTS, fetchAllStudents);
     yield takeEvery(actionTypes.CREATE_STUDENT_START, createStudent);

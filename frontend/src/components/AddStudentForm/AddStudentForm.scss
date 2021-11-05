@@ -1,4 +1,5 @@
 .student-container{
+    width: 350px;
     display: flex;
     align-items: center;
     flex-direction: column;
@@ -14,7 +15,7 @@
 .form-buttons{
     display: flex;
     align-items: center;
-    justify-content: space-around;
-    margin-top: 20px;
+    justify-content: space-between;
+    margin-top: 30px;
     width: 100%;
 }

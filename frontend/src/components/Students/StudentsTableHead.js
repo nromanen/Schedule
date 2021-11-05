@@ -6,7 +6,7 @@ import './StudentTable.scss';
 import { useTranslation } from 'react-i18next';
 import {
     SELECT_ALL,
-    SEND_LETTER_LABEL,
+    EMAIL_LABEL,
     STUDENT_ACTIONS,
     STUDENT_FULL_NAME,
 } from '../../constants/translationLabels/formElements';
@@ -31,7 +31,7 @@ export const StudentsTableHead = (props) => {
                     </span>
                 </TableCell>
                 <TableCell>{t(STUDENT_FULL_NAME)}</TableCell>
-                <TableCell>{t(SEND_LETTER_LABEL)}</TableCell>
+                <TableCell>{t(EMAIL_LABEL)}</TableCell>
                 <TableCell>{t(STUDENT_ACTIONS)}</TableCell>
             </TableRow>
         </TableHead>

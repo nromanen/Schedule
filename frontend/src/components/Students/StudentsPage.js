@@ -19,7 +19,6 @@ export const StudentsPage = (props) => {
         isOpenMoveStudentsDialog,
         moveStudentsToGroupStart,
         setIsOpenMoveStudentDialog,
-        setExistingGroupStudentStart,
         ...rest
     } = props;
 
@@ -52,7 +51,6 @@ export const StudentsPage = (props) => {
                     checkBoxStudents={students}
                     onClose={() => setIsOpenMoveStudentDialog(false)}
                     moveStudentsToGroupStart={moveStudentsToGroupStart}
-                    setExistingGroupStudentStart={setExistingGroupStudentStart}
                 />
             )}
             {isOpenUpdateDialog && (

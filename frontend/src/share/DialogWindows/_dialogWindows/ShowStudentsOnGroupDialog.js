@@ -5,9 +5,12 @@ import { useTranslation } from 'react-i18next';
 import { isEmpty } from 'lodash';
 import { UploadFile } from '../../../components/UploadFile/UploadFile';
 import CustomDialog from '../../../containers/Dialogs/CustomDialog';
-import { GROUP_LABEL } from '../../../constants/translationLabels/formElements';
 import StudentsPage from '../../../containers/Students/StudentsPage';
 import { StudentsPageHead } from '../../../components/Students/StudentsPageHead';
+import {
+    GROUP_LABEL,
+    NO_EXIST_STUDENTS_AT_GROUP,
+} from '../../../constants/translationLabels/formElements';
 import {
     dialogCloseButton,
     dialogUploadFromFileButton,
@@ -67,7 +70,7 @@ const ShowStudentsOnGroupDialog = (props) => {
                         : dialogButtons
                 }
             >
-                {isEmptyStudents && <>{t('no_exist_students_in_group')} </>}
+                {isEmptyStudents && <>{t(NO_EXIST_STUDENTS_AT_GROUP)} </>}
 
                 {!isEmptyStudents && (
                     <span className="table-student-data">
