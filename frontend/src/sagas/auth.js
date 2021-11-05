@@ -22,9 +22,9 @@ import { axiosCall } from '../services/axios';
 import { GOOGLE } from '../constants/common';
 import { TOKEN_BEGIN } from '../constants/tokenBegin';
 import axios from '../helper/axios';
-import { COMMON_ERROR_MESSAGE } from '../constants/translationLabels/common';
 import { setLoading } from '../actions/loadingIndicator';
-import i18n from '../i18n';
+import { POST, PUT } from '../constants/methods';
+import { createErrorMessage } from '../utils/sagaUtils';
 
 function* loginToAccount(payload) {
     try {
@@ -32,7 +32,7 @@ function* loginToAccount(payload) {
         if (payload.type === GOOGLE) {
             response = { data: { token: payload.token, email: '' } };
         } else {
-            response = yield call(axiosCall, LOGIN_URL, 'POST', payload.result);
+            response = yield call(axiosCall, LOGIN_URL, POST, payload.result);
         }
         const { token, email } = response.data;
         const decodedJWT = jwtDecode(token);
@@ -50,7 +50,7 @@ function* loginToAccount(payload) {
     } catch (error) {
         yield put(
             setAuthError({
-                login: error.response ? error.response.data.message : i18n.t(COMMON_ERROR_MESSAGE),
+                login: createErrorMessage({ response: error.response }),
             }),
         );
     } finally {
@@ -60,14 +60,12 @@ function* loginToAccount(payload) {
 
 function* registerAccount(payload) {
     try {
-        const response = yield call(axiosCall, REGISTRATION_URL, 'POST', payload.result);
+        const response = yield call(axiosCall, REGISTRATION_URL, POST, payload.result);
         yield put(registerUserSuccess(response));
     } catch (error) {
         yield put(
             setAuthError({
-                registration: error.response
-                    ? error.response.data.message
-                    : i18n.t(COMMON_ERROR_MESSAGE),
+                registration: createErrorMessage({ response: error.response }),
             }),
         );
     } finally {
@@ -77,12 +75,12 @@ function* registerAccount(payload) {
 
 function* logoutOfAccount(payload) {
     try {
-        yield call(axiosCall, LOGOUT_URL, 'POST', payload);
+        yield call(axiosCall, LOGOUT_URL, POST, payload);
         yield put(logout());
     } catch (error) {
         yield put(
             setAuthError({
-                login: error.response ? error.response.data.message : i18n.t(COMMON_ERROR_MESSAGE),
+                login: createErrorMessage({ response: error.response }),
             }),
         );
     }
@@ -108,15 +106,13 @@ function* activateUserAccount(payload) {
         const response = yield call(
             axiosCall,
             `${ACTIVATE_ACCOUNT_URL}?token=${payload.result}`,
-            'PUT',
+            PUT,
         );
         yield put(activateSuccess(response));
     } catch (error) {
         yield put(
             setAuthError({
-                activationError: error.response
-                    ? error.response.data.message
-                    : i18n.t(COMMON_ERROR_MESSAGE),
+                activationError: createErrorMessage({ response: error.response }),
             }),
         );
     } finally {
@@ -126,14 +122,17 @@ function* activateUserAccount(payload) {
 
 function* resetPassword(payload) {
     try {
-        const response = yield call(`${RESET_PASSWORD_URL}?email=${payload.email}`, payload);
+        const response = yield call(
+            axiosCall,
+            `${RESET_PASSWORD_URL}?email=${payload.result.email}`,
+            PUT,
+            payload,
+        );
         yield put(resetUserPasswordSuccess(response));
     } catch (error) {
         yield put(
             setAuthError({
-                resetPassword: error.response
-                    ? error.response.data.message
-                    : i18n.t(COMMON_ERROR_MESSAGE),
+                resetPassword: createErrorMessage({ response: error.response }),
             }),
         );
     } finally {
