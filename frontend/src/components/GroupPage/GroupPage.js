@@ -1,7 +1,7 @@
 import './GroupPage.scss';
 import React, { useState } from 'react';
-import GroupList from '../GroupList/GroupList';
-import GroupSidebar from '../GroupSidebar/GroupSidebar';
+import GroupList from './GroupList';
+import GroupSidebar from './GroupSidebar';
 import SnackbarComponent from '../../share/Snackbar/SnackbarComponent';
 import { handleSnackbarCloseService } from '../../services/snackbarService';
 
