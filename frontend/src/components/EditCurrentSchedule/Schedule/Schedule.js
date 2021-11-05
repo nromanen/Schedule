@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import i18n from 'i18next';
 import ScheduleBoard from '../../../containers/EditCurrentSchedule/ScheduleBoard';
 import ScheduleDialog from '../../../containers/Dialogs/ScheduleDialog';

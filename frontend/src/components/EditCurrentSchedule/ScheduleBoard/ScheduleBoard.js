@@ -20,7 +20,7 @@ const ScheduleBoard = (props) => {
     } = props;
     const { classId, dayName, week } = lesson;
     const [className, setClassName] = useState('');
-    const [boardFill, setBoardFill] = React.useState({});
+    const [boardFill, setBoardFill] = useState({});
     useEffect(() => {
         setBoardFill(
             scheduleItems.find(
