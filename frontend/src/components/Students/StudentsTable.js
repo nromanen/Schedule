@@ -15,6 +15,7 @@ export const StudentsTable = (props) => {
         updateStudentSuccess,
         checkAllStudentsSuccess,
         setIsGroupButtonDisabled,
+        ...rest
     } = props;
 
     const [page, setPage] = useState(0);
@@ -70,7 +71,7 @@ export const StudentsTable = (props) => {
                         setCheckedAll={setCheckedAll}
                         setCheckBoxStudents={setCheckBoxStudents}
                         currentStudentsOnList={currentStudentsOnList}
-                        {...props}
+                        {...rest}
                     />
                 </Table>
                 <div className="table-footer">
