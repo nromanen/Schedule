@@ -2,6 +2,7 @@
 
 .search-group {
     min-height: 85px;
+    max-width: 300px;
 
     @media (max-width: 500px) {
         width: 85% !important;

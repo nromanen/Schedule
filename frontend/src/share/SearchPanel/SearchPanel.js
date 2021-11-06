@@ -21,7 +21,7 @@ const SearchPanel = ({ SearchChange, showDisabled, showArchived, forLessons }) =
     const { t } = useTranslation('formElements');
     const [term, setTerm] = useState('');
 
-    const [state, setState] = React.useState({
+    const [state, setState] = useState({
         checkedB: false,
         checkedArchived: false,
     });
