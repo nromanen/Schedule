@@ -57,7 +57,7 @@ export const AddStudentForm = (props) => {
                 onSubmit={handleSubmit((data) => submitStudentStart(data, groupId))}
             >
                 <Field
-                    className="form-field"
+                    className="name-field"
                     name="surname"
                     id="surname"
                     component={renderTextField}
@@ -66,7 +66,6 @@ export const AddStudentForm = (props) => {
                     label={t(SURNAME_PLACEHOLDER)}
                     validate={[required]}
                 />
-
                 <Field
                     className="form-field"
                     name="name"
@@ -77,7 +76,6 @@ export const AddStudentForm = (props) => {
                     label={t(NAME_PLACEHOLDER)}
                     validate={[required]}
                 />
-
                 <Field
                     className="form-field"
                     name="patronymic"

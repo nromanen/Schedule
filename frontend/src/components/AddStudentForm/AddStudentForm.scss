@@ -1,21 +1,32 @@
-.student-container{
-    width: 320px;
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-    margin: 10px;
-}
-
-.student-form{
+.student-container {
+    width: 420px;
     display: flex;
     align-items: center;
     flex-direction: column;
 }
-
-.form-buttons{
+.student-name {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    width: 300px;
+    .name-field {
+        margin-right: 10px;
+    }
+}
+.student-data {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+.student-form {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+.form-buttons {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
     margin-top: 30px;
     width: 100%;
 }

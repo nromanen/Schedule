@@ -22,6 +22,8 @@ import {
 import { STUDENT } from '../constants/names';
 import { setStudentsLoading } from '../actions/loadingIndicator';
 
+const getStudents = (state) => state.students.students;
+
 function* fetchAllStudents({ id }) {
     try {
         yield put(showAllStudents([]));
@@ -84,8 +86,6 @@ function* deleteStudent({ id }) {
         yield put(setOpenErrorSnackbar(createErrorMessage(err)));
     }
 }
-
-const getStudents = (state) => state.students.students;
 
 function* moveStudentsToGroup({ group, newGroup }) {
     try {

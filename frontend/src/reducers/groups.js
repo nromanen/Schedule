@@ -10,10 +10,9 @@ const initialState = {
 const reducer = (state = initialState, action) => {
     switch (action.type) {
         case actionTypes.SHOW_ALL_GROUPS_SUCCESS: {
-            const newGroup = action.result;
             return updateObject(state, {
                 ...state,
-                groups: newGroup,
+                groups: action.result,
             });
         }
 

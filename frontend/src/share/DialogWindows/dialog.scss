@@ -77,9 +77,14 @@
         min-width: 340px;
     }
     .custom-dialog-title {
-        padding: 10px 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
     .custom-dialog-body {
+        display: flex;
+        align-items: center;
+        justify-content: center;
         padding: 4px 15px;
     }
     .buttons-container {
