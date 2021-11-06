@@ -13,24 +13,13 @@ export const getScheduleItemsSuccess = (items) => {
     };
 };
 
-export const getAllPublicTeachersByDepartmentStart = (departmentId) => {
-    return {
-        type: actionTypes.GET_ALL_PUBLIC_TEACHERS_BY_DEPARTMENT_START,
-        departmentId,
-    };
-};
-
 export const getCurrentSemesterSuccess = (semester) => {
     return {
         type: actionTypes.GET_CURRENT_SEMESTER_SUCCESS,
         semester,
     };
 };
-export const getAllPublicTeachersStart = () => {
-    return {
-        type: actionTypes.GET_ALL_PUBLIC_TEACHERS_START,
-    };
-};
+
 export const getAllPublicSemestersStart = () => {
     return {
         type: actionTypes.GET_ALL_PUBLIC_SEMESTERS_START,
@@ -79,12 +68,7 @@ export const clearScheduleStart = (semesterId) => {
         semesterId,
     };
 };
-export const getAllPublicGroupsStart = (id) => {
-    return {
-        type: actionTypes.GET_ALL_PUBLIC_GROUPS_START,
-        id,
-    };
-};
+
 export const sendTeacherScheduleStart = (data) => {
     return {
         type: actionTypes.SEND_TEACHER_SCHEDULE_START,

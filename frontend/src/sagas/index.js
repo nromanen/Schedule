@@ -3,6 +3,7 @@ import { watchSemester } from './semesters';
 import groupWatcher from './group';
 import studentWatcher from './student';
 import watchSchedule from './schedule';
+import watchTeachers from './teachers';
 import watchUserAuthentication from './watchers';
 import watchLessons from './lessons';
 
@@ -14,5 +15,6 @@ export default function* startForman() {
         watchSemester(),
         watchLessons(),
         watchSchedule(),
+        watchTeachers(),
     ]);
 }

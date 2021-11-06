@@ -8,53 +8,31 @@ import {
     CLEAR_SCHEDULE_URL,
     CURRENT_SEMESTER_URL,
     DEFAULT_SEMESTER_URL,
-    DEPARTMENT_URL,
     FOR_TEACHER_SCHEDULE_URL,
     FULL_SCHEDULE_URL,
-    GROUPS_URL,
     GROUP_SCHEDULE_URL,
     PUBLIC_SEMESTERS_URL,
-    PUBLIC_TEACHER_URL,
     ROOMS_AVAILABILITY,
     SCHEDULE_CHECK_AVAILABILITY_URL,
     SCHEDULE_ITEMS_URL,
     SCHEDULE_ITEM_ROOM_CHANGE,
     SCHEDULE_SEMESTER_ITEMS_URL,
-    SEMESTERS_URL,
     SEND_PDF_TO_EMAIL,
     TEACHER_SCHEDULE_URL,
-    TEACHER_URL,
 } from '../constants/axios';
-import {
-    setLoading,
-    setScheduleLoading,
-    setSemesterLoading,
-    showAllGroups,
-    showAllTeachers,
-} from '../actions';
-import {
-    setOpenSuccessSnackbar,
-    setOpenErrorSnackbar,
-    setOpenInfoSnackbar,
-} from '../actions/snackbar';
+import { setLoading, setScheduleLoading, setSemesterLoading } from '../actions';
+import { setOpenSuccessSnackbar, setOpenErrorSnackbar } from '../actions/snackbar';
 import {
     COMMON_SCHEDULE_TITLE,
     NO_CURRENT_SEMESTER_ERROR,
 } from '../constants/translationLabels/common';
 import {
     BACK_END_SUCCESS_OPERATION,
-    CHOSEN_SEMESTER_HAS_NOT_GROUPS,
     CLEARED_LABEL,
-    SERVICE_MESSAGE_GROUP_LABEL,
     SERVICE_MESSAGE_SENT_LABEL,
     UPDATED_LABEL,
 } from '../constants/translationLabels/serviceMessages';
-import { sortGroup } from '../helper/sortGroup';
-import {
-    FORM_CHOSEN_SEMESTER_LABEL,
-    FORM_SCHEDULE_LABEL,
-} from '../constants/translationLabels/formElements';
-import { getAllTeachersByDepartmentId } from '../actions/teachers';
+import { FORM_SCHEDULE_LABEL } from '../constants/translationLabels/formElements';
 import { setMainScheduleLoading } from '../actions/loadingIndicator';
 import { createErrorMessage, createMessage } from '../utils/sagaUtils';
 import {
@@ -76,6 +54,8 @@ import {
 import { getAllBusyRoomsSuccess } from '../actions/busyRooms';
 import { DELETE, POST, PUT } from '../constants/methods';
 import { FULL, GROUP, TEACHER } from '../constants/scheduleTypes';
+import { getAllPublicGroups } from './group';
+import { getAllPublicTeachers } from './teachers';
 
 export function* getScheduleItemsBySemester({ semesterId }) {
     const requestUrl = `${SCHEDULE_SEMESTER_ITEMS_URL}?semesterId=${semesterId}`;
@@ -198,53 +178,11 @@ export function* editRoomItemToSchedule({ item }) {
         yield put(setOpenErrorSnackbar(createErrorMessage(error)));
     }
 }
-// Check if it is necessary here
-export function* getAllPublicGroups({ id }) {
-    try {
-        if (id !== null && id !== undefined) {
-            const requestUrl = `/${SEMESTERS_URL}/${id}/${GROUPS_URL}`;
-            const { data } = yield call(axiosCall, requestUrl);
-            const sortedGroups = data.sort((a, b) => sortGroup(a, b));
-            yield put(showAllGroups(sortedGroups));
-            if (data.length === 0) {
-                const message = createMessage(
-                    CHOSEN_SEMESTER_HAS_NOT_GROUPS,
-                    FORM_CHOSEN_SEMESTER_LABEL,
-                    SERVICE_MESSAGE_GROUP_LABEL,
-                );
-                yield put(setOpenInfoSnackbar(message));
-            }
-        }
-    } catch (error) {
-        yield put(setOpenErrorSnackbar(createErrorMessage(error)));
-    }
-}
 
 export function* getAllPublicSemesters() {
     try {
         const { data } = yield call(axiosCall, PUBLIC_SEMESTERS_URL);
         yield put(getAllPublicSemestersSuccess(data));
-    } catch (error) {
-        yield put(setOpenErrorSnackbar(createErrorMessage(error)));
-    }
-}
-
-// Check if it is necessary here
-export function* getAllPublicTeachers() {
-    try {
-        const { data } = yield call(axiosCall, PUBLIC_TEACHER_URL);
-        yield put(showAllTeachers(data));
-    } catch (error) {
-        yield put(setOpenErrorSnackbar(createErrorMessage(error)));
-    }
-}
-
-// Check if it is necessary here
-export function* getAllPublicTeachersByDepartment({ departmentId }) {
-    const requestUrl = `${DEPARTMENT_URL}/${departmentId}/${TEACHER_URL}`;
-    try {
-        const { data } = yield call(axiosCall, requestUrl);
-        yield put(getAllTeachersByDepartmentId(data));
     } catch (error) {
         yield put(setOpenErrorSnackbar(createErrorMessage(error)));
     }
@@ -346,12 +284,16 @@ export function* sendTeacherSchedule({ data }) {
     }
 }
 
+const getSemestersFromState = (state) => state.schedule.semesters;
+
 // Refactor required
 function* setSemesterAndType(semesterId, type) {
     yield put(setMainScheduleLoading(true));
-    let semesters = yield select((state) => state.schedule.semesters);
-    if (isEmpty(semesters)) yield call(getAllPublicSemesters);
-    semesters = yield select((state) => state.schedule.semesters);
+    let semesters = yield select(getSemestersFromState);
+    if (isEmpty(semesters)) {
+        yield call(getAllPublicSemesters);
+        semesters = yield select(getSemestersFromState);
+    }
     const semester = semesters.find((item) => item.id === Number(semesterId));
 
     const teachers = yield select((state) => state.teachers.teachers);
@@ -366,8 +308,6 @@ function* setSemesterAndType(semesterId, type) {
 export function* selectGroupSchedule({ semesterId, groupId }) {
     yield call(setSemesterAndType, semesterId, GROUP);
     const groups = yield select((state) => state.groups.groups);
-    // if (isEmpty(groups)) yield call(getAllPublicGroups, { id: semesterId });
-    // groups = yield select((state) => state.groups.groups);
     const group = groups.find((item) => item.id === Number(groupId));
     yield put(setScheduleGroup(group));
     yield call(getGroupSchedule, { semesterId, groupId });
@@ -375,8 +315,6 @@ export function* selectGroupSchedule({ semesterId, groupId }) {
 export function* selectTeacherSchedule({ semesterId, teacherId }) {
     yield call(setSemesterAndType, semesterId, TEACHER);
     const teachers = yield select((state) => state.teachers.teachers);
-    // if (isEmpty(teachers)) yield call(getAllPublicTeachers);
-    // teachers = yield select((state) => state.teachers.teachers);
     const teacher = teachers.find((item) => item.id === Number(teacherId));
     yield put(setScheduleTeacher(teacher));
     yield call(getTeacherSchedule, { semesterId, teacherId });
@@ -395,12 +333,6 @@ export default function* watchSchedule() {
         actionTypes.CHECK_AVAILABILITY_CHANGE_ROOM_SCHEDULE_START,
         checkAvailabilityChangeRoomSchedule,
     );
-    yield takeLatest(
-        actionTypes.GET_ALL_PUBLIC_TEACHERS_BY_DEPARTMENT_START,
-        getAllPublicTeachersByDepartment,
-    );
-    yield takeLatest(actionTypes.GET_ALL_PUBLIC_TEACHERS_START, getAllPublicTeachers);
-    yield takeLatest(actionTypes.GET_ALL_PUBLIC_GROUPS_START, getAllPublicGroups);
     yield takeLatest(actionTypes.GET_ALL_PUBLIC_SEMESTERS_START, getAllPublicSemesters);
     yield takeLatest(actionTypes.SEND_TEACHER_SCHEDULE_START, sendTeacherSchedule);
     yield takeLatest(actionTypes.GET_TEACHER_RANGE_SCHEDULE_START, getTeacherRangeSchedule);

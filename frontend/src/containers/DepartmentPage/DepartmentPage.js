@@ -33,7 +33,7 @@ import {
     SHOW_TEACHER_TITLE,
 } from '../../constants/translationLabels/formElements';
 import { COMMON_SET_DISABLED, COMMON_SET_ENABLED } from '../../constants/translationLabels/common';
-import { getAllPublicTeachersByDepartmentStart } from '../../actions/schedule';
+import { getAllPublicTeachersByDepartmentStart } from '../../actions/teachers';
 
 const DepartmentPage = (props) => {
     const {
