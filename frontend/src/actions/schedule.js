@@ -207,24 +207,24 @@ export const setScheduleType = (result) => {
     };
 };
 
-export const setScheduleGroupId = (groupId) => {
+export const setScheduleGroup = (group) => {
     return {
-        type: actionTypes.SET_SCHEDULE_GROUP_ID,
-        groupId,
+        type: actionTypes.SET_SCHEDULE_GROUP,
+        group,
     };
 };
 
-export const setScheduleTeacherId = (teacherId) => {
+export const setScheduleTeacher = (teacher) => {
     return {
-        type: actionTypes.SET_SCHEDULE_TEACHER_ID,
-        teacherId,
+        type: actionTypes.SET_SCHEDULE_TEACHER,
+        teacher,
     };
 };
 
-export const setScheduleSemesterId = (semesterId) => {
+export const setScheduleSemester = (semester) => {
     return {
-        type: actionTypes.SET_SCHEDULE_SEMESTER_ID,
-        semesterId,
+        type: actionTypes.SET_SCHEDULE_SEMESTER,
+        semester,
     };
 };
 
@@ -239,5 +239,27 @@ export const setPlace = (place) => {
     return {
         type: actionTypes.SET_PLACE,
         place,
+    };
+};
+
+export const selectGroupSchedule = (semesterId, groupId) => {
+    return {
+        type: actionTypes.SELECT_GROUP_SCHEDULE_START,
+        semesterId,
+        groupId,
+    };
+};
+export const selectTeacherSchedule = (semesterId, teacherId) => {
+    return {
+        type: actionTypes.SELECT_TEACHER_SCHEDULE_START,
+        semesterId,
+        teacherId,
+    };
+};
+
+export const selectFullSchedule = (semesterId) => {
+    return {
+        type: actionTypes.SELECT_FULL_SCHEDULE_START,
+        semesterId,
     };
 };

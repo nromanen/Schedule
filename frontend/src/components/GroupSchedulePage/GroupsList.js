@@ -3,7 +3,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Field } from 'redux-form';
 import { FORM_GROUP_LABEL } from '../../constants/translationLabels/formElements';
-import SelectField from '../../share/renderedFields/select';
+import { renderAutocompleteField } from '../../helper/renderAutocompleteField';
 
 const GroupsList = (props) => {
     const { handleChange, groups } = props;
@@ -12,22 +12,16 @@ const GroupsList = (props) => {
     return (
         <Field
             disabled={isEmpty(groups)}
-            id="group"
             name="group"
-            component={SelectField}
+            component={(values) => renderAutocompleteField(values)}
             label={t(FORM_GROUP_LABEL)}
             type="text"
-            onChange={() => {
+            handleChange={() => {
                 handleChange('teacher', null);
             }}
-        >
-            <option className="option-item" value={0} />
-            {groups.map((group) => (
-                <option key={group.id} value={group.id} className="option-item">
-                    {group.title}
-                </option>
-            ))}
-        </Field>
+            values={groups}
+            getOptionLabel={(group) => (group ? group.title : '')}
+        ></Field>
     );
 };
 

@@ -46,10 +46,10 @@ const printWeekNumber = (startScheduleDate) => {
 };
 
 function isWeekOdd(num) {
-    return num % 2;
+    return num % 2 === 1;
 }
 
-let currentWeekType = 0;
+let currentWeekType = false;
 
 const renderClassCell = (classItem) => {
     return `${classItem.class_name}\n\r\n\r${classItem.startTime} - ${classItem.endTime}`;
@@ -71,10 +71,7 @@ export const renderGroupDayClass = (classDay, isOddWeek, semesterDays) => {
             {res.map(({ day, card }) => {
                 let className = 'lesson ';
                 if (currentDay === day) {
-                    if (
-                        (currentWeekType === 1 && isOddWeek === 0) ||
-                        (currentWeekType === 0 && isOddWeek === 1)
-                    ) {
+                    if (currentWeekType === isOddWeek) {
                         className += ' currentDay';
                     }
                 }
@@ -122,13 +119,7 @@ export const renderGroupTable = (classes, isOdd, semester) => {
     );
 };
 
-export const renderGroupCells = (
-    groups,
-    isOdd = 0,
-    currentWeekTypeNumber = 0,
-    isCurrentDay = 0,
-    dayName,
-) => {
+export const renderGroupCells = (groups, isOdd, weekType, isCurrentDay, dayName) => {
     const prepareGroups = (groupsArray) => {
         // TODO map => reduce
         return groupsArray.map((group, groupIndex) => {
@@ -137,7 +128,7 @@ export const renderGroupCells = (
             let rowspan = 1;
             let classname = 'lesson';
 
-            if (currentWeekTypeNumber === isOdd && isCurrentDay) {
+            if (weekType === isOdd && isCurrentDay) {
                 classname += ' currentDay';
             }
             if (card !== null && card.skip_render === 1) {
@@ -197,13 +188,14 @@ export const renderScheduleHeader = (groups) => (
 export const renderFirstDayFirstClassFirstCardLine = (dayName, classItem, groups, classesCount) => {
     let dayClassName = 'dayNameCell ';
     const classClassName = 'classNameCell ';
+    const isCurrentDay = dayName === currentDay;
 
     let oddWeekClass = '';
     let evenWeekClass = '';
     if (currentDay === dayName) {
         dayClassName += ' currentDay';
 
-        if (currentWeekType === 1) {
+        if (currentWeekType) {
             oddWeekClass = ' currentDay';
         } else {
             evenWeekClass = ' currentDay';
@@ -226,13 +218,13 @@ export const renderFirstDayFirstClassFirstCardLine = (dayName, classItem, groups
                     {renderClassCell(classItem)}
                 </TableCell>
                 <TableCell className={`${classClassName + oddWeekClass} subClassName`}>1</TableCell>
-                {renderGroupCells(groups.odd, 0, 0, 0, dayName)}
+                {renderGroupCells(groups.odd, false, currentWeekType, isCurrentDay, dayName)}
             </TableRow>
             <TableRow>
                 <TableCell className={`${classClassName + evenWeekClass} subClassName`}>
                     2
                 </TableCell>
-                {renderGroupCells(groups.even, 0, 0, 0, dayName)}
+                {renderGroupCells(groups.even, false, currentWeekType, isCurrentDay, dayName)}
             </TableRow>
         </React.Fragment>
     );
@@ -240,11 +232,12 @@ export const renderFirstDayFirstClassFirstCardLine = (dayName, classItem, groups
 
 export const renderFirstDayOtherClassFirstCardLine = (dayName, classItem, groups) => {
     const classClassName = 'classNameCell ';
+    const isCurrentDay = dayName === currentDay;
     let oddWeekClass = '';
     let evenWeekClass = '';
 
     if (currentDay === dayName) {
-        if (currentWeekType === 1) {
+        if (currentWeekType) {
             oddWeekClass = ' currentDay';
         } else {
             evenWeekClass = ' currentDay';
@@ -258,13 +251,13 @@ export const renderFirstDayOtherClassFirstCardLine = (dayName, classItem, groups
                     {renderClassCell(classItem)}
                 </TableCell>
                 <TableCell className={`${classClassName + oddWeekClass} subClassName`}>1</TableCell>
-                {renderGroupCells(groups.odd, 1, 0, 0, dayName)}
+                {renderGroupCells(groups.odd, true, currentWeekType, isCurrentDay, dayName)}
             </TableRow>
             <TableRow>
                 <TableCell className={`${classClassName + evenWeekClass} subClassName`}>
                     2
                 </TableCell>
-                {renderGroupCells(groups.even, 0, 0, 0, dayName)}
+                {renderGroupCells(groups.even, false, currentWeekType, isCurrentDay, dayName)}
             </TableRow>
         </React.Fragment>
     );

@@ -1,4 +1,5 @@
-import { takeLatest, takeEvery, call, put } from 'redux-saga/effects';
+import { takeLatest, takeEvery, call, put, select } from 'redux-saga/effects';
+import { isEmpty } from 'lodash';
 import * as actionTypes from '../actions/actionsType';
 import { axiosCall } from '../services/axios';
 import i18n from '../i18n';
@@ -67,6 +68,10 @@ import {
     getScheduleItemsSuccess,
     getTeacherRangeScheduleSuccess,
     getTeacherScheduleSuccess,
+    setScheduleGroup,
+    setScheduleSemester,
+    setScheduleTeacher,
+    setScheduleType,
 } from '../actions/schedule';
 import { getAllBusyRoomsSuccess } from '../actions/busyRooms';
 
@@ -339,6 +344,46 @@ export function* sendTeacherSchedule({ data }) {
     }
 }
 
+// Refactor required
+function* setSemesterAndType(semesterId, type) {
+    yield put(setMainScheduleLoading(true));
+    let semesters = yield select((state) => state.schedule.semesters);
+    if (isEmpty(semesters)) yield call(getAllPublicSemesters);
+    semesters = yield select((state) => state.schedule.semesters);
+    const semester = semesters.find((item) => item.id === Number(semesterId));
+
+    const teachers = yield select((state) => state.teachers.teachers);
+    if (isEmpty(teachers)) yield call(getAllPublicTeachers);
+
+    const groups = yield select((state) => state.groups.groups);
+    if (isEmpty(groups)) yield call(getAllPublicGroups, { id: semesterId });
+
+    yield put(setScheduleSemester(semester));
+    yield put(setScheduleType(type));
+}
+export function* selectGroupSchedule({ semesterId, groupId }) {
+    yield call(setSemesterAndType, semesterId, 'group');
+    const groups = yield select((state) => state.groups.groups);
+    // if (isEmpty(groups)) yield call(getAllPublicGroups, { id: semesterId });
+    // groups = yield select((state) => state.groups.groups);
+    const group = groups.find((item) => item.id === Number(groupId));
+    yield put(setScheduleGroup(group));
+    yield call(getGroupSchedule, { semesterId, groupId });
+}
+export function* selectTeacherSchedule({ semesterId, teacherId }) {
+    yield call(setSemesterAndType, semesterId, 'teacher');
+    const teachers = yield select((state) => state.teachers.teachers);
+    // if (isEmpty(teachers)) yield call(getAllPublicTeachers);
+    // teachers = yield select((state) => state.teachers.teachers);
+    const teacher = teachers.find((item) => item.id === Number(teacherId));
+    yield put(setScheduleTeacher(teacher));
+    yield call(getTeacherSchedule, { semesterId, teacherId });
+}
+export function* selectFullSchedule({ semesterId }) {
+    yield call(setSemesterAndType, semesterId, 'full');
+    yield call(getFullSchedule, { semesterId });
+}
+
 export default function* watchSchedule() {
     yield takeLatest(actionTypes.GET_CURRENT_SEMESTER_START, getCurrentSemester);
     yield takeLatest(actionTypes.GET_DEFAULT_SEMESTER_START, getDefaultSemester);
@@ -364,5 +409,7 @@ export default function* watchSchedule() {
     yield takeEvery(actionTypes.CLEAR_SCHEDULE_START, clearSchedule);
     yield takeLatest(actionTypes.GET_GROUP_SCHEDULE_START, getGroupSchedule);
     yield takeLatest(actionTypes.GET_TEACHER_SCHEDULE_START, getTeacherSchedule);
-    yield takeLatest(actionTypes.GET_FULL_SCHEDULE_START, getFullSchedule);
+    yield takeLatest(actionTypes.SELECT_GROUP_SCHEDULE_START, selectGroupSchedule);
+    yield takeLatest(actionTypes.SELECT_TEACHER_SCHEDULE_START, selectTeacherSchedule);
+    yield takeLatest(actionTypes.SELECT_FULL_SCHEDULE_START, selectFullSchedule);
 }

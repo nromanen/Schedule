@@ -2,11 +2,12 @@ import React, { useEffect } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import './GroupSchedulePage.scss';
 import { CircularProgress } from '@material-ui/core';
+import { get } from 'lodash';
 import { getDataFromParams } from '../../utils/urlUtils';
 import GroupSchedulePageTop from './GroupSchedulePageTop/GroupSchedulePageTop';
 import { SCHEDULE_FOR_LINK } from '../../constants/links';
 import { renderSchedule } from '../../helper/renderSchedule';
-import { submitSearchSchedule } from '../../helper/submitSearchSchedule';
+import { getScheduleType } from '../../helper/getScheduleType';
 
 const GroupSchedulePage = (props) => {
     const history = useHistory();
@@ -16,10 +17,6 @@ const GroupSchedulePage = (props) => {
         scheduleType,
         loading,
         getDefaultSemester,
-        setSemesterId,
-        setTypeOfSchedule,
-        setGroupId,
-        setTeacherId,
         getGroupSchedule,
         getTeacherSchedule,
         getFullSchedule,
@@ -29,33 +26,46 @@ const GroupSchedulePage = (props) => {
         getDefaultSemester();
     }, []);
 
+    const scheduleActions = {
+        group: (values) => {
+            const { semester, group } = values;
+            const groupId = group ? group.id : null;
+            getGroupSchedule(semester.id, groupId);
+        },
+        teacher: (values) => {
+            const { semester, teacher } = values;
+            const teacherId = teacher ? teacher.id : null;
+            getTeacherSchedule(semester.id, teacherId);
+        },
+        full: (values) => {
+            const { semester } = values;
+            getFullSchedule(semester.id);
+        },
+    };
+
     const handleSubmit = (values) => {
-        const actionCalls = {
-            setSemesterId,
-            setTypeOfSchedule,
-            setGroupId,
-            getGroupSchedule,
-            setTeacherId,
-            getTeacherSchedule,
-            getFullSchedule,
-        };
         const { semester, group, teacher } = values;
-        const groupPath = group ? `&group=${group}` : '';
-        const teacherPath = teacher ? `&teacher=${teacher}` : '';
-        submitSearchSchedule(values, actionCalls);
-        history.push(`${SCHEDULE_FOR_LINK}?semester=${semester}${groupPath}${teacherPath}`);
+        const groupPath = get(group, 'id') ? `&group=${group.id}` : '';
+        const teacherPath = get(teacher, 'id') ? `&teacher=${teacher.id}` : '';
+        const typeOfSchedule = getScheduleType(values);
+        scheduleActions[typeOfSchedule](values);
+        history.push(`${SCHEDULE_FOR_LINK}?semester=${semester.id}${groupPath}${teacherPath}`);
     };
 
     const getSchedule = () => {
         const { semester, group, teacher } = getDataFromParams(location);
 
         if (!semester) {
-            handleSubmit({ semester: defaultSemester.id });
+            handleSubmit({
+                semester: defaultSemester,
+                group: { id: group },
+                teacher: { id: teacher },
+            });
         } else {
             handleSubmit({
-                semester,
-                group: group || 0,
-                teacher: teacher || 0,
+                semester: { id: Number(semester) },
+                group: { id: group },
+                teacher: { id: teacher },
             });
         }
     };

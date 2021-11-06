@@ -11,6 +11,7 @@ const SelectPlace = (props) => {
     const setPlace = ({ target }) => {
         if (target) {
             changePlace(target.value);
+            localStorage.setItem('place', target.value);
         }
     };
 
