@@ -24,7 +24,9 @@ let FreeRoomForm = (props) => {
 
     const weeks = ['ODD', 'EVEN', 'WEEKLY'];
 
-    useEffect(() => getAllSemestersItems(), []);
+    useEffect(() => {
+        getAllSemestersItems();
+    }, []);
 
     const { handleSubmit, classScheduler, pristine, submitting, onReset, semesters } = props;
 
