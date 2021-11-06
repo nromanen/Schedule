@@ -1,3 +1,30 @@
+@import '../../styles/colors.scss';
+@import '../../styles/mixin.scss';  
+
+.table{
+  margin: 20px;
+  border: 1px solid rgba(224, 224, 224, 1);
+  .MuiTable-root{
+    min-width: 700px;
+  }
+  .MuiTableContainer-root{
+    margin-bottom: 0;
+  }
+  .MuiTableRow-root{
+    &:hover{
+      background-color: $light-blue;
+    }
+  }
+  tr:nth-child(odd){
+      background-color: #f7fafd;
+    }
+  
+}
+
+.title-align{
+  margin-top: 0;
+  margin-bottom: 0;
+}
 .edit-cell{
   display: flex;
   flex-direction: row;
@@ -6,12 +33,13 @@
   align-content: center;
   margin: 0 20px;
   .edit-button{
-    color: #265d26;
+    //color: #ade6c6;
+    color: $blue;
     margin-right: 10px;
     font-size: 25px;
   }
   .delete-button{
-    color: #de2f23;
+    color: #ff7676;
     font-size: 25px;
   }
 }
@@ -19,12 +47,12 @@
   margin: -1px;
   width: 20px;
   height: 20px;
-  box-shadow: rgb(131, 148, 231) 0px 5px 10px;
 }
 
-.table-footer{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;  
+.table-footer{ 
+    @include displayCenter();
+    width: 100%; 
+    .MuiTableCell-root{
+      border-bottom: none;
+    }
 }

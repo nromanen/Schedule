@@ -2,9 +2,16 @@
   display: flex;
 }
 
+@mixin displayCenter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 @mixin buttonStyle {
   cursor: pointer;
   width: $btn-size;
   height: $btn-size;
   transition: color 0.3s linear;
 }
+

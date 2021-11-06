@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Table from '@material-ui/core/Table';
 import TableContainer from '@material-ui/core/TableContainer';
-import Paper from '@material-ui/core/Paper';
 import './StudentTable.scss';
 
 import { TableFooterComponent } from '../Table/TableFooter';
@@ -57,7 +56,7 @@ export const StudentsTable = (props) => {
 
     return (
         <div className="table">
-            <TableContainer component={Paper}>
+            <TableContainer>
                 <Table aria-label="custom pagination table">
                     <StudentsTableHead
                         checkedAll={checkedAll}
