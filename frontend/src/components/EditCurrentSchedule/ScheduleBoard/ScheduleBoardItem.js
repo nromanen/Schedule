@@ -1,5 +1,4 @@
 import React from 'react';
-import i18n from 'i18next';
 import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -19,6 +18,7 @@ import {
 } from '../../../constants/translationLabels/common';
 import { actionType } from '../../../constants/actionTypes';
 import { getTeacherName } from '../../../helper/renderTeacher';
+import i18n from '../../../i18n';
 
 const ScheduleItem = (props) => {
     const {

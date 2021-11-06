@@ -1,5 +1,4 @@
 import React from 'react';
-import i18n from 'i18next';
 import Card from '@material-ui/core/Card';
 import { MdGroup } from 'react-icons/md';
 import {
@@ -8,6 +7,7 @@ import {
 } from '../../constants/translationLabels/formElements';
 import { getTeacherName } from '../../helper/renderTeacher';
 import './ScheduleLessonList/ScheduleLessonList.scss';
+import i18n from '../../i18n';
 
 const DragDropCard = (props) => {
     const { setDragItemData, lesson } = props;

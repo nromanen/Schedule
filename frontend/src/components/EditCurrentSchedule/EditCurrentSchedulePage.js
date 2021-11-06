@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import i18n from 'i18next';
 import { CircularProgress } from '@material-ui/core';
-import { getClassScheduleListService } from '../../services/classService';
+import './EditCurrentSchedule.scss';
 import { showListOfRoomsService } from '../../services/roomService';
 
 import ScheduleLessonsList from '../../containers/EditCurrentSchedule/ScheduleLessonsList';
 import Schedule from '../../containers/EditCurrentSchedule/Schedule';
 import { SCHEDULE_TITLE, USE_PC } from '../../constants/translationLabels/common';
 import { EDIT_SCHEDULE_MIN_WINDOW_SIZE } from '../../constants/windowSizes';
-import './EditCurrentSchedule.scss';
+import i18n from '../../i18n';
 
 const SchedulePage = (props) => {
     const {
@@ -21,6 +20,7 @@ const SchedulePage = (props) => {
         getAllLessonsByGroup,
         getAllScheduleItems,
         clearScheduleItems,
+        getClassScheduleListSuccess,
         currentSemester,
     } = props;
     document.title = i18n.t(SCHEDULE_TITLE);
@@ -40,6 +40,7 @@ const SchedulePage = (props) => {
 
     useEffect(() => {
         window.addEventListener('resize', handleResize);
+        handleResize();
     }, []);
 
     days.forEach((day, outerIndex) => {
@@ -66,7 +67,7 @@ const SchedulePage = (props) => {
         getAllScheduleItems();
         fetchEnabledGroupsStart();
         showListOfRoomsService();
-        getClassScheduleListService();
+        getClassScheduleListSuccess();
     }, []);
 
     useEffect(() => {

@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import i18n from 'i18next';
 import { isEmpty } from 'lodash';
 import { CircularProgress } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
@@ -14,6 +13,7 @@ import {
     LESSON_NO_LESSON_FOR_GROUP_LABEL,
 } from '../../../constants/translationLabels/common';
 import './ScheduleLessonList.scss';
+import i18n from '../../../i18n';
 
 const ScheduleLessonsList = (props) => {
     const {

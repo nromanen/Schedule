@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import i18n from 'i18next';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import TextField from '@material-ui/core/TextField';
 import { dialogTypes, dialogCloseButton, dialogChooseButton } from '../../../constants/dialogs';
@@ -16,6 +15,7 @@ import './ScheduleDialog.scss';
 import CustomDialog from '../../../containers/Dialogs/CustomDialog';
 import { sortByLength } from '../../../helper/sortArray';
 import '../../../share/DialogWindows/dialog.scss';
+import i18n from '../../../i18n';
 
 const ScheduleDialog = (props) => {
     const {

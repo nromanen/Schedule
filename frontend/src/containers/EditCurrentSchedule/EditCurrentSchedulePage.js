@@ -1,6 +1,7 @@
 import { connect } from 'react-redux';
 
 import { getLessonsByGroup, setScheduleLoading, showAllGroups } from '../../actions';
+import { getClassScheduleListStart } from '../../actions/classes';
 import { clearScheduleStart, getAllScheduleItemsStart } from '../../actions/schedule';
 import { fetchEnabledGroupsStart } from '../../actions/groups';
 import EditCurrentSchedulePage from '../../components/EditCurrentSchedule/EditCurrentSchedulePage';
@@ -23,6 +24,7 @@ const mapDispatchToProps = (dispatch) => ({
     clearScheduleItems: (id) => dispatch(clearScheduleStart(id)),
     setScheduleLoading: (newState) => dispatch(setScheduleLoading(newState)),
     showAllGroups: () => dispatch(showAllGroups()),
+    getClassScheduleListSuccess: () => dispatch(getClassScheduleListStart()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(EditCurrentSchedulePage);
