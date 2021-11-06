@@ -20,14 +20,19 @@ import {
     DELETED_LABEL,
 } from '../constants/translationLabels/serviceMessages';
 import { STUDENT } from '../constants/names';
+import { setStudentsLoading } from '../actions/loadingIndicator';
 
 function* fetchAllStudents({ id }) {
     try {
+        yield put(showAllStudents([]));
+        yield put(setStudentsLoading(true));
         const requestUrl = `groups/${id}/with-students`;
         const res = yield call(axiosCall, requestUrl);
         yield put(showAllStudents(res.data.students));
     } catch (err) {
         yield put(setOpenErrorSnackbar(createErrorMessage(err)));
+    } finally {
+        yield put(setStudentsLoading(false));
     }
 }
 

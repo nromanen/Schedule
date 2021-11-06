@@ -1,5 +1,5 @@
-@import '../../App';
-@import '../../styles/colors.scss';
+@import "../../App";
+@import "../../styles/colors.scss";
 
 .delete-word {
     color: $delete-color;
@@ -42,9 +42,7 @@
 .group-select {
     z-index: 1000;
 }
-.MuiDialog-paperWidthSm {
-    max-width: 800px !important;
-}
+
 .student-dialog-button-data {
     width: 25%;
     height: 45px;
@@ -71,6 +69,9 @@
     text-decoration: none;
 }
 .custom-dialog {
+    .MuiDialog-paperWidthSm {
+        max-width: unset;
+    }
     .MuiPaper-root {
         position: unset;
         min-width: 340px;
@@ -86,7 +87,7 @@
         align-items: center;
         justify-content: space-around;
         margin: 10px 0;
-        
+
         .common-button,
         .choose-button,
         .upload-file-button {

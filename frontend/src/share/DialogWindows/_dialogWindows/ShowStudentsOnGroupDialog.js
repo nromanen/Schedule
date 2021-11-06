@@ -5,12 +5,8 @@ import { useTranslation } from 'react-i18next';
 import { isEmpty } from 'lodash';
 import { UploadFile } from '../../../components/UploadFile/UploadFile';
 import CustomDialog from '../../../containers/Dialogs/CustomDialog';
-import StudentsPage from '../../../containers/Students/StudentsPage';
-import { StudentsPageHead } from '../../../components/Students/StudentsPageHead';
-import {
-    GROUP_LABEL,
-    NO_EXIST_STUDENTS_AT_GROUP,
-} from '../../../constants/translationLabels/formElements';
+import { GROUP_LABEL } from '../../../constants/translationLabels/formElements';
+import { ShowStudentsOnGroupContent } from '../../../components/Students/ShowStudentsOnGroupContent';
 import {
     dialogCloseButton,
     dialogUploadFromFileButton,
@@ -24,6 +20,7 @@ const ShowStudentsOnGroupDialog = (props) => {
         students,
         onClose,
         groupId,
+        loading,
         open,
         match,
         groups,
@@ -50,7 +47,7 @@ const ShowStudentsOnGroupDialog = (props) => {
         dialogUploadFromFileButton(handleShowDialogFile, buttonClassName),
         dialogCloseButton(onClose, buttonClassName),
     ];
-    const isEmptyStudents = isEmpty(students);
+
     return (
         <>
             <CustomDialog
@@ -58,7 +55,7 @@ const ShowStudentsOnGroupDialog = (props) => {
                 onClose={onClose}
                 title={`${t(GROUP_LABEL)} - ${group.title}`}
                 buttons={
-                    !isEmptyStudents
+                    !isEmpty(students)
                         ? [
                               dialogChooseGroupButton(
                                   showMoveStudentsByGroupDialog,
@@ -70,23 +67,17 @@ const ShowStudentsOnGroupDialog = (props) => {
                         : dialogButtons
                 }
             >
-                {isEmptyStudents && <>{t(NO_EXIST_STUDENTS_AT_GROUP)} </>}
-
-                {!isEmptyStudents && (
-                    <span className="table-student-data">
-                        <StudentsPageHead t={t} students={students} />
-                        <StudentsPage
-                            group={group}
-                            match={match}
-                            groups={groups}
-                            students={students}
-                            onDeleteStudent={onDeleteStudent}
-                            isOpenMoveStudentsDialog={isOpenMoveStudentsDialog}
-                            setIsOpenMoveStudentDialog={setIsOpenMoveStudentDialog}
-                            setIsDisabledBtnMoveStudent={setIsDisabledBtnMoveStudent}
-                        />
-                    </span>
-                )}
+                <ShowStudentsOnGroupContent
+                    group={group}
+                    match={match}
+                    groups={groups}
+                    loading={loading}
+                    students={students}
+                    onDeleteStudent={onDeleteStudent}
+                    isOpenMoveStudentsDialog={isOpenMoveStudentsDialog}
+                    setIsOpenMoveStudentDialog={setIsOpenMoveStudentDialog}
+                    setIsDisabledBtnMoveStudent={setIsDisabledBtnMoveStudent}
+                />
             </CustomDialog>
             {isOpenUploadFileDialog && (
                 <UploadFile

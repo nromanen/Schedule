@@ -26,3 +26,10 @@ export const setSemesterLoading = (res) => {
         result: res,
     };
 };
+
+export const setStudentsLoading = (res) => {
+    return {
+        type: actionTypes.SET_STUDENTS_LOADING_INDICATOR,
+        result: res,
+    };
+};
