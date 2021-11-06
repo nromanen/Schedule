@@ -74,6 +74,8 @@ import {
     setScheduleType,
 } from '../actions/schedule';
 import { getAllBusyRoomsSuccess } from '../actions/busyRooms';
+import { DELETE, POST, PUT } from '../constants/methods';
+import { FULL, GROUP, TEACHER } from '../constants/scheduleTypes';
 
 export function* getScheduleItemsBySemester({ semesterId }) {
     const requestUrl = `${SCHEDULE_SEMESTER_ITEMS_URL}?semesterId=${semesterId}`;
@@ -112,7 +114,7 @@ export function* getScheduleItems() {
 
 export function* addItemsToSchedule({ item }) {
     try {
-        yield call(axiosCall, SCHEDULE_ITEMS_URL, 'POST', item);
+        yield call(axiosCall, SCHEDULE_ITEMS_URL, POST, item);
         yield call(getScheduleItems);
     } catch (error) {
         yield put(setOpenErrorSnackbar(createErrorMessage(error)));
@@ -154,7 +156,7 @@ export function* checkScheduleItemAvailability({ item }) {
 export function* clearSchedule({ semesterId }) {
     try {
         const requestUrl = `${CLEAR_SCHEDULE_URL}?semesterId=${semesterId}`;
-        yield call(axiosCall, requestUrl, 'DELETE');
+        yield call(axiosCall, requestUrl, DELETE);
         const message = createMessage(
             BACK_END_SUCCESS_OPERATION,
             COMMON_SCHEDULE_TITLE,
@@ -171,7 +173,7 @@ export function* clearSchedule({ semesterId }) {
 export function* deleteScheduleItem({ itemId }) {
     try {
         const requestUrl = `${SCHEDULE_ITEMS_URL}/${itemId}`;
-        yield call(axiosCall, requestUrl, 'DELETE');
+        yield call(axiosCall, requestUrl, DELETE);
         yield put(deleteScheduleItemSuccess(itemId));
         yield call(getScheduleItems);
     } catch (error) {
@@ -184,7 +186,7 @@ export function* editRoomItemToSchedule({ item }) {
     try {
         const { roomId, itemId } = item;
         const requestUrl = `${SCHEDULE_ITEM_ROOM_CHANGE}?roomId=${roomId}&scheduleId=${itemId}`;
-        yield call(axiosCall, requestUrl, 'PUT');
+        yield call(axiosCall, requestUrl, PUT);
         const message = createMessage(
             BACK_END_SUCCESS_OPERATION,
             COMMON_SCHEDULE_TITLE,
@@ -362,7 +364,7 @@ function* setSemesterAndType(semesterId, type) {
     yield put(setScheduleType(type));
 }
 export function* selectGroupSchedule({ semesterId, groupId }) {
-    yield call(setSemesterAndType, semesterId, 'group');
+    yield call(setSemesterAndType, semesterId, GROUP);
     const groups = yield select((state) => state.groups.groups);
     // if (isEmpty(groups)) yield call(getAllPublicGroups, { id: semesterId });
     // groups = yield select((state) => state.groups.groups);
@@ -371,7 +373,7 @@ export function* selectGroupSchedule({ semesterId, groupId }) {
     yield call(getGroupSchedule, { semesterId, groupId });
 }
 export function* selectTeacherSchedule({ semesterId, teacherId }) {
-    yield call(setSemesterAndType, semesterId, 'teacher');
+    yield call(setSemesterAndType, semesterId, TEACHER);
     const teachers = yield select((state) => state.teachers.teachers);
     // if (isEmpty(teachers)) yield call(getAllPublicTeachers);
     // teachers = yield select((state) => state.teachers.teachers);
@@ -380,7 +382,7 @@ export function* selectTeacherSchedule({ semesterId, teacherId }) {
     yield call(getTeacherSchedule, { semesterId, teacherId });
 }
 export function* selectFullSchedule({ semesterId }) {
-    yield call(setSemesterAndType, semesterId, 'full');
+    yield call(setSemesterAndType, semesterId, FULL);
     yield call(getFullSchedule, { semesterId });
 }
 
