@@ -13,37 +13,32 @@ import { ROOM_LABEL, FIND_FREE_ROOM } from '../../constants/translationLabels/fo
 import { TYPE_LABEL } from '../../constants/translationLabels/common';
 
 const FreeRooms = (props) => {
+    const { classScheduler } = props;
     const { t } = useTranslation('formElements');
-
     const [isOpenFreeRoomDialog, setIsOpenFreeRoomDialog] = useState(false);
 
-    const { classScheduler } = props;
+    useEffect(() => {
+        getClassScheduleListService();
+    }, []);
 
-    useEffect(() => getClassScheduleListService(), []);
-
-    const handleClickOpen = () => {
-        setIsOpenFreeRoomDialog(true);
+    const handleIsOpenFreeRoomDialog = () => {
+        setIsOpenFreeRoomDialog((prev) => !prev);
     };
-
-    const handleClose = () => {
-        setIsOpenFreeRoomDialog(false);
-    };
-
     const submit = (values) => {
         showFreeRoomsService(values);
     };
 
     return (
         <>
-            <span className="navLinks" onClick={handleClickOpen} aria-hidden="true">
+            <span className="navLinks" onClick={handleIsOpenFreeRoomDialog} aria-hidden="true">
                 {t(FIND_FREE_ROOM)}
             </span>
             {isOpenFreeRoomDialog && (
                 <CustomDialog
                     title={t(FIND_FREE_ROOM)}
                     open={isOpenFreeRoomDialog}
-                    onClose={handleClose}
-                    buttons={[dialogCloseButton(handleClose)]}
+                    onClose={handleIsOpenFreeRoomDialog}
+                    buttons={[dialogCloseButton(handleIsOpenFreeRoomDialog)]}
                     maxWidth="lg"
                     aria-labelledby="form-dialog-title"
                 >
@@ -82,4 +77,4 @@ const mapStateToProps = (state) => ({
     freeRooms: state.freeRooms.freeRooms,
 });
 
-export default connect(mapStateToProps)(FreeRooms);
+export default connect(mapStateToProps, null)(FreeRooms);

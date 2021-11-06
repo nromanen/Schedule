@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import { authUser, registerUser, resetUserPassword, setAuthError, setLoading } from '../../actions';
-import Auth from '../../components/Auth';
+import Auth from '../../components/Auth/Auth';
 
 const mapStateToProps = (state) => ({
     response: state.auth.response,
