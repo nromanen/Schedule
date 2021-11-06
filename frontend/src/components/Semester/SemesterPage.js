@@ -27,7 +27,6 @@ const SemesterPage = (props) => {
     const [disabled, setDisabled] = useState(false);
     const [archived, setArchived] = useState(false);
 
-
     const options = getGroupsOptionsForSelect(groups);
     useEffect(() => {
         getAllGroupsItems();

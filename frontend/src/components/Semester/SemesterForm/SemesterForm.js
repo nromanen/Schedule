@@ -15,7 +15,11 @@ import {
     lessThanDate,
     greaterThanDate,
 } from '../../../validation/validateFields';
-import { getClearOrCancelTitle, setDisableButton } from '../../../helper/disableComponent';
+import {
+    getClearOrCancelTitle,
+    setDisableButton,
+    setDisabledSaveButtonSemester,
+} from '../../../helper/disableComponent';
 import Card from '../../../share/Card/Card';
 import {
     COMMON_EDIT,
@@ -248,7 +252,12 @@ const SemesterForm = (props) => {
                         variant="contained"
                         color="primary"
                         className="buttons-style "
-                        disabled={(pristine || submitting) && selectedGroups.length === 0}
+                        disabled={setDisabledSaveButtonSemester(
+                            pristine,
+                            submitting,
+                            semester,
+                            selectedGroups,
+                        )}
                         type="submit"
                     >
                         {t(COMMON_SAVE_BUTTON_LABEL)}
