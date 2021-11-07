@@ -15,5 +15,3 @@ export const Sidebar = (props) => {
         </aside>
     );
 };
-
-export default Sidebar;
