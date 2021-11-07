@@ -130,7 +130,7 @@ const SemesterList = (props) => {
             </section>
         );
     }
-    if (!visibleItems.length) {
+    if (isEmpty(visibleItems)) {
         return <NotFound name={t(SEMESTERY_LABEL)} />;
     }
     return (
