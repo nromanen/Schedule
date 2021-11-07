@@ -59,7 +59,7 @@ const SemesterForm = (props) => {
         clearSemesterSuccess,
     } = props;
 
-    const [startDate, setStartDate] = useState(getToday());
+    const [startDate, setStartDate] = useState(new Date());
     const [finishDate, setFinishDate] = useState(getTomorrow());
     const [disabledFinishDate, setDisabledFinishDate] = useState(true);
 

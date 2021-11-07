@@ -25,7 +25,7 @@ export const setDisabledSaveButtonSemester = (pristine, submitting, semester, se
         const deleteGroups = beginGroups.filter((group) => !restGroups.includes(group));
         const isChosenGroup =
             isEmpty(semester.semester_groups) || !isEmpty(newGroups) || !isEmpty(deleteGroups);
-        return !isEmpty(selectedGroups) && !isChosenGroup && (pristine || submitting);
+        return !isChosenGroup && (pristine || submitting);
     }
     return pristine || submitting;
 };
