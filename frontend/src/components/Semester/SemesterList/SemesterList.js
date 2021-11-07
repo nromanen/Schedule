@@ -78,20 +78,24 @@ const SemesterList = (props) => {
         const foundSemester = semesters.find(
             (semesterItem) => semesterItem.id === currentSemesterId,
         );
-        if (confirmDialogType === dialogTypes.SET_DEFAULT) {
-            setDefaultSemesterById(currentSemesterId);
-        } else if (confirmDialogType === dialogTypes.SET_VISIBILITY_ENABLED) {
-            toggleSemesterVisibility({
-                ...foundSemester,
-                disable: false,
-            });
-        } else if (confirmDialogType === dialogTypes.SET_VISIBILITY_DISABLED) {
-            toggleSemesterVisibility({
-                ...foundSemester,
-                disable: true,
-            });
-        } else {
-            removeSemesterCard(currentSemesterId);
+        switch (confirmDialogType) {
+            case dialogTypes.SET_DEFAULT:
+                setDefaultSemesterById(currentSemesterId);
+                break;
+            case dialogTypes.SET_VISIBILITY_ENABLED:
+                toggleSemesterVisibility({
+                    ...foundSemester,
+                    disable: false,
+                });
+                break;
+            case dialogTypes.SET_VISIBILITY_DISABLED:
+                toggleSemesterVisibility({
+                    ...foundSemester,
+                    disable: true,
+                });
+                break;
+            default:
+                removeSemesterCard(currentSemesterId);
         }
     };
     // it doesnt work, need to finish implement archeved functionality
