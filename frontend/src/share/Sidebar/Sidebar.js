@@ -1,6 +1,5 @@
 import React from 'react';
-import './Sidebar.scss';
-import SearchPanel from '../../share/SearchPanel/SearchPanel';
+import SearchPanel from '../SearchPanel/SearchPanel';
 
 export const Sidebar = (props) => {
     const { toggleDisabled, isDisabled, setSearchDisabled, children, searchName } = props;

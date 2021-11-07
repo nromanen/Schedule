@@ -6,7 +6,6 @@ import { useTranslation } from 'react-i18next';
 import './SearchPanel.scss';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
-import Card from '../Card/Card';
 import {
     TYPE_TO_SEARCH,
     SHOW_ARCHIVED,
@@ -45,7 +44,7 @@ const SearchPanel = ({ SearchChange, showDisabled, showArchived, forLessons }) =
     };
 
     return (
-        <Card additionClassName="search-group">
+        <div className="search-group">
             {!forLessons && (
                 <FormControlLabel
                     control={
@@ -80,7 +79,7 @@ const SearchPanel = ({ SearchChange, showDisabled, showArchived, forLessons }) =
                 value={term}
                 onChange={onSearchChange}
             />
-        </Card>
+        </div>
     );
 };
 
