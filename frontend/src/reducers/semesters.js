@@ -36,7 +36,9 @@ const reducer = (state = initialState, action) => {
             });
 
         case actionTypes.SELECT_SEMESTER_SUCCESS: {
-            let selectSemesterSuccess = state.semesters.find((semester) => semester.id === action.result);
+            let selectSemesterSuccess = state.semesters.find(
+                (semester) => semester.id === action.result,
+            );
             if (!selectSemesterSuccess) {
                 selectSemesterSuccess = {};
             }

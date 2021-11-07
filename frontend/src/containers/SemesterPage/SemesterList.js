@@ -27,8 +27,7 @@ const mapDispatchToProps = (dispatch) => ({
     setOpenConfirmDialog: (newState) => dispatch(setIsOpenConfirmDialog(newState)),
     updateSemesterSuccess: (item) => dispatch(updateSemesterStart(item)),
     removeSemesterCard: (semesterId) => dispatch(deleteSemesterStart(semesterId)),
-    setDefaultSemesterById: (semesterId, isDisabled) =>
-        dispatch(updateSemesterByIdStartSuccess(semesterId, isDisabled)),
+    setDefaultSemesterById: (semesterId) => dispatch(updateSemesterByIdStartSuccess(semesterId)),
     semesterCopy: (values) => dispatch(setSemesterCopyStart(values)),
     setOpenSuccessSnackbar: (message) => dispatch(setOpenSuccessSnackbar(message)),
     setGroupsToSemester: (semesterId, groups) =>

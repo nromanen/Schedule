@@ -78,9 +78,8 @@ const SemesterList = (props) => {
         const foundSemester = semesters.find(
             (semesterItem) => semesterItem.id === currentSemesterId,
         );
-        const isDisabled = disabled;
         if (confirmDialogType === dialogTypes.SET_DEFAULT) {
-            setDefaultSemesterById(currentSemesterId, isDisabled);
+            setDefaultSemesterById(currentSemesterId);
         } else if (confirmDialogType === dialogTypes.SET_VISIBILITY_ENABLED) {
             toggleSemesterVisibility({
                 ...foundSemester,
