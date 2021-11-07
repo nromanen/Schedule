@@ -1,15 +1,30 @@
+@import '../../styles/colors.scss';
+
 .group-form{
   display: flex;
   flex-direction: column;
   justify-content: center;
+  padding: 30px 25px 30px 25px;
+  margin: 15px 0 10px;
+   border-radius: 3px;
+    border: 1px solid $light-gray;
+    -webkit-box-shadow: 4px 4px 8px -4px rgba(34, 60, 80, 0.2);
+    -moz-box-shadow: 4px 4px 8px -4px rgba(34, 60, 80, 0.2);
+    box-shadow: 4px 4px 8px -4px rgba(34, 60, 80, 0.2);
+
   .MuiFormControl-root{
-    margin-left: 17px;
+    width: 99%;
     margin-bottom: 10px;
   }
+  
 }
 
 .group {
     &-form__title {
-        text-align: center
+        text-align: center;
+        font-weight: 600;
     }
+}
+.form-buttons-container{
+  width: 100%;
 }

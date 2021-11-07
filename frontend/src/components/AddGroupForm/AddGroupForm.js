@@ -4,7 +4,6 @@ import Button from '@material-ui/core/Button';
 import { useTranslation } from 'react-i18next';
 
 import './AddGroupForms.scss';
-import Card from '../../share/Card/Card';
 import renderTextField from '../../share/renderedFields/input';
 import { required, uniqueGroup, minLengthValue } from '../../validation/validateFields';
 import { getClearOrCancelTitle, setDisableButton } from '../../helper/disableComponent';
@@ -47,13 +46,13 @@ export const AddGroup = (props) => {
     };
 
     return (
-        <Card additionClassName="form-card group-form">
-            <h2 className="group-form__title">
+        <div className="group-form">
+            <div className="group-form__title">
                 {group.id ? t(EDIT_TITLE) : t(CREATE_TITLE)}
                 {t(GROUP_Y_LABEL)}
-            </h2>
+            </div>
             <form
-                className="group-form"
+                // className="group-form"
                 onSubmit={handleSubmit((data) => {
                     submitGroupStart(data);
                     setGroup({});
@@ -69,6 +68,7 @@ export const AddGroup = (props) => {
                 />
                 <div className="form-buttons-container">
                     <Button
+                        size="small"
                         variant="contained"
                         className="buttons-style "
                         color="primary"
@@ -78,8 +78,9 @@ export const AddGroup = (props) => {
                         {t(SAVE_BUTTON_LABEL)}
                     </Button>
                     <Button
+                        size="small"
                         type="button"
-                        className="buttons-style"
+                        className="buttons-style size"
                         variant="contained"
                         disabled={setDisableButton(pristine, submitting, group.id)}
                         onClick={onReset}
@@ -88,6 +89,6 @@ export const AddGroup = (props) => {
                     </Button>
                 </div>
             </form>
-        </Card>
+        </div>
     );
 };

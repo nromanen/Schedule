@@ -1,5 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import './StudentTable.scss';
 import { isEmpty } from 'lodash';
 import { CircularProgress } from '@material-ui/core';
 import StudentsPage from '../../containers/Students/StudentsPage';
@@ -18,7 +19,7 @@ export const ShowStudentsOnGroupContent = (props) => {
         );
     }
     if (isEmpty(students)) {
-        return <>{t(NO_EXIST_STUDENTS_AT_GROUP)} </>;
+        return <div className="empty-students-table">{t(NO_EXIST_STUDENTS_AT_GROUP)} </div>;
     }
     return (
         <span className="table-student-data">

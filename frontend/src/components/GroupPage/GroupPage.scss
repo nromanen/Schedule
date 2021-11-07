@@ -4,6 +4,11 @@
 @import '../../styles/mixin.scss';
 
 $group-size: 10px;
+
+.cards-container{
+  display: flex;
+  padding: 5px;
+}
 .students-group {
   display: flex;
   flex-direction: column;
@@ -109,9 +114,9 @@ $group-size: 10px;
 
 .group-sidebar{
   position: sticky;
-  width: 40%;
+  margin-top: 10px;
   top: 1rem;
-  width: 420px;
+  width: 360px;
   @media (max-width: 850px) {
       margin: 10px auto;
       width: 50%;
