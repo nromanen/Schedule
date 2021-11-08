@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { HOME_PAGE_LINK, LOGIN_LINK, ADMIN_PAGE_LINK } from '../../constants/links';
 import { authTypes, successAuthMessages } from '../../constants/auth';
@@ -23,7 +24,6 @@ import {
     ADMIN_TITLE,
     RESET_PASSWORD_PAGE_TITLE,
 } from '../../constants/translationLabels/common';
-import i18n from '../../i18n';
 
 const Auth = (props) => {
     const {
@@ -41,6 +41,7 @@ const Auth = (props) => {
     } = props;
     const [isResponse, setIsResponse] = useState(false);
     const history = useHistory();
+    const { t } = useTranslation('common');
     // const url = window.document.location;
     // const parser = new URL(url);
 
@@ -51,15 +52,15 @@ const Auth = (props) => {
     };
 
     const showSuccessMessage = (massage) => {
-        handleSnackbarOpenService(true, snackbarTypes.SUCCESS, i18n.t(massage));
+        handleSnackbarOpenService(true, snackbarTypes.SUCCESS, t(massage));
     };
 
     const successLoginRedirect = useCallback(() => {
         if (userRole === userRoles.MANAGER) {
-            document.title = i18n.t(ADMIN_TITLE);
+            document.title = t(ADMIN_TITLE);
             history.push(ADMIN_PAGE_LINK);
         } else {
-            document.title = i18n.t(HOME_TITLE);
+            document.title = t(HOME_TITLE);
             history.push(HOME_PAGE_LINK);
         }
         showSuccessMessage(successAuthMessages[authType]);
@@ -136,7 +137,7 @@ const Auth = (props) => {
 
     switch (authType) {
         case authTypes.REGISTRATION:
-            document.title = i18n.t(REGISTRATION_PAGE_TITLE);
+            document.title = t(REGISTRATION_PAGE_TITLE);
             return (
                 <div className="auth-container">
                     <RegistrationForm
@@ -148,7 +149,7 @@ const Auth = (props) => {
                 </div>
             );
         case authTypes.RESET_PASSWORD:
-            document.title = i18n.t(RESET_PASSWORD_PAGE_TITLE);
+            document.title = t(RESET_PASSWORD_PAGE_TITLE);
             return (
                 <div className="auth-container">
                     <ResetPasswordForm
@@ -160,7 +161,7 @@ const Auth = (props) => {
                 </div>
             );
         default:
-            document.title = i18n.t(LOGIN_TITLE);
+            document.title = t(LOGIN_TITLE);
             return (
                 <div className="auth-container">
                     <LoginForm
