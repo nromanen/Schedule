@@ -1,6 +1,5 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { connect } from 'react-redux';
 import {
     EDIT_TITLE,
     CREATE_TITLE,
@@ -25,9 +24,4 @@ const LessonLabelForm = (props) => {
     );
 };
 
-const mapStateToProps = (state) => ({
-    lesson: state.lesson.lesson,
-    groupId: state.lesson.groupId,
-});
-
-export default connect(mapStateToProps)(LessonLabelForm);
+export default LessonLabelForm;

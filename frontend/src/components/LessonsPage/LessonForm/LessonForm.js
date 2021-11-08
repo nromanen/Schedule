@@ -18,6 +18,9 @@ import { handleTeacherInfo } from '../../../helper/renderTeacher';
 import { getClearOrCancelTitle, setDisableButton } from '../../../helper/disableComponent';
 import { selectGroupService } from '../../../services/groupService';
 import { RenderMultiselect } from '../../../share/renderedFields/renderMultiselect';
+import { renderAutocompleteField } from '../../../helper/renderAutocompleteField';
+import LessonLabelForm from '../../../containers/LessonPage/LessonLabelForm';
+
 import {
     SAVE_BUTTON_LABEL,
     GROUP_LABEL,
@@ -35,8 +38,6 @@ import {
 } from '../../../constants/translationLabels/formElements';
 
 import './LessonForm.scss';
-import { renderAutocompleteField } from '../../../helper/renderAutocompleteField';
-import LessonLabelForm from './LessonLabelForm';
 
 const LessonForm = (props) => {
     const { t } = useTranslation('formElements');
