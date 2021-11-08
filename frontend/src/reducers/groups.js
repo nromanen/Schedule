@@ -16,7 +16,7 @@ const reducer = (state = initialState, action) => {
             });
         }
 
-        case actionTypes.FETCH_GROUP_BY_ID_SUCCESS: {
+        case actionTypes.GET_GROUP_BY_ID_SUCCESS: {
             return updateObject(state, {
                 ...state,
                 group: action.group,

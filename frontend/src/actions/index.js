@@ -46,7 +46,7 @@ export {
 } from './class';
 export { clearFreeRooms, showFreeRooms } from './freeRooms';
 export {
-    fetchGroupByIdSuccess,
+    getGroupByIdSuccess,
     createGroupSuccess,
     clearGroupSuccess,
     deleteGroupSuccess,
@@ -54,7 +54,7 @@ export {
     updateGroupSuccess,
     showAllGroupsSuccess,
     toggleDisabledStatus,
-    fetchEnabledGroupsStart,
+    getEnabledGroupsStart,
 } from './groups';
 
 export { setLoading, setScheduleLoading, setSemesterLoading } from './loadingIndicator';

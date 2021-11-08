@@ -21,9 +21,9 @@ export const showAllGroupsSuccess = (res) => {
     };
 };
 
-export const fetchGroupByIdSuccess = (group) => {
+export const getGroupByIdSuccess = (group) => {
     return {
-        type: actionTypes.FETCH_GROUP_BY_ID_SUCCESS,
+        type: actionTypes.GET_GROUP_BY_ID_SUCCESS,
         group,
     };
 };
@@ -48,21 +48,21 @@ export const clearGroupSuccess = () => {
     };
 };
 
-export const fetchDisabledGroupsStart = () => {
+export const getDisabledGroupsStart = () => {
     return {
-        type: actionTypes.FETCH_DISABLED_GROUPS_START,
+        type: actionTypes.GET_DISABLED_GROUPS_START,
     };
 };
 
-export const fetchEnabledGroupsStart = () => {
+export const getEnabledGroupsStart = () => {
     return {
-        type: actionTypes.FETCH_ENABLED_GROUPS_START,
+        type: actionTypes.GET_ENABLED_GROUPS_START,
     };
 };
 
-export const fetchGroupByIdStart = (id) => {
+export const getGroupByIdStart = (id) => {
     return {
-        type: actionTypes.FETCH_GROUP_BY_ID_START,
+        type: actionTypes.GET_GROUP_BY_ID_START,
         id,
     };
 };

@@ -15,7 +15,7 @@ import {
     DELETED_LABEL,
 } from '../constants/translationLabels/serviceMessages';
 import {
-    fetchGroupByIdSuccess,
+    getGroupByIdSuccess,
     showAllGroupsSuccess,
     deleteGroupSuccess,
     updateGroupSuccess,
@@ -39,11 +39,11 @@ function* fetchGroups(url) {
     }
 }
 
-function* fetchGroupById({ id }) {
+function* getGroupById({ id }) {
     try {
         yield put(selectGroupSuccess({}));
         const res = yield call(axiosCall, `${GROUP_URL}${id}`);
-        yield put(fetchGroupByIdSuccess(res.data));
+        yield put(getGroupByIdSuccess(res.data));
     } catch (err) {
         yield put(setOpenErrorSnackbar(createErrorMessage(err)));
     }
@@ -88,10 +88,10 @@ function* updateGroup({ data }) {
 
 function* submitGroupForm({ group }) {
     try {
-        if (!group.id) {
-            yield call(createGroup, { data: group });
-        } else {
+        if (group.id) {
             yield call(updateGroup, { data: group });
+        } else {
+            yield call(createGroup, { data: group });
         }
     } catch (err) {
         yield put(setOpenErrorSnackbar(createErrorMessage(err)));
@@ -132,9 +132,9 @@ function* clearGroup() {
 
 export default function* groupWatcher() {
     yield takeEvery(actionTypes.TOGGLE_DISABLED_STATUS_GROUP, toggleDisabledGroup);
-    yield takeLatest(actionTypes.FETCH_DISABLED_GROUPS_START, fetchDisabledGroups);
-    yield takeLatest(actionTypes.FETCH_ENABLED_GROUPS_START, fetchEnabledGroups);
-    yield takeEvery(actionTypes.FETCH_GROUP_BY_ID_START, fetchGroupById);
+    yield takeLatest(actionTypes.GET_DISABLED_GROUPS_START, fetchDisabledGroups);
+    yield takeLatest(actionTypes.GET_ENABLED_GROUPS_START, fetchEnabledGroups);
+    yield takeEvery(actionTypes.GET_GROUP_BY_ID_START, getGroupById);
     yield takeEvery(actionTypes.SUBMIT_GROUP_START, submitGroupForm);
     yield takeEvery(actionTypes.DELETE_GROUP_START, deleteGroup);
     yield takeEvery(actionTypes.CLEAR_GROUP_START, clearGroup);

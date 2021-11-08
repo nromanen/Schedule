@@ -25,7 +25,7 @@ import { getLessonTypes } from '../../actions';
 
 const TemporarySchedule = (props) => {
     const { t } = useTranslation('common');
-    const { teachers, teacherId, isLoading } = props;
+    const { teachers, teacherId, isLoading, getEnabledGroupsStart } = props;
     const [fromDate, setFromDate] = useState(null);
     const [toDate, setToDate] = useState(null);
 
@@ -36,7 +36,7 @@ const TemporarySchedule = (props) => {
         showAllSubjectsService();
         getClassScheduleListService(null);
         getLessonTypes();
-        //fetchEnabledGroupsStart();  rename to fetchEnabledGroupsStart
+        getEnabledGroupsStart();
     }, []);
 
     const handleTemporaryScheduleSubmit = (values) => {

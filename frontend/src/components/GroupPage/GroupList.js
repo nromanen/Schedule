@@ -14,8 +14,8 @@ import ShowStudentsOnGroupDialog from '../../containers/Students/ShowStudentsOnG
 
 const GroupList = (props) => {
     const {
-        fetchDisabledGroupsStart,
-        fetchEnabledGroupsStart,
+        getEnabledGroupsStart,
+        getDisabledGroupsStart,
         setIsOpenConfirmDialog,
         toggleDisabledStatus,
         isOpenConfirmDialog,
@@ -36,13 +36,13 @@ const GroupList = (props) => {
     const [isOpenAddStudentDialog, setIsOpenAddStudentDialog] = useState(false);
 
     useEffect(() => {
-        fetchEnabledGroupsStart();
+        getEnabledGroupsStart();
     }, []);
     useEffect(() => {
         if (isDisabled) {
-            fetchDisabledGroupsStart();
+            getDisabledGroupsStart();
         } else {
-            fetchEnabledGroupsStart();
+            getEnabledGroupsStart();
         }
     }, [isDisabled]);
 

@@ -3,8 +3,8 @@ import { setIsOpenConfirmDialog } from '../../actions/dialog';
 import {
     clearGroupStart,
     deleteGroupStart,
-    fetchDisabledGroupsStart,
-    fetchEnabledGroupsStart,
+    getDisabledGroupsStart,
+    getEnabledGroupsStart,
     selectGroupSuccess,
     toggleDisabledStatus,
 } from '../../actions/groups';
@@ -21,8 +21,8 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = {
-    fetchDisabledGroupsStart,
-    fetchEnabledGroupsStart,
+    getEnabledGroupsStart,
+    getDisabledGroupsStart,
     setIsOpenConfirmDialog,
     toggleDisabledStatus,
     deleteStudentStart,

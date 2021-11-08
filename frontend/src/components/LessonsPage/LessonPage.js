@@ -47,7 +47,7 @@ const LessonPage = (props) => {
         isOpenConfirmDialog,
         setOpenErrorSnackbar,
         setUniqueError,
-        fetchEnabledGroupsStart,
+        getEnabledGroupsStart,
     } = props;
     const { t } = useTranslation('common');
     const [term, setTerm] = useState('');
@@ -66,7 +66,7 @@ const LessonPage = (props) => {
     useEffect(() => {
         showAllTeachersService();
         getLessonTypes();
-        fetchEnabledGroupsStart();
+        getEnabledGroupsStart();
         showAllSubjectsService();
         showAllSemestersService();
     }, []);
