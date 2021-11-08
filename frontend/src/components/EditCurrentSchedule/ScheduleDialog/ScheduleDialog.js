@@ -13,7 +13,7 @@ import {
 import { FORM_ROOM_LABEL } from '../../../constants/translationLabels/formElements';
 import './ScheduleDialog.scss';
 import CustomDialog from '../../../containers/Dialogs/CustomDialog';
-import { sortByLength } from '../../../helper/sortArray';
+import { sortByName } from '../../../helper/sortArray';
 import '../../../share/DialogWindows/dialog.scss';
 import i18n from '../../../i18n';
 
@@ -54,7 +54,7 @@ const ScheduleDialog = (props) => {
         }
     };
     const defaultProps = {
-        options: availability.rooms ? sortByLength(availability.rooms) : rooms,
+        options: availability.rooms ? sortByName(availability.rooms) : sortByName(rooms),
         getOptionLabel,
     };
 
