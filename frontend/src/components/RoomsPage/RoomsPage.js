@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import CustomDialog from '../../containers/Dialogs/CustomDialog';
 import { dialogTypes } from '../../constants/dialogs';
 import { cardType } from '../../constants/cardType';
-import AddRoom from './AddRoomForm/AddRoomForm';
+import AddRoomForm from './AddRoomForm/AddRoomForm';
 import NewRoomType from './AddNewRoomType/AddNewRoomType';
 import SearchPanel from '../../share/SearchPanel/SearchPanel';
 
@@ -26,7 +26,8 @@ import {
 import RoomList from './RoomsList/RoomsList';
 
 const RoomPage = (props) => {
-    const { rooms, roomTypes, disabledRooms, isOpenConfirmDialog, setOpenConfirmDialog } = props;
+    const { rooms, roomTypes, disabledRooms, isOpenConfirmDialog, setOpenConfirmDialog, oneRoom } =
+        props;
 
     const [isDisabled, setIsDisabled] = useState(false);
     const [confirmDialogType, setConfirmDialogType] = useState('');
@@ -101,7 +102,12 @@ const RoomPage = (props) => {
                     <SearchPanel SearchChange={SearchChange} showDisabled={changeDisable} />
                     {!isDisabled && (
                         <>
-                            <AddRoom onSubmit={createRoom} onReset={clearRoomOneService} />
+                            <AddRoomForm
+                                onSubmit={createRoom}
+                                onReset={clearRoomOneService}
+                                oneRoom={oneRoom}
+                                roomTypes={roomTypes}
+                            />
                             <NewRoomType
                                 className="new-type"
                                 setTypeId={setTypeId}
