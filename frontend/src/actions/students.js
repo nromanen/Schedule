@@ -41,9 +41,9 @@ export const checkAllStudentsSuccess = (checkedStudents, checkedAll) => {
     };
 };
 
-export const fetchAllStudentsStart = (id) => {
+export const getAllStudentsStart = (id) => {
     return {
-        type: actionTypes.FETCH_ALL_STUDENTS,
+        type: actionTypes.GET_ALL_STUDENTS,
         id,
     };
 };

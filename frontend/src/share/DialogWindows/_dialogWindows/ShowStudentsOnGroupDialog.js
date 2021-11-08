@@ -15,7 +15,7 @@ import {
 
 const ShowStudentsOnGroupDialog = (props) => {
     const {
-        fetchAllStudentsStart,
+        getAllStudentsStart,
         onDeleteStudent,
         students,
         onClose,
@@ -33,7 +33,7 @@ const ShowStudentsOnGroupDialog = (props) => {
     const [isDisabledBtnMoveStudent, setIsDisabledBtnMoveStudent] = useState(false);
 
     useEffect(() => {
-        fetchAllStudentsStart(groupId);
+        getAllStudentsStart(groupId);
     }, [groupId]);
 
     const showMoveStudentsByGroupDialog = () => {

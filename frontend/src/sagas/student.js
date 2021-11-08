@@ -100,7 +100,7 @@ function* moveStudentsToGroup({ group, newGroup }) {
 export default function* studentWatcher() {
     yield takeEvery(actionTypes.MOVE_STUDENTS_TO_GROUP_START, moveStudentsToGroup);
     yield takeEvery(actionTypes.SUBMIT_STUDENT_FORM, submitStudentForm);
-    yield takeEvery(actionTypes.FETCH_ALL_STUDENTS, fetchAllStudents);
+    yield takeEvery(actionTypes.GET_ALL_STUDENTS, fetchAllStudents);
     yield takeEvery(actionTypes.CREATE_STUDENT_START, createStudent);
     yield takeEvery(actionTypes.UPDATE_STUDENT_START, updateStudent);
     yield takeEvery(actionTypes.DELETE_STUDENT_START, deleteStudent);
