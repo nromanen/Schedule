@@ -6,9 +6,7 @@
     border-radius: 2px;
     margin: 10px;
     border: 1px solid $light-gray;
-    -webkit-box-shadow: 4px 4px 8px -4px rgba(34, 60, 80, 0.2);
-    -moz-box-shadow: 4px 4px 8px -4px rgba(34, 60, 80, 0.2);
-    box-shadow: 4px 4px 8px -4px rgba(34, 60, 80, 0.2);
+    box-shadow: 4px 4px 8px -4px $box-shadow;
     .MuiTypography-body1{
         font-size: 0.8rem;
     }
