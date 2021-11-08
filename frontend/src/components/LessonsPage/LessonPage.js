@@ -28,8 +28,6 @@ import { showAllTeachersService } from '../../services/teacherService';
 import { FORM_GROUP_LABEL } from '../../constants/translationLabels/formElements';
 
 const LessonPage = (props) => {
-    const { selectByGroupId, group } = props;
-
     const {
         currentSemester,
         isUniqueError,
@@ -38,6 +36,7 @@ const LessonPage = (props) => {
         teachers,
         lessons,
         groupId,
+        group,
         groups,
         copyLessonCard,
         deleteLessonCardStart,
@@ -50,6 +49,7 @@ const LessonPage = (props) => {
         setUniqueError,
         copyLessonsFromSemester,
         handleLesson,
+        selectByGroupId,
     } = props;
     const { t } = useTranslation('common');
     const [term, setTerm] = useState('');
@@ -115,10 +115,10 @@ const LessonPage = (props) => {
         copyLessonsFromSemester({ ...values, toSemesterId, fromSemesterId });
     };
 
-    const handleGroupSelect = (selGroup) => {
-        if (selGroup) {
-            selectByGroupId(selGroup.id);
-            selectGroupService(selGroup.id);
+    const handleGroupSelect = (selectedGroup) => {
+        if (selectedGroup) {
+            selectByGroupId(selectedGroup.id);
+            selectGroupService(selectedGroup.id);
         }
     };
 

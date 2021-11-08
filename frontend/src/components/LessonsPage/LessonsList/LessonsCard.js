@@ -73,7 +73,7 @@ const LessonsCard = (props) => {
                     {{ count: lesson.hours }}
                 </Trans>
             </p>
-            {lesson.linkToMeeting ? (
+            {lesson.linkToMeeting && (
                 <a
                     className="lesson-link"
                     href={lesson.linkToMeeting}
@@ -82,8 +82,6 @@ const LessonsCard = (props) => {
                 >
                     {lesson.linkToMeeting}
                 </a>
-            ) : (
-                ''
             )}
         </Card>
     );

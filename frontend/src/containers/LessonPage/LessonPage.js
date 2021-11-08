@@ -22,6 +22,7 @@ const mapStateToProps = (state) => ({
     isUniqueError: state.lesson.uniqueError,
     teachers: state.teachers.teachers,
     groups: state.groups.groups,
+    group: state.groups.group,
     subjects: state.subjects.subjects,
     loading: state.loadingIndicator.loading,
     semesters: state.semesters.semesters,
