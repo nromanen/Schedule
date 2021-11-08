@@ -53,6 +53,11 @@ const reducer = (
                 rooms: [...roomState],
             });
         }
+        case actionTypes.GET_BUSY_ROOMS_SUCCESS: {
+            return updateObject(state, {
+                rooms: action.busyRooms,
+            });
+        }
         case actionTypes.CLEAR_ROOM_ONE:
             return updateObject(state, {
                 oneRoom: {},

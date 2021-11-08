@@ -13,7 +13,6 @@ import subjects from './subjects';
 import groups from './groups';
 import rooms from './rooms';
 import roomTypes from './roomTypes';
-import busyRooms from './busyRooms';
 import semesters from './semesters';
 import users from './users';
 import freeRooms from './freeRooms';
@@ -35,7 +34,6 @@ const rootReducer = combineReducers({
     groups,
     rooms,
     roomTypes,
-    busyRooms,
     semesters,
     freeRooms,
     departments,
