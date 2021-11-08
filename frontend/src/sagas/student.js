@@ -53,7 +53,7 @@ function* updateStudent({ data }) {
     try {
         const res = yield call(axiosCall, STUDENT_URL, PUT, data);
         yield put(updateStudentSuccess(res.data));
-        yield put(selectStudentSuccess(null));
+        yield put(selectStudentSuccess(data.id));
         yield put(reset(STUDENT_FORM));
         const message = createDynamicMessage(STUDENT, UPDATED_LABEL);
         yield put(setOpenSuccessSnackbar(message));

@@ -97,7 +97,7 @@ export const AddStudentForm = (props) => {
                     label={t(EMAIL_FIELD)}
                     validate={[required]}
                 />
-                {student && (
+                {student.id && (
                     <Field
                         className="form-field"
                         component={renderSelectField}

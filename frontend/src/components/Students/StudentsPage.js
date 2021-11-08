@@ -4,6 +4,7 @@ import { StudentsTable } from './StudentsTable';
 import CustomDialog from '../../containers/Dialogs/CustomDialog';
 import { dialogTypes } from '../../constants/dialogs';
 import AddStudentDialog from '../../share/DialogWindows/_dialogWindows/AddStudentDialog';
+import { STUDENT } from '../../constants/names';
 
 export const StudentsPage = (props) => {
     const {
@@ -12,8 +13,8 @@ export const StudentsPage = (props) => {
         students,
         deleteStudentStart,
         isOpenConfirmDialog,
-        selectStudentSuccess,
         updateStudentSuccess,
+        selectStudentSuccess,
         setIsOpenConfirmDialog,
         checkAllStudentsSuccess,
         isOpenMoveStudentsDialog,
@@ -29,6 +30,10 @@ export const StudentsPage = (props) => {
         setIsOpenConfirmDialog(false);
         deleteStudentStart(studentId);
     };
+    const closeAddStudentDialog = () => {
+        setIsOpenUpdateDialog(false);
+        selectStudentSuccess(null);
+    };
 
     return (
         <>
@@ -37,6 +42,7 @@ export const StudentsPage = (props) => {
                 groups={groups}
                 students={students}
                 setStudent={setStudent}
+                selectStudentSuccess={selectStudentSuccess}
                 updateStudentSuccess={updateStudentSuccess}
                 setIsOpenUpdateDialog={setIsOpenUpdateDialog}
                 setIsOpenConfirmDialog={setIsOpenConfirmDialog}
@@ -55,14 +61,13 @@ export const StudentsPage = (props) => {
             )}
             {isOpenUpdateDialog && (
                 <AddStudentDialog
-                    student={student}
                     groupId={group.id}
                     open={isOpenUpdateDialog}
-                    setOpen={() => setIsOpenUpdateDialog(false)}
+                    setOpen={closeAddStudentDialog}
                 />
             )}
             <CustomDialog
-                whatDelete="student"
+                whatDelete={STUDENT}
                 open={isOpenConfirmDialog}
                 type={dialogTypes.DELETE_CONFIRM}
                 handelConfirm={() => confirmDeleteStudent(student.id)}

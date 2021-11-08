@@ -28,6 +28,7 @@ export const StudentsTableBody = (props) => {
         setStudent,
         checkStudent,
         setIsOpenUpdateDialog,
+        selectStudentSuccess,
         currentStudentsOnList,
         setIsOpenConfirmDialog,
     } = props;
@@ -76,7 +77,7 @@ export const StudentsTableBody = (props) => {
                                     className="edit-button"
                                     title={t(EDIT_TITLE)}
                                     onClick={() => {
-                                        setStudent(student);
+                                        selectStudentSuccess(student.id);
                                         setIsOpenUpdateDialog(true);
                                     }}
                                 />

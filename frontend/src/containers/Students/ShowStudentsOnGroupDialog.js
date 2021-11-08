@@ -5,7 +5,6 @@ import { getAllStudentsStart } from '../../actions/students';
 const mapStateToProps = (state) => ({
     loading: state.loadingIndicator.studentsLoading,
     students: state.students.students,
-    student: state.students.student,
     groups: state.groups.groups,
     group: state.groups.group,
 });

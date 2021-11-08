@@ -26,7 +26,9 @@ import {
 import { hasDisabled } from '../constants/disabledCard';
 import { GROUP } from '../constants/names';
 
-function* fetchGroups(url) {
+const getGroupsState = (state) => state.groups.groups;
+
+function* getGroups(url) {
     try {
         yield put(showAllGroupsSuccess([]));
         yield put(setLoading(true));
@@ -49,12 +51,12 @@ function* getGroupById({ id }) {
     }
 }
 
-function* fetchDisabledGroups() {
-    yield call(fetchGroups, DISABLED_GROUPS_URL);
+function* getDisabledGroups() {
+    yield call(getGroups, DISABLED_GROUPS_URL);
 }
 
-function* fetchEnabledGroups() {
-    yield call(fetchGroups, GROUP_URL);
+function* getEnabledGroups() {
+    yield call(getGroups, GROUP_URL);
 }
 
 function* createGroup({ data }) {
@@ -112,8 +114,8 @@ function* deleteGroup({ id }) {
 function* toggleDisabledGroup({ groupId, disabledStatus }) {
     try {
         if (groupId) {
-            const state = yield select();
-            const group = state.groups.groups.find((item) => item.id === groupId);
+            const groups = yield select(getGroupsState);
+            const group = groups.find((item) => item.id === groupId);
             yield call(updateGroup, { data: { ...group, disable: !disabledStatus } });
         }
     } catch (err) {
@@ -132,8 +134,8 @@ function* clearGroup() {
 
 export default function* groupWatcher() {
     yield takeEvery(actionTypes.TOGGLE_DISABLED_STATUS_GROUP, toggleDisabledGroup);
-    yield takeLatest(actionTypes.GET_DISABLED_GROUPS_START, fetchDisabledGroups);
-    yield takeLatest(actionTypes.GET_ENABLED_GROUPS_START, fetchEnabledGroups);
+    yield takeLatest(actionTypes.GET_DISABLED_GROUPS_START, getDisabledGroups);
+    yield takeLatest(actionTypes.GET_ENABLED_GROUPS_START, getEnabledGroups);
     yield takeEvery(actionTypes.GET_GROUP_BY_ID_START, getGroupById);
     yield takeEvery(actionTypes.SUBMIT_GROUP_START, submitGroupForm);
     yield takeEvery(actionTypes.DELETE_GROUP_START, deleteGroup);
