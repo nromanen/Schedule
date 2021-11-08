@@ -1,8 +1,7 @@
 import React from 'react';
 
-import SearchPanel from '../../../share/SearchPanel/SearchPanel';
-import '../LessonPage.scss';
-import './Search.scss';
+import SearchPanel from '../../share/SearchPanel/SearchPanel';
+import './LessonPage.scss';
 
 const Search = (props) => {
     const { setTerm, group } = props;

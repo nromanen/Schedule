@@ -16,7 +16,7 @@ import {
     DELETE_LESSON,
     EDIT_LESSON,
 } from '../../../constants/translationLabels/common';
-import '../LessonPage.scss';
+import './LessonList.scss';
 
 const LessonsCard = (props) => {
     const { lesson, onCopyLesson, onSelectLesson, onClickOpen } = props;

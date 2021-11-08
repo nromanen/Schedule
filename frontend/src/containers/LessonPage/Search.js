@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import { selectGroupId } from '../../actions';
-import Search from '../../components/LessonsPage/Search/Search';
+import Search from '../../components/LessonsPage/Search';
 
 const mapStateToProps = (state) => ({
     groups: state.groups.groups,
