@@ -4,7 +4,7 @@ import { ROOM_FORM_TYPE } from '../constants/reduxForms';
 import { ROOM_TYPES_URL } from '../constants/axios';
 import axios from '../helper/axios';
 import {
-    getAllRoomTypes,
+    getAllRoomTypesSuccess,
     deleteType,
     updateOneType,
     postOneType,
@@ -26,7 +26,7 @@ export const getAllRoomTypesService = () => {
     axios
         .get(ROOM_TYPES_URL)
         .then((res) => {
-            store.dispatch(getAllRoomTypes(res.data));
+            store.dispatch(getAllRoomTypesSuccess(res.data));
         })
         .catch((error) => errorHandler(error));
 };

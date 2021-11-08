@@ -7,10 +7,16 @@ export const postOneType = (roomType) => {
     };
 };
 
-export const getAllRoomTypes = (roomType) => {
+export const getAllRoomTypesSuccess = (roomType) => {
     return {
-        type: actionsType.GET_ALL_ROOM_TYPES,
-        result: roomType,
+        type: actionsType.GET_ALL_ROOM_TYPES_SUCCESS,
+        roomType,
+    };
+};
+
+export const getAllRoomTypesStart = () => {
+    return {
+        type: actionsType.GET_ALL_ROOM_TYPES_START,
     };
 };
 

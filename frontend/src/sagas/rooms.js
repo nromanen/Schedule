@@ -5,10 +5,16 @@ import { setLoading } from '../actions/loadingIndicator';
 import { setOpenSuccessSnackbar, setOpenErrorSnackbar } from '../actions/snackbar';
 import { axiosCall } from '../services/axios';
 import i18n from '../i18n';
-import { ROOM_URL, DISABLED_ROOMS_URL } from '../constants/axios';
+import { ROOM_URL, DISABLED_ROOMS_URL, ROOM_TYPES_URL } from '../constants/axios';
 import { ROOM_FORM } from '../constants/reduxForms';
 import { createErrorMessage, createMessage } from '../utils/sagaUtils';
-import { updateOneRoom, addRoom, getListOfRoomsSuccess, getListOfDisabledRoomsSuccess } from '../actions/rooms';
+import {
+    updateOneRoom,
+    addRoom,
+    getListOfRoomsSuccess,
+    getListOfDisabledRoomsSuccess,
+} from '../actions/rooms';
+import { getAllRoomTypesSuccess } from '../actions/roomTypes';
 import {
     BACK_END_SUCCESS_OPERATION,
     UPDATED_LABEL,
@@ -76,9 +82,19 @@ export function* handleRoomFormSubmit({ values }) {
     }
 }
 
+export function* getAllRoomTypes() {
+    try {
+        const { data } = yield call(axiosCall, ROOM_TYPES_URL);
+        yield put(getAllRoomTypesSuccess(data));
+    } catch (error) {
+        yield put(setOpenErrorSnackbar(createErrorMessage(error)));
+    }
+}
+
 function* watchRooms() {
     yield takeLatest(actionTypes.GET_LIST_OF_ROOMS_START, getListOfRooms);
     yield takeLatest(actionTypes.GET_LIST_OF_DISABLED_ROOMS_START, getListOfDisabledRooms);
+    yield takeLatest(actionTypes.GET_ALL_ROOM_TYPES_START, getAllRoomTypes);
     yield takeEvery(actionTypes.ADD_ROOM_START, addRoomItem);
     yield takeEvery(actionTypes.UPDATE_ROOM_START, updateRoomItem);
     yield takeEvery(actionTypes.HANDLE_ROOM_FORM_SUBMIT_START, handleRoomFormSubmit);

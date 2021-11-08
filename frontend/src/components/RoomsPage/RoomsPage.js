@@ -11,6 +11,7 @@ import {
     getListOfRoomsStart,
     getListOfDisabledRoomsStart,
 } from '../../actions/rooms';
+import { getAllRoomTypesStart } from '../../actions/roomTypes';
 import {
     getAllRoomTypesService,
     addNewTypeService,
@@ -36,6 +37,7 @@ const RoomPage = (props) => {
         handleRoomFormSubmit,
         getListOfRooms,
         getListOfDisabledRooms,
+        getAllRoomTypes,
     } = props;
 
     const [isDisabled, setIsDisabled] = useState(false);
@@ -45,7 +47,7 @@ const RoomPage = (props) => {
     const [term, setTerm] = useState('');
 
     useEffect(() => {
-        getAllRoomTypesService();
+        getAllRoomTypes();
     }, []);
 
     useEffect(() => {
@@ -146,8 +148,9 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
     setOpenConfirmDialog: (newState) => dispatch(setIsOpenConfirmDialog(newState)),
     handleRoomFormSubmit: (values) => dispatch(handleRoomFormSubmitStart(values)),
-    getListOfRooms: (rooms) => dispatch(getListOfRoomsStart(rooms)),
-    getListOfDisabledRooms: (rooms) => dispatch(getListOfDisabledRoomsStart(rooms)),
+    getListOfRooms: () => dispatch(getListOfRoomsStart()),
+    getListOfDisabledRooms: () => dispatch(getListOfDisabledRoomsStart()),
+    getAllRoomTypes: () => dispatch(getAllRoomTypesStart()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(RoomPage);

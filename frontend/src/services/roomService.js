@@ -34,7 +34,7 @@ export const showListOfRoomsService = () => {
         })
         .catch((error) => errorHandler(error));
 };
-
+//  created saga
 export const getDisabledRoomsService = () => {
     axios
         .get(DISABLED_ROOMS_URL)

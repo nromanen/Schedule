@@ -27,10 +27,9 @@ export const getListOfRoomsSuccess = (rooms) => {
     };
 };
 
-export const getListOfRoomsStart = (rooms) => {
+export const getListOfRoomsStart = () => {
     return {
         type: actionsType.GET_LIST_OF_ROOMS_START,
-        rooms,
     };
 };
 
@@ -40,10 +39,9 @@ export const getListOfDisabledRoomsSuccess = (rooms) => {
         result: rooms,
     };
 };
-export const getListOfDisabledRoomsStart = (rooms) => {
+export const getListOfDisabledRoomsStart = () => {
     return {
         type: actionsType.GET_LIST_OF_DISABLED_ROOMS_START,
-        rooms,
     };
 };
 

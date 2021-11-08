@@ -14,14 +14,14 @@ const reducer = (
                 roomTypes: [...state.roomTypes, action.result],
             });
 
-        case actionTypes.GET_ALL_ROOM_TYPES:
+        case actionTypes.GET_ALL_ROOM_TYPES_SUCCESS:
             return updateObject(state, {
-                roomTypes: [...action.result],
+                roomTypes: [...action.roomType],
             });
         case actionTypes.DELETE_TYPE:
             return updateObject(state, {
                 roomTypes: [
-                    ...state.roomTypes.filter((roomTypess) => roomTypess.id !== action.result),
+                    ...state.roomTypes.filter((roomTypes) => roomTypes.id !== action.result),
                 ],
             });
 
