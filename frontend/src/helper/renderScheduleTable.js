@@ -56,19 +56,12 @@ const renderClassCell = (classItem) => {
 };
 
 export const renderGroupDayClass = (classDay, isOddWeek, semesterDays) => {
-    // TODO check if we can remove it
-    const res = [];
-    Object.entries(classDay.cards).forEach((pair) => {
-        const [key, value] = pair;
-        value.day = key;
-        res.push(value);
-    });
     return (
         <TableRow key={shortid.generate()}>
             <TableCell className=" lesson groupLabelCell">
                 {renderClassCell(classDay.class)}
             </TableCell>
-            {res.map(({ day, card }) => {
+            {classDay.lessons.map(({ day, card }) => {
                 let className = 'lesson ';
                 if (currentDay === day) {
                     if (currentWeekType === isOddWeek) {

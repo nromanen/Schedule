@@ -9,6 +9,12 @@ import { SCHEDULE_FOR_LINK } from '../../constants/links';
 import { renderSchedule } from '../../helper/renderSchedule';
 import { getScheduleType } from '../../helper/getScheduleType';
 
+const createSubmitValues = (semester, group, teacher) => ({
+    semester,
+    group: { id: group },
+    teacher: { id: teacher },
+});
+
 const GroupSchedulePage = (props) => {
     const history = useHistory();
     const location = useLocation();
@@ -29,13 +35,11 @@ const GroupSchedulePage = (props) => {
     const scheduleActions = {
         group: (values) => {
             const { semester, group } = values;
-            const groupId = group ? group.id : null;
-            getGroupSchedule(semester.id, groupId);
+            getGroupSchedule(semester.id, group.id);
         },
         teacher: (values) => {
             const { semester, teacher } = values;
-            const teacherId = teacher ? teacher.id : null;
-            getTeacherSchedule(semester.id, teacherId);
+            getTeacherSchedule(semester.id, teacher.id);
         },
         full: (values) => {
             const { semester } = values;
@@ -56,17 +60,9 @@ const GroupSchedulePage = (props) => {
         const { semester, group, teacher } = getDataFromParams(location);
 
         if (!semester) {
-            handleSubmit({
-                semester: defaultSemester,
-                group: { id: group },
-                teacher: { id: teacher },
-            });
+            handleSubmit(createSubmitValues(defaultSemester, group, teacher));
         } else {
-            handleSubmit({
-                semester: { id: Number(semester) },
-                group: { id: group },
-                teacher: { id: teacher },
-            });
+            handleSubmit(createSubmitValues({ id: Number(semester) }, group, teacher));
         }
     };
 

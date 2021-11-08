@@ -19,7 +19,7 @@ import {
     CLEAR_SCHEDULE_LABEL,
     USE_PC,
 } from '../../constants/translationLabels/common';
-import { getLessonsByGroup,  } from '../../actions';
+import { getLessonsByGroup } from '../../actions';
 import { clearScheduleStart, getAllScheduleItemsStart } from '../../actions/schedule';
 
 const SchedulePage = (props) => {
