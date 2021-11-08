@@ -1,5 +1,4 @@
 import React, { Fragment, useEffect, useState } from 'react';
-import i18n from 'i18next';
 import ScheduleBoard from '../../../containers/EditCurrentSchedule/ScheduleBoard';
 import ScheduleDialog from '../../../containers/Dialogs/ScheduleDialog';
 import ScheduleDaySidebar from '../../ScheduleTable/ScheduleDaySidebar/ScheduleDaySidebar';
@@ -23,7 +22,9 @@ const Schedule = (props) => {
         getLessonsByGroupId,
         addItemsToSchedule,
         editRoomItemToSchedule,
+        t,
     } = props;
+
     const [isOpenScheduleDialog, setIsOpenScheduleDialog] = useState(false);
     const [dialogScheduleData, setDialogScheduleData] = useState(null);
     const days = currentSemester.semester_days;
@@ -63,6 +64,7 @@ const Schedule = (props) => {
                 <ScheduleDialog
                     itemData={dialogScheduleData}
                     open={isOpenScheduleDialog}
+                    t={t}
                     handleChangeSchedule={handleChangeSchedule}
                     onClose={handleClose}
                 />
@@ -71,7 +73,7 @@ const Schedule = (props) => {
                 <>
                     <ScheduleDaySidebar
                         days={days}
-                        title={i18n.t(COMMON_GROUP_TITLE)}
+                        title={t(COMMON_GROUP_TITLE)}
                         classes={classes}
                     />
                     <section className="groups-section">
@@ -113,6 +115,7 @@ const Schedule = (props) => {
                                                     currentSemester={currentSemester}
                                                     openDialogWithData={openScheduleDialogWithData}
                                                     dragItemData={dragItemData}
+                                                    t={t}
                                                     isSelectedGroup={isSelectedGroup}
                                                     additionClassName="card schedule-board"
                                                 />
@@ -125,7 +128,7 @@ const Schedule = (props) => {
                     </section>
                 </>
             ) : (
-                <h2 className="no-current-semester">{i18n.t(NO_CURRENT_SEMESTER)}</h2>
+                <h2 className="no-current-semester">{t(NO_CURRENT_SEMESTER)}</h2>
             )}
         </>
     );

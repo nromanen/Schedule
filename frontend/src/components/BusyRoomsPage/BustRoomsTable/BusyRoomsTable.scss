@@ -7,7 +7,7 @@
     padding-top: 15px;
     display: flex;
     .busy-room-title {
-        width: 150px;
+        width: 130px;
         display: flex;
         height: 50px;
         padding: 10px 7px;
@@ -18,17 +18,11 @@
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
-        .type-word {
-            margin-left: 5px;
-            // height: 10px;
-            // width: 10px;
-            border-radius: 5px;
-            color: $blue;
-        }
     }
     .busy-room-section {
         &:hover {
             position: relative;
+            color: $blue;
             &::after {
                 position: absolute;
                 top: 0;
@@ -40,13 +34,4 @@
             }
         }
     }
-    // .aa {
-    //     background-color: $red;
-    // }
-    // .dd {
-    //     background-color: $azure;
-    // }
-    // .ff {
-    //     background-color: $green;
-    // }
 }

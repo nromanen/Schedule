@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import i18n from 'i18next';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import TextField from '@material-ui/core/TextField';
 import { dialogTypes, dialogCloseButton, dialogChooseButton } from '../../../constants/dialogs';
@@ -25,6 +24,7 @@ const ScheduleDialog = (props) => {
         itemData,
         open,
         rooms,
+        t,
         availability,
         isOpenConfirmDialog,
     } = props;
@@ -33,14 +33,12 @@ const ScheduleDialog = (props) => {
     const [warning, setWarning] = useState('');
 
     const getOptionLabel = (option) => {
-        return `${option.name} (${
-            option.available ? i18n.t(COMMON_AVAILABLE) : i18n.t(COMMON_UNAVAILABLE)
-        })`;
+        return `${option.name} (${option.available ? t(COMMON_AVAILABLE) : t(COMMON_UNAVAILABLE)})`;
     };
 
     useEffect(() => {
         if (!availability.teacherAvailable) {
-            setWarning(i18n.t(COMMON_TEACHER_IS_UNAVAILABLE));
+            setWarning(t(COMMON_TEACHER_IS_UNAVAILABLE));
         } else {
             setWarning('');
         }
@@ -50,7 +48,7 @@ const ScheduleDialog = (props) => {
         if (!room) return;
         setOpenConfirmDialog(true);
         if (!room.available) {
-            setWarning((prev) => `${prev}\n${i18n.t(COMMON_ROOM_IS_UNAVAILABLE)}`);
+            setWarning((prev) => `${prev}\n${t(COMMON_ROOM_IS_UNAVAILABLE)}`);
         }
     };
     const defaultProps = {
@@ -61,7 +59,7 @@ const ScheduleDialog = (props) => {
     return (
         <>
             <CustomDialog
-                title={i18n.t(COMMON_SCHEDULE_DIALOG_TITLE)}
+                title={t(COMMON_SCHEDULE_DIALOG_TITLE)}
                 open={open}
                 onClose={onClose}
                 buttons={[dialogChooseButton(chooseClickHandle), dialogCloseButton(onClose)]}
@@ -81,11 +79,7 @@ const ScheduleDialog = (props) => {
                             setRoom(newValue);
                         }}
                         renderInput={(params) => (
-                            <TextField
-                                {...params}
-                                label={i18n.t(FORM_ROOM_LABEL)}
-                                margin="normal"
-                            />
+                            <TextField {...params} label={t(FORM_ROOM_LABEL)} margin="normal" />
                         )}
                     />
                 </div>

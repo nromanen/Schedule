@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import i18n from 'i18next';
 import { CircularProgress } from '@material-ui/core';
+import { useTranslation } from 'react-i18next';
 import { getClassScheduleListService } from '../../services/classService';
 import { showListOfRoomsService } from '../../services/roomService';
-
 import ScheduleLessonsList from '../../containers/EditCurrentSchedule/ScheduleLessonsList';
 import Schedule from '../../containers/EditCurrentSchedule/Schedule';
 import { SCHEDULE_TITLE, USE_PC } from '../../constants/translationLabels/common';
@@ -23,7 +22,8 @@ const SchedulePage = (props) => {
         clearScheduleItems,
         currentSemester,
     } = props;
-    document.title = i18n.t(SCHEDULE_TITLE);
+    const { t } = useTranslation('common');
+    document.title = t(SCHEDULE_TITLE);
     const [dragItemData, setDragItemData] = useState({});
     const [isHiddenSchedule, setIsHiddenSchedule] = useState(false);
     const days = currentSemester.semester_days || [];
@@ -88,7 +88,7 @@ const SchedulePage = (props) => {
     if (isHiddenSchedule) {
         return (
             <section className="for-phones-and-tablets card">
-                <h1>{i18n.t(USE_PC)}</h1>
+                <h1>{t(USE_PC)}</h1>
             </section>
         );
     }
@@ -106,6 +106,7 @@ const SchedulePage = (props) => {
                                 currentSemester={currentSemester}
                                 itemGroupId={itemGroupId}
                                 items={scheduleItems}
+                                t={t}
                                 allLessons={allLessons}
                             />
                         </>
@@ -117,6 +118,7 @@ const SchedulePage = (props) => {
                         items={scheduleItems}
                         handleClearSchedule={handleClearSchedule}
                         groupId={groupId}
+                        t={t}
                         classScheduler={currentSemester.semester_classes}
                     />
                 </aside>

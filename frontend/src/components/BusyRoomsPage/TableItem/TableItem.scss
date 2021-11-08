@@ -14,38 +14,34 @@
         position: relative;
         .class-info-data {
             position: relative;
-            width: 150px;
+            width: 130px;
             z-index: 1;
             height: 100px;
             padding: 5px;
         }
     }
-    .group-list {
+    .group-list-container{
+        position: relative;
         display: flex;
         flex-direction: column;
         min-height: 40px;
-        margin: {
-            top: 5px;
-            left: 5px;
-            right: 5px;
-            bottom: 5px;
-        }
-        align-items: center;
         justify-content: center;
         text-align: center;
-        font-size: $font-sm;
         &:before {
             content: '';
             display: block;
             flex-grow: 1;
-            height: 2px;
+            height: 4px;
         }
-        h5 {
-            display: flex;
-            justify-content: center;
-        }
-        &:not(:last-of-type)::after {
-            content: ',';
+    }
+    .group-list {
+        display: flex;
+        flex-wrap: wrap;
+        margin: 2px;
+        justify-content: center;
+        font-size: $font-sm;
+        span:nth-child(2n) {
+            margin-top: 4px;
         }
     }
     .week-type {

@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import i18n from 'i18next';
 import { isEmpty } from 'lodash';
 import { setLoadingService } from '../../../services/loadingService';
 import ScheduleBoardItem from '../../../containers/EditCurrentSchedule/ScheduleBoardItem';
@@ -16,8 +15,10 @@ const ScheduleBoard = (props) => {
         groupId,
         scheduleItems,
         openDialogWithData,
+        t,
         checkScheduleItemAvailability,
     } = props;
+
     const { classId, dayName, week } = lesson;
     const [className, setClassName] = useState('');
     const [boardFill, setBoardFill] = React.useState({});
@@ -74,7 +75,11 @@ const ScheduleBoard = (props) => {
     return (
         <>
             {!isEmpty(boardFill) ? (
-                <ScheduleBoardItem itemData={boardFill} openDialogWithData={openDialogWithData} />
+                <ScheduleBoardItem
+                    itemData={boardFill}
+                    t={t}
+                    openDialogWithData={openDialogWithData}
+                />
             ) : (
                 <div
                     className={`board ${additionClassName} ${className}`}
@@ -82,7 +87,7 @@ const ScheduleBoard = (props) => {
                     onDragOver={dragOver}
                     onDragLeave={dragLeave}
                 >
-                    <p>{i18n.t(`week_${week.toLowerCase()}_title`)}</p>
+                    <p>{t(`week_${week.toLowerCase()}_title`)}</p>
                 </div>
             )}
         </>
