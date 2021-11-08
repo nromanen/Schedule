@@ -7,7 +7,7 @@ export const toggleDisabled = (res) => {
     };
 };
 
-export const setSearchDisabled = (res) => {
+export const setSearchName = (res) => {
     return {
         type: actionTypes.SET_SEARCH_NAME,
         res,

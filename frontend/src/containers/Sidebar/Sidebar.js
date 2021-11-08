@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
-import { toggleDisabled, setSearchDisabled } from '../../actions/sidebar';
-import Sidebar from '../../components/Sidebar/Sidebar';
+import { toggleDisabled, setSearchName } from '../../actions/sidebar';
+import { Sidebar } from '../../share/Sidebar/Sidebar';
 
 const mapStateToProps = (state) => ({
     isDisabled: state.sidebar.isDisabled,
@@ -9,7 +9,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = {
     toggleDisabled,
-    setSearchDisabled,
+    setSearchName,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Sidebar);
