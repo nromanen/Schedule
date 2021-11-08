@@ -10,7 +10,7 @@ import {
     selectOneRoom,
     updateOneRoom,
     clearRoomOne,
-    setDisabledRooms,
+    getListOfDisabledRoomsSuccess,
 } from '../actions/rooms';
 
 import { errorHandler, successHandler } from '../helper/handlerAxios';
@@ -39,7 +39,7 @@ export const getDisabledRoomsService = () => {
     axios
         .get(DISABLED_ROOMS_URL)
         .then((res) => {
-            store.dispatch(setDisabledRooms(res.data));
+            store.dispatch(getListOfDisabledRoomsSuccess(res.data));
         })
         .catch((error) => errorHandler(error));
 };

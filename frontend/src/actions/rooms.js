@@ -22,7 +22,7 @@ export const deleteRoom = (id) => {
 
 export const getListOfRoomsSuccess = (rooms) => {
     return {
-        type: actionsType.SHOW_LIST_OF_ROOMS_SUCCESS,
+        type: actionsType.SHOW_LIST_OF_DISABLED_ROOMS_SUCCESS,
         rooms,
     };
 };
@@ -34,10 +34,16 @@ export const getListOfRoomsStart = (rooms) => {
     };
 };
 
-export const setDisabledRooms = (rooms) => {
+export const getListOfDisabledRoomsSuccess = (rooms) => {
     return {
         type: actionsType.SET_DISABLED_ROOMS,
         result: rooms,
+    };
+};
+export const getListOfDisabledRoomsStart = (rooms) => {
+    return {
+        type: actionsType.GET_LIST_OF_DISABLED_ROOMS_START,
+        rooms,
     };
 };
 

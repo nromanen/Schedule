@@ -5,10 +5,10 @@ import { setLoading } from '../actions/loadingIndicator';
 import { setOpenSuccessSnackbar, setOpenErrorSnackbar } from '../actions/snackbar';
 import { axiosCall } from '../services/axios';
 import i18n from '../i18n';
-import { ROOM_URL } from '../constants/axios';
+import { ROOM_URL, DISABLED_ROOMS_URL } from '../constants/axios';
 import { ROOM_FORM } from '../constants/reduxForms';
 import { createErrorMessage, createMessage } from '../utils/sagaUtils';
-import { updateOneRoom, addRoom, getListOfRoomsSuccess } from '../actions/rooms';
+import { updateOneRoom, addRoom, getListOfRoomsSuccess, getListOfDisabledRoomsSuccess } from '../actions/rooms';
 import {
     BACK_END_SUCCESS_OPERATION,
     UPDATED_LABEL,
@@ -22,6 +22,18 @@ export function* getListOfRooms() {
         yield put(setLoading(true));
         const { data } = yield call(axiosCall, ROOM_URL);
         yield put(getListOfRoomsSuccess(data));
+    } catch (error) {
+        yield put(setOpenErrorSnackbar(createErrorMessage(error)));
+    } finally {
+        yield put(setLoading(false));
+    }
+}
+
+export function* getListOfDisabledRooms() {
+    try {
+        yield put(setLoading(true));
+        const { data } = yield call(axiosCall, DISABLED_ROOMS_URL);
+        yield put(getListOfDisabledRoomsSuccess(data));
     } catch (error) {
         yield put(setOpenErrorSnackbar(createErrorMessage(error)));
     } finally {
@@ -66,6 +78,7 @@ export function* handleRoomFormSubmit({ values }) {
 
 function* watchRooms() {
     yield takeLatest(actionTypes.GET_LIST_OF_ROOMS_START, getListOfRooms);
+    yield takeLatest(actionTypes.GET_LIST_OF_DISABLED_ROOMS_START, getListOfDisabledRooms);
     yield takeEvery(actionTypes.ADD_ROOM_START, addRoomItem);
     yield takeEvery(actionTypes.UPDATE_ROOM_START, updateRoomItem);
     yield takeEvery(actionTypes.HANDLE_ROOM_FORM_SUBMIT_START, handleRoomFormSubmit);

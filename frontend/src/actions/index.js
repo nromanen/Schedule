@@ -61,7 +61,7 @@ export {
     clearRoomOne,
     deleteRoom,
     selectOneRoom,
-    setDisabledRooms,
+    getListOfDisabledRoomsSuccess,
     getListOfRoomsSuccess,
     updateOneRoom,
 } from './rooms';

@@ -6,7 +6,11 @@ import { cardType } from '../../constants/cardType';
 import AddRoomForm from './AddRoomForm/AddRoomForm';
 import RoomTypeForm from './RoomTypeForm/RoomTypeForm';
 import SearchPanel from '../../share/SearchPanel/SearchPanel';
-import { handleRoomFormSubmitStart, getListOfRoomsStart } from '../../actions/rooms';
+import {
+    handleRoomFormSubmitStart,
+    getListOfRoomsStart,
+    getListOfDisabledRoomsStart,
+} from '../../actions/rooms';
 import {
     getAllRoomTypesService,
     addNewTypeService,
@@ -16,7 +20,6 @@ import { setIsOpenConfirmDialog } from '../../actions/dialog';
 import {
     deleteRoomCardService,
     clearRoomOneService,
-    getDisabledRoomsService,
     setDisabledRoomsService,
     setEnabledRoomsService,
 } from '../../services/roomService';
@@ -32,6 +35,7 @@ const RoomPage = (props) => {
         oneRoom,
         handleRoomFormSubmit,
         getListOfRooms,
+        getListOfDisabledRooms,
     } = props;
 
     const [isDisabled, setIsDisabled] = useState(false);
@@ -46,7 +50,7 @@ const RoomPage = (props) => {
 
     useEffect(() => {
         if (isDisabled) {
-            getDisabledRoomsService();
+            getListOfDisabledRooms();
         } else {
             getListOfRooms();
         }
@@ -143,6 +147,7 @@ const mapDispatchToProps = (dispatch) => ({
     setOpenConfirmDialog: (newState) => dispatch(setIsOpenConfirmDialog(newState)),
     handleRoomFormSubmit: (values) => dispatch(handleRoomFormSubmitStart(values)),
     getListOfRooms: (rooms) => dispatch(getListOfRoomsStart(rooms)),
+    getListOfDisabledRooms: (rooms) => dispatch(getListOfDisabledRoomsStart(rooms)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(RoomPage);
