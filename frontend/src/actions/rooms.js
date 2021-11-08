@@ -20,10 +20,17 @@ export const deleteRoom = (id) => {
     };
 };
 
-export const showListOfRooms = (rooms) => {
+export const getListOfRoomsSuccess = (rooms) => {
     return {
-        type: actionsType.SHOW_LIST_OF_ROOMS,
-        result: rooms,
+        type: actionsType.SHOW_LIST_OF_ROOMS_SUCCESS,
+        rooms,
+    };
+};
+
+export const getListOfRoomsStart = (rooms) => {
+    return {
+        type: actionsType.GET_LIST_OF_ROOMS_START,
+        rooms,
     };
 };
 

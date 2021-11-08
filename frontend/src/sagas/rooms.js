@@ -8,7 +8,7 @@ import i18n from '../i18n';
 import { ROOM_URL } from '../constants/axios';
 import { ROOM_FORM } from '../constants/reduxForms';
 import { createErrorMessage, createMessage } from '../utils/sagaUtils';
-import { updateOneRoom, addRoom } from '../actions/rooms';
+import { updateOneRoom, addRoom, getListOfRoomsSuccess } from '../actions/rooms';
 import {
     BACK_END_SUCCESS_OPERATION,
     UPDATED_LABEL,
@@ -16,6 +16,18 @@ import {
     DELETED_LABEL,
 } from '../constants/translationLabels/serviceMessages';
 import { FORM_ROOM_LABEL } from '../constants/translationLabels/formElements';
+
+export function* getListOfRooms() {
+    try {
+        yield put(setLoading(true));
+        const { data } = yield call(axiosCall, ROOM_URL);
+        yield put(getListOfRoomsSuccess(data));
+    } catch (error) {
+        yield put(setOpenErrorSnackbar(createErrorMessage(error)));
+    } finally {
+        yield put(setLoading(false));
+    }
+}
 
 export function* updateRoomItem({ values }) {
     try {
@@ -53,6 +65,7 @@ export function* handleRoomFormSubmit({ values }) {
 }
 
 function* watchRooms() {
+    yield takeLatest(actionTypes.GET_LIST_OF_ROOMS_START, getListOfRooms);
     yield takeEvery(actionTypes.ADD_ROOM_START, addRoomItem);
     yield takeEvery(actionTypes.UPDATE_ROOM_START, updateRoomItem);
     yield takeEvery(actionTypes.HANDLE_ROOM_FORM_SUBMIT_START, handleRoomFormSubmit);

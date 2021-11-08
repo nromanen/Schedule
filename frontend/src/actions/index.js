@@ -62,7 +62,7 @@ export {
     deleteRoom,
     selectOneRoom,
     setDisabledRooms,
-    showListOfRooms,
+    getListOfRoomsSuccess,
     updateOneRoom,
 } from './rooms';
 export {

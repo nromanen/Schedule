@@ -16,23 +16,23 @@ import {
     editTemporaryScheduleService,
 } from '../../services/temporaryScheduleService';
 import { getClassScheduleListService } from '../../services/classService';
-import { showListOfRoomsService } from '../../services/roomService';
 import { showAllSubjectsService } from '../../services/subjectService';
 import { showAllGroupsService } from '../../services/groupService';
 import './TemporarySchedule.scss';
 import { EMPTY_LABEL } from '../../constants/translationLabels/common';
 import { getLessonTypes } from '../../actions';
+import { getListOfRoomsStart } from '../../actions/rooms';
 
 const TemporarySchedule = (props) => {
     const { t } = useTranslation('common');
-    const { teachers, teacherId, isLoading } = props;
+    const { teachers, teacherId, isLoading, getListOfRooms } = props;
     const [fromDate, setFromDate] = useState(null);
     const [toDate, setToDate] = useState(null);
 
     useEffect(() => {
         setLoadingService(true);
         showAllTeachersService();
-        showListOfRoomsService();
+        getListOfRooms();
         showAllSubjectsService();
         getClassScheduleListService(null);
         getLessonTypes();
@@ -137,6 +137,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
     getLessonTypes: () => dispatch(getLessonTypes()),
+    getListOfRooms: (rooms) => dispatch(getListOfRoomsStart(rooms)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(TemporarySchedule);

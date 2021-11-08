@@ -30,9 +30,9 @@ const reducer = (
                 rooms: [...state.rooms.filter((room) => room.id !== action.result)],
             });
 
-        case actionTypes.SHOW_LIST_OF_ROOMS:
+        case actionTypes.SHOW_LIST_OF_ROOMS_SUCCESS:
             return updateObject(state, {
-                rooms: [...action.result],
+                rooms: [...action.rooms],
             });
         case actionTypes.SET_DISABLED_ROOMS:
             return updateObject(state, {

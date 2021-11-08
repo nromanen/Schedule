@@ -4,7 +4,7 @@ import { DISABLED_ROOMS_URL, ROOM_URL } from '../constants/axios';
 import { ROOM_FORM } from '../constants/reduxForms';
 import axios from '../helper/axios';
 import {
-    showListOfRooms,
+    getListOfRoomsSuccess,
     deleteRoom,
     addRoom,
     selectOneRoom,
@@ -24,12 +24,13 @@ import {
 import { FORM_ROOM_LABEL } from '../constants/translationLabels/formElements';
 import i18n from '../i18n';
 
+// created sags
 export const showListOfRoomsService = () => {
     axios
         .get(ROOM_URL)
         .then((response) => {
             const results = response.data;
-            store.dispatch(showListOfRooms(results));
+            store.dispatch(getListOfRoomsSuccess(results));
         })
         .catch((error) => errorHandler(error));
 };

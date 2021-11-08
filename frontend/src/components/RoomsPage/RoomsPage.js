@@ -6,8 +6,7 @@ import { cardType } from '../../constants/cardType';
 import AddRoomForm from './AddRoomForm/AddRoomForm';
 import RoomTypeForm from './RoomTypeForm/RoomTypeForm';
 import SearchPanel from '../../share/SearchPanel/SearchPanel';
-import { search } from '../../helper/search';
-import { handleRoomFormSubmitStart } from '../../actions/rooms';
+import { handleRoomFormSubmitStart, getListOfRoomsStart } from '../../actions/rooms';
 import {
     getAllRoomTypesService,
     addNewTypeService,
@@ -15,7 +14,6 @@ import {
 } from '../../services/roomTypesService';
 import { setIsOpenConfirmDialog } from '../../actions/dialog';
 import {
-    showListOfRoomsService,
     deleteRoomCardService,
     clearRoomOneService,
     getDisabledRoomsService,
@@ -33,24 +31,26 @@ const RoomPage = (props) => {
         setOpenConfirmDialog,
         oneRoom,
         handleRoomFormSubmit,
+        getListOfRooms,
     } = props;
 
     const [isDisabled, setIsDisabled] = useState(false);
     const [confirmDialogType, setConfirmDialogType] = useState('');
     const [deleteLabel, setDeleteLabel] = useState('');
-    const [idForDialog, setIdForDialog] = useState();
+    const [selectedId, setSelectedId] = useState();
     const [term, setTerm] = useState('');
 
     useEffect(() => {
-        showListOfRoomsService();
         getAllRoomTypesService();
-        getDisabledRoomsService();
     }, []);
 
-    const SearchChange = setTerm;
-    const visibleItems = isDisabled
-        ? search(disabledRooms, term, ['name'])
-        : search(rooms, term, ['name']);
+    useEffect(() => {
+        if (isDisabled) {
+            getDisabledRoomsService();
+        } else {
+            getListOfRooms();
+        }
+    }, [isDisabled]);
 
     const submitRoomForm = (values) => {
         const type = roomTypes.find((roomType) => roomType.id === values.type);
@@ -58,7 +58,7 @@ const RoomPage = (props) => {
     };
 
     const showConfirmDialog = (id, dialogType) => {
-        setIdForDialog(id);
+        setSelectedId(id);
         setConfirmDialogType(dialogType);
         setOpenConfirmDialog(true);
     };
@@ -73,13 +73,13 @@ const RoomPage = (props) => {
     const handleConfirm = () => {
         setOpenConfirmDialog(false);
         if (deleteLabel === cardType.TYPE) {
-            deleteTypeService(idForDialog);
+            deleteTypeService(selectedId);
         }
         if (deleteLabel === cardType.ROOM) {
             if (confirmDialogType !== dialogTypes.DELETE_CONFIRM) {
-                changeGroupDisabledStatus(idForDialog);
+                changeGroupDisabledStatus(selectedId);
             } else {
-                deleteRoomCardService(idForDialog);
+                deleteRoomCardService(selectedId);
             }
         }
     };
@@ -98,7 +98,7 @@ const RoomPage = (props) => {
 
             <div className="cards-container">
                 <aside className="search-list__panel">
-                    <SearchPanel SearchChange={SearchChange} showDisabled={changeDisable} />
+                    <SearchPanel SearchChange={setTerm} showDisabled={changeDisable} />
                     {!isDisabled && (
                         <>
                             <AddRoomForm
@@ -118,10 +118,12 @@ const RoomPage = (props) => {
                     )}
                 </aside>
                 <RoomList
-                    visibleItems={visibleItems}
                     isDisabled={isDisabled}
                     showConfirmDialog={showConfirmDialog}
                     setDeleteLabel={setDeleteLabel}
+                    term={term}
+                    disabledRooms={disabledRooms}
+                    rooms={rooms}
                 />
             </div>
         </>
@@ -140,6 +142,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
     setOpenConfirmDialog: (newState) => dispatch(setIsOpenConfirmDialog(newState)),
     handleRoomFormSubmit: (values) => dispatch(handleRoomFormSubmitStart(values)),
+    getListOfRooms: (rooms) => dispatch(getListOfRoomsStart(rooms)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(RoomPage);
