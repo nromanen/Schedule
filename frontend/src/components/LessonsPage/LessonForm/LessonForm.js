@@ -194,7 +194,6 @@ const LessonForm = (props) => {
                             component={renderTextField}
                             label={t(LINK_TO_MEETING_LABEL)}
                             validate={[maxLengthValue]}
-                            type="url"
                             placeholder="Input URL"
                         />
                         <Field

@@ -26,6 +26,7 @@ import { showAllSubjectsService } from '../../services/subjectService';
 import { showAllTeachersService } from '../../services/teacherService';
 
 import { FORM_GROUP_LABEL } from '../../constants/translationLabels/formElements';
+import { HTTP } from '../../constants/formats';
 
 const LessonPage = (props) => {
     const {
@@ -74,7 +75,8 @@ const LessonPage = (props) => {
     }, []);
 
     const submitLessonForm = (card) => {
-        const cardObj = cardObjectHandler(card, groupId, currentSemester);
+        const link = !card.linkToMeeting.includes(HTTP) ? `http://${card.linkToMeeting}` : '';
+        const cardObj = cardObjectHandler(card, groupId, currentSemester, link);
 
         if (!checkUniqLesson(lessons, cardObj)) {
             const message = t(COMMON_LESSON_SERVICE_IS_NOT_UNIQUE);
@@ -83,7 +85,6 @@ const LessonPage = (props) => {
             setUniqueError(true);
             return;
         }
-
         handleLesson(cardObj, groupId);
     };
 
@@ -102,10 +103,10 @@ const LessonPage = (props) => {
         setIsOpenCopyLessonDialog(true);
     };
 
-    const closeCopyLessonDialogHandle = ({ group, lesson }) => {
+    const closeCopyLessonDialogHandle = ({ copyGroup, lesson }) => {
         setIsOpenCopyLessonDialog(false);
-        if (!isNil(group)) {
-            copyLessonCard(group, lesson);
+        if (!isNil(copyGroup)) {
+            copyLessonCard(copyGroup, lesson);
         }
     };
 
