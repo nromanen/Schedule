@@ -38,8 +38,7 @@ const RoomPage = (props) => {
     const [isDisabled, setIsDisabled] = useState(false);
     const [confirmDialogType, setConfirmDialogType] = useState('');
     const [deleteLabel, setDeleteLabel] = useState('');
-    const [typeId, setTypeId] = useState('');
-    const [roomId, setRoomId] = useState(-1);
+    const [idForDialog, setIdForDialog] = useState();
     const [term, setTerm] = useState('');
 
     useEffect(() => {
@@ -59,8 +58,7 @@ const RoomPage = (props) => {
     };
 
     const showConfirmDialog = (id, dialogType) => {
-        setRoomId(id);
-        setDeleteLabel(cardType.ROOM);
+        setIdForDialog(id);
         setConfirmDialogType(dialogType);
         setOpenConfirmDialog(true);
     };
@@ -75,13 +73,13 @@ const RoomPage = (props) => {
     const handleConfirm = () => {
         setOpenConfirmDialog(false);
         if (deleteLabel === cardType.TYPE) {
-            deleteTypeService(typeId);
+            deleteTypeService(idForDialog);
         }
         if (deleteLabel === cardType.ROOM) {
             if (confirmDialogType !== dialogTypes.DELETE_CONFIRM) {
-                changeGroupDisabledStatus(roomId);
+                changeGroupDisabledStatus(idForDialog);
             } else {
-                deleteRoomCardService(roomId);
+                deleteRoomCardService(idForDialog);
             }
         }
     };
@@ -111,12 +109,10 @@ const RoomPage = (props) => {
                             />
                             <RoomTypeForm
                                 className="new-type"
-                                setTypeId={setTypeId}
                                 setDeleteLabel={setDeleteLabel}
-                                setConfirmDialogType={setConfirmDialogType}
                                 onSubmit={addNewTypeService}
                                 isOpenConfirmDialog={isOpenConfirmDialog}
-                                setOpenConfirmDialog={setOpenConfirmDialog}
+                                showConfirmDialog={showConfirmDialog}
                             />
                         </>
                     )}
@@ -125,6 +121,7 @@ const RoomPage = (props) => {
                     visibleItems={visibleItems}
                     isDisabled={isDisabled}
                     showConfirmDialog={showConfirmDialog}
+                    setDeleteLabel={setDeleteLabel}
                 />
             </div>
         </>

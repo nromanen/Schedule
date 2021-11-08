@@ -14,9 +14,10 @@ import {
     COMMON_SET_ENABLED,
 } from '../../../constants/translationLabels/common';
 import { selectOneRoomService } from '../../../services/roomService';
+import { cardType } from '../../../constants/cardType';
 
 const RoomCard = (props) => {
-    const { roomItem, isDisabled, showConfirmDialog } = props;
+    const { roomItem, isDisabled, showConfirmDialog, setDeleteLabel } = props;
     const { t } = useTranslation('formElements');
 
     return (
@@ -48,7 +49,10 @@ const RoomCard = (props) => {
 
                 <MdDelete
                     className="svg-btn"
-                    onClick={() => showConfirmDialog(roomItem.id, dialogTypes.DELETE_CONFIRM)}
+                    onClick={() => {
+                        showConfirmDialog(roomItem.id, dialogTypes.DELETE_CONFIRM, cardType.ROOM);
+                        setDeleteLabel(cardType.ROOM);
+                    }}
                 />
             </div>
 

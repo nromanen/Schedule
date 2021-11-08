@@ -27,10 +27,8 @@ let RoomTypeForm = (props) => {
         oneType,
         initialize,
         setDeleteLabel,
-        setConfirmDialogType,
-        setTypeId,
-        setOpenConfirmDialog,
         selectRoomType,
+        showConfirmDialog,
     } = props;
 
     useEffect(() => {
@@ -43,13 +41,6 @@ let RoomTypeForm = (props) => {
     }, [oneType]);
 
     const { t } = useTranslation('formElements');
-
-    const handleClickOpen = (id) => {
-        setTypeId(id);
-        setDeleteLabel(cardType.TYPE);
-        setConfirmDialogType(dialogTypes.DELETE_CONFIRM);
-        setOpenConfirmDialog(true);
-    };
 
     return (
         <>
@@ -93,7 +84,8 @@ let RoomTypeForm = (props) => {
                                 <MdDelete
                                     className="btn delete"
                                     onClick={() => {
-                                        handleClickOpen(roomType.id);
+                                        showConfirmDialog(roomType.id, dialogTypes.DELETE_CONFIRM);
+                                        setDeleteLabel(cardType.TYPE);
                                     }}
                                 />
                             </span>

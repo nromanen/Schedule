@@ -5,7 +5,7 @@ import { ROOM_Y_LABEL } from '../../../constants/translationLabels/formElements'
 import RoomCard from './RoomCard';
 
 const RoomList = (props) => {
-    const { visibleItems, isDisabled, showConfirmDialog } = props;
+    const { visibleItems, isDisabled, showConfirmDialog, setDeleteLabel } = props;
     const { t } = useTranslation('formElements');
 
     return (
@@ -17,6 +17,7 @@ const RoomList = (props) => {
                     roomItem={roomItem}
                     isDisabled={isDisabled}
                     showConfirmDialog={showConfirmDialog}
+                    setDeleteLabel={setDeleteLabel}
                 />
             ))}
         </section>
