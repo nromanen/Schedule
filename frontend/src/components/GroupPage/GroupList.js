@@ -1,10 +1,11 @@
+import './GroupPage.scss';
 import React, { useEffect, useState } from 'react';
+import { isEmpty } from 'lodash';
 import { useTranslation } from 'react-i18next';
 import { CircularProgress } from '@material-ui/core';
 import { dialogTypes } from '../../constants/dialogs';
 import { GROUP_Y_LABEL } from '../../constants/translationLabels/formElements';
 import { search } from '../../helper/search';
-import './GroupPage.scss';
 import GroupCard from './GroupCard';
 import NotFound from '../../share/NotFound/NotFound';
 import CustomDialog from '../../containers/Dialogs/CustomDialog';
@@ -77,7 +78,7 @@ const GroupList = (props) => {
         );
     }
 
-    if (!visibleGroups.length) {
+    if (isEmpty(visibleGroups)) {
         return <NotFound name={t(GROUP_Y_LABEL)} />;
     }
 
