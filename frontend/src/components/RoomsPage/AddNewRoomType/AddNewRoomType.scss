@@ -1,5 +1,5 @@
-@import '../../App';
-@import '../../share/Card/Card.scss';
+@import '../../../App';
+@import '../../../share/Card/Card.scss';
 
 .room-form {
     margin: 10px;
@@ -46,7 +46,7 @@
     .edit:active,
     .edit:hover {
         color: #3f51b5;
-        transition: ease-in-out .5s;
+        transition: ease-in-out 0.5s;
     }
 
     .delete {
@@ -56,6 +56,6 @@
     .delete:active,
     .delete:hover {
         color: #fa0a04;
-        transition: ease-in-out .5s;
+        transition: ease-in-out 0.5s;
     }
 }

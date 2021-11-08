@@ -6,21 +6,21 @@ import { useTranslation } from 'react-i18next';
 import Button from '@material-ui/core/Button';
 import { MdDelete } from 'react-icons/md';
 import { FaEdit } from 'react-icons/fa';
-import { ROOM_FORM_TYPE } from '../../constants/reduxForms';
+import { ROOM_FORM_TYPE } from '../../../constants/reduxForms';
 
-import { cardType } from '../../constants/cardType';
-import { dialogTypes } from '../../constants/dialogs';
+import { cardType } from '../../../constants/cardType';
+import { dialogTypes } from '../../../constants/dialogs';
 
-import Card from '../../share/Card/Card';
-import renderTextField from '../../share/renderedFields/input';
-import { getOneNewTypeService } from '../../services/roomTypesService';
-import { setIsOpenConfirmDialog } from '../../actions/dialog';
+import Card from '../../../share/Card/Card';
+import renderTextField from '../../../share/renderedFields/input';
+import { getOneNewTypeService } from '../../../services/roomTypesService';
+import { setIsOpenConfirmDialog } from '../../../actions/dialog';
 import './AddNewRoomType.scss';
 import {
     SAVE_BUTTON_LABEL,
     ADD_TYPE_LABEL,
     NEW_TYPE_LABEL,
-} from '../../constants/translationLabels/formElements';
+} from '../../../constants/translationLabels/formElements';
 
 let NewRoomType = (props) => {
     const {

@@ -1,19 +1,13 @@
-import './RoomList.scss';
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { FaEdit } from 'react-icons/fa';
-import { MdDelete } from 'react-icons/md';
-import { useTranslation } from 'react-i18next';
-import { GiSightDisabled, IoMdEye } from 'react-icons/all';
-import CustomDialog from '../Dialogs/CustomDialog';
+import CustomDialog from '../../containers/Dialogs/CustomDialog';
 import { dialogTypes } from '../../constants/dialogs';
 import { cardType } from '../../constants/cardType';
-import AddRoom from '../../components/AddRoomForm/AddRoomForm';
-import NewRoomType from '../../components/AddNewRoomType/AddNewRoomType';
+import AddRoom from './AddRoomForm/AddRoomForm';
+import NewRoomType from './AddNewRoomType/AddNewRoomType';
 import SearchPanel from '../../share/SearchPanel/SearchPanel';
-import Card from '../../share/Card/Card';
+
 import { search } from '../../helper/search';
-import NotFound from '../../share/NotFound/NotFound';
 import {
     getAllRoomTypesService,
     addNewTypeService,
@@ -24,22 +18,15 @@ import {
     createRoomService,
     showListOfRoomsService,
     deleteRoomCardService,
-    selectOneRoomService,
     clearRoomOneService,
     getDisabledRoomsService,
     setDisabledRoomsService,
     setEnabledRoomsService,
 } from '../../services/roomService';
-import { ROOM_Y_LABEL, ROOM_LABEL } from '../../constants/translationLabels/formElements';
-import {
-    TYPE_LABEL,
-    COMMON_SET_DISABLED,
-    COMMON_SET_ENABLED,
-} from '../../constants/translationLabels/common';
+import RoomList from './RoomsList/RoomsList';
 
-const RoomList = (props) => {
+const RoomPage = (props) => {
     const { rooms, roomTypes, disabledRooms, isOpenConfirmDialog, setOpenConfirmDialog } = props;
-    const { t } = useTranslation('formElements');
 
     const [isDisabled, setIsDisabled] = useState(false);
     const [confirmDialogType, setConfirmDialogType] = useState('');
@@ -125,56 +112,11 @@ const RoomList = (props) => {
                         </>
                     )}
                 </aside>
-                <section className="container-flex-wrap wrapper">
-                    {visibleItems.length === 0 && <NotFound name={t(ROOM_Y_LABEL)} />}
-                    {visibleItems.map((roomItem) => (
-                        <Card key={roomItem.id} additionClassName="room-card done-card">
-                            <div className="cards-btns">
-                                {!isDisabled ? (
-                                    <>
-                                        <GiSightDisabled
-                                            className="svg-btn copy-btn"
-                                            title={t(COMMON_SET_DISABLED)}
-                                            onClick={() => {
-                                                showConfirmDialog(
-                                                    roomItem.id,
-                                                    dialogTypes.SET_VISIBILITY_DISABLED,
-                                                );
-                                            }}
-                                        />
-                                        <FaEdit
-                                            className="svg-btn"
-                                            onClick={() => selectOneRoomService(roomItem.id)}
-                                        />
-                                    </>
-                                ) : (
-                                    <IoMdEye
-                                        className="svg-btn copy-btn"
-                                        title={t(COMMON_SET_ENABLED)}
-                                        onClick={() => {
-                                            showConfirmDialog(
-                                                roomItem.id,
-                                                dialogTypes.SET_VISIBILITY_ENABLED,
-                                            );
-                                        }}
-                                    />
-                                )}
-
-                                <MdDelete
-                                    className="svg-btn"
-                                    onClick={() =>
-                                        showConfirmDialog(roomItem.id, dialogTypes.DELETE_CONFIRM)
-                                    }
-                                />
-                            </div>
-
-                            <span> {`${t(ROOM_LABEL)}:`} </span>
-                            <h2 className="room-card__number">{roomItem.name}</h2>
-                            <span>{`${t(TYPE_LABEL)}:`}</span>
-                            <h2 className="room-card__number">{roomItem.type.description}</h2>
-                        </Card>
-                    ))}
-                </section>
+                <RoomList
+                    visibleItems={visibleItems}
+                    isDisabled={isDisabled}
+                    showConfirmDialog={showConfirmDialog}
+                />
             </div>
         </>
     );
@@ -193,4 +135,4 @@ const mapDispatchToProps = (dispatch) => ({
     setOpenConfirmDialog: (newState) => dispatch(setIsOpenConfirmDialog(newState)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(RoomList);
+export default connect(mapStateToProps, mapDispatchToProps)(RoomPage);
