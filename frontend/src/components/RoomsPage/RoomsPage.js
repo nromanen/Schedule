@@ -6,8 +6,8 @@ import { cardType } from '../../constants/cardType';
 import AddRoomForm from './AddRoomForm/AddRoomForm';
 import NewRoomType from './AddNewRoomType/AddNewRoomType';
 import SearchPanel from '../../share/SearchPanel/SearchPanel';
-
 import { search } from '../../helper/search';
+import { handleRoomFormSubmitStart } from '../../actions/rooms';
 import {
     getAllRoomTypesService,
     addNewTypeService,
@@ -26,8 +26,15 @@ import {
 import RoomList from './RoomsList/RoomsList';
 
 const RoomPage = (props) => {
-    const { rooms, roomTypes, disabledRooms, isOpenConfirmDialog, setOpenConfirmDialog, oneRoom } =
-        props;
+    const {
+        rooms,
+        roomTypes,
+        disabledRooms,
+        isOpenConfirmDialog,
+        setOpenConfirmDialog,
+        oneRoom,
+        handleRoomFormSubmit,
+    } = props;
 
     const [isDisabled, setIsDisabled] = useState(false);
     const [confirmDialogType, setConfirmDialogType] = useState('');
@@ -47,10 +54,9 @@ const RoomPage = (props) => {
         ? search(disabledRooms, term, ['name'])
         : search(rooms, term, ['name']);
 
-    const createRoom = (values) => {
-        const description = roomTypes.find((type) => type.id === +values.type);
-        const typeDescription = description.description;
-        createRoomService({ ...values, typeDescription });
+    const submitRoomForm = (values) => {
+        const type = roomTypes.find((roomType) => roomType.id === values.type);
+        handleRoomFormSubmit({ ...values, type });
     };
 
     const showConfirmDialog = (id, dialogType) => {
@@ -103,7 +109,7 @@ const RoomPage = (props) => {
                     {!isDisabled && (
                         <>
                             <AddRoomForm
-                                onSubmit={createRoom}
+                                onSubmit={submitRoomForm}
                                 onReset={clearRoomOneService}
                                 oneRoom={oneRoom}
                                 roomTypes={roomTypes}
@@ -139,6 +145,7 @@ const mapStateToProps = (state) => ({
 });
 const mapDispatchToProps = (dispatch) => ({
     setOpenConfirmDialog: (newState) => dispatch(setIsOpenConfirmDialog(newState)),
+    handleRoomFormSubmit: (values) => dispatch(handleRoomFormSubmitStart(values)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(RoomPage);

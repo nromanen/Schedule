@@ -106,20 +106,12 @@ const post = (values) => {
 };
 
 export const createRoomService = (values) => {
-    if (values.id) {
-        const newValue = {
-            id: values.id,
-            name: values.name,
-            type: { id: +values.type, description: values.typeDescription },
-        };
-        put(newValue);
+    console.log('values', values)
+    const { id, name, type } = values;
+    if (id) {
+        put({ id, name, type });
     } else {
-        const newValue = {
-            name: values.name,
-            type: { id: +values.type, description: values.typeDescription },
-        };
-
-        post(newValue);
+        post({ name, type });
     }
 };
 

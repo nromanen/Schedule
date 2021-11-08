@@ -6,6 +6,12 @@ export const addRoom = (room) => {
         result: room,
     };
 };
+export const addRoomStart = (room) => {
+    return {
+        type: actionsType.ADD_ROOM_START,
+        room,
+    };
+};
 
 export const deleteRoom = (id) => {
     return {
@@ -41,7 +47,20 @@ export const updateOneRoom = (room) => {
         result: room,
     };
 };
+export const updateRoomStart = (room) => {
+    return {
+        type: actionsType.UPDATE_ROOM_START,
+        room,
+    };
+};
 
 export const clearRoomOne = () => ({
     type: actionsType.CLEAR_ROOM_ONE,
 });
+
+export const handleRoomFormSubmitStart = (values) => {
+    return {
+        type: actionsType.HANDLE_ROOM_FORM_SUBMIT_START,
+        values,
+    };
+};
