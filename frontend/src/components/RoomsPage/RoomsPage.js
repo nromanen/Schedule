@@ -4,7 +4,7 @@ import CustomDialog from '../../containers/Dialogs/CustomDialog';
 import { dialogTypes } from '../../constants/dialogs';
 import { cardType } from '../../constants/cardType';
 import AddRoomForm from './AddRoomForm/AddRoomForm';
-import NewRoomType from './AddNewRoomType/AddNewRoomType';
+import RoomTypeForm from './RoomTypeForm/RoomTypeForm';
 import SearchPanel from '../../share/SearchPanel/SearchPanel';
 import { search } from '../../helper/search';
 import { handleRoomFormSubmitStart } from '../../actions/rooms';
@@ -15,7 +15,6 @@ import {
 } from '../../services/roomTypesService';
 import { setIsOpenConfirmDialog } from '../../actions/dialog';
 import {
-    createRoomService,
     showListOfRoomsService,
     deleteRoomCardService,
     clearRoomOneService,
@@ -61,7 +60,7 @@ const RoomPage = (props) => {
 
     const showConfirmDialog = (id, dialogType) => {
         setRoomId(id);
-        setDeleteLabel(cardType.ROOM.toLowerCase());
+        setDeleteLabel(cardType.ROOM);
         setConfirmDialogType(dialogType);
         setOpenConfirmDialog(true);
     };
@@ -73,21 +72,17 @@ const RoomPage = (props) => {
         return isDisabled ? setEnabledRoomsService(foundRoom) : setDisabledRoomsService(foundRoom);
     };
 
-    const acceptConfirmDialog = (currentId) => {
-        setOpenConfirmDialog(false);
-        if (confirmDialogType !== dialogTypes.DELETE_CONFIRM) {
-            changeGroupDisabledStatus(currentId);
-        } else {
-            deleteRoomCardService(currentId);
-        }
-    };
     const handleConfirm = () => {
-        if (deleteLabel === cardType.TYPE.toLowerCase()) {
-            setOpenConfirmDialog(false);
+        setOpenConfirmDialog(false);
+        if (deleteLabel === cardType.TYPE) {
             deleteTypeService(typeId);
         }
-        if (deleteLabel === cardType.ROOM.toLowerCase()) {
-            acceptConfirmDialog(roomId);
+        if (deleteLabel === cardType.ROOM) {
+            if (confirmDialogType !== dialogTypes.DELETE_CONFIRM) {
+                changeGroupDisabledStatus(roomId);
+            } else {
+                deleteRoomCardService(roomId);
+            }
         }
     };
     const changeDisable = () => {
@@ -114,12 +109,14 @@ const RoomPage = (props) => {
                                 oneRoom={oneRoom}
                                 roomTypes={roomTypes}
                             />
-                            <NewRoomType
+                            <RoomTypeForm
                                 className="new-type"
                                 setTypeId={setTypeId}
                                 setDeleteLabel={setDeleteLabel}
                                 setConfirmDialogType={setConfirmDialogType}
                                 onSubmit={addNewTypeService}
+                                isOpenConfirmDialog={isOpenConfirmDialog}
+                                setOpenConfirmDialog={setOpenConfirmDialog}
                             />
                         </>
                     )}

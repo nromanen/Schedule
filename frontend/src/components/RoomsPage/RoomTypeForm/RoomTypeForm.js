@@ -1,28 +1,24 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Field, reduxForm } from 'redux-form';
-
 import { useTranslation } from 'react-i18next';
 import Button from '@material-ui/core/Button';
 import { MdDelete } from 'react-icons/md';
 import { FaEdit } from 'react-icons/fa';
 import { ROOM_FORM_TYPE } from '../../../constants/reduxForms';
-
 import { cardType } from '../../../constants/cardType';
 import { dialogTypes } from '../../../constants/dialogs';
-
 import Card from '../../../share/Card/Card';
 import renderTextField from '../../../share/renderedFields/input';
-import { getOneNewTypeService } from '../../../services/roomTypesService';
-import { setIsOpenConfirmDialog } from '../../../actions/dialog';
-import './AddNewRoomType.scss';
+import './RoomTypeForm.scss';
 import {
     SAVE_BUTTON_LABEL,
     ADD_TYPE_LABEL,
     NEW_TYPE_LABEL,
 } from '../../../constants/translationLabels/formElements';
+import { selectRoomType } from '../../../actions/roomTypes';
 
-let NewRoomType = (props) => {
+let RoomTypeForm = (props) => {
     const {
         handleSubmit,
         pristine,
@@ -34,21 +30,23 @@ let NewRoomType = (props) => {
         setConfirmDialogType,
         setTypeId,
         setOpenConfirmDialog,
+        selectRoomType,
     } = props;
 
     useEffect(() => {
-        let defaultValue = {};
         if (oneType.id) {
-            defaultValue = { description: oneType.description, id: oneType.id };
+            const { description, id } = oneType;
+            initialize({ description, id });
+        } else {
+            initialize({});
         }
-        initialize(defaultValue);
     }, [oneType]);
 
     const { t } = useTranslation('formElements');
 
     const handleClickOpen = (id) => {
         setTypeId(id);
-        setDeleteLabel(cardType.TYPE.toLowerCase());
+        setDeleteLabel(cardType.TYPE);
         setConfirmDialogType(dialogTypes.DELETE_CONFIRM);
         setOpenConfirmDialog(true);
     };
@@ -90,7 +88,7 @@ let NewRoomType = (props) => {
                             <span className="buttons">
                                 <FaEdit
                                     className="btn edit"
-                                    onClick={() => getOneNewTypeService(roomType.id)}
+                                    onClick={() => selectRoomType(roomType.id)}
                                 />
                                 <MdDelete
                                     className="btn delete"
@@ -110,14 +108,13 @@ let NewRoomType = (props) => {
 const mapStateToProps = (state) => ({
     oneType: state.roomTypes.oneType,
     roomTypes: state.roomTypes.roomTypes,
-    isOpenConfirmDialog: state.dialog.isOpenConfirmDialog,
 });
 const mapDispatchToProps = (dispatch) => ({
-    setOpenConfirmDialog: (newState) => dispatch(setIsOpenConfirmDialog(newState)),
+    selectRoomType: (typeId) => dispatch(selectRoomType(typeId)),
 });
 
-NewRoomType = reduxForm({
+RoomTypeForm = reduxForm({
     form: ROOM_FORM_TYPE,
-})(NewRoomType);
+})(RoomTypeForm);
 
-export default connect(mapStateToProps, mapDispatchToProps)(NewRoomType);
+export default connect(mapStateToProps, mapDispatchToProps)(RoomTypeForm);

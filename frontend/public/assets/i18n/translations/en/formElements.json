@@ -27,6 +27,7 @@
     "class_label": "Class",
     "chosen_semester_label": "Chosen semester",
     "room_label": "Room",
+    "type_delete_element": "type",
     "student_label": "Student",
     "subject_label": "Subject",
     "department_add_label": "Department",

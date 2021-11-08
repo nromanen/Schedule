@@ -35,10 +35,10 @@ const reducer = (
                 roomTypes: [...updateTypeState],
             });
         }
-        case actionTypes.GET_ONE_NEW_TYPE: {
-            const one = state.roomTypes.find((roomTypeItem) => roomTypeItem.id === action.result);
+        case actionTypes.SELECT_ROOM_TYPE: {
+            const type = state.roomTypes.find((roomType) => roomType.id === action.typeId);
             return updateObject(state, {
-                oneType: one,
+                oneType: type,
             });
         }
         default:

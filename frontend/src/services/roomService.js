@@ -58,7 +58,7 @@ export const deleteRoomCardService = (id) => {
         })
         .catch((error) => errorHandler(error));
 };
-
+// created saga
 const put = (values) => {
     axios
         .put(ROOM_URL, values)
@@ -88,7 +88,7 @@ export const setEnabledRoomsService = (room) => {
     bufferRoom.disable = false;
     put(bufferRoom);
 };
-
+// created saga
 const post = (values) => {
     axios
         .post(ROOM_URL, values)
@@ -104,9 +104,8 @@ const post = (values) => {
         })
         .catch((error) => errorHandler(error));
 };
-
+// created saga
 export const createRoomService = (values) => {
-    console.log('values', values)
     const { id, name, type } = values;
     if (id) {
         put({ id, name, type });

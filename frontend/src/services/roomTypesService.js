@@ -8,7 +8,7 @@ import {
     deleteType,
     updateOneType,
     postOneType,
-    getOneNewType,
+    selectRoomType,
 } from '../actions/roomTypes';
 
 import i18n from '../i18n';
@@ -85,7 +85,7 @@ export const addNewTypeService = (values) => {
         postNewType(values);
     }
 };
-
+// used action in component directly
 export const getOneNewTypeService = (roomId) => {
-    store.dispatch(getOneNewType(roomId));
+    store.dispatch(selectRoomType(roomId));
 };

@@ -103,6 +103,7 @@
     "subject_element": "цей предмет",
     "department_element": "цю кафедру",
     "semester_element": "цей семестр",
+    "type_delete_element": "цей тип",
     "reference_element": "посиланням",
     "semester_free_rooms": "Оберіть семестр",
     "week_free_rooms": "Оберіть тиждень",

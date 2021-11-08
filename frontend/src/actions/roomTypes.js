@@ -28,9 +28,9 @@ export const updateOneType = (roomType) => {
     };
 };
 
-export const getOneNewType = (roomType) => {
+export const selectRoomType = (typeId) => {
     return {
-        type: actionsType.GET_ONE_NEW_TYPE,
-        result: roomType,
+        type: actionsType.SELECT_ROOM_TYPE,
+        typeId,
     };
 };
