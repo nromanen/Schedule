@@ -13,7 +13,7 @@ export const ShowStudentsOnGroupContent = (props) => {
 
     if (loading) {
         return (
-            <section className="centered-container">
+            <section className="louder-container">
                 <CircularProgress />
             </section>
         );

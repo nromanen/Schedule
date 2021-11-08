@@ -70,13 +70,15 @@ const GroupCard = (props) => {
                     onClick={() => showConfirmDialog(item.id, dialogTypes.DELETE_CONFIRM)}
                 />
                 <Link to={`${GROUP_LIST_LINK}/${item.id}${ADD_STUDENT_LINK}`}>
-                    <FaUserPlus
-                        title={t(FORM_STUDENT_ADD_LABEL)}
-                        className="svg-btn copy-btn align-left info-btn"
-                        onClick={() => {
-                            showAddStudentDialog(item.id);
-                        }}
-                    />
+                    <span className="students-group">
+                        <FaUserPlus
+                            title={t(FORM_STUDENT_ADD_LABEL)}
+                            className="svg-btn copy-btn align-left info-btn student"
+                            onClick={() => {
+                                showAddStudentDialog(item.id);
+                            }}
+                        />
+                    </span>
                 </Link>
             </div>
             <p className="group-card__description">{`${t(GROUP_LABEL)}:`}</p>

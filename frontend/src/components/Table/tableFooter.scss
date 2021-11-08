@@ -1,6 +1,11 @@
+@import '../../styles/mixin.scss';
+
 .pagination{
-    display: flex;
+    @include displayCenter();
     flex-direction: row;
-    justify-content: center;
-    align-items: center;
+}
+.table-footer{
+    .MuiTablePagination-select{
+        text-align: center;
+    }
 }

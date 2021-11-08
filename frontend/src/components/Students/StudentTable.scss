@@ -1,45 +1,54 @@
 @import '../../styles/colors.scss';
-@import '../../styles/mixin.scss';  
+@import '../../styles/mixin.scss';
+@import '../../styles/variables.scss';    
+
+.louder-container{
+ @include displayCenter();
+  min-width: 510px;
+}
 
 .table{
   margin: 20px;
-  border: 1px solid rgba(224, 224, 224, 1);
+  border: $table-border;
+  .MuiTableContainer-root{
+    overflow: auto;
+  }
   .MuiTable-root{
     min-width: 700px;
+  }
+  .MuiTableCell-alignCenter{
+    text-align: left;
   }
   .MuiTableContainer-root{
     margin-bottom: 0;
   }
   .MuiTableRow-root{
     &:hover{
-      background-color: $light-blue;
+      background-color: $light-hover-blue;
     }
   }
   tr:nth-child(odd){
-      background-color: #f7fafd;
+      background-color: $light-blue;
     }
-  
 }
 
 .title-align{
+  color: $blue-hover;
   margin-top: 0;
   margin-bottom: 0;
 }
 .edit-cell{
-  display: flex;
+  @include displayCenter();
   flex-direction: row;
   flex-wrap: nowrap;
-  align-items: center;
-  align-content: center;
   margin: 0 20px;
   .edit-button{
-    //color: #ade6c6;
     color: $blue;
     margin-right: 10px;
     font-size: 25px;
   }
   .delete-button{
-    color: #ff7676;
+    color: $light-red;
     font-size: 25px;
   }
 }

@@ -21,7 +21,7 @@ export const TableFooterComponent = (props) => {
                 <TablePagination
                     labelRowsPerPage={`${t(ROWS_PER_PAGE)}`}
                     rowsPerPageOptions={[5, 10, 25, { label: `${t(ALL_PAGE)}`, value: ALL_ROWS }]}
-                    colSpan={3}
+                    colSpan={4}
                     count={items.length}
                     rowsPerPage={rowsPerPage}
                     page={page}
