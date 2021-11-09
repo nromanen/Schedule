@@ -21,7 +21,16 @@ import { TYPE_LABEL } from '../../../constants/translationLabels/common';
 
 const AddRoomForm = (props) => {
     const { t } = useTranslation('formElements');
-    const { handleSubmit, pristine, submitting, onReset, oneRoom, roomTypes, initialize } = props;
+    const {
+        handleSubmit,
+        pristine,
+        submitting,
+        reset,
+        oneRoom,
+        roomTypes,
+        initialize,
+        clearRoomItem,
+    } = props;
 
     useEffect(() => {
         if (oneRoom.id) {
@@ -79,7 +88,10 @@ const AddRoomForm = (props) => {
                         className="buttons-style"
                         variant="contained"
                         disabled={setDisableButton(pristine, submitting, oneRoom.id)}
-                        onClick={onReset}
+                        onClick={() => {
+                            clearRoomItem();
+                            reset(ROOM_FORM);
+                        }}
                     >
                         {getClearOrCancelTitle(oneRoom.id, t)}
                     </Button>

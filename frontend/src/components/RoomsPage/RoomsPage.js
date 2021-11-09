@@ -13,6 +13,7 @@ import {
     toggleRoomVisibilityStart,
     deleteRoomStart,
     selectOneRoom,
+    clearRoomOne,
 } from '../../actions/rooms';
 import {
     getAllRoomTypesStart,
@@ -20,7 +21,6 @@ import {
     handleRoomTypeFormSubmitStart,
 } from '../../actions/roomTypes';
 import { setIsOpenConfirmDialog } from '../../actions/dialog';
-import { clearRoomOneService } from '../../services/roomService';
 import RoomList from './RoomsList/RoomsList';
 
 const RoomPage = (props) => {
@@ -39,7 +39,8 @@ const RoomPage = (props) => {
         deleteRoom,
         deleteRoomType,
         handleRoomTypeFormSubmit,
-        setSelectRoom
+        setSelectRoom,
+        clearRoomItem,
     } = props;
 
     const [isDisabled, setIsDisabled] = useState(false);
@@ -114,7 +115,7 @@ const RoomPage = (props) => {
                         <>
                             <AddRoomForm
                                 onSubmit={submitRoomForm}
-                                onReset={clearRoomOneService}
+                                clearRoomItem={clearRoomItem}
                                 oneRoom={oneRoom}
                                 roomTypes={roomTypes}
                             />
@@ -163,6 +164,7 @@ const mapDispatchToProps = (dispatch) => ({
     deleteRoomType: (roomTypeId) => dispatch(deleteRoomTypeStart(roomTypeId)),
     handleRoomTypeFormSubmit: (values) => dispatch(handleRoomTypeFormSubmitStart(values)),
     setSelectRoom: (roomId) => dispatch(selectOneRoom(roomId)),
+    clearRoomItem: () => dispatch(clearRoomOne()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(RoomPage);

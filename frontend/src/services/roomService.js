@@ -119,7 +119,7 @@ export const createRoomService = (values) => {
 export const selectOneRoomService = (roomId) => {
     store.dispatch(selectOneRoom(roomId));
 };
-
+// used directly in component
 export const clearRoomOneService = () => {
     store.dispatch(clearRoomOne());
     resetFormHandler(ROOM_FORM);
