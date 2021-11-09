@@ -1,5 +1,5 @@
 import { call, put, takeLatest } from 'redux-saga/effects';
-import { TEACHER_URL } from '../constants/axios';
+import { DISABLED_TEACHERS_URL, TEACHER_URL } from '../constants/axios';
 import { DELETE, GET } from '../constants/methods';
 import { axiosCall } from '../services/axios';
 import { createErrorMessage, createMessage } from '../utils/sagaUtils';
@@ -8,7 +8,7 @@ import {
     DELETED_LABEL,
 } from '../constants/translationLabels/serviceMessages';
 import { FORM_TEACHER_A_LABEL } from '../constants/translationLabels/formElements';
-import { deleteTeacher, setLoading, showAllTeachers } from '../actions';
+import { deleteTeacher, setDisabledTeachers, setLoading, showAllTeachers } from '../actions';
 import { setOpenSuccessSnackbar } from '../actions/snackbar';
 import { getDisabledTeachersService } from '../services/teacherService';
 import * as actionTypes from '../actions/actionsType';
@@ -25,7 +25,7 @@ export function* removeTeacher({ result }) {
         );
 
         yield put(deleteTeacher(result));
-        getDisabledTeachersService();
+        getDisabledTeachersService(); // TODO: REPLACE
         yield put(setOpenSuccessSnackbar(message));
     } catch (error) {
         yield put(createErrorMessage(error));
@@ -44,7 +44,18 @@ export function* showTeachers() {
     }
 }
 
+export function* getDisabledTeachers() {
+    try {
+        const { data } = yield call(axiosCall, DISABLED_TEACHERS_URL, GET);
+
+        yield put(setDisabledTeachers(data));
+    } catch (error) {
+        yield put(createErrorMessage(error));
+    }
+}
+
 export default function* watchTeachers() {
     yield takeLatest(actionTypes.DELETE_TEACHER_START, removeTeacher);
     yield takeLatest(actionTypes.SHOW_ALL_TEACHERS_START, showTeachers);
+    yield takeLatest(actionTypes.SET_DISABLED_TEACHERS_START, getDisabledTeachers);
 }

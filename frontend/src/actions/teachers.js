@@ -68,3 +68,10 @@ export const setDisabledTeachers = (teachers) => {
         result: teachers,
     };
 };
+
+export const setDisabledTeachersStart = (teachers) => {
+    return {
+        type: actionsType.SET_DISABLED_TEACHERS_START,
+        result: teachers,
+    };
+};

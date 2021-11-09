@@ -21,7 +21,7 @@ import {
 const TeachersCard = (props) => {
     const { t } = useTranslation('common');
 
-    const { isDisabled, showConfirmDialog, teacherItem } = props;
+    const { isDisabled, showConfirmDialog, teacherItem, selectedTeacherCard } = props;
     return (
         <Card key={teacherItem.id} additionClassName="teacher-card done-card">
             <div className="cards-btns">
@@ -41,7 +41,7 @@ const TeachersCard = (props) => {
                             className="svg-btn edit-btn"
                             title={t(COMMON_EDIT_HOVER_TITLE)}
                             onClick={() => {
-                                selectTeacherCardService(teacherItem.id);
+                                selectedTeacherCard(teacherItem.id);
                                 console.log('teacherItems 1111', teacherItem.id);
                             }}
                         />
