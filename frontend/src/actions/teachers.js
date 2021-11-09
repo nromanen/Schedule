@@ -21,6 +21,13 @@ export const deleteTeacher = (id) => {
     };
 };
 
+export const deleteTeacherStart = (id) => {
+    return {
+        type: actionsType.DELETE_TEACHER_START,
+        result: id,
+    };
+};
+
 export const selectTeacherCard = (res) => {
     return {
         type: actionsType.SELECT_TEACHER,
