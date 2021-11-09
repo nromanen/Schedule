@@ -46,7 +46,7 @@
     .MuiInput-underline {
         &.Mui-error {
             &::after {
-                border-color: #f44336;
+                border-color: $delete-color;
             }
         }
         &::before {

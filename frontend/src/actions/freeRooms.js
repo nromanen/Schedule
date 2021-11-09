@@ -2,7 +2,7 @@ import * as actionsType from './actionsType';
 
 export const showFreeRooms = (freeRooms) => {
     return {
-        type: actionsType.SHOW_FREE_ROOMS,
+        type: 'SHOW_FREE_ROOMS',
         result: freeRooms,
     };
 };

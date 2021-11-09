@@ -9,7 +9,7 @@ const reducer = (
     action,
 ) => {
     switch (action.type) {
-        case actionTypes.SHOW_FREE_ROOMS:
+        case 'SHOW_FREE_ROOMS':
             return updateObject(state, {
                 freeRooms: action.result,
             });

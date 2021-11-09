@@ -1,11 +1,10 @@
-import { call, put, takeLatest, takeEvery, select } from 'redux-saga/effects';
+import { call, put, takeLatest, takeEvery } from 'redux-saga/effects';
 import { reset } from 'redux-form';
 import * as actionTypes from '../actions/actionsType';
 import { setLoading } from '../actions/loadingIndicator';
 import { setOpenSuccessSnackbar, setOpenErrorSnackbar } from '../actions/snackbar';
 import { axiosCall } from '../services/axios';
-import i18n from '../i18n';
-import { ROOM_URL, DISABLED_ROOMS_URL, ROOM_TYPES_URL } from '../constants/axios';
+import { ROOM_URL, DISABLED_ROOMS_URL, ROOM_TYPES_URL, FREE_ROOMS_URL } from '../constants/axios';
 import { ROOM_FORM, ROOM_FORM_TYPE } from '../constants/reduxForms';
 import { createErrorMessage, createMessage } from '../utils/sagaUtils';
 import {
@@ -18,6 +17,7 @@ import {
     deleteRoomTypeSuccess,
     updateRoomTypeSuccess,
     addRoomTypeSuccess,
+    getFreeRoomsSuccess,
 } from '../actions/rooms';
 import {
     BACK_END_SUCCESS_OPERATION,
@@ -26,6 +26,7 @@ import {
     DELETED_LABEL,
 } from '../constants/translationLabels/serviceMessages';
 import { FORM_ROOM_LABEL, FORM_TYPE_LABEL } from '../constants/translationLabels/formElements';
+import { POST, DELETE, PUT } from '../constants/methods';
 
 export function* getListOfRooms() {
     try {
@@ -65,7 +66,7 @@ export function* updateRoomItem({ values }) {
 
 export function* addRoomItem({ values }) {
     try {
-        const { data } = yield call(axiosCall, ROOM_URL, 'POST', values);
+        const { data } = yield call(axiosCall, ROOM_URL, POST, values);
         yield put(addRoomSuccess(data));
         yield put(reset(ROOM_FORM));
         const message = createMessage(BACK_END_SUCCESS_OPERATION, FORM_ROOM_LABEL, CREATED_LABEL);
@@ -77,7 +78,7 @@ export function* addRoomItem({ values }) {
 
 export function* toggleRoomsVisibility({ room, isDisabled }) {
     try {
-        yield call(axiosCall, ROOM_URL, 'PUT', room);
+        yield call(axiosCall, ROOM_URL, PUT, room);
         yield put(deleteRoomSuccess(room.id, isDisabled));
         const message = createMessage(BACK_END_SUCCESS_OPERATION, FORM_ROOM_LABEL, UPDATED_LABEL);
         yield put(setOpenSuccessSnackbar(message));
@@ -89,7 +90,7 @@ export function* toggleRoomsVisibility({ room, isDisabled }) {
 export function* deleteRoomItem({ roomId, isDisabled }) {
     try {
         const requestUrl = `${ROOM_URL}/${roomId}`;
-        yield call(axiosCall, requestUrl, 'DELETE');
+        yield call(axiosCall, requestUrl, DELETE);
         yield put(deleteRoomSuccess(roomId, isDisabled));
         const message = createMessage(BACK_END_SUCCESS_OPERATION, FORM_ROOM_LABEL, DELETED_LABEL);
         yield put(setOpenSuccessSnackbar(message));
@@ -121,7 +122,7 @@ export function* getAllRoomTypes() {
 
 export function* updateRoomTypeItem({ values }) {
     try {
-        const { data } = yield call(axiosCall, ROOM_TYPES_URL, 'PUT', values);
+        const { data } = yield call(axiosCall, ROOM_TYPES_URL, PUT, values);
         yield put(updateRoomTypeSuccess(data));
         yield put(reset(ROOM_FORM_TYPE));
         const message = createMessage(BACK_END_SUCCESS_OPERATION, FORM_TYPE_LABEL, UPDATED_LABEL);
@@ -133,7 +134,7 @@ export function* updateRoomTypeItem({ values }) {
 
 export function* addRoomTypeItem({ values }) {
     try {
-        const { data } = yield call(axiosCall, ROOM_TYPES_URL, 'POST', values);
+        const { data } = yield call(axiosCall, ROOM_TYPES_URL, POST, values);
         yield put(addRoomTypeSuccess(data));
         yield put(reset(ROOM_FORM_TYPE));
         const message = createMessage(BACK_END_SUCCESS_OPERATION, FORM_TYPE_LABEL, CREATED_LABEL);
@@ -157,11 +158,21 @@ export function* handleRoomTypeFormSubmit({ values }) {
 export function* deleteRoomTypeItem({ roomTypeId }) {
     try {
         const requestUrl = `${ROOM_TYPES_URL}/${roomTypeId}`;
-        console.log('roomTypeId', roomTypeId)
-        yield call(axiosCall, requestUrl, 'DELETE');
+        yield call(axiosCall, requestUrl, DELETE);
         yield put(deleteRoomTypeSuccess(roomTypeId));
         const message = createMessage(BACK_END_SUCCESS_OPERATION, FORM_TYPE_LABEL, DELETED_LABEL);
         yield put(setOpenSuccessSnackbar(message));
+    } catch (error) {
+        yield put(setOpenErrorSnackbar(createErrorMessage(error)));
+    }
+}
+
+export function* getFreeRoomsByParams({ params }) {
+    try {
+        const { dayOfWeek, evenOdd, classId, semesterId } = params;
+        const requestUrl = `${FREE_ROOMS_URL}?dayOfWeek=${dayOfWeek}&evenOdd=${evenOdd}&classId=${classId}&semesterId=${semesterId}`;
+        const { data } = yield call(axiosCall, requestUrl);
+        yield put(getFreeRoomsSuccess(data));
     } catch (error) {
         yield put(setOpenErrorSnackbar(createErrorMessage(error)));
     }
@@ -171,6 +182,7 @@ function* watchRooms() {
     yield takeLatest(actionTypes.GET_LIST_OF_ROOMS_START, getListOfRooms);
     yield takeLatest(actionTypes.GET_LIST_OF_DISABLED_ROOMS_START, getListOfDisabledRooms);
     yield takeLatest(actionTypes.GET_ALL_ROOM_TYPES_START, getAllRoomTypes);
+    yield takeLatest(actionTypes.GET_FREE_ROOMS_START, getFreeRoomsByParams);
     yield takeEvery(actionTypes.ADD_ROOM_START, addRoomItem);
     yield takeEvery(actionTypes.UPDATE_ROOM_START, updateRoomItem);
     yield takeEvery(actionTypes.DELETE_ROOM_START, deleteRoomItem);

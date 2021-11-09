@@ -8,6 +8,7 @@ const reducer = (
         roomTypes: [],
         oneRoom: {},
         oneType: {},
+        freeRooms: [],
     },
     action,
 ) => {
@@ -83,6 +84,11 @@ const reducer = (
             const type = state.roomTypes.find((roomType) => roomType.id === action.typeId);
             return updateObject(state, {
                 oneType: type,
+            });
+        }
+        case actionTypes.GET_FREE_ROOMS_SUCCESS: {
+            return updateObject(state, {
+                freeRooms: action.freeRooms,
             });
         }
         default:

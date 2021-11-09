@@ -145,3 +145,13 @@ export const handleRoomTypeFormSubmitStart = (values) => {
         values,
     };
 };
+
+export const getFreeRoomsStart = (params) => ({
+    type: actionsType.GET_FREE_ROOMS_START,
+    params,
+});
+
+export const getFreeRoomsSuccess = (freeRooms) => ({
+    type: actionsType.GET_FREE_ROOMS_SUCCESS,
+    freeRooms,
+});

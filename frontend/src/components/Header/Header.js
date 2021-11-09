@@ -36,7 +36,7 @@ import {
 import LanguageSelector from '../LanguageSelector/LanguageSelector';
 import * as colors from '../../constants/schedule/colors';
 
-import FreeRooms from '../../containers/FreeRooms/freeRooms';
+import FreeRooms from '../../containers/Dialogs/FreeRoomsDialog';
 import { setSemesterLoadingService } from '../../services/loadingService';
 import {
     LOGIN_TITLE,
