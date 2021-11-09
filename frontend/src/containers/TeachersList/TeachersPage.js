@@ -1,30 +1,20 @@
-import './TeachersList.scss';
 import React, { useEffect, useState } from 'react';
 import Button from '@material-ui/core/Button';
 import { useTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import i18n from 'i18next';
 
-import CustomDialog from '../Dialogs/CustomDialog';
 import { dialogTypes } from '../../constants/dialogs';
 import { cardType } from '../../constants/cardType';
-import { search } from '../../helper/search';
-import SearchPanel from '../../share/SearchPanel/SearchPanel';
-import { MultiSelect } from '../../helper/multiselect';
-import { getPublicClassScheduleListService } from '../../services/classService';
-import { getFirstLetter } from '../../helper/renderTeacher';
-import AddTeacherForm from '../../components/AddTeacherForm/AddTeacherForm';
-import { clearDepartment, getAllDepartmentsService } from '../../services/departmentService';
-import { setIsOpenConfirmDialog } from '../../actions/dialog';
-import {
-    getDisabledTeachersService,
-    handleTeacherService,
-    removeTeacherCardService,
-    setDisabledTeachersService,
-    setEnabledTeachersService,
-    showAllTeachersService,
-} from '../../services/teacherService';
 import { SEND_SCHEDULE_FOR_TEACHER } from '../../constants/translationLabels/common';
+import { search } from '../../helper/search';
+import { MultiSelect } from '../../helper/multiselect';
+import { getFirstLetter } from '../../helper/renderTeacher';
+import SearchPanel from '../../share/SearchPanel/SearchPanel';
+import { clearDepartment, getAllDepartmentsService } from '../../services/departmentService';
+import { getPublicClassScheduleListService } from '../../services/classService';
+import AddTeacherForm from '../../components/AddTeacherForm/AddTeacherForm';
+import { setIsOpenConfirmDialog } from '../../actions/dialog';
 import { getAllSemestersStart } from '../../actions/semesters';
 import {
     getAllPublicSemestersStart,
@@ -33,12 +23,15 @@ import {
     sendTeacherScheduleStart,
 } from '../../actions/schedule';
 import { getLessonTypes, selectTeacherCard } from '../../actions';
-import TeacherList from './TeacherList';
 import {
     deleteTeacherStart,
+    handleTeacherStart,
     setDisabledTeachersStart,
     showAllTeachersStart,
 } from '../../actions/teachers';
+import CustomDialog from '../Dialogs/CustomDialog';
+import TeacherList from './TeacherList';
+import './TeachersList.scss';
 
 const TeacherPage = (props) => {
     const { t } = useTranslation('common');
@@ -61,6 +54,7 @@ const TeacherPage = (props) => {
         deleteTeacher,
         showAllTeachers,
         getDisabledTeachers,
+        handleTeacher,
     } = props;
     const [term, setTerm] = useState('');
     const [isDisabled, setIsDisabled] = useState(false);
@@ -81,9 +75,11 @@ const TeacherPage = (props) => {
         getPublicClassScheduleListService();
     }, []);
 
-    const visibleItems = isDisabled
-        ? search(disabledTeachers, term, ['name', 'surname', 'patronymic'])
-        : search(enabledTeachers, term, ['name', 'surname', 'patronymic']);
+    const visibleItems = search(isDisabled ? disabledTeachers : enabledTeachers, term, [
+        'name',
+        'surname',
+        'patronymic',
+    ]);
 
     const setOptions = () => {
         return enabledTeachers.map((item) => {
@@ -114,18 +110,17 @@ const TeacherPage = (props) => {
 
     const teacherSubmit = (values) => {
         const sendData = { ...values, department };
-        handleTeacherService(sendData);
+
+        handleTeacher(sendData);
         clearDepartment();
     };
-    const setEnabledDisabledDepartment = (currentTeacherId) => {
+    const setEnabledDisabled = (currentTeacherId) => {
         const teacher = [...enabledTeachers, ...disabledTeachers].find(
             (teacherEl) => teacherEl.id === currentTeacherId,
         );
-        const changeDisabledStatus = {
-            [dialogTypes.SET_VISIBILITY_ENABLED]: setEnabledTeachersService(teacher),
-            [dialogTypes.SET_VISIBILITY_DISABLED]: setDisabledTeachersService(teacher),
-        };
-        return changeDisabledStatus[confirmDialogType];
+
+        const isDisable = dialogTypes.SET_VISIBILITY_ENABLED !== confirmDialogType;
+        handleTeacher({ ...teacher, disable: isDisable });
     };
     const showConfirmDialog = (id, dialogType) => {
         setTeacherId(id);
@@ -136,7 +131,7 @@ const TeacherPage = (props) => {
         setOpenConfirmDialog(false);
         // if (!id) return;
         if (confirmDialogType !== dialogTypes.DELETE_CONFIRM) {
-            setEnabledDisabledDepartment(teacherId);
+            setEnabledDisabled(teacherId);
         } else {
             deleteTeacher(teacherId);
         }
@@ -166,7 +161,6 @@ const TeacherPage = (props) => {
         return selected.length !== 0;
     };
     const changeDisable = () => {
-        // isDisabled
         setIsDisabled((prev) => !prev);
     };
     const parseDefaultSemester = () => {
@@ -224,7 +218,6 @@ const TeacherPage = (props) => {
             </aside>
 
             <TeacherList
-                term={term}
                 visibleItems={visibleItems}
                 isDisabled={isDisabled}
                 setTeacherId={setTeacherId}
@@ -259,6 +252,7 @@ const mapDispatchToProps = (dispatch) => ({
     deleteTeacher: (id) => dispatch(deleteTeacherStart(id)),
     showAllTeachers: () => dispatch(showAllTeachersStart()),
     getDisabledTeachers: () => dispatch(setDisabledTeachersStart()),
+    handleTeacher: (values) => dispatch(handleTeacherStart(values)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(TeacherPage);

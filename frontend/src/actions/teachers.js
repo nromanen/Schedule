@@ -1,9 +1,23 @@
 import * as actionsType from './actionsType';
 
+export const handleTeacherStart = (values) => {
+    return {
+        type: actionsType.HANDLE_TEACHER_START,
+        values,
+    };
+};
+
 export const addTeacher = (teacher) => {
     return {
         type: actionsType.ADD_TEACHER,
-        result: teacher,
+        teacher,
+    };
+};
+
+export const addTeacherStart = (teacher) => {
+    return {
+        type: actionsType.ADD_TEACHER_START,
+        teacher,
     };
 };
 
@@ -35,10 +49,17 @@ export const selectTeacherCard = (res) => {
     };
 };
 
-export const updateTeacherCard = (res) => {
+export const updateTeacherCard = (teacher) => {
     return {
         type: actionsType.UPDATE_TEACHER,
-        result: res,
+        teacher,
+    };
+};
+
+export const updateTeacherCardStart = (teacher) => {
+    return {
+        type: actionsType.UPDATE_TEACHER_START,
+        teacher,
     };
 };
 

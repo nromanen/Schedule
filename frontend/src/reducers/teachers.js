@@ -22,7 +22,7 @@ const reducer = (
     switch (action.type) {
         case actionTypes.ADD_TEACHER:
             return updateObject(state, {
-                teachers: [...state.teachers, action.result].sort(compare),
+                teachers: [...state.teachers, action.teacher].sort(compare),
             });
 
         case actionTypes.DELETE_TEACHER:
@@ -44,11 +44,11 @@ const reducer = (
             });
         }
         case actionTypes.UPDATE_TEACHER: {
-            const teacherIndex = state.teachers.findIndex(({ id }) => id === action.result.id);
+            const teacherIndex = state.teachers.findIndex(({ id }) => id === action.teacher.id);
             const teachers = [...state.teachers];
             teachers[teacherIndex] = {
                 ...teachers[teacherIndex],
-                ...action.result,
+                ...action.teacher,
             };
             return updateObject(state, {
                 teacher: {},
@@ -62,6 +62,7 @@ const reducer = (
             });
         case actionTypes.SHOW_ALL_TEACHERS:
         case actionTypes.GET_TEACHERS_BY_DEPARTMENT:
+        case actionTypes.GET_TEACHERS_WITHOUT_ACCOUNT_SUCCESS:
             return updateObject(state, {
                 teachers: [...action.result],
             });
