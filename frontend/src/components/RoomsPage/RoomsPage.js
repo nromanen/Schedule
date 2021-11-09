@@ -14,12 +14,10 @@ import {
     deleteRoomStart,
     setSelectRoomSuccess,
     clearRoomSuccess,
-} from '../../actions/rooms';
-import {
     getAllRoomTypesStart,
     deleteRoomTypeStart,
     handleRoomTypeFormSubmitStart,
-} from '../../actions/roomTypes';
+} from '../../actions/rooms';
 import { setIsOpenConfirmDialog } from '../../actions/dialog';
 import RoomList from './RoomsList/RoomsList';
 

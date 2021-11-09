@@ -14,13 +14,11 @@ import {
     getListOfRoomsSuccess,
     getListOfDisabledRoomsSuccess,
     deleteRoomSuccess,
-} from '../actions/rooms';
-import {
     getAllRoomTypesSuccess,
     deleteRoomTypeSuccess,
     updateRoomTypeSuccess,
     addRoomTypeSuccess,
-} from '../actions/roomTypes';
+} from '../actions/rooms';
 import {
     BACK_END_SUCCESS_OPERATION,
     UPDATED_LABEL,
@@ -159,6 +157,7 @@ export function* handleRoomTypeFormSubmit({ values }) {
 export function* deleteRoomTypeItem({ roomTypeId }) {
     try {
         const requestUrl = `${ROOM_TYPES_URL}/${roomTypeId}`;
+        console.log('roomTypeId', roomTypeId)
         yield call(axiosCall, requestUrl, 'DELETE');
         yield put(deleteRoomTypeSuccess(roomTypeId));
         const message = createMessage(BACK_END_SUCCESS_OPERATION, FORM_TYPE_LABEL, DELETED_LABEL);

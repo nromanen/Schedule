@@ -16,7 +16,7 @@ import {
     ADD_TYPE_LABEL,
     NEW_TYPE_LABEL,
 } from '../../../constants/translationLabels/formElements';
-import { selectRoomType } from '../../../actions/roomTypes';
+import { selectRoomType } from '../../../actions/rooms';
 
 let RoomTypeForm = (props) => {
     const {

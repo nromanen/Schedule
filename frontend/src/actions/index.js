@@ -64,14 +64,13 @@ export {
     getListOfDisabledRoomsSuccess,
     getListOfRoomsSuccess,
     updateRoomSuccess,
-} from './rooms';
-export {
     deleteRoomTypeSuccess,
     getAllRoomTypesSuccess,
     selectRoomType,
     addRoomTypeSuccess,
     updateRoomTypeSuccess,
-} from './roomTypes';
+} from './rooms';
+
 export {
     addItemToSchedule,
     checkAvailabilitySchedule,

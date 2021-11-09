@@ -9,7 +9,7 @@ import {
     updateRoomTypeSuccess,
     addRoomTypeSuccess,
     selectRoomType,
-} from '../actions/roomTypes';
+} from '../actions/rooms';
 
 import i18n from '../i18n';
 import { errorHandler, successHandler } from '../helper/handlerAxios';
