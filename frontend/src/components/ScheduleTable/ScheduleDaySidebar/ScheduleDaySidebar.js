@@ -10,7 +10,7 @@ const ScheduleDaySidebar = (props) => {
 
     return (
         <aside className="day-classes-aside">
-            <div className="card day-sidebar-title">{title}</div>
+            <div className="schedule-card day-sidebar-title">{title}</div>
             {days.map((day, index) => (
                 <div className="cards-container day-container" key={day}>
                     <span className={`${getDayColour(index)} schedule-day card`}>
@@ -25,7 +25,7 @@ const ScheduleDaySidebar = (props) => {
                                     ></p>
                                     <span
                                         id={`${day}-${classScheduler.class_name}`}
-                                        className="card schedule-class"
+                                        className="schedule-card schedule-class"
                                     >
                                         {classScheduler.class_name}
                                     </span>

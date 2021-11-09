@@ -87,7 +87,7 @@ const Schedule = (props) => {
                                     }`}
                                     id={`group-${group.id}`}
                                 >
-                                    <span className="group-title card sticky-container">
+                                    <span className="group-title schedule-card sticky-container">
                                         {group.title}
                                     </span>
                                     {allLessons.map((lesson) => {
@@ -117,7 +117,7 @@ const Schedule = (props) => {
                                                     dragItemData={dragItemData}
                                                     t={t}
                                                     isSelectedGroup={isSelectedGroup}
-                                                    additionClassName="card schedule-board"
+                                                    additionClassName="schedule-card schedule-board"
                                                 />
                                             </div>
                                         );

@@ -4,7 +4,7 @@
 .draggable-card {
     cursor: move;
 }
-.lesson-list.card {
+.lesson-list.schedule-card {
     width: 16%;
     height: $h-full;
     margin-top: 0;
@@ -19,7 +19,7 @@
         justify-content: center;
     }
 
-    .card {
+    .schedule-card {
         font-size: $font-sm;
     }
 

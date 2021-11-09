@@ -9,14 +9,14 @@ const BusyRoomsTable = (props) => {
     const { busyRooms, days, classes } = props;
     const { t } = useTranslation('common');
     return (
-        <section className="card busy-rooms-table-container">
+        <section className="schedule-card busy-rooms-table-container">
             <ScheduleDaySidebar title={t(ROOM_LIST_TITLE)} days={days} classes={classes} />
             <section className="view-rooms">
                 {busyRooms.map((busyRoom) => (
                     <div className="busy-room-section" key={busyRoom.room_id}>
                         <span
                             title={busyRoom.room_type}
-                            className="busy-room-title card sticky-container"
+                            className="busy-room-title schedule-card sticky-container"
                         >
                             {busyRoom.room_name}
                         </span>

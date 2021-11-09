@@ -87,7 +87,7 @@ const SchedulePage = (props) => {
     };
     if (isHiddenSchedule) {
         return (
-            <section className="for-phones-and-tablets card">
+            <section className="for-phones-and-tablets schedule-card">
                 <h1>{t(USE_PC)}</h1>
             </section>
         );
@@ -95,7 +95,7 @@ const SchedulePage = (props) => {
     return (
         <>
             <section className="schedule-control-panel">
-                <section className="card schedule-table ">
+                <section className="schedule-card schedule-table ">
                     {scheduleLoading ? (
                         <CircularProgress className="loading-circle" />
                     ) : (
@@ -112,7 +112,7 @@ const SchedulePage = (props) => {
                         </>
                     )}
                 </section>
-                <aside className="card lesson-list">
+                <aside className="schedule-card lesson-list">
                     <ScheduleLessonsList
                         setDragItemData={setDragItemData}
                         items={scheduleItems}

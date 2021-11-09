@@ -1,6 +1,15 @@
 @import '../../../styles/colors.scss';
 @import '../../../styles/variables.scss';
 
+.schedule-card {
+    background-color: $main-color;
+    display: inline-block;
+    margin: 10px;
+    padding: 1rem;
+    border-radius: 5px;
+    box-shadow: 0 2px 8px $shadow-box;
+}
+
 .day-classes-aside {
     position: sticky;
     left: 0;

@@ -38,7 +38,9 @@ const TableItem = (props) => {
             >
                 <div className="class-info-container">
                     <Card
-                        className={`card class-info-data ${getColorByFullness(classOdd?.lessons)}`}
+                        className={`schedule-card class-info-data ${getColorByFullness(
+                            classOdd?.lessons,
+                        )}`}
                     >
                         <div className="group-list-container">
                             {!classOdd || isEmpty(classOdd.lessons) ? (
@@ -52,7 +54,9 @@ const TableItem = (props) => {
 
                 <div className="class-info-container">
                     <Card
-                        className={`card class-info-data ${getColorByFullness(classEven?.lessons)}`}
+                        className={`schedule-card class-info-data ${getColorByFullness(
+                            classEven?.lessons,
+                        )}`}
                     >
                         <div className="group-list-container">
                             {!classEven || isEmpty(classEven.lessons) ? (
