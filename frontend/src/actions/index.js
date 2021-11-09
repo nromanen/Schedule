@@ -57,13 +57,13 @@ export {
 
 export { setLoading, setScheduleLoading, setSemesterLoading } from './loadingIndicator';
 export {
-    addRoom,
-    clearRoomOne,
+    addRoomSuccess,
+    clearRoomSuccess,
     deleteRoomSuccess,
-    selectOneRoom,
+    setSelectRoomSuccess,
     getListOfDisabledRoomsSuccess,
     getListOfRoomsSuccess,
-    updateOneRoom,
+    updateRoomSuccess,
 } from './rooms';
 export {
     deleteRoomTypeSuccess,

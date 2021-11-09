@@ -12,8 +12,8 @@ import {
     getListOfDisabledRoomsStart,
     toggleRoomVisibilityStart,
     deleteRoomStart,
-    selectOneRoom,
-    clearRoomOne,
+    setSelectRoomSuccess,
+    clearRoomSuccess,
 } from '../../actions/rooms';
 import {
     getAllRoomTypesStart,
@@ -163,8 +163,8 @@ const mapDispatchToProps = (dispatch) => ({
     deleteRoom: (roomId, isDisabled) => dispatch(deleteRoomStart(roomId, isDisabled)),
     deleteRoomType: (roomTypeId) => dispatch(deleteRoomTypeStart(roomTypeId)),
     handleRoomTypeFormSubmit: (values) => dispatch(handleRoomTypeFormSubmitStart(values)),
-    setSelectRoom: (roomId) => dispatch(selectOneRoom(roomId)),
-    clearRoomItem: () => dispatch(clearRoomOne()),
+    setSelectRoom: (roomId) => dispatch(setSelectRoomSuccess(roomId)),
+    clearRoomItem: () => dispatch(clearRoomSuccess()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(RoomPage);

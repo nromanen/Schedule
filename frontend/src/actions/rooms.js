@@ -1,9 +1,9 @@
 import * as actionsType from './actionsType';
 
-export const addRoom = (room) => {
+export const addRoomSuccess = (room) => {
     return {
         type: actionsType.ADD_ROOM,
-        result: room,
+        room,
     };
 };
 export const addRoomStart = (room) => {
@@ -15,7 +15,7 @@ export const addRoomStart = (room) => {
 
 export const deleteRoomSuccess = (roomId, isDisabled) => {
     return {
-        type: actionsType.DELETE_ROOM_SUCCESS,
+        type: actionsType.DELETE_ROOM,
         roomId,
         isDisabled,
     };
@@ -45,7 +45,7 @@ export const getListOfRoomsStart = () => {
 export const getListOfDisabledRoomsSuccess = (rooms) => {
     return {
         type: actionsType.SET_DISABLED_ROOMS,
-        result: rooms,
+        rooms,
     };
 };
 export const getListOfDisabledRoomsStart = () => {
@@ -54,17 +54,17 @@ export const getListOfDisabledRoomsStart = () => {
     };
 };
 
-export const selectOneRoom = (id) => {
+export const setSelectRoomSuccess = (roomId) => {
     return {
-        type: actionsType.SELECT_ONE_ROOM,
-        result: id,
+        type: actionsType.SET_SELECT_ROOM,
+        roomId,
     };
 };
 
-export const updateOneRoom = (room) => {
+export const updateRoomSuccess = (room) => {
     return {
-        type: actionsType.UPDATE_ONE_ROOM,
-        result: room,
+        type: actionsType.UPDATE_ROOM,
+        room,
     };
 };
 export const updateRoomStart = (values) => {
@@ -74,8 +74,8 @@ export const updateRoomStart = (values) => {
     };
 };
 
-export const clearRoomOne = () => ({
-    type: actionsType.CLEAR_ROOM_ONE,
+export const clearRoomSuccess = () => ({
+    type: actionsType.CLEAR_ROOM,
 });
 
 export const handleRoomFormSubmitStart = (values) => {

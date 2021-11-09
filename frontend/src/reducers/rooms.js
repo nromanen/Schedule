@@ -1,15 +1,6 @@
 import * as actionTypes from '../actions/actionsType';
 import { updateObject } from '../utility';
 
-function compare(a, b) {
-    let comparison = 0;
-    if (a.name > b.name) {
-        comparison = 1;
-    } else if (a.name < b.name) {
-        comparison = -1;
-    }
-    return comparison;
-}
 const reducer = (
     state = {
         rooms: [],
@@ -22,9 +13,9 @@ const reducer = (
         case actionTypes.ADD_ROOM:
             return updateObject(state, {
                 oneRoom: {},
-                rooms: [...state.rooms, action.result].sort(compare),
+                rooms: [...state.rooms, action.room].sort((a, b) => a.name.localeCompare(b.name)),
             });
-        case actionTypes.DELETE_ROOM_SUCCESS:
+        case actionTypes.DELETE_ROOM:
             if (action.isDisabled) {
                 return updateObject(state, {
                     disabledRooms: [
@@ -42,24 +33,24 @@ const reducer = (
             });
         case actionTypes.SET_DISABLED_ROOMS:
             return updateObject(state, {
-                disabledRooms: [...action.result],
+                disabledRooms: [...action.rooms],
             });
-        case actionTypes.SELECT_ONE_ROOM: {
-            const one = state.rooms.find((roomItem) => roomItem.id === action.result);
+        case actionTypes.SET_SELECT_ROOM: {
+            const room = state.rooms.find((roomItem) => roomItem.id === action.roomId);
             return updateObject(state, {
-                oneRoom: one,
+                oneRoom: room,
             });
         }
-        case actionTypes.UPDATE_ONE_ROOM: {
+        case actionTypes.UPDATE_ROOM: {
             const roomState = [...state.rooms];
-            roomState[roomState.findIndex((roomItem) => roomItem.id === action.result.id)] =
-                action.result;
+            roomState[roomState.findIndex((roomItem) => roomItem.id === action.room.id)] =
+                action.room;
             return updateObject(state, {
                 oneRoom: {},
                 rooms: [...roomState],
             });
         }
-        case actionTypes.CLEAR_ROOM_ONE:
+        case actionTypes.CLEAR_ROOM:
             return updateObject(state, {
                 oneRoom: {},
             });

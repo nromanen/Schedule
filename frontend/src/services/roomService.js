@@ -6,10 +6,10 @@ import axios from '../helper/axios';
 import {
     getListOfRoomsSuccess,
     deleteRoomSuccess,
-    addRoom,
-    selectOneRoom,
-    updateOneRoom,
-    clearRoomOne,
+    addRoomSuccess,
+    setSelectRoomSuccess,
+    updateRoomSuccess,
+    clearRoomSuccess,
     getListOfDisabledRoomsSuccess,
 } from '../actions/rooms';
 
@@ -65,7 +65,7 @@ const put = (values) => {
     axios
         .put(ROOM_URL, values)
         .then((result) => {
-            store.dispatch(updateOneRoom(result.data));
+            store.dispatch(updateRoomSuccess(result.data));
             resetFormHandler(ROOM_FORM);
             getDisabledRoomsService();
             showListOfRoomsService();
@@ -95,7 +95,7 @@ const post = (values) => {
     axios
         .post(ROOM_URL, values)
         .then((res) => {
-            store.dispatch(addRoom(res.data));
+            store.dispatch(addRoomSuccess(res.data));
             resetFormHandler(ROOM_FORM);
             successHandler(
                 i18n.t(BACK_END_SUCCESS_OPERATION, {
@@ -117,10 +117,10 @@ export const createRoomService = (values) => {
 };
 // used directly in component
 export const selectOneRoomService = (roomId) => {
-    store.dispatch(selectOneRoom(roomId));
+    store.dispatch(setSelectRoomSuccess(roomId));
 };
 // used directly in component
 export const clearRoomOneService = () => {
-    store.dispatch(clearRoomOne());
+    store.dispatch(clearRoomSuccess());
     resetFormHandler(ROOM_FORM);
 };

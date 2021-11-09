@@ -9,8 +9,8 @@ import { ROOM_URL, DISABLED_ROOMS_URL, ROOM_TYPES_URL } from '../constants/axios
 import { ROOM_FORM, ROOM_FORM_TYPE } from '../constants/reduxForms';
 import { createErrorMessage, createMessage } from '../utils/sagaUtils';
 import {
-    updateOneRoom,
-    addRoom,
+    updateRoomSuccess,
+    addRoomSuccess,
     getListOfRoomsSuccess,
     getListOfDisabledRoomsSuccess,
     deleteRoomSuccess,
@@ -56,7 +56,7 @@ export function* getListOfDisabledRooms() {
 export function* updateRoomItem({ values }) {
     try {
         const { data } = yield call(axiosCall, ROOM_URL, 'PUT', values);
-        yield put(updateOneRoom(data));
+        yield put(updateRoomSuccess(data));
         yield put(reset(ROOM_FORM));
         const message = createMessage(BACK_END_SUCCESS_OPERATION, FORM_ROOM_LABEL, UPDATED_LABEL);
         yield put(setOpenSuccessSnackbar(message));
@@ -68,7 +68,7 @@ export function* updateRoomItem({ values }) {
 export function* addRoomItem({ values }) {
     try {
         const { data } = yield call(axiosCall, ROOM_URL, 'POST', values);
-        yield put(addRoom(data));
+        yield put(addRoomSuccess(data));
         yield put(reset(ROOM_FORM));
         const message = createMessage(BACK_END_SUCCESS_OPERATION, FORM_ROOM_LABEL, CREATED_LABEL);
         yield put(setOpenSuccessSnackbar(message));
