@@ -100,8 +100,8 @@ let RoomTypeForm = (props) => {
 };
 
 const mapStateToProps = (state) => ({
-    oneType: state.roomTypes.oneType,
-    roomTypes: state.roomTypes.roomTypes,
+    oneType: state.rooms.oneType,
+    roomTypes: state.rooms.roomTypes,
 });
 const mapDispatchToProps = (dispatch) => ({
     selectRoomType: (typeId) => dispatch(selectRoomType(typeId)),

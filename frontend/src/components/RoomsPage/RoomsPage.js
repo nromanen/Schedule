@@ -146,8 +146,8 @@ const mapStateToProps = (state) => ({
     rooms: state.rooms.rooms,
     disabledRooms: state.rooms.disabledRooms,
     oneRoom: state.rooms.oneRoom,
-    roomTypes: state.roomTypes.roomTypes,
-    oneType: state.roomTypes.oneType,
+    roomTypes: state.rooms.roomTypes,
+    oneType: state.rooms.oneType,
     isOpenConfirmDialog: state.dialog.isOpenConfirmDialog,
 });
 const mapDispatchToProps = (dispatch) => ({
