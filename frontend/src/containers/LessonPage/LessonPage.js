@@ -14,6 +14,7 @@ import {
 import { setOpenErrorSnackbar } from '../../actions/snackbar';
 import { copyLessonsFromSemesterStart } from '../../actions/semesters';
 import { handleLessonStart } from '../../actions/lesson';
+import { showAllTeachersStart } from '../../actions/teachers';
 
 const mapStateToProps = (state) => ({
     lessons: state.lesson.lessons,
@@ -41,6 +42,7 @@ const mapDispatchToProps = (dispatch) => ({
     copyLessonsFromSemester: (values) => dispatch(copyLessonsFromSemesterStart(values)),
     handleLesson: (values, groupId) => dispatch(handleLessonStart(values, groupId)),
     selectByGroupId: (groupId) => dispatch(selectGroupId(groupId)),
+    showAllTeachers: () => dispatch(showAllTeachersStart()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(LessonPage);

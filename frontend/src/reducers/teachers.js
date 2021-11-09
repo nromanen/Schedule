@@ -60,7 +60,7 @@ const reducer = (
             return updateObject(state, {
                 disabledTeachers: [...action.result],
             });
-        case actionTypes.SHOW_ALL:
+        case actionTypes.SHOW_ALL_TEACHERS:
         case actionTypes.GET_TEACHERS_BY_DEPARTMENT:
             return updateObject(state, {
                 teachers: [...action.result],

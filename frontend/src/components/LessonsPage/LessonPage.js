@@ -51,6 +51,7 @@ const LessonPage = (props) => {
         copyLessonsFromSemester,
         handleLesson,
         selectByGroupId,
+        showAllTeachers,
     } = props;
     const { t } = useTranslation('common');
     const [term, setTerm] = useState('');
@@ -67,7 +68,7 @@ const LessonPage = (props) => {
     }, [groupId]);
 
     useEffect(() => {
-        showAllTeachersService();
+        showAllTeachers();
         getLessonTypes();
         showAllGroupsService();
         showAllSubjectsService();

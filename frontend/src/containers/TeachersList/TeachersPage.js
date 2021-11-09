@@ -34,7 +34,7 @@ import {
 } from '../../actions/schedule';
 import { getLessonTypes, selectTeacherCard } from '../../actions';
 import TeacherList from './TeacherList';
-import { deleteTeacherStart } from '../../actions/teachers';
+import { deleteTeacherStart, showAllTeachersStart } from '../../actions/teachers';
 
 const TeacherPage = (props) => {
     const { t } = useTranslation('common');
@@ -55,6 +55,7 @@ const TeacherPage = (props) => {
         sendTeacherSchedule,
         selectedTeacherCard,
         deleteTeacher,
+        showAllTeachers,
     } = props;
     const [term, setTerm] = useState('');
     const [isDisabled, setIsDisabled] = useState(false);
@@ -68,7 +69,7 @@ const TeacherPage = (props) => {
         getCurrentSemester();
         getDefaultSemester();
         getDisabledTeachersService();
-        showAllTeachersService();
+        showAllTeachers();
         getAllSemestersItems();
         getAllDepartmentsService();
         getAllPublicSemesters();
@@ -251,6 +252,7 @@ const mapDispatchToProps = (dispatch) => ({
     sendTeacherSchedule: (data) => dispatch(sendTeacherScheduleStart(data)),
     selectedTeacherCard: (teacherCardId) => dispatch(selectTeacherCard(teacherCardId)),
     deleteTeacher: (id) => dispatch(deleteTeacherStart(id)),
+    showAllTeachers: () => dispatch(showAllTeachersStart()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(TeacherPage);

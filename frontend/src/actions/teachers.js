@@ -44,7 +44,14 @@ export const updateTeacherCard = (res) => {
 
 export const showAllTeachers = (teachers) => {
     return {
-        type: actionsType.SHOW_ALL,
+        type: actionsType.SHOW_ALL_TEACHERS,
+        result: teachers,
+    };
+};
+
+export const showAllTeachersStart = (teachers) => {
+    return {
+        type: actionsType.SHOW_ALL_TEACHERS_START,
         result: teachers,
     };
 };
