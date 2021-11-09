@@ -117,7 +117,7 @@ public class GroupControllerTest {
 
     @Test
     public void getAllGroups() throws Exception {
-        assertions.assertForGetListWithOneEntity(groupDTOWithID4L);
+        assertions.assertForGetList(List.of(groupDTOWithID4L, groupDTOWithID6L));
     }
 
     @Test
@@ -173,18 +173,29 @@ public class GroupControllerTest {
     }
 
     @Test
-    public void saveAfterGroup() throws Exception {
+    public void saveAfterGroupWithId() throws Exception {
         GroupDTO groupDTO = GroupDTO.builder()
                 .title("sdsdsdsd")
                 .build();
         assertions.assertForSave(groupDTO, GroupControllerTest::matchIgnoringId, "/groups/after/4");
-        List<GroupDTO> expected = List.of(groupDTOWithID6L, groupDTO, groupDTOWithID4L);
+        List<GroupDTO> expected = List.of(groupDTOWithID6L, groupDTOWithID4L, groupDTO);
         groupDTO.setId(1L);
         assertions.assertForGetList(expected, "/groups/ordered");
     }
 
     @Test
-    public void updateGroupOrder() throws Exception {
+    public void saveAfterGroupWithoutId() throws Exception {
+        GroupDTO groupDTO = GroupDTO.builder()
+                .title("sdsdsdsd")
+                .build();
+        assertions.assertForSave(groupDTO, GroupControllerTest::matchIgnoringId, "/groups/after");
+        List<GroupDTO> expected = List.of(groupDTOWithID6L, groupDTOWithID4L, groupDTO);
+        groupDTO.setId(1L);
+        assertions.assertForGetList(expected, "/groups/ordered");
+    }
+
+    @Test
+    public void updateGroupOrderWithId() throws Exception {
         GroupDTO groupDTO = GroupDTO.builder()
                 .title("sdsdsdsd")
                 .build();
@@ -192,6 +203,18 @@ public class GroupControllerTest {
         groupDTO.setId(1L);
         assertions.assertForUpdate(groupDTO, "/groups/after/6");
         List<GroupDTO> expected = List.of(groupDTOWithID6L, groupDTO, groupDTOWithID4L);
+        assertions.assertForGetList(expected, "/groups/ordered");
+    }
+
+    @Test
+    public void updateGroupOrderWithoutId() throws Exception {
+        GroupDTO groupDTO = GroupDTO.builder()
+                .title("sdsdsdsd")
+                .build();
+        assertions.assertForSave(groupDTO, GroupControllerTest::matchIgnoringId, "/groups/after/4");
+        groupDTO.setId(1L);
+        assertions.assertForUpdate(groupDTO, "/groups/after");
+        List<GroupDTO> expected = List.of(groupDTO, groupDTOWithID6L, groupDTOWithID4L);
         assertions.assertForGetList(expected, "/groups/ordered");
     }
 

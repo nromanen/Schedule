@@ -18,7 +18,11 @@ public interface GroupRepository extends BasicRepository<Group, Long> {
 
     List<Group> getAllBySortingOrder();
 
-    Group saveGroupAfterOrder(Group group, Long afterId);
+    Optional<Double> getNextPosition(Double position);
 
-    Group updateGroupOrder(Group group, Long afterId);
+    Optional<Double> getMaxSortingOrder();
+
+    void changeGroupOrderOffset(Double order);
+
+    Optional<Double> getSortingOrderById(Long id);
 }

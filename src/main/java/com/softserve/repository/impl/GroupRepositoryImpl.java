@@ -47,10 +47,10 @@ public class GroupRepositoryImpl extends BasicRepositoryImpl<Group, Long> implem
             + "FROM Lesson l "
             + "WHERE l.teacher.id = :id AND l.semester.defaultSemester = true";
 
-    private static final String GET_ALL_BY_ORDER_QUERY
+    private static final String GET_ALL_ORDERED
             = "SELECT g "
             + "FROM Group g "
-            + "ORDER BY g.sortingOrder ASC, g.title ASC";
+            + "ORDER BY g.sortingOrder ASC";
 
     private static final String GET_MAX_SORTING_ORDER
             = "SELECT max(g.sortingOrder) "
@@ -65,6 +65,11 @@ public class GroupRepositoryImpl extends BasicRepositoryImpl<Group, Long> implem
             = "SELECT min(g.sortingOrder) "
             + "FROM Group g "
             + "WHERE g.sortingOrder > :position";
+
+    public static final String GET_ORDER_BY_ID
+            = "SELECT g.sortingOrder "
+            + "FROM Group g "
+            + "WHERE g.id = :id";
 
 
     private Session getSession(){
@@ -108,79 +113,64 @@ public class GroupRepositoryImpl extends BasicRepositoryImpl<Group, Long> implem
      */
     @Override
     public List<Group> getAllBySortingOrder() {
-        log.trace("Entered getAllBySortingOrder()");
+        log.debug("Entered getAllBySortingOrder()");
         return getSession()
-                .createQuery(GET_ALL_BY_ORDER_QUERY, Group.class)
+                .createQuery(GET_ALL_ORDERED, Group.class)
                 .getResultList();
     }
 
-
     /**
-     * The method is used to save group after the specific group to get desired order
-     * @param group the group that must be saved
-     * @param afterId the id of the group after which must be saved the new one
-     * @return saved group with set order and id
+     * The method is used to get sorting order of the next element
+     *
+     * @param position sorting order of the element
+     * @return sorting order of the nex element
      */
     @Override
-    public Group saveGroupAfterOrder(Group group, Long afterId) {
-        log.trace("Entered saveGroupAfterOrder({},{})", group, afterId);
-        Optional<Group> groupAfter = super.findById(afterId);
-        Double maxOrder = Optional.ofNullable(
-                    getSession().createQuery(GET_MAX_SORTING_ORDER, Double.class).getSingleResult()
-                ).orElse(0.0);
-        log.debug("Max order: {}", maxOrder );
-        if (groupAfter.isPresent()) {
-            Double order = Optional.ofNullable(groupAfter.get().getSortingOrder()).orElse(maxOrder);
-            group.setSortingOrder(order+1);
-            changeGroupOrderOffset(order+1);
-        } else {
-            group.setSortingOrder(maxOrder+1);
-        }
-        super.save(group);
-        return group;
+    public Optional<Double> getNextPosition(Double position) {
+        log.info("Entered getNextPosition({})", position);
+        return getSession().createQuery(GET_NEXT_POSITION, Double.class)
+                .setParameter("position", position)
+                .uniqueResultOptional();
     }
 
     /**
-     * Method updates group order position
-     * @param group group that will be replaced
-     * @param afterId id of the group after which will be placed
-     * @return group with new position
+     * The method is used to retrieve max sorting order
+     *
+     * @return max sorting order
      */
     @Override
-    public Group updateGroupOrder(Group group, Long afterId) {
-        log.trace("Entered updateGroupOrder({}, {})", group, afterId);
-        Optional<Group> previousGroup = super.findById(afterId);
-        if (previousGroup.isPresent()) {
-            Double previousPosition = Optional.ofNullable(previousGroup.get().getSortingOrder())
-                    .orElse(0.0);
-            TypedQuery<Double> doubleTypedQuery = getSession().createQuery(GET_NEXT_POSITION, Double.class);
-            doubleTypedQuery.setParameter("position", previousPosition);
-            Double nextPosition =
-                    Optional.ofNullable(
-                        doubleTypedQuery.getSingleResult()
-                    ).orElse(previousPosition+2);
-            Double newPosition = ((nextPosition + previousPosition)/2);
-            if (newPosition - 1 < 0.01) {
-                newPosition = Optional.ofNullable(
-                        getSession().createQuery(GET_MAX_SORTING_ORDER, Double.class).getSingleResult()
-                ).orElse(0.0) + 1;
-            }
-            group.setSortingOrder(newPosition);
-        } else {
-            group.setSortingOrder(1.0);
-            changeGroupOrderOffset(0.0);
-        }
-        super.update(group);
-        return group;
+    public Optional<Double> getMaxSortingOrder() {
+        log.debug("Entered getMaxSortingOrder()");
+        return getSession().createQuery(GET_MAX_SORTING_ORDER, Double.class)
+                .uniqueResultOptional();
     }
 
-
-    private int changeGroupOrderOffset(Double order) {
+    /**
+     * The method is used to change group's sorting order
+     *
+     * @param order sorting order from which offseting will start
+     */
+    @Override
+    public void changeGroupOrderOffset(Double order) {
+        log.info("Entered changeGroupOffset({})", order);
         TypedQuery<Group> groupTypedQuery = getSession().createQuery(UPDATE_GROUP_OFFSET);
         groupTypedQuery.setParameter("position", order);
         int updated = groupTypedQuery.executeUpdate();
         log.debug("Updated order of {} groups", updated);
-        return updated;
+    }
+
+    /**
+     * The method is used to retrieve sorting order by group's id
+     *
+     * @param id group's id which sorting order needs to be retrieved
+     * @return sorting order of the group
+     */
+    @Override
+    public Optional<Double> getSortingOrderById(Long id) {
+        log.info("Entered getSortingOrderById({})", id);
+        return getSession().createQuery(GET_ORDER_BY_ID, Double.class)
+                .setParameter("id", id)
+                .uniqueResultOptional();
     }
 
 

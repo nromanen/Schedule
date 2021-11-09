@@ -100,6 +100,14 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return buildResponseEntity(apiError);
     }
 
+    @ExceptionHandler(SortingOrderNotExistsException.class)
+    protected ResponseEntity<Object> handleSortingOrderNotExists(SortingOrderNotExistsException exception) {
+        ApiError apiError = new ApiError(NOT_FOUND, exception);
+        apiError.setMessage(exception.getShortMessage());
+        log.error(exception.getMessage());
+        return buildResponseEntity(apiError);
+    }
+
     // Handles javax.validation.ConstraintViolationException. Thrown when @Validated fails.
     @ExceptionHandler(javax.validation.ConstraintViolationException.class)
     protected ResponseEntity<Object> handleConstraintViolation(

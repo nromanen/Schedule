@@ -250,20 +250,31 @@ public class GroupServiceTest {
 
     @Test
     public void saveAfterOrder() {
-        when(groupRepository.saveGroupAfterOrder(group, 1L)).thenReturn(group);
+        when(groupRepository.getMaxSortingOrder()).thenReturn(Optional.of(1.0));
+        when(groupRepository.findById(1L)).thenReturn(Optional.of(new Group()));
+        doNothing().when(groupRepository).changeGroupOrderOffset(2.0);
+        when(groupRepository.save(group)).thenReturn(group);
 
-        Group actual = groupRepository.saveGroupAfterOrder(group, 1L);
+        Group actual = groupService.saveAfterOrder(group, 1L);
         assertEquals(group, actual);
-        verify(groupRepository).saveGroupAfterOrder(group, 1L);
+        verify(groupRepository).save(group);
+        verify(groupRepository).findById(1L);
+        verify(groupRepository).getMaxSortingOrder();
+        verify(groupRepository).changeGroupOrderOffset(2.0);
     }
 
     @Test
     public void updateGroupOrder() {
-        when(groupRepository.updateGroupOrder(group, 1L)).thenReturn(group);
-
-        Group actual = groupRepository.updateGroupOrder(group, 1L);
+        when(groupRepository.getNextPosition(0.0)).thenReturn(Optional.of(0.0));
+        when(groupRepository.getMaxSortingOrder()).thenReturn(Optional.of(1.0));
+        when(groupRepository.findById(1L)).thenReturn(Optional.of(group));
+        when(groupRepository.update(group)).thenReturn(group);
+        Group actual = groupService.updateGroupOrder(group, 1L);
         assertEquals(group, actual);
-        verify(groupRepository).updateGroupOrder(group, 1L);
+        verify(groupRepository).getNextPosition(0.0);
+        verify(groupRepository).getMaxSortingOrder();
+        verify(groupRepository).update(group);
+        verify(groupRepository).findById(1L);
     }
 
 }
