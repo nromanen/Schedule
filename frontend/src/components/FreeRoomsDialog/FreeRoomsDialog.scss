@@ -1,8 +1,82 @@
 @import '../../styles/forms.scss';
 @import '../../styles/colors.scss';
-
+@import '../../styles/variables.scss';
 
 .free-room-form {
-   .form-select{}
+    margin-left: 5px;
+    width: 205px;
+    .form-select {
+        @extend .form-input;
+        margin-top: 10px;
+    }
+    .app-button-container {
+        margin-top: 15px;
+        .common-button {
+            width: $w-full;
+        }
+    }
+    h3 {
+        text-align: center;
+    }
+}
+.MuiList-root {
+    .hidden {
+        display: none;
+    }
+}
+.dialog-body-container {
+    display: flex;
+    @media (max-width: $md-width) {
+        display: flex;
+        flex-direction: column-reverse;
+        justify-items: center;
+    }
+}
+.free-rooms-container {
+    position: relative;
+    height: 60vh;
+    width: 60vw;
+    overflow-y: auto;
+    margin: 2px 10px;
+    @media (max-width: $md-width) {
+        width: 55vw;
+        height: 50vh;
+    }
+}
+.free-rooms-form-container {
+    display: flex;
+    flex-wrap: wrap;
+    width: 270px;
+    padding: {
+        left: 20px;
+    }
+    border-left: 1px solid $light-gray;
+    align-content: center;
+    justify-content: center;
+    @media (max-width: $md-width) {
+        width: $w-full;
+        border-left: none;
+        padding-left: none;
+        padding-bottom: 20px;
+        border-bottom: 1px solid $light-gray;
+    }
+}
+.room-icon-container,
+.loading-rooms {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    top: $h-50;
+    left: $w-50;
+    transform: translate(-50%, -50%);
+}
 
+.room-icon {
+    place-self: center;
+    font-size: 75px;
+    color: $blue;
+}
+.description-text {
+    margin-top: 10px;
+    color: $gray;
 }

@@ -44,7 +44,6 @@ export {
     getClassScheduleOne,
     setClassScheduleList,
 } from './class';
-export { clearFreeRooms, showFreeRooms } from './freeRooms';
 export {
     addGroup,
     clearGroupSusses,

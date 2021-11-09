@@ -37,6 +37,7 @@
 }
 
 .form-input {
+    width: 100%;
     .MuiFormLabel-root {
         &.Mui-focused {
             color: $blue;
@@ -76,5 +77,37 @@
     text-decoration: none;
     &:hover {
         text-decoration: underline;
+    }
+}
+
+.app-button-container {
+    .common-button,
+    .choose-button,
+    .upload-file-button {
+        background-color: $blue;
+        color: $snowy-white;
+        &:hover {
+            background-color: $blue-hover;
+        }
+    }
+    .common-button,
+    .choose-button,
+    .upload-file-button,
+    .close-button {
+        text-transform: none;
+        &:disabled {
+            color: $gray;
+            background-color: $light-gray;
+        }
+    }
+    .close-button {
+        background-color: $snowy-white;
+        border: 1px solid $light-gray;
+        &:hover {
+            background-color: $light-clear-gray;
+        }
+        .MuiButton-label {
+            color: $black;
+        }
     }
 }

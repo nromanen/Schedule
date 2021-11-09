@@ -152,3 +152,5 @@ export const MERGE_ROLE_PAGE_TITLE = 'MergeRolePage_management_title';
 export const CHANGES_TITLE = 'Changes_management_title';
 export const BUSY_ROOMS_TITLE = 'BusyRooms_management_title';
 export const GENERAL_TITLE = 'General_management_title';
+export const COMMON_SEARCH_FREE_ROOMS_TITLE = 'common:search_params';
+export const COMMON_FREE_ROOMS_LIST_EMPTY = 'common:free-rooms-list-empty';

@@ -181,5 +181,7 @@
     "hour_one": "<0>{{count}}</0> hour",
     "hour_other": "<0>{{count}}</0> hours",
     "move_label": "Move",
-    "more_label": "More"
+    "more_label": "More",
+    "search_params": "Search options for available rooms",
+    "free-rooms-list-empty": "The list of available rooms is empty"
 }

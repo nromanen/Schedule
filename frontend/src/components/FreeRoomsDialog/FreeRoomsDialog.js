@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import Card from '../../share/Card/Card';
-import FreeRoomForm from './freeRoomForm';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import FreeRoomForm from '../../containers/Rooms/FreeRoomsForm';
 import { getClassScheduleListService } from '../../services/classService';
 import CustomDialog from '../../containers/Dialogs/CustomDialog';
 import { dialogCloseButton } from '../../constants/dialogs';
 import './FreeRoomsDialog.scss';
-import { ROOM_LABEL, FIND_FREE_ROOM } from '../../constants/translationLabels/formElements';
-import { TYPE_LABEL } from '../../constants/translationLabels/common';
+import { FIND_FREE_ROOM } from '../../constants/translationLabels/formElements';
+import FreeRoomsCardList from './FreeRoomsCardList';
 
 const FreeRoomsDialog = (props) => {
-    const { getFreeRoomsByParams } = props;
+    const { clearFreeRooms, freeRooms, isLoading } = props;
     const { t } = useTranslation('formElements');
     const [isOpenFreeRoomDialog, setIsOpenFreeRoomDialog] = useState(false);
 
@@ -20,10 +20,7 @@ const FreeRoomsDialog = (props) => {
 
     const handleIsOpenFreeRoomDialog = () => {
         setIsOpenFreeRoomDialog((prev) => !prev);
-    };
-    const submit = (values) => {
-        console.log(values);
-        // getFreeRoomsByParams(values);
+        clearFreeRooms();
     };
 
     return (
@@ -33,33 +30,24 @@ const FreeRoomsDialog = (props) => {
             </span>
             {isOpenFreeRoomDialog && (
                 <CustomDialog
-                    title={t(FIND_FREE_ROOM)}
                     open={isOpenFreeRoomDialog}
                     onClose={handleIsOpenFreeRoomDialog}
                     buttons={[dialogCloseButton(handleIsOpenFreeRoomDialog)]}
-                    maxWidth="lg"
                     aria-labelledby="form-dialog-title"
                 >
-                    <div className="cards-container ">
-                        <aside className="free-rooms__panel">
-                            <div className="freeRoomForms">
-                                <FreeRoomForm onSubmit={submit} />
-                            </div>
-                        </aside>
-                        <section className="container-flex-wrap wrapper">
-                            {props.freeRooms.map((freeRoom) => (
-                                <Card key={freeRoom.id} className="container">
-                                    <div className="freeRoomCard">
-                                        <span> {`${t(ROOM_LABEL)}:`} </span>
-                                        <h2 className="room-card__number">{freeRoom.name}</h2>
-                                        <span>{`${t(TYPE_LABEL)}:`}</span>
-                                        <h2 className="room-card__number">
-                                            {freeRoom.type.description}
-                                        </h2>
-                                    </div>
-                                </Card>
-                            ))}
+                    <div className="dialog-body-container">
+                        <section className="free-rooms-container">
+                            {isLoading ? (
+                                <div className="loading-rooms">
+                                    <CircularProgress size="70px" className="loading-circle" />
+                                </div>
+                            ) : (
+                                <FreeRoomsCardList freeRooms={freeRooms} t={t} />
+                            )}
                         </section>
+                        <aside className="free-rooms-form-container">
+                            <FreeRoomForm />
+                        </aside>
                     </div>
                 </CustomDialog>
             )}

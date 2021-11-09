@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { reduxForm, Field, change, untouch } from 'redux-form';
-import { connect } from 'react-redux';
+import { Field } from 'redux-form';
 import { isNil } from 'lodash';
 import Button from '@material-ui/core/Button';
 import MenuItem from '@material-ui/core/MenuItem';
 import { useTranslation } from 'react-i18next';
 import { required } from '../../validation/validateFields';
 import SelectField from '../../share/renderedFields/select';
-import { FREE_ROOMS } from '../../constants/reduxForms';
 import './FreeRoomsDialog.scss';
 import {
     FORM_SEMESTER_FREE_ROOMS,
@@ -16,8 +14,7 @@ import {
     FORM_CLASS_FREE_ROOMS,
     FORM_SUBMIT_BUTTON_LABEL,
 } from '../../constants/translationLabels/formElements';
-import { getAllSemestersStart } from '../../actions/semesters';
-import { getFreeRoomsStart } from '../../actions/rooms';
+import { COMMON_SEARCH_FREE_ROOMS_TITLE } from '../../constants/translationLabels/common';
 
 const FreeRoomForm = (props) => {
     const {
@@ -28,6 +25,7 @@ const FreeRoomForm = (props) => {
         submitting,
         semesters,
         clearField,
+        setRoomsLoading,
         initialValues,
     } = props;
     const [semesterClasses, setSemesterClasses] = useState([]);
@@ -53,13 +51,15 @@ const FreeRoomForm = (props) => {
         }
     }, [semesters]);
 
-    const searchFreeRooms = (values) => {
-        getFreeRoomsByParams(values);
+    const searchHandler = (params) => {
+        getFreeRoomsByParams(params);
+        setRoomsLoading(true);
     };
 
     return (
-        <>
-            <form className="free-room-form" onSubmit={handleSubmit(searchFreeRooms)}>
+        <form className="free-room-form" onSubmit={handleSubmit(searchHandler)}>
+            <h3>{t(COMMON_SEARCH_FREE_ROOMS_TITLE)}</h3>
+            <div className="field-container">
                 <Field
                     name="semesterId"
                     component={SelectField}
@@ -83,7 +83,7 @@ const FreeRoomForm = (props) => {
                     className="form-select"
                     validate={[required]}
                 >
-                    <MenuItem value=""></MenuItem>
+                    <MenuItem value="" className="hidden" disabled />
                     {weeks.map((week) => (
                         <MenuItem key={week} value={`${week}`}>
                             {t(`common:${week.toLowerCase()}_week`)}
@@ -98,7 +98,7 @@ const FreeRoomForm = (props) => {
                     className="form-select"
                     validate={[required]}
                 >
-                    <MenuItem value=""></MenuItem>
+                    <MenuItem value="" className="hidden" disabled />
                     {semesterDays.map((day) => (
                         <MenuItem key={day} value={`${day}`}>
                             {t(`common:day_of_week_${day}`)}
@@ -111,10 +111,9 @@ const FreeRoomForm = (props) => {
                     label={t(FORM_CLASS_FREE_ROOMS)}
                     type="text"
                     className="form-select"
-                    displayEmpty
                     validate={[required]}
                 >
-                    <MenuItem value=""></MenuItem>
+                    <MenuItem value="" className="hidden" disabled />
                     {semesterClasses.map((item) => {
                         const classTitle = item.class_name;
                         return (
@@ -124,42 +123,19 @@ const FreeRoomForm = (props) => {
                         );
                     })}
                 </Field>
-                <div className="form-buttons-container freeRoomsButtons">
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        disabled={pristine || submitting}
-                        className="buttons-style"
-                        type="submit"
-                    >
-                        {t(FORM_SUBMIT_BUTTON_LABEL)}
-                    </Button>
-                </div>
-            </form>
-        </>
+            </div>
+            <div className="app-button-container">
+                <Button
+                    variant="contained"
+                    disabled={pristine || submitting}
+                    className="common-button"
+                    type="submit"
+                >
+                    {t(FORM_SUBMIT_BUTTON_LABEL)}
+                </Button>
+            </div>
+        </form>
     );
 };
 
-const mapStateToProps = (state) => ({
-    initialValues: { semesterId: state.schedule.currentSemester.id },
-    freeRooms: state.rooms.freeRooms,
-    semesters: state.semesters.semesters,
-});
-const mapDispatchToProps = (dispatch) => ({
-    getAllSemestersItems: () => dispatch(getAllSemestersStart()),
-    getFreeRoomsByParams: (params) => dispatch(getFreeRoomsStart(params)),
-    clearField: (fieldName) => {
-        dispatch(change(FREE_ROOMS, fieldName));
-        dispatch(untouch(FREE_ROOMS, fieldName));
-    },
-});
-
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps,
-)(
-    reduxForm({
-        form: FREE_ROOMS,
-        enableReinitialize: true,
-    })(FreeRoomForm),
-);
+export default FreeRoomForm;

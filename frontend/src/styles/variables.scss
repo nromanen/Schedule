@@ -1,10 +1,28 @@
-$btn-size: 20px;
 $schedule-button-size: 15px;
 
-$bold-border: 1px solid $thunck-color-hover;
+// $bold-border: 1px solid $thunck-color-hover;
 $regular-border: 1px solid #e0e0e0;
 
+//width and height constants
+$h-screen: 100vh;
+$w-screen: 100vw;
+$h-full: 100%;
+$w-full: 100%;
+$h-75: 75%;
+$w-75: 75%;
+$h-50: 50%;
+$w-50: 50%;
+$h-25: 25%;
+$w-25: 25%;
+$h-10: 10%;
+$w-10: 10%;
+
+// fonts constants
 $font-xs: 12px;
 $font-sm: 14px;
 $font-base: 16px;
+$btn-size: 20px;
+
+//responsive constants
 $md-width: 768px;
+$schedule-pc-screen: 1000px;

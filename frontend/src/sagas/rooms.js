@@ -1,7 +1,7 @@
 import { call, put, takeLatest, takeEvery } from 'redux-saga/effects';
 import { reset } from 'redux-form';
 import * as actionTypes from '../actions/actionsType';
-import { setLoading } from '../actions/loadingIndicator';
+import { setLoading, setRoomsLoading } from '../actions/loadingIndicator';
 import { setOpenSuccessSnackbar, setOpenErrorSnackbar } from '../actions/snackbar';
 import { axiosCall } from '../services/axios';
 import { ROOM_URL, DISABLED_ROOMS_URL, ROOM_TYPES_URL, FREE_ROOMS_URL } from '../constants/axios';
@@ -175,6 +175,8 @@ export function* getFreeRoomsByParams({ params }) {
         yield put(getFreeRoomsSuccess(data));
     } catch (error) {
         yield put(setOpenErrorSnackbar(createErrorMessage(error)));
+    } finally {
+        yield put(setRoomsLoading(false));
     }
 }
 

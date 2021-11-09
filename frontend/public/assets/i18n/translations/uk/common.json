@@ -179,5 +179,7 @@
     "hour_few": "<0>{{count}}</0> години",
     "hour_many": "<0>{{count}}</0> годин",
     "more_label": "Більше",
-    "move_label": "Перемістити"
+    "move_label": "Перемістити",
+    "search_params": "Параметри пошуку вільних кімнати",
+    "free-rooms-list-empty": "Список вільних кімнат порожній"
 }

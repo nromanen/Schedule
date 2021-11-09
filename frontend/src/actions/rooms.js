@@ -155,3 +155,7 @@ export const getFreeRoomsSuccess = (freeRooms) => ({
     type: actionsType.GET_FREE_ROOMS_SUCCESS,
     freeRooms,
 });
+
+export const clearFreeRooms = () => ({
+    type: actionsType.CLEAT_FREE_ROOMS,
+});
