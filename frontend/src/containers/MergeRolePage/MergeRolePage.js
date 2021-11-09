@@ -20,6 +20,7 @@ import {
     FORM_MERGE_BUTTON,
 } from '../../constants/translationLabels/formElements';
 import { MERGE_HEADER } from '../../constants/translationLabels/common';
+import { getTeacherWithoutAccountStart } from '../../actions/teachers';
 
 const useStyles = makeStyles(() => ({
     autoCompleteField: {
@@ -39,10 +40,10 @@ const MergeRolePage = (props) => {
 
     const classes = useStyles();
 
-    const { teachers } = props;
+    const { teachers, gettTeachersWithoutAccount } = props;
     const { users } = props;
 
-    useEffect(() => getTeachersWithoutAccount(), []);
+    useEffect(() => gettTeachersWithoutAccount(), []);
     useEffect(() => getUsersService(), []);
 
     const defaultPropsTeachers = {
@@ -130,4 +131,8 @@ const mapStateToProps = (state) => ({
     loading: state.loadingIndicator.loading,
 });
 
-export default connect(mapStateToProps)(MergeRolePage);
+const mapDispatchToProps = (dispatch) => ({
+    gettTeachersWithoutAccount: () => dispatch(getTeacherWithoutAccountStart()),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(MergeRolePage);

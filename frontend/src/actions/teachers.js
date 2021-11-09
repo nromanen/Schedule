@@ -55,6 +55,20 @@ export const showAllTeachersStart = (teachers) => {
         result: teachers,
     };
 };
+
+export const getTeacherWithoutAccountStart = (teachers) => {
+    return {
+        type: actionsType.GET_TEACHERS_WITHOUT_ACCOUNT_START,
+        result: teachers,
+    };
+};
+
+export const getTeacherWithoutAccountSuccess = (teachers) => {
+    return {
+        type: actionsType.GET_TEACHERS_WITHOUT_ACCOUNT_SUCCESS,
+        result: teachers,
+    };
+};
 export const getAllTeachersByDepartmentId = (teachers) => {
     return {
         type: actionsType.GET_TEACHERS_BY_DEPARTMENT,

@@ -1,5 +1,9 @@
 import { call, put, takeLatest } from 'redux-saga/effects';
-import { DISABLED_TEACHERS_URL, TEACHER_URL } from '../constants/axios';
+import {
+    DISABLED_TEACHERS_URL,
+    TEACHERS_WITHOUT_ACCOUNT_URL,
+    TEACHER_URL,
+} from '../constants/axios';
 import { DELETE, GET } from '../constants/methods';
 import { axiosCall } from '../services/axios';
 import { createErrorMessage, createMessage } from '../utils/sagaUtils';
@@ -12,6 +16,7 @@ import { deleteTeacher, setDisabledTeachers, setLoading, showAllTeachers } from 
 import { setOpenSuccessSnackbar } from '../actions/snackbar';
 import { getDisabledTeachersService } from '../services/teacherService';
 import * as actionTypes from '../actions/actionsType';
+import { getTeacherWithoutAccountSuccess } from '../actions/teachers';
 
 export function* removeTeacher({ result }) {
     try {
@@ -54,8 +59,19 @@ export function* getDisabledTeachers() {
     }
 }
 
+export function* getTeachersWithoutAccount() {
+    try {
+        const { data } = yield call(axiosCall, TEACHERS_WITHOUT_ACCOUNT_URL, GET);
+
+        yield put(getTeacherWithoutAccountSuccess(data));
+    } catch (error) {
+        yield put(createErrorMessage(error));
+    }
+}
+
 export default function* watchTeachers() {
     yield takeLatest(actionTypes.DELETE_TEACHER_START, removeTeacher);
     yield takeLatest(actionTypes.SHOW_ALL_TEACHERS_START, showTeachers);
     yield takeLatest(actionTypes.SET_DISABLED_TEACHERS_START, getDisabledTeachers);
+    yield takeLatest(actionTypes.GET_TEACHERS_WITHOUT_ACCOUNT_START, getTeachersWithoutAccount);
 }
