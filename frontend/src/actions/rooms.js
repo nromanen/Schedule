@@ -15,7 +15,7 @@ export const addRoomStart = (room) => {
 
 export const deleteRoomSuccess = (roomId, isDisabled) => {
     return {
-        type: actionsType.DELETE_ROOM_SUCEESS,
+        type: actionsType.DELETE_ROOM_SUCCESS,
         roomId,
         isDisabled,
     };

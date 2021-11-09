@@ -5,7 +5,7 @@ import { ROOM_TYPES_URL } from '../constants/axios';
 import axios from '../helper/axios';
 import {
     getAllRoomTypesSuccess,
-    deleteType,
+    deleteRoomTypeSuccess,
     updateOneType,
     postOneType,
     selectRoomType,
@@ -30,12 +30,12 @@ export const getAllRoomTypesService = () => {
         })
         .catch((error) => errorHandler(error));
 };
-
+// created saga
 export const deleteTypeService = (roomTypeId) => {
     axios
         .delete(`${ROOM_TYPES_URL}/${roomTypeId}`)
         .then(() => {
-            store.dispatch(deleteType(roomTypeId));
+            store.dispatch(deleteRoomTypeSuccess(roomTypeId));
             successHandler(
                 i18n.t(BACK_END_SUCCESS_OPERATION, {
                     cardType: `${i18n.t(FORM_ROOM_LABEL)} ${i18n.t(FORM_TYPE_LABEL)}`,

@@ -18,11 +18,9 @@ const reducer = (
             return updateObject(state, {
                 roomTypes: [...action.roomType],
             });
-        case actionTypes.DELETE_TYPE:
+        case actionTypes.DELETE_ROOM_TYPE_SUCCESS:
             return updateObject(state, {
-                roomTypes: [
-                    ...state.roomTypes.filter((roomTypes) => roomTypes.id !== action.result),
-                ],
+                roomTypes: [...state.roomTypes.filter((type) => type.id !== action.roomTypeId)],
             });
 
         case actionTypes.UPDATE_ONE_TYPE: {

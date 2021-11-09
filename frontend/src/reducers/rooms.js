@@ -24,7 +24,7 @@ const reducer = (
                 oneRoom: {},
                 rooms: [...state.rooms, action.result].sort(compare),
             });
-        case actionTypes.DELETE_ROOM_SUCEESS:
+        case actionTypes.DELETE_ROOM_SUCCESS:
             if (action.isDisabled) {
                 return updateObject(state, {
                     disabledRooms: [

@@ -66,7 +66,7 @@ export {
     updateOneRoom,
 } from './rooms';
 export {
-    deleteType,
+    deleteRoomTypeSuccess,
     getAllRoomTypesSuccess,
     selectRoomType,
     postOneType,

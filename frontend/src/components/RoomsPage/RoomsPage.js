@@ -13,19 +13,10 @@ import {
     toggleRoomVisibilityStart,
     deleteRoomStart,
 } from '../../actions/rooms';
-import { getAllRoomTypesStart } from '../../actions/roomTypes';
-import {
-    getAllRoomTypesService,
-    addNewTypeService,
-    deleteTypeService,
-} from '../../services/roomTypesService';
+import { getAllRoomTypesStart, deleteRoomTypeStart } from '../../actions/roomTypes';
+import { addNewTypeService } from '../../services/roomTypesService';
 import { setIsOpenConfirmDialog } from '../../actions/dialog';
-import {
-    deleteRoomCardService,
-    clearRoomOneService,
-    setDisabledRoomsService,
-    setEnabledRoomsService,
-} from '../../services/roomService';
+import { clearRoomOneService } from '../../services/roomService';
 import RoomList from './RoomsList/RoomsList';
 
 const RoomPage = (props) => {
@@ -42,6 +33,7 @@ const RoomPage = (props) => {
         getAllRoomTypes,
         toggleRoomVisibility,
         deleteRoomSuccess,
+        deleteRoomType,
     } = props;
 
     const [isDisabled, setIsDisabled] = useState(false);
@@ -86,7 +78,7 @@ const RoomPage = (props) => {
     const handleConfirm = () => {
         setOpenConfirmDialog(false);
         if (deleteLabel === cardType.TYPE) {
-            deleteTypeService(selectedId);
+            deleteRoomType(selectedId);
         }
         if (deleteLabel === cardType.ROOM) {
             if (confirmDialogType !== dialogTypes.DELETE_CONFIRM) {
@@ -161,6 +153,7 @@ const mapDispatchToProps = (dispatch) => ({
     toggleRoomVisibility: (values, isDisabled) =>
         dispatch(toggleRoomVisibilityStart(values, isDisabled)),
     deleteRoomSuccess: (roomId, isDisabled) => dispatch(deleteRoomStart(roomId, isDisabled)),
+    deleteRoomType: (roomTypeId) => dispatch(deleteRoomTypeStart(roomTypeId)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(RoomPage);

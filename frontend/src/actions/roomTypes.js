@@ -20,10 +20,17 @@ export const getAllRoomTypesStart = () => {
     };
 };
 
-export const deleteType = (roomType) => {
+export const deleteRoomTypeSuccess = (roomTypeId) => {
     return {
-        type: actionsType.DELETE_TYPE,
-        result: roomType,
+        type: actionsType.DELETE_ROOM_TYPE_SUCCESS,
+        roomTypeId,
+    };
+};
+
+export const deleteRoomTypeStart = (roomTypeId) => {
+    return {
+        type: actionsType.DELETE_ROOM_TYPE_START,
+        roomTypeId,
     };
 };
 

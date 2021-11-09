@@ -15,14 +15,14 @@ import {
     getListOfDisabledRoomsSuccess,
     deleteRoomSuccess,
 } from '../actions/rooms';
-import { getAllRoomTypesSuccess } from '../actions/roomTypes';
+import { getAllRoomTypesSuccess, deleteRoomTypeSuccess } from '../actions/roomTypes';
 import {
     BACK_END_SUCCESS_OPERATION,
     UPDATED_LABEL,
     CREATED_LABEL,
     DELETED_LABEL,
 } from '../constants/translationLabels/serviceMessages';
-import { FORM_ROOM_LABEL } from '../constants/translationLabels/formElements';
+import { FORM_ROOM_LABEL, FORM_TYPE_LABEL } from '../constants/translationLabels/formElements';
 
 export function* getListOfRooms() {
     try {
@@ -115,6 +115,18 @@ export function* getAllRoomTypes() {
     }
 }
 
+export function* deleteRoomTypeItem({ roomTypeId }) {
+    try {
+        const requestUrl = `${ROOM_TYPES_URL}/${roomTypeId}`;
+        yield call(axiosCall, requestUrl, 'DELETE');
+        yield put(deleteRoomTypeSuccess(roomTypeId));
+        const message = createMessage(BACK_END_SUCCESS_OPERATION, FORM_TYPE_LABEL, DELETED_LABEL);
+        yield put(setOpenSuccessSnackbar(message));
+    } catch (error) {
+        yield put(setOpenErrorSnackbar(createErrorMessage(error)));
+    }
+}
+
 function* watchRooms() {
     yield takeLatest(actionTypes.GET_LIST_OF_ROOMS_START, getListOfRooms);
     yield takeLatest(actionTypes.GET_LIST_OF_DISABLED_ROOMS_START, getListOfDisabledRooms);
@@ -122,6 +134,7 @@ function* watchRooms() {
     yield takeEvery(actionTypes.ADD_ROOM_START, addRoomItem);
     yield takeEvery(actionTypes.UPDATE_ROOM_START, updateRoomItem);
     yield takeEvery(actionTypes.DELETE_ROOM_START, deleteRoomItem);
+    yield takeEvery(actionTypes.DELETE_ROOM_TYPE_START, deleteRoomTypeItem);
     yield takeEvery(actionTypes.HANDLE_ROOM_FORM_SUBMIT_START, handleRoomFormSubmit);
     yield takeEvery(actionTypes.TOGGLE_ROOM_VISIBILITY_START, toggleRoomsVisibility);
 }
