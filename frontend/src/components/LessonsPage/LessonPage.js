@@ -26,7 +26,7 @@ import { showAllSubjectsService } from '../../services/subjectService';
 import { showAllTeachersService } from '../../services/teacherService';
 
 import { FORM_GROUP_LABEL } from '../../constants/translationLabels/formElements';
-import { HTTP } from '../../constants/formats';
+import { trasformLink } from '../../utils/trasformLink';
 
 const LessonPage = (props) => {
     const {
@@ -75,7 +75,7 @@ const LessonPage = (props) => {
     }, []);
 
     const submitLessonForm = (card) => {
-        const link = !card.linkToMeeting.includes(HTTP) ? `http://${card.linkToMeeting}` : '';
+        const link = trasformLink(card.linkToMeeting);
         const cardObj = cardObjectHandler(card, groupId, currentSemester, link);
 
         if (!checkUniqLesson(lessons, cardObj)) {
