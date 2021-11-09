@@ -6,7 +6,6 @@ import { useTranslation } from 'react-i18next';
 import { GiSightDisabled, IoMdEye } from 'react-icons/all';
 import { dialogTypes } from '../../../constants/dialogs';
 import Card from '../../../share/Card/Card';
-
 import { ROOM_LABEL } from '../../../constants/translationLabels/formElements';
 import {
     TYPE_LABEL,
@@ -14,6 +13,7 @@ import {
     COMMON_SET_ENABLED,
 } from '../../../constants/translationLabels/common';
 import { cardType } from '../../../constants/cardType';
+import './RoomCard.scss';
 
 const RoomCard = (props) => {
     const { room, isDisabled, showConfirmDialog, setSelectRoom } = props;
