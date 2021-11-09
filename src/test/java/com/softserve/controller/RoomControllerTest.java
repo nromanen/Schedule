@@ -6,6 +6,7 @@ import com.softserve.config.MyWebAppInitializer;
 import com.softserve.config.WebMvcConfig;
 import com.softserve.dto.RoomDTO;
 import com.softserve.dto.RoomTypeDTO;
+import com.softserve.dto.RoomWithSortOrderDTO;
 import com.softserve.entity.Room;
 
 import com.softserve.entity.enums.EvenOdd;
@@ -27,6 +28,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.time.DayOfWeek;
+import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -78,11 +80,11 @@ public class RoomControllerTest {
     @Test
     public void getFreeRoomsBySpecificPeriodDayOfWeekAndNumberOfWeek() throws Exception {
         mockMvc.perform(get("/rooms/free")
-                .param("semesterId", "1")
-                .param("classId", "1")
-                .param("dayOfWeek", DayOfWeek.MONDAY.toString())
-                .param("evenOdd", EvenOdd.EVEN.toString())
-                .accept(MediaType.APPLICATION_JSON))
+                        .param("semesterId", "1")
+                        .param("classId", "1")
+                        .param("dayOfWeek", DayOfWeek.MONDAY.toString())
+                        .param("evenOdd", EvenOdd.EVEN.toString())
+                        .accept(MediaType.APPLICATION_JSON))
                 .andExpect(content().contentType("application/json"));
     }
 
@@ -96,7 +98,7 @@ public class RoomControllerTest {
         roomDtoForSave.setType(roomTypeDTO);
 
         mockMvc.perform(post("/rooms").content(objectMapper.writeValueAsString(roomDtoForSave))
-                .contentType(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
     }
 
@@ -113,7 +115,7 @@ public class RoomControllerTest {
         Room roomForCompare = new RoomMapperImpl().convertToEntity(roomDtoForUpdate);
 
         mockMvc.perform(put("/rooms", 4).content(objectMapper.writeValueAsString(roomDtoForUpdate))
-                .contentType(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(roomForCompare.getId()))
                 .andExpect(jsonPath("$.type").value(roomForCompare.getType()))
@@ -123,7 +125,7 @@ public class RoomControllerTest {
     @Test
     public void deleteExistRoom() throws Exception {
         mockMvc.perform(delete("/rooms/{id}", 5)
-                .contentType(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
 
@@ -142,7 +144,7 @@ public class RoomControllerTest {
         roomDtoForSave.setType(roomTypeDTO);
 
         mockMvc.perform(post("/rooms").content(objectMapper.writeValueAsString(roomDtoForSave))
-                .contentType(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isBadRequest());
     }
@@ -155,7 +157,7 @@ public class RoomControllerTest {
         roomDtoForUpdate.setType(null);
 
         mockMvc.perform(put("/rooms", 4).content(objectMapper.writeValueAsString(roomDtoForUpdate))
-                .contentType(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isInternalServerError());
     }
@@ -166,4 +168,70 @@ public class RoomControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"));
     }
+
+    @Test
+    public void getAllRoomsOrdered() throws Exception {
+        mockMvc.perform(get("/rooms/ordered").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json"));
+    }
+
+    @Test
+    public void SetRoomAfterId() throws Exception{
+
+        RoomTypeDTO roomTypeDTO = new RoomTypeDTO();
+        roomTypeDTO.setId(4L);
+        roomTypeDTO.setDescription("Small auditory");
+
+        RoomWithSortOrderDTO roomSave = new RoomWithSortOrderDTO();
+        roomSave.setName("Save after 5");
+        roomSave.setType(roomTypeDTO);
+
+        mockMvc.perform(post("/rooms/after/{id}", 5)
+                        .content(objectMapper.writeValueAsString(roomSave))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated());
+
+    }
+
+    @Test
+    public void SetRoomFirstOrder() throws Exception{
+
+        RoomTypeDTO roomTypeDTO = new RoomTypeDTO();
+        roomTypeDTO.setId(5L);
+        roomTypeDTO.setDescription("Small auditory");
+
+        RoomWithSortOrderDTO roomSave = new RoomWithSortOrderDTO();
+        roomSave.setName("Save First");
+        roomSave.setType(roomTypeDTO);
+
+        mockMvc.perform(post("/rooms/after/{id}", 0)
+                        .content(objectMapper.writeValueAsString(roomSave))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated());
+
+    }
+
+    @Test
+    public void UpdateRoomSetOrder() throws Exception{
+
+        RoomTypeDTO roomTypeDTO = new RoomTypeDTO();
+        roomTypeDTO.setId(5L);
+        roomTypeDTO.setDescription("Medium auditory");
+        RoomDTO roomDtoForUpdate = new RoomDTO();
+        roomDtoForUpdate.setId(4L);
+        roomDtoForUpdate.setName("update medium room");
+        roomDtoForUpdate.setType(roomTypeDTO);
+
+        Room roomForCompare = new RoomMapperImpl().convertToEntity(roomDtoForUpdate);
+
+        mockMvc.perform(put("/rooms/after/{id}", 5).content(objectMapper.writeValueAsString(roomDtoForUpdate))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(roomForCompare.getId()))
+                .andExpect(jsonPath("$.type").value(roomForCompare.getType()))
+                .andExpect(jsonPath("$.name").value(roomForCompare.getName()));
+
+    }
+
 }

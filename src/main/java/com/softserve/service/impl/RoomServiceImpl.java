@@ -151,4 +151,20 @@ public class RoomServiceImpl implements RoomService {
     public boolean isRoomExists(Room room) {
         return roomRepository.countRoomDuplicates(room) != 0;
     }
+
+    @Override
+    public List<Room> getAllOrdered() {
+        List<Room> rooms = roomRepository.getAllOrdered();
+        return rooms;
+    }
+
+    @Override
+    public Room saveRoomAfterId(Room room, Long afterId) {
+        return roomRepository.saveRoomAfterId(room, afterId);
+    }
+
+    @Override
+    public Room updateRoomAfterId(Room room, Long afterId) {
+        return roomRepository.updateRoomAfterId(room, afterId);
+    }
 }

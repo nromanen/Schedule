@@ -13,4 +13,8 @@ public interface RoomRepository extends BasicRepository<Room, Long>  {
 
     Long countRoomDuplicates(Room room);
     List<Room> getDisabled();
+
+    List<Room> getAllOrdered();
+    Room saveRoomAfterId(Room room, Long afterId);
+    Room updateRoomAfterId(Room room, Long afterId);
 }
