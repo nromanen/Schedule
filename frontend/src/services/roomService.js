@@ -43,6 +43,7 @@ export const getDisabledRoomsService = () => {
         })
         .catch((error) => errorHandler(error));
 };
+// created saga
 export const deleteRoomCardService = (id) => {
     axios
         .delete(`${ROOM_URL}/${id}`)
@@ -77,13 +78,13 @@ const put = (values) => {
         })
         .catch((error) => errorHandler(error));
 };
-
+// used directly in component
 export const setDisabledRoomsService = (room) => {
     const bufferRoom = room;
     bufferRoom.disable = true;
     put(bufferRoom);
 };
-
+// used directly in component
 export const setEnabledRoomsService = (room) => {
     const bufferRoom = room;
     bufferRoom.disable = false;

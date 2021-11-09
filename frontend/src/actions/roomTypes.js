@@ -47,3 +47,9 @@ export const selectRoomType = (typeId) => {
         typeId,
     };
 };
+export const handleRoomTypeFormSubmitStart = (values) => {
+    return {
+        type: actionsType.HANDLE_ROOM_TYPE_FORM_SUBMIT_START,
+        values,
+    };
+};

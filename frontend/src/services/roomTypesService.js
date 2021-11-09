@@ -21,7 +21,7 @@ import {
     DELETED_LABEL,
 } from '../constants/translationLabels/serviceMessages';
 import { FORM_ROOM_LABEL, FORM_TYPE_LABEL } from '../constants/translationLabels/formElements';
-
+// created saga
 export const getAllRoomTypesService = () => {
     axios
         .get(ROOM_TYPES_URL)
@@ -45,7 +45,7 @@ export const deleteTypeService = (roomTypeId) => {
         })
         .catch((error) => errorHandler(error));
 };
-
+// created saga
 export const putNewType = (values) => {
     axios
         .put(ROOM_TYPES_URL, values)
@@ -61,7 +61,7 @@ export const putNewType = (values) => {
         })
         .catch((error) => errorHandler(error));
 };
-
+// created saga
 export const postNewType = (values) => {
     axios
         .post(ROOM_TYPES_URL, values)
@@ -77,7 +77,7 @@ export const postNewType = (values) => {
         })
         .catch((error) => errorHandler(error));
 };
-
+// created saga
 export const addNewTypeService = (values) => {
     if (values.id) {
         putNewType(values);

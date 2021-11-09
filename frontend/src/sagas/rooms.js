@@ -6,7 +6,7 @@ import { setOpenSuccessSnackbar, setOpenErrorSnackbar } from '../actions/snackba
 import { axiosCall } from '../services/axios';
 import i18n from '../i18n';
 import { ROOM_URL, DISABLED_ROOMS_URL, ROOM_TYPES_URL } from '../constants/axios';
-import { ROOM_FORM } from '../constants/reduxForms';
+import { ROOM_FORM, ROOM_FORM_TYPE } from '../constants/reduxForms';
 import { createErrorMessage, createMessage } from '../utils/sagaUtils';
 import {
     updateOneRoom,
@@ -15,7 +15,12 @@ import {
     getListOfDisabledRoomsSuccess,
     deleteRoomSuccess,
 } from '../actions/rooms';
-import { getAllRoomTypesSuccess, deleteRoomTypeSuccess } from '../actions/roomTypes';
+import {
+    getAllRoomTypesSuccess,
+    deleteRoomTypeSuccess,
+    updateOneType,
+    postOneType,
+} from '../actions/roomTypes';
 import {
     BACK_END_SUCCESS_OPERATION,
     UPDATED_LABEL,
@@ -59,6 +64,7 @@ export function* updateRoomItem({ values }) {
         yield put(setOpenErrorSnackbar(createErrorMessage(error)));
     }
 }
+
 export function* addRoomItem({ values }) {
     try {
         const { data } = yield call(axiosCall, ROOM_URL, 'POST', values);
@@ -115,6 +121,41 @@ export function* getAllRoomTypes() {
     }
 }
 
+export function* updateRoomTypeItem({ values }) {
+    try {
+        const { data } = yield call(axiosCall, ROOM_TYPES_URL, 'PUT', values);
+        yield put(updateOneType(data));
+        yield put(reset(ROOM_FORM_TYPE));
+        const message = createMessage(BACK_END_SUCCESS_OPERATION, FORM_TYPE_LABEL, UPDATED_LABEL);
+        yield put(setOpenSuccessSnackbar(message));
+    } catch (error) {
+        yield put(setOpenErrorSnackbar(createErrorMessage(error)));
+    }
+}
+
+export function* addRoomTypeItem({ values }) {
+    try {
+        const { data } = yield call(axiosCall, ROOM_TYPES_URL, 'POST', values);
+        yield put(postOneType(data));
+        yield put(reset(ROOM_FORM_TYPE));
+        const message = createMessage(BACK_END_SUCCESS_OPERATION, FORM_TYPE_LABEL, CREATED_LABEL);
+        yield put(setOpenSuccessSnackbar(message));
+    } catch (error) {
+        yield put(setOpenErrorSnackbar(createErrorMessage(error)));
+    }
+}
+export function* handleRoomTypeFormSubmit({ values }) {
+    try {
+        if (values.id) {
+            yield call(updateRoomTypeItem, { values });
+        } else {
+            yield call(addRoomTypeItem, { values });
+        }
+    } catch (error) {
+        yield put(setOpenErrorSnackbar(createErrorMessage(error)));
+    }
+}
+
 export function* deleteRoomTypeItem({ roomTypeId }) {
     try {
         const requestUrl = `${ROOM_TYPES_URL}/${roomTypeId}`;
@@ -136,6 +177,7 @@ function* watchRooms() {
     yield takeEvery(actionTypes.DELETE_ROOM_START, deleteRoomItem);
     yield takeEvery(actionTypes.DELETE_ROOM_TYPE_START, deleteRoomTypeItem);
     yield takeEvery(actionTypes.HANDLE_ROOM_FORM_SUBMIT_START, handleRoomFormSubmit);
+    yield takeEvery(actionTypes.HANDLE_ROOM_TYPE_FORM_SUBMIT_START, handleRoomTypeFormSubmit);
     yield takeEvery(actionTypes.TOGGLE_ROOM_VISIBILITY_START, toggleRoomsVisibility);
 }
 

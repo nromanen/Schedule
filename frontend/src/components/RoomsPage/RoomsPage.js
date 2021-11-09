@@ -13,8 +13,11 @@ import {
     toggleRoomVisibilityStart,
     deleteRoomStart,
 } from '../../actions/rooms';
-import { getAllRoomTypesStart, deleteRoomTypeStart } from '../../actions/roomTypes';
-import { addNewTypeService } from '../../services/roomTypesService';
+import {
+    getAllRoomTypesStart,
+    deleteRoomTypeStart,
+    handleRoomTypeFormSubmitStart,
+} from '../../actions/roomTypes';
 import { setIsOpenConfirmDialog } from '../../actions/dialog';
 import { clearRoomOneService } from '../../services/roomService';
 import RoomList from './RoomsList/RoomsList';
@@ -32,8 +35,9 @@ const RoomPage = (props) => {
         getListOfDisabledRooms,
         getAllRoomTypes,
         toggleRoomVisibility,
-        deleteRoomSuccess,
+        deleteRoom,
         deleteRoomType,
+        handleRoomTypeFormSubmit,
     } = props;
 
     const [isDisabled, setIsDisabled] = useState(false);
@@ -84,7 +88,7 @@ const RoomPage = (props) => {
             if (confirmDialogType !== dialogTypes.DELETE_CONFIRM) {
                 changeGroupDisabledStatus(selectedId);
             } else {
-                deleteRoomSuccess(selectedId, isDisabled);
+                deleteRoom(selectedId, isDisabled);
             }
         }
     };
@@ -115,7 +119,7 @@ const RoomPage = (props) => {
                             <RoomTypeForm
                                 className="new-type"
                                 setDeleteLabel={setDeleteLabel}
-                                onSubmit={addNewTypeService}
+                                onSubmit={handleRoomTypeFormSubmit}
                                 isOpenConfirmDialog={isOpenConfirmDialog}
                                 showConfirmDialog={showConfirmDialog}
                             />
@@ -152,8 +156,9 @@ const mapDispatchToProps = (dispatch) => ({
     getAllRoomTypes: () => dispatch(getAllRoomTypesStart()),
     toggleRoomVisibility: (values, isDisabled) =>
         dispatch(toggleRoomVisibilityStart(values, isDisabled)),
-    deleteRoomSuccess: (roomId, isDisabled) => dispatch(deleteRoomStart(roomId, isDisabled)),
+    deleteRoom: (roomId, isDisabled) => dispatch(deleteRoomStart(roomId, isDisabled)),
     deleteRoomType: (roomTypeId) => dispatch(deleteRoomTypeStart(roomTypeId)),
+    handleRoomTypeFormSubmit: (values) => dispatch(handleRoomTypeFormSubmitStart(values)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(RoomPage);
