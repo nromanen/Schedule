@@ -1,19 +1,22 @@
 import './UploadFile.scss';
 import React, { useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
+import BackupIcon from '@material-ui/icons/Backup';
 import { uploadStudentsToGroupFile } from '../../services/uploadFile';
 import CustomDialog from '../../containers/Dialogs/CustomDialog';
 import { dialogCloseButton, dialogUploadButton } from '../../constants/dialogs';
 import { setLoadingService } from '../../services/loadingService';
 import {
-    COMMON_NAME_LABEL,
-    COMMON_TYPE_LABEL,
-    COMMON_BYTE_SIZE_LABEL,
-    COMMON_SELECT_FILE_LABEL,
+    SELECT_FILE,
+    SELECT_CORRECT_FORMAT,
+    // COMMON_NAME_LABEL,
+    // COMMON_TYPE_LABEL,
+    // COMMON_BYTE_SIZE_LABEL,
+    // COMMON_UPLOAD_FROM_FILE_TITLE,
 } from '../../constants/translationLabels/common';
 
 export const UploadFile = (props) => {
-    const { t } = useTranslation('formElements');
+    const { t } = useTranslation('common');
     const [selectedFile, setSelectedFile] = useState(null);
     const fileInputRef = useRef();
     const {
@@ -36,9 +39,10 @@ export const UploadFile = (props) => {
     const setDisabledSendButton = () => {
         return selectedFile === null;
     };
+    const buttonTitle = selectedFile ? selectedFile.name : t(SELECT_FILE);
     return (
         <CustomDialog
-            title="Upload file"
+            // title={t(COMMON_UPLOAD_FROM_FILE_TITLE)}
             open={open}
             onClose={handleCloseDialogFile}
             buttons={[
@@ -46,22 +50,28 @@ export const UploadFile = (props) => {
                 dialogCloseButton(handleCloseDialogFile),
             ]}
         >
-            <input
-                type="file"
-                name="file"
-                accept=".txt, .csv"
-                onChange={changeHandler}
-                ref={fileInputRef}
-            />
-            {selectedFile ? (
-                <div>
-                    <p>{`${t(COMMON_NAME_LABEL)}: ${selectedFile.name}`}</p>
-                    <p>{`${t(COMMON_TYPE_LABEL)}: ${selectedFile.type}`}</p>
-                    <p>{`${t(COMMON_BYTE_SIZE_LABEL)}: ${selectedFile.size}`}</p>
-                </div>
-            ) : (
-                <p>{t(COMMON_SELECT_FILE_LABEL)}</p>
-            )}
+            <div className="upload-dialog">
+                <div className="upload-title">{t(SELECT_CORRECT_FORMAT)}</div>
+                <label htmlFor="file-upload" className="upload-file">
+                    <input
+                        id="file-upload"
+                        type="file"
+                        accept=".txt, .csv"
+                        onChange={changeHandler}
+                        ref={fileInputRef}
+                        className="upload-input"
+                    />
+                    <BackupIcon></BackupIcon>
+                    <div className="upload-text">{t(buttonTitle)}</div>
+                </label>
+                {/* {selectedFile && (
+                    <div>
+                        <p>{`${t(COMMON_NAME_LABEL)}: ${selectedFile.name}`}</p>
+                        <p>{`${t(COMMON_TYPE_LABEL)}: ${selectedFile.type}`}</p>
+                        <p>{`${t(COMMON_BYTE_SIZE_LABEL)}: ${selectedFile.size}`}</p>
+                    </div>
+                )} */}
+            </div>
         </CustomDialog>
     );
 };

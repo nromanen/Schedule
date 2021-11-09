@@ -112,7 +112,7 @@
     "no_button_title": "Ні",
     "close_title": "Закрити",
     "upload_title": "Завантажити",
-    "select_file_label": "Виберіть файл щоб дізнатися більше...",
+    "select_file": "Виберіть файл",
     "name_label": "Назва",
     "type_label": "Тип",
     "byte_size_label": "Розмір у байтах",
@@ -179,5 +179,6 @@
     "hour_few": "<0>{{count}}</0> години",
     "hour_many": "<0>{{count}}</0> годин",
     "more_label": "Більше",
-    "move_label": "Перемістити"
+    "move_label": "Перемістити",
+    "select-correct_format": "Формат файлу повинен бути csv"
 }

@@ -7,7 +7,6 @@ import {
     COMMON_CLOSE_TITLE,
     CONFIRM_GROUPS,
     SENT_SCHEDULE,
-    COMMON_UPLOAD_TITLE,
     COMMON_UPLOAD_FROM_FILE_TITLE,
     COMMON_YES_BUTTON_TITLE,
     COMMON_NO_BUTTON_TITLE,
@@ -79,7 +78,7 @@ export const dialogSendSchedule = (handelFuc, isDisabled) => {
 };
 export const dialogUploadButton = (handelFuc, isDisabled) => {
     return {
-        label: i18n.t(COMMON_UPLOAD_TITLE),
+        label: i18n.t(COMMON_UPLOAD_FROM_FILE_TITLE),
         handleClick: handelFuc,
         additionClassName: `choose-button`,
         disabled: isDisabled,
