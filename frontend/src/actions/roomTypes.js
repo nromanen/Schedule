@@ -1,15 +1,15 @@
 import * as actionsType from './actionsType';
 
-export const postOneType = (roomType) => {
+export const addRoomTypeSuccess = (roomType) => {
     return {
-        type: actionsType.POST_NEW_TYPE,
-        result: roomType,
+        type: actionsType.ADD_ROOM_TYPE,
+        roomType,
     };
 };
 
 export const getAllRoomTypesSuccess = (roomType) => {
     return {
-        type: actionsType.GET_ALL_ROOM_TYPES_SUCCESS,
+        type: actionsType.GET_ALL_ROOM_TYPES,
         roomType,
     };
 };
@@ -22,7 +22,7 @@ export const getAllRoomTypesStart = () => {
 
 export const deleteRoomTypeSuccess = (roomTypeId) => {
     return {
-        type: actionsType.DELETE_ROOM_TYPE_SUCCESS,
+        type: actionsType.DELETE_ROOM_TYPE,
         roomTypeId,
     };
 };
@@ -34,10 +34,10 @@ export const deleteRoomTypeStart = (roomTypeId) => {
     };
 };
 
-export const updateOneType = (roomType) => {
+export const updateRoomTypeSuccess = (roomType) => {
     return {
-        type: actionsType.UPDATE_ONE_TYPE,
-        result: roomType,
+        type: actionsType.UPDATE_ROOM_TYPE,
+        roomType,
     };
 };
 

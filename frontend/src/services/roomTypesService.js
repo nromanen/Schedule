@@ -6,8 +6,8 @@ import axios from '../helper/axios';
 import {
     getAllRoomTypesSuccess,
     deleteRoomTypeSuccess,
-    updateOneType,
-    postOneType,
+    updateRoomTypeSuccess,
+    addRoomTypeSuccess,
     selectRoomType,
 } from '../actions/roomTypes';
 
@@ -50,7 +50,7 @@ export const putNewType = (values) => {
     axios
         .put(ROOM_TYPES_URL, values)
         .then((response) => {
-            store.dispatch(updateOneType(response.data));
+            store.dispatch(updateRoomTypeSuccess(response.data));
             resetFormHandler(ROOM_FORM_TYPE);
             successHandler(
                 i18n.t(BACK_END_SUCCESS_OPERATION, {
@@ -66,7 +66,7 @@ export const postNewType = (values) => {
     axios
         .post(ROOM_TYPES_URL, values)
         .then((response) => {
-            store.dispatch(postOneType(response.data));
+            store.dispatch(addRoomTypeSuccess(response.data));
             resetFormHandler(ROOM_FORM_TYPE);
             successHandler(
                 i18n.t(BACK_END_SUCCESS_OPERATION, {

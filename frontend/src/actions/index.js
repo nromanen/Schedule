@@ -69,8 +69,8 @@ export {
     deleteRoomTypeSuccess,
     getAllRoomTypesSuccess,
     selectRoomType,
-    postOneType,
-    updateOneType,
+    addRoomTypeSuccess,
+    updateRoomTypeSuccess,
 } from './roomTypes';
 export {
     addItemToSchedule,

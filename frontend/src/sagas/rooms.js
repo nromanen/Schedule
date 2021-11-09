@@ -18,8 +18,8 @@ import {
 import {
     getAllRoomTypesSuccess,
     deleteRoomTypeSuccess,
-    updateOneType,
-    postOneType,
+    updateRoomTypeSuccess,
+    addRoomTypeSuccess,
 } from '../actions/roomTypes';
 import {
     BACK_END_SUCCESS_OPERATION,
@@ -124,7 +124,7 @@ export function* getAllRoomTypes() {
 export function* updateRoomTypeItem({ values }) {
     try {
         const { data } = yield call(axiosCall, ROOM_TYPES_URL, 'PUT', values);
-        yield put(updateOneType(data));
+        yield put(updateRoomTypeSuccess(data));
         yield put(reset(ROOM_FORM_TYPE));
         const message = createMessage(BACK_END_SUCCESS_OPERATION, FORM_TYPE_LABEL, UPDATED_LABEL);
         yield put(setOpenSuccessSnackbar(message));
@@ -136,7 +136,7 @@ export function* updateRoomTypeItem({ values }) {
 export function* addRoomTypeItem({ values }) {
     try {
         const { data } = yield call(axiosCall, ROOM_TYPES_URL, 'POST', values);
-        yield put(postOneType(data));
+        yield put(addRoomTypeSuccess(data));
         yield put(reset(ROOM_FORM_TYPE));
         const message = createMessage(BACK_END_SUCCESS_OPERATION, FORM_TYPE_LABEL, CREATED_LABEL);
         yield put(setOpenSuccessSnackbar(message));
