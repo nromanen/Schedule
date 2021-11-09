@@ -1,8 +1,14 @@
+@import '../../../styles/colors.scss';
 .room-form {
     margin: 10px;
-    max-height: 420px;
+    max-height: auto;
     width: 21em;
 }
-.MuiMenu-list option {
-    margin: 2px 33%;
+.select-item {
+    & {
+        margin: 4px 10px 0;
+    }
+    &:hover {
+        background-color: $selected-blue;
+    }
 }

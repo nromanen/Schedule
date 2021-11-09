@@ -35,7 +35,10 @@ const RoomCard = (props) => {
                                 );
                             }}
                         />
-                        <FaEdit className="svg-btn" onClick={() => setSelectRoom(room.id)} />
+                        <FaEdit
+                            className="svg-btn edit-btn"
+                            onClick={() => setSelectRoom(room.id)}
+                        />
                     </>
                 ) : (
                     <GiSightDisabled
@@ -52,7 +55,7 @@ const RoomCard = (props) => {
                 )}
 
                 <MdDelete
-                    className="svg-btn"
+                    className="svg-btn delete-btn"
                     onClick={() => {
                         showConfirmDialog(room.id, dialogTypes.DELETE_CONFIRM, cardType.ROOM);
                     }}

@@ -1,9 +1,5 @@
-@import '../../../App';
 @import '../../../share/Card/Card.scss';
-
-.room-form {
-    margin: 10px;
-}
+@import '../../../styles/colors.scss';
 
 .new-type-container {
     text-align: center;
@@ -29,7 +25,7 @@
     padding: 0;
 }
 
-.typeDescription {
+.type-description {
     vertical-align: middle;
 }
 
@@ -42,18 +38,14 @@
     .edit {
         cursor: pointer;
     }
-
-    .edit:active,
     .edit:hover {
-        color: #3f51b5;
+        color: $dark-blue;
         transition: ease-in-out 0.5s;
     }
 
     .delete {
         cursor: pointer;
     }
-
-    .delete:active,
     .delete:hover {
         color: #fa0a04;
         transition: ease-in-out 0.5s;

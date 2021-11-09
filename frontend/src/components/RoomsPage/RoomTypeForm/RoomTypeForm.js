@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
 import { Field, reduxForm } from 'redux-form';
 import { useTranslation } from 'react-i18next';
 import Button from '@material-ui/core/Button';
@@ -16,7 +15,6 @@ import {
     ADD_TYPE_LABEL,
     NEW_TYPE_LABEL,
 } from '../../../constants/translationLabels/formElements';
-import { selectRoomType } from '../../../actions/rooms';
 
 const RoomTypeForm = (props) => {
     const {
@@ -74,7 +72,7 @@ const RoomTypeForm = (props) => {
                             value={roomType.description}
                             className="new-types-list"
                         >
-                            <span className="typeDescription">{roomType.description}</span>
+                            <span className="type-description">{roomType.description}</span>
                             <span className="buttons">
                                 <FaEdit
                                     className="btn edit"
