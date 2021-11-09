@@ -17,7 +17,7 @@ import { selectOneRoomService } from '../../../services/roomService';
 import { cardType } from '../../../constants/cardType';
 
 const RoomCard = (props) => {
-    const { room, isDisabled, showConfirmDialog, setDeleteLabel } = props;
+    const { room, isDisabled, showConfirmDialog } = props;
     const { t } = useTranslation('formElements');
 
     return (
@@ -29,7 +29,11 @@ const RoomCard = (props) => {
                             className="svg-btn copy-btn"
                             title={t(COMMON_SET_DISABLED)}
                             onClick={() => {
-                                showConfirmDialog(room.id, dialogTypes.SET_VISIBILITY_DISABLED);
+                                showConfirmDialog(
+                                    room.id,
+                                    dialogTypes.SET_VISIBILITY_DISABLED,
+                                    cardType.ROOM,
+                                );
                             }}
                         />
                         <FaEdit className="svg-btn" onClick={() => selectOneRoomService(room.id)} />
@@ -39,7 +43,11 @@ const RoomCard = (props) => {
                         className="svg-btn copy-btn"
                         title={t(COMMON_SET_ENABLED)}
                         onClick={() => {
-                            showConfirmDialog(room.id, dialogTypes.SET_VISIBILITY_ENABLED);
+                            showConfirmDialog(
+                                room.id,
+                                dialogTypes.SET_VISIBILITY_ENABLED,
+                                cardType.ROOM,
+                            );
                         }}
                     />
                 )}
@@ -48,7 +56,6 @@ const RoomCard = (props) => {
                     className="svg-btn"
                     onClick={() => {
                         showConfirmDialog(room.id, dialogTypes.DELETE_CONFIRM, cardType.ROOM);
-                        setDeleteLabel(cardType.ROOM);
                     }}
                 />
             </div>

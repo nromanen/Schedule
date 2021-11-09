@@ -13,16 +13,17 @@ export const addRoomStart = (room) => {
     };
 };
 
-export const deleteRoom = (id) => {
+export const deleteRoom = (id, isDisabled) => {
     return {
         type: actionsType.DELETE_ROOM,
-        result: id,
+        id,
+        isDisabled,
     };
 };
 
 export const getListOfRoomsSuccess = (rooms) => {
     return {
-        type: actionsType.SHOW_LIST_OF_DISABLED_ROOMS_SUCCESS,
+        type: actionsType.SHOW_LIST_OF_ROOMS_SUCCESS,
         rooms,
     };
 };
@@ -58,10 +59,10 @@ export const updateOneRoom = (room) => {
         result: room,
     };
 };
-export const updateRoomStart = (room) => {
+export const updateRoomStart = (values) => {
     return {
         type: actionsType.UPDATE_ROOM_START,
-        room,
+        values,
     };
 };
 
@@ -73,5 +74,12 @@ export const handleRoomFormSubmitStart = (values) => {
     return {
         type: actionsType.HANDLE_ROOM_FORM_SUBMIT_START,
         values,
+    };
+};
+export const toggleRoomVisibilityStart = (room, isDisabled) => {
+    return {
+        type: actionsType.TOGGLE_ROOM_VISIBILITY_START,
+        room,
+        isDisabled,
     };
 };

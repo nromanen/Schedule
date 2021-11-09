@@ -10,6 +10,7 @@ import {
     handleRoomFormSubmitStart,
     getListOfRoomsStart,
     getListOfDisabledRoomsStart,
+    toggleRoomVisibilityStart,
 } from '../../actions/rooms';
 import { getAllRoomTypesStart } from '../../actions/roomTypes';
 import {
@@ -38,6 +39,7 @@ const RoomPage = (props) => {
         getListOfRooms,
         getListOfDisabledRooms,
         getAllRoomTypes,
+        toggleRoomVisibility,
     } = props;
 
     const [isDisabled, setIsDisabled] = useState(false);
@@ -63,8 +65,9 @@ const RoomPage = (props) => {
         handleRoomFormSubmit({ ...values, type });
     };
 
-    const showConfirmDialog = (id, dialogType) => {
+    const showConfirmDialog = (id, dialogType, label) => {
         setSelectedId(id);
+        setDeleteLabel(label);
         setConfirmDialogType(dialogType);
         setOpenConfirmDialog(true);
     };
@@ -73,7 +76,9 @@ const RoomPage = (props) => {
         const foundRoom = [...disabledRooms, ...rooms].find(
             (roomItem) => roomItem.id === currentId,
         );
-        return isDisabled ? setEnabledRoomsService(foundRoom) : setDisabledRoomsService(foundRoom);
+        return isDisabled
+            ? toggleRoomVisibility({ ...foundRoom, disable: false }, isDisabled)
+            : toggleRoomVisibility({ ...foundRoom, disable: true }, isDisabled);
     };
 
     const handleConfirm = () => {
@@ -151,6 +156,7 @@ const mapDispatchToProps = (dispatch) => ({
     getListOfRooms: () => dispatch(getListOfRoomsStart()),
     getListOfDisabledRooms: () => dispatch(getListOfDisabledRoomsStart()),
     getAllRoomTypes: () => dispatch(getAllRoomTypesStart()),
+    toggleRoomVisibility: (values, isDisabled) => dispatch(toggleRoomVisibilityStart(values, isDisabled)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(RoomPage);

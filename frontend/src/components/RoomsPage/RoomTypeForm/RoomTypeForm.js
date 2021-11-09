@@ -26,7 +26,6 @@ let RoomTypeForm = (props) => {
         roomTypes,
         oneType,
         initialize,
-        setDeleteLabel,
         selectRoomType,
         showConfirmDialog,
     } = props;
@@ -84,8 +83,11 @@ let RoomTypeForm = (props) => {
                                 <MdDelete
                                     className="btn delete"
                                     onClick={() => {
-                                        showConfirmDialog(roomType.id, dialogTypes.DELETE_CONFIRM);
-                                        setDeleteLabel(cardType.TYPE);
+                                        showConfirmDialog(
+                                            roomType.id,
+                                            dialogTypes.DELETE_CONFIRM,
+                                            cardType.TYPE,
+                                        );
                                     }}
                                 />
                             </span>

@@ -107,11 +107,11 @@ const post = (values) => {
 };
 // created saga
 export const createRoomService = (values) => {
-    const { id, name, type } = values;
+    const { id, name, type, disable } = values;
     if (id) {
-        put({ id, name, type });
+        put({ id, name, type, disable });
     } else {
-        post({ name, type });
+        post({ name, type, disable });
     }
 };
 

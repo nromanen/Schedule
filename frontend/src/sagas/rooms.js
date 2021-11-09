@@ -13,6 +13,7 @@ import {
     addRoom,
     getListOfRoomsSuccess,
     getListOfDisabledRoomsSuccess,
+    deleteRoom,
 } from '../actions/rooms';
 import { getAllRoomTypesSuccess } from '../actions/roomTypes';
 import {
@@ -70,6 +71,17 @@ export function* addRoomItem({ values }) {
     }
 }
 
+export function* toggleRoomsVisibility({ room, isDisabled }) {
+    try {
+        yield call(axiosCall, ROOM_URL, 'PUT', room);
+        yield put(deleteRoom(room.id, isDisabled));
+        const message = createMessage(BACK_END_SUCCESS_OPERATION, FORM_ROOM_LABEL, UPDATED_LABEL);
+        yield put(setOpenSuccessSnackbar(message));
+    } catch (error) {
+        yield put(setOpenErrorSnackbar(createErrorMessage(error)));
+    }
+}
+
 export function* handleRoomFormSubmit({ values }) {
     try {
         if (values.id) {
@@ -98,6 +110,7 @@ function* watchRooms() {
     yield takeEvery(actionTypes.ADD_ROOM_START, addRoomItem);
     yield takeEvery(actionTypes.UPDATE_ROOM_START, updateRoomItem);
     yield takeEvery(actionTypes.HANDLE_ROOM_FORM_SUBMIT_START, handleRoomFormSubmit);
+    yield takeEvery(actionTypes.TOGGLE_ROOM_VISIBILITY_START, toggleRoomsVisibility);
 }
 
 export default watchRooms;
