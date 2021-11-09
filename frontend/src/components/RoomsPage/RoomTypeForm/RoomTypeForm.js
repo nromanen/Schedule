@@ -18,7 +18,7 @@ import {
 } from '../../../constants/translationLabels/formElements';
 import { selectRoomType } from '../../../actions/rooms';
 
-let RoomTypeForm = (props) => {
+const RoomTypeForm = (props) => {
     const {
         handleSubmit,
         pristine,
@@ -26,7 +26,7 @@ let RoomTypeForm = (props) => {
         roomTypes,
         oneType,
         initialize,
-        selectRoomType,
+        setSelectRoomType,
         showConfirmDialog,
     } = props;
 
@@ -43,7 +43,7 @@ let RoomTypeForm = (props) => {
 
     return (
         <>
-            <Card additionClassName="form-card room-form">
+            <Card additionClassName="form-card room-form new-type">
                 <form className="new-type-container" onSubmit={handleSubmit}>
                     <Field
                         type="text"
@@ -78,7 +78,7 @@ let RoomTypeForm = (props) => {
                             <span className="buttons">
                                 <FaEdit
                                     className="btn edit"
-                                    onClick={() => selectRoomType(roomType.id)}
+                                    onClick={() => setSelectRoomType(roomType.id)}
                                 />
                                 <MdDelete
                                     className="btn delete"
@@ -99,16 +99,6 @@ let RoomTypeForm = (props) => {
     );
 };
 
-const mapStateToProps = (state) => ({
-    oneType: state.rooms.oneType,
-    roomTypes: state.rooms.roomTypes,
-});
-const mapDispatchToProps = (dispatch) => ({
-    selectRoomType: (typeId) => dispatch(selectRoomType(typeId)),
-});
-
-RoomTypeForm = reduxForm({
+export default reduxForm({
     form: ROOM_FORM_TYPE,
 })(RoomTypeForm);
-
-export default connect(mapStateToProps, mapDispatchToProps)(RoomTypeForm);

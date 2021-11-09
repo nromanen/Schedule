@@ -6,7 +6,7 @@ import RoomCard from './RoomCard';
 import { search } from '../../../helper/search';
 
 const RoomList = (props) => {
-    const { isDisabled, showConfirmDialog, disabledRooms, term, rooms, setSelectRoom } = props;
+    const { isDisabled, disabledRooms, term, rooms, ...rest } = props;
     const { t } = useTranslation('formElements');
 
     const visibleItems = isDisabled
@@ -16,13 +16,7 @@ const RoomList = (props) => {
         <section className="container-flex-wrap wrapper">
             {visibleItems.length === 0 && <NotFound name={t(ROOM_Y_LABEL)} />}
             {visibleItems.map((room) => (
-                <RoomCard
-                    key={room.id}
-                    room={room}
-                    isDisabled={isDisabled}
-                    showConfirmDialog={showConfirmDialog}
-                    setSelectRoom={setSelectRoom}
-                />
+                <RoomCard key={room.id} room={room} isDisabled={isDisabled} {...rest} />
             ))}
         </section>
     );

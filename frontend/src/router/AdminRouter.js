@@ -21,7 +21,7 @@ import TeacherList from '../containers/TeachersList/TeachersList';
 import BusyRooms from '../containers/BusyRooms/BusyRooms';
 import GroupList from '../containers/GroupPage/GroupPage';
 import ClassSchedule from '../containers/ClassSchedule/ClassSchedule';
-import RoomPage from '../components/RoomsPage/RoomsPage';
+import RoomPage from '../containers/RoomsPage/RoomsPage';
 import SubjectPage from '../containers/SubjectPage/SubjectPage';
 import SemesterPage from '../containers/SemesterPage/SemesterPage';
 import MergeRolePage from '../containers/MergeRolePage/MergeRolePage';

@@ -1,30 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { connect } from 'react-redux';
 import CustomDialog from '../../containers/Dialogs/CustomDialog';
 import { dialogTypes } from '../../constants/dialogs';
 import { cardType } from '../../constants/cardType';
 import AddRoomForm from './AddRoomForm/AddRoomForm';
 import RoomTypeForm from './RoomTypeForm/RoomTypeForm';
 import SearchPanel from '../../share/SearchPanel/SearchPanel';
-import {
-    handleRoomFormSubmitStart,
-    getListOfRoomsStart,
-    getListOfDisabledRoomsStart,
-    toggleRoomVisibilityStart,
-    deleteRoomStart,
-    setSelectRoomSuccess,
-    clearRoomSuccess,
-    getAllRoomTypesStart,
-    deleteRoomTypeStart,
-    handleRoomTypeFormSubmitStart,
-} from '../../actions/rooms';
-import { setIsOpenConfirmDialog } from '../../actions/dialog';
 import RoomList from './RoomsList/RoomsList';
 
 const RoomPage = (props) => {
     const {
         rooms,
         roomTypes,
+        oneType,
         disabledRooms,
         isOpenConfirmDialog,
         setOpenConfirmDialog,
@@ -39,6 +26,7 @@ const RoomPage = (props) => {
         handleRoomTypeFormSubmit,
         setSelectRoom,
         clearRoomItem,
+        setSelectRoomType,
     } = props;
 
     const [isDisabled, setIsDisabled] = useState(false);
@@ -118,11 +106,13 @@ const RoomPage = (props) => {
                                 roomTypes={roomTypes}
                             />
                             <RoomTypeForm
-                                className="new-type"
                                 setDeleteLabel={setDeleteLabel}
                                 onSubmit={handleRoomTypeFormSubmit}
                                 isOpenConfirmDialog={isOpenConfirmDialog}
                                 showConfirmDialog={showConfirmDialog}
+                                oneType={oneType}
+                                roomTypes={roomTypes}
+                                setSelectRoomType={setSelectRoomType}
                             />
                         </>
                     )}
@@ -141,28 +131,4 @@ const RoomPage = (props) => {
     );
 };
 
-const mapStateToProps = (state) => ({
-    classScheduler: state.classActions.classScheduler,
-    rooms: state.rooms.rooms,
-    disabledRooms: state.rooms.disabledRooms,
-    oneRoom: state.rooms.oneRoom,
-    roomTypes: state.rooms.roomTypes,
-    oneType: state.rooms.oneType,
-    isOpenConfirmDialog: state.dialog.isOpenConfirmDialog,
-});
-const mapDispatchToProps = (dispatch) => ({
-    setOpenConfirmDialog: (newState) => dispatch(setIsOpenConfirmDialog(newState)),
-    handleRoomFormSubmit: (values) => dispatch(handleRoomFormSubmitStart(values)),
-    getListOfRooms: () => dispatch(getListOfRoomsStart()),
-    getListOfDisabledRooms: () => dispatch(getListOfDisabledRoomsStart()),
-    getAllRoomTypes: () => dispatch(getAllRoomTypesStart()),
-    toggleRoomVisibility: (values, isDisabled) =>
-        dispatch(toggleRoomVisibilityStart(values, isDisabled)),
-    deleteRoom: (roomId, isDisabled) => dispatch(deleteRoomStart(roomId, isDisabled)),
-    deleteRoomType: (roomTypeId) => dispatch(deleteRoomTypeStart(roomTypeId)),
-    handleRoomTypeFormSubmit: (values) => dispatch(handleRoomTypeFormSubmitStart(values)),
-    setSelectRoom: (roomId) => dispatch(setSelectRoomSuccess(roomId)),
-    clearRoomItem: () => dispatch(clearRoomSuccess()),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(RoomPage);
+export default RoomPage;
