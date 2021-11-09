@@ -24,14 +24,16 @@ const reducer = (
                 oneRoom: {},
                 rooms: [...state.rooms, action.result].sort(compare),
             });
-        case actionTypes.DELETE_ROOM:
+        case actionTypes.DELETE_ROOM_SUCEESS:
             if (action.isDisabled) {
                 return updateObject(state, {
-                    disabledRooms: [...state.disabledRooms.filter((room) => room.id !== action.id)],
+                    disabledRooms: [
+                        ...state.disabledRooms.filter((room) => room.id !== action.roomId),
+                    ],
                 });
             }
             return updateObject(state, {
-                rooms: [...state.rooms.filter((room) => room.id !== action.id)],
+                rooms: [...state.rooms.filter((room) => room.id !== action.roomId)],
             });
 
         case actionTypes.SHOW_LIST_OF_ROOMS_SUCCESS:

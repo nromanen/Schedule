@@ -11,6 +11,7 @@ import {
     getListOfRoomsStart,
     getListOfDisabledRoomsStart,
     toggleRoomVisibilityStart,
+    deleteRoomStart,
 } from '../../actions/rooms';
 import { getAllRoomTypesStart } from '../../actions/roomTypes';
 import {
@@ -40,6 +41,7 @@ const RoomPage = (props) => {
         getListOfDisabledRooms,
         getAllRoomTypes,
         toggleRoomVisibility,
+        deleteRoomSuccess,
     } = props;
 
     const [isDisabled, setIsDisabled] = useState(false);
@@ -90,7 +92,7 @@ const RoomPage = (props) => {
             if (confirmDialogType !== dialogTypes.DELETE_CONFIRM) {
                 changeGroupDisabledStatus(selectedId);
             } else {
-                deleteRoomCardService(selectedId);
+                deleteRoomSuccess(selectedId, isDisabled);
             }
         }
     };
@@ -156,7 +158,9 @@ const mapDispatchToProps = (dispatch) => ({
     getListOfRooms: () => dispatch(getListOfRoomsStart()),
     getListOfDisabledRooms: () => dispatch(getListOfDisabledRoomsStart()),
     getAllRoomTypes: () => dispatch(getAllRoomTypesStart()),
-    toggleRoomVisibility: (values, isDisabled) => dispatch(toggleRoomVisibilityStart(values, isDisabled)),
+    toggleRoomVisibility: (values, isDisabled) =>
+        dispatch(toggleRoomVisibilityStart(values, isDisabled)),
+    deleteRoomSuccess: (roomId, isDisabled) => dispatch(deleteRoomStart(roomId, isDisabled)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(RoomPage);

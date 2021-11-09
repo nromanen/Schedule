@@ -5,7 +5,7 @@ import { ROOM_FORM } from '../constants/reduxForms';
 import axios from '../helper/axios';
 import {
     getListOfRoomsSuccess,
-    deleteRoom,
+    deleteRoomSuccess,
     addRoom,
     selectOneRoom,
     updateOneRoom,
@@ -47,7 +47,7 @@ export const deleteRoomCardService = (id) => {
     axios
         .delete(`${ROOM_URL}/${id}`)
         .then(() => {
-            store.dispatch(deleteRoom(id));
+            store.dispatch(deleteRoomSuccess(id));
             getDisabledRoomsService();
             showListOfRoomsService();
             successHandler(

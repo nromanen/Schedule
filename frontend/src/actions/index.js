@@ -59,7 +59,7 @@ export { setLoading, setScheduleLoading, setSemesterLoading } from './loadingInd
 export {
     addRoom,
     clearRoomOne,
-    deleteRoom,
+    deleteRoomSuccess,
     selectOneRoom,
     getListOfDisabledRoomsSuccess,
     getListOfRoomsSuccess,

@@ -13,10 +13,18 @@ export const addRoomStart = (room) => {
     };
 };
 
-export const deleteRoom = (id, isDisabled) => {
+export const deleteRoomSuccess = (roomId, isDisabled) => {
     return {
-        type: actionsType.DELETE_ROOM,
-        id,
+        type: actionsType.DELETE_ROOM_SUCEESS,
+        roomId,
+        isDisabled,
+    };
+};
+
+export const deleteRoomStart = (roomId, isDisabled) => {
+    return {
+        type: actionsType.DELETE_ROOM_START,
+        roomId,
         isDisabled,
     };
 };
