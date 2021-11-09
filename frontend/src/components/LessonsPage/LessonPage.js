@@ -103,10 +103,11 @@ const LessonPage = (props) => {
         setIsOpenCopyLessonDialog(true);
     };
 
-    const closeCopyLessonDialogHandle = ({ copyGroup, lesson }) => {
+    const closeCopyLessonDialogHandle = (params) => {
+        const { group: copiedGroup, lesson } = params;
         setIsOpenCopyLessonDialog(false);
-        if (!isNil(copyGroup)) {
-            copyLessonCard(copyGroup, lesson);
+        if (!isNil(copiedGroup)) {
+            copyLessonCard(copiedGroup, lesson);
         }
     };
 
