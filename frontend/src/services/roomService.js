@@ -115,7 +115,7 @@ export const createRoomService = (values) => {
         post({ name, type, disable });
     }
 };
-
+// used directly in component
 export const selectOneRoomService = (roomId) => {
     store.dispatch(selectOneRoom(roomId));
 };

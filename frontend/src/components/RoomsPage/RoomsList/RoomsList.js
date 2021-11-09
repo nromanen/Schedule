@@ -6,7 +6,7 @@ import RoomCard from './RoomCard';
 import { search } from '../../../helper/search';
 
 const RoomList = (props) => {
-    const { isDisabled, showConfirmDialog, disabledRooms, term, rooms } = props;
+    const { isDisabled, showConfirmDialog, disabledRooms, term, rooms, setSelectRoom } = props;
     const { t } = useTranslation('formElements');
 
     const visibleItems = isDisabled
@@ -21,6 +21,7 @@ const RoomList = (props) => {
                     room={room}
                     isDisabled={isDisabled}
                     showConfirmDialog={showConfirmDialog}
+                    setSelectRoom={setSelectRoom}
                 />
             ))}
         </section>

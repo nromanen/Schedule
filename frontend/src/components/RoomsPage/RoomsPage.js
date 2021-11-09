@@ -12,6 +12,7 @@ import {
     getListOfDisabledRoomsStart,
     toggleRoomVisibilityStart,
     deleteRoomStart,
+    selectOneRoom,
 } from '../../actions/rooms';
 import {
     getAllRoomTypesStart,
@@ -38,6 +39,7 @@ const RoomPage = (props) => {
         deleteRoom,
         deleteRoomType,
         handleRoomTypeFormSubmit,
+        setSelectRoom
     } = props;
 
     const [isDisabled, setIsDisabled] = useState(false);
@@ -133,6 +135,7 @@ const RoomPage = (props) => {
                     term={term}
                     disabledRooms={disabledRooms}
                     rooms={rooms}
+                    setSelectRoom={setSelectRoom}
                 />
             </div>
         </>
@@ -159,6 +162,7 @@ const mapDispatchToProps = (dispatch) => ({
     deleteRoom: (roomId, isDisabled) => dispatch(deleteRoomStart(roomId, isDisabled)),
     deleteRoomType: (roomTypeId) => dispatch(deleteRoomTypeStart(roomTypeId)),
     handleRoomTypeFormSubmit: (values) => dispatch(handleRoomTypeFormSubmitStart(values)),
+    setSelectRoom: (roomId) => dispatch(selectOneRoom(roomId)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(RoomPage);

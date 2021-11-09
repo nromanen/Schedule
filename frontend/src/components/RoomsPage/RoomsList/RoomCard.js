@@ -13,11 +13,10 @@ import {
     COMMON_SET_DISABLED,
     COMMON_SET_ENABLED,
 } from '../../../constants/translationLabels/common';
-import { selectOneRoomService } from '../../../services/roomService';
 import { cardType } from '../../../constants/cardType';
 
 const RoomCard = (props) => {
-    const { room, isDisabled, showConfirmDialog } = props;
+    const { room, isDisabled, showConfirmDialog, setSelectRoom } = props;
     const { t } = useTranslation('formElements');
 
     return (
@@ -36,7 +35,7 @@ const RoomCard = (props) => {
                                 );
                             }}
                         />
-                        <FaEdit className="svg-btn" onClick={() => selectOneRoomService(room.id)} />
+                        <FaEdit className="svg-btn" onClick={() => setSelectRoom(room.id)} />
                     </>
                 ) : (
                     <GiSightDisabled
