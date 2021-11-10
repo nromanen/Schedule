@@ -11,15 +11,15 @@ export const TableFooterComponent = (props) => {
     const ALL_ROWS = -1;
     const { t } = useTranslation('formElements');
     const onRowsPerPageChange = (event) => {
-        setRowsPerPage(parseInt(event.target.value, 10));
+        const { value } = event.target;
         setPage(0);
+        return value === '-1' ? setRowsPerPage(items.length) : setRowsPerPage(parseInt(value, 10));
     };
     return (
         <div className="table-footer">
             <TablePagination
                 labelRowsPerPage={`${t(ROWS_PER_PAGE)}`}
                 rowsPerPageOptions={[5, 10, 25, { label: `${t(ALL_PAGE)}`, value: ALL_ROWS }]}
-                colSpan={4}
                 count={items.length}
                 rowsPerPage={rowsPerPage}
                 page={page}
