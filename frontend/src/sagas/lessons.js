@@ -29,11 +29,12 @@ import {
 } from '../constants/translationLabels/serviceMessages';
 import { axiosCall } from '../services/axios';
 
-export function* createLessonCard({ values }) {
+export function* createLessonCard({ values, groupId }) {
     try {
         const { data } = yield call(axiosCall, LESSON_URL, POST, values);
+        const dataForThisGroup = data.filter((item) => item.group.id === groupId);
 
-        yield put(createLesson(data));
+        yield put(createLesson(dataForThisGroup));
         const message = createMessage(BACK_END_SUCCESS_OPERATION, FORM_LESSON_LABEL, CREATED_LABEL);
 
         yield put(reset(LESSON_FORM));
@@ -69,7 +70,7 @@ export function* handleLesson({ values, groupId }) {
         if (values.id) {
             yield call(updateLesson, { values, groupId });
         } else {
-            yield call(createLessonCard, { values });
+            yield call(createLessonCard, { values, groupId });
         }
     } catch (error) {
         yield put(setOpenErrorSnackbar(createErrorMessage(error)));
