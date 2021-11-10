@@ -37,12 +37,15 @@ export {
     setAuthError,
 } from './auth';
 export {
-    addClassScheduleOne,
-    deleteClassScheduleOne,
-    getClassScheduleList,
-    getClassScheduleOne,
-    setClassScheduleList,
-} from './class';
+    addClassScheduleSuccess,
+    getClassScheduleListSuccess,
+    getClassScheduleByIdSuccess,
+    deleteClassScheduleSuccess,
+    updateClassScheduleSuccess,
+    clearClassScheduleSuccess,
+    getPublicClassScheduleSuccess,
+} from './classes';
+
 export { clearFreeRooms, showFreeRooms } from './freeRooms';
 export {
     addGroup,

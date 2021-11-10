@@ -36,15 +36,15 @@ import { hourFormat, timeFormat } from '../../constants/formats';
 
 const ClassFormFunc = (props) => {
     const { t } = useTranslation('formElements');
-    const { handleSubmit, pristine, onReset, submitting, classScheduleOne, initialize, change } =
+    const { handleSubmit, pristine, onReset, submitting, classSchedule, initialize, change } =
         props;
     useEffect(() => {
         let initialValues = {};
-        if (classScheduleOne) {
-            initialValues = classScheduleOne;
+        if (classSchedule) {
+            initialValues = classSchedule;
         }
         initialize(initialValues);
-    }, [classScheduleOne]);
+    }, [classSchedule]);
 
     const setEndTime = (startTime) =>
         change(
@@ -55,7 +55,7 @@ const ClassFormFunc = (props) => {
     return (
         <Card additionClassName="form-card">
             <h2 className="form-title">
-                {classScheduleOne.id ? t(EDIT_TITLE) : t(CREATE_TITLE)} {t(CLASS_Y_LABEL)}
+                {classSchedule.id ? t(EDIT_TITLE) : t(CREATE_TITLE)} {t(CLASS_Y_LABEL)}
             </h2>
             <form onSubmit={handleSubmit}>
                 <Field
@@ -105,10 +105,10 @@ const ClassFormFunc = (props) => {
                         className="buttons-style"
                         type="button"
                         variant="contained"
-                        disabled={setDisableButton(pristine, submitting, classScheduleOne.id)}
+                        disabled={setDisableButton(pristine, submitting, classSchedule.id)}
                         onClick={onReset}
                     >
-                        {getClearOrCancelTitle(classScheduleOne.id, t)}
+                        {getClearOrCancelTitle(classSchedule.id, t)}
                     </Button>
                 </div>
             </form>
@@ -117,7 +117,7 @@ const ClassFormFunc = (props) => {
 };
 
 const mapStateToProps = (state) => ({
-    classScheduleOne: state.classActions.classScheduleOne,
+    classSchedule: state.classActions.classSchedule,
 });
 
 export default connect(mapStateToProps)(

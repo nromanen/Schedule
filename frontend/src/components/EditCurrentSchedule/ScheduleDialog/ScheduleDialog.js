@@ -13,8 +13,9 @@ import {
 import { FORM_ROOM_LABEL } from '../../../constants/translationLabels/formElements';
 import './ScheduleDialog.scss';
 import CustomDialog from '../../../containers/Dialogs/CustomDialog';
-import { sortByLength } from '../../../helper/sortArray';
+import { sortByName } from '../../../helper/sortArray';
 import '../../../share/DialogWindows/dialog.scss';
+import i18n from '../../../i18n';
 
 const ScheduleDialog = (props) => {
     const {
@@ -30,7 +31,7 @@ const ScheduleDialog = (props) => {
     } = props;
 
     const [room, setRoom] = useState('');
-    const [warning, setWarning] = useState('');
+    const [warnings, setWarnings] = useState([]);
 
     const getOptionLabel = (option) => {
         return `${option.name} (${option.available ? t(COMMON_AVAILABLE) : t(COMMON_UNAVAILABLE)})`;
@@ -38,21 +39,32 @@ const ScheduleDialog = (props) => {
 
     useEffect(() => {
         if (!availability.teacherAvailable) {
-            setWarning(t(COMMON_TEACHER_IS_UNAVAILABLE));
+            setWarnings([i18n.t(COMMON_TEACHER_IS_UNAVAILABLE)]);
         } else {
-            setWarning('');
+            setWarnings([]);
         }
     }, [availability]);
+
+    const updateWarnings = () => {
+        const isRoomAvailableWarning = warnings.includes(i18n.t(COMMON_ROOM_IS_UNAVAILABLE));
+        if (!room.available && !isRoomAvailableWarning) {
+            setWarnings((prev) => [...prev, i18n.t(COMMON_ROOM_IS_UNAVAILABLE)]);
+        } else if (room.available && isRoomAvailableWarning) {
+            setWarnings((prev) => {
+                prev.pop();
+                return prev;
+            });
+        }
+    };
 
     const chooseClickHandle = () => {
         if (!room) return;
         setOpenConfirmDialog(true);
-        if (!room.available) {
-            setWarning((prev) => `${prev}\n${t(COMMON_ROOM_IS_UNAVAILABLE)}`);
-        }
+        updateWarnings();
     };
+
     const defaultProps = {
-        options: availability.rooms ? sortByLength(availability.rooms) : rooms,
+        options: availability.rooms ? sortByName(availability.rooms) : sortByName(rooms),
         getOptionLabel,
     };
 
@@ -65,7 +77,7 @@ const ScheduleDialog = (props) => {
                 buttons={[dialogChooseButton(chooseClickHandle), dialogCloseButton(onClose)]}
             >
                 <div className="availability-info">
-                    <p className="availability-warning">{warning}</p>
+                    <p className="availability-warning">{warnings[0]}</p>
                 </div>
                 <div className="autocomplete-container">
                     <Autocomplete
@@ -88,7 +100,7 @@ const ScheduleDialog = (props) => {
             <CustomDialog
                 type={dialogTypes.CONFIRM_WITH_WARNING}
                 open={isOpenConfirmDialog}
-                warning={warning}
+                warnings={warnings}
                 handelConfirm={() => {
                     handleChangeSchedule(room.id, itemData);
                     setOpenConfirmDialog(false);

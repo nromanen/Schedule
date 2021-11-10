@@ -1,7 +1,8 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ScheduleBoard from '../../../containers/EditCurrentSchedule/ScheduleBoard';
 import ScheduleDialog from '../../../containers/Dialogs/ScheduleDialog';
 import ScheduleDaySidebar from '../../ScheduleTable/ScheduleDaySidebar/ScheduleDaySidebar';
+import './Schedule.scss';
 
 import {
     NO_CURRENT_SEMESTER,
@@ -9,7 +10,6 @@ import {
 } from '../../../constants/translationLabels/common';
 import { actionType } from '../../../constants/actionTypes';
 import { addClassDayBoard, removeClassDayBoard } from '../../../helper/schedule';
-import './Schedule.scss';
 
 const Schedule = (props) => {
     const {

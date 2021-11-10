@@ -18,6 +18,7 @@ import {
 } from '../../../constants/translationLabels/common';
 import { actionType } from '../../../constants/actionTypes';
 import { getTeacherName } from '../../../helper/renderTeacher';
+import i18n from '../../../i18n';
 
 const ScheduleItem = (props) => {
     const {

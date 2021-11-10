@@ -4,21 +4,20 @@ import { useTranslation } from 'react-i18next';
 import Card from '../../share/Card/Card';
 import FreeRoomForm from '../../components/FreeRoomForm/freeRoomForm';
 import { clearFreeRoomsService, showFreeRoomsService } from '../../services/freeRoomsService';
-import { getClassScheduleListService } from '../../services/classService';
 import CustomDialog from '../Dialogs/CustomDialog';
 import { dialogCloseButton } from '../../constants/dialogs';
-
+import { getClassScheduleListStart } from '../../actions/classes';
 import './freeRooms.scss';
 import { ROOM_LABEL, FIND_FREE_ROOM } from '../../constants/translationLabels/formElements';
 import { TYPE_LABEL } from '../../constants/translationLabels/common';
 
 const FreeRooms = (props) => {
-    const { classScheduler } = props;
+    const { classScheduler, getClassScheduleList } = props;
     const { t } = useTranslation('formElements');
     const [isOpenFreeRoomDialog, setIsOpenFreeRoomDialog] = useState(false);
 
     useEffect(() => {
-        getClassScheduleListService();
+        getClassScheduleList();
     }, []);
 
     const handleIsOpenFreeRoomDialog = () => {
@@ -76,5 +75,8 @@ const FreeRooms = (props) => {
 const mapStateToProps = (state) => ({
     freeRooms: state.freeRooms.freeRooms,
 });
+const mapDispatchToProps = (dispatch) => ({
+    getClassScheduleList: () => dispatch(getClassScheduleListStart()),
+});
 
-export default connect(mapStateToProps, null)(FreeRooms);
+export default connect(mapStateToProps, mapDispatchToProps)(FreeRooms);

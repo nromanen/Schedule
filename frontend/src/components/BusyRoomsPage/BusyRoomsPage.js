@@ -8,7 +8,6 @@ import FormLabel from '@material-ui/core/FormLabel';
 import { useTranslation } from 'react-i18next';
 import { get } from 'lodash';
 import './BusyRoomsPage.scss';
-import { getClassScheduleListService } from '../../services/classService';
 import BusyRoomsTable from './BustRoomsTable/BusyRoomsTable';
 import {
     COMMON_TABLE_COLUMNS_SIZE,
@@ -23,6 +22,7 @@ const BusyRoomsPage = (props) => {
         getAllScheduleItems,
         busyRooms,
         getBusyRooms,
+        getClassScheduleList,
         setScheduleLoading,
         scheduleLoading,
     } = props;
@@ -35,7 +35,7 @@ const BusyRoomsPage = (props) => {
         setScheduleLoading(true);
         getBusyRooms();
         getAllScheduleItems();
-        getClassScheduleListService();
+        getClassScheduleList();
     }, []);
 
     const handleChange = ({ target }) => {
@@ -49,7 +49,7 @@ const BusyRoomsPage = (props) => {
     return (
         <section className="schedule-card busy-rooms-control-panel">
             {scheduleLoading || !get(busyRooms[0], 'schedules') ? (
-                <CircularProgress />
+                <CircularProgress className="loading-circle" />
             ) : (
                 <>
                     <div className="table-size-container">

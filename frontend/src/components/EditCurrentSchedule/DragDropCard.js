@@ -7,6 +7,7 @@ import {
 } from '../../constants/translationLabels/formElements';
 import { getTeacherName } from '../../helper/renderTeacher';
 import './ScheduleLessonList/ScheduleLessonList.scss';
+import i18n from '../../i18n';
 
 const DragDropCard = (props) => {
     const { setDragItemData, lesson, t } = props;
