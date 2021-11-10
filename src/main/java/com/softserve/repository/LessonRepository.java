@@ -13,4 +13,6 @@ public interface LessonRepository extends BasicRepository <Lesson, Long>  {
     List<Lesson> getLessonsBySubjectIdTeacherIdSemesterIdLessonTypeAndExcludeCurrentLessonId(Lesson lesson);
     List<Lesson> getGroupedLessonsByLesson(Lesson lesson);
     Integer updateLinkToMeeting(Lesson lesson);
+    Lesson updateGrouped(Lesson updatedLesson);
+    Lesson deleteGrouped(Lesson lesson);
 }

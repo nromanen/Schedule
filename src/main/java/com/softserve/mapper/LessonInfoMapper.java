@@ -15,6 +15,7 @@ import java.util.List;
 public abstract class LessonInfoMapper {
     public abstract LessonInfoDTO lessonToLessonInfoDTO(Lesson lesson);
 
+    @Mapping(target = "semester.id", source = "semesterId")
     public abstract Lesson lessonInfoDTOToLesson(LessonInfoDTO lessonInfoDTO);
 
     public List<Lesson> lessonForGroupsDTOToLessons(LessonForGroupsDTO lessonForGroupsDTO) {
@@ -26,7 +27,7 @@ public abstract class LessonInfoMapper {
             LessonInfoDTO lessonInfoDTO = new LessonInfoDTO();
             lessonInfoDTO.setId(lessonForGroupsDTO.getId());
             lessonInfoDTO.setHours(lessonForGroupsDTO.getHours());
-            lessonInfoDTO.setSemester(lessonForGroupsDTO.getSemester());
+            lessonInfoDTO.setSemesterId(lessonForGroupsDTO.getSemesterId());
             lessonInfoDTO.setLinkToMeeting(lessonForGroupsDTO.getLinkToMeeting());
             lessonInfoDTO.setSubjectForSite(lessonForGroupsDTO.getSubjectForSite());
             lessonInfoDTO.setLessonType(lessonForGroupsDTO.getLessonType());

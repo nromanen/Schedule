@@ -21,7 +21,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @Slf4j
-@Transactional
+@Transactional(readOnly = true)
 @Service
 public class LessonServiceImpl implements LessonService {
 
@@ -89,6 +89,7 @@ public class LessonServiceImpl implements LessonService {
      * @return saved Lesson entity
      */
     @Override
+    @Transactional
     public Lesson save(Lesson object) {
         object.setSemester(semesterService.getCurrentSemester());
         log.info("In save(entity = [{}]", object);
@@ -112,6 +113,7 @@ public class LessonServiceImpl implements LessonService {
      * @return saved Lessons entities
      */
     @Override
+    @Transactional
     public List<Lesson> save(List<Lesson> lessons) {
         log.info("In save(lessons = [{}])", lessons);
         List<Lesson> lessonsList = new ArrayList<>();
@@ -127,19 +129,23 @@ public class LessonServiceImpl implements LessonService {
 
     /**
      * Method updates information for an existing lesson in Repository
-     * @param object Lesson entity with info to be updated
+     * @param lesson Lesson entity with info to be updated
      * @return updated Lesson entity
      */
     @Override
-    public Lesson update(Lesson object) {
-        object.setSemester(semesterService.getCurrentSemester());
-        log.info("In update(entity = [{}]", object);
-        if (isLessonForGroupExistsAndIgnoreWithId(object)){
+    @Transactional
+    public Lesson update(Lesson lesson) {
+        lesson.setSemester(semesterService.getCurrentSemester());
+        log.info("In update(entity = [{}]", lesson);
+        if (isLessonForGroupExistsAndIgnoreWithId(lesson)){
             throw new EntityAlreadyExistsException("Lesson with this parameters already exists");
         }
-        else {
-            return lessonRepository.update(object);
+        if (lesson.isGrouped()) {
+            lesson =  lessonRepository.updateGrouped(lesson);
+        } else {
+            lesson = lessonRepository.update(lesson);
         }
+        return lesson;
     }
 
     /**
@@ -148,9 +154,14 @@ public class LessonServiceImpl implements LessonService {
      * @return deleted Lesson entity
      */
     @Override
+    @Transactional
     public Lesson delete(Lesson object) {
         log.info("In delete(object = [{}])",  object);
+        if (object.isGrouped()) {
+            return lessonRepository.deleteGrouped(object);
+        }
         return lessonRepository.delete(object);
+
     }
 
     /**
