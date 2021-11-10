@@ -15,6 +15,7 @@ import {
 
 const ShowStudentsOnGroupDialog = (props) => {
     const {
+        uploadStudentsToGroupStart,
         getAllStudentsStart,
         onDeleteStudent,
         students,
@@ -60,7 +61,7 @@ const ShowStudentsOnGroupDialog = (props) => {
                               dialogChooseGroupButton(
                                   showMoveStudentsByGroupDialog,
                                   isDisabledBtnMoveStudent,
-                                  buttonClassName,
+                                  buttonClassName
                               ),
                               ...dialogButtons,
                           ]
@@ -84,6 +85,7 @@ const ShowStudentsOnGroupDialog = (props) => {
                     group={group}
                     open={isOpenUploadFileDialog}
                     handleCloseDialogFile={handleShowDialogFile}
+                    uploadStudentsToGroupStart={uploadStudentsToGroupStart}
                 />
             )}
         </>

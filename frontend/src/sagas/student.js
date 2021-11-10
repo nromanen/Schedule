@@ -1,6 +1,6 @@
 import { call, takeEvery, put, select } from 'redux-saga/effects';
 import { reset } from 'redux-form';
-import { STUDENT_URL } from '../constants/axios';
+import { STUDENT_URL, STUDENTS_TO_GROUP_FILE } from '../constants/axios';
 
 import * as actionTypes from '../actions/actionsType';
 import { STUDENT_FORM } from '../constants/reduxForms';
@@ -20,11 +20,11 @@ import {
     DELETED_LABEL,
 } from '../constants/translationLabels/serviceMessages';
 import { STUDENT } from '../constants/names';
-import { setStudentsLoading } from '../actions/loadingIndicator';
+import { setStudentsLoading, setLoading } from '../actions/loadingIndicator';
 
 const getStudents = (state) => state.students.students;
 
-function* fetchAllStudents({ id }) {
+function* getAllStudents({ id }) {
     try {
         yield put(showAllStudents([]));
         yield put(setStudentsLoading(true));
@@ -87,6 +87,19 @@ function* deleteStudent({ id }) {
     }
 }
 
+function* uploadStudentsToGroup({ file, id }) {
+    try {
+        yield put(setLoading(true));
+        const formData = new FormData();
+        formData.append('file', file);
+        yield call(axiosCall, `${STUDENTS_TO_GROUP_FILE}${id}`, POST, formData);
+    } catch (err) {
+        yield put(setOpenErrorSnackbar(createErrorMessage(err)));
+    } finally {
+        yield put(setLoading(false));
+    }
+}
+
 function* moveStudentsToGroup({ group, newGroup }) {
     try {
         const students = yield select(getStudents);
@@ -98,10 +111,11 @@ function* moveStudentsToGroup({ group, newGroup }) {
 }
 
 export default function* studentWatcher() {
+    yield takeEvery(actionTypes.UPLOAD_FILE_STUDENT_START, uploadStudentsToGroup);
     yield takeEvery(actionTypes.MOVE_STUDENTS_TO_GROUP_START, moveStudentsToGroup);
     yield takeEvery(actionTypes.SUBMIT_STUDENT_FORM, submitStudentForm);
-    yield takeEvery(actionTypes.GET_ALL_STUDENTS, fetchAllStudents);
     yield takeEvery(actionTypes.CREATE_STUDENT_START, createStudent);
     yield takeEvery(actionTypes.UPDATE_STUDENT_START, updateStudent);
     yield takeEvery(actionTypes.DELETE_STUDENT_START, deleteStudent);
+    yield takeEvery(actionTypes.GET_ALL_STUDENTS, getAllStudents);
 }

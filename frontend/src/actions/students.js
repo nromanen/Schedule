@@ -63,6 +63,14 @@ export const deleteStudentStart = (id) => {
     };
 };
 
+export const uploadStudentsToGroupStart = (file, id) => {
+    return {
+        type: actionTypes.UPLOAD_FILE_STUDENT_START,
+        file,
+        id,
+    };
+};
+
 export const moveStudentsToGroupStart = (group, newGroup) => {
     return {
         type: actionTypes.MOVE_STUDENTS_TO_GROUP_START,

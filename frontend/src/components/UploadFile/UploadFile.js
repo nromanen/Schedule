@@ -2,21 +2,14 @@ import './UploadFile.scss';
 import React, { useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import BackupIcon from '@material-ui/icons/Backup';
-// import InfoIcon from '@material-ui/icons/Info';
 import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
-import { uploadStudentsToGroupFile } from '../../services/uploadFile';
 import CustomDialog from '../../containers/Dialogs/CustomDialog';
 import { dialogCloseButton, dialogUploadButton } from '../../constants/dialogs';
-import { setLoadingService } from '../../services/loadingService';
 import {
     SELECT_FILE,
     FILE_RULES_FOR_EACH_LNE,
     EXAMPLE_FILE,
     SELECT_CORRECT_FORMAT,
-    // COMMON_NAME_LABEL,
-    // COMMON_TYPE_LABEL,
-    // COMMON_BYTE_SIZE_LABEL,
-    // COMMON_UPLOAD_FROM_FILE_TITLE,
 } from '../../constants/translationLabels/common';
 
 export const UploadFile = (props) => {
@@ -28,6 +21,7 @@ export const UploadFile = (props) => {
         group: { id },
         open,
         handleCloseDialogFile,
+        uploadStudentsToGroupStart,
     } = props;
 
     const changeHandler = (event) => {
@@ -35,8 +29,7 @@ export const UploadFile = (props) => {
     };
 
     const handleSubmission = () => {
-        setLoadingService(true);
-        uploadStudentsToGroupFile(selectedFile, id);
+        uploadStudentsToGroupStart(selectedFile, id);
         fileInputRef.current.value = '';
         setSelectedFile(null);
     };
