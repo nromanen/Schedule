@@ -6,7 +6,7 @@ import { FREE_ROOMS } from '../../constants/reduxForms';
 import { getAllSemestersStart } from '../../actions/semesters';
 import { setRoomsLoading } from '../../actions/loadingIndicator';
 import { getFreeRoomsStart } from '../../actions/rooms';
-import FreeRoomForm from '../../components/FreeRoomsDialog/FreeRoomForm';
+import FreeRoomForm from '../../components/FreeRoomsDialog/freeRoomForm';
 
 const mapStateToProps = (state) => ({
     initialValues: { semesterId: state.schedule.currentSemester.id },
