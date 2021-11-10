@@ -20,29 +20,19 @@
             padding: 5px;
         }
     }
-    .group-list-container{
-        position: relative;
-        display: flex;
-        flex-direction: column;
-        min-height: 40px;
-        justify-content: center;
+    .group-list-container {
+        margin-top: 5px;
         text-align: center;
-        &:before {
-            content: '';
-            display: block;
-            flex-grow: 1;
-            height: 4px;
-        }
     }
     .group-list {
-        display: flex;
-        flex-wrap: wrap;
         margin: 2px;
-        justify-content: center;
         font-size: $font-sm;
         font-weight: bold;
-        span:nth-child(2n) {
-            margin-top: 4px;
+        &:after {
+            content: ',';
+        }
+        &:last-of-type::after{
+            display: none;
         }
     }
     .week-type {
@@ -55,17 +45,21 @@
             text-transform: uppercase;
         }
     }
-    .possible {
-        background-color: $warning-color;
+    .possible,
+    .available,
+    .allow {
         p {
             color: $black;
         }
     }
-    .allow {
+    .possible {
+        background-color: $warning-color;
+    }
+    .available {
         background-color: $light-green;
-        p {
-            color: $black;
-        }
+    }
+    .allow {
+        background-color: $create-color-light;
     }
     .not-allow {
         background-color: $red-light;

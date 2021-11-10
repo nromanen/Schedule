@@ -4,8 +4,9 @@
     display: flex;
 }
 .busy-rooms-control-panel {
-    display: flex;
-    height: 85vh;
+    position: relative;
+    // display: flex;
+    height: 77vh;
     padding-bottom: 10px;
     .busy-rooms-table-container {
         align-items: start;
@@ -15,11 +16,26 @@
         height: $h-full;
         justify-content: stretch;
         margin: 0 5px;
-        padding:0px;
+        padding: 0px;
         overflow: auto;
-
     }
-    .day-classes-aside .day-sidebar-title {
-        height: 50px;
+    .day-classes-aside {
+        .day-sidebar-title {
+            height: 50px;
+        }
+    }
+    .table-size-container {
+        // position: absolute;
+        // right: -5px;
+        // bottom: -5px;
+        display: flex;
+        .radio-control{
+            justify-content: center;
+            text-align: center;
+
+        }
+        .radio-group {
+            flex-direction: row;
+        }
     }
 }
