@@ -153,3 +153,5 @@ export const BUSY_ROOMS_TITLE = 'BusyRooms_management_title';
 export const GENERAL_TITLE = 'General_management_title';
 export const SELECT_FILE = 'common:select_file';
 export const SELECT_CORRECT_FORMAT = 'common:select-correct_format';
+export const FILE_RULES_FOR_EACH_LNE = 'common:file-rules-for-each-line';
+export const EXAMPLE_FILE = 'common:example-file';

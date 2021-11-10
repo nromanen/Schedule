@@ -10,7 +10,9 @@ import { dialogCloseButton, dialogUploadButton } from '../../constants/dialogs';
 import { setLoadingService } from '../../services/loadingService';
 import {
     SELECT_FILE,
-    // SELECT_CORRECT_FORMAT,
+    FILE_RULES_FOR_EACH_LNE,
+    EXAMPLE_FILE,
+    SELECT_CORRECT_FORMAT,
     // COMMON_NAME_LABEL,
     // COMMON_TYPE_LABEL,
     // COMMON_BYTE_SIZE_LABEL,
@@ -45,7 +47,6 @@ export const UploadFile = (props) => {
     const buttonTitle = selectedFile ? selectedFile.name : t(SELECT_FILE);
     return (
         <CustomDialog
-            // title={t(COMMON_UPLOAD_FROM_FILE_TITLE)}
             open={open}
             onClose={handleCloseDialogFile}
             buttons={[
@@ -56,16 +57,12 @@ export const UploadFile = (props) => {
             <div className="upload-dialog">
                 {isHideRules && (
                     <div className="upload-title">
-                        <div> * This File has to be in csv format.</div>
-                        <div>
-                            * Each line of the file should consist of four fields, separated by
-                            commas.
-                        </div>
-                        <div>* First line of the file is a header.</div>
+                        <div>{t(SELECT_CORRECT_FORMAT)}</div>
+                        <div>{t(FILE_RULES_FOR_EACH_LNE)}</div>
                     </div>
                 )}
                 <div className="upload-example-btn">
-                    <div className="upload-example">Example of file</div>
+                    <div className="upload-example">{t(EXAMPLE_FILE)}</div>
                     <HelpOutlineIcon
                         className="upload-button"
                         onClick={() => setIsHideRules(!isHideRules)}

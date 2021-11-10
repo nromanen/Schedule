@@ -182,5 +182,7 @@
     "move_label": "Move",
     "more_label": "More",
     "select_file": "Select file",
-    "select-correct_format": "File has to be in csv format"
+    "select-correct_format": "*File has to be in csv format",
+    "file-rules-for-each-line": "*Each line of the file should consist of four fields, separated by commas.",
+    "example-file": "Example of file"
 }

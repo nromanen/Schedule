@@ -22,13 +22,14 @@ input[type="file"] {
   margin: 10px;
   cursor: pointer;
   &:hover {
-    color: $blue;
+    color: $blue-hover;
   }
   }
   &-title{
     color: $label-color;
   }
   &-example{
+    align-self: center;
     margin: 10px 0 10px;
   }
   &-text-file{

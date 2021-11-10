@@ -8,12 +8,12 @@ import { RenderStudentTableActions } from './Pagination';
 
 export const TableFooterComponent = (props) => {
     const { page, setPage, rowsPerPage, setRowsPerPage, items } = props;
-    const ALL_ROWS = -1;
+    const ALL_ROWS = items.length;
     const { t } = useTranslation('formElements');
     const onRowsPerPageChange = (event) => {
         const { value } = event.target;
         setPage(0);
-        return value === '-1' ? setRowsPerPage(items.length) : setRowsPerPage(parseInt(value, 10));
+        setRowsPerPage(parseInt(value, 10));
     };
     return (
         <div className="table-footer">

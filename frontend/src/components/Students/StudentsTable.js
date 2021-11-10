@@ -20,7 +20,7 @@ export const StudentsTable = (props) => {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
     const [checkedAll, setCheckedAll] = useState(false);
-    console.log(rowsPerPage);
+
     const currentStudentsOnList = students.slice(
         page * rowsPerPage,
         page * rowsPerPage + rowsPerPage,

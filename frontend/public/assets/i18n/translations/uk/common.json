@@ -180,5 +180,7 @@
     "hour_many": "<0>{{count}}</0> годин",
     "more_label": "Більше",
     "move_label": "Перемістити",
-    "select-correct_format": "Формат файлу повинен бути csv"
+    "select-correct_format": "*Формат файлу повинен бути csv",
+    "file-rules-for-each-line": "*Кожний рядок повинен мати 4 поля через кому.",
+    "example-file": "Приклад файлу."
 }
