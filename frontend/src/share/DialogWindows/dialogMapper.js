@@ -24,7 +24,7 @@ const dialogMapper = (props) => {
         whatDelete,
         handelConfirm,
         setOpenConfirmDialog,
-        warning,
+        warnings,
         linkToMeeting = 'none',
     } = props;
     const handelClose = () => {
@@ -54,7 +54,11 @@ const dialogMapper = (props) => {
                 title: i18n.t(COMMON_ARE_YOU_SURE),
                 children: (
                     <div className="availability-info">
-                        <p className="availability-warning">{warning}</p>
+                        {warnings.map((warning) => (
+                            <p key={warning} className="availability-warning">
+                                {warning}
+                            </p>
+                        ))}
                     </div>
                 ),
                 buttons: defaultModalButtons,

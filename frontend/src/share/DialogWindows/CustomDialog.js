@@ -15,7 +15,7 @@ const CustomDialog = (props) => {
         children,
         handelConfirm,
         whatDelete,
-        warning,
+        warnings,
         linkToMeeting,
         setOpenConfirmDialog,
         title,
