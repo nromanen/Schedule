@@ -75,6 +75,7 @@ public class TeacherServiceTest {
 
         teacherWithoutId = new Teacher();
         teacherWithoutId.setName(name);
+        teacherWithoutId.setDisable(false);
         teacherWithoutId.setSurname(surname);
         teacherWithoutId.setPatronymic(patronymic);
         teacherWithoutId.setPosition(position);
@@ -82,6 +83,7 @@ public class TeacherServiceTest {
 
         teacherWithId1LAndWithUserId1 = new Teacher();
         teacherWithId1LAndWithUserId1.setId(1L);
+        teacherWithId1LAndWithUserId1.setDisable(false);
         teacherWithId1LAndWithUserId1.setName(name);
         teacherWithId1LAndWithUserId1.setSurname(surname);
         teacherWithId1LAndWithUserId1.setPatronymic(patronymic);
@@ -90,6 +92,7 @@ public class TeacherServiceTest {
 
         teacherWithId1LAndWithoutUser = new Teacher();
         teacherWithId1LAndWithoutUser.setId(1L);
+        teacherWithId1LAndWithoutUser.setDisable(false);
         teacherWithId1LAndWithoutUser.setName(name);
         teacherWithId1LAndWithoutUser.setSurname(surname);
         teacherWithId1LAndWithoutUser.setPatronymic(patronymic);
@@ -98,6 +101,7 @@ public class TeacherServiceTest {
 
         teacherDtoWithoutId = new TeacherDTO();
         teacherDtoWithoutId.setName(name);
+        teacherDtoWithoutId.setDisable(false);
         teacherDtoWithoutId.setSurname(surname);
         teacherDtoWithoutId.setPatronymic(patronymic);
         teacherDtoWithoutId.setPosition(position);
@@ -105,6 +109,7 @@ public class TeacherServiceTest {
 
         teacherForUpdateDTOWithId1L = new TeacherForUpdateDTO();
         teacherForUpdateDTOWithId1L.setId(1L);
+        teacherForUpdateDTOWithId1L.setDisable(false);
         teacherForUpdateDTOWithId1L.setName(name);
         teacherForUpdateDTOWithId1L.setSurname(surname);
         teacherForUpdateDTOWithId1L.setPatronymic(patronymic);

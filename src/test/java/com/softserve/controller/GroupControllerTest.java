@@ -90,11 +90,13 @@ public class GroupControllerTest {
 
         groupDTOWithID4L = GroupDTO.builder()
                 .id(4L)
+                .disable(false)
                 .title("444")
                 .build();
 
         disabledGroupDTOWithID5L = GroupDTO.builder()
                 .id(5L)
+                .disable(true)
                 .title("555")
                 .build();
 
@@ -125,7 +127,7 @@ public class GroupControllerTest {
     )
     @Sql(value = {"classpath:create-lessons-before.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     public void getByTeacherId() throws Exception {
-        GroupDTO expectedGroup = GroupDTO.builder().id(4L).title("111").build();
+        GroupDTO expectedGroup = GroupDTO.builder().id(4L).disable(false).title("111").build();
         assertions.assertForGetListWithOneEntity(expectedGroup, "/groups/teacher/4");
     }
 

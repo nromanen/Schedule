@@ -7,10 +7,7 @@ import com.softserve.dto.TeacherWithUserDTO;
 import com.softserve.dto.UserDataDTO;
 import com.softserve.entity.Teacher;
 import com.softserve.service.UserService;
-import org.mapstruct.InheritInverseConfiguration;
-import org.mapstruct.Mapper;
-import org.mapstruct.MapperConfig;
-import org.mapstruct.Mapping;
+import org.mapstruct.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 
@@ -24,9 +21,9 @@ public abstract class TeacherMapper {
     @Mapping(target = "email", source = "userId", qualifiedByName = "userIdToEmail")
     public abstract TeacherDTO teacherToTeacherDTO(Teacher teacher);
 
-    public String userIdToEmail(Integer userId) {
+    public String userIdToEmail(Long userId) {
         if(userId != null) {
-            return userService.getById(userId.longValue()).getEmail();
+            return userService.getById(userId).getEmail();
         }
         return null;
     }
