@@ -13,7 +13,7 @@ import { getFirstLetter } from '../../helper/renderTeacher';
 import SearchPanel from '../../share/SearchPanel/SearchPanel';
 import { clearDepartment, getAllDepartmentsService } from '../../services/departmentService';
 import { getPublicClassScheduleListService } from '../../services/classService';
-import AddTeacherForm from '../../components/AddTeacherForm/AddTeacherForm';
+import AddTeacherForm from './AddTeacherForm/AddTeacherForm';
 import { setIsOpenConfirmDialog } from '../../actions/dialog';
 import { getAllSemestersStart } from '../../actions/semesters';
 import {
@@ -29,9 +29,9 @@ import {
     setDisabledTeachersStart,
     showAllTeachersStart,
 } from '../../actions/teachers';
-import CustomDialog from '../Dialogs/CustomDialog';
-import TeacherList from './TeacherList';
-import './TeachersList.scss';
+import CustomDialog from '../../containers/Dialogs/CustomDialog';
+import TeacherList from './TeachersList/TeacherList';
+import './TeachersList/TeachersList.scss';
 
 const TeacherPage = (props) => {
     const { t } = useTranslation('common');

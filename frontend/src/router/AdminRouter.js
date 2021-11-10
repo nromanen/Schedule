@@ -17,7 +17,7 @@ import {
     ADMIN_PAGE_LINK,
     ACTIVATION_PAGE_LINK,
 } from '../constants/links';
-import TeacherPage from '../containers/TeachersList/TeachersPage';
+import TeacherPage from '../components/TeachersPage/TeachersPage';
 import BusyRooms from '../containers/BusyRooms/BusyRooms';
 import GroupList from '../containers/GroupPage/GroupPage';
 import ClassSchedule from '../containers/ClassSchedule/ClassSchedule';

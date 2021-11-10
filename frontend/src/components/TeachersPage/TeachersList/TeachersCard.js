@@ -4,19 +4,18 @@ import { FaEdit } from 'react-icons/fa';
 import { MdDelete } from 'react-icons/md';
 import { useTranslation } from 'react-i18next';
 import { GiSightDisabled, IoMdEye } from 'react-icons/all';
-import Card from '../../share/Card/Card';
+import Card from '../../../share/Card/Card';
 
-import { dialogTypes } from '../../constants/dialogs';
-import { getTeacherFullName } from '../../helper/renderTeacher';
-import { getShortTitle } from '../../helper/shortTitle';
-import { selectTeacherCardService } from '../../services/teacherService';
+import { dialogTypes } from '../../../constants/dialogs';
+import { getTeacherFullName } from '../../../helper/renderTeacher';
+import { getShortTitle } from '../../../helper/shortTitle';
 import {
     COMMON_SET_DISABLED,
     COMMON_EDIT_HOVER_TITLE,
     COMMON_DELETE_HOVER_TITLE,
     COMMON_SET_ENABLED,
     TEACHER_DEPARTMENT,
-} from '../../constants/translationLabels/common';
+} from '../../../constants/translationLabels/common';
 
 const TeachersCard = (props) => {
     const { t } = useTranslation('common');
