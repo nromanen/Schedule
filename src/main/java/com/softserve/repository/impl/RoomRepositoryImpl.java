@@ -27,7 +27,7 @@ public class RoomRepositoryImpl extends BasicRepositoryImpl<Room, Long> implemen
 
     private static final String CHECK_REFERENCE =
             "select count (s.id) " +
-            "from Schedule s where s.room.id = :roomId";
+                    "from Schedule s where s.room.id = :roomId";
 
     private static final String GET_NOT_AVAILABLE_ROOMS_FOR_SCHEDULE =
             "select r1 from Room r1 " +
@@ -75,18 +75,22 @@ public class RoomRepositoryImpl extends BasicRepositoryImpl<Room, Long> implemen
     private static final String GET_MAX_SORTING_ORDER =
             "SELECT max(r.sortOrder) FROM Room r";
 
-    public static final String GET_NEXT_POSITION=
+    public static final String GET_NEXT_POSITION =
             "SELECT min(r.sortOrder) FROM Room r WHERE r.sortOrder > :position";
 
     private static final String GET_MIN_SORTING_ORDER =
             "SELECT min(r.sortOrder) FROM Room r";
 
-    private Session getSession(){
+    private static final String GET_AFTER_ID_SORT_ORDER =
+            "select r.sortOrder from Room r where r.id = :afterId";
+
+    private Session getSession() {
         Session session = sessionFactory.getCurrentSession();
         Filter filter = session.enableFilter("roomDisableFilter");
         filter.setParameter("disable", false);
         return session;
     }
+
     /**
      * The method used for getting list of entities from database
      *
@@ -128,13 +132,13 @@ public class RoomRepositoryImpl extends BasicRepositoryImpl<Room, Long> implemen
                 idOfPeriod, dayOfWeek, evenOdd);
         Session session = getSession();
         Query query = session.createQuery
-                ("select r1 from " + basicClass.getName() + " r1" +
-                        " where r1.id not in" +
-                        "(select r.id from Schedule s" +
-                        " join s.room r " +
-                        " where  s.period.id = :idOfPeriod" +
-                        " and s.dayOfWeek = :dayOfWeek" +
-                        " and s.evenOdd = :evenOdd)")
+                        ("select r1 from " + basicClass.getName() + " r1" +
+                                " where r1.id not in" +
+                                "(select r.id from Schedule s" +
+                                " join s.room r " +
+                                " where  s.period.id = :idOfPeriod" +
+                                " and s.dayOfWeek = :dayOfWeek" +
+                                " and s.evenOdd = :evenOdd)")
                 .setParameter("idOfPeriod", idOfPeriod)
                 .setParameter("dayOfWeek", dayOfWeek)
                 .setParameter("evenOdd", evenOdd);
@@ -147,7 +151,7 @@ public class RoomRepositoryImpl extends BasicRepositoryImpl<Room, Long> implemen
     protected boolean checkReference(Room room) {
         log.info("In checkReference(room = [{}])", room);
         long count = (long) sessionFactory.getCurrentSession().createQuery
-                (CHECK_REFERENCE)
+                        (CHECK_REFERENCE)
                 .setParameter("roomId", room.getId())
                 .getSingleResult();
         return count != 0;
@@ -206,7 +210,8 @@ public class RoomRepositoryImpl extends BasicRepositoryImpl<Room, Long> implemen
 
     /**
      * The method is used to save room after the specific room to get desired order
-     * @param room the room that must be saved
+     *
+     * @param room    the room that must be saved
      * @param afterId the id of the room after which must be saved the new one
      *                if we want to insert into first position we set afterId = 0
      * @return saved room with set order and id
@@ -217,34 +222,30 @@ public class RoomRepositoryImpl extends BasicRepositoryImpl<Room, Long> implemen
         Optional<Room> previousRoom = findById(afterId);
 
         Double maxOrder = Optional.ofNullable(
-                getSession().createQuery(GET_MAX_SORTING_ORDER, Double.class )
-                        .getSingleResult()).orElse(0.0);
+                getSession().createQuery(GET_MAX_SORTING_ORDER, Double.class).getSingleResult()).orElse(0.0);
 
-        Double minOrder = Optional.ofNullable(
-                getSession().createQuery(GET_MIN_SORTING_ORDER, Double.class)
-                        .getSingleResult()).orElse(2.0);
+        Double minOrder = Optional.ofNullable(getSession().createQuery(GET_MIN_SORTING_ORDER, Double.class)
+                .getSingleResult()).orElse(2.0);
 
         if (previousRoom.isPresent()) {
-            Double previousPosition = Optional.ofNullable(
-                    previousRoom.get().getSortOrder()).orElse(0.0);
+            Double previousPosition = Optional.ofNullable(previousRoom.get().getSortOrder()).orElse(0.0);
 
-            TypedQuery<Double> doubleTypedQuery = getSession().createQuery(
-                    GET_NEXT_POSITION, Double.class);
+            TypedQuery<Double> doubleTypedQuery = getSession().createQuery(GET_NEXT_POSITION, Double.class);
+
             doubleTypedQuery.setParameter("position", previousPosition);
             Double nextPosition = Optional.ofNullable(
                     doubleTypedQuery.getSingleResult()).orElse(previousPosition + 2);
 
             Double newPosition = ((nextPosition + previousPosition) / 2);
             if (newPosition - 1 < 0.01) {
-                newPosition = Optional.ofNullable(
-                        getSession().createQuery(GET_MAX_SORTING_ORDER, Double.class)
-                        .getSingleResult()).orElse(0.0) + 1;
+                newPosition = Optional.ofNullable(getSession().createQuery(GET_MAX_SORTING_ORDER, Double.class)
+                                .getSingleResult()).orElse(0.0) + 1;
             }
             room.setSortOrder(newPosition);
-        }else if(afterId == 0){
-            room.setSortOrder(minOrder/2);
-        }else{
-            room.setSortOrder(maxOrder+1);
+        } else if (afterId == 0) {
+            room.setSortOrder(minOrder / 2);
+        } else {
+            room.setSortOrder(maxOrder + 1);
         }
         save(room);
         return room;
@@ -252,17 +253,24 @@ public class RoomRepositoryImpl extends BasicRepositoryImpl<Room, Long> implemen
 
     /**
      * Method updates room order position
-     * @param room room that will be replaced
+     *
+     * @param room    room that will be replaced
      * @param afterId id of the room after which will be placed
-     *                  if we want to update room to first position we set afterId = 0
+     *                if we want to update room to first position we set afterId = 0
      * @return room with new position
      */
     @Override
     public Room updateRoomAfterId(Room room, Long afterId) {
-        log.info("Enter updateRoomAfterId");
+        log.info("Enter updateRoomAfterId: {}{}", room, afterId);
 
-        if(afterId == room.getId()){
-        //TODO sortOrder = null
+        if (afterId == room.getId()) {
+
+            TypedQuery<Double> sortOrderTypedQuery = getSession().createQuery(GET_AFTER_ID_SORT_ORDER, Double.class);
+            sortOrderTypedQuery.setParameter("afterId", afterId);
+
+            Double myOrder = Optional.ofNullable(sortOrderTypedQuery.getSingleResult()).orElse(0.0);
+
+            room.setSortOrder(myOrder);
         } else {
             Optional<Room> previousRoom = findById(afterId);
 
@@ -271,11 +279,9 @@ public class RoomRepositoryImpl extends BasicRepositoryImpl<Room, Long> implemen
                             .getSingleResult()).orElse(0.0);
 
             if (previousRoom.isPresent()) {
-                Double previousPosition = Optional.ofNullable(
-                        previousRoom.get().getSortOrder()).orElse(0.0);
+                Double previousPosition = Optional.ofNullable(previousRoom.get().getSortOrder()).orElse(0.0);
 
-                TypedQuery<Double> doubleTypedQuery = getSession().createQuery(
-                        GET_NEXT_POSITION, Double.class);
+                TypedQuery<Double> doubleTypedQuery = getSession().createQuery(GET_NEXT_POSITION, Double.class);
                 doubleTypedQuery.setParameter("position", previousPosition);
 
                 Double nextPosition = Optional.ofNullable(doubleTypedQuery.
@@ -283,21 +289,19 @@ public class RoomRepositoryImpl extends BasicRepositoryImpl<Room, Long> implemen
                 Double newPosition = ((nextPosition + previousPosition) / 2);
 
                 if (newPosition - 1 < 0.01) {
-                    newPosition = Optional.ofNullable(
-                            getSession().createQuery(GET_MAX_SORTING_ORDER, Double.class)
+                    newPosition = Optional.ofNullable(getSession().createQuery(GET_MAX_SORTING_ORDER, Double.class)
                             .getSingleResult()).orElse(0.0) + 1;
                 }
                 room.setSortOrder(newPosition);
-            }else if(afterId == 0) {
+
+            } else if (afterId == 0) {
                 room.setSortOrder(minOrder / 2);
-            }
-            else {
+            } else {
                 room.setSortOrder(1.0);
             }
         }
         update(room);
         return room;
     }
-
 
 }

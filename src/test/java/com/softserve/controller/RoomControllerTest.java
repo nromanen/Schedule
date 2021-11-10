@@ -6,7 +6,6 @@ import com.softserve.config.MyWebAppInitializer;
 import com.softserve.config.WebMvcConfig;
 import com.softserve.dto.RoomDTO;
 import com.softserve.dto.RoomTypeDTO;
-import com.softserve.dto.RoomWithSortOrderDTO;
 import com.softserve.entity.Room;
 
 import com.softserve.entity.enums.EvenOdd;
@@ -28,7 +27,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.time.DayOfWeek;
-import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -183,7 +181,7 @@ public class RoomControllerTest {
         roomTypeDTO.setId(4L);
         roomTypeDTO.setDescription("Small auditory");
 
-        RoomWithSortOrderDTO roomSave = new RoomWithSortOrderDTO();
+        RoomDTO roomSave = new RoomDTO();
         roomSave.setName("Save after 5");
         roomSave.setType(roomTypeDTO);
 
@@ -191,7 +189,6 @@ public class RoomControllerTest {
                         .content(objectMapper.writeValueAsString(roomSave))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
-
     }
 
     @Test
@@ -201,7 +198,7 @@ public class RoomControllerTest {
         roomTypeDTO.setId(5L);
         roomTypeDTO.setDescription("Small auditory");
 
-        RoomWithSortOrderDTO roomSave = new RoomWithSortOrderDTO();
+        RoomDTO roomSave = new RoomDTO();
         roomSave.setName("Save First");
         roomSave.setType(roomTypeDTO);
 
@@ -209,7 +206,6 @@ public class RoomControllerTest {
                         .content(objectMapper.writeValueAsString(roomSave))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
-
     }
 
     @Test
@@ -218,6 +214,7 @@ public class RoomControllerTest {
         RoomTypeDTO roomTypeDTO = new RoomTypeDTO();
         roomTypeDTO.setId(5L);
         roomTypeDTO.setDescription("Medium auditory");
+
         RoomDTO roomDtoForUpdate = new RoomDTO();
         roomDtoForUpdate.setId(4L);
         roomDtoForUpdate.setName("update medium room");
@@ -231,7 +228,29 @@ public class RoomControllerTest {
                 .andExpect(jsonPath("$.id").value(roomForCompare.getId()))
                 .andExpect(jsonPath("$.type").value(roomForCompare.getType()))
                 .andExpect(jsonPath("$.name").value(roomForCompare.getName()));
+    }
 
+    @Test
+    public void UpdateRoomWithSameOrder() throws Exception{
+
+        RoomTypeDTO roomTypeDTO = new RoomTypeDTO();
+        roomTypeDTO.setId(5L);
+        roomTypeDTO.setDescription("Medium auditory");
+
+        RoomDTO roomDtoForUpdate = new RoomDTO();
+        roomDtoForUpdate.setId(5L);
+        roomDtoForUpdate.setName("update with id 2");
+        roomDtoForUpdate.setType(roomTypeDTO);
+
+        Room roomForCompare = new RoomMapperImpl().convertToEntity(roomDtoForUpdate);
+
+        mockMvc.perform(put("/rooms/after/{id}", 5)
+                        .content(objectMapper.writeValueAsString(roomDtoForUpdate))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(roomForCompare.getId()))
+                .andExpect(jsonPath("$.type").value(roomForCompare.getType()))
+                .andExpect(jsonPath("$.name").value(roomForCompare.getName()));
     }
 
 }
