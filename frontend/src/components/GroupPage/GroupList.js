@@ -11,7 +11,6 @@ import NotFound from '../../share/NotFound/NotFound';
 import CustomDialog from '../../containers/Dialogs/CustomDialog';
 import AddStudentDialog from '../../share/DialogWindows/_dialogWindows/AddStudentDialog';
 import ShowStudentsOnGroupDialog from '../../containers/Students/ShowStudentsOnGroupDialog';
-import { SHOW_STUDENTS_LINK } from '../../constants/links';
 
 const GroupList = (props) => {
     const {
@@ -70,26 +69,6 @@ const GroupList = (props) => {
         selectGroupSuccess(currentGroupId);
         setIsOpenShowStudentsDialog(true);
     };
-
-    const pathIncludesParams = (linkType) => {
-        return match.path.includes(linkType);
-    };
-    const checkParamsActions = () => {
-        const { id } = match.params;
-        console.log(id);
-        const linksActions = [SHOW_STUDENTS_LINK];
-        const checkParamsAndSetActions = {
-            SHOW_STUDENTS_LINK: showStudentsByGroup(id),
-            // [links.AddStudent]: showAddStudentDialog(id),
-            // [links.ShowStudents]: setShowStudents(true),
-        };
-        const find = linksActions.find((link) => pathIncludesParams(link));
-        return checkParamsAndSetActions[find];
-    };
-
-    useEffect(() => {
-        checkParamsActions();
-    }, []);
 
     if (loading) {
         return (

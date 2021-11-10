@@ -6,7 +6,7 @@ import {
     DEPARTMENTS_LINK,
     LESSON_PAGE_LINK,
     TEACHER_LIST_LINK,
-    GROUP_LIST_LINK,
+    GROUP_LIST_PARAM_LINK,
     CLASS_SCHEDULE_TITLE_LINK,
     ROOM_LIST_LINK,
     SUBJECT_PAGE_LINK,
@@ -38,7 +38,7 @@ export default function Routers() {
                 <AdminRoute path={DEPARTMENTS_LINK} component={DepartmentPage} />
                 <AdminRoute path={LESSON_PAGE_LINK} component={LessonPage} />
                 <AdminRoute path={TEACHER_LIST_LINK} component={TeacherList} />
-                <AdminRoute path={GROUP_LIST_LINK} component={GroupList} />
+                <AdminRoute path={GROUP_LIST_PARAM_LINK} component={GroupList} />
                 <AdminRoute path={CLASS_SCHEDULE_TITLE_LINK} component={ClassSchedule} />
                 <AdminRoute path={ROOM_LIST_LINK} component={RoomList} />
                 <AdminRoute path={SUBJECT_PAGE_LINK} component={SubjectPage} />

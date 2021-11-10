@@ -1,10 +1,10 @@
 import './GroupCard.scss';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 import { GiSightDisabled, IoMdEye } from 'react-icons/all';
 import { FaEdit, FaUserPlus, FaUsers } from 'react-icons/fa';
 import { MdDelete } from 'react-icons/md';
-import { Link } from 'react-router-dom';
 import { dialogTypes } from '../../../constants/dialogs';
 import {
     ADD_STUDENT_LINK,
@@ -28,6 +28,7 @@ import { getShortTitle } from '../../../helper/shortTitle';
 const GroupCard = (props) => {
     const {
         item,
+        match,
         disabled,
         setGroup,
         showConfirmDialog,
