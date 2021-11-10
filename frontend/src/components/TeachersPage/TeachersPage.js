@@ -8,7 +8,6 @@ import { cardType } from '../../constants/cardType';
 import { SEND_SCHEDULE_FOR_TEACHER } from '../../constants/translationLabels/common';
 import { search } from '../../helper/search';
 import { MultiSelect } from '../../helper/multiselect';
-import { getFirstLetter } from '../../helper/renderTeacher';
 import SearchPanel from '../../share/SearchPanel/SearchPanel';
 import { clearDepartment, getAllDepartmentsService } from '../../services/departmentService';
 import { getPublicClassScheduleListService } from '../../services/classService';
@@ -16,6 +15,7 @@ import AddTeacherForm from './AddTeacherForm/AddTeacherForm';
 import CustomDialog from '../../containers/Dialogs/CustomDialog';
 import TeachersList from './TeachersList/TeachersList';
 import './TeachersList/TeachersList.scss';
+import { setDepartmentOptions, setOptions, setSemesterOptions } from '../../utils/selectUtils';
 
 const TeachersPage = (props) => {
     const { t } = useTranslation('common');
@@ -76,13 +76,14 @@ const TeachersPage = (props) => {
         handleTeacher(sendData);
         clearDepartment();
     };
+
     const setEnabledDisabled = (currentTeacherId) => {
-        const teacher = [...enabledTeachers, ...disabledTeachers].find(
+        const findTeacher = [...enabledTeachers, ...disabledTeachers].find(
             (teacherEl) => teacherEl.id === currentTeacherId,
         );
 
         const isDisable = dialogTypes.SET_VISIBILITY_ENABLED !== confirmDialogType;
-        handleTeacher({ ...teacher, disable: isDisable });
+        handleTeacher({ ...findTeacher, disable: isDisable });
     };
 
     const showConfirmDialog = (id, dialogType) => {
@@ -100,50 +101,13 @@ const TeachersPage = (props) => {
         }
     };
 
-    const setOptions = () => {
-        return enabledTeachers.map((item) => {
-            return {
-                id: item.id,
-                value: item.id,
-                label: `${item.surname} ${getFirstLetter(item.name)} ${getFirstLetter(
-                    item.patronymic,
-                )}`,
-            };
-        });
-    };
-
-    const setSemesterOptions = () => {
-        return semesters !== undefined
-            ? semesters.map((item) => {
-                  return { id: item.id, value: item.id, label: `${item.description}` };
-              })
-            : null;
-    };
-
-    const setDepartmentOptions = () => {
-        return departments.map((item) => {
-            return { id: item.id, value: item.id, label: `${item.name}` };
-        });
-    };
-
-    const options = setOptions();
-    const semesterOptions = setSemesterOptions();
-    const departmentOptions = setDepartmentOptions();
-
-    const closeSelectionDialog = () => {
-        // del
+    const cancelSelection = () => {
+        setSelected([]);
         setIsOpenMultiSelectDialog(false);
     };
-    const clearSelection = () => {
-        // del
-        setSelected([]);
-    };
-    const cancelSelection = () => {
-        clearSelection();
-        closeSelectionDialog();
-    };
+
     const sendTeachers = () => {
-        closeSelectionDialog(); // change
+        setIsOpenMultiSelectDialog(false);
         const teachersId = selected.map((item) => {
             return item.id;
         });
@@ -151,8 +115,9 @@ const TeachersPage = (props) => {
         const { language } = i18n;
         const data = { semesterId, teachersId, language };
         sendTeacherSchedule(data);
-        clearSelection();
+        setSelected([]);
     };
+
     const isChosenSelection = () => {
         return selected.length !== 0;
     };
@@ -179,13 +144,13 @@ const TeachersPage = (props) => {
                 {isOpenMultiSelectDialog && (
                     <MultiSelect
                         open={isOpenMultiSelectDialog}
-                        options={options}
+                        options={setOptions(enabledTeachers)}
                         value={selected}
                         onChange={setSelected}
                         onCancel={cancelSelection}
                         onSentTeachers={sendTeachers}
                         isEnabledSentBtn={isChosenSelection()}
-                        semesters={semesterOptions}
+                        semesters={setSemesterOptions(semesters)}
                         defaultSemester={parseDefaultSemester()}
                         onChangeSemesterValue={setSelectedSemester}
                     />
@@ -204,7 +169,7 @@ const TeachersPage = (props) => {
                             {t(SEND_SCHEDULE_FOR_TEACHER)}
                         </Button>
                         <AddTeacherForm
-                            departments={departmentOptions}
+                            departments={setDepartmentOptions(departments)}
                             teachers={enabledTeachers}
                             onSubmit={teacherSubmit}
                             onSetSelectedCard={selectedTeacherCard}
