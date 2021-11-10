@@ -36,10 +36,8 @@ import {
     COMMON_CLASS_SCHEDULE_MANAGEMENT_TITLE,
     COMMON_SAVE_BUTTON_LABEL,
 } from '../../../constants/translationLabels/common';
-import { dateFormat } from '../../../constants/formats';
 import SetSemesterCheckboxes from './SemesterCheckboxes';
 import {
-    getTomorrow,
     initialCheckboxesStateForDays,
     initialCheckboxesStateForClasses,
 } from '../../../utils/formUtils';
@@ -55,17 +53,12 @@ const SemesterForm = (props) => {
         semester,
         classScheduler,
         initialize,
-        change,
         reset,
         selectedGroups,
         setSelectedGroups,
         options,
         clearSemesterSuccess,
     } = props;
-
-    const [startDate, setStartDate] = useState(new Date());
-    const [finishDate, setFinishDate] = useState(getTomorrow());
-    const [disabledFinishDate, setDisabledFinishDate] = useState(true);
 
     const [checkedClasses, setCheckedClasses] = useState({});
     const [checkedDates, setCheckedDates] = useState(initialCheckboxesStateForDays);
@@ -126,16 +119,6 @@ const SemesterForm = (props) => {
 
     const closeDialogForGroup = () => {
         setOpenGroupDialog(false);
-    };
-
-    const setStartDayHandler = (startTimeParam) => {
-        setStartDate(startTimeParam);
-        if (disabledFinishDate || moment(startDate).isSameOrBefore(finishDate)) {
-            const newDate = moment(startTimeParam, dateFormat).add(1, 'd');
-            setFinishDate(newDate.toDate());
-            change('endDay', moment(startTimeParam, dateFormat).add(7, 'd').format(dateFormat));
-        }
-        setDisabledFinishDate(false);
     };
 
     const resetSemesterForm = () => {
@@ -213,10 +196,6 @@ const SemesterForm = (props) => {
                         component={renderMonthPicker}
                         label={`${t(COMMON_CLASS_FROM_LABEL)}:`}
                         validate={[required, lessThanDate]}
-                        minDate={startDate}
-                        onChange={(_, value) => {
-                            setStartDayHandler(value);
-                        }}
                     />
                     <Field
                         className="semester-field-input"
@@ -224,11 +203,6 @@ const SemesterForm = (props) => {
                         component={renderMonthPicker}
                         label={`${t(COMMON_CLASS_TO_LABEL)}:`}
                         validate={[required, greaterThanDate]}
-                        minDate={finishDate}
-                        disabled={disabledFinishDate}
-                        onChange={(_, value) => {
-                            setFinishDate(value);
-                        }}
                     />
                 </div>
                 <p>{`${t(COMMON_DAYS_LABEL)}: `}</p>
