@@ -21,12 +21,13 @@ const SemestersList = (props) => {
                 }}
                 values={semesters}
                 getOptionLabel={(semester) => (semester ? semester.description : '')}
+                className="schedule-form_semester"
             ></Field>
         );
     }
     if (semesters && semesters.length === 1) {
         handleSubmit({ semester: semesters[0] });
-        return <p>{semesters[0].description}</p>;
+        return <p className="schedule-form_semester">{semesters[0].description}</p>;
     }
     return null;
 };

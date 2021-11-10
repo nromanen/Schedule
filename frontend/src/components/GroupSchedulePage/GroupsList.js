@@ -21,6 +21,7 @@ const GroupsList = (props) => {
             }}
             values={groups}
             getOptionLabel={(group) => (group ? group.title : '')}
+            className="schedule-form_group"
         ></Field>
     );
 };

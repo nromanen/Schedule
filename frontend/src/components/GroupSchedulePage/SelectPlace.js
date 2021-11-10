@@ -16,7 +16,7 @@ const SelectPlace = (props) => {
     };
 
     return (
-        <span id="select-place">
+        <div id="select-place">
             <label htmlFor="demo-controlled-open-select">{t(PLACE_FOR_CLASS_LABEL)}</label>
             <Select
                 className="place"
@@ -31,7 +31,7 @@ const SelectPlace = (props) => {
                     </MenuItem>
                 ))}
             </Select>
-        </span>
+        </div>
     );
 };
 

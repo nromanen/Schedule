@@ -19,6 +19,7 @@ const TeachersList = (props) => {
             }}
             values={teachers}
             getOptionLabel={(teacher) => (teacher ? getTeacherFullName(teacher) : '')}
+            className="schedule-form_teacher"
         ></Field>
     );
 };

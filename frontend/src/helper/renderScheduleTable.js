@@ -1,5 +1,5 @@
 import React from 'react';
-import { isEqual } from 'lodash';
+import { isEqual, isNil } from 'lodash';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableContainer from '@material-ui/core/TableContainer';
@@ -211,7 +211,7 @@ export const renderFirstDayFirstClassFirstCardLine = (dayName, classItem, groups
                     {renderClassCell(classItem)}
                 </TableCell>
                 <TableCell className={`${classClassName + oddWeekClass} subClassName`}>1</TableCell>
-                {renderGroupCells(groups.odd, false, currentWeekType, isCurrentDay, dayName)}
+                {renderGroupCells(groups.odd, true, currentWeekType, isCurrentDay, dayName)}
             </TableRow>
             <TableRow>
                 <TableCell className={`${classClassName + evenWeekClass} subClassName`}>
@@ -430,38 +430,24 @@ export const renderTeacherRangeDay = (schedule) => {
 };
 
 export const renderTeacherRangeSchedule = (schedule, viewTeacherScheduleResults) => {
-    if (schedule === undefined) return null;
-    if (schedule) {
-        if (schedule.length === 0) {
-            return i18n.t(EMPTY_SCHEDULE);
-        }
-        return schedule.map((dayItem) => {
-            const parsed = Array.from(dayItem.date);
-
-            const startDay = new Date(
-                parsed[3] +
-                    parsed[4] +
-                    parsed[5] +
-                    parsed[0] +
-                    parsed[1] +
-                    parsed[2] +
-                    parsed[6] +
-                    parsed[7] +
-                    parsed[8] +
-                    parsed[9],
-            );
-            return (
-                <Card
-                    additionClassName={`${viewTeacherScheduleResults} form-card teacher-schedule-day-card`}
-                    key={shortid.generate()}
-                >
-                    <h3>
-                        {`${dayItem.date} ( ${i18n.t(`day_of_week_${startDay.getDay() + 1}`)} )`}
-                    </h3>
-                    {renderTeacherRangeDay(dayItem.schedule)}
-                </Card>
-            );
-        });
+    if (isNil(schedule)) return null;
+    if (schedule.length === 0) {
+        return i18n.t(EMPTY_SCHEDULE);
     }
-    return null;
+    return schedule.map((dayItem) => {
+        const [day, month, year] = dayItem.date.split('/');
+        const startDateString = `${month}/${day}/${year}`;
+
+        const startDay = new Date(startDateString);
+
+        return (
+            <Card
+                additionClassName={`${viewTeacherScheduleResults} form-card teacher-schedule-day-card`}
+                key={shortid.generate()}
+            >
+                <h3>{`${dayItem.date} ( ${i18n.t(`day_of_week_${startDay.getDay() + 1}`)} )`}</h3>
+                {renderTeacherRangeDay(dayItem.schedule)}
+            </Card>
+        );
+    });
 };

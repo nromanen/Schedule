@@ -19,6 +19,7 @@ export const renderAutocompleteField = ({
             options={values}
             placeholder={label}
             getOptionLabel={getOptionLabel}
+            className={className}
             {...input}
             {...custom}
             onChange={(_, value) => {
@@ -28,7 +29,7 @@ export const renderAutocompleteField = ({
             onBlur={(_, value) => input.onBlur(value)}
             renderInput={(params) => (
                 <FormControl error={touched && !!error}>
-                    <TextField {...params} label={label} className={className} />
+                    <TextField {...params} label={label} />
                     {renderFromHelper({ touched, error })}
                 </FormControl>
             )}

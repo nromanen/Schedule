@@ -12,7 +12,7 @@ const SchedulePageForm = (props) => {
     const { t } = useTranslation('common');
 
     return (
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="schedule-form">
             <SemestersList handleSubmit={handleFormSubmit} />
             <GroupsList handleChange={change} />
             <TeachersList handleChange={change} />
@@ -21,6 +21,7 @@ const SchedulePageForm = (props) => {
                 color="primary"
                 type="submit"
                 disabled={pristine || submitting}
+                className="schedule-form_submit"
             >
                 <MdPlayArrow title={t(TEACHER_SCHEDULE_LABEL)} className="svg-btn" />
             </Button>
