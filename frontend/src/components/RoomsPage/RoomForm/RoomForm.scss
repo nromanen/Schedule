@@ -3,11 +3,13 @@
     margin: 10px;
     max-height: auto;
     width: 21em;
+    padding: 0 20px 20px;
+    &-field {
+        width: 18.5em;
+    }
 }
 .select-item {
-    & {
-        margin: 4px 10px 0;
-    }
+    margin: 4px 10px 0;
     &:hover {
         background-color: $selected-blue;
     }

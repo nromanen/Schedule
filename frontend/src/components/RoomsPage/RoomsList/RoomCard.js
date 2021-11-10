@@ -1,14 +1,11 @@
 import React from 'react';
-
 import { FaEdit } from 'react-icons/fa';
 import { MdDelete } from 'react-icons/md';
 import { useTranslation } from 'react-i18next';
 import { GiSightDisabled, IoMdEye } from 'react-icons/all';
 import { dialogTypes } from '../../../constants/dialogs';
 import Card from '../../../share/Card/Card';
-import { ROOM_LABEL } from '../../../constants/translationLabels/formElements';
 import {
-    TYPE_LABEL,
     COMMON_SET_DISABLED,
     COMMON_SET_ENABLED,
 } from '../../../constants/translationLabels/common';
@@ -61,11 +58,8 @@ const RoomCard = (props) => {
                     }}
                 />
             </div>
-
-            <span> {`${t(ROOM_LABEL)}:`} </span>
-            <h2 className="room-card__number">{room.name}</h2>
-            <span>{`${t(TYPE_LABEL)}:`}</span>
-            <h2 className="room-card__number">{room.type.description}</h2>
+            <h2 className="room-card__name">{room.name}</h2>
+            <p className="room-card__title">{room.type.description}</p>
         </Card>
     );
 };

@@ -7,7 +7,7 @@ import SelectField from '../../../share/renderedFields/select';
 import { ROOM_FORM } from '../../../constants/reduxForms';
 import { required, uniqueRoomName } from '../../../validation/validateFields';
 import Card from '../../../share/Card/Card';
-import './AddRoomForm.scss';
+import './RoomForm.scss';
 import { getClearOrCancelTitle, setDisableButton } from '../../../helper/disableComponent';
 import {
     EDIT_TITLE,
@@ -56,12 +56,12 @@ const AddRoomForm = (props) => {
                     name="name"
                     component={renderTextField}
                     placeholder={t(NUMBER_LABEL)}
-                    className="form-field"
+                    className="form-field room-form-field"
                     label={t(ROOM_LABEL)}
                     validate={[required, uniqueRoomName]}
                 />
                 <Field
-                    className="form-field select-container"
+                    className="form-field room-form-field"
                     component={SelectField}
                     name="type"
                     label={t(TYPE_LABEL)}

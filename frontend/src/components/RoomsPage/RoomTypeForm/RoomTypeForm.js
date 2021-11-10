@@ -42,7 +42,7 @@ const RoomTypeForm = (props) => {
     return (
         <>
             <Card additionClassName="form-card room-form new-type">
-                <form className="new-type-container" onSubmit={handleSubmit}>
+                <form className="room-type-form" onSubmit={handleSubmit}>
                     <Field
                         type="text"
                         name="description"
