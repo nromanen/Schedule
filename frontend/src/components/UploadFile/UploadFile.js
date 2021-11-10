@@ -2,6 +2,8 @@ import './UploadFile.scss';
 import React, { useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import BackupIcon from '@material-ui/icons/Backup';
+// import InfoIcon from '@material-ui/icons/Info';
+import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
 import { uploadStudentsToGroupFile } from '../../services/uploadFile';
 import CustomDialog from '../../containers/Dialogs/CustomDialog';
 import { dialogCloseButton, dialogUploadButton } from '../../constants/dialogs';
@@ -54,33 +56,25 @@ export const UploadFile = (props) => {
             <div className="upload-dialog">
                 {isHideRules && (
                     <div className="upload-title">
-                        <div>
-                            * This asynchronous method used for importing students from csv file.
-                        </div>
+                        <div> * This File has to be in csv format.</div>
                         <div>
                             * Each line of the file should consist of four fields, separated by
                             commas.
                         </div>
-                        <div>* Each field may or may not be enclosed in double-quotes.</div>
                         <div>* First line of the file is a header.</div>
-                        <div>* All subsequent lines contain data about students.</div>
                     </div>
                 )}
                 <div className="upload-example-btn">
-                    <div className="upload-example">Example of table</div>
-                    <button
+                    <div className="upload-example">Example of file</div>
+                    <HelpOutlineIcon
                         className="upload-button"
-                        type="button"
                         onClick={() => setIsHideRules(!isHideRules)}
-                    >
-                        Show rules
-                    </button>
+                    />
                 </div>
-                <img
-                    className="upload-example"
-                    src="https://res.cloudinary.com/dsjs7ggfi/image/upload/v1636532388/example_tgb4tr.png"
-                    alt="альтернативный текст"
-                />
+                <div className="upload-text-file">
+                    <div> surname,name,patronymic,email</div>
+                    <div> example,example,example,example@gmail.com</div>
+                </div>
                 <label htmlFor="file-upload" className="upload-file">
                     <input
                         id="file-upload"
@@ -93,13 +87,6 @@ export const UploadFile = (props) => {
                     <BackupIcon></BackupIcon>
                     <div className="upload-text">{t(buttonTitle)}</div>
                 </label>
-                {/* {selectedFile && (
-                    <div>
-                        <p>{`${t(COMMON_NAME_LABEL)}: ${selectedFile.name}`}</p>
-                        <p>{`${t(COMMON_TYPE_LABEL)}: ${selectedFile.type}`}</p>
-                        <p>{`${t(COMMON_BYTE_SIZE_LABEL)}: ${selectedFile.size}`}</p>
-                    </div>
-                )} */}
             </div>
         </CustomDialog>
     );

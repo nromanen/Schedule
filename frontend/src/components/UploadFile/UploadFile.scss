@@ -18,27 +18,22 @@ input[type="file"] {
     width: 100%;
   }
   &-button{
-  background-color: $snowy-white;
-  display: flex;
-  align-items: center;
-  flex-direction: row;
-  justify-content: space-around;
-  border-radius: 5px;
+  color: $blue;
   margin: 10px;
-  padding: 5px 30px 5px 30px;
-  border: $card-border;
-  box-shadow: $card-shadow;
   cursor: pointer;
   &:hover {
-    color: $snowy-white;
-    background-color: $blue;
+    color: $blue;
   }
   }
   &-title{
     color: $label-color;
   }
   &-example{
-    margin: 10px 20px 10px;
+    margin: 10px 0 10px;
+  }
+  &-text-file{
+    align-self: start;
+    margin-bottom: 20px;
   }
   &-file {
   color: $snowy-white;

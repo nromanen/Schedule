@@ -12,7 +12,6 @@ const GroupPage = (props) => {
     const [group, setGroup] = useState({});
     const [searchItem, setSearchItem] = useState('');
     const [isDisabled, setIsDisabled] = useState(false);
-
     return (
         <>
             <div className="group-container">

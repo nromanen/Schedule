@@ -28,7 +28,6 @@ import { getShortTitle } from '../../../helper/shortTitle';
 const GroupCard = (props) => {
     const {
         item,
-        match,
         disabled,
         setGroup,
         showConfirmDialog,
