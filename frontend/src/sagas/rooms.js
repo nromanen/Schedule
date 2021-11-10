@@ -1,10 +1,9 @@
-import { call, put, takeLatest, takeEvery, select } from 'redux-saga/effects';
+import { call, put, takeLatest, takeEvery } from 'redux-saga/effects';
 import { reset } from 'redux-form';
 import * as actionTypes from '../actions/actionsType';
 import { setLoading } from '../actions/loadingIndicator';
 import { setOpenSuccessSnackbar, setOpenErrorSnackbar } from '../actions/snackbar';
 import { axiosCall } from '../services/axios';
-import i18n from '../i18n';
 import { ROOM_URL, DISABLED_ROOMS_URL, ROOM_TYPES_URL } from '../constants/axios';
 import { ROOM_FORM, ROOM_FORM_TYPE } from '../constants/reduxForms';
 import { createErrorMessage, createMessage } from '../utils/sagaUtils';
@@ -157,7 +156,6 @@ export function* handleRoomTypeFormSubmit({ values }) {
 export function* deleteRoomTypeItem({ roomTypeId }) {
     try {
         const requestUrl = `${ROOM_TYPES_URL}/${roomTypeId}`;
-        console.log('roomTypeId', roomTypeId)
         yield call(axiosCall, requestUrl, 'DELETE');
         yield put(deleteRoomTypeSuccess(roomTypeId));
         const message = createMessage(BACK_END_SUCCESS_OPERATION, FORM_TYPE_LABEL, DELETED_LABEL);

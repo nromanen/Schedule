@@ -22,6 +22,7 @@ const mapStateToProps = (state) => ({
     roomTypes: state.rooms.roomTypes,
     oneType: state.rooms.oneType,
     isOpenConfirmDialog: state.dialog.isOpenConfirmDialog,
+    loading: state.loadingIndicator.loading,
 });
 const mapDispatchToProps = (dispatch) => ({
     setOpenConfirmDialog: (newState) => dispatch(setIsOpenConfirmDialog(newState)),

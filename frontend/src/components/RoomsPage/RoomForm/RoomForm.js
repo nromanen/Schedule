@@ -67,9 +67,9 @@ const AddRoomForm = (props) => {
                     label={t(TYPE_LABEL)}
                     validate={[required]}
                 >
-                    <option className="select-item" />
+                    <option className="room-select-item" />
                     {roomTypes.map((roomType) => (
-                        <option key={roomType.id} value={roomType.id} className="select-item">
+                        <option key={roomType.id} value={roomType.id} className="room-select-item">
                             {roomType.description}
                         </option>
                     ))}

@@ -27,6 +27,7 @@ const RoomPage = (props) => {
         setSelectRoom,
         clearRoomItem,
         setSelectRoomType,
+        loading,
     } = props;
 
     const [isDisabled, setIsDisabled] = useState(false);
@@ -125,6 +126,7 @@ const RoomPage = (props) => {
                     disabledRooms={disabledRooms}
                     rooms={rooms}
                     setSelectRoom={setSelectRoom}
+                    loading={loading}
                 />
             </div>
         </>
