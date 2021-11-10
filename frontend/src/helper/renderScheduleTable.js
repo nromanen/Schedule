@@ -185,7 +185,7 @@ export const renderFirstDayFirstClassFirstCardLine = (dayName, classItem, groups
 
     let oddWeekClass = '';
     let evenWeekClass = '';
-    if (currentDay === dayName) {
+    if (isCurrentDay) {
         dayClassName += ' currentDay';
 
         if (currentWeekType) {
@@ -229,7 +229,7 @@ export const renderFirstDayOtherClassFirstCardLine = (dayName, classItem, groups
     let oddWeekClass = '';
     let evenWeekClass = '';
 
-    if (currentDay === dayName) {
+    if (isCurrentDay) {
         if (currentWeekType) {
             oddWeekClass = ' currentDay';
         } else {
