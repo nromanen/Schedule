@@ -26,7 +26,7 @@ export const uploadStudentsToGroupFile = (file, groupId) => {
                     : ` ${i18n.t(FORM_STUDENT_FILE_LABEL)}`;
             successHandler(
                 i18n.t(FILE_BACK_END_SUCCESS_OPERATION, {
-                    cardType: students,
+                    cardType: i18n.t(FORM_STUDENTS_FILE_LABEL),
                     actionType: i18n.t(FILE_LABEL),
                 }),
             );

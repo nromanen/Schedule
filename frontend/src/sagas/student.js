@@ -1,11 +1,12 @@
 import { call, takeEvery, put, select } from 'redux-saga/effects';
 import { reset } from 'redux-form';
+import i18n from '../i18n';
 import { STUDENT_URL, STUDENTS_TO_GROUP_FILE } from '../constants/axios';
 
 import * as actionTypes from '../actions/actionsType';
 import { STUDENT_FORM } from '../constants/reduxForms';
 import { createErrorMessage, createDynamicMessage } from '../utils/sagaUtils';
-import { setOpenSuccessSnackbar, setOpenErrorSnackbar } from '../actions/snackbar';
+import { setOpenSuccessSnackbar, setOpenErrorSnackbar, setOpenSnackbar } from '../actions/snackbar';
 import { DELETE, POST, PUT } from '../constants/methods';
 import { axiosCall } from '../services/axios';
 import {
@@ -18,9 +19,14 @@ import {
     UPDATED_LABEL,
     CREATED_LABEL,
     DELETED_LABEL,
+    FILE_BACK_END_SUCCESS_OPERATION,
+    FILE_LABEL,
 } from '../constants/translationLabels/serviceMessages';
 import { STUDENT } from '../constants/names';
 import { setStudentsLoading, setLoading } from '../actions/loadingIndicator';
+import { FORM_STUDENTS_FILE_LABEL } from '../constants/translationLabels/formElements';
+
+import { snackbarTypes } from '../constants/snackbarTypes';
 
 const getStudents = (state) => state.students.students;
 
@@ -93,6 +99,13 @@ function* uploadStudentsToGroup({ file, id }) {
         const formData = new FormData();
         formData.append('file', file);
         yield call(axiosCall, `${STUDENTS_TO_GROUP_FILE}${id}`, POST, formData);
+        const message = i18n.t(FILE_BACK_END_SUCCESS_OPERATION, {
+            cardType: i18n.t(FORM_STUDENTS_FILE_LABEL),
+            actionType: i18n.t(FILE_LABEL),
+        });
+        const isOpen = true;
+        const type = snackbarTypes.SUCCESS;
+        yield put(setOpenSnackbar({ isOpen, type, message }));
     } catch (err) {
         yield put(setOpenErrorSnackbar(createErrorMessage(err)));
     } finally {
