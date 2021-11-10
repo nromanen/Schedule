@@ -5,131 +5,58 @@
 
 $group-size: 10px;
 
-.cards-container{
+.group{
+  &-container{
   display: flex;
   padding: 5px;
+  @media (max-width: $md-width) {
+      @include displayCenter();
+      flex-direction: column;
+    }
 }
-.students-group {
-  display: flex;
-  flex-direction: column;
-  flex-wrap: wrap;
-  align-items: center;
-  .students {
-    color: $blue-hover;
-    margin: -15px -8px;
-    font-size: 20px;
-    cursor: pointer;
-    &:hover {
-    color: $blue;
+&-sidebar{
+  margin: 0 10px 0 10px;
+  .MuiTypography-body1{
+        font-size: x-small;
+    }
+  .MuiFormControl-root{
+    width: 98%;
   }
+  @media (max-width: $md-width) {
+    display: flex;
+    margin: 10px auto;
+    width: 50%;
+    justify-content: center;
+    }
   }
-  .student{
-    cursor: pointer;
-    &:hover {
-    color: $light-forest;
+  &-aside{
+    width: 360px;
+    position: sticky;
+    top: 1rem;
   }
-  }
-}
-.link-href {
-  text-decoration: none;
-  color: $black;
-  &:hover {
-    color: $black;
-  }
-}
-.group {
 
-  &-list {
+ &-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    @media (max-width: $md-width) {
+      margin: 10px auto;
+      width: 100%;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+  }
+&-list {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
     width: 100%;
   }
-
-  &-wrapper {
-    display: flex;
-    flex-wrap: wrap;
-    width: 80%;
-
-    @media (max-width: 850px) {
-      margin: 10px auto;
-      max-width: 100%;
+   @media (max-width: $md-width) {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
     }
-  }
 
-  &-card {
-    box-sizing: border-box;
-    max-width: 19 * $group-size; 
-    min-width: 18 * $group-size;
-    height: 16 * $group-size;
-
-    display: flex;
-    flex-direction: column;
-    margin: $group-size;
-    padding: 5 + $group-size;
-
-    border-radius: 2px;
-    border: 1px solid $light-gray;
-    box-shadow: 4px 4px 8px -4px rgba(34, 60, 80, 0.2);
-
-    &__number {
-      text-align: center;
-      margin-top: $group-size/2;
-      text-transform: uppercase;
-    }
-
-    &__description {
-      margin: 5px 0 5px 0;
-      font-size: 0.8rem;
-      text-align: center;
-    }
-  }
-
-  &__buttons-wrapper {
-    width: 90%;
-    margin: 0 auto;
-    display: flex;
-    justify-content: space-between;
-  }
-
-  &__buttons-delete {
-    @include buttonStyle();
-
-    &:hover {
-      color: $delete-color;
-    }
-  }
-
-  &__buttons-edit {
-    @include buttonStyle();
-
-    &:hover {
-      color: $background-color;
-    }
-  }
-
-  &__buttons-hide {
-    @include buttonStyle();
-
-    &:hover {
-      color: $good-color;
-    }
-  }
-}
-
-.group-sidebar{
-  position: sticky;
-  margin: 10px 10px 0 10px;
-  top: 1rem;
-  width: 360px;
-  @media (max-width: 850px) {
-      margin: 10px auto;
-      width: 50%;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
 }

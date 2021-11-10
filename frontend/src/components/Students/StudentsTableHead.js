@@ -21,7 +21,7 @@ export const StudentsTableHead = (props) => {
                 <TableCell>
                     <span className="checked-all">
                         <input
-                            id="checked-all-input"
+                            id="student-checked-all-box"
                             type="checkbox"
                             checked={checkedAll}
                             onClick={checkedAllOnPageClick}

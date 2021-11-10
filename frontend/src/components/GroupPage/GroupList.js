@@ -6,7 +6,7 @@ import { CircularProgress } from '@material-ui/core';
 import { dialogTypes } from '../../constants/dialogs';
 import { GROUP_Y_LABEL } from '../../constants/translationLabels/formElements';
 import { search } from '../../helper/search';
-import GroupCard from './GroupCard';
+import GroupCard from './GroupCard/GroupCard';
 import NotFound from '../../share/NotFound/NotFound';
 import CustomDialog from '../../containers/Dialogs/CustomDialog';
 import AddStudentDialog from '../../share/DialogWindows/_dialogWindows/AddStudentDialog';

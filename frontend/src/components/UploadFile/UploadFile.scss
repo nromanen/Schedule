@@ -14,7 +14,6 @@ input[type="file"] {
   }
   &-title{
     color: $label-color;
-    //margin-bottom: 20px;
   }
   &-file {
   color: $snowy-white;
@@ -29,6 +28,9 @@ input[type="file"] {
   border: $card-border;
   box-shadow: $card-shadow;
   cursor: pointer;
+  &:hover {
+    background-color: $blue-hover;
+  }
  }
  &-text{
   margin-left: 10px;

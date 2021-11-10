@@ -15,7 +15,7 @@ const GroupPage = (props) => {
 
     return (
         <>
-            <div className="cards-container">
+            <div className="group-container">
                 <div className="group-sidebar">
                     <Sidebar
                         isDisabled={isDisabled}

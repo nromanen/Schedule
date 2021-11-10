@@ -11,6 +11,7 @@ import {
     SHOW_ARCHIVED,
     SHOW_REGULAR,
 } from '../../constants/translationLabels/formElements';
+import Card from '../Card/Card';
 import {
     COMMON_SHOW_DISABLED,
     COMMON_SHOW_ENABLED,
@@ -20,7 +21,7 @@ const SearchPanel = ({ SearchChange, showDisabled, showArchived, forLessons }) =
     const { t } = useTranslation('formElements');
     const [term, setTerm] = useState('');
 
-    const [state, setState] = React.useState({
+    const [state, setState] = useState({
         checkedB: false,
         checkedArchived: false,
     });
@@ -44,7 +45,7 @@ const SearchPanel = ({ SearchChange, showDisabled, showArchived, forLessons }) =
     };
 
     return (
-        <div className="search-group">
+        <Card className="search-group">
             {!forLessons && (
                 <FormControlLabel
                     control={
@@ -79,7 +80,7 @@ const SearchPanel = ({ SearchChange, showDisabled, showArchived, forLessons }) =
                 value={term}
                 onChange={onSearchChange}
             />
-        </div>
+        </Card>
     );
 };
 

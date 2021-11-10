@@ -1,30 +1,23 @@
 @import '../../styles/colors.scss';
+@import '../../styles/mixin.scss';
 
-.search-group {
-    min-height: 85px;
-    padding: 20px 20px 30px;
-    border-radius: 2px;
-    border: 1px solid $light-gray;
-    box-shadow: 4px 4px 8px -4px rgba(34, 60, 80, 0.2);
-    .MuiTypography-body1{
-        font-size: 0.8rem;
-    }
-    .MuiFormControl-root{
-        max-width: 98%;
-    }
+// .search-group {
+//     @include displayCenter();
+//     .MuiTypography-body1{
+//         font-size: 0.8rem;
+//     }
+// }
 
-}
+//  @media (max-width: 850px) {
+//      .search-group{
+//         display: flex;
+//         align-items: center;
+//         flex-direction: column;
+//      }   
+//     }
 
- @media (max-width: 850px) {
-     .search-group{
-        display: flex;
-        align-items: center;
-        flex-direction: column;
-     }   
-    }
-
-.form-field {
-    @media (max-width: 800px) {
-        max-width: 100% !important;
-    }
-}
+// .form-field {
+//     @media (max-width: 800px) {
+//         max-width: 100%;
+//     }
+// }

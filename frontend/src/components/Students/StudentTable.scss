@@ -8,19 +8,18 @@
 }
 
 .table{
-  margin: 20px;
+  margin: 20px 20px 0 20px;
   border: $table-border;
   .MuiTableContainer-root{
     overflow: auto;
+    margin-bottom: 0;
   }
   .MuiTable-root{
+    max-height: 20%;
     min-width: 700px;
   }
   .MuiTableCell-alignCenter{
     text-align: left;
-  }
-  .MuiTableContainer-root{
-    margin-bottom: 0;
   }
   .MuiTableRow-root{
     &:hover{
@@ -46,13 +45,19 @@
     color: $blue;
     margin-right: 10px;
     font-size: 25px;
+    &:hover{
+      color: $blue-hover;
+    }
   }
   .delete-button{
     color: $light-red;
     font-size: 25px;
+    &:hover{
+      color: $delete-color
+    }
   }
 }
-#checked-all-input{
+.student-checked-all-box{
   margin: -1px;
   width: 20px;
   height: 20px;
