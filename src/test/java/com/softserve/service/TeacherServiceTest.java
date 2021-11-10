@@ -131,6 +131,7 @@ public class TeacherServiceTest {
     @Test
     public void delete() {
         Teacher expectedTeacher = teacherWithId1LAndWithUserId1;
+        expectedTeacher.setUserId(null);
         when(teacherRepository.delete(argThat(t -> deepEqualsForTeachers(t, expectedTeacher))))
                 .thenReturn(expectedTeacher);
 
@@ -349,7 +350,7 @@ public class TeacherServiceTest {
 
         Teacher result = teacherService.joinTeacherWithUser(teacher.getId(), user.getId());
         assertNotNull(result);
-        assertEquals(Long.valueOf(result.getUserId()), user.getId());
+        assertEquals(result.getUserId(), user.getId());
         assertEquals(ROLE_TEACHER, user.getRole());
         verify(userService, timeout(1)).getById(anyLong());
         verify(userService, times(1)).update(any(User.class));

@@ -3936,3 +3936,6 @@ List of constraint violations:[
 [INFO ] 2021-11-10 15:56:50.252 [Test worker] c.s.s.i.TeacherServiceImpl - Enter into update method with entity:Teacher(id=1, name=Name1, surname=Surname1, patronymic=Patronymic1, position=Position1, userId=1, department=null, disable=false)
 [INFO ] 2021-11-10 15:59:11.800 [Test worker] c.s.s.i.TeacherServiceImpl - Enter into getAll of getDisabled
 [INFO ] 2021-11-10 15:59:11.938 [Test worker] c.s.s.i.TeacherServiceImpl - Enter into delete method with entity:Teacher(id=1, name=Name1, surname=Surname1, patronymic=Patronymic1, position=Position1, userId=1, department=null, disable=false)
+[INFO ] 2021-11-10 16:15:34.993 [Test worker] c.s.s.i.TeacherServiceImpl - Enter into delete method with entity:Teacher(id=1, name=Name1, surname=Surname1, patronymic=Patronymic1, position=Position1, userId=1, department=null, disable=false)
+[INFO ] 2021-11-10 16:16:42.726 [Test worker] c.s.s.i.TeacherServiceImpl - Enter into delete method with entity:Teacher(id=1, name=Name1, surname=Surname1, patronymic=Patronymic1, position=Position1, userId=1, department=null, disable=false)
+[INFO ] 2021-11-10 16:21:32.725 [Test worker] c.s.s.i.TeacherServiceImpl - Enter into delete method with entity:Teacher(id=1, name=Name1, surname=Surname1, patronymic=Patronymic1, position=Position1, userId=null, department=null, disable=false)
