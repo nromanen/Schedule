@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
 import { Field, reduxForm } from 'redux-form';
 
 import Button from '@material-ui/core/Button';
@@ -28,7 +27,7 @@ import {
     DEPARTMENT_TEACHER_LABEL,
 } from '../../../constants/translationLabels/formElements';
 
-let AddTeacher = (props) => {
+const AddTeacherForm = (props) => {
     const { t } = useTranslation('formElements');
     const { handleSubmit, pristine, submitting, reset, departments, teacher, initialize } = props;
 
@@ -161,10 +160,6 @@ let AddTeacher = (props) => {
     );
 };
 
-const mapStateToProps = (state) => ({ teacher: state.teachers.teacher });
-
-AddTeacher = reduxForm({
+export default reduxForm({
     form: TEACHER_FORM,
-})(AddTeacher);
-
-export default connect(mapStateToProps)(AddTeacher);
+})(AddTeacherForm);

@@ -23,6 +23,7 @@ const mapStateToProps = (state) => ({
     departments: state.departments.departments,
     department: state.departments.department,
     isOpenConfirmDialog: state.dialog.isOpenConfirmDialog,
+    teacher: state.teachers.teacher,
 });
 const mapDispatchToProps = (dispatch) => ({
     setOpenConfirmDialog: (newState) => dispatch(setIsOpenConfirmDialog(newState)),

@@ -21,6 +21,7 @@ const TeachersPage = (props) => {
     const { t } = useTranslation('common');
 
     const {
+        teacher,
         enabledTeachers,
         disabledTeachers,
         defaultSemester,
@@ -207,6 +208,7 @@ const TeachersPage = (props) => {
                             teachers={enabledTeachers}
                             onSubmit={teacherSubmit}
                             onSetSelectedCard={selectedTeacherCard}
+                            teacher={teacher}
                         />
                     </div>
                 )}
