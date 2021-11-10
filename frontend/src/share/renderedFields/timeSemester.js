@@ -1,7 +1,7 @@
 import React from 'react';
 import MomentUtils from '@date-io/moment';
 import * as moment from 'moment';
-import { MuiPickersUtilsProvider, DatePicker } from '@material-ui/pickers';
+import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
 import { dateFormat } from '../../constants/formats';
 
 const renderMonthPicker = ({
@@ -12,8 +12,9 @@ const renderMonthPicker = ({
 }) => {
     return (
         <MuiPickersUtilsProvider utils={MomentUtils}>
-            <DatePicker
+            <KeyboardDatePicker
                 minDate={new Date()}
+                placeholder="11/11/2021"
                 clearable
                 value={value ? moment(value, dateFormat).toDate() : null}
                 format="DD/MM/YYYY"
