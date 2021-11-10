@@ -24,7 +24,7 @@ export const StudentsTableHead = (props) => {
                             id="student-checked-all-box"
                             type="checkbox"
                             checked={checkedAll}
-                            onClick={checkedAllOnPageClick}
+                            onChange={checkedAllOnPageClick}
                             value="checkedAll"
                             title={`${t(SELECT_ALL)}`}
                         />

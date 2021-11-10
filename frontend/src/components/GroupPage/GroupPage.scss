@@ -39,6 +39,7 @@ $group-size: 10px;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
+    width: 100%;
     @media (max-width: $md-width) {
       margin: 10px auto;
       width: 100%;

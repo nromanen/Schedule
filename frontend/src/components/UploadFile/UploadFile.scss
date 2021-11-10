@@ -9,11 +9,36 @@ input[type="file"] {
   &-dialog{
     @include displayCenter();
     flex-direction: column;
-     width: 550px;
-
+     width: 650px;
+  }
+  &-example-btn{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+  }
+  &-button{
+  background-color: $snowy-white;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  justify-content: space-around;
+  border-radius: 5px;
+  margin: 10px;
+  padding: 5px 30px 5px 30px;
+  border: $card-border;
+  box-shadow: $card-shadow;
+  cursor: pointer;
+  &:hover {
+    color: $snowy-white;
+    background-color: $blue;
+  }
   }
   &-title{
     color: $label-color;
+  }
+  &-example{
+    margin: 10px 20px 10px;
   }
   &-file {
   color: $snowy-white;

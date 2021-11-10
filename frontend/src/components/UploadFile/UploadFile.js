@@ -8,7 +8,7 @@ import { dialogCloseButton, dialogUploadButton } from '../../constants/dialogs';
 import { setLoadingService } from '../../services/loadingService';
 import {
     SELECT_FILE,
-    SELECT_CORRECT_FORMAT,
+    // SELECT_CORRECT_FORMAT,
     // COMMON_NAME_LABEL,
     // COMMON_TYPE_LABEL,
     // COMMON_BYTE_SIZE_LABEL,
@@ -17,6 +17,7 @@ import {
 
 export const UploadFile = (props) => {
     const { t } = useTranslation('common');
+    const [isHideRules, setIsHideRules] = useState(false);
     const [selectedFile, setSelectedFile] = useState(null);
     const fileInputRef = useRef();
     const {
@@ -51,7 +52,35 @@ export const UploadFile = (props) => {
             ]}
         >
             <div className="upload-dialog">
-                <div className="upload-title">{t(SELECT_CORRECT_FORMAT)}</div>
+                {isHideRules && (
+                    <div className="upload-title">
+                        <div>
+                            * This asynchronous method used for importing students from csv file.
+                        </div>
+                        <div>
+                            * Each line of the file should consist of four fields, separated by
+                            commas.
+                        </div>
+                        <div>* Each field may or may not be enclosed in double-quotes.</div>
+                        <div>* First line of the file is a header.</div>
+                        <div>* All subsequent lines contain data about students.</div>
+                    </div>
+                )}
+                <div className="upload-example-btn">
+                    <div className="upload-example">Example of table</div>
+                    <button
+                        className="upload-button"
+                        type="button"
+                        onClick={() => setIsHideRules(!isHideRules)}
+                    >
+                        Show rules
+                    </button>
+                </div>
+                <img
+                    className="upload-example"
+                    src="https://res.cloudinary.com/dsjs7ggfi/image/upload/v1636532388/example_tgb4tr.png"
+                    alt="альтернативный текст"
+                />
                 <label htmlFor="file-upload" className="upload-file">
                     <input
                         id="file-upload"

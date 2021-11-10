@@ -45,7 +45,7 @@ export const StudentsTableBody = (props) => {
                 <TableRow key={student.id}>
                     <TableCell component="th" scope="row" align="center">
                         <input
-                            onClick={(e) => checkStudent(e)}
+                            onChange={(e) => checkStudent(e)}
                             type="checkbox"
                             checked={student.checked}
                             value={student.id}

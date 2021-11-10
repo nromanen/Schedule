@@ -72,15 +72,13 @@ export const StudentsTable = (props) => {
                         {...rest}
                     />
                 </Table>
-                <div className="table-footer">
-                    <TableFooterComponent
-                        page={page}
-                        items={students}
-                        setPage={setPage}
-                        rowsPerPage={rowsPerPage}
-                        setRowsPerPage={setRowsPerPage}
-                    />
-                </div>
+                <TableFooterComponent
+                    page={page}
+                    items={students}
+                    setPage={setPage}
+                    rowsPerPage={rowsPerPage}
+                    setRowsPerPage={setRowsPerPage}
+                />
             </TableContainer>
         </div>
     );

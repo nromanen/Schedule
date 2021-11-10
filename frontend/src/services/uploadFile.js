@@ -12,11 +12,13 @@ import {
 } from '../constants/translationLabels/formElements';
 
 export const uploadStudentsToGroupFile = (file, groupId) => {
+    console.log(file, groupId);
     const formData = new FormData();
     formData.append('file', file);
     axios
         .post(`${STUDENTS_TO_GROUP_FILE}${groupId}`, formData)
         .then((res) => {
+            console.log(res);
             let students = res.data.length;
             students +=
                 students !== 1
