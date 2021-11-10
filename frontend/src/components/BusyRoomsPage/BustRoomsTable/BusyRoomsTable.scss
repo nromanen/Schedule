@@ -2,12 +2,9 @@
 @import '../../../styles/colors.scss';
 
 .view-rooms {
-    position: relative;
     margin: 0;
-    padding-top: 15px;
     display: flex;
     .busy-room-title {
-        width: 130px;
         display: flex;
         height: 50px;
         padding: 10px 7px;
@@ -18,6 +15,17 @@
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
+    }
+    .responsive-table-column {
+        &-sm {
+            width: 100px;
+        }
+        &-base {
+            width: 130px;
+        }
+        &-lg {
+            width: 160px;
+        }
     }
     .busy-room-section {
         &:hover {

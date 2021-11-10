@@ -181,5 +181,9 @@
     "hour_one": "<0>{{count}}</0> hour",
     "hour_other": "<0>{{count}}</0> hours",
     "move_label": "Move",
-    "more_label": "More"
+    "more_label": "More",
+    "table_columns_size": "Table columns size",
+    "columns_size_small": "small",
+    "columns_size_base": "base",
+    "columns_size_large": "large"
 }

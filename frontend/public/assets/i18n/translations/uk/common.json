@@ -179,5 +179,9 @@
     "hour_few": "<0>{{count}}</0> години",
     "hour_many": "<0>{{count}}</0> годин",
     "more_label": "Більше",
-    "move_label": "Перемістити"
+    "move_label": "Перемістити",
+    "table_columns_size": "Розмір стовпців таблиці",
+    "columns_size_small": "малі",
+    "columns_size_base": "базові",
+    "columns_size_large": "великі"
 }

@@ -1,41 +1,64 @@
 @import '../../styles/variables.scss';
+@import '../../styles/colors.scss';
 
-.busy-room {
-    display: flex;
-}
-.busy-rooms-control-panel {
+.busy-rooms-control-panel.schedule-card {
     position: relative;
-    // display: flex;
-    height: 77vh;
-    padding-bottom: 10px;
-    .busy-rooms-table-container {
-        align-items: start;
-        overflow-x: hidden;
-        display: flex;
-        width: $w-full;
-        height: $h-full;
-        justify-content: stretch;
-        margin: 0 5px;
-        padding: 0px;
-        overflow: auto;
+    display: block;
+    height: 85vh;
+    padding: {
+        top: 10px;
+        bottom: 5px;
     }
+    margin: 15px 5px;
     .day-classes-aside {
+        padding-top: 0;
+        padding-left: 5px;
         .day-sidebar-title {
             height: 50px;
         }
     }
-    .table-size-container {
-        // position: absolute;
-        // right: -5px;
-        // bottom: -5px;
+}
+.busy-rooms-table-container {
+    display: flex;
+    width: $w-full;
+    height: 95%;
+    margin-top: 5px;
+    padding: 0px;
+    padding-top: 2px;
+    align-items: start;
+    justify-content: stretch;
+    overflow: auto;
+}
+.table-size-container {
+    display: flex;
+    justify-content: flex-start;
+    .radio-control {
+        padding-left: 10px;
         display: flex;
-        .radio-control{
-            justify-content: center;
-            text-align: center;
-
+        align-items: center;
+        .MuiFormLabel-root {
+            font-size: $font-sm;
         }
-        .radio-group {
-            flex-direction: row;
+        .MuiFormLabel-root.Mui-focused {
+            color: $blue;
+        }
+    }
+    .radio-group {
+        margin-left: 20px;
+        flex-direction: row;
+        .MuiFormControlLabel-root {
+            .MuiRadio-colorSecondary.Mui-checked {
+                color: $blue;
+            }
+            .MuiTypography-root {
+                font-size: $font-sm;
+            }
+            .MuiButtonBase-root {
+                padding: 4px;
+                &:hover {
+                    background-color: $selected-black;
+                }
+            }
         }
     }
 }

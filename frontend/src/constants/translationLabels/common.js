@@ -152,3 +152,7 @@ export const MERGE_ROLE_PAGE_TITLE = 'MergeRolePage_management_title';
 export const CHANGES_TITLE = 'Changes_management_title';
 export const BUSY_ROOMS_TITLE = 'BusyRooms_management_title';
 export const GENERAL_TITLE = 'General_management_title';
+export const COMMON_TABLE_COLUMNS_SIZE = 'table_columns_size';
+export const COMMON_TABLE_COLUMNS_SIZE_SMALL = 'columns_size_small';
+export const COMMON_TABLE_COLUMNS_SIZE_BASE = 'columns_size_base';
+export const COMMON_TABLE_COLUMNS_SIZE_LARGE = 'columns_size_large';

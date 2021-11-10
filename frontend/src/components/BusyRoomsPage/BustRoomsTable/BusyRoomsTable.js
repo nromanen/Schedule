@@ -1,22 +1,20 @@
 import React from 'react';
-import { useTranslation } from 'react-i18next';
 import './BusyRoomsTable.scss';
 import TableItem from '../TableItem/TableItem';
 import ScheduleDaySidebar from '../../ScheduleTable/ScheduleDaySidebar/ScheduleDaySidebar';
 import { ROOM_LIST_TITLE } from '../../../constants/translationLabels/common';
 
 const BusyRoomsTable = (props) => {
-    const { busyRooms, days, classes } = props;
-    const { t } = useTranslation('common');
+    const { busyRooms, days, classes, columnsSize, t } = props;
     return (
-        <section className="schedule-card busy-rooms-table-container">
+        <section className="busy-rooms-table-container">
             <ScheduleDaySidebar title={t(ROOM_LIST_TITLE)} days={days} classes={classes} />
             <section className="view-rooms">
                 {busyRooms.map((busyRoom) => (
                     <div className="busy-room-section" key={busyRoom.room_id}>
                         <span
                             title={busyRoom.room_type}
-                            className="busy-room-title schedule-card sticky-container"
+                            className={`busy-room-title responsive-table-column-${columnsSize} schedule-card sticky-container`}
                         >
                             {busyRoom.room_name}
                         </span>
