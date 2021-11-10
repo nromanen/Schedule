@@ -38,7 +38,11 @@ import {
 } from '../../../constants/translationLabels/common';
 import { dateFormat } from '../../../constants/formats';
 import SetSemesterCheckboxes from './SemesterCheckboxes';
-import { getTomorrow, initialCheckboxesStateForDays } from '../../../utils/formUtils';
+import {
+    getTomorrow,
+    initialCheckboxesStateForDays,
+    initialCheckboxesStateForClasses,
+} from '../../../utils/formUtils';
 import { getGroupsOptionsForSelect } from '../../../utils/selectUtils';
 import { SEMESTER_FORM } from '../../../constants/reduxForms';
 
@@ -77,11 +81,7 @@ const SemesterForm = (props) => {
     };
 
     useEffect(() => {
-        const prepSetCheckedClasses = classScheduler.reduce((init, classItem) => {
-            const isCheckedClass = init;
-            isCheckedClass[`${classItem.id}`] = false;
-            return isCheckedClass;
-        }, {});
+        const prepSetCheckedClasses = initialCheckboxesStateForClasses(classScheduler);
         setCheckedClasses({ ...prepSetCheckedClasses });
         const semesterItem = { ...semester };
         clearCheckboxes();

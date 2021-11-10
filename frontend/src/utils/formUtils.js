@@ -14,6 +14,14 @@ export const initialCheckboxesStateForDays = daysUppercase.reduce((init, item) =
     return isCheckedDays;
 }, {});
 
+export const initialCheckboxesStateForClasses = (classScheduler) => {
+    return classScheduler.reduce((init, classItem) => {
+        const isCheckedClass = init;
+        isCheckedClass[`${classItem.id}`] = false;
+        return isCheckedClass;
+    }, {});
+};
+
 export const createClasslabel = (lessons, classItem) => {
     const item = lessons.find((lesson) => lesson.id === +classItem);
     return `${item.class_name} (${item.startTime}-${item.endTime})`;
