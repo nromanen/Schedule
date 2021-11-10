@@ -38,7 +38,7 @@ import {
 } from '../../../constants/translationLabels/common';
 import { dateFormat } from '../../../constants/formats';
 import SetSemesterCheckboxes from './SemesterCheckboxes';
-import { getToday, getTomorrow, initialCheckboxesStateForDays } from '../../../utils/formUtils';
+import { getTomorrow, initialCheckboxesStateForDays } from '../../../utils/formUtils';
 import { getGroupsOptionsForSelect } from '../../../utils/selectUtils';
 import { SEMESTER_FORM } from '../../../constants/reduxForms';
 
@@ -189,24 +189,26 @@ const SemesterForm = (props) => {
                         {t(COMMON_CHOOSE_GROUPS_BUTTON_LABEL)}
                     </Button>
                 </div>
-                <Field
-                    className="form-field"
-                    name="year"
-                    type="number"
-                    component={renderTextField}
-                    label={`${t(COMMON_YEAR_LABEL)}:`}
-                    validate={[required, minYearValue]}
-                />
-                <Field
-                    className="form-field"
-                    name="description"
-                    component={renderTextField}
-                    label={`${t(COMMON_SEMESTER_LABEL)}:`}
-                    validate={[required]}
-                />
-                <div className="form-time-block">
+                <div className="form-input-block">
                     <Field
-                        className="time-input"
+                        className="form-field semester-field-input"
+                        name="year"
+                        type="number"
+                        component={renderTextField}
+                        label={`${t(COMMON_YEAR_LABEL)}:`}
+                        validate={[required, minYearValue]}
+                    />
+                    <Field
+                        className="form-field semester-field-input"
+                        name="description"
+                        component={renderTextField}
+                        label={`${t(COMMON_SEMESTER_LABEL)}:`}
+                        validate={[required]}
+                    />
+                </div>
+                <div className="form-input-block">
+                    <Field
+                        className="semester-field-input"
                         name="startDay"
                         component={renderMonthPicker}
                         label={`${t(COMMON_CLASS_FROM_LABEL)}:`}
@@ -217,7 +219,7 @@ const SemesterForm = (props) => {
                         }}
                     />
                     <Field
-                        className="time-input"
+                        className="semester-field-input"
                         name="endDay"
                         component={renderMonthPicker}
                         label={`${t(COMMON_CLASS_TO_LABEL)}:`}
@@ -229,8 +231,8 @@ const SemesterForm = (props) => {
                         }}
                     />
                 </div>
-                <div className="">
-                    <p>{`${t(COMMON_DAYS_LABEL)}: `}</p>
+                <p>{`${t(COMMON_DAYS_LABEL)}: `}</p>
+                <div className="semester-checkboxes-container">
                     <SetSemesterCheckboxes
                         checked={checkedDates}
                         method={setCheckedDates}
@@ -238,8 +240,8 @@ const SemesterForm = (props) => {
                         classScheduler={classScheduler}
                     />
                 </div>
-                <div className="">
-                    <p>{`${t(COMMON_CLASS_SCHEDULE_MANAGEMENT_TITLE)}: `}</p>
+                <p>{`${t(COMMON_CLASS_SCHEDULE_MANAGEMENT_TITLE)}: `}</p>
+                <div className="semester-checkboxes-container">
                     <SetSemesterCheckboxes
                         checked={checkedClasses}
                         method={setCheckedClasses}

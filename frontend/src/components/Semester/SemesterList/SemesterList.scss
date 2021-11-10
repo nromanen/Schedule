@@ -1,8 +1,7 @@
-@import '../../../App.scss';
-
+@import '../../../styles/colors.scss';
 .semester-card {
     min-height: 175px;
-    min-width: 170px;
+    min-width: 16em;
     margin-bottom: 50px;
     display: flex;
     flex-direction: column;
@@ -12,7 +11,7 @@
 
     .semester-groups {
         font-size: 25px;
-        color: #028802;
+        color: $good-color;
     }
 
     &__description {
@@ -35,10 +34,10 @@
 .default {
     width: 25px;
     height: 25px;
-    border: 1px solid green;
+    border: 1px solid $good-color;
     border-radius: 50%;
     box-shadow: 0 0px 4px 0.5px $good-color;
-    color: #028802;
+    color: $good-color;
 }
 
 p.semester-card__description {

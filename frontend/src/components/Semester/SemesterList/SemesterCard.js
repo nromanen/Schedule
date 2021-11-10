@@ -115,7 +115,7 @@ const SemesterCard = (props) => {
             </div>
 
             <p className="semester-card__description">
-                <small>{`${t(SEMESTER_LABEL)}:`}</small>
+                <small>{`${t(SEMESTER_LABEL)}: `}</small>
                 <b>{semester.description}</b>
                 {` ( ${semester.year} )`}
             </p>
