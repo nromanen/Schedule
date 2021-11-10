@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Button from '@material-ui/core/Button';
 import { useTranslation } from 'react-i18next';
-import { connect } from 'react-redux';
 import i18n from 'i18next';
 
 import { dialogTypes } from '../../constants/dialogs';
@@ -14,26 +13,11 @@ import SearchPanel from '../../share/SearchPanel/SearchPanel';
 import { clearDepartment, getAllDepartmentsService } from '../../services/departmentService';
 import { getPublicClassScheduleListService } from '../../services/classService';
 import AddTeacherForm from './AddTeacherForm/AddTeacherForm';
-import { setIsOpenConfirmDialog } from '../../actions/dialog';
-import { getAllSemestersStart } from '../../actions/semesters';
-import {
-    getAllPublicSemestersStart,
-    getCurrentSemesterRequsted,
-    getDefaultSemesterRequsted,
-    sendTeacherScheduleStart,
-} from '../../actions/schedule';
-import { getLessonTypes, selectTeacherCard } from '../../actions';
-import {
-    deleteTeacherStart,
-    handleTeacherStart,
-    setDisabledTeachersStart,
-    showAllTeachersStart,
-} from '../../actions/teachers';
 import CustomDialog from '../../containers/Dialogs/CustomDialog';
-import TeacherList from './TeachersList/TeacherList';
+import TeachersList from './TeachersList/TeachersList';
 import './TeachersList/TeachersList.scss';
 
-const TeacherPage = (props) => {
+const TeachersPage = (props) => {
     const { t } = useTranslation('common');
 
     const {
@@ -81,32 +65,9 @@ const TeacherPage = (props) => {
         'patronymic',
     ]);
 
-    const setOptions = () => {
-        return enabledTeachers.map((item) => {
-            return {
-                id: item.id,
-                value: item.id,
-                label: `${item.surname} ${getFirstLetter(item.name)} ${getFirstLetter(
-                    item.patronymic,
-                )}`,
-            };
-        });
+    const changeDisable = () => {
+        setIsDisabled((prev) => !prev);
     };
-    const setSemesterOptions = () => {
-        return semesters !== undefined
-            ? semesters.map((item) => {
-                  return { id: item.id, value: item.id, label: `${item.description}` };
-              })
-            : null;
-    };
-    const setDepartmentOptions = () => {
-        return departments.map((item) => {
-            return { id: item.id, value: item.id, label: `${item.name}` };
-        });
-    };
-    const options = setOptions();
-    const semesterOptions = setSemesterOptions();
-    const departmentOptions = setDepartmentOptions();
 
     const teacherSubmit = (values) => {
         const sendData = { ...values, department };
@@ -122,6 +83,7 @@ const TeacherPage = (props) => {
         const isDisable = dialogTypes.SET_VISIBILITY_ENABLED !== confirmDialogType;
         handleTeacher({ ...teacher, disable: isDisable });
     };
+
     const showConfirmDialog = (id, dialogType) => {
         setTeacherId(id);
         setConfirmDialogType(dialogType);
@@ -136,10 +98,43 @@ const TeacherPage = (props) => {
             deleteTeacher(teacherId);
         }
     };
+
+    const setOptions = () => {
+        return enabledTeachers.map((item) => {
+            return {
+                id: item.id,
+                value: item.id,
+                label: `${item.surname} ${getFirstLetter(item.name)} ${getFirstLetter(
+                    item.patronymic,
+                )}`,
+            };
+        });
+    };
+
+    const setSemesterOptions = () => {
+        return semesters !== undefined
+            ? semesters.map((item) => {
+                  return { id: item.id, value: item.id, label: `${item.description}` };
+              })
+            : null;
+    };
+
+    const setDepartmentOptions = () => {
+        return departments.map((item) => {
+            return { id: item.id, value: item.id, label: `${item.name}` };
+        });
+    };
+
+    const options = setOptions();
+    const semesterOptions = setSemesterOptions();
+    const departmentOptions = setDepartmentOptions();
+
     const closeSelectionDialog = () => {
+        // del
         setIsOpenMultiSelectDialog(false);
     };
     const clearSelection = () => {
+        // del
         setSelected([]);
     };
     const cancelSelection = () => {
@@ -147,7 +142,7 @@ const TeacherPage = (props) => {
         closeSelectionDialog();
     };
     const sendTeachers = () => {
-        closeSelectionDialog();
+        closeSelectionDialog(); // change
         const teachersId = selected.map((item) => {
             return item.id;
         });
@@ -160,9 +155,7 @@ const TeacherPage = (props) => {
     const isChosenSelection = () => {
         return selected.length !== 0;
     };
-    const changeDisable = () => {
-        setIsDisabled((prev) => !prev);
-    };
+
     const parseDefaultSemester = () => {
         return {
             id: defaultSemester.id,
@@ -182,16 +175,6 @@ const TeacherPage = (props) => {
 
             <aside className="form-with-search-panel">
                 <SearchPanel SearchChange={setTerm} showDisabled={changeDisable} />
-                <Button
-                    className="send-button"
-                    variant="contained"
-                    color="primary"
-                    onClick={() => {
-                        setIsOpenMultiSelectDialog(true);
-                    }}
-                >
-                    {t(SEND_SCHEDULE_FOR_TEACHER)}
-                </Button>
                 {isOpenMultiSelectDialog && (
                     <MultiSelect
                         open={isOpenMultiSelectDialog}
@@ -208,16 +191,28 @@ const TeacherPage = (props) => {
                 )}
 
                 {!isDisabled && (
-                    <AddTeacherForm
-                        departments={departmentOptions}
-                        teachers={enabledTeachers}
-                        onSubmit={teacherSubmit}
-                        onSetSelectedCard={selectedTeacherCard}
-                    />
+                    <div>
+                        <Button
+                            className="send-button"
+                            variant="contained"
+                            color="primary"
+                            onClick={() => {
+                                setIsOpenMultiSelectDialog(true);
+                            }}
+                        >
+                            {t(SEND_SCHEDULE_FOR_TEACHER)}
+                        </Button>
+                        <AddTeacherForm
+                            departments={departmentOptions}
+                            teachers={enabledTeachers}
+                            onSubmit={teacherSubmit}
+                            onSetSelectedCard={selectedTeacherCard}
+                        />
+                    </div>
                 )}
             </aside>
 
-            <TeacherList
+            <TeachersList
                 visibleItems={visibleItems}
                 isDisabled={isDisabled}
                 setTeacherId={setTeacherId}
@@ -227,32 +222,5 @@ const TeacherPage = (props) => {
         </div>
     );
 };
-const mapStateToProps = (state) => ({
-    enabledTeachers: state.teachers.teachers,
-    disabledTeachers: state.teachers.disabledTeachers,
-    classScheduler: state.classActions.classScheduler,
-    currentSemester: state.schedule.currentSemester,
-    defaultSemester: state.schedule.defaultSemester,
-    semesters: state.schedule.semesters,
-    departments: state.departments.departments,
-    department: state.departments.department,
-    isOpenConfirmDialog: state.dialog.isOpenConfirmDialog,
-    subjects: state.subjects.subjects,
-    lessonTypes: state.lesson.lessonTypes,
-});
-const mapDispatchToProps = (dispatch) => ({
-    getLessonTypes: () => dispatch(getLessonTypes()),
-    setOpenConfirmDialog: (newState) => dispatch(setIsOpenConfirmDialog(newState)),
-    getAllSemestersItems: () => dispatch(getAllSemestersStart()),
-    getCurrentSemester: () => dispatch(getCurrentSemesterRequsted()),
-    getDefaultSemester: () => dispatch(getDefaultSemesterRequsted()),
-    getAllPublicSemesters: () => dispatch(getAllPublicSemestersStart()),
-    sendTeacherSchedule: (data) => dispatch(sendTeacherScheduleStart(data)),
-    selectedTeacherCard: (teacherCardId) => dispatch(selectTeacherCard(teacherCardId)),
-    deleteTeacher: (id) => dispatch(deleteTeacherStart(id)),
-    showAllTeachers: () => dispatch(showAllTeachersStart()),
-    getDisabledTeachers: () => dispatch(setDisabledTeachersStart()),
-    handleTeacher: (values) => dispatch(handleTeacherStart(values)),
-});
 
-export default connect(mapStateToProps, mapDispatchToProps)(TeacherPage);
+export default TeachersPage;

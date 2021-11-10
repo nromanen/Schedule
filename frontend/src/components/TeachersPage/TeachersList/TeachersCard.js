@@ -41,7 +41,6 @@ const TeachersCard = (props) => {
                             title={t(COMMON_EDIT_HOVER_TITLE)}
                             onClick={() => {
                                 selectedTeacherCard(teacherItem.id);
-                                console.log('teacherItems 1111', teacherItem.id);
                             }}
                         />
                     </>
@@ -70,7 +69,7 @@ const TeachersCard = (props) => {
                         : ''
                 }`}
             </p>
-            <p>{`${teacherItem.email}`}</p>
+            {teacherItem.email && <p>{`${teacherItem.email}`}</p>}
         </Card>
     );
 };

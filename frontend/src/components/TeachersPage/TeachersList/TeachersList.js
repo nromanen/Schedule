@@ -4,7 +4,7 @@ import { FORM_TEACHER_A_LABEL } from '../../../constants/translationLabels/formE
 import NotFound from '../../../share/NotFound/NotFound';
 import TeachersCard from './TeachersCard';
 
-const TeacherList = (props) => {
+const TeachersList = (props) => {
     const { t } = useTranslation('common');
 
     const { visibleItems, ...rest } = props;
@@ -19,4 +19,4 @@ const TeacherList = (props) => {
     );
 };
 
-export default TeacherList;
+export default TeachersList;
