@@ -40,6 +40,7 @@ const TeachersPage = (props) => {
         showAllTeachers,
         getDisabledTeachers,
         handleTeacher,
+        toggleDisabledTeacher,
     } = props;
     const [term, setTerm] = useState('');
     const [isDisabled, setIsDisabled] = useState(false);
@@ -52,13 +53,19 @@ const TeachersPage = (props) => {
     useEffect(() => {
         getCurrentSemester();
         getDefaultSemester();
-        getDisabledTeachers();
-        showAllTeachers();
         getAllSemestersItems();
         getAllDepartmentsService();
         getAllPublicSemesters();
         getPublicClassScheduleListService();
     }, []);
+
+    useEffect(() => {
+        if (isDisabled) {
+            getDisabledTeachers();
+        } else {
+            showAllTeachers();
+        }
+    }, [isDisabled]);
 
     const visibleItems = search(isDisabled ? disabledTeachers : enabledTeachers, term, [
         'name',
@@ -78,15 +85,6 @@ const TeachersPage = (props) => {
         clearDepartment();
     };
 
-    const setEnabledDisabled = (currentTeacherId) => {
-        const findTeacher = [...enabledTeachers, ...disabledTeachers].find(
-            (teacherEl) => teacherEl.id === currentTeacherId,
-        );
-
-        const isDisable = dialogTypes.SET_VISIBILITY_ENABLED !== confirmDialogType;
-        handleTeacher({ ...findTeacher, disable: isDisable });
-    };
-
     const showConfirmDialog = (id, dialogType) => {
         setTeacherId(id);
         setConfirmDialogType(dialogType);
@@ -95,7 +93,7 @@ const TeachersPage = (props) => {
     const acceptConfirmDialog = () => {
         setOpenConfirmDialog(false);
         if (confirmDialogType !== dialogTypes.DELETE_CONFIRM) {
-            setEnabledDisabled(teacherId);
+            toggleDisabledTeacher(teacherId, isDisabled);
         } else {
             deleteTeacher(teacherId);
         }

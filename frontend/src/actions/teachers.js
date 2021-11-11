@@ -28,17 +28,26 @@ export const setTeacher = (teacher) => {
     };
 };
 
-export const deleteTeacher = (id) => {
+export const toggleTeacherStart = (teacherId, disableStatus) => {
+    return {
+        type: actionsType.TOOGLE_TEACHER_START,
+        teacherId,
+        disableStatus,
+    };
+};
+
+export const deleteTeacher = (id, disableStatus) => {
     return {
         type: actionsType.DELETE_TEACHER,
-        result: id,
+        id,
+        disableStatus,
     };
 };
 
 export const deleteTeacherStart = (id) => {
     return {
         type: actionsType.DELETE_TEACHER_START,
-        result: id,
+        id,
     };
 };
 

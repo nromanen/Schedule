@@ -25,10 +25,22 @@ const reducer = (
                 teachers: [...state.teachers, action.teacher].sort(compare),
             });
 
-        case actionTypes.DELETE_TEACHER:
-            return updateObject(state, {
-                teachers: [...state.teachers.filter((teacher) => teacher.id !== action.result)],
-            });
+        case actionTypes.DELETE_TEACHER: {
+            if (action.disabledStatus) {
+                return {
+                    ...state,
+                    disabledTeachers: [
+                        ...state.disabledTeachers.filter(
+                            (disabledTeacher) => disabledTeacher.id !== action.id,
+                        ),
+                    ],
+                };
+            }
+            return {
+                ...state,
+                teachers: [...state.teachers.filter((teacher) => teacher.id !== action.id)],
+            };
+        }
 
         case actionTypes.SET_TEACHER:
             return updateObject(state, {

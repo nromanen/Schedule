@@ -1,5 +1,5 @@
 import { reset } from 'redux-form';
-import { call, put, takeLatest } from 'redux-saga/effects';
+import { call, put, takeLatest, select } from 'redux-saga/effects';
 import {
     DISABLED_TEACHERS_URL,
     TEACHERS_WITHOUT_ACCOUNT_URL,
@@ -50,9 +50,9 @@ export function* getDisabledTeachers() {
     }
 }
 
-export function* removeTeacher({ result }) {
+export function* removeTeacher({ id }) {
     try {
-        const requestUrl = `${TEACHER_URL}/${result}`;
+        const requestUrl = `${TEACHER_URL}/${id}`;
         yield call(axiosCall, requestUrl, DELETE);
 
         const message = createMessage(
@@ -61,7 +61,7 @@ export function* removeTeacher({ result }) {
             DELETED_LABEL,
         );
 
-        yield put(deleteTeacher(result));
+        yield put(deleteTeacher(id));
         yield call(getDisabledTeachers);
         yield put(setOpenSuccessSnackbar(message));
     } catch (error) {
@@ -119,6 +119,18 @@ export function* updateTeacher({ teacher }) {
     }
 }
 
+function* toggleDisabledTeacher({ teacherId, disableStatus }) {
+    try {
+        const state = yield select();
+        const { teachers, disabledTeachers } = state.teachers;
+        const teacher = [...teachers, ...disabledTeachers].find((item) => item.id === teacherId);
+        yield call(updateTeacher, { teacher: { ...teacher, disable: !disableStatus } });
+        yield put(deleteTeacher(teacherId, disableStatus));
+    } catch (error) {
+        yield put(setOpenErrorSnackbar(createErrorMessage(error)));
+    }
+}
+
 export function* handleTeacher({ values }) {
     try {
         if (values.id) {
@@ -149,4 +161,5 @@ export default function* watchTeachers() {
     yield takeLatest(actionTypes.ADD_TEACHER_START, createTeacher);
     yield takeLatest(actionTypes.UPDATE_TEACHER_START, updateTeacher);
     yield takeLatest(actionTypes.HANDLE_TEACHER_START, handleTeacher);
+    yield takeLatest(actionTypes.TOOGLE_TEACHER_START, toggleDisabledTeacher);
 }

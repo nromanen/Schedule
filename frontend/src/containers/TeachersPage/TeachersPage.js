@@ -12,6 +12,7 @@ import {
     handleTeacherStart,
     setDisabledTeachersStart,
     showAllTeachersStart,
+    toggleTeacherStart,
 } from '../../actions/teachers';
 import TeachersPage from '../../components/TeachersPage/TeachersPage';
 
@@ -37,6 +38,8 @@ const mapDispatchToProps = (dispatch) => ({
     showAllTeachers: () => dispatch(showAllTeachersStart()),
     getDisabledTeachers: () => dispatch(setDisabledTeachersStart()),
     handleTeacher: (values) => dispatch(handleTeacherStart(values)),
+    toggleDisabledTeacher: (teacherId, isDisabled) =>
+        dispatch(toggleTeacherStart(teacherId, isDisabled)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(TeachersPage);
