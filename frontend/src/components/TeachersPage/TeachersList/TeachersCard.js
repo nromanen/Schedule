@@ -21,12 +21,18 @@ const TeachersCard = (props) => {
     const { t } = useTranslation('common');
 
     const { isDisabled, showConfirmDialog, teacherItem, selectedTeacherCard } = props;
+
+    const sendMail = (email) => {
+        const mailto = `mailto:${email}`;
+        window.location.href = mailto;
+    };
+
     return (
         <Card key={teacherItem.id} additionClassName="teacher-card">
             <div className="cards-btns">
                 {!isDisabled ? (
                     <>
-                        <GiSightDisabled
+                        <IoMdEye
                             className="svg-btn copy-btn"
                             title={t(COMMON_SET_DISABLED)}
                             onClick={() => {
@@ -45,7 +51,7 @@ const TeachersCard = (props) => {
                         />
                     </>
                 ) : (
-                    <IoMdEye
+                    <GiSightDisabled
                         className="svg-btn copy-btn"
                         title={t(COMMON_SET_ENABLED)}
                         onClick={() => {
@@ -70,7 +76,13 @@ const TeachersCard = (props) => {
                 }`}
             </p>
             {teacherItem.email && (
-                <a className="teacher-email" href={teacherItem.email}>{`${teacherItem.email}`}</a>
+                <button
+                    type="button"
+                    className="teacher-email"
+                    onClick={() => {
+                        sendMail(teacherItem.email);
+                    }}
+                >{`${teacherItem.email}`}</button>
             )}
         </Card>
     );
