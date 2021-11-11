@@ -4,13 +4,13 @@ import { DISABLED_ROOMS_URL, ROOM_URL } from '../constants/axios';
 import { ROOM_FORM } from '../constants/reduxForms';
 import axios from '../helper/axios';
 import {
-    showListOfRooms,
-    deleteRoom,
-    addRoom,
-    selectOneRoom,
-    updateOneRoom,
-    clearRoomOne,
-    setDisabledRooms,
+    getListOfRoomsSuccess,
+    deleteRoomSuccess,
+    addRoomSuccess,
+    setSelectRoomSuccess,
+    updateRoomSuccess,
+    clearRoomSuccess,
+    getListOfDisabledRoomsSuccess,
 } from '../actions/rooms';
 
 import { errorHandler, successHandler } from '../helper/handlerAxios';
@@ -24,29 +24,31 @@ import {
 import { FORM_ROOM_LABEL } from '../constants/translationLabels/formElements';
 import i18n from '../i18n';
 
+// created sags
 export const showListOfRoomsService = () => {
     axios
         .get(ROOM_URL)
         .then((response) => {
             const results = response.data;
-            store.dispatch(showListOfRooms(results));
+            store.dispatch(getListOfRoomsSuccess(results));
         })
         .catch((error) => errorHandler(error));
 };
-
+//  created saga
 export const getDisabledRoomsService = () => {
     axios
         .get(DISABLED_ROOMS_URL)
         .then((res) => {
-            store.dispatch(setDisabledRooms(res.data));
+            store.dispatch(getListOfDisabledRoomsSuccess(res.data));
         })
         .catch((error) => errorHandler(error));
 };
+// created saga
 export const deleteRoomCardService = (id) => {
     axios
         .delete(`${ROOM_URL}/${id}`)
         .then(() => {
-            store.dispatch(deleteRoom(id));
+            store.dispatch(deleteRoomSuccess(id));
             getDisabledRoomsService();
             showListOfRoomsService();
             successHandler(
@@ -58,12 +60,12 @@ export const deleteRoomCardService = (id) => {
         })
         .catch((error) => errorHandler(error));
 };
-
+// created saga
 const put = (values) => {
     axios
         .put(ROOM_URL, values)
         .then((result) => {
-            store.dispatch(updateOneRoom(result.data));
+            store.dispatch(updateRoomSuccess(result.data));
             resetFormHandler(ROOM_FORM);
             getDisabledRoomsService();
             showListOfRoomsService();
@@ -76,24 +78,24 @@ const put = (values) => {
         })
         .catch((error) => errorHandler(error));
 };
-
+// used directly in component
 export const setDisabledRoomsService = (room) => {
     const bufferRoom = room;
     bufferRoom.disable = true;
     put(bufferRoom);
 };
-
+// used directly in component
 export const setEnabledRoomsService = (room) => {
     const bufferRoom = room;
     bufferRoom.disable = false;
     put(bufferRoom);
 };
-
+// created saga
 const post = (values) => {
     axios
         .post(ROOM_URL, values)
         .then((res) => {
-            store.dispatch(addRoom(res.data));
+            store.dispatch(addRoomSuccess(res.data));
             resetFormHandler(ROOM_FORM);
             successHandler(
                 i18n.t(BACK_END_SUCCESS_OPERATION, {
@@ -104,30 +106,21 @@ const post = (values) => {
         })
         .catch((error) => errorHandler(error));
 };
-
+// created saga
 export const createRoomService = (values) => {
-    if (values.id) {
-        const newValue = {
-            id: values.id,
-            name: values.name,
-            type: { id: +values.type, description: values.typeDescription },
-        };
-        put(newValue);
+    const { id, name, type, disable } = values;
+    if (id) {
+        put({ id, name, type, disable });
     } else {
-        const newValue = {
-            name: values.name,
-            type: { id: +values.type, description: values.typeDescription },
-        };
-
-        post(newValue);
+        post({ name, type, disable });
     }
 };
-
+// used directly in component
 export const selectOneRoomService = (roomId) => {
-    store.dispatch(selectOneRoom(roomId));
+    store.dispatch(setSelectRoomSuccess(roomId));
 };
-
+// used directly in component
 export const clearRoomOneService = () => {
-    store.dispatch(clearRoomOne());
+    store.dispatch(clearRoomSuccess());
     resetFormHandler(ROOM_FORM);
 };

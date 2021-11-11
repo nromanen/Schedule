@@ -1,0 +1,12 @@
+.room-card {
+    height: 9.5em;
+    width: 15.1em;
+
+    &__name {
+        margin: 0.2em 0 1em;
+        font-size: 1.2rem;
+    }
+    &__title {
+        margin: 0.2em 0 1em;
+    }
+}

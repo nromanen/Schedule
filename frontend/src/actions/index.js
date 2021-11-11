@@ -57,21 +57,20 @@ export {
 
 export { setLoading, setScheduleLoading, setSemesterLoading } from './loadingIndicator';
 export {
-    addRoom,
-    clearRoomOne,
-    deleteRoom,
-    selectOneRoom,
-    setDisabledRooms,
-    showListOfRooms,
-    updateOneRoom,
+    addRoomSuccess,
+    clearRoomSuccess,
+    deleteRoomSuccess,
+    setSelectRoomSuccess,
+    getListOfDisabledRoomsSuccess,
+    getListOfRoomsSuccess,
+    updateRoomSuccess,
+    deleteRoomTypeSuccess,
+    getAllRoomTypesSuccess,
+    selectRoomType,
+    addRoomTypeSuccess,
+    updateRoomTypeSuccess,
 } from './rooms';
-export {
-    deleteType,
-    getAllRoomTypes,
-    getOneNewType,
-    postOneType,
-    updateOneType,
-} from './roomTypes';
+
 export {
     addItemToSchedule,
     checkAvailabilitySchedule,

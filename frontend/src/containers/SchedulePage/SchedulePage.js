@@ -7,7 +7,6 @@ import { CircularProgress } from '@material-ui/core';
 import { showAllGroupsService } from '../../services/groupService';
 import { setLoadingService, setScheduleLoadingService } from '../../services/loadingService';
 import { getClassScheduleListService } from '../../services/classService';
-import { showListOfRoomsService } from '../../services/roomService';
 
 import ScheduleLessonsList from '../../components/ScheduleLessonsList/ScheduleLessonsList';
 import Schedule from '../../components/Schedule/Schedule';
@@ -19,8 +18,9 @@ import {
     CLEAR_SCHEDULE_LABEL,
     USE_PC,
 } from '../../constants/translationLabels/common';
-import { getLessonsByGroup,  } from '../../actions';
+import { getLessonsByGroup } from '../../actions';
 import { clearScheduleStart, getAllScheduleItemsStart } from '../../actions/schedule';
+import { getListOfRoomsStart } from '../../actions/rooms';
 
 const SchedulePage = (props) => {
     const {
@@ -33,6 +33,7 @@ const SchedulePage = (props) => {
         getAllLessonsByGroup,
         getAllScheduleItems,
         clearScheduleItems,
+        getListOfRooms,
     } = props;
     const { t } = useTranslation('common');
 
@@ -43,7 +44,7 @@ const SchedulePage = (props) => {
         setScheduleLoadingService(true);
         getAllScheduleItems();
         showAllGroupsService();
-        showListOfRoomsService();
+        getListOfRooms();
         getClassScheduleListService();
     }, []);
 
@@ -140,6 +141,7 @@ const mapDispatchToProps = (dispatch) => ({
     getAllLessonsByGroup: (groupId) => dispatch(getLessonsByGroup(groupId)),
     getAllScheduleItems: () => dispatch(getAllScheduleItemsStart()),
     clearScheduleItems: (id) => dispatch(clearScheduleStart(id)),
+    getListOfRooms: (rooms) => dispatch(getListOfRoomsStart(rooms)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SchedulePage);

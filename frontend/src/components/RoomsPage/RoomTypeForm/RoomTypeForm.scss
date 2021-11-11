@@ -1,16 +1,12 @@
-@import '../../App';
-@import '../../share/Card/Card.scss';
+@import '../../../styles/colors.scss';
 
-.room-form {
-    margin: 10px;
-}
-
-.new-type-container {
+.room-type-form {
     text-align: center;
+    margin: 20px 5px 0;
 }
 
 .btn-style-wrapper {
-    margin: 20px 0;
+    margin: 15px 0;
 }
 
 .btn-style {
@@ -26,10 +22,9 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0;
 }
 
-.typeDescription {
+.type-description {
     vertical-align: middle;
 }
 
@@ -42,20 +37,16 @@
     .edit {
         cursor: pointer;
     }
-
-    .edit:active,
     .edit:hover {
-        color: #3f51b5;
-        transition: ease-in-out .5s;
+        color: $dark-blue;
+        transition: ease-in-out 0.5s;
     }
 
     .delete {
         cursor: pointer;
     }
-
-    .delete:active,
     .delete:hover {
-        color: #fa0a04;
-        transition: ease-in-out .5s;
+        color: $delete-color;
+        transition: ease-in-out 0.5s;
     }
 }
