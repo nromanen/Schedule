@@ -22,7 +22,7 @@ const TeachersCard = (props) => {
 
     const { isDisabled, showConfirmDialog, teacherItem, selectedTeacherCard } = props;
     return (
-        <Card key={teacherItem.id} additionClassName="teacher-card done-card">
+        <Card key={teacherItem.id} additionClassName="teacher-card">
             <div className="cards-btns">
                 {!isDisabled ? (
                     <>
@@ -60,7 +60,7 @@ const TeachersCard = (props) => {
                 />
             </div>
             <h2 className="teacher-card-name">
-                {getShortTitle(getTeacherFullName(teacherItem), 30)}
+                {getShortTitle(getTeacherFullName(teacherItem), 40)}
             </h2>
             <p className="teacher-card-title">
                 {`${teacherItem.position} ${
@@ -69,7 +69,9 @@ const TeachersCard = (props) => {
                         : ''
                 }`}
             </p>
-            {teacherItem.email && <p>{`${teacherItem.email}`}</p>}
+            {teacherItem.email && (
+                <a className="teacher-email" href={teacherItem.email}>{`${teacherItem.email}`}</a>
+            )}
         </Card>
     );
 };

@@ -1,7 +1,21 @@
+@import '../../../styles/colors.scss';
+@import '../../../styles//variables.scss';
+
 .teacher-form {
     margin: 10px;
 
-    @media (max-width: 500px) {
-        width: 70%;
+    @media (max-width: $md-small) {
+        width: 100%;
+    }
+
+    .form-buttons-container {
+        margin-top: 25px;
+    }
+}
+
+.option {
+    margin-bottom: 10px;
+    &:hover {
+        background-color: $selected-blue;
     }
 }

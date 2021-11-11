@@ -125,9 +125,9 @@ const AddTeacherForm = (props) => {
                         getDepartmentByIdService(target.value);
                     }}
                 >
-                    <option />
+                    <option className="option" />
                     {departments.map((item) => (
-                        <option key={item.id} value={item.value}>
+                        <option className="option" key={item.id} value={item.value}>
                             {item.label}
                         </option>
                     ))}

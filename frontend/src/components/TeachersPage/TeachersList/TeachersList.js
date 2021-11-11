@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { FORM_TEACHER_A_LABEL } from '../../../constants/translationLabels/formElements';
 import NotFound from '../../../share/NotFound/NotFound';
 import TeachersCard from './TeachersCard';
+import './TeachersList.scss';
 
 const TeachersList = (props) => {
     const { t } = useTranslation('common');
