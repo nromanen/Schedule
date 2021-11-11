@@ -51,7 +51,7 @@ const GroupCard = (props) => {
                             <FaEdit
                                 className="group-card__buttons-edit link-href"
                                 title={t(COMMON_EDIT)}
-                                onClick={() => setGroup(item.id)}
+                                onClick={() => setGroup(item)}
                             />
                         </Link>
                     </>
