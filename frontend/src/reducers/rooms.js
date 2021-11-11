@@ -91,7 +91,7 @@ const reducer = (
                 freeRooms: action.freeRooms,
             });
         }
-        case actionTypes.CLEAT_FREE_ROOMS: {
+        case actionTypes.CLEAR_FREE_ROOMS: {
             return updateObject(state, {
                 freeRooms: [],
             });
