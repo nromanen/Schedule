@@ -25,16 +25,17 @@ const ShowStudentsOnGroupDialog = (props) => {
         open,
         match,
         groups,
-        group,
     } = props;
     const { t } = useTranslation('formElements');
 
+    const [group, setGroup] = useState({});
     const [isOpenUploadFileDialog, setIsOpenUploadFileDialog] = useState(false);
     const [isOpenMoveStudentsDialog, setIsOpenMoveStudentDialog] = useState(false);
     const [isDisabledBtnMoveStudent, setIsDisabledBtnMoveStudent] = useState(false);
 
     useEffect(() => {
         getAllStudentsStart(groupId);
+        setGroup(groups.find((item) => item.id === +groupId));
     }, [groupId]);
 
     const showMoveStudentsByGroupDialog = () => {
@@ -53,7 +54,6 @@ const ShowStudentsOnGroupDialog = (props) => {
         <>
             <CustomDialog
                 open={open}
-                onClose={onClose}
                 title={`${t(GROUP_LABEL)} - ${group.title}`}
                 buttons={
                     !isEmpty(students)
@@ -61,7 +61,7 @@ const ShowStudentsOnGroupDialog = (props) => {
                               dialogChooseGroupButton(
                                   showMoveStudentsByGroupDialog,
                                   isDisabledBtnMoveStudent,
-                                  buttonClassName
+                                  buttonClassName,
                               ),
                               ...dialogButtons,
                           ]

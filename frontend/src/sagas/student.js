@@ -1,7 +1,7 @@
 import { call, takeEvery, put, select } from 'redux-saga/effects';
 import { reset } from 'redux-form';
 import i18n from '../i18n';
-import { STUDENT_URL, STUDENTS_TO_GROUP_FILE } from '../constants/axios';
+import { STUDENT_URL, GROUP_URL, WITH_STUDENTS, STUDENTS_TO_GROUP_FILE } from '../constants/axios';
 
 import * as actionTypes from '../actions/actionsType';
 import { STUDENT_FORM } from '../constants/reduxForms';
@@ -34,7 +34,7 @@ function* getAllStudents({ id }) {
     try {
         yield put(showAllStudents([]));
         yield put(setStudentsLoading(true));
-        const requestUrl = `groups/${id}/with-students`;
+        const requestUrl = `${GROUP_URL}/${id}${WITH_STUDENTS}`;
         const res = yield call(axiosCall, requestUrl);
         yield put(showAllStudents(res.data.students));
     } catch (err) {

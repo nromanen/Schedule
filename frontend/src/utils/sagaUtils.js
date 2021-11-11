@@ -1,6 +1,9 @@
 import i18n from '../i18n';
 import { FORM_STUDENT_LABEL, FORM_GROUP_LABEL } from '../constants/translationLabels/formElements';
-import { BACK_END_SUCCESS_OPERATION } from '../constants/translationLabels/serviceMessages';
+import {
+    BACK_END_ACTION_SUCCESS,
+    BACK_END_SUCCESS_OPERATION,
+} from '../constants/translationLabels/serviceMessages';
 import { GROUP, STUDENT } from '../constants/names';
 
 export const createErrorMessage = ({ response }) => {
@@ -27,6 +30,8 @@ export const createDynamicMessage = (typeMessage, message) => {
                 actionType: i18n.t(message),
             });
         default:
-            return 'SUCCESS';
+            return i18n.t(BACK_END_ACTION_SUCCESS, {
+                actionType: i18n.t(message),
+            });
     }
 };

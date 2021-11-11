@@ -12,8 +12,8 @@ import {
     STUDENT_LINK,
     EDIT_LINK,
     DELETE_LINK,
-    GROUP_LINK,
     GROUP_LIST_LINK,
+    SHOW_STUDENTS_LINK,
 } from '../../constants/links';
 import {
     EDIT_TITLE,
@@ -71,7 +71,7 @@ export const StudentsTableBody = (props) => {
                     <TableCell component="th" scope="row" align="center">
                         <span className="edit-cell">
                             <Link
-                                to={`${GROUP_LIST_LINK}${GROUP_LINK}/${group.id}${STUDENT_LINK}/${student.id}${EDIT_LINK}`}
+                                to={`${GROUP_LIST_LINK}/${group.id}${SHOW_STUDENTS_LINK}/${student.id}${EDIT_LINK}`}
                             >
                                 <FaEdit
                                     className="edit-button"
@@ -83,7 +83,7 @@ export const StudentsTableBody = (props) => {
                                 />
                             </Link>
                             <Link
-                                to={`${GROUP_LIST_LINK}${GROUP_LINK}/${group.id}${STUDENT_LINK}/${student.id}${DELETE_LINK}`}
+                                to={`${GROUP_LIST_LINK}/${group.id}${STUDENT_LINK}/${student.id}${DELETE_LINK}`}
                             >
                                 <Delete
                                     title={t(DELETE_TITLE_LABEL)}

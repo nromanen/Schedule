@@ -1,8 +1,10 @@
 import './GroupPage.scss';
 import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import { isEmpty } from 'lodash';
 import { useTranslation } from 'react-i18next';
 import { CircularProgress } from '@material-ui/core';
+import { goToGroupPage } from '../../helper/pageRedirection';
 import { dialogTypes } from '../../constants/dialogs';
 import { GROUP_Y_LABEL } from '../../constants/translationLabels/formElements';
 import { search } from '../../helper/search';
@@ -11,7 +13,6 @@ import NotFound from '../../share/NotFound/NotFound';
 import CustomDialog from '../../containers/Dialogs/CustomDialog';
 import AddStudentDialog from '../../share/DialogWindows/_dialogWindows/AddStudentDialog';
 import ShowStudentsOnGroupDialog from '../../containers/Students/ShowStudentsOnGroupDialog';
-import { EDIT_LINK, ADD_STUDENT_LINK, SHOW_STUDENTS_LINK } from '../../constants/links';
 
 const GroupList = (props) => {
     const {
@@ -29,6 +30,7 @@ const GroupList = (props) => {
         setGroup,
         isDisabled,
     } = props;
+    const history = useHistory();
     const { t } = useTranslation('formElements');
 
     const [groupId, setGroupId] = useState(-1);
@@ -71,18 +73,19 @@ const GroupList = (props) => {
         setIsOpenShowStudentsDialog(true);
     };
 
-    const checkParamsActions = () => {
+    const checkParamsForActions = () => {
         const { id, action } = match.params;
 
         const checkParamsAndSetActions = {
             'add-student': showAddStudentDialog,
             'show-students': showStudentsByGroup,
         };
-        return action && checkParamsAndSetActions[action](id);
+        const actionsFunc = checkParamsAndSetActions[action];
+        if (actionsFunc) actionsFunc(id);
     };
 
     useEffect(() => {
-        checkParamsActions();
+        checkParamsForActions();
     }, []);
 
     if (loading) {
@@ -118,7 +121,10 @@ const GroupList = (props) => {
                     match={match}
                     groupId={groupId}
                     open={isOpenShowStudentsDialog}
-                    onClose={() => setIsOpenShowStudentsDialog(false)}
+                    onClose={() => {
+                        goToGroupPage(history);
+                        setIsOpenShowStudentsDialog(false);
+                    }}
                 />
             )}
             <div className="group-list">
