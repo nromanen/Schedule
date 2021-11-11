@@ -36,7 +36,7 @@ export const StudentsTable = (props) => {
 
     const checkStudent = (event) => {
         const { value, checked } = event.target;
-        const checkedStudent = students.filter((student) => student.id === Number(value));
+        const checkedStudent = students.filter((student) => student.id === +value);
         updateStudentSuccess({ ...checkedStudent[0], checked });
         isCheckedAll();
     };

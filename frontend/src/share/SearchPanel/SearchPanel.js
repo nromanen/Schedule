@@ -45,7 +45,7 @@ const SearchPanel = ({ SearchChange, showDisabled, showArchived, forLessons }) =
     };
 
     return (
-        <Card className="search-group">
+        <Card additionClassName="search-group">
             {!forLessons && (
                 <FormControlLabel
                     control={
