@@ -52,10 +52,10 @@ const RoomTypeForm = (props) => {
                         className="form-field"
                         variant="outlined"
                     />
-                    <div className="btn-style-wrapper">
+                    <div className="btn-type-form-wrapper">
                         <Button
                             color="primary"
-                            className="btn-style"
+                            className="type-form-btn"
                             disabled={pristine || submitting}
                             variant="contained"
                             type="submit"
@@ -65,21 +65,21 @@ const RoomTypeForm = (props) => {
                     </div>
                 </form>
 
-                <ul className="new-types">
+                <ul className="form-types-list">
                     {roomTypes.map((roomType) => (
                         <li
                             key={roomType.id}
                             value={roomType.description}
-                            className="new-types-list"
+                            className="form-types-item"
                         >
-                            <span className="type-description">{roomType.description}</span>
-                            <span className="buttons">
+                            <span className="form-types">{roomType.description}</span>
+                            <span className="form-types-icons">
                                 <FaEdit
-                                    className="btn edit"
+                                    className="room-type-icon room-type-icon__edit"
                                     onClick={() => setSelectRoomType(roomType.id)}
                                 />
                                 <MdDelete
-                                    className="btn delete"
+                                    className="room-type-icon room-type-icon__delete"
                                     onClick={() => {
                                         showConfirmDialog(
                                             roomType.id,
