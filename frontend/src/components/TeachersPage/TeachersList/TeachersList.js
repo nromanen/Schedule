@@ -11,7 +11,7 @@ const TeachersList = (props) => {
     const { visibleItems, ...rest } = props;
 
     return (
-        <section className="container-flex-wrap">
+        <section className="teachers-list-container">
             {visibleItems.length === 0 && <NotFound name={t(FORM_TEACHER_A_LABEL)} />}
             {visibleItems.map((teacherItem) => {
                 return <TeachersCard teacherItem={teacherItem} key={teacherItem.id} {...rest} />;

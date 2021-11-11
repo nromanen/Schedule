@@ -16,6 +16,7 @@ import {
     COMMON_SET_ENABLED,
     TEACHER_DEPARTMENT,
 } from '../../../constants/translationLabels/common';
+import { MAX_LENGTH_40 } from '../../../constants/common';
 
 const TeachersCard = (props) => {
     const { t } = useTranslation('common');
@@ -29,7 +30,7 @@ const TeachersCard = (props) => {
 
     return (
         <Card key={teacherItem.id} additionClassName="teacher-card">
-            <div className="cards-btns">
+            <div className="teacher-btns">
                 {!isDisabled ? (
                     <>
                         <IoMdEye
@@ -66,7 +67,7 @@ const TeachersCard = (props) => {
                 />
             </div>
             <h2 className="teacher-card-name">
-                {getShortTitle(getTeacherFullName(teacherItem), 40)}
+                {getShortTitle(getTeacherFullName(teacherItem), MAX_LENGTH_40)}
             </h2>
             <p className="teacher-card-title">
                 {`${teacherItem.position} ${

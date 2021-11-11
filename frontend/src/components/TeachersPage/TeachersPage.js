@@ -132,7 +132,7 @@ const TeachersPage = (props) => {
     };
 
     return (
-        <div className="cards-container">
+        <div className="teachers-container">
             <div className="form-with-search-panel">
                 <div className="teacher-search">
                     <SearchPanel SearchChange={setTerm} showDisabled={changeDisable} />
