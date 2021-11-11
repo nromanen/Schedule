@@ -64,6 +64,7 @@ const TeachersPage = (props) => {
         'name',
         'surname',
         'patronymic',
+        'department.name',
     ]);
 
     const changeDisable = () => {
@@ -93,7 +94,6 @@ const TeachersPage = (props) => {
     };
     const acceptConfirmDialog = () => {
         setOpenConfirmDialog(false);
-        // if (!id) return;
         if (confirmDialogType !== dialogTypes.DELETE_CONFIRM) {
             setEnabledDisabled(teacherId);
         } else {
@@ -132,59 +132,65 @@ const TeachersPage = (props) => {
 
     return (
         <div className="cards-container">
-            <CustomDialog
-                type={confirmDialogType}
-                whatDelete={cardType.TEACHER}
-                open={isOpenConfirmDialog}
-                handelConfirm={acceptConfirmDialog}
-            />
-
-            <aside className="form-with-search-panel">
-                <SearchPanel SearchChange={setTerm} showDisabled={changeDisable} />
-                {isOpenMultiSelectDialog && (
-                    <MultiSelect
-                        open={isOpenMultiSelectDialog}
-                        options={setOptions(enabledTeachers)}
-                        value={selected}
-                        onChange={setSelected}
-                        onCancel={cancelSelection}
-                        onSentTeachers={sendTeachers}
-                        isEnabledSentBtn={isChosenSelection()}
-                        semesters={setSemesterOptions(semesters)}
-                        defaultSemester={parseDefaultSemester()}
-                        onChangeSemesterValue={setSelectedSemester}
-                    />
-                )}
+            <div className="form-with-search-panel">
+                <div className="teacher-search">
+                    <SearchPanel SearchChange={setTerm} showDisabled={changeDisable} />
+                </div>
 
                 {!isDisabled && (
-                    <div>
-                        <Button
-                            className="send-button"
-                            variant="contained"
-                            color="primary"
-                            onClick={() => {
-                                setIsOpenMultiSelectDialog(true);
-                            }}
-                        >
-                            {t(SEND_SCHEDULE_FOR_TEACHER)}
-                        </Button>
-                        <AddTeacherForm
-                            departments={setDepartmentOptions(departments)}
-                            teachers={enabledTeachers}
-                            onSubmit={teacherSubmit}
-                            onSetSelectedCard={selectedTeacherCard}
-                            teacher={teacher}
-                        />
+                    <div className="teacher-form">
+                        <div className="send-schedule">
+                            <Button
+                                className="send-button"
+                                variant="contained"
+                                color="primary"
+                                onClick={() => {
+                                    setIsOpenMultiSelectDialog(true);
+                                }}
+                            >
+                                {t(SEND_SCHEDULE_FOR_TEACHER)}
+                            </Button>
+                        </div>
+                        <div className="add-form">
+                            <AddTeacherForm
+                                departments={setDepartmentOptions(departments)}
+                                teachers={enabledTeachers}
+                                onSubmit={teacherSubmit}
+                                onSetSelectedCard={selectedTeacherCard}
+                                teacher={teacher}
+                            />
+                        </div>
                     </div>
                 )}
-            </aside>
-
+            </div>
             <TeachersList
                 visibleItems={visibleItems}
                 isDisabled={isDisabled}
                 setTeacherId={setTeacherId}
                 showConfirmDialog={showConfirmDialog}
                 selectedTeacherCard={selectedTeacherCard}
+            />
+
+            {isOpenMultiSelectDialog && (
+                <MultiSelect
+                    open={isOpenMultiSelectDialog}
+                    options={setOptions(enabledTeachers)}
+                    value={selected}
+                    onChange={setSelected}
+                    onCancel={cancelSelection}
+                    onSentTeachers={sendTeachers}
+                    isEnabledSentBtn={isChosenSelection()}
+                    semesters={setSemesterOptions(semesters)}
+                    defaultSemester={parseDefaultSemester()}
+                    onChangeSemesterValue={setSelectedSemester}
+                />
+            )}
+
+            <CustomDialog
+                type={confirmDialogType}
+                whatDelete={cardType.TEACHER}
+                open={isOpenConfirmDialog}
+                handelConfirm={acceptConfirmDialog}
             />
         </div>
     );
