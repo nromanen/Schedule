@@ -41,8 +41,7 @@ const renderSchedule = (props) => {
         }
         case 'teacher': {
             const { semester, teacher, odd, even } = teacherSchedule;
-
-            if (isEmpty(odd) || isEmpty(even)) return emptySchedule();
+            if (isEmpty(odd?.classes) || isEmpty(even?.classes)) return emptySchedule();
 
             return (
                 <>
