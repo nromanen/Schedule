@@ -4,7 +4,7 @@ import { CircularProgress } from '@material-ui/core';
 import { isEmpty } from 'lodash';
 import NotFound from '../../../share/NotFound/NotFound';
 import { ROOM_Y_LABEL } from '../../../constants/translationLabels/formElements';
-import RoomCard from './RoomCard';
+import RoomCard from './RoomCard/RoomCard';
 import { search } from '../../../helper/search';
 
 const RoomList = (props) => {
