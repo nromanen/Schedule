@@ -3,7 +3,6 @@ import { FaSearch } from 'react-icons/fa';
 import { TextField } from '@material-ui/core';
 import { useTranslation } from 'react-i18next';
 
-import './SearchPanel.scss';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 import {
