@@ -73,6 +73,11 @@ const GroupList = (props) => {
         setIsOpenShowStudentsDialog(true);
     };
 
+    const closeShowStudentsByGroup = () => {
+        goToGroupPage(history);
+        setIsOpenShowStudentsDialog(false);
+    };
+
     const checkParamsForActions = () => {
         const { id, action } = match.params;
 
@@ -121,10 +126,7 @@ const GroupList = (props) => {
                     match={match}
                     groupId={groupId}
                     open={isOpenShowStudentsDialog}
-                    onClose={() => {
-                        goToGroupPage(history);
-                        setIsOpenShowStudentsDialog(false);
-                    }}
+                    onClose={closeShowStudentsByGroup}
                 />
             )}
             <div className="group-list">

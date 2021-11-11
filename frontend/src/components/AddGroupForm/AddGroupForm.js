@@ -80,7 +80,7 @@ export const AddGroup = (props) => {
                     <Button
                         size="small"
                         type="button"
-                        className="buttons-style size"
+                        className="buttons-style"
                         variant="contained"
                         disabled={setDisableButton(pristine, submitting, group.id)}
                         onClick={onReset}
