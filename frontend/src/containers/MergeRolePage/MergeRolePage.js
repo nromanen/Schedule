@@ -43,8 +43,12 @@ const MergeRolePage = (props) => {
     const { teachers, gettTeachersWithoutAccount } = props;
     const { users } = props;
 
-    useEffect(() => gettTeachersWithoutAccount(), []);
-    useEffect(() => getUsersService(), []);
+    useEffect(() => {
+        gettTeachersWithoutAccount();
+    }, []);
+    useEffect(() => {
+        getUsersService();
+    }, []);
 
     const defaultPropsTeachers = {
         options: teachers,
