@@ -6,23 +6,20 @@ import {
     COMMON_DO_YOU_WANNA_DISABLE,
     COMMON_DELETE_WORD,
     COMMON_DO_YOU_WANNA_SHOW,
-    COMMON_BY_THIS_CARD_TYPE,
     COMMON_THIS_CARD_TYPE,
     COMMON_GO_TO_MEETING_WORD,
     COMMON_SET_DEFAULT_WORD,
     COMMON_ARE_YOU_SURE,
 } from '../../constants/translationLabels/common';
 
-import {
-    FORM_REFERENCE_ELEMENT,
-    FORM_SEMESTER_ELEMENT,
-} from '../../constants/translationLabels/formElements';
+import { FORM_SEMESTER_ELEMENT } from '../../constants/translationLabels/formElements';
 
 const dialogMapper = (props) => {
     const {
         type,
         whatDelete,
         handelConfirm,
+        onClose,
         setOpenConfirmDialog,
         warning,
         linkToMeeting = 'none',
@@ -31,7 +28,10 @@ const dialogMapper = (props) => {
         setOpenConfirmDialog(false);
     };
 
-    const defaultModalButtons = [dialogYesButton(handelConfirm), dialogNoButton(handelClose)];
+    const defaultModalButtons = [
+        dialogYesButton(handelConfirm),
+        dialogNoButton(onClose || handelClose),
+    ];
 
     switch (type) {
         case dialogTypes.DELETE_CONFIRM:
@@ -78,14 +78,6 @@ const dialogMapper = (props) => {
         case dialogTypes.MEETING_LINK:
             return {
                 title: (
-                    <>
-                        {i18n.t(COMMON_DO_YOU_WANNA_SHOW)}{' '}
-                        {i18n.t(COMMON_BY_THIS_CARD_TYPE, {
-                            cardType: i18n.t(FORM_REFERENCE_ELEMENT),
-                        })}
-                    </>
-                ),
-                children: (
                     <>
                         {i18n.t(COMMON_DO_YOU_WANNA)}
                         <span>

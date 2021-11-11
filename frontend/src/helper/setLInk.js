@@ -1,5 +1,5 @@
 import React from 'react';
-import { LinkToMeeting } from '../components/LinkToMeeting/LinkToMeeting';
+import LinkToMeeting from '../components/LinkToMeeting/LinkToMeeting';
 import { places } from '../constants/places';
 import { getHref } from './getHref';
 
