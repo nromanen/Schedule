@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -29,14 +29,14 @@ const ScheduleItem = (props) => {
         selectByGroupId,
         openDialogWithData,
     } = props;
-    const [anchorEl, setAnchorEl] = React.useState(null);
+    const [anchor, setAnchor] = useState(null);
     const { lesson } = itemData;
 
     const handleClick = (event) => {
-        setAnchorEl(event.currentTarget);
+        setAnchor(event.currentTarget);
     };
     const handleClose = () => {
-        setAnchorEl(null);
+        setAnchor(null);
     };
 
     const handelEdit = () => {
@@ -74,9 +74,9 @@ const ScheduleItem = (props) => {
                 </Button>
                 <Menu
                     className="action-menu"
-                    anchorEl={anchorEl}
+                    anchorEl={anchor}
                     keepMounted
-                    open={Boolean(anchorEl)}
+                    open={Boolean(anchor)}
                     onClose={handleClose}
                 >
                     <MenuItem className="edit-item" onClick={handelEdit}>
