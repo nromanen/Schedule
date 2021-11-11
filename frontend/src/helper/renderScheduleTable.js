@@ -24,17 +24,27 @@ import TeacherTemporaryCardCell from '../containers/GroupSchedulePage/TeacherTem
 
 const shortid = require('shortid');
 
+const transformSemesterDate = (date) => {
+    const [day, month, year] = date.split('/');
+    const endDateString = `${month}/${day}/${year}`;
+
+    return new Date(endDateString);
+};
+
+const checkSemesterEnd = (semesterEndDate) => {
+    const today = new Date();
+
+    const endDate = transformSemesterDate(semesterEndDate);
+    return today - endDate > 0;
+};
+
 const matchDayNumberSysytemToDayName = () => {
     const now = new Date();
     return daysUppercase[now.getDay() - 1];
 };
-const currentDay = matchDayNumberSysytemToDayName();
 
 const getWeekNumber = (startScheduleDate, date) => {
-    const [day, month, year] = startScheduleDate.split('/');
-    const startDateString = `${month}/${day}/${year}`;
-
-    const startDay = new Date(startDateString);
+    const startDay = transformSemesterDate(startScheduleDate);
 
     const numberOfDays = Math.floor((date - startDay) / numberOfMilisecondsInADay);
     return Math.ceil((date.getDay() + 1 + numberOfDays) / numberOfDaysInAWeek);
@@ -49,13 +59,17 @@ function isWeekOdd(num) {
     return num % 2 === 1;
 }
 
-let currentWeekType = false;
-
 const renderClassCell = (classItem) => {
     return `${classItem.class_name}\n\r\n\r${classItem.startTime} - ${classItem.endTime}`;
 };
 
-export const renderGroupDayClass = (classDay, isOddWeek, semesterDays) => {
+export const renderGroupDayClass = (
+    classDay,
+    isOddWeek,
+    semesterDays,
+    currentWeekType,
+    currentDay,
+) => {
     return (
         <TableRow key={shortid.generate()}>
             <TableCell className=" lesson groupLabelCell">
@@ -63,10 +77,8 @@ export const renderGroupDayClass = (classDay, isOddWeek, semesterDays) => {
             </TableCell>
             {classDay.lessons.map(({ day, card }) => {
                 let className = 'lesson ';
-                if (currentDay === day) {
-                    if (currentWeekType === isOddWeek) {
-                        className += ' currentDay';
-                    }
+                if (currentDay === day && currentWeekType === isOddWeek) {
+                    className += ' currentDay';
                 }
                 return (
                     semesterDays.includes(day) && (
@@ -92,9 +104,8 @@ export const renderScheduleGroupHeader = (days) => (
 );
 
 export const renderGroupTable = (classes, isOdd, semester) => {
-    if (semester) {
-        currentWeekType = isWeekOdd(printWeekNumber(semester.startDay));
-    }
+    const currentWeekType = isWeekOdd(printWeekNumber(semester.startDay));
+    const currentDay = checkSemesterEnd(semester.endDay) ? '' : matchDayNumberSysytemToDayName();
     return (
         <TableContainer>
             <Table aria-label="sticky table">
@@ -102,7 +113,13 @@ export const renderGroupTable = (classes, isOdd, semester) => {
                 <TableBody>
                     {classes.map((classDay) => {
                         if (classDay) {
-                            return renderGroupDayClass(classDay, isOdd, semester.semester_days);
+                            return renderGroupDayClass(
+                                classDay,
+                                isOdd,
+                                semester.semester_days,
+                                currentWeekType,
+                                currentDay,
+                            );
                         }
                         return null;
                     })}
@@ -178,7 +195,14 @@ export const renderScheduleHeader = (groups) => (
     </TableHead>
 );
 
-export const renderFirstDayFirstClassFirstCardLine = (dayName, classItem, groups, classesCount) => {
+export const renderFirstDayFirstClassFirstCardLine = (
+    dayName,
+    classItem,
+    groups,
+    classesCount,
+    currentWeekType,
+    currentDay,
+) => {
     let dayClassName = 'dayNameCell ';
     const classClassName = 'classNameCell ';
     const isCurrentDay = dayName === currentDay;
@@ -223,7 +247,13 @@ export const renderFirstDayFirstClassFirstCardLine = (dayName, classItem, groups
     );
 };
 
-export const renderFirstDayOtherClassFirstCardLine = (dayName, classItem, groups) => {
+export const renderFirstDayOtherClassFirstCardLine = (
+    dayName,
+    classItem,
+    groups,
+    currentWeekType,
+    currentDay,
+) => {
     const classClassName = 'classNameCell ';
     const isCurrentDay = dayName === currentDay;
     let oddWeekClass = '';
@@ -256,7 +286,7 @@ export const renderFirstDayOtherClassFirstCardLine = (dayName, classItem, groups
     );
 };
 
-export const renderDay = (dayName, dayItem, semesterClassesCount) => {
+export const renderDay = (dayName, dayItem, semesterClassesCount, currentWeekType, currentDay) => {
     return dayItem.map((classItem, classIndex) => {
         if (classIndex === 0) {
             return renderFirstDayFirstClassFirstCardLine(
@@ -264,9 +294,17 @@ export const renderDay = (dayName, dayItem, semesterClassesCount) => {
                 classItem.class,
                 classItem.cards,
                 semesterClassesCount,
+                currentWeekType,
+                currentDay,
             );
         }
-        return renderFirstDayOtherClassFirstCardLine(dayName, classItem.class, classItem.cards);
+        return renderFirstDayOtherClassFirstCardLine(
+            dayName,
+            classItem.class,
+            classItem.cards,
+            currentWeekType,
+            currentDay,
+        );
     });
 };
 
@@ -283,17 +321,18 @@ export const renderScheduleFullHeader = (groupList) => (
     </TableHead>
 );
 
-const renderScheduleDays = (resultArray, semesterClasses) => {
+const renderScheduleDays = (resultArray, semesterClasses, currentWeekType, currentDay) => {
     return resultArray.map(({ day, classes }) => {
-        return renderDay(day, classes, semesterClasses.length || 0);
+        return renderDay(day, classes, semesterClasses.length || 0, currentWeekType, currentDay);
     });
 };
 
 export const renderFullSchedule = (fullResultSchedule) => {
     const { semester, groupList, semesterClasses, resultArray } = fullResultSchedule;
     const { startDay, description, endDay } = semester;
-    currentWeekType = isWeekOdd(printWeekNumber(startDay));
     const scheduleTitle = `${description} (${startDay}-${endDay})`;
+    const currentWeekType = isWeekOdd(printWeekNumber(startDay));
+    const currentDay = checkSemesterEnd(endDay) ? '' : matchDayNumberSysytemToDayName();
 
     return (
         <>
@@ -301,7 +340,14 @@ export const renderFullSchedule = (fullResultSchedule) => {
             <TableContainer>
                 <Table aria-label="sticky table">
                     {renderScheduleFullHeader(groupList)}
-                    <TableBody>{renderScheduleDays(resultArray, semesterClasses)}</TableBody>
+                    <TableBody>
+                        {renderScheduleDays(
+                            resultArray,
+                            semesterClasses,
+                            currentWeekType,
+                            currentDay,
+                        )}
+                    </TableBody>
                 </Table>
             </TableContainer>
         </>
@@ -435,10 +481,7 @@ export const renderTeacherRangeSchedule = (schedule, viewTeacherScheduleResults)
         return i18n.t(EMPTY_SCHEDULE);
     }
     return schedule.map((dayItem) => {
-        const [day, month, year] = dayItem.date.split('/');
-        const startDateString = `${month}/${day}/${year}`;
-
-        const startDay = new Date(startDateString);
+        const startDay = transformSemesterDate(dayItem.date);
 
         return (
             <Card
