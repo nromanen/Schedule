@@ -20,7 +20,7 @@ const GroupSchedulePageTop = (props) => {
         <section className="schedule_page-container">
             <p>{t(GREETING_SCHEDULE_MESSAGE)}</p>
             <p>{t(GREETING_SCHEDULE_MESSAGE_HINT)}</p>
-            <section className="form-buttons-container top">
+            <section className="schedule-form-buttons-container top">
                 <Card additionClassName="form-card schedule-form-card">
                     <SchedulePageForm onSubmit={handleSubmit} />
                 </Card>
