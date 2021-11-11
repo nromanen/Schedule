@@ -1,4 +1,7 @@
-@import '../../App';
+@import '../../styles/colors.scss';
+@import '../../styles/variables.scss';
+@import '../../styles/mixins.scss';
+
 $group-size: 10px;
 .students-group{
   display: flex;

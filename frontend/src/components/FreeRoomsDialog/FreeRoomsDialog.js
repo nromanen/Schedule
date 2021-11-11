@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import { FaDoorOpen } from 'react-icons/fa';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
 import FreeRoomForm from '../../containers/Rooms/FreeRoomsForm';
 import { getClassScheduleListService } from '../../services/classService';
 import CustomDialog from '../../containers/Dialogs/CustomDialog';
@@ -26,6 +28,9 @@ const FreeRoomsDialog = (props) => {
     return (
         <>
             <span className="navLinks" onClick={handleIsOpenFreeRoomDialog} aria-hidden="true">
+                <ListItemIcon>
+                    <FaDoorOpen fontSize="normal" />
+                </ListItemIcon>
                 {t(FIND_FREE_ROOM)}
             </span>
             {isOpenFreeRoomDialog && (
