@@ -2,7 +2,11 @@ import React from 'react';
 import { isEmpty } from 'lodash';
 import Card from '@material-ui/core/Card';
 import './TableItem.scss';
-import { addClassDayBoard, removeClassDayBoard } from '../../../helper/schedule';
+import {
+    addClassDayBoard,
+    removeClassDayBoard,
+    getColorByFullness,
+} from '../../../helper/schedule';
 import { GroupTitle } from './GroupTitle';
 
 const TableItem = (props) => {
@@ -10,29 +14,6 @@ const TableItem = (props) => {
 
     const findItemInArray = (array, equalTo) => {
         return array.find((classItem) => classItem.class_id === equalTo);
-    };
-
-    const getColorByFullness = (array = []) => {
-        let color = isEmpty(array) ? 'available' : 'allow';
-        let prevLesson = {
-            teacherName: array[0]?.teacher_for_site,
-            lessonName: array[0]?.subject_for_site,
-        };
-        array.forEach((lesson) => {
-            const isTeacherNameTheSame = lesson.teacher_for_site === prevLesson.teacherName;
-            const isLessonNotTheSame = lesson.subject_for_site !== prevLesson.lessonName;
-            if (isLessonNotTheSame && isTeacherNameTheSame) {
-                color = 'possible';
-            }
-            if (!isTeacherNameTheSame) {
-                color = 'not-allow';
-            }
-            prevLesson = {
-                teacherName: lesson.teacher_for_site,
-                lessonName: lesson.subject_for_site,
-            };
-        });
-        return color;
     };
 
     return classes.map((scheduleClass, classIndex) => {

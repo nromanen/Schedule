@@ -6,8 +6,6 @@ import { dialogTypes, dialogCloseButton, dialogChooseButton } from '../../../con
 import {
     COMMON_SCHEDULE_DIALOG_TITLE,
     COMMON_ROOM_IS_UNAVAILABLE,
-    COMMON_AVAILABLE,
-    COMMON_UNAVAILABLE,
     COMMON_TEACHER_IS_UNAVAILABLE,
 } from '../../../constants/translationLabels/common';
 import { FORM_ROOM_LABEL } from '../../../constants/translationLabels/formElements';
@@ -16,6 +14,7 @@ import CustomDialog from '../../../containers/Dialogs/CustomDialog';
 import { sortByName } from '../../../helper/sortArray';
 import '../../../share/DialogWindows/dialog.scss';
 import i18n from '../../../i18n';
+import { getOptionLabelWithAvailable } from '../../../utils/selectUtils';
 
 const ScheduleDialog = (props) => {
     const {
@@ -32,10 +31,6 @@ const ScheduleDialog = (props) => {
 
     const [room, setRoom] = useState('');
     const [warnings, setWarnings] = useState([]);
-
-    const getOptionLabel = (option) => {
-        return `${option.name} (${option.available ? t(COMMON_AVAILABLE) : t(COMMON_UNAVAILABLE)})`;
-    };
 
     useEffect(() => {
         if (!availability.teacherAvailable) {
@@ -65,7 +60,7 @@ const ScheduleDialog = (props) => {
 
     const defaultProps = {
         options: availability.rooms ? sortByName(availability.rooms) : sortByName(rooms),
-        getOptionLabel,
+        getOptionLabelWithAvailable,
     };
 
     return (

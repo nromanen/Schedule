@@ -35,3 +35,26 @@ export const removeClassDayBoard = (dayName, classId) => {
     dayClassWeek[0].classList.remove(hoverLineClassName);
     dayClassWeek[1].classList.remove(hoverLineClassName);
 };
+
+export const getColorByFullness = (array = []) => {
+    let color = isEmpty(array) ? 'available' : 'allow';
+    let prevLesson = {
+        teacherName: array[0]?.teacher_for_site,
+        lessonName: array[0]?.subject_for_site,
+    };
+    array.forEach((lesson) => {
+        const isTeacherNameTheSame = lesson.teacher_for_site === prevLesson.teacherName;
+        const isLessonNotTheSame = lesson.subject_for_site !== prevLesson.lessonName;
+        if (isLessonNotTheSame && isTeacherNameTheSame) {
+            color = 'possible';
+        }
+        if (!isTeacherNameTheSame) {
+            color = 'not-allow';
+        }
+        prevLesson = {
+            teacherName: lesson.teacher_for_site,
+            lessonName: lesson.subject_for_site,
+        };
+    });
+    return color;
+};
