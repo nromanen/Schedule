@@ -9,9 +9,8 @@
   background-color: $main-color;
   margin: 10px;
   padding: 1rem;
-  border-radius: 3px;
-  border: $card-border;
-  box-shadow: $card-shadow;
+  border-radius: 5px;
+  box-shadow: 0 2px 8px $shadow-box;
 }
 
 .form-card {

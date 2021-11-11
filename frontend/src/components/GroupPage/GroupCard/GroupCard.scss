@@ -9,16 +9,17 @@ $group-size: 10px;
     box-sizing: border-box;
     max-width: 19 * $group-size; 
     min-width: 18 * $group-size;
-    height: 16 * $group-size;
+    height: 15 * $group-size;
 
     display: flex;
     flex-direction: column;
     margin: $group-size;
-    padding: 15px;
+    padding: 10px;
 
     border-radius: 2px;
-    border: $card-border;
-    box-shadow: $card-shadow;
+    // border: $card-border;
+    // box-shadow: $card-shadow;
+    box-shadow: 0 1px 4px $shadow-box;
 
     &__number {
       font-size: x-large;

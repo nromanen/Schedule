@@ -6,10 +6,10 @@
   flex-direction: column;
   justify-content: center;
   padding: 1rem;
-  margin:  10px;
+  margin:  15px 10px 10px 10px;
   border-radius: 3px;
-  border: $card-border;
-  box-shadow: $card-shadow;
+  border-radius: 5px;
+  box-shadow: 0 2px 8px $shadow-box;
 
   .MuiFormControl-root{
     width: 99%;
