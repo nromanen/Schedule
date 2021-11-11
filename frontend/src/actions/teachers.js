@@ -7,9 +7,9 @@ export const handleTeacherStart = (values) => {
     };
 };
 
-export const addTeacher = (teacher) => {
+export const addTeacherSuccess = (teacher) => {
     return {
-        type: actionsType.ADD_TEACHER,
+        type: actionsType.ADD_TEACHER_SUCCESS,
         teacher,
     };
 };
@@ -36,9 +36,9 @@ export const toggleTeacherStart = (teacherId, disableStatus) => {
     };
 };
 
-export const deleteTeacher = (id, disableStatus) => {
+export const deleteTeacherSuccess = (id, disableStatus) => {
     return {
-        type: actionsType.DELETE_TEACHER,
+        type: actionsType.DELETE_TEACHER_SUCCESS,
         id,
         disableStatus,
     };
@@ -58,9 +58,9 @@ export const selectTeacherCard = (res) => {
     };
 };
 
-export const updateTeacherCard = (teacher) => {
+export const updateTeacherCardSuccess = (teacher) => {
     return {
-        type: actionsType.UPDATE_TEACHER,
+        type: actionsType.UPDATE_TEACHER_SUCCESS,
         teacher,
     };
 };
@@ -72,9 +72,9 @@ export const updateTeacherCardStart = (teacher) => {
     };
 };
 
-export const showAllTeachers = (teachers) => {
+export const showAllTeachersSuccess = (teachers) => {
     return {
-        type: actionsType.SHOW_ALL_TEACHERS,
+        type: actionsType.SHOW_ALL_TEACHERS_SUCCESS,
         result: teachers,
     };
 };
@@ -106,9 +106,9 @@ export const getAllTeachersByDepartmentId = (teachers) => {
     };
 };
 
-export const setDisabledTeachers = (teachers) => {
+export const setDisabledTeachersSuccess = (teachers) => {
     return {
-        type: actionsType.SET_DISABLED_TEACHERS,
+        type: actionsType.SET_DISABLED_TEACHERS_SUCCESS,
         result: teachers,
     };
 };

@@ -23,10 +23,9 @@ import CopyLessonDialog from './CopyLessonDialog/CopyLessonDialog';
 import './LessonPage.scss';
 import { showAllGroupsService, selectGroupService } from '../../services/groupService';
 import { showAllSubjectsService } from '../../services/subjectService';
-import { showAllTeachersService } from '../../services/teacherService';
 
 import { FORM_GROUP_LABEL } from '../../constants/translationLabels/formElements';
-import { HTTP } from '../../constants/formats';
+import { HTTP } from '../../constants/common';
 
 const LessonPage = (props) => {
     const {

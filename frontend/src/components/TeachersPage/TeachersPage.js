@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Button from '@material-ui/core/Button';
 import { useTranslation } from 'react-i18next';
 import i18n from 'i18next';
+import { isEmpty } from 'lodash';
 
 import { dialogTypes } from '../../constants/dialogs';
 import { cardType } from '../../constants/cardType';
@@ -50,6 +51,8 @@ const TeachersPage = (props) => {
     const [selectedSemester, setSelectedSemester] = useState('');
     const [confirmDialogType, setConfirmDialogType] = useState('');
 
+    const { id, description } = defaultSemester;
+
     useEffect(() => {
         getCurrentSemester();
         getDefaultSemester();
@@ -85,8 +88,8 @@ const TeachersPage = (props) => {
         clearDepartment();
     };
 
-    const showConfirmDialog = (id, dialogType) => {
-        setTeacherId(id);
+    const showConfirmDialog = (takeId, dialogType) => {
+        setTeacherId(takeId);
         setConfirmDialogType(dialogType);
         setOpenConfirmDialog(true);
     };
@@ -109,7 +112,7 @@ const TeachersPage = (props) => {
         const teachersId = selected.map((item) => {
             return item.id;
         });
-        const semesterId = selectedSemester === '' && defaultSemester.id;
+        const semesterId = selectedSemester === '' && id;
         const { language } = i18n;
         const data = { semesterId, teachersId, language };
         sendTeacherSchedule(data);
@@ -117,14 +120,14 @@ const TeachersPage = (props) => {
     };
 
     const isChosenSelection = () => {
-        return selected.length !== 0;
+        return !isEmpty(selected);
     };
 
     const parseDefaultSemester = () => {
         return {
-            id: defaultSemester.id,
-            value: defaultSemester.id,
-            label: `${defaultSemester.description}`,
+            id,
+            value: id,
+            label: `${description}`,
         };
     };
 

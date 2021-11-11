@@ -8,7 +8,6 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import Button from '@material-ui/core/Button';
 import { CircularProgress } from '@material-ui/core';
 import { setLoadingService } from '../../services/loadingService';
-import { getTeachersWithoutAccount } from '../../services/teacherService';
 import { getUsersService, mergeUserAndTeacherService } from '../../services/userService';
 
 import Card from '../../share/Card/Card';
@@ -40,11 +39,11 @@ const MergeRolePage = (props) => {
 
     const classes = useStyles();
 
-    const { teachers, gettTeachersWithoutAccount } = props;
+    const { teachers, getTeachersWithoutAccount } = props;
     const { users } = props;
 
     useEffect(() => {
-        gettTeachersWithoutAccount();
+        getTeachersWithoutAccount();
     }, []);
     useEffect(() => {
         getUsersService();
@@ -136,7 +135,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    gettTeachersWithoutAccount: () => dispatch(getTeacherWithoutAccountStart()),
+    getTeachersWithoutAccount: () => dispatch(getTeacherWithoutAccountStart()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(MergeRolePage);

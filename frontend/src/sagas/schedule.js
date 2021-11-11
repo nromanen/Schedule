@@ -39,7 +39,7 @@ import {
     setTeacherRangeSchedule,
     setTeacherSchedule,
     showAllGroups,
-    showAllTeachers,
+    showAllTeachersSuccess,
 } from '../actions';
 import { showBusyRooms } from '../services/busyRooms';
 import { snackbarTypes } from '../constants/snackbarTypes';
@@ -258,7 +258,7 @@ export function* getAllPublicSemesters() {
 export function* getAllPublicTeachers() {
     try {
         const response = yield call(axiosCall, PUBLIC_TEACHER_URL);
-        yield put(showAllTeachers(response.data));
+        yield put(showAllTeachersSuccess(response.data));
     } catch (error) {
         const message = error.response
             ? i18n.t(error.response.data.message, error.response.data.message)

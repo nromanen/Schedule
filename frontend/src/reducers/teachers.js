@@ -20,12 +20,12 @@ const reducer = (
     action,
 ) => {
     switch (action.type) {
-        case actionTypes.ADD_TEACHER:
+        case actionTypes.ADD_TEACHER_SUCCESS:
             return updateObject(state, {
                 teachers: [...state.teachers, action.teacher].sort(compare),
             });
 
-        case actionTypes.DELETE_TEACHER: {
+        case actionTypes.DELETE_TEACHER_SUCCESS: {
             if (action.disabledStatus) {
                 return {
                     ...state,
@@ -55,7 +55,7 @@ const reducer = (
                 teacher,
             });
         }
-        case actionTypes.UPDATE_TEACHER: {
+        case actionTypes.UPDATE_TEACHER_SUCCESS: {
             const teacherIndex = state.teachers.findIndex(({ id }) => id === action.teacher.id);
             const teachers = [...state.teachers];
             teachers[teacherIndex] = {
@@ -68,11 +68,11 @@ const reducer = (
             });
         }
 
-        case actionTypes.SET_DISABLED_TEACHERS:
+        case actionTypes.SET_DISABLED_TEACHERS_SUCCESS:
             return updateObject(state, {
                 disabledTeachers: [...action.result],
             });
-        case actionTypes.SHOW_ALL_TEACHERS:
+        case actionTypes.SHOW_ALL_TEACHERS_SUCCESS:
         case actionTypes.GET_TEACHERS_BY_DEPARTMENT:
         case actionTypes.GET_TEACHERS_WITHOUT_ACCOUNT_SUCCESS:
             return updateObject(state, {

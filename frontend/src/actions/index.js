@@ -115,11 +115,11 @@ export {
     updateSubject,
 } from './subjects';
 export {
-    addTeacher,
-    deleteTeacher,
-    selectTeacherCard,
-    setDisabledTeachers,
     setTeacher,
-    showAllTeachers,
-    updateTeacherCard,
+    selectTeacherCard,
+    addTeacherSuccess,
+    deleteTeacherSuccess,
+    showAllTeachersSuccess,
+    updateTeacherCardSuccess,
+    setDisabledTeachersSuccess,
 } from './teachers';

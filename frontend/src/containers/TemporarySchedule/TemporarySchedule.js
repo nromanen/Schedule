@@ -9,7 +9,6 @@ import TemporaryScheduleList from '../../components/TemporarySchedule/TemporaryS
 import TemporaryScheduleVacationForm from '../../components/TemporarySchedule/TemporaryScheduleVacationForm/TemporaryScheduleVacationForm';
 import Card from '../../share/Card/Card';
 import { setLoadingService } from '../../services/loadingService';
-import { showAllTeachersService } from '../../services/teacherService';
 import {
     addTemporaryScheduleForRangeService,
     addTemporaryScheduleService,

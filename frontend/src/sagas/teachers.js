@@ -1,38 +1,44 @@
 import { reset } from 'redux-form';
 import { call, put, takeLatest, select } from 'redux-saga/effects';
+import { axiosCall } from '../services/axios';
+
 import {
     DISABLED_TEACHERS_URL,
     TEACHERS_WITHOUT_ACCOUNT_URL,
     TEACHER_URL,
 } from '../constants/axios';
-import { DELETE, GET, POST, PUT } from '../constants/methods';
-import { axiosCall } from '../services/axios';
-import { createErrorMessage, createMessage } from '../utils/sagaUtils';
 import {
     BACK_END_SUCCESS_OPERATION,
     CREATED_LABEL,
     DELETED_LABEL,
     UPDATED_LABEL,
 } from '../constants/translationLabels/serviceMessages';
+import { TEACHER_FORM } from '../constants/reduxForms';
+import { DELETE, GET, POST, PUT } from '../constants/methods';
 import { FORM_TEACHER_A_LABEL } from '../constants/translationLabels/formElements';
-import { deleteTeacher, setDisabledTeachers, setLoading, showAllTeachers } from '../actions';
+import { isObjectEmpty } from '../helper/ObjectRevision';
+import { createErrorMessage, createMessage } from '../utils/sagaUtils';
+import {
+    setLoading,
+    deleteTeacherSuccess,
+    showAllTeachersSuccess,
+    setDisabledTeachersSuccess,
+} from '../actions';
 import { setOpenErrorSnackbar, setOpenSuccessSnackbar } from '../actions/snackbar';
 import * as actionTypes from '../actions/actionsType';
 import {
-    getTeacherWithoutAccountSuccess,
-    addTeacher,
-    updateTeacherCard,
     selectTeacherCard,
+    addTeacherSuccess,
+    updateTeacherCardSuccess,
+    getTeacherWithoutAccountSuccess,
 } from '../actions/teachers';
-import { isObjectEmpty } from '../helper/ObjectRevision';
-import { TEACHER_FORM } from '../constants/reduxForms';
 
-export function* showTeachers() {
+export function* getEnabledTeachers() {
     try {
         yield put(setLoading(true));
         const { data } = yield call(axiosCall, TEACHER_URL, GET);
 
-        yield put(showAllTeachers(data));
+        yield put(showAllTeachersSuccess(data));
     } catch (error) {
         yield put(setOpenErrorSnackbar(createErrorMessage(error)));
     } finally {
@@ -44,7 +50,7 @@ export function* getDisabledTeachers() {
     try {
         const { data } = yield call(axiosCall, DISABLED_TEACHERS_URL, GET);
 
-        yield put(setDisabledTeachers(data));
+        yield put(setDisabledTeachersSuccess(data));
     } catch (error) {
         yield put(setOpenErrorSnackbar(createErrorMessage(error)));
     }
@@ -61,7 +67,7 @@ export function* removeTeacher({ id }) {
             DELETED_LABEL,
         );
 
-        yield put(deleteTeacher(id));
+        yield put(deleteTeacherSuccess(id));
         yield call(getDisabledTeachers);
         yield put(setOpenSuccessSnackbar(message));
     } catch (error) {
@@ -84,7 +90,7 @@ export function* createTeacher(teacher) {
             CREATED_LABEL,
         );
 
-        yield put(addTeacher(data));
+        yield put(addTeacherSuccess(data));
         yield put(reset(TEACHER_FORM));
         yield put(setOpenSuccessSnackbar(message));
     } catch (error) {
@@ -101,9 +107,9 @@ export function* updateTeacher({ teacher }) {
     try {
         const { data } = yield call(axiosCall, TEACHER_URL, PUT, result);
 
-        yield put(updateTeacherCard(data));
+        yield put(updateTeacherCardSuccess(data));
 
-        yield call(showTeachers);
+        yield call(getEnabledTeachers);
         yield call(getDisabledTeachers);
         yield put(selectTeacherCard(null));
 
@@ -125,7 +131,7 @@ function* toggleDisabledTeacher({ teacherId, disableStatus }) {
         const { teachers, disabledTeachers } = state.teachers;
         const teacher = [...teachers, ...disabledTeachers].find((item) => item.id === teacherId);
         yield call(updateTeacher, { teacher: { ...teacher, disable: !disableStatus } });
-        yield put(deleteTeacher(teacherId, disableStatus));
+        yield put(deleteTeacherSuccess(teacherId, disableStatus));
     } catch (error) {
         yield put(setOpenErrorSnackbar(createErrorMessage(error)));
     }
@@ -155,7 +161,7 @@ export function* getTeachersWithoutAccount() {
 
 export default function* watchTeachers() {
     yield takeLatest(actionTypes.DELETE_TEACHER_START, removeTeacher);
-    yield takeLatest(actionTypes.SHOW_ALL_TEACHERS_START, showTeachers);
+    yield takeLatest(actionTypes.SHOW_ALL_TEACHERS_START, getEnabledTeachers);
     yield takeLatest(actionTypes.SET_DISABLED_TEACHERS_START, getDisabledTeachers);
     yield takeLatest(actionTypes.GET_TEACHERS_WITHOUT_ACCOUNT_START, getTeachersWithoutAccount);
     yield takeLatest(actionTypes.ADD_TEACHER_START, createTeacher);
