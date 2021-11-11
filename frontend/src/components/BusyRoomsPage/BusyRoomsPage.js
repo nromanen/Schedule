@@ -64,7 +64,7 @@ const BusyRoomsPage = (props) => {
                                         key={item.value}
                                         value={item.value}
                                         control={<Radio />}
-                                        label={t(item.lable)}
+                                        label={t(item.label)}
                                     />
                                 ))}
                             </RadioGroup>
