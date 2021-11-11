@@ -9,12 +9,8 @@ import { useTranslation } from 'react-i18next';
 import { get } from 'lodash';
 import './BusyRoomsPage.scss';
 import BusyRoomsTable from './BustRoomsTable/BusyRoomsTable';
-import {
-    COMMON_TABLE_COLUMNS_SIZE,
-    COMMON_TABLE_COLUMNS_SIZE_SMALL,
-    COMMON_TABLE_COLUMNS_SIZE_BASE,
-    COMMON_TABLE_COLUMNS_SIZE_LARGE,
-} from '../../constants/translationLabels/common';
+import { COMMON_TABLE_COLUMNS_SIZE } from '../../constants/translationLabels/common';
+import { columnSizeArray } from '../../constants/schedule/schedule';
 
 const BusyRoomsPage = (props) => {
     const {
@@ -63,21 +59,14 @@ const BusyRoomsPage = (props) => {
                                 value={columnsSize}
                                 onChange={handleChange}
                             >
-                                <FormControlLabel
-                                    value="sm"
-                                    control={<Radio />}
-                                    label={t(COMMON_TABLE_COLUMNS_SIZE_SMALL)}
-                                />
-                                <FormControlLabel
-                                    value="base"
-                                    control={<Radio />}
-                                    label={t(COMMON_TABLE_COLUMNS_SIZE_BASE)}
-                                />
-                                <FormControlLabel
-                                    value="lg"
-                                    control={<Radio />}
-                                    label={t(COMMON_TABLE_COLUMNS_SIZE_LARGE)}
-                                />
+                                {columnSizeArray.map((item) => (
+                                    <FormControlLabel
+                                        key={item.value}
+                                        value={item.value}
+                                        control={<Radio />}
+                                        label={t(item.lable)}
+                                    />
+                                ))}
                             </RadioGroup>
                         </FormControl>
                     </div>
