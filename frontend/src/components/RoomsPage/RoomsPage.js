@@ -60,15 +60,6 @@ const RoomPage = (props) => {
         setOpenConfirmDialog(true);
     };
 
-    const changeGroupDisabledStatus = (currentId) => {
-        const foundRoom = [...disabledRooms, ...rooms].find(
-            (roomItem) => roomItem.id === currentId,
-        );
-        return isDisabled
-            ? toggleRoomVisibility({ ...foundRoom, disable: false }, isDisabled)
-            : toggleRoomVisibility({ ...foundRoom, disable: true }, isDisabled);
-    };
-
     const handleConfirm = () => {
         setOpenConfirmDialog(false);
         if (deleteLabel === cardType.TYPE) {
@@ -76,12 +67,13 @@ const RoomPage = (props) => {
         }
         if (deleteLabel === cardType.ROOM) {
             if (confirmDialogType !== dialogTypes.DELETE_CONFIRM) {
-                changeGroupDisabledStatus(selectedId);
+                toggleRoomVisibility(selectedId, isDisabled);
             } else {
                 deleteRoom(selectedId, isDisabled);
             }
         }
     };
+
     const changeDisable = () => {
         setIsDisabled((prev) => !prev);
     };

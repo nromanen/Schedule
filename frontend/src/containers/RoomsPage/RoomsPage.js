@@ -30,8 +30,8 @@ const mapDispatchToProps = (dispatch) => ({
     getListOfRooms: () => dispatch(getListOfRoomsStart()),
     getListOfDisabledRooms: () => dispatch(getListOfDisabledRoomsStart()),
     getAllRoomTypes: () => dispatch(getAllRoomTypesStart()),
-    toggleRoomVisibility: (values, isDisabled) =>
-        dispatch(toggleRoomVisibilityStart(values, isDisabled)),
+    toggleRoomVisibility: (roomId, isDisabled) =>
+        dispatch(toggleRoomVisibilityStart(roomId, isDisabled)),
     deleteRoom: (roomId, isDisabled) => dispatch(deleteRoomStart(roomId, isDisabled)),
     deleteRoomType: (roomTypeId) => dispatch(deleteRoomTypeStart(roomTypeId)),
     handleRoomTypeFormSubmit: (values) => dispatch(handleRoomTypeFormSubmitStart(values)),

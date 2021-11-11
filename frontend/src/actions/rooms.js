@@ -84,10 +84,10 @@ export const handleRoomFormSubmitStart = (values) => {
         values,
     };
 };
-export const toggleRoomVisibilityStart = (room, isDisabled) => {
+export const toggleRoomVisibilityStart = (roomId, isDisabled) => {
     return {
         type: actionsType.TOGGLE_ROOM_VISIBILITY_START,
-        room,
+        roomId,
         isDisabled,
     };
 };

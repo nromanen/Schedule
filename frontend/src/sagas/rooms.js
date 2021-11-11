@@ -1,4 +1,4 @@
-import { call, put, takeLatest, takeEvery } from 'redux-saga/effects';
+import { call, put, takeLatest, takeEvery, select } from 'redux-saga/effects';
 import { reset } from 'redux-form';
 import * as actionTypes from '../actions/actionsType';
 import { setLoading } from '../actions/loadingIndicator';
@@ -74,10 +74,13 @@ export function* addRoomItem({ values }) {
     }
 }
 
-export function* toggleRoomsVisibility({ room, isDisabled }) {
+export function* toggleRoomsVisibility({ roomId, isDisabled }) {
     try {
-        yield call(axiosCall, ROOM_URL, 'PUT', room);
-        yield put(deleteRoomSuccess(room.id, isDisabled));
+        const state = yield select();
+        const { disabledRooms, rooms } = state.rooms;
+        const room = [...disabledRooms, ...rooms].find((roomItem) => roomItem.id === roomId);
+        yield call(axiosCall, ROOM_URL, 'PUT', { ...room, disable: !room.disable });
+        yield put(deleteRoomSuccess(roomId, isDisabled));
         const message = createMessage(BACK_END_SUCCESS_OPERATION, FORM_ROOM_LABEL, UPDATED_LABEL);
         yield put(setOpenSuccessSnackbar(message));
     } catch (error) {
