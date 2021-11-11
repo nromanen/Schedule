@@ -1,13 +1,13 @@
-@import '../../../styles/colors.scss';
+@import '../../../App.scss';
+
 .semester-card {
-    min-height: 175px;
-    min-width: 16em;
+    height: 470px;
+    width: 250px;
     margin-bottom: 50px;
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
     align-items: center;
-    height: 30em;
 
     .semester-groups {
         font-size: 25px;
@@ -16,6 +16,7 @@
 
     &__description {
         text-align: center;
+        height: 50px;
     }
 
     &__name {
@@ -23,23 +24,15 @@
     }
 }
 
-.wrapper {
-    width: 100%;
-}
-
-.current {
+.current-semester {
     box-shadow: 0 0px 15px 1px $good-color;
 }
 
-.default {
+.default-semester {
     width: 25px;
     height: 25px;
     border: 1px solid $good-color;
     border-radius: 50%;
     box-shadow: 0 0px 4px 0.5px $good-color;
     color: $good-color;
-}
-
-p.semester-card__description {
-    height: 3em;
 }

@@ -42,7 +42,7 @@ const SemesterCard = (props) => {
     return (
         <Card
             additionClassName={`semester-card done-card ${
-                semester.currentSemester ? 'current' : ''
+                semester.currentSemester ? 'current-semester' : ''
             }`}
         >
             <div className="cards-btns">
@@ -107,7 +107,9 @@ const SemesterCard = (props) => {
 
                 {!(disabled || archived) && (
                     <MdDonutSmall
-                        className={`svg-btn edit-btn ${semester.defaultSemester ? 'default' : ''}`}
+                        className={`svg-btn edit-btn ${
+                            semester.defaultSemester ? 'default-semester' : ''
+                        }`}
                         title={t(SET_DEFAULT_TITLE)}
                         onClick={() => showConfirmDialog(semester.id, dialogTypes.SET_DEFAULT)}
                     />

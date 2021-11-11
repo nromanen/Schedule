@@ -127,7 +127,7 @@ const SemesterForm = (props) => {
     };
 
     return (
-        <Card additionClassName="form-card semester-form">
+        <Card additionClassName="semester-form">
             <h2 className="card-title">
                 {semester.id ? t(COMMON_EDIT) : t(COMMON_CREATE)}
                 {` ${t(COMMON_SEMESTER)}`}
@@ -141,7 +141,7 @@ const SemesterForm = (props) => {
                 onClose={closeDialogForGroup}
             />
             <form onSubmit={handleSubmit}>
-                <div className="semester-checkbox group-options">
+                <div className="semester-checkbox">
                     <div>
                         <Field
                             name="currentSemester"
@@ -165,15 +165,15 @@ const SemesterForm = (props) => {
                     <Button
                         variant="contained"
                         color="primary"
-                        className="buttons-style "
+                        className="buttons-style semester-btn"
                         onClick={openDialogForGroup}
                     >
                         {t(COMMON_CHOOSE_GROUPS_BUTTON_LABEL)}
                     </Button>
                 </div>
-                <div className="form-input-block">
+                <div className="semester-inputs-block">
                     <Field
-                        className="form-field semester-field-input"
+                        className="semester-field-input"
                         name="year"
                         type="number"
                         component={renderTextField}
@@ -181,14 +181,14 @@ const SemesterForm = (props) => {
                         validate={[required, minYearValue]}
                     />
                     <Field
-                        className="form-field semester-field-input"
+                        className="semester-field-input"
                         name="description"
                         component={renderTextField}
                         label={`${t(COMMON_SEMESTER_LABEL)}:`}
                         validate={[required]}
                     />
                 </div>
-                <div className="form-input-block">
+                <div className="semester-inputs-block">
                     <Field
                         className="semester-field-input"
                         name="startDay"
