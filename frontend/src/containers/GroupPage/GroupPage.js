@@ -16,8 +16,8 @@ const mapStateToProps = (state) => ({
     isSnackbarOpen: state.snackbar.isSnackbarOpen,
     snackbarType: state.snackbar.snackbarType,
     snackbarMessage: state.snackbar.message,
-    loading: state.loadingIndicator.loading,
     groups: state.groups.groups,
+    loading: state.loadingIndicator.loading,
 });
 
 const mapDispatchToProps = {

@@ -30,6 +30,7 @@ const GroupList = (props) => {
         setGroup,
         isDisabled,
     } = props;
+
     const history = useHistory();
     const { t } = useTranslation('formElements');
 
@@ -38,9 +39,6 @@ const GroupList = (props) => {
     const [isOpenShowStudentsDialog, setIsOpenShowStudentsDialog] = useState(false);
     const [isOpenAddStudentDialog, setIsOpenAddStudentDialog] = useState(false);
 
-    useEffect(() => {
-        getEnabledGroupsStart();
-    }, []);
     useEffect(() => {
         if (isDisabled) {
             getDisabledGroupsStart();
