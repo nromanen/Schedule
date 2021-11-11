@@ -36,7 +36,7 @@ const GroupCard = (props) => {
     } = props;
     const { t } = useTranslation('formElements');
     return (
-        <section className="group-card">
+        <div className="group-card">
             <div className="group-card__buttons-wrapper">
                 {!disabled ? (
                     <>
@@ -94,7 +94,7 @@ const GroupCard = (props) => {
                     />
                 </span>
             </Link>
-        </section>
+        </div>
     );
 };
 

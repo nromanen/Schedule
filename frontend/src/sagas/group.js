@@ -30,7 +30,6 @@ const getGroupsState = (state) => state.groups.groups;
 
 function* getGroups(url) {
     try {
-        yield put(showAllGroupsSuccess([]));
         yield put(setLoading(true));
         const res = yield call(axiosCall, url);
         yield put(showAllGroupsSuccess(res.data));

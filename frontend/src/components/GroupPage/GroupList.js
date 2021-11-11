@@ -13,6 +13,7 @@ import NotFound from '../../share/NotFound/NotFound';
 import CustomDialog from '../../containers/Dialogs/CustomDialog';
 import AddStudentDialog from '../../share/DialogWindows/_dialogWindows/AddStudentDialog';
 import ShowStudentsOnGroupDialog from '../../containers/Students/ShowStudentsOnGroupDialog';
+import { ADD_STUDENT_ACTION, SHOW_STUDENTS_ACTION } from '../../constants/actionsUrl';
 
 const GroupList = (props) => {
     const {
@@ -78,13 +79,12 @@ const GroupList = (props) => {
 
     const checkParamsForActions = () => {
         const { id, action } = match.params;
-
         const checkParamsAndSetActions = {
-            'add-student': showAddStudentDialog,
-            'show-students': showStudentsByGroup,
+            [ADD_STUDENT_ACTION]: showAddStudentDialog,
+            [SHOW_STUDENTS_ACTION]: showStudentsByGroup,
         };
         const actionsFunc = checkParamsAndSetActions[action];
-        if (actionsFunc) actionsFunc(id);
+        if (actionsFunc && id) actionsFunc(id);
     };
 
     useEffect(() => {

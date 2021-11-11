@@ -2,7 +2,7 @@ import * as actionTypes from '../actions/actionsType';
 import { updateObject } from '../utility';
 
 const initialState = {
-    loading: false,
+    loading: true,
     scheduleLoading: false,
     semesterLoading: false,
     studentsLoading: false,

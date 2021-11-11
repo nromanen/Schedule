@@ -1,7 +1,7 @@
 @import '../../../styles/colors.scss';
 @import '../../../styles/fonts.scss';
 @import '../../../styles/variables.scss';
-@import '../../../styles/mixin.scss';
+@import '../../../styles/mixins.scss';
 
 $group-size: 10px;
 
@@ -21,6 +21,7 @@ $group-size: 10px;
     box-shadow: $card-shadow;
 
     &__number {
+      font-size: x-large;
       text-align: center;
       text-transform: uppercase;
       margin-top: 5px;
