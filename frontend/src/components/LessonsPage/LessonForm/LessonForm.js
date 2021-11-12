@@ -38,6 +38,7 @@ import {
 } from '../../../constants/translationLabels/formElements';
 
 import './LessonForm.scss';
+import '../LessonPage.scss';
 
 const LessonForm = (props) => {
     const { t } = useTranslation('formElements');
@@ -110,7 +111,7 @@ const LessonForm = (props) => {
     return (
         <>
             {groupId ? (
-                <Card additionClassName="form-card">
+                <Card additionClassName="lesson-form-card">
                     <LessonLabelForm />
                     <form onSubmit={handleSubmit} className="lesson-form">
                         <Field

@@ -13,27 +13,88 @@
     transition: color 0.3s linear;
 }
 
-.cards-container {
+.lesson-cards-container {
+    display: flex;
+    align-items: start;
     margin: 20px 0px 50px 0px;
-    @media (max-width: $md-table-lanscape) {
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-    }
+
     @include flexWrap();
     align-items: start;
 
-    .container-flex-wrap {
+    .lesson-container {
         @include flexWrap();
+
+        display: flex;
+        width: 100%;
+        align-items: center;
+        justify-content: space-around;
+        flex-wrap: wrap;
+        margin: 0;
 
         width: 100%;
         align-items: center;
         justify-content: space-around;
         flex-wrap: wrap;
-        @media (max-width: $md-table-lanscape) {
-            margin-top: 3rem;
+
+        .lesson-card {
+            background-color: $main-color;
+            width: 15em;
+            height: 16.5em;
+
+            display: inline-block;
+            margin: 10px;
+            padding: 1rem;
+            border-radius: 5px;
+            box-shadow: 0 2px 8px $shadow-box;
+        }
+
+        .lesson-btns {
+            @include flexWrap();
+            align-items: center;
+            justify-content: flex-end;
+            position: relative;
+            height: 2em;
+
+            .svg-btn {
+                @include buttonStyle;
+                margin-right: 10px;
+
+                &:last-child {
+                    margin-right: 0;
+                }
+            }
+
+            .delete-btn {
+                &:hover {
+                    color: $delete-color;
+                }
+            }
+
+            .edit-btn {
+                &:hover {
+                    color: $background-color;
+                }
+            }
+
+            .info-btn {
+                color: $good-color;
+                cursor: default;
+                left: 0;
+                position: absolute;
+            }
+
+            .copy-btn {
+                &:hover {
+                    color: $good-color;
+                }
+            }
         }
     }
+}
+
+.title {
+    font-weight: bold;
+    height: 3em;
 }
 
 .lesson-link {
@@ -44,57 +105,4 @@
     text-overflow: ellipsis;
     font-size: 15px;
     color: $link;
-}
-
-.done-lesson-card {
-    background-color: $main-color;
-    width: 15em;
-    height: 16.5em;
-}
-
-.cards-btns {
-    @include flexWrap();
-    align-items: center;
-    justify-content: flex-end;
-    position: relative;
-    height: 2em;
-
-    .svg-btn {
-        @include buttonStyle;
-        margin-right: 10px;
-
-        &:last-child {
-            margin-right: 0;
-        }
-    }
-
-    .delete-btn {
-        &:hover {
-            color: $delete-color;
-        }
-    }
-
-    .edit-btn {
-        &:hover {
-            color: $background-color;
-        }
-    }
-
-    .info-btn {
-        color: $good-color;
-        cursor: default;
-        left: 0;
-        position: absolute;
-    }
-
-    .copy-btn {
-        &:hover {
-            color: $good-color;
-        }
-    }
-}
-
-.lesson-container .title {
-    font-weight: bold;
-    height: 3em;
 }

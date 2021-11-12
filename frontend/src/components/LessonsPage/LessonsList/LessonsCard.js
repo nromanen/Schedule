@@ -34,8 +34,8 @@ const LessonsCard = (props) => {
     };
 
     return (
-        <Card additionClassName="done-lesson-card">
-            <div className="cards-btns">
+        <Card additionClassName="lesson-card">
+            <div className="lesson-btns">
                 {lesson.grouped && (
                     <FaUserPlus
                         title={t(FORM_GROUPED_LABEL, { ns: 'formElements' })}

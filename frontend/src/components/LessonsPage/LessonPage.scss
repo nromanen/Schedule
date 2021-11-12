@@ -13,12 +13,6 @@
     transition: color 0.3s linear;
 }
 
-.lesson-card {
-    @media (max-width: $md-table-lanscape) {
-        box-sizing: border-box;
-    }
-}
-
 .card-title {
     width: 95%;
     text-align: center;
@@ -32,28 +26,50 @@
     margin-top: 1em;
 }
 
-.wrapper {
+.lesson-wrapper {
     display: flex;
+    width: 100%;
 
-    @media (max-width: $md-small) {
-        width: 100%;
+    @media (max-width: $md-medium) {
         display: flex;
         flex-wrap: wrap;
         justify-content: center;
     }
 }
 
-.side-one {
+.lesson-side-bar {
     display: flex;
     flex-direction: column;
     width: min-content;
 
-    .cards-container {
+    .lesson-form-container {
         transition: all 1s ease-out;
         margin: 0;
+        margin-bottom: 50px;
+        display: flex;
+        align-items: start;
     }
-    .cards-container .section {
+    .lesson-form-container .section {
         margin-top: 20px;
+    }
+
+    .lesson-form-card {
+        width: 20em;
+        position: sticky;
+        top: 1em;
+        background-color: $main-color;
+        display: inline-block;
+        margin: 10px;
+        padding: 1rem;
+        border-radius: 5px;
+        box-shadow: 0 2px 8px $shadow-box;
+    }
+
+    .lesson-form-title {
+        position: relative;
+        margin: 20px 0;
+        text-align: center;
+        word-wrap: break-word;
     }
 
     .not-selected {
@@ -70,6 +86,13 @@
     .search-group {
         max-width: 320px;
         width: 100%;
+        background-color: $main-color;
+        display: inline-block;
+        margin: 10px;
+        padding: 1rem;
+        border-radius: 5px;
+        box-shadow: 0 2px 8px $shadow-box;
+        min-height: 85px;
     }
 
     .form-field {
@@ -84,7 +107,7 @@
     }
 }
 
-.side-two {
+.lessons-list {
     display: flex;
     flex-direction: column;
     width: 100%;

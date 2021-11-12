@@ -15,7 +15,7 @@ const LessonLabelForm = (props) => {
     return (
         <section>
             {groupId && (
-                <h2 className="form-title under-line">
+                <h2 className="lesson-form-title under-line">
                     {lesson.id ? t(EDIT_TITLE) : t(CREATE_TITLE)}
                     {t(LESSON_LABEL)}
                 </h2>

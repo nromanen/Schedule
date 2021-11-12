@@ -21,6 +21,7 @@ import CopyLessonsFromSemesterForm from '../../containers/LessonPage/CopyLessons
 import CopyLessonDialog from './CopyLessonDialog/CopyLessonDialog';
 
 import './LessonPage.scss';
+import './LessonForm/LessonForm.scss';
 import { showAllGroupsService, selectGroupService } from '../../services/groupService';
 import { showAllSubjectsService } from '../../services/subjectService';
 import { showAllTeachersService } from '../../services/teacherService';
@@ -126,10 +127,10 @@ const LessonPage = (props) => {
 
     return (
         <>
-            <div className="wrapper">
-                <div className="side-one">
+            <div className="lesson-wrapper">
+                <div className="lesson-side-bar">
                     <Search setTerm={setTerm} />
-                    <div className="cards-container">
+                    <div className="lesson-form-container">
                         <section className="section">
                             <LessonForm
                                 lessonTypes={lessonTypes}
@@ -145,7 +146,7 @@ const LessonPage = (props) => {
                         </section>
                     </div>
                 </div>
-                <div className="side-two">
+                <div className="lessons-list">
                     <div className="group-lesson">
                         <Autocomplete
                             id="group"
@@ -167,7 +168,7 @@ const LessonPage = (props) => {
                             )}
                         />
                     </div>
-                    <div className="cards-container">
+                    <div className="lesson-cards-container">
                         <Lessons
                             visibleItems={visibleItems}
                             onClickOpen={showConfirmDialog}
