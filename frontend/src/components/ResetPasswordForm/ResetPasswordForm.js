@@ -1,5 +1,4 @@
 import React from 'react';
-import i18n from 'i18next';
 
 import { Field, reduxForm } from 'redux-form';
 
@@ -18,6 +17,7 @@ import {
     RESET_PASSWORD_HELPER_TEXT,
 } from '../../constants/translationLabels/formElements';
 import { LOGIN_LINK } from '../../constants/links';
+import i18n from '../../i18n';
 import {
     LOGIN_TITLE,
     RESET_PASSWORD_PAGE_TITLE,

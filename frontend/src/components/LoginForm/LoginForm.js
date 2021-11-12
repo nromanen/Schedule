@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
-import i18n from 'i18next';
 import { connect } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import '../../styles/forms.scss';
 
@@ -37,14 +37,31 @@ import {
 } from '../../actions';
 
 const LoginForm = (props) => {
-    const { handleSubmit, loginHandler, errors, setError, isLoading } = props;
+    const {
+        handleSubmit,
+        loginHandler,
+        errors,
+        setError,
+        isLoading,
+        setSemesterId,
+        setTypeOfSchedule,
+        setGroupId,
+        setTeacherId,
+    } = props;
+    const { t } = useTranslation('common');
+    useEffect(() => {
+        setSemesterId(0);
+        setTeacherId(0);
+        setGroupId(0);
+        setTypeOfSchedule('full');
+    });
     const isValidForm = (formValues) => {
         if (!formValues.email || !formValues.password) {
-            setError({ login: i18n.t(EMPTY_FIELDS) });
+            setError({ login: t(EMPTY_FIELDS) });
             return false;
         }
         if (!validation.EMAIL.test(formValues.email)) {
-            setError({ login: i18n.t(EMAIL_MESSAGE) });
+            setError({ login: t(EMAIL_MESSAGE) });
             return false;
         }
         return true;
@@ -63,7 +80,7 @@ const LoginForm = (props) => {
     return (
         <Card className="auth-card">
             <div className="auth-card-header">
-                <h2 className="title">{i18n.t(LOGIN_TITLE)}</h2>
+                <h2 className="title">{t(LOGIN_TITLE)}</h2>
             </div>
 
             {isLoading ? (
@@ -74,7 +91,7 @@ const LoginForm = (props) => {
                         name="email"
                         className="form-input"
                         component={renderTextField}
-                        label={i18n.t(EMAIL_LABEL)}
+                        label={t(EMAIL_LABEL)}
                         error={!!errors}
                         helperText={errors ? errors.login : null}
                         onChange={(e) => errorHandling(e.target.value)}
@@ -84,13 +101,13 @@ const LoginForm = (props) => {
                         className="form-input"
                         type="password"
                         component={renderTextField}
-                        label={i18n.t(PASSWORD_LABEL)}
+                        label={t(PASSWORD_LABEL)}
                         error={!!errors}
                         onChange={() => setError(null)}
                     />
                     <div className="forgot-password-label">
                         <Link to={RESET_PASSWORD_LINK} className="form-link">
-                            {i18n.t(FORGOT_PASSWORD_LABEL)}
+                            {t(FORGOT_PASSWORD_LABEL)}
                         </Link>
                     </div>
                     <div className="auth-form-actions">
@@ -100,14 +117,14 @@ const LoginForm = (props) => {
                             variant="contained"
                             color="primary"
                         >
-                            {i18n.t(LOGIN_TITLE)}
+                            {t(LOGIN_TITLE)}
                         </Button>
                     </div>
 
                     <div className="auth-form-footer">
-                        <span>{i18n.t(DONT_HAVE_ACCOUNT_LABEL)}</span>
+                        <span>{t(DONT_HAVE_ACCOUNT_LABEL)}</span>
                         <Link to={REGISTRATION_LINK} className="form-link">
-                            {i18n.t(REGISTRATION_PAGE_TITLE)}
+                            {t(REGISTRATION_PAGE_TITLE)}
                         </Link>
                     </div>
                 </form>
@@ -120,4 +137,11 @@ const LoginReduxForm = reduxForm({
     form: LOGIN_FORM,
 })(LoginForm);
 
-export default LoginReduxForm;
+const mapDispatchToProps = (dispatch) => ({
+    setSemesterId: (id) => dispatch(setScheduleSemesterId(id)),
+    setTypeOfSchedule: (type) => dispatch(setScheduleType(type)),
+    setGroupId: (id) => dispatch(setScheduleGroupId(id)),
+    setTeacherId: (id) => dispatch(setScheduleTeacherId(id)),
+});
+
+export default connect(null, mapDispatchToProps)(LoginReduxForm);

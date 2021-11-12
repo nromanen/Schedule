@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { HOME_PAGE_LINK, LOGIN_LINK, ADMIN_PAGE_LINK } from '../../constants/links';
@@ -40,8 +40,8 @@ const Auth = (props) => {
         isLoading,
     } = props;
     const [isResponse, setIsResponse] = useState(false);
-    const { t } = useTranslation('common');
     const history = useHistory();
+    const { t } = useTranslation('common');
     // const url = window.document.location;
     // const parser = new URL(url);
 
@@ -55,7 +55,7 @@ const Auth = (props) => {
         handleSnackbarOpenService(true, snackbarTypes.SUCCESS, t(massage));
     };
 
-    const successLoginRedirect = () => {
+    const successLoginRedirect = useCallback(() => {
         if (userRole === userRoles.MANAGER) {
             document.title = t(ADMIN_TITLE);
             history.push(ADMIN_PAGE_LINK);
@@ -64,7 +64,7 @@ const Auth = (props) => {
             history.push(HOME_PAGE_LINK);
         }
         showSuccessMessage(successAuthMessages[authType]);
-    };
+    }, []);
 
     const registrationHandler = (registrationData) => {
         onRegister({
@@ -156,7 +156,6 @@ const Auth = (props) => {
                         isLoading={isLoading}
                         resetPasswordError={error}
                         onSubmit={resetPasswordHandler}
-                        translation={t}
                         setError={setError}
                     />
                 </div>

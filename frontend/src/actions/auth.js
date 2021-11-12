@@ -7,6 +7,12 @@ export const authUser = (res) => {
         result: res,
     };
 };
+export const authAutoLogout = (res) => {
+    return {
+        type: actionTypes.AUTH_USER_AUTO_LOGOUT,
+        expirationTime: res,
+    };
+};
 
 export const registerUser = (res) => {
     return {
@@ -31,7 +37,7 @@ export const activateUser = (res) => {
 
 export const logout = () => {
     return {
-        type: actionTypes.AUTH_USER_INITIATE_LOGOUT,
+        type: actionTypes.AUTH_USER_LOGOUT,
     };
 };
 
@@ -49,7 +55,21 @@ export const authCheckState = () => {
         role,
     };
 };
-
+export const activateSuccess = (res) => {
+    return { type: actionTypes.ACTIVATE_USER_SUCCESS, response: res };
+};
+export const resetUserPasswordSuccess = (res) => {
+    return { type: actionTypes.RESET_USER_PASSWORD_SUCCESS, response: res };
+};
+export const registerUserSuccess = (res) => {
+    return { type: actionTypes.REGISTER_USER_SUCCESS, response: res };
+};
+export const authSuccess = (res) => {
+    return {
+        type: actionTypes.AUTH_USER_SUCCESS,
+        response: res,
+    };
+};
 export const setAuthError = (res) => {
     return {
         type: actionTypes.SET_AUTH_ERROR,

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Paper from '@material-ui/core/Paper';
 import { connect } from 'react-redux';
-import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -12,10 +11,10 @@ import './NavigationPanel.scss';
 import { general, tabsComponents } from '../../constants/navigationComponents';
 import { ADMIN_PAGE_LINK } from '../../constants/links';
 import { COMMON_MORE_LABEL } from '../../constants/translationLabels/common';
+import i18n from '../../i18n';
 
 const NavigationPanel = () => {
     const history = useHistory();
-    const { t } = useTranslation('common');
     const [selectItem, setSelectItem] = useState('');
     const [selectedTab, setSelectedTab] = useState('');
 
@@ -38,7 +37,7 @@ const NavigationPanel = () => {
 
     const handleNavigate = (item, index) => {
         setSelectedTab(index);
-        document.title = t(item.title);
+        document.title = i18n.t(item.title);
         history.push({ ...history.location, pathname: `${ADMIN_PAGE_LINK}/${item.name}` });
     };
 
@@ -52,7 +51,7 @@ const NavigationPanel = () => {
                         onClick={() => handleNavigate(item, index)}
                         className="navigation-link"
                     >
-                        <ListItemText>{t(item.title)}</ListItemText>
+                        <ListItemText>{i18n.t(item.title)}</ListItemText>
                     </ListItem>
                 ))}
                 <ListItem
@@ -71,7 +70,7 @@ const NavigationPanel = () => {
                         }}
                     >
                         <MenuItem value="" disabled selected className="navigation-select-item">
-                            {t(COMMON_MORE_LABEL)}
+                            {i18n.t(COMMON_MORE_LABEL)}
                         </MenuItem>
                         {general.map((item) => (
                             <MenuItem
@@ -80,7 +79,7 @@ const NavigationPanel = () => {
                                 value={item.name}
                                 onClick={() => handleNavigate(item, tabsComponents.length)}
                             >
-                                {t(item.title)}
+                                {i18n.t(item.title)}
                             </MenuItem>
                         ))}
                     </Select>

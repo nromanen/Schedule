@@ -1,8 +1,7 @@
 import React from 'react';
-import i18n from 'i18next';
 
 import { Field, reduxForm } from 'redux-form';
-
+import { useTranslation } from 'react-i18next';
 import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { Link } from 'react-router-dom';
@@ -28,6 +27,7 @@ import {
 
 const RegistrationForm = (props) => {
     const { handleSubmit, errors, setError, registrationHandler, isLoading } = props;
+    const { t } = useTranslation('common');
 
     const emailValidate = { validate: [required, email] };
     const emailErrorCondition = errors && errors.registration.reg;
@@ -51,7 +51,7 @@ const RegistrationForm = (props) => {
     const isValidForm = (formValues) => {
         if (formValues.password !== formValues.retypePassword) {
             setError({
-                registration: { passwords: i18n.t(DIFFERENT_PASSWORDS) },
+                registration: { passwords: t(DIFFERENT_PASSWORDS) },
             });
             return false;
         }
@@ -67,7 +67,7 @@ const RegistrationForm = (props) => {
     return (
         <Card className="auth-card">
             <div className="auth-card-header">
-                <h2 className="title">{i18n.t(REGISTRATION_PAGE_TITLE)}</h2>
+                <h2 className="title">{t(REGISTRATION_PAGE_TITLE)}</h2>
             </div>
 
             {isLoading ? (
@@ -79,7 +79,7 @@ const RegistrationForm = (props) => {
                         className="form-input"
                         type="email"
                         component={renderTextField}
-                        label={i18n.t(EMAIL_LABEL)}
+                        label={t(EMAIL_LABEL)}
                         {...(!errors ? emailValidate : emailAdvancedValidate)}
                         onChange={() => props.setError(null)}
                     />
@@ -88,7 +88,7 @@ const RegistrationForm = (props) => {
                         className="form-input"
                         type="password"
                         component={renderTextField}
-                        label={i18n.t(PASSWORD_LABEL)}
+                        label={t(PASSWORD_LABEL)}
                         {...(!errors ? passwordValidate : passwordValidateAdvanced)}
                         onChange={() => props.setError(null)}
                     />
@@ -97,7 +97,7 @@ const RegistrationForm = (props) => {
                         className="form-input"
                         type="password"
                         component={renderTextField}
-                        label={i18n.t(RETYPE_PASSWORD_LABEL)}
+                        label={t(RETYPE_PASSWORD_LABEL)}
                         {...(!errors ? retypePasswordValidate : retypePasswordValidateAdvanced)}
                     />
                     <div className="auth-form-actions">
@@ -107,13 +107,13 @@ const RegistrationForm = (props) => {
                             variant="contained"
                             color="primary"
                         >
-                            {i18n.t(CREATE_ACCOUNT)}
+                            {t(CREATE_ACCOUNT)}
                         </Button>
                     </div>
                     <div className="auth-form-footer">
-                        <span>{i18n.t(ACCOUNT_EXIST)}</span>
+                        <span>{t(ACCOUNT_EXIST)}</span>
                         <Link to={LOGIN_LINK} className="form-link">
-                            {i18n.t(LOGIN_TITLE)}
+                            {t(LOGIN_TITLE)}
                         </Link>
                     </div>
                 </form>
