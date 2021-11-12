@@ -27,7 +27,6 @@ import {
     setArchivedSemesters,
     moveToArchivedSemester,
     setScheduleType,
-    setFullSchedule,
 } from '../actions/index';
 
 import { errorHandler, successHandler } from '../helper/handlerAxios';
@@ -47,6 +46,7 @@ import {
     FORM_SEMESTER_LABEL,
 } from '../constants/translationLabels/formElements';
 import { COMMON_SEMESTER_IS_NOT_UNIQUE } from '../constants/translationLabels/common';
+import { getFullScheduleSuccess } from '../actions/schedule';
 // can delete it
 export const selectSemesterService = (semesterId) => store.dispatch(selectSemester(semesterId));
 
@@ -340,7 +340,7 @@ export const viewArchivedSemester = (semesterId) => {
     axios
         .get(`${ARCHIVE_SEMESTER}/${semesterId}`)
         .then((response) => {
-            store.dispatch(setFullSchedule(response.data));
+            store.dispatch(getFullScheduleSuccess(response.data));
         })
         .catch((err) => errorHandler(err));
 };

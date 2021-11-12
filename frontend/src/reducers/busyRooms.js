@@ -6,8 +6,8 @@ const busyRooms = (
     },
     action,
 ) => {
-    if (action.type === actionTypes.SHOW_ALL_BUSY_ROOMS) {
-        return { ...state, busyRooms: [action.result] };
+    if (action.type === actionTypes.GET_BUSY_ROOMS_SUCCESS) {
+        return { ...state, busyRooms: [action.rooms] };
     }
     return state;
 };

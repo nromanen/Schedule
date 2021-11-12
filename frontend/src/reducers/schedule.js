@@ -22,19 +22,19 @@ const initialState = {
 
 const reducer = (state = initialState, action) => {
     switch (action.type) {
-        case actionTypes.SET_SCHEDULE_ITEMS:
+        case actionTypes.GET_SCHEDULE_ITEMS_SUCCESS:
             return updateObject(state, {
-                items: action.result,
+                items: action.items,
             });
-        case actionTypes.SET_CURRENT_SEMESTER:
+        case actionTypes.GET_CURRENT_SEMESTER_SUCCESS:
             return updateObject(state, {
-                currentSemester: action.payload,
+                currentSemester: action.semester,
             });
-        case actionTypes.SET_DEFAULT_SEMESTER:
+        case actionTypes.GET_DEFAULT_SEMESTER_SUCCESS:
             return updateObject(state, {
-                defaultSemester: action.payload,
+                defaultSemester: action.semester,
             });
-        case actionTypes.CHECK_AVAILABILITY_SCHEDULE:
+        case actionTypes.CHECK_AVAILABILITY_CHANGE_ROOM_SCHEDULE_SUCCESS:
             return updateObject(state, {
                 availability: action.result,
             });
@@ -64,16 +64,16 @@ const reducer = (state = initialState, action) => {
                 fullSchedule: [],
                 scheduleType: action.newType,
             });
-        case actionTypes.SET_FULL_SCHEDULE: {
-            const mappedSchedule = makeFullSchedule(action.result);
+        case actionTypes.GET_FULL_SCHEDULE_SUCCESS: {
+            const mappedSchedule = makeFullSchedule(action.schedule);
             return updateObject(state, {
                 fullSchedule: mappedSchedule,
                 groupSchedule: {},
                 teacherSchedule: {},
             });
         }
-        case actionTypes.SET_GROUP_SCHEDULE: {
-            const mappedSchedule = makeGroupSchedule(action.result);
+        case actionTypes.GET_GROUP_SCHEDULE_SUCCESS: {
+            const mappedSchedule = makeGroupSchedule(action.schedule);
             return updateObject(state, {
                 groupSchedule: mappedSchedule,
                 teacherSchedule: {},
@@ -88,8 +88,8 @@ const reducer = (state = initialState, action) => {
             return updateObject(state, {
                 scheduleGroupId: action.groupId,
             });
-        case actionTypes.DELETE_ITEM_FROM_SCHEDULE: {
-            const index = state.items.findIndex((item) => item.id === action.result);
+        case actionTypes.DELETE_SCHEDULE_ITEM_SUCCESS: {
+            const index = state.items.findIndex((item) => item.id === action.itemId);
             state.items.splice(index, 1);
             const newArr = state.items;
             return updateObject(state, {
@@ -100,17 +100,17 @@ const reducer = (state = initialState, action) => {
             return updateObject(state, {
                 scheduleTeacherId: action.teacherId,
             });
-        case actionTypes.SET_TEACHER_SCHEDULE: {
-            const mappedSchedule = makeTeacherSchedule(action.result);
+        case actionTypes.GET_TEACHER_SCHEDULE_SUCCESS: {
+            const mappedSchedule = makeTeacherSchedule(action.schedule);
             return updateObject(state, {
                 teacherSchedule: mappedSchedule,
                 groupSchedule: {},
                 fullSchedule: [],
             });
         }
-        case actionTypes.SET_SEMESTER_LIST:
+        case actionTypes.GET_ALL_PUBLIC_SEMESTERS_SUCCESS:
             return updateObject(state, {
-                semesters: action.result,
+                semesters: action.semesters,
             });
         case actionTypes.SET_SCHEDULE_SEMESTER_ID:
             return updateObject(state, {
@@ -118,9 +118,9 @@ const reducer = (state = initialState, action) => {
                 scheduleTeacherId: null,
                 scheduleSemesterId: action.semesterId,
             });
-        case actionTypes.SET_TEACHER_RANGE_SCHEDULE:
+        case actionTypes.GET_TEACHER_RANGE_SCHEDULE_SUCCESS:
             return updateObject(state, {
-                teacherRangeSchedule: action.result,
+                teacherRangeSchedule: action.schedule,
                 scheduleGroupId: null,
                 teacherSchedule: [],
                 groupSchedule: {},

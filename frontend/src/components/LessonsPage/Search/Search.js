@@ -42,7 +42,7 @@ const Search = (props) => {
                         }}
                         renderInput={(params) => (
                             <TextField
-                                classname="groupField"
+                                className="groupField"
                                 {...params}
                                 label={t(FORM_GROUP_LABEL)}
                                 margin="normal"

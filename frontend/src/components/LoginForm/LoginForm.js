@@ -37,23 +37,7 @@ import {
 } from '../../actions';
 
 const LoginForm = (props) => {
-    const {
-        handleSubmit,
-        loginHandler,
-        errors,
-        setError,
-        isLoading,
-        setSemesterId,
-        setTypeOfSchedule,
-        setGroupId,
-        setTeacherId,
-    } = props;
-    useEffect(() => {
-        setSemesterId(0);
-        setTeacherId(0);
-        setGroupId(0);
-        setTypeOfSchedule('full');
-    });
+    const { handleSubmit, loginHandler, errors, setError, isLoading } = props;
     const isValidForm = (formValues) => {
         if (!formValues.email || !formValues.password) {
             setError({ login: i18n.t(EMPTY_FIELDS) });
@@ -136,11 +120,4 @@ const LoginReduxForm = reduxForm({
     form: LOGIN_FORM,
 })(LoginForm);
 
-const mapDispatchToProps = (dispatch) => ({
-    setSemesterId: (id) => dispatch(setScheduleSemesterId(id)),
-    setTypeOfSchedule: (type) => dispatch(setScheduleType(type)),
-    setGroupId: (id) => dispatch(setScheduleGroupId(id)),
-    setTeacherId: (id) => dispatch(setScheduleTeacherId(id)),
-});
-
-export default connect(null, mapDispatchToProps)(LoginReduxForm);
+export default LoginReduxForm;
