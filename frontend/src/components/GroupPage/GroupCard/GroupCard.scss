@@ -17,8 +17,6 @@ $group-size: 10px;
     padding: 10px;
 
     border-radius: 2px;
-    // border: $card-border;
-    // box-shadow: $card-shadow;
     box-shadow: 0 1px 4px $shadow-box;
 
     &__number {
@@ -59,7 +57,7 @@ $group-size: 10px;
     @include buttonStyle();
 
     &:hover {
-      color: $good-color;
+      color: $light-forest;
     }
   }
   &__button-students{
@@ -78,6 +76,7 @@ $group-size: 10px;
   }
   }
 .student{
+    color: $light-forest;
     cursor: pointer;
     &:hover {
     color: $forest;

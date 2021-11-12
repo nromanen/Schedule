@@ -55,6 +55,7 @@ const ShowStudentsOnGroupDialog = (props) => {
             <CustomDialog
                 open={open}
                 title={`${t(GROUP_LABEL)} - ${group.title}`}
+                onClose={onClose}
                 buttons={
                     !isEmpty(students)
                         ? [

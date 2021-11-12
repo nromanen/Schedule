@@ -182,5 +182,6 @@
     "move_label": "Перемістити",
     "select-correct_format": "*Формат файлу повинен бути csv",
     "file-rules-for-each-line": "*Кожний рядок повинен мати 4 поля через кому.",
-    "example-file": "Приклад файлу."
+    "example-file": "Приклад файлу.",
+    "file-rules-for-header": "*Перший рядок файлу - це заголовок."
 }

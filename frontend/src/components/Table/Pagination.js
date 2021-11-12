@@ -6,7 +6,7 @@ import FirstPageIcon from '@material-ui/icons/FirstPage';
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import LastPageIcon from '@material-ui/icons/LastPage';
-import './TableFooter.scss';
+import './tableFooter.scss';
 
 export const RenderStudentTableActions = (props) => {
     const theme = useTheme();

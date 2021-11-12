@@ -7,9 +7,10 @@ import CustomDialog from '../../containers/Dialogs/CustomDialog';
 import { dialogCloseButton, dialogUploadButton } from '../../constants/dialogs';
 import {
     SELECT_FILE,
-    FILE_RULES_FOR_EACH_LNE,
     EXAMPLE_FILE,
+    FILE_RULES_FOR_HEADER,
     SELECT_CORRECT_FORMAT,
+    FILE_RULES_FOR_EACH_LNE,
 } from '../../constants/translationLabels/common';
 
 export const UploadFile = (props) => {
@@ -51,6 +52,7 @@ export const UploadFile = (props) => {
                 {isHideRules && (
                     <div className="upload-title">
                         <div>{t(SELECT_CORRECT_FORMAT)}</div>
+                        <div>{t(FILE_RULES_FOR_HEADER)}</div>
                         <div>{t(FILE_RULES_FOR_EACH_LNE)}</div>
                     </div>
                 )}

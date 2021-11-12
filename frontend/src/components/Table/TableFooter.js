@@ -1,5 +1,5 @@
 import React from 'react';
-import './TableFooter.scss';
+import './tableFooter.scss';
 import TablePagination from '@material-ui/core/TablePagination';
 import { useTranslation } from 'react-i18next';
 

@@ -1,59 +1,59 @@
-@import '../../styles/colors.scss';
-@import '../../styles/variables.scss';
-@import '../../styles/mixins.scss';
+@import "../../styles/colors.scss";
+@import "../../styles/variables.scss";
+@import "../../styles/mixins.scss";
 input[type="file"] {
-    display: none;
+  display: none;
 }
 
-.upload{
-  &-dialog{
+.upload {
+  &-dialog {
     @include displayCenter();
     flex-direction: column;
-     width: 650px;
+    width: 650px;
   }
-  &-example-btn{
+  &-example-btn {
     display: flex;
     align-items: center;
     justify-content: space-between;
     width: 100%;
   }
-  &-button{
-  color: $blue;
-  margin: 10px;
-  cursor: pointer;
-  &:hover {
-    color: $blue-hover;
+  &-button {
+    color: $blue;
+    margin: 10px;
+    cursor: pointer;
+    &:hover {
+      color: $blue-hover;
+    }
   }
-  }
-  &-title{
+  &-title {
     color: $label-color;
   }
-  &-example{
+  &-example {
     align-self: center;
     margin: 10px 0 10px;
   }
-  &-text-file{
+  &-text-file {
     align-self: start;
     margin-bottom: 20px;
   }
   &-file {
-  color: $snowy-white;
-  background-color: $blue;
-  display: flex;
-  align-items: center;
-  flex-direction: row;
-  justify-content: space-around;
-  border-radius: 5px;
-  margin: 10px;
-  padding: 5px 30px 5px 30px;
-  border: $card-border;
-  box-shadow: $card-shadow;
-  cursor: pointer;
-  &:hover {
-    background-color: $blue-hover;
+    color: $snowy-white;
+    background-color: $blue;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    justify-content: space-around;
+    border-radius: 5px;
+    margin: 10px;
+    padding: 5px 30px 5px 30px;
+    border: $card-border;
+    box-shadow: $card-shadow;
+    cursor: pointer;
+    &:hover {
+      background-color: $blue-hover;
+    }
   }
- }
- &-text{
-  margin-left: 10px;
- }
+  &-text {
+    margin-left: 10px;
+  }
 }

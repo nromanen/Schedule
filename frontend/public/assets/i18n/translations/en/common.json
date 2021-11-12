@@ -184,5 +184,6 @@
     "select_file": "Select file",
     "select-correct_format": "*File has to be in csv format",
     "file-rules-for-each-line": "*Each line of the file should consist of four fields, separated by commas.",
-    "example-file": "Example of file"
+    "example-file": "Example of file",
+    "file-rules-for-header": "*First line of the file is a header."
 }
