@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { GiSightDisabled, IoMdEye } from 'react-icons/all';
 import { FaEdit, FaUserPlus, FaUsers } from 'react-icons/fa';
 import { MdDelete } from 'react-icons/md';
@@ -28,6 +28,7 @@ import {
 const GroupCard = (props) => {
     const {
         item,
+        match,
         disabled,
         showConfirmDialog,
         showStudentsByGroup,
