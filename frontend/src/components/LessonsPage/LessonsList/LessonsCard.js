@@ -10,29 +10,32 @@ import { getShortTitle } from '../../../helper/shortTitle';
 
 import { firstStringLetterCapital } from '../../../helper/strings';
 import { FORM_GROUPED_LABEL } from '../../../constants/translationLabels/formElements';
+import { MAX_LENGTH } from '../../../constants/formats';
 import {
     COPY_LESSON,
     DELETE_LESSON,
     EDIT_LESSON,
 } from '../../../constants/translationLabels/common';
-import './LessonsList.scss';
+import './LessonList.scss';
 
 const LessonsCard = (props) => {
     const { lesson, onCopyLesson, onSelectLesson, onClickOpen } = props;
 
     const { t } = useTranslation(['common', 'formElements']);
 
-    const MAX_LENGTH = 50;
     const getTitle = (lessonItem) => {
-        return `${firstStringLetterCapital(lessonItem.subjectForSite)} ${t(
-            `lesson_type_${lessonItem.lessonType.toLowerCase()}_label`,
-            { ns: 'formElements' },
-        )}`;
+        return `${firstStringLetterCapital(lessonItem.subjectForSite)}`;
+    };
+
+    const getType = (lessonItem) => {
+        return `${t(`lesson_type_${lessonItem.lessonType.toLowerCase()}_label`, {
+            ns: 'formElements',
+        })}`;
     };
 
     return (
-        <Card additionClassName="done-card">
-            <div className="cards-btns">
+        <Card additionClassName="lesson-card">
+            <div className="lesson-btns">
                 {lesson.grouped && (
                     <FaUserPlus
                         title={t(FORM_GROUPED_LABEL, { ns: 'formElements' })}
@@ -55,7 +58,10 @@ const LessonsCard = (props) => {
                     onClick={() => onClickOpen(lesson.id)}
                 />
             </div>
-            <p className="title">{getShortTitle(getTitle(lesson), MAX_LENGTH)}</p>
+            <p className="title" title={lesson.subjectForSite}>
+                {getShortTitle(getTitle(lesson), MAX_LENGTH)}
+            </p>
+            <p>{getType(lesson)}</p>
             <p>{getTeacherName(lesson.teacher)}</p>
             <p>
                 <Trans
@@ -67,7 +73,16 @@ const LessonsCard = (props) => {
                     {{ count: lesson.hours }}
                 </Trans>
             </p>
-            <input value={lesson.linkToMeeting ?? ''} disabled />
+            {lesson.linkToMeeting && (
+                <a
+                    className="lesson-link"
+                    href={lesson.linkToMeeting}
+                    target="_blank"
+                    rel="noreferrer"
+                >
+                    {lesson.linkToMeeting}
+                </a>
+            )}
         </Card>
     );
 };

@@ -11,7 +11,7 @@ const initialState = {
 
 const reducer = (state = initialState, action) => {
     switch (action.type) {
-        case actionTypes.CREATE_LESSON_CARD:
+        case actionTypes.CREATE_LESSON_CARD_SUCCESS:
             return updateObject(state, {
                 lessons: state.lessons.concat(action.result),
             });
@@ -23,7 +23,7 @@ const reducer = (state = initialState, action) => {
             return updateObject(state, {
                 lessonTypes: action.result,
             });
-        case actionTypes.DELETE_LESSON_CARD: {
+        case actionTypes.DELETE_LESSON_CARD_SUCCESS: {
             const lessons = state.lessons.filter((lesson) => lesson.id !== action.id);
             return updateObject(state, {
                 lessons,
@@ -38,7 +38,7 @@ const reducer = (state = initialState, action) => {
                 lesson,
             });
         }
-        case actionTypes.UPDATE_LESSON_CARD: {
+        case actionTypes.UPDATE_LESSON_CARD_SUCCESS: {
             const lessonIndex = state.lessons.findIndex(({ id }) => id === action.result.id);
             const lessons = [...state.lessons];
 

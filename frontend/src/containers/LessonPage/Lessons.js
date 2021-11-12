@@ -4,8 +4,8 @@ import Lessons from '../../components/LessonsPage/Lessons';
 
 const mapStateToProps = (state) => ({
     groupId: state.lesson.groupId,
-    groups: state.groups.groups,
     loading: state.loadingIndicator.loading,
+    group: state.groups.group,
 });
 
 const mapDispatchToProps = (dispatch) => ({

@@ -1,3 +1,5 @@
+@import './colors.scss';
+
 $btn-size: 20px;
 $schedule-button-size: 15px;
 
@@ -8,3 +10,10 @@ $font-xs: 12px;
 $font-sm: 14px;
 $font-base: 16px;
 $md-width: 768px;
+
+$md-large: 1440px;
+$md-desktop: 1200px;
+$md-table: 768px;
+$md-medium: 650px;
+$md-table-lanscape: 850px;
+$md-small: 500px;

@@ -4,31 +4,19 @@ import PropTypes from 'prop-types';
 
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import TextField from '@material-ui/core/TextField';
-import { makeStyles } from '@material-ui/core/styles';
 
 import {
     COPY_TO_SAME_GROUP_ERROR,
-    CHOOSE_GROUP,
     COMMON_CHOOSE_GROUP,
-} from '../../constants/translationLabels/common';
-import CustomDialog from '../../containers/Dialogs/CustomDialog';
-import { dialogCloseButton, dialogChooseButton } from '../../constants/dialogs';
-
-const useStyles = makeStyles(() => ({
-    groupField: {
-        '&': {
-            margin: '0 auto',
-            width: '90%',
-        },
-    },
-}));
+} from '../../../constants/translationLabels/common';
+import CustomDialog from '../../../containers/Dialogs/CustomDialog';
+import { dialogCloseButton, dialogChooseButton } from '../../../constants/dialogs';
+import './CopyLessonDialog.scss';
 
 const CopyLessonDialog = (props) => {
     const { onClose, lesson, translation, groups, groupId, open } = props;
     const [group, setGroup] = useState('');
     const [error, setError] = useState('');
-
-    const classes = useStyles();
 
     const chooseClickHandle = () => {
         if (!group) {
@@ -52,7 +40,6 @@ const CopyLessonDialog = (props) => {
     };
     return (
         <CustomDialog
-            title={translation(CHOOSE_GROUP)}
             open={open}
             onClose={onClose}
             buttons={[dialogChooseButton(chooseClickHandle), dialogCloseButton(() => onClose(''))]}
@@ -63,7 +50,7 @@ const CopyLessonDialog = (props) => {
                 multiple
                 clearOnEscape
                 openOnFocus
-                className={classes.groupField}
+                className="groupField"
                 onChange={handleChangeAutocomplete}
                 renderInput={(params) => (
                     <TextField

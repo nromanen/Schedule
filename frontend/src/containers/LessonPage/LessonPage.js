@@ -3,16 +3,17 @@ import '../../components/LessonsPage/LessonPage.scss';
 import LessonPage from '../../components/LessonsPage/LessonPage';
 import {
     copyLessonCard,
-    createLessonCardStart,
     deleteLessonCardStart,
     getLessonsByGroup,
     getLessonTypes,
     selectLessonCard,
     setUniqueError,
     setIsOpenConfirmDialog,
-    updateLessonCardStart,
+    selectGroupId,
 } from '../../actions';
 import { setOpenErrorSnackbar } from '../../actions/snackbar';
+import { copyLessonsFromSemesterStart } from '../../actions/semesters';
+import { handleLessonStart } from '../../actions/lesson';
 
 const mapStateToProps = (state) => ({
     lessons: state.lesson.lessons,
@@ -21,6 +22,7 @@ const mapStateToProps = (state) => ({
     isUniqueError: state.lesson.uniqueError,
     teachers: state.teachers.teachers,
     groups: state.groups.groups,
+    group: state.groups.group,
     subjects: state.subjects.subjects,
     loading: state.loadingIndicator.loading,
     semesters: state.semesters.semesters,
@@ -30,15 +32,15 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
     getLessonsByGroup: (groupId) => dispatch(getLessonsByGroup(groupId)),
     getLessonTypes: () => dispatch(getLessonTypes()),
-    updateLessonCardStart: ({ info, groupId }) =>
-        dispatch(updateLessonCardStart({ info, groupId })),
-    createLessonCardStart: ({ info, isCopy }) => dispatch(createLessonCardStart({ info, isCopy })),
     deleteLessonCardStart: (lessonId) => dispatch(deleteLessonCardStart(lessonId)),
     copyLessonCard: (group, lesson) => dispatch(copyLessonCard(group, lesson)),
     selectLessonCard: (lessonCardId) => dispatch(selectLessonCard(lessonCardId)),
     setOpenErrorSnackbar: (message) => dispatch(setOpenErrorSnackbar(message)),
     setUniqueError: (value) => dispatch(setUniqueError(value)),
     setOpenConfirmDialog: (newState) => dispatch(setIsOpenConfirmDialog(newState)),
+    copyLessonsFromSemester: (values) => dispatch(copyLessonsFromSemesterStart(values)),
+    handleLesson: (values, groupId) => dispatch(handleLessonStart(values, groupId)),
+    selectByGroupId: (groupId) => dispatch(selectGroupId(groupId)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(LessonPage);

@@ -1,23 +1,16 @@
 import { CircularProgress } from '@material-ui/core';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { isEmpty } from 'lodash';
 import { LESSON_NO_LESSON_FOR_GROUP_LABEL } from '../../constants/translationLabels/common';
 
 import LessonsList from './LessonsList/LessonsList';
+import './LessonPage.scss';
 
 const Lessons = (props) => {
     const { t } = useTranslation('common');
-    const {
-        visibleItems,
-        onClickOpen,
-        onCopyLesson,
-        groupId,
-        groups,
-        loading,
-        selectLessonCardOf,
-    } = props;
-
-    const searchTitleGroupByID = (id) => groups.find((group) => group.id === +id)?.title;
+    const { visibleItems, onClickOpen, onCopyLesson, groupId, group, loading, selectLessonCardOf } =
+        props;
 
     if (loading) {
         return (
@@ -27,10 +20,10 @@ const Lessons = (props) => {
         );
     }
 
-    if (!visibleItems.length && groupId) {
+    if (isEmpty(visibleItems) && groupId) {
         return (
             <section className="centered-container">
-                <h2>{t(LESSON_NO_LESSON_FOR_GROUP_LABEL) + searchTitleGroupByID(groupId)}</h2>
+                <h2>{t(LESSON_NO_LESSON_FOR_GROUP_LABEL) + group.title}</h2>
             </section>
         );
     }

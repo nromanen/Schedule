@@ -1,13 +1,13 @@
 import * as actionTypes from './actionsType';
 
-export const createLessonCard = (result) => {
+export const createLesson = (result) => {
     return {
-        type: actionTypes.CREATE_LESSON_CARD,
+        type: actionTypes.CREATE_LESSON_CARD_SUCCESS,
         result,
     };
 };
 
-export const createLessonCardStart = (payload) => {
+export const createLessonStart = (payload) => {
     return {
         type: actionTypes.CREATE_LESSON_CARD_START,
         payload,
@@ -39,7 +39,7 @@ export const setLessonTypes = (result) => ({
 
 export const deleteLessonCard = (id) => {
     return {
-        type: actionTypes.DELETE_LESSON_CARD,
+        type: actionTypes.DELETE_LESSON_CARD_SUCCESS,
         id,
     };
 };
@@ -68,7 +68,7 @@ export const selectLessonCard = (res) => {
 
 export const updateLessonCard = (res) => {
     return {
-        type: actionTypes.UPDATE_LESSON_CARD,
+        type: actionTypes.UPDATE_LESSON_CARD_SUCCESS,
         result: res,
     };
 };
@@ -77,6 +77,14 @@ export const updateLessonCardStart = (payload) => {
     return {
         type: actionTypes.UPDATE_LESSON_CARD_START,
         payload,
+    };
+};
+
+export const handleLessonStart = (values, groupId) => {
+    return {
+        type: actionTypes.HANDLE_LESSON_CARD_START,
+        values,
+        groupId,
     };
 };
 

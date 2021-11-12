@@ -3,16 +3,14 @@ import { useTranslation } from 'react-i18next';
 
 import { isNil } from 'lodash';
 
-import Card from '../../share/Card/Card';
+import TextField from '@material-ui/core/TextField';
+import { Autocomplete } from '@material-ui/lab';
 import CustomDialog from '../../containers/Dialogs/CustomDialog';
 import { dialogTypes } from '../../constants/dialogs';
 import { cardType } from '../../constants/cardType';
 import { COMMON_LESSON_SERVICE_IS_NOT_UNIQUE } from '../../constants/translationLabels/common';
 import { searchLessonsByTeacher } from '../../helper/search';
-import {
-    CopyLessonsFromSemesterService,
-    showAllSemestersService,
-} from '../../services/semesterService';
+import { showAllSemestersService } from '../../services/semesterService';
 import { checkUniqLesson } from '../../validation/storeValidation';
 import { cardObjectHandler } from '../../helper/cardObjectHandler';
 
@@ -20,12 +18,16 @@ import Lessons from '../../containers/LessonPage/Lessons';
 import Search from '../../containers/LessonPage/Search';
 import LessonForm from '../../containers/LessonPage/LessonForm';
 import CopyLessonsFromSemesterForm from '../../containers/LessonPage/CopyLessonsFromSemesterForm';
-import CopyLessonDialog from './CopyLessonDialog';
+import CopyLessonDialog from './CopyLessonDialog/CopyLessonDialog';
 
 import './LessonPage.scss';
-import { showAllGroupsService } from '../../services/groupService';
+import './LessonForm/LessonForm.scss';
+import { showAllGroupsService, selectGroupService } from '../../services/groupService';
 import { showAllSubjectsService } from '../../services/subjectService';
 import { showAllTeachersService } from '../../services/teacherService';
+
+import { FORM_GROUP_LABEL } from '../../constants/translationLabels/formElements';
+import { trasformLink } from '../../utils/trasformLink';
 
 const LessonPage = (props) => {
     const {
@@ -36,18 +38,20 @@ const LessonPage = (props) => {
         teachers,
         lessons,
         groupId,
+        group,
         groups,
         copyLessonCard,
         deleteLessonCardStart,
         getLessonTypes,
         getLessonsByGroup,
-        createLessonCardStart,
-        updateLessonCardStart,
         selectLessonCard,
         setOpenConfirmDialog,
         isOpenConfirmDialog,
         setOpenErrorSnackbar,
         setUniqueError,
+        copyLessonsFromSemester,
+        handleLesson,
+        selectByGroupId,
     } = props;
     const { t } = useTranslation('common');
     const [term, setTerm] = useState('');
@@ -72,7 +76,8 @@ const LessonPage = (props) => {
     }, []);
 
     const submitLessonForm = (card) => {
-        let cardObj = cardObjectHandler(card, groupId, currentSemester);
+        const link = trasformLink(card.linkToMeeting);
+        const cardObj = cardObjectHandler(card, groupId, currentSemester, link);
 
         if (!checkUniqLesson(lessons, cardObj)) {
             const message = t(COMMON_LESSON_SERVICE_IS_NOT_UNIQUE);
@@ -81,15 +86,7 @@ const LessonPage = (props) => {
             setUniqueError(true);
             return;
         }
-
-        const lessonTeacher = teachers.find((teacher) => {
-            return card.teacher === teacher.id;
-        });
-
-        cardObj = { ...cardObj, teacher: lessonTeacher };
-
-        if (cardObj.id) updateLessonCardStart({ info: cardObj, groupId });
-        createLessonCardStart({ info: cardObj, isCopy: false });
+        handleLesson(cardObj, groupId);
     };
 
     const showConfirmDialog = (lessonCardId) => {
@@ -97,9 +94,8 @@ const LessonPage = (props) => {
         setOpenConfirmDialog(true);
     };
 
-    const acceptConfirmDialog = (id) => {
+    const acceptConfirmDialog = () => {
         setOpenConfirmDialog(false);
-        if (!id) return;
         deleteLessonCardStart(lessonId);
     };
 
@@ -108,22 +104,81 @@ const LessonPage = (props) => {
         setIsOpenCopyLessonDialog(true);
     };
 
-    const closeCopyLessonDialogHandle = ({ group, lesson }) => {
+    const closeCopyLessonDialogHandle = (params) => {
+        const { group: copiedGroup, lesson } = params;
         setIsOpenCopyLessonDialog(false);
-        if (!isNil(group)) {
-            copyLessonCard(group, lesson);
+        if (!isNil(copiedGroup)) {
+            copyLessonCard(copiedGroup, lesson);
         }
     };
 
     const submitCopySemester = (values) => {
         const toSemesterId = currentSemester.id;
         const fromSemesterId = +values.fromSemesterId;
-        CopyLessonsFromSemesterService({ ...values, toSemesterId, fromSemesterId });
+        copyLessonsFromSemester({ ...values, toSemesterId, fromSemesterId });
+    };
+
+    const handleGroupSelect = (selectedGroup) => {
+        if (selectedGroup) {
+            selectByGroupId(selectedGroup.id);
+            selectGroupService(selectedGroup.id);
+        }
     };
 
     return (
         <>
-            <Card additionClassName="card-title lesson-card">
+            <div className="lesson-wrapper">
+                <div className="lesson-side-bar">
+                    <Search setTerm={setTerm} />
+                    <div className="lesson-form-container">
+                        <section className="section">
+                            <LessonForm
+                                lessonTypes={lessonTypes}
+                                isUniqueError={isUniqueError}
+                                subjects={subjects}
+                                teachers={teachers}
+                                onSubmit={submitLessonForm}
+                                onSetSelectedCard={selectLessonCard}
+                            />
+                            {!groupId && (
+                                <CopyLessonsFromSemesterForm onSubmit={submitCopySemester} />
+                            )}
+                        </section>
+                    </div>
+                </div>
+                <div className="lessons-list">
+                    <div className="group-lesson">
+                        <Autocomplete
+                            id="group"
+                            value={group}
+                            options={groups}
+                            clearOnEscape
+                            openOnFocus
+                            getOptionLabel={(option) => option.title}
+                            onChange={(_, newValue) => {
+                                handleGroupSelect(newValue);
+                            }}
+                            renderInput={(params) => (
+                                <TextField
+                                    className="textField"
+                                    {...params}
+                                    label={t(FORM_GROUP_LABEL)}
+                                    margin="normal"
+                                />
+                            )}
+                        />
+                    </div>
+                    <div className="lesson-cards-container">
+                        <Lessons
+                            visibleItems={visibleItems}
+                            onClickOpen={showConfirmDialog}
+                            onCopyLesson={openCopyLessonDialogHandle}
+                        />
+                    </div>
+                </div>
+            </div>
+
+            <div className="card-title lesson-card">
                 {isOpenCopyLessonDialog && (
                     <CopyLessonDialog
                         open={isOpenCopyLessonDialog}
@@ -137,30 +192,11 @@ const LessonPage = (props) => {
                 {isOpenConfirmDialog && (
                     <CustomDialog
                         type={dialogTypes.DELETE_CONFIRM}
-                        handelConfirm={() => acceptConfirmDialog(groupId)}
+                        handelConfirm={acceptConfirmDialog}
                         whatDelete={cardType.LESSON.toLowerCase()}
                         open={isOpenConfirmDialog}
                     />
                 )}
-                <Search setTerm={setTerm} />
-            </Card>
-            <div className="cards-container">
-                <section>
-                    <LessonForm
-                        lessonTypes={lessonTypes}
-                        isUniqueError={isUniqueError}
-                        subjects={subjects}
-                        teachers={teachers}
-                        onSubmit={submitLessonForm}
-                        onSetSelectedCard={selectLessonCard}
-                    />
-                    {!groupId && <CopyLessonsFromSemesterForm onSubmit={submitCopySemester} />}
-                </section>
-                <Lessons
-                    visibleItems={visibleItems}
-                    onClickOpen={showConfirmDialog}
-                    onCopyLesson={openCopyLessonDialogHandle}
-                />
             </div>
         </>
     );

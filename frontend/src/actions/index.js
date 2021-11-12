@@ -1,6 +1,6 @@
 export {
-    createLessonCard,
-    createLessonCardStart,
+    createLesson,
+    createLessonStart,
     getLessonsByGroup,
     setLessonsCards,
     getLessonTypes,
