@@ -1,9 +1,6 @@
 @import './colors.scss';
 
-$btn-size: 20px;
-$schedule-button-size: 15px;
 
-// $bold-border: 1px solid $thunck-color-hover;
 $regular-border: 1px solid #e0e0e0;
 $table-border:1px solid rgba(224, 224, 224, 1);
 $card-border: 1px solid $light-gray;
@@ -28,6 +25,7 @@ $font-xs: 12px;
 $font-sm: 14px;
 $font-base: 16px;
 $btn-size: 20px;
+$schedule-button-size: 15px;
 
 //responsive constants
 $md-width: 768px;
@@ -38,4 +36,5 @@ $md-medium: 650px;
 $md-table-lanscape: 850px;
 $md-small: 500px;
 $schedule-pc-screen: 1000px;
-$md-width: 850px;
+$sm-width: 640px;
+$schedule-pc-screen: 1000px;

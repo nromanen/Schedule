@@ -135,8 +135,8 @@
     "go_to_meeting_word": "перейти на онлайн-заняття",
     "link_to_meeting_word": "посилання на онлайн-заняття",
     "do_you_wanna": "Ви хочете ",
-    "do_you_wanna_disable": "Ви хочете відключити ",
-    "do_you_wanna_show": "Ви хочете включити ",
+    "do_you_wanna_disable": "Ви хочете відключити?",
+    "do_you_wanna_show": "Ви хочете включити?",
     "this_card_type": "{{cardType}}?",
     "by_this_card_type": "за цим {{cardType}}?",
     "teacher_schedule_label": "Розклад для викладача",
@@ -188,5 +188,7 @@
     "table_columns_size": "Розмір стовпців таблиці",
     "columns_size_small": "малі",
     "columns_size_base": "базові",
-    "columns_size_large": "великі"
+    "columns_size_large": "великі",
+    "search_params": "Параметри пошуку вільних кімнати",
+    "free-rooms-list-empty": "Список вільних кімнат порожній"
 }

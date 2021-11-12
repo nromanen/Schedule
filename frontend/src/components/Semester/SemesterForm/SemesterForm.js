@@ -15,7 +15,11 @@ import {
     lessThanDate,
     greaterThanDate,
 } from '../../../validation/validateFields';
-import { getClearOrCancelTitle, setDisableButton } from '../../../helper/disableComponent';
+import {
+    getClearOrCancelTitle,
+    setDisableButton,
+    setDisabledSaveButtonSemester,
+} from '../../../helper/disableComponent';
 import Card from '../../../share/Card/Card';
 import {
     COMMON_EDIT,
@@ -36,7 +40,7 @@ import { dateFormat } from '../../../constants/formats';
 import SetSemesterCheckboxes from './SemesterCheckboxes';
 import { getToday, getTomorrow, initialCheckboxesStateForDays } from '../../../utils/formUtils';
 import { getGroupsOptionsForSelect } from '../../../utils/selectUtils';
-import { clearSemesterService } from '../../../services/semesterService';
+import { SEMESTER_FORM } from '../../../constants/reduxForms';
 
 const SemesterForm = (props) => {
     const { t } = useTranslation('formElements');
@@ -48,18 +52,18 @@ const SemesterForm = (props) => {
         classScheduler,
         initialize,
         change,
+        reset,
         selectedGroups,
         setSelectedGroups,
         options,
+        clearSemesterSuccess,
     } = props;
 
-    const prepSetCheckedClasses = {};
-
-    const [startDate, setStartDate] = useState(getToday());
+    const [startDate, setStartDate] = useState(new Date());
     const [finishDate, setFinishDate] = useState(getTomorrow());
     const [disabledFinishDate, setDisabledFinishDate] = useState(true);
 
-    const [checkedClasses, setCheckedClasses] = useState(prepSetCheckedClasses);
+    const [checkedClasses, setCheckedClasses] = useState({});
     const [checkedDates, setCheckedDates] = useState(initialCheckboxesStateForDays);
     const [current, setCurrent] = useState(false);
     const [byDefault, setByDefault] = useState(false);
@@ -73,11 +77,12 @@ const SemesterForm = (props) => {
     };
 
     useEffect(() => {
-        classScheduler.forEach((classItem) => {
-            prepSetCheckedClasses[`${classItem.id}`] = false;
-        });
+        const prepSetCheckedClasses = classScheduler.reduce((init, classItem) => {
+            const isCheckedClass = init;
+            isCheckedClass[`${classItem.id}`] = false;
+            return isCheckedClass;
+        }, {});
         setCheckedClasses({ ...prepSetCheckedClasses });
-        clearCheckboxes();
         const semesterItem = { ...semester };
         clearCheckboxes();
         if (semester.id) {
@@ -133,16 +138,15 @@ const SemesterForm = (props) => {
         setDisabledFinishDate(false);
     };
 
-    const handleChange = (event, setState) => setState(event.target.checked);
-
     const resetSemesterForm = () => {
         setSelectedGroups([]);
-        clearSemesterService();
+        clearSemesterSuccess();
+        reset(SEMESTER_FORM);
     };
 
     return (
         <Card additionClassName="form-card semester-form">
-            <h2 style={{ textAlign: 'center' }}>
+            <h2 className="card-title">
                 {semester.id ? t(COMMON_EDIT) : t(COMMON_CREATE)}
                 {` ${t(COMMON_SEMESTER)}`}
             </h2>
@@ -163,7 +167,7 @@ const SemesterForm = (props) => {
                             labelPlacement="start"
                             component={renderCheckboxField}
                             checked={current}
-                            onChange={(e) => handleChange(e, setCurrent)}
+                            onChange={(event) => setCurrent(event.target.checked)}
                             color="primary"
                         />
                         <Field
@@ -172,7 +176,7 @@ const SemesterForm = (props) => {
                             labelPlacement="start"
                             component={renderCheckboxField}
                             checked={byDefault}
-                            onChange={(e) => handleChange(e, setByDefault)}
+                            onChange={(event) => setByDefault(event.target.checked)}
                             color="primary"
                         />
                     </div>
@@ -248,7 +252,12 @@ const SemesterForm = (props) => {
                         variant="contained"
                         color="primary"
                         className="buttons-style "
-                        disabled={(pristine || submitting) && selectedGroups.length === 0}
+                        disabled={setDisabledSaveButtonSemester(
+                            pristine,
+                            submitting,
+                            semester,
+                            selectedGroups,
+                        )}
                         type="submit"
                     >
                         {t(COMMON_SAVE_BUTTON_LABEL)}

@@ -9,7 +9,7 @@ $group-size: 10px;
   &-container{
   display: flex;
   padding: 5px;
-  @media (max-width: $md-width) {
+  @media (max-width: $md-table-lanscape) {
       @include displayCenter();
       flex-direction: column;
     }
@@ -22,7 +22,7 @@ $group-size: 10px;
   .MuiFormControl-root{
     width: 98%;
   }
-  @media (max-width: $md-width) {
+  @media (max-width: $md-table-lanscape) {
     display: flex;
     margin: 10px auto;
     width: 50%;
@@ -40,7 +40,7 @@ $group-size: 10px;
     flex-wrap: wrap;
     justify-content: center;
     width: 100%;
-    @media (max-width: $md-width) {
+    @media (max-width: $md-table-lanscape) {
       margin: 10px auto;
       width: 100%;
       display: flex;
@@ -54,7 +54,7 @@ $group-size: 10px;
     justify-content: center;
     width: 100%;
   }
-   @media (max-width: $md-width) {
+   @media (max-width: $md-table-lanscape) {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;

@@ -161,3 +161,5 @@ export const COMMON_TABLE_COLUMNS_SIZE = 'table_columns_size';
 export const COMMON_TABLE_COLUMNS_SIZE_SMALL = 'columns_size_small';
 export const COMMON_TABLE_COLUMNS_SIZE_BASE = 'columns_size_base';
 export const COMMON_TABLE_COLUMNS_SIZE_LARGE = 'columns_size_large';
+export const COMMON_SEARCH_FREE_ROOMS_TITLE = 'common:search_params';
+export const COMMON_FREE_ROOMS_LIST_EMPTY = 'common:free-rooms-list-empty';

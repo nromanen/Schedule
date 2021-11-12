@@ -1,4 +1,4 @@
-@import '../../../styles/colors.scss';
+@import '../../../../styles/colors.scss';
 
 p.empty_schedule {
     text-align: center;
@@ -18,6 +18,9 @@ h1 {
 }
 p.red-color {
     color: $delete-color;
+}
+.copy-form > * {
+    margin: 8px;
 }
 .form-buttons-container {
     @media (max-width: 800px) {

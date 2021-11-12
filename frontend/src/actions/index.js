@@ -51,7 +51,6 @@ export {
     getPublicClassScheduleSuccess,
 } from './classes';
 
-export { clearFreeRooms, showFreeRooms } from './freeRooms';
 export {
     getGroupByIdSuccess,
     createGroupSuccess,
@@ -66,21 +65,20 @@ export {
 
 export { setLoading, setScheduleLoading, setSemesterLoading } from './loadingIndicator';
 export {
-    addRoom,
-    clearRoomOne,
-    deleteRoom,
-    selectOneRoom,
-    setDisabledRooms,
-    showListOfRooms,
-    updateOneRoom,
+    addRoomSuccess,
+    clearRoomSuccess,
+    deleteRoomSuccess,
+    setSelectRoomSuccess,
+    getListOfDisabledRoomsSuccess,
+    getListOfRoomsSuccess,
+    updateRoomSuccess,
+    deleteRoomTypeSuccess,
+    getAllRoomTypesSuccess,
+    selectRoomType,
+    addRoomTypeSuccess,
+    updateRoomTypeSuccess,
 } from './rooms';
-export {
-    deleteType,
-    getAllRoomTypes,
-    getOneNewType,
-    postOneType,
-    updateOneType,
-} from './roomTypes';
+
 export {
     addItemToSchedule,
     setItemGroupId,
@@ -91,15 +89,15 @@ export {
     setTeacherViewType,
 } from './schedule';
 export {
-    addSemester,
-    clearSemester,
-    deleteSemester,
-    moveToArchivedSemester,
-    selectSemester,
-    setArchivedSemesters,
-    setDisabledSemesters,
-    showAllSemesters,
-    updateSemester,
+    addSemesterSuccess,
+    clearSemesterSuccess,
+    deleteSemesterSuccess,
+    moveToArchivedSemesterSuccess,
+    selectSemesterSuccess,
+    getArchivedSemestersSuccess,
+    getDisabledSemestersSuccess,
+    getAllSemestersSuccess,
+    updateSemesterSuccess,
 } from './semesters';
 
 export { setIsOpenConfirmDialog } from './dialog';

@@ -7,6 +7,7 @@ const initialState = {
     semesterLoading: false,
     studentsLoading: false,
     mainScheduleLoading: false,
+    roomsLoading: false,
 };
 
 const reducer = (state = initialState, action) => {
@@ -30,6 +31,10 @@ const reducer = (state = initialState, action) => {
         case actionTypes.SET_STUDENTS_LOADING_INDICATOR:
             return updateObject(state, {
                 studentsLoading: action.result,
+            });
+        case actionTypes.SET_ROOMS_LOADING_INDICATOR:
+            return updateObject(state, {
+                roomsLoading: action.result,
             });
         default:
             return state;

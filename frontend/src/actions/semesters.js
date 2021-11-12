@@ -1,8 +1,8 @@
 import * as actionTypes from './actionsType';
 
-export const showAllSemesters = (res) => {
+export const getAllSemestersSuccess = (res) => {
     return {
-        type: actionTypes.SHOW_ALL_SEMESTERS,
+        type: actionTypes.SHOW_ALL_SEMESTERS_SUCCESS,
         result: res,
     };
 };
@@ -12,9 +12,9 @@ export const getAllSemestersStart = () => {
     };
 };
 
-export const setDisabledSemesters = (res) => {
+export const getDisabledSemestersSuccess = (res) => {
     return {
-        type: actionTypes.SET_DISABLED_SEMESTERS,
+        type: actionTypes.SET_DISABLED_SEMESTERS_SUCCESS,
         result: res,
     };
 };
@@ -23,15 +23,15 @@ export const getDisabledSemestersStart = () => {
         type: actionTypes.GET_DISABLED_SEMESTERS_START,
     };
 };
-export const setArchivedSemesters = (res) => {
+export const getArchivedSemestersSuccess = (res) => {
     return {
-        type: actionTypes.SET_ARCHIVED_SEMESTERS,
+        type: actionTypes.SET_ARCHIVED_SEMESTERS_SUCCESS,
         result: res,
     };
 };
-export const getArchivedSemesterStart = (semesterId) => {
+export const getArchivedSemesterByIdStart = (semesterId) => {
     return {
-        type: actionTypes.GET_ARCHIVE_SEMESTER_START,
+        type: actionTypes.GET_ARCHIVE_SEMESTER_BY_ID_START,
         semesterId,
     };
 };
@@ -49,9 +49,9 @@ export const getArchivedSemestersStart = () => {
     };
 };
 
-export const addSemester = (res) => {
+export const addSemesterSuccess = (res) => {
     return {
-        type: actionTypes.ADD_SEMESTER,
+        type: actionTypes.ADD_SEMESTER_SUCCESS,
         result: res,
     };
 };
@@ -61,9 +61,9 @@ export const addSemesterStart = (item) => {
         item,
     };
 };
-export const deleteSemester = (res) => {
+export const deleteSemesterSuccess = (res) => {
     return {
-        type: actionTypes.DELETE_SEMESTER,
+        type: actionTypes.DELETE_SEMESTER_SUCCESS,
         result: res,
     };
 };
@@ -74,16 +74,16 @@ export const deleteSemesterStart = (semesterId) => {
     };
 };
 
-export const selectSemester = (res) => {
+export const selectSemesterSuccess = (res) => {
     return {
-        type: actionTypes.SELECT_SEMESTER,
+        type: actionTypes.SELECT_SEMESTER_SUCCESS,
         result: res,
     };
 };
 
-export const updateSemester = (res) => {
+export const updateSemesterSuccess = (res) => {
     return {
-        type: actionTypes.UPDATE_SEMESTER,
+        type: actionTypes.UPDATE_SEMESTER_SUCCESS,
         result: res,
     };
 };
@@ -94,27 +94,27 @@ export const updateSemesterStart = (item) => {
         item,
     };
 };
-export const updateSemesterByIdStart = (semesterId) => {
+export const updateSemesterByIdStartSuccess = (semesterId) => {
     return {
-        type: actionTypes.UPDATE_SEMESTER_BY_ID_START,
+        type: actionTypes.UPDATE_SEMESTER_BY_ID_START_SUCCESS,
         semesterId,
     };
 };
-export const moveToArchivedSemester = (res) => {
+export const moveToArchivedSemesterSuccess = (res) => {
     return {
-        type: actionTypes.MOVE_SEMESTER_TO_ARCHIVE,
+        type: actionTypes.MOVE_SEMESTER_TO_ARCHIVE_SUCCESS,
         result: res,
     };
 };
 
-export const clearSemester = () => ({
-    type: actionTypes.CLEAR_SEMESTER,
+export const clearSemesterSuccess = () => ({
+    type: actionTypes.CLEAR_SEMESTER_SUCCESS,
 });
 
-export const setError = (res) => {
+export const handleSemesterFormSubmitStart = (values) => {
     return {
-        type: actionTypes.SET_ERROR,
-        result: res,
+        type: actionTypes.HANDLE_SEMESTER_FORM_SUBMIT_START,
+        values,
     };
 };
 
@@ -136,5 +136,11 @@ export const setSemesterCopyStart = (values) => {
     return {
         type: actionTypes.SET_SEMESTER_COPY_START,
         values,
+    };
+};
+export const toggleSemesterVisibilityStart = (semester) => {
+    return {
+        type: actionTypes.TOGGLE_SEMESTER_VISIBILITY_START,
+        semester,
     };
 };

@@ -9,36 +9,34 @@ const reducer = (
     action,
 ) => {
     switch (action.type) {
-        case actionTypes.POST_NEW_TYPE:
+        case actionTypes.ADD_ROOM_TYPE:
             return updateObject(state, {
-                roomTypes: [...state.roomTypes, action.result],
+                roomTypes: [...state.roomTypes, action.roomType],
             });
 
         case actionTypes.GET_ALL_ROOM_TYPES:
             return updateObject(state, {
-                roomTypes: [...action.result],
+                roomTypes: [...action.roomType],
             });
-        case actionTypes.DELETE_TYPE:
+        case actionTypes.DELETE_ROOM_TYPE:
             return updateObject(state, {
-                roomTypes: [
-                    ...state.roomTypes.filter((roomTypess) => roomTypess.id !== action.result),
-                ],
+                roomTypes: [...state.roomTypes.filter((type) => type.id !== action.roomTypeId)],
             });
 
-        case actionTypes.UPDATE_ONE_TYPE: {
+        case actionTypes.UPDATE_ROOM_TYPE: {
             const updateTypeState = [...state.roomTypes];
             updateTypeState[
-                updateTypeState.findIndex((typeItem) => typeItem.id === action.result.id)
-            ] = action.result;
+                updateTypeState.findIndex((typeItem) => typeItem.id === action.roomType.id)
+            ] = action.roomType;
             return updateObject(state, {
                 oneType: {},
                 roomTypes: [...updateTypeState],
             });
         }
-        case actionTypes.GET_ONE_NEW_TYPE: {
-            const one = state.roomTypes.find((roomTypeItem) => roomTypeItem.id === action.result);
+        case actionTypes.SELECT_ROOM_TYPE: {
+            const type = state.roomTypes.find((roomType) => roomType.id === action.typeId);
             return updateObject(state, {
-                oneType: one,
+                oneType: type,
             });
         }
         default:

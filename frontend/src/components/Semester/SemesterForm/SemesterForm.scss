@@ -1,4 +1,6 @@
-@import '../../../App';
+@import '../../../styles/colors.scss';
+@import '../../../styles/variables.scss';
+
 .semester {
     &-form {
         margin: 10px;
@@ -14,7 +16,9 @@
         color: $label-color;
     }
 }
-
+.card-title {
+    text-align: center;
+}
 .form-field-up {
     margin-top: 30px;
 }
@@ -40,7 +44,7 @@
     align-items: center;
     align-content: center;
 
-    Button {
+    .buttons-style {
         margin: 5px 0 5px 17px;
     }
 }
