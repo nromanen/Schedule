@@ -60,7 +60,7 @@ const ScheduleDialog = (props) => {
 
     const defaultProps = {
         options: availability.rooms ? sortByName(availability.rooms) : sortByName(rooms),
-        getOptionLabelWithAvailable,
+        getOptionLabel: getOptionLabelWithAvailable,
     };
 
     return (
