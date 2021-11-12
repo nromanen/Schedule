@@ -1,74 +1,96 @@
 import * as actionTypes from './actionsType';
 
-export const addGroup = (res) => {
+export const createGroupSuccess = (res) => {
     return {
-        type: actionTypes.ADD_GROUP,
+        type: actionTypes.CREATE_GROUP_SUCCESS,
         result: res,
     };
 };
 
-export const updateGroupSusses = (res) => {
+export const updateGroupSuccess = (res) => {
     return {
-        type: actionTypes.UPDATE_GROUP,
+        type: actionTypes.UPDATE_GROUP_SUCCESS,
         result: res,
     };
 };
 
-export const showAllGroups = (res) => {
+export const showAllGroupsSuccess = (res) => {
     return {
-        type: actionTypes.SHOW_ALL_GROUPS,
+        type: actionTypes.SHOW_ALL_GROUPS_SUCCESS,
         result: res,
     };
 };
 
-export const deleteGroupSusses = (res) => {
+export const getGroupByIdSuccess = (group) => {
     return {
-        type: actionTypes.DELETE_GROUP,
+        type: actionTypes.GET_GROUP_BY_ID_SUCCESS,
+        group,
+    };
+};
+
+export const deleteGroupSuccess = (res) => {
+    return {
+        type: actionTypes.DELETE_GROUP_SUCCESS,
         result: res,
     };
 };
 
-export const selectGroup = (res) => {
+export const selectGroupSuccess = (res) => {
     return {
-        type: actionTypes.SELECT_GROUP,
+        type: actionTypes.SELECT_GROUP_SUCCESS,
         result: res,
     };
 };
 
-export const clearGroupSusses = () => ({
-    type: actionTypes.CLEAR_GROUP,
-});
+export const clearGroupSuccess = () => {
+    return {
+        type: actionTypes.CLEAR_GROUP_SUCCESS,
+    };
+};
 
-export const fetchDisabledGroupsStart = () => ({
-    type: actionTypes.FETCH_DISABLED_GROUPS_START,
-});
+export const getDisabledGroupsStart = () => {
+    return {
+        type: actionTypes.GET_DISABLED_GROUPS_START,
+    };
+};
 
-export const fetchEnabledGroupsStart = () => ({
-    type: actionTypes.FETCH_ENABLED_GROUPS_START,
-});
+export const getEnabledGroupsStart = () => {
+    return {
+        type: actionTypes.GET_ENABLED_GROUPS_START,
+    };
+};
 
-export const deleteGroupStart = (id) => ({
-    type: actionTypes.DELETE_GROUP_START,
-    id,
-});
+export const getGroupByIdStart = (id) => {
+    return {
+        type: actionTypes.GET_GROUP_BY_ID_START,
+        id,
+    };
+};
 
-export const createGroupStart = (data) => ({
-    type: actionTypes.CREATE_GROUP_START,
-    data,
-});
+export const deleteGroupStart = (id) => {
+    return {
+        type: actionTypes.DELETE_GROUP_START,
+        id,
+    };
+};
 
-export const updateGroupStart = (data) => ({
-    type: actionTypes.UPDATE_GROUP_START,
-    data,
-});
+export const submitGroupStart = (group) => {
+    return {
+        type: actionTypes.SUBMIT_GROUP_START,
+        group,
+    };
+};
 
-export const clearGroupStart = (data) => ({
-    type: actionTypes.CLEAR_GROUP_START,
-    data,
-});
+export const clearGroupStart = () => {
+    return {
+        type: actionTypes.CLEAR_GROUP_START,
+    };
+};
 
-export const toggleDisabledStatus = (groupId, disabledStatus) => ({
-    type: actionTypes.TOGGLE_DISABLED_STATUS_GROUP,
-    groupId,
-    disabledStatus,
-});
+export const toggleDisabledStatus = (groupId, disabledStatus) => {
+    return {
+        type: actionTypes.TOGGLE_DISABLED_STATUS_GROUP,
+        groupId,
+        disabledStatus,
+    };
+};

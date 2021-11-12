@@ -18,14 +18,13 @@ import {
 import { getClassScheduleListStart } from '../../actions/classes';
 import { showListOfRoomsService } from '../../services/roomService';
 import { showAllSubjectsService } from '../../services/subjectService';
-import { showAllGroupsService } from '../../services/groupService';
 import './TemporarySchedule.scss';
 import { EMPTY_LABEL } from '../../constants/translationLabels/common';
-import { getLessonTypes } from '../../actions';
+import { getLessonTypes, getEnabledGroupsStart } from '../../actions';
 
 const TemporarySchedule = (props) => {
     const { t } = useTranslation('common');
-    const { teachers, teacherId, isLoading, getClassScheduleList } = props;
+    const { teachers, teacherId, isLoading, getClassScheduleList, getEnabledGroups } = props;
     const [fromDate, setFromDate] = useState(null);
     const [toDate, setToDate] = useState(null);
 
@@ -36,7 +35,7 @@ const TemporarySchedule = (props) => {
         showAllSubjectsService();
         getClassScheduleList();
         getLessonTypes();
-        showAllGroupsService();
+        getEnabledGroups();
     }, []);
 
     const handleTemporaryScheduleSubmit = (values) => {
@@ -138,6 +137,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
     getLessonTypes: () => dispatch(getLessonTypes()),
     getClassScheduleList: () => dispatch(getClassScheduleListStart()),
+    getEnabledGroups: () => dispatch(getEnabledGroupsStart()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(TemporarySchedule);

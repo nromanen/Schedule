@@ -4,7 +4,6 @@ import Button from '@material-ui/core/Button';
 import { useTranslation } from 'react-i18next';
 
 import './AddGroupForms.scss';
-import Card from '../../share/Card/Card';
 import renderTextField from '../../share/renderedFields/input';
 import { required, uniqueGroup, minLengthValue } from '../../validation/validateFields';
 import { getClearOrCancelTitle, setDisableButton } from '../../helper/disableComponent';
@@ -17,8 +16,18 @@ import {
 } from '../../constants/translationLabels/formElements';
 
 export const AddGroup = (props) => {
+    const {
+        clearGroupStart,
+        submitGroupStart,
+        handleSubmit,
+        initialize,
+        submitting,
+        setGroup,
+        pristine,
+        invalid,
+        group,
+    } = props;
     const { t } = useTranslation('formElements');
-    const { handleSubmit, pristine, onReset, submitting, group, initialize } = props;
 
     useEffect(() => {
         if (group.id) {
@@ -30,13 +39,25 @@ export const AddGroup = (props) => {
             initialize();
         }
     }, [group.id]);
+
+    const onReset = () => {
+        setGroup({});
+        clearGroupStart();
+    };
+
     return (
-        <Card additionClassName="form-card group-form">
-            <h2 className="group-form__title">
+        <div className="group-form">
+            <div className="group-form__title">
                 {group.id ? t(EDIT_TITLE) : t(CREATE_TITLE)}
                 {t(GROUP_Y_LABEL)}
-            </h2>
-            <form onSubmit={handleSubmit}>
+            </div>
+            <form
+                // className="group-form"
+                onSubmit={handleSubmit((data) => {
+                    submitGroupStart(data);
+                    setGroup({});
+                })}
+            >
                 <Field
                     className="form-field"
                     name="title"
@@ -45,17 +66,19 @@ export const AddGroup = (props) => {
                     component={renderTextField}
                     validate={[required, minLengthValue, uniqueGroup]}
                 />
-                <div className="form-buttons-container group-btns">
+                <div className="form-buttons-container">
                     <Button
+                        size="small"
                         variant="contained"
                         className="buttons-style "
                         color="primary"
-                        disabled={pristine || submitting}
+                        disabled={invalid || pristine || submitting}
                         type="submit"
                     >
                         {t(SAVE_BUTTON_LABEL)}
                     </Button>
                     <Button
+                        size="small"
                         type="button"
                         className="buttons-style"
                         variant="contained"
@@ -66,6 +89,6 @@ export const AddGroup = (props) => {
                     </Button>
                 </div>
             </form>
-        </Card>
+        </div>
     );
 };

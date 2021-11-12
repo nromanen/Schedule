@@ -1,51 +1,54 @@
+import './GroupPage.scss';
 import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
+import { isEmpty } from 'lodash';
 import { useTranslation } from 'react-i18next';
 import { CircularProgress } from '@material-ui/core';
+import { goToGroupPage } from '../../helper/pageRedirection';
 import { dialogTypes } from '../../constants/dialogs';
 import { GROUP_Y_LABEL } from '../../constants/translationLabels/formElements';
 import { search } from '../../helper/search';
-import GroupCard from './GroupCard';
+import GroupCard from './GroupCard/GroupCard';
 import NotFound from '../../share/NotFound/NotFound';
 import CustomDialog from '../../containers/Dialogs/CustomDialog';
-import AddStudentDialog from '../../containers/Student/AddStudentDialog';
-import ShowStudentsOnGroupDialog from '../../containers/Student/ShowStudentsOnGroupDialog';
+import AddStudentDialog from '../../share/DialogWindows/_dialogWindows/AddStudentDialog';
+import ShowStudentsOnGroupDialog from '../../containers/Students/ShowStudentsOnGroupDialog';
+import { ADD_STUDENT_ACTION, SHOW_STUDENTS_ACTION } from '../../constants/actionsUrl';
 
 const GroupList = (props) => {
     const {
-        fetchDisabledGroupsStart,
-        fetchEnabledGroupsStart,
+        getEnabledGroupsStart,
+        getDisabledGroupsStart,
         setIsOpenConfirmDialog,
         toggleDisabledStatus,
         isOpenConfirmDialog,
-        deleteStudentStart,
+        selectGroupSuccess,
         deleteGroupStart,
-        selectGroup,
+        searchItem,
         loading,
         groups,
         match,
-        term,
+        setGroup,
         isDisabled,
     } = props;
+
+    const history = useHistory();
     const { t } = useTranslation('formElements');
 
-    const [group, setGroup] = useState();
     const [groupId, setGroupId] = useState(-1);
     const [confirmDialogType, setConfirmDialogType] = useState('');
     const [isOpenShowStudentsDialog, setIsOpenShowStudentsDialog] = useState(false);
     const [isOpenAddStudentDialog, setIsOpenAddStudentDialog] = useState(false);
 
     useEffect(() => {
-        fetchEnabledGroupsStart();
-    }, []);
-    useEffect(() => {
         if (isDisabled) {
-            fetchDisabledGroupsStart();
+            getDisabledGroupsStart();
         } else {
-            fetchEnabledGroupsStart();
+            getEnabledGroupsStart();
         }
     }, [isDisabled]);
 
-    const visibleGroups = search(groups, term, ['title']);
+    const visibleGroups = search(groups, searchItem, ['title']);
 
     const showConfirmDialog = (currentId, disabledStatus) => {
         setGroupId(currentId);
@@ -54,7 +57,6 @@ const GroupList = (props) => {
     };
     const acceptConfirmDialog = (currentGroupId) => {
         setIsOpenConfirmDialog(false);
-        if (!currentGroupId) return;
         if (confirmDialogType !== dialogTypes.DELETE_CONFIRM) {
             toggleDisabledStatus(currentGroupId, isDisabled);
         } else deleteGroupStart(currentGroupId);
@@ -64,13 +66,42 @@ const GroupList = (props) => {
         setGroupId(currentGroupId);
         setIsOpenAddStudentDialog(true);
     };
-    const showStudentsByGroup = (currentGroup) => {
-        setGroup(currentGroup);
+    const showStudentsByGroup = (currentGroupId) => {
+        setGroupId(currentGroupId);
+        selectGroupSuccess(currentGroupId);
         setIsOpenShowStudentsDialog(true);
     };
-    const onDeleteStudent = (id) => {
-        deleteStudentStart(id);
+
+    const closeShowStudentsByGroup = () => {
+        goToGroupPage(history);
+        setIsOpenShowStudentsDialog(false);
     };
+
+    const checkParamsForActions = () => {
+        const { id, action } = match.params;
+        const checkParamsAndSetActions = {
+            [ADD_STUDENT_ACTION]: showAddStudentDialog,
+            [SHOW_STUDENTS_ACTION]: showStudentsByGroup,
+        };
+        const actionsFunc = checkParamsAndSetActions[action];
+        if (actionsFunc && id) actionsFunc(id);
+    };
+
+    useEffect(() => {
+        checkParamsForActions();
+    }, []);
+
+    if (loading) {
+        return (
+            <section className="centered-container">
+                <CircularProgress />
+            </section>
+        );
+    }
+
+    if (isEmpty(visibleGroups)) {
+        return <NotFound name={t(GROUP_Y_LABEL)} />;
+    }
 
     return (
         <>
@@ -80,9 +111,9 @@ const GroupList = (props) => {
                 whatDelete="group"
                 open={isOpenConfirmDialog}
             />
-
             {isOpenAddStudentDialog && (
                 <AddStudentDialog
+                    groups={groups}
                     groupId={groupId}
                     open={isOpenAddStudentDialog}
                     setOpen={setIsOpenAddStudentDialog}
@@ -90,36 +121,24 @@ const GroupList = (props) => {
             )}
             {isOpenShowStudentsDialog && (
                 <ShowStudentsOnGroupDialog
-                    onClose={() => setIsOpenShowStudentsDialog(false)}
-                    open={isOpenShowStudentsDialog}
-                    group={group}
                     match={match}
-                    onDeleteStudent={onDeleteStudent}
-                    groups={groups}
+                    groupId={groupId}
+                    open={isOpenShowStudentsDialog}
+                    onClose={closeShowStudentsByGroup}
                 />
             )}
-            <div className="group-wrapper group-list">
-                {!loading && visibleGroups.length === 0 ? (
-                    <NotFound name={t(GROUP_Y_LABEL)} />
-                ) : (
-                    visibleGroups.map((item) => (
-                        <GroupCard
-                            key={item.id}
-                            item={item}
-                            match={match}
-                            disabled={isDisabled}
-                            showConfirmDialog={showConfirmDialog}
-                            getGroupToUpdateForm={(id) => selectGroup(id)}
-                            showAddStudentDialog={showAddStudentDialog}
-                            showStudentsByGroup={showStudentsByGroup}
-                        />
-                    ))
-                )}
-                {loading && (
-                    <section className="centered-container">
-                        <CircularProgress />
-                    </section>
-                )}
+            <div className="group-list">
+                {visibleGroups.map((item) => (
+                    <GroupCard
+                        key={item.id}
+                        item={item}
+                        setGroup={setGroup}
+                        disabled={isDisabled}
+                        showConfirmDialog={showConfirmDialog}
+                        showAddStudentDialog={showAddStudentDialog}
+                        showStudentsByGroup={showStudentsByGroup}
+                    />
+                ))}
             </div>
         </>
     );

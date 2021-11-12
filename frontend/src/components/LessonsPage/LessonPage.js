@@ -22,7 +22,6 @@ import CopyLessonDialog from './CopyLessonDialog/CopyLessonDialog';
 
 import './LessonPage.scss';
 import './LessonForm/LessonForm.scss';
-import { showAllGroupsService, selectGroupService } from '../../services/groupService';
 import { showAllSubjectsService } from '../../services/subjectService';
 import { showAllTeachersService } from '../../services/teacherService';
 
@@ -52,6 +51,8 @@ const LessonPage = (props) => {
         copyLessonsFromSemester,
         handleLesson,
         selectByGroupId,
+        selectGroupSuccess,
+        getEnabledGroupsStart,
     } = props;
     const { t } = useTranslation('common');
     const [term, setTerm] = useState('');
@@ -70,7 +71,7 @@ const LessonPage = (props) => {
     useEffect(() => {
         showAllTeachersService();
         getLessonTypes();
-        showAllGroupsService();
+        getEnabledGroupsStart();
         showAllSubjectsService();
         showAllSemestersService();
     }, []);
@@ -121,7 +122,7 @@ const LessonPage = (props) => {
     const handleGroupSelect = (selectedGroup) => {
         if (selectedGroup) {
             selectByGroupId(selectedGroup.id);
-            selectGroupService(selectedGroup.id);
+            selectGroupSuccess(selectedGroup.id);
         }
     };
 

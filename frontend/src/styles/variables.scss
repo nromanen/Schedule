@@ -5,6 +5,9 @@ $schedule-button-size: 15px;
 
 $bold-border: 1px solid $thunck-color-hover;
 $regular-border: 1px solid #e0e0e0;
+$table-border:1px solid rgba(224, 224, 224, 1);
+$card-border: 1px solid $light-gray;
+$card-shadow: 4px 4px 8px -4px $card-shadow-color;
 
 //width and height constants
 $h-screen: 100vh;
@@ -35,3 +38,4 @@ $md-medium: 650px;
 $md-table-lanscape: 850px;
 $md-small: 500px;
 $schedule-pc-screen: 1000px;
+$md-width: 850px;

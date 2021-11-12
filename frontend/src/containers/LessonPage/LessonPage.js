@@ -10,6 +10,8 @@ import {
     setUniqueError,
     setIsOpenConfirmDialog,
     selectGroupId,
+    selectGroupSuccess,
+    getEnabledGroupsStart,
 } from '../../actions';
 import { setOpenErrorSnackbar } from '../../actions/snackbar';
 import { copyLessonsFromSemesterStart } from '../../actions/semesters';
@@ -29,7 +31,9 @@ const mapStateToProps = (state) => ({
     currentSemester: state.schedule.currentSemester,
     isOpenConfirmDialog: state.dialog.isOpenConfirmDialog,
 });
+
 const mapDispatchToProps = (dispatch) => ({
+    getEnabledGroupsStart: () => dispatch(getEnabledGroupsStart()),
     getLessonsByGroup: (groupId) => dispatch(getLessonsByGroup(groupId)),
     getLessonTypes: () => dispatch(getLessonTypes()),
     deleteLessonCardStart: (lessonId) => dispatch(deleteLessonCardStart(lessonId)),
@@ -41,6 +45,7 @@ const mapDispatchToProps = (dispatch) => ({
     copyLessonsFromSemester: (values) => dispatch(copyLessonsFromSemesterStart(values)),
     handleLesson: (values, groupId) => dispatch(handleLessonStart(values, groupId)),
     selectByGroupId: (groupId) => dispatch(selectGroupId(groupId)),
+    selectGroupSuccess: (id) => dispatch(selectGroupSuccess(id)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(LessonPage);

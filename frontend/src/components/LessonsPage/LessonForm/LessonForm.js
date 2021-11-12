@@ -60,6 +60,7 @@ const LessonForm = (props) => {
         lessonTypes,
         selectLessonCard,
         setUniqueError,
+        selectGroupSuccess,
     } = props;
     const [checked, setChecked] = React.useState(false);
 
@@ -94,7 +95,7 @@ const LessonForm = (props) => {
     const handleChange = (event) => setChecked(event.target.checked);
 
     useEffect(() => {
-        selectGroupService(groupId);
+        selectGroupSuccess(groupId);
     }, [groupId]);
 
     useEffect(() => {

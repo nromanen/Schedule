@@ -1,0 +1,35 @@
+.student-container {
+    width: 420px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+.student-name {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 300px;
+    .name-field {
+        margin-right: 10px;
+    }
+}
+.student-data {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+.student-form {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+.form-buttons {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 30px;
+    width: 100%;
+    .MuiButtonBase-root{
+    width: 48%;
+  }
+}

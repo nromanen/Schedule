@@ -1,20 +1,59 @@
-.upload-dialog{
-  box-shadow: rgb(131, 148, 231) 0px 30px 60px -12px inset, rgb(40, 53, 112) 0px 18px 36px -18px inset;;
-  display: flex;
-  flex-direction: column;
-  flex-wrap: wrap;
-  align-items: center;
-  align-content: center;
-  width: 700px;
-  height: 300px;
+@import "../../styles/colors.scss";
+@import "../../styles/variables.scss";
+@import "../../styles/mixins.scss";
+input[type="file"] {
+  display: none;
+}
 
-  div{
-    margin: 0px;
-    input{
-      margin-bottom: 15px;
+.upload {
+  &-dialog {
+    @include displayCenter();
+    flex-direction: column;
+    width: 650px;
+  }
+  &-example-btn {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+  }
+  &-button {
+    color: $blue;
+    margin: 10px;
+    cursor: pointer;
+    &:hover {
+      color: $blue-hover;
     }
-    p{
-      font-size: 14px;
+  }
+  &-title {
+    color: $label-color;
+  }
+  &-example {
+    align-self: center;
+    margin: 10px 0 10px;
+  }
+  &-text-file {
+    align-self: start;
+    margin-bottom: 20px;
+  }
+  &-file {
+    color: $snowy-white;
+    background-color: $blue;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    justify-content: space-around;
+    border-radius: 5px;
+    margin: 10px;
+    padding: 5px 30px 5px 30px;
+    border: $card-border;
+    box-shadow: $card-shadow;
+    cursor: pointer;
+    &:hover {
+      background-color: $blue-hover;
     }
+  }
+  &-text {
+    margin-left: 10px;
   }
 }

@@ -42,9 +42,7 @@
 .group-select {
     z-index: 1000;
 }
-.MuiDialog-paperWidthSm {
-    max-width: 800px !important;
-}
+
 .student-dialog-button-data {
     width: 25%;
     height: 45px;
@@ -71,12 +69,21 @@
     text-decoration: none;
 }
 .custom-dialog {
+    .MuiDialogContent-root{
+        overflow-y: visible;
+    }
+    .MuiDialog-paperWidthSm {
+        max-width: unset;
+    }
     .MuiPaper-root {
         position: unset;
         min-width: 340px;
+        overflow-y: visible;
     }
     .custom-dialog-title {
-        padding: 10px 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
     .custom-dialog-body {
         padding: 4px 15px;

@@ -9,18 +9,27 @@ const initialState = {
 
 const reducer = (state = initialState, action) => {
     switch (action.type) {
-        case actionTypes.SHOW_ALL_GROUPS:
+        case actionTypes.SHOW_ALL_GROUPS_SUCCESS: {
             return updateObject(state, {
                 ...state,
-                groups: action.result.sort((a, b) => sortGroup(a, b)),
+                groups: action.result,
             });
+        }
 
-        case actionTypes.ADD_GROUP:
+        case actionTypes.GET_GROUP_BY_ID_SUCCESS: {
             return updateObject(state, {
-                groups: state.groups.concat(action.result).sort((a, b) => sortGroup(a, b)),
+                ...state,
+                group: action.group,
             });
+        }
 
-        case actionTypes.UPDATE_GROUP: {
+        case actionTypes.CREATE_GROUP_SUCCESS: {
+            return updateObject(state, {
+                groups: [action.result, ...state.groups],
+            });
+        }
+
+        case actionTypes.UPDATE_GROUP_SUCCESS: {
             const groupIndex = state.groups.findIndex(({ id }) => id === action.result.id);
             const groups = [...state.groups];
 
@@ -28,22 +37,23 @@ const reducer = (state = initialState, action) => {
                 ...groups[groupIndex],
                 ...action.result,
             };
+            const sortedGroups = groups.sort((a, b) => sortGroup(a, b));
 
             return updateObject(state, {
-                groups,
+                groups: sortedGroups,
                 group: {},
             });
         }
 
-        case actionTypes.DELETE_GROUP: {
+        case actionTypes.DELETE_GROUP_SUCCESS: {
             const groups = state.groups.filter((group) => group.id !== action.result);
             return updateObject(state, {
                 groups,
             });
         }
 
-        case actionTypes.SELECT_GROUP: {
-            let selectedGroup = state.groups.find((group) => group.id === Number(action.result));
+        case actionTypes.SELECT_GROUP_SUCCESS: {
+            let selectedGroup = state.groups.find((group) => group.id === +action.result);
             if (!selectedGroup) {
                 selectedGroup = { id: null };
             }
@@ -52,7 +62,7 @@ const reducer = (state = initialState, action) => {
             });
         }
 
-        case actionTypes.CLEAR_GROUP:
+        case actionTypes.CLEAR_GROUP_SUCCESS:
             return updateObject(state, {
                 group: {},
             });

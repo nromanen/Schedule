@@ -106,7 +106,6 @@
     "no_button_title": "No",
     "close_title": "Close",
     "upload_title": "Upload",
-    "select_file_label": "Select a file to show more details...",
     "name_label": "Name",
     "type_label": "Type",
     "byte_size_label": "Size in bytes",
@@ -182,5 +181,10 @@
     "hour_one": "<0>{{count}}</0> hour",
     "hour_other": "<0>{{count}}</0> hours",
     "move_label": "Move",
-    "more_label": "More"
+    "more_label": "More",
+    "select_file": "Select file",
+    "select-correct_format": "*File has to be in csv format",
+    "file-rules-for-each-line": "*Each line of the file should consist of four fields, separated by commas.",
+    "example-file": "Example of file",
+    "file-rules-for-header": "*First line of the file is a header."
 }

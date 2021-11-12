@@ -1,10 +1,34 @@
-.group {
+@import '../../styles/colors.scss';
+@import '../../styles/variables.scss';
 
-    &-form__title {
-        text-align: center
-    }
+.group-form{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 1rem;
+  margin:  15px 10px 10px 10px;
+  border-radius: 3px;
+  border-radius: 5px;
+  box-shadow: 0 2px 8px $shadow-box;
+
+  .MuiFormControl-root{
+    width: 99%;
+    margin-bottom: 10px;
+  }
   
-  &-btns {
-    margin-top: 20px
+}
+
+.group {
+    &-form__title {
+        text-align: center;
+        font-weight: 600;
+    }
+}
+
+.form-buttons-container{
+  width: 100%;
+  .MuiButtonBase-root{
+    width: 48%;
+    margin: 5px 0 5px ;
   }
 }

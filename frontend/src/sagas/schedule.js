@@ -1,7 +1,14 @@
-import { takeLatest, takeEvery, call, put } from 'redux-saga/effects';
+import { call, put, takeEvery, takeLatest } from 'redux-saga/effects';
+import {
+    setLoading,
+    setScheduleLoading,
+    setSemesterLoading,
+    showAllTeachers,
+    showAllGroupsSuccess,
+} from '../actions';
 import * as actionTypes from '../actions/actionsType';
-import { axiosCall } from '../services/axios';
-import i18n from '../i18n';
+import { setMainScheduleLoading } from '../actions/loadingIndicator';
+import { getAllTeachersByDepartmentId } from '../actions/teachers';
 import {
     BUSY_ROOMS,
     CLEAR_SCHEDULE_URL,
@@ -25,13 +32,6 @@ import {
     TEACHER_URL,
 } from '../constants/axios';
 import {
-    setLoading,
-    setScheduleLoading,
-    setSemesterLoading,
-    showAllGroups,
-    showAllTeachers,
-} from '../actions';
-import {
     setOpenSuccessSnackbar,
     setOpenErrorSnackbar,
     setOpenInfoSnackbar,
@@ -41,6 +41,10 @@ import {
     NO_CURRENT_SEMESTER_ERROR,
 } from '../constants/translationLabels/common';
 import {
+    FORM_CHOSEN_SEMESTER_LABEL,
+    FORM_SCHEDULE_LABEL,
+} from '../constants/translationLabels/formElements';
+import {
     BACK_END_SUCCESS_OPERATION,
     CHOSEN_SEMESTER_HAS_NOT_GROUPS,
     CLEARED_LABEL,
@@ -49,12 +53,6 @@ import {
     UPDATED_LABEL,
 } from '../constants/translationLabels/serviceMessages';
 import { sortGroup } from '../helper/sortGroup';
-import {
-    FORM_CHOSEN_SEMESTER_LABEL,
-    FORM_SCHEDULE_LABEL,
-} from '../constants/translationLabels/formElements';
-import { getAllTeachersByDepartmentId } from '../actions/teachers';
-import { setMainScheduleLoading } from '../actions/loadingIndicator';
 import { createErrorMessage, createMessage } from '../utils/sagaUtils';
 import {
     checkAvailabilityScheduleSuccess,
@@ -69,6 +67,8 @@ import {
     getTeacherScheduleSuccess,
 } from '../actions/schedule';
 import { getAllBusyRoomsSuccess } from '../actions/busyRooms';
+import i18n from '../i18n';
+import { axiosCall } from '../services/axios';
 
 export function* getScheduleItemsBySemester({ semesterId }) {
     const requestUrl = `${SCHEDULE_SEMESTER_ITEMS_URL}?semesterId=${semesterId}`;
@@ -198,7 +198,7 @@ export function* getAllPublicGroups({ id }) {
             const requestUrl = `/${SEMESTERS_URL}/${id}/${GROUPS_URL}`;
             const { data } = yield call(axiosCall, requestUrl);
             const sortedGroups = data.sort((a, b) => sortGroup(a, b));
-            yield put(showAllGroups(sortedGroups));
+            yield put(showAllGroupsSuccess(sortedGroups));
             if (data.length === 0) {
                 const message = createMessage(
                     CHOSEN_SEMESTER_HAS_NOT_GROUPS,

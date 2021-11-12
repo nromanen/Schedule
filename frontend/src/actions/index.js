@@ -53,13 +53,15 @@ export {
 
 export { clearFreeRooms, showFreeRooms } from './freeRooms';
 export {
-    addGroup,
-    clearGroupSusses,
-    deleteGroupSusses,
-    selectGroup,
-    updateGroupSusses,
-    showAllGroups,
+    getGroupByIdSuccess,
+    createGroupSuccess,
+    clearGroupSuccess,
+    deleteGroupSuccess,
+    selectGroupSuccess,
+    updateGroupSuccess,
+    showAllGroupsSuccess,
     toggleDisabledStatus,
+    getEnabledGroupsStart,
 } from './groups';
 
 export { setLoading, setScheduleLoading, setSemesterLoading } from './loadingIndicator';

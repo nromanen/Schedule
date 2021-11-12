@@ -1,6 +1,6 @@
 import * as actionTypes from './actionsType';
 
-export const createStudent = (res) => {
+export const createStudentSuccess = (res) => {
     return {
         type: actionTypes.CREATE_STUDENT,
         result: res,
@@ -13,49 +13,68 @@ export const showAllStudents = (res) => {
     };
 };
 
-export const deleteStudent = (res) => {
+export const deleteStudentSuccess = (res) => {
     return {
         type: actionTypes.DELETE_STUDENT,
         result: res,
     };
 };
-export const setStudent = (res) => {
+export const selectStudentSuccess = (res) => {
     return {
         type: actionTypes.SET_STUDENT,
         result: res,
     };
 };
-export const updateStudent = (res) => {
+
+export const updateStudentSuccess = (res) => {
     return {
         type: actionTypes.UPDATE_STUDENT,
         result: res,
     };
 };
 
-export const fetchAllStudentsStart = (id) => {
+export const checkAllStudentsSuccess = (checkedStudents, checkedAll) => {
     return {
-        type: actionTypes.FETCH_ALL_STUDENTS,
+        type: actionTypes.CHECK_ALL_STUDENTS,
+        checkedStudents,
+        checkedAll,
+    };
+};
+
+export const getAllStudentsStart = (id) => {
+    return {
+        type: actionTypes.GET_ALL_STUDENTS,
         id,
     };
 };
 
-export const createStudentStart = (data) => {
+export const submitStudentStart = (data, groupId) => {
     return {
-        type: actionTypes.START_CREATE_STUDENTS,
+        type: actionTypes.SUBMIT_STUDENT_FORM,
         data,
-    };
-};
-
-export const updateStudentStart = (data) => {
-    return {
-        type: actionTypes.START_UPDATE_STUDENTS,
-        data,
+        groupId,
     };
 };
 
 export const deleteStudentStart = (id) => {
     return {
-        type: actionTypes.START_DELETE_STUDENTS,
+        type: actionTypes.DELETE_STUDENT_START,
         id,
+    };
+};
+
+export const uploadStudentsToGroupStart = (file, id) => {
+    return {
+        type: actionTypes.UPLOAD_FILE_STUDENT_START,
+        file,
+        id,
+    };
+};
+
+export const moveStudentsToGroupStart = (group, newGroup) => {
+    return {
+        type: actionTypes.MOVE_STUDENTS_TO_GROUP_START,
+        group,
+        newGroup,
     };
 };
