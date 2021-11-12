@@ -5,31 +5,31 @@ import { renderFromHelper } from '../share/renderedFields/error';
 
 export const renderAutocompleteField = ({
     values,
-    title,
     label,
-    getItemTitle,
     input,
+    handleChange,
     getOptionLabel,
     meta: { touched, error },
     className,
     ...custom
 }) => {
-    const customTitle = input.value && getItemTitle(input.value);
-
     return (
         <Autocomplete
             label={label}
             options={values}
             placeholder={label}
             getOptionLabel={getOptionLabel}
-            title={customTitle}
+            className={className}
             {...input}
             {...custom}
-            onChange={(_, value) => input.onChange(value)}
+            onChange={(_, value) => {
+                handleChange(value);
+                return input.onChange(value);
+            }}
             onBlur={(_, value) => input.onBlur(value)}
             renderInput={(params) => (
                 <FormControl error={touched && !!error}>
-                    <TextField {...params} label={label} className={className} />
+                    <TextField {...params} label={label} />
                     {renderFromHelper({ touched, error })}
                 </FormControl>
             )}

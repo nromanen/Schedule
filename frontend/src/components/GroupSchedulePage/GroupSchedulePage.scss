@@ -94,7 +94,6 @@ a.pdf_link {
                 background-color: $main-color;
                 border-right: $regular-border;
                 font-size: 1em;
-                padding: 0px;
                 position: relative;
                 position: sticky;
                 text-align: center;
@@ -102,13 +101,13 @@ a.pdf_link {
             }
 
             &.classNameCell {
-                left: 51px;
+                left: 50px;
                 width: 10px;
                 &.currentDay {
                     background-color: $light-blue;
                 }
                 &.subClassName {
-                    left: 93px;
+                    left: 112px;
                     width: 10px;
                 }
             }

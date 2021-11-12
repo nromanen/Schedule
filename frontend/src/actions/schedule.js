@@ -13,24 +13,13 @@ export const getScheduleItemsSuccess = (items) => {
     };
 };
 
-export const getAllPublicTeachersByDepartmentStart = (departmentId) => {
-    return {
-        type: actionTypes.GET_ALL_PUBLIC_TEACHERS_BY_DEPARTMENT_START,
-        departmentId,
-    };
-};
-
 export const getCurrentSemesterSuccess = (semester) => {
     return {
         type: actionTypes.GET_CURRENT_SEMESTER_SUCCESS,
         semester,
     };
 };
-export const getAllPublicTeachersStart = () => {
-    return {
-        type: actionTypes.GET_ALL_PUBLIC_TEACHERS_START,
-    };
-};
+
 export const getAllPublicSemestersStart = () => {
     return {
         type: actionTypes.GET_ALL_PUBLIC_SEMESTERS_START,
@@ -79,12 +68,7 @@ export const clearScheduleStart = (semesterId) => {
         semesterId,
     };
 };
-export const getAllPublicGroupsStart = (id) => {
-    return {
-        type: actionTypes.GET_ALL_PUBLIC_GROUPS_START,
-        id,
-    };
-};
+
 export const sendTeacherScheduleStart = (data) => {
     return {
         type: actionTypes.SEND_TEACHER_SCHEDULE_START,
@@ -207,24 +191,24 @@ export const setScheduleType = (result) => {
     };
 };
 
-export const setScheduleGroupId = (groupId) => {
+export const setScheduleGroup = (group) => {
     return {
-        type: actionTypes.SET_SCHEDULE_GROUP_ID,
-        groupId,
+        type: actionTypes.SET_SCHEDULE_GROUP,
+        group,
     };
 };
 
-export const setScheduleTeacherId = (teacherId) => {
+export const setScheduleTeacher = (teacher) => {
     return {
-        type: actionTypes.SET_SCHEDULE_TEACHER_ID,
-        teacherId,
+        type: actionTypes.SET_SCHEDULE_TEACHER,
+        teacher,
     };
 };
 
-export const setScheduleSemesterId = (semesterId) => {
+export const setScheduleSemester = (semester) => {
     return {
-        type: actionTypes.SET_SCHEDULE_SEMESTER_ID,
-        semesterId,
+        type: actionTypes.SET_SCHEDULE_SEMESTER,
+        semester,
     };
 };
 
@@ -232,5 +216,34 @@ export const setTeacherViewType = (type) => {
     return {
         type: actionTypes.SET_TEACHER_VIEW_TYPE,
         result: type,
+    };
+};
+
+export const setPlace = (place) => {
+    return {
+        type: actionTypes.SET_PLACE,
+        place,
+    };
+};
+
+export const selectGroupSchedule = (semesterId, groupId) => {
+    return {
+        type: actionTypes.SELECT_GROUP_SCHEDULE_START,
+        semesterId,
+        groupId,
+    };
+};
+export const selectTeacherSchedule = (semesterId, teacherId) => {
+    return {
+        type: actionTypes.SELECT_TEACHER_SCHEDULE_START,
+        semesterId,
+        teacherId,
+    };
+};
+
+export const selectFullSchedule = (semesterId) => {
+    return {
+        type: actionTypes.SELECT_FULL_SCHEDULE_START,
+        semesterId,
     };
 };

@@ -11,3 +11,7 @@ export const daysObject = {
     SATURDAY: {},
     SUNDAY: {},
 };
+
+export const numberOfMilisecondsInADay = 86400000;
+
+export const numberOfDaysInAWeek = 7;

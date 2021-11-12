@@ -99,6 +99,14 @@ export const getTeacherWithoutAccountSuccess = (teachers) => {
         result: teachers,
     };
 };
+
+export const getAllPublicTeachersByDepartmentStart = (departmentId) => {
+    return {
+        type: actionsType.GET_ALL_PUBLIC_TEACHERS_BY_DEPARTMENT_START,
+        departmentId,
+    };
+};
+
 export const getAllTeachersByDepartmentId = (teachers) => {
     return {
         type: actionsType.GET_TEACHERS_BY_DEPARTMENT,

@@ -78,6 +78,9 @@ const reducer = (state = initialState, action) => {
         case actionTypes.GET_FREE_ROOMS_SUCCESS: {
             return { ...state, freeRooms: action.freeRooms };
         }
+        case actionTypes.GET_BUSY_ROOMS_SUCCESS: {
+            return { ...state, rooms: action.busyRooms };
+        }
         case actionTypes.CLEAR_FREE_ROOMS: {
             return { ...state, freeRooms: [] };
         }

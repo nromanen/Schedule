@@ -82,9 +82,9 @@ export {
 export {
     addItemToSchedule,
     setItemGroupId,
-    setScheduleGroupId,
-    setScheduleSemesterId,
-    setScheduleTeacherId,
+    setScheduleGroup,
+    setScheduleSemester,
+    setScheduleTeacher,
     setScheduleType,
     setTeacherViewType,
 } from './schedule';
