@@ -554,7 +554,7 @@ public class SemesterServiceTest {
 
         when(semesterRepository.findById(anyLong())).thenReturn(Optional.of(semester));
 
-        Semester semesterWithGroup = semesterService.addGroupsToSemester(semester, groupList);
+        Semester semesterWithGroup = semesterService.addGroupsToSemester(semester, new Long[]{group1.getId(), group2.getId()});
         assertNotNull(semesterWithGroup);
         assertTrue(semesterWithGroup.getGroups().contains(group1));
         assertTrue(semesterWithGroup.getGroups().contains(group2));

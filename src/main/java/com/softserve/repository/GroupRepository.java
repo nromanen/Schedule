@@ -15,4 +15,6 @@ public interface GroupRepository extends BasicRepository<Group, Long> {
     boolean isExistsById(Long id);
 
     List<Group> getByTeacherId(Long id);
+
+    List<Group> getGroupsByGroupIds(Long[] groupIds);
 }

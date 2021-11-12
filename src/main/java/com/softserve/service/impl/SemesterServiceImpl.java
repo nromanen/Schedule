@@ -4,7 +4,9 @@ import com.softserve.entity.Group;
 import com.softserve.entity.Period;
 import com.softserve.entity.Semester;
 import com.softserve.exception.*;
+import com.softserve.repository.GroupRepository;
 import com.softserve.repository.SemesterRepository;
+import com.softserve.service.GroupService;
 import com.softserve.service.PeriodService;
 import com.softserve.service.SemesterService;
 import lombok.extern.slf4j.Slf4j;
@@ -29,11 +31,15 @@ public class SemesterServiceImpl implements SemesterService {
     private final PeriodService periodService;
     private final List<DayOfWeek> workDaysList = Arrays.asList(DayOfWeek.MONDAY, DayOfWeek.TUESDAY,
             DayOfWeek.WEDNESDAY, DayOfWeek.THURSDAY, DayOfWeek.FRIDAY);
+    private final GroupRepository groupRepository;
 
     @Autowired
-    public SemesterServiceImpl(SemesterRepository semesterRepository, PeriodService periodService) {
+    public SemesterServiceImpl(SemesterRepository semesterRepository,
+                               PeriodService periodService,
+                               GroupRepository groupRepository) {
         this.semesterRepository = semesterRepository;
         this.periodService = periodService;
+        this.groupRepository = groupRepository;
     }
 
     /**
@@ -289,7 +295,7 @@ public class SemesterServiceImpl implements SemesterService {
      */
     @Override
     public Semester addGroupToSemester(Semester semester, Group group) {
-        log.trace("In addGroupToSemester (semester = [{}], group = [{}])", semester, group);
+        log.info("In addGroupToSemester (semester = [{}], group = [{}])", semester, group);
         List<Group> groups = semester.getGroups();
         if (groups == null){
             groups = new ArrayList<>();
@@ -305,12 +311,13 @@ public class SemesterServiceImpl implements SemesterService {
      * Method add groups to an existing semester
      *
      * @param semester semester in which we need to add groups
-     * @param groups groups to add
+     * @param groupIds groups to add
      * @return changed Semester
      */
     @Override
-    public Semester addGroupsToSemester(Semester semester, List<Group> groups) {
-        log.trace("In addGroupsToSemester (semester = [{}], groups = [{}])", semester, groups);
+    public Semester addGroupsToSemester(Semester semester, Long[] groupIds) {
+        log.info("In addGroupsToSemester (semester = [{}], groupIds = [{}])", semester, groupIds);
+        List<Group> groups = groupRepository.getGroupsByGroupIds(groupIds);
         semester.setGroups(groups);
         semesterRepository.update(semester);
         log.debug("Semester groups has been updated");
