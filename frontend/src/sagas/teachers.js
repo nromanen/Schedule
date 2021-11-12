@@ -5,7 +5,9 @@ import { axiosCall } from '../services/axios';
 import {
     DISABLED_TEACHERS_URL,
     TEACHERS_WITHOUT_ACCOUNT_URL,
+    PUBLIC_TEACHER_URL,
     TEACHER_URL,
+    DEPARTMENT_URL,
 } from '../constants/axios';
 import {
     BACK_END_SUCCESS_OPERATION,
@@ -31,6 +33,7 @@ import {
     addTeacherSuccess,
     updateTeacherCardSuccess,
     getTeacherWithoutAccountSuccess,
+    getAllTeachersByDepartmentId,
 } from '../actions/teachers';
 
 export function* getEnabledTeachers() {
@@ -149,11 +152,30 @@ export function* handleTeacher({ values }) {
     }
 }
 
+export function* getAllPublicTeachers() {
+    try {
+        const { data } = yield call(axiosCall, PUBLIC_TEACHER_URL);
+        yield put(showAllTeachersSuccess(data));
+    } catch (error) {
+        yield put(setOpenErrorSnackbar(createErrorMessage(error)));
+    }
+}
+
 export function* getTeachersWithoutAccount() {
     try {
         const { data } = yield call(axiosCall, TEACHERS_WITHOUT_ACCOUNT_URL, GET);
 
         yield put(getTeacherWithoutAccountSuccess(data));
+    } catch (error) {
+        yield put(setOpenErrorSnackbar(createErrorMessage(error)));
+    }
+}
+
+export function* getAllPublicTeachersByDepartment({ departmentId }) {
+    const requestUrl = `${DEPARTMENT_URL}/${departmentId}/${TEACHER_URL}`;
+    try {
+        const { data } = yield call(axiosCall, requestUrl);
+        yield put(getAllTeachersByDepartmentId(data));
     } catch (error) {
         yield put(setOpenErrorSnackbar(createErrorMessage(error)));
     }
@@ -168,4 +190,9 @@ export default function* watchTeachers() {
     yield takeLatest(actionTypes.UPDATE_TEACHER_START, updateTeacher);
     yield takeLatest(actionTypes.HANDLE_TEACHER_START, handleTeacher);
     yield takeLatest(actionTypes.TOOGLE_TEACHER_START, toggleDisabledTeacher);
+    yield takeLatest(actionTypes.GET_ALL_PUBLIC_TEACHERS_START, getAllPublicTeachers);
+    yield takeLatest(
+        actionTypes.GET_ALL_PUBLIC_TEACHERS_BY_DEPARTMENT_START,
+        getAllPublicTeachersByDepartment,
+    );
 }

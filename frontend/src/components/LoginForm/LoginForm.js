@@ -1,5 +1,4 @@
-import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import '../../styles/forms.scss';
@@ -29,32 +28,11 @@ import {
     REGISTRATION_PAGE_TITLE,
 } from '../../constants/translationLabels/common';
 import { REGISTRATION_LINK, RESET_PASSWORD_LINK } from '../../constants/links';
-import {
-    setScheduleSemesterId,
-    setScheduleType,
-    setScheduleGroupId,
-    setScheduleTeacherId,
-} from '../../actions';
 
 const LoginForm = (props) => {
-    const {
-        handleSubmit,
-        loginHandler,
-        errors,
-        setError,
-        isLoading,
-        setSemesterId,
-        setTypeOfSchedule,
-        setGroupId,
-        setTeacherId,
-    } = props;
+    const { handleSubmit, loginHandler, errors, setError, isLoading } = props;
     const { t } = useTranslation('common');
-    useEffect(() => {
-        setSemesterId(0);
-        setTeacherId(0);
-        setGroupId(0);
-        setTypeOfSchedule('full');
-    });
+
     const isValidForm = (formValues) => {
         if (!formValues.email || !formValues.password) {
             setError({ login: t(EMPTY_FIELDS) });
@@ -137,11 +115,4 @@ const LoginReduxForm = reduxForm({
     form: LOGIN_FORM,
 })(LoginForm);
 
-const mapDispatchToProps = (dispatch) => ({
-    setSemesterId: (id) => dispatch(setScheduleSemesterId(id)),
-    setTypeOfSchedule: (type) => dispatch(setScheduleType(type)),
-    setGroupId: (id) => dispatch(setScheduleGroupId(id)),
-    setTeacherId: (id) => dispatch(setScheduleTeacherId(id)),
-});
-
-export default connect(null, mapDispatchToProps)(LoginReduxForm);
+export default LoginReduxForm;

@@ -7,33 +7,41 @@ import { getGroupScheduleTitle, getTeacherScheduleTitle } from '../utils/titlesU
 
 const emptySchedule = () => <p className="empty_schedule">{i18n.t('common:empty_schedule')}</p>;
 
-const renderSchedule = (
-    { scheduleType, groupSchedule, fullSchedule, teacherSchedule, groupId, teacherId, semesterId },
-    place,
-) => {
+const renderSchedule = (props) => {
+    const {
+        scheduleType,
+        groupSchedule,
+        fullSchedule,
+        teacherSchedule,
+        groupData,
+        teacherData,
+        semesterData,
+    } = props;
     switch (scheduleType) {
         case 'group': {
             const { semester, group, oddArray, evenArray } = groupSchedule;
 
             if (isEmpty(oddArray) || isEmpty(evenArray)) return emptySchedule();
-
             return (
                 <>
                     <h1>
                         {getGroupScheduleTitle(semester, group)}
-                        <DownloadLink entity="group" semesterId={semesterId} entityId={groupId} />
+                        <DownloadLink
+                            entity="group"
+                            semesterId={semesterData.id}
+                            entityId={groupData.id}
+                        />
                     </h1>
                     <h2>{i18n.t('common:odd_week')}</h2>
-                    {renderGroupTable(oddArray, 1, semester, place)}
+                    {renderGroupTable(oddArray, true, semester)}
                     <h2>{i18n.t('common:even_week')}</h2>
-                    {renderGroupTable(evenArray, 0, semester, place)}
+                    {renderGroupTable(evenArray, false, semester)}
                 </>
             );
         }
         case 'teacher': {
             const { semester, teacher, odd, even } = teacherSchedule;
-
-            if (isEmpty(odd) || isEmpty(even)) return emptySchedule();
+            if (isEmpty(odd?.classes) || isEmpty(even?.classes)) return emptySchedule();
 
             return (
                 <>
@@ -41,14 +49,14 @@ const renderSchedule = (
                         {getTeacherScheduleTitle(semester, teacher)}
                         <DownloadLink
                             entity="teacher"
-                            semesterId={semesterId}
-                            entityId={teacherId}
+                            semesterId={semesterData.id}
+                            entityId={teacherData.id}
                         />
                     </h1>
                     <h2>{i18n.t('common:odd_week')}</h2>
-                    {renderWeekTable(odd, place)}
+                    {renderWeekTable(odd)}
                     <h2>{i18n.t('common:even_week')}</h2>
-                    {renderWeekTable(even, place)}
+                    {renderWeekTable(even)}
                 </>
             );
         }
@@ -57,7 +65,7 @@ const renderSchedule = (
             if (isEmpty(resultArray)) {
                 return emptySchedule();
             }
-            return renderFullSchedule(fullSchedule, place);
+            return renderFullSchedule(fullSchedule);
         }
         default:
             return null;

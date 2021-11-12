@@ -1,39 +1,30 @@
 import { connect } from 'react-redux';
 import {
     getDefaultSemesterRequsted,
-    setScheduleSemesterId,
-    setScheduleType,
-    setScheduleGroupId,
-    setScheduleTeacherId,
-    getGroupScheduleStart,
-    getTeacherScheduleStart,
-    getFullScheduleStart,
+    selectFullSchedule,
+    selectGroupSchedule,
+    selectTeacherSchedule,
 } from '../../actions/schedule';
 import GroupSchedulePage from '../../components/GroupSchedulePage/GroupSchedulePage';
 
 const mapStateToProps = (state) => ({
+    defaultSemester: state.schedule.defaultSemester,
     scheduleType: state.schedule.scheduleType,
+    loading: state.loadingIndicator.mainScheduleLoading,
     groupSchedule: state.schedule.groupSchedule,
     fullSchedule: state.schedule.fullSchedule,
     teacherSchedule: state.schedule.teacherSchedule,
-    groupId: state.schedule.scheduleGroupId,
-    teacherId: state.schedule.scheduleTeacherId,
-    semesterId: state.schedule.scheduleSemesterId,
-    loading: state.loadingIndicator.mainScheduleLoading,
-    defaultSemester: state.schedule.defaultSemester,
+    groupData: state.schedule.scheduleGroup,
+    teacherData: state.schedule.scheduleTeacher,
+    semesterData: state.schedule.scheduleSemester,
     semesters: state.schedule.semesters,
 });
 
 const mapDispatchToProps = (dispatch) => ({
     getDefaultSemester: () => dispatch(getDefaultSemesterRequsted()),
-    setSemesterId: (id) => dispatch(setScheduleSemesterId(id)),
-    setTypeOfSchedule: (type) => dispatch(setScheduleType(type)),
-    setGroupId: (id) => dispatch(setScheduleGroupId(id)),
-    setTeacherId: (id) => dispatch(setScheduleTeacherId(id)),
-    getGroupSchedule: (groupId, semesterId) => dispatch(getGroupScheduleStart(groupId, semesterId)),
-    getTeacherSchedule: (groupId, semesterId) =>
-        dispatch(getTeacherScheduleStart(groupId, semesterId)),
-    getFullSchedule: (semesterId) => dispatch(getFullScheduleStart(semesterId)),
+    getGroupSchedule: (semester, group) => dispatch(selectGroupSchedule(semester, group)),
+    getTeacherSchedule: (semester, teacher) => dispatch(selectTeacherSchedule(semester, teacher)),
+    getFullSchedule: (semester) => dispatch(selectFullSchedule(semester)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(GroupSchedulePage);

@@ -14,6 +14,13 @@ export const updateGroupSuccess = (res) => {
     };
 };
 
+export const getAllPublicGroupsStart = (id) => {
+    return {
+        type: actionTypes.GET_ALL_PUBLIC_GROUPS_START,
+        id,
+    };
+};
+
 export const showAllGroupsSuccess = (res) => {
     return {
         type: actionTypes.SHOW_ALL_GROUPS_SUCCESS,

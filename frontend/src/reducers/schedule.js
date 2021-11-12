@@ -3,18 +3,20 @@ import * as actionTypes from '../actions/actionsType';
 import { makeFullSchedule } from '../mappers/fullScheduleMapper';
 import { makeTeacherSchedule } from '../mappers/teacherScheduleMapper';
 import { makeGroupSchedule } from '../mappers/groupScheduleMapper';
+import { places } from '../constants/places';
 
 const initialState = {
     items: [],
+    place: localStorage.getItem('place') || places.TOGETHER,
     availability: {},
     itemsIds: [],
     fullSchedule: [],
     groupSchedule: {},
     teacherSchedule: {},
     scheduleType: 'full',
-    scheduleGroupId: null,
-    scheduleTeacherId: null,
-    scheduleSemesterId: null,
+    scheduleGroup: null,
+    scheduleTeacher: null,
+    scheduleSemester: null,
     currentSemester: {},
     defaultSemester: {},
     viewTeacherScheduleResults: 'block-view',
@@ -22,6 +24,8 @@ const initialState = {
 
 const reducer = (state = initialState, action) => {
     switch (action.type) {
+        case actionTypes.SET_PLACE:
+            return updateObject(state, { place: action.place });
         case actionTypes.GET_SCHEDULE_ITEMS_SUCCESS:
             return updateObject(state, {
                 items: action.items,
@@ -84,9 +88,9 @@ const reducer = (state = initialState, action) => {
             return updateObject(state, {
                 itemGroupId: action.result,
             });
-        case actionTypes.SET_SCHEDULE_GROUP_ID:
+        case actionTypes.SET_SCHEDULE_GROUP:
             return updateObject(state, {
-                scheduleGroupId: action.groupId,
+                scheduleGroup: action.group,
             });
         case actionTypes.DELETE_SCHEDULE_ITEM_SUCCESS: {
             const index = state.items.findIndex((item) => item.id === action.itemId);
@@ -96,9 +100,9 @@ const reducer = (state = initialState, action) => {
                 items: newArr,
             });
         }
-        case actionTypes.SET_SCHEDULE_TEACHER_ID:
+        case actionTypes.SET_SCHEDULE_TEACHER:
             return updateObject(state, {
-                scheduleTeacherId: action.teacherId,
+                scheduleTeacher: action.teacher,
             });
         case actionTypes.GET_TEACHER_SCHEDULE_SUCCESS: {
             const mappedSchedule = makeTeacherSchedule(action.schedule);
@@ -112,16 +116,16 @@ const reducer = (state = initialState, action) => {
             return updateObject(state, {
                 semesters: action.semesters,
             });
-        case actionTypes.SET_SCHEDULE_SEMESTER_ID:
+        case actionTypes.SET_SCHEDULE_SEMESTER:
             return updateObject(state, {
-                scheduleGroupId: null,
-                scheduleTeacherId: null,
-                scheduleSemesterId: action.semesterId,
+                scheduleGroup: null,
+                scheduleTeacher: null,
+                scheduleSemester: action.semester,
             });
         case actionTypes.GET_TEACHER_RANGE_SCHEDULE_SUCCESS:
             return updateObject(state, {
                 teacherRangeSchedule: action.schedule,
-                scheduleGroupId: null,
+                scheduleGroup: null,
                 teacherSchedule: [],
                 groupSchedule: {},
                 fullSchedule: [],

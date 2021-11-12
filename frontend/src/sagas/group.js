@@ -4,15 +4,22 @@ import { has } from 'lodash';
 import { GROUP_FORM } from '../constants/reduxForms';
 import * as actionTypes from '../actions/actionsType';
 import { setLoading } from '../actions/loadingIndicator';
-import { createErrorMessage, createDynamicMessage } from '../utils/sagaUtils';
-import { setOpenSuccessSnackbar, setOpenErrorSnackbar } from '../actions/snackbar';
-import { DISABLED_GROUPS_URL, GROUP_URL } from '../constants/axios';
+import { createErrorMessage, createDynamicMessage, createMessage } from '../utils/sagaUtils';
+import {
+    setOpenSuccessSnackbar,
+    setOpenErrorSnackbar,
+    setOpenInfoSnackbar,
+} from '../actions/snackbar';
+import { DISABLED_GROUPS_URL, GROUP_URL, SEMESTERS_URL, GROUPS_URL } from '../constants/axios';
 import { DELETE, POST, PUT } from '../constants/methods';
 import { axiosCall } from '../services/axios';
+import { FORM_CHOSEN_SEMESTER_LABEL } from '../constants/translationLabels/formElements';
 import {
     UPDATED_LABEL,
     CREATED_LABEL,
     DELETED_LABEL,
+    CHOSEN_SEMESTER_HAS_NOT_GROUPS,
+    SERVICE_MESSAGE_GROUP_LABEL,
 } from '../constants/translationLabels/serviceMessages';
 import {
     getGroupByIdSuccess,
@@ -131,6 +138,24 @@ function* clearGroup() {
     }
 }
 
+export function* getAllPublicGroups({ id }) {
+    try {
+        const requestUrl = `/${SEMESTERS_URL}/${id}/${GROUPS_URL}`;
+        const { data } = yield call(axiosCall, requestUrl);
+        yield put(showAllGroupsSuccess(data));
+        if (data.length === 0) {
+            const message = createMessage(
+                CHOSEN_SEMESTER_HAS_NOT_GROUPS,
+                FORM_CHOSEN_SEMESTER_LABEL,
+                SERVICE_MESSAGE_GROUP_LABEL,
+            );
+            yield put(setOpenInfoSnackbar(message));
+        }
+    } catch (error) {
+        yield put(setOpenErrorSnackbar(createErrorMessage(error)));
+    }
+}
+
 export default function* groupWatcher() {
     yield takeEvery(actionTypes.TOGGLE_DISABLED_STATUS_GROUP, toggleDisabledGroup);
     yield takeLatest(actionTypes.GET_DISABLED_GROUPS_START, getDisabledGroups);
@@ -139,4 +164,5 @@ export default function* groupWatcher() {
     yield takeEvery(actionTypes.SUBMIT_GROUP_START, submitGroupForm);
     yield takeEvery(actionTypes.DELETE_GROUP_START, deleteGroup);
     yield takeEvery(actionTypes.CLEAR_GROUP_START, clearGroup);
+    yield takeLatest(actionTypes.GET_ALL_PUBLIC_GROUPS_START, getAllPublicGroups);
 }
