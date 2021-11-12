@@ -15,7 +15,7 @@ import {
     addTemporaryScheduleService,
     editTemporaryScheduleService,
 } from '../../services/temporaryScheduleService';
-import { getClassScheduleListService } from '../../services/classService';
+import { getClassScheduleListStart } from '../../actions/classes';
 import { showListOfRoomsService } from '../../services/roomService';
 import { showAllSubjectsService } from '../../services/subjectService';
 import { showAllGroupsService } from '../../services/groupService';
@@ -25,7 +25,7 @@ import { getLessonTypes } from '../../actions';
 
 const TemporarySchedule = (props) => {
     const { t } = useTranslation('common');
-    const { teachers, teacherId, isLoading } = props;
+    const { teachers, teacherId, isLoading, getClassScheduleList } = props;
     const [fromDate, setFromDate] = useState(null);
     const [toDate, setToDate] = useState(null);
 
@@ -34,7 +34,7 @@ const TemporarySchedule = (props) => {
         showAllTeachersService();
         showListOfRoomsService();
         showAllSubjectsService();
-        getClassScheduleListService(null);
+        getClassScheduleList();
         getLessonTypes();
         showAllGroupsService();
     }, []);
@@ -137,6 +137,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
     getLessonTypes: () => dispatch(getLessonTypes()),
+    getClassScheduleList: () => dispatch(getClassScheduleListStart()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(TemporarySchedule);

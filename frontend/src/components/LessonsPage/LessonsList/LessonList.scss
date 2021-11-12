@@ -77,7 +77,7 @@
             }
 
             .info-btn {
-                color: $good-color;
+                color: $create-color;
                 cursor: default;
                 left: 0;
                 position: absolute;
@@ -85,7 +85,7 @@
 
             .copy-btn {
                 &:hover {
-                    color: $good-color;
+                    color: $create-color;
                 }
             }
         }

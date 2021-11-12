@@ -1,0 +1,97 @@
+@import '../../../styles/colors.scss';
+@import '../../../styles/variables.scss';
+
+.selected-group {
+    border: 2px solid $light-blue;
+    .group-title {
+        color: $light-blue;
+    }
+}
+
+.groups-section {
+    position: relative;
+    margin: 0;
+    padding-top: 15px;
+    display: flex;
+}
+.schedule-table {
+    .no-current-semester {
+        margin: 10% auto 0;
+    }
+    .card {
+        margin: 5px;
+        &.schedule-class,
+        &.schedule-day {
+            margin-top: 0;
+            margin-bottom: 0;
+        }
+    }
+    .group-section {
+        margin: 0;
+    }
+
+    .group-title {
+        display: flex;
+        height: 34px;
+        padding: 10px 7px;
+        justify-content: center;
+        font-size: $font-sm;
+        overflow: hidden;
+    }
+    .focus-class {
+        box-sizing: border-box;
+        background-color: $light-blue;
+        color: $snowy-white;
+    }
+}
+.hover-line {
+    position: absolute;
+    top: 0;
+    left: 10px;
+    width: 80vw;
+    z-index: -10;
+    box-sizing: border-box;
+    border-bottom: 2px solid $light-blue;
+    &:nth-of-type(2) {
+        top: 226px;
+    }
+}
+.day-line {
+    margin: 0;
+    padding: 0;
+}
+
+.sticky-container {
+    position: sticky;
+    top: 0;
+    z-index: 9;
+}
+
+.class-section {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    width: 60px;
+    margin: 0;
+    align-content: center;
+    align-items: center;
+}
+
+.availability-warning {
+    color: $delete-color;
+}
+
+.group-section {
+    &:hover {
+        position: relative;
+        &::after {
+            position: absolute;
+            top: 0;
+            content: '';
+            width: $w-full;
+            height: 100%;
+            background: none;
+            border: 2px solid $light-blue;
+        }
+    }
+}

@@ -10,7 +10,6 @@ const GroupPage = (props) => {
 
     const [term, setTerm] = useState('');
     const [isDisabled, setIsDisabled] = useState(false);
-
     return (
         <>
             <div className="cards-container">

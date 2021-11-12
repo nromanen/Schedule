@@ -16,7 +16,7 @@ import { search } from '../../helper/search';
 import SearchPanel from '../../share/SearchPanel/SearchPanel';
 import NotFound from '../../share/NotFound/NotFound';
 import { MultiSelect } from '../../helper/multiselect';
-import { getPublicClassScheduleListService } from '../../services/classService';
+import { getClassScheduleListStart } from '../../actions/classes';
 import { getFirstLetter, getTeacherFullName } from '../../helper/renderTeacher';
 import AddTeacherForm from '../../components/AddTeacherForm/AddTeacherForm';
 import { clearDepartment, getAllDepartmentsService } from '../../services/departmentService';
@@ -64,6 +64,7 @@ const TeacherList = (props) => {
         getCurrentSemester,
         getDefaultSemester,
         getAllPublicSemesters,
+        getClassScheduleList,
         sendTeacherSchedule,
     } = props;
     const [term, setTerm] = useState('');
@@ -82,7 +83,7 @@ const TeacherList = (props) => {
         getAllDepartmentsService();
         getDisabledTeachersService();
         getAllPublicSemesters();
-        getPublicClassScheduleListService();
+        getClassScheduleList();
     }, []);
 
     const SearchChange = setTerm;
@@ -303,6 +304,7 @@ const mapDispatchToProps = (dispatch) => ({
     getDefaultSemester: () => dispatch(getDefaultSemesterRequsted()),
     getAllPublicSemesters: () => dispatch(getAllPublicSemestersStart()),
     sendTeacherSchedule: (data) => dispatch(sendTeacherScheduleStart(data)),
+    getClassScheduleList: () => dispatch(getClassScheduleListStart()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(TeacherList);

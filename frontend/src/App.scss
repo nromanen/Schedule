@@ -12,7 +12,9 @@
     height: $btn-size;
     transition: color 0.3s linear;
 }
-
+html {
+    height: 100%;
+}
 body {
     margin: 0;
     font-family: $font;
@@ -162,7 +164,7 @@ body {
     }
 
     .info-btn {
-        color: $good-color;
+        color: $create-color;
         cursor: default;
         left: 0;
         position: absolute;
@@ -170,15 +172,15 @@ body {
 
     .copy-btn {
         &:hover {
-            color: $good-color;
+            color: $create-color;
         }
     }
-}
 
-.info-btn {
-    color: $good-color;
-    cursor: default;
-    margin: 0 5px;
+    .info-btn {
+        color: $create-color;
+        cursor: default;
+        margin: 0 5px;
+    }
 }
 
 ::-webkit-scrollbar {

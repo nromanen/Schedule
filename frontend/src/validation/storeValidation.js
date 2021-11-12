@@ -8,7 +8,7 @@ import {
 } from '../constants/translationLabels/validationMessages';
 
 export const checkUniqClassName = (className) => {
-    const classId = store.getState().classActions.classScheduleOne.id;
+    const classId = store.getState().classActions.classSchedule.id;
     let find = false;
     if (classId) {
         find = store.getState().classActions.classScheduler.some((value) => {
@@ -23,7 +23,7 @@ export const checkUniqClassName = (className) => {
 };
 
 export const timeIntersectService = (startTime, endTime) => {
-    const classId = store.getState().classActions.classScheduleOne.id;
+    const classId = store.getState().classActions.classSchedule.id;
     const moment = extendMoment(Moment);
     let find = false;
     if (startTime && endTime) {
