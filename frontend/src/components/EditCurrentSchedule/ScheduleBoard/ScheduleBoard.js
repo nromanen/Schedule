@@ -16,8 +16,10 @@ const ScheduleBoard = (props) => {
         groupId,
         scheduleItems,
         openDialogWithData,
+        t,
         checkScheduleItemAvailability,
     } = props;
+
     const { classId, dayName, week } = lesson;
     const [className, setClassName] = useState('');
     const [boardFill, setBoardFill] = useState({});
@@ -74,7 +76,11 @@ const ScheduleBoard = (props) => {
     return (
         <>
             {!isEmpty(boardFill) ? (
-                <ScheduleBoardItem itemData={boardFill} openDialogWithData={openDialogWithData} />
+                <ScheduleBoardItem
+                    itemData={boardFill}
+                    t={t}
+                    openDialogWithData={openDialogWithData}
+                />
             ) : (
                 <div
                     className={`board ${additionClassName} ${className}`}
@@ -82,7 +88,7 @@ const ScheduleBoard = (props) => {
                     onDragOver={dragOver}
                     onDragLeave={dragLeave}
                 >
-                    <p>{i18n.t(`week_${week.toLowerCase()}_title`)}</p>
+                    <p>{t(`week_${week.toLowerCase()}_title`)}</p>
                 </div>
             )}
         </>

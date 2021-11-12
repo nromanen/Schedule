@@ -1,29 +1,29 @@
 import React, { useEffect, useState } from 'react';
 import { CircularProgress } from '@material-ui/core';
+import { useTranslation } from 'react-i18next';
 import './EditCurrentSchedule.scss';
 import { showListOfRoomsService } from '../../services/roomService';
-
 import ScheduleLessonsList from '../../containers/EditCurrentSchedule/ScheduleLessonsList';
 import Schedule from '../../containers/EditCurrentSchedule/Schedule';
 import { SCHEDULE_TITLE, USE_PC } from '../../constants/translationLabels/common';
 import { EDIT_SCHEDULE_MIN_WINDOW_SIZE } from '../../constants/windowSizes';
-import i18n from '../../i18n';
 
 const SchedulePage = (props) => {
     const {
         groupId,
         itemGroupId,
         scheduleItems,
-        fetchEnabledGroupsStart,
+        getEnabledGroups,
         scheduleLoading,
         setScheduleLoading,
         getAllLessonsByGroup,
         getAllScheduleItems,
         clearScheduleItems,
-        getClassScheduleListSuccess,
+        getClassScheduleList,
         currentSemester,
     } = props;
-    document.title = i18n.t(SCHEDULE_TITLE);
+    const { t } = useTranslation('common');
+    document.title = t(SCHEDULE_TITLE);
     const [dragItemData, setDragItemData] = useState({});
     const [isHiddenSchedule, setIsHiddenSchedule] = useState(false);
     const days = currentSemester.semester_days || [];
@@ -41,9 +41,6 @@ const SchedulePage = (props) => {
     useEffect(() => {
         window.addEventListener('resize', handleResize);
         handleResize();
-        return () => {
-            window.removeEventListener('resize', handleResize);
-        };
     }, []);
 
     days.forEach((day, outerIndex) => {
@@ -52,12 +49,14 @@ const SchedulePage = (props) => {
                 {
                     dayName: day,
                     classId: classNumber.id,
+                    className: classNumber.class_name,
                     week: 'ODD',
                     id: `${index}-${outerIndex}`,
                 },
                 {
                     dayName: day,
                     classId: classNumber.id,
+                    className: classNumber.class_name,
                     week: 'EVEN',
                     id: `${index}-${outerIndex}`,
                 },
@@ -68,9 +67,9 @@ const SchedulePage = (props) => {
     useEffect(() => {
         setScheduleLoading(true);
         getAllScheduleItems();
-        fetchEnabledGroupsStart();
+        getEnabledGroups();
         showListOfRoomsService();
-        getClassScheduleListSuccess();
+        getClassScheduleList();
     }, []);
 
     useEffect(() => {
@@ -89,15 +88,15 @@ const SchedulePage = (props) => {
     };
     if (isHiddenSchedule) {
         return (
-            <section className="for-phones-and-tablets card">
-                <h1>{i18n.t(USE_PC)}</h1>
+            <section className="for-phones-and-tablets schedule-card">
+                <h1>{t(USE_PC)}</h1>
             </section>
         );
     }
     return (
         <>
             <section className="schedule-control-panel">
-                <section className="card schedule-table ">
+                <section className="schedule-card schedule-table ">
                     {scheduleLoading ? (
                         <CircularProgress className="loading-circle" />
                     ) : (
@@ -108,17 +107,19 @@ const SchedulePage = (props) => {
                                 currentSemester={currentSemester}
                                 itemGroupId={itemGroupId}
                                 items={scheduleItems}
+                                t={t}
                                 allLessons={allLessons}
                             />
                         </>
                     )}
                 </section>
-                <aside className="card lesson-list">
+                <aside className="schedule-card lesson-list">
                     <ScheduleLessonsList
                         setDragItemData={setDragItemData}
                         items={scheduleItems}
                         handleClearSchedule={handleClearSchedule}
                         groupId={groupId}
+                        t={t}
                         classScheduler={currentSemester.semester_classes}
                     />
                 </aside>

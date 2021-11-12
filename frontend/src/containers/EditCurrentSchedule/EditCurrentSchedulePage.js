@@ -18,13 +18,13 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    fetchEnabledGroupsStart: () => dispatch(getEnabledGroupsStart()),
+    getEnabledGroups: () => dispatch(getEnabledGroupsStart()),
     getAllLessonsByGroup: (groupId) => dispatch(getLessonsByGroup(groupId)),
     getAllScheduleItems: () => dispatch(getAllScheduleItemsStart()),
     clearScheduleItems: (id) => dispatch(clearScheduleStart(id)),
     setScheduleLoading: (newState) => dispatch(setScheduleLoading(newState)),
     showAllGroups: () => dispatch(showAllGroupsSuccess()),
-    getClassScheduleListSuccess: () => dispatch(getClassScheduleListStart()),
+    getClassScheduleList: () => dispatch(getClassScheduleListStart()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(EditCurrentSchedulePage);

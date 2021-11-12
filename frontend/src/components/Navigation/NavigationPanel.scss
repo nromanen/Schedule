@@ -16,7 +16,7 @@
             padding: 14px 0px;
         }
         .Mui-selected {
-            background-color: $selected-blue;
+            background-color: $selected-black;
         }
     }
     .navigation-link {
@@ -24,7 +24,7 @@
         color: $snowy-white;
         cursor: pointer;
         &:hover {
-            background-color: $selected-blue;
+            background-color: $selected-black;
         }
     }
     .select-container {
@@ -67,7 +67,7 @@
     .navigation-select-item {
         color: $dark-blue;
         &:hover {
-            background-color: $selected-blue;
+            background-color: $selected-black;
         }
     }
 }

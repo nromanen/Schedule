@@ -4,7 +4,7 @@ import { updateObject } from '../utility';
 const reducer = (
     state = {
         freeRooms: [],
-        freeRoom: {},
+        // freeRoom: {},
     },
     action,
 ) => {
@@ -15,7 +15,7 @@ const reducer = (
             });
         case actionTypes.CLEAR_FREE_ROOM:
             return updateObject(state, {
-                freeRoom: {},
+                freeRooms: [],
             });
         default:
             return state;

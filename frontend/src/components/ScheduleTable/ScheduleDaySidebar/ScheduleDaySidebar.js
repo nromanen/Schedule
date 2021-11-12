@@ -10,7 +10,7 @@ const ScheduleDaySidebar = (props) => {
 
     return (
         <aside className="day-classes-aside">
-            <div className="card day-sidebar-title">{title}</div>
+            <div className="schedule-card day-sidebar-title">{title}</div>
             {days.map((day, index) => (
                 <div className="cards-container day-container" key={day}>
                     <span className={`${getDayColour(index)} schedule-day card`}>
@@ -20,14 +20,18 @@ const ScheduleDaySidebar = (props) => {
                         {classes.map((classScheduler) => (
                             <Fragment key={classScheduler.id}>
                                 <div className="day-section">
-                                    <p className={`day-line ${day}-${classScheduler.id}`}></p>
+                                    <p
+                                        className={`day-line ${day}-${classScheduler.class_name}`}
+                                    ></p>
                                     <span
-                                        id={`${day}-${classScheduler.id}`}
-                                        className="card schedule-class"
+                                        id={`${day}-${classScheduler.class_name}`}
+                                        className="schedule-card schedule-class"
                                     >
                                         {classScheduler.class_name}
                                     </span>
-                                    <p className={`day-line ${day}-${classScheduler.id}`}></p>
+                                    <p
+                                        className={`day-line ${day}-${classScheduler.class_name}`}
+                                    ></p>
                                 </div>
                             </Fragment>
                         ))}

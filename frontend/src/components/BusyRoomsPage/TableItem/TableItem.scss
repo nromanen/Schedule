@@ -1,0 +1,89 @@
+@import '../../../styles/colors.scss';
+@import '../../../styles/variables.scss';
+
+.class-container {
+    position: relative;
+    margin: 0;
+    .schedule-card {
+        background-color: $snowy-white;
+        margin: 5px;
+        border-radius: 5px;
+        box-shadow: 0 2px 8px $shadow-box;
+    }
+    .class-info-container {
+        position: relative;
+        width: $w-full;
+        height: 114px;
+        padding: 5px;
+        .class-info-data {
+            position: relative;
+            width: $w-full;
+            height: $h-full;
+            padding: 10px;
+            margin: 0px;
+            z-index: 1;
+            &:hover {
+                position: absolute;
+                z-index: 20;
+                height: unset;
+                margin: -5px;
+                min-height: 114px;
+                box-shadow: 0 0 8px 4px $blue-shadow-box;
+                .group-list-container { 
+                    display: block;
+                }
+            }
+        }
+    }
+    .group-list-container { 
+        display: -webkit-box;
+        margin-top: 5px;
+        text-align: center; 
+        overflow: hidden;
+            -webkit-line-clamp: 4;
+            -webkit-box-orient: vertical;
+    }
+    .group-list {
+        margin: 2px;
+        font-size: $font-sm;
+        font-weight: bold;
+        &:after {
+            content: ',';
+        }
+        &:last-of-type::after{
+            display: none;
+        }
+    }
+    .week-type {
+        position: absolute;
+        left: 10px;
+        top: -4px;
+        color: $light-gray;
+        font-size: $font-xs;
+        &::first-letter {
+            text-transform: uppercase;
+        }
+    }
+    .possible,
+    .available,
+    .allow {
+        p {
+            color: $black;
+        }
+    }
+    .possible {
+        background-color: $warning-color;
+    }
+    .available {
+        background-color: $light-green;
+    }
+    .allow {
+        background-color: $create-color-light;
+    }
+    .not-allow {
+        background-color: $light-red;
+        p {
+            color: $main-color;
+        }
+    }
+}

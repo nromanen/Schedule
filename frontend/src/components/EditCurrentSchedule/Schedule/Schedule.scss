@@ -18,7 +18,7 @@
     .no-current-semester {
         margin: 10% auto 0;
     }
-    .card {
+    .schedule-card {
         margin: 5px;
         &.schedule-class,
         &.schedule-day {
@@ -38,22 +38,8 @@
         font-size: $font-sm;
         overflow: hidden;
     }
-    .focus-class {
-        box-sizing: border-box;
-        background-color: $light-blue;
-        color: $snowy-white;
-    }
-}
-.hover-line {
-    position: absolute;
-    top: 0;
-    left: 10px;
-    width: 80vw;
-    z-index: -10;
-    box-sizing: border-box;
-    border-bottom: 2px solid $light-blue;
-    &:nth-of-type(2) {
-        top: 226px;
+    .day-classes-aside .day-sidebar-title {
+        margin: 5px 5px 5px 0px;
     }
 }
 .day-line {

@@ -1,6 +1,15 @@
 @import '../../../styles/colors.scss';
 @import '../../../styles/variables.scss';
 
+.schedule-card {
+    background-color: $main-color;
+    display: inline-block;
+    margin: 10px;
+    padding: 1rem;
+    border-radius: 5px;
+    box-shadow: 0 2px 8px $shadow-box;
+}
+
 .day-classes-aside {
     position: sticky;
     left: 0;
@@ -23,6 +32,7 @@
         .schedule-day {
             position: relative;
             font-size: 17px;
+            margin: 0;
             writing-mode: vertical-rl;
             text-orientation: upright;
             text-align: center;
@@ -57,5 +67,24 @@
         justify-content: center;
         font-size: $font-sm;
         overflow: hidden;
+        align-items: center;
+        margin: 5px 5px 5px 0px;
+    }
+    .focus-class {
+        box-sizing: border-box;
+        background-color: $light-blue;
+        color: $snowy-white;
+    }
+}
+.hover-line {
+    position: absolute;
+    top: 0;
+    left: 10px;
+    width: 100vw;
+    z-index: -10;
+    box-sizing: border-box;
+    border-bottom: 2px solid $light-blue;
+    &:nth-of-type(2) {
+        top: 226px;
     }
 }

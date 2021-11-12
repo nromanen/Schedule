@@ -45,3 +45,12 @@ export const updateOneRoom = (room) => {
 export const clearRoomOne = () => ({
     type: actionsType.CLEAR_ROOM_ONE,
 });
+export const getBusyRoomsStart = (semesterId) => ({
+    type: actionsType.GET_BUSY_ROOMS_START,
+    semesterId,
+});
+
+export const getBusyRoomsSuccess = (busyRooms) => ({
+    type: actionsType.GET_BUSY_ROOMS_SUCCESS,
+    busyRooms,
+});

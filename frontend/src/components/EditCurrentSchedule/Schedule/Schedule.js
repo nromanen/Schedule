@@ -10,7 +10,6 @@ import {
 } from '../../../constants/translationLabels/common';
 import { actionType } from '../../../constants/actionTypes';
 import { addClassDayBoard, removeClassDayBoard } from '../../../helper/schedule';
-import i18n from '../../../i18n';
 
 const Schedule = (props) => {
     const {
@@ -23,7 +22,9 @@ const Schedule = (props) => {
         getLessonsByGroupId,
         addItemsToSchedule,
         editRoomItemToSchedule,
+        t,
     } = props;
+
     const [isOpenScheduleDialog, setIsOpenScheduleDialog] = useState(false);
     const [dialogScheduleData, setDialogScheduleData] = useState(null);
     const days = currentSemester.semester_days;
@@ -63,6 +64,7 @@ const Schedule = (props) => {
                 <ScheduleDialog
                     itemData={dialogScheduleData}
                     open={isOpenScheduleDialog}
+                    t={t}
                     handleChangeSchedule={handleChangeSchedule}
                     onClose={handleClose}
                 />
@@ -71,10 +73,10 @@ const Schedule = (props) => {
                 <>
                     <ScheduleDaySidebar
                         days={days}
-                        title={i18n.t(COMMON_GROUP_TITLE)}
+                        title={t(COMMON_GROUP_TITLE)}
                         classes={classes}
                     />
-                    <section className="groups-section ">
+                    <section className="groups-section">
                         {groups.map((group) => {
                             const isSelectedGroup = group.id === groupId;
                             return (
@@ -85,44 +87,48 @@ const Schedule = (props) => {
                                     }`}
                                     id={`group-${group.id}`}
                                 >
-                                    <span className="group-title card sticky-container">
+                                    <span className="group-title schedule-card sticky-container">
                                         {group.title}
                                     </span>
-                                    {allLessons.map((lesson) => (
-                                        <div
-                                            key={`${group.id}-${lesson.id}-${lesson.week}`}
-                                            className="board-container"
-                                            onMouseOver={() =>
-                                                addClassDayBoard(lesson.dayName, lesson.classId)
-                                            }
-                                            onFocus={() =>
-                                                addClassDayBoard(lesson.dayName, lesson.classId)
-                                            }
-                                            onMouseOut={() =>
-                                                removeClassDayBoard(lesson.dayName, lesson.classId)
-                                            }
-                                            onBlur={() =>
-                                                removeClassDayBoard(lesson.dayName, lesson.classId)
-                                            }
-                                        >
-                                            <ScheduleBoard
-                                                lesson={lesson}
-                                                groupId={group.id}
-                                                currentSemester={currentSemester}
-                                                openDialogWithData={openScheduleDialogWithData}
-                                                dragItemData={dragItemData}
-                                                isSelectedGroup={isSelectedGroup}
-                                                additionClassName="card schedule-board"
-                                            />
-                                        </div>
-                                    ))}
+                                    {allLessons.map((lesson) => {
+                                        return (
+                                            // eslint-disable-next-line jsx-a11y/mouse-events-have-key-events
+                                            <div
+                                                key={`${group.id}-${lesson.id}-${lesson.week}`}
+                                                className="board-container"
+                                                onMouseOver={() =>
+                                                    addClassDayBoard(
+                                                        lesson.dayName,
+                                                        lesson.className,
+                                                    )
+                                                }
+                                                onMouseOut={() =>
+                                                    removeClassDayBoard(
+                                                        lesson.dayName,
+                                                        lesson.className,
+                                                    )
+                                                }
+                                            >
+                                                <ScheduleBoard
+                                                    lesson={lesson}
+                                                    groupId={group.id}
+                                                    currentSemester={currentSemester}
+                                                    openDialogWithData={openScheduleDialogWithData}
+                                                    dragItemData={dragItemData}
+                                                    t={t}
+                                                    isSelectedGroup={isSelectedGroup}
+                                                    additionClassName="schedule-card schedule-board"
+                                                />
+                                            </div>
+                                        );
+                                    })}
                                 </div>
                             );
                         })}
                     </section>
                 </>
             ) : (
-                <h2 className="no-current-semester">{i18n.t(NO_CURRENT_SEMESTER)}</h2>
+                <h2 className="no-current-semester">{t(NO_CURRENT_SEMESTER)}</h2>
             )}
         </>
     );

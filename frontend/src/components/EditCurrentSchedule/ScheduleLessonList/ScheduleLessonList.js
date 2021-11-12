@@ -18,6 +18,7 @@ import i18n from '../../../i18n';
 const ScheduleLessonsList = (props) => {
     const {
         groups,
+        t,
         setDragItemData,
         groupId,
         lessons,
@@ -58,12 +59,12 @@ const ScheduleLessonsList = (props) => {
                     color="primary"
                     onClick={handleClearSchedule}
                 >
-                    {i18n.t(CLEAR_SCHEDULE_LABEL)}
+                    {t(CLEAR_SCHEDULE_LABEL)}
                 </Button>
             </div>
 
             <>
-                <p className="helper-text">{i18n.t(COMMON_SELECT_GROUP_SCHEDULE)}</p>
+                <p className="helper-text">{t(COMMON_SELECT_GROUP_SCHEDULE)}</p>
                 <div className="autocomplete-container">
                     <Autocomplete
                         options={groups}
@@ -79,7 +80,7 @@ const ScheduleLessonsList = (props) => {
                             <TextField
                                 {...params}
                                 className="form-input"
-                                label={i18n.t(FORM_GROUP_LABEL)}
+                                label={t(FORM_GROUP_LABEL)}
                                 margin="normal"
                             />
                         )}
@@ -99,13 +100,12 @@ const ScheduleLessonsList = (props) => {
                                   index={index}
                                   lesson={item}
                                   lessons={lessons}
+                                  t={t}
                                   setDragItemData={setDragItemData}
                                   classScheduler={props.classScheduler}
                               />
                           ))
-                        : groupId && (
-                              <p className="empty">{i18n.t(LESSON_NO_LESSON_FOR_GROUP_LABEL)}</p>
-                          )}
+                        : groupId && <p className="empty">{t(LESSON_NO_LESSON_FOR_GROUP_LABEL)}</p>}
                 </section>
             </>
         </>

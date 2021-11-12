@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -27,16 +27,17 @@ const ScheduleItem = (props) => {
         itemData,
         getLessonsByGroupId,
         selectByGroupId,
+        t,
         openDialogWithData,
     } = props;
-    const [anchor, setAnchor] = useState(null);
+    const [anchorEl, setAnchorEl] = React.useState(null);
     const { lesson } = itemData;
 
     const handleClick = (event) => {
-        setAnchor(event.currentTarget);
+        setAnchorEl(event.currentTarget);
     };
     const handleClose = () => {
-        setAnchor(null);
+        setAnchorEl(null);
     };
 
     const handelEdit = () => {
@@ -74,34 +75,34 @@ const ScheduleItem = (props) => {
                 </Button>
                 <Menu
                     className="action-menu"
-                    anchorEl={anchor}
+                    anchorEl={anchorEl}
                     keepMounted
-                    open={Boolean(anchor)}
+                    open={Boolean(anchorEl)}
                     onClose={handleClose}
                 >
                     <MenuItem className="edit-item" onClick={handelEdit}>
-                        {i18n.t(COMMON_EDIT)}
+                        {t(COMMON_EDIT)}
                     </MenuItem>
                     <MenuItem className="delete-item" onClick={handelDelete}>
-                        {i18n.t(COMMON_DELETE_HOVER_TITLE)}
+                        {t(COMMON_DELETE_HOVER_TITLE)}
                     </MenuItem>
                 </Menu>
             </div>
             <h5 className="lesson-title">
                 {lesson.subjectForSite} (
-                {i18n.t(`formElements:lesson_type_${lesson.lessonType.toLowerCase()}_label`)})
+                {t(`formElements:lesson_type_${lesson.lessonType.toLowerCase()}_label`)})
             </h5>
             <p className="teacher-name">{getTeacherName(lesson.teacher)}</p>
             {lesson.grouped && (
                 <span className="grouped-icon">
                     <MdGroup
-                        title={i18n.t(FORM_GROUPED_LABEL)}
+                        title={t(FORM_GROUPED_LABEL)}
                         className="svg-btn copy-btn align-left info-btn"
                     />
                 </span>
             )}
             <p className="lesson-duration">
-                <b>1</b> {i18n.t(FORM_HOURS_LABEL)}
+                <b>1</b> {t(FORM_HOURS_LABEL)}
             </p>
         </Card>
     );

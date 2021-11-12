@@ -184,5 +184,9 @@
     "select-correct_format": "*Формат файлу повинен бути csv",
     "file-rules-for-each-line": "*Кожний рядок повинен мати 4 поля через кому.",
     "example-file": "Приклад файлу.",
-    "file-rules-for-header": "*Перший рядок файлу - це заголовок."
+    "file-rules-for-header": "*Перший рядок файлу - це заголовок.",
+    "table_columns_size": "Розмір стовпців таблиці",
+    "columns_size_small": "малі",
+    "columns_size_base": "базові",
+    "columns_size_large": "великі"
 }

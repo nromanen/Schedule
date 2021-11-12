@@ -3,6 +3,9 @@
 @import './styles/variables.scss';
 @import './styles/mixins.scss';
 
+html {
+    height: 100%;
+}
 body {
     margin: 0;
     font-family: $font;
