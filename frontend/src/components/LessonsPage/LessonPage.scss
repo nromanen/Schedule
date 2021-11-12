@@ -52,6 +52,11 @@
     .lesson-form-container .section {
         margin-top: 20px;
     }
+    .lesson-form-container .form-card {
+        .MuiFormControl-root {
+            width: 100%;
+        }
+    }
 
     .lesson-form-card {
         width: 20em;
