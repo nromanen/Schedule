@@ -18,7 +18,7 @@ import { handleTeacherInfo } from '../../../helper/renderTeacher';
 import { getClearOrCancelTitle, setDisableButton } from '../../../helper/disableComponent';
 import { selectGroupService } from '../../../services/groupService';
 import { RenderMultiselect } from '../../../share/renderedFields/renderMultiselect';
-import { renderAutocompleteField } from '../../../helper/renderAutocompleteField';
+import { renderLessonAutocomplete } from '../../../helper/renderLessonAutocomplete';
 import LessonLabelForm from '../../../containers/LessonPage/LessonLabelForm';
 
 import {
@@ -116,7 +116,7 @@ const LessonForm = (props) => {
                     <form onSubmit={handleSubmit} className="lesson-form">
                         <Field
                             name="teacher"
-                            component={renderAutocompleteField}
+                            component={renderLessonAutocomplete}
                             label={t(TEACHER_LABEL)}
                             type="text"
                             getItemTitle={handleTeacherInfo}
@@ -127,7 +127,7 @@ const LessonForm = (props) => {
                         />
                         <Field
                             name="subject"
-                            component={renderAutocompleteField}
+                            component={renderLessonAutocomplete}
                             label={t(SUBJECT_LABEL)}
                             type="text"
                             getItemTitle={(sub) => {
@@ -146,7 +146,7 @@ const LessonForm = (props) => {
                         <div className="form-fields-container">
                             <Field
                                 name="type"
-                                component={renderAutocompleteField}
+                                component={renderLessonAutocomplete}
                                 label={t(TYPE_LABEL)}
                                 getItemTitle={(type) => {
                                     return t(
