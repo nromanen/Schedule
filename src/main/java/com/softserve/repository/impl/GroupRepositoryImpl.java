@@ -6,6 +6,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Filter;
 import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
+
+import javax.persistence.TypedQuery;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,6 +47,31 @@ public class GroupRepositoryImpl extends BasicRepositoryImpl<Group, Long> implem
             + "FROM Lesson l "
             + "WHERE l.teacher.id = :id AND l.semester.defaultSemester = true";
 
+    private static final String GET_ALL_ORDERED
+            = "SELECT g "
+            + "FROM Group g "
+            + "ORDER BY g.sortingOrder ASC";
+
+    private static final String GET_MAX_SORTING_ORDER
+            = "SELECT max(g.sortingOrder) "
+            + "FROM Group g";
+
+    private static final String UPDATE_GROUP_OFFSET
+            = "UPDATE Group g "
+            + "SET g.sortingOrder = g.sortingOrder+1 "
+            + "WHERE g.sortingOrder >= :position";
+
+    public static final String GET_NEXT_POSITION
+            = "SELECT min(g.sortingOrder) "
+            + "FROM Group g "
+            + "WHERE g.sortingOrder > :position";
+
+    public static final String GET_ORDER_BY_ID
+            = "SELECT g.sortingOrder "
+            + "FROM Group g "
+            + "WHERE g.id = :id";
+
+
     private Session getSession(){
         Session session = sessionFactory.getCurrentSession();
         Filter filter = session.enableFilter("groupDisableFilter");
@@ -78,6 +105,74 @@ public class GroupRepositoryImpl extends BasicRepositoryImpl<Group, Long> implem
                 .setParameter("id", id)
                 .getResultList();
     }
+
+    /**
+     * The method is used to retrieve groups by set sorting order
+     *
+     * @return the list of groups sorted by set sorting order
+     */
+    @Override
+    public List<Group> getAllBySortingOrder() {
+        log.debug("Entered getAllBySortingOrder()");
+        return getSession()
+                .createQuery(GET_ALL_ORDERED, Group.class)
+                .getResultList();
+    }
+
+    /**
+     * The method is used to get sorting order of the next element
+     *
+     * @param position sorting order of the element
+     * @return sorting order of the nex element
+     */
+    @Override
+    public Optional<Double> getNextPosition(Double position) {
+        log.info("Entered getNextPosition({})", position);
+        return getSession().createQuery(GET_NEXT_POSITION, Double.class)
+                .setParameter("position", position)
+                .uniqueResultOptional();
+    }
+
+    /**
+     * The method is used to retrieve max sorting order
+     *
+     * @return max sorting order
+     */
+    @Override
+    public Optional<Double> getMaxSortingOrder() {
+        log.debug("Entered getMaxSortingOrder()");
+        return getSession().createQuery(GET_MAX_SORTING_ORDER, Double.class)
+                .uniqueResultOptional();
+    }
+
+    /**
+     * The method is used to change group's sorting order
+     *
+     * @param order sorting order from which offseting will start
+     */
+    @Override
+    public void changeGroupOrderOffset(Double order) {
+        log.info("Entered changeGroupOffset({})", order);
+        TypedQuery<Group> groupTypedQuery = getSession().createQuery(UPDATE_GROUP_OFFSET);
+        groupTypedQuery.setParameter("position", order);
+        int updated = groupTypedQuery.executeUpdate();
+        log.debug("Updated order of {} groups", updated);
+    }
+
+    /**
+     * The method is used to retrieve sorting order by group's id
+     *
+     * @param id group's id which sorting order needs to be retrieved
+     * @return sorting order of the group
+     */
+    @Override
+    public Optional<Double> getSortingOrderById(Long id) {
+        log.info("Entered getSortingOrderById({})", id);
+        return getSession().createQuery(GET_ORDER_BY_ID, Double.class)
+                .setParameter("id", id)
+                .uniqueResultOptional();
+    }
+
 
     /**
      * The method used for getting by id entity with students

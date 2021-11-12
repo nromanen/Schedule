@@ -3,6 +3,7 @@ package com.softserve.service.impl;
 import com.softserve.entity.Group;
 import com.softserve.exception.EntityNotFoundException;
 import com.softserve.exception.FieldAlreadyExistsException;
+import com.softserve.exception.SortingOrderNotExistsException;
 import com.softserve.repository.GroupRepository;
 import com.softserve.service.GroupService;
 import com.softserve.service.SemesterService;
@@ -76,6 +77,76 @@ public class GroupServiceImpl  implements GroupService {
     public List<Group> getByTeacherId(Long id) {
         log.info("In service getByTeacherId(id = [{}])", id);
         return groupRepository.getByTeacherId(id);
+    }
+
+    /**
+     * The method is used to retrieve groups by set sorting order
+     *
+     * @return the list of groups sorted by set sorting order
+     */
+    @Transactional(readOnly = true)
+    @Override
+    public List<Group> getAllBySortingOrder() {
+        log.debug("Entered getAllBySortingOrder() method");
+        List<Group> groups = groupRepository.getAllBySortingOrder();
+        log.debug("Retrieved groups. Size: {}", groups.size());
+        return groups;
+    }
+
+    /**
+     * The method is used to save group after the specific group to get desired order
+     * @param group the group that must be saved
+     * @param afterId the id of the group after which must be saved the new one
+     * @return saved group with set order and id
+     */
+    @Transactional
+    @Override
+    public Group saveAfterOrder(Group group, Long afterId) {
+        log.info("Entered getAllBySortingOrder({},{})", afterId, group);
+        Double maxOrder = groupRepository.getMaxSortingOrder().orElse(0.0);
+        if (afterId != null) {
+            Double order = getSortingOrderById(afterId)+1;
+            group.setSortingOrder(order);
+            groupRepository.changeGroupOrderOffset(order);
+        } else {
+            group.setSortingOrder(maxOrder+1);
+        }
+        return groupRepository.save(group);
+    }
+
+    /**
+     * Method updates group order position
+     * @param group group that will be replaced
+     * @param afterId id of the group after which will be placed
+     * @return group with new position
+     */
+    @Transactional
+    @Override
+    public Group updateGroupOrder(Group group, Long afterId) {
+        log.info("Entered updateGroupOrder({}, {})", group, afterId);
+        if (!groupRepository.isExistsById(group.getId())) {
+            throw new EntityNotFoundException(Group.class, "id", group.getId().toString());
+        }
+        if (afterId != null) {
+            Double previousPosition = getSortingOrderById(afterId);
+            Double nextPosition = groupRepository.getNextPosition(previousPosition)
+                    .orElse(previousPosition+2);
+            Double newPosition = (previousPosition+nextPosition)/2;
+            if (newPosition - 1 < 0.01) {
+                newPosition = groupRepository.getMaxSortingOrder().orElse(0.0)+1;
+            }
+            group.setSortingOrder(newPosition);
+        } else {
+            group.setSortingOrder(1.0);
+            groupRepository.changeGroupOrderOffset(0.0);
+        }
+        return groupRepository.update(group);
+    }
+
+    private Double getSortingOrderById(Long id) {
+        log.debug("Entered getSortingOrderById({})", id);
+        return groupRepository.getSortingOrderById(id)
+                .orElseThrow(() -> new SortingOrderNotExistsException(Group.class, id));
     }
 
     /**
