@@ -1,5 +1,5 @@
 import { reset } from 'redux-form';
-import { call, put, takeLatest, takeEvery } from 'redux-saga/effects';
+import { call, put, takeLatest, takeEvery, select } from 'redux-saga/effects';
 
 import * as actionTypes from '../actions/actionsType';
 import { setScheduleLoading } from '../actions';
@@ -65,7 +65,7 @@ export function* getListOfDisabledRooms() {
 
 export function* updateRoomItem({ values }) {
     try {
-        const { data } = yield call(axiosCall, ROOM_URL, 'PUT', values);
+        const { data } = yield call(axiosCall, ROOM_URL, PUT, values);
         yield put(updateRoomSuccess(data));
         yield put(reset(ROOM_FORM));
         const message = createMessage(BACK_END_SUCCESS_OPERATION, FORM_ROOM_LABEL, UPDATED_LABEL);
@@ -87,10 +87,13 @@ export function* addRoomItem({ values }) {
     }
 }
 
-export function* toggleRoomsVisibility({ room, isDisabled }) {
+export function* toggleRoomsVisibility({ roomId, isDisabled }) {
     try {
-        yield call(axiosCall, ROOM_URL, PUT, room);
-        yield put(deleteRoomSuccess(room.id, isDisabled));
+        const state = yield select();
+        const { disabledRooms, rooms } = state.rooms;
+        const room = [...disabledRooms, ...rooms].find((roomItem) => roomItem.id === roomId);
+        yield call(axiosCall, ROOM_URL, PUT, { ...room, disable: !room.disable });
+        yield put(deleteRoomSuccess(roomId, isDisabled));
         const message = createMessage(BACK_END_SUCCESS_OPERATION, FORM_ROOM_LABEL, UPDATED_LABEL);
         yield put(setOpenSuccessSnackbar(message));
     } catch (error) {

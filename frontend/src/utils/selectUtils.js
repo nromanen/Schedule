@@ -2,7 +2,6 @@ import { isEmpty } from 'lodash';
 import i18n from '../i18n';
 import { COMMON_AVAILABLE, COMMON_UNAVAILABLE } from '../constants/translationLabels/common';
 
-
 export const getGroupsOptionsForSelect = (groupOptions) => {
     if (!isEmpty(groupOptions)) {
         return groupOptions.map((item) => {

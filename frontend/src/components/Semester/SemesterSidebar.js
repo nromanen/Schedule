@@ -49,7 +49,7 @@ const SemesterSidebar = (props) => {
             setOpenErrorSnackbar(message);
             return;
         }
-        if (!checkSemesterYears(semesterItem.endDay, semesterItem.startDay, semesterItem.year))
+        if (!checkSemesterYears(semesterItem.endDay, semesterItem.startDay, +semesterItem.year))
             return;
         handleSemesterFormSubmit(semesterItem);
         setSelectedGroups([]);

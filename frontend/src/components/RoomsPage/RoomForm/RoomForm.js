@@ -7,11 +7,7 @@ import SelectField from '../../../share/renderedFields/select';
 import { ROOM_FORM } from '../../../constants/reduxForms';
 import { required, uniqueRoomName } from '../../../validation/validateFields';
 import Card from '../../../share/Card/Card';
-<<<<<<< HEAD:frontend/src/components/RoomsPage/AddRoomForm/AddRoomForm.js
-import './AddRoomForm.scss';
-=======
 import './RoomForm.scss';
->>>>>>> origin/TS-45(88)-refactor-Semester-and-Rooms-Pages:frontend/src/components/RoomsPage/RoomForm/RoomForm.js
 import { getClearOrCancelTitle, setDisableButton } from '../../../helper/disableComponent';
 import {
     EDIT_TITLE,
@@ -71,11 +67,7 @@ const AddRoomForm = (props) => {
                     label={t(TYPE_LABEL)}
                     validate={[required]}
                 >
-<<<<<<< HEAD:frontend/src/components/RoomsPage/AddRoomForm/AddRoomForm.js
-                    <option />
-=======
                     <option className="room-select-item" />
->>>>>>> origin/TS-45(88)-refactor-Semester-and-Rooms-Pages:frontend/src/components/RoomsPage/RoomForm/RoomForm.js
                     {roomTypes.map((roomType) => (
                         <option key={roomType.id} value={roomType.id} className="room-select-item">
                             {roomType.description}

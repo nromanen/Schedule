@@ -1,4 +1,3 @@
-import * as moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Field } from 'redux-form';
@@ -36,9 +35,11 @@ import {
     COMMON_CLASS_SCHEDULE_MANAGEMENT_TITLE,
     COMMON_SAVE_BUTTON_LABEL,
 } from '../../../constants/translationLabels/common';
-import { dateFormat } from '../../../constants/formats';
 import SetSemesterCheckboxes from './SemesterCheckboxes';
-import { getToday, getTomorrow, initialCheckboxesStateForDays } from '../../../utils/formUtils';
+import {
+    initialCheckboxesStateForDays,
+    initialCheckboxesStateForClasses,
+} from '../../../utils/formUtils';
 import { getGroupsOptionsForSelect } from '../../../utils/selectUtils';
 import { SEMESTER_FORM } from '../../../constants/reduxForms';
 
@@ -51,17 +52,12 @@ const SemesterForm = (props) => {
         semester,
         classScheduler,
         initialize,
-        change,
         reset,
         selectedGroups,
         setSelectedGroups,
         options,
         clearSemesterSuccess,
     } = props;
-
-    const [startDate, setStartDate] = useState(new Date());
-    const [finishDate, setFinishDate] = useState(getTomorrow());
-    const [disabledFinishDate, setDisabledFinishDate] = useState(true);
 
     const [checkedClasses, setCheckedClasses] = useState({});
     const [checkedDates, setCheckedDates] = useState(initialCheckboxesStateForDays);
@@ -77,11 +73,7 @@ const SemesterForm = (props) => {
     };
 
     useEffect(() => {
-        const prepSetCheckedClasses = classScheduler.reduce((init, classItem) => {
-            const isCheckedClass = init;
-            isCheckedClass[`${classItem.id}`] = false;
-            return isCheckedClass;
-        }, {});
+        const prepSetCheckedClasses = initialCheckboxesStateForClasses(classScheduler);
         setCheckedClasses({ ...prepSetCheckedClasses });
         const semesterItem = { ...semester };
         clearCheckboxes();
@@ -128,16 +120,6 @@ const SemesterForm = (props) => {
         setOpenGroupDialog(false);
     };
 
-    const setStartDayHandler = (startTimeParam) => {
-        setStartDate(startTimeParam);
-        if (disabledFinishDate || moment(startDate).isSameOrBefore(finishDate)) {
-            const newDate = moment(startTimeParam, dateFormat).add(1, 'd');
-            setFinishDate(newDate.toDate());
-            change('endDay', moment(startTimeParam, dateFormat).add(7, 'd').format(dateFormat));
-        }
-        setDisabledFinishDate(false);
-    };
-
     const resetSemesterForm = () => {
         setSelectedGroups([]);
         clearSemesterSuccess();
@@ -145,7 +127,7 @@ const SemesterForm = (props) => {
     };
 
     return (
-        <Card additionClassName="form-card semester-form">
+        <Card additionClassName="semester-form">
             <h2 className="card-title">
                 {semester.id ? t(COMMON_EDIT) : t(COMMON_CREATE)}
                 {` ${t(COMMON_SEMESTER)}`}
@@ -159,7 +141,7 @@ const SemesterForm = (props) => {
                 onClose={closeDialogForGroup}
             />
             <form onSubmit={handleSubmit}>
-                <div className="semester-checkbox group-options">
+                <div className="semester-checkbox">
                     <div>
                         <Field
                             name="currentSemester"
@@ -183,54 +165,47 @@ const SemesterForm = (props) => {
                     <Button
                         variant="contained"
                         color="primary"
-                        className="buttons-style "
+                        className="buttons-style semester-btn"
                         onClick={openDialogForGroup}
                     >
                         {t(COMMON_CHOOSE_GROUPS_BUTTON_LABEL)}
                     </Button>
                 </div>
-                <Field
-                    className="form-field"
-                    name="year"
-                    type="number"
-                    component={renderTextField}
-                    label={`${t(COMMON_YEAR_LABEL)}:`}
-                    validate={[required, minYearValue]}
-                />
-                <Field
-                    className="form-field"
-                    name="description"
-                    component={renderTextField}
-                    label={`${t(COMMON_SEMESTER_LABEL)}:`}
-                    validate={[required]}
-                />
-                <div className="form-time-block">
+                <div className="semester-inputs-block">
                     <Field
-                        className="time-input"
+                        className="semester-field-input"
+                        name="year"
+                        type="number"
+                        component={renderTextField}
+                        label={`${t(COMMON_YEAR_LABEL)}:`}
+                        validate={[required, minYearValue]}
+                    />
+                    <Field
+                        className="semester-field-input"
+                        name="description"
+                        component={renderTextField}
+                        label={`${t(COMMON_SEMESTER_LABEL)}:`}
+                        validate={[required]}
+                    />
+                </div>
+                <div className="semester-inputs-block">
+                    <Field
+                        className="semester-field-input"
                         name="startDay"
                         component={renderMonthPicker}
                         label={`${t(COMMON_CLASS_FROM_LABEL)}:`}
                         validate={[required, lessThanDate]}
-                        minDate={startDate}
-                        onChange={(_, value) => {
-                            setStartDayHandler(value);
-                        }}
                     />
                     <Field
-                        className="time-input"
+                        className="semester-field-input"
                         name="endDay"
                         component={renderMonthPicker}
                         label={`${t(COMMON_CLASS_TO_LABEL)}:`}
                         validate={[required, greaterThanDate]}
-                        minDate={finishDate}
-                        disabled={disabledFinishDate}
-                        onChange={(_, value) => {
-                            setFinishDate(value);
-                        }}
                     />
                 </div>
-                <div className="">
-                    <p>{`${t(COMMON_DAYS_LABEL)}: `}</p>
+                <p>{`${t(COMMON_DAYS_LABEL)}: `}</p>
+                <div className="semester-checkboxes-container">
                     <SetSemesterCheckboxes
                         checked={checkedDates}
                         method={setCheckedDates}
@@ -238,8 +213,8 @@ const SemesterForm = (props) => {
                         classScheduler={classScheduler}
                     />
                 </div>
-                <div className="">
-                    <p>{`${t(COMMON_CLASS_SCHEDULE_MANAGEMENT_TITLE)}: `}</p>
+                <p>{`${t(COMMON_CLASS_SCHEDULE_MANAGEMENT_TITLE)}: `}</p>
+                <div className="semester-checkboxes-container">
                     <SetSemesterCheckboxes
                         checked={checkedClasses}
                         method={setCheckedClasses}

@@ -74,6 +74,28 @@ export const updateRoomStart = (values) => {
     };
 };
 
+export const getFreeRoomsStart = (params) => ({
+    type: actionsType.GET_FREE_ROOMS_START,
+    params,
+});
+
+export const getFreeRoomsSuccess = (freeRooms) => ({
+    type: actionsType.GET_FREE_ROOMS_SUCCESS,
+    freeRooms,
+});
+
+export const clearFreeRooms = () => ({
+    type: actionsType.CLEAR_FREE_ROOMS,
+});
+export const getBusyRoomsStart = (semesterId) => ({
+    type: actionsType.GET_BUSY_ROOMS_START,
+    semesterId,
+});
+
+export const getBusyRoomsSuccess = (busyRooms) => ({
+    type: actionsType.GET_BUSY_ROOMS_SUCCESS,
+    busyRooms,
+});
 export const clearRoomSuccess = () => ({
     type: actionsType.CLEAR_ROOM,
 });
@@ -84,10 +106,10 @@ export const handleRoomFormSubmitStart = (values) => {
         values,
     };
 };
-export const toggleRoomVisibilityStart = (room, isDisabled) => {
+export const toggleRoomVisibilityStart = (roomId, isDisabled) => {
     return {
         type: actionsType.TOGGLE_ROOM_VISIBILITY_START,
-        room,
+        roomId,
         isDisabled,
     };
 };
@@ -145,26 +167,3 @@ export const handleRoomTypeFormSubmitStart = (values) => {
         values,
     };
 };
-
-export const getFreeRoomsStart = (params) => ({
-    type: actionsType.GET_FREE_ROOMS_START,
-    params,
-});
-
-export const getFreeRoomsSuccess = (freeRooms) => ({
-    type: actionsType.GET_FREE_ROOMS_SUCCESS,
-    freeRooms,
-});
-
-export const clearFreeRooms = () => ({
-    type: actionsType.CLEAR_FREE_ROOMS,
-});
-export const getBusyRoomsStart = (semesterId) => ({
-    type: actionsType.GET_BUSY_ROOMS_START,
-    semesterId,
-});
-
-export const getBusyRoomsSuccess = (busyRooms) => ({
-    type: actionsType.GET_BUSY_ROOMS_SUCCESS,
-    busyRooms,
-});

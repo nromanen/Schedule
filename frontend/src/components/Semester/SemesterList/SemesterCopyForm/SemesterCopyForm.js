@@ -15,9 +15,9 @@ const SemesterCopyForm = (props) => {
     const { semesterId, semesters, handleSubmit, pristine, submitting, submitButtonLabel } = props;
 
     return (
-        <section className="copy-form">
+        <section className="semester-copy-form">
             <p>{t(FORM_SEMESTER_COPY_HINT)}</p>
-            <p className="red-color">{t(FORM_SEMESTER_COPY_RED_HINT)}</p>
+            <p className="semester-copy-title">{t(FORM_SEMESTER_COPY_RED_HINT)}</p>
             <form onSubmit={handleSubmit}>
                 <div className="form-buttons-container">
                     <SemesterSelect semesterId={semesterId} semesters={semesters} />

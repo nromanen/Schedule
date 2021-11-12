@@ -3,7 +3,7 @@ import { get } from 'lodash';
 import CustomDialog from '../../containers/Dialogs/CustomDialog';
 import { dialogTypes } from '../../constants/dialogs';
 import { cardType } from '../../constants/cardType';
-import AddRoomForm from './AddRoomForm/AddRoomForm';
+import AddRoomForm from './RoomForm/RoomForm';
 import RoomTypeForm from './RoomTypeForm/RoomTypeForm';
 import SearchPanel from '../../share/SearchPanel/SearchPanel';
 import RoomList from './RoomsList/RoomsList';
@@ -28,6 +28,7 @@ const RoomPage = (props) => {
         setSelectRoom,
         clearRoomItem,
         setSelectRoomType,
+        loading,
     } = props;
 
     const [isDisabled, setIsDisabled] = useState(false);
@@ -60,15 +61,6 @@ const RoomPage = (props) => {
         setOpenConfirmDialog(true);
     };
 
-    const changeGroupDisabledStatus = (currentId) => {
-        const foundRoom = [...disabledRooms, ...rooms].find(
-            (roomItem) => roomItem.id === currentId,
-        );
-        return isDisabled
-            ? toggleRoomVisibility({ ...foundRoom, disable: false }, isDisabled)
-            : toggleRoomVisibility({ ...foundRoom, disable: true }, isDisabled);
-    };
-
     const handleConfirm = () => {
         setOpenConfirmDialog(false);
         if (deleteLabel === cardType.TYPE) {
@@ -76,7 +68,7 @@ const RoomPage = (props) => {
         }
         if (deleteLabel === cardType.ROOM) {
             if (confirmDialogType !== dialogTypes.DELETE_CONFIRM) {
-                changeGroupDisabledStatus(selectedId);
+                toggleRoomVisibility(selectedId, isDisabled);
             } else {
                 deleteRoom(selectedId, isDisabled);
             }
@@ -127,6 +119,7 @@ const RoomPage = (props) => {
                         disabledRooms={disabledRooms}
                         rooms={rooms}
                         setSelectRoom={setSelectRoom}
+                        loading={loading}
                     />
                 )}
             </div>

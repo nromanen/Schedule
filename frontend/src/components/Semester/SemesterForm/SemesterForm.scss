@@ -1,50 +1,48 @@
 @import '../../../styles/colors.scss';
-@import '../../../styles/variables.scss';
-
 .semester {
     &-form {
-        margin: 10px;
+        width: 400px;
+        padding: 25px;
     }
 
     &-btns {
         margin-top: 20px;
     }
 
+    &-checkboxes-container {
+        display: flex;
+        flex-wrap: wrap;
+        margin-left: 27px;
+        label {
+            display: block;
+            width: 155px;
+        }
+    }
+
     &-checkbox {
-        margin-left: -17px;
-        margin-bottom: -10px;
+        display: flex;
+        flex-direction: column;
+        flex-wrap: wrap;
+        align-items: center;
+        align-content: center;
+        margin-right: 17px;
+        margin-top: 10px;
         color: $label-color;
     }
-}
-.card-title {
-    text-align: center;
-}
-.form-field-up {
-    margin-top: 30px;
-}
-
-.form-time-block {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin: 8px 0;
-
-    .semester-input {
-        width: 100% !important;
+    &-form-description {
+        display: flex;
     }
-
-    .time-input {
-        width: 48%;
+    .-btn {
+        margin: 10px 0 10px 17px;
     }
-}
-.group-options {
-    display: flex;
-    flex-direction: column;
-    flex-wrap: wrap;
-    align-items: center;
-    align-content: center;
+    &-inputs-block {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin: 8px 0;
 
-    .buttons-style {
-        margin: 5px 0 5px 17px;
+        .semester-field-input {
+            width: 45%;
+        }
     }
 }

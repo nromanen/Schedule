@@ -12,7 +12,6 @@ import classActions from './class';
 import subjects from './subjects';
 import groups from './groups';
 import rooms from './rooms';
-import roomTypes from './roomTypes';
 import semesters from './semesters';
 import users from './users';
 import departments from './departments';
@@ -32,7 +31,6 @@ const rootReducer = combineReducers({
     subjects,
     groups,
     rooms,
-    roomTypes,
     semesters,
     departments,
     students,
