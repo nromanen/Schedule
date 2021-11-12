@@ -55,6 +55,10 @@
             @media (max-width: $md-small) {
                 width: 340px;
             }
+
+            .MuiFormControl-root {
+                width: 100%;
+            }
         }
     }
 
