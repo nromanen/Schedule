@@ -20,15 +20,27 @@ const reducer = (
     action,
 ) => {
     switch (action.type) {
-        case actionTypes.ADD_TEACHER:
+        case actionTypes.ADD_TEACHER_SUCCESS:
             return updateObject(state, {
-                teachers: [...state.teachers, action.result].sort(compare),
+                teachers: [...state.teachers, action.teacher].sort(compare),
             });
 
-        case actionTypes.DELETE_TEACHER:
-            return updateObject(state, {
-                teachers: [...state.teachers.filter((teacher) => teacher.id !== action.result)],
-            });
+        case actionTypes.DELETE_TEACHER_SUCCESS: {
+            if (action.disabledStatus) {
+                return {
+                    ...state,
+                    disabledTeachers: [
+                        ...state.disabledTeachers.filter(
+                            (disabledTeacher) => disabledTeacher.id !== action.id,
+                        ),
+                    ],
+                };
+            }
+            return {
+                ...state,
+                teachers: [...state.teachers.filter((teacher) => teacher.id !== action.id)],
+            };
+        }
 
         case actionTypes.SET_TEACHER:
             return updateObject(state, {
@@ -43,12 +55,12 @@ const reducer = (
                 teacher,
             });
         }
-        case actionTypes.UPDATE_TEACHER: {
-            const teacherIndex = state.teachers.findIndex(({ id }) => id === action.result.id);
+        case actionTypes.UPDATE_TEACHER_SUCCESS: {
+            const teacherIndex = state.teachers.findIndex(({ id }) => id === action.teacher.id);
             const teachers = [...state.teachers];
             teachers[teacherIndex] = {
                 ...teachers[teacherIndex],
-                ...action.result,
+                ...action.teacher,
             };
             return updateObject(state, {
                 teacher: {},
@@ -56,12 +68,13 @@ const reducer = (
             });
         }
 
-        case actionTypes.SET_DISABLED_TEACHERS:
+        case actionTypes.SET_DISABLED_TEACHERS_SUCCESS:
             return updateObject(state, {
                 disabledTeachers: [...action.result],
             });
-        case actionTypes.SHOW_ALL:
+        case actionTypes.SHOW_ALL_TEACHERS_SUCCESS:
         case actionTypes.GET_TEACHERS_BY_DEPARTMENT:
+        case actionTypes.GET_TEACHERS_WITHOUT_ACCOUNT_SUCCESS:
             return updateObject(state, {
                 teachers: [...action.result],
             });

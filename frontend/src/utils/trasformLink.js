@@ -1,4 +1,4 @@
-import { HTTP } from '../constants/formats';
+import { HTTP } from '../constants/common';
 
 export const trasformLink = (link) => {
     if (!link) return link;

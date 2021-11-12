@@ -7,6 +7,7 @@ import watchUserAuthentication from './auth';
 import watchLessons from './lessons';
 import watchRooms from './rooms';
 import watchClasses from './class';
+import watchTeachers from './teachers';
 
 export default function* startForman() {
     yield all([
@@ -18,5 +19,6 @@ export default function* startForman() {
         watchSchedule(),
         watchRooms(),
         watchClasses(),
+        watchTeachers(),
     ]);
 }

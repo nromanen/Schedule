@@ -9,7 +9,6 @@ import TemporaryScheduleList from '../../components/TemporarySchedule/TemporaryS
 import TemporaryScheduleVacationForm from '../../components/TemporarySchedule/TemporaryScheduleVacationForm/TemporaryScheduleVacationForm';
 import Card from '../../share/Card/Card';
 import { setLoadingService } from '../../services/loadingService';
-import { showAllTeachersService } from '../../services/teacherService';
 import {
     addTemporaryScheduleForRangeService,
     addTemporaryScheduleService,
@@ -21,6 +20,7 @@ import './TemporarySchedule.scss';
 import { EMPTY_LABEL } from '../../constants/translationLabels/common';
 import { getLessonTypes, getEnabledGroupsStart } from '../../actions';
 import { getListOfRoomsStart } from '../../actions/rooms';
+import { showAllTeachersStart } from '../../actions/teachers';
 
 const TemporarySchedule = (props) => {
     const { t } = useTranslation('common');
@@ -31,14 +31,15 @@ const TemporarySchedule = (props) => {
         getListOfRooms,
         getClassScheduleList,
         getEnabledGroups,
+        showAllTeachers,
     } = props;
     const [fromDate, setFromDate] = useState(null);
     const [toDate, setToDate] = useState(null);
 
     useEffect(() => {
         setLoadingService(true);
-        showAllTeachersService();
         getListOfRooms();
+        showAllTeachers();
         showAllSubjectsService();
         getClassScheduleList();
         getLessonTypes();
@@ -146,6 +147,7 @@ const mapDispatchToProps = (dispatch) => ({
     getClassScheduleList: () => dispatch(getClassScheduleListStart()),
     getEnabledGroups: () => dispatch(getEnabledGroupsStart()),
     getListOfRooms: (rooms) => dispatch(getListOfRoomsStart(rooms)),
+    showAllTeachers: () => dispatch(showAllTeachersStart()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(TemporarySchedule);

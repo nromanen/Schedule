@@ -3,8 +3,8 @@ import {
     setLoading,
     setScheduleLoading,
     setSemesterLoading,
-    showAllTeachers,
     showAllGroupsSuccess,
+    showAllTeachersSuccess,
 } from '../actions';
 import * as actionTypes from '../actions/actionsType';
 import { setMainScheduleLoading } from '../actions/loadingIndicator';
@@ -212,8 +212,8 @@ export function* getAllPublicSemesters() {
 // Check if it is necessary here
 export function* getAllPublicTeachers() {
     try {
-        const { data } = yield call(axiosCall, PUBLIC_TEACHER_URL);
-        yield put(showAllTeachers(data));
+        const response = yield call(axiosCall, PUBLIC_TEACHER_URL);
+        yield put(showAllTeachersSuccess(response.data));
     } catch (error) {
         yield put(setOpenErrorSnackbar(createErrorMessage(error)));
     }

@@ -10,7 +10,7 @@ import { getShortTitle } from '../../../helper/shortTitle';
 
 import { firstStringLetterCapital } from '../../../helper/strings';
 import { FORM_GROUPED_LABEL } from '../../../constants/translationLabels/formElements';
-import { MAX_LENGTH } from '../../../constants/formats';
+import { MAX_LENGTH_50 } from '../../../constants/common';
 import {
     COPY_LESSON,
     DELETE_LESSON,
@@ -59,7 +59,7 @@ const LessonsCard = (props) => {
                 />
             </div>
             <p className="title" title={lesson.subjectForSite}>
-                {getShortTitle(getTitle(lesson), MAX_LENGTH)}
+                {getShortTitle(getTitle(lesson), MAX_LENGTH_50)}
             </p>
             <p>{getType(lesson)}</p>
             <p>{getTeacherName(lesson.teacher)}</p>

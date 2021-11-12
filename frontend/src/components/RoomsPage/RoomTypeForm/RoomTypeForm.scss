@@ -1,60 +1,51 @@
-// @import '../../../share/Card/Card.scss';
+@import '../../../styles/colors.scss';
 
-.room-form {
-    margin: 10px;
-}
-
-.new-type-container {
+.room-type-form {
     text-align: center;
+    margin: 20px 5px 0;
 }
 
-.btn-style-wrapper {
-    margin: 20px 0;
+.btn-type-form-wrapper {
+    margin: 15px 0;
+
+    .type-form-btn {
+        width: 96%;
+    }
 }
 
-.btn-style {
-    width: 96%;
-}
-
-.new-types {
+.form-types-list {
     padding: 0;
+
+    .form-types-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+}
+
+.form-types-description {
     vertical-align: middle;
 }
 
-.new-types-list {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0;
-}
-
-.typeDescription {
-    vertical-align: middle;
-}
-
-.buttons {
-    .btn {
+.form-types-icons {
+    .room-type-icon {
         margin: 7px;
         font-size: 22px;
-    }
 
-    .edit {
-        cursor: pointer;
-    }
+        &_edit {
+            cursor: pointer;
+        }
+        &__edit:hover {
+            color: $dark-blue;
+            transition: ease-in-out 0.5s;
+        }
 
-    .edit:active,
-    .edit:hover {
-        color: #3f51b5;
-        transition: ease-in-out 0.5s;
-    }
-
-    .delete {
-        cursor: pointer;
-    }
-
-    .delete:active,
-    .delete:hover {
-        color: #fa0a04;
-        transition: ease-in-out 0.5s;
+        &__delete {
+            cursor: pointer;
+        }
+        &__delete:hover {
+            color: $delete-color;
+            transition: ease-in-out 0.5s;
+        }
     }
 }

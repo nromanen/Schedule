@@ -23,7 +23,6 @@ import CopyLessonDialog from './CopyLessonDialog/CopyLessonDialog';
 import './LessonPage.scss';
 import './LessonForm/LessonForm.scss';
 import { showAllSubjectsService } from '../../services/subjectService';
-import { showAllTeachersService } from '../../services/teacherService';
 
 import { FORM_GROUP_LABEL } from '../../constants/translationLabels/formElements';
 import { trasformLink } from '../../utils/trasformLink';
@@ -53,6 +52,7 @@ const LessonPage = (props) => {
         selectByGroupId,
         selectGroupSuccess,
         getEnabledGroupsStart,
+        showAllTeachers,
     } = props;
     const { t } = useTranslation('common');
     const [term, setTerm] = useState('');
@@ -69,7 +69,7 @@ const LessonPage = (props) => {
     }, [groupId]);
 
     useEffect(() => {
-        showAllTeachersService();
+        showAllTeachers();
         getLessonTypes();
         getEnabledGroupsStart();
         showAllSubjectsService();

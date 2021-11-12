@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
 import { Field, reduxForm } from 'redux-form';
 import { useTranslation } from 'react-i18next';
 import Button from '@material-ui/core/Button';
@@ -16,7 +15,6 @@ import {
     ADD_TYPE_LABEL,
     NEW_TYPE_LABEL,
 } from '../../../constants/translationLabels/formElements';
-import { selectRoomType } from '../../../actions/rooms';
 
 const RoomTypeForm = (props) => {
     const {
@@ -44,7 +42,7 @@ const RoomTypeForm = (props) => {
     return (
         <>
             <Card additionClassName="form-card room-form new-type">
-                <form className="new-type-container" onSubmit={handleSubmit}>
+                <form className="room-type-form" onSubmit={handleSubmit}>
                     <Field
                         type="text"
                         name="description"
@@ -54,10 +52,10 @@ const RoomTypeForm = (props) => {
                         className="form-field"
                         variant="outlined"
                     />
-                    <div className="btn-style-wrapper">
+                    <div className="btn-type-form-wrapper">
                         <Button
                             color="primary"
-                            className="btn-style"
+                            className="type-form-btn"
                             disabled={pristine || submitting}
                             variant="contained"
                             type="submit"
@@ -67,21 +65,21 @@ const RoomTypeForm = (props) => {
                     </div>
                 </form>
 
-                <ul className="new-types">
+                <ul className="form-types-list">
                     {roomTypes.map((roomType) => (
                         <li
                             key={roomType.id}
                             value={roomType.description}
-                            className="new-types-list"
+                            className="form-types-item"
                         >
-                            <span className="typeDescription">{roomType.description}</span>
-                            <span className="buttons">
+                            <span className="form-types">{roomType.description}</span>
+                            <span className="form-types-icons">
                                 <FaEdit
-                                    className="btn edit"
+                                    className="room-type-icon room-type-icon__edit"
                                     onClick={() => setSelectRoomType(roomType.id)}
                                 />
                                 <MdDelete
-                                    className="btn delete"
+                                    className="room-type-icon room-type-icon__delete"
                                     onClick={() => {
                                         showConfirmDialog(
                                             roomType.id,

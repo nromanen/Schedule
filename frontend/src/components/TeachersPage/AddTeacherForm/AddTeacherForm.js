@@ -1,20 +1,19 @@
 import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
 import { Field, reduxForm } from 'redux-form';
 
 import Button from '@material-ui/core/Button';
 import { useTranslation } from 'react-i18next';
-import renderTextField from '../../share/renderedFields/input';
-import { required } from '../../validation/validateFields';
+import renderTextField from '../../../share/renderedFields/input';
+import { required } from '../../../validation/validateFields';
 
-import Card from '../../share/Card/Card';
+import Card from '../../../share/Card/Card';
 
-import { TEACHER_FORM } from '../../constants/reduxForms';
+import { TEACHER_FORM } from '../../../constants/reduxForms';
 
 import './AddTeacherForm.scss';
-import SelectField from '../../share/renderedFields/select';
-import { getDepartmentByIdService } from '../../services/departmentService';
-import { getClearOrCancelTitle, setDisableButton } from '../../helper/disableComponent';
+import SelectField from '../../../share/renderedFields/select';
+import { getDepartmentByIdService } from '../../../services/departmentService';
+import { getClearOrCancelTitle, setDisableButton } from '../../../helper/disableComponent';
 import {
     EDIT_TITLE,
     CREATE_TITLE,
@@ -26,9 +25,9 @@ import {
     TEACHER_POSITION,
     EMAIL_FIELD,
     DEPARTMENT_TEACHER_LABEL,
-} from '../../constants/translationLabels/formElements';
+} from '../../../constants/translationLabels/formElements';
 
-let AddTeacher = (props) => {
+const AddTeacherForm = (props) => {
     const { t } = useTranslation('formElements');
     const { handleSubmit, pristine, submitting, reset, departments, teacher, initialize } = props;
 
@@ -126,9 +125,9 @@ let AddTeacher = (props) => {
                         getDepartmentByIdService(target.value);
                     }}
                 >
-                    <option />
+                    <option className="select-department" />
                     {departments.map((item) => (
-                        <option key={item.id} value={item.value}>
+                        <option className="select-department" key={item.id} value={item.value}>
                             {item.label}
                         </option>
                     ))}
@@ -161,10 +160,6 @@ let AddTeacher = (props) => {
     );
 };
 
-const mapStateToProps = (state) => ({ teacher: state.teachers.teacher });
-
-AddTeacher = reduxForm({
+export default reduxForm({
     form: TEACHER_FORM,
-})(AddTeacher);
-
-export default connect(mapStateToProps)(AddTeacher);
+})(AddTeacherForm);

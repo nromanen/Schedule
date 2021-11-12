@@ -1,0 +1,42 @@
+@import '../../../styles/colors.scss';
+@import '../../../styles//variables.scss';
+
+.add-form {
+    width: 100%;
+    max-width: 340px;
+
+    .MuiFormControl-root {
+        margin-top: 5px;
+    }
+
+    .teacher-form {
+        position: sticky;
+        display: inline-block;
+        width: auto;
+        margin: 20px 0 0 0;
+        top: 1em;
+        background-color: $main-color;
+        padding: 1rem;
+        border-radius: 5px;
+        box-shadow: 0 2px 8px $shadow-box;
+    }
+}
+
+.teacher-form {
+    margin: 10px;
+
+    @media (max-width: $md-small) {
+        width: 100%;
+    }
+
+    .form-buttons-container {
+        margin-top: 25px;
+    }
+}
+
+.select-department {
+    margin-bottom: 10px;
+    &:hover {
+        background-color: $selected-black;
+    }
+}
