@@ -1,3 +1,4 @@
+
 @import '../../styles/colors.scss';
 @import '../../styles/fonts.scss';
 @import '../../styles/variables.scss';
@@ -9,7 +10,7 @@ $group-size: 10px;
   &-container{
   display: flex;
   padding: 5px;
-  @media (max-width: $md-table-lanscape) {
+  @media (max-width: $md-width) {
       @include displayCenter();
       flex-direction: column;
     }
@@ -17,12 +18,12 @@ $group-size: 10px;
 &-sidebar{
   margin: 0 10px 0 10px;
   .MuiTypography-body1{
-        font-size: x-small;
+        font-size: $font-sm;
     }
   .MuiFormControl-root{
     width: 98%;
   }
-  @media (max-width: $md-table-lanscape) {
+  @media (max-width: $md-width) {
     display: flex;
     margin: 10px auto;
     width: 50%;
@@ -40,7 +41,7 @@ $group-size: 10px;
     flex-wrap: wrap;
     justify-content: center;
     width: 100%;
-    @media (max-width: $md-table-lanscape) {
+    @media (max-width: $md-width) {
       margin: 10px auto;
       width: 100%;
       display: flex;
@@ -54,7 +55,7 @@ $group-size: 10px;
     justify-content: center;
     width: 100%;
   }
-   @media (max-width: $md-table-lanscape) {
+   @media (max-width: $md-width) {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;

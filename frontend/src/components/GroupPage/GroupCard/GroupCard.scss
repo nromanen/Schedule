@@ -7,9 +7,8 @@ $group-size: 10px;
 
 .group-card {
     box-sizing: border-box;
-    max-width: 19 * $group-size; 
-    min-width: 18 * $group-size;
-    height: 15 * $group-size;
+    width: 155px; 
+    height: 133px;
 
     display: flex;
     flex-direction: column;
@@ -20,16 +19,16 @@ $group-size: 10px;
     box-shadow: 0 1px 4px $shadow-box;
 
     &__number {
-      font-size: x-large;
+      font-size: $font-xl;
       text-align: center;
       text-transform: uppercase;
-      margin-top: 5px;
+      margin-top: 2px;
     }
 
     &__description {
       text-align: center;
       margin: 5px 0 5px 0;
-      font-size: x-small;
+      font-size: $font-sm;
     }
 
   &__buttons-wrapper {
@@ -65,6 +64,7 @@ $group-size: 10px;
   flex-direction: column;
   flex-wrap: wrap;
   align-items: center;
+  margin-top: 5px;
   }
   .students {
     color: $blue-hover;
@@ -88,4 +88,3 @@ $group-size: 10px;
   text-decoration: none;
   color: $black;
 }
-

@@ -27,6 +27,7 @@ export const StudentsTableHead = (props) => {
                             onChange={checkedAllOnPageClick}
                             value="checkedAll"
                             title={`${t(SELECT_ALL)}`}
+                            color="primary"
                         />
                     </span>
                 </TableCell>
