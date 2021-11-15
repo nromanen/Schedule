@@ -41,18 +41,9 @@
     display: flex;
     flex-direction: column;
     width: min-content;
+    margin-top: 20px;
 
-    .lesson-form-container {
-        transition: all 1s ease-out;
-        margin: 0;
-        margin-bottom: 50px;
-        display: flex;
-        align-items: start;
-    }
-    .lesson-form-container .section {
-        margin-top: 20px;
-    }
-    .lesson-form-container .form-card {
+    .form-card {
         .MuiFormControl-root {
             width: 100%;
         }
@@ -86,7 +77,7 @@
     }
 
     .search-lesson {
-        margin-top: 20px;
+        padding-bottom: 20px;
     }
     .search-group {
         max-width: 320px;
@@ -116,6 +107,7 @@
     display: flex;
     flex-direction: column;
     width: 100%;
+    align-items: center;
 
     .group-lesson {
         height: 105px;
@@ -124,10 +116,10 @@
         justify-content: center;
         align-content: center;
         align-items: center;
+    }
 
-        .MuiAutocomplete-root {
-            width: 150px;
-            margin-bottom: 4px;
-        }
+    .MuiAutocomplete-root {
+        width: 150px;
+        margin-bottom: 4px;
     }
 }

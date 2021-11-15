@@ -131,51 +131,42 @@ const LessonPage = (props) => {
             <div className="lesson-wrapper">
                 <div className="lesson-side-bar">
                     <Search setTerm={setTerm} />
-                    <div className="lesson-form-container">
-                        <section className="section">
-                            <LessonForm
-                                lessonTypes={lessonTypes}
-                                isUniqueError={isUniqueError}
-                                subjects={subjects}
-                                teachers={teachers}
-                                onSubmit={submitLessonForm}
-                                onSetSelectedCard={selectLessonCard}
-                            />
-                            {!groupId && (
-                                <CopyLessonsFromSemesterForm onSubmit={submitCopySemester} />
-                            )}
-                        </section>
-                    </div>
+                    <LessonForm
+                        lessonTypes={lessonTypes}
+                        isUniqueError={isUniqueError}
+                        subjects={subjects}
+                        teachers={teachers}
+                        onSubmit={submitLessonForm}
+                        onSetSelectedCard={selectLessonCard}
+                    />
+                    {!groupId && <CopyLessonsFromSemesterForm onSubmit={submitCopySemester} />}
                 </div>
                 <div className="lessons-list">
-                    <div className="group-lesson">
-                        <Autocomplete
-                            id="group"
-                            value={group}
-                            options={groups}
-                            clearOnEscape
-                            openOnFocus
-                            getOptionLabel={(option) => option.title}
-                            onChange={(_, newValue) => {
-                                handleGroupSelect(newValue);
-                            }}
-                            renderInput={(params) => (
-                                <TextField
-                                    className="textField"
-                                    {...params}
-                                    label={t(FORM_GROUP_LABEL)}
-                                    margin="normal"
-                                />
-                            )}
-                        />
-                    </div>
-                    <div className="lesson-cards-container">
-                        <Lessons
-                            visibleItems={visibleItems}
-                            onClickOpen={showConfirmDialog}
-                            onCopyLesson={openCopyLessonDialogHandle}
-                        />
-                    </div>
+                    <Autocomplete
+                        id="group"
+                        value={group}
+                        options={groups}
+                        className="group-lesson"
+                        clearOnEscape
+                        openOnFocus
+                        getOptionLabel={(option) => option.title}
+                        onChange={(_, newValue) => {
+                            handleGroupSelect(newValue);
+                        }}
+                        renderInput={(params) => (
+                            <TextField
+                                className="textField"
+                                {...params}
+                                label={t(FORM_GROUP_LABEL)}
+                                margin="normal"
+                            />
+                        )}
+                    />
+                    <Lessons
+                        visibleItems={visibleItems}
+                        onClickOpen={showConfirmDialog}
+                        onCopyLesson={openCopyLessonDialogHandle}
+                    />
                 </div>
             </div>
 

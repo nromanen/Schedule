@@ -13,87 +13,73 @@
     transition: color 0.3s linear;
 }
 
-.lesson-cards-container {
-    display: flex;
-    align-items: start;
-    margin: 20px 0px 50px 0px;
-
+.lesson-container {
     @include flexWrap();
-    align-items: start;
 
-    .lesson-container {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    margin: 20px 0;
+
+    .lesson-card {
+        background-color: $main-color;
+        width: 15em;
+        height: 16.5em;
+
+        display: inline-block;
+        margin: 10px;
+        padding: 1rem;
+        border-radius: 5px;
+        box-shadow: 0 2px 8px $shadow-box;
+    }
+
+    .lesson-btns {
         @include flexWrap();
-
-        display: flex;
-        width: 100%;
         align-items: center;
-        justify-content: space-around;
-        flex-wrap: wrap;
-        margin: 0;
+        justify-content: flex-end;
+        position: relative;
+        height: 2em;
 
-        width: 100%;
-        align-items: center;
-        justify-content: space-around;
-        flex-wrap: wrap;
+        .svg-btn {
+            @include buttonStyle;
+            margin-right: 10px;
 
-        .lesson-card {
-            background-color: $main-color;
-            width: 15em;
-            height: 16.5em;
-
-            display: inline-block;
-            margin: 10px;
-            padding: 1rem;
-            border-radius: 5px;
-            box-shadow: 0 2px 8px $shadow-box;
+            &:last-child {
+                margin-right: 0;
+            }
         }
 
-        .lesson-btns {
-            @include flexWrap();
-            align-items: center;
-            justify-content: flex-end;
-            position: relative;
-            height: 2em;
-
-            .svg-btn {
-                @include buttonStyle;
-                margin-right: 10px;
-
-                &:last-child {
-                    margin-right: 0;
-                }
+        .delete-btn {
+            &:hover {
+                color: $delete-color;
             }
+        }
 
-            .delete-btn {
-                &:hover {
-                    color: $delete-color;
-                }
+        .edit-btn {
+            &:hover {
+                color: $background-color;
             }
+        }
 
-            .edit-btn {
-                &:hover {
-                    color: $background-color;
-                }
-            }
+        .info-btn {
+            color: $create-color;
+            cursor: default;
+            left: 0;
+            position: absolute;
+        }
 
-            .info-btn {
+        .copy-btn {
+            &:hover {
                 color: $create-color;
-                cursor: default;
-                left: 0;
-                position: absolute;
-            }
-
-            .copy-btn {
-                &:hover {
-                    color: $create-color;
-                }
             }
         }
     }
 }
 
 .title {
-    font-weight: bold;
+    font-weight: 500;
     height: 3em;
 }
 
