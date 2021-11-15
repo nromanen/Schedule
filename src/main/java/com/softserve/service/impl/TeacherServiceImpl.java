@@ -2,23 +2,34 @@ package com.softserve.service.impl;
 
 import com.softserve.dto.TeacherDTO;
 import com.softserve.dto.TeacherForUpdateDTO;
+import com.softserve.entity.Department;
+import com.softserve.entity.Student;
 import com.softserve.entity.Teacher;
 import com.softserve.entity.User;
 import com.softserve.entity.enums.Role;
 import com.softserve.exception.EntityAlreadyExistsException;
 import com.softserve.exception.EntityNotFoundException;
+import com.softserve.exception.FieldAlreadyExistsException;
 import com.softserve.exception.FieldNullException;
 import com.softserve.mapper.TeacherMapper;
 import com.softserve.repository.TeacherRepository;
 import com.softserve.service.MailService;
 import com.softserve.service.TeacherService;
 import com.softserve.service.UserService;
+import com.softserve.util.CsvFileParser;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.ConstraintViolationException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 @Transactional
 @Service
@@ -219,5 +230,60 @@ public class TeacherServiceImpl implements TeacherService {
 
     private boolean isEmailNullOrEmpty(String email) {
         return email == null || email.isEmpty();
+    }
+
+    /**
+     * This asynchronous method used for importing teachers from csv file.
+     * Each line of the file should consist of four fields, separated by commas.
+     * Each field may or may not be enclosed in double-quotes.
+     * First line of the file is a header.
+     * All subsequent lines contain data about students.
+     * <p>
+     * name,surname,patronymic,position,email
+     * Test1, Test1, Test1, test1, test1@gmail.com
+     * Test2, Test2, Test2, test2, test2@gmail.com
+     * etc.
+     * <p>
+     * The method is not transactional in order to prevent interruptions while saving a student
+     *
+     * @param file file with students data
+     * @return list of created students.
+     * If the student in the returned list have a non-null value of the group title then he already existed.
+     * If the student in the returned list have a null value of the group title then he saved as a new student.
+     * If the student in the returned list have a null value of the group then he didn't pass a validation.
+     */
+    @Override
+    @Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
+    @Async
+    public CompletableFuture<List<Teacher>> saveFromFile(MultipartFile file, Long departmentId) {
+        log.info("Enter into saveFromFile of TeacherServiceImpl");
+
+        List<Teacher> teachers = CsvFileParser.getTeachersFromFile(file);
+
+        List<Teacher> savedTeachers = new ArrayList<>();
+
+        for(Teacher teacher : teachers){
+            try{
+                Optional<Teacher> teacherOptional = teacherRepository.findByUserId(teacher.getUserId());
+                if(teacherOptional.isEmpty()){
+//                    Department department = new Department();
+//                    department.setId(departmentId);
+//                    department.setName(department.getName());
+//                    teacher.setDepartment(department);
+                    //TODO Global null exception
+                    teacher.getDepartment().setId(departmentId);
+                    savedTeachers.add(teacherRepository.save(teacher));
+                }else {
+                    savedTeachers.add(teacherOptional.get());
+                    //TODO Check current exception to return Long to test with user_id
+                    log.error("Error occurred while saving teacher", new FieldAlreadyExistsException(Teacher.class, "user_id", teacher.getName()));
+                }
+            } catch (ConstraintViolationException e) {
+                log.error("Error occurred while saving teacher with department {}", teacher.getDepartment(), e);
+                teacher.setDepartment(null);
+                savedTeachers.add(teacher);
+            }
+        }
+       return CompletableFuture.completedFuture(savedTeachers);
     }
 }
