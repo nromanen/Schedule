@@ -1,5 +1,5 @@
-@import '../../styles/forms.scss';
-@import '../../styles/colors.scss';
+@import "../../styles/forms.scss";
+@import "../../styles/colors.scss";
 
 .delete-word {
     color: $delete-color;
@@ -25,7 +25,7 @@
     text-align: center;
 }
 .send-letter-button {
-    color: $dark-blue;
+    color: $blue5;
     border: none;
     background-color: inherit;
 }
@@ -58,7 +58,7 @@
     position: fixed;
     top: 100px;
     left: 400px;
-    background-color: $light-gray;
+    background-color: $gray1;
 }
 
 .confirm-dialog {
@@ -69,7 +69,7 @@
     text-decoration: none;
 }
 .custom-dialog {
-    .MuiDialogContent-root{
+    .MuiDialogContent-root {
         overflow-y: visible;
     }
     .MuiDialog-paperWidthSm {
@@ -93,12 +93,12 @@
         align-items: center;
         justify-content: space-around;
         margin: 10px 0;
-        
+
         .dialog-button {
             width: 45%;
         }
     }
-    .availability-warning{
+    .availability-warning {
         margin: 5px 0px;
     }
 }

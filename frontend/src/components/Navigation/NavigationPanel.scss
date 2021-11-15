@@ -1,5 +1,5 @@
-@import '../../styles/colors.scss';
-@import '../../styles/variables.scss';
+@import "../../styles/colors.scss";
+@import "../../styles/variables.scss";
 
 .admin-navigation {
     flex-grow: 1;
@@ -16,15 +16,15 @@
             padding: 14px 0px;
         }
         .Mui-selected {
-            background-color: $selected-black;
+            background-color: $selected-hover-color;
         }
     }
     .navigation-link {
         text-align: center;
-        color: $snowy-white;
+        color: $white;
         cursor: pointer;
         &:hover {
-            background-color: $selected-black;
+            background-color: $selected-hover-color;
         }
     }
     .select-container {
@@ -32,7 +32,7 @@
         padding: 0;
         .navigation-select {
             min-width: 100%;
-            color: $snowy-white;
+            color: $white;
             display: flex;
             height: 40px;
             .MuiSelect-select {
@@ -43,11 +43,11 @@
         }
 
         .MuiSelect-icon {
-            color: $snowy-white;
+            color: $white;
         }
         &:hover {
             .MuiInput-underline::before {
-                border-color: $snowy-white;
+                border-color: $white;
             }
         }
         .MuiInput-underline {
@@ -55,19 +55,19 @@
                 width: 98%;
                 left: 50%;
                 transform: translateX(-50%);
-                border-color: $snowy-white;
+                border-color: $white;
             }
             &::after {
-                border-color: $snowy-white;
+                border-color: $white;
             }
         }
     }
 }
 .MuiList-root {
     .navigation-select-item {
-        color: $dark-blue;
+        color: $blue5;
         &:hover {
-            background-color: $selected-black;
+            background-color: $selected-hover-color;
         }
     }
 }

@@ -1,5 +1,5 @@
-@import '../../../styles/forms.scss';
-@import '../../../styles/colors.scss';
+@import "../../../styles/forms.scss";
+@import "../../../styles/colors.scss";
 
 .draggable-card {
     cursor: move;
@@ -14,13 +14,13 @@
     .common-button {
         margin-bottom: 15px;
     }
-    .app-button-container{
+    .app-button-container {
         display: flex;
         justify-content: center;
     }
 
     .schedule-card {
-        font-size: $font-sm;
+        font-size: $font-xs;
     }
 
     .autocomplete-container {
@@ -29,23 +29,23 @@
     .helper-text {
         margin: 0 5px;
         color: $gray;
-        font-size: $font-sm;
+        font-size: $font-xs;
         text-align: center;
     }
     .form-input {
         margin-top: 10px;
     }
-    .empty{
+    .empty {
         text-align: center;
     }
-    .lessons-container{
+    .lessons-container {
         height: 82%;
         margin-top: 10px;
         color: $gray;
-        font-size: $font-sm;
+        font-size: $font-xs;
         overflow-y: auto;
     }
-    .lessons-container.loading{
+    .lessons-container.loading {
         position: relative;
         overflow-y: hidden;
         &::after {
@@ -53,12 +53,13 @@
             z-index: 2;
             width: $w-full;
             height: $h-full;
-            content: '';
+            content: "";
             top: 0;
-            background-color: $snowy-white;
+            background-color: $white;
         }
-    }.content-center{
-        display:flex;
+    }
+    .content-center {
+        display: flex;
         justify-content: center;
     }
     .loading-circle {

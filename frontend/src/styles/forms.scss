@@ -1,5 +1,5 @@
-@import './colors.scss';
-@import './variables.scss';
+@import "./colors.scss";
+@import "./variables.scss";
 
 .form-input {
     width: 100%;
@@ -16,7 +16,7 @@
             }
         }
         &::before {
-            border-color: $light-gray;
+            border-color: $gray1;
             border-width: 1px;
         }
 
@@ -49,9 +49,9 @@
     .choose-button,
     .upload-file-button {
         background-color: $blue;
-        color: $snowy-white;
+        color: $white;
         &:hover {
-            background-color: $blue-hover;
+            background-color: $blue-btn-hover;
         }
     }
     .common-button,
@@ -61,14 +61,14 @@
         text-transform: none;
         &:disabled {
             color: $gray;
-            background-color: $light-gray;
+            background-color: $gray1;
         }
     }
     .close-button {
-        background-color: $snowy-white;
-        border: 1px solid $light-gray;
+        background-color: $white;
+        border: 1px solid $gray1;
         &:hover {
-            background-color: $light-clear-gray;
+            background-color: $gray2;
         }
         .MuiButton-label {
             color: $black;

@@ -22,7 +22,7 @@ input[type="file"] {
     margin: 10px;
     cursor: pointer;
     &:hover {
-      color: $blue-hover;
+      color: $blue-btn-hover;
     }
   }
   &-title {
@@ -37,7 +37,7 @@ input[type="file"] {
     margin-bottom: 20px;
   }
   &-file {
-    color: $snowy-white;
+    color: $white;
     background-color: $blue;
     display: flex;
     align-items: center;
@@ -46,11 +46,9 @@ input[type="file"] {
     border-radius: 5px;
     margin: 10px;
     padding: 5px 30px 5px 30px;
-    border: $card-border;
-    box-shadow: $card-shadow;
     cursor: pointer;
     &:hover {
-      background-color: $blue-hover;
+      background-color: $blue-btn-hover;
     }
   }
   &-text {

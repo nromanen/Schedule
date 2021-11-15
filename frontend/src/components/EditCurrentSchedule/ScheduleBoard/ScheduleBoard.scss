@@ -1,5 +1,5 @@
-@import '../../../styles/variables.scss';
-@import '../../../styles/colors.scss';
+@import "../../../styles/variables.scss";
+@import "../../../styles/colors.scss";
 
 .board-container {
     position: relative;
@@ -35,7 +35,7 @@
         .teacher-name {
             margin-top: 4px;
             margin-bottom: 3px;
-            font-size: $font-xs;
+            font-size: $font-2xs;
             b {
                 color: $blue;
             }
@@ -77,7 +77,7 @@
             align-items: center;
             justify-content: center;
             color: $gray;
-            font-size: $font-xs;
+            font-size: $font-2xs;
         }
     }
     .grouped-icon {
@@ -93,15 +93,15 @@
         }
     }
     .allow {
-        background-color: $light-green;
+        background-color: $green1;
         p {
             color: $black;
         }
     }
     .not-allow {
-        background-color: $light-red;
+        background-color: $red2;
         p {
-            color: $main-color;
+            color: $white;
         }
     }
 }
@@ -109,7 +109,7 @@
     .MuiPaper-root {
         .edit-item,
         .delete-item {
-            font-size: $font-sm;
+            font-size: $font-xs;
         }
         .delete-item {
             color: $red;
