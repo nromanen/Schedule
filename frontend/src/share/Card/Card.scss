@@ -1,13 +1,13 @@
-@import '../../styles/colors.scss';
-@import '../../styles/fonts.scss';
-@import '../../styles/variables.scss';
+@import "../../styles/colors.scss";
+@import "../../styles/fonts.scss";
+@import "../../styles/variables.scss";
 
 @mixin set-width($form-width) {
     width: $form-width;
 }
 
 .card {
-    background-color: $main-color;
+    background-color: $white;
     display: inline-block;
     margin: 10px;
     padding: 1rem;
@@ -21,7 +21,7 @@
     position: sticky;
     top: 1em;
 
-    @media (max-width: $md-table-lanscape) {
+    @media (max-width: $md-width-lanscape) {
         position: relative;
     }
 
@@ -36,7 +36,7 @@
 }
 
 .form-field {
-    width: 15.5em;
+    width: 100%;
 
     @media (max-width: $md-small) {
         & input {
@@ -50,13 +50,13 @@
 }
 
 .done-card {
-    background-color: $main-color;
+    background-color: $white;
     width: 15em;
     height: 14.5em;
 }
 
 .department-card {
-    background-color: $main-color;
+    background-color: $white;
     width: 15em;
     height: 5em;
 }

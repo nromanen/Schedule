@@ -1,5 +1,5 @@
-@import '../../styles/colors.scss';
-@import '../../styles/variables.scss';
+@import "../../styles/colors.scss";
+@import "../../styles/variables.scss";
 
 .auth-form {
     margin: 8px 14px;
@@ -23,14 +23,14 @@
         .auth-confirm-button {
             min-width: 95%;
             font: {
-                size: $font-sm;
+                size: $font-xs;
                 weight: bold;
             }
             padding: 6px 15px;
             text-transform: none;
             background-color: $blue;
             &:hover {
-                background-color: $blue-hover;
+                background-color: $blue-btn-hover;
             }
         }
     }
@@ -44,7 +44,7 @@
     justify-content: center;
     text-align: center;
     &::before {
-        content: '';
+        content: "";
         display: block;
         flex-grow: 1;
         height: 24px;
@@ -56,11 +56,11 @@
         border-radius: 5px;
         width: 450px;
         box-shadow: 0 12px 20px 0px $shadow-box;
-    
+
         @media (max-width: 500px) {
             max-width: 90%;
         }
-    
+
         .form-field {
             width: 25em;
         }
@@ -80,7 +80,7 @@
                 left: 5px;
                 right: 5px;
             }
-            font-size: $font-sm;
+            font-size: $font-xs;
         }
     }
     .auth-link {
@@ -92,7 +92,7 @@
         cursor: pointer;
     }
     .auth-link:hover {
-        color: $background-color-dark;
+        color: $blue6;
     }
 }
 .MuiCircularProgress-root.auth-loading {
