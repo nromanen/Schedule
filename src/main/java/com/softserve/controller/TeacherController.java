@@ -1,5 +1,6 @@
 package com.softserve.controller;
 
+import com.softserve.dto.StudentDTO;
 import com.softserve.dto.TeacherDTO;
 import com.softserve.dto.TeacherForUpdateDTO;
 import com.softserve.entity.Teacher;
@@ -9,6 +10,7 @@ import com.softserve.service.TeacherService;
 import com.softserve.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,6 +23,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -102,4 +107,13 @@ public class TeacherController {
         scheduleService.sendScheduleToTeachers(semesterId, teachersId, language);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
+
+    @PostMapping("/import")
+    @ApiOperation(value = "import teachers from file to database")
+    public ResponseEntity<List<TeacherDTO>> importFromCsv(@ApiParam(value = "csv format is required")
+                                                          @RequestParam("file") MultipartFile file, @RequestParam Long departmentId) {
+        return ResponseEntity.ok(teacherMapper.teachersToTeacherDTOs(teacherService.saveFromFile(file, departmentId)
+                .getNow(new ArrayList<>())));
+    }
+
 }

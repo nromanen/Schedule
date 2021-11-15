@@ -3,7 +3,10 @@ package com.softserve.service;
 import com.softserve.dto.TeacherDTO;
 import com.softserve.dto.TeacherForUpdateDTO;
 import com.softserve.entity.Teacher;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 public interface TeacherService extends BasicService<Teacher, Long> {
     Teacher save(TeacherDTO teacherDTO);
@@ -16,5 +19,7 @@ public interface TeacherService extends BasicService<Teacher, Long> {
     Teacher findByUserId(Long userId);
 
     List<Teacher> getAllTeacherWithoutUser();
+
+    CompletableFuture<List<Teacher>> saveFromFile(MultipartFile file, Long departmentId);
 }
 
