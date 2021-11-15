@@ -17,7 +17,8 @@
 
 @mixin button-icon($color, $hoverColor, $size: $icon-size) {
   cursor: pointer;
-  font-size: $icon-size;
+  width: $size;
+  height: $size;
   color: $color;
   &:hover {
     color: $hoverColor;
