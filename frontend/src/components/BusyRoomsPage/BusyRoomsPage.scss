@@ -33,8 +33,9 @@
     display: flex;
     justify-content: flex-start;
     .radio-control {
-        padding-left: 10px;
         display: flex;
+        flex-direction: row;
+        padding-left: 10px;
         align-items: center;
         .MuiFormLabel-root {
             font-size: $font-sm;
