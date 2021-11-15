@@ -27,7 +27,7 @@ const SemesterCard = (props) => {
     const {
         disabled,
         archived,
-        selectSemesterSuccess,
+        selectSemester,
         showConfirmDialog,
         setIsOpenSemesterCopyForm,
         setSemesterId,
@@ -59,7 +59,7 @@ const SemesterCard = (props) => {
                             className="svg-btn edit-btn"
                             title={t(EDIT_TITLE)}
                             onClick={() => {
-                                selectSemesterSuccess(semester.id);
+                                selectSemester(semester.id);
                             }}
                         />
                         <FaCopy
