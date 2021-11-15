@@ -1,6 +1,5 @@
 export {
     createLesson,
-    createLessonStart,
     getLessonsByGroup,
     setLessonsCards,
     getLessonTypes,
@@ -10,7 +9,6 @@ export {
     copyLessonCard,
     selectLessonCard,
     updateLessonCard,
-    updateLessonCardStart,
     selectGroupId,
     setUniqueError,
 } from './lesson';

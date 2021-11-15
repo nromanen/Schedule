@@ -87,7 +87,7 @@ const LessonPage = (props) => {
             setUniqueError(true);
             return;
         }
-        handleLesson(cardObj, groupId);
+        handleLesson({ values: cardObj, groupId });
     };
 
     const showConfirmDialog = (lessonCardId) => {
@@ -109,7 +109,7 @@ const LessonPage = (props) => {
         const { group: copiedGroup, lesson } = params;
         setIsOpenCopyLessonDialog(false);
         if (!isNil(copiedGroup)) {
-            copyLessonCard(copiedGroup, lesson);
+            copyLessonCard({ group: copiedGroup, lesson });
         }
     };
 

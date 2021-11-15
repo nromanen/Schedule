@@ -138,7 +138,6 @@ const LessonForm = (props) => {
                             {...valid}
                             label={t(SUBJECT_LABEL)}
                             type="text"
-                            // FIX RETURN
                             getItemTitle={(sub) => sub.name}
                             values={subjects}
                             onChange={(subject) => {

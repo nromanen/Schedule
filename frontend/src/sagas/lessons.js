@@ -62,7 +62,8 @@ export function* updateLesson({ values, groupId }) {
     }
 }
 
-export function* handleLesson({ values, groupId }) {
+export function* handleLesson({ payload }) {
+    const { values, groupId } = payload;
     try {
         yield call(handleFormSubmit(values, createLessonCard, updateLesson), { values, groupId });
     } catch (error) {
@@ -84,7 +85,8 @@ export function* removeLessonCard({ id }) {
     }
 }
 
-export function* copyLessonCard({ group, lesson }) {
+export function* copyLessonCard({ payload }) {
+    const { group, lesson } = payload;
     const groupList = group.map((groupItem) => {
         return groupItem.id;
     });

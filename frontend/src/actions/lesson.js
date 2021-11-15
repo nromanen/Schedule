@@ -6,14 +6,6 @@ export const createLesson = (result) => {
         result,
     };
 };
-
-export const createLessonStart = (payload) => {
-    return {
-        type: actionTypes.CREATE_LESSON_CARD_START,
-        payload,
-    };
-};
-
 export const getLessonsByGroup = (id) => {
     return {
         type: actionTypes.GET_LESSONS_CARDS_START,
@@ -51,53 +43,44 @@ export const deleteLessonCardStart = (id) => {
     };
 };
 
-export const copyLessonCard = (group, lesson) => {
-    return {
-        type: actionTypes.COPY_LESSON_START,
-        group,
-        lesson,
-    };
-};
-
-export const selectLessonCard = (res) => {
+export const selectLessonCard = (result) => {
     return {
         type: actionTypes.SELECT_LESSON_CARD,
-        result: res,
+        result,
     };
 };
 
-export const updateLessonCard = (res) => {
+export const updateLessonCard = (result) => {
     return {
         type: actionTypes.UPDATE_LESSON_CARD_SUCCESS,
-        result: res,
+        result,
     };
 };
 
-export const updateLessonCardStart = (payload) => {
+export const copyLessonCard = (payload) => {
     return {
-        type: actionTypes.UPDATE_LESSON_CARD_START,
+        type: actionTypes.COPY_LESSON_START,
         payload,
     };
 };
 
-export const handleLessonStart = (values, groupId) => {
+export const handleLessonStart = (payload) => {
     return {
         type: actionTypes.HANDLE_LESSON_CARD_START,
-        values,
-        groupId,
+        payload,
     };
 };
 
-export const selectGroupId = (res) => {
+export const selectGroupId = (result) => {
     return {
         type: actionTypes.SELECT_GROUP_ID,
-        result: res,
+        result,
     };
 };
 
-export const setUniqueError = (res) => {
+export const setUniqueError = (result) => {
     return {
         type: actionTypes.SET_UNIQUE_ERROR,
-        result: res,
+        result,
     };
 };
