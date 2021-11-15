@@ -270,6 +270,7 @@ public class TeacherServiceImpl implements TeacherService {
 //                    department.setId(departmentId);
 //                    department.setName(department.getName());
 //                    teacher.setDepartment(department);
+                    //TODO how to merge changes to other branch
                     //TODO Global null exception
                     teacher.getDepartment().setId(departmentId);
                     savedTeachers.add(teacherRepository.save(teacher));
