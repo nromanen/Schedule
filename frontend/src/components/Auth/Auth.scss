@@ -1,5 +1,6 @@
 @import "../../styles/colors.scss";
 @import "../../styles/variables.scss";
+@import "../../styles/mixins.scss";
 
 .auth-form {
     margin: 8px 14px;
@@ -37,11 +38,8 @@
 }
 
 .auth-container {
-    display: flex;
-    flex-direction: column;
+    @include displayFlex(center, center, column);
     min-height: 52vh;
-    align-items: center;
-    justify-content: center;
     text-align: center;
     &::before {
         content: "";
@@ -57,7 +55,7 @@
         width: 450px;
         box-shadow: 0 12px 20px 0px $shadow-box;
 
-        @media (max-width: 500px) {
+        @media (max-width: $md-s) {
             max-width: 90%;
         }
 
@@ -99,7 +97,7 @@
     margin: 50px;
 }
 .forgot-password-label {
-    font-size: 14px;
+    font-size: $font-xs;
     font-weight: bold;
     margin-top: 10px;
 }

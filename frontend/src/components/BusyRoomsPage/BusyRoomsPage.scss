@@ -1,5 +1,6 @@
 @import "../../styles/variables.scss";
 @import "../../styles/colors.scss";
+@import "../../styles/mixins.scss";
 
 .busy-rooms-control-panel.schedule-card {
     position: relative;
@@ -30,13 +31,10 @@
     overflow: auto;
 }
 .table-size-container {
-    display: flex;
-    justify-content: flex-start;
+    @include displayFlex(stretch, flex-start);
     .radio-control {
-        display: flex;
-        flex-direction: row;
+        @include displayFlex(center, flex-start);
         padding-left: 10px;
-        align-items: center;
         .MuiFormLabel-root {
             font-size: $font-xs;
         }

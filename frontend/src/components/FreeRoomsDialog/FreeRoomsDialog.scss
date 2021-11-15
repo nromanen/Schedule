@@ -1,6 +1,7 @@
-@import "../../styles/forms.scss";
-@import "../../styles/colors.scss";
-@import "../../styles/variables.scss";
+@import '../../styles/forms.scss';
+@import '../../styles/colors.scss';
+@import '../../styles/variables.scss';
+@import '../../styles/mixins.scss';
 
 .free-room-form {
     margin-left: 5px;
@@ -24,14 +25,18 @@
         display: none;
     }
 }
-.dialog-body-container {
-    display: flex;
-    @media (max-width: $md-width) {
+.free-room-dialog {
+    .MuiPaper-root.MuiDialog-paperWidthSm {
+        max-width: 850px;
+    }
+    .dialog-body-container {
         display: flex;
-        flex-direction: column-reverse;
-        justify-items: center;
+        @media (max-width: $md-width) {
+            @include displayFlex(stretch, center, column-reverse);
+        }
     }
 }
+
 .free-rooms-container {
     position: relative;
     display: grid;
@@ -54,15 +59,13 @@
     }
 }
 .free-rooms-form-container {
-    display: flex;
+    @include displayFlex(center, center);
     flex-wrap: wrap;
     width: 270px;
     padding: {
         left: 20px;
     }
     border-left: 1px solid $gray1;
-    align-content: center;
-    justify-content: center;
     @media (max-width: $md-width) {
         width: $w-full;
         border-left: none;

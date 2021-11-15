@@ -1,45 +1,33 @@
 import * as actionTypes from './actionsType';
 import { TOKEN_BEGIN } from '../constants/tokenBegin';
 
-export const authUser = (res) => {
-    return {
-        type: actionTypes.AUTH_USER,
-        result: res,
-    };
-};
-export const authAutoLogout = (res) => {
-    return {
-        type: actionTypes.AUTH_USER_AUTO_LOGOUT,
-        expirationTime: res,
-    };
-};
+export const authUser = (userData) => ({
+    type: actionTypes.AUTH_USER,
+    userData,
+});
+export const authAutoLogout = (expirationTime) => ({
+    type: actionTypes.AUTH_USER_AUTO_LOGOUT,
+    expirationTime,
+});
 
-export const registerUser = (res) => {
-    return {
-        type: actionTypes.REGISTER_USER,
-        result: res,
-    };
-};
+export const registerUser = (userData) => ({
+    type: actionTypes.REGISTER_USER,
+    userData,
+});
 
-export const resetUserPassword = (res) => {
-    return {
-        type: actionTypes.RESET_USER_PASSWORD,
-        result: res,
-    };
-};
+export const resetUserPassword = (payload) => ({
+    type: actionTypes.RESET_USER_PASSWORD,
+    payload,
+});
 
-export const activateUser = (res) => {
-    return {
-        type: actionTypes.ACTIVATE_USER,
-        result: res,
-    };
-};
+export const activateUser = (payload) => ({
+    type: actionTypes.ACTIVATE_USER,
+    payload,
+});
 
-export const logout = () => {
-    return {
-        type: actionTypes.AUTH_USER_LOGOUT,
-    };
-};
+export const logout = () => ({
+    type: actionTypes.AUTH_USER_LOGOUT,
+});
 
 export const authCheckState = () => {
     const token = localStorage.getItem('token');
@@ -55,24 +43,23 @@ export const authCheckState = () => {
         role,
     };
 };
-export const activateSuccess = (res) => {
-    return { type: actionTypes.ACTIVATE_USER_SUCCESS, response: res };
-};
-export const resetUserPasswordSuccess = (res) => {
-    return { type: actionTypes.RESET_USER_PASSWORD_SUCCESS, response: res };
-};
-export const registerUserSuccess = (res) => {
-    return { type: actionTypes.REGISTER_USER_SUCCESS, response: res };
-};
-export const authSuccess = (res) => {
-    return {
-        type: actionTypes.AUTH_USER_SUCCESS,
-        response: res,
-    };
-};
-export const setAuthError = (res) => {
-    return {
-        type: actionTypes.SET_AUTH_ERROR,
-        result: res,
-    };
-};
+export const activateSuccess = (response) => ({
+    type: actionTypes.ACTIVATE_USER_SUCCESS,
+    response,
+});
+export const resetUserPasswordSuccess = (response) => ({
+    type: actionTypes.RESET_USER_PASSWORD_SUCCESS,
+    response,
+});
+export const registerUserSuccess = (response) => ({
+    type: actionTypes.REGISTER_USER_SUCCESS,
+    response,
+});
+export const authSuccess = (response) => ({
+    type: actionTypes.AUTH_USER_SUCCESS,
+    response,
+});
+export const setAuthError = (error) => ({
+    type: actionTypes.SET_AUTH_ERROR,
+    error,
+});

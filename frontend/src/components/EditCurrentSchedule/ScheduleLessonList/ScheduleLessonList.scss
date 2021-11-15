@@ -1,5 +1,6 @@
 @import "../../../styles/forms.scss";
 @import "../../../styles/colors.scss";
+@import "../../../styles/mixins.scss";
 
 .draggable-card {
     cursor: move;
@@ -59,8 +60,7 @@
         }
     }
     .content-center {
-        display: flex;
-        justify-content: center;
+        @include displayFlex(stretch, center);
     }
     .loading-circle {
         position: absolute;

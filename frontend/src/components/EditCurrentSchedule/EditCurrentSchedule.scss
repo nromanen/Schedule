@@ -1,19 +1,18 @@
 @import '../../styles/variables.scss';
+@import '../../styles/mixins.scss';
 
 .schedule-control-panel {
     display: flex;
     height: 92vh;
     padding-bottom: 10px;
     .schedule-table {
-        align-items: start;
-        overflow-x: hidden;
-        display: flex;
+        @include displayFlex(start, stretch);
         width: 84%;
         height: $h-full;
-        justify-content: stretch;
         margin: 0 5px;
         padding:0px;
         overflow: auto;
+        overflow-x: hidden;
     }
 }
 .for-phones-and-tablets.schedule-card {

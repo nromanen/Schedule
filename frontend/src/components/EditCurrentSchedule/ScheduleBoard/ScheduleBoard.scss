@@ -1,11 +1,11 @@
 @import "../../../styles/variables.scss";
 @import "../../../styles/colors.scss";
+@import "../../../styles/mixins.scss";
 
 .board-container {
+    @include displayFlex(stretch, center);
     position: relative;
-    display: flex;
     height: 114px;
-    justify-content: center;
     .schedule-item,
     .board {
         position: relative;
@@ -82,7 +82,7 @@
     }
     .grouped-icon {
         position: absolute;
-        right: 3px;
+        right: 5px;
         bottom: 15px;
         color: $create-color;
     }
