@@ -5,6 +5,7 @@ import com.softserve.entity.enums.EvenOdd;
 
 import java.time.DayOfWeek;
 import java.util.List;
+import java.util.Optional;
 
 public interface RoomRepository extends BasicRepository<Room, Long>  {
     List<Room> freeRoomBySpecificPeriod(Long idOfPeriod, DayOfWeek dayOfWeek, EvenOdd evenOdd);
@@ -15,6 +16,9 @@ public interface RoomRepository extends BasicRepository<Room, Long>  {
     List<Room> getDisabled();
 
     List<Room> getAllOrdered();
-    Room saveRoomAfterId(Room room, Long afterId);
-    Room updateRoomAfterId(Room room, Long afterId);
+    Optional<Double> getMaxSortOrder();
+    Optional<Double> getMinSortOrder();
+    Optional<Double> getNextPosition(Double position);
+    Optional<Double> getSortOrderAfterId(Long afterId);
+
 }

@@ -105,20 +105,6 @@ public class RoomRepositoryImpl extends BasicRepositoryImpl<Room, Long> implemen
     }
 
     /**
-     * The method used for getting list of entities from database
-     *
-     * @return list of entities ordered by sortOrder and title
-     */
-    @Override
-    public List<Room> getAllOrdered() {
-        log.info("In getAll()");
-        Session session = getSession();
-        return session.createQuery(GET_ALL_QUERY_ORDERED)
-                .getResultList();
-    }
-
-
-    /**
      * The method used for getting list of free room by specific period, day of week and number of week from database
      *
      * @param idOfPeriod identity number of period
@@ -209,99 +195,57 @@ public class RoomRepositoryImpl extends BasicRepositoryImpl<Room, Long> implemen
     }
 
     /**
-     * The method is used to save room after the specific room to get desired order
-     *
-     * @param room    the room that must be saved
-     * @param afterId the id of the room after which must be saved the new one
-     *                if we want to insert into first position we set afterId = 0
-     * @return saved room with set order and id
+     * The method used for getting list of entities from database
+     * @return list of entities ordered by sortOrder and title
      */
     @Override
-    public Room saveRoomAfterId(Room room, Long afterId) {
-        log.info("Enter saveRoomAfterId");
-        Optional<Room> previousRoom = findById(afterId);
-
-        Double maxOrder = Optional.ofNullable(
-                getSession().createQuery(GET_MAX_SORTING_ORDER, Double.class).getSingleResult()).orElse(0.0);
-
-        Double minOrder = Optional.ofNullable(getSession().createQuery(GET_MIN_SORTING_ORDER, Double.class)
-                .getSingleResult()).orElse(2.0);
-
-        if (previousRoom.isPresent()) {
-            Double previousPosition = Optional.ofNullable(previousRoom.get().getSortOrder()).orElse(0.0);
-
-            TypedQuery<Double> doubleTypedQuery = getSession().createQuery(GET_NEXT_POSITION, Double.class);
-
-            doubleTypedQuery.setParameter("position", previousPosition);
-            Double nextPosition = Optional.ofNullable(
-                    doubleTypedQuery.getSingleResult()).orElse(previousPosition + 2);
-
-            Double newPosition = ((nextPosition + previousPosition) / 2);
-            if (newPosition - 1 < 0.01) {
-                newPosition = Optional.ofNullable(getSession().createQuery(GET_MAX_SORTING_ORDER, Double.class)
-                                .getSingleResult()).orElse(0.0) + 1;
-            }
-            room.setSortOrder(newPosition);
-        } else if (afterId == 0) {
-            room.setSortOrder(minOrder / 2);
-        } else {
-            room.setSortOrder(maxOrder + 1);
-        }
-        save(room);
-        return room;
+    public List<Room> getAllOrdered() {
+        log.info("In getAll()");
+        Session session = getSession();
+        return session.createQuery(GET_ALL_QUERY_ORDERED, Room.class)
+                .getResultList();
     }
 
     /**
-     * Method updates room order position
-     *
-     * @param room    room that will be replaced
-     * @param afterId id of the room after which will be placed
-     *                if we want to update room to first position we set afterId = 0
-     * @return room with new position
+     * This method for getting max sort_order form database
+     * @return max sorting order
      */
     @Override
-    public Room updateRoomAfterId(Room room, Long afterId) {
-        log.info("Enter updateRoomAfterId: {}{}", room, afterId);
+    public Optional<Double> getMaxSortOrder() {
+        return getSession().createQuery(GET_MAX_SORTING_ORDER, Double.class).uniqueResultOptional();
+    }
 
-        if (afterId == room.getId()) {
+    /**
+     * This method for getting min sort_order form database
+     * @return min sorting order
+     */
+    @Override
+    public Optional<Double> getMinSortOrder() {
+        return getSession().createQuery(GET_MIN_SORTING_ORDER, Double.class).uniqueResultOptional();
+    }
 
-            TypedQuery<Double> sortOrderTypedQuery = getSession().createQuery(GET_AFTER_ID_SORT_ORDER, Double.class);
-            sortOrderTypedQuery.setParameter("afterId", afterId);
+    /**
+     * This method for getting sorting order of the next element
+     * @param position sorting order of the element
+     * @return sorting order of the nex element
+     */
+    @Override
+    public Optional<Double> getNextPosition(Double position) {
+        return getSession().createQuery(GET_NEXT_POSITION, Double.class)
+                .setParameter("position", position)
+                .uniqueResultOptional();
+    }
 
-            Double myOrder = Optional.ofNullable(sortOrderTypedQuery.getSingleResult()).orElse(0.0);
-
-            room.setSortOrder(myOrder);
-        } else {
-            Optional<Room> previousRoom = findById(afterId);
-
-            Double minOrder = Optional.ofNullable(
-                    getSession().createQuery(GET_MIN_SORTING_ORDER, Double.class)
-                            .getSingleResult()).orElse(0.0);
-
-            if (previousRoom.isPresent()) {
-                Double previousPosition = Optional.ofNullable(previousRoom.get().getSortOrder()).orElse(0.0);
-
-                TypedQuery<Double> doubleTypedQuery = getSession().createQuery(GET_NEXT_POSITION, Double.class);
-                doubleTypedQuery.setParameter("position", previousPosition);
-
-                Double nextPosition = Optional.ofNullable(doubleTypedQuery.
-                        getSingleResult()).orElse(previousPosition + 2);
-                Double newPosition = ((nextPosition + previousPosition) / 2);
-
-                if (newPosition - 1 < 0.01) {
-                    newPosition = Optional.ofNullable(getSession().createQuery(GET_MAX_SORTING_ORDER, Double.class)
-                            .getSingleResult()).orElse(0.0) + 1;
-                }
-                room.setSortOrder(newPosition);
-
-            } else if (afterId == 0) {
-                room.setSortOrder(minOrder / 2);
-            } else {
-                room.setSortOrder(1.0);
-            }
-        }
-        update(room);
-        return room;
+    /**
+     * This method for retrieving sorting order by rooms id
+     * @param afterId rooms id which sorting order needs to be retrieved
+     * @return sorting order of the room
+     */
+    @Override
+    public Optional<Double> getSortOrderAfterId(Long afterId) {
+        return getSession().createQuery(GET_AFTER_ID_SORT_ORDER, Double.class)
+                .setParameter("afterId", afterId)
+                .uniqueResultOptional();
     }
 
 }
