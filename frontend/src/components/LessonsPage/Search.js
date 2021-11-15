@@ -1,11 +1,8 @@
 import React from 'react';
-
 import SearchPanel from '../../share/SearchPanel/SearchPanel';
 import './LessonPage.scss';
 
-const Search = (props) => {
-    const { setTerm, group } = props;
-
+const Search = ({ setTerm, group }) => {
     return (
         <>
             {group.id && (

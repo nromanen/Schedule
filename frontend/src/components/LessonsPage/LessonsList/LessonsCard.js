@@ -23,15 +23,12 @@ const LessonsCard = (props) => {
 
     const { t } = useTranslation(['common', 'formElements']);
 
-    const getTitle = (lessonItem) => {
-        return `${firstStringLetterCapital(lessonItem.subjectForSite)}`;
-    };
+    const getTitle = (lessonItem) => `${firstStringLetterCapital(lessonItem.subjectForSite)}`;
 
-    const getType = (lessonItem) => {
-        return `${t(`lesson_type_${lessonItem.lessonType.toLowerCase()}_label`, {
+    const getType = (lessonItem) =>
+        `${t(`lesson_type_${lessonItem.lessonType.toLowerCase()}_label`, {
             ns: 'formElements',
         })}`;
-    };
 
     return (
         <Card additionClassName="lesson-card">

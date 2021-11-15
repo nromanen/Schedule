@@ -22,9 +22,9 @@ const Lessons = (props) => {
 
     if (isEmpty(visibleItems) && groupId) {
         return (
-            <section className="centered-container">
-                <h2>{t(LESSON_NO_LESSON_FOR_GROUP_LABEL) + group.title}</h2>
-            </section>
+            <h2 className="centered-container">
+                {t(LESSON_NO_LESSON_FOR_GROUP_LABEL) + group.title}
+            </h2>
         );
     }
 

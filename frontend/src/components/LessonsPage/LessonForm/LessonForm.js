@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Field } from 'redux-form';
 import { useTranslation } from 'react-i18next';
 
@@ -62,7 +62,7 @@ const LessonForm = (props) => {
         setUniqueError,
         selectGroupSuccess,
     } = props;
-    const [checked, setChecked] = React.useState(false);
+    const [checked, setChecked] = useState(false);
 
     const lessonId = lesson.id;
 
@@ -109,6 +109,12 @@ const LessonForm = (props) => {
 
     const valid = !isUniqueError ? { validate: [required] } : { error: isUniqueError };
 
+    const clearForm = () => {
+        reset();
+        setUniqueError(null);
+        selectLessonCard(null);
+    };
+
     return (
         <>
             {groupId ? (
@@ -118,24 +124,23 @@ const LessonForm = (props) => {
                         <Field
                             name="teacher"
                             component={renderLessonAutocomplete}
+                            {...valid}
                             label={t(TEACHER_LABEL)}
                             type="text"
                             getItemTitle={handleTeacherInfo}
                             values={teachers}
-                            {...valid}
                             onChange={() => setUniqueError(false)}
                             getOptionLabel={(option) => (option ? handleTeacherInfo(option) : '')}
                         />
                         <Field
                             name="subject"
                             component={renderLessonAutocomplete}
+                            {...valid}
                             label={t(SUBJECT_LABEL)}
                             type="text"
-                            getItemTitle={(sub) => {
-                                return sub.name;
-                            }}
+                            // FIX RETURN
+                            getItemTitle={(sub) => sub.name}
                             values={subjects}
-                            {...valid}
                             onChange={(subject) => {
                                 change('subjectForSite', subject?.name ?? '');
                                 setUniqueError(false);
@@ -148,15 +153,13 @@ const LessonForm = (props) => {
                             <Field
                                 name="type"
                                 component={renderLessonAutocomplete}
-                                label={t(TYPE_LABEL)}
-                                getItemTitle={(type) => {
-                                    return t(
-                                        `formElements:lesson_type_${type.toLowerCase()}_label`,
-                                    );
-                                }}
-                                type="text"
-                                values={lessonTypes}
                                 {...valid}
+                                label={t(TYPE_LABEL)}
+                                type="text"
+                                getItemTitle={(type) => {
+                                    t(`formElements:lesson_type_${type.toLowerCase()}_label`);
+                                }}
+                                values={lessonTypes}
                                 onChange={() => {
                                     setUniqueError(false);
                                 }}
@@ -263,9 +266,7 @@ const LessonForm = (props) => {
                                 variant="contained"
                                 disabled={setDisableButton(pristine, submitting, lesson.id)}
                                 onClick={() => {
-                                    reset();
-                                    setUniqueError(null);
-                                    selectLessonCard(null);
+                                    clearForm();
                                 }}
                             >
                                 {getClearOrCancelTitle(lesson.id, t)}
@@ -274,9 +275,9 @@ const LessonForm = (props) => {
                     </form>
                 </Card>
             ) : (
-                <div className="card not-selected">
-                    <h2>{`${t(GROUP_LABEL)} ${t(NOT_SELECTED_LABEL)}`}</h2>
-                </div>
+                <h2 className="card not-selected">{`${t(GROUP_LABEL)} ${t(
+                    NOT_SELECTED_LABEL,
+                )}`}</h2>
             )}
         </>
     );
