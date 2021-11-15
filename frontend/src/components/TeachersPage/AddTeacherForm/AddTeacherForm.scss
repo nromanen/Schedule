@@ -1,5 +1,5 @@
-@import '../../../styles/colors.scss';
-@import '../../../styles//variables.scss';
+@import "../../../styles/colors.scss";
+@import "../../../styles//variables.scss";
 
 .add-form {
     width: 100%;
@@ -16,7 +16,7 @@
         width: auto;
         margin: 20px 0 0 0;
         top: 1em;
-        background-color: $main-color;
+        background-color: $white;
         padding: 1rem;
         border-radius: 5px;
         box-shadow: 0 2px 8px $shadow-box;
@@ -38,6 +38,6 @@
 .select-department {
     margin-bottom: 10px;
     &:hover {
-        background-color: $selected-black;
+        background-color: $selected-hover-color;
     }
 }

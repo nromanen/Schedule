@@ -1,5 +1,5 @@
-@import '../../../styles/variables.scss';
-@import '../../../styles/colors.scss';
+@import "../../../styles/variables.scss";
+@import "../../../styles/colors.scss";
 
 .view-rooms {
     margin: 0;
@@ -11,7 +11,7 @@
         margin: 5px;
         align-items: center;
         justify-content: center;
-        font-size: $font-sm;
+        font-size: $font-xs;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
@@ -34,11 +34,11 @@
             &::after {
                 position: absolute;
                 top: 0;
-                content: '';
+                content: "";
                 width: $w-full;
                 height: 100%;
                 background: none;
-                border: 2px solid $light-blue;
+                border: 2px solid $blue3;
             }
         }
     }

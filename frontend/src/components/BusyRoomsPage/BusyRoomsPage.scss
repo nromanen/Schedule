@@ -1,5 +1,5 @@
-@import '../../styles/variables.scss';
-@import '../../styles/colors.scss';
+@import "../../styles/variables.scss";
+@import "../../styles/colors.scss";
 
 .busy-rooms-control-panel.schedule-card {
     position: relative;
@@ -37,7 +37,7 @@
         display: flex;
         align-items: center;
         .MuiFormLabel-root {
-            font-size: $font-sm;
+            font-size: $font-xs;
         }
         .MuiFormLabel-root.Mui-focused {
             color: $blue;
@@ -51,12 +51,12 @@
                 color: $blue;
             }
             .MuiTypography-root {
-                font-size: $font-sm;
+                font-size: $font-xs;
             }
             .MuiButtonBase-root {
                 padding: 4px;
                 &:hover {
-                    background-color: $selected-black;
+                    background-color: $selected-hover-color;
                 }
             }
         }

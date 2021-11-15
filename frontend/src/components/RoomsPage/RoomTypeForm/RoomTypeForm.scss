@@ -1,4 +1,4 @@
-@import '../../../styles/colors.scss';
+@import "../../../styles/colors.scss";
 
 .room-type-form {
     text-align: center;
@@ -36,7 +36,7 @@
             cursor: pointer;
         }
         &__edit:hover {
-            color: $dark-blue;
+            color: $blue5;
             transition: ease-in-out 0.5s;
         }
 

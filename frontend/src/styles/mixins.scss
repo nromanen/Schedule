@@ -10,8 +10,24 @@
 
 @mixin buttonStyle {
   cursor: pointer;
-  width: $btn-size;
-  height: $btn-size;
+  width: $icon-size;
+  height: $icon-size;
   transition: color 0.3s linear;
 }
 
+@mixin button-icon($color, $hoverColor, $size: $icon-size) {
+  cursor: pointer;
+  font-size: $icon-size;
+  color: $color;
+  &:hover {
+    color: $hoverColor;
+    transition: all 0.3s ease;
+  }
+}
+
+@mixin displayFlex($align, $justify, $direction: row) {
+  display: flex;
+  align-items: $align;
+  justify-content: $justify;
+  flex-direction: $direction;
+}
