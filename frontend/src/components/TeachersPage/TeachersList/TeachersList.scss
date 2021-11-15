@@ -1,11 +1,11 @@
-@import '../../../styles/colors.scss';
-@import '../../../styles/fonts.scss';
-@import '../../../styles/variables.scss';
+@import "../../../styles/colors.scss";
+@import "../../../styles/fonts.scss";
+@import "../../../styles/variables.scss";
 
 @mixin buttonStyle {
     cursor: pointer;
-    width: $btn-size;
-    height: $btn-size;
+    width: $icon-size;
+    height: $icon-size;
     transition: color 0.3s linear;
 }
 
@@ -45,7 +45,7 @@
             width: auto;
             max-width: fit-content;
             min-height: 85px;
-            background-color: $main-color;
+            background-color: $white;
             display: inline-block;
             margin: 10px;
             padding: 1rem;
@@ -79,7 +79,7 @@
         }
     }
 
-    @media (max-width: $md-table-lanscape) {
+    @media (max-width: $md-width-lanscape) {
         position: relative;
         margin-bottom: 20px;
         max-width: 90%;
@@ -96,7 +96,7 @@
 .teacher-card {
     position: relative;
     height: 14.5em;
-    background-color: $main-color;
+    background-color: $white;
     width: 15em;
     display: inline-block;
     margin: 10px;
@@ -170,7 +170,7 @@
         font-size: 16px;
         color: $link;
         margin: 16px 0;
-        background-color: $main-color;
+        background-color: $white;
         border: none;
         cursor: pointer;
     }
@@ -184,7 +184,7 @@
     flex-wrap: wrap;
     margin: 0;
 
-    @media (max-width: $md-table-lanscape) {
+    @media (max-width: $md-width-lanscape) {
         margin-top: 15px;
     }
 }

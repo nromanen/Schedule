@@ -1,5 +1,5 @@
-@import '../../styles/colors.scss';
-@import '../../styles/variables.scss';
+@import "../../styles/colors.scss";
+@import "../../styles/variables.scss";
 
 a.pdf_link {
     display: block;
@@ -30,10 +30,8 @@ a.pdf_link {
         margin: 0 auto;
         width: auto;
 
-        thead.MuiTableHead-root
-            tr.MuiTableRow-root.MuiTableRow-head
-            th.MuiTableCell-root.MuiTableCell-head {
-            background-color: $main-color;
+        thead.MuiTableHead-root tr.MuiTableRow-root.MuiTableRow-head th.MuiTableCell-root.MuiTableCell-head {
+            background-color: $white;
             border-right: $regular-border;
             position: sticky;
             text-align: center;
@@ -52,7 +50,7 @@ a.pdf_link {
             width: auto;
             z-index: 0;
 
-            &[rowSpan~='2'] {
+            &[rowSpan~="2"] {
                 height: 120px;
             }
 
@@ -75,23 +73,23 @@ a.pdf_link {
                     background-color: $danger-background-color;
                 }
                 p.temporary-class {
-                    background-color: $create-color-light;
+                    background-color: $green2;
                     padding: 5px 0;
                     cursor: pointer;
                 }
             }
 
             &.grouped {
-                background-color: $dark-yellow;
+                background-color: $yellow1;
             }
 
             &.currentDay {
-                background-color: $light-blue;
+                background-color: $blue3;
             }
 
             &.classNameCell,
             &.dayNameCell {
-                background-color: $main-color;
+                background-color: $white;
                 border-right: $regular-border;
                 font-size: 1em;
                 position: relative;
@@ -104,7 +102,7 @@ a.pdf_link {
                 left: 50px;
                 width: 10px;
                 &.currentDay {
-                    background-color: $light-blue;
+                    background-color: $blue3;
                 }
                 &.subClassName {
                     left: 112px;
@@ -124,7 +122,7 @@ a.pdf_link {
                 }
 
                 &.currentDay {
-                    background-color: $light-blue;
+                    background-color: $blue3;
                 }
 
                 .dayName {

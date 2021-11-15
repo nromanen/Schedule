@@ -1,61 +1,60 @@
+@import "../../styles/colors.scss";
+@import "../../styles/mixins.scss";
+@import "../../styles/variables.scss";
 
-@import '../../styles/colors.scss';
-@import '../../styles/mixins.scss';
-@import '../../styles/variables.scss';    
-
-.louder-container{
- @include displayCenter();
+.louder-container {
+  @include displayCenter();
   min-width: 510px;
 }
 
-.table{
+.table {
   margin: 20px 20px 0 20px;
-  border: $table-border;
-  .MuiTableContainer-root{
+  border: $regular-border;
+  .MuiTableContainer-root {
     max-height: 65vh;
     overflow: auto;
     margin-bottom: 0;
   }
-  .MuiTable-root{
+  .MuiTable-root {
     max-height: 20%;
     min-width: 700px;
   }
-  .MuiTableCell-alignCenter{
+  .MuiTableCell-alignCenter {
     text-align: left;
   }
-  .MuiTableRow-root{
-    &:hover{
-      background-color: $light-hover-blue;
+  .MuiTableRow-root {
+    &:hover {
+      background-color: $table-row-hover-color;
     }
   }
-  tr:nth-child(odd){
-      background-color: $light-blue-table;
-    }
+  tr:nth-child(odd) {
+    background-color: $table-row-color;
+  }
 }
 
-.title-align{
-  color: $blue-hover;
+.title-align {
+  color: $blue-btn-hover;
   margin-top: 0;
   margin-bottom: 0;
 }
-.edit-cell{
+.edit-cell {
   @include displayCenter();
   flex-direction: row;
   flex-wrap: nowrap;
   margin: 0 20px;
-  .edit-button{
+  .edit-button {
     color: $blue;
     margin-right: 10px;
     font-size: 25px;
-    &:hover{
-      color: $blue-hover;
+    &:hover {
+      color: $blue-btn-hover;
     }
   }
-  .delete-button{
-    color: $light-red;
+  .delete-button {
+    color: $red2;
     font-size: 25px;
-    &:hover{
-      color: $delete-color
+    &:hover {
+      color: $delete-color;
     }
   }
 }
@@ -65,14 +64,14 @@
   height: 20px;
 }
 
-.table-footer{ 
-    @include displayCenter();
-    width: 100%; 
-    .MuiTableCell-root{
-      border-bottom: none;
-    }
+.table-footer {
+  @include displayCenter();
+  width: 100%;
+  .MuiTableCell-root {
+    border-bottom: none;
+  }
 }
-.empty-students-table{
+.empty-students-table {
   display: flex;
   align-items: center;
   justify-content: center;

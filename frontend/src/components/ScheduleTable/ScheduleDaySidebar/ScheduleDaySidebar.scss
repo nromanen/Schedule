@@ -1,8 +1,8 @@
-@import '../../../styles/colors.scss';
-@import '../../../styles/variables.scss';
+@import "../../../styles/colors.scss";
+@import "../../../styles/variables.scss";
 
 .schedule-card {
-    background-color: $main-color;
+    background-color: $white;
     display: inline-block;
     margin: 10px;
     padding: 1rem;
@@ -16,7 +16,7 @@
     z-index: 10;
     padding-left: 15px;
     padding-top: 15px;
-    background-color: $snowy-white;
+    background-color: $white;
     .card.empty-card {
         width: 120px;
         height: 19px;
@@ -44,7 +44,7 @@
         .schedule-class {
             height: 228px;
             text-align: center;
-            font-size: $font-base;
+            font-size: $font-s;
             writing-mode: vertical-rl;
             text-orientation: upright;
             margin-bottom: 0.8px;
@@ -52,28 +52,28 @@
         }
     }
     .dark-blue-day {
-        background-color: $light-blue;
-        color: $snowy-white;
+        background-color: $blue3;
+        color: $white;
     }
 
     .blue-day {
         background-color: $blue;
-        color: $snowy-white;
+        color: $white;
     }
     .day-sidebar-title {
         display: flex;
         height: 34px;
         padding: 10px 7px;
         justify-content: center;
-        font-size: $font-sm;
+        font-size: $font-xs;
         overflow: hidden;
         align-items: center;
         margin: 5px 5px 5px 0px;
     }
     .focus-class {
         box-sizing: border-box;
-        background-color: $light-blue;
-        color: $snowy-white;
+        background-color: $blue3;
+        color: $white;
     }
 }
 .hover-line {
@@ -83,7 +83,7 @@
     width: 100vw;
     z-index: -10;
     box-sizing: border-box;
-    border-bottom: 2px solid $light-blue;
+    border-bottom: 2px solid $blue3;
     &:nth-of-type(2) {
         top: 226px;
     }

@@ -1,7 +1,7 @@
-@import '../../../styles/colors.scss';
-@import '../../../styles/fonts.scss';
-@import '../../../styles/variables.scss';
-@import '../../../styles/mixins.scss';
+@import "../../../styles/colors.scss";
+@import "../../../styles/fonts.scss";
+@import "../../../styles/variables.scss";
+@import "../../../styles/mixins.scss";
 
 $group-size: 10px;
 
@@ -10,13 +10,13 @@ $group-size: 10px;
     width: 155px; 
     height: 133px;
 
-    display: flex;
-    flex-direction: column;
-    margin: $group-size;
-    padding: 10px;
+  display: flex;
+  flex-direction: column;
+  margin: $group-size;
+  padding: 10px;
 
-    border-radius: 2px;
-    box-shadow: 0 1px 4px $shadow-box;
+  border-radius: 2px;
+  box-shadow: 0 1px 4px $shadow-box;
 
     &__number {
       font-size: $font-xl;
@@ -36,30 +36,29 @@ $group-size: 10px;
     margin: 0 auto;
     display: flex;
     justify-content: space-between;
-
   }
-  &__buttons-delete{
+  &__buttons-delete {
     @include buttonStyle();
 
     &:hover {
       color: $delete-color;
     }
   }
-  &__buttons-edit{
+  &__buttons-edit {
     @include buttonStyle();
 
     &:hover {
       color: $background-color;
     }
   }
-  &__buttons-hide{
+  &__buttons-hide {
     @include buttonStyle();
 
     &:hover {
       color: $green;
     }
   }
-  &__button-students{
+  &__button-students {
     display: flex;
   flex-direction: column;
   flex-wrap: wrap;
@@ -67,24 +66,24 @@ $group-size: 10px;
   margin-top: 5px;
   }
   .students {
-    color: $blue-hover;
+    color: $blue-btn-hover;
     margin: -15px -8px;
     font-size: 20px;
     cursor: pointer;
     &:hover {
-    color: $blue;
+      color: $blue;
+    }
   }
-  }
-.student{
+  .student {
     color: $green;
     cursor: pointer;
     &:hover {
-    color: $dark-green;
-  }
+      color: $green3;
+    }
   }
 }
 
- .link-href {
+.link-href {
   text-decoration: none;
   color: $black;
 }

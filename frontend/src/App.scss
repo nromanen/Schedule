@@ -1,7 +1,7 @@
-@import './styles/colors.scss';
-@import './styles/fonts.scss';
-@import './styles/variables.scss';
-@import './styles/mixins.scss';
+@import "./styles/colors.scss";
+@import "./styles/fonts.scss";
+@import "./styles/variables.scss";
+@import "./styles/mixins.scss";
 
 html {
     height: 100%;
@@ -47,7 +47,7 @@ body {
     position: relative;
 
     &::after {
-        content: '';
+        content: "";
         position: absolute;
         left: 0;
         width: 100%;
@@ -185,12 +185,12 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-    background: $thunck-color;
+    background: $scroll-color;
     border-radius: 5px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: $thunck-color-hover;
+    background: $scroll-hover-color;
 }
 
 .search-list__panel {
@@ -227,3 +227,19 @@ body {
     margin: 10px;
     color: $blue;
 }
+
+
+// icon-btn
+
+.edit-icon-btn{
+  @include button-icon($black, $blue)
+}
+
+.eye-icon-btn, .copy-icon-btn{
+  @include button-icon($black, $green)
+}
+
+.delete-icon-btn{
+  @include button-icon($black, $red)
+}
+

@@ -1,6 +1,6 @@
-@import '../../styles/forms.scss';
-@import '../../styles/colors.scss';
-@import '../../styles/variables.scss';
+@import "../../styles/forms.scss";
+@import "../../styles/colors.scss";
+@import "../../styles/variables.scss";
 
 .free-room-form {
     margin-left: 5px;
@@ -60,7 +60,7 @@
     padding: {
         left: 20px;
     }
-    border-left: 1px solid $light-gray;
+    border-left: 1px solid $gray1;
     align-content: center;
     justify-content: center;
     @media (max-width: $md-width) {
@@ -68,7 +68,7 @@
         border-left: none;
         padding-left: none;
         padding-bottom: 20px;
-        border-bottom: 1px solid $light-gray;
+        border-bottom: 1px solid $gray1;
     }
 }
 .room-icon-container,
@@ -81,17 +81,16 @@
     transform: translate(-50%, -50%);
 }
 
-.free-room-card.card{
+.free-room-card.card {
     width: 150px;
     margin: 8px;
     .room-card-name {
         margin: 10px 0px;
-        font-size: $font-base;
+        font-size: $font-s;
     }
     span {
         display: flex;
-        font-size: $font-sm;
-
+        font-size: $font-xs;
     }
     .room-card-type {
         margin: 0px;
