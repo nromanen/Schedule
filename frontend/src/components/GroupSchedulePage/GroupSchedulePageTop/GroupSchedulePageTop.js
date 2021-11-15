@@ -9,22 +9,22 @@ import {
     GREETING_SCHEDULE_MESSAGE,
     GREETING_SCHEDULE_MESSAGE_HINT,
 } from '../../../constants/translationLabels/common';
-import SelectPlace from '../SelectPlace';
+import SelectPlace from '../../../containers/GroupSchedulePage/SelectPlace';
 import SchedulePageForm from '../../../containers/GroupSchedulePage/SchedulePageForm';
 
 const GroupSchedulePageTop = (props) => {
     const { t } = useTranslation('common');
-    const { handleSubmit, changePlace, place } = props;
+    const { handleSubmit } = props;
 
     return (
         <section className="schedule_page-container">
             <p>{t(GREETING_SCHEDULE_MESSAGE)}</p>
             <p>{t(GREETING_SCHEDULE_MESSAGE_HINT)}</p>
-            <section className="form-buttons-container top">
-                <Card additionClassName="form-card width-auto">
+            <section className="schedule-form-buttons-container">
+                <Card additionClassName="form-card schedule-form-card">
                     <SchedulePageForm onSubmit={handleSubmit} />
                 </Card>
-                <SelectPlace place={place} changePlace={changePlace} />
+                <SelectPlace />
             </section>
         </section>
     );

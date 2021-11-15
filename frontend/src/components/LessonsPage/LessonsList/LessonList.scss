@@ -1,6 +1,6 @@
-@import '../../../styles/colors.scss';
-@import '../../../styles/fonts.scss';
-@import '../../../styles/variables.scss';
+@import "../../../styles/colors.scss";
+@import "../../../styles/fonts.scss";
+@import "../../../styles/variables.scss";
 
 @mixin flexWrap {
     display: flex;
@@ -8,8 +8,8 @@
 
 @mixin buttonStyle {
     cursor: pointer;
-    width: $btn-size;
-    height: $btn-size;
+    width: $icon-size;
+    height: $icon-size;
     transition: color 0.3s linear;
 }
 
@@ -37,7 +37,7 @@
         flex-wrap: wrap;
 
         .lesson-card {
-            background-color: $main-color;
+            background-color: $white;
             width: 15em;
             height: 16.5em;
 

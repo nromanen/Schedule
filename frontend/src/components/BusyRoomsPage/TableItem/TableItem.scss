@@ -1,11 +1,11 @@
-@import '../../../styles/colors.scss';
-@import '../../../styles/variables.scss';
+@import "../../../styles/colors.scss";
+@import "../../../styles/variables.scss";
 
 .class-container {
     position: relative;
     margin: 0;
     .schedule-card {
-        background-color: $snowy-white;
+        background-color: $white;
         margin: 5px;
         border-radius: 5px;
         box-shadow: 0 2px 8px $shadow-box;
@@ -29,28 +29,29 @@
                 margin: -5px;
                 min-height: 114px;
                 box-shadow: 0 0 8px 4px $blue-shadow-box;
-                .group-list-container { 
+                .group-list-container {
                     display: block;
                 }
             }
         }
     }
-    .group-list-container { 
+    .group-list-container {
         display: -webkit-box;
         margin-top: 5px;
-        text-align: center; 
+        text-align: center;
         overflow: hidden;
-            -webkit-line-clamp: 4;
-            -webkit-box-orient: vertical;
+        -webkit-line-clamp: 4;
+        -webkit-box-orient: vertical;
     }
     .group-list {
+        display: initial;
         margin: 2px;
-        font-size: $font-sm;
+        font-size: $font-xs;
         font-weight: bold;
         &:after {
-            content: ',';
+            content: ",";
         }
-        &:last-of-type::after{
+        &:last-of-type::after {
             display: none;
         }
     }
@@ -58,8 +59,8 @@
         position: absolute;
         left: 10px;
         top: -4px;
-        color: $light-gray;
-        font-size: $font-xs;
+        color: $gray1;
+        font-size: $font-2xs;
         &::first-letter {
             text-transform: uppercase;
         }
@@ -75,15 +76,15 @@
         background-color: $warning-color;
     }
     .available {
-        background-color: $light-green;
+        background-color: $green1;
     }
     .allow {
-        background-color: $create-color-light;
+        background-color: $green2;
     }
     .not-allow {
-        background-color: $light-red;
+        background-color: $red2;
         p {
-            color: $main-color;
+            color: $white;
         }
     }
 }

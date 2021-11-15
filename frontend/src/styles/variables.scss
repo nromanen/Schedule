@@ -1,10 +1,6 @@
-@import './colors.scss';
+@import "./colors.scss";
 
-
-$regular-border: 1px solid #e0e0e0;
-$table-border:1px solid rgba(224, 224, 224, 1);
-$card-border: 1px solid $light-gray;
-$card-shadow: 4px 4px 8px -4px $card-shadow-color;
+$regular-border: 1px solid $grey4;
 
 //width and height constants
 $h-screen: 100vh;
@@ -21,20 +17,33 @@ $h-10: 10%;
 $w-10: 10%;
 
 // fonts constants
-$font-xs: 12px;
-$font-sm: 14px;
-$font-base: 16px;
-$btn-size: 20px;
-$schedule-button-size: 15px;
+$font-2xs: 12px;
+$font-xs: 14px;
+$font-s: 16px;
+$font-m: 18px;
+$font-l: 20px;
+$font-xl: 24px;
+$font-2xl: 28px;
+$font-3xl: 36px;
+$font-4xl: 40px;
+$font-7xl: 72px;
+$font-10xl: 140px;
+
+// button size
+$icon-size: $font-l;
 
 //responsive constants
-$md-width: 768px;
-$md-large: 1440px;
-$md-desktop: 1200px;
-$md-table: 768px;
-$md-medium: 650px;
-$md-table-lanscape: 850px;
-$md-small: 500px;
-$sm-width: 640px;
-$md-smaller: 400px;
+$md-2xl: 1400px;
+$md-xl: 1200px;
+$md-l: 992px;
+$md-m: 768px;
+$md-s: 576px;
+
+//
 $schedule-pc-screen: 1000px;
+$md-width-lanscape: 850px;
+$md-width: 768px;
+$md-medium: 650px;
+$md-small: 500px;
+$md-smaller: 400px;
+$sm-width: 640px;

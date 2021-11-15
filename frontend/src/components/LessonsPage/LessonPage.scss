@@ -1,6 +1,6 @@
-@import '../../styles/colors.scss';
-@import '../../styles/fonts.scss';
-@import '../../styles/variables.scss';
+@import "../../styles/colors.scss";
+@import "../../styles/fonts.scss";
+@import "../../styles/variables.scss";
 
 @mixin flexWrap {
     display: flex;
@@ -8,8 +8,8 @@
 
 @mixin buttonStyle {
     cursor: pointer;
-    width: $btn-size;
-    height: $btn-size;
+    width: $icon-size;
+    height: $icon-size;
     transition: color 0.3s linear;
 }
 
@@ -52,12 +52,17 @@
     .lesson-form-container .section {
         margin-top: 20px;
     }
+    .lesson-form-container .form-card {
+        .MuiFormControl-root {
+            width: 100%;
+        }
+    }
 
     .lesson-form-card {
         width: 20em;
         position: sticky;
         top: 1em;
-        background-color: $main-color;
+        background-color: $white;
         display: inline-block;
         margin: 10px;
         padding: 1rem;
@@ -86,7 +91,7 @@
     .search-group {
         max-width: 320px;
         width: 100%;
-        background-color: $main-color;
+        background-color: $white;
         display: inline-block;
         margin: 10px;
         padding: 1rem;

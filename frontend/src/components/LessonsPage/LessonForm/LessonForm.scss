@@ -1,9 +1,10 @@
-@import '../../../styles/variables.scss';
+@import "../../../styles/variables.scss";
 
 .lesson-form {
     margin: 7px 2px;
     .MuiFormControl-root {
         margin-top: 10px;
+        width: 100%;
     }
 
     .MuiAccordion-root {
@@ -64,7 +65,7 @@
         .buttons-style {
             width: 48%;
 
-            @media (max-width: $md-table) {
+            @media (max-width: $md-width) {
                 margin-bottom: 5px;
                 font-size: 12px;
                 width: 60%;

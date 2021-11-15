@@ -3,33 +3,33 @@ import { Autocomplete } from '@material-ui/lab';
 import { FormControl, TextField } from '@material-ui/core';
 import { renderFromHelper } from '../share/renderedFields/error';
 
-export const renderAutocompleteField = ({
+export const renderLessonAutocomplete = ({
     values,
+    title,
     label,
+    getItemTitle,
     input,
-    handleChange,
     getOptionLabel,
     meta: { touched, error },
     className,
     ...custom
 }) => {
+    const customTitle = input.value && getItemTitle(input.value);
+
     return (
         <Autocomplete
             label={label}
             options={values}
             placeholder={label}
             getOptionLabel={getOptionLabel}
-            className={className}
+            title={customTitle}
             {...input}
             {...custom}
-            onChange={(_, value) => {
-                handleChange(value);
-                return input.onChange(value);
-            }}
+            onChange={(_, value) => input.onChange(value)}
             onBlur={(_, value) => input.onBlur(value)}
             renderInput={(params) => (
                 <FormControl error={touched && !!error}>
-                    <TextField {...params} label={label} />
+                    <TextField {...params} label={label} className={className} />
                     {renderFromHelper({ touched, error })}
                 </FormControl>
             )}
