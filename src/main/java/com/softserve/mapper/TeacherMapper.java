@@ -24,6 +24,7 @@ public abstract class TeacherMapper {
     @Mapping(target = "email", source = "userId", qualifiedByName = "userIdToEmail")
     public abstract TeacherDTO teacherToTeacherDTO(Teacher teacher);
 
+    //TODO do i need to apply Pasha changing?
     public String userIdToEmail(Integer userId) {
         if(userId != null) {
             return userService.getById(userId.longValue()).getEmail();
