@@ -1,8 +1,6 @@
 import { reset } from 'redux-form';
 import { call, put, takeLatest } from 'redux-saga/effects';
-
 import * as actionTypes from '../actions/actionsType';
-
 import {
     createLesson,
     selectLessonCard,
@@ -13,9 +11,7 @@ import {
     setLessonTypes,
 } from '../actions';
 import { setOpenErrorSnackbar, setOpenSuccessSnackbar } from '../actions/snackbar';
-
 import { createErrorMessage, createMessage } from '../utils/sagaUtils';
-
 import { DELETE, POST, PUT, GET } from '../constants/methods';
 import { LESSON_FORM } from '../constants/reduxForms';
 import { FORM_LESSON_LABEL } from '../constants/translationLabels/formElements';
@@ -28,6 +24,7 @@ import {
     COPIED_LABEL,
 } from '../constants/translationLabels/serviceMessages';
 import { axiosCall } from '../services/axios';
+import { handleFormSubmit } from '../helper/handleFormSubmit';
 
 export function* createLessonCard({ values, groupId }) {
     try {
@@ -67,11 +64,7 @@ export function* updateLesson({ values, groupId }) {
 
 export function* handleLesson({ values, groupId }) {
     try {
-        if (values.id) {
-            yield call(updateLesson, { values, groupId });
-        } else {
-            yield call(createLessonCard, { values, groupId });
-        }
+        yield call(handleFormSubmit(values, createLessonCard, updateLesson), { values, groupId });
     } catch (error) {
         yield put(setOpenErrorSnackbar(createErrorMessage(error)));
     }

@@ -35,6 +35,7 @@ import {
     getTeacherWithoutAccountSuccess,
     getAllTeachersByDepartmentId,
 } from '../actions/teachers';
+import { handleFormSubmit } from '../helper/handleFormSubmit';
 
 export function* getEnabledTeachers() {
     try {
@@ -78,7 +79,7 @@ export function* removeTeacher({ id }) {
     }
 }
 
-export function* createTeacher(teacher) {
+export function* createTeacher({ teacher }) {
     const results = { ...teacher };
     if (isObjectEmpty(teacher.department) || !teacher.department?.id) {
         delete results.department;
@@ -142,11 +143,7 @@ function* toggleDisabledTeacher({ teacherId, disableStatus }) {
 
 export function* handleTeacher({ values }) {
     try {
-        if (values.id) {
-            yield call(updateTeacher, { teacher: values });
-        } else {
-            yield call(createTeacher, values);
-        }
+        yield call(handleFormSubmit(values, createTeacher, updateTeacher), { teacher: values });
     } catch (error) {
         yield put(setOpenErrorSnackbar(createErrorMessage(error)));
     }
