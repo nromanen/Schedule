@@ -26,9 +26,9 @@ const RoomList = (props) => {
         return <NotFound name={t(ROOM_Y_LABEL)} />;
     }
     return (
-        <section className="container-flex-wrap wrapper">
+        <section className="container-flex-wrap">
             {visibleItems.map((room) => (
-                <RoomCard key={room.id} room={room} isDisabled={isDisabled} {...rest} />
+                <RoomCard key={room.id} {...rest} room={room} isDisabled={isDisabled} />
             ))}
         </section>
     );

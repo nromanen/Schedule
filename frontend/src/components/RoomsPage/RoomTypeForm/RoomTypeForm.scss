@@ -1,4 +1,11 @@
-@import "../../../styles/colors.scss";
+@import '../../../styles/colors.scss';
+@import '../../../styles/mixins.scss';
+@import '../../../styles/variables.scss';
+
+.room-type-card {
+    width: 350px;
+    padding: 0 20px 20px;
+}
 
 .room-type-form {
     text-align: center;
@@ -9,17 +16,14 @@
     margin: 15px 0;
 
     .type-form-btn {
-        width: 96%;
+        width: $w-full;
     }
 }
 
 .form-types-list {
     padding: 0;
-
     .form-types-item {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
+        @include displayFlex(center, space-between);
     }
 }
 
@@ -27,25 +31,13 @@
     vertical-align: middle;
 }
 
-.form-types-icons {
-    .room-type-icon {
-        margin: 7px;
-        font-size: 22px;
+.room-type-icon {
+    margin: 7px;
+    &_edit {
+        @include button-icon($black, $blue, 22px);
+    }
 
-        &_edit {
-            cursor: pointer;
-        }
-        &__edit:hover {
-            color: $blue5;
-            transition: ease-in-out 0.5s;
-        }
-
-        &__delete {
-            cursor: pointer;
-        }
-        &__delete:hover {
-            color: $delete-color;
-            transition: ease-in-out 0.5s;
-        }
+    &_delete {
+        @include button-icon($black, $red, 22px);
     }
 }
