@@ -1,12 +1,13 @@
+@import '../../../../styles/variables.scss';
 .room-card {
-    height: 9.5em;
-    width: 15.1em;
+    height: 150px;
+    width: 235px;
 
-    &__name {
-        margin: 0.2em 0 1em;
-        font-size: 1.2rem;
+    &-name {
+        margin: 5px 0 15px;
+        font-size: $font-l;
     }
-    &__title {
-        margin: 0.2em 0 1em;
+    &-title {
+        margin: 5px 0 15px;
     }
 }
