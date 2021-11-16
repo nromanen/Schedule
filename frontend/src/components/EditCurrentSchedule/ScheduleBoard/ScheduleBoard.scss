@@ -1,5 +1,5 @@
-@import "../../../styles/variables.scss";
-@import "../../../styles/colors.scss";
+@import '../../../styles/variables.scss';
+@import '../../../styles/colors.scss';
 
 .board-container {
     position: relative;
@@ -72,7 +72,7 @@
         }
         p {
             display: flex;
-            height: $h-full;
+            height: $full-size;
             margin: 0;
             align-items: center;
             justify-content: center;

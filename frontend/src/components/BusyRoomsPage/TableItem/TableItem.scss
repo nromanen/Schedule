@@ -1,5 +1,5 @@
-@import "../../../styles/colors.scss";
-@import "../../../styles/variables.scss";
+@import '../../../styles/colors.scss';
+@import '../../../styles/variables.scss';
 
 .class-container {
     position: relative;
@@ -12,13 +12,13 @@
     }
     .class-info-container {
         position: relative;
-        width: $w-full;
+        width: $full-size;
         height: 114px;
         padding: 5px;
         .class-info-data {
             position: relative;
-            width: $w-full;
-            height: $h-full;
+            width: $full-size;
+            height: $full-size;
             padding: 10px;
             margin: 0px;
             z-index: 1;
@@ -49,7 +49,7 @@
         font-size: $font-xs;
         font-weight: bold;
         &:after {
-            content: ",";
+            content: ',';
         }
         &:last-of-type::after {
             display: none;
