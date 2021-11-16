@@ -1,6 +1,6 @@
-@import "../../styles/colors.scss";
-@import "../../styles/mixins.scss";
-@import "../../styles/variables.scss";
+@import '../../styles/colors.scss';
+@import '../../styles/mixins.scss';
+@import '../../styles/variables.scss';
 
 .louder-container {
   @include displayFlex(center, center);
@@ -55,14 +55,14 @@
 }
 .table-footer {
   @include displayFlex(center, center);
-  width: $w-full;
+  width: $full-size;
   .MuiTableCell-root {
     border-bottom: none;
   }
 }
 .checkbox-table-body {
   @include displayFlex(center, center);
-  width: 100%;
+  width: $full-size;
   .MuiIconButton-label{
     color: $blue;
   }

@@ -1,20 +1,12 @@
-@import "./colors.scss";
+@import './colors.scss';
 
 $regular-border: 1px solid $grey4;
 
 //width and height constants
 $h-screen: 100vh;
 $w-screen: 100vw;
-$h-full: 100%;
-$w-full: 100%;
-$h-75: 75%;
-$w-75: 75%;
-$h-50: 50%;
-$w-50: 50%;
-$h-25: 25%;
-$w-25: 25%;
-$h-10: 10%;
-$w-10: 10%;
+$full-size: 100%;
+$medium-size: 50%;
 
 // fonts constants
 $font-2xs: 12px;

@@ -1,6 +1,6 @@
-@import "../../styles/forms.scss";
-@import "../../styles/colors.scss";
-@import "../../styles/variables.scss";
+@import '../../styles/forms.scss';
+@import '../../styles/colors.scss';
+@import '../../styles/variables.scss';
 
 .free-room-form {
     margin-left: 5px;
@@ -12,7 +12,7 @@
     .app-button-container {
         margin-top: 15px;
         .common-button {
-            width: $w-full;
+            width: $full-size;
         }
     }
     h3 {
@@ -64,7 +64,7 @@
     align-content: center;
     justify-content: center;
     @media (max-width: $md-width) {
-        width: $w-full;
+        width: $full-size;
         border-left: none;
         padding-left: none;
         padding-bottom: 20px;
@@ -76,8 +76,8 @@
     position: absolute;
     display: flex;
     flex-direction: column;
-    top: $h-50;
-    left: $w-50;
+    top: $medium-size;
+    left: $medium-size;
     transform: translate(-50%, -50%);
 }
 
