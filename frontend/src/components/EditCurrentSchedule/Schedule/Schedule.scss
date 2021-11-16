@@ -1,5 +1,5 @@
-@import "../../../styles/colors.scss";
-@import "../../../styles/variables.scss";
+@import '../../../styles/colors.scss';
+@import '../../../styles/variables.scss';
 
 .selected-group {
     border: 2px solid $blue3;
@@ -73,8 +73,8 @@
         &::after {
             position: absolute;
             top: 0;
-            content: "";
-            width: $w-full;
+            content: '';
+            width: $full-size;
             height: 100%;
             background: none;
             border: 2px solid $blue3;
