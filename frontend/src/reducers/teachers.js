@@ -21,9 +21,7 @@ const reducer = (
 ) => {
     switch (action.type) {
         case actionTypes.ADD_TEACHER_SUCCESS:
-            return updateObject(state, {
-                teachers: [...state.teachers, action.teacher].sort(compare),
-            });
+            return { ...state, teachers: [...state.teachers, action.teacher].sort(compare) };
 
         case actionTypes.DELETE_TEACHER_SUCCESS: {
             if (action.disabledStatus) {
@@ -43,17 +41,13 @@ const reducer = (
         }
 
         case actionTypes.SET_TEACHER:
-            return updateObject(state, {
-                teacher: action.result,
-            });
+            return { ...state, teacher: action.result };
         case actionTypes.SELECT_TEACHER: {
             let teacher = state.teachers.find((teach) => teach.id === action.result);
             if (!teacher) {
                 teacher = { id: null };
             }
-            return updateObject(state, {
-                teacher,
-            });
+            return { ...state, teacher };
         }
         case actionTypes.UPDATE_TEACHER_SUCCESS: {
             const teacherIndex = state.teachers.findIndex(({ id }) => id === action.teacher.id);
@@ -62,22 +56,15 @@ const reducer = (
                 ...teachers[teacherIndex],
                 ...action.teacher,
             };
-            return updateObject(state, {
-                teacher: {},
-                teachers,
-            });
+            return { ...state, teacher: {}, teachers };
         }
 
         case actionTypes.SET_DISABLED_TEACHERS_SUCCESS:
-            return updateObject(state, {
-                disabledTeachers: [...action.result],
-            });
+            return { ...state, disabledTeachers: [...action.result] };
         case actionTypes.SHOW_ALL_TEACHERS_SUCCESS:
         case actionTypes.GET_TEACHERS_BY_DEPARTMENT:
         case actionTypes.GET_TEACHERS_WITHOUT_ACCOUNT_SUCCESS:
-            return updateObject(state, {
-                teachers: [...action.result],
-            });
+            return { ...state, teachers: [...action.result] };
 
         default:
             return state;
