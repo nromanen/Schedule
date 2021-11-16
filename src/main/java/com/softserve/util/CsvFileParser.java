@@ -1,6 +1,7 @@
 package com.softserve.util;
 
 import com.opencsv.bean.CsvToBeanBuilder;
+import com.softserve.dto.TeacherDTO;
 import com.softserve.entity.Student;
 import com.softserve.exception.ParseFileException;
 import lombok.extern.slf4j.Slf4j;
@@ -50,5 +51,31 @@ public class CsvFileParser {
         } catch (IOException e) {
             log.error("Error occurred while delete file {}", file.getName(), e);
         }
+    }
+
+    public static List<TeacherDTO> getTeachersFromFile(MultipartFile file) {
+        String fileName = String.join("", "teachers_",
+                String.valueOf(LocalDateTime.now().getNano()), ".csv");
+
+        File csvFile = new File(fileName);
+
+        List<TeacherDTO> teachers = new ArrayList<>();
+        try {
+            file.transferTo(csvFile);
+
+            try (Reader reader = new FileReader(csvFile, StandardCharsets.UTF_8)) {
+                teachers = new CsvToBeanBuilder<TeacherDTO>(reader)
+                        .withType(TeacherDTO.class)
+                        .build().parse();
+            }
+        } catch (RuntimeException e) {
+            log.error("Error occurred while parsing file {}", csvFile.getName(), e);
+            throw new ParseFileException("Bad file format");
+        } catch (IOException e) {
+            log.error("Error occurred while accessing to file {}", csvFile.getName(), e);
+        } finally {
+            fileDelete(csvFile);
+        }
+        return teachers;
     }
 }
