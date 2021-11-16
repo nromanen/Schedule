@@ -11,7 +11,7 @@
 
     .semester-groups {
         font-size: 25px;
-        color: $create-color;
+        color: $green;
     }
 
     &__description {
@@ -25,12 +25,14 @@
 }
 
 .current-semester {
-    box-shadow: 0 0px 15px 1px $create-color;
+    box-shadow: 0 0px 15px 1px $green;
 }
 
 .default-semester {
     width: 25px;
     height: 25px;
-    border: 1px solid $create-color;
+    border: 1px solid $green;
     border-radius: 50%;
+    box-shadow: 0 0px 4px 0.5px $green;
+    color: $green;
 }

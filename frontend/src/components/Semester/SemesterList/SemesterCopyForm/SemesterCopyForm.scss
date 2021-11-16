@@ -1,37 +1,46 @@
 @import '../../../../styles/colors.scss';
 
-p.empty_schedule {
-    text-align: center;
-    font-weight: bold;
-    margin: 50px auto;
-}
-h1 {
-    text-align: center;
-}
-.form-card.width-auto {
-    width: auto;
-    .MuiFormControl-root,
-    .MuiInputBase-input {
-        margin: 0px 15px;
-        width: auto;
-    }
-}
-p.red-color {
+@import '../../../../styles/colors.scss';
+
+.semester-copy-title {
     color: $delete-color;
 }
-.copy-form > * {
+.semester-copy-form > * {
     margin: 8px;
 }
-.form-buttons-container {
-    @media (max-width: 800px) {
-        display: flex;
-        flex-direction: column;
-    }
-    p {
-        display: block;
-        width: 100%;
-    }
-    .semester-copy-btn {
-        vertical-align: bottom;
-    }
-}
+
+// p.empty_schedule {
+//     text-align: center;
+//     font-weight: bold;
+//     margin: 50px auto;
+// }
+// h1 {
+//     text-align: center;
+// }
+// .form-card.width-auto {
+//     width: auto;
+//     .MuiFormControl-root,
+//     .MuiInputBase-input {
+//         margin: 0px 15px;
+//         width: auto;
+//     }
+// }
+// p.red-color {
+//     color: $delete-color;
+// }
+// .copy-form > * {
+//     margin: 8px;
+// }
+// .form-buttons-container {
+//     @media (max-width: 800px) {
+//         display: flex;
+//         flex-direction: column;
+//     }
+//     p {
+//         display: block;
+//         width: 100%;
+//     }
+//     .semester-copy-btn {
+//         vertical-align: bottom;
+//     }
+// }
