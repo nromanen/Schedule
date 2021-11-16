@@ -13,6 +13,7 @@ import com.softserve.exception.FieldAlreadyExistsException;
 import com.softserve.exception.FieldNullException;
 import com.softserve.mapper.TeacherMapper;
 import com.softserve.repository.TeacherRepository;
+import com.softserve.service.DepartmentService;
 import com.softserve.service.MailService;
 import com.softserve.service.TeacherService;
 import com.softserve.service.UserService;
@@ -40,14 +41,16 @@ public class TeacherServiceImpl implements TeacherService {
     private final UserService userService;
     private final MailService mailService;
     private final TeacherMapper teacherMapper;
+    private final DepartmentService departmentService;
 
     @Autowired
     public TeacherServiceImpl(TeacherRepository teacherRepository, UserService userService, MailService mailService,
-                              TeacherMapper teacherMapper) {
+                              TeacherMapper teacherMapper, DepartmentService departmentService) {
         this.teacherRepository = teacherRepository;
         this.userService = userService;
         this.mailService = mailService;
         this.teacherMapper = teacherMapper;
+        this.departmentService = departmentService;
     }
 
     /**
@@ -258,31 +261,29 @@ public class TeacherServiceImpl implements TeacherService {
     public CompletableFuture<List<Teacher>> saveFromFile(MultipartFile file, Long departmentId) {
         log.info("Enter into saveFromFile of TeacherServiceImpl");
 
-        List<Teacher> teachers = CsvFileParser.getTeachersFromFile(file);
+        List<TeacherDTO> teachers = CsvFileParser.getTeachersFromFile(file);
 
         List<Teacher> savedTeachers = new ArrayList<>();
 
-        for(Teacher teacher : teachers){
+        for(TeacherDTO teacher : teachers){
             try{
-                Optional<Teacher> teacherOptional = teacherRepository.findByUserId(teacher.getUserId());
-                if(teacherOptional.isEmpty()){
-//                    Department department = new Department();
-//                    department.setId(departmentId);
-//                    department.setName(department.getName());
-//                    teacher.setDepartment(department);
-                    //TODO how to merge changes to other branch
-                    //TODO Global null exception
-                    teacher.getDepartment().setId(departmentId);
-                    savedTeachers.add(teacherRepository.save(teacher));
+                Optional<User> userOptional = userService.findSocialUser(teacher.getEmail());
+                Teacher newTeacher = teacherMapper.teacherDTOToTeacher(teacher);
+                if(userOptional.isEmpty()){
+                    Teacher registeredTeacher = registerTeacher(newTeacher, teacher.getEmail());
+                    Department department = departmentService.getById(departmentId);
+                    registeredTeacher.setDepartment(department);
+                    savedTeachers.add(teacherRepository.save(registeredTeacher));
                 }else {
-                    savedTeachers.add(teacherOptional.get());
                     //TODO Check current exception to return Long to test with user_id
                     log.error("Error occurred while saving teacher", new FieldAlreadyExistsException(Teacher.class, "user_id", teacher.getName()));
                 }
             } catch (ConstraintViolationException e) {
-                log.error("Error occurred while saving teacher with department {}", teacher.getDepartment(), e);
-                teacher.setDepartment(null);
-                savedTeachers.add(teacher);
+                Teacher newTeacher = teacherMapper.teacherDTOToTeacher(teacher);
+                //TODO change to email;
+                log.error("Error occurred while saving teacher with department {}", newTeacher.getDepartment(), e);
+                newTeacher.setDepartment(null);
+                savedTeachers.add(newTeacher);
             }
         }
        return CompletableFuture.completedFuture(savedTeachers);
