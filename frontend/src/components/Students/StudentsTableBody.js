@@ -45,23 +45,16 @@ export const StudentsTableBody = (props) => {
             {currentStudentsOnList.map((student) => (
                 <TableRow key={student.id}>
                     <TableCell component="th" scope="row" align="center">
-                        <span className="checkbox-table-body">
-                            {/* <input
-                                onChange={(e) => checkStudent(e)}
-                                type="checkbox"
-                                checked={student.checked}
-                                value={student.id}
-                                className="checked-box"
-                                title={`${t(SELECT_STUDENT)} ${getTeacherFullName(student)}`}
-                            /> */}
+                        <div className="checkbox-table-body">
                             <Checkbox
                                 onChange={(e) => checkStudent(e)}
                                 checked={student.checked}
                                 value={student.id}
                                 color="primary"
+                                size="small"
                                 title={`${t(SELECT_STUDENT)} ${getTeacherFullName(student)}`}
                             />
-                        </span>
+                        </div>
                     </TableCell>
                     <TableCell component="th" scope="row" align="center">
                         {getTeacherFullName(student)}

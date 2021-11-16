@@ -1,5 +1,4 @@
 import * as actionTypes from '../actions/actionsType';
-import { updateObject } from '../utility';
 
 const initialState = {
     students: [],
@@ -9,24 +8,27 @@ const initialState = {
 const reducer = (state = initialState, action) => {
     switch (action.type) {
         case actionTypes.SHOW_ALL_STUDENTS: {
-            const newData = action.res.map((item) => {
+            const newData = action.payload.map((item) => {
                 return { ...item, checked: false };
             });
-            return updateObject(state, {
+            return {
+                ...state,
                 students: newData,
-            });
+            };
         }
 
         case actionTypes.CREATE_STUDENT:
-            return updateObject(state, {
+            return {
+                ...state,
                 students: state.students.concat(action.student),
-            });
+            };
 
         case actionTypes.DELETE_STUDENT: {
             const students = state.students.filter((student) => student.id !== +action.id);
-            return updateObject(state, {
+            return {
+                ...state,
                 students,
-            });
+            };
         }
 
         case actionTypes.SET_STUDENT: {
@@ -35,9 +37,10 @@ const reducer = (state = initialState, action) => {
             if (!student) {
                 student = { id: null };
             }
-            return updateObject(state, {
+            return {
+                ...state,
                 student,
-            });
+            };
         }
 
         case actionTypes.UPDATE_STUDENT: {
@@ -47,10 +50,11 @@ const reducer = (state = initialState, action) => {
                 ...students[studentIndex],
                 ...action.student,
             };
-            return updateObject(state, {
+            return {
+                ...state,
                 students,
                 student: {},
-            });
+            };
         }
 
         case actionTypes.CHECK_ALL_STUDENTS: {
@@ -61,9 +65,10 @@ const reducer = (state = initialState, action) => {
                 });
                 return newItem;
             });
-            return updateObject(state, {
+            return {
+                ...state,
                 students: newData,
-            });
+            };
         }
         default:
             return state;

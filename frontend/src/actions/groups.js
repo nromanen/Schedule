@@ -1,8 +1,8 @@
 import * as actionTypes from './actionsType';
 
-export const showAllGroupsSuccess = (res) => ({
+export const showAllGroupsSuccess = (payload) => ({
     type: actionTypes.SHOW_ALL_GROUPS_SUCCESS,
-    res,
+    payload,
 });
 
 export const getGroupByIdSuccess = (group) => ({
@@ -10,9 +10,9 @@ export const getGroupByIdSuccess = (group) => ({
     group,
 });
 
-export const createGroupSuccess = (data) => ({
+export const createGroupSuccess = (group) => ({
     type: actionTypes.CREATE_GROUP_SUCCESS,
-    data,
+    group,
 });
 
 export const updateGroupSuccess = (group) => ({

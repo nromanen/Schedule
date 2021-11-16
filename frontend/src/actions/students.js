@@ -4,15 +4,16 @@ export const createStudentSuccess = (student) => ({
     type: actionTypes.CREATE_STUDENT,
     student,
 });
-export const showAllStudents = (res) => ({
+export const showAllStudents = (payload) => ({
     type: actionTypes.SHOW_ALL_STUDENTS,
-    res,
+    payload,
 });
 
 export const deleteStudentSuccess = (id) => ({
     type: actionTypes.DELETE_STUDENT,
     id,
 });
+
 export const selectStudentSuccess = (id) => ({
     type: actionTypes.SET_STUDENT,
     id,

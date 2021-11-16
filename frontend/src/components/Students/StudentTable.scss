@@ -25,6 +25,9 @@
   .MuiTableCell-alignCenter {
     text-align: left;
   }
+  .MuiTableCell-root{
+    padding: 5px;
+  }
   .MuiTableRow-root {
     &:hover {
       background-color: $table-row-hover-color;
@@ -44,7 +47,7 @@
   flex-wrap: nowrap;
   .edit-button-table {
     @include button-icon($blue, $blue-btn-hover);
-    margin-right: 5px;
+    margin-right: 10px;
   }
   .delete-button-table {
     @include button-icon($red2, $red);
@@ -58,7 +61,11 @@
   }
 }
 .checkbox-table-body {
-  margin-left: 7px;
+  @include displayFlex(center, center);
+  width: 100%;
+  .MuiIconButton-label{
+    color: $blue;
+  }
 }
 
 .empty-students-table {
