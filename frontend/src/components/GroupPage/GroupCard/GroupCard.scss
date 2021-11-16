@@ -26,16 +26,16 @@
   }
 
   &-buttons {
-    @include displayFlex(center,space-between);
-    width: $w-full;
+    @include displayFlex(center, space-between);
+    width: $full-size;
     &-add-student {
       @include button-icon($green, $green3);
     }
   }
 
-  &-button-students{
-    @include displayFlex(center,center);
+  &-button-students {
+    @include displayFlex(center, center);
     @include button-icon($blue-btn-hover, $blue, $font-l);
-    width: $w-full;
+    width: $full-size;
   }
 }

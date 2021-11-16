@@ -14,14 +14,14 @@
     align-items: center;
     flex-direction: column;
     .MuiFormControl-root{
-        width: $w-full;
+        width: $full-size;
     }
 }
 
 .form-buttons {
     @include displayFlex(center, space-between);
     margin-top: 30px;
-    width: 100%;
+    width: $full-size;
     .MuiButtonBase-root{
     width: 48%;
   }
