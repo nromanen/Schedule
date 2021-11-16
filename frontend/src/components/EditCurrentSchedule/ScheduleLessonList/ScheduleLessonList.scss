@@ -1,12 +1,12 @@
-@import "../../../styles/forms.scss";
-@import "../../../styles/colors.scss";
+@import '../../../styles/forms.scss';
+@import '../../../styles/colors.scss';
 
 .draggable-card {
     cursor: move;
 }
 .lesson-list.schedule-card {
     width: 16%;
-    height: $h-full;
+    height: $full-size;
     margin-top: 0;
     margin-right: 0;
     overflow: hidden;
@@ -51,9 +51,9 @@
         &::after {
             position: absolute;
             z-index: 2;
-            width: $w-full;
-            height: $h-full;
-            content: "";
+            width: $full-size;
+            height: $full-size;
+            content: '';
             top: 0;
             background-color: $white;
         }
