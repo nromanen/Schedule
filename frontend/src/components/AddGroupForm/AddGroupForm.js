@@ -47,12 +47,11 @@ export const AddGroup = (props) => {
 
     return (
         <div className="group-form">
-            <div className="group-form__title">
+            <h3 className="group-form-title">
                 {group.id ? t(EDIT_TITLE) : t(CREATE_TITLE)}
                 {t(GROUP_Y_LABEL)}
-            </div>
+            </h3>
             <form
-                // className="group-form"
                 onSubmit={handleSubmit((data) => {
                     submitGroupStart(data);
                     setGroup({});

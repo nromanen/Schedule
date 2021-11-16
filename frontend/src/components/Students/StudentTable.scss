@@ -56,3 +56,8 @@
 .checkbox-table-body {
   margin-left: 23px;
 }
+
+.empty-students-table {
+  @include displayFlex(center, center);
+  min-width: 600px;
+}

@@ -51,7 +51,7 @@ export const AddStudentForm = (props) => {
     }, [student]);
 
     return (
-        <div className="student-container">
+        <div className="student-form-container">
             <form
                 className="student-form"
                 onSubmit={handleSubmit((data) => submitStudentStart(data, groupId))}

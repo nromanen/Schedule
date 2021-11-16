@@ -1,32 +1,25 @@
-.student-container {
-    width: 420px;
+@import "../../styles/mixins.scss";
+@import "../../styles/colors.scss";
+@import "../../styles/variables.scss";
+
+.student-form-container {
     display: flex;
     align-items: center;
     flex-direction: column;
+    width: 350px;
 }
-.student-name {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 300px;
-    .name-field {
-        margin-right: 10px;
-    }
-}
-.student-data {
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-}
+
 .student-form {
     display: flex;
     align-items: center;
     flex-direction: column;
+    .MuiFormControl-root{
+        width: $w-full;
+    }
 }
+
 .form-buttons {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    @include displayFlex(center, space-between);
     margin-top: 30px;
     width: 100%;
     .MuiButtonBase-root{
