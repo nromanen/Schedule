@@ -77,7 +77,7 @@ export const StudentsTableBody = (props) => {
                         </button>
                     </TableCell>
                     <TableCell component="th" scope="row" align="center">
-                        <span className="edit-cell-table">
+                        <div className="edit-cell-table">
                             <Link
                                 to={`${GROUP_LIST_LINK}/${group.id}${SHOW_STUDENTS_LINK}/${student.id}${EDIT_LINK}`}
                             >
@@ -102,7 +102,7 @@ export const StudentsTableBody = (props) => {
                                     }}
                                 />
                             </Link>
-                        </span>
+                        </div>
                     </TableCell>
                 </TableRow>
             ))}

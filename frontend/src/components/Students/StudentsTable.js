@@ -51,7 +51,7 @@ export const StudentsTable = (props) => {
     return (
         <div className="table">
             <TableContainer>
-                <Table aria-label="custom pagination table">
+                <Table>
                     <StudentsTableHead
                         checkedAll={checkedAll}
                         checkedAllOnPageClick={checkedAllOnPageClick}

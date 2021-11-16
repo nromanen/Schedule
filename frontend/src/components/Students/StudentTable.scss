@@ -20,8 +20,7 @@
     margin-bottom: 0;
   }
   .MuiTable-root {
-    max-height: 20%;
-    min-width: 700px;
+    min-width: 600px;
   }
   .MuiTableCell-alignCenter {
     text-align: left;
@@ -33,6 +32,11 @@
   }
   tr:nth-child(odd) {
     background-color: $table-row-color;
+  }
+  @media (max-width: $md-m) {
+    .MuiTable-root {
+      min-width: 100px;
+    }
   }
 }
 .edit-cell-table {
@@ -54,10 +58,10 @@
   }
 }
 .checkbox-table-body {
-  margin-left: 23px;
+  margin-left: 7px;
 }
 
 .empty-students-table {
   @include displayFlex(center, center);
-  min-width: 600px;
+  min-width: 450px;
 }

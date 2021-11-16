@@ -32,10 +32,11 @@ export const StudentsTableHead = (props) => {
                         />
                     </span> */}
                     <Checkbox
+                        value="checkedAll"
                         checked={checkedAll}
                         onChange={checkedAllOnPageClick}
-                        title={`${t(SELECT_ALL)}`}
                         color="primary"
+                        title={`${t(SELECT_ALL)}`}
                     />
                 </TableCell>
                 <TableCell>{t(STUDENT_FULL_NAME)}</TableCell>

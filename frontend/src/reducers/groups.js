@@ -12,7 +12,7 @@ const reducer = (state = initialState, action) => {
         case actionTypes.SHOW_ALL_GROUPS_SUCCESS: {
             return updateObject(state, {
                 ...state,
-                groups: action.result,
+                groups: action.res,
             });
         }
 
@@ -25,17 +25,17 @@ const reducer = (state = initialState, action) => {
 
         case actionTypes.CREATE_GROUP_SUCCESS: {
             return updateObject(state, {
-                groups: [action.result, ...state.groups],
+                groups: [action.data, ...state.groups],
             });
         }
 
         case actionTypes.UPDATE_GROUP_SUCCESS: {
-            const groupIndex = state.groups.findIndex(({ id }) => id === action.result.id);
+            const groupIndex = state.groups.findIndex(({ id }) => id === action.group.id);
             const groups = [...state.groups];
 
             groups[groupIndex] = {
                 ...groups[groupIndex],
-                ...action.result,
+                ...action.group,
             };
             const sortedGroups = groups.sort((a, b) => sortGroup(a, b));
 
@@ -46,7 +46,7 @@ const reducer = (state = initialState, action) => {
         }
 
         case actionTypes.DELETE_GROUP_SUCCESS: {
-            const groups = state.groups.filter((group) => group.id !== action.result);
+            const groups = state.groups.filter((group) => group.id !== action.id);
             return updateObject(state, {
                 groups,
             });

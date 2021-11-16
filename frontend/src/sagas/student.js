@@ -1,12 +1,11 @@
 import { call, takeEvery, put, select } from 'redux-saga/effects';
 import { reset } from 'redux-form';
-import i18n from '../i18n';
 import { STUDENT_URL, GROUP_URL, WITH_STUDENTS, STUDENTS_TO_GROUP_FILE } from '../constants/axios';
 
 import * as actionTypes from '../actions/actionsType';
 import { STUDENT_FORM } from '../constants/reduxForms';
-import { createErrorMessage, createDynamicMessage } from '../utils/sagaUtils';
-import { setOpenSuccessSnackbar, setOpenErrorSnackbar, setOpenSnackbar } from '../actions/snackbar';
+import { createErrorMessage, createDynamicMessage, createMessage } from '../utils/sagaUtils';
+import { setOpenSuccessSnackbar, setOpenErrorSnackbar } from '../actions/snackbar';
 import { DELETE, POST, PUT } from '../constants/methods';
 import { axiosCall } from '../services/axios';
 import {
@@ -25,8 +24,6 @@ import {
 import { STUDENT } from '../constants/names';
 import { setStudentsLoading, setLoading } from '../actions/loadingIndicator';
 import { FORM_STUDENTS_FILE_LABEL } from '../constants/translationLabels/formElements';
-
-import { snackbarTypes } from '../constants/snackbarTypes';
 
 const getStudents = (state) => state.students.students;
 
@@ -55,10 +52,14 @@ function* createStudent({ data }) {
     }
 }
 
-function* updateStudent({ data }) {
+function* updateStudent({ data, groupId }) {
     try {
         const res = yield call(axiosCall, STUDENT_URL, PUT, data);
-        yield put(updateStudentSuccess(res.data));
+        if (data.group.id === +groupId) {
+            yield put(updateStudentSuccess(res.data));
+        } else {
+            yield put(deleteStudentSuccess(data.id));
+        }
         yield put(selectStudentSuccess(data.id));
         yield put(reset(STUDENT_FORM));
         const message = createDynamicMessage(STUDENT, UPDATED_LABEL);
@@ -75,7 +76,7 @@ function* submitStudentForm({ data, groupId }) {
             yield call(createStudent, { data: newStudent });
         } else {
             const updatedStudent = { ...data, group: { id: data.group } };
-            yield call(updateStudent, { data: updatedStudent });
+            yield call(updateStudent, { data: updatedStudent, groupId });
         }
     } catch (err) {
         yield put(setOpenErrorSnackbar(createErrorMessage(err)));
@@ -99,13 +100,12 @@ function* uploadStudentsToGroup({ file, id }) {
         const formData = new FormData();
         formData.append('file', file);
         yield call(axiosCall, `${STUDENTS_TO_GROUP_FILE}${id}`, POST, formData);
-        const message = i18n.t(FILE_BACK_END_SUCCESS_OPERATION, {
-            cardType: i18n.t(FORM_STUDENTS_FILE_LABEL),
-            actionType: i18n.t(FILE_LABEL),
-        });
-        const isOpen = true;
-        const type = snackbarTypes.SUCCESS;
-        yield put(setOpenSnackbar({ isOpen, type, message }));
+        const message = createMessage(
+            FILE_BACK_END_SUCCESS_OPERATION,
+            FORM_STUDENTS_FILE_LABEL,
+            FILE_LABEL,
+        );
+        yield put(setOpenSuccessSnackbar(message));
     } catch (err) {
         yield put(setOpenErrorSnackbar(createErrorMessage(err)));
     } finally {

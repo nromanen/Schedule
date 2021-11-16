@@ -32,6 +32,7 @@ import {
 } from '../actions';
 import { hasDisabled } from '../constants/disabledCard';
 import { GROUP } from '../constants/names';
+import { handleFormSubmit } from '../helper/handleFormSubmit';
 
 const getGroupsState = (state) => state.groups.groups;
 
@@ -96,11 +97,7 @@ function* updateGroup({ data }) {
 
 function* submitGroupForm({ group }) {
     try {
-        if (group.id) {
-            yield call(updateGroup, { data: group });
-        } else {
-            yield call(createGroup, { data: group });
-        }
+        yield call(handleFormSubmit(group, createGroup, updateGroup), { data: group });
     } catch (err) {
         yield put(setOpenErrorSnackbar(createErrorMessage(err)));
     }

@@ -13,7 +13,6 @@ export const StudentsPage = (props) => {
         students,
         deleteStudentStart,
         isOpenConfirmDialog,
-        updateStudentSuccess,
         selectStudentSuccess,
         setIsOpenConfirmDialog,
         checkAllStudentsSuccess,
@@ -42,7 +41,6 @@ export const StudentsPage = (props) => {
                 students={students}
                 setStudent={setStudent}
                 selectStudentSuccess={selectStudentSuccess}
-                updateStudentSuccess={updateStudentSuccess}
                 setIsOpenUpdateDialog={setIsOpenUpdateDialog}
                 setIsOpenConfirmDialog={setIsOpenConfirmDialog}
                 checkAllStudentsSuccess={checkAllStudentsSuccess}
