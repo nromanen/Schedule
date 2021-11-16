@@ -145,6 +145,7 @@ const SemesterList = (props) => {
             )}
             {isOpenSemesterCopyForm && (
                 <CustomDialog
+                    className="semester-copy-dialog"
                     title={t(SEMESTER_COPY_LABEL)}
                     open={isOpenSemesterCopyForm}
                     onClose={closeSemesterCopyForm}

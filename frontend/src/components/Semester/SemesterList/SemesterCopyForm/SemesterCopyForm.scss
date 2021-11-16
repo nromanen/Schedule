@@ -1,46 +1,17 @@
 @import '../../../../styles/colors.scss';
-
-@import '../../../../styles/colors.scss';
+@import '../../../../styles/mixins.scss';
 
 .semester-copy-title {
-    color: $delete-color;
+    color: $red;
 }
-.semester-copy-form > * {
-    margin: 8px;
+.semester-copy-form {
+    @include displayFlex(stretch, center);
 }
-
-// p.empty_schedule {
-//     text-align: center;
-//     font-weight: bold;
-//     margin: 50px auto;
-// }
-// h1 {
-//     text-align: center;
-// }
-// .form-card.width-auto {
-//     width: auto;
-//     .MuiFormControl-root,
-//     .MuiInputBase-input {
-//         margin: 0px 15px;
-//         width: auto;
-//     }
-// }
-// p.red-color {
-//     color: $delete-color;
-// }
-// .copy-form > * {
-//     margin: 8px;
-// }
-// .form-buttons-container {
-//     @media (max-width: 800px) {
-//         display: flex;
-//         flex-direction: column;
-//     }
-//     p {
-//         display: block;
-//         width: 100%;
-//     }
-//     .semester-copy-btn {
-//         vertical-align: bottom;
-//     }
-// }
+.semester-copy-dialog .MuiPaper-root {
+    width: 775px;
+    padding: 8px;
+}
+.semester-copy-select .MuiInput-root {
+    width: 250px;
+    margin-right: 25px;
+}
