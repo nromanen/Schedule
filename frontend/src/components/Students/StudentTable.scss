@@ -3,10 +3,14 @@
 @import "../../styles/variables.scss";
 
 .louder-container {
-  @include displayCenter();
+  @include displayFlex(center, center);
   min-width: 510px;
 }
-
+.title-align {
+  color: $blue-btn-hover;
+  margin-top: 0;
+  margin-bottom: 0;
+}
 .table {
   margin: 20px 20px 0 20px;
   border: $regular-border;
@@ -31,54 +35,24 @@
     background-color: $table-row-color;
   }
 }
-
-.title-align {
-  color: $blue-btn-hover;
-  margin-top: 0;
-  margin-bottom: 0;
-}
-.edit-cell {
-  @include displayCenter();
-  flex-direction: row;
+.edit-cell-table {
+  @include displayFlex(center, center);
   flex-wrap: nowrap;
-  margin: 0 20px;
-  .edit-button {
-    color: $blue;
-    margin-right: 10px;
-    font-size: 25px;
-    &:hover {
-      color: $blue-btn-hover;
-    }
+  .edit-button-table {
+    @include button-icon($blue, $blue-btn-hover);
+    margin-right: 5px;
   }
-  .delete-button {
-    color: $red2;
-    font-size: 25px;
-    &:hover {
-      color: $delete-color;
-    }
+  .delete-button-table {
+    @include button-icon($red2, $red);
   }
 }
-.student-checked-all-box {
-  margin-left: -10px;
-  width: 20px;
-  height: 20px;
-}
-
 .table-footer {
-  @include displayCenter();
-  width: 100%;
+  @include displayFlex(center, center);
+  width: $w-full;
   .MuiTableCell-root {
     border-bottom: none;
   }
 }
-.empty-students-table {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 600px;
-}
-
-.checkbox {
+.checkbox-table-body {
   margin-left: 23px;
-  color: $blue;
 }

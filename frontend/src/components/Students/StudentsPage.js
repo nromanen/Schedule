@@ -20,7 +20,6 @@ export const StudentsPage = (props) => {
         isOpenMoveStudentsDialog,
         moveStudentsToGroupStart,
         setIsOpenMoveStudentDialog,
-        ...rest
     } = props;
 
     const [student, setStudent] = useState(0);
@@ -47,7 +46,7 @@ export const StudentsPage = (props) => {
                 setIsOpenUpdateDialog={setIsOpenUpdateDialog}
                 setIsOpenConfirmDialog={setIsOpenConfirmDialog}
                 checkAllStudentsSuccess={checkAllStudentsSuccess}
-                {...rest}
+                {...props}
             />
             {isOpenMoveStudentsDialog && (
                 <MovingGroupsDialog

@@ -1,12 +1,13 @@
 import React from 'react';
+import './StudentTable.scss';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
+import Checkbox from '@material-ui/core/Checkbox';
 import { useTranslation } from 'react-i18next';
 import { FaEdit } from 'react-icons/all';
 import { Delete } from '@material-ui/icons';
 import { Link } from 'react-router-dom';
-import './StudentTable.scss';
 import { getTeacherFullName } from '../../helper/renderTeacher';
 import {
     STUDENT_LINK,
@@ -44,13 +45,20 @@ export const StudentsTableBody = (props) => {
             {currentStudentsOnList.map((student) => (
                 <TableRow key={student.id}>
                     <TableCell component="th" scope="row" align="center">
-                        <span className="checkbox">
-                            <input
+                        <span className="checkbox-table-body">
+                            {/* <input
                                 onChange={(e) => checkStudent(e)}
                                 type="checkbox"
                                 checked={student.checked}
                                 value={student.id}
                                 className="checked-box"
+                                title={`${t(SELECT_STUDENT)} ${getTeacherFullName(student)}`}
+                            /> */}
+                            <Checkbox
+                                onChange={(e) => checkStudent(e)}
+                                checked={student.checked}
+                                value={student.id}
+                                color="primary"
                                 title={`${t(SELECT_STUDENT)} ${getTeacherFullName(student)}`}
                             />
                         </span>
@@ -59,24 +67,22 @@ export const StudentsTableBody = (props) => {
                         {getTeacherFullName(student)}
                     </TableCell>
                     <TableCell component="th" scope="row" align="center">
-                        <span>
-                            <button
-                                className="send-letter-button"
-                                title={`${t(SEND_LETTER_LABEL)} ${student.email}`}
-                                onClick={() => sendMail(student.email)}
-                                type="button"
-                            >
-                                {student.email}
-                            </button>
-                        </span>
+                        <button
+                            className="send-letter-button"
+                            title={`${t(SEND_LETTER_LABEL)} ${student.email}`}
+                            onClick={() => sendMail(student.email)}
+                            type="button"
+                        >
+                            {student.email}
+                        </button>
                     </TableCell>
                     <TableCell component="th" scope="row" align="center">
-                        <span className="edit-cell">
+                        <span className="edit-cell-table">
                             <Link
                                 to={`${GROUP_LIST_LINK}/${group.id}${SHOW_STUDENTS_LINK}/${student.id}${EDIT_LINK}`}
                             >
                                 <FaEdit
-                                    className="edit-button"
+                                    className="edit-button-table"
                                     title={t(EDIT_TITLE)}
                                     onClick={() => {
                                         selectStudentSuccess(student.id);
@@ -89,7 +95,7 @@ export const StudentsTableBody = (props) => {
                             >
                                 <Delete
                                     title={t(DELETE_TITLE_LABEL)}
-                                    className="delete-button"
+                                    className="delete-button-table"
                                     onClick={() => {
                                         setStudent(student);
                                         setIsOpenConfirmDialog(true);
