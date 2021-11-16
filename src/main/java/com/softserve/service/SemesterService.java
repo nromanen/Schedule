@@ -11,5 +11,5 @@ public interface SemesterService extends BasicService<Semester, Long> {
     Semester getDefaultSemester();
     Semester changeDefaultSemester(Long semesterId);
     Semester addGroupToSemester(Semester semester, Group group);
-    Semester addGroupsToSemester(Semester semester, Long[] groupIds);
+    Semester addGroupsToSemester(Semester semester, List<Long> groupIds);
 }

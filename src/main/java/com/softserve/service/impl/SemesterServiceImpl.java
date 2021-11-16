@@ -315,7 +315,7 @@ public class SemesterServiceImpl implements SemesterService {
      * @return changed Semester
      */
     @Override
-    public Semester addGroupsToSemester(Semester semester, Long[] groupIds) {
+    public Semester addGroupsToSemester(Semester semester, List<Long> groupIds) {
         log.info("In addGroupsToSemester (semester = [{}], groupIds = [{}])", semester, groupIds);
         List<Group> groups = groupRepository.getGroupsByGroupIds(groupIds);
         semester.setGroups(groups);

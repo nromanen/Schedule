@@ -16,5 +16,5 @@ public interface GroupRepository extends BasicRepository<Group, Long> {
 
     List<Group> getByTeacherId(Long id);
 
-    List<Group> getGroupsByGroupIds(Long[] groupIds);
+    List<Group> getGroupsByGroupIds(List<Long> groupIds);
 }

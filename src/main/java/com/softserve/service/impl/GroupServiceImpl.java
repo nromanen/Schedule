@@ -182,7 +182,7 @@ public class GroupServiceImpl  implements GroupService {
      */
     @Override
     @Transactional
-    public List<Group> getGroupsByGroupIds(Long[] groupIds) {
+    public List<Group> getGroupsByGroupIds(List<Long> groupIds) {
         log.info("Enter into getGroupsByGroupIds");
         return groupRepository.getGroupsByGroupIds(groupIds);
     }

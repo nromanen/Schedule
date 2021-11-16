@@ -91,7 +91,7 @@ public class GroupRepositoryImpl extends BasicRepositoryImpl<Group, Long> implem
      * @return list of the groups
      */
     @Override
-    public List<Group> getGroupsByGroupIds(Long[] groupIds) {
+    public List<Group> getGroupsByGroupIds(List<Long> groupIds) {
         return getSession()
                 .createQuery(GET_GROUPS_BY_IDS, Group.class)
                 .setParameterList("ids", groupIds)

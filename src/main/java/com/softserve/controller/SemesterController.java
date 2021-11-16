@@ -121,8 +121,8 @@ public class SemesterController {
 
     @PutMapping("/semesters/{semesterId}/groups")
     @ApiOperation(value = "Replace groups in semester by id")
-    public ResponseEntity<SemesterWithGroupsDTO> addGroupsToSemester(@PathVariable Long semesterId, @RequestBody Long[] groupId) {
-        log.trace("In addGroupsToSemester (semesterId = [{}], groupId = [{}])", semesterId, groupId);
+    public ResponseEntity<SemesterWithGroupsDTO> addGroupsToSemester(@PathVariable Long semesterId, @RequestBody List<Long> groupId) {
+        log.info("In addGroupsToSemester (semesterId = [{}], groupId = [{}])", semesterId, groupId);
         Semester semester = semesterService.addGroupsToSemester(semesterService.getById(semesterId), groupId);
         return ResponseEntity.status(HttpStatus.OK).body(semesterMapper.semesterToSemesterWithGroupsDTO(semester));
     }
