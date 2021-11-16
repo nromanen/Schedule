@@ -13,7 +13,7 @@
     .app-button-container {
         margin-top: 15px;
         .common-button {
-            width: $w-full;
+            width: $full-size;
         }
     }
     h3 {
@@ -42,8 +42,8 @@
     display: grid;
     height: 60vh;
     width: 60vw;
-    overflow-y: auto;
     margin: 2px 10px;
+    overflow-y: auto;
     place-items: center;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     @media (max-width: $schedule-pc-screen) {
@@ -67,7 +67,7 @@
     }
     border-left: 1px solid $gray1;
     @media (max-width: $md-width) {
-        width: $w-full;
+        width: $full-size;
         border-left: none;
         padding-left: none;
         padding-bottom: 20px;
@@ -79,8 +79,8 @@
     position: absolute;
     display: flex;
     flex-direction: column;
-    top: $h-50;
-    left: $w-50;
+    top: $medium-size;
+    left: $medium-size;
     transform: translate(-50%, -50%);
 }
 

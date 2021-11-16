@@ -1,6 +1,6 @@
-@import "../../../styles/colors.scss";
-@import "../../../styles/variables.scss";
-@import "../../../styles/mixins.scss";
+@import '../../../styles/colors.scss';
+@import '../../../styles/variables.scss';
+@import '../../../styles/mixins.scss';
 
 .selected-group {
     border: 2px solid $blue3;
@@ -71,9 +71,9 @@
         &::after {
             position: absolute;
             top: 0;
-            content: "";
-            width: $w-full;
-            height: $h-full;
+            content: '';
+            width: $full-size;
+            height: $full-size;
             background: none;
             border: 2px solid $blue3;
         }

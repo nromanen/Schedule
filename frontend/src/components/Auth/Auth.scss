@@ -5,13 +5,10 @@
 .auth-form {
     margin: 8px 14px;
     &-footer {
+        @include displayFlex(center, center,column);
+        text-align: center;
         color: $gray;
         margin-top: 15px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
         .form-link {
             margin-top: 5px;
         }
@@ -58,25 +55,19 @@
         @media (max-width: $md-s) {
             max-width: 90%;
         }
-
-        .form-field {
-            width: 25em;
-        }
     }
     .auth-card-header {
-        .title {
+        .auth-card-title {
             margin: {
                 top: 24px;
                 bottom: 0px;
             }
         }
-        .subtitle {
+        .auth-card-subtitle {
+            display: block;
             color: $gray;
-            margin-top: 8px;
             margin: {
-                top: 8px;
-                left: 5px;
-                right: 5px;
+                top: 10px;
             }
             font-size: $font-xs;
         }
