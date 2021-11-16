@@ -18,7 +18,7 @@ import {
     ACTIVATION_PAGE_LINK,
 } from '../constants/links';
 import TeachersPage from '../containers/TeachersPage/TeachersPage';
-import BusyRoomsPage from '../containers/Room/BusyRoomsPage';
+import BusyRoomsPage from '../containers/Rooms/BusyRoomsPage';
 import GroupList from '../containers/GroupPage/GroupPage';
 import ClassSchedule from '../containers/ClassSchedule/ClassSchedule';
 import RoomPage from '../containers/RoomsPage/RoomsPage';
