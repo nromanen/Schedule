@@ -16,7 +16,6 @@ import renderCheckboxField from '../../../share/renderedFields/checkbox';
 import { lessThanZero, maxLengthValue, required } from '../../../validation/validateFields';
 import { handleTeacherInfo } from '../../../helper/renderTeacher';
 import { getClearOrCancelTitle, setDisableButton } from '../../../helper/disableComponent';
-import { selectGroupService } from '../../../services/groupService';
 import { RenderMultiselect } from '../../../share/renderedFields/renderMultiselect';
 import { renderLessonAutocomplete } from '../../../helper/renderLessonAutocomplete';
 import LessonLabelForm from '../../../containers/LessonPage/LessonLabelForm';
@@ -274,9 +273,7 @@ const LessonForm = (props) => {
                     </form>
                 </Card>
             ) : (
-                <h2 className="card not-selected">{`${t(GROUP_LABEL)} ${t(
-                    NOT_SELECTED_LABEL,
-                )}`}</h2>
+                <h2 className="not-selected">{`${t(GROUP_LABEL)} ${t(NOT_SELECTED_LABEL)}`}</h2>
             )}
         </>
     );

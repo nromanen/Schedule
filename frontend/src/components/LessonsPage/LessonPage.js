@@ -170,26 +170,24 @@ const LessonPage = (props) => {
                 </div>
             </div>
 
-            <div className="card-title lesson-card">
-                {isOpenCopyLessonDialog && (
-                    <CopyLessonDialog
-                        open={isOpenCopyLessonDialog}
-                        onClose={closeCopyLessonDialogHandle}
-                        groupId={groupId}
-                        lesson={copiedLesson}
-                        groups={groups}
-                        translation={t}
-                    />
-                )}
-                {isOpenConfirmDialog && (
-                    <CustomDialog
-                        type={dialogTypes.DELETE_CONFIRM}
-                        handelConfirm={acceptConfirmDialog}
-                        whatDelete={cardType.LESSON.toLowerCase()}
-                        open={isOpenConfirmDialog}
-                    />
-                )}
-            </div>
+            {isOpenCopyLessonDialog && (
+                <CopyLessonDialog
+                    open={isOpenCopyLessonDialog}
+                    onClose={closeCopyLessonDialogHandle}
+                    groupId={groupId}
+                    lesson={copiedLesson}
+                    groups={groups}
+                    translation={t}
+                />
+            )}
+            {isOpenConfirmDialog && (
+                <CustomDialog
+                    type={dialogTypes.DELETE_CONFIRM}
+                    handelConfirm={acceptConfirmDialog}
+                    whatDelete={cardType.LESSON.toLowerCase()}
+                    open={isOpenConfirmDialog}
+                />
+            )}
         </>
     );
 };
