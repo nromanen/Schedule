@@ -1,26 +1,20 @@
 @import '../../../styles/colors.scss';
+@import '../../../styles/mixins.scss';
+@import '../../../styles/variables.scss';
 
 .semester-card {
     height: 470px;
     width: 250px;
     margin-bottom: 50px;
-    display: flex;
-    flex-direction: column;
-    flex-wrap: wrap;
-    align-items: center;
-
-    .semester-groups {
-        font-size: 25px;
+    @include displayFlex(center, start, column);
+    .semester-groups-icon {
+        font-size: $font-xl;
         color: $green;
     }
 
-    &__description {
+    &-description {
         text-align: center;
         height: 50px;
-    }
-
-    &__name {
-        text-align: center;
     }
 }
 
@@ -33,6 +27,5 @@
     height: 25px;
     border: 1px solid $green;
     border-radius: 50%;
-    box-shadow: 0 0px 4px 0.5px $green;
-    color: $green;
+    box-shadow: 0 0 4px 0.5px $green;
 }

@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import './SemesterList.scss';
 import { isEqual, isEmpty } from 'lodash';
 import { CircularProgress } from '@material-ui/core';
 import NotFound from '../../../share/NotFound/NotFound';
@@ -49,7 +48,6 @@ const SemesterList = (props) => {
     const [isOpenSemesterCopyForm, setIsOpenSemesterCopyForm] = useState(false);
     const [confirmDialogType, setConfirmDialogType] = useState('');
     const [isOpenGroupsDialog, setIsOpenGroupsDialog] = useState(false);
-
     const [semesterGroupsOptions, setSemesterGroupsOptions] = useState([]);
     const [semesterId, setSemesterId] = useState(null);
 
@@ -62,6 +60,7 @@ const SemesterList = (props) => {
         setConfirmDialogType(dialogType);
         setOpenConfirmDialog(true);
     };
+
     const submitSemesterCopy = ({ toSemesterId }) => {
         semesterCopy({
             fromSemesterId: semesterId,
@@ -69,6 +68,7 @@ const SemesterList = (props) => {
         });
         setIsOpenSemesterCopyForm(false);
     };
+
     const closeSemesterCopyForm = () => {
         setIsOpenSemesterCopyForm(false);
     };
@@ -159,7 +159,7 @@ const SemesterList = (props) => {
                     />
                 </CustomDialog>
             )}
-            <section className="container-flex-wrap wrapper">
+            <section className="container-flex-wrap">
                 {visibleItems.map((semester) => {
                     const semDays = semester.semester_days.map((day) =>
                         t(`common:day_of_week_${day}`),
