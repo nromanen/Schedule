@@ -30,6 +30,22 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
     private static final String GET_BY_ALL_PARAMETERS = "FROM Schedule s where s.period.id = :periodId " +
             "and s.lesson.id = :lessonId and s.dayOfWeek = :dayOfWeek and s.evenOdd = :evenOdd and s.room.id = :roomId";
 
+    private static final String GET_ALL_ORDERED_BY_ROOMS_DAYS_PERIODS
+            = "SELECT s "
+            + "FROM Schedule s "
+            + "ORDER BY s.room.name, " //if sort_order implemented, must be sort_order
+            + " CASE "
+            + "WHEN Day = 'Monday' THEN 1 "
+            + "WHEN Day = 'Tuesday' THEN 2 "
+            + "WHEN Day = 'Wednesday' THEN 3 "
+            + "WHEN Day = 'Thursday' THEN 4 "
+            + "WHEN Day = 'Friday' THEN 5 "
+            + "WHEN Day = 'Saturday' THEN 6 "
+            + "WHEN Day = 'Sunday' THEN 7 "
+            + "END, "
+            + "s.evenOdd, s.period.name, "
+            + "s.lesson.subjectForSite, s.lesson.teacher.surname, s.lesson.lessonType ";
+
     /**
      * Method searches if there are any saved records in schedule for particular group
      *
@@ -432,5 +448,12 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
                 .setParameter("dayOfWeek", day)
                 .setParameter("evenOdd", evenOdd)
                 .getSingleResult();
+    }
+
+    @Override
+    public List<Schedule> getAllOrderedByRoomsDaysPeriods() {
+        return sessionFactory.getCurrentSession()
+                .createQuery(GET_ALL_ORDERED_BY_ROOMS_DAYS_PERIODS, Schedule.class)
+                .getResultList();
     }
 }
