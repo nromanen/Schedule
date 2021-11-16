@@ -8,8 +8,8 @@
 
 @mixin buttonStyle {
     cursor: pointer;
-    width: $btn-size;
-    height: $btn-size;
+    width: $icon-size;
+    height: $icon-size;
     transition: color 0.3s linear;
 }
 
@@ -45,6 +45,10 @@
         .svg-btn {
             @include buttonStyle;
             margin-right: 10px;
+            // .lesson-card {
+            // background-color: $white;
+            // width: 15em;
+            // height: 16.5em;
 
             &:last-child {
                 margin-right: 0;

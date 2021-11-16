@@ -1,4 +1,4 @@
-@import '../../../styles/colors.scss';
+@import "../../../styles/colors.scss";
 .room-form {
     margin: 10px;
     max-height: auto;
@@ -11,6 +11,6 @@
 .room-select-item {
     margin: 4px 10px 0;
     &:hover {
-        background-color: $selected-black;
+        background-color: $selected-hover-color;
     }
 }
