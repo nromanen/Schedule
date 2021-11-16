@@ -30,7 +30,7 @@ const SemesterList = (props) => {
         disabled,
         term,
         semesters,
-        selectSemesterSuccess,
+        selectSemester,
         createArchivedSemester,
         setOpenConfirmDialog,
         removeSemesterCard,
@@ -171,7 +171,7 @@ const SemesterList = (props) => {
                             semDays={semDays}
                             disabled={disabled}
                             archived={archived}
-                            selectSemesterSuccess={selectSemesterSuccess}
+                            selectSemester={selectSemester}
                             showConfirmDialog={showConfirmDialog}
                             setIsOpenSemesterCopyForm={setIsOpenSemesterCopyForm}
                             setSemesterId={setSemesterId}

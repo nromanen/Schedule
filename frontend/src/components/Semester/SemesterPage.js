@@ -49,36 +49,29 @@ const SemesterPage = (props) => {
     // };
 
     return (
-        <>
-            <div className="cards-container">
-                <SemesterSidebar
-                    setTerm={setTerm}
-                    archived={archived}
-                    disabled={disabled}
-                    showDisabledHandle={() => {
-                        setDisabled(!disabled);
-                        setArchived(false);
-                    }}
-                    setOpenErrorSnackbar={setOpenErrorSnackbar}
-                    handleSemesterFormSubmit={handleSemesterFormSubmit}
-                    semester={semester}
-                    options={options}
-                    classScheduler={classScheduler}
-                />
-                <SemesterList
-                    term={term}
-                    archived={archived}
-                    disabled={disabled}
-                    options={options}
-                />
-            </div>
+        <div className="cards-container">
+            <SemesterSidebar
+                setTerm={setTerm}
+                archived={archived}
+                disabled={disabled}
+                showDisabledHandle={() => {
+                    setDisabled(!disabled);
+                    setArchived(false);
+                }}
+                setOpenErrorSnackbar={setOpenErrorSnackbar}
+                handleSemesterFormSubmit={handleSemesterFormSubmit}
+                semester={semester}
+                options={options}
+                classScheduler={classScheduler}
+            />
+            <SemesterList term={term} archived={archived} disabled={disabled} options={options} />
             <SnackbarComponent
                 message={snackbarMessage}
                 type={snackbarType}
                 isOpen={isSnackbarOpen}
                 handleSnackbarClose={handleSnackbarCloseService}
             />
-        </>
+        </div>
     );
 };
 
