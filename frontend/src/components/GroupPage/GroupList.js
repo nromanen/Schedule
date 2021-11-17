@@ -4,7 +4,7 @@ import { CircularProgress } from '@material-ui/core';
 import { dialogTypes } from '../../constants/dialogs';
 import { GROUP_Y_LABEL } from '../../constants/translationLabels/formElements';
 import { search } from '../../helper/search';
-import GroupCard from '../GroupCard/GroupCard';
+import GroupCard from './GroupCard';
 import NotFound from '../../share/NotFound/NotFound';
 import CustomDialog from '../../containers/Dialogs/CustomDialog';
 import AddStudentDialog from '../../containers/Student/AddStudentDialog';
@@ -51,7 +51,6 @@ const GroupList = (props) => {
         setGroupId(currentId);
         setConfirmDialogType(disabledStatus);
         setIsOpenConfirmDialog(true);
-        return undefined;
     };
     const acceptConfirmDialog = (currentGroupId) => {
         setIsOpenConfirmDialog(false);
