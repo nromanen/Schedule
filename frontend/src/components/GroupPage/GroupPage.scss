@@ -11,13 +11,13 @@
     }
   }
   &-sidebar {
-    margin: 0 10px 0 10px;
+    margin: 0 10px;
     .MuiTypography-body1 {
       font-size: $font-s;
     }
     @media (max-width: $md-m) {
       @include displayFlex(center,center);
-      width: 100%;
+      width: $full-size;
     }
   }
   &-aside {
@@ -28,11 +28,11 @@
 
   &-wrapper {
     @include displayFlex(center,center);
-    width: 100%;
+    width: $full-size;
   }
   &-list {
     @include displayFlex(start,center);
     flex-wrap: wrap;
-    width: 100%;
+    width: $full-size;
   }
 }

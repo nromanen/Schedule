@@ -56,7 +56,7 @@ export const AddStudentForm = (props) => {
             onSubmit={handleSubmit((data) => submitStudentStart(data, groupId))}
         >
             <Field
-                className="name-field"
+                className="form-field"
                 name="surname"
                 id="surname"
                 component={renderTextField}

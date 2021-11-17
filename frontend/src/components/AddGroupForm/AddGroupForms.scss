@@ -4,7 +4,7 @@
 .group-form{
   padding: 1rem;
   border-radius: 5px;
-  margin:  15px 10px 10px 10px;
+  margin:  15px 10px;
   box-shadow: 0 2px 8px $shadow-box;
 
   &-title {
@@ -21,7 +21,7 @@
 }
 
 .form-buttons-container{
-  width: 100%;
+  width: $full-size;
   .MuiButtonBase-root{
     width: 48%;
     margin: 5px 0 5px ;
