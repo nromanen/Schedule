@@ -257,7 +257,7 @@ public class TeacherServiceImpl implements TeacherService {
      */
     @Override
     @Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
-    public CompletableFuture<List<TeacherImportDTO>> saveFromFile(MultipartFile file, Long departmentId) {
+    public List<TeacherImportDTO> saveFromFile(MultipartFile file, Long departmentId) {
         log.info("Enter into saveFromFile of TeacherServiceImpl");
 
         List<TeacherImportDTO> teachers = CsvFileParser.getTeachersFromFile(file);
@@ -289,7 +289,7 @@ public class TeacherServiceImpl implements TeacherService {
                 savedTeachers.add(teacher);
             }
         }
-       return CompletableFuture.completedFuture(savedTeachers);
+       return savedTeachers;
     }
 
 }
