@@ -11,4 +11,5 @@ public interface TeacherRepository extends BasicRepository<Teacher, Long> {
     List<Teacher> getAllTeacherWithoutUser();
 
     TeacherImportDTO saveImport(TeacherImportDTO teacherImportDTO);
+
 }
