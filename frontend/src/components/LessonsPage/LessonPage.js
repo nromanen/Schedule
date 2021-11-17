@@ -38,11 +38,11 @@ const LessonPage = (props) => {
         groupId,
         group,
         groups,
-        copyLessonCard,
+        copyLessonCardStart,
         deleteLessonCardStart,
-        getLessonTypes,
-        getLessonsByGroup,
-        selectLessonCard,
+        getLessonTypesStart,
+        getLessonsByGroupStart,
+        selectLessonCardSuccess,
         setOpenConfirmDialog,
         isOpenConfirmDialog,
         setOpenErrorSnackbar,
@@ -64,13 +64,13 @@ const LessonPage = (props) => {
 
     useEffect(() => {
         if (groupId) {
-            getLessonsByGroup(groupId);
+            getLessonsByGroupStart(groupId);
         }
     }, [groupId]);
 
     useEffect(() => {
         showAllTeachers();
-        getLessonTypes();
+        getLessonTypesStart();
         getEnabledGroupsStart();
         showAllSubjectsService();
         showAllSemestersService();
@@ -109,7 +109,7 @@ const LessonPage = (props) => {
         const { group: copiedGroup, lesson } = params;
         setIsOpenCopyLessonDialog(false);
         if (!isNil(copiedGroup)) {
-            copyLessonCard({ group: copiedGroup, lesson });
+            copyLessonCardStart({ group: copiedGroup, lesson });
         }
     };
 
@@ -137,7 +137,7 @@ const LessonPage = (props) => {
                         subjects={subjects}
                         teachers={teachers}
                         onSubmit={submitLessonForm}
-                        onSetSelectedCard={selectLessonCard}
+                        onSetSelectedCard={selectLessonCardSuccess}
                     />
                     {!groupId && <CopyLessonsFromSemesterForm onSubmit={submitCopySemester} />}
                 </div>

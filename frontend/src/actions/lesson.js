@@ -1,29 +1,29 @@
 import * as actionTypes from './actionsType';
 
-export const createLesson = (result) => ({
+export const createLessonSuccess = (result) => ({
     type: actionTypes.CREATE_LESSON_CARD_SUCCESS,
     result,
 });
-export const getLessonsByGroup = (id) => ({
+export const getLessonsByGroupStart = (id) => ({
     type: actionTypes.GET_LESSONS_CARDS_START,
     id,
 });
 
-export const setLessonsCards = (result) => ({
-    type: actionTypes.SET_LESSONS_CARDS,
+export const setLessonsCardsStart = (result) => ({
+    type: actionTypes.SET_LESSONS_CARDS_START,
     result,
 });
 
-export const getLessonTypes = () => ({
+export const getLessonTypesStart = () => ({
     type: actionTypes.GET_LESSON_TYPES_START,
 });
 
-export const setLessonTypes = (result) => ({
-    type: actionTypes.SET_LESSON_TYPES,
+export const setLessonTypesSuccess = (result) => ({
+    type: actionTypes.SET_LESSON_TYPES_SUCCESS,
     result,
 });
 
-export const deleteLessonCard = (id) => ({
+export const deleteLessonCardSuccess = (id) => ({
     type: actionTypes.DELETE_LESSON_CARD_SUCCESS,
     id,
 });
@@ -33,17 +33,17 @@ export const deleteLessonCardStart = (id) => ({
     id,
 });
 
-export const selectLessonCard = (result) => ({
-    type: actionTypes.SELECT_LESSON_CARD,
+export const selectLessonCardSuccess = (result) => ({
+    type: actionTypes.SELECT_LESSON_CARD_SUCCESS,
     result,
 });
 
-export const updateLessonCard = (result) => ({
+export const updateLessonCardSuccess = (result) => ({
     type: actionTypes.UPDATE_LESSON_CARD_SUCCESS,
     result,
 });
 
-export const copyLessonCard = (payload) => ({
+export const copyLessonCardStart = (payload) => ({
     type: actionTypes.COPY_LESSON_START,
     payload,
 });

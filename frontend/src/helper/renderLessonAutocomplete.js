@@ -18,13 +18,13 @@ export const renderLessonAutocomplete = ({
 
     return (
         <Autocomplete
+            {...input}
+            {...custom}
             label={label}
             options={values}
             placeholder={label}
             getOptionLabel={getOptionLabel}
             title={customTitle}
-            {...input}
-            {...custom}
             onChange={(_, value) => input.onChange(value)}
             onBlur={(_, value) => input.onBlur(value)}
             renderInput={(params) => (

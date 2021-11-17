@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import { addItemsToScheduleStart, editRoomItemToScheduleStart } from '../../actions/schedule';
-import { getLessonsByGroup, selectGroupId, setScheduleLoading } from '../../actions';
+import { getLessonsByGroupStart, selectGroupId, setScheduleLoading } from '../../actions';
 import Schedule from '../../components/EditCurrentSchedule/Schedule/Schedule';
 
 const mapStateToProps = (state) => ({
@@ -11,7 +11,7 @@ const mapDispatchToProps = (dispatch) => ({
     addItemsToSchedule: (item) => dispatch(addItemsToScheduleStart(item)),
     editRoomItemToSchedule: (item) => dispatch(editRoomItemToScheduleStart(item)),
     selectedGroupById: (id) => dispatch(selectGroupId(id)),
-    getLessonsByGroupId: (id) => dispatch(getLessonsByGroup(id)),
+    getLessonsByGroupId: (id) => dispatch(getLessonsByGroupStart(id)),
     setScheduleLoading: (newState) => dispatch(setScheduleLoading(newState)),
 });
 

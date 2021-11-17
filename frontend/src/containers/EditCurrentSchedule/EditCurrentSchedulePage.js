@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 
-import { getLessonsByGroup, setScheduleLoading, showAllGroupsSuccess } from '../../actions';
+import { getLessonsByGroupStart, setScheduleLoading, showAllGroupsSuccess } from '../../actions';
 import { getClassScheduleListStart } from '../../actions/classes';
 import { clearScheduleStart, getAllScheduleItemsStart } from '../../actions/schedule';
 import { getEnabledGroupsStart } from '../../actions/groups';
@@ -19,7 +19,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
     getEnabledGroups: () => dispatch(getEnabledGroupsStart()),
-    getAllLessonsByGroup: (groupId) => dispatch(getLessonsByGroup(groupId)),
+    getAllLessonsByGroup: (groupId) => dispatch(getLessonsByGroupStart(groupId)),
     getAllScheduleItems: () => dispatch(getAllScheduleItemsStart()),
     clearScheduleItems: (id) => dispatch(clearScheduleStart(id)),
     setScheduleLoading: (newState) => dispatch(setScheduleLoading(newState)),

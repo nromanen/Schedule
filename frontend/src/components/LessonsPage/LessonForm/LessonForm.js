@@ -57,7 +57,7 @@ const LessonForm = (props) => {
         initialize,
         change,
         lessonTypes,
-        selectLessonCard,
+        selectLessonCardSuccess,
         setUniqueError,
         selectGroupSuccess,
     } = props;
@@ -111,7 +111,7 @@ const LessonForm = (props) => {
     const clearForm = () => {
         reset();
         setUniqueError(null);
-        selectLessonCard(null);
+        selectLessonCardSuccess(null);
     };
 
     return (

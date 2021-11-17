@@ -4,7 +4,9 @@
 @import '../../styles/mixins.scss';
 
 .lesson-wrapper {
+    margin-bottom: 50px;
     display: flex;
+    align-items: start;
 
     @media (max-width: $md-medium) {
         @include displayFlex(stretch, center);
@@ -28,6 +30,9 @@
 }
 
 .lesson-side-bar {
+    position: sticky;
+    top: 16px;
+    margin-bottom: 100px;
     .form-card {
         .MuiFormControl-root {
             width: $full-size;
@@ -36,9 +41,8 @@
 
     .lesson-form-card {
         width: 320px;
-        position: sticky;
-        top: 16px;
         text-align: center;
+        margin-bottom: 100px;
     }
 
     .not-selected {

@@ -16,6 +16,7 @@ export const addTeacherStart = (teacher) => ({
 });
 
 export const setTeacher = (teacher) => ({
+    //
     type: actionsType.SET_TEACHER,
     result: teacher,
 });
@@ -37,9 +38,9 @@ export const deleteTeacherStart = (id) => ({
     id,
 });
 
-export const selectTeacherCard = (res) => ({
+export const selectTeacherCard = (result) => ({
     type: actionsType.SELECT_TEACHER,
-    result: res,
+    result,
 });
 
 export const updateTeacherCardSuccess = (teacher) => ({
@@ -78,6 +79,7 @@ export const getAllPublicTeachersByDepartmentStart = (departmentId) => ({
 });
 
 export const getAllTeachersByDepartmentId = (teachers) => ({
+    //
     type: actionsType.GET_TEACHERS_BY_DEPARTMENT,
     result: teachers,
 });

@@ -9,8 +9,15 @@ import './LessonPage.scss';
 
 const Lessons = (props) => {
     const { t } = useTranslation('common');
-    const { visibleItems, onClickOpen, onCopyLesson, groupId, group, loading, selectLessonCardOf } =
-        props;
+    const {
+        visibleItems,
+        onClickOpen,
+        onCopyLesson,
+        groupId,
+        group,
+        loading,
+        selectLessonCardSuccess,
+    } = props;
 
     if (loading) {
         return (
@@ -32,7 +39,7 @@ const Lessons = (props) => {
         <LessonsList
             lessons={visibleItems}
             onClickOpen={onClickOpen}
-            onSelectLesson={selectLessonCardOf}
+            onSelectLesson={selectLessonCardSuccess}
             onCopyLesson={onCopyLesson}
         />
     );

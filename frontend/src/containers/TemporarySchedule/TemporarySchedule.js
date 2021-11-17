@@ -18,7 +18,7 @@ import { getClassScheduleListStart } from '../../actions/classes';
 import { showAllSubjectsService } from '../../services/subjectService';
 import './TemporarySchedule.scss';
 import { EMPTY_LABEL } from '../../constants/translationLabels/common';
-import { getLessonTypes, getEnabledGroupsStart } from '../../actions';
+import { getLessonTypesStart, getEnabledGroupsStart } from '../../actions';
 import { getListOfRoomsStart } from '../../actions/rooms';
 import { showAllTeachersStart } from '../../actions/teachers';
 
@@ -42,7 +42,7 @@ const TemporarySchedule = (props) => {
         showAllTeachers();
         showAllSubjectsService();
         getClassScheduleList();
-        getLessonTypes();
+        getLessonTypesStart();
         getEnabledGroups();
     }, []);
 
@@ -143,7 +143,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    getLessonTypes: () => dispatch(getLessonTypes()),
+    getLessonTypesStart: () => dispatch(getLessonTypesStart()),
     getClassScheduleList: () => dispatch(getClassScheduleListStart()),
     getEnabledGroups: () => dispatch(getEnabledGroupsStart()),
     getListOfRooms: (rooms) => dispatch(getListOfRoomsStart(rooms)),
