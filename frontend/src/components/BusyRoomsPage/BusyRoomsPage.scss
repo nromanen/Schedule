@@ -1,5 +1,5 @@
-@import "../../styles/variables.scss";
-@import "../../styles/colors.scss";
+@import '../../styles/variables.scss';
+@import '../../styles/colors.scss';
 
 .busy-rooms-control-panel.schedule-card {
     position: relative;
@@ -20,7 +20,7 @@
 }
 .busy-rooms-table-container {
     display: flex;
-    width: $w-full;
+    width: $full-size;
     height: 95%;
     margin-top: 5px;
     padding: 0px;
