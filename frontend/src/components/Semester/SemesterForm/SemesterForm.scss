@@ -26,7 +26,7 @@
     @include displayFlex(center, space-between);
     margin: 5px 0;
     .semester-field-input {
-        width: $w-50;
+        width: $medium-size;
         padding-right: 20px;
     }
 }
