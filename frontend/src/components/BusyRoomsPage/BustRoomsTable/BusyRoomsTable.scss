@@ -1,16 +1,15 @@
-@import '../../../styles/variables.scss';
-@import '../../../styles/colors.scss';
+@import "../../../styles/variables.scss";
+@import "../../../styles/colors.scss";
+@import "../../../styles/mixins.scss";
 
 .view-rooms {
     margin: 0;
     display: flex;
     .busy-room-title {
-        display: flex;
+        @include displayFlex(center, center);
         height: 50px;
         padding: 10px 7px;
         margin: 5px;
-        align-items: center;
-        justify-content: center;
         font-size: $font-xs;
         overflow: hidden;
         text-overflow: ellipsis;

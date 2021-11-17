@@ -49,7 +49,7 @@ const BusyRoomsPage = (props) => {
             ) : (
                 <>
                     <div className="table-size-container">
-                        <FormControl component="div" class="radio-control">
+                        <FormControl component="div" className="radio-control">
                             <FormLabel component="legend">{`${t(
                                 COMMON_TABLE_COLUMNS_SIZE,
                             )}:`}</FormLabel>

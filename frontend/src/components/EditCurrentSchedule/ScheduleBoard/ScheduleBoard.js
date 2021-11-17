@@ -4,7 +4,6 @@ import { setLoadingService } from '../../../services/loadingService';
 import ScheduleBoardItem from '../../../containers/EditCurrentSchedule/ScheduleBoardItem';
 import { actionType } from '../../../constants/actionTypes';
 import './ScheduleBoard.scss';
-import i18n from '../../../i18n';
 
 const ScheduleBoard = (props) => {
     const {

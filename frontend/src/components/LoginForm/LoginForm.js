@@ -58,7 +58,7 @@ const LoginForm = (props) => {
     return (
         <Card className="auth-card">
             <div className="auth-card-header">
-                <h2 className="title">{t(LOGIN_TITLE)}</h2>
+                <h2 className="auth-card-title">{t(LOGIN_TITLE)}</h2>
             </div>
 
             {isLoading ? (

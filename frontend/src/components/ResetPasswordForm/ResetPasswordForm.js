@@ -42,8 +42,8 @@ const ResetPasswordForm = (props) => {
     return (
         <Card className="auth-card">
             <div className="auth-card-header">
-                <h2 className="title">{i18n.t(RESET_PASSWORD_PAGE_TITLE)}</h2>
-                <span className="subtitle">{i18n.t(RESET_PASSWORD_HELPER_TEXT)}</span>
+                <h2 className="auth-card-title">{i18n.t(RESET_PASSWORD_PAGE_TITLE)}</h2>
+                <span className="auth-card-subtitle">{i18n.t(RESET_PASSWORD_HELPER_TEXT)}</span>
             </div>
             {isLoading ? (
                 <CircularProgress size="70px" className="loading-circle auth-loading" />

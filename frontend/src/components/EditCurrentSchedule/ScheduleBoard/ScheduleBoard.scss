@@ -1,11 +1,11 @@
-@import '../../../styles/variables.scss';
-@import '../../../styles/colors.scss';
+@import "../../../styles/variables.scss";
+@import "../../../styles/colors.scss";
+@import "../../../styles/mixins.scss";
 
 .board-container {
+    @include displayFlex(stretch, center);
     position: relative;
-    display: flex;
     height: 114px;
-    justify-content: center;
     .schedule-item,
     .board {
         position: relative;
@@ -71,19 +71,18 @@
             text-transform: uppercase;
         }
         p {
-            display: flex;
+            @include displayFlex(center, center);
             height: $full-size;
             margin: 0;
-            align-items: center;
-            justify-content: center;
             color: $gray;
             font-size: $font-2xs;
         }
     }
     .grouped-icon {
         position: absolute;
-        right: 3px;
+        right: 5px;
         bottom: 15px;
+        color: $create-color;
     }
     .possible {
         background-color: $warning-color;
