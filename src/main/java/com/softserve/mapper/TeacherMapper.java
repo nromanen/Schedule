@@ -1,10 +1,7 @@
 package com.softserve.mapper;
 
-import com.softserve.dto.TeacherForUpdateDTO;
+import com.softserve.dto.*;
 import org.apache.commons.lang3.StringUtils;
-import com.softserve.dto.TeacherDTO;
-import com.softserve.dto.TeacherWithUserDTO;
-import com.softserve.dto.UserDataDTO;
 import com.softserve.entity.Teacher;
 import com.softserve.service.UserService;
 import org.mapstruct.*;
