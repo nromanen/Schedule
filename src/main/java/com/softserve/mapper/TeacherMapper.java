@@ -21,6 +21,10 @@ public abstract class TeacherMapper {
     @Mapping(target = "email", source = "userId", qualifiedByName = "userIdToEmail")
     public abstract TeacherDTO teacherToTeacherDTO(Teacher teacher);
 
+    @InheritInverseConfiguration
+    @Mapping(target = "email", source = "userId", qualifiedByName = "userIdToEmail")
+    public abstract TeacherImportDTO teacherToTeacherImportDTO(Teacher teacher);
+
     @Named("userIdToEmail")
     public String userIdToEmail(Long userId) {
         if(userId != null) {
@@ -38,6 +42,9 @@ public abstract class TeacherMapper {
 
     @Mapping(target = "department", source = "departmentDTO")
     public abstract Teacher teacherDTOToTeacher(TeacherDTO teacherDTO);
+
+    @Mapping(target = "department", source = "departmentDTO")
+    public abstract Teacher teacherImportDTOToTeacher(TeacherImportDTO teacherImportDTO);
 
     public abstract TeacherWithUserDTO toTeacherWithUserDTO(Teacher teacher);
 
