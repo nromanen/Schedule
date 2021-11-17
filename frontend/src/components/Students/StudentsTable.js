@@ -58,7 +58,6 @@ export const StudentsTable = (props) => {
                     />
                     <StudentsTableBody
                         page={page}
-                        students={students}
                         rowsPerPage={rowsPerPage}
                         checkStudent={checkStudent}
                         setCheckedAll={setCheckedAll}

@@ -15,7 +15,6 @@ export const StudentsPage = (props) => {
         isOpenConfirmDialog,
         selectStudentSuccess,
         setIsOpenConfirmDialog,
-        checkAllStudentsSuccess,
         isOpenMoveStudentsDialog,
         moveStudentsToGroupStart,
         setIsOpenMoveStudentDialog,
@@ -36,14 +35,9 @@ export const StudentsPage = (props) => {
     return (
         <>
             <StudentsTable
-                group={group}
-                groups={groups}
                 students={students}
                 setStudent={setStudent}
-                selectStudentSuccess={selectStudentSuccess}
                 setIsOpenUpdateDialog={setIsOpenUpdateDialog}
-                setIsOpenConfirmDialog={setIsOpenConfirmDialog}
-                checkAllStudentsSuccess={checkAllStudentsSuccess}
                 {...props}
             />
             {isOpenMoveStudentsDialog && (
