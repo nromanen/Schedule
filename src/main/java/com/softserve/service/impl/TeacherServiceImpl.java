@@ -2,6 +2,8 @@ package com.softserve.service.impl;
 
 import com.softserve.dto.TeacherDTO;
 import com.softserve.dto.TeacherForUpdateDTO;
+import com.softserve.dto.TeacherImportDTO;
+import com.softserve.dto.TeacherStatus;
 import com.softserve.entity.Department;
 import com.softserve.entity.Student;
 import com.softserve.entity.Teacher;
@@ -26,6 +28,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.swing.text.html.Option;
 import javax.validation.ConstraintViolationException;
 import java.util.ArrayList;
 import java.util.List;
@@ -257,35 +260,39 @@ public class TeacherServiceImpl implements TeacherService {
      */
     @Override
     @Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
-    @Async
-    public CompletableFuture<List<Teacher>> saveFromFile(MultipartFile file, Long departmentId) {
+    public CompletableFuture<List<TeacherImportDTO>> saveFromFile(MultipartFile file, Long departmentId) {
         log.info("Enter into saveFromFile of TeacherServiceImpl");
 
-        List<TeacherDTO> teachers = CsvFileParser.getTeachersFromFile(file);
+        List<TeacherImportDTO> teachers = CsvFileParser.getTeachersFromFile(file);
 
-        List<Teacher> savedTeachers = new ArrayList<>();
+        List<TeacherImportDTO> savedTeachers = new ArrayList<>();
 
-        for(TeacherDTO teacher : teachers){
+        for(TeacherImportDTO teacher : teachers){
             try{
                 Optional<User> userOptional = userService.findSocialUser(teacher.getEmail());
-                Teacher newTeacher = teacherMapper.teacherDTOToTeacher(teacher);
+                Teacher newTeacher = teacherMapper.teacherImportDTOToTeacher(teacher);
                 if(userOptional.isEmpty()){
                     Teacher registeredTeacher = registerTeacher(newTeacher, teacher.getEmail());
                     Department department = departmentService.getById(departmentId);
                     registeredTeacher.setDepartment(department);
-                    savedTeachers.add(teacherRepository.save(registeredTeacher));
+                    TeacherImportDTO savedTeacher = teacherMapper.teacherToTeacherImportDTO(registeredTeacher);
+                    teacherRepository.save(registeredTeacher);
+                    savedTeacher.setTeacherStatus(TeacherStatus.SAVED);
+                    /*Замість емейла повертало User_id, думаю це зв'язано з мапером */
+                    savedTeacher.setEmail(teacher.getEmail());
+                    savedTeachers.add(savedTeacher);
                 }else {
-                    //TODO Check current exception to return Long to test with user_id
-                    log.error("Error occurred while saving teacher", new FieldAlreadyExistsException(Teacher.class, "user_id", teacher.getName()));
+                    teacher.setTeacherStatus(TeacherStatus.ALREADY_EXIST);
+                    savedTeachers.add(teacher);
+                    log.error("Teacher with current email exist ", new FieldAlreadyExistsException(Teacher.class, "email", teacher.getEmail()));
                 }
             } catch (ConstraintViolationException e) {
-                Teacher newTeacher = teacherMapper.teacherDTOToTeacher(teacher);
-                //TODO change to email;
-                log.error("Error occurred while saving teacher with department {}", newTeacher.getDepartment(), e);
-                newTeacher.setDepartment(null);
-                savedTeachers.add(newTeacher);
+                teacher.setTeacherStatus(TeacherStatus.VALIDATION_ERROR);
+                log.error("Error occurred while saving teacher with email {}", teacher.getEmail(), e);
+                savedTeachers.add(teacher);
             }
         }
        return CompletableFuture.completedFuture(savedTeachers);
     }
+
 }

@@ -2,6 +2,7 @@ package com.softserve.util;
 
 import com.opencsv.bean.CsvToBeanBuilder;
 import com.softserve.dto.TeacherDTO;
+import com.softserve.dto.TeacherImportDTO;
 import com.softserve.entity.Student;
 import com.softserve.exception.ParseFileException;
 import lombok.extern.slf4j.Slf4j;
@@ -53,19 +54,19 @@ public class CsvFileParser {
         }
     }
 
-    public static List<TeacherDTO> getTeachersFromFile(MultipartFile file) {
+    public static List<TeacherImportDTO> getTeachersFromFile(MultipartFile file) {
         String fileName = String.join("", "teachers_",
                 String.valueOf(LocalDateTime.now().getNano()), ".csv");
 
         File csvFile = new File(fileName);
 
-        List<TeacherDTO> teachers = new ArrayList<>();
+        List<TeacherImportDTO> teachers = new ArrayList<>();
         try {
             file.transferTo(csvFile);
 
             try (Reader reader = new FileReader(csvFile, StandardCharsets.UTF_8)) {
-                teachers = new CsvToBeanBuilder<TeacherDTO>(reader)
-                        .withType(TeacherDTO.class)
+                teachers = new CsvToBeanBuilder<TeacherImportDTO>(reader)
+                        .withType(TeacherImportDTO.class)
                         .build().parse();
             }
         } catch (RuntimeException e) {
