@@ -1,6 +1,6 @@
-@import "../../styles/colors.scss";
-@import "../../styles/fonts.scss";
-@import "../../styles/variables.scss";
+@import '../../styles/colors.scss';
+@import '../../styles/fonts.scss';
+@import '../../styles/variables.scss';
 
 @mixin flexWrap {
     display: flex;
@@ -16,14 +16,6 @@
 .card-title {
     width: 95%;
     text-align: center;
-}
-
-.centered-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex: 100%;
-    margin-top: 1em;
 }
 
 .lesson-wrapper {

@@ -1,56 +1,30 @@
-@import "./styles/colors.scss";
-@import "./styles/fonts.scss";
-@import "./styles/variables.scss";
-@import "./styles/mixins.scss";
+@import './styles/colors.scss';
+@import './styles/fonts.scss';
+@import './styles/variables.scss';
+@import './styles/mixins.scss';
 
 html {
-    height: 100%;
+    height: $full-size;
 }
+
 body {
     margin: 0;
     font-family: $font;
 }
 
 .centered-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex: 100%;
-    margin-top: 1em;
-}
-
-.page-title {
-    display: flex;
-    justify-content: center;
-
-    @media (max-width: 500px) {
-        flex-direction: column;
-    }
-
-    .page-h {
-        @media (max-width: 850px) {
-            font-size: 1.1rem;
-            line-height: 80px;
-            margin-right: 20px;
-        }
-
-        @media (max-width: 500px) {
-            line-height: 20px;
-        }
-
-        line-height: 50px;
-        margin-right: 10px;
-    }
+    @include displayFlex(center, center);
+    flex: $full-size;
 }
 
 .under-line {
     position: relative;
 
     &::after {
-        content: "";
+        content: '';
         position: absolute;
         left: 0;
-        width: 100%;
+        width: $full-size;
         bottom: -10px;
         border-bottom: 1px solid;
     }
@@ -61,14 +35,12 @@ body {
     margin: 10px auto;
 
     @media (max-width: 1440px) {
-        margin: 10px 10px;
+        margin: 10px;
     }
 }
 
 .form-fields-container {
-    @include flexWrap();
-    align-items: center;
-    justify-content: space-between;
+    @include displayFlex(center, space-between);
 
     .MuiFormControl-root,
     .form-field {
@@ -87,51 +59,38 @@ body {
 }
 
 .form-buttons-container {
-    @include flexWrap();
-    align-items: center;
-    justify-content: space-between;
+    @include displayFlex(center, space-between);
     margin-top: 10px;
 
     .buttons-style {
         width: 48%;
 
-        @media (max-width: 768px) {
+        @media (max-width: $md-m) {
             margin-bottom: 5px;
-            font-size: 12px;
+            font-size: $font-2xs;
             width: 60%;
         }
     }
 }
 
-.margin-top-bottom {
-    margin: 2px 0 7px 0;
-}
-
 .cards-container {
+    @include displayFlex(start, start);
     margin-bottom: 50px;
-    @media (max-width: 850px) {
-        flex-direction: column;
-        align-items: center;
+
+    @media (max-width: $md-m) {
+        @include displayFlex(center, start, column);
     }
-    @include flexWrap();
-    align-items: start;
 
     .container-flex-wrap {
-        @include flexWrap();
-
-        width: 100%;
-        align-items: center;
-        justify-content: space-around;
+        @include displayFlex(center, space-around);
         flex-wrap: wrap;
+        width: $full-size;
     }
 }
 
 .cards-btns {
-    @include flexWrap();
-    align-items: center;
-    justify-content: flex-end;
-    position: relative;
-    height: 2em;
+    @include displayFlex(center, flex-end);
+    height: 30px;
 
     .svg-btn {
         @include buttonStyle;
@@ -150,12 +109,12 @@ body {
 
     .edit-btn {
         &:hover {
-            color: $background-color;
+            color: $blue;
         }
     }
 
     .info-btn {
-        color: $create-color;
+        color: $green;
         cursor: default;
         left: 0;
         position: absolute;
@@ -163,12 +122,12 @@ body {
 
     .copy-btn {
         &:hover {
-            color: $create-color;
+            color: $green;
         }
     }
 
     .info-btn {
-        color: $create-color;
+        color: $green;
         cursor: default;
         margin: 0 5px;
     }
@@ -195,21 +154,18 @@ body {
 
 .search-list__panel {
     position: sticky;
-    top: 1rem;
-    width: 30rem;
-    @media (max-width: 850px) {
+    top: 15px;
+    width: 395px;
+    @media (max-width: $md-m) {
         position: relative;
         margin: 0 auto 40px;
-        max-width: 100%;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
+        max-width: $full-size;
+        @include displayFlex(center, start, column);
     }
 }
 
 .search-lesson-group {
-    display: flex;
-    align-items: center;
+    @include displayFlex(center, start);
     align-content: center;
 
     .search-lesson {
@@ -228,18 +184,17 @@ body {
     color: $blue;
 }
 
+// new icon-btn styles
 
-// icon-btn
-
-.edit-icon-btn{
-  @include button-icon($black, $blue)
+.edit-icon-btn {
+    @include button-icon($black, $blue);
 }
 
-.eye-icon-btn, .copy-icon-btn{
-  @include button-icon($black, $green)
+.eye-icon-btn,
+.copy-icon-btn {
+    @include button-icon($black, $green);
 }
 
-.delete-icon-btn{
-  @include button-icon($black, $red)
+.delete-icon-btn {
+    @include button-icon($black, $red);
 }
-
