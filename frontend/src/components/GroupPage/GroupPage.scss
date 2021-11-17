@@ -27,7 +27,7 @@
   }
 
   &-wrapper {
-    @include displayFlex(center,center);
+    @include displayFlex(start,center);
     width: $full-size;
   }
   &-list {
