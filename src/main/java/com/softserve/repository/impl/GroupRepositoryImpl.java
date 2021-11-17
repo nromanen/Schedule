@@ -47,6 +47,11 @@ public class GroupRepositoryImpl extends BasicRepositoryImpl<Group, Long> implem
             + "FROM Lesson l "
             + "WHERE l.teacher.id = :id AND l.semester.defaultSemester = true";
 
+    private static final String GET_GROUPS_BY_IDS
+            = "select g "
+            + "from Group g "
+            + "where g.id in (:ids)";
+
     private static final String GET_ALL_ORDERED
             = "SELECT g "
             + "FROM Group g "
@@ -256,5 +261,19 @@ public class GroupRepositoryImpl extends BasicRepositoryImpl<Group, Long> implem
                 .createQuery(IS_LESSONS_EXIST_FOR_GROUP_ID_QUERY)
                 .setParameter("groupId", group.getId())
                 .getSingleResult();
+    }
+
+    /**
+     * The method used for getting all groups by group Ids
+     *
+     * @param groupIds ids of the groups that need to be retrieved
+     * @return list of the groups
+     */
+    @Override
+    public List<Group> getGroupsByGroupIds(List<Long> groupIds) {
+        return getSession()
+                .createQuery(GET_GROUPS_BY_IDS, Group.class)
+                .setParameterList("ids", groupIds)
+                .getResultList();
     }
 }
