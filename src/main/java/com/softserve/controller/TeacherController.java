@@ -109,8 +109,7 @@ public class TeacherController {
     @ApiOperation(value = "import teachers from file to database")
     public ResponseEntity<List<TeacherImportDTO>> importFromCsv(@ApiParam(value = "csv format is required")
                                                           @RequestParam("file") MultipartFile file, @RequestParam Long departmentId) {
-        return ResponseEntity.ok((teacherService.saveFromFile(file, departmentId)
-                .getNow(new ArrayList<>())));
+        return ResponseEntity.status(HttpStatus.OK).body(teacherService.saveFromFile(file, departmentId));
     }
 
 }

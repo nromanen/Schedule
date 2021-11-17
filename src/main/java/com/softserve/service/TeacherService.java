@@ -21,7 +21,7 @@ public interface TeacherService extends BasicService<Teacher, Long> {
 
     List<Teacher> getAllTeacherWithoutUser();
 
-    CompletableFuture<List<TeacherImportDTO>> saveFromFile(MultipartFile file, Long departmentId);
+    List<TeacherImportDTO> saveFromFile(MultipartFile file, Long departmentId);
 
 }
 
