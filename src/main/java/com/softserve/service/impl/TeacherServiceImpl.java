@@ -275,7 +275,6 @@ public class TeacherServiceImpl implements TeacherService {
                     TeacherImportDTO savedTeacher = teacherMapper.teacherToTeacherImportDTO(registeredTeacher);
                     teacherRepository.save(registeredTeacher);
                     savedTeacher.setTeacherStatus(TeacherStatus.SAVED);
-                    /*Замість емейла повертало User_id, думаю це зв'язано з мапером */
                     savedTeacher.setEmail(teacher.getEmail());
                     savedTeachers.add(savedTeacher);
                 }else {
