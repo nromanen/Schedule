@@ -71,11 +71,9 @@
             text-transform: uppercase;
         }
         p {
-            display: flex;
+            @include displayFlex(center, center);
             height: $full-size;
             margin: 0;
-            align-items: center;
-            justify-content: center;
             color: $gray;
             font-size: $font-2xs;
         }

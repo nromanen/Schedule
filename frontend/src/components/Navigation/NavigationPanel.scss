@@ -34,7 +34,7 @@
         .navigation-select {
             display: flex;
             height: 40px;
-            min-width: 100%;
+            min-width: $full-size;
             color: $white;
             .MuiSelect-select {
                 &:focus {
@@ -53,7 +53,7 @@
         }
         .MuiInput-underline {
             &::before {
-                width: 98%;
+                width: $full-size;
                 left: 50%;
                 transform: translateX(-50%);
                 border-color: $white;
