@@ -347,19 +347,19 @@ public class ScheduleServiceImpl implements ScheduleService {
      */
     @Override
     public ScheduleFullDTO getFullScheduleForSemester(Long semesterId) {
-        ScheduleFullDTO scheduleFullDTO = new ScheduleFullDTO();
-        SemesterMapper semesterMapper = new SemesterMapperImpl();
-        scheduleFullDTO.setSemester(semesterMapper.semesterToSemesterDTO(semesterService.getById(semesterId)));
+                ScheduleFullDTO scheduleFullDTO = new ScheduleFullDTO();
+                SemesterMapper semesterMapper = new SemesterMapperImpl();
+                scheduleFullDTO.setSemester(semesterMapper.semesterToSemesterDTO(semesterService.getById(semesterId)));
 
-        List<ScheduleForGroupDTO> scheduleForGroupDTOList = new ArrayList<>();
-        List<Group> groupsForSchedule = new ArrayList<>();
+                List<ScheduleForGroupDTO> scheduleForGroupDTOList = new ArrayList<>();
+                List<Group> groupsForSchedule = new ArrayList<>();
 
-        groupsForSchedule.addAll(scheduleRepository.uniqueGroupsInScheduleBySemester(semesterId));
-        for (Group group : groupsForSchedule) {
-            ScheduleForGroupDTO scheduleForGroupDTO = new ScheduleForGroupDTO();
-            scheduleForGroupDTO.setGroup(groupMapper.groupToGroupDTO(group));
-            scheduleForGroupDTO.setDays(getDaysForSemester(semesterId, group.getId()));
-            scheduleForGroupDTOList.add(scheduleForGroupDTO);
+                groupsForSchedule.addAll(scheduleRepository.uniqueGroupsInScheduleBySemester(semesterId));
+                for (Group group : groupsForSchedule) {
+                    ScheduleForGroupDTO scheduleForGroupDTO = new ScheduleForGroupDTO();
+                    scheduleForGroupDTO.setGroup(groupMapper.groupToGroupDTO(group));
+                    scheduleForGroupDTO.setDays(getDaysForSemester(semesterId, group.getId()));
+                    scheduleForGroupDTOList.add(scheduleForGroupDTO);
 
         }
         scheduleFullDTO.setSchedule(scheduleForGroupDTOList);

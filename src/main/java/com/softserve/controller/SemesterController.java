@@ -4,10 +4,16 @@ import com.softserve.dto.GroupDTO;
 import com.softserve.dto.SemesterDTO;
 import com.softserve.dto.SemesterWithGroupsDTO;
 import com.softserve.entity.Group;
+import com.softserve.entity.Lesson;
+import com.softserve.entity.Schedule;
 import com.softserve.entity.Semester;
 import com.softserve.mapper.GroupMapper;
+import com.softserve.mapper.ScheduleMapper;
 import com.softserve.mapper.SemesterMapper;
+import com.softserve.repository.GroupRepository;
 import com.softserve.service.GroupService;
+import com.softserve.service.LessonService;
+import com.softserve.service.ScheduleService;
 import com.softserve.service.SemesterService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -15,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,13 +31,21 @@ import java.util.List;
 @Slf4j
 public class SemesterController {
 
+    private final GroupRepository groupRepository;
+    private final ScheduleMapper scheduleMapper;
+    private final LessonService lessonService;
+    private final ScheduleService scheduleService;
     private final SemesterService semesterService;
     private final SemesterMapper semesterMapper;
     private final GroupMapper groupMapper;
     private final GroupService groupService;
 
     @Autowired
-    public SemesterController(SemesterService semesterService, SemesterMapper semesterMapper, GroupMapper groupMapper, GroupService groupService) {
+    public SemesterController(GroupRepository groupRepository, ScheduleMapper scheduleMapper, LessonService lessonService, ScheduleService scheduleService, SemesterService semesterService, SemesterMapper semesterMapper, GroupMapper groupMapper, GroupService groupService) {
+        this.groupRepository = groupRepository;
+        this.scheduleMapper = scheduleMapper;
+        this.lessonService = lessonService;
+        this.scheduleService = scheduleService;
         this.semesterService = semesterService;
         this.semesterMapper = semesterMapper;
         this.groupMapper = groupMapper;
@@ -111,7 +126,6 @@ public class SemesterController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-
     @GetMapping("/semesters/disabled")
     @ApiOperation(value = "Get the list of disabled semester")
     public ResponseEntity<List<SemesterDTO>> getDisabled() {
@@ -149,5 +163,15 @@ public class SemesterController {
         log.info("In getGroupsBySemesterId (semesterId =[{}]", semesterId);
         List<Group> groups = groupService.getGroupsBySemesterId(semesterId);
         return ResponseEntity.status(HttpStatus.OK).body(groupMapper.groupsToGroupDTOs(groups));
+    }
+
+    @PostMapping("/copy-semester")
+    @ApiOperation(value = "Copy full semester from one to another semester")
+    @PreAuthorize("hasRole('MANAGER')")
+    public ResponseEntity<SemesterWithGroupsDTO> copySemester(@RequestParam Long fromSemesterId,
+                                                              @RequestParam Long toSemesterId) {
+        log.debug("In copySemester with fromSemesterId = {} and toSemesterId = {}", fromSemesterId, toSemesterId);
+        Semester semester = semesterService.copySemester(fromSemesterId,toSemesterId);
+        return ResponseEntity.status(HttpStatus.OK).body(semesterMapper.semesterToSemesterWithGroupsDTO(semester));
     }
 }
