@@ -317,10 +317,8 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
      * @return updated Lesson
      */
     @Override
-    public Lesson updateGrouped(Lesson updatedLesson) {
-        log.info("Entered updateGroup({})", updatedLesson);
-        Lesson oldLesson = findById(updatedLesson.getId())
-                .orElseThrow(() -> new EntityNotFoundException(Lesson.class, "id", updatedLesson.getId().toString()));
+    public Lesson updateGrouped(Lesson oldLesson,Lesson updatedLesson) {
+        log.info("Entered updateGroup({}, {})", oldLesson, updatedLesson);
         int updated = sessionFactory.getCurrentSession()
                 .createQuery(UPDATE_GROUPED)
                 .setParameter("initialSubjectId", oldLesson.getSubject().getId())
