@@ -1,13 +1,12 @@
 package com.softserve.controller;
 
-import com.softserve.dto.StudentDTO;
 import com.softserve.dto.TeacherDTO;
 import com.softserve.dto.TeacherForUpdateDTO;
+import com.softserve.dto.TeacherImportDTO;
 import com.softserve.entity.Teacher;
 import com.softserve.mapper.TeacherMapper;
 import com.softserve.service.ScheduleService;
 import com.softserve.service.TeacherService;
-import com.softserve.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -35,14 +34,12 @@ import java.util.Locale;
 public class TeacherController {
     private final TeacherService teacherService;
     private final TeacherMapper teacherMapper;
-    private final UserService userService;
     private final ScheduleService scheduleService;
 
     @Autowired
-    public TeacherController(TeacherService teacherService, TeacherMapper teacherMapper, UserService userService, ScheduleService scheduleService) {
+    public TeacherController(TeacherService teacherService, TeacherMapper teacherMapper, ScheduleService scheduleService) {
         this.teacherService = teacherService;
         this.teacherMapper = teacherMapper;
-        this.userService = userService;
         this.scheduleService = scheduleService;
     }
 
@@ -108,11 +105,11 @@ public class TeacherController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    @PostMapping("/import")
+    @PostMapping("/teachers/import")
     @ApiOperation(value = "import teachers from file to database")
-    public ResponseEntity<List<TeacherDTO>> importFromCsv(@ApiParam(value = "csv format is required")
+    public ResponseEntity<List<TeacherImportDTO>> importFromCsv(@ApiParam(value = "csv format is required")
                                                           @RequestParam("file") MultipartFile file, @RequestParam Long departmentId) {
-        return ResponseEntity.ok(teacherMapper.teachersToTeacherDTOs(teacherService.saveFromFile(file, departmentId)
+        return ResponseEntity.ok((teacherService.saveFromFile(file, departmentId)
                 .getNow(new ArrayList<>())));
     }
 

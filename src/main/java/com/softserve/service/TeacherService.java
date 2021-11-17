@@ -2,6 +2,7 @@ package com.softserve.service;
 
 import com.softserve.dto.TeacherDTO;
 import com.softserve.dto.TeacherForUpdateDTO;
+import com.softserve.dto.TeacherImportDTO;
 import com.softserve.entity.Teacher;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,6 +21,7 @@ public interface TeacherService extends BasicService<Teacher, Long> {
 
     List<Teacher> getAllTeacherWithoutUser();
 
-    CompletableFuture<List<Teacher>> saveFromFile(MultipartFile file, Long departmentId);
+    CompletableFuture<List<TeacherImportDTO>> saveFromFile(MultipartFile file, Long departmentId);
+
 }
 

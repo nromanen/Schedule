@@ -1,5 +1,6 @@
 package com.softserve.repository.impl;
 
+import com.softserve.dto.TeacherImportDTO;
 import com.softserve.entity.Teacher;
 import com.softserve.repository.TeacherRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -86,4 +87,12 @@ public class TeacherRepositoryImpl extends BasicRepositoryImpl<Teacher, Long> im
                         " where t.userId = null ")
                 .getResultList();
     }
+
+    @Override
+    public TeacherImportDTO saveImport(TeacherImportDTO teacherImportDTO) {
+            log.info("In save(teacherImportDTO = [{}]", teacherImportDTO);
+            sessionFactory.getCurrentSession()
+                    .save(teacherImportDTO);
+            return teacherImportDTO;
+        }
 }
