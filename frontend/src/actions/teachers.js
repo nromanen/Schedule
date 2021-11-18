@@ -1,129 +1,93 @@
 import * as actionsType from './actionsType';
 
-export const handleTeacherStart = (values) => {
-    return {
-        type: actionsType.HANDLE_TEACHER_START,
-        values,
-    };
-};
+export const handleTeacherStart = (values) => ({
+    type: actionsType.HANDLE_TEACHER_START,
+    values,
+});
 
-export const addTeacherSuccess = (teacher) => {
-    return {
-        type: actionsType.ADD_TEACHER_SUCCESS,
-        teacher,
-    };
-};
+export const addTeacherSuccess = (teacher) => ({
+    type: actionsType.ADD_TEACHER_SUCCESS,
+    teacher,
+});
 
-export const addTeacherStart = (teacher) => {
-    return {
-        type: actionsType.ADD_TEACHER_START,
-        teacher,
-    };
-};
+export const addTeacherStart = (teacher) => ({
+    type: actionsType.ADD_TEACHER_START,
+    teacher,
+});
 
-export const setTeacher = (teacher) => {
-    return {
-        type: actionsType.SET_TEACHER,
-        result: teacher,
-    };
-};
+export const setTeacher = (teacher) => ({
+    type: actionsType.SET_TEACHER,
+    teacher,
+});
 
-export const toggleTeacherStart = (teacherId, disableStatus) => {
-    return {
-        type: actionsType.TOOGLE_TEACHER_START,
-        teacherId,
-        disableStatus,
-    };
-};
+export const toggleTeacherStart = (teacherId, disableStatus) => ({
+    type: actionsType.TOOGLE_TEACHER_START,
+    teacherId,
+    disableStatus,
+});
 
-export const deleteTeacherSuccess = (id, disableStatus) => {
-    return {
-        type: actionsType.DELETE_TEACHER_SUCCESS,
-        id,
-        disableStatus,
-    };
-};
+export const deleteTeacherSuccess = (id, disableStatus) => ({
+    type: actionsType.DELETE_TEACHER_SUCCESS,
+    id,
+    disableStatus,
+});
 
-export const deleteTeacherStart = (id) => {
-    return {
-        type: actionsType.DELETE_TEACHER_START,
-        id,
-    };
-};
+export const deleteTeacherStart = (id) => ({
+    type: actionsType.DELETE_TEACHER_START,
+    id,
+});
 
-export const selectTeacherCard = (res) => {
-    return {
-        type: actionsType.SELECT_TEACHER,
-        result: res,
-    };
-};
+export const selectTeacherCard = (teacher) => ({
+    type: actionsType.SELECT_TEACHER,
+    teacher,
+});
 
-export const updateTeacherCardSuccess = (teacher) => {
-    return {
-        type: actionsType.UPDATE_TEACHER_SUCCESS,
-        teacher,
-    };
-};
+export const updateTeacherCardSuccess = (teacher) => ({
+    type: actionsType.UPDATE_TEACHER_SUCCESS,
+    teacher,
+});
 
-export const updateTeacherCardStart = (teacher) => {
-    return {
-        type: actionsType.UPDATE_TEACHER_START,
-        teacher,
-    };
-};
+export const updateTeacherCardStart = (teacher) => ({
+    type: actionsType.UPDATE_TEACHER_START,
+    teacher,
+});
 
-export const showAllTeachersSuccess = (teachers) => {
-    return {
-        type: actionsType.SHOW_ALL_TEACHERS_SUCCESS,
-        result: teachers,
-    };
-};
+export const showAllTeachersSuccess = (teachers) => ({
+    type: actionsType.SHOW_ALL_TEACHERS_SUCCESS,
+    teachers,
+});
 
-export const showAllTeachersStart = (teachers) => {
-    return {
-        type: actionsType.SHOW_ALL_TEACHERS_START,
-        result: teachers,
-    };
-};
+export const showAllTeachersStart = (teachers) => ({
+    type: actionsType.SHOW_ALL_TEACHERS_START,
+    teachers,
+});
 
-export const getTeacherWithoutAccountStart = (teachers) => {
-    return {
-        type: actionsType.GET_TEACHERS_WITHOUT_ACCOUNT_START,
-        result: teachers,
-    };
-};
+export const getTeacherWithoutAccountStart = (teachers) => ({
+    type: actionsType.GET_TEACHERS_WITHOUT_ACCOUNT_START,
+    teachers,
+});
 
-export const getTeacherWithoutAccountSuccess = (teachers) => {
-    return {
-        type: actionsType.GET_TEACHERS_WITHOUT_ACCOUNT_SUCCESS,
-        result: teachers,
-    };
-};
+export const getTeacherWithoutAccountSuccess = (teachers) => ({
+    type: actionsType.GET_TEACHERS_WITHOUT_ACCOUNT_SUCCESS,
+    teachers,
+});
 
-export const getAllPublicTeachersByDepartmentStart = (departmentId) => {
-    return {
-        type: actionsType.GET_ALL_PUBLIC_TEACHERS_BY_DEPARTMENT_START,
-        departmentId,
-    };
-};
+export const getAllPublicTeachersByDepartmentStart = (departmentId) => ({
+    type: actionsType.GET_ALL_PUBLIC_TEACHERS_BY_DEPARTMENT_START,
+    departmentId,
+});
 
-export const getAllTeachersByDepartmentId = (teachers) => {
-    return {
-        type: actionsType.GET_TEACHERS_BY_DEPARTMENT,
-        result: teachers,
-    };
-};
+export const getAllTeachersByDepartmentId = (teachers) => ({
+    type: actionsType.GET_TEACHERS_BY_DEPARTMENT,
+    teachers,
+});
 
-export const setDisabledTeachersSuccess = (teachers) => {
-    return {
-        type: actionsType.SET_DISABLED_TEACHERS_SUCCESS,
-        result: teachers,
-    };
-};
+export const setDisabledTeachersSuccess = (teachers) => ({
+    type: actionsType.SET_DISABLED_TEACHERS_SUCCESS,
+    teachers,
+});
 
-export const setDisabledTeachersStart = (teachers) => {
-    return {
-        type: actionsType.SET_DISABLED_TEACHERS_START,
-        result: teachers,
-    };
-};
+export const setDisabledTeachersStart = (teachers) => ({
+    type: actionsType.SET_DISABLED_TEACHERS_START,
+    teachers,
+});

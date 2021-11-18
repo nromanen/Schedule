@@ -1,164 +1,69 @@
-@import "../../../styles/colors.scss";
-@import "../../../styles/fonts.scss";
-@import "../../../styles/variables.scss";
+@import '../../../styles/colors.scss';
+@import '../../../styles/fonts.scss';
+@import '../../../styles/variables.scss';
+@import '../../../styles/mixins.scss';
 
-@mixin buttonStyle {
-    cursor: pointer;
-    width: $icon-size;
-    height: $icon-size;
-    transition: color 0.3s linear;
-}
-
-.teachers-container {
-    margin-bottom: 50px;
-    display: flex;
-    align-items: start;
-    margin-top: 30px;
-
-    @media (max-width: $md-medium) {
-        display: flex;
+.cards-container {
+    @media (max-width: $md-m) {
+        @include displayFlex(stretch, center);
         flex-wrap: wrap;
-        justify-content: center;
     }
 
-    @media (max-width: $md-small) {
-        display: flex;
+    @media (max-width: $md-s) {
+        @include displayFlex(stretch, center);
         flex-wrap: wrap;
         text-align: center;
-        justify-content: center;
     }
 }
 
 .form-with-search-panel {
-    width: auto;
     position: sticky;
-    top: 1em;
+    top: 16px;
+    margin-top: 16px;
 
-    .teacher-search {
-        width: 360px;
-
-        @media (max-width: $md-small) {
+    .search-group {
+        width: 340px;
+        @media (max-width: $md-s) {
             width: 340px;
-        }
-
-        .search-group {
-            width: auto;
-            max-width: fit-content;
-            min-height: 85px;
-            background-color: $white;
-            display: inline-block;
-            margin: 10px;
-            padding: 1rem;
-            border-radius: 5px;
-            box-shadow: 0 2px 8px $shadow-box;
-
-            @media (max-width: $md-small) {
-                width: 340px;
-            }
-
-            .MuiFormControl-root {
-                width: 100%;
-            }
-        }
-    }
-
-    .send-schedule {
-        display: flex;
-
-        @media (max-width: $md-small) {
-            display: flex;
-            justify-content: center;
         }
     }
 
     .send-button {
-        width: 100%;
+        width: $full-size;
 
-        @media (max-width: $md-small) {
-            width: 290px;
+        @media (max-width: $md-s) {
+            width: 340px;
         }
     }
 
-    @media (max-width: $md-width-lanscape) {
-        position: relative;
-        margin-bottom: 20px;
-        max-width: 90%;
+    @media (max-width: $md-l) {
+        margin-top: 30px;
     }
 
-    @media (max-width: $md-small) {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
+    @media (max-width: $md-s) {
+        @include displayFlex(center, flex-start, column);
         width: 340px;
     }
 }
 
 .teacher-card {
-    position: relative;
-    height: 14.5em;
-    background-color: $white;
-    width: 15em;
-    display: inline-block;
-    margin: 10px;
-    padding: 1rem;
-    border-radius: 5px;
-    box-shadow: 0 2px 8px $shadow-box;
-
-    .teacher-btns {
-        display: flex;
-        align-items: center;
-        justify-content: flex-end;
-        position: relative;
-        height: 2em;
-
-        .svg-btn {
-            @include buttonStyle;
-            margin-right: 10px;
-
-            &:last-child {
-                margin-right: 0;
-            }
-        }
-
-        .delete-btn {
-            &:hover {
-                color: $delete-color;
-            }
-        }
-
-        .edit-btn {
-            &:hover {
-                color: $background-color;
-            }
-        }
-
-        .copy-btn {
-            &:hover {
-                color: $create-color;
-            }
-        }
-    }
+    height: 230px;
+    width: 230px;
 
     .teacher-card-name {
-        height: 3.5em;
-        margin: 0.3em 0 1em;
-        font-size: 1.3rem;
+        height: 70px;
+        margin: 5px 0 16px;
+        font-size: 20px;
         text-overflow: ellipsis;
         overflow: hidden;
 
-        @media (max-width: $md-smaller) {
-            font-size: 1.1rem;
+        @media (max-width: $md-s) {
+            font-size: 16px;
         }
     }
 
     .teacher-card-title {
-        margin: 0.2em 0 1em;
-        height: 2.3em;
-    }
-
-    .teacher-subtitle {
-        font-size: 0.8em;
-        margin: 5px 0;
+        height: 35px;
     }
 
     .teacher-email {
@@ -169,7 +74,6 @@
         text-overflow: ellipsis;
         font-size: 16px;
         color: $link;
-        margin: 16px 0;
         background-color: $white;
         border: none;
         cursor: pointer;
@@ -178,14 +82,12 @@
 
 .teachers-list-container {
     display: flex;
-    width: 100%;
-    align-items: center;
     justify-content: space-around;
     flex-wrap: wrap;
-    margin: 0;
+    margin-top: 15px;
 
-    @media (max-width: $md-width-lanscape) {
-        margin-top: 15px;
+    @media (max-width: $md-l) {
+        margin-top: 30px;
     }
 }
 

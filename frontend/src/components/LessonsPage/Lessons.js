@@ -9,8 +9,15 @@ import './LessonPage.scss';
 
 const Lessons = (props) => {
     const { t } = useTranslation('common');
-    const { visibleItems, onClickOpen, onCopyLesson, groupId, group, loading, selectLessonCardOf } =
-        props;
+    const {
+        visibleItems,
+        onClickOpen,
+        onCopyLesson,
+        groupId,
+        group,
+        loading,
+        selectLessonCardSuccess,
+    } = props;
 
     if (loading) {
         return (
@@ -22,9 +29,9 @@ const Lessons = (props) => {
 
     if (isEmpty(visibleItems) && groupId) {
         return (
-            <section className="centered-container">
-                <h2>{t(LESSON_NO_LESSON_FOR_GROUP_LABEL) + group.title}</h2>
-            </section>
+            <h2 className="centered-container">
+                {t(LESSON_NO_LESSON_FOR_GROUP_LABEL) + group.title}
+            </h2>
         );
     }
 
@@ -32,7 +39,7 @@ const Lessons = (props) => {
         <LessonsList
             lessons={visibleItems}
             onClickOpen={onClickOpen}
-            onSelectLesson={selectLessonCardOf}
+            onSelectLesson={selectLessonCardSuccess}
             onCopyLesson={onCopyLesson}
         />
     );

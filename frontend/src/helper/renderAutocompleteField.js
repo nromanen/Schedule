@@ -15,15 +15,18 @@ export const renderAutocompleteField = ({
 }) => {
     return (
         <Autocomplete
+            {...input}
+            {...custom}
             label={label}
             options={values}
             placeholder={label}
             getOptionLabel={getOptionLabel}
             className={className}
-            {...input}
-            {...custom}
             onChange={(_, value) => {
-                handleChange(value);
+                if (handleChange) {
+                    handleChange(value);
+                }
+
                 return input.onChange(value);
             }}
             onBlur={(_, value) => input.onBlur(value)}

@@ -1,6 +1,6 @@
-@import "../../styles/colors.scss";
-@import "../../styles/fonts.scss";
-@import "../../styles/variables.scss";
+@import '../../styles/colors.scss';
+@import '../../styles/fonts.scss';
+@import '../../styles/variables.scss';
 
 .card {
     background-color: $white;
@@ -12,7 +12,7 @@
 }
 
 .form-card {
-    width: 200px;
+    width: 340px;
 
     position: sticky;
     top: 1rem;
@@ -36,7 +36,7 @@
 }
 
 .class-card-width {
-    width: 110px;
+    width: 200px;
 }
 
 .done-card {

@@ -3,7 +3,7 @@ import {
     checkAvailabilityChangeRoomScheduleStart,
     deleteScheduleItemStart,
 } from '../../actions/schedule';
-import { selectGroupId, getLessonsByGroup } from '../../actions';
+import { selectGroupId, getLessonsByGroupStart } from '../../actions';
 import ScheduleBoardItem from '../../components/EditCurrentSchedule/ScheduleBoard/ScheduleBoardItem';
 
 const mapStateToProps = (state) => ({
@@ -13,7 +13,7 @@ const mapDispatchToProps = (dispatch) => ({
     selectByGroupId: (groupId) => dispatch(selectGroupId(groupId)),
     checkRoomAvailability: (item) => dispatch(checkAvailabilityChangeRoomScheduleStart(item)),
     deleteScheduleItem: (item) => dispatch(deleteScheduleItemStart(item)),
-    getLessonsByGroupId: (id) => dispatch(getLessonsByGroup(id)),
+    getLessonsByGroupId: (id) => dispatch(getLessonsByGroupStart(id)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ScheduleBoardItem);

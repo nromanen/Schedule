@@ -1,21 +1,17 @@
 import { reset } from 'redux-form';
 import { call, put, takeLatest } from 'redux-saga/effects';
-
 import * as actionTypes from '../actions/actionsType';
-
 import {
-    createLesson,
-    selectLessonCard,
-    updateLessonCard,
-    deleteLessonCard,
-    setLessonsCards,
+    createLessonSuccess,
+    selectLessonCardSuccess,
+    updateLessonCardSuccess,
+    deleteLessonCardSuccess,
+    setLessonsCardsStart,
     setLoading,
-    setLessonTypes,
+    setLessonTypesSuccess,
 } from '../actions';
 import { setOpenErrorSnackbar, setOpenSuccessSnackbar } from '../actions/snackbar';
-
 import { createErrorMessage, createMessage } from '../utils/sagaUtils';
-
 import { DELETE, POST, PUT, GET } from '../constants/methods';
 import { LESSON_FORM } from '../constants/reduxForms';
 import { FORM_LESSON_LABEL } from '../constants/translationLabels/formElements';
@@ -28,13 +24,14 @@ import {
     COPIED_LABEL,
 } from '../constants/translationLabels/serviceMessages';
 import { axiosCall } from '../services/axios';
+import { handleFormSubmit } from '../helper/handleFormSubmit';
 
 export function* createLessonCard({ values, groupId }) {
     try {
         const { data } = yield call(axiosCall, LESSON_URL, POST, values);
         const dataForThisGroup = data.filter((item) => item.group.id === groupId);
 
-        yield put(createLesson(dataForThisGroup));
+        yield put(createLessonSuccess(dataForThisGroup));
         const message = createMessage(BACK_END_SUCCESS_OPERATION, FORM_LESSON_LABEL, CREATED_LABEL);
 
         yield put(reset(LESSON_FORM));
@@ -56,8 +53,8 @@ export function* updateLesson({ values, groupId }) {
 
         const message = createMessage(BACK_END_SUCCESS_OPERATION, FORM_LESSON_LABEL, UPDATED_LABEL);
 
-        yield put(updateLessonCard(data));
-        yield put(selectLessonCard(null));
+        yield put(updateLessonCardSuccess(data));
+        yield put(selectLessonCardSuccess(null));
         yield put(reset(LESSON_FORM));
         yield put(setOpenSuccessSnackbar(message));
     } catch (error) {
@@ -65,13 +62,10 @@ export function* updateLesson({ values, groupId }) {
     }
 }
 
-export function* handleLesson({ values, groupId }) {
+export function* handleLesson({ payload }) {
+    const { values, groupId } = payload;
     try {
-        if (values.id) {
-            yield call(updateLesson, { values, groupId });
-        } else {
-            yield call(createLessonCard, { values, groupId });
-        }
+        yield call(handleFormSubmit(values, createLessonCard, updateLesson), { values, groupId });
     } catch (error) {
         yield put(setOpenErrorSnackbar(createErrorMessage(error)));
     }
@@ -84,14 +78,15 @@ export function* removeLessonCard({ id }) {
 
         const message = createMessage(BACK_END_SUCCESS_OPERATION, FORM_LESSON_LABEL, DELETED_LABEL);
 
-        yield put(deleteLessonCard(id));
+        yield put(deleteLessonCardSuccess(id));
         yield put(setOpenSuccessSnackbar(message));
     } catch (error) {
         yield put(setOpenErrorSnackbar(createErrorMessage(error)));
     }
 }
 
-export function* copyLessonCard({ group, lesson }) {
+export function* copyLessonCard({ payload }) {
+    const { group, lesson } = payload;
     const groupList = group.map((groupItem) => {
         return groupItem.id;
     });
@@ -114,7 +109,7 @@ export function* getLessonsByGroup({ id }) {
         const requestUrl = `${LESSON_URL}?groupId=${Number(id)}`;
         const { data } = yield call(axiosCall, requestUrl, GET, id);
 
-        yield put(setLessonsCards(data));
+        yield put(setLessonsCardsStart(data));
     } catch (error) {
         yield put(setOpenErrorSnackbar(createErrorMessage(error)));
     } finally {
@@ -126,7 +121,7 @@ export function* getLessonTypes() {
     try {
         const { data } = yield call(axiosCall, LESSON_TYPES_URL, GET);
 
-        yield put(setLessonTypes(data));
+        yield put(setLessonTypesSuccess(data));
     } catch (error) {
         yield put(setOpenErrorSnackbar(createErrorMessage(error)));
     }

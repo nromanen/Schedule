@@ -23,19 +23,16 @@ const LessonsCard = (props) => {
 
     const { t } = useTranslation(['common', 'formElements']);
 
-    const getTitle = (lessonItem) => {
-        return `${firstStringLetterCapital(lessonItem.subjectForSite)}`;
-    };
+    const getTitle = (lessonItem) => `${firstStringLetterCapital(lessonItem.subjectForSite)}`;
 
-    const getType = (lessonItem) => {
-        return `${t(`lesson_type_${lessonItem.lessonType.toLowerCase()}_label`, {
+    const getType = (lessonItem) =>
+        `${t(`lesson_type_${lessonItem.lessonType.toLowerCase()}_label`, {
             ns: 'formElements',
         })}`;
-    };
 
     return (
         <Card additionClassName="lesson-card">
-            <div className="lesson-btns">
+            <div className="cards-btns">
                 {lesson.grouped && (
                     <FaUserPlus
                         title={t(FORM_GROUPED_LABEL, { ns: 'formElements' })}
@@ -44,21 +41,21 @@ const LessonsCard = (props) => {
                 )}
                 <MdContentCopy
                     title={t(COPY_LESSON)}
-                    className="svg-btn copy-btn"
+                    className="copy-icon-btn"
                     onClick={() => onCopyLesson(lesson)}
                 />
                 <FaEdit
                     title={t(EDIT_LESSON)}
-                    className="svg-btn edit-btn"
+                    className="edit-icon-btn"
                     onClick={() => onSelectLesson(lesson.id)}
                 />
                 <MdDelete
                     title={t(DELETE_LESSON)}
-                    className="svg-btn delete-btn"
+                    className="delete-icon-btn"
                     onClick={() => onClickOpen(lesson.id)}
                 />
             </div>
-            <p className="title" title={lesson.subjectForSite}>
+            <p className="lesson-card__title" title={lesson.subjectForSite}>
                 {getShortTitle(getTitle(lesson), MAX_LENGTH_50)}
             </p>
             <p>{getType(lesson)}</p>
@@ -75,7 +72,7 @@ const LessonsCard = (props) => {
             </p>
             {lesson.linkToMeeting && (
                 <a
-                    className="lesson-link"
+                    className="lesson-card__link"
                     href={lesson.linkToMeeting}
                     target="_blank"
                     rel="noreferrer"
