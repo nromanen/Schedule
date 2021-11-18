@@ -1,4 +1,5 @@
 import { reset } from 'redux-form';
+import { isEmpty } from 'lodash';
 import { call, put, takeLatest, select } from 'redux-saga/effects';
 import { axiosCall } from '../services/axios';
 
@@ -18,7 +19,6 @@ import {
 import { TEACHER_FORM } from '../constants/reduxForms';
 import { DELETE, GET, POST, PUT } from '../constants/methods';
 import { FORM_TEACHER_A_LABEL } from '../constants/translationLabels/formElements';
-import { isObjectEmpty } from '../helper/ObjectRevision';
 import { createErrorMessage, createMessage } from '../utils/sagaUtils';
 import {
     setLoading,
@@ -81,7 +81,7 @@ export function* removeTeacher({ id }) {
 
 export function* createTeacher({ teacher }) {
     const results = { ...teacher };
-    if (isObjectEmpty(teacher.department) || !teacher.department?.id) {
+    if (isEmpty(teacher.department) || !teacher.department?.id) {
         delete results.department;
     }
 
@@ -105,7 +105,7 @@ export function* createTeacher({ teacher }) {
 export function* updateTeacher({ teacher }) {
     const result = { ...teacher };
 
-    if (isObjectEmpty(teacher.department) || !teacher.department?.id) {
+    if (isEmpty(teacher.department) || !teacher.department?.id) {
         delete result.department;
     }
     try {

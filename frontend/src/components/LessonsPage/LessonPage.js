@@ -78,16 +78,16 @@ const LessonPage = (props) => {
 
     const submitLessonForm = (card) => {
         const link = trasformLink(card.linkToMeeting);
-        const cardObj = cardObjectHandler(card, groupId, currentSemester, link);
+        const values = cardObjectHandler(card, groupId, currentSemester, link);
 
-        if (!checkUniqLesson(lessons, cardObj)) {
+        if (!checkUniqLesson(lessons, values)) {
             const message = t(COMMON_LESSON_SERVICE_IS_NOT_UNIQUE);
 
             setOpenErrorSnackbar(message);
             setUniqueError(true);
             return;
         }
-        handleLesson({ values: cardObj, groupId });
+        handleLesson({ values, groupId });
     };
 
     const showConfirmDialog = (lessonCardId) => {

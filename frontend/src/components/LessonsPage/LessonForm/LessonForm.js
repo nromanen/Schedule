@@ -13,11 +13,11 @@ import Card from '../../../share/Card/Card';
 import renderTextField from '../../../share/renderedFields/input';
 import renderCheckboxField from '../../../share/renderedFields/checkbox';
 
-import { lessThanZero, maxLengthValue, required } from '../../../validation/validateFields';
+import { isUrl, lessThanZero, maxLengthValue, required } from '../../../validation/validateFields';
 import { handleTeacherInfo } from '../../../helper/renderTeacher';
 import { getClearOrCancelTitle, setDisableButton } from '../../../helper/disableComponent';
 import { RenderMultiselect } from '../../../share/renderedFields/renderMultiselect';
-import { renderLessonAutocomplete } from '../../../helper/renderLessonAutocomplete';
+import { renderAutocompleteField } from '../../../helper/renderAutocompleteField';
 import LessonLabelForm from '../../../containers/LessonPage/LessonLabelForm';
 
 import {
@@ -122,7 +122,7 @@ const LessonForm = (props) => {
                     <form onSubmit={handleSubmit} className="lesson-form">
                         <Field
                             name="teacher"
-                            component={renderLessonAutocomplete}
+                            component={renderAutocompleteField}
                             {...valid}
                             label={t(TEACHER_LABEL)}
                             type="text"
@@ -133,7 +133,7 @@ const LessonForm = (props) => {
                         />
                         <Field
                             name="subject"
-                            component={renderLessonAutocomplete}
+                            component={renderAutocompleteField}
                             {...valid}
                             label={t(SUBJECT_LABEL)}
                             type="text"
@@ -150,7 +150,7 @@ const LessonForm = (props) => {
                         <div className="form-fields-container">
                             <Field
                                 name="type"
-                                component={renderLessonAutocomplete}
+                                component={renderAutocompleteField}
                                 {...valid}
                                 label={t(TYPE_LABEL)}
                                 type="text"
@@ -197,7 +197,7 @@ const LessonForm = (props) => {
                             margin="normal"
                             component={renderTextField}
                             label={t(LINK_TO_MEETING_LABEL)}
-                            validate={[maxLengthValue]}
+                            validate={[isUrl, maxLengthValue]}
                             placeholder="Input URL"
                         />
                         <Field

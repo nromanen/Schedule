@@ -23,7 +23,10 @@ export const renderAutocompleteField = ({
             getOptionLabel={getOptionLabel}
             className={className}
             onChange={(_, value) => {
-                handleChange(value);
+                if (handleChange) {
+                    handleChange(value);
+                }
+
                 return input.onChange(value);
             }}
             onBlur={(_, value) => input.onBlur(value)}

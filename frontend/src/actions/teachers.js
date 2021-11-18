@@ -16,9 +16,8 @@ export const addTeacherStart = (teacher) => ({
 });
 
 export const setTeacher = (teacher) => ({
-    //
     type: actionsType.SET_TEACHER,
-    result: teacher,
+    teacher,
 });
 
 export const toggleTeacherStart = (teacherId, disableStatus) => ({
@@ -38,9 +37,9 @@ export const deleteTeacherStart = (id) => ({
     id,
 });
 
-export const selectTeacherCard = (result) => ({
+export const selectTeacherCard = (teacher) => ({
     type: actionsType.SELECT_TEACHER,
-    result,
+    teacher,
 });
 
 export const updateTeacherCardSuccess = (teacher) => ({
@@ -55,22 +54,22 @@ export const updateTeacherCardStart = (teacher) => ({
 
 export const showAllTeachersSuccess = (teachers) => ({
     type: actionsType.SHOW_ALL_TEACHERS_SUCCESS,
-    result: teachers,
+    teachers,
 });
 
 export const showAllTeachersStart = (teachers) => ({
     type: actionsType.SHOW_ALL_TEACHERS_START,
-    result: teachers,
+    teachers,
 });
 
 export const getTeacherWithoutAccountStart = (teachers) => ({
     type: actionsType.GET_TEACHERS_WITHOUT_ACCOUNT_START,
-    result: teachers,
+    teachers,
 });
 
 export const getTeacherWithoutAccountSuccess = (teachers) => ({
     type: actionsType.GET_TEACHERS_WITHOUT_ACCOUNT_SUCCESS,
-    result: teachers,
+    teachers,
 });
 
 export const getAllPublicTeachersByDepartmentStart = (departmentId) => ({
@@ -79,17 +78,16 @@ export const getAllPublicTeachersByDepartmentStart = (departmentId) => ({
 });
 
 export const getAllTeachersByDepartmentId = (teachers) => ({
-    //
     type: actionsType.GET_TEACHERS_BY_DEPARTMENT,
-    result: teachers,
+    teachers,
 });
 
 export const setDisabledTeachersSuccess = (teachers) => ({
     type: actionsType.SET_DISABLED_TEACHERS_SUCCESS,
-    result: teachers,
+    teachers,
 });
 
 export const setDisabledTeachersStart = (teachers) => ({
     type: actionsType.SET_DISABLED_TEACHERS_START,
-    result: teachers,
+    teachers,
 });

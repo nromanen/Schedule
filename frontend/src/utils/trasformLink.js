@@ -1,10 +1,4 @@
-import { HTTP } from '../constants/common';
-
-export const trasformLink = (link) => {
-    if (!link) return link;
-    const trimmedLink = link.trim();
-
-    if (!trimmedLink.length) return '';
-
-    return !trimmedLink.includes(HTTP) ? `http://${trimmedLink}` : trimmedLink;
+export const trasformLink = (url) => {
+    if (url) return !/^https?:\/\//i.test(url) ? `http://${url}` : url;
+    return url;
 };

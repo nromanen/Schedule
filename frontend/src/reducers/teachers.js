@@ -41,9 +41,9 @@ const reducer = (
         }
 
         case actionTypes.SET_TEACHER:
-            return { ...state, teacher: action.result };
+            return { ...state, teacher: action.teacher };
         case actionTypes.SELECT_TEACHER: {
-            let teacher = state.teachers.find((teach) => teach.id === action.result);
+            let teacher = state.teachers.find((teach) => teach.id === action.teacher);
             if (!teacher) {
                 teacher = { id: null };
             }
@@ -60,11 +60,11 @@ const reducer = (
         }
 
         case actionTypes.SET_DISABLED_TEACHERS_SUCCESS:
-            return { ...state, disabledTeachers: [...action.result] };
+            return { ...state, disabledTeachers: [...action.teachers] };
         case actionTypes.SHOW_ALL_TEACHERS_SUCCESS:
         case actionTypes.GET_TEACHERS_BY_DEPARTMENT:
         case actionTypes.GET_TEACHERS_WITHOUT_ACCOUNT_SUCCESS:
-            return { ...state, teachers: [...action.result] };
+            return { ...state, teachers: [...action.teachers] };
 
         default:
             return state;
