@@ -102,7 +102,6 @@ public class ScheduleServiceTest {
         schedule.setRoom(room);
 
         when(scheduleRepository.save(any(Schedule.class))).thenReturn(schedule);
-       /* when(semesterService.getCurrentSemester()).thenReturn(semester);*/
         when(lessonService.getById(anyLong())).thenReturn(lesson);
 
         Schedule result = scheduleServiceImpl.save(schedule);
@@ -220,10 +219,6 @@ public class ScheduleServiceTest {
         schedule.setDayOfWeek(DayOfWeek.MONDAY);
         schedule.setRoom(room);
         when(lessonService.getAllGroupedLessonsByLesson(lesson)).thenReturn(Arrays.asList(lesson2, lesson));
-      /*  when(lessonService.getById(1L)).thenReturn(lesson);
-        when(lessonService.getById(2L)).thenReturn(lesson2);
-        when(scheduleRepository.countByLessonIdPeriodIdEvenOddDayOfWeek(any(),any(),any(),any())).thenReturn(0L);
-        when(scheduleRepository.conflictForGroupInSchedule(any(),any(),any(),any(),any())).thenReturn(0L);*/
         List<Schedule> schedules = scheduleServiceImpl.schedulesForGroupedLessons(schedule);
         assertEquals(2, schedules.size());
     }
