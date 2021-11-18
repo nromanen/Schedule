@@ -8,7 +8,7 @@ import { StudentsPageHead } from './StudentsPageHead';
 import { NO_EXIST_STUDENTS_AT_GROUP } from '../../constants/translationLabels/formElements';
 
 export const ShowStudentsOnGroupContent = (props) => {
-    const { students, loading, ...res } = props;
+    const { students, loading } = props;
     const { t } = useTranslation('formElements');
 
     if (loading) {
@@ -24,7 +24,7 @@ export const ShowStudentsOnGroupContent = (props) => {
     return (
         <span className="table-student-data">
             <StudentsPageHead t={t} students={students} />
-            <StudentsPage students={students} {...res} />
+            <StudentsPage students={students} {...props} />
         </span>
     );
 };

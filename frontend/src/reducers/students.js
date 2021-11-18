@@ -1,5 +1,4 @@
 import * as actionTypes from '../actions/actionsType';
-import { updateObject } from '../utility';
 
 const initialState = {
     students: [],
@@ -9,48 +8,53 @@ const initialState = {
 const reducer = (state = initialState, action) => {
     switch (action.type) {
         case actionTypes.SHOW_ALL_STUDENTS: {
-            const newData = action.res.map((item) => {
+            const newData = action.payload.map((item) => {
                 return { ...item, checked: false };
             });
-            return updateObject(state, {
+            return {
+                ...state,
                 students: newData,
-            });
+            };
         }
 
         case actionTypes.CREATE_STUDENT:
-            return updateObject(state, {
-                students: state.students.concat(action.res),
-            });
+            return {
+                ...state,
+                students: state.students.concat(action.student),
+            };
 
         case actionTypes.DELETE_STUDENT: {
-            const students = state.students.filter((student) => student.id !== action.result);
-            return updateObject(state, {
+            const students = state.students.filter((student) => student.id !== +action.id);
+            return {
+                ...state,
                 students,
-            });
+            };
         }
 
         case actionTypes.SET_STUDENT: {
-            let student = state.students.find((stud) => stud.id === Number(action.result));
+            let student = state.students.find((stud) => stud.id === +action.id);
 
             if (!student) {
                 student = { id: null };
             }
-            return updateObject(state, {
+            return {
+                ...state,
                 student,
-            });
+            };
         }
 
         case actionTypes.UPDATE_STUDENT: {
-            const studentIndex = state.students.findIndex(({ id }) => id === action.result.id);
+            const studentIndex = state.students.findIndex(({ id }) => id === action.student.id);
             const students = [...state.students];
             students[studentIndex] = {
                 ...students[studentIndex],
-                ...action.result,
+                ...action.student,
             };
-            return updateObject(state, {
+            return {
+                ...state,
                 students,
                 student: {},
-            });
+            };
         }
 
         case actionTypes.CHECK_ALL_STUDENTS: {
@@ -61,9 +65,10 @@ const reducer = (state = initialState, action) => {
                 });
                 return newItem;
             });
-            return updateObject(state, {
+            return {
+                ...state,
                 students: newData,
-            });
+            };
         }
         default:
             return state;

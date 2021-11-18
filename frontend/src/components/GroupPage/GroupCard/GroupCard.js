@@ -6,12 +6,8 @@ import { GiSightDisabled, IoMdEye } from 'react-icons/all';
 import { FaEdit, FaUserPlus, FaUsers } from 'react-icons/fa';
 import { MdDelete } from 'react-icons/md';
 import { dialogTypes } from '../../../constants/dialogs';
-import {
-    ADD_STUDENT_LINK,
-    EDIT_LINK,
-    GROUP_LIST_LINK,
-    SHOW_STUDENTS_LINK,
-} from '../../../constants/links';
+import { ADD_STUDENT_LINK, GROUP_LIST_LINK, SHOW_STUDENTS_LINK } from '../../../constants/links';
+import { getShortTitle } from '../../../helper/shortTitle';
 import {
     COMMON_EDIT,
     COMMON_SET_DISABLED,
@@ -23,7 +19,6 @@ import {
     FORM_STUDENT_ADD_LABEL,
     GROUP_LABEL,
 } from '../../../constants/translationLabels/formElements';
-import { getShortTitle } from '../../../helper/shortTitle';
 
 const GroupCard = (props) => {
     const {
@@ -37,27 +32,25 @@ const GroupCard = (props) => {
     const { t } = useTranslation('formElements');
     return (
         <div className="group-card">
-            <div className="group-card__buttons-wrapper">
+            <div className="group-card-buttons">
                 {!disabled ? (
                     <>
                         <IoMdEye
-                            className="group-card__buttons-hide link-href"
+                            className="eye-icon-btn"
                             title={t(COMMON_SET_DISABLED)}
                             onClick={() => {
                                 showConfirmDialog(item.id, dialogTypes.SET_VISIBILITY_DISABLED);
                             }}
                         />
-                        <Link to={`${GROUP_LIST_LINK}/${item.id}${EDIT_LINK}`}>
-                            <FaEdit
-                                className="group-card__buttons-edit link-href"
-                                title={t(COMMON_EDIT)}
-                                onClick={() => setGroup(item)}
-                            />
-                        </Link>
+                        <FaEdit
+                            className="edit-icon-btn"
+                            title={t(COMMON_EDIT)}
+                            onClick={() => setGroup(item)}
+                        />
                     </>
                 ) : (
                     <GiSightDisabled
-                        className="group-card__buttons-hide link-href"
+                        className="eye-icon-btn"
                         title={t(COMMON_SET_ENABLED)}
                         onClick={() => {
                             showConfirmDialog(item.id, dialogTypes.SET_VISIBILITY_ENABLED);
@@ -65,34 +58,30 @@ const GroupCard = (props) => {
                     />
                 )}
                 <MdDelete
-                    className="group-card__buttons-delete link-href"
+                    className="delete-icon-btn"
                     title={t(DELETE_TITLE_LABEL)}
                     onClick={() => showConfirmDialog(item.id, dialogTypes.DELETE_CONFIRM)}
                 />
                 <Link to={`${GROUP_LIST_LINK}/${item.id}${ADD_STUDENT_LINK}`}>
-                    <span className="group-card__buttons">
-                        <FaUserPlus
-                            title={t(FORM_STUDENT_ADD_LABEL)}
-                            className="svg-btn copy-btn align-left info-btn student"
-                            onClick={() => {
-                                showAddStudentDialog(item.id);
-                            }}
-                        />
-                    </span>
+                    <FaUserPlus
+                        title={t(FORM_STUDENT_ADD_LABEL)}
+                        className="group-card-buttons-add-student"
+                        onClick={() => {
+                            showAddStudentDialog(item.id);
+                        }}
+                    />
                 </Link>
             </div>
             <p className="group-card__description">{`${t(GROUP_LABEL)}:`}</p>
-            <h1 className="group-card__number">{getShortTitle(item.title, 5)}</h1>
+            <h3 className="group-card__number">{getShortTitle(item.title, 5)}</h3>
             <Link to={`${GROUP_LIST_LINK}/${item.id}${SHOW_STUDENTS_LINK}`}>
-                <span className="group-card__button-students">
-                    <FaUsers
-                        title={t(FORM_SHOW_STUDENTS)}
-                        className="svg-btn copy-btn align-left info-btn students"
-                        onClick={() => {
-                            showStudentsByGroup(item.id);
-                        }}
-                    />
-                </span>
+                <FaUsers
+                    title={t(FORM_SHOW_STUDENTS)}
+                    className="group-card-button-students"
+                    onClick={() => {
+                        showStudentsByGroup(item.id);
+                    }}
+                />
             </Link>
         </div>
     );

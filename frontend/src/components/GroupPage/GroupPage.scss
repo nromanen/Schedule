@@ -3,30 +3,21 @@
 @import "../../styles/variables.scss";
 @import "../../styles/mixins.scss";
 
-$group-size: 10px;
-
 .group {
   &-container {
     display: flex;
-    padding: 5px;
-    @media (max-width: $md-width-lanscape) {
-      @include displayCenter();
-      flex-direction: column;
+    @media (max-width: $md-m) {
+      @include displayFlex(center,center, column);
     }
   }
   &-sidebar {
-    margin: 0 10px 0 10px;
+    margin: 0 10px;
     .MuiTypography-body1 {
-      font-size: x-small;
+      font-size: $font-s;
     }
-    .MuiFormControl-root {
-      width: 98%;
-    }
-    @media (max-width: $md-width-lanscape) {
-      display: flex;
-      margin: 10px auto;
-      width: 50%;
-      justify-content: center;
+    @media (max-width: $md-m) {
+      @include displayFlex(center,center);
+      width: $full-size;
     }
   }
   &-aside {
@@ -36,27 +27,12 @@ $group-size: 10px;
   }
 
   &-wrapper {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    width: 100%;
-    @media (max-width: $md-width-lanscape) {
-      margin: 10px auto;
-      width: 100%;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
+    @include displayFlex(start,center);
+    width: $full-size;
   }
   &-list {
-    display: flex;
+    @include displayFlex(start,center);
     flex-wrap: wrap;
-    justify-content: center;
-    width: 100%;
-  }
-  @media (max-width: $md-width-lanscape) {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
+    width: $full-size;
   }
 }

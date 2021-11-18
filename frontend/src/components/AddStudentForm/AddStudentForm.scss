@@ -1,34 +1,19 @@
-.student-container {
-    width: 420px;
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-}
-.student-name {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 300px;
-    .name-field {
-        margin-right: 10px;
+@import "../../styles/mixins.scss";
+@import "../../styles/colors.scss";
+@import "../../styles/variables.scss";
+
+.student-form {
+    @include displayFlex(center, space-between,column);
+    margin: 15px;
+    .MuiFormControl-root{
+        width: $full-size;
     }
 }
-.student-data {
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-}
-.student-form {
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-}
+
 .form-buttons {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    @include displayFlex(center, space-between);
     margin-top: 30px;
-    width: 100%;
+    width: $full-size;
     .MuiButtonBase-root{
     width: 48%;
   }
