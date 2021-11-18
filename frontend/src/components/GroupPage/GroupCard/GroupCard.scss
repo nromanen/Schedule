@@ -3,87 +3,39 @@
 @import "../../../styles/variables.scss";
 @import "../../../styles/mixins.scss";
 
-$group-size: 10px;
-
 .group-card {
-  box-sizing: border-box;
-  max-width: 19 * $group-size;
-  min-width: 18 * $group-size;
-  height: 15 * $group-size;
-
-  display: flex;
-  flex-direction: column;
-  margin: $group-size;
+  @include displayFlex(center, center, column);
+  width: 155px;
+  height: 135px;
+  margin: 10px;
   padding: 10px;
-
   border-radius: 2px;
   box-shadow: 0 1px 4px $shadow-box;
 
   &__number {
-    font-size: x-large;
     text-align: center;
     text-transform: uppercase;
-    margin-top: 5px;
+    font-size: $font-2xl;
+    margin: 5px 0;
   }
 
   &__description {
     text-align: center;
-    margin: 5px 0 5px 0;
-    font-size: x-small;
+    margin: 5px 0;
+    font-size: $font-xs;
   }
 
-  &__buttons-wrapper {
-    width: 90%;
-    margin: 0 auto;
-    display: flex;
-    justify-content: space-between;
+  &-buttons {
+    @include displayFlex(center, space-between);
+    width: $full-size;
+    &-add-student {
+      @include button-icon($green, $green3);
+    }
   }
-  &__buttons-delete {
-    @include buttonStyle();
 
-    &:hover {
-      color: $delete-color;
-    }
+  &-button-students {
+    @include displayFlex(center, center);
+    @include button-icon($blue-btn-hover, $blue, $font-l);
+    width: $full-size;
   }
-  &__buttons-edit {
-    @include buttonStyle();
-
-    &:hover {
-      color: $background-color;
-    }
-  }
-  &__buttons-hide {
-    @include buttonStyle();
-
-    &:hover {
-      color: $green;
-    }
-  }
-  &__button-students {
-    display: flex;
-    flex-direction: column;
-    flex-wrap: wrap;
-    align-items: center;
-  }
-  .students {
-    color: $blue-btn-hover;
-    margin: -15px -8px;
-    font-size: 20px;
-    cursor: pointer;
-    &:hover {
-      color: $blue;
-    }
-  }
-  .student {
-    color: $green;
-    cursor: pointer;
-    &:hover {
-      color: $green3;
-    }
-  }
-}
-
-.link-href {
-  text-decoration: none;
-  color: $black;
 }

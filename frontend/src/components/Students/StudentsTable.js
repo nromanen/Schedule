@@ -8,14 +8,8 @@ import { StudentsTableBody } from './StudentsTableBody';
 import { StudentsTableHead } from './StudentsTableHead';
 
 export const StudentsTable = (props) => {
-    const {
-        students,
-        setCheckBoxStudents,
-        updateStudentSuccess,
-        checkAllStudentsSuccess,
-        setIsDisabledBtnMoveStudent,
-        ...rest
-    } = props;
+    const { students, updateStudentSuccess, checkAllStudentsSuccess, setIsDisabledBtnMoveStudent } =
+        props;
 
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -57,19 +51,18 @@ export const StudentsTable = (props) => {
     return (
         <div className="table">
             <TableContainer>
-                <Table aria-label="custom pagination table">
+                <Table>
                     <StudentsTableHead
                         checkedAll={checkedAll}
                         checkedAllOnPageClick={checkedAllOnPageClick}
                     />
                     <StudentsTableBody
                         page={page}
-                        students={students}
                         rowsPerPage={rowsPerPage}
                         checkStudent={checkStudent}
                         setCheckedAll={setCheckedAll}
                         currentStudentsOnList={currentStudentsOnList}
-                        {...rest}
+                        {...props}
                     />
                 </Table>
                 <TableFooterComponent

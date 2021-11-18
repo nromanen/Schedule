@@ -23,12 +23,10 @@ const DragDropCard = (props) => {
                 </h5>
                 <p className="teacher-name">{getTeacherName(lesson.teacher)}</p>
                 {lesson.grouped && (
-                    <span className="grouped-icon">
-                        <MdGroup
-                            title={t(FORM_GROUPED_LABEL)}
-                            className="svg-btn copy-btn align-left info-btn"
-                        />
-                    </span>
+                    <MdGroup
+                        title={t(FORM_GROUPED_LABEL)}
+                        className="svg-btn copy-btn info-btn grouped-icon"
+                    />
                 )}
                 <p className="lesson-duration">
                     <b>1</b> {t(FORM_HOURS_LABEL)}

@@ -84,7 +84,7 @@ a.pdf_link {
             }
 
             &.currentDay {
-                background-color: $blue3;
+                background-color: $azure;
             }
 
             &.classNameCell,
@@ -102,7 +102,7 @@ a.pdf_link {
                 left: 50px;
                 width: 10px;
                 &.currentDay {
-                    background-color: $blue3;
+                    background-color: $azure;
                 }
                 &.subClassName {
                     left: 112px;
@@ -122,7 +122,7 @@ a.pdf_link {
                 }
 
                 &.currentDay {
-                    background-color: $blue3;
+                    background-color: $azure;
                 }
 
                 .dayName {

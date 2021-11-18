@@ -2,31 +2,26 @@
 @import '../../styles/variables.scss';
 
 .group-form{
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
   padding: 1rem;
-  margin:  15px 10px 10px 10px;
-  border-radius: 3px;
   border-radius: 5px;
+  margin:  15px 10px;
   box-shadow: 0 2px 8px $shadow-box;
 
+  &-title {
+        text-align: center;
+        margin-top: 5px;
+        margin-bottom: 0px;
+    }
+
   .MuiFormControl-root{
-    width: 99%;
+    width: $full-size;
     margin-bottom: 10px;
   }
   
 }
 
-.group {
-    &-form__title {
-        text-align: center;
-        font-weight: 600;
-    }
-}
-
 .form-buttons-container{
-  width: 100%;
+  width: $full-size;
   .MuiButtonBase-root{
     width: 48%;
     margin: 5px 0 5px ;

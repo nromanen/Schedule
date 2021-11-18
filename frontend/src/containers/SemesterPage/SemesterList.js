@@ -23,7 +23,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
     createArchivedSemester: (semesterId) => dispatch(createArchivedSemesterStart(semesterId)),
     getArchivedSemesterById: (semesterId) => dispatch(getArchivedSemesterByIdStart(semesterId)),
-    selectSemesterSuccess: (semesterId) => dispatch(selectSemesterSuccess(semesterId)),
+    selectSemester: (semesterId) => dispatch(selectSemesterSuccess(semesterId)),
     setOpenConfirmDialog: (newState) => dispatch(setIsOpenConfirmDialog(newState)),
     updateSemesterSuccess: (item) => dispatch(updateSemesterStart(item)),
     removeSemesterCard: (semesterId) => dispatch(deleteSemesterStart(semesterId)),

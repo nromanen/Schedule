@@ -1,10 +1,11 @@
 @import "../../styles/colors.scss";
 @import "../../styles/variables.scss";
+@import "../../styles/mixins.scss";
 
 .admin-navigation {
     flex-grow: 1;
-    background-color: $blue;
     margin: 10px 5px;
+    background-color: $blue;
     .navigation-container {
         display: flex;
         flex-direction: row;
@@ -20,9 +21,9 @@
         }
     }
     .navigation-link {
-        text-align: center;
-        color: $white;
         cursor: pointer;
+        color: $white;
+        text-align: center;
         &:hover {
             background-color: $selected-hover-color;
         }
@@ -31,10 +32,10 @@
         justify-content: center;
         padding: 0;
         .navigation-select {
-            min-width: 100%;
-            color: $white;
             display: flex;
             height: 40px;
+            min-width: $full-size;
+            color: $white;
             .MuiSelect-select {
                 &:focus {
                     background-color: transparent;
@@ -52,7 +53,7 @@
         }
         .MuiInput-underline {
             &::before {
-                width: 98%;
+                width: $full-size;
                 left: 50%;
                 transform: translateX(-50%);
                 border-color: $white;

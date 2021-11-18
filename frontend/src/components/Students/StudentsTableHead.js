@@ -1,9 +1,10 @@
 import React from 'react';
+import './StudentTable.scss';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 import TableHead from '@material-ui/core/TableHead';
-import './StudentTable.scss';
 import { useTranslation } from 'react-i18next';
+import Checkbox from '@material-ui/core/Checkbox';
 import {
     SELECT_ALL,
     EMAIL_LABEL,
@@ -19,16 +20,15 @@ export const StudentsTableHead = (props) => {
         <TableHead>
             <TableRow>
                 <TableCell>
-                    <span className="checked-all">
-                        <input
-                            id="student-checked-all-box"
-                            type="checkbox"
-                            checked={checkedAll}
-                            onChange={checkedAllOnPageClick}
-                            value="checkedAll"
-                            title={`${t(SELECT_ALL)}`}
-                        />
-                    </span>
+                    <Checkbox
+                        className="checkbox-table-body"
+                        value="checkedAll"
+                        checked={checkedAll}
+                        onChange={checkedAllOnPageClick}
+                        color="primary"
+                        size="small"
+                        title={`${t(SELECT_ALL)}`}
+                    />
                 </TableCell>
                 <TableCell>{t(STUDENT_FULL_NAME)}</TableCell>
                 <TableCell>{t(EMAIL_LABEL)}</TableCell>
