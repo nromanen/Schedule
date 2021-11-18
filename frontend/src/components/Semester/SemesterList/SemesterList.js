@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import './SemesterList.scss';
 import { isEqual, isEmpty } from 'lodash';
 import { CircularProgress } from '@material-ui/core';
 import NotFound from '../../../share/NotFound/NotFound';
@@ -30,7 +31,7 @@ const SemesterList = (props) => {
         disabled,
         term,
         semesters,
-        selectSemester,
+        selectSemesterSuccess,
         createArchivedSemester,
         setOpenConfirmDialog,
         removeSemesterCard,
@@ -48,6 +49,7 @@ const SemesterList = (props) => {
     const [isOpenSemesterCopyForm, setIsOpenSemesterCopyForm] = useState(false);
     const [confirmDialogType, setConfirmDialogType] = useState('');
     const [isOpenGroupsDialog, setIsOpenGroupsDialog] = useState(false);
+
     const [semesterGroupsOptions, setSemesterGroupsOptions] = useState([]);
     const [semesterId, setSemesterId] = useState(null);
 
@@ -60,7 +62,6 @@ const SemesterList = (props) => {
         setConfirmDialogType(dialogType);
         setOpenConfirmDialog(true);
     };
-
     const submitSemesterCopy = ({ toSemesterId }) => {
         semesterCopy({
             fromSemesterId: semesterId,
@@ -68,7 +69,6 @@ const SemesterList = (props) => {
         });
         setIsOpenSemesterCopyForm(false);
     };
-
     const closeSemesterCopyForm = () => {
         setIsOpenSemesterCopyForm(false);
     };
@@ -145,7 +145,6 @@ const SemesterList = (props) => {
             )}
             {isOpenSemesterCopyForm && (
                 <CustomDialog
-                    className="semester-copy-dialog"
                     title={t(SEMESTER_COPY_LABEL)}
                     open={isOpenSemesterCopyForm}
                     onClose={closeSemesterCopyForm}
@@ -159,7 +158,7 @@ const SemesterList = (props) => {
                     />
                 </CustomDialog>
             )}
-            <section className="container-flex-wrap">
+            <section className="container-flex-wrap wrapper">
                 {visibleItems.map((semester) => {
                     const semDays = semester.semester_days.map((day) =>
                         t(`common:day_of_week_${day}`),
@@ -171,7 +170,7 @@ const SemesterList = (props) => {
                             semDays={semDays}
                             disabled={disabled}
                             archived={archived}
-                            selectSemester={selectSemester}
+                            selectSemesterSuccess={selectSemesterSuccess}
                             showConfirmDialog={showConfirmDialog}
                             setIsOpenSemesterCopyForm={setIsOpenSemesterCopyForm}
                             setSemesterId={setSemesterId}

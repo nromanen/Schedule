@@ -41,9 +41,6 @@ const SchedulePage = (props) => {
     useEffect(() => {
         window.addEventListener('resize', handleResize);
         handleResize();
-        return () => {
-            window.removeEventListener('resize', handleResize);
-        };
     }, []);
 
     days.forEach((day, outerIndex) => {

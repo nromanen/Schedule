@@ -1,4 +1,5 @@
 import * as actionTypes from '../actions/actionsType';
+import { updateObject } from '../utility';
 
 const reducer = (
     state = {
@@ -9,14 +10,15 @@ const reducer = (
 ) => {
     switch (action.type) {
         case actionTypes.GET_CLASS_SCHEDULE_LIST_SUCCESS: {
-            return { ...state, classScheduler: [...action.classScheduler] };
+            return updateObject(state, {
+                classScheduler: [...action.classScheduler],
+            });
         }
         case actionTypes.ADD_CLASS_SCHEDULE_SUCCESS: {
-            return {
-                ...state,
+            return updateObject(state, {
                 classSchedule: {},
                 classScheduler: [...state.classScheduler, action.classSchedule],
-            };
+            });
         }
         case actionTypes.GET_PUBLIC_CLASS_SCHEDULE_LIST_SUCCESS:
             return state;
@@ -24,15 +26,16 @@ const reducer = (
             const one = state.classScheduler.find(
                 (classScheduleItem) => classScheduleItem.id === action.id,
             );
-            return { ...state, classSchedule: one };
+            return updateObject(state, {
+                classSchedule: one,
+            });
         }
         case actionTypes.DELETE_CLASS_SCHEDULE_SUCCESS: {
-            return {
-                ...state,
+            return updateObject(state, {
                 classScheduler: state.classScheduler.filter(
                     (classScheduleItem) => classScheduleItem.id !== action.id,
                 ),
-            };
+            });
         }
         case actionTypes.UPDATE_CLASS_SCHEDULE_SUCCESS: {
             const classSchedulerstate = [...state.classScheduler];
@@ -41,10 +44,15 @@ const reducer = (
                     (classItem) => classItem.id === action.classSchedule.id,
                 )
             ] = action.classSchedule;
-            return { ...state, classSchedule: {}, classScheduler: [...classSchedulerstate] };
+            return updateObject(state, {
+                classSchedule: {},
+                classScheduler: [...classSchedulerstate],
+            });
         }
         case actionTypes.CLEAR_CLASS_SCHEDULE_SUCCESS: {
-            return { ...state, classSchedule: {} };
+            return updateObject(state, {
+                classSchedule: {},
+            });
         }
         default:
             return state;

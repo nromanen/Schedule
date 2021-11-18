@@ -1,7 +1,8 @@
 @import '../../styles/mixins.scss';
 
 .pagination{
-   @include displayFlex(center, center);
+    @include displayCenter();
+    flex-direction: row;
 }
 .table-footer{
     .MuiTablePagination-select{

@@ -1,0 +1,36 @@
+@import '../../../styles/colors.scss';
+
+.semester-card {
+    height: 470px;
+    width: 250px;
+    margin-bottom: 50px;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    align-items: center;
+
+    .semester-groups {
+        font-size: 25px;
+        color: $create-color;
+    }
+
+    &__description {
+        text-align: center;
+        height: 50px;
+    }
+
+    &__name {
+        text-align: center;
+    }
+}
+
+.current-semester {
+    box-shadow: 0 0px 15px 1px $create-color;
+}
+
+.default-semester {
+    width: 25px;
+    height: 25px;
+    border: 1px solid $create-color;
+    border-radius: 50%;
+}

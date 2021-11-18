@@ -63,6 +63,7 @@ const SemesterForm = (props) => {
     const [checkedDates, setCheckedDates] = useState(initialCheckboxesStateForDays);
     const [current, setCurrent] = useState(false);
     const [byDefault, setByDefault] = useState(false);
+
     const [openGroupDialog, setOpenGroupDialog] = useState(false);
 
     const clearCheckboxes = () => {
@@ -126,7 +127,7 @@ const SemesterForm = (props) => {
     };
 
     return (
-        <Card additionClassName="semester-form-card">
+        <Card additionClassName="semester-form">
             <h2 className="card-title">
                 {semester.id ? t(COMMON_EDIT) : t(COMMON_CREATE)}
                 {` ${t(COMMON_SEMESTER)}`}
@@ -140,7 +141,7 @@ const SemesterForm = (props) => {
                 onClose={closeDialogForGroup}
             />
             <form onSubmit={handleSubmit}>
-                <div className="semester-checkboxes">
+                <div className="semester-checkbox">
                     <div>
                         <Field
                             name="currentSemester"
@@ -164,7 +165,7 @@ const SemesterForm = (props) => {
                     <Button
                         variant="contained"
                         color="primary"
-                        className="buttons-style"
+                        className="buttons-style semester-btn"
                         onClick={openDialogForGroup}
                     >
                         {t(COMMON_CHOOSE_GROUPS_BUTTON_LABEL)}
@@ -221,11 +222,11 @@ const SemesterForm = (props) => {
                         classScheduler={classScheduler}
                     />
                 </div>
-                <div className="form-buttons-container">
+                <div className="form-buttons-container semester-btns">
                     <Button
                         variant="contained"
                         color="primary"
-                        className="buttons-style"
+                        className="buttons-style "
                         disabled={setDisabledSaveButtonSemester(
                             pristine,
                             submitting,

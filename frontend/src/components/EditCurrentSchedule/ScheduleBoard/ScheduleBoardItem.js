@@ -65,37 +65,41 @@ const ScheduleItem = (props) => {
 
     return (
         <Card className="schedule-item">
-            <Button
-                aria-controls="simple-menu"
-                className="schedule-item-menu"
-                onClick={handleClick}
-            >
-                <IoMdMore title="more" className="svg-btn delete-btn" />
-            </Button>
-            <Menu
-                className="action-menu"
-                anchorEl={anchorEl}
-                keepMounted
-                open={Boolean(anchorEl)}
-                onClose={handleClose}
-            >
-                <MenuItem className="edit-item" onClick={handelEdit}>
-                    {t(COMMON_EDIT)}
-                </MenuItem>
-                <MenuItem className="delete-item" onClick={handelDelete}>
-                    {t(COMMON_DELETE_HOVER_TITLE)}
-                </MenuItem>
-            </Menu>
+            <div>
+                <Button
+                    aria-controls="simple-menu"
+                    className="schedule-item-menu"
+                    onClick={handleClick}
+                >
+                    <IoMdMore title="more" className="svg-btn delete-btn" />
+                </Button>
+                <Menu
+                    className="action-menu"
+                    anchorEl={anchorEl}
+                    keepMounted
+                    open={Boolean(anchorEl)}
+                    onClose={handleClose}
+                >
+                    <MenuItem className="edit-item" onClick={handelEdit}>
+                        {t(COMMON_EDIT)}
+                    </MenuItem>
+                    <MenuItem className="delete-item" onClick={handelDelete}>
+                        {t(COMMON_DELETE_HOVER_TITLE)}
+                    </MenuItem>
+                </Menu>
+            </div>
             <h5 className="lesson-title">
                 {lesson.subjectForSite} (
                 {t(`formElements:lesson_type_${lesson.lessonType.toLowerCase()}_label`)})
             </h5>
             <p className="teacher-name">{getTeacherName(lesson.teacher)}</p>
             {lesson.grouped && (
-                <MdGroup
-                    title={t(FORM_GROUPED_LABEL)}
-                    className="svg-btn copy-btn grouped-icon align-left info-btn"
-                />
+                <span className="grouped-icon">
+                    <MdGroup
+                        title={t(FORM_GROUPED_LABEL)}
+                        className="svg-btn copy-btn align-left info-btn"
+                    />
+                </span>
             )}
             <p className="lesson-duration">
                 <b>1</b> {t(FORM_HOURS_LABEL)}

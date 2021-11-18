@@ -1,7 +1,6 @@
 @import '../../styles/forms.scss';
 @import '../../styles/colors.scss';
 @import '../../styles/variables.scss';
-@import '../../styles/mixins.scss';
 
 .free-room-form {
     margin-left: 5px;
@@ -25,25 +24,21 @@
         display: none;
     }
 }
-.free-room-dialog {
-    .MuiPaper-root.MuiDialog-paperWidthSm {
-        max-width: 850px;
-    }
-    .dialog-body-container {
+.dialog-body-container {
+    display: flex;
+    @media (max-width: $md-width) {
         display: flex;
-        @media (max-width: $md-width) {
-            @include displayFlex(stretch, center, column-reverse);
-        }
+        flex-direction: column-reverse;
+        justify-items: center;
     }
 }
-
 .free-rooms-container {
     position: relative;
     display: grid;
     height: 60vh;
     width: 60vw;
-    margin: 2px 10px;
     overflow-y: auto;
+    margin: 2px 10px;
     place-items: center;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     @media (max-width: $schedule-pc-screen) {
@@ -59,13 +54,15 @@
     }
 }
 .free-rooms-form-container {
-    @include displayFlex(center, center);
+    display: flex;
     flex-wrap: wrap;
     width: 270px;
     padding: {
         left: 20px;
     }
     border-left: 1px solid $gray1;
+    align-content: center;
+    justify-content: center;
     @media (max-width: $md-width) {
         width: $full-size;
         border-left: none;

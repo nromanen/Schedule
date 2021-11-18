@@ -1,14 +1,16 @@
 @import "../../styles/colors.scss";
 @import "../../styles/variables.scss";
-@import "../../styles/mixins.scss";
 
 .auth-form {
     margin: 8px 14px;
     &-footer {
-        @include displayFlex(center, center,column);
-        text-align: center;
         color: $gray;
         margin-top: 15px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
         .form-link {
             margin-top: 5px;
         }
@@ -35,8 +37,11 @@
 }
 
 .auth-container {
-    @include displayFlex(center, center, column);
+    display: flex;
+    flex-direction: column;
     min-height: 52vh;
+    align-items: center;
+    justify-content: center;
     text-align: center;
     &::before {
         content: "";
@@ -52,22 +57,28 @@
         width: 450px;
         box-shadow: 0 12px 20px 0px $shadow-box;
 
-        @media (max-width: $md-s) {
+        @media (max-width: 500px) {
             max-width: 90%;
+        }
+
+        .form-field {
+            width: 25em;
         }
     }
     .auth-card-header {
-        .auth-card-title {
+        .title {
             margin: {
                 top: 24px;
                 bottom: 0px;
             }
         }
-        .auth-card-subtitle {
-            display: block;
+        .subtitle {
             color: $gray;
+            margin-top: 8px;
             margin: {
-                top: 10px;
+                top: 8px;
+                left: 5px;
+                right: 5px;
             }
             font-size: $font-xs;
         }
@@ -88,7 +99,7 @@
     margin: 50px;
 }
 .forgot-password-label {
-    font-size: $font-xs;
+    font-size: 14px;
     font-weight: bold;
     margin-top: 10px;
 }

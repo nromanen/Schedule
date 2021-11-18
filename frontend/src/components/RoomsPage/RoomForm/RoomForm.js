@@ -19,7 +19,7 @@ import {
 } from '../../../constants/translationLabels/formElements';
 import { TYPE_LABEL } from '../../../constants/translationLabels/common';
 
-const RoomForm = (props) => {
+const AddRoomForm = (props) => {
     const { t } = useTranslation('formElements');
     const {
         handleSubmit,
@@ -47,7 +47,7 @@ const RoomForm = (props) => {
 
     return (
         <Card additionClassName="form-card room-form">
-            <form onSubmit={handleSubmit}>
+            <form className="createGroupForm w-100" onSubmit={handleSubmit}>
                 <h2 className="form-title">
                     {oneRoom.id ? t(EDIT_TITLE) : t(CREATE_TITLE)} {t(ROOM_Y_LABEL)}
                 </h2>
@@ -56,12 +56,12 @@ const RoomForm = (props) => {
                     name="name"
                     component={renderTextField}
                     placeholder={t(NUMBER_LABEL)}
-                    className="form-field"
+                    className="form-field room-form-field"
                     label={t(ROOM_LABEL)}
                     validate={[required, uniqueRoomName]}
                 />
                 <Field
-                    className="form-field"
+                    className="form-field room-form-field"
                     component={SelectField}
                     name="type"
                     label={t(TYPE_LABEL)}
@@ -103,4 +103,4 @@ const RoomForm = (props) => {
 
 export default reduxForm({
     form: ROOM_FORM,
-})(RoomForm);
+})(AddRoomForm);

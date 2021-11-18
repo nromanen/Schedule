@@ -15,20 +15,23 @@ const SemesterCopyForm = (props) => {
     const { semesterId, semesters, handleSubmit, pristine, submitting, submitButtonLabel } = props;
 
     return (
-        <section>
+        <section className="semester-copy-form">
             <p>{t(FORM_SEMESTER_COPY_HINT)}</p>
             <p className="semester-copy-title">{t(FORM_SEMESTER_COPY_RED_HINT)}</p>
-            <form onSubmit={handleSubmit} className="semester-copy-form">
-                <SemesterSelect semesterId={semesterId} semesters={semesters} />
-                <Button
-                    variant="contained"
-                    color="primary"
-                    type="submit"
-                    disabled={pristine || submitting}
-                >
-                    <MdPlayArrow title={t(TEACHER_SCHEDULE_LABEL)} className="svg-btn" />
-                    {submitButtonLabel}
-                </Button>
+            <form onSubmit={handleSubmit}>
+                <div className="form-buttons-container">
+                    <SemesterSelect semesterId={semesterId} semesters={semesters} />
+                    <Button
+                        className="semester-copy-btn"
+                        variant="contained"
+                        color="primary"
+                        type="submit"
+                        disabled={pristine || submitting}
+                    >
+                        <MdPlayArrow title={t(TEACHER_SCHEDULE_LABEL)} className="svg-btn" />
+                        {submitButtonLabel}
+                    </Button>
+                </div>
             </form>
         </section>
     );

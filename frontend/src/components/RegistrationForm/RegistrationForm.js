@@ -67,7 +67,7 @@ const RegistrationForm = (props) => {
     return (
         <Card className="auth-card">
             <div className="auth-card-header">
-                <h2 className="auth-card-title">{t(REGISTRATION_PAGE_TITLE)}</h2>
+                <h2 className="title">{t(REGISTRATION_PAGE_TITLE)}</h2>
             </div>
 
             {isLoading ? (

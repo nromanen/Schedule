@@ -7,7 +7,7 @@ import { handleSnackbarCloseService } from '../../services/snackbarService';
 import AddGroup from '../../containers/GroupPage/GroupForm';
 
 const GroupPage = (props) => {
-    const { isSnackbarOpen, snackbarMessage, snackbarType, match } = props;
+    const { isSnackbarOpen, snackbarMessage, snackbarType, match, ...rest } = props;
 
     const [group, setGroup] = useState({});
     const [searchItem, setSearchItem] = useState('');
@@ -30,7 +30,7 @@ const GroupPage = (props) => {
                         setGroup={setGroup}
                         searchItem={searchItem}
                         isDisabled={isDisabled}
-                        {...props}
+                        {...rest}
                     />
                 </div>
             </div>

@@ -1,6 +1,5 @@
 @import '../../../styles/colors.scss';
 @import '../../../styles/variables.scss';
-@import '../../../styles/mixins.scss';
 
 .selected-group {
     border: 2px solid $blue3;
@@ -32,9 +31,10 @@
     }
 
     .group-title {
-        @include displayFlex(stretch, center);
+        display: flex;
         height: 34px;
         padding: 10px 7px;
+        justify-content: center;
         font-size: $font-xs;
         overflow: hidden;
     }
@@ -54,11 +54,13 @@
 }
 
 .class-section {
-    @include displayFlex(center, center, column);
+    display: flex;
     flex-wrap: wrap;
+    flex-direction: column;
     width: 60px;
     margin: 0;
     align-content: center;
+    align-items: center;
 }
 
 .availability-warning {
@@ -73,7 +75,7 @@
             top: 0;
             content: '';
             width: $full-size;
-            height: $full-size;
+            height: 100%;
             background: none;
             border: 2px solid $blue3;
         }

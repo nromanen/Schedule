@@ -17,12 +17,12 @@ const RoomCard = (props) => {
     const { t } = useTranslation('formElements');
 
     return (
-        <Card additionClassName="room-card">
+        <Card additionClassName="room-card done-card">
             <div className="cards-btns">
                 {!isDisabled ? (
                     <>
                         <IoMdEye
-                            className="eye-icon-btn"
+                            className="svg-btn copy-btn"
                             title={t(COMMON_SET_DISABLED)}
                             onClick={() => {
                                 showConfirmDialog(
@@ -32,11 +32,14 @@ const RoomCard = (props) => {
                                 );
                             }}
                         />
-                        <FaEdit className="edit-icon-btn" onClick={() => setSelectRoom(room.id)} />
+                        <FaEdit
+                            className="svg-btn edit-btn"
+                            onClick={() => setSelectRoom(room.id)}
+                        />
                     </>
                 ) : (
                     <GiSightDisabled
-                        className="eye-icon-btn"
+                        className="svg-btn copy-btn"
                         title={t(COMMON_SET_ENABLED)}
                         onClick={() => {
                             showConfirmDialog(
@@ -49,14 +52,14 @@ const RoomCard = (props) => {
                 )}
 
                 <MdDelete
-                    className="delete-icon-btn"
+                    className="svg-btn delete-btn"
                     onClick={() => {
                         showConfirmDialog(room.id, dialogTypes.DELETE_CONFIRM, cardType.ROOM);
                     }}
                 />
             </div>
-            <h2 className="room-card-name">{room.name}</h2>
-            <p className="room-card-title">{room.type.description}</p>
+            <h2 className="room-card__name">{room.name}</h2>
+            <p className="room-card__title">{room.type.description}</p>
         </Card>
     );
 };

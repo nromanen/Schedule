@@ -1,4 +1,5 @@
 import * as actionTypes from '../actions/actionsType';
+import { updateObject } from '../utility';
 import { sortGroup } from '../helper/sortGroup';
 
 const initialState = {
@@ -8,47 +9,47 @@ const initialState = {
 
 const reducer = (state = initialState, action) => {
     switch (action.type) {
-        case actionTypes.SHOW_ALL_GROUPS_SUCCESS:
-            return {
+        case actionTypes.SHOW_ALL_GROUPS_SUCCESS: {
+            return updateObject(state, {
                 ...state,
-                groups: action.payload,
-            };
+                groups: action.result,
+            });
+        }
 
-        case actionTypes.GET_GROUP_BY_ID_SUCCESS:
-            return {
+        case actionTypes.GET_GROUP_BY_ID_SUCCESS: {
+            return updateObject(state, {
                 ...state,
                 group: action.group,
-            };
+            });
+        }
 
-        case actionTypes.CREATE_GROUP_SUCCESS:
-            return {
-                ...state,
-                groups: [action.group, ...state.groups],
-            };
+        case actionTypes.CREATE_GROUP_SUCCESS: {
+            return updateObject(state, {
+                groups: [action.result, ...state.groups],
+            });
+        }
 
         case actionTypes.UPDATE_GROUP_SUCCESS: {
-            const groupIndex = state.groups.findIndex(({ id }) => id === action.group.id);
+            const groupIndex = state.groups.findIndex(({ id }) => id === action.result.id);
             const groups = [...state.groups];
 
             groups[groupIndex] = {
                 ...groups[groupIndex],
-                ...action.group,
+                ...action.result,
             };
             const sortedGroups = groups.sort((a, b) => sortGroup(a, b));
 
-            return {
-                ...state,
+            return updateObject(state, {
                 groups: sortedGroups,
                 group: {},
-            };
+            });
         }
 
         case actionTypes.DELETE_GROUP_SUCCESS: {
-            const groups = state.groups.filter((group) => group.id !== action.id);
-            return {
-                ...state,
+            const groups = state.groups.filter((group) => group.id !== action.result);
+            return updateObject(state, {
                 groups,
-            };
+            });
         }
 
         case actionTypes.SELECT_GROUP_SUCCESS: {
@@ -56,17 +57,15 @@ const reducer = (state = initialState, action) => {
             if (!selectedGroup) {
                 selectedGroup = { id: null };
             }
-            return {
-                ...state,
+            return updateObject(state, {
                 group: selectedGroup,
-            };
+            });
         }
 
         case actionTypes.CLEAR_GROUP_SUCCESS:
-            return {
-                ...state,
+            return updateObject(state, {
                 group: {},
-            };
+            });
 
         default:
             return state;

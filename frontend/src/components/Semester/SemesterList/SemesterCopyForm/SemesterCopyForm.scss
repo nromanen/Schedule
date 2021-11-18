@@ -1,17 +1,37 @@
 @import '../../../../styles/colors.scss';
-@import '../../../../styles/mixins.scss';
 
-.semester-copy-title {
-    color: $red;
+p.empty_schedule {
+    text-align: center;
+    font-weight: bold;
+    margin: 50px auto;
 }
-.semester-copy-form {
-    @include displayFlex(stretch, center);
+h1 {
+    text-align: center;
 }
-.semester-copy-dialog .MuiPaper-root {
-    width: 775px;
-    padding: 8px;
+.form-card.width-auto {
+    width: auto;
+    .MuiFormControl-root,
+    .MuiInputBase-input {
+        margin: 0px 15px;
+        width: auto;
+    }
 }
-.semester-copy-select .MuiInput-root {
-    width: 250px;
-    margin-right: 25px;
+p.red-color {
+    color: $delete-color;
+}
+.copy-form > * {
+    margin: 8px;
+}
+.form-buttons-container {
+    @media (max-width: 800px) {
+        display: flex;
+        flex-direction: column;
+    }
+    p {
+        display: block;
+        width: 100%;
+    }
+    .semester-copy-btn {
+        vertical-align: bottom;
+    }
 }

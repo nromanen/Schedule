@@ -1,13 +1,12 @@
 import React from 'react';
-import './StudentTable.scss';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
-import Checkbox from '@material-ui/core/Checkbox';
 import { useTranslation } from 'react-i18next';
 import { FaEdit } from 'react-icons/all';
 import { Delete } from '@material-ui/icons';
 import { Link } from 'react-router-dom';
+import './StudentTable.scss';
 import { getTeacherFullName } from '../../helper/renderTeacher';
 import {
     STUDENT_LINK,
@@ -45,37 +44,37 @@ export const StudentsTableBody = (props) => {
             {currentStudentsOnList.map((student) => (
                 <TableRow key={student.id}>
                     <TableCell component="th" scope="row" align="center">
-                        <div className="checkbox-table-body">
-                            <Checkbox
-                                onChange={(e) => checkStudent(e)}
-                                checked={student.checked}
-                                value={student.id}
-                                color="primary"
-                                size="small"
-                                title={`${t(SELECT_STUDENT)} ${getTeacherFullName(student)}`}
-                            />
-                        </div>
+                        <input
+                            onChange={(e) => checkStudent(e)}
+                            type="checkbox"
+                            checked={student.checked}
+                            value={student.id}
+                            className="checked-box"
+                            title={`${t(SELECT_STUDENT)} ${getTeacherFullName(student)}`}
+                        />
                     </TableCell>
                     <TableCell component="th" scope="row" align="center">
                         {getTeacherFullName(student)}
                     </TableCell>
                     <TableCell component="th" scope="row" align="center">
-                        <button
-                            className="send-letter-button"
-                            title={`${t(SEND_LETTER_LABEL)} ${student.email}`}
-                            onClick={() => sendMail(student.email)}
-                            type="button"
-                        >
-                            {student.email}
-                        </button>
+                        <span>
+                            <button
+                                className="send-letter-button"
+                                title={`${t(SEND_LETTER_LABEL)} ${student.email}`}
+                                onClick={() => sendMail(student.email)}
+                                type="button"
+                            >
+                                {student.email}
+                            </button>
+                        </span>
                     </TableCell>
                     <TableCell component="th" scope="row" align="center">
-                        <div className="edit-cell-table">
+                        <span className="edit-cell">
                             <Link
                                 to={`${GROUP_LIST_LINK}/${group.id}${SHOW_STUDENTS_LINK}/${student.id}${EDIT_LINK}`}
                             >
                                 <FaEdit
-                                    className="edit-button-table"
+                                    className="edit-button"
                                     title={t(EDIT_TITLE)}
                                     onClick={() => {
                                         selectStudentSuccess(student.id);
@@ -88,14 +87,14 @@ export const StudentsTableBody = (props) => {
                             >
                                 <Delete
                                     title={t(DELETE_TITLE_LABEL)}
-                                    className="delete-button-table"
+                                    className="delete-button"
                                     onClick={() => {
                                         setStudent(student);
                                         setIsOpenConfirmDialog(true);
                                     }}
                                 />
                             </Link>
-                        </div>
+                        </span>
                     </TableCell>
                 </TableRow>
             ))}

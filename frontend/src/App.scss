@@ -4,17 +4,43 @@
 @import './styles/mixins.scss';
 
 html {
-    height: $full-size;
+    height: 100%;
 }
-
 body {
     margin: 0;
     font-family: $font;
 }
 
 .centered-container {
-    @include displayFlex(center, center);
-    flex: $full-size;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 100%;
+    margin-top: 1em;
+}
+
+.page-title {
+    display: flex;
+    justify-content: center;
+
+    @media (max-width: 500px) {
+        flex-direction: column;
+    }
+
+    .page-h {
+        @media (max-width: 850px) {
+            font-size: 1.1rem;
+            line-height: 80px;
+            margin-right: 20px;
+        }
+
+        @media (max-width: 500px) {
+            line-height: 20px;
+        }
+
+        line-height: 50px;
+        margin-right: 10px;
+    }
 }
 
 .under-line {
@@ -24,31 +50,36 @@ body {
         content: '';
         position: absolute;
         left: 0;
-        width: $full-size;
+        width: 100%;
         bottom: -10px;
         border-bottom: 1px solid;
     }
 }
+
 .container {
     max-width: 1440px;
     margin: 10px auto;
 
     @media (max-width: 1440px) {
-        margin: 10px;
+        margin: 10px 10px;
     }
 }
 
 .form-fields-container {
-    @include displayFlex(center, space-between);
+    @include flexWrap();
+    align-items: center;
+    justify-content: space-between;
 
     .MuiFormControl-root,
     .form-field {
         width: fit-content;
         padding-right: 24px;
     }
+
     label + .MuiInput-formControl {
         padding-right: 0;
     }
+
     .MuiTypography-root,
     span.MuiCheckbox-root svg {
         margin-top: 16px;
@@ -56,17 +87,15 @@ body {
 }
 
 .form-buttons-container {
-    @include displayFlex(center, space-between);
+    @include flexWrap();
+    align-items: center;
+    justify-content: space-between;
     margin-top: 10px;
-
-    @media (max-width: $md-m) {
-        flex-direction: column;
-    }
 
     .buttons-style {
         width: 48%;
 
-        @media (max-width: $md-m) {
+        @media (max-width: 768px) {
             margin-bottom: 5px;
             font-size: 12px;
             width: 60%;
@@ -74,32 +103,45 @@ body {
     }
 }
 
-.cards-container {
-    @include displayFlex(start, start);
-    margin-bottom: 50px;
+.margin-top-bottom {
+    margin: 2px 0 7px 0;
+}
 
-    @media (max-width: $md-m) {
-        @include displayFlex(center, start, column);
+.cards-container {
+    margin-bottom: 50px;
+    @media (max-width: 850px) {
+        flex-direction: column;
+        align-items: center;
     }
+    @include flexWrap();
+    align-items: start;
 
     .container-flex-wrap {
-        @include displayFlex(center, space-around);
+        @include flexWrap();
+
+        width: 100%;
+        align-items: center;
+        justify-content: space-around;
         flex-wrap: wrap;
-        width: $full-size;
     }
 }
 
 .cards-btns {
-    @include displayFlex(center, flex-end);
-    height: 30px;
+    @include flexWrap();
+    align-items: center;
+    justify-content: flex-end;
+    position: relative;
+    height: 2em;
 
     .svg-btn {
         @include buttonStyle;
         margin-right: 10px;
+
         &:last-child {
             margin-right: 0;
         }
     }
+
     .delete-btn {
         &:hover {
             color: $delete-color;
@@ -108,12 +150,12 @@ body {
 
     .edit-btn {
         &:hover {
-            color: $blue;
+            color: $background-color;
         }
     }
 
     .info-btn {
-        color: $green;
+        color: $create-color;
         cursor: default;
         left: 0;
         position: absolute;
@@ -121,46 +163,53 @@ body {
 
     .copy-btn {
         &:hover {
-            color: $green;
+            color: $create-color;
         }
     }
 
     .info-btn {
-        color: $green;
+        color: $create-color;
         cursor: default;
         margin: 0 5px;
     }
 }
+
 ::-webkit-scrollbar {
     width: 7px;
     height: 6px;
 }
+
 ::-webkit-scrollbar-track {
     box-shadow: inset 0 0 5px grey;
     border-radius: 5px;
 }
+
 ::-webkit-scrollbar-thumb {
     background: $scroll-color;
     border-radius: 5px;
 }
+
 ::-webkit-scrollbar-thumb:hover {
     background: $scroll-hover-color;
 }
 
 .search-list__panel {
     position: sticky;
-    top: 15px;
-    width: 395px;
-    @media (max-width: $md-m) {
+    top: 1rem;
+    width: 30rem;
+    @media (max-width: 850px) {
         position: relative;
         margin: 0 auto 40px;
-        max-width: $full-size;
-        @include displayFlex(center, start, column);
+        max-width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
     }
 }
 
 .search-lesson-group {
-    @include displayFlex(center, start);
+    display: flex;
+    align-items: center;
     align-content: center;
 
     .search-lesson {
@@ -168,16 +217,18 @@ body {
         margin-right: 110px;
     }
 }
+
 .language-icon {
     max-width: 30px;
     margin-right: 25px;
 }
+
 .MuiCircularProgress-root.loading-circle {
     margin: 10px;
     color: $blue;
 }
 
-// new icon-btn styles
+// icon-btn
 
 .edit-icon-btn {
     @include button-icon($black, $blue);

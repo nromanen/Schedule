@@ -1,9 +1,11 @@
-@import '../../styles/forms.scss';
-@import '../../styles/colors.scss';
-@import '../../styles/variables.scss';
+@import "../../styles/forms.scss";
+@import "../../styles/colors.scss";
 
 .delete-word {
     color: $delete-color;
+}
+.edit-word {
+    color: $green;
 }
 
 .availability-info {
@@ -11,8 +13,12 @@
     font-weight: bolder;
 }
 
+.circular-progress-dialog {
+    width: 100px;
+    text-align: center;
+}
 .send-message {
-    font-size: $font-xl;
+    font-size: 25px;
     color: $blue;
 }
 .title-align {
@@ -33,11 +39,39 @@
         padding: 5px;
     }
 }
+.group-select {
+    z-index: 1000;
+}
+
+.student-dialog-button-data {
+    width: 25%;
+    height: 45px;
+}
+.student-dialog-button-no-data {
+    width: 45%;
+    height: 45px;
+}
+.group-students {
+    z-index: 1000;
+    width: 600px;
+    height: 600px;
+    position: fixed;
+    top: 100px;
+    left: 400px;
+    background-color: $gray1;
+}
+
+.confirm-dialog {
+    width: 1000px;
+}
 .go-to-meeting {
     color: $green;
     text-decoration: none;
 }
 .custom-dialog {
+    .MuiDialogContent-root {
+        overflow-y: visible;
+    }
     .MuiDialog-paperWidthSm {
         max-width: unset;
     }

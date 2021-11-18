@@ -17,10 +17,11 @@
 
 @mixin button-icon($color, $hoverColor, $size: $icon-size) {
     cursor: pointer;
-    font-size: $size;
+    font-size: $icon-size;
     color: $color;
-    &:not(:last-child) {
-        margin-right: 10px;
+    margin-right: 10px;
+    &:last-child {
+        margin-right: 0;
     }
     &:hover {
         color: $hoverColor;

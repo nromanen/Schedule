@@ -2,6 +2,10 @@
 @import "../../styles/fonts.scss";
 @import "../../styles/variables.scss";
 
+@mixin set-width($form-width) {
+    width: $form-width;
+}
+
 .card {
     background-color: $white;
     display: inline-block;
@@ -12,10 +16,10 @@
 }
 
 .form-card {
-    width: 200px;
+    @include set-width(20em);
 
     position: sticky;
-    top: 1rem;
+    top: 1em;
 
     @media (max-width: $md-width-lanscape) {
         position: relative;
@@ -32,27 +36,33 @@
 }
 
 .form-field {
-    width: $full-size;
+    width: 100%;
+
+    @media (max-width: $md-small) {
+        & input {
+            max-width: 100%;
+        }
+    }
 }
 
 .class-card-width {
-    width: 110px;
+    width: 11em;
 }
 
 .done-card {
     background-color: $white;
-    width: 150px;
-    height: 145px;
+    width: 15em;
+    height: 14.5em;
 }
 
 .department-card {
     background-color: $white;
-    width: 150px;
-    height: 50px;
+    width: 15em;
+    height: 5em;
 }
 
 .vacation-card {
-    background-color: $yellow;
+    background-color: #f5deb3;
     text-align: center;
     min-width: 272px;
 }
@@ -66,6 +76,10 @@
 }
 
 .card-title {
-    width: $full-size;
+    width: 99%;
     text-align: center;
+}
+
+.green-card {
+    background-color: #90ee90;
 }

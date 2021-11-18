@@ -63,7 +63,9 @@ const RoomPage = (props) => {
 
     const handleConfirm = () => {
         setOpenConfirmDialog(false);
-        if (deleteLabel === cardType.TYPE) deleteRoomType(selectedId);
+        if (deleteLabel === cardType.TYPE) {
+            deleteRoomType(selectedId);
+        }
         if (deleteLabel === cardType.ROOM) {
             if (confirmDialogType !== dialogTypes.DELETE_CONFIRM) {
                 toggleRoomVisibility(selectedId, isDisabled);
@@ -72,7 +74,9 @@ const RoomPage = (props) => {
             }
         }
     };
-    const changeDisable = () => setIsDisabled((prev) => !prev);
+    const changeDisable = () => {
+        setIsDisabled((prev) => !prev);
+    };
 
     return (
         <>

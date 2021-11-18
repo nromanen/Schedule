@@ -37,7 +37,7 @@ const FreeRoomsDialog = (props) => {
                     open={isOpenFreeRoomDialog}
                     onClose={handleIsOpenFreeRoomDialog}
                     buttons={[dialogCloseButton(handleIsOpenFreeRoomDialog)]}
-                    className="free-room-dialog"
+                    aria-labelledby="form-dialog-title"
                 >
                     <div className="dialog-body-container">
                         <section className="free-rooms-container">

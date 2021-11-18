@@ -1,23 +1,15 @@
 @import '../../../styles/forms.scss';
 @import '../../../styles/colors.scss';
-@import '../../../styles/variables.scss';
-@import '../../../styles/mixins.scss';
 
 .draggable-card {
     cursor: move;
 }
 .lesson-list.schedule-card {
-    width: 15vw;
+    width: 16%;
     height: $full-size;
     margin-top: 0;
     margin-right: 0;
     overflow: hidden;
-    @media (max-width: $md-2xl) {
-        width: 17vw;
-    }
-    @media (max-width: $md-xl) {
-        width: 18vw;
-    }
 
     .common-button {
         margin-bottom: 15px;
@@ -67,7 +59,8 @@
         }
     }
     .content-center {
-        @include displayFlex(stretch, center);
+        display: flex;
+        justify-content: center;
     }
     .loading-circle {
         position: absolute;

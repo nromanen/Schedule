@@ -32,7 +32,7 @@ function* loginToAccount(payload) {
         if (payload.type === GOOGLE) {
             response = { data: { token: payload.token, email: '' } };
         } else {
-            response = yield call(axiosCall, LOGIN_URL, POST, payload.userData);
+            response = yield call(axiosCall, LOGIN_URL, POST, payload.result);
         }
         const { token, email } = response.data;
         const decodedJWT = jwtDecode(token);
@@ -58,9 +58,9 @@ function* loginToAccount(payload) {
     }
 }
 
-function* registerAccount({ userData }) {
+function* registerAccount(payload) {
     try {
-        const response = yield call(axiosCall, REGISTRATION_URL, POST, userData);
+        const response = yield call(axiosCall, REGISTRATION_URL, POST, payload.result);
         yield put(registerUserSuccess(response));
     } catch (error) {
         yield put(
@@ -101,9 +101,13 @@ function* checkAuthTimeout(action) {
     yield call(logoutOfAccount);
 }
 
-function* activateUserAccount({ payload }) {
+function* activateUserAccount(payload) {
     try {
-        const response = yield call(axiosCall, `${ACTIVATE_ACCOUNT_URL}?token=${payload}`, PUT);
+        const response = yield call(
+            axiosCall,
+            `${ACTIVATE_ACCOUNT_URL}?token=${payload.result}`,
+            PUT,
+        );
         yield put(activateSuccess(response));
     } catch (error) {
         yield put(
@@ -116,11 +120,11 @@ function* activateUserAccount({ payload }) {
     }
 }
 
-function* resetPassword({ payload }) {
+function* resetPassword(payload) {
     try {
         const response = yield call(
             axiosCall,
-            `${RESET_PASSWORD_URL}?email=${payload.email}`,
+            `${RESET_PASSWORD_URL}?email=${payload.result.email}`,
             PUT,
             payload,
         );

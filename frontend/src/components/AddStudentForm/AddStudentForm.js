@@ -51,87 +51,89 @@ export const AddStudentForm = (props) => {
     }, [student]);
 
     return (
-        <form
-            className="student-form"
-            onSubmit={handleSubmit((data) => submitStudentStart(data, groupId))}
-        >
-            <Field
-                className="form-field"
-                name="surname"
-                id="surname"
-                component={renderTextField}
-                type="text"
-                placeholder={t(SURNAME_PLACEHOLDER)}
-                label={t(SURNAME_PLACEHOLDER)}
-                validate={[required]}
-            />
-            <Field
-                className="form-field"
-                name="name"
-                id="name"
-                component={renderTextField}
-                type="text"
-                placeholder={t(NAME_PLACEHOLDER)}
-                label={t(NAME_PLACEHOLDER)}
-                validate={[required]}
-            />
-            <Field
-                className="form-field"
-                name="patronymic"
-                id="patronymic"
-                component={renderTextField}
-                type="text"
-                placeholder={t(PATRONYMIC_PLACEHOLDER)}
-                label={t(PATRONYMIC_PLACEHOLDER)}
-                validate={[required]}
-            />
-
-            <Field
-                className="form-field"
-                name="email"
-                id="email"
-                component={renderTextField}
-                type="email"
-                placeholder={t(EMAIL_FIELD)}
-                label={t(EMAIL_FIELD)}
-                validate={[required]}
-            />
-            {student.id && (
+        <div className="student-container">
+            <form
+                className="student-form"
+                onSubmit={handleSubmit((data) => submitStudentStart(data, groupId))}
+            >
+                <Field
+                    className="name-field"
+                    name="surname"
+                    id="surname"
+                    component={renderTextField}
+                    type="text"
+                    placeholder={t(SURNAME_PLACEHOLDER)}
+                    label={t(SURNAME_PLACEHOLDER)}
+                    validate={[required]}
+                />
                 <Field
                     className="form-field"
-                    component={renderSelectField}
-                    name="group"
-                    label={t(TYPE_LABEL)}
+                    name="name"
+                    id="name"
+                    component={renderTextField}
+                    type="text"
+                    placeholder={t(NAME_PLACEHOLDER)}
+                    label={t(NAME_PLACEHOLDER)}
                     validate={[required]}
-                >
-                    defaultValue={groupId}
-                    {groups.map((groupItem) => (
-                        <option key={groupItem.id} value={groupItem.id}>
-                            {groupItem.title}
-                        </option>
-                    ))}
-                </Field>
-            )}
+                />
+                <Field
+                    className="form-field"
+                    name="patronymic"
+                    id="patronymic"
+                    component={renderTextField}
+                    type="text"
+                    placeholder={t(PATRONYMIC_PLACEHOLDER)}
+                    label={t(PATRONYMIC_PLACEHOLDER)}
+                    validate={[required]}
+                />
 
-            <div className="form-buttons">
-                <Button
-                    className="buttons-style"
-                    variant="contained"
-                    color="primary"
-                    disabled={pristine || submitting}
-                    type="submit"
-                >
-                    {t(SAVE_BUTTON_LABEL)}
-                </Button>
-                <Button
-                    className="buttons-style"
-                    variant="contained"
-                    disabled={pristine || submitting}
-                    onClick={reset}
-                >
-                    {student ? t(CANCEL_BUTTON_LABEL) : t(CLEAR_BUTTON_LABEL)}
-                </Button>
-            </div>
-        </form>
+                <Field
+                    className="form-field"
+                    name="email"
+                    id="email"
+                    component={renderTextField}
+                    type="email"
+                    placeholder={t(EMAIL_FIELD)}
+                    label={t(EMAIL_FIELD)}
+                    validate={[required]}
+                />
+                {student.id && (
+                    <Field
+                        className="form-field"
+                        component={renderSelectField}
+                        name="group"
+                        label={t(TYPE_LABEL)}
+                        validate={[required]}
+                    >
+                        defaultValue={groupId}
+                        {groups.map((groupItem) => (
+                            <option key={groupItem.id} value={groupItem.id}>
+                                {groupItem.title}
+                            </option>
+                        ))}
+                    </Field>
+                )}
+
+                <div className="form-buttons">
+                    <Button
+                        className="buttons-style"
+                        variant="contained"
+                        color="primary"
+                        disabled={pristine || submitting}
+                        type="submit"
+                    >
+                        {t(SAVE_BUTTON_LABEL)}
+                    </Button>
+                    <Button
+                        className="buttons-style"
+                        variant="contained"
+                        disabled={pristine || submitting}
+                        onClick={reset}
+                    >
+                        {student ? t(CANCEL_BUTTON_LABEL) : t(CLEAR_BUTTON_LABEL)}
+                    </Button>
+                </div>
+            </form>
+        </div>
     );
 };
