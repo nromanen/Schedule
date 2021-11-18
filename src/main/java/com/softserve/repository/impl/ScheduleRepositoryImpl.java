@@ -33,6 +33,7 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
     private static final String GET_ALL_ORDERED_BY_ROOMS_DAYS_PERIODS
             = "SELECT s "
             + "FROM Schedule s "
+            + "where s.lesson.semester.id = :semesterId "
             + "ORDER BY s.room.name, " //if sort_order implemented, must be sort_order
             + " CASE "
             + "WHEN Day = 'Monday' THEN 1 "

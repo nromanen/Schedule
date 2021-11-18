@@ -241,41 +241,6 @@ public class ScheduleController {
         return ResponseEntity.ok().body(scheduleMapper.scheduleToScheduleDTO(updateSchedule));
     }
 
-
-    //convert schedule map to schedule dto
-    /*private List<ScheduleDateRangeFullDTO> fullDTOForTeacherDateRange(Map<LocalDate, Map<Period, List<Schedule>>> map) {
-        List<ScheduleDateRangeFullDTO> fullDTO = new ArrayList<>();
-
-        for (Map.Entry<LocalDate, Map<Period, List<Schedule>>> itr: map.entrySet()) {
-            ScheduleDateRangeFullDTO scheduleDateRangeFullDTO = new ScheduleDateRangeFullDTO();
-            scheduleDateRangeFullDTO.setDate(itr.getKey());
-
-            List<ScheduleForTeacherDateRangeDTO> scheduleForTeacherDateRangeDTOS = new ArrayList<>();
-            for (Map.Entry<Period, List<Schedule>> entry : itr.getValue().entrySet()) {
-                ScheduleForTeacherDateRangeDTO scheduleForTeacherDateRangeDTO = new ScheduleForTeacherDateRangeDTO();
-                scheduleForTeacherDateRangeDTO.setPeriod(periodMapper.convertToDto(entry.getKey()));
-
-                List<LessonTeacherDTO> lessonsTeacherDateRangeDTOS = new ArrayList<>();
-                for (Schedule schedule : entry.getValue()) {
-                    LessonsTeacherDateRangeDTO lessonsInScheduleDTO = new LessonsTeacherDateRangeDTO();
-                    lessonsInScheduleDTO.setSubjectForSite(schedule.getLesson().getSubjectForSite());
-                    lessonsInScheduleDTO.setGroupName(schedule.getLesson().getGroup().getTitle());
-                    lessonsInScheduleDTO.setRoom(roomForScheduleMapper.roomToRoomForScheduleDTO(schedule.getRoom()));
-
-                    LessonTeacherDTO lessonTeacherDTO = new LessonTeacherDTO();
-                    lessonTeacherDTO.setLesson(lessonsInScheduleDTO);
-                    lessonsTeacherDateRangeDTOS.add(lessonTeacherDTO);
-                }
-                scheduleForTeacherDateRangeDTO.setLessons(lessonsTeacherDateRangeDTOS);
-                scheduleForTeacherDateRangeDTOS.add(scheduleForTeacherDateRangeDTO);
-            }
-            scheduleDateRangeFullDTO.setSchedule(scheduleForTeacherDateRangeDTOS);
-            fullDTO.add(scheduleDateRangeFullDTO);
-        }
-        return fullDTO;
-    }*/
-
-
     private List<ScheduleForTemporaryDateRangeDTO> fullDTOForTemporaryScheduleByTeacherDateRange(Map<LocalDate, Map<Period, Map<Schedule, TemporarySchedule>>> map) {
         List<ScheduleForTemporaryDateRangeDTO> fullDTO = new ArrayList<>();
 

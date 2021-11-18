@@ -643,29 +643,6 @@ public class ScheduleServiceImpl implements ScheduleService {
         return schedules;
     }
 
-   /* **
-     * Method scheduleByDateRangeForTeacher get all schedules from db in particular date range
-     *
-     * @param fromDate  LocalDate from
-     * @param toDate    LocalDate to
-     * @param teacherId id teacher
-     * @return list of schedules
-     *
-    @Override
-    public Map<LocalDate, Map<Period, List<Schedule>>> scheduleByDateRangeForTeacher(LocalDate fromDate, LocalDate toDate, Long teacherId) {
-        log.info("In scheduleByDateRangeForTeacher with fromDate = {} and toDate = {}", fromDate, toDate);
-        List<Schedule> schedules = scheduleRepository.scheduleByDateRangeForTeacher(fromDate, toDate, teacherId);
-
-        List<Schedule> dateRangeSchedule = new ArrayList<>();
-        for (Schedule schedule : schedules) {
-            if (isDateInSemesterDateRange(schedule, toDate)) {
-                dateRangeSchedule.add(schedule);
-            }
-        }
-
-return fullScheduleForTeacherByDateRange(dateRangeSchedule,  fromDate, toDate);
-    }*/
-
 
     /**
      * Method temporaryScheduleByDateRangeForTeacher get all schedules and temporary schedules from db in particular date range
