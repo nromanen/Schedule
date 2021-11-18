@@ -13,6 +13,5 @@ public class TeacherImportDTO {
     private String email;
     @JsonProperty("department")
     private DepartmentDTO departmentDTO;
-    @JsonProperty("teacherStatus")
     private TeacherStatus teacherStatus;
 }
