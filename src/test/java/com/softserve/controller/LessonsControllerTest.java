@@ -35,6 +35,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.util.Collections;
+
 import static com.softserve.entity.enums.LessonType.LABORATORY;
 import static com.softserve.entity.enums.LessonType.LECTURE;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -113,14 +115,14 @@ public class LessonsControllerTest {
         TeacherDTO teacherDTO = new TeacherNameMapperImpl().teacherDTOToTeacher(teacherService.getById(5L));
         SubjectDTO subjectDTO = new SubjectMapperImpl().subjectToSubjectDTO(subjectService.getById(4L));
         GroupDTO groupDTO = new GroupMapperImpl().groupToGroupDTO(groupService.getById(4L));
-        LessonInfoDTO lessonDtoForSave = new LessonInfoDTO();
+        LessonForGroupsDTO lessonDtoForSave = new  LessonForGroupsDTO();
         lessonDtoForSave.setHours(1);
         lessonDtoForSave.setSubjectForSite("");
         lessonDtoForSave.setLinkToMeeting("");
         lessonDtoForSave.setLessonType(LABORATORY);
         lessonDtoForSave.setTeacher(teacherDTO);
         lessonDtoForSave.setSubject(subjectDTO);
-        lessonDtoForSave.setGroup(groupDTO);
+        lessonDtoForSave.setGroups(Collections.singletonList(groupDTO));
 
         mockMvc.perform(post("/lessons").content(objectMapper.writeValueAsString(lessonDtoForSave))
                 .contentType(MediaType.APPLICATION_JSON))
@@ -168,9 +170,7 @@ public class LessonsControllerTest {
 
     @Test
     public void returnBadRequestIfSaveExistLesson() throws Exception {
-        LessonInfoDTO lessonDtoForSave = new LessonInfoMapperImpl().lessonToLessonInfoDTO(lessonService.getById(4L));
-
-        mockMvc.perform(post("/lessons").content(objectMapper.writeValueAsString(lessonDtoForSave))
+        mockMvc.perform(post("/lessons").content("1")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isBadRequest());
