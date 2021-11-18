@@ -6,6 +6,7 @@
 .lesson-container {
     @include displayFlex(center, space-around);
     flex-wrap: wrap;
+    margin-top: 20px;
 
     .lesson-card {
         width: 240px;

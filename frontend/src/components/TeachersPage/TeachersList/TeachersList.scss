@@ -4,12 +4,12 @@
 @import '../../../styles/mixins.scss';
 
 .cards-container {
-    @media (max-width: $md-medium) {
+    @media (max-width: $md-m) {
         @include displayFlex(stretch, center);
         flex-wrap: wrap;
     }
 
-    @media (max-width: $md-small) {
+    @media (max-width: $md-s) {
         @include displayFlex(stretch, center);
         flex-wrap: wrap;
         text-align: center;
@@ -23,25 +23,25 @@
 
     .search-group {
         width: 340px;
-        @media (max-width: $md-small) {
-            width: 300px;
+        @media (max-width: $md-s) {
+            width: 340px;
         }
     }
 
     .send-button {
         width: $full-size;
 
-        @media (max-width: $md-small) {
-            width: 290px;
+        @media (max-width: $md-s) {
+            width: 340px;
         }
     }
 
-    @media (max-width: $md-width-lanscape) {
+    @media (max-width: $md-l) {
         position: relative;
         margin-bottom: 20px;
     }
 
-    @media (max-width: $md-small) {
+    @media (max-width: $md-s) {
         @include displayFlex(center, flex-start, column);
         width: 340px;
     }
@@ -58,7 +58,7 @@
         text-overflow: ellipsis;
         overflow: hidden;
 
-        @media (max-width: $md-smaller) {
+        @media (max-width: $md-s) {
             font-size: 16px;
         }
     }
@@ -85,10 +85,10 @@
     display: flex;
     justify-content: space-around;
     flex-wrap: wrap;
-    margin: 0;
+    margin-top: 15px;
 
-    @media (max-width: $md-width-lanscape) {
-        margin-top: 15px;
+    @media (max-width: $md-l) {
+        margin-top: 30px;
     }
 }
 

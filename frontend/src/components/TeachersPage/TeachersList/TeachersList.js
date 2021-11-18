@@ -1,3 +1,4 @@
+import { isEmpty } from 'lodash';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { FORM_TEACHER_A_LABEL } from '../../../constants/translationLabels/formElements';
@@ -10,13 +11,16 @@ const TeachersList = (props) => {
 
     const { visibleItems, ...rest } = props;
 
+    if (isEmpty(visibleItems)) {
+        return <NotFound name={t(FORM_TEACHER_A_LABEL)} />;
+    }
+
     return (
-        <section className="teachers-list-container centered-container">
-            {visibleItems.length === 0 && <NotFound name={t(FORM_TEACHER_A_LABEL)} />}
+        <div className="teachers-list-container">
             {visibleItems.map((teacherItem) => {
                 return <TeachersCard teacherItem={teacherItem} key={teacherItem.id} {...rest} />;
             })}
-        </section>
+        </div>
     );
 };
 

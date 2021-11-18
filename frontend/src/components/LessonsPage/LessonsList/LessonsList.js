@@ -6,11 +6,11 @@ const LessonsList = (props) => {
     const { lessons, ...rest } = props;
 
     return (
-        <section className="lesson-container">
+        <div className="lesson-container">
             {lessons.map((lesson) => (
                 <LessonsCard lesson={lesson} key={lesson.id} {...rest} />
             ))}
-        </section>
+        </div>
     );
 };
 

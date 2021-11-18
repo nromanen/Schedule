@@ -22,7 +22,13 @@
         }
     }
 
-    @media (max-width: $md-small) {
+    .form-card {
+        @media (max-width: $md-s) {
+            max-width: 100%;
+        }
+    }
+
+    @media (max-width: $md-s) {
         width: $full-size;
     }
 }
