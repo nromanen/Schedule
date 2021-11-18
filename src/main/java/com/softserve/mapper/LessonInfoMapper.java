@@ -24,7 +24,8 @@ public abstract class LessonInfoMapper {
         }
         List<Lesson> lessons = new ArrayList<>();
         lessonForGroupsDTO.getGroups().forEach(group -> {
-            LessonInfoDTO lessonInfoDTO = lessonInfoDTOToLessonForGroupsDTO(lessonForGroupsDTO);
+            LessonInfoDTO lessonInfoDTO = lessonForGroupsDTOToLessonInfoDTO(lessonForGroupsDTO);
+            lessonInfoDTO.setGroup(group);
             lessons.add(lessonInfoDTOToLesson(lessonInfoDTO));
         });
         return lessons;
@@ -34,7 +35,7 @@ public abstract class LessonInfoMapper {
 
     public abstract List<LessonDTO> lessonsToLessonDTOs(List<Lesson> lessons);
 
-    public abstract LessonInfoDTO lessonInfoDTOToLessonForGroupsDTO(LessonForGroupsDTO lessonForGroupsDTO);
+    public abstract LessonInfoDTO lessonForGroupsDTOToLessonInfoDTO(LessonForGroupsDTO lessonForGroupsDTO);
 
     @Mapping(source = "semesterId", target = "semester.id")
     @Mapping(source = "teacherId", target = "teacher.id")
