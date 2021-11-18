@@ -30,11 +30,11 @@ const TeachersCard = (props) => {
 
     return (
         <Card key={teacherItem.id} additionClassName="teacher-card">
-            <div className="teacher-btns">
+            <div className="cards-btns">
                 {!isDisabled ? (
                     <>
                         <IoMdEye
-                            className="svg-btn copy-btn"
+                            className="copy-icon-btn"
                             title={t(COMMON_SET_DISABLED)}
                             onClick={() => {
                                 showConfirmDialog(
@@ -44,7 +44,7 @@ const TeachersCard = (props) => {
                             }}
                         />
                         <FaEdit
-                            className="svg-btn edit-btn"
+                            className="edit-icon-btn"
                             title={t(COMMON_EDIT_HOVER_TITLE)}
                             onClick={() => {
                                 selectedTeacherCard(teacherItem.id);
@@ -53,7 +53,7 @@ const TeachersCard = (props) => {
                     </>
                 ) : (
                     <GiSightDisabled
-                        className="svg-btn copy-btn"
+                        className="copy-icon-btn"
                         title={t(COMMON_SET_ENABLED)}
                         onClick={() => {
                             showConfirmDialog(teacherItem.id, dialogTypes.SET_VISIBILITY_ENABLED);
@@ -61,7 +61,7 @@ const TeachersCard = (props) => {
                     />
                 )}
                 <MdDelete
-                    className="svg-btn delete-btn"
+                    className="delete-icon-btn"
                     title={t(COMMON_DELETE_HOVER_TITLE)}
                     onClick={() => showConfirmDialog(teacherItem.id, dialogTypes.DELETE_CONFIRM)}
                 />

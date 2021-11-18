@@ -1,133 +1,74 @@
-@import "../../styles/colors.scss";
-@import "../../styles/fonts.scss";
-@import "../../styles/variables.scss";
-
-@mixin flexWrap {
-    display: flex;
-}
-
-@mixin buttonStyle {
-    cursor: pointer;
-    width: $icon-size;
-    height: $icon-size;
-    transition: color 0.3s linear;
-}
-
-.card-title {
-    width: 95%;
-    text-align: center;
-}
-
-.centered-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex: 100%;
-    margin-top: 1em;
-}
+@import '../../styles/colors.scss';
+@import '../../styles/fonts.scss';
+@import '../../styles/variables.scss';
+@import '../../styles/mixins.scss';
 
 .lesson-wrapper {
-    display: flex;
-    width: 100%;
+    margin-bottom: 50px;
+    @include displayFlex(start, flex-start);
 
-    @media (max-width: $md-medium) {
-        display: flex;
+    @media (max-width: $md-m) {
+        @include displayFlex(stretch, center);
         flex-wrap: wrap;
-        justify-content: center;
-    }
-}
-
-.lesson-side-bar {
-    display: flex;
-    flex-direction: column;
-    width: min-content;
-
-    .lesson-form-container {
-        transition: all 1s ease-out;
-        margin: 0;
-        margin-bottom: 50px;
-        display: flex;
-        align-items: start;
-    }
-    .lesson-form-container .section {
-        margin-top: 20px;
-    }
-    .lesson-form-container .form-card {
-        .MuiFormControl-root {
-            width: 100%;
-        }
-    }
-
-    .lesson-form-card {
-        width: 20em;
-        position: sticky;
-        top: 1em;
-        background-color: $white;
-        display: inline-block;
-        margin: 10px;
-        padding: 1rem;
-        border-radius: 5px;
-        box-shadow: 0 2px 8px $shadow-box;
-    }
-
-    .lesson-form-title {
-        position: relative;
-        margin: 20px 0;
-        text-align: center;
-        word-wrap: break-word;
-    }
-
-    .not-selected {
-        width: 320px;
-        display: flex;
-        height: 85px;
-        align-items: center;
-        margin-bottom: 30px;
-    }
-
-    .search-lesson {
-        margin-top: 20px;
-    }
-    .search-group {
-        max-width: 320px;
-        width: 100%;
-        background-color: $white;
-        display: inline-block;
-        margin: 10px;
-        padding: 1rem;
-        border-radius: 5px;
-        box-shadow: 0 2px 8px $shadow-box;
-        min-height: 85px;
-    }
-
-    .form-field {
-        width: 100%;
-    }
-
-    @media (max-width: $md-small) {
-        display: flex;
-        flex-direction: column;
-        width: min-content;
-        text-align: center;
     }
 }
 
 .lessons-list {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
+    @include displayFlex(center, flex-start, column);
+    width: $full-size;
 
     .group-lesson {
+        @include displayCenter();
         height: 105px;
-        display: flex;
-        margin-top: 20px;
-        justify-content: center;
-        align-content: center;
-        align-items: center;
+    }
 
-        .MuiAutocomplete-root {
-            width: 150px;
-            margin-bottom: 4px;
+    .MuiAutocomplete-root {
+        width: 150px;
+        margin-bottom: 4px;
+    }
+}
+
+.lesson-side-bar {
+    position: sticky;
+    top: 16px;
+    margin-bottom: 100px;
+    .form-card {
+        .MuiFormControl-root {
+            width: $full-size;
         }
+    }
+
+    .lesson-form-card {
+        width: 320px;
+        text-align: center;
+        margin-bottom: 100px;
+
+        @media (max-width: $md-m) {
+            margin-bottom: 0;
+        }
+    }
+
+    .not-selected {
+        @include displayFlex(center, flex-start);
+        height: 85px;
+        margin: 10px;
+        padding: 16px;
+        border-radius: 5px;
+        box-shadow: 0 2px 8px $shadow-box;
+        margin-bottom: 30px;
+    }
+
+    .search-lesson {
+        padding-bottom: 25px;
+    }
+    .search-group {
+        max-width: 320px;
+        width: $full-size;
+        min-height: 85px;
+    }
+
+    @media (max-width: $md-m) {
+        position: unset;
+        margin-bottom: 0;
     }
 }

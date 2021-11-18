@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Field } from 'redux-form';
 import { useTranslation } from 'react-i18next';
 
@@ -13,12 +13,11 @@ import Card from '../../../share/Card/Card';
 import renderTextField from '../../../share/renderedFields/input';
 import renderCheckboxField from '../../../share/renderedFields/checkbox';
 
-import { lessThanZero, maxLengthValue, required } from '../../../validation/validateFields';
+import { isUrl, lessThanZero, maxLengthValue, required } from '../../../validation/validateFields';
 import { handleTeacherInfo } from '../../../helper/renderTeacher';
 import { getClearOrCancelTitle, setDisableButton } from '../../../helper/disableComponent';
-import { selectGroupService } from '../../../services/groupService';
 import { RenderMultiselect } from '../../../share/renderedFields/renderMultiselect';
-import { renderLessonAutocomplete } from '../../../helper/renderLessonAutocomplete';
+import { renderAutocompleteField } from '../../../helper/renderAutocompleteField';
 import LessonLabelForm from '../../../containers/LessonPage/LessonLabelForm';
 
 import {
@@ -58,11 +57,11 @@ const LessonForm = (props) => {
         initialize,
         change,
         lessonTypes,
-        selectLessonCard,
+        selectLessonCardSuccess,
         setUniqueError,
         selectGroupSuccess,
     } = props;
-    const [checked, setChecked] = React.useState(false);
+    const [checked, setChecked] = useState(false);
 
     const lessonId = lesson.id;
 
@@ -109,6 +108,12 @@ const LessonForm = (props) => {
 
     const valid = !isUniqueError ? { validate: [required] } : { error: isUniqueError };
 
+    const clearForm = () => {
+        reset();
+        setUniqueError(null);
+        selectLessonCardSuccess(null);
+    };
+
     return (
         <>
             {groupId ? (
@@ -117,25 +122,23 @@ const LessonForm = (props) => {
                     <form onSubmit={handleSubmit} className="lesson-form">
                         <Field
                             name="teacher"
-                            component={renderLessonAutocomplete}
+                            component={renderAutocompleteField}
+                            {...valid}
                             label={t(TEACHER_LABEL)}
                             type="text"
                             getItemTitle={handleTeacherInfo}
                             values={teachers}
-                            {...valid}
                             onChange={() => setUniqueError(false)}
                             getOptionLabel={(option) => (option ? handleTeacherInfo(option) : '')}
                         />
                         <Field
                             name="subject"
-                            component={renderLessonAutocomplete}
+                            component={renderAutocompleteField}
+                            {...valid}
                             label={t(SUBJECT_LABEL)}
                             type="text"
-                            getItemTitle={(sub) => {
-                                return sub.name;
-                            }}
+                            getItemTitle={(sub) => sub.name}
                             values={subjects}
-                            {...valid}
                             onChange={(subject) => {
                                 change('subjectForSite', subject?.name ?? '');
                                 setUniqueError(false);
@@ -147,16 +150,14 @@ const LessonForm = (props) => {
                         <div className="form-fields-container">
                             <Field
                                 name="type"
-                                component={renderLessonAutocomplete}
-                                label={t(TYPE_LABEL)}
-                                getItemTitle={(type) => {
-                                    return t(
-                                        `formElements:lesson_type_${type.toLowerCase()}_label`,
-                                    );
-                                }}
-                                type="text"
-                                values={lessonTypes}
+                                component={renderAutocompleteField}
                                 {...valid}
+                                label={t(TYPE_LABEL)}
+                                type="text"
+                                getItemTitle={(type) => {
+                                    t(`formElements:lesson_type_${type.toLowerCase()}_label`);
+                                }}
+                                values={lessonTypes}
                                 onChange={() => {
                                     setUniqueError(false);
                                 }}
@@ -196,7 +197,7 @@ const LessonForm = (props) => {
                             margin="normal"
                             component={renderTextField}
                             label={t(LINK_TO_MEETING_LABEL)}
-                            validate={[maxLengthValue]}
+                            validate={[isUrl, maxLengthValue]}
                             placeholder="Input URL"
                         />
                         <Field
@@ -263,9 +264,7 @@ const LessonForm = (props) => {
                                 variant="contained"
                                 disabled={setDisableButton(pristine, submitting, lesson.id)}
                                 onClick={() => {
-                                    reset();
-                                    setUniqueError(null);
-                                    selectLessonCard(null);
+                                    clearForm();
                                 }}
                             >
                                 {getClearOrCancelTitle(lesson.id, t)}
@@ -274,9 +273,7 @@ const LessonForm = (props) => {
                     </form>
                 </Card>
             ) : (
-                <div className="card not-selected">
-                    <h2>{`${t(GROUP_LABEL)} ${t(NOT_SELECTED_LABEL)}`}</h2>
-                </div>
+                <h2 className="not-selected">{`${t(GROUP_LABEL)} ${t(NOT_SELECTED_LABEL)}`}</h2>
             )}
         </>
     );

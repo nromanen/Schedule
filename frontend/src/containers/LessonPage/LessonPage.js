@@ -2,11 +2,11 @@ import { connect } from 'react-redux';
 import '../../components/LessonsPage/LessonPage.scss';
 import LessonPage from '../../components/LessonsPage/LessonPage';
 import {
-    copyLessonCard,
+    copyLessonCardStart,
     deleteLessonCardStart,
-    getLessonsByGroup,
-    getLessonTypes,
-    selectLessonCard,
+    getLessonsByGroupStart,
+    getLessonTypesStart,
+    selectLessonCardSuccess,
     setUniqueError,
     setIsOpenConfirmDialog,
     selectGroupId,
@@ -35,11 +35,11 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
     getEnabledGroupsStart: () => dispatch(getEnabledGroupsStart()),
-    getLessonsByGroup: (groupId) => dispatch(getLessonsByGroup(groupId)),
-    getLessonTypes: () => dispatch(getLessonTypes()),
+    getLessonsByGroupStart: (groupId) => dispatch(getLessonsByGroupStart(groupId)),
+    getLessonTypesStart: () => dispatch(getLessonTypesStart()),
     deleteLessonCardStart: (lessonId) => dispatch(deleteLessonCardStart(lessonId)),
-    copyLessonCard: (group, lesson) => dispatch(copyLessonCard(group, lesson)),
-    selectLessonCard: (lessonCardId) => dispatch(selectLessonCard(lessonCardId)),
+    copyLessonCardStart: (group, lesson) => dispatch(copyLessonCardStart(group, lesson)),
+    selectLessonCardSuccess: (lessonCardId) => dispatch(selectLessonCardSuccess(lessonCardId)),
     setOpenErrorSnackbar: (message) => dispatch(setOpenErrorSnackbar(message)),
     setUniqueError: (value) => dispatch(setUniqueError(value)),
     setOpenConfirmDialog: (newState) => dispatch(setIsOpenConfirmDialog(newState)),

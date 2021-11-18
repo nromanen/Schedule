@@ -1,37 +1,35 @@
-@import "../../../styles/colors.scss";
-@import "../../../styles//variables.scss";
+@import '../../../styles/colors.scss';
+@import '../../../styles//variables.scss';
 
-.add-form {
-    width: 100%;
-    max-width: 340px;
-
-    .MuiFormControl-root {
-        margin-top: 5px;
-        width: 100%;
-    }
-
-    .teacher-form {
-        position: sticky;
-        display: inline-block;
-        width: auto;
-        margin: 20px 0 0 0;
-        top: 1em;
-        background-color: $white;
-        padding: 1rem;
-        border-radius: 5px;
-        box-shadow: 0 2px 8px $shadow-box;
-    }
-}
-
-.teacher-form {
+.teacher-form-container {
     margin: 10px;
 
-    @media (max-width: $md-small) {
-        width: 100%;
+    .add-form {
+        max-width: 340px;
+
+        .MuiFormControl-root {
+            margin-top: 5px;
+            width: $full-size;
+        }
+
+        .teacher-form {
+            width: $full-size;
+            margin: 20px 0 0 0;
+        }
+
+        .form-buttons-container {
+            margin-top: 25px;
+        }
     }
 
-    .form-buttons-container {
-        margin-top: 25px;
+    .form-card {
+        @media (max-width: $md-s) {
+            max-width: $full-size;
+        }
+    }
+
+    @media (max-width: $md-s) {
+        width: $full-size;
     }
 }
 

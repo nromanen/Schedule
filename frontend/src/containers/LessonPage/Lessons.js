@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { selectLessonCard } from '../../actions';
+import { selectLessonCardSuccess } from '../../actions';
 import Lessons from '../../components/LessonsPage/Lessons';
 
 const mapStateToProps = (state) => ({
@@ -9,7 +9,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    selectLessonCardOf: (lessonCardId) => dispatch(selectLessonCard(lessonCardId)),
+    selectLessonCardSuccess: (lessonCardId) => dispatch(selectLessonCardSuccess(lessonCardId)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Lessons);

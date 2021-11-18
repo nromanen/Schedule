@@ -1,108 +1,29 @@
-@import "../../../styles/colors.scss";
-@import "../../../styles/fonts.scss";
-@import "../../../styles/variables.scss";
+@import '../../../styles/colors.scss';
+@import '../../../styles/fonts.scss';
+@import '../../../styles/variables.scss';
+@import '../../../styles/mixins.scss';
 
-@mixin flexWrap {
-    display: flex;
-}
+.lesson-container {
+    @include displayFlex(center, space-around);
+    flex-wrap: wrap;
+    margin-top: 20px;
 
-@mixin buttonStyle {
-    cursor: pointer;
-    width: $icon-size;
-    height: $icon-size;
-    transition: color 0.3s linear;
-}
-
-.lesson-cards-container {
-    display: flex;
-    align-items: start;
-    margin: 20px 0px 50px 0px;
-
-    @include flexWrap();
-    align-items: start;
-
-    .lesson-container {
-        @include flexWrap();
-
-        display: flex;
-        width: 100%;
-        align-items: center;
-        justify-content: space-around;
-        flex-wrap: wrap;
-        margin: 0;
-
-        width: 100%;
-        align-items: center;
-        justify-content: space-around;
-        flex-wrap: wrap;
-
-        .lesson-card {
-            background-color: $white;
-            width: 15em;
-            height: 16.5em;
-
-            display: inline-block;
-            margin: 10px;
-            padding: 1rem;
-            border-radius: 5px;
-            box-shadow: 0 2px 8px $shadow-box;
+    .lesson-card {
+        width: 240px;
+        height: 270px;
+        &__title {
+            font-weight: 600;
+            height: 50px;
         }
 
-        .lesson-btns {
-            @include flexWrap();
-            align-items: center;
-            justify-content: flex-end;
-            position: relative;
-            height: 2em;
-
-            .svg-btn {
-                @include buttonStyle;
-                margin-right: 10px;
-
-                &:last-child {
-                    margin-right: 0;
-                }
-            }
-
-            .delete-btn {
-                &:hover {
-                    color: $delete-color;
-                }
-            }
-
-            .edit-btn {
-                &:hover {
-                    color: $background-color;
-                }
-            }
-
-            .info-btn {
-                color: $create-color;
-                cursor: default;
-                left: 0;
-                position: absolute;
-            }
-
-            .copy-btn {
-                &:hover {
-                    color: $create-color;
-                }
-            }
+        &__link {
+            text-decoration: none;
+            overflow: hidden;
+            white-space: nowrap;
+            display: block;
+            text-overflow: ellipsis;
+            font-size: $font-xs;
+            color: $link;
         }
     }
-}
-
-.title {
-    font-weight: bold;
-    height: 3em;
-}
-
-.lesson-link {
-    text-decoration: none;
-    overflow: hidden;
-    white-space: nowrap;
-    display: block;
-    text-overflow: ellipsis;
-    font-size: 15px;
-    color: $link;
 }

@@ -1,10 +1,9 @@
-@import "../../../styles/variables.scss";
+@import '../../../styles/variables.scss';
 
 .lesson-form {
-    margin: 7px 2px;
     .MuiFormControl-root {
         margin-top: 10px;
-        width: 100%;
+        width: $full-size;
     }
 
     .MuiAccordion-root {
@@ -16,18 +15,15 @@
     }
 
     .form-fields-container {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
         margin-top: 15px;
 
         div.MuiAutocomplete-root {
-            width: 100%;
+            width: $full-size;
             .MuiFormControl-root {
-                width: 100%;
+                width: $full-size;
             }
             div.MuiFormControl-root.MuiTextField-root.MuiFormControl-fullWidth {
-                width: 100%;
+                width: $full-size;
                 margin-top: 0;
             }
         }
@@ -37,7 +33,7 @@
         }
 
         .MuiIconButton-colorPrimary {
-            color: #3f51b5;
+            color: $blue5;
         }
 
         .PrivateSwitchBase-root-2 {
@@ -46,30 +42,13 @@
 
         .MuiTypography-root,
         .MuiFormControlLabel-root .MuiTypography-label {
-            font-size: 15px;
+            font-size: $font-s;
             margin-top: 0px;
-            color: rgba(0, 0, 0, 0.54);
+            color: $scroll-hover-color;
         }
 
         .MuiFormControlLabel-root {
             margin-right: 0;
-        }
-    }
-
-    .form-buttons-container {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-top: 15px;
-
-        .buttons-style {
-            width: 48%;
-
-            @media (max-width: $md-width) {
-                margin-bottom: 5px;
-                font-size: 12px;
-                width: 60%;
-            }
         }
     }
 }

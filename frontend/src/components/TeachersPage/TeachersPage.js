@@ -132,26 +132,22 @@ const TeachersPage = (props) => {
     };
 
     return (
-        <div className="teachers-container">
+        <div className="cards-container">
             <div className="form-with-search-panel">
-                <div className="teacher-search">
-                    <SearchPanel SearchChange={setTerm} showDisabled={changeDisable} />
-                </div>
+                <SearchPanel SearchChange={setTerm} showDisabled={changeDisable} />
 
                 {!isDisabled && (
-                    <div className="teacher-form">
-                        <div className="send-schedule">
-                            <Button
-                                className="send-button"
-                                variant="contained"
-                                color="primary"
-                                onClick={() => {
-                                    setIsOpenMultiSelectDialog(true);
-                                }}
-                            >
-                                {t(SEND_SCHEDULE_FOR_TEACHER)}
-                            </Button>
-                        </div>
+                    <div className="teacher-form-container">
+                        <Button
+                            className="send-button"
+                            variant="contained"
+                            color="primary"
+                            onClick={() => {
+                                setIsOpenMultiSelectDialog(true);
+                            }}
+                        >
+                            {t(SEND_SCHEDULE_FOR_TEACHER)}
+                        </Button>
                         <div className="add-form">
                             <AddTeacherForm
                                 departments={setDepartmentOptions(departments)}

@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import { reduxForm } from 'redux-form';
-import { selectLessonCard, setUniqueError, selectGroupSuccess } from '../../actions';
+import { selectLessonCardSuccess, setUniqueError, selectGroupSuccess } from '../../actions';
 import LessonForm from '../../components/LessonsPage/LessonForm/LessonForm';
 import { LESSON_FORM } from '../../constants/reduxForms';
 
@@ -17,7 +17,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    selectLessonCard: (lessonCardId) => dispatch(selectLessonCard(lessonCardId)),
+    selectLessonCardSuccess: (lessonCardId) => dispatch(selectLessonCardSuccess(lessonCardId)),
     setUniqueError: (isUniqueError) => dispatch(setUniqueError(isUniqueError)),
     selectGroupSuccess: (id) => dispatch(selectGroupSuccess(id)),
 });
