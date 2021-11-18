@@ -1,7 +1,7 @@
-@import "./styles/colors.scss";
-@import "./styles/fonts.scss";
-@import "./styles/variables.scss";
-@import "./styles/mixins.scss";
+@import './styles/colors.scss';
+@import './styles/fonts.scss';
+@import './styles/variables.scss';
+@import './styles/mixins.scss';
 
 html {
     height: 100%;
@@ -47,7 +47,7 @@ body {
     position: relative;
 
     &::after {
-        content: "";
+        content: '';
         position: absolute;
         left: 0;
         width: 100%;
@@ -228,18 +228,18 @@ body {
     color: $blue;
 }
 
-
 // icon-btn
-
-.edit-icon-btn{
-  @include button-icon($black, $blue)
+.edit-icon-btn,
+.archive-icon-btn {
+    @include button-icon($black, $blue);
 }
 
-.eye-icon-btn, .copy-icon-btn{
-  @include button-icon($black, $green)
+.eye-icon-btn,
+.copy-icon-btn,
+.default-icon-btn {
+    @include button-icon($black, $green);
 }
 
-.delete-icon-btn{
-  @include button-icon($black, $red)
+.delete-icon-btn {
+    @include button-icon($black, $red);
 }
-

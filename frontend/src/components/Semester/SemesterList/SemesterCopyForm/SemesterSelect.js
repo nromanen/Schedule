@@ -21,6 +21,7 @@ const SemesterSelect = (props) => {
                     label={t(FORM_SEMESTER_LABEL)}
                     type="text"
                     validate={[required]}
+                    className="semester-copy-select"
                 >
                     <option />
                     {availableSemestersForCopy.map((semester) => (

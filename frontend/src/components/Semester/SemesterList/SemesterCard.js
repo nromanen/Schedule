@@ -2,7 +2,7 @@ import React from 'react';
 import { FaEdit, FaUsers, FaFileArchive } from 'react-icons/fa';
 import { MdDelete, MdDonutSmall } from 'react-icons/md';
 import { useTranslation } from 'react-i18next';
-import './SemesterList.scss';
+import './SemesterCard.scss';
 import { GiSightDisabled, IoMdEye, FaCopy } from 'react-icons/all';
 import Card from '../../../share/Card/Card';
 import { dialogTypes } from '../../../constants/dialogs';
@@ -27,7 +27,7 @@ const SemesterCard = (props) => {
     const {
         disabled,
         archived,
-        selectSemesterSuccess,
+        selectSemester,
         showConfirmDialog,
         setIsOpenSemesterCopyForm,
         setSemesterId,
@@ -41,7 +41,7 @@ const SemesterCard = (props) => {
 
     return (
         <Card
-            additionClassName={`semester-card done-card ${
+            additionClassName={`semester-card ${
                 semester.currentSemester ? 'current-semester' : ''
             }`}
         >
@@ -49,21 +49,21 @@ const SemesterCard = (props) => {
                 {!(disabled || archived) && (
                     <>
                         <IoMdEye
-                            className="svg-btn copy-btn"
+                            className="eye-icon-btn"
                             title={t(COMMON_SET_DISABLED)}
                             onClick={() => {
                                 showConfirmDialog(semester.id, dialogTypes.SET_VISIBILITY_DISABLED);
                             }}
                         />
                         <FaEdit
-                            className="svg-btn edit-btn"
+                            className="edit-icon-btn"
                             title={t(EDIT_TITLE)}
                             onClick={() => {
-                                selectSemesterSuccess(semester.id);
+                                selectSemester(semester.id);
                             }}
                         />
                         <FaCopy
-                            className="svg-btn copy-btn"
+                            className="copy-icon-btn"
                             title={t(COPY_LABEL)}
                             onClick={() => {
                                 setIsOpenSemesterCopyForm(true);
@@ -72,7 +72,7 @@ const SemesterCard = (props) => {
                         />
                         {!semester.currentSemester && (
                             <FaFileArchive
-                                className="svg-btn archive-btn"
+                                className="archive-icon-btn"
                                 title={t(COMMON_MAKE_ARCHIVE)}
                                 onClick={() => {
                                     createArchivedSemester(semester.id);
@@ -83,7 +83,7 @@ const SemesterCard = (props) => {
                 )}
                 {disabled && !archived && (
                     <GiSightDisabled
-                        className="svg-btn copy-btn"
+                        className="copy-icon-btn"
                         title={t(COMMON_SET_ENABLED)}
                         onClick={() => {
                             showConfirmDialog(semester.id, dialogTypes.SET_VISIBILITY_ENABLED);
@@ -92,7 +92,7 @@ const SemesterCard = (props) => {
                 )}
                 {/* {archived && (
                                 <IoMdEye
-                                    className="svg-btn copy-btn"
+                                    className="eye-icon-btn"
                                     title={t(COMMON_PREVIEW)}
                                     onClick={() => {
                                         handleSemesterArchivedPreview(semester.id);
@@ -100,14 +100,14 @@ const SemesterCard = (props) => {
                                 />
                             )} */}
                 <MdDelete
-                    className="svg-btn delete-btn"
+                    className="delete-icon-btn"
                     title={t(DELETE_TITLE)}
                     onClick={() => showConfirmDialog(semester.id, dialogTypes.DELETE_CONFIRM)}
                 />
 
                 {!(disabled || archived) && (
                     <MdDonutSmall
-                        className={`svg-btn edit-btn ${
+                        className={`default-icon-btn ${
                             semester.defaultSemester ? 'default-semester' : ''
                         }`}
                         title={t(SET_DEFAULT_TITLE)}
@@ -116,21 +116,21 @@ const SemesterCard = (props) => {
                 )}
             </div>
 
-            <p className="semester-card__description">
+            <p className="semester-card-description">
                 <small>{`${t(SEMESTER_LABEL)}: `}</small>
                 <b>{semester.description}</b>
                 {` ( ${semester.year} )`}
             </p>
-            <p className="semester-card__description">
+            <p className="semester-card-description">
                 <b>
                     {semester.startDay} - {semester.endDay}
                 </b>
             </p>
-            <p className="semester-card__description">
+            <p className="semester-card-description">
                 {`${t(COMMON_DAYS_LABEL)}: `}
                 {semDays.join(', ')}
             </p>
-            <p className="semester-card__description">
+            <p className="semester-card-description">
                 {`${t(COMMON_CLASS_SCHEDULE_MANAGEMENT_TITLE)}: `}
                 {semester.semester_classes
                     .map((classItem) => {
@@ -142,7 +142,7 @@ const SemesterCard = (props) => {
             {!(disabled || archived) && (
                 <FaUsers
                     title={t(FORM_SHOW_GROUPS)}
-                    className="svg-btn copy-btn  semester-groups"
+                    className="semester-groups-icon"
                     onClick={() => {
                         setSemesterId(semester.id);
                         setSemesterGroupsOptions(

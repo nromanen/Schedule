@@ -41,7 +41,7 @@ const RoomTypeForm = (props) => {
 
     return (
         <>
-            <Card additionClassName="form-card room-form new-type">
+            <Card additionClassName="form-card room-type-card">
                 <form className="room-type-form" onSubmit={handleSubmit}>
                     <Field
                         type="text"
@@ -73,13 +73,13 @@ const RoomTypeForm = (props) => {
                             className="form-types-item"
                         >
                             <span className="form-types">{roomType.description}</span>
-                            <span className="form-types-icons">
+                            <span>
                                 <FaEdit
-                                    className="room-type-icon room-type-icon__edit"
+                                    className="room-type-icon room-type-icon_edit"
                                     onClick={() => setSelectRoomType(roomType.id)}
                                 />
                                 <MdDelete
-                                    className="room-type-icon room-type-icon__delete"
+                                    className="room-type-icon room-type-icon_delete"
                                     onClick={() => {
                                         showConfirmDialog(
                                             roomType.id,
