@@ -35,7 +35,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 import static com.softserve.entity.enums.LessonType.LABORATORY;
 import static com.softserve.entity.enums.LessonType.LECTURE;
@@ -115,7 +117,7 @@ public class LessonsControllerTest {
         TeacherDTO teacherDTO = new TeacherNameMapperImpl().teacherDTOToTeacher(teacherService.getById(5L));
         SubjectDTO subjectDTO = new SubjectMapperImpl().subjectToSubjectDTO(subjectService.getById(4L));
         GroupDTO groupDTO = new GroupMapperImpl().groupToGroupDTO(groupService.getById(4L));
-        LessonForGroupsDTO lessonDtoForSave = new  LessonForGroupsDTO();
+        LessonForGroupsDTO lessonDtoForSave = new LessonForGroupsDTO();
         lessonDtoForSave.setHours(1);
         lessonDtoForSave.setSubjectForSite("");
         lessonDtoForSave.setLinkToMeeting("");
@@ -125,7 +127,7 @@ public class LessonsControllerTest {
         lessonDtoForSave.setGroups(Collections.singletonList(groupDTO));
 
         mockMvc.perform(post("/lessons").content(objectMapper.writeValueAsString(lessonDtoForSave))
-                .contentType(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
     }
 
@@ -144,7 +146,7 @@ public class LessonsControllerTest {
         Lesson lessonForCompare = new LessonInfoMapperImpl().lessonInfoDTOToLesson(lessonDtoForUpdate);
 
         mockMvc.perform(put("/lessons").content(objectMapper.writeValueAsString(lessonDtoForUpdate))
-                .contentType(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(lessonForCompare.getId()))
                 .andExpect(jsonPath("$.hours").value(lessonForCompare.getHours()))
@@ -158,7 +160,7 @@ public class LessonsControllerTest {
     @Test
     public void deleteLesson() throws Exception {
         mockMvc.perform(delete("/lessons/{id}", 7)
-                .contentType(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
 
@@ -170,8 +172,21 @@ public class LessonsControllerTest {
 
     @Test
     public void returnBadRequestIfSaveExistLesson() throws Exception {
-        mockMvc.perform(post("/lessons").content("1")
-                .contentType(MediaType.APPLICATION_JSON))
+        LessonInfoDTO lessonDtoForSave = new LessonInfoMapperImpl().lessonToLessonInfoDTO(lessonService.getById(4L));
+        LessonForGroupsDTO lessonDto = new LessonForGroupsDTO();
+        lessonDto.setHours(lessonDtoForSave.getHours());
+        lessonDto.setSubjectForSite(lessonDtoForSave.getSubjectForSite());
+        lessonDto.setLinkToMeeting(lessonDtoForSave.getLinkToMeeting());
+        lessonDto.setLessonType(lessonDtoForSave.getLessonType());
+        lessonDto.setTeacher(lessonDtoForSave.getTeacher());
+        lessonDto.setSemesterId(lessonDtoForSave.getSemesterId());
+        lessonDto.setSubject(lessonDtoForSave.getSubject());
+        lessonDto.setGrouped(lessonDtoForSave.isGrouped());
+        lessonDto.setGroups(List.of(lessonDtoForSave.getGroup()));
+        lessonDto.setId(lessonDtoForSave.getId());
+
+        mockMvc.perform(post("/lessons").content(objectMapper.writeValueAsString(lessonDtoForSave))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isBadRequest());
     }
@@ -190,7 +205,7 @@ public class LessonsControllerTest {
         lessonDtoForSave.setGroup(groupDTO);
 
         mockMvc.perform(post("/lessons").content(objectMapper.writeValueAsString(lessonDtoForSave))
-                .contentType(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isInternalServerError());
     }
@@ -208,7 +223,7 @@ public class LessonsControllerTest {
         lessonDtoForUpdate.setGroup(new GroupMapperImpl().groupToGroupDTO(groupService.getById(4L)));
 
         mockMvc.perform(put("/lessons", 4).content(objectMapper.writeValueAsString(lessonDtoForUpdate))
-                .contentType(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isInternalServerError());
     }
@@ -218,7 +233,7 @@ public class LessonsControllerTest {
     public void updateLinkToMeeting(LessonWithLinkDTO lessonWithLinkDTO, Integer result) throws Exception {
 
         mockMvc.perform(put("/lessons/link").content(objectMapper.writeValueAsString(lessonWithLinkDTO))
-                .contentType(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"))
                 .andExpect(jsonPath("$").value(result));
@@ -250,11 +265,11 @@ public class LessonsControllerTest {
         lessonWithNoExistingType.setSubjectId(5L);
         lessonWithNoExistingType.setLessonType("LABORATORY");
 
-        return new Object[] {
-                new Object[] { lessonWithSubjectAndType, 2 },
-                new Object[] { lessonWithSubject, 3 },
-                new Object[] { lesson, 4 },
-                new Object[] { lessonWithNoExistingType, 0 }
+        return new Object[]{
+                new Object[]{lessonWithSubjectAndType, 2},
+                new Object[]{lessonWithSubject, 3},
+                new Object[]{lesson, 4},
+                new Object[]{lessonWithNoExistingType, 0}
         };
     }
 }
