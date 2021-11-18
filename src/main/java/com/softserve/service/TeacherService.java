@@ -7,7 +7,6 @@ import com.softserve.entity.Teacher;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 
 public interface TeacherService extends BasicService<Teacher, Long> {
     Teacher save(TeacherDTO teacherDTO);

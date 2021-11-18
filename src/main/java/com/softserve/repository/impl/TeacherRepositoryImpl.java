@@ -89,11 +89,18 @@ public class TeacherRepositoryImpl extends BasicRepositoryImpl<Teacher, Long> im
     }
 
     @Override
-    public TeacherImportDTO saveImport(TeacherImportDTO teacherImportDTO) {
-            log.info("In save(teacherImportDTO = [{}]", teacherImportDTO);
-            sessionFactory.getCurrentSession()
-                    .save(teacherImportDTO);
-            return teacherImportDTO;
-        }
+    public Optional<Teacher> getExistingTeacher(Teacher teacher) {
+        return sessionFactory.getCurrentSession().createQuery(
+                "select t from Teacher t " +
+                        "where t.name = :tName and " +
+                        "t.surname = :tSurname and " +
+                        "t.patronymic = :tPatronymic and " +
+                        "t.position = :tPosition")
+                .setParameter("tName", teacher.getName())
+                .setParameter("tSurname", teacher.getSurname())
+                .setParameter("tPatronymic", teacher.getPatronymic())
+                .setParameter("tPosition", teacher.getPosition())
+                .uniqueResultOptional();
 
+    }
 }
