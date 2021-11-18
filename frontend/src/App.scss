@@ -30,10 +30,10 @@ body {
     }
 }
 .container {
-    max-width: 1440px;
+    max-width: $md-2xl;
     margin: 10px auto;
 
-    @media (max-width: 1440px) {
+    @media (max-width: $md-2xl) {
         margin: 10px;
     }
 }
