@@ -1,28 +1,35 @@
 import React, { useEffect, useState } from 'react';
-
 import PropTypes from 'prop-types';
-
-import Button from '@material-ui/core/Button';
 
 import { useTranslation } from 'react-i18next';
 import { isEmpty } from 'lodash';
-import i18n from '../../../i18n';
 import RenderStudentTable from '../../../helper/renderStudentTable';
-import { getAllStudentsByGroupId } from '../../../services/studentService';
 import { UploadFile } from '../../../components/UploadFile/UploadFile';
-import CustomDialog from '../CustomDialog';
+import CustomDialog from '../../../containers/Dialogs/CustomDialog';
+import {
+    dialogCloseButton,
+    dialogUploadFromFileButton,
+    dialogChooseGroupButton,
+} from '../../../constants/dialogs';
 import MovingGroupsDialog from './MovingGroupsDialog';
 import { GROUP_LABEL } from '../../../constants/translationLabels/formElements';
-import { COMMON_CLOSE_TITLE } from '../../../constants/translationLabels/common';
 
 const ShowStudentsOnGroupDialog = (props) => {
-    const { onClose, cardId, open, onDeleteStudent, students, onSubmit, match, groups, group } =
-        props;
+    const {
+        onClose,
+        open,
+        onDeleteStudent,
+        students,
+        match,
+        groups,
+        group,
+        fetchAllStudentsStart,
+    } = props;
     const [checkBoxStudents, setCheckBoxStudents] = useState([]);
     const [isGroupButtonDisabled, setIsGroupButtonDisabled] = useState(true);
     const [checkedAll, setCheckedAll] = useState(false);
-    const [openUploadFile, setOpenUploadFile] = useState(false);
-    const [showStudentList, setShowStudentList] = useState(false);
+    const [isOpenUploadFileDialog, setIsOpenUploadFileDialog] = useState(false);
+    const [isOpenStudentListDialog, setIsOpenStudentListDialog] = useState(false);
     const { t } = useTranslation('formElements');
 
     const setSelectDisabled = () => {
@@ -35,18 +42,14 @@ const ShowStudentsOnGroupDialog = (props) => {
         setCheckBoxStudents(res);
     };
     useEffect(() => {
-        getAllStudentsByGroupId(props.group.id);
-    }, [open, openUploadFile]);
+        fetchAllStudentsStart(group.id);
+    }, [group.id]);
     useEffect(() => {
         parseStudentToCheckBox();
     }, [props.students]);
     useEffect(() => {
         setSelectDisabled();
     }, [props.students]);
-
-    const handleClose = () => {
-        onClose(cardId);
-    };
 
     const handleCheckElement = (event) => {
         setCheckBoxStudents(
@@ -72,10 +75,13 @@ const ShowStudentsOnGroupDialog = (props) => {
     const handleAllCheckedBtn = (pageItemsCount, page, rowsPerPage) => {
         let start = page * rowsPerPage;
         const finish = pageItemsCount + page * rowsPerPage;
-        while (checkBoxStudents[start].checked && start < finish) {
-            start += 1;
+        while (start < finish) {
+            if (checkBoxStudents[start].checked) {
+                start += 1;
+            } else {
+                break;
+            }
         }
-
         setCheckedAll(start === finish && start !== 0);
     };
     const handleAllClear = () => {
@@ -92,65 +98,35 @@ const ShowStudentsOnGroupDialog = (props) => {
     const handleChangeCheckedAllBtn = () => {
         setCheckedAll((prevState) => !prevState);
     };
-    const handleClearCheckedAllBtn = () => {
-        setCheckedAll(false);
-    };
 
     const getDialog = () => {
-        setShowStudentList(true);
+        setIsOpenStudentListDialog(true);
     };
     const handleShowDialogFile = () => {
-        setOpenUploadFile((prevState) => !prevState);
+        setIsOpenUploadFileDialog((prevState) => !prevState);
     };
-
-    const buttonClassName = !isEmpty(students)
-        ? 'student-dialog-button-data'
-        : 'student-dialog-button-no-data';
-
+    const buttonClassName = { additionClassName: 'student-dialog-button-data' };
+    const dialogButtons = [
+        dialogUploadFromFileButton(handleShowDialogFile, buttonClassName),
+        dialogCloseButton(onClose, buttonClassName),
+    ];
     return (
         <>
             <CustomDialog
                 open={open}
-                onClose={handleClose}
+                onClose={onClose}
                 title={`${t(GROUP_LABEL)} - ${props.group.title}`}
                 buttons={
-                    <>
-                        <UploadFile
-                            group={group}
-                            open={openUploadFile}
-                            handleCloseDialogFile={handleShowDialogFile}
-                        />
-                        <Button
-                            className={buttonClassName}
-                            variant="contained"
-                            onClick={handleShowDialogFile}
-                            color="primary"
-                            title={i18n.t('upload_from_file')}
-                        >
-                            {i18n.t('common:upload_from_file_title')}
-                        </Button>
-                        {!isEmpty(students) && (
-                            <Button
-                                className="student-dialog-button-data"
-                                variant="contained"
-                                onClick={getDialog}
-                                color="primary"
-                                disabled={isGroupButtonDisabled}
-                                title={i18n.t('choose_group_title')}
-                            >
-                                {i18n.t('choose_group_title')}
-                            </Button>
-                        )}
-                        <Button
-                            className={buttonClassName}
-                            variant="contained"
-                            onClick={() => onClose('')}
-                            color="primary"
-                            title={i18n.t('close_title')}
-                        >
-                            {i18n.t(COMMON_CLOSE_TITLE)}
-                        </Button>
-                    </>
+                    !isEmpty(students)
+                        ? [
+                              dialogChooseGroupButton(
+                                  getDialog,
+                                  isGroupButtonDisabled,
+                                  buttonClassName,
+                              ),
+                              ...dialogButtons,
+                          ]
+                        : dialogButtons
                 }
             >
                 {isEmpty(students) ? (
@@ -166,10 +142,9 @@ const ShowStudentsOnGroupDialog = (props) => {
                         </h3>
 
                         <RenderStudentTable
-                            group={props.group}
+                            group={group}
                             onDeleteStudent={onDeleteStudent}
                             students={students}
-                            onSubmit={onSubmit}
                             match={match}
                             student={props.student}
                             checkBoxStudents={checkBoxStudents}
@@ -177,21 +152,30 @@ const ShowStudentsOnGroupDialog = (props) => {
                             handleAllChecked={handleAllChecked}
                             handleAllClear={handleAllClear}
                             handleChangeCheckedAllBtn={handleChangeCheckedAllBtn}
-                            handleClearCheckedAllBtn={handleClearCheckedAllBtn}
+                            handleClearCheckedAllBtn={() => setCheckedAll(false)}
                             checkedAllBtn={checkedAll}
                             handleAllCheckedBtn={handleAllCheckedBtn}
                         />
                     </span>
                 )}
             </CustomDialog>
-            <MovingGroupsDialog
-                onClose={handleClose}
-                open={showStudentList}
-                checkBoxStudents={checkBoxStudents}
-                setShowStudentList={setShowStudentList}
-                groups={groups}
-                group={group}
-            />
+            {isOpenStudentListDialog && (
+                <MovingGroupsDialog
+                    onClose={() => setIsOpenStudentListDialog(false)}
+                    open={isOpenStudentListDialog}
+                    checkBoxStudents={checkBoxStudents}
+                    setShowStudentList={setIsOpenStudentListDialog}
+                    groups={groups}
+                    group={group}
+                />
+            )}
+            {isOpenUploadFileDialog && (
+                <UploadFile
+                    group={group}
+                    open={isOpenUploadFileDialog}
+                    handleCloseDialogFile={handleShowDialogFile}
+                />
+            )}
         </>
     );
 };

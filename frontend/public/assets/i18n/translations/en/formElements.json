@@ -34,7 +34,7 @@
   "department_teachers_label": "Department",
   "department_teachers": "of department",
   "group_students": "of group",
-  "type_label": "Type",
+  "type_element": "Type",
   "hours_label": "Hour(s)",
   "lesson_label": "Lesson",
   "temporary_schedule_label": "Temporary schedule",
@@ -121,5 +121,9 @@
   "show_archived": "Show archived",
   "show_regular": "Show regular",
   "no_exist_teachers_at_department": "There aren't teachers at this department",
-  "no_exist_students_in_group": "There aren't students in this group"
+  "no_exist_students_in_group": "There aren't students in this group",
+  "create_account_label": "Create an Account",
+  "forgot_password_label": "Forgot password?",
+  "dont_have_an_account": "Don't have an account?",
+  "reset_password_helper_text": "Just enter your email address below and we'll send you a link to reset your password!"
 }

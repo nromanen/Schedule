@@ -32,6 +32,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.util.Collections;
+import java.util.List;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.*;
@@ -77,6 +78,8 @@ public class GroupControllerTest {
 
     private GroupDTO disabledGroupDTOWithID5L;
 
+    private GroupDTO groupDTOWithID6L;
+
     private StudentWithoutGroupDTO studentDTOWithId4LForGroupWithId4L;
 
 
@@ -92,6 +95,11 @@ public class GroupControllerTest {
                 .id(4L)
                 .disable(false)
                 .title("444")
+                .build();
+
+        groupDTOWithID6L = GroupDTO.builder()
+                .id(6L)
+                .title("666")
                 .build();
 
         disabledGroupDTOWithID5L = GroupDTO.builder()
@@ -111,7 +119,7 @@ public class GroupControllerTest {
 
     @Test
     public void getAllGroups() throws Exception {
-        assertions.assertForGetListWithOneEntity(groupDTOWithID4L);
+        assertions.assertForGetList(List.of(groupDTOWithID4L, groupDTOWithID6L));
     }
 
     @Test
@@ -158,6 +166,58 @@ public class GroupControllerTest {
                 .title("sdsdsdsd")
                 .build();
         assertions.assertForSave(groupDTO, GroupControllerTest::matchIgnoringId);
+    }
+
+    @Test
+    public void getAllBySortingOrder() throws Exception {
+        List<GroupDTO> expected = List.of(groupDTOWithID6L, groupDTOWithID4L);
+        assertions.assertForGetList(expected, "/groups/ordered");
+    }
+
+    @Test
+    public void saveAfterGroupWithId() throws Exception {
+        GroupDTO groupDTO = GroupDTO.builder()
+                .title("sdsdsdsd")
+                .build();
+        assertions.assertForSave(groupDTO, GroupControllerTest::matchIgnoringId, "/groups/after/4");
+        List<GroupDTO> expected = List.of(groupDTOWithID6L, groupDTOWithID4L, groupDTO);
+        groupDTO.setId(1L);
+        assertions.assertForGetList(expected, "/groups/ordered");
+    }
+
+    @Test
+    public void saveAfterGroupWithoutId() throws Exception {
+        GroupDTO groupDTO = GroupDTO.builder()
+                .title("sdsdsdsd")
+                .build();
+        assertions.assertForSave(groupDTO, GroupControllerTest::matchIgnoringId, "/groups/after");
+        List<GroupDTO> expected = List.of(groupDTOWithID6L, groupDTOWithID4L, groupDTO);
+        groupDTO.setId(1L);
+        assertions.assertForGetList(expected, "/groups/ordered");
+    }
+
+    @Test
+    public void updateGroupOrderWithId() throws Exception {
+        GroupDTO groupDTO = GroupDTO.builder()
+                .title("sdsdsdsd")
+                .build();
+        assertions.assertForSave(groupDTO, GroupControllerTest::matchIgnoringId, "/groups/after/4");
+        groupDTO.setId(1L);
+        assertions.assertForUpdate(groupDTO, "/groups/after/6");
+        List<GroupDTO> expected = List.of(groupDTOWithID6L, groupDTO, groupDTOWithID4L);
+        assertions.assertForGetList(expected, "/groups/ordered");
+    }
+
+    @Test
+    public void updateGroupOrderWithoutId() throws Exception {
+        GroupDTO groupDTO = GroupDTO.builder()
+                .title("sdsdsdsd")
+                .build();
+        assertions.assertForSave(groupDTO, GroupControllerTest::matchIgnoringId, "/groups/after/4");
+        groupDTO.setId(1L);
+        assertions.assertForUpdate(groupDTO, "/groups/after");
+        List<GroupDTO> expected = List.of(groupDTO, groupDTOWithID6L, groupDTOWithID4L);
+        assertions.assertForGetList(expected, "/groups/ordered");
     }
 
     @Test

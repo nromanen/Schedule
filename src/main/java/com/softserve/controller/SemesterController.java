@@ -120,20 +120,10 @@ public class SemesterController {
     }
 
     @PutMapping("/semesters/{semesterId}/groups")
-    @ApiOperation(value = "Add groups to semester by id")
-    public ResponseEntity<SemesterWithGroupsDTO> addGroupsToSemester(@PathVariable Long semesterId, @RequestParam Long[] groupId) {
+    @ApiOperation(value = "Replace groups in semester by id")
+    public ResponseEntity<SemesterWithGroupsDTO> addGroupsToSemester(@PathVariable Long semesterId, @RequestBody List<Long> groupId) {
         log.info("In addGroupsToSemester (semesterId = [{}], groupId = [{}])", semesterId, groupId);
-        List<Group> groups = groupService.getGroupsByGroupIds(groupId);
-        Semester semester = semesterService.addGroupsToSemester(semesterService.getById(semesterId), groups);
-        return ResponseEntity.status(HttpStatus.OK).body(semesterMapper.semesterToSemesterWithGroupsDTO(semester));
-    }
-
-    @DeleteMapping("/semesters/{semesterId}/groups")
-    @ApiOperation(value = "Delete groups from semester by id")
-    public ResponseEntity<SemesterWithGroupsDTO> deleteGroupsFromSemester(@PathVariable Long semesterId, @RequestParam Long[] groupId) {
-        log.info("In deleteGroupsFromSemester (semesterId = [{}], groupId = [{}])", semesterId, groupId);
-        List<Group> groups = groupService.getGroupsByGroupIds(groupId);
-        Semester semester = semesterService.deleteGroupsFromSemester(semesterService.getById(semesterId), groups);
+        Semester semester = semesterService.addGroupsToSemester(semesterService.getById(semesterId), groupId);
         return ResponseEntity.status(HttpStatus.OK).body(semesterMapper.semesterToSemesterWithGroupsDTO(semester));
     }
 

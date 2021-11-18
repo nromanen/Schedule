@@ -21,9 +21,10 @@ public abstract class TeacherMapper {
     @Mapping(target = "email", source = "userId", qualifiedByName = "userIdToEmail")
     public abstract TeacherDTO teacherToTeacherDTO(Teacher teacher);
 
+    @Named("userIdToEmail")
     public String userIdToEmail(Long userId) {
         if(userId != null) {
-            return userService.getById(userId).getEmail();
+            return userService.getById(userId.longValue()).getEmail();
         }
         return null;
     }

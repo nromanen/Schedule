@@ -55,4 +55,7 @@ public class Group implements Serializable {
 
     @Column(name = "disable",  columnDefinition = "boolean default 'false'")
     private boolean disable = false;
+
+    @Column(name = "sorting_order")
+    private Double sortingOrder;
 }

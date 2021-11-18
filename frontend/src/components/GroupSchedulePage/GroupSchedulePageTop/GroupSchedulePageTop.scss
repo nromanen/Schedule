@@ -1,0 +1,54 @@
+@import '../../../App';
+
+p.empty_schedule {
+    text-align: center;
+    font-weight: bold;
+    margin: 50px auto;
+}
+h1 {
+    text-align: center;
+}
+.form-card.width-auto {
+    width: auto;
+    .MuiFormControl-root,
+    .MuiInputBase-input {
+        margin: 0px 15px;
+        width: auto;
+    }
+}
+.place {
+    padding: 10px;
+    width: 120px;
+    border-radius: 10px;
+}
+#select-place {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    label {
+        color: #9c9c9c;
+        margin-bottom: 8px;
+    }
+}
+.form-buttons-container {
+    @media (max-width: 800px) {
+        display: flex;
+        flex-direction: column;
+    }
+    p {
+        display: block;
+        width: 100%;
+    }
+    .MuiButtonBase-root.MuiButton-containedPrimary {
+        vertical-align: bottom;
+    }
+}
+
+.MuiList-root .option-item:hover {
+    background: #d4dafd;
+    cursor: pointer;
+}
+
+.schedule_page-container > * {
+    margin: 8px;
+}

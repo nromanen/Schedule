@@ -1,44 +1,15 @@
 import React, { Fragment, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { connect } from 'react-redux';
 
-import { userRoles } from '../../constants/userRoles';
+import GroupSchedulePage from '../GroupSchedulePage/GroupSchedulePage';
 
-import GroupSchedulePage from '../../components/GroupSchedulePage/GroupSchedulePage';
-
-import {
-    getDefaultSemesterService,
-    setScheduleSemesterIdService,
-    setScheduleTypeService,
-} from '../../services/scheduleService';
 import { getPublicClassScheduleListService } from '../../services/classService';
 import { HOME_TITLE } from '../../constants/translationLabels/common';
 
-const HomePage = (props) => {
+const HomePage = () => {
     const { t } = useTranslation('common');
 
     useEffect(() => getPublicClassScheduleListService(), []);
-    setScheduleSemesterIdService(null);
-    setScheduleTypeService('');
-
-    useEffect(() => {
-        if (props.userRole === null) {
-            getDefaultSemesterService();
-            setScheduleTypeService('');
-        }
-    }, []);
-    useEffect(() => {
-        if (props.userRole === userRoles.TEACHER) {
-            getDefaultSemesterService();
-            setScheduleTypeService('');
-        }
-    }, []);
-    useEffect(() => {
-        if (props.userRole === userRoles.MANAGER) {
-            getDefaultSemesterService();
-            setScheduleTypeService('');
-        }
-    }, []);
 
     return (
         <Fragment>
@@ -48,8 +19,4 @@ const HomePage = (props) => {
     );
 };
 
-const mapStateToProps = (state) => ({
-    userRole: state.auth.role,
-});
-
-export default connect(mapStateToProps)(HomePage);
+export default HomePage;

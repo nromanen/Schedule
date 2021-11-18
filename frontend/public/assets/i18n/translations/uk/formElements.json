@@ -42,7 +42,7 @@
   "room_y_label": "аудиторії",
   "subject_y_label": "предмет",
   "department_y_label": "Кафедри",
-  "type_label": "Тип",
+  "type_element": "Тип",
   "hours_label": "Годин(а/и)",
   "email_label": "Електронна адреса",
   "password_label": "Пароль",
@@ -123,5 +123,9 @@
   "show_archived": "Відобразити заархівовані",
   "show_regular": "Віобразити звичайні",
   "no_exist_teachers_at_department": "Немає викладачів на цій кафедрі",
-  "no_exist_students_in_group": "У даній групі немає студентів"
+  "no_exist_students_in_group": "У даній групі немає студентів",
+  "create_account_label": "Створити аккаунт",
+  "forgot_password_label": "Забули пароль?",
+  "dont_have_an_account": "Не маєте облікового запису?",
+  "reset_password_helper_text": "Просто введіть свою електронну адресу нижче, і ми надішлемо вам посилання для скидання пароля!"
 }

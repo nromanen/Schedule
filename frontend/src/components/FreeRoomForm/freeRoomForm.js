@@ -6,7 +6,6 @@ import { useTranslation } from 'react-i18next';
 import { required } from '../../validation/validateFields';
 import SelectField from '../../share/renderedFields/select';
 import { FREE_ROOMS } from '../../constants/reduxForms';
-import { showAllSemestersService } from '../../services/semesterService';
 import './freeRoomForm.scss';
 import { daysUppercase } from '../../constants/schedule/days';
 import {
@@ -17,13 +16,17 @@ import {
     FORM_SUBMIT_BUTTON_LABEL,
     FORM_CLEAR_BUTTON_LABEL,
 } from '../../constants/translationLabels/formElements';
+import { getAllSemestersStart } from '../../actions/semesters';
 
 let FreeRoomForm = (props) => {
+    const { getAllSemestersItems } = props;
     const { t } = useTranslation('formElements');
 
     const weeks = ['ODD', 'EVEN', 'WEEKLY'];
 
-    useEffect(() => showAllSemestersService(), []);
+    useEffect(() => {
+        getAllSemestersItems();
+    }, []);
 
     const { handleSubmit, classScheduler, pristine, submitting, onReset, semesters } = props;
 
@@ -126,9 +129,11 @@ const mapStateToProps = (state) => ({
     freeRooms: state.freeRooms.freeRooms,
     semesters: state.semesters.semesters,
 });
-
+const mapDispatchToProps = (dispatch) => ({
+    getAllSemestersItems: () => dispatch(getAllSemestersStart()),
+});
 FreeRoomForm = reduxForm({
     form: FREE_ROOMS,
 })(FreeRoomForm);
 
-export default connect(mapStateToProps)(FreeRoomForm);
+export default connect(mapStateToProps, mapDispatchToProps)(FreeRoomForm);

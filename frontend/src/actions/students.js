@@ -1,23 +1,18 @@
 import * as actionTypes from './actionsType';
 
-export const addStudent = (res) => {
+export const createStudent = (res) => {
     return {
-        type: actionTypes.ADD_STUDENT,
+        type: actionTypes.CREATE_STUDENT,
         result: res,
     };
 };
 export const showAllStudents = (res) => {
     return {
         type: actionTypes.SHOW_ALL_STUDENTS,
-        result: res,
+        res,
     };
 };
-export const showAllStudentsByGroupId = (res) => {
-    return {
-        type: actionTypes.SHOW_ALL_STUDENTS_BY_GROUP_ID,
-        result: res,
-    };
-};
+
 export const deleteStudent = (res) => {
     return {
         type: actionTypes.DELETE_STUDENT,
@@ -34,5 +29,33 @@ export const updateStudent = (res) => {
     return {
         type: actionTypes.UPDATE_STUDENT,
         result: res,
+    };
+};
+
+export const fetchAllStudentsStart = (id) => {
+    return {
+        type: actionTypes.FETCH_ALL_STUDENTS,
+        id,
+    };
+};
+
+export const createStudentStart = (data) => {
+    return {
+        type: actionTypes.START_CREATE_STUDENTS,
+        data,
+    };
+};
+
+export const updateStudentStart = (data) => {
+    return {
+        type: actionTypes.START_UPDATE_STUDENTS,
+        data,
+    };
+};
+
+export const deleteStudentStart = (id) => {
+    return {
+        type: actionTypes.START_DELETE_STUDENTS,
+        id,
     };
 };

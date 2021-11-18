@@ -6,18 +6,20 @@ import { useTranslation } from 'react-i18next';
 import './LanguageSelector.scss';
 import { languageShorthands } from '../../constants/languages/shorthands';
 import { languageTitles } from '../../constants/languages/titles';
+import ukIcon from '../../share/icons/uk.png';
+import uaIcon from '../../share/icons/ua.png';
 
 const LanguageSelector = () => {
     const { i18n } = useTranslation();
     const langFlags = [
         {
             lang: languageShorthands.English,
-            img: 'https://image.flaticon.com/icons/svg/555/555417.svg',
+            img: ukIcon,
             title: languageTitles.English,
         },
         {
             lang: languageShorthands.Ukrainian,
-            img: 'https://image.flaticon.com/icons/svg/321/321267.svg',
+            img: uaIcon,
             title: languageTitles.Ukrainian,
         },
     ];

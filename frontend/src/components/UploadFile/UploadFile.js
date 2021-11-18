@@ -1,17 +1,15 @@
 import React, { useState } from 'react';
 import './UploadFile.scss';
 import { useTranslation } from 'react-i18next';
-import Button from '@material-ui/core/Button';
 import { uploadStudentsToGroupFile } from '../../services/uploadFile';
-import { CustomDialog } from '../../share/DialogWindows';
+import CustomDialog from '../../containers/Dialogs/CustomDialog';
+import { dialogCloseButton, dialogUploadButton } from '../../constants/dialogs';
 import { setLoadingService } from '../../services/loadingService';
-import { CLOSE_LABEL } from '../../constants/translationLabels/formElements';
 import {
     COMMON_NAME_LABEL,
     COMMON_TYPE_LABEL,
     COMMON_BYTE_SIZE_LABEL,
     COMMON_SELECT_FILE_LABEL,
-    COMMON_UPLOAD_TITLE,
 } from '../../constants/translationLabels/common';
 
 export const UploadFile = (props) => {
@@ -42,30 +40,11 @@ export const UploadFile = (props) => {
         <CustomDialog
             title="Upload file"
             open={open}
-            onClick={handleCloseDialogFile}
-            buttons={
-                <>
-                    <Button
-                        className="dialog-button"
-                        variant="contained"
-                        onClick={handleSubmission}
-                        color="primary"
-                        title={t(COMMON_UPLOAD_TITLE)}
-                        disabled={setDisabledSendButton()}
-                    >
-                        {t(COMMON_UPLOAD_TITLE)}
-                    </Button>
-                    <Button
-                        className="dialog-button"
-                        variant="contained"
-                        onClick={handleCloseDialogFile}
-                        color="primary"
-                        title={t(CLOSE_LABEL)}
-                    >
-                        {t(CLOSE_LABEL)}
-                    </Button>
-                </>
-            }
+            onClose={handleCloseDialogFile}
+            buttons={[
+                dialogUploadButton(handleSubmission, setDisabledSendButton()),
+                dialogCloseButton(handleCloseDialogFile),
+            ]}
         >
             <input
                 type="file"

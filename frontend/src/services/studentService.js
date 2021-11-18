@@ -7,11 +7,10 @@ import { STUDENT_FORM } from '../constants/reduxForms';
 import { errorHandler, successHandler } from '../helper/handlerAxios';
 import i18n from '../i18n';
 import {
-    addStudent,
+    createStudent,
     deleteStudent,
     setStudent,
     showAllStudents,
-    showAllStudentsByGroupId,
     updateStudent,
 } from '../actions/students';
 import {
@@ -26,7 +25,7 @@ export const createStudentService = (data) => {
     axios
         .post(STUDENT_URL, data)
         .then((response) => {
-            store.dispatch(addStudent(response.data));
+            store.dispatch(createStudent(response.data));
             resetFormHandler(STUDENT_FORM);
             successHandler(
                 i18n.t(BACK_END_SUCCESS_OPERATION, {
@@ -43,7 +42,6 @@ export const getAllStudentsByGroupId = (groupId) => {
         .get(STUDENT_URL)
         .then((response) => {
             const result = response.data.filter(({ group }) => group.id === groupId);
-            store.dispatch(showAllStudentsByGroupId(result));
         })
         .catch((error) => errorHandler(error));
 };

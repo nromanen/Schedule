@@ -9,12 +9,13 @@ import { GiSightDisabled, IoMdEye } from 'react-icons/all';
 import Card from '../../share/Card/Card';
 import { search } from '../../helper/search';
 import NotFound from '../../share/NotFound/NotFound';
-import { CustomDialog } from '../../share/DialogWindows';
+import CustomDialog from '../Dialogs/CustomDialog';
 import { dialogTypes } from '../../constants/dialogs';
 import SearchPanel from '../../share/SearchPanel/SearchPanel';
 import SnackbarComponent from '../../share/Snackbar/SnackbarComponent';
 import AddSubject from '../../components/AddSubjectForm/AddSubjectForm';
 import { handleSnackbarCloseService } from '../../services/snackbarService';
+import { setIsOpenConfirmDialog } from '../../actions/dialog';
 import {
     showAllSubjectsService,
     removeSubjectCardService,
@@ -25,8 +26,6 @@ import {
     setDisabledSubjectsService,
     getDisabledSubjectsService,
 } from '../../services/subjectService';
-import NavigationPage from '../../components/Navigation/NavigationPage';
-import { navigation, navigationNames } from '../../constants/navigation';
 import {
     EDIT_TITLE,
     SUBJECT_Y_LABEL,
@@ -36,10 +35,17 @@ import { COMMON_SET_DISABLED, COMMON_SET_ENABLED } from '../../constants/transla
 
 const SubjectPage = (props) => {
     const { t } = useTranslation('formElements');
-    const { isSnackbarOpen, snackbarType, snackbarMessage, disabledSubjects, subjects } = props;
+    const {
+        isSnackbarOpen,
+        snackbarType,
+        snackbarMessage,
+        disabledSubjects,
+        subjects,
+        setOpenConfirmDialog,
+        isOpenConfirmDialog,
+    } = props;
 
-    const [openSubDialog, setOpenSubDialog] = useState(false);
-    const [subDialogType, setSubDialogType] = useState('');
+    const [confirmDialogType, setConfirmDialogType] = useState('');
     const [subjectId, setSubjectId] = useState(-1);
     const [term, setTerm] = useState('');
 
@@ -58,14 +64,14 @@ const SubjectPage = (props) => {
 
     const showConfirmDialog = (subjId, dialogType) => {
         setSubjectId(subjId);
-        setSubDialogType(dialogType);
-        setOpenSubDialog(true);
+        setConfirmDialogType(dialogType);
+        setOpenConfirmDialog(true);
     };
 
     const acceptConfirmDialog = (id) => {
-        setOpenSubDialog(false);
+        setOpenConfirmDialog(false);
         if (!id) return;
-        switch (subDialogType) {
+        switch (confirmDialogType) {
             case dialogTypes.DELETE_CONFIRM:
                 removeSubjectCardService(subjectId);
                 break;
@@ -91,14 +97,13 @@ const SubjectPage = (props) => {
     };
     return (
         <>
-            <NavigationPage name={navigationNames.SUBJECT_PAGE} val={navigation.SUBJECTS} />
             <CustomDialog
-                type={subDialogType}
-                cardId={subjectId}
+                type={confirmDialogType}
                 whatDelete="subject"
-                open={openSubDialog}
-                onClose={acceptConfirmDialog}
+                open={isOpenConfirmDialog}
+                handelConfirm={() => acceptConfirmDialog(subjectId)}
             />
+
             <div className="cards-container">
                 <aside className="search-list__panel">
                     <SearchPanel SearchChange={SearchChange} showDisabled={showDisabledHandle} />
@@ -176,6 +181,10 @@ const mapStateToProps = (state) => ({
     isSnackbarOpen: state.snackbar.isSnackbarOpen,
     snackbarType: state.snackbar.snackbarType,
     snackbarMessage: state.snackbar.message,
+    isOpenConfirmDialog: state.dialog.isOpenConfirmDialog,
+});
+const mapDispatchToProps = (dispatch) => ({
+    setOpenConfirmDialog: (newState) => dispatch(setIsOpenConfirmDialog(newState)),
 });
 
-export default connect(mapStateToProps, {})(SubjectPage);
+export default connect(mapStateToProps, mapDispatchToProps)(SubjectPage);
