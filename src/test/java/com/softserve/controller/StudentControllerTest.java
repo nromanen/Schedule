@@ -86,6 +86,7 @@ public class StudentControllerTest {
 
     private final GroupDTO groupDTO = GroupDTO.builder()
             .id(1L)
+            .disable(false)
             .title("First Title")
             .build();
 
