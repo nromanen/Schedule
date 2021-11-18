@@ -90,6 +90,7 @@ body {
 }
 
 .cards-btns {
+    position: relative;
     @include displayFlex(center, flex-end);
     height: 30px;
 
@@ -179,12 +180,14 @@ body {
 
 // new icon-btn styles
 
-.edit-icon-btn {
+.edit-icon-btn,
+.archive-icon-btn {
     @include button-icon($black, $blue);
 }
 
 .eye-icon-btn,
-.copy-icon-btn {
+.copy-icon-btn,
+.default-icon-btn {
     @include button-icon($black, $green);
 }
 

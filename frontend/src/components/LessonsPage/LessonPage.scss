@@ -5,8 +5,7 @@
 
 .lesson-wrapper {
     margin-bottom: 50px;
-    display: flex;
-    align-items: start;
+    @include displayFlex(start, flex-start);
 
     @media (max-width: $md-m) {
         @include displayFlex(stretch, center);
@@ -50,9 +49,8 @@
     }
 
     .not-selected {
-        display: flex;
+        @include displayFlex(center, flex-start);
         height: 85px;
-        align-items: center;
         margin: 10px;
         padding: 16px;
         border-radius: 5px;
