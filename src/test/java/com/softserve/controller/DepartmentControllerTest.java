@@ -198,6 +198,7 @@ public class DepartmentControllerTest {
 
         TeacherDTO firstTeacher = new TeacherDTO();
         firstTeacher.setId(4L);
+        firstTeacher.setDisable(false);
         firstTeacher.setName("Ivan");
         firstTeacher.setSurname("Ivanov");
         firstTeacher.setPatronymic("Ivanovych");

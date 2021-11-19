@@ -4,7 +4,9 @@ import com.softserve.entity.Group;
 import com.softserve.entity.Period;
 import com.softserve.entity.Semester;
 import com.softserve.exception.*;
+import com.softserve.repository.GroupRepository;
 import com.softserve.repository.SemesterRepository;
+import com.softserve.service.GroupService;
 import com.softserve.service.PeriodService;
 import com.softserve.service.SemesterService;
 import lombok.extern.slf4j.Slf4j;
@@ -29,11 +31,15 @@ public class SemesterServiceImpl implements SemesterService {
     private final PeriodService periodService;
     private final List<DayOfWeek> workDaysList = Arrays.asList(DayOfWeek.MONDAY, DayOfWeek.TUESDAY,
             DayOfWeek.WEDNESDAY, DayOfWeek.THURSDAY, DayOfWeek.FRIDAY);
+    private final GroupRepository groupRepository;
 
     @Autowired
-    public SemesterServiceImpl(SemesterRepository semesterRepository, PeriodService periodService) {
+    public SemesterServiceImpl(SemesterRepository semesterRepository,
+                               PeriodService periodService,
+                               GroupRepository groupRepository) {
         this.semesterRepository = semesterRepository;
         this.periodService = periodService;
+        this.groupRepository = groupRepository;
     }
 
     /**
@@ -305,45 +311,16 @@ public class SemesterServiceImpl implements SemesterService {
      * Method add groups to an existing semester
      *
      * @param semester semester in which we need to add groups
-     * @param groups groups to add
+     * @param groupIds groups to add
      * @return changed Semester
      */
     @Override
-    public Semester addGroupsToSemester(Semester semester, List<Group> groups) {
-        log.info("In addGroupsToSemester (semester = [{}], groups = [{}])", semester, groups);
-        groups.forEach(group -> addGroupToSemester(semester, group));
-        return semester;
-    }
-
-    /**
-     *
-     * Method delete group from an existing semester
-     *
-     * @param semester semester in which we need to delete group
-     * @param group group to delete
-     * @return changed Semester
-     */
-    @Override
-    public Semester deleteGroupFromSemester(Semester semester, Group group) {
-        log.info("In deleteGroupFromSemester (semester = [{}], group = [{}])", semester, group);
-        List<Group> groups = semester.getGroups();
-        groups.remove(group);
-        update(semester);
-        return semester;
-    }
-
-    /**
-     *
-     * Method delete groups from an existing semester
-     *
-     * @param semester semester in which we need to delete groups
-     * @param groups group to delete
-     * @return changed Semester
-     */
-    @Override
-    public Semester deleteGroupsFromSemester(Semester semester, List<Group> groups) {
-        log.info("In deleteGroupsFromSemester (semester = [{}], group = [{}])", semester, groups);
-        groups.forEach(group -> deleteGroupFromSemester(semester, group));
+    public Semester addGroupsToSemester(Semester semester, List<Long> groupIds) {
+        log.info("In addGroupsToSemester (semester = [{}], groupIds = [{}])", semester, groupIds);
+        List<Group> groups = groupRepository.getGroupsByGroupIds(groupIds);
+        semester.setGroups(groups);
+        semesterRepository.update(semester);
+        log.debug("Semester groups has been updated");
         return semester;
     }
 }

@@ -112,4 +112,29 @@ public class RoomController {
         availableRoomsDTO.addAll(notAvailableRoomsDTO);
         return ResponseEntity.ok().body(availableRoomsDTO);
     }
+
+    @GetMapping("/ordered")
+    @ApiOperation(value = "Get the list of all rooms sorted by order")
+    public ResponseEntity<List<RoomDTO>> getAllOrdered(){
+        log.info("Entered getAllOrdered");
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(roomMapper.convertToDtoList(roomService.getAllOrdered()));
+    }
+
+    @PostMapping("/after/{id}")
+    @ApiOperation(value = "Create room after id")
+    public ResponseEntity<RoomDTO> saveRoomAfterId(@PathVariable("id") Long id, @RequestBody RoomDTO roomDTO){
+        log.info("Entered saveRoomAfterId({}{})", id, roomDTO);
+        Room room = roomService.saveRoomAfterId(roomMapper.convertToEntity(roomDTO),id);
+        return ResponseEntity.status(HttpStatus.CREATED).body(roomMapper.convertToDto(room));
+    }
+
+    @PutMapping("/after/{id}")
+    @ApiOperation(value = "Update room order")
+    public ResponseEntity<RoomDTO> upgradeRoomAfterId(@PathVariable("id") Long RoomAfterId, @RequestBody RoomDTO roomDTO){
+        log.info("Entered upgradeRoomAfterId({}{})", RoomAfterId, roomDTO);
+        Room room = roomService.updateRoomAfterId(roomMapper.convertToEntity(roomDTO),RoomAfterId);
+        return ResponseEntity.status(HttpStatus.OK).body(roomMapper.convertToDto(room));
+    }
 }

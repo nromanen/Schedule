@@ -576,10 +576,8 @@ public class SemesterServiceTest {
         semester.setEndDay(LocalDate.of(2020, 5, 10));
         semester.setCurrentSemester(false);
         semester.setGroups(groupList);
-        semester.setDaysOfWeek(new HashSet<>());
-        semester.setPeriods(new HashSet<>());
 
-
+        when(semesterRepository.findById(anyLong())).thenReturn(Optional.of(semester));
 
         Semester semesterWithoutGroup = semesterService.deleteGroupFromSemester(semester, group);
         assertNotNull(semesterWithoutGroup);

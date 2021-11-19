@@ -21,7 +21,6 @@ import java.util.Arrays;
 import java.util.List;
 
 @Slf4j
-@Transactional
 @Service
 public class LessonServiceImpl implements LessonService {
 
@@ -42,6 +41,7 @@ public class LessonServiceImpl implements LessonService {
      * @return Lesson entity
      */
     @Override
+    @Transactional(readOnly = true)
     public Lesson getById(Long id) {
         log.info("In getById(id = [{}])",  id);
         Lesson lesson = lessonRepository.findById(id).orElseThrow(
@@ -56,6 +56,7 @@ public class LessonServiceImpl implements LessonService {
      * @return List of all lessons
      */
     @Override
+    @Transactional(readOnly = true)
     public List<Lesson> getAll() {
         log.info("In getAll()");
         List<Lesson> lessons = lessonRepository.getAll();
@@ -71,6 +72,7 @@ public class LessonServiceImpl implements LessonService {
      * @return List of all lessons
      */
     @Override
+    @Transactional(readOnly = true)
     public List<Lesson> getLessonByTeacher(Long teacherId) {
         log.info("In getLessonByTeacher()");
         List<Lesson> lessons = lessonRepository.getLessonByTeacher(teacherId, semesterService.getCurrentSemester().getId());
@@ -89,6 +91,7 @@ public class LessonServiceImpl implements LessonService {
      * @return saved Lesson entity
      */
     @Override
+    @Transactional
     public Lesson save(Lesson object) {
         object.setSemester(semesterService.getCurrentSemester());
         log.info("In save(entity = [{}]", object);
@@ -112,6 +115,7 @@ public class LessonServiceImpl implements LessonService {
      * @return saved Lessons entities
      */
     @Override
+    @Transactional
     public List<Lesson> save(List<Lesson> lessons) {
         log.info("In save(lessons = [{}])", lessons);
         List<Lesson> lessonsList = new ArrayList<>();
@@ -127,19 +131,24 @@ public class LessonServiceImpl implements LessonService {
 
     /**
      * Method updates information for an existing lesson in Repository
-     * @param object Lesson entity with info to be updated
+     * @param lesson Lesson entity with info to be updated
      * @return updated Lesson entity
      */
     @Override
-    public Lesson update(Lesson object) {
-        object.setSemester(semesterService.getCurrentSemester());
-        log.info("In update(entity = [{}]", object);
-        if (isLessonForGroupExistsAndIgnoreWithId(object)){
+    @Transactional
+    public Lesson update(Lesson lesson) {
+        lesson.setSemester(semesterService.getCurrentSemester());
+        log.info("In update(entity = [{}]", lesson);
+        if (isLessonForGroupExistsAndIgnoreWithId(lesson)){
             throw new EntityAlreadyExistsException("Lesson with this parameters already exists");
         }
-        else {
-            return lessonRepository.update(object);
+        if (lesson.isGrouped()) {
+            Lesson oldLesson = getById(lesson.getId());
+            lesson =  lessonRepository.updateGrouped(oldLesson, lesson);
+        } else {
+            lesson = lessonRepository.update(lesson);
         }
+        return lesson;
     }
 
     /**
@@ -148,9 +157,14 @@ public class LessonServiceImpl implements LessonService {
      * @return deleted Lesson entity
      */
     @Override
+    @Transactional
     public Lesson delete(Lesson object) {
         log.info("In delete(object = [{}])",  object);
+        if (object.isGrouped()) {
+            return lessonRepository.deleteGrouped(object);
+        }
         return lessonRepository.delete(object);
+
     }
 
     /**
@@ -159,6 +173,7 @@ public class LessonServiceImpl implements LessonService {
      * @return List of filtered lessons
      */
     @Override
+    @Transactional(readOnly = true)
     public List<Lesson> getAllForGroup(Long groupId) {
         log.info("In getAllForGroup(groupId = [{}])",  groupId);
         List<Lesson> lessons = lessonRepository.getAllForGroup(groupId, semesterService.getCurrentSemester().getId());
@@ -174,6 +189,7 @@ public class LessonServiceImpl implements LessonService {
      * @return Lesson type enum in the List
      */
     @Override
+    @Transactional(readOnly = true)
     public List<LessonType> getAllLessonTypes() {
         log.info("In getAllLessonTypes()");
         return Arrays.asList(LessonType.values());
@@ -185,6 +201,7 @@ public class LessonServiceImpl implements LessonService {
      * @return true if such lesson already exists
      */
     @Override
+    @Transactional(readOnly = true)
     public boolean isLessonForGroupExists(Lesson lesson) {
         log.info("In isLessonForGroupExists(lesson = [{}])", lesson);
         return lessonRepository.countLessonDuplicates(lesson) !=0;
@@ -196,6 +213,7 @@ public class LessonServiceImpl implements LessonService {
      * @return true if such lesson already exists
      */
     @Override
+    @Transactional(readOnly = true)
     public boolean isLessonForGroupExistsAndIgnoreWithId(Lesson lesson) {
         log.info("In isLessonForGroupExistsAndIgnoreWithId(lesson = [{}])", lesson);
         return lessonRepository.countLessonDuplicatesWithIgnoreId(lesson) != 0;
@@ -208,6 +226,7 @@ public class LessonServiceImpl implements LessonService {
      * @return list of entities Lesson
      */
     @Override
+    @Transactional(readOnly = true)
     public List<Lesson> getLessonsBySemester(Long semesterId) {
         log.info("In getLessonsBySemester(semesterId = [{}])", semesterId);
         List<Lesson> lessons = lessonRepository.getLessonsBySemester(semesterId);
@@ -226,6 +245,7 @@ public class LessonServiceImpl implements LessonService {
      * @return list of lessons for toSemester
      */
     @Override
+    @Transactional
     public List<Lesson> copyLessonsFromOneToAnotherSemester(List<Lesson> lessons, Semester toSemester) {
         log.info("In method copyLessonsFromOneToAnotherSemester with lessons = {} and toSemester = {}", lessons, toSemester);
         List<Lesson> toLessons = new ArrayList<>();
@@ -243,12 +263,14 @@ public class LessonServiceImpl implements LessonService {
      * @return Lesson entity after saved in db
      */
     @Override
+    @Transactional
     public Lesson saveLessonDuringCopy(Lesson lesson) {
         log.info("In method saveLessonDuringCopy with lesson = {}", lesson);
         return lessonRepository.save(lesson);
     }
 
     @Override
+    @Transactional
     public void deleteLessonBySemesterId(Long semesterId) {
         log.info("In method deleteLessonBySemesterId with semesterId = {}", semesterId);
         lessonRepository.deleteLessonBySemesterId(semesterId);
@@ -261,6 +283,7 @@ public class LessonServiceImpl implements LessonService {
      * @return List of Lessons
      */
     @Override
+    @Transactional(readOnly = true)
     public List<Lesson> getLessonsBySubjectIdTeacherIdSemesterIdLessonTypeAndExcludeCurrentLessonId(Lesson lesson) {
         log.info("In getLessonsBySubjectIdTeacherIdSemesterIdLessonTypeAndExcludeCurrentLessonId(lesson = [{}]", lesson);
         List<Lesson> lessons = lessonRepository.getLessonsBySubjectIdTeacherIdSemesterIdLessonTypeAndExcludeCurrentLessonId(lesson);
@@ -278,6 +301,7 @@ public class LessonServiceImpl implements LessonService {
      * @return List of Lessons
      */
     @Override
+    @Transactional(readOnly = true)
     public List<Lesson> getAllGroupedLessonsByLesson(Lesson lesson) {
         return lessonRepository.getGroupedLessonsByLesson(lesson);
     }
@@ -288,6 +312,7 @@ public class LessonServiceImpl implements LessonService {
      * @return Integer the number of links that was updated
      */
     @Override
+    @Transactional
     public Integer updateLinkToMeeting(Lesson lesson) {
         log.info("In service updateLinkToMeeting lesson = [{}]", lesson);
         return lessonRepository.updateLinkToMeeting(lesson);
