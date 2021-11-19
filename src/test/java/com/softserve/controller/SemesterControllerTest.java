@@ -374,7 +374,7 @@ public class SemesterControllerTest {
         Assert.assertEquals(semesterWithGroupsDTOBefore.getDaysOfWeek(), Collections.EMPTY_SET);
         Assert.assertEquals(semesterWithGroupsDTOBefore.getPeriods(), Collections.EMPTY_SET);
 
-                mockMvc.perform(post("/copy-semester").param("fromSemesterId", "5").param("toSemesterId", "6")
+                mockMvc.perform(post("/semesters/copy-semester").param("fromSemesterId", "5").param("toSemesterId", "6")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk());
