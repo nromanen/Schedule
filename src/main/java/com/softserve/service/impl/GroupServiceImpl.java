@@ -253,9 +253,9 @@ public class GroupServiceImpl  implements GroupService {
      */
     @Override
     @Transactional
-    public List<Group> getGroupsByGroupIds(Long[] groupIds) {
+    public List<Group> getGroupsByGroupIds(List<Long> groupIds) {
         log.info("Enter into getGroupsByGroupIds");
-        return Arrays.stream(groupIds).map(this::getById).collect(Collectors.toList());
+        return groupRepository.getGroupsByGroupIds(groupIds);
     }
 
     private void checkTitleForUniqueness(String title) {

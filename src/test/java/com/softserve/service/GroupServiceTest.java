@@ -229,7 +229,7 @@ public class GroupServiceTest {
         Semester semester = new Semester();
         semester.setDefaultSemester(true);
         semester.setGroups(groupList);
-        Long[] groupIds = {1L, 2L};
+        List<Long> groupIds = List.of(1L, 2L);
 
         when(groupRepository.findById(1L)).thenReturn(Optional.of(group1));
         when(groupRepository.findById(2L)).thenReturn(Optional.of(group2));
