@@ -220,12 +220,14 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     private Teacher registerTeacher(Teacher teacher, String email) {
+        log.info("Enter into registerTeacher method with teacher {} and email:{}", teacher, email);
         User registeredUserForTeacher = userService.automaticRegistration(email, Role.ROLE_TEACHER);
         teacher.setUserId(registeredUserForTeacher.getId());
         return teacher;
     }
 
     private void updateEmailInUserForTeacher(String email, long userId) {
+        log.info("Enter into updateEmailInUserForTeacher method with email {} and userId:{}", email, userId);
         User userForTeacher = userService.getById(userId);
         userForTeacher.setEmail(email);
         userService.update(userForTeacher);
@@ -273,6 +275,7 @@ public class TeacherServiceImpl implements TeacherService {
                 Department department = departmentService.getById(departmentId);
 
                 if(userOptional.isEmpty() && teacherFromBase.isEmpty()){
+                    log.debug("Enter to method if email and teacher DONT EXIST");
 
                     Teacher registeredTeacher = registerTeacher(newTeacher, teacher.getEmail());
                     registeredTeacher.setDepartment(department);
@@ -283,6 +286,8 @@ public class TeacherServiceImpl implements TeacherService {
                     savedTeachers.add(savedTeacher);
 
                 }else if(userOptional.isEmpty() && teacherFromBase.isPresent()){
+                    log.debug("Enter to method if email DONT EXIST and teacher EXIST");
+
                     Teacher ourTeacherFromBase = getById(teacherFromBase.get().getId());
                     Teacher registeredTeacher1 = registerTeacher(ourTeacherFromBase, teacher.getEmail());
                     if(ourTeacherFromBase.getDepartment() == null || ourTeacherFromBase.getUserId() == null) {
@@ -292,7 +297,6 @@ public class TeacherServiceImpl implements TeacherService {
                         if (ourTeacherFromBase.getUserId() == null) {
                             registeredTeacher1.setUserId(registeredTeacher1.getUserId());
                         }
-                        teacherRepository.update(registeredTeacher1);
                     }
                     teacherRepository.update(registeredTeacher1);
                     TeacherImportDTO savedTeacher = teacherMapper.teacherToTeacherImportDTO(registeredTeacher1);
@@ -302,6 +306,7 @@ public class TeacherServiceImpl implements TeacherService {
 
                 }
                 else if(userOptional.isPresent() && teacherFromBase.isEmpty()){
+                    log.debug("Enter to method if email EXIST and teacher DONT EXIST");
 
                     Teacher ourNewTeacherWithoutEmail = newTeacher;
                     ourNewTeacherWithoutEmail.setUserId(userOptional.get().getId());
@@ -313,6 +318,8 @@ public class TeacherServiceImpl implements TeacherService {
                     savedTeachers.add(savedTeacher);
 
                 }else if(userOptional.isPresent() && teacherFromBase.isPresent()){
+                    log.debug("Enter to method if email EXIST and teacher EXIST");
+
                     Teacher ourTeacherFromBase = getById(teacherFromBase.get().getId());
                     if(ourTeacherFromBase.getDepartment() == null || ourTeacherFromBase.getUserId() == null) {
                         if (ourTeacherFromBase.getDepartment() == null) {
@@ -336,7 +343,5 @@ public class TeacherServiceImpl implements TeacherService {
         }
        return savedTeachers;
     }
-
-
 
 }
