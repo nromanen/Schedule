@@ -298,7 +298,9 @@ public class TeacherServiceImpl implements TeacherService {
                             registeredTeacher1.setUserId(registeredTeacher1.getUserId());
                         }
                     }
-                    teacherRepository.update(registeredTeacher1);
+//                    teacherRepository.update(registeredTeacher1);
+                    teacherRepository.updateTeacherDepartment(registeredTeacher1);
+                    teacherRepository.updateTeacherUserId(registeredTeacher1, registeredTeacher1.getUserId());
                     TeacherImportDTO savedTeacher = teacherMapper.teacherToTeacherImportDTO(registeredTeacher1);
                     savedTeacher.setEmail(teacher.getEmail());
                     savedTeacher.setTeacherStatus(TeacherStatus.ALREADY_EXIST);
@@ -328,7 +330,9 @@ public class TeacherServiceImpl implements TeacherService {
                         if (ourTeacherFromBase.getUserId() == null) {
                             ourTeacherFromBase.setUserId(userOptional.get().getId());
                         }
-                        teacherRepository.update(ourTeacherFromBase);
+//                        teacherRepository.update(ourTeacherFromBase);
+                        teacherRepository.updateTeacherDepartment(ourTeacherFromBase);
+                        teacherRepository.updateTeacherUserId(ourTeacherFromBase, ourTeacherFromBase.getUserId());
                     }
                     TeacherImportDTO existedTeacher = teacherMapper.teacherToTeacherImportDTO(ourTeacherFromBase);
                     existedTeacher.setTeacherStatus(TeacherStatus.ALREADY_EXIST);

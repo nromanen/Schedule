@@ -103,4 +103,23 @@ public class TeacherRepositoryImpl extends BasicRepositoryImpl<Teacher, Long> im
                 .uniqueResultOptional();
 
     }
+
+    @Override
+    public void updateTeacherUserId(Teacher teacher, Long userId) {
+        long teacherId = teacher.getId();
+        //update teachers set user_id = 138 where id = 208
+        String query = "update Teacher t set t.userId = :userId where t.id = :teacherId";
+        sessionFactory.getCurrentSession().createQuery(query)
+                .setParameter("userId", userId)
+                .setParameter("teacherId", teacherId);
+    }
+
+    @Override
+    public void updateTeacherDepartment(Teacher teacher) {
+        long teacherId = teacher.getId();
+        String query = "update Teacher t set t.department = :departmentFromTeacher where t.id = :teacherId";
+        sessionFactory.getCurrentSession().createQuery(query)
+                .setParameter("departmentFromTeacher", teacher.getDepartment())
+                .setParameter("teacherId", teacherId);
+    }
 }
