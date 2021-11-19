@@ -31,21 +31,13 @@ import java.util.List;
 @Slf4j
 public class SemesterController {
 
-    private final GroupRepository groupRepository;
-    private final ScheduleMapper scheduleMapper;
-    private final LessonService lessonService;
-    private final ScheduleService scheduleService;
     private final SemesterService semesterService;
     private final SemesterMapper semesterMapper;
     private final GroupMapper groupMapper;
     private final GroupService groupService;
 
     @Autowired
-    public SemesterController(GroupRepository groupRepository, ScheduleMapper scheduleMapper, LessonService lessonService, ScheduleService scheduleService, SemesterService semesterService, SemesterMapper semesterMapper, GroupMapper groupMapper, GroupService groupService) {
-        this.groupRepository = groupRepository;
-        this.scheduleMapper = scheduleMapper;
-        this.lessonService = lessonService;
-        this.scheduleService = scheduleService;
+    public SemesterController(SemesterService semesterService, SemesterMapper semesterMapper, GroupMapper groupMapper, GroupService groupService) {
         this.semesterService = semesterService;
         this.semesterMapper = semesterMapper;
         this.groupMapper = groupMapper;
@@ -165,7 +157,7 @@ public class SemesterController {
         return ResponseEntity.status(HttpStatus.OK).body(groupMapper.groupsToGroupDTOs(groups));
     }
 
-    @PostMapping("/copy-semester")
+    @PostMapping("/semesters/copy-semester")
     @ApiOperation(value = "Copy full semester from one to another semester")
     @PreAuthorize("hasRole('MANAGER')")
     public ResponseEntity<SemesterWithGroupsDTO> copySemester(@RequestParam Long fromSemesterId,

@@ -56,7 +56,7 @@ public class SemesterServiceImpl implements SemesterService {
      */
     @Override
     public Semester getById(Long id) {
-        log.debug("In getById(id = [{}])", id);
+        log.info("In getById(id = [{}])", id);
         Semester semester = semesterRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException(Semester.class, "id", id.toString()));
         Hibernate.initialize(semester.getDaysOfWeek());
@@ -90,7 +90,7 @@ public class SemesterServiceImpl implements SemesterService {
      */
     @Override
     public Semester save(Semester semester) {
-        log.debug("In save(entity = [{}]", semester);
+        log.info("In save(entity = [{}]", semester);
         checkConstraints(semester);
         fillDefaultValues(semester);
         setCurrentToFalse(semester);
@@ -221,7 +221,7 @@ public class SemesterServiceImpl implements SemesterService {
     }
 
     private boolean isSemesterExists(long semesterId, String description, int year) {
-        log.debug("In isSemesterExists (semesterId = [{}],description = [{}], year = [{}])", semesterId, description, year);
+        log.info("In isSemesterExists (semesterId = [{}],description = [{}], year = [{}])", semesterId, description, year);
         Semester existingSemester = semesterRepository.getSemesterByDescriptionAndYear(description, year).orElse(null);
         if (existingSemester == null) {
             return false;
@@ -252,7 +252,7 @@ public class SemesterServiceImpl implements SemesterService {
     private boolean isScheduleWithLessonsCanNotBeRemoved(Semester semester) {
         log.debug("Enter into isScheduleWithLessonsCanNotBeRemoved with entity: {}", semester);
         List<Schedule> scheduleInSemester = scheduleRepository.getScheduleBySemester(semester.getId());
-        return !scheduleRepository.getScheduleBySemester(semester.getId()).containsAll(scheduleInSemester);
+        return !scheduleInSemester.containsAll(scheduleInSemester);
     }
 
     /**
@@ -369,7 +369,7 @@ public class SemesterServiceImpl implements SemesterService {
         }
         days.addAll(daysOfWeek);
         semester.setDaysOfWeek(days);
-        getById(semester.getId()).setDaysOfWeek(days);
+        semester.setDaysOfWeek(days);
         return semester;
     }
 
@@ -391,7 +391,7 @@ public class SemesterServiceImpl implements SemesterService {
         }
         periodsSemester.addAll(periods);
         semester.setPeriods(periodsSemester);
-        getById(semester.getId()).setPeriods(periodsSemester);
+        semester.setPeriods(periodsSemester);
         return semester;
     }
 
@@ -453,7 +453,7 @@ public class SemesterServiceImpl implements SemesterService {
      */
     @Override
     public Semester copySemester(Long fromSemesterId, Long toSemesterId) {
-
+        log.info("In copySemester (fromSemesterId = [{}], toSemesterId = [{}])", fromSemesterId, toSemesterId);
         Semester toSemester = getById(toSemesterId);
         Semester fromSemester = getById(fromSemesterId);
         List<Schedule> schedules = scheduleRepository.getScheduleBySemester(fromSemesterId);
@@ -476,40 +476,47 @@ public class SemesterServiceImpl implements SemesterService {
         addPeriodsToSemester(toSemester, fromSemester.getPeriods());
 
         Set<Lesson> lessonSet = schedules.stream().map(Schedule::getLesson).collect(Collectors.toSet());
-        Map<Lesson, Lesson> oldToNewLessonMap = new HashMap<>();
-        for (Lesson lesson : lessonSet) {
-            Lesson lessonNewSaved = lessonRepository.save(copyLesson(lesson, toSemester));
-            oldToNewLessonMap.put(lesson, lessonNewSaved);
-        }
 
-        for (Schedule schedule : schedules) {
-             scheduleRepository.save(copySchedule(schedule, oldToNewLessonMap.get(schedule.getLesson())));
-        }
+        copySchedules(schedules,copyLessons(lessonSet,toSemester));
+
         return toSemester;
     }
 
-    private Lesson copyLesson(Lesson lesson, Semester toSemester) {
-        Lesson lessonNew = new Lesson();
-        lessonNew.setSemester(toSemester);
-        lessonNew.setHours(lesson.getHours());
-        lessonNew.setLessonType(lesson.getLessonType());
-        lessonNew.setSubjectForSite(lesson.getSubjectForSite());
-        lessonNew.setGroup(lesson.getGroup());
-        lessonNew.setSubject(lesson.getSubject());
-        lessonNew.setTeacher(lesson.getTeacher());
-        lessonNew.setGrouped(lesson.isGrouped());
-        lessonNew.setLinkToMeeting(lesson.getLinkToMeeting());
-        return lessonNew;
+    private Map<Long, Lesson> copyLessons(Set<Lesson> lessonSet, Semester toSemester) {
+        log.debug("In copyLessons (lessonSet = [{}], toSemester = [{}])", lessonSet, toSemester);
+        Map<Long, Lesson> oldToNewLessonMap = new HashMap<>();
+
+        for (Lesson lesson : lessonSet) {
+            Lesson lessonNew = new Lesson();
+            lessonNew.setSemester(toSemester);
+            lessonNew.setHours(lesson.getHours());
+            lessonNew.setLessonType(lesson.getLessonType());
+            lessonNew.setSubjectForSite(lesson.getSubjectForSite());
+            lessonNew.setGroup(lesson.getGroup());
+            lessonNew.setSubject(lesson.getSubject());
+            lessonNew.setTeacher(lesson.getTeacher());
+            lessonNew.setGrouped(lesson.isGrouped());
+            lessonNew.setLinkToMeeting(lesson.getLinkToMeeting());
+            Lesson lessonNewSaved = lessonRepository.save(lessonNew);
+            oldToNewLessonMap.put(lesson.getId(), lessonNewSaved);
+        }
+        return oldToNewLessonMap;
     }
 
-    private Schedule copySchedule (Schedule schedule, Lesson lesson){
-        Schedule scheduleNew = new Schedule();
-        scheduleNew.setDayOfWeek(schedule.getDayOfWeek());
-        scheduleNew.setEvenOdd(schedule.getEvenOdd());
-        scheduleNew.setLesson(lesson);
-        scheduleNew.setPeriod(schedule.getPeriod());
-        scheduleNew.setRoom(schedule.getRoom());
-        return scheduleNew;
+    private List<Schedule> copySchedules (List<Schedule> schedules, Map<Long, Lesson> oldToNewLessonMap){
+        log.debug("In copySchedules (schedules = [{}], oldToNewLessonMap = [{}])", schedules, oldToNewLessonMap);
+        List<Schedule> scheduleSaved = new ArrayList<>();
+
+        for (Schedule schedule : schedules) {
+            Schedule scheduleNew = new Schedule();
+            scheduleNew.setDayOfWeek(schedule.getDayOfWeek());
+            scheduleNew.setEvenOdd(schedule.getEvenOdd());
+            scheduleNew.setLesson(oldToNewLessonMap.get(schedule.getLesson().getId()));
+            scheduleNew.setPeriod(schedule.getPeriod());
+            scheduleNew.setRoom(schedule.getRoom());
+            scheduleSaved.add(scheduleRepository.save(scheduleNew));
+        }
+        return scheduleSaved;
     }
 
 }
