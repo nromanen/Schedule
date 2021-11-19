@@ -215,7 +215,7 @@ public class SemesterServiceImpl implements SemesterService {
 
     //check if the end time is not before the start time or equals return true, else - false
     private boolean isTimeInvalid(Semester object) {
-        log.debug("Enter into isTimeInvalid  with entity: {}", object);
+        log.info("Enter into isTimeInvalid  with entity: {}", object);
         return object.getStartDay().isAfter(object.getEndDay()) ||
                 object.getStartDay().equals(object.getEndDay());
     }
