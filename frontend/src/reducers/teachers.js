@@ -1,5 +1,4 @@
 import * as actionTypes from '../actions/actionsType';
-import { updateObject } from '../utility';
 
 function compare(a, b) {
     let comparison = 0;

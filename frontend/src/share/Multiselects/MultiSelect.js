@@ -1,16 +1,16 @@
 import React, { useRef } from 'react';
 import ReactSelect from 'react-select';
-import './multiselect.scss';
+import './MultiSelect.scss';
 import { useTranslation } from 'react-i18next';
 import {
     SCHEDULE_FOR_SEMESTER,
     CHOOSE_TEACHER,
     ALL_TEACHERS,
-} from '../constants/translationLabels/common';
-import CustomDialog from '../containers/Dialogs/CustomDialog';
-import { dialogCancelButton, dialogSendSchedule } from '../constants/dialogs';
+} from '../../constants/translationLabels/common';
+import CustomDialog from '../../containers/Dialogs/CustomDialog';
+import { dialogCancelButton, dialogSendSchedule } from '../../constants/dialogs';
 
-export const MultiSelect = (props) => {
+const MultiSelect = (props) => {
     const { t } = useTranslation('common');
     const valueRef = useRef(props.value);
     valueRef.current = props.value;
@@ -60,7 +60,7 @@ export const MultiSelect = (props) => {
             open={open}
             onClose={onCancel}
             buttons={[
-                dialogSendSchedule(onSentTeachers, !isEnabledSentBtn), 
+                dialogSendSchedule(onSentTeachers, !isEnabledSentBtn),
                 dialogCancelButton(onCancel),
             ]}
         >
@@ -87,3 +87,5 @@ export const MultiSelect = (props) => {
         </CustomDialog>
     );
 };
+
+export default MultiSelect;

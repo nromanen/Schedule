@@ -1,5 +1,11 @@
 import { connect } from 'react-redux';
-import { authUser, registerUser, resetUserPassword, setAuthError, setLoading } from '../../actions';
+import {
+    authUser,
+    registerUser,
+    resetUserPassword,
+    setAuthError,
+    setAuthLoading,
+} from '../../actions';
 import Auth from '../../components/Auth/Auth';
 
 const mapStateToProps = (state) => ({
@@ -8,14 +14,14 @@ const mapStateToProps = (state) => ({
     error: state.auth.error,
     token: state.auth.token,
     userRole: state.auth.role,
-    isLoading: state.loadingIndicator.loading,
+    isLoading: state.loadingIndicator.authLoading,
 });
 
 const mapDispatchToProps = (dispatch) => ({
     onAuth: (data) => dispatch(authUser(data)),
     onRegister: (data) => dispatch(registerUser(data)),
     onResetPassword: (data) => dispatch(resetUserPassword(data)),
-    setLoadingForm: (isLoading) => dispatch(setLoading(isLoading)),
+    setLoadingForm: (isLoading) => dispatch(setAuthLoading(isLoading)),
     setError: (error) => dispatch(setAuthError(error)),
 });
 

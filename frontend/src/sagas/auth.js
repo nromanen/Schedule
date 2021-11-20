@@ -22,7 +22,7 @@ import { axiosCall } from '../services/axios';
 import { GOOGLE } from '../constants/common';
 import { TOKEN_BEGIN } from '../constants/tokenBegin';
 import axios from '../helper/axios';
-import { setLoading } from '../actions/loadingIndicator';
+import { setAuthLoading } from '../actions/loadingIndicator';
 import { POST, PUT } from '../constants/methods';
 import { createErrorMessage } from '../utils/sagaUtils';
 
@@ -54,7 +54,7 @@ function* loginToAccount(payload) {
             }),
         );
     } finally {
-        yield put(setLoading(false));
+        yield put(setAuthLoading(false));
     }
 }
 
@@ -69,7 +69,7 @@ function* registerAccount({ userData }) {
             }),
         );
     } finally {
-        yield put(setLoading(false));
+        yield put(setAuthLoading(false));
     }
 }
 
@@ -112,7 +112,7 @@ function* activateUserAccount({ payload }) {
             }),
         );
     } finally {
-        yield put(setLoading(false));
+        yield put(setAuthLoading(false));
     }
 }
 
@@ -132,7 +132,7 @@ function* resetPassword({ payload }) {
             }),
         );
     } finally {
-        yield put(setLoading(false));
+        yield put(setAuthLoading(false));
     }
 }
 
