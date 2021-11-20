@@ -19,7 +19,7 @@ import { getGroupsOptionsForSelect } from '../../../utils/selectUtils';
 import SemesterCopyForm from '../../../containers/SemesterPage/SemesterCopyForm';
 import SemesterCard from './SemesterCard';
 import CustomDialog from '../../../containers/Dialogs/CustomDialog';
-import { MultiselectForGroups } from '../../../helper/MultiselectForGroups';
+import MultiselectForGroups from '../../../share/Multiselects/MultiSelectForGroups';
 import i18n from '../../../i18n';
 
 const SemesterList = (props) => {

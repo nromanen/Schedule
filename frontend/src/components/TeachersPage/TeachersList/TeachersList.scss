@@ -67,10 +67,10 @@
     }
 
     .teacher-email {
-        text-decoration: none;
+        width: 200px;
+        text-align: start;
         overflow: hidden;
         white-space: nowrap;
-        display: block;
         text-overflow: ellipsis;
         font-size: 16px;
         color: $link;
