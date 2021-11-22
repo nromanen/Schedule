@@ -422,7 +422,6 @@ public class SemesterServiceImpl implements SemesterService {
         semester.setGroups(groups);
         semester.setPeriods(periods);
         semester.setDaysOfWeek(dayOfWeeks);
-        update(semester);
         return semester;
     }
 
@@ -471,7 +470,7 @@ public class SemesterServiceImpl implements SemesterService {
 
         copySchedules(schedules,copyLessons(lessonSet,toSemester));
 
-        return toSemester;
+        return update(toSemester);
     }
 
     private boolean shouldClearSemesterContent(Semester semester) {
