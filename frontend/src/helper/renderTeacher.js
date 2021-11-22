@@ -1,9 +1,9 @@
-const parseShortPosition = (position) => {
+export const parseShortPosition = (position) => {
     const teacherPosition = new Map();
     teacherPosition.set('доцент', 'доц.');
     teacherPosition.set('асистент', 'ac.');
     teacherPosition.set('професор', 'проф.');
-    return teacherPosition.get(position);
+    return teacherPosition.get(position.toLowerCase());
 };
 export const getFirstLetter = (word) => {
     return word !== null ? `${word.charAt(0)}.` : '';
@@ -28,12 +28,7 @@ export const getTeacherWithPosition = (teacher) => {
     const { name, surname, patronymic, position } = teacher;
     return `${position} ${surname} ${name} ${patronymic}`;
 };
-export const getTeacherShortPosition = (teacher) => {
-    const { name, surname, patronymic, position } = teacher;
-    return `${parseShortPosition(position)} ${surname} ${getFirstLetter(name)} ${getFirstLetter(
-        patronymic,
-    )}\n`;
-};
+
 export const getTeacherWithShortPosition = (teacher) => {
     const { name, surname, patronymic, position } = teacher;
     return `${parseShortPosition(position)} ${surname} ${name} ${patronymic}`;
