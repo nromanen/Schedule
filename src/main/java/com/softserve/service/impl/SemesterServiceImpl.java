@@ -9,7 +9,6 @@ import com.softserve.repository.SemesterRepository;
 import com.softserve.service.LessonService;
 import com.softserve.service.GroupService;
 import com.softserve.service.PeriodService;
-import com.softserve.service.ScheduleService;
 import com.softserve.service.SemesterService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
@@ -329,7 +328,6 @@ public class SemesterServiceImpl implements SemesterService {
         }
         groups.add(group);
         semester.setGroups(groups);
-        getById(semester.getId()).setGroups(groups);
         return semester;
     }
 
@@ -369,7 +367,6 @@ public class SemesterServiceImpl implements SemesterService {
         }
         days.addAll(daysOfWeek);
         semester.setDaysOfWeek(days);
-        semester.setDaysOfWeek(days);
         return semester;
     }
 
@@ -390,7 +387,6 @@ public class SemesterServiceImpl implements SemesterService {
             periodsSemester = new HashSet<Period>();
         }
         periodsSemester.addAll(periods);
-        semester.setPeriods(periodsSemester);
         semester.setPeriods(periodsSemester);
         return semester;
     }
@@ -463,11 +459,7 @@ public class SemesterServiceImpl implements SemesterService {
             Hibernate.initialize(schedule.getLesson().getSemester().getGroups());
         }
 
-        List<Group> groups = getById(toSemesterId).getGroups();
-        Set<Period> periods = toSemester.getPeriods();
-        Set<DayOfWeek> dayOfWeeks = toSemester.getDaysOfWeek();
-
-        if (!groups.isEmpty() || !periods.isEmpty() || !dayOfWeeks.isEmpty()) {
+        if (shouldClearSemesterContent(toSemester)) {
             deleteAllContentFromSemester(toSemester);
         }
 
@@ -480,6 +472,12 @@ public class SemesterServiceImpl implements SemesterService {
         copySchedules(schedules,copyLessons(lessonSet,toSemester));
 
         return toSemester;
+    }
+
+    private boolean shouldClearSemesterContent(Semester semester) {
+        return CollectionUtils.isNotEmpty(semester.getGroups())
+                || CollectionUtils.isNotEmpty(semester.getPeriods())
+                || CollectionUtils.isNotEmpty(semester.getDaysOfWeek());
     }
 
     private Map<Long, Lesson> copyLessons(Set<Lesson> lessonSet, Semester toSemester) {
