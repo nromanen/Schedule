@@ -1,7 +1,6 @@
 package com.softserve.util;
 
 import com.opencsv.bean.CsvToBeanBuilder;
-import com.softserve.dto.TeacherDTO;
 import com.softserve.dto.TeacherImportDTO;
 import com.softserve.entity.Student;
 import com.softserve.exception.ParseFileException;

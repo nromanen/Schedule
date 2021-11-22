@@ -241,7 +241,6 @@ public class TeacherServiceImpl implements TeacherService {
 
     /**
      * Each line of the file should consist of five fields, separated by commas without spaceBar.
-     * Each field may or may not be enclosed in double-quotes.
      * First line of the file is a header.
      * All subsequent lines contain data about teachers.
      * <p>
@@ -250,14 +249,9 @@ public class TeacherServiceImpl implements TeacherService {
      * Test2,Test2,Test2,test2,test2@gmail.com
      * etc.
      * <p>
-     * The method is not transactional in order to prevent interruptions while saving a student
      *
      * @param file file with teachers data
      * @return list of created teachers.
-     * If the student in the returned list have a non-null value of the group title then he already existed.
-     * If the teacher in the returned list doesn't exist in teachersTable in base
-     * AND provided email don't registered, yet we register new user with provided Email
-     * AND create new teacher
      */
     @Override
     public List<TeacherImportDTO> saveFromFile(MultipartFile file, Long departmentId) {
@@ -299,6 +293,14 @@ public class TeacherServiceImpl implements TeacherService {
         }
     }
 
+    /**
+     * The method used for assigning existing user to provided new teacher
+     * @param savedTeachers is a list of teachers which we will show all our teacher from file
+     * @param teacher our teacher from file
+     * @param userOptional our user from database
+     * @param newTeacher our teacher which we will save to database
+     * @param department department which provided from server
+     */
     private void assignUserToNewTeacher(List<TeacherImportDTO> savedTeachers, TeacherImportDTO teacher, Optional<User> userOptional, Teacher newTeacher, Department department) {
         log.debug("Enter to method if email EXIST and teacher DONT EXIST");
         if (userOptional.isPresent()) {
@@ -313,6 +315,13 @@ public class TeacherServiceImpl implements TeacherService {
         }
     }
 
+    /**
+     * The method used for register provided user and update existed teacher
+     * @param savedTeachers is a list of teachers which we will show all our teacher from file
+     * @param teacher our teacher from file
+     * @param teacherFromBase our teacher from dataBase
+     * @param department department which provided from server
+     */
     private void registerUserAndUpdateTeacher(List<TeacherImportDTO> savedTeachers, TeacherImportDTO teacher, Optional<Teacher> teacherFromBase, Department department) {
         log.debug("Enter to method if email DONT EXIST and teacher EXIST");
         if(teacherFromBase.isPresent()) {
@@ -333,6 +342,13 @@ public class TeacherServiceImpl implements TeacherService {
         }
     }
 
+    /**
+     * The method used for register provided user and save provided teacher
+     * @param savedTeachers is a list of teachers which we will show all our teacher from file
+     * @param teacher our teacher from file
+     * @param newTeacher our teacher which we will save to database
+     * @param department department which provided from server
+     */
     private void registerAndSaveNewTeacher(List<TeacherImportDTO> savedTeachers, TeacherImportDTO teacher, Teacher newTeacher, Department department) {
         log.debug("Enter to method if email and teacher DONT EXIST");
 
@@ -345,6 +361,14 @@ public class TeacherServiceImpl implements TeacherService {
         savedTeachers.add(savedTeacher);
     }
 
+    /**
+     * The method used for register provided user and save provided teacher
+     * @param savedTeachers is a list of teachers which we will show all our teacher from file
+     * @param teacher our teacher from file
+     * @param teacherFromBase our teacher from dataBase
+     * @param userOptional our user from database
+     * @param department department which provided from server
+     */
     private void checkForEmptyFieldsOfExistingTeacher(List<TeacherImportDTO> savedTeachers, TeacherImportDTO teacher, Optional<User> userOptional, Optional<Teacher> teacherFromBase, Department department) {
         log.debug("Enter to method if email EXIST and teacher EXIST");
         if (userOptional.isPresent() && teacherFromBase.isPresent()) {
