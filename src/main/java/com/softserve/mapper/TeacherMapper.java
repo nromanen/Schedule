@@ -25,7 +25,7 @@ public abstract class TeacherMapper {
     @Named("userIdToEmail")
     public String userIdToEmail(Long userId) {
         if(userId != null) {
-            return userService.getById(userId.longValue()).getEmail();
+            return userService.getById(userId).getEmail();
         }
         return null;
     }

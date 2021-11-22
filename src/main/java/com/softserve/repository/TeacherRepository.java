@@ -11,7 +11,4 @@ public interface TeacherRepository extends BasicRepository<Teacher, Long> {
 
     Optional<Teacher> getExistingTeacher (Teacher teacher);
 
-    void updateTeacherUserId (Teacher teacher, Long userId);
-    void updateTeacherDepartment (Teacher teacher);
-
 }
