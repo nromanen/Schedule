@@ -22,5 +22,6 @@ public interface TeacherService extends BasicService<Teacher, Long> {
 
     List<TeacherImportDTO> saveFromFile(MultipartFile file, Long departmentId);
 
+    void saveTeacher(Long departmentId, List<TeacherImportDTO> savedTeachers, TeacherImportDTO teacher);
 }
 

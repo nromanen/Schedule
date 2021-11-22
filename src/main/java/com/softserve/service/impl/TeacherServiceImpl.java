@@ -21,6 +21,7 @@ import com.softserve.service.UserService;
 import com.softserve.util.CsvFileParser;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,7 +31,6 @@ import javax.validation.ConstraintViolationException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
 
 @Transactional
 @Service
@@ -42,15 +42,17 @@ public class TeacherServiceImpl implements TeacherService {
     private final MailService mailService;
     private final TeacherMapper teacherMapper;
     private final DepartmentService departmentService;
+    private final TeacherService self;
 
     @Autowired
     public TeacherServiceImpl(TeacherRepository teacherRepository, UserService userService, MailService mailService,
-                              TeacherMapper teacherMapper, DepartmentService departmentService) {
+                              TeacherMapper teacherMapper, DepartmentService departmentService , @Lazy TeacherService self) {
         this.teacherRepository = teacherRepository;
         this.userService = userService;
         this.mailService = mailService;
         this.teacherMapper = teacherMapper;
         this.departmentService = departmentService;
+        this.self = self;
     }
 
     /**
@@ -144,7 +146,7 @@ public class TeacherServiceImpl implements TeacherService {
     public Teacher delete(Teacher teacher) {
         log.info("Enter into delete method with entity:{}", teacher);
         if (teacher.getUserId() != null) {
-            User user = userService.getById(teacher.getUserId().longValue());
+            User user = userService.getById(teacher.getUserId());
             user.setRole(Role.ROLE_USER);
             userService.update(user);
         }
@@ -241,7 +243,7 @@ public class TeacherServiceImpl implements TeacherService {
      * Each line of the file should consist of five fields, separated by commas without spaceBar.
      * Each field may or may not be enclosed in double-quotes.
      * First line of the file is a header.
-     * All subsequent lines contain data about students.
+     * All subsequent lines contain data about teachers.
      * <p>
      * name,surname,patronymic,position,email
      * Test1,Test1,Test1,test1,test1@gmail.com
@@ -258,7 +260,6 @@ public class TeacherServiceImpl implements TeacherService {
      * AND create new teacher
      */
     @Override
-    @Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
     public List<TeacherImportDTO> saveFromFile(MultipartFile file, Long departmentId) {
         log.info("Enter into saveFromFile of TeacherServiceImpl");
 
@@ -267,85 +268,83 @@ public class TeacherServiceImpl implements TeacherService {
         List<TeacherImportDTO> savedTeachers = new ArrayList<>();
 
         for(TeacherImportDTO teacher : teachers){
-            try{
-                Optional<User> userOptional = userService.findSocialUser(teacher.getEmail());
-                Teacher newTeacher = teacherMapper.teacherImportDTOToTeacher(teacher);
-                Optional<Teacher> teacherFromBase = teacherRepository.getExistingTeacher(newTeacher);
-
-                Department department = departmentService.getById(departmentId);
-
-                if(userOptional.isEmpty() && teacherFromBase.isEmpty()){
-                    log.debug("Enter to method if email and teacher DONT EXIST");
-
-                    Teacher registeredTeacher = registerTeacher(newTeacher, teacher.getEmail());
-                    registeredTeacher.setDepartment(department);
-                    teacherRepository.save(registeredTeacher);
-                    TeacherImportDTO savedTeacher = teacherMapper.teacherToTeacherImportDTO(registeredTeacher);
-                    savedTeacher.setEmail(teacher.getEmail());
-                    savedTeacher.setTeacherStatus(TeacherStatus.SAVED);
-                    savedTeachers.add(savedTeacher);
-
-                }else if(userOptional.isEmpty() && teacherFromBase.isPresent()){
-                    log.debug("Enter to method if email DONT EXIST and teacher EXIST");
-
-                    Teacher ourTeacherFromBase = getById(teacherFromBase.get().getId());
-                    Teacher registeredTeacher1 = registerTeacher(ourTeacherFromBase, teacher.getEmail());
-                    if(ourTeacherFromBase.getDepartment() == null || ourTeacherFromBase.getUserId() == null) {
-                        if (ourTeacherFromBase.getDepartment() == null) {
-                            registeredTeacher1.setDepartment(department);
-                        }
-                        if (ourTeacherFromBase.getUserId() == null) {
-                            registeredTeacher1.setUserId(registeredTeacher1.getUserId());
-                        }
-                    }
-//                    teacherRepository.update(registeredTeacher1);
-                    teacherRepository.updateTeacherDepartment(registeredTeacher1);
-                    teacherRepository.updateTeacherUserId(registeredTeacher1, registeredTeacher1.getUserId());
-                    TeacherImportDTO savedTeacher = teacherMapper.teacherToTeacherImportDTO(registeredTeacher1);
-                    savedTeacher.setEmail(teacher.getEmail());
-                    savedTeacher.setTeacherStatus(TeacherStatus.ALREADY_EXIST);
-                    savedTeachers.add(savedTeacher);
-
-                }
-                else if(userOptional.isPresent() && teacherFromBase.isEmpty()){
-                    log.debug("Enter to method if email EXIST and teacher DONT EXIST");
-
-                    Teacher ourNewTeacherWithoutEmail = newTeacher;
-                    ourNewTeacherWithoutEmail.setUserId(userOptional.get().getId());
-                    ourNewTeacherWithoutEmail.setDepartment(department);
-                    teacherRepository.save(ourNewTeacherWithoutEmail);
-                    TeacherImportDTO savedTeacher = teacherMapper.teacherToTeacherImportDTO(ourNewTeacherWithoutEmail);
-                    savedTeacher.setEmail(teacher.getEmail());
-                    savedTeacher.setTeacherStatus(TeacherStatus.SAVED);
-                    savedTeachers.add(savedTeacher);
-
-                }else if(userOptional.isPresent() && teacherFromBase.isPresent()){
-                    log.debug("Enter to method if email EXIST and teacher EXIST");
-
-                    Teacher ourTeacherFromBase = getById(teacherFromBase.get().getId());
-                    if(ourTeacherFromBase.getDepartment() == null || ourTeacherFromBase.getUserId() == null) {
-                        if (ourTeacherFromBase.getDepartment() == null) {
-                            ourTeacherFromBase.setDepartment(department);
-                        }
-                        if (ourTeacherFromBase.getUserId() == null) {
-                            ourTeacherFromBase.setUserId(userOptional.get().getId());
-                        }
-//                        teacherRepository.update(ourTeacherFromBase);
-                        teacherRepository.updateTeacherDepartment(ourTeacherFromBase);
-                        teacherRepository.updateTeacherUserId(ourTeacherFromBase, ourTeacherFromBase.getUserId());
-                    }
-                    TeacherImportDTO existedTeacher = teacherMapper.teacherToTeacherImportDTO(ourTeacherFromBase);
-                    existedTeacher.setTeacherStatus(TeacherStatus.ALREADY_EXIST);
-                    savedTeachers.add(existedTeacher);
-                    log.error("Teacher with current email exist ", new FieldAlreadyExistsException(Teacher.class, "email", teacher.getEmail()));
-                }
-            } catch (ConstraintViolationException e) {
-                teacher.setTeacherStatus(TeacherStatus.VALIDATION_ERROR);
-                log.error("Error occurred while saving teacher with email {}", teacher.getEmail(), e);
-                savedTeachers.add(teacher);
-            }
+            self.saveTeacher(departmentId, savedTeachers, teacher);
         }
        return savedTeachers;
+    }
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void saveTeacher(Long departmentId, List<TeacherImportDTO> savedTeachers, TeacherImportDTO teacher) {
+        try{
+            Optional<User> userOptional = userService.findSocialUser(teacher.getEmail());
+            Teacher newTeacher = teacherMapper.teacherImportDTOToTeacher(teacher);
+            Optional<Teacher> teacherFromBase = teacherRepository.getExistingTeacher(newTeacher);
+
+            Department department = departmentService.getById(departmentId);
+
+            if(userOptional.isEmpty() && teacherFromBase.isEmpty()){
+                log.debug("Enter to method if email and teacher DONT EXIST");
+
+                Teacher registeredTeacher = registerTeacher(newTeacher, teacher.getEmail());
+                registeredTeacher.setDepartment(department);
+                teacherRepository.save(registeredTeacher);
+                TeacherImportDTO savedTeacher = teacherMapper.teacherToTeacherImportDTO(registeredTeacher);
+                savedTeacher.setEmail(teacher.getEmail());
+                savedTeacher.setTeacherStatus(TeacherStatus.SAVED);
+                savedTeachers.add(savedTeacher);
+
+            }else if(userOptional.isEmpty()){
+                log.debug("Enter to method if email DONT EXIST and teacher EXIST");
+
+                Teacher ourTeacherFromBase = getById(teacherFromBase.get().getId());
+                Teacher registeredTeacher1 = registerTeacher(ourTeacherFromBase, teacher.getEmail());
+                if (ourTeacherFromBase.getDepartment() == null) {
+                        registeredTeacher1.setDepartment(department);
+                }
+                if (ourTeacherFromBase.getUserId() == null) {
+                        registeredTeacher1.setUserId(registeredTeacher1.getUserId());
+                }
+                teacherRepository.update(registeredTeacher1);
+                TeacherImportDTO savedTeacher = teacherMapper.teacherToTeacherImportDTO(registeredTeacher1);
+                savedTeacher.setEmail(teacher.getEmail());
+                savedTeacher.setTeacherStatus(TeacherStatus.ALREADY_EXIST);
+                savedTeachers.add(savedTeacher);
+
+            }
+            else if(teacherFromBase.isEmpty()){
+                log.debug("Enter to method if email EXIST and teacher DONT EXIST");
+
+                newTeacher.setUserId(userOptional.get().getId());
+                newTeacher.setDepartment(department);
+                teacherRepository.save(newTeacher);
+                TeacherImportDTO savedTeacher = teacherMapper.teacherToTeacherImportDTO(newTeacher);
+                savedTeacher.setEmail(teacher.getEmail());
+                savedTeacher.setTeacherStatus(TeacherStatus.SAVED);
+                savedTeachers.add(savedTeacher);
+
+            }else{
+                log.debug("Enter to method if email EXIST and teacher EXIST");
+
+                Teacher ourTeacherFromBase = getById(teacherFromBase.get().getId());
+                if(ourTeacherFromBase.getDepartment() == null || ourTeacherFromBase.getUserId() == null) {
+                    if (ourTeacherFromBase.getDepartment() == null) {
+                        ourTeacherFromBase.setDepartment(department);
+                    }
+                    if (ourTeacherFromBase.getUserId() == null) {
+                        ourTeacherFromBase.setUserId(userOptional.get().getId());
+                    }
+                    teacherRepository.update(ourTeacherFromBase);
+                }
+                TeacherImportDTO existedTeacher = teacherMapper.teacherToTeacherImportDTO(ourTeacherFromBase);
+                existedTeacher.setTeacherStatus(TeacherStatus.ALREADY_EXIST);
+                savedTeachers.add(existedTeacher);
+                log.error("Teacher with current email exist ", new FieldAlreadyExistsException(Teacher.class, "email", teacher.getEmail()));
+            }
+        } catch (ConstraintViolationException e) {
+            teacher.setTeacherStatus(TeacherStatus.VALIDATION_ERROR);
+            log.error("Error occurred while saving teacher with email {}", teacher.getEmail(), e);
+            savedTeachers.add(teacher);
+        }
     }
 
 }
