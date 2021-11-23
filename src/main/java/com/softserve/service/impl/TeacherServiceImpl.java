@@ -21,12 +21,10 @@ import com.softserve.service.UserService;
 import com.softserve.util.CsvFileParser;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-
 import javax.validation.ConstraintViolationException;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,17 +40,15 @@ public class TeacherServiceImpl implements TeacherService {
     private final MailService mailService;
     private final TeacherMapper teacherMapper;
     private final DepartmentService departmentService;
-    private final TeacherService self;
 
     @Autowired
     public TeacherServiceImpl(TeacherRepository teacherRepository, UserService userService, MailService mailService,
-                              TeacherMapper teacherMapper, DepartmentService departmentService , @Lazy TeacherService self) {
+                              TeacherMapper teacherMapper, DepartmentService departmentService ) {
         this.teacherRepository = teacherRepository;
         this.userService = userService;
         this.mailService = mailService;
         this.teacherMapper = teacherMapper;
         this.departmentService = departmentService;
-        this.self = self;
     }
 
     /**
@@ -222,10 +218,10 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     private Teacher registerTeacher(Teacher teacher, String email) {
-        log.info("Enter into registerTeacher method with teacher {} and email:{}", teacher, email);
-        User registeredUserForTeacher = userService.automaticRegistration(email, Role.ROLE_TEACHER);
-        teacher.setUserId(registeredUserForTeacher.getId());
-        return teacher;
+            log.info("Enter into registerTeacher method with teacher {} and email:{}", teacher, email);
+            User registeredUserForTeacher = userService.automaticRegistration(email, Role.ROLE_TEACHER);
+            teacher.setUserId(registeredUserForTeacher.getId());
+            return teacher;
     }
 
     private void updateEmailInUserForTeacher(String email, long userId) {
@@ -262,14 +258,17 @@ public class TeacherServiceImpl implements TeacherService {
         List<TeacherImportDTO> savedTeachers = new ArrayList<>();
 
         for(TeacherImportDTO teacher : teachers){
-            self.saveTeacher(departmentId, savedTeachers, teacher);
+            TeacherImportDTO test = saveTeacher(departmentId, teacher);
+            savedTeachers.add(test);
         }
+
        return savedTeachers;
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public void saveTeacher(Long departmentId, List<TeacherImportDTO> savedTeachers, TeacherImportDTO teacher) {
+    public TeacherImportDTO saveTeacher(Long departmentId, TeacherImportDTO teacher) {
         try{
+
             Optional<User> userOptional = userService.findSocialUser(teacher.getEmail());
             Teacher newTeacher = teacherMapper.teacherImportDTOToTeacher(teacher);
             Optional<Teacher> teacherFromBase = teacherRepository.getExistingTeacher(newTeacher);
@@ -277,31 +276,32 @@ public class TeacherServiceImpl implements TeacherService {
             Department department = departmentService.getById(departmentId);
 
             if(userOptional.isEmpty() && teacherFromBase.isEmpty()){
-                registerAndSaveNewTeacher(savedTeachers, teacher, newTeacher, department);
+                return registerAndSaveNewTeacher(teacher, newTeacher, department);
             }else if(userOptional.isEmpty()){
-                registerUserAndUpdateTeacher(savedTeachers, teacher, teacherFromBase, department);
+               return registerUserAndUpdateTeacher(teacher, teacherFromBase, department);
             }
             else if(teacherFromBase.isEmpty()){
-                assignUserToNewTeacher(savedTeachers, teacher, userOptional, newTeacher, department);
+                return  assignUserToNewTeacher( teacher, userOptional, newTeacher, department);
             }else{
-                checkForEmptyFieldsOfExistingTeacher(savedTeachers, teacher, userOptional, teacherFromBase, department);
+                return  checkForEmptyFieldsOfExistingTeacher(teacher, userOptional, teacherFromBase, department);
             }
-        } catch (ConstraintViolationException e) {
+        }
+        catch (ConstraintViolationException e) {
             teacher.setTeacherStatus(TeacherStatus.VALIDATION_ERROR);
             log.error("Error occurred while saving teacher with email {}", teacher.getEmail(), e);
-            savedTeachers.add(teacher);
+            return teacher;
+
         }
     }
 
     /**
      * The method used for assigning existing user to provided new teacher
-     * @param savedTeachers is a list of teachers which we will show all our teacher from file
      * @param teacher our teacher from file
      * @param userOptional our user from database
      * @param newTeacher our teacher which we will save to database
      * @param department department which provided from server
      */
-    private void assignUserToNewTeacher(List<TeacherImportDTO> savedTeachers, TeacherImportDTO teacher, Optional<User> userOptional, Teacher newTeacher, Department department) {
+    private TeacherImportDTO assignUserToNewTeacher(TeacherImportDTO teacher, Optional<User> userOptional, Teacher newTeacher, Department department) {
         log.debug("Enter to method if email EXIST and teacher DONT EXIST");
         if (userOptional.isPresent()) {
 
@@ -311,18 +311,18 @@ public class TeacherServiceImpl implements TeacherService {
             TeacherImportDTO savedTeacher = teacherMapper.teacherToTeacherImportDTO(newTeacher);
             savedTeacher.setEmail(teacher.getEmail());
             savedTeacher.setTeacherStatus(TeacherStatus.SAVED);
-            savedTeachers.add(savedTeacher);
+            return savedTeacher;
         }
+        return null;
     }
 
     /**
      * The method used for register provided user and update existed teacher
-     * @param savedTeachers is a list of teachers which we will show all our teacher from file
      * @param teacher our teacher from file
      * @param teacherFromBase our teacher from dataBase
      * @param department department which provided from server
      */
-    private void registerUserAndUpdateTeacher(List<TeacherImportDTO> savedTeachers, TeacherImportDTO teacher, Optional<Teacher> teacherFromBase, Department department) {
+    private TeacherImportDTO registerUserAndUpdateTeacher(TeacherImportDTO teacher, Optional<Teacher> teacherFromBase, Department department) {
         log.debug("Enter to method if email DONT EXIST and teacher EXIST");
         if(teacherFromBase.isPresent()) {
 
@@ -338,38 +338,37 @@ public class TeacherServiceImpl implements TeacherService {
             TeacherImportDTO savedTeacher = teacherMapper.teacherToTeacherImportDTO(registeredTeacher1);
             savedTeacher.setEmail(teacher.getEmail());
             savedTeacher.setTeacherStatus(TeacherStatus.ALREADY_EXIST);
-            savedTeachers.add(savedTeacher);
+            return savedTeacher;
         }
+        return null;
     }
 
     /**
      * The method used for register provided user and save provided teacher
-     * @param savedTeachers is a list of teachers which we will show all our teacher from file
      * @param teacher our teacher from file
      * @param newTeacher our teacher which we will save to database
      * @param department department which provided from server
      */
-    private void registerAndSaveNewTeacher(List<TeacherImportDTO> savedTeachers, TeacherImportDTO teacher, Teacher newTeacher, Department department) {
+    private TeacherImportDTO registerAndSaveNewTeacher(TeacherImportDTO teacher, Teacher newTeacher, Department department) {
         log.debug("Enter to method if email and teacher DONT EXIST");
 
-        Teacher registeredTeacher = registerTeacher(newTeacher, teacher.getEmail());
-        registeredTeacher.setDepartment(department);
-        teacherRepository.save(registeredTeacher);
-        TeacherImportDTO savedTeacher = teacherMapper.teacherToTeacherImportDTO(registeredTeacher);
-        savedTeacher.setEmail(teacher.getEmail());
-        savedTeacher.setTeacherStatus(TeacherStatus.SAVED);
-        savedTeachers.add(savedTeacher);
+            Teacher registeredTeacher = registerTeacher(newTeacher, teacher.getEmail());
+            registeredTeacher.setDepartment(department);
+            teacherRepository.save(registeredTeacher);
+            TeacherImportDTO savedTeacher = teacherMapper.teacherToTeacherImportDTO(registeredTeacher);
+            savedTeacher.setEmail(teacher.getEmail());
+            savedTeacher.setTeacherStatus(TeacherStatus.SAVED);
+            return savedTeacher;
     }
 
     /**
      * The method used for register provided user and save provided teacher
-     * @param savedTeachers is a list of teachers which we will show all our teacher from file
      * @param teacher our teacher from file
      * @param teacherFromBase our teacher from dataBase
      * @param userOptional our user from database
      * @param department department which provided from server
      */
-    private void checkForEmptyFieldsOfExistingTeacher(List<TeacherImportDTO> savedTeachers, TeacherImportDTO teacher, Optional<User> userOptional, Optional<Teacher> teacherFromBase, Department department) {
+    private TeacherImportDTO checkForEmptyFieldsOfExistingTeacher(TeacherImportDTO teacher, Optional<User> userOptional, Optional<Teacher> teacherFromBase, Department department) {
         log.debug("Enter to method if email EXIST and teacher EXIST");
         if (userOptional.isPresent() && teacherFromBase.isPresent()) {
 
@@ -385,9 +384,10 @@ public class TeacherServiceImpl implements TeacherService {
             }
             TeacherImportDTO existedTeacher = teacherMapper.teacherToTeacherImportDTO(ourTeacherFromBase);
             existedTeacher.setTeacherStatus(TeacherStatus.ALREADY_EXIST);
-            savedTeachers.add(existedTeacher);
             log.error("Teacher with current email exist ", new FieldAlreadyExistsException(Teacher.class, "email", teacher.getEmail()));
+            return existedTeacher;
         }
+        return null;
     }
 
 }
