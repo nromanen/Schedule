@@ -41,9 +41,21 @@ public class ScheduleController {
     private final LessonsInScheduleMapper lessonsInScheduleMapper;
     private final LessonService lessonService;
     private final RoomService roomService;
+    private final ScheduleForRoomMapper scheduleForRoomMapper;
 
     @Autowired
-    public ScheduleController(ScheduleService scheduleService, SemesterService semesterService, SemesterMapper semesterMapper, ScheduleMapper scheduleMapper, ScheduleSaveMapper scheduleSaveMapper, ScheduleWithoutSemesterMapper scheduleWithoutSemesterMapper, TeacherService teacherService, PeriodMapper periodMapper, RoomForScheduleMapper roomForScheduleMapper, LessonService lessonService, LessonsInScheduleMapper lessonsInScheduleMapper, RoomService roomService) {
+    public ScheduleController(ScheduleService scheduleService,
+                              SemesterService semesterService,
+                              SemesterMapper semesterMapper,
+                              ScheduleMapper scheduleMapper,
+                              ScheduleSaveMapper scheduleSaveMapper,
+                              ScheduleWithoutSemesterMapper scheduleWithoutSemesterMapper,
+                              TeacherService teacherService, PeriodMapper periodMapper,
+                              RoomForScheduleMapper roomForScheduleMapper,
+                              LessonService lessonService,
+                              LessonsInScheduleMapper lessonsInScheduleMapper,
+                              RoomService roomService,
+                              ScheduleForRoomMapper scheduleForRoomMapper) {
         this.scheduleService = scheduleService;
         this.semesterService = semesterService;
         this.semesterMapper = semesterMapper;
@@ -56,6 +68,7 @@ public class ScheduleController {
         this.lessonService = lessonService;
         this.lessonsInScheduleMapper = lessonsInScheduleMapper;
         this.roomService = roomService;
+        this.scheduleForRoomMapper = scheduleForRoomMapper;
     }
 
     @GetMapping
@@ -119,7 +132,11 @@ public class ScheduleController {
     @ApiOperation(value = "Get full schedule for semester. Returns schedule for  rooms")
     public ResponseEntity<List<ScheduleForRoomDTO>> getFullScheduleForRoom(@RequestParam Long semesterId) {
         log.info("In, getFullScheduleForRoom (semesterId = [{}]) ", semesterId);
-        List<ScheduleForRoomDTO> scheduleForRoomDTOS = fullDTOForRoomSchedule(scheduleService.getScheduleForRooms(semesterId));
+        List<ScheduleForRoomDTO> scheduleForRoomDTOS =
+                scheduleForRoomMapper
+                        .schedulesToScheduleForRoomDTO(
+                            scheduleService.getAllOrderedByRoomsDaysPeriods(semesterId)
+                        );
         return ResponseEntity.status(HttpStatus.OK).body(scheduleForRoomDTOS);
     }
 
@@ -283,69 +300,5 @@ public class ScheduleController {
             fullDTO.add(scheduleForTemporaryDateRangeDTO);
         }
         return fullDTO;
-    }
-
-    private List<ScheduleForRoomDTO> fullDTOForRoomSchedule(Map<Room, Map<DayOfWeek, Map<EvenOdd, Map<Period, Map<String, Map<String, Map<LessonType, List<Lesson>>>>>>>> schedules) {
-        List<ScheduleForRoomDTO> scheduleForRoomDTOS = new ArrayList<>();
-
-        for (Map.Entry<Room, Map<DayOfWeek, Map<EvenOdd, Map<Period, Map<String, Map<String, Map<LessonType, List<Lesson>>>>>>>> roomItem : schedules.entrySet()) {
-            ScheduleForRoomDTO scheduleForRoomDTO = new ScheduleForRoomDTO();
-            scheduleForRoomDTO.setRoomId(roomItem.getKey().getId());
-            scheduleForRoomDTO.setRoomName(roomItem.getKey().getName());
-            scheduleForRoomDTO.setRoomType(roomItem.getKey().getType().getDescription());
-            List<DaysOfWeekWithClassesForRoomDTO> daysOfWeekWithClassesForRoomDTOList = new ArrayList<>();
-            for (Map.Entry<DayOfWeek, Map<EvenOdd, Map<Period, Map<String, Map<String, Map<LessonType, List<Lesson>>>>>>> dayItem : roomItem.getValue().entrySet()) {
-                DaysOfWeekWithClassesForRoomDTO daysOfWeekWithClassesForRoomDTO = new DaysOfWeekWithClassesForRoomDTO();
-                daysOfWeekWithClassesForRoomDTO.setDay(dayItem.getKey());
-                List<RoomClassesInScheduleDTO> roomClassesInScheduleDTOList = new ArrayList<>();
-                RoomClassesInScheduleDTO roomClassesInScheduleDTO = new RoomClassesInScheduleDTO();
-                for (Map.Entry<EvenOdd, Map<Period, Map<String, Map<String, Map<LessonType, List<Lesson>>>>>> evenOddMapEntry : dayItem.getValue().entrySet()) {
-                    List<LessonsInRoomScheduleDTO> evenOddLessonsInRoomScheduleDTOList = new ArrayList<>();
-                    if (evenOddMapEntry.getValue() != null) {
-                        for (Map.Entry<Period, Map<String, Map<String, Map<LessonType, List<Lesson>>>>> periodListEntry : evenOddMapEntry.getValue().entrySet()) {
-                            LessonsInRoomScheduleDTO even = new LessonsInRoomScheduleDTO();
-                            even.setClassName(periodListEntry.getKey().getName());
-                            even.setClassId(periodListEntry.getKey().getId());
-
-                            List<LessonsListInRoomScheduleDTO> lessonsListInRoomScheduleDTOS = new ArrayList<>();
-                            for (Map.Entry<String, Map<String, Map<LessonType, List<Lesson>>>> subjectForSiteMap : periodListEntry.getValue().entrySet()) {
-                                for (Map.Entry<String, Map<LessonType, List<Lesson>>> teacherForSiteMap : subjectForSiteMap.getValue().entrySet()) {
-                                    for (Map.Entry<LessonType, List<Lesson>> lessonTypeListMap : teacherForSiteMap.getValue().entrySet()) {
-                                        LessonsListInRoomScheduleDTO lessonsListInRoomScheduleDTO = new LessonsListInRoomScheduleDTO();
-                                        lessonsListInRoomScheduleDTO.setLessonType(lessonTypeListMap.getKey());
-                                        lessonsListInRoomScheduleDTO.setSubjectName(subjectForSiteMap.getKey());
-                                        lessonsListInRoomScheduleDTO.setSurname(teacherForSiteMap.getKey());
-
-                                        List<GroupDTOInRoomSchedule> groupDTOInRoomScheduleList = new ArrayList<>();
-                                        for (Lesson lesson : lessonTypeListMap.getValue()) {
-                                            GroupDTOInRoomSchedule groupDTOInRoomSchedule = new GroupDTOInRoomSchedule();
-                                            groupDTOInRoomSchedule.setGroupId(lesson.getGroup().getId());
-                                            groupDTOInRoomSchedule.setGroupName(lesson.getGroup().getTitle());
-                                            groupDTOInRoomScheduleList.add(groupDTOInRoomSchedule);
-                                        }
-                                        lessonsListInRoomScheduleDTO.setGroups(groupDTOInRoomScheduleList);
-                                        lessonsListInRoomScheduleDTOS.add(lessonsListInRoomScheduleDTO);
-                                    }
-                                }
-                            }
-                            even.setLessons(lessonsListInRoomScheduleDTOS);
-                            evenOddLessonsInRoomScheduleDTOList.add(even);
-                        }
-                    }
-                    if (evenOddMapEntry.getKey().equals(EvenOdd.EVEN)) {
-                        roomClassesInScheduleDTO.setEven(evenOddLessonsInRoomScheduleDTOList);
-                    } else {
-                        roomClassesInScheduleDTO.setOdd(evenOddLessonsInRoomScheduleDTOList);
-                    }
-                }
-                roomClassesInScheduleDTOList.add(roomClassesInScheduleDTO);
-                daysOfWeekWithClassesForRoomDTO.setClasses(roomClassesInScheduleDTOList);
-                daysOfWeekWithClassesForRoomDTOList.add(daysOfWeekWithClassesForRoomDTO);
-            }
-            scheduleForRoomDTO.setSchedules(daysOfWeekWithClassesForRoomDTOList);
-            scheduleForRoomDTOS.add(scheduleForRoomDTO);
-        }
-        return scheduleForRoomDTOS;
-
     }
 }

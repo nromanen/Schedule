@@ -8,6 +8,7 @@ import com.softserve.entity.enums.LessonType;
 import javax.mail.MessagingException;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -31,11 +32,8 @@ public interface ScheduleService extends BasicService<Schedule, Long> {
 
     List<Schedule> getAllSchedulesByTeacherIdAndSemesterId(Long teacherId, Long semesterId);
 
-    Map<Room, Map<DayOfWeek, Map<EvenOdd, Map<Period, Map<String, Map<String, Map<LessonType, List<Lesson>>>>>>>> getScheduleForRooms(Long semesterId);
-
     List<Schedule> getSchedulesBySemester(Long semesterId);
 
-    //Map<LocalDate, Map<Period, List<Schedule>>> scheduleByDateRangeForTeacher(LocalDate fromDate, LocalDate toDate, Long teacherId);
     Map<LocalDate, Map<Period, Map<Schedule, TemporarySchedule>>>  temporaryScheduleByDateRangeForTeacher(LocalDate fromDate, LocalDate toDate, Long teacherId);
 
     void deleteSchedulesBySemesterId(Long semesterId);
@@ -51,5 +49,7 @@ public interface ScheduleService extends BasicService<Schedule, Long> {
     void sendScheduleToTeachers(Long semesterId, Long[] teachersId, Locale language);
 
     void sendScheduleToTeacher(Long semesterId, Long teacherId, Locale language) throws MessagingException;
+
+    List<List<Schedule>> getAllOrderedByRoomsDaysPeriods(Long semesterId);
 }
 

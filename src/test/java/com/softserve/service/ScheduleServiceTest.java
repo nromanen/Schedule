@@ -219,4 +219,29 @@ public class ScheduleServiceTest {
         assertEquals(2, schedules.size());
     }
 
+
+    @Test
+    public void getAllOrderedByRoomsDaysPeriodsTest() {
+        Room room = new Room();
+        room.setId(1L);
+        Schedule schedule = new Schedule();
+        schedule.setId(1L);
+        schedule.setEvenOdd(EvenOdd.ODD);
+        schedule.setDayOfWeek(DayOfWeek.MONDAY);
+        schedule.setRoom(room);
+        Room room2 = new Room();
+        room.setId(2L);
+        Schedule schedule2 = new Schedule();
+        schedule2.setId(2L);
+        schedule2.setEvenOdd(EvenOdd.ODD);
+        schedule2.setDayOfWeek(DayOfWeek.MONDAY);
+        schedule2.setRoom(room2);
+        when(scheduleRepository.getAllOrderedByRoomsDaysPeriods(1L)).thenReturn(List.of(schedule, schedule2));
+        List<List<Schedule>> expected = new ArrayList<>();
+        expected.add(List.of(schedule2));
+        expected.add(List.of(schedule));
+        List<List<Schedule>> actual = scheduleServiceImpl.getAllOrderedByRoomsDaysPeriods(1L);
+        assertEquals(expected, actual);
+        verify(scheduleRepository, times(1)).getAllOrderedByRoomsDaysPeriods(1L);
+    }
 }

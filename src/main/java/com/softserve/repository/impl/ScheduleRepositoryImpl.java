@@ -36,13 +36,13 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
             + "where s.lesson.semester.id = :semesterId "
             + "ORDER BY s.room.name, " //if sort_order implemented, must be sort_order
             + " CASE "
-            + "WHEN Day = 'Monday' THEN 1 "
-            + "WHEN Day = 'Tuesday' THEN 2 "
-            + "WHEN Day = 'Wednesday' THEN 3 "
-            + "WHEN Day = 'Thursday' THEN 4 "
-            + "WHEN Day = 'Friday' THEN 5 "
-            + "WHEN Day = 'Saturday' THEN 6 "
-            + "WHEN Day = 'Sunday' THEN 7 "
+            + "WHEN day_of_week = 'Monday' THEN 1 "
+            + "WHEN day_of_week = 'Tuesday' THEN 2 "
+            + "WHEN day_of_week = 'Wednesday' THEN 3 "
+            + "WHEN day_of_week = 'Thursday' THEN 4 "
+            + "WHEN day_of_week = 'Friday' THEN 5 "
+            + "WHEN day_of_week = 'Saturday' THEN 6 "
+            + "WHEN day_of_week = 'Sunday' THEN 7 "
             + "END, "
             + "s.evenOdd, s.period.name, "
             + "s.lesson.subjectForSite, s.lesson.teacher.surname, s.lesson.lessonType ";
@@ -452,9 +452,11 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
     }
 
     @Override
-    public List<Schedule> getAllOrderedByRoomsDaysPeriods() {
+    public List<Schedule> getAllOrderedByRoomsDaysPeriods(Long semesterId) {
+        log.debug("Entered getAllOrderedByRoomsDaysPeriods()");
         return sessionFactory.getCurrentSession()
                 .createQuery(GET_ALL_ORDERED_BY_ROOMS_DAYS_PERIODS, Schedule.class)
+                .setParameter("semesterId", semesterId)
                 .getResultList();
     }
 }

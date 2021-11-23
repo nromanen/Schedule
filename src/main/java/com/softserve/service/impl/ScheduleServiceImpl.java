@@ -17,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.mail.MessagingException;
@@ -574,63 +575,6 @@ public class ScheduleServiceImpl implements ScheduleService {
         return scheduleRepository.getAllSchedulesByTeacherIdAndSemesterId(teacherId, semesterId);
     }
 
-    private Map<DayOfWeek, Map<EvenOdd, Map<Period, Map<String, Map<String, Map<LessonType, List<Lesson>>>>>>> getLessonsForRoomBySemester(Long semesterId, Long roomId) {
-        log.info("In getLessonsForRoomBySemester(semesterId = [{}], roomId = [{}])", semesterId, roomId);
-        List<Schedule> schedules = scheduleRepository.scheduleForRoomBySemester(semesterId, roomId);
-
-        Map<Period, List<Schedule>> uniquePeriodMap = new HashMap<>();
-        for (Schedule schedule1 : schedules) {
-            uniquePeriodMap.computeIfAbsent(schedule1.getPeriod(), k -> new ArrayList<>()).add(schedule1);
-        }
-        Map<DayOfWeek, Map<EvenOdd, Map<Period, Map<String, Map<String, Map<LessonType, List<Lesson>>>>>>> dayOfWeekMapMap = new LinkedHashMap<>();
-        for (DayOfWeek day : DayOfWeek.values()) {
-            Map<EvenOdd, Map<Period, Map<String, Map<String, Map<LessonType, List<Lesson>>>>>> evenMap = new HashMap<>();
-            Map<Period, Map<String, Map<String, Map<LessonType, List<Lesson>>>>> evenPeriodListMap = new LinkedHashMap<>();
-            Map<Period, Map<String, Map<String, Map<LessonType, List<Lesson>>>>> oddPeriodListMap = new LinkedHashMap<>();
-            for (Map.Entry<Period, List<Schedule>> periodListEntry : uniquePeriodMap.entrySet()) {
-                for (Schedule schedule : periodListEntry.getValue()) {
-                    Hibernate.initialize(schedule.getLesson().getSemester().getPeriods());
-                    Hibernate.initialize(schedule.getLesson().getSemester().getGroups());
-                }
-                Map<String, Map<String, Map<LessonType, List<Lesson>>>> resultEven = periodListEntry.getValue().stream().filter(schedule ->
-                        schedule.getDayOfWeek().equals(day) && (schedule.getEvenOdd().equals(EvenOdd.EVEN) || schedule.getEvenOdd().equals(EvenOdd.WEEKLY)))
-                        .map(Schedule::getLesson).collect(Collectors.groupingBy(Lesson::getSubjectForSite,
-                                Collectors.groupingBy(lesson -> lesson.getTeacher().getSurname(),
-                                        Collectors.groupingBy(Lesson::getLessonType))));
-
-                Map<String, Map<String, Map<LessonType, List<Lesson>>>> resultOdd = periodListEntry.getValue().stream().filter(schedule ->
-                        schedule.getDayOfWeek().equals(day) && (schedule.getEvenOdd().equals(EvenOdd.ODD) || schedule.getEvenOdd().equals(EvenOdd.WEEKLY)))
-                        .map(Schedule::getLesson).collect(Collectors.groupingBy(Lesson::getSubjectForSite,
-                                Collectors.groupingBy(lesson -> lesson.getTeacher().getSurname(),
-                                        Collectors.groupingBy(Lesson::getLessonType))));
-                evenPeriodListMap.put(periodListEntry.getKey(), resultEven);
-                evenMap.put(EvenOdd.EVEN, evenPeriodListMap);
-                oddPeriodListMap.put(periodListEntry.getKey(), resultOdd);
-                evenMap.put(EvenOdd.ODD, oddPeriodListMap);
-            }
-            if (!evenMap.containsKey(EvenOdd.EVEN)) {
-                evenMap.put(EvenOdd.EVEN, null);
-            }
-
-            if (!evenMap.containsKey(EvenOdd.ODD)) {
-                evenMap.put(EvenOdd.ODD, null);
-            }
-            dayOfWeekMapMap.put(day, evenMap);
-        }
-        return dayOfWeekMapMap;
-    }
-
-    @Override
-    public Map<Room, Map<DayOfWeek, Map<EvenOdd, Map<Period, Map<String, Map<String, Map<LessonType, List<Lesson>>>>>>>> getScheduleForRooms(Long semesterId) {
-        log.info("Enter into getScheduleForRooms");
-        List<Room> roomForDetails = roomService.getAll();
-        Map<Room, Map<DayOfWeek, Map<EvenOdd, Map<Period, Map<String, Map<String, Map<LessonType, List<Lesson>>>>>>>> roomMap = new LinkedHashMap<>();
-        for (Room room : roomForDetails) {
-            roomMap.put(room, getLessonsForRoomBySemester(semesterId, room.getId()));
-        }
-        return roomMap;
-    }
-
     @Override
     public List<Schedule> getSchedulesBySemester(Long semesterId) {
         log.info("In getScheduleBySemester(Long semesterId = [{}])", semesterId);
@@ -918,6 +862,23 @@ public class ScheduleServiceImpl implements ScheduleService {
                 "Schedule",
                 String.format("Schedule for %s %s %s", teacher.getSurname(), teacher.getName(), teacher.getPatronymic()),
                 bos);
+    }
+
+    /**
+     * The method is used for getting list of schedules grouped by rooms
+     * @param semesterId Id of Semester
+     * @return grouped List of schedule's list
+     */
+    @Override
+    @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
+    public List<List<Schedule>> getAllOrderedByRoomsDaysPeriods(Long semesterId){
+        log.debug("Entered getAllOrderedByRoomsDaysPeriods()");
+        Collection<List<Schedule>> schedules = scheduleRepository
+                .getAllOrderedByRoomsDaysPeriods(semesterId)
+                .stream()
+                .collect(Collectors.groupingBy(Schedule::getRoom, Collectors.toList()))
+                .values();
+        return new ArrayList<>(schedules);
     }
 }
 
