@@ -12,10 +12,8 @@ import com.softserve.exception.apierror.ApiValidationError;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.junit.Before;
-import org.junit.ClassRule;
-import org.junit.Rule;
-import org.junit.Test;
+import org.hamcrest.core.IsNull;
+import org.junit.*;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -403,15 +401,15 @@ public class TeacherControllerTest {
                 .andExpect(jsonPath("$[6].teacherStatus").value("ALREADY_EXIST"))
                 .andExpect(jsonPath("$[6].department.id").value(1))
 
-//                .andExpect(jsonPath("$[7].id").value("null"))
-                .andExpect(jsonPath("$[7].name").value("ValidationError"))
+                .andExpect(jsonPath("$[7].id").value(IsNull.nullValue()))
+                .andExpect(jsonPath("$[7].name").value("Name"))
                 .andExpect(jsonPath("$[7].surname").value("Surname"))
                 .andExpect(jsonPath("$[7].patronymic").value("Patronymic"))
                 .andExpect(jsonPath("$[7].position").value("Position"))
                 .andExpect(jsonPath("$[7].email").value("Email"))
-                .andExpect(jsonPath("$[7].teacherStatus").value("VALIDATION_ERROR"));
-//                .andExpect(jsonPath("$[6].department.id").value(null));
-
+                .andExpect(jsonPath("$[7].teacherStatus").value("VALIDATION_ERROR"))
+                .andExpect(jsonPath("$[7].department").value(IsNull.nullValue()));
     }
+
 }
 
