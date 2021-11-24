@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -103,11 +104,11 @@ public class GroupServiceImpl  implements GroupService {
     @Override
     public Group saveAfterOrder(Group group, Long afterId) {
         log.info("Entered getAllBySortingOrder({},{})", afterId, group);
-        Double maxOrder = groupRepository.getMaxSortingOrder().orElse(0.0);
+        Integer maxOrder = groupRepository.getMaxSortingOrder().orElse(0);
         if (afterId != null) {
-            Double order = getSortingOrderById(afterId)+1;
+            Integer order = getSortingOrderById(afterId)+1;
             group.setSortingOrder(order);
-            groupRepository.changeGroupOrderOffset(order);
+            groupRepository.changeGroupOrderOffset(order, maxOrder+1);
         } else {
             group.setSortingOrder(maxOrder+1);
         }
@@ -127,23 +128,20 @@ public class GroupServiceImpl  implements GroupService {
         if (!groupRepository.isExistsById(group.getId())) {
             throw new EntityNotFoundException(Group.class, "id", group.getId().toString());
         }
+        Integer maxOrder = groupRepository.getMaxSortingOrder().orElse(0);
         if (afterId != null) {
-            Double previousPosition = getSortingOrderById(afterId);
-            Double nextPosition = groupRepository.getNextPosition(previousPosition)
-                    .orElse(previousPosition+2);
-            Double newPosition = (previousPosition+nextPosition)/2;
-            if (newPosition - 1 < 0.01) {
-                newPosition = groupRepository.getMaxSortingOrder().orElse(0.0)+1;
-            }
-            group.setSortingOrder(newPosition);
+            Integer lowerBound = getSortingOrderById(afterId)+1;
+            Integer upperBound = Optional.ofNullable(group.getSortingOrder()).orElse(maxOrder+1)+1;
+            group.setSortingOrder(lowerBound);
+            groupRepository.changeGroupOrderOffset(lowerBound, upperBound);
         } else {
-            group.setSortingOrder(1.0);
-            groupRepository.changeGroupOrderOffset(0.0);
+            group.setSortingOrder(1);
+            groupRepository.changeGroupOrderOffset(0, maxOrder+1);
         }
         return groupRepository.update(group);
     }
 
-    private Double getSortingOrderById(Long id) {
+    private Integer getSortingOrderById(Long id) {
         log.debug("Entered getSortingOrderById({})", id);
         return groupRepository.getSortingOrderById(id)
                 .orElseThrow(() -> new SortingOrderNotExistsException(Group.class, id));
