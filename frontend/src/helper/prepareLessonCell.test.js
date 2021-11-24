@@ -39,7 +39,7 @@ describe('prepareLessonSubCardCell function', () => {
         });
         it('if card is null or undefined but place equal ONLINE', () => {
             let card = null;
-            expect(prepareLessonSubCardCell(card, places.AUDITORY)).toEqual('');
+            expect(prepareLessonSubCardCell(card, places.ONLINE)).toEqual('');
             card = undefined;
             expect(prepareLessonSubCardCell(card, places.ONLINE)).toEqual('');
         });
