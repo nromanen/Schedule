@@ -29,11 +29,6 @@ const LanguageSelector = () => {
     });
     radioLangClasses[i18n.language] += ' activeLanguage';
 
-    useEffect(() => {
-        console.log(localStorage.getItem('i18nextLng'));
-        i18n.changeLanguage(localStorage.getItem('i18nextLng') || languageShorthands.Ukrainian);
-    }, []);
-
     const changeLanguage = (event) => {
         radioLangClasses[i18n.language] = 'languageItem ';
         radioLangClasses[event.target.value] += ' activeLanguage';
