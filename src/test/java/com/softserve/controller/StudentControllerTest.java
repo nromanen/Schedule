@@ -36,6 +36,8 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import static java.util.Arrays.asList;
@@ -126,6 +128,7 @@ public class StudentControllerTest {
                 .email("romaniuk@gmail.com")
                 .group(groupDTO)
                 .build();
+
     }
 
     @Test
@@ -157,6 +160,37 @@ public class StudentControllerTest {
     public void updateStudent() throws Exception {
         assertions.assertForUpdate(studentDTOWithId5L);
     }
+
+    @Test
+    public void updateListStudent() throws Exception {
+        List<StudentDTO> listOfStudentsForUpdate = new ArrayList<>();
+        StudentDTO student = new StudentDTO();
+        student.setEmail("aware.123db@gmail.com");
+        student.setId(4L);
+        student.setGroup(groupDTO);
+        student.setName("First Name11");
+        student.setSurname("First Surname11");
+        student.setPatronymic("First Patronymic11");
+        listOfStudentsForUpdate.add(student);
+        student = new StudentDTO();
+        student.setEmail("student@gmail.com");
+        student.setId(5L);
+        student.setGroup(groupDTO);
+        student.setName("First Name22");
+        student.setSurname("First Surname22");
+        student.setPatronymic("First Patronymic22");
+        listOfStudentsForUpdate.add(student);
+
+
+        mockMvc.perform(put("/students/list")
+                        .content(objectMapper.writeValueAsString(listOfStudentsForUpdate))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0]").value(listOfStudentsForUpdate.get(0)))
+                .andExpect(jsonPath("$[1]").value(listOfStudentsForUpdate.get(1)));
+
+    }
+
 
     @Test
     public void throwFieldAlreadyExistsExceptionWhenUpdate() throws Exception {
