@@ -67,6 +67,18 @@ public class StudentController {
         return ResponseEntity.status(HttpStatus.OK).body(studentMapper.convertToDTO(updatedStudent));
     }
 
+    @PutMapping("/list")
+    @PreAuthorize("hasRole('MANAGER')")
+    @ApiOperation(value = "Update List of students")
+    public ResponseEntity<List<StudentDTO>> updateList(@RequestBody List<StudentDTO> studentsDTO) {
+        log.info("Enter into update of StudentController with studentDTO = [{}] ", studentsDTO);
+        List<Student> updatedStudents =  new ArrayList<>();
+        for (StudentDTO studentDTO : studentsDTO) {
+            updatedStudents.add(studentService.update(studentMapper.convertToEntity(studentDTO)));
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(studentMapper.convertToDTOList(updatedStudents));
+    }
+
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('MANAGER')")
     @ApiOperation(value = "Delete student by id")
