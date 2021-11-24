@@ -97,7 +97,8 @@ function* updateGroup({ data }) {
 
 function* submitGroupForm({ group }) {
     try {
-        yield call(handleFormSubmit(group, createGroup, updateGroup), { data: group });
+        console.log(group);
+        // yield call(handleFormSubmit(group, createGroup, updateGroup), { data: group });
     } catch (err) {
         yield put(setOpenErrorSnackbar(createErrorMessage(err)));
     }

@@ -1,18 +1,21 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Field } from 'redux-form';
 import Button from '@material-ui/core/Button';
 import { useTranslation } from 'react-i18next';
 
 import './AddGroupForms.scss';
+import { Autocomplete } from '@material-ui/lab';
+import TextField from '@material-ui/core/TextField';
 import renderTextField from '../../share/renderedFields/input';
 import { required, uniqueGroup, minLengthValue } from '../../validation/validateFields';
 import { getClearOrCancelTitle, setDisableButton } from '../../helper/disableComponent';
 import {
-    SAVE_BUTTON_LABEL,
-    GROUP_Y_LABEL,
-    CREATE_TITLE,
-    GROUP_LABEL,
     EDIT_TITLE,
+    GROUP_LABEL,
+    CREATE_TITLE,
+    GROUP_Y_LABEL,
+    SAVE_BUTTON_LABEL,
+    FORM_GROUP_LABEL_AFTER,
 } from '../../constants/translationLabels/formElements';
 
 export const AddGroup = (props) => {
@@ -25,15 +28,18 @@ export const AddGroup = (props) => {
         setGroup,
         pristine,
         invalid,
+        groups,
         group,
     } = props;
     const { t } = useTranslation('formElements');
+    const [afterIdGroup, setAfterIdGroup] = useState(null);
 
     useEffect(() => {
         if (group.id) {
             initialize({
                 id: group.id,
                 title: group.title,
+                afterId: afterIdGroup,
             });
         } else {
             initialize();
@@ -43,6 +49,7 @@ export const AddGroup = (props) => {
     const onReset = () => {
         setGroup({});
         clearGroupStart();
+        setAfterIdGroup(null);
     };
 
     return (
@@ -53,10 +60,30 @@ export const AddGroup = (props) => {
             </h3>
             <form
                 onSubmit={handleSubmit((data) => {
-                    submitGroupStart(data);
+                    submitGroupStart({ ...data, afterId: afterIdGroup.id });
                     setGroup({});
                 })}
             >
+                <Autocomplete
+                    id="group"
+                    value={afterIdGroup}
+                    options={groups}
+                    className="group-lesson"
+                    clearOnEscape
+                    openOnFocus
+                    getOptionLabel={(option) => option.title}
+                    onChange={(_, newValue) => {
+                        setAfterIdGroup(newValue);
+                    }}
+                    renderInput={(params) => (
+                        <TextField
+                            className="textField"
+                            {...params}
+                            label={t(FORM_GROUP_LABEL_AFTER)}
+                            margin="normal"
+                        />
+                    )}
+                />
                 <Field
                     className="form-field"
                     name="title"
