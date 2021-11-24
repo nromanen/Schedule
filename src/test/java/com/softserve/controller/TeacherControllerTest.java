@@ -21,6 +21,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.query.Collation;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers;
 import org.springframework.test.context.ContextConfiguration;
@@ -32,14 +33,19 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
+import static org.hamcrest.Matchers.hasSize;
 import java.util.stream.Collectors;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @Category(IntegrationTestCategory.class)
 @RunWith(JUnitParamsRunner.class)
@@ -94,7 +100,6 @@ public class TeacherControllerTest {
 
         teacherDtoWithId1L = new TeacherDTO();
         teacherDtoWithId1L.setId(10L);
-        teacherDtoWithId1L.setDisable(false);
         teacherDtoWithId1L.setName(teacherName);
         teacherDtoWithId1L.setSurname(teacherSurname);
         teacherDtoWithId1L.setPatronymic(teacherPatronymic);
@@ -103,8 +108,7 @@ public class TeacherControllerTest {
         teacherDtoWithId1L.setEmail(teacherEmail);
 
         disabledTeacherDtoWithId2LAndWithoutEmail = new TeacherDTO();
-        disabledTeacherDtoWithId2LAndWithoutEmail.setId(20L);
-        disabledTeacherDtoWithId2LAndWithoutEmail.setDisable(true);
+        disabledTeacherDtoWithId2LAndWithoutEmail.setId(2L);
         disabledTeacherDtoWithId2LAndWithoutEmail.setName(teacherName);
         disabledTeacherDtoWithId2LAndWithoutEmail.setSurname(teacherSurname);
         disabledTeacherDtoWithId2LAndWithoutEmail.setPatronymic(teacherPatronymic);
@@ -112,7 +116,7 @@ public class TeacherControllerTest {
         disabledTeacherDtoWithId2LAndWithoutEmail.setDepartmentDTO(departmentDTO);
 
         teacherForUpdateDtoWithId1L = new TeacherForUpdateDTO();
-        teacherForUpdateDtoWithId1L.setId(10L);
+        teacherForUpdateDtoWithId1L.setId(1L);
         teacherForUpdateDtoWithId1L.setDisable(false);
         teacherForUpdateDtoWithId1L.setName(teacherName);
         teacherForUpdateDtoWithId1L.setSurname(teacherSurname);
@@ -122,7 +126,7 @@ public class TeacherControllerTest {
         teacherForUpdateDtoWithId1L.setEmail(teacherEmail);
 
         teacherForUpdateDtoWithId2LAndWithoutEmail = new TeacherForUpdateDTO();
-        teacherForUpdateDtoWithId2LAndWithoutEmail.setId(20L);
+        teacherForUpdateDtoWithId2LAndWithoutEmail.setId(2L);
         teacherForUpdateDtoWithId2LAndWithoutEmail.setDisable(true);
         teacherForUpdateDtoWithId2LAndWithoutEmail.setName(teacherName);
         teacherForUpdateDtoWithId2LAndWithoutEmail.setSurname(teacherSurname);
@@ -133,12 +137,14 @@ public class TeacherControllerTest {
 
     @Test
     public void getTeacherById() throws Exception {
-        assertions.assertForGet(teacherDtoWithId1L, "/teachers/10");
+        assertions.assertForGet(teacherDtoWithId1L, "/teachers/1");
     }
 
     @Test
     public void getAllTeachers() throws Exception {
-        assertions.assertForGetListWithOneEntity(teacherDtoWithId1L);
+//        assertions.assertForGetListWithOneEntity(teacherDtoWithId1L);
+        mockMvc.perform(get("/teachers").contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -167,7 +173,7 @@ public class TeacherControllerTest {
 
     @Test
     public void deleteTeacher() throws Exception {
-        assertions.assertForDelete(10);
+        assertions.assertForDelete(1);
     }
 
     @Test
@@ -177,7 +183,9 @@ public class TeacherControllerTest {
 
     @Test
     public void getAllPublicTeachers() throws Exception {
-        assertions.assertForGetListWithOneEntity(teacherDtoWithId1L, "/public/teachers");
+//        assertions.assertForGetListWithOneEntity(teacherDtoWithId1L, "/public/teachers");
+        mockMvc.perform(get("/public/teachers").contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -187,7 +195,9 @@ public class TeacherControllerTest {
 
     @Test
     public void getAllNotRegisteredTeachers() throws Exception {
-        assertions.assertForGetListWithOneEntity(disabledTeacherDtoWithId2LAndWithoutEmail, "/not-registered-teachers");
+//        assertions.assertForGetListWithOneEntity(disabledTeacherDtoWithId2LAndWithoutEmail, "/not-registered-teachers");
+        mockMvc.perform(get("/not-registered-teachers").contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
     }
 
     public Object[] parametersForTestValidationException() {
@@ -325,6 +335,93 @@ public class TeacherControllerTest {
                 jsonPath("$.position").value(expected.getPosition()),
                 jsonPath("$.department").value(expected.getDepartmentDTO())
         );
+    }
+
+    @Test
+    public void testImportFromCsv() throws Exception {
+
+        MockMultipartFile multipartFile = new MockMultipartFile("file",
+                "teachers.csv",
+                "csv",
+                Files.readAllBytes(Path.of("src/test/resources/test_teachers.csv")));
+
+        mockMvc.perform(multipart("/teachers/import").file(multipartFile).param("departmentId", "2"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json"))
+                .andExpect(jsonPath("$", hasSize(8)))
+
+                .andExpect(jsonPath("$[0].id").value(8))
+                .andExpect(jsonPath("$[0].name").value("FirstName"))
+                .andExpect(jsonPath("$[0].surname").value("FirstSurname"))
+                .andExpect(jsonPath("$[0].patronymic").value("FirstPatronymic"))
+                .andExpect(jsonPath("$[0].position").value("FirstPosition"))
+                .andExpect(jsonPath("$[0].email").value("FirstEmail@test.com"))
+                .andExpect(jsonPath("$[0].teacherStatus").value("SAVED"))
+                .andExpect(jsonPath("$[0].department.id").value(2))
+
+                .andExpect(jsonPath("$[1].id").value(3))
+                .andExpect(jsonPath("$[1].name").value("SecondName"))
+                .andExpect(jsonPath("$[1].surname").value("SecondSurname"))
+                .andExpect(jsonPath("$[1].patronymic").value("SecondPatronymic"))
+                .andExpect(jsonPath("$[1].position").value("SecondPosition"))
+                .andExpect(jsonPath("$[1].email").value("SecondEmail@test.com"))
+                .andExpect(jsonPath("$[1].teacherStatus").value("ALREADY_EXIST"))
+                .andExpect(jsonPath("$[1].department.id").value(2))
+
+                .andExpect(jsonPath("$[2].id").value(4))
+                .andExpect(jsonPath("$[2].name").value("ThirdName"))
+                .andExpect(jsonPath("$[2].surname").value("ThirdSurname"))
+                .andExpect(jsonPath("$[2].patronymic").value("ThirdPatronymic"))
+                .andExpect(jsonPath("$[2].position").value("ThirdPosition"))
+                .andExpect(jsonPath("$[2].email").value("ThirdEmail@test.com"))
+                .andExpect(jsonPath("$[2].teacherStatus").value("ALREADY_EXIST"))
+                .andExpect(jsonPath("$[2].department.id").value(1))
+
+                .andExpect(jsonPath("$[3].id").value(9))
+                .andExpect(jsonPath("$[3].name").value("FourthName"))
+                .andExpect(jsonPath("$[3].surname").value("FourthSurname"))
+                .andExpect(jsonPath("$[3].patronymic").value("FourthPatronymic"))
+                .andExpect(jsonPath("$[3].position").value("FourthPosition"))
+                .andExpect(jsonPath("$[3].email").value("FourthEmail@test.com"))
+                .andExpect(jsonPath("$[3].teacherStatus").value("SAVED"))
+                .andExpect(jsonPath("$[3].department.id").value(2))
+
+                .andExpect(jsonPath("$[4].id").value(5))
+                .andExpect(jsonPath("$[4].name").value("Five"))
+                .andExpect(jsonPath("$[4].surname").value("Five"))
+                .andExpect(jsonPath("$[4].patronymic").value("Five"))
+                .andExpect(jsonPath("$[4].position").value("Five"))
+                .andExpect(jsonPath("$[4].email").value("Five@test.com"))
+                .andExpect(jsonPath("$[4].teacherStatus").value("ALREADY_EXIST"))
+                .andExpect(jsonPath("$[4].department.id").value(2))
+
+                .andExpect(jsonPath("$[5].id").value(6))
+                .andExpect(jsonPath("$[5].name").value("Six"))
+                .andExpect(jsonPath("$[5].surname").value("Six"))
+                .andExpect(jsonPath("$[5].patronymic").value("Six"))
+                .andExpect(jsonPath("$[5].position").value("Six"))
+                .andExpect(jsonPath("$[5].email").value("Six@test.com"))
+                .andExpect(jsonPath("$[5].teacherStatus").value("ALREADY_EXIST"))
+                .andExpect(jsonPath("$[5].department.id").value(1))
+
+                .andExpect(jsonPath("$[6].id").value(7))
+                .andExpect(jsonPath("$[6].name").value("Seven"))
+                .andExpect(jsonPath("$[6].surname").value("Seven"))
+                .andExpect(jsonPath("$[6].patronymic").value("Seven"))
+                .andExpect(jsonPath("$[6].position").value("Seven"))
+                .andExpect(jsonPath("$[6].email").value("Seven@test.com"))
+                .andExpect(jsonPath("$[6].teacherStatus").value("ALREADY_EXIST"))
+                .andExpect(jsonPath("$[6].department.id").value(1))
+
+//                .andExpect(jsonPath("$[7].id").value("null"))
+                .andExpect(jsonPath("$[7].name").value("ValidationError"))
+                .andExpect(jsonPath("$[7].surname").value("Surname"))
+                .andExpect(jsonPath("$[7].patronymic").value("Patronymic"))
+                .andExpect(jsonPath("$[7].position").value("Position"))
+                .andExpect(jsonPath("$[7].email").value("Email"))
+                .andExpect(jsonPath("$[7].teacherStatus").value("VALIDATION_ERROR"));
+//                .andExpect(jsonPath("$[6].department.id").value(null));
+
     }
 }
 
