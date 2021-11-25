@@ -7,7 +7,7 @@ import './SemesterForm.scss';
 import renderCheckboxField from '../../../share/renderedFields/checkbox';
 import renderTextField from '../../../share/renderedFields/input';
 import renderMonthPicker from '../../../share/renderedFields/timeSemester';
-import { MultiselectForGroups } from '../../../helper/MultiselectForGroups';
+import MultiselectForGroups from '../../../share/Multiselects/MultiSelectForGroups';
 import {
     required,
     minYearValue,

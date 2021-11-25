@@ -4,7 +4,7 @@ import { initReactI18next } from 'react-i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
 
 const supportedLangs = ['en', 'uk'];
-const userLang = (navigator.language || navigator.userLanguage).slice(0, 2);
+const userLang = localStorage.getItem('i18nextLng') || navigator.language;
 export const lang = supportedLangs.find((i) => i === userLang) || 'en';
 
 i18next

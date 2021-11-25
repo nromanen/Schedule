@@ -1,12 +1,12 @@
 import React, { useRef } from 'react';
 import Select from 'react-select';
-import './multiselect.scss';
+import './MultiSelect.scss';
 import { useTranslation } from 'react-i18next';
-import { CHOOSE_GROUPS, ALL_GROUPS } from '../constants/translationLabels/common';
-import CustomDialog from '../containers/Dialogs/CustomDialog';
-import { dialogCancelButton, dialogConfirmButton } from '../constants/dialogs';
+import { CHOOSE_GROUPS, ALL_GROUPS } from '../../constants/translationLabels/common';
+import CustomDialog from '../../containers/Dialogs/CustomDialog';
+import { dialogCancelButton, dialogConfirmButton } from '../../constants/dialogs';
 
-export const MultiselectForGroups = (props) => {
+const MultiselectForGroups = (props) => {
     const { t } = useTranslation('common');
     const valueRef = useRef(props.value);
     valueRef.current = props.value;
@@ -70,3 +70,5 @@ export const MultiselectForGroups = (props) => {
         </CustomDialog>
     );
 };
+
+export default MultiselectForGroups;

@@ -83,7 +83,7 @@ const dialogMapper = (props) => {
             return {
                 title: (
                     <>
-                        {i18n.t(COMMON_DO_YOU_WANNA)}
+                        {i18n.t(COMMON_DO_YOU_WANNA)}{' '}
                         <span>
                             <a
                                 className="go-to-meeting"

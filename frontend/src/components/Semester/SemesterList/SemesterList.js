@@ -19,8 +19,8 @@ import { getGroupsOptionsForSelect } from '../../../utils/selectUtils';
 import SemesterCopyForm from '../../../containers/SemesterPage/SemesterCopyForm';
 import SemesterCard from './SemesterCard';
 import CustomDialog from '../../../containers/Dialogs/CustomDialog';
-import { MultiselectForGroups } from '../../../helper/MultiselectForGroups';
 import { createMessage } from '../../../utils/sagaUtils';
+import MultiselectForGroups from '../../../share/Multiselects/MultiSelectForGroups';
 
 const SemesterList = (props) => {
     const { t } = useTranslation('formElements');
