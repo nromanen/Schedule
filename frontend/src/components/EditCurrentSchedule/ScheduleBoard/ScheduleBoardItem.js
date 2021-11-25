@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -18,7 +18,6 @@ import {
 } from '../../../constants/translationLabels/common';
 import { actionType } from '../../../constants/actionTypes';
 import { getTeacherName } from '../../../helper/renderTeacher';
-import i18n from '../../../i18n';
 
 const ScheduleItem = (props) => {
     const {
@@ -30,7 +29,7 @@ const ScheduleItem = (props) => {
         t,
         openDialogWithData,
     } = props;
-    const [anchorEl, setAnchorEl] = React.useState(null);
+    const [anchorEl, setAnchorEl] = useState(null);
     const { lesson } = itemData;
 
     const handleClick = (event) => {
@@ -41,13 +40,14 @@ const ScheduleItem = (props) => {
     };
 
     const handelEdit = () => {
-        const { group } = lesson;
+        const { group, semester } = lesson;
+        const { id, period, dayOfWeek, evenOdd } = itemData;
         const editObj = {
-            id: itemData.id,
-            dayOfWeek: itemData.dayOfWeek,
-            periodId: itemData.period.id,
-            evenOdd: itemData.evenOdd,
-            semesterId: lesson.semester.id,
+            id,
+            dayOfWeek,
+            periodId: period.id,
+            evenOdd,
+            semesterId: semester.id,
         };
         checkRoomAvailability(editObj);
         selectByGroupId(group.id);
