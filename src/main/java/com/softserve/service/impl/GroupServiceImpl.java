@@ -174,6 +174,7 @@ public class GroupServiceImpl  implements GroupService {
     public Group update(Group object) {
         log.info("In update(entity = [{}]", object);
         checkTitleForUniquenessIgnoringId(object.getTitle(), object.getId());
+        object.setSortingOrder(groupRepository.getSortingOrderById(object.getId()).orElse(null));
         return groupRepository.update(object);
     }
 
