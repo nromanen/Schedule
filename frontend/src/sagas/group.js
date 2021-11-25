@@ -126,6 +126,10 @@ function* deleteGroup({ id }) {
 
 function* dragAndDropGroup({ indexAfterGroup, dragGroup, afterGroupId }) {
     try {
+        console.log(indexAfterGroup, {
+            ...dragGroup,
+            afterId: afterGroupId,
+        });
         yield put(setLoading(true));
         yield call(axiosCall, GROUPS_AFTER_URL, PUT, {
             ...dragGroup,

@@ -14,6 +14,7 @@ import CustomDialog from '../../containers/Dialogs/CustomDialog';
 import AddStudentDialog from '../../share/DialogWindows/_dialogWindows/AddStudentDialog';
 import ShowStudentsOnGroupDialog from '../../containers/Students/ShowStudentsOnGroupDialog';
 import { ADD_STUDENT_ACTION, SHOW_STUDENTS_ACTION } from '../../constants/actionsUrl';
+import { DraggableCard } from '../../share/DraggableCard/DraggableCard';
 
 const GroupList = (props) => {
     const {
@@ -79,6 +80,10 @@ const GroupList = (props) => {
         setIsOpenShowStudentsDialog(false);
     };
 
+    const dragAndDropItem = (indexBeforeItem, afterItemId) => {
+        dragAndDropGroupStart(indexBeforeItem, dragGroup, afterItemId);
+    };
+
     const checkParamsForActions = () => {
         const { id, action } = match.params;
         const checkParamsAndSetActions = {
@@ -104,29 +109,6 @@ const GroupList = (props) => {
     if (isEmpty(visibleGroups)) {
         return <NotFound name={t(GROUP_Y_LABEL)} />;
     }
-
-    const styleCard = (e) => {
-        if (e.target.className === 'group-card drag-border-card') {
-            e.target.className = 'group-card';
-        }
-    };
-    const dragStartHandler = (card) => {
-        setGroupStart(card);
-    };
-    const dragLeaveHandler = (e) => {
-        styleCard(e);
-    };
-    const dragOverHandler = (e) => {
-        e.preventDefault();
-        if (e.target.className === 'group-card') {
-            e.target.className = 'group-card drag-border-card';
-        }
-    };
-    const dropHandler = (e, card, index) => {
-        e.preventDefault();
-        styleCard(e);
-        dragAndDropGroupStart(index, dragGroup, card.id);
-    };
 
     return (
         <>
@@ -154,25 +136,22 @@ const GroupList = (props) => {
             )}
             <div className="group-list">
                 {visibleGroups.map((item, index) => (
-                    <div
-                        className="drag-and-drop-card"
-                        onDragStart={() => dragStartHandler(item)}
-                        onDragLeave={(e) => dragLeaveHandler(e)}
-                        onDragOver={(e) => dragOverHandler(e)}
-                        onDrop={(e) => dropHandler(e, item, index)}
-                        draggable
+                    <DraggableCard
                         key={item.id}
+                        item={item}
+                        index={index}
+                        setGroupStart={setGroupStart}
+                        dragAndDropItem={dragAndDropItem}
                     >
                         <GroupCard
                             item={item}
-                            index={index}
                             setGroup={setGroup}
                             disabled={isDisabled}
                             showConfirmDialog={showConfirmDialog}
                             showAddStudentDialog={showAddStudentDialog}
                             showStudentsByGroup={showStudentsByGroup}
                         />
-                    </div>
+                    </DraggableCard>
                 ))}
             </div>
         </>
