@@ -3,20 +3,23 @@ package com.softserve.mapper;
 import com.softserve.dto.DaysOfWeekWithClassesForRoomDTO;
 import com.softserve.dto.ScheduleForRoomDTO;
 
+import com.softserve.entity.Room;
 import com.softserve.entity.Schedule;
 import com.softserve.entity.enums.EvenOdd;
+import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.DayOfWeek;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = RoomMapper.class)
 public abstract class ScheduleForRoomMapper {
 
     private LessonsListInRoomScheduleMapper lessonsMapper;
-    private RoomMapper roomMapper;
 
     public ScheduleForRoomMapper() {}
 
@@ -25,18 +28,13 @@ public abstract class ScheduleForRoomMapper {
         this.lessonsMapper = lessonsMapper;
     }
 
-    @Autowired
-    public void setRoomMapper(RoomMapper roomMapper) {
-        this.roomMapper = roomMapper;
-    }
-
     public abstract List<ScheduleForRoomDTO> schedulesToScheduleForRoomDTO(List<List<Schedule>> schedules);
 
-    public ScheduleForRoomDTO scheduleToScheduleForRoomDTO(List<Schedule> schedules){
-        ScheduleForRoomDTO scheduleForRoomDTO = new ScheduleForRoomDTO();
+    @Mapping(source = "schedules", target = "room", qualifiedBy = ToRoomDto.class)
+    public abstract ScheduleForRoomDTO scheduleToScheduleForRoomDTO(List<Schedule> schedules);
 
-        scheduleForRoomDTO.setRoom(roomMapper.convertToDto(schedules.get(0).getRoom()));
-
+    @AfterMapping
+    public void setDayOfWeekWithClassesForRoomDto(List<Schedule> schedules, @MappingTarget ScheduleForRoomDTO schedule){
         Set<DayOfWeek> dayOfWeeks = schedules.get(0).getLesson().getSemester().getDaysOfWeek();
 
         List<DaysOfWeekWithClassesForRoomDTO> list = new ArrayList<>();
@@ -45,10 +43,9 @@ public abstract class ScheduleForRoomMapper {
             list.add(toDaysOfWeekWithClassesForRoomDTO(schedules, dayOfWeek));
         }
 
-        scheduleForRoomDTO.setSchedules(list);
-
-        return scheduleForRoomDTO;
+        schedule.setSchedules(list);
     }
+
 
     public DaysOfWeekWithClassesForRoomDTO toDaysOfWeekWithClassesForRoomDTO(List<Schedule> schedules,
                                                                               DayOfWeek dayName) {
