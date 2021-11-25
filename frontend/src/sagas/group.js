@@ -115,6 +115,14 @@ function* deleteGroup({ id }) {
     }
 }
 
+function* dragAndDropGroup({ indexAfterGroup, dragGroup, afterGroupID }) {
+    try {
+        console.log(indexAfterGroup, dragGroup, afterGroupID);
+    } catch (err) {
+        yield put(setOpenErrorSnackbar(createErrorMessage(err)));
+    }
+}
+
 function* toggleDisabledGroup({ groupId, disabledStatus }) {
     try {
         if (groupId) {
@@ -155,12 +163,13 @@ export function* getAllPublicGroups({ id }) {
 }
 
 export default function* groupWatcher() {
-    yield takeEvery(actionTypes.TOGGLE_DISABLED_STATUS_GROUP, toggleDisabledGroup);
-    yield takeLatest(actionTypes.GET_DISABLED_GROUPS_START, getDisabledGroups);
-    yield takeLatest(actionTypes.GET_ENABLED_GROUPS_START, getEnabledGroups);
-    yield takeEvery(actionTypes.GET_GROUP_BY_ID_START, getGroupById);
-    yield takeEvery(actionTypes.SUBMIT_GROUP_START, submitGroupForm);
     yield takeEvery(actionTypes.DELETE_GROUP_START, deleteGroup);
     yield takeEvery(actionTypes.CLEAR_GROUP_START, clearGroup);
+    yield takeEvery(actionTypes.GET_GROUP_BY_ID_START, getGroupById);
+    yield takeEvery(actionTypes.SUBMIT_GROUP_START, submitGroupForm);
+    yield takeLatest(actionTypes.GET_ENABLED_GROUPS_START, getEnabledGroups);
+    yield takeEvery(actionTypes.DRAG_AND_DROP_GROUP_START, dragAndDropGroup);
+    yield takeLatest(actionTypes.GET_DISABLED_GROUPS_START, getDisabledGroups);
     yield takeLatest(actionTypes.GET_ALL_PUBLIC_GROUPS_START, getAllPublicGroups);
+    yield takeEvery(actionTypes.TOGGLE_DISABLED_STATUS_GROUP, toggleDisabledGroup);
 }

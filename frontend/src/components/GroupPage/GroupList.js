@@ -20,11 +20,11 @@ const GroupList = (props) => {
         getEnabledGroupsStart,
         getDisabledGroupsStart,
         setIsOpenConfirmDialog,
+        dragAndDropGroupStart,
         toggleDisabledStatus,
         isOpenConfirmDialog,
         selectGroupSuccess,
         deleteGroupStart,
-        dragAndDropGroup,
         searchItem,
         loading,
         groups,
@@ -115,13 +115,11 @@ const GroupList = (props) => {
         e.preventDefault();
         e.target.style.background = '#4c94f6';
     };
-    const dropHandler = (e, index) => {
+    const dropHandler = (e, card, index) => {
         e.preventDefault();
         e.target.style.background = 'white';
         console.log(index, dragGroup);
-        // const newGroups = dragGroup.filter((el) => el.id !== groupStart.id);
-        // newGroups.splice(index1 + 1, 0, groupStart);
-        dragAndDropGroup(index, dragGroup);
+        dragAndDropGroupStart(index, dragGroup, card.id);
     };
 
     return (
@@ -155,7 +153,7 @@ const GroupList = (props) => {
                         onDragStart={() => dragStartHandler(item)}
                         onDragLeave={(e) => dragLeaveHandler(e)}
                         onDragOver={(e) => dragOverHandler(e)}
-                        onDrop={(e) => dropHandler(e, index)}
+                        onDrop={(e) => dropHandler(e, item, index)}
                         draggable
                         key={item.id}
                     >

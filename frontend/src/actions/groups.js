@@ -20,6 +20,12 @@ export const updateGroupSuccess = (group) => ({
     group,
 });
 
+export const dragAndDropGroupSuccess = (indexAfterGroup, dragGroup) => ({
+    type: actionTypes.DRAG_AND_DROP_SUCCESS_GROUP,
+    indexAfterGroup,
+    dragGroup,
+});
+
 export const getAllPublicGroupsStart = (id) => ({
     type: actionTypes.GET_ALL_PUBLIC_GROUPS_START,
     id,
@@ -72,8 +78,9 @@ export const toggleDisabledStatus = (groupId, disabledStatus) => ({
     disabledStatus,
 });
 
-export const dragAndDropGroup = (indexAfterGroup, dragGroup) => ({
-    type: actionTypes.DRAG_AND_DROP_GROUP,
+export const dragAndDropGroupStart = (indexAfterGroup, dragGroup, afterGroupID) => ({
+    type: actionTypes.DRAG_AND_DROP_GROUP_START,
     indexAfterGroup,
     dragGroup,
+    afterGroupID,
 });
