@@ -22,13 +22,12 @@ import com.softserve.util.CsvFileParser;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import javax.validation.ConstraintViolationException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Transactional
 @Service
@@ -251,21 +250,13 @@ public class TeacherServiceImpl implements TeacherService {
      */
     @Override
     public List<TeacherImportDTO> saveFromFile(MultipartFile file, Long departmentId) {
-        log.info("Enter into saveFromFile of TeacherServiceImpl");
+        log.info("Enter into saveFromFile of TeacherServiceImpl with departmentId {}", departmentId);
 
         List<TeacherImportDTO> teachers = CsvFileParser.getTeachersFromFile(file);
 
-        List<TeacherImportDTO> savedTeachers = new ArrayList<>();
-
-        for(TeacherImportDTO teacher : teachers){
-            TeacherImportDTO test = saveTeacher(departmentId, teacher);
-            savedTeachers.add(test);
-        }
-
-       return savedTeachers;
+       return teachers.stream().map(teacher -> saveTeacher(departmentId, teacher)).collect(Collectors.toList());
     }
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public TeacherImportDTO saveTeacher(Long departmentId, TeacherImportDTO teacher) {
         try{
 
