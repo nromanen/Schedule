@@ -105,12 +105,14 @@ public class GroupServiceImpl  implements GroupService {
     public Group saveAfterOrder(Group group, Long afterId) {
         log.info("Entered getAllBySortingOrder({},{})", afterId, group);
         Integer maxOrder = groupRepository.getMaxSortingOrder().orElse(0);
+        Integer order;
         if (afterId != null) {
-            Integer order = getSortingOrderById(afterId)+1;
+            order = getSortingOrderById(afterId)+1;
             group.setSortingOrder(order);
             groupRepository.changeGroupOrderOffset(order, maxOrder+1);
         } else {
-            group.setSortingOrder(maxOrder+1);
+            group.setSortingOrder(1);
+            groupRepository.changeGroupOrderOffset(0, maxOrder+1);
         }
         return groupRepository.save(group);
     }

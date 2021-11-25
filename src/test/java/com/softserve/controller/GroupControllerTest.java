@@ -204,7 +204,7 @@ public class GroupControllerTest {
                 .disable(false)
                 .build();
         assertions.assertForSave(groupDTO, GroupControllerTest::matchIgnoringId, "/groups/after");
-        List<GroupDTO> expected = List.of(groupDTOWithID6L, groupDTOWithID4L, groupDTO);
+        List<GroupDTO> expected = List.of(groupDTO, groupDTOWithID6L, groupDTOWithID4L);
         groupDTO.setId(1L);
         assertions.assertForGetList(expected, "/groups/ordered");
     }
