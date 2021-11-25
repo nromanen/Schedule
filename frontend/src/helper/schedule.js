@@ -37,6 +37,7 @@ export const removeClassDayBoard = (dayName, classId) => {
 };
 
 export const getColorByFullness = (array = []) => {
+    console.log(array);
     let color = isEmpty(array) ? 'available' : 'allow';
     let prevLesson = {
         teacherName: array[0]?.teacher_for_site,

@@ -27,7 +27,7 @@ export const searchLessonsByTeacher = (lessons, term) => {
             isIncludeValue(teacher.surname, termTmp) ||
             isIncludeValue(subjectForSite, termTmp) ||
             isIncludeValue(lessonType, termTmp) ||
-            (isIncludeValue('Grouped', term) && grouped)
+            (isIncludeValue('групова', term) && grouped)
         );
     });
 };
