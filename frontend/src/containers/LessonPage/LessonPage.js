@@ -14,7 +14,7 @@ import {
     getEnabledGroupsStart,
 } from '../../actions';
 import { setOpenErrorSnackbar } from '../../actions/snackbar';
-import { copyLessonsFromSemesterStart } from '../../actions/semesters';
+import { copyLessonsFromSemesterStart, getAllSemestersStart } from '../../actions/semesters';
 import { handleLessonStart } from '../../actions/lesson';
 import { showAllTeachersStart } from '../../actions/teachers';
 
@@ -48,6 +48,7 @@ const mapDispatchToProps = (dispatch) => ({
     selectByGroupId: (groupId) => dispatch(selectGroupId(groupId)),
     selectGroupSuccess: (id) => dispatch(selectGroupSuccess(id)),
     showAllTeachers: () => dispatch(showAllTeachersStart()),
+    getAllSemesters: () => dispatch(getAllSemestersStart()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(LessonPage);

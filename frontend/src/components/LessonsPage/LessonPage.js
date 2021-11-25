@@ -10,7 +10,6 @@ import { dialogTypes } from '../../constants/dialogs';
 import { cardType } from '../../constants/cardType';
 import { COMMON_LESSON_SERVICE_IS_NOT_UNIQUE } from '../../constants/translationLabels/common';
 import { searchLessonsByTeacher } from '../../helper/search';
-import { showAllSemestersService } from '../../services/semesterService';
 import { checkUniqLesson } from '../../validation/storeValidation';
 import { cardObjectHandler } from '../../helper/cardObjectHandler';
 
@@ -53,6 +52,7 @@ const LessonPage = (props) => {
         selectGroupSuccess,
         getEnabledGroupsStart,
         showAllTeachers,
+        getAllSemesters,
     } = props;
     const { t } = useTranslation('common');
     const [term, setTerm] = useState('');
@@ -73,7 +73,7 @@ const LessonPage = (props) => {
         getLessonTypesStart();
         getEnabledGroupsStart();
         showAllSubjectsService();
-        showAllSemestersService();
+        getAllSemesters();
     }, []);
 
     const submitLessonForm = (card) => {
