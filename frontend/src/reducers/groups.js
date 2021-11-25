@@ -62,6 +62,16 @@ const reducer = (state = initialState, action) => {
             };
         }
 
+        case actionTypes.DRAG_AND_DROP_GROUP: {
+            const groups = state.groups.filter((el) => el.id !== action.dragGroup.id);
+            groups.splice(action.indexAfterGroup + 1, 0, action.dragGroup);
+            console.log(groups);
+            return {
+                ...state,
+                groups,
+            };
+        }
+
         case actionTypes.CLEAR_GROUP_SUCCESS:
             return {
                 ...state,

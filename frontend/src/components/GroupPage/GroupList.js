@@ -24,6 +24,7 @@ const GroupList = (props) => {
         isOpenConfirmDialog,
         selectGroupSuccess,
         deleteGroupStart,
+        dragAndDropGroup,
         searchItem,
         loading,
         groups,
@@ -39,6 +40,7 @@ const GroupList = (props) => {
     const [confirmDialogType, setConfirmDialogType] = useState('');
     const [isOpenShowStudentsDialog, setIsOpenShowStudentsDialog] = useState(false);
     const [isOpenAddStudentDialog, setIsOpenAddStudentDialog] = useState(false);
+    const [dragGroup, setGroupStart] = useState();
 
     useEffect(() => {
         if (isDisabled) {
@@ -103,6 +105,25 @@ const GroupList = (props) => {
         return <NotFound name={t(GROUP_Y_LABEL)} />;
     }
 
+    const dragStartHandler = (card) => {
+        setGroupStart(card);
+    };
+    const dragLeaveHandler = (e) => {
+        e.target.style.background = 'white';
+    };
+    const dragOverHandler = (e) => {
+        e.preventDefault();
+        e.target.style.background = '#4c94f6';
+    };
+    const dropHandler = (e, index) => {
+        e.preventDefault();
+        e.target.style.background = 'white';
+        console.log(index, dragGroup);
+        // const newGroups = dragGroup.filter((el) => el.id !== groupStart.id);
+        // newGroups.splice(index1 + 1, 0, groupStart);
+        dragAndDropGroup(index, dragGroup);
+    };
+
     return (
         <>
             <CustomDialog
@@ -128,16 +149,26 @@ const GroupList = (props) => {
                 />
             )}
             <div className="group-list">
-                {visibleGroups.map((item) => (
-                    <GroupCard
+                {visibleGroups.map((item, index) => (
+                    <div
+                        className="drag-group-card"
+                        onDragStart={() => dragStartHandler(item)}
+                        onDragLeave={(e) => dragLeaveHandler(e)}
+                        onDragOver={(e) => dragOverHandler(e)}
+                        onDrop={(e) => dropHandler(e, index)}
+                        draggable
                         key={item.id}
-                        item={item}
-                        setGroup={setGroup}
-                        disabled={isDisabled}
-                        showConfirmDialog={showConfirmDialog}
-                        showAddStudentDialog={showAddStudentDialog}
-                        showStudentsByGroup={showStudentsByGroup}
-                    />
+                    >
+                        <GroupCard
+                            item={item}
+                            index={index}
+                            setGroup={setGroup}
+                            disabled={isDisabled}
+                            showConfirmDialog={showConfirmDialog}
+                            showAddStudentDialog={showAddStudentDialog}
+                            showStudentsByGroup={showStudentsByGroup}
+                        />
+                    </div>
                 ))}
             </div>
         </>

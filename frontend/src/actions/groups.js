@@ -71,3 +71,9 @@ export const toggleDisabledStatus = (groupId, disabledStatus) => ({
     groupId,
     disabledStatus,
 });
+
+export const dragAndDropGroup = (indexAfterGroup, dragGroup) => ({
+    type: actionTypes.DRAG_AND_DROP_GROUP,
+    indexAfterGroup,
+    dragGroup,
+});
