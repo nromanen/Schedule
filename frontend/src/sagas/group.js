@@ -90,11 +90,7 @@ function* updateGroup({ data }) {
     console.log(data);
     try {
         const res = yield call(axiosCall, GROUP_URL, PUT, data);
-        if (has(data, hasDisabled)) {
-            yield put(deleteGroupSuccess(data.id));
-        } else {
-            yield put(updateGroupSuccess(res.data));
-        }
+        yield put(updateGroupSuccess(res.data));
         yield put(selectGroupSuccess(null));
         const message = createDynamicMessage(GROUP, UPDATED_LABEL);
         yield put(setOpenSuccessSnackbar(message));
@@ -126,10 +122,6 @@ function* deleteGroup({ id }) {
 
 function* dragAndDropGroup({ indexAfterGroup, dragGroup, afterGroupId }) {
     try {
-        console.log(indexAfterGroup, {
-            ...dragGroup,
-            afterId: afterGroupId,
-        });
         yield put(setLoading(true));
         yield call(axiosCall, GROUPS_AFTER_URL, PUT, {
             ...dragGroup,
@@ -145,12 +137,13 @@ function* dragAndDropGroup({ indexAfterGroup, dragGroup, afterGroupId }) {
     }
 }
 
-function* toggleDisabledGroup({ groupId, disabledStatus }) {
+function* toggleDisabledGroup({ groupId }) {
     try {
         if (groupId) {
             const groups = yield select(getGroupsState);
             const group = groups.find((item) => item.id === groupId);
-            yield call(updateGroup, { data: { ...group, disable: !disabledStatus } });
+            yield call(updateGroup, { data: { ...group, disable: !group.disable } });
+            yield put(deleteGroupSuccess(groupId));
         }
     } catch (err) {
         yield put(setOpenErrorSnackbar(createErrorMessage(err)));

@@ -34,13 +34,19 @@ export const AddGroup = (props) => {
     const { t } = useTranslation('formElements');
     const [afterIdGroup, setAfterIdGroup] = useState(null);
 
+    const getAfterIdGroup = () => {
+        const groupIndex = groups.findIndex(({ id }) => id === group.id);
+        const afterId = groups.find((item, index) => index === groupIndex - 1);
+        setAfterIdGroup(afterId);
+    };
+
     useEffect(() => {
         if (group.id) {
             initialize({
                 id: group.id,
                 title: group.title,
-                afterId: afterIdGroup,
             });
+            getAfterIdGroup();
         } else {
             initialize();
         }
