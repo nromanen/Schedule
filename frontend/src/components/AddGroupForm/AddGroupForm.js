@@ -46,6 +46,12 @@ export const AddGroup = (props) => {
         }
     }, [group.id]);
 
+    const submitGroup = (data) => {
+        const afterId = afterIdGroup ? afterIdGroup.id : null;
+        submitGroupStart({ ...data, disable: false, afterId });
+        setGroup({});
+    };
+
     const onReset = () => {
         setGroup({});
         clearGroupStart();
@@ -58,12 +64,7 @@ export const AddGroup = (props) => {
                 {group.id ? t(EDIT_TITLE) : t(CREATE_TITLE)}
                 {t(GROUP_Y_LABEL)}
             </h3>
-            <form
-                onSubmit={handleSubmit((data) => {
-                    submitGroupStart({ ...data, afterId: afterIdGroup.id });
-                    setGroup({});
-                })}
-            >
+            <form onSubmit={handleSubmit((data) => submitGroup(data))}>
                 <Autocomplete
                     id="group"
                     value={afterIdGroup}

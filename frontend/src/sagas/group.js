@@ -14,6 +14,7 @@ import {
     GROUP_URL,
     SEMESTERS_URL,
     GROUPS_URL,
+    GROUPS_AFTER_URL,
     GROUPS_ORDERED_URL,
     DISABLED_GROUPS_URL,
 } from '../constants/axios';
@@ -28,6 +29,7 @@ import {
     SERVICE_MESSAGE_GROUP_LABEL,
 } from '../constants/translationLabels/serviceMessages';
 import {
+    dragAndDropGroupSuccess,
     getGroupByIdSuccess,
     showAllGroupsSuccess,
     deleteGroupSuccess,
@@ -74,7 +76,7 @@ function* getEnabledGroups() {
 
 function* createGroup({ data }) {
     try {
-        const res = yield call(axiosCall, GROUP_URL, POST, data);
+        const res = yield call(axiosCall, GROUPS_AFTER_URL, POST, data);
         yield put(createGroupSuccess(res.data));
         yield put(reset(GROUP_FORM));
         const message = createDynamicMessage(GROUP, CREATED_LABEL);
@@ -124,15 +126,18 @@ function* deleteGroup({ id }) {
 
 function* dragAndDropGroup({ indexAfterGroup, dragGroup, afterGroupId }) {
     try {
-        console.log(indexAfterGroup, dragGroup, afterGroupId);
-        // yield call(updateGroup, { data: { ...dragGroup, afterId: afterGroupId } });
-        const res = yield call(axiosCall, '/groups/after', PUT, {
+        yield put(setLoading(true));
+        yield call(axiosCall, GROUPS_AFTER_URL, PUT, {
             ...dragGroup,
             afterId: afterGroupId,
         });
-        console.log(res);
+        yield put(dragAndDropGroupSuccess(indexAfterGroup, dragGroup));
+        const message = createDynamicMessage(GROUP, UPDATED_LABEL);
+        yield put(setOpenSuccessSnackbar(message));
     } catch (err) {
         yield put(setOpenErrorSnackbar(createErrorMessage(err)));
+    } finally {
+        yield put(setLoading(false));
     }
 }
 
