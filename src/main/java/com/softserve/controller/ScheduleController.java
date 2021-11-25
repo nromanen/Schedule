@@ -3,6 +3,7 @@ package com.softserve.controller;
 import com.softserve.dto.*;
 import com.softserve.entity.*;
 import com.softserve.entity.enums.EvenOdd;
+import com.softserve.entity.enums.LessonType;
 import com.softserve.mapper.*;
 import com.softserve.security.jwt.JwtUser;
 import com.softserve.service.*;
@@ -134,7 +135,7 @@ public class ScheduleController {
         List<ScheduleForRoomDTO> scheduleForRoomDTOS =
                 scheduleForRoomMapper
                         .schedulesToScheduleForRoomDTO(
-                            scheduleService.getAllOrdered(semesterId)
+                            scheduleService.getAllOrderedByRoomsDaysPeriods(semesterId)
                         );
         return ResponseEntity.status(HttpStatus.OK).body(scheduleForRoomDTOS);
     }

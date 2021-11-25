@@ -4,6 +4,7 @@ package com.softserve.service.impl;
 import com.softserve.dto.*;
 import com.softserve.entity.*;
 import com.softserve.entity.enums.EvenOdd;
+import com.softserve.entity.enums.LessonType;
 import com.softserve.exception.EntityAlreadyExistsException;
 import com.softserve.exception.EntityNotFoundException;
 import com.softserve.exception.MessageNotSendException;
@@ -870,10 +871,10 @@ public class ScheduleServiceImpl implements ScheduleService {
      */
     @Override
     @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
-    public List<List<Schedule>> getAllOrdered(Long semesterId){
-        log.debug("Entered getAllOrdered()");
+    public List<List<Schedule>> getAllOrderedByRoomsDaysPeriods(Long semesterId){
+        log.debug("Entered getAllOrderedByRoomsDaysPeriods()");
         Collection<List<Schedule>> schedules = scheduleRepository
-                .getAllOrdered(semesterId)
+                .getAllOrderedByRoomsDaysPeriods(semesterId)
                 .stream()
                 .collect(Collectors.groupingBy(Schedule::getRoom, Collectors.toList()))
                 .values();

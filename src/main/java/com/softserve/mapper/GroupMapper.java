@@ -28,7 +28,6 @@ public interface GroupMapper {
 
     List<GroupDTO> groupsToGroupDTOs(List<Group> groups);
 
-    @ToGroupInRoom
     @Mapping(source = "id", target = "groupId")
     @Mapping(source = "title", target = "groupName")
     GroupDTOInRoomSchedule groupToGroupDTOInRoomSchedule(Group group);

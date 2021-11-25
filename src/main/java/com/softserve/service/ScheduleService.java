@@ -50,6 +50,6 @@ public interface ScheduleService extends BasicService<Schedule, Long> {
 
     void sendScheduleToTeacher(Long semesterId, Long teacherId, Locale language) throws MessagingException;
 
-    List<List<Schedule>> getAllOrdered(Long semesterId);
+    List<List<Schedule>> getAllOrderedByRoomsDaysPeriods(Long semesterId);
 }
 
