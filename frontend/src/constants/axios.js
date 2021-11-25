@@ -35,6 +35,8 @@ export const BUSY_ROOMS = 'schedules/full/rooms';
 export const ROOMS_AVAILABILITY = 'rooms/available';
 export const SEMESTERS_URL = 'semesters';
 export const GROUPS_URL = 'groups';
+export const GROUPS_ORDERED_URL = 'groups/ordered';
+export const GROUPS_AFTER_URL = '/groups/after';
 export const TEACHER_SCHEDULE_URL = 'schedules/full/teachers?semesterId=';
 
 export const DISABLED_ROOMS_URL = 'rooms/disabled';

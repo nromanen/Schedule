@@ -10,7 +10,13 @@ import {
     setOpenErrorSnackbar,
     setOpenInfoSnackbar,
 } from '../actions/snackbar';
-import { DISABLED_GROUPS_URL, GROUP_URL, SEMESTERS_URL, GROUPS_URL } from '../constants/axios';
+import {
+    GROUP_URL,
+    SEMESTERS_URL,
+    GROUPS_URL,
+    GROUPS_ORDERED_URL,
+    DISABLED_GROUPS_URL,
+} from '../constants/axios';
 import { DELETE, POST, PUT } from '../constants/methods';
 import { axiosCall } from '../services/axios';
 import { FORM_CHOSEN_SEMESTER_LABEL } from '../constants/translationLabels/formElements';
@@ -63,7 +69,7 @@ function* getDisabledGroups() {
 }
 
 function* getEnabledGroups() {
-    yield call(getGroups, GROUP_URL);
+    yield call(getGroups, GROUPS_ORDERED_URL);
 }
 
 function* createGroup({ data }) {
@@ -79,6 +85,7 @@ function* createGroup({ data }) {
 }
 
 function* updateGroup({ data }) {
+    console.log(data);
     try {
         const res = yield call(axiosCall, GROUP_URL, PUT, data);
         if (has(data, hasDisabled)) {
@@ -115,9 +122,15 @@ function* deleteGroup({ id }) {
     }
 }
 
-function* dragAndDropGroup({ indexAfterGroup, dragGroup, afterGroupID }) {
+function* dragAndDropGroup({ indexAfterGroup, dragGroup, afterGroupId }) {
     try {
-        console.log(indexAfterGroup, dragGroup, afterGroupID);
+        console.log(indexAfterGroup, dragGroup, afterGroupId);
+        // yield call(updateGroup, { data: { ...dragGroup, afterId: afterGroupId } });
+        const res = yield call(axiosCall, '/groups/after', PUT, {
+            ...dragGroup,
+            afterId: afterGroupId,
+        });
+        console.log(res);
     } catch (err) {
         yield put(setOpenErrorSnackbar(createErrorMessage(err)));
     }

@@ -118,7 +118,6 @@ const GroupList = (props) => {
     const dropHandler = (e, card, index) => {
         e.preventDefault();
         e.target.style.background = 'white';
-        console.log(index, dragGroup);
         dragAndDropGroupStart(index, dragGroup, card.id);
     };
 
