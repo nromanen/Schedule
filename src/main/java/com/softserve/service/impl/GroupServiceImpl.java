@@ -152,42 +152,42 @@ public class GroupServiceImpl  implements GroupService {
     /**
      * Method saves new group to Repository
      *
-     * @param object Group entity with info to be saved
+     * @param group Group entity with info to be saved
      * @return saved Group entity
      * @throws FieldAlreadyExistsException if Group with input title already exists
      */
     @Transactional
     @Override
-    public Group save(Group object) {
-        log.info("In save(entity = [{}]", object);
-        checkTitleForUniqueness(object.getTitle());
-        return groupRepository.save(object);
+    public Group save(Group group) {
+        log.info("In save(entity = [{}]", group);
+        checkTitleForUniqueness(group.getTitle());
+        return groupRepository.save(group);
     }
 
     /**
      * Method updates information for an existing group in  Repository
-     * @param object Group entity with info to be updated
+     * @param group Group entity with info to be updated
      * @return updated Group entity
      */
     @Transactional
     @Override
-    public Group update(Group object) {
-        log.info("In update(entity = [{}]", object);
-        checkTitleForUniquenessIgnoringId(object.getTitle(), object.getId());
-        object.setSortingOrder(groupRepository.getSortingOrderById(object.getId()).orElse(null));
-        return groupRepository.update(object);
+    public Group update(Group group) {
+        log.info("In update(entity = [{}]", group);
+        checkTitleForUniquenessIgnoringId(group.getTitle(), group.getId());
+        group.setSortingOrder(groupRepository.getSortingOrderById(group.getId()).orElse(null));
+        return groupRepository.update(group);
     }
 
     /**
      * Method deletes an existing group from Repository
-     * @param object Group entity to be deleted
+     * @param group Group entity to be deleted
      * @return deleted Group entity
      */
     @Transactional
     @Override
-    public Group delete(Group object) {
-        log.info("In delete(entity = [{}])",  object);
-        return groupRepository.delete(object);
+    public Group delete(Group group) {
+        log.info("In delete(entity = [{}])",  group);
+        return groupRepository.delete(group);
     }
 
     /**
