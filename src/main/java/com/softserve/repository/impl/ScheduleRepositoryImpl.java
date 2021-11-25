@@ -452,8 +452,8 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
     }
 
     @Override
-    public List<Schedule> getAllOrderedByRoomsDaysPeriods(Long semesterId) {
-        log.debug("Entered getAllOrderedByRoomsDaysPeriods()");
+    public List<Schedule> getAllOrdered(Long semesterId) {
+        log.debug("Entered getAllOrdered()");
         return sessionFactory.getCurrentSession()
                 .createQuery(GET_ALL_ORDERED_BY_ROOMS_DAYS_PERIODS, Schedule.class)
                 .setParameter("semesterId", semesterId)
