@@ -19,7 +19,7 @@ const reducer = (
             };
         }
         case actionTypes.GET_PUBLIC_CLASS_SCHEDULE_LIST_SUCCESS:
-            return state;
+            return { ...state, classScheduler: [...action.classScheduler] };
         case actionTypes.GET_CLASS_SCHEDULE_BY_ID_SUCCESS: {
             const one = state.classScheduler.find(
                 (classScheduleItem) => classScheduleItem.id === action.id,
