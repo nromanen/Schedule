@@ -105,19 +105,26 @@ const GroupList = (props) => {
         return <NotFound name={t(GROUP_Y_LABEL)} />;
     }
 
+    const styleCard = (e) => {
+        if (e.target.className === 'group-card drag-border-card') {
+            e.target.className = 'group-card';
+        }
+    };
     const dragStartHandler = (card) => {
         setGroupStart(card);
     };
     const dragLeaveHandler = (e) => {
-        e.target.style.background = 'white';
+        styleCard(e);
     };
     const dragOverHandler = (e) => {
         e.preventDefault();
-        e.target.style.background = '#4c94f6';
+        if (e.target.className === 'group-card') {
+            e.target.className = 'group-card drag-border-card';
+        }
     };
     const dropHandler = (e, card, index) => {
         e.preventDefault();
-        e.target.style.background = 'white';
+        styleCard(e);
         dragAndDropGroupStart(index, dragGroup, card.id);
     };
 
@@ -148,7 +155,7 @@ const GroupList = (props) => {
             <div className="group-list">
                 {visibleGroups.map((item, index) => (
                     <div
-                        className="drag-group-card"
+                        className="drag-and-drop-card"
                         onDragStart={() => dragStartHandler(item)}
                         onDragLeave={(e) => dragLeaveHandler(e)}
                         onDragOver={(e) => dragOverHandler(e)}

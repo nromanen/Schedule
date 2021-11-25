@@ -86,6 +86,7 @@ export const AddGroup = (props) => {
                         />
                     )}
                 />
+
                 <Field
                     className="form-field"
                     name="title"
