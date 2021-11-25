@@ -77,7 +77,7 @@ function* getEnabledGroups() {
 function* createGroup({ data }) {
     try {
         const res = yield call(axiosCall, GROUPS_AFTER_URL, POST, data);
-        yield put(createGroupSuccess(res.data));
+        yield put(createGroupSuccess(res.data, data.afterId));
         yield put(reset(GROUP_FORM));
         const message = createDynamicMessage(GROUP, CREATED_LABEL);
         yield put(setOpenSuccessSnackbar(message));
@@ -107,7 +107,7 @@ function* updateGroup({ data }) {
 function* submitGroupForm({ group }) {
     try {
         console.log(group);
-        // yield call(handleFormSubmit(group, createGroup, updateGroup), { data: group });
+        yield call(handleFormSubmit(group, createGroup, updateGroup), { data: group });
     } catch (err) {
         yield put(setOpenErrorSnackbar(createErrorMessage(err)));
     }

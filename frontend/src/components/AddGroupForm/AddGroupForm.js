@@ -50,6 +50,7 @@ export const AddGroup = (props) => {
         const afterId = afterIdGroup ? afterIdGroup.id : null;
         submitGroupStart({ ...data, disable: false, afterId });
         setGroup({});
+        setAfterIdGroup(null);
     };
 
     const onReset = () => {

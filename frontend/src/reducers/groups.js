@@ -20,11 +20,20 @@ const reducer = (state = initialState, action) => {
                 group: action.group,
             };
 
-        case actionTypes.CREATE_GROUP_SUCCESS:
+        case actionTypes.CREATE_GROUP_SUCCESS: {
+            const { groups } = state;
+            let newGroups = [...groups];
+            if (action.afterId) {
+                const afterGroupIndex = groups.findIndex(({ id }) => id === action.afterId);
+                newGroups.splice(afterGroupIndex + 1, 0, action.group);
+            } else {
+                newGroups = [action.group, ...groups];
+            }
             return {
                 ...state,
-                groups: [action.group, ...state.groups],
+                groups: newGroups,
             };
+        }
 
         case actionTypes.UPDATE_GROUP_SUCCESS: {
             const groupIndex = state.groups.findIndex(({ id }) => id === action.group.id);

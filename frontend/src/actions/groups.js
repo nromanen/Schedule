@@ -10,9 +10,10 @@ export const getGroupByIdSuccess = (group) => ({
     group,
 });
 
-export const createGroupSuccess = (group) => ({
+export const createGroupSuccess = (group, afterId) => ({
     type: actionTypes.CREATE_GROUP_SUCCESS,
     group,
+    afterId,
 });
 
 export const updateGroupSuccess = (group) => ({
