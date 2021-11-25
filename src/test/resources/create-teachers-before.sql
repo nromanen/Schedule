@@ -13,19 +13,7 @@ insert into users(id, email, password) values (DEFAULT, 'teacher@gmail.com', 'Pa
 insert into users(id, email, password) values (DEFAULT, 'Seven@test.com', 'Pass1233!');
 
 insert into teachers(id, name, patronymic, position, surname, department_id, user_id)
-values (DEFAULT, 'Ivan', 'Ivanovych', 'docent', 'Ivanov', 1, 1);
+values (1, 'Ivan', 'Ivanovych', 'docent', 'Ivanov', 1, 1);
 
 insert into teachers(id, name, patronymic, position, surname, department_id, disable)
-values (DEFAULT, 'Ivan', 'Ivanovych', 'docent', 'Ivanov', 1, true);
-
-insert into teachers(id, name, patronymic, position, surname, department_id, user_id)
-values (DEFAULT, 'SecondName', 'SecondPatronymic', 'SecondPosition', 'SecondSurname', null, null);
-insert into teachers(id, name, patronymic, position, surname, department_id, user_id)
-values (DEFAULT, 'ThirdName', 'ThirdPatronymic', 'ThirdPosition', 'ThirdSurname', 1, null);
-insert into teachers(id, name, patronymic, position, surname, department_id, user_id)
-values (DEFAULT, 'Five', 'Five', 'Five', 'Five', null, null);
-insert into teachers(id, name, patronymic, position, surname, department_id, user_id)
-values (DEFAULT, 'Six', 'Six', 'Six', 'Six', 1, null);
-insert into teachers(id, name, patronymic, position, surname, department_id, user_id)
-values (DEFAULT, 'Seven', 'Seven', 'Seven', 'Seven', 1, 2);
-
+values (2, 'Ivan', 'Ivanovych', 'docent', 'Ivanov', 1, true);

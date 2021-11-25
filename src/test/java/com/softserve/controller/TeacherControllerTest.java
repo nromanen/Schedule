@@ -17,6 +17,7 @@ import org.junit.*;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.query.Collation;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -34,7 +35,10 @@ import org.springframework.web.context.WebApplicationContext;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
+
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -91,6 +95,7 @@ public class TeacherControllerTest {
 
         teacherDtoWithId1L = new TeacherDTO();
         teacherDtoWithId1L.setId(1L);
+        teacherDtoWithId1L.setDisable(false);
         teacherDtoWithId1L.setName(teacherName);
         teacherDtoWithId1L.setSurname(teacherSurname);
         teacherDtoWithId1L.setPatronymic(teacherPatronymic);
@@ -100,6 +105,7 @@ public class TeacherControllerTest {
 
         disabledTeacherDtoWithId2LAndWithoutEmail = new TeacherDTO();
         disabledTeacherDtoWithId2LAndWithoutEmail.setId(2L);
+        disabledTeacherDtoWithId2LAndWithoutEmail.setDisable(true);
         disabledTeacherDtoWithId2LAndWithoutEmail.setName(teacherName);
         disabledTeacherDtoWithId2LAndWithoutEmail.setSurname(teacherSurname);
         disabledTeacherDtoWithId2LAndWithoutEmail.setPatronymic(teacherPatronymic);
@@ -108,6 +114,7 @@ public class TeacherControllerTest {
 
         teacherForUpdateDtoWithId1L = new TeacherForUpdateDTO();
         teacherForUpdateDtoWithId1L.setId(1L);
+        teacherForUpdateDtoWithId1L.setDisable(false);
         teacherForUpdateDtoWithId1L.setName(teacherName);
         teacherForUpdateDtoWithId1L.setSurname(teacherSurname);
         teacherForUpdateDtoWithId1L.setPatronymic(teacherPatronymic);
@@ -117,6 +124,7 @@ public class TeacherControllerTest {
 
         teacherForUpdateDtoWithId2LAndWithoutEmail = new TeacherForUpdateDTO();
         teacherForUpdateDtoWithId2LAndWithoutEmail.setId(2L);
+        teacherForUpdateDtoWithId2LAndWithoutEmail.setDisable(true);
         teacherForUpdateDtoWithId2LAndWithoutEmail.setName(teacherName);
         teacherForUpdateDtoWithId2LAndWithoutEmail.setSurname(teacherSurname);
         teacherForUpdateDtoWithId2LAndWithoutEmail.setPatronymic(teacherPatronymic);
@@ -318,6 +326,7 @@ public class TeacherControllerTest {
     private static ResultMatcher matchTeacherExcludingId(TeacherDTO expected) {
         return ResultMatcher.matchAll(
                 jsonPath("$.name").value(expected.getName()),
+                jsonPath("$.disable").value(expected.getDisable()),
                 jsonPath("$.surname").value(expected.getSurname()),
                 jsonPath("$.patronymic").value(expected.getPatronymic()),
                 jsonPath("$.position").value(expected.getPosition()),
