@@ -1,5 +1,4 @@
 import * as actionTypes from '../actions/actionsType';
-import { sortGroup } from '../helper/sortGroup';
 
 const initialState = {
     groups: [],
@@ -34,7 +33,7 @@ const reducer = (state = initialState, action) => {
                 ...groups[groupIndex],
                 ...action.group,
             };
-            const sortedGroups = groups.sort((a, b) => sortGroup(a, b));
+            const sortedGroups = groups;
 
             return {
                 ...state,
