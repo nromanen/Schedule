@@ -1,6 +1,12 @@
 import { call, takeEvery, put, select } from 'redux-saga/effects';
 import { reset } from 'redux-form';
-import { STUDENT_URL, GROUP_URL, WITH_STUDENTS, STUDENTS_TO_GROUP_FILE } from '../constants/axios';
+import {
+    STUDENT_URL,
+    GROUP_URL,
+    WITH_STUDENTS,
+    MOVE_STUDENTS_URL,
+    STUDENTS_TO_GROUP_FILE,
+} from '../constants/axios';
 
 import * as actionTypes from '../actions/actionsType';
 import { STUDENT_FORM } from '../constants/reduxForms';
@@ -13,17 +19,23 @@ import {
     selectStudentSuccess,
     showAllStudents,
     updateStudentSuccess,
+    deleteAllStudentSuccess,
 } from '../actions/students';
 import {
+    FILE_LABEL,
     UPDATED_LABEL,
     CREATED_LABEL,
     DELETED_LABEL,
+    MOVED_TO_GROUP_LABEL,
     FILE_BACK_END_SUCCESS_OPERATION,
-    FILE_LABEL,
+    BACK_END_SUCCESS_OPERATION,
 } from '../constants/translationLabels/serviceMessages';
 import { STUDENT } from '../constants/names';
 import { setStudentsLoading, setLoading } from '../actions/loadingIndicator';
-import { FORM_STUDENTS_FILE_LABEL } from '../constants/translationLabels/formElements';
+import {
+    FORM_STUDENTS_FILE_LABEL,
+    STUDENTS_WAS_LABEL,
+} from '../constants/translationLabels/formElements';
 
 const getStudents = (state) => state.students.students;
 
@@ -113,11 +125,23 @@ function* uploadStudentsToGroup({ file, id }) {
     }
 }
 
-function* moveStudentsToGroup({ group, newGroup }) {
+function* moveStudentsToGroup({ group }) {
     try {
-        const students = yield select(getStudents);
-        const movedStudents = students.filter((item) => item.checked === true);
-        console.log(movedStudents, group, newGroup);
+        const allStudents = yield select(getStudents);
+        const movedStudents = allStudents.filter((item) => item.checked === true);
+        const students = movedStudents.map((student) => {
+            const item = student;
+            delete item.checked;
+            return item;
+        });
+        yield call(axiosCall, MOVE_STUDENTS_URL, PUT, { students, group });
+        yield put(deleteAllStudentSuccess(students));
+        const message = createMessage(
+            BACK_END_SUCCESS_OPERATION,
+            STUDENTS_WAS_LABEL,
+            MOVED_TO_GROUP_LABEL,
+        );
+        yield put(setOpenSuccessSnackbar(message));
     } catch (err) {
         yield put(setOpenErrorSnackbar(createErrorMessage(err)));
     }

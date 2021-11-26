@@ -14,6 +14,11 @@ export const deleteStudentSuccess = (id) => ({
     id,
 });
 
+export const deleteAllStudentSuccess = (students) => ({
+    type: actionTypes.DELETE_ALL_STUDENTS,
+    students,
+});
+
 export const selectStudentSuccess = (id) => ({
     type: actionTypes.SET_STUDENT,
     id,
@@ -52,8 +57,7 @@ export const uploadStudentsToGroupStart = (file, id) => ({
     id,
 });
 
-export const moveStudentsToGroupStart = (group, newGroup) => ({
+export const moveStudentsToGroupStart = (group) => ({
     type: actionTypes.MOVE_STUDENTS_TO_GROUP_START,
     group,
-    newGroup,
 });

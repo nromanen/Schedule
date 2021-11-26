@@ -31,6 +31,20 @@ const reducer = (state = initialState, action) => {
             };
         }
 
+        case actionTypes.DELETE_ALL_STUDENTS: {
+            const students = state.students.filter((student) => {
+                let res = true;
+                action.students.forEach((el) => {
+                    if (student.id === +el.id) res = false;
+                });
+                return res;
+            });
+            return {
+                ...state,
+                students,
+            };
+        }
+
         case actionTypes.SET_STUDENT: {
             let student = state.students.find((stud) => stud.id === +action.id);
 

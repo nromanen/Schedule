@@ -17,5 +17,6 @@
     "copied_label": "copied",
     "cleared_label": "cleared",
     "exist_label": "exist(s)",
-    "archived_label": "archived"
+    "archived_label": "archived",
+    "moved_to_group": "moved to the group"
 }

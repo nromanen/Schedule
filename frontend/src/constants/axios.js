@@ -14,6 +14,7 @@ export const ROOM_TYPES_URL = 'room-types';
 export const FREE_ROOMS_URL = 'rooms/free';
 export const SUBJECT_URL = 'subjects';
 export const STUDENT_URL = 'students';
+export const MOVE_STUDENTS_URL = 'move-to-group';
 
 export const FULL_SCHEDULE_URL = 'schedules/full/semester?semesterId=';
 export const GROUP_SCHEDULE_URL = 'schedules/full/groups?semesterId=';

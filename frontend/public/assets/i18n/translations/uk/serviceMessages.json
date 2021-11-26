@@ -17,5 +17,6 @@
     "copied_label": "скопійовано",
     "cleared_label": "очищено",
     "exist_label": "належ(и/а)ть",
-    "archived_label": "заархівовано"
+    "archived_label": "заархівовано",
+    "moved_to_group": "переміщено в групу"
 }
