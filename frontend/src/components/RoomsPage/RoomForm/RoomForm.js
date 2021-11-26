@@ -18,6 +18,7 @@ import {
     ROOM_LABEL,
 } from '../../../constants/translationLabels/formElements';
 import { TYPE_LABEL } from '../../../constants/translationLabels/common';
+import MenuItem from '@material-ui/core/MenuItem';
 
 const RoomForm = (props) => {
     const { t } = useTranslation('formElements');
@@ -67,11 +68,11 @@ const RoomForm = (props) => {
                     label={t(TYPE_LABEL)}
                     validate={[required]}
                 >
-                    <option className="room-select-item" />
+                    <MenuItem value="" className="hidden" disabled/>
                     {roomTypes.map((roomType) => (
-                        <option key={roomType.id} value={roomType.id} className="room-select-item">
+                        <MenuItem key={roomType.id} value={roomType.id}>
                             {roomType.description}
-                        </option>
+                        </MenuItem>
                     ))}
                 </Field>
                 <div className="form-buttons-container">
