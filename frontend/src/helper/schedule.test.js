@@ -59,25 +59,25 @@ const items = [
 ];
 
 describe('behavior of divideLessonsByOneHourLesson function', () => {
-    test('it should return lessons with one-hour duration each which length equal amount of all hours of lessons', () => {
+    test('should return lessons with one-hour duration each which length equal amount of all hours of lessons', () => {
         expect(divideLessonsByOneHourLesson([], lessons).length).toBe(5);
     });
-    test('it should return lessons with one-hour duration each which length equal amount of all hours of lessons minus amount of items which exist in lessons', () => {
+    test('should return lessons with one-hour duration each which length equal amount of all hours of lessons minus amount of items which exist in lessons', () => {
         expect(divideLessonsByOneHourLesson(items, lessons).length).toBe(4);
     });
 });
 
 describe('behavior of getColorByFullness function', () => {
-    test('it adds  css class "available" if  array of groups is empty', () => {
+    test('should add css class "available" if  array of groups is empty', () => {
         expect(getColorByFullness([])).toBe('available');
     });
-    test('it adds  css class "possible" if  lesson is not the same and teacher is the same', () => {
+    test('should add css class "possible" if  lesson is not the same and teacher is the same', () => {
         expect(getColorByFullness(teacherTheSame)).toBe('possible');
     });
-    test('it adds css class "not-allow" if teacher is not the same', () => {
+    test('should add css class "not-allow" if teacher is not the same', () => {
         expect(getColorByFullness(teacherIsNotTheSame)).toBe('not-allow');
     });
-    test('it adds css class "allow" if lesson and teacher are the same', () => {
+    test('should add css class "allow" if lesson and teacher are the same', () => {
         expect(getColorByFullness(teacherAndSubjectAreTheSame)).toBe('allow');
     });
 });

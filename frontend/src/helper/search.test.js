@@ -2,38 +2,43 @@ import { search } from './search';
 
 const items = [
     {
-        id: 55,
         name: '1 к. 19 аудиторія',
-        disable: false,
         type: {
-            id: 26,
             description: 'Практична',
         },
+        grouped: true,
     },
     {
-        id: 56,
         name: '1 к. 21 ауд.',
-        disable: false,
         type: {
-            id: 25,
             description: 'Лекційна',
         },
+        grouped: false,
     },
 ];
+
 const term = 'аудиторія';
 const deepTerm = 'Лекційна';
-const arr = ['name', 'type.description'];
+const grouped = 'групова';
+const arr = ['name', 'type.description', grouped];
+const excludeTerm = 'exclude9012';
 
 describe('behavior of search function', () => {
-    test('it shows all items if search term length === 0', () => {
+    test('shows all items if search term length === 0', () => {
         expect(search(items, '', arr).length).toBe(items.length);
     });
 
-    test('it shows items which include search term', () => {
+    test('shows items which include search term', () => {
         expect(search(items, term, arr)).toEqual(
             expect.arrayContaining([
                 expect.objectContaining({ name: expect.stringContaining(term) }),
             ]),
+        );
+    });
+
+    test('shows items which include search term equal "групова"', () => {
+        expect(search(items, grouped, arr)).toEqual(
+            expect.arrayContaining([expect.objectContaining({ grouped: true })]),
         );
     });
 
@@ -50,9 +55,9 @@ describe('behavior of search function', () => {
     });
 
     test('it does not show items which exclude search term', () => {
-        expect(search(items, '1909', arr)).toEqual(
+        expect(search(items, excludeTerm, arr)).toEqual(
             expect.not.arrayContaining([
-                expect.objectContaining({ name: expect.stringContaining('1909') }),
+                expect.objectContaining({ name: expect.stringContaining(excludeTerm) }),
             ]),
         );
     });

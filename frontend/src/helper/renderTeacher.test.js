@@ -10,9 +10,6 @@ import {
 } from './renderTeacher';
 
 const teacher = {
-    department: null,
-    email: 'toxa13.00@ukr.net',
-    id: 7,
     name: 'Олександр',
     patronymic: 'Петрович',
     position: 'Професор',
