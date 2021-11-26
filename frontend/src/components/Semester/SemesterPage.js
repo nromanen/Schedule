@@ -7,9 +7,6 @@ import SemesterSidebar from './SemesterSidebar';
 
 const SemesterPage = (props) => {
     const {
-        isSnackbarOpen,
-        snackbarType,
-        snackbarMessage,
         groups,
         semester,
         getAllSemestersItems,
@@ -65,12 +62,6 @@ const SemesterPage = (props) => {
                 classScheduler={classScheduler}
             />
             <SemesterList term={term} archived={archived} disabled={disabled} options={options} />
-            <SnackbarComponent
-                message={snackbarMessage}
-                type={snackbarType}
-                isOpen={isSnackbarOpen}
-                handleSnackbarClose={handleSnackbarCloseService}
-            />
         </div>
     );
 };
