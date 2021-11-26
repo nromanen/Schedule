@@ -1,6 +1,5 @@
 import { call, takeEvery, put, select, takeLatest } from 'redux-saga/effects';
 import { reset } from 'redux-form';
-import { has } from 'lodash';
 import { GROUP_FORM } from '../constants/reduxForms';
 import * as actionTypes from '../actions/actionsType';
 import { setLoading } from '../actions/loadingIndicator';
@@ -12,8 +11,8 @@ import {
 } from '../actions/snackbar';
 import {
     GROUP_URL,
-    SEMESTERS_URL,
     GROUPS_URL,
+    SEMESTERS_URL,
     GROUPS_AFTER_URL,
     GROUPS_ORDERED_URL,
     DISABLED_GROUPS_URL,
@@ -38,7 +37,6 @@ import {
     clearGroupSuccess,
     createGroupSuccess,
 } from '../actions';
-import { hasDisabled } from '../constants/disabledCard';
 import { GROUP } from '../constants/names';
 import { handleFormSubmit } from '../helper/handleFormSubmit';
 
@@ -86,11 +84,10 @@ function* createGroup({ data }) {
     }
 }
 
-function* updateGroup({ data }) {
-    console.log(data);
+function* updateGroup({ data, url }) {
     try {
-        const res = yield call(axiosCall, GROUP_URL, PUT, data);
-        yield put(updateGroupSuccess(res.data));
+        const res = yield call(axiosCall, url, PUT, data);
+        yield put(updateGroupSuccess(res.data, data.afterId));
         yield put(selectGroupSuccess(null));
         const message = createDynamicMessage(GROUP, UPDATED_LABEL);
         yield put(setOpenSuccessSnackbar(message));
@@ -102,8 +99,11 @@ function* updateGroup({ data }) {
 
 function* submitGroupForm({ group }) {
     try {
-        console.log(group);
-        yield call(handleFormSubmit(group, createGroup, updateGroup), { data: group });
+        const url = GROUPS_AFTER_URL;
+        yield call(handleFormSubmit(group, createGroup, updateGroup), {
+            data: group,
+            url,
+        });
     } catch (err) {
         yield put(setOpenErrorSnackbar(createErrorMessage(err)));
     }
@@ -140,9 +140,10 @@ function* dragAndDropGroup({ indexAfterGroup, dragGroup, afterGroupId }) {
 function* toggleDisabledGroup({ groupId }) {
     try {
         if (groupId) {
+            const url = GROUP_URL;
             const groups = yield select(getGroupsState);
             const group = groups.find((item) => item.id === groupId);
-            yield call(updateGroup, { data: { ...group, disable: !group.disable } });
+            yield call(updateGroup, { data: { ...group, disable: !group.disable }, url });
             yield put(deleteGroupSuccess(groupId));
         }
     } catch (err) {

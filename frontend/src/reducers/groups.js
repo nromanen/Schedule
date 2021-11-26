@@ -1,4 +1,5 @@
 import * as actionTypes from '../actions/actionsType';
+import { sortGroups } from '../helper/sortGroup';
 
 const initialState = {
     groups: [],
@@ -20,14 +21,8 @@ const reducer = (state = initialState, action) => {
             };
 
         case actionTypes.CREATE_GROUP_SUCCESS: {
-            const { groups } = state;
-            let newGroups = [...groups];
-            if (action.afterId) {
-                const afterGroupIndex = groups.findIndex(({ id }) => id === action.afterId);
-                newGroups.splice(afterGroupIndex + 1, 0, action.group);
-            } else {
-                newGroups = [action.group, ...groups];
-            }
+            const groups = [...state.groups];
+            const newGroups = sortGroups(groups, action.group, action.afterId);
             return {
                 ...state,
                 groups: newGroups,
@@ -35,17 +30,12 @@ const reducer = (state = initialState, action) => {
         }
 
         case actionTypes.UPDATE_GROUP_SUCCESS: {
-            const groupIndex = state.groups.findIndex(({ id }) => id === action.group.id);
-            const groups = [...state.groups];
-
-            groups[groupIndex] = {
-                ...groups[groupIndex],
-                ...action.group,
-            };
+            const groups = state.groups.filter((group) => group.id !== action.group.id);
+            const newGroups = sortGroups(groups, action.group, action.afterId);
 
             return {
                 ...state,
-                groups,
+                groups: newGroups,
                 group: {},
             };
         }

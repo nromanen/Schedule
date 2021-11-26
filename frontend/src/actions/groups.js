@@ -16,9 +16,10 @@ export const createGroupSuccess = (group, afterId) => ({
     afterId,
 });
 
-export const updateGroupSuccess = (group) => ({
+export const updateGroupSuccess = (group, afterId) => ({
     type: actionTypes.UPDATE_GROUP_SUCCESS,
     group,
+    afterId,
 });
 
 export const dragAndDropGroupSuccess = (indexAfterGroup, dragGroup) => ({
