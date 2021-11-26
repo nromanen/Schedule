@@ -452,11 +452,6 @@ public class SemesterServiceImpl implements SemesterService {
         Semester toSemester = getById(toSemesterId);
         Semester fromSemester = getById(fromSemesterId);
         List<Schedule> schedules = scheduleRepository.getScheduleBySemester(fromSemesterId);
-        for (Schedule schedule : schedules) {
-            Hibernate.initialize(schedule.getLesson().getSemester().getDaysOfWeek());
-            Hibernate.initialize(schedule.getLesson().getSemester().getPeriods());
-            Hibernate.initialize(schedule.getLesson().getSemester().getGroups());
-        }
 
         if (shouldClearSemesterContent(toSemester)) {
             deleteAllContentFromSemester(toSemester);
@@ -468,7 +463,7 @@ public class SemesterServiceImpl implements SemesterService {
 
         Set<Lesson> lessonSet = schedules.stream().map(Schedule::getLesson).collect(Collectors.toSet());
 
-        copySchedules(schedules,copyLessons(lessonSet,toSemester));
+        copySchedules(schedules, copyLessons(lessonSet, toSemester));
 
         return update(toSemester);
     }
@@ -500,7 +495,7 @@ public class SemesterServiceImpl implements SemesterService {
         return oldToNewLessonMap;
     }
 
-    private List<Schedule> copySchedules (List<Schedule> schedules, Map<Long, Lesson> oldToNewLessonMap){
+    private List<Schedule> copySchedules(List<Schedule> schedules, Map<Long, Lesson> oldToNewLessonMap) {
         log.debug("In copySchedules (schedules = [{}], oldToNewLessonMap = [{}])", schedules, oldToNewLessonMap);
         List<Schedule> scheduleSaved = new ArrayList<>();
 
