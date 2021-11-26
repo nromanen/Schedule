@@ -79,10 +79,11 @@ export function* getArchivedSemestersItems() {
 }
 
 export function* setGroupsToSemester({ semesterId, groups }) {
+    console.log('groups', groups);
     try {
-        const groupIds = groups.map((item) => `groupId=${item.id}`).join('&');
-        const requestUrl = `${SEMESTERS_URL}/${semesterId}/groups?${groupIds}`;
-        const { data } = yield call(axiosCall, requestUrl, PUT);
+        const groupIds = groups.map((item) => item.id);
+        const requestUrl = `${SEMESTERS_URL}/${semesterId}/groups`;
+        const { data } = yield call(axiosCall, requestUrl, PUT, groupIds);
         yield put(updateSemesterSuccess(data));
         yield put(selectSemesterSuccess(null));
         yield put(reset(SEMESTER_FORM));
