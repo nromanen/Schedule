@@ -9,7 +9,7 @@ import CustomDialog from '../../containers/Dialogs/CustomDialog';
 import { dialogTypes } from '../../constants/dialogs';
 import { cardType } from '../../constants/cardType';
 import { COMMON_LESSON_SERVICE_IS_NOT_UNIQUE } from '../../constants/translationLabels/common';
-import { searchLessonsByTeacher } from '../../helper/search';
+import { search } from '../../helper/search';
 import { showAllSemestersService } from '../../services/semesterService';
 import { checkUniqLesson } from '../../validation/storeValidation';
 import { cardObjectHandler } from '../../helper/cardObjectHandler';
@@ -26,6 +26,7 @@ import { showAllSubjectsService } from '../../services/subjectService';
 
 import { FORM_GROUP_LABEL } from '../../constants/translationLabels/formElements';
 import { trasformLink } from '../../utils/trasformLink';
+import { GROUPED } from '../../constants/common';
 
 const LessonPage = (props) => {
     const {
@@ -60,7 +61,12 @@ const LessonPage = (props) => {
     const [copiedLesson, setCopiedLesson] = useState();
     const [isOpenCopyLessonDialog, setIsOpenCopyLessonDialog] = useState(false);
 
-    const visibleItems = searchLessonsByTeacher(lessons, term);
+    const visibleItems = search(lessons, term, [
+        'teacher.surname',
+        'subjectForSite',
+        'lessonType',
+        GROUPED,
+    ]);
 
     useEffect(() => {
         if (groupId) {
