@@ -1,59 +1,50 @@
 import * as actionTypes from '../actions/actionsType';
-import { updateObject } from '../utility';
 
 const reducer = (
     state = {
         classScheduler: [],
-        classScheduleOne: {},
+        classSchedule: {},
     },
     action,
 ) => {
     switch (action.type) {
-        case actionTypes.SET_CLASS_SCHEDULE_LIST: {
-            return updateObject(state, {
-                classScheduler: [...action.classScheduler],
-            });
+        case actionTypes.GET_CLASS_SCHEDULE_LIST_SUCCESS: {
+            return { ...state, classScheduler: [...action.classScheduler] };
         }
-        case actionTypes.ADD_CLASS_SCHEDULE_ONE: {
-            return updateObject(state, {
-                classScheduleOne: {},
-                classScheduler: [...state.classScheduler, action.classSchedulOne],
-            });
+        case actionTypes.ADD_CLASS_SCHEDULE_SUCCESS: {
+            return {
+                ...state,
+                classSchedule: {},
+                classScheduler: [...state.classScheduler, action.classSchedule],
+            };
         }
-        case actionTypes.GET_CLASS_SCHEDULE_LIST:
-            return state;
-        case actionTypes.GET_CLASS_SCHEDULE_ONE: {
+        case actionTypes.GET_PUBLIC_CLASS_SCHEDULE_LIST_SUCCESS:
+            return { ...state, classScheduler: [...action.classScheduler] };
+        case actionTypes.GET_CLASS_SCHEDULE_BY_ID_SUCCESS: {
             const one = state.classScheduler.find(
-                (classScheduleItem) => classScheduleItem.id === action.classSchedulOne,
+                (classScheduleItem) => classScheduleItem.id === action.id,
             );
-            return updateObject(state, {
-                classScheduleOne: one,
-            });
+            return { ...state, classSchedule: one };
         }
-        case actionTypes.DELETE_CLASS_SCHEDULE_ONE: {
+        case actionTypes.DELETE_CLASS_SCHEDULE_SUCCESS: {
             return {
                 ...state,
                 classScheduler: state.classScheduler.filter(
-                    (classScheduleItem) => classScheduleItem.id !== action.classSchedulOne,
+                    (classScheduleItem) => classScheduleItem.id !== action.id,
                 ),
             };
         }
-        case actionTypes.UPDATE_CLASS_SCHEDULE_ONE: {
+        case actionTypes.UPDATE_CLASS_SCHEDULE_SUCCESS: {
             const classSchedulerstate = [...state.classScheduler];
             classSchedulerstate[
                 classSchedulerstate.findIndex(
-                    (classItem) => classItem.id === action.classSchedulOne.id,
+                    (classItem) => classItem.id === action.classSchedule.id,
                 )
-            ] = action.classSchedulOne;
-            return updateObject(state, {
-                classScheduleOne: {},
-                classScheduler: [...classSchedulerstate],
-            });
+            ] = action.classSchedule;
+            return { ...state, classSchedule: {}, classScheduler: [...classSchedulerstate] };
         }
-        case actionTypes.CLEAR_CLASS_SCHEDULE_ONE: {
-            return updateObject(state, {
-                classScheduleOne: {},
-            });
+        case actionTypes.CLEAR_CLASS_SCHEDULE_SUCCESS: {
+            return { ...state, classSchedule: {} };
         }
         default:
             return state;

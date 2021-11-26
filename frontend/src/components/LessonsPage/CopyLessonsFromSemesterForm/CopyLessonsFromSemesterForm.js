@@ -52,7 +52,7 @@ const CopyLessonsFromSemesterForm = (props) => {
     return (
         <Card additionClassName="form-card">
             <form onSubmit={handleSubmit}>
-                <h2 className="lesson-page-h">{t(COPY_LESSON)}</h2>
+                <h2>{t(COPY_LESSON)}</h2>
                 <p>{t(COPY_LESSONS_FROM_SEMESTER)}</p>
                 {renderSemesterList()}
                 <div className="form-buttons-container">

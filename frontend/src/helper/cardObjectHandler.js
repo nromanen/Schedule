@@ -1,19 +1,15 @@
-export const cardObjectHandler = (card, groupId, semester) => {
-    const groupData =
-        card.groups.map((group) => group.id).includes(groupId) && card.groups.length !== 1
-            ? { groups: card.groups }
-            : { groups: [{ id: groupId }] };
+export const cardObjectHandler = (card, groupId, semester, link) => {
     return {
-        ...groupData,
         id: Number(card.lessonCardId),
         hours: Number(card.hours),
         subject: {
-            id: Number(card.subject),
+            id: Number(card.subject.id),
         },
         lessonType: card.type,
         subjectForSite: card.subjectForSite,
-        teacher: { id: Number(card.teacher) },
-        linkToMeeting: card.linkToMeeting,
+        teacher: card.teacher,
+        linkToMeeting: link,
+        groups: card.groups,
         grouped: card.grouped,
         semester,
     };

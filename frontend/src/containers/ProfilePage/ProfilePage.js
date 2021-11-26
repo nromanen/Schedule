@@ -7,7 +7,7 @@ import { resetFormHandler } from '../../helper/formHelper';
 import { PROFILE_FORM, TEACHER_FORM } from '../../constants/reduxForms';
 import ChangePasswordForm from '../../components/ChangePasswordForm/ChangePasswordForm';
 import { getUserProfile, updateUserPassword, updateUserTeacher } from '../../services/userService';
-import AddTeacherForm from '../../components/AddTeacherForm/AddTeacherForm';
+import AddTeacherForm from '../../components/TeachersPage/AddTeacherForm/AddTeacherForm';
 import { EMAIL_LABEL } from '../../constants/translationLabels/formElements';
 import { COMMON_MY_PROFILE, DIFFERENT_PASSWORDS } from '../../constants/translationLabels/common';
 

@@ -1,15 +1,15 @@
 import { connect } from 'react-redux';
-import { selectLessonCard } from '../../actions';
+import { selectLessonCardSuccess } from '../../actions';
 import Lessons from '../../components/LessonsPage/Lessons';
 
 const mapStateToProps = (state) => ({
     groupId: state.lesson.groupId,
-    groups: state.groups.groups,
     loading: state.loadingIndicator.loading,
+    group: state.groups.group,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    selectLessonCardOf: (lessonCardId) => dispatch(selectLessonCard(lessonCardId)),
+    selectLessonCardSuccess: (lessonCardId) => dispatch(selectLessonCardSuccess(lessonCardId)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Lessons);

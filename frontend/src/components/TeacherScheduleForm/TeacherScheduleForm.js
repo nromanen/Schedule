@@ -90,16 +90,12 @@ const TeacherScheduleForm = (props) => {
     );
 };
 
-const mapStateToProps = (state) => ({
-    classScheduleOne: state.classActions.classScheduleOne,
-});
-
 const mapDispatchToProps = (dispatch) => ({
     setTypeOfTeacherView: (type) => dispatch(setTeacherViewType(type)),
 });
 
 export default connect(
-    mapStateToProps,
+    null,
     mapDispatchToProps,
 )(
     reduxForm({

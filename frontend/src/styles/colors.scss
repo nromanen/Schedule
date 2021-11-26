@@ -1,29 +1,53 @@
-$main-color: #fff;
-$background-color: #3f51b5;
-$background-color-dark: #32408f;
-$delete-color: #e62116;
-$danger-background-color: #ff9999;
-$good-color: #028802;
-$good-color-light: #90ee90;
-$shadow-box: #00000042;
-$thunck-color: #3333336c;
-$thunck-color-hover: #333333b9;
-$group-background-color: #edefff;
-$light-blue: #add8e6;
-$border-color: #000000;
-$label-color: #9c9c9c;
+$white: #ffffff;
 
-
-$dark-blue: #3f51b5;
-$selected-blue: #0000001a;
 $black: #0f0f0f;
+
+$gray1: #d1d5db;
+$gray2: #edeef1;
+$grey4: #e0e0e0;
+$gray3: #9c9c9c;
 $gray: #6b7280;
-$light-gray: #d1d5db;
-$light-clear-gray: #edeef1;
-$snowy-white: #ffffff;
+
+$blue1: #f7fafd;
+$blue2: #e8f1f8;
+$blue3: #4c94f6;
 $blue: #1976d2;
-$blue-hover: #155da5;
-$dark-blue: #3f51b5;
-$selected-blue: #0000001a;
-$light-forest: #028802;
-$forest: #184b44;
+$blue4: #155da5;
+$blue5: #3f51b5;
+$blue6: #32408f;
+
+$green1: #c7f6b6;
+$green2: #90ee90;
+$green: #028802;
+$green3: #184b44;
+
+$yellow: #f7f7c1;
+$yellow1: #ffc000;
+
+$red1: #ff9999;
+$red2: #ff7f7f;
+$red: #e62116;
+
+$azure: #add8e6;
+
+// opacity
+$shadow-box: #00000042;
+$scroll-color: #3333336c;
+$blue-shadow-box: #1976d242;
+$scroll-hover-color: #333333b9;
+$selected-hover-color: #0000001a;
+
+// hover
+$blue-btn-hover: $blue4;
+$table-row-hover-color: $blue2;
+
+$link: $blue;
+$label-color: $gray3;
+$warning-color: $yellow;
+$background-color: $blue5;
+$table-row-color: $blue1;
+$danger-background-color: $red1;
+
+$edit-color: $blue;
+$delete-color: $red;
+$create-color: $green;

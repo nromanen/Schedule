@@ -1,95 +1,64 @@
 import * as actionTypes from './actionsType';
 
-export const createLessonCard = (result) => {
-    return {
-        type: actionTypes.CREATE_LESSON_CARD,
-        result,
-    };
-};
-
-export const createLessonCardStart = (payload) => {
-    return {
-        type: actionTypes.CREATE_LESSON_CARD_START,
-        payload,
-    };
-};
-
-export const getLessonsByGroup = (id) => {
-    return {
-        type: actionTypes.GET_LESSONS_CARDS_START,
-        id,
-    };
-};
-
-export const setLessonsCards = (result) => {
-    return {
-        type: actionTypes.SET_LESSONS_CARDS,
-        result,
-    };
-};
-
-export const getLessonTypes = () => ({
-    type: actionTypes.GET_LESSON_TYPES_START,
+export const createLessonSuccess = (result) => ({
+    type: actionTypes.CREATE_LESSON_CARD_SUCCESS,
+    result,
+});
+export const getLessonsByGroupStart = (id) => ({
+    type: actionTypes.GET_LESSONS_CARDS_START,
+    id,
 });
 
-export const setLessonTypes = (result) => ({
-    type: actionTypes.SET_LESSON_TYPES,
+export const setLessonsCardsStart = (result) => ({
+    type: actionTypes.SET_LESSONS_CARDS_START,
     result,
 });
 
-export const deleteLessonCard = (id) => {
-    return {
-        type: actionTypes.DELETE_LESSON_CARD,
-        id,
-    };
-};
+export const getLessonTypesStart = () => ({
+    type: actionTypes.GET_LESSON_TYPES_START,
+});
 
-export const deleteLessonCardStart = (id) => {
-    return {
-        type: actionTypes.DELETE_LESSON_CARD_START,
-        id,
-    };
-};
+export const setLessonTypesSuccess = (result) => ({
+    type: actionTypes.SET_LESSON_TYPES_SUCCESS,
+    result,
+});
 
-export const copyLessonCard = (group, lesson) => {
-    return {
-        type: actionTypes.COPY_LESSON_START,
-        group,
-        lesson,
-    };
-};
+export const deleteLessonCardSuccess = (id) => ({
+    type: actionTypes.DELETE_LESSON_CARD_SUCCESS,
+    id,
+});
 
-export const selectLessonCard = (res) => {
-    return {
-        type: actionTypes.SELECT_LESSON_CARD,
-        result: res,
-    };
-};
+export const deleteLessonCardStart = (id) => ({
+    type: actionTypes.DELETE_LESSON_CARD_START,
+    id,
+});
 
-export const updateLessonCard = (res) => {
-    return {
-        type: actionTypes.UPDATE_LESSON_CARD,
-        result: res,
-    };
-};
+export const selectLessonCardSuccess = (result) => ({
+    type: actionTypes.SELECT_LESSON_CARD_SUCCESS,
+    result,
+});
 
-export const updateLessonCardStart = (payload) => {
-    return {
-        type: actionTypes.UPDATE_LESSON_CARD_START,
-        payload,
-    };
-};
+export const updateLessonCardSuccess = (result) => ({
+    type: actionTypes.UPDATE_LESSON_CARD_SUCCESS,
+    result,
+});
 
-export const selectGroupId = (res) => {
-    return {
-        type: actionTypes.SELECT_GROUP_ID,
-        result: res,
-    };
-};
+export const copyLessonCardStart = (payload) => ({
+    type: actionTypes.COPY_LESSON_START,
+    payload,
+});
 
-export const setUniqueError = (res) => {
-    return {
-        type: actionTypes.SET_UNIQUE_ERROR,
-        result: res,
-    };
-};
+export const handleLessonStart = (payload) => ({
+    type: actionTypes.HANDLE_LESSON_CARD_START,
+    payload,
+});
+
+export const selectGroupId = (result) => ({
+    type: actionTypes.SELECT_GROUP_ID,
+    result,
+});
+
+export const setUniqueError = (result) => ({
+    type: actionTypes.SET_UNIQUE_ERROR,
+    result,
+});

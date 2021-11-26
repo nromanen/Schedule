@@ -98,7 +98,7 @@ export const mergeUserAndTeacherService = (mergeObj) => {
     axios
         .put(MERGE_USER_AND_TEACHER_URL, mergeObj)
         .then(() => {
-            getTeachersWithoutAccount();
+            getTeachersWithoutAccount(); // replace in future to saga from teachers
             getUsersService();
             setLoadingService(false);
             successHandler(

@@ -1,4 +1,5 @@
 export const BACK_END_SUCCESS_OPERATION = 'serviceMessages:back_end_success_operation';
+export const BACK_END_ACTION_SUCCESS = 'serviceMessages:back_end_action_success';
 export const CREATED_LABEL = 'serviceMessages:created_label';
 export const UPDATED_LABEL = 'serviceMessages:updated_label';
 export const DELETED_LABEL = 'serviceMessages:deleted_label';

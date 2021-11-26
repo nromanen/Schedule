@@ -3,7 +3,13 @@ export const search = (items, term, arr) => {
 
     return items.filter((item) => {
         for (let i = 0; i < arr.length; i += 1) {
-            if (String(item[arr[i]]).toLowerCase().indexOf(term.toLowerCase()) > -1) return true;
+            let data = item[arr[i]];
+
+            if (arr[i].includes('.')) {
+                const [objectName, property] = arr[i].split('.');
+                data = item[objectName]?.[property];
+            }
+            if (String(data).toLowerCase().indexOf(term.toLowerCase()) > -1) return true;
         }
         return false;
     });

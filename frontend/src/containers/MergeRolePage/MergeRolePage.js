@@ -8,7 +8,6 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import Button from '@material-ui/core/Button';
 import { CircularProgress } from '@material-ui/core';
 import { setLoadingService } from '../../services/loadingService';
-import { getTeachersWithoutAccount } from '../../services/teacherService';
 import { getUsersService, mergeUserAndTeacherService } from '../../services/userService';
 
 import Card from '../../share/Card/Card';
@@ -20,6 +19,7 @@ import {
     FORM_MERGE_BUTTON,
 } from '../../constants/translationLabels/formElements';
 import { MERGE_HEADER } from '../../constants/translationLabels/common';
+import { getTeacherWithoutAccountStart } from '../../actions/teachers';
 
 const useStyles = makeStyles(() => ({
     autoCompleteField: {
@@ -39,11 +39,15 @@ const MergeRolePage = (props) => {
 
     const classes = useStyles();
 
-    const { teachers } = props;
+    const { teachers, getTeachersWithoutAccount } = props;
     const { users } = props;
 
-    useEffect(() => getTeachersWithoutAccount(), []);
-    useEffect(() => getUsersService(), []);
+    useEffect(() => {
+        getTeachersWithoutAccount();
+    }, []);
+    useEffect(() => {
+        getUsersService();
+    }, []);
 
     const defaultPropsTeachers = {
         options: teachers,
@@ -130,4 +134,8 @@ const mapStateToProps = (state) => ({
     loading: state.loadingIndicator.loading,
 });
 
-export default connect(mapStateToProps)(MergeRolePage);
+const mapDispatchToProps = (dispatch) => ({
+    getTeachersWithoutAccount: () => dispatch(getTeacherWithoutAccountStart()),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(MergeRolePage);
