@@ -20,11 +20,11 @@ public interface GroupRepository extends BasicRepository<Group, Long> {
     
     List<Group> getAllBySortingOrder();
 
-    Optional<Double> getNextPosition(Double position);
+    Optional<Integer> getNextPosition(Integer position);
 
-    Optional<Double> getMaxSortingOrder();
+    Optional<Integer> getMaxSortingOrder();
 
-    void changeGroupOrderOffset(Double order);
+    void changeGroupOrderOffset(Integer lowerBound, Integer upperBound);
 
-    Optional<Double> getSortingOrderById(Long id);
+    Optional<Integer> getSortingOrderById(Long id);
 }
