@@ -3,6 +3,7 @@ package com.softserve.service.impl;
 import com.softserve.entity.Group;
 import com.softserve.exception.EntityNotFoundException;
 import com.softserve.exception.FieldAlreadyExistsException;
+import com.softserve.exception.SortingOrderNotExistsException;
 import com.softserve.repository.GroupRepository;
 import com.softserve.service.GroupService;
 import com.softserve.service.SemesterService;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -79,43 +81,113 @@ public class GroupServiceImpl  implements GroupService {
     }
 
     /**
+     * The method is used to retrieve groups by set sorting order
+     *
+     * @return the list of groups sorted by set sorting order
+     */
+    @Transactional(readOnly = true)
+    @Override
+    public List<Group> getAllBySortingOrder() {
+        log.debug("Entered getAllBySortingOrder() method");
+        List<Group> groups = groupRepository.getAllBySortingOrder();
+        log.debug("Retrieved groups. Size: {}", groups.size());
+        return groups;
+    }
+
+    /**
+     * The method is used to save group after the specific group to get desired order
+     * @param group the group that must be saved
+     * @param afterId the id of the group after which must be saved the new one
+     * @return saved group with set order and id
+     */
+    @Transactional
+    @Override
+    public Group saveAfterOrder(Group group, Long afterId) {
+        log.info("Entered getAllBySortingOrder({},{})", afterId, group);
+        Integer maxOrder = groupRepository.getMaxSortingOrder().orElse(0);
+        Integer order;
+        if (afterId != null) {
+            order = getSortingOrderById(afterId)+1;
+            group.setSortingOrder(order);
+            groupRepository.changeGroupOrderOffset(order, maxOrder+1);
+        } else {
+            group.setSortingOrder(1);
+            groupRepository.changeGroupOrderOffset(0, maxOrder+1);
+        }
+        return groupRepository.save(group);
+    }
+
+    /**
+     * Method updates group order position
+     * @param group group that will be replaced
+     * @param afterId id of the group after which will be placed
+     * @return group with new position
+     */
+    @Transactional
+    @Override
+    public Group updateGroupOrder(Group group, Long afterId) {
+        log.info("Entered updateGroupOrder({}, {})", group, afterId);
+        if (!groupRepository.isExistsById(group.getId())) {
+            throw new EntityNotFoundException(Group.class, "id", group.getId().toString());
+        }
+        Integer maxOrder = groupRepository.getMaxSortingOrder().orElse(0);
+        if (afterId != null) {
+            Integer lowerBound = getSortingOrderById(afterId)+1;
+            Integer upperBound = Optional.ofNullable(group.getSortingOrder()).orElse(maxOrder+1)+1;
+            group.setSortingOrder(lowerBound);
+            groupRepository.changeGroupOrderOffset(lowerBound, upperBound);
+        } else {
+            group.setSortingOrder(1);
+            groupRepository.changeGroupOrderOffset(0, maxOrder+1);
+        }
+        return groupRepository.update(group);
+    }
+
+    private Integer getSortingOrderById(Long id) {
+        log.debug("Entered getSortingOrderById({})", id);
+        return groupRepository.getSortingOrderById(id)
+                .orElseThrow(() -> new SortingOrderNotExistsException(Group.class, id));
+    }
+
+    /**
      * Method saves new group to Repository
      *
-     * @param object Group entity with info to be saved
+     * @param group Group entity with info to be saved
      * @return saved Group entity
      * @throws FieldAlreadyExistsException if Group with input title already exists
      */
     @Transactional
     @Override
-    public Group save(Group object) {
-        log.info("In save(entity = [{}]", object);
-        checkTitleForUniqueness(object.getTitle());
-        return groupRepository.save(object);
+    public Group save(Group group) {
+        log.info("In save(entity = [{}]", group);
+        checkTitleForUniqueness(group.getTitle());
+        return groupRepository.save(group);
     }
 
     /**
      * Method updates information for an existing group in  Repository
-     * @param object Group entity with info to be updated
+     * @param group Group entity with info to be updated
      * @return updated Group entity
      */
     @Transactional
     @Override
-    public Group update(Group object) {
-        log.info("In update(entity = [{}]", object);
-        checkTitleForUniquenessIgnoringId(object.getTitle(), object.getId());
-        return groupRepository.update(object);
+    public Group update(Group group) {
+        log.info("In update(entity = [{}]", group);
+        checkTitleForUniquenessIgnoringId(group.getTitle(), group.getId());
+        group.setSortingOrder(groupRepository.getSortingOrderById(group.getId()).orElse(null));
+        return groupRepository.update(group);
     }
 
     /**
      * Method deletes an existing group from Repository
-     * @param object Group entity to be deleted
+     * @param group Group entity to be deleted
      * @return deleted Group entity
      */
     @Transactional
     @Override
-    public Group delete(Group object) {
-        log.info("In delete(entity = [{}])",  object);
-        return groupRepository.delete(object);
+    public Group delete(Group group) {
+        log.info("In delete(entity = [{}])",  group);
+        return groupRepository.delete(group);
     }
 
     /**
@@ -182,9 +254,9 @@ public class GroupServiceImpl  implements GroupService {
      */
     @Override
     @Transactional
-    public List<Group> getGroupsByGroupIds(Long[] groupIds) {
+    public List<Group> getGroupsByGroupIds(List<Long> groupIds) {
         log.info("Enter into getGroupsByGroupIds");
-        return Arrays.stream(groupIds).map(this::getById).collect(Collectors.toList());
+        return groupRepository.getGroupsByGroupIds(groupIds);
     }
 
     private void checkTitleForUniqueness(String title) {

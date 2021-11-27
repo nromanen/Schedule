@@ -75,6 +75,7 @@ public class TeacherServiceTest {
 
         teacherWithoutId = new Teacher();
         teacherWithoutId.setName(name);
+        teacherWithoutId.setDisable(false);
         teacherWithoutId.setSurname(surname);
         teacherWithoutId.setPatronymic(patronymic);
         teacherWithoutId.setPosition(position);
@@ -82,6 +83,7 @@ public class TeacherServiceTest {
 
         teacherWithId1LAndWithUserId1 = new Teacher();
         teacherWithId1LAndWithUserId1.setId(1L);
+        teacherWithId1LAndWithUserId1.setDisable(false);
         teacherWithId1LAndWithUserId1.setName(name);
         teacherWithId1LAndWithUserId1.setSurname(surname);
         teacherWithId1LAndWithUserId1.setPatronymic(patronymic);
@@ -90,6 +92,7 @@ public class TeacherServiceTest {
 
         teacherWithId1LAndWithoutUser = new Teacher();
         teacherWithId1LAndWithoutUser.setId(1L);
+        teacherWithId1LAndWithoutUser.setDisable(false);
         teacherWithId1LAndWithoutUser.setName(name);
         teacherWithId1LAndWithoutUser.setSurname(surname);
         teacherWithId1LAndWithoutUser.setPatronymic(patronymic);
@@ -98,6 +101,7 @@ public class TeacherServiceTest {
 
         teacherDtoWithoutId = new TeacherDTO();
         teacherDtoWithoutId.setName(name);
+        teacherDtoWithoutId.setDisable(false);
         teacherDtoWithoutId.setSurname(surname);
         teacherDtoWithoutId.setPatronymic(patronymic);
         teacherDtoWithoutId.setPosition(position);
@@ -105,6 +109,7 @@ public class TeacherServiceTest {
 
         teacherForUpdateDTOWithId1L = new TeacherForUpdateDTO();
         teacherForUpdateDTOWithId1L.setId(1L);
+        teacherForUpdateDTOWithId1L.setDisable(false);
         teacherForUpdateDTOWithId1L.setName(name);
         teacherForUpdateDTOWithId1L.setSurname(surname);
         teacherForUpdateDTOWithId1L.setPatronymic(patronymic);
@@ -126,6 +131,7 @@ public class TeacherServiceTest {
     @Test
     public void delete() {
         Teacher expectedTeacher = teacherWithId1LAndWithUserId1;
+        expectedTeacher.setUserId(null);
         when(teacherRepository.delete(argThat(t -> deepEqualsForTeachers(t, expectedTeacher))))
                 .thenReturn(expectedTeacher);
 
@@ -344,7 +350,7 @@ public class TeacherServiceTest {
 
         Teacher result = teacherService.joinTeacherWithUser(teacher.getId(), user.getId());
         assertNotNull(result);
-        assertEquals(Long.valueOf(result.getUserId()), user.getId());
+        assertEquals(result.getUserId(), user.getId());
         assertEquals(ROLE_TEACHER, user.getRole());
         verify(userService, timeout(1)).getById(anyLong());
         verify(userService, times(1)).update(any(User.class));

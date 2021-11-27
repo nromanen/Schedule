@@ -32,22 +32,22 @@ const reducer = (state = initialState, action) => {
         case actionTypes.GET_DEFAULT_SEMESTER_SUCCESS:
             return { ...state, defaultSemester: action.semester };
         case actionTypes.CHECK_AVAILABILITY_CHANGE_ROOM_SCHEDULE_SUCCESS:
-            return { ...state, availability: action.result };
+            return { ...state, availability: action.payload };
         case actionTypes.ADD_ITEM_TO_SCHEDULE: {
-            const { id } = action.result;
+            const { id } = action.payload;
             let itemArr;
             if (id) {
                 const index = state.items.findIndex((item) => {
                     return item.id === id;
                 });
                 if (index < 0) {
-                    itemArr = state.items.concat(action.result);
+                    itemArr = state.items.concat(action.payload);
                 } else {
-                    state.items.splice(index, 1, action.result);
+                    state.items.splice(index, 1, action.payload);
                     itemArr = state.items;
                 }
             } else {
-                itemArr = state.items.concat(action.result);
+                itemArr = state.items.concat(action.payload);
             }
             return { ...state, items: itemArr };
         }
@@ -72,7 +72,7 @@ const reducer = (state = initialState, action) => {
             };
         }
         case actionTypes.SET_ITEM_GROUP_ID:
-            return { ...state, itemGroupId: action.result };
+            return { ...state, itemGroupId: action.payload };
         case actionTypes.SET_SCHEDULE_GROUP:
             return { ...state, scheduleGroup: action.group };
         case actionTypes.DELETE_SCHEDULE_ITEM_SUCCESS: {
@@ -111,7 +111,7 @@ const reducer = (state = initialState, action) => {
                 fullSchedule: [],
             };
         case actionTypes.SET_TEACHER_VIEW_TYPE:
-            return { ...state, viewTeacherScheduleResults: action.result };
+            return { ...state, viewTeacherScheduleResults: action.payload };
         default:
             return state;
     }

@@ -191,5 +191,5 @@
     "columns_size_base": "base",
     "columns_size_large": "large",
     "search_params": "Search options for available rooms",
-    "free-rooms-list-empty": "The list of available rooms is empty"
+    "free_rooms_list_empty": "The list of available rooms is empty"
 }

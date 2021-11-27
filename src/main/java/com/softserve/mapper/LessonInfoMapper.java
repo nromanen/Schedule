@@ -15,6 +15,7 @@ import java.util.List;
 public abstract class LessonInfoMapper {
     public abstract LessonInfoDTO lessonToLessonInfoDTO(Lesson lesson);
 
+    @Mapping(target = "semester.id", source = "semesterId")
     public abstract Lesson lessonInfoDTOToLesson(LessonInfoDTO lessonInfoDTO);
 
     public List<Lesson> lessonForGroupsDTOToLessons(LessonForGroupsDTO lessonForGroupsDTO) {
@@ -23,17 +24,8 @@ public abstract class LessonInfoMapper {
         }
         List<Lesson> lessons = new ArrayList<>();
         lessonForGroupsDTO.getGroups().forEach(group -> {
-            LessonInfoDTO lessonInfoDTO = new LessonInfoDTO();
-            lessonInfoDTO.setId(lessonForGroupsDTO.getId());
-            lessonInfoDTO.setHours(lessonForGroupsDTO.getHours());
-            lessonInfoDTO.setSemester(lessonForGroupsDTO.getSemester());
-            lessonInfoDTO.setLinkToMeeting(lessonForGroupsDTO.getLinkToMeeting());
-            lessonInfoDTO.setSubjectForSite(lessonForGroupsDTO.getSubjectForSite());
-            lessonInfoDTO.setLessonType(lessonForGroupsDTO.getLessonType());
-            lessonInfoDTO.setSubject(lessonForGroupsDTO.getSubject());
+            LessonInfoDTO lessonInfoDTO = lessonForGroupsDTOToLessonInfoDTO(lessonForGroupsDTO);
             lessonInfoDTO.setGroup(group);
-            lessonInfoDTO.setTeacher(lessonForGroupsDTO.getTeacher());
-            lessonInfoDTO.setGrouped(lessonForGroupsDTO.isGrouped());
             lessons.add(lessonInfoDTOToLesson(lessonInfoDTO));
         });
         return lessons;
@@ -42,6 +34,8 @@ public abstract class LessonInfoMapper {
     public abstract List<LessonInfoDTO> lessonsToLessonInfoDTOs(List<Lesson> lessons);
 
     public abstract List<LessonDTO> lessonsToLessonDTOs(List<Lesson> lessons);
+
+    public abstract LessonInfoDTO lessonForGroupsDTOToLessonInfoDTO(LessonForGroupsDTO lessonForGroupsDTO);
 
     @Mapping(source = "semesterId", target = "semester.id")
     @Mapping(source = "teacherId", target = "teacher.id")

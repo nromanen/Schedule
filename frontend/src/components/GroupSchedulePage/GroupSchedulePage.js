@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import './GroupSchedulePage.scss';
 import { CircularProgress } from '@material-ui/core';
 import { get } from 'lodash';
@@ -18,6 +19,7 @@ const createSubmitValues = (semester, group, teacher) => ({
 const GroupSchedulePage = (props) => {
     const history = useHistory();
     const location = useLocation();
+    const { t } = useTranslation('common');
     const {
         defaultSemester,
         scheduleType,
@@ -85,7 +87,7 @@ const GroupSchedulePage = (props) => {
                     <CircularProgress />
                 </section>
             ) : (
-                renderSchedule(props)
+                renderSchedule({ ...props, t })
             )}
         </>
     );

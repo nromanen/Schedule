@@ -189,5 +189,5 @@
     "columns_size_base": "базові",
     "columns_size_large": "великі",
     "search_params": "Параметри пошуку вільних кімнати",
-    "free-rooms-list-empty": "Список вільних кімнат порожній"
+    "free_rooms_list_empty": "Список вільних кімнат порожній"
 }
