@@ -1,5 +1,4 @@
-import { isEmpty } from 'lodash';
-import { filterClassesArray } from '../utils/sheduleUtils';
+import { isEmpty, uniqBy } from 'lodash';
 import { sortStrings } from '../utils/sortStrings';
 
 const mapTeacherSchedule = (days) => {
@@ -50,14 +49,14 @@ const mapTeacherSchedule = (days) => {
 
     const parsedOdd = {
         days: parsedOddDays,
-        classes: filterClassesArray(parsedOddClasses).sort((a, b) =>
+        classes: uniqBy(parsedOddClasses, 'id').sort((a, b) =>
             sortStrings(a.startTime, b.startTime),
         ),
         cards: parsedOddArray,
     };
     const parsedEven = {
         days: parsedEvenDays,
-        classes: filterClassesArray(parsedEvenClasses).sort((a, b) =>
+        classes: uniqBy(parsedEvenClasses, 'id').sort((a, b) =>
             sortStrings(a.startTime, b.startTime),
         ),
         cards: parsedEvenArray,
