@@ -4,16 +4,13 @@ import SchedulePageForm from '../../components/GroupSchedulePage/SchedulePageFor
 import { SCHEDULE_SEARCH_FORM } from '../../constants/reduxForms';
 
 const mapStateToProps = (state) => ({
-    initialValues: {
-        semester: state.schedule.scheduleSemester,
-        group: state.schedule.scheduleGroup,
-        teacher: state.schedule.scheduleTeacher,
-    },
+    semester: state.schedule.scheduleSemester,
+    group: state.schedule.scheduleGroup,
+    teacher: state.schedule.scheduleTeacher,
 });
 
 export default connect(mapStateToProps)(
     reduxForm({
         form: SCHEDULE_SEARCH_FORM,
-        enableReinitialize: true,
     })(SchedulePageForm),
 );
