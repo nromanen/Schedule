@@ -55,8 +55,6 @@ export const AddGroup = props => {
         const afterId = data.afterId ? data.afterId.id : null;
         submitGroupStart({ ...data, disable: false, afterId });
         setGroup({});
-        // console.log(data);
-        // console.log({ ...data, disable: false, afterId });
     };
 
     const onReset = () => {
@@ -80,6 +78,7 @@ export const AddGroup = props => {
                     validate={[required, minLengthValue]}
                 />
                 <Field
+                    className="select-field"
                     name="afterId"
                     component={renderAutocompleteField}
                     label={t(FORM_GROUP_LABEL_AFTER)}
