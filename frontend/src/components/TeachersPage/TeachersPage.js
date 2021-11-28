@@ -8,7 +8,7 @@ import { dialogTypes } from '../../constants/dialogs';
 import { cardType } from '../../constants/cardType';
 import { SEND_SCHEDULE_FOR_TEACHER } from '../../constants/translationLabels/common';
 import { search } from '../../helper/search';
-import { MultiSelect } from '../../helper/multiselect';
+import MultiSelect from '../../share/Multiselects/MultiSelect';
 import SearchPanel from '../../share/SearchPanel/SearchPanel';
 import { clearDepartment, getAllDepartmentsService } from '../../services/departmentService';
 import AddTeacherForm from './AddTeacherForm/AddTeacherForm';

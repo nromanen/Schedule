@@ -65,7 +65,7 @@ export const getPublicClassScheduleStart = () => ({
     type: actionTypes.GET_PUBLIC_CLASS_SCHEDULE_LIST_START,
 });
 
-export const getPublicClassScheduleSuccess = (classSchedule) => ({
+export const getPublicClassScheduleSuccess = (classScheduler) => ({
     type: actionTypes.GET_PUBLIC_CLASS_SCHEDULE_LIST_SUCCESS,
-    classSchedule,
+    classScheduler,
 });

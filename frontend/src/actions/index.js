@@ -61,7 +61,12 @@ export {
     getEnabledGroupsStart,
 } from './groups';
 
-export { setLoading, setScheduleLoading, setSemesterLoading } from './loadingIndicator';
+export {
+    setLoading,
+    setScheduleLoading,
+    setSemesterLoading,
+    setAuthLoading,
+} from './loadingIndicator';
 export {
     addRoomSuccess,
     clearRoomSuccess,

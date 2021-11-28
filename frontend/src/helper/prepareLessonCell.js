@@ -12,9 +12,9 @@ export const prepareLessonCardCell = (card) => {
 };
 
 export const prepareLessonSubCardCell = (card, place) => {
-    const room = place !== places.ONLINE ? card.room : '';
     let inner = '';
     if (!isNil(card)) {
+        const room = place !== places.ONLINE ? card.room : '';
         inner = i18n.t(`formElements:lesson_type_${card.lessonType.toLowerCase()}_label`);
         if (room !== '') {
             inner = `(${inner}, ${card.room.name})`;

@@ -1,7 +1,13 @@
+import { isEmpty } from 'lodash';
+import { GROUPED } from '../constants/common';
+
 export const search = (items, term, arr) => {
-    if (term.length === 0) return items;
+    const termTmp = term.trim();
+    if (isEmpty(termTmp)) return items;
 
     return items.filter((item) => {
+        if (item.grouped && GROUPED.includes(termTmp.toLowerCase())) return true;
+
         for (let i = 0; i < arr.length; i += 1) {
             let data = item[arr[i]];
 
@@ -9,25 +15,8 @@ export const search = (items, term, arr) => {
                 const [objectName, property] = arr[i].split('.');
                 data = item[objectName]?.[property];
             }
-            if (String(data).toLowerCase().indexOf(term.toLowerCase()) > -1) return true;
+            if (String(data).toLowerCase().indexOf(termTmp.toLowerCase()) > -1) return true;
         }
         return false;
-    });
-};
-
-export const searchLessonsByTeacher = (lessons, term) => {
-    const isIncludeValue = (item, value) => {
-        return item.toLowerCase().includes(value.toLowerCase());
-    };
-    const termTmp = term.trim();
-    if (termTmp.length === 0) return lessons;
-    return lessons.filter((lesson) => {
-        const { teacher, subjectForSite, lessonType, grouped } = lesson;
-        return (
-            isIncludeValue(teacher.surname, termTmp) ||
-            isIncludeValue(subjectForSite, termTmp) ||
-            isIncludeValue(lessonType, termTmp) ||
-            (isIncludeValue('Grouped', term) && grouped)
-        );
     });
 };
