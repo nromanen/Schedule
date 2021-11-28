@@ -2,8 +2,8 @@ import React from 'react';
 import { Field } from 'redux-form';
 import { isEmpty } from 'lodash';
 import { useTranslation } from 'react-i18next';
-import SelectField from '../../../../share/renderedFields/select';
 import MenuItem from '@material-ui/core/MenuItem';
+import SelectField from '../../../../share/renderedFields/select';
 import './SemesterCopyForm.scss';
 import { required } from '../../../../validation/validateFields';
 import { FORM_SEMESTER_LABEL } from '../../../../constants/translationLabels/formElements';
@@ -24,7 +24,7 @@ const SemesterSelect = (props) => {
                     validate={[required]}
                     className="semester-copy-select"
                 >
-                    <MenuItem value="" className="hidden" disabled/>
+                    <MenuItem value="" className="hidden" disabled />
                     {availableSemestersForCopy.map((semester) => (
                         <MenuItem key={semester.id} value={semester.id}>
                             {semester.description}

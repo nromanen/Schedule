@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import SnackbarComponent from '../../share/Snackbar/SnackbarComponent';
-import { handleSnackbarCloseService } from '../../services/snackbarService';
 import SemesterList from '../../containers/SemesterPage/SemesterList';
 import { getGroupsOptionsForSelect } from '../../utils/selectUtils';
 import SemesterSidebar from './SemesterSidebar';

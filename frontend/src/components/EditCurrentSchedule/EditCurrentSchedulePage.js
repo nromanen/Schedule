@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { CircularProgress } from '@material-ui/core';
 import { useTranslation } from 'react-i18next';
 import './EditCurrentSchedule.scss';
-import { showListOfRoomsService } from '../../services/roomService';
 import ScheduleLessonsList from '../../containers/EditCurrentSchedule/ScheduleLessonsList';
 import Schedule from '../../containers/EditCurrentSchedule/Schedule';
 import { SCHEDULE_TITLE, USE_PC } from '../../constants/translationLabels/common';
@@ -21,6 +20,7 @@ const SchedulePage = (props) => {
         clearScheduleItems,
         getClassScheduleList,
         currentSemester,
+        getListOfRooms,
     } = props;
     const { t } = useTranslation('common');
     document.title = t(SCHEDULE_TITLE);
@@ -71,7 +71,7 @@ const SchedulePage = (props) => {
         setScheduleLoading(true);
         getAllScheduleItems();
         getEnabledGroups();
-        showListOfRoomsService();
+        getListOfRooms();
         getClassScheduleList();
     }, []);
 
