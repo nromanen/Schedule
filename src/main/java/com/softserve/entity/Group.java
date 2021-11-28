@@ -57,5 +57,5 @@ public class Group implements Serializable {
     private boolean disable = false;
 
     @Column(name = "sorting_order")
-    private Double sortingOrder;
+    private Integer sortingOrder;
 }
