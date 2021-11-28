@@ -9,6 +9,7 @@ import { setOpenSuccessSnackbar, setOpenErrorSnackbar } from '../actions/snackba
 import { axiosCall } from '../services/axios';
 import {
     ROOM_URL,
+    ROOM_ORDERED_URL,
     DISABLED_ROOMS_URL,
     ROOM_TYPES_URL,
     FREE_ROOMS_URL,
@@ -42,7 +43,7 @@ import { POST, DELETE, PUT } from '../constants/methods';
 export function* getListOfRooms() {
     try {
         yield put(setLoading(true));
-        const { data } = yield call(axiosCall, ROOM_URL);
+        const { data } = yield call(axiosCall, ROOM_ORDERED_URL);
         yield put(getListOfRoomsSuccess(data));
     } catch (error) {
         yield put(setOpenErrorSnackbar(createErrorMessage(error)));
