@@ -78,7 +78,7 @@ const LessonPage = (props) => {
 
     const submitLessonForm = (card) => {
         const link = trasformLink(card.linkToMeeting);
-        const values = cardObjectHandler(card, groupId, currentSemester, link);
+        const values = cardObjectHandler(card, currentSemester, link);
 
         if (!checkUniqLesson(lessons, values)) {
             const message = t(COMMON_LESSON_SERVICE_IS_NOT_UNIQUE);
