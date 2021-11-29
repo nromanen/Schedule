@@ -25,8 +25,7 @@ import {
     BROKEN_TOKEN,
 } from '../../constants/translationLabels/common';
 
-// eslint-disable-next-line sonarjs/cognitive-complexity
-const Auth = props => {
+const Auth = (props) => {
     const {
         authType,
         userRole,
