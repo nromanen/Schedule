@@ -31,14 +31,10 @@ const reducer = (state = initialState, action) => {
             };
         }
 
-        case actionTypes.DELETE_ALL_STUDENTS: {
-            const students = state.students.filter((student) => {
-                let res = true;
-                action.students.forEach((el) => {
-                    if (student.id === +el.id) res = false;
-                });
-                return res;
-            });
+        case actionTypes.DELETE_SELECTED_STUDENTS: {
+            const students = state.students.filter(
+                (student) => !action.students.some((el) => student.id === +el.id),
+            );
             return {
                 ...state,
                 students,

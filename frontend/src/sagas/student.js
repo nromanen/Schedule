@@ -1,41 +1,41 @@
-import { call, takeEvery, put, select } from 'redux-saga/effects';
 import { reset } from 'redux-form';
-import {
-    STUDENT_URL,
-    GROUP_URL,
-    WITH_STUDENTS,
-    MOVE_STUDENTS_URL,
-    STUDENTS_TO_GROUP_FILE,
-} from '../constants/axios';
-
+import { call, put, select, takeEvery } from 'redux-saga/effects';
+import { omit } from 'lodash';
 import * as actionTypes from '../actions/actionsType';
-import { STUDENT_FORM } from '../constants/reduxForms';
-import { createErrorMessage, createDynamicMessage, createMessage } from '../utils/sagaUtils';
-import { setOpenSuccessSnackbar, setOpenErrorSnackbar } from '../actions/snackbar';
-import { DELETE, POST, PUT } from '../constants/methods';
-import { axiosCall } from '../services/axios';
+import { setLoading, setStudentsLoading } from '../actions/loadingIndicator';
+import { setOpenErrorSnackbar, setOpenSuccessSnackbar } from '../actions/snackbar';
 import {
+    deleteAllStudentSuccess,
     deleteStudentSuccess,
     selectStudentSuccess,
     showAllStudents,
     updateStudentSuccess,
-    deleteAllStudentSuccess,
 } from '../actions/students';
 import {
-    FILE_LABEL,
-    UPDATED_LABEL,
-    CREATED_LABEL,
-    DELETED_LABEL,
-    MOVED_TO_GROUP_LABEL,
-    FILE_BACK_END_SUCCESS_OPERATION,
-    BACK_END_SUCCESS_OPERATION,
-} from '../constants/translationLabels/serviceMessages';
+    GROUP_URL,
+    MOVE_STUDENTS_URL,
+    STUDENTS_TO_GROUP_FILE,
+    STUDENT_URL,
+    WITH_STUDENTS,
+} from '../constants/axios';
+import { DELETE, POST, PUT } from '../constants/methods';
 import { STUDENT } from '../constants/names';
-import { setStudentsLoading, setLoading } from '../actions/loadingIndicator';
+import { STUDENT_FORM } from '../constants/reduxForms';
 import {
     FORM_STUDENTS_FILE_LABEL,
-    STUDENTS_WAS_LABEL,
+    STUDENTS_UPPERCASE,
 } from '../constants/translationLabels/formElements';
+import {
+    BACK_END_SUCCESS_OPERATION,
+    CREATED_LABEL,
+    DELETED_LABEL,
+    FILE_BACK_END_SUCCESS_OPERATION,
+    FILE_LABEL,
+    MOVED_TO_GROUP_LABEL,
+    UPDATED_LABEL,
+} from '../constants/translationLabels/serviceMessages';
+import { axiosCall } from '../services/axios';
+import { createDynamicMessage, createErrorMessage, createMessage } from '../utils/sagaUtils';
 
 const getStudents = (state) => state.students.students;
 
@@ -129,16 +129,12 @@ function* moveStudentsToGroup({ group }) {
     try {
         const allStudents = yield select(getStudents);
         const movedStudents = allStudents.filter((item) => item.checked === true);
-        const students = movedStudents.map((student) => {
-            const item = student;
-            delete item.checked;
-            return item;
-        });
+        const students = movedStudents.map((student) => omit(student, ['checked']));
         yield call(axiosCall, MOVE_STUDENTS_URL, PUT, { students, group });
         yield put(deleteAllStudentSuccess(students));
         const message = createMessage(
             BACK_END_SUCCESS_OPERATION,
-            STUDENTS_WAS_LABEL,
+            STUDENTS_UPPERCASE,
             MOVED_TO_GROUP_LABEL,
         );
         yield put(setOpenSuccessSnackbar(message));
