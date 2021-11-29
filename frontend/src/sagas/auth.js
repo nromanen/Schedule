@@ -26,13 +26,13 @@ import { setAuthLoading } from '../actions/loadingIndicator';
 import { POST, PUT } from '../constants/methods';
 import { createErrorMessage } from '../utils/sagaUtils';
 
-function* loginToAccount(payload) {
+function* loginToAccount({ payload }) {
     try {
         let response;
         if (payload.type === GOOGLE) {
             response = { data: { token: payload.token, email: '' } };
         } else {
-            response = yield call(axiosCall, LOGIN_URL, POST, payload.userData);
+            response = yield call(axiosCall, LOGIN_URL, POST, payload);
         }
         const { token, email } = response.data;
         const decodedJWT = jwtDecode(token);
@@ -58,9 +58,9 @@ function* loginToAccount(payload) {
     }
 }
 
-function* registerAccount({ userData }) {
+function* registerAccount({ payload }) {
     try {
-        const response = yield call(axiosCall, REGISTRATION_URL, POST, userData);
+        const response = yield call(axiosCall, REGISTRATION_URL, POST, payload);
         yield put(registerUserSuccess(response));
     } catch (error) {
         yield put(

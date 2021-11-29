@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { HOME_PAGE_LINK, LOGIN_LINK, ADMIN_PAGE_LINK } from '../../constants/links';
 import { authTypes, successAuthMessages } from '../../constants/auth';
+import { GOOGLE_LOGIN_URL } from '../../constants/axios';
 import { userRoles } from '../../constants/userRoles';
 import { snackbarTypes } from '../../constants/snackbarTypes';
 import LoginForm from '../LoginForm/LoginForm';
@@ -12,9 +13,7 @@ import ResetPasswordForm from '../ResetPasswordForm/ResetPasswordForm';
 import { resetFormHandler } from '../../helper/formHelper';
 import { handleSnackbarOpenService } from '../../services/snackbarService';
 import { LOGIN_FORM, REGISTRATION_FORM, RESET_PASSWORD_FORM } from '../../constants/reduxForms';
-
-// COMMENT: The functionality for the one commented below is temporarily disabled
-// import { GOOGLE } from '../../constants/common';
+import { GOOGLE } from '../../constants/common';
 
 import './Auth.scss';
 import {
@@ -23,9 +22,11 @@ import {
     HOME_TITLE,
     ADMIN_TITLE,
     RESET_PASSWORD_PAGE_TITLE,
+    BROKEN_TOKEN,
 } from '../../constants/translationLabels/common';
 
-const Auth = (props) => {
+// eslint-disable-next-line sonarjs/cognitive-complexity
+const Auth = props => {
     const {
         authType,
         userRole,
@@ -42,16 +43,16 @@ const Auth = (props) => {
     const [isResponse, setIsResponse] = useState(false);
     const history = useHistory();
     const { t } = useTranslation('common');
-    // const url = window.document.location;
-    // const parser = new URL(url);
+    const url = window.document.location;
+    const parser = new URL(url);
 
-    const loginHandler = (loginData) => {
+    const loginHandler = loginData => {
         onAuth(loginData);
         setLoadingForm(true);
         resetFormHandler(LOGIN_FORM);
     };
 
-    const showSuccessMessage = (massage) => {
+    const showSuccessMessage = massage => {
         handleSnackbarOpenService(true, snackbarTypes.SUCCESS, t(massage));
     };
 
@@ -66,7 +67,7 @@ const Auth = (props) => {
         showSuccessMessage(successAuthMessages[authType]);
     }, []);
 
-    const registrationHandler = (registrationData) => {
+    const registrationHandler = registrationData => {
         onRegister({
             email: registrationData.email,
             password: registrationData.password,
@@ -76,7 +77,7 @@ const Auth = (props) => {
         setIsResponse(true);
     };
 
-    const resetPasswordHandler = (resetPasswordData) => {
+    const resetPasswordHandler = resetPasswordData => {
         onResetPassword({
             email: resetPasswordData.email,
         });
@@ -85,42 +86,41 @@ const Auth = (props) => {
         setIsResponse(true);
     };
 
-    // const socialLoginHandler = (data) => {
-    //     props.setLoading(true);
-    //     if (!data.token || data.token.length < 20) {
-    //         props.setError({ login: t(BROKEN_TOKEN) });
-    //         return;
-    //     }
-    //     setAuthType(authTypes.GOOGLE);
-    //     props.onAuth(data);
-    //     resetFormHandler(LOGIN_FORM);
-    //     window.history.replaceState({}, document.title, '/');
-    //     props.setLoading(false);
-    // };
+    const socialLoginHandler = data => {
+        setLoadingForm(true);
+        if (!data.token || data.token.length < 20) {
+            props.setError({ login: t(BROKEN_TOKEN) });
+            return;
+        }
+        onAuth({ type: authTypes.GOOGLE });
+        resetFormHandler(LOGIN_FORM);
+        window.history.replaceState({}, document.title, '/');
+        setLoadingForm(false);
+    };
 
-    // let social = false;
-    // let isToken = false;
-    // let splitedParamToken = '';
+    let social = false;
+    let isToken = false;
+    let splitedParamToken = '';
 
-    // if (parser.search.length > 0) {
-    //     const params = parser.search.split('&');
-    //     if (params) {
-    //         params.forEach((param) => {
-    //             const splitedParam = param.split('=');
-    //             if (splitedParam) {
-    //                 if (splitedParam[0] === '?social' && splitedParam[1] === 'true') {
-    //                     social = true;
-    //                 }
-    //                 if (splitedParam[0] === 'token' && splitedParam[1].length > 0) {
-    //                     isToken = true;
-    //                     splitedParamToken = splitedParam;
-    //                 }
-    //             }
-    //         });
-    //     }
-    //     if (social && isToken)
-    //         socialLoginHandler({ authType: GOOGLE, token: splitedParamToken[1] });
-    // }
+    if (parser.search.length > 0) {
+        const params = parser.search.split('&');
+        if (params) {
+            params.forEach(param => {
+                const splitedParam = param.split('=');
+                if (splitedParam) {
+                    if (splitedParam[0] === '?social' && splitedParam[1] === 'true') {
+                        social = true;
+                    }
+                    if (splitedParam[0] === 'token' && splitedParam[1].length > 0) {
+                        isToken = true;
+                        splitedParamToken = splitedParam;
+                    }
+                }
+            });
+        }
+        if (social && isToken)
+            socialLoginHandler({ authType: GOOGLE, token: splitedParamToken[1] });
+    }
 
     useEffect(() => {
         if (userRole) {
@@ -164,6 +164,12 @@ const Auth = (props) => {
             document.title = t(LOGIN_TITLE);
             return (
                 <div className="auth-container">
+                    <a
+                        className="hidden-link"
+                        href={`${process.env.REACT_APP_API_BASE_URL.trim()}${`/${GOOGLE_LOGIN_URL}`}`}
+                    >
+                        auth via google
+                    </a>
                     <LoginForm
                         isLoading={isLoading}
                         loginHandler={loginHandler}

@@ -1,18 +1,18 @@
 import * as actionTypes from './actionsType';
 import { TOKEN_BEGIN } from '../constants/tokenBegin';
 
-export const authUser = (userData) => ({
+export const authUser = (payload) => ({
     type: actionTypes.AUTH_USER,
-    userData,
+    payload,
 });
 export const authAutoLogout = (expirationTime) => ({
     type: actionTypes.AUTH_USER_AUTO_LOGOUT,
     expirationTime,
 });
 
-export const registerUser = (userData) => ({
+export const registerUser = (payload) => ({
     type: actionTypes.REGISTER_USER,
-    userData,
+    payload,
 });
 
 export const resetUserPassword = (payload) => ({

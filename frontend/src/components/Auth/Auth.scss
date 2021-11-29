@@ -92,3 +92,15 @@
     font-weight: bold;
     margin-top: 10px;
 }
+
+.hidden-link {
+    position: absolute;
+    right: 5px;
+    bottom: 5px;
+    color: $grey4;
+    text-decoration: none;
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
