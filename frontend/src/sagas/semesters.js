@@ -156,12 +156,16 @@ export function* addSemesterItem({ values }) {
 export function* handleSemesterFormSubmit({ values }) {
     try {
         const state = yield select();
-        const oldCurrentSemester = state.semesters.semesters.find(
-            (semesterItem) => semesterItem.currentSemester && semesterItem.id !== values.id,
-        );
-        const oldDefaultSemester = state.semesters.semesters.find(
-            (semesterItem) => semesterItem.defaultSemester && semesterItem.id !== values.id,
-        );
+        const oldCurrentSemester = {
+            ...state.semesters.semesters.find(
+                (semesterItem) => semesterItem.currentSemester && semesterItem.id !== values.id,
+            ),
+        };
+        const oldDefaultSemester = {
+            ...state.semesters.semesters.find(
+                (semesterItem) => semesterItem.defaultSemester && semesterItem.id !== values.id,
+            ),
+        };
         if (values.currentSemester && oldCurrentSemester) {
             oldCurrentSemester.currentSemester = false;
             yield put(updateSemesterSuccess(oldCurrentSemester));
@@ -179,9 +183,11 @@ export function* handleSemesterFormSubmit({ values }) {
 export function* setDefaultSemesterById({ semesterId }) {
     try {
         const state = yield select();
-        const oldDefaultSemester = state.semesters.semesters.find(
-            (semesterItem) => semesterItem.defaultSemester && semesterItem.id !== semesterId,
-        );
+        const oldDefaultSemester = {
+            ...state.semesters.semesters.find(
+                (semesterItem) => semesterItem.defaultSemester && semesterItem.id !== semesterId,
+            ),
+        };
         if (oldDefaultSemester) {
             oldDefaultSemester.defaultSemester = false;
             yield put(updateSemesterSuccess(oldDefaultSemester));
