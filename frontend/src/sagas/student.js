@@ -130,12 +130,12 @@ function* moveStudentsToGroup({ group }) {
         const allStudents = yield select(getStudents);
         const movedStudents = allStudents.filter((item) => item.checked === true);
         const students = movedStudents.map((student) => omit(student, ['checked']));
-        yield call(axiosCall, MOVE_STUDENTS_URL, PUT, { students, group });
+        yield call(axiosCall, MOVE_STUDENTS_URL, PUT, { students, groupId: group.id });
         yield put(deleteAllStudentSuccess(students));
         const message = createMessage(
-            BACK_END_SUCCESS_OPERATION,
             STUDENTS_UPPERCASE,
             MOVED_TO_GROUP_LABEL,
+            BACK_END_SUCCESS_OPERATION,
         );
         yield put(setOpenSuccessSnackbar(message));
     } catch (err) {
