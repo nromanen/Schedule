@@ -13,7 +13,7 @@ const reducer = (state = initialState, action) => {
         case actionTypes.ADD_ROOM:
             return {
                 ...state,
-                rooms: [...state.rooms, action.room],
+                rooms: [...state.rooms, action.room].sort((a, b) => a.name.localeCompare(b.name)),
                 oneRoom: {},
             };
 
