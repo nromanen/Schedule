@@ -20,19 +20,6 @@ const props = {
     setSelectRoom,
     isDisabled: true,
 };
-const props2 = {
-    room: {
-        id: 73,
-        name: 'Пара проводиться онлайн',
-        type: {
-            id: 25,
-            description: 'Лекційна',
-        },
-    },
-    showConfirmDialog,
-    setSelectRoom,
-    isDisabled: true,
-};
 
 describe('behavior of RoomCard Component when room is disabled', () => {
     let wrapper;
