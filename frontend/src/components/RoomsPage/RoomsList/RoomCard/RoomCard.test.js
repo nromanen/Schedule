@@ -31,41 +31,44 @@ const props2 = {
     },
     showConfirmDialog,
     setSelectRoom,
-    isDisabled: false,
+    isDisabled: true,
 };
 
-describe('behavior of RoomCard Component when room is not disabled', () => {
+describe('behavior of RoomCard Component when room is disabled', () => {
+    let wrapper;
+    beforeEach(() => {
+        wrapper = shallow(<RoomCard {...props} />);
+    });
     it('should render GiSightDisabled and MdDelete icons if disabled is true', () => {
-        const wrapper = shallow(<RoomCard {...props} />);
         expect(wrapper.find(GiSightDisabled)).toHaveLength(1);
         expect(wrapper.find(MdDelete)).toHaveLength(1);
     });
     it('should call showConfirmDialog when click to GiSightDisabled icon', () => {
-        const wrapper = shallow(<RoomCard {...props} />);
         wrapper.find(GiSightDisabled).simulate('click');
         expect(props.showConfirmDialog).toHaveBeenCalled();
     });
     it('should call showConfirmDialog when click to MdDelete icon', () => {
-        const wrapper = shallow(<RoomCard {...props} />);
         wrapper.find(MdDelete).simulate('click');
         expect(props.showConfirmDialog).toHaveBeenCalled();
     });
+});
+
+describe('behavior of RoomCard Component when room is not disabled', () => {
+    let wrapper;
+    beforeEach(() => {
+        wrapper = shallow(<RoomCard {...props} isDisabled={false} />);
+    });
     it('should render IoMdEye, FaEdit and MdDelete icons if disabled is false', () => {
-        const wrapper = shallow(<RoomCard {...props} isDisabled={false} />);
         expect(wrapper.find(IoMdEye)).toHaveLength(1);
         expect(wrapper.find(FaEdit)).toHaveLength(1);
         expect(wrapper.find(MdDelete)).toHaveLength(1);
     });
     it('should call showConfirmDialog when click to IoMdEye icon', () => {
-        const wrapper = shallow(<RoomCard {...props} isDisabled={false} />);
         wrapper.find(IoMdEye).simulate('click');
         expect(props.showConfirmDialog).toHaveBeenCalled();
     });
     it('should call setSelectRoom when click to FaEdit icon', () => {
-        const wrapper = shallow(<RoomCard {...props} isDisabled={false} />);
         wrapper.find(FaEdit).simulate('click');
         expect(props.setSelectRoom).toHaveBeenCalled();
     });
 });
-
-
