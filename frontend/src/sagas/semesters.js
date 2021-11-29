@@ -157,12 +157,10 @@ export function* handleSemesterFormSubmit({ values }) {
     try {
         const state = yield select();
         const oldCurrentSemester = state.semesters.semesters.find(
-            (semesterItem) =>
-                semesterItem.currentSemester === true && semesterItem.id !== values.id,
+            (semesterItem) => semesterItem.currentSemester && semesterItem.id !== values.id,
         );
         const oldDefaultSemester = state.semesters.semesters.find(
-            (semesterItem) =>
-                semesterItem.defaultSemester === true && semesterItem.id !== values.id,
+            (semesterItem) => semesterItem.defaultSemester && semesterItem.id !== values.id,
         );
         if (values.currentSemester && oldCurrentSemester) {
             oldCurrentSemester.currentSemester = false;
@@ -182,8 +180,7 @@ export function* setDefaultSemesterById({ semesterId }) {
     try {
         const state = yield select();
         const oldDefaultSemester = state.semesters.semesters.find(
-            (semesterItem) =>
-                semesterItem.defaultSemester === true && semesterItem.id !== semesterId,
+            (semesterItem) => semesterItem.defaultSemester && semesterItem.id !== semesterId,
         );
         if (oldDefaultSemester) {
             oldDefaultSemester.defaultSemester = false;
