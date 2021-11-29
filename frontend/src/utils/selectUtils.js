@@ -5,9 +5,7 @@ import { getFirstLetter } from '../helper/renderTeacher';
 
 export const getGroupsOptionsForSelect = (groupOptions) => {
     if (!isEmpty(groupOptions)) {
-        console.log(groupOptions);
         return groupOptions.map((item) => {
-            console.log({ id: item.id, value: item.id, label: `${item.title}` });
             return { id: item.id, value: item.id, label: `${item.title}` };
         });
     }
