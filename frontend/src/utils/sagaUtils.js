@@ -7,7 +7,7 @@ import {
 import { GROUP, STUDENT } from '../constants/names';
 
 export const createErrorMessage = ({ response }) =>
-    response ? i18n.t(response.data.message, response.data.message) : 'Error';
+    response ? i18n.t(response.data.message) : 'Error';
 
 export const createMessage = (message, cardTypeMessage, actionTypeMessage) =>
     i18n.t(message, {
