@@ -348,12 +348,14 @@ public class SemesterControllerTest {
         GroupDTO groupDTO1 = new GroupDTO();
         groupDTO1.setId(4L);
         groupDTO1.setTitle("444");
+        groupDTO1.setDisable(false);
         GroupDTO groupDTO2 = new GroupDTO();
         groupDTO2.setId(5L);
         groupDTO2.setTitle("555");
         List<GroupDTO> groupsDTO = new LinkedList<>();
         groupsDTO.add(groupDTO1);
         groupsDTO.add(groupDTO2);
+        groupDTO2.setDisable(false);
         PeriodDTO periodDTO = new PeriodDTO();
         periodDTO.setId(7L);
         periodDTO.setName("4 para");
