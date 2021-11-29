@@ -75,7 +75,7 @@ export const AddGroup = props => {
                     id="title"
                     label={`${t(GROUP_LABEL)}:`}
                     component={renderTextField}
-                    validate={[required, minLengthValue]}
+                    validate={[required, uniqueGroup, minLengthValue]}
                 />
                 <Field
                     className="select-field"

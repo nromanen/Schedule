@@ -28,7 +28,6 @@ import {
     SERVICE_MESSAGE_GROUP_LABEL,
 } from '../constants/translationLabels/serviceMessages';
 import {
-    dragAndDropGroupSuccess,
     getGroupByIdSuccess,
     showAllGroupsSuccess,
     deleteGroupSuccess,
@@ -120,16 +119,14 @@ function* deleteGroup({ id }) {
     }
 }
 
-function* dragAndDropGroup({ indexAfterGroup, dragGroup, afterGroupId }) {
+function* dragAndDropGroup({ dragGroup, afterGroupId }) {
     try {
         yield put(setLoading(true));
-        yield call(axiosCall, GROUPS_AFTER_URL, PUT, {
-            ...dragGroup,
-            afterId: afterGroupId,
+        const url = GROUPS_AFTER_URL;
+        yield call(updateGroup, {
+            data: { ...dragGroup, afterId: afterGroupId },
+            url,
         });
-        yield put(dragAndDropGroupSuccess(indexAfterGroup, dragGroup));
-        const message = createDynamicMessage(GROUP, UPDATED_LABEL);
-        yield put(setOpenSuccessSnackbar(message));
     } catch (err) {
         yield put(setOpenErrorSnackbar(createErrorMessage(err)));
     } finally {

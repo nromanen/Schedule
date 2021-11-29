@@ -59,7 +59,6 @@ export {
     showAllGroupsSuccess,
     toggleDisabledStatus,
     getEnabledGroupsStart,
-    dragAndDropGroupSuccess,
 } from './groups';
 
 export {

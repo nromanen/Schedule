@@ -2,7 +2,7 @@ import React from 'react';
 import './DraggableCard.scss';
 
 export const DraggableCard = (props) => {
-    const { children, item, index, dragAndDropItem, setGroupStart } = props;
+    const { children, item, dragAndDropItem, setGroupStart } = props;
 
     const styleCard = (e) => {
         if (e.target.className === 'group-card drag-border-card') {
@@ -21,10 +21,10 @@ export const DraggableCard = (props) => {
             e.target.className = 'group-card drag-border-card';
         }
     };
-    const dropHandler = (e, card, dropIndex) => {
+    const dropHandler = (e, card) => {
         e.preventDefault();
         styleCard(e);
-        dragAndDropItem(dropIndex, card.id);
+        dragAndDropItem(card.id);
     };
 
     return (
@@ -33,7 +33,7 @@ export const DraggableCard = (props) => {
             onDragStart={() => dragStartHandler(item)}
             onDragLeave={(e) => dragLeaveHandler(e)}
             onDragOver={(e) => dragOverHandler(e)}
-            onDrop={(e) => dropHandler(e, item, index)}
+            onDrop={(e) => dropHandler(e, item)}
             draggable
         >
             {children}

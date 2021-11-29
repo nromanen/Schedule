@@ -80,8 +80,8 @@ const GroupList = (props) => {
         setIsOpenShowStudentsDialog(false);
     };
 
-    const dragAndDropItem = (indexBeforeItem, afterItemId) => {
-        dragAndDropGroupStart(indexBeforeItem, dragGroup, afterItemId);
+    const dragAndDropItem = (afterItemId) => {
+        dragAndDropGroupStart(dragGroup, afterItemId);
     };
 
     const checkParamsForActions = () => {
@@ -135,11 +135,10 @@ const GroupList = (props) => {
                 />
             )}
             <div className="group-list">
-                {visibleGroups.map((item, index) => (
+                {visibleGroups.map((item) => (
                     <DraggableCard
                         key={item.id}
                         item={item}
-                        index={index}
                         setGroupStart={setGroupStart}
                         dragAndDropItem={dragAndDropItem}
                     >
