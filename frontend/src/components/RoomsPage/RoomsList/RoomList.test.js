@@ -1,9 +1,7 @@
 import React from 'react';
-import { shallow } from 'enzyme';
+import { mount } from 'enzyme';
 import { CircularProgress } from '@material-ui/core';
-import NotFound from '../../../share/NotFound/NotFound';
 import RoomList from './RoomsList';
-import RoomCard from './RoomCard/RoomCard';
 
 const props = {
     loading: false,
@@ -24,15 +22,18 @@ const props = {
 
 describe('behavior of RoomList Component', () => {
     it('should render loading if "loading:true"', () => {
-        const wrapper = shallow(<RoomList {...props} loading />);
+        const wrapper = mount(<RoomList {...props} loading />);
         expect(wrapper.find(CircularProgress)).toHaveLength(1);
+        wrapper.unmount();
     });
     it('should render NotFound component if visible items are empty', () => {
-        const wrapper = shallow(<RoomList {...props} loading={false} rooms={[]} />);
-        expect(wrapper.find(NotFound)).toHaveLength(1);
+        const wrapper = mount(<RoomList {...props} loading={false} rooms={[]} />);
+        expect(wrapper.find('NotFound')).toHaveLength(1);
+        wrapper.unmount();
     });
     it('should render RoomCard component if visible items are not empty', () => {
-        const wrapper = shallow(<RoomList {...props} />);
-        expect(wrapper.find(RoomCard)).toHaveLength(1);
+        const wrapper = mount(<RoomList {...props} />);
+        expect(wrapper.find('RoomCard')).toHaveLength(1);
+        wrapper.unmount();
     });
 });
