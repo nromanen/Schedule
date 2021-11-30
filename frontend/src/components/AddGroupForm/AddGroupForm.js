@@ -1,22 +1,21 @@
-import React, { useEffect } from 'react';
-import { Field } from 'redux-form';
 import Button from '@material-ui/core/Button';
+import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-
-import './AddGroupForms.scss';
-
-import renderTextField from '../../share/renderedFields/input';
-import { required, uniqueGroup, minLengthValue } from '../../validation/validateFields';
-import { getClearOrCancelTitle, setDisableButton } from '../../helper/disableComponent';
+import { Field } from 'redux-form';
 import {
-    EDIT_TITLE,
-    GROUP_LABEL,
+    FIRST_GROUPS,
     CREATE_TITLE,
+    EDIT_TITLE,
+    FORM_GROUP_LABEL_AFTER,
+    GROUP_LABEL,
     GROUP_Y_LABEL,
     SAVE_BUTTON_LABEL,
-    FORM_GROUP_LABEL_AFTER,
 } from '../../constants/translationLabels/formElements';
+import { getClearOrCancelTitle, setDisableButton } from '../../helper/disableComponent';
 import { renderAutocompleteField } from '../../helper/renderAutocompleteField';
+import renderTextField from '../../share/renderedFields/input';
+import { minLengthValue, required, uniqueGroup } from '../../validation/validateFields';
+import './AddGroupForms.scss';
 
 export const AddGroup = (props) => {
     const {
@@ -35,7 +34,7 @@ export const AddGroup = (props) => {
 
     const removeCurrentGroup = () => groups.filter((el) => el.id !== group.id);
     const groupsForAutocomplete = group.id ? removeCurrentGroup() : groups;
-
+    const firstGroup = { id: null, disable: false, title: t(FIRST_GROUPS) };
     useEffect(() => {
         const groupIndex = groups.findIndex(({ id }) => id === group.id);
         const afterId = groups.find((item, index) => index === groupIndex - 1);
@@ -82,7 +81,7 @@ export const AddGroup = (props) => {
                     component={renderAutocompleteField}
                     label={t(FORM_GROUP_LABEL_AFTER)}
                     type="text"
-                    values={groupsForAutocomplete}
+                    values={[firstGroup, ...groupsForAutocomplete]}
                     getOptionLabel={(item) => (item ? item.title : '')}
                 ></Field>
                 <div className="form-buttons-container">
