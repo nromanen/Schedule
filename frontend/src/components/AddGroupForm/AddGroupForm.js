@@ -18,7 +18,7 @@ import {
 } from '../../constants/translationLabels/formElements';
 import { renderAutocompleteField } from '../../helper/renderAutocompleteField';
 
-export const AddGroup = props => {
+export const AddGroup = (props) => {
     const {
         clearGroupStart,
         submitGroupStart,
@@ -33,9 +33,8 @@ export const AddGroup = props => {
     } = props;
     const { t } = useTranslation('formElements');
 
-    const removeCurrentGroup = () => groups.filter(el => el.id !== group.id);
-
-    const groupsForAfterId = group.id ? removeCurrentGroup() : groups;
+    const removeCurrentGroup = () => groups.filter((el) => el.id !== group.id);
+    const groupsForAutocomplete = group.id ? removeCurrentGroup() : groups;
 
     useEffect(() => {
         const groupIndex = groups.findIndex(({ id }) => id === group.id);
@@ -51,7 +50,7 @@ export const AddGroup = props => {
         }
     }, [group.id]);
 
-    const submitGroup = data => {
+    const submitGroup = (data) => {
         const afterId = data.afterId ? data.afterId.id : null;
         submitGroupStart({ ...data, disable: false, afterId });
         setGroup({});
@@ -68,7 +67,7 @@ export const AddGroup = props => {
                 {group.id ? t(EDIT_TITLE) : t(CREATE_TITLE)}
                 {t(GROUP_Y_LABEL)}
             </h3>
-            <form onSubmit={handleSubmit(data => submitGroup(data))}>
+            <form onSubmit={handleSubmit((data) => submitGroup(data))}>
                 <Field
                     className="form-field"
                     name="title"
@@ -83,8 +82,8 @@ export const AddGroup = props => {
                     component={renderAutocompleteField}
                     label={t(FORM_GROUP_LABEL_AFTER)}
                     type="text"
-                    values={groupsForAfterId}
-                    getOptionLabel={item => (item ? item.title : '')}
+                    values={groupsForAutocomplete}
+                    getOptionLabel={(item) => (item ? item.title : '')}
                 ></Field>
                 <div className="form-buttons-container">
                     <Button
