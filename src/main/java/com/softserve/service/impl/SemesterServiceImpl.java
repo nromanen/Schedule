@@ -13,6 +13,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -48,6 +52,7 @@ public class SemesterServiceImpl implements SemesterService {
      * @param id Identity number of the Semester
      * @return Semester entity
      */
+    @Cacheable(value = "map", key = "#id")
     @Override
     public Semester getById(Long id) {
         log.info("In getById(id = [{}])", id);
@@ -64,6 +69,7 @@ public class SemesterServiceImpl implements SemesterService {
      *
      * @return List of all semesters
      */
+    @Cacheable(value = "semesterList")
     @Override
     public List<Semester> getAll() {
         log.info("In getAll()");
@@ -82,6 +88,7 @@ public class SemesterServiceImpl implements SemesterService {
      * @param semester Semester entity to be saved
      * @return saved Semester entity
      */
+    @CacheEvict(value = "semesterList", allEntries = true)
     @Override
     public Semester save(Semester semester) {
         log.info("In save(entity = [{}]", semester);
@@ -148,6 +155,8 @@ public class SemesterServiceImpl implements SemesterService {
      * @param semester Semester entity with updated fields
      * @return updated Semester entity
      */
+    @Caching(put = {@CachePut(value = "map", key = "#semester.id")},
+            evict = {@CacheEvict(value = "semesterList", allEntries = true)})
     @Override
     public Semester update(Semester semester) {
         log.info("In update(entity = [{}]", semester);
@@ -163,6 +172,7 @@ public class SemesterServiceImpl implements SemesterService {
      * @param object Semester entity to be deleted
      * @return deleted Semester entity
      */
+    @CacheEvict(value = "map", key = "#object.id")
     @Override
     public Semester delete(Semester object) {
         log.info("In delete(object = [{}])", object);
@@ -264,6 +274,7 @@ public class SemesterServiceImpl implements SemesterService {
      * @param semesterId id of the semester that needs to be current
      * @return changed Semester
      */
+    @CacheEvict(value = "semesterList", allEntries = true)
     @Override
     public Semester changeCurrentSemester(Long semesterId) {
         log.info("In changeCurrentSemester(Long semesterId = [{}])", semesterId);
@@ -277,6 +288,7 @@ public class SemesterServiceImpl implements SemesterService {
      * @param semesterId id of the semester that needs to be current
      * @return changed Semester
      */
+    @CacheEvict(value = "semesterList", allEntries = true)
     @Override
     public Semester changeDefaultSemester(Long semesterId) {
         log.info("In changeDefaultSemester(Long semesterId = [{}])", semesterId);
@@ -293,6 +305,7 @@ public class SemesterServiceImpl implements SemesterService {
      * @param group group to add
      * @return changed Semester
      */
+    @CacheEvict(value = "semesterList", allEntries = true)
     @Override
     public Semester addGroupToSemester(Semester semester, Group group) {
         log.info("In addGroupToSemester (semester = [{}], group = [{}])", semester, group);
@@ -314,6 +327,7 @@ public class SemesterServiceImpl implements SemesterService {
      * @param groupIds groups to add
      * @return changed Semester
      */
+    @CacheEvict(value = "semesterList", allEntries = true)
     @Override
     public Semester addGroupsToSemester(Semester semester, List<Long> groupIds) {
         log.info("In addGroupsToSemester (semester = [{}], groupIds = [{}])", semester, groupIds);

@@ -16,6 +16,8 @@ import com.softserve.util.PdfReportGenerator;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -100,6 +102,7 @@ public class ScheduleServiceImpl implements ScheduleService {
      * @return List of all Schedules
      */
     @Override
+    @Cacheable("scheduleList")
     public List<Schedule> getAll() {
         log.info("In getAll()");
         List<Schedule> schedules = scheduleRepository.getAll();
@@ -118,6 +121,7 @@ public class ScheduleServiceImpl implements ScheduleService {
      * @return saved Schedule entity
      */
     @Override
+    @CacheEvict(value = "scheduleList", allEntries = true)
     public Schedule save(Schedule schedule) {
         log.info("In save(entity = [{}]", schedule);
         if (isConflictForGroupInSchedule(schedule.getLesson().getSemester().getId(), schedule.getDayOfWeek(), schedule.getEvenOdd(), schedule.getPeriod().getId(), schedule.getLesson().getId())) {
@@ -180,6 +184,7 @@ public class ScheduleServiceImpl implements ScheduleService {
      * @return updated Schedule entity
      */
     @Override
+    @CacheEvict(value = "scheduleList", allEntries = true)
     public Schedule update(Schedule object) {
         log.info("In update(entity = [{}]", object);
         if (isConflictForGroupInSchedule(object.getLesson().getSemester().getId(), object.getDayOfWeek(), object.getEvenOdd(), object.getPeriod().getId(), object.getLesson().getId())) {
@@ -196,6 +201,7 @@ public class ScheduleServiceImpl implements ScheduleService {
      * @return deleted Schedule entity
      */
     @Override
+    @CacheEvict(value = "scheduleList", allEntries = true)
     public Schedule delete(Schedule object) {
         return scheduleRepository.delete(object);
     }
