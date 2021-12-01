@@ -1,63 +1,63 @@
 import * as actionTypes from './actionsType';
 
-export const createStudentSuccess = student => ({
+export const createStudentSuccess = (student) => ({
     type: actionTypes.CREATE_STUDENT,
-    student
+    student,
 });
-export const showAllStudents = payload => ({
+export const showAllStudents = (payload) => ({
     type: actionTypes.SHOW_ALL_STUDENTS,
-    payload
+    payload,
 });
 
-export const deleteStudentSuccess = id => ({
+export const deleteStudentSuccess = (id) => ({
     type: actionTypes.DELETE_STUDENT,
-    id
+    id,
 });
 
-export const deleteAllStudentSuccess = students => ({
+export const deleteAllStudentSuccess = (students) => ({
     type: actionTypes.DELETE_SELECTED_STUDENTS,
-    students
+    students,
 });
 
-export const selectStudentSuccess = id => ({
+export const selectStudentSuccess = (id) => ({
     type: actionTypes.SET_STUDENT,
-    id
+    id,
 });
 
-export const updateStudentSuccess = student => ({
+export const updateStudentSuccess = (student) => ({
     type: actionTypes.UPDATE_STUDENT,
-    student
+    student,
 });
 
 export const checkAllStudentsSuccess = (checkedStudents, checkedAll) => ({
     type: actionTypes.CHECK_ALL_STUDENTS,
     checkedStudents,
-    checkedAll
+    checkedAll,
 });
 
-export const getAllStudentsStart = id => ({
+export const getAllStudentsStart = (id) => ({
     type: actionTypes.GET_ALL_STUDENTS,
-    id
+    id,
 });
 
 export const submitStudentStart = (data, groupId) => ({
     type: actionTypes.SUBMIT_STUDENT_FORM,
     data,
-    groupId
+    groupId,
 });
 
-export const deleteStudentStart = id => ({
+export const deleteStudentStart = (id) => ({
     type: actionTypes.DELETE_STUDENT_START,
-    id
+    id,
 });
 
 export const uploadStudentsToGroupStart = (file, id) => ({
     type: actionTypes.UPLOAD_FILE_STUDENT_START,
     file,
-    id
+    id,
 });
 
-export const moveStudentsToGroupStart = group => ({
+export const moveStudentsToGroupStart = (group) => ({
     type: actionTypes.MOVE_STUDENTS_TO_GROUP_START,
-    group
+    group,
 });
