@@ -1,9 +1,11 @@
 package com.softserve.service.impl;
 
+import com.softserve.dto.StudentForUpdateListDTO;
 import com.softserve.entity.Student;
 import com.softserve.exception.EntityNotFoundException;
 import com.softserve.exception.FieldAlreadyExistsException;
 import com.softserve.repository.StudentRepository;
+import com.softserve.repository.impl.StudentRepositoryImpl;
 import com.softserve.service.StudentService;
 import com.softserve.util.CsvFileParser;
 import lombok.SneakyThrows;
@@ -87,6 +89,14 @@ public class StudentServiceImpl implements StudentService {
         log.info("Enter into update method with entity:{}", object);
         checkEmailForUniquenessIgnoringId(object.getEmail(), object.getId());
         return studentRepository.update(object);
+    }
+
+    @SneakyThrows
+    @Transactional
+    @Override
+    public void updateStudentList(StudentForUpdateListDTO students) {
+        log.info("Enter into update method with entity:{}", students);
+        studentRepository.updateListStudentsByGroups(students.getIdList(), students.getGroupId());
     }
 
     /**
