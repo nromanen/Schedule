@@ -35,15 +35,18 @@ public class LessonServiceTest {
     @InjectMocks
     private LessonServiceImpl lessonService;
 
+    @Mock
+    private SemesterService semesterService;
+
     @Test
     public void getLessonById() {
         Semester semester = new Semester();
-        semester.setId(1L);
+        semester.setId(4L);
         semester.setCurrentSemester(true);
         semester.setPeriods(Set.of(new Period()));
         semester.setYear(2020);
-        semester.setEndDay(LocalDate.of(2020, 1, 1));
-        semester.setStartDay(LocalDate.of(2020, 12, 12));
+        semester.setEndDay(LocalDate.of(2020, 2, 20));
+        semester.setStartDay(LocalDate.of(2020, 1, 20));
         Lesson lesson = new Lesson();
         lesson.setId(1L);
         lesson.setHours(1);
@@ -79,7 +82,7 @@ public class LessonServiceTest {
         group.setId(1L);
         group.setTitle("group");
         Teacher teacher = new Teacher();
-        teacher.setId(1L);
+        teacher.setId(10L);
         teacher.setUserId(1L);
         teacher.setName("Ivan");
         teacher.setSurname("Ivanov");
@@ -116,7 +119,7 @@ public class LessonServiceTest {
         group.setId(1L);
         group.setTitle("group");
         Teacher teacher = new Teacher();
-        teacher.setId(1L);
+        teacher.setId(10L);
         teacher.setUserId(1L);
         teacher.setName("Ivan");
         teacher.setSurname("Ivanov");
@@ -146,9 +149,11 @@ public class LessonServiceTest {
     public void updateLessonIfItDoesNotEqualsWithExistsLessons() {
         Group group = new Group();
         group.setId(1L);
+        group.setDisable(false);
         group.setTitle("group");
         Teacher teacher = new Teacher();
-        teacher.setId(1L);
+        teacher.setId(10L);
+        teacher.setDisable(false);
         teacher.setUserId(1L);
         teacher.setName("Ivan");
         teacher.setSurname("Ivanov");
@@ -167,6 +172,15 @@ public class LessonServiceTest {
         lesson.setSubjectForSite("Human anatomy");
         lesson.setLinkToMeeting("https://softserveinc.zoom.us/j/93198369163?pwd=Rk1GU281cDFtK1FCK3pJWXphRkJrQT09");
 
+        Semester semester = new Semester();
+        semester.setId(4L);
+        semester.setCurrentSemester(true);
+        semester.setPeriods(Set.of(new Period()));
+        semester.setYear(2020);
+        semester.setEndDay(LocalDate.of(2020, 2, 20));
+        semester.setStartDay(LocalDate.of(2020, 1, 20));
+        when(semesterService.getCurrentSemester()).thenReturn(semester);
+
         when(lessonRepository.countLessonDuplicatesWithIgnoreId(lesson)).thenReturn(0L);
         when(lessonRepository.update(lesson)).thenReturn(lesson);
 
@@ -184,7 +198,7 @@ public class LessonServiceTest {
         group.setId(1L);
         group.setTitle("group");
         Teacher teacher = new Teacher();
-        teacher.setId(1L);
+        teacher.setId(10L);
         teacher.setUserId(1L);
         teacher.setName("Ivan");
         teacher.setSurname("Ivanov");

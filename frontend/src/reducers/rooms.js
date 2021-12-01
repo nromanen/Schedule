@@ -1,63 +1,89 @@
 import * as actionTypes from '../actions/actionsType';
-import { updateObject } from '../utility';
 
-function compare(a, b) {
-    let comparison = 0;
-    if (a.name > b.name) {
-        comparison = 1;
-    } else if (a.name < b.name) {
-        comparison = -1;
-    }
-    return comparison;
-}
-const reducer = (
-    state = {
-        rooms: [],
-        oneRoom: {},
-        disabledRooms: [],
-    },
-    action,
-) => {
+const initialState = {
+    rooms: [],
+    disabledRooms: [],
+    roomTypes: [],
+    oneRoom: {},
+    oneType: {},
+    freeRooms: [],
+};
+const reducer = (state = initialState, action) => {
     switch (action.type) {
         case actionTypes.ADD_ROOM:
-            return updateObject(state, {
+            return {
+                ...state,
+                rooms: [action.room, ...state.rooms],
                 oneRoom: {},
-                rooms: [...state.rooms, action.result].sort(compare),
-            });
+            };
+
         case actionTypes.DELETE_ROOM:
-            return updateObject(state, {
-                oneRoom: {},
-                rooms: [...state.rooms.filter((room) => room.id !== action.result)],
-            });
+            if (action.isDisabled) {
+                return {
+                    ...state,
+                    disabledRooms: [
+                        ...state.disabledRooms.filter((room) => room.id !== action.roomId),
+                    ],
+                };
+            }
+            return {
+                ...state,
+                rooms: [...state.rooms.filter((room) => room.id !== action.roomId)],
+            };
 
-        case actionTypes.SHOW_LIST_OF_ROOMS:
-            return updateObject(state, {
-                rooms: [...action.result],
-            });
+        case actionTypes.SHOW_LIST_OF_ROOMS_SUCCESS:
+            return { ...state, rooms: [...action.rooms] };
+
         case actionTypes.SET_DISABLED_ROOMS:
-            return updateObject(state, {
-                disabledRooms: [...action.result],
-            });
-        case actionTypes.SELECT_ONE_ROOM: {
-            const one = state.rooms.find((roomItem) => roomItem.id === action.result);
-            return updateObject(state, {
-                oneRoom: one,
-            });
-        }
-        case actionTypes.UPDATE_ONE_ROOM: {
-            const roomState = [...state.rooms];
-            roomState[roomState.findIndex((roomItem) => roomItem.id === action.result.id)] =
-                action.result;
-            return updateObject(state, {
-                oneRoom: {},
-                rooms: [...roomState],
-            });
-        }
-        case actionTypes.CLEAR_ROOM_ONE:
-            return updateObject(state, {
-                oneRoom: {},
-            });
+            return { ...state, disabledRooms: [...action.rooms] };
 
+        case actionTypes.SET_SELECT_ROOM: {
+            const room = state.rooms.find((roomItem) => roomItem.id === action.roomId);
+            return { ...state, oneRoom: room };
+        }
+
+        case actionTypes.UPDATE_ROOM: {
+            const rooms = [...state.rooms];
+            rooms[rooms.findIndex((roomItem) => roomItem.id === action.room.id)] = action.room;
+            return { ...state, oneRoom: {}, rooms: [...rooms] };
+        }
+
+        case actionTypes.CLEAR_ROOM:
+            return { ...state, oneRoom: {} };
+
+        case actionTypes.ADD_ROOM_TYPE:
+            return { ...state, roomTypes: [...state.roomTypes, action.roomType] };
+
+        case actionTypes.GET_ALL_ROOM_TYPES:
+            return { ...state, roomTypes: [...action.roomType] };
+
+        case actionTypes.DELETE_ROOM_TYPE:
+            return {
+                ...state,
+                roomTypes: [...state.roomTypes.filter((type) => type.id !== action.roomTypeId)],
+            };
+
+        case actionTypes.UPDATE_ROOM_TYPE: {
+            const roomTypes = [...state.roomTypes];
+            roomTypes[roomTypes.findIndex((typeItem) => typeItem.id === action.roomType.id)] =
+                action.roomType;
+            return { ...state, oneType: {}, roomTypes: [...roomTypes] };
+        }
+
+        case actionTypes.SELECT_ROOM_TYPE: {
+            const type = state.roomTypes.find((roomType) => roomType.id === action.typeId);
+            return { ...state, oneType: type };
+        }
+
+        case actionTypes.GET_FREE_ROOMS_SUCCESS: {
+            return { ...state, freeRooms: action.freeRooms };
+        }
+        case actionTypes.GET_BUSY_ROOMS_SUCCESS: {
+            return { ...state, rooms: action.busyRooms };
+        }
+        case actionTypes.CLEAR_FREE_ROOMS: {
+            return { ...state, freeRooms: [] };
+        }
         default:
             return state;
     }

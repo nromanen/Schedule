@@ -250,31 +250,32 @@ public class GroupServiceTest {
 
     @Test
     public void saveAfterOrder() {
-        when(groupRepository.getMaxSortingOrder()).thenReturn(Optional.of(1.0));
-        when(groupRepository.findById(1L)).thenReturn(Optional.of(new Group()));
-        doNothing().when(groupRepository).changeGroupOrderOffset(2.0);
+        when(groupRepository.getMaxSortingOrder()).thenReturn(Optional.of(1));
+        when(groupRepository.getSortingOrderById(1L)).thenReturn(Optional.of(1));
+        doNothing().when(groupRepository).changeGroupOrderOffset(2, 2);
         when(groupRepository.save(group)).thenReturn(group);
 
         Group actual = groupService.saveAfterOrder(group, 1L);
         assertEquals(group, actual);
         verify(groupRepository).save(group);
-        verify(groupRepository).findById(1L);
+        verify(groupRepository).getSortingOrderById(1L);
         verify(groupRepository).getMaxSortingOrder();
-        verify(groupRepository).changeGroupOrderOffset(2.0);
+        verify(groupRepository).changeGroupOrderOffset(2, 2);
     }
 
     @Test
     public void updateGroupOrder() {
-        when(groupRepository.getNextPosition(0.0)).thenReturn(Optional.of(0.0));
-        when(groupRepository.getMaxSortingOrder()).thenReturn(Optional.of(1.0));
-        when(groupRepository.findById(1L)).thenReturn(Optional.of(group));
+        when(groupRepository.getNextPosition(0)).thenReturn(Optional.of(0));
+        when(groupRepository.getMaxSortingOrder()).thenReturn(Optional.of(1));
+        when(groupRepository.getSortingOrderById(1L)).thenReturn(Optional.of(1));
+        when(groupRepository.getSortingOrderById(1L)).thenReturn(Optional.of(1));
         when(groupRepository.update(group)).thenReturn(group);
         Group actual = groupService.updateGroupOrder(group, 1L);
         assertEquals(group, actual);
-        verify(groupRepository).getNextPosition(0.0);
+        verify(groupRepository).getNextPosition(0);
         verify(groupRepository).getMaxSortingOrder();
         verify(groupRepository).update(group);
-        verify(groupRepository).findById(1L);
+        verify(groupRepository).getSortingOrderById(1L);
     }
 
 }

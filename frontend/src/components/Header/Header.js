@@ -6,7 +6,6 @@ import {
     FaCaretDown,
     FaClipboardList,
     FaClock,
-    FaDoorOpen,
     FaHome,
     FaRunning,
     FaSignOutAlt,
@@ -19,7 +18,6 @@ import MenuItem from '@material-ui/core/MenuItem';
 import { withStyles } from '@material-ui/core/styles';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 
-import '../../App.scss';
 import './Header.scss';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import {
@@ -36,7 +34,7 @@ import {
 import LanguageSelector from '../LanguageSelector/LanguageSelector';
 import * as colors from '../../constants/schedule/colors';
 
-import FreeRooms from '../../containers/FreeRooms/freeRooms';
+import FreeRooms from '../../containers/Dialogs/FreeRoomsDialog';
 import { setSemesterLoadingService } from '../../services/loadingService';
 import {
     LOGIN_TITLE,
@@ -164,9 +162,6 @@ const Header = (props) => {
                                 tabIndex="0"
                             >
                                 <StyledMenuItem>
-                                    <ListItemIcon>
-                                        <FaDoorOpen fontSize="normal" />
-                                    </ListItemIcon>
                                     <FreeRooms classScheduler={props.classScheduler} />
                                 </StyledMenuItem>
                             </span>
@@ -400,9 +395,6 @@ const Header = (props) => {
                         tabIndex="0"
                     >
                         <StyledMenuItem>
-                            <ListItemIcon>
-                                <FaDoorOpen fontSize="normall" />
-                            </ListItemIcon>
                             <FreeRooms classScheduler={props.classScheduler} />
                         </StyledMenuItem>
                     </span>

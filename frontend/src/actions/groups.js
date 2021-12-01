@@ -1,50 +1,55 @@
 import * as actionTypes from './actionsType';
 
-export const addGroup = (res) => {
-    return {
-        type: actionTypes.ADD_GROUP,
-        result: res,
-    };
-};
-
-export const updateGroupSusses = (res) => {
-    return {
-        type: actionTypes.UPDATE_GROUP,
-        result: res,
-    };
-};
-
-export const showAllGroups = (res) => {
-    return {
-        type: actionTypes.SHOW_ALL_GROUPS,
-        result: res,
-    };
-};
-
-export const deleteGroupSusses = (res) => {
-    return {
-        type: actionTypes.DELETE_GROUP,
-        result: res,
-    };
-};
-
-export const selectGroup = (res) => {
-    return {
-        type: actionTypes.SELECT_GROUP,
-        result: res,
-    };
-};
-
-export const clearGroupSusses = () => ({
-    type: actionTypes.CLEAR_GROUP,
+export const showAllGroupsSuccess = (payload) => ({
+    type: actionTypes.SHOW_ALL_GROUPS_SUCCESS,
+    payload,
 });
 
-export const fetchDisabledGroupsStart = () => ({
-    type: actionTypes.FETCH_DISABLED_GROUPS_START,
+export const getGroupByIdSuccess = (group) => ({
+    type: actionTypes.GET_GROUP_BY_ID_SUCCESS,
+    group,
 });
 
-export const fetchEnabledGroupsStart = () => ({
-    type: actionTypes.FETCH_ENABLED_GROUPS_START,
+export const createGroupSuccess = (group) => ({
+    type: actionTypes.CREATE_GROUP_SUCCESS,
+    group,
+});
+
+export const updateGroupSuccess = (group) => ({
+    type: actionTypes.UPDATE_GROUP_SUCCESS,
+    group,
+});
+
+export const getAllPublicGroupsStart = (id) => ({
+    type: actionTypes.GET_ALL_PUBLIC_GROUPS_START,
+    id,
+});
+
+export const deleteGroupSuccess = (id) => ({
+    type: actionTypes.DELETE_GROUP_SUCCESS,
+    id,
+});
+
+export const selectGroupSuccess = (id) => ({
+    type: actionTypes.SELECT_GROUP_SUCCESS,
+    id,
+});
+
+export const clearGroupSuccess = () => ({
+    type: actionTypes.CLEAR_GROUP_SUCCESS,
+});
+
+export const getDisabledGroupsStart = () => ({
+    type: actionTypes.GET_DISABLED_GROUPS_START,
+});
+
+export const getEnabledGroupsStart = () => ({
+    type: actionTypes.GET_ENABLED_GROUPS_START,
+});
+
+export const getGroupByIdStart = (id) => ({
+    type: actionTypes.GET_GROUP_BY_ID_START,
+    id,
 });
 
 export const deleteGroupStart = (id) => ({
@@ -52,19 +57,13 @@ export const deleteGroupStart = (id) => ({
     id,
 });
 
-export const createGroupStart = (data) => ({
-    type: actionTypes.CREATE_GROUP_START,
-    data,
+export const submitGroupStart = (group) => ({
+    type: actionTypes.SUBMIT_GROUP_START,
+    group,
 });
 
-export const updateGroupStart = (data) => ({
-    type: actionTypes.UPDATE_GROUP_START,
-    data,
-});
-
-export const clearGroupStart = (data) => ({
+export const clearGroupStart = () => ({
     type: actionTypes.CLEAR_GROUP_START,
-    data,
 });
 
 export const toggleDisabledStatus = (groupId, disabledStatus) => ({

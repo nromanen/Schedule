@@ -9,34 +9,41 @@ import TemporaryScheduleList from '../../components/TemporarySchedule/TemporaryS
 import TemporaryScheduleVacationForm from '../../components/TemporarySchedule/TemporaryScheduleVacationForm/TemporaryScheduleVacationForm';
 import Card from '../../share/Card/Card';
 import { setLoadingService } from '../../services/loadingService';
-import { showAllTeachersService } from '../../services/teacherService';
 import {
     addTemporaryScheduleForRangeService,
     addTemporaryScheduleService,
     editTemporaryScheduleService,
 } from '../../services/temporaryScheduleService';
-import { getClassScheduleListService } from '../../services/classService';
-import { showListOfRoomsService } from '../../services/roomService';
+import { getClassScheduleListStart } from '../../actions/classes';
 import { showAllSubjectsService } from '../../services/subjectService';
-import { showAllGroupsService } from '../../services/groupService';
 import './TemporarySchedule.scss';
 import { EMPTY_LABEL } from '../../constants/translationLabels/common';
-import { getLessonTypes } from '../../actions';
+import { getLessonTypesStart, getEnabledGroupsStart } from '../../actions';
+import { getListOfRoomsStart } from '../../actions/rooms';
+import { showAllTeachersStart } from '../../actions/teachers';
 
 const TemporarySchedule = (props) => {
     const { t } = useTranslation('common');
-    const { teachers, teacherId, isLoading } = props;
+    const {
+        teachers,
+        teacherId,
+        isLoading,
+        getListOfRooms,
+        getClassScheduleList,
+        getEnabledGroups,
+        showAllTeachers,
+    } = props;
     const [fromDate, setFromDate] = useState(null);
     const [toDate, setToDate] = useState(null);
 
     useEffect(() => {
         setLoadingService(true);
-        showAllTeachersService();
-        showListOfRoomsService();
+        getListOfRooms();
+        showAllTeachers();
         showAllSubjectsService();
-        getClassScheduleListService(null);
-        getLessonTypes();
-        showAllGroupsService();
+        getClassScheduleList();
+        getLessonTypesStart();
+        getEnabledGroups();
     }, []);
 
     const handleTemporaryScheduleSubmit = (values) => {
@@ -136,7 +143,11 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    getLessonTypes: () => dispatch(getLessonTypes()),
+    getLessonTypesStart: () => dispatch(getLessonTypesStart()),
+    getClassScheduleList: () => dispatch(getClassScheduleListStart()),
+    getEnabledGroups: () => dispatch(getEnabledGroupsStart()),
+    getListOfRooms: (rooms) => dispatch(getListOfRoomsStart(rooms)),
+    showAllTeachers: () => dispatch(showAllTeachersStart()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(TemporarySchedule);

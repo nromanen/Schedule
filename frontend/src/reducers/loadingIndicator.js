@@ -1,31 +1,31 @@
 import * as actionTypes from '../actions/actionsType';
-import { updateObject } from '../utility';
 
 const initialState = {
-    loading: false,
+    loading: true,
+    authLoading: false,
     scheduleLoading: false,
     semesterLoading: false,
+    studentsLoading: false,
     mainScheduleLoading: false,
+    roomsLoading: false,
 };
 
 const reducer = (state = initialState, action) => {
     switch (action.type) {
         case actionTypes.SET_LOADING_INDICATOR:
-            return updateObject(state, {
-                loading: action.result,
-            });
+            return { ...state, loading: action.payload };
+        case actionTypes.SET_AUTH_LOADING_INDICATOR:
+            return { ...state, authLoading: action.payload };
         case actionTypes.SET_SCHEDULE_LOADING_INDICATOR:
-            return updateObject(state, {
-                scheduleLoading: action.result,
-            });
+            return { ...state, scheduleLoading: action.payload };
         case actionTypes.SET_MAIN_SCHEDULE_LOADING_INDICATOR:
-            return updateObject(state, {
-                mainScheduleLoading: action.result,
-            });
+            return { ...state, mainScheduleLoading: action.payload };
         case actionTypes.SET_SEMESTER_LOADING_INDICATOR:
-            return updateObject(state, {
-                semesterLoading: action.result,
-            });
+            return { ...state, semesterLoading: action.payload };
+        case actionTypes.SET_STUDENTS_LOADING_INDICATOR:
+            return { ...state, studentsLoading: action.payload };
+        case actionTypes.SET_ROOMS_LOADING_INDICATOR:
+            return { ...state, roomsLoading: action.payload };
         default:
             return state;
     }

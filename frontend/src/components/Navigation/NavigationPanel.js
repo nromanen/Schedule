@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import Paper from '@material-ui/core/Paper';
-import { connect } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import Select from '@material-ui/core/Select';
@@ -90,9 +89,4 @@ const NavigationPanel = () => {
     );
 };
 
-const mapStateToProps = (state) => ({
-    classScheduler: state.classActions.classScheduler,
-    ClassScheduleOne: state.classActions.classScheduleOne,
-});
-
-export default connect(mapStateToProps, {})(NavigationPanel);
+export default NavigationPanel;

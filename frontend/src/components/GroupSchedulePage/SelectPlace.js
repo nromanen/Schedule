@@ -7,15 +7,23 @@ import { PLACE_FOR_CLASS_LABEL } from '../../constants/translationLabels/common'
 const SelectPlace = (props) => {
     const { place, changePlace } = props;
     const { t } = useTranslation('common');
+
+    const setPlace = ({ target }) => {
+        if (target) {
+            changePlace(target.value);
+            localStorage.setItem('place', target.value);
+        }
+    };
+
     return (
-        <span id="select-place">
+        <div id="select-place">
             <label htmlFor="demo-controlled-open-select">{t(PLACE_FOR_CLASS_LABEL)}</label>
             <Select
                 className="place"
                 labelId="demo-controlled-open-select-label"
                 id="demo-controlled-open-select"
                 value={place}
-                onChange={changePlace}
+                onChange={setPlace}
             >
                 {Object.entries(places).map(([key, value]) => (
                     <MenuItem value={value} key={key}>
@@ -23,7 +31,7 @@ const SelectPlace = (props) => {
                     </MenuItem>
                 ))}
             </Select>
-        </span>
+        </div>
     );
 };
 

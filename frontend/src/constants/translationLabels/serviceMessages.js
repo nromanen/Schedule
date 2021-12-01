@@ -1,4 +1,5 @@
 export const BACK_END_SUCCESS_OPERATION = 'serviceMessages:back_end_success_operation';
+export const BACK_END_ACTION_SUCCESS = 'serviceMessages:back_end_action_success';
 export const CREATED_LABEL = 'serviceMessages:created_label';
 export const UPDATED_LABEL = 'serviceMessages:updated_label';
 export const DELETED_LABEL = 'serviceMessages:deleted_label';
@@ -17,3 +18,4 @@ export const EXIST_LABEL = 'serviceMessages:exist_label';
 export const GROUP_EXIST_IN_THIS_SEMESTER = 'serviceMessages:group_exist_in_this_semester';
 export const STUDENTS_EXIST_IN_THIS_GROUP = 'serviceMessages:students_exist_in_this_group';
 export const SUCCESSFULLY_MERGED = 'serviceMessages:successfully_merged';
+export const MOVED_TO_GROUP_LABEL = 'serviceMessages:moved_to_group';

@@ -9,3 +9,4 @@ export const PASSWORD_MESSAGE = 'validationMessages:password';
 export const UNIQUE_ERROR_MESSAGE = 'validationMessages:unique_error_message';
 export const INTERSECT_TIME_ERROR_MESSAGE = 'validationMessages:intersect_time_error_message';
 export const EMAIL_MESSAGE = 'validationMessages:email';
+export const URL_MESSAGE = 'validationMessages:url';

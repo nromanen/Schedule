@@ -9,6 +9,7 @@ export const MY_PROFILE_LINK = '/my-profile';
 export const LESSON_PAGE_LINK = '/admin/lessons';
 export const TEACHER_LIST_LINK = '/admin/teachers';
 export const GROUP_LIST_LINK = '/admin/groups';
+export const GROUP_LIST_PARAM_LINK = '/admin/groups/:id?/:action?';
 export const GROUP_LINK = '/group';
 export const STUDENT_LINK = '/student';
 export const EDIT_LINK = '/edit';
