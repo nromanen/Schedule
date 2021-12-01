@@ -1,5 +1,7 @@
 package com.softserve.repository.impl;
 
+import com.softserve.dto.StudentForUpdateListDTO;
+import com.softserve.dto.StudentWithoutGroupDTO;
 import com.softserve.entity.Student;
 import com.softserve.repository.StudentRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -7,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,6 +27,8 @@ public class StudentRepositoryImpl extends BasicRepositoryImpl<Student, Long> im
             + "WHERE s.email = :email AND s.id != :id";
 
     private static final String FIND_BY_EMAIL = "SELECT s FROM Student s JOIN FETCH s.group WHERE s.email = :email";
+
+    private static final String UPDATE_BY_LIST_OF_STUDENTS = "UPDATE Student s SET s.group.id = :groupId WHERE s.id IN (:studentsIdList)";
 
     /**
      * The method used for finding out if Student exists by email
@@ -68,9 +73,13 @@ public class StudentRepositoryImpl extends BasicRepositoryImpl<Student, Long> im
     }
 
     @Override
-    public void updateListStudentsByGroups(List<Long> idList, Long group){
-        sessionFactory.getCurrentSession().createQuery("UPDATE Student s "
-                + "SET s.group.id = :groupId " +
-                " WHERE s.id IN (:idList)").setParameter("groupId", group).setParameter("idList", idList).executeUpdate();
+    public void updateListStudentsByGroups(StudentForUpdateListDTO students){
+        log.info("In updateListStudentsByGroups with : {}", students);
+        List<Long> studentsIdList = new ArrayList<>();
+        for (StudentWithoutGroupDTO studentWithoutGroupDTO : students.getStudentsWithoutGroupDTOList()) {
+            studentsIdList.add(studentWithoutGroupDTO.getId());
+        }
+
+        sessionFactory.getCurrentSession().createQuery(UPDATE_BY_LIST_OF_STUDENTS ).setParameter("groupId", students.getGroupId()).setParameter("studentsIdList", studentsIdList).executeUpdate();
     }
 }

@@ -1,5 +1,6 @@
 package com.softserve.repository;
 
+import com.softserve.dto.StudentForUpdateListDTO;
 import com.softserve.entity.Student;
 
 import java.util.List;
@@ -12,5 +13,5 @@ public interface StudentRepository extends BasicRepository <Student, Long> {
 
     Optional<Student> findByEmail(String email);
 
-    void updateListStudentsByGroups(List<Long> idList, Long group);
+    void updateListStudentsByGroups(StudentForUpdateListDTO students);
 }

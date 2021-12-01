@@ -95,8 +95,8 @@ public class StudentServiceImpl implements StudentService {
     @Transactional
     @Override
     public void updateStudentList(StudentForUpdateListDTO students) {
-        log.info("Enter into update method with entity:{}", students);
-        studentRepository.updateListStudentsByGroups(students.getIdList(), students.getGroupId());
+        log.info("Enter into update method with StudentForUpdateListDTO:{}", students);
+        studentRepository.updateListStudentsByGroups(students);
     }
 
     /**

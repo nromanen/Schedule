@@ -10,6 +10,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class StudentForUpdateListDTO {
-    private List<Long> idList;
+    private List<StudentWithoutGroupDTO> studentsWithoutGroupDTOList;
     private Long groupId;
 }

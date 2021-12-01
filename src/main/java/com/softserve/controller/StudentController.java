@@ -2,6 +2,7 @@ package com.softserve.controller;
 
 import com.softserve.dto.StudentDTO;
 import com.softserve.dto.StudentForUpdateListDTO;
+import com.softserve.dto.StudentWithoutGroupDTO;
 import com.softserve.entity.Student;
 import com.softserve.mapper.StudentMapper;
 import com.softserve.service.StudentService;
@@ -66,15 +67,15 @@ public class StudentController {
         return ResponseEntity.status(HttpStatus.OK).body(studentMapper.convertToDTO(updatedStudent));
     }
 
-    @PutMapping("/list")
+    @PutMapping("/move-to-group")
     @PreAuthorize("hasRole('MANAGER')")
     @ApiOperation(value = "Update List of students")
     public ResponseEntity<List<StudentDTO>> updateList(@RequestBody StudentForUpdateListDTO studentsForUpdateDTO) {
         log.info("Enter into update of StudentController with studentDTO = [{}] ", studentsForUpdateDTO);
         studentService.updateStudentList(studentsForUpdateDTO);
         List<StudentDTO> updatedStudents = new ArrayList<>();
-        for (Long studentsId : studentsForUpdateDTO.getIdList()) {
-            updatedStudents.add(studentMapper.convertToDTO(studentService.getById(studentsId)));
+        for (StudentWithoutGroupDTO students : studentsForUpdateDTO.getStudentsWithoutGroupDTOList()) {
+            updatedStudents.add(studentMapper.convertToDTO(studentService.getById(students.getId())));
         }
         return ResponseEntity.status(HttpStatus.OK).body(updatedStudents);
     }
