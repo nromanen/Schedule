@@ -3,6 +3,8 @@ package com.softserve.mapper;
 import com.softserve.dto.DaysOfWeekWithClassesForRoomDTO;
 import com.softserve.dto.ScheduleForRoomDTO;
 
+import com.softserve.dto.SchedulesAtDayOfWeek;
+import com.softserve.dto.SchedulesInRoomDTO;
 import com.softserve.entity.Room;
 import com.softserve.entity.Schedule;
 import com.softserve.entity.enums.EvenOdd;
@@ -16,52 +18,20 @@ import java.time.DayOfWeek;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@Mapper(componentModel = "spring", uses = RoomMapper.class)
-public abstract class ScheduleForRoomMapper {
+@Mapper(componentModel = "spring", uses = {RoomMapper.class})
+public interface ScheduleForRoomMapper {
 
-    private LessonsListInRoomScheduleMapper lessonsMapper;
+    List<ScheduleForRoomDTO> schedulesToScheduleForRoomDTO(List<SchedulesInRoomDTO> schedules);
 
-    public ScheduleForRoomMapper() {}
-
-    @Autowired
-    public void setLessonsMapper(LessonsListInRoomScheduleMapper lessonsMapper) {
-        this.lessonsMapper = lessonsMapper;
-    }
-
-    public abstract List<ScheduleForRoomDTO> schedulesToScheduleForRoomDTO(List<List<Schedule>> schedules);
-
-    @Mapping(source = "schedules", target = "room", qualifiedBy = ToRoomDto.class)
-    public abstract ScheduleForRoomDTO scheduleToScheduleForRoomDTO(List<Schedule> schedules);
-
-    @AfterMapping
-    public void setDayOfWeekWithClassesForRoomDto(List<Schedule> schedules, @MappingTarget ScheduleForRoomDTO schedule){
-        Set<DayOfWeek> dayOfWeeks = schedules.get(0).getLesson().getSemester().getDaysOfWeek();
-
-        List<DaysOfWeekWithClassesForRoomDTO> list = new ArrayList<>();
-
-        for (DayOfWeek dayOfWeek: dayOfWeeks) {
-            list.add(toDaysOfWeekWithClassesForRoomDTO(schedules, dayOfWeek));
-        }
-
-        schedule.setSchedules(list);
-    }
+    @Mapping(target = "room", source = "room", qualifiedBy = ToRoomDto.class)
+    ScheduleForRoomDTO scheduleToScheduleForRoomDTO(SchedulesInRoomDTO schedules);
 
 
-    public DaysOfWeekWithClassesForRoomDTO toDaysOfWeekWithClassesForRoomDTO(List<Schedule> schedules,
-                                                                              DayOfWeek dayName) {
+    List<DaysOfWeekWithClassesForRoomDTO> toDaysOfWeekWithClassesForRoomDTOS(List<SchedulesAtDayOfWeek> schedules);
 
-        DaysOfWeekWithClassesForRoomDTO daysOfWeekWithClassesForRoomDTO = new DaysOfWeekWithClassesForRoomDTO();
-        daysOfWeekWithClassesForRoomDTO.setDay(dayName);
-
-        Map<Boolean, List<Schedule>> mapEven =
-                schedules.stream()
-                        .filter(Objects::nonNull)
-                        .filter(s -> s.getDayOfWeek().equals(dayName))
-                        .collect(Collectors.partitioningBy(x-> x.getEvenOdd().equals(EvenOdd.EVEN)));
-
-        daysOfWeekWithClassesForRoomDTO.setEven(lessonsMapper.toLessonsInRoomScheduleDTO(mapEven.get(Boolean.TRUE)));
-        daysOfWeekWithClassesForRoomDTO.setOdd(lessonsMapper.toLessonsInRoomScheduleDTO(mapEven.get(Boolean.FALSE)));
-        return daysOfWeekWithClassesForRoomDTO;
-    }
+    @Mapping(source = "dayOfWeek", target = "day")
+    @Mapping(source = "schedules",target = "even", qualifiedBy = ToEven.class)
+    @Mapping(source = "schedules", target = "odd", qualifiedBy = ToOdd.class)
+    DaysOfWeekWithClassesForRoomDTO toDaysOfWeekWithClassesForRoomDTO(SchedulesAtDayOfWeek schedulesAtDayOfWeek);
 
 }

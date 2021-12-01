@@ -134,7 +134,7 @@ public class ScheduleController {
         List<ScheduleForRoomDTO> scheduleForRoomDTOS =
                 scheduleForRoomMapper
                         .schedulesToScheduleForRoomDTO(
-                            scheduleService.getAllOrdered(semesterId)
+                            ConverterToSchedulesInRoom.convertToSchedulesInRoom(scheduleService.getAllOrdered(semesterId))
                         );
         return ResponseEntity.status(HttpStatus.OK).body(scheduleForRoomDTOS);
     }

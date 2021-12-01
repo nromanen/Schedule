@@ -20,5 +20,7 @@ public class LessonsListInRoomScheduleDTO {
     @JsonProperty("teacher_for_site")
     private String surname;
 
+    private boolean grouped;
+
     private GroupDTOInRoomSchedule group;
 }

@@ -870,14 +870,12 @@ public class ScheduleServiceImpl implements ScheduleService {
      */
     @Override
     @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
-    public List<List<Schedule>> getAllOrdered(Long semesterId){
-        log.debug("Entered getAllOrdered()");
-        Collection<List<Schedule>> schedules = scheduleRepository
+    public Map<Room, List<Schedule>>  getAllOrdered(Long semesterId){
+        log.info("Entered getAllOrdered({})", semesterId);
+        return scheduleRepository
                 .getAllOrdered(semesterId)
                 .stream()
-                .collect(Collectors.groupingBy(Schedule::getRoom, Collectors.toList()))
-                .values();
-        return new ArrayList<>(schedules);
+                .collect(Collectors.groupingBy(Schedule::getRoom, Collectors.toList()));
     }
 }
 

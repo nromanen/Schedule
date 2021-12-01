@@ -237,10 +237,10 @@ public class ScheduleServiceTest {
         schedule2.setDayOfWeek(DayOfWeek.MONDAY);
         schedule2.setRoom(room2);
         when(scheduleRepository.getAllOrdered(1L)).thenReturn(List.of(schedule, schedule2));
-        List<List<Schedule>> expected = new ArrayList<>();
-        expected.add(List.of(schedule2));
-        expected.add(List.of(schedule));
-        List<List<Schedule>> actual = scheduleServiceImpl.getAllOrdered(1L);
+        Map<Room, List<Schedule>> expected = new HashMap<>();
+        expected.put(room2, List.of(schedule2));
+        expected.put(room, List.of(schedule));
+       Map<Room, List<Schedule>> actual = scheduleServiceImpl.getAllOrdered(1L);
         assertEquals(expected, actual);
         verify(scheduleRepository, times(1)).getAllOrdered(1L);
     }
