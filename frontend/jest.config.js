@@ -8,6 +8,7 @@ module.exports = {
         '^.+\\.(css|less|scss|jpg|jpeg|png|svg)$': 'babel-jest',
     },
     transformIgnorePatterns: [`/node_modules/(?!${esModules})`],
+    resetMocks: true,
     coverageThreshold: {
         global: {
             branches: 50,
