@@ -251,7 +251,7 @@ public class SemesterServiceImpl implements SemesterService {
     private boolean isScheduleWithLessonsCanNotBeRemoved(Semester semester) {
         log.debug("Enter into isScheduleWithLessonsCanNotBeRemoved with entity: {}", semester);
         List<Schedule> scheduleInSemester = scheduleRepository.getScheduleBySemester(semester.getId());
-        return !scheduleInSemester.containsAll(scheduleInSemester);
+        return CollectionUtils.isNotEmpty(scheduleInSemester);
     }
 
     /**
