@@ -9,6 +9,7 @@ export const REGISTRATION_URL = 'auth/sign-up';
 export const RESET_PASSWORD_URL = 'auth/reset-password';
 export const ACTIVATE_ACCOUNT_URL = 'auth/activation-account';
 export const TEACHER_URL = 'teachers';
+export const ROOM_ORDERED_URL = 'rooms/ordered';
 export const ROOM_URL = 'rooms';
 export const ROOM_TYPES_URL = 'room-types';
 export const FREE_ROOMS_URL = 'rooms/free';
