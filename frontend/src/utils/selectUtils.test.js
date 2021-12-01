@@ -5,7 +5,6 @@ import {
     getGroupsOptionsForSelect,
     getOptionLabelWithAvailable,
 } from './selectUtils';
-import i18n from '../i18n';
 import { COMMON_AVAILABLE, COMMON_UNAVAILABLE } from '../constants/translationLabels/common';
 
 const group = [
@@ -31,13 +30,13 @@ describe('getOptionLabelWithAvailable function', () => {
     it('should return option.name with COMMON_AVAILABLE if option available is true', () => {
         const optionAvailable = { id: 74, name: '1 к. 40 ауд.', available: true };
         expect(getOptionLabelWithAvailable(optionAvailable)).toEqual(
-            `${optionAvailable.name} (${i18n.t(COMMON_AVAILABLE)})`,
+            `${optionAvailable.name} (${COMMON_AVAILABLE})`,
         );
     });
     it('should return option.name with COMMON_AVAILABLE if option available is false ', () => {
         const optionUnavailable = { id: 50, name: '1 к. 7 ауд.', available: false };
         expect(getOptionLabelWithAvailable(optionUnavailable)).toEqual(
-            `${optionUnavailable.name} (${i18n.t(COMMON_UNAVAILABLE)})`,
+            `${optionUnavailable.name} (${COMMON_UNAVAILABLE})`,
         );
     });
 });
