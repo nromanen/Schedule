@@ -2,7 +2,10 @@ TRUNCATE
     "public".semester_day,
     "public".semester_period,
     "public".periods,
-    "public".semesters
+    "public".semesters,
+    "public".groups,
+    "public".students,
+    "public".semester_group
     RESTART IDENTITY
     CASCADE;
 
@@ -26,4 +29,12 @@ insert into "public".semester_day (semester_id, "day") values
 insert into "public".semester_period (semester_id, period_id) values
 (4, 4),
 (4, 5),
-(5, 4);
+(5, 7);
+
+insert into "public".groups(id, title, disable) values
+(4,'444', false),
+(5,'555', false);
+
+insert into "public".semester_group (semester_id, group_id) values
+(5, 4),
+(5, 5);

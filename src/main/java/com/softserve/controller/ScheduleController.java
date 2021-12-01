@@ -191,31 +191,6 @@ public class ScheduleController {
         return ResponseEntity.status(HttpStatus.OK).body(dto);
     }
 
-    @PostMapping("/copy-schedule")
-    @ApiOperation(value = "Copy full schedule from one semester to another semester")
-    @PreAuthorize("hasRole('MANAGER')")
-    public ResponseEntity<List<ScheduleForCopyDTO>> copySchedule(@RequestParam Long fromSemesterId,
-                                                                 @RequestParam Long toSemesterId) {
-        log.info("In copySchedule with fromSemesterId = {} and toSemesterId = {}", fromSemesterId, toSemesterId);
-        Semester toSemester = semesterService.getById(toSemesterId);
-        List<Schedule> schedules = scheduleService.getSchedulesBySemester(fromSemesterId);
-        List<Schedule> schedulesForToSemester = scheduleService.getSchedulesBySemester(toSemester.getId());
-        if (!schedulesForToSemester.isEmpty()) {
-            for (Schedule schedule : schedulesForToSemester) {
-                scheduleService.delete(schedule);
-            }
-        }
-        List<Schedule> schedulesForSave = new ArrayList<>();
-        for (Schedule schedule : schedules) {
-            Lesson lesson = schedule.getLesson();
-            lesson.setSemester(toSemester);
-            lessonService.saveLessonDuringCopy(lesson);
-            schedule.setLesson(lesson);
-            schedulesForSave.add(scheduleService.saveScheduleDuringCopy(schedule));
-        }
-        return ResponseEntity.ok().body(scheduleMapper.scheduleToScheduleForCopyDTOs(schedulesForSave));
-    }
-
     @DeleteMapping("/delete-schedules")
     @ApiOperation(value = "Delete all schedules by semester id")
     @PreAuthorize("hasRole('MANAGER')")
@@ -243,7 +218,7 @@ public class ScheduleController {
 
 
     //convert schedule map to schedule dto
-    /*private List<ScheduleDateRangeFullDTO> fullDTOForTeacherDateRange(Map<LocalDate, Map<Period, List<Schedule>>> map) {
+    private List<ScheduleDateRangeFullDTO> fullDTOForTeacherDateRange(Map<LocalDate, Map<Period, List<Schedule>>> map) {
         List<ScheduleDateRangeFullDTO> fullDTO = new ArrayList<>();
 
         for (Map.Entry<LocalDate, Map<Period, List<Schedule>>> itr: map.entrySet()) {
@@ -273,7 +248,7 @@ public class ScheduleController {
             fullDTO.add(scheduleDateRangeFullDTO);
         }
         return fullDTO;
-    }*/
+    }
 
 
     private List<ScheduleForTemporaryDateRangeDTO> fullDTOForTemporaryScheduleByTeacherDateRange(Map<LocalDate, Map<Period, Map<Schedule, TemporarySchedule>>> map) {
