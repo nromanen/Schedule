@@ -217,11 +217,24 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public AuthenticationSuccessHandler authenticationSuccessHandler() {
         return (request, response, authentication) -> {
             OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
-            User user = userService.createSocialUser(oAuth2User);
 
             String url = env.getProperty("backend.url");
-            String jwtToken = jwtTokenProvider.createToken(user.getEmail(), user.getRole().toString());
-            response.sendRedirect(url + "login?social=true&token=" + jwtToken);
+            String email = oAuth2User.getAttribute("email");
+            if(checkIfEmailExist(email)){
+                User user = userService.findByEmail(email);
+
+                String jwtToken = jwtTokenProvider.createToken(user.getEmail(), user.getRole().toString());
+                response.sendRedirect(url + "login?social=true&token=" + jwtToken);
+            }else {
+                assert email != null;
+                String newEmail = email.replaceAll(".com", "");
+                response.sendRedirect(url + "auth/google-error/"+newEmail);
+            }
         };
     }
+
+    private boolean checkIfEmailExist(String email){
+        return userService.isEmailExist(email);
+    }
+
 }

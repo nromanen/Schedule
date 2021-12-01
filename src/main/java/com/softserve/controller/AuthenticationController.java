@@ -118,4 +118,14 @@ public class AuthenticationController {
         response.sendRedirect(url + "oauth_login/google");
         return ResponseEntity.ok().body("Ok");
     }
+
+    @GetMapping("/google-error/{email}")
+    @ApiOperation(value = "Redirect with email", hidden = true)
+    public ResponseEntity<BadRequestEmailDTO> withResponseEntity(@PathVariable ("email") String email) {
+        String text = "Email is not registered yet";
+        BadRequestEmailDTO badRequestEmailDTO = new BadRequestEmailDTO(text, email);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(badRequestEmailDTO);
+    }
+
+
 }

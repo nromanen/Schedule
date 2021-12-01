@@ -318,4 +318,10 @@ public class UserServiceImpl implements UserService {
         user.setRole(Role.ROLE_USER);
         return userRepository.save(user);
     }
+
+    @Override
+    public boolean isEmailExist(String email) {
+        log.info("Enter into emailExists method with email:{}", email);
+        return emailExists(email);
+    }
 }
