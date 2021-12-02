@@ -32,7 +32,7 @@ const MovingGroupsDialog = (props) => {
     };
 
     const handleSubmitGroupStudents = () => {
-        moveStudentsToGroupStart(group, newGroup);
+        moveStudentsToGroupStart(newGroup);
         clearSelection();
     };
 

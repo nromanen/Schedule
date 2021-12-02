@@ -5,6 +5,7 @@ import { getClassScheduleListStart } from '../../actions/classes';
 import { clearScheduleStart, getAllScheduleItemsStart } from '../../actions/schedule';
 import { getEnabledGroupsStart } from '../../actions/groups';
 import EditCurrentSchedulePage from '../../components/EditCurrentSchedule/EditCurrentSchedulePage';
+import { getListOfRoomsStart } from '../../actions/rooms';
 
 const mapStateToProps = (state) => ({
     groups: state.groups.groups,
@@ -25,6 +26,7 @@ const mapDispatchToProps = (dispatch) => ({
     setScheduleLoading: (newState) => dispatch(setScheduleLoading(newState)),
     showAllGroups: () => dispatch(showAllGroupsSuccess()),
     getClassScheduleList: () => dispatch(getClassScheduleListStart()),
+    getListOfRooms: () => dispatch(getListOfRoomsStart()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(EditCurrentSchedulePage);

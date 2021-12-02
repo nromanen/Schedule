@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { Field, reduxForm } from 'redux-form';
 import Button from '@material-ui/core/Button';
 import { useTranslation } from 'react-i18next';
+import MenuItem from '@material-ui/core/MenuItem';
 import renderTextField from '../../../share/renderedFields/input';
 import SelectField from '../../../share/renderedFields/select';
 import { ROOM_FORM } from '../../../constants/reduxForms';
@@ -67,11 +68,11 @@ const RoomForm = (props) => {
                     label={t(TYPE_LABEL)}
                     validate={[required]}
                 >
-                    <option className="room-select-item" />
+                    <MenuItem value="" className="hidden" disabled />
                     {roomTypes.map((roomType) => (
-                        <option key={roomType.id} value={roomType.id} className="room-select-item">
+                        <MenuItem key={roomType.id} value={roomType.id}>
                             {roomType.description}
-                        </option>
+                        </MenuItem>
                     ))}
                 </Field>
                 <div className="form-buttons-container">

@@ -124,4 +124,4 @@ export const LOGIN_VIA_GOOGLE_LABEL = 'formElements:login_via_google';
 export const RESET_PASSWORD_HELPER_TEXT = 'formElements:reset_password_helper_text';
 export const FORM_CHOOSE_GROUP_LABEL = 'choose_group_title';
 export const FORM_GROUP_LABEL_AFTER = 'form_group_label_after';
-export const FIRST_GROUPS = 'first_group';
+export const STUDENTS_UPPERCASE = 'formElements:students_uppercase';
