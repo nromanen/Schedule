@@ -7,6 +7,7 @@ import {
     getEnabledGroupsStart,
     selectGroupSuccess,
     toggleDisabledStatus,
+    dragAndDropGroupStart,
 } from '../../actions/groups';
 import { deleteStudentStart } from '../../actions/students';
 import GroupPage from '../../components/GroupPage/GroupPage';
@@ -24,6 +25,7 @@ const mapDispatchToProps = {
     getEnabledGroupsStart,
     getDisabledGroupsStart,
     setIsOpenConfirmDialog,
+    dragAndDropGroupStart,
     toggleDisabledStatus,
     deleteStudentStart,
     deleteGroupStart,
