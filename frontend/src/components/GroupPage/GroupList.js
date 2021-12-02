@@ -131,7 +131,7 @@ const GroupList = (props) => {
                 {visibleGroups.map((item) => (
                     <GroupCard
                         key={item.id}
-                        item={item}
+                        group={item}
                         setGroup={setGroup}
                         disabled={isDisabled}
                         showConfirmDialog={showConfirmDialog}
