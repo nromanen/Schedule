@@ -3600,7 +3600,7 @@ describe('Full schedule mapper', () => {
         };
         expect(makeFullSchedule(inputData)).toEqual(result);
     });
-    it('returns empty groupList and resultArray arrays if schedule is empty', () => {
+    it('returns empty groupList and resultArray arrays, groupCount = 0 if schedule is empty', () => {
         const inputData = {
             schedule: [],
             semester: {
@@ -3655,6 +3655,7 @@ describe('Full schedule mapper', () => {
         };
         expect(makeFullSchedule(inputData).resultArray.length).toEqual(0);
         expect(makeFullSchedule(inputData).groupList.length).toEqual(0);
+        expect(makeFullSchedule(inputData).groupsCount).toEqual(0);
     });
     it('returns semester without changes', () => {
         const inputData = {
