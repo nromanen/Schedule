@@ -83,7 +83,9 @@ const TeachersCard = (props) => {
                     onClick={() => {
                         sendMail(teacherItem.email);
                     }}
-                >{`${teacherItem.email}`}</button>
+                >
+                    {teacherItem.email}
+                </button>
             )}
         </Card>
     );
