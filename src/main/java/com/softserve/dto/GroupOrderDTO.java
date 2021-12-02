@@ -7,11 +7,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class GroupDTO {
-    private Long id;
-    private Boolean disable;
-    private String title;
+public class GroupOrderDTO extends GroupDTO{
+
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private Long afterId;
 }
