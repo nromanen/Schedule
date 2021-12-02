@@ -1,38 +1,20 @@
-import { shallow } from 'enzyme';
+import { mount } from 'enzyme';
 import React from 'react';
-import { render, unmountComponentAtNode } from 'react-dom';
-import { act } from 'react-dom/test-utils';
 import { places } from '../../constants/places';
 import LinkToMeeting from '../LinkToMeeting/LinkToMeeting';
 
 import TeacherTemporaryCardCell from './TeacherTemporaryCardCell';
 
 describe('Testing TeacherTemporaryCardCell component', () => {
-    let container = null;
-    beforeEach(() => {
-        container = document.createElement('div');
-        document.body.appendChild(container);
-    });
-
-    afterEach(() => {
-        unmountComponentAtNode(container);
-        container.remove();
-        container = null;
-    });
-
     it('renders an empty string without cards prop', () => {
-        act(() => {
-            render(<TeacherTemporaryCardCell />, container);
-        });
-        expect(container.textContent).toBe('');
+        const wrapper = mount(<TeacherTemporaryCardCell />);
+        expect(wrapper.textContent).toBe(undefined);
     });
 
     it('renders an empty string with empty cards[0] prop', () => {
         const cards = [null];
-        act(() => {
-            render(<TeacherTemporaryCardCell cards={cards} />, container);
-        });
-        expect(container.textContent).toBe('');
+        const wrapper = mount(<TeacherTemporaryCardCell cards={cards} />);
+        expect(wrapper.textContent).toBe(undefined);
     });
 
     it('does not render linkToMeeting child component if card.linkToMeeting is not present', () => {
@@ -51,7 +33,7 @@ describe('Testing TeacherTemporaryCardCell component', () => {
                 temporary_schedule: null,
             },
         ];
-        const wrapper = shallow(<TeacherTemporaryCardCell cards={cards} place={places.TOGETHER} />);
+        const wrapper = mount(<TeacherTemporaryCardCell cards={cards} place={places.TOGETHER} />);
         expect(
             wrapper.containsMatchingElement(<LinkToMeeting linkToMeeting={cards.linkToMeeting} />),
         ).not.toEqual(true);
@@ -73,7 +55,7 @@ describe('Testing TeacherTemporaryCardCell component', () => {
                 temporary_schedule: null,
             },
         ];
-        const wrapper = shallow(<TeacherTemporaryCardCell cards={cards} place={places.TOGETHER} />);
+        const wrapper = mount(<TeacherTemporaryCardCell cards={cards} place={places.TOGETHER} />);
         expect(
             wrapper.containsMatchingElement(<LinkToMeeting linkToMeeting={cards.linkToMeeting} />),
         ).toEqual(true);
