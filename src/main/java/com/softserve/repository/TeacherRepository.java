@@ -8,4 +8,7 @@ public interface TeacherRepository extends BasicRepository<Teacher, Long> {
     List<Teacher> getDisabled();
     Optional<Teacher> findByUserId(Long userId);
     List<Teacher> getAllTeacherWithoutUser();
+
+    Optional<Teacher> getExistingTeacher (Teacher teacher);
+
 }
