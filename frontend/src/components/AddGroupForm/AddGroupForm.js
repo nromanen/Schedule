@@ -3,7 +3,6 @@ import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Field } from 'redux-form';
 import {
-    FIRST_GROUPS,
     CREATE_TITLE,
     EDIT_TITLE,
     FORM_GROUP_LABEL_AFTER,
@@ -34,7 +33,6 @@ export const AddGroup = (props) => {
 
     const removeCurrentGroup = () => groups.filter((el) => el.id !== group.id);
     const groupsForAutocomplete = group.id ? removeCurrentGroup() : groups;
-    const firstGroup = { id: null, disable: false, title: t(FIRST_GROUPS) };
     useEffect(() => {
         const groupIndex = groups.findIndex(({ id }) => id === group.id);
         const afterId = groups.find((item, index) => index === groupIndex - 1);
@@ -81,7 +79,7 @@ export const AddGroup = (props) => {
                     component={renderAutocompleteField}
                     label={t(FORM_GROUP_LABEL_AFTER)}
                     type="text"
-                    values={[firstGroup, ...groupsForAutocomplete]}
+                    values={groupsForAutocomplete}
                     getOptionLabel={(item) => (item ? item.title : '')}
                 ></Field>
                 <div className="form-buttons-container">
