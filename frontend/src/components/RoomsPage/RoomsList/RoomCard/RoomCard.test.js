@@ -38,6 +38,7 @@ describe('behavior of RoomCard Component when room is disabled', () => {
     it('should call showConfirmDialog when click to MdDelete icon', () => {
         wrapper.find('MdDelete').simulate('click');
         expect(props.showConfirmDialog.mock.calls.length).toEqual(1);
+        expect(props.showConfirmDialog).toBeCalledWith(props.room.id, 'deleteConfirm', 'room');
     });
 });
 
