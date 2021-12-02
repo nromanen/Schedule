@@ -50,29 +50,29 @@
     height: 230px;
     width: 230px;
 
-    .teacher-card-name {
+    &__name {
         height: 70px;
         margin: 5px 0 16px;
-        font-size: 20px;
+        font-size: $font-l;
         text-overflow: ellipsis;
         overflow: hidden;
 
         @media (max-width: $md-s) {
-            font-size: 16px;
+            font-size: $font-s;
         }
     }
 
-    .teacher-card-title {
+    &__title {
         height: 35px;
     }
 
-    .teacher-email {
+    &__email {
         width: 200px;
         text-align: start;
         overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;
-        font-size: 16px;
+        font-size: $font-s;
         color: $link;
         background-color: $white;
         border: none;

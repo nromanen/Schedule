@@ -99,21 +99,21 @@ describe('behaviour TeachersCard when teacher is not disabled', () => {
 
     it('should have correct teacher full name', () => {
         const { surname, name, patronymic } = props.teacherItem;
-        const teacherFullName = wrapper.find('.teacher-card-name').text();
+        const teacherFullName = wrapper.find('.teacher-card__name').text();
 
         expect(teacherFullName).toEqual(`${surname} ${name} ${patronymic}`);
     });
 
     it('should have correct teacher title', () => {
         const { position, department } = props.teacherItem;
-        const teacherTitle = wrapper.find('.teacher-card-title').text();
+        const teacherTitle = wrapper.find('.teacher-card__title').text();
 
         expect(teacherTitle).toEqual(`${position} ${TEACHER_DEPARTMENT} ${department.name}`);
     });
 
     it('should render email if email passed', () => {
         const { email } = props.teacherItem;
-        const teacherEmail = wrapper.find('.teacher-email').text();
+        const teacherEmail = wrapper.find('.teacher-card__email').text();
 
         expect(teacherEmail).toEqual(email);
     });
@@ -126,12 +126,12 @@ describe('behaviour card if teacher no department or email', () => {
     });
 
     it('should not render email', () => {
-        expect(wrapper.find('.teacher-email')).toHaveLength(0);
+        expect(wrapper.find('.teacher-card__email')).toHaveLength(0);
     });
 
     it('should have only position in title if department is null', () => {
         const { position } = props.teacherItem;
-        const teacherTitle = wrapper.find('.teacher-card-title').text();
+        const teacherTitle = wrapper.find('.teacher-card__title').text();
 
         expect(teacherTitle).toEqual(`${position} `);
     });
