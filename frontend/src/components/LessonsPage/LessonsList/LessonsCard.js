@@ -58,8 +58,8 @@ const LessonsCard = (props) => {
             <p className="lesson-card__title" title={lesson.subjectForSite}>
                 {getShortTitle(getTitle(lesson), MAX_LENGTH_50)}
             </p>
-            <p>{getType(lesson)}</p>
-            <p>{getTeacherName(lesson.teacher)}</p>
+            <p className="lesson-card__type">{getType(lesson)}</p>
+            <p className="lesson-card__teacher">{getTeacherName(lesson.teacher)}</p>
             <p>
                 <Trans
                     i18nKey="hour"
