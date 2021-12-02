@@ -2,12 +2,6 @@ import { daysUppercase } from '../constants/schedule/days';
 import i18n from '../i18n';
 import { SEMESTER_SERVICE_NOT_AS_BEGIN_OR_END } from '../constants/translationLabels/serviceMessages';
 
-export const getTomorrow = () => {
-    const tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    return tomorrow;
-};
-
 export const initialCheckboxesStateForDays = daysUppercase.reduce((init, item) => {
     const isCheckedDays = init;
     isCheckedDays[item] = false;
