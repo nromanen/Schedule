@@ -14,12 +14,14 @@ import CustomDialog from '../../containers/Dialogs/CustomDialog';
 import AddStudentDialog from '../../share/DialogWindows/_dialogWindows/AddStudentDialog';
 import ShowStudentsOnGroupDialog from '../../containers/Students/ShowStudentsOnGroupDialog';
 import { ADD_STUDENT_ACTION, SHOW_STUDENTS_ACTION } from '../../constants/actionsUrl';
+import { DraggableCard } from '../../share/DraggableCard/DraggableCard';
 
 const GroupList = (props) => {
     const {
         getEnabledGroupsStart,
         getDisabledGroupsStart,
         setIsOpenConfirmDialog,
+        dragAndDropGroupStart,
         toggleDisabledStatus,
         isOpenConfirmDialog,
         selectGroupSuccess,
@@ -39,6 +41,7 @@ const GroupList = (props) => {
     const [confirmDialogType, setConfirmDialogType] = useState('');
     const [isOpenShowStudentsDialog, setIsOpenShowStudentsDialog] = useState(false);
     const [isOpenAddStudentDialog, setIsOpenAddStudentDialog] = useState(false);
+    const [dragGroup, setGroupStart] = useState();
 
     useEffect(() => {
         if (isDisabled) {
@@ -75,6 +78,10 @@ const GroupList = (props) => {
     const closeShowStudentsByGroup = () => {
         goToGroupPage(history);
         setIsOpenShowStudentsDialog(false);
+    };
+
+    const dragAndDropItem = (afterItemId) => {
+        dragAndDropGroupStart(dragGroup, afterItemId);
     };
 
     const checkParamsForActions = () => {
@@ -129,15 +136,21 @@ const GroupList = (props) => {
             )}
             <div className="group-list">
                 {visibleGroups.map((item) => (
-                    <GroupCard
+                    <DraggableCard
                         key={item.id}
-                        group={item}
-                        setGroup={setGroup}
-                        disabled={isDisabled}
-                        showConfirmDialog={showConfirmDialog}
-                        showAddStudentDialog={showAddStudentDialog}
-                        showStudentsByGroup={showStudentsByGroup}
-                    />
+                        item={item}
+                        setGroupStart={setGroupStart}
+                        dragAndDropItem={dragAndDropItem}
+                    >
+                        <GroupCard
+                            item={item}
+                            setGroup={setGroup}
+                            disabled={isDisabled}
+                            showConfirmDialog={showConfirmDialog}
+                            showAddStudentDialog={showAddStudentDialog}
+                            showStudentsByGroup={showStudentsByGroup}
+                        />
+                    </DraggableCard>
                 ))}
             </div>
         </>

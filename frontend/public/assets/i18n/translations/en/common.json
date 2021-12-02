@@ -182,14 +182,14 @@
     "move_label": "Move",
     "more_label": "More",
     "select_file": "Select file",
-    "select-correct_format": "*File has to be in csv format",
-    "file-rules-for-each-line": "*Each line of the file should consist of four fields, separated by commas.",
-    "example-file": "Example of file",
-    "file-rules-for-header": "*First line of the file is a header.",
+    "select_correct_format": "*File has to be in csv format",
+    "file_rules_for_each_line": "*Each line of the file should consist of four fields, separated by commas.",
+    "example_file": "Example of file",
+    "file_rules_for_header": "*First line of the file is a header.",
     "table_columns_size": "Table columns size",
     "columns_size_small": "small",
     "columns_size_base": "base",
     "columns_size_large": "large",
     "search_params": "Search options for available rooms",
-    "free-rooms-list-empty": "The list of available rooms is empty"
+    "free_rooms_list_empty": "The list of available rooms is empty"
 }

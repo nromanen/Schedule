@@ -1,4 +1,5 @@
 package com.softserve.service.impl;
+
 import com.softserve.dto.RoomForScheduleInfoDTO;
 import com.softserve.entity.Room;
 import com.softserve.entity.enums.EvenOdd;
@@ -13,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.DayOfWeek;
-import java.util.ArrayList;
 import java.util.List;
 
 @Transactional
@@ -76,11 +76,10 @@ public class RoomServiceImpl implements RoomService {
      */
     @Override
     public Room save(Room object) {
-        log.info("Enter into save of RoomServiceImpl with entity:{}", object );
-        if (isRoomExists(object)){
+        log.info("Enter into save of RoomServiceImpl with entity:{}", object);
+        if (isRoomExists(object)) {
             throw new EntityAlreadyExistsException("Room with this parameters already exists");
-        }
-        else {
+        } else {
             return roomRepository.save(object);
         }
     }
@@ -94,10 +93,9 @@ public class RoomServiceImpl implements RoomService {
     @Override
     public Room update(Room object) {
         log.info("Enter into update of RoomServiceImpl with entity:{}", object);
-        if (isRoomExists(object)){
+        if (isRoomExists(object)) {
             throw new EntityAlreadyExistsException("Room with this parameters already exists");
-        }
-        else {
+        } else {
             return roomRepository.update(object);
         }
     }
@@ -118,7 +116,7 @@ public class RoomServiceImpl implements RoomService {
      * The method used for getting list of free room by specific period, day of week and number of week
      *
      * @param idOfPeriod identity number of period
-     * @param dayOfWeek day of the week
+     * @param dayOfWeek  day of the week
      * @param evenOdd    number of week
      * @return list of rooms
      */
@@ -151,4 +149,74 @@ public class RoomServiceImpl implements RoomService {
     public boolean isRoomExists(Room room) {
         return roomRepository.countRoomDuplicates(room) != 0;
     }
+
+    /**
+     * The method used for getting list of rooms ordered by sort_order
+     *
+     * @return list of rooms
+     */
+    @Override
+    public List<Room> getAllOrdered() {
+        log.info("Entered getAllOrdered()");
+        return roomRepository.getAllOrdered();
+    }
+
+    /**
+     * The method used for saving room after specific one
+     *
+     * @param room Room entity that we want to save
+     * @param afterId id of room after which we want to insert our room
+     * @return room
+     */
+    @Transactional
+    @Override
+    public Room saveRoomAfterId(Room room, Long afterId) {
+        log.info("Entered saveRoomAfterId({},{})", room, afterId);
+        Double maxOrder = roomRepository.getMaxSortOrder().orElse(0.0);
+        Double minOrder = roomRepository.getMinSortOrder().orElse(0.0);
+        if (afterId != null) {
+            if (afterId == 0) {
+                room.setSortOrder(minOrder / 2);
+            }else {
+                Double prevPos = roomRepository.getSortOrderAfterId(afterId).orElse(0.0);
+                Double nextPos = roomRepository.getNextPosition(prevPos).orElse(prevPos + 2);
+                Double newPos = ((nextPos + prevPos) / 2);
+                room.setSortOrder(newPos);
+            }
+        } else {
+            room.setSortOrder(maxOrder + 1);
+        }
+        return roomRepository.save(room);
+    }
+
+    /**
+     * The method used for updating room after specific one
+     *
+     * @param room Room entity that we want to save
+     * @param afterId id of room after which we want to insert our room
+     * @return room
+     */
+    @Transactional
+    @Override
+    public Room updateRoomAfterId(Room room, Long afterId) {
+        log.info("Entered updateRoomAfterId({},{})", room, afterId);
+        Double minOrder = roomRepository.getMinSortOrder().orElse(0.0);
+        if (afterId != null) {
+            if(afterId == room.getId()) {
+                Double myOrder = roomRepository.getSortOrderAfterId(afterId).orElse(0.0);
+                room.setSortOrder(myOrder);
+            }else if (afterId == 0) {
+                room.setSortOrder(minOrder / 2);
+            } else {
+                Double prevPos = roomRepository.getSortOrderAfterId(afterId).orElse(0.0);
+                Double nextPos = roomRepository.getNextPosition(prevPos).orElse(prevPos + 2);
+                Double newPos = ((nextPos + prevPos) / 2);
+                room.setSortOrder(newPos);
+            }
+        }else {
+            room.setSortOrder(1.0);
+        }
+        return roomRepository.update(room);
+    }
+
 }

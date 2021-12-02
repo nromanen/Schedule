@@ -19,8 +19,8 @@ import { getGroupsOptionsForSelect } from '../../../utils/selectUtils';
 import SemesterCopyForm from '../../../containers/SemesterPage/SemesterCopyForm';
 import SemesterCard from './SemesterCard';
 import CustomDialog from '../../../containers/Dialogs/CustomDialog';
+import { createMessage } from '../../../utils/sagaUtils';
 import MultiselectForGroups from '../../../share/Multiselects/MultiSelectForGroups';
-import i18n from '../../../i18n';
 
 const SemesterList = (props) => {
     const { t } = useTranslation('formElements');
@@ -109,12 +109,12 @@ const SemesterList = (props) => {
             : [];
         const finishGroups = [...semesterGroupsOptions];
         if (isEqual(beginGroups, finishGroups)) {
-            setOpenSuccessSnackbar(
-                i18n.t(GROUP_EXIST_IN_THIS_SEMESTER, {
-                    cardType: i18n.t(COMMON_GROUP_TITLE),
-                    actionType: i18n.t(EXIST_LABEL),
-                }),
+            const message = createMessage(
+                GROUP_EXIST_IN_THIS_SEMESTER,
+                COMMON_GROUP_TITLE,
+                EXIST_LABEL,
             );
+            setOpenSuccessSnackbar(message);
             return;
         }
         setGroupsToSemester(semesterId, semesterGroupsOptions);

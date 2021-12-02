@@ -229,11 +229,53 @@ public class GroupServiceTest {
         Semester semester = new Semester();
         semester.setDefaultSemester(true);
         semester.setGroups(groupList);
-        Long[] groupIds = {1L, 2L};
+        List<Long> groupIds = List.of(1L, 2L);
 
         when(groupRepository.findById(1L)).thenReturn(Optional.of(group1));
         when(groupRepository.findById(2L)).thenReturn(Optional.of(group2));
 
         assertEquals(groupService.getGroupsByGroupIds(groupIds), groupList);
     }
+
+    @Test
+    public void getAllBySortingOrder() {
+        List<Group> expected = singletonList(group);
+        when(groupRepository.getAllBySortingOrder()).thenReturn(expected);
+
+        List<Group> actual = groupService.getAllBySortingOrder();
+
+        assertThat(actual).hasSameSizeAs(expected).isEqualTo(expected);
+        verify(groupRepository).getAllBySortingOrder();
+    }
+
+    @Test
+    public void saveAfterOrder() {
+        when(groupRepository.getMaxSortingOrder()).thenReturn(Optional.of(1));
+        when(groupRepository.getSortingOrderById(1L)).thenReturn(Optional.of(1));
+        doNothing().when(groupRepository).changeGroupOrderOffset(2, 2);
+        when(groupRepository.save(group)).thenReturn(group);
+
+        Group actual = groupService.saveAfterOrder(group, 1L);
+        assertEquals(group, actual);
+        verify(groupRepository).save(group);
+        verify(groupRepository).getSortingOrderById(1L);
+        verify(groupRepository).getMaxSortingOrder();
+        verify(groupRepository).changeGroupOrderOffset(2, 2);
+    }
+
+    @Test
+    public void updateGroupOrder() {
+        when(groupRepository.getNextPosition(0)).thenReturn(Optional.of(0));
+        when(groupRepository.getMaxSortingOrder()).thenReturn(Optional.of(1));
+        when(groupRepository.getSortingOrderById(1L)).thenReturn(Optional.of(1));
+        when(groupRepository.getSortingOrderById(1L)).thenReturn(Optional.of(1));
+        when(groupRepository.update(group)).thenReturn(group);
+        Group actual = groupService.updateGroupOrder(group, 1L);
+        assertEquals(group, actual);
+        verify(groupRepository).getNextPosition(0);
+        verify(groupRepository).getMaxSortingOrder();
+        verify(groupRepository).update(group);
+        verify(groupRepository).getSortingOrderById(1L);
+    }
+
 }

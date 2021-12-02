@@ -68,7 +68,7 @@ body {
 
         @media (max-width: $md-m) {
             margin-bottom: 5px;
-            font-size: 12px;
+            font-size: $font-2xs;
             width: 60%;
         }
     }

@@ -15,4 +15,16 @@ public interface GroupRepository extends BasicRepository<Group, Long> {
     boolean isExistsById(Long id);
 
     List<Group> getByTeacherId(Long id);
+
+    List<Group> getGroupsByGroupIds(List<Long> groupIds);
+    
+    List<Group> getAllBySortingOrder();
+
+    Optional<Integer> getNextPosition(Integer position);
+
+    Optional<Integer> getMaxSortingOrder();
+
+    void changeGroupOrderOffset(Integer lowerBound, Integer upperBound);
+
+    Optional<Integer> getSortingOrderById(Long id);
 }
