@@ -143,7 +143,7 @@ const GroupList = (props) => {
                         dragAndDropItem={dragAndDropItem}
                     >
                         <GroupCard
-                            item={item}
+                            group={item}
                             setGroup={setGroup}
                             disabled={isDisabled}
                             showConfirmDialog={showConfirmDialog}
