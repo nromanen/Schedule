@@ -25,6 +25,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @Api(tags = "Semester API")
@@ -137,7 +138,7 @@ public class SemesterController {
     @ApiOperation(value = "Get the list of all groups for current semester")
     public ResponseEntity<List<GroupDTO>> getGroupsForCurrentSemester(){
         log.info("In getGroupsForCurrentSemester"    );
-        List<Group> groups = groupService.getGroupsForCurrentSemester();
+        Set<Group> groups = groupService.getGroupsForCurrentSemester();
         return ResponseEntity.status(HttpStatus.OK).body(groupMapper.groupsToGroupDTOs(groups));
     }
 
@@ -145,7 +146,7 @@ public class SemesterController {
     @ApiOperation(value = "Get the list of all groups for default semester")
     public ResponseEntity<List<GroupDTO>> getGroupsForDefaultSemester(){
         log.info("In getGroupsForDefaultSemester"    );
-        List<Group> groups = groupService.getGroupsForDefaultSemester();
+        Set<Group> groups = groupService.getGroupsForDefaultSemester();
         return ResponseEntity.status(HttpStatus.OK).body(groupMapper.groupsToGroupDTOs(groups));
     }
 
@@ -153,7 +154,7 @@ public class SemesterController {
     @ApiOperation(value = "Get the list of all groups for semester by id")
     public ResponseEntity<List<GroupDTO>> getGroupsBySemesterId(@PathVariable Long semesterId){
         log.info("In getGroupsBySemesterId (semesterId =[{}]", semesterId);
-        List<Group> groups = groupService.getGroupsBySemesterId(semesterId);
+        Set<Group> groups = groupService.getGroupsBySemesterId(semesterId);
         return ResponseEntity.status(HttpStatus.OK).body(groupMapper.groupsToGroupDTOs(groups));
     }
 

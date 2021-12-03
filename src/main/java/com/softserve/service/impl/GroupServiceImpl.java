@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -220,7 +221,7 @@ public class GroupServiceImpl  implements GroupService {
      * @return list of groups for semester
      */
     @Override
-    public List<Group> getGroupsBySemesterId(Long semesterId) {
+    public Set<Group> getGroupsBySemesterId(Long semesterId) {
         log.info("Enter into getGroupsBySemesterId");
         return semesterService.getById(semesterId).getGroups();
     }
@@ -231,7 +232,7 @@ public class GroupServiceImpl  implements GroupService {
      * @return list of groups for current semester
      */
     @Override
-    public List<Group> getGroupsForCurrentSemester() {
+    public Set<Group> getGroupsForCurrentSemester() {
         log.info("Enter into getGroupsByCurrentSemester");
         return semesterService.getCurrentSemester().getGroups();
     }
@@ -242,7 +243,7 @@ public class GroupServiceImpl  implements GroupService {
      * @return list of groups for default semester
      */
     @Override
-    public List<Group> getGroupsForDefaultSemester() {
+    public Set<Group> getGroupsForDefaultSemester() {
         log.info("Enter into getGroupsByCurrentSemester");
         return semesterService.getDefaultSemester().getGroups();
     }

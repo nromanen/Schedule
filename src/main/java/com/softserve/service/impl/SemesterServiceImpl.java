@@ -73,11 +73,6 @@ public class SemesterServiceImpl implements SemesterService {
     public List<Semester> getAll() {
         log.debug("In getAll()");
         List<Semester> semesters = semesterRepository.getAll();
-        for (Semester semester : semesters) {
-            Hibernate.initialize(semester.getDaysOfWeek());
-            Hibernate.initialize(semester.getPeriods());
-            Hibernate.initialize(semester.getGroups());
-        }
         return semesters;
     }
 
@@ -322,9 +317,9 @@ public class SemesterServiceImpl implements SemesterService {
     @Override
     public Semester addGroupToSemester(Semester semester, Group group) {
         log.debug("In addGroupToSemester (semester = [{}], group = [{}])", semester, group);
-        List<Group> groups = semester.getGroups();
+        Set<Group> groups = semester.getGroups();
         if (groups == null) {
-            groups = new ArrayList<>();
+            groups = new HashSet<>();
         }
         groups.add(group);
         semester.setGroups(groups);
@@ -343,7 +338,8 @@ public class SemesterServiceImpl implements SemesterService {
     public Semester addGroupsToSemester(Semester semester, List<Long> groupIds) {
         log.info("In addGroupsToSemester (semester = [{}], groupIds = [{}])", semester, groupIds);
         List<Group> groups = groupRepository.getGroupsByGroupIds(groupIds);
-        semester.setGroups(groups);
+        Set<Group> groupSet = new HashSet<>(groups);
+        semester.setGroups(groupSet);
         semesterRepository.update(semester);
         log.debug("Semester groups has been updated");
         return semester;
@@ -401,7 +397,7 @@ public class SemesterServiceImpl implements SemesterService {
     @Override
     public Semester deleteGroupFromSemester(Semester semester, Group group) {
         log.debug("In deleteGroupFromSemester (semester = [{}], group = [{}])", semester, group);
-        List<Group> groups = semester.getGroups();
+        Set<Group> groups = semester.getGroups();
         groups.remove(group);
         update(semester);
         return semester;
@@ -416,7 +412,7 @@ public class SemesterServiceImpl implements SemesterService {
     @Override
     public Semester deleteAllContentFromSemester(Semester semester) {
         log.debug("In deleteAllContentFromSemester (semester = [{}] )", semester);
-        List<Group> groups = new ArrayList<>();
+        Set<Group> groups = new HashSet<>();
         Set<Period> periods = new HashSet<>();
         Set<DayOfWeek> dayOfWeeks = new HashSet<>();
         semester.setGroups(groups);

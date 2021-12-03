@@ -15,9 +15,9 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Optional;
+
+import java.util.*;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.*;
@@ -182,7 +182,7 @@ public class GroupServiceTest {
 
     @Test
     public void getGroupsBySemesterId() {
-        List<Group> groupList = new ArrayList<>();
+        Set<Group> groupList = new HashSet<>();
         groupList.add(group);
         Semester semester = new Semester();
         semester.setId(1L);
@@ -194,7 +194,7 @@ public class GroupServiceTest {
 
     @Test
     public void getGroupsForCurrentSemester() {
-        List<Group> groupList = new ArrayList<>();
+        Set<Group> groupList = new HashSet<>();
         groupList.add(group);
         Semester semester = new Semester();
         semester.setCurrentSemester(true);
@@ -206,7 +206,7 @@ public class GroupServiceTest {
 
     @Test
     public void getGroupsForDefaultSemester() {
-        List<Group> groupList = new ArrayList<>();
+        Set<Group> groupList = new HashSet<>();
         groupList.add(group);
         Semester semester = new Semester();
         semester.setDefaultSemester(true);
@@ -229,7 +229,7 @@ public class GroupServiceTest {
         groupList.add(group2);
         Semester semester = new Semester();
         semester.setDefaultSemester(true);
-        semester.setGroups(groupList);
+        semester.setGroups(new HashSet<>(groupList));
         List<Long> groupIds = List.of(1L, 2L);
 
         when(groupRepository.getGroupsByGroupIds(groupIds)).thenReturn(List.of(group1,group2));

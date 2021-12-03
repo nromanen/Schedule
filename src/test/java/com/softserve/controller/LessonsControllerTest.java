@@ -32,6 +32,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.util.Arrays;
+import java.util.Collections;
+
 import static com.softserve.entity.enums.LessonType.LABORATORY;
 import static com.softserve.entity.enums.LessonType.LECTURE;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -164,29 +167,42 @@ public class LessonsControllerTest {
     }
 
     @Test
-    @Ignore("Check LessonInfoDTO and LessonForGroupsDTO")
     public void returnBadRequestIfSaveExistLesson() throws Exception {
-        LessonInfoDTO lessonDtoForSave = new LessonInfoMapperImpl().lessonToLessonInfoDTO(lessonService.getById(4L));
+        Lesson lesson = lessonService.getById(7L);
+        LessonInfoDTO lessonDtoForSave = new LessonInfoMapperImpl().lessonToLessonInfoDTO(lesson);
 
-        mockMvc.perform(post("/lessons").content(objectMapper.writeValueAsString(lessonDtoForSave))
+        LessonForGroupsDTO lessonForGroupsDTO = new LessonForGroupsDTO();
+
+        lessonForGroupsDTO.setGroups(Collections.singletonList(lessonDtoForSave.getGroup()));
+        lessonForGroupsDTO.setLessonType(lessonDtoForSave.getLessonType());
+        lessonForGroupsDTO.setGrouped(lessonDtoForSave.isGrouped());
+        lessonForGroupsDTO.setId(7L);
+        lessonForGroupsDTO.setSemesterId(lesson.getSemester().getId());
+        lessonForGroupsDTO.setHours(lessonDtoForSave.getHours());
+        lessonForGroupsDTO.setLinkToMeeting(lessonDtoForSave.getLinkToMeeting());
+        lessonForGroupsDTO.setSubjectForSite(lessonDtoForSave.getSubjectForSite());
+        lessonForGroupsDTO.setLessonType(lessonDtoForSave.getLessonType());
+        lessonForGroupsDTO.setSubject(lessonDtoForSave.getSubject());
+        lessonForGroupsDTO.setTeacher(lessonDtoForSave.getTeacher());
+
+        mockMvc.perform(post("/lessons").content(objectMapper.writeValueAsString(lessonForGroupsDTO))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isBadRequest());
     }
 
     @Test
-    @Ignore("Check LessonInfoDTO and LessonForGroupsDTO / Check if should expect 500?")
     public void returnInternalServerErrorIfSavedTeacherIsNull() throws Exception {
         SubjectDTO subjectDTO = new SubjectMapperImpl().subjectToSubjectDTO(subjectService.getById(6L));
         GroupDTO groupDTO = new GroupMapperImpl().groupToGroupDTO(groupService.getById(6L));
-        LessonInfoDTO lessonDtoForSave = new LessonInfoDTO();
+        LessonForGroupsDTO lessonDtoForSave = new LessonForGroupsDTO();
         lessonDtoForSave.setHours(2);
         lessonDtoForSave.setSubjectForSite("");
         lessonDtoForSave.setLinkToMeeting("");
         lessonDtoForSave.setLessonType(LABORATORY);
         lessonDtoForSave.setTeacher(null);
         lessonDtoForSave.setSubject(subjectDTO);
-        lessonDtoForSave.setGroup(groupDTO);
+        lessonDtoForSave.setGroups(Arrays.asList(groupDTO));
 
         mockMvc.perform(post("/lessons").content(objectMapper.writeValueAsString(lessonDtoForSave))
                 .contentType(MediaType.APPLICATION_JSON))
