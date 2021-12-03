@@ -16,7 +16,13 @@ public interface GroupService extends BasicService<Group, Long> {
 
     List<Group> getGroupsForDefaultSemester();
 
-    List<Group> getGroupsByGroupIds(Long[] groupId);
+    List<Group> getGroupsByGroupIds(List<Long> groupId);
 
     List<Group> getByTeacherId(Long id);
+
+    List<Group> getAllBySortingOrder();
+
+    Group saveAfterOrder(Group group, Long afterId);
+
+    Group updateGroupOrder(Group group, Long afterId);
 }

@@ -6,6 +6,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Filter;
 import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
+
+import javax.persistence.TypedQuery;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,6 +47,36 @@ public class GroupRepositoryImpl extends BasicRepositoryImpl<Group, Long> implem
             + "FROM Lesson l "
             + "WHERE l.teacher.id = :id AND l.semester.defaultSemester = true";
 
+    private static final String GET_GROUPS_BY_IDS
+            = "select g "
+            + "from Group g "
+            + "where g.id in (:ids)";
+
+    private static final String GET_ALL_ORDERED
+            = "SELECT g "
+            + "FROM Group g "
+            + "ORDER BY g.sortingOrder ASC";
+
+    private static final String GET_MAX_SORTING_ORDER
+            = "SELECT max(g.sortingOrder) "
+            + "FROM Group g";
+
+    private static final String UPDATE_GROUP_OFFSET
+            = "UPDATE Group g "
+            + "SET g.sortingOrder = g.sortingOrder+1 "
+            + "WHERE g.sortingOrder >= :lowerPosition and g.sortingOrder < :upperPosition";
+
+    public static final String GET_NEXT_POSITION
+            = "SELECT min(g.sortingOrder) "
+            + "FROM Group g "
+            + "WHERE g.sortingOrder > :position";
+
+    public static final String GET_ORDER_BY_ID
+            = "SELECT g.sortingOrder "
+            + "FROM Group g "
+            + "WHERE g.id = :id";
+
+
     private Session getSession(){
         Session session = sessionFactory.getCurrentSession();
         Filter filter = session.enableFilter("groupDisableFilter");
@@ -78,6 +110,62 @@ public class GroupRepositoryImpl extends BasicRepositoryImpl<Group, Long> implem
                 .setParameter("id", id)
                 .getResultList();
     }
+
+    /**
+     * The method is used to retrieve groups by set sorting order
+     *
+     * @return the list of groups sorted by set sorting order
+     */
+    @Override
+    public List<Group> getAllBySortingOrder() {
+        log.debug("Entered getAllBySortingOrder()");
+        return getSession()
+                .createQuery(GET_ALL_ORDERED, Group.class)
+                .getResultList();
+    }
+
+    /**
+     * The method is used to retrieve max sorting order
+     *
+     * @return max sorting order
+     */
+    @Override
+    public Optional<Integer> getMaxSortingOrder() {
+        log.debug("Entered getMaxSortingOrder()");
+        return getSession().createQuery(GET_MAX_SORTING_ORDER, Integer.class)
+                .uniqueResultOptional();
+    }
+
+    /**
+     * The method is used to change group's sorting order
+     *
+     * @param lowerBound the lower bound of sorting order
+     * @param upperBound the upper bound of sorting order
+     */
+    @Override
+    public void changeGroupOrderOffset(Integer lowerBound, Integer upperBound) {
+        log.info("Entered changeGroupOffset({}, {})", lowerBound, upperBound);
+        TypedQuery<Group> groupTypedQuery = getSession().createQuery(UPDATE_GROUP_OFFSET);
+        groupTypedQuery.setParameter("lowerPosition", lowerBound);
+        groupTypedQuery.setParameter("upperPosition", upperBound);
+        int updated = groupTypedQuery.executeUpdate();
+        log.debug("Updated order of {} groups", updated);
+    }
+
+    /**
+     * The method is used to retrieve sorting order by group's id
+     *
+     * @param id group's id which sorting order needs to be retrieved
+     * @return sorting order of the group
+     */
+    @Override
+        public Optional<Integer> getSortingOrderById(Long id) {
+        log.info("Entered getSortingOrderById({})", id);
+        return getSession().createQuery(GET_ORDER_BY_ID, Integer.class)
+                .setParameter("id", id)
+                .uniqueResultOptional();
+    }
+
 
     /**
      * The method used for getting by id entity with students
@@ -161,5 +249,19 @@ public class GroupRepositoryImpl extends BasicRepositoryImpl<Group, Long> implem
                 .createQuery(IS_LESSONS_EXIST_FOR_GROUP_ID_QUERY)
                 .setParameter("groupId", group.getId())
                 .getSingleResult();
+    }
+
+    /**
+     * The method used for getting all groups by group Ids
+     *
+     * @param groupIds ids of the groups that need to be retrieved
+     * @return list of the groups
+     */
+    @Override
+    public List<Group> getGroupsByGroupIds(List<Long> groupIds) {
+        return getSession()
+                .createQuery(GET_GROUPS_BY_IDS, Group.class)
+                .setParameterList("ids", groupIds)
+                .getResultList();
     }
 }

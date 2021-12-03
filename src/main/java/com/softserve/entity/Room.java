@@ -44,4 +44,6 @@ public class Room implements Serializable {
     @Column(name = "disable",  columnDefinition = "boolean default 'false'")
     private boolean disable = false;
 
+    @Column(name = "sort_order")
+    private Double sortOrder;
 }

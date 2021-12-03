@@ -1,15 +1,18 @@
 import React, { Fragment, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-
+import { connect } from 'react-redux';
 import GroupSchedulePage from '../GroupSchedulePage/GroupSchedulePage';
+import { getPublicClassScheduleStart } from '../../actions/classes';
 
-import { getPublicClassScheduleListService } from '../../services/classService';
 import { HOME_TITLE } from '../../constants/translationLabels/common';
 
-const HomePage = () => {
+const HomePage = (props) => {
+    const { getClassScheduleList } = props;
     const { t } = useTranslation('common');
 
-    useEffect(() => getPublicClassScheduleListService(), []);
+    useEffect(() => {
+        getClassScheduleList();
+    }, []);
 
     return (
         <Fragment>
@@ -18,5 +21,8 @@ const HomePage = () => {
         </Fragment>
     );
 };
+const mapDispatchToProps = (dispatch) => ({
+    getClassScheduleList: () => dispatch(getPublicClassScheduleStart()),
+});
 
-export default HomePage;
+export default connect(null, mapDispatchToProps)(HomePage);

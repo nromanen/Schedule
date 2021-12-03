@@ -4,10 +4,16 @@ import com.softserve.dto.GroupDTO;
 import com.softserve.dto.SemesterDTO;
 import com.softserve.dto.SemesterWithGroupsDTO;
 import com.softserve.entity.Group;
+import com.softserve.entity.Lesson;
+import com.softserve.entity.Schedule;
 import com.softserve.entity.Semester;
 import com.softserve.mapper.GroupMapper;
+import com.softserve.mapper.ScheduleMapper;
 import com.softserve.mapper.SemesterMapper;
+import com.softserve.repository.GroupRepository;
 import com.softserve.service.GroupService;
+import com.softserve.service.LessonService;
+import com.softserve.service.ScheduleService;
 import com.softserve.service.SemesterService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -15,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -111,7 +118,6 @@ public class SemesterController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-
     @GetMapping("/semesters/disabled")
     @ApiOperation(value = "Get the list of disabled semester")
     public ResponseEntity<List<SemesterDTO>> getDisabled() {
@@ -120,20 +126,10 @@ public class SemesterController {
     }
 
     @PutMapping("/semesters/{semesterId}/groups")
-    @ApiOperation(value = "Add groups to semester by id")
-    public ResponseEntity<SemesterWithGroupsDTO> addGroupsToSemester(@PathVariable Long semesterId, @RequestParam Long[] groupId) {
+    @ApiOperation(value = "Replace groups in semester by id")
+    public ResponseEntity<SemesterWithGroupsDTO> addGroupsToSemester(@PathVariable Long semesterId, @RequestBody List<Long> groupId) {
         log.info("In addGroupsToSemester (semesterId = [{}], groupId = [{}])", semesterId, groupId);
-        List<Group> groups = groupService.getGroupsByGroupIds(groupId);
-        Semester semester = semesterService.addGroupsToSemester(semesterService.getById(semesterId), groups);
-        return ResponseEntity.status(HttpStatus.OK).body(semesterMapper.semesterToSemesterWithGroupsDTO(semester));
-    }
-
-    @DeleteMapping("/semesters/{semesterId}/groups")
-    @ApiOperation(value = "Delete groups from semester by id")
-    public ResponseEntity<SemesterWithGroupsDTO> deleteGroupsFromSemester(@PathVariable Long semesterId, @RequestParam Long[] groupId) {
-        log.info("In deleteGroupsFromSemester (semesterId = [{}], groupId = [{}])", semesterId, groupId);
-        List<Group> groups = groupService.getGroupsByGroupIds(groupId);
-        Semester semester = semesterService.deleteGroupsFromSemester(semesterService.getById(semesterId), groups);
+        Semester semester = semesterService.addGroupsToSemester(semesterService.getById(semesterId), groupId);
         return ResponseEntity.status(HttpStatus.OK).body(semesterMapper.semesterToSemesterWithGroupsDTO(semester));
     }
 
@@ -159,5 +155,15 @@ public class SemesterController {
         log.info("In getGroupsBySemesterId (semesterId =[{}]", semesterId);
         List<Group> groups = groupService.getGroupsBySemesterId(semesterId);
         return ResponseEntity.status(HttpStatus.OK).body(groupMapper.groupsToGroupDTOs(groups));
+    }
+
+    @PostMapping("/semesters/copy-semester")
+    @ApiOperation(value = "Copy full semester from one to another semester")
+    @PreAuthorize("hasRole('MANAGER')")
+    public ResponseEntity<SemesterWithGroupsDTO> copySemester(@RequestParam Long fromSemesterId,
+                                                              @RequestParam Long toSemesterId) {
+        log.debug("In copySemester with fromSemesterId = {} and toSemesterId = {}", fromSemesterId, toSemesterId);
+        Semester semester = semesterService.copySemester(fromSemesterId,toSemesterId);
+        return ResponseEntity.status(HttpStatus.OK).body(semesterMapper.semesterToSemesterWithGroupsDTO(semester));
     }
 }

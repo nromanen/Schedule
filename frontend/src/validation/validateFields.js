@@ -20,6 +20,7 @@ import {
     BIGGER_THAN_CHAR_MESSAGE,
     LESS_THAN_CHAR_MESSAGE,
     PASSWORD_MESSAGE,
+    URL_MESSAGE,
 } from '../constants/translationLabels/validationMessages';
 import {
     FORM_CLASS_FROM_LABEL,
@@ -28,6 +29,14 @@ import {
 import { dateFormat } from '../constants/formats';
 
 export const required = (value) => (value ? undefined : i18n.t(REQUIRED_MESSAGE));
+
+export const isUrl = (value) => {
+    const validationUrl = value?.match(
+        /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g,
+    );
+    if (value && validationUrl == null) return i18n.t(URL_MESSAGE);
+    return '';
+};
 
 export const lessThanZero = (value) => (value > 0 ? undefined : i18n.t(BIGGER_THAN_ZERO_MESSAGE));
 

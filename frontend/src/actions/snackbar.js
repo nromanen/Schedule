@@ -8,6 +8,17 @@ export const setOpenSnackbar = (res) => {
     };
 };
 
+export const setOpenInfoSnackbar = (message) => {
+    return {
+        type: actionTypes.SET_OPEN_SNACKBAR,
+        result: {
+            isOpen: true,
+            type: snackbarTypes.INFO,
+            message,
+        },
+    };
+};
+
 export const setOpenSuccessSnackbar = (message) => {
     return {
         type: actionTypes.SET_OPEN_SNACKBAR,

@@ -9,11 +9,13 @@ export const REGISTRATION_URL = 'auth/sign-up';
 export const RESET_PASSWORD_URL = 'auth/reset-password';
 export const ACTIVATE_ACCOUNT_URL = 'auth/activation-account';
 export const TEACHER_URL = 'teachers';
+export const ROOM_ORDERED_URL = 'rooms/ordered';
 export const ROOM_URL = 'rooms';
 export const ROOM_TYPES_URL = 'room-types';
 export const FREE_ROOMS_URL = 'rooms/free';
 export const SUBJECT_URL = 'subjects';
 export const STUDENT_URL = 'students';
+export const MOVE_STUDENTS_URL = 'students/move-to-group';
 
 export const FULL_SCHEDULE_URL = 'schedules/full/semester?semesterId=';
 export const GROUP_SCHEDULE_URL = 'schedules/full/groups?semesterId=';
@@ -27,6 +29,7 @@ export const TEMPORARY_SCHEDULE_URL = 'temporary-schedules';
 export const TEMPORARY_SCHEDULE_RANGE_URL = 'temporary-schedules/add-range';
 export const TEACHER_TEMPORARY_SCHEDULE = 'schedules/full/teachers/date-range';
 
+export const WITH_STUDENTS = '/with-students';
 export const STUDENTS_TO_GROUP_FILE = 'students/import?groupId=';
 
 export const SCHEDULE_CHECK_AVAILABILITY_URL = 'schedules/data-before';
@@ -34,6 +37,8 @@ export const BUSY_ROOMS = 'schedules/full/rooms';
 export const ROOMS_AVAILABILITY = 'rooms/available';
 export const SEMESTERS_URL = 'semesters';
 export const GROUPS_URL = 'groups';
+export const GROUPS_ORDERED_URL = 'groups/ordered';
+export const GROUPS_AFTER_URL = '/groups/after';
 export const TEACHER_SCHEDULE_URL = 'schedules/full/teachers?semesterId=';
 
 export const DISABLED_ROOMS_URL = 'rooms/disabled';

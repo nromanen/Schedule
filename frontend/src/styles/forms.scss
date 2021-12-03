@@ -1,42 +1,8 @@
-@import './colors.scss';
-@import './variables.scss';
-
-.auth-form {
-    margin: 8px 14px;
-    &-footer {
-        color: $gray;
-        margin-top: 15px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
-        .form-link {
-            margin-top: 5px;
-        }
-    }
-    .form-input {
-        margin: 7px 2px;
-    }
-    &-actions {
-        margin-top: 10px;
-        .auth-confirm-button {
-            min-width: 95%;
-            font: {
-                size: $font-sm;
-                weight: bold;
-            }
-            padding: 6px 15px;
-            text-transform: none;
-            background-color: $blue;
-            &:hover {
-                background-color: $blue-hover;
-            }
-        }
-    }
-}
+@import "./colors.scss";
+@import "./variables.scss";
 
 .form-input {
+    width: 100%;
     .MuiFormLabel-root {
         &.Mui-focused {
             color: $blue;
@@ -46,11 +12,11 @@
     .MuiInput-underline {
         &.Mui-error {
             &::after {
-                border-color: #f44336;
+                border-color: $delete-color;
             }
         }
         &::before {
-            border-color: $light-gray;
+            border-color: $gray1;
             border-width: 1px;
         }
 
@@ -76,5 +42,36 @@
     text-decoration: none;
     &:hover {
         text-decoration: underline;
+    }
+}
+.app-button-container {
+    .common-button,
+    .choose-button,
+    .upload-file-button {
+        background-color: $blue;
+        color: $white;
+        &:hover {
+            background-color: $blue-btn-hover;
+        }
+    }
+    .common-button,
+    .choose-button,
+    .upload-file-button,
+    .close-button {
+        text-transform: none;
+        &:disabled {
+            color: $gray;
+            background-color: $gray1;
+        }
+    }
+    .close-button {
+        background-color: $white;
+        border: 1px solid $gray1;
+        &:hover {
+            background-color: $gray2;
+        }
+        .MuiButton-label {
+            color: $black;
+        }
     }
 }

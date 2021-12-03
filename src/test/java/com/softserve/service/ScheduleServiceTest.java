@@ -1,5 +1,8 @@
 package com.softserve.service;
 
+import com.softserve.dto.DaysOfWeekWithClassesForTeacherDTO;
+import com.softserve.dto.ScheduleForTeacherDTO;
+import com.softserve.dto.SemesterDTO;
 import com.softserve.dto.TeacherDTO;
 import com.softserve.entity.*;
 import com.softserve.entity.enums.EvenOdd;
@@ -7,6 +10,7 @@ import com.softserve.exception.EntityNotFoundException;
 import com.softserve.mapper.TeacherMapper;
 import com.softserve.repository.ScheduleRepository;
 import com.softserve.service.impl.ScheduleServiceImpl;
+import org.hibernate.service.spi.InjectService;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -41,7 +45,8 @@ public class ScheduleServiceTest {
     private MailService mailService;
     @Mock
     private TeacherMapper teacherMapper;
-
+    @Mock
+    private TemporaryScheduleService temporaryScheduleService;
 
     @InjectMocks
     private ScheduleServiceImpl scheduleServiceImpl;
@@ -97,7 +102,6 @@ public class ScheduleServiceTest {
         schedule.setRoom(room);
 
         when(scheduleRepository.save(any(Schedule.class))).thenReturn(schedule);
-        when(semesterService.getCurrentSemester()).thenReturn(semester);
         when(lessonService.getById(anyLong())).thenReturn(lesson);
 
         Schedule result = scheduleServiceImpl.save(schedule);
@@ -143,13 +147,14 @@ public class ScheduleServiceTest {
         user.setId(1L);
         user.setEmail("Test@gmail.com");
         Teacher teacher = new Teacher();
-        teacher.setId(1L);
+        teacher.setId(10L);
+        teacher.setDisable(false);
         teacher.setUserId(1L);
         Semester semester = new Semester();
-        semester.setId(1L);
+        semester.setId(4L);
         TeacherDTO teacherDTO = new TeacherDTO();
         List<DayOfWeek> dayOfWeeks = new ArrayList<>();
-        Long[] id = new Long[]{1L, 2L, 3L, 4L};
+        Long[] id = new Long[]{10L, 20L, 30L, 40L};
         dayOfWeeks.add(DayOfWeek.MONDAY);
         dayOfWeeks.add(DayOfWeek.TUESDAY);
         when(teacherService.getById(anyLong())).thenReturn(teacher);
@@ -158,7 +163,7 @@ public class ScheduleServiceTest {
         when(teacherMapper.teacherToTeacherDTO(any())).thenReturn(teacherDTO);
         when(scheduleRepository.getDaysWhenTeacherHasClassesBySemester(anyLong(), anyLong())).thenReturn(dayOfWeeks);
         doNothing().when(mailService).send(anyString(), anyString(), anyString(), anyString(),any());
-        scheduleServiceImpl.sendScheduleToTeachers(1L, id, Locale.ENGLISH);
+        scheduleServiceImpl.sendScheduleToTeachers(4L, id, Locale.ENGLISH);
         verify(mailService, times(id.length)).send(anyString(), anyString(), anyString(), anyString(),any());
     }
 
@@ -173,6 +178,8 @@ public class ScheduleServiceTest {
         Semester semester = new Semester();
         semester.setId(1L);
         TeacherDTO teacherDTO = new TeacherDTO();
+        Map<EvenOdd, Map<DayOfWeek, List<TemporarySchedule>>> temporarySchedules = new HashMap<>();
+        temporarySchedules.put(EvenOdd.EVEN,new HashMap<>());
         List<DayOfWeek> dayOfWeeks = new ArrayList<>();
         dayOfWeeks.add(DayOfWeek.MONDAY);
         dayOfWeeks.add(DayOfWeek.TUESDAY);
@@ -181,6 +188,7 @@ public class ScheduleServiceTest {
         when(userService.getById(1L)).thenReturn(user);
         when(teacherMapper.teacherToTeacherDTO(any())).thenReturn(teacherDTO);
         when(scheduleRepository.getDaysWhenTeacherHasClassesBySemester(anyLong(), anyLong())).thenReturn(dayOfWeeks);
+        when(temporaryScheduleService.getTemporaryScheduleForEvenOddWeeks(any())).thenReturn(temporarySchedules);
         doNothing().when(mailService).send(anyString(), anyString(), anyString(), anyString(),any());
         scheduleServiceImpl.sendScheduleToTeacher(1L, 1L, Locale.ENGLISH);
         verify(mailService, times(1)).send(anyString(), anyString(), anyString(), anyString(),any());
@@ -211,10 +219,6 @@ public class ScheduleServiceTest {
         schedule.setDayOfWeek(DayOfWeek.MONDAY);
         schedule.setRoom(room);
         when(lessonService.getAllGroupedLessonsByLesson(lesson)).thenReturn(Arrays.asList(lesson2, lesson));
-        when(lessonService.getById(1L)).thenReturn(lesson);
-        when(lessonService.getById(2L)).thenReturn(lesson2);
-        when(scheduleRepository.countByLessonIdPeriodIdEvenOddDayOfWeek(any(),any(),any(),any())).thenReturn(0L);
-        when(scheduleRepository.conflictForGroupInSchedule(any(),any(),any(),any(),any())).thenReturn(0L);
         List<Schedule> schedules = scheduleServiceImpl.schedulesForGroupedLessons(schedule);
         assertEquals(2, schedules.size());
     }
@@ -245,3 +249,4 @@ public class ScheduleServiceTest {
         verify(scheduleRepository, times(1)).getAllOrdered(1L);
     }
 }
+

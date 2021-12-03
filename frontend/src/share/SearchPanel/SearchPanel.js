@@ -3,15 +3,14 @@ import { FaSearch } from 'react-icons/fa';
 import { TextField } from '@material-ui/core';
 import { useTranslation } from 'react-i18next';
 
-import './SearchPanel.scss';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
-import Card from '../Card/Card';
 import {
     TYPE_TO_SEARCH,
     SHOW_ARCHIVED,
     SHOW_REGULAR,
 } from '../../constants/translationLabels/formElements';
+import Card from '../Card/Card';
 import {
     COMMON_SHOW_DISABLED,
     COMMON_SHOW_ENABLED,
@@ -21,7 +20,7 @@ const SearchPanel = ({ SearchChange, showDisabled, showArchived, forLessons }) =
     const { t } = useTranslation('formElements');
     const [term, setTerm] = useState('');
 
-    const [state, setState] = React.useState({
+    const [state, setState] = useState({
         checkedB: false,
         checkedArchived: false,
     });

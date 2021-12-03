@@ -1,6 +1,7 @@
 package com.softserve.repository.impl;
 
 import com.softserve.entity.Lesson;
+import com.softserve.exception.EntityNotFoundException;
 import com.softserve.repository.LessonRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.query.Query;
@@ -15,10 +16,63 @@ import java.util.List;
 @Slf4j
 public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> implements LessonRepository {
 
-    private static final String SELECT_GROUPED = "select l from Lesson l " +
-            "where l.grouped=true and l.subject.id= :subjectId " +
-            "and l.hours= :hours and l.teacher.id= :teacherId " +
-            "and l.semester.id= :semesterId and l.lessonType= :lessonType";
+    private static final String SELECT_GROUPED
+            = "select l from Lesson l "
+            +"where l.grouped = true "
+            + "and l.subject.id = :subjectId "
+            + "and l.hours = :hours "
+            + "and l.teacher.id = :teacherId "
+            + "and l.semester.id = :semesterId "
+            + "and l.lessonType = :lessonType";
+
+
+    private static final String UPDATE_GROUPED
+            = "update Lesson "
+            + "set subject.id = :subjectId, "
+            + " hours = :hours, "
+            + " teacher.id = :teacherId, "
+            + " lessonType = :lessonType, "
+            + " subjectForSite = :subjectForSite "
+            + "where grouped = true "
+            + "and subject.id = :initialSubjectId "
+            + "and hours = :initialHours "
+            + "and teacher.id = :initialTeacherId "
+            + "and semester.id = :initialSemesterId "
+            + "and lessonType = :initialLessonType";
+
+    private static final String DELETE_GROUPED
+            = "delete Lesson l "
+            + "where l.grouped = true "
+            + "and l.subject.id = :subjectId "
+            + "and l.hours = :hours "
+            + "and l.teacher.id = :teacherId "
+            + "and l.semester.id = :semesterId "
+            + "and l.lessonType = :lessonType";
+
+    private static final String COUNT_QUERY
+            = "select count (s.id) "
+            + "from Schedule s "
+            + "where s.lesson.id = :lessonId";
+
+    private static final String GET_BY_SEMESTER_ID
+            = "select l from Lesson l "
+            + "where l.semester.id= :semesterId "
+            + "order by l.subjectForSite ASC ";
+
+    private static final String GET_SUBJECT_TEACHER_SEMESTER
+            = "select l from Lesson l " +
+            " where l.subject.id= :subjectId " +
+            "and l.teacher.id= :teacherId " +
+            "and l.semester.id= :semesterId " +
+            "and l.lessonType= :lessonType " +
+            "and l.id != :lessonId";
+
+    private static final String DELETE_BY_SEMESTER_ID
+            = "delete from Lesson l " +
+            "where l.id " +
+            "in (select les.id " +
+            "from Lesson les " +
+            "where les.semester.id = :semesterId)";
 
     /**
      * Method gets information about all lessons from DB
@@ -153,7 +207,7 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
         return query.getSingleResult();
     }
 
-    /*
+    /**
      * The method used for getting list of lessons from database by semesterId
      *
      * @param semesterId Semester id for getting all lessons by this id from db
@@ -162,17 +216,17 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
     @Override
     public List<Lesson> getLessonsBySemester(Long semesterId) {
         log.info("In getLessonsBySemester(semesterId = [{}])", semesterId);
-        return sessionFactory.getCurrentSession().createQuery(
-                "select l from Lesson l " +
-                        " where l.semester.id= :semesterId order by subjectForSite ASC ").setParameter("semesterId", semesterId)
+        return sessionFactory.getCurrentSession()
+                .createQuery(GET_BY_SEMESTER_ID, Lesson.class)
+                .setParameter("semesterId", semesterId)
                 .getResultList();
     }
 
     @Override
     public void deleteLessonBySemesterId(Long semesterId) {
         log.info("In deleteLessonBySemesterId(semesterId = [{}])", semesterId);
-        sessionFactory.getCurrentSession().createQuery(
-                "delete from Lesson l where l.id in (select les.id from Lesson les where les.semester.id = :semesterId)")
+        sessionFactory.getCurrentSession()
+                .createQuery(DELETE_BY_SEMESTER_ID)
                 .setParameter("semesterId", semesterId).executeUpdate();
     }
 
@@ -185,9 +239,8 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
     @Override
     public List<Lesson> getLessonsBySubjectIdTeacherIdSemesterIdLessonTypeAndExcludeCurrentLessonId(Lesson lesson) {
         log.info("In getLessonsBySubjectIdTeacherIdSemesterIdLessonTypeAndExcludeCurrentLessonId(lesson = [{}]", lesson);
-        return sessionFactory.getCurrentSession().createQuery(
-                "select l from Lesson l " +
-                        " where l.subject.id= :subjectId and l.teacher.id= :teacherId and l.semester.id= :semesterId and l.lessonType= :lessonType and l.id != :lessonId")
+        return sessionFactory.getCurrentSession()
+                .createQuery(GET_SUBJECT_TEACHER_SEMESTER, Lesson.class)
                 .setParameter("subjectId", lesson.getSubject().getId())
                 .setParameter("teacherId", lesson.getTeacher().getId())
                 .setParameter("semesterId", lesson.getSemester().getId())
@@ -205,7 +258,8 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
     @Override
     public List<Lesson> getGroupedLessonsByLesson(Lesson lesson) {
         log.info("getGroupedLessonsByLessonId(lesson = [{}]", lesson);
-        return sessionFactory.getCurrentSession().createQuery(SELECT_GROUPED)
+        return sessionFactory.getCurrentSession()
+                .createQuery(SELECT_GROUPED, Lesson.class)
                 .setParameter("subjectId", lesson.getSubject().getId())
                 .setParameter("hours", lesson.getHours())
                 .setParameter("teacherId", lesson.getTeacher().getId())
@@ -218,9 +272,8 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
     @Override
     protected boolean checkReference(Lesson lesson) {
         log.info("In checkReference(lesson = [{}])", lesson);
-        long count = (long) sessionFactory.getCurrentSession().createQuery
-                ("select count (s.id) " +
-                        "from Schedule s where s.lesson.id = :lessonId")
+        long count = sessionFactory.getCurrentSession().createQuery
+                (COUNT_QUERY, Long.class)
                 .setParameter("lessonId", lesson.getId())
                 .getSingleResult();
         return count != 0;
@@ -258,5 +311,51 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
         criteriaUpdate.where(predicates.toArray(new Predicate[0]));
 
         return sessionFactory.getCurrentSession().createQuery(criteriaUpdate).executeUpdate();
+    }
+
+    /**
+     * Method is used to update grouped lessons
+     * @param updatedLesson grouped lesson that needs to be updated
+     * @return updated Lesson
+     */
+    @Override
+    public Lesson updateGrouped(Lesson oldLesson,Lesson updatedLesson) {
+        log.info("Entered updateGroup({}, {})", oldLesson, updatedLesson);
+        int updated = sessionFactory.getCurrentSession()
+                .createQuery(UPDATE_GROUPED)
+                .setParameter("initialSubjectId", oldLesson.getSubject().getId())
+                .setParameter("initialHours", oldLesson.getHours())
+                .setParameter("initialTeacherId", oldLesson.getTeacher().getId())
+                .setParameter("initialSemesterId", oldLesson.getSemester().getId())
+                .setParameter("initialLessonType", oldLesson.getLessonType())
+                .setParameter("subjectId", updatedLesson.getSubject().getId())
+                .setParameter("hours", updatedLesson.getHours())
+                .setParameter("teacherId", updatedLesson.getTeacher().getId())
+                .setParameter("lessonType", updatedLesson.getLessonType())
+                .setParameter("subjectForSite", updatedLesson.getSubjectForSite())
+                .executeUpdate();
+        log.debug("Updated group lessons {}", updated);
+        return updatedLesson;
+    }
+
+    /**
+     * The method is used to delete all lessons grouped
+     *
+     * @param lesson grouped lesson which must be deleted
+     * @return deleted lesson
+     */
+    @Override
+    public Lesson deleteGrouped(Lesson lesson) {
+        log.info("Entered deleteGrouped({})", lesson);
+        int deleted = sessionFactory.getCurrentSession()
+                .createQuery(DELETE_GROUPED)
+                .setParameter("subjectId", lesson.getSubject().getId())
+                .setParameter("hours", lesson.getHours())
+                .setParameter("teacherId", lesson.getTeacher().getId())
+                .setParameter("semesterId", lesson.getSemester().getId())
+                .setParameter("lessonType", lesson.getLessonType())
+                .executeUpdate();
+        log.debug("Deleted group lessons {}", deleted);
+        return lesson;
     }
 }

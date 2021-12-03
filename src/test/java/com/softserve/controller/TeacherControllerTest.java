@@ -19,6 +19,7 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.query.Collation;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers;
@@ -32,7 +33,10 @@ import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -56,11 +60,14 @@ public class TeacherControllerTest {
 
     private TeacherDTO teacherDtoWithId1L;
 
+    private TeacherDTO teacherDtoWithId3L;
+
     private TeacherDTO disabledTeacherDtoWithId2LAndWithoutEmail;
 
     private TeacherForUpdateDTO teacherForUpdateDtoWithId1L;
 
     private TeacherForUpdateDTO teacherForUpdateDtoWithId2LAndWithoutEmail;
+
 
     private CustomMockMvcAssertions assertions;
 
@@ -86,7 +93,8 @@ public class TeacherControllerTest {
         String teacherEmail = "teacher@gmail.com";
 
         teacherDtoWithId1L = new TeacherDTO();
-        teacherDtoWithId1L.setId(1L);
+        teacherDtoWithId1L.setId(10L);
+        teacherDtoWithId1L.setDisable(false);
         teacherDtoWithId1L.setName(teacherName);
         teacherDtoWithId1L.setSurname(teacherSurname);
         teacherDtoWithId1L.setPatronymic(teacherPatronymic);
@@ -95,7 +103,8 @@ public class TeacherControllerTest {
         teacherDtoWithId1L.setEmail(teacherEmail);
 
         disabledTeacherDtoWithId2LAndWithoutEmail = new TeacherDTO();
-        disabledTeacherDtoWithId2LAndWithoutEmail.setId(2L);
+        disabledTeacherDtoWithId2LAndWithoutEmail.setId(20L);
+        disabledTeacherDtoWithId2LAndWithoutEmail.setDisable(true);
         disabledTeacherDtoWithId2LAndWithoutEmail.setName(teacherName);
         disabledTeacherDtoWithId2LAndWithoutEmail.setSurname(teacherSurname);
         disabledTeacherDtoWithId2LAndWithoutEmail.setPatronymic(teacherPatronymic);
@@ -103,7 +112,8 @@ public class TeacherControllerTest {
         disabledTeacherDtoWithId2LAndWithoutEmail.setDepartmentDTO(departmentDTO);
 
         teacherForUpdateDtoWithId1L = new TeacherForUpdateDTO();
-        teacherForUpdateDtoWithId1L.setId(1L);
+        teacherForUpdateDtoWithId1L.setId(10L);
+        teacherForUpdateDtoWithId1L.setDisable(false);
         teacherForUpdateDtoWithId1L.setName(teacherName);
         teacherForUpdateDtoWithId1L.setSurname(teacherSurname);
         teacherForUpdateDtoWithId1L.setPatronymic(teacherPatronymic);
@@ -112,7 +122,8 @@ public class TeacherControllerTest {
         teacherForUpdateDtoWithId1L.setEmail(teacherEmail);
 
         teacherForUpdateDtoWithId2LAndWithoutEmail = new TeacherForUpdateDTO();
-        teacherForUpdateDtoWithId2LAndWithoutEmail.setId(2L);
+        teacherForUpdateDtoWithId2LAndWithoutEmail.setId(20L);
+        teacherForUpdateDtoWithId2LAndWithoutEmail.setDisable(true);
         teacherForUpdateDtoWithId2LAndWithoutEmail.setName(teacherName);
         teacherForUpdateDtoWithId2LAndWithoutEmail.setSurname(teacherSurname);
         teacherForUpdateDtoWithId2LAndWithoutEmail.setPatronymic(teacherPatronymic);
@@ -122,7 +133,7 @@ public class TeacherControllerTest {
 
     @Test
     public void getTeacherById() throws Exception {
-        assertions.assertForGet(teacherDtoWithId1L, "/teachers/1");
+        assertions.assertForGet(teacherDtoWithId1L, "/teachers/10");
     }
 
     @Test
@@ -156,7 +167,7 @@ public class TeacherControllerTest {
 
     @Test
     public void deleteTeacher() throws Exception {
-        assertions.assertForDelete(1);
+        assertions.assertForDelete(10);
     }
 
     @Test
@@ -308,6 +319,7 @@ public class TeacherControllerTest {
     private static ResultMatcher matchTeacherExcludingId(TeacherDTO expected) {
         return ResultMatcher.matchAll(
                 jsonPath("$.name").value(expected.getName()),
+                jsonPath("$.disable").value(expected.getDisable()),
                 jsonPath("$.surname").value(expected.getSurname()),
                 jsonPath("$.patronymic").value(expected.getPatronymic()),
                 jsonPath("$.position").value(expected.getPosition()),

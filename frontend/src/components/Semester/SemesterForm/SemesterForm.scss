@@ -1,46 +1,41 @@
-@import '../../../App';
-.semester {
-    &-form {
-        margin: 10px;
-    }
+@import '../../../styles/colors.scss';
+@import '../../../styles/variables.scss';
+@import '../../../styles/mixins.scss';
 
-    &-btns {
-        margin-top: 20px;
-    }
-
-    &-checkbox {
-        margin-left: -17px;
-        margin-bottom: -10px;
-        color: $label-color;
-    }
+.semester-form-card {
+    width: 375px;
+    padding: 25px;
 }
 
-.form-field-up {
-    margin-top: 30px;
+.semester-checkboxes {
+    @include displayFlex(center, start, column);
+    color: $label-color;
+    margin-right: 17px;
 }
 
-.form-time-block {
+.semester-checkboxes-container {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin: 8px 0;
-
-    .semester-input {
-        width: 100% !important;
-    }
-
-    .time-input {
-        width: 48%;
-    }
-}
-.group-options {
-    display: flex;
-    flex-direction: column;
     flex-wrap: wrap;
-    align-items: center;
-    align-content: center;
-
-    Button {
-        margin: 5px 0 5px 17px;
+    .MuiFormControlLabel-root {
+        display: block;
+        width: 155px;
     }
+}
+
+.semester-inputs-block {
+    @include displayFlex(center, space-between);
+    margin: 5px 0;
+    .semester-field-input {
+        width: $medium-size;
+        padding-right: 20px;
+    }
+}
+.semester-aside-panel{
+width: 395px;
+@media (max-width: $md-m) {
+    position: relative;
+    margin: 0 auto 40px;
+    max-width: $full-size;
+    @include displayFlex(center, start, column);
+}
 }
