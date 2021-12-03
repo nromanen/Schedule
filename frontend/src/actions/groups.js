@@ -10,14 +10,16 @@ export const getGroupByIdSuccess = (group) => ({
     group,
 });
 
-export const createGroupSuccess = (group) => ({
+export const createGroupSuccess = (group, afterId) => ({
     type: actionTypes.CREATE_GROUP_SUCCESS,
     group,
+    afterId,
 });
 
-export const updateGroupSuccess = (group) => ({
+export const updateGroupSuccess = (group, afterId) => ({
     type: actionTypes.UPDATE_GROUP_SUCCESS,
     group,
+    afterId,
 });
 
 export const getAllPublicGroupsStart = (id) => ({
@@ -70,4 +72,10 @@ export const toggleDisabledStatus = (groupId, disabledStatus) => ({
     type: actionTypes.TOGGLE_DISABLED_STATUS_GROUP,
     groupId,
     disabledStatus,
+});
+
+export const dragAndDropGroupStart = (dragGroup, afterGroupId) => ({
+    type: actionTypes.DRAG_AND_DROP_GROUP_START,
+    dragGroup,
+    afterGroupId,
 });

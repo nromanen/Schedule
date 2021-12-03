@@ -17,6 +17,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import java.text.MessageFormat;
 import java.util.List;
@@ -186,6 +187,7 @@ public class UserServiceImpl implements UserService {
      * @return User entity
      * @throws IncorrectPasswordException when password is incorrect or not strong enough
      */
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     @Override
     public User automaticRegistration(String email, Role role) {
         log.info("Enter into registration method  with email:{} and role:{}", email, role);

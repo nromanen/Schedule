@@ -56,7 +56,7 @@ const SemesterSidebar = (props) => {
     };
 
     return (
-        <aside className="search-list__panel">
+        <aside className="semester-aside-panel">
             <SearchPanel
                 SearchChange={setTerm}
                 showDisabled={showDisabledHandle}

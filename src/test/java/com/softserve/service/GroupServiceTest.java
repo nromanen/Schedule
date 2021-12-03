@@ -266,15 +266,13 @@ public class GroupServiceTest {
     @Test
     @Ignore("we need to check ")
     public void updateGroupOrder() {
-        when(groupRepository.getNextPosition(0)).thenReturn(Optional.of(0));
         when(groupRepository.getMaxSortingOrder()).thenReturn(Optional.of(1));
         when(groupRepository.getSortingOrderById(1L)).thenReturn(Optional.of(1));
-        when(groupRepository.getSortingOrderById(1L)).thenReturn(Optional.of(1));
+        when(groupRepository.isExistsById(1L)).thenReturn(true);
         when(groupRepository.update(group)).thenReturn(group);
         when(groupRepository.isExistsById(1L)).thenReturn(true);
         Group actual = groupService.updateGroupOrder(group, 1L);
         assertEquals(group, actual);
-        verify(groupRepository).getNextPosition(0);
         verify(groupRepository).getMaxSortingOrder();
         verify(groupRepository).update(group);
         verify(groupRepository).getSortingOrderById(1L);

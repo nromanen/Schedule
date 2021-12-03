@@ -1,5 +1,5 @@
 import * as actionTypes from '../actions/actionsType';
-import { sortGroup } from '../helper/sortGroup';
+import { sortGroups } from '../helper/sortGroup';
 
 const initialState = {
     groups: [],
@@ -20,25 +20,22 @@ const reducer = (state = initialState, action) => {
                 group: action.group,
             };
 
-        case actionTypes.CREATE_GROUP_SUCCESS:
+        case actionTypes.CREATE_GROUP_SUCCESS: {
+            const groups = [...state.groups];
+            const newGroups = sortGroups(groups, action.group, action.afterId);
             return {
                 ...state,
-                groups: [action.group, ...state.groups],
+                groups: newGroups,
             };
+        }
 
         case actionTypes.UPDATE_GROUP_SUCCESS: {
-            const groupIndex = state.groups.findIndex(({ id }) => id === action.group.id);
-            const groups = [...state.groups];
-
-            groups[groupIndex] = {
-                ...groups[groupIndex],
-                ...action.group,
-            };
-            const sortedGroups = groups.sort((a, b) => sortGroup(a, b));
+            const groups = state.groups.filter((group) => group.id !== action.group.id);
+            const newGroups = sortGroups(groups, action.group, action.afterId);
 
             return {
                 ...state,
-                groups: sortedGroups,
+                groups: newGroups,
                 group: {},
             };
         }

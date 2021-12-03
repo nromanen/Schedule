@@ -3,10 +3,7 @@ package com.softserve.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.softserve.assertions.CustomMockMvcAssertions;
 import com.softserve.config.*;
-import com.softserve.dto.GroupDTO;
-import com.softserve.dto.GroupForUpdateDTO;
-import com.softserve.dto.StudentDTO;
-import com.softserve.dto.StudentWithoutGroupDTO;
+import com.softserve.dto.*;
 import com.softserve.entity.Group;
 import com.softserve.exception.apierror.ApiValidationError;
 import junitparams.JUnitParamsRunner;
@@ -177,11 +174,10 @@ public class GroupControllerTest {
 
     @Test
     public void saveAfterGroupWithId() throws Exception {
-        GroupDTO groupDTO = GroupDTO.builder()
-                .title("sdsdsdsd")
-                .afterId(6L)
-                .disable(false)
-                .build();
+        GroupOrderDTO groupDTO = new GroupOrderDTO();
+        groupDTO.setTitle("sdsdsdsd");
+        groupDTO.setDisable(false);
+        groupDTO.setAfterId(6L);
         String groupJSON = "{\n" +
                 "  \"afterId\": 6,\n" +
                 "  \"disable\": false,\n" +
@@ -211,11 +207,10 @@ public class GroupControllerTest {
 
     @Test
     public void updateGroupOrderWithId() throws Exception {
-        GroupDTO groupDTO = GroupDTO.builder()
-                .title("sdsdsdsd")
-                .afterId(4L)
-                .disable(false)
-                .build();
+        GroupOrderDTO groupDTO = new GroupOrderDTO();
+        groupDTO.setTitle("sdsdsdsd");
+        groupDTO.setDisable(false);
+        groupDTO.setAfterId(4L);
         groupDTO.setId(1L);
         String groupJSON = "{\n" +
                 "  \"afterId\": 4,\n" +
