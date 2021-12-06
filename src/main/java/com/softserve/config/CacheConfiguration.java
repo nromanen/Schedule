@@ -33,7 +33,7 @@ public class CacheConfiguration {
     RedissonClient redisson() {
         Config config = new Config();
         config.useSingleServer()
-                .setAddress("redis://127.0.0.1:6379");
+                .setAddress(environment.getProperty("redis.address", String.class));
         return Redisson.create(config);
     }
 
