@@ -1,49 +1,84 @@
 import * as actionTypes from '../actions/actionsType';
-import { updateObject } from '../utility';
 
 const initialState = {
-    studentsByGroup: [],
     students: [],
     student: {},
 };
 
 const reducer = (state = initialState, action) => {
     switch (action.type) {
-        case actionTypes.CREATE_STUDENT:
-            return updateObject(state, {
-                students: state.students.concat(action.res),
+        case actionTypes.SHOW_ALL_STUDENTS: {
+            const newData = action.payload.map((item) => {
+                return { ...item, checked: false };
             });
-        case actionTypes.SHOW_ALL_STUDENTS:
-            return updateObject(state, {
-                students: action.res,
-            });
-        case actionTypes.DELETE_STUDENT: {
-            const students = state.students.filter((student) => student.id !== action.result);
-            return updateObject(state, {
-                students,
-            });
+            return {
+                ...state,
+                students: newData,
+            };
         }
+
+        case actionTypes.CREATE_STUDENT:
+            return {
+                ...state,
+                students: state.students.concat(action.student),
+            };
+
+        case actionTypes.DELETE_STUDENT: {
+            const students = state.students.filter((student) => student.id !== +action.id);
+            return {
+                ...state,
+                students,
+            };
+        }
+
+        case actionTypes.DELETE_SELECTED_STUDENTS: {
+            const students = state.students.filter(
+                (student) => !action.students.some((el) => student.id === +el.id),
+            );
+            return {
+                ...state,
+                students,
+            };
+        }
+
         case actionTypes.SET_STUDENT: {
-            let student = state.students.find((stud) => stud.id === Number(action.result));
+            let student = state.students.find((stud) => stud.id === +action.id);
 
             if (!student) {
                 student = { id: null };
             }
-            return updateObject(state, {
+            return {
+                ...state,
                 student,
-            });
+            };
         }
+
         case actionTypes.UPDATE_STUDENT: {
-            const studentIndex = state.students.findIndex(({ id }) => id === action.result.id);
+            const studentIndex = state.students.findIndex(({ id }) => id === action.student.id);
             const students = [...state.students];
             students[studentIndex] = {
                 ...students[studentIndex],
-                ...action.result,
+                ...action.student,
             };
-            return updateObject(state, {
+            return {
+                ...state,
                 students,
                 student: {},
+            };
+        }
+
+        case actionTypes.CHECK_ALL_STUDENTS: {
+            const newData = state.students.map((item) => {
+                const newItem = item;
+                action.checkedStudents.forEach((element) => {
+                    if (element.id === item.id) newItem.checked = !action.checkedAll;
+                });
+                return newItem;
             });
+            return {
+                ...state,
+                students: newData,
+            };
         }
         default:
             return state;

@@ -14,11 +14,16 @@ const SelectField = (props) => {
         id,
         meta: { touched, error },
         children,
+        className,
         ...custom
     } = props;
     const [isOpen, setIsOpen] = useState(false);
     return (
-        <FormControl error={touched && !!error} onClick={() => setIsOpen((state) => !state)}>
+        <FormControl
+            className={className}
+            error={touched && !!error}
+            onClick={() => setIsOpen((state) => !state)}
+        >
             <InputLabel htmlFor={id}>{label}</InputLabel>
             <Select {...input} {...custom} name={name} id={id} open={isOpen}>
                 {children}

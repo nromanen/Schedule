@@ -1,14 +1,45 @@
-@import '../../App';
+@import "../../styles/colors.scss";
+@import "../../styles/variables.scss";
+@import "../../styles/mixins.scss";
+
+.auth-form {
+    margin: 8px 14px;
+    &-footer {
+        @include displayFlex(center, center,column);
+        text-align: center;
+        color: $gray;
+        margin-top: 15px;
+        .form-link {
+            margin-top: 5px;
+        }
+    }
+    .form-input {
+        margin: 7px 2px;
+    }
+    &-actions {
+        margin-top: 10px;
+        .auth-confirm-button {
+            min-width: 95%;
+            font: {
+                size: $font-xs;
+                weight: bold;
+            }
+            padding: 6px 15px;
+            text-transform: none;
+            background-color: $blue;
+            &:hover {
+                background-color: $blue-btn-hover;
+            }
+        }
+    }
+}
 
 .auth-container {
-    display: flex;
-    flex-direction: column;
+    @include displayFlex(center, center, column);
     min-height: 52vh;
-    align-items: center;
-    justify-content: center;
     text-align: center;
     &::before {
-        content: '';
+        content: "";
         display: block;
         flex-grow: 1;
         height: 24px;
@@ -20,31 +51,25 @@
         border-radius: 5px;
         width: 450px;
         box-shadow: 0 12px 20px 0px $shadow-box;
-    
-        @media (max-width: 500px) {
+
+        @media (max-width: $md-s) {
             max-width: 90%;
-        }
-    
-        .form-field {
-            width: 25em;
         }
     }
     .auth-card-header {
-        .title {
+        .auth-card-title {
             margin: {
                 top: 24px;
                 bottom: 0px;
             }
         }
-        .subtitle {
+        .auth-card-subtitle {
+            display: block;
             color: $gray;
-            margin-top: 8px;
             margin: {
-                top: 8px;
-                left: 5px;
-                right: 5px;
+                top: 10px;
             }
-            font-size: $font-sm;
+            font-size: $font-xs;
         }
     }
     .auth-link {
@@ -56,14 +81,14 @@
         cursor: pointer;
     }
     .auth-link:hover {
-        color: $background-color-dark;
+        color: $blue6;
     }
 }
 .MuiCircularProgress-root.auth-loading {
     margin: 50px;
 }
 .forgot-password-label {
-    font-size: 14px;
+    font-size: $font-xs;
     font-weight: bold;
     margin-top: 10px;
 }

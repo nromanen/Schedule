@@ -15,7 +15,7 @@ const CustomDialog = (props) => {
         children,
         handelConfirm,
         whatDelete,
-        warning,
+        warnings,
         linkToMeeting,
         setOpenConfirmDialog,
         title,
@@ -31,7 +31,7 @@ const CustomDialog = (props) => {
         >
             <DialogTitle className="custom-dialog-title">{title}</DialogTitle>
             <DialogContent className="custom-dialog-body">{children}</DialogContent>
-            <DialogActions className="buttons-container">
+            <DialogActions className="buttons-container app-button-container">
                 {buttons.map(({ label, handleClick, additionClassName = '', ...res }) => (
                     <Button
                         key={label}

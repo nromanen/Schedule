@@ -10,28 +10,28 @@ import { getShortTitle } from '../../../helper/shortTitle';
 
 import { firstStringLetterCapital } from '../../../helper/strings';
 import { FORM_GROUPED_LABEL } from '../../../constants/translationLabels/formElements';
+import { MAX_LENGTH_50 } from '../../../constants/common';
 import {
     COPY_LESSON,
     DELETE_LESSON,
     EDIT_LESSON,
 } from '../../../constants/translationLabels/common';
-import './LessonsList.scss';
+import './LessonList.scss';
 
 const LessonsCard = (props) => {
     const { lesson, onCopyLesson, onSelectLesson, onClickOpen } = props;
 
     const { t } = useTranslation(['common', 'formElements']);
 
-    const MAX_LENGTH = 50;
-    const getTitle = (lessonItem) => {
-        return `${firstStringLetterCapital(lessonItem.subjectForSite)} ${t(
-            `lesson_type_${lessonItem.lessonType.toLowerCase()}_label`,
-            { ns: 'formElements' },
-        )}`;
-    };
+    const getTitle = (lessonItem) => `${firstStringLetterCapital(lessonItem.subjectForSite)}`;
+
+    const getType = (lessonItem) =>
+        `${t(`lesson_type_${lessonItem.lessonType.toLowerCase()}_label`, {
+            ns: 'formElements',
+        })}`;
 
     return (
-        <Card additionClassName="done-card">
+        <Card additionClassName="lesson-card">
             <div className="cards-btns">
                 {lesson.grouped && (
                     <FaUserPlus
@@ -41,21 +41,24 @@ const LessonsCard = (props) => {
                 )}
                 <MdContentCopy
                     title={t(COPY_LESSON)}
-                    className="svg-btn copy-btn"
+                    className="copy-icon-btn"
                     onClick={() => onCopyLesson(lesson)}
                 />
                 <FaEdit
                     title={t(EDIT_LESSON)}
-                    className="svg-btn edit-btn"
+                    className="edit-icon-btn"
                     onClick={() => onSelectLesson(lesson.id)}
                 />
                 <MdDelete
                     title={t(DELETE_LESSON)}
-                    className="svg-btn delete-btn"
+                    className="delete-icon-btn"
                     onClick={() => onClickOpen(lesson.id)}
                 />
             </div>
-            <p className="title">{getShortTitle(getTitle(lesson), MAX_LENGTH)}</p>
+            <p className="lesson-card__title" title={lesson.subjectForSite}>
+                {getShortTitle(getTitle(lesson), MAX_LENGTH_50)}
+            </p>
+            <p>{getType(lesson)}</p>
             <p>{getTeacherName(lesson.teacher)}</p>
             <p>
                 <Trans
@@ -67,7 +70,16 @@ const LessonsCard = (props) => {
                     {{ count: lesson.hours }}
                 </Trans>
             </p>
-            <input value={lesson.linkToMeeting ?? ''} disabled />
+            {lesson.linkToMeeting && (
+                <a
+                    className="lesson-card__link"
+                    href={lesson.linkToMeeting}
+                    target="_blank"
+                    rel="noreferrer"
+                >
+                    {lesson.linkToMeeting}
+                </a>
+            )}
         </Card>
     );
 };

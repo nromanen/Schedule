@@ -1,25 +1,19 @@
 import { connect } from 'react-redux';
 import { reduxForm } from 'redux-form';
-import { getAllPublicSemestersStart, getAllPublicTeachersStart } from '../../actions/schedule';
 import SchedulePageForm from '../../components/GroupSchedulePage/SchedulePageForm';
 import { SCHEDULE_SEARCH_FORM } from '../../constants/reduxForms';
 
 const mapStateToProps = (state) => ({
-    semester: state.schedule.scheduleSemesterId,
-    group: state.schedule.scheduleGroupId,
-    teacher: state.schedule.scheduleTeacherId,
+    initialValues: {
+        semester: state.schedule.scheduleSemester,
+        group: state.schedule.scheduleGroup,
+        teacher: state.schedule.scheduleTeacher,
+    },
 });
 
-const mapDispatchToProps = (dispatch) => ({
-    getAllPublicTeachers: () => dispatch(getAllPublicTeachersStart()),
-    getAllPublicSemesters: () => dispatch(getAllPublicSemestersStart()),
-});
-
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps,
-)(
+export default connect(mapStateToProps)(
     reduxForm({
         form: SCHEDULE_SEARCH_FORM,
+        enableReinitialize: true,
     })(SchedulePageForm),
 );

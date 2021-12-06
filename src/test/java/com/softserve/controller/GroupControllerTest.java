@@ -3,10 +3,7 @@ package com.softserve.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.softserve.assertions.CustomMockMvcAssertions;
 import com.softserve.config.*;
-import com.softserve.dto.GroupDTO;
-import com.softserve.dto.GroupForUpdateDTO;
-import com.softserve.dto.StudentDTO;
-import com.softserve.dto.StudentWithoutGroupDTO;
+import com.softserve.dto.*;
 import com.softserve.entity.Group;
 import com.softserve.exception.apierror.ApiValidationError;
 import junitparams.JUnitParamsRunner;
@@ -100,6 +97,7 @@ public class GroupControllerTest {
         groupDTOWithID6L = GroupDTO.builder()
                 .id(6L)
                 .title("666")
+                .disable(false)
                 .build();
 
         disabledGroupDTOWithID5L = GroupDTO.builder()
@@ -176,11 +174,21 @@ public class GroupControllerTest {
 
     @Test
     public void saveAfterGroupWithId() throws Exception {
-        GroupDTO groupDTO = GroupDTO.builder()
-                .title("sdsdsdsd")
-                .build();
-        assertions.assertForSave(groupDTO, GroupControllerTest::matchIgnoringId, "/groups/after/4");
-        List<GroupDTO> expected = List.of(groupDTOWithID6L, groupDTOWithID4L, groupDTO);
+        GroupOrderDTO groupDTO = new GroupOrderDTO();
+        groupDTO.setTitle("sdsdsdsd");
+        groupDTO.setDisable(false);
+        groupDTO.setAfterId(6L);
+        String groupJSON = "{\n" +
+                "  \"afterId\": 6,\n" +
+                "  \"disable\": false,\n" +
+                "  \"id\": 0,\n" +
+                "  \"title\": \"sdsdsdsd\"\n" +
+                "}";
+        mockMvc.perform(post("/groups/after").content(groupJSON)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated())
+                .andExpect(content().contentType("application/json"));
+        List<GroupDTO> expected = List.of(groupDTOWithID6L, groupDTO, groupDTOWithID4L);
         groupDTO.setId(1L);
         assertions.assertForGetList(expected, "/groups/ordered");
     }
@@ -189,21 +197,37 @@ public class GroupControllerTest {
     public void saveAfterGroupWithoutId() throws Exception {
         GroupDTO groupDTO = GroupDTO.builder()
                 .title("sdsdsdsd")
+                .disable(false)
                 .build();
         assertions.assertForSave(groupDTO, GroupControllerTest::matchIgnoringId, "/groups/after");
-        List<GroupDTO> expected = List.of(groupDTOWithID6L, groupDTOWithID4L, groupDTO);
+        List<GroupDTO> expected = List.of(groupDTO, groupDTOWithID6L, groupDTOWithID4L);
         groupDTO.setId(1L);
         assertions.assertForGetList(expected, "/groups/ordered");
     }
 
     @Test
     public void updateGroupOrderWithId() throws Exception {
-        GroupDTO groupDTO = GroupDTO.builder()
-                .title("sdsdsdsd")
-                .build();
-        assertions.assertForSave(groupDTO, GroupControllerTest::matchIgnoringId, "/groups/after/4");
+        GroupOrderDTO groupDTO = new GroupOrderDTO();
+        groupDTO.setTitle("sdsdsdsd");
+        groupDTO.setDisable(false);
+        groupDTO.setAfterId(4L);
         groupDTO.setId(1L);
-        assertions.assertForUpdate(groupDTO, "/groups/after/6");
+        String groupJSON = "{\n" +
+                "  \"afterId\": 4,\n" +
+                "  \"disable\": false,\n" +
+                "  \"id\": 1,\n" +
+                "  \"title\": \"sdsdsdsd\"\n" +
+                "}";
+        mockMvc.perform(post("/groups/after").content(groupJSON)
+                        .contentType(MediaType.APPLICATION_JSON))
+                        .andExpect(status().isCreated())
+                        .andExpect(content().contentType("application/json"));
+        groupDTO.setAfterId(6L);
+        groupJSON = groupJSON.replace("4", "6");
+        mockMvc.perform(put("/groups/after").content(groupJSON)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json"));
         List<GroupDTO> expected = List.of(groupDTOWithID6L, groupDTO, groupDTOWithID4L);
         assertions.assertForGetList(expected, "/groups/ordered");
     }
@@ -212,8 +236,9 @@ public class GroupControllerTest {
     public void updateGroupOrderWithoutId() throws Exception {
         GroupDTO groupDTO = GroupDTO.builder()
                 .title("sdsdsdsd")
+                .disable(false)
                 .build();
-        assertions.assertForSave(groupDTO, GroupControllerTest::matchIgnoringId, "/groups/after/4");
+        assertions.assertForSave(groupDTO, GroupControllerTest::matchIgnoringId, "/groups/after");
         groupDTO.setId(1L);
         assertions.assertForUpdate(groupDTO, "/groups/after");
         List<GroupDTO> expected = List.of(groupDTO, groupDTOWithID6L, groupDTOWithID4L);

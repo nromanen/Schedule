@@ -4,6 +4,8 @@ import com.softserve.entity.Group;
 import com.softserve.entity.Period;
 import com.softserve.entity.Semester;
 import com.softserve.exception.*;
+import com.softserve.repository.GroupRepository;
+import com.softserve.repository.ScheduleRepository;
 import com.softserve.repository.SemesterRepository;
 import com.softserve.service.impl.SemesterServiceImpl;
 import org.junit.Test;
@@ -28,6 +30,12 @@ public class SemesterServiceTest {
 
     @Mock
     private SemesterRepository semesterRepository;
+
+    @Mock
+    private ScheduleRepository scheduleRepository;
+
+    @Mock
+    private GroupRepository groupRepository;
 
     @InjectMocks
     private SemesterServiceImpl semesterService;
@@ -526,8 +534,6 @@ public class SemesterServiceTest {
         semester.setEndDay(LocalDate.of(2020, 5, 10));
         semester.setCurrentSemester(false);
 
-        when(semesterRepository.findById(anyLong())).thenReturn(Optional.of(semester));
-
         Semester semesterWithGroup = semesterService.addGroupToSemester(semester, group);
         assertNotNull(semesterWithGroup);
         assertTrue(semesterWithGroup.getGroups().contains(group));
@@ -538,12 +544,11 @@ public class SemesterServiceTest {
         Group group1 = new Group();
         group1.setTitle("some group");
         group1.setId(1L);
+        group1.setDisable(false);
         Group group2 = new Group();
         group2.setTitle("some group");
-        group2.setId(1L);
-        List<Group> groupList = new ArrayList<>();
-        groupList.add(group1);
-        groupList.add(group2);
+        group2.setId(2L);
+        group2.setDisable(false);
         Semester semester = new Semester();
         semester.setId(1L);
         semester.setYear(2020);
@@ -552,11 +557,14 @@ public class SemesterServiceTest {
         semester.setEndDay(LocalDate.of(2020, 5, 10));
         semester.setCurrentSemester(false);
 
-        when(semesterRepository.findById(anyLong())).thenReturn(Optional.of(semester));
+        when(groupRepository.getGroupsByGroupIds(any())).thenReturn(List.of(group1,group2));
 
-        Semester semesterWithGroup = semesterService.addGroupsToSemester(semester, List.of(group1.getId(), group2.getId()));
+        Semester semesterWithGroup = semesterService.addGroupsToSemester(semester, List.of(group1.getId(),group2.getId()));
         assertNotNull(semesterWithGroup);
         assertTrue(semesterWithGroup.getGroups().contains(group1));
         assertTrue(semesterWithGroup.getGroups().contains(group2));
     }
+
+
+
 }

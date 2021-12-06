@@ -1,96 +1,38 @@
-@import '../../App';
-$group-size: 10px;
-.students-group{
-  display: flex;
-  flex-direction: column;
-  flex-wrap: wrap;
-  align-items: center;
- .students{
-   color: #3f51b5 !important;
-   margin: -15px -8px;
-   font-size: 20px;
- }
-}
-.link-href{
-  text-decoration: none;
-  color: $black;
-  &:hover{
-    color: $black;
-  }
+@import "../../styles/colors.scss";
+@import "../../styles/fonts.scss";
+@import "../../styles/variables.scss";
+@import "../../styles/mixins.scss";
 
-}
 .group {
+  &-container {
+    display: flex;
+    @media (max-width: $md-m) {
+      @include displayFlex(center,center, column);
+    }
+  }
+  &-sidebar {
+    margin: 0 10px;
+    .MuiTypography-body1 {
+      font-size: $font-s;
+    }
+    @media (max-width: $md-m) {
+      @include displayFlex(center,center);
+      width: $full-size;
+    }
+  }
+  &-aside {
+    width: 360px;
+    position: sticky;
+    top: 1rem;
+  }
 
   &-wrapper {
-    display: flex;
+    @include displayFlex(start,center);
+    width: $full-size;
+  }
+  &-list {
+    @include displayFlex(start,center);
     flex-wrap: wrap;
-    width: 100%;
-
-    @media (max-width: 850px) { 
-      margin: 10px auto;
-      max-width: 100%;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
+    width: $full-size;
   }
-
-  }
-
-  &-card {
-    box-sizing: border-box;
-    height: 12*$group-size;
-    width: 13*$group-size;
-
-    display: flex;
-    flex-direction: column;
-    margin: $group-size ;
-
-    border-radius: $group-size/2;
-    box-shadow: 0 2px 8px $shadow-box;
-
-    &__number {
-      text-align: center;
-      margin-top: 0;
-      text-transform: uppercase;
-    }
-
-    &__description {
-      margin: 5px 0 0;
-      font-size: 0.7rem;
-      text-align: center;
-    }
-  }
-
-  &__buttons-wrapper {
-    width: 90%;
-    margin: 0 auto;
-    display: flex;
-    justify-content: space-between;
-  }
-
-  &__buttons-delete {
-    @include buttonStyle();
-
-    &:hover {
-      color: $delete-color;
-    }
-  }
-
-  &__buttons-edit {
-    @include buttonStyle();
-
-    &:hover {
-      color: $background-color;
-    }
-  }
-
-  &__buttons-hide {
-    @include buttonStyle();
-
-    &:hover {
-      color: $good-color;
-    }
-  }
-
 }
-

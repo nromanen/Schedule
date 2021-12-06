@@ -1,134 +1,188 @@
-import { errorHandler, successHandler } from '../helper/handlerAxios';
 import { call, takeEvery, put, select, takeLatest } from 'redux-saga/effects';
 import { reset } from 'redux-form';
-import { has } from 'lodash';
-import i18n from '../i18n';
 import { GROUP_FORM } from '../constants/reduxForms';
 import * as actionTypes from '../actions/actionsType';
 import { setLoading } from '../actions/loadingIndicator';
-import { FORM_GROUP_LABEL } from '../constants/translationLabels/formElements';
+import { createErrorMessage, createDynamicMessage, createMessage } from '../utils/sagaUtils';
 import {
-    BACK_END_SUCCESS_OPERATION,
+    setOpenSuccessSnackbar,
+    setOpenErrorSnackbar,
+    setOpenInfoSnackbar,
+} from '../actions/snackbar';
+import {
+    GROUP_URL,
+    GROUPS_URL,
+    SEMESTERS_URL,
+    GROUPS_AFTER_URL,
+    GROUPS_ORDERED_URL,
+    DISABLED_GROUPS_URL,
+} from '../constants/axios';
+import { DELETE, POST, PUT } from '../constants/methods';
+import { axiosCall } from '../services/axios';
+import { FORM_CHOSEN_SEMESTER_LABEL } from '../constants/translationLabels/formElements';
+import {
     UPDATED_LABEL,
     CREATED_LABEL,
     DELETED_LABEL,
+    CHOSEN_SEMESTER_HAS_NOT_GROUPS,
+    SERVICE_MESSAGE_GROUP_LABEL,
 } from '../constants/translationLabels/serviceMessages';
 import {
-    showAllGroups,
-    deleteGroupSusses,
-    updateGroupSusses,
-    selectGroup,
-    clearGroupSusses,
-    addGroup,
+    getGroupByIdSuccess,
+    showAllGroupsSuccess,
+    deleteGroupSuccess,
+    updateGroupSuccess,
+    selectGroupSuccess,
+    clearGroupSuccess,
+    createGroupSuccess,
 } from '../actions';
-import { DISABLED_GROUPS_URL, GROUP_URL } from '../constants/axios';
-import { axiosCall } from '../services/axios';
+import { GROUP } from '../constants/names';
+import { handleFormSubmit } from '../helper/handleFormSubmit';
 
-function* fetchDisabledGroups() {
+const getGroupsState = (state) => state.groups.groups;
+
+function* getGroups(url) {
     try {
-        yield put(showAllGroups([]));
         yield put(setLoading(true));
-        const res = yield call(axiosCall, DISABLED_GROUPS_URL, 'GET');
-        yield put(showAllGroups(res.data));
+        const res = yield call(axiosCall, url);
+        yield put(showAllGroupsSuccess(res.data));
     } catch (err) {
-        errorHandler(err);
+        yield put(setOpenErrorSnackbar(createErrorMessage(err)));
     } finally {
         yield put(setLoading(false));
     }
 }
 
-function* fetchEnabledGroups() {
+function* getGroupById({ id }) {
     try {
-        yield put(showAllGroups([]));
-        yield put(setLoading(true));
-        const res = yield call(axiosCall, GROUP_URL, 'GET');
-        yield put(showAllGroups(res.data));
+        yield put(selectGroupSuccess({}));
+        const res = yield call(axiosCall, `${GROUP_URL}${id}`);
+        yield put(getGroupByIdSuccess(res.data));
     } catch (err) {
-        errorHandler(err);
-    } finally {
-        yield put(setLoading(false));
+        yield put(setOpenErrorSnackbar(createErrorMessage(err)));
     }
+}
+
+function* getDisabledGroups() {
+    yield call(getGroups, DISABLED_GROUPS_URL);
+}
+
+function* getEnabledGroups() {
+    yield call(getGroups, GROUPS_ORDERED_URL);
 }
 
 function* createGroup({ data }) {
     try {
-        const res = yield call(axiosCall, GROUP_URL, 'POST', data);
-        yield put(addGroup(res.data));
+        const res = yield call(axiosCall, GROUPS_AFTER_URL, POST, data);
+        yield put(createGroupSuccess(res.data, data.afterId));
         yield put(reset(GROUP_FORM));
-        successHandler(
-            i18n.t(BACK_END_SUCCESS_OPERATION, {
-                cardType: i18n.t(FORM_GROUP_LABEL),
-                actionType: i18n.t(CREATED_LABEL),
-            }),
-        );
+        const message = createDynamicMessage(GROUP, CREATED_LABEL);
+        yield put(setOpenSuccessSnackbar(message));
     } catch (err) {
-        errorHandler(err);
+        yield put(setOpenErrorSnackbar(createErrorMessage(err)));
     }
 }
 
-function* updateGroup({ data }) {
+function* updateGroup({ data, url }) {
     try {
-        const res = yield call(axiosCall, GROUP_URL, 'PUT', data);
-        if (has(data, 'disable')) {
-            yield put(deleteGroupSusses(data.id));
-        } else {
-            yield put(updateGroupSusses(res.data));
-        }
-        yield put(selectGroup(null));
+        const res = yield call(axiosCall, url, PUT, data);
+        yield put(updateGroupSuccess(res.data, data.afterId));
+        yield put(selectGroupSuccess(null));
+        const message = createDynamicMessage(GROUP, UPDATED_LABEL);
+        yield put(setOpenSuccessSnackbar(message));
         yield put(reset(GROUP_FORM));
-        successHandler(
-            i18n.t(BACK_END_SUCCESS_OPERATION, {
-                cardType: i18n.t(FORM_GROUP_LABEL),
-                actionType: i18n.t(UPDATED_LABEL),
-            }),
-        );
     } catch (err) {
-        errorHandler(err);
+        yield put(setOpenErrorSnackbar(createErrorMessage(err)));
+    }
+}
+
+function* submitGroupForm({ group }) {
+    try {
+        const url = GROUPS_AFTER_URL;
+        yield call(handleFormSubmit(group, createGroup, updateGroup), {
+            data: group,
+            url,
+        });
+    } catch (err) {
+        yield put(setOpenErrorSnackbar(createErrorMessage(err)));
     }
 }
 
 function* deleteGroup({ id }) {
     try {
-        yield call(axiosCall, `${GROUP_URL}/${id}`, 'DELETE');
-        yield put(deleteGroupSusses(id));
-        successHandler(
-            i18n.t(BACK_END_SUCCESS_OPERATION, {
-                cardType: i18n.t(FORM_GROUP_LABEL),
-                actionType: i18n.t(DELETED_LABEL),
-            }),
-        );
+        yield call(axiosCall, `${GROUP_URL}/${id}`, DELETE);
+        yield put(deleteGroupSuccess(id));
+        const message = createDynamicMessage(GROUP, DELETED_LABEL);
+        yield put(setOpenSuccessSnackbar(message));
     } catch (err) {
-        errorHandler(err);
+        yield put(setOpenErrorSnackbar(createErrorMessage(err)));
     }
 }
 
-function* toggleDisabledGroup({ groupId, disabledStatus }) {
+function* dragAndDropGroup({ dragGroup, afterGroupId }) {
+    try {
+        yield put(setLoading(true));
+        const url = GROUPS_AFTER_URL;
+        yield call(updateGroup, {
+            data: { ...dragGroup, afterId: afterGroupId },
+            url,
+        });
+    } catch (err) {
+        yield put(setOpenErrorSnackbar(createErrorMessage(err)));
+    } finally {
+        yield put(setLoading(false));
+    }
+}
+
+function* toggleDisabledGroup({ groupId }) {
     try {
         if (groupId) {
-            const state = yield select();
-            const group = state.groups.groups.find((item) => item.id === groupId);
-            yield call(updateGroup, { data: { ...group, disable: !disabledStatus } });
+            const url = GROUP_URL;
+            const groups = yield select(getGroupsState);
+            const group = groups.find((item) => item.id === groupId);
+            yield call(updateGroup, { data: { ...group, disable: !group.disable }, url });
+            yield put(deleteGroupSuccess(groupId));
         }
     } catch (err) {
-        errorHandler(err);
+        yield put(setOpenErrorSnackbar(createErrorMessage(err)));
     }
 }
 
 function* clearGroup() {
     try {
-        yield put(clearGroupSusses());
+        yield put(clearGroupSuccess());
         yield put(reset(GROUP_FORM));
     } catch (err) {
-        errorHandler(err);
+        yield put(setOpenErrorSnackbar(createErrorMessage(err)));
+    }
+}
+
+export function* getAllPublicGroups({ id }) {
+    try {
+        const requestUrl = `/${SEMESTERS_URL}/${id}/${GROUPS_URL}`;
+        const { data } = yield call(axiosCall, requestUrl);
+        yield put(showAllGroupsSuccess(data));
+        if (data.length === 0) {
+            const message = createMessage(
+                CHOSEN_SEMESTER_HAS_NOT_GROUPS,
+                FORM_CHOSEN_SEMESTER_LABEL,
+                SERVICE_MESSAGE_GROUP_LABEL,
+            );
+            yield put(setOpenInfoSnackbar(message));
+        }
+    } catch (error) {
+        yield put(setOpenErrorSnackbar(createErrorMessage(error)));
     }
 }
 
 export default function* groupWatcher() {
-    yield takeEvery(actionTypes.TOGGLE_DISABLED_STATUS_GROUP, toggleDisabledGroup);
-    yield takeLatest(actionTypes.FETCH_DISABLED_GROUPS_START, fetchDisabledGroups);
-    yield takeLatest(actionTypes.FETCH_ENABLED_GROUPS_START, fetchEnabledGroups);
     yield takeEvery(actionTypes.DELETE_GROUP_START, deleteGroup);
-    yield takeEvery(actionTypes.CREATE_GROUP_START, createGroup);
-    yield takeEvery(actionTypes.UPDATE_GROUP_START, updateGroup);
     yield takeEvery(actionTypes.CLEAR_GROUP_START, clearGroup);
+    yield takeEvery(actionTypes.GET_GROUP_BY_ID_START, getGroupById);
+    yield takeEvery(actionTypes.SUBMIT_GROUP_START, submitGroupForm);
+    yield takeLatest(actionTypes.GET_ENABLED_GROUPS_START, getEnabledGroups);
+    yield takeEvery(actionTypes.DRAG_AND_DROP_GROUP_START, dragAndDropGroup);
+    yield takeLatest(actionTypes.GET_DISABLED_GROUPS_START, getDisabledGroups);
+    yield takeLatest(actionTypes.GET_ALL_PUBLIC_GROUPS_START, getAllPublicGroups);
+    yield takeEvery(actionTypes.TOGGLE_DISABLED_STATUS_GROUP, toggleDisabledGroup);
 }

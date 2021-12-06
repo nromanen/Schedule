@@ -1,39 +1,35 @@
 import * as actionTypes from './actionsType';
 
-export const setScheduleItems = (res) => {
-    return {
-        type: actionTypes.SET_SCHEDULE_ITEMS,
-        result: res,
-    };
-};
-
 export const getScheduleItemsStart = (semesterId) => {
     return {
         type: actionTypes.GET_SCHEDULE_ITEMS_START,
         semesterId,
     };
 };
-export const getAllPublicTeachersByDepartmentStart = (departmentId) => {
+export const getScheduleItemsSuccess = (items) => {
     return {
-        type: actionTypes.GET_ALL_PUBLIC_TEACHERS_BY_DEPARTMENT_START,
-        departmentId,
+        type: actionTypes.GET_SCHEDULE_ITEMS_SUCCESS,
+        items,
     };
 };
 
-export const setCurrentSemester = (res) => {
+export const getCurrentSemesterSuccess = (semester) => {
     return {
-        type: actionTypes.SET_CURRENT_SEMESTER,
-        payload: res,
+        type: actionTypes.GET_CURRENT_SEMESTER_SUCCESS,
+        semester,
     };
 };
-export const getAllPublicTeachersStart = () => {
-    return {
-        type: actionTypes.GET_ALL_PUBLIC_TEACHERS_START,
-    };
-};
+
 export const getAllPublicSemestersStart = () => {
     return {
         type: actionTypes.GET_ALL_PUBLIC_SEMESTERS_START,
+    };
+};
+
+export const getAllPublicSemestersSuccess = (semesters) => {
+    return {
+        type: actionTypes.GET_ALL_PUBLIC_SEMESTERS_SUCCESS,
+        semesters,
     };
 };
 export const getAllScheduleItemsStart = () => {
@@ -59,18 +55,20 @@ export const deleteScheduleItemStart = (itemId) => {
         itemId,
     };
 };
+
+export const deleteScheduleItemSuccess = (itemId) => {
+    return {
+        type: actionTypes.DELETE_SCHEDULE_ITEM_SUCCESS,
+        itemId,
+    };
+};
 export const clearScheduleStart = (semesterId) => {
     return {
         type: actionTypes.CLEAR_SCHEDULE_START,
         semesterId,
     };
 };
-export const getAllPublicGroupsStart = (id) => {
-    return {
-        type: actionTypes.GET_ALL_PUBLIC_GROUPS_START,
-        id,
-    };
-};
+
 export const sendTeacherScheduleStart = (data) => {
     return {
         type: actionTypes.SEND_TEACHER_SCHEDULE_START,
@@ -84,16 +82,16 @@ export const getTeacherRangeScheduleStart = (values) => {
     };
 };
 
-export const getCurrentSemesterRequsted = () => {
+export const getTeacherRangeScheduleSuccess = (schedule) => {
     return {
-        type: actionTypes.GET_CURRENT_SEMESTER_START,
+        type: actionTypes.GET_TEACHER_RANGE_SCHEDULE_SUCCESS,
+        schedule,
     };
 };
 
-export const setDefaultSemester = (res) => {
+export const getCurrentSemesterRequsted = () => {
     return {
-        type: actionTypes.SET_DEFAULT_SEMESTER,
-        payload: res,
+        type: actionTypes.GET_CURRENT_SEMESTER_START,
     };
 };
 
@@ -103,17 +101,17 @@ export const getDefaultSemesterRequsted = () => {
     };
 };
 
-export const addItemToSchedule = (res) => {
+export const getDefaultSemesterSuccess = (semester) => {
     return {
-        type: actionTypes.ADD_ITEM_TO_SCHEDULE,
-        result: res,
+        type: actionTypes.GET_DEFAULT_SEMESTER_SUCCESS,
+        semester,
     };
 };
 
-export const checkAvailabilitySchedule = (res) => {
+export const addItemToSchedule = (payload) => {
     return {
-        type: actionTypes.CHECK_AVAILABILITY_SCHEDULE,
-        result: res,
+        type: actionTypes.ADD_ITEM_TO_SCHEDULE,
+        payload,
     };
 };
 
@@ -123,6 +121,14 @@ export const checkAvailabilityScheduleStart = (item) => {
         item,
     };
 };
+
+export const checkAvailabilityScheduleSuccess = (payload) => {
+    return {
+        type: actionTypes.CHECK_AVAILABILITY_CHANGE_ROOM_SCHEDULE_SUCCESS,
+        payload,
+    };
+};
+
 export const checkAvailabilityChangeRoomScheduleStart = (item) => {
     return {
         type: actionTypes.CHECK_AVAILABILITY_CHANGE_ROOM_SCHEDULE_START,
@@ -130,23 +136,23 @@ export const checkAvailabilityChangeRoomScheduleStart = (item) => {
     };
 };
 
-export const setFullSchedule = (result) => {
+export const getFullScheduleStart = (semesterId) => {
     return {
-        type: actionTypes.SET_FULL_SCHEDULE,
-        result,
-    };
-};
-export const setItemGroupId = (res) => {
-    return {
-        type: actionTypes.SET_ITEM_GROUP_ID,
-        result: res,
+        type: actionTypes.GET_FULL_SCHEDULE_START,
+        semesterId,
     };
 };
 
-export const setGroupSchedule = (result) => {
+export const getFullScheduleSuccess = (schedule) => {
     return {
-        type: actionTypes.SET_GROUP_SCHEDULE,
-        result,
+        type: actionTypes.GET_FULL_SCHEDULE_SUCCESS,
+        schedule,
+    };
+};
+export const setItemGroupId = (payload) => {
+    return {
+        type: actionTypes.SET_ITEM_GROUP_ID,
+        payload,
     };
 };
 export const getGroupScheduleStart = (groupId, semesterId) => {
@@ -156,6 +162,13 @@ export const getGroupScheduleStart = (groupId, semesterId) => {
         semesterId,
     };
 };
+
+export const getGroupScheduleSuccess = (schedule) => {
+    return {
+        type: actionTypes.GET_GROUP_SCHEDULE_SUCCESS,
+        schedule,
+    };
+};
 export const getTeacherScheduleStart = (teacherId, semesterId) => {
     return {
         type: actionTypes.GET_TEACHER_SCHEDULE_START,
@@ -163,69 +176,74 @@ export const getTeacherScheduleStart = (teacherId, semesterId) => {
         semesterId,
     };
 };
-export const getFullScheduleStart = (semesterId) => {
+
+export const getTeacherScheduleSuccess = (schedule) => {
     return {
-        type: actionTypes.GET_FULL_SCHEDULE_START,
-        semesterId,
-    };
-};
-export const deleteItemFromSchedule = (res) => {
-    return {
-        type: actionTypes.DELETE_ITEM_FROM_SCHEDULE,
-        result: res,
+        type: actionTypes.GET_TEACHER_SCHEDULE_SUCCESS,
+        schedule,
     };
 };
 
-export const setScheduleType = (result) => {
+export const setScheduleType = (newType) => {
     return {
         type: actionTypes.SET_SCHEDULE_TYPE,
-        newType: result,
+        newType,
     };
 };
 
-export const setScheduleGroupId = (groupId) => {
+export const setScheduleGroup = (group) => {
     return {
-        type: actionTypes.SET_SCHEDULE_GROUP_ID,
+        type: actionTypes.SET_SCHEDULE_GROUP,
+        group,
+    };
+};
+
+export const setScheduleTeacher = (teacher) => {
+    return {
+        type: actionTypes.SET_SCHEDULE_TEACHER,
+        teacher,
+    };
+};
+
+export const setScheduleSemester = (semester) => {
+    return {
+        type: actionTypes.SET_SCHEDULE_SEMESTER,
+        semester,
+    };
+};
+
+export const setTeacherViewType = (payload) => {
+    return {
+        type: actionTypes.SET_TEACHER_VIEW_TYPE,
+        payload,
+    };
+};
+
+export const setPlace = (place) => {
+    return {
+        type: actionTypes.SET_PLACE,
+        place,
+    };
+};
+
+export const selectGroupSchedule = (semesterId, groupId) => {
+    return {
+        type: actionTypes.SELECT_GROUP_SCHEDULE_START,
+        semesterId,
         groupId,
     };
 };
-
-export const setScheduleTeacherId = (teacherId) => {
+export const selectTeacherSchedule = (semesterId, teacherId) => {
     return {
-        type: actionTypes.SET_SCHEDULE_TEACHER_ID,
+        type: actionTypes.SELECT_TEACHER_SCHEDULE_START,
+        semesterId,
         teacherId,
     };
 };
-export const setTeacherSchedule = (result) => {
-    return {
-        type: actionTypes.SET_TEACHER_SCHEDULE,
-        result,
-    };
-};
 
-export const setSemesterList = (result) => {
+export const selectFullSchedule = (semesterId) => {
     return {
-        type: actionTypes.SET_SEMESTER_LIST,
-        result,
-    };
-};
-export const setScheduleSemesterId = (semesterId) => {
-    return {
-        type: actionTypes.SET_SCHEDULE_SEMESTER_ID,
+        type: actionTypes.SELECT_FULL_SCHEDULE_START,
         semesterId,
-    };
-};
-
-export const setTeacherRangeSchedule = (result) => {
-    return {
-        type: actionTypes.SET_TEACHER_RANGE_SCHEDULE,
-        result,
-    };
-};
-
-export const setTeacherViewType = (type) => {
-    return {
-        type: actionTypes.SET_TEACHER_VIEW_TYPE,
-        result: type,
     };
 };

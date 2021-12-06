@@ -25,12 +25,14 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
             + "and l.semester.id = :semesterId "
             + "and l.lessonType = :lessonType";
 
+
     private static final String UPDATE_GROUPED
             = "update Lesson "
             + "set subject.id = :subjectId, "
             + " hours = :hours, "
             + " teacher.id = :teacherId, "
-            + " lessonType = :lessonType "
+            + " lessonType = :lessonType, "
+            + " subjectForSite = :subjectForSite "
             + "where grouped = true "
             + "and subject.id = :initialSubjectId "
             + "and hours = :initialHours "
@@ -158,17 +160,13 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
         CriteriaQuery<Long> cq = cb.createQuery(Long.class);
         Root<Lesson> from = cq.from(Lesson.class);
 
-        cq.where(cb.equal(from.get("teacher").get("disable"), false),
+        cq.where(
                 cb.equal(from.get("teacher").get("id"), lesson.getTeacher().getId()),
-
-                cb.equal(from.get("subject").get("disable"), false),
                 cb.equal(from.get("subject").get("id"), lesson.getSubject().getId()),
-
-                cb.equal(from.get("group").get("disable"), false),
                 cb.equal(from.get("group").get("id"), lesson.getGroup().getId()),
-
                 cb.equal(from.get("semester").get("id"), lesson.getSemester().getId()),
                 cb.equal(from.get("lessonType"),lesson.getLessonType()));
+
         cq.select(cb.count(from));
         Query<Long> query = sessionFactory.getCurrentSession().createQuery(cq);
         return query.getSingleResult();
@@ -330,6 +328,7 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
                 .setParameter("hours", updatedLesson.getHours())
                 .setParameter("teacherId", updatedLesson.getTeacher().getId())
                 .setParameter("lessonType", updatedLesson.getLessonType())
+                .setParameter("subjectForSite", updatedLesson.getSubjectForSite())
                 .executeUpdate();
         log.debug("Updated group lessons {}", updated);
         return updatedLesson;

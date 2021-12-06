@@ -127,6 +127,7 @@ public class ScheduleServiceImpl implements ScheduleService {
             return scheduleRepository.save(schedule);
         }
     }
+
     /**
      * Method create List of schedules in accordance to grouped lessons
      *
@@ -634,13 +635,8 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Override
     public List<Schedule> getSchedulesBySemester(Long semesterId) {
         log.info("In getScheduleBySemester(Long semesterId = [{}])", semesterId);
-        List<Schedule> schedules = scheduleRepository.getScheduleBySemester(semesterId);
-        for (Schedule schedule : schedules) {
-            Hibernate.initialize(schedule.getLesson().getSemester().getDaysOfWeek());
-            Hibernate.initialize(schedule.getLesson().getSemester().getPeriods());
-            Hibernate.initialize(schedule.getLesson().getSemester().getGroups());
-        }
-        return schedules;
+
+        return scheduleRepository.getScheduleBySemester(semesterId);
     }
 
    /* **

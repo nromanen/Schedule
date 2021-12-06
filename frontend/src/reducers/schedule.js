@@ -1,20 +1,21 @@
-import { updateObject } from '../utility';
 import * as actionTypes from '../actions/actionsType';
 import { makeFullSchedule } from '../mappers/fullScheduleMapper';
 import { makeTeacherSchedule } from '../mappers/teacherScheduleMapper';
 import { makeGroupSchedule } from '../mappers/groupScheduleMapper';
+import { places } from '../constants/places';
 
 const initialState = {
     items: [],
+    place: localStorage.getItem('place') || places.TOGETHER,
     availability: {},
     itemsIds: [],
     fullSchedule: [],
     groupSchedule: {},
     teacherSchedule: {},
     scheduleType: 'full',
-    scheduleGroupId: null,
-    scheduleTeacherId: null,
-    scheduleSemesterId: null,
+    scheduleGroup: null,
+    scheduleTeacher: null,
+    scheduleSemester: null,
     currentSemester: {},
     defaultSemester: {},
     viewTeacherScheduleResults: 'block-view',
@@ -22,114 +23,95 @@ const initialState = {
 
 const reducer = (state = initialState, action) => {
     switch (action.type) {
-        case actionTypes.SET_SCHEDULE_ITEMS:
-            return updateObject(state, {
-                items: action.result,
-            });
-        case actionTypes.SET_CURRENT_SEMESTER:
-            return updateObject(state, {
-                currentSemester: action.payload,
-            });
-        case actionTypes.SET_DEFAULT_SEMESTER:
-            return updateObject(state, {
-                defaultSemester: action.payload,
-            });
-        case actionTypes.CHECK_AVAILABILITY_SCHEDULE:
-            return updateObject(state, {
-                availability: action.result,
-            });
+        case actionTypes.SET_PLACE:
+            return { ...state, place: action.place };
+        case actionTypes.GET_SCHEDULE_ITEMS_SUCCESS:
+            return { ...state, items: action.items };
+        case actionTypes.GET_CURRENT_SEMESTER_SUCCESS:
+            return { ...state, currentSemester: action.semester };
+        case actionTypes.GET_DEFAULT_SEMESTER_SUCCESS:
+            return { ...state, defaultSemester: action.semester };
+        case actionTypes.CHECK_AVAILABILITY_CHANGE_ROOM_SCHEDULE_SUCCESS:
+            return { ...state, availability: action.payload };
         case actionTypes.ADD_ITEM_TO_SCHEDULE: {
-            const { id } = action.result;
+            const { id } = action.payload;
             let itemArr;
             if (id) {
                 const index = state.items.findIndex((item) => {
                     return item.id === id;
                 });
                 if (index < 0) {
-                    itemArr = state.items.concat(action.result);
+                    itemArr = state.items.concat(action.payload);
                 } else {
-                    state.items.splice(index, 1, action.result);
+                    state.items.splice(index, 1, action.payload);
                     itemArr = state.items;
                 }
             } else {
-                itemArr = state.items.concat(action.result);
+                itemArr = state.items.concat(action.payload);
             }
-            return updateObject(state, {
-                items: itemArr,
-            });
+            return { ...state, items: itemArr };
         }
         case actionTypes.SET_SCHEDULE_TYPE:
-            return updateObject(state, {
-                groupSchedule: {},
-                fullSchedule: [],
-                scheduleType: action.newType,
-            });
-        case actionTypes.SET_FULL_SCHEDULE: {
-            const mappedSchedule = makeFullSchedule(action.result);
-            return updateObject(state, {
+            return { ...state, groupSchedule: {}, fullSchedule: [], scheduleType: action.newType };
+        case actionTypes.GET_FULL_SCHEDULE_SUCCESS: {
+            const mappedSchedule = makeFullSchedule(action.schedule);
+            return {
+                ...state,
                 fullSchedule: mappedSchedule,
                 groupSchedule: {},
                 teacherSchedule: {},
-            });
+            };
         }
-        case actionTypes.SET_GROUP_SCHEDULE: {
-            const mappedSchedule = makeGroupSchedule(action.result);
-            return updateObject(state, {
+        case actionTypes.GET_GROUP_SCHEDULE_SUCCESS: {
+            const mappedSchedule = makeGroupSchedule(action.schedule);
+            return {
+                ...state,
                 groupSchedule: mappedSchedule,
                 teacherSchedule: {},
                 fullSchedule: [],
-            });
+            };
         }
         case actionTypes.SET_ITEM_GROUP_ID:
-            return updateObject(state, {
-                itemGroupId: action.result,
-            });
-        case actionTypes.SET_SCHEDULE_GROUP_ID:
-            return updateObject(state, {
-                scheduleGroupId: action.groupId,
-            });
-        case actionTypes.DELETE_ITEM_FROM_SCHEDULE: {
-            const index = state.items.findIndex((item) => item.id === action.result);
+            return { ...state, itemGroupId: action.payload };
+        case actionTypes.SET_SCHEDULE_GROUP:
+            return { ...state, scheduleGroup: action.group };
+        case actionTypes.DELETE_SCHEDULE_ITEM_SUCCESS: {
+            const index = state.items.findIndex((item) => item.id === action.itemId);
             state.items.splice(index, 1);
             const newArr = state.items;
-            return updateObject(state, {
-                items: newArr,
-            });
+            return { ...state, items: newArr };
         }
-        case actionTypes.SET_SCHEDULE_TEACHER_ID:
-            return updateObject(state, {
-                scheduleTeacherId: action.teacherId,
-            });
-        case actionTypes.SET_TEACHER_SCHEDULE: {
-            const mappedSchedule = makeTeacherSchedule(action.result);
-            return updateObject(state, {
+        case actionTypes.SET_SCHEDULE_TEACHER:
+            return { ...state, scheduleTeacher: action.teacher };
+        case actionTypes.GET_TEACHER_SCHEDULE_SUCCESS: {
+            const mappedSchedule = makeTeacherSchedule(action.schedule);
+            return {
+                ...state,
                 teacherSchedule: mappedSchedule,
                 groupSchedule: {},
                 fullSchedule: [],
-            });
+            };
         }
-        case actionTypes.SET_SEMESTER_LIST:
-            return updateObject(state, {
-                semesters: action.result,
-            });
-        case actionTypes.SET_SCHEDULE_SEMESTER_ID:
-            return updateObject(state, {
-                scheduleGroupId: null,
-                scheduleTeacherId: null,
-                scheduleSemesterId: action.semesterId,
-            });
-        case actionTypes.SET_TEACHER_RANGE_SCHEDULE:
-            return updateObject(state, {
-                teacherRangeSchedule: action.result,
-                scheduleGroupId: null,
+        case actionTypes.GET_ALL_PUBLIC_SEMESTERS_SUCCESS:
+            return { ...state, semesters: action.semesters };
+        case actionTypes.SET_SCHEDULE_SEMESTER:
+            return {
+                ...state,
+                scheduleGroup: null,
+                scheduleTeacher: null,
+                scheduleSemester: action.semester,
+            };
+        case actionTypes.GET_TEACHER_RANGE_SCHEDULE_SUCCESS:
+            return {
+                ...state,
+                teacherRangeSchedule: action.schedule,
+                scheduleGroup: null,
                 teacherSchedule: [],
                 groupSchedule: {},
                 fullSchedule: [],
-            });
+            };
         case actionTypes.SET_TEACHER_VIEW_TYPE:
-            return updateObject(state, {
-                viewTeacherScheduleResults: action.result,
-            });
+            return { ...state, viewTeacherScheduleResults: action.payload };
         default:
             return state;
     }

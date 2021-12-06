@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -103,13 +105,15 @@ public class GroupServiceImpl  implements GroupService {
     @Override
     public Group saveAfterOrder(Group group, Long afterId) {
         log.info("Entered getAllBySortingOrder({},{})", afterId, group);
-        Double maxOrder = groupRepository.getMaxSortingOrder().orElse(0.0);
+        Integer maxOrder = groupRepository.getMaxSortingOrder().orElse(0);
+        Integer order;
         if (afterId != null) {
-            Double order = getSortingOrderById(afterId)+1;
+            order = getSortingOrderById(afterId)+1;
             group.setSortingOrder(order);
-            groupRepository.changeGroupOrderOffset(order);
+            groupRepository.changeGroupOrderOffset(order, maxOrder+1);
         } else {
-            group.setSortingOrder(maxOrder+1);
+            group.setSortingOrder(1);
+            groupRepository.changeGroupOrderOffset(0, maxOrder+1);
         }
         return groupRepository.save(group);
     }
@@ -127,23 +131,20 @@ public class GroupServiceImpl  implements GroupService {
         if (!groupRepository.isExistsById(group.getId())) {
             throw new EntityNotFoundException(Group.class, "id", group.getId().toString());
         }
+        Integer maxOrder = groupRepository.getMaxSortingOrder().orElse(0);
         if (afterId != null) {
-            Double previousPosition = getSortingOrderById(afterId);
-            Double nextPosition = groupRepository.getNextPosition(previousPosition)
-                    .orElse(previousPosition+2);
-            Double newPosition = (previousPosition+nextPosition)/2;
-            if (newPosition - 1 < 0.01) {
-                newPosition = groupRepository.getMaxSortingOrder().orElse(0.0)+1;
-            }
-            group.setSortingOrder(newPosition);
+            Integer lowerBound = getSortingOrderById(afterId)+1;
+            Integer upperBound = Optional.ofNullable(group.getSortingOrder()).orElse(maxOrder+1)+1;
+            group.setSortingOrder(lowerBound);
+            groupRepository.changeGroupOrderOffset(lowerBound, upperBound);
         } else {
-            group.setSortingOrder(1.0);
-            groupRepository.changeGroupOrderOffset(0.0);
+            group.setSortingOrder(1);
+            groupRepository.changeGroupOrderOffset(0, maxOrder+1);
         }
         return groupRepository.update(group);
     }
 
-    private Double getSortingOrderById(Long id) {
+    private Integer getSortingOrderById(Long id) {
         log.debug("Entered getSortingOrderById({})", id);
         return groupRepository.getSortingOrderById(id)
                 .orElseThrow(() -> new SortingOrderNotExistsException(Group.class, id));
@@ -152,41 +153,42 @@ public class GroupServiceImpl  implements GroupService {
     /**
      * Method saves new group to Repository
      *
-     * @param object Group entity with info to be saved
+     * @param group Group entity with info to be saved
      * @return saved Group entity
      * @throws FieldAlreadyExistsException if Group with input title already exists
      */
     @Transactional
     @Override
-    public Group save(Group object) {
-        log.info("In save(entity = [{}]", object);
-        checkTitleForUniqueness(object.getTitle());
-        return groupRepository.save(object);
+    public Group save(Group group) {
+        log.info("In save(entity = [{}]", group);
+        checkTitleForUniqueness(group.getTitle());
+        return groupRepository.save(group);
     }
 
     /**
      * Method updates information for an existing group in  Repository
-     * @param object Group entity with info to be updated
+     * @param group Group entity with info to be updated
      * @return updated Group entity
      */
     @Transactional
     @Override
-    public Group update(Group object) {
-        log.info("In update(entity = [{}]", object);
-        checkTitleForUniquenessIgnoringId(object.getTitle(), object.getId());
-        return groupRepository.update(object);
+    public Group update(Group group) {
+        log.info("In update(entity = [{}]", group);
+        checkTitleForUniquenessIgnoringId(group.getTitle(), group.getId());
+        group.setSortingOrder(groupRepository.getSortingOrderById(group.getId()).orElse(null));
+        return groupRepository.update(group);
     }
 
     /**
      * Method deletes an existing group from Repository
-     * @param object Group entity to be deleted
+     * @param group Group entity to be deleted
      * @return deleted Group entity
      */
     @Transactional
     @Override
-    public Group delete(Group object) {
-        log.info("In delete(entity = [{}])",  object);
-        return groupRepository.delete(object);
+    public Group delete(Group group) {
+        log.info("In delete(entity = [{}])",  group);
+        return groupRepository.delete(group);
     }
 
     /**
@@ -219,7 +221,7 @@ public class GroupServiceImpl  implements GroupService {
      * @return list of groups for semester
      */
     @Override
-    public List<Group> getGroupsBySemesterId(Long semesterId) {
+    public Set<Group> getGroupsBySemesterId(Long semesterId) {
         log.info("Enter into getGroupsBySemesterId");
         return semesterService.getById(semesterId).getGroups();
     }
@@ -230,7 +232,7 @@ public class GroupServiceImpl  implements GroupService {
      * @return list of groups for current semester
      */
     @Override
-    public List<Group> getGroupsForCurrentSemester() {
+    public Set<Group> getGroupsForCurrentSemester() {
         log.info("Enter into getGroupsByCurrentSemester");
         return semesterService.getCurrentSemester().getGroups();
     }
@@ -241,7 +243,7 @@ public class GroupServiceImpl  implements GroupService {
      * @return list of groups for default semester
      */
     @Override
-    public List<Group> getGroupsForDefaultSemester() {
+    public Set<Group> getGroupsForDefaultSemester() {
         log.info("Enter into getGroupsByCurrentSemester");
         return semesterService.getDefaultSemester().getGroups();
     }

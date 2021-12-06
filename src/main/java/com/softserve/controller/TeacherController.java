@@ -2,13 +2,14 @@ package com.softserve.controller;
 
 import com.softserve.dto.TeacherDTO;
 import com.softserve.dto.TeacherForUpdateDTO;
+import com.softserve.dto.TeacherImportDTO;
 import com.softserve.entity.Teacher;
 import com.softserve.mapper.TeacherMapper;
 import com.softserve.service.ScheduleService;
 import com.softserve.service.TeacherService;
-import com.softserve.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,6 +22,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -30,14 +34,12 @@ import java.util.Locale;
 public class TeacherController {
     private final TeacherService teacherService;
     private final TeacherMapper teacherMapper;
-    private final UserService userService;
     private final ScheduleService scheduleService;
 
     @Autowired
-    public TeacherController(TeacherService teacherService, TeacherMapper teacherMapper, UserService userService, ScheduleService scheduleService) {
+    public TeacherController(TeacherService teacherService, TeacherMapper teacherMapper, ScheduleService scheduleService) {
         this.teacherService = teacherService;
         this.teacherMapper = teacherMapper;
-        this.userService = userService;
         this.scheduleService = scheduleService;
     }
 
@@ -102,4 +104,12 @@ public class TeacherController {
         scheduleService.sendScheduleToTeachers(semesterId, teachersId, language);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
+
+    @PostMapping("/teachers/import")
+    @ApiOperation(value = "import teachers from file to database")
+    public ResponseEntity<List<TeacherImportDTO>> importFromCsv(@ApiParam(value = "csv format is required")
+                                                          @RequestParam("file") MultipartFile file, @RequestParam Long departmentId) {
+        return ResponseEntity.status(HttpStatus.OK).body(teacherService.saveFromFile(file, departmentId));
+    }
+
 }

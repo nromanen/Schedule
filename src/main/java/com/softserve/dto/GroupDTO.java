@@ -14,7 +14,4 @@ public class GroupDTO {
     private Long id;
     private Boolean disable;
     private String title;
-
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    private Long afterId;
 }

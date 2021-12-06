@@ -64,7 +64,7 @@ public class GroupRepositoryImpl extends BasicRepositoryImpl<Group, Long> implem
     private static final String UPDATE_GROUP_OFFSET
             = "UPDATE Group g "
             + "SET g.sortingOrder = g.sortingOrder+1 "
-            + "WHERE g.sortingOrder >= :position";
+            + "WHERE g.sortingOrder >= :lowerPosition and g.sortingOrder < :upperPosition";
 
     public static final String GET_NEXT_POSITION
             = "SELECT min(g.sortingOrder) "
@@ -125,41 +125,29 @@ public class GroupRepositoryImpl extends BasicRepositoryImpl<Group, Long> implem
     }
 
     /**
-     * The method is used to get sorting order of the next element
-     *
-     * @param position sorting order of the element
-     * @return sorting order of the nex element
-     */
-    @Override
-    public Optional<Double> getNextPosition(Double position) {
-        log.info("Entered getNextPosition({})", position);
-        return getSession().createQuery(GET_NEXT_POSITION, Double.class)
-                .setParameter("position", position)
-                .uniqueResultOptional();
-    }
-
-    /**
      * The method is used to retrieve max sorting order
      *
      * @return max sorting order
      */
     @Override
-    public Optional<Double> getMaxSortingOrder() {
+    public Optional<Integer> getMaxSortingOrder() {
         log.debug("Entered getMaxSortingOrder()");
-        return getSession().createQuery(GET_MAX_SORTING_ORDER, Double.class)
+        return getSession().createQuery(GET_MAX_SORTING_ORDER, Integer.class)
                 .uniqueResultOptional();
     }
 
     /**
      * The method is used to change group's sorting order
      *
-     * @param order sorting order from which offseting will start
+     * @param lowerBound the lower bound of sorting order
+     * @param upperBound the upper bound of sorting order
      */
     @Override
-    public void changeGroupOrderOffset(Double order) {
-        log.info("Entered changeGroupOffset({})", order);
+    public void changeGroupOrderOffset(Integer lowerBound, Integer upperBound) {
+        log.info("Entered changeGroupOffset({}, {})", lowerBound, upperBound);
         TypedQuery<Group> groupTypedQuery = getSession().createQuery(UPDATE_GROUP_OFFSET);
-        groupTypedQuery.setParameter("position", order);
+        groupTypedQuery.setParameter("lowerPosition", lowerBound);
+        groupTypedQuery.setParameter("upperPosition", upperBound);
         int updated = groupTypedQuery.executeUpdate();
         log.debug("Updated order of {} groups", updated);
     }
@@ -171,9 +159,9 @@ public class GroupRepositoryImpl extends BasicRepositoryImpl<Group, Long> implem
      * @return sorting order of the group
      */
     @Override
-    public Optional<Double> getSortingOrderById(Long id) {
+        public Optional<Integer> getSortingOrderById(Long id) {
         log.info("Entered getSortingOrderById({})", id);
-        return getSession().createQuery(GET_ORDER_BY_ID, Double.class)
+        return getSession().createQuery(GET_ORDER_BY_ID, Integer.class)
                 .setParameter("id", id)
                 .uniqueResultOptional();
     }

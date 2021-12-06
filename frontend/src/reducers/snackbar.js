@@ -1,5 +1,4 @@
 import * as actionTypes from '../actions/actionsType';
-import { updateObject } from '../utility';
 
 const initialState = {
     isSnackbarOpen: false,
@@ -10,11 +9,7 @@ const initialState = {
 const reducer = (state = initialState, action) => {
     if (action.type === actionTypes.SET_OPEN_SNACKBAR) {
         const { type, message, isOpen } = action.result;
-        return updateObject(state, {
-            isSnackbarOpen: isOpen,
-            snackbarType: type,
-            message,
-        });
+        return { ...state, isSnackbarOpen: isOpen, snackbarType: type, message };
     }
     return state;
 };
