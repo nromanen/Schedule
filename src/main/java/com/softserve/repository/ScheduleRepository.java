@@ -46,4 +46,6 @@ public interface ScheduleRepository extends BasicRepository<Schedule, Long> {
     Long countInputLessonsInScheduleByLessonId(Long lessonId);
 
     Long countByLessonIdPeriodIdEvenOddDayOfWeek(Long lessonId, Long periodId, EvenOdd evenOdd, DayOfWeek day);
+
+    List<Schedule> getAllOrdered(Long semesterId);
 }

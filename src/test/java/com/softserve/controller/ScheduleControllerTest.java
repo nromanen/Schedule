@@ -223,7 +223,8 @@ public class ScheduleControllerTest {
         scheduleSaveDTO.setPeriodId(4L);
         scheduleSaveDTO.setRoomId(5L);
 
-        mockMvc.perform(post("/schedules").content(objectMapper.writeValueAsString(scheduleSaveDTO))
+        mockMvc.perform(post("/schedules")
+                        .content(objectMapper.writeValueAsString(scheduleSaveDTO))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
     }
