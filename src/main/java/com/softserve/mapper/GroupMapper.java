@@ -8,6 +8,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.NullValueCheckStrategy;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 
+import java.util.Collection;
 import java.util.List;
 
 @Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
@@ -23,5 +24,5 @@ public interface GroupMapper {
 
     Group groupForUpdateDTOToGroup(GroupForUpdateDTO groupForUpdateDTO);
 
-    List<GroupDTO> groupsToGroupDTOs(List<Group> groups);
+    List<GroupDTO> groupsToGroupDTOs(Collection<Group> groups);
 }

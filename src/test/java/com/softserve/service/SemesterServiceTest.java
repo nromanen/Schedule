@@ -5,6 +5,7 @@ import com.softserve.entity.Period;
 import com.softserve.entity.Semester;
 import com.softserve.exception.*;
 import com.softserve.repository.GroupRepository;
+import com.softserve.repository.ScheduleRepository;
 import com.softserve.repository.SemesterRepository;
 import com.softserve.service.impl.SemesterServiceImpl;
 import org.junit.Test;
@@ -29,6 +30,9 @@ public class SemesterServiceTest {
 
     @Mock
     private SemesterRepository semesterRepository;
+
+    @Mock
+    private ScheduleRepository scheduleRepository;
 
     @Mock
     private GroupRepository groupRepository;
@@ -530,8 +534,6 @@ public class SemesterServiceTest {
         semester.setEndDay(LocalDate.of(2020, 5, 10));
         semester.setCurrentSemester(false);
 
-        when(semesterRepository.findById(anyLong())).thenReturn(Optional.of(semester));
-
         Semester semesterWithGroup = semesterService.addGroupToSemester(semester, group);
         assertNotNull(semesterWithGroup);
         assertTrue(semesterWithGroup.getGroups().contains(group));
@@ -555,7 +557,6 @@ public class SemesterServiceTest {
         semester.setEndDay(LocalDate.of(2020, 5, 10));
         semester.setCurrentSemester(false);
 
-        when(semesterRepository.findById(anyLong())).thenReturn(Optional.of(semester));
         when(groupRepository.getGroupsByGroupIds(any())).thenReturn(List.of(group1,group2));
 
         Semester semesterWithGroup = semesterService.addGroupsToSemester(semester, List.of(group1.getId(),group2.getId()));
