@@ -24,17 +24,21 @@ insert into "public".semesters(id, current_semester, default_semester, descripti
 insert into "public".semester_day (semester_id, "day") values
 (4, 'MONDAY'),
 (5, 'FRIDAY'),
-(5, 'TUESDAY');
+(5, 'TUESDAY'),
+(6, 'MONDAY');
 
 insert into "public".semester_period (semester_id, period_id) values
 (4, 4),
 (4, 5),
+(6, 5),
 (5, 7);
 
 insert into "public".groups(id, title, disable) values
 (4,'444', false),
-(5,'555', false);
+(5,'555', false),
+(6,'666', false);
 
 insert into "public".semester_group (semester_id, group_id) values
 (5, 4),
-(5, 5);
+(5, 5),
+(6, 6);

@@ -88,7 +88,8 @@ public class Semester implements Serializable {
     @JoinTable(name = "semester_group",
             joinColumns = { @JoinColumn(name = "semester_id")},
             inverseJoinColumns = {@JoinColumn(name = "group_id")})
-    private List<Group> groups;
+    @OrderBy("sorting_order")
+    private Set<Group> groups;
 
     @Column(name = "disable",  columnDefinition = "boolean default 'false'")
     private boolean disable = false;
