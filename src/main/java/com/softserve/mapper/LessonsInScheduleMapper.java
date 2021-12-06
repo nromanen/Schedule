@@ -17,9 +17,4 @@ public interface LessonsInScheduleMapper {
     LessonsInRoomScheduleDTO lessonToLessonsInRoomScheduleDTO(Lesson lesson);
 
     LessonInfoDTO lessonToLessonsInTemporaryScheduleDTO(Lesson lesson);
-    LessonInfoDTO lessonToLessonsInTemporaryScheduleDTO(TemporarySchedule temporarySchedule);
-
-
-
-
 }

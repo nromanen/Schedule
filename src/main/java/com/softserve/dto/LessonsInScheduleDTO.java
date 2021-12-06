@@ -14,7 +14,4 @@ public class LessonsInScheduleDTO {
     private String subjectForSite;
     private String lessonType;
     private RoomForScheduleDTO room;
-    @EqualsAndHashCode.Exclude
-    @JsonProperty("temporary_schedule")
-    private TemporaryScheduleDTOForDashboard temporaryScheduleDTO;
 }

@@ -34,7 +34,7 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
             = "select s "
             + "from Schedule s "
             + "where s.lesson.semester.id = :semesterId "
-            + "and s.lesson.teacher.id = :teacherId "
+            + "and s.lesson.teacher.id = :teacherId ";
 
     /**
      * Method searches if there are any saved records in schedule for particular group
@@ -92,9 +92,9 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
     public Long conflictForTeacherInSchedule(Long semesterId, DayOfWeek dayOfWeek, EvenOdd evenOdd, Long classId, Long teacherId) {
         log.info("In conflictForTeacherInSchedule(semesterId = [{}], dayOfWeek = [{}], evenOdd = [{}], classId = [{}], teacherId = [{}])", semesterId, dayOfWeek, evenOdd, classId, teacherId);
         if (evenOdd == EvenOdd.WEEKLY) {
-            return (Long) sessionFactory.getCurrentSession().createQuery("" +
+            return sessionFactory.getCurrentSession().createQuery("" +
                     SELECT_COUNT +
-                    "and s.lesson.teacher.id = :teacherId ")
+                    "and s.lesson.teacher.id = :teacherId ", Long.class)
                     .setParameter("semesterId", semesterId)
                     .setParameter("dayOfWeek", dayOfWeek)
                     .setParameter("classId", classId)
@@ -102,10 +102,10 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
                     .getSingleResult();
 
         } else {
-            return (Long) sessionFactory.getCurrentSession().createQuery(
+            return sessionFactory.getCurrentSession().createQuery(
                     SELECT_COUNT +
                             "and s.lesson.teacher.id = :teacherId " +
-                            "and ( s.evenOdd = :evenOdd or s.evenOdd = 'WEEKLY')")
+                            "and ( s.evenOdd = :evenOdd or s.evenOdd = 'WEEKLY')", Long.class)
                     .setParameter("semesterId", semesterId)
                     .setParameter("dayOfWeek", dayOfWeek)
                     .setParameter("classId", classId)

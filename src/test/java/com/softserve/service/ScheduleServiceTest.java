@@ -45,9 +45,6 @@ public class ScheduleServiceTest {
     private MailService mailService;
     @Mock
     private TeacherMapper teacherMapper;
-    @Mock
-    private TemporaryScheduleService temporaryScheduleService;
-
     @InjectMocks
     private ScheduleServiceImpl scheduleServiceImpl;
 
@@ -188,7 +185,6 @@ public class ScheduleServiceTest {
         when(userService.getById(1L)).thenReturn(user);
         when(teacherMapper.teacherToTeacherDTO(any())).thenReturn(teacherDTO);
         when(scheduleRepository.getDaysWhenTeacherHasClassesBySemester(anyLong(), anyLong())).thenReturn(dayOfWeeks);
-        when(temporaryScheduleService.getTemporaryScheduleForEvenOddWeeks(any())).thenReturn(temporarySchedules);
         doNothing().when(mailService).send(anyString(), anyString(), anyString(), anyString(),any());
         scheduleServiceImpl.sendScheduleToTeacher(1L, 1L, Locale.ENGLISH);
         verify(mailService, times(1)).send(anyString(), anyString(), anyString(), anyString(),any());

@@ -18,6 +18,4 @@ public class LessonForTeacherScheduleDTO {
    // @EqualsAndHashCode.Exclude
     private GroupDTO group;
     private String room;
-    @JsonProperty("temporary_schedule")
-    private TemporaryScheduleDTOForDashboard temporaryScheduleDTO;
 }

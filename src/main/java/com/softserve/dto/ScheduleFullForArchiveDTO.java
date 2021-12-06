@@ -15,5 +15,4 @@ public class ScheduleFullForArchiveDTO {
     private boolean archived;
     private SemesterDTO semester;
     private List<ScheduleForGroupDTO> schedule;
-    private List<TemporaryScheduleForArchiveDTO> temporarySchedule;
 }

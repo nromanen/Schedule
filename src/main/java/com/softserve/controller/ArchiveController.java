@@ -3,7 +3,6 @@ package com.softserve.controller;
 import com.softserve.dto.*;
 import com.softserve.entity.Schedule;
 import com.softserve.entity.Semester;
-import com.softserve.mapper.TemporaryScheduleMapperForArchive;
 import com.softserve.service.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -26,17 +25,13 @@ public class ArchiveController {
     private final ScheduleService scheduleService;
     private final SemesterService semesterService;
     private final LessonService lessonService;
-    private final TemporaryScheduleService temporaryScheduleService;
-    private final TemporaryScheduleMapperForArchive temporaryScheduleMapper;
 
     @Autowired
-    public ArchiveController(ArchiveService archiveService, ScheduleService scheduleService, SemesterService semesterService, LessonService lessonService, TemporaryScheduleService temporaryScheduleService, TemporaryScheduleMapperForArchive temporaryScheduleMapper) {
+    public ArchiveController(ArchiveService archiveService, ScheduleService scheduleService, SemesterService semesterService, LessonService lessonService) {
         this.archiveService = archiveService;
         this.scheduleService = scheduleService;
         this.semesterService = semesterService;
         this.lessonService = lessonService;
-        this.temporaryScheduleService = temporaryScheduleService;
-        this.temporaryScheduleMapper = temporaryScheduleMapper;
     }
 
     @PostMapping("/{semesterId}")
@@ -50,9 +45,9 @@ public class ArchiveController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageDTO(String.format("Schedules with semesterId = %d not found.", semesterId)));
         }
         ScheduleFullDTO scheduleFullDTO = scheduleService.getFullScheduleForSemester(semesterId);
-        List<TemporaryScheduleForArchiveDTO> temporaryScheduleDTOs = temporaryScheduleMapper.convertToNewDtoList(temporaryScheduleService.getAllBySemesterId(semesterId));
-        ScheduleFullForArchiveDTO scheduleForArchiveDTO = new ScheduleFullForArchiveDTO(true, scheduleFullDTO.getSemester(), scheduleFullDTO.getSchedule(), temporaryScheduleDTOs);
-        temporaryScheduleService.deleteTemporarySchedulesBySemesterId(semesterId);
+
+        ScheduleFullForArchiveDTO scheduleForArchiveDTO = new ScheduleFullForArchiveDTO(true, scheduleFullDTO.getSemester(), scheduleFullDTO.getSchedule());
+
         scheduleService.deleteSchedulesBySemesterId(semesterId);
         lessonService.deleteLessonBySemesterId(semesterId);
         semesterService.delete(semester);
