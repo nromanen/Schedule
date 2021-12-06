@@ -9,14 +9,13 @@ import com.softserve.config.SecurityWebApplicationInitializer;
 import com.softserve.config.WebMvcConfig;
 import com.softserve.dto.GroupDTO;
 import com.softserve.dto.StudentDTO;
+import com.softserve.dto.StudentForUpdateListDTO;
+import com.softserve.dto.StudentWithoutGroupDTO;
 import com.softserve.exception.apierror.ApiValidationError;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.junit.Before;
-import org.junit.ClassRule;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +35,8 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import static java.util.Arrays.asList;
@@ -126,6 +127,7 @@ public class StudentControllerTest {
                 .email("romaniuk@gmail.com")
                 .group(groupDTO)
                 .build();
+
     }
 
     @Test
@@ -157,6 +159,37 @@ public class StudentControllerTest {
     public void updateStudent() throws Exception {
         assertions.assertForUpdate(studentDTOWithId5L);
     }
+
+
+    @Test
+    public void updateListStudent() throws Exception {
+        List<StudentWithoutGroupDTO> students = new ArrayList<>();
+        StudentWithoutGroupDTO student = new StudentWithoutGroupDTO();
+        student.setEmail("aware.123db@gmail.com");
+        student.setId(4L);
+        student.setName("First Name11");
+        student.setSurname("First Surname11");
+        student.setPatronymic("First Patronymic11");
+        students.add(student);
+        student = new StudentWithoutGroupDTO();
+        student.setEmail("student@gmail.com");
+        student.setId(5L);
+        student.setName("First Name22");
+        student.setSurname("First Surname22");
+        student.setPatronymic("First Patronymic22");
+        students.add(student);
+        StudentForUpdateListDTO studentForUpdateListDTO = new StudentForUpdateListDTO();
+        studentForUpdateListDTO.setStudentsWithoutGroupDTOList(students);
+        studentForUpdateListDTO.setGroupId(1L);
+
+        mockMvc.perform(put("/students/move-to-group")
+                        .content(objectMapper.writeValueAsString(studentForUpdateListDTO))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.[0].group.id").value(studentForUpdateListDTO.getGroupId()));
+
+    }
+
 
     @Test
     public void throwFieldAlreadyExistsExceptionWhenUpdate() throws Exception {

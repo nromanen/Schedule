@@ -1,6 +1,8 @@
 package com.softserve.controller;
 
 import com.softserve.dto.StudentDTO;
+import com.softserve.dto.StudentForUpdateListDTO;
+import com.softserve.dto.StudentWithoutGroupDTO;
 import com.softserve.entity.Student;
 import com.softserve.mapper.StudentMapper;
 import com.softserve.service.StudentService;
@@ -15,10 +17,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 @Slf4j
 @RestController
@@ -65,6 +65,19 @@ public class StudentController {
         log.info("Enter into update of StudentController with studentDTO = [{}] ", studentDTO);
         Student updatedStudent = studentService.update(studentMapper.convertToEntity(studentDTO));
         return ResponseEntity.status(HttpStatus.OK).body(studentMapper.convertToDTO(updatedStudent));
+    }
+
+    @PutMapping("/move-to-group")
+    @PreAuthorize("hasRole('MANAGER')")
+    @ApiOperation(value = "Update List of students")
+    public ResponseEntity<List<StudentDTO>> updateList(@RequestBody StudentForUpdateListDTO studentsForUpdateDTO) {
+        log.info("Enter into update of StudentController with studentDTO = [{}] ", studentsForUpdateDTO);
+        studentService.updateStudentList(studentsForUpdateDTO);
+        List<StudentDTO> updatedStudents = new ArrayList<>();
+        for (StudentWithoutGroupDTO students : studentsForUpdateDTO.getStudentsWithoutGroupDTOList()) {
+            updatedStudents.add(studentMapper.convertToDTO(studentService.getById(students.getId())));
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(updatedStudents);
     }
 
     @DeleteMapping("/{id}")
