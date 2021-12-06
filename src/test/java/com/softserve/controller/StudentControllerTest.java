@@ -162,7 +162,6 @@ public class StudentControllerTest {
 
 
     @Test
-    @Ignore("this test dont work, is fixed later")
     public void updateListStudent() throws Exception {
         List<StudentWithoutGroupDTO> students = new ArrayList<>();
         StudentWithoutGroupDTO student = new StudentWithoutGroupDTO();
@@ -184,9 +183,10 @@ public class StudentControllerTest {
         studentForUpdateListDTO.setGroupId(1L);
 
         mockMvc.perform(put("/students/move-to-group")
-                        .content(objectMapper.writeValueAsString(students))
+                        .content(objectMapper.writeValueAsString(studentForUpdateListDTO))
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.[0].group.id").value(studentForUpdateListDTO.getGroupId()));
 
     }
 
