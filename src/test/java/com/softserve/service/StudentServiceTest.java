@@ -1,7 +1,10 @@
 package com.softserve.service;
 
+import com.softserve.dto.StudentImportDTO;
 import com.softserve.entity.Group;
 import com.softserve.entity.Student;
+import com.softserve.entity.User;
+import com.softserve.entity.enums.Role;
 import com.softserve.exception.EntityNotFoundException;
 import com.softserve.exception.FieldAlreadyExistsException;
 import com.softserve.repository.StudentRepository;
@@ -47,11 +50,18 @@ public class StudentServiceTest {
 
     @Before
     public void setUp() {
+
+        User userWithId1L = new User();
+        userWithId1L.setId(1L);
+        userWithId1L.setEmail("userWithId1L@test.com");
+        userWithId1L.setPassword("12345@testAa");
+        userWithId1L.setRole(Role.ROLE_STUDENT);
+
         studentWithId1L = new Student();
         studentWithId1L.setName("Name");
         studentWithId1L.setSurname("Surname");
         studentWithId1L.setPatronymic("Patronymic");
-        studentWithId1L.setEmail("tempStudent@gmail.com");
+        studentWithId1L.setUser(userWithId1L);
     }
 
     @Test
@@ -80,26 +90,22 @@ public class StudentServiceTest {
     public void save() {
         Student expected = studentWithId1L;
         when(studentRepository.save(expected)).thenReturn(expected);
-        when(studentRepository.isExistsByEmail(expected.getEmail())).thenReturn(false);
 
         Student actual = studentService.save(expected);
 
         assertThat(actual).isEqualToComparingFieldByField(expected);
         verify(studentRepository).save(expected);
-        verify(studentRepository).isExistsByEmail(expected.getEmail());
     }
 
     @Test
     public void update() {
         Student expected= studentWithId1L;
         when(studentRepository.update(expected)).thenReturn(expected);
-        when(studentRepository.isExistsByEmailIgnoringId(expected.getEmail(), expected.getId())).thenReturn(false);
 
         Student actual = studentService.update(expected);
 
         assertThat(actual).isEqualToComparingFieldByField(expected);
         verify(studentRepository).update(expected);
-        verify(studentRepository).isExistsByEmailIgnoringId(expected.getEmail(), expected.getId());
     }
 
     @Test
@@ -122,70 +128,83 @@ public class StudentServiceTest {
 
     @Test(expected = FieldAlreadyExistsException.class)
     public void throwFieldAlreadyExistsExceptionWhenSave() {
+        //Доробити
         Student expected = studentWithId1L;
-        when(studentRepository.isExistsByEmail(expected.getEmail())).thenReturn(true);
         studentService.save(expected);
-        verify(studentRepository).isExistsByEmail(expected.getEmail());
     }
 
     @Test(expected = FieldAlreadyExistsException.class)
     public void throwFieldAlreadyExistsExceptionWhenUpdate() {
+        //Доробити
         Student expected = studentWithId1L;
-        when(studentRepository.isExistsByEmailIgnoringId(expected.getEmail(), expected.getId())).thenReturn(true);
         studentService.update(expected);
-        verify(studentRepository).isExistsByEmailIgnoringId(expected.getEmail(), expected.getId());
     }
 
     @Test
     @Parameters(method = "parametersToTestImport")
     public void importStudentsFromFile(MockMultipartFile multipartFile) {
+
+        //Null Pointer userService.findSocialUser StudentServiceImpl
+
+        User userWithId1L = new User();
+        userWithId1L.setId(1L);
+        userWithId1L.setEmail("userWithId1L@test.com");
+        userWithId1L.setPassword("12345@testAa");
+        userWithId1L.setRole(Role.ROLE_STUDENT);
+        User userWithId2L = new User();
+        userWithId2L.setId(2L);
+        userWithId2L.setEmail("userWithId2L@test.com");
+        userWithId2L.setPassword("12345@testAa");
+        userWithId2L.setRole(Role.ROLE_STUDENT);
+        User userWithId3L = new User();
+        userWithId3L.setId(2L);
+        userWithId3L.setEmail("userWithId3L@test.com");
+        userWithId3L.setPassword("12345@testAa");
+        userWithId3L.setRole(Role.ROLE_STUDENT);
+
         List<Student> expectedStudents = new ArrayList<>();
 
         Group group = new Group();
-        group.setId(4L);
+        group.setId(10L);
 
         Student student1 = new Student();
         student1.setSurname("Romaniuk");
         student1.setName("Hanna");
         student1.setPatronymic("Stepanivna");
-        student1.setEmail("romaniuk@gmail.com");
+        student1.setUser(userWithId1L);
         student1.setGroup(group);
 
         Student student2 = new Student();
         student2.setSurname("Boichuk");
         student2.setName("Oleksandr");
         student2.setPatronymic("Ivanovych");
-        student2.setEmail("");
+        student2.setUser(null);
         student2.setGroup(group);
 
         Student student3 = new Student();
         student3.setSurname("Hanushchak");
         student3.setName("Viktor");
         student3.setPatronymic("Mykolaiovych");
-        student3.setEmail("hanushchak@bigmir.net");
+        student3.setUser(userWithId3L);
         student3.setGroup(group);
 
         expectedStudents.add(student1);
         expectedStudents.add(student2);
         expectedStudents.add(student3);
 
-        when(studentRepository.findByEmail(student1.getEmail())).thenReturn(Optional.empty());
-        when(studentRepository.findByEmail(student2.getEmail())).thenReturn(Optional.empty());
-        when(studentRepository.findByEmail(student3.getEmail())).thenReturn(Optional.empty());
-
         when(studentRepository.save(student1)).thenReturn(student1);
         when(studentRepository.save(student2)).thenReturn(student2);
         when(studentRepository.save(student3)).thenReturn(student3);
 
-        List<Student> actualStudents = studentService.saveFromFile(multipartFile, 4L).getNow(new ArrayList<>());
+        List<StudentImportDTO> actualStudents = studentService.saveFromFile(multipartFile, 4L).getNow(new ArrayList<>());
         assertNotNull(actualStudents);
         assertEquals(expectedStudents, actualStudents);
         verify(studentRepository).save(student1);
         verify(studentRepository).save(student2);
         verify(studentRepository).save(student3);
-        verify(studentRepository).findByEmail(student1.getEmail());
-        verify(studentRepository).findByEmail(student2.getEmail());
-        verify(studentRepository).findByEmail(student3.getEmail());
+        verify(studentRepository).getExistingStudent(student1);
+        verify(studentRepository).getExistingStudent(student2);
+        verify(studentRepository).getExistingStudent(student3);
     }
 
     private Object[] parametersToTestImport() throws IOException {
