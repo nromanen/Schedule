@@ -98,6 +98,7 @@ public class StudentServiceImpl implements StudentService {
      * @param studentDTO StudentDTO instance
      * @return saved Student entity
      */
+    @Transactional
     @Override
     public Student save(StudentDTO studentDTO) {
         log.info("Enter into save method with studentDTO:{}", studentDTO);
@@ -126,6 +127,7 @@ public class StudentServiceImpl implements StudentService {
         return studentRepository.update(object);
     }
 
+    @Transactional
     @Override
     public Student update(StudentDTO studentDTO) {
         log.info("Enter into update method with studentDTO:{}", studentDTO);
