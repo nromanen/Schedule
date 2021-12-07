@@ -15,14 +15,27 @@ public class StudentRepositoryImpl extends BasicRepositoryImpl<Student, Long> im
     private static final String HQL_IS_EXISTS_BY_EMAIL
             = "SELECT (count(*) > 0) "
             + "FROM Student s "
-            + "WHERE s.email = :email";
+            + "WHERE s.user.email = :email";
 
-    private static final String HQL_IS_EXISTS_BY_EMAIL_IGNORING_ID
+    private static final String HQL_IS_EXISTS_BY_EMAIL_IN_CURRENT_STUDENT
             = "SELECT (count(*) > 0) "
             + "FROM Student s "
-            + "WHERE s.email = :email AND s.id != :id";
+            + "WHERE s.user.email = :email AND s.id = :id";
 
     private static final String FIND_BY_EMAIL = "SELECT s FROM Student s JOIN FETCH s.group WHERE s.email = :email";
+
+    @Override
+    public Optional<Student> getExistingStudent(Student student) {
+        return sessionFactory.getCurrentSession().createQuery(
+                        "select s from Student s " +
+                                "where s.name = :sName and " +
+                                "s.surname = :sSurname and " +
+                                "s.patronymic = :sPatronymic")
+                .setParameter("sName", student.getName())
+                .setParameter("sSurname", student.getSurname())
+                .setParameter("sPatronymic", student.getPatronymic())
+                .uniqueResultOptional();
+    }
 
     /**
      * The method used for finding out if Student exists by email
@@ -31,7 +44,7 @@ public class StudentRepositoryImpl extends BasicRepositoryImpl<Student, Long> im
      * @return boolean : if exists - true, else - false
      */
     @Override
-    public boolean isExistsByEmail(String email) {
+    public boolean isEmailInUse(String email) {
         return (boolean) sessionFactory.getCurrentSession()
                 .createQuery(HQL_IS_EXISTS_BY_EMAIL)
                 .setParameter("email", email)
@@ -39,30 +52,19 @@ public class StudentRepositoryImpl extends BasicRepositoryImpl<Student, Long> im
     }
 
     /**
-     * The method used for finding out if Student exists by email ignoring id
+     * The method used for finding out if Student exists by email and id
      *
      * @param email String email used to find Student
-     * @param id Long id, which is ignored during the search
+     * @param id Long id, which is used to find Student
      * @return boolean : if exists - true, else - false
      */
     @Override
-    public boolean isExistsByEmailIgnoringId(String email, Long id) {
+    public boolean isEmailForThisStudent(String email, Long id) {
         return (boolean) sessionFactory.getCurrentSession()
-                .createQuery(HQL_IS_EXISTS_BY_EMAIL_IGNORING_ID)
+                .createQuery(HQL_IS_EXISTS_BY_EMAIL_IN_CURRENT_STUDENT)
                 .setParameter("email", email)
                 .setParameter("id", id)
                 .getSingleResult();
     }
 
-    /**
-     * The method used for getting Student by email from database
-     * @param email String email used to find Student by it
-     * @return optional student or empty object if student with provided email doesn't exist
-     */
-    @Override
-    public Optional<Student> findByEmail(String email) {
-        log.info("In findByEmail() with email: {}", email);
-        return sessionFactory.getCurrentSession()
-                .createQuery(FIND_BY_EMAIL, Student.class).setParameter("email", email).uniqueResultOptional();
-    }
 }

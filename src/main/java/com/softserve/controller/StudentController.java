@@ -1,8 +1,8 @@
 package com.softserve.controller;
 
 import com.softserve.dto.StudentDTO;
-import com.softserve.entity.Student;
-import com.softserve.mapper.StudentMapper;
+import com.softserve.dto.StudentImportDTO;
+import com.softserve.mapper.StudentMapperNew;
 import com.softserve.service.StudentService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -15,10 +15,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 @Slf4j
 @RestController
@@ -27,10 +25,10 @@ import java.util.concurrent.ExecutionException;
 public class StudentController {
 
     private final StudentService studentService;
-    private final StudentMapper studentMapper;
+    private final StudentMapperNew studentMapper;
 
     @Autowired
-    public StudentController(StudentService studentService, StudentMapper studentMapper) {
+    public StudentController(StudentService studentService, StudentMapperNew studentMapper) {
         this.studentService = studentService;
         this.studentMapper = studentMapper;
     }
@@ -46,7 +44,7 @@ public class StudentController {
     @ApiOperation(value = "Get student by id")
     public ResponseEntity<StudentDTO> getById(@PathVariable("id") long id) {
         log.info("Enter into getById of StudentController with id {} ", id);
-        return ResponseEntity.status(HttpStatus.OK).body(studentMapper.convertToDTO(studentService.getById(id)));
+        return ResponseEntity.status(HttpStatus.OK).body(studentMapper.studentToStudentDTO(studentService.getById(id)));
     }
 
     @PostMapping
@@ -54,8 +52,10 @@ public class StudentController {
     @ApiOperation(value = "Create new student")
     public ResponseEntity<StudentDTO> save(@RequestBody StudentDTO studentDTO) {
         log.info("Enter into save of StudentController with studentDTO = [{}] ", studentDTO);
-        Student savedStudent = studentService.save(studentMapper.convertToEntity(studentDTO));
-        return ResponseEntity.status(HttpStatus.CREATED).body(studentMapper.convertToDTO(savedStudent));
+//        Student savedStudent = studentService.save(studentMapper.studentDTOToStudent(studentDTO));
+//        return ResponseEntity.status(HttpStatus.CREATED).body(studentMapper.studentToStudentDTO(savedStudent));
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(studentMapper.studentToStudentDTO(studentService.save(studentDTO)));
     }
 
     @PutMapping
@@ -63,8 +63,10 @@ public class StudentController {
     @ApiOperation(value = "Update existing student")
     public ResponseEntity<StudentDTO> update(@RequestBody StudentDTO studentDTO) {
         log.info("Enter into update of StudentController with studentDTO = [{}] ", studentDTO);
-        Student updatedStudent = studentService.update(studentMapper.convertToEntity(studentDTO));
-        return ResponseEntity.status(HttpStatus.OK).body(studentMapper.convertToDTO(updatedStudent));
+//        Student updatedStudent = studentService.update(studentMapper.studentDTOToStudent(studentDTO));
+//        return ResponseEntity.status(HttpStatus.OK).body(studentMapper.studentToStudentDTO(updatedStudent));
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(studentMapper.studentToStudentDTO(studentService.update(studentDTO)));
     }
 
     @DeleteMapping("/{id}")
@@ -78,9 +80,9 @@ public class StudentController {
 
     @PostMapping("/import")
     @ApiOperation(value = "import students from file to database")
-    public ResponseEntity<List<StudentDTO>> importFromCsv(@ApiParam(value = "csv or txt format is required")
+    public ResponseEntity<List<StudentImportDTO>> importFromCsv(@ApiParam(value = "csv format is required")
             @RequestParam("file") MultipartFile file, @RequestParam Long groupId) {
-        return ResponseEntity.ok(studentMapper.convertToDTOList(studentService.saveFromFile(file, groupId)
-                .getNow(new ArrayList<>())));
+        return ResponseEntity.ok(studentService.saveFromFile(file, groupId)
+                .getNow(new ArrayList<>()));
     }
 }

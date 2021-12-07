@@ -1,8 +1,8 @@
 package com.softserve.util;
 
 import com.opencsv.bean.CsvToBeanBuilder;
+import com.softserve.dto.StudentImportDTO;
 import com.softserve.dto.TeacherImportDTO;
-import com.softserve.entity.Student;
 import com.softserve.exception.ParseFileException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,19 +19,19 @@ import java.util.List;
 
 @Slf4j
 public class CsvFileParser {
-    public static List<Student> getStudentsFromFile(MultipartFile file){
+    public static List<StudentImportDTO> getStudentsFromFile(MultipartFile file){
         String fileName = String.join("", "students_",
                 String.valueOf(LocalDateTime.now().getNano()), ".csv");
 
         File csvFile = new File(fileName);
 
-        List<Student> students = new ArrayList<>();
+        List<StudentImportDTO> students = new ArrayList<>();
         try {
             file.transferTo(csvFile);
 
             try (Reader reader = new FileReader(csvFile, StandardCharsets.UTF_8)) {
-                students = new CsvToBeanBuilder<Student>(reader)
-                        .withType(Student.class)
+                students = new CsvToBeanBuilder<StudentImportDTO>(reader)
+                        .withType(StudentImportDTO.class)
                         .build().parse();
             }
         } catch (RuntimeException e) {
