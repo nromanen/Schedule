@@ -5,9 +5,9 @@ import com.softserve.entity.Student;
 import java.util.Optional;
 
 public interface StudentRepository extends BasicRepository <Student, Long> {
-    boolean isExistsByEmail(String email);
+    Optional<Student> getExistingStudent (Student student);
 
-    boolean isExistsByEmailIgnoringId(String email, Long id);
+    boolean isEmailInUse(String email);
 
-    Optional<Student> findByEmail(String email);
+    boolean isEmailForThisStudent(String email, Long id);
 }
