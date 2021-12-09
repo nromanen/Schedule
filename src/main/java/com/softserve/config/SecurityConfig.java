@@ -3,6 +3,7 @@ package com.softserve.config;
 import com.softserve.entity.User;
 import com.softserve.exception.AuthGoogleEmailDontExistException;
 import com.softserve.exception.SocialClientRegistrationException;
+import com.softserve.security.customFilter.AuthFilter;
 import com.softserve.security.jwt.JwtConfigurer;
 import com.softserve.security.jwt.JwtTokenProvider;
 import com.softserve.service.UserService;
@@ -29,6 +30,7 @@ import org.springframework.security.oauth2.client.registration.InMemoryClientReg
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableOAuth2Client;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.logout.LogoutFilter;
 
 import javax.security.sasl.AuthenticationException;
 import javax.servlet.http.HttpServletResponse;
@@ -96,6 +98,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         this.userService = userService;
     }
 
+    @Autowired
+    private AuthFilter authFilter;
+
     @Bean
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
@@ -105,6 +110,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
+                .addFilterBefore(authFilter, LogoutFilter.class)
                 .cors()
                 .and()
                 .httpBasic().disable()
