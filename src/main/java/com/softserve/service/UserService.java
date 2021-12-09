@@ -24,5 +24,8 @@ public interface UserService extends BasicService <User, Long> {
     String changePasswordForCurrentUser(User user, String oldPassword, String newPassword);
 
     User automaticRegistration(String email, Role role);
+
+    User registerAutomatic (String email, Role role);
+
 }
 

@@ -30,6 +30,7 @@ public abstract class StudentMapperNew {
     @Named("userToEmail")
     public String userToEmail(User user) {
         if(user != null) {
+            //get email
             return userService.getById(user.getId()).getEmail();
         }
         return null;

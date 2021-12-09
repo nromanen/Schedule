@@ -9,6 +9,7 @@ import com.softserve.entity.User;
 import com.softserve.entity.enums.Role;
 import com.softserve.exception.EntityNotFoundException;
 import com.softserve.exception.FieldAlreadyExistsException;
+import com.softserve.exception.FieldNullException;
 import com.softserve.exception.ImportRoleConflictException;
 import com.softserve.mapper.GroupMapper;
 import com.softserve.mapper.StudentMapperNew;
@@ -133,13 +134,18 @@ public class StudentServiceImpl implements StudentService {
         log.info("Enter into update method with studentDTO:{}", studentDTO);
         Student student = studentMapper.studentDTOToStudent(studentDTO);
         if (isEmailNullOrEmpty(studentDTO.getEmail())) {
-            return update(student);
+            throw new FieldNullException(Student.class, "email");
         }
         if(student.getUser() != null) {
             boolean test2 = isEmailInUse(studentDTO.getEmail());
             boolean test3 = isEmailForThisStudent(studentDTO.getEmail(), studentDTO.getId());
 
-            if(student.getUser() != null && test2 && !test3) {
+//            boolean test = checkStudent(studentDTO.getEmail(), studentDTO.getId());
+//            if(student.getUser() != null && !test)
+
+            if(student.getUser() != null && test2 && !test3)
+
+            {
                 return throwFieldAlreadyExist(student);
             }
         }
@@ -151,6 +157,17 @@ public class StudentServiceImpl implements StudentService {
         }
         return update(registerStudent(student, studentDTO.getEmail()));
     }
+
+//    private boolean checkStudent(String email, Long id) {
+//        //findIdByEmail and return long
+//        Optional<Student> optionalStudent = studentRepository.findByEmail(email);
+//        if (optionalStudent.isPresent()){
+//            if(Objects.equals(optionalStudent.get().getId(), id)){
+//                return true;
+//            }
+//        }
+//        return false;
+//    }
 
     /**
      * Method deletes an existing Student from Repository
@@ -346,7 +363,7 @@ public class StudentServiceImpl implements StudentService {
      */
     private Student registerStudent(Student student, String email) {
         log.info("Enter into registerStudent method with student {} and email:{}", student, email);
-        User registeredUserForStudent = userService.automaticRegistration(email, Role.ROLE_STUDENT);
+        User registeredUserForStudent = userService.registerAutomatic(email, Role.ROLE_STUDENT);
         student.setUser(registeredUserForStudent);
         return student;
     }

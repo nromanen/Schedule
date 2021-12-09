@@ -67,4 +67,12 @@ public class StudentRepositoryImpl extends BasicRepositoryImpl<Student, Long> im
                 .getSingleResult();
     }
 
+    @Override
+    public Optional<Student> findByEmail(String email) {
+        return sessionFactory.getCurrentSession().createQuery(
+                        "select s from Student s " +
+                                "where s.user.email = :sEmail")
+                .setParameter("sEmail", email)
+                .uniqueResultOptional();
+    }
 }

@@ -218,7 +218,7 @@ public class TeacherServiceImpl implements TeacherService {
 
     private Teacher registerTeacher(Teacher teacher, String email) {
             log.info("Enter into registerTeacher method with teacher {} and email:{}", teacher, email);
-            User registeredUserForTeacher = userService.automaticRegistration(email, Role.ROLE_TEACHER);
+            User registeredUserForTeacher = userService.registerAutomatic(email, Role.ROLE_TEACHER);
             teacher.setUserId(registeredUserForTeacher.getId());
             return teacher;
     }
