@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.LinkedList;
 import java.util.List;
 
 @RestController
@@ -62,9 +63,27 @@ public class ArchiveController {
     @GetMapping("/{semesterId}")
     @ApiOperation(value = "Get archive schedule by semesterId from mongo db")
     @PreAuthorize("hasRole('MANAGER')")
-    public ResponseEntity<ScheduleFullForArchiveDTO> getScheduleBySemesterId(@PathVariable("semesterId") Long semesterId) {
+    public ResponseEntity<SemesterWithGroupsDTO> getScheduleBySemesterId(@PathVariable("semesterId") Long semesterId) {
         log.info("In getScheduleBySemesterId with semesterId = {}", semesterId);
-        return ResponseEntity.ok().body(archiveService.getArchiveScheduleBySemesterId(semesterId));
+        SemesterWithGroupsDTO semesterWithGroupsDTO = new SemesterWithGroupsDTO();
+        ScheduleFullForArchiveDTO scheduleFullForArchiveDTO;
+        scheduleFullForArchiveDTO = archiveService.getArchiveScheduleBySemesterId(semesterId);
+        semesterWithGroupsDTO.setCurrentSemester(scheduleFullForArchiveDTO.getSemester().isDefaultSemester());
+        semesterWithGroupsDTO.setDaysOfWeek(scheduleFullForArchiveDTO.getSemester().getDaysOfWeek());
+        semesterWithGroupsDTO.setDescription(scheduleFullForArchiveDTO.getSemester().getDescription());
+        semesterWithGroupsDTO.setDisable(scheduleFullForArchiveDTO.getSemester().isDisable());
+        semesterWithGroupsDTO.setEndDay(scheduleFullForArchiveDTO.getSemester().getEndDay());
+        semesterWithGroupsDTO.setId(scheduleFullForArchiveDTO.getSemester().getId());
+        semesterWithGroupsDTO.setPeriods(scheduleFullForArchiveDTO.getSemester().getPeriods());
+        semesterWithGroupsDTO.setStartDay(scheduleFullForArchiveDTO.getSemester().getStartDay());
+        semesterWithGroupsDTO.setYear(scheduleFullForArchiveDTO.getSemester().getYear());
+        semesterWithGroupsDTO.setDefaultSemester(scheduleFullForArchiveDTO.getSemester().isDefaultSemester());
+        LinkedList<GroupDTO> groups = new LinkedList<>();
+        for (ScheduleForGroupDTO scheduleForGroupDTO : scheduleFullForArchiveDTO.getSchedule()) {
+            groups.add(scheduleForGroupDTO.getGroup());
+        }
+        semesterWithGroupsDTO.setGroups(groups);
+        return ResponseEntity.ok().body(semesterWithGroupsDTO);
     }
 
     @GetMapping(value = "all-semesters")
