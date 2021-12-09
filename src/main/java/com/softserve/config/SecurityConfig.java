@@ -234,7 +234,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 String jwtToken = jwtTokenProvider.createToken(user.getEmail(), user.getRole().toString());
                 response.sendRedirect(url + "login?social=true&token=" + jwtToken);
             }else {
-               throw new AuthGoogleEmailDontExistException("Email dont registered in DataBase: ", email);
+               throw new AuthGoogleEmailDontExistException("Email dont registered in system: ", email);
             }
         };
     }
