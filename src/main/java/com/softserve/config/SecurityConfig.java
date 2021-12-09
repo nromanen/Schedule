@@ -1,6 +1,7 @@
 package com.softserve.config;
 
 import com.softserve.entity.User;
+import com.softserve.exception.AuthGoogleEmailDontExistException;
 import com.softserve.exception.SocialClientRegistrationException;
 import com.softserve.security.jwt.JwtConfigurer;
 import com.softserve.security.jwt.JwtTokenProvider;
@@ -29,6 +30,7 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
+import javax.security.sasl.AuthenticationException;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Arrays;
 import java.util.List;
@@ -226,9 +228,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 String jwtToken = jwtTokenProvider.createToken(user.getEmail(), user.getRole().toString());
                 response.sendRedirect(url + "login?social=true&token=" + jwtToken);
             }else {
-                assert email != null;
-                String newEmail = email.replaceAll(".com", "");
-                response.sendRedirect(url + "auth/google-error/"+newEmail);
+               throw new AuthGoogleEmailDontExistException("Email dont registered in DataBase: ", email);
             }
         };
     }

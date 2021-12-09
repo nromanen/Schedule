@@ -257,6 +257,16 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return buildResponseEntity(apiError);
     }
 
+
+    @ExceptionHandler(AuthGoogleEmailDontExistException.class)
+    protected ResponseEntity<Object> handleAuthGoogle(AuthGoogleEmailDontExistException ex) {
+        ApiError apiError = new ApiError(BAD_REQUEST);
+        apiError.setMessage("Unexpected error occurred, please refer to the logs for more information");
+        apiError.setDebugMessage(ex.getMessage());
+        log.error(ex.getMessage());
+        return buildResponseEntity(apiError);
+    }
+
     // Handle Exception in case, other handlers dod not handle it
     @ExceptionHandler(Exception.class)
     protected ResponseEntity<Object> handleOtherExceptions(Exception ex) {
@@ -266,6 +276,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         log.error(ex.getMessage());
         return buildResponseEntity(apiError);
     }
+
 
     //Response builder
     private ResponseEntity<Object> buildResponseEntity(ApiError apiError) {
