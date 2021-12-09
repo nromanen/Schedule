@@ -9,6 +9,7 @@ import com.softserve.dto.GroupDTO;
 import com.softserve.dto.PeriodDTO;
 import com.softserve.dto.SemesterDTO;
 import com.softserve.dto.SemesterWithGroupsDTO;
+import org.assertj.core.api.SoftAssertions;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,6 +33,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -342,9 +344,13 @@ public class SemesterControllerTest {
     @Test
     public void copySemester() throws Exception {
 
+        SoftAssertions softly = new SoftAssertions();
+
         TreeSet<DayOfWeek> dayOfWeeks = new TreeSet<>();
         dayOfWeeks.add(DayOfWeek.TUESDAY);
         dayOfWeeks.add(DayOfWeek.FRIDAY);
+        TreeSet<DayOfWeek> dayOfWeeks2 = new TreeSet<>();
+        dayOfWeeks2.add(DayOfWeek.MONDAY);
         GroupDTO groupDTO1 = new GroupDTO();
         groupDTO1.setId(4L);
         groupDTO1.setTitle("444");
@@ -352,10 +358,17 @@ public class SemesterControllerTest {
         GroupDTO groupDTO2 = new GroupDTO();
         groupDTO2.setId(5L);
         groupDTO2.setTitle("555");
+        groupDTO2.setDisable(false);
         List<GroupDTO> groupsDTO = new LinkedList<>();
         groupsDTO.add(groupDTO1);
         groupsDTO.add(groupDTO2);
-        groupDTO2.setDisable(false);
+        GroupDTO groupDTO3 = new GroupDTO();
+        groupDTO3.setId(6L);
+        groupDTO3.setTitle("666");
+        groupDTO3.setDisable(false);
+        List<GroupDTO> groupsDTOForSemesterId6 = new LinkedList<>();
+        groupsDTOForSemesterId6.add(groupDTO3);
+
         PeriodDTO periodDTO = new PeriodDTO();
         periodDTO.setId(7L);
         periodDTO.setName("4 para");
@@ -363,6 +376,14 @@ public class SemesterControllerTest {
         periodDTO.setEndTime(LocalTime.parse("04:00:00"));
         LinkedHashSet<PeriodDTO> periodDTOS = new LinkedHashSet<>();
         periodDTOS.add(periodDTO);
+
+        PeriodDTO periodDTO2 = new PeriodDTO();
+        periodDTO2.setId(5L);
+        periodDTO2.setName("2 para");
+        periodDTO2.setStartTime(LocalTime.parse("03:00:00"));
+        periodDTO2.setEndTime(LocalTime.parse("04:00:00"));
+        LinkedHashSet<PeriodDTO> periodDTOS2 = new LinkedHashSet<>();
+        periodDTOS2.add(periodDTO2);
 
         MvcResult mvcResult1 = mockMvc.perform(get("/semesters/6")
                 .contentType(MediaType.APPLICATION_JSON))
@@ -372,15 +393,14 @@ public class SemesterControllerTest {
         String contentAsString1 = mvcResult1.getResponse().getContentAsString();
         SemesterWithGroupsDTO semesterWithGroupsDTOBefore = objectMapper.readValue(contentAsString1, SemesterWithGroupsDTO.class);
 
-        Assert.assertEquals(semesterWithGroupsDTOBefore.getGroups(), Collections.EMPTY_LIST);
-        Assert.assertEquals(semesterWithGroupsDTOBefore.getDaysOfWeek(), Collections.EMPTY_SET);
-        Assert.assertEquals(semesterWithGroupsDTOBefore.getPeriods(), Collections.EMPTY_SET);
+        softly.assertThat(semesterWithGroupsDTOBefore.getGroups()).isEqualTo(groupsDTOForSemesterId6);
+        softly.assertThat(semesterWithGroupsDTOBefore.getDaysOfWeek()).isEqualTo(dayOfWeeks2);
+        softly.assertThat(semesterWithGroupsDTOBefore.getPeriods()).isEqualTo(periodDTOS2);
 
                 mockMvc.perform(post("/semesters/copy-semester").param("fromSemesterId", "5").param("toSemesterId", "6")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk());
-
 
         MvcResult mvcResultAfter = mockMvc.perform(get("/semesters/6")
                 .contentType(MediaType.APPLICATION_JSON))
@@ -390,9 +410,21 @@ public class SemesterControllerTest {
         String contentAsStringAfter = mvcResultAfter.getResponse().getContentAsString();
         SemesterWithGroupsDTO semesterWithGroupsDTOAfter = objectMapper.readValue(contentAsStringAfter, SemesterWithGroupsDTO.class);
 
-        Assert.assertEquals(groupsDTO, semesterWithGroupsDTOAfter.getGroups());
-        Assert.assertEquals(dayOfWeeks, semesterWithGroupsDTOAfter.getDaysOfWeek());
-        Assert.assertEquals(periodDTOS, semesterWithGroupsDTOAfter.getPeriods());
+        softly.assertThat(semesterWithGroupsDTOAfter.getGroups()).isEqualTo(groupsDTO);
+        softly.assertThat(semesterWithGroupsDTOAfter.getDaysOfWeek()).isEqualTo(dayOfWeeks);
+        softly.assertThat(semesterWithGroupsDTOAfter.getPeriods()).isEqualTo(periodDTOS);
 
+        MvcResult mvcResultAfter2 = mockMvc.perform(get("/semesters/5")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andReturn();
+        String contentAsStringBefore = mvcResultAfter2.getResponse().getContentAsString();
+        SemesterWithGroupsDTO semesterFromToCopy = objectMapper.readValue(contentAsStringBefore, SemesterWithGroupsDTO.class);
+
+        softly.assertThat(semesterFromToCopy.getGroups()).isEqualTo(groupsDTO);
+        softly.assertThat(semesterFromToCopy.getDaysOfWeek()).isEqualTo(dayOfWeeks);
+        softly.assertThat(semesterFromToCopy.getPeriods()).isEqualTo(periodDTOS);
+        softly.assertAll();
     }
 }

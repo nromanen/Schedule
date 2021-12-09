@@ -19,7 +19,7 @@ public abstract class LessonInfoMapper {
     public abstract Lesson lessonInfoDTOToLesson(LessonInfoDTO lessonInfoDTO);
 
     public List<Lesson> lessonForGroupsDTOToLessons(LessonForGroupsDTO lessonForGroupsDTO) {
-        if (lessonForGroupsDTO == null) {
+        if (lessonForGroupsDTO == null || lessonForGroupsDTO.getGroups() == null) {
             return new ArrayList<>();
         }
         List<Lesson> lessons = new ArrayList<>();
