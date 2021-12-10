@@ -52,8 +52,6 @@ public class StudentController {
     @ApiOperation(value = "Create new student")
     public ResponseEntity<StudentDTO> save(@RequestBody StudentDTO studentDTO) {
         log.info("Enter into save of StudentController with studentDTO = [{}] ", studentDTO);
-//        Student savedStudent = studentService.save(studentMapper.studentDTOToStudent(studentDTO));
-//        return ResponseEntity.status(HttpStatus.CREATED).body(studentMapper.studentToStudentDTO(savedStudent));
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(studentMapper.studentToStudentDTO(studentService.save(studentDTO)));
     }
@@ -63,8 +61,6 @@ public class StudentController {
     @ApiOperation(value = "Update existing student")
     public ResponseEntity<StudentDTO> update(@RequestBody StudentDTO studentDTO) {
         log.info("Enter into update of StudentController with studentDTO = [{}] ", studentDTO);
-//        Student updatedStudent = studentService.update(studentMapper.studentDTOToStudent(studentDTO));
-//        return ResponseEntity.status(HttpStatus.OK).body(studentMapper.studentToStudentDTO(updatedStudent));
         return ResponseEntity.status(HttpStatus.OK)
                 .body(studentMapper.studentToStudentDTO(studentService.update(studentDTO)));
     }

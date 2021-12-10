@@ -105,10 +105,11 @@ public class StudentServiceImpl implements StudentService {
         log.info("Enter into save method with studentDTO:{}", studentDTO);
         Student student = studentMapper.studentDTOToStudent(studentDTO);
         if(isEmailNullOrEmpty(studentDTO.getEmail())){
-            return save(student);
+            throw new FieldNullException(StudentDTO.class, "email");
         }
-        if(student.getUser() != null && isEmailInUse(studentDTO.getEmail())) {
-            throwFieldAlreadyExist(student);
+        Optional<User> optionalUser = userService.findSocialUser(studentDTO.getEmail());
+        if(optionalUser.isPresent() && isEmailInUse(studentDTO.getEmail())) {
+            throw new FieldAlreadyExistsException(Student.class, "email", studentDTO.getEmail());
         }
         return save(registerStudent(student, studentDTO.getEmail()));
     }
@@ -134,40 +135,29 @@ public class StudentServiceImpl implements StudentService {
         log.info("Enter into update method with studentDTO:{}", studentDTO);
         Student student = studentMapper.studentDTOToStudent(studentDTO);
         if (isEmailNullOrEmpty(studentDTO.getEmail())) {
-            throw new FieldNullException(Student.class, "email");
+            throw new FieldNullException(StudentDTO.class, "email");
         }
-        if(student.getUser() != null) {
-            boolean test2 = isEmailInUse(studentDTO.getEmail());
-            boolean test3 = isEmailForThisStudent(studentDTO.getEmail(), studentDTO.getId());
+        boolean test = studentRepository.isIdPresent(student.getId());
+        if(test){
 
-//            boolean test = checkStudent(studentDTO.getEmail(), studentDTO.getId());
-//            if(student.getUser() != null && !test)
+            Optional<User> userOptional = userService.findSocialUser(studentDTO.getEmail());
+            if(userOptional.isPresent()) {
 
-            if(student.getUser() != null && test2 && !test3)
-
-            {
-                return throwFieldAlreadyExist(student);
+                boolean test2 = studentRepository.isEmailForThisStudent(studentDTO.getEmail(), student.getId());
+                if (!test2) {
+                        throw new FieldAlreadyExistsException(Student.class, "email", studentDTO.getEmail());
+                } else {
+                    student.setUser(userOptional.get());
+                    return update(student);
+                }
+            }else {
+                return update(registerStudent(student, studentDTO.getEmail()));
             }
         }
-        Optional<User> userOptional = userService.findSocialUser(studentDTO.getEmail());
-        if(userOptional.isPresent()){
-            User user = userService.findByEmail(studentDTO.getEmail());
-            student.setUser(user);
-            return update(student);
+        else {
+            throw new EntityNotFoundException(Student.class, "email", studentDTO.getEmail());
         }
-        return update(registerStudent(student, studentDTO.getEmail()));
     }
-
-//    private boolean checkStudent(String email, Long id) {
-//        //findIdByEmail and return long
-//        Optional<Student> optionalStudent = studentRepository.findByEmail(email);
-//        if (optionalStudent.isPresent()){
-//            if(Objects.equals(optionalStudent.get().getId(), id)){
-//                return true;
-//            }
-//        }
-//        return false;
-//    }
 
     /**
      * Method deletes an existing Student from Repository
@@ -350,13 +340,6 @@ public class StudentServiceImpl implements StudentService {
     private boolean isEmailInUse(String email){return studentRepository.isEmailInUse(email);}
 
     /**
-     * The method used check if provided student from DB has this email
-     * @param email our email from studentDTO
-     */
-    private boolean isEmailForThisStudent(String email, Long id) {
-        return  studentRepository.isEmailForThisStudent(email,id);}
-
-    /**
      * The method for register new user with provided email and set user_id to provided student
      * @param email our email from studentDTO
      * @param student is our provided student
@@ -366,14 +349,6 @@ public class StudentServiceImpl implements StudentService {
         User registeredUserForStudent = userService.registerAutomatic(email, Role.ROLE_STUDENT);
         student.setUser(registeredUserForStudent);
         return student;
-    }
-
-    /**
-     * The method throws an exception if student with provided email exist
-     * @param student is student with email
-     */
-    private Student throwFieldAlreadyExist(Student student) {
-        throw new FieldAlreadyExistsException(Student.class, "email", student.getUser().getEmail());
     }
 
     /**

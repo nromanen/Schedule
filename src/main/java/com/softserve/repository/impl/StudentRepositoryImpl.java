@@ -5,8 +5,6 @@ import com.softserve.repository.StudentRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.TypedQuery;
-import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -22,15 +20,15 @@ public class StudentRepositoryImpl extends BasicRepositoryImpl<Student, Long> im
             + "FROM Student s "
             + "WHERE s.user.email = :email AND s.id = :id";
 
-    private static final String FIND_BY_EMAIL = "SELECT s FROM Student s JOIN FETCH s.group WHERE s.email = :email";
+    private static final String GET_STUDENT_WITH_FULL_NAME_SURNAME
+            = "select s from Student s " +
+            "where s.name = :sName and " +
+            "s.surname = :sSurname and " +
+            "s.patronymic = :sPatronymic";
 
     @Override
     public Optional<Student> getExistingStudent(Student student) {
-        return sessionFactory.getCurrentSession().createQuery(
-                        "select s from Student s " +
-                                "where s.name = :sName and " +
-                                "s.surname = :sSurname and " +
-                                "s.patronymic = :sPatronymic")
+        return sessionFactory.getCurrentSession().createQuery(GET_STUDENT_WITH_FULL_NAME_SURNAME)
                 .setParameter("sName", student.getName())
                 .setParameter("sSurname", student.getSurname())
                 .setParameter("sPatronymic", student.getPatronymic())
@@ -68,11 +66,13 @@ public class StudentRepositoryImpl extends BasicRepositoryImpl<Student, Long> im
     }
 
     @Override
-    public Optional<Student> findByEmail(String email) {
-        return sessionFactory.getCurrentSession().createQuery(
-                        "select s from Student s " +
-                                "where s.user.email = :sEmail")
-                .setParameter("sEmail", email)
-                .uniqueResultOptional();
+    public boolean isIdPresent(Long id) {
+        return (boolean) sessionFactory.getCurrentSession()
+                .createQuery("SELECT (count(*) > 0) "
+                        + "FROM Student s "
+                        + "WHERE s.id = :sId")
+                .setParameter("sId", id)
+                .getSingleResult();
     }
+
 }
