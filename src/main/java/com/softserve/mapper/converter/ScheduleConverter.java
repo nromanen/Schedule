@@ -5,10 +5,7 @@ import com.softserve.entity.*;
 import com.softserve.entity.enums.EvenOdd;
 import com.softserve.entity.enums.LessonType;
 import com.softserve.exception.ScheduleConflictException;
-import com.softserve.mapper.GroupMapper;
-import com.softserve.mapper.PeriodMapper;
-import com.softserve.mapper.SemesterMapper;
-import com.softserve.mapper.SemesterMapperImpl;
+import com.softserve.mapper.*;
 import com.softserve.repository.ScheduleRepository;
 import com.softserve.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,14 +29,16 @@ public class ScheduleConverter {
     private final MailService mailService;
     private final GroupMapper groupMapper;
     private final PeriodMapper periodMapper;
-
+    private final RoomForScheduleMapper roomForScheduleMapper;
+    private final LessonsInScheduleMapper lessonsInScheduleMapper;
 
 
     @Autowired
     public ScheduleConverter(ScheduleRepository scheduleRepository, LessonService lessonService, RoomService roomService,
                                GroupService groupService, TeacherService teacherService,
                                SemesterService semesterService, UserService userService, MailService mailService,
-                                GroupMapper groupMapper, PeriodMapper periodMapper) {
+                                GroupMapper groupMapper, PeriodMapper periodMapper, RoomForScheduleMapper roomForScheduleMapper,
+                             LessonsInScheduleMapper lessonsInScheduleMapper) {
         this.scheduleRepository = scheduleRepository;
         this.lessonService = lessonService;
         this.roomService = roomService;
@@ -50,6 +49,8 @@ public class ScheduleConverter {
         this.mailService = mailService;
         this.groupMapper = groupMapper;
         this.periodMapper = periodMapper;
+        this.roomForScheduleMapper = roomForScheduleMapper;
+        this.lessonsInScheduleMapper = lessonsInScheduleMapper;
     }
 
     public ScheduleForTeacherDTO getScheduleForTeacher(Long semesterId, Long teacherId) {
@@ -197,33 +198,13 @@ public class ScheduleConverter {
         for (var periodSchedule : uniquePeriods.entrySet()) {
             ClassesInScheduleForGroupDTO classesInScheduleForGroupDTO = new ClassesInScheduleForGroupDTO();
             classesInScheduleForGroupDTO.setPeriod(periodMapper.convertToDto(periodSchedule.getKey()));
-            classesInScheduleForGroupDTO.setWeeks(getLessonsForGroupForPeriodBySemesterAndDay(semesterId, groupId, period.getId(), day));
+            var evenOdd = periodSchedule.getValue().stream().collect(Collectors.partitioningBy(schedule -> schedule.getEvenOdd().equals(EvenOdd.EVEN)));
+            classesInScheduleForGroupDTO.setEven(lessonsInScheduleMapper.lessonToLessonsInScheduleDTO(evenOdd.get(Boolean.TRUE)));
+            classesInScheduleForGroupDTO.setOdd(lessonsInScheduleMapper.lessonToLessonsInScheduleDTO(evenOdd.get(Boolean.FALSE)));
             classesInScheduleForGroupDTOList.add(classesInScheduleForGroupDTO);
         }
 
         return classesInScheduleForGroupDTOList;
-    }
-
-    //get and fill even and odd lessons for group at some semester (by semester id) at some day for some period(by periodId)
-    private LessonInScheduleByWeekDTO getLessonsForGroupForPeriodBySemesterAndDay(Long semesterId, Long groupId, Long periodId, DayOfWeek day) {
-        log.info("In getLessonsForGroupForPeriodBySemesterAndDay(semesterId = [{}], groupId = [{}], periodId = [{}], day = [{}])", semesterId, groupId, periodId, day);
-        LessonInScheduleByWeekDTO lessonInScheduleByWeekDTO = new LessonInScheduleByWeekDTO();
-        Lesson lesson = scheduleRepository.lessonForGroupByDayBySemesterByPeriodByWeek(semesterId, groupId, periodId, day, EvenOdd.EVEN).orElse(null);
-        LessonsInScheduleDTO even = lessonsInScheduleMapper.lessonToLessonsInScheduleDTO(lesson);
-
-        if (lesson != null) {
-            even.setRoom(roomForScheduleMapper.roomToRoomForScheduleDTO(scheduleRepository.getRoomForLesson(semesterId, periodId, lesson.getId(), day, EvenOdd.EVEN)));
-            lessonInScheduleByWeekDTO.setEven(even);
-        }
-
-        Lesson lesson2 = scheduleRepository.lessonForGroupByDayBySemesterByPeriodByWeek(semesterId, groupId, periodId, day, EvenOdd.ODD).orElse(null);
-        LessonsInScheduleDTO odd = lessonsInScheduleMapper.lessonToLessonsInScheduleDTO(lesson2);
-        if (lesson2 != null) {
-            odd.setRoom(roomForScheduleMapper.roomToRoomForScheduleDTO(scheduleRepository.getRoomForLesson(semesterId, periodId, lesson2.getId(), day, EvenOdd.ODD)));
-            lessonInScheduleByWeekDTO.setOdd(odd);
-        }
-
-        return lessonInScheduleByWeekDTO;
     }
 
     //verifies if group with groupId has Schedule in semester with semesterId
@@ -234,7 +215,6 @@ public class ScheduleConverter {
 
     public Map<Room, Map<DayOfWeek, Map<EvenOdd, Map<Period, Map<String, Map<String, Map<LessonType, List<Lesson>>>>>>>>
     getScheduleForRooms(Long semesterId) {
-        log.info("Enter into getScheduleForRooms");
         List<Schedule> schedulesForRooms = scheduleRepository.getSchedulesOrderedByRooms(semesterId);
         List<Room> roomForDetails = roomService.getAll();
         Map<Room, Map<DayOfWeek, Map<EvenOdd, Map<Period, Map<String, Map<String, Map<LessonType, List<Lesson>>>>>>>> roomMap = new LinkedHashMap<>();
