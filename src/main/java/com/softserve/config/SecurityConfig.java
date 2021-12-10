@@ -32,7 +32,6 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 
-import javax.security.sasl.AuthenticationException;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Arrays;
 import java.util.List;
