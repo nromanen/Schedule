@@ -4,7 +4,6 @@ import com.softserve.dto.LessonInfoDTO;
 import com.softserve.dto.LessonsInRoomScheduleDTO;
 import com.softserve.dto.LessonsInScheduleDTO;
 import com.softserve.entity.Lesson;
-import com.softserve.entity.TemporarySchedule;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

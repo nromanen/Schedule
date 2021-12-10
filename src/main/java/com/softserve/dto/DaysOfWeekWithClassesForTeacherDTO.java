@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import java.time.DayOfWeek;
+import java.util.List;
 
 @Getter
 @Setter
@@ -13,7 +14,7 @@ import java.time.DayOfWeek;
 public class DaysOfWeekWithClassesForTeacherDTO {
     private DayOfWeek day;
     @JsonProperty("even")
-    private ClassesInScheduleForTeacherDTO evenWeek;
+    private List<ClassForTeacherScheduleDTO> even;
     @JsonProperty("odd")
-    private ClassesInScheduleForTeacherDTO oddWeek;
+    private List<ClassForTeacherScheduleDTO> odd;
 }

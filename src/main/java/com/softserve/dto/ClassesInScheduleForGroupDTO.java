@@ -11,5 +11,6 @@ import lombok.*;
 public class ClassesInScheduleForGroupDTO {
     @JsonProperty("class")
     private PeriodDTO period;
-    private LessonInScheduleByWeekDTO weeks;
+    private LessonsInScheduleDTO even;
+    private LessonsInScheduleDTO odd;
 }

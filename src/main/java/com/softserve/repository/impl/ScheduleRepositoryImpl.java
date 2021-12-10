@@ -6,10 +6,6 @@ import com.softserve.repository.ScheduleRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.List;
@@ -36,6 +32,222 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
             + "where s.lesson.semester.id = :semesterId "
             + "and s.lesson.teacher.id = :teacherId ";
 
+    private static final String GET_BY_ROOM_SEMESTER
+            = "SELECT s from Schedule s "
+            + "join fetch s.lesson as l "
+            + "join fetch l.semester as sem "
+            + "join fetch sem.periods "
+            + "join fetch  sem.groups "
+            + "where s.room.id = :roomId "
+            + "and s.lesson.semester.id = :semesterId "
+            + "order by s.period.startTime asc ";
+
+    private static final String CONFLICT_IN_GROUP_SCHEDULE
+            = SELECT_COUNT +
+            "and s.lesson.group.id = :groupId";
+
+    private static final String DELETE_BY_SEMESTER_ID
+            = "delete from Schedule s " +
+            "where s.id in " +
+            "(select sch.id " +
+            "from Schedule sch " +
+            "where sch.lesson.semester.id = :semesterId)";
+
+    private static final String CONFLICT_IN_GROUP_SCHEDULE_REPEATS
+            = CONFLICT_IN_GROUP_SCHEDULE
+            + " and ( s.evenOdd = :evenOdd or s.evenOdd = 'WEEKLY')";
+
+    private static final String COUNT_BY_GROUP_SEMESTER
+            = "select count (s.id) " +
+            "from  Schedule s " +
+            "where s.lesson.semester.id = :semesterId " +
+            "and s.lesson.group.id = :groupId"
+            + NOT_DISABLED_SQL;
+
+    private static final String GET_ALL_BY_TEACHER_SEMESTER
+            = "From Schedule s " +
+            "where s.lesson.semester.id = :semesterId " +
+            "and s.lesson.teacher.id = :teacherId " +
+            NOT_DISABLED_SQL;
+
+    private static final String GET_BY_SEMESTER
+            = "SELECT distinct s" +
+            " from Schedule s " +
+            "join fetch s.lesson sl " +
+            "join fetch sl.semester slm " +
+            "join fetch slm.periods " +
+            "join fetch slm.groups " +
+            "join fetch slm.daysOfWeek " +
+            "where s.lesson.semester.id = :semesterId " +
+            NOT_DISABLED_SQL;
+
+    private static final String CONFLICT_TEACHER
+            = SELECT_COUNT +
+            "and s.lesson.teacher.id = :teacherId ";
+
+    private static final String CONFLICT_TEACHER_EVEN
+            = CONFLICT_TEACHER +
+            "and ( s.evenOdd = :evenOdd or s.evenOdd = 'WEEKLY')";
+
+    private static final String UNIQUE_GROUPS_BY_SEMESTER
+            = "select distinct g1 from Group g1" +
+            " where g1.id in" +
+            " (select g.id from Schedule s join s.lesson.group g where s.lesson.semester.id = :semesterId"
+            + NOT_DISABLED_SQL + ")";
+
+    private static final String GET_LESSON_BY_DAY_SEMESTER_PERIOD_WEEK
+            = "select l1 from Lesson l1" +
+            " where l1.id in" +
+            " (select l.id " +
+            "from Schedule s " +
+            "join s.lesson " +
+            "l where (s.lesson.semester.id = :semesterId " +
+            "and s.dayOfWeek = :dayOfWeek " +
+            "and s.period.id = :periodId " +
+            "and s.lesson.group.id = :groupId " +
+            NOT_DISABLED_SQL + ") " +
+            "and (s.evenOdd = :evenOdd or s.evenOdd = 'WEEKLY'))";
+
+    private static final String GET_PERIODS_BY_GROUP_DAY_SEMESTER
+            = "select distinct p1 from Period p1" +
+            " where p1.id in" +
+            " (select p.id " +
+            "from Schedule s " +
+            "join s.period p " +
+            "where s.lesson.semester.id = :semesterId " +
+            "and s.lesson.group.id = :groupId " +
+            "and s.dayOfWeek = :dayOfWeek" +
+            NOT_DISABLED_SQL + ") " +
+            "order by p1.startTime";
+
+    private static final String GET_ROOM_FOR_LESSON
+            = "select r1 from Room r1" +
+            " where r1.id in" +
+            " (select r.id " +
+            "from Schedule s " +
+            "join s.room r " +
+            "where (s.lesson.semester.id = :semesterId " +
+            "and s.dayOfWeek = :dayOfWeek " +
+            "and s.period.id = :periodId " +
+            "and s.lesson.id = :lessonId " +
+            NOT_DISABLED_SQL + ") " +
+            "and (s.evenOdd = :evenOdd or s.evenOdd = 'WEEKLY'))";
+
+    private static final String GET_DAYS_BY_GROUP_SEMESTER
+            = "select distinct s.dayOfWeek " +
+            "from  Schedule s " +
+            "where s.lesson.semester.id = :semesterId " +
+            "and s.lesson.group.id = :groupId";
+
+    private static final String GET_DAYS_BY_TEACHER_SEMESTER
+            = "select distinct s.dayOfWeek " +
+            "from  Schedule s " +
+            "where s.lesson.semester.id = :semesterId " +
+            "and s.lesson.teacher.id = :teacherId" +
+            NOT_DISABLED_SQL;
+
+    private static final String GET_PERIOD_BY_TEACHER_DAY_SEMESTER_WEEK
+            = "select distinct p1 " +
+            "from Period p1" +
+            " where p1.id in" +
+            " (select p.id " +
+            "from Schedule s " +
+            "join s.period p " +
+            "where (s.lesson.semester.id = :semesterId " +
+            "and s.lesson.teacher.id = :teacherId " +
+            "and s.dayOfWeek = :dayOfWeek " +
+            NOT_DISABLED_SQL + ") " +
+            "and (s.evenOdd = :evenOdd or s.evenOdd = 'WEEKLY')) " +
+            "order by p1.startTime";
+
+    private static final String GET_LESSON_BY_TEACHER_SEMESTER_DAY_PERIOD_WEEK
+            = "select l1 " +
+            "from Lesson l1" +
+            " where l1.id in" +
+            " (select l.id " +
+            "from Schedule s " +
+            "join s.lesson l " +
+            "where (s.lesson.semester.id = :semesterId " +
+            "and s.dayOfWeek = :dayOfWeek " +
+            "and s.period.id = :periodId " +
+            "and s.lesson.teacher.id = :teacherId " +
+            NOT_DISABLED_SQL + ") " +
+            "and (s.evenOdd = :evenOdd or s.evenOdd = 'WEEKLY'))";
+
+    private static final String GET_BY_DATE_RANGE_TEACHER
+            = "SELECT s " +
+            "from Schedule s " +
+            "join fetch s.lesson as l " +
+            "join fetch l.semester as sem " +
+            "join fetch sem.periods " +
+            "join fetch  sem.groups " +
+            "where s.lesson.semester.startDay <= :toDate " +
+            "and s.lesson.semester.endDay >= :fromDate " +
+            "and s.lesson.teacher.id = :teacherId";
+
+    private static final String COUNT_BY_LESSON_ID
+            = "select count (s.id) " +
+            "from  Schedule s " +
+            "where s.lesson.id = :lessonId " +
+            NOT_DISABLED_SQL;
+
+    private static final String COUNT_BY_LESSON_PERIOD_EVENODD_DAY
+            = "select count (s.id) " +
+            "from  Schedule s " +
+            "where s.lesson.id = :lessonId " +
+            "and s.period.id = :periodId " +
+            "and s.dayOfWeek =:dayOfWeek " +
+            "and (s.evenOdd =:evenOdd or s.evenOdd = 'WEEKLY')" +
+            NOT_DISABLED_SQL;
+
+    private static final String GET_BY_ID
+            = "select s " +
+            "from Schedule s " +
+            "left join fetch s.lesson as l " +
+            "left join fetch l.semester as sem " +
+            "left join fetch sem.periods " +
+            "left join fetch sem.groups " +
+            "left join fetch sem.daysOfWeek " +
+            "where s.id = :id ";
+
+    private static final String GET_ALL
+            = "select s " +
+            "from Schedule s " +
+            "left join fetch s.lesson as l " +
+            "left join fetch l.semester as sem " +
+            "left join fetch sem.periods " +
+            "left join fetch sem.groups " +
+            "left join fetch sem.daysOfWeek " +
+            "where s.room.disable = false " +
+            "and s.lesson.semester.disable = false " +
+            "and s.lesson.group.disable = false  " +
+            "and s.lesson.subject.disable = false " +
+            "and s.lesson.teacher.disable = false ";
+
+    private static final String GET_ORDERED_BY_ROOMS
+            = "select s from Schedule s "
+            + "join fetch s.lesson as l "
+            + "join fetch l.semester as sem "
+            + "join fetch sem.periods "
+            + "join fetch  sem.groups "
+            + "where s.lesson.semester = :semesterId "
+            + "order by s.room.sortOrder";
+
+    private static final String GET_BY_SEMESTER_GROUP
+            = "select s " +
+            "from Schedule s " +
+            "where s.lesson.semester = :semesterId " +
+            "and s.lesson.group = :groupId";
+
+
+    @Override
+    public Optional<Schedule> findById(Long id) {
+        return sessionFactory.getCurrentSession()
+                .createQuery(GET_BY_ID, Schedule.class)
+                .setParameter("id", id)
+                .uniqueResultOptional();
+    }
+
     /**
      * Method searches if there are any saved records in schedule for particular group
      *
@@ -52,9 +264,8 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
         //if schedule pretends to occur weekly need to check that there are no any already saved schedules for that Group
         if (evenOdd == EvenOdd.WEEKLY) {
             log.debug("Search when lesson repeats weekly");
-            return (Long) sessionFactory.getCurrentSession().createQuery(
-                    SELECT_COUNT +
-                            "and s.lesson.group.id = :groupId")
+            return sessionFactory.getCurrentSession()
+                    .createQuery(CONFLICT_IN_GROUP_SCHEDULE, Long.class)
                     .setParameter("semesterId", semesterId)
                     .setParameter("dayOfWeek", dayOfWeek)
                     .setParameter("classId", classId)
@@ -65,10 +276,7 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
         //else schedule pretends to occur by even/odd need to check that here are no amy already saved schedules for that Group at the same half or weekly
         else {
             log.debug("Search when lesson repeats by even/odd");
-            return (Long) sessionFactory.getCurrentSession().createQuery(
-                    SELECT_COUNT +
-                            "and s.lesson.group.id = :groupId " +
-                            "and ( s.evenOdd = :evenOdd or s.evenOdd = 'WEEKLY')")
+            return sessionFactory.getCurrentSession().createQuery(CONFLICT_IN_GROUP_SCHEDULE_REPEATS, Long.class)
                     .setParameter("semesterId", semesterId)
                     .setParameter("dayOfWeek", dayOfWeek)
                     .setParameter("classId", classId)
@@ -92,9 +300,8 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
     public Long conflictForTeacherInSchedule(Long semesterId, DayOfWeek dayOfWeek, EvenOdd evenOdd, Long classId, Long teacherId) {
         log.info("In conflictForTeacherInSchedule(semesterId = [{}], dayOfWeek = [{}], evenOdd = [{}], classId = [{}], teacherId = [{}])", semesterId, dayOfWeek, evenOdd, classId, teacherId);
         if (evenOdd == EvenOdd.WEEKLY) {
-            return sessionFactory.getCurrentSession().createQuery("" +
-                    SELECT_COUNT +
-                    "and s.lesson.teacher.id = :teacherId ", Long.class)
+            return sessionFactory.getCurrentSession()
+                    .createQuery(CONFLICT_TEACHER,Long.class)
                     .setParameter("semesterId", semesterId)
                     .setParameter("dayOfWeek", dayOfWeek)
                     .setParameter("classId", classId)
@@ -102,10 +309,8 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
                     .getSingleResult();
 
         } else {
-            return sessionFactory.getCurrentSession().createQuery(
-                    SELECT_COUNT +
-                            "and s.lesson.teacher.id = :teacherId " +
-                            "and ( s.evenOdd = :evenOdd or s.evenOdd = 'WEEKLY')", Long.class)
+            return sessionFactory.getCurrentSession()
+                    .createQuery(CONFLICT_TEACHER_EVEN, Long.class)
                     .setParameter("semesterId", semesterId)
                     .setParameter("dayOfWeek", dayOfWeek)
                     .setParameter("classId", classId)
@@ -124,11 +329,11 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
      */
     @Override
     public List<Group> uniqueGroupsInScheduleBySemester(Long semesterId) {
-        log.info("In uniqueGroupsInScheduleBySemester", semesterId);
-        return sessionFactory.getCurrentSession().createQuery("select distinct g1 from Group g1" +
-                " where g1.id in" +
-                " (select g.id from Schedule s join s.lesson.group g where s.lesson.semester.id = :semesterId" + NOT_DISABLED_SQL + ")")
-                .setParameter("semesterId", semesterId).getResultList();
+        log.info("In uniqueGroupsInScheduleBySemester({})", semesterId);
+        return sessionFactory.getCurrentSession()
+                .createQuery(UNIQUE_GROUPS_BY_SEMESTER, Group.class)
+                .setParameter("semesterId", semesterId)
+                .getResultList();
     }
 
     /**
@@ -142,9 +347,8 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
     @Override
     public List<Period> periodsForGroupByDayBySemester(Long semesterId, Long groupId, DayOfWeek day) {
         log.info("In periodsForGroupByDayBySemester(semesterId = [{}], groupId = [{}], day = [{}])", semesterId, groupId, day);
-        return sessionFactory.getCurrentSession().createQuery("select distinct p1 from Period p1" +
-                " where p1.id in" +
-                " (select p.id from Schedule s join s.period p where s.lesson.semester.id = :semesterId and s.lesson.group.id = :groupId and s.dayOfWeek = :dayOfWeek" + NOT_DISABLED_SQL + ") order by p1.startTime")
+        return sessionFactory.getCurrentSession()
+                .createQuery(GET_PERIODS_BY_GROUP_DAY_SEMESTER,Period.class)
                 .setParameter("semesterId", semesterId)
                 .setParameter("groupId", groupId)
                 .setParameter("dayOfWeek", day)
@@ -164,9 +368,8 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
     @Override
     public Optional<Lesson> lessonForGroupByDayBySemesterByPeriodByWeek(Long semesterId, Long groupId, Long periodId, DayOfWeek day, EvenOdd evenOdd) {
         log.info("In lessonForGroupByDayBySemesterByPeriodByWeek(semesterId = [{}], groupId = [{}], periodId = [{}], day = [{}], evenOdd = [{}])", semesterId, groupId, periodId, day, evenOdd);
-        return sessionFactory.getCurrentSession().createQuery("select l1 from Lesson l1" +
-                " where l1.id in" +
-                " (select l.id from Schedule s join s.lesson l where (s.lesson.semester.id = :semesterId and s.dayOfWeek = :dayOfWeek and s.period.id = :periodId and s.lesson.group.id = :groupId " + NOT_DISABLED_SQL + ") and (s.evenOdd = :evenOdd or s.evenOdd = 'WEEKLY'))")
+        return sessionFactory.getCurrentSession()
+                .createQuery(GET_LESSON_BY_DAY_SEMESTER_PERIOD_WEEK, Lesson.class)
                 .setParameter("semesterId", semesterId)
                 .setParameter("groupId", groupId)
                 .setParameter("periodId", periodId)
@@ -188,9 +391,7 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
     @Override
     public Room getRoomForLesson(Long semesterId, Long periodId, Long lessonId, DayOfWeek day, EvenOdd evenOdd) {
         log.info("In getRoomForLesson(semesterId = [{}], periodId = [{}], lessonId = [{}], day = [{}], evenOdd = [{}])", semesterId, periodId, lessonId, day, evenOdd);
-        return (Room) sessionFactory.getCurrentSession().createQuery("select r1 from Room r1" +
-                " where r1.id in" +
-                " (select r.id from Schedule s join s.room r where (s.lesson.semester.id = :semesterId and s.dayOfWeek = :dayOfWeek and s.period.id = :periodId and s.lesson.id = :lessonId " + NOT_DISABLED_SQL + ") and (s.evenOdd = :evenOdd or s.evenOdd = 'WEEKLY'))")
+        return sessionFactory.getCurrentSession().createQuery(GET_ROOM_FOR_LESSON, Room.class)
                 .setParameter("semesterId", semesterId)
                 .setParameter("lessonId", lessonId)
                 .setParameter("periodId", periodId)
@@ -209,7 +410,8 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
     @Override
     public List<DayOfWeek> getDaysWhenGroupHasClassesBySemester(Long semesterId, Long groupId) {
         log.info("In getDaysWhenGroupHasClassesBySemester(semesterId = [{}], groupId = [{}])", semesterId, groupId);
-        return sessionFactory.getCurrentSession().createQuery("select distinct s.dayOfWeek from  Schedule s where s.lesson.semester.id = :semesterId and s.lesson.group.id = :groupId")
+        return sessionFactory.getCurrentSession()
+                .createQuery(GET_DAYS_BY_GROUP_SEMESTER, DayOfWeek.class)
                 .setParameter("semesterId", semesterId)
                 .setParameter("groupId", groupId)
                 .getResultList();
@@ -225,7 +427,8 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
     @Override
     public Long countSchedulesForGroupInSemester(Long semesterId, Long groupId) {
         log.info("In countSchedulesForGroupInSemester(semesterId = [{}], groupId = [{}])", semesterId, groupId);
-        return (Long) sessionFactory.getCurrentSession().createQuery("select count (s.id) from  Schedule s where s.lesson.semester.id = :semesterId and s.lesson.group.id = :groupId" + NOT_DISABLED_SQL)
+        return sessionFactory.getCurrentSession()
+                .createQuery(COUNT_BY_GROUP_SEMESTER, Long.class)
                 .setParameter("semesterId", semesterId)
                 .setParameter("groupId", groupId)
                 .getSingleResult();
@@ -241,7 +444,8 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
     @Override
     public List<DayOfWeek> getDaysWhenTeacherHasClassesBySemester(Long semesterId, Long teacherId) {
         log.info("In getDaysWhenTeacherHasClassesBySemester(semesterId = [{}], teacherId = [{}])", semesterId, teacherId);
-        return sessionFactory.getCurrentSession().createQuery("select distinct s.dayOfWeek from  Schedule s where s.lesson.semester.id = :semesterId and s.lesson.teacher.id = :teacherId" + NOT_DISABLED_SQL)
+        return sessionFactory.getCurrentSession()
+                .createQuery(GET_DAYS_BY_TEACHER_SEMESTER, DayOfWeek.class)
                 .setParameter("semesterId", semesterId)
                 .setParameter("teacherId", teacherId)
                 .getResultList();
@@ -258,9 +462,8 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
     @Override
     public List<Period> periodsForTeacherBySemesterByDayByWeek(Long semesterId, Long teacherId, DayOfWeek day, EvenOdd evenOdd) {
         log.info("In periodsForTeacherBySemesterByDayByWeek(semesterId = [{}], teacherId = [{}], day = [{}], evenOdd = [{}])", semesterId, teacherId, day, evenOdd);
-        return sessionFactory.getCurrentSession().createQuery("select distinct p1 from Period p1" +
-                " where p1.id in" +
-                " (select p.id from Schedule s join s.period p where (s.lesson.semester.id = :semesterId and s.lesson.teacher.id = :teacherId and s.dayOfWeek = :dayOfWeek " + NOT_DISABLED_SQL + ") and (s.evenOdd = :evenOdd or s.evenOdd = 'WEEKLY')) order by p1.startTime")
+        return sessionFactory.getCurrentSession()
+                .createQuery(GET_PERIOD_BY_TEACHER_DAY_SEMESTER_WEEK, Period.class)
                 .setParameter("semesterId", semesterId)
                 .setParameter("teacherId", teacherId)
                 .setParameter("dayOfWeek", day)
@@ -281,9 +484,8 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
     @Override
     public List<Lesson> lessonsForTeacherBySemesterByDayByPeriodByWeek(Long semesterId, Long teacherId, Long periodId, DayOfWeek day, EvenOdd evenOdd) {
         log.info("In lessonsForTeacherBySemesterByDayByPeriodByWeek(semesterId = [{}], teacherId = [{}], periodId = [{}], day = [{}], evenOdd = [{}])", semesterId, teacherId, periodId, day, evenOdd);
-        return sessionFactory.getCurrentSession().createQuery("select l1 from Lesson l1" +
-                " where l1.id in" +
-                " (select l.id from Schedule s join s.lesson l where (s.lesson.semester.id = :semesterId and s.dayOfWeek = :dayOfWeek and s.period.id = :periodId and s.lesson.teacher.id = :teacherId " + NOT_DISABLED_SQL + ") and (s.evenOdd = :evenOdd or s.evenOdd = 'WEEKLY'))")
+        return sessionFactory.getCurrentSession()
+                .createQuery(GET_LESSON_BY_TEACHER_SEMESTER_DAY_PERIOD_WEEK, Lesson.class)
                 .setParameter("semesterId", semesterId)
                 .setParameter("teacherId", teacherId)
                 .setParameter("periodId", periodId)
@@ -295,9 +497,8 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
     @Override
     public List<Schedule> getAllSchedulesByTeacherIdAndSemesterId(Long teacherId, Long semesterId) {
         log.info("Enter into getAll of TeacherRepositoryImpl");
-        return sessionFactory.getCurrentSession().
-                createQuery("from Schedule s where s.lesson.semester.id = :semesterId " +
-                        "and s.lesson.teacher.id = :teacherId " + NOT_DISABLED_SQL)
+        return sessionFactory.getCurrentSession()
+                .createQuery(GET_ALL_BY_TEACHER_SEMESTER, Schedule.class)
                 .setParameter("semesterId", semesterId)
                 .setParameter("teacherId", teacherId)
                 .getResultList();
@@ -312,8 +513,8 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
     @Override
     public Schedule getScheduleByObject(Schedule schedule) {
         log.info("Enter into getScheduleByObject");
-        return sessionFactory.getCurrentSession().
-                createQuery(GET_BY_ALL_PARAMETERS, Schedule.class)
+        return sessionFactory.getCurrentSession()
+                .createQuery(GET_BY_ALL_PARAMETERS, Schedule.class)
                 .setParameter("periodId", schedule.getPeriod().getId())
                 .setParameter("lessonId", schedule.getLesson().getId())
                 .setParameter("dayOfWeek", schedule.getDayOfWeek())
@@ -332,17 +533,10 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
     public List<Schedule> getScheduleBySemester(Long semesterId) {
         log.info("In getScheduleBySemester(semesterId = [{}])", semesterId);
 
-        List<Schedule> scheduleList = sessionFactory.getCurrentSession().createQuery("SELECT distinct s" +
-                " from Schedule s " +
-                "join fetch s.lesson sl " +
-                "join fetch sl.semester slm " +
-                "join fetch slm.periods " +
-                "join fetch slm.groups " +
-                "join fetch slm.daysOfWeek " +
-                "where s.lesson.semester.id = :semesterId " + NOT_DISABLED_SQL)
+        return sessionFactory.getCurrentSession()
+                .createQuery(GET_BY_SEMESTER, Schedule.class)
                 .setParameter("semesterId", semesterId)
                 .getResultList();
-        return scheduleList;
 
     }
 
@@ -353,18 +547,10 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
      */
     @Override
     public List<Schedule> getAll() {
-        log.info("In getAll()");
-        CriteriaBuilder cb = sessionFactory.getCurrentSession().getCriteriaBuilder();
-        CriteriaQuery<Schedule> cq = cb.createQuery(Schedule.class);
-        Root<Schedule> from = cq.from(Schedule.class);
-        cq.where(cb.equal(from.get("room").get("disable"), false),
-                cb.equal(from.get("lesson").get("semester").get("disable"), false),
-                cb.equal(from.get("lesson").get("group").get("disable"), false),
-                cb.equal(from.get("lesson").get("subject").get("disable"), false),
-                cb.equal(from.get("lesson").get("teacher").get("disable"), false));
-
-        TypedQuery<Schedule> tq = sessionFactory.getCurrentSession().createQuery(cq);
-        return tq.getResultList();
+        log.debug("In getAll()");
+        return sessionFactory.getCurrentSession()
+                .createQuery(GET_ALL, Schedule.class)
+                .getResultList();
     }
 
 
@@ -379,8 +565,8 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
     @Override
     public List<Schedule> scheduleByDateRangeForTeacher(LocalDate fromDate, LocalDate toDate, Long teacherId) {
         log.info("In scheduleByDateRangeForTeacher with fromDate = {} and toDate = {}", fromDate, toDate);
-        return sessionFactory.getCurrentSession().createQuery("SELECT s from Schedule s " +
-                "where s.lesson.semester.startDay <= :toDate  and s.lesson.semester.endDay >= :fromDate and s.lesson.teacher.id = :teacherId")
+        return sessionFactory.getCurrentSession()
+                .createQuery(GET_BY_DATE_RANGE_TEACHER, Schedule.class)
                 .setParameter("fromDate", fromDate)
                 .setParameter("toDate", toDate)
                 .setParameter("teacherId", teacherId)
@@ -397,8 +583,8 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
     @Override
     public List<Schedule> scheduleForRoomBySemester(Long semesterId, Long roomId) {
         log.info("In scheduleForRoomBySemester with semesterId = {} and roomId = {}", semesterId, roomId);
-        return sessionFactory.getCurrentSession().createQuery("SELECT s from Schedule s " +
-                "where s.room.id = :roomId and s.lesson.semester.id = :semesterId order by s.period.startTime asc ")
+        return sessionFactory.getCurrentSession()
+                .createQuery(GET_BY_ROOM_SEMESTER, Schedule.class)
                 .setParameter("roomId", roomId)
                 .setParameter("semesterId", semesterId)
                 .getResultList();
@@ -413,9 +599,10 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
     @Override
     public void deleteSchedulesBySemesterId(Long semesterId) {
         log.info("In deleteSchedulesBySemesterId with semesterId = {}", semesterId);
-        sessionFactory.getCurrentSession().createQuery(
-                "delete from Schedule s where s.id in (select sch.id from Schedule sch where sch.lesson.semester.id = :semesterId)")
-                .setParameter("semesterId", semesterId).executeUpdate();
+        sessionFactory.getCurrentSession()
+                .createQuery(DELETE_BY_SEMESTER_ID)
+                .setParameter("semesterId", semesterId)
+                .executeUpdate();
     }
 
     /**
@@ -427,7 +614,8 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
     @Override
     public Long countInputLessonsInScheduleByLessonId(Long lessonId) {
         log.info("In countInputLessonsInScheduleByLessonId(lessonId = [{}])", lessonId);
-        return (Long) sessionFactory.getCurrentSession().createQuery("select count (s.id) from  Schedule s where s.lesson.id = :lessonId " + NOT_DISABLED_SQL)
+        return sessionFactory.getCurrentSession()
+                .createQuery(COUNT_BY_LESSON_ID, Long.class)
                 .setParameter("lessonId", lessonId)
                 .getSingleResult();
     }
@@ -444,8 +632,8 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
     @Override
     public Long countByLessonIdPeriodIdEvenOddDayOfWeek(Long lessonId, Long periodId, EvenOdd evenOdd, DayOfWeek day) {
         log.info("In countByLessonIdPeriodIdEvenOddDayOfWeek(lessonId = [{}], periodId = [{}], evenOdd = [{}], day = [{}])", lessonId, periodId, evenOdd, day);
-        return (Long) sessionFactory.getCurrentSession().createQuery(
-                "select count (s.id) from  Schedule s where s.lesson.id = :lessonId and s.period.id = :periodId and s.dayOfWeek =:dayOfWeek and (s.evenOdd =:evenOdd or s.evenOdd = 'WEEKLY')" + NOT_DISABLED_SQL)
+        return sessionFactory.getCurrentSession()
+                .createQuery(COUNT_BY_LESSON_PERIOD_EVENODD_DAY, Long.class)
                 .setParameter("lessonId", lessonId)
                 .setParameter("periodId", periodId)
                 .setParameter("dayOfWeek", day)
@@ -460,6 +648,24 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
                 .createQuery(GET_BY_SEMESTER_TEACHER, Schedule.class)
                 .setParameter("semesterId", semesterId)
                 .setParameter("teacherId", teacherId)
+                .getResultList();
+    }
+
+    @Override
+    public List<Schedule> getSchedulesOrderedByRooms(Long semesterId) {
+        return sessionFactory.getCurrentSession()
+                .createQuery(GET_ORDERED_BY_ROOMS, Schedule.class)
+                .setParameter("semesterId", semesterId)
+                .getResultList();
+    }
+
+    @Override
+    public List<Schedule> getSchedulesBySemesterGroup(Long semesterId, Long groupId){
+        log.info("Entered getScheulesBySemesterGroup({},{})", semesterId, groupId);
+        return sessionFactory.getCurrentSession()
+                .createQuery(GET_BY_SEMESTER_GROUP, Schedule.class)
+                .setParameter("semesterId", semesterId)
+                .setParameter("groupId", groupId)
                 .getResultList();
     }
 }

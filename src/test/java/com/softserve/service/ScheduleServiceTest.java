@@ -175,8 +175,6 @@ public class ScheduleServiceTest {
         Semester semester = new Semester();
         semester.setId(1L);
         TeacherDTO teacherDTO = new TeacherDTO();
-        Map<EvenOdd, Map<DayOfWeek, List<TemporarySchedule>>> temporarySchedules = new HashMap<>();
-        temporarySchedules.put(EvenOdd.EVEN,new HashMap<>());
         List<DayOfWeek> dayOfWeeks = new ArrayList<>();
         dayOfWeeks.add(DayOfWeek.MONDAY);
         dayOfWeeks.add(DayOfWeek.TUESDAY);

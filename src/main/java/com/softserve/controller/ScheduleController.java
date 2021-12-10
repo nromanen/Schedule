@@ -169,7 +169,7 @@ public class ScheduleController {
         LocalDate fromDate = LocalDate.parse(LocalDate.parse(from, formatter).toString(), currentFormatter);
         LocalDate toDate = LocalDate.parse(LocalDate.parse(to, formatter).toString(), currentFormatter);
         Teacher teacher = teacherService.findByUserId(jwtUser.getId());
-        List<ScheduleForTemporaryDateRangeDTO> dto = fullDTOForTemporaryScheduleByTeacherDateRange(scheduleService.temporaryScheduleByDateRangeForTeacher(fromDate, toDate, teacher.getId()));
+        List<ScheduleForTemporaryDateRangeDTO> dto = fullDTOForTemporaryScheduleByTeacherDateRange(scheduleService.scheduleByDateRangeForTeacher(fromDate, toDate, teacher.getId()));
         return ResponseEntity.status(HttpStatus.OK).body(dto);
     }
 
@@ -185,8 +185,8 @@ public class ScheduleController {
         LocalDate fromDate = LocalDate.parse(LocalDate.parse(from, formatter).toString(), currentFormatter);
         LocalDate toDate = LocalDate.parse(LocalDate.parse(to, formatter).toString(), currentFormatter);
         teacherService.getById(teacherId);
-        Map<LocalDate, Map<Period, Map<Schedule, TemporarySchedule>>> mapSchedules =
-                scheduleService.temporaryScheduleByDateRangeForTeacher(fromDate, toDate, teacherId);
+        Map<LocalDate, Map<Period, Schedule>> mapSchedules =
+                scheduleService.scheduleByDateRangeForTeacher(fromDate, toDate, teacherId);
 
         List<ScheduleForTemporaryDateRangeDTO> dto = fullDTOForTemporaryScheduleByTeacherDateRange(mapSchedules);
         return ResponseEntity.status(HttpStatus.OK).body(dto);
@@ -195,7 +195,7 @@ public class ScheduleController {
     @DeleteMapping("/delete-schedules")
     @ApiOperation(value = "Delete all schedules by semester id")
     @PreAuthorize("hasRole('MANAGER')")
-    public ResponseEntity deleteSchedulesBySemesterId(@RequestParam Long semesterId) {
+    public ResponseEntity<?> deleteSchedulesBySemesterId(@RequestParam Long semesterId) {
         log.info("In deleteSchedulesBySemesterId with semesterId = {}", semesterId);
         scheduleService.deleteSchedulesBySemesterId(semesterId);
         return ResponseEntity.ok().build();
@@ -253,27 +253,25 @@ public class ScheduleController {
 
 
     private List<ScheduleForTemporaryDateRangeDTO> fullDTOForTemporaryScheduleByTeacherDateRange(
-            Map<LocalDate, Map<Period, Map<Schedule, TemporarySchedule>>> map) {
+            Map<LocalDate, Map<Period, Schedule>> map) {
         List<ScheduleForTemporaryDateRangeDTO> fullDTO = new ArrayList<>();
 
-        for (Map.Entry<LocalDate, Map<Period, Map<Schedule, TemporarySchedule>>> itr : map.entrySet()) {
+        for (Map.Entry<LocalDate, Map<Period, Schedule>> itr : map.entrySet()) {
             ScheduleForTemporaryDateRangeDTO scheduleForTemporaryDateRangeDTO = new ScheduleForTemporaryDateRangeDTO();
             scheduleForTemporaryDateRangeDTO.setDate(itr.getKey());
 
             List<ScheduleForTemporaryTeacherDateRangeDTO> scheduleForTemporaryTeacherDateRangeDTOS = new ArrayList<>();
-            for (Map.Entry<Period, Map<Schedule, TemporarySchedule>> entry : itr.getValue().entrySet()) {
-                for (Map.Entry<Schedule, TemporarySchedule> item : entry.getValue().entrySet()) {
+            for (Map.Entry<Period, Schedule> entry : itr.getValue().entrySet()) {
                     ScheduleForTemporaryTeacherDateRangeDTO scheduleForTemporaryTeacherDateRangeDTO = new ScheduleForTemporaryTeacherDateRangeDTO();
-
                     ScheduleTemporaryTeacherDateRangeDTO lessonsInScheduleDTO = new ScheduleTemporaryTeacherDateRangeDTO();
-                    lessonsInScheduleDTO.setId(item.getKey().getId());
+                    lessonsInScheduleDTO.setId(entry.getValue().getId());
                     lessonsInScheduleDTO.setPeriod(periodMapper.convertToDto(entry.getKey()));
-                    lessonsInScheduleDTO.setLesson(lessonsInScheduleMapper.lessonToLessonsInTemporaryScheduleDTO(item.getKey().getLesson()));
+                    lessonsInScheduleDTO.setLesson(lessonsInScheduleMapper.lessonToLessonsInTemporaryScheduleDTO(entry.getValue().getLesson()));
                     lessonsInScheduleDTO.setPeriod(periodMapper.convertToDto(entry.getKey()));
-                    lessonsInScheduleDTO.setRoom(roomForScheduleMapper.roomToRoomForScheduleDTO(item.getKey().getRoom()));
+                    lessonsInScheduleDTO.setRoom(roomForScheduleMapper.roomToRoomForScheduleDTO(entry.getValue().getRoom()));
                     scheduleForTemporaryTeacherDateRangeDTOS.add(scheduleForTemporaryTeacherDateRangeDTO);
                     scheduleForTemporaryDateRangeDTO.setSchedules(scheduleForTemporaryTeacherDateRangeDTOS);
-                }
+
             }
             fullDTO.add(scheduleForTemporaryDateRangeDTO);
         }

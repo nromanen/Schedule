@@ -23,20 +23,20 @@ public interface ScheduleService extends BasicService<Schedule, Long> {
 
     boolean isConflictForGroupInSchedule(Long semesterId, DayOfWeek dayOfWeek, EvenOdd evenOdd, Long classId, Long lessonId);
 
-    List<ScheduleForGroupDTO> getFullScheduleForGroup(Long semesterId, Long groupId);
+    List<Schedule> getFullScheduleForGroup(Long semesterId, Long groupId);
 
-    ScheduleFullDTO getFullScheduleForSemester(Long semesterId);
+    List<Schedule> getFullScheduleForSemester(Long semesterId);
 
-    ScheduleForTeacherDTO getScheduleForTeacher(Long semesterId, Long teacherId);
+    List<Schedule> getScheduleForTeacher(Long semesterId, Long teacherId);
 
     List<Schedule> getAllSchedulesByTeacherIdAndSemesterId(Long teacherId, Long semesterId);
 
-    Map<Room, Map<DayOfWeek, Map<EvenOdd, Map<Period, Map<String, Map<String, Map<LessonType, List<Lesson>>>>>>>> getScheduleForRooms(Long semesterId);
+    Map<Room, List<Schedule>> getScheduleForRooms(Long semesterId);
 
     List<Schedule> getSchedulesBySemester(Long semesterId);
 
-    //Map<LocalDate, Map<Period, List<Schedule>>> scheduleByDateRangeForTeacher(LocalDate fromDate, LocalDate toDate, Long teacherId);
-    Map<LocalDate, Map<Period, Map<Schedule, TemporarySchedule>>>  temporaryScheduleByDateRangeForTeacher(LocalDate fromDate, LocalDate toDate, Long teacherId);
+
+    List<Schedule> scheduleByDateRangeForTeacher(LocalDate fromDate, LocalDate toDate, Long teacherId);
 
     void deleteSchedulesBySemesterId(Long semesterId);
 

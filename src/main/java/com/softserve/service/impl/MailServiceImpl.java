@@ -1,7 +1,6 @@
 package com.softserve.service.impl;
 
 import com.softserve.dto.EmailMessageDTO;
-import com.softserve.entity.TemporarySchedule;
 import com.softserve.exception.MessageNotSendException;
 import com.softserve.service.MailService;
 import lombok.extern.slf4j.Slf4j;
@@ -140,30 +139,6 @@ public class MailServiceImpl implements MailService {
         multipart.addBodyPart(fileBodyPart);
 
         mimeMessage.setContent(multipart);
-        this.mailSender.send(mimeMessage);
-    }
-
-    @Async
-    @Override
-    public void send(final String emailTo, final String subject, TemporarySchedule temporarySchedule, final String emailTemplate) throws MessagingException
-    {
-
-        // Prepare the evaluation context
-        final Context ctx = new Context(Locale.UK);
-        ctx.setVariable("temporarySchedule", temporarySchedule);
-        //ctx.setVariable("imageResourceName", imageResourceName); // so that we can reference it from HTML
-
-        // Prepare message using a Spring helper
-        final MimeMessage mimeMessage = this.mailSender.createMimeMessage();
-        final MimeMessageHelper message = new MimeMessageHelper(mimeMessage, true, "UTF-8"); // true = multipart
-        message.setSubject(subject);
-        message.setFrom(credentialsUsername);
-        message.setTo(emailTo);
-
-        // Create the HTML body using Thymeleaf
-        final String htmlContent = this.springTemplateEngine.process(emailTemplate, ctx);
-        message.setText(htmlContent, true); // true = isHtml
-        // Send mail
         this.mailSender.send(mimeMessage);
     }
 }
