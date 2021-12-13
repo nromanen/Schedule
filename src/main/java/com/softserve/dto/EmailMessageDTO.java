@@ -11,6 +11,6 @@ import java.util.List;
 public class EmailMessageDTO {
     private String subject;
     private String text;
-    private List<MultipartFile> attachments;
+    private MultipartFile attachments;
     private List<String> receivers;
 }

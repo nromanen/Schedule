@@ -19,19 +19,15 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
+
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -126,13 +122,14 @@ public class UserController {
     }
 
     @PostMapping(value = "/send-email")
+//    @RequestMapping(path = "/send-email", method = POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE )
     @PreAuthorize("hasRole('TEACHER')")
     @ApiOperation(value = "Send email")
-    public ResponseEntity<Void> sendEmail(@CurrentUser JwtUser jwtUser,
+    public ResponseEntity<String> sendEmail(@CurrentUser JwtUser jwtUser,
                                           @ModelAttribute EmailMessageDTO emailMessageDTO) {
         log.info("Enter into sendEmail(jwtUser(username: {}), emailMessageDTO: {})",
                 jwtUser.getUsername(), emailMessageDTO);
         mailService.send(jwtUser.getUsername(), emailMessageDTO);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.status(HttpStatus.OK).body("Massage has sent");
     }
 }

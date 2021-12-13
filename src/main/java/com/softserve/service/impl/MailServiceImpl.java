@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.InputStreamSource;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -29,6 +31,7 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.mail.util.ByteArrayDataSource;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.util.Locale;
 import java.util.Objects;
@@ -42,24 +45,22 @@ public class MailServiceImpl implements MailService {
 
     private final JavaMailSender mailSender;
 
-    private final Environment environment;
-
     private final SpringTemplateEngine springTemplateEngine;
 
     private String credentialsUsername;
 
     @Autowired
     public MailServiceImpl(JavaMailSender mailSender,
-                           Environment environment,
                            SpringTemplateEngine springTemplateEngine) {
         this.mailSender = mailSender;
-        this.environment = environment;
         this.springTemplateEngine = springTemplateEngine;
     }
 
     @PostConstruct
     private void postConstruct() {
-        credentialsUsername = environment.getProperty(username);
+//        credentialsUsername = environment.getProperty(username);
+//TODO Check environment.getProperty()
+        credentialsUsername = username;
         if (credentialsUsername == null) {
             credentialsUsername = System.getenv("HEROKU_MAIL_USERNAME");
         }
@@ -102,11 +103,15 @@ public class MailServiceImpl implements MailService {
             messageHelper.setSubject(emailMessageDTO.getSubject());
             messageHelper.setText(emailMessageDTO.getText());
             messageHelper.setTo(emailMessageDTO.getReceivers().toArray(String[]::new));
+            File file1 = new File("C:/image/3.txt");
+            File file2 = new File("C:/image/4.txt");
+            File[] attachmens= new File[]{ file1, file2 };
 
-            if (emailMessageDTO.getAttachments() != null) {
-                for (MultipartFile attachment: emailMessageDTO.getAttachments()) {
-                    messageHelper.addAttachment(Objects.requireNonNull(attachment.getOriginalFilename()), attachment);
-                }
+
+
+                for (File attachments: attachmens) {
+            FileSystemResource fileSystemResource = new FileSystemResource(attachments);
+                    messageHelper.addAttachment(attachments.getName(), fileSystemResource);
             }
 
             mailSender.send(messageHelper.getMimeMessage());
