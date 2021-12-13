@@ -18,7 +18,7 @@ import java.time.DayOfWeek;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@Mapper(componentModel = "spring", uses = {RoomMapper.class})
+@Mapper(componentModel = "spring", uses = {RoomMapper.class, LessonsListInRoomScheduleMapper.class})
 public interface ScheduleForRoomMapper {
 
     List<ScheduleForRoomDTO> schedulesToScheduleForRoomDTO(List<SchedulesInRoomDTO> schedules);
