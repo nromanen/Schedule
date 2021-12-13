@@ -19,6 +19,10 @@ In order to create a local copy of the project you need:
 1. Download and install the last version of PostgreSQL https://www.postgresql.org/download/
 2. Configure your username, password and connection url in `hibernate.properties` file
 
+##Redis
+1. Download and install the last version of Redis  https://redis.io/download
+2. Configure connection url in `cache.properties` file
+
 ## Starting backend server using IntelliJ IDEA and Tomcat
 1. Download and install the Ultimate version of IntelliJ IDEA (alternatively you can use a trial or EAP version) https://www.jetbrains.com/idea/download
 2. Download and install Tomcat 9.0.50 https://tomcat.apache.org/download-90.cgi
