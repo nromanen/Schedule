@@ -19,8 +19,5 @@ public class LessonsListInRoomScheduleDTO {
     private LessonType lessonType;
     @JsonProperty("teacher_for_site")
     private String surname;
-
-    private boolean grouped;
-
-    private GroupDTOInRoomSchedule group;
+    private List<GroupDTOInRoomSchedule> groups;
 }

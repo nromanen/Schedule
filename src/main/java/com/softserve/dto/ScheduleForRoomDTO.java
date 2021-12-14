@@ -13,8 +13,14 @@ import java.util.List;
 @ToString
 @EqualsAndHashCode
 public class ScheduleForRoomDTO {
+    @JsonProperty("room_id")
+    private Long roomId;
 
-    private RoomDTO room;
+    @JsonProperty("room_name")
+    private String roomName;
+
+    @JsonProperty("room_type")
+    private String roomType;
 
     private List<DaysOfWeekWithClassesForRoomDTO> schedules;
 }

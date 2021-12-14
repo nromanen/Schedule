@@ -40,7 +40,7 @@ public class ScheduleController {
     private final LessonsInScheduleMapper lessonsInScheduleMapper;
     private final LessonService lessonService;
     private final RoomService roomService;
-    private final ScheduleForRoomMapper scheduleForRoomMapper;
+    private final ConverterToSchedulesInRoom converterToSchedulesInRoom;
 
     @Autowired
     public ScheduleController(ScheduleService scheduleService,
@@ -54,7 +54,7 @@ public class ScheduleController {
                               LessonService lessonService,
                               LessonsInScheduleMapper lessonsInScheduleMapper,
                               RoomService roomService,
-                              ScheduleForRoomMapper scheduleForRoomMapper) {
+                              ConverterToSchedulesInRoom converterToSchedulesInRoom) {
         this.scheduleService = scheduleService;
         this.semesterService = semesterService;
         this.semesterMapper = semesterMapper;
@@ -67,7 +67,7 @@ public class ScheduleController {
         this.lessonService = lessonService;
         this.lessonsInScheduleMapper = lessonsInScheduleMapper;
         this.roomService = roomService;
-        this.scheduleForRoomMapper = scheduleForRoomMapper;
+        this.converterToSchedulesInRoom = converterToSchedulesInRoom;
     }
 
     @GetMapping
@@ -132,10 +132,7 @@ public class ScheduleController {
     public ResponseEntity<List<ScheduleForRoomDTO>> getFullScheduleForRoom(@RequestParam Long semesterId) {
         log.info("In, getFullScheduleForRoom (semesterId = [{}]) ", semesterId);
         List<ScheduleForRoomDTO> scheduleForRoomDTOS =
-                scheduleForRoomMapper
-                        .schedulesToScheduleForRoomDTO(
-                            ConverterToSchedulesInRoom.convertToSchedulesInRoom(scheduleService.getAllOrdered(semesterId))
-                        );
+                converterToSchedulesInRoom.convertToSchedulesInRoom(scheduleService.getAllOrdered(semesterId));
         return ResponseEntity.status(HttpStatus.OK).body(scheduleForRoomDTOS);
     }
 
