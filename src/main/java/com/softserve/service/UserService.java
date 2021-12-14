@@ -25,7 +25,5 @@ public interface UserService extends BasicService <User, Long> {
 
     User automaticRegistration(String email, Role role);
 
-    boolean isEmailExist (String email);
-
 }
 

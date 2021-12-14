@@ -3,6 +3,7 @@ package com.softserve.config;
 import com.softserve.entity.User;
 import com.softserve.exception.AuthGoogleEmailDontExistException;
 import com.softserve.exception.SocialClientRegistrationException;
+import com.softserve.repository.UserRepository;
 import com.softserve.security.customFilter.AuthFilter;
 import com.softserve.security.jwt.JwtConfigurer;
 import com.softserve.security.jwt.JwtTokenProvider;
@@ -53,6 +54,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final Environment env;
     private final UserService userService;
+    private final UserRepository userRepository;
 
     private static final String CLIENT_PROPERTY_KEY = "spring.security.oauth2.client.registration.";
     private static final String GOOGLE = "google";
@@ -91,10 +93,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 
     @Autowired
-    public SecurityConfig(JwtTokenProvider jwtTokenProvider, Environment env, UserService userService) {
+    public SecurityConfig(JwtTokenProvider jwtTokenProvider, Environment env, UserService userService, UserRepository userRepository) {
         this.jwtTokenProvider = jwtTokenProvider;
         this.env = env;
         this.userService = userService;
+        this.userRepository = userRepository;
     }
 
     @Autowired
@@ -239,7 +242,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     private boolean checkIfEmailExist(String email){
-        return userService.isEmailExist(email);
+        return userRepository.findByEmail(email).isPresent();
     }
 
 }
