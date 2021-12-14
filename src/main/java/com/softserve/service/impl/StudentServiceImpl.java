@@ -7,10 +7,7 @@ import com.softserve.entity.Group;
 import com.softserve.entity.Student;
 import com.softserve.entity.User;
 import com.softserve.entity.enums.Role;
-import com.softserve.exception.EntityNotFoundException;
-import com.softserve.exception.FieldAlreadyExistsException;
-import com.softserve.exception.FieldNullException;
-import com.softserve.exception.ImportRoleConflictException;
+import com.softserve.exception.*;
 import com.softserve.mapper.GroupMapper;
 import com.softserve.mapper.StudentMapperNew;
 import com.softserve.repository.StudentRepository;
@@ -23,7 +20,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -96,6 +92,7 @@ public class StudentServiceImpl implements StudentService {
 
     /**
      * Method save information for student in Repository and register user if email exists
+     *
      * @param studentDTO StudentDTO instance
      * @return saved Student entity
      */
@@ -104,11 +101,11 @@ public class StudentServiceImpl implements StudentService {
     public Student save(StudentDTO studentDTO) {
         log.info("Enter into save method with studentDTO:{}", studentDTO);
         Student student = studentMapper.studentDTOToStudent(studentDTO);
-        if(isEmailNullOrEmpty(studentDTO.getEmail())){
+        if (isEmailNullOrEmpty(studentDTO.getEmail())) {
             throw new FieldNullException(StudentDTO.class, "email");
         }
         Optional<User> optionalUser = userService.findSocialUser(studentDTO.getEmail());
-        if(optionalUser.isPresent() && isEmailInUse(studentDTO.getEmail())) {
+        if (optionalUser.isPresent() && isEmailInUse(studentDTO.getEmail())) {
             throw new FieldAlreadyExistsException(Student.class, "email", studentDTO.getEmail());
         }
         return save(registerStudent(student, studentDTO.getEmail()));
@@ -137,27 +134,21 @@ public class StudentServiceImpl implements StudentService {
         if (isEmailNullOrEmpty(studentDTO.getEmail())) {
             throw new FieldNullException(StudentDTO.class, "email");
         }
-        boolean test = studentRepository.isIdPresent(student.getId());
-        if(test){
-
-            Optional<User> userOptional = userService.findSocialUser(studentDTO.getEmail());
-            if(userOptional.isPresent()) {
-
-                boolean test2 = studentRepository.isEmailForThisStudent(studentDTO.getEmail(), student.getId());
-                if (!test2) {
-                        throw new FieldAlreadyExistsException(Student.class, "email", studentDTO.getEmail());
-                } else {
-                    student.setUser(userOptional.get());
-                    return update(student);
-                }
-            }else {
-                return update(registerStudent(student, studentDTO.getEmail()));
-            }
-        }
-        else {
+        if (!studentRepository.isIdPresent(student.getId())) {
             throw new EntityNotFoundException(Student.class, "email", studentDTO.getEmail());
         }
+        Optional<User> userOptional = userService.findSocialUser(studentDTO.getEmail());
+        if (userOptional.isEmpty()) {
+            return update(registerStudent(student, studentDTO.getEmail()));
+        }
+        if (!studentRepository.isEmailForThisStudent(studentDTO.getEmail(), student.getId())) {
+            throw new FieldAlreadyExistsException(Student.class, "email", studentDTO.getEmail());
+        }
+        student.setUser(userOptional.get());
+        return update(student);
+
     }
+
 
     /**
      * Method deletes an existing Student from Repository
@@ -180,8 +171,8 @@ public class StudentServiceImpl implements StudentService {
      * All subsequent lines contain data about students.
      * <p>
      * "surname","name","patronymic","email"
-     * "Romaniuk","Hanna","Stepanivna","romaniuk@gmail.com"
-     * "Boichuk","Oleksandr","Ivanovych","boichuk@ukr.net"
+     * "Romanian","Hanna","Stepanov","romaniuk@gmail.com"
+     * "Bochum","Oleksandr","Ivanov","boichuk@ukr.net"
      * etc.
      * <p>
      * The method is not transactional in order to prevent interruptions while saving a student
@@ -193,7 +184,7 @@ public class StudentServiceImpl implements StudentService {
      * If the student in the returned list have a null value of the group then he didn't pass a validation.
      */
     @Override
-    @Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
+    @Transactional
     @Async
     public CompletableFuture<List<StudentImportDTO>> saveFromFile(MultipartFile file, Long groupId) {
         log.info("Enter into saveFromFile of StudentServiceImpl with groupId {}", groupId);
@@ -211,6 +202,12 @@ public class StudentServiceImpl implements StudentService {
 
     public StudentImportDTO saveStudentFromFile(Long groupId, StudentImportDTO student) {
         try {
+            if(student.getEmail() == null || student.getEmail().isEmpty()){
+                log.error("Empty or null email: {}", student.getEmail());
+                student.setImportSaveStatus(ImportSaveStatus.VALIDATION_ERROR);
+                return student;
+            }
+
             Optional<User> userOptional = userService.findSocialUser(student.getEmail());
             Student newStudent = studentMapper.studentImportDTOToStudent(student);
             Optional<Student> studentFromBase = studentRepository.getExistingStudent(newStudent);
@@ -219,16 +216,14 @@ public class StudentServiceImpl implements StudentService {
 
             if (userOptional.isEmpty() && studentFromBase.isEmpty()) {
                 return registerAndSaveNewStudent(student, newStudent, group);
-            } else if (userOptional.isEmpty()) {
-                return registerUserAndUpdateStudent(student, studentFromBase);
-            } else if (studentFromBase.isEmpty()) {
-                return assignUserToNewStudent(student, userOptional, newStudent, group);
-            } else {
-                return checkForEmptyFieldsOfExistingStudent(student, userOptional, studentFromBase);
             }
+            if (studentFromBase.isEmpty()) {
+                return assignUserToNewStudent(student, userOptional, newStudent, group);
+            }
+                return checkForEmptyFieldsOfExistingStudent(student, userOptional, studentFromBase);
         } catch (ConstraintViolationException e) {
             student.setImportSaveStatus(ImportSaveStatus.VALIDATION_ERROR);
-            log.error("Error occurred while saving student with email {}", student.getEmail(), e);
+            log.error("VALIDATION_ERROR while saving student with email {}", student.getEmail(), e);
             return student;
         } catch (ImportRoleConflictException ex) {
             student.setImportSaveStatus(ImportSaveStatus.ROLE_CONFLICT);
@@ -238,7 +233,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     /**
-     * The method used for register provided user and save provided teacher
+     * The method used for register provided user and save provided student
      *
      * @param student    our student from file
      * @param newStudent our student which we will save to database
@@ -252,32 +247,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     /**
-     * The method used for register provided user and update existed teacher
-     *
-     * @param student         our student from file
-     * @param studentFromBase our student from dataBase
-     */
-    private StudentImportDTO registerUserAndUpdateStudent(StudentImportDTO student, Optional<Student> studentFromBase) {
-        log.debug("Enter to method if email DONT EXIST and student EXIST");
-        if (studentFromBase.isPresent()) {
-
-            Student ourStudentFromBase = getById(studentFromBase.get().getId());
-            Student registeredStudent1 = registerStudent(ourStudentFromBase, student.getEmail());
-            if (ourStudentFromBase.getUser() == null) {
-                registeredStudent1.setUser(registeredStudent1.getUser());
-            }
-            studentRepository.update(registeredStudent1);
-            StudentImportDTO savedStudent = studentMapper.studentToStudentImportDTO(registeredStudent1);
-            savedStudent.setEmail(student.getEmail());
-            savedStudent.setGroupDTO(groupMapper.groupToGroupDTO(registeredStudent1.getGroup()));
-            savedStudent.setImportSaveStatus(ImportSaveStatus.ALREADY_EXIST);
-            return savedStudent;
-        }
-        return null;
-    }
-
-    /**
-     * The method used for assigning existing user to provided new teacher
+     * The method used for assigning existing user to provided new student
      *
      * @param student      our student from file
      * @param userOptional our user from database
@@ -287,7 +257,12 @@ public class StudentServiceImpl implements StudentService {
     private StudentImportDTO assignUserToNewStudent(StudentImportDTO student, Optional<User> userOptional, Student newStudent, Group group) {
         log.debug("Enter to method if email EXIST and student DONT EXIST");
         if (userOptional.isPresent() && userOptional.get().getRole() == Role.ROLE_STUDENT) {
-
+            if(isEmailInUse(student.getEmail())){
+                log.error("Student with current email exist ",
+                        new FieldAlreadyExistsException(Student.class, "email", student.getEmail()));
+               student.setImportSaveStatus(ImportSaveStatus.ALREADY_EXIST);
+               return student;
+            }
             newStudent.setUser(userOptional.get());
             return saveStudentAndSetEmailGroupStatus(student, group, newStudent);
         } else {
@@ -296,7 +271,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     /**
-     * The method used for register provided user and save provided teacher
+     * The method used for register provided user and save provided student
      *
      * @param student         our student from file
      * @param studentFromBase our student from dataBase
@@ -307,12 +282,7 @@ public class StudentServiceImpl implements StudentService {
                                                                   Optional<Student> studentFromBase) {
         log.debug("Enter to method if email EXIST and student EXIST");
         if (userOptional.isPresent() && studentFromBase.isPresent() && userOptional.get().getRole() == Role.ROLE_STUDENT) {
-
             Student ourStudentFromBase = getById(studentFromBase.get().getId());
-            if (ourStudentFromBase.getUser() == null) {
-                ourStudentFromBase.setUser(userOptional.get());
-                studentRepository.update(ourStudentFromBase);
-            }
             StudentImportDTO existedStudent = studentMapper.studentToStudentImportDTO(ourStudentFromBase);
             existedStudent.setImportSaveStatus(ImportSaveStatus.ALREADY_EXIST);
             existedStudent.setEmail(student.getEmail());
@@ -327,6 +297,7 @@ public class StudentServiceImpl implements StudentService {
 
     /**
      * The method used check if email Null or Empty
+     *
      * @param email our email from studentDTO
      */
     private boolean isEmailNullOrEmpty(String email) {
@@ -335,26 +306,31 @@ public class StudentServiceImpl implements StudentService {
 
     /**
      * The method used check if students from DB has this email
+     *
      * @param email our email from studentDTO
      */
-    private boolean isEmailInUse(String email){return studentRepository.isEmailInUse(email);}
+    private boolean isEmailInUse(String email) {
+        return studentRepository.isEmailInUse(email);
+    }
 
     /**
      * The method for register new user with provided email and set user_id to provided student
-     * @param email our email from studentDTO
+     *
+     * @param email   our email from studentDTO
      * @param student is our provided student
      */
     private Student registerStudent(Student student, String email) {
         log.info("Enter into registerStudent method with student {} and email:{}", student, email);
-        User registeredUserForStudent = userService.registerAutomatic(email, Role.ROLE_STUDENT);
+        User registeredUserForStudent = userService.automaticRegistration(email, Role.ROLE_STUDENT);
         student.setUser(registeredUserForStudent);
         return student;
     }
 
     /**
      * The method used for save new student with registered/found user and set fields to studentDTO
-     * @param student is provided studentImportDTO from file
-     * @param group is provided group from server
+     *
+     * @param student           is provided studentImportDTO from file
+     * @param group             is provided group from server
      * @param registeredStudent is our student that we're going to save
      */
     private StudentImportDTO saveStudentAndSetEmailGroupStatus(StudentImportDTO student,

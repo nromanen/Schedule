@@ -81,10 +81,7 @@ public class StudentControllerTest {
     private StudentDTO studentDTOWithId8L;
     private StudentDTO studentDTOWithId9L;
     private StudentDTO studentDTOWithId10L;
-    private StudentDTO studentDTOWithId11L;
     private StudentDTO studentDTOWithId12L;
-    private StudentDTO studentDTOWithId13L;
-    private StudentDTO studentDTOWithId14L;
 
     private final GroupDTO groupDTO = GroupDTO.builder()
             .id(1L)
@@ -129,39 +126,12 @@ public class StudentControllerTest {
                 .group(groupDTO)
                 .build();
 
-        studentDTOWithId11L = StudentDTO.builder()
-                .id(11L)
-                .name("Second")
-                .surname("Second")
-                .patronymic("Second")
-                .email(null)
-                .group(groupDTO)
-                .build();
-
         studentDTOWithId12L = StudentDTO.builder()
                 .id(12L)
-                .name("Five")
-                .surname("Five")
-                .patronymic("Five")
-                .email(null)
-                .group(groupDTO)
-                .build();
-
-        studentDTOWithId13L = StudentDTO.builder()
-                .id(13L)
-                .name("Six")
-                .surname("Six")
-                .patronymic("Six")
-                .email("Six@test.com")
-                .group(groupDTO)
-                .build();
-
-        studentDTOWithId14L = StudentDTO.builder()
-                .id(14L)
-                .name("Seven")
-                .surname("Seven")
-                .patronymic("Seven")
-                .email(null)
+                .name("Fourth")
+                .surname("Fourth")
+                .patronymic("Fourth")
+                .email("Fourth@test.com")
                 .group(groupDTO)
                 .build();
 
@@ -170,8 +140,7 @@ public class StudentControllerTest {
     @Test
     public void getAllStudents() throws Exception {
         assertions.assertForGetList(asList(
-                studentDTOWithId8L, studentDTOWithId9L, studentDTOWithId10L, studentDTOWithId11L,
-                studentDTOWithId12L, studentDTOWithId13L, studentDTOWithId14L));
+                studentDTOWithId8L, studentDTOWithId9L, studentDTOWithId10L, studentDTOWithId12L));
     }
 
     @Test
@@ -195,8 +164,6 @@ public class StudentControllerTest {
     }
 
     @Test
-    //Expected :200
-    //Actual   :500
     public void updateStudent() throws Exception {
         assertions.assertForUpdate(studentDTOWithId10L);
     }
@@ -249,18 +216,14 @@ public class StudentControllerTest {
     public Object[] parametersForTestValidationException() {
         String objectError = "Student";
 
+        //Object 1
         StudentDTO studentDTOWithNullValues = new StudentDTO();
+        studentDTOWithNullValues.setEmail("12345Asd@test.com");
         ApiValidationError nameIsNullError = new ApiValidationError(
                 objectError,
                 "name",
                 null,
                 "Name cannot be empty"
-        );
-        ApiValidationError emailIsNullError = new ApiValidationError(
-                objectError,
-                "email",
-                null,
-                "Email cannot be empty"
         );
         ApiValidationError surnameIsNullError = new ApiValidationError(
                 objectError,
@@ -283,12 +246,12 @@ public class StudentControllerTest {
 
         List<ApiValidationError> errorListWithNullValues = Arrays.asList(
                 nameIsNullError,
-                emailIsNullError,
                 surnameIsNullError,
                 patronymicIsNullError,
                 groupIsNullError
         );
 
+        //Object 2
         String wordWithLength1 = "T";
         StudentDTO studentDTOWithValuesLengthsLessThanMin = StudentDTO.builder()
                 .name(wordWithLength1)
@@ -322,6 +285,7 @@ public class StudentControllerTest {
                 patronymicLengthIs1Error
         );
 
+        //Object 3
         String wordWithLength55 = RandomStringUtils.random(45, "abc") + "@gmail.com";
         StudentDTO studentDTOWithValuesLengthsMoreThanMax = StudentDTO.builder()
                 .name(wordWithLength55)
@@ -355,6 +319,8 @@ public class StudentControllerTest {
                 patronymicLengthIs55Error
         );
 
+        //Last Object
+        objectError = "User";
         String incorrectEmail = "saass";
         StudentDTO studentDTOWithIncorrectEmail = StudentDTO.builder()
                 .name("sdsdsd")
@@ -367,7 +333,7 @@ public class StudentControllerTest {
                 objectError,
                 "email",
                 incorrectEmail,
-                "Email must match format"
+                "must be a well-formed email address"
         );
 
         return new Object[] {
@@ -396,76 +362,58 @@ public class StudentControllerTest {
         mockMvc.perform(multipart("/students/import").file(multipartFile).param("groupId", "2"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"))
-                .andExpect(jsonPath("$", hasSize(8)))
+                .andExpect(jsonPath("$", hasSize(6)))
 
                 .andExpect(jsonPath("$[0].id").value(1))
                 .andExpect(jsonPath("$[0].name").value("First"))
                 .andExpect(jsonPath("$[0].surname").value("First"))
                 .andExpect(jsonPath("$[0].patronymic").value("First"))
                 .andExpect(jsonPath("$[0].email").value("First@test.com"))
-                .andExpect(jsonPath("$[0].group.id").value(2))
-                .andExpect(jsonPath("$[0].group.title").value("Second Title"))
+                .andExpect(jsonPath("$[0].groupDTO.id").value(2))
+                .andExpect(jsonPath("$[0].groupDTO.title").value("Second Title"))
                 .andExpect(jsonPath("$[0].importSaveStatus").value("SAVED"))
 
-                .andExpect(jsonPath("$[1].id").value(11))
+                .andExpect(jsonPath("$[1].id").value(2))
                 .andExpect(jsonPath("$[1].name").value("Second"))
                 .andExpect(jsonPath("$[1].surname").value("Second"))
                 .andExpect(jsonPath("$[1].patronymic").value("Second"))
                 .andExpect(jsonPath("$[1].email").value("Second@test.com"))
-                .andExpect(jsonPath("$[1].group.id").value(1))
-                .andExpect(jsonPath("$[1].group.title").value("First Title"))
-                .andExpect(jsonPath("$[1].importSaveStatus").value("ALREADY_EXIST"))
+                .andExpect(jsonPath("$[1].groupDTO.id").value(2))
+                .andExpect(jsonPath("$[1].groupDTO.title").value("Second Title"))
+                .andExpect(jsonPath("$[1].importSaveStatus").value("SAVED"))
 
-                .andExpect(jsonPath("$[2].id").value(2))
+                .andExpect(jsonPath("$[2].id").doesNotExist())
                 .andExpect(jsonPath("$[2].name").value("Third"))
                 .andExpect(jsonPath("$[2].surname").value("Third"))
                 .andExpect(jsonPath("$[2].patronymic").value("Third"))
-                .andExpect(jsonPath("$[2].email").value("Third@test.com"))
-                .andExpect(jsonPath("$[2].group.id").value(2))
-                .andExpect(jsonPath("$[2].group.title").value("Second Title"))
-                .andExpect(jsonPath("$[2].importSaveStatus").value("SAVED"))
+                .andExpect(jsonPath("$[2].email").value("Second@test.com"))
+                .andExpect(jsonPath("$[2].groupDTO").doesNotExist())
+                .andExpect(jsonPath("$[2].importSaveStatus").value("ALREADY_EXIST"))
 
-                .andExpect(jsonPath("$[3].id").doesNotExist())
+                .andExpect(jsonPath("$[3].id").value(12))
                 .andExpect(jsonPath("$[3].name").value("Fourth"))
                 .andExpect(jsonPath("$[3].surname").value("Fourth"))
                 .andExpect(jsonPath("$[3].patronymic").value("Fourth"))
                 .andExpect(jsonPath("$[3].email").value("Fourth@test.com"))
-                .andExpect(jsonPath("$[3].group").doesNotExist())
-                .andExpect(jsonPath("$[3].importSaveStatus").value("ROLE_CONFLICT"))
+                .andExpect(jsonPath("$[3].groupDTO.id").value(1))
+                .andExpect(jsonPath("$[3].groupDTO.title").value("First Title"))
+                .andExpect(jsonPath("$[3].importSaveStatus").value("ALREADY_EXIST"))
 
-                .andExpect(jsonPath("$[4].id").value(12))
+                .andExpect(jsonPath("$[4].id").doesNotExist())
                 .andExpect(jsonPath("$[4].name").value("Five"))
                 .andExpect(jsonPath("$[4].surname").value("Five"))
                 .andExpect(jsonPath("$[4].patronymic").value("Five"))
                 .andExpect(jsonPath("$[4].email").value("Five@test.com"))
-                .andExpect(jsonPath("$[4].group.id").value(1))
-                .andExpect(jsonPath("$[4].group.title").value("First Title"))
-                .andExpect(jsonPath("$[4].importSaveStatus").value("ALREADY_EXIST"))
+                .andExpect(jsonPath("$[4].groupDTO").doesNotExist())
+                .andExpect(jsonPath("$[4].importSaveStatus").value("ROLE_CONFLICT"))
 
-                .andExpect(jsonPath("$[5].id").value(13))
-                .andExpect(jsonPath("$[5].name").value("Six"))
-                .andExpect(jsonPath("$[5].surname").value("Six"))
-                .andExpect(jsonPath("$[5].patronymic").value("Six"))
-                .andExpect(jsonPath("$[5].email").value("Six@test.com"))
-                .andExpect(jsonPath("$[5].group.id").value(1))
-                .andExpect(jsonPath("$[5].group.title").value("First Title"))
-                .andExpect(jsonPath("$[5].importSaveStatus").value("ALREADY_EXIST"))
-
-                .andExpect(jsonPath("$[6].id").doesNotExist())
-                .andExpect(jsonPath("$[6].name").value("Seven"))
-                .andExpect(jsonPath("$[6].surname").value("Seven"))
-                .andExpect(jsonPath("$[6].patronymic").value("Seven"))
-                .andExpect(jsonPath("$[6].email").value("Seven@test.com"))
-                .andExpect(jsonPath("$[6].group").doesNotExist())
-                .andExpect(jsonPath("$[6].importSaveStatus").value("ROLE_CONFLICT"))
-
-                .andExpect(jsonPath("$[7].id").doesNotExist())
-                .andExpect(jsonPath("$[7].name").value("Name"))
-                .andExpect(jsonPath("$[7].surname").value("Surname"))
-                .andExpect(jsonPath("$[7].patronymic").value("Patronymic"))
-                .andExpect(jsonPath("$[7].email").value("Email"))
-                .andExpect(jsonPath("$[7].group").doesNotExist())
-                .andExpect(jsonPath("$[7].importSaveStatus").value("VALIDATION_ERROR"));
+                .andExpect(jsonPath("$[5].id").doesNotExist())
+                .andExpect(jsonPath("$[5].name").value("Name"))
+                .andExpect(jsonPath("$[5].surname").value("Surname"))
+                .andExpect(jsonPath("$[5].patronymic").value("Patronymic"))
+                .andExpect(jsonPath("$[5].email").value("Email"))
+                .andExpect(jsonPath("$[5].groupDTO").doesNotExist())
+                .andExpect(jsonPath("$[5].importSaveStatus").value("VALIDATION_ERROR"));
     }
 
     private void assertThatReturnedFieldAlreadyExistsException(MockHttpServletRequestBuilder requestBuilder,

@@ -179,10 +179,6 @@ public class UserServiceImpl implements UserService {
         return registration(user, MessageFormat.format(REGISTRATION_MESSAGE, user.getEmail()));
     }
 
-    public User registerAutomatic (String email, Role role){
-        return automaticRegistration(email, role);
-    }
-
     /**
      * The method used for automatic registration User
      *
