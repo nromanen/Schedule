@@ -7,6 +7,7 @@ import com.softserve.service.MailService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.FileSystemResource;
@@ -17,6 +18,8 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
+import org.springframework.web.multipart.support.StandardServletMultipartResolver;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 import javax.activation.DataHandler;
@@ -33,6 +36,8 @@ import javax.mail.util.ByteArrayDataSource;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
@@ -103,25 +108,16 @@ public class MailServiceImpl implements MailService {
             messageHelper.setSubject(emailMessageDTO.getSubject());
             messageHelper.setText(emailMessageDTO.getText());
             messageHelper.setTo(emailMessageDTO.getReceivers().toArray(String[]::new));
-            File file1 = new File("C:/image/3.txt");
-            File file2 = new File("C:/image/4.txt");
-            File[] attachments= new File[]{ file1, file2 };
+//            File file1 = new File("C:/image/3.txt");
+//            File file2 = new File("C:/image/4.txt");
+//            File[] attachments= new File[]{ file1, file2 };
 
-            if (emailMessageDTO.getAttachments() != null) {
-//                for (MultipartFile attachment: emailMessageDTO.getAttachments()) {
-//                    messageHelper.addAttachment(Objects.requireNonNull(attachment.getOriginalFilename()), attachment);
-                    messageHelper.addAttachment(Objects.requireNonNull(emailMessageDTO.getAttachments().getOriginalFilename()), emailMessageDTO.getAttachments());
-//                }
-            }
-
-            if(emailMessageDTO.getAttachments() == null) {
-                for (File attachment : attachments) {
-                    FileSystemResource fileSystemResource = new FileSystemResource(attachment);
-                    messageHelper.addAttachment(attachment.getName(), fileSystemResource);
+            if (emailMessageDTO.getAttachmentsName() != null) {
+                for (String attachment: emailMessageDTO.getAttachmentsName()) {
+                    File file = new File(System.getProperty("java.io.tmpdir")+"/"+attachment);
+                    messageHelper.addAttachment(Objects.requireNonNull(attachment), file);
                 }
             }
-
-
 
             mailSender.send(messageHelper.getMimeMessage());
         } catch (IOException | MessagingException e) {
@@ -180,4 +176,31 @@ public class MailServiceImpl implements MailService {
         // Send mail
         this.mailSender.send(mimeMessage);
     }
+
+    @Override
+    public List<String> uploadFiles(List<MultipartFile> files) throws IOException {
+        List<String> filesName = new ArrayList<>();
+        String uploadDir = System.getProperty("java.io.tmpdir");
+
+            for(MultipartFile file: files) {
+                File transferFile = new File(uploadDir + "/" + file.getOriginalFilename());
+                file.transferTo(transferFile);
+                filesName.add(file.getOriginalFilename());
+            }
+
+        return filesName;
+    }
+
+    @Bean(name = "multipartResolver")
+    public CommonsMultipartResolver multipartResolver() {
+        CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();
+        multipartResolver.setMaxUploadSize(100000);
+        return multipartResolver;
+    }
+
+    @Bean
+    public StandardServletMultipartResolver multipartResolver2() {
+        return new StandardServletMultipartResolver();
+    }
+
 }

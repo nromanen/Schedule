@@ -23,9 +23,11 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
@@ -123,20 +125,31 @@ public class UserController {
     }
 
     @PostMapping(value = "/send-email")
-    @RequestMapping(path = "/send-email", method = POST, consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
-//    @RequestMapping(path = "/send-email", method = POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE )
     @PreAuthorize("hasRole('TEACHER')")
     @ApiOperation(value = "Send email")
     public ResponseEntity<String> sendEmail(
             @RequestBody EmailMessageDTO emailMessageDTO,
-            @RequestPart MultipartFile document,
             @CurrentUser JwtUser jwtUser
-//                                          @ModelAttribute EmailMessageDTO emailMessageDTO
     ) {
         log.info("Enter into sendEmail(jwtUser(username: {}), emailMessageDTO: {})",
                 jwtUser.getUsername(), emailMessageDTO);
-        emailMessageDTO.setAttachments(document);
         mailService.send(jwtUser.getUsername(), emailMessageDTO);
         return ResponseEntity.status(HttpStatus.OK).body("Massage has sent");
+    }
+
+    @RequestMapping(value = "/upload-files", method = RequestMethod.POST, consumes = "multipart/form-data")
+    @PreAuthorize("hasRole('TEACHER')")
+    @ApiOperation(value = "Upload files")
+    public String uploadFiles(
+            @RequestParam("files") MultipartFile[] multipartFile, ModelMap modelMap
+    ) throws IOException {
+        log.info("Enter into uploadFiles (multipartFile(names: {}))",
+                multipartFile.toString());
+        modelMap.addAttribute("files", multipartFile);
+        return "fileUploadView";
+
+//        List<String> attachmentsName = mailService.uploadFiles(multipartFile);
+//        return ResponseEntity.status(HttpStatus.OK).body(attachmentsName);
+
     }
 }
