@@ -24,6 +24,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -122,13 +123,19 @@ public class UserController {
     }
 
     @PostMapping(value = "/send-email")
+    @RequestMapping(path = "/send-email", method = POST, consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
 //    @RequestMapping(path = "/send-email", method = POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE )
     @PreAuthorize("hasRole('TEACHER')")
     @ApiOperation(value = "Send email")
-    public ResponseEntity<String> sendEmail(@CurrentUser JwtUser jwtUser,
-                                          @ModelAttribute EmailMessageDTO emailMessageDTO) {
+    public ResponseEntity<String> sendEmail(
+            @RequestBody EmailMessageDTO emailMessageDTO,
+            @RequestPart MultipartFile document,
+            @CurrentUser JwtUser jwtUser
+//                                          @ModelAttribute EmailMessageDTO emailMessageDTO
+    ) {
         log.info("Enter into sendEmail(jwtUser(username: {}), emailMessageDTO: {})",
                 jwtUser.getUsername(), emailMessageDTO);
+        emailMessageDTO.setAttachments(document);
         mailService.send(jwtUser.getUsername(), emailMessageDTO);
         return ResponseEntity.status(HttpStatus.OK).body("Massage has sent");
     }

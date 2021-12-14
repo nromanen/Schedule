@@ -105,14 +105,23 @@ public class MailServiceImpl implements MailService {
             messageHelper.setTo(emailMessageDTO.getReceivers().toArray(String[]::new));
             File file1 = new File("C:/image/3.txt");
             File file2 = new File("C:/image/4.txt");
-            File[] attachmens= new File[]{ file1, file2 };
+            File[] attachments= new File[]{ file1, file2 };
 
-
-
-                for (File attachments: attachmens) {
-            FileSystemResource fileSystemResource = new FileSystemResource(attachments);
-                    messageHelper.addAttachment(attachments.getName(), fileSystemResource);
+            if (emailMessageDTO.getAttachments() != null) {
+//                for (MultipartFile attachment: emailMessageDTO.getAttachments()) {
+//                    messageHelper.addAttachment(Objects.requireNonNull(attachment.getOriginalFilename()), attachment);
+                    messageHelper.addAttachment(Objects.requireNonNull(emailMessageDTO.getAttachments().getOriginalFilename()), emailMessageDTO.getAttachments());
+//                }
             }
+
+            if(emailMessageDTO.getAttachments() == null) {
+                for (File attachment : attachments) {
+                    FileSystemResource fileSystemResource = new FileSystemResource(attachment);
+                    messageHelper.addAttachment(attachment.getName(), fileSystemResource);
+                }
+            }
+
+
 
             mailSender.send(messageHelper.getMimeMessage());
         } catch (IOException | MessagingException e) {
