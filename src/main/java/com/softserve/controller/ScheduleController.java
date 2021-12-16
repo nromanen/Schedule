@@ -131,8 +131,11 @@ public class ScheduleController {
     @ApiOperation(value = "Get full schedule for semester. Returns schedule for  rooms")
     public ResponseEntity<List<ScheduleForRoomDTO>> getFullScheduleForRoom(@RequestParam Long semesterId) {
         log.info("In, getFullScheduleForRoom (semesterId = [{}]) ", semesterId);
+        Semester semester = semesterService.getById(semesterId);
+        List<Room> rooms = roomService.getAllOrdered();
         List<ScheduleForRoomDTO> scheduleForRoomDTOS =
-                converterToSchedulesInRoom.convertToSchedulesInRoom(scheduleService.getAllOrdered(semesterId));
+                converterToSchedulesInRoom.getBySemester(rooms, semester,
+                        scheduleService.getAllOrdered(semesterId));
         return ResponseEntity.status(HttpStatus.OK).body(scheduleForRoomDTOS);
     }
 
