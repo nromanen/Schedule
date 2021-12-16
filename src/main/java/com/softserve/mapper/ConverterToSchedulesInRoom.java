@@ -18,69 +18,6 @@ public class ConverterToSchedulesInRoom {
         this.groupMapper = groupMapper;
     }
 
-    public List<ScheduleForRoomDTO> convertToSchedulesInRoom(Map<Room, List<Schedule>> schedules) {
-        List<ScheduleForRoomDTO> schedulesInRoomDTOS = new ArrayList<>();
-        for (var roomSchedule: schedules.entrySet()) {
-            ScheduleForRoomDTO schedule = new ScheduleForRoomDTO();
-            schedule.setRoomId(roomSchedule.getKey().getId());
-            schedule.setRoomName(roomSchedule.getKey().getName());
-            schedule.setRoomType(roomSchedule.getKey().getType().toString());
-            schedule.setSchedules(getDaysOfWeekWithClassesForRoomDTOS(
-                    roomSchedule.getValue().stream()
-                            .collect(Collectors.groupingBy(Schedule::getDayOfWeek))
-            ));
-            schedulesInRoomDTOS.add(schedule);
-        }
-        return schedulesInRoomDTOS;
-    }
-
-    private List<DaysOfWeekWithClassesForRoomDTO> getDaysOfWeekWithClassesForRoomDTOS(Map<DayOfWeek, List<Schedule>> daySchedules) {
-        List<DaysOfWeekWithClassesForRoomDTO> days = new ArrayList<>();
-        for (var daySchedule: daySchedules.entrySet()) {
-            DaysOfWeekWithClassesForRoomDTO daysOfWeekWithClassesForRoomDTO = new DaysOfWeekWithClassesForRoomDTO();
-            daysOfWeekWithClassesForRoomDTO.setDay(daySchedule.getKey());
-            daysOfWeekWithClassesForRoomDTO.setClasses(getRoomClassesInScheduleDTOS(
-                    daySchedule.getValue().stream()
-                            .collect(Collectors.groupingBy(Schedule::getPeriod))
-            ));
-            days.add(daysOfWeekWithClassesForRoomDTO);
-        }
-        return days;
-    }
-
-    private List<RoomClassesInScheduleDTO> getRoomClassesInScheduleDTOS(Map<Period, List<Schedule>> schedules) {
-        List<RoomClassesInScheduleDTO> roomClassesInScheduleDTOS = new ArrayList<>();
-
-        for (var periodSchedule : schedules.entrySet()) {
-            Map<Boolean, List<Schedule>> evenOdd = periodSchedule.getValue().stream()
-                    .collect(Collectors.partitioningBy(s -> s.getEvenOdd().equals(EvenOdd.EVEN)));
-            RoomClassesInScheduleDTO roomClassesInScheduleDTO = new RoomClassesInScheduleDTO();
-            roomClassesInScheduleDTO.setEven(getLessonsInRoomScheduleDTOS(
-                    evenOdd.get(Boolean.TRUE).stream().collect(Collectors.groupingBy(Schedule::getPeriod))
-            ));
-            roomClassesInScheduleDTO.setOdd(getLessonsInRoomScheduleDTOS(
-                    evenOdd.get(Boolean.FALSE).stream().collect(Collectors.groupingBy(Schedule::getPeriod))
-            ));
-            roomClassesInScheduleDTOS.add(roomClassesInScheduleDTO);
-        }
-        return roomClassesInScheduleDTOS;
-    }
-
-    private List<LessonsInRoomScheduleDTO> getLessonsInRoomScheduleDTOS(Map<Period, List<Schedule>> schedules) {
-        List<LessonsInRoomScheduleDTO> lessons = new ArrayList<>();
-        for (var periodSchedule: schedules.entrySet()) {
-            LessonsInRoomScheduleDTO lessonsInRoomScheduleDTO = new LessonsInRoomScheduleDTO();
-            lessonsInRoomScheduleDTO.setClassId(periodSchedule.getKey().getId());
-            lessonsInRoomScheduleDTO.setClassName(periodSchedule.getKey().getName());
-            lessonsInRoomScheduleDTO.setLessons(getLessonsListInRoomScheduleDTOS(
-                    periodSchedule.getValue().stream()
-                            .collect(Collectors.groupingBy(Schedule::getLesson))
-            ));
-            lessons.add(lessonsInRoomScheduleDTO);
-        }
-        return lessons;
-    }
-
     private List<LessonsListInRoomScheduleDTO> getLessonsListInRoomScheduleDTOS(Map<Lesson, List<Schedule>> schedules) {
         List<LessonsListInRoomScheduleDTO> lessonsListInRoomScheduleDTOS = new ArrayList<>();
         for(var lessonSchedule: schedules.entrySet()) {
@@ -173,19 +110,6 @@ public class ConverterToSchedulesInRoom {
             lessons.add(lessonsInRoomScheduleDTO);
         }
         return lessons;
-    }
-
-    public List<ScheduleForRoomDTO> getEmptyBySemester(List<Room> rooms, Semester semester) {
-        List<ScheduleForRoomDTO> schedulesInRoomDTOS = new ArrayList<>();
-        for (var roomSchedule: rooms) {
-            ScheduleForRoomDTO schedule = new ScheduleForRoomDTO();
-            schedule.setRoomId(roomSchedule.getId());
-            schedule.setRoomName(roomSchedule.getName());
-            schedule.setRoomType(roomSchedule.getType().getDescription());
-            schedule.setSchedules(getEmptyDays(semester));
-            schedulesInRoomDTOS.add(schedule);
-        }
-        return schedulesInRoomDTOS;
     }
 
     private List<DaysOfWeekWithClassesForRoomDTO> getEmptyDays(Semester semester) {
