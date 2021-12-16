@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 @Component
 public class ConverterToSchedulesInRoom {
 
-    private GroupMapper groupMapper;
+    private final GroupMapper groupMapper;
 
     public ConverterToSchedulesInRoom(GroupMapper groupMapper) {
         this.groupMapper = groupMapper;
@@ -41,24 +41,30 @@ public class ConverterToSchedulesInRoom {
         for (var daySchedule: daySchedules.entrySet()) {
             DaysOfWeekWithClassesForRoomDTO daysOfWeekWithClassesForRoomDTO = new DaysOfWeekWithClassesForRoomDTO();
             daysOfWeekWithClassesForRoomDTO.setDay(daySchedule.getKey());
-            daysOfWeekWithClassesForRoomDTO.setClasses(getRoomClassesInScheduleDTOS(daySchedule.getValue()));
+            daysOfWeekWithClassesForRoomDTO.setClasses(getRoomClassesInScheduleDTOS(
+                    daySchedule.getValue().stream()
+                            .collect(Collectors.groupingBy(Schedule::getPeriod))
+            ));
             days.add(daysOfWeekWithClassesForRoomDTO);
         }
         return days;
     }
 
-    private List<RoomClassesInScheduleDTO> getRoomClassesInScheduleDTOS(List<Schedule> schedules) {
+    private List<RoomClassesInScheduleDTO> getRoomClassesInScheduleDTOS(Map<Period, List<Schedule>> schedules) {
         List<RoomClassesInScheduleDTO> roomClassesInScheduleDTOS = new ArrayList<>();
-        Map<Boolean, List<Schedule>> evenOdd = schedules.stream()
-                .collect(Collectors.partitioningBy(s -> s.getEvenOdd().equals(EvenOdd.EVEN)));
-        RoomClassesInScheduleDTO roomClassesInScheduleDTO = new RoomClassesInScheduleDTO();
-        roomClassesInScheduleDTO.setEven(getLessonsInRoomScheduleDTOS(
-                evenOdd.get(Boolean.TRUE).stream().collect(Collectors.groupingBy(Schedule::getPeriod))
-        ));
-        roomClassesInScheduleDTO.setOdd(getLessonsInRoomScheduleDTOS(
-                evenOdd.get(Boolean.FALSE).stream().collect(Collectors.groupingBy(Schedule::getPeriod))
-        ));
-        roomClassesInScheduleDTOS.add(roomClassesInScheduleDTO);
+
+        for (var periodSchedule : schedules.entrySet()) {
+            Map<Boolean, List<Schedule>> evenOdd = periodSchedule.getValue().stream()
+                    .collect(Collectors.partitioningBy(s -> s.getEvenOdd().equals(EvenOdd.EVEN)));
+            RoomClassesInScheduleDTO roomClassesInScheduleDTO = new RoomClassesInScheduleDTO();
+            roomClassesInScheduleDTO.setEven(getLessonsInRoomScheduleDTOS(
+                    evenOdd.get(Boolean.TRUE).stream().collect(Collectors.groupingBy(Schedule::getPeriod))
+            ));
+            roomClassesInScheduleDTO.setOdd(getLessonsInRoomScheduleDTOS(
+                    evenOdd.get(Boolean.FALSE).stream().collect(Collectors.groupingBy(Schedule::getPeriod))
+            ));
+            roomClassesInScheduleDTOS.add(roomClassesInScheduleDTO);
+        }
         return roomClassesInScheduleDTOS;
     }
 
