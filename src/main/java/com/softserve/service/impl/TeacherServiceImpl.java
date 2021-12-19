@@ -3,15 +3,12 @@ package com.softserve.service.impl;
 import com.softserve.dto.TeacherDTO;
 import com.softserve.dto.TeacherForUpdateDTO;
 import com.softserve.dto.TeacherImportDTO;
-import com.softserve.dto.TeacherStatus;
+import com.softserve.dto.enums.ImportSaveStatus;
 import com.softserve.entity.Department;
 import com.softserve.entity.Teacher;
 import com.softserve.entity.User;
 import com.softserve.entity.enums.Role;
-import com.softserve.exception.EntityAlreadyExistsException;
-import com.softserve.exception.EntityNotFoundException;
-import com.softserve.exception.FieldAlreadyExistsException;
-import com.softserve.exception.FieldNullException;
+import com.softserve.exception.*;
 import com.softserve.mapper.TeacherMapper;
 import com.softserve.repository.TeacherRepository;
 import com.softserve.service.DepartmentService;
@@ -259,7 +256,6 @@ public class TeacherServiceImpl implements TeacherService {
 
     public TeacherImportDTO saveTeacher(Long departmentId, TeacherImportDTO teacher) {
         try{
-
             Optional<User> userOptional = userService.findSocialUser(teacher.getEmail());
             Teacher newTeacher = teacherMapper.teacherImportDTOToTeacher(teacher);
             Optional<Teacher> teacherFromBase = teacherRepository.getExistingTeacher(newTeacher);
@@ -276,9 +272,13 @@ public class TeacherServiceImpl implements TeacherService {
             }else{
                 return  checkForEmptyFieldsOfExistingTeacher(teacher, userOptional, teacherFromBase, department);
             }
+        }catch (ImportRoleConflictException ex) {
+            teacher.setImportSaveStatus(ImportSaveStatus.ROLE_CONFLICT);
+            log.error("User with current email has another ROLE");
+            return teacher;
         }
         catch (ConstraintViolationException e) {
-            teacher.setTeacherStatus(TeacherStatus.VALIDATION_ERROR);
+            teacher.setImportSaveStatus(ImportSaveStatus.VALIDATION_ERROR);
             log.error("Error occurred while saving teacher with email {}", teacher.getEmail(), e);
             return teacher;
 
@@ -294,17 +294,18 @@ public class TeacherServiceImpl implements TeacherService {
      */
     private TeacherImportDTO assignUserToNewTeacher(TeacherImportDTO teacher, Optional<User> userOptional, Teacher newTeacher, Department department) {
         log.debug("Enter to method if email EXIST and teacher DONT EXIST");
-        if (userOptional.isPresent()) {
+        if (userOptional.isPresent() && userOptional.get().getRole() == Role.ROLE_TEACHER) {
 
             newTeacher.setUserId(userOptional.get().getId());
             newTeacher.setDepartment(department);
             teacherRepository.save(newTeacher);
             TeacherImportDTO savedTeacher = teacherMapper.teacherToTeacherImportDTO(newTeacher);
             savedTeacher.setEmail(teacher.getEmail());
-            savedTeacher.setTeacherStatus(TeacherStatus.SAVED);
+            savedTeacher.setImportSaveStatus(ImportSaveStatus.SAVED);
             return savedTeacher;
+        }else{
+            throw new ImportRoleConflictException("User with current Email has another ROLE");
         }
-        return null;
     }
 
     /**
@@ -328,7 +329,7 @@ public class TeacherServiceImpl implements TeacherService {
             teacherRepository.update(registeredTeacher1);
             TeacherImportDTO savedTeacher = teacherMapper.teacherToTeacherImportDTO(registeredTeacher1);
             savedTeacher.setEmail(teacher.getEmail());
-            savedTeacher.setTeacherStatus(TeacherStatus.ALREADY_EXIST);
+            savedTeacher.setImportSaveStatus(ImportSaveStatus.ALREADY_EXIST);
             return savedTeacher;
         }
         return null;
@@ -348,7 +349,7 @@ public class TeacherServiceImpl implements TeacherService {
             teacherRepository.save(registeredTeacher);
             TeacherImportDTO savedTeacher = teacherMapper.teacherToTeacherImportDTO(registeredTeacher);
             savedTeacher.setEmail(teacher.getEmail());
-            savedTeacher.setTeacherStatus(TeacherStatus.SAVED);
+            savedTeacher.setImportSaveStatus(ImportSaveStatus.SAVED);
             return savedTeacher;
     }
 
@@ -361,7 +362,7 @@ public class TeacherServiceImpl implements TeacherService {
      */
     private TeacherImportDTO checkForEmptyFieldsOfExistingTeacher(TeacherImportDTO teacher, Optional<User> userOptional, Optional<Teacher> teacherFromBase, Department department) {
         log.debug("Enter to method if email EXIST and teacher EXIST");
-        if (userOptional.isPresent() && teacherFromBase.isPresent()) {
+        if (userOptional.isPresent() && teacherFromBase.isPresent() && userOptional.get().getRole() == Role.ROLE_TEACHER) {
 
             Teacher ourTeacherFromBase = getById(teacherFromBase.get().getId());
             if (ourTeacherFromBase.getDepartment() == null || ourTeacherFromBase.getUserId() == null) {
@@ -374,11 +375,13 @@ public class TeacherServiceImpl implements TeacherService {
                 teacherRepository.update(ourTeacherFromBase);
             }
             TeacherImportDTO existedTeacher = teacherMapper.teacherToTeacherImportDTO(ourTeacherFromBase);
-            existedTeacher.setTeacherStatus(TeacherStatus.ALREADY_EXIST);
+            existedTeacher.setImportSaveStatus(ImportSaveStatus.ALREADY_EXIST);
             log.error("Teacher with current email exist ", new FieldAlreadyExistsException(Teacher.class, "email", teacher.getEmail()));
             return existedTeacher;
         }
-        return null;
+        else {
+            throw new ImportRoleConflictException("User with current Email has another ROLE");
+        }
     }
 
 }
