@@ -165,7 +165,8 @@ dependencies {
     implementation group: 'commons-fileupload', name: 'commons-fileupload', version: '1.4'
     implementation group: 'commons-io', name: 'commons-io', version: '2.11.0'
 
-
+    //caching
+    implementation group: 'org.redisson', name: 'redisson', version: '3.16.4'
 
 
 }

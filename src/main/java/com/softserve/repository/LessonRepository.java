@@ -15,4 +15,5 @@ public interface LessonRepository extends BasicRepository <Lesson, Long>  {
     Integer updateLinkToMeeting(Lesson lesson);
     Lesson updateGrouped(Lesson oldLesson,Lesson updatedLesson);
     Lesson deleteGrouped(Lesson lesson);
+    int setGrouped(Long lessonId);
 }
