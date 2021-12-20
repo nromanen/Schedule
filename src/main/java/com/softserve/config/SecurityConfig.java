@@ -4,7 +4,7 @@ import com.softserve.entity.User;
 import com.softserve.exception.AuthGoogleEmailDontExistException;
 import com.softserve.exception.SocialClientRegistrationException;
 import com.softserve.repository.UserRepository;
-import com.softserve.security.customFilter.AuthFilter;
+import com.softserve.security.customFilter.GoogleAuthFilter;
 import com.softserve.security.jwt.JwtConfigurer;
 import com.softserve.security.jwt.JwtTokenProvider;
 import com.softserve.service.UserService;
@@ -101,7 +101,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Autowired
-    private AuthFilter authFilter;
+    private GoogleAuthFilter googleAuthFilter;
 
     @Bean
     @Override
@@ -112,7 +112,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .addFilterBefore(authFilter, LogoutFilter.class)
+                .addFilterBefore(googleAuthFilter, LogoutFilter.class)
                 .cors()
                 .and()
                 .httpBasic().disable()

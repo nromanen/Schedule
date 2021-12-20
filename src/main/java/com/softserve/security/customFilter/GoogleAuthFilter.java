@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Component
-public class AuthFilter extends OncePerRequestFilter {
+public class GoogleAuthFilter extends OncePerRequestFilter {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -31,7 +31,7 @@ public class AuthFilter extends OncePerRequestFilter {
         try {
             filterChain.doFilter(request,response);
         }catch (AuthGoogleEmailDontExistException ex){
-            log.error("Spring Security AuthFilter Exception:",ex);
+            log.error("Spring Security GoogleAuthFilter Exception:",ex);
             resolver.resolveException(request, response, null, ex);
         }
 
