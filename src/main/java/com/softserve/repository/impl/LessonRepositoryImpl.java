@@ -25,6 +25,11 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
             + "and l.semester.id = :semesterId "
             + "and l.lessonType = :lessonType";
 
+    private static final String SET_GROUPED
+            = "update Lesson "
+            + "set grouped = true "
+            + "where id = :id";
+
 
     private static final String UPDATE_GROUPED
             = "update Lesson "
@@ -353,5 +358,14 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
                 .executeUpdate();
         log.debug("Deleted group lessons {}", deleted);
         return lesson;
+    }
+
+    @Override
+    public int setGrouped(Long lessonId){
+        log.info("Entered setGrouped({})", lessonId);
+        return sessionFactory.getCurrentSession()
+                .createQuery(SET_GROUPED)
+                .setParameter("id", lessonId)
+                .executeUpdate();
     }
 }
