@@ -220,14 +220,16 @@ public class ScheduleServiceImpl implements ScheduleService {
      * @return filled schedule for group
      */
     @Override
-    public List<Schedule> getFullScheduleForGroup(Long semesterId, Long groupId) {
+    public Map<Group, List<Schedule>> getFullScheduleForGroup(Long semesterId, Long groupId) {
         log.info("In getFullSchedule(semesterId = [{}], groupId[{}])", semesterId, groupId);
-
+        List<Schedule> schedules;
         if (semesterId != null && groupId != null) {
-            return scheduleRepository.getSchedulesBySemesterGroup(semesterId, groupId);
+            schedules = scheduleRepository.getSchedulesBySemesterGroup(semesterId, groupId);
         } else {
-            return scheduleRepository.getAll();
+            schedules = scheduleRepository.getAll();
         }
+        return schedules.stream()
+                .collect(Collectors.groupingBy(s-> s.getLesson().getGroup()));
     }
 
     /**

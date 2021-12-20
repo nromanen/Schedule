@@ -73,8 +73,8 @@ public class TeacherTableBuilder extends BaseTableBuilder {
             //getting in second loop layer - iterating days
             for (DaysOfWeekWithClassesForTeacherDTO day : schedule.getDays()) {
                 //getting odd and even classes by day and period
-                ClassForTeacherScheduleDTO oddClasses = getClassByPeriod(day.getOddWeek().getPeriods(), period);
-                ClassForTeacherScheduleDTO evenClasses = getClassByPeriod(day.getEvenWeek().getPeriods(), period);
+                ClassForTeacherScheduleDTO oddClasses = getClassByPeriod(day.getOdd(), period);
+                ClassForTeacherScheduleDTO evenClasses = getClassByPeriod(day.getEven(), period);
                 // building cells
                 table.addCell(createInnerCell(oddClasses, evenClasses, language));
             }
@@ -111,7 +111,7 @@ public class TeacherTableBuilder extends BaseTableBuilder {
         log.info("Enter into getAllPeriods method with schedule {}", schedule);
 
         return schedule.getDays().stream()
-                .flatMap(s -> Stream.of(s.getEvenWeek().getPeriods(), s.getOddWeek().getPeriods()))
+                .flatMap(s -> Stream.of(s.getEven(), s.getOdd()))
                 .flatMap(Collection::stream)
                 .map(ClassForTeacherScheduleDTO::getPeriod)
                 .collect(Collectors.toCollection(

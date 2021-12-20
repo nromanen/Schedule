@@ -141,12 +141,12 @@ public class GroupTableBuilder extends BaseTableBuilder {
             // filling in column raws checking needed period
             if (currentClasses.getPeriod().equals(period)) {
                 if (isOddAndEvenClassesAreEqual(currentClasses)) {
-                    cell = generateCell(currentClasses.getWeeks().getEven(), language);
+                    cell = generateCell(currentClasses.getEven(), language);
                 } else {
                     // creating new inner table with two cells - odd and even
                     PdfPTable inner = new PdfPTable(1);
-                    inner.addCell(createUpperInnerCell(currentClasses.getWeeks().getOdd(), language));
-                    inner.addCell(createLowerInnerCell(currentClasses.getWeeks().getEven(), language));
+                    inner.addCell(createUpperInnerCell(currentClasses.getOdd(), language));
+                    inner.addCell(createLowerInnerCell(currentClasses.getEven(), language));
                     cell = new PdfPCell(inner);
                 }
             }
@@ -248,8 +248,8 @@ public class GroupTableBuilder extends BaseTableBuilder {
     }
 
     private boolean isOddAndEvenClassesAreEqual(ClassesInScheduleForGroupDTO classes) {
-        LessonsInScheduleDTO even = classes.getWeeks().getEven();
-        LessonsInScheduleDTO odd = classes.getWeeks().getOdd();
+        LessonsInScheduleDTO even = classes.getEven();
+        LessonsInScheduleDTO odd = classes.getOdd();
         return even != null && even.equals(odd);
     }
 }

@@ -9,6 +9,7 @@ import com.softserve.mapper.*;
 import com.softserve.repository.ScheduleRepository;
 import com.softserve.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -16,147 +17,102 @@ import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Component
 public class ScheduleConverter {
 
     private final ScheduleRepository scheduleRepository;
 
-    private final LessonService lessonService;
-    private final RoomService roomService;
-    private final GroupService groupService;
-    private final TeacherService teacherService;
     private final SemesterService semesterService;
-    private final UserService userService;
-    private final MailService mailService;
     private final GroupMapper groupMapper;
     private final PeriodMapper periodMapper;
     private final RoomForScheduleMapper roomForScheduleMapper;
+    private final LessonForTeacherScheduleMapper lessonForTeacherScheduleMapper;
     private final LessonsInScheduleMapper lessonsInScheduleMapper;
-
+    private final TeacherMapper teacherMapper;
+    private final SemesterMapper semesterMapper;
+    private final RoomMapper roomMapper;
 
     @Autowired
-    public ScheduleConverter(ScheduleRepository scheduleRepository, LessonService lessonService, RoomService roomService,
-                               GroupService groupService, TeacherService teacherService,
-                               SemesterService semesterService, UserService userService, MailService mailService,
+    public ScheduleConverter(ScheduleRepository scheduleRepository, SemesterService semesterService,
                                 GroupMapper groupMapper, PeriodMapper periodMapper, RoomForScheduleMapper roomForScheduleMapper,
-                             LessonsInScheduleMapper lessonsInScheduleMapper) {
+                             LessonsInScheduleMapper lessonsInScheduleMapper, TeacherMapper teacherMapper,
+                             SemesterMapper semesterMapper, RoomMapper roomMapper,
+                             LessonForTeacherScheduleMapper lessonForTeacherScheduleMapper) {
         this.scheduleRepository = scheduleRepository;
-        this.lessonService = lessonService;
-        this.roomService = roomService;
-        this.groupService = groupService;
-        this.teacherService = teacherService;
         this.semesterService = semesterService;
-        this.userService = userService;
-        this.mailService = mailService;
         this.groupMapper = groupMapper;
         this.periodMapper = periodMapper;
         this.roomForScheduleMapper = roomForScheduleMapper;
         this.lessonsInScheduleMapper = lessonsInScheduleMapper;
+        this.teacherMapper = teacherMapper;
+        this.semesterMapper = semesterMapper;
+        this.roomMapper = roomMapper;
+        this.lessonForTeacherScheduleMapper = lessonForTeacherScheduleMapper;
     }
 
-    public ScheduleForTeacherDTO getScheduleForTeacher(Long semesterId, Long teacherId) {
-        List<Schedule> teacherSchedules = scheduleRepository.getSchedulesBySemesterTeacher(semesterId, teacherId);
-
+    public ScheduleForTeacherDTO getScheduleForTeacher(List<Schedule> teacherSchedules) {
         ScheduleForTeacherDTO scheduleForTeacherDTO = new ScheduleForTeacherDTO();
-        SemesterMapper semesterMapper = new SemesterMapperImpl();
-        scheduleForTeacherDTO.setSemester(semesterMapper.semesterToSemesterDTO(teacherSchedules.get(0).getLesson().getSemester()));
-
-        //get Teacher Info
+        scheduleForTeacherDTO.setSemesterId(teacherSchedules.get(0).getLesson().getSemester().getId());
         scheduleForTeacherDTO.setTeacher(teacherMapper.teacherToTeacherDTO(teacherSchedules.get(0).getLesson().getTeacher()));
-
-        List<DayOfWeek> weekList = scheduleRepository.getDaysWhenTeacherHasClassesBySemester(semesterId, teacherId);
-        weekList.sort(Comparator.comparingInt(DayOfWeek::getValue));
-
-        List<DaysOfWeekWithClassesForTeacherDTO> daysOfWeekWithClassesForTeacherDTOList = new ArrayList<>();
-        for (DayOfWeek day : weekList) {
-            DaysOfWeekWithClassesForTeacherDTO daysOfWeekWithClassesForTeacherDTO = new DaysOfWeekWithClassesForTeacherDTO();
-            daysOfWeekWithClassesForTeacherDTO.setDay(day);
-            daysOfWeekWithClassesForTeacherDTO.setEven(getInfoForTeacherScheduleByWeek(semesterId, teacherId, day, EvenOdd.EVEN));
-            daysOfWeekWithClassesForTeacherDTO.setOdd(getInfoForTeacherScheduleByWeek(semesterId, teacherId, day, EvenOdd.ODD));
-            daysOfWeekWithClassesForTeacherDTOList.add(daysOfWeekWithClassesForTeacherDTO);
-        }
-        scheduleForTeacherDTO.setDays(daysOfWeekWithClassesForTeacherDTOList);
+        scheduleForTeacherDTO.setDays(getDaysOfWeekWithClassesForTeacherDTOS(
+                teacherSchedules.stream()
+                        .collect(Collectors.groupingBy(Schedule::getDayOfWeek, TreeMap::new, Collectors.toList()))
+        ));
         return scheduleForTeacherDTO;
     }
 
-    private List<ClassForTeacherScheduleDTO> getInfoForTeacherScheduleByWeek(Long semesterId, Long teacherId, DayOfWeek day, EvenOdd evenOdd) {
-        List<ClassForTeacherScheduleDTO> classForTeacherScheduleDTOList = new ArrayList<>();
+    private List<DaysOfWeekWithClassesForTeacherDTO> getDaysOfWeekWithClassesForTeacherDTOS(Map<DayOfWeek, List<Schedule>> daySchedules) {
+        List<DaysOfWeekWithClassesForTeacherDTO> days = new ArrayList<>();
 
-        ClassesInScheduleForTeacherDTO classesInScheduleForTeacherDTO = new ClassesInScheduleForTeacherDTO();
-
-        List<Period> periodList = scheduleRepository.periodsForTeacherBySemesterByDayByWeek(semesterId, teacherId, day, evenOdd);
-
-        if (!periodList.isEmpty()) {
-            for (Period period : periodList) {
-                ClassForTeacherScheduleDTO classForTeacherScheduleDTO = new ClassForTeacherScheduleDTO();
-                classForTeacherScheduleDTO.setPeriod(periodMapper.convertToDto(period));
-                classForTeacherScheduleDTO.setLessons(getLessonsForTeacherBySemesterByDayByWeekByPeriod(semesterId, teacherId, day, evenOdd, period.getId()));
-                classForTeacherScheduleDTOList.add(classForTeacherScheduleDTO);
-
-            }
+        for (var daySchedule: daySchedules.entrySet()) {
+            DaysOfWeekWithClassesForTeacherDTO daysOfWeekWithClassesForTeacherDTO = new DaysOfWeekWithClassesForTeacherDTO();
+            daysOfWeekWithClassesForTeacherDTO.setDay(daySchedule.getKey());
+            var evenOdd = daySchedule.getValue().stream()
+                    .collect(Collectors.partitioningBy(schedule -> schedule.getEvenOdd().equals(EvenOdd.EVEN)));
+            daysOfWeekWithClassesForTeacherDTO.setEven(getDaysOfWeekWithClassesDTO(
+                    evenOdd.get(Boolean.TRUE).stream()
+                            .collect(Collectors.groupingBy(Schedule::getPeriod)))
+            );
+            daysOfWeekWithClassesForTeacherDTO.setOdd(getDaysOfWeekWithClassesDTO(
+                    evenOdd.get(Boolean.FALSE).stream()
+                            .collect(Collectors.groupingBy(Schedule::getPeriod)))
+            );
+            days.add(daysOfWeekWithClassesForTeacherDTO);
         }
-        classesInScheduleForTeacherDTO.setPeriods(classForTeacherScheduleDTOList);
-        return classForTeacherScheduleDTOList;
+
+        return days;
     }
 
-    private List<LessonForTeacherScheduleDTO> getLessonsForTeacherBySemesterByDayByWeekByPeriod(Long semesterId, Long teacherId, DayOfWeek day, EvenOdd evenOdd, Long periodId) {
-        List<LessonForTeacherScheduleDTO> lessonForTeacherScheduleDTOList = new ArrayList<>();
-        List<Lesson> lessons = scheduleRepository.lessonsForTeacherBySemesterByDayByPeriodByWeek(semesterId, teacherId, periodId, day, evenOdd);
-        for (Lesson lesson : lessons) {
-            LessonForTeacherScheduleDTO lessonForTeacherScheduleDTO = lessonForTeacherScheduleMapper.lessonToLessonForTeacherScheduleDTO(lesson);
-            lessonForTeacherScheduleDTO.setRoom(scheduleRepository.getRoomForLesson(semesterId, periodId, lessonForTeacherScheduleDTO.getId(), day, evenOdd).getName());
-            lessonForTeacherScheduleDTOList.add(lessonForTeacherScheduleDTO);
+    private List<ClassForTeacherScheduleDTO> getDaysOfWeekWithClassesDTO(Map<Period, List<Schedule>> periodSchedules) {
+        List<ClassForTeacherScheduleDTO> daysOfWeekWithClassesForTeacherDTOS = new ArrayList<>();
+
+        for (var periodSchedule:periodSchedules.entrySet()) {
+            ClassForTeacherScheduleDTO classForTeacherScheduleDTO = new ClassForTeacherScheduleDTO();
+            classForTeacherScheduleDTO.setPeriod(periodMapper.convertToDto(periodSchedule.getKey()));
+            classForTeacherScheduleDTO.setLessons(lessonForTeacherScheduleMapper.lessonsToLessonForTeacherScheduleDTOs(
+                    periodSchedule.getValue()
+            ));
+            daysOfWeekWithClassesForTeacherDTOS.add(classForTeacherScheduleDTO);
         }
-        return lessonForTeacherScheduleDTOList;
+
+        return daysOfWeekWithClassesForTeacherDTOS;
     }
 
-    public ScheduleFullDTO getFullScheduleForSemester(Long semesterId) {
+
+    public ScheduleFullDTO getFullScheduleForSemester(List<Schedule> schedules) {
         ScheduleFullDTO scheduleFullDTO = new ScheduleFullDTO();
-        SemesterMapper semesterMapper = new SemesterMapperImpl();
-        scheduleFullDTO.setSemester(semesterMapper.semesterToSemesterDTO(semesterService.getById(semesterId)));
+        Long semesterId = schedules.get(0).getLesson().getSemester().getId();
 
-        List<ScheduleForGroupDTO> scheduleForGroupDTOList = new ArrayList<>();
-        List<Group> groupsForSchedule = new ArrayList<>();
-
-        groupsForSchedule.addAll(scheduleRepository.uniqueGroupsInScheduleBySemester(semesterId));
-        for (Group group : groupsForSchedule) {
-            ScheduleForGroupDTO scheduleForGroupDTO = new ScheduleForGroupDTO();
-            scheduleForGroupDTO.setGroup(groupMapper.groupToGroupDTO(group));
-            scheduleForGroupDTO.setDays(getDaysForSemester(semesterId, group.getId()));
-            scheduleForGroupDTOList.add(scheduleForGroupDTO);
-
-        }
-        scheduleFullDTO.setSchedule(scheduleForGroupDTOList);
+        scheduleFullDTO.setSemester(
+                semesterMapper.semesterToSemesterDTO(
+                        semesterService.getById(semesterId)
+                )
+        );
+        scheduleFullDTO.setSchedule(getFullScheduleForGroup(
+                schedules.stream().
+                        collect(Collectors.groupingBy(s -> s.getLesson().getGroup())))
+        );
         return scheduleFullDTO;
-    }
-
-    private List<DaysOfWeekWithClassesForGroupDTO> getDaysForSemester(Long semesterId, Long groupId) {
-        log.info("In getDaysForSemester(semesterId = [{}])", semesterId);
-        List<DaysOfWeekWithClassesForGroupDTO> daysOfWeekWithClassesForGroupDTOList = new ArrayList<>();
-        Set<DayOfWeek> weekList = semesterService.getById(semesterId).getDaysOfWeek();
-        TreeSet<DayOfWeek> dayOfWeeks = new TreeSet<>(weekList);
-        for (DayOfWeek day : dayOfWeeks) {
-            DaysOfWeekWithClassesForGroupDTO daysOfWeekWithClassesForGroupDTO = new DaysOfWeekWithClassesForGroupDTO();
-            daysOfWeekWithClassesForGroupDTO.setDay(day);
-            daysOfWeekWithClassesForGroupDTO.setClasses(getClassesForSemesterByDay(semesterId, day, groupId));
-            daysOfWeekWithClassesForGroupDTOList.add(daysOfWeekWithClassesForGroupDTO);
-
-        }
-
-        return daysOfWeekWithClassesForGroupDTOList;
-    }
-
-    private List<ClassesInScheduleForGroupDTO> getClassesForSemesterByDay(Long semesterId, DayOfWeek day, Long groupId) {
-
-        Set<Period> semesterPeriods = semesterService.getById(semesterId).getPeriods();
-        List<ClassesInScheduleForGroupDTO> classesInScheduleForGroupDTOList = new ArrayList<>();
-        for (Period period : semesterPeriods) {
-            ClassesInScheduleForGroupDTO classesInScheduleForGroupDTO = new ClassesInScheduleForGroupDTO();
-            classesInScheduleForGroupDTO.setPeriod(periodMapper.convertToDto(period));
-            classesInScheduleForGroupDTO.setWeeks(getLessonsForGroupForPeriodBySemesterAndDay(semesterId, groupId, period.getId(), day));
-            classesInScheduleForGroupDTOList.add(classesInScheduleForGroupDTO);
-        }
-
-        return classesInScheduleForGroupDTOList;
     }
 
 
@@ -184,7 +140,7 @@ public class ScheduleConverter {
             daysOfWeekWithClassesForGroupDTO.setDay(daySchedule.getKey());
             daysOfWeekWithClassesForGroupDTO.setClasses(getClassesForGroupBySemesterByDayOfWeek(daySchedule.getValue()));
             daysOfWeekWithClassesForGroupDTOList.add(daysOfWeekWithClassesForGroupDTO);
-
+            daysOfWeekWithClassesForGroupDTOList.add(daysOfWeekWithClassesForGroupDTO);
         }
         return daysOfWeekWithClassesForGroupDTOList;
     }
@@ -198,132 +154,110 @@ public class ScheduleConverter {
         for (var periodSchedule : uniquePeriods.entrySet()) {
             ClassesInScheduleForGroupDTO classesInScheduleForGroupDTO = new ClassesInScheduleForGroupDTO();
             classesInScheduleForGroupDTO.setPeriod(periodMapper.convertToDto(periodSchedule.getKey()));
-            var evenOdd = periodSchedule.getValue().stream().collect(Collectors.partitioningBy(schedule -> schedule.getEvenOdd().equals(EvenOdd.EVEN)));
-            classesInScheduleForGroupDTO.setEven(lessonsInScheduleMapper.lessonToLessonsInScheduleDTO(evenOdd.get(Boolean.TRUE)));
-            classesInScheduleForGroupDTO.setOdd(lessonsInScheduleMapper.lessonToLessonsInScheduleDTO(evenOdd.get(Boolean.FALSE)));
+            var evenOdd = periodSchedule.getValue().stream()
+                    .collect(Collectors.partitioningBy(schedule -> schedule.getEvenOdd().equals(EvenOdd.EVEN)));
+            LessonsInScheduleDTO lessons = lessonsInScheduleMapper.lessonToLessonsInScheduleDTO(
+                    evenOdd.get(Boolean.TRUE).stream().map(Schedule::getLesson).findFirst().orElse(new Lesson()));
+            lessons.setRoom(roomForScheduleMapper
+                    .roomToRoomForScheduleDTO(evenOdd.get(Boolean.TRUE).stream()
+                            .findFirst().orElse(new Schedule()).getRoom())
+            );
+            classesInScheduleForGroupDTO.setEven(lessons);
+            lessons = lessonsInScheduleMapper.lessonToLessonsInScheduleDTO(
+                    evenOdd.get(Boolean.FALSE).stream().map(Schedule::getLesson).findFirst().orElse(new Lesson()));
+            lessons.setRoom(roomForScheduleMapper
+                    .roomToRoomForScheduleDTO(evenOdd.get(Boolean.FALSE).stream()
+                            .findFirst().orElse(new Schedule()).getRoom())
+            );
+            classesInScheduleForGroupDTO.setOdd(lessons);
             classesInScheduleForGroupDTOList.add(classesInScheduleForGroupDTO);
         }
 
         return classesInScheduleForGroupDTOList;
     }
 
-    //verifies if group with groupId has Schedule in semester with semesterId
-    private boolean groupHasScheduleInSemester(Long semesterId, Long groupId) {
-        return scheduleRepository.countSchedulesForGroupInSemester(semesterId, groupId) != 0;
+
+    public List<ScheduleForRoomDTO> getScheduleForRooms(Map<Room, List<Schedule>> roomSchedules) {
+        List<ScheduleForRoomDTO> schedules = new ArrayList<>();
+        for (var room: roomSchedules.entrySet()) {
+            ScheduleForRoomDTO scheduleForRoomDTO = new ScheduleForRoomDTO();
+            scheduleForRoomDTO.setRoom(roomMapper.convertToDto(room.getKey()));
+            scheduleForRoomDTO.setSchedules(getDaysOfWeekWithClasses(
+                    room.getValue().stream().collect(Collectors.groupingBy(Schedule::getDayOfWeek))
+            ));
+            schedules.add(scheduleForRoomDTO);
+        }
+
+        return schedules;
     }
 
-
-    public Map<Room, Map<DayOfWeek, Map<EvenOdd, Map<Period, Map<String, Map<String, Map<LessonType, List<Lesson>>>>>>>>
-    getScheduleForRooms(Long semesterId) {
-        List<Schedule> schedulesForRooms = scheduleRepository.getSchedulesOrderedByRooms(semesterId);
-        List<Room> roomForDetails = roomService.getAll();
-        Map<Room, Map<DayOfWeek, Map<EvenOdd, Map<Period, Map<String, Map<String, Map<LessonType, List<Lesson>>>>>>>> roomMap = new LinkedHashMap<>();
-        for (Room room : roomForDetails) {
-            roomMap.put(room, getLessonsForRoomBySemester(semesterId, room.getId()));
+    private List<DaysOfWeekWithClassesForRoomDTO> getDaysOfWeekWithClasses(Map<DayOfWeek, List<Schedule>> daySchedules) {
+        List<DaysOfWeekWithClassesForRoomDTO> daysOfWeekWithClassesForRoomDTOS = new ArrayList<>();
+        for (var daySchedule: daySchedules.entrySet()) {
+            DaysOfWeekWithClassesForRoomDTO daysOfWeekWithClassesForRoomDTO = new DaysOfWeekWithClassesForRoomDTO();
+            daysOfWeekWithClassesForRoomDTO.setDay(daySchedule.getKey());
+            Map<Boolean, List<Schedule>> evenOdd =
+                    daySchedule.getValue().stream()
+                            .collect(Collectors.partitioningBy(s -> s.getEvenOdd().equals(EvenOdd.EVEN)));
+            daysOfWeekWithClassesForRoomDTO.setEven(
+                    getLessonsInRoomScheduleDTOs(evenOdd.get(Boolean.TRUE).stream()
+                            .collect(Collectors.groupingBy(Schedule::getPeriod))
+            ));
+            daysOfWeekWithClassesForRoomDTO.setOdd(getLessonsInRoomScheduleDTOs(evenOdd.get(Boolean.FALSE).stream()
+                    .collect(Collectors.groupingBy(Schedule::getPeriod))
+            ));
+            daysOfWeekWithClassesForRoomDTOS.add(daysOfWeekWithClassesForRoomDTO);
         }
-        return roomMap;
+        return daysOfWeekWithClassesForRoomDTOS;
     }
 
-    private Map<DayOfWeek, Map<EvenOdd, Map<Period, Map<String, Map<String, Map<LessonType, List<Lesson>>>>>>> getLessonsForRoomBySemester(Long semesterId, Long roomId) {
-        log.info("In getLessonsForRoomBySemester(semesterId = [{}], roomId = [{}])", semesterId, roomId);
-        List<Schedule> schedules = scheduleRepository.scheduleForRoomBySemester(semesterId, roomId);
+    private List<LessonsInRoomScheduleDTO> getLessonsInRoomScheduleDTOs(Map<Period, List<Schedule>> schedulePeriods) {
+        List<LessonsInRoomScheduleDTO> lessons = new ArrayList<>();
 
-        Map<Period, List<Schedule>> uniquePeriodMap = new HashMap<>();
-        for (Schedule schedule1 : schedules) {
-            uniquePeriodMap.computeIfAbsent(schedule1.getPeriod(), k -> new ArrayList<>()).add(schedule1);
+        for(var schedulePeriod: schedulePeriods.entrySet()) {
+            LessonsInRoomScheduleDTO lesson = new LessonsInRoomScheduleDTO();
+            lesson.setClassId(schedulePeriod.getKey().getId());
+            lesson.setClassName(schedulePeriod.getKey().getName());
+            lesson.setLessons(getLessonsListInRoomScheduleDTOS(schedulePeriod.getValue()
+                    .stream()
+                    .collect(Collectors.groupingBy(Schedule::getLesson))));
+            lessons.add(lesson);
         }
-        Map<DayOfWeek, Map<EvenOdd, Map<Period, Map<String, Map<String, Map<LessonType, List<Lesson>>>>>>> dayOfWeekMapMap = new LinkedHashMap<>();
-        for (DayOfWeek day : DayOfWeek.values()) {
-            Map<EvenOdd, Map<Period, Map<String, Map<String, Map<LessonType, List<Lesson>>>>>> evenMap = new HashMap<>();
-            Map<Period, Map<String, Map<String, Map<LessonType, List<Lesson>>>>> evenPeriodListMap = new LinkedHashMap<>();
-            Map<Period, Map<String, Map<String, Map<LessonType, List<Lesson>>>>> oddPeriodListMap = new LinkedHashMap<>();
-            for (Map.Entry<Period, List<Schedule>> periodListEntry : uniquePeriodMap.entrySet()) {
-                Map<String, Map<String, Map<LessonType, List<Lesson>>>> resultEven = periodListEntry.getValue().stream().filter(schedule ->
-                                schedule.getDayOfWeek().equals(day) && (schedule.getEvenOdd().equals(EvenOdd.EVEN) || schedule.getEvenOdd().equals(EvenOdd.WEEKLY)))
-                        .map(Schedule::getLesson).collect(Collectors.groupingBy(Lesson::getSubjectForSite,
-                                Collectors.groupingBy(lesson -> lesson.getTeacher().getSurname(),
-                                        Collectors.groupingBy(Lesson::getLessonType))));
 
-                Map<String, Map<String, Map<LessonType, List<Lesson>>>> resultOdd = periodListEntry.getValue().stream().filter(schedule ->
-                                schedule.getDayOfWeek().equals(day) && (schedule.getEvenOdd().equals(EvenOdd.ODD) || schedule.getEvenOdd().equals(EvenOdd.WEEKLY)))
-                        .map(Schedule::getLesson).collect(Collectors.groupingBy(Lesson::getSubjectForSite,
-                                Collectors.groupingBy(lesson -> lesson.getTeacher().getSurname(),
-                                        Collectors.groupingBy(Lesson::getLessonType))));
-                evenPeriodListMap.put(periodListEntry.getKey(), resultEven);
-                evenMap.put(EvenOdd.EVEN, evenPeriodListMap);
-                oddPeriodListMap.put(periodListEntry.getKey(), resultOdd);
-                evenMap.put(EvenOdd.ODD, oddPeriodListMap);
-            }
-            if (!evenMap.containsKey(EvenOdd.EVEN)) {
-                evenMap.put(EvenOdd.EVEN, null);
-            }
-
-            if (!evenMap.containsKey(EvenOdd.ODD)) {
-                evenMap.put(EvenOdd.ODD, null);
-            }
-            dayOfWeekMapMap.put(day, evenMap);
-        }
-        return dayOfWeekMapMap;
+        return lessons;
     }
 
-    //check dates(even/odd/weekly) for distribution in baskets and create Map<LocalDate, Map<Period, List<Schedule>>>
-    private Map<LocalDate, Map<Period, List<Schedule>>> fullScheduleForTeacherByDateRange(List<Schedule> schedules, LocalDate fromDate, LocalDate toDate) {
-        Map<LocalDate, List<Schedule>> scheduleByDateRange = new LinkedHashMap<>();
+    private List<LessonsListInRoomScheduleDTO> getLessonsListInRoomScheduleDTOS(Map<Lesson, List<Schedule>> lessonsSchedules) {
+        List<LessonsListInRoomScheduleDTO> lessons = new ArrayList<>();
 
-        for (LocalDate date = fromDate; date.isBefore(toDate.plusDays(1)); date = date.plusDays(1)) {
-            List<Schedule> scheduleList = new ArrayList<>();
-            for (Schedule schedule : schedules) {
-                if (date.getDayOfWeek() == schedule.getDayOfWeek() && (date.isBefore(schedule.getLesson().getSemester().getEndDay()) ||
-                        date.isEqual(schedule.getLesson().getSemester().getEndDay())) && (date.isAfter(schedule.getLesson().getSemester().getStartDay())
-                        || date.isEqual(schedule.getLesson().getSemester().getStartDay()))) {
-                    int countStartDate = schedule.getLesson().getSemester().getStartDay().getDayOfWeek().getValue();
-                    int countEndDate = date.getDayOfWeek().getValue();
-                    int countDays = Integer.parseInt(String.valueOf(ChronoUnit.DAYS.between(
-                            schedule.getLesson().getSemester().getStartDay().minusDays(countStartDate), date.plusDays(7 - countEndDate))));
-
-                    switch (schedule.getEvenOdd()) {
-                        case ODD:
-                            if ((countDays / 7) % 2 != 0) {
-                                scheduleList.add(schedule);
-                            }
-                            break;
-                        case EVEN:
-                            if ((countDays / 7) % 2 == 0) {
-                                scheduleList.add(schedule);
-                            }
-                            break;
-                        case WEEKLY:
-                            scheduleList.add(schedule);
-                            break;
-                    }
-                }
-            }
-            if (!scheduleList.isEmpty()) {
-                scheduleByDateRange.put(date, scheduleList);
-            }
+        for (var lesson : lessonsSchedules.entrySet()) {
+            LessonsListInRoomScheduleDTO lessonsList = new LessonsListInRoomScheduleDTO();
+            lessonsList.setLessonType(lesson.getKey().getLessonType());
+            lessonsList.setSubjectName(lesson.getKey().getSubjectForSite());
+            lessonsList.setSurname(lesson.getKey().getTeacher().getSurname());
+            lessonsList.setGroups(getGroupDTOInRoomSchedules(lesson.getValue().stream()
+                    .map(s -> s.getLesson().getGroup())
+                    .collect(Collectors.toList())));
+            lessons.add(lessonsList);
         }
-        return convertToMapScheduleDateRange(scheduleByDateRange);
+
+        return lessons;
     }
 
-    //convert from Map<LocalDate, List<Schedule>> to Map<LocalDate, Map<Period, List<Schedule>>> for easy way to convert dto in future
-    private Map<LocalDate, Map<Period, List<Schedule>>> convertToMapScheduleDateRange(Map<LocalDate, List<Schedule>> scheduleByDateRange) {
-        Map<LocalDate, Map<Period, List<Schedule>>> map = new LinkedHashMap<>();
+    private List<GroupDTOInRoomSchedule> getGroupDTOInRoomSchedules(List<Group> groupSchedules) {
+        List<GroupDTOInRoomSchedule> groupDTOSchedules = new ArrayList<>();
 
-        for (Map.Entry<LocalDate, List<Schedule>> itr : scheduleByDateRange.entrySet()) {
-            Map<Period, List<Schedule>> collect = itr.getValue().stream()
-                    .collect(Collectors.groupingBy(Schedule::getPeriod));
-
-
-            Map<Period, List<Schedule>> sorted = new LinkedHashMap<>();
-            collect.entrySet().stream().sorted(Map.Entry.comparingByKey(Comparator.comparing(Period::getName)))
-                    .forEachOrdered(x -> sorted.put(x.getKey(), x.getValue()));
-            map.put(itr.getKey(), sorted);
+        for(var groupSchedule: groupSchedules) {
+            GroupDTOInRoomSchedule groupDTOInRoomSchedule = new GroupDTOInRoomSchedule();
+            groupDTOInRoomSchedule.setGroupId(groupSchedule.getId());
+            groupDTOInRoomSchedule.setGroupName(groupSchedule.getTitle());
+            groupDTOSchedules.add(groupDTOInRoomSchedule);
         }
-        return map;
+
+        return groupDTOSchedules;
     }
 
     public Map<LocalDate, Map<Period, Schedule>> scheduleByDateRangeForTeacher(LocalDate fromDate, LocalDate toDate, Long teacherId) {
-        log.info("In scheduleByDateRangeForTeacher with fromDate = {} and toDate = {} and teacher = {}", fromDate, toDate, teacherId);
         List<Schedule> schedules = scheduleRepository.scheduleByDateRangeForTeacher(fromDate, toDate, teacherId);
 
         List<Schedule> dateRangeSchedule = new ArrayList<>();

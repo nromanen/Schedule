@@ -230,14 +230,14 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
             + "join fetch l.semester as sem "
             + "join fetch sem.periods "
             + "join fetch  sem.groups "
-            + "where s.lesson.semester = :semesterId "
+            + "where s.lesson.semester.id = :semesterId "
             + "order by s.room.sortOrder";
 
     private static final String GET_BY_SEMESTER_GROUP
             = "select s " +
             "from Schedule s " +
-            "where s.lesson.semester = :semesterId " +
-            "and s.lesson.group = :groupId";
+            "where s.lesson.semester.id = :semesterId " +
+            "and s.lesson.group.id = :groupId";
 
 
     @Override
@@ -661,7 +661,7 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
 
     @Override
     public List<Schedule> getSchedulesBySemesterGroup(Long semesterId, Long groupId){
-        log.info("Entered getScheulesBySemesterGroup({},{})", semesterId, groupId);
+        log.info("Entered getSchedulesBySemesterGroup({},{})", semesterId, groupId);
         return sessionFactory.getCurrentSession()
                 .createQuery(GET_BY_SEMESTER_GROUP, Schedule.class)
                 .setParameter("semesterId", semesterId)

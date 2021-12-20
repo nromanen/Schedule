@@ -23,7 +23,7 @@ public interface ScheduleService extends BasicService<Schedule, Long> {
 
     boolean isConflictForGroupInSchedule(Long semesterId, DayOfWeek dayOfWeek, EvenOdd evenOdd, Long classId, Long lessonId);
 
-    List<Schedule> getFullScheduleForGroup(Long semesterId, Long groupId);
+    Map<Group, List<Schedule>> getFullScheduleForGroup(Long semesterId, Long groupId);
 
     List<Schedule> getFullScheduleForSemester(Long semesterId);
 

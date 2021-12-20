@@ -3,6 +3,7 @@ package com.softserve.controller;
 import com.softserve.dto.*;
 import com.softserve.entity.Schedule;
 import com.softserve.entity.Semester;
+import com.softserve.mapper.converter.ScheduleConverter;
 import com.softserve.service.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -25,13 +26,17 @@ public class ArchiveController {
     private final ScheduleService scheduleService;
     private final SemesterService semesterService;
     private final LessonService lessonService;
+    private final ScheduleConverter scheduleConverter;
 
     @Autowired
-    public ArchiveController(ArchiveService archiveService, ScheduleService scheduleService, SemesterService semesterService, LessonService lessonService) {
+    public ArchiveController(ArchiveService archiveService, ScheduleService scheduleService,
+                             SemesterService semesterService, LessonService lessonService,
+                             ScheduleConverter scheduleConverter) {
         this.archiveService = archiveService;
         this.scheduleService = scheduleService;
         this.semesterService = semesterService;
         this.lessonService = lessonService;
+        this.scheduleConverter = scheduleConverter;
     }
 
     @PostMapping("/{semesterId}")
@@ -44,7 +49,7 @@ public class ArchiveController {
         if (schedules.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageDTO(String.format("Schedules with semesterId = %d not found.", semesterId)));
         }
-        ScheduleFullDTO scheduleFullDTO = scheduleService.getFullScheduleForSemester(semesterId);
+        ScheduleFullDTO scheduleFullDTO = scheduleConverter.getFullScheduleForSemester(scheduleService.getFullScheduleForSemester(semesterId));
 
         ScheduleFullForArchiveDTO scheduleForArchiveDTO = new ScheduleFullForArchiveDTO(true, scheduleFullDTO.getSemester(), scheduleFullDTO.getSchedule());
 
