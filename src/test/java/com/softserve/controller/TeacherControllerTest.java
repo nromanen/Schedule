@@ -401,14 +401,13 @@ public class TeacherControllerTest {
                 .andExpect(jsonPath("$[5].importSaveStatus").value("ALREADY_EXIST"))
                 .andExpect(jsonPath("$[5].department.id").value(1))
 
-                .andExpect(jsonPath("$[6].id").value(5))
+                .andExpect(jsonPath("$[6].id").value(IsNull.nullValue()))
                 .andExpect(jsonPath("$[6].name").value("Seven"))
                 .andExpect(jsonPath("$[6].surname").value("Seven"))
                 .andExpect(jsonPath("$[6].patronymic").value("Seven"))
                 .andExpect(jsonPath("$[6].position").value("Seven"))
                 .andExpect(jsonPath("$[6].email").value("Seven@test.com"))
-                .andExpect(jsonPath("$[6].importSaveStatus").value("ALREADY_EXIST"))
-                .andExpect(jsonPath("$[6].department.id").value(1))
+                .andExpect(jsonPath("$[6].importSaveStatus").value("ROLE_CONFLICT"))
 
                 .andExpect(jsonPath("$[7].id").value(IsNull.nullValue()))
                 .andExpect(jsonPath("$[7].name").value("Name"))

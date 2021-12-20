@@ -268,7 +268,7 @@ public class TeacherServiceImpl implements TeacherService {
                return registerUserAndUpdateTeacher(teacher, teacherFromBase, department);
             }
             else if(teacherFromBase.isEmpty()){
-                return  assignUserToNewTeacher( teacher, userOptional, newTeacher, department);
+                return  assignUserToNewTeacher(userOptional,teacherFromBase);
             }else{
                 return  checkForEmptyFieldsOfExistingTeacher(teacher, userOptional, teacherFromBase, department);
             }
@@ -287,20 +287,16 @@ public class TeacherServiceImpl implements TeacherService {
 
     /**
      * The method used for assigning existing user to provided new teacher
-     * @param teacher our teacher from file
      * @param userOptional our user from database
-     * @param newTeacher our teacher which we will save to database
-     * @param department department which provided from server
+     * @param teacherFromBase teacher from base
      */
-    private TeacherImportDTO assignUserToNewTeacher(TeacherImportDTO teacher, Optional<User> userOptional, Teacher newTeacher, Department department) {
+    private TeacherImportDTO assignUserToNewTeacher(Optional<User> userOptional, Optional<Teacher> teacherFromBase) {
         log.debug("Enter to method if email EXIST and teacher DONT EXIST");
         if (userOptional.isPresent() && userOptional.get().getRole() == Role.ROLE_TEACHER) {
-
-            newTeacher.setUserId(userOptional.get().getId());
-            newTeacher.setDepartment(department);
-            teacherRepository.save(newTeacher);
-            TeacherImportDTO savedTeacher = teacherMapper.teacherToTeacherImportDTO(newTeacher);
-            savedTeacher.setEmail(teacher.getEmail());
+            if(teacherFromBase.isEmpty()){
+               throw new ImportRoleConflictException("Error");
+            }
+            TeacherImportDTO savedTeacher = teacherMapper.teacherToTeacherImportDTO(teacherFromBase.get());
             savedTeacher.setImportSaveStatus(ImportSaveStatus.SAVED);
             return savedTeacher;
         }else{
