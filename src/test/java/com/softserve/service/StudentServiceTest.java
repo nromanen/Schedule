@@ -12,7 +12,7 @@ import com.softserve.exception.EntityNotFoundException;
 import com.softserve.exception.FieldAlreadyExistsException;
 import com.softserve.exception.FieldNullException;
 import com.softserve.mapper.GroupMapper;
-import com.softserve.mapper.StudentMapperNew;
+import com.softserve.mapper.StudentMapper;
 import com.softserve.repository.StudentRepository;
 import com.softserve.service.impl.StudentServiceImpl;
 import junitparams.JUnitParamsRunner;
@@ -53,7 +53,7 @@ public class StudentServiceTest {
     @InjectMocks
     StudentServiceImpl studentService;
     @Mock
-        StudentMapperNew studentMapper;
+    StudentMapper studentMapper;
     @Mock
             UserService userService;
     @Mock

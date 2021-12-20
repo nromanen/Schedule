@@ -9,7 +9,7 @@ import com.softserve.entity.User;
 import com.softserve.entity.enums.Role;
 import com.softserve.exception.*;
 import com.softserve.mapper.GroupMapper;
-import com.softserve.mapper.StudentMapperNew;
+import com.softserve.mapper.StudentMapper;
 import com.softserve.repository.StudentRepository;
 import com.softserve.service.GroupService;
 import com.softserve.service.StudentService;
@@ -33,13 +33,13 @@ import java.util.concurrent.CompletableFuture;
 @Service
 public class StudentServiceImpl implements StudentService {
     private final StudentRepository studentRepository;
-    private final StudentMapperNew studentMapper;
+    private final StudentMapper studentMapper;
     private final GroupService groupService;
     private final UserService userService;
     private final GroupMapper groupMapper;
 
     @Autowired
-    public StudentServiceImpl(StudentRepository studentRepository, StudentMapperNew studentMapper,
+    public StudentServiceImpl(StudentRepository studentRepository, StudentMapper studentMapper,
                               GroupService groupService, UserService userService,
                               GroupMapper groupMapper) {
         this.studentRepository = studentRepository;

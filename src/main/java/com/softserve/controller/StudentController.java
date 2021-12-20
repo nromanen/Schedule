@@ -2,7 +2,7 @@ package com.softserve.controller;
 
 import com.softserve.dto.StudentDTO;
 import com.softserve.dto.StudentImportDTO;
-import com.softserve.mapper.StudentMapperNew;
+import com.softserve.mapper.StudentMapper;
 import com.softserve.service.StudentService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -25,10 +25,10 @@ import java.util.List;
 public class StudentController {
 
     private final StudentService studentService;
-    private final StudentMapperNew studentMapper;
+    private final StudentMapper studentMapper;
 
     @Autowired
-    public StudentController(StudentService studentService, StudentMapperNew studentMapper) {
+    public StudentController(StudentService studentService, StudentMapper studentMapper) {
         this.studentService = studentService;
         this.studentMapper = studentMapper;
     }
