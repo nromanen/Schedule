@@ -1,6 +1,5 @@
 import { call, takeEvery, put, select, takeLatest } from 'redux-saga/effects';
 import { reset } from 'redux-form';
-import { has } from 'lodash';
 import { GROUP_FORM } from '../constants/reduxForms';
 import * as actionTypes from '../actions/actionsType';
 import { setLoading } from '../actions/loadingIndicator';
@@ -10,7 +9,14 @@ import {
     setOpenErrorSnackbar,
     setOpenInfoSnackbar,
 } from '../actions/snackbar';
-import { DISABLED_GROUPS_URL, GROUP_URL, SEMESTERS_URL, GROUPS_URL } from '../constants/axios';
+import {
+    GROUP_URL,
+    GROUPS_URL,
+    SEMESTERS_URL,
+    GROUPS_AFTER_URL,
+    GROUPS_ORDERED_URL,
+    DISABLED_GROUPS_URL,
+} from '../constants/axios';
 import { DELETE, POST, PUT } from '../constants/methods';
 import { axiosCall } from '../services/axios';
 import { FORM_CHOSEN_SEMESTER_LABEL } from '../constants/translationLabels/formElements';
@@ -30,7 +36,6 @@ import {
     clearGroupSuccess,
     createGroupSuccess,
 } from '../actions';
-import { hasDisabled } from '../constants/disabledCard';
 import { GROUP } from '../constants/names';
 import { handleFormSubmit } from '../helper/handleFormSubmit';
 
@@ -63,13 +68,13 @@ function* getDisabledGroups() {
 }
 
 function* getEnabledGroups() {
-    yield call(getGroups, GROUP_URL);
+    yield call(getGroups, GROUPS_ORDERED_URL);
 }
 
 function* createGroup({ data }) {
     try {
-        const res = yield call(axiosCall, GROUP_URL, POST, data);
-        yield put(createGroupSuccess(res.data));
+        const res = yield call(axiosCall, GROUPS_AFTER_URL, POST, data);
+        yield put(createGroupSuccess(res.data, data.afterId));
         yield put(reset(GROUP_FORM));
         const message = createDynamicMessage(GROUP, CREATED_LABEL);
         yield put(setOpenSuccessSnackbar(message));
@@ -78,14 +83,10 @@ function* createGroup({ data }) {
     }
 }
 
-function* updateGroup({ data }) {
+function* updateGroup({ data, url }) {
     try {
-        const res = yield call(axiosCall, GROUP_URL, PUT, data);
-        if (has(data, hasDisabled)) {
-            yield put(deleteGroupSuccess(data.id));
-        } else {
-            yield put(updateGroupSuccess(res.data));
-        }
+        const res = yield call(axiosCall, url, PUT, data);
+        yield put(updateGroupSuccess(res.data, data.afterId));
         yield put(selectGroupSuccess(null));
         const message = createDynamicMessage(GROUP, UPDATED_LABEL);
         yield put(setOpenSuccessSnackbar(message));
@@ -97,7 +98,11 @@ function* updateGroup({ data }) {
 
 function* submitGroupForm({ group }) {
     try {
-        yield call(handleFormSubmit(group, createGroup, updateGroup), { data: group });
+        const url = GROUPS_AFTER_URL;
+        yield call(handleFormSubmit(group, createGroup, updateGroup), {
+            data: group,
+            url,
+        });
     } catch (err) {
         yield put(setOpenErrorSnackbar(createErrorMessage(err)));
     }
@@ -114,12 +119,29 @@ function* deleteGroup({ id }) {
     }
 }
 
-function* toggleDisabledGroup({ groupId, disabledStatus }) {
+function* dragAndDropGroup({ dragGroup, afterGroupId }) {
+    try {
+        yield put(setLoading(true));
+        const url = GROUPS_AFTER_URL;
+        yield call(updateGroup, {
+            data: { ...dragGroup, afterId: afterGroupId },
+            url,
+        });
+    } catch (err) {
+        yield put(setOpenErrorSnackbar(createErrorMessage(err)));
+    } finally {
+        yield put(setLoading(false));
+    }
+}
+
+function* toggleDisabledGroup({ groupId }) {
     try {
         if (groupId) {
+            const url = GROUP_URL;
             const groups = yield select(getGroupsState);
             const group = groups.find((item) => item.id === groupId);
-            yield call(updateGroup, { data: { ...group, disable: !disabledStatus } });
+            yield call(updateGroup, { data: { ...group, disable: !group.disable }, url });
+            yield put(deleteGroupSuccess(groupId));
         }
     } catch (err) {
         yield put(setOpenErrorSnackbar(createErrorMessage(err)));
@@ -154,12 +176,13 @@ export function* getAllPublicGroups({ id }) {
 }
 
 export default function* groupWatcher() {
-    yield takeEvery(actionTypes.TOGGLE_DISABLED_STATUS_GROUP, toggleDisabledGroup);
-    yield takeLatest(actionTypes.GET_DISABLED_GROUPS_START, getDisabledGroups);
-    yield takeLatest(actionTypes.GET_ENABLED_GROUPS_START, getEnabledGroups);
-    yield takeEvery(actionTypes.GET_GROUP_BY_ID_START, getGroupById);
-    yield takeEvery(actionTypes.SUBMIT_GROUP_START, submitGroupForm);
     yield takeEvery(actionTypes.DELETE_GROUP_START, deleteGroup);
     yield takeEvery(actionTypes.CLEAR_GROUP_START, clearGroup);
+    yield takeEvery(actionTypes.GET_GROUP_BY_ID_START, getGroupById);
+    yield takeEvery(actionTypes.SUBMIT_GROUP_START, submitGroupForm);
+    yield takeLatest(actionTypes.GET_ENABLED_GROUPS_START, getEnabledGroups);
+    yield takeEvery(actionTypes.DRAG_AND_DROP_GROUP_START, dragAndDropGroup);
+    yield takeLatest(actionTypes.GET_DISABLED_GROUPS_START, getDisabledGroups);
     yield takeLatest(actionTypes.GET_ALL_PUBLIC_GROUPS_START, getAllPublicGroups);
+    yield takeEvery(actionTypes.TOGGLE_DISABLED_STATUS_GROUP, toggleDisabledGroup);
 }

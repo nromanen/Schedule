@@ -1,6 +1,7 @@
 package com.softserve.controller;
 
 import com.softserve.dto.GroupDTO;
+import com.softserve.dto.GroupOrderDTO;
 import com.softserve.dto.GroupWithStudentsDTO;
 import com.softserve.dto.GroupForUpdateDTO;
 import com.softserve.entity.Group;
@@ -108,15 +109,15 @@ public class GroupController {
 
     @PostMapping( "/after")
     @ApiOperation(value = "Create group ordered after another")
-    public ResponseEntity<GroupDTO> saveGroupAfter(@RequestBody GroupDTO groupDTO) {
+    public ResponseEntity<GroupDTO> saveGroupAfter(@RequestBody GroupOrderDTO groupDTO) {
         log.info("Entered saveGroupAfter({})", groupDTO);
-        Group group = groupService.saveAfterOrder(groupMapper.groupDTOToGroup(groupDTO),groupDTO.getAfterId());
+        Group group = groupService.saveAfterOrder(groupMapper.groupDTOToGroup(groupDTO), groupDTO.getAfterId());
         return ResponseEntity.status(HttpStatus.CREATED).body(groupMapper.groupToGroupDTO(group));
     }
 
     @PutMapping("/after")
     @ApiOperation(value = "Update group order")
-    public ResponseEntity<GroupDTO> updateGroupOrder(@RequestBody GroupDTO groupDTO) {
+    public ResponseEntity<GroupDTO> updateGroupOrder(@RequestBody GroupOrderDTO groupDTO) {
         log.info("Entered updateGroupOrder(({})", groupDTO);
         Group group = groupService.updateGroupOrder(groupMapper.groupDTOToGroup(groupDTO), groupDTO.getAfterId());
         return ResponseEntity.status(HttpStatus.OK).body(groupMapper.groupToGroupDTO(group));

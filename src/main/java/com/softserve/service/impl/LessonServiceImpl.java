@@ -13,6 +13,8 @@ import com.softserve.service.SubjectService;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,13 +39,14 @@ public class LessonServiceImpl implements LessonService {
 
     /**
      * Method gets information from Repository for particular lesson with id parameter
+     *
      * @param id Identity number of the lesson
      * @return Lesson entity
      */
     @Override
     @Transactional(readOnly = true)
     public Lesson getById(Long id) {
-        log.info("In getById(id = [{}])",  id);
+        log.info("In getById(id = [{}])", id);
         Lesson lesson = lessonRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException(Lesson.class, "id", id.toString()));
         Hibernate.initialize(lesson.getSemester().getPeriods());
@@ -53,10 +56,12 @@ public class LessonServiceImpl implements LessonService {
 
     /**
      * Method gets information about all lessons from Repository
+     *
      * @return List of all lessons
      */
     @Override
     @Transactional(readOnly = true)
+    @Cacheable("lessons")
     public List<Lesson> getAll() {
         log.info("In getAll()");
         List<Lesson> lessons = lessonRepository.getAll();
@@ -69,10 +74,12 @@ public class LessonServiceImpl implements LessonService {
 
     /**
      * Method gets information about all lessons from Repository
+     *
      * @return List of all lessons
      */
     @Override
     @Transactional(readOnly = true)
+    @Cacheable(value = "lessons", key = "#teacherId")
     public List<Lesson> getLessonByTeacher(Long teacherId) {
         log.info("In getLessonByTeacher()");
         List<Lesson> lessons = lessonRepository.getLessonByTeacher(teacherId, semesterService.getCurrentSemester().getId());
@@ -81,24 +88,25 @@ public class LessonServiceImpl implements LessonService {
             Hibernate.initialize(e.getSemester().getGroups());
         });
         return lessons;
-       }
+    }
 
     /**
      * Method saves new lesson to Repository and automatically assigns
      * teacher for site by teacher data if teacher for site is empty or null and
      * subject for site by subject name if subject for site is empty or null
+     *
      * @param object Lesson entity with info to be saved
      * @return saved Lesson entity
      */
     @Override
     @Transactional
+    @CacheEvict(value = "lessons", allEntries = true)
     public Lesson save(Lesson object) {
         object.setSemester(semesterService.getCurrentSemester());
         log.info("In save(entity = [{}]", object);
-        if (isLessonForGroupExists(object)){
+        if (isLessonForGroupExists(object)) {
             throw new EntityAlreadyExistsException("Lesson with this parameters already exists");
-        }
-    else {
+        } else {
             //Fill in subject for site by subject name (from JSON) if subject for site is empty or null
             if (object.getSubjectForSite().isEmpty() || object.getSubjectForSite() == null) {
                 Subject subject = subjectService.getById(object.getSubject().getId());
@@ -111,35 +119,35 @@ public class LessonServiceImpl implements LessonService {
     /**
      * Method saves new lessons to Repository.
      * Saves only lessons that did not exist in the database.
+     *
      * @param lessons Lessons entities with info to be saved
      * @return saved Lessons entities
      */
     @Override
     @Transactional
+    @CacheEvict(value = "lessons", allEntries = true)
     public List<Lesson> save(List<Lesson> lessons) {
         log.info("In save(lessons = [{}])", lessons);
         List<Lesson> lessonsList = new ArrayList<>();
         lessons.forEach(lesson -> {
-            try {
-                lessonsList.add(save(lesson));
-            } catch (EntityAlreadyExistsException e) {
-                log.warn(e.getMessage());
-            }
+            lessonsList.add(save(lesson));
         });
         return lessonsList;
     }
 
     /**
      * Method updates information for an existing lesson in Repository
+     *
      * @param lesson Lesson entity with info to be updated
      * @return updated Lesson entity
      */
     @Override
     @Transactional
+    @CacheEvict(value = "lessons", allEntries = true)
     public Lesson update(Lesson lesson) {
         lesson.setSemester(semesterService.getCurrentSemester());
         log.info("In update(entity = [{}]", lesson);
-        if (isLessonForGroupExistsAndIgnoreWithId(lesson)){
+        if (isLessonForGroupExistsAndIgnoreWithId(lesson)) {
             throw new EntityAlreadyExistsException("Lesson with this parameters already exists");
         }
         if (lesson.isGrouped()) {
@@ -156,13 +164,15 @@ public class LessonServiceImpl implements LessonService {
 
     /**
      * Method deletes an existing lesson from Repository
+     *
      * @param object Lesson entity to be deleted
      * @return deleted Lesson entity
      */
     @Override
     @Transactional
+    @CacheEvict(value = "lessons", allEntries = true)
     public Lesson delete(Lesson object) {
-        log.info("In delete(object = [{}])",  object);
+        log.info("In delete(object = [{}])", object);
         if (object.isGrouped()) {
             return lessonRepository.deleteGrouped(object);
         }
@@ -171,14 +181,16 @@ public class LessonServiceImpl implements LessonService {
     }
 
     /**
-     *  Method gets information about all lessons for particular group from Repository
+     * Method gets information about all lessons for particular group from Repository
+     *
      * @param groupId Identity number of the group for which need to find all lessons
      * @return List of filtered lessons
      */
     @Override
     @Transactional(readOnly = true)
+    @Cacheable(value = "lessons", key = "#groupId")
     public List<Lesson> getAllForGroup(Long groupId) {
-        log.info("In getAllForGroup(groupId = [{}])",  groupId);
+        log.info("In getAllForGroup(groupId = [{}])", groupId);
         List<Lesson> lessons = lessonRepository.getAllForGroup(groupId, semesterService.getCurrentSemester().getId());
         lessons.forEach(e -> {
             Hibernate.initialize(e.getSemester().getPeriods());
@@ -189,6 +201,7 @@ public class LessonServiceImpl implements LessonService {
 
     /**
      * Method creates a list from Lesson type enum
+     *
      * @return Lesson type enum in the List
      */
     @Override
@@ -200,6 +213,7 @@ public class LessonServiceImpl implements LessonService {
 
     /**
      * Method verifies if lesson doesn't exist in Repository
+     *
      * @param lesson Lesson entity that needs to be verified
      * @return true if such lesson already exists
      */
@@ -207,11 +221,12 @@ public class LessonServiceImpl implements LessonService {
     @Transactional(readOnly = true)
     public boolean isLessonForGroupExists(Lesson lesson) {
         log.info("In isLessonForGroupExists(lesson = [{}])", lesson);
-        return lessonRepository.countLessonDuplicates(lesson) !=0;
+        return lessonRepository.countLessonDuplicates(lesson) != 0;
     }
 
     /**
      * Method verifies if lesson doesn't exist in Repository
+     *
      * @param lesson Lesson entity that needs to be verified
      * @return true if such lesson already exists
      */
@@ -230,6 +245,7 @@ public class LessonServiceImpl implements LessonService {
      */
     @Override
     @Transactional(readOnly = true)
+    @Cacheable(value = "lessons", key = "#semesterId")
     public List<Lesson> getLessonsBySemester(Long semesterId) {
         log.info("In getLessonsBySemester(semesterId = [{}])", semesterId);
         List<Lesson> lessons = lessonRepository.getLessonsBySemester(semesterId);
@@ -243,7 +259,7 @@ public class LessonServiceImpl implements LessonService {
     /**
      * Method copyLessonsFromOneToAnotherSemester save lessons in db by copy from one semester to another
      *
-     * @param lessons  List<Lesson> from one semester
+     * @param lessons    List<Lesson> from one semester
      * @param toSemester Semester entity for which save schedule
      * @return list of lessons for toSemester
      */
@@ -252,7 +268,7 @@ public class LessonServiceImpl implements LessonService {
     public List<Lesson> copyLessonsFromOneToAnotherSemester(List<Lesson> lessons, Semester toSemester) {
         log.info("In method copyLessonsFromOneToAnotherSemester with lessons = {} and toSemester = {}", lessons, toSemester);
         List<Lesson> toLessons = new ArrayList<>();
-        for (Lesson lesson: lessons) {
+        for (Lesson lesson : lessons) {
             lesson.setSemester(toSemester);
             toLessons.add(lessonRepository.save(lesson));
         }
@@ -262,7 +278,7 @@ public class LessonServiceImpl implements LessonService {
     /**
      * Method saveLessonDuringCopy save lessons in db
      *
-     * @param lesson  Lesson entity
+     * @param lesson Lesson entity
      * @return Lesson entity after saved in db
      */
     @Override
@@ -274,6 +290,7 @@ public class LessonServiceImpl implements LessonService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "lessons", allEntries = true)
     public void deleteLessonBySemesterId(Long semesterId) {
         log.info("In method deleteLessonBySemesterId with semesterId = {}", semesterId);
         lessonRepository.deleteLessonBySemesterId(semesterId);
@@ -311,6 +328,7 @@ public class LessonServiceImpl implements LessonService {
 
     /**
      * The method used for updating links to meeting for lessons
+     *
      * @param lesson Lesson object with new link to meeting
      * @return Integer the number of links that was updated
      */

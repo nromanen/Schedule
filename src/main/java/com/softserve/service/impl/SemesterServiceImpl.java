@@ -14,6 +14,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -53,6 +57,7 @@ public class SemesterServiceImpl implements SemesterService {
      * @param id Identity number of the Semester
      * @return Semester entity
      */
+    @Cacheable(value = "map", key = "#id")
     @Override
     public Semester getById(Long id) {
         log.info("In getById(id = [{}])", id);
@@ -69,15 +74,11 @@ public class SemesterServiceImpl implements SemesterService {
      *
      * @return List of all semesters
      */
+    @Cacheable(value = "semesterList")
     @Override
     public List<Semester> getAll() {
         log.debug("In getAll()");
         List<Semester> semesters = semesterRepository.getAll();
-        for (Semester semester : semesters) {
-            Hibernate.initialize(semester.getDaysOfWeek());
-            Hibernate.initialize(semester.getPeriods());
-            Hibernate.initialize(semester.getGroups());
-        }
         return semesters;
     }
 
@@ -87,6 +88,7 @@ public class SemesterServiceImpl implements SemesterService {
      * @param semester Semester entity to be saved
      * @return saved Semester entity
      */
+    @CacheEvict(value = "semesterList", allEntries = true)
     @Override
     public Semester save(Semester semester) {
         log.info("In save(entity = [{}]", semester);
@@ -158,6 +160,8 @@ public class SemesterServiceImpl implements SemesterService {
      * @param semester Semester entity with updated fields
      * @return updated Semester entity
      */
+    @Caching(put = {@CachePut(value = "map", key = "#semester.id")},
+            evict = {@CacheEvict(value = "semesterList", allEntries = true)})
     @Override
     public Semester update(Semester semester) {
         log.debug("In update(entity = [{}]", semester);
@@ -173,6 +177,7 @@ public class SemesterServiceImpl implements SemesterService {
      * @param object Semester entity to be deleted
      * @return deleted Semester entity
      */
+    @CacheEvict(value = "map", key = "#object.id")
     @Override
     public Semester delete(Semester object) {
         log.debug("In delete(object = [{}])", object);
@@ -251,7 +256,7 @@ public class SemesterServiceImpl implements SemesterService {
     private boolean isScheduleWithLessonsCanNotBeRemoved(Semester semester) {
         log.debug("Enter into isScheduleWithLessonsCanNotBeRemoved with entity: {}", semester);
         List<Schedule> scheduleInSemester = scheduleRepository.getScheduleBySemester(semester.getId());
-        return !scheduleInSemester.containsAll(scheduleInSemester);
+        return CollectionUtils.isNotEmpty(scheduleInSemester);
     }
 
     /**
@@ -290,6 +295,7 @@ public class SemesterServiceImpl implements SemesterService {
      * @param semesterId id of the semester that needs to be current
      * @return changed Semester
      */
+    @CacheEvict(value = "semesterList", allEntries = true)
     @Override
     public Semester changeCurrentSemester(Long semesterId) {
         log.debug("In changeCurrentSemester(Long semesterId = [{}])", semesterId);
@@ -304,6 +310,7 @@ public class SemesterServiceImpl implements SemesterService {
      * @param semesterId id of the semester that needs to be current
      * @return changed Semester
      */
+    @CacheEvict(value = "semesterList", allEntries = true)
     @Override
     public Semester changeDefaultSemester(Long semesterId) {
         log.debug("In changeDefaultSemester(Long semesterId = [{}])", semesterId);
@@ -319,12 +326,13 @@ public class SemesterServiceImpl implements SemesterService {
      * @param group    group to add
      * @return changed Semester
      */
+    @CacheEvict(value = "semesterList", allEntries = true)
     @Override
     public Semester addGroupToSemester(Semester semester, Group group) {
         log.debug("In addGroupToSemester (semester = [{}], group = [{}])", semester, group);
-        List<Group> groups = semester.getGroups();
+        Set<Group> groups = semester.getGroups();
         if (groups == null) {
-            groups = new ArrayList<>();
+            groups = new HashSet<>();
         }
         groups.add(group);
         semester.setGroups(groups);
@@ -339,11 +347,13 @@ public class SemesterServiceImpl implements SemesterService {
      * @param groupIds groups to add
      * @return changed Semester
      */
+    @CacheEvict(value = "semesterList", allEntries = true)
     @Override
     public Semester addGroupsToSemester(Semester semester, List<Long> groupIds) {
         log.info("In addGroupsToSemester (semester = [{}], groupIds = [{}])", semester, groupIds);
         List<Group> groups = groupRepository.getGroupsByGroupIds(groupIds);
-        semester.setGroups(groups);
+        Set<Group> groupSet = new HashSet<>(groups);
+        semester.setGroups(groupSet);
         semesterRepository.update(semester);
         log.debug("Semester groups has been updated");
         return semester;
@@ -401,7 +411,7 @@ public class SemesterServiceImpl implements SemesterService {
     @Override
     public Semester deleteGroupFromSemester(Semester semester, Group group) {
         log.debug("In deleteGroupFromSemester (semester = [{}], group = [{}])", semester, group);
-        List<Group> groups = semester.getGroups();
+        Set<Group> groups = semester.getGroups();
         groups.remove(group);
         update(semester);
         return semester;
@@ -416,7 +426,7 @@ public class SemesterServiceImpl implements SemesterService {
     @Override
     public Semester deleteAllContentFromSemester(Semester semester) {
         log.debug("In deleteAllContentFromSemester (semester = [{}] )", semester);
-        List<Group> groups = new ArrayList<>();
+        Set<Group> groups = new HashSet<>();
         Set<Period> periods = new HashSet<>();
         Set<DayOfWeek> dayOfWeeks = new HashSet<>();
         semester.setGroups(groups);

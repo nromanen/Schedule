@@ -125,20 +125,6 @@ public class GroupRepositoryImpl extends BasicRepositoryImpl<Group, Long> implem
     }
 
     /**
-     * The method is used to get sorting order of the next element
-     *
-     * @param position sorting order of the element
-     * @return sorting order of the nex element
-     */
-    @Override
-    public Optional<Integer> getNextPosition(Integer position) {
-        log.info("Entered getNextPosition({})", position);
-        return getSession().createQuery(GET_NEXT_POSITION, Integer.class)
-                .setParameter("position", position)
-                .uniqueResultOptional();
-    }
-
-    /**
      * The method is used to retrieve max sorting order
      *
      * @return max sorting order

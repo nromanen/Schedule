@@ -2,6 +2,7 @@ package com.softserve.service;
 
 import com.softserve.entity.Group;
 import java.util.List;
+import java.util.Set;
 
 public interface GroupService extends BasicService<Group, Long> {
     Group getWithStudentsById(Long id);
@@ -10,11 +11,11 @@ public interface GroupService extends BasicService<Group, Long> {
 
     List<Group> getDisabled();
 
-    List<Group> getGroupsBySemesterId(Long semesterId);
+    Set<Group> getGroupsBySemesterId(Long semesterId);
 
-    List<Group> getGroupsForCurrentSemester();
+    Set<Group> getGroupsForCurrentSemester();
 
-    List<Group> getGroupsForDefaultSemester();
+    Set<Group> getGroupsForDefaultSemester();
 
     List<Group> getGroupsByGroupIds(List<Long> groupId);
 
