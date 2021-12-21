@@ -268,7 +268,7 @@ public class TeacherServiceImpl implements TeacherService {
                return registerUserAndUpdateTeacher(teacher, teacherFromBase, department);
             }
             else if(teacherFromBase.isEmpty()){
-                return  assignUserToNewTeacher(userOptional,teacherFromBase);
+                return  assignUserToNewTeacher(userOptional,teacher, newTeacher, department);
             }else{
                 return  checkForEmptyFieldsOfExistingTeacher(teacher, userOptional, teacherFromBase, department);
             }
@@ -288,15 +288,18 @@ public class TeacherServiceImpl implements TeacherService {
     /**
      * The method used for assigning existing user to provided new teacher
      * @param userOptional our user from database
-     * @param teacherFromBase teacher from base
      */
-    private TeacherImportDTO assignUserToNewTeacher(Optional<User> userOptional, Optional<Teacher> teacherFromBase) {
+    private TeacherImportDTO assignUserToNewTeacher(Optional<User> userOptional, TeacherImportDTO teacher, Teacher newTeacher, Department department) {
         log.debug("Enter to method if email EXIST and teacher DONT EXIST");
         if (userOptional.isPresent() && userOptional.get().getRole() == Role.ROLE_TEACHER) {
-            if(teacherFromBase.isEmpty()){
-               throw new ImportRoleConflictException("Error");
+            if(teacherRepository.findByUserId(userOptional.get().getId()).isPresent()){
+                throw new ImportRoleConflictException("Teacher with current email exist");
             }
-            TeacherImportDTO savedTeacher = teacherMapper.teacherToTeacherImportDTO(teacherFromBase.get());
+            newTeacher.setUserId(userOptional.get().getId());
+            newTeacher.setDepartment(department);
+            teacherRepository.save(newTeacher);
+            TeacherImportDTO savedTeacher = teacherMapper.teacherToTeacherImportDTO(newTeacher);
+            savedTeacher.setEmail(teacher.getEmail());
             savedTeacher.setImportSaveStatus(ImportSaveStatus.SAVED);
             return savedTeacher;
         }else{
