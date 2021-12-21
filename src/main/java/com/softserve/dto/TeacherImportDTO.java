@@ -1,6 +1,7 @@
 package com.softserve.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.softserve.dto.enums.ImportSaveStatus;
 import lombok.Data;
 
 @Data
@@ -13,5 +14,5 @@ public class TeacherImportDTO {
     private String email;
     @JsonProperty("department")
     private DepartmentDTO departmentDTO;
-    private TeacherStatus teacherStatus;
+    private ImportSaveStatus importSaveStatus;
 }
