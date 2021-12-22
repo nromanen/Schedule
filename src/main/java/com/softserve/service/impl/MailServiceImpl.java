@@ -5,6 +5,7 @@ import com.softserve.entity.TemporarySchedule;
 import com.softserve.exception.MessageNotSendException;
 import com.softserve.service.MailService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -98,7 +99,7 @@ public class MailServiceImpl implements MailService {
      * @param emailMessageDTO message that will be sent
      */
     @Override
-    public void send(String sender, EmailMessageDTO emailMessageDTO) {
+    public void send(String sender, EmailMessageDTO emailMessageDTO) throws IOException {
         log.info("Enter into send method with sender - {}, emailMessageDTO - {}", sender, emailMessageDTO);
         try {
             MimeMessage message = this.mailSender.createMimeMessage();
@@ -108,9 +109,6 @@ public class MailServiceImpl implements MailService {
             messageHelper.setSubject(emailMessageDTO.getSubject());
             messageHelper.setText(emailMessageDTO.getText());
             messageHelper.setTo(emailMessageDTO.getReceivers().toArray(String[]::new));
-//            File file1 = new File("C:/image/3.txt");
-//            File file2 = new File("C:/image/4.txt");
-//            File[] attachments= new File[]{ file1, file2 };
 
             if (emailMessageDTO.getAttachmentsName() != null) {
                 for (String attachment: emailMessageDTO.getAttachmentsName()) {
@@ -123,6 +121,8 @@ public class MailServiceImpl implements MailService {
         } catch (IOException | MessagingException e) {
             throw new MessageNotSendException(e.getMessage());
         }
+            FileUtils.cleanDirectory(new File(System.getProperty("java.io.tmpdir")));
+
     }
 
     @Override
@@ -178,7 +178,7 @@ public class MailServiceImpl implements MailService {
     }
 
     @Override
-    public List<String> uploadFiles(List<MultipartFile> files) throws IOException {
+    public List<String> uploadFiles(MultipartFile[] files) throws IOException {
         List<String> filesName = new ArrayList<>();
         String uploadDir = System.getProperty("java.io.tmpdir");
 
@@ -189,18 +189,6 @@ public class MailServiceImpl implements MailService {
             }
 
         return filesName;
-    }
-
-    @Bean(name = "multipartResolver")
-    public CommonsMultipartResolver multipartResolver() {
-        CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();
-        multipartResolver.setMaxUploadSize(100000);
-        return multipartResolver;
-    }
-
-    @Bean
-    public StandardServletMultipartResolver multipartResolver2() {
-        return new StandardServletMultipartResolver();
     }
 
 }

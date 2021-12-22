@@ -12,11 +12,11 @@ import java.util.List;
 public interface MailService {
     void send(String receiver, String subject, String message);
 
-    void send(String sender, EmailMessageDTO emailMessageDTO);
+    void send(String sender, EmailMessageDTO emailMessageDTO) throws IOException;
 
     void send(String fileName, String receiver, String subject, String message, ByteArrayOutputStream bos) throws MessagingException;
 
     void send(final String emailTo, final String subject, TemporarySchedule temporarySchedule, final String emailTemplate) throws MessagingException;
 
-    List<String> uploadFiles(List<MultipartFile> multipartFile) throws IOException;
+    List<String> uploadFiles(MultipartFile[] multipartFile) throws IOException;
 }

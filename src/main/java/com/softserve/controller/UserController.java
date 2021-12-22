@@ -23,12 +23,24 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
@@ -130,7 +142,7 @@ public class UserController {
     public ResponseEntity<String> sendEmail(
             @RequestBody EmailMessageDTO emailMessageDTO,
             @CurrentUser JwtUser jwtUser
-    ) {
+    ) throws IOException {
         log.info("Enter into sendEmail(jwtUser(username: {}), emailMessageDTO: {})",
                 jwtUser.getUsername(), emailMessageDTO);
         mailService.send(jwtUser.getUsername(), emailMessageDTO);
@@ -140,16 +152,22 @@ public class UserController {
     @RequestMapping(value = "/upload-files", method = RequestMethod.POST, consumes = "multipart/form-data")
     @PreAuthorize("hasRole('TEACHER')")
     @ApiOperation(value = "Upload files")
-    public String uploadFiles(
-            @RequestParam("files") MultipartFile[] multipartFile, ModelMap modelMap
-    ) throws IOException {
-        log.info("Enter into uploadFiles (multipartFile(names: {}))",
-                multipartFile.toString());
+    public ResponseEntity<List<String>> uploadFiles(
+            @RequestParam("files") MultipartFile[] multipartFile, ModelMap modelMap) throws IOException {
+
         modelMap.addAttribute("files", multipartFile);
-        return "fileUploadView";
+        if(multipartFile !=null) {
+            log.info("Enter (not Null) into uploadFiles (count of multipartFile: {})",
+                    Arrays.stream(multipartFile).count());
+            for (MultipartFile file : multipartFile) {
+                log.info("Enter into uploadFiles (multipartFile(names: {}))",
+                        file.getOriginalFilename());
+            }
+        } else {
+            return null;
+        }
 
-//        List<String> attachmentsName = mailService.uploadFiles(multipartFile);
-//        return ResponseEntity.status(HttpStatus.OK).body(attachmentsName);
-
+        List<String> attachmentsName = mailService.uploadFiles(multipartFile);
+        return ResponseEntity.status(HttpStatus.OK).body(attachmentsName);
     }
 }

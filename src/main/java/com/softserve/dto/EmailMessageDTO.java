@@ -1,7 +1,6 @@
 package com.softserve.dto;
 
 import lombok.*;
-import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 @Data
@@ -15,7 +14,4 @@ public class EmailMessageDTO {
     private String text;
     private List<String> receivers;
     private List<String> attachmentsName;
-
-//    System.getProperty("java.io.tmpdir");
-
 }
