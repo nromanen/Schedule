@@ -1,9 +1,13 @@
 import { connect } from 'react-redux';
 
-import { getLessonsByGroupStart, setScheduleLoading, showAllGroupsSuccess } from '../../actions';
+import {
+    getLessonsByGroupStart,
+    setScheduleLoading,
+    showAllGroupsSuccess,
+    getAllPublicGroupsStart,
+} from '../../actions';
 import { getClassScheduleListStart } from '../../actions/classes';
 import { clearScheduleStart, getAllScheduleItemsStart } from '../../actions/schedule';
-import { getEnabledGroupsStart } from '../../actions/groups';
 import EditCurrentSchedulePage from '../../components/EditCurrentSchedule/EditCurrentSchedulePage';
 import { getListOfRoomsStart } from '../../actions/rooms';
 
@@ -19,7 +23,6 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    getEnabledGroups: () => dispatch(getEnabledGroupsStart()),
     getAllLessonsByGroup: (groupId) => dispatch(getLessonsByGroupStart(groupId)),
     getAllScheduleItems: () => dispatch(getAllScheduleItemsStart()),
     clearScheduleItems: (id) => dispatch(clearScheduleStart(id)),
@@ -27,6 +30,7 @@ const mapDispatchToProps = (dispatch) => ({
     showAllGroups: () => dispatch(showAllGroupsSuccess()),
     getClassScheduleList: () => dispatch(getClassScheduleListStart()),
     getListOfRooms: () => dispatch(getListOfRoomsStart()),
+    getAllPublicGroupsStart: (id) => dispatch(getAllPublicGroupsStart(id)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(EditCurrentSchedulePage);

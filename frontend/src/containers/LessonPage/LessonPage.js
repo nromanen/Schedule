@@ -11,7 +11,7 @@ import {
     setIsOpenConfirmDialog,
     selectGroupId,
     selectGroupSuccess,
-    getEnabledGroupsStart,
+    getAllPublicGroupsStart,
 } from '../../actions';
 import { setOpenErrorSnackbar } from '../../actions/snackbar';
 import { copyLessonsFromSemesterStart, getAllSemestersStart } from '../../actions/semesters';
@@ -34,7 +34,6 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    getEnabledGroupsStart: () => dispatch(getEnabledGroupsStart()),
     getLessonsByGroupStart: (groupId) => dispatch(getLessonsByGroupStart(groupId)),
     getLessonTypesStart: () => dispatch(getLessonTypesStart()),
     deleteLessonCardStart: (lessonId) => dispatch(deleteLessonCardStart(lessonId)),
@@ -49,6 +48,7 @@ const mapDispatchToProps = (dispatch) => ({
     selectGroupSuccess: (id) => dispatch(selectGroupSuccess(id)),
     showAllTeachers: () => dispatch(showAllTeachersStart()),
     getAllSemesters: () => dispatch(getAllSemestersStart()),
+    getAllPublicGroupsStart: (id) => dispatch(getAllPublicGroupsStart(id)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(LessonPage);

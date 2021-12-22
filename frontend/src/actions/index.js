@@ -59,6 +59,7 @@ export {
     showAllGroupsSuccess,
     toggleDisabledStatus,
     getEnabledGroupsStart,
+    getAllPublicGroupsStart,
 } from './groups';
 
 export {

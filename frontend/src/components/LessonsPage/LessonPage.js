@@ -50,7 +50,7 @@ const LessonPage = (props) => {
         handleLesson,
         selectByGroupId,
         selectGroupSuccess,
-        getEnabledGroupsStart,
+        getAllPublicGroupsStart,
         showAllTeachers,
         getAllSemesters,
     } = props;
@@ -67,11 +67,13 @@ const LessonPage = (props) => {
             getLessonsByGroupStart(groupId);
         }
     }, [groupId]);
+    useEffect(() => {
+        if (currentSemester.id) getAllPublicGroupsStart(currentSemester.id);
+    }, [currentSemester]);
 
     useEffect(() => {
         showAllTeachers();
         getLessonTypesStart();
-        getEnabledGroupsStart();
         showAllSubjectsService();
         getAllSemesters();
     }, []);
