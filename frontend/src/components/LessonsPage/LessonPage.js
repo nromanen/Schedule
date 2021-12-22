@@ -1,30 +1,25 @@
-import React, { useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-
-import { isNil } from 'lodash';
-
 import TextField from '@material-ui/core/TextField';
 import { Autocomplete } from '@material-ui/lab';
-import CustomDialog from '../../containers/Dialogs/CustomDialog';
-import { dialogTypes } from '../../constants/dialogs';
+import { isNil } from 'lodash';
+import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { cardType } from '../../constants/cardType';
+import { dialogTypes } from '../../constants/dialogs';
 import { COMMON_LESSON_SERVICE_IS_NOT_UNIQUE } from '../../constants/translationLabels/common';
-import { searchLessonsByTeacher } from '../../helper/search';
-import { checkUniqLesson } from '../../validation/storeValidation';
-import { cardObjectHandler } from '../../helper/cardObjectHandler';
-
+import { FORM_GROUP_LABEL } from '../../constants/translationLabels/formElements';
+import CustomDialog from '../../containers/Dialogs/CustomDialog';
+import CopyLessonsFromSemesterForm from '../../containers/LessonPage/CopyLessonsFromSemesterForm';
+import LessonForm from '../../containers/LessonPage/LessonForm';
 import Lessons from '../../containers/LessonPage/Lessons';
 import Search from '../../containers/LessonPage/Search';
-import LessonForm from '../../containers/LessonPage/LessonForm';
-import CopyLessonsFromSemesterForm from '../../containers/LessonPage/CopyLessonsFromSemesterForm';
-import CopyLessonDialog from './CopyLessonDialog/CopyLessonDialog';
-
-import './LessonPage.scss';
-import './LessonForm/LessonForm.scss';
+import { cardObjectHandler } from '../../helper/cardObjectHandler';
+import { searchLessonsByTeacher } from '../../helper/search';
 import { showAllSubjectsService } from '../../services/subjectService';
-
-import { FORM_GROUP_LABEL } from '../../constants/translationLabels/formElements';
 import { trasformLink } from '../../utils/trasformLink';
+import { checkUniqLesson } from '../../validation/storeValidation';
+import CopyLessonDialog from './CopyLessonDialog/CopyLessonDialog';
+import './LessonForm/LessonForm.scss';
+import './LessonPage.scss';
 
 const LessonPage = (props) => {
     const {
