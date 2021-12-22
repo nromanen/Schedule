@@ -37,10 +37,8 @@ import javax.mail.util.ByteArrayDataSource;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Objects;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
 
 @Service
 @PropertySource("classpath:mail.properties")
@@ -121,7 +119,12 @@ public class MailServiceImpl implements MailService {
         } catch (IOException | MessagingException e) {
             throw new MessageNotSendException(e.getMessage());
         }
-            FileUtils.cleanDirectory(new File(System.getProperty("java.io.tmpdir")));
+        if (emailMessageDTO.getAttachmentsName() != null) {
+            for (String attachment : emailMessageDTO.getAttachmentsName()) {
+                File file = new File(System.getProperty("java.io.tmpdir") + "/" + attachment);
+                FileUtils.deleteQuietly(file);
+            }
+        }
 
     }
 
