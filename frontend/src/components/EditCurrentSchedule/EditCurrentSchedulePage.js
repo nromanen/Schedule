@@ -12,7 +12,6 @@ const SchedulePage = (props) => {
         groupId,
         itemGroupId,
         scheduleItems,
-        getEnabledGroups,
         scheduleLoading,
         setScheduleLoading,
         getAllLessonsByGroup,
@@ -21,6 +20,7 @@ const SchedulePage = (props) => {
         getClassScheduleList,
         currentSemester,
         getListOfRooms,
+        getAllPublicGroupsStart,
     } = props;
     const { t } = useTranslation('common');
     document.title = t(SCHEDULE_TITLE);
@@ -68,9 +68,12 @@ const SchedulePage = (props) => {
     });
 
     useEffect(() => {
+        if (currentSemester.id) getAllPublicGroupsStart(currentSemester.id);
+    }, [currentSemester]);
+
+    useEffect(() => {
         setScheduleLoading(true);
         getAllScheduleItems();
-        getEnabledGroups();
         getListOfRooms();
         getClassScheduleList();
     }, []);
@@ -84,9 +87,8 @@ const SchedulePage = (props) => {
     const handleClearSchedule = () => {
         if (currentSemester.id) {
             clearScheduleItems(currentSemester.id);
-            if (groupId) {
-                getAllLessonsByGroup(groupId);
-            }
+            // eslint-disable-next-line no-unused-expressions
+            groupId && getAllLessonsByGroup(groupId);
         }
     };
     if (isHiddenSchedule) {

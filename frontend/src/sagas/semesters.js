@@ -12,7 +12,11 @@ import {
     addSemesterSuccess,
     moveToArchivedSemesterSuccess,
 } from '../actions/semesters';
-import { setScheduleType, getFullScheduleSuccess } from '../actions/schedule';
+import {
+    setScheduleType,
+    getFullScheduleSuccess,
+    getCurrentSemesterRequsted,
+} from '../actions/schedule';
 import { axiosCall } from '../services/axios';
 import i18n from '../i18n';
 import {
@@ -132,6 +136,7 @@ export function* updateSemesterItem({ values }) {
             UPDATED_LABEL,
         );
         yield put(setOpenSuccessSnackbar(message));
+        yield put(getCurrentSemesterRequsted());
     } catch (error) {
         yield put(setOpenErrorSnackbar(createErrorMessage(error)));
     }
