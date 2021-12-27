@@ -12,6 +12,5 @@ import java.util.List;
 @EqualsAndHashCode
 public class DaysOfWeekWithClassesForRoomDTO {
     private DayOfWeek day;
-    private List<LessonsInRoomScheduleDTO> even;
-    private List<LessonsInRoomScheduleDTO> odd;
+    private List<RoomClassesInScheduleDTO> classes;
 }
