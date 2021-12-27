@@ -95,7 +95,6 @@ const RoomPage = (props) => {
                                 roomTypes={roomTypes}
                             />
                             <RoomTypeForm
-                                setDeleteLabel={setDeleteLabel}
                                 onSubmit={handleRoomTypeFormSubmit}
                                 isOpenConfirmDialog={isOpenConfirmDialog}
                                 showConfirmDialog={showConfirmDialog}
@@ -110,7 +109,6 @@ const RoomPage = (props) => {
                     <RoomList
                         isDisabled={isDisabled}
                         showConfirmDialog={showConfirmDialog}
-                        setDeleteLabel={setDeleteLabel}
                         term={term}
                         disabledRooms={disabledRooms}
                         rooms={rooms}

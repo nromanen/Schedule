@@ -2,6 +2,7 @@ import React from 'react';
 import { Field } from 'redux-form';
 
 import { useTranslation } from 'react-i18next';
+import { MenuItem } from '@material-ui/core';
 
 import Button from '@material-ui/core/Button';
 import SelectField from '../../../share/renderedFields/select';
@@ -33,11 +34,11 @@ const CopyLessonsFromSemesterForm = (props) => {
                     type="text"
                     validate={[required]}
                 >
-                    <option />
+                    <MenuItem value="" className="hidden" disabled />
                     {semesters.map((semester) => (
-                        <option key={semester.id} value={semester.id}>
+                        <MenuItem key={semester.id} value={semester.id}>
                             {semester.description}
-                        </option>
+                        </MenuItem>
                     ))}
                 </Field>
             );

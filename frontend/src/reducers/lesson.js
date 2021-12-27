@@ -21,7 +21,7 @@ const reducer = (state = initialState, action) => {
             return { ...state, lessons };
         }
         case actionTypes.SELECT_LESSON_CARD_SUCCESS: {
-            let lesson = state.lessons.find((less) => less.id === action.result);
+            let lesson = state.lessons.find((less) => less.id === action.cardId);
             if (!lesson) {
                 lesson = { id: null };
             }
@@ -38,7 +38,7 @@ const reducer = (state = initialState, action) => {
             return { ...state, lessons, lesson: {} };
         }
         case actionTypes.SELECT_GROUP_ID:
-            return { ...state, lesson: {}, groupId: action.result };
+            return { ...state, lesson: {}, groupId: action.id };
         case actionTypes.SET_UNIQUE_ERROR:
             return { ...state, uniqueError: action.result };
         default:

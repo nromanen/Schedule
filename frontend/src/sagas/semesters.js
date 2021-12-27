@@ -42,6 +42,8 @@ import { createErrorMessage, createMessage } from '../utils/sagaUtils';
 import { handleFormSubmit } from '../helper/handleFormSubmit';
 import { POST, DELETE, PUT } from '../constants/methods';
 
+const getSemestersState = (state) => state.semesters.semesters;
+
 export function* getAllSemestersItems() {
     try {
         yield put(setLoading(true));
@@ -99,8 +101,8 @@ export function* setGroupsToSemester({ semesterId, groups }) {
 
 export function* deleteSemesterItem({ semesterId }) {
     try {
-        const state = yield select();
-        const semester = state.semesters.semesters.find((item) => item.id === semesterId);
+        const semesters = yield select(getSemestersState);
+        const semester = semesters.find((item) => item.id === semesterId);
         if (semester.currentSemester) {
             const message = i18n.t(SEMESTER_SERVICE_IS_ACTIVE);
             yield put(setOpenErrorSnackbar(message));
@@ -152,29 +154,35 @@ export function* addSemesterItem({ values }) {
         yield put(setOpenErrorSnackbar(createErrorMessage(error)));
     }
 }
-
+function* setPreviousDefaultSemesterToFalse({ values }) {
+    const semesters = yield select(getSemestersState);
+    const oldDefaultSemester = {
+        ...semesters.find(
+            (semesterItem) => semesterItem.defaultSemester && semesterItem.id !== values.id,
+        ),
+    };
+    if (values.defaultSemester && oldDefaultSemester) {
+        oldDefaultSemester.defaultSemester = false;
+        yield put(updateSemesterSuccess(oldDefaultSemester));
+    }
+}
+function* setPreviousCurrentSemesterToFalse({ values }) {
+    const semesters = yield select(getSemestersState);
+    const oldCurrentSemester = {
+        ...semesters.find(
+            (semesterItem) => semesterItem.currentSemester && semesterItem.id !== values.id,
+        ),
+    };
+    if (values.currentSemester && oldCurrentSemester) {
+        oldCurrentSemester.currentSemester = false;
+        yield put(updateSemesterSuccess(oldCurrentSemester));
+    }
+}
 export function* handleSemesterFormSubmit({ values }) {
     try {
-        const state = yield select();
-        const oldCurrentSemester = {
-            ...state.semesters.semesters.find(
-                (semesterItem) => semesterItem.currentSemester && semesterItem.id !== values.id,
-            ),
-        };
-        const oldDefaultSemester = {
-            ...state.semesters.semesters.find(
-                (semesterItem) => semesterItem.defaultSemester && semesterItem.id !== values.id,
-            ),
-        };
-        if (values.currentSemester && oldCurrentSemester) {
-            oldCurrentSemester.currentSemester = false;
-            yield put(updateSemesterSuccess(oldCurrentSemester));
-        }
-        if (values.defaultSemester && oldDefaultSemester) {
-            oldDefaultSemester.defaultSemester = false;
-            yield put(updateSemesterSuccess(oldDefaultSemester));
-        }
         yield call(handleFormSubmit(values, addSemesterItem, updateSemesterItem), { values });
+        yield call(setPreviousCurrentSemesterToFalse, { values });
+        yield call(setPreviousDefaultSemesterToFalse, { values });
     } catch (error) {
         yield put(setOpenErrorSnackbar(createErrorMessage(error)));
     }
@@ -182,9 +190,9 @@ export function* handleSemesterFormSubmit({ values }) {
 
 export function* setDefaultSemesterById({ semesterId }) {
     try {
-        const state = yield select();
+        const semesters = yield select(getSemestersState);
         const oldDefaultSemester = {
-            ...state.semesters.semesters.find(
+            ...semesters.find(
                 (semesterItem) => semesterItem.defaultSemester && semesterItem.id !== semesterId,
             ),
         };

@@ -21,11 +21,10 @@ export const buildLessonWithRoom = (card, place) => {
     inner += `${prepareTeacherCardCell(card)}\n`;
     inner +=
         room !== ''
-            ? `(${i18n.t(`formElements:lesson_type_${card.lessonType.toLowerCase()}_label`)} ,${
+            ? `(${i18n.t(`formElements:lesson_type_${card.lessonType.toLowerCase()}_label`)}, ${
                   card.room
               })\n`
             : `${i18n.t(`formElements:lesson_type_${card.lessonType.toLowerCase()}_label`)}\n`;
-
     return inner;
 };
 

@@ -30,7 +30,7 @@ const TableItem = (props) => {
             >
                 <div className="class-info-container">
                     <Card
-                        className={`schedule-card class-info-container class-info-data ${getColorByFullness(
+                        className={`schedule-card class-info-data ${getColorByFullness(
                             classOdd?.lessons,
                         )}`}
                     >

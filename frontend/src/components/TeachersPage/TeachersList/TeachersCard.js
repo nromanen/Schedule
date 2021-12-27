@@ -66,10 +66,10 @@ const TeachersCard = (props) => {
                     onClick={() => showConfirmDialog(teacherItem.id, dialogTypes.DELETE_CONFIRM)}
                 />
             </div>
-            <h2 className="teacher-card-name">
+            <h2 className="teacher-card__name">
                 {getShortTitle(getTeacherFullName(teacherItem), MAX_LENGTH_40)}
             </h2>
-            <p className="teacher-card-title">
+            <p className="teacher-card__title">
                 {`${teacherItem.position} ${
                     teacherItem.department !== null
                         ? `${t(TEACHER_DEPARTMENT)} ${teacherItem.department.name}`
@@ -79,11 +79,13 @@ const TeachersCard = (props) => {
             {teacherItem.email && (
                 <button
                     type="button"
-                    className="teacher-email"
+                    className="teacher-card__email"
                     onClick={() => {
                         sendMail(teacherItem.email);
                     }}
-                >{`${teacherItem.email}`}</button>
+                >
+                    {teacherItem.email}
+                </button>
             )}
         </Card>
     );

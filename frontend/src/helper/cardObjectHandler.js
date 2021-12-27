@@ -1,4 +1,4 @@
-export const cardObjectHandler = (card, groupId, semester, link) => {
+export const cardObjectHandler = (card, semester, link) => {
     return {
         id: Number(card.lessonCardId),
         hours: Number(card.hours),
