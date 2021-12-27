@@ -8,21 +8,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.core.env.Environment;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.InputStreamSource;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.commons.CommonsMultipartResolver;
-import org.springframework.web.multipart.support.StandardServletMultipartResolver;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring5.SpringTemplateEngine;
+
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import javax.annotation.PostConstruct;
@@ -37,6 +32,7 @@ import javax.mail.util.ByteArrayDataSource;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
@@ -109,23 +105,26 @@ public class MailServiceImpl implements MailService {
             messageHelper.setTo(emailMessageDTO.getReceivers().toArray(String[]::new));
 
             if (emailMessageDTO.getAttachmentsName() != null) {
-                for (String attachment: emailMessageDTO.getAttachmentsName()) {
-                    File file = new File(System.getProperty("java.io.tmpdir")+"/"+attachment);
+                List<String> attachments = new ArrayList<>(emailMessageDTO.getAttachmentsName());
+                String folder = attachments.get(0);
+                attachments.remove(0);
+
+                for (String attachment : attachments) {
+                    File file = new File(folder + "/" + attachment);
                     messageHelper.addAttachment(Objects.requireNonNull(attachment), file);
                 }
             }
 
             mailSender.send(messageHelper.getMimeMessage());
+
+            if (emailMessageDTO.getAttachmentsName() != null) {
+                File file = new File(emailMessageDTO.getAttachmentsName().get(0));
+                FileUtils.deleteDirectory(file);
+            }
+
         } catch (IOException | MessagingException e) {
             throw new MessageNotSendException(e.getMessage());
         }
-        if (emailMessageDTO.getAttachmentsName() != null) {
-            for (String attachment : emailMessageDTO.getAttachmentsName()) {
-                File file = new File(System.getProperty("java.io.tmpdir") + "/" + attachment);
-                FileUtils.deleteQuietly(file);
-            }
-        }
-
     }
 
     @Override
@@ -183,12 +182,14 @@ public class MailServiceImpl implements MailService {
     @Override
     public List<String> uploadFiles(MultipartFile[] files) throws IOException {
         List<String> filesName = new ArrayList<>();
-        String uploadDir = System.getProperty("java.io.tmpdir");
+        String uploadDir = System.getProperty("java.io.tmpdir") + "/" + UUID.randomUUID();
+        filesName.add(uploadDir);
 
             for(MultipartFile file: files) {
-                File transferFile = new File(uploadDir + "/" + file.getOriginalFilename());
+                String originalFileName = URLDecoder.decode(Objects.requireNonNull(file.getOriginalFilename()), StandardCharsets.UTF_8);
+                File transferFile = new File(uploadDir + "/" + originalFileName);
                 file.transferTo(transferFile);
-                filesName.add(file.getOriginalFilename());
+                filesName.add(originalFileName);
             }
 
         return filesName;
