@@ -6,8 +6,8 @@ import java.util.List;
 @Data
 @ToString(exclude = "attachmentsName")
 @EqualsAndHashCode(exclude = "attachmentsName")
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
+@AllArgsConstructor(access = AccessLevel.PUBLIC)
 @Builder
 public class EmailMessageDTO {
     private String subject;

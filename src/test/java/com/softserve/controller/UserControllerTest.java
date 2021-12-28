@@ -4,16 +4,22 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.softserve.config.DBConfigTest;
 import com.softserve.config.MyWebAppInitializer;
 import com.softserve.config.WebMvcConfig;
+import com.softserve.dto.EmailMessageDTO;
 import com.softserve.dto.UserCreateDTO;
+import com.softserve.security.jwt.JwtUser;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -21,9 +27,12 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.util.Arrays;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
 
 @Category(IntegrationTestCategory.class)
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -172,5 +181,21 @@ public class UserControllerTest {
         mockMvc.perform(get("/users/with-role-user").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"));
+    }
+
+    @Test
+    @WithMockUser(username = "first@mail.com", password = "$2a$04$SpUhTZ/SjkDQop/Zvx1.seftJdqvOploGce/wau247zQhpEvKtz9.", roles = "TEACHER")
+    public void sendEmailTest() throws Exception {
+        EmailMessageDTO emailMessageDTO = new EmailMessageDTO();
+        emailMessageDTO.setText("Test");
+        emailMessageDTO.setAttachmentsName(null);
+        emailMessageDTO.setReceivers(Arrays.asList("second@mail.com", "first@mail.com"));
+        emailMessageDTO.setSubject("Test");
+
+        mockMvc.perform(post("/users/send-email")
+                .content(objectMapper.writeValueAsString(emailMessageDTO))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isNoContent());
     }
 }

@@ -58,8 +58,6 @@ public class MailServiceImpl implements MailService {
 
     @PostConstruct
     private void postConstruct() {
-//        credentialsUsername = environment.getProperty(username);
-//TODO Check environment.getProperty()
         credentialsUsername = username;
         if (credentialsUsername == null) {
             credentialsUsername = System.getenv("HEROKU_MAIL_USERNAME");
