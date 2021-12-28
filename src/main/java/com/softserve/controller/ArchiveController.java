@@ -28,7 +28,6 @@ public class ArchiveController {
     private final SemesterMapper semesterMapper;
     private final ScheduleService scheduleService;
     private final SemesterService semesterService;
-    private final PeriodService periodService;
     private final LessonService lessonService;
     private final TemporaryScheduleService temporaryScheduleService;
     private final TemporaryScheduleMapperForArchive temporaryScheduleMapper;
@@ -39,7 +38,6 @@ public class ArchiveController {
         this.semesterMapper = semesterMapper;
         this.scheduleService = scheduleService;
         this.semesterService = semesterService;
-        this.periodService = periodService;
         this.lessonService = lessonService;
         this.temporaryScheduleService = temporaryScheduleService;
         this.temporaryScheduleMapper = temporaryScheduleMapper;
