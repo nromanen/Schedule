@@ -37,6 +37,9 @@ public class MailConfig {
     @Value("${spring.mail.properties.mail.smtp.starttls.enable}")
     private String enable;
 
+    @Value("${mail.enabled}")
+    private String enabled;
+
     @Bean
     public JavaMailSender javaMailSender() {
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
@@ -60,6 +63,7 @@ public class MailConfig {
         properties.setProperty("mail.debug", debug);
         properties.setProperty("mail.smtp.auth", auth);
         properties.setProperty("mail.smtp.starttls.enable", enable);
+        properties.setProperty("mail.enabled", enabled);
 
         return mailSender;
     }

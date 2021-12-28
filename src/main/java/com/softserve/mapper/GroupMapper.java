@@ -5,7 +5,6 @@ import com.softserve.dto.GroupDTOInRoomSchedule;
 import com.softserve.dto.GroupForUpdateDTO;
 import com.softserve.dto.GroupWithStudentsDTO;
 import com.softserve.entity.Group;
-import com.softserve.entity.Lesson;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.NullValueCheckStrategy;

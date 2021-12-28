@@ -33,9 +33,9 @@ export const deleteLessonCardStart = (id) => ({
     id,
 });
 
-export const selectLessonCardSuccess = (result) => ({
+export const selectLessonCardSuccess = (cardId) => ({
     type: actionTypes.SELECT_LESSON_CARD_SUCCESS,
-    result,
+    cardId,
 });
 
 export const updateLessonCardSuccess = (result) => ({
@@ -53,9 +53,9 @@ export const handleLessonStart = (payload) => ({
     payload,
 });
 
-export const selectGroupId = (result) => ({
+export const selectGroupId = (id) => ({
     type: actionTypes.SELECT_GROUP_ID,
-    result,
+    id,
 });
 
 export const setUniqueError = (result) => ({

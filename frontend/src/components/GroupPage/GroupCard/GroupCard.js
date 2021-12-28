@@ -22,7 +22,7 @@ import {
 
 const GroupCard = (props) => {
     const {
-        item,
+        group,
         disabled,
         setGroup,
         showConfirmDialog,
@@ -39,13 +39,13 @@ const GroupCard = (props) => {
                             className="eye-icon-btn"
                             title={t(COMMON_SET_DISABLED)}
                             onClick={() => {
-                                showConfirmDialog(item.id, dialogTypes.SET_VISIBILITY_DISABLED);
+                                showConfirmDialog(group.id, dialogTypes.SET_VISIBILITY_DISABLED);
                             }}
                         />
                         <FaEdit
                             className="edit-icon-btn"
                             title={t(COMMON_EDIT)}
-                            onClick={() => setGroup(item)}
+                            onClick={() => setGroup(group)}
                         />
                     </>
                 ) : (
@@ -53,33 +53,33 @@ const GroupCard = (props) => {
                         className="eye-icon-btn"
                         title={t(COMMON_SET_ENABLED)}
                         onClick={() => {
-                            showConfirmDialog(item.id, dialogTypes.SET_VISIBILITY_ENABLED);
+                            showConfirmDialog(group.id, dialogTypes.SET_VISIBILITY_ENABLED);
                         }}
                     />
                 )}
                 <MdDelete
                     className="delete-icon-btn"
                     title={t(DELETE_TITLE_LABEL)}
-                    onClick={() => showConfirmDialog(item.id, dialogTypes.DELETE_CONFIRM)}
+                    onClick={() => showConfirmDialog(group.id, dialogTypes.DELETE_CONFIRM)}
                 />
-                <Link to={`${GROUP_LIST_LINK}/${item.id}${ADD_STUDENT_LINK}`}>
+                <Link to={`${GROUP_LIST_LINK}/${group.id}${ADD_STUDENT_LINK}`}>
                     <FaUserPlus
                         title={t(FORM_STUDENT_ADD_LABEL)}
                         className="group-card-buttons-add-student"
                         onClick={() => {
-                            showAddStudentDialog(item.id);
+                            showAddStudentDialog(group.id);
                         }}
                     />
                 </Link>
             </div>
             <p className="group-card__description">{`${t(GROUP_LABEL)}:`}</p>
-            <h3 className="group-card__number">{getShortTitle(item.title, 5)}</h3>
-            <Link to={`${GROUP_LIST_LINK}/${item.id}${SHOW_STUDENTS_LINK}`}>
+            <h3 className="group-card__number">{getShortTitle(group.title, 5)}</h3>
+            <Link to={`${GROUP_LIST_LINK}/${group.id}${SHOW_STUDENTS_LINK}`}>
                 <FaUsers
                     title={t(FORM_SHOW_STUDENTS)}
                     className="group-card-button-students"
                     onClick={() => {
-                        showStudentsByGroup(item.id);
+                        showStudentsByGroup(group.id);
                     }}
                 />
             </Link>

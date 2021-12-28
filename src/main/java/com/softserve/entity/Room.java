@@ -15,6 +15,7 @@ import java.io.Serializable;
 @Setter
 @Getter
 @Entity
+@EqualsAndHashCode
 @Table(name = "rooms")
 
 @FilterDef(name="roomDisableFilter", parameters={

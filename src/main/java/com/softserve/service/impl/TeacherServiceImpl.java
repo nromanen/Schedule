@@ -3,7 +3,7 @@ package com.softserve.service.impl;
 import com.softserve.dto.TeacherDTO;
 import com.softserve.dto.TeacherForUpdateDTO;
 import com.softserve.dto.TeacherImportDTO;
-import com.softserve.dto.TeacherStatus;
+import com.softserve.dto.enums.ImportSaveStatus;
 import com.softserve.entity.Department;
 import com.softserve.entity.Teacher;
 import com.softserve.entity.User;
@@ -278,7 +278,7 @@ public class TeacherServiceImpl implements TeacherService {
             }
         }
         catch (ConstraintViolationException e) {
-            teacher.setTeacherStatus(TeacherStatus.VALIDATION_ERROR);
+            teacher.setImportSaveStatus(ImportSaveStatus.VALIDATION_ERROR);
             log.error("Error occurred while saving teacher with email {}", teacher.getEmail(), e);
             return teacher;
 
@@ -301,7 +301,7 @@ public class TeacherServiceImpl implements TeacherService {
             teacherRepository.save(newTeacher);
             TeacherImportDTO savedTeacher = teacherMapper.teacherToTeacherImportDTO(newTeacher);
             savedTeacher.setEmail(teacher.getEmail());
-            savedTeacher.setTeacherStatus(TeacherStatus.SAVED);
+            savedTeacher.setImportSaveStatus(ImportSaveStatus.SAVED);
             return savedTeacher;
         }
         return null;
@@ -328,7 +328,7 @@ public class TeacherServiceImpl implements TeacherService {
             teacherRepository.update(registeredTeacher1);
             TeacherImportDTO savedTeacher = teacherMapper.teacherToTeacherImportDTO(registeredTeacher1);
             savedTeacher.setEmail(teacher.getEmail());
-            savedTeacher.setTeacherStatus(TeacherStatus.ALREADY_EXIST);
+            savedTeacher.setImportSaveStatus(ImportSaveStatus.ALREADY_EXIST);
             return savedTeacher;
         }
         return null;
@@ -348,7 +348,7 @@ public class TeacherServiceImpl implements TeacherService {
             teacherRepository.save(registeredTeacher);
             TeacherImportDTO savedTeacher = teacherMapper.teacherToTeacherImportDTO(registeredTeacher);
             savedTeacher.setEmail(teacher.getEmail());
-            savedTeacher.setTeacherStatus(TeacherStatus.SAVED);
+            savedTeacher.setImportSaveStatus(ImportSaveStatus.SAVED);
             return savedTeacher;
     }
 
@@ -374,7 +374,7 @@ public class TeacherServiceImpl implements TeacherService {
                 teacherRepository.update(ourTeacherFromBase);
             }
             TeacherImportDTO existedTeacher = teacherMapper.teacherToTeacherImportDTO(ourTeacherFromBase);
-            existedTeacher.setTeacherStatus(TeacherStatus.ALREADY_EXIST);
+            existedTeacher.setImportSaveStatus(ImportSaveStatus.ALREADY_EXIST);
             log.error("Teacher with current email exist ", new FieldAlreadyExistsException(Teacher.class, "email", teacher.getEmail()));
             return existedTeacher;
         }

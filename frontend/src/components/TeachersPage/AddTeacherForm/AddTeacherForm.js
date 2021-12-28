@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { Field, reduxForm } from 'redux-form';
 
+import { MenuItem } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import { useTranslation } from 'react-i18next';
 import renderTextField from '../../../share/renderedFields/input';
@@ -125,11 +126,11 @@ const AddTeacherForm = (props) => {
                         getDepartmentByIdService(target.value);
                     }}
                 >
-                    <option className="select-department" />
+                    <MenuItem value="" className="hidden" disabled />
                     {departments.map((item) => (
-                        <option className="select-department" key={item.id} value={item.value}>
+                        <MenuItem key={item.id} value={item.value}>
                             {item.label}
-                        </option>
+                        </MenuItem>
                     ))}
                 </Field>
 

@@ -43,6 +43,9 @@ public class MailServiceImpl implements MailService {
     @Value("${spring.mail.username}")
     private String username;
 
+    @Value("${mail.enabled:true}")
+    boolean enabled;
+
     private final JavaMailSender mailSender;
 
     private final SpringTemplateEngine springTemplateEngine;
@@ -75,14 +78,16 @@ public class MailServiceImpl implements MailService {
     public void send(String emailTo, String subject, String message) {
         log.info("Enter into send method with emailTo {}, subject {}", emailTo, subject);
 
-        SimpleMailMessage mailMessage = new SimpleMailMessage();
+        if(enabled){
+            SimpleMailMessage mailMessage = new SimpleMailMessage();
 
-        mailMessage.setFrom(credentialsUsername);
-        mailMessage.setTo(emailTo);
-        mailMessage.setSubject(subject);
-        mailMessage.setText(message);
+            mailMessage.setFrom(credentialsUsername);
+            mailMessage.setTo(emailTo);
+            mailMessage.setSubject(subject);
+            mailMessage.setText(message);
 
-        mailSender.send(mailMessage);
+            mailSender.send(mailMessage);
+        }
     }
 
     /**

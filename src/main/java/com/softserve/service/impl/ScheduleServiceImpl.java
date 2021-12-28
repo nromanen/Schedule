@@ -877,7 +877,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         return scheduleRepository
                 .getAllOrdered(semesterId)
                 .stream()
-                .collect(Collectors.groupingBy(Schedule::getRoom, Collectors.toList()));
+                .collect(Collectors.groupingBy(Schedule::getRoom, LinkedHashMap::new, Collectors.toList()));
     }
 }
 

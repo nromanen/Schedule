@@ -12,13 +12,12 @@ import {
     UPDATED_LABEL,
 } from '../constants/translationLabels/serviceMessages';
 import { FORM_GROUP_LABEL } from '../constants/translationLabels/formElements';
-import { sortGroup } from '../helper/sortGroup';
 
 export const showAllGroupsService = () => {
     axios
         .get(GROUP_URL)
         .then((response) => {
-            store.dispatch(showAllGroupsSuccess(response.data.sort((a, b) => sortGroup(a, b))));
+            store.dispatch(showAllGroupsSuccess(response.data));
         })
         .catch((error) => errorHandler(error));
 };

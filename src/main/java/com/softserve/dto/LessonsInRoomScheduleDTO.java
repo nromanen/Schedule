@@ -10,8 +10,7 @@ import java.util.List;
 @NoArgsConstructor
 public class LessonsInRoomScheduleDTO {
 
-    private LessonsListInRoomScheduleDTO lessons;
-
+    private List<LessonsListInRoomScheduleDTO> lessons;
     @JsonProperty("class_id")
     private Long classId;
 
