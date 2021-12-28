@@ -3,6 +3,7 @@ package com.softserve.controller;
 import com.softserve.dto.*;
 import com.softserve.entity.Schedule;
 import com.softserve.entity.Semester;
+import com.softserve.mapper.SemesterMapper;
 import com.softserve.mapper.TemporaryScheduleMapperForArchive;
 import com.softserve.service.*;
 import io.swagger.annotations.Api;
@@ -24,17 +25,21 @@ import java.util.List;
 public class ArchiveController {
 
     private final ArchiveService archiveService;
+    private final SemesterMapper semesterMapper;
     private final ScheduleService scheduleService;
     private final SemesterService semesterService;
+    private final PeriodService periodService;
     private final LessonService lessonService;
     private final TemporaryScheduleService temporaryScheduleService;
     private final TemporaryScheduleMapperForArchive temporaryScheduleMapper;
 
     @Autowired
-    public ArchiveController(ArchiveService archiveService, ScheduleService scheduleService, SemesterService semesterService, LessonService lessonService, TemporaryScheduleService temporaryScheduleService, TemporaryScheduleMapperForArchive temporaryScheduleMapper) {
+    public ArchiveController(ArchiveService archiveService, SemesterMapper semesterMapper, ScheduleService scheduleService, SemesterService semesterService, PeriodService periodService, LessonService lessonService, TemporaryScheduleService temporaryScheduleService, TemporaryScheduleMapperForArchive temporaryScheduleMapper) {
         this.archiveService = archiveService;
+        this.semesterMapper = semesterMapper;
         this.scheduleService = scheduleService;
         this.semesterService = semesterService;
+        this.periodService = periodService;
         this.lessonService = lessonService;
         this.temporaryScheduleService = temporaryScheduleService;
         this.temporaryScheduleMapper = temporaryScheduleMapper;
@@ -86,12 +91,42 @@ public class ArchiveController {
         return ResponseEntity.ok().body(semesterWithGroupsDTO);
     }
 
+    @PostMapping("/archiveSemester/{semesterId}")
+    @ApiOperation(value = "Save archive schedule by semesterId in mongo db")
+    @PreAuthorize("hasRole('MANAGER')")
+    public ResponseEntity archiveSemester(@PathVariable("semesterId") Long semesterId) {
+        log.info("In archiveSemester with semesterId = {}", semesterId);
+        Semester semester = semesterService.getById(semesterId);
+        SemesterWithGroupsDTO semesterWithGroupsDTO = semesterMapper.semesterToSemesterWithGroupsDTO(semester);
+        scheduleService.deleteSchedulesBySemesterId(semesterId);
+        lessonService.deleteLessonBySemesterId(semesterId);
+        semesterService.delete(semester);
+        return ResponseEntity.status(HttpStatus.OK).body(archiveService.saveSemesterWithGroupDTO(semesterWithGroupsDTO));
+    }
+
+    @GetMapping("/getSemester/{semesterId}")
+    @ApiOperation(value = "Get archive semester by semesterId from mongo db")
+    @PreAuthorize("hasRole('MANAGER')")
+    public ResponseEntity<SemesterWithGroupsDTO> getSemester(@PathVariable("semesterId") Long semesterId) {
+        log.info("In getSemester with semesterId = {}", semesterId);
+        return ResponseEntity.ok().body(archiveService.getArchiveSemester(semesterId));
+    }
+
     @GetMapping(value = "all-semesters")
     @ApiOperation(value = "Get all semesters from archived schedules, that contains it")
     @PreAuthorize("hasRole('MANAGER')")
     public ResponseEntity<List<SemesterDTO>> getAllSemestersInArchiveSchedule() {
         log.info("In getAllSemestersInArchiveSchedule ");
         return ResponseEntity.ok().body(archiveService.getAllSemestersInArchiveSchedule());
+    }
+
+    @DeleteMapping("/removeArchiveSemester/{semesterId}")
+    @ApiOperation(value = "Delete archive schedule by semesterId from mongo db")
+    @PreAuthorize("hasRole('MANAGER')")
+    public ResponseEntity<MessageDTO> removeArchiveSemester(@PathVariable("semesterId") Long semesterId) {
+        log.info("In removeArchiveSemester with semesterId = {}", semesterId);
+        archiveService.deleteArchiveSemester(semesterId);
+        return ResponseEntity.ok().body(new MessageDTO("Object deleted successfully"));
     }
 
     @DeleteMapping("/{semesterId}")
