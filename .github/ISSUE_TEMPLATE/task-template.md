@@ -17,4 +17,7 @@ Include specific tasks in the order they need to be done in. Include links to sp
 - [ ] Task 3
 
 #### Wiki
-Link to wiki-page with ...
+Link to wiki-page with additional information
+
+#### User story link
+E.g. "User story #"
