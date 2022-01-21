@@ -2,7 +2,7 @@
 name: Task template
 about: Template for technical task.
 title: TASK
-labels: ''
+labels: task
 assignees: ''
 
 ---
