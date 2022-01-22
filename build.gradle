@@ -39,6 +39,8 @@ if (System.getenv('$buildDir') != "") {
     stage.dependsOn(copyToLib)
 }
 
+apply from: 'liquibase.gradle'
+
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
     testCompile group: 'org.assertj', name: 'assertj-core', version: '3.6.1'

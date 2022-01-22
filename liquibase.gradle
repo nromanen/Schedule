@@ -1,0 +1,33 @@
+configurations {
+    liquibase
+}
+
+dependencies {
+    liquibase group: 'org.liquibase.ext', name: 'liquibase-hibernate5', version: '4.6.2'
+}
+
+Properties hibernateProps = new Properties()
+hibernateProps.load(new FileInputStream("src/main/resources/hibernate.properties"))
+
+task liquibaseDiffChangelog(type: JavaExec) {
+    group = "liquibase"
+
+    classpath sourceSets.main.runtimeClasspath
+    classpath configurations.liquibase
+    main = "liquibase.integration.commandline.Main"
+
+    args "--changeLogFile=" + hibernateProps.getProperty('liquibase.changelog.path') + buildTimestamp() + "_changelog.yaml"
+    args "--referenceUrl=hibernate:spring:" + hibernateProps.getProperty('hibernate.entity.package') + "?dialect=" + hibernateProps.getProperty('hibernate.dialect')
+    args "--url=" + hibernateProps.getProperty('hibernate.connection.url')
+    args "--username=" + hibernateProps.getProperty('hibernate.connection.username')
+    args "--password=" + hibernateProps.getProperty('hibernate.connection.password')
+    args "--driver=" + hibernateProps.getProperty('hibernate.connection.driver_class')
+    args "diffChangeLog"
+
+}
+
+def buildTimestamp() {
+    def date = new Date()
+    def formattedDate = date.format('yyyy-MM-dd-HH-mm')
+    return formattedDate
+}
