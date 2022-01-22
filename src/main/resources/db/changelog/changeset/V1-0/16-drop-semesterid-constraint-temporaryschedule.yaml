@@ -1,0 +1,9 @@
+databaseChangeLog:
+  - changeSet:
+      id: 16-drop-semesterid-constraint-temporaryschedule
+      author: Alexander Karabush
+      changes:
+        - dropNotNullConstraint:
+            columnDataType: int
+            columnName: semester_id
+            tableName: temporary_schedule

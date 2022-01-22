@@ -1,0 +1,17 @@
+databaseChangeLog:
+  - changeSet:
+      id: 5-add-userid-column-students
+      author: Alexander Karabush
+      changes:
+        - addColumn:
+            tableName: students
+            columns:
+              - column:
+                  name: user_id
+                  type: bigint
+        - addForeignKeyConstraint:
+            constraintName: user_id_fk
+            baseTableName: students
+            baseColumnNames: user_id
+            referencedTableName: users
+            referencedColumnNames: id

@@ -1,0 +1,9 @@
+databaseChangeLog:
+  - changeSet:
+      id: 13-drop-periodid-constraint-temporaryschedule
+      author: Alexander Karabush
+      changes:
+        - dropNotNullConstraint:
+            columnDataType: int
+            columnName: period_id
+            tableName: temporary_schedule

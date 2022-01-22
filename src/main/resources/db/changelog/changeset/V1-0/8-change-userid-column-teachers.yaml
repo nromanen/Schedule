@@ -1,0 +1,9 @@
+databaseChangeLog:
+  - changeSet:
+      id: 8-change-userid-column-type-teachers
+      author: Alexander Karabush
+      changes:
+        - modifyDataType:
+            tableName: teachers
+            columnName: user_id
+            newDataType: bigint

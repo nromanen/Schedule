@@ -1,0 +1,11 @@
+databaseChangeLog:
+  - changeSet:
+      id: 3-change-semesterid-column-semestergroup
+      author: Alexander Karabush
+      changes:
+        - createSequence:
+            sequenceName: semester_id_sequence
+        - addDefaultValue:
+            tableName: semester_group
+            columnName: semester_id
+            defaultValueSequenceNext: semester_id_sequence
