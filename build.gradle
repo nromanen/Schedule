@@ -168,5 +168,6 @@ dependencies {
     //caching
     implementation group: 'org.redisson', name: 'redisson', version: '3.16.4'
 
-
+    //liquibase
+    implementation group: 'org.liquibase', name: 'liquibase-core', version: '4.6.2'
 }
