@@ -111,7 +111,7 @@ public class DBConfig {
         SpringLiquibase liquibase = new SpringLiquibase();
         liquibase.setChangeLog("classpath:db/changelog/db.changelog-master.yaml");
         liquibase.setDataSource(getDataSource());
-        liquibase.setShouldRun(Objects.requireNonNull(environment.getProperty("spring.liquibase.enabled", Boolean.class)));
+        liquibase.setShouldRun(environment.getProperty("liquibase.should_run", Boolean.class, Boolean.TRUE));
         return liquibase;
     }
 
