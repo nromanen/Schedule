@@ -1,10 +1,12 @@
 package com.softserve.config;
 
 import com.mchange.v2.c3p0.ComboPooledDataSource;
+import liquibase.integration.spring.SpringLiquibase;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
@@ -67,6 +69,7 @@ public class DBConfig {
 
 
     @Bean
+    @DependsOn("liquibase")
     public LocalSessionFactoryBean getSessionFactory() {
         LocalSessionFactoryBean sessionFactoryBean = new LocalSessionFactoryBean();
         sessionFactoryBean.setDataSource(getDataSource());
@@ -101,6 +104,15 @@ public class DBConfig {
         HibernateTransactionManager transactionManager = new HibernateTransactionManager();
         transactionManager.setSessionFactory(getSessionFactory().getObject());
         return transactionManager;
+    }
+
+    @Bean
+    public SpringLiquibase liquibase() {
+        SpringLiquibase liquibase = new SpringLiquibase();
+        liquibase.setChangeLog("classpath:db/changelog/db.changelog-master.yaml");
+        liquibase.setDataSource(getDataSource());
+        liquibase.setShouldRun(environment.getProperty("liquibase.should_run", Boolean.class, Boolean.TRUE));
+        return liquibase;
     }
 
 }
