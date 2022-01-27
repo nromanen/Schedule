@@ -26,6 +26,22 @@ task liquibaseDiffChangelog(type: JavaExec) {
 
 }
 
+task liquibaseUpdate(type: JavaExec) {
+    group = "liquibase"
+
+    classpath sourceSets.main.runtimeClasspath
+    classpath configurations.liquibase
+    main = "liquibase.integration.commandline.Main"
+
+    args "--changeLogFile=src/main/resources/db/changelog/db.changelog-master.yaml"
+    args "--url=" + hibernateProps.getProperty('hibernate.connection.url')
+    args "--username=" + hibernateProps.getProperty('hibernate.connection.username')
+    args "--password=" + hibernateProps.getProperty('hibernate.connection.password')
+    args "--driver=" + hibernateProps.getProperty('hibernate.connection.driver_class')
+    args "update"
+
+}
+
 def buildTimestamp() {
     def date = new Date()
     def formattedDate = date.format('yyyy-MM-dd-HH-mm')
