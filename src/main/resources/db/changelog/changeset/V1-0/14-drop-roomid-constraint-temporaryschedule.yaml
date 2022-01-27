@@ -1,9 +1,0 @@
-databaseChangeLog:
-  - changeSet:
-      id: 14-drop-roomid-constraint-temporaryschedule
-      author: Alexander Karabush
-      changes:
-        - dropNotNullConstraint:
-            columnDataType: int
-            columnName: room_id
-            tableName: temporary_schedule

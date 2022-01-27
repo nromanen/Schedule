@@ -1,9 +1,0 @@
-databaseChangeLog:
-  - changeSet:
-      id: 12-drop-groupid-constraint-temporaryschedule
-      author: Alexander Karabush
-      changes:
-        - dropNotNullConstraint:
-            columnDataType: int
-            columnName: group_id
-            tableName: temporary_schedule

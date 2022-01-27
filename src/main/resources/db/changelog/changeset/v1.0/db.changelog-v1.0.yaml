@@ -1,0 +1,196 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1642775490693-45
+      author: SaneQQQQ
+      changes:
+        - addColumn:
+            tableName: groups
+            columns:
+              - column:
+                  name: sorting_order
+                  type: integer
+  - changeSet:
+      id: 1642775490693-46
+      author: SaneQQQQ
+      changes:
+        - createSequence:
+            sequenceName: sorting_order_sequence
+  - changeSet:
+      id: 1642775490693-47
+      author: SaneQQQQ
+      changes:
+        - sql:
+            sql: update groups set sorting_order = g.new_sorting_order from(select id, nextval('sorting_order_sequence') as new_sorting_order from groups order by "title") g where g.id = groups.id;
+  - changeSet:
+      id: 1642775490693-48
+      author: SaneQQQQ
+      changes:
+        - addColumn:
+            tableName: rooms
+            columns:
+              - column:
+                  name: sort_order
+                  type: double precision
+  - changeSet:
+      id: 1642775490693-49
+      author: SaneQQQQ
+      changes:
+        - createSequence:
+            sequenceName: sort_order_sequence
+  - changeSet:
+      id: 1642775490693-50
+      author: SaneQQQQ
+      changes:
+        - sql:
+            sql: update rooms set sort_order = t.new_sort_order from(select id, nextval('sort_order_sequence') as new_sort_order from rooms order by "name") t where t.id = rooms.id;
+  - changeSet:
+      id: 1642775490693-51
+      author: SaneQQQQ
+      changes:
+        - createSequence:
+            sequenceName: semester_id_sequence
+  - changeSet:
+      id: 1642775490693-52
+      author: SaneQQQQ
+      changes:
+        - addDefaultValue:
+            tableName: semester_group
+            columnName: semester_id
+            defaultValueSequenceNext: semester_id_sequence
+  - changeSet:
+      id: 1642775490693-53
+      author: SaneQQQQ
+      changes:
+        - createSequence:
+            sequenceName: group_id_sequence
+  - changeSet:
+      id: 1642775490693-54
+      author: SaneQQQQ
+      changes:
+        - addDefaultValue:
+            tableName: semester_group
+            columnName: group_id
+            defaultValueSequenceNext: group_id_sequence
+  - changeSet:
+      id: 1642775490693-55
+      author: SaneQQQQ
+      changes:
+        - addColumn:
+            tableName: students
+            columns:
+              - column:
+                  name: user_id
+                  type: bigint
+  - changeSet:
+      id: 1642775490693-56
+      author: SaneQQQQ
+      changes:
+        - addForeignKeyConstraint:
+            constraintName: user_id_fk
+            baseTableName: students
+            baseColumnNames: user_id
+            referencedTableName: users
+            referencedColumnNames: id
+  - changeSet:
+      id: 1642775490693-57
+      author: SaneQQQQ
+      changes:
+        - sql:
+            sql: update students set user_id = u.id from(select * from users) u where u.email = students.email;
+  - changeSet:
+      id: 1642775490693-58
+      author: SaneQQQQ
+      changes:
+        - dropColumn:
+            tableName: students
+            columnName: email
+  - changeSet:
+      id: 1642775490693-59
+      author: SaneQQQQ
+      changes:
+        - modifyDataType:
+            tableName: teachers
+            columnName: user_id
+            newDataType: bigint
+  - changeSet:
+      id: 1642775490693-60
+      author: SaneQQQQ
+      changes:
+        - dropColumn:
+            columnName: lesson_id
+            tableName: temporary_schedule
+  - changeSet:
+      id: 1642775490693-61
+      author: SaneQQQQ
+      changes:
+        - dropColumn:
+            columnName: teacher_for_site
+            tableName: temporary_schedule
+  - changeSet:
+      id: 1642775490693-62
+      author: SaneQQQQ
+      changes:
+        - dropSequence:
+            sequenceName: sort_order_sequence
+  - changeSet:
+      id: 1642775490693-63
+      author: SaneQQQQ
+      changes:
+        - dropSequence:
+            sequenceName: sorting_order_sequence
+  - changeSet:
+      id: 1642775490693-64
+      author: SaneQQQQ
+      changes:
+        - dropNotNullConstraint:
+            columnDataType: int
+            columnName: group_id
+            tableName: temporary_schedule
+  - changeSet:
+      id: 1642775490693-65
+      author: SaneQQQQ
+      changes:
+        - dropNotNullConstraint:
+            columnDataType: int
+            columnName: period_id
+            tableName: temporary_schedule
+  - changeSet:
+      id: 1642775490693-66
+      author: SaneQQQQ
+      changes:
+        - dropNotNullConstraint:
+            columnDataType: int
+            columnName: room_id
+            tableName: temporary_schedule
+  - changeSet:
+      id: 1642775490693-67
+      author: SaneQQQQ
+      changes:
+        - dropNotNullConstraint:
+            columnDataType: int
+            columnName: room_type_id
+            tableName: rooms
+  - changeSet:
+      id: 1642775490693-68
+      author: SaneQQQQ
+      changes:
+        - dropNotNullConstraint:
+            columnDataType: int
+            columnName: semester_id
+            tableName: temporary_schedule
+  - changeSet:
+      id: 1642775490693-69
+      author: SaneQQQQ
+      changes:
+        - dropNotNullConstraint:
+            columnDataType: int
+            columnName: subject_id
+            tableName: temporary_schedule
+  - changeSet:
+      id: 1642775490693-70
+      author: SaneQQQQ
+      changes:
+        - dropNotNullConstraint:
+            columnDataType: int
+            columnName: teacher_id
+            tableName: temporary_schedule

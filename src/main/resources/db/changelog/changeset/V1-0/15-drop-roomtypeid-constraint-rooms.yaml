@@ -1,9 +1,0 @@
-databaseChangeLog:
-  - changeSet:
-      id: 15-drop-roomtypeid-constraint-rooms
-      author: Alexander Karabush
-      changes:
-        - dropNotNullConstraint:
-            columnDataType: int
-            columnName: room_type_id
-            tableName: rooms
