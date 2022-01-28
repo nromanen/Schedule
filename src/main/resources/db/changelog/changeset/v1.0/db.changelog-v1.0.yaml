@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: 1642775490693-45
+      id: 1642775490693-105
       author: SaneQQQQ
       changes:
         - addColumn:
@@ -10,19 +10,19 @@ databaseChangeLog:
                   name: sorting_order
                   type: integer
   - changeSet:
-      id: 1642775490693-46
+      id: 1642775490693-106
       author: SaneQQQQ
       changes:
         - createSequence:
             sequenceName: sorting_order_sequence
   - changeSet:
-      id: 1642775490693-47
+      id: 1642775490693-107
       author: SaneQQQQ
       changes:
         - sql:
             sql: update groups set sorting_order = g.new_sorting_order from(select id, nextval('sorting_order_sequence') as new_sorting_order from groups order by "title") g where g.id = groups.id;
   - changeSet:
-      id: 1642775490693-48
+      id: 1642775490693-108
       author: SaneQQQQ
       changes:
         - addColumn:
@@ -32,25 +32,25 @@ databaseChangeLog:
                   name: sort_order
                   type: double precision
   - changeSet:
-      id: 1642775490693-49
+      id: 1642775490693-109
       author: SaneQQQQ
       changes:
         - createSequence:
             sequenceName: sort_order_sequence
   - changeSet:
-      id: 1642775490693-50
+      id: 1642775490693-110
       author: SaneQQQQ
       changes:
         - sql:
             sql: update rooms set sort_order = t.new_sort_order from(select id, nextval('sort_order_sequence') as new_sort_order from rooms order by "name") t where t.id = rooms.id;
   - changeSet:
-      id: 1642775490693-51
+      id: 1642775490693-111
       author: SaneQQQQ
       changes:
         - createSequence:
             sequenceName: semester_id_sequence
   - changeSet:
-      id: 1642775490693-52
+      id: 1642775490693-112
       author: SaneQQQQ
       changes:
         - addDefaultValue:
@@ -58,13 +58,13 @@ databaseChangeLog:
             columnName: semester_id
             defaultValueSequenceNext: semester_id_sequence
   - changeSet:
-      id: 1642775490693-53
+      id: 1642775490693-113
       author: SaneQQQQ
       changes:
         - createSequence:
             sequenceName: group_id_sequence
   - changeSet:
-      id: 1642775490693-54
+      id: 1642775490693-114
       author: SaneQQQQ
       changes:
         - addDefaultValue:
@@ -72,7 +72,7 @@ databaseChangeLog:
             columnName: group_id
             defaultValueSequenceNext: group_id_sequence
   - changeSet:
-      id: 1642775490693-55
+      id: 1642775490693-115
       author: SaneQQQQ
       changes:
         - addColumn:
@@ -82,7 +82,7 @@ databaseChangeLog:
                   name: user_id
                   type: bigint
   - changeSet:
-      id: 1642775490693-56
+      id: 1642775490693-116
       author: SaneQQQQ
       changes:
         - addForeignKeyConstraint:
@@ -92,20 +92,20 @@ databaseChangeLog:
             referencedTableName: users
             referencedColumnNames: id
   - changeSet:
-      id: 1642775490693-57
+      id: 1642775490693-117
       author: SaneQQQQ
       changes:
         - sql:
             sql: update students set user_id = u.id from(select * from users) u where u.email = students.email;
   - changeSet:
-      id: 1642775490693-58
+      id: 1642775490693-118
       author: SaneQQQQ
       changes:
         - dropColumn:
             tableName: students
             columnName: email
   - changeSet:
-      id: 1642775490693-59
+      id: 1642775490693-119
       author: SaneQQQQ
       changes:
         - modifyDataType:
@@ -113,33 +113,33 @@ databaseChangeLog:
             columnName: user_id
             newDataType: bigint
   - changeSet:
-      id: 1642775490693-60
+      id: 1642775490693-120
       author: SaneQQQQ
       changes:
         - dropColumn:
             columnName: lesson_id
             tableName: temporary_schedule
   - changeSet:
-      id: 1642775490693-61
+      id: 1642775490693-121
       author: SaneQQQQ
       changes:
         - dropColumn:
             columnName: teacher_for_site
             tableName: temporary_schedule
   - changeSet:
-      id: 1642775490693-62
+      id: 1642775490693-122
       author: SaneQQQQ
       changes:
         - dropSequence:
             sequenceName: sort_order_sequence
   - changeSet:
-      id: 1642775490693-63
+      id: 1642775490693-123
       author: SaneQQQQ
       changes:
         - dropSequence:
             sequenceName: sorting_order_sequence
   - changeSet:
-      id: 1642775490693-64
+      id: 1642775490693-124
       author: SaneQQQQ
       changes:
         - dropNotNullConstraint:
@@ -147,7 +147,7 @@ databaseChangeLog:
             columnName: group_id
             tableName: temporary_schedule
   - changeSet:
-      id: 1642775490693-65
+      id: 1642775490693-125
       author: SaneQQQQ
       changes:
         - dropNotNullConstraint:
@@ -155,7 +155,7 @@ databaseChangeLog:
             columnName: period_id
             tableName: temporary_schedule
   - changeSet:
-      id: 1642775490693-66
+      id: 1642775490693-126
       author: SaneQQQQ
       changes:
         - dropNotNullConstraint:
@@ -163,7 +163,7 @@ databaseChangeLog:
             columnName: room_id
             tableName: temporary_schedule
   - changeSet:
-      id: 1642775490693-67
+      id: 1642775490693-127
       author: SaneQQQQ
       changes:
         - dropNotNullConstraint:
@@ -171,7 +171,7 @@ databaseChangeLog:
             columnName: room_type_id
             tableName: rooms
   - changeSet:
-      id: 1642775490693-68
+      id: 1642775490693-128
       author: SaneQQQQ
       changes:
         - dropNotNullConstraint:
@@ -179,7 +179,7 @@ databaseChangeLog:
             columnName: semester_id
             tableName: temporary_schedule
   - changeSet:
-      id: 1642775490693-69
+      id: 1642775490693-129
       author: SaneQQQQ
       changes:
         - dropNotNullConstraint:
@@ -187,7 +187,7 @@ databaseChangeLog:
             columnName: subject_id
             tableName: temporary_schedule
   - changeSet:
-      id: 1642775490693-70
+      id: 1642775490693-130
       author: SaneQQQQ
       changes:
         - dropNotNullConstraint:
