@@ -1,6 +1,5 @@
 databaseChangeLog:
-#  create empty database structure
 #  - include:
-#      file: db/changelog/start_database_structure_changelog.yaml
+#      file: db/changelog/initial-schema.yaml
   - include:
       file: db/changelog/changeset/V1-0/db.changelog-V1-0.yaml
