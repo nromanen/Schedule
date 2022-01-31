@@ -1,0 +1,70 @@
+import java.time.format.DateTimeFormatter
+import java.time.LocalDateTime
+
+configurations {
+    liquibase
+}
+
+dependencies {
+    liquibase group: 'org.liquibase.ext', name: 'liquibase-hibernate5', version: '4.6.2'
+}
+
+Properties hibernateProperties = new Properties()
+hibernateProperties.load(new FileInputStream("src/main/resources/hibernate.properties"))
+
+task diffChangelog(type: JavaExec) {
+    group = "liquibase"
+    description 'Receives information on differences between two databases you are comparing and creates a changelog file containing deployable changesets.'
+
+    classpath sourceSets.main.runtimeClasspath
+    classpath configurations.liquibase
+    mainClass.set("liquibase.integration.commandline.Main")
+
+    args "--changeLogFile=" + hibernateProperties.getProperty('liquibase.changelog.file_path') + timestamp() + "_changelog.yaml"
+    args "--referenceUrl=hibernate:spring:" + hibernateProperties.getProperty('hibernate.entity.package') + "?dialect=" + hibernateProperties.getProperty('hibernate.dialect')
+    args "--url=" + hibernateProperties.getProperty('hibernate.connection.url')
+    args "--username=" + hibernateProperties.getProperty('hibernate.connection.username')
+    args "--password=" + hibernateProperties.getProperty('hibernate.connection.password')
+    args "--driver=" + hibernateProperties.getProperty('hibernate.connection.driver_class')
+    args "--logLevel=warn"
+    args "diffChangeLog"
+}
+
+task diff(type: JavaExec) {
+    group = "liquibase"
+    description 'Compares two databases of the same type, or different types, to one another.'
+
+    classpath sourceSets.main.runtimeClasspath
+    classpath configurations.liquibase
+    mainClass.set("liquibase.integration.commandline.Main")
+
+    args "--referenceUrl=hibernate:spring:" + hibernateProperties.getProperty('hibernate.entity.package') + "?dialect=" + hibernateProperties.getProperty('hibernate.dialect')
+    args "--url=" + hibernateProperties.getProperty('hibernate.connection.url')
+    args "--username=" + hibernateProperties.getProperty('hibernate.connection.username')
+    args "--password=" + hibernateProperties.getProperty('hibernate.connection.password')
+    args "--driver=" + hibernateProperties.getProperty('hibernate.connection.driver_class')
+    args "--excludeObjects=databasechangelog, databasechangeloglock"
+    args "--logLevel=warn"
+    args "diff"
+}
+
+task update(type: JavaExec) {
+    group = "liquibase"
+    description 'Deploys any changes that are in the changelog file and that have not been deployed to your database yet.'
+
+    classpath sourceSets.main.runtimeClasspath
+    classpath configurations.liquibase
+    mainClass.set("liquibase.integration.commandline.Main")
+
+    args "--changeLogFile=src/main/resources/db/changelog/db.changelog-master.yaml"
+    args "--url=" + hibernateProperties.getProperty('hibernate.connection.url')
+    args "--username=" + hibernateProperties.getProperty('hibernate.connection.username')
+    args "--password=" + hibernateProperties.getProperty('hibernate.connection.password')
+    args "--driver=" + hibernateProperties.getProperty('hibernate.connection.driver_class')
+    args "--logLevel=warn"
+    args "update"
+}
+
+String timestamp() {
+    return DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss").format(LocalDateTime.now());
+}
