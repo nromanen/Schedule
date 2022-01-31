@@ -1,9 +1,0 @@
-databaseChangeLog:
-- changeSet:
-    id: 11-drop-sort-sequences
-    author: Alexander Karabush
-    changes:
-      - dropSequence:
-          sequenceName: sort_order_sequence
-      - dropSequence:
-          sequenceName: sorting_order_sequence

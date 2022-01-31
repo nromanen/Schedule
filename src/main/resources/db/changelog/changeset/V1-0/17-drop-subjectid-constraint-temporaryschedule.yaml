@@ -1,9 +1,0 @@
-databaseChangeLog:
-  - changeSet:
-      id: 17-drop-subjectid-constraint-temporaryschedule
-      author: Alexander Karabush
-      changes:
-        - dropNotNullConstraint:
-            columnDataType: int
-            columnName: subject_id
-            tableName: temporary_schedule

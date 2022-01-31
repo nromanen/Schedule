@@ -1,8 +1,0 @@
-databaseChangeLog:
-- changeSet:
-    id: 10-drop-teacherforsite-column-temporaryschedule
-    author: Alexander Karabush
-    changes:
-      - dropColumn:
-          columnName: teacher_for_site
-          tableName: temporary_schedule

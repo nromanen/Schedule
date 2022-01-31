@@ -1,8 +1,0 @@
-databaseChangeLog:
-  - changeSet:
-      id: 7-drop-email-column-students
-      author: Alexander Karabush
-      changes:
-        - dropColumn:
-            tableName: students
-            columnName: email
