@@ -18,5 +18,5 @@ public class LessonBaseDTO {
     private LessonType lessonType;
     private SubjectDTO subject;
     private TeacherDTO teacher;
-    private Long semesterId;
+    private boolean grouped;
 }

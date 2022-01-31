@@ -195,14 +195,14 @@ public class LessonsControllerTest {
     public void returnInternalServerErrorIfSavedTeacherIsNull() throws Exception {
         SubjectDTO subjectDTO = new SubjectMapperImpl().subjectToSubjectDTO(subjectService.getById(6L));
         GroupDTO groupDTO = new GroupMapperImpl().groupToGroupDTO(groupService.getById(6L));
-        LessonForGroupsDTO lessonDtoForSave = new LessonForGroupsDTO();
+        LessonInfoDTO lessonDtoForSave = new LessonInfoDTO();
         lessonDtoForSave.setHours(2);
         lessonDtoForSave.setSubjectForSite("");
         lessonDtoForSave.setLinkToMeeting("");
         lessonDtoForSave.setLessonType(LABORATORY);
         lessonDtoForSave.setTeacher(null);
         lessonDtoForSave.setSubject(subjectDTO);
-        lessonDtoForSave.setGroups(Arrays.asList(groupDTO));
+        lessonDtoForSave.setGroup(groupDTO);
 
         mockMvc.perform(post("/lessons").content(objectMapper.writeValueAsString(lessonDtoForSave))
                 .contentType(MediaType.APPLICATION_JSON))

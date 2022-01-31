@@ -13,5 +13,5 @@ import java.util.List;
 @ToString
 public class LessonForGroupsDTO extends LessonBaseDTO{
     private List<GroupDTO> groups;
-    private boolean grouped;
+    private Long semesterId;
 }

@@ -13,9 +13,10 @@ import java.util.List;
 
 @Mapper(componentModel = "spring")
 public abstract class LessonInfoMapper {
+
+    @Mapping(source = "semester.id", target = "semesterId")
     public abstract LessonInfoDTO lessonToLessonInfoDTO(Lesson lesson);
 
-    @Mapping(target = "semester.id", source = "semesterId")
     public abstract Lesson lessonInfoDTOToLesson(LessonInfoDTO lessonInfoDTO);
 
     public List<Lesson> lessonForGroupsDTOToLessons(LessonForGroupsDTO lessonForGroupsDTO) {
