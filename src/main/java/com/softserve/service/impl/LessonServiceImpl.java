@@ -155,7 +155,11 @@ public class LessonServiceImpl implements LessonService {
             if (!oldLesson.isGrouped()) {
                 lessonRepository.setGrouped(lesson.getId());
             }
-            lesson =  lessonRepository.updateGrouped(oldLesson, lesson);
+            boolean isTeacherOrSubjectUpdated = ((oldLesson.getSubject().getId().longValue()
+                    != lesson.getSubject().getId().longValue())
+                    || (oldLesson.getTeacher().getId()
+                    != lesson.getTeacher().getId()));
+            lesson = lessonRepository.updateGrouped(oldLesson, lesson, isTeacherOrSubjectUpdated);
         } else {
             lesson = lessonRepository.update(lesson);
         }
