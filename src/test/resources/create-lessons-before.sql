@@ -25,7 +25,8 @@ insert into "public".teachers(id, name, patronymic, "position", surname) VALUES
 insert into "public".groups(id, title) values
 (4,'111'),
 (5,'222'),
-(6,'333');
+(6,'333'),
+(7,'444');
 
 insert into "public".semesters(id, current_semester, default_semester, description, end_day, start_day, "year", disable) VALUES
 (4, true , false, '1 semester', '2020-02-20', '2020/01/20', 2020, false),
@@ -61,3 +62,9 @@ insert into "public".lessons(id, hours, lessontype, subject_for_site, link_to_me
 (10, 1, 'LECTURE', '', '', 7, 4, 4, 5),
 (11, 1, 'PRACTICAL', '', '', 7, 5, 5, 5),
 (12, 1, 'PRACTICAL', '', '', 5, 5, 5, 5);
+
+insert into "public".lessons(id, hours, lessontype, subject_for_site, link_to_meeting, semester_id, group_id, subject_id, teacher_id, grouped) VALUES
+(13, 1, 'LECTURE', 'Biology 1', '', 5, 4, 4, 5, true),
+(14, 1, 'LECTURE', 'Biology 1', '', 5, 5, 4, 5, true),
+(15, 1, 'LECTURE', 'Biology 2', '', 5, 6, 4, 5, true),
+(16, 1, 'LECTURE', 'Biology 2', '', 5, 7, 4, 5, true);

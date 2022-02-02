@@ -16,6 +16,7 @@ import com.softserve.service.SubjectService;
 import com.softserve.service.TeacherService;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
+import org.assertj.core.api.SoftAssertions;
 import org.junit.*;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -110,7 +111,7 @@ public class LessonsControllerTest {
 
     @Test
     public void saveLessonsIfLessonDoesNotExist() throws Exception {
-        TeacherDTO teacherDTO = new TeacherNameMapperImpl().teacherDTOToTeacher(teacherService.getById(5L));
+        TeacherNameDTO teacherDTO = new TeacherNameMapperImpl().teacherDTOToTeacher(teacherService.getById(5L));
         SubjectDTO subjectDTO = new SubjectMapperImpl().subjectToSubjectDTO(subjectService.getById(4L));
         GroupDTO groupDTO = new GroupMapperImpl().groupToGroupDTO(groupService.getById(4L));
         LessonInfoDTO lessonDtoForSave = new LessonInfoDTO();
@@ -151,6 +152,95 @@ public class LessonsControllerTest {
                 .andExpect(jsonPath("$.lessonType").value(lessonForCompare.getLessonType().toString()))
                 .andExpect(jsonPath("$.subject").value(lessonForCompare.getSubject()))
                 .andExpect(jsonPath("$.group").value(lessonForCompare.getGroup()));
+    }
+
+    @Test
+    public void updateForGroupedLesson() throws Exception {
+        LessonInfoDTO lessonDtoForUpdate = new LessonInfoDTO();
+        lessonDtoForUpdate.setId(13L);
+        lessonDtoForUpdate.setHours(2);
+        lessonDtoForUpdate.setLinkToMeeting("https://softserveinc.zoom.us/j/93198369163?pwd=Rk1GU281cDFtK1FCK3pJWXphRkJrQT09");
+        lessonDtoForUpdate.setSubjectForSite("Biology 3");
+        lessonDtoForUpdate.setLessonType(LABORATORY);
+        lessonDtoForUpdate.setTeacher(new TeacherNameMapperImpl().teacherDTOToTeacher(teacherService.getById(5L)));
+        lessonDtoForUpdate.setSubject(new SubjectMapperImpl().subjectToSubjectDTO(subjectService.getById(4L)));
+        lessonDtoForUpdate.setGroup(new GroupMapperImpl().groupToGroupDTO(groupService.getById(4L)));
+        lessonDtoForUpdate.setGrouped(true);
+
+        Lesson expectedLesson = new LessonInfoMapperImpl().lessonInfoDTOToLesson(lessonDtoForUpdate);
+
+        mockMvc.perform(put("/lessons").content(objectMapper.writeValueAsString(lessonDtoForUpdate))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(expectedLesson.getId()))
+                .andExpect(jsonPath("$.hours").value(expectedLesson.getHours()))
+                .andExpect(jsonPath("$.linkToMeeting").value(expectedLesson.getLinkToMeeting()))
+                .andExpect(jsonPath("$.subjectForSite").value(expectedLesson.getSubjectForSite()))
+                .andExpect(jsonPath("$.lessonType").value(expectedLesson.getLessonType().toString()))
+                .andExpect(jsonPath("$.subject").value(expectedLesson.getSubject()))
+                .andExpect(jsonPath("$.teacher").value(expectedLesson.getTeacher()))
+                .andExpect(jsonPath("$.group").value(expectedLesson.getGroup()))
+                .andExpect(jsonPath("$.grouped").value(expectedLesson.isGrouped()));
+
+        Lesson GroupedWithSameSubjectForSite = lessonService.getById(14L);
+        Lesson GroupedWithDiffSubjectForSite = lessonService.getById(15L);
+
+        SoftAssertions softAssertions = new SoftAssertions();
+        softAssertions.assertThat(expectedLesson).isEqualToComparingOnlyGivenFields(GroupedWithSameSubjectForSite,
+                        "hours", "linkToMeeting", "subjectForSite", "lessonType", "teacher",
+                        "subject", "grouped");
+        softAssertions.assertThat(expectedLesson.getGroup()).isNotEqualTo(GroupedWithSameSubjectForSite.getGroup());
+        softAssertions.assertThat(expectedLesson).isEqualToComparingOnlyGivenFields(GroupedWithDiffSubjectForSite,
+                        "teacher", "subject", "grouped");
+        softAssertions.assertThat(expectedLesson.getHours()).isNotEqualTo(GroupedWithDiffSubjectForSite.getHours());
+        softAssertions.assertThat(expectedLesson.getLinkToMeeting()).isNotEqualTo(GroupedWithDiffSubjectForSite.getLinkToMeeting());
+        softAssertions.assertThat(expectedLesson.getSubjectForSite()).isNotEqualTo(GroupedWithDiffSubjectForSite.getSubjectForSite());
+        softAssertions.assertThat(expectedLesson.getLessonType()).isNotEqualTo(GroupedWithDiffSubjectForSite.getLessonType());
+        softAssertions.assertThat(expectedLesson.getGroup()).isNotEqualTo(GroupedWithDiffSubjectForSite.getGroup());
+        softAssertions.assertAll();
+    }
+
+    @Test
+    public void updateTeacherAndSubjectForGroupedLesson() throws Exception {
+        LessonInfoDTO lessonDtoForUpdate = new LessonInfoDTO();
+        lessonDtoForUpdate.setId(13L);
+        lessonDtoForUpdate.setHours(1);
+        lessonDtoForUpdate.setLinkToMeeting("");
+        lessonDtoForUpdate.setSubjectForSite("History");
+        lessonDtoForUpdate.setLessonType(LECTURE);
+        lessonDtoForUpdate.setTeacher(new TeacherNameMapperImpl().teacherDTOToTeacher(teacherService.getById(4L)));
+        lessonDtoForUpdate.setSubject(new SubjectMapperImpl().subjectToSubjectDTO(subjectService.getById(5L)));
+        lessonDtoForUpdate.setGroup(new GroupMapperImpl().groupToGroupDTO(groupService.getById(4L)));
+        lessonDtoForUpdate.setGrouped(true);
+
+        Lesson expectedLesson = new LessonInfoMapperImpl().lessonInfoDTOToLesson(lessonDtoForUpdate);
+
+        mockMvc.perform(put("/lessons").content(objectMapper.writeValueAsString(lessonDtoForUpdate))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(expectedLesson.getId()))
+                .andExpect(jsonPath("$.hours").value(expectedLesson.getHours()))
+                .andExpect(jsonPath("$.linkToMeeting").value(expectedLesson.getLinkToMeeting()))
+                .andExpect(jsonPath("$.subjectForSite").value(expectedLesson.getSubjectForSite()))
+                .andExpect(jsonPath("$.lessonType").value(expectedLesson.getLessonType().toString()))
+                .andExpect(jsonPath("$.subject").value(expectedLesson.getSubject()))
+                .andExpect(jsonPath("$.teacher").value(expectedLesson.getTeacher()))
+                .andExpect(jsonPath("$.group").value(expectedLesson.getGroup()))
+                .andExpect(jsonPath("$.grouped").value(expectedLesson.isGrouped()));
+
+        Lesson GroupedWithSameSubjectForSite = lessonService.getById(14L);
+        Lesson GroupedWithDiffSubjectForSite = lessonService.getById(15L);
+
+        SoftAssertions softAssertions = new SoftAssertions();
+        softAssertions.assertThat(expectedLesson).isEqualToComparingOnlyGivenFields(GroupedWithSameSubjectForSite,
+                "hours", "linkToMeeting", "subjectForSite", "lessonType", "teacher",
+                "subject", "grouped");
+        softAssertions.assertThat(expectedLesson.getGroup()).isNotEqualTo(GroupedWithSameSubjectForSite.getGroup());
+        softAssertions.assertThat(expectedLesson).isEqualToComparingOnlyGivenFields(GroupedWithDiffSubjectForSite,
+                "hours", "linkToMeeting", "subjectForSite", "lessonType", "teacher",
+                "subject", "grouped");
+        softAssertions.assertThat(expectedLesson.getGroup()).isNotEqualTo(GroupedWithDiffSubjectForSite.getGroup());
+        softAssertions.assertAll();
     }
 
     @Test
