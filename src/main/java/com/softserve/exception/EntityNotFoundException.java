@@ -12,7 +12,7 @@ public class EntityNotFoundException extends RuntimeException {
     private final String shortMessage;
 
     public EntityNotFoundException(Class clazz, String... searchParamsMap) {
-        super(EntityNotFoundException.generateMessage(clazz.getSimpleName(), toMap(String.class, String.class, searchParamsMap)));
+        super(EntityNotFoundException.generateMessage(clazz.getSimpleName(), toMap(String.class, String.class, (Object[]) searchParamsMap)));
         this.clazz = clazz;
         this.searchParamsMap = searchParamsMap;
         shortMessage = StringUtils.capitalize(clazz.getSimpleName()) + " was not found";
