@@ -13,6 +13,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.mongodb.core.MongoTemplate;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.concurrent.TimeUnit;
 
 
@@ -31,6 +32,9 @@ public class MongoConfig {
     private String mongoServerUsername = System.getenv("MONGO_USERNAME");
     private String mongoServerMainDatabase = System.getenv("MONGO_MAIN_DATABASE");
     private String mongoServerCurrentDatabase = System.getenv("MONGO_CURRENT_DATABASE");
+
+    @Value("${default.server.cluster}")
+    private String defaultServerCluster;
 
     @Value("${mongo.local.current.database}")
     private String mongoLocalCurrentDatabase;
@@ -56,7 +60,11 @@ public class MongoConfig {
                     .build();
             return MongoClients.create(settings);
         }
-        return new com.mongodb.MongoClient("127.0.0.1", PORT);
+        MongoClientSettings settings = MongoClientSettings.builder()
+                .applyToClusterSettings(builder ->
+                        builder.hosts(Collections.singletonList(new ServerAddress(defaultServerCluster, PORT))))
+                .build();
+        return MongoClients.create(settings);
     }
 
     @Bean
@@ -64,7 +72,7 @@ public class MongoConfig {
         if (isServerMongoDB()) {
             return new MongoTemplate((MongoClient) getMongoClient(), mongoServerCurrentDatabase);
         }
-        return new MongoTemplate((com.mongodb.MongoClient) getMongoClient(), mongoLocalCurrentDatabase);
+        return new MongoTemplate((MongoClient) getMongoClient(), mongoLocalCurrentDatabase);
     }
 
     private boolean isServerMongoDB() {
