@@ -40,10 +40,8 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
             + " linkToMeeting = :linkToMeeting "
             + "where grouped = true "
             + "and subject.id = :initialSubjectId "
-            + "and hours = :initialHours "
             + "and teacher.id = :initialTeacherId "
-            + "and semester.id = :initialSemesterId "
-            + "and lessonType = :initialLessonType";
+            + "and semester.id = :initialSemesterId";
 
     private static final String UPDATE_GROUPED
             = "update Lesson "
@@ -343,10 +341,8 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
                 ? currentSession.createQuery(UPDATE_GROUPED_TEACHER_OR_SUBJECT)
                 : currentSession.createQuery(UPDATE_GROUPED);
         query = query.setParameter("initialSubjectId", oldLesson.getSubject().getId())
-                .setParameter("initialHours", oldLesson.getHours())
                 .setParameter("initialTeacherId", oldLesson.getTeacher().getId())
                 .setParameter("initialSemesterId", oldLesson.getSemester().getId())
-                .setParameter("initialLessonType", oldLesson.getLessonType())
                 .setParameter("linkToMeeting", updatedLesson.getLinkToMeeting())
                 .setParameter("subjectId", updatedLesson.getSubject().getId())
                 .setParameter("hours", updatedLesson.getHours())
@@ -355,7 +351,9 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
                 .setParameter("subjectForSite", updatedLesson.getSubjectForSite());
         query = isTeacherOrSubjectUpdated
                 ? query
-                : query.setParameter("initialSubjectForSite", oldLesson.getSubjectForSite());
+                : query.setParameter("initialSubjectForSite", oldLesson.getSubjectForSite())
+                .setParameter("initialHours", oldLesson.getHours())
+                .setParameter("initialLessonType", oldLesson.getLessonType());
         int updated = query.executeUpdate();
         log.debug("Updated group lessons {}", updated);
         return updatedLesson;
