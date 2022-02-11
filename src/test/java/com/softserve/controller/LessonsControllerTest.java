@@ -1,11 +1,13 @@
 package com.softserve.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.softserve.assertions.CustomMockMvcAssertions;
 import com.softserve.config.DBConfigTest;
 import com.softserve.config.MyWebAppInitializer;
 import com.softserve.config.WebMvcConfig;
 import com.softserve.dto.*;
 import com.softserve.entity.Lesson;
+import com.softserve.exception.EntityNotFoundException;
 import com.softserve.mapper.GroupMapperImpl;
 import com.softserve.mapper.LessonInfoMapperImpl;
 import com.softserve.mapper.SubjectMapperImpl;
@@ -16,6 +18,7 @@ import com.softserve.service.SubjectService;
 import com.softserve.service.TeacherService;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
+import org.assertj.core.api.SoftAssertions;
 import org.junit.*;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -72,11 +75,15 @@ public class LessonsControllerTest {
     @Autowired
     private GroupService groupService;
 
+    private CustomMockMvcAssertions assertions;
+
     @Before
     public void insertData() {
         mockMvc = MockMvcBuilders.webAppContextSetup(wac)
                 .apply(SecurityMockMvcConfigurers.springSecurity())
                 .build();
+
+        assertions = new CustomMockMvcAssertions(mockMvc, objectMapper, "/lessons");
     }
 
     @Test
@@ -158,6 +165,16 @@ public class LessonsControllerTest {
         mockMvc.perform(delete("/lessons/{id}", 7)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    public void deleteLessonGrouped() throws Exception {
+        assertions.assertForDelete(13,"/lessons/{id}");
+
+        SoftAssertions softAssertions = new SoftAssertions();
+        softAssertions.assertThatThrownBy(() -> lessonService.getById(14L)).isInstanceOf(EntityNotFoundException.class);
+        softAssertions.assertThat(lessonService.getById(15L)).isNotNull();
+        softAssertions.assertAll();
     }
 
     @Test
