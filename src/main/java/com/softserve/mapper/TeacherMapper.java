@@ -1,6 +1,7 @@
 package com.softserve.mapper;
 
 import com.softserve.dto.*;
+import com.softserve.entity.User;
 import org.apache.commons.lang3.StringUtils;
 import com.softserve.entity.Teacher;
 import com.softserve.service.UserService;
@@ -20,6 +21,7 @@ public abstract class TeacherMapper {
 
     @InheritInverseConfiguration
     @Mapping(target = "email", source = "userId", qualifiedByName = "userIdToEmail")
+    @Mapping(target = "importSaveStatus", ignore = true)
     public abstract TeacherImportDTO teacherToTeacherImportDTO(Teacher teacher);
 
     @Named("userIdToEmail")
@@ -30,7 +32,13 @@ public abstract class TeacherMapper {
         return null;
     }
 
+    @Named("emailToUserId")
+    public Long emailToUser(String email) {
+        return userService.findSocialUser(email).map(User::getId).orElse(null);
+    }
+
     @Mapping(target = "department", source = "departmentDTO")
+    @Mapping(target = "userId", source = "email", qualifiedByName = "emailToUserId")
     public abstract Teacher teacherForUpdateDTOToTeacher(TeacherForUpdateDTO teacherForUpdateDTO);
 
     @InheritInverseConfiguration
@@ -38,9 +46,12 @@ public abstract class TeacherMapper {
     public abstract TeacherForUpdateDTO teacherToTeacherForUpdateDTO(Teacher teacher);
 
     @Mapping(target = "department", source = "departmentDTO")
+    @Mapping(target = "userId", source = "email", qualifiedByName = "emailToUserId")
     public abstract Teacher teacherDTOToTeacher(TeacherDTO teacherDTO);
 
     @Mapping(target = "department", source = "departmentDTO")
+    @Mapping(target = "disable", ignore = true)
+    @Mapping(target = "userId", source = "email", qualifiedByName = "emailToUserId")
     public abstract Teacher teacherImportDTOToTeacher(TeacherImportDTO teacherImportDTO);
 
     public abstract TeacherWithUserDTO toTeacherWithUserDTO(Teacher teacher);

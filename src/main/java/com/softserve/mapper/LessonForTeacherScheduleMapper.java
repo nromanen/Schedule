@@ -7,7 +7,8 @@ import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface LessonForTeacherScheduleMapper {
-
     @Mapping(source = "lessonType", target = "lessonType")
+    @Mapping(target = "room", ignore = true)
+    @Mapping(target = "temporaryScheduleDTO", ignore = true)
     LessonForTeacherScheduleDTO lessonToLessonForTeacherScheduleDTO(Lesson lesson);
 }

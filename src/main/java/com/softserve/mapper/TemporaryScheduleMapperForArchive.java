@@ -8,7 +8,7 @@ import org.mapstruct.Named;
 import java.util.List;
 
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = TeacherMapper.class)
 public interface TemporaryScheduleMapperForArchive {
     @Named("temporary_schedule_for_archive")
     List<TemporaryScheduleForArchiveDTO> convertToNewDtoList(List<TemporarySchedule> schedules);
