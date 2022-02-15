@@ -189,6 +189,7 @@ public class LessonsControllerTest {
                         "hours", "linkToMeeting", "subjectForSite", "lessonType", "teacher",
                         "subject", "grouped");
         softAssertions.assertThat(expectedLesson.getGroup()).isNotEqualTo(GroupedWithSameSubjectForSite.getGroup());
+        softAssertions.assertAll();
     }
 
     @Test
