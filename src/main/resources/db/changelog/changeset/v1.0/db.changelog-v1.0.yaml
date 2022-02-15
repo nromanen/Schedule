@@ -196,7 +196,7 @@ databaseChangeLog:
             tableName: temporary_schedule
   - changeSet:
       id: 1642775490693-131
-      author: vchornyy12
+      author: vchornyy 12
       changes:
         - delete:
             tableName: students
