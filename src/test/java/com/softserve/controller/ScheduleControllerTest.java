@@ -9,6 +9,7 @@ import com.softserve.entity.Lesson;
 import com.softserve.entity.Teacher;
 import com.softserve.entity.enums.EvenOdd;
 import com.softserve.service.*;
+import org.assertj.core.api.SoftAssertions;
 import org.hamcrest.Matchers;
 import org.hamcrest.collection.IsEmptyCollection;
 import org.junit.Before;
@@ -24,10 +25,13 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.time.DayOfWeek;
+import java.util.Arrays;
+import java.util.List;
 
 import static com.softserve.entity.enums.LessonType.LECTURE;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -227,6 +231,38 @@ public class ScheduleControllerTest {
                         .content(objectMapper.writeValueAsString(scheduleSaveDTO))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
+    }
+
+    @Test
+    public void saveScheduleWithGroupedLessons() throws Exception {
+        ScheduleSaveDTO scheduleSaveDTO = new ScheduleSaveDTO();
+        scheduleSaveDTO.setDayOfWeek(DayOfWeek.TUESDAY);
+        scheduleSaveDTO.setEvenOdd(EvenOdd.ODD);
+        scheduleSaveDTO.setLessonId(8L);
+        scheduleSaveDTO.setPeriodId(5L);
+        scheduleSaveDTO.setRoomId(4L);
+        ScheduleSaveDTO scheduleGrouped = new ScheduleSaveDTO();
+        scheduleGrouped.setDayOfWeek(DayOfWeek.TUESDAY);
+        scheduleGrouped.setEvenOdd(EvenOdd.ODD);
+        scheduleGrouped.setLessonId(9L);
+        scheduleGrouped.setPeriodId(5L);
+        scheduleGrouped.setRoomId(4L);
+
+        MvcResult mvcResult = mockMvc.perform(post("/schedules")
+                        .content(objectMapper.writeValueAsString(scheduleSaveDTO))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated())
+                .andReturn();
+
+        String contentAsString = mvcResult.getResponse().getContentAsString();
+        List<ScheduleSaveDTO> savedSchedules = Arrays.asList(objectMapper.readValue(contentAsString, ScheduleSaveDTO[].class));
+
+        SoftAssertions softAssertions = new SoftAssertions();
+        softAssertions.assertThat(scheduleSaveDTO).isEqualToComparingOnlyGivenFields(savedSchedules.get(0),
+                "dayOfWeek", "evenOdd", "lessonId", "periodId", "roomId");
+        softAssertions.assertThat(scheduleGrouped).isEqualToComparingOnlyGivenFields(savedSchedules.get(1),
+                "dayOfWeek", "evenOdd", "lessonId", "periodId", "roomId");
+        softAssertions.assertAll();
     }
 
 //  Uncomment when fix response statusCode

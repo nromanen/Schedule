@@ -61,11 +61,13 @@ insert into "public".semester_period (semester_id, period_id) values
 (4, 5),
 (5, 4);
 
-insert into "public".lessons(id, hours, lessontype, subject_for_site, link_to_meeting, semester_id, group_id, subject_id, teacher_id) VALUES
-(4, 1, 'LECTURE', '', '', 4, 4, 4, 4),
-(5, 1, 'LABORATORY', '', '', 5, 5, 5, 5),
-(6, 2, 'LABORATORY', '', '', 4, 4, 5, 6),
-(7, 2, 'PRACTICAL', '', '', 6, 6, 6, 6);
+insert into "public".lessons(id, hours, lessontype, subject_for_site, link_to_meeting, semester_id, group_id, subject_id, teacher_id, grouped) VALUES
+(4, 1, 'LECTURE', '', '', 4, 4, 4, 4, false),
+(5, 1, 'LABORATORY', '', '', 5, 5, 5, 5, false),
+(6, 2, 'LABORATORY', '', '', 4, 4, 5, 6, false),
+(7, 2, 'PRACTICAL', '', '', 6, 6, 6, 6, false),
+(8, 2, 'LABORATORY', 'Biology 1', '', 6, 4, 4, 6, true),
+(9, 2, 'LABORATORY', 'Biology 1', '', 6, 5, 4, 6, true);
 
 insert into "public".schedules(id, day_of_week, evenodd, lesson_id, period_id, room_id) VALUES
 (4, 'MONDAY', 'EVEN', 4, 4, 4),
