@@ -66,5 +66,4 @@ insert into "public".lessons(id, hours, lessontype, subject_for_site, link_to_me
 insert into "public".lessons(id, hours, lessontype, subject_for_site, link_to_meeting, semester_id, group_id, subject_id, teacher_id, grouped) VALUES
 (13, 1, 'LECTURE', 'Biology 1', '', 5, 4, 4, 5, true),
 (14, 1, 'LECTURE', 'Biology 1', '', 5, 5, 4, 5, true),
-(15, 1, 'LECTURE', 'Biology 2', '', 5, 6, 4, 5, true),
-(16, 1, 'LECTURE', 'Biology 2', '', 5, 7, 4, 5, true);
+(15, 1, 'LECTURE', 'Biology 2', '', 5, 6, 4, 5, true);
