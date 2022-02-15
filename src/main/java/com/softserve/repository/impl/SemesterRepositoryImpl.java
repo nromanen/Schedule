@@ -38,13 +38,13 @@ public class SemesterRepositoryImpl extends BasicRepositoryImpl<Semester, Long> 
     @Override
     public List<Semester> getAll() {
         log.info("In getAll()");
-        List<Semester> semesterList = sessionFactory.getCurrentSession().createQuery("SELECT distinct s " +
+        Session session = getSession();
+        return  session.createQuery("SELECT distinct s " +
                 "from Semester s " +
                 "left join fetch s.periods " +
                 "left join fetch s.groups " +
-                "left join fetch s.daysOfWeek" )
+                "left join fetch s.daysOfWeek", Semester.class)
                 .getResultList();
-        return semesterList;
     }
 
 
@@ -54,7 +54,7 @@ public class SemesterRepositoryImpl extends BasicRepositoryImpl<Semester, Long> 
      * @param entity Semester is going to be updated
      * @return Semester
      */
-    @Override
+    @Override //merge?
     public Semester update(Semester entity) {
         log.info("Enter into update method with entity:{}", entity);
         entity = (Semester) sessionFactory.getCurrentSession().merge(entity);
@@ -66,7 +66,7 @@ public class SemesterRepositoryImpl extends BasicRepositoryImpl<Semester, Long> 
     @Override
     protected boolean checkReference(Semester semester) {
         log.info("In checkReference(semester = [{}])", semester);
-        long count = (long) sessionFactory.getCurrentSession().createQuery
+        Long count = (Long) sessionFactory.getCurrentSession().createQuery
                         ("select count (s.id) " +
                                 "from Schedule s where s.lesson.semester.id = :semesterId")
                 .setParameter("semesterId", semester.getId()).getSingleResult();
@@ -188,7 +188,7 @@ public class SemesterRepositoryImpl extends BasicRepositoryImpl<Semester, Long> 
     @Override
     public Optional<Semester> getSemesterByDescriptionAndYear(String description, int year) {
         log.info("In getSemesterByDescriptionAndYear(String description = [{}], int year = [{}])", description, year);
-        return sessionFactory.getCurrentSession().createQuery("select s from Semester s where s.description= :description and s.year= :year")
+        return sessionFactory.getCurrentSession().createQuery("select s from Semester s where s.description= :description and s.year= :year", Semester.class)
                 .setParameter("description", description).
                 setParameter("year", year)
                 .uniqueResultOptional();

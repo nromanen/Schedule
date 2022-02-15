@@ -32,7 +32,7 @@ public class SubjectRepositoryImpl extends BasicRepositoryImpl<Subject, Long> im
     public List<Subject> getAll() {
         log.info("In getAll()");
         Session session = getSession();
-        return session.createQuery("from Subject ORDER BY name ASC")
+        return session.createQuery("from Subject ORDER BY name ASC", Subject.class)
                 .getResultList();
     }
 
@@ -83,7 +83,7 @@ public class SubjectRepositoryImpl extends BasicRepositoryImpl<Subject, Long> im
     @Override
     protected boolean checkReference(Subject subject) {
         log.info("In checkReference(subject = [{}])", subject);
-        long count = (long) sessionFactory.getCurrentSession().createQuery
+        Long count = (Long) sessionFactory.getCurrentSession().createQuery
                 ("select count (l.id) " +
                         "from Lesson l where l.subject.id = :subjectId")
                 .setParameter("subjectId", subject.getId())

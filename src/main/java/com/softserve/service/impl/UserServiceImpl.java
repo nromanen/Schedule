@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import java.text.MessageFormat;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import static org.apache.commons.lang3.StringUtils.containsAny;
@@ -120,7 +121,7 @@ public class UserServiceImpl implements UserService {
         log.info("Enter into update method with entity:{}", object);
         getById(object.getId());
         if (userRepository.findByEmail(object.getEmail()).isPresent() &&
-                userRepository.findByEmail(object.getEmail()).get().getId() != object.getId()) {
+                !Objects.equals(userRepository.findByEmail(object.getEmail()).get().getId(), object.getId())) {
             throw new FieldAlreadyExistsException(User.class, "email", object.getEmail());
         }
         return userRepository.update(object);
@@ -284,7 +285,7 @@ public class UserServiceImpl implements UserService {
             String token = UUID.randomUUID().toString();
             user.setToken(token);
             User registrationUser = save(user);
-            sendRegistrationMail(user, registrationMessage);
+//            sendRegistrationMail(user, registrationMessage);
             return registrationUser;
         } else {
             throw new IncorrectPasswordException();

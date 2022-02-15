@@ -59,7 +59,7 @@ public class UserRepositoryImpl extends BasicRepositoryImpl<User, Long> implemen
         log.info("Enter into getAllUsersWithRoleUser of UserRepositoryImpl");
         return sessionFactory.getCurrentSession().createQuery(
                 "select u from User u " +
-                        " where u.role = 'ROLE_USER' ")
+                        " where u.role = 'ROLE_USER' ", User.class)
                 .getResultList();
     }
 
@@ -82,9 +82,9 @@ public class UserRepositoryImpl extends BasicRepositoryImpl<User, Long> implemen
     @Override
     protected boolean checkReference(User user) {
         log.info("In checkReference(user = [{}])", user);
-        long count = (long) sessionFactory.getCurrentSession().createQuery
+        Long count = (Long) sessionFactory.getCurrentSession().createQuery
                 ("select count (t.id) " +
-                        "from Teacher t where t.userId.id = :userId")
+                        "from Teacher t where t.userId = :userId")
                 .setParameter("userId", user.getId())
                 .getSingleResult();
         return count != 0;
