@@ -273,7 +273,7 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
     @Override
     protected boolean checkReference(Lesson lesson) {
         log.info("In checkReference(lesson = [{}])", lesson);
-        long count = sessionFactory.getCurrentSession().createQuery
+        Long count = sessionFactory.getCurrentSession().createQuery
                 (COUNT_QUERY, Long.class)
                 .setParameter("lessonId", lesson.getId())
                 .getSingleResult();
