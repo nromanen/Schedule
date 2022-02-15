@@ -1,9 +1,0 @@
-databaseChangeLog:
-  - changeSet:
-      id: 1642775490693-133
-      author: vchornyy
-      changes:
-        - delete:
-            tableName: students
-            where: user_id=1
-
