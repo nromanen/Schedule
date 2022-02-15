@@ -1,11 +1,14 @@
 package com.softserve.entity;
 
-import lombok.*;
-import org.hibernate.annotations.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.hibernate.annotations.Filter;
+import org.hibernate.annotations.FilterDef;
+import org.hibernate.annotations.Filters;
+import org.hibernate.annotations.ParamDef;
 
 import javax.persistence.*;
-import javax.persistence.Entity;
-import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
@@ -15,22 +18,21 @@ import java.io.Serializable;
 @Setter
 @Getter
 @Entity
-@EqualsAndHashCode
 @Table(name = "rooms")
 
-@FilterDef(name="roomDisableFilter", parameters={
-        @ParamDef( name="disable", type="boolean" ),
+@FilterDef(name = "roomDisableFilter", parameters = {
+        @ParamDef(name = "disable", type = "boolean"),
 })
 
-@Filters( {
-        @Filter(name="roomDisableFilter", condition="disable = :disable"),
-} )
+@Filters({
+        @Filter(name = "roomDisableFilter", condition = "disable = :disable"),
+})
 
 public class Room implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(columnDefinition = "serial")
-    private long id;
+    private Long id;
 
 
     @NotEmpty(message = "Name cannot be empty")
@@ -42,7 +44,7 @@ public class Room implements Serializable {
     @JoinColumn(name = "room_type_id")
     private RoomType type;
 
-    @Column(name = "disable",  columnDefinition = "boolean default 'false'")
+    @Column(name = "disable", columnDefinition = "boolean default 'false'")
     private boolean disable = false;
 
     @Column(name = "sort_order")

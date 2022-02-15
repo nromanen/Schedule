@@ -1,13 +1,15 @@
 package com.softserve.dto;
 
 import com.softserve.entity.Schedule;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.DayOfWeek;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 public class SchedulesAtDayOfWeek {
     private DayOfWeek dayOfWeek;
