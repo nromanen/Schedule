@@ -2,9 +2,11 @@ package com.softserve.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.softserve.dto.enums.ImportSaveStatus;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 public class TeacherImportDTO {
     private Long id;
     private String name;

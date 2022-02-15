@@ -11,7 +11,7 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 public class ScheduleTemporaryTeacherDateRangeDTO {
-    Long id;
+    private Long id;
     private RoomForScheduleDTO room;
     @JsonProperty(value = "class")
     private PeriodDTO period;
