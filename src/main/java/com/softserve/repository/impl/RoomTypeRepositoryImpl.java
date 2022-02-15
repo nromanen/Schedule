@@ -41,7 +41,7 @@ public class RoomTypeRepositoryImpl extends BasicRepositoryImpl<RoomType, Long> 
     @Override
     protected boolean checkReference(RoomType roomType) {
         log.info("In checkReference(roomType = [{}])", roomType);
-        long count = (long) sessionFactory.getCurrentSession().createQuery
+        Long count = (Long) sessionFactory.getCurrentSession().createQuery
                 ("select count (r.id) " +
                         "from Room r where r.type.id = :roomTypeId")
                 .setParameter("roomTypeId", roomType.getId())
