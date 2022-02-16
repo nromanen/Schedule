@@ -40,6 +40,7 @@ import java.util.Collections;
 
 import static com.softserve.entity.enums.LessonType.LABORATORY;
 import static com.softserve.entity.enums.LessonType.LECTURE;
+import static org.junit.Assert.fail;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -168,9 +169,12 @@ public class LessonsControllerTest {
     }
 
     @Test
-    public void deleteLessonGrouped() throws Exception {
-        assertions.assertForDelete(13,"/lessons/{id}");
-
+    public void deleteLessonGrouped() {
+        try {
+            assertions.assertForDelete(13,"/lessons/{id}");
+        } catch (Exception e) {
+            fail("Request for delete failed");
+        }
         SoftAssertions softAssertions = new SoftAssertions();
         softAssertions.assertThatThrownBy(() -> lessonService.getById(14L)).isInstanceOf(EntityNotFoundException.class);
         softAssertions.assertThat(lessonService.getById(15L)).isNotNull();
