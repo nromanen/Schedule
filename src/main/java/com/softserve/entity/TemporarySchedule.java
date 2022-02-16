@@ -42,27 +42,27 @@ public class TemporarySchedule implements Serializable {
     private Long scheduleId;
 
     @ManyToOne(targetEntity = Teacher.class, fetch = FetchType.EAGER)
-    @JoinColumn(name = "teacher_id")
+    @JoinColumn(name = "teacher_id", columnDefinition = "bigint")
     private Teacher teacher;
 
     @ManyToOne(targetEntity = Subject.class, fetch = FetchType.EAGER)
-    @JoinColumn(name = "subject_id")
+    @JoinColumn(name = "subject_id", columnDefinition = "bigint")
     private Subject subject;
 
     @ManyToOne(targetEntity = Group.class, fetch = FetchType.EAGER)
-    @JoinColumn(name = "group_id")
+    @JoinColumn(name = "group_id", columnDefinition = "bigint")
     private Group group;
 
     @ManyToOne(targetEntity = Semester.class, fetch = FetchType.EAGER)
-    @JoinColumn(name = "semester_id")
+    @JoinColumn(name = "semester_id", columnDefinition = "bigint")
     private Semester semester;
 
     @ManyToOne(targetEntity = Room.class, fetch = FetchType.EAGER)
-    @JoinColumn(name = "room_id")
+    @JoinColumn(name = "room_id", columnDefinition = "bigint")
     private Room room;
 
     @ManyToOne(targetEntity = Period.class, fetch = FetchType.EAGER)
-    @JoinColumn(name = "period_id")
+    @JoinColumn(name = "period_id", columnDefinition = "bigint")
     private Period period;
 
 

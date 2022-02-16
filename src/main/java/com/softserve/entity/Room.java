@@ -39,7 +39,7 @@ public class Room implements Serializable {
     private String name;
 
     @ManyToOne(targetEntity = RoomType.class)
-    @JoinColumn(name = "room_type_id")
+    @JoinColumn(name = "room_type_id", columnDefinition = "bigint")
     private RoomType type;
 
     @Column(name = "disable",  columnDefinition = "boolean default 'false'")

@@ -39,22 +39,22 @@ public class Lesson implements Serializable {
     private LessonType lessonType;
 
     @ManyToOne(targetEntity = Teacher.class)
-    @JoinColumn(name = "teacher_id")
+    @JoinColumn(name = "teacher_id", columnDefinition = "bigint")
     @NotNull
     private Teacher teacher;
 
     @ManyToOne(targetEntity = Subject.class)
-    @JoinColumn(name = "subject_id")
+    @JoinColumn(name = "subject_id", columnDefinition = "bigint")
     @NotNull
     private Subject subject;
 
     @ManyToOne(targetEntity = Group.class)
-    @JoinColumn(name = "group_id")
+    @JoinColumn(name = "group_id", columnDefinition = "bigint")
     @NotNull
     private Group group;
 
     @ManyToOne(targetEntity = Semester.class)
-    @JoinColumn(name = "semester_id")
+    @JoinColumn(name = "semester_id", columnDefinition = "bigint")
     @NotNull
     private Semester semester;
 

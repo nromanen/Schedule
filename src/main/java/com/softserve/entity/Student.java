@@ -40,11 +40,11 @@ public class Student implements Serializable {
     private String patronymic;
 
     @OneToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", columnDefinition = "bigint")
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "group_id")
+    @JoinColumn(name = "group_id", columnDefinition = "bigint")
     @NotNull(message = "Group cannot be null")
     @CsvRecurse
     private Group group;

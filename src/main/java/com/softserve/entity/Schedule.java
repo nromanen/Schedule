@@ -32,18 +32,18 @@ public class Schedule implements Serializable {
     private EvenOdd evenOdd;
 
     @ManyToOne(targetEntity = Room.class)
-    @JoinColumn(name = "room_id")
+    @JoinColumn(name = "room_id", columnDefinition = "bigint")
     @NotNull
     @Where(clause = "disable = false")
     private Room room;
 
     @ManyToOne(targetEntity = Period.class)
-    @JoinColumn(name = "period_id")
+    @JoinColumn(name = "period_id", columnDefinition = "bigint")
     @NotNull
     private Period period;
 
     @ManyToOne(targetEntity = Lesson.class)
-    @JoinColumn(name = "lesson_id")
+    @JoinColumn(name = "lesson_id", columnDefinition = "bigint")
     @NotNull
     private Lesson lesson;
 }

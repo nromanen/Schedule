@@ -71,7 +71,7 @@ public class Semester implements Serializable {
 
     @ElementCollection(targetClass = DayOfWeek.class, fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
-    @CollectionTable(name="semester_day")
+    @CollectionTable(name="semester_day", joinColumns = @JoinColumn(name = "semester_id", columnDefinition = "bigint"))
     @Column(name = "day")
     @NotNull(message = "At least one day should persist in the semester")
     private Set<DayOfWeek> daysOfWeek;
@@ -79,15 +79,15 @@ public class Semester implements Serializable {
     @NotNull(message = "Semester should contain at least one period")
     @ManyToMany
     @JoinTable(name = "semester_period",
-            joinColumns = { @JoinColumn(name = "semester_id")},
-            inverseJoinColumns = {@JoinColumn(name = "period_id")})
+            joinColumns = { @JoinColumn(name = "semester_id", columnDefinition = "bigint")},
+            inverseJoinColumns = {@JoinColumn(name = "period_id", columnDefinition = "bigint")})
     @OrderBy("startTime")
     private Set<Period> periods;
 
     @ManyToMany
     @JoinTable(name = "semester_group",
-            joinColumns = { @JoinColumn(name = "semester_id")},
-            inverseJoinColumns = {@JoinColumn(name = "group_id")})
+            joinColumns = { @JoinColumn(name = "semester_id", columnDefinition = "bigint")},
+            inverseJoinColumns = {@JoinColumn(name = "group_id", columnDefinition = "bigint")})
     @OrderBy("sorting_order")
     private Set<Group> groups;
 
