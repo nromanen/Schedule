@@ -194,3 +194,10 @@ databaseChangeLog:
             columnDataType: int
             columnName: teacher_id
             tableName: temporary_schedule
+  - changeSet:
+      id: 1642775490693-131
+      author: vchornyy 12
+      changes:
+        - delete:
+            tableName: students
+            where: user_id is null
