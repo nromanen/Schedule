@@ -46,7 +46,6 @@ import java.util.List;
 public class Semester implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(columnDefinition = "serial")
     private long id;
 
     @NotBlank(message = "Description cannot be null or empty")
@@ -71,7 +70,7 @@ public class Semester implements Serializable {
 
     @ElementCollection(targetClass = DayOfWeek.class, fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
-    @CollectionTable(name="semester_day", joinColumns = @JoinColumn(name = "semester_id", columnDefinition = "bigint"))
+    @CollectionTable(name="semester_day")
     @Column(name = "day")
     @NotNull(message = "At least one day should persist in the semester")
     private Set<DayOfWeek> daysOfWeek;
@@ -79,15 +78,15 @@ public class Semester implements Serializable {
     @NotNull(message = "Semester should contain at least one period")
     @ManyToMany
     @JoinTable(name = "semester_period",
-            joinColumns = { @JoinColumn(name = "semester_id", columnDefinition = "bigint")},
-            inverseJoinColumns = {@JoinColumn(name = "period_id", columnDefinition = "bigint")})
+            joinColumns = { @JoinColumn(name = "semester_id")},
+            inverseJoinColumns = {@JoinColumn(name = "period_id")})
     @OrderBy("startTime")
     private Set<Period> periods;
 
     @ManyToMany
     @JoinTable(name = "semester_group",
-            joinColumns = { @JoinColumn(name = "semester_id", columnDefinition = "bigint")},
-            inverseJoinColumns = {@JoinColumn(name = "group_id", columnDefinition = "bigint")})
+            joinColumns = { @JoinColumn(name = "semester_id")},
+            inverseJoinColumns = {@JoinColumn(name = "group_id")})
     @OrderBy("sorting_order")
     private Set<Group> groups;
 

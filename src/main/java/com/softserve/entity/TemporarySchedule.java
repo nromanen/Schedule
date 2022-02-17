@@ -21,7 +21,6 @@ import java.time.LocalDate;
 public class TemporarySchedule implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(columnDefinition = "serial")
     private Long id;
 
     @NotNull(message = "Schedule date cannot be empty")
@@ -42,27 +41,27 @@ public class TemporarySchedule implements Serializable {
     private Long scheduleId;
 
     @ManyToOne(targetEntity = Teacher.class, fetch = FetchType.EAGER)
-    @JoinColumn(name = "teacher_id", columnDefinition = "bigint")
+    @JoinColumn(name = "teacher_id")
     private Teacher teacher;
 
     @ManyToOne(targetEntity = Subject.class, fetch = FetchType.EAGER)
-    @JoinColumn(name = "subject_id", columnDefinition = "bigint")
+    @JoinColumn(name = "subject_id")
     private Subject subject;
 
     @ManyToOne(targetEntity = Group.class, fetch = FetchType.EAGER)
-    @JoinColumn(name = "group_id", columnDefinition = "bigint")
+    @JoinColumn(name = "group_id")
     private Group group;
 
     @ManyToOne(targetEntity = Semester.class, fetch = FetchType.EAGER)
-    @JoinColumn(name = "semester_id", columnDefinition = "bigint")
+    @JoinColumn(name = "semester_id")
     private Semester semester;
 
     @ManyToOne(targetEntity = Room.class, fetch = FetchType.EAGER)
-    @JoinColumn(name = "room_id", columnDefinition = "bigint")
+    @JoinColumn(name = "room_id")
     private Room room;
 
     @ManyToOne(targetEntity = Period.class, fetch = FetchType.EAGER)
-    @JoinColumn(name = "period_id", columnDefinition = "bigint")
+    @JoinColumn(name = "period_id")
     private Period period;
 
 

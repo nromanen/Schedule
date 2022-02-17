@@ -18,7 +18,6 @@ import java.io.Serializable;
 public class Student implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(columnDefinition = "serial")
     private Long id;
 
     @NotEmpty(message = "Name cannot be empty")
@@ -40,11 +39,11 @@ public class Student implements Serializable {
     private String patronymic;
 
     @OneToOne
-    @JoinColumn(name = "user_id", columnDefinition = "bigint")
+    @JoinColumn(name = "user_id")
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "group_id", columnDefinition = "bigint")
+    @JoinColumn(name = "group_id")
     @NotNull(message = "Group cannot be null")
     @CsvRecurse
     private Group group;

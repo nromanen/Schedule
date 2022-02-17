@@ -21,7 +21,6 @@ import java.io.Serializable;
 public class Lesson implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(columnDefinition = "serial")
     private Long id;
 
     @Min(1)
@@ -39,22 +38,22 @@ public class Lesson implements Serializable {
     private LessonType lessonType;
 
     @ManyToOne(targetEntity = Teacher.class)
-    @JoinColumn(name = "teacher_id", columnDefinition = "bigint")
+    @JoinColumn(name = "teacher_id")
     @NotNull
     private Teacher teacher;
 
     @ManyToOne(targetEntity = Subject.class)
-    @JoinColumn(name = "subject_id", columnDefinition = "bigint")
+    @JoinColumn(name = "subject_id")
     @NotNull
     private Subject subject;
 
     @ManyToOne(targetEntity = Group.class)
-    @JoinColumn(name = "group_id", columnDefinition = "bigint")
+    @JoinColumn(name = "group_id")
     @NotNull
     private Group group;
 
     @ManyToOne(targetEntity = Semester.class)
-    @JoinColumn(name = "semester_id", columnDefinition = "bigint")
+    @JoinColumn(name = "semester_id")
     @NotNull
     private Semester semester;
 

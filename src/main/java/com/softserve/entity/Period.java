@@ -21,7 +21,6 @@ import java.util.Objects;
 public class Period implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(columnDefinition = "serial")
     private long id;
 
     @NotNull(message = "Start time cannot be empty")

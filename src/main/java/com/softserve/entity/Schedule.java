@@ -18,7 +18,6 @@ import java.time.DayOfWeek;
 public class Schedule implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(columnDefinition = "serial")
     private long id;
 
 
@@ -32,18 +31,18 @@ public class Schedule implements Serializable {
     private EvenOdd evenOdd;
 
     @ManyToOne(targetEntity = Room.class)
-    @JoinColumn(name = "room_id", columnDefinition = "bigint")
+    @JoinColumn(name = "room_id")
     @NotNull
     @Where(clause = "disable = false")
     private Room room;
 
     @ManyToOne(targetEntity = Period.class)
-    @JoinColumn(name = "period_id", columnDefinition = "bigint")
+    @JoinColumn(name = "period_id")
     @NotNull
     private Period period;
 
     @ManyToOne(targetEntity = Lesson.class)
-    @JoinColumn(name = "lesson_id", columnDefinition = "bigint")
+    @JoinColumn(name = "lesson_id")
     @NotNull
     private Lesson lesson;
 }

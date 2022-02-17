@@ -32,7 +32,6 @@ import java.io.Serializable;
 public class Teacher implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(columnDefinition = "serial")
     private long id;
 
     @NotEmpty(message = "Name cannot be empty")
@@ -59,7 +58,7 @@ public class Teacher implements Serializable {
     private Long userId;
 
     @ManyToOne
-    @JoinColumn(name = "department_id",  columnDefinition = "bigint")
+    @JoinColumn(name = "department_id")
     private Department department;
 
     @Column(name = "disable",  columnDefinition = "boolean default 'false'")

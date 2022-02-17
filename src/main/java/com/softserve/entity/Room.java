@@ -29,7 +29,6 @@ import java.io.Serializable;
 public class Room implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(columnDefinition = "serial")
     private long id;
 
 
@@ -39,7 +38,7 @@ public class Room implements Serializable {
     private String name;
 
     @ManyToOne(targetEntity = RoomType.class)
-    @JoinColumn(name = "room_type_id", columnDefinition = "bigint")
+    @JoinColumn(name = "room_type_id")
     private RoomType type;
 
     @Column(name = "disable",  columnDefinition = "boolean default 'false'")
