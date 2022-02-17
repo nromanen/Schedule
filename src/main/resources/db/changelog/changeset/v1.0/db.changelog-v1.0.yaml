@@ -195,6 +195,13 @@ databaseChangeLog:
             columnName: teacher_id
             tableName: temporary_schedule
   - changeSet:
+      id: 1642775490693-131
+      author: vchornyy 12
+      changes:
+        - delete:
+            tableName: students
+            where: user_id is null
+  - changeSet:
       id: 1642775490693-132
       author: SaneQQQQ
       changes:
@@ -206,3 +213,4 @@ databaseChangeLog:
       changes:
         - sql:
             sql: ALTER SEQUENCE public.semester_group_group_id_seq OWNED BY public.semester_group.group_id;
+
