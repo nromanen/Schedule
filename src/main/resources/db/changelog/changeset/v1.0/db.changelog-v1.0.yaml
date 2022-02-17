@@ -48,7 +48,7 @@ databaseChangeLog:
       author: SaneQQQQ
       changes:
         - createSequence:
-            sequenceName: semester_id_sequence
+            sequenceName: semester_group_semester_id_seq
   - changeSet:
       id: 1642775490693-112
       author: SaneQQQQ
@@ -56,13 +56,13 @@ databaseChangeLog:
         - addDefaultValue:
             tableName: semester_group
             columnName: semester_id
-            defaultValueSequenceNext: semester_id_sequence
+            defaultValueSequenceNext: semester_group_semester_id_seq
   - changeSet:
       id: 1642775490693-113
       author: SaneQQQQ
       changes:
         - createSequence:
-            sequenceName: group_id_sequence
+            sequenceName: semester_group_group_id_seq
   - changeSet:
       id: 1642775490693-114
       author: SaneQQQQ
@@ -70,7 +70,7 @@ databaseChangeLog:
         - addDefaultValue:
             tableName: semester_group
             columnName: group_id
-            defaultValueSequenceNext: group_id_sequence
+            defaultValueSequenceNext: semester_group_group_id_seq
   - changeSet:
       id: 1642775490693-115
       author: SaneQQQQ
@@ -194,6 +194,25 @@ databaseChangeLog:
             columnDataType: int
             columnName: teacher_id
             tableName: temporary_schedule
+  - changeSet:
+      id: 1642775490693-131
+      author: vchornyy 12
+      changes:
+        - delete:
+            tableName: students
+            where: user_id is null
+  - changeSet:
+      id: 1642775490693-132
+      author: SaneQQQQ
+      changes:
+        - sql:
+            sql: ALTER SEQUENCE public.semester_group_semester_id_seq OWNED BY public.semester_group.semester_id;
+  - changeSet:
+      id: 1642775490693-133
+      author: SaneQQQQ
+      changes:
+        - sql:
+            sql: ALTER SEQUENCE public.semester_group_group_id_seq OWNED BY public.semester_group.group_id;
   - changeSet:
       id: 1642775490693-134
       author: SaneQQQQ
