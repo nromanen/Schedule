@@ -53,7 +53,7 @@ public class SemesterRepositoryImpl extends BasicRepositoryImpl<Semester, Long> 
      * @param entity Semester is going to be updated
      * @return Semester
      */
-    @Override //merge?
+    @Override
     public Semester update(Semester entity) {
         log.info("Enter into update method with entity:{}", entity);
         entity = (Semester) sessionFactory.getCurrentSession().merge(entity);
