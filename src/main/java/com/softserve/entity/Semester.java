@@ -46,7 +46,7 @@ import java.util.List;
 public class Semester implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @NotBlank(message = "Description cannot be null or empty")
     private String description;
