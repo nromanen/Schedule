@@ -7,10 +7,12 @@ import org.mapstruct.Mapper;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = {GroupMapper.class, RoomMapper.class, LessonInfoMapper.class})
 public interface ScheduleMapper {
     ScheduleDTO scheduleToScheduleDTO(Schedule schedule);
     Schedule scheduleDTOToSchedule(ScheduleDTO scheduleDTO);
+
+    ScheduleForCopyDTO scheduleToScheduleForCopyDTO(Schedule schedule);
 
     List<ScheduleDTO> scheduleToScheduleDTOs(List<Schedule> schedules);
     List<ScheduleForCopyDTO> scheduleToScheduleForCopyDTOs(List<Schedule> schedules);

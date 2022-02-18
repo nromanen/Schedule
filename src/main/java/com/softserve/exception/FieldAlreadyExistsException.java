@@ -14,11 +14,11 @@ public class FieldAlreadyExistsException extends RuntimeException {
     private final String shortMessage;
 
     public FieldAlreadyExistsException(Class clazz, String... searchParamsMap) {
-        super(FieldAlreadyExistsException.generateMessage(clazz.getSimpleName(), toMap(String.class, String.class, searchParamsMap)));
+        super(FieldAlreadyExistsException.generateMessage(clazz.getSimpleName(), toMap(String.class, String.class, (Object[]) searchParamsMap)));
         this.clazz = clazz;
         this.searchParamsMap = searchParamsMap;
         shortMessage = (StringUtils.capitalize(clazz.getSimpleName()) +
-                " with provided " + toMap(String.class, String.class, searchParamsMap)
+                " with provided " + toMap(String.class, String.class, (Object[]) searchParamsMap)
                 .keySet() + " already exists").replaceAll("[\\[\\]]", "");
     }
 

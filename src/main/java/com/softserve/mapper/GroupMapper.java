@@ -14,16 +14,20 @@ import java.util.Collection;
 import java.util.List;
 
 @Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
-        nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
+        nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS, uses = StudentMapper.class)
 public interface GroupMapper {
     GroupDTO groupToGroupDTO(Group group);
 
+    @Mapping(target = "students", ignore = true)
+    @Mapping(target = "sortingOrder", ignore = true)
     Group groupDTOToGroup(GroupDTO groupDTO);
 
     GroupForUpdateDTO groupToGroupForUpdateDTO(Group group);
 
     GroupWithStudentsDTO groupToGroupWithStudentsDTO(Group group);
 
+    @Mapping(target = "students", ignore = true)
+    @Mapping(target = "sortingOrder", ignore = true)
     Group groupForUpdateDTOToGroup(GroupForUpdateDTO groupForUpdateDTO);
 
     List<GroupDTO> groupsToGroupDTOs(List<Group> groups);

@@ -110,7 +110,7 @@ public class LessonsControllerTest {
 
     @Test
     public void saveLessonsIfLessonDoesNotExist() throws Exception {
-        TeacherDTO teacherDTO = new TeacherNameMapperImpl().teacherDTOToTeacher(teacherService.getById(5L));
+        TeacherNameDTO teacherDTO = new TeacherNameMapperImpl().teacherDTOToTeacher(teacherService.getById(5L));
         SubjectDTO subjectDTO = new SubjectMapperImpl().subjectToSubjectDTO(subjectService.getById(4L));
         GroupDTO groupDTO = new GroupMapperImpl().groupToGroupDTO(groupService.getById(4L));
         LessonInfoDTO lessonDtoForSave = new LessonInfoDTO();

@@ -2,6 +2,7 @@ package com.softserve.mapper;
 
 import com.softserve.dto.StudentDTO;
 import com.softserve.dto.StudentImportDTO;
+import com.softserve.dto.StudentWithoutGroupDTO;
 import com.softserve.entity.Student;
 import com.softserve.entity.User;
 import com.softserve.service.UserService;
@@ -14,7 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 import java.util.Optional;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = GroupMapper.class)
 public abstract class StudentMapper {
     @Autowired
     protected UserService userService;
@@ -25,6 +26,8 @@ public abstract class StudentMapper {
 
     @InheritInverseConfiguration
     @Mapping(target = "email", source = "user", qualifiedByName = "userToEmail")
+    @Mapping(target = "groupDTO", source = "group")
+    @Mapping(target = "importSaveStatus", ignore = true)
     public abstract StudentImportDTO studentToStudentImportDTO(Student student);
 
     @Named("userToEmail")
@@ -37,6 +40,7 @@ public abstract class StudentMapper {
     }
 
     @Mapping(target = "user", source = "email", qualifiedByName = "userToEmail")
+    @Mapping(target = "group", source = "groupDTO")
     public abstract Student studentImportDTOToStudent(StudentImportDTO studentImportDTO);
 
     @Mapping(target = "user", source = "email", qualifiedByName = "userToEmail")
@@ -50,6 +54,13 @@ public abstract class StudentMapper {
         }
         return null;
     }
+
+    @Mapping(target = "email", source = "user", qualifiedByName = "userToEmail")
+    public abstract StudentWithoutGroupDTO studentToStudentWithoutGroupDTO(Student student);
+
+    @Mapping(target = "user", source = "email", qualifiedByName = "userToEmail")
+    @Mapping(target = "group", ignore = true)
+    public abstract Student studentWithoutGroupDTOToStudent(StudentWithoutGroupDTO studentWithoutGroupDTO);
 
     public abstract List<StudentDTO> convertToDTOList(List<Student> studentList);
 

@@ -6,9 +6,8 @@ import org.mapstruct.Mapper;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = {LessonInfoMapper.class, RoomMapper.class})
 public interface ScheduleWithoutSemesterMapper {
-
     ScheduleWithoutSemesterDTO scheduleToScheduleWithoutSemesterDTO(Schedule schedule);
     Schedule ScheduleWithoutSemesterDTOToSchedule(ScheduleWithoutSemesterDTO scheduleWithoutSemesterDTO);
 
