@@ -1,9 +1,9 @@
 package com.softserve.repository.impl;
 
 import com.softserve.entity.Lesson;
-import com.softserve.exception.EntityNotFoundException;
 import com.softserve.repository.LessonRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.Session;
 import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
 
@@ -30,6 +30,18 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
             + "set grouped = true "
             + "where id = :id";
 
+    private static final String UPDATE_GROUPED_TEACHER_OR_SUBJECT
+            = "update Lesson "
+            + "set subject.id = :subjectId, "
+            + " hours = :hours, "
+            + " teacher.id = :teacherId, "
+            + " lessonType = :lessonType, "
+            + " subjectForSite = :subjectForSite, "
+            + " linkToMeeting = :linkToMeeting "
+            + "where grouped = true "
+            + "and subject.id = :initialSubjectId "
+            + "and teacher.id = :initialTeacherId "
+            + "and semester.id = :initialSemesterId";
 
     private static final String UPDATE_GROUPED
             = "update Lesson "
@@ -37,13 +49,15 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
             + " hours = :hours, "
             + " teacher.id = :teacherId, "
             + " lessonType = :lessonType, "
-            + " subjectForSite = :subjectForSite "
+            + " subjectForSite = :subjectForSite, "
+            + " linkToMeeting = :linkToMeeting "
             + "where grouped = true "
             + "and subject.id = :initialSubjectId "
             + "and hours = :initialHours "
             + "and teacher.id = :initialTeacherId "
             + "and semester.id = :initialSemesterId "
-            + "and lessonType = :initialLessonType";
+            + "and lessonType = :initialLessonType "
+            + "and subjectForSite = :initialSubjectForSite";
 
     private static final String DELETE_GROUPED
             = "delete Lesson l "
@@ -320,21 +334,27 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
      * @return updated Lesson
      */
     @Override
-    public Lesson updateGrouped(Lesson oldLesson,Lesson updatedLesson) {
+    public Lesson updateGrouped(Lesson oldLesson,Lesson updatedLesson, boolean isTeacherOrSubjectUpdated) {
         log.info("Entered updateGroup({}, {})", oldLesson, updatedLesson);
-        int updated = sessionFactory.getCurrentSession()
-                .createQuery(UPDATE_GROUPED)
-                .setParameter("initialSubjectId", oldLesson.getSubject().getId())
-                .setParameter("initialHours", oldLesson.getHours())
+        Session currentSession = sessionFactory.getCurrentSession();
+        Query query = isTeacherOrSubjectUpdated
+                ? currentSession.createQuery(UPDATE_GROUPED_TEACHER_OR_SUBJECT)
+                : currentSession.createQuery(UPDATE_GROUPED);
+        query = query.setParameter("initialSubjectId", oldLesson.getSubject().getId())
                 .setParameter("initialTeacherId", oldLesson.getTeacher().getId())
                 .setParameter("initialSemesterId", oldLesson.getSemester().getId())
-                .setParameter("initialLessonType", oldLesson.getLessonType())
+                .setParameter("linkToMeeting", updatedLesson.getLinkToMeeting())
                 .setParameter("subjectId", updatedLesson.getSubject().getId())
                 .setParameter("hours", updatedLesson.getHours())
                 .setParameter("teacherId", updatedLesson.getTeacher().getId())
                 .setParameter("lessonType", updatedLesson.getLessonType())
-                .setParameter("subjectForSite", updatedLesson.getSubjectForSite())
-                .executeUpdate();
+                .setParameter("subjectForSite", updatedLesson.getSubjectForSite());
+        query = isTeacherOrSubjectUpdated
+                ? query
+                : query.setParameter("initialSubjectForSite", oldLesson.getSubjectForSite())
+                .setParameter("initialHours", oldLesson.getHours())
+                .setParameter("initialLessonType", oldLesson.getLessonType());
+        int updated = query.executeUpdate();
         log.debug("Updated group lessons {}", updated);
         return updatedLesson;
     }

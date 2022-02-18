@@ -86,7 +86,6 @@ public class LessonController {
     @ApiOperation(value = "Update existing lesson")
     public ResponseEntity<LessonInfoDTO> update(@RequestBody LessonInfoDTO lessonInfoDTO) {
         log.info("In update (lessonInfoDTO = [{}])", lessonInfoDTO);
-        lessonService.getById(lessonInfoDTO.getId());
         Lesson updatedLesson = lessonService.update(lessonInfoMapper.lessonInfoDTOToLesson(lessonInfoDTO));
         return ResponseEntity.status(HttpStatus.OK).body(lessonInfoMapper.lessonToLessonInfoDTO(updatedLesson));
     }

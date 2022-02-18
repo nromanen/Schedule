@@ -13,7 +13,7 @@ public interface LessonRepository extends BasicRepository <Lesson, Long>  {
     List<Lesson> getLessonsBySubjectIdTeacherIdSemesterIdLessonTypeAndExcludeCurrentLessonId(Lesson lesson);
     List<Lesson> getGroupedLessonsByLesson(Lesson lesson);
     Integer updateLinkToMeeting(Lesson lesson);
-    Lesson updateGrouped(Lesson oldLesson,Lesson updatedLesson);
+    Lesson updateGrouped(Lesson oldLesson,Lesson updatedLesson, boolean isTeacherOrSubjectUpdated);
     Lesson deleteGrouped(Lesson lesson);
     int setGrouped(Long lessonId);
 }
