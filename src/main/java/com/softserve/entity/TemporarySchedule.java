@@ -21,7 +21,6 @@ import java.time.LocalDate;
 public class TemporarySchedule implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(columnDefinition = "serial")
     private Long id;
 
     @NotNull(message = "Schedule date cannot be empty")

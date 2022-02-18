@@ -19,7 +19,6 @@ import java.io.Serializable;
 public class Student implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(columnDefinition = "serial")
     private Long id;
 
     @NotEmpty(message = "Name cannot be empty")

@@ -20,7 +20,6 @@ import java.time.DayOfWeek;
 public class Schedule implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(columnDefinition = "serial")
     private Long id;
 
 

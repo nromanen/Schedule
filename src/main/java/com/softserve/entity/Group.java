@@ -35,7 +35,6 @@ import java.util.List;
 public class Group implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(columnDefinition = "serial")
     private Long id;
 
     @NotEmpty(message = "Title cannot be empty")

@@ -17,7 +17,6 @@ import java.io.Serializable;
 public class RoomType implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(columnDefinition = "serial")
     private Long id;
 
     @NotEmpty(message = "Description cannot be empty")

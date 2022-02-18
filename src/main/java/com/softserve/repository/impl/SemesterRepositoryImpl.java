@@ -38,7 +38,8 @@ public class SemesterRepositoryImpl extends BasicRepositoryImpl<Semester, Long> 
     @Override
     public List<Semester> getAll() {
         log.info("In getAll()");
-        return  getSession().createQuery("SELECT distinct s " +
+        Session session = getSession();
+        return  session.createQuery("SELECT distinct s " +
                 "from Semester s " +
                 "left join fetch s.periods " +
                 "left join fetch s.groups " +
@@ -53,7 +54,7 @@ public class SemesterRepositoryImpl extends BasicRepositoryImpl<Semester, Long> 
      * @param entity Semester is going to be updated
      * @return Semester
      */
-    @Override
+    @Override //merge?
     public Semester update(Semester entity) {
         log.info("Enter into update method with entity:{}", entity);
         entity = (Semester) sessionFactory.getCurrentSession().merge(entity);
@@ -61,7 +62,7 @@ public class SemesterRepositoryImpl extends BasicRepositoryImpl<Semester, Long> 
         return entity;
     }
 
-
+    // Checking if semester is used in Schedule table
     @Override
     protected boolean checkReference(Semester semester) {
         log.info("In checkReference(semester = [{}])", semester);
