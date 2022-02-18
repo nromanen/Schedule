@@ -1,9 +1,11 @@
 package com.softserve.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 public class GroupDTOInRoomSchedule {
     @JsonProperty("group_id")
     private Long groupId;
