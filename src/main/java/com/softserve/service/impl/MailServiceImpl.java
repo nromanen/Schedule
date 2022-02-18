@@ -5,10 +5,10 @@ import com.softserve.entity.TemporarySchedule;
 import com.softserve.exception.MessageNotSendException;
 import com.softserve.service.MailService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.core.env.Environment;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring5.SpringTemplateEngine;
+
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import javax.annotation.PostConstruct;
@@ -29,9 +30,11 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.mail.util.ByteArrayDataSource;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
-import java.util.Locale;
-import java.util.Objects;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
 
 @Service
 @PropertySource("classpath:mail.properties")
@@ -45,24 +48,20 @@ public class MailServiceImpl implements MailService {
 
     private final JavaMailSender mailSender;
 
-    private final Environment environment;
-
     private final SpringTemplateEngine springTemplateEngine;
 
     private String credentialsUsername;
 
     @Autowired
     public MailServiceImpl(JavaMailSender mailSender,
-                           Environment environment,
                            SpringTemplateEngine springTemplateEngine) {
         this.mailSender = mailSender;
-        this.environment = environment;
         this.springTemplateEngine = springTemplateEngine;
     }
 
     @PostConstruct
     private void postConstruct() {
-        credentialsUsername = environment.getProperty(username);
+        credentialsUsername = username;
         if (credentialsUsername == null) {
             credentialsUsername = System.getenv("HEROKU_MAIL_USERNAME");
         }
@@ -97,7 +96,7 @@ public class MailServiceImpl implements MailService {
      * @param emailMessageDTO message that will be sent
      */
     @Override
-    public void send(String sender, EmailMessageDTO emailMessageDTO) {
+    public void send(String sender, EmailMessageDTO emailMessageDTO) throws IOException {
         log.info("Enter into send method with sender - {}, emailMessageDTO - {}", sender, emailMessageDTO);
         try {
             MimeMessage message = this.mailSender.createMimeMessage();
@@ -108,13 +107,24 @@ public class MailServiceImpl implements MailService {
             messageHelper.setText(emailMessageDTO.getText());
             messageHelper.setTo(emailMessageDTO.getReceivers().toArray(String[]::new));
 
-            if (emailMessageDTO.getAttachments() != null) {
-                for (MultipartFile attachment: emailMessageDTO.getAttachments()) {
-                    messageHelper.addAttachment(Objects.requireNonNull(attachment.getOriginalFilename()), attachment);
+            if (emailMessageDTO.getAttachmentsName() != null) {
+                List<String> attachments = new ArrayList<>(emailMessageDTO.getAttachmentsName());
+                String folder = attachments.get(0);
+                attachments.remove(0);
+
+                for (String attachment : attachments) {
+                    File file = new File(folder + "/" + attachment);
+                    messageHelper.addAttachment(Objects.requireNonNull(attachment), file);
                 }
             }
 
             mailSender.send(messageHelper.getMimeMessage());
+
+            if (emailMessageDTO.getAttachmentsName() != null) {
+                File file = new File(emailMessageDTO.getAttachmentsName().get(0));
+                FileUtils.deleteDirectory(file);
+            }
+
         } catch (IOException | MessagingException e) {
             throw new MessageNotSendException(e.getMessage());
         }
@@ -171,4 +181,21 @@ public class MailServiceImpl implements MailService {
         // Send mail
         this.mailSender.send(mimeMessage);
     }
+
+    @Override
+    public List<String> uploadFiles(MultipartFile[] files) throws IOException {
+        List<String> filesName = new ArrayList<>();
+        String uploadDir = System.getProperty("java.io.tmpdir") + "/" + UUID.randomUUID();
+        filesName.add(uploadDir);
+
+            for(MultipartFile file: files) {
+                String originalFileName = URLDecoder.decode(Objects.requireNonNull(file.getOriginalFilename()), StandardCharsets.UTF_8);
+                File transferFile = new File(uploadDir + "/" + originalFileName);
+                file.transferTo(transferFile);
+                filesName.add(originalFileName);
+            }
+
+        return filesName;
+    }
+
 }

@@ -74,7 +74,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Bean(name = "multipartResolver")
     public CommonsMultipartResolver multipartResolver() throws IOException {
         CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();
-        multipartResolver.setMaxUploadSize(100000);
+        multipartResolver.setMaxUploadSize(1048576);
         Resource resource = new PathResource(System.getProperty("user.dir"));
         multipartResolver.setUploadTempDir(resource);
         return multipartResolver;

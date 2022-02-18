@@ -192,43 +192,6 @@ public class LessonsControllerTest {
     }
 
     @Test
-    public void returnInternalServerErrorIfSavedTeacherIsNull() throws Exception {
-        SubjectDTO subjectDTO = new SubjectMapperImpl().subjectToSubjectDTO(subjectService.getById(6L));
-        GroupDTO groupDTO = new GroupMapperImpl().groupToGroupDTO(groupService.getById(6L));
-        LessonForGroupsDTO lessonDtoForSave = new LessonForGroupsDTO();
-        lessonDtoForSave.setHours(2);
-        lessonDtoForSave.setSubjectForSite("");
-        lessonDtoForSave.setLinkToMeeting("");
-        lessonDtoForSave.setLessonType(LABORATORY);
-        lessonDtoForSave.setTeacher(null);
-        lessonDtoForSave.setSubject(subjectDTO);
-        lessonDtoForSave.setGroups(Arrays.asList(groupDTO));
-
-        mockMvc.perform(post("/lessons").content(objectMapper.writeValueAsString(lessonDtoForSave))
-                .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isInternalServerError());
-    }
-
-    @Test
-    public void returnInternalServerErrorIfUpdatedTeacherIsNull() throws Exception {
-        LessonInfoDTO lessonDtoForUpdate = new LessonInfoDTO();
-        lessonDtoForUpdate.setId(4L);
-        lessonDtoForUpdate.setHours(1);
-        lessonDtoForUpdate.setLinkToMeeting("https://softserveinc.zoom.us/j/93198369163?pwd=Rk1GU281cDFtK1FCK3pJWXphRkJrQT09");
-        lessonDtoForUpdate.setSubjectForSite("History of World");
-        lessonDtoForUpdate.setLessonType(LECTURE);
-        lessonDtoForUpdate.setTeacher(null);
-        lessonDtoForUpdate.setSubject(new SubjectMapperImpl().subjectToSubjectDTO(subjectService.getById(5L)));
-        lessonDtoForUpdate.setGroup(new GroupMapperImpl().groupToGroupDTO(groupService.getById(4L)));
-
-        mockMvc.perform(put("/lessons", 4).content(objectMapper.writeValueAsString(lessonDtoForUpdate))
-                .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isInternalServerError());
-    }
-
-    @Test
     @Parameters(method = "parametersToUpdateLinkToMeeting")
     public void updateLinkToMeeting(LessonWithLinkDTO lessonWithLinkDTO, Integer result) throws Exception {
 

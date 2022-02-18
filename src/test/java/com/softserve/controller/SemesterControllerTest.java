@@ -349,8 +349,7 @@ public class SemesterControllerTest {
         TreeSet<DayOfWeek> dayOfWeeks = new TreeSet<>();
         dayOfWeeks.add(DayOfWeek.TUESDAY);
         dayOfWeeks.add(DayOfWeek.FRIDAY);
-        TreeSet<DayOfWeek> dayOfWeeks2 = new TreeSet<>();
-        dayOfWeeks2.add(DayOfWeek.MONDAY);
+
         GroupDTO groupDTO1 = new GroupDTO();
         groupDTO1.setId(4L);
         groupDTO1.setTitle("444");
@@ -362,12 +361,6 @@ public class SemesterControllerTest {
         List<GroupDTO> groupsDTO = new LinkedList<>();
         groupsDTO.add(groupDTO1);
         groupsDTO.add(groupDTO2);
-        GroupDTO groupDTO3 = new GroupDTO();
-        groupDTO3.setId(6L);
-        groupDTO3.setTitle("666");
-        groupDTO3.setDisable(false);
-        List<GroupDTO> groupsDTOForSemesterId6 = new LinkedList<>();
-        groupsDTOForSemesterId6.add(groupDTO3);
 
         PeriodDTO periodDTO = new PeriodDTO();
         periodDTO.setId(7L);
@@ -376,26 +369,6 @@ public class SemesterControllerTest {
         periodDTO.setEndTime(LocalTime.parse("04:00:00"));
         LinkedHashSet<PeriodDTO> periodDTOS = new LinkedHashSet<>();
         periodDTOS.add(periodDTO);
-
-        PeriodDTO periodDTO2 = new PeriodDTO();
-        periodDTO2.setId(5L);
-        periodDTO2.setName("2 para");
-        periodDTO2.setStartTime(LocalTime.parse("03:00:00"));
-        periodDTO2.setEndTime(LocalTime.parse("04:00:00"));
-        LinkedHashSet<PeriodDTO> periodDTOS2 = new LinkedHashSet<>();
-        periodDTOS2.add(periodDTO2);
-
-        MvcResult mvcResult1 = mockMvc.perform(get("/semesters/6")
-                .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andReturn();
-        String contentAsString1 = mvcResult1.getResponse().getContentAsString();
-        SemesterWithGroupsDTO semesterWithGroupsDTOBefore = objectMapper.readValue(contentAsString1, SemesterWithGroupsDTO.class);
-
-        softly.assertThat(semesterWithGroupsDTOBefore.getGroups()).isEqualTo(groupsDTOForSemesterId6);
-        softly.assertThat(semesterWithGroupsDTOBefore.getDaysOfWeek()).isEqualTo(dayOfWeeks2);
-        softly.assertThat(semesterWithGroupsDTOBefore.getPeriods()).isEqualTo(periodDTOS2);
 
                 mockMvc.perform(post("/semesters/copy-semester").param("fromSemesterId", "5").param("toSemesterId", "6")
                 .contentType(MediaType.APPLICATION_JSON))

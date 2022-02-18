@@ -1,11 +1,9 @@
 package com.softserve.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.core.env.Environment;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 
@@ -42,19 +40,16 @@ public class MailConfig {
     @Value("${mail.enabled}")
     private String enabled;
 
-    @Autowired
-    private Environment environment;
-
     @Bean
     public JavaMailSender javaMailSender() {
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
 
-        String credentialsUsername = environment.getProperty(username);
-        String credentialsPassword = environment.getProperty(password);
+        String credentialsUsername = System.getenv("HEROKU_MAIL_USERNAME");
+        String credentialsPassword = System.getenv("HEROKU_MAIL_PASSWORD");
 
-        if (credentialsUsername == null && credentialsPassword == null) {
-            credentialsUsername = System.getenv("HEROKU_MAIL_USERNAME");
-            credentialsPassword = System.getenv("HEROKU_MAIL_PASSWORD");
+        if (credentialsUsername == null || credentialsPassword == null) {
+            credentialsUsername = username;
+            credentialsPassword = password;
         }
 
         mailSender.setHost(host);

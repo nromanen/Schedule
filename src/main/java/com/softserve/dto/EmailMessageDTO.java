@@ -1,16 +1,17 @@
 package com.softserve.dto;
 
 import lombok.*;
-import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 @Data
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@ToString(exclude = "attachmentsName")
+@EqualsAndHashCode(exclude = "attachmentsName")
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
+@AllArgsConstructor(access = AccessLevel.PUBLIC)
 @Builder
 public class EmailMessageDTO {
     private String subject;
     private String text;
-    private List<MultipartFile> attachments;
     private List<String> receivers;
+    private List<String> attachmentsName;
 }

@@ -9,11 +9,11 @@ import com.softserve.entity.User;
 import com.softserve.entity.enums.Role;
 import com.softserve.mapper.DepartmentMapper;
 import com.softserve.mapper.TeacherMapper;
+import com.softserve.mapper.UserMapper;
 import com.softserve.security.jwt.JwtUser;
 import com.softserve.service.MailService;
 import com.softserve.service.TeacherService;
 import com.softserve.service.UserService;
-import com.softserve.mapper.UserMapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -21,16 +21,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 @Slf4j
@@ -128,11 +127,38 @@ public class UserController {
     @PostMapping(value = "/send-email")
     @PreAuthorize("hasRole('TEACHER')")
     @ApiOperation(value = "Send email")
-    public ResponseEntity<Void> sendEmail(@CurrentUser JwtUser jwtUser,
-                                          @ModelAttribute EmailMessageDTO emailMessageDTO) {
+    public ResponseEntity<?> sendEmail(
+            @RequestBody EmailMessageDTO emailMessageDTO) throws IOException {
+
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username = userDetails.getUsername();
+
         log.info("Enter into sendEmail(jwtUser(username: {}), emailMessageDTO: {})",
-                jwtUser.getUsername(), emailMessageDTO);
-        mailService.send(jwtUser.getUsername(), emailMessageDTO);
-        return ResponseEntity.ok().build();
+                username, emailMessageDTO);
+        mailService.send(username, emailMessageDTO);
+        return ResponseEntity.noContent().build();
+
+    }
+
+    @RequestMapping(value = "/upload-files", method = RequestMethod.POST, consumes = "multipart/form-data")
+    @PreAuthorize("hasRole('TEACHER')")
+    @ApiOperation(value = "Upload files")
+    public ResponseEntity<List<String>> uploadFiles(
+            @RequestParam("files") MultipartFile[] multipartFile, ModelMap modelMap) throws IOException {
+
+        modelMap.addAttribute("files", multipartFile);
+        if (multipartFile != null) {
+            log.info("Enter (not Null) into uploadFiles (count of multipartFile: {})",
+                    Arrays.stream(multipartFile).count());
+            for (MultipartFile file : multipartFile) {
+                log.info("Enter into uploadFiles (multipartFile(names: {}))",
+                        file.getOriginalFilename());
+            }
+        } else {
+            return null;
+        }
+
+        List<String> attachmentsName = mailService.uploadFiles(multipartFile);
+        return ResponseEntity.status(HttpStatus.OK).body(attachmentsName);
     }
 }
