@@ -38,8 +38,7 @@ public class SemesterRepositoryImpl extends BasicRepositoryImpl<Semester, Long> 
     @Override
     public List<Semester> getAll() {
         log.info("In getAll()");
-        Session session = getSession();
-        return  session.createQuery("SELECT distinct s " +
+        return  getSession().createQuery("SELECT distinct s " +
                 "from Semester s " +
                 "left join fetch s.periods " +
                 "left join fetch s.groups " +
