@@ -66,7 +66,8 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
             + "and l.hours = :hours "
             + "and l.teacher.id = :teacherId "
             + "and l.semester.id = :semesterId "
-            + "and l.lessonType = :lessonType";
+            + "and l.lessonType = :lessonType "
+            + "and l.subjectForSite = :subjectForSite";
 
     private static final String COUNT_QUERY
             = "select count (s.id) "
@@ -375,6 +376,7 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
                 .setParameter("teacherId", lesson.getTeacher().getId())
                 .setParameter("semesterId", lesson.getSemester().getId())
                 .setParameter("lessonType", lesson.getLessonType())
+                .setParameter("subjectForSite", lesson.getSubjectForSite())
                 .executeUpdate();
         log.debug("Deleted group lessons {}", deleted);
         return lesson;
