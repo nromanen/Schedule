@@ -10,7 +10,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(callSuper = true)
 public class GroupOrderDTO extends GroupDTO{
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
