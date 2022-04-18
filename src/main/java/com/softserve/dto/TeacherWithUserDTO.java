@@ -1,13 +1,15 @@
 package com.softserve.dto;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 public class TeacherWithUserDTO {
     private Long id;
     private String name;
     private String surname;
     private String patronymic;
     private String position;
-    private Integer userId;
+    private Long userId;
 }

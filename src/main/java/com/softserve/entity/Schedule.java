@@ -1,8 +1,7 @@
 package com.softserve.entity;
 
 import com.softserve.entity.enums.EvenOdd;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
@@ -11,19 +10,21 @@ import java.io.Serializable;
 import java.time.DayOfWeek;
 
 
+@Getter
+@Setter
 @NoArgsConstructor
-@Data
+@AllArgsConstructor
+@ToString
 @Entity
 @Table(name = "schedules")
 public class Schedule implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(columnDefinition = "serial")
-    private long id;
+    private Long id;
 
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "day_of_week",length = 35, nullable = false)
+    @Column(name = "day_of_week", length = 35, nullable = false)
     @NotNull
     private DayOfWeek dayOfWeek;
 

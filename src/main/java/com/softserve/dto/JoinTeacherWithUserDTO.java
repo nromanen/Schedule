@@ -6,6 +6,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class JoinTeacherWithUserDTO {
-    private long teacherId;
-    private long userId;
+    private Long teacherId;
+    private Long userId;
 }

@@ -1,6 +1,6 @@
 package com.softserve.entity;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -13,16 +13,17 @@ import java.util.Objects;
         name = "findName",
         query = "from Period p where p.name= :name"
 )
-
+@Getter
+@Setter
 @NoArgsConstructor
-@Data
+@AllArgsConstructor
+@ToString
 @Entity
 @Table(name = "periods")
 public class Period implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(columnDefinition = "serial")
-    private long id;
+    private Long id;
 
     @NotNull(message = "Start time cannot be empty")
     @Column(name = "start_time")

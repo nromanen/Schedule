@@ -31,7 +31,6 @@ import java.io.Serializable;
 public class Department implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(columnDefinition = "serial")
     private Long id;
 
     @NotBlank(message = "Name cannot be blank")

@@ -50,7 +50,7 @@ public class TeacherRepositoryImpl extends BasicRepositoryImpl<Teacher, Long> im
     @Override
     protected boolean checkReference(Teacher teacher) {
         log.info("In checkReference(teacher = [{}])", teacher);
-        long count = (long) sessionFactory.getCurrentSession().createQuery
+        Long count = (Long) sessionFactory.getCurrentSession().createQuery
                 ("select count (l.id) " +
                         "from Lesson l where l.teacher.id = :teacherId")
                 .setParameter("teacherId", teacher.getId()).getSingleResult();

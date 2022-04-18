@@ -1,7 +1,6 @@
 package com.softserve.entity;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
@@ -10,13 +9,14 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 @NoArgsConstructor
-@Data
+@ToString
+@Getter
+@Setter
 @Entity
 @Table(name = "room_types")
 public class RoomType implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(columnDefinition = "serial")
     private Long id;
 
     @NotEmpty(message = "Description cannot be empty")

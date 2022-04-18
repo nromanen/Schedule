@@ -1,9 +1,13 @@
 package com.softserve.dto;
 
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-@Data
+@ToString
+@Getter
+@Setter
 @NoArgsConstructor
 public class AuthenticationRequestDTO {
     private String email;

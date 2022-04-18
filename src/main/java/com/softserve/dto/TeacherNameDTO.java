@@ -1,8 +1,10 @@
 package com.softserve.dto;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 public class TeacherNameDTO {
     private Long id;
     private String name;

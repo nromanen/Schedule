@@ -1,12 +1,7 @@
 package com.softserve.entity;
 
 import com.opencsv.bean.CsvBindByName;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.annotations.Filter;
 import org.hibernate.annotations.FilterDef;
 import org.hibernate.annotations.OrderBy;
@@ -27,7 +22,9 @@ import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
+@ToString
+@Getter
+@Setter
 @Entity
 @Table(name = "groups")
 @Builder(toBuilder = true)
@@ -38,7 +35,6 @@ import java.util.List;
 public class Group implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(columnDefinition = "serial")
     private Long id;
 
     @NotEmpty(message = "Title cannot be empty")

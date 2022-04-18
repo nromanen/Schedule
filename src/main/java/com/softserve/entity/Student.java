@@ -2,8 +2,7 @@ package com.softserve.entity;
 
 import com.opencsv.bean.CsvBindByName;
 import com.opencsv.bean.CsvRecurse;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
@@ -12,13 +11,14 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 @NoArgsConstructor
-@Data
+@ToString
+@Getter
+@Setter
 @Entity
 @Table(name = "students")
 public class Student implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(columnDefinition = "serial")
     private Long id;
 
     @NotEmpty(message = "Name cannot be empty")
