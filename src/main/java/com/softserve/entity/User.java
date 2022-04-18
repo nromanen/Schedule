@@ -33,7 +33,7 @@ public class User implements Serializable {
     private Long id;
 
     @NotNull
-    @Email
+    @Email(message = "must be a well-formed email address")
     @Size(min = 5, max = 40)
     @Column(unique = true, length = 40)
     @NotEmpty(message = "Email cannot be empty")
