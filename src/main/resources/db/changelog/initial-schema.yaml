@@ -2,12 +2,22 @@ databaseChangeLog:
   - changeSet:
       id: 1642775490693-1
       author: SaneQQQQ
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - sequenceExists:
+                sequenceName: department_id_seq
       changes:
         - createSequence:
             sequenceName: department_id_seq
   - changeSet:
       id: 1642775490693-2
       author: SaneQQQQ
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: department
       changes:
         - createTable:
             columns:
@@ -32,12 +42,22 @@ databaseChangeLog:
   - changeSet:
       id: 1642775490693-3
       author: SaneQQQQ
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - sequenceExists:
+                sequenceName: groups_id_seq
       changes:
         - createSequence:
             sequenceName: groups_id_seq
   - changeSet:
       id: 1642775490693-4
       author: SaneQQQQ
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: groups
       changes:
         - createTable:
             columns:
@@ -62,36 +82,66 @@ databaseChangeLog:
   - changeSet:
       id: 1642775490693-5
       author: SaneQQQQ
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - sequenceExists:
+                sequenceName: lessons_id_seq
       changes:
         - createSequence:
             sequenceName: lessons_id_seq
   - changeSet:
       id: 1642775490693-6
       author: SaneQQQQ
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - sequenceExists:
+                sequenceName: lessons_group_id_seq
       changes:
         - createSequence:
             sequenceName: lessons_group_id_seq
   - changeSet:
       id: 1642775490693-7
       author: SaneQQQQ
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - sequenceExists:
+                sequenceName: lessons_subject_id_seq
       changes:
         - createSequence:
             sequenceName: lessons_subject_id_seq
   - changeSet:
       id: 1642775490693-8
       author: SaneQQQQ
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - sequenceExists:
+                sequenceName: lessons_teacher_id_seq
       changes:
         - createSequence:
             sequenceName: lessons_teacher_id_seq
   - changeSet:
       id: 1642775490693-9
       author: SaneQQQQ
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - sequenceExists:
+                sequenceName: lessons_semester_id_seq
       changes:
         - createSequence:
             sequenceName: lessons_semester_id_seq
   - changeSet:
       id: 1642775490693-10
       author: SaneQQQQ
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: lessons
       changes:
         - createTable:
             columns:
@@ -153,12 +203,22 @@ databaseChangeLog:
   - changeSet:
       id: 1642775490693-11
       author: SaneQQQQ
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - sequenceExists:
+                sequenceName: periods_id_seq
       changes:
         - createSequence:
             sequenceName: periods_id_seq
   - changeSet:
       id: 1642775490693-12
       author: SaneQQQQ
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: periods
       changes:
         - createTable:
             columns:
@@ -189,12 +249,22 @@ databaseChangeLog:
   - changeSet:
       id: 1642775490693-13
       author: SaneQQQQ
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - sequenceExists:
+                sequenceName: room_types_id_seq
       changes:
         - createSequence:
             sequenceName: room_types_id_seq
   - changeSet:
       id: 1642775490693-14
       author: SaneQQQQ
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: room_types
       changes:
         - createTable:
             columns:
@@ -215,18 +285,33 @@ databaseChangeLog:
   - changeSet:
       id: 1642775490693-15
       author: SaneQQQQ
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - sequenceExists:
+                sequenceName: rooms_id_seq
       changes:
         - createSequence:
             sequenceName: rooms_id_seq
   - changeSet:
       id: 1642775490693-16
       author: SaneQQQQ
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - sequenceExists:
+                sequenceName: rooms_room_type_id_seq
       changes:
         - createSequence:
             sequenceName: rooms_room_type_id_seq
   - changeSet:
       id: 1642775490693-17
       author: SaneQQQQ
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: rooms
       changes:
         - createTable:
             columns:
@@ -257,30 +342,55 @@ databaseChangeLog:
   - changeSet:
       id: 1642775490693-18
       author: SaneQQQQ
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - sequenceExists:
+                sequenceName: schedules_id_seq
       changes:
         - createSequence:
             sequenceName: schedules_id_seq
   - changeSet:
       id: 1642775490693-19
       author: SaneQQQQ
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - sequenceExists:
+                sequenceName: schedules_lesson_id_seq
       changes:
         - createSequence:
             sequenceName: schedules_lesson_id_seq
   - changeSet:
       id: 1642775490693-20
       author: SaneQQQQ
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - sequenceExists:
+                sequenceName: schedules_period_id_seq
       changes:
         - createSequence:
             sequenceName: schedules_period_id_seq
   - changeSet:
       id: 1642775490693-21
       author: SaneQQQQ
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - sequenceExists:
+                sequenceName: schedules_room_id_seq
       changes:
         - createSequence:
             sequenceName: schedules_room_id_seq
   - changeSet:
       id: 1642775490693-22
       author: SaneQQQQ
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: schedules
       changes:
         - createTable:
             columns:
@@ -324,12 +434,22 @@ databaseChangeLog:
   - changeSet:
       id: 1642775490693-23
       author: SaneQQQQ
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - sequenceExists:
+                sequenceName: semester_day_semester_id_seq
       changes:
         - createSequence:
             sequenceName: semester_day_semester_id_seq
   - changeSet:
       id: 1642775490693-24
       author: SaneQQQQ
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: semester_day
       changes:
         - createTable:
             columns:
@@ -346,18 +466,33 @@ databaseChangeLog:
   - changeSet:
       id: 1642775490693-25
       author: SaneQQQQ
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - sequenceExists:
+                sequenceName: semester_period_semester_id_seq
       changes:
         - createSequence:
             sequenceName: semester_period_semester_id_seq
   - changeSet:
       id: 1642775490693-26
       author: SaneQQQQ
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - sequenceExists:
+                sequenceName: semester_period_period_id_seq
       changes:
         - createSequence:
             sequenceName: semester_period_period_id_seq
   - changeSet:
       id: 1642775490693-27
       author: SaneQQQQ
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: semester_period
       changes:
         - createTable:
             columns:
@@ -381,12 +516,22 @@ databaseChangeLog:
   - changeSet:
       id: 1642775490693-28
       author: SaneQQQQ
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - sequenceExists:
+                sequenceName: semesters_id_seq
       changes:
         - createSequence:
             sequenceName: semesters_id_seq
   - changeSet:
       id: 1642775490693-29
       author: SaneQQQQ
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: semesters
       changes:
         - createTable:
             columns:
@@ -432,12 +577,22 @@ databaseChangeLog:
   - changeSet:
       id: 1642775490693-30
       author: SaneQQQQ
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - sequenceExists:
+                sequenceName: students_id_seq
       changes:
         - createSequence:
             sequenceName: students_id_seq
   - changeSet:
       id: 1642775490693-31
       author: SaneQQQQ
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: students
       changes:
         - createTable:
             columns:
@@ -478,12 +633,22 @@ databaseChangeLog:
   - changeSet:
       id: 1642775490693-32
       author: SaneQQQQ
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - sequenceExists:
+                sequenceName: subjects_id_seq
       changes:
         - createSequence:
             sequenceName: subjects_id_seq
   - changeSet:
       id: 1642775490693-33
       author: SaneQQQQ
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: subjects
       changes:
         - createTable:
             columns:
@@ -508,12 +673,22 @@ databaseChangeLog:
   - changeSet:
       id: 1642775490693-34
       author: SaneQQQQ
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - sequenceExists:
+                sequenceName: teachers_id_seq
       changes:
         - createSequence:
             sequenceName: teachers_id_seq
   - changeSet:
       id: 1642775490693-35
       author: SaneQQQQ
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: teachers
       changes:
         - createTable:
             columns:
@@ -559,48 +734,88 @@ databaseChangeLog:
   - changeSet:
       id: 1642775490693-36
       author: SaneQQQQ
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - sequenceExists:
+                sequenceName: temporary_schedule_id_seq
       changes:
         - createSequence:
             sequenceName: temporary_schedule_id_seq
   - changeSet:
       id: 1642775490693-37
       author: SaneQQQQ
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - sequenceExists:
+                sequenceName: temporary_schedule_group_id_seq
       changes:
         - createSequence:
             sequenceName: temporary_schedule_group_id_seq
   - changeSet:
       id: 1642775490693-38
       author: SaneQQQQ
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - sequenceExists:
+                sequenceName: temporary_schedule_period_id_seq
       changes:
         - createSequence:
             sequenceName: temporary_schedule_period_id_seq
   - changeSet:
       id: 1642775490693-39
       author: SaneQQQQ
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - sequenceExists:
+                sequenceName: temporary_schedule_room_id_seq
       changes:
         - createSequence:
             sequenceName: temporary_schedule_room_id_seq
   - changeSet:
       id: 1642775490693-40
       author: SaneQQQQ
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - sequenceExists:
+                sequenceName: temporary_schedule_semester_id_seq
       changes:
         - createSequence:
             sequenceName: temporary_schedule_semester_id_seq
   - changeSet:
       id: 1642775490693-41
       author: SaneQQQQ
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - sequenceExists:
+                sequenceName: temporary_schedule_subject_id_seq
       changes:
         - createSequence:
             sequenceName: temporary_schedule_subject_id_seq
   - changeSet:
       id: 1642775490693-42
       author: SaneQQQQ
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - sequenceExists:
+                sequenceName: temporary_schedule_teacher_id_seq
       changes:
         - createSequence:
             sequenceName: temporary_schedule_teacher_id_seq
   - changeSet:
       id: 1642775490693-43
       author: SaneQQQQ
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: temporary_schedule
       changes:
         - createTable:
             columns:
@@ -687,12 +902,22 @@ databaseChangeLog:
   - changeSet:
       id: 1642775490693-44
       author: SaneQQQQ
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - sequenceExists:
+                sequenceName: users_id_seq
       changes:
         - createSequence:
             sequenceName: users_id_seq
   - changeSet:
       id: 1642775490693-45
       author: SaneQQQQ
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: users
       changes:
         - createTable:
             columns:
@@ -725,6 +950,11 @@ databaseChangeLog:
   - changeSet:
       id: 1642775490693-46
       author: SaneQQQQ
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: semester_group
       changes:
         - createTable:
             columns:
@@ -746,186 +976,401 @@ databaseChangeLog:
   - changeSet:
       id: 1642775490693-47
       author: SaneQQQQ
+      preConditions:
+        - onFail: MARK_RAN
+        - sequenceExists:
+            sequenceName: department_id_seq
+        - columnExists:
+            tableName: department
+            columnName: id
       changes:
         - sql:
             sql: ALTER SEQUENCE public.department_id_seq OWNED BY public.department.id;
   - changeSet:
       id: 1642775490693-48
       author: SaneQQQQ
+      preConditions:
+        - onFail: MARK_RAN
+        - sequenceExists:
+            sequenceName: groups_id_seq
+        - columnExists:
+            tableName: groups
+            columnName: id
       changes:
         - sql:
             sql: ALTER SEQUENCE public.groups_id_seq OWNED BY public.groups.id;
   - changeSet:
       id: 1642775490693-49
       author: SaneQQQQ
+      preConditions:
+        - onFail: MARK_RAN
+        - sequenceExists:
+            sequenceName: lessons_group_id_seq
+        - columnExists:
+            tableName: lessons
+            columnName: group_id
       changes:
         - sql:
             sql: ALTER SEQUENCE public.lessons_group_id_seq OWNED BY public.lessons.group_id;
   - changeSet:
       id: 1642775490693-50
       author: SaneQQQQ
+      preConditions:
+        - onFail: MARK_RAN
+        - sequenceExists:
+            sequenceName: lessons_id_seq
+        - columnExists:
+            tableName: lessons
+            columnName: id
       changes:
         - sql:
             sql: ALTER SEQUENCE public.lessons_id_seq OWNED BY public.lessons.id;
   - changeSet:
       id: 1642775490693-51
       author: SaneQQQQ
+      preConditions:
+        - onFail: MARK_RAN
+        - sequenceExists:
+            sequenceName: lessons_semester_id_seq
+        - columnExists:
+            tableName: lessons
+            columnName: semester_id
       changes:
         - sql:
             sql: ALTER SEQUENCE public.lessons_semester_id_seq OWNED BY public.lessons.semester_id;
   - changeSet:
       id: 1642775490693-52
       author: SaneQQQQ
+      preConditions:
+        - onFail: MARK_RAN
+        - sequenceExists:
+            sequenceName: lessons_subject_id_seq
+        - columnExists:
+            tableName: lessons
+            columnName: subject_id
       changes:
         - sql:
             sql: ALTER SEQUENCE public.lessons_subject_id_seq OWNED BY public.lessons.subject_id;
   - changeSet:
       id: 1642775490693-53
       author: SaneQQQQ
+      preConditions:
+        - onFail: MARK_RAN
+        - sequenceExists:
+            sequenceName: lessons_teacher_id_seq
+        - columnExists:
+            tableName: lessons
+            columnName: teacher_id
       changes:
         - sql:
             sql: ALTER SEQUENCE public.lessons_teacher_id_seq OWNED BY public.lessons.teacher_id;
   - changeSet:
       id: 1642775490693-54
       author: SaneQQQQ
+      preConditions:
+        - onFail: MARK_RAN
+        - sequenceExists:
+            sequenceName: periods_id_seq
+        - columnExists:
+            tableName: periods
+            columnName: id
       changes:
         - sql:
             sql: ALTER SEQUENCE public.periods_id_seq OWNED BY public.periods.id;
   - changeSet:
       id: 1642775490693-55
       author: SaneQQQQ
+      preConditions:
+        - onFail: MARK_RAN
+        - sequenceExists:
+            sequenceName: room_types_id_seq
+        - columnExists:
+            tableName: room_types
+            columnName: id
       changes:
         - sql:
             sql: ALTER SEQUENCE public.room_types_id_seq OWNED BY public.room_types.id;
   - changeSet:
       id: 1642775490693-56
       author: SaneQQQQ
+      preConditions:
+        - onFail: MARK_RAN
+        - sequenceExists:
+            sequenceName: rooms_id_seq
+        - columnExists:
+            tableName: rooms
+            columnName: id
       changes:
         - sql:
             sql: ALTER SEQUENCE public.rooms_id_seq OWNED BY public.rooms.id;
   - changeSet:
       id: 1642775490693-57
       author: SaneQQQQ
+      preConditions:
+        - onFail: MARK_RAN
+        - sequenceExists:
+            sequenceName: rooms_room_type_id_seq
+        - columnExists:
+            tableName: rooms
+            columnName: room_type_id
       changes:
         - sql:
             sql: ALTER SEQUENCE public.rooms_room_type_id_seq OWNED BY public.rooms.room_type_id;
   - changeSet:
       id: 1642775490693-58
       author: SaneQQQQ
+      preConditions:
+        - onFail: MARK_RAN
+        - sequenceExists:
+            sequenceName: schedules_id_seq
+        - columnExists:
+            tableName: schedules
+            columnName: id
       changes:
         - sql:
             sql: ALTER SEQUENCE public.schedules_id_seq OWNED BY public.schedules.id;
   - changeSet:
       id: 1642775490693-59
       author: SaneQQQQ
+      preConditions:
+        - onFail: MARK_RAN
+        - sequenceExists:
+            sequenceName: schedules_lesson_id_seq
+        - columnExists:
+            tableName: schedules
+            columnName: lesson_id
       changes:
         - sql:
             sql: ALTER SEQUENCE public.schedules_lesson_id_seq OWNED BY public.schedules.lesson_id;
   - changeSet:
       id: 1642775490693-60
       author: SaneQQQQ
+      preConditions:
+        - onFail: MARK_RAN
+        - sequenceExists:
+            sequenceName: schedules_period_id_seq
+        - columnExists:
+            tableName: schedules
+            columnName: period_id
       changes:
         - sql:
             sql: ALTER SEQUENCE public.schedules_period_id_seq OWNED BY public.schedules.period_id;
   - changeSet:
       id: 1642775490693-61
       author: SaneQQQQ
+      preConditions:
+        - onFail: MARK_RAN
+        - sequenceExists:
+            sequenceName: schedules_room_id_seq
+        - columnExists:
+            tableName: schedules
+            columnName: room_id
       changes:
         - sql:
             sql: ALTER SEQUENCE public.schedules_room_id_seq OWNED BY public.schedules.room_id;
   - changeSet:
       id: 1642775490693-62
       author: SaneQQQQ
+      preConditions:
+        - onFail: MARK_RAN
+        - sequenceExists:
+            sequenceName: semester_day_semester_id_seq
+        - columnExists:
+            tableName: semester_day
+            columnName: semester_id
       changes:
         - sql:
             sql: ALTER SEQUENCE public.semester_day_semester_id_seq OWNED BY public.semester_day.semester_id;
   - changeSet:
       id: 1642775490693-63
       author: SaneQQQQ
+      preConditions:
+        - onFail: MARK_RAN
+        - sequenceExists:
+            sequenceName: semester_period_period_id_seq
+        - columnExists:
+            tableName: semester_period
+            columnName: period_id
       changes:
         - sql:
             sql: ALTER SEQUENCE public.semester_period_period_id_seq OWNED BY public.semester_period.period_id;
   - changeSet:
       id: 1642775490693-64
       author: SaneQQQQ
+      preConditions:
+        - onFail: MARK_RAN
+        - sequenceExists:
+            sequenceName: semester_period_semester_id_seq
+        - columnExists:
+            tableName: semester_period
+            columnName: semester_id
       changes:
         - sql:
             sql: ALTER SEQUENCE public.semester_period_semester_id_seq OWNED BY public.semester_period.semester_id;
   - changeSet:
       id: 1642775490693-65
       author: SaneQQQQ
+      preConditions:
+        - onFail: MARK_RAN
+        - sequenceExists:
+            sequenceName: semesters_id_seq
+        - columnExists:
+            tableName: semesters
+            columnName: id
       changes:
         - sql:
             sql: ALTER SEQUENCE public.semesters_id_seq OWNED BY public.semesters.id;
   - changeSet:
       id: 1642775490693-66
       author: SaneQQQQ
+      preConditions:
+        - onFail: MARK_RAN
+        - sequenceExists:
+            sequenceName: students_id_seq
+        - columnExists:
+            tableName: students
+            columnName: id
       changes:
         - sql:
             sql: ALTER SEQUENCE public.students_id_seq OWNED BY public.students.id;
   - changeSet:
       id: 1642775490693-67
       author: SaneQQQQ
+      preConditions:
+        - onFail: MARK_RAN
+        - sequenceExists:
+            sequenceName: subjects_id_seq
+        - columnExists:
+            tableName: subjects
+            columnName: id
       changes:
         - sql:
             sql: ALTER SEQUENCE public.subjects_id_seq OWNED BY public.subjects.id;
   - changeSet:
       id: 1642775490693-68
       author: SaneQQQQ
+      preConditions:
+        - onFail: MARK_RAN
+        - sequenceExists:
+            sequenceName: teachers_id_seq
+        - columnExists:
+            tableName: teachers
+            columnName: id
       changes:
         - sql:
             sql: ALTER SEQUENCE public.teachers_id_seq OWNED BY public.teachers.id;
   - changeSet:
       id: 1642775490693-69
       author: SaneQQQQ
+      preConditions:
+        - onFail: MARK_RAN
+        - sequenceExists:
+            sequenceName: temporary_schedule_group_id_seq
+        - columnExists:
+            tableName: temporary_schedule
+            columnName: group_id
       changes:
         - sql:
             sql: ALTER SEQUENCE public.temporary_schedule_group_id_seq OWNED BY public.temporary_schedule.group_id;
   - changeSet:
       id: 1642775490693-70
       author: SaneQQQQ
+      preConditions:
+        - onFail: MARK_RAN
+        - sequenceExists:
+            sequenceName: temporary_schedule_id_seq
+        - columnExists:
+            tableName: temporary_schedule
+            columnName: id
       changes:
         - sql:
             sql: ALTER SEQUENCE public.temporary_schedule_id_seq OWNED BY public.temporary_schedule.id;
   - changeSet:
       id: 1642775490693-71
       author: SaneQQQQ
+      preConditions:
+        - onFail: MARK_RAN
+        - sequenceExists:
+            sequenceName: temporary_schedule_period_id_seq
+        - columnExists:
+            tableName: temporary_schedule
+            columnName: period_id
       changes:
         - sql:
             sql: ALTER SEQUENCE public.temporary_schedule_period_id_seq OWNED BY public.temporary_schedule.period_id;
   - changeSet:
       id: 1642775490693-72
       author: SaneQQQQ
+      preConditions:
+        - onFail: MARK_RAN
+        - sequenceExists:
+            sequenceName: temporary_schedule_room_id_seq
+        - columnExists:
+            tableName: temporary_schedule
+            columnName: room_id
       changes:
         - sql:
             sql: ALTER SEQUENCE public.temporary_schedule_room_id_seq OWNED BY public.temporary_schedule.room_id;
   - changeSet:
       id: 1642775490693-73
       author: SaneQQQQ
+      preConditions:
+        - onFail: MARK_RAN
+        - sequenceExists:
+            sequenceName: temporary_schedule_semester_id_seq
+        - columnExists:
+            tableName: temporary_schedule
+            columnName: semester_id
       changes:
         - sql:
             sql: ALTER SEQUENCE public.temporary_schedule_semester_id_seq OWNED BY public.temporary_schedule.semester_id;
   - changeSet:
       id: 1642775490693-74
       author: SaneQQQQ
+      preConditions:
+        - onFail: MARK_RAN
+        - sequenceExists:
+            sequenceName: temporary_schedule_subject_id_seq
+        - columnExists:
+            tableName: temporary_schedule
+            columnName: subject_id
       changes:
         - sql:
             sql: ALTER SEQUENCE public.temporary_schedule_subject_id_seq OWNED BY public.temporary_schedule.subject_id;
   - changeSet:
       id: 1642775490693-75
       author: SaneQQQQ
+      preConditions:
+        - onFail: MARK_RAN
+        - sequenceExists:
+            sequenceName: temporary_schedule_teacher_id_seq
+        - columnExists:
+            tableName: temporary_schedule
+            columnName: teacher_id
       changes:
         - sql:
             sql: ALTER SEQUENCE public.temporary_schedule_teacher_id_seq OWNED BY public.temporary_schedule.teacher_id;
   - changeSet:
       id: 1642775490693-76
       author: SaneQQQQ
+      preConditions:
+        - onFail: MARK_RAN
+        - sequenceExists:
+            sequenceName: users_id_seq
+        - columnExists:
+            tableName: users
+            columnName: id
       changes:
         - sql:
             sql: ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
   - changeSet:
       id: 1642775490693-77
       author: SaneQQQQ
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - foreignKeyConstraintExists:
+                foreignKeyName: fkl19hwymwn2ra2gwwty5trvyas
       changes:
         - addForeignKeyConstraint:
             baseColumnNames: department_id
@@ -941,6 +1386,14 @@ databaseChangeLog:
   - changeSet:
       id: 1642775490693-78
       author: SaneQQQQ
+      preConditions:
+        - onFail: MARK_RAN
+        - columnExists:
+            tableName: department
+            columnName: name
+        - not:
+            - indexExists:
+                indexName: uk_biw7tevwc07g3iutlbmkes0cm
       changes:
         - addUniqueConstraint:
             columnNames: name
@@ -949,6 +1402,11 @@ databaseChangeLog:
   - changeSet:
       id: 1642775490693-79
       author: SaneQQQQ
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - foreignKeyConstraintExists:
+                foreignKeyName: fka1bsm9fsuxn5t098i2cb7nncu
       changes:
         - addForeignKeyConstraint:
             baseColumnNames: group_id
@@ -964,6 +1422,11 @@ databaseChangeLog:
   - changeSet:
       id: 1642775490693-80
       author: SaneQQQQ
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - foreignKeyConstraintExists:
+                foreignKeyName: fkmsev1nou0j86spuk5jrv19mss
       changes:
         - addForeignKeyConstraint:
             baseColumnNames: group_id
@@ -979,6 +1442,11 @@ databaseChangeLog:
   - changeSet:
       id: 1642775490693-81
       author: SaneQQQQ
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - foreignKeyConstraintExists:
+                foreignKeyName: fkpf19s66cmi8qpqc0iaeigbrhh
       changes:
         - addForeignKeyConstraint:
             baseColumnNames: group_id
@@ -994,6 +1462,11 @@ databaseChangeLog:
   - changeSet:
       id: 1642775490693-82
       author: SaneQQQQ
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - foreignKeyConstraintExists:
+                foreignKeyName: fktdolsaotaqlwxbxwaxt00kimk
       changes:
         - addForeignKeyConstraint:
             baseColumnNames: group_id
@@ -1009,6 +1482,14 @@ databaseChangeLog:
   - changeSet:
       id: 1642775490693-83
       author: SaneQQQQ
+      preConditions:
+        - onFail: MARK_RAN
+        - columnExists:
+            tableName: groups
+            columnName: title
+        - not:
+            - indexExists:
+                indexName: uk_ct3jhny5hfe6uj2osyn8a4p83
       changes:
         - addUniqueConstraint:
             columnNames: title
@@ -1017,6 +1498,11 @@ databaseChangeLog:
   - changeSet:
       id: 1642775490693-84
       author: SaneQQQQ
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - foreignKeyConstraintExists:
+                foreignKeyName: fk7f954gltrwny6pe4see76kpw8
       changes:
         - addForeignKeyConstraint:
             baseColumnNames: lesson_id
@@ -1032,6 +1518,11 @@ databaseChangeLog:
   - changeSet:
       id: 1642775490693-85
       author: SaneQQQQ
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - foreignKeyConstraintExists:
+                foreignKeyName: fkbr76cuebuufbbltujpfq04tto
       changes:
         - addForeignKeyConstraint:
             baseColumnNames: teacher_id
@@ -1047,6 +1538,11 @@ databaseChangeLog:
   - changeSet:
       id: 1642775490693-86
       author: SaneQQQQ
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - foreignKeyConstraintExists:
+                foreignKeyName: fke94a0k21xpi7glv89af90lwjv
       changes:
         - addForeignKeyConstraint:
             baseColumnNames: subject_id
@@ -1062,6 +1558,11 @@ databaseChangeLog:
   - changeSet:
       id: 1642775490693-87
       author: SaneQQQQ
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - foreignKeyConstraintExists:
+                foreignKeyName: fkil1jt6gri8x6yfaa3ijf7d6d9
       changes:
         - addForeignKeyConstraint:
             baseColumnNames: semester_id
@@ -1077,6 +1578,11 @@ databaseChangeLog:
   - changeSet:
       id: 1642775490693-88
       author: SaneQQQQ
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - foreignKeyConstraintExists:
+                foreignKeyName: fk4g2p59v3jm7hk6a9ufdufy8ie
       changes:
         - addForeignKeyConstraint:
             baseColumnNames: period_id
@@ -1092,6 +1598,11 @@ databaseChangeLog:
   - changeSet:
       id: 1642775490693-89
       author: SaneQQQQ
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - foreignKeyConstraintExists:
+                foreignKeyName: fkm237asf73ugk3vvw47aq266kl
       changes:
         - addForeignKeyConstraint:
             baseColumnNames: period_id
@@ -1107,6 +1618,11 @@ databaseChangeLog:
   - changeSet:
       id: 1642775490693-90
       author: SaneQQQQ
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - foreignKeyConstraintExists:
+                foreignKeyName: fkr76lbhlv0di8ix7iviixs0p4g
       changes:
         - addForeignKeyConstraint:
             baseColumnNames: period_id
@@ -1122,6 +1638,14 @@ databaseChangeLog:
   - changeSet:
       id: 1642775490693-91
       author: SaneQQQQ
+      preConditions:
+        - onFail: MARK_RAN
+        - columnExists:
+            tableName: periods
+            columnName: name
+        - not:
+            - indexExists:
+                indexName: uk_bgj9vbqf54b7iryxqu895bggh
       changes:
         - addUniqueConstraint:
             columnNames: name
@@ -1130,6 +1654,11 @@ databaseChangeLog:
   - changeSet:
       id: 1642775490693-92
       author: SaneQQQQ
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - foreignKeyConstraintExists:
+                foreignKeyName: fkh9m2n1paq5hmd3u0klfl7wsfv
       changes:
         - addForeignKeyConstraint:
             baseColumnNames: room_type_id
@@ -1145,6 +1674,14 @@ databaseChangeLog:
   - changeSet:
       id: 1642775490693-93
       author: SaneQQQQ
+      preConditions:
+        - onFail: MARK_RAN
+        - columnExists:
+            tableName: room_types
+            columnName: description
+        - not:
+            - indexExists:
+                indexName: uk_gunh6313ruq1dghti9p00529u
       changes:
         - addUniqueConstraint:
             columnNames: description
@@ -1153,6 +1690,11 @@ databaseChangeLog:
   - changeSet:
       id: 1642775490693-94
       author: SaneQQQQ
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - foreignKeyConstraintExists:
+                foreignKeyName: fk34r5t4jexlcas19pleifb8ihv
       changes:
         - addForeignKeyConstraint:
             baseColumnNames: room_id
@@ -1168,6 +1710,11 @@ databaseChangeLog:
   - changeSet:
       id: 1642775490693-95
       author: SaneQQQQ
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - foreignKeyConstraintExists:
+                foreignKeyName: fk3hid2313ah5gjqqye9d3eik2g
       changes:
         - addForeignKeyConstraint:
             baseColumnNames: room_id
@@ -1183,6 +1730,11 @@ databaseChangeLog:
   - changeSet:
       id: 1642775490693-96
       author: SaneQQQQ
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - foreignKeyConstraintExists:
+                foreignKeyName: fk36f17dewxqjhb23rhlmc7slk3
       changes:
         - addForeignKeyConstraint:
             baseColumnNames: semester_id
@@ -1198,6 +1750,11 @@ databaseChangeLog:
   - changeSet:
       id: 1642775490693-97
       author: SaneQQQQ
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - foreignKeyConstraintExists:
+                foreignKeyName: fk94poii1rmjhoevjx7bsymtbtd
       changes:
         - addForeignKeyConstraint:
             baseColumnNames: semester_id
@@ -1213,6 +1770,11 @@ databaseChangeLog:
   - changeSet:
       id: 1642775490693-98
       author: SaneQQQQ
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - foreignKeyConstraintExists:
+                foreignKeyName: fk4j15tivie8ttfhl0s7x3o3syv
       changes:
         - addForeignKeyConstraint:
             baseColumnNames: semester_id
@@ -1228,6 +1790,11 @@ databaseChangeLog:
   - changeSet:
       id: 1642775490693-99
       author: SaneQQQQ
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - foreignKeyConstraintExists:
+                foreignKeyName: fkaqmj2bajc0ud8wproqn4843pk
       changes:
         - addForeignKeyConstraint:
             baseColumnNames: semester_id
@@ -1243,6 +1810,14 @@ databaseChangeLog:
   - changeSet:
       id: 1642775490693-100
       author: SaneQQQQ
+      preConditions:
+        - onFail: MARK_RAN
+        - columnExists:
+            tableName: students
+            columnName: email
+        - not:
+            - indexExists:
+                indexName: uk_e2rndfrsx22acpq2ty1caeuyw
       changes:
         - addUniqueConstraint:
             columnNames: email
@@ -1251,6 +1826,11 @@ databaseChangeLog:
   - changeSet:
       id: 1642775490693-101
       author: SaneQQQQ
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - foreignKeyConstraintExists:
+                foreignKeyName: fkqn6ufkok0nhqdkn46ctqckb76
       changes:
         - addForeignKeyConstraint:
             baseColumnNames: subject_id
@@ -1266,6 +1846,14 @@ databaseChangeLog:
   - changeSet:
       id: 1642775490693-102
       author: SaneQQQQ
+      preConditions:
+        - onFail: MARK_RAN
+        - columnExists:
+            tableName: subjects
+            columnName: name
+        - not:
+            - indexExists:
+                indexName: uk_aodt3utnw0lsov4k9ta88dbpr
       changes:
         - addUniqueConstraint:
             columnNames: name
@@ -1274,6 +1862,11 @@ databaseChangeLog:
   - changeSet:
       id: 1642775490693-103
       author: SaneQQQQ
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - foreignKeyConstraintExists:
+                foreignKeyName: fko7tild8vhrqlodd3oaf8acvyw
       changes:
         - addForeignKeyConstraint:
             baseColumnNames: teacher_id
@@ -1289,9 +1882,16 @@ databaseChangeLog:
   - changeSet:
       id: 1642775490693-104
       author: SaneQQQQ
+      preConditions:
+        - onFail: MARK_RAN
+        - columnExists:
+            tableName: users
+            columnName: email
+        - not:
+            - indexExists:
+                indexName: uk_6dotkott2kjsp8vw4d0m25fb7
       changes:
         - addUniqueConstraint:
             columnNames: email
             constraintName: uk_6dotkott2kjsp8vw4d0m25fb7
             tableName: users
-

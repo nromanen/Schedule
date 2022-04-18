@@ -47,8 +47,10 @@ public class Group implements Serializable {
     @ToString.Exclude
     @OneToMany(mappedBy = "group")
     @OrderBy(clause = "surname ASC")
+    @Builder.Default
     private List<Student> students = new ArrayList<>();
 
+    @Builder.Default
     @Column(name = "disable",  columnDefinition = "boolean default 'false'")
     private boolean disable = false;
 

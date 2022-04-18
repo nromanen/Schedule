@@ -17,6 +17,6 @@ public class LessonBaseDTO {
     private String subjectForSite;
     private LessonType lessonType;
     private SubjectDTO subject;
-    private TeacherDTO teacher;
+    private TeacherNameDTO teacher;
     private Long semesterId;
 }
