@@ -15,6 +15,7 @@ import java.io.Serializable;
 @Getter
 @Setter
 @Entity
+@EqualsAndHashCode
 @Table(name = "students")
 public class Student implements Serializable {
     @Id

@@ -6,6 +6,7 @@ import lombok.*;
 @Setter
 @Builder
 @ToString
+@EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
 public class GroupDTO {

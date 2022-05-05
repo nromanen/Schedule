@@ -26,6 +26,7 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
+@EqualsAndHashCode
 @Table(name = "groups")
 @Builder(toBuilder = true)
 @FilterDef(name="groupDisableFilter", parameters={
