@@ -1,5 +1,6 @@
 package com.softserve.entity;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -16,6 +17,7 @@ import java.io.Serializable;
 @Getter
 @ToString
 @Entity
+@EqualsAndHashCode
 @Table(name = "teachers")
 @FilterDef(name = "teachersDisableFilter", parameters = {
         @ParamDef(name = "disable", type = "boolean"),

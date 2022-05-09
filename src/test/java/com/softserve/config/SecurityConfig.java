@@ -7,10 +7,7 @@ import com.softserve.security.jwt.JwtTokenProvider;
 import com.softserve.service.UserService;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.*;
 import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -39,7 +36,12 @@ import java.util.stream.Stream;
 @EnableWebSecurity
 @EnableOAuth2Client
 @PropertySource({"classpath:social.properties", "classpath:cors.properties"})
-@ComponentScan(basePackages = {"com.softserve.*"})
+@ComponentScan(basePackages = {"com.softserve.*"}, excludeFilters = {
+        @ComponentScan.Filter(
+                type = FilterType.ASSIGNABLE_TYPE,
+                value = {CacheConfiguration.class}
+        )
+})
 @EnableGlobalMethodSecurity(
         prePostEnabled = true,
         securedEnabled = true,

@@ -188,13 +188,13 @@ public class LessonsControllerTest {
                 .andExpect(jsonPath("$.group").value(expectedLesson.getGroup()))
                 .andExpect(jsonPath("$.grouped").value(expectedLesson.isGrouped()));
 
-        Lesson GroupedWithSameSubjectForSite = lessonService.getById(14L);
+        LessonInfoDTO GroupedWithSameSubjectForSite = new LessonInfoMapperImpl().lessonToLessonInfoDTO(lessonService.getById(14L));
 
         SoftAssertions softAssertions = new SoftAssertions();
-        softAssertions.assertThat(expectedLesson).isEqualToComparingOnlyGivenFields(GroupedWithSameSubjectForSite,
+        softAssertions.assertThat(lessonDtoForUpdate).isEqualToComparingOnlyGivenFields(GroupedWithSameSubjectForSite,
                         "hours", "linkToMeeting", "subjectForSite", "lessonType", "teacher",
                         "subject", "grouped");
-        softAssertions.assertThat(expectedLesson.getGroup()).isNotEqualTo(GroupedWithSameSubjectForSite.getGroup());
+        softAssertions.assertThat(lessonDtoForUpdate.getGroup()).isNotEqualTo(GroupedWithSameSubjectForSite.getGroup());
         softAssertions.assertAll();
     }
 
@@ -226,18 +226,18 @@ public class LessonsControllerTest {
                 .andExpect(jsonPath("$.group").value(expectedLesson.getGroup()))
                 .andExpect(jsonPath("$.grouped").value(expectedLesson.isGrouped()));
 
-        Lesson GroupedWithSameSubjectForSite = lessonService.getById(14L);
-        Lesson GroupedWithDiffSubjectForSite = lessonService.getById(15L);
+        LessonInfoDTO GroupedWithSameSubjectForSite = new LessonInfoMapperImpl().lessonToLessonInfoDTO(lessonService.getById(14L));
+        LessonInfoDTO GroupedWithDiffSubjectForSite = new LessonInfoMapperImpl().lessonToLessonInfoDTO(lessonService.getById(15L));
 
         SoftAssertions softAssertions = new SoftAssertions();
-        softAssertions.assertThat(expectedLesson).isEqualToComparingOnlyGivenFields(GroupedWithSameSubjectForSite,
+        softAssertions.assertThat(lessonDtoForUpdate).isEqualToComparingOnlyGivenFields(GroupedWithSameSubjectForSite,
                 "hours", "linkToMeeting", "subjectForSite", "lessonType", "teacher",
                 "subject", "grouped");
-        softAssertions.assertThat(expectedLesson.getGroup()).isNotEqualTo(GroupedWithSameSubjectForSite.getGroup());
-        softAssertions.assertThat(expectedLesson).isEqualToComparingOnlyGivenFields(GroupedWithDiffSubjectForSite,
+        softAssertions.assertThat(lessonDtoForUpdate.getGroup()).isNotEqualTo(GroupedWithSameSubjectForSite.getGroup());
+        softAssertions.assertThat(lessonDtoForUpdate).isEqualToComparingOnlyGivenFields(GroupedWithDiffSubjectForSite,
                 "hours", "linkToMeeting", "subjectForSite", "lessonType", "teacher",
                 "subject", "grouped");
-        softAssertions.assertThat(expectedLesson.getGroup()).isNotEqualTo(GroupedWithDiffSubjectForSite.getGroup());
+        softAssertions.assertThat(lessonDtoForUpdate.getGroup()).isNotEqualTo(GroupedWithDiffSubjectForSite.getGroup());
         softAssertions.assertAll();
     }
 

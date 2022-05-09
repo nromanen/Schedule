@@ -1,11 +1,13 @@
 package com.softserve.dto;
 
 import com.softserve.dto.enums.ImportSaveStatus;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
+@EqualsAndHashCode
 public class StudentImportDTO {
     private Long id;
     private String name;

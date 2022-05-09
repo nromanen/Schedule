@@ -99,7 +99,7 @@ public class SemesterControllerTest {
         SemesterDTO semesterDtoForSave = new SemesterDTO();
         semesterDtoForSave.setDaysOfWeek(dayOfWeeks);
         semesterDtoForSave.setPeriods(periodDTOS);
-        semesterDtoForSave.setId(1);
+        semesterDtoForSave.setId(1L);
         semesterDtoForSave.setDescription("another semester");
         semesterDtoForSave.setYear(2020);
         semesterDtoForSave.setStartDay(LocalDate.parse("2020/08/20", DateTimeFormatter.ofPattern("yyyy/MM/dd")));
@@ -123,7 +123,7 @@ public class SemesterControllerTest {
         LinkedHashSet<PeriodDTO> periodDTOS = new LinkedHashSet<>();
         periodDTOS.add(periodDTO);
         SemesterDTO semesterDtoForUpdate = new SemesterDTO();
-        semesterDtoForUpdate.setId(4);
+        semesterDtoForUpdate.setId(4L);
         semesterDtoForUpdate.setYear(2222);
         semesterDtoForUpdate.setDescription("another semester");
         semesterDtoForUpdate.setStartDay(LocalDate.of(2020, 7, 20));
@@ -168,7 +168,7 @@ public class SemesterControllerTest {
         SemesterDTO semesterDtoForSave = new SemesterDTO();
         semesterDtoForSave.setDaysOfWeek(dayOfWeeks);
         semesterDtoForSave.setPeriods(periodDTOS);
-        semesterDtoForSave.setId(0);
+        semesterDtoForSave.setId(0L);
         semesterDtoForSave.setDescription("1 semester");
         semesterDtoForSave.setYear(2020);
         semesterDtoForSave.setStartDay(LocalDate.parse("2020/08/20", DateTimeFormatter.ofPattern("yyyy/MM/dd")));
@@ -195,7 +195,7 @@ public class SemesterControllerTest {
         SemesterDTO semesterDtoForSave = new SemesterDTO();
         semesterDtoForSave.setDaysOfWeek(dayOfWeeks);
         semesterDtoForSave.setPeriods(periodDTOS);
-        semesterDtoForSave.setId(2);
+        semesterDtoForSave.setId(2L);
         semesterDtoForSave.setDescription("5 semester");
         semesterDtoForSave.setYear(2020);
         semesterDtoForSave.setStartDay(LocalDate.parse("2020/10/20", DateTimeFormatter.ofPattern("yyyy/MM/dd")));
@@ -222,7 +222,7 @@ public class SemesterControllerTest {
         SemesterDTO semesterDtoForSave = new SemesterDTO();
         semesterDtoForSave.setDaysOfWeek(dayOfWeeks);
         semesterDtoForSave.setPeriods(periodDTOS);
-        semesterDtoForSave.setId(1);
+        semesterDtoForSave.setId(1L);
         semesterDtoForSave.setDescription(null);
         semesterDtoForSave.setYear(2020);
         semesterDtoForSave.setStartDay(LocalDate.parse("2020/08/20", DateTimeFormatter.ofPattern("yyyy/MM/dd")));
@@ -249,7 +249,7 @@ public class SemesterControllerTest {
         SemesterDTO semesterDtoForSave = new SemesterDTO();
         semesterDtoForSave.setDaysOfWeek(dayOfWeeks);
         semesterDtoForSave.setPeriods(periodDTOS);
-        semesterDtoForSave.setId(4);
+        semesterDtoForSave.setId(4L);
         semesterDtoForSave.setDescription("2 semester");
         semesterDtoForSave.setYear(2020);
         semesterDtoForSave.setStartDay(LocalDate.parse("2020/08/20", DateTimeFormatter.ofPattern("yyyy/MM/dd")));
@@ -264,7 +264,7 @@ public class SemesterControllerTest {
     @Test
     public void returnBadRequestIfUpdatedStartDayBeginAfterEndDay() throws Exception {
         SemesterDTO semesterDtoForSave = new SemesterDTO();
-        semesterDtoForSave.setId(4);
+        semesterDtoForSave.setId(4L);
         semesterDtoForSave.setDescription("2 semester");
         semesterDtoForSave.setStartDay(LocalDate.of(2020, 6, 20));
         semesterDtoForSave.setEndDay(LocalDate.of(2020, 5, 20));
@@ -290,7 +290,7 @@ public class SemesterControllerTest {
         SemesterDTO semesterDtoForSave = new SemesterDTO();
         semesterDtoForSave.setDaysOfWeek(dayOfWeeks);
         semesterDtoForSave.setPeriods(periodDTOS);
-        semesterDtoForSave.setId(5);
+        semesterDtoForSave.setId(5L);
         semesterDtoForSave.setDescription(null);
         semesterDtoForSave.setYear(2020);
         semesterDtoForSave.setStartDay(LocalDate.parse("2020/08/20", DateTimeFormatter.ofPattern("yyyy/MM/dd")));
