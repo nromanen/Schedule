@@ -11,7 +11,7 @@ buildscript {
 plugins {
     id 'war'
     id 'java'
-
+    id "org.sonarqube" version "3.3"
 }
 
 group 'com.softserve'
@@ -40,6 +40,14 @@ if (System.getenv('$buildDir') != "") {
 }
 
 apply from: 'liquibase.gradle'
+
+sonarqube {
+    properties {
+        property "sonar.projectKey", "nromanen_Schedule"
+        property "sonar.organization", "nromanen"
+        property "sonar.host.url", "https://sonarcloud.io"
+    }
+}
 
 dependencies {
     testImplementation group: 'junit', name: 'junit', version: '4.11'

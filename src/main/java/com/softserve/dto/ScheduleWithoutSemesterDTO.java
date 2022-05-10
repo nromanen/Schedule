@@ -1,15 +1,13 @@
 package com.softserve.dto;
 
 import com.softserve.entity.enums.EvenOdd;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import java.time.DayOfWeek;
 
 @Getter
 @Setter
+@EqualsAndHashCode
 @NoArgsConstructor
 @ToString
 public class ScheduleWithoutSemesterDTO {

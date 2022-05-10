@@ -13,6 +13,7 @@ import java.io.Serializable;
 @Getter
 @Setter
 @Entity
+@EqualsAndHashCode
 @Table(name = "room_types")
 public class RoomType implements Serializable {
     @Id

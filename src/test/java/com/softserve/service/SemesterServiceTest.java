@@ -189,7 +189,7 @@ public class SemesterServiceTest {
         semesterInDatabase.setEndDay(LocalDate.of(2020, 5, 10));
 
         Semester newSemester = new Semester();
-        newSemester.setId(0);
+        newSemester.setId(0L);
         newSemester.setDescription("1 semester");
         newSemester.setYear(2020);
         newSemester.setStartDay(LocalDate.of(2020, 4, 10));

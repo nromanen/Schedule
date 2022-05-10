@@ -39,7 +39,7 @@ public abstract class StudentMapper {
         return null;
     }
 
-    @Mapping(target = "user", source = "email", qualifiedByName = "userToEmail")
+    @Mapping(target = "user", source = "email", qualifiedByName = "emailToUser")
     @Mapping(target = "group", source = "groupDTO")
     public abstract Student studentImportDTOToStudent(StudentImportDTO studentImportDTO);
 
