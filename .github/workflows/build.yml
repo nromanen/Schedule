@@ -42,7 +42,7 @@ jobs:
         id: jacoco
         uses: madrapps/jacoco-report@v1.2
         with:
-          title:
+          title: Test Coverage Report
           min-coverage-overall: 50
           min-coverage-changed-files: 70
           token: ${{ secrets.GITHUB_TOKEN }}
