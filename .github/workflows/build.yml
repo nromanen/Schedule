@@ -38,3 +38,12 @@ jobs:
         if: always()
         with:
           report_paths: '**/build/test-results/test/TEST-*.xml'
+      - name: JaCoCo report
+        id: jacoco
+        uses: madrapps/jacoco-report@v1.2
+        with:
+          title:
+          min-coverage-overall: 50
+          min-coverage-changed-files: 70
+          token: ${{ secrets.GITHUB_TOKEN }}
+          paths: ${{ github.workspace }}/build/reports/jacoco/test/jacocoTestReport.xml
