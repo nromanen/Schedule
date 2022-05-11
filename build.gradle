@@ -12,6 +12,7 @@ plugins {
     id 'war'
     id 'java'
     id "org.sonarqube" version "3.3"
+    id 'jacoco'
 }
 
 group 'com.softserve'
@@ -34,6 +35,7 @@ task copyToLib(type: Copy) {
 test {
     useJUnit()
     maxHeapSize = '1G'
+    finalizedBy jacocoTestReport
 }
 if (System.getenv('$buildDir') != "") {
     stage.dependsOn(copyToLib)
@@ -46,6 +48,16 @@ sonarqube {
         property "sonar.projectKey", "nromanen_Schedule"
         property "sonar.organization", "nromanen"
         property "sonar.host.url", "https://sonarcloud.io"
+    }
+}
+
+jacoco {
+    toolVersion = "0.8.7"
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled(true)
     }
 }
 
