@@ -55,12 +55,25 @@ jacoco {
     toolVersion = "0.8.7"
 }
 
-jacocoTestReport.dependsOn(test)
 jacocoTestReport {
+    dependsOn(test)
     reports {
         xml.enabled(true)
     }
 }
+
+jacocoTestCoverageVerification {
+    violationRules {
+        failOnViolation = true
+        rule {
+            limit {
+                minimum = 0.5
+            }
+        }
+    }
+}
+
+check.dependsOn jacocoTestCoverageVerification
 
 dependencies {
     testImplementation group: 'junit', name: 'junit', version: '4.11'
