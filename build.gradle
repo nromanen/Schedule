@@ -75,6 +75,8 @@ jacocoTestCoverageVerification {
 
 check.dependsOn jacocoTestCoverageVerification
 
+apply from: "$projectDir/pre-commit.gradle"
+
 dependencies {
     testImplementation group: 'junit', name: 'junit', version: '4.11'
     testImplementation group: 'org.assertj', name: 'assertj-core', version: '3.6.1'
