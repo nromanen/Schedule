@@ -38,7 +38,7 @@ jobs:
         if: always()
         with:
           report_paths: '**/build/test-results/test/TEST-*.xml'
-      - name: JaCoCo reports
+      - name: JaCoCo report
         uses: madrapps/jacoco-report@v1.2
         with:
           title: Test Coverage Report

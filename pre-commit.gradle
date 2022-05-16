@@ -1,5 +1,5 @@
 task installGitHook(type: Copy) {
-    from new File(projectDir, 'pre-commit')
+    from new File(projectDir, 'scripts/pre-commit')
     into { new File(projectDir, '.git/hooks') }
     fileMode 0777
 }
