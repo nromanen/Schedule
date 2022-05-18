@@ -29,11 +29,6 @@ public abstract class BasicRepositoryImpl<T extends Serializable, I extends Seri
                 .getActualTypeArguments()[0];
     }
 
-    /**
-     * The method used for getting list of entities from database
-     *
-     * @return list of entities
-     */
     @Override
     public List<T> getAll() {
         log.info("In getAll()");
@@ -42,24 +37,12 @@ public abstract class BasicRepositoryImpl<T extends Serializable, I extends Seri
                 .getResultList();
     }
 
-    /**
-     * The method used for getting entity by id from database
-     *
-     * @param id Identity number of entity
-     * @return entity
-     */
     @Override
     public Optional<T> findById(I id) {
         log.info("In findById(id = [{}])", id);
         return Optional.ofNullable(sessionFactory.getCurrentSession().get(basicClass, id));
     }
 
-    /**
-     * The method used for saving entity in database
-     *
-     * @param entity entity is going to be saved
-     * @return entity that has been saved
-     */
     @Override
     public T save(T entity) {
         log.info("In save(entity = [{}]", entity);
@@ -68,12 +51,6 @@ public abstract class BasicRepositoryImpl<T extends Serializable, I extends Seri
         return entity;
     }
 
-    /**
-     * The method used for updating existed entity from database
-     *
-     * @param entity entity is going to be updated
-     * @return entity that was updated
-     */
     @Override
     public T update(T entity) {
         log.info("In update(entity = [{}]", entity);
@@ -82,13 +59,6 @@ public abstract class BasicRepositoryImpl<T extends Serializable, I extends Seri
         return entity;
     }
 
-    /**
-     * The method used for deleting existed entity from database
-     *
-     * @param entity entity is going to be deleted
-     * @return deleted entity
-     * @throws DeleteDisabledException when there are still references pointing to object requested for deleting
-     */
     @Override
     public T delete(T entity) {
         log.info("In delete(entity = [{}])", entity);
@@ -111,17 +81,12 @@ public abstract class BasicRepositoryImpl<T extends Serializable, I extends Seri
         return false;
     }
 
-    /**
-     * The method used for getting list of disabled entities from database
-     *
-     * @return list
-     */
     @Override
     public List<T> getDisabled() {
         log.info("In getDisabled");
         return sessionFactory.getCurrentSession().createQuery(
-                "from " + basicClass.getName() +" tableName"+
-                        " where tableName.disable = true ")
+                        "from " + basicClass.getName() + " tableName" +
+                                " where tableName.disable = true ")
                 .getResultList();
     }
 }

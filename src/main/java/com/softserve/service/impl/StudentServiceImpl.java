@@ -32,11 +32,14 @@ import java.util.concurrent.CompletableFuture;
 @Slf4j
 @Service
 public class StudentServiceImpl implements StudentService {
+
     private final StudentRepository studentRepository;
-    private final StudentMapper studentMapper;
+
     private final GroupService groupService;
     private final UserService userService;
+
     private final GroupMapper groupMapper;
+    private final StudentMapper studentMapper;
 
     @Autowired
     public StudentServiceImpl(StudentRepository studentRepository, StudentMapper studentMapper,
@@ -90,12 +93,6 @@ public class StudentServiceImpl implements StudentService {
         return studentRepository.save(object);
     }
 
-    /**
-     * Method save information for student in Repository and register user if email exists
-     *
-     * @param studentDTO StudentDTO instance
-     * @return saved Student entity
-     */
     @Transactional
     @Override
     public Student save(StudentDTO studentDTO) {
@@ -149,7 +146,6 @@ public class StudentServiceImpl implements StudentService {
 
     }
 
-
     /**
      * Method deletes an existing Student from Repository
      *
@@ -202,7 +198,7 @@ public class StudentServiceImpl implements StudentService {
 
     public StudentImportDTO saveStudentFromFile(Long groupId, StudentImportDTO student) {
         try {
-            if(student.getEmail() == null || student.getEmail().isEmpty()){
+            if (student.getEmail() == null || student.getEmail().isEmpty()) {
                 log.error("Empty or null email: {}", student.getEmail());
                 student.setImportSaveStatus(ImportSaveStatus.VALIDATION_ERROR);
                 return student;
@@ -220,7 +216,7 @@ public class StudentServiceImpl implements StudentService {
             if (studentFromBase.isEmpty()) {
                 return assignUserToNewStudent(student, userOptional, newStudent, group);
             }
-                return checkForEmptyFieldsOfExistingStudent(student, userOptional, studentFromBase);
+            return checkForEmptyFieldsOfExistingStudent(student, userOptional, studentFromBase);
         } catch (ConstraintViolationException e) {
             student.setImportSaveStatus(ImportSaveStatus.VALIDATION_ERROR);
             log.error("VALIDATION_ERROR while saving student with email {}", student.getEmail(), e);
@@ -257,11 +253,11 @@ public class StudentServiceImpl implements StudentService {
     private StudentImportDTO assignUserToNewStudent(StudentImportDTO student, Optional<User> userOptional, Student newStudent, Group group) {
         log.debug("Enter to method if email EXIST and student DONT EXIST");
         if (userOptional.isPresent() && userOptional.get().getRole() == Role.ROLE_STUDENT) {
-            if(isEmailInUse(student.getEmail())){
+            if (isEmailInUse(student.getEmail())) {
                 log.error("Student with current email exist ",
                         new FieldAlreadyExistsException(Student.class, "email", student.getEmail()));
-               student.setImportSaveStatus(ImportSaveStatus.ALREADY_EXIST);
-               return student;
+                student.setImportSaveStatus(ImportSaveStatus.ALREADY_EXIST);
+                return student;
             }
             newStudent.setUser(userOptional.get());
             return saveStudentAndSetEmailGroupStatus(student, group, newStudent);
@@ -343,5 +339,4 @@ public class StudentServiceImpl implements StudentService {
         savedStudent.setImportSaveStatus(ImportSaveStatus.SAVED);
         return savedStudent;
     }
-
 }

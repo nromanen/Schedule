@@ -56,12 +56,6 @@ public class RoomServiceImpl implements RoomService {
         return roomRepository.getAll();
     }
 
-
-    /**
-     * The method used for getting all rooms
-     *
-     * @return list of rooms
-     */
     @Override
     public List<Room> getDisabled() {
         log.info("Enter into getAll of getDisabled");
@@ -112,14 +106,6 @@ public class RoomServiceImpl implements RoomService {
         return roomRepository.delete(object);
     }
 
-    /**
-     * The method used for getting list of free room by specific period, day of week and number of week
-     *
-     * @param idOfPeriod identity number of period
-     * @param dayOfWeek  day of the week
-     * @param evenOdd    number of week
-     * @return list of rooms
-     */
     @Override
     public List<Room> freeRoomBySpecificPeriod(Long idOfPeriod, DayOfWeek dayOfWeek, EvenOdd evenOdd) {
         log.info("Enter into freeRoomBySpecificPeriod of RoomServiceImpl with id {}, dayOfWeek {} and evenOdd {} ",
@@ -150,24 +136,12 @@ public class RoomServiceImpl implements RoomService {
         return roomRepository.countRoomDuplicates(room) != 0;
     }
 
-    /**
-     * The method used for getting list of rooms ordered by sort_order
-     *
-     * @return list of rooms
-     */
     @Override
     public List<Room> getAllOrdered() {
         log.info("Entered getAllOrdered()");
         return roomRepository.getAllOrdered();
     }
 
-    /**
-     * The method used for saving room after specific one
-     *
-     * @param room Room entity that we want to save
-     * @param afterId id of room after which we want to insert our room
-     * @return room
-     */
     @Transactional
     @Override
     public Room saveRoomAfterId(Room room, Long afterId) {
@@ -177,7 +151,7 @@ public class RoomServiceImpl implements RoomService {
         if (afterId != null) {
             if (afterId == 0) {
                 room.setSortOrder(minOrder / 2);
-            }else {
+            } else {
                 Double prevPos = roomRepository.getSortOrderAfterId(afterId).orElse(0.0);
                 Double nextPos = roomRepository.getNextPosition(prevPos).orElse(prevPos + 2);
                 Double newPos = ((nextPos + prevPos) / 2);
@@ -189,23 +163,16 @@ public class RoomServiceImpl implements RoomService {
         return roomRepository.save(room);
     }
 
-    /**
-     * The method used for updating room after specific one
-     *
-     * @param room Room entity that we want to save
-     * @param afterId id of room after which we want to insert our room
-     * @return room
-     */
     @Transactional
     @Override
     public Room updateRoomAfterId(Room room, Long afterId) {
         log.info("Entered updateRoomAfterId({},{})", room, afterId);
         Double minOrder = roomRepository.getMinSortOrder().orElse(0.0);
         if (afterId != null) {
-            if(afterId == room.getId()) {
+            if (afterId == room.getId()) {
                 Double myOrder = roomRepository.getSortOrderAfterId(afterId).orElse(0.0);
                 room.setSortOrder(myOrder);
-            }else if (afterId == 0) {
+            } else if (afterId == 0) {
                 room.setSortOrder(minOrder / 2);
             } else {
                 Double prevPos = roomRepository.getSortOrderAfterId(afterId).orElse(0.0);
@@ -213,7 +180,7 @@ public class RoomServiceImpl implements RoomService {
                 Double newPos = ((nextPos + prevPos) / 2);
                 room.setSortOrder(newPos);
             }
-        }else {
+        } else {
             room.setSortOrder(1.0);
         }
         return roomRepository.update(room);

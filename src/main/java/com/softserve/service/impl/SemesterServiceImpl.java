@@ -31,12 +31,14 @@ import java.util.stream.Collectors;
 public class SemesterServiceImpl implements SemesterService {
 
     private final SemesterRepository semesterRepository;
-    private final PeriodService periodService;
     private final ScheduleRepository scheduleRepository;
     private final LessonRepository lessonRepository;
+    private final GroupRepository groupRepository;
+
+    private final PeriodService periodService;
+
     private final List<DayOfWeek> workDaysList = Arrays.asList(DayOfWeek.MONDAY, DayOfWeek.TUESDAY,
             DayOfWeek.WEDNESDAY, DayOfWeek.THURSDAY, DayOfWeek.FRIDAY);
-    private final GroupRepository groupRepository;
 
     @Autowired
     public SemesterServiceImpl(SemesterRepository semesterRepository,
@@ -184,12 +186,6 @@ public class SemesterServiceImpl implements SemesterService {
         return semesterRepository.delete(object);
     }
 
-
-    /**
-     * Method searches get of semester with currentSemester = true in the DB
-     *
-     * @return entity Semester if such exist, else return null
-     */
     @Override
     public Semester getCurrentSemester() {
         log.debug("In getCurrentSemester");
@@ -201,11 +197,6 @@ public class SemesterServiceImpl implements SemesterService {
         return semester;
     }
 
-    /**
-     * Method searches get of semester with defaultSemester = true in the DB
-     *
-     * @return entity Semester if such exist, else return null
-     */
     @Override
     public Semester getDefaultSemester() {
         log.debug("In getDefaultSemester");
@@ -272,11 +263,6 @@ public class SemesterServiceImpl implements SemesterService {
         return !semester.getPeriods().containsAll(periodsInSchedule);
     }
 
-    /**
-     * The method used for getting all disabled semesters
-     *
-     * @return list of disabled semesters
-     */
     @Override
     public List<Semester> getDisabled() {
         log.debug("Enter into getAll of getDisabled");
@@ -289,12 +275,6 @@ public class SemesterServiceImpl implements SemesterService {
         return semesters;
     }
 
-    /**
-     * The method used to change the current semester that the Manager is working on
-     *
-     * @param semesterId id of the semester that needs to be current
-     * @return changed Semester
-     */
     @CacheEvict(value = "semesterList", allEntries = true)
     @Override
     public Semester changeCurrentSemester(Long semesterId) {
@@ -304,12 +284,6 @@ public class SemesterServiceImpl implements SemesterService {
         return getById(semesterId);
     }
 
-    /**
-     * The method used to change the default semester that the Manager is working on
-     *
-     * @param semesterId id of the semester that needs to be current
-     * @return changed Semester
-     */
     @CacheEvict(value = "semesterList", allEntries = true)
     @Override
     public Semester changeDefaultSemester(Long semesterId) {
@@ -319,13 +293,6 @@ public class SemesterServiceImpl implements SemesterService {
         return getById(semesterId);
     }
 
-    /**
-     * Method add group to an existing semester
-     *
-     * @param semester semester in which we need to add group
-     * @param group    group to add
-     * @return changed Semester
-     */
     @CacheEvict(value = "semesterList", allEntries = true)
     @Override
     public Semester addGroupToSemester(Semester semester, Group group) {
@@ -339,14 +306,6 @@ public class SemesterServiceImpl implements SemesterService {
         return semester;
     }
 
-    /**
-     *
-     * Method add groups to an existing semester
-     *
-     * @param semester semester in which we need to add groups
-     * @param groupIds groups to add
-     * @return changed Semester
-     */
     @CacheEvict(value = "semesterList", allEntries = true)
     @Override
     public Semester addGroupsToSemester(Semester semester, List<Long> groupIds) {
@@ -359,13 +318,6 @@ public class SemesterServiceImpl implements SemesterService {
         return semester;
     }
 
-    /**
-     * Method add daysOfWeek to an existing semester
-     *
-     * @param semester   semester in which we need to add daysOfWeek
-     * @param daysOfWeek daysOfWeek to add
-     * @return changed Semester
-     */
     @Override
     public Semester addDaysOfWeekToSemester(Semester semester, Set<DayOfWeek> daysOfWeek) {
         log.debug("In addDaysOfWeekToSemester (semester = [{}], daysOfWeek = [{}])", semester, daysOfWeek);
@@ -380,13 +332,6 @@ public class SemesterServiceImpl implements SemesterService {
         return semester;
     }
 
-    /**
-     * Method add daysOfWeek to an existing semester
-     *
-     * @param semester semester in which we need to add periods
-     * @param periods  periods to add
-     * @return changed Semester
-     */
     @Override
     public Semester addPeriodsToSemester(Semester semester, Set<Period> periods) {
         log.debug("In addPeriodsToSemester (semester = [{}], periods = [{}])", semester, periods);
@@ -401,13 +346,6 @@ public class SemesterServiceImpl implements SemesterService {
         return semester;
     }
 
-    /**
-     * Method delete group from an existing semester
-     *
-     * @param semester semester in which we need to delete group
-     * @param group    group to delete
-     * @return changed Semester
-     */
     @Override
     public Semester deleteGroupFromSemester(Semester semester, Group group) {
         log.debug("In deleteGroupFromSemester (semester = [{}], group = [{}])", semester, group);
@@ -417,12 +355,6 @@ public class SemesterServiceImpl implements SemesterService {
         return semester;
     }
 
-    /**
-     * Method delete groups, periods and days Of Weeks from an existing semester
-     *
-     * @param semester semester in which we need to delete group
-     * @return changed Semester
-     */
     @Override
     public Semester deleteAllContentFromSemester(Semester semester) {
         log.debug("In deleteAllContentFromSemester (semester = [{}] )", semester);
@@ -435,13 +367,6 @@ public class SemesterServiceImpl implements SemesterService {
         return semester;
     }
 
-    /**
-     * Method delete groups from an existing semester
-     *
-     * @param semester semester in which we need to delete groups
-     * @param groups   group to delete
-     * @return changed Semester
-     */
     @Override
     public Semester deleteGroupsFromSemester(Semester semester, List<Group> groups) {
         log.debug("In deleteGroupsFromSemester (semester = [{}], group = [{}])", semester, groups);
@@ -449,13 +374,6 @@ public class SemesterServiceImpl implements SemesterService {
         return semester;
     }
 
-    /**
-     * Method copy groups, periods, days Of Weeks and Schedule from one to other semester
-     *
-     * @param fromSemesterId id semester from which we need to copy groups, periods, days Of Weeks and Schedule
-     * @param toSemesterId   id semester in which we need to copy groups, periods, days Of Weeks and Schedule
-     * @return copied Semester
-     */
     @Override
     public Semester copySemester(Long fromSemesterId, Long toSemesterId) {
         log.info("In copySemester (fromSemesterId = [{}], toSemesterId = [{}])", fromSemesterId, toSemesterId);

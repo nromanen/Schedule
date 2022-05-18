@@ -18,7 +18,7 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
 
     private static final String SELECT_GROUPED
             = "select l from Lesson l "
-            +"where l.grouped = true "
+            + "where l.grouped = true "
             + "and l.subject.id = :subjectId "
             + "and l.hours = :hours "
             + "and l.teacher.id = :teacherId "
@@ -115,13 +115,6 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
         return tq.getResultList();
     }
 
-
-    /**
-     * Method gets information about all lessons for particular group from DB
-     *
-     * @param groupId Identity number of the group for which need to find all lessons
-     * @return List of filtered lessons
-     */
     @Override
     public List<Lesson> getAllForGroup(Long groupId, Long semesterId) {
         log.info("In getAllForGroup(groupId = [{}])", groupId);
@@ -137,16 +130,9 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
                 cb.equal(from.get("semester").get("id"), semesterId));
         cq.orderBy(cb.asc(from.get("subjectForSite")));
         TypedQuery<Lesson> tq = sessionFactory.getCurrentSession().createQuery(cq);
-        return  tq.getResultList();
+        return tq.getResultList();
     }
 
-
-    /**
-     * Method gets information  all lessons for teacher from DB
-     *
-     * @param teacherId Identity number of the teacher for which need to find all lessons
-     * @return List of filtered lessons
-     */
     @Override
     public List<Lesson> getLessonByTeacher(Long teacherId, Long semesterId) {
         log.info("In getLessonByTeacher(groupId = [{}])", teacherId);
@@ -162,17 +148,9 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
                 cb.equal(from.get("semester").get("id"), semesterId));
         cq.orderBy(cb.asc(from.get("subjectForSite")));
         TypedQuery<Lesson> tq = sessionFactory.getCurrentSession().createQuery(cq);
-        return  tq.getResultList();
+        return tq.getResultList();
     }
 
-
-
-    /**
-     * Method searches duplicate of lesson in the DB
-     *
-     * @param lesson Lesson entity that needs to be verified
-     * @return count of duplicates if such exist, else return 0
-     */
     @Override
     public Long countLessonDuplicates(Lesson lesson) {
         log.info("In countLessonDuplicates(lesson = [{}])", lesson);
@@ -186,19 +164,13 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
                 cb.equal(from.get("subject").get("id"), lesson.getSubject().getId()),
                 cb.equal(from.get("group").get("id"), lesson.getGroup().getId()),
                 cb.equal(from.get("semester").get("id"), lesson.getSemester().getId()),
-                cb.equal(from.get("lessonType"),lesson.getLessonType()));
+                cb.equal(from.get("lessonType"), lesson.getLessonType()));
 
         cq.select(cb.count(from));
         Query<Long> query = sessionFactory.getCurrentSession().createQuery(cq);
         return query.getSingleResult();
     }
 
-    /**
-     * Method searches duplicate of lesson in the DB
-     *
-     * @param lesson Lesson entity that needs to be verified
-     * @return count of duplicates if such exist, else return 0
-     */
     @Override
     public Long countLessonDuplicatesWithIgnoreId(Lesson lesson) {
         log.info("In countLessonDuplicates(lesson = [{}])", lesson);
@@ -224,12 +196,6 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
         return query.getSingleResult();
     }
 
-    /**
-     * The method used for getting list of lessons from database by semesterId
-     *
-     * @param semesterId Semester id for getting all lessons by this id from db
-     * @return list of entities Lesson
-     */
     @Override
     public List<Lesson> getLessonsBySemester(Long semesterId) {
         log.info("In getLessonsBySemester(semesterId = [{}])", semesterId);
@@ -247,12 +213,6 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
                 .setParameter("semesterId", semesterId).executeUpdate();
     }
 
-    /**
-     * The method used for getting all lessons from database by subjectForSite, teacherForSite and semesterId
-     *
-     * @param lesson Lesson object for getting lessons from db by this param
-     * @return List of Lessons
-     */
     @Override
     public List<Lesson> getLessonsBySubjectIdTeacherIdSemesterIdLessonTypeAndExcludeCurrentLessonId(Lesson lesson) {
         log.info("In getLessonsBySubjectIdTeacherIdSemesterIdLessonTypeAndExcludeCurrentLessonId(lesson = [{}]", lesson);
@@ -266,12 +226,6 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
                 .getResultList();
     }
 
-    /**
-     * The method used for getting all lessons from database which are grouped by lesson
-     *
-     * @param lesson Lesson object for getting lessons
-     * @return List of Lessons
-     */
     @Override
     public List<Lesson> getGroupedLessonsByLesson(Lesson lesson) {
         log.info("getGroupedLessonsByLessonId(lesson = [{}]", lesson);
@@ -290,20 +244,13 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
     @Override
     protected boolean checkReference(Lesson lesson) {
         log.info("In checkReference(lesson = [{}])", lesson);
-        Long count = sessionFactory.getCurrentSession().createQuery
-                (COUNT_QUERY, Long.class)
+        Long count = sessionFactory.getCurrentSession()
+                .createQuery(COUNT_QUERY, Long.class)
                 .setParameter("lessonId", lesson.getId())
                 .getSingleResult();
         return count != 0;
     }
 
-    /**
-     * The method used for updating links to meeting for lessons.
-     * By default, link to meeting is updated by semester id and teacher id
-     * But update can be more specific by providing additional subject id and/or lesson type in a lesson object
-     * @param lesson Lesson object with new link to meeting
-     * @return Integer the number of links that was updated
-     */
     @Override
     public Integer updateLinkToMeeting(Lesson lesson) {
         log.info("In repository updateLinkToMeeting lesson = [{}]", lesson);
@@ -331,13 +278,8 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
         return sessionFactory.getCurrentSession().createQuery(criteriaUpdate).executeUpdate();
     }
 
-    /**
-     * Method is used to update grouped lessons
-     * @param updatedLesson grouped lesson that needs to be updated
-     * @return updated Lesson
-     */
     @Override
-    public Lesson updateGrouped(Lesson oldLesson,Lesson updatedLesson, boolean isTeacherOrSubjectUpdated) {
+    public Lesson updateGrouped(Lesson oldLesson, Lesson updatedLesson, boolean isTeacherOrSubjectUpdated) {
         log.info("Entered updateGroup({}, {})", oldLesson, updatedLesson);
         Session currentSession = sessionFactory.getCurrentSession();
         Query query = isTeacherOrSubjectUpdated
@@ -362,12 +304,6 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
         return updatedLesson;
     }
 
-    /**
-     * The method is used to delete all lessons grouped
-     *
-     * @param lesson grouped lesson which must be deleted
-     * @return deleted lesson
-     */
     @Override
     public Lesson deleteGrouped(Lesson lesson) {
         log.info("Entered deleteGrouped({})", lesson);
@@ -385,7 +321,7 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
     }
 
     @Override
-    public int setGrouped(Long lessonId){
+    public int setGrouped(Long lessonId) {
         log.info("Entered setGrouped({})", lessonId);
         return sessionFactory.getCurrentSession()
                 .createQuery(SET_GROUPED)

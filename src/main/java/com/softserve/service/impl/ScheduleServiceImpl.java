@@ -53,7 +53,6 @@ public class ScheduleServiceImpl implements ScheduleService {
     private final LessonForTeacherScheduleMapper lessonForTeacherScheduleMapper;
     private final TemporaryScheduleMapper temporaryScheduleMapper;
 
-
     @Autowired
     public ScheduleServiceImpl(ScheduleRepository scheduleRepository, LessonService lessonService, RoomService roomService,
                                GroupService groupService, TeacherService teacherService,
@@ -132,12 +131,6 @@ public class ScheduleServiceImpl implements ScheduleService {
         }
     }
 
-    /**
-     * Method create List of schedules in accordance to grouped lessons
-     *
-     * @param schedule Schedule entity with grouped lesson
-     * @return List of schedules for grouped lessons
-     */
     @Override
     public List<Schedule> schedulesForGroupedLessons(Schedule schedule) {
         log.info("In schedulesForGroupedLessons(schedule = [{}]", schedule);
@@ -177,7 +170,6 @@ public class ScheduleServiceImpl implements ScheduleService {
         }
     }
 
-
     /**
      * Method updates information for an existing Schedule in Repository
      *
@@ -207,16 +199,6 @@ public class ScheduleServiceImpl implements ScheduleService {
         return scheduleRepository.delete(object);
     }
 
-    /**
-     * Method returns necessary info to finish saving schedule
-     *
-     * @param semesterId the semester id in which schedule have to be saved
-     * @param dayOfWeek  the semester id in which schedule have to be saved
-     * @param evenOdd    lesson occurs by EVEN/ODD/WEEKLY
-     * @param classId    period id in which schedule have to be saved
-     * @param lessonId   lesson id that pretends t be saved
-     * @return CreateScheduleInfoDTO - necessary info to finish saving schedule
-     */
     @Override
     public CreateScheduleInfoDTO getInfoForCreatingSchedule(Long semesterId, DayOfWeek dayOfWeek, EvenOdd evenOdd, Long classId, Long lessonId) {
         log.info("In getInfoForCreatingSchedule (semesterId = [{}], dayOfWeek = [{}], evenOdd = [{}], classId = [{}], lessonId = [{}])", semesterId, dayOfWeek, evenOdd, classId, lessonId);
@@ -233,7 +215,6 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     }
 
-    //verifies if group has conflict in schedule when it saves
     @Override
     public boolean isConflictForGroupInSchedule(Long semesterId, DayOfWeek dayOfWeek, EvenOdd evenOdd, Long classId, Long lessonId) {
         log.info("In isConflictForGroupInSchedule(semesterId = [{}], dayOfWeek = [{}], evenOdd = [{}], classId = [{}], lessonId = [{}])", semesterId, dayOfWeek, evenOdd, classId, lessonId);
@@ -243,7 +224,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         return scheduleRepository.conflictForGroupInSchedule(semesterId, dayOfWeek, evenOdd, classId, groupId) != 0;
     }
 
-    //verifies if teacher already has another schedule at  at some semester (by semester id) at some day for some period(by classId)
+    //verifies if teacher already has another schedule at some semester (by semester id) at some day for some period(by classId)
     private boolean isTeacherAvailableForSchedule(Long semesterId, DayOfWeek dayOfWeek, EvenOdd evenOdd, Long classId, Long lessonId) {
         log.info("In isTeacherAvailable (semesterId = [{}], dayOfWeek = [{}], evenOdd = [{}], classId = [{}], lessonId = [{}]", semesterId, dayOfWeek, evenOdd, classId, lessonId);
         //Get teacher ID from Lesson by lesson ID to search further by teacher ID
@@ -251,13 +232,6 @@ public class ScheduleServiceImpl implements ScheduleService {
         return scheduleRepository.conflictForTeacherInSchedule(semesterId, dayOfWeek, evenOdd, classId, teacherId) == 0;
     }
 
-    /**
-     * Method gets full schedule for groups in particular semester
-     *
-     * @param semesterId id of semester
-     * @param groupId    group id
-     * @return filled schedule for group
-     */
     @Override
     public List<ScheduleForGroupDTO> getFullScheduleForGroup(Long semesterId, Long groupId) {
         log.info("In getFullSchedule(semesterId = [{}], groupId[{}])", semesterId, groupId);
@@ -346,12 +320,6 @@ public class ScheduleServiceImpl implements ScheduleService {
         return scheduleRepository.countSchedulesForGroupInSemester(semesterId, groupId) != 0;
     }
 
-    /**
-     * Method gets full schedule for groups in particular semester
-     *
-     * @param semesterId id of semester
-     * @return filled schedule for all groups that have any lessons in that semester
-     */
     @Override
     public ScheduleFullDTO getFullScheduleForSemester(Long semesterId) {
         ScheduleFullDTO scheduleFullDTO = new ScheduleFullDTO();
@@ -412,7 +380,6 @@ public class ScheduleServiceImpl implements ScheduleService {
         }
     }
 
-
     private List<ScheduleForGroupDTO> addTemporaryScheduleToScheduleForGroup(Long semesterId, List<ScheduleForGroupDTO> scheduleForGroupDTOList) {
         Map<EvenOdd, Map<DayOfWeek, List<TemporarySchedule>>> temporarySchedules = temporaryScheduleService.getTemporaryScheduleForEvenOddWeeks(semesterId);
         for (ScheduleForGroupDTO scheduleForGroupDTO : scheduleForGroupDTOList) {
@@ -421,14 +388,13 @@ public class ScheduleServiceImpl implements ScheduleService {
         return scheduleForGroupDTOList;
     }
 
-
     private TemporaryScheduleDTOForDashboard compareScheduleWithTemporarySchedule(List<TemporarySchedule> temporarySchedules, Long groupId, Long periodId, Long teacherId) {
         TemporaryScheduleDTOForDashboard temporaryScheduleDTO = new TemporaryScheduleDTOForDashboard();
         TemporarySchedule temporarySchedule = temporarySchedules.stream().filter(temporarySchedule1 ->
-                !temporarySchedule1.isVacation() && temporarySchedule1.getScheduleId() != null
-                        && temporarySchedule1.getPeriod().getId() == periodId
-                        && temporarySchedule1.getGroup().getId().equals(groupId)
-        )
+                        !temporarySchedule1.isVacation() && temporarySchedule1.getScheduleId() != null
+                                && temporarySchedule1.getPeriod().getId() == periodId
+                                && temporarySchedule1.getGroup().getId().equals(groupId)
+                )
                 .findFirst().orElse(temporarySchedules.stream().filter(temporarySchedule1 ->
                         temporarySchedule1.getScheduleId() != null &&
                                 temporarySchedule1.getPeriod().getId() == periodId
@@ -446,7 +412,6 @@ public class ScheduleServiceImpl implements ScheduleService {
         temporaryScheduleDTO = temporaryScheduleMapper.convertToDtoForDashboard(temporarySchedule);
         return temporaryScheduleDTO;
     }
-
 
     private List<DaysOfWeekWithClassesForGroupDTO> getDaysForSemester(Long semesterId, Long groupId) {
         log.info("In getDaysForSemester(semesterId = [{}])", semesterId);
@@ -479,13 +444,6 @@ public class ScheduleServiceImpl implements ScheduleService {
         return classesInScheduleForGroupDTOList;
     }
 
-    /**
-     * Method gets full schedule for teacher in particular semester
-     *
-     * @param semesterId id of semester
-     * @param teacherId  id of teacher
-     * @return filled schedule for teacher
-     */
     @Override
     public ScheduleForTeacherDTO getScheduleForTeacher(Long semesterId, Long teacherId) {
         log.info("In getScheduleForTeacher(semesterId = [{}], teacherId[{}])", semesterId, teacherId);
@@ -543,7 +501,6 @@ public class ScheduleServiceImpl implements ScheduleService {
         return scheduleForTeacherDTO;
     }
 
-
     private ClassesInScheduleForTeacherDTO getInfoForTeacherScheduleByWeek(Long semesterId, Long teacherId, DayOfWeek day, EvenOdd evenOdd) {
         List<ClassForTeacherScheduleDTO> classForTeacherScheduleDTOList = new ArrayList<>();
 
@@ -588,16 +545,6 @@ public class ScheduleServiceImpl implements ScheduleService {
         return scheduleRepository.getScheduleBySemester(semesterId);
     }
 
-
-    /**
-     * Method temporaryScheduleByDateRangeForTeacher get all schedules and temporary schedules from db in particular date range
-     * temporaryScheduleByDateRangeForTeacher
-     *
-     * @param fromDate  LocalDate from
-     * @param toDate    LocalDate to
-     * @param teacherId id teacher
-     * @return list of schedules and temporary schedules
-     */
     @Override
     public Map<LocalDate, Map<Period, Map<Schedule, TemporarySchedule>>> temporaryScheduleByDateRangeForTeacher(LocalDate fromDate, LocalDate toDate, Long teacherId) {
         log.info("In temporaryScheduleByDateRangeForTeacher with fromDate = {} and toDate = {} and teacher = {}", fromDate, toDate, teacherId);
@@ -617,62 +564,30 @@ public class ScheduleServiceImpl implements ScheduleService {
         return convertToMapTemporaryScheduleDateRange(fullScheduleForTeacherByDateRange(dateRangeSchedule, fromDate, toDate), temporarySchedules, vacationByDateRange);
     }
 
-    /**
-     * Method deleteSchedulesBySemesterId delete all schedules from db in with current semesterId
-     *
-     * @param semesterId id Semester for delete schedule
-     */
     @Override
     public void deleteSchedulesBySemesterId(Long semesterId) {
         log.info("In deleteSchedulesBySemesterId with semesterId = {}", semesterId);
         scheduleRepository.deleteSchedulesBySemesterId(semesterId);
     }
 
-    /**
-     * Method saveScheduleDuringCopy save Schedule in db
-     *
-     * @param schedule Schedule entity for save schedule in db
-     * @return Schedule entity after saved in db
-     */
     @Override
     public Schedule saveScheduleDuringCopy(Schedule schedule) {
         log.info("In saveScheduleDuringCopy with schedule = {}", schedule);
         return scheduleRepository.save(schedule);
     }
 
-    /**
-     * Method updateWithoutChecks update Schedule in db
-     *
-     * @param schedule Schedule entity for update schedule in db
-     * @return Schedule entity after update in db
-     */
     @Override
     public Schedule updateWithoutChecks(Schedule schedule) {
         log.info("In updateWithoutChecks with schedule = {}", schedule);
         return scheduleRepository.update(schedule);
     }
 
-    /**
-     * Method counts schedule records in db for lesson by lessonsId
-     *
-     * @param lessonId id of the lesson
-     * @return number of records in db
-     */
     @Override
     public Long countInputLessonsInScheduleByLessonId(Long lessonId) {
         log.info("In countInputLessonsInScheduleByLessonId(lessonId = [{}])", lessonId);
         return scheduleRepository.countInputLessonsInScheduleByLessonId(lessonId);
     }
 
-    /**
-     * Method return boolean value for schedule records in db by lessonsId, periodId, EvenOdd and DayOfWeek
-     *
-     * @param lessonId id of the lesson
-     * @param periodId id of the Period
-     * @param evenOdd  Even/Odd
-     * @param day      day of Week
-     * @return true if count equals 0 and false in another case
-     */
     @Override
     public boolean isLessonInScheduleByLessonIdPeriodIdEvenOddDayOfWeek(Long lessonId, Long periodId, EvenOdd evenOdd, DayOfWeek day) {
         log.info("In countByLessonIdPeriodIdEvenOddDayOfWeek(lessonId = [{}], periodId = [{}], evenOdd = [{}], day = [{}])", lessonId, periodId, evenOdd, day);
@@ -779,7 +694,6 @@ public class ScheduleServiceImpl implements ScheduleService {
         return map;
     }
 
-
     private Map<LocalDate, Map<Period, Map<Schedule, TemporarySchedule>>> convertToMapTemporaryScheduleDateRange(Map<LocalDate, Map<Period, List<Schedule>>> scheduleByDateRange,
                                                                                                                  List<TemporarySchedule> temporarySchedules,
                                                                                                                  List<TemporarySchedule> vacationByDateRangeForTeacher) {
@@ -826,12 +740,6 @@ public class ScheduleServiceImpl implements ScheduleService {
         return map;
     }
 
-    /**
-     * The method used for sending schedules to teachers
-     *
-     * @param semesterId semester for schedule
-     * @param teachersId id of teachers to whom we need to send the schedule
-     */
     @Override
     public void sendScheduleToTeachers(Long semesterId, Long[] teachersId, Locale language) {
         log.info("Enter into sendScheduleToTeachers of TeacherServiceImpl");
@@ -844,12 +752,6 @@ public class ScheduleServiceImpl implements ScheduleService {
         });
     }
 
-    /**
-     * The method used for sending schedules to one teacher
-     *
-     * @param semesterId semester for schedule
-     * @param teacherId  id of teacher to which we need to send the schedule
-     */
     @Override
     public void sendScheduleToTeacher(Long semesterId, Long teacherId, Locale language) throws MessagingException {
         log.info("Enter into sendScheduleToTeacher of TeacherServiceImpl");
@@ -865,14 +767,9 @@ public class ScheduleServiceImpl implements ScheduleService {
                 bos);
     }
 
-    /**
-     * The method is used for getting list of schedules grouped by rooms
-     * @param semesterId Id of Semester
-     * @return grouped List of schedule's list
-     */
     @Override
     @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
-    public Map<Room, List<Schedule>>  getAllOrdered(Long semesterId){
+    public Map<Room, List<Schedule>> getAllOrdered(Long semesterId) {
         log.info("Entered getAllOrdered({})", semesterId);
         return scheduleRepository
                 .getAllOrdered(semesterId)

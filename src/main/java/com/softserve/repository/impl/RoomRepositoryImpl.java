@@ -102,14 +102,6 @@ public class RoomRepositoryImpl extends BasicRepositoryImpl<Room, Long> implemen
                 .getResultList();
     }
 
-    /**
-     * The method used for getting list of free room by specific period, day of week and number of week from database
-     *
-     * @param idOfPeriod identity number of period
-     * @param dayOfWeek  day of the week
-     * @param evenOdd    number of week
-     * @return list of rooms
-     */
     @Override
     public List<Room> freeRoomBySpecificPeriod(Long idOfPeriod, DayOfWeek dayOfWeek, EvenOdd evenOdd) {
         log.info("Enter into freeRoomBySpecificPeriod of RoomRepositoryImpl with id {}, dayOfWeek {} and evenOdd {} ",
@@ -191,10 +183,6 @@ public class RoomRepositoryImpl extends BasicRepositoryImpl<Room, Long> implemen
                 .getSingleResult();
     }
 
-    /**
-     * The method used for getting list of entities from database
-     * @return list of entities ordered by sortOrder and title
-     */
     @Override
     public List<Room> getAllOrdered() {
         log.info("In getAll()");
@@ -203,29 +191,16 @@ public class RoomRepositoryImpl extends BasicRepositoryImpl<Room, Long> implemen
                 .getResultList();
     }
 
-    /**
-     * This method for getting max sort_order form database
-     * @return max sorting order
-     */
     @Override
     public Optional<Double> getMaxSortOrder() {
         return getSession().createQuery(GET_MAX_SORTING_ORDER, Double.class).uniqueResultOptional();
     }
 
-    /**
-     * This method for getting min sort_order form database
-     * @return min sorting order
-     */
     @Override
     public Optional<Double> getMinSortOrder() {
         return getSession().createQuery(GET_MIN_SORTING_ORDER, Double.class).uniqueResultOptional();
     }
 
-    /**
-     * This method for getting sorting order of the next element
-     * @param position sorting order of the element
-     * @return sorting order of the nex element
-     */
     @Override
     public Optional<Double> getNextPosition(Double position) {
         return getSession().createQuery(GET_NEXT_POSITION, Double.class)
@@ -233,11 +208,6 @@ public class RoomRepositoryImpl extends BasicRepositoryImpl<Room, Long> implemen
                 .uniqueResultOptional();
     }
 
-    /**
-     * This method for retrieving sorting order by rooms id
-     * @param afterId rooms id which sorting order needs to be retrieved
-     * @return sorting order of the room
-     */
     @Override
     public Optional<Double> getSortOrderAfterId(Long afterId) {
         return getSession().createQuery(GET_AFTER_ID_SORT_ORDER, Double.class)

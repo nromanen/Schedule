@@ -25,13 +25,6 @@ public class ArchiveServiceImpl implements ArchiveService {
         this.archiveRepository = archiveRepository;
     }
 
-    /**
-     * The method used for getting schedule from mongo database by semesterId
-     *
-     * @param semesterId Semester id for getting schedule by this id from mongo db
-     * @return ScheduleFullForArchiveDTO
-     * @throws EntityNotFoundException if schedule by current semesterId not found
-     */
     @Override
     public ScheduleFullForArchiveDTO getArchiveScheduleBySemesterId(Long semesterId) {
         log.info("In getArchiveScheduleBySemesterId with semesterId = {}", semesterId);
@@ -40,39 +33,23 @@ public class ArchiveServiceImpl implements ArchiveService {
         );
     }
 
-    /**
-     * The method used for getting all of archived schedules from mongo database
-     *
-     * @return list of semesters
-     */
     @Override
     public List<SemesterDTO> getAllSemestersInArchiveSchedule() {
         log.info("In getAllSemestersInArchiveSchedule");
         List<ScheduleFullForArchiveDTO> schedules = archiveRepository.getAllArchiveSchedule();
         List<SemesterDTO> semesters = new ArrayList<>();
-        for (ScheduleFullForArchiveDTO schedule: schedules) {
+        for (ScheduleFullForArchiveDTO schedule : schedules) {
             semesters.add(schedule.getSemester());
         }
         return semesters;
     }
 
-    /**
-     * The method used for save schedule in mongo database
-     *
-     * @param scheduleFullForArchiveDTO object ScheduleFullForArchiveDTO for save schedule in mongo db
-     * @return ScheduleFullForArchiveDTO object
-     */
     @Override
     public ScheduleFullForArchiveDTO saveScheduleForArchive(ScheduleFullForArchiveDTO scheduleFullForArchiveDTO) {
         log.info("In saveScheduleForArchive with scheduleForArchiveDTO = {}", scheduleFullForArchiveDTO);
         return archiveRepository.saveScheduleForArchive(scheduleFullForArchiveDTO);
     }
 
-    /**
-     * The method used for delete schedule from mongo database by semesterId
-     *
-     * @param semesterId Semester id use for delete schedule by this id from mongo db
-     */
     @Override
     public void deleteArchiveScheduleBySemesterId(Long semesterId) {
         log.info("In removeArchiveScheduleBySemesterId with semesterId = {}", semesterId);
