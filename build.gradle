@@ -12,6 +12,7 @@ plugins {
     id 'war'
     id 'java'
     id "org.sonarqube" version "3.3"
+    id 'jacoco'
 }
 
 group 'com.softserve'
@@ -34,6 +35,7 @@ task copyToLib(type: Copy) {
 test {
     useJUnit()
     maxHeapSize = '1G'
+    finalizedBy jacocoTestReport
 }
 if (System.getenv('$buildDir') != "") {
     stage.dependsOn(copyToLib)
@@ -48,6 +50,32 @@ sonarqube {
         property "sonar.host.url", "https://sonarcloud.io"
     }
 }
+
+jacoco {
+    toolVersion = "0.8.7"
+}
+
+jacocoTestReport {
+    dependsOn(test)
+    reports {
+        xml.enabled(true)
+    }
+}
+
+jacocoTestCoverageVerification {
+    violationRules {
+        failOnViolation = true
+        rule {
+            limit {
+                minimum = 0.5
+            }
+        }
+    }
+}
+
+check.dependsOn jacocoTestCoverageVerification
+
+apply from: "$projectDir/pre-commit.gradle"
 
 dependencies {
     testImplementation group: 'junit', name: 'junit', version: '4.11'
