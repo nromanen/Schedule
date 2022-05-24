@@ -17,6 +17,11 @@ public class SubjectRepositoryImpl extends BasicRepositoryImpl<Subject, Long> im
     private static final String GET_SUBJECTS = "SELECT new com.softserve.dto.SubjectWithTypeDTO(l.subject, l.lessonType) " +
             "FROM Lesson l WHERE l.teacher.id = :teacherId AND l.semester.id = :semesterId";
 
+    /**
+     * Returns the current session with the "subjectDisableFilter" filter enabled.
+     *
+     * @return the current session with the "subjectDisableFilter" filter enabled
+     */
     private Session getSession() {
         Session session = sessionFactory.getCurrentSession();
         Filter filter = session.enableFilter("subjectDisableFilter");
@@ -25,9 +30,9 @@ public class SubjectRepositoryImpl extends BasicRepositoryImpl<Subject, Long> im
     }
 
     /**
-     * Method gets information about all subjects from DB
+     * Returns all subjects from database with ascending sorting by name.
      *
-     * @return List of all subjects with ASCII sorting by name
+     * @return the list of subjects with ascending sorting by name
      */
     @Override
     public List<Subject> getAll() {
@@ -37,6 +42,9 @@ public class SubjectRepositoryImpl extends BasicRepositoryImpl<Subject, Long> im
                 .getResultList();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Long countSubjectsWithName(String name) {
         log.info("In countSubjectsWithName(name = [{}])", name);
@@ -45,6 +53,9 @@ public class SubjectRepositoryImpl extends BasicRepositoryImpl<Subject, Long> im
                 .setParameter("name", name).getSingleResult();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Long countSubjectsWithNameAndIgnoreWithId(Long id, String name) {
         log.info("In countSubjectsWithName(name = [{}])", name);
@@ -53,6 +64,9 @@ public class SubjectRepositoryImpl extends BasicRepositoryImpl<Subject, Long> im
                 .setParameter("name", name).setParameter("id", id).getSingleResult();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Long countBySubjectId(Long id) {
         log.info("In countBySubjectId(id = [{}])", id);
@@ -61,7 +75,12 @@ public class SubjectRepositoryImpl extends BasicRepositoryImpl<Subject, Long> im
                 .setParameter("id", id).getSingleResult();
     }
 
-    // Checking if subject is used in Lesson table
+    /**
+     * Checks if subject is used in Lesson table.
+     *
+     * @param subject the group entity to be checked
+     * @return {@code true} if exists lesson related with given subject, otherwise {@code false}
+     */
     @Override
     protected boolean checkReference(Subject subject) {
         log.info("In checkReference(subject = [{}])", subject);
@@ -73,6 +92,9 @@ public class SubjectRepositoryImpl extends BasicRepositoryImpl<Subject, Long> im
         return count != 0;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<SubjectWithTypeDTO> getSubjectsWithTypes(Long semesterId, Long teacherId) {
         log.info("In repository getSubjects(semesterId = [{}], teacherId = [{}])", semesterId, teacherId);

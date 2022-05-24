@@ -29,6 +29,9 @@ public abstract class BasicRepositoryImpl<T extends Serializable, I extends Seri
                 .getActualTypeArguments()[0];
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<T> getAll() {
         log.info("In getAll()");
@@ -37,12 +40,18 @@ public abstract class BasicRepositoryImpl<T extends Serializable, I extends Seri
                 .getResultList();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<T> findById(I id) {
         log.info("In findById(id = [{}])", id);
         return Optional.ofNullable(sessionFactory.getCurrentSession().get(basicClass, id));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public T save(T entity) {
         log.info("In save(entity = [{}]", entity);
@@ -51,6 +60,9 @@ public abstract class BasicRepositoryImpl<T extends Serializable, I extends Seri
         return entity;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public T update(T entity) {
         log.info("In update(entity = [{}]", entity);
@@ -59,6 +71,9 @@ public abstract class BasicRepositoryImpl<T extends Serializable, I extends Seri
         return entity;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public T delete(T entity) {
         log.info("In delete(entity = [{}])", entity);
@@ -71,16 +86,19 @@ public abstract class BasicRepositoryImpl<T extends Serializable, I extends Seri
     }
 
     /**
-     * The method used for checking if entity is used in another tables
+     * Checks if entity is used in another tables.
      *
-     * @param entity entity is going to be checked
-     * @return true if there's constraint violation
+     * @param entity the entity to be checked
+     * @return {@code true} if entity is used in another tables, otherwise {@code false}
      */
     protected boolean checkReference(T entity) {
         log.info("In checkReference(entity = [{}])", entity);
         return false;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<T> getDisabled() {
         log.info("In getDisabled");

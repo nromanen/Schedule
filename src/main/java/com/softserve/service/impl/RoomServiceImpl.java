@@ -31,11 +31,7 @@ public class RoomServiceImpl implements RoomService {
     }
 
     /**
-     * The method used for getting room by id
-     *
-     * @param id Identity number of room
-     * @return target room
-     * @throws EntityNotFoundException if room doesn't exist
+     * {@inheritDoc}
      */
     @Override
     public Room getById(Long id) {
@@ -46,9 +42,7 @@ public class RoomServiceImpl implements RoomService {
     }
 
     /**
-     * The method used for getting all rooms
-     *
-     * @return list of rooms
+     * {@inheritDoc}
      */
     @Override
     public List<Room> getAll() {
@@ -56,6 +50,9 @@ public class RoomServiceImpl implements RoomService {
         return roomRepository.getAll();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<Room> getDisabled() {
         log.info("Enter into getAll of getDisabled");
@@ -63,10 +60,9 @@ public class RoomServiceImpl implements RoomService {
     }
 
     /**
-     * The method used for saving room in database
+     * {@inheritDoc}
      *
-     * @param object room
-     * @return save room
+     * @throws EntityAlreadyExistsException if given room already exists
      */
     @Override
     public Room save(Room object) {
@@ -79,10 +75,9 @@ public class RoomServiceImpl implements RoomService {
     }
 
     /**
-     * The method used for updating existed room in database
+     * {@inheritDoc}
      *
-     * @param object room
-     * @return room before update
+     * @throws EntityAlreadyExistsException if there is already another room with parameters as in the given room
      */
     @Override
     public Room update(Room object) {
@@ -95,10 +90,7 @@ public class RoomServiceImpl implements RoomService {
     }
 
     /**
-     * The method used for deleting existed room in database
-     *
-     * @param object room
-     * @return deleted room
+     * {@inheritDoc}
      */
     @Override
     public Room delete(Room object) {
@@ -106,6 +98,9 @@ public class RoomServiceImpl implements RoomService {
         return roomRepository.delete(object);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<Room> freeRoomBySpecificPeriod(Long idOfPeriod, DayOfWeek dayOfWeek, EvenOdd evenOdd) {
         log.info("Enter into freeRoomBySpecificPeriod of RoomServiceImpl with id {}, dayOfWeek {} and evenOdd {} ",
@@ -113,16 +108,25 @@ public class RoomServiceImpl implements RoomService {
         return roomRepository.freeRoomBySpecificPeriod(idOfPeriod, dayOfWeek, evenOdd);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<Room> getNotAvailableRoomsForSchedule(Long semesterId, DayOfWeek dayOfWeek, EvenOdd evenOdd, Long classId) {
         return roomRepository.getNotAvailableRoomsForSchedule(semesterId, dayOfWeek, evenOdd, classId);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<Room> getAvailableRoomsForSchedule(Long semesterId, DayOfWeek dayOfWeek, EvenOdd evenOdd, Long classId) {
         return roomRepository.getAvailableRoomsForSchedule(semesterId, dayOfWeek, evenOdd, classId);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<RoomForScheduleInfoDTO> getAllRoomsForCreatingSchedule(Long semesterId, DayOfWeek dayOfWeek, EvenOdd evenOdd, Long classId) {
         List<RoomForScheduleInfoDTO> rooms = roomForScheduleInfoMapper.toRoomForScheduleDTOList(getAvailableRoomsForSchedule(semesterId, dayOfWeek, evenOdd, classId));
@@ -131,17 +135,26 @@ public class RoomServiceImpl implements RoomService {
         return rooms;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isRoomExists(Room room) {
         return roomRepository.countRoomDuplicates(room) != 0;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<Room> getAllOrdered() {
         log.info("Entered getAllOrdered()");
         return roomRepository.getAllOrdered();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Transactional
     @Override
     public Room saveRoomAfterId(Room room, Long afterId) {
@@ -163,6 +176,9 @@ public class RoomServiceImpl implements RoomService {
         return roomRepository.save(room);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Transactional
     @Override
     public Room updateRoomAfterId(Room room, Long afterId) {

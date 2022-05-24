@@ -23,6 +23,9 @@ public class ArchiveRepositoryImpl implements ArchiveRepository {
         this.mongoOperations = mongoOperations;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<ScheduleFullForArchiveDTO> getArchiveScheduleBySemesterId(Long semesterId) {
         log.info("In getArchiveScheduleBySemesterId with semesterId = {}", semesterId);
@@ -30,18 +33,27 @@ public class ArchiveRepositoryImpl implements ArchiveRepository {
                 mongoOperations.findOne(new Query().addCriteria(Criteria.where("semester.id").is(semesterId)), ScheduleFullForArchiveDTO.class));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<ScheduleFullForArchiveDTO> getAllArchiveSchedule() {
         log.info("In getAllArchiveSchedule");
         return mongoOperations.findAll(ScheduleFullForArchiveDTO.class);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public ScheduleFullForArchiveDTO saveScheduleForArchive(ScheduleFullForArchiveDTO fullScheduleForArchiveDTO) {
         log.info("In saveScheduleForArchive with scheduleForArchiveDTO = {}", fullScheduleForArchiveDTO);
         return mongoOperations.insert(fullScheduleForArchiveDTO);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void deleteArchiveScheduleBySemesterId(Long semesterId) {
         log.info("In removeArchiveScheduleBySemesterId with semesterId = {}", semesterId);

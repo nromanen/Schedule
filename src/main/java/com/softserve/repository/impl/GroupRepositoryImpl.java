@@ -85,9 +85,9 @@ public class GroupRepositoryImpl extends BasicRepositoryImpl<Group, Long> implem
     }
 
     /**
-     * Method gets information about all groups from DB
+     * Returns all groups from database with ascending sorting by title.
      *
-     * @return List of all groups with ASC sorting by title
+     * @return the list of all groups
      */
     @Override
     public List<Group> getAll() {
@@ -97,6 +97,9 @@ public class GroupRepositoryImpl extends BasicRepositoryImpl<Group, Long> implem
                 .getResultList();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<Group> getByTeacherId(Long id) {
         log.info("In repository getByTeacherId(id = [{}])", id);
@@ -106,6 +109,9 @@ public class GroupRepositoryImpl extends BasicRepositoryImpl<Group, Long> implem
                 .getResultList();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<Group> getAllBySortingOrder() {
         log.debug("Entered getAllBySortingOrder()");
@@ -114,6 +120,9 @@ public class GroupRepositoryImpl extends BasicRepositoryImpl<Group, Long> implem
                 .getResultList();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<Integer> getMaxSortingOrder() {
         log.debug("Entered getMaxSortingOrder()");
@@ -121,6 +130,9 @@ public class GroupRepositoryImpl extends BasicRepositoryImpl<Group, Long> implem
                 .uniqueResultOptional();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void changeGroupOrderOffset(Integer lowerBound, Integer upperBound) {
         log.info("Entered changeGroupOffset({}, {})", lowerBound, upperBound);
@@ -131,6 +143,9 @@ public class GroupRepositoryImpl extends BasicRepositoryImpl<Group, Long> implem
         log.debug("Updated order of {} groups", updated);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<Integer> getSortingOrderById(Long id) {
         log.info("Entered getSortingOrderById({})", id);
@@ -139,6 +154,9 @@ public class GroupRepositoryImpl extends BasicRepositoryImpl<Group, Long> implem
                 .uniqueResultOptional();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<Group> getWithStudentsById(Long id) {
         log.info("In getWithStudentsById(id = [{}])", id);
@@ -148,6 +166,9 @@ public class GroupRepositoryImpl extends BasicRepositoryImpl<Group, Long> implem
                 .uniqueResultOptional();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isExistsByTitle(String title) {
         log.info("In isExistsByTitle(title = [{}])", title);
@@ -160,6 +181,9 @@ public class GroupRepositoryImpl extends BasicRepositoryImpl<Group, Long> implem
                 .getSingleResult();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isExistsByTitleIgnoringId(String title, Long id) {
         log.info("In isExistsByTitleIgnoringId(id = [{}], title = [{}])", id, title);
@@ -173,6 +197,9 @@ public class GroupRepositoryImpl extends BasicRepositoryImpl<Group, Long> implem
                 .getSingleResult();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isExistsById(Long id) {
         log.info("In isExistsById(id = [{}])", id);
@@ -183,10 +210,10 @@ public class GroupRepositoryImpl extends BasicRepositoryImpl<Group, Long> implem
     }
 
     /**
-     * The method used for checking if group is used in Lesson table
+     * Checks if group is used in lesson table.
      *
-     * @param group Group entity is going to be checked
-     * @return true if exists lesson related with this group
+     * @param group the group entity to be checked
+     * @return {@code true} if exists lesson related with given group
      */
     @Override
     protected boolean checkReference(Group group) {
@@ -197,6 +224,9 @@ public class GroupRepositoryImpl extends BasicRepositoryImpl<Group, Long> implem
                 .getSingleResult();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<Group> getGroupsByGroupIds(List<Long> groupIds) {
         return getSession()

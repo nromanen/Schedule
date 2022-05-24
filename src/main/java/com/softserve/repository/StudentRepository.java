@@ -6,25 +6,36 @@ import java.util.Optional;
 
 public interface StudentRepository extends BasicRepository<Student, Long> {
 
+    /**
+     * Retrieves a student from the database by full name.
+     * @param student the student with given full name
+     * @return an Optional describing the student with the given id or an empty Optional if none found
+     */
     Optional<Student> getExistingStudent(Student student);
 
     /**
-     * The method used for finding out if Student exists by email
+     * Returns {@code true} if given email exists in the database.
      *
-     * @param email String email used to find Student
-     * @return boolean : if exists - true, else - false
+     * @param email the string represents the email
+     * @return {@code true} if given email exists, otherwise {@code false}
      */
     boolean isEmailInUse(String email);
 
     /**
-     * The method used for finding out if Student exists by email and id
+     * Returns {@code true} if there is a student with given email and id in the database.
      *
-     * @param email String email used to find Student
-     * @param id    Long id, which is used to find Student
-     * @return boolean : if exists - true, else - false
+     * @param email the string represents an email
+     * @param id    the id of the student
+     * @return {@code true} if there is a student with given email and id, otherwise {@code false}
      */
     boolean isEmailForThisStudent(String email, Long id);
 
+    /**
+     * Returns {@code true} if there is a student with given id, otherwise false.
+     *
+     * @param id the id of the student
+     * @return {@code true} if there is a student with given id, otherwise false
+     */
     boolean isIdPresent(Long id);
 
 }

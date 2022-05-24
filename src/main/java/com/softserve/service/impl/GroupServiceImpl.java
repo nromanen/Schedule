@@ -32,11 +32,7 @@ public class GroupServiceImpl implements GroupService {
     }
 
     /**
-     * Method gets group by id  from Repository
-     *
-     * @param id Identity number of the group
-     * @return Group entity
-     * @throws EntityNotFoundException if Group with id doesn't exist
+     * {@inheritDoc}
      */
     @Transactional(readOnly = true)
     @Override
@@ -46,6 +42,9 @@ public class GroupServiceImpl implements GroupService {
                 .orElseThrow(() -> new EntityNotFoundException(Group.class, "id", id.toString()));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Transactional(readOnly = true)
     @Override
     public Group getWithStudentsById(Long id) {
@@ -55,9 +54,7 @@ public class GroupServiceImpl implements GroupService {
     }
 
     /**
-     * Method gets information about all groups from Repository
-     *
-     * @return List of all groups
+     * {@inheritDoc}
      */
     @Transactional(readOnly = true)
     @Override
@@ -66,6 +63,9 @@ public class GroupServiceImpl implements GroupService {
         return groupRepository.getAll();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Transactional(readOnly = true)
     @Override
     public List<Group> getByTeacherId(Long id) {
@@ -73,6 +73,9 @@ public class GroupServiceImpl implements GroupService {
         return groupRepository.getByTeacherId(id);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Transactional(readOnly = true)
     @Override
     public List<Group> getAllBySortingOrder() {
@@ -82,6 +85,9 @@ public class GroupServiceImpl implements GroupService {
         return groups;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Transactional
     @Override
     public Group saveAfterOrder(Group group, Long afterId) {
@@ -99,6 +105,9 @@ public class GroupServiceImpl implements GroupService {
         return groupRepository.save(group);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Transactional
     @Override
     public Group updateGroupOrder(Group group, Long afterId) {
@@ -119,6 +128,13 @@ public class GroupServiceImpl implements GroupService {
         return groupRepository.update(group);
     }
 
+    /**
+     * Retrieves sorting order by group id.
+     *
+     * @param id the id of the group
+     * @return the sorting order of the group
+     * @throws SortingOrderNotExistsException if sorting order not exists
+     */
     private Integer getSortingOrderById(Long id) {
         log.debug("Entered getSortingOrderById({})", id);
         return groupRepository.getSortingOrderById(id)
@@ -126,11 +142,9 @@ public class GroupServiceImpl implements GroupService {
     }
 
     /**
-     * Method saves new group to Repository
+     * {@inheritDoc}
      *
-     * @param group Group entity with info to be saved
-     * @return saved Group entity
-     * @throws FieldAlreadyExistsException if Group with input title already exists
+     * @throws FieldAlreadyExistsException if group with input title already exists
      */
     @Transactional
     @Override
@@ -141,10 +155,9 @@ public class GroupServiceImpl implements GroupService {
     }
 
     /**
-     * Method updates information for an existing group in  Repository
+     * {@inheritDoc}
      *
-     * @param group Group entity with info to be updated
-     * @return updated Group entity
+     * @throws FieldAlreadyExistsException if another group with input title already exists
      */
     @Transactional
     @Override
@@ -156,10 +169,7 @@ public class GroupServiceImpl implements GroupService {
     }
 
     /**
-     * Method deletes an existing group from Repository
-     *
-     * @param group Group entity to be deleted
-     * @return deleted Group entity
+     * {@inheritDoc}
      */
     @Transactional
     @Override
@@ -168,6 +178,9 @@ public class GroupServiceImpl implements GroupService {
         return groupRepository.delete(group);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Transactional(readOnly = true)
     @Override
     public boolean isExistsById(Long id) {
@@ -175,6 +188,9 @@ public class GroupServiceImpl implements GroupService {
         return groupRepository.isExistsById(id);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Transactional(readOnly = true)
     @Override
     public List<Group> getDisabled() {
@@ -182,24 +198,36 @@ public class GroupServiceImpl implements GroupService {
         return groupRepository.getDisabled();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Set<Group> getGroupsBySemesterId(Long semesterId) {
         log.info("Enter into getGroupsBySemesterId");
         return semesterService.getById(semesterId).getGroups();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Set<Group> getGroupsForCurrentSemester() {
         log.info("Enter into getGroupsByCurrentSemester");
         return semesterService.getCurrentSemester().getGroups();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Set<Group> getGroupsForDefaultSemester() {
         log.info("Enter into getGroupsByCurrentSemester");
         return semesterService.getDefaultSemester().getGroups();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @Transactional
     public List<Group> getGroupsByGroupIds(List<Long> groupIds) {

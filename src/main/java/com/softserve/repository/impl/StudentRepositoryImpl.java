@@ -27,6 +27,9 @@ public class StudentRepositoryImpl extends BasicRepositoryImpl<Student, Long> im
             "s.surname = :sSurname and " +
             "s.patronymic = :sPatronymic";
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<Student> getExistingStudent(Student student) {
         return sessionFactory.getCurrentSession()
@@ -37,6 +40,9 @@ public class StudentRepositoryImpl extends BasicRepositoryImpl<Student, Long> im
                 .uniqueResultOptional();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isEmailInUse(String email) {
         return (boolean) sessionFactory.getCurrentSession()
@@ -45,6 +51,9 @@ public class StudentRepositoryImpl extends BasicRepositoryImpl<Student, Long> im
                 .getSingleResult();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isEmailForThisStudent(String email, Long id) {
         return (boolean) sessionFactory.getCurrentSession()
@@ -54,6 +63,9 @@ public class StudentRepositoryImpl extends BasicRepositoryImpl<Student, Long> im
                 .getSingleResult();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isIdPresent(Long id) {
         return (boolean) sessionFactory.getCurrentSession()

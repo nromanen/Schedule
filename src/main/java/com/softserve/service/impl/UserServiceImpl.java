@@ -70,11 +70,7 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * The method used for getting user by id
-     *
-     * @param id Identity user id
-     * @return User entity
-     * @throws EntityNotFoundException if user doesn't exist
+     * {@inheritDoc}
      */
     @Override
     public User getById(Long id) {
@@ -85,9 +81,7 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * Method gets information about all users from Repository
-     *
-     * @return List of all users
+     * {@inheritDoc}
      */
     @Override
     public List<User> getAll() {
@@ -96,11 +90,9 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * The method used for saving user in database
+     * {@inheritDoc}
      *
-     * @param object new user
-     * @return User entity
-     * @throws FieldAlreadyExistsException when some of provided fields already exist in database
+     * @throws FieldAlreadyExistsException if some of provided fields already exist in the repository
      */
     @Override
     public User save(User object) {
@@ -113,11 +105,9 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * The method used for updating user in database
+     * {@inheritDoc}
      *
-     * @param object updated user
-     * @return User entity
-     * @throws FieldAlreadyExistsException when some of provided fields already exist in database
+     * @throws FieldAlreadyExistsException if some of provided fields already exist in the repository
      */
     @Override
     public User update(User object) {
@@ -131,10 +121,7 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * Method deletes an existing user from repository
-     *
-     * @param object user entity to be deleted
-     * @return deleted user
+     * {@inheritDoc}
      */
     @Override
     public User delete(User object) {
@@ -142,6 +129,9 @@ public class UserServiceImpl implements UserService {
         return userRepository.delete(object);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public User findByEmail(String email) {
         log.info("Enter into findByEmail method with email:{}", email);
@@ -150,6 +140,9 @@ public class UserServiceImpl implements UserService {
         );
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public User findByToken(String token) {
         log.info("Enter into findByToken method with token:{}", token);
@@ -158,12 +151,18 @@ public class UserServiceImpl implements UserService {
         );
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public User registration(User user) {
         log.info("Enter into registration method  with email:{}", user.getEmail());
         return registration(user, MessageFormat.format(REGISTRATION_MESSAGE, user.getEmail()));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     @Override
     public User automaticRegistration(String email, Role role) {
@@ -175,6 +174,9 @@ public class UserServiceImpl implements UserService {
         return registration(user, MessageFormat.format(AUTOMATIC_REGISTRATION_MESSAGE, user.getEmail()));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void resetPassword(String email) {
         log.info("Enter into resetPassword method  with email:{}", email);
@@ -196,6 +198,9 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public User createSocialUser(OAuth2User oAuth2User) {
         log.info("Enter into emailExists method with OAuth2User = {}", oAuth2User);
@@ -203,18 +208,27 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByEmail(email).orElseGet(() -> saveSocialUser(email));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<User> findSocialUser(String email) {
         log.info("Enter into findSocialUser method with email = {}", email);
         return userRepository.findByEmail(email);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<User> getAllUsersWithRoleUser() {
         log.info("Enter into getAllUsersWithRoleUser of UserServiceImpl");
         return userRepository.getAllUsersWithRoleUser();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String changePasswordForCurrentUser(User user, String oldPassword, String newPassword) {
         if (!passwordEncoder.matches(oldPassword, user.getPassword())) {

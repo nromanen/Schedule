@@ -65,11 +65,7 @@ public class TemporaryScheduleServiceImpl implements TemporaryScheduleService {
     }
 
     /**
-     * The method used for getting room by id
-     *
-     * @param id Identity number of temporary schedule
-     * @return target temporary schedule
-     * @throws EntityNotFoundException if temporary schedule doesn't exist
+     * {@inheritDoc}
      */
     @Override
     public TemporarySchedule getById(Long id) {
@@ -87,9 +83,7 @@ public class TemporaryScheduleServiceImpl implements TemporaryScheduleService {
     }
 
     /**
-     * The method used for getting all temporary schedules
-     *
-     * @return list of  temporary schedules
+     * {@inheritDoc}
      */
     @Override
     public List<TemporarySchedule> getAll() {
@@ -97,12 +91,18 @@ public class TemporaryScheduleServiceImpl implements TemporaryScheduleService {
         return temporaryScheduleRepository.getAll();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<TemporarySchedule> getAllByTeacherAndRange(LocalDate fromDate, LocalDate toDate, Long teacherId) {
         log.info("Enter into getAllByTeacherAndRange of TemporaryScheduleServiceImpl");
         return temporaryScheduleRepository.getAllByTeacherAndRange(fromDate, toDate, teacherId);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<TemporarySchedule> getTemporaryScheduleByTeacherAndRange(LocalDate fromDate, LocalDate toDate, Long teacherId) {
         log.info("Enter into getAllByTeacherAndRange of TemporaryScheduleServiceImpl");
@@ -113,12 +113,18 @@ public class TemporaryScheduleServiceImpl implements TemporaryScheduleService {
         return temporarySchedules;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<TemporarySchedule> getAllBySemesterAndRange(Long semesterId, LocalDate fromDate, LocalDate toDate) {
         log.info("Enter into getAllBySemesterAndRange of TemporaryScheduleServiceImpl");
         return temporaryScheduleRepository.getAllBySemesterAndRange(semesterId, fromDate, toDate);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<TemporarySchedule> getAllByCurrentSemester() {
         log.info("Enter into getAllByCurrentSemester of TemporaryScheduleServiceImpl");
@@ -129,6 +135,9 @@ public class TemporaryScheduleServiceImpl implements TemporaryScheduleService {
         return temporarySchedules;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<TemporarySchedule> getAllBySemesterId(Long semesterId) {
         log.info("Enter into getAllBySemesterId of TemporaryScheduleServiceImpl");
@@ -139,6 +148,9 @@ public class TemporaryScheduleServiceImpl implements TemporaryScheduleService {
         return temporarySchedules;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<TemporarySchedule> getAllByRange(LocalDate fromDate, LocalDate toDate) {
         log.info("Enter into getAllBySemester of TemporaryScheduleServiceImpl");
@@ -149,6 +161,9 @@ public class TemporaryScheduleServiceImpl implements TemporaryScheduleService {
         return temporarySchedules;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<TemporarySchedule> vacationByDateRange(LocalDate fromDate, LocalDate toDate) {
         log.info("Enter into vacationByDateRange of TemporaryScheduleServiceImpl");
@@ -157,12 +172,18 @@ public class TemporaryScheduleServiceImpl implements TemporaryScheduleService {
         return temporarySchedules;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void deleteTemporarySchedulesBySemesterId(Long semesterId) {
         log.info("In deleteTemporarySchedulesBySemesterId with semesterId = {}", semesterId);
         temporaryScheduleRepository.deleteTemporarySchedulesBySemesterId(semesterId);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Map<EvenOdd, Map<DayOfWeek, List<TemporarySchedule>>> getTemporaryScheduleForEvenOddWeeks(Long semesterId) {
         log.info("In getTemporaryScheduleForEvenOddWeeks with semesterId = {}", semesterId);
@@ -202,6 +223,9 @@ public class TemporaryScheduleServiceImpl implements TemporaryScheduleService {
         return evenOddListMap;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<String> addRange(LocalDate from, LocalDate to, TemporarySchedule object) {
         log.info("Enter into addRange of TemporaryScheduleServiceImpl with entity:{}", object);
@@ -224,10 +248,11 @@ public class TemporaryScheduleServiceImpl implements TemporaryScheduleService {
     }
 
     /**
-     * The method used for saving temporary schedule in database
+     * Saves the given temporary schedule in the repository.
      *
-     * @param object temporary schedule
-     * @return save temporary schedule
+     * @param object the temporary schedule
+     * @return the saved temporary schedule
+     * @throws EntityAlreadyExistsException
      */
     @Override
     public TemporarySchedule save(TemporarySchedule object) {
@@ -262,10 +287,7 @@ public class TemporaryScheduleServiceImpl implements TemporaryScheduleService {
     }
 
     /**
-     * The method used for updating existed room in database
-     *
-     * @param object temporary schedule
-     * @return temporary schedule before update
+     * {@inheritDoc}
      */
     @Override
     public TemporarySchedule update(TemporarySchedule object) {
@@ -372,10 +394,7 @@ public class TemporaryScheduleServiceImpl implements TemporaryScheduleService {
     }
 
     /**
-     * The method used for deleting existed temporary schedule in database
-     *
-     * @param object temporary schedule
-     * @return deleted temporary schedule
+     * {@inheritDoc}
      */
     @Override
     public TemporarySchedule delete(TemporarySchedule object) {
@@ -429,6 +448,9 @@ public class TemporaryScheduleServiceImpl implements TemporaryScheduleService {
         return temporaryScheduleRepository.isExistTemporaryScheduleByDateAndScheduleIdWithIgnoreId(object, vacation) != 0;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public Teacher getTeacherByScheduleId(Long scheduleId) {
         if (scheduleId != null) {
             return scheduleService.getById(scheduleId).getLesson().getTeacher();
@@ -436,6 +458,9 @@ public class TemporaryScheduleServiceImpl implements TemporaryScheduleService {
         return null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public String getTeacherEmailFromTemporarySchedule(Teacher teacher) {
         if (teacher != null) {
             Long toTeacherId = teacherService.getById(teacher.getId()).getUserId();

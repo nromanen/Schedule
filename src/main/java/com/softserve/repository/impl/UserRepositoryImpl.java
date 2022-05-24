@@ -13,6 +13,9 @@ import java.util.Optional;
 @Repository
 public class UserRepositoryImpl extends BasicRepositoryImpl<User, Long> implements UserRepository {
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<User> findByEmail(String email) {
         log.info("Enter into findByEmail method with email:{}", email);
@@ -25,6 +28,9 @@ public class UserRepositoryImpl extends BasicRepositoryImpl<User, Long> implemen
         return Optional.of(query.getResultList().get(0));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<User> findByToken(String token) {
         log.info("Enter into findByToken  with token:{}", token);
@@ -37,6 +43,9 @@ public class UserRepositoryImpl extends BasicRepositoryImpl<User, Long> implemen
         return Optional.of(query.getResultList().get(0));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<User> getAllUsersWithRoleUser() {
         log.info("Enter into getAllUsersWithRoleUser of UserRepositoryImpl");
@@ -47,10 +56,7 @@ public class UserRepositoryImpl extends BasicRepositoryImpl<User, Long> implemen
     }
 
     /**
-     * Modified update method, which merge entity before updating it
-     *
-     * @param entity user is going to be updated
-     * @return User
+     * {@inheritDoc}
      */
     @Override
     public User update(User entity) {
@@ -60,7 +66,12 @@ public class UserRepositoryImpl extends BasicRepositoryImpl<User, Long> implemen
         return entity;
     }
 
-    // Checking if user is used in Teacher table
+    /**
+     * Checks if given user is used in Teacher table.
+     *
+     * @param user the user to be checked
+     * @return {@code true} if there's teacher related with given user, otherwise {@code false}
+     */
     @Override
     protected boolean checkReference(User user) {
         log.info("In checkReference(user = [{}])", user);

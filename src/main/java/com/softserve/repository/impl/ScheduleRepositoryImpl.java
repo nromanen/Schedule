@@ -47,6 +47,9 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
             + "s.evenOdd, s.period.name, "
             + "s.lesson.subjectForSite, s.lesson.teacher.surname, s.lesson.lessonType ";
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Long conflictForGroupInSchedule(Long semesterId, DayOfWeek dayOfWeek, EvenOdd evenOdd, Long classId, Long groupId) {
         log.info("In isConflictForGroupInSchedule(semesterId = [{}], dayOfWeek = [{}], evenOdd = [{}], classId = [{}], groupId = [{}])", semesterId, dayOfWeek, evenOdd, classId, groupId);
@@ -79,6 +82,9 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Long conflictForTeacherInSchedule(Long semesterId, DayOfWeek dayOfWeek, EvenOdd evenOdd, Long classId, Long teacherId) {
         log.info("In conflictForTeacherInSchedule(semesterId = [{}], dayOfWeek = [{}], evenOdd = [{}], classId = [{}], teacherId = [{}])", semesterId, dayOfWeek, evenOdd, classId, teacherId);
@@ -107,6 +113,9 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
 
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<Group> uniqueGroupsInScheduleBySemester(Long semesterId) {
         log.info("In uniqueGroupsInScheduleBySemester", semesterId);
@@ -116,6 +125,9 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
                 .setParameter("semesterId", semesterId).getResultList();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<Period> periodsForGroupByDayBySemester(Long semesterId, Long groupId, DayOfWeek day) {
         log.info("In periodsForGroupByDayBySemester(semesterId = [{}], groupId = [{}], day = [{}])", semesterId, groupId, day);
@@ -128,6 +140,9 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
                 .getResultList();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<Lesson> lessonForGroupByDayBySemesterByPeriodByWeek(Long semesterId, Long groupId, Long periodId, DayOfWeek day, EvenOdd evenOdd) {
         log.info("In lessonForGroupByDayBySemesterByPeriodByWeek(semesterId = [{}], groupId = [{}], periodId = [{}], day = [{}], evenOdd = [{}])", semesterId, groupId, periodId, day, evenOdd);
@@ -142,6 +157,9 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
                 .uniqueResultOptional();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Room getRoomForLesson(Long semesterId, Long periodId, Long lessonId, DayOfWeek day, EvenOdd evenOdd) {
         log.info("In getRoomForLesson(semesterId = [{}], periodId = [{}], lessonId = [{}], day = [{}], evenOdd = [{}])", semesterId, periodId, lessonId, day, evenOdd);
@@ -156,6 +174,9 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
                 .getSingleResult();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<DayOfWeek> getDaysWhenGroupHasClassesBySemester(Long semesterId, Long groupId) {
         log.info("In getDaysWhenGroupHasClassesBySemester(semesterId = [{}], groupId = [{}])", semesterId, groupId);
@@ -165,6 +186,9 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
                 .getResultList();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Long countSchedulesForGroupInSemester(Long semesterId, Long groupId) {
         log.info("In countSchedulesForGroupInSemester(semesterId = [{}], groupId = [{}])", semesterId, groupId);
@@ -174,6 +198,9 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
                 .getSingleResult();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<DayOfWeek> getDaysWhenTeacherHasClassesBySemester(Long semesterId, Long teacherId) {
         log.info("In getDaysWhenTeacherHasClassesBySemester(semesterId = [{}], teacherId = [{}])", semesterId, teacherId);
@@ -183,6 +210,9 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
                 .getResultList();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<Period> periodsForTeacherBySemesterByDayByWeek(Long semesterId, Long teacherId, DayOfWeek day, EvenOdd evenOdd) {
         log.info("In periodsForTeacherBySemesterByDayByWeek(semesterId = [{}], teacherId = [{}], day = [{}], evenOdd = [{}])", semesterId, teacherId, day, evenOdd);
@@ -196,6 +226,9 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
                 .getResultList();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<Lesson> lessonsForTeacherBySemesterByDayByPeriodByWeek(Long semesterId, Long teacherId, Long periodId, DayOfWeek day, EvenOdd evenOdd) {
         log.info("In lessonsForTeacherBySemesterByDayByPeriodByWeek(semesterId = [{}], teacherId = [{}], periodId = [{}], day = [{}], evenOdd = [{}])", semesterId, teacherId, periodId, day, evenOdd);
@@ -210,6 +243,9 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
                 .getResultList();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<Schedule> getAllSchedulesByTeacherIdAndSemesterId(Long teacherId, Long semesterId) {
         log.info("Enter into getAll of TeacherRepositoryImpl");
@@ -221,6 +257,9 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
                 .getResultList();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Schedule getScheduleByObject(Schedule schedule) {
         log.info("Enter into getScheduleByObject");
@@ -234,6 +273,9 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
                 .getSingleResult();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<Schedule> getScheduleBySemester(Long semesterId) {
         log.info("In getScheduleBySemester(semesterId = [{}])", semesterId);
@@ -253,9 +295,7 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
     }
 
     /**
-     * Method gets information about all schedules from DB
-     *
-     * @return List of all schedules
+     * {@inheritDoc}
      */
     @Override
     public List<Schedule> getAll() {
@@ -273,6 +313,9 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
         return tq.getResultList();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<Schedule> scheduleByDateRangeForTeacher(LocalDate fromDate, LocalDate toDate, Long teacherId) {
         log.info("In scheduleByDateRangeForTeacher with fromDate = {} and toDate = {}", fromDate, toDate);
@@ -284,6 +327,9 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
                 .getResultList();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<Schedule> scheduleForRoomBySemester(Long semesterId, Long roomId) {
         log.info("In scheduleForRoomBySemester with semesterId = {} and roomId = {}", semesterId, roomId);
@@ -294,6 +340,9 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
                 .getResultList();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void deleteSchedulesBySemesterId(Long semesterId) {
         log.info("In deleteSchedulesBySemesterId with semesterId = {}", semesterId);
@@ -302,6 +351,9 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
                 .setParameter("semesterId", semesterId).executeUpdate();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Long countInputLessonsInScheduleByLessonId(Long lessonId) {
         log.info("In countInputLessonsInScheduleByLessonId(lessonId = [{}])", lessonId);
@@ -310,6 +362,9 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
                 .getSingleResult();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Long countByLessonIdPeriodIdEvenOddDayOfWeek(Long lessonId, Long periodId, EvenOdd evenOdd, DayOfWeek day) {
         log.info("In countByLessonIdPeriodIdEvenOddDayOfWeek(lessonId = [{}], periodId = [{}], evenOdd = [{}], day = [{}])", lessonId, periodId, evenOdd, day);
@@ -322,6 +377,9 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
                 .getSingleResult();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<Schedule> getAllOrdered(Long semesterId) {
         log.debug("Entered getAllOrdered()");

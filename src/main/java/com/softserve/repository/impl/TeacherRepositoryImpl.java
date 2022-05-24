@@ -23,9 +23,9 @@ public class TeacherRepositoryImpl extends BasicRepositoryImpl<Teacher, Long> im
     }
 
     /**
-     * The method used for getting list of teachers entities from database
+     * Returns all teachers from database.
      *
-     * @return list of entities ordered by surname
+     * @return the list of teachers ordered by surname
      */
     @Override
     public List<Teacher> getAll() {
@@ -36,10 +36,7 @@ public class TeacherRepositoryImpl extends BasicRepositoryImpl<Teacher, Long> im
     }
 
     /**
-     * The method used for updating Teacher
-     *
-     * @param entity entity is going to be updated
-     * @return entity that was updated
+     * {@inheritDoc}
      */
     @Override
     public Teacher update(Teacher entity) {
@@ -47,7 +44,12 @@ public class TeacherRepositoryImpl extends BasicRepositoryImpl<Teacher, Long> im
         return super.update(entity);
     }
 
-    // Checking if teacher is used in Lesson table
+    /**
+     * Checks if teacher is used in Lesson table.
+     *
+     * @param teacher the teacher to be checked
+     * @return {@code true} if exists lesson related with given teacher, otherwise {@code false}
+     */
     @Override
     protected boolean checkReference(Teacher teacher) {
         log.info("In checkReference(teacher = [{}])", teacher);
@@ -59,6 +61,9 @@ public class TeacherRepositoryImpl extends BasicRepositoryImpl<Teacher, Long> im
         return count != 0;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<Teacher> findByUserId(Long userId) {
         return sessionFactory.getCurrentSession().createQuery(
@@ -68,6 +73,9 @@ public class TeacherRepositoryImpl extends BasicRepositoryImpl<Teacher, Long> im
                 .uniqueResultOptional();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<Teacher> getAllTeacherWithoutUser() {
         log.info("Enter into getAllTeacherWithoutUser of TeacherRepositoryImpl");
@@ -77,6 +85,9 @@ public class TeacherRepositoryImpl extends BasicRepositoryImpl<Teacher, Long> im
                 .getResultList();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<Teacher> getExistingTeacher(Teacher teacher) {
         return sessionFactory.getCurrentSession().createQuery(

@@ -38,10 +38,7 @@ public class LessonServiceImpl implements LessonService {
     }
 
     /**
-     * Method gets information from Repository for particular lesson with id parameter
-     *
-     * @param id Identity number of the lesson
-     * @return Lesson entity
+     * {@inheritDoc}
      */
     @Override
     @Transactional(readOnly = true)
@@ -55,9 +52,7 @@ public class LessonServiceImpl implements LessonService {
     }
 
     /**
-     * Method gets information about all lessons from Repository
-     *
-     * @return List of all lessons
+     * {@inheritDoc}
      */
     @Override
     @Transactional(readOnly = true)
@@ -72,6 +67,9 @@ public class LessonServiceImpl implements LessonService {
         return lessonRepository.getAll();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @Transactional(readOnly = true)
     @Cacheable(value = "lessons", key = "#teacherId")
@@ -86,12 +84,12 @@ public class LessonServiceImpl implements LessonService {
     }
 
     /**
-     * Method saves new lesson to Repository and automatically assigns
-     * teacher for site by teacher data if teacher for site is empty or null and
-     * subject for site by subject name if subject for site is empty or null
+     * {@inheritDoc}
      *
-     * @param object Lesson entity with info to be saved
-     * @return saved Lesson entity
+     * Saves new lesson in the repository and automatically assigns
+     * teacher for site by teacher data if teacher for site is empty or null and
+     * subject for site by subject name if subject for site is empty or null.
+     * @throws EntityAlreadyExistsException if given lesson already exists
      */
     @Override
     @Transactional
@@ -111,6 +109,9 @@ public class LessonServiceImpl implements LessonService {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @Transactional
     @CacheEvict(value = "lessons", allEntries = true)
@@ -124,10 +125,9 @@ public class LessonServiceImpl implements LessonService {
     }
 
     /**
-     * Method updates information for an existing lesson in Repository
+     * {@inheritDoc}
      *
-     * @param lesson Lesson entity with info to be updated
-     * @return updated Lesson entity
+     * @throws EntityAlreadyExistsException if there is already another lesson with parameters as in the given
      */
     @Override
     @Transactional
@@ -153,10 +153,7 @@ public class LessonServiceImpl implements LessonService {
     }
 
     /**
-     * Method deletes an existing lesson from Repository
-     *
-     * @param object Lesson entity to be deleted
-     * @return deleted Lesson entity
+     * {@inheritDoc}
      */
     @Override
     @Transactional
@@ -170,6 +167,9 @@ public class LessonServiceImpl implements LessonService {
 
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @Transactional(readOnly = true)
     @Cacheable(value = "lessons", key = "#groupId")
@@ -183,6 +183,9 @@ public class LessonServiceImpl implements LessonService {
         return lessons;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @Transactional(readOnly = true)
     public List<LessonType> getAllLessonTypes() {
@@ -190,6 +193,9 @@ public class LessonServiceImpl implements LessonService {
         return Arrays.asList(LessonType.values());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @Transactional(readOnly = true)
     public boolean isLessonForGroupExists(Lesson lesson) {
@@ -197,6 +203,9 @@ public class LessonServiceImpl implements LessonService {
         return lessonRepository.countLessonDuplicates(lesson) != 0;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @Transactional(readOnly = true)
     public boolean isLessonForGroupExistsAndIgnoreWithId(Lesson lesson) {
@@ -204,6 +213,9 @@ public class LessonServiceImpl implements LessonService {
         return lessonRepository.countLessonDuplicatesWithIgnoreId(lesson) != 0;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @Transactional(readOnly = true)
     @Cacheable(value = "lessons", key = "#semesterId")
@@ -217,6 +229,9 @@ public class LessonServiceImpl implements LessonService {
         return lessons;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @Transactional
     public List<Lesson> copyLessonsFromOneToAnotherSemester(List<Lesson> lessons, Semester toSemester) {
@@ -229,6 +244,9 @@ public class LessonServiceImpl implements LessonService {
         return toLessons;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @Transactional
     public Lesson saveLessonDuringCopy(Lesson lesson) {
@@ -236,14 +254,20 @@ public class LessonServiceImpl implements LessonService {
         return lessonRepository.save(lesson);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @Transactional
     @CacheEvict(value = "lessons", allEntries = true)
     public void deleteLessonBySemesterId(Long semesterId) {
         log.info("In method deleteLessonBySemesterId with semesterId = {}", semesterId);
-        lessonRepository.deleteLessonBySemesterId(semesterId);
+        lessonRepository.deleteLessonsBySemesterId(semesterId);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @Transactional(readOnly = true)
     public List<Lesson> getLessonsBySubjectIdTeacherIdSemesterIdLessonTypeAndExcludeCurrentLessonId(Lesson lesson) {
@@ -256,12 +280,18 @@ public class LessonServiceImpl implements LessonService {
         return lessons;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @Transactional(readOnly = true)
     public List<Lesson> getAllGroupedLessonsByLesson(Lesson lesson) {
         return lessonRepository.getGroupedLessonsByLesson(lesson);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @Transactional
     public Integer updateLinkToMeeting(Lesson lesson) {

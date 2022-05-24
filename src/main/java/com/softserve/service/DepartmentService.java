@@ -8,17 +8,17 @@ import java.util.List;
 public interface DepartmentService extends BasicService<Department, Long> {
 
     /**
-     * The method returns all disabled departments
+     * Returns all disabled departments.
      *
-     * @return list of disabled departments
+     * @return the list of disabled departments
      */
     List<Department> getDisabled();
 
     /**
-     * The method returns all teachers from the Department
+     * Returns all teachers with the given department id.
      *
-     * @param departmentId id of the department
-     * @return list of teachers
+     * @param departmentId the id of the department
+     * @return the list of the teachers
      */
     List<Teacher> getAllTeachers(Long departmentId);
 }

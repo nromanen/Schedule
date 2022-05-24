@@ -8,70 +8,70 @@ import java.util.Optional;
 public interface GroupRepository extends BasicRepository<Group, Long> {
 
     /**
-     * The method used for getting by id entity with students
+     * Retrieves a group with the given id.
      *
-     * @param id Long id of entity
-     * @return found entity
+     * @param id the id of group
+     * @return an Optional describing the group with the given id or an empty Optional if none found
      */
     Optional<Group> getWithStudentsById(Long id);
 
-    /**
-     * The method used for finding out if group with such title exists ignoring id
+     /**
+     * Returns {@code true} if group with the given title exists other than the group with the given id.
      *
-     * @param title String title used to find Group
-     * @param id    Long id, which is ignored during the search
-     * @return true if exists, else - false
+     * @param title the string represents the title of the group
+     * @param id    the id of the group to be excluded from the search result
+     * @return {@code true} if group with given title exists, otherwise {@code false}
      */
     boolean isExistsByTitleIgnoringId(String title, Long id);
 
     /**
-     * The method used for finding out if group with such title exists
+     * Returns {@code true} if group with the given title exists.
      *
-     * @param title String title used to find Group
-     * @return true if exists, else - false
+     * @param title the string represents the title of the group
+     * @return {@code true} if group with given title exists, otherwise {@code false}
      */
     boolean isExistsByTitle(String title);
 
     /**
-     * Method used to verify if group with such id exists
+     * Returns {@code true} if group with the given id exists.
      *
-     * @param id long id of the Group
-     * @return true if there is no group with such id, false if record with id exists
+     * @param id the id of the group
+     * @return {@code true} if group with given id exists, otherwise {@code false}
      */
     boolean isExistsById(Long id);
 
     /**
-     * The method used for getting groups by teacher id for default semester
+     * Returns all groups with the given teacher id for default semester.
      *
-     * @param id Long id of a teacher
-     * @return List of groups
+     * @param id the id of the teacher
+     * @return the list of groups
      */
     List<Group> getByTeacherId(Long id);
 
     /**
-     * The method used for getting all groups by group Ids
+     * Returns all groups with the given Ids.
      *
-     * @param groupIds ids of the groups that need to be retrieved
-     * @return list of the groups
+     * @param groupIds the list of the ids of the groups
+     * @return the list of groups
      */
     List<Group> getGroupsByGroupIds(List<Long> groupIds);
 
     /**
-     * The method is used to retrieve groups by set sorting order
+     * Returns the list of groups sorted according to the established sort order.
      *
-     * @return the list of groups sorted by set sorting order
+     * @return the list of groups sorted according to the established sort order
      */
     List<Group> getAllBySortingOrder();
 
     /**
-     * The method is used to retrieve max sorting order
+     * Returns max sorting order.
      *
-     * @return max sorting order
+     * @return an Optional describing the max sorting order or an empty Optional if none found
      */
     Optional<Integer> getMaxSortingOrder();
 
     /**
-     * The method is used to change group's sorting order
+     * Changes group's sorting order.
      *
      * @param lowerBound the lower bound of sorting order
      * @param upperBound the upper bound of sorting order
@@ -79,10 +79,10 @@ public interface GroupRepository extends BasicRepository<Group, Long> {
     void changeGroupOrderOffset(Integer lowerBound, Integer upperBound);
 
     /**
-     * The method is used to retrieve sorting order by group's id
+     * Retrieves sorting order by group id.
      *
-     * @param id group's id which sorting order needs to be retrieved
-     * @return sorting order of the group
+     * @param id the id of the group which sorting order needs to be retrieved
+     * @return an Optional describing the sorting order of the group
      */
     Optional<Integer> getSortingOrderById(Long id);
 }

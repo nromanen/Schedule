@@ -14,70 +14,70 @@ import java.util.List;
 public interface TeacherService extends BasicService<Teacher, Long> {
 
     /**
-     * Method save information for teacher in Repository and register user if email exists
+     * Saves given teacher in the repository and register user if email exists.
      *
-     * @param teacherDTO TeacherDTO instance
-     * @return saved Teacher entity
+     * @param teacherDTO the teacher to be saved
+     * @return the saved teacher
      */
     Teacher save(TeacherDTO teacherDTO);
 
     /**
-     * Method updates information for an existing teacher in Repository and register user if email was added
+     * Updates an existing teacher in the repository and register user if email was added.
      *
-     * @param teacherForUpdateDTO TeacherForUpdateDTO instance with info to be updated
-     * @return updated Teacher entity
+     * @param teacherForUpdateDTO the teacher with info to be updated
+     * @return the updated teacher
      */
     Teacher update(TeacherForUpdateDTO teacherForUpdateDTO);
 
     /**
-     * The method used for join Teacher and User
+     * Returns joined teacher with user.
      *
-     * @param teacherId Long teacherId used to find Teacher by it
-     * @param userId    Long userId used to find User by it
-     * @return Teacher entity
-     * @throws EntityAlreadyExistsException when user already exist in some teacher/manager or teacher contains some userId
+     * @param teacherId the id of the teacher
+     * @param userId    the id of the user
+     * @return the joined teacher with user
+     * @throws EntityAlreadyExistsException if user already exist in some teacher/manager or teacher contains some user id
      */
     Teacher joinTeacherWithUser(Long teacherId, Long userId);
 
     /**
-     * The method used for getting all disabled teachers
+     * Returns all disabled teachers.
      *
-     * @return list of disabled teachers
+     * @return the list of disabled teachers
      */
     List<Teacher> getDisabled();
 
     /**
-     * The method used for getting teacher by userId
+     * Returns teacher by user id.
      *
-     * @param userId Identity user id
-     * @return Teacher entity
+     * @param userId the id of the user
+     * @return the founded teacher
      * @throws EntityNotFoundException if teacher doesn't exist
-     * @throws FieldNullException      if userId is null
+     * @throws FieldNullException      if user id is null
      */
     Teacher findByUserId(Long userId);
 
     /**
-     * The method used for getting list of teachers from database, that don't registered in system
+     * Returns all teachers from repository, that don't registered in system.
      *
-     * @return list of entities User
+     * @return the list of teachers without registered user
      */
     List<Teacher> getAllTeacherWithoutUser();
 
     /**
-     * Each line of the file should consist of five fields, separated by commas without spaceBar.
-     * First line of the file is a header.
-     * All subsequent lines contain data about teachers.
-     * <p>
-     * name,surname,patronymic,position,email
-     * Test1,Test1,Test1,test1,test1@gmail.com
-     * Test2,Test2,Test2,test2,test2@gmail.com
-     * etc.
+     * Imports teachers from file and saves in the repository.
      *
-     * @param file file with teachers data
-     * @return list of created teachers.
+     * @param file the file with teachers data
+     * @return tje list of created teachers
      */
     List<TeacherImportDTO> saveFromFile(MultipartFile file, Long departmentId);
 
+    /**
+     * Saves given teacher with given department id.
+     *
+     * @param departmentId the id of the department
+     * @param teacher      the teacher entity which
+     * @return the saved teacher
+     */
     TeacherImportDTO saveTeacher(Long departmentId, TeacherImportDTO teacher);
 }
 

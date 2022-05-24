@@ -70,6 +70,9 @@ public class MailServiceImpl implements MailService {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Async
     @Override
     public void send(String receiver, String subject, String message) {
@@ -87,6 +90,9 @@ public class MailServiceImpl implements MailService {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void send(String sender, EmailMessageDTO emailMessageDTO) {
         log.info("Enter into send method with sender - {}, emailMessageDTO - {}", sender, emailMessageDTO);
@@ -111,6 +117,9 @@ public class MailServiceImpl implements MailService {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void send(String fileName, String receiver, String subject, String message, ByteArrayOutputStream bos) throws MessagingException {
         log.info("Enter into send method with emailTo - {}, subject - {}", receiver, subject);
@@ -139,6 +148,9 @@ public class MailServiceImpl implements MailService {
         this.mailSender.send(mimeMessage);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Async
     @Override
     public void send(final String emailTo, final String subject, TemporarySchedule temporarySchedule, final String emailTemplate) throws MessagingException {

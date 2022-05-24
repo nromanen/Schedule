@@ -25,6 +25,9 @@ public class ArchiveServiceImpl implements ArchiveService {
         this.archiveRepository = archiveRepository;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public ScheduleFullForArchiveDTO getArchiveScheduleBySemesterId(Long semesterId) {
         log.info("In getArchiveScheduleBySemesterId with semesterId = {}", semesterId);
@@ -33,6 +36,9 @@ public class ArchiveServiceImpl implements ArchiveService {
         );
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<SemesterDTO> getAllSemestersInArchiveSchedule() {
         log.info("In getAllSemestersInArchiveSchedule");
@@ -44,12 +50,18 @@ public class ArchiveServiceImpl implements ArchiveService {
         return semesters;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public ScheduleFullForArchiveDTO saveScheduleForArchive(ScheduleFullForArchiveDTO scheduleFullForArchiveDTO) {
         log.info("In saveScheduleForArchive with scheduleForArchiveDTO = {}", scheduleFullForArchiveDTO);
         return archiveRepository.saveScheduleForArchive(scheduleFullForArchiveDTO);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void deleteArchiveScheduleBySemesterId(Long semesterId) {
         log.info("In removeArchiveScheduleBySemesterId with semesterId = {}", semesterId);

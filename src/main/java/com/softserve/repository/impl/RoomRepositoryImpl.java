@@ -90,9 +90,7 @@ public class RoomRepositoryImpl extends BasicRepositoryImpl<Room, Long> implemen
     }
 
     /**
-     * The method used for getting list of entities from database
-     *
-     * @return list of entities
+     * {@inheritDoc}
      */
     @Override
     public List<Room> getAll() {
@@ -102,6 +100,9 @@ public class RoomRepositoryImpl extends BasicRepositoryImpl<Room, Long> implemen
                 .getResultList();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<Room> freeRoomBySpecificPeriod(Long idOfPeriod, DayOfWeek dayOfWeek, EvenOdd evenOdd) {
         log.info("Enter into freeRoomBySpecificPeriod of RoomRepositoryImpl with id {}, dayOfWeek {} and evenOdd {} ",
@@ -121,17 +122,24 @@ public class RoomRepositoryImpl extends BasicRepositoryImpl<Room, Long> implemen
         return query.getResultList();
     }
 
-    // Checking if room is used in Schedule table
+    /**
+     * Checks if room is used in schedule table.
+     *
+     * @param room the room to be checked
+     * @return {@code true} if room is used in schedule table, otherwise {@code false}
+     */
     @Override
     protected boolean checkReference(Room room) {
         log.info("In checkReference(room = [{}])", room);
-        Long count = (Long) sessionFactory.getCurrentSession().createQuery
-                        (CHECK_REFERENCE)
+        Long count = (Long) sessionFactory.getCurrentSession().createQuery(CHECK_REFERENCE)
                 .setParameter("roomId", room.getId())
                 .getSingleResult();
         return count != 0;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<Room> getNotAvailableRoomsForSchedule(Long semesterId, DayOfWeek dayOfWeek, EvenOdd evenOdd, Long classId) {
         log.info("Enter into getNotAvailableRooms with semesterId = {}, dayOfWeek = {}, evenOdd = {}, classId = {} ", semesterId, dayOfWeek, evenOdd, classId);
@@ -152,6 +160,9 @@ public class RoomRepositoryImpl extends BasicRepositoryImpl<Room, Long> implemen
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<Room> getAvailableRoomsForSchedule(Long semesterId, DayOfWeek dayOfWeek, EvenOdd evenOdd, Long classId) {
         log.info("Enter into getAvailableRooms with semesterId = {}, dayOfWeek = {}, evenOdd = {}, classId = {} ", semesterId, dayOfWeek, evenOdd, classId);
@@ -172,6 +183,9 @@ public class RoomRepositoryImpl extends BasicRepositoryImpl<Room, Long> implemen
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Long countRoomDuplicates(Room room) {
         log.info("In countRoomDuplicates(room = [{}])", room);
@@ -183,6 +197,9 @@ public class RoomRepositoryImpl extends BasicRepositoryImpl<Room, Long> implemen
                 .getSingleResult();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<Room> getAllOrdered() {
         log.info("In getAll()");
@@ -191,16 +208,25 @@ public class RoomRepositoryImpl extends BasicRepositoryImpl<Room, Long> implemen
                 .getResultList();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<Double> getMaxSortOrder() {
         return getSession().createQuery(GET_MAX_SORTING_ORDER, Double.class).uniqueResultOptional();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<Double> getMinSortOrder() {
         return getSession().createQuery(GET_MIN_SORTING_ORDER, Double.class).uniqueResultOptional();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<Double> getNextPosition(Double position) {
         return getSession().createQuery(GET_NEXT_POSITION, Double.class)
@@ -208,6 +234,9 @@ public class RoomRepositoryImpl extends BasicRepositoryImpl<Room, Long> implemen
                 .uniqueResultOptional();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<Double> getSortOrderAfterId(Long afterId) {
         return getSession().createQuery(GET_AFTER_ID_SORT_ORDER, Double.class)

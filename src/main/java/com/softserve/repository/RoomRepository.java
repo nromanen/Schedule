@@ -10,57 +10,84 @@ import java.util.Optional;
 public interface RoomRepository extends BasicRepository<Room, Long> {
 
     /**
-     * The method used for getting list of free room by specific period, day of week and number of week from database
+     * Returns all free rooms by specific period, day of week and number of week from database.
      *
-     * @param idOfPeriod identity number of period
-     * @param dayOfWeek  day of the week
-     * @param evenOdd    number of week
-     * @return list of rooms
+     * @param idOfPeriod the id of the period
+     * @param dayOfWeek  the day of the week
+     * @param evenOdd    the type of the week
+     * @return the list of rooms
      */
     List<Room> freeRoomBySpecificPeriod(Long idOfPeriod, DayOfWeek dayOfWeek, EvenOdd evenOdd);
 
+    /**
+     * Returns all rooms that are not available.
+     *
+     * @param semesterId the id of the semester
+     * @param dayOfWeek  the day of the week
+     * @param evenOdd    the type of the week
+     * @param classId    the id of the class
+     * @return the list of not available rooms
+     */
     List<Room> getNotAvailableRoomsForSchedule(Long semesterId, DayOfWeek dayOfWeek, EvenOdd evenOdd, Long classId);
 
+    /**
+     * Returns all available rooms.
+     *
+     * @param semesterId the id of the semester
+     * @param dayOfWeek  the day of the week
+     * @param evenOdd    the type of the week
+     * @param classId    the id of the class
+     * @return the list of available rooms
+     */
     List<Room> getAvailableRoomsForSchedule(Long semesterId, DayOfWeek dayOfWeek, EvenOdd evenOdd, Long classId);
 
+    /**
+     * Returns the number of duplicates of given room.
+     *
+     * @param room the room entity that needs to be count
+     * @return the number of duplicates of given room
+     */
     Long countRoomDuplicates(Room room);
 
+    /**
+     * {@inheritDoc}
+     */
     List<Room> getDisabled();
 
     /**
-     * The method used for getting list of entities from database
+     * Returns all rooms from database ordered by sortOrder and title.
      *
-     * @return list of entities ordered by sortOrder and title
+     * @return the list of entities ordered by sortOrder and title
      */
     List<Room> getAllOrdered();
 
     /**
-     * This method for getting max sort_order form database
+     * Returns max sorting order.
      *
-     * @return max sorting order
+     * @return an Optional describing the max sorting order
      */
     Optional<Double> getMaxSortOrder();
 
     /**
-     * This method for getting min sort_order form database
+     * Returns min sorting order.
      *
-     * @return min sorting order
+     * @return an Optional describing the min sorting order
      */
     Optional<Double> getMinSortOrder();
 
     /**
-     * This method for getting sorting order of the next element
+     * Returns sorting order of the next element.
      *
-     * @param position sorting order of the element
-     * @return sorting order of the nex element
+     * @param position the sorting order of the element
+     * @return an Optional describing sorting order of the next element
      */
     Optional<Double> getNextPosition(Double position);
 
     /**
-     * This method for retrieving sorting order by rooms id
+     * Returns sorting order of the given room id.
      *
-     * @param afterId rooms id which sorting order needs to be retrieved
-     * @return sorting order of the room
+     * @param afterId the room id which sorting order needs to be retrieved
+     * @return an Optional describing sorting order of the room
      */
     Optional<Double> getSortOrderAfterId(Long afterId);
 

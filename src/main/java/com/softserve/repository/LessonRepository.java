@@ -7,88 +7,102 @@ import java.util.List;
 public interface LessonRepository extends BasicRepository<Lesson, Long> {
 
     /**
-     * Method gets information about all lessons for particular group from DB
+     * Returns the list of lessons with the given group id and semester id from the  database.
      *
-     * @param groupId Identity number of the group for which need to find all lessons
-     * @return List of filtered lessons
+     * @param groupId the id of the group for which need to find all lessons
+     * @return the list of filtered lessons
      */
     List<Lesson> getAllForGroup(Long groupId, Long semesterId);
 
     /**
-     * Method gets information  all lessons for teacher from DB
+     * Returns the list of lessons with given teacher id and semester id from the database.
      *
-     * @param teacherId Identity number of the teacher for which need to find all lessons
-     * @return List of filtered lessons
+     * @param teacherId  the id of the teacher
+     * @param semesterId the id of the semester
+     * @return the list of lessons
      */
     List<Lesson> getLessonByTeacher(Long teacherId, Long semesterId);
 
     /**
-     * Method searches duplicate of lesson in the DB
+     * Counts the number of duplicates of given lesson in the database.
      *
-     * @param lesson Lesson entity that needs to be verified
-     * @return count of duplicates if such exist, else return 0
+     * @param lesson the lesson entity to be count
+     * @return the number of duplicates
      */
     Long countLessonDuplicates(Lesson lesson);
 
     /**
-     * Method searches duplicate of lesson in the DB
+     * Counts the number of duplicates of given lesson in the database other than the id of the given lesson.
      *
-     * @param lesson Lesson entity that needs to be verified
-     * @return count of duplicates if such exist, else return 0
+     * @param lesson the lesson to be verified
+     * @return the number of duplicates
      */
     Long countLessonDuplicatesWithIgnoreId(Lesson lesson);
 
     /**
-     * The method used for getting list of lessons from database by semesterId
+     * Returns the list of lessons from database by semesterId.
      *
-     * @param semesterId Semester id for getting all lessons by this id from db
-     * @return list of entities Lesson
+     * @param semesterId the id of the semester for getting all lessons by this id from db
+     * @return the list of lessons
      */
     List<Lesson> getLessonsBySemester(Long semesterId);
 
-    void deleteLessonBySemesterId(Long semesterId);
+    /**
+     * Deletes lessons with the given semester id in the database.
+     *
+     * @param semesterId the id of the semester for delete all lessons by this id in db
+     */
+    void deleteLessonsBySemesterId(Long semesterId);
 
     /**
-     * The method used for getting all lessons from database by subjectForSite, teacherForSite and semesterId
+     * Returns the list of lessons with the same subject, teacher and semester as the given lesson, except given lesson.
      *
-     * @param lesson Lesson object for getting lessons from db by this param
-     * @return List of Lessons
+     * @param lesson the lesson entity
+     * @return the list of lessons
      */
     List<Lesson> getLessonsBySubjectIdTeacherIdSemesterIdLessonTypeAndExcludeCurrentLessonId(Lesson lesson);
 
     /**
-     * The method used for getting all lessons from database which are grouped by lesson
+     * Returns all lessons from database which are grouped with the given lesson.
      *
-     * @param lesson Lesson object for getting lessons
-     * @return List of Lessons
+     * @param lesson the lesson entity
+     * @return the list of lessons
      */
     List<Lesson> getGroupedLessonsByLesson(Lesson lesson);
 
     /**
-     * The method used for updating links to meeting for lessons.
-     * By default, link to meeting is updated by semester id and teacher id
-     * But update can be more specific by providing additional subject id and/or lesson type in a lesson object
+     * Updates links to lesson's meeting.
      *
-     * @param lesson Lesson object with new link to meeting
-     * @return Integer the number of links that was updated
+     * By default, link to meeting is updated by semester id and teacher id.
+     * But update can be more specific by providing additional subject id and/or lesson type in a lesson object.
+     *
+     * @param lesson the lesson with a new link to the meeting
+     * @return the number of updated links
      */
     Integer updateLinkToMeeting(Lesson lesson);
 
     /**
-     * Method is used to update grouped lessons
+     * Updates grouped lessons.
      *
+     * @param oldLesson the lesson
      * @param updatedLesson grouped lesson that needs to be updated
-     * @return updated Lesson
+     * @param isTeacherOrSubjectUpdated {@code true} if teacher or subject is updated
+     * @return the updated lesson
      */
     Lesson updateGrouped(Lesson oldLesson, Lesson updatedLesson, boolean isTeacherOrSubjectUpdated);
 
     /**
-     * The method is used to delete all lessons grouped
+     * Deletes all grouped lessons.
      *
-     * @param lesson grouped lesson which must be deleted
-     * @return deleted lesson
+     * @param lesson the grouped lesson to delete
+     * @return the deleted lesson
      */
     Lesson deleteGrouped(Lesson lesson);
 
+    /**
+     * Set the lesson as grouped.
+     * @param lessonId the id of the lesson
+     * @return the number of updated lessons
+     */
     int setGrouped(Long lessonId);
 }

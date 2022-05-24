@@ -9,32 +9,32 @@ import java.util.Optional;
 public interface ArchiveRepository {
 
     /**
-     * The method used for getting Optional of schedule from mongo database by semesterId
+     * Retrieves schedule from MongoDB by semester id.
      *
-     * @param semesterId Semester id for getting schedule by this id from mongo db
-     * @return Optional of schedule
+     * @param semesterId the id of the semester for getting a schedule by this id from MongoDB
+     * @return an Optional describing the schedule with the specified semester id, otherwise an empty Optional
      */
     Optional<ScheduleFullForArchiveDTO> getArchiveScheduleBySemesterId(Long semesterId);
 
     /**
-     * The method used for getting all of archived schedules from mongo database
+     * Returns all archived schedules from MongoDB.
      *
-     * @return list of schedules
+     * @return the list of schedules
      */
     List<ScheduleFullForArchiveDTO> getAllArchiveSchedule();
 
     /**
-     * The method used for save schedule in mongo database
+     * Saves a given schedule in MongoDB.
      *
-     * @param fullScheduleForArchiveDTO object ScheduleFullForArchiveDTO for save schedule in mongo db
-     * @return ScheduleFullForArchiveDTO object
+     * @param fullScheduleForArchiveDTO the schedule to save in MongoDB
+     * @return the saved schedule
      */
     ScheduleFullForArchiveDTO saveScheduleForArchive(ScheduleFullForArchiveDTO fullScheduleForArchiveDTO);
 
     /**
-     * The method used for delete schedule from mongo database by semesterId
+     * Deletes schedule from MongoDB database with the given id.
      *
-     * @param semesterId Semester id use for delete schedule by this id from mongo db
+     * @param semesterId the id of the semester. Uses for delete schedule by this id from MongoDB
      */
     void deleteArchiveScheduleBySemesterId(Long semesterId);
 }

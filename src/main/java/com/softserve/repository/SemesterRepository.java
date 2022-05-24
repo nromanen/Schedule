@@ -10,82 +10,85 @@ import java.util.Optional;
 public interface SemesterRepository extends BasicRepository<Semester, Long> {
 
     /**
-     * Method gets count of semesters with provided description and year
+     * Count the number of semesters with given description and year.
      *
-     * @param description searched description
-     * @param year        searched year
-     * @return count of semesters
+     * @param description the string represents the description
+     * @param year        the searched year
+     * @return the number of semesters
      */
     Long countSemesterDuplicatesByDescriptionAndYear(String description, int year);
 
     /**
-     * Method searches get of semester with currentSemester = true in the DB
+     * Retrieves semester with a value of currentSemester equal to {@code true}.
      *
-     * @return Optional with Semester if such exist, else return empty Optional
+     * @return an Optional describing the semester, otherwise - empty Optional
      */
     Optional<Semester> getCurrentSemester();
 
     /**
-     * Method gets Semester object with provided description and year
+     * Returns a semester with given description and year.
      *
-     * @param description searched description
-     * @param year        searched year
-     * @return Semester if such exists, else null
+     * @param description the string represents the description
+     * @param year        the searched year
+     * @return an Optional describing the semester if such exists, otherwise - empty Optional
      */
     Optional<Semester> getSemesterByDescriptionAndYear(String description, int year);
 
+    /**
+     * {@inheritDoc}
+     */
     List<Semester> getDisabled();
 
     /**
-     * Method sets value current semester to false fo all entities which have it true
+     * Sets the field currentSemester to {@code false} for all entities which have it {@code true}.
      *
-     * @return number of updated rows
+     * @return the number of updated rows
      */
     int updateAllSemesterCurrentToFalse();
 
     /**
-     * Method sets the value current semester true for semester with id
+     * Sets the field currentSemester to {@code true} for semester with given id.
      *
-     * @param semesterId id of the semester
-     * @return number of updated rows
+     * @param semesterId the id of the semester
+     * @return the number of updated rows
      */
     int setCurrentSemester(Long semesterId);
 
     /**
-     * Method searches get of semester with defaultSemester = true in the DB
+     * Returns all semesters with a value of defaultSemester equal to {@code true}.
      *
      * @return Optional with Semester if such exist, else return empty Optional
      */
     Optional<Semester> getDefaultSemester();
 
     /**
-     * Method sets value default semester to false fo all entities which have it true
+     * Sets the field defaultSemester equal to false for all semesters which have it equal to {@code true}.
      *
-     * @return number of updated rows
+     * @return the number of updated rows
      */
     int updateAllSemesterDefaultToFalse();
 
     /**
-     * Method sets the value default semester true for semester with id
+     * Sets the field defaultSemester equal to {@code true} for semester with given id.
      *
-     * @param semesterId id of the semester
-     * @return number of updated rows
+     * @param semesterId the id of the semester
+     * @return the number of updated rows
      */
     int setDefaultSemester(Long semesterId);
 
     /**
-     * The method used for getting unique days with lessons in the semester
+     * Returns all unique days with lessons in the given semester.
      *
-     * @param semesterId id of the semester
-     * @return a list of days
+     * @param semesterId the id of the semester
+     * @return the list of days
      */
     List<DayOfWeek> getDaysWithLessonsBySemesterId(Long semesterId);
 
     /**
-     * The method used for getting periods with lessons in the semester
+     * Returns all periods with lessons in the given semester.
      *
-     * @param semesterId id of the semester
-     * @return a list of periods
+     * @param semesterId the id of the semester
+     * @return the list of periods
      */
     List<Period> getPeriodsWithLessonsBySemesterId(Long semesterId);
 }

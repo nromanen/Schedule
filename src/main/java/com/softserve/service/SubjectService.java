@@ -8,43 +8,43 @@ import java.util.List;
 public interface SubjectService extends BasicService<Subject, Long> {
 
     /**
-     * Method finds if Subject with name already exists
+     * Checks if subject with given name already exists.
      *
-     * @param name subject name
-     * @return true if Subject with such name already exist
+     * @param name the string represents the subject name
+     * @return {@code true} if Subject with such name already exists, otherwise {@code false}
      */
     boolean isSubjectExistsWithName(String name);
 
     /**
-     * Method finds if Subject with name already exists
+     * Checks if subject with given name already exists in the repository ignoring the given group id.
      *
-     * @param id   subject id
-     * @param name subject name
-     * @return true if Subject with such name already exist
+     * @param id   the id of the subject
+     * @param name the string represents the subject name
+     * @return {@code true} if subject with given name already exists, otherwise {@code false}
      */
     boolean isSubjectExistsWithNameAndIgnoreWithId(Long id, String name);
 
     /**
-     * Method verifies if Subject with id param exist in repository
+     * Checks if subject with given id exists in the repository.
      *
-     * @param id subject id
-     * @return true if Subject with id param exist
+     * @param id the id of the subject
+     * @return {@code true} if subject with given id exists, otherwise {@code false}
      */
     boolean isExistsWithId(Long id);
 
     /**
-     * The method used for getting all disabled subjects
+     * Returns all disabled subjects.
      *
-     * @return list of disabled subjects
+     * @return the list of disabled subjects
      */
     List<Subject> getDisabled();
 
     /**
-     * The method used for getting subjects with their types from database
+     * Returns all subjects with their types from repository with the given semester id and teacher id.
      *
-     * @param semesterId Long semester from which subjects will be taken
-     * @param teacherId  Long teacher who teaches subjects
-     * @return List of subjects with their types
+     * @param semesterId the id of the semester from which subjects will be taken
+     * @param teacherId  the id of the teacher who teaches subjects
+     * @return the list of subjects with their types
      */
     List<SubjectWithTypeDTO> getSubjectsWithTypes(Long semesterId, Long teacherId);
 

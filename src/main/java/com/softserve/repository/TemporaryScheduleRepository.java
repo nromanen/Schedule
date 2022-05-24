@@ -8,125 +8,144 @@ import java.util.List;
 public interface TemporaryScheduleRepository extends BasicRepository<TemporarySchedule, Long> {
 
     /**
-     * Method counts temporary schedule records in db for date and vacation  in the semester
+     * Counts the number of temporary schedule records in the database for given date and vacation in the given semester.
      *
-     * @param date
-     * @param semesterId
-     * @param vacation
-     * @return number of records in db
+     * @param date       the required date
+     * @param semesterId the id of the semester
+     * @param vacation   the boolean value represents vacation
+     * @return the number of records in db
      */
     Long isExistTemporaryScheduleByVacationByDate(LocalDate date, Long semesterId, boolean vacation);
 
     /**
-     * Method counts temporary schedule records in db for date and vacation  in the semester
+     * Counts the number of temporary schedule records in the database for given date and vacation in the given semester ignoring the specified id.
      *
-     * @param date, semesterId, vacation
-     * @return number of records in db
+     * @param id         the id of temporary schedule that will be ignored
+     * @param date       the required date
+     * @param semesterId the id of the semester
+     * @param vacation   the boolean value represents vacation
+     * @return the number of records in db
      */
     Long isExistTemporaryScheduleByVacationByDateWithIgnoreId(Long id, LocalDate date, Long semesterId, boolean vacation);
 
     /**
-     * Method counts temporary schedule records in db for date and vacation  in the semester
+     * Counts the number of temporary schedule records in the database for date and vacation in the semester.
      *
-     * @param date, semesterId, vacation
-     * @return number of records in db
+     * @param date       the required date
+     * @param semesterId the id of the semester
+     * @param teacherId  the id of the teacher
+     * @param vacation   the boolean value represents vacation
+     * @return the number of records in db
      */
     Long isExistTemporaryScheduleByVacationByDateAndTeacher(LocalDate date, Long semesterId, Long teacherId, boolean vacation);
 
     /**
-     * Method counts temporary schedule records in db for date and vacation  in the semester
+     * Counts the number of temporary schedule records in the database for given date, teacher and vacation in the given semester ignoring the specified id.
      *
-     * @param date, semesterId, vacation
-     * @return number of records in db
+     * @param id         the id of temporary schedule that will be ignored
+     * @param date       the required date
+     * @param semesterId the id of the semester
+     * @param teacherId  the id of the teacher
+     * @param vacation   the boolean value represents vacation
+     * @return the number of records in db
      */
     Long isExistTemporaryScheduleByVacationByDateAndTeacherWithIgnoreId(Long id, LocalDate date, Long semesterId, Long teacherId, boolean vacation);
 
     /**
-     * Method counts schedule records in db for group in the semester
+     * Counts the number of temporary schedule records in the database that corresponds to the specified temporary schedule and given vacation.
      *
-     * @param object
-     * @return number of records in db
+     * @param object   the temporary schedule
+     * @param vacation the boolean value represents vacation
+     * @return the number of records in db
      */
     Long isExistTemporarySchedule(TemporarySchedule object, boolean vacation);
 
     /**
-     * Method counts schedule records in db for group in the semester
+     * Counts the number of temporary schedule records in the database that corresponds to the specified date, schedule id, semester id and given vacation.
      *
-     * @param object
-     * @return number of records in db
+     * @param object   the temporary schedule
+     * @param vacation the boolean value represents vacation
+     * @return the number of records in db
      */
     Long isExistTemporaryScheduleByDateAndScheduleId(TemporarySchedule object, boolean vacation);
 
     /**
-     * Method counts schedule records in db for group in the semester
+     * Counts the number of temporary schedule records in the database that corresponds to the specified temporary schedule and given vacation ignoring the specified id.
      *
-     * @param object
-     * @return number of records in db
+     * @param object   the temporary schedule
+     * @param vacation the boolean value represents vacation
+     * @return the number of records in db
      */
     Long isExistTemporaryScheduleByDateAndScheduleIdWithIgnoreId(TemporarySchedule object, boolean vacation);
 
     /**
-     * Method counts schedule records in db for group in the semester
+     * Counts the number of temporary schedule records in the database that corresponds to the specified temporary schedule ignoring the id of given schedule.
      *
-     * @param object
-     * @return number of records in db
+     * @param object the temporary schedule
+     * @return the number of records in db
      */
     Long isExistTemporaryScheduleWithIgnoreId(TemporarySchedule object);
 
     /**
-     * Method scheduleByDateRangeForTeacher get all schedules from db in particular date range
+     * Returns all temporary schedules from database for a specific date range and with given teacher id.
      *
-     * @param fromDate  LocalDate from
-     * @param toDate    LocalDate to
-     * @param teacherId id teacher
-     * @return list of schedules
+     * @param fromDate  the start of the date range
+     * @param toDate    the end of the date range
+     * @param teacherId the id of the teacher
+     * @return the list of temporary schedules for a specific date range and with given teacher id
      */
     List<TemporarySchedule> temporaryScheduleByDateRangeForTeacher(LocalDate fromDate, LocalDate toDate, Long teacherId);
 
     /**
-     * Method counts schedule records in db for group in the semester
+     * Returns all temporary schedules from database for a specific date range and with given semester id.
      *
-     * @param
-     * @return number of records in db
+     * @param semesterId the id of the semester
+     * @param fromDate   the start of the date range
+     * @param toDate     the end of the date range
+     * @return the list of temporary schedules with given semester id for a specific date range
      */
     List<TemporarySchedule> getAllBySemesterAndRange(Long semesterId, LocalDate fromDate, LocalDate toDate);
 
     /**
-     * Method counts temporary schedule records in db for teacher
+     * Returns all temporary schedules with related schedules and lessons from database for a specific date range and with given teacher id.
      *
-     * @param teacherId, fromDate, toDate
-     * @return number of records in db
+     * @param fromDate  the start of the date range
+     * @param toDate    the end of the date range
+     * @param teacherId the id of the teacher
+     * @return the list of temporary schedules for a specific date range and with given teacher id
      */
     List<TemporarySchedule> getAllByTeacherAndRange(LocalDate fromDate, LocalDate toDate, Long teacherId);
 
     /**
-     * Method counts schedule records in db for group in the semester
+     * Returns all temporary schedules from database with given semester id.
      *
-     * @param semesterId
-     * @return number of records in db
+     * @param semesterId the id of the semester
+     * @return the list of temporary schedules with given semester id
      */
     List<TemporarySchedule> getAllBySemester(Long semesterId);
 
     /**
-     * Method counts schedule records in db for group in the semester
+     * Returns all temporary schedules from database for a specific date range.
      *
-     * @param
-     * @return number of records in db
+     * @param fromDate the start of the date range
+     * @param toDate   the end of the date range
+     * @return the list of temporary schedules for a specific date range
      */
     List<TemporarySchedule> getAllByRange(LocalDate fromDate, LocalDate toDate);
 
     /**
-     * Method counts schedule records in db for group in the semester
+     * Returns all temporary schedules with vacation from database for a specific date range.
      *
-     * @param fromDate, toDate, teacherId, semesterId
-     * @return number of records in db
+     * @param fromDate the start of the date range
+     * @param toDate   the end of the date range
+     * @return the list of temporary schedules with vacation for a specific date range
      */
     List<TemporarySchedule> vacationByDateRangeForTeacher(LocalDate fromDate, LocalDate toDate);
 
     /**
-     * Method deleteTemporarySchedulesBySemesterId delete all temporarySchedule from db in with current semesterId
+     * Deletes all temporary schedules from database in with given semester id.
      *
-     * @param semesterId id Semester for delete TemporarySchedule
+     * @param semesterId the id of the semester
      */
     void deleteTemporarySchedulesBySemesterId(Long semesterId);
 }

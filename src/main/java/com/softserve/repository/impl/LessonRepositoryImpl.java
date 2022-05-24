@@ -96,9 +96,7 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
             "where les.semester.id = :semesterId)";
 
     /**
-     * Method gets information about all lessons from DB
-     *
-     * @return List of all lessons
+     * {@inheritDoc}
      */
     @Override
     public List<Lesson> getAll() {
@@ -115,6 +113,9 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
         return tq.getResultList();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<Lesson> getAllForGroup(Long groupId, Long semesterId) {
         log.info("In getAllForGroup(groupId = [{}])", groupId);
@@ -133,6 +134,9 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
         return tq.getResultList();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<Lesson> getLessonByTeacher(Long teacherId, Long semesterId) {
         log.info("In getLessonByTeacher(groupId = [{}])", teacherId);
@@ -151,6 +155,9 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
         return tq.getResultList();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Long countLessonDuplicates(Lesson lesson) {
         log.info("In countLessonDuplicates(lesson = [{}])", lesson);
@@ -171,6 +178,9 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
         return query.getSingleResult();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Long countLessonDuplicatesWithIgnoreId(Lesson lesson) {
         log.info("In countLessonDuplicates(lesson = [{}])", lesson);
@@ -196,6 +206,9 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
         return query.getSingleResult();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<Lesson> getLessonsBySemester(Long semesterId) {
         log.info("In getLessonsBySemester(semesterId = [{}])", semesterId);
@@ -206,13 +219,16 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
     }
 
     @Override
-    public void deleteLessonBySemesterId(Long semesterId) {
+    public void deleteLessonsBySemesterId(Long semesterId) {
         log.info("In deleteLessonBySemesterId(semesterId = [{}])", semesterId);
         sessionFactory.getCurrentSession()
                 .createQuery(DELETE_BY_SEMESTER_ID)
                 .setParameter("semesterId", semesterId).executeUpdate();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<Lesson> getLessonsBySubjectIdTeacherIdSemesterIdLessonTypeAndExcludeCurrentLessonId(Lesson lesson) {
         log.info("In getLessonsBySubjectIdTeacherIdSemesterIdLessonTypeAndExcludeCurrentLessonId(lesson = [{}]", lesson);
@@ -226,6 +242,9 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
                 .getResultList();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<Lesson> getGroupedLessonsByLesson(Lesson lesson) {
         log.info("getGroupedLessonsByLessonId(lesson = [{}]", lesson);
@@ -240,7 +259,12 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
                 .getResultList();
     }
 
-    // Checking if lesson is used in Schedule table
+    /**
+     * Checks if lesson is used in Schedule table.
+     *
+     * @param lesson the lesson entity to be checked
+     * @return {@code true} if lesson is used in Schedule table, otherwise {@code false}
+     */
     @Override
     protected boolean checkReference(Lesson lesson) {
         log.info("In checkReference(lesson = [{}])", lesson);
@@ -251,6 +275,9 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
         return count != 0;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Integer updateLinkToMeeting(Lesson lesson) {
         log.info("In repository updateLinkToMeeting lesson = [{}]", lesson);
@@ -278,6 +305,9 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
         return sessionFactory.getCurrentSession().createQuery(criteriaUpdate).executeUpdate();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Lesson updateGrouped(Lesson oldLesson, Lesson updatedLesson, boolean isTeacherOrSubjectUpdated) {
         log.info("Entered updateGroup({}, {})", oldLesson, updatedLesson);
@@ -304,6 +334,9 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
         return updatedLesson;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Lesson deleteGrouped(Lesson lesson) {
         log.info("Entered deleteGrouped({})", lesson);
@@ -320,6 +353,9 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
         return lesson;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int setGrouped(Long lessonId) {
         log.info("Entered setGrouped({})", lessonId);

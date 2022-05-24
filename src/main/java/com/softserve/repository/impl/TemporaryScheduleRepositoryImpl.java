@@ -12,16 +12,23 @@ import java.util.List;
 @Slf4j
 public class TemporaryScheduleRepositoryImpl extends BasicRepositoryImpl<TemporarySchedule, Long> implements TemporaryScheduleRepository {
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Long isExistTemporaryScheduleByVacationByDate(LocalDate date, Long semesterId, boolean vacation) {
         log.info("In isExistTemporaryScheduleByVacationByDate(semesterId = [{}], date = [{}], vacation = [{}])", semesterId, date, vacation);
-        return (Long) sessionFactory.getCurrentSession().createQuery("select count (t.id) from  TemporarySchedule t where  t.date = :date and t.vacation =  :vacation and t.semester.id = :semesterId and t.scheduleId = null  and t.teacher = null  and t.period = null ")
+        return (Long) sessionFactory.getCurrentSession().createQuery(
+                "select count (t.id) from TemporarySchedule t where t.date = :date and t.vacation = :vacation and t.semester.id = :semesterId and t.scheduleId = null  and t.teacher = null  and t.period = null ")
                 .setParameter("date", date)
                 .setParameter("semesterId", semesterId)
                 .setParameter("vacation", vacation)
                 .getSingleResult();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Long isExistTemporaryScheduleByVacationByDateWithIgnoreId(Long id, LocalDate date, Long semesterId, boolean vacation) {
         log.info("In isExistTemporaryScheduleByVacationByDateWithIgnoreId(semesterId = [{}], date = [{}])", semesterId, date);
@@ -35,6 +42,9 @@ public class TemporaryScheduleRepositoryImpl extends BasicRepositoryImpl<Tempora
                 .getSingleResult();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Long isExistTemporaryScheduleByVacationByDateAndTeacher(LocalDate date, Long semesterId, Long teacherId, boolean vacation) {
         log.info("In isExistVacationByDate(semesterId = [{}], date = [{}])", semesterId, date);
@@ -45,6 +55,9 @@ public class TemporaryScheduleRepositoryImpl extends BasicRepositoryImpl<Tempora
                 .getSingleResult();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Long isExistTemporaryScheduleByVacationByDateAndTeacherWithIgnoreId(Long id, LocalDate date, Long semesterId, Long teacherId, boolean vacation) {
         log.info("In isExistVacationByDate(semesterId = [{}], date = [{}])", semesterId, date);
@@ -58,6 +71,9 @@ public class TemporaryScheduleRepositoryImpl extends BasicRepositoryImpl<Tempora
                 .getSingleResult();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Long isExistTemporarySchedule(TemporarySchedule object, boolean vacation) {
         log.info("In isExistTemporarySchedule(object = [{}]", object);
@@ -75,6 +91,9 @@ public class TemporaryScheduleRepositoryImpl extends BasicRepositoryImpl<Tempora
                 .getSingleResult();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Long isExistTemporaryScheduleByDateAndScheduleId(TemporarySchedule object, boolean vacation) {
         log.info("In isExistTemporarySchedule(object = [{}]", object);
@@ -87,6 +106,9 @@ public class TemporaryScheduleRepositoryImpl extends BasicRepositoryImpl<Tempora
                 .getSingleResult();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Long isExistTemporaryScheduleByDateAndScheduleIdWithIgnoreId(TemporarySchedule object, boolean vacation) {
         log.info("In isExistTemporarySchedule(object = [{}]", object);
@@ -100,6 +122,9 @@ public class TemporaryScheduleRepositoryImpl extends BasicRepositoryImpl<Tempora
                 .getSingleResult();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Long isExistTemporaryScheduleWithIgnoreId(TemporarySchedule object) {
         log.info("In isExistTemporarySchedule(object = [{}]", object);
@@ -117,6 +142,9 @@ public class TemporaryScheduleRepositoryImpl extends BasicRepositoryImpl<Tempora
                 .getSingleResult();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<TemporarySchedule> temporaryScheduleByDateRangeForTeacher(LocalDate fromDate, LocalDate toDate, Long teacherId) {
         log.info("In temporaryScheduleByDateRangeForTeacher with fromDate = {} and toDate = {} and teacherId = {}", fromDate, toDate, teacherId);
@@ -128,6 +156,9 @@ public class TemporaryScheduleRepositoryImpl extends BasicRepositoryImpl<Tempora
                 .getResultList();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<TemporarySchedule> getAllByTeacherAndRange(LocalDate fromDate, LocalDate toDate, Long teacherId) {
         log.info("In getAllByTeacherAndRange(teacherId = [{}], fromDate = [{}], toDate = [{}]", teacherId, fromDate, teacherId);
@@ -141,6 +172,9 @@ public class TemporaryScheduleRepositoryImpl extends BasicRepositoryImpl<Tempora
                 .getResultList();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<TemporarySchedule> getAllBySemester(Long semesterId) {
         log.info("In getAllBySemester(semesterId = [{}]", semesterId);
@@ -150,6 +184,9 @@ public class TemporaryScheduleRepositoryImpl extends BasicRepositoryImpl<Tempora
                 .getResultList();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<TemporarySchedule> getAllByRange(LocalDate fromDate, LocalDate toDate) {
         log.info("In getAllByRange");
@@ -160,6 +197,9 @@ public class TemporaryScheduleRepositoryImpl extends BasicRepositoryImpl<Tempora
                 .getResultList();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<TemporarySchedule> getAllBySemesterAndRange(Long semesterId, LocalDate fromDate, LocalDate toDate) {
         log.info("In getAllBySemesterAndRange");
@@ -171,6 +211,9 @@ public class TemporaryScheduleRepositoryImpl extends BasicRepositoryImpl<Tempora
                 .getResultList();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<TemporarySchedule> vacationByDateRangeForTeacher(LocalDate fromDate, LocalDate toDate) {
         log.info("In vacationByDateRangeForTeacher");
@@ -181,6 +224,9 @@ public class TemporaryScheduleRepositoryImpl extends BasicRepositoryImpl<Tempora
                 .getResultList();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void deleteTemporarySchedulesBySemesterId(Long semesterId) {
         log.info("In deleteTemporarySchedulesBySemesterId with semesterId = {}", semesterId);

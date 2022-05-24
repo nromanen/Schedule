@@ -9,33 +9,33 @@ import java.util.List;
 public interface ArchiveService {
 
     /**
-     * The method used for getting schedule from mongo database by semesterId
+     * Returns a schedule with given semester id.
      *
-     * @param semesterId Semester id for getting schedule by this id from mongo db
-     * @return ScheduleFullForArchiveDTO
-     * @throws EntityNotFoundException if schedule by current semesterId not found
+     * @param semesterId the id of the semester for getting schedule by this id
+     * @return the schedule with given semester id
+     * @throws EntityNotFoundException if schedule by given semester id not found
      */
     ScheduleFullForArchiveDTO getArchiveScheduleBySemesterId(Long semesterId);
 
     /**
-     * The method used for getting all of archived schedules from mongo database
+     * Returns all semesters in the archived schedules.
      *
-     * @return list of semesters
+     * @return the list of semesters
      */
     List<SemesterDTO> getAllSemestersInArchiveSchedule();
 
     /**
-     * The method used for save schedule in mongo database
+     * Saves given schedule in archive.
      *
-     * @param scheduleFullForArchiveDTO object ScheduleFullForArchiveDTO for save schedule in mongo db
-     * @return ScheduleFullForArchiveDTO object
+     * @param scheduleFullForArchiveDTO the schedule to save in archive
+     * @return the saved schedule
      */
     ScheduleFullForArchiveDTO saveScheduleForArchive(ScheduleFullForArchiveDTO scheduleFullForArchiveDTO);
 
     /**
-     * The method used for delete schedule from mongo database by semesterId
+     * Deletes schedule from the archive by semester id.
      *
-     * @param semesterId Semester id use for delete schedule by this id from mongo db
+     * @param semesterId the id of the semester to be deleted
      */
     void deleteArchiveScheduleBySemesterId(Long semesterId);
 }

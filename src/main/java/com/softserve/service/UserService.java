@@ -2,6 +2,7 @@ package com.softserve.service;
 
 import com.softserve.entity.User;
 import com.softserve.entity.enums.Role;
+import com.softserve.exception.EntityNotFoundException;
 import com.softserve.exception.IncorrectPasswordException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
@@ -11,77 +12,80 @@ import java.util.Optional;
 public interface UserService extends BasicService<User, Long> {
 
     /**
-     * The method used for getting User by email from database
+     * Retrieves a user by email from the repository.
      *
-     * @param email String email used to find User by it
-     * @return User entity
+     * @param email the string represents user's email
+     * @return the found user
+     * @throws EntityNotFoundException if user with given email is not found
      */
     User findByEmail(String email);
 
     /**
-     * The method used for getting User by token from database
+     * Retrieves a user by token from the repository.
      *
-     * @param token String token used to find User by it
-     * @return User entity
+     * @param token the string represents the user's token
+     * @return the founded user
+     * @throws EntityNotFoundException if user with given token is not found
      */
     User findByToken(String token);
 
     /**
-     * The method used for registration User
+     * Registers the given user in the system.
      *
-     * @param user Entity User used for registration User in system
+     * @param user the user used for registration in the system
      * @return User entity
      * @throws IncorrectPasswordException when password is incorrect or not strong enough
      */
     User registration(User user);
 
     /**
-     * The method used for reset User password
+     * Resets the user password.
      *
-     * @param email used for getting user by email
+     * @param email the string represents user's email
      */
     void resetPassword(String email);
 
     /**
-     * The method used for create User after sign in with Oauth2 Social
+     * Creates user after sign in with Oauth2 Social.
      *
-     * @param oAuth2User OAuth2User - credentials for save User in db
-     * @return User entity
+     * @param oAuth2User the user credentials to save
+     * @return created user
      */
     User createSocialUser(OAuth2User oAuth2User);
 
     /**
-     * The method used for getting Optional<User> by email from database
+     * Returns user by email from the repository.
      *
-     * @param email String email used to find User by it
-     * @return Optional<User> entity
+     * @param email the string represents user's email
+     * @return an Optional describing the user or an empty Optional if none found
      */
     Optional<User> findSocialUser(String email);
 
     /**
-     * The method used for getting list of users from database, that have role USER in system
+     * Returns all users from the repository, that have role USER.
      *
-     * @return list of entities User
+     * @return the list of users that have role USER
      */
     List<User> getAllUsersWithRoleUser();
 
     /**
-     * The method used for change password for current user
+     * Returns the new encoded password for the given user.
      *
-     * @param user        User entity
-     * @param oldPassword String password, that use user for sign in up to now
-     * @param newPassword String password, that will use user for sign in in future
-     * @return Optional<User> entity
+     * @param user        the user
+     * @param oldPassword the string represents previous raw password
+     * @param newPassword the string represents new raw password
+     * @return the string represents new encoded password
+     * @throws IncorrectPasswordException if previous password was incorrect or new one not strong enough
      */
     String changePasswordForCurrentUser(User user, String oldPassword, String newPassword);
 
     /**
-     * The method used for automatic registration User
+     * Performs automatic user registration in the system.
      *
-     * @param email email used for registration User in system
-     * @param role  role used for registration User in system
-     * @return User entity
-     * @throws IncorrectPasswordException when password is incorrect or not strong enough
+     * @param email the string represents email for user registration
+     * @param role  the role of the new user
+     * @return the new registered user
+     * @throws IncorrectPasswordException if password was incorrect or not strong enough
      */
     User automaticRegistration(String email, Role role);
 
