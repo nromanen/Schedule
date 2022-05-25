@@ -27,10 +27,7 @@ public class SubjectServiceImpl implements SubjectService {
     }
 
     /**
-     * Method gets information from Repository for particular subject with id parameter
-     *
-     * @param id Identity number of the subject
-     * @return Subject entity
+     * {@inheritDoc}
      */
     @Override
     public Subject getById(Long id) {
@@ -40,9 +37,7 @@ public class SubjectServiceImpl implements SubjectService {
     }
 
     /**
-     * Method gets information about all subjects from Repository
-     *
-     * @return List of all subject
+     * {@inheritDoc}
      */
     @Override
     public List<Subject> getAll() {
@@ -51,10 +46,9 @@ public class SubjectServiceImpl implements SubjectService {
     }
 
     /**
-     * Method saves new subject to Repository
+     * {@inheritDoc}
      *
-     * @param object Subject entity to be saved
-     * @return saved Subject entity
+     * @throws FieldAlreadyExistsException  if subject with given name already exists.
      */
     @Override
     public Subject save(Subject object) {
@@ -67,10 +61,10 @@ public class SubjectServiceImpl implements SubjectService {
     }
 
     /**
-     * Method updates information for an existing subject in Repository
+     * {@inheritDoc}
      *
-     * @param object Subject entity with updated fields
-     * @return updated Subject entity
+     * @throws FieldAlreadyExistsException if subject with given name already exists.
+     * @throws EntityNotFoundException if given subject not found
      */
     @Override
     public Subject update(Subject object) {
@@ -87,10 +81,7 @@ public class SubjectServiceImpl implements SubjectService {
     }
 
     /**
-     * Method deletes an existing subject from Repository
-     *
-     * @param object Subject entity to be deleted
-     * @return deleted Subject entity
+     * {@inheritDoc}
      */
     @Override
     public Subject delete(Subject object) {

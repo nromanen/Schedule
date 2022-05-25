@@ -56,10 +56,7 @@ public class UserRepositoryImpl extends BasicRepositoryImpl<User, Long> implemen
     }
 
     /**
-     * Modified update method, which merge entity before updating it
-     *
-     * @param entity user is going to be updated
-     * @return User
+     * {@inheritDoc}
      */
     @Override
     public User update(User entity) {
@@ -69,7 +66,12 @@ public class UserRepositoryImpl extends BasicRepositoryImpl<User, Long> implemen
         return entity;
     }
 
-    // Checking if user is used in Teacher table
+    /**
+     * Checks if given user is used in Teacher table.
+     *
+     * @param user the user to be checked
+     * @return {@code true} if there's teacher related with given user, otherwise {@code false}
+     */
     @Override
     protected boolean checkReference(User user) {
         log.info("In checkReference(user = [{}])", user);

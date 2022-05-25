@@ -22,10 +22,7 @@ public class DepartmentServiceImpl implements DepartmentService {
     private final DepartmentRepository repository;
 
     /**
-     * The method returns information from Repository for particular department with id parameter
-     *
-     * @param id Identity number of the department
-     * @return Department entity
+     * {@inheritDoc}
      */
     @Override
     public Department getById(Long id) {
@@ -35,9 +32,7 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     /**
-     * The method returns information about all departments from Repository
-     *
-     * @return List of all departments
+     * {@inheritDoc}
      */
     @Override
     public List<Department> getAll() {
@@ -46,10 +41,9 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     /**
-     * The method saves new department to Repository
+     * {@inheritDoc}
      *
-     * @param object Department entity with info to be saved
-     * @return saved Department entity
+     * @throws FieldAlreadyExistsException if there is a department with a name as the given department has
      */
     @Override
     public Department save(Department object) {
@@ -59,10 +53,9 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     /**
-     * The method updates information for an existing department in  Repository
+     * {@inheritDoc}
      *
-     * @param object Department entity with info to be updated
-     * @return updated Department entity
+     * @throws FieldAlreadyExistsException if there is a department with a name as the given department has
      */
     @Override
     public Department update(Department object) {
@@ -72,10 +65,7 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     /**
-     * The method deletes an existing department from Repository
-     *
-     * @param object Department entity to be deleted
-     * @return deleted Department entity
+     * {@inheritDoc}
      */
     @Override
     public Department delete(Department object) {
@@ -101,12 +91,22 @@ public class DepartmentServiceImpl implements DepartmentService {
         return repository.getAllTeachers(departmentId);
     }
 
+    /**
+     * Checks if there is no department with the same name as the given department in the repository.
+     * @param object the department
+     * @throws FieldAlreadyExistsException if there is a department with the name as the given department has
+     */
     private void checkNameForUniqueness(Department object) {
         if (repository.isExistsByName(object.getName())) {
             throw new FieldAlreadyExistsException(Department.class, "name", object.getName());
         }
     }
 
+    /**
+     * Checks the uniqueness of the department name in the repository.
+     * @param object the department
+     * @throws FieldAlreadyExistsException if the name of the given department not unique
+     */
     private void checkNameForUniquenessIgnoringId(Department object) {
         if (repository.isExistsByNameIgnoringId(object.getName(), object.getId())) {
             throw new FieldAlreadyExistsException(Department.class, "name", object.getName());

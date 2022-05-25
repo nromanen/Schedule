@@ -12,73 +12,105 @@ import java.util.Map;
 public interface TemporaryScheduleService extends BasicService<TemporarySchedule, Long> {
 
     /**
-     * The method used for getting all temporary schedules
+     * Returns all temporary schedules with related schedules and lessons from the repository for a specific date range and with given teacher id.
      *
-     * @return list of  temporary schedules
+     * @param teacherId the id of the teacher
+     * @param fromDate  the start of the date range
+     * @param toDate    the end of the date range
+     * @return the list of temporary schedules
      */
     List<TemporarySchedule> getAllByTeacherAndRange(LocalDate fromDate, LocalDate toDate, Long teacherId);
 
     /**
-     * The method used for getting all temporary schedules
+     * Returns all temporary schedules from the repository for a specific date range and with given teacher id.
      *
-     * @return list of  temporary schedules
+     * @param fromDate  the start of the date range
+     * @param toDate    the end of the date range
+     * @param teacherId the id of the teacher
+     * @return the list of temporary schedules for a specific date range and with given teacher id
      */
     List<TemporarySchedule> getTemporaryScheduleByTeacherAndRange(LocalDate fromDate, LocalDate toDate, Long teacherId);
 
     /**
-     * The method used for getting all temporary schedules
+     * Returns all temporary schedules from the repository with a semester id equal to the current one.
      *
-     * @return list of  temporary schedules
+     * @return the list of temporary schedules for current semester
      */
     List<TemporarySchedule> getAllByCurrentSemester();
 
     /**
-     * The method used for getting all temporary schedules by semesterId
+     * Returns all temporary schedules from the repository with given semester id.
      *
-     * @return list of  temporary schedules
+     * @param semesterId the id of the semester
+     * @return the list of temporary schedules with given semester id.
      */
     List<TemporarySchedule> getAllBySemesterId(Long semesterId);
 
     /**
-     * The method used for getting all temporary schedules
+     * Returns all temporary schedules from the repository for a specific date range.
      *
-     * @return list of  temporary schedules
+     * @param fromDate the start of the date range
+     * @param toDate   the end of the date range
+     * @return the list of temporary schedules for a specific date range
      */
     List<TemporarySchedule> getAllByRange(LocalDate fromDate, LocalDate toDate);
 
     /**
-     * The method used for getting all temporary schedules
+     * Returns all temporary schedules with given semester id for a specific date range.
      *
-     * @return list of  temporary schedules
+     * @param semesterId the id of the semester
+     * @param fromDate   the start of the date range
+     * @param toDate     the end of the date range
+     * @return the list of temporary schedules with given semester id for a specific date range
      */
     List<TemporarySchedule> getAllBySemesterAndRange(Long semesterId, LocalDate fromDate, LocalDate toDate);
 
     /**
-     * The method used for getting all temporary schedules
+     * Returns all temporary schedules with vacation for a specific date range.
      *
-     * @return list of  temporary schedules
+     * @param fromDate the start of the date range
+     * @param toDate   the end of the date range
+     * @return the list of  temporary schedules with vacation for a specific date range
      */
     List<TemporarySchedule> vacationByDateRange(LocalDate fromDate, LocalDate toDate);
 
     /**
-     * The method used for saving temporary schedule in database
+     * Saves the given temporary schedule in the repository in a specific date range.
      *
+     * @param from   the start of the date range
+     * @param to     the end of the date range
      * @param object temporary schedule
-     * @return save temporary schedule
+     * @return the list of messages about occurred errors while saving the temporary schedule
      */
     List<String> addRange(LocalDate from, LocalDate to, TemporarySchedule object);
 
     /**
-     * Method deleteTemporarySchedulesBySemesterId delete all temporarySchedule from db in with current semesterId
+     * Deletes all temporary schedule from the repository with given semester id.
      *
-     * @param semesterId id Semester for delete schedule
+     * @param semesterId the id of the semester
      */
     void deleteTemporarySchedulesBySemesterId(Long semesterId);
 
-    public String getTeacherEmailFromTemporarySchedule(Teacher teacher);
+    /**
+     * Returns teacher's email.
+     *
+     * @param teacher the teacher entity
+     * @return the string represents email of the given teacher. Returns {@code null} if teacher equals to {@code null}
+     */
+    String getTeacherEmailFromTemporarySchedule(Teacher teacher);
 
-    public Teacher getTeacherByScheduleId(Long scheduleId);
+    /**
+     * Returns teacher entity by the given schedule id.
+     * @param scheduleId the id of the schedule
+     * @return teacher entity by the given schedule id or {@code null} if the schedule id equal to {@code null}
+     */
+    Teacher getTeacherByScheduleId(Long scheduleId);
 
+    /**
+     * Returns the lists of temporary schedules grouped into map by the days of the week and then grouped into map by type of the week.
+     * @param semesterId the id of the semester
+     * @return the lists of temporary schedules grouped into map by the days of the week and then grouped into map by type of the week
+     */
     Map<EvenOdd, Map<DayOfWeek, List<TemporarySchedule>>> getTemporaryScheduleForEvenOddWeeks(Long semesterId);
 }
 

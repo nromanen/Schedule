@@ -8,27 +8,27 @@ import java.util.List;
 public interface DepartmentRepository extends BasicRepository<Department, Long> {
 
     /**
-     * The method used for finding out if name exists
+     * Returns {@code true} if there is a department with the specified name.
      *
-     * @param name String name used to find Department
-     * @return boolean : if exists - true, else - false
+     * @param name the string represents the name of the department
+     * @return {@code true} if there is such department, otherwise {@code false}
      */
     boolean isExistsByName(String name);
 
     /**
-     * The method used for finding out if name exists ignoring id
+     * Returns {@code true} if there is a department with the specified name other than the department with the given id.
      *
-     * @param name String name used to find Department
-     * @param id   Long id
-     * @return boolean : if exists - true, else - false
+     * @param name the string represents the name of the department
+     * @param id the id of the department to be excluded from the search result
+     * @return {@code true} if there is such department, otherwise {@code false}
      */
     boolean isExistsByNameIgnoringId(String name, Long id);
 
     /**
-     * The method used for getting all teachers from the Department
+     * Returns all teachers with the given department id.
      *
-     * @param departmentId id of the department
-     * @return list of teachers
+     * @param departmentId the id of the department
+     * @return the list of teachers
      */
     List<Teacher> getAllTeachers(Long departmentId);
 }

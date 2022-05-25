@@ -38,10 +38,7 @@ public class LessonServiceImpl implements LessonService {
     }
 
     /**
-     * Method gets information from Repository for particular lesson with id parameter
-     *
-     * @param id Identity number of the lesson
-     * @return Lesson entity
+     * {@inheritDoc}
      */
     @Override
     @Transactional(readOnly = true)
@@ -55,9 +52,7 @@ public class LessonServiceImpl implements LessonService {
     }
 
     /**
-     * Method gets information about all lessons from Repository
-     *
-     * @return List of all lessons
+     * {@inheritDoc}
      */
     @Override
     @Transactional(readOnly = true)
@@ -89,12 +84,12 @@ public class LessonServiceImpl implements LessonService {
     }
 
     /**
-     * Method saves new lesson to Repository and automatically assigns
-     * teacher for site by teacher data if teacher for site is empty or null and
-     * subject for site by subject name if subject for site is empty or null
+     * {@inheritDoc}
      *
-     * @param object Lesson entity with info to be saved
-     * @return saved Lesson entity
+     * Saves new lesson in the repository and automatically assigns
+     * teacher for site by teacher data if teacher for site is empty or null and
+     * subject for site by subject name if subject for site is empty or null.
+     * @throws EntityAlreadyExistsException if given lesson already exists
      */
     @Override
     @Transactional
@@ -126,14 +121,14 @@ public class LessonServiceImpl implements LessonService {
         lessons.forEach(lesson -> {
             lessonsList.add(save(lesson));
         });
+
         return lessonsList;
     }
 
     /**
-     * Method updates information for an existing lesson in Repository
+     * {@inheritDoc}
      *
-     * @param lesson Lesson entity with info to be updated
-     * @return updated Lesson entity
+     * @throws EntityAlreadyExistsException if there is already another lesson with parameters as in the given
      */
     @Override
     @Transactional
@@ -159,10 +154,7 @@ public class LessonServiceImpl implements LessonService {
     }
 
     /**
-     * Method deletes an existing lesson from Repository
-     *
-     * @param object Lesson entity to be deleted
-     * @return deleted Lesson entity
+     * {@inheritDoc}
      */
     @Override
     @Transactional
@@ -263,12 +255,15 @@ public class LessonServiceImpl implements LessonService {
         return lessonRepository.save(lesson);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @Transactional
     @CacheEvict(value = "lessons", allEntries = true)
     public void deleteLessonBySemesterId(Long semesterId) {
         log.info("In method deleteLessonBySemesterId with semesterId = {}", semesterId);
-        lessonRepository.deleteLessonBySemesterId(semesterId);
+        lessonRepository.deleteLessonsBySemesterId(semesterId);
     }
 
     /**

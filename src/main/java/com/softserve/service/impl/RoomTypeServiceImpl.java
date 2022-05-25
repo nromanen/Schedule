@@ -25,10 +25,7 @@ public class RoomTypeServiceImpl implements RoomTypeService {
     }
 
     /**
-     * Method gets information from Repository for particular RoomType with id parameter
-     *
-     * @param id Identity number of the RoomType
-     * @return RoomType entity
+     * {@inheritDoc}
      */
     @Override
     public RoomType getById(Long id) {
@@ -38,9 +35,7 @@ public class RoomTypeServiceImpl implements RoomTypeService {
     }
 
     /**
-     * Method gets information about all RoomTypes from Repository
-     *
-     * @return List of all RoomTypes
+     * {@inheritDoc}
      */
     @Override
     public List<RoomType> getAll() {
@@ -49,10 +44,9 @@ public class RoomTypeServiceImpl implements RoomTypeService {
     }
 
     /**
-     * Method saves new RoomType to Repository
+     * {@inheritDoc}
      *
-     * @param object RoomType entity with info to be saved
-     * @return saved RoomType entity
+     * @throws FieldAlreadyExistsException if given room type already exists in the repository
      */
     @Override
     public RoomType save(RoomType object) {
@@ -64,10 +58,7 @@ public class RoomTypeServiceImpl implements RoomTypeService {
     }
 
     /**
-     * Method updates information for an existing group in  Repository
-     *
-     * @param object Group entity with info to be updated
-     * @return updated Group entity
+     * {@inheritDoc}
      */
     @Override
     public RoomType update(RoomType object) {
@@ -84,10 +75,7 @@ public class RoomTypeServiceImpl implements RoomTypeService {
     }
 
     /**
-     * Method deletes an existing RoomType from Repository
-     *
-     * @param object RoomType entity to be deleted
-     * @return deleted RoomType entity
+     * {@inheritDoc}
      */
     @Override
     public RoomType delete(RoomType object) {

@@ -8,25 +8,25 @@ import java.util.Optional;
 public interface UserRepository extends BasicRepository<User, Long> {
 
     /**
-     * The method used for getting User by email from database
+     * Retrieves a user by email from the database.
      *
-     * @param email String email used to find User by it
-     * @return User
+     * @param email the string represents user's email
+     * @return an Optional describing the user or an empty Optional if none found
      */
     Optional<User> findByEmail(String email);
 
     /**
-     * The method used for getting User by token from database
+     * Retrieves a user by token from the database.
      *
-     * @param token String token used to find User by it
-     * @return User
+     * @param token the string represents the user's token
+     * @return an Optional describing the user or an empty Optional if none found
      */
     Optional<User> findByToken(String token);
 
     /**
-     * The method used for getting list of users from database, that have role USER in system
+     * Returns all users from the database, that have role USER in system.
      *
-     * @return list of entities Teacher
+     * @return the list of users that have role USER
      */
     List<User> getAllUsersWithRoleUser();
 }

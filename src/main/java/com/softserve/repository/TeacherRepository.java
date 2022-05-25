@@ -7,23 +7,31 @@ import java.util.Optional;
 
 public interface TeacherRepository extends BasicRepository<Teacher, Long> {
 
+    /**
+     * {@inheritDoc}
+     */
     List<Teacher> getDisabled();
 
     /**
-     * The method used for getting teacher by userId
+     * Retrieves a teacher by user id.
      *
-     * @param userId Identity user id
-     * @return Optional<Teacher> entity
+     * @param userId the id of the user
+     * @return an Optional describing the teacher with the given user id or an empty Optional if none found
      */
     Optional<Teacher> findByUserId(Long userId);
 
     /**
-     * The method used for getting list of teachers from database, that don't registered in system
+     * Returns all teachers from database, that don't registered in system.
      *
-     * @return list of entities Teacher
+     * @return the list of teachers
      */
     List<Teacher> getAllTeacherWithoutUser();
 
+    /**
+     * Retrieves a teacher entity by his full name and position.
+     * @param teacher the teacher with given full name and position
+     * @return an Optional describing the teacher with the given user id or an empty Optional if none found
+     */
     Optional<Teacher> getExistingTeacher(Teacher teacher);
 
 }

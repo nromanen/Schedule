@@ -5,18 +5,18 @@ import com.softserve.entity.RoomType;
 public interface RoomTypeService extends BasicService<RoomType, Long> {
 
     /**
-     * Method finds if RoomType with description already exists
+     * Checks if room type with given description already exists in the repository.
      *
-     * @param description
-     * @return true if RoomType with such description already exist
+     * @param description the description of the room type
+     * @return {@code true} if room type with given description already exists
      */
     boolean isRoomTypeExistsWithDescription(String description);
 
     /**
-     * Method verifies if RoomType with id param exist in repository
+     * Checks if room type with given id already exist in the repository.
      *
-     * @param id
-     * @return true if RoomType with id param exist
+     * @param id the id of the room type
+     * @return {@code true} if room type with given id already exist
      */
     boolean isExistsWithId(Long id);
 }

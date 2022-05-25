@@ -243,6 +243,9 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
                 .getResultList();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<Schedule> getAllSchedulesByTeacherIdAndSemesterId(Long teacherId, Long semesterId) {
         log.info("Enter into getAll of TeacherRepositoryImpl");
@@ -292,9 +295,7 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
     }
 
     /**
-     * Method gets information about all schedules from DB
-     *
-     * @return List of all schedules
+     * {@inheritDoc}
      */
     @Override
     public List<Schedule> getAll() {
@@ -376,6 +377,9 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
                 .getSingleResult();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<Schedule> getAllOrdered(Long semesterId) {
         log.debug("Entered getAllOrdered()");

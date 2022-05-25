@@ -38,9 +38,9 @@ public class DepartmentRepositoryImpl extends BasicRepositoryImpl<Department, Lo
     }
 
     /**
-     * The method returns information about all departments from DB
+     * Returns the list of all departments with ascending sorting by name from the database.
      *
-     * @return List of all departments with ASC sorting by name
+     * @return the list of departments with ascending sorting by name
      */
     @Override
     public List<Department> getAll() {
@@ -51,10 +51,7 @@ public class DepartmentRepositoryImpl extends BasicRepositoryImpl<Department, Lo
     }
 
     /**
-     * The method used for updating Department
-     *
-     * @param entity entity is going to be updated
-     * @return entity that was updated
+     * {@inheritDoc}
      */
     @Override
     public Department update(Department entity) {
@@ -105,6 +102,9 @@ public class DepartmentRepositoryImpl extends BasicRepositoryImpl<Department, Lo
                 .getResultList();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected boolean checkReference(Department department) {
         return sessionFactory.getCurrentSession()

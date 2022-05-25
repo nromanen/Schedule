@@ -86,10 +86,10 @@ public abstract class BasicRepositoryImpl<T extends Serializable, I extends Seri
     }
 
     /**
-     * The method used for checking if entity is used in another tables
+     * Checks if entity is used in another tables.
      *
-     * @param entity entity is going to be checked
-     * @return true if there's constraint violation
+     * @param entity the entity to be checked
+     * @return {@code true} if entity is used in another tables, otherwise {@code false}
      */
     protected boolean checkReference(T entity) {
         log.info("In checkReference(entity = [{}])", entity);

@@ -70,11 +70,7 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * The method used for getting user by id
-     *
-     * @param id Identity user id
-     * @return User entity
-     * @throws EntityNotFoundException if user doesn't exist
+     * {@inheritDoc}
      */
     @Override
     public User getById(Long id) {
@@ -85,9 +81,7 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * Method gets information about all users from Repository
-     *
-     * @return List of all users
+     * {@inheritDoc}
      */
     @Override
     public List<User> getAll() {
@@ -96,11 +90,9 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * The method used for saving user in database
+     * {@inheritDoc}
      *
-     * @param object new user
-     * @return User entity
-     * @throws FieldAlreadyExistsException when some of provided fields already exist in database
+     * @throws FieldAlreadyExistsException if some of provided fields already exist in the repository
      */
     @Override
     public User save(User object) {
@@ -113,11 +105,9 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * The method used for updating user in database
+     * {@inheritDoc}
      *
-     * @param object updated user
-     * @return User entity
-     * @throws FieldAlreadyExistsException when some of provided fields already exist in database
+     * @throws FieldAlreadyExistsException if some of provided fields already exist in the repository
      */
     @Override
     public User update(User object) {
@@ -131,10 +121,7 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * Method deletes an existing user from repository
-     *
-     * @param object user entity to be deleted
-     * @return deleted user
+     * {@inheritDoc}
      */
     @Override
     public User delete(User object) {

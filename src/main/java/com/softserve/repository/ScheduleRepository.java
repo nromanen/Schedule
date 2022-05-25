@@ -11,182 +11,198 @@ import java.util.Optional;
 public interface ScheduleRepository extends BasicRepository<Schedule, Long> {
 
     /**
-     * Method searches if there are any saved records in schedule for particular group
+     * Counts the number of conflicts for particular group in schedule.
+     * if there are any saved records in schedule for particular group.
      *
-     * @param semesterId the semester id that the search is performed for
-     * @param dayOfWeek  the day of the week that the search is performed for
-     * @param evenOdd    lesson should occur by EVEN/ODD/WEEKLY
-     * @param classId    id for period that the search is performed for
-     * @param groupId    group id for which the search is performed for
-     * @return 0 if there are no records(conflicts), else number of records
+     * @param semesterId the id of the semester for which the search is performed
+     * @param dayOfWeek  the day of the week for which the search is performed
+     * @param evenOdd    the type of the week for which the search is performed
+     * @param classId    the class id for which the search is performed
+     * @param groupId    the group id for which the search is performed
+     * @return the number conflicts for particular group in schedule
      */
     Long conflictForGroupInSchedule(Long semesterId, DayOfWeek dayOfWeek, EvenOdd evenOdd, Long classId, Long groupId);
 
     /**
-     * Method gets the count of records in Schedule table for teacher if teacher has Schedule at some semester at some day(by even odd week) for some period
+     * Counts the number of conflicts for particular teacher in schedule.
+     * Method searches if teacher has schedule at some semester at some day(by even odd week) for some period.
      *
-     * @param semesterId id of semester
-     * @param dayOfWeek  day of the week
-     * @param evenOdd    even/odd/weekly
-     * @param classId    id of period
-     * @param teacherId  id of the teacher
-     * @return the count of records in Schedule table
+     * @param semesterId the id of the semester for which the search is performed
+     * @param dayOfWeek  the day of the week for which the search is performed
+     * @param evenOdd    the type of the week for which the search is performed
+     * @param classId    the class id for which the search is performed
+     * @param teacherId  the id of the teacher for which the search is performed
+     * @return the number of conflicts for particular teacher in schedule
      */
     Long conflictForTeacherInSchedule(Long semesterId, DayOfWeek dayOfWeek, EvenOdd evenOdd, Long classId, Long teacherId);
 
     /**
-     * Method gets the list of unique groups in semester
+     * Returns a list of unique groups in semester.
      *
-     * @param semesterId id of semester
-     * @return list of unique groups in semester
+     * @param semesterId the id of the semester
+     * @return the list of unique groups in semester
      */
     List<Group> uniqueGroupsInScheduleBySemester(Long semesterId);
 
     /**
-     * Method gets the list of periods/classes for group in some semester at some day
+     * Returns a list of periods for group in some semester at some day.
      *
-     * @param semesterId id of the semester
-     * @param groupId    id of the group
-     * @param day        day of the week
-     * @return the list of periods/classes
+     * @param semesterId the id of the semester
+     * @param groupId    the id of the group
+     * @param day        the day of the week
+     * @return the list of periods
      */
     List<Period> periodsForGroupByDayBySemester(Long semesterId, Long groupId, DayOfWeek day);
 
     /**
-     * Method gets Lesson for group in some semester at some day(even/odd) at some period/class
+     * Retrieves a lesson for group in given semester at given day(even/odd) and period.
      *
-     * @param semesterId id of the semester
-     * @param groupId    id of the group
-     * @param periodId   id of the period/class
-     * @param day        day of the week
-     * @param evenOdd    even/odd/weekly
-     * @return Optional Lesson object
+     * @param semesterId the id of the semester
+     * @param groupId    the id of the group
+     * @param periodId   the id of the period
+     * @param day        the day of the week
+     * @param evenOdd    the type of the week
+     * @return an Optional describing the lesson
      */
     Optional<Lesson> lessonForGroupByDayBySemesterByPeriodByWeek(Long semesterId, Long groupId, Long periodId, DayOfWeek day, EvenOdd evenOdd);
 
     /**
-     * Method gets Room for Lesson in some semester at some day(even/odd) at some period/class
+     * Retrieves a room for lesson in given semester at given day(even/odd) and at given period.
      *
-     * @param semesterId id of the semester
-     * @param periodId   id of the period/class
-     * @param lessonId   id of the lesson
-     * @param day        day of the week
-     * @param evenOdd    even/odd/weekly
-     * @return Room object
+     * @param semesterId the id of the semester
+     * @param periodId   the id of the period
+     * @param lessonId   the id of the lesson
+     * @param day        the day of the week
+     * @param evenOdd    the type of the week
+     * @return an Optional describing the room
      */
     Room getRoomForLesson(Long semesterId, Long periodId, Long lessonId, DayOfWeek day, EvenOdd evenOdd);
 
     /**
-     * Method gets unique days when Group have classes in semester
+     * Returns unique days when group have classes in given semester.
      *
-     * @param semesterId id of the semester
-     * @param groupId    id of the group
-     * @return List of days
+     * @param semesterId the id of the semester
+     * @param groupId    the id of the group
+     * @return the list of days
      */
     List<DayOfWeek> getDaysWhenGroupHasClassesBySemester(Long semesterId, Long groupId);
 
     /**
-     * Method counts schedule records in db for group in the semester
+     * Counts the number of schedule records in database for group in the semester.
      *
-     * @param semesterId id of the semester
-     * @param groupId    id og the group
-     * @return number of records in db
+     * @param semesterId the id of the semester
+     * @param groupId    the id og the group
+     * @return the number of records in database
      */
     Long countSchedulesForGroupInSemester(Long semesterId, Long groupId);
 
     /**
-     * Method gets unique days when Teacher has classes in semester
+     * Returns unique days when teacher has classes in given semester.
      *
-     * @param semesterId id of the semester
-     * @param teacherId  id of the teacher
-     * @return List of days
+     * @param semesterId the id of the semester
+     * @param teacherId  the id of the teacher
+     * @return the list of days
      */
     List<DayOfWeek> getDaysWhenTeacherHasClassesBySemester(Long semesterId, Long teacherId);
 
     /**
-     * Method gets the list of periods/classes for teacher in some semester at some day
+     * Returns periods for teacher in given semester at given day.
      *
-     * @param semesterId id of the semester
-     * @param teacherId  id of the teacher
-     * @param day        day of the week
-     * @return the list of periods/classes
+     * @param semesterId the id of the semester
+     * @param teacherId  the id of the teacher
+     * @param day        the day of the week
+     * @param evenOdd    the type of the week
+     * @return the list of periods
      */
     List<Period> periodsForTeacherBySemesterByDayByWeek(Long semesterId, Long teacherId, DayOfWeek day, EvenOdd evenOdd);
 
     /**
-     * Method gets Lesson for teacher in some semester at some day(even/odd) at some period/class
+     * Returns lessons for teacher in given semester at given day(even/odd) and at given period.
      *
-     * @param semesterId id of the semester
-     * @param teacherId  id of the group
-     * @param periodId   id of the period/class
-     * @param day        day of the week
-     * @param evenOdd    even/odd/weekly
-     * @return Optional Lesson object
+     * @param semesterId the id of the semester
+     * @param teacherId  the id of the teacher
+     * @param periodId   the id of the period
+     * @param day        the day of the week
+     * @param evenOdd    the type of the week
+     * @return the list of lessons
      */
     List<Lesson> lessonsForTeacherBySemesterByDayByPeriodByWeek(Long semesterId, Long teacherId, Long periodId, DayOfWeek day, EvenOdd evenOdd);
 
+    /**
+     * Returns all schedules for given teacher in given semester.
+     *
+     * @param teacherId  the id of the teacher
+     * @param semesterId the id of the semester
+     * @return the list of schedules
+     */
     List<Schedule> getAllSchedulesByTeacherIdAndSemesterId(Long teacherId, Long semesterId);
 
     /**
-     * Method gets schedule by schedule all schedule parameters
+     * Retrieves a schedule by given schedule with all schedule parameters.
      *
-     * @param schedule schedule with parameters
-     * @return List of all schedules
+     * @param schedule the schedule with parameters
+     * @return the schedule with all schedule parameters
      */
     Schedule getScheduleByObject(Schedule schedule);
 
     /**
-     * Method gets all schedules from db in particular semester
+     * Returns all schedules from db in particular semester.
      *
-     * @param semesterId id of the semester
-     * @return list of schedules
+     * @param semesterId the id of the semester
+     * @return the list of schedules
      */
     List<Schedule> getScheduleBySemester(Long semesterId);
 
     /**
-     * Method scheduleForRoomBySemester get all schedules for specific  room and  semester
+     * Returns all schedules for given room and semester.
      *
-     * @param semesterId
-     * @param roomId
-     * @return list of schedules
+     * @param semesterId the id of the semester
+     * @param roomId     the id of the room
+     * @return the list of schedules
      */
     List<Schedule> scheduleForRoomBySemester(Long semesterId, Long roomId);
 
     /**
-     * Method scheduleByDateRangeForTeacher get all schedules from db in particular date range
+     * Returns all schedules from db in particular date range.
      *
-     * @param fromDate  LocalDate from
-     * @param toDate    LocalDate to
-     * @param teacherId id teacher
-     * @return list of schedules
+     * @param fromDate  the start of the date range
+     * @param toDate    the end of the date range
+     * @param teacherId the id of the teacher
+     * @return the list of schedules
      */
     List<Schedule> scheduleByDateRangeForTeacher(LocalDate fromDate, LocalDate toDate, Long teacherId);
 
     /**
-     * Method deleteSchedulesBySemesterId delete all schedules from db in with current semesterId
+     * Deletes all schedules from db with given semester id.
      *
-     * @param semesterId id Semester for delete schedule
+     * @param semesterId the id of the semester
      */
     void deleteSchedulesBySemesterId(Long semesterId);
 
     /**
-     * Method counts schedule records in db for lesson by lessonsId
+     * Counts the number of schedule records in the database with given lessons id.
      *
-     * @param lessonId id of the lesson
-     * @return count of records in db
+     * @param lessonId the id of the lesson
+     * @return the number of records in db
      */
     Long countInputLessonsInScheduleByLessonId(Long lessonId);
 
     /**
-     * Method counts schedule records in db for lesson by lessonsId, periodId, EvenOdd and DayOfWeek
+     * Counts the number of schedule records in the database with given lesson id, period id, type of the week and day of the week.
      *
-     * @param lessonId id of the lesson
-     * @param periodId id of the Period
-     * @param evenOdd  Even/Odd
-     * @param day      day of Week
-     * @return count of records in db
+     * @param lessonId the id of the lesson
+     * @param periodId the id of the Period
+     * @param evenOdd  the type of the week
+     * @param day      the day of the week
+     * @return the number of records in db
      */
     Long countByLessonIdPeriodIdEvenOddDayOfWeek(Long lessonId, Long periodId, EvenOdd evenOdd, DayOfWeek day);
 
+    /**
+     * Returns all schedules for given semester in ordered form.
+     *
+     * @param semesterId the id of the semester
+     * @return the list of schedules
+     */
     List<Schedule> getAllOrdered(Long semesterId);
 }

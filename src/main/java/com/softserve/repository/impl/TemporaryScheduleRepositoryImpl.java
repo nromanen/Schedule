@@ -18,7 +18,8 @@ public class TemporaryScheduleRepositoryImpl extends BasicRepositoryImpl<Tempora
     @Override
     public Long isExistTemporaryScheduleByVacationByDate(LocalDate date, Long semesterId, boolean vacation) {
         log.info("In isExistTemporaryScheduleByVacationByDate(semesterId = [{}], date = [{}], vacation = [{}])", semesterId, date, vacation);
-        return (Long) sessionFactory.getCurrentSession().createQuery("select count (t.id) from  TemporarySchedule t where  t.date = :date and t.vacation =  :vacation and t.semester.id = :semesterId and t.scheduleId = null  and t.teacher = null  and t.period = null ")
+        return (Long) sessionFactory.getCurrentSession().createQuery(
+                "select count (t.id) from TemporarySchedule t where t.date = :date and t.vacation = :vacation and t.semester.id = :semesterId and t.scheduleId = null  and t.teacher = null  and t.period = null ")
                 .setParameter("date", date)
                 .setParameter("semesterId", semesterId)
                 .setParameter("vacation", vacation)
@@ -196,6 +197,9 @@ public class TemporaryScheduleRepositoryImpl extends BasicRepositoryImpl<Tempora
                 .getResultList();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<TemporarySchedule> getAllBySemesterAndRange(Long semesterId, LocalDate fromDate, LocalDate toDate) {
         log.info("In getAllBySemesterAndRange");

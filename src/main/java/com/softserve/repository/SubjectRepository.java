@@ -8,38 +8,41 @@ import java.util.List;
 public interface SubjectRepository extends BasicRepository<Subject, Long> {
 
     /**
-     * The method used for getting number of subjects with name from database
+     * Counts the number of subjects with given name in the database.
      *
-     * @param name String name used to find Subject
-     * @return Long number of records with name
+     * @param name the string represents the name of subject
+     * @return the number of subjects with given name
      */
     Long countSubjectsWithName(String name);
 
     /**
-     * The method used for getting number of subjects with name from database
+     * Counts the number of subjects with given name and id in the database.
      *
-     * @param id   Long id used to ignore Subject
-     * @param name String name used to find Subject
-     * @return Long number of records with name
+     * @param id   the id of the subject
+     * @param name the string represents the name of the subject
+     * @return the number of subjects with given name and id
      */
     Long countSubjectsWithNameAndIgnoreWithId(Long id, String name);
 
     /**
-     * Method used to verify if Subject with such id exists
+     * Counts the number of subjects with given id.
      *
-     * @param id of the Subject
-     * @return 0 if there is no Subject with such id, 1 if record with id exists
+     * @param id the id of the subject
+     * @return the number of subjects with given id
      */
     Long countBySubjectId(Long id);
 
+    /**
+     * {@inheritDoc}
+     */
     List<Subject> getDisabled();
 
     /**
-     * The method used for getting subjects with their types from database
+     * Returns subjects with given id of the semester and id of the teacher.
      *
-     * @param semesterId Long semester from which subjects will be taken
-     * @param teacherId  Long teacher who teaches subjects
-     * @return List of subjects with their types
+     * @param semesterId the id of the semester from which subjects will be taken
+     * @param teacherId  the id of the teacher who teaches those subjects
+     * @return the list of subjects with their types
      */
     List<SubjectWithTypeDTO> getSubjectsWithTypes(Long semesterId, Long teacherId);
 

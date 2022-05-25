@@ -96,9 +96,7 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
             "where les.semester.id = :semesterId)";
 
     /**
-     * Method gets information about all lessons from DB
-     *
-     * @return List of all lessons
+     * {@inheritDoc}
      */
     @Override
     public List<Lesson> getAll() {
@@ -221,7 +219,7 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
     }
 
     @Override
-    public void deleteLessonBySemesterId(Long semesterId) {
+    public void deleteLessonsBySemesterId(Long semesterId) {
         log.info("In deleteLessonBySemesterId(semesterId = [{}])", semesterId);
         sessionFactory.getCurrentSession()
                 .createQuery(DELETE_BY_SEMESTER_ID)
@@ -261,7 +259,12 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
                 .getResultList();
     }
 
-    // Checking if lesson is used in Schedule table
+    /**
+     * Checks if lesson is used in Schedule table.
+     *
+     * @param lesson the lesson entity to be checked
+     * @return {@code true} if lesson is used in Schedule table, otherwise {@code false}
+     */
     @Override
     protected boolean checkReference(Lesson lesson) {
         log.info("In checkReference(lesson = [{}])", lesson);
@@ -350,6 +353,9 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
         return lesson;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int setGrouped(Long lessonId) {
         log.info("Entered setGrouped({})", lessonId);

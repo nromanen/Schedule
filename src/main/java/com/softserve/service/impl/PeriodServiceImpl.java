@@ -28,11 +28,7 @@ public class PeriodServiceImpl implements PeriodService {
     }
 
     /**
-     * The method used for getting period by id
-     *
-     * @param id Identity number of period
-     * @return target period
-     * @throws EntityNotFoundException if period doesn't exist
+     * {@inheritDoc}
      */
     @Override
     public Period getById(Long id) {
@@ -43,9 +39,7 @@ public class PeriodServiceImpl implements PeriodService {
     }
 
     /**
-     * The method used for getting all periods
-     *
-     * @return list of periods
+     * {@inheritDoc}
      */
     @Override
     public List<Period> getAll() {
@@ -54,13 +48,11 @@ public class PeriodServiceImpl implements PeriodService {
     }
 
     /**
-     * The method used for saving single period with validation
+     * {@inheritDoc}
      *
-     * @param object period
-     * @return saved period
-     * @throws IncorrectTimeException      when period begins after his end or begin equal to end
-     * @throws PeriodConflictException     when some periods intersect with others or periods
-     * @throws FieldAlreadyExistsException when periods name already exists
+     * @throws IncorrectTimeException      if the start time of the period was after its end or the start time was equal to the end time
+     * @throws PeriodConflictException     if given period intersect with other periods
+     * @throws FieldAlreadyExistsException if period's name already exists
      */
     @Override
     public Period save(Period object) {
@@ -95,11 +87,10 @@ public class PeriodServiceImpl implements PeriodService {
     }
 
     /**
-     * The method used for updating existed period
+     * {@inheritDoc}
      *
-     * @param object period is going to be updated
-     * @return updated period
-     * @throws FieldAlreadyExistsException when periods name already exists
+     * @throws FieldAlreadyExistsException if periods name already exists
+     * @throws PeriodConflictException     if given period intersect with other periods
      */
     @Override
     public Period update(Period object) {
@@ -120,10 +111,7 @@ public class PeriodServiceImpl implements PeriodService {
     }
 
     /**
-     * The method used for deleting existed period
-     *
-     * @param object object is going to be deleted
-     * @return deleted object
+     * {@inheritDoc}
      */
     @Override
     public Period delete(Period object) {
@@ -175,12 +163,19 @@ public class PeriodServiceImpl implements PeriodService {
                 object.getStartTime().equals(object.getEndTime());
     }
 
-    // method for checking email in database
+    /**
+     * Checks if the period with given name exists in the repository.
+     * @param name the string represents tha namen of the period
+     * @return {@code true} if the period with given name exists, otherwise {@code false}
+     */
     private boolean nameExists(String name) {
         log.info("Enter into nameExists method with name:{}", name);
         return periodRepository.findByName(name).isPresent();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<Period> getFirstFourPeriods() {
         return periodRepository.getFistFourPeriods();

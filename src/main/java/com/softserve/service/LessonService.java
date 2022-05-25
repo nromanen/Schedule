@@ -9,100 +9,105 @@ import java.util.List;
 public interface LessonService extends BasicService<Lesson, Long> {
 
     /**
-     * Method saves new lessons to Repository.
-     * Saves only lessons that did not exist in the database.
+     * Saves new lessons from the given list of the lessons in the repository.
+     * Saves only lessons that did not exist in the repository.
      *
-     * @param lessons Lessons entities with info to be saved
-     * @return saved Lessons entities
+     * @param lessons the list of the lessons
+     * @return the list of the saved lessons
      */
     List<Lesson> save(List<Lesson> lessons);
 
     /**
-     * Method gets information about all lessons for particular group from Repository
+     * Returns all lessons with the given group id from the repository.
      *
-     * @param groupId Identity number of the group for which need to find all lessons
-     * @return List of filtered lessons
+     * @param groupId the id of the group
+     * @return the list of the lessons with the given group id
      */
     List<Lesson> getAllForGroup(Long groupId);
 
     /**
-     * Method gets information about all lessons from Repository
+     * Returns all lessons with the given teacher id from the repository.
      *
-     * @return List of all lessons
+     * @param teacherId the id of the teacher
+     * @return the list of the lessons with the given teacher id
      */
     List<Lesson> getLessonByTeacher(Long teacherId);
 
     /**
-     * Method creates a list from Lesson type enum
+     * Returns all types of lessons defined in the enum LessonType.
      *
-     * @return Lesson type enum in the List
+     * @return the list of the lesson types
      */
     List<LessonType> getAllLessonTypes();
 
     /**
-     * Method verifies if lesson doesn't exist in Repository
+     * Checks if the given lesson already exists in the repository.
      *
-     * @param lesson Lesson entity that needs to be verified
-     * @return true if such lesson already exists
+     * @param lesson the lesson entity that needs to be checked
+     * @return {@code true} if the given lesson already exists
      */
     boolean isLessonForGroupExists(Lesson lesson);
 
     /**
-     * Method verifies if lesson doesn't exist in Repository
+     * Checks if the given lesson already exists in the repository ignoring the id of given lesson.
      *
-     * @param lesson Lesson entity that needs to be verified
-     * @return true if such lesson already exists
+     * @param lesson the lesson entity that needs to be checked
+     * @return {@code true} if the given lesson already exists in the repository
      */
     boolean isLessonForGroupExistsAndIgnoreWithId(Lesson lesson);
 
     /**
-     * The method used for getting list of lessons from database by semesterId
+     * Returns all lessons from the repository with given semester id.
      *
-     * @param semesterId Semester id for getting all lessons by this id from db
-     * @return list of entities Lesson
+     * @param semesterId the id of the semester
+     * @return the list of lessons with the given semester id
      */
     List<Lesson> getLessonsBySemester(Long semesterId);
 
     /**
-     * Method copyLessonsFromOneToAnotherSemester save lessons in db by copy from one semester to another
+     * Saves lessons in the repository by copy from one semester to another.
      *
-     * @param lessons    List<Lesson> from one semester
-     * @param toSemester Semester entity for which save schedule
-     * @return list of lessons for toSemester
+     * @param lessons    the list of the lessons from the previous semester
+     * @param toSemester the semester where the lessons will be saved
+     * @return the list of saved lessons
      */
     List<Lesson> copyLessonsFromOneToAnotherSemester(List<Lesson> lessons, Semester toSemester);
 
     /**
-     * Method saveLessonDuringCopy save lessons in db
+     * Saves lessons in the repository.
      *
-     * @param lesson Lesson entity
-     * @return Lesson entity after saved in db
+     * @param lesson the lesson
+     * @return the saved lesson
      */
     Lesson saveLessonDuringCopy(Lesson lesson);
 
+    /**
+     * Deletes lessons with the given semester id from the repository.
+     * @param semesterId the id of the semester
+     */
     void deleteLessonBySemesterId(Long semesterId);
 
     /**
-     * The method used for getting all lessons from database by subjectId, teacherId, semesterId and lessonType and exclude current lessonId
+     * Returns all lessons from the repository by subject id, teacher id, semester id and lessonType and exclude given lesson id.
      *
-     * @param lesson Lesson object for getting lessons from db by this param
-     * @return List of Lessons
+     * @param lesson the lesson object for getting lessons from repository by its params
+     * @return the list of lessons
      */
     List<Lesson> getLessonsBySubjectIdTeacherIdSemesterIdLessonTypeAndExcludeCurrentLessonId(Lesson lesson);
 
     /**
-     * The method used for getting all lessons which are grouped by lesson
+     * Returns all lessons which are grouped with given lesson.
      *
-     * @param lesson Lesson object for getting lessons
-     * @return List of Lessons
+     * @param lesson the lesson object
+     * @return the list of lessons which are grouped with given lesson
      */
     List<Lesson> getAllGroupedLessonsByLesson(Lesson lesson);
 
     /**
-     * The method used for updating links to meeting for lessons
+     * Updates links to meeting for lessons.
      *
-     * @param lesson Lesson object with new link to meeting
-     * @return Integer the number of links that was updated
+     * @param lesson the lesson with a new link to the meeting
+     * @return the number of links that was updated
      */
     Integer updateLinkToMeeting(Lesson lesson);
 }

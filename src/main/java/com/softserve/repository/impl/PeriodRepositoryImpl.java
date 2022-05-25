@@ -15,9 +15,9 @@ import java.util.Optional;
 public class PeriodRepositoryImpl extends BasicRepositoryImpl<Period, Long> implements PeriodRepository {
 
     /**
-     * The method used for getting list of periods from database
+     * Returns all periods from database ordered by start time.
      *
-     * @return list of periods ordered by start time
+     * @return the list of periods ordered by start time
      */
     @Override
     public List<Period> getAll() {
@@ -28,10 +28,7 @@ public class PeriodRepositoryImpl extends BasicRepositoryImpl<Period, Long> impl
     }
 
     /**
-     * The method used for updating existed entity from database
-     *
-     * @param entity entity is going to be updated
-     * @return entity that was updated
+     * {@inheritDoc}
      */
     @Override
     public Period update(Period entity) {
@@ -45,8 +42,10 @@ public class PeriodRepositoryImpl extends BasicRepositoryImpl<Period, Long> impl
     @Override
     public Optional<Period> findByName(String name) {
         log.info("Enter into findByName method with name: {}", name);
-        TypedQuery<Period> query = sessionFactory.getCurrentSession().createNamedQuery("findName", Period.class).setMaxResults(1);
-        query.setParameter("name", name);
+        TypedQuery<Period> query = sessionFactory.getCurrentSession()
+                .createNamedQuery("findName", Period.class)
+                .setMaxResults(1)
+                .setParameter("name", name);
         List<Period> periods = query.getResultList();
         if (periods.isEmpty()) {
             return Optional.empty();
@@ -54,7 +53,12 @@ public class PeriodRepositoryImpl extends BasicRepositoryImpl<Period, Long> impl
         return Optional.of(query.getResultList().get(0));
     }
 
-    // Checking if period is used in Schedule table
+    /**
+     * Checks if period is used in Schedule tables.
+     *
+     * @param period the period to be checked
+     * @return {@code true} if period is used in Schedule tables, otherwise {@code false}
+     */
     @Override
     protected boolean checkReference(Period period) {
         log.info("In checkReference(period = [{}])", period);
@@ -66,6 +70,9 @@ public class PeriodRepositoryImpl extends BasicRepositoryImpl<Period, Long> impl
         return count != 0;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<Period> getFistFourPeriods() {
         log.info("In getFistFourPeriods()");

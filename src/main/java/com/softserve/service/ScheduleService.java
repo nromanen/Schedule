@@ -3,12 +3,13 @@ package com.softserve.service;
 import com.softserve.dto.*;
 import com.softserve.entity.*;
 import com.softserve.entity.enums.EvenOdd;
-import com.softserve.entity.enums.LessonType;
+import com.softserve.exception.EntityAlreadyExistsException;
+import com.softserve.exception.MessageNotSendException;
+import com.softserve.exception.ScheduleConflictException;
 
 import javax.mail.MessagingException;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -16,145 +17,175 @@ import java.util.Map;
 public interface ScheduleService extends BasicService<Schedule, Long> {
 
     /**
-     * Method create List of schedules in accordance to grouped lessons
+     * Creates a list of schedules in accordance to grouped lessons.
      *
-     * @param schedule Schedule entity with grouped lesson
-     * @return List of schedules for grouped lessons
+     * @param schedule the schedule with grouped lessons
+     * @return the list of the schedules for grouped lessons
      */
     List<Schedule> schedulesForGroupedLessons(Schedule schedule);
 
+    /**
+     * Returns all schedules for grouped lessons from the repository.
+     *
+     * @param schedule the schedule
+     * @return the list of the schedules
+     */
     List<Schedule> getSchedulesForGroupedLessons(Schedule schedule);
 
+    /**
+     * Checks if lessons with this group title already exists and if schedule item for group already exists.
+     *
+     * @param schedule the schedule
+     * @throws EntityAlreadyExistsException if lessons with this group title already exists
+     * @throws ScheduleConflictException    if schedule for group already exists
+     */
     void checkReferences(Schedule schedule);
 
     /**
-     * Method returns necessary info to finish saving schedule
+     * Returns necessary info to finish saving schedule.
      *
-     * @param semesterId the semester id in which schedule have to be saved
-     * @param dayOfWeek  the semester id in which schedule have to be saved
-     * @param evenOdd    lesson occurs by EVEN/ODD/WEEKLY
-     * @param classId    period id in which schedule have to be saved
-     * @param lessonId   lesson id that pretends t be saved
-     * @return CreateScheduleInfoDTO - necessary info to finish saving schedule
+     * @param semesterId the id of the semester
+     * @param dayOfWeek  the day of the week
+     * @param evenOdd    the type of the week
+     * @param classId    the id of the class
+     * @param lessonId   the id of the lesson
+     * @return the necessary info to finish saving schedule
+     * @throws ScheduleConflictException if schedule for group already exists
      */
     CreateScheduleInfoDTO getInfoForCreatingSchedule(Long semesterId, DayOfWeek dayOfWeek, EvenOdd evenOdd, Long classId, Long lessonId);
 
     /**
-     * Verifies if group has conflict in schedule when it saves
+     * Checks if group has conflict in schedule when it saves.
      *
-     * @param semesterId
-     * @param dayOfWeek
-     * @param evenOdd
-     * @param classId
-     * @param lessonId
-     * @return
+     * @param semesterId the id of the semester
+     * @param dayOfWeek  the day of the week
+     * @param evenOdd    the type of the week
+     * @param classId    the id of the class
+     * @param lessonId   the id of the lesson
+     * @return {@code true} if group has conflict in schedule when it saves
      */
     boolean isConflictForGroupInSchedule(Long semesterId, DayOfWeek dayOfWeek, EvenOdd evenOdd, Long classId, Long lessonId);
 
     /**
-     * Method gets full schedule for groups in particular semester
+     * Returns full schedule for specified group in given semester.
      *
-     * @param semesterId id of semester
-     * @param groupId    group id
-     * @return filled schedule for group
+     * @param semesterId the id of the semester
+     * @param groupId    the id of the group
+     * @return the filled schedule for specified group in given semester
      */
     List<ScheduleForGroupDTO> getFullScheduleForGroup(Long semesterId, Long groupId);
 
     /**
-     * Method gets full schedule for groups in particular semester
+     * Returns full schedule in specified semester.
      *
-     * @param semesterId id of semester
-     * @return filled schedule for all groups that have any lessons in that semester
+     * @param semesterId the id of the semester
+     * @return the filled schedule for all groups that have any lessons in specified semester
      */
     ScheduleFullDTO getFullScheduleForSemester(Long semesterId);
 
     /**
-     * Method gets full schedule for teacher in particular semester
+     * Returns full schedule for teacher in specified semester.
      *
-     * @param semesterId id of semester
-     * @param teacherId  id of teacher
-     * @return filled schedule for teacher
+     * @param semesterId the id of the semester
+     * @param teacherId  the id of the teacher
+     * @return the filled schedule for teacher in specified semester
      */
     ScheduleForTeacherDTO getScheduleForTeacher(Long semesterId, Long teacherId);
 
+    /**
+     * Returns all schedules with given teacher id and semester id.
+     *
+     * @param teacherId  the id of the teacher
+     * @param semesterId the id of the semester
+     * @return the list of the schedules with given teacher id and semester id
+     */
     List<Schedule> getAllSchedulesByTeacherIdAndSemesterId(Long teacherId, Long semesterId);
 
+    /**
+     * Returns all schedules with given semester id.
+     *
+     * @param semesterId the id of the semester
+     * @return the list of the schedules with given semester id
+     */
     List<Schedule> getSchedulesBySemester(Long semesterId);
 
     /**
-     * Method temporaryScheduleByDateRangeForTeacher get all schedules and temporary schedules from db in particular date range
-     * temporaryScheduleByDateRangeForTeacher
+     * Returns all schedules and temporary schedules with given teacher id from the repository in the given date range.
      *
-     * @param fromDate  LocalDate from
-     * @param toDate    LocalDate to
-     * @param teacherId id teacher
-     * @return list of schedules and temporary schedules
+     * @param fromDate  the start of the date range
+     * @param toDate    the end of the date range
+     * @param teacherId the id of the teacher
+     * @return the list of schedules and temporary schedules
      */
     Map<LocalDate, Map<Period, Map<Schedule, TemporarySchedule>>> temporaryScheduleByDateRangeForTeacher(LocalDate fromDate, LocalDate toDate, Long teacherId);
 
     /**
-     * Method deleteSchedulesBySemesterId delete all schedules from db in with current semesterId
+     * Deletes all schedules from the repository in with given semester id.
      *
-     * @param semesterId id Semester for delete schedule
+     * @param semesterId the id of the semester to delete
      */
     void deleteSchedulesBySemesterId(Long semesterId);
 
     /**
-     * Method saveScheduleDuringCopy save Schedule in db
+     * Saves the given schedule in the repository.
      *
-     * @param schedule Schedule entity for save schedule in db
-     * @return Schedule entity after saved in db
+     * @param schedule the schedule to save in the repository
+     * @return the saved schedule
      */
     Schedule saveScheduleDuringCopy(Schedule schedule);
 
     /**
-     * Method updateWithoutChecks update Schedule in db
+     * Updates the given schedule in the repository without checks.
      *
-     * @param schedule Schedule entity for update schedule in db
-     * @return Schedule entity after update in db
+     * @param schedule the schedule
+     * @return the updated schedule
      */
     Schedule updateWithoutChecks(Schedule schedule);
 
     /**
-     * Method counts schedule records in db for lesson by lessonsId
+     * Counts the number of schedule records in the repository with given lesson id.
      *
-     * @param lessonId id of the lesson
-     * @return number of records in db
+     * @param lessonId the id of the lesson
+     * @return the number of records in the repository
      */
     Long countInputLessonsInScheduleByLessonId(Long lessonId);
 
     /**
-     * Method return boolean value for schedule records in db by lessonsId, periodId, EvenOdd and DayOfWeek
+     * Checks if given lesson exist in schedule with given period id, type of the week and day of the week.
      *
-     * @param lessonId id of the lesson
-     * @param periodId id of the Period
-     * @param evenOdd  Even/Odd
-     * @param day      day of Week
-     * @return true if count equals 0 and false in another case
+     * @param lessonId the id of the lesson
+     * @param periodId the id of the period
+     * @param evenOdd  the type of the week
+     * @param day      the day of the week
+     * @return {@code true} if given lesson exist in schedule with given period id, type of the week and day of the week
      */
     boolean isLessonInScheduleByLessonIdPeriodIdEvenOddDayOfWeek(Long lessonId, Long periodId, EvenOdd evenOdd, DayOfWeek day);
 
     /**
-     * The method used for sending schedules to teachers
+     * Sends the schedules to the teachers.
      *
-     * @param semesterId semester for schedule
-     * @param teachersId id of teachers to whom we need to send the schedule
+     * @param semesterId the id of the semester
+     * @param teachersId the array of ids of teachers to whom the schedule will be sent
+     * @param language   the locale of the message
+     * @throws MessageNotSendException if message with the schedule not send
      */
     void sendScheduleToTeachers(Long semesterId, Long[] teachersId, Locale language);
 
     /**
-     * The method used for sending schedules to one teacher
+     * Sends the schedules to one teacher.
      *
-     * @param semesterId semester for schedule
-     * @param teacherId  id of teacher to which we need to send the schedule
+     * @param semesterId the id of the semester
+     * @param teacherId  the id of teacher to whom the schedule should be sent
+     * @param language   the locale of the message
+     * @throws MessagingException if an error occurred while sending the letter
      */
     void sendScheduleToTeacher(Long semesterId, Long teacherId, Locale language) throws MessagingException;
 
     /**
-     * The method is used for getting list of schedules grouped by rooms
+     * Returns lists of schedules grouped by rooms.
      *
-     * @param semesterId Id of Semester
-     * @return grouped List of schedule's list
+     * @param semesterId the id of the semester
+     * @return the lists of schedules grouped by rooms
      */
     Map<Room, List<Schedule>> getAllOrdered(Long semesterId);
 }

@@ -9,14 +9,19 @@ import java.util.List;
 public interface PeriodService extends BasicService<Period, Long> {
 
     /**
-     * The method used for saving list of periods with validation
+     * Validates and saves a list of periods.
      *
-     * @param periods list of periods
-     * @return list of periods that have been saved
-     * @throws IncorrectTimeException  when period begins after his end or begin equal to end
-     * @throws PeriodConflictException when some periods intersect with others or periods
+     * @param periods the list of periods
+     * @return the list of saved periods
+     * @throws IncorrectTimeException  if the start time of the period was after its end or the start time was equal to the end time
+     * @throws PeriodConflictException if some periods intersected with others periods
      */
     List<Period> save(List<Period> periods);
 
+    /**
+     * Returns the list of first four periods.
+     *
+     * @return the list of periods
+     */
     List<Period> getFirstFourPeriods();
 }

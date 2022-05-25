@@ -4,6 +4,7 @@ import com.softserve.dto.StudentDTO;
 import com.softserve.dto.StudentImportDTO;
 import com.softserve.entity.Student;
 import com.softserve.exception.FieldAlreadyExistsException;
+import com.softserve.exception.FieldNullException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -12,41 +13,30 @@ import java.util.concurrent.CompletableFuture;
 public interface StudentService extends BasicService<Student, Long> {
 
     /**
-     * Method save information for student in Repository and register user if email exists
+     * Saves student in the repository and register user if email exists.
      *
-     * @param studentDTO StudentDTO instance
-     * @return saved Student entity
+     * @param studentDTO the student to be saved
+     * @return the saved student
+     * @throws FieldNullException          if user's email was empty
+     * @throws FieldAlreadyExistsException if email was already in use
      */
     Student save(StudentDTO studentDTO);
 
     /**
-     * Method updates information for an existing Student in Repository
+     * Updates student in the repository.
      *
-     * @param studentDTO Student entity with info to be updated
-     * @return updated Student entity
-     * @throws FieldAlreadyExistsException if Student with input email already exists
+     * @param studentDTO the student with new information to be updated
+     * @return the updated student
+     * @throws FieldAlreadyExistsException if student with given input email already exists
      */
     Student update(StudentDTO studentDTO);
 
     /**
-     * This asynchronous method used for importing students from csv file.
-     * Each line of the file should consist of four fields, separated by commas.
-     * Each field may or may not be enclosed in double-quotes.
-     * First line of the file is a header.
-     * All subsequent lines contain data about students.
-     * <p>
-     * "surname","name","patronymic","email"
-     * "Romanian","Hanna","Stepanov","romaniuk@gmail.com"
-     * "Bochum","Oleksandr","Ivanov","boichuk@ukr.net"
-     * etc.
-     * <p>
-     * The method is not transactional in order to prevent interruptions while saving a student
+     * Imports students from csv file.
      *
-     * @param file file with students data
-     * @return list of created students.
-     * If the student in the returned list have a non-null value of the group title then he already existed.
-     * If the student in the returned list have a null value of the group title then he saved as a new student.
-     * If the student in the returned list have a null value of the group then he didn't pass a validation.
+     * @param file    the string represents a file name with data of students
+     * @param groupId the id of the group
+     * @return list of imported and saved students
      */
     CompletableFuture<List<StudentImportDTO>> saveFromFile(MultipartFile file, Long groupId);
 

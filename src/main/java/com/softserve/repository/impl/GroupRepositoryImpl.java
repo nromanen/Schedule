@@ -85,9 +85,9 @@ public class GroupRepositoryImpl extends BasicRepositoryImpl<Group, Long> implem
     }
 
     /**
-     * Method gets information about all groups from DB
+     * Returns all groups from database with ascending sorting by title.
      *
-     * @return List of all groups with ASC sorting by title
+     * @return the list of all groups
      */
     @Override
     public List<Group> getAll() {
@@ -210,10 +210,10 @@ public class GroupRepositoryImpl extends BasicRepositoryImpl<Group, Long> implem
     }
 
     /**
-     * The method used for checking if group is used in Lesson table
+     * Checks if group is used in lesson table.
      *
-     * @param group Group entity is going to be checked
-     * @return true if exists lesson related with this group
+     * @param group the group entity to be checked
+     * @return {@code true} if exists lesson related with given group
      */
     @Override
     protected boolean checkReference(Group group) {

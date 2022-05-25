@@ -31,7 +31,12 @@ public class RoomTypeRepositoryImpl extends BasicRepositoryImpl<RoomType, Long> 
                 .setParameter("id", id).getSingleResult();
     }
 
-    // Checking if RoomType is used in Room table
+    /**
+     * Checks if given type of room is used in Room table.
+     *
+     * @param roomType the type of room to be checked
+     * @return {@code true} if type of room is used in Room table, otherwise {@code false}
+     */
     @Override
     protected boolean checkReference(RoomType roomType) {
         log.info("In checkReference(roomType = [{}])", roomType);
