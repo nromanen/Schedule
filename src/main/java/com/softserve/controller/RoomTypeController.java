@@ -2,8 +2,8 @@ package com.softserve.controller;
 
 import com.softserve.dto.RoomTypeDTO;
 import com.softserve.entity.RoomType;
-import com.softserve.service.RoomTypeService;
 import com.softserve.mapper.RoomTypeMapper;
+import com.softserve.service.RoomTypeService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
@@ -38,7 +39,7 @@ public class RoomTypeController {
 
     @GetMapping("/{id}")
     @ApiOperation(value = "Get room type info by id")
-    public ResponseEntity<RoomTypeDTO> get(@PathVariable("id") long id){
+    public ResponseEntity<RoomTypeDTO> get(@PathVariable("id") long id) {
         log.info("In get(id = [{}])", id);
         RoomType roomType = roomTypeService.getById(id);
         return ResponseEntity.status(HttpStatus.OK).body(roomTypeMapper.roomTypeToRoomTypeDTO(roomType));
@@ -48,7 +49,7 @@ public class RoomTypeController {
     @ApiOperation(value = "Create new room type")
     public ResponseEntity<RoomTypeDTO> save(@RequestBody RoomTypeDTO roomTypeDTO) {
         log.info("In save (roomTypeDTO = [{}])", roomTypeDTO);
-        RoomType roomType = roomTypeService.save(roomTypeMapper.RoomTypeDTOTRoomType(roomTypeDTO));
+        RoomType roomType = roomTypeService.save(roomTypeMapper.roomTypeDTOTRoomType(roomTypeDTO));
         return ResponseEntity.status(HttpStatus.CREATED).body(roomTypeMapper.roomTypeToRoomTypeDTO(roomType));
     }
 
@@ -56,13 +57,13 @@ public class RoomTypeController {
     @ApiOperation(value = "Update existing room type by id")
     public ResponseEntity<RoomTypeDTO> update(@RequestBody RoomTypeDTO roomTypeDTO) {
         log.info("In update (roomTypeDTO = [{}])", roomTypeDTO);
-        RoomType roomType = roomTypeService.update(roomTypeMapper.RoomTypeDTOTRoomType(roomTypeDTO));
+        RoomType roomType = roomTypeService.update(roomTypeMapper.roomTypeDTOTRoomType(roomTypeDTO));
         return ResponseEntity.status(HttpStatus.OK).body(roomTypeMapper.roomTypeToRoomTypeDTO(roomType));
     }
 
     @DeleteMapping("/{id}")
     @ApiOperation(value = "Delete room type by id")
-    public ResponseEntity delete(@PathVariable("id") long id){
+    public ResponseEntity delete(@PathVariable("id") long id) {
         log.info("In delete (id =[{}]", id);
         RoomType roomType = roomTypeService.getById(id);
         roomTypeService.delete(roomType);

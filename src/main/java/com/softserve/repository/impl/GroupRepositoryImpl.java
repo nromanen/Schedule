@@ -14,70 +14,57 @@ import java.util.Optional;
 @Repository
 @Slf4j
 public class GroupRepositoryImpl extends BasicRepositoryImpl<Group, Long> implements GroupRepository {
+    public static final String GET_NEXT_POSITION
+            = "SELECT min(g.sortingOrder) "
+            + "FROM Group g "
+            + "WHERE g.sortingOrder > :position";
+    public static final String GET_ORDER_BY_ID
+            = "SELECT g.sortingOrder "
+            + "FROM Group g "
+            + "WHERE g.id = :id";
     private static final String GET_ALL_QUERY
             = "SELECT g "
             + "FROM Group g "
             + "ORDER BY g.title ASC";
-
     private static final String GET_WITH_STUDENTS_BY_ID_QUERY
             = "SELECT g "
             + "FROM Group g "
             + "LEFT JOIN FETCH g.students "
             + "WHERE g.id = :id";
-
     private static final String IS_EXISTS_BY_TITLE_QUERY
             = "SELECT (count(*) > 0) "
             + "FROM Group g "
             + "WHERE lower(g.title) = lower(:title)";
-
     private static final String IS_EXISTS_BY_TITLE_IGNORING_ID_QUERY = IS_EXISTS_BY_TITLE_QUERY + " AND g.id!=:id";
-
     private static final String IS_EXISTS_BY_ID_QUERY
             = "SELECT (count(*) > 0) "
             + "FROM Group g "
             + "WHERE g.id = :id";
-
     private static final String IS_LESSONS_EXIST_FOR_GROUP_ID_QUERY
             = "SELECT (count(l.id) > 0) "
             + "FROM Lesson l "
             + "WHERE l.group.id = :groupId";
-
     private static final String GET_BY_TEACHER_ID
             = "SELECT DISTINCT l.group "
             + "FROM Lesson l "
             + "WHERE l.teacher.id = :id AND l.semester.defaultSemester = true";
-
     private static final String GET_GROUPS_BY_IDS
             = "select g "
             + "from Group g "
             + "where g.id in (:ids)";
-
     private static final String GET_ALL_ORDERED
             = "SELECT g "
             + "FROM Group g "
             + "ORDER BY g.sortingOrder ASC";
-
     private static final String GET_MAX_SORTING_ORDER
             = "SELECT max(g.sortingOrder) "
             + "FROM Group g";
-
     private static final String UPDATE_GROUP_OFFSET
             = "UPDATE Group g "
             + "SET g.sortingOrder = g.sortingOrder+1 "
             + "WHERE g.sortingOrder >= :lowerPosition and g.sortingOrder < :upperPosition";
 
-    public static final String GET_NEXT_POSITION
-            = "SELECT min(g.sortingOrder) "
-            + "FROM Group g "
-            + "WHERE g.sortingOrder > :position";
-
-    public static final String GET_ORDER_BY_ID
-            = "SELECT g.sortingOrder "
-            + "FROM Group g "
-            + "WHERE g.id = :id";
-
-
-    private Session getSession(){
+    private Session getSession() {
         Session session = sessionFactory.getCurrentSession();
         Filter filter = session.enableFilter("groupDisableFilter");
         filter.setParameter("disable", false);
@@ -99,6 +86,7 @@ public class GroupRepositoryImpl extends BasicRepositoryImpl<Group, Long> implem
 
     /**
      * The method used for getting groups by teacher id for default semester
+     *
      * @param id Long id of a teacher
      * @return List of groups
      */
@@ -159,7 +147,7 @@ public class GroupRepositoryImpl extends BasicRepositoryImpl<Group, Long> implem
      * @return sorting order of the group
      */
     @Override
-        public Optional<Integer> getSortingOrderById(Long id) {
+    public Optional<Integer> getSortingOrderById(Long id) {
         log.info("Entered getSortingOrderById({})", id);
         return getSession().createQuery(GET_ORDER_BY_ID, Integer.class)
                 .setParameter("id", id)
@@ -176,7 +164,7 @@ public class GroupRepositoryImpl extends BasicRepositoryImpl<Group, Long> implem
     @Override
     public Optional<Group> getWithStudentsById(Long id) {
         log.info("In getWithStudentsById(id = [{}])", id);
-        return  sessionFactory.getCurrentSession()
+        return sessionFactory.getCurrentSession()
                 .createQuery(GET_WITH_STUDENTS_BY_ID_QUERY, Group.class)
                 .setParameter("id", id)
                 .uniqueResultOptional();
@@ -192,7 +180,7 @@ public class GroupRepositoryImpl extends BasicRepositoryImpl<Group, Long> implem
     @Override
     public boolean isExistsByTitle(String title) {
         log.info("In isExistsByTitle(title = [{}])", title);
-        if(title == null) {
+        if (title == null) {
             return false;
         }
         return (boolean) sessionFactory.getCurrentSession()
@@ -205,13 +193,13 @@ public class GroupRepositoryImpl extends BasicRepositoryImpl<Group, Long> implem
      * The method used for finding out if group with such title exists ignoring id
      *
      * @param title String title used to find Group
-     * @param id Long id, which is ignored during the search
+     * @param id    Long id, which is ignored during the search
      * @return true if exists, else - false
      */
     @Override
     public boolean isExistsByTitleIgnoringId(String title, Long id) {
         log.info("In isExistsByTitleIgnoringId(id = [{}], title = [{}])", id, title);
-        if(title == null) {
+        if (title == null) {
             return false;
         }
         return (boolean) sessionFactory.getCurrentSession()

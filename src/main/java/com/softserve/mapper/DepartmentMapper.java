@@ -3,6 +3,7 @@ package com.softserve.mapper;
 import com.softserve.dto.DepartmentDTO;
 import com.softserve.entity.Department;
 import org.mapstruct.Mapper;
+
 import java.util.List;
 
 @Mapper(componentModel = "spring")

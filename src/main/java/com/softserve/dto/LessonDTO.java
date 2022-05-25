@@ -9,7 +9,7 @@ import lombok.ToString;
 @Setter
 @NoArgsConstructor
 @ToString
-public class LessonDTO extends LessonBaseDTO{
+public class LessonDTO extends LessonBaseDTO {
     private GroupDTO group;
     private SemesterDTO semester;
 }

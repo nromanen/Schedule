@@ -2,6 +2,7 @@ package com.softserve.service;
 
 import com.softserve.dto.EmailMessageDTO;
 import com.softserve.entity.TemporarySchedule;
+
 import javax.mail.MessagingException;
 import java.io.ByteArrayOutputStream;
 

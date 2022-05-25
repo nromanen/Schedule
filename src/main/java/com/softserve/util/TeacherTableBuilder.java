@@ -6,7 +6,6 @@ import com.itextpdf.text.Phrase;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.softserve.dto.*;
-import com.softserve.entity.enums.LessonType;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
@@ -25,10 +24,11 @@ public class TeacherTableBuilder extends BaseTableBuilder {
     /**
      * Constructs a TeacherTableBuilder.
      *
-     * @throws IOException if the font file could not be read
+     * @throws IOException       if the font file could not be read
      * @throws DocumentException if the font is invalid, or when size of table is wrong
      */
-    protected TeacherTableBuilder() throws DocumentException, IOException {}
+    protected TeacherTableBuilder() throws DocumentException, IOException {
+    }
 
     /**
      * Method used for creating group schedule table in pdf
@@ -82,10 +82,11 @@ public class TeacherTableBuilder extends BaseTableBuilder {
         return table;
     }
 
-    /** Method used for getting ClassForTeacherScheduleDTO by period
+    /**
+     * Method used for getting ClassForTeacherScheduleDTO by period
      *
      * @param classes the classes to search
-     * @param period the period for class
+     * @param period  the period for class
      * @return ClassForTeacherScheduleDTO by period
      */
     private ClassForTeacherScheduleDTO getClassByPeriod(List<ClassForTeacherScheduleDTO> classes, PeriodDTO period) {
@@ -94,15 +95,16 @@ public class TeacherTableBuilder extends BaseTableBuilder {
         ClassForTeacherScheduleDTO classForTeacherScheduleDTO = new ClassForTeacherScheduleDTO();
         classForTeacherScheduleDTO.setLessons(Collections.emptyList());
         for (ClassForTeacherScheduleDTO clazz : classes) {
-            if (clazz.getPeriod().equals(period))
+            if (clazz.getPeriod().equals(period)) {
                 return clazz;
+            }
         }
         return classForTeacherScheduleDTO;
     }
 
     /**
-     *  Method used for getting all periods from schedule using TreeSet to avoid
-     *  duplicating values, then sorting them by start time
+     * Method used for getting all periods from schedule using TreeSet to avoid
+     * duplicating values, then sorting them by start time
      *
      * @param schedule the schedule of teacher
      * @return sorted treeSet of periodDTO
@@ -115,9 +117,9 @@ public class TeacherTableBuilder extends BaseTableBuilder {
                 .flatMap(Collection::stream)
                 .map(ClassForTeacherScheduleDTO::getPeriod)
                 .collect(Collectors.toCollection(
-                        () -> new TreeSet<>(
-                                Comparator.comparing(PeriodDTO::getStartTime)
-                        )
+                                () -> new TreeSet<>(
+                                        Comparator.comparing(PeriodDTO::getStartTime)
+                                )
                         )
                 );
     }
@@ -126,8 +128,8 @@ public class TeacherTableBuilder extends BaseTableBuilder {
      * Method used for creating title cell for table
      *
      * @param tableWidth the width of table
-     * @param schedule the schedule of teacher
-     * @param language the selected language
+     * @param schedule   the schedule of teacher
+     * @param language   the selected language
      * @return PdfPTable schedule for group
      */
     private PdfPCell createTitleCell(int tableWidth, ScheduleForTeacherDTO schedule, Locale language) {
@@ -147,9 +149,9 @@ public class TeacherTableBuilder extends BaseTableBuilder {
      * Method used for creating  main table cells
      * depending on whether they are odd or even
      *
-     * @param oddClasses the upper (odd) cell of table
+     * @param oddClasses  the upper (odd) cell of table
      * @param evenClasses the lover (even) cell of table
-     * @param language the selected language
+     * @param language    the selected language
      * @return inner PdfPCell for table
      */
     private PdfPCell createInnerCell(ClassForTeacherScheduleDTO oddClasses, ClassForTeacherScheduleDTO evenClasses, Locale language) {
@@ -159,13 +161,11 @@ public class TeacherTableBuilder extends BaseTableBuilder {
         // creating one whole empty cell, if both odd and even lists of lessons r empty
         if (oddClasses.getLessons().isEmpty() && evenClasses.getLessons().isEmpty()) {
             cell = new PdfPCell(new Phrase(EMPTY_CELL, cellFont));
-        }
-        // creating one whole cell, if odd and even lists of lessons r equal
-        else if (oddClasses.getLessons().equals(evenClasses.getLessons())) {
+        } else if (oddClasses.getLessons().equals(evenClasses.getLessons())) {
+            // creating one whole cell, if odd and even lists of lessons r equal
             cell = generateCell(oddClasses.getLessons(), language);
-        }
-        // dividing one cell into odd (upper) and even (lower) cells and filling them
-        else {
+        } else {
+            // dividing one cell into odd (upper) and even (lower) cells and filling them
             // creating new inner table with two cells - odd and even
             PdfPTable inner = new PdfPTable(1);
             inner.addCell(createUpperInnerCell(oddClasses, language));
@@ -177,10 +177,10 @@ public class TeacherTableBuilder extends BaseTableBuilder {
     }
 
     /**
-     *  Method used for creating upper (odd) cell of table
+     * Method used for creating upper (odd) cell of table
      *
      * @param oddClasses the classes for teacher
-     * @param language the selected language
+     * @param language   the selected language
      * @return inner PdfPCell for table
      */
     private PdfPCell createUpperInnerCell(ClassForTeacherScheduleDTO oddClasses, Locale language) {
@@ -194,10 +194,10 @@ public class TeacherTableBuilder extends BaseTableBuilder {
     }
 
     /**
-     *  Method used for creating lower (even) cell of table
+     * Method used for creating lower (even) cell of table
      *
      * @param evenClasses the classes for teacher
-     * @param language the selected language
+     * @param language    the selected language
      * @return inner PdfPCell for table
      */
     private PdfPCell createLowerInnerCell(ClassForTeacherScheduleDTO evenClasses, Locale language) {
@@ -211,11 +211,10 @@ public class TeacherTableBuilder extends BaseTableBuilder {
     }
 
 
-
     /**
-     *  Method used for generating schedule text in table's cell
+     * Method used for generating schedule text in table's cell
      *
-     * @param lessons the lessons of schedule
+     * @param lessons  the lessons of schedule
      * @param language the selected language
      * @return inner PdfPCell for table
      */
@@ -224,19 +223,16 @@ public class TeacherTableBuilder extends BaseTableBuilder {
         List<String> links = getLinksFromLessonsInScheduleDTOs(lessons);
         Phrase phrase = new Phrase(baseText, cellFont);
 
-        if(!links.isEmpty()) {
-            if(links.size() == 1) {
+        if (!links.isEmpty()) {
+            if (links.size() == 1) {
                 phrase.add(COMA_SEPARATOR + NEW_LINE_SEPARATOR);
                 Chunk chunk = new Chunk(translator.getTranslation("follow the link", language), linkFont);
                 chunk.setAnchor(links.get(0));
                 phrase.add(chunk);
-            }
-            else {
+            } else {
                 for (int i = 0; i < links.size(); i++) {
                     phrase.add(COMA_SEPARATOR + NEW_LINE_SEPARATOR);
-                    Chunk chunk = new Chunk(
-                            translator.getTranslation("follow the link", language).concat(" (" + (i+1) + ")")
-                            , linkFont);
+                    Chunk chunk = new Chunk(translator.getTranslation("follow the link", language).concat(" (" + (i + 1) + ")"), linkFont);
                     chunk.setAnchor(links.get(i));
                     phrase.add(chunk);
                 }
@@ -247,8 +243,8 @@ public class TeacherTableBuilder extends BaseTableBuilder {
     }
 
     /**
-     *  Method used for get group's title, getSubject for site, Lesson type
-     *  and room from lessons
+     * Method used for get group's title, getSubject for site, Lesson type
+     * and room from lessons
      *
      * @param lessons the lessons of schedule
      * @return text of group's title, getSubject for site, Lesson type and room from lessons
@@ -283,7 +279,7 @@ public class TeacherTableBuilder extends BaseTableBuilder {
     }
 
     /**
-     *  Method used for get list of links from lessons
+     * Method used for get list of links from lessons
      *
      * @param lessons the lessons of schedule
      * @return list of links from lessons

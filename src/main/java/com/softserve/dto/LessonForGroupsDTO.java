@@ -11,7 +11,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @ToString
-public class LessonForGroupsDTO extends LessonBaseDTO{
+public class LessonForGroupsDTO extends LessonBaseDTO {
     private List<GroupDTO> groups;
     private boolean grouped;
 }

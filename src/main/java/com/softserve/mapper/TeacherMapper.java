@@ -1,12 +1,13 @@
 package com.softserve.mapper;
 
 import com.softserve.dto.*;
-import com.softserve.entity.User;
-import org.apache.commons.lang3.StringUtils;
 import com.softserve.entity.Teacher;
+import com.softserve.entity.User;
 import com.softserve.service.UserService;
+import org.apache.commons.lang3.StringUtils;
 import org.mapstruct.*;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import java.util.List;
 
 @Mapper(componentModel = "spring")
@@ -14,6 +15,15 @@ import java.util.List;
 public abstract class TeacherMapper {
     @Autowired
     protected UserService userService;
+
+    public static String teacherDTOToTeacherForSite(TeacherDTO teacherDTO) {
+        return StringUtils.join(
+                teacherDTO.getPosition(), " ",
+                teacherDTO.getSurname(), " ",
+                teacherDTO.getName().charAt(0), ". ",
+                teacherDTO.getPatronymic().charAt(0), "."
+        );
+    }
 
     @InheritInverseConfiguration
     @Mapping(target = "email", source = "userId", qualifiedByName = "userIdToEmail")
@@ -26,7 +36,7 @@ public abstract class TeacherMapper {
 
     @Named("userIdToEmail")
     public String userIdToEmail(Long userId) {
-        if(userId != null) {
+        if (userId != null) {
             return userService.getById(userId).getEmail();
         }
         return null;
@@ -65,18 +75,5 @@ public abstract class TeacherMapper {
     public abstract UserDataDTO teacherToUserDataDTO(Teacher teacher);
 
     public abstract List<TeacherDTO> teachersToTeacherDTOs(List<Teacher> teachers);
-
-    public static String teacherDTOToTeacherForSite(TeacherDTO teacherDTO) {
-        return StringUtils.join(
-                teacherDTO.getPosition()
-                , " "
-                , teacherDTO.getSurname()
-                , " "
-                , teacherDTO.getName().charAt(0)
-                , ". "
-                , teacherDTO.getPatronymic().charAt(0)
-                , "."
-        );
-    }
 
 }

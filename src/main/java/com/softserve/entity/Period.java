@@ -1,4 +1,5 @@
 package com.softserve.entity;
+
 import lombok.*;
 
 import javax.persistence.*;
@@ -40,8 +41,12 @@ public class Period implements Serializable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Period period = (Period) o;
         return name.equals(period.name);
     }

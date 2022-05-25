@@ -2,12 +2,10 @@ package com.softserve.service.impl;
 
 import com.softserve.entity.*;
 import com.softserve.exception.*;
+import com.softserve.repository.GroupRepository;
 import com.softserve.repository.LessonRepository;
 import com.softserve.repository.ScheduleRepository;
-import com.softserve.repository.GroupRepository;
 import com.softserve.repository.SemesterRepository;
-import com.softserve.service.LessonService;
-import com.softserve.service.GroupService;
 import com.softserve.service.PeriodService;
 import com.softserve.service.SemesterService;
 import lombok.extern.slf4j.Slf4j;
@@ -340,7 +338,6 @@ public class SemesterServiceImpl implements SemesterService {
     }
 
     /**
-     *
      * Method add groups to an existing semester
      *
      * @param semester semester in which we need to add groups

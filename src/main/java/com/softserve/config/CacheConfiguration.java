@@ -29,7 +29,7 @@ public class CacheConfiguration {
         this.environment = environment;
     }
 
-    @Bean(destroyMethod="shutdown")
+    @Bean(destroyMethod = "shutdown")
     RedissonClient redisson() {
         Config config = new Config();
         config.useSingleServer()
@@ -41,8 +41,8 @@ public class CacheConfiguration {
     CacheManager cacheManager(RedissonClient redissonClient) {
         Map<String, CacheConfig> config = new HashMap<>();
 
-        Long ttl = Optional.ofNullable(environment.getProperty("ttl", Long.class)).orElse(60*60*1000L);
-        Long maxIdleTime = Optional.ofNullable(environment.getProperty("maxIdleTime", Long.class)).orElse(30*60*1000L);
+        Long ttl = Optional.ofNullable(environment.getProperty("ttl", Long.class)).orElse(60 * 60 * 1000L);
+        Long maxIdleTime = Optional.ofNullable(environment.getProperty("maxIdleTime", Long.class)).orElse(30 * 60 * 1000L);
 
         config.put("map", new CacheConfig(ttl, maxIdleTime));
         config.put("semesterList", new CacheConfig(ttl, maxIdleTime));

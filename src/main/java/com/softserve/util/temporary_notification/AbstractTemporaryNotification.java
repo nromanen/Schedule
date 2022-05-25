@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.mail.MessagingException;
+
 @NoArgsConstructor
 @Setter
 @Getter
@@ -18,6 +19,7 @@ public abstract class AbstractTemporaryNotification {
     }
 
     public abstract boolean check(TemporarySchedule object) throws MessagingException;
+
     protected boolean checkNext(TemporarySchedule object) throws MessagingException {
         if (next == null) {
             return true;

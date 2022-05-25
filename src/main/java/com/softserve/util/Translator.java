@@ -20,14 +20,6 @@ public class Translator {
 
     private Map<String, Map<Locale, String>> dictionary = new HashMap<>();
 
-    public String getTranslation(String key, Locale language) {
-        if(dictionary.containsKey(key) && dictionary.get(key).containsKey(language)) {
-            return  dictionary.get(key).get(language);
-        }
-        log.warn("There is no translation of the word = {}", key);
-        return key;
-    }
-
     public static Translator getInstance() {
         if (translator == null) {
             ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
@@ -40,5 +32,13 @@ public class Translator {
             }
         }
         return translator;
+    }
+
+    public String getTranslation(String key, Locale language) {
+        if (dictionary.containsKey(key) && dictionary.get(key).containsKey(language)) {
+            return dictionary.get(key).get(language);
+        }
+        log.warn("There is no translation of the word = {}", key);
+        return key;
     }
 }

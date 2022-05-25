@@ -21,11 +21,13 @@ public interface UserMapper {
     @Mapping(target = "role", ignore = true)
     @Mapping(target = "token", ignore = true)
     User toCreateUser(RegistrationRequestDTO registrationDTO);
+
     List<UserDTO> toUserDTOs(List<User> users);
 
     @Mapping(target = "role", ignore = true)
     @Mapping(target = "token", ignore = true)
     User toUser(UserCreateDTO userCreateDTO);
+
     UserCreateDTO toUserCreateDTO(User user);
 
 }

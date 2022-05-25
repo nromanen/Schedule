@@ -97,8 +97,10 @@ public class ScheduleController {
                                                                             @RequestParam EvenOdd evenOdd,
                                                                             @RequestParam Long classId,
                                                                             @RequestParam Long lessonId) {
-        log.info("In getInfoForCreatingSchedule(semesterId = [{}], dayOfWeek = [{}], evenOdd = [{}], classId = [{}], lessonId = [{}])", semesterId, dayOfWeek, evenOdd, classId, lessonId);
-        return ResponseEntity.status(HttpStatus.OK).body(scheduleService.getInfoForCreatingSchedule(semesterId, dayOfWeek, evenOdd, classId, lessonId));
+        log.info("In getInfoForCreatingSchedule(semesterId = [{}], dayOfWeek = [{}], evenOdd = [{}], classId = [{}], lessonId = [{}])",
+                semesterId, dayOfWeek, evenOdd, classId, lessonId);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                scheduleService.getInfoForCreatingSchedule(semesterId, dayOfWeek, evenOdd, classId, lessonId));
     }
 
     @GetMapping("/full/groups")
@@ -148,7 +150,7 @@ public class ScheduleController {
         Schedule schedule = scheduleSaveMapper.scheduleSaveDTOToSchedule(scheduleSaveDTO);
         schedule.setLesson(lessonService.getById(scheduleSaveDTO.getLessonId()));
         List<Schedule> schedules = new ArrayList<>();
-        if (schedule.getLesson().isGrouped()){
+        if (schedule.getLesson().isGrouped()) {
             schedules = scheduleService.schedulesForGroupedLessons(schedule);
             schedules.forEach(scheduleService::checkReferences);
             schedules.forEach(scheduleService::save);
@@ -164,7 +166,7 @@ public class ScheduleController {
     public ResponseEntity delete(@PathVariable("id") long id) {
         log.info("In delete(id =[{}]", id);
         Schedule schedule = scheduleService.getById(id);
-        if (schedule.getLesson().isGrouped()){
+        if (schedule.getLesson().isGrouped()) {
             List<Schedule> schedules = scheduleService.getSchedulesForGroupedLessons(schedule);
             schedules.forEach(scheduleService::delete);
         } else {
@@ -185,7 +187,8 @@ public class ScheduleController {
         LocalDate fromDate = LocalDate.parse(LocalDate.parse(from, formatter).toString(), currentFormatter);
         LocalDate toDate = LocalDate.parse(LocalDate.parse(to, formatter).toString(), currentFormatter);
         Teacher teacher = teacherService.findByUserId(jwtUser.getId());
-        List<ScheduleForTemporaryDateRangeDTO> dto = fullDTOForTemporaryScheduleByTeacherDateRange(scheduleService.temporaryScheduleByDateRangeForTeacher(fromDate, toDate, teacher.getId()));
+        List<ScheduleForTemporaryDateRangeDTO> dto = fullDTOForTemporaryScheduleByTeacherDateRange(
+                scheduleService.temporaryScheduleByDateRangeForTeacher(fromDate, toDate, teacher.getId()));
         return ResponseEntity.status(HttpStatus.OK).body(dto);
     }
 
@@ -201,7 +204,8 @@ public class ScheduleController {
         LocalDate fromDate = LocalDate.parse(LocalDate.parse(from, formatter).toString(), currentFormatter);
         LocalDate toDate = LocalDate.parse(LocalDate.parse(to, formatter).toString(), currentFormatter);
         teacherService.getById(teacherId);
-        Map<LocalDate, Map<Period, Map<Schedule, TemporarySchedule>>> mapSchedules = scheduleService.temporaryScheduleByDateRangeForTeacher(fromDate, toDate, teacherId);
+        Map<LocalDate, Map<Period, Map<Schedule, TemporarySchedule>>> mapSchedules = scheduleService
+                .temporaryScheduleByDateRangeForTeacher(fromDate, toDate, teacherId);
 
         List<ScheduleForTemporaryDateRangeDTO> dto = fullDTOForTemporaryScheduleByTeacherDateRange(mapSchedules);
         return ResponseEntity.status(HttpStatus.OK).body(dto);
@@ -232,7 +236,8 @@ public class ScheduleController {
         return ResponseEntity.ok().body(scheduleMapper.scheduleToScheduleDTO(updateSchedule));
     }
 
-    private List<ScheduleForTemporaryDateRangeDTO> fullDTOForTemporaryScheduleByTeacherDateRange(Map<LocalDate, Map<Period, Map<Schedule, TemporarySchedule>>> map) {
+    private List<ScheduleForTemporaryDateRangeDTO> fullDTOForTemporaryScheduleByTeacherDateRange(Map<LocalDate, Map<Period,
+            Map<Schedule, TemporarySchedule>>> map) {
         List<ScheduleForTemporaryDateRangeDTO> fullDTO = new ArrayList<>();
 
         for (Map.Entry<LocalDate, Map<Period, Map<Schedule, TemporarySchedule>>> itr : map.entrySet()) {

@@ -19,7 +19,7 @@ import java.util.List;
 
 @Slf4j
 public class CsvFileParser {
-    public static List<StudentImportDTO> getStudentsFromFile(MultipartFile file){
+    public static List<StudentImportDTO> getStudentsFromFile(MultipartFile file) {
         String fileName = String.join("", "students_",
                 String.valueOf(LocalDateTime.now().getNano()), ".csv");
 

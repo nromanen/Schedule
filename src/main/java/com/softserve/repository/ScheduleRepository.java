@@ -34,6 +34,7 @@ public interface ScheduleRepository extends BasicRepository<Schedule, Long> {
     List<Schedule> getAllSchedulesByTeacherIdAndSemesterId(Long teacherId, Long semesterId);
 
     Schedule getScheduleByObject(Schedule schedule);
+
     //rooms
     List<Schedule> getScheduleBySemester(Long semesterId);
 

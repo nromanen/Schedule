@@ -120,8 +120,8 @@ public abstract class BasicRepositoryImpl<T extends Serializable, I extends Seri
     public List<T> getDisabled() {
         log.info("In getDisabled");
         return sessionFactory.getCurrentSession().createQuery(
-                "from " + basicClass.getName() +" tableName"+
-                        " where tableName.disable = true ")
+                        "from " + basicClass.getName() + " tableName" +
+                                " where tableName.disable = true ")
                 .getResultList();
     }
 }

@@ -1,14 +1,18 @@
 package com.softserve.service;
 
-import com.softserve.dto.*;
-import com.softserve.entity.*;
+import com.softserve.dto.CreateScheduleInfoDTO;
+import com.softserve.dto.ScheduleForGroupDTO;
+import com.softserve.dto.ScheduleForTeacherDTO;
+import com.softserve.dto.ScheduleFullDTO;
+import com.softserve.entity.Period;
+import com.softserve.entity.Room;
+import com.softserve.entity.Schedule;
+import com.softserve.entity.TemporarySchedule;
 import com.softserve.entity.enums.EvenOdd;
-import com.softserve.entity.enums.LessonType;
 
 import javax.mail.MessagingException;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -34,7 +38,8 @@ public interface ScheduleService extends BasicService<Schedule, Long> {
 
     List<Schedule> getSchedulesBySemester(Long semesterId);
 
-    Map<LocalDate, Map<Period, Map<Schedule, TemporarySchedule>>>  temporaryScheduleByDateRangeForTeacher(LocalDate fromDate, LocalDate toDate, Long teacherId);
+    Map<LocalDate, Map<Period, Map<Schedule, TemporarySchedule>>> temporaryScheduleByDateRangeForTeacher(LocalDate fromDate, LocalDate toDate,
+                                                                                                         Long teacherId);
 
     void deleteSchedulesBySemesterId(Long semesterId);
 
@@ -50,6 +55,6 @@ public interface ScheduleService extends BasicService<Schedule, Long> {
 
     void sendScheduleToTeacher(Long semesterId, Long teacherId, Locale language) throws MessagingException;
 
-    Map<Room, List<Schedule>>  getAllOrdered(Long semesterId);
+    Map<Room, List<Schedule>> getAllOrdered(Long semesterId);
 }
 

@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-
 @RestController
 @Api(tags = "Temporary Schedule API")
 @RequestMapping("/temporary-schedules")
@@ -35,7 +34,8 @@ public class TemporaryScheduleController {
     private final TeacherService teacherService;
 
     @Autowired
-    public TemporaryScheduleController(TemporaryScheduleService temporaryScheduleService, TemporaryScheduleMapper temporaryScheduleMapper, TeacherService teacherService) {
+    public TemporaryScheduleController(TemporaryScheduleService temporaryScheduleService,
+                                       TemporaryScheduleMapper temporaryScheduleMapper, TeacherService teacherService) {
         this.temporaryScheduleService = temporaryScheduleService;
         this.temporaryScheduleMapper = temporaryScheduleMapper;
         this.teacherService = teacherService;
@@ -57,7 +57,8 @@ public class TemporaryScheduleController {
         log.info("Enter into addByRange of TemporaryScheduleController with temporaryScheduleDTO: {}", temporaryScheduleSaveRangeDTO);
         LocalDate to = temporaryScheduleSaveRangeDTO.getTo();
         LocalDate from = temporaryScheduleSaveRangeDTO.getFrom();
-        List<String> temporaryAddedMessagesDTOS = temporaryScheduleService.addRange(from, to, temporaryScheduleMapper.convertToEntity(temporaryScheduleSaveRangeDTO.getTemporarySchedule()));
+        List<String> temporaryAddedMessagesDTOS = temporaryScheduleService
+                .addRange(from, to, temporaryScheduleMapper.convertToEntity(temporaryScheduleSaveRangeDTO.getTemporarySchedule()));
 
         List<TemporaryAddedMessagesDTO> temporaryAddedMessagesDTOList = new ArrayList<>();
         for (String message : temporaryAddedMessagesDTOS) {
@@ -93,18 +94,18 @@ public class TemporaryScheduleController {
                                                              @RequestParam Optional<String> to) {
         log.info("Enter into getAll of TemporaryScheduleController");
         List<TemporarySchedule> temporaryScheduleList;
-        if(from.isPresent() && to.isPresent()){
+        if (from.isPresent() && to.isPresent()) {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
             DateTimeFormatter currentFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             LocalDate fromDate = LocalDate.parse(LocalDate.parse(from.get(), formatter).toString(), currentFormatter);
             LocalDate toDate = LocalDate.parse(LocalDate.parse(to.get(), formatter).toString(), currentFormatter);
-            if(teacherId.isPresent()){
+            if (teacherId.isPresent()) {
                 teacherService.getById(teacherId.get());
                 temporaryScheduleList = temporaryScheduleService.getAllByTeacherAndRange(fromDate, toDate, teacherId.get());
-            }else{
+            } else {
                 temporaryScheduleList = temporaryScheduleService.getAllByRange(fromDate, toDate);
             }
-        }else{
+        } else {
             temporaryScheduleList = temporaryScheduleService.getAllByCurrentSemester();
         }
         return ResponseEntity.ok().body(temporaryScheduleMapper.convertToDtoList(temporaryScheduleList));
@@ -131,13 +132,15 @@ public class TemporaryScheduleController {
         DateTimeFormatter currentFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate fromDate = LocalDate.parse(LocalDate.parse(from, formatter).toString(), currentFormatter);
         LocalDate toDate = LocalDate.parse(LocalDate.parse(to, formatter).toString(), currentFormatter);
-        return ResponseEntity.ok().body(temporaryScheduleMapper.convertToDtoList(temporaryScheduleService.getTemporaryScheduleByTeacherAndRange(fromDate, toDate, teacher.getId())));
+        return ResponseEntity.ok().body(temporaryScheduleMapper.convertToDtoList(temporaryScheduleService
+                .getTemporaryScheduleByTeacherAndRange(fromDate, toDate, teacher.getId())));
     }
 
 
     /*private List<TemporaryScheduleDTO> convertToGroupedTemporarySchedule(List<TemporarySchedule> temporarySchedules){
     List<TemporaryScheduleDTO> temporaryScheduleDTOS = new ArrayList<>();
-        Map<LocalDate, Map<Period, Map<Room, Map<String, Map<String, List<TemporarySchedule>>>>>> groupedTemporarySchedules = temporarySchedules.stream()
+        Map<LocalDate, Map<Period, Map<Room, Map<String, Map<String, List<TemporarySchedule>>>>>> groupedTemporarySchedules =
+        temporarySchedules.stream()
                 .collect(Collectors.groupingBy(TemporarySchedule::getDate,
                         Collectors.groupingBy(TemporarySchedule::getPeriod,
                                 Collectors.groupingBy(TemporarySchedule::getRoom,
@@ -145,7 +148,8 @@ public class TemporaryScheduleController {
                                         Collectors.groupingBy(TemporarySchedule::getSubjectForSite))))));
 
 
-        for (Map.Entry<LocalDate, Map<Period, Map<Room, Map<String, Map<String, List<TemporarySchedule>>>>>> dateMapEntry : groupedTemporarySchedules.entrySet()) {
+        for (Map.Entry<LocalDate, Map<Period, Map<Room, Map<String, Map<String, List<TemporarySchedule>>>>>> dateMapEntry :
+        groupedTemporarySchedules.entrySet()) {
             for (Map.Entry<Period,Map<Room, Map<String, Map<String, List<TemporarySchedule>>>>> periodMapEntry : dateMapEntry.getValue().entrySet()) {
             for (Map.Entry<Room, Map<String, Map<String, List<TemporarySchedule>>>> roomMapEntry : periodMapEntry.getValue().entrySet()) {
                 for (Map.Entry<String, Map<String, List<TemporarySchedule>>> teacherForSiteMap : roomMapEntry.getValue().entrySet()) {
@@ -162,7 +166,4 @@ public class TemporaryScheduleController {
             }
     return temporaryScheduleDTOS;
     }*/
-
-
-
 }

@@ -10,14 +10,14 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring", uses = TeacherMapper.class)
 public interface LessonsInScheduleMapper {
     @Mapping(source = "lessonType", target = "lessonType")
-    @Mapping(target = "room",ignore = true)
-    @Mapping(target = "temporaryScheduleDTO",ignore = true)
+    @Mapping(target = "room", ignore = true)
+    @Mapping(target = "temporaryScheduleDTO", ignore = true)
     LessonsInScheduleDTO lessonToLessonsInScheduleDTO(Lesson lesson);
 
     @Mapping(source = "semester.id", target = "semesterId")
     LessonInfoDTO lessonToLessonsInTemporaryScheduleDTO(Lesson lesson);
 
     @Mapping(source = "semester.id", target = "semesterId")
-    @Mapping(target = "hours",ignore = true)
+    @Mapping(target = "hours", ignore = true)
     LessonInfoDTO lessonToLessonsInTemporaryScheduleDTO(TemporarySchedule temporarySchedule);
 }

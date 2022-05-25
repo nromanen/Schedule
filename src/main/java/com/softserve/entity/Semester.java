@@ -17,7 +17,6 @@ import java.io.Serializable;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.Set;
-import java.util.List;
 
 @NamedQuery(
         name = "findCurrentSemester",
@@ -29,13 +28,13 @@ import java.util.List;
         query = "from Semester s where s.defaultSemester= :defaultSemester"
 )
 
-@FilterDef(name="semesterDisableFilter", parameters={
-        @ParamDef( name="disable", type="boolean" ),
+@FilterDef(name = "semesterDisableFilter", parameters = {
+        @ParamDef(name = "disable", type = "boolean"),
 })
 
-@Filters( {
-        @Filter(name="semesterDisableFilter", condition="disable = :disable"),
-} )
+@Filters({
+        @Filter(name = "semesterDisableFilter", condition = "disable = :disable"),
+})
 
 
 @NoArgsConstructor
@@ -70,7 +69,7 @@ public class Semester implements Serializable {
 
     @ElementCollection(targetClass = DayOfWeek.class, fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
-    @CollectionTable(name="semester_day")
+    @CollectionTable(name = "semester_day")
     @Column(name = "day")
     @NotNull(message = "At least one day should persist in the semester")
     private Set<DayOfWeek> daysOfWeek;
@@ -78,18 +77,18 @@ public class Semester implements Serializable {
     @NotNull(message = "Semester should contain at least one period")
     @ManyToMany
     @JoinTable(name = "semester_period",
-            joinColumns = { @JoinColumn(name = "semester_id")},
+            joinColumns = {@JoinColumn(name = "semester_id")},
             inverseJoinColumns = {@JoinColumn(name = "period_id")})
     @OrderBy("startTime")
     private Set<Period> periods;
 
     @ManyToMany
     @JoinTable(name = "semester_group",
-            joinColumns = { @JoinColumn(name = "semester_id")},
+            joinColumns = {@JoinColumn(name = "semester_id")},
             inverseJoinColumns = {@JoinColumn(name = "group_id")})
     @OrderBy("sorting_order")
     private Set<Group> groups;
 
-    @Column(name = "disable",  columnDefinition = "boolean default 'false'")
+    @Column(name = "disable", columnDefinition = "boolean default 'false'")
     private boolean disable = false;
 }

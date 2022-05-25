@@ -53,7 +53,7 @@ public class StudentRepositoryImpl extends BasicRepositoryImpl<Student, Long> im
      * The method used for finding out if Student exists by email and id
      *
      * @param email String email used to find Student
-     * @param id Long id, which is used to find Student
+     * @param id    Long id, which is used to find Student
      * @return boolean : if exists - true, else - false
      */
     @Override

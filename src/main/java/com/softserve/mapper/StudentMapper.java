@@ -32,7 +32,7 @@ public abstract class StudentMapper {
 
     @Named("userToEmail")
     public String userToEmail(User user) {
-        if(user != null) {
+        if (user != null) {
             //get email
             return userService.getById(user.getId()).getEmail();
         }
@@ -49,7 +49,7 @@ public abstract class StudentMapper {
     @Named("emailToUser")
     public User emailToUser(String email) {
         Optional<User> optionalUser = userService.findSocialUser(email);
-        if(optionalUser.isPresent()) {
+        if (optionalUser.isPresent()) {
             return userService.findByEmail(email);
         }
         return null;

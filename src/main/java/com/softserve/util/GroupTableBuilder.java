@@ -12,11 +12,8 @@ import java.io.IOException;
 import java.text.MessageFormat;
 import java.time.DayOfWeek;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Locale;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -26,10 +23,11 @@ public class GroupTableBuilder extends BaseTableBuilder {
     /**
      * Constructs a GroupTableBuilder.
      *
-     * @throws IOException if the font file could not be read
+     * @throws IOException       if the font file could not be read
      * @throws DocumentException if the font is invalid, or when size of table is wrong
      */
-    public GroupTableBuilder() throws DocumentException, IOException {}
+    public GroupTableBuilder() throws DocumentException, IOException {
+    }
 
     /**
      * Method used for creating group schedule table in pdf
@@ -54,7 +52,7 @@ public class GroupTableBuilder extends BaseTableBuilder {
                 .stream()
                 .map(DaysOfWeekWithClassesForGroupDTO::getDay)
                 .collect(Collectors.toList());
-        PdfPCell[] cells =  createHeaderCells(days, language);
+        PdfPCell[] cells = createHeaderCells(days, language);
         Arrays.stream(cells).forEach(table::addCell);
 
         // getting all unique periods from schedule
@@ -81,8 +79,8 @@ public class GroupTableBuilder extends BaseTableBuilder {
     }
 
     /**
-     *  Method used for getting all periods from schedule using TreeSet to avoid
-     *  duplicating values, then sorting them by start time
+     * Method used for getting all periods from schedule using TreeSet to avoid
+     * duplicating values, then sorting them by start time
      *
      * @param schedule the schedule of group
      * @return sorted treeSet of periodDTO
@@ -94,9 +92,9 @@ public class GroupTableBuilder extends BaseTableBuilder {
                 .flatMap(s -> s.getClasses().stream())
                 .map(ClassesInScheduleForGroupDTO::getPeriod)
                 .collect(Collectors.toCollection(
-                        () -> new TreeSet<>(
-                                Comparator.comparing(PeriodDTO::getStartTime)
-                        )
+                                () -> new TreeSet<>(
+                                        Comparator.comparing(PeriodDTO::getStartTime)
+                                )
                         )
                 );
     }
@@ -105,8 +103,8 @@ public class GroupTableBuilder extends BaseTableBuilder {
      * Method used for creating title cell for table
      *
      * @param tableWidth the width of table
-     * @param schedule the schedule of group
-     * @param language the selected language
+     * @param schedule   the schedule of group
+     * @param language   the selected language
      * @return PdfPTable schedule for group
      */
     private PdfPCell createTitleCell(int tableWidth, ScheduleForGroupDTO schedule, Locale language) {
@@ -127,8 +125,8 @@ public class GroupTableBuilder extends BaseTableBuilder {
      * Method used for creating  main table cells
      * depending on whether they are odd or even
      *
-     * @param day the day of week and classes for group
-     * @param period the period for group
+     * @param day      the day of week and classes for group
+     * @param period   the period for group
      * @param language the selected language
      * @return inner PdfPCell for table
      */
@@ -156,9 +154,9 @@ public class GroupTableBuilder extends BaseTableBuilder {
     }
 
     /**
-     *  Method used for creating upper (odd) cell of table
+     * Method used for creating upper (odd) cell of table
      *
-     * @param lessons the lessons for group
+     * @param lessons  the lessons for group
      * @param language the selected language
      * @return inner PdfPCell for table
      */
@@ -175,9 +173,9 @@ public class GroupTableBuilder extends BaseTableBuilder {
     }
 
     /**
-     *  Method used for creating lower (even) cell of table
+     * Method used for creating lower (even) cell of table
      *
-     * @param lessons the lessons for group
+     * @param lessons  the lessons for group
      * @param language the selected language
      * @return inner PdfPCell for table
      */
@@ -193,9 +191,9 @@ public class GroupTableBuilder extends BaseTableBuilder {
     }
 
     /**
-     *  Method used for generating schedule text in table's cell
+     * Method used for generating schedule text in table's cell
      *
-     * @param lessons the lessons of schedule
+     * @param lessons  the lessons of schedule
      * @param language the selected language
      * @return inner PdfPCell for table
      */
@@ -203,7 +201,7 @@ public class GroupTableBuilder extends BaseTableBuilder {
         String baseText = getBaseTextFromLessonsInScheduleDTO(lessons);
         String linkText = getLinkTextFromLessonsInScheduleDTO(lessons);
         Phrase phrase = new Phrase(baseText, cellFont);
-        if(linkText != null) {
+        if (linkText != null) {
             phrase.add(COMA_SEPARATOR + NEW_LINE_SEPARATOR);
             Chunk chunk = new Chunk(translator.getTranslation("follow the link", language), linkFont);
             chunk.setAnchor(linkText);
@@ -213,7 +211,7 @@ public class GroupTableBuilder extends BaseTableBuilder {
     }
 
     /**
-     *  Method used for get subjectName, lesson type, teacher and room from lessons
+     * Method used for get subjectName, lesson type, teacher and room from lessons
      *
      * @param lessons the lessons of schedule
      * @return text of subjectName, lesson type, teacher and room from lessons
@@ -232,7 +230,7 @@ public class GroupTableBuilder extends BaseTableBuilder {
     }
 
     /**
-     *  Method used for get link from lessons
+     * Method used for get link from lessons
      *
      * @param lessons the lessons of schedule
      * @return text of link from lessons if link is not null, else null
@@ -240,7 +238,7 @@ public class GroupTableBuilder extends BaseTableBuilder {
     private String getLinkTextFromLessonsInScheduleDTO(LessonsInScheduleDTO lessons) {
         StringBuilder stringBuilder = new StringBuilder();
         String link = lessons.getLinkToMeeting();
-        if(link == null) {
+        if (link == null) {
             return null;
         }
         stringBuilder.append(link);

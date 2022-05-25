@@ -6,9 +6,9 @@ import com.softserve.entity.Lesson;
 import com.softserve.entity.Semester;
 import com.softserve.entity.enums.LessonType;
 import com.softserve.mapper.GroupMapper;
+import com.softserve.mapper.LessonInfoMapper;
 import com.softserve.service.GroupService;
 import com.softserve.service.LessonService;
-import com.softserve.mapper.LessonInfoMapper;
 import com.softserve.service.ScheduleService;
 import com.softserve.service.SemesterService;
 import io.swagger.annotations.Api;
@@ -37,7 +37,8 @@ public class LessonController {
     private final GroupMapper groupMapper;
 
     @Autowired
-    public LessonController(LessonService lessonService, LessonInfoMapper lessonInfoMapper, SemesterService semesterService, GroupService groupService, ScheduleService scheduleService, GroupMapper groupMapper) {
+    public LessonController(LessonService lessonService, LessonInfoMapper lessonInfoMapper, SemesterService semesterService,
+                            GroupService groupService, ScheduleService scheduleService, GroupMapper groupMapper) {
         this.lessonService = lessonService;
         this.lessonInfoMapper = lessonInfoMapper;
         this.semesterService = semesterService;
@@ -49,7 +50,9 @@ public class LessonController {
 
     @ApiOperation(value = "Get list of all lessons")
     @GetMapping
-    public ResponseEntity<List<LessonInfoDTO>> list(@RequestParam(required = false) @ApiParam(value = "Get all lessons for particular group") Long groupId) {
+    public ResponseEntity<List<LessonInfoDTO>> list(
+            @RequestParam(required = false) @ApiParam(value = "Get all lessons for particular group") Long groupId
+    ) {
         log.info("In list ()");
         List<Lesson> lessons = groupId == null ? lessonService.getAll() : lessonService.getAllForGroup(groupId);
         return ResponseEntity.status(HttpStatus.OK).body(lessonInfoMapper.lessonsToLessonInfoDTOs(lessons));
@@ -124,7 +127,7 @@ public class LessonController {
         log.info("In copyLessonInSameSemesterForGroups with lessonId = {} and groupsId = {}", lessonId, groupsId);
         List<Lesson> lessonsToSave = new ArrayList<>();
         Lesson lesson = lessonService.getById(lessonId);
-        for (long groupId: groupsId) {
+        for (long groupId : groupsId) {
             if (groupService.isExistsById(groupId)) {
                 lesson.setGroup(groupService.getById(groupId));
                 lessonService.saveLessonDuringCopy(lesson);

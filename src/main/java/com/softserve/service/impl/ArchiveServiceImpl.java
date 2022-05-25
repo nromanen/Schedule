@@ -50,7 +50,7 @@ public class ArchiveServiceImpl implements ArchiveService {
         log.info("In getAllSemestersInArchiveSchedule");
         List<ScheduleFullForArchiveDTO> schedules = archiveRepository.getAllArchiveSchedule();
         List<SemesterDTO> semesters = new ArrayList<>();
-        for (ScheduleFullForArchiveDTO schedule: schedules) {
+        for (ScheduleFullForArchiveDTO schedule : schedules) {
             semesters.add(schedule.getSemester());
         }
         return semesters;

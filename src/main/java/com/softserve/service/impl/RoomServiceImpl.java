@@ -5,9 +5,9 @@ import com.softserve.entity.Room;
 import com.softserve.entity.enums.EvenOdd;
 import com.softserve.exception.EntityAlreadyExistsException;
 import com.softserve.exception.EntityNotFoundException;
+import com.softserve.mapper.RoomForScheduleInfoMapper;
 import com.softserve.repository.RoomRepository;
 import com.softserve.service.RoomService;
-import com.softserve.mapper.RoomForScheduleInfoMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -139,7 +139,8 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     public List<RoomForScheduleInfoDTO> getAllRoomsForCreatingSchedule(Long semesterId, DayOfWeek dayOfWeek, EvenOdd evenOdd, Long classId) {
-        List<RoomForScheduleInfoDTO> rooms = roomForScheduleInfoMapper.toRoomForScheduleDTOList(getAvailableRoomsForSchedule(semesterId, dayOfWeek, evenOdd, classId));
+        List<RoomForScheduleInfoDTO> rooms = roomForScheduleInfoMapper.toRoomForScheduleDTOList(
+                getAvailableRoomsForSchedule(semesterId, dayOfWeek, evenOdd, classId));
         rooms.forEach(roomForScheduleDTO -> roomForScheduleDTO.setAvailable(true));
         rooms.addAll(roomForScheduleInfoMapper.toRoomForScheduleDTOList(getNotAvailableRoomsForSchedule(semesterId, dayOfWeek, evenOdd, classId)));
         return rooms;
@@ -164,7 +165,7 @@ public class RoomServiceImpl implements RoomService {
     /**
      * The method used for saving room after specific one
      *
-     * @param room Room entity that we want to save
+     * @param room    Room entity that we want to save
      * @param afterId id of room after which we want to insert our room
      * @return room
      */
@@ -177,7 +178,7 @@ public class RoomServiceImpl implements RoomService {
         if (afterId != null) {
             if (afterId == 0) {
                 room.setSortOrder(minOrder / 2);
-            }else {
+            } else {
                 Double prevPos = roomRepository.getSortOrderAfterId(afterId).orElse(0.0);
                 Double nextPos = roomRepository.getNextPosition(prevPos).orElse(prevPos + 2);
                 Double newPos = ((nextPos + prevPos) / 2);
@@ -192,7 +193,7 @@ public class RoomServiceImpl implements RoomService {
     /**
      * The method used for updating room after specific one
      *
-     * @param room Room entity that we want to save
+     * @param room    Room entity that we want to save
      * @param afterId id of room after which we want to insert our room
      * @return room
      */
@@ -202,10 +203,10 @@ public class RoomServiceImpl implements RoomService {
         log.info("Entered updateRoomAfterId({},{})", room, afterId);
         Double minOrder = roomRepository.getMinSortOrder().orElse(0.0);
         if (afterId != null) {
-            if(afterId == room.getId()) {
+            if (afterId == room.getId()) {
                 Double myOrder = roomRepository.getSortOrderAfterId(afterId).orElse(0.0);
                 room.setSortOrder(myOrder);
-            }else if (afterId == 0) {
+            } else if (afterId == 0) {
                 room.setSortOrder(minOrder / 2);
             } else {
                 Double prevPos = roomRepository.getSortOrderAfterId(afterId).orElse(0.0);
@@ -213,7 +214,7 @@ public class RoomServiceImpl implements RoomService {
                 Double newPos = ((nextPos + prevPos) / 2);
                 room.setSortOrder(newPos);
             }
-        }else {
+        } else {
             room.setSortOrder(1.0);
         }
         return roomRepository.update(room);

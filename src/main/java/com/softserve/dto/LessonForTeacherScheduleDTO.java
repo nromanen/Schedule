@@ -15,7 +15,7 @@ public class LessonForTeacherScheduleDTO {
     private String linkToMeeting;
     private String subjectForSite;
     private LessonType lessonType;
-   // @EqualsAndHashCode.Exclude
+    // @EqualsAndHashCode.Exclude
     private GroupDTO group;
     private String room;
     @JsonProperty("temporary_schedule")

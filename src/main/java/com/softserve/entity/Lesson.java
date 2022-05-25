@@ -1,7 +1,10 @@
 package com.softserve.entity;
 
 import com.softserve.entity.enums.LessonType;
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
@@ -54,6 +57,6 @@ public class Lesson implements Serializable {
     @NotNull
     private Semester semester;
 
-    @Column(name = "grouped",  columnDefinition = "boolean default 'false'")
+    @Column(name = "grouped", columnDefinition = "boolean default 'false'")
     private boolean grouped = false;
 }

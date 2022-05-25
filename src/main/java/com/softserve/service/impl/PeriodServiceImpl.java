@@ -1,4 +1,5 @@
 package com.softserve.service.impl;
+
 import com.softserve.entity.Period;
 import com.softserve.exception.EntityNotFoundException;
 import com.softserve.exception.FieldAlreadyExistsException;
@@ -57,8 +58,8 @@ public class PeriodServiceImpl implements PeriodService {
      *
      * @param object period
      * @return saved period
-     * @throws IncorrectTimeException  when period begins after his end or begin equal to end
-     * @throws PeriodConflictException when some periods intersect with others or periods
+     * @throws IncorrectTimeException      when period begins after his end or begin equal to end
+     * @throws PeriodConflictException     when some periods intersect with others or periods
      * @throws FieldAlreadyExistsException when periods name already exists
      */
     @Override
@@ -152,10 +153,9 @@ public class PeriodServiceImpl implements PeriodService {
     private boolean isPeriodFree(List<Period> oldPeriods, Period newPeriod) {
         log.info("Enter into isPeriodFree of PeriodServiceImpl with entities oldPeriods: {} and newPeriod: {}",
                 oldPeriods, newPeriod);
-        return oldPeriods.stream().noneMatch
-                (oldPeriod ->
-                        (isPeriodsGlued(newPeriod, oldPeriod)  || isPeriodsIntersect(newPeriod, oldPeriod)) &&  newPeriod.getId() != oldPeriod.getId()
-                );
+        return oldPeriods.stream().noneMatch(oldPeriod ->
+                (isPeriodsGlued(newPeriod, oldPeriod) || isPeriodsIntersect(newPeriod, oldPeriod)) && newPeriod.getId() != oldPeriod.getId()
+        );
     }
 
     private boolean isPeriodsIntersect(Period newPeriod, Period oldPeriod) {
@@ -180,6 +180,7 @@ public class PeriodServiceImpl implements PeriodService {
         return object.getStartTime().isAfter(object.getEndTime()) ||
                 object.getStartTime().equals(object.getEndTime());
     }
+
     // method for checking email in database
     private boolean nameExists(String name) {
         log.info("Enter into nameExists method with name:{}", name);

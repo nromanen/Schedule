@@ -37,7 +37,7 @@ public class TemporarySchedule implements Serializable {
     private LessonType lessonType;
 
 
-    @Column(name ="schedule_id")
+    @Column(name = "schedule_id")
     private Long scheduleId;
 
     @ManyToOne(targetEntity = Teacher.class, fetch = FetchType.EAGER)
@@ -65,12 +65,12 @@ public class TemporarySchedule implements Serializable {
     private Period period;
 
 
-    @Column(name = "grouped",  columnDefinition = "boolean default 'false'")
+    @Column(name = "grouped", columnDefinition = "boolean default 'false'")
     private boolean grouped = false;
 
-    @Column(name = "vacation",  columnDefinition = "boolean default 'false'")
+    @Column(name = "vacation", columnDefinition = "boolean default 'false'")
     private boolean vacation = false;
 
-    @Column(name = "notification",  columnDefinition = "boolean default 'false'")
+    @Column(name = "notification", columnDefinition = "boolean default 'false'")
     private boolean notification = false;
 }

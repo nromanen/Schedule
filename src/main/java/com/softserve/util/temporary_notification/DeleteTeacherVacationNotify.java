@@ -12,7 +12,7 @@ import javax.mail.MessagingException;
 
 @Slf4j
 @Component
-public class DeleteTeacherVacationNotify extends AbstractTemporaryNotification{
+public class DeleteTeacherVacationNotify extends AbstractTemporaryNotification {
     private final TemporaryScheduleService temporaryScheduleService;
     private final MailService mailService;
 

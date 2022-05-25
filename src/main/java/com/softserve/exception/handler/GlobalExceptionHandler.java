@@ -46,7 +46,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return buildResponseEntity(apiError);
     }
 
-    /** Handles IncorrectTimeException, IncorrectPasswordException, ScheduleConflictException,
+    /**
+     * Handles IncorrectTimeException, IncorrectPasswordException, ScheduleConflictException,
      * PeriodConflictException, EntityAlreadyExistsException, IncorrectEmailException, UsedEntityException.
      * Triggered when:
      * time in period / password, entered during registration by User, are incorrect;
@@ -152,7 +153,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     //Handle HttpMessageNotReadableException. Happens when request JSON is malformed.
     @Override
-    protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+    protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpHeaders headers,
+                                                                  HttpStatus status, WebRequest request) {
         ServletWebRequest servletWebRequest = (ServletWebRequest) request;
         log.info("{} to {}", servletWebRequest.getHttpMethod(), servletWebRequest.getRequest().getServletPath());
         String error = "Malformed JSON request";
@@ -202,7 +204,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     // Handle HttpMessageNotWritableException.
     @Override
-    protected ResponseEntity<Object> handleHttpMessageNotWritable(HttpMessageNotWritableException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+    protected ResponseEntity<Object> handleHttpMessageNotWritable(HttpMessageNotWritableException ex, HttpHeaders headers,
+                                                                  HttpStatus status, WebRequest request) {
         String error = "Error writing JSON output";
         log.error(ex.getMessage());
         return buildResponseEntity(new ApiError(INTERNAL_SERVER_ERROR, error, ex));

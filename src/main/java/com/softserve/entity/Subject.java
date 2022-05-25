@@ -4,23 +4,24 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.*;
+import org.hibernate.annotations.Filter;
+import org.hibernate.annotations.FilterDef;
+import org.hibernate.annotations.Filters;
+import org.hibernate.annotations.ParamDef;
 
 import javax.persistence.*;
-import javax.persistence.Entity;
-import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 
-@FilterDef(name="subjectDisableFilter", parameters={
-        @ParamDef( name="disable", type="boolean" ),
+@FilterDef(name = "subjectDisableFilter", parameters = {
+        @ParamDef(name = "disable", type = "boolean"),
 })
 
-@Filters( {
-        @Filter(name="subjectDisableFilter", condition="disable = :disable"),
-} )
+@Filters({
+        @Filter(name = "subjectDisableFilter", condition = "disable = :disable"),
+})
 @NoArgsConstructor
 @Setter
 @Getter
@@ -38,6 +39,6 @@ public class Subject implements Serializable {
     @NotNull
     private String name;
 
-    @Column(name = "disable",  columnDefinition = "boolean default 'false'")
+    @Column(name = "disable", columnDefinition = "boolean default 'false'")
     private boolean disable = false;
 }

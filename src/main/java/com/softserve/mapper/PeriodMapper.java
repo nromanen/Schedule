@@ -1,7 +1,7 @@
 package com.softserve.mapper;
 
-import com.softserve.dto.PeriodDTO;
 import com.softserve.dto.AddPeriodDTO;
+import com.softserve.dto.PeriodDTO;
 import com.softserve.entity.Period;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

@@ -7,5 +7,6 @@ import java.util.List;
 
 public interface DepartmentService extends BasicService<Department, Long> {
     List<Department> getDisabled();
+
     List<Teacher> getAllTeachers(Long departmentId);
 }

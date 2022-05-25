@@ -46,15 +46,9 @@ import java.util.stream.Stream;
         securedEnabled = true,
         jsr250Enabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-    private final JwtTokenProvider jwtTokenProvider;
-
-    private final Environment env;
-    private final UserService userService;
-
     private static final String CLIENT_PROPERTY_KEY = "spring.security.oauth2.client.registration.";
     private static final String GOOGLE = "google";
     private static final String FACEBOOK = "facebook";
-
     private static final String MANAGER_ENDPOINT = "/managers/**";
     private static final String CLASSES_ENDPOINT = "/classes/**";
     private static final String GROUPS_ENDPOINT = "/groups/**";
@@ -85,6 +79,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     //TEACHER
     private static final String GROUPS_BY_TEACHER_ID_ENDPOINT = "/groups/teacher/{teacherId}";
     private static final String GROUP_WITH_STUDENTS = "/groups/{id}/with-students";
+    private final JwtTokenProvider jwtTokenProvider;
+    private final Environment env;
+    private final UserService userService;
 
 
     @Autowired
@@ -112,7 +109,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers(FRONTEND_ACTIVATION_PAGE_ENDPOINT, DOWNLOAD_SCHEDULE_ENDPOINT,
                         AUTH_ENDPOINT, SCHEDULE_FOR_USERS_ENDPOINT, GROUPS_BY_SEMESTER_ID_PUBLIC_ENDPOINT,
-                        ALL_TEACHERS_PUBLIC_ENDPOINT, HOME_ENDPOINT,LOGIN_ENDPOINT,ADMIN_ENDPOINT,
+                        ALL_TEACHERS_PUBLIC_ENDPOINT, HOME_ENDPOINT, LOGIN_ENDPOINT, ADMIN_ENDPOINT,
                         FRONTEND_SCHEDULE_ENDPOINT, ALL_CLASSES_PUBLIC_ENDPOINT, ALL_SEMESTERS_PUBLIC_ENDPOINT,
                         GROUPS_FOR_DEFAULT_SEMESTER_PUBLIC_ENDPOINT, GROUPS_FOR_CURRENT_SEMESTER_PUBLIC_ENDPOINT,
                         DEFAULT_SEMESTER_PUBLIC_ENDPOINT).permitAll()
@@ -136,8 +133,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         http
                 .exceptionHandling()
-                .authenticationEntryPoint((request, response, e) ->
-                        {
+                .authenticationEntryPoint((request, response, e) -> {
                             response.setContentType("application/json;charset=UTF-8");
                             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
                             response.getWriter().write(new JSONObject()

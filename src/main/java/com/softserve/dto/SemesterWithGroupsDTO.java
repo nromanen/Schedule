@@ -10,7 +10,7 @@ import java.util.LinkedList;
 @EqualsAndHashCode(callSuper = true)
 @Getter
 @Setter
-public class SemesterWithGroupsDTO extends SemesterDTO{
+public class SemesterWithGroupsDTO extends SemesterDTO {
     @JsonProperty("semester_groups")
     private LinkedList<GroupDTO> groups;
 }

@@ -12,7 +12,7 @@ import javax.mail.MessagingException;
 
 @Slf4j
 @Component
-public class DeleteVacationNotify extends AbstractTemporaryNotification{
+public class DeleteVacationNotify extends AbstractTemporaryNotification {
     private final TemporaryScheduleService temporaryScheduleService;
     private final MailService mailService;
 
@@ -26,10 +26,10 @@ public class DeleteVacationNotify extends AbstractTemporaryNotification{
     public boolean check(TemporarySchedule temporarySchedule) throws MessagingException {
         log.info("In check of DeleteVacationNotification(temporarySchedule = [{}])", temporarySchedule);
         String temporaryTeacherEmail = temporaryScheduleService.getTeacherEmailFromTemporarySchedule(temporarySchedule.getTeacher());
-        if(temporaryTeacherEmail != null){
-            mailService.send(temporaryTeacherEmail,"test", temporarySchedule,"mail/deleteVacation" );
+        if (temporaryTeacherEmail != null) {
+            mailService.send(temporaryTeacherEmail, "test", temporarySchedule, "mail/deleteVacation");
         }
-       return checkNext(temporarySchedule);
+        return checkNext(temporarySchedule);
 
     }
 }

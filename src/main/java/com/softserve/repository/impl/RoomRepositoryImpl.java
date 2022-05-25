@@ -17,16 +17,15 @@ import java.util.Optional;
 @Slf4j
 public class RoomRepositoryImpl extends BasicRepositoryImpl<Room, Long> implements RoomRepository {
 
+    public static final String GET_NEXT_POSITION =
+            "SELECT min(r.sortOrder) FROM Room r WHERE r.sortOrder > :position";
     private static final String GET_ALL_QUERY =
             "from Room order by name ASC";
-
     private static final String GET_ALL_QUERY_ORDERED =
             "from Room order by sortOrder ASC , name";
-
     private static final String CHECK_REFERENCE =
             "select count (s.id) " +
                     "from Schedule s where s.room.id = :roomId";
-
     private static final String GET_NOT_AVAILABLE_ROOMS_FOR_SCHEDULE =
             "select r1 from Room r1 " +
                     "where r1.id in " +
@@ -35,7 +34,6 @@ public class RoomRepositoryImpl extends BasicRepositoryImpl<Room, Long> implemen
                     " where  s.lesson.semester.id = :semesterId " +
                     "and s.dayOfWeek = :dayOfWeek " +
                     "and s.period.id = :classId )";
-
     private static final String GET_NOT_AVAILABLE_ROOMS_FOR_SCHEDULE_2 =
             "select r1 from Room r1 " +
                     "where r1.id in " +
@@ -45,7 +43,6 @@ public class RoomRepositoryImpl extends BasicRepositoryImpl<Room, Long> implemen
                     "and s.dayOfWeek = :dayOfWeek " +
                     "and s.period.id = :classId " +
                     "and ( s.evenOdd = :evenOdd or s.evenOdd = 'WEEKLY') )";
-
     private static final String GET_AVAILABLE_ROOMS_FOR_SCHEDULE =
             "select r1 from Room r1 " +
                     "where r1.id not in " +
@@ -54,7 +51,6 @@ public class RoomRepositoryImpl extends BasicRepositoryImpl<Room, Long> implemen
                     " where  s.lesson.semester.id = :semesterId " +
                     "and s.dayOfWeek = :dayOfWeek " +
                     "and s.period.id = :classId )";
-
     private static final String GET_AVAILABLE_ROOMS_FOR_SCHEDULE_2 =
             "select r1 from Room r1 " +
                     "where r1.id not in " +
@@ -64,18 +60,12 @@ public class RoomRepositoryImpl extends BasicRepositoryImpl<Room, Long> implemen
                     "and s.dayOfWeek = :dayOfWeek " +
                     "and s.period.id = :classId " +
                     "and ( s.evenOdd = :evenOdd or s.evenOdd = 'WEEKLY') )";
-
     private static final String COUNT_ROOM_DUPLICATES =
             "select count(*) from Room r " +
                     "where r.name = :name  and r.id != :id " +
                     "and r.type.id = :typeId ";
-
     private static final String GET_MAX_SORTING_ORDER =
             "SELECT max(r.sortOrder) FROM Room r";
-
-    public static final String GET_NEXT_POSITION =
-            "SELECT min(r.sortOrder) FROM Room r WHERE r.sortOrder > :position";
-
     private static final String GET_MIN_SORTING_ORDER =
             "SELECT min(r.sortOrder) FROM Room r";
 
@@ -115,8 +105,8 @@ public class RoomRepositoryImpl extends BasicRepositoryImpl<Room, Long> implemen
         log.info("Enter into freeRoomBySpecificPeriod of RoomRepositoryImpl with id {}, dayOfWeek {} and evenOdd {} ",
                 idOfPeriod, dayOfWeek, evenOdd);
         Session session = getSession();
-        Query<Room> query = session.createQuery
-                        ("select r1 from " + basicClass.getName() + " r1" +
+        Query<Room> query = session.createQuery(
+                        "select r1 from " + basicClass.getName() + " r1" +
                                 " where r1.id not in" +
                                 "(select r.id from Schedule s" +
                                 " join s.room r " +
@@ -133,8 +123,7 @@ public class RoomRepositoryImpl extends BasicRepositoryImpl<Room, Long> implemen
     @Override
     protected boolean checkReference(Room room) {
         log.info("In checkReference(room = [{}])", room);
-        Long count = (Long) sessionFactory.getCurrentSession().createQuery
-                        (CHECK_REFERENCE)
+        Long count = (Long) sessionFactory.getCurrentSession().createQuery(CHECK_REFERENCE)
                 .setParameter("roomId", room.getId())
                 .getSingleResult();
         return count != 0;
@@ -142,7 +131,8 @@ public class RoomRepositoryImpl extends BasicRepositoryImpl<Room, Long> implemen
 
     @Override
     public List<Room> getNotAvailableRoomsForSchedule(Long semesterId, DayOfWeek dayOfWeek, EvenOdd evenOdd, Long classId) {
-        log.info("Enter into getNotAvailableRooms with semesterId = {}, dayOfWeek = {}, evenOdd = {}, classId = {} ", semesterId, dayOfWeek, evenOdd, classId);
+        log.info("Enter into getNotAvailableRooms with semesterId = {}, dayOfWeek = {}, evenOdd = {}, classId = {} ",
+                semesterId, dayOfWeek, evenOdd, classId);
         Session session = getSession();
         if (evenOdd == EvenOdd.WEEKLY) {
             return session.createQuery(GET_NOT_AVAILABLE_ROOMS_FOR_SCHEDULE, Room.class)
@@ -162,7 +152,8 @@ public class RoomRepositoryImpl extends BasicRepositoryImpl<Room, Long> implemen
 
     @Override
     public List<Room> getAvailableRoomsForSchedule(Long semesterId, DayOfWeek dayOfWeek, EvenOdd evenOdd, Long classId) {
-        log.info("Enter into getAvailableRooms with semesterId = {}, dayOfWeek = {}, evenOdd = {}, classId = {} ", semesterId, dayOfWeek, evenOdd, classId);
+        log.info("Enter into getAvailableRooms with semesterId = {}, dayOfWeek = {}, evenOdd = {}, classId = {} ",
+                semesterId, dayOfWeek, evenOdd, classId);
         Session session = getSession();
         if (evenOdd == EvenOdd.WEEKLY) {
             return session.createQuery(GET_AVAILABLE_ROOMS_FOR_SCHEDULE, Room.class)
@@ -193,6 +184,7 @@ public class RoomRepositoryImpl extends BasicRepositoryImpl<Room, Long> implemen
 
     /**
      * The method used for getting list of entities from database
+     *
      * @return list of entities ordered by sortOrder and title
      */
     @Override
@@ -205,6 +197,7 @@ public class RoomRepositoryImpl extends BasicRepositoryImpl<Room, Long> implemen
 
     /**
      * This method for getting max sort_order form database
+     *
      * @return max sorting order
      */
     @Override
@@ -214,6 +207,7 @@ public class RoomRepositoryImpl extends BasicRepositoryImpl<Room, Long> implemen
 
     /**
      * This method for getting min sort_order form database
+     *
      * @return min sorting order
      */
     @Override
@@ -223,6 +217,7 @@ public class RoomRepositoryImpl extends BasicRepositoryImpl<Room, Long> implemen
 
     /**
      * This method for getting sorting order of the next element
+     *
      * @param position sorting order of the element
      * @return sorting order of the nex element
      */
@@ -235,6 +230,7 @@ public class RoomRepositoryImpl extends BasicRepositoryImpl<Room, Long> implemen
 
     /**
      * This method for retrieving sorting order by rooms id
+     *
      * @param afterId rooms id which sorting order needs to be retrieved
      * @return sorting order of the room
      */
@@ -244,5 +240,4 @@ public class RoomRepositoryImpl extends BasicRepositoryImpl<Room, Long> implemen
                 .setParameter("afterId", afterId)
                 .uniqueResultOptional();
     }
-
 }

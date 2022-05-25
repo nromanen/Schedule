@@ -12,5 +12,5 @@ public interface RoomForScheduleInfoMapper {
     @Mapping(target = "available", ignore = true)
     RoomForScheduleInfoDTO roomToRoomForScheduleInfoDTO(Room room);
 
-    List<RoomForScheduleInfoDTO> toRoomForScheduleDTOList (List<Room> room);
+    List<RoomForScheduleInfoDTO> toRoomForScheduleDTOList(List<Room> room);
 }
