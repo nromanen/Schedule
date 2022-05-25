@@ -182,8 +182,9 @@
         <module name="FinalClass"/> <!-- клас, який має лише приватні конструктори і не має класів-нащадків, оголошується як остаточний -->
         <module name="HideUtilityClassConstructor"/> <!-- util класи які мають тільки статичні методи або поля мають мати приватний конструктор -->
         <module name="InterfaceIsType"/> <!-- інтерфейс не можна використовувати для позначення констант(можна добавити шо інтерфес має мати хотяб якийсь метод)  -->
-        <module name="VisibilityModifier"/> <!-- дозволяє в класі public final, всі інші not public -->
-
+        <module name="VisibilityModifier"> <!-- дозволяє в класі public final, всі інші not public -->
+            <property name="protectedAllowed" value="true"/>
+        </module>
         <!-- Miscellaneous other checks.                   -->
         <!-- See https://checkstyle.org/config_misc.html -->
         <module name="ArrayTypeStyle"/> <!-- checkstyle array - int[] mas -->

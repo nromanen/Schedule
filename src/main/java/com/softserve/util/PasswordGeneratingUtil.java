@@ -1,14 +1,14 @@
 package com.softserve.util;
 
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
 import org.passay.CharacterData;
 import org.passay.CharacterRule;
 import org.passay.EnglishCharacterData;
 import org.passay.PasswordGenerator;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class PasswordGeneratingUtil {
+public final class PasswordGeneratingUtil {
+
+    private PasswordGeneratingUtil() { }
+
     private static final CharacterData SPECIAL_CHARS = new CharacterData() {
         public String getErrorCode() {
             return "INSUFFICIENT_SPECIAL";

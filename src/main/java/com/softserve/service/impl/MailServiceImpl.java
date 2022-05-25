@@ -42,7 +42,7 @@ public class MailServiceImpl implements MailService {
     private final Environment environment;
     private final SpringTemplateEngine springTemplateEngine;
     @Value("${mail.enabled:true}")
-    boolean enabled;
+    private boolean enabled;
     @Value("${spring.mail.username}")
     private String username;
     private String credentialsUsername;
@@ -148,8 +148,8 @@ public class MailServiceImpl implements MailService {
 
     @Async
     @Override
-    public void send(final String emailTo, final String subject,
-                     TemporarySchedule temporarySchedule, final String emailTemplate) throws MessagingException {
+    public void send(String emailTo, String subject,
+                     TemporarySchedule temporarySchedule, String emailTemplate) throws MessagingException {
 
         // Prepare the evaluation context
         final Context ctx = new Context(Locale.UK);
