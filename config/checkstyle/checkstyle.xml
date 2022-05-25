@@ -1,0 +1,203 @@
+<?xml version="1.0"?>
+<!DOCTYPE module PUBLIC
+        "-//Checkstyle//DTD Checkstyle Configuration 1.3//EN"
+        "https://checkstyle.org/dtds/configuration_1_3.dtd">
+
+<!--
+
+  Checkstyle configuration that checks the sun coding conventions from:
+
+    - the Java Language Specification at
+      https://docs.oracle.com/javase/specs/jls/se11/html/index.html
+
+    - the Sun Code Conventions at https://www.oracle.com/java/technologies/javase/codeconventions-contents.html
+
+    - the Javadoc guidelines at
+      https://www.oracle.com/technical-resources/articles/java/javadoc-tool.html
+
+    - the JDK Api documentation https://docs.oracle.com/en/java/javase/11/
+
+    - some best practices
+
+  Checkstyle is very configurable. Be sure to read the documentation at
+  https://checkstyle.org (or in your downloaded distribution).
+
+  Most Checks are configurable, be sure to consult the documentation.
+
+  To completely disable a check, just comment it out or delete it from the file.
+  To suppress certain violations please review suppression filters.
+
+  Finally, it is worth reading the documentation.
+
+-->
+
+<module name="Checker">
+    <!--
+        If you set the basedir property below, then all reported file
+        names will be relative to the specified directory. See
+        https://checkstyle.org/config.html#Checker
+
+        <property name="basedir" value="${basedir}"/>
+    -->
+    <property name="severity" value="error"/>
+
+    <property name="fileExtensions" value="java, properties, xml"/>
+
+    <!-- Excludes all 'module-info.java' files              -->
+    <!-- See https://checkstyle.org/config_filefilters.html -->
+    <module name="BeforeExecutionExclusionFileFilter">
+        <property name="fileNamePattern" value="module\-info\.java$"/>
+    </module>
+
+    <!-- https://checkstyle.org/config_filters.html#SuppressionFilter -->
+    <module name="SuppressionFilter">
+        <property name="file" value="${org.checkstyle.sun.suppressionfilter.config}"
+                  default="checkstyle-suppressions.xml"/>
+        <property name="optional" value="true"/>
+    </module>
+
+    <!-- Checks that a package-info.java file exists for each package.     -->
+    <!-- See https://checkstyle.org/config_javadoc.html#JavadocPackage -->
+    <!--<module name="JavadocPackage"/>--> <!-- перевіряє Javadoc над пакетом -->
+
+    <!-- Checks whether files end with a new line.                        -->
+    <!-- See https://checkstyle.org/config_misc.html#NewlineAtEndOfFile -->
+    <module name="NewlineAtEndOfFile"/>
+
+    <!-- Checks that property files contain the same keys.         -->
+    <!-- See https://checkstyle.org/config_misc.html#Translation -->
+    <module name="Translation"/>
+
+    <!-- Checks for Size Violations.                    -->
+    <!-- See https://checkstyle.org/config_sizes.html -->
+    <module name="FileLength"/> <!-- максимальна кількість рядків у файлі - 2000 -->
+    <module name="LineLength"> <!-- максимальна довжина рядка - 150 -->
+        <property name="fileExtensions" value="java"/>
+        <property name="max" value="150"/>
+    </module>
+
+    <!-- Checks for whitespace                               -->
+    <!-- See https://checkstyle.org/config_whitespace.html -->
+    <module name="FileTabCharacter"/>
+
+    <!-- Miscellaneous other checks.                   -->
+    <!-- See https://checkstyle.org/config_misc.html -->
+    <module name="RegexpSingleline">
+        <property name="format" value="\s+$"/>
+        <property name="minimum" value="0"/>
+        <property name="maximum" value="0"/>
+        <property name="message" value="Line has trailing spaces."/>
+    </module>
+
+    <!-- Checks for Headers                                -->
+    <!-- See https://checkstyle.org/config_header.html   -->
+    <!-- <module name="Header"> -->
+    <!--   <property name="headerFile" value="${checkstyle.header.file}"/> -->
+    <!--   <property name="fileExtensions" value="java"/> -->
+    <!-- </module> -->
+
+    <module name="TreeWalker">
+
+        <!-- Checks for Javadoc comments.                     -->
+        <!-- See https://checkstyle.org/config_javadoc.html -->
+        <module name="InvalidJavadocPosition"/> <!-- перевіряє, чи розташовані Javadocs у правильному положенні -->
+        <module name="JavadocMethod"> <!-- перевіряє, стиль Javadoc над методами -->
+            <property name="tokens" value="METHOD_DEF"/>
+        </module>
+        <module name="JavadocType"/> <!-- перевіряє, стиль Javadoc над типами -->
+        <!--<module name="JavadocVariable"/>--> <!-- перевіряє, наявність Javadoc над змінними -->
+        <!--<module name="JavadocStyle"/>--> <!-- перевіряє, стиль Javadoc -->
+        <module name="MissingJavadocMethod"> <!-- перевіряє, наявність Javadoc над методами -->
+            <property name="tokens" value="METHOD_DEF"/>
+        </module>
+
+        <!-- Checks for Naming Conventions.                  -->
+        <!-- See https://checkstyle.org/config_naming.html -->
+        <module name="ConstantName"/> <!-- перевіряє, чи відповідають імена констант заданому шаблону -->
+        <module name="LocalFinalVariableName"/> <!-- перевіряє відповідність локальних кінцевих імен змінних заданому шаблону -->
+        <module name="LocalVariableName"/> <!-- перевіряють неймінг local not final variables -->
+        <module name="MemberName"/> <!-- перевіряють неймінг екземплярів -->
+        <module name="MethodName"/> <!-- перевіряють неймінг method -->
+        <module name="PackageName"/> <!-- перевіряють неймінг package -->
+        <module name="ParameterName"/> <!-- перевіряють неймінг variables -->
+        <module name="StaticVariableName"/> <!-- перевіряють неймінг static variables -->
+        <module name="TypeName"/> <!-- перевіряє неймінг класів, інтер, ... -->
+
+        <!-- Checks for imports                              -->
+        <!-- See https://checkstyle.org/config_imports.html -->
+        <!--<module name="AvoidStarImport"/>--> <!-- не дозволяє імпортувати весь пакет -->
+        <module name="IllegalImport"/> <!-- defaults to sun.* packages -->  <!-- перевіряє від яких пакетів заборонений імпорт -->
+        <module name="RedundantImport"/> <!-- перевіряє наявність зайвих операторів імпорту(java.lang; ільше одного разу; з того самого пакету) -->
+        <module name="UnusedImports"> <!-- перевіряє наявність невикористаних операторів імпорту -->
+            <property name="processJavadoc" value="false"/>
+        </module>
+
+        <!-- Checks for Size Violations.                    -->
+        <!-- See https://checkstyle.org/config_sizes.html -->
+        <module name="MethodLength"/> <!-- велечина блоку методу не можу бути > 150 -->
+        <!--<module name="ParameterNumber"/>--> <!-- дозволяє 7 параметрів для методу -->
+
+        <!-- Checks for whitespace                               -->
+        <!-- See https://checkstyle.org/config_whitespace.html -->
+        <module name="EmptyForIteratorPad"/> <!-- перевіряє заповнення пустого для ітератора -->
+        <module name="GenericWhitespace"/> <!-- перевіряє пробіли біля кутових дужок <> -->
+        <module name="MethodParamPad"/> <!-- перевіряє пробіли в написанні методів -->
+        <module name="NoWhitespaceAfter"/> <!-- перевіряє, чи немає пробілів після знаків -->
+        <module name="NoWhitespaceBefore"/> <!-- перевіряє, чи немає пробілів перед знаками -->
+        <!--<module name="OperatorWrap"/>--> <!-- перевіряє що оператори повинні бути в наступному рядку при розлученні виразу -->
+        <module name="ParenPad"/> <!-- перевіряє політику щодо заповнення дужок(default: nospace) -->
+        <module name="TypecastParenPad"/> <!-- перевіряє політику заповнення дужок для приведення типів(default: nospace) -->
+        <module name="WhitespaceAfter"/> <!-- перевіряє наявність пробілів після(for, if, while, coma, ...) -->
+        <module name="WhitespaceAround"/> <!-- перевіряє, що маркер оточений пробілами -->
+
+        <!-- Modifier Checks                                    -->
+        <!-- See https://checkstyle.org/config_modifier.html -->
+        <module name="ModifierOrder"/> <!-- перевіряє, чи порядок модифікаторів відповідає пропозиціям у специфікації мови Java -->
+        <module name="RedundantModifier"/> <!-- перевіряє наявність зайвих модифікаторів. -->
+
+        <!-- Checks for blocks. You know, those {}'s         -->
+        <!-- See https://checkstyle.org/config_blocks.html -->
+        <module name="AvoidNestedBlocks"/> <!-- знаходить вкладені блоки (блоки, які вільно використовуються в коді) -->
+        <module name="EmptyBlock"/> <!-- перевіряє наявність порожніх блоків -->
+        <module name="LeftCurly"/> <!-- перевіряє розміщення правих фігурних дужок '{' для блоків(можна налаштувати) -->
+        <module name="NeedBraces"/> <!-- потребує фігурних дужок в блоках -->
+        <module name="RightCurly"/> <!-- перевіряє розміщення правих фігурних дужок '}' для блоків(можна налаштувати) -->
+
+        <!-- Checks for common coding problems               -->
+        <!-- See https://checkstyle.org/config_coding.html -->
+        <module name="EmptyStatement"/> <!-- перевіряє написання після (); -->
+        <!--<module name="EqualsHashCode"/>--> <!-- перевизначення Equals HashCode -->
+        <!--<module name="HiddenField"/>--> <!-- локальні змінні перекривають глобальні -->
+        <module name="IllegalInstantiation"/> <!-- перевіряє які екземпляри треба создавати через фабрику(треба налаштовувати) -->
+        <module name="InnerAssignment"/> <!-- не можна сетати значення змінним у виразах -->
+        <!--<module name="MagicNumber"/>--> <!-- зазначає що всі цифри мають бути змінними -->
+        <module name="MissingSwitchDefault"/> <!-- switch have default -->
+        <module name="MultipleVariableDeclarations"/> <!-- не можна визначати пару змінних в одному рядку -->
+        <module name="SimplifyBooleanExpression"/> <!-- перевіряє чи можна спростити логічний вираз -->
+        <module name="SimplifyBooleanReturn"/> <!-- перевіряє чи можна спростити повернення логічного виразу -->
+
+        <!-- Checks for class design                         -->
+        <!-- See https://checkstyle.org/config_design.html -->
+        <!--<module name="DesignForExtension"/>--> <!-- визначає design pattern для класів які можуть розширюватись(викоритосуєтьсяв більшості для бібліоте API)  -->
+        <module name="FinalClass"/> <!-- клас, який має лише приватні конструктори і не має класів-нащадків, оголошується як остаточний -->
+        <module name="HideUtilityClassConstructor"/> <!-- util класи які мають тільки статичні методи або поля мають мати приватний конструктор -->
+        <module name="InterfaceIsType"/> <!-- інтерфейс не можна використовувати для позначення констант(можна добавити шо інтерфес має мати хотяб якийсь метод)  -->
+        <module name="VisibilityModifier"/> <!-- дозволяє в класі public final, всі інші not public -->
+
+        <!-- Miscellaneous other checks.                   -->
+        <!-- See https://checkstyle.org/config_misc.html -->
+        <module name="ArrayTypeStyle"/> <!-- checkstyle array - int[] mas -->
+        <!--<module name="FinalParameters"/>--> <!-- поля повинні бути final -->
+        <!--<module name="TodoComment"/>--> <!--перевіряє праивльність написання todo (and add config fixme)-->
+        <module name="UpperEll"/> <!-- long variables мають закінчення - L, а не l -->
+
+        <!-- https://checkstyle.org/config_filters.html#SuppressionXpathFilter -->
+        <module name="SuppressionXpathFilter">
+            <property name="file" value="${org.checkstyle.sun.suppressionxpathfilter.config}"
+                      default="checkstyle-xpath-suppressions.xml"/>
+            <property name="optional" value="true"/>
+        </module>
+
+    </module>
+
+</module>

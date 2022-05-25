@@ -13,6 +13,7 @@ plugins {
     id 'java'
     id "org.sonarqube" version "3.3"
     id 'jacoco'
+    id 'checkstyle'
 }
 
 group 'com.softserve'
@@ -74,6 +75,21 @@ jacocoTestCoverageVerification {
 }
 
 check.dependsOn jacocoTestCoverageVerification
+
+checkstyle {
+    toolVersion = 10.0
+    showViolations = true
+    ignoreFailures = true
+}
+
+tasks.withType(Checkstyle) {
+    checkstyleMain {
+        reports {
+            xml.destination rootProject.file("build/reports/checkstyle/checkstyle.xml")
+            html.destination rootProject.file("build/reports/checkstyle/checkstyle.html")
+        }
+    }
+}
 
 apply from: "$projectDir/pre-commit.gradle"
 
