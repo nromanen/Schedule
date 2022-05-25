@@ -14,10 +14,7 @@ import java.util.Optional;
 public class UserRepositoryImpl extends BasicRepositoryImpl<User, Long> implements UserRepository {
 
     /**
-     * The method used for getting User by email from database
-     *
-     * @param email String email used to find User by it
-     * @return User
+     * {@inheritDoc}
      */
     @Override
     public Optional<User> findByEmail(String email) {
@@ -32,10 +29,7 @@ public class UserRepositoryImpl extends BasicRepositoryImpl<User, Long> implemen
     }
 
     /**
-     * The method used for getting User by token from database
-     *
-     * @param token String token used to find User by it
-     * @return User
+     * {@inheritDoc}
      */
     @Override
     public Optional<User> findByToken(String token) {
@@ -50,19 +44,16 @@ public class UserRepositoryImpl extends BasicRepositoryImpl<User, Long> implemen
     }
 
     /**
-     * The method used for getting list of users from database, that have role USER in system
-     *
-     * @return list of entities Teacher
+     * {@inheritDoc}
      */
     @Override
     public List<User> getAllUsersWithRoleUser() {
         log.info("Enter into getAllUsersWithRoleUser of UserRepositoryImpl");
         return sessionFactory.getCurrentSession().createQuery(
-                "select u from User u " +
-                        " where u.role = 'ROLE_USER' ", User.class)
+                        "select u from User u " +
+                                " where u.role = 'ROLE_USER' ", User.class)
                 .getResultList();
     }
-
 
     /**
      * Modified update method, which merge entity before updating it
@@ -83,8 +74,8 @@ public class UserRepositoryImpl extends BasicRepositoryImpl<User, Long> implemen
     protected boolean checkReference(User user) {
         log.info("In checkReference(user = [{}])", user);
         Long count = (Long) sessionFactory.getCurrentSession().createQuery
-                ("select count (t.id) " +
-                        "from Teacher t where t.userId = :userId")
+                        ("select count (t.id) " +
+                                "from Teacher t where t.userId = :userId")
                 .setParameter("userId", user.getId())
                 .getSingleResult();
         return count != 0;

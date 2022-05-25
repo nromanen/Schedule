@@ -30,9 +30,7 @@ public abstract class BasicRepositoryImpl<T extends Serializable, I extends Seri
     }
 
     /**
-     * The method used for getting list of entities from database
-     *
-     * @return list of entities
+     * {@inheritDoc}
      */
     @Override
     public List<T> getAll() {
@@ -43,10 +41,7 @@ public abstract class BasicRepositoryImpl<T extends Serializable, I extends Seri
     }
 
     /**
-     * The method used for getting entity by id from database
-     *
-     * @param id Identity number of entity
-     * @return entity
+     * {@inheritDoc}
      */
     @Override
     public Optional<T> findById(I id) {
@@ -55,10 +50,7 @@ public abstract class BasicRepositoryImpl<T extends Serializable, I extends Seri
     }
 
     /**
-     * The method used for saving entity in database
-     *
-     * @param entity entity is going to be saved
-     * @return entity that has been saved
+     * {@inheritDoc}
      */
     @Override
     public T save(T entity) {
@@ -69,10 +61,7 @@ public abstract class BasicRepositoryImpl<T extends Serializable, I extends Seri
     }
 
     /**
-     * The method used for updating existed entity from database
-     *
-     * @param entity entity is going to be updated
-     * @return entity that was updated
+     * {@inheritDoc}
      */
     @Override
     public T update(T entity) {
@@ -83,11 +72,7 @@ public abstract class BasicRepositoryImpl<T extends Serializable, I extends Seri
     }
 
     /**
-     * The method used for deleting existed entity from database
-     *
-     * @param entity entity is going to be deleted
-     * @return deleted entity
-     * @throws DeleteDisabledException when there are still references pointing to object requested for deleting
+     * {@inheritDoc}
      */
     @Override
     public T delete(T entity) {
@@ -112,16 +97,14 @@ public abstract class BasicRepositoryImpl<T extends Serializable, I extends Seri
     }
 
     /**
-     * The method used for getting list of disabled entities from database
-     *
-     * @return list
+     * {@inheritDoc}
      */
     @Override
     public List<T> getDisabled() {
         log.info("In getDisabled");
         return sessionFactory.getCurrentSession().createQuery(
-                "from " + basicClass.getName() +" tableName"+
-                        " where tableName.disable = true ")
+                        "from " + basicClass.getName() + " tableName" +
+                                " where tableName.disable = true ")
                 .getResultList();
     }
 }

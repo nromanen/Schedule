@@ -24,10 +24,7 @@ public class ArchiveRepositoryImpl implements ArchiveRepository {
     }
 
     /**
-     * The method used for getting Optional of schedule from mongo database by semesterId
-     *
-     * @param semesterId Semester id for getting schedule by this id from mongo db
-     * @return Optional of schedule
+     * {@inheritDoc}
      */
     @Override
     public Optional<ScheduleFullForArchiveDTO> getArchiveScheduleBySemesterId(Long semesterId) {
@@ -37,9 +34,7 @@ public class ArchiveRepositoryImpl implements ArchiveRepository {
     }
 
     /**
-     * The method used for getting all of archived schedules from mongo database
-     *
-     * @return list of schedules
+     * {@inheritDoc}
      */
     @Override
     public List<ScheduleFullForArchiveDTO> getAllArchiveSchedule() {
@@ -48,21 +43,16 @@ public class ArchiveRepositoryImpl implements ArchiveRepository {
     }
 
     /**
-     * The method used for save schedule in mongo database
-     *
-     * @param fullForArchiveDTO object ScheduleFullForArchiveDTO for save schedule in mongo db
-     * @return ScheduleFullForArchiveDTO object
+     * {@inheritDoc}
      */
     @Override
-    public ScheduleFullForArchiveDTO saveScheduleForArchive(ScheduleFullForArchiveDTO fullForArchiveDTO) {
-        log.info("In saveScheduleForArchive with scheduleForArchiveDTO = {}", fullForArchiveDTO);
-        return mongoOperations.insert(fullForArchiveDTO);
+    public ScheduleFullForArchiveDTO saveScheduleForArchive(ScheduleFullForArchiveDTO fullScheduleForArchiveDTO) {
+        log.info("In saveScheduleForArchive with scheduleForArchiveDTO = {}", fullScheduleForArchiveDTO);
+        return mongoOperations.insert(fullScheduleForArchiveDTO);
     }
 
     /**
-     * The method used for delete schedule from mongo database by semesterId
-     *
-     * @param semesterId Semester id use for delete schedule by this id from mongo db
+     * {@inheritDoc}
      */
     @Override
     public void deleteArchiveScheduleBySemesterId(Long semesterId) {

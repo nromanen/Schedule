@@ -15,6 +15,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class DepartmentRepositoryImpl extends BasicRepositoryImpl<Department, Long> implements DepartmentRepository {
+
     private static final String HQL_IS_EXISTS_BY_NAME
             = "SELECT (count(*) > 0) "
             + "FROM Department d "
@@ -29,7 +30,7 @@ public class DepartmentRepositoryImpl extends BasicRepositoryImpl<Department, Lo
 
     private static final String HQL_SELECT_ALL = "FROM Department ORDER BY name ASC";
 
-    private Session getSession(){
+    private Session getSession() {
         Session session = sessionFactory.getCurrentSession();
         Filter filter = session.enableFilter("departmentDisableFilter");
         filter.setParameter("disable", false);
@@ -38,6 +39,7 @@ public class DepartmentRepositoryImpl extends BasicRepositoryImpl<Department, Lo
 
     /**
      * The method returns information about all departments from DB
+     *
      * @return List of all departments with ASC sorting by name
      */
     @Override
@@ -50,6 +52,7 @@ public class DepartmentRepositoryImpl extends BasicRepositoryImpl<Department, Lo
 
     /**
      * The method used for updating Department
+     *
      * @param entity entity is going to be updated
      * @return entity that was updated
      */
@@ -60,14 +63,12 @@ public class DepartmentRepositoryImpl extends BasicRepositoryImpl<Department, Lo
     }
 
     /**
-     * The method used for finding out if name exists
-     * @param name String name used to find Department
-     * @return boolean : if exists - true, else - false
+     * {@inheritDoc}
      */
     @Override
     public boolean isExistsByName(String name) {
         log.info("In isExistsByName(name = [{}])", name);
-        if(name == null) {
+        if (name == null) {
             return false;
         }
         return (boolean) sessionFactory.getCurrentSession()
@@ -77,15 +78,12 @@ public class DepartmentRepositoryImpl extends BasicRepositoryImpl<Department, Lo
     }
 
     /**
-     * The method used for finding out if name exists ignoring id
-     * @param name String name used to find Department
-     * @param id Long id
-     * @return boolean : if exists - true, else - false
+     * {@inheritDoc}
      */
     @Override
     public boolean isExistsByNameIgnoringId(String name, Long id) {
         log.info("In isExistsByTitleIgnoringId(id = [{}], name = [{}])", id, name);
-        if(name == null) {
+        if (name == null) {
             return false;
         }
         return (boolean) sessionFactory.getCurrentSession()
@@ -96,9 +94,7 @@ public class DepartmentRepositoryImpl extends BasicRepositoryImpl<Department, Lo
     }
 
     /**
-     * The method used for getting all teachers from the Department
-     * @param departmentId id of the department
-     * @return list of teachers
+     * {@inheritDoc}
      */
     @Override
     public List<Teacher> getAllTeachers(Long departmentId) {

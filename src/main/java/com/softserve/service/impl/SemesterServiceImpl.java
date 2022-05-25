@@ -31,12 +31,14 @@ import java.util.stream.Collectors;
 public class SemesterServiceImpl implements SemesterService {
 
     private final SemesterRepository semesterRepository;
-    private final PeriodService periodService;
     private final ScheduleRepository scheduleRepository;
     private final LessonRepository lessonRepository;
+    private final GroupRepository groupRepository;
+
+    private final PeriodService periodService;
+
     private final List<DayOfWeek> workDaysList = Arrays.asList(DayOfWeek.MONDAY, DayOfWeek.TUESDAY,
             DayOfWeek.WEDNESDAY, DayOfWeek.THURSDAY, DayOfWeek.FRIDAY);
-    private final GroupRepository groupRepository;
 
     @Autowired
     public SemesterServiceImpl(SemesterRepository semesterRepository,
@@ -184,12 +186,6 @@ public class SemesterServiceImpl implements SemesterService {
         return semesterRepository.delete(object);
     }
 
-
-    /**
-     * Method searches get of semester with currentSemester = true in the DB
-     *
-     * @return entity Semester if such exist, else return null
-     */
     @Override
     public Semester getCurrentSemester() {
         log.debug("In getCurrentSemester");
@@ -202,9 +198,7 @@ public class SemesterServiceImpl implements SemesterService {
     }
 
     /**
-     * Method searches get of semester with defaultSemester = true in the DB
-     *
-     * @return entity Semester if such exist, else return null
+     * {@inheritDoc}
      */
     @Override
     public Semester getDefaultSemester() {
@@ -273,9 +267,7 @@ public class SemesterServiceImpl implements SemesterService {
     }
 
     /**
-     * The method used for getting all disabled semesters
-     *
-     * @return list of disabled semesters
+     * {@inheritDoc}
      */
     @Override
     public List<Semester> getDisabled() {
@@ -290,10 +282,7 @@ public class SemesterServiceImpl implements SemesterService {
     }
 
     /**
-     * The method used to change the current semester that the Manager is working on
-     *
-     * @param semesterId id of the semester that needs to be current
-     * @return changed Semester
+     * {@inheritDoc}
      */
     @CacheEvict(value = "semesterList", allEntries = true)
     @Override
@@ -305,10 +294,7 @@ public class SemesterServiceImpl implements SemesterService {
     }
 
     /**
-     * The method used to change the default semester that the Manager is working on
-     *
-     * @param semesterId id of the semester that needs to be current
-     * @return changed Semester
+     * {@inheritDoc}
      */
     @CacheEvict(value = "semesterList", allEntries = true)
     @Override
@@ -320,11 +306,7 @@ public class SemesterServiceImpl implements SemesterService {
     }
 
     /**
-     * Method add group to an existing semester
-     *
-     * @param semester semester in which we need to add group
-     * @param group    group to add
-     * @return changed Semester
+     * {@inheritDoc}
      */
     @CacheEvict(value = "semesterList", allEntries = true)
     @Override
@@ -340,12 +322,7 @@ public class SemesterServiceImpl implements SemesterService {
     }
 
     /**
-     *
-     * Method add groups to an existing semester
-     *
-     * @param semester semester in which we need to add groups
-     * @param groupIds groups to add
-     * @return changed Semester
+     * {@inheritDoc}
      */
     @CacheEvict(value = "semesterList", allEntries = true)
     @Override
@@ -360,11 +337,7 @@ public class SemesterServiceImpl implements SemesterService {
     }
 
     /**
-     * Method add daysOfWeek to an existing semester
-     *
-     * @param semester   semester in which we need to add daysOfWeek
-     * @param daysOfWeek daysOfWeek to add
-     * @return changed Semester
+     * {@inheritDoc}
      */
     @Override
     public Semester addDaysOfWeekToSemester(Semester semester, Set<DayOfWeek> daysOfWeek) {
@@ -381,11 +354,7 @@ public class SemesterServiceImpl implements SemesterService {
     }
 
     /**
-     * Method add daysOfWeek to an existing semester
-     *
-     * @param semester semester in which we need to add periods
-     * @param periods  periods to add
-     * @return changed Semester
+     * {@inheritDoc}
      */
     @Override
     public Semester addPeriodsToSemester(Semester semester, Set<Period> periods) {
@@ -402,11 +371,7 @@ public class SemesterServiceImpl implements SemesterService {
     }
 
     /**
-     * Method delete group from an existing semester
-     *
-     * @param semester semester in which we need to delete group
-     * @param group    group to delete
-     * @return changed Semester
+     * {@inheritDoc}
      */
     @Override
     public Semester deleteGroupFromSemester(Semester semester, Group group) {
@@ -418,10 +383,7 @@ public class SemesterServiceImpl implements SemesterService {
     }
 
     /**
-     * Method delete groups, periods and days Of Weeks from an existing semester
-     *
-     * @param semester semester in which we need to delete group
-     * @return changed Semester
+     * {@inheritDoc}
      */
     @Override
     public Semester deleteAllContentFromSemester(Semester semester) {
@@ -436,11 +398,7 @@ public class SemesterServiceImpl implements SemesterService {
     }
 
     /**
-     * Method delete groups from an existing semester
-     *
-     * @param semester semester in which we need to delete groups
-     * @param groups   group to delete
-     * @return changed Semester
+     * {@inheritDoc}
      */
     @Override
     public Semester deleteGroupsFromSemester(Semester semester, List<Group> groups) {
@@ -450,11 +408,7 @@ public class SemesterServiceImpl implements SemesterService {
     }
 
     /**
-     * Method copy groups, periods, days Of Weeks and Schedule from one to other semester
-     *
-     * @param fromSemesterId id semester from which we need to copy groups, periods, days Of Weeks and Schedule
-     * @param toSemesterId   id semester in which we need to copy groups, periods, days Of Weeks and Schedule
-     * @return copied Semester
+     * {@inheritDoc}
      */
     @Override
     public Semester copySemester(Long fromSemesterId, Long toSemesterId) {

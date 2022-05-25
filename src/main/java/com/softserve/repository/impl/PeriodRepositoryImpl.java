@@ -40,10 +40,7 @@ public class PeriodRepositoryImpl extends BasicRepositoryImpl<Period, Long> impl
     }
 
     /**
-     * The method used for getting Period by name from database
-     *
-     * @param name String email used to find User by it
-     * @return Period
+     * {@inheritDoc}
      */
     @Override
     public Optional<Period> findByName(String name) {
@@ -62,8 +59,8 @@ public class PeriodRepositoryImpl extends BasicRepositoryImpl<Period, Long> impl
     protected boolean checkReference(Period period) {
         log.info("In checkReference(period = [{}])", period);
         Long count = (Long) sessionFactory.getCurrentSession().createQuery
-                ("select count (s.id) " +
-                        "from Schedule s where s.period.id = :periodId")
+                        ("select count (s.id) " +
+                                "from Schedule s where s.period.id = :periodId")
                 .setParameter("periodId", period.getId())
                 .getSingleResult();
         return count != 0;

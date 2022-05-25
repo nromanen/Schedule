@@ -10,6 +10,7 @@ import java.util.Optional;
 @Repository
 @Slf4j
 public class StudentRepositoryImpl extends BasicRepositoryImpl<Student, Long> implements StudentRepository {
+
     private static final String HQL_IS_EXISTS_BY_EMAIL
             = "SELECT (count(*) > 0) "
             + "FROM Student s "
@@ -28,7 +29,8 @@ public class StudentRepositoryImpl extends BasicRepositoryImpl<Student, Long> im
 
     @Override
     public Optional<Student> getExistingStudent(Student student) {
-        return sessionFactory.getCurrentSession().createQuery(GET_STUDENT_WITH_FULL_NAME_SURNAME)
+        return sessionFactory.getCurrentSession()
+                .createQuery(GET_STUDENT_WITH_FULL_NAME_SURNAME)
                 .setParameter("sName", student.getName())
                 .setParameter("sSurname", student.getSurname())
                 .setParameter("sPatronymic", student.getPatronymic())
@@ -36,10 +38,7 @@ public class StudentRepositoryImpl extends BasicRepositoryImpl<Student, Long> im
     }
 
     /**
-     * The method used for finding out if Student exists by email
-     *
-     * @param email String email used to find Student
-     * @return boolean : if exists - true, else - false
+     * {@inheritDoc}
      */
     @Override
     public boolean isEmailInUse(String email) {
@@ -50,11 +49,7 @@ public class StudentRepositoryImpl extends BasicRepositoryImpl<Student, Long> im
     }
 
     /**
-     * The method used for finding out if Student exists by email and id
-     *
-     * @param email String email used to find Student
-     * @param id Long id, which is used to find Student
-     * @return boolean : if exists - true, else - false
+     * {@inheritDoc}
      */
     @Override
     public boolean isEmailForThisStudent(String email, Long id) {
